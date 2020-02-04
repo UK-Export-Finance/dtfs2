@@ -1,0 +1,27 @@
+{
+  "name": "dtfs2",
+  "version": "1.0.0",
+  "description": "DTFS2 Portal",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notbinary/dtfs2.git"
+  },
+  "keywords": [
+    "export",
+    "finance"
+  ],
+  "author": "David Carboni",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/notbinary/dtfs2/issues"
+  },
+  "homepage": "https://github.com/notbinary/dtfs2#readme",
+  "dependencies": {
+    "govuk-frontend": "^3.5.0",
+    "nunjucks": "^3.2.0"
+  }
+}
