@@ -61,7 +61,7 @@
             <image src="/static/assets/images/govuk-logotype-crown.png" xlink:href="" class="govuk-header__logotype-crown-fallback-image" width="36" height="32"></image>
           </svg>
           <span class="govuk-header__logotype-text">
-            DTFS2
+            DTFS
           </span>
         </span>
       </a>
@@ -77,21 +77,66 @@
     <li class="govuk-breadcrumbs__list-item">
       <a class="govuk-breadcrumbs__link" href="/">Home</a>
     </li>
-    {% if title is not none and title != "Home" %}
+    <!-- {% if title is not none and title != "Home" %}
     <li class="govuk-breadcrumbs__list-item">
       <a class="govuk-breadcrumbs__link" href="/index.html">Home</a>
     </li>
-    {% endif %}
+    {% endif %} -->
   </ol>
 </div>
 
         <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">Welcome to DTFS2</h1>
+      <h1 class="govuk-heading-xl">Requests for cover</h1>
 
       <p class="govuk-body">
-          Hello, world!
+        <table class="govuk-table">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Bank ref</th>
+              <th scope="col" class="govuk-table__header">UKEF ref</th>
+              <th scope="col" class="govuk-table__header">Status</th>
+              <th scope="col" class="govuk-table__header">Automatic cover</th>
+              <th scope="col" class="govuk-table__header">Maker</th>
+              <th scope="col" class="govuk-table__header">Checker</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">Lorem</th>
+              <td class="govuk-table__cell">ipsum</td>
+              <td class="govuk-table__cell">dolor</th>
+              <td class="govuk-table__cell">sit</td>
+              <td class="govuk-table__cell">amet</th>
+              <td class="govuk-table__cell">consectetur</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">adipiscing</th>
+              <td class="govuk-table__cell">elit</td>
+              <td class="govuk-table__cell">sed</th>
+              <td class="govuk-table__cell">do</td>
+              <td class="govuk-table__cell">eiusmod</th>
+              <td class="govuk-table__cell">tempor</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">incididunt</th>
+              <td class="govuk-table__cell">ut</td>
+              <td class="govuk-table__cell">labore</th>
+              <td class="govuk-table__cell">et</td>
+              <td class="govuk-table__cell">dolore</th>
+              <td class="govuk-table__cell">magna</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">aliqua</th>
+              <td class="govuk-table__cell">ut</td>
+              <td class="govuk-table__cell">ad</th>
+              <td class="govuk-table__cell">minim</td>
+              <td class="govuk-table__cell">veniam</th>
+              <td class="govuk-table__cell">quis</td>
+            </tr>
+          </tbody>
+        </table>
       </p>
 
     </div>
@@ -107,19 +152,16 @@
         <nav role="navigation" aria-labelledby="subsection-title">
           <ul class="govuk-list govuk-!-font-size-16">
             <li class="gem-c-related-navigation__link">
-              <a class="govuk-link" href="#/get-a-passport-urgently">Get a passport urgently</a>
+              <a class="govuk-link" href="#">Requests for cover</a>
             </li>
             <li class="gem-c-related-navigation__link">
-              <a class="govuk-link" href="#/renew-adult-passport">Renew or replace your adult passport</a>
+              <a class="govuk-link" href="#">Bonds and loans</a>
             </li>
             <li class="gem-c-related-navigation__link">
-              <a class="govuk-link" href="#/passport-fees">Passport fees</a>
+              <a class="govuk-link" href="#">Amendment requests</a>
             </li>
             <li class="gem-c-related-navigation__link">
-              <a class="govuk-link" href="#/government/news/need-to-renew-your-british-passport-go-online">Need to renew your British passport? Go online</a>
-            </li>
-            <li class="gem-c-related-navigation__link">
-              <a class="govuk-link" href="#/government/news/changes-to-passport-applications-for-british-nationals-living-abroad">Changes to passport applications for British nationals living abroad</a>
+              <a class="govuk-link" href="#">Reports</a>
             </li>
           </ul>
         </nav>
