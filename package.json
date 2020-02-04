@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/notbinary/dtfs2#readme",
   "dependencies": {
+    "express": "^4.17.1",
     "govuk-frontend": "^3.5.0",
     "nunjucks": "^3.2.0"
   }
