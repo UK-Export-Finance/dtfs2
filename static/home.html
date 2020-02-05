@@ -83,10 +83,71 @@
   </ol>
 </div>
 
-        <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+  <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-full">
       <h1 class="govuk-heading-xl">Requests for cover</h1>
+
+        <button class="govuk-button" data-module="govuk-button">
+          Create a new request for cover
+        </button>
+
+        <div class="govuk-form-group">
+
+          <fieldset class="govuk-fieldset" aria-describedby="changed-name-hint">
+            <span id="show" class="govuk-hint">
+              Show
+            </span>
+            <div class="govuk-radios govuk-radios--inline">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="changed-name" name="changed-name" type="radio" value="all" checked>
+                <label class="govuk-label govuk-radios__label" for="changed-name">
+                  All
+                </label>
+              </div>
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="changed-name-2" name="changed-name" type="radio" value="your-requests">
+                <label class="govuk-label govuk-radios__label" for="changed-name-2">
+                  Your requests
+                </label>
+              </div>
+            </div>
+          </fieldset>
+
+        </div>
+        <div class="govuk-form-group">
+
+          <fieldset class="govuk-fieldset" aria-describedby="changed-name-hint">
+            <label class="govuk-hint" for="search">
+              Search
+            </label>
+            <input class="govuk-input govuk-input--width-10" id="search" name="search" type="text">
+          </fieldset>
+
+        </div>
+        <div class="govuk-form-group">
+
+          <a href="#" class="govuk-link">Show filters</a>
+
+        </div>
+        <div class="govuk-form-group">
+
+          <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
+              <div class="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="waste" name="waste" type="checkbox" value="carcasses">
+                  <label class="govuk-label govuk-checkboxes__label" for="waste">
+                    Show abandoned
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+
+        </div>
+      </p>
 
       <p class="govuk-body">
         <table class="govuk-table">
