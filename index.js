@@ -18,6 +18,8 @@ app.get('/home', (req, res) => res.render('home.njk'))
 
 app.get('/start-now', (req, res) => res.render('start-now.njk'))
 
+app.get('/before-you-start', (req, res) => res.render('before-you-start.njk'))
+
 app.use(express.static('static'))
 
 app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`))
