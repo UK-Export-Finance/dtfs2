@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template ">
+  <head>
+    <meta charset="utf-8" />
+    <title>DTFS2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0c0c" /> 
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="/assets/images/favicon.ico" type="image/x-icon" />
+    <link rel="mask-icon" href="/assets/images/govuk-mask-icon.svg" color="#0b0c0c"> 
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/govuk-apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/assets/images/govuk-apple-touch-icon-167x167.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/govuk-apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" href="/assets/images/govuk-apple-touch-icon.png">
+
+
+    <!--[if !IE 8]><!-->
+      <link rel="stylesheet" href="/govuk-frontend-3.5.0.min.css">
+    <!--<![endif]-->
+
+    <!--[if IE 8]>
+      <link rel="stylesheet" href="/govuk-frontend-ie8-3.5.0.min.css">
+    <![endif]-->
+
+  <!--[if !IE 8]><!-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/themes/prism.min.css" integrity="sha256-vtR0hSWRc3Tb26iuN2oZHt3KRUomwTufNIf5/4oeCyg=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/prism.min.js" integrity="sha256-Zb9yKJ/cfs+jG/zIOFL0QEuXr2CDKF7FR5YBJY3No+c=" crossorigin="anonymous"></script>
+  <!--<![endif]-->
+
+  <!--[if lt IE 9]>
+    <script src="/vendor/html5-shiv/html5shiv.js"></script>
+  <![endif]-->
+
+    <meta property="og:image" content="/assets/images/govuk-opengraph-image.png">
+
+  </head>
+
+  <body class="govuk-template__body ">
+
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+
+    {% include "partials/header.html" %}
+
+    <div class="govuk-width-container">
+
+      <div class="govuk-breadcrumbs">
+        <ol class="govuk-breadcrumbs__list">
+          <li class="govuk-breadcrumbs__list-item">
+            <a class="govuk-breadcrumbs__link" href="/">Home</a>
+          </li>
+          <li class="govuk-breadcrumbs__list-item">
+            <a class="govuk-breadcrumbs__link" href="/home.html">Requests for cover</a>
+          </li>
+        </ol>
+      </div>
+
+      <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+        {% block content %}{% endblock %}
+      </main>
+
+    </div>
+
+    {% include "partials/footer.html" %}
+
+    <script src="/govuk-frontend-3.5.0.min.js"></script>
+    <script>window.GOVUKFrontend.initAll()</script>
+
+  </body>
+</html>
