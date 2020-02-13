@@ -22,6 +22,8 @@ app.get('/before-you-start', (req, res) => res.render('before-you-start.njk'))
 
 app.get('/before-you-start/bank-deal', (req, res) => res.render('before-you-start-bank-deal.njk'))
 
+app.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk'))
+
 app.use(express.static('static'))
 
 app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`))
