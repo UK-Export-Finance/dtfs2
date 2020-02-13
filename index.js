@@ -5,6 +5,8 @@ const app = express()
 const HOST = '0.0.0.0';
 const PORT = process.env.PORT || 5000
 
+app.use(express.static('static'))
+
 nunjucks.configure('templates', {
   autoescape: true,
   express: app,
@@ -24,6 +26,6 @@ app.get('/before-you-start/bank-deal', (req, res) => res.render('before-you-star
 
 app.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk'))
 
-app.use(express.static('static'))
+app.get('/feedback', (req, res) => res.render('feedback.njk'))
 
 app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`))
