@@ -5,141 +5,293 @@
   <h1 class="govuk-heading-l">Feedback</h1>
 
 
-  <div class="govuk-form-group">
-    <label class="govuk-label" for="role">
-      What is your role?
-    </label>
-    <input class="govuk-input" id="role" name="role" type="text">
-  </div>
+  <form>
 
-  <div class="govuk-form-group">
-    <label class="govuk-label" for="organisation">
-      Which organisation do you work for?
-    </label>
-    <input class="govuk-input" id="organisation" name="organisation" type="text">
-  </div>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
 
-  <div class="govuk-form-group">
-    <label class="govuk-label" for="organisation">
-      Which organisation do you work for?
-    </label>
-    <input class="govuk-input" id="organisation" name="organisation" type="text">
-  </div>
-
-
-  <div class="govuk-form-group">
-    <fieldset class="govuk-fieldset">
-
-      <legend class="govuk-fieldset__legend govuk-fieldset__legend">
-        What was your reason for visiting the Beta service today? 
-      </legend>
-
-      <div class="govuk-radios">
-
-        <div class="govuk-radios__item">
-          <input class="govuk-radios__input" id="reason-for-visiting" name="reason for visiting" type="radio" value="automatic-inclusion-notice">
-          <label class="govuk-label govuk-radios__label" for="reason-for-visiting">
-            Submission of an automatic inclusion notice
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="role">
+            What is your role?
           </label>
+          <input class="govuk-input" id="role" name="role" type="text">
         </div>
 
-        <div class="govuk-radios__item">
-          <input class="govuk-radios__input" id="reason-for-visiting-2" name="reason for visiting" type="radio" value="manual-inclusion-application">
-          <label class="govuk-label govuk-radios__label" for="reason-for-visiting-2">
-            Submission of a manual inclusion application
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="organisation">
+            Which organisation do you work for?
           </label>
-        </div>
-
-        <div class="govuk-radios__item">
-          <input class="govuk-radios__input" id="reason-for-visiting-3" name="reason for visiting" type="radio" value="manual-inclusion-notice">
-          <label class="govuk-label govuk-radios__label" for="reason-for-visiting-3">
-            Submission of a manual inclusion notice
-          </label>
-        </div>
-
-        <div class="govuk-radios__item">
-          <input class="govuk-radios__input" id="reason-for-visiting-4" name="reason for visiting" type="radio" value="other">
-          <label class="govuk-label govuk-radios__label" for="reason-for-visiting-4">
-            Other
-          </label>
+          <input class="govuk-input" id="organisation" name="organisation" type="text">
         </div>
 
       </div>
+    </div>
 
-    </fieldset>
-  </div>
 
-  <div class="govuk-form-group">
-    <fieldset class="govuk-fieldset">
+    <div class="govuk-form-group govuk-!-margin-bottom-9">
+      <fieldset class="govuk-fieldset">
 
-      <legend class="govuk-fieldset__legend govuk-fieldset__legend">
-        Overall, were you satisfied with the Beta service?
-      </legend>
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend">
+          What was your reason for visiting the Beta service today? 
+        </legend>
 
-      <div class="govuk-radios">
+        <div class="govuk-radios">
 
-        <div class="govuk-radios__item">
-          <input class="govuk-radios__input" id="satisfied" name="satisfied" type="radio" value="automatic-inclusion-notice">
-          <label class="govuk-label govuk-radios__label" for="satisfied">
-            Very satisfied
-          </label>
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="reason-for-visiting" name="reason for visiting" type="radio" value="automatic-inclusion-notice">
+            <label class="govuk-label govuk-radios__label" for="reason-for-visiting">
+              Submission of an automatic inclusion notice
+            </label>
+          </div>
+
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="reason-for-visiting-2" name="reason for visiting" type="radio" value="manual-inclusion-application">
+            <label class="govuk-label govuk-radios__label" for="reason-for-visiting-2">
+              Submission of a manual inclusion application
+            </label>
+          </div>
+
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="reason-for-visiting-3" name="reason for visiting" type="radio" value="manual-inclusion-notice">
+            <label class="govuk-label govuk-radios__label" for="reason-for-visiting-3">
+              Submission of a manual inclusion notice
+            </label>
+          </div>
+
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="reason-for-visiting-4" name="reason for visiting" type="radio" value="other">
+            <label class="govuk-label govuk-radios__label" for="reason-for-visiting-4">
+              Other
+            </label>
+          </div>
+
         </div>
 
-        <div class="govuk-radios__item">
-          <input class="govuk-radios__input" id="satisfied-2" name="satisfied" type="radio" value="scotland">
-          <label class="govuk-label govuk-radios__label" for="satisfied-2">
-            Satisfied
-          </label>
+      </fieldset>
+    </div>
+
+
+    <div class="govuk-form-group govuk-!-margin-bottom-9">
+
+      <table class="govuk-table feedback-table">
+        <caption class="govuk-table__caption">How would you rate the Beta service?</caption>
+
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header"></th>
+            <th scope="col" class="govuk-table__header">Very good</th>
+            <th scope="col" class="govuk-table__header">Good</th>
+            <th scope="col" class="govuk-table__header">Neither good nor poor</th>
+            <th scope="col" class="govuk-table__header">Poor</th>
+            <th scope="col" class="govuk-table__header">Very poor</th>
+            <th scope="col" class="govuk-table__header">I don't know</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              a. Ease of use
+            </td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="ease-of-use" name="ease-of-use" type="radio" value="Very good" aria-label="Very good">
+                <label for="ease-of-use" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="ease-of-use-2" name="ease-of-use" type="radio" value="Good" aria-label="Good">
+                <label for="ease-of-use-2" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="ease-of-use-3" name="ease-of-use" type="radio" value="Neither good nor poor" aria-label="Neither good nor poor">
+                <label for="ease-of-use-3" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="ease-of-use-4" name="ease-of-use" type="radio" value="Poor" aria-label="Poor">
+                <label for="ease-of-use-4" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="ease-of-use-5" name="ease-of-use" type="radio" value="Very poor" aria-label="Very poor">
+                <label for="ease-of-use-5" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="ease-of-use-6" name="ease-of-use" type="radio" value="I don't know" aria-label="I don't know">
+                <label for="ease-of-use-6" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+          </tr>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">b. Information required is clearly explained</td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="clearly-explained" name="clearly-explained" type="radio" value="Very good" aria-label="Very good">
+                <label for="clearly-explained" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="clearly-explained-2" name="clearly-explained" type="radio" value="Good" aria-label="Good">
+                <label for="clearly-explained-2" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="clearly-explained-3" name="clearly-explained" type="radio" value="Neither good nor poor" aria-label="Neither good nor poor">
+                <label for="clearly-explained-3" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="clearly-explained-4" name="clearly-explained" type="radio" value="Poor" aria-label="Poor">
+                <label for="clearly-explained-4" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="clearly-explained-5" name="clearly-explained" type="radio" value="Very poor" aria-label="Very poor">
+                <label for="clearly-explained-5" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="clearly-explained-6" name="clearly-explained" type="radio" value="I don't know" aria-label="I don't know">
+                <label for="clearly-explained-6" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+          </tr>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">c. Information required is easy to understand</td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="easy-to-understand" name="easy-to-understand" type="radio" value="Very good" aria-label="Very good">
+                <label for="easy-to-understand" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="easy-to-understand-2" name="easy-to-understand" type="radio" value="Good" aria-label="Good">
+                <label for="easy-to-understand-2" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="easy-to-understand-3" name="easy-to-understand" type="radio" value="Neither good nor poor" aria-label="Neither good nor poor">
+                <label for="easy-to-understand-3" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="easy-to-understand-4" name="easy-to-understand" type="radio" value="Poor" aria-label="Poor">
+                <label for="easy-to-understand-4" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="easy-to-understand-5" name="easy-to-understand" type="radio" value="Very poor" aria-label="Very poor">
+                <label for="easy-to-understand-5" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+            <td class="govuk-table__cell">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="easy-to-understand-6" name="easy-to-understand" type="radio" value="I don't know" aria-label="I don't know">
+                <label for="easy-to-understand-6" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="govuk-form-group govuk-!-margin-bottom-9">
+      <fieldset class="govuk-fieldset">
+
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend">
+          Overall, were you satisfied with the Beta service?
+        </legend>
+
+        <div class="govuk-radios">
+
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="satisfied" name="satisfied" type="radio" value="automatic-inclusion-notice">
+            <label class="govuk-label govuk-radios__label" for="satisfied">
+              Very satisfied
+            </label>
+          </div>
+
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="satisfied-2" name="satisfied" type="radio" value="scotland">
+            <label class="govuk-label govuk-radios__label" for="satisfied-2">
+              Satisfied
+            </label>
+          </div>
+
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="satisfied-3" name="satisfied" type="radio" value="wales">
+            <label class="govuk-label govuk-radios__label" for="satisfied-3">
+              Neither satisfied not dissatisfied
+            </label>
+          </div>
+
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="satisfied-4" name="satisfied" type="radio" value="northern-ireland">
+            <label class="govuk-label govuk-radios__label" for="satisfied-4">
+              Dissatisfied
+            </label>
+          </div>
+
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="satisfied-5" name="satisfied" type="radio" value="very-dissatisfied">
+            <label class="govuk-label govuk-radios__label" for="satisfied-5">
+              Very dissatisfied
+            </label>
+          </div>
+
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="satisfied-6" name="satisfied" type="radio" value="do-not-know">
+            <label class="govuk-label govuk-radios__label" for="satisfied-6">
+              I don't know
+            </label>
+          </div>
+
         </div>
 
-        <div class="govuk-radios__item">
-          <input class="govuk-radios__input" id="satisfied-3" name="satisfied" type="radio" value="wales">
-          <label class="govuk-label govuk-radios__label" for="satisfied-3">
-            Neither satisfied not dissatisfied
+      </fieldset>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="how-can-we-improve">
+            How can we improve this service? (optional)
           </label>
+          <textarea class="govuk-textarea" id="how-can-we-improve" name="how-can-we-improve" rows="5"></textarea>
         </div>
 
-        <div class="govuk-radios__item">
-          <input class="govuk-radios__input" id="satisfied-4" name="satisfied" type="radio" value="northern-ireland">
-          <label class="govuk-label govuk-radios__label" for="satisfied-4">
-            Dissatisfied
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="email-address">
+            Help us make this service better (optional)
           </label>
+          <span id="email-address-hint" class="govuk-hint">
+            Leave your email address if you want to help with our user research.
+          </span>
+          <input class="govuk-input" id="email-address" name="email-address" type="text" aria-describedby="email-address-hint">
         </div>
-
-        <div class="govuk-radios__item">
-          <input class="govuk-radios__input" id="satisfied-5" name="satisfied" type="radio" value="very-dissatisfied">
-          <label class="govuk-label govuk-radios__label" for="satisfied-5">
-            Very dissatisfied
-          </label>
-        </div>
-
-        <div class="govuk-radios__item">
-          <input class="govuk-radios__input" id="satisfied-6" name="satisfied" type="radio" value="do-not-know">
-          <label class="govuk-label govuk-radios__label" for="satisfied-6">
-            I don't know
-          </label>
-        </div>
-
+            
       </div>
+    </div>
 
-    </fieldset>
-  </div>
+    <button class="govuk-button" data-module="govuk-button">Submit</button>
 
-  <div class="govuk-form-group">
-    <label class="govuk-label" for="how-can-we-improve">
-      How can we improve this service? (optional)
-    </label>
-    <textarea class="govuk-textarea" id="how-can-we-improve" name="how-can-we-improve" rows="5" aria-describedby="how-can-we-improve-hint"></textarea>
-  </div>
+  </form>
 
-  <div class="govuk-form-group">
-    <label class="govuk-label" for="email-address">
-      Help us make this service better (optional)
-    </label>
-    <span id="email-address-hint" class="govuk-hint">
-      Leave your email address if you want to help with our user research.
-    </span>
-    <input class="govuk-input" id="email-address" name="email-address" type="text" aria-describedby="email-address-hint">
-  </div>
-  
 {% endblock %}
