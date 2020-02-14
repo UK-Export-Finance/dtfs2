@@ -1,0 +1,120 @@
+{% extends "page.njk" %}
+
+{% block content %}
+
+  <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ supplyContractName }}</span></h1>
+
+  <div class="govuk-tabs" data-module="govuk-tabs">
+    <h2 class="govuk-tabs__title">
+      Contents
+    </h2>
+
+    <ul class="govuk-tabs__list">
+      <li class="govuk-tabs__list-item">
+        <a class="govuk-tabs__tab" href="/contract/{{ id }}/view">
+          View
+        </a>
+      </li>
+      <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+        <a class="govuk-tabs__tab" href="#comments">
+          Comments
+        </a>
+      </li>
+      <li class="govuk-tabs__list-item">
+        <a class="govuk-tabs__tab" href="/contract/{{ id }}/preview-deal-details">
+          Preview Deal Details
+        </a>
+      </li>
+    </ul>
+
+    <section class="govuk-tabs__panel" id="comments">
+      
+      <table class="govuk-table contract-table">
+
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank Supply Contract ID</th>
+              <th scope="col" class="govuk-table__header govuk-!-font-size-14">UKEF Deal ID</th>
+              <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th>
+              <th scope="col" class="govuk-table__header govuk-!-font-size-14">Previous status</th>
+              <th scope="col" class="govuk-table__header govuk-!-font-size-14">Maker</th>
+              <th scope="col" class="govuk-table__header govuk-!-font-size-14">Checker</th>
+              <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submission date</th>
+              <th scope="col" class="govuk-table__header govuk-!-font-size-14">Date of Last Action</th>
+              <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submission type</th>
+            </tr>
+          </thead>
+
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ details.bankSupplyContractID }}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ details.ukefDealId }}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ details.status }}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ details.previousStatus }}
+              </td>
+              
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ details.maker }}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ details.checker }}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ details.submissionDate }}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ details.dateOfLastAction }}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ details.submissionType }}
+              </td>
+
+            </tr>
+          </tbody>
+
+      </table>
+
+    </section>
+  </div>
+
+  <h3 class="govuk-heading-s">Maker/Checker comments:</h3>
+
+  {% if comments.length %}
+
+    <ul class="govuk-list">
+      {% for comment in comments %}
+        <li class="govuk-!-padding-3 govuk-!-margin-bottom-3 comment">
+
+          <p class="govuk-body">
+            <span class="govuk-!-font-weight-bold">{{ comment.firstName }} {{ comment.lastName }}</span>
+            {{ comment.created }}
+          </p>
+
+          <div class="govuk-body govuk-!-padding-left-3">
+            {{ comment.body | safe }}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+
+    {% else %}
+      <p class="govuk-body">No comments between Maker and Checker</p>
+  
+  {% endif %}
+
+
+{% endblock %}

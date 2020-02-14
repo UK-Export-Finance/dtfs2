@@ -1,3 +1,7 @@
+/*
+  temp CSS until we setup Sass
+*/
+
 .feedback-table th,
 .feedback-table td {
   width: 10%;
@@ -16,4 +20,12 @@
 
 .feedback-table .govuk-table__caption {
   font-weight: normal;
+}
+
+.contract-table td {
+  border-bottom: none;
+}
+
+.comment {
+  background: #F3F2F1;
 }
