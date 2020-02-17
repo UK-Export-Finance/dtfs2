@@ -29,3 +29,21 @@
 .comment {
   background: #F3F2F1;
 }
+
+.box {
+  border: 1px dashed lightgrey;
+  margin-bottom: 20px;
+}
+
+.box__header-link {
+  text-align: right;
+}
+
+.box__header-inline-message {
+  display: inline-block;
+  text-transform: uppercase;
+}
+
+.contract-container .govuk-error-summary {
+  border: 0;
+}
