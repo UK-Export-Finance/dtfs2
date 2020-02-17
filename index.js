@@ -1,5 +1,7 @@
 const express = require('express')
 const nunjucks = require('nunjucks')
+const MOCKS = require('./mocks')
+
 const app = express()
 
 const HOST = '0.0.0.0';
@@ -26,36 +28,12 @@ app.get('/before-you-start/bank-deal', (req, res) => res.render('before-you-star
 
 app.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk'))
 
+app.get('/contract/:id', (req, res) =>
+  res.render('contract-view.njk', MOCKS.CONTRACT)
+)
+
 app.get('/contract/:id/comments', (req, res) =>
-  res.render('contract-view-comments.njk', {
-    supplyContractName: 'UKEF plc',
-    id: '1234',
-    details: {
-      bankSupplyContractID: 'MIA/Msstar/BSS/DGR',
-      ukefDealId: '20010739',
-      status: 'Acknowledged by UKEF',
-      previousStatus: 'Submitted',
-      maker: 'MAKER DURGA',
-      checker: 'CHECKER DURGA',
-      submissionDate: '12/02/2020',
-      dateOfLastAction: '12/02/2020 - 13:45',
-      submissionType: 'Automatic Inclusion Notice'
-    },
-    comments: [
-      {
-        firstName: 'Durga',
-        lastName: 'Rao',
-        created: '12/02/2020 - 13:00',
-        body: 'Test comment'
-      },
-      {
-        firstName: 'Joe',
-        lastName: 'Bloggs',
-        created: '12/03/2020 - 10:00',
-        body: '<a href="https://staging.ukexportfinance.gov.uk">https://staging.ukexportfinance.gov.uk</a>'
-      }
-    ]
-  })
+  res.render('contract-view-comments.njk', MOCKS.CONTRACT)
 )
 
 app.get('/feedback', (req, res) => res.render('feedback.njk'))

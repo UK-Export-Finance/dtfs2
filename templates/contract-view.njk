@@ -1,0 +1,294 @@
+{% extends "page.njk" %}
+
+{% block content %}
+
+  <div class="contract-container">
+
+    <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ supplyContractName }}</span></h1>
+
+    <div class="govuk-tabs" data-module="govuk-tabs">
+      <h2 class="govuk-tabs__title">
+        Contents
+      </h2>
+
+      <ul class="govuk-tabs__list">
+        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+          <a class="govuk-tabs__tab" href="/contract/{{ id }}">
+            View
+          </a>
+        </li>
+        <li class="govuk-tabs__list-item">
+          <a class="govuk-tabs__tab" href="/contract/{{ id }}/comments">
+            Comments
+          </a>
+        </li>
+        <li class="govuk-tabs__list-item">
+          <a class="govuk-tabs__tab" href="/contract/{{ id }}/preview-deal-details">
+            Preview Deal Details
+          </a>
+        </li>
+      </ul>
+
+      <section class="govuk-tabs__panel" id="view">
+
+
+        <div class="govuk-grid-row govuk-!-margin-bottom-2">
+          <div class="govuk-grid-column-three-quarters">
+            &nbsp;
+          </div>
+          <div class="govuk-grid-column-one-quarter box__header-link">
+            <a href="#" class="govuk-link govuk-!-font-size-14">Clone</a>
+            <a href="#" class="govuk-link govuk-!-font-size-14 govuk-!-margin-left-2">Abandon</a>
+          </div>
+        </div>
+
+        <hr class="govuk-section-break" />
+
+        <div class="govuk-grid-row govuk-!-padding-2 govuk-!-margin-bottom-8 box">
+          <table class="govuk-table contract-table govuk-!-margin-bottom-0">
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank Supply Contract ID</th>
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14">UKEF Deal ID</th>
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th>
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Previous status</th>
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Maker</th>
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Checker</th>
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submission date</th>
+                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Date of Last Action</th>
+              </tr>
+            </thead>
+
+            <tbody class="govuk-table__body">
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell govuk-!-font-size-14">
+                  {{ details.bankSupplyContractID }}
+                </td>
+
+                <td class="govuk-table__cell govuk-!-font-size-14">
+                  {{ details.ukefDealId }}
+                </td>
+
+                <td class="govuk-table__cell govuk-!-font-size-14">
+                  {{ details.status }}
+                </td>
+
+                <td class="govuk-table__cell govuk-!-font-size-14">
+                  {{ details.previousStatus }}
+                </td>
+                
+                <td class="govuk-table__cell govuk-!-font-size-14">
+                  {{ details.maker }}
+                </td>
+
+                <td class="govuk-table__cell govuk-!-font-size-14">
+                  {{ details.checker }}
+                </td>
+
+                <td class="govuk-table__cell govuk-!-font-size-14">
+                  {{ details.submissionDate }}
+                </td>
+
+                <td class="govuk-table__cell govuk-!-font-size-14">
+                  {{ details.dateOfLastAction }}
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+
+        <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
+          <div class="box__header">
+            <div class="govuk-grid-column-three-quarters">
+              <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+                About the Supply Contract 
+                <span class="govuk-!-margin-bottom-0 govuk-!-margin-left-6 govuk-!-font-size-16 box__header-inline-message">Complete</span>
+              </h2>
+            </div>
+            <div class="govuk-grid-column-one-quarter box__header-link">
+              <a href="#" class="govuk-link">View details</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
+          <div class="box__header">
+            <div class="govuk-grid-column-three-quarters">
+              <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+                Confirm eligibility
+                <span class="govuk-error-message govuk-!-margin-bottom-0 govuk-!-margin-left-6 govuk-!-font-weight-regular govuk-!-font-size-16 box__header-inline-message">Not started</span>
+              </h2>
+            </div>
+            <div class="govuk-grid-column-one-quarter box__header-link">
+              <a href="#" class="govuk-link">View details</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
+          <div class="box__header">
+            <div class="govuk-grid-column-three-quarters">
+              <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+                Bond transactions
+                <span class="govuk-error-message govuk-!-margin-bottom-0 govuk-!-margin-left-6 govuk-!-font-weight-regular govuk-!-font-size-16 box__header-inline-message">Incomplete</span>
+              </h2>
+            </div>
+
+            <div class="govuk-grid-column-one-quarter box__header-link">
+              <a href="#" class="govuk-link">Add a Bond</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
+          <div class="box__header">
+            <div class="govuk-grid-column-three-quarters">
+              <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+                Loan transactions
+              </h2>
+            </div>
+            <div class="govuk-grid-column-one-quarter box__header-link">
+              <a href="#" class="govuk-link">Add a working capital Loan</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
+
+          <div class="govuk-grid-column-one-half">
+            <table class="govuk-table">
+              <caption class="govuk-table__caption govuk-!-font-size-24">Supply Contract summary</caption>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">Deal currency</th>
+                  <td class="govuk-table__cell">{{ summary.dealCurrency }}</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">Number of bonds</th>
+                  <td class="govuk-table__cell">{{ summary.totals.bonds }}</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">Number of loans</th>
+                  <td class="govuk-table__cell">{{ summary.totals.loans }}</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">Number of transactions</th>
+                  <td class="govuk-table__cell">{{ summary.totals.transactions }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+
+          <div class="govuk-grid-column-full">
+            <div class="govuk-error-summary govuk-!-padding-0" aria-labelledby="error-summary-title" data-module="govuk-error-summary">
+              <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                  <li>
+                    <a href="#passport-issued-error">Warning: Some of your Transaction forms are incomplete. Only the complete facilities will be processed in the financial summary data below.</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="govuk-grid-column-full">
+            <table class="govuk-table">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header govuk-!-font-size-14">&nbsp;</th>
+                  <th scope="col" class="govuk-table__header govuk-!-font-size-14">Deal currency</th>
+                  <th scope="col" class="govuk-table__header govuk-!-font-size-14">Deal in GBP</th>
+                  <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bond currency</th>
+                  <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bond in GBP</th>
+                  <th scope="col" class="govuk-table__header govuk-!-font-size-14">Loan currency</th>
+                  <th scope="col" class="govuk-table__header govuk-!-font-size-14">Loan in GBP</th>
+                </tr>
+              </thead>
+
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__cell govuk-!-font-size-14">
+                    Total value
+                  </td>
+
+                  <td class="govuk-table__cell govuk-!-font-size-14">
+                    {{ summary.dealBondsLoans.totalValue.dealCurrency }}
+                  </td>
+
+                  <td class="govuk-table__cell govuk-!-font-size-14">
+                    {{ summary.dealBondsLoans.totalValue.dealInGbp }}
+                  </td>
+
+                  <td class="govuk-table__cell govuk-!-font-size-14">
+                    {{ summary.dealBondsLoans.totalValue.bondCurrency }}
+                  </td>
+
+                  <td class="govuk-table__cell govuk-!-font-size-14">
+                    {{ summary.dealBondsLoans.totalValue.bondInGbp }}
+                  </td>
+                  
+                  <td class="govuk-table__cell govuk-!-font-size-14">
+                    {{ summary.dealBondsLoans.totalValue.loanCurrency }}
+                  </td>
+
+                  <td class="govuk-table__cell govuk-!-font-size-14">
+                    {{ summary.dealBondsLoans.totalValue.loanInGbp }}
+                  </td>
+                </tr>
+
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__cell govuk-!-font-size-14">
+                    Total UKEF exposure
+                  </td>
+
+                  <td class="govuk-table__cell govuk-!-font-size-14">
+                    {{ summary.dealBondsLoans.totalUkefExposure.dealCurrency }}
+                  </td>
+
+                  <td class="govuk-table__cell govuk-!-font-size-14">
+                    {{ summary.dealBondsLoans.totalUkefExposure.dealInGbp }}
+                  </td>
+
+                  <td class="govuk-table__cell govuk-!-font-size-14">
+                    {{ summary.dealBondsLoans.totalUkefExposure.bondCurrency }}
+                  </td>
+
+                  <td class="govuk-table__cell govuk-!-font-size-14">
+                    {{ summary.dealBondsLoans.totalUkefExposure.bondInGbp }}
+                  </td>
+                  
+                  <td class="govuk-table__cell govuk-!-font-size-14">
+                    {{ summary.dealBondsLoans.totalUkefExposure.loanCurrency }}
+                  </td>
+
+                  <td class="govuk-table__cell govuk-!-font-size-14">
+                    {{ summary.dealBondsLoans.totalUkefExposure.loanInGbp }}
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+
+        </div>
+
+        <p class="govuk-body">Please complete all form sections in order to submit your Supply Contract.</p>
+
+        <button class="govuk-button govuk-!-margin-right-1" disabled data-module="govuk-button">
+          Proceed to review
+        </button>
+
+        <button class="govuk-button govuk-button--secondary" disabled data-module="govuk-button">
+          Abandon
+        </button>
+        
+      </section>
+
+    </div>
+
+  </div>
+  
+{% endblock %}
