@@ -20,12 +20,8 @@ const MOCKS = {
       confirmEligibility: {
         submissionType: 'Automatic Inclusion Notice'
       },
-      bondTransactions: {
-        status: 'Incomplete'
-      },
-      loanTransactions: {
-        
-      },
+      bondTransactions: {},
+      loanTransactions: {},
       summary: {
         dealCurrency: 'USD',
         totals: {
@@ -85,10 +81,54 @@ const MOCKS = {
         status: 'Incomplete'
       },
       confirmEligibility: {
+        status: 'Complete',
         submissionType: 'Manual Inclusion Notice'
       },
+      bondTransactions: {
+        items: [
+          {
+            bankReferenceNumber: 'Not entered',
+            ukefFacilityID: '12345678',
+            value: 'GBP 123,456.00',
+            stage: 'Unconditional',
+            startDate: '12/02/2020',
+            endDate: '14/03/2027',
+            action: '?'
+          },
+          {
+            bankReferenceNumber: 'test',
+            ukefFacilityID: '12345678',
+            value: 'GBP 123,456.00',
+            stage: 'Unconditional',
+            startDate: '12/02/2020',
+            endDate: '14/03/2027',
+            action: '?'
+          }
+        ]
+      },
       loanTransactions: {
-
+        items: [
+          {
+            bankReferenceNumber: 'Not entered',
+            ukefFacilityID: '12345678',
+            status: 'Not started',
+            value: 'GBP 123,456.00',
+            stage: 'Unconditional',
+            startDate: '12/02/2020',
+            endDate: '14/03/2027',
+            action: '?'
+          },
+          {
+            bankReferenceNumber: 'test',
+            ukefFacilityID: '12345678',
+            status: 'Incomplete',
+            value: 'GBP 123,456.00',
+            stage: '',
+            startDate: '',
+            endDate: '',
+            action: '?'
+          }
+        ]
       },
       summary: {
         dealCurrency: 'GBP',
