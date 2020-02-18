@@ -41,6 +41,9 @@
 
 .box__header-inline-message {
   display: inline-block;
+}
+
+.box__header-inline-message--uppercase {
   text-transform: uppercase;
 }
 

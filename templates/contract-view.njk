@@ -6,7 +6,11 @@
 
   <div class="contract-container">
 
-    <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ supplyContractName }}</span></h1>
+    <h1 class="govuk-heading-l">
+      Supply Contract name:
+      <span class="govuk-body govuk-!-font-size-24">{{ supplyContractName }}</span>
+      <a class="govuk-link govuk-!-font-size-14" href="#">Edit</a>
+    </h1>
 
     <div class="govuk-tabs" data-module="govuk-tabs">
       <h2 class="govuk-tabs__title">
@@ -37,8 +41,10 @@
           <div class="box__header">
             <div class="govuk-grid-column-three-quarters">
               <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-                About the Supply Contract 
-                <span class="govuk-!-margin-bottom-0 govuk-!-margin-left-6 govuk-!-font-size-16 box__header-inline-message">Complete</span>
+                <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
+                  About the Supply Contract 
+                </span>
+                <span class="govuk-!-margin-bottom-0 govuk-!-margin-left-6 govuk-!-font-size-16 box__header-inline-message box__header-inline-message--uppercase">Complete</span>
               </h2>
             </div>
             <div class="govuk-grid-column-one-quarter box__header-link">
@@ -51,8 +57,13 @@
           <div class="box__header">
             <div class="govuk-grid-column-three-quarters">
               <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-                Confirm eligibility
-                <span class="govuk-error-message govuk-!-margin-bottom-0 govuk-!-margin-left-6 govuk-!-font-weight-regular govuk-!-font-size-16 box__header-inline-message">Not started</span>
+                <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
+                  Confirm eligibility
+                </span>
+                <span class="govuk-!-margin-bottom-0 govuk-!-margin-left-6 govuk-!-font-weight-regular govuk-!-font-size-16 box__header-inline-message">
+                  <span class="govuk-!-font-weight-bold">Submission type: </span> <br />
+                  Automatic Inclusion Notice
+                </span>
               </h2>
             </div>
             <div class="govuk-grid-column-one-quarter box__header-link">
@@ -65,8 +76,10 @@
           <div class="box__header">
             <div class="govuk-grid-column-three-quarters">
               <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-                Bond transactions
-                <span class="govuk-error-message govuk-!-margin-bottom-0 govuk-!-margin-left-6 govuk-!-font-weight-regular govuk-!-font-size-16 box__header-inline-message">Incomplete</span>
+                <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
+                  Bond transactions
+                </span>
+                <span class="govuk-error-message govuk-!-margin-bottom-0 govuk-!-margin-left-6 govuk-!-font-weight-regular govuk-!-font-size-16 box__header-inline-message box__header-inline-message--uppercase">Incomplete</span>
               </h2>
             </div>
 
@@ -80,7 +93,9 @@
           <div class="box__header">
             <div class="govuk-grid-column-three-quarters">
               <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-                Loan transactions
+                <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
+                  Loan transactions
+                </span>
               </h2>
             </div>
             <div class="govuk-grid-column-one-quarter box__header-link">
@@ -116,7 +131,7 @@
           </div>
 
           <div class="govuk-grid-column-full">
-            <div class="govuk-error-summary govuk-!-padding-0" aria-labelledby="error-summary-title" data-module="govuk-error-summary">
+            <div class="govuk-error-summary govuk-!-padding-0" data-module="govuk-error-summary">
               <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
                   <li>
