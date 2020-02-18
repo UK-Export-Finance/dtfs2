@@ -1,6 +1,7 @@
 {% extends "page.njk" %}
 {% import 'macros/contract-tabs.njk' as contractTabs %}
 {% import 'macros/contract-details.njk' as contractDetails %}
+{% import 'macros/contract-child-section.njk' as contractChildSection %}
 
 {% block content %}
 
@@ -44,7 +45,7 @@
                 <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
                   About the Supply Contract 
                 </span>
-                <span class="govuk-!-margin-bottom-0 govuk-!-margin-left-6 govuk-!-font-size-16 box__header-inline-message box__header-inline-message--uppercase">Complete</span>
+                {{ contractChildSection.status(aboutSupplyContract.status) }}
               </h2>
             </div>
             <div class="govuk-grid-column-one-quarter box__header-link">
@@ -60,10 +61,13 @@
                 <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
                   Confirm eligibility
                 </span>
-                <span class="govuk-!-margin-bottom-0 govuk-!-margin-left-6 govuk-!-font-weight-regular govuk-!-font-size-16 box__header-inline-message">
-                  <span class="govuk-!-font-weight-bold">Submission type: </span> <br />
-                  Automatic Inclusion Notice
-                </span>
+
+                {% if confirmEligibility.submissionType %}
+                  <span class="govuk-!-margin-bottom-0 govuk-!-margin-left-6 govuk-!-font-weight-regular govuk-!-font-size-16 box__header-inline-message">
+                    <span class="govuk-!-font-weight-bold">Submission type: </span> <br />
+                    {{ confirmEligibility.submissionType }}
+                  </span>
+                {% endif %}
               </h2>
             </div>
             <div class="govuk-grid-column-one-quarter box__header-link">
@@ -79,7 +83,7 @@
                 <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
                   Bond transactions
                 </span>
-                <span class="govuk-error-message govuk-!-margin-bottom-0 govuk-!-margin-left-6 govuk-!-font-weight-regular govuk-!-font-size-16 box__header-inline-message box__header-inline-message--uppercase">Incomplete</span>
+                {{ contractChildSection.status(bondTransactions.status) }}
               </h2>
             </div>
 
@@ -96,6 +100,9 @@
                 <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
                   Loan transactions
                 </span>
+
+                {{ contractChildSection.status(loanTransactions.status) }}
+
               </h2>
             </div>
             <div class="govuk-grid-column-one-quarter box__header-link">
