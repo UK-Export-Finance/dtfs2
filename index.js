@@ -16,6 +16,9 @@ nunjucks.configure('templates', {
   watch: true
 });
 
+const getMockContractById = id =>
+  MOCKS.CONTRACTS.find(c => c.id === id) || MOCKS.CONTRACTS[0];
+
 app.get('/', (req, res) => res.redirect('/home'))
 
 app.get('/home', (req, res) => res.render('home.njk'))
@@ -29,11 +32,11 @@ app.get('/before-you-start/bank-deal', (req, res) => res.render('before-you-star
 app.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk'))
 
 app.get('/contract/:id', (req, res) =>
-  res.render('contract-view.njk', MOCKS.CONTRACT)
+  res.render('contract-view.njk', getMockContractById(req.params.id))
 )
 
-app.get('/contract/:id/comments', (req, res) =>
-  res.render('contract-view-comments.njk', MOCKS.CONTRACT)
+app.get('/contract/:id/comments', (req, res) => 
+  res.render('contract-view-comments.njk', getMockContractById(req.params.id))
 )
 
 app.get('/feedback', (req, res) => res.render('feedback.njk'))
