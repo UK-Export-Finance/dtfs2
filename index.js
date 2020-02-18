@@ -41,4 +41,6 @@ app.get('/contract/:id/comments', (req, res) =>
 
 app.get('/feedback', (req, res) => res.render('feedback.njk'))
 
+app.get('/contact-us', (req, res) => res.render('contact.njk'))
+
 app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`))
