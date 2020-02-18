@@ -1,0 +1,55 @@
+{% macro table(details) %}
+
+  <table class="govuk-table contract-table govuk-!-margin-bottom-0">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank Supply Contract ID</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">UKEF Deal ID</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Previous status</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Maker</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Checker</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submission date</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Date of Last Action</th>
+      </tr>
+    </thead>
+
+    <tbody class="govuk-table__body">
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ details.bankSupplyContractID }}
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ details.ukefDealId }}
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ details.status }}
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ details.previousStatus }}
+        </td>
+        
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ details.maker }}
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ details.checker }}
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ details.submissionDate }}
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ details.dateOfLastAction }}
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+
+{% endmacro %}

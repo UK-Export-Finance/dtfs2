@@ -1,0 +1,62 @@
+{% macro nav(selected, id) %}
+
+  <ul class="govuk-tabs__list">
+    <li
+      {% if selected === 'view' %}
+        class="govuk-tabs__list-item govuk-tabs__list-item--selected"
+      {% else %}
+        class="govuk-tabs__list-item"
+      {% endif %}
+    >
+      <a
+        class="govuk-tabs__tab"
+        {% if selected === 'view' %}
+          href="#"
+        {% else %}
+          href="/contract/{{ id }}"
+        {% endif %}
+      >
+        View
+      </a>
+    </li>
+
+    <li
+      {% if selected === 'comments' %}
+        class="govuk-tabs__list-item govuk-tabs__list-item--selected"
+      {% else %}
+        class="govuk-tabs__list-item"
+      {% endif %}
+    >
+      <a
+        class="govuk-tabs__tab"
+        {% if selected === 'comments' %}
+          href="#"
+        {% else %}
+          href="/contract/{{ id }}/comments"
+        {% endif %}
+      >
+        Comments
+      </a>
+    </li>
+
+    <li
+      {% if selected === 'preview-deal-details' %}
+        class="govuk-tabs__list-item govuk-tabs__list-item--selected"
+      {% else %}
+        class="govuk-tabs__list-item"
+      {% endif %}
+    >
+      <a
+        class="govuk-tabs__tab"
+        {% if selected === 'preview-deal-details' %}
+          href="#"
+        {% else %}
+          href="/contract/{{ id }}/preview-deal-details"
+        {% endif %}
+      >
+        Preview Deal Details
+      </a>
+    </li>
+  </ul>
+
+{% endmacro %}
