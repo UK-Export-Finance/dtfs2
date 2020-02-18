@@ -1,4 +1,6 @@
 {% extends "page.njk" %}
+{% import 'macros/contract-details.njk' as contractDetails %}
+{% import 'macros/contract-tabs.njk' as contractTabs %}
 
 {% block content %}
 
@@ -11,86 +13,12 @@
         Contents
       </h2>
 
-      <ul class="govuk-tabs__list">
-        <li class="govuk-tabs__list-item">
-          <a class="govuk-tabs__tab" href="/contract/{{ id }}">
-            View
-          </a>
-        </li>
-        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
-          <a class="govuk-tabs__tab" href="#">
-            Comments
-          </a>
-        </li>
-        <li class="govuk-tabs__list-item">
-          <a class="govuk-tabs__tab" href="/contract/{{ id }}/preview-deal-details">
-            Preview Deal Details
-          </a>
-        </li>
-      </ul>
+      {{ contractTabs.nav(selected = 'comments', id = id) }}
 
       <section class="govuk-tabs__panel" id="comments">
-        
-        <table class="govuk-table contract-table">
-
-          <thead class="govuk-table__head">
-              <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank Supply Contract ID</th>
-                <th scope="col" class="govuk-table__header govuk-!-font-size-14">UKEF Deal ID</th>
-                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th>
-                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Previous status</th>
-                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Maker</th>
-                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Checker</th>
-                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submission date</th>
-                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Date of Last Action</th>
-                <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submission type</th>
-              </tr>
-            </thead>
-
-            <tbody class="govuk-table__body">
-              <tr class="govuk-table__row">
-                <td class="govuk-table__cell govuk-!-font-size-14">
-                  {{ details.bankSupplyContractID }}
-                </td>
-
-                <td class="govuk-table__cell govuk-!-font-size-14">
-                  {{ details.ukefDealId }}
-                </td>
-
-                <td class="govuk-table__cell govuk-!-font-size-14">
-                  {{ details.status }}
-                </td>
-
-                <td class="govuk-table__cell govuk-!-font-size-14">
-                  {{ details.previousStatus }}
-                </td>
-                
-                <td class="govuk-table__cell govuk-!-font-size-14">
-                  {{ details.maker }}
-                </td>
-
-                <td class="govuk-table__cell govuk-!-font-size-14">
-                  {{ details.checker }}
-                </td>
-
-                <td class="govuk-table__cell govuk-!-font-size-14">
-                  {{ details.submissionDate }}
-                </td>
-
-                <td class="govuk-table__cell govuk-!-font-size-14">
-                  {{ details.dateOfLastAction }}
-                </td>
-
-                <td class="govuk-table__cell govuk-!-font-size-14">
-                  {{ details.submissionType }}
-                </td>
-
-              </tr>
-            </tbody>
-
-        </table>
-
+        {{ contractDetails.table(details) }}
       </section>
+      
     </div>
 
     <h3 class="govuk-heading-s">Maker/Checker comments:</h3>
