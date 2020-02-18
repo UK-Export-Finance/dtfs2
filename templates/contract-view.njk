@@ -1,7 +1,8 @@
 {% extends "page.njk" %}
 {% import 'macros/contract-tabs.njk' as contractTabs %}
 {% import 'macros/contract-details.njk' as contractDetails %}
-{% import 'macros/contract-child-section.njk' as contractChildSection %}
+{% import 'macros/status.njk' as status %}
+{% import 'macros/transactions-table.njk' as transactionsTable %}
 
 {% block content %}
 
@@ -45,7 +46,9 @@
                 <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
                   About the Supply Contract 
                 </span>
-                {{ contractChildSection.status(aboutSupplyContract.status) }}
+                <span class="govuk-!-margin-left-6">
+                  {{ status.statusText(aboutSupplyContract.status) }}
+                </span>
               </h2>
             </div>
             <div class="govuk-grid-column-one-quarter box__header-link">
@@ -58,6 +61,13 @@
           <div class="box__header">
             <div class="govuk-grid-column-three-quarters">
               <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+
+                {% if confirmEligibility.status %}
+                  <span class="govuk-!-margin-left-6 box__header-inline-message">
+                    {{ status.statusText(confirmEligibility.status) }}
+                  </span>
+                {% endif %}
+
                 <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
                   Confirm eligibility
                 </span>
@@ -68,6 +78,7 @@
                     {{ confirmEligibility.submissionType }}
                   </span>
                 {% endif %}
+
               </h2>
             </div>
             <div class="govuk-grid-column-one-quarter box__header-link">
@@ -83,13 +94,22 @@
                 <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
                   Bond transactions
                 </span>
-                {{ contractChildSection.status(bondTransactions.status) }}
+                <span class="govuk-!-margin-left-6">
+                  {{ status.statusText(bondTransactions.status) }}
+                </span>
               </h2>
             </div>
 
             <div class="govuk-grid-column-one-quarter box__header-link">
               <a href="#" class="govuk-link">Add a Bond</a>
             </div>
+
+            {% if bondTransactions.items %}
+              <div class="govuk-grid-column-full">
+                {{ transactionsTable.table(bondTransactions.items) }}
+              </div>
+            {% endif %}
+
           </div>
         </div>
 
@@ -101,13 +121,23 @@
                   Loan transactions
                 </span>
 
-                {{ contractChildSection.status(loanTransactions.status) }}
+                <span class="govuk-!-margin-left-6">
+                  {{ status.statusText(loanTransactions.status) }}
+                </span>
 
               </h2>
             </div>
+
             <div class="govuk-grid-column-one-quarter box__header-link">
               <a href="#" class="govuk-link">Add a working capital Loan</a>
             </div>
+
+            {% if loanTransactions.items %}
+              <div class="govuk-grid-column-full">
+                {{ transactionsTable.table(loanTransactions.items) }}
+              </div>
+            {% endif %}
+
           </div>
         </div>
 

@@ -1,0 +1,13 @@
+{% macro statusText(status) %}
+  {% if status %}
+    <span
+      {% if status === 'Incomplete' or status === 'Not started' %}
+        class="govuk-!-margin-bottom-0 govuk-!-font-size-16 box__header-inline-message box__header-inline-message--uppercase govuk-error-message govuk-!-font-weight-regular"
+      {% else %}
+        class="govuk-!-margin-bottom-0 govuk-!-font-size-16 box__header-inline-message box__header-inline-message--uppercase"
+      {% endif %}
+    >
+      {{ status }}
+    </span>
+  {% endif %}
+{% endmacro %}

@@ -1,0 +1,61 @@
+{% import 'macros/status.njk' as status %}
+
+{% macro table(items) %}
+
+  <table class="govuk-table contract-table govuk-!-margin-bottom-0">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank reference number</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">UKEF facility ID</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Value</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Stage</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Start date</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">End date</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Action</th>
+      </tr>
+    </thead>
+
+    <tbody class="govuk-table__body">
+
+      {% for item in items %}
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell govuk-!-font-size-14">
+            <a href="#" class="govuk-link">{{ item.bankReferenceNumber }}</a>
+          </td>
+
+          <td class="govuk-table__cell govuk-!-font-size-14">
+            {{ item.ukefFacilityID }}
+          </td>
+
+          <td class="govuk-table__cell govuk-!-font-size-14 contract-table--status-cell">
+            {{ status.statusText(item.status) }}
+          </td>
+
+          <td class="govuk-table__cell govuk-!-font-size-14">
+            {{ item.value }}
+          </td>
+          
+          <td class="govuk-table__cell govuk-!-font-size-14">
+            {{ item.stage }}
+          </td>
+
+          <td class="govuk-table__cell govuk-!-font-size-14">
+            {{ item.startDate }}
+          </td>
+
+          <td class="govuk-table__cell govuk-!-font-size-14">
+            {{ item.endDate }}
+          </td>
+
+          <td class="govuk-table__cell govuk-!-font-size-14">
+            {{ item.action }}
+          </td>
+        </tr>
+
+      {% endfor %}
+    </tbody>
+
+  </table>
+
+{% endmacro %}
