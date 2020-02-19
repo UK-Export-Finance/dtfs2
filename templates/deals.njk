@@ -1,5 +1,6 @@
 {% extends "page.njk" %}
 {% import 'macros/dashboard-tabs.njk' as dashboardTabs %}
+{% import 'macros/date-range.njk' as dateRange %}
 
 {% block content %}
 
@@ -22,7 +23,7 @@
                 Show me
               </label>
 
-              <select class="govuk-select" id="filterBySubmissionUser" name="filterBySubmissionUser">
+              <select class="govuk-select govuk-!-width-full" id="filterBySubmissionUser" name="filterBySubmissionUser">
                 <option value="all" selected>Any</option>
                 <option value="createdByMe">Submissions created by me</option>
                 <option value="createdByColleagues">Submissions created by my colleagues</option>
@@ -36,7 +37,7 @@
                 Submission type
               </label>
 
-              <select class="govuk-select" id="filterBySubmissionType" name="filterBySubmissionType">
+              <select class="govuk-select govuk-!-width-full" id="filterBySubmissionType" name="filterBySubmissionType">
                 <option value="all" selected>Any</option>
                 <option value="manualInclusionApplication">Manual Inclusion Application</option>
                 <option value="automaticInclusionNotice">Automatic Inclusion Notice</option>
@@ -89,86 +90,12 @@
 
           </div>
 
-          <div class="govuk-grid-row">
-
-            <div class="govuk-grid-column-one-third">
-              
-              <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset" role="group">
-                  <legend class="govuk-fieldset__legend">Select created date between</legend>
-
-                  <div class="govuk-date-input" id="created-from">
-                    <div class="govuk-date-input__item">
-                      <div class="govuk-form-group">
-                        <label class="govuk-label govuk-date-input__label" for="created-from-day">
-                          Day
-                        </label>
-                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="created-from-day" name="created-from-day" type="text" pattern="[0-9]*" inputmode="numeric">
-                      </div>
-                    </div>
-                    <div class="govuk-date-input__item">
-                      <div class="govuk-form-group">
-                        <label class="govuk-label govuk-date-input__label" for="created-from-month">
-                          Month
-                        </label>
-                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="created-from-month" name="created-from-month" type="text" pattern="[0-9]*" inputmode="numeric">
-                      </div>
-                    </div>
-                    <div class="govuk-date-input__item">
-                      <div class="govuk-form-group">
-                        <label class="govuk-label govuk-date-input__label" for="created-from-year">
-                          Year
-                        </label>
-                        <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="created-from-year" name="created-from-year" type="text" pattern="[0-9]*" inputmode="numeric">
-                      </div>
-                    </div>
-                  </div>
-                </fieldset>
-              </div>
-
-            </div>
-
-            <div class="govuk-grid-column-one-third">
-              <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset" role="group">
-                  <legend class="govuk-fieldset__legend">And</legend>
-
-                  <div class="govuk-date-input" id="created-to">
-                    <div class="govuk-date-input__item">
-                      <div class="govuk-form-group">
-                        <label class="govuk-label govuk-date-input__label" for="created-to-day">
-                          Day
-                        </label>
-                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="created-to-day" name="created-to-day" type="text" pattern="[0-9]*" inputmode="numeric">
-                      </div>
-                    </div>
-                    <div class="govuk-date-input__item">
-                      <div class="govuk-form-group">
-                        <label class="govuk-label govuk-date-input__label" for="created-to-month">
-                          Month
-                        </label>
-                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="created-to-month" name="created-to-month" type="text" pattern="[0-9]*" inputmode="numeric">
-                      </div>
-                    </div>
-                    <div class="govuk-date-input__item">
-                      <div class="govuk-form-group">
-                        <label class="govuk-label govuk-date-input__label" for="created-to-year">
-                          Year
-                        </label>
-                        <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="created-to-year" name="created-to-year" type="text" pattern="[0-9]*" inputmode="numeric">
-                      </div>
-                    </div>
-                  </div>
-                </fieldset>
-              </div>
-            </div>
-
-          </div>
+          {{ dateRange.inputs(fromLegend = 'Select created date between', toLegend = 'And' ) }}
 
           <div class="govuk-grid-row">
 
             <div class="govuk-grid-column-one-third">
-              <div class="govuk-form-group">
+              <div class="govuk-form-group govuk-!-margin-top-4 govuk-!-margin-bottom-0">
                 <label class="govuk-label" for="supplierName">
                   Supplier name
                 </label>
@@ -181,7 +108,7 @@
         </details>
 
         <button class="govuk-button" data-module="govuk-button">
-          Filter
+          Apply filters
         </button>
 
       </form>
@@ -232,13 +159,11 @@
               </td>
 
             </tr>
-
           {% endfor %}
+
         </tbody>
 
       </table>
-
-      
 
     </section>
 

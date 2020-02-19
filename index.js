@@ -32,6 +32,9 @@ app.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk'))
 app.get('/dashboard', (req, res) =>
   res.render('deals.njk', { contracts: MOCKS.CONTRACTS }))
 
+app.get('/dashboard/transactions', (req, res) =>
+  res.render('transactions.njk', { transactions: MOCKS.TRANSACTIONS }))
+
 app.get('/contract/:id', (req, res) =>
   res.render('contract-view.njk', getMockContractById(req.params.id))
 )

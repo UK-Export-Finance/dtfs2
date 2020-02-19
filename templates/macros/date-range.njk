@@ -1,0 +1,79 @@
+{% macro inputs(fromLegend, toLegend) %}
+
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-one-third">
+      
+      <div class="govuk-form-group govuk-!-margin-bottom-0">
+        <fieldset class="govuk-fieldset" role="group">
+          <legend class="govuk-fieldset__legend">{{ fromLegend }}</legend>
+
+          <div class="govuk-date-input" id="created-from">
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-date-input__label" for="created-from-day">
+                  Day
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="created-from-day" name="created-from-day" type="text" pattern="[0-9]*" inputmode="numeric">
+              </div>
+            </div>
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-date-input__label" for="created-from-month">
+                  Month
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="created-from-month" name="created-from-month" type="text" pattern="[0-9]*" inputmode="numeric">
+              </div>
+            </div>
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-date-input__label" for="created-from-year">
+                  Year
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="created-from-year" name="created-from-year" type="text" pattern="[0-9]*" inputmode="numeric">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-form-group govuk-!-margin-bottom-0">
+        <fieldset class="govuk-fieldset" role="group">
+          <legend class="govuk-fieldset__legend">{{ toLegend }}</legend>
+
+          <div class="govuk-date-input" id="created-to">
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-date-input__label" for="created-to-day">
+                  Day
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="created-to-day" name="created-to-day" type="text" pattern="[0-9]*" inputmode="numeric">
+              </div>
+            </div>
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-date-input__label" for="created-to-month">
+                  Month
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="created-to-month" name="created-to-month" type="text" pattern="[0-9]*" inputmode="numeric">
+              </div>
+            </div>
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-date-input__label" for="created-to-year">
+                  Year
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="created-to-year" name="created-to-year" type="text" pattern="[0-9]*" inputmode="numeric">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+
+  </div>
+
+{% endmacro %}
