@@ -19,9 +19,7 @@ nunjucks.configure('templates', {
 const getMockContractById = id =>
   MOCKS.CONTRACTS.find(c => c.id === id) || MOCKS.CONTRACTS[0];
 
-app.get('/', (req, res) => res.redirect('/home'))
-
-app.get('/home', (req, res) => res.render('home.njk'))
+app.get('/', (req, res) => res.render('login.njk'))
 
 app.get('/start-now', (req, res) => res.render('start-now.njk'))
 
