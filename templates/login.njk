@@ -1,0 +1,53 @@
+{% extends "page.njk" %}
+
+{% block content %}
+
+  <h1 class="govuk-heading-l">Log in</h1>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+      <form>
+
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="email">
+            Email
+          </label>
+          <input class="govuk-input" id="email" name="email" type="text">
+        </div>
+
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="password">
+            Password
+          </label>
+          <input class="govuk-input" id="password" name="password" type="password">
+        </div>
+
+
+        <button class="govuk-button" data-module="govuk-button">
+          Log in
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <p class="govuk-body govuk-!-margin-bottom-6"><a class="govuk-link" href="/user/password">Forgot your password?</a></p>
+
+  <h2 class="govuk-heading-m">Having trouble with this page?</h2>
+
+  <h3 class="govuk-heading-s">Telephone</h3>
+
+  <p class="govuk-body">If you have a unique reference number, have it with you when you call.</p>
+
+  <ul class="govuk-list">
+    <li>Telephone: 020 7271 8010</li>
+  </ul>
+
+  <h2 class="govuk-heading-s">Email</h2>
+
+  <ul class="govuk-list">
+    <li><a class="govuk-link" href="mailto:DigitalService.TradeFinance@ukexportfinance.gov.uk">DigitalService.TradeFinance@ukexportfinance.gov.uk</a></li>
+    <li>We aim to respond within 2 working days</li>
+  </ul>
+
+{% endblock %}
