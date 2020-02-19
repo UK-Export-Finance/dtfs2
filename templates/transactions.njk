@@ -1,0 +1,150 @@
+{% extends "page.njk" %}
+{% import 'macros/dashboard-tabs.njk' as dashboardTabs %}
+{% import 'macros/date-range.njk' as dateRange %}
+
+{% block content %}
+
+  <h1 class="govuk-heading-l">Transactions</h1>
+
+  <div class="govuk-tabs" data-module="govuk-tabs">
+    <h2 class="govuk-tabs__title">Contents</h2>
+
+    {{ dashboardTabs.nav(selected = 'transactions', id = id ) }}
+
+    <section class="govuk-tabs__panel" id="transactions">
+
+      <form>
+
+        <div class="govuk-grid-row">
+
+          <div class="govuk-grid-column-one-third">
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="filterByTransactionStage">
+                Transaction stage
+              </label>
+
+              <select class="govuk-select govuk-!-width-full" id="filterByTransactionStage" name="filterByTransactionStage">
+                <option value="all" selected>Any</option>
+                <option value="conditional">Unissued/Conditional</option>
+                <option value="unconditional">Issued/Unconditional</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="govuk-grid-column-one-third">
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="filterByTransactionType">
+                Transaction type
+              </label>
+
+              <select class="govuk-select govuk-!-width-full" id="filterByTransactionType" name="filterByTransactionType">
+                <option value="all" selected>Any</option>
+                <option value="bond">Bond</option>
+                <option value="loan">Loan</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+        <details class="govuk-details" data-module="govuk-details">
+          <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+              Show filters
+            </span>
+          </summary>
+
+
+          <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-one-third">
+              <div class="govuk-form-group">
+                <label class="govuk-label" for="bankFacilityID">
+                  Bank Facility ID
+                </label>
+                <input class="govuk-input" id="bankFacilityID" name="bankFacilityID" type="text">
+              </div>
+            </div>
+
+            <div class="govuk-grid-column-one-third">
+              <div class="govuk-form-group">
+                <label class="govuk-label" for="uKefFacilityID">
+                  UKEF Facility ID
+                </label>
+                <input class="govuk-input" id="uKefFacilityID" name="uKefFacilityID" type="text">
+              </div>
+            </div>
+
+          </div>
+
+          {{ dateRange.inputs(fromLegend = 'Creation date', toLegend = 'And' ) }}
+         
+        </details>
+
+        <button class="govuk-button" data-module="govuk-button">
+          Apply filters
+        </button>
+
+      </form>
+
+      <table class="govuk-table govuk-!-margin-bottom-0">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank Facility ID</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">UKEF Facility ID</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Type</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Value</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Stage</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Issued Date</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Maker</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Checker</th>
+          </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+
+          {% for transaction in transactions %}
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                <a href="#" class="govuk-link">{{ transaction.bankFacilityId }}</a>
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ transaction.ukefFacilityId }}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ transaction.type }}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ transaction.value }}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ transaction.stage }}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ transaction.issuedDate }}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ transaction.maker }}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ transaction.checker }}
+              </td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+
+      </table>
+
+    </section>
+
+  </div>
+  
+{% endblock %}
