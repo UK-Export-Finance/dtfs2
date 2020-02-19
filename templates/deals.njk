@@ -1,0 +1,247 @@
+{% extends "page.njk" %}
+{% import 'macros/dashboard-tabs.njk' as dashboardTabs %}
+
+{% block content %}
+
+  <h1 class="govuk-heading-l">Deals</h1>
+
+  <div class="govuk-tabs" data-module="govuk-tabs">
+    <h2 class="govuk-tabs__title">Contents</h2>
+
+    {{ dashboardTabs.nav(selected = 'deals', id = id ) }}
+
+    <section class="govuk-tabs__panel" id="deals">
+
+      <form>
+
+        <div class="govuk-grid-row">
+
+          <div class="govuk-grid-column-one-third">
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="filterBySubmissionUser">
+                Show me
+              </label>
+
+              <select class="govuk-select" id="filterBySubmissionUser" name="filterBySubmissionUser">
+                <option value="all" selected>Any</option>
+                <option value="createdByMe">Submissions created by me</option>
+                <option value="createdByColleagues">Submissions created by my colleagues</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="govuk-grid-column-one-third">
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="filterBySubmissionType">
+                Submission type
+              </label>
+
+              <select class="govuk-select" id="filterBySubmissionType" name="filterBySubmissionType">
+                <option value="all" selected>Any</option>
+                <option value="manualInclusionApplication">Manual Inclusion Application</option>
+                <option value="automaticInclusionNotice">Automatic Inclusion Notice</option>
+                <option value="manualInclusionNotice">Manual Inclusion Notice</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+        <details class="govuk-details" data-module="govuk-details">
+          <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+              Show filters
+            </span>
+          </summary>
+
+
+          <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-one-third">
+              <div class="govuk-form-group">
+                <label class="govuk-label" for="filterByStatus">
+                  Status
+                </label>
+
+                <select class="govuk-select" id="filterByStatus" name="filterByStatus">
+                  <option value="all" selected>Any</option>
+                  <option value="draft">Draft</option>
+                  <option value="readyForApproval">Ready for Checker's approval</option>
+                  <option value="inputRequired">Further Maker's input required</option>
+                  <option value="abandoned">Abandoned Deal</option>
+                  <option value="submitted">Submitted</option>
+                  <option value="submissionAcknowledged">Acknowledged by UKEF</option>
+                  <option value="approved">Accepted by UKEF (without conditions)</option>
+                  <option value="approvedWithConditions">Accepted by UKEF (with conditions)</option>
+                  <option value="refused">Rejected by UKEF</option></select>
+                </select>
+              </div>
+            </div>
+
+            <div class="govuk-grid-column-one-third">
+              <div class="govuk-form-group">
+                <label class="govuk-label" for="supplyContractID">
+                  Supply contract ID
+                </label>
+                <input class="govuk-input" id="supplyContractID" name="supplyContractID" type="text">
+              </div>
+            </div>
+
+          </div>
+
+          <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-one-third">
+              
+              <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" role="group">
+                  <legend class="govuk-fieldset__legend">Select created date between</legend>
+
+                  <div class="govuk-date-input" id="created-from">
+                    <div class="govuk-date-input__item">
+                      <div class="govuk-form-group">
+                        <label class="govuk-label govuk-date-input__label" for="created-from-day">
+                          Day
+                        </label>
+                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="created-from-day" name="created-from-day" type="text" pattern="[0-9]*" inputmode="numeric">
+                      </div>
+                    </div>
+                    <div class="govuk-date-input__item">
+                      <div class="govuk-form-group">
+                        <label class="govuk-label govuk-date-input__label" for="created-from-month">
+                          Month
+                        </label>
+                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="created-from-month" name="created-from-month" type="text" pattern="[0-9]*" inputmode="numeric">
+                      </div>
+                    </div>
+                    <div class="govuk-date-input__item">
+                      <div class="govuk-form-group">
+                        <label class="govuk-label govuk-date-input__label" for="created-from-year">
+                          Year
+                        </label>
+                        <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="created-from-year" name="created-from-year" type="text" pattern="[0-9]*" inputmode="numeric">
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+
+            </div>
+
+            <div class="govuk-grid-column-one-third">
+              <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" role="group">
+                  <legend class="govuk-fieldset__legend">And</legend>
+
+                  <div class="govuk-date-input" id="created-to">
+                    <div class="govuk-date-input__item">
+                      <div class="govuk-form-group">
+                        <label class="govuk-label govuk-date-input__label" for="created-to-day">
+                          Day
+                        </label>
+                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="created-to-day" name="created-to-day" type="text" pattern="[0-9]*" inputmode="numeric">
+                      </div>
+                    </div>
+                    <div class="govuk-date-input__item">
+                      <div class="govuk-form-group">
+                        <label class="govuk-label govuk-date-input__label" for="created-to-month">
+                          Month
+                        </label>
+                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="created-to-month" name="created-to-month" type="text" pattern="[0-9]*" inputmode="numeric">
+                      </div>
+                    </div>
+                    <div class="govuk-date-input__item">
+                      <div class="govuk-form-group">
+                        <label class="govuk-label govuk-date-input__label" for="created-to-year">
+                          Year
+                        </label>
+                        <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="created-to-year" name="created-to-year" type="text" pattern="[0-9]*" inputmode="numeric">
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-one-third">
+              <div class="govuk-form-group">
+                <label class="govuk-label" for="supplierName">
+                  Supplier name
+                </label>
+                <input class="govuk-input" id="supplierName" name="supplierName" type="text">
+              </div>
+            </div>
+
+          </div>
+         
+        </details>
+
+        <button class="govuk-button" data-module="govuk-button">
+          Filter
+        </button>
+
+      </form>
+
+      <table class="govuk-table govuk-!-margin-bottom-0">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Supply Contract ID</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">UKEF Deal ID</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submission type</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Maker</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Checker</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Updated</th>
+          </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+
+          {% for contract in contracts %}
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                <a href="#" class="govuk-link">{{ contract.details.bankSupplyContractID }}</a>
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ contract.details.ukefDealId }}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ contract.details.status }}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ contract.details.submissionType }}
+              </td>
+              
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ contract.details.maker }}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ contract.details.checker }}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ contract.details.dateOfLastAction }}
+              </td>
+
+            </tr>
+
+          {% endfor %}
+        </tbody>
+
+      </table>
+
+      
+
+    </section>
+
+  </div>
+  
+{% endblock %}
