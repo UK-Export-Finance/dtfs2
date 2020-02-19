@@ -1,0 +1,44 @@
+{% macro nav(selected, id) %}
+
+  <ul class="govuk-tabs__list">
+    <li
+      {% if selected === 'deals' %}
+        class="govuk-tabs__list-item govuk-tabs__list-item--selected"
+      {% else %}
+        class="govuk-tabs__list-item"
+      {% endif %}
+    >
+      <a
+        class="govuk-tabs__tab"
+        {% if selected === 'deals' %}
+          href="#"
+        {% else %}
+          href="/dashboard"
+        {% endif %}
+      >
+        Deals
+      </a>
+    </li>
+
+    <li
+      {% if selected === 'transactions' %}
+        class="govuk-tabs__list-item govuk-tabs__list-item--selected"
+      {% else %}
+        class="govuk-tabs__list-item"
+      {% endif %}
+    >
+      <a
+        class="govuk-tabs__tab"
+        {% if selected === 'transactions' %}
+          href="#"
+        {% else %}
+          href="/dashboard/transactions"
+        {% endif %}
+      >
+        Transactions
+      </a>
+    </li>
+
+  </ul>
+
+{% endmacro %}
