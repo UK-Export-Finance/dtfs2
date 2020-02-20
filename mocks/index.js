@@ -169,8 +169,56 @@ const MOCKS = {
           created: '16/02/2020 - 09:43',
           body: 'Please see: <a href="https://staging.ukexportfinance.gov.uk">https://staging.ukexportfinance.gov.uk</a>'
         }
-      ]
-    }
+      ],
+      submissionDetails: {
+        supplierType: 'Exporter',
+        supplierCompaniesHouseRegistrationNumber: '1234',
+        supplierName: 'TEST',
+        supplierAddress: 'Test <br/> PO1 3AX <br/>GBR',
+        suppliersCorrespondenceAddressDifferent: false,
+        industrySector: '1234',
+        industryClass: '56789',
+        smeType: 'Mico',
+        supplyContractDescription: 'Test',
+        legallyDistinct: false,
+        buyer: {
+          name: 'TESTING',
+          country: 'United Kingdom',
+          goodsServicesDestination: 'France' 
+        },
+        supplyContractFinancials: {
+          value: '123.00',
+          currency: 'USD - US Dollars',
+          conversionRateToGBP: '0.8',
+          conversionDate: '01/02/2020'
+        },
+        bond: {
+          issuer: 'test',
+          type: 'Advance payment guarantee',
+          stage: 'Issued',
+          cover: {
+            requestedStartDate: '13/02/2020',
+            endDate: '01/01/2023'
+          },
+          uniqueIdentificationNumber: 'TEST',
+          beneficiary: 'TEST',
+          financial: {
+            value: '1.00',
+            transactionCurrencySameAsSupplyContractCurrency: true,
+            riskMarginFee: '3%',
+            coveredPercentage: '50%',
+            minimumRiskMarginFee: '0.00',
+            guaranteeFeePayableByBank: '2.7000%',
+            uKefExposure: '0.50'
+          },
+          fee: {
+            type: 'In advance',
+            frequency: 'Quarterly',
+            dayCountBasis: '365'
+          }
+        }
+      }
+    },
   ],
   TRANSACTIONS: [
     {

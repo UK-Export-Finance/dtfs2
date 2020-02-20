@@ -40,7 +40,7 @@
     </li>
 
     <li
-      {% if selected === 'preview-deal-details' %}
+      {% if selected === 'submission-details' %}
         class="govuk-tabs__list-item govuk-tabs__list-item--selected"
       {% else %}
         class="govuk-tabs__list-item"
@@ -48,10 +48,10 @@
     >
       <a
         class="govuk-tabs__tab"
-        {% if selected === 'preview-deal-details' %}
+        {% if selected === 'submission-details' %}
           href="#"
         {% else %}
-          href="/contract/{{ id }}/preview-deal-details"
+          href="/contract/{{ id }}/submission-details"
         {% endif %}
       >
         Preview Deal Details
