@@ -1,0 +1,395 @@
+{% extends "page.njk" %}
+{% import 'macros/contract-details.njk' as contractDetails %}
+{% import 'macros/contract-tabs.njk' as contractTabs %}
+
+{% block content %}
+
+  <div class="contract-container">
+
+    <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ supplyContractName }}</span></h1>
+
+    <div class="govuk-tabs" data-module="govuk-tabs">
+      <h2 class="govuk-tabs__title">
+        Contents
+      </h2>
+
+      {{ contractTabs.nav(selected = 'submission-details', id = id) }}
+
+      <section class="govuk-tabs__panel" id="submission-details">
+        {{ contractDetails.table(details) }}
+
+        <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8">
+
+        <h3 class="govuk-heading-l">General deal information</h3>
+
+        <h4 class="govuk-heading-m">Supplier and counter-indemnifier/guarantor</h4>
+
+        <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Supplier type
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.supplierType }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              UK Supplier’s Companies House registration number, if UK registered
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.supplierCompaniesHouseRegistrationNumber }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Supplier name
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.supplierName }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Supplier address
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.supplierAddress | safe }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Is the Supplier's correspondence address different for the Company's Registered Address?
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.suppliersCorrespondenceAddressDifferent }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Industry sector
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.industrySector }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Industry class
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.industryClass }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              SME type
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.smeType }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Description of supply contract
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.supplyContractDescription }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Is the counter-indemnifier (for bonds) or guarantor (for loans) legally distinct from the supplier? 
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {% if submissionDetails.legallyDistinct %}
+                Yes
+              {% else %}
+                No
+              {% endif %}
+            </dd>
+          </div>
+        </dl>
+
+
+        <h4 class="govuk-heading-m">Buyer</h4>
+
+        <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Buyer name
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.buyer.name }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Country of buyer
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.buyer.country }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Destination of goods and services 
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.buyer.goodsServicesDestination }}
+            </dd>
+          </div>
+
+        </dl>
+
+        <h4 class="govuk-heading-m">Financial information</h4>
+
+        <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Supply Contract value (in Supply Contract currency)
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.supplyContractFinancials.value }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Supply Contract currency
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.supplyContractFinancials.currency }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Conversion rate from Supply Contract currency to GBP
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.supplyContractFinancials.conversionRateToGBP }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Supply Contract conversion date, as determined by the bank(Supply Contract currency to GBP)
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.supplyContractFinancials.conversionDate }}
+            </dd>
+          </div>
+
+        </dl>
+
+        <p>TODO: Confirm eligibility</p>
+
+        <p>TODO: Mandatory criteria</p>
+
+        <p>TODO: Eligibility criteria</p>
+        <p>TODO: Supporting documentation</p>
+
+        <h3 class="govuk-heading-l">Bond</h3>
+
+        <h4 class="govuk-heading-m">Bond details</h4>
+
+        <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Bond issuer
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.bond.issuer }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Bond type
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.bond.type }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Bond stage
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.bond.stage }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Requested Cover Start Date
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.bond.cover.requestedStartDate }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Cover End Date
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.bond.cover.endDate }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Bond's unique identification number
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.bond.uniqueIdentificationNumber }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Bond beneficiary
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.bond.beneficiary }}
+            </dd>
+          </div>
+
+        </dl>
+
+
+        <h4 class="govuk-heading-m">Bond financial details</h4>
+
+        <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Bond value
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.bond.financial.value }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Is the currency for this Transaction the same as your Supply Contract currency?
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {% if submissionDetails.bond.financial.transactionCurrencySameAsSupplyContractCurrency %}
+                Yes
+              {% else %}
+                No
+              {% endif %}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Risk Margin Fee %
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.bond.financial.riskMarginFee }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Covered Percentage
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.bond.financial.coveredPercentage }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Minimum risk margin fee
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.bond.financial.minimumRiskMarginFee }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Guarantee fee payable by bank
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.bond.financial.guaranteeFeePayableByBank }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              UKEF exposure
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.bond.financial.uKefExposure }}
+            </dd>
+          </div>
+
+        </dl>
+        
+
+        <h4 class="govuk-heading-m">Fee details</h4>
+
+        <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Fee type
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.bond.fee.type }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Fee frequency
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.bond.fee.frequency }}
+            </dd>
+          </div>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Day count basis
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ submissionDetails.bond.fee.dayCountBasis }}
+            </dd>
+          </div>
+
+        </dl>
+
+
+        <p><a href="/contract/{{ id }}" class="govuk-link">Back to Supply Contract page</a></p>
+
+      </section>
+
+    </div>
+
+  </div>
+
+{% endblock %}
