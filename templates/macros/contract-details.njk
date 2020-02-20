@@ -11,6 +11,7 @@
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Checker</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submission date</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Date of Last Action</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submission type</th>
       </tr>
     </thead>
 
@@ -47,6 +48,11 @@
         <td class="govuk-table__cell govuk-!-font-size-14">
           {{ details.dateOfLastAction }}
         </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ details.submissionType }}
+        </td>
+
       </tr>
     </tbody>
 
