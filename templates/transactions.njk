@@ -1,6 +1,7 @@
 {% extends "page.njk" %}
 {% import 'macros/dashboard-tabs.njk' as dashboardTabs %}
 {% import 'macros/date-range.njk' as dateRange %}
+{% import 'macros/pagination.njk' as pagination %}
 
 {% block content %}
 
@@ -142,6 +143,8 @@
         </tbody>
 
       </table>
+
+      {{ pagination.pagination(totalPages = 12, currentPage = 1, totalItems = transactions.length) }}
 
     </section>
 
