@@ -4,48 +4,44 @@
 
 {% block content %}
 
-  <div class="contract-container">
+  <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ supplyContractName }}</span></h1>
 
-    <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ supplyContractName }}</span></h1>
+  <div class="govuk-tabs" data-module="govuk-tabs">
+    <h2 class="govuk-tabs__title">
+      Contents
+    </h2>
 
-    <div class="govuk-tabs" data-module="govuk-tabs">
-      <h2 class="govuk-tabs__title">
-        Contents
-      </h2>
+    {{ contractTabs.nav(selected = 'comments', id = id) }}
 
-      {{ contractTabs.nav(selected = 'comments', id = id) }}
-
-      <section class="govuk-tabs__panel" id="comments">
-        {{ contractDetails.table(details) }}
-      </section>
-      
-    </div>
-
-    <h2 class="govuk-heading-s">Maker/Checker comments:</h2>
-
-    {% if comments.length %}
-
-      <ul class="govuk-list">
-        {% for comment in comments %}
-          <li class="govuk-!-padding-3 govuk-!-margin-bottom-3 comment">
-
-            <p class="govuk-body">
-              <span class="govuk-!-font-weight-bold">{{ comment.firstName }} {{ comment.lastName }}</span>
-              {{ comment.created }}
-            </p>
-
-            <div class="govuk-body govuk-!-padding-left-3">
-              {{ comment.body | safe }}
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
-
-      {% else %}
-        <p class="govuk-body">No comments between Maker and Checker</p>
+    <section class="govuk-tabs__panel" id="comments">
+      {{ contractDetails.table(details) }}
+    </section>
     
-    {% endif %}
-
   </div>
+
+  <h2 class="govuk-heading-s">Maker/Checker comments:</h2>
+
+  {% if comments.length %}
+
+    <ul class="govuk-list">
+      {% for comment in comments %}
+        <li class="govuk-!-padding-3 govuk-!-margin-bottom-3 comment">
+
+          <p class="govuk-body">
+            <span class="govuk-!-font-weight-bold">{{ comment.firstName }} {{ comment.lastName }}</span>
+            {{ comment.created }}
+          </p>
+
+          <div class="govuk-body govuk-!-padding-left-3">
+            {{ comment.body | safe }}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+
+    {% else %}
+      <p class="govuk-body">No comments between Maker and Checker</p>
+  
+  {% endif %}
 
 {% endblock %}
