@@ -47,6 +47,10 @@ app.get('/contract/:id/submission-details', (req, res) =>
   res.render('contract-submission-details.njk', getMockContractById(req.params.id))
 )
 
+app.get('/contract/:id/delete', (req, res) =>
+  res.render('contract-delete.njk', getMockContractById(req.params.id))
+)
+
 app.get('/feedback', (req, res) => res.render('feedback.njk'))
 
 app.get('/contact-us', (req, res) => res.render('contact.njk'))

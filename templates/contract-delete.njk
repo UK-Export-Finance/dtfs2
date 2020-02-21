@@ -1,0 +1,33 @@
+{% extends "page.njk" %}
+
+{% block content %}
+
+  <h1 class="govuk-heading-l">Are you sure you want to abandon {{ supplyContractName }}?</h1>
+
+  <form>
+
+
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-three-quarters">
+
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="comments">Comments</label>
+          <span id="comments-hint" class="govuk-hint">
+            Explain why you are abandoning this Supply Contract?
+          </span>
+          <textarea class="govuk-textarea" id="comments" name="comments" rows="5" aria-describedby="comments-hint"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <button class="govuk-button govuk-button--warning govuk-!-margin-right-1" data-module="govuk-button">
+      Abandon
+    </button>
+
+    <a href="/start-now" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+
+
+  </form>
+
+{% endblock %}
