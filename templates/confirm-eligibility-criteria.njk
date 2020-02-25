@@ -1,0 +1,55 @@
+{% extends "page.njk" %}
+{% import 'macros/confirm-eligibility-intro.njk' as confirmEligibility %}
+
+{% block content %}
+
+  {{ confirmEligibility.intro(
+    completedStatus = eligibility.completedStatus,
+    current = 'criteria',
+    contractId = id
+  )}}
+  
+  <form>
+
+    {% for criterion in eligibility.criteria %}
+
+      <div class="govuk-form-group">
+
+        <fieldset class="govuk-fieldset">
+
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend">
+            Eligibility criterion {{ criterion.id }}
+          </legend>
+
+          <p class="govuk-body grey-text">{{ criterion.description }}</p>
+
+          <div class="govuk-radios govuk-radios--inline">
+
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="{{ criterion.id }}" name="{{ criterion.id }}" type="radio" value="true">
+              <label class="govuk-label govuk-radios__label" for="{{ criterion.id }}">
+                True
+              </label>
+            </div>
+
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="{{ criterion.id }}" name="{{ criterion.id }}" type="radio" value="false">
+              <label class="govuk-label govuk-radios__label" for="{{ criterion.id }}">
+                False
+              </label>
+            </div>
+          </div>
+
+        </fieldset>
+
+      </div>
+
+    {% endfor %}
+
+    <button class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">Next page</button>
+
+    <button class="govuk-button govuk-button--secondary" data-module="govuk-button">Save and go back to deal</a>
+    
+  </form>
+
+{% endblock %}
