@@ -1,0 +1,36 @@
+{% macro navItem(title, id, step, completed, href, current, contractId) %}
+
+  <div
+    {% if completed %}
+      class="govuk-!-margin-bottom-2 govuk-!-padding-0 criteria__nav-item criteria__nav-item--completed"
+
+    {% elif current === title %}
+      class="govuk-!-margin-bottom-2 govuk-!-padding-0 criteria__nav-item criteria__nav-item--current"
+
+    {% else %}
+      class="govuk-!-margin-bottom-2 govuk-!-padding-0 criteria__nav-item"
+    {% endif %}
+  >
+    {% if completed %}
+      <div class="govuk-checkboxes__item">
+        <input class="govuk-checkboxes__input" id="{{ id }}" name="{{ id }}" type="checkbox" value="{{ id }}" checked="true" disabled>
+        <label class="govuk-label govuk-checkboxes__label govuk-!-padding-left-6" for="{{ id }}">
+          <a class="govuk-link" href="/contract/{{ contractId }}/{{ href }}">{{ title }}</a>
+        </label>
+      </div>
+
+    {% else %}
+      <p class="govuk-body govuk-!-margin-bottom-0">
+        <span class="govuk-!-font-weight-bold criteria__nav-item-progress-number">
+          {% if step %}
+            {{ step }}
+          {% else %}
+            &nbsp;
+          {% endif %}
+        </span> 
+        {{ title }}
+      </p>
+    {% endif %}
+  </div>
+  
+{% endmacro %}

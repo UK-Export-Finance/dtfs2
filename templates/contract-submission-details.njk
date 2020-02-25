@@ -260,7 +260,7 @@
 
           <div class="eligibility-criteria-row">
             <h7 class="govuk-heading-s govuk-!-margin-bottom-1">
-              {{ criterion.heading }}
+              Eligibility criterion {{ criterion.id }}
               <span class="govuk-body-s govuk-!-font-weight-regular govuk-!-margin-left-4">
                 {% if criterion.answer %}
                   True
@@ -271,7 +271,7 @@
             </h7>
           </div>
 
-          <p class="govuk-body-s eligibility-criteria-row-description">{{ criterion.description }}</p>
+          <p class="govuk-body-s grey-text">{{ criterion.description }}</p>
 
         {% endfor %}
       </dl>

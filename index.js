@@ -51,6 +51,10 @@ app.get('/contract/:id/delete', (req, res) =>
   res.render('contract-delete.njk', getMockContractById(req.params.id))
 )
 
+app.get('/contract/:id/eligibility/criteria', (req, res) =>
+  res.render('confirm-eligibility-criteria.njk', getMockContractById(req.params.id))
+)
+
 app.get('/feedback', (req, res) => res.render('feedback.njk'))
 
 app.get('/contact-us', (req, res) => res.render('contact.njk'))

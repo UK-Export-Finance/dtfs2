@@ -70,17 +70,17 @@
                   Confirm eligibility
                 </span>
 
-                {% if confirmEligibility.submissionType %}
+                {% if eligibility.submissionType %}
                   <span class="govuk-!-margin-bottom-0 govuk-!-margin-left-6 govuk-!-font-weight-regular govuk-!-font-size-16 box__header-inline-message">
                     <span class="govuk-!-font-weight-bold">Submission type: </span> <br />
-                    {{ confirmEligibility.submissionType }}
+                    {{ eligibility.submissionType }}
                   </span>
                 {% endif %}
 
               </h2>
             </div>
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <a href="#" class="govuk-link">View details</a>
+              <a href="/contract/{{ id }}/eligibility/criteria" class="govuk-link">View details</a>
             </div>
           </div>
         </div>
