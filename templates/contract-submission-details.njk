@@ -280,56 +280,21 @@
       <h4 class="govuk-heading-m">Supporting documentation</h4>
 
       <ol class="govuk-list govuk-list--number">
+        {% for documentation in submissionDetails.supportingDocumentation %}
 
-        <li class="govuk-body-s">
-          <span class="govuk-!-font-weight-bold">Manual Inclusion Questionnaire</span>
-          {% if submissionDetails.supportingDocumentation.manualInclusionQuestionnaire %}
-            <a href="#{{ submissionDetails.supportingDocumentation.manualInclusionQuestionnaire }}" class="govuk-link govuk-!-margin-left-4">{{ submissionDetails.supportingDocumentation.manualInclusionQuestionnaire }}</a>
-          {% endif %}
-        </li>
-      
-        <li class="govuk-body-s">
-          <span class="govuk-!-font-weight-bold">Financial statements for the past 3 years</span>
-          {% if submissionDetails.supportingDocumentation.financialStatements %}
-            <a href="#{{ submissionDetails.supportingDocumentation.financialStatements }}" class="govuk-link govuk-!-margin-left-4">{{ submissionDetails.supportingDocumentation.financialStatements }}</a>
-          {% endif %}
-        </li>
+          <li class="govuk-body-s">
+            <span class="govuk-!-font-weight-bold">{{ documentation.title }}</span>
+            {% if documentation.href %}
+              <a href="#{{ documentation.href }}" class="govuk-link govuk-!-margin-left-4">{{ documentation.href }}</a>
+            {% endif %}
 
-        <li class="govuk-body-s">
-          <span class="govuk-!-font-weight-bold">Year to date management accounts</span>
-          {% if submissionDetails.supportingDocumentation.managementAccounts %}
-            <a href="#{{ submissionDetails.supportingDocumentation.managementAccounts }}" class="govuk-link govuk-!-margin-left-4">{{ submissionDetails.supportingDocumentation.managementAccounts }}</a>
-          {% endif %}
-        </li>
+            {% if documentation.value %}
+              <span class="govuk-body-s govuk-!-margin-left-4">{{ documentation.value }}</span>
+            {% endif %}
 
-        <li class="govuk-body-s">
-          <span class="govuk-!-font-weight-bold">Financial forecasts for the next 3 years</span>
-          {% if submissionDetails.supportingDocumentation.financialForecasts %}
-            <a href="#{{ submissionDetails.supportingDocumentation.financialForecasts }}" class="govuk-link govuk-!-margin-left-4">{{ submissionDetails.supportingDocumentation.financialForecasts }}</a>
-          {% endif %}
-        </li>
+          </li>
 
-        <li class="govuk-body-s">
-          <span class="govuk-!-font-weight-bold">Brief commentary on the financial information</span>
-          {% if submissionDetails.supportingDocumentation.financialInformation %}
-            <a href="#{{ submissionDetails.supportingDocumentation.financialInformation }}" class="govuk-link govuk-!-margin-left-4">{{ submissionDetails.supportingDocumentation.financialInformation }}</a>
-          {% endif %}
-        </li>
-
-        <li class="govuk-body-s">
-          <span class="govuk-!-font-weight-bold">Corporate structure diagram</span>
-          {% if submissionDetails.supportingDocumentation.corporateStructure %}
-            <a href="#{{ submissionDetails.supportingDocumentation.corporateStructure }}" class="govuk-link govuk-!-margin-left-4">{{ submissionDetails.supportingDocumentation.corporateStructure }}</a>
-          {% endif %}
-        </li>
-
-        <li class="govuk-body-s">
-          <span class="govuk-!-font-weight-bold">Security</span>
-          {% if submissionDetails.supportingDocumentation.corporateStructure %}
-            <a href="#{{ submissionDetails.supportingDocumentation.corporateStructure }}" class="govuk-link govuk-!-margin-left-4">{{ submissionDetails.supportingDocumentation.corporateStructure }}</a>
-          {% endif %}
-        </li>
-
+        {% endfor %}
       </ol>
 
       <h3 class="govuk-heading-l">
