@@ -26,7 +26,8 @@
           step = 1,
           completed = completedStatus.eligibilityCriteria,
           href = "eligibility/criteria",
-          contractId = contractId
+          contractId = contractId,
+          current = current
       )}}
 
       {{ nav.navItem(
@@ -34,8 +35,9 @@
           id = 'supportingDocumentation',
           step = 2,
           completed = completedStatus.supportingDocumentation,
-          href = 'eligibility/documentation',
-          contractId = contractId
+          href = 'eligibility/supporting-documentation',
+          contractId = contractId,
+          current = current
       )}}
 
     </div>
@@ -46,7 +48,8 @@
           title = 'Preview',
           completed = completedStatus.eligibilityCriteria and completedStatus.supportingDocumentation,
           href = 'eligibility/preview',
-          contractId = contractId
+          contractId = contractId,
+          current = current
       )}}
       
     </div>
