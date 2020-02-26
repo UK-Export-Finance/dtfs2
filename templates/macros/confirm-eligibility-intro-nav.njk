@@ -1,5 +1,5 @@
 {% macro navItem(title, id, step, completed, href, current, contractId) %}
-
+  
   <div
     {% if completed and current === id %}
       class="govuk-!-margin-bottom-2 govuk-!-padding-0 criteria__nav-item criteria__nav-item--completed criteria__nav-item--current"
@@ -30,8 +30,14 @@
           {% else %}
             &nbsp;
           {% endif %}
-        </span> 
-        {{ title }}
+        </span>
+        {% if id === 'preview' or current === id %}
+          {{ title }}
+        {% else %}
+          <a class="govuk-link" href="/contract/{{ contractId }}/{{ href }}">
+            {{ title }}
+          </a>
+        {% endif %}
       </p>
     {% endif %}
   </div>

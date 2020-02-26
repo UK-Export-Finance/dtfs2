@@ -12,7 +12,7 @@
       Contents
     </h2>
 
-    {{ contractTabs.nav(selected = 'submission-details', id = id) }}
+    {{ contractTabs.nav(selected = 'submission-details', id = contract.id) }}
 
     <section class="govuk-tabs__panel" id="submission-details">
       {{ contractDetails.table(contract.details) }}
