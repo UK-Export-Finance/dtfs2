@@ -80,7 +80,7 @@
 }
 
 .criteria__nav-item--current {
-  background: #DEE6EE; 
+  background: #DEE6EE;
 }
 
 .criteria__nav-item-progress-number {
@@ -98,12 +98,6 @@
 .criteria__nav-item .govuk-checkboxes__label {
   padding: 17px 30px;
 }
-
-/* @media (min-width:40.0625em) {
-  .criteria__nav-item .govuk-checkboxes__label {
-    padding: 17px 20px;
-  }
-} */
 
 .criteria__nav-item .govuk-checkboxes__label::before {
   border: none;
