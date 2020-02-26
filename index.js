@@ -65,7 +65,10 @@ app.get('/contract/:id/eligibility/supporting-documentation', (req, res) =>
 )
 
 app.get('/contract/:id/eligibility/preview', (req, res) =>
-  res.render('e.njk', getMockContractById(req.params.id))
+  res.render('confirm-eligibility-preview.njk', {
+    contract: getMockContractById(req.params.id),
+    mandatoryCriteria: MOCKS.MANDATORY_CRITERIA
+  })
 )
 
 app.get('/feedback', (req, res) => res.render('feedback.njk'))
