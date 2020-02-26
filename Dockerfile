@@ -7,7 +7,6 @@ WORKDIR /app
 ADD package.json .
 RUN npm install
 
-ADD static ./static
-ADD index.js .
+ADD . .
 
 ENTRYPOINT node index.js
