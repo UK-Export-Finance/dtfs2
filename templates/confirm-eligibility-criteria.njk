@@ -9,7 +9,7 @@
     contractId = id
   )}}
 
-  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8">
+  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
   
   <form>
 
@@ -28,15 +28,15 @@
           <div class="govuk-radios govuk-radios--inline">
 
             <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="{{ criterion.id }}" name="{{ criterion.id }}" type="radio" value="true">
-              <label class="govuk-label govuk-radios__label" for="{{ criterion.id }}">
+              <input class="govuk-radios__input" id="criterion-{{ criterion.id }}" name="criterion-{{ criterion.id }}" type="radio" value="true">
+              <label class="govuk-label govuk-radios__label" for="criterion-{{ criterion.id }}">
                 True
               </label>
             </div>
 
             <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="{{ criterion.id }}" name="{{ criterion.id }}" type="radio" value="false">
-              <label class="govuk-label govuk-radios__label" for="{{ criterion.id }}">
+              <input class="govuk-radios__input" id="criterion-{{ criterion.id }}-2" name="criterion-{{ criterion.id }}-2" type="radio" value="false">
+              <label class="govuk-label govuk-radios__label" for="criterion-{{ criterion.id }}-2">
                 False
               </label>
             </div>
