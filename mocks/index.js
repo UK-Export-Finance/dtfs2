@@ -33,6 +33,44 @@ const ELIGIBILITY_CRITERIA = [
   }
 ];
 
+const SUPPORTING_DOCUMENTATION = [
+  {
+    id: 1,
+    title: 'Manual Inclusion Questionnaire',
+    description: 'Please upload a completed Manual Inclusion Questionnaire. You can download the template here: <a href="#">Manual Inclusion Questionnaire</a>'
+  },
+  {
+    id: 2,
+    title: 'Financial statements for the past 3 years',
+    description: 'Financial statements (audited if available) for the past 3 years, including a Profit & Loss, Balance Sheet and Cash Flow Statement, (with notes, if applicable). If the company is part of a larger group, separate accounts should be provided for the company and group.'
+  },
+  {
+    id: 3,
+    title: 'Year to date management accounts',
+    description: 'Including Profit & Loss, Balance Sheet and Cash Flow where available.'
+  },
+  {
+    id: 4,
+    title: 'Financial forecasts for the next 3 years',
+    description: 'Including monthly cash-flow projections for the business as a whole. If unavailable provide for at least the projected facility/guarantee term. If there are any cash flow shortfalls, explain how these will be filled.'
+  },
+  {
+    id: 5,
+    title: 'Brief commentary on the financial information',
+    description: 'A brief commentary on the financial information in 2-4, with particular focus on turnover, gross and net profit, dividends (if any), debt profile including bank borrowing and net worth, and any other information with explains any exceptions, anomalies or volatility. If the company has experienced any unusual or off-trend financial performance in the last 3 years please also explain this.'
+  },
+  {
+    id: 6,
+    title: 'Corporate structure diagram',
+    description: 'Showing corporate structure including parent, subsidiary and associated companies.'
+  },
+  {
+    id: 7,
+    title: 'Security',
+    description: 'Details of the overarching general facility taken by the bank in relation to the exporter, for example debenture, fixed and floating charge, but not including any security that is specific to the Transaction.'
+  }
+];
+
 const MOCKS = {
   CONTRACTS: [
     {
@@ -263,15 +301,13 @@ const MOCKS = {
             dayCountBasis: '365'
           }
         },
-        supportingDocumentation: {
-          manualInclusionQuestionnaire: 'test.pdf',
-          financialStatements: '',
-          managementAccounts: 'mock.docx',
-          financialForecasts: '',
-          financialInformation: 'test.pdf',
-          corporateStructure: '',
-          security: ''
-        },
+        supportingDocumentation: SUPPORTING_DOCUMENTATION.map(d => {
+          return {
+            ...d,
+            href: d.id === 7 ? null : 'test.pdf',
+            value: d.id === 7 ? 'Testing' : null
+          }
+        }),
         eligibilityCriteria: ELIGIBILITY_CRITERIA.map(c => {
           return {
             ...c,
