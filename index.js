@@ -23,7 +23,9 @@ app.get('/', (req, res) => res.render('login.njk'))
 
 app.get('/start-now', (req, res) => res.render('start-now.njk'))
 
-app.get('/before-you-start', (req, res) => res.render('before-you-start.njk'))
+app.get('/before-you-start', (req, res) =>
+  res.render('before-you-start.njk', { mandatoryCriteria: MOCKS.MANDATORY_CRITERIA })
+)
 
 app.get('/before-you-start/bank-deal', (req, res) => res.render('before-you-start-bank-deal.njk'))
 
@@ -44,7 +46,10 @@ app.get('/contract/:id/comments', (req, res) =>
 )
 
 app.get('/contract/:id/submission-details', (req, res) => 
-  res.render('contract-submission-details.njk', getMockContractById(req.params.id))
+  res.render('contract-submission-details.njk', {
+    contract: getMockContractById(req.params.id),
+    mandatoryCriteria: MOCKS.MANDATORY_CRITERIA
+  })
 )
 
 app.get('/contract/:id/delete', (req, res) =>
@@ -57,6 +62,10 @@ app.get('/contract/:id/eligibility/criteria', (req, res) =>
 
 app.get('/contract/:id/eligibility/supporting-documentation', (req, res) =>
   res.render('confirm-eligibility-supporting-documentation.njk', getMockContractById(req.params.id))
+)
+
+app.get('/contract/:id/eligibility/preview', (req, res) =>
+  res.render('e.njk', getMockContractById(req.params.id))
 )
 
 app.get('/feedback', (req, res) => res.render('feedback.njk'))

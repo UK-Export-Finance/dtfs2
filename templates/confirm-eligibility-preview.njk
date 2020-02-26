@@ -1,0 +1,16 @@
+{% extends "page.njk" %}
+{% import 'macros/confirm-eligibility-intro.njk' as confirmEligibility %}
+
+{% block content %}
+
+  {{ confirmEligibility.intro(
+    completedStatus = eligibility.completedStatus,
+    current = 'preview',
+    contractId = id
+  )}}
+
+  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8">
+
+  <p>stuff here</p>
+
+{% endblock %}

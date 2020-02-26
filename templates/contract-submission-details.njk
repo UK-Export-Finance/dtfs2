@@ -1,6 +1,7 @@
 {% extends "page.njk" %}
 {% import 'macros/contract-details.njk' as contractDetails %}
 {% import 'macros/contract-tabs.njk' as contractTabs %}
+{% import 'macros/mandatory-criteria-box.njk' as mandatoryCriteriaBox %}
 
 {% block content %}
 
@@ -14,7 +15,7 @@
     {{ contractTabs.nav(selected = 'submission-details', id = id) }}
 
     <section class="govuk-tabs__panel" id="submission-details">
-      {{ contractDetails.table(details) }}
+      {{ contractDetails.table(contract.details) }}
 
       <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8">
 
@@ -32,7 +33,7 @@
             Supplier type
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.supplierType }}
+            {{ contract.submissionDetails.supplierType }}
           </dd>
         </div>
 
@@ -41,7 +42,7 @@
             UK Supplier’s Companies House registration number, if UK registered
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.supplierCompaniesHouseRegistrationNumber }}
+            {{ contract.submissionDetails.supplierCompaniesHouseRegistrationNumber }}
           </dd>
         </div>
 
@@ -50,7 +51,7 @@
             Supplier name
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.supplierName }}
+            {{ contract.submissionDetails.supplierName }}
           </dd>
         </div>
 
@@ -59,7 +60,7 @@
             Supplier address
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.supplierAddress | safe }}
+            {{ contract.submissionDetails.supplierAddress | safe }}
           </dd>
         </div>
 
@@ -68,7 +69,7 @@
             Is the Supplier's correspondence address different for the Company's Registered Address?
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.suppliersCorrespondenceAddressDifferent }}
+            {{ contract.submissionDetails.suppliersCorrespondenceAddressDifferent }}
           </dd>
         </div>
 
@@ -77,7 +78,7 @@
             Industry sector
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.industrySector }}
+            {{ contract.submissionDetails.industrySector }}
           </dd>
         </div>
 
@@ -86,7 +87,7 @@
             Industry class
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.industryClass }}
+            {{ contract.submissionDetails.industryClass }}
           </dd>
         </div>
 
@@ -95,7 +96,7 @@
             SME type
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.smeType }}
+            {{ contract.submissionDetails.smeType }}
           </dd>
         </div>
 
@@ -104,7 +105,7 @@
             Description of supply contract
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.supplyContractDescription }}
+            {{ contract.submissionDetails.supplyContractDescription }}
           </dd>
         </div>
 
@@ -113,7 +114,7 @@
             Is the counter-indemnifier (for bonds) or guarantor (for loans) legally distinct from the supplier? 
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {% if submissionDetails.legallyDistinct %}
+            {% if contract.submissionDetails.legallyDistinct %}
               Yes
             {% else %}
               No
@@ -121,7 +122,6 @@
           </dd>
         </div>
       </dl>
-
 
       <h4 class="govuk-heading-m">Buyer</h4>
 
@@ -132,7 +132,7 @@
             Buyer name
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.buyer.name }}
+            {{ contract.submissionDetails.buyer.name }}
           </dd>
         </div>
 
@@ -141,7 +141,7 @@
             Country of buyer
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.buyer.country }}
+            {{ contract.submissionDetails.buyer.country }}
           </dd>
         </div>
 
@@ -150,7 +150,7 @@
             Destination of goods and services 
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.buyer.goodsServicesDestination }}
+            {{ contract.submissionDetails.buyer.goodsServicesDestination }}
           </dd>
         </div>
 
@@ -165,7 +165,7 @@
             Supply Contract value (in Supply Contract currency)
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.supplyContractFinancials.value }}
+            {{ contract.submissionDetails.supplyContractFinancials.value }}
           </dd>
         </div>
 
@@ -174,7 +174,7 @@
             Supply Contract currency
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.supplyContractFinancials.currency }}
+            {{ contract.submissionDetails.supplyContractFinancials.currency }}
           </dd>
         </div>
 
@@ -183,7 +183,7 @@
             Conversion rate from Supply Contract currency to GBP
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.supplyContractFinancials.conversionRateToGBP }}
+            {{ contract.submissionDetails.supplyContractFinancials.conversionRateToGBP }}
           </dd>
         </div>
 
@@ -192,7 +192,7 @@
             Supply Contract conversion date, as determined by the bank(Supply Contract currency to GBP)
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.supplyContractFinancials.conversionDate }}
+            {{ contract.submissionDetails.supplyContractFinancials.conversionDate }}
           </dd>
         </div>
 
@@ -203,60 +203,12 @@
         <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="#">edit</a>
       </h3>
 
-      <div class="govuk-grid-row govuk-!-margin-0 govuk-!-padding-top-4 govuk-!-margin-bottom-6 box">
-
-        <div class="govuk-grid-column-full">
-        
-          <h4 class="govuk-heading-m">Mandatory criteria</h4>
-          <h5 class="govuk-heading-s">This deal meets all UKEF’s mandatory criteria.</h5>
-
-          <p class="govuk-body-s">You have affirmed that all the following mandatory criteria are or will be true for this deal on the date that cover starts.</p>
-          
-          <h6 class="govuk-heading-s">Supply contract/Transaction</h6>
-
-          <ol class="govuk-list govuk-list--number">
-            <li class="govuk-body-s">The Supplier has provided the Bank with a duly completed Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate.</li>
-            <li class="govuk-body-s">The Bank has complied with its policies and procedures in relation to the Transaction.</li>
-            <li class="govuk-body-s">Where the Supplier is a UK Supplier, the Supplier has provided the Bank with a duly completed UK Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate. (Conditional for UK Supplier)</li>
-          </ol>
-
-          <h6 class="govuk-heading-s">Financial</h6>
-
-          <ol class="govuk-list govuk-list--number">
-            <li value="4" class="govuk-body-s">The Bank Customer (to include both the Supplier and any Parent Obligor) is an <a href="#" class="govuk-link">Eligible Person</a>.</li>
-          </ol>
-
-
-          <h6 class="govuk-heading-s">Credit</h6>
-
-          <ol class="govuk-list govuk-list--number">
-            <li value="5" class="govuk-body-s">The Bank Customer (to include both the Supplier and any UK Parent Obligor) has a one- year probability of default of less than 14.1%.</li>
-          </ol>
-
-
-          <h6 class="govuk-heading-s">Bank Facility Letter</h6>
-
-          <ol class="govuk-list govuk-list--number">
-            <li value="6" class="govuk-body-s">The Bank Facility Letter is governed by the laws of England and Wales, Scotland or Northern Ireland.</li>
-          </ol>
-
-
-          <h6 class="govuk-heading-s">Legal</h6>
-
-          <ol class="govuk-list govuk-list--number">
-            <li value="7" class="govuk-body-s">The Bank is the sole and beneficial owner of, and has legal title to, the Transaction.</li>
-            <li value="8" class="govuk-body-s">The Bank has not made a Disposal (other than a Permitted Disposal) or a Risk Transfer (other than a Permitted Risk Transfer) in relation to the Transaction.</li>
-            <li value="9" class="govuk-body-s">The Bank’s right, title and interest in relation to the Transaction is clear of any Security and Quasi-Security (other than Permitted Security) and is freely assignable without the need to obtain consent of any Obligor or any other person.</li>
-            <li value="10" class="govuk-body-s">The Bank is not restricted or prevented by any agreement with an Obligor from providing information and records relating to the Transaction.</li>
-          </ol>
-
-        </div>
-      </div>
-
+      {{ mandatoryCriteriaBox.success(mandatoryCriteria)}}
+    
       <h4 class="govuk-heading-m">Eligibility criteria</h4>
 
       <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-4">
-        {% for criterion in submissionDetails.eligibilityCriteria %}
+        {% for criterion in contract.submissionDetails.eligibilityCriteria %}
 
           <div class="eligibility-criteria-row">
             <h7 class="govuk-heading-s govuk-!-margin-bottom-1">
@@ -275,12 +227,11 @@
 
         {% endfor %}
       </dl>
-      
 
       <h4 class="govuk-heading-m">Supporting documentation</h4>
 
       <ol class="govuk-list govuk-list--number">
-        {% for documentation in submissionDetails.supportingDocumentation %}
+        {% for documentation in contract.submissionDetails.supportingDocumentation %}
 
           <li class="govuk-body-s">
             <span class="govuk-!-font-weight-bold">{{ documentation.title }}</span>
@@ -311,7 +262,7 @@
             Bond issuer
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.bond.issuer }}
+            {{ contract.submissionDetails.bond.issuer }}
           </dd>
         </div>
 
@@ -320,7 +271,7 @@
             Bond type
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.bond.type }}
+            {{ contract.submissionDetails.bond.type }}
           </dd>
         </div>
 
@@ -329,7 +280,7 @@
             Bond stage
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.bond.stage }}
+            {{ contract.submissionDetails.bond.stage }}
           </dd>
         </div>
 
@@ -338,7 +289,7 @@
             Requested Cover Start Date
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.bond.cover.requestedStartDate }}
+            {{ contract.submissionDetails.bond.cover.requestedStartDate }}
           </dd>
         </div>
 
@@ -347,7 +298,7 @@
             Cover End Date
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.bond.cover.endDate }}
+            {{ contract.submissionDetails.bond.cover.endDate }}
           </dd>
         </div>
 
@@ -356,7 +307,7 @@
             Bond's unique identification number
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.bond.uniqueIdentificationNumber }}
+            {{ contract.submissionDetails.bond.uniqueIdentificationNumber }}
           </dd>
         </div>
 
@@ -365,7 +316,7 @@
             Bond beneficiary
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.bond.beneficiary }}
+            {{ contract.submissionDetails.bond.beneficiary }}
           </dd>
         </div>
 
@@ -381,7 +332,7 @@
             Bond value
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.bond.financial.value }}
+            {{ contract.submissionDetails.bond.financial.value }}
           </dd>
         </div>
 
@@ -390,7 +341,7 @@
             Is the currency for this Transaction the same as your Supply Contract currency?
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {% if submissionDetails.bond.financial.transactionCurrencySameAsSupplyContractCurrency %}
+            {% if contract.submissionDetails.bond.financial.transactionCurrencySameAsSupplyContractCurrency %}
               Yes
             {% else %}
               No
@@ -403,7 +354,7 @@
             Risk Margin Fee %
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.bond.financial.riskMarginFee }}
+            {{ contract.submissionDetails.bond.financial.riskMarginFee }}
           </dd>
         </div>
 
@@ -412,7 +363,7 @@
             Covered Percentage
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.bond.financial.coveredPercentage }}
+            {{ contract.submissionDetails.bond.financial.coveredPercentage }}
           </dd>
         </div>
 
@@ -421,7 +372,7 @@
             Minimum risk margin fee
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.bond.financial.minimumRiskMarginFee }}
+            {{ contract.submissionDetails.bond.financial.minimumRiskMarginFee }}
           </dd>
         </div>
 
@@ -430,7 +381,7 @@
             Guarantee fee payable by bank
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.bond.financial.guaranteeFeePayableByBank }}
+            {{ contract.submissionDetails.bond.financial.guaranteeFeePayableByBank }}
           </dd>
         </div>
 
@@ -439,7 +390,7 @@
             UKEF exposure
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.bond.financial.uKefExposure }}
+            {{ contract.submissionDetails.bond.financial.uKefExposure }}
           </dd>
         </div>
 
@@ -455,7 +406,7 @@
             Fee type
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.bond.fee.type }}
+            {{ contract.submissionDetails.bond.fee.type }}
           </dd>
         </div>
 
@@ -464,7 +415,7 @@
             Fee frequency
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.bond.fee.frequency }}
+            {{ contract.submissionDetails.bond.fee.frequency }}
           </dd>
         </div>
 
@@ -473,7 +424,7 @@
             Day count basis
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s">
-            {{ submissionDetails.bond.fee.dayCountBasis }}
+            {{ contract.submissionDetails.bond.fee.dayCountBasis }}
           </dd>
         </div>
 

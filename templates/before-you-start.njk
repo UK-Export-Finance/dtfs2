@@ -8,37 +8,16 @@
 
   <p class="govuk-body">To proceed with this submission, you need to be able to affirm that all the following mandatory criteria are or will be true for this deal on the date that cover starts.</p>
 
-  <h2 class="govuk-heading-m">Supply contract/Transaction</h2>
+  {% for group in mandatoryCriteria %}
+    <h2 class="govuk-heading-m">{{ group.title }}</h2>
 
-  <ol class="govuk-list govuk-list--number">
-    <li>The Supplier has provided the Bank with a duly completed Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate.</li>
-    <li>The Bank has complied with its policies and procedures in relation to the Transaction.</li>
-    <li>Where the Supplier is a UK Supplier, the Supplier has provided the Bank with a duly completed UK Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate. (Conditional for UK Supplier)</li>
-  </ol>
+    <ol class="govuk-list govuk-list--number">
+      {% for item in group.items %}
+        <li value="{{ item.id }}">{{ item.copy | safe}}</li>
+      {% endfor %}
+    </ol>
 
-  <h2 class="govuk-heading-m">Financial</h2>
-
-  <ol class="govuk-list govuk-list--number">
-    <li value="4">The Bank Customer (to include both the Supplier and any Parent Obligor) is an <a href="#" class="govuk-link">Eligible Person</a>.</li>
-  </ol>
-
-  <h2 class="govuk-heading-m">Credit</h2>
-  <ol class="govuk-list govuk-list--number">
-    <li value="5">The Bank Customer (to include both the Supplier and any UK Parent Obligor) has a one- year probability of default of less than 14.1%.</li>
-  </ol>
-
-  <h2 class="govuk-heading-m">Bank Facility Letter</h2>
-  <ol class="govuk-list govuk-list--number">
-    <li value="6">The Bank Facility Letter is governed by the laws of England and Wales, Scotland or Northern Ireland.</li>
-  </ol>
-
-  <h2 class="govuk-heading-m">Legal</h2>
-  <ol class="govuk-list govuk-list--number">
-    <li value="7">The Bank is the sole and beneficial owner of, and has legal title to, the Transaction.</li>
-    <li value="8">The Bank has not made a Disposal (other than a Permitted Disposal) or a Risk Transfer (other than a Permitted Risk Transfer) in relation to the Transaction.</li>
-    <li value="9">The Bank’s right, title and interest in relation to the Transaction is clear of any Security and Quasi-Security (other than Permitted Security) and is freely assignable without the need to obtain consent of any Obligor or any other person.</li>
-    <li value="10">The Bank is not restricted or prevented by any agreement with an Obligor from providing information and records relating to the Transaction.</li>
-  </ol>
+  {% endfor %}
 
   <hr class="govuk-section-break" />
 
