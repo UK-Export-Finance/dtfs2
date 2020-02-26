@@ -1,0 +1,56 @@
+{% extends "page.njk" %}
+{% import 'macros/confirm-eligibility-intro.njk' as confirmEligibility %}
+
+{% block content %}
+
+  {{ confirmEligibility.intro(
+    completedStatus = eligibility.completedStatus,
+    current = 'supportingDocumentation',
+    contractId = id
+  )}}
+
+  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8">
+  
+  <form>
+
+    <ol class="govuk-list govuk-list--number">
+      {% for documentation in submissionDetails.supportingDocumentation %}
+
+        <li class="govuk-form-group govuk-!-margin-bottom-8">
+          <label for="{{ documentation.fieldName }}">{{ documentation.title }}</label>
+          <p class="govuk-body govuk-hint" id="{{ documentation.fieldName }}-hint">{{ documentation.description | safe }}</p>
+
+          {% if documentation.inputType === 'file'%}
+            <input class="govuk-file-upload" id="{{ documentation.fieldName }}" name="{{ documentation.fieldName }}" type="file" multiple>
+
+            {% elif documentation.inputType === 'textarea'%}
+              <div class="govuk-grid-column-one-half govuk-!-padding-0">
+
+                <div class="govuk-character-count govuk-!-margin-bottom-0" data-module="govuk-character-count" data-maxlength="300">
+                  <textarea class="govuk-textarea govuk-js-character-count" id="{{ documentation.fieldName }}" name="{{ documentation.fieldName }}" rows="5" aria-describedby="{{ documentation.fieldName }}-info {{ documentation.fieldName }}-hint"></textarea>
+
+                  <span id="{{ documentation.fieldName }}-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+                    You can enter up to 300 characters
+                  </span>
+                </div>
+
+              </div>
+            
+          {% endif %}
+
+        </li>
+
+      {% endfor %}
+    </ol>
+
+    <div class="govuk-grid-row govuk-!-margin-0">
+      <div class="govuk-grid-column-full">
+        <button class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">Preview</button>
+
+        <button class="govuk-button govuk-button--secondary" data-module="govuk-button">Save and go back to deal</a>
+      </div>
+    </div>
+  
+  </form>
+
+{% endblock %}
