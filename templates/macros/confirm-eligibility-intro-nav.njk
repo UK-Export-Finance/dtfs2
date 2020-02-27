@@ -18,7 +18,11 @@
       <div class="govuk-checkboxes__item">
         <input class="govuk-checkboxes__input" id="{{ id }}" name="{{ id }}" type="checkbox" value="{{ id }}" checked="true" disabled>
         <label class="govuk-label govuk-checkboxes__label" for="{{ id }}">
-          <a class="govuk-link" href="/contract/{{ contractId }}/{{ href }}">{{ title }}</a>
+          {% if current === id %}
+            {{ title }}
+          {% else %}
+            <a class="govuk-link" href="/contract/{{ contractId }}/{{ href }}">{{ title }}</a>
+          {% endif %}
         </label>
       </div>
 
