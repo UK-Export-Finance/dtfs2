@@ -2,9 +2,11 @@
   "name": "dtfs2",
   "version": "1.0.0",
   "description": "DTFS2 Portal",
+  "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "build": "rm -rf dist && webpack --config webpack.server.config.js && webpack --config webpack.config.js",
+    "start": "node ./dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,6 +26,22 @@
   "dependencies": {
     "express": "^4.17.1",
     "govuk-frontend": "^3.5.0",
-    "nunjucks": "^3.2.0"
+    "nunjucks": "^3.2.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.6",
+    "@babel/preset-env": "^7.8.6",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.4.2",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.13.1",
+    "nunjucks-html-loader": "^1.1.0",
+    "sass-loader": "^8.0.2",
+    "style-loader": "^1.1.3",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11",
+    "webpack-node-externals": "^1.7.2"
   }
 }
