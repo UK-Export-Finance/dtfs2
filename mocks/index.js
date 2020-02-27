@@ -390,7 +390,68 @@ const MOCKS = {
           created: '16/02/2020 - 09:43',
           body: 'Please see: <a href="https://staging.ukexportfinance.gov.uk">https://staging.ukexportfinance.gov.uk</a>'
         }
-      ]
+      ],
+      submissionDetails: {
+        supplierType: 'Exporter',
+        supplierCompaniesHouseRegistrationNumber: '123',
+        supplierName: 'TEST',
+        supplierAddress: 'Test <br/> PO1 3AX <br/>GBR',
+        suppliersCorrespondenceAddressDifferent: false,
+        industrySector: '5678',
+        industryClass: '12345',
+        smeType: 'Mico',
+        supplyContractDescription: 'Test',
+        legallyDistinct: false,
+        buyer: {
+          name: 'TESTING',
+          country: 'United Kingdom',
+          goodsServicesDestination: 'France'
+        },
+        supplyContractFinancials: {
+          value: '456.00',
+          currency: 'USD - US Dollars',
+          conversionRateToGBP: '0.8',
+          conversionDate: '01/02/2020'
+        },
+        bond: {
+          issuer: 'test',
+          type: 'Advance payment guarantee',
+          stage: 'Issued',
+          cover: {
+            requestedStartDate: '13/02/2020',
+            endDate: '01/01/2023'
+          },
+          uniqueIdentificationNumber: 'TEST',
+          beneficiary: 'TEST',
+          financial: {
+            value: '1.50',
+            transactionCurrencySameAsSupplyContractCurrency: true,
+            riskMarginFee: '1%',
+            coveredPercentage: '70%',
+            minimumRiskMarginFee: '0.00',
+            guaranteeFeePayableByBank: '2.4500%',
+            uKefExposure: '0.25'
+          },
+          fee: {
+            type: 'In advance',
+            frequency: 'Quarterly',
+            dayCountBasis: '365'
+          }
+        },
+        supportingDocumentation: SUPPORTING_DOCUMENTATION.map(d => {
+          return {
+            ...d,
+            href: d.id === 7 ? null : 'test.docx',
+            value: d.id === 7 ? 'Test' : null
+          }
+        }),
+        eligibilityCriteria: ELIGIBILITY_CRITERIA.map(c => {
+          return {
+            ...c,
+            answer: (c.id === 14 || c.id === 16) ? false : true
+          }
+        })
+      }
     },
   ],
   TRANSACTIONS: [
