@@ -8,20 +8,19 @@ const app = express()
 const HOST = '0.0.0.0';
 const PORT = process.env.PORT || 5000
 
-app.use(express.static(__dirname))
+app.use(express.static('dist'))
 
-// nunjucks.configure('templates', {
-//   autoescape: true,
-//   express: app,
-//   noCache: true,
-//   watch: true
-// });
+nunjucks.configure('templates', {
+  autoescape: true,
+  express: app,
+  noCache: true,
+  watch: true
+});
 
 const getMockContractById = id =>
   MOCKS.CONTRACTS.find(c => c.id === id) || MOCKS.CONTRACTS[0];
 
-// app.get('/', (req, res) => res.render('login.njk'))
-app.get('*', (req, res) => res.sendFile('index.html'))
+app.get('/', (req, res) => res.render('login.njk'))
 
 app.get('/start-now', (req, res) => res.render('start-now.njk'))
 
