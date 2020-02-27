@@ -1,0 +1,26 @@
+{% macro answers(criteria) %}
+
+  <h4 class="govuk-heading-m">Eligibility criteria</h4>
+
+  <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-4">
+    {% for criterion in criteria %}
+
+      <div class="eligibility-criteria-row">
+        <h7 class="govuk-heading-s govuk-!-margin-bottom-1">
+          Eligibility criterion {{ criterion.id }}
+          <span class="govuk-body-s govuk-!-font-weight-regular govuk-!-margin-left-4">
+            {% if criterion.answer %}
+              True
+              {% else %}
+              False
+            {% endif %}
+          </span>
+        </h7>
+      </div>
+
+      <p class="govuk-body-s govuk-hint">{{ criterion.description }}</p>
+
+    {% endfor %}
+  </dl>
+      
+{% endmacro %}
