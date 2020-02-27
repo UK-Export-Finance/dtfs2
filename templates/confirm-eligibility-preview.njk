@@ -1,11 +1,13 @@
 {% extends "page.njk" %}
 {% import 'macros/confirm-eligibility-intro.njk' as confirmEligibility %}
 {% import 'macros/mandatory-criteria-box.njk' as mandatoryCriteriaBox %}
+{% import 'macros/eligibility-criteria-answers.njk' as eligibilityCriteria %}
+{% import 'macros/supporting-documentation-answers.njk' as supportingDocumentation %}
 
 {% block content %}
 
   {{ confirmEligibility.intro(
-    completedStatus = eligibility.completedStatus,
+    completedStatus = contract.eligibility.completedStatus,
     current = 'preview',
     contractId = id
   )}}
@@ -13,5 +15,13 @@
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8">
 
   {{ mandatoryCriteriaBox.success(mandatoryCriteria)}}
+
+  {{ eligibilityCriteria.answers(contract.submissionDetails.eligibilityCriteria)}}
+
+  {{ supportingDocumentation.answers(contract.submissionDetails.supportingDocumentation)}}
+
+  <hr class="govuk-section-break govuk-!-margin-bottom-8">
+
+  <p class="govuk-body"><a href="/contract/{{ contract.id }}" class="govuk-link">Save and go back to deal</a></p>
 
 {% endblock %}

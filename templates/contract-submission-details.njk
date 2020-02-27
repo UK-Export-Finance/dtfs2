@@ -2,6 +2,8 @@
 {% import 'macros/contract-details.njk' as contractDetails %}
 {% import 'macros/contract-tabs.njk' as contractTabs %}
 {% import 'macros/mandatory-criteria-box.njk' as mandatoryCriteriaBox %}
+{% import 'macros/eligibility-criteria-answers.njk' as eligibilityCriteria %}
+{% import 'macros/supporting-documentation-answers.njk' as supportingDocumentation %}
 
 {% block content %}
 
@@ -204,49 +206,10 @@
       </h3>
 
       {{ mandatoryCriteriaBox.success(mandatoryCriteria)}}
-    
-      <h4 class="govuk-heading-m">Eligibility criteria</h4>
 
-      <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-4">
-        {% for criterion in contract.submissionDetails.eligibilityCriteria %}
+      {{ eligibilityCriteria.answers(contract.submissionDetails.eligibilityCriteria)}}
 
-          <div class="eligibility-criteria-row">
-            <h7 class="govuk-heading-s govuk-!-margin-bottom-1">
-              Eligibility criterion {{ criterion.id }}
-              <span class="govuk-body-s govuk-!-font-weight-regular govuk-!-margin-left-4">
-                {% if criterion.answer %}
-                  True
-                  {% else %}
-                  False
-                {% endif %}
-              </span>
-            </h7>
-          </div>
-
-          <p class="govuk-body-s govuk-hint">{{ criterion.description }}</p>
-
-        {% endfor %}
-      </dl>
-
-      <h4 class="govuk-heading-m">Supporting documentation</h4>
-
-      <ol class="govuk-list govuk-list--number">
-        {% for documentation in contract.submissionDetails.supportingDocumentation %}
-
-          <li class="govuk-body-s">
-            <span class="govuk-!-font-weight-bold">{{ documentation.title }}</span>
-            {% if documentation.href %}
-              <a href="#{{ documentation.href }}" class="govuk-link govuk-!-margin-left-4">{{ documentation.href }}</a>
-            {% endif %}
-
-            {% if documentation.value %}
-              <span class="govuk-body-s govuk-!-margin-left-4">{{ documentation.value }}</span>
-            {% endif %}
-
-          </li>
-
-        {% endfor %}
-      </ol>
+      {{ supportingDocumentation.answers(contract.submissionDetails.supportingDocumentation)}}
 
       <h3 class="govuk-heading-l">
         Bond
