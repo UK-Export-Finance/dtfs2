@@ -39,8 +39,7 @@ module.exports = {
           loader: 'nunjucks-html-loader',
           options: {
             // base directory in which webpack is going to find any .njk files
-            searchPaths: [...returnEntries('./templates/**/')],
-            // minimize: true
+            searchPaths: [...returnEntries('./templates/**/')]
           }
         }]
       },
