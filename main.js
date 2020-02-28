@@ -1,4 +1,4 @@
-
-// import GDS JS
+import { initAll } from 'govuk-frontend'
 import './styles.scss';
-console.log('------DTFS2');
+
+initAll();

@@ -1,8 +1,9 @@
 const path = require('path')
 const webpack = require('webpack')
 const nodeExternals = require('webpack-node-externals')
-const HtmlWebPackPlugin = require('html-webpack-plugin')
 const globEntries = require('webpack-glob-entries')
+const HtmlWebPackPlugin = require('html-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 
 // Webpack doesn't support glob paths. For the nunjucks-html-loader,
 // we need each path to be specified for it to work (even subdirectories)
@@ -21,7 +22,7 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    publicPath: '/',
+    publicPath: '/assets',
     filename: '[name].js'
   },
   target: 'web',
@@ -62,6 +63,9 @@ module.exports = {
       inject: 'body',
       // tell webpack to pass index.njk through the nunjucks-html-loader
       template: 'nunjucks-html-loader!./templates/index.njk',
-    })
+    }),
+    new CopyPlugin([
+      { from: './node_modules/govuk-frontend/govuk/assets', to: './assets' }
+    ]),
   ]
 }
