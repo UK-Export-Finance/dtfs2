@@ -81,7 +81,7 @@ const ELIGIBILITY_CRITERIA = [
   },
   {
     id: 14,
-    description: 'For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 3 months prior to the submission of this Inclusion Notice. For a loan Transaction, the loan has not yet been advance.'
+    description: 'For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 3 months prior to the submission of this Inclusion Notice. For a loan Transaction, the loan has not yet been advanced.'
   },
   {
     id: 15,
