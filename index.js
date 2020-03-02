@@ -79,6 +79,8 @@ app.get('/contract/:id/eligibility/preview', (req, res) =>
   })
 )
 
+app.get('/contract/:id/bond/details', (req, res) => res.render('contract-bond-details.njk'))
+
 app.get('/feedback', (req, res) => res.render('feedback.njk'))
 
 app.get('/contact-us', (req, res) => res.render('contact.njk'))
