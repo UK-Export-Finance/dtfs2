@@ -66,6 +66,6 @@ module.exports = {
     }),
     new CopyPlugin([
       { from: './node_modules/govuk-frontend/govuk/assets', to: './assets' }
-    ]),
+    ])
   ]
 }
