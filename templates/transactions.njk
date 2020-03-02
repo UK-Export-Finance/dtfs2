@@ -79,6 +79,25 @@
           </div>
 
           {{ dateRange.inputs(fromLegend = 'Creation date', toLegend = 'And' ) }}
+
+          <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-one-third">
+              <div class="govuk-form-group govuk-!-margin-bottom-0">
+                <label class="govuk-label" for="bank">
+                  Bank
+                </label>
+
+                <select class="govuk-select govuk-!-width-full" id="bank" name="bank">
+                  <option value="all" selected>Any</option>
+                  {% for bank in banks %}
+                    <option value="{{ bank.id }}">{{ bank.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+          </div>          
          
         </details>
 
