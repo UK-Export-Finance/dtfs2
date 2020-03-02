@@ -32,10 +32,18 @@ app.get('/before-you-start/bank-deal', (req, res) => res.render('before-you-star
 app.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk'))
 
 app.get('/dashboard', (req, res) =>
-  res.render('deals.njk', { contracts: MOCKS.CONTRACTS }))
+  res.render('deals.njk', {
+    contracts: MOCKS.CONTRACTS,
+    banks: MOCKS.BANKS
+  })
+)
 
 app.get('/dashboard/transactions', (req, res) =>
-  res.render('transactions.njk', { transactions: MOCKS.TRANSACTIONS }))
+  res.render('transactions.njk', {
+    transactions: MOCKS.TRANSACTIONS,
+    banks: MOCKS.BANKS
+  })
+)
 
 app.get('/contract/:id', (req, res) =>
   res.render('contract-view.njk', getMockContractById(req.params.id))
