@@ -5,6 +5,8 @@ services:
     build: .
     image: dtfs2/portal
     restart: always
+    depends_on:
+      - deal
     ports:
       - "5000:5000"
 
@@ -13,8 +15,6 @@ services:
     build: ./deal
     image: dtfs/deal
     restart: always
-    depends_on:
-      - portal
     ports:
       - "5001:5000"
 
