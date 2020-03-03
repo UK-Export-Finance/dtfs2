@@ -1,7 +1,7 @@
 {
   "name": "dtfs2",
   "version": "1.0.0",
-  "description": "DTFS2 Portal",
+  "description": "DTFS2 deal API",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -15,17 +15,13 @@
     "export",
     "finance"
   ],
-  "author": "David Carboni",
+  "author": "Dan Watkinson",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/notbinary/dtfs2/issues"
   },
   "homepage": "https://github.com/notbinary/dtfs2#readme",
   "dependencies": {
-    "axios": "^0.19.2",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "govuk-frontend": "^3.5.0",
-    "nunjucks": "^3.2.0"
+    "express": "^4.17.1"
   }
 }
