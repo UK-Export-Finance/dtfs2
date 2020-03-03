@@ -337,15 +337,22 @@ const MOCKS = {
       bondTransactions: {
         items: [
           {
+            id: 1,
             bankReferenceNumber: 'Not entered',
             ukefFacilityID: '12345678',
             value: 'GBP 123,456.00',
             stage: 'Unconditional',
             startDate: '12/02/2020',
             endDate: '14/03/2027',
-            action: '?'
+            action: '?',
+            completedStatus: {
+              bondDetails: true,
+              bondFinancialDetails: false,
+              feeDetails: false
+            }
           },
           {
+            id: 2,
             bankReferenceNumber: 'test',
             ukefFacilityID: '12345678',
             value: 'GBP 123,456.00',

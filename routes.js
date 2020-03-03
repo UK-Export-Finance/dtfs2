@@ -7,6 +7,9 @@ const getMockContractById = id =>
   MOCKS.CONTRACTS.find(c => c.id === id) || MOCKS.CONTRACTS[0];
 
 
+const getContractBondById = (contract, bondId) => 
+  contract.bondTransactions.items.find(bond => bond.id === bondId) || contract.bondTransactions.items[0];
+
 router.get('/', (req, res) => res.redirect('/login'))
 
 router.get('/login', (req, res) => res.render('login.njk'))
@@ -69,7 +72,15 @@ router.get('/contract/:id/eligibility/preview', (req, res) =>
   })
 )
 
-router.get('/contract/:id/bond/details', (req, res) => res.render('contract-bond-details.njk'))
+router.get('/contract/:id/bond/:bondId/details', (req, res) =>
+  res.render('contract-bond-details.njk', {
+    contractId: req.params.id,
+    bond: getContractBondById(
+      getMockContractById(req.params.id),
+      req.params.bondId
+    )
+  })
+)
 
 router.get('/feedback', (req, res) => res.render('feedback.njk'))
 
