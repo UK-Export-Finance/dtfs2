@@ -1,6 +1,6 @@
 const express = require('express')
 const nunjucks = require('nunjucks')
-const MOCKS = require('./mocks')
+const api = require('./api');
 
 const app = express()
 
@@ -16,66 +16,66 @@ nunjucks.configure('templates', {
   watch: true
 });
 
-const getMockContractById = id =>
-  MOCKS.CONTRACTS.find(c => c.id === id) || MOCKS.CONTRACTS[0];
-
+// const getMockContractById = id =>
+//   MOCKS.CONTRACTS.find(c => c.id === id) || MOCKS.CONTRACTS[0];
+//
 app.get('/', (req, res) => res.render('login.njk'))
 
 app.get('/start-now', (req, res) => res.render('start-now.njk'))
 
-app.get('/before-you-start', (req, res) =>
-  res.render('before-you-start.njk', { mandatoryCriteria: MOCKS.MANDATORY_CRITERIA })
+app.get('/before-you-start', async (req, res) =>
+  res.render('before-you-start.njk', { mandatoryCriteria: await api.mandatoryCriteria() })
 )
 
 app.get('/before-you-start/bank-deal', (req, res) => res.render('before-you-start-bank-deal.njk'))
 
 app.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk'))
 
-app.get('/dashboard', (req, res) =>
+app.get('/dashboard', async (req, res) =>
   res.render('deals.njk', {
-    contracts: MOCKS.CONTRACTS,
-    banks: MOCKS.BANKS
+    contracts: await api.contracts(),
+    banks: await api.banks()
   })
 )
 
-app.get('/dashboard/transactions', (req, res) =>
+app.get('/dashboard/transactions', async (req, res) =>
   res.render('transactions.njk', {
-    transactions: MOCKS.TRANSACTIONS,
-    banks: MOCKS.BANKS
+    transactions: await api.transactions(),
+    banks: await api.banks()
   })
 )
 
-app.get('/contract/:id', (req, res) =>
-  res.render('contract-view.njk', getMockContractById(req.params.id))
+app.get('/contract/:id', async (req, res) =>
+  res.render('contract-view.njk', await api.contract(req.params.id))
 )
 
-app.get('/contract/:id/comments', (req, res) => 
-  res.render('contract-view-comments.njk', getMockContractById(req.params.id))
+app.get('/contract/:id/comments', async (req, res) =>
+  res.render('contract-view-comments.njk', await api.contract(req.params.id))
 )
 
-app.get('/contract/:id/submission-details', (req, res) => 
+app.get('/contract/:id/submission-details', async (req, res) =>
   res.render('contract-submission-details.njk', {
-    contract: getMockContractById(req.params.id),
-    mandatoryCriteria: MOCKS.MANDATORY_CRITERIA
+    contract: await api.contract(req.params.id),
+    mandatoryCriteria: await api.mandatoryCriteria()
   })
 )
 
-app.get('/contract/:id/delete', (req, res) =>
-  res.render('contract-delete.njk', getMockContractById(req.params.id))
+app.get('/contract/:id/delete', async (req, res) =>
+  res.render('contract-delete.njk', await api.contract(req.params.id))
 )
 
-app.get('/contract/:id/eligibility/criteria', (req, res) =>
-  res.render('confirm-eligibility-criteria.njk', getMockContractById(req.params.id))
+app.get('/contract/:id/eligibility/criteria', async (req, res) =>
+  res.render('confirm-eligibility-criteria.njk', await api.contract(req.params.id))
 )
 
-app.get('/contract/:id/eligibility/supporting-documentation', (req, res) =>
-  res.render('confirm-eligibility-supporting-documentation.njk', getMockContractById(req.params.id))
+app.get('/contract/:id/eligibility/supporting-documentation', async (req, res) =>
+  res.render('confirm-eligibility-supporting-documentation.njk', await api.contract(req.params.id))
 )
 
-app.get('/contract/:id/eligibility/preview', (req, res) =>
+app.get('/contract/:id/eligibility/preview', async (req, res) =>
   res.render('confirm-eligibility-preview.njk', {
-    contract: getMockContractById(req.params.id),
-    mandatoryCriteria: MOCKS.MANDATORY_CRITERIA
+    contract: await api.contract(req.params.id),
+    mandatoryCriteria: await api.mandatoryCriteria()
   })
 )
 

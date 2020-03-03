@@ -1,0 +1,22 @@
+version: '3'
+services:
+  portal:
+    container_name: portal
+    build: .
+    image: dtfs2/portal
+    restart: always
+    ports:
+      - "5000:5000"
+
+  deal:
+    container_name: deal
+    build: ./deal
+    image: dtfs/deal
+    restart: always
+    depends_on:
+      - portal
+    ports:
+      - "5001:5000"
+
+networks:
+   default:
