@@ -1,4 +1,4 @@
-{% import 'macros/confirm-eligibility-intro-nav.njk' as nav %}
+{% import 'macros/progress-nav.njk' as progressNav %}
 
 {% macro intro(completedStatus, current, contractId) %}
 
@@ -20,7 +20,7 @@
 
     <div class="govuk-grid-column-one-half">
 
-      {{ nav.navItem(
+      {{ progressNav.navItem(
           title = 'Eligibility criteria',
           id = 'eligibilityCriteria',
           step = 1,
@@ -30,7 +30,7 @@
           current = current
       )}}
 
-      {{ nav.navItem(
+      {{ progressNav.navItem(
           title = 'Supporting documentation',
           id = 'supportingDocumentation',
           step = 2,
@@ -44,7 +44,7 @@
 
     <div class="govuk-grid-column-one-half">
    
-      {{ nav.navItem(
+      {{ progressNav.navItem(
           title = 'Preview',
           id = 'preview',
           completed = completedStatus.eligibilityCriteria and completedStatus.supportingDocumentation,

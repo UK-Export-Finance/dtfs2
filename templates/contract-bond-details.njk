@@ -1,4 +1,5 @@
 {% extends "index.njk" %}
+{% import 'macros/progress-nav.njk' as progressNav %}
 
 {% block content %}
 
@@ -20,6 +21,59 @@
 
   <h1 class="govuk-heading-l">Bond</h1>
 
+  <div class="govuk-grid-row govuk-!-margin-bottom-8">
+
+    <div class="govuk-grid-column-one-half">
+
+      {{ progressNav.navItem(
+          title = 'Bond Details',
+          id = 'bondDetails',
+          step = 1,
+          completed = bond.completedStatus.bondDetails,
+          href = 'bond/details',
+          contractId = contractId,
+          current = current
+      )}}
+
+      {{ progressNav.navItem(
+          title = 'Bond financial details',
+          id = 'bondFinancialDetails',
+          step = 2,
+          completed = bond.completedStatus.bondFinancialDetails,
+          href = 'bond/financial-details',
+          contractId = contractId,
+          current = current
+      )}}
+
+      {{ progressNav.navItem(
+          title = 'Fee details',
+          id = 'feeDetails',
+          step = 3,
+          completed = bond.completedStatus.feeDetails,
+          href = 'bond/fee-details',
+          contractId = contractId,
+          current = current
+      )}}
+      
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+   
+      {{ progressNav.navItem(
+          title = 'Preview',
+          id = 'preview',
+          completed = bond.completedStatus.bondDetails and bond.completedStatus.bondFinancialDetails and bond.completedStatus.feeDetails,
+          href = 'bond/preview',
+          contractId = contractId,
+          current = current
+      )}}
+      
+    </div>
+
+  </div>
+
+  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+
   <form autocomplete="off">
 
     <div class="govuk-grid-row">
@@ -33,7 +87,7 @@
               <label class="govuk-label" for="bondIssuer">
                 Bond issuer (optional)
               </label>
-              <span id="bond-issuer-hint" class="govuk-hint"
+              <span id="bond-issuer-hint" class="govuk-hint">
                 Only enter if Bond issuer differs from the bank
               </span>
 

@@ -104,7 +104,10 @@
 
             {% if bondTransactions.items %}
               <div class="govuk-grid-column-full">
-                {{ transactionsTable.table(bondTransactions.items) }}
+                {{ transactionsTable.table(
+                  items = bondTransactions.items,
+                  hrefRoot = '/bond'
+                ) }}
               </div>
             {% endif %}
 
@@ -132,7 +135,10 @@
 
             {% if loanTransactions.items %}
               <div class="govuk-grid-column-full">
-                {{ transactionsTable.table(loanTransactions.items) }}
+                {{ transactionsTable.table(
+                  items = loanTransactions.items,
+                  hrefRoot = '/loan'
+                ) }}
               </div>
             {% endif %}
 
