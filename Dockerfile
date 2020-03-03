@@ -4,9 +4,10 @@ WORKDIR /app
 
 ADD package.json .
 ADD package-lock.json .
-ADD webpack.* ./
 RUN npm install
 
 ADD . .
+RUN npm run buildProd
+ADD dist .
 
-ENTRYPOINT node index.js
+ENTRYPOINT node dist/server.js
