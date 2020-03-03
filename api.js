@@ -28,7 +28,7 @@ const transactions = async () => {
   return response.data;
 };
 
-module.exports = {
+export default {
   banks,
   contract,
   contracts,
