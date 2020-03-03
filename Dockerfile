@@ -8,6 +8,6 @@ RUN npm install
 
 ADD . .
 RUN npm run buildProd
-ADD dist .
 
 ENTRYPOINT node dist/server.js
+
