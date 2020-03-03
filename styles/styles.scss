@@ -1,0 +1,11 @@
+@import "node_modules/govuk-frontend/govuk/all";
+@import "node_modules/govuk-frontend/govuk/settings/_colours-organisations.scss";
+
+// custom styles
+@import "./box.scss";
+@import "./breadcrumbs.scss";
+@import "./criteria-nav.scss";
+@import "./comment.scss";
+@import "./contract.scss";
+@import "./contract-table.scss";
+@import "./feedback-table.scss";
