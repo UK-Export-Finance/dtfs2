@@ -6,6 +6,8 @@ const app = express()
 const HOST = '0.0.0.0';
 const PORT = process.env.PORT || 5000
 
+console.log(PORT)
+
 const getMockContractById = id =>
   MOCKS.CONTRACTS.find(c => c.id === id) || MOCKS.CONTRACTS[0];
 
@@ -34,4 +36,4 @@ const getMockContractById = id =>
     res.status(200).send(getMockContractById(req.params.id))
   });
 
-app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`))
+app.listen(PORT, () => console.log(`Deals API listening on port ${PORT}`))
