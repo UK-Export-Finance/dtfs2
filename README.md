@@ -16,3 +16,13 @@ From another terminal, stop everything cleanly with:
 ```
 docker-compose down
 ```
+
+Portal can then be seen on:
+```
+http://localhost:5000
+```
+
+the API services can be seen for eg. on:
+```
+http://localhost:5001/mocks/contract/2
+```
