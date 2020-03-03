@@ -26,3 +26,7 @@ the API services can be seen for eg. on:
 ```
 http://localhost:5001/mocks/contract/2
 ```
+
+a mongoDB instance will have been started:
+* to connect a client from your local machine, connect to localhost:27017 as <todo>/<todo>
+* to connect from within another docker image, connect to dealData:27017, same user/password

@@ -18,5 +18,19 @@ services:
     ports:
       - "5001:5000"
 
+  dealData:
+    container_name: dealData
+    image: 'mongo'
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=<todo>
+      - MONGO_INITDB_ROOT_USERNAME=<todo>
+      - MONGO_INITDB_ROOT_PASSWORD=<todo>
+    volumes:
+      - ./dealData/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./dealData_volume:/data/db
+    ports:
+      - "27017-27019:27017-27019"
+
 networks:
    default:
