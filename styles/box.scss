@@ -1,0 +1,17 @@
+.box {
+  border: 1px dashed lightgrey;
+  margin-bottom: 20px;
+}
+
+.box__header-link {
+  text-align: right;
+}
+
+.box__header-inline-message {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.box__header-inline-message--uppercase {
+  text-transform: uppercase;
+}
