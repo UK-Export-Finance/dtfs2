@@ -4,7 +4,7 @@
 {% block content %}
 
   <script type="text/javascript">
-    function toggleBondStageFormFields(bondStage) {
+    function toggleFormFields(bondStage) {
       var unissuedFormFields = document.getElementById('unissued-form-fields');
       var issuedFormFields = document.getElementById('issued-form-fields');
 
@@ -78,13 +78,13 @@
             </legend>
             <div class="govuk-radios govuk-radios--inline">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="bondStage" name="bondStage" type="radio" value="unissued" onClick="toggleBondStageFormFields('unissued')">
+                <input class="govuk-radios__input" id="bondStage" name="bondStage" type="radio" value="unissued" onClick="toggleFormFields('unissued')">
                 <label class="govuk-label govuk-radios__label" for="bondStage">
                   Unissued
                 </label>
               </div>
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="bondStage2" name="bondStage" type="radio" value="issued" onClick="toggleBondStageFormFields('issued')">
+                <input class="govuk-radios__input" id="bondStage2" name="bondStage" type="radio" value="issued" onClick="toggleFormFields('issued')">
                 <label class="govuk-label govuk-radios__label" for="bondStage2">
                   Issued
                 </label>
@@ -113,7 +113,7 @@
                   Requested Cover Start Date (optional)
               </legend>
               <span id="requested-cover-start-date-hint" class="govuk-hint">
-                For example, 12 11 2019
+                For example, 27 11 2019
               </span>
 
               <span id="requested-cover-start-date-hint-2" class="govuk-hint">
@@ -156,7 +156,7 @@
                   Cover End Date
               </legend>
               <span id="cover-end-date-hint" class="govuk-hint">
-                For example, 12 11 2019
+                For example, 27 11 2019
               </span>
               <div class="govuk-date-input" id="cover-end-date">
                 <div class="govuk-date-input__item">

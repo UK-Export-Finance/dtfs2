@@ -87,7 +87,8 @@ router.get('/contract/:id/bond/:bondId/financial-details', (req, res) =>
     bond: getContractBondById(
       getMockContractById(req.params.id),
       req.params.bondId
-    )
+    ),
+    currencies: MOCKS.BOND_CURRENCIES
   })
 )
 
