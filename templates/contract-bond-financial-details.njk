@@ -1,0 +1,51 @@
+{% extends "index.njk" %}
+{% import 'macros/bond-nav.njk' as bondNav %}
+
+{% block content %}
+
+  <script type="text/javascript">
+    function toggleBondStageFormFields(bondStage) {
+      var unissuedFormFields = document.getElementById('unissued-form-fields');
+      var issuedFormFields = document.getElementById('issued-form-fields');
+
+      if (bondStage === 'unissued') {
+        unissuedFormFields.className = '';
+        issuedFormFields.className = 'govuk-visually-hidden';
+      }
+      if (bondStage === 'issued') {
+        issuedFormFields.className = '';
+        unissuedFormFields.className = 'govuk-visually-hidden';
+      }
+    }
+  </script>
+
+  {{ bondNav.nav(
+    completedStatus = bond.completedStatus,
+    current = 'bondFinancialDetails',
+    contractId = contractId,
+    childId = bond.id
+  )}}
+
+  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+
+  <form autocomplete="off">
+
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-three-quarters">
+                  
+      </div>
+
+    </div>
+
+  </form>
+
+    <button class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
+      Next page
+    </button>
+
+    <button class="govuk-button govuk-button--secondary" data-module="govuk-button">Save and go back to deal</a>
+
+  </form>
+
+{% endblock %}
