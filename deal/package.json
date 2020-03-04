@@ -22,6 +22,9 @@
   },
   "homepage": "https://github.com/notbinary/dtfs2#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongodb": "^3.5.4",
+    "mongoose": "^5.9.3",
+    "xml2js": "^0.4.23"
   }
 }
