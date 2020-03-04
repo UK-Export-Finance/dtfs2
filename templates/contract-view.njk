@@ -106,7 +106,9 @@
               <div class="govuk-grid-column-full">
                 {{ transactionsTable.table(
                   items = bondTransactions.items,
-                  hrefRoot = '/bond'
+                  contractId = id,
+                  hrefRoot = 'bond',
+                  hrefPage = 'details'
                 ) }}
               </div>
             {% endif %}
@@ -137,7 +139,9 @@
               <div class="govuk-grid-column-full">
                 {{ transactionsTable.table(
                   items = loanTransactions.items,
-                  hrefRoot = '/loan'
+                  contractId = id,
+                  hrefRoot = 'loan',
+                  hrefPage = 'guarantee-details'
                 ) }}
               </div>
             {% endif %}
