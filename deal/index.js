@@ -1,14 +1,23 @@
-const bodyParser = require('body-parser');
-const express = require('express')
+const express = require("express");
+const MOCKS = require("./mocks");
 
-const MOCKS = require('./mocks')
+const app = express();
+const mongoose = require("mongoose");
 
-const app = express()
+const HOST = "0.0.0.0";
+const PORT = process.env.PORT || 5000;
 
-const HOST = '0.0.0.0';
-const PORT = process.env.PORT || 5000
+const deals = require("./controllers/deal.controller");
 
-console.log(PORT)
+mongoose.Promise = global.Promise;
+
+app.get("/api/deals", deals.findAll);
+app.put("/api/deals", deals.create);
+
+app.get("/api/deals/:id", deals.findOne);
+app.put("/api/deals/:id", deals.update);
+
+console.log(PORT);
 
 const getMockContractById = id =>
   MOCKS.CONTRACTS.find(c => c.id === id) || MOCKS.CONTRACTS[0];
@@ -36,9 +45,9 @@ const getMockContractById = id =>
   });
 
 //TODO feels like this should send back getMockContractsById(x).comments but just copying from original service for now..
-  app.get('/mocks/contract/:id/comments', (req, res) => {
-    res.status(200).send(getMockContractById(req.params.id))
-  });
+app.get("/mocks/contract/:id/comments", (req, res) => {
+  res.status(200).send(getMockContractById(req.params.id));
+});
 
   app.post('/deal', (req, res) => {
     // prove we're receiving something..
