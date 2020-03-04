@@ -216,7 +216,7 @@ const MOCKS = {
             endDate: '14/03/2027',
             action: '?',
             completedStatus: {
-              bondDetails: true,
+              bondDetails: false,
               bondFinancialDetails: false,
               feeDetails: false
             }
@@ -231,9 +231,9 @@ const MOCKS = {
             endDate: '14/03/2027',
             action: '?',
             completedStatus: {
-              bondDetails: true,
-              bondFinancialDetails: true,
-              feeDetails: true
+              bondDetails: false,
+              bondFinancialDetails: false,
+              feeDetails: false
             }
           }
         ]
@@ -267,9 +267,9 @@ const MOCKS = {
             endDate: '',
             action: '?',
             completedStatus: {
-              bondDetails: true,
-              bondFinancialDetails: true,
-              feeDetails: true
+              bondDetails: false,
+              bondFinancialDetails: false,
+              feeDetails: false
             }
           }
         ]
@@ -414,7 +414,7 @@ const MOCKS = {
             endDate: '14/03/2027',
             action: '?',
             completedStatus: {
-              bondDetails: true,
+              bondDetails: false,
               bondFinancialDetails: false,
               feeDetails: false
             }
@@ -429,9 +429,9 @@ const MOCKS = {
             endDate: '14/03/2027',
             action: '?',
             completedStatus: {
-              bondDetails: true,
-              bondFinancialDetails: true,
-              feeDetails: true
+              bondDetails: false,
+              bondFinancialDetails: false,
+              feeDetails: false
             }
           }
         ]
@@ -449,7 +449,7 @@ const MOCKS = {
             endDate: '14/03/2027',
             action: '?',
             completedStatus: {
-              bondDetails: true,
+              bondDetails: false,
               bondFinancialDetails: false,
               feeDetails: false
             }
@@ -465,9 +465,9 @@ const MOCKS = {
             endDate: '',
             action: '?',
             completedStatus: {
-              bondDetails: true,
-              bondFinancialDetails: true,
-              feeDetails: true
+              bondDetails: false,
+              bondFinancialDetails: false,
+              feeDetails: false
             }
           }
         ]
