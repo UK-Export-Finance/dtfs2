@@ -1,0 +1,66 @@
+{% import 'macros/progress-nav.njk' as progressNav %}
+
+{% macro nav(completedStatus, current, contractId, childId) %}  
+
+  <h1 class="govuk-heading-l">Bond</h1>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-8">
+
+    <div class="govuk-grid-column-one-half">
+
+      {{ progressNav.navItem(
+          title = 'Bond details',
+          id = 'bondDetails',
+          step = 1,
+          completed = completedStatus.bondDetails,
+          href = 'bond',
+          childId = childId,
+          childHref = 'details',
+          contractId = contractId,
+          current = current
+      )}}
+
+      {{ progressNav.navItem(
+          title = 'Bond financial details',
+          id = 'bondFinancialDetails',
+          step = 2,
+          completed = completedStatus.bondFinancialDetails,
+          href = 'bond',
+          childId = childId,
+          childHref = 'financial-details',
+          contractId = contractId,
+          current = current
+      )}}
+
+      {{ progressNav.navItem(
+          title = 'Fee details',
+          id = 'feeDetails',
+          step = 3,
+          completed = completedStatus.feeDetails,
+          href = 'bond',
+          childId = childId,
+          childHref = 'fee-details',
+          contractId = contractId,
+          current = current
+      )}}
+      
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+   
+      {{ progressNav.navItem(
+          title = 'Preview',
+          id = 'preview',
+          completed = completedStatus.bondDetails and completedStatus.bondFinancialDetails and completedStatus.feeDetails,
+          href = 'bond',
+          childId = childId,
+          childHref = 'preview',
+          contractId = contractId,
+          current = current
+      )}}
+      
+    </div>
+
+  </div>    
+
+{% endmacro %}

@@ -1,5 +1,5 @@
 {% extends "index.njk" %}
-{% import 'macros/progress-nav.njk' as progressNav %}
+{% import 'macros/bond-nav.njk' as bondNav %}
 
 {% block content %}
 
@@ -19,66 +19,12 @@
     }
   </script>
 
-  <h1 class="govuk-heading-l">Bond</h1>
-
-  <div class="govuk-grid-row govuk-!-margin-bottom-8">
-
-    <div class="govuk-grid-column-one-half">
-
-      {{ progressNav.navItem(
-          title = 'Bond details',
-          id = 'bondDetails',
-          step = 1,
-          completed = bond.completedStatus.bondDetails,
-          href = 'bond',
-          childId = bond.id,
-          childHref = 'details',
-          contractId = contractId,
-          current = 'bondDetails'
-      )}}
-
-      {{ progressNav.navItem(
-          title = 'Bond financial details',
-          id = 'bondFinancialDetails',
-          step = 2,
-          completed = bond.completedStatus.bondFinancialDetails,
-          href = 'bond',
-          childId = bond.id,
-          childHref = 'financial-details',
-          contractId = contractId,
-          current = 'bondDetails'
-      )}}
-
-      {{ progressNav.navItem(
-          title = 'Fee details',
-          id = 'feeDetails',
-          step = 3,
-          completed = bond.completedStatus.feeDetails,
-          href = 'bond',
-          childId = bond.id,
-          childHref = 'fee-details',
-          contractId = contractId,
-          current = 'bondDetails'
-      )}}
-      
-    </div>
-
-    <div class="govuk-grid-column-one-half">
-   
-      {{ progressNav.navItem(
-          title = 'Preview',
-          id = 'preview',
-          completed = bond.completedStatus.bondDetails and bond.completedStatus.bondFinancialDetails and bond.completedStatus.feeDetails,
-          href = 'bond',
-          childId = bond.id,
-          childHref = 'preview',
-          contractId = contractId,
-          current = current
-      )}}
-      
-    </div>
-
-  </div>
+  {{ bondNav.nav(
+    completedStatus = bond.completedStatus,
+    current = 'bondDetails',
+    contractId = contractId,
+    childId = bond.id
+  )}}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
 
