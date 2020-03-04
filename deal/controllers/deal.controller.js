@@ -9,8 +9,6 @@ const password = encodeURIComponent("<todo>");
 const authMechanism = "DEFAULT";
 const url = `mongodb://${user}:${password}@localhost:27017/?authMechanism=${authMechanism}`;
 
-const client = new MongoClient(url, { useNewUrlParser: true });
-
 const getDealById = id => {
   return MOCKS.CONTRACTS.find(c => c.id === id) || MOCKS.CONTRACTS[0];
 };
@@ -26,9 +24,21 @@ const findDeals = (db, callback) => {
   });
 };
 
+const findOneDeal = (id, db, callback) => {
+  const collection = db.collection("deals");
+
+  collection.findOne({ id }, function(err, result) {
+    console.log({ result });
+    assert.equal(err, null);
+    callback(result);
+  });
+};
+
 exports.create = (req, res) => {};
 
 exports.findAll = (req, res) => {
+  const client = new MongoClient(url, { useNewUrlParser: true });
+
   client.connect(function(err) {
     const db = client.db(dbName);
 
@@ -41,7 +51,16 @@ exports.findAll = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
-  res.status(200).send(getDealById(req.params.id));
+  const client = new MongoClient(url, { useNewUrlParser: true });
+
+  client.connect(function(err) {
+    const db = client.db(dbName);
+
+    findOneDeal(req.params.id, db, deal => {
+      client.close();
+      res.status(200).send(deal);
+    });
+  });
 };
 
 exports.update = (req, res) => {};
