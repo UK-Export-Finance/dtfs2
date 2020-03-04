@@ -26,13 +26,15 @@
     <div class="govuk-grid-column-one-half">
 
       {{ progressNav.navItem(
-          title = 'Bond Details',
+          title = 'Bond details',
           id = 'bondDetails',
           step = 1,
           completed = bond.completedStatus.bondDetails,
-          href = 'bond/details',
+          href = 'bond',
+          childId = bond.id,
+          childHref = 'details',
           contractId = contractId,
-          current = current
+          current = 'bondDetails'
       )}}
 
       {{ progressNav.navItem(
@@ -40,9 +42,11 @@
           id = 'bondFinancialDetails',
           step = 2,
           completed = bond.completedStatus.bondFinancialDetails,
-          href = 'bond/financial-details',
+          href = 'bond',
+          childId = bond.id,
+          childHref = 'financial-details',
           contractId = contractId,
-          current = current
+          current = 'bondDetails'
       )}}
 
       {{ progressNav.navItem(
@@ -50,9 +54,11 @@
           id = 'feeDetails',
           step = 3,
           completed = bond.completedStatus.feeDetails,
-          href = 'bond/fee-details',
+          href = 'bond',
+          childId = bond.id,
+          childHref = 'fee-details',
           contractId = contractId,
-          current = current
+          current = 'bondDetails'
       )}}
       
     </div>
@@ -63,7 +69,9 @@
           title = 'Preview',
           id = 'preview',
           completed = bond.completedStatus.bondDetails and bond.completedStatus.bondFinancialDetails and bond.completedStatus.feeDetails,
-          href = 'bond/preview',
+          href = 'bond',
+          childId = bond.id,
+          childHref = 'preview',
           contractId = contractId,
           current = current
       )}}

@@ -1,4 +1,4 @@
-{% macro navItem(title, id, step, completed, href, current, contractId) %}
+{% macro navItem(title, id, step, completed, href, childId, childHref, contractId, current) %}
   
   <div
     {% if completed and current === id %}
@@ -14,6 +14,7 @@
       class="govuk-!-margin-bottom-2 govuk-!-padding-0 criteria__nav-item"
     {% endif %}
   >
+
     {% if completed %}
       <div class="govuk-checkboxes__item">
         <input class="govuk-checkboxes__input" id="{{ id }}" name="{{ id }}" type="checkbox" value="{{ id }}" checked="true" disabled>
@@ -21,7 +22,17 @@
           {% if current === id %}
             {{ title }}
           {% else %}
-            <a class="govuk-link" href="/contract/{{ contractId }}/{{ href }}">{{ title }}</a>
+
+            {% if childId and childHref %}
+              <a class="govuk-link" href="/contract/{{ contractId }}/{{ href }}/{{ childId }}/{{ childHref }}">
+                {{ title }}
+              </a>
+            {% else %}
+            <a class="govuk-link" href="/contract/{{ contractId }}/{{ href }}">
+              {{ title }}
+            </a>
+            {% endif %}
+
           {% endif %}
         </label>
       </div>
@@ -38,9 +49,17 @@
         {% if id === 'preview' or current === id %}
           {{ title }}
         {% else %}
-          <a class="govuk-link" href="/contract/{{ contractId }}/{{ href }}">
-            {{ title }}
-          </a>
+
+            {% if childId and childHref %}
+            <a class="govuk-link" href="/contract/{{ contractId }}/{{ href }}/{{ childId }}/{{ childHref }}">
+              {{ title }}
+            </a>
+            {% else %}
+            <a class="govuk-link" href="/contract/{{ contractId }}/{{ href }}">
+              {{ title }}
+            </a>
+
+          {% endif %}
         {% endif %}
       </p>
     {% endif %}

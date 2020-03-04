@@ -207,7 +207,7 @@ const MOCKS = {
       bondTransactions: {
         items: [
           {
-            id: 1,
+            id: '1',
             bankReferenceNumber: 'Not entered',
             ukefFacilityID: '12345678',
             value: 'GBP 123,456.00',
@@ -222,7 +222,7 @@ const MOCKS = {
             }
           },
           {
-            id: 2,
+            id: '2',
             bankReferenceNumber: 'test',
             ukefFacilityID: '12345678',
             value: 'GBP 123,456.00',
@@ -241,7 +241,7 @@ const MOCKS = {
       loanTransactions: {
         items: [
           {
-            id: 1,
+            id: '1',
             bankReferenceNumber: 'Not entered',
             ukefFacilityID: '12345678',
             status: 'Not started',
@@ -257,7 +257,7 @@ const MOCKS = {
             }
           },
           {
-            id: 2,
+            id: '2',
             bankReferenceNumber: 'test',
             ukefFacilityID: '12345678',
             status: 'Incomplete',
@@ -405,7 +405,7 @@ const MOCKS = {
       bondTransactions: {
         items: [
           {
-            id: 1,
+            id: '1',
             bankReferenceNumber: 'Not entered',
             ukefFacilityID: '12345678',
             value: 'GBP 123,456.00',
@@ -420,7 +420,7 @@ const MOCKS = {
             }
           },
           {
-            id: 2,
+            id: '2',
             bankReferenceNumber: 'test',
             ukefFacilityID: '12345678',
             value: 'GBP 123,456.00',
@@ -439,7 +439,7 @@ const MOCKS = {
       loanTransactions: {
         items: [
           {
-            id: 1,
+            id: '1',
             bankReferenceNumber: 'Not entered',
             ukefFacilityID: '12345678',
             status: 'Not started',
@@ -455,7 +455,7 @@ const MOCKS = {
             }
           },
           {
-            id: 2,
+            id: '2',
             bankReferenceNumber: 'test',
             ukefFacilityID: '12345678',
             status: 'Incomplete',

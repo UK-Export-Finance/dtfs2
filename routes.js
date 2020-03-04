@@ -6,7 +6,6 @@ const router = express.Router()
 const getMockContractById = id =>
   MOCKS.CONTRACTS.find(c => c.id === id) || MOCKS.CONTRACTS[0];
 
-
 const getContractBondById = (contract, bondId) => 
   contract.bondTransactions.items.find(bond => bond.id === bondId) || contract.bondTransactions.items[0];
 
