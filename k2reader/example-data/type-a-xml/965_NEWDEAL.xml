@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Deal portal_deal_id="965" application_group="BSS and EWCS" revision_id="4409" action_name="NewDeal" action_code="003"
+      message_type="A">
+    <General_information>
+        <Deal_name><![CDATA[26/04/2017]]></Deal_name>
+        <Bank_deal_id><![CDATA[SIT TEST 26/04/2017]]></Bank_deal_id>
+    </General_information>
+    <Application_route>ATP</Application_route>
+    <Application_owner>test_deal@example.com</Application_owner>
+    <Application_owner_email>test_deal@example.com</Application_owner_email>
+    <Application_bank>Barry's Delegated Bank</Application_bank>
+    <UKEF_deal_id/>
+    <Deal_information>
+        <Exporter_and_indemnifier>
+            <Customer_type>1</Customer_type>
+            <Exporter_co_hse_reg_number>00000006</Exporter_co_hse_reg_number>
+            <Exporter_registration_source>Companies House</Exporter_registration_source>
+            <Exporter_name><![CDATA[MARINE AND GENERAL MUTUAL LIFE ASSURANCE SOCIETY]]></Exporter_name>
+            <Exporter_postcode>EC4N 6AF</Exporter_postcode>
+            <Industry_sector_code>1010</Industry_sector_code>
+            <Industry_sector_name>1010</Industry_sector_name>
+            <Industry_class_code>65110</Industry_class_code>
+            <Industry_class_name>65110</Industry_class_name>
+            <Sme_type>2</Sme_type>
+            <Description_of_export><![CDATA[dddd]]></Description_of_export>
+            <Bank_security><![CDATA[asdasds]]></Bank_security>
+            <Indemnifier_co_hse_reg_number>00000006</Indemnifier_co_hse_reg_number>
+            <Indemnifier_name><![CDATA[MARINE AND GENERAL MUTUAL LIFE ASSURANCE SOCIETY]]></Indemnifier_name>
+            <Indemnifier_postcode>EC4N 6AF</Indemnifier_postcode>
+        </Exporter_and_indemnifier>
+        <Buyer>
+            <Buyer_name><![CDATA[dddd]]></Buyer_name>
+            <Buyer_country_code>50</Buyer_country_code>
+            <Buyer_country_name>Bangladesh</Buyer_country_name>
+            <Destination_country_code>50</Destination_country_code>
+            <Destination_country_label>Bangladesh</Destination_country_label>
+        </Buyer>
+        <Financial>
+            <Deal_currency_code>51</Deal_currency_code>
+            <Deal_currency_name>IDR - Indonesian Rupiah</Deal_currency_name>
+            <Conversion_rate>56</Conversion_rate>
+            <Conversion_date>01-02-2017</Conversion_date>
+            <Contract_value>123465.00</Contract_value>
+        </Financial>
+    </Deal_information>
+    <Eligibility_checklist>
+        <Ec_agents_check>true</Ec_agents_check>
+        <Ec_initial_term_check>false</Ec_initial_term_check>
+        <Ec_total_exposure_check>true</Ec_total_exposure_check>
+        <Ec_bond_issuance_check>true</Ec_bond_issuance_check>
+        <Ec_industry_check>true</Ec_industry_check>
+        <Ec_indemnifier_turnover_check>true</Ec_indemnifier_turnover_check>
+        <Ec_indemnifier_net_worth_check>true</Ec_indemnifier_net_worth_check>
+        <Ec_indemnifier_liquidity_check>true</Ec_indemnifier_liquidity_check>
+        <Ec_indemnifier_filed_accounts_check>true</Ec_indemnifier_filed_accounts_check>
+        <Ec_indemnifier_watchlist_check>true</Ec_indemnifier_watchlist_check>
+        <Ec_indemnifier_rating_check>true</Ec_indemnifier_rating_check>
+        <Ec_internal_approval_check>true</Ec_internal_approval_check>
+        <Ec_third_party_check xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+        <Agent_name/>
+        <Agent_address/>
+    </Eligibility_checklist>
+    <Facilities>
+        <BSS>
+            <UKEF_BSS_facility_id/>
+            <BSS_Guarantee_details>
+                <BSS_portal_facility_id>5153</BSS_portal_facility_id>
+                <BSS_bank_id/>
+                <BSS_issuer/>
+                <BSS_type>1</BSS_type>
+                <BSS_stage>2</BSS_stage>
+                <BSS_beneficiary/>
+            </BSS_Guarantee_details>
+            <BSS_Financial_details>
+                <BSS_value>123456.00</BSS_value>
+                <BSS_currency_code>51</BSS_currency_code>
+                <BSS_currency_name>IDR - Indonesian Rupiah</BSS_currency_name>
+                <BSS_conversion_rate_deal>4.5</BSS_conversion_rate_deal>
+                <BSS_conversion_date_deal>14-02-2017</BSS_conversion_date_deal>
+                <BSS_fee_rate>56</BSS_fee_rate>
+                <BSS_fee_perc>50.4000</BSS_fee_perc>
+                <BSS_guarantee_perc>56</BSS_guarantee_perc>
+                <BSS_max_liability>69135.36</BSS_max_liability>
+                <BSS_min_quarterly_fee>568</BSS_min_quarterly_fee>
+            </BSS_Financial_details>
+            <BSS_Dates_repayments>
+                <BSS_premium_freq>2</BSS_premium_freq>
+                <BSS_premium_type>1</BSS_premium_type>
+                <BSS_cover_start_date>01-02-2017</BSS_cover_start_date>
+                <BSS_issue_date/>
+                <BSS_cover_end_date>01-02-2020</BSS_cover_end_date>
+                <BSS_cover_period/>
+                <BSS_day_basis>1</BSS_day_basis>
+            </BSS_Dates_repayments>
+        </BSS>
+        <EWCS>
+            <UKEF_EWCS_facility_id/>
+            <EWCS_Guarantee_details>
+                <EWCS_portal_facility_id>5166</EWCS_portal_facility_id>
+                <EWCS_bank_id>998877</EWCS_bank_id>
+                <EWCS_stage>2</EWCS_stage>
+            </EWCS_Guarantee_details>
+            <EWCS_Financial_details>
+                <EWCS_value>564578.00</EWCS_value>
+                <EWCS_currency_code>51</EWCS_currency_code>
+                <EWCS_currency_name>IDR - Indonesian Rupiah</EWCS_currency_name>
+                <EWCS_conversion_rate_deal>56</EWCS_conversion_rate_deal>
+                <EWCS_conversion_date_deal>01-02-2017</EWCS_conversion_date_deal>
+                <EWCS_interest_rate>45</EWCS_interest_rate>
+                <EWCS_fee_perc>40.5000</EWCS_fee_perc>
+                <EWCS_guarantee_perc>45</EWCS_guarantee_perc>
+                <EWCS_max_liability>254060.10</EWCS_max_liability>
+                <EWCS_min_quarterly_fee>4568</EWCS_min_quarterly_fee>
+            </EWCS_Financial_details>
+            <EWCS_Dates_repayments>
+                <EWCS_premium_type>2</EWCS_premium_type>
+                <EWCS_premium_freq>1</EWCS_premium_freq>
+                <EWCS_cover_start_date>01-07-2017</EWCS_cover_start_date>
+                <EWCS_issue_date/>
+                <EWCS_cover_end_date>01-07-2022</EWCS_cover_end_date>
+                <EWCS_cover_period/>
+                <EWCS_day_basis>1</EWCS_day_basis>
+            </EWCS_Dates_repayments>
+            <EWCS_Drawdowns>
+                <EWCS_Drawdown_details>
+                    <EWCS_drawdown_date>01-02-2017</EWCS_drawdown_date>
+                    <EWCS_drawdown_amount>45678.00</EWCS_drawdown_amount>
+                    <EWCS_drawdown_cumulative>99887745.00</EWCS_drawdown_cumulative>
+                </EWCS_Drawdown_details>
+            </EWCS_Drawdowns>
+        </EWCS>
+    </Facilities>
+    <Deal_summary>
+        <Deal_no_facilities>2</Deal_no_facilities>
+        <Deal_total_exposure_gbp>31649476.32</Deal_total_exposure_gbp>
+        <Deal_total_premium_gbp>16158696.52</Deal_total_premium_gbp>
+        <Deal_total_exposure_deal_cur>565169.22</Deal_total_exposure_deal_cur>
+        <Deal_total_premium_deal_cur>288548.15</Deal_total_premium_deal_cur>
+        <BSS_no_facilities>1</BSS_no_facilities>
+        <BSS_total_exposure_gbp>17422110.72</BSS_total_exposure_gbp>
+        <BSS_total_premium_gbp>9756382.00</BSS_total_premium_gbp>
+        <BSS_total_exposure_deal_cur>311109.12</BSS_total_exposure_deal_cur>
+        <BSS_total_premium_deal_cur>174221.11</BSS_total_premium_deal_cur>
+        <EWCS_no_facilities>1</EWCS_no_facilities>
+        <EWCS_total_exposure_gbp>14227365.60</EWCS_total_exposure_gbp>
+        <EWCS_total_premium_gbp>6402314.52</EWCS_total_premium_gbp>
+        <EWCS_total_exposure_deal_cur>254060.10</EWCS_total_exposure_deal_cur>
+        <EWCS_total_premium_deal_cur>114327.05</EWCS_total_premium_deal_cur>
+    </Deal_summary>
+    <Deal_files/>
+</Deal>

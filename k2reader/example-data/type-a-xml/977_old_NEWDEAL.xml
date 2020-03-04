@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Deal portal_deal_id="977" application_group="BSS and EWCS" revision_id="4424" action_name="NewDeal" action_code="003"
+      message_type="A">
+    <General_information>
+        <Deal_name><![CDATA[REGRESSION TEST 15/06/2017]]></Deal_name>
+        <Bank_deal_id><![CDATA[Production Release v4.0]]></Bank_deal_id>
+    </General_information>
+    <Application_route>ATP</Application_route>
+    <Application_owner>drao@ukexportfinance.gov.uk</Application_owner>
+    <Application_owner_email>drao@ukexportfinance.gov.uk</Application_owner_email>
+    <Application_bank>Barry's Delegated Bank</Application_bank>
+    <UKEF_deal_id/>
+    <Deal_information>
+        <Exporter_and_indemnifier>
+            <Customer_type>1</Customer_type>
+            <Exporter_co_hse_reg_number/>
+            <Exporter_registration_source>Companies House</Exporter_registration_source>
+            <Exporter_name><![CDATA[REGRESSION TEST]]></Exporter_name>
+            <Exporter_postcode>E6 1FT</Exporter_postcode>
+            <Industry_sector_code>1010</Industry_sector_code>
+            <Industry_sector_name>1010</Industry_sector_name>
+            <Industry_class_code>64992</Industry_class_code>
+            <Industry_class_name>64992</Industry_class_name>
+            <Sme_type>4</Sme_type>
+            <Description_of_export>
+                <![CDATA[A brief description of the goods and/or services provided in this Supply Contract. ]]></Description_of_export>
+            <Bank_security>
+                <![CDATA[Details of the overarching general facility taken by the bank in relation to the exporter, for example debenture, fixed and floating charge, but not including any related security Details of the overarching general facility taken by the bank in relation to the exporter, for example debenture, fixed ]]></Bank_security>
+            <Indemnifier_co_hse_reg_number/>
+            <Indemnifier_name><![CDATA[MESSAGE CODE]]></Indemnifier_name>
+            <Indemnifier_postcode>ig11 7fd</Indemnifier_postcode>
+        </Exporter_and_indemnifier>
+        <Buyer>
+            <Buyer_name><![CDATA[BIND&BRO LIMITED]]></Buyer_name>
+            <Buyer_country_code>826</Buyer_country_code>
+            <Buyer_country_name>United Kingdom</Buyer_country_name>
+            <Destination_country_code>826</Destination_country_code>
+            <Destination_country_label>United Kingdom</Destination_country_label>
+        </Buyer>
+        <Financial>
+            <Deal_currency_code>12</Deal_currency_code>
+            <Deal_currency_name>GBP - UK Sterling</Deal_currency_name>
+            <Conversion_rate>85.62</Conversion_rate>
+            <Conversion_date>15-06-2017</Conversion_date>
+            <Contract_value>200000.00</Contract_value>
+        </Financial>
+    </Deal_information>
+    <Eligibility_checklist>
+        <Ec_agents_check>false</Ec_agents_check>
+        <Ec_initial_term_check>true</Ec_initial_term_check>
+        <Ec_total_exposure_check>true</Ec_total_exposure_check>
+        <Ec_bond_issuance_check>true</Ec_bond_issuance_check>
+        <Ec_industry_check>false</Ec_industry_check>
+        <Ec_indemnifier_turnover_check>true</Ec_indemnifier_turnover_check>
+        <Ec_indemnifier_net_worth_check>true</Ec_indemnifier_net_worth_check>
+        <Ec_indemnifier_liquidity_check>true</Ec_indemnifier_liquidity_check>
+        <Ec_indemnifier_filed_accounts_check>false</Ec_indemnifier_filed_accounts_check>
+        <Ec_indemnifier_watchlist_check>true</Ec_indemnifier_watchlist_check>
+        <Ec_indemnifier_rating_check>true</Ec_indemnifier_rating_check>
+        <Ec_internal_approval_check>true</Ec_internal_approval_check>
+        <Ec_third_party_check xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+        <Agent_name/>
+        <Agent_address>3-4-96/23, Dark Building, Harley Street, Companies Road, West London, United Kingdom, 8TY 3DGY
+        </Agent_address>
+    </Eligibility_checklist>
+    <Facilities>
+        <BSS>
+            <UKEF_BSS_facility_id/>
+            <BSS_Guarantee_details>
+                <BSS_portal_facility_id>5186</BSS_portal_facility_id>
+                <BSS_bank_id/>
+                <BSS_issuer><![CDATA[Barclays Bank plc]]></BSS_issuer>
+                <BSS_type>3</BSS_type>
+                <BSS_stage>2</BSS_stage>
+                <BSS_beneficiary><![CDATA[Bond issuer]]></BSS_beneficiary>
+            </BSS_Guarantee_details>
+            <BSS_Financial_details>
+                <BSS_value>200000.00</BSS_value>
+                <BSS_currency_code>58</BSS_currency_code>
+                <BSS_currency_name>ZMK - Zambian Kwacha</BSS_currency_name>
+                <BSS_conversion_rate_deal>89.62</BSS_conversion_rate_deal>
+                <BSS_conversion_date_deal>14-05-2017</BSS_conversion_date_deal>
+                <BSS_fee_rate>10</BSS_fee_rate>
+                <BSS_fee_perc>9.0000</BSS_fee_perc>
+                <BSS_guarantee_perc>80</BSS_guarantee_perc>
+                <BSS_max_liability>160000.00</BSS_max_liability>
+                <BSS_min_quarterly_fee>25.65</BSS_min_quarterly_fee>
+            </BSS_Financial_details>
+            <BSS_Dates_repayments>
+                <BSS_premium_freq>2</BSS_premium_freq>
+                <BSS_premium_type>1</BSS_premium_type>
+                <BSS_cover_start_date>13-05-2017</BSS_cover_start_date>
+                <BSS_issue_date/>
+                <BSS_cover_end_date>12-04-2018</BSS_cover_end_date>
+                <BSS_exposure_period>85</BSS_exposure_period>
+                <BSS_day_basis>1</BSS_day_basis>
+            </BSS_Dates_repayments>
+        </BSS>
+        <EWCS>
+            <UKEF_EWCS_facility_id/>
+            <EWCS_Guarantee_details>
+                <EWCS_portal_facility_id>5189</EWCS_portal_facility_id>
+                <EWCS_bank_id>121154545</EWCS_bank_id>
+                <EWCS_stage>2</EWCS_stage>
+            </EWCS_Guarantee_details>
+            <EWCS_Financial_details>
+                <EWCS_value>150000.00</EWCS_value>
+                <EWCS_currency_code>12</EWCS_currency_code>
+                <EWCS_currency_name>GBP - UK Sterling</EWCS_currency_name>
+                <EWCS_conversion_rate_deal>123212.32</EWCS_conversion_rate_deal>
+                <EWCS_conversion_date_deal>11-05-2017</EWCS_conversion_date_deal>
+                <EWCS_interest_rate>10</EWCS_interest_rate>
+                <EWCS_fee_perc>9.0000</EWCS_fee_perc>
+                <EWCS_guarantee_perc>80</EWCS_guarantee_perc>
+                <EWCS_max_liability>120000.00</EWCS_max_liability>
+                <EWCS_min_quarterly_fee>25.36</EWCS_min_quarterly_fee>
+            </EWCS_Financial_details>
+            <EWCS_Dates_repayments>
+                <EWCS_premium_type>3</EWCS_premium_type>
+                <EWCS_premium_freq xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+                <EWCS_cover_start_date>22-05-2017</EWCS_cover_start_date>
+                <EWCS_issue_date/>
+                <EWCS_cover_end_date>11-06-2018</EWCS_cover_end_date>
+                <EWCS_exposure_period>85</EWCS_exposure_period>
+                <EWCS_day_basis>1</EWCS_day_basis>
+            </EWCS_Dates_repayments>
+            <EWCS_Drawdowns>
+                <EWCS_Drawdown_details>
+                    <EWCS_drawdown_date>22-05-2017</EWCS_drawdown_date>
+                    <EWCS_drawdown_amount>12152.20</EWCS_drawdown_amount>
+                    <EWCS_drawdown_cumulative>44646.35</EWCS_drawdown_cumulative>
+                </EWCS_Drawdown_details>
+            </EWCS_Drawdowns>
+        </EWCS>
+    </Facilities>
+    <Deal_summary>
+        <Deal_no_facilities>2</Deal_no_facilities>
+        <Deal_total_exposure_gbp>1267160382912.00</Deal_total_exposure_gbp>
+        <Deal_total_premium_gbp>1013728306329.60</Deal_total_premium_gbp>
+        <Deal_total_exposure_deal_cur>14799817600.00</Deal_total_exposure_deal_cur>
+        <Deal_total_premium_deal_cur>11839854080.00</Deal_total_premium_deal_cur>
+        <BSS_no_facilities>1</BSS_no_facilities>
+        <BSS_total_exposure_gbp>1227722304.00</BSS_total_exposure_gbp>
+        <BSS_total_premium_gbp>982177843.20</BSS_total_premium_gbp>
+        <BSS_total_exposure_deal_cur>14339200.00</BSS_total_exposure_deal_cur>
+        <BSS_total_premium_deal_cur>11471360.00</BSS_total_premium_deal_cur>
+        <EWCS_no_facilities>1</EWCS_no_facilities>
+        <EWCS_total_exposure_gbp>1265932660608.00</EWCS_total_exposure_gbp>
+        <EWCS_total_premium_gbp>1012746128486.40</EWCS_total_premium_gbp>
+        <EWCS_total_exposure_deal_cur>14785478400.00</EWCS_total_exposure_deal_cur>
+        <EWCS_total_premium_deal_cur>11828382720.00</EWCS_total_premium_deal_cur>
+    </Deal_summary>
+    <Deal_files>
+        <Exporter_questionnaire type="general_correspondence">Supplementary_Questionnaire_20170615_104502.docx
+        </Exporter_questionnaire>
+    </Deal_files>
+</Deal>
