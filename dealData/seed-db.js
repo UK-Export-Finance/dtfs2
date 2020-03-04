@@ -66,7 +66,7 @@ async function loadSeedFiles(path) {
 
     parser.parseString(xmlData, function(err, data) {
       deals.push({
-        id: deals.length + 1,
+        id: `${deals.length + 1}`,
         status: "submitted",
         deal: data.Deal
       });
