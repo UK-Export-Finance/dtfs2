@@ -1,11 +1,13 @@
-const hasDecimalPlaces = str => str.indexOf('.') >= 0
+const hasDecimalPlaces = str => str.indexOf('.') >= 1
 
 // return string with only 2 decimal places
 const trimDecimalPlaces = str => (str.substr(0, str.indexOf('.')) + str.substr(str.indexOf('.'), 3))
 
 const handleDecimalPlaces = str => {
-  if (hasDecimalPlaces) {
+  if (hasDecimalPlaces(str)) {
     return trimDecimalPlaces(str);
+  } else {
+    return str;
   }
 }
 
