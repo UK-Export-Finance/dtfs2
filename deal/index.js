@@ -1,4 +1,6 @@
+const bodyParser = require('body-parser');
 const express = require('express')
+
 const MOCKS = require('./mocks')
 
 const app = express()
@@ -10,6 +12,8 @@ console.log(PORT)
 
 const getMockContractById = id =>
   MOCKS.CONTRACTS.find(c => c.id === id) || MOCKS.CONTRACTS[0];
+
+  app.use(bodyParser.json()); // lets us get at posted data
 
   app.get('/mocks/mandatoryCriteria', (req, res) => {
     res.status(200).send(MOCKS.MANDATORY_CRITERIA);
@@ -34,6 +38,13 @@ const getMockContractById = id =>
 //TODO feels like this should send back getMockContractsById(x).comments but just copying from original service for now..
   app.get('/mocks/contract/:id/comments', (req, res) => {
     res.status(200).send(getMockContractById(req.params.id))
+  });
+
+  app.post('/deal', (req, res) => {
+    // prove we're receiving something..
+    console.log(JSON.stringify(req.body,null,2));
+
+    res.status(200).send();
   });
 
 app.listen(PORT, () => console.log(`Deals API listening on port ${PORT}`))
