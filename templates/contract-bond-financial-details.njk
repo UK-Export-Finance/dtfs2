@@ -26,183 +26,223 @@
 
   <form autocomplete="off">
 
-    <div class="govuk-grid-row">
-
-      <div class="govuk-grid-column-one-half">
-
-        {# TODO: pattern validations #}
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="bondValue">
-            Bond value
-          </label>
+    {# TODO: pattern validations #}
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="bondValue">
+        Bond value
+      </label>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
           <input class="govuk-input input--numeric-float" id="bondValue" name="bondValue" type="text" size="60" maxlength="255" pattern="[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)" step="0.25" value="0.00">
         </div>
+      </div>
+    </div>
 
+    <div class="govuk-form-group">
+      <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend">
+          Is the currency for this Transaction the same as your Supply Contract currency?
+        </legend>
+        <div class="govuk-radios govuk-radios--inline">
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="transactionCurrencySameAsSupplyContractCurrency" name="transactionCurrencySameAsSupplyContractCurrency" type="radio" value="unissued" onClick="showAdditionalFields(false)">
+            <label class="govuk-label govuk-radios__label" for="transactionCurrencySameAsSupplyContractCurrency">
+              Yes
+            </label>
+          </div>
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="transactionCurrencySameAsSupplyContractCurrency2" name="transactionCurrencySameAsSupplyContractCurrency" type="radio" value="issued" onClick="showAdditionalFields(true)">
+            <label class="govuk-label govuk-radios__label" for="transactionCurrencySameAsSupplyContractCurrency2">
+              No
+            </label>
+          </div>
+        </div>
+      </fieldset>
+    </div>
 
-        <div class="govuk-form-group">
-          <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend">
-              Is the currency for this Transaction the same as your Supply Contract currency?
-            </legend>
-            <div class="govuk-radios govuk-radios--inline">
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="transactionCurrencySameAsSupplyContractCurrency" name="transactionCurrencySameAsSupplyContractCurrency" type="radio" value="unissued" onClick="showAdditionalFields(false)">
-                <label class="govuk-label govuk-radios__label" for="transactionCurrencySameAsSupplyContractCurrency">
-                  Yes
+    <div id="additional-form-fields" class="govuk-visually-hidden">
+      
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="currency">
+          Currency
+        </label>
+
+        <select class="govuk-select" id="currency" name="currency">
+          <option value="">Select value</option>
+          {% for currency in currencies %}
+            <option value={{ currency.id }}>{{ currency.text }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="conversionRate">
+          Conversion rate to the Supply Contract currency 
+        </label>
+
+        <span id="conversion-rate-hint" class="govuk-hint">
+          E.g. EUR to USD (100 EUR/ 0.91 = 109.89 USD)
+        </span>
+
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-quarter">
+            <input class="govuk-input" id="conversionRate" name="conversionRate" type="text" size="60" maxlength="@55" pattern="[0-9]{0,6}(\.\d{0,6}|\.?)" aria-describedby="conversion-rate-hint">
+          </div>
+        </div>
+      </div>
+
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset" role="group" aria-describedby="conversion-rate-date-hint">
+          <legend class="govuk-fieldset__legend">
+              Conversion rate date
+          </legend>
+          <span id="conversion-rate-date-hint" class="govuk-hint">
+            For example, 27 11 2019
+          </span>
+
+          <div class="govuk-date-input">
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-date-input__label" for="conversionRateDate-day">
+                  Day
                 </label>
-              </div>
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="transactionCurrencySameAsSupplyContractCurrency2" name="transactionCurrencySameAsSupplyContractCurrency" type="radio" value="issued" onClick="showAdditionalFields(true)">
-                <label class="govuk-label govuk-radios__label" for="transactionCurrencySameAsSupplyContractCurrency2">
-                  No
-                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="conversionRateDate-day" name="conversionRateDate-day" type="text" pattern="[0-9]*" inputmode="numeric">
               </div>
             </div>
-          </fieldset>
-        </div>
-
-
-        <div id="additional-form-fields" class="govuk-visually-hidden">
-          
-          <div class="govuk-form-group">
-            <label class="govuk-label" for="currency">
-              Currency
-            </label>
-
-            <select class="govuk-select" id="currency" name="currency">
-              <option value="">Select value</option>
-              {% for currency in currencies %}
-                <option value={{ currency.id }}>{{ currency.text }}</option>
-              {% endfor %}
-            </select>
-          </div>
-
-          <div class="govuk-form-group">
-            <label class="govuk-label" for="conversionRate">
-              Conversion rate to the Supply Contract currency 
-            </label>
-
-            <span id="conversion-rate-hint" class="govuk-hint">
-              E.g. EUR to USD (100 EUR/ 0.91 = 109.89 USD)
-            </span>
-
-            <input class="govuk-input" id="conversionRate" name="conversionRate" type="number" min="0" max="99" aria-describedby="conversion-rate-hint">
-          </div>
-
-          <div class="govuk-form-group">
-            <fieldset class="govuk-fieldset" role="group" aria-describedby="conversion-rate-date-hint">
-              <legend class="govuk-fieldset__legend">
-                  Conversion rate date
-              </legend>
-              <span id="conversion-rate-date-hint" class="govuk-hint">
-                For example, 27 11 2019
-              </span>
-
-              <div class="govuk-date-input">
-                <div class="govuk-date-input__item">
-                  <div class="govuk-form-group">
-                    <label class="govuk-label govuk-date-input__label" for="conversionRateDate-day">
-                      Day
-                    </label>
-                    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="conversionRateDate-day" name="conversionRateDate-day" type="text" pattern="[0-9]*" inputmode="numeric">
-                  </div>
-                </div>
-                <div class="govuk-date-input__item">
-                  <div class="govuk-form-group">
-                    <label class="govuk-label govuk-date-input__label" for="conversionRateDate-month">
-                      Month
-                    </label>
-                    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="conversionRateDate-month" name="conversionRateDate-month" type="text" pattern="[0-9]*" inputmode="numeric">
-                  </div>
-                </div>
-                <div class="govuk-date-input__item">
-                  <div class="govuk-form-group">
-                    <label class="govuk-label govuk-date-input__label" for="conversionRateDate-year">
-                      Year
-                    </label>
-                    <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="conversionRateDate-year" name="conversionRateDate-year" type="text" pattern="[0-9]*" inputmode="numeric">
-                  </div>
-                </div>
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-date-input__label" for="conversionRateDate-month">
+                  Month
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="conversionRateDate-month" name="conversionRateDate-month" type="text" pattern="[0-9]*" inputmode="numeric">
               </div>
-            </fieldset>
+            </div>
+            <div class="govuk-date-input__item">
+              <div class="govuk-form-group">
+                <label class="govuk-label govuk-date-input__label" for="conversionRateDate-year">
+                  Year
+                </label>
+                <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="conversionRateDate-year" name="conversionRateDate-year" type="text" pattern="[0-9]*" inputmode="numeric">
+              </div>
+            </div>
           </div>
-
-        </div>
-
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="riskMarginFee">
-            Risk Margin Fee %
-          </label>
-
-          <span id="risk-margin-fee-hint" class="govuk-hint">
-            The ongoing fee charged by the bank to the Supplier for the provision of the bond to the beneficiary. It excludes any arrangement, issuance or other up-front fees.
-          </span>
-
-          <div class="form-group--input-container">
-            <input class="govuk-input" id="riskMarginFee" name="riskMarginFee" type="number" min="0" max="99" aria-describedby="risk-margin-fee-hint">
-            <span class="govuk-body form-group--input-container--symbol">%</span>
-          </div>
-        </div>
-
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="coveredPercentage">
-            Covered Percentage
-          </label>
-
-          <span id="covered-percentage-hint" class="govuk-hint">
-            Percentage of UKEF cover requested by the bank. This can be any value up to 80%.
-          </span>
-
-          <div class="form-group--input-container">
-            <input class="govuk-input" id="coveredPercentage" name="coveredPercentage" type="number" min="0" max="80" aria-describedby="covered-percentage-hint">
-            <span class="govuk-body form-group--input-container--symbol">%</span>
-          </div>
-        </div>
-
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="minimumRiskMarginFee">
-            Minimum risk margin fee (optional)
-          </label>
-
-          <span id="minimum-risk-margin-fee-hint" class="govuk-hint">
-            The minimum fee payable in the currency of the bond, if any, by the supplier.
-          </span>
-
-          <input class="govuk-input input--numeric-float" id="minimumRiskMarginFee" name="minimumRiskMarginFee" type="text" size="60" maxlength="255" pattern="[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)" aria-describedby="minimum-risk-margin-fee-hint" value="0.00">
-        </div>
-
-        <div class="govuk-form-group form-group-disabled">
-          <label class="govuk-label" for="guaranteeFeePayableByBank">
-            Guarantee fee payable by bank
-          </label>
-
-          <span id="guarantee-fee-payable-by-bank-hint" class="govuk-hint">
-            The fee to be paid by the bank to UKEF, which represents the Risk Margin Fee multiplied by the Covered Percentage, minus the 10% retained by the bank as an administrative fee. It is a calculated field. No input is required.
-          </span>
-
-          <div class="form-group--input-container">
-            <input class="govuk-input form-group-disabled--input" id="guaranteeFeePayableByBank" name="guaranteeFeePayableByBank" type="number" step="0.0001" min="0" max="100" aria-describedby="guarantee-fee-payable-by-bank-hint" value="0" disabled>
-            <span class="govuk-body form-group--input-container--symbol">%</span>
-          </div>
-        </div>
-
-        <div class="govuk-form-group form-group-disabled">
-          <label class="govuk-label" for="ukefExposure">
-            UKEF exposure
-          </label>
-
-          <span id="ukef-exposure-hint" class="govuk-hint">
-            The amount of UKEF's exposure for this Transaction in the bond currency. It is the bond value multiplied by the Covered Percentage. It is a calculated field. No input is required.
-          </span>
-
-          <input class="govuk-input form-group-disabled--input input__text-align-right" id="ukefExposure" name="ukefExposure" type="number" size="60" maxlength="255" aria-describedby="ukef-exposure-hint" value="0.00" disabled>
-        </div>
-                  
+        </fieldset>
       </div>
 
     </div>
 
-  </form>
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="riskMarginFee">
+        Risk Margin Fee %
+      </label>
+
+      <span id="risk-margin-fee-hint" class="govuk-hint">
+        The ongoing fee charged by the bank to the Supplier for the provision of the bond to the beneficiary. It excludes any arrangement, issuance or other up-front fees.
+      </span>
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+
+              <div class="form-group--input-container">
+                <input class="govuk-input" id="riskMarginFee" name="riskMarginFee" type="number" min="0" max="99" aria-describedby="risk-margin-fee-hint">
+                <span class="govuk-body form-group--input-container--symbol">%</span>
+              </div>
+
+            </div>
+          </div>        
+        </div>
+      </div>
+      
+    </div>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="coveredPercentage">
+        Covered Percentage
+      </label>
+
+      <span id="covered-percentage-hint" class="govuk-hint">
+        Percentage of UKEF cover requested by the bank. This can be any value up to 80%.
+      </span>
+
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+
+              <div class="form-group--input-container">
+                <input class="govuk-input" id="coveredPercentage" name="coveredPercentage" type="number" min="0" max="80" aria-describedby="covered-percentage-hint">
+                <span class="govuk-body form-group--input-container--symbol">%</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="minimumRiskMarginFee">
+        Minimum risk margin fee (optional)
+      </label>
+
+      <span id="minimum-risk-margin-fee-hint" class="govuk-hint">
+        The minimum fee payable in the currency of the bond, if any, by the supplier.
+      </span>
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          <input class="govuk-input input--numeric-float" id="minimumRiskMarginFee" name="minimumRiskMarginFee" type="text" size="60" maxlength="255" pattern="[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)" aria-describedby="minimum-risk-margin-fee-hint" value="0.00">
+        </div>
+      </div>
+      
+    </div>
+
+    <div class="govuk-form-group form-group-disabled">
+      <label class="govuk-label" for="guaranteeFeePayableByBank">
+        Guarantee fee payable by bank
+      </label>
+
+      <span id="guarantee-fee-payable-by-bank-hint" class="govuk-hint">
+        The fee to be paid by the bank to UKEF, which represents the Risk Margin Fee multiplied by the Covered Percentage, minus the 10% retained by the bank as an administrative fee. It is a calculated field. No input is required.
+      </span>
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+
+              <div class="form-group--input-container">
+                <input class="govuk-input form-group-disabled--input" id="guaranteeFeePayableByBank" name="guaranteeFeePayableByBank" type="number" step="0.0001" min="0" max="100" aria-describedby="guarantee-fee-payable-by-bank-hint" value="0" disabled>
+                <span class="govuk-body form-group--input-container--symbol">%</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="govuk-form-group form-group-disabled">
+      <label class="govuk-label" for="ukefExposure">
+        UKEF exposure
+      </label>
+
+      <span id="ukef-exposure-hint" class="govuk-hint">
+        The amount of UKEF's exposure for this Transaction in the bond currency. It is the bond value multiplied by the Covered Percentage. It is a calculated field. No input is required.
+      </span>
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          <input class="govuk-input form-group-disabled--input input__text-align-right" id="ukefExposure" name="ukefExposure" type="number" size="60" maxlength="255" aria-describedby="ukef-exposure-hint" value="0.00" disabled>
+        </div>
+      </div>
+    </div>
+
 
     <button class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
       Next page
