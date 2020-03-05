@@ -4,7 +4,7 @@
   "description": "reads k2 xml files, translates into json, posts onwards...",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node src/go.js",
     "test": "jest --notify --coverage --verbose --config=unit.jest.config.js --detectOpenHandles --forceExit"
   },
   "repository": {
