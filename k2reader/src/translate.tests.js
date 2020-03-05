@@ -1,5 +1,5 @@
 const translate = require('./translate');
-const xmlReader = require('./k2xml-reader');
+const xmlReader = require('./read-k2-type-a-xml');
 const fs = require('fs');
 
 describe('translate', () => {

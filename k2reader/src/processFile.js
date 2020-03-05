@@ -1,9 +1,7 @@
-const getContent = require('./k2xml-reader');
+const readK2Xml = require('./read-k2-type-a-xml');
 const translate = require('./translate');
 
 module.exports = async (file) => {
-  const xmlContent = await getContent(file);
-  const internalRepresentation = await translate( xmlContent );
-
-  return internalRepresentation;
+  const xmlContent = await readK2Xml(file);
+  return translate(xmlContent);;
 }
