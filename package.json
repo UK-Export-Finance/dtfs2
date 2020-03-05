@@ -9,7 +9,8 @@
     "buildProd": "rm -rf dist && webpack --mode production --config webpack.server.config.js && webpack --mode production --config webpack.prod.config.js",
     "start": "npm run buildProd && node ./dist/server.js",
     "dev": "npm run buildDev && node ./dist/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-prebuild": "npm install --dev"
   },
   "repository": {
     "type": "git",
