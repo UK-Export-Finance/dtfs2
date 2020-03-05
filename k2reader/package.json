@@ -1,11 +1,11 @@
 {
   "name": "dtfs2",
   "version": "1.0.0",
-  "description": "DTFS2 deal API",
+  "description": "reads k2 xml files, translates into json, posts onwards...",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/go.js",
+    "test": "jest --notify --coverage --verbose --config=unit.jest.config.js --detectOpenHandles --forceExit"
   },
   "repository": {
     "type": "git",
@@ -21,8 +21,15 @@
     "url": "https://github.com/notbinary/dtfs2/issues"
   },
   "homepage": "https://github.com/notbinary/dtfs2#readme",
+  "devDependencies": {
+    "jest": "^24.9.0",
+    "jest-cli": "^24.8.0"
+  },
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1"
+    "autodetect-decoder-stream": "^1.0.3",
+    "axios": "^0.19.2",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "xml2js": "^0.4.23"
   }
 }
