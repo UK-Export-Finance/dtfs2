@@ -92,6 +92,16 @@ router.get('/contract/:id/bond/:bondId/financial-details', (req, res) =>
   })
 )
 
+router.get('/contract/:id/bond/:bondId/fee-details', (req, res) =>
+  res.render('contract-bond-fee-details.njk', {
+    contractId: req.params.id,
+    bond: getContractBondById(
+      getMockContractById(req.params.id),
+      req.params.bondId
+    )
+  })
+)
+
 router.get('/feedback', (req, res) => res.render('feedback.njk'))
 
 router.get('/contact-us', (req, res) => res.render('contact.njk'))
