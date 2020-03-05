@@ -11,6 +11,10 @@ module.exports = async (xmlContent) => {
   return ourJson;
 };
 
+const parseAddress = (address) => { //TODO something more formal?
+  return `${address.Line1} ${address.Line2} ${address.Line3} ${address.Town} ${address.PostalCode} ${address.Country}`;
+};
+
 const map = async (k2Json) => {
   const k2Deal = k2Json.Deal;
 
@@ -18,7 +22,7 @@ const map = async (k2Json) => {
     supplyContractName: k2Deal.Deal_information[0].Exporter_and_indemnifier[0].Exporter_name[0],
     id:                 k2Deal.$.portal_deal_id,
     details: {
-      bankSupplyContractID: k2Deal.$.bank_deal_id,
+      bankSupplyContractID: k2Deal.General_information[0].Bank_deal_id[0],
       ukefDealId:           "NEEDS-MAPPING", //[dw] think this is irrelevant until we've picked up a response from k2
       status:               "NEEDS-MAPPING", //[dw] think this is irrelevant until we've picked up a response from k2
       previousStatus:       "NEEDS-MAPPING", //[dw] ????
@@ -176,7 +180,7 @@ const map = async (k2Json) => {
       supplierType:                             "Exporter", //TODO?
       supplierCompaniesHouseRegistrationNumber: k2Deal.Deal_information[0].Exporter_and_indemnifier[0].Exporter_co_hse_reg_number[0],
       supplierName:                             k2Deal.Deal_information[0].Exporter_and_indemnifier[0].Exporter_name[0],
-      supplierAddress:                          k2Deal.Deal_information[0].Exporter_and_indemnifier[0].Exporter_postcode[0],
+      supplierAddress:                          parseAddress(k2Deal.Deal_information[0].Exporter_and_indemnifier[0].Exporter_address[0]),
       suppliersCorrespondenceAddressDifferent:  false,  //TODO?
       industrySector:                           k2Deal.Deal_information[0].Exporter_and_indemnifier[0].Industry_sector_code[0],
       industryClass:                            k2Deal.Deal_information[0].Exporter_and_indemnifier[0].Industry_class_code[0],
@@ -185,12 +189,12 @@ const map = async (k2Json) => {
       legallyDistinct:                          false,  //TODO?
       buyer: {
         name:                                     k2Deal.Deal_information[0].Buyer[0].Buyer_name[0],
-        country:                                  k2Deal.Deal_information[0].Buyer[0].Buyer_country_name[0], //TODO xml talks about code+name for this, so we probably need some reference data+mappings
-        goodsServicesDestination:                 k2Deal.Deal_information[0].Buyer[0].Destination_country_label[0], //TODO xml talks about code+label for this, so we probably need some reference data+mappings
+        country:                                  k2Deal.Deal_information[0].Buyer[0].Buyer_country_code[0], //TODO needs mapping. https://ukef-dtfs.atlassian.net/wiki/download/attachments/16187433/WF%20Type%20A%20Message%20Mapping.xlsx?api=v2 says there is a UKEF country code.
+        goodsServicesDestination:                 k2Deal.Deal_information[0].Buyer[0].Destination_country_code[0], //TODO needs mapping. https://ukef-dtfs.atlassian.net/wiki/download/attachments/16187433/WF%20Type%20A%20Message%20Mapping.xlsx?api=v2 says there is a UKEF country code.
       },
       supplyContractFinancials: {
         value:                                    k2Deal.Deal_information[0].Financial[0].Contract_value[0],
-        currency:                                 k2Deal.Deal_information[0].Financial[0].Deal_currency_name[0], //TODO xml has code+name here, so mapping likely needed
+        currency:                                 k2Deal.Deal_information[0].Financial[0].Deal_currency_code[0], //TODO mapping needed
         conversionRateToGBP:                      k2Deal.Deal_information[0].Financial[0].Conversion_rate[0], //TODO -assuming- "conversion_rate" == "conversionRateToGBP".. shold check; getting it upsidedown would be embarrassing
         conversionDate:                           k2Deal.Deal_information[0].Financial[0].Conversion_date[0],
       },

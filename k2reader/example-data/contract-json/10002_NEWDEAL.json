@@ -1,8 +1,8 @@
 {
-  "supplyContractName": "test",
-  "id": "329",
+  "supplyContractName": "S.C.O.T.S LTD.",
+  "id": "1994",
   "details": {
-    "bankSupplyContractID": "27/03/2017",
+    "bankSupplyContractID": "Thursday 1",
     "ukefDealId": "NEEDS-MAPPING",
     "status": "NEEDS-MAPPING",
     "previousStatus": "NEEDS-MAPPING",
@@ -169,38 +169,38 @@
   ],
   "submissionDetails": {
     "supplierType": "Exporter",
-    "supplierCompaniesHouseRegistrationNumber": "21212122",
-    "supplierName": "test",
-    "supplierAddress": "ig11 7ye",
+    "supplierCompaniesHouseRegistrationNumber": "SC257512",
+    "supplierName": "S.C.O.T.S LTD.",
+    "supplierAddress": "57/59 High Street Dunblane  Perthshire FK15 0EE 826",
     "suppliersCorrespondenceAddressDifferent": false,
-    "industrySector": "96",
-    "industryClass": "9631",
-    "smeType": "4",
-    "supplyContractDescription": "TEST",
+    "industrySector": "1012",
+    "industryClass": "70229",
+    "smeType": "2",
+    "supplyContractDescription": "desc",
     "legallyDistinct": false,
     "buyer": {
-      "name": "TEST",
-      "country": "Abu Dhabi",
-      "goodsServicesDestination": "Afghanistan"
+      "name": "Buyer name",
+      "country": "24",
+      "goodsServicesDestination": "50"
     },
     "supplyContractFinancials": {
-      "value": "100.00",
-      "currency": "AED - U.A.E. Dirham",
-      "conversionRateToGBP": "20",
-      "conversionDate": "11-05-2017"
+      "value": "1234567890123456.00",
+      "currency": "11",
+      "conversionRateToGBP": "123456.654321",
+      "conversionDate": "03-05-2018"
     },
     "bond": {
-      "issuer": "",
-      "type": "7",
+      "issuer": "44444",
+      "type": "1",
       "stage": "2",
       "cover": {
         "requestedStartDate": "NEEDS-MAPPING",
         "endDate": "NEEDS-MAPPING"
       },
       "uniqueIdentificationNumber": "",
-      "beneficiary": "",
+      "beneficiary": "10",
       "financial": {
-        "value": "100.00",
+        "value": "1234567890123456.00",
         "transactionCurrencySameAsSupplyContractCurrency": true,
         "riskMarginFee": "3%",
         "coveredPercentage": "50%",
@@ -209,8 +209,8 @@
         "uKefExposure": "0.50"
       },
       "fee": {
-        "type": "2",
-        "frequency": "2",
+        "type": "1",
+        "frequency": "1",
         "dayCountBasis": "1"
       }
     },
