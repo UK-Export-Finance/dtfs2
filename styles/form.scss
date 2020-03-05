@@ -6,3 +6,23 @@
   opacity: .5;
   background: none;
 }
+
+.form-group--input-container {
+  @include govuk-media-query($from: tablet) {
+    position: relative;
+  }
+}
+
+.form-group--input-container--symbol {
+  display: none;
+}
+
+.form-group--input-container--symbol {
+  @include govuk-media-query($from: tablet) {
+    display: block;
+    position: absolute;
+    top: .4rem;
+    right: -1.25rem;
+  }
+}
+
