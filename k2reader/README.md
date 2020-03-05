@@ -10,3 +10,9 @@ npm start
 ```
 
 will scan everything in ./test-data/type-a-xml and post it to localhost:5001/deal, the endpoint just logs the data.
+
+```
+npm test
+```
+
+is wired to run all jest tests it can find, and create coverage reports under /reports.
