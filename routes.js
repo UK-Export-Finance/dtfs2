@@ -112,6 +112,16 @@ router.get('/contract/:id/bond/:bondId/preview', (req, res) =>
   })
 )
 
+router.get('/contract/:id/bond/:bondId/delete', (req, res) =>
+  res.render('contract-bond-delete.njk', {
+    contract: getMockContractById(req.params.id),
+    bond: getContractBondById(
+      getMockContractById(req.params.id),
+      req.params.bondId
+    )
+  })
+)
+
 router.get('/feedback', (req, res) => res.render('feedback.njk'))
 
 router.get('/contact-us', (req, res) => res.render('contact.njk'))
