@@ -63,4 +63,41 @@ router.get('/contract/:id/eligibility/preview', async (req, res) =>
   })
 )
 
+router.get('/contract/:id/bond/:bondId/details', async (req, res) =>
+  res.render('contract-bond-details.njk',
+    await api.contractBond(req.params.id, req.params.bondId)
+  )
+)
+
+router.get('/contract/:id/bond/:bondId/financial-details', async (req, res) =>
+  res.render('contract-bond-financial-details.njk', {
+    ...await api.contractBond(req.params.id, req.params.bondId),
+    currencies: await api.bondCurrencies()
+  })
+)
+
+router.get('/contract/:id/bond/:bondId/fee-details', async (req, res) =>
+  res.render('contract-bond-fee-details.njk', 
+    await api.contractBond(req.params.id, req.params.bondId)
+  )
+)
+
+router.get('/contract/:id/bond/:bondId/preview', async (req, res) =>
+  res.render('contract-bond-preview.njk', {
+      contract: await api.contract(req.params.id),
+      bond: api.contractBond(req.params.id, req.params.bondId)
+  })
+)
+
+router.get('/contract/:id/bond/:bondId/delete', async (req, res) =>
+  res.render('contract-bond-delete.njk', {
+    contract: await api.contract(req.params.id),
+    bond: api.contractBond(req.params.id, req.params.bondId)
+  })
+)
+
+router.get('/feedback', (req, res) => res.render('feedback.njk'))
+
+router.get('/contact-us', (req, res) => res.render('contact.njk'))
+
 export default router
