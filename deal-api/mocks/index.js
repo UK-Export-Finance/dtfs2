@@ -1,3 +1,4 @@
+
 const BOND_CURRENCIES = [
   {
     id: 'AED',
@@ -454,7 +455,7 @@ const MOCKS = {
             endDate: '14/03/2027',
             action: '?',
             completedStatus: {
-              bondDetails: false,
+              bondDetails: true,
               bondFinancialDetails: false,
               feeDetails: false
             }

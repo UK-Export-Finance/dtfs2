@@ -1,9 +1,9 @@
 {% extends "index.njk" %}
-{% import 'macros/confirm-eligibility-intro.njk' as confirmEligibility %}
+{% import 'macros/confirm-eligibility-nav.njk' as confirmEligibility %}
 
 {% block content %}
 
-  {{ confirmEligibility.intro(
+  {{ confirmEligibility.nav(
     completedStatus = eligibility.completedStatus,
     current = 'supportingDocumentation',
     contractId = id

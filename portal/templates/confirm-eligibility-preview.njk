@@ -1,12 +1,12 @@
 {% extends "index.njk" %}
-{% import 'macros/confirm-eligibility-intro.njk' as confirmEligibility %}
+{% import 'macros/confirm-eligibility-nav.njk' as confirmEligibility %}
 {% import 'macros/mandatory-criteria-box.njk' as mandatoryCriteriaBox %}
 {% import 'macros/eligibility-criteria-answers.njk' as eligibilityCriteria %}
 {% import 'macros/supporting-documentation-answers.njk' as supportingDocumentation %}
 
 {% block content %}
 
-  {{ confirmEligibility.intro(
+  {{ confirmEligibility.nav(
     completedStatus = contract.eligibility.completedStatus,
     current = 'preview',
     contractId = contract.id
