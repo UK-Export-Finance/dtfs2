@@ -1,10 +1,5 @@
-<<<<<<< HEAD:portal/templates/macros/confirm-eligibility-intro-nav.njk
-{% macro navItem(title, id, step, completed, href, current, contractId) %}
-
-=======
 {% macro navItem(title, id, step, completed, href, childId, childHref, contractId, current) %}
-  
->>>>>>> master:portal/templates/macros/progress-nav.njk
+
   <div
     {% if completed and current === id %}
       class="govuk-!-margin-bottom-2 govuk-!-padding-0 criteria__nav-item criteria__nav-item--completed criteria__nav-item--current"
