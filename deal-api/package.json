@@ -1,0 +1,34 @@
+{
+  "name": "dtfs2",
+  "version": "1.0.0",
+  "description": "DTFS2 deal API",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notbinary/dtfs2.git"
+  },
+  "keywords": [
+    "export",
+    "finance"
+  ],
+  "author": "Dan Watkinson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/notbinary/dtfs2/issues"
+  },
+  "homepage": "https://github.com/notbinary/dtfs2#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.5.4",
+    "mongoose": "^5.9.3",
+    "xml2js": "^0.4.23"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}

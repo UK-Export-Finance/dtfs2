@@ -283,7 +283,7 @@ const MANDATORY_CRITERIA = [
       },
       {
         id: 8,
-      copy: 'The Bank has not made a Disposal (other than a Permitted Disposal) or a Risk Transfer (other than a Permitted Risk Transfer) in relation to the Transaction.'
+        copy: 'The Bank has not made a Disposal (other than a Permitted Disposal) or a Risk Transfer (other than a Permitted Risk Transfer) in relation to the Transaction.'
       },
       {
         id: 9,
