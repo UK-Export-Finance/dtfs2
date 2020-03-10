@@ -24,4 +24,4 @@ COPY --from=build /build/scripts scripts/
 COPY --from=build /build/styles styles/
 COPY --from=build /build/templates templates/
 
-ENTRYPOINT node dist/server.js
+CMD node dist/server.js
