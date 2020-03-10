@@ -30,3 +30,17 @@ http://localhost:5001/mocks/contract/2
 a mongoDB instance will have been started:
 * to connect a client from your local machine, connect to localhost:27017 as <todo>/<todo>
 * to connect from within another docker image, connect to dealData:27017, same user/password
+
+## End to End Testing
+
+navigate into the e2e-tests folder
+
+```
+npm test
+```
+will execute everything under ./e2e-tests/cypress/integration/ in headless mode.
+
+```
+npm run test:browser
+```
+will launch the cypress client, which lets you run individual tests and watch them play out.
