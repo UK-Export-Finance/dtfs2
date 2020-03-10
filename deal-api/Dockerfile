@@ -7,4 +7,4 @@ RUN npm install
 
 ADD . .
 
-ENTRYPOINT node src/index.js
+CMD node src/index.js
