@@ -2,9 +2,9 @@
   "name": "dtfs2",
   "version": "1.0.0",
   "description": "DTFS2 deal API",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -27,5 +27,8 @@
     "mongodb": "^3.5.4",
     "mongoose": "^5.9.3",
     "xml2js": "^0.4.23"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
   }
 }
