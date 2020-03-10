@@ -10,8 +10,8 @@ module.exports = async (xmlContent) => {
   return ourJson;
 };
 
-const map = async (k2Json) => {
-  const k2Deal = k2Json.Deal;
+const map = async (k2xml) => {
+  const k2Deal = k2xml.Deal;
 
   let mapped = {
     supplyContractName:   k2Deal.Deal_information[0].Exporter_and_indemnifier[0].Exporter_name[0],

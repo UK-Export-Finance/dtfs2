@@ -1,25 +1,28 @@
 version: "3"
 services:
-  # portal:
-  # container_name: portal
-  #  build: .
-  #  image: dtfs2/portal
-  #  depends_on:
-  #   restart: always
-  #    - deal
-  #  ports:
-  #    - "5000:5000"
-  #  deal:
-  #    container_name: deal
-  #    build: ./deal
-  #    image: dtfs/deal
-  #    restart: always
-  #    volumes:
-  #    ports:
-  #      - "5001:5000"
-  dealData:
-    container_name: dealData
-    image: "mongo"
+  portal:
+    container_name: portal
+    build: ./portal
+    image: dtfs2/portal
+    restart: always
+    depends_on:
+      - deal-api
+    ports:
+      - "5000:5000"
+
+  deal-api:
+    container_name: deal-api
+    build: ./deal-api
+    image: dtfs/deal-api
+    restart: always
+    depends_on:
+      - deal-api-data
+    ports:
+      - "5001:5000"
+
+  deal-api-data:
+    container_name: deal-api-data
+    image: mongo
     restart: always
     environment:
       - MONGO_INITDB_DATABASE=<todo>
