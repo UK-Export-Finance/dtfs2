@@ -19,6 +19,9 @@ services:
       - deal-api-data
     ports:
       - "5001:5000"
+    volumes:
+      - ./deal-api/src:/app/src:ro
+    entrypoint: npx nodemon src/index.js
 
   deal-api-data:
     container_name: deal-api-data
