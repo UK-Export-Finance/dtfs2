@@ -11,8 +11,6 @@ ADD . .
 RUN npm install
 RUN npm run buildProd
 
-RUN ls -lah
-
 
 # Runtime container
 
