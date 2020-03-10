@@ -1,0 +1,232 @@
+{% extends "index.njk" %}
+{% import 'macros/bond-nav.njk' as bondNav %}
+
+{% block content %}
+
+  <script type="text/javascript">
+    function toggleFormFields(bondStage) {
+      var unissuedFormFields = document.getElementById('unissued-form-fields');
+      var issuedFormFields = document.getElementById('issued-form-fields');
+
+      if (bondStage === 'unissued') {
+        unissuedFormFields.className = '';
+        issuedFormFields.className = 'govuk-visually-hidden';
+      }
+      if (bondStage === 'issued') {
+        issuedFormFields.className = '';
+        unissuedFormFields.className = 'govuk-visually-hidden';
+      }
+    }
+  </script>
+
+  {{ bondNav.nav(
+    completedStatus = bond.completedStatus,
+    current = 'bondDetails',
+    contractId = contractId,
+    childId = bond.id
+  )}}
+
+  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+
+  <form autocomplete="off">
+
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-three-quarters">
+
+        <div class="govuk-form-group">
+
+          <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="bondIssuer">
+                Bond issuer (optional)
+              </label>
+              <span id="bond-issuer-hint" class="govuk-hint">
+                Only enter if Bond issuer differs from the bank
+              </span>
+
+              <input class="govuk-input govuk-js-character-count" id="bondIssuer" name="bondIssuer" type="text" maxlength="150" aria-describedby="bond-issuer-hint">
+            </div>
+
+            <span id="bond-issuer-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+              You can enter up to 150 characters
+            </span>
+          </div>
+        </div>
+
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="bondType">
+            Bond type
+          </label>
+          <select class="govuk-select" id="bondType" name="bondType">
+            <option value="">Select value</option>
+            <option value="Advance payment guarantee">Advance payment guarantee</option>
+            <option value="Bid bond">Bid bond</option>
+            <option value="Maintenance bond">Maintenance bond</option>
+            <option value="Performance bond">Performance bond</option>
+            <option value="Progress payment bond">Progress payment bond</option>
+            <option value="Retention bond">Retention bond</option>
+            <option value="Standby letter of credit">Standby letter of credit</option>
+            <option value="Warranty letter">Warranty letter</option>
+          </select>
+        </div>
+
+        <div class="govuk-form-group">
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend">
+              Bond stage
+            </legend>
+            <div class="govuk-radios govuk-radios--inline">
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="bondStage" name="bondStage" type="radio" value="unissued" onClick="toggleFormFields('unissued')">
+                <label class="govuk-label govuk-radios__label" for="bondStage">
+                  Unissued
+                </label>
+              </div>
+              <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="bondStage2" name="bondStage" type="radio" value="issued" onClick="toggleFormFields('issued')">
+                <label class="govuk-label govuk-radios__label" for="bondStage2">
+                  Issued
+                </label>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div id="unissued-form-fields" class="govuk-visually-hidden">
+          
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="ukefGuaranteeInMonths">
+              Length of time that the UKEF's guarantee will be in place for (in months, rounded up) 
+            </label>
+
+            <input class="govuk-input" id="ukefGuaranteeInMonths" name="ukefGuaranteeInMonths" type="text">
+          </div>
+
+        </div>
+
+        <div id="issued-form-fields" class="govuk-visually-hidden">
+
+          <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset" role="group" aria-describedby="requested-cover-start-date-hint requested-cover-start-date-hint-2">
+              <legend class="govuk-fieldset__legend">
+                  Requested Cover Start Date (optional)
+              </legend>
+              <span id="requested-cover-start-date-hint" class="govuk-hint">
+                For example, 27 11 2019
+              </span>
+
+              <span id="requested-cover-start-date-hint-2" class="govuk-hint">
+                This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date.
+              </span>
+
+              <div class="govuk-date-input" id="requested-cover-start-date">
+                <div class="govuk-date-input__item">
+                  <div class="govuk-form-group">
+                    <label class="govuk-label govuk-date-input__label" for="requested-cover-start-date-day">
+                      Day
+                    </label>
+                    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="requested-cover-start-date-day" name="requested-cover-start-date-day" type="text" pattern="[0-9]*" inputmode="numeric">
+                  </div>
+                </div>
+                <div class="govuk-date-input__item">
+                  <div class="govuk-form-group">
+                    <label class="govuk-label govuk-date-input__label" for="requested-cover-start-date-month">
+                      Month
+                    </label>
+                    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="requested-cover-start-date-month" name="requested-cover-start-date-month" type="text" pattern="[0-9]*" inputmode="numeric">
+                  </div>
+                </div>
+                <div class="govuk-date-input__item">
+                  <div class="govuk-form-group">
+                    <label class="govuk-label govuk-date-input__label" for="requested-cover-start-date-year">
+                      Year
+                    </label>
+                    <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="requested-cover-start-date-year" name="requested-cover-start-date-year" type="text" pattern="[0-9]*" inputmode="numeric">
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+
+
+          <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset" role="group" aria-describedby="cover-end-date-hint">
+              <legend class="govuk-fieldset__legend">
+                  Cover End Date
+              </legend>
+              <span id="cover-end-date-hint" class="govuk-hint">
+                For example, 27 11 2019
+              </span>
+              <div class="govuk-date-input" id="cover-end-date">
+                <div class="govuk-date-input__item">
+                  <div class="govuk-form-group">
+                    <label class="govuk-label govuk-date-input__label" for="cover-end-date-day">
+                      Day
+                    </label>
+                    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="cover-end-date-day" name="cover-end-date-day" type="text" pattern="[0-9]*" inputmode="numeric">
+                  </div>
+                </div>
+                <div class="govuk-date-input__item">
+                  <div class="govuk-form-group">
+                    <label class="govuk-label govuk-date-input__label" for="cover-end-date-month">
+                      Month
+                    </label>
+                    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="cover-end-date-month" name="cover-end-date-month" type="text" pattern="[0-9]*" inputmode="numeric">
+                  </div>
+                </div>
+                <div class="govuk-date-input__item">
+                  <div class="govuk-form-group">
+                    <label class="govuk-label govuk-date-input__label" for="cover-end-date-year">
+                      Year
+                    </label>
+                    <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="cover-end-date-year" name="cover-end-date-year" type="text" pattern="[0-9]*" inputmode="numeric">
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="uniqueIdentificationNumber">
+              Bond's unique identification number
+            </label>
+
+            <input class="govuk-input" id="uniqueIdentificationNumber" name="uniqueIdentificationNumber" type="text">
+          </div>
+        </div>
+
+
+        <div class="govuk-form-group">
+
+          <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="bondBeneficiary">
+                Bond beneficiary (optional)
+              </label>
+              <span id="bond-beneficiary-hint" class="govuk-hint">
+                Only enter if different from (but related to) the overseas buyer in line with the MGA
+              </span>
+
+              <input class="govuk-input govuk-js-character-count" id="bondBeneficiary" name="bondBeneficiary" type="text" maxlength="150" aria-describedby="bond-beneficiary-info bond-beneficiary-hint">
+
+            </div>
+
+            <span id="bond-beneficiary-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+              You can enter up to 150 characters
+            </span>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+    <button class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
+      Next page
+    </button>
+
+    <button class="govuk-button govuk-button--secondary" data-module="govuk-button">Save and go back to deal</a>
+
+  </form>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "index.njk" %}
+
+{% block content %}
+
+  <h1 class="govuk-heading-l">Are you sure you want to delete {{ bond.bankReferenceNumber }} #{{bond.ukefFacilityID}}?</h1>
+
+  <p class="govuk-body">This action cannot be undone.</p>
+
+  <form>
+
+    <button class="govuk-button govuk-button--warning govuk-!-margin-right-1" data-module="govuk-button">
+      Delete
+    </button>
+
+    <a href="/{{ contract.id }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+
+  </form>
+
+{% endblock %}

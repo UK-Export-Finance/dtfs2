@@ -10,3 +10,4 @@ ADD . .
 RUN npm run buildProd
 
 ENTRYPOINT node dist/server.js
+

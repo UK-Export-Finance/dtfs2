@@ -1,0 +1,20 @@
+{% extends "index.njk" %}
+{% import 'macros/bond-nav.njk' as bondNav %}
+{% import 'macros/submission-details.njk' as submissionDetails %}
+
+{% block content %}
+
+  {{ bondNav.nav(
+    completedStatus = bond.completedStatus,
+    current = 'bondPreview',
+    contractId = contract.id,
+    childId = bond.id
+  )}}
+
+  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+    
+  {{ submissionDetails.bond(bondDetails = contract.submissionDetails.bond)}}
+
+  <p class="govuk-body"><a class="govuk-link" href="/contract/{{ contract.id }}">Save and go back to deal</a></p>
+
+{% endblock %}

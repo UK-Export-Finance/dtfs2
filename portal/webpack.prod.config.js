@@ -18,7 +18,7 @@ function returnEntries(globPath) {
 
 module.exports = {
   entry: {
-    main: './main.js'
+    main: './scripts/main.js'
   },
   output: {
     path: path.join(__dirname, 'dist'),
