@@ -9,6 +9,13 @@ services:
       - deal-api
     ports:
       - "5000:5000"
+    volumes:
+      - ./portal/scripts:/app/scripts:ro
+      - ./portal/styles:/app/styles:ro
+      - ./portal/templates:/app/templates:ro
+      - ./portal/server:/app/server:ro
+      - ./portal/.env:/app/.env:ro
+    command: /bin/bash -c "npm run buildDev && npm install -g nodemon && nodemon --watch dist dist/server.js"
 
   deal-api:
     container_name: deal-api
