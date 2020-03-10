@@ -23,6 +23,5 @@ COPY --from=build /build/dist dist/
 COPY --from=build /build/scripts scripts/
 COPY --from=build /build/styles styles/
 COPY --from=build /build/templates templates/
-COPY --from=build /build/mocks mocks/
 
 ENTRYPOINT node dist/server.js
