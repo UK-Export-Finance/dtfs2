@@ -3,6 +3,10 @@ import path from 'path'
 import nunjucks from 'nunjucks'
 import routes from './routes'
 
+// var webpack = require('webpack');
+// var webpackConfig = require('../webpack.dev.config');
+// var compiler = webpack(webpackConfig);
+
 const app = express()
 
 const HOST = '0.0.0.0';
@@ -14,6 +18,13 @@ nunjucks.configure('templates', {
   noCache: true,
   watch: true
 });
+
+// app.use(require("webpack-dev-middleware")(compiler, {
+//     noInfo: true,
+//     publicPath: webpackConfig.output.publicPath
+// }));
+//
+// app.use(require("webpack-hot-middleware")(compiler));
 
 app.use('/', routes);
 

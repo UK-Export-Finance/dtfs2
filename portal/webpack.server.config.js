@@ -4,7 +4,7 @@ const nodeExternals = require('webpack-node-externals')
 
 module.exports = {
   entry: {
-    server: './index.js',
+    server: './server/index.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),

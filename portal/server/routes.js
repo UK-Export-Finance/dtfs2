@@ -77,7 +77,7 @@ router.get('/contract/:id/bond/:bondId/financial-details', async (req, res) =>
 )
 
 router.get('/contract/:id/bond/:bondId/fee-details', async (req, res) =>
-  res.render('contract-bond-fee-details.njk', 
+  res.render('contract-bond-fee-details.njk',
     await api.contractBond(req.params.id, req.params.bondId)
   )
 )
