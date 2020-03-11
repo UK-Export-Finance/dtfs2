@@ -1,12 +1,11 @@
-const express = require('express');
 const bodyParser = require('body-parser');
+const express = require('express');
+
+const deals = require('./controllers/deal.controller');
 const MOCKS = require('./mocks/index');
 
 const app = express();
-app.use(bodyParser.json({ type: 'application/json' })); // lets us get at posted data
-
-const deals = require('./controllers/deal.controller');
-
+app.use(bodyParser.json({ type: 'application/json' }));
 
 app.get('/api/deals', deals.findAll);
 app.post('/api/deals', deals.create);
@@ -46,13 +45,6 @@ app.get('/mocks/contracts', (req, res) => {
 
 app.get('/mocks/contract/:id/comments', (req, res) => {
   res.status(200).send(getMockContractById(req.params.id));
-});
-
-app.post('/deal', (req, res) => {
-  // prove we're receiving something..
-  console.log(JSON.stringify(req.body, null, 2));
-
-  res.status(200).send();
 });
 
 module.exports = app
