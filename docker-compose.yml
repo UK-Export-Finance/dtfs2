@@ -15,7 +15,8 @@ services:
       - ./portal/templates:/app/templates:ro
       - ./portal/server:/app/server:ro
       - ./portal/.env:/app/.env:ro
-    command: /bin/bash -c "npm run buildDev && npm install -g nodemon && nodemon --watch dist dist/server.js"
+#    command: /bin/bash -c "npm run buildDev && npm install -g nodemon && nodemon --watch dist dist/server.js"
+    command: node dist/server.js
 
   deal-api:
     container_name: deal-api
