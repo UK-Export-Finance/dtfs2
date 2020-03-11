@@ -22,25 +22,15 @@ Portal can then be seen on:
 http://localhost:5000
 ```
 
-the API services can be seen for eg. on:
+mock API services can be seen for eg. on:
 ```
 http://localhost:5001/mocks/contract/2
 ```
 
+real API services that are interacting with mongoDB can be seen for eg. on:
+```
+http://localhost:5001/api/deals
+```
+
 a mongoDB instance will have been started:
-* to connect a client from your local machine, connect to localhost:27017 as <todo>/<todo>
-* to connect from within another docker image, connect to dealData:27017, same user/password
-
-## End to End Testing
-
-navigate into the e2e-tests folder
-
-```
-npm test
-```
-will execute everything under ./e2e-tests/cypress/integration/ in headless mode.
-
-```
-npm run test:browser
-```
-will launch the cypress client, which lets you run individual tests and watch them play out.
+* to connect a client from your local machine, connect to localhost:27017 as root/r00t
