@@ -5,10 +5,8 @@ services:
     container_name: deal-api-data-test
     image: mongo
     restart: always
-    environment:
-      - MONGO_INITDB_DATABASE=<todo>
-      - MONGO_INITDB_ROOT_USERNAME=<todo>
-      - MONGO_INITDB_ROOT_PASSWORD=<todo>
+    env_file:
+      - .env
     volumes:
       - ../deal-api-data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - ./deal-api-data-volume-test:/data/db
