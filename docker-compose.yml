@@ -14,8 +14,7 @@ services:
       - ./portal/styles:/app/styles:ro
       - ./portal/templates:/app/templates:ro
       - ./portal/server:/app/server:ro
-      - ./portal/.env:/app/.env:ro
-#    command: /bin/bash -c "npm run buildDev && npm install -g nodemon && nodemon --watch dist dist/server.js"
+      - ./portal/.env.full-local-docker-environment:/app/.env:ro
     command: node dist/server.js
 
   deal-api:
@@ -29,16 +28,15 @@ services:
       - "5001:5000"
     volumes:
       - ./deal-api/src:/app/src:ro
+      - ./deal-api/.env.full-local-docker-environment:/app/.env:ro
     entrypoint: npx nodemon src/index.js
 
   deal-api-data:
     container_name: deal-api-data
     image: mongo
     restart: always
-    environment:
-      - MONGO_INITDB_DATABASE=<todo>
-      - MONGO_INITDB_ROOT_USERNAME=<todo>
-      - MONGO_INITDB_ROOT_PASSWORD=<todo>
+    env_file:
+      - ./deal-api/.env.full-local-docker-environment
     volumes:
       - ./deal-api-data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - ./deal-api-data-volume:/data/db

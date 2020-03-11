@@ -24,6 +24,7 @@
   "homepage": "https://github.com/notbinary/dtfs2#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongodb": "^3.5.4",
     "mongoose": "^5.9.3",
