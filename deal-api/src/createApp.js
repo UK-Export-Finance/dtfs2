@@ -1,26 +1,20 @@
-const bodyParser = require('body-parser');
 const express = require('express');
-
-const MOCKS = require('./mocks');
-const deals = require('./controllers/deal.controller');
+const bodyParser = require('body-parser');
+const MOCKS = require('./mocks/index');
 
 const app = express();
-const mongoose = require('mongoose');
+app.use(bodyParser.json({ type: 'application/json' })); // lets us get at posted data
 
-const HOST = '0.0.0.0';
-const PORT = process.env.PORT || 5000;
+const deals = require('./controllers/deal.controller');
 
-mongoose.Promise = global.Promise;
 
 app.get('/api/deals', deals.findAll);
-app.put('/api/deals', deals.create);
+app.post('/api/deals', deals.create);
 
 app.get('/api/deals/:id', deals.findOne);
 app.put('/api/deals/:id', deals.update);
 
 const getMockContractById = (id) => MOCKS.CONTRACTS.find((c) => c.id === id) || MOCKS.CONTRACTS[0];
-
-app.use(bodyParser.json()); // lets us get at posted data
 
 app.get('/mocks/mandatoryCriteria', (req, res) => {
   res.status(200).send(MOCKS.MANDATORY_CRITERIA);
