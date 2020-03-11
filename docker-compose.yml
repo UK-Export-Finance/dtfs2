@@ -40,8 +40,8 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=<todo>
       - MONGO_INITDB_ROOT_PASSWORD=<todo>
     volumes:
-      - ./dealData/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-      - ./dealData_volume:/data/db
+      - ./deal-api-data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./deal-api-data-volume:/data/db
     ports:
       - "27017-27019:27017-27019"
 networks:
