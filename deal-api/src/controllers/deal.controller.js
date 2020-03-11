@@ -11,6 +11,7 @@ const authMechanism = 'DEFAULT';
 const url = `mongodb://${user}:${password}@localhost:27017/?authMechanism=${authMechanism}`;
 
 const findDeals = (db, callback) => {
+  console.log('deal.controller::findDeals');
   const collection = db.collection('deals');
 
   collection.find({}).toArray((err, result) => {
@@ -20,6 +21,7 @@ const findDeals = (db, callback) => {
 };
 
 const findOneDeal = (id, db, callback) => {
+  console.log('deal.controller::findOneDeal');
   const collection = db.collection('deals');
 
   collection.findOne({ id }, (err, result) => {
@@ -31,6 +33,8 @@ const findOneDeal = (id, db, callback) => {
 exports.create = (req, res) => {};
 
 exports.findAll = (req, res) => {
+  console.log('deal.controller::findAll');
+
   const client = new MongoClient(url, { useNewUrlParser: true });
 
   client.connect((err) => {
@@ -44,6 +48,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
+  console.log('deal.controller::findOne');
   const client = new MongoClient(url, { useNewUrlParser: true });
 
   client.connect((err) => {
