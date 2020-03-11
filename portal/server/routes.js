@@ -1,4 +1,5 @@
 import express from 'express'
+import nunjucks from 'nunjucks'
 import api from './api'
 
 const router = express.Router()
@@ -46,6 +47,23 @@ router.get('/contract/:id/submission-details', async (req, res) =>
 
 router.get('/contract/:id/delete', async (req, res) =>
   res.render('contract-delete.njk', await api.contract(req.params.id))
+)
+
+router.get('/contract/:id/about/supplier', async (req, res) =>
+  res.render('about-supply-contract.njk', {
+    contract: await api.contract(req.params.id),
+    testing: {
+      something: true,
+      foo: {
+        test: 'yes',
+        testing: 'hello'
+      },
+      bar: [
+        { test: true, something: 'test' },
+        { testing: true, somethingElse: 'test' }
+      ]
+    }
+  })
 )
 
 router.get('/contract/:id/eligibility/criteria', async (req, res) =>
