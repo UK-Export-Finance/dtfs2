@@ -5,14 +5,12 @@ this may be throw-away but it forces us to look at the mappings etc.
 
 assumes you have the whole environment running with docker-compose..
 
+to scan everything in ./test-data/type-a-xml and post it to DEAL_API_URL as defined in .env:
 ```
 npm start
 ```
 
-will scan everything in ./test-data/type-a-xml and post it to localhost:5001/deal, the endpoint just logs the data.
-
+unit-tests:
 ```
 npm test
 ```
-
-is wired to run all jest tests it can find, and create coverage reports under /reports.
