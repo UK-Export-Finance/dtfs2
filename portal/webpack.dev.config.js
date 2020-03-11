@@ -20,8 +20,7 @@ module.exports = {
   mode: 'development',
   entry: {
     main: [
-      './scripts/main.js',
-      'webpack-hot-middleware/client?reload=true'
+      './scripts/main.js'
     ]
   },
   output: {
@@ -70,11 +69,6 @@ module.exports = {
     }),
     new CopyPlugin([
       { from: './node_modules/govuk-frontend/govuk/assets', to: './assets' }
-    ]),
-    // OccurrenceOrderPlugin is needed for webpack 1.x only
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    // Use NoErrorsPlugin for webpack 1.x
-    new webpack.NoEmitOnErrorsPlugin()
+    ])
   ]
 }
