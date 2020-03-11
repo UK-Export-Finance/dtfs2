@@ -1,18 +1,9 @@
 const assert = require('assert');
 
-const { MongoClient } = require('mongodb');
-const MOCKS = require('../mocks');
+const db = require('../db-driver/client');
 
-// Connection URL
-const dbName = '<todo>';
-const user = encodeURIComponent('<todo>');
-const password = encodeURIComponent('<todo>');
-const authMechanism = 'DEFAULT';
-const url = `mongodb://${user}:${password}@localhost:27017/?authMechanism=${authMechanism}`;
-
-const findDeals = (db, callback) => {
-  console.log('deal.controller::findDeals');
-  const collection = db.collection('deals');
+const findDeals = async (callback) => {
+  const collection = await db.getCollection('deals');
 
   collection.find({}).toArray((err, result) => {
     assert.equal(err, null);
@@ -20,9 +11,8 @@ const findDeals = (db, callback) => {
   });
 };
 
-const findOneDeal = (id, db, callback) => {
-  console.log('deal.controller::findOneDeal');
-  const collection = db.collection('deals');
+const findOneDeal = async (id, callback) => {
+  const collection = await db.getCollection('deals');
 
   collection.findOne({ id }, (err, result) => {
     assert.equal(err, null);
@@ -30,36 +20,20 @@ const findOneDeal = (id, db, callback) => {
   });
 };
 
-exports.create = (req, res) => {};
+exports.create = async (req, res) => {
+  const collection = await db.getCollection('deals');
+  const deal = await collection.insertOne(req.body);
 
-exports.findAll = (req, res) => {
-  console.log('deal.controller::findAll');
-
-  const client = new MongoClient(url, { useNewUrlParser: true });
-
-  client.connect((err) => {
-    const db = client.db(dbName);
-
-    findDeals(db, (deals) => {
-      client.close();
-      res.status(200).send(deals);
-    });
-  });
+  res.status(200).send(deal);
 };
 
-exports.findOne = (req, res) => {
-  console.log('deal.controller::findOne');
-  const client = new MongoClient(url, { useNewUrlParser: true });
+exports.findAll = (req, res) => (
+  findDeals((deals) => res.status(200).send(deals))
+);
 
-  client.connect((err) => {
-    const db = client.db(dbName);
-
-    findOneDeal(req.params.id, db, (deal) => {
-      client.close();
-      res.status(200).send(deal);
-    });
-  });
-};
+exports.findOne = (req, res) => (
+  findOneDeal(req.params.id, (deal) => res.status(200).send(deal))
+);
 
 exports.update = (req, res) => {};
 
