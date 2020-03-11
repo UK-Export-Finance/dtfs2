@@ -1,0 +1,58 @@
+{% import 'macros/progress-nav.njk' as progressNav %}
+
+{% macro nav(completedStatus, current, contractId, childId) %}  
+
+  <h1 class="govuk-heading-l">About the Supply Contract</h1>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-8">
+
+    <div class="govuk-grid-column-one-half">
+
+      {{ progressNav.navItem(
+          title = 'Supplier and counter-indemnifier/guarantor',
+          id = 'supplierAndGuarantor',
+          step = 1,
+          completed = completedStatus.supplierAndGuarantor,
+          href = 'about/supplier',
+          contractId = contractId,
+          current = current
+      )}}
+
+      {{ progressNav.navItem(
+          title = 'Buyer',
+          id = 'buyer',
+          step = 2,
+          completed = completedStatus.buyer,
+          href = 'about/buyer',
+          contractId = contractId,
+          current = current
+      )}}
+
+      {{ progressNav.navItem(
+          title = 'Financial information',
+          id = 'financialInformation',
+          step = 3,
+          completed = completedStatus.financialInformation,
+          href = 'about/financial-information',
+          contractId = contractId,
+          current = current
+      )}}
+      
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+   
+      {{ progressNav.navItem(
+          title = 'Preview',
+          id = 'preview',
+          completed = completedStatus.supplierAndGuarantor and completedStatus.buyer and completedStatus.financialInformation,
+          href = 'bond',
+          contractId = contractId,
+          current = current
+      )}}
+      
+    </div>
+
+  </div>    
+
+{% endmacro %}

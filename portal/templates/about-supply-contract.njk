@@ -1,0 +1,269 @@
+{% extends "index.njk" %}
+{% import 'macros/about-supply-contract-nav.njk' as aboutSupplyContract %}
+
+{% block content %}
+
+  {{ aboutSupplyContract.nav(
+    completedStatus = supplyContract.completedStatus,
+    current = 'supplierAndGuarantor',
+    contractId = id
+  )}}
+
+  <script type="text/javascript">
+    const testing = {{ testing | dump | safe }};
+    console.log('** testing', testing);
+  </script>
+
+  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+  
+  <form>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="supplierType">
+        Supplier type
+      </label>
+      <span id="supplierType-hint" class="govuk-hint">
+          Where the supplier is a UK Supplier, please ensure that it has provided a UK Supplier Declaration 
+      </span>
+
+      <select class="govuk-select" id="supplierType" name="supplierType" aria-describedby="supplierType-hint">
+        <option value="">Select value</option>
+        <option value="Exporter">Exporter</option>
+        <option value="UK Supplier">UK Supplier</option>
+      </select>
+    </div>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="supplierCompaniesHouseRegistrationNumber">
+        UK Supplier’s Companies House registration number, if UK registered (optional) 
+      </label>
+
+      <span id="supplierCompaniesHouseRegistrationNumberHint" class="govuk-hint">
+        We use a Companies House service to provide you with company details. If the company is not UK registered or the Companies House service is unavailable, then you will need to complete the company details fields manually.
+      </span>
+
+      <input class="govuk-input govuk-!-margin-bottom-6" id="supplierCompaniesHouseRegistrationNumber" name="supplierCompaniesHouseRegistrationNumber" type="text" aria-describedby="supplierCompaniesHouseRegistrationNumberHint">
+
+      <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button">Search</button>
+
+    </div>
+  
+    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="supplierName">
+          Supplier name
+        </label>
+        <span id="supplierName-hint" class="govuk-hint">
+          This should be the legal name of the entity
+        </span>
+        <input class="govuk-input govuk-js-character-count" id="supplierName" name="supplierName" aria-describedby="supplierName-info supplierName-hint" />
+      </div>
+
+      <span id="supplierName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+        You can enter up to 150 characters
+      </span>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend" aria-describedby="address-hint">
+            Supplier address
+          </legend>
+          <span id="address-hint" class="govuk-hint">
+            This should be the supplier's principal place of business
+          </span>
+ 
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="address-line-country">
+              Country
+            </label>
+            <select class="govuk-select" id="address-line-country" name="address-line-country">
+              <option value="">Select value</option>
+              <option value="test">Test</option>
+            </select>
+          </div>
+          
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="address-line-1">
+              Building and street <span class="govuk-visually-hidden">line 1 of 2</span>
+            </label>
+            <input class="govuk-input" id="address-line-1" name="address-line-1" type="text">
+          </div>
+
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="address-line-2">
+              <span class="govuk-visually-hidden">Building and street line 2 of 2</span>
+            </label>
+            <input class="govuk-input" id="address-line-2" name="address-line-2" type="text">
+          </div>
+
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="address-town">
+              Town or city
+            </label>
+            <input class="govuk-input govuk-!-width-two-thirds" id="address-town" name="address-town" type="text">
+          </div>
+
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="address-county">
+              County
+            </label>
+            <input class="govuk-input govuk-!-width-two-thirds" id="address-county" name="address-county" type="text">
+          </div>
+
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="address-postcode">
+              Postcode
+            </label>
+            <input class="govuk-input govuk-input--width-10" id="address-postcode" name="address-postcode" type="text">
+          </div>
+
+        </fieldset>
+
+      </div>
+    </div>
+
+    <div class="govuk-form-group">
+      <fieldset class="govuk-fieldset">
+
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend">
+          Is the Supplier's correspondence address different for the Company's Registered Address? 
+        </legend>
+
+        <div class="govuk-radios govuk-radios--inline">
+
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="suppliersCorrespondenceAddressDifferent" name="suppliersCorrespondenceAddressDifferent" type="radio" value="true">
+            <label class="govuk-label govuk-radios__label" for="suppliersCorrespondenceAddressDifferent">
+              Yes
+            </label>
+          </div>
+
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="suppliersCorrespondenceAddressDifferent-2" name="suppliersCorrespondenceAddressDifferent" type="radio" value="false">
+            <label class="govuk-label govuk-radios__label" for="suppliersCorrespondenceAddressDifferent-2">
+              No
+            </label>
+          </div>
+        </div>
+
+      </fieldset>
+    </div>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="industrySector">
+        Bond type
+      </label>
+      <select class="govuk-select" id="industrySector" name="industrySector">
+        <option value="">Select value</option>
+        <option value="test">Test</option>
+      </select>
+    </div>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="industryClass">
+        Industry class
+      </label>
+      <select class="govuk-select" id="industryClass" name="industryClass">
+        <option value="">Select value</option>
+        <option value="test">Test</option>
+      </select>
+    </div>
+
+    <div class="govuk-form-group">
+
+      <fieldset class="govuk-fieldset">
+
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend" aria-describedby="smeType-hint">
+          SME type
+        </legend>
+
+        <span id="smeType-hint" class="govuk-hint">
+          Confirm the SME type based on the <a href="https://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition" target="_blank">European Commission definitions</a>
+        </span>
+
+        <div class="govuk-radios govuk-radios--inline">
+
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="smeType" name="smeType" type="radio" value="Micro">
+            <label class="govuk-label govuk-radios__label" for="smeType">
+              Micro
+            </label>
+          </div>
+
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="smeType-2" name="smeType" type="radio" value="Small">
+            <label class="govuk-label govuk-radios__label" for="smeType-2">
+              Small
+            </label>
+          </div>
+
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="smeType-3" name="smeType" type="radio" value="Medium">
+            <label class="govuk-label govuk-radios__label" for="smeType-3">
+              Medium
+            </label>
+          </div>
+
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="smeType-4" name="smeType" type="radio" value="Non-SME">
+            <label class="govuk-label govuk-radios__label" for="smeType-4">
+              Non-SME
+            </label>
+          </div>
+
+        </div>
+
+      </fieldset>
+
+    </div>
+
+    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="300">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="supplyContractDescription">
+          Description of supply contract
+        </label>
+        <textarea class="govuk-textarea govuk-js-character-count" id="supplyContractDescription" name="supplyContractDescription" rows="5" aria-describedby="supplyContractDescription-info"></textarea>
+      </div>
+
+      <span id="supplyContractDescription-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+        You can enter up to 300 characters
+      </span>
+    </div>
+
+    <div class="govuk-form-group">
+      <fieldset class="govuk-fieldset">
+
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend">
+          Is the counter-indemnifier (for bonds) or guarantor (for loans) legally distinct from the supplier? 
+        </legend>
+
+        <div class="govuk-radios govuk-radios--inline">
+
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="legallyDistinct" name="legallyDistinct" type="radio" value="true">
+            <label class="govuk-label govuk-radios__label" for="legallyDistinct">
+              Yes
+            </label>
+          </div>
+
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="legallyDistinct-2" name="legallyDistinct" type="radio" value="false">
+            <label class="govuk-label govuk-radios__label" for="legallyDistinct-2">
+              No
+            </label>
+          </div>
+        </div>
+
+      </fieldset>
+    </div>
+
+    <input type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" value="Next page" />
+
+    <button class="govuk-button govuk-button--secondary" data-module="govuk-button">Save and go back to deal</a>
+    
+  </form>
+
+{% endblock %}

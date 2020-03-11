@@ -527,7 +527,7 @@ const MOCKS = {
         suppliersCorrespondenceAddressDifferent: false,
         industrySector: '1234',
         industryClass: '56789',
-        smeType: 'Mico',
+        smeType: 'Micro',
         supplyContractDescription: 'Test',
         legallyDistinct: false,
         buyer: {
@@ -726,7 +726,7 @@ const MOCKS = {
         suppliersCorrespondenceAddressDifferent: false,
         industrySector: '5678',
         industryClass: '12345',
-        smeType: 'Mico',
+        smeType: 'Micro',
         supplyContractDescription: 'Test',
         legallyDistinct: false,
         buyer: {
