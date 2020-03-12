@@ -52,6 +52,7 @@ router.get('/contract/:id/delete', async (req, res) =>
 router.get('/contract/:id/about/supplier', async (req, res) =>
   res.render('about-supply-contract.njk', {
     contract: await api.contract(req.params.id),
+    countries: await api.countries(),
     testing: {
       something: true,
       foo: {

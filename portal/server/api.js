@@ -30,6 +30,11 @@ const contracts = async () => {
   return response.data;
 };
 
+const countries = async () => {
+  const response = await axios(`${urlRoot}/mocks/countries`);
+  return response.data;
+}
+
 const mandatoryCriteria = async () => {
   const response = await axios(`${urlRoot}/mocks/mandatoryCriteria`);
   return response.data;
@@ -46,6 +51,7 @@ export default {
   contract,
   contractBond,
   contracts,
+  countries,
   mandatoryCriteria,
   transactions
 };
