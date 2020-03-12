@@ -28,7 +28,7 @@
           Where the supplier is a UK Supplier, please ensure that it has provided a UK Supplier Declaration 
       </span>
 
-      <select class="govuk-select" id="supplierType" name="supplierType" aria-describedby="supplierType-hint">
+      <select class="govuk-select govuk-!-width-one-half" id="supplierType" name="supplierType" aria-describedby="supplierType-hint">
         <option value="">Select value</option>
         <option value="Exporter">Exporter</option>
         <option value="UK Supplier">UK Supplier</option>
@@ -44,7 +44,9 @@
         We use a Companies House service to provide you with company details. If the company is not UK registered or the Companies House service is unavailable, then you will need to complete the company details fields manually.
       </span>
 
-      <input class="govuk-input govuk-!-margin-bottom-6" id="supplierCompaniesHouseRegistrationNumber" name="supplierCompaniesHouseRegistrationNumber" type="text" aria-describedby="supplierCompaniesHouseRegistrationNumberHint">
+      <input class="govuk-input govuk-!-width-one-half govuk-!-margin-bottom-6" id="supplierCompaniesHouseRegistrationNumber" name="supplierCompaniesHouseRegistrationNumber" type="text" aria-describedby="supplierCompaniesHouseRegistrationNumberHint">
+
+      <hr class="govuk-section-break" />
 
       <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button">Search</button>
 
@@ -58,7 +60,7 @@
         <span id="supplierName-hint" class="govuk-hint">
           This should be the legal name of the entity
         </span>
-        <input class="govuk-input govuk-js-character-count" id="supplierName" name="supplierName" aria-describedby="supplierName-info supplierName-hint" />
+        <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="supplierName" name="supplierName" aria-describedby="supplierName-info supplierName-hint" />
       </div>
 
       <span id="supplierName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
@@ -81,7 +83,7 @@
             <label class="govuk-label" for="address-line-country">
               Country
             </label>
-            <select class="govuk-select" id="address-line-country" name="address-line-country">
+            <select class="govuk-select govuk-!-width-full" id="address-line-country" name="address-line-country">
               <option value="">Select value</option>
               {% for country in countries %}
                 <option value="{{ country.code }}">{{ country.name}}</option>
@@ -161,7 +163,7 @@
       <label class="govuk-label" for="industrySector">
         Industry sector
       </label>
-      <select class="govuk-select" id="industrySector" name="industrySector" onChange="onChangeIndustrySector(event)">
+      <select class="govuk-select govuk-!-width-one-half" id="industrySector" name="industrySector" onChange="onChangeIndustrySector(event)">
         <option value="">Select value</option>
         {% for sector in industrySectors %}
           <option value="{{ sector.code }}">{{ sector.name}}</option>
@@ -173,7 +175,7 @@
       <label class="govuk-label" for="industryClass">
         Industry class
       </label>
-      <select class="govuk-select" id="industryClass" name="industryClass">
+      <select class="govuk-select govuk-!-width-one-half" id="industryClass" name="industryClass">
         <option value="">Select value</option>
       </select>
     </div>
@@ -231,7 +233,7 @@
         <label class="govuk-label" for="supplyContractDescription">
           Description of supply contract
         </label>
-        <textarea class="govuk-textarea govuk-js-character-count" id="supplyContractDescription" name="supplyContractDescription" rows="5" aria-describedby="supplyContractDescription-info"></textarea>
+        <textarea class="govuk-textarea govuk-!-width-one-half govuk-js-character-count" id="supplyContractDescription" name="supplyContractDescription" rows="5" aria-describedby="supplyContractDescription-info"></textarea>
       </div>
 
       <span id="supplyContractDescription-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
