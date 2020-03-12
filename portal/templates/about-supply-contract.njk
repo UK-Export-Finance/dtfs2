@@ -81,7 +81,10 @@
             </label>
             <select class="govuk-select" id="address-line-country" name="address-line-country">
               <option value="">Select value</option>
-              <option value="test">Test</option>
+              {% for country in countries %}
+                <option value="{{ country.code }}">{{ country.name}}</option>
+              {% endfor %}
+              
             </select>
           </div>
           
