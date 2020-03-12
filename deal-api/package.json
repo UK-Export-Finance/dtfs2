@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "unit-test": "jest --notify --coverage --verbose --config=unit.jest.config.js --detectOpenHandles --forceExit",
+    "api-test": "jest --notify --coverage --verbose --config=api-test.jest.config.js --detectOpenHandles --forceExit"
   },
   "repository": {
     "type": "git",
@@ -23,12 +24,16 @@
   "homepage": "https://github.com/notbinary/dtfs2#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongodb": "^3.5.4",
     "mongoose": "^5.9.3",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "jest": "^24.9.0",
+    "jest-cli": "^24.8.0",
+    "nodemon": "^2.0.2",
+    "supertest": "^4.0.2"
   }
 }
