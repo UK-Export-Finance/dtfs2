@@ -1,0 +1,17 @@
+version: "3"
+services:
+
+  deal-api-data-test:
+    container_name: deal-api-data-test
+    image: mongo
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ../deal-api-data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./deal-api-data-volume-test:/data/db
+    ports:
+      - "27017-27019:27017-27019"
+
+networks:
+  default:
