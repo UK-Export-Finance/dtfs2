@@ -10,13 +10,15 @@
   )}}
 
   <script type="text/javascript">
-    const testing = {{ testing | dump | safe }};
-    console.log('** testing', testing);
+    const industrySectors = {{ industrySectors | dump | safe }};
+    function onChangeIndustrySector(event) {
+      window.dtfs.changeIndustryClasses(event, industrySectors);
+    };
   </script>
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
   
-  <form>
+  <form autocomplete="off">
 
     <div class="govuk-form-group">
       <label class="govuk-label" for="supplierType">
@@ -157,11 +159,13 @@
 
     <div class="govuk-form-group">
       <label class="govuk-label" for="industrySector">
-        Bond type
+        Industry sector
       </label>
-      <select class="govuk-select" id="industrySector" name="industrySector">
+      <select class="govuk-select" id="industrySector" name="industrySector" onChange="onChangeIndustrySector(event)">
         <option value="">Select value</option>
-        <option value="test">Test</option>
+        {% for sector in industrySectors %}
+          <option value="{{ sector.code }}">{{ sector.name}}</option>
+        {% endfor %}
       </select>
     </div>
 
@@ -171,7 +175,6 @@
       </label>
       <select class="govuk-select" id="industryClass" name="industryClass">
         <option value="">Select value</option>
-        <option value="test">Test</option>
       </select>
     </div>
 
