@@ -27,10 +27,6 @@ app.get('/mocks/contracts', (req, res) => {
   res.status(200).send(MOCKS.CONTRACTS);
 });
 
-app.get('/mocks/transactions', (req, res) => {
-  res.status(200).send(MOCKS.TRANSACTIONS);
-});
-
 app.get('/mocks/contract/:id', (req, res) => {
   res.status(200).send(getMockContractById(req.params.id));
 });
@@ -47,8 +43,16 @@ app.get('/mocks/countries', (req, res) => {
   res.status(200).send(MOCKS.COUNTRIES);
 });
 
+app.get('/mocks/industry-sectors', (req, res) => {
+  res.status(200).send(MOCKS.INDUSTRY_SECTORS);
+});
+
 app.get('/mocks/mandatoryCriteria', (req, res) => {
   res.status(200).send(MOCKS.MANDATORY_CRITERIA);
+});
+
+app.get('/mocks/transactions', (req, res) => {
+  res.status(200).send(MOCKS.TRANSACTIONS);
 });
 
 module.exports = app

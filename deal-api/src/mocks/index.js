@@ -1,5 +1,6 @@
 const COUNTRIES = require('./countries');
 const BOND_CURRENCIES = require('./bond-currencies');
+const INDUSTRY_SECTORS = require('./industry-sectors');
 
 const BANKS = [
   {
@@ -180,6 +181,7 @@ const MOCKS = {
   BANKS,
   BOND_CURRENCIES,
   COUNTRIES,
+  INDUSTRY_SECTORS,
   MANDATORY_CRITERIA,
   CONTRACTS: [
     {
