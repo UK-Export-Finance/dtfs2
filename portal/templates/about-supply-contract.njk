@@ -1,5 +1,6 @@
 {% extends "index.njk" %}
 {% import 'macros/about-supply-contract-nav.njk' as aboutSupplyContract %}
+{% import 'macros/address-fields.njk' as address %}
 
 {% block content %}
 
@@ -14,6 +15,16 @@
     function onChangeIndustrySector(event) {
       window.dtfs.changeIndustryClasses(event, industrySectors);
     };
+
+    function showAdditionalFields(bool) {
+      var additionalFormFields = document.getElementById('additional-form-fields');
+
+      if (bool) {
+        additionalFormFields.className = '';
+      } else {
+        additionalFormFields.className = 'govuk-visually-hidden';
+      }
+    }
   </script>
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
@@ -68,69 +79,11 @@
       </span>
     </div>
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-
-        <fieldset class="govuk-fieldset">
-          <legend class="govuk-fieldset__legend" aria-describedby="address-hint">
-            Supplier address
-          </legend>
-          <span id="address-hint" class="govuk-hint">
-            This should be the supplier's principal place of business
-          </span>
- 
-          <div class="govuk-form-group">
-            <label class="govuk-label" for="address-line-country">
-              Country
-            </label>
-            <select class="govuk-select govuk-!-width-full" id="address-line-country" name="address-line-country">
-              <option value="">Select value</option>
-              {% for country in countries %}
-                <option value="{{ country.code }}">{{ country.name}}</option>
-              {% endfor %}
-              
-            </select>
-          </div>
-          
-          <div class="govuk-form-group">
-            <label class="govuk-label" for="address-line-1">
-              Building and street <span class="govuk-visually-hidden">line 1 of 2</span>
-            </label>
-            <input class="govuk-input" id="address-line-1" name="address-line-1" type="text">
-          </div>
-
-          <div class="govuk-form-group">
-            <label class="govuk-label" for="address-line-2">
-              <span class="govuk-visually-hidden">Building and street line 2 of 2</span>
-            </label>
-            <input class="govuk-input" id="address-line-2" name="address-line-2" type="text">
-          </div>
-
-          <div class="govuk-form-group">
-            <label class="govuk-label" for="address-town">
-              Town or city
-            </label>
-            <input class="govuk-input govuk-!-width-two-thirds" id="address-town" name="address-town" type="text">
-          </div>
-
-          <div class="govuk-form-group">
-            <label class="govuk-label" for="address-county">
-              County
-            </label>
-            <input class="govuk-input govuk-!-width-two-thirds" id="address-county" name="address-county" type="text">
-          </div>
-
-          <div class="govuk-form-group">
-            <label class="govuk-label" for="address-postcode">
-              Postcode
-            </label>
-            <input class="govuk-input govuk-input--width-10" id="address-postcode" name="address-postcode" type="text">
-          </div>
-
-        </fieldset>
-
-      </div>
-    </div>
+    {{ address.fields(
+      id = "supplier",
+      legend = "Supplier address",
+      hint = "This should be the supplier's principal place of business"
+    )}}
 
     <div class="govuk-form-group">
       <fieldset class="govuk-fieldset">
@@ -142,14 +95,14 @@
         <div class="govuk-radios govuk-radios--inline">
 
           <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="suppliersCorrespondenceAddressDifferent" name="suppliersCorrespondenceAddressDifferent" type="radio" value="true">
+            <input class="govuk-radios__input" id="suppliersCorrespondenceAddressDifferent" name="suppliersCorrespondenceAddressDifferent" type="radio" value="true" onClick="showAdditionalFields(true)">
             <label class="govuk-label govuk-radios__label" for="suppliersCorrespondenceAddressDifferent">
               Yes
             </label>
           </div>
 
           <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="suppliersCorrespondenceAddressDifferent-2" name="suppliersCorrespondenceAddressDifferent" type="radio" value="false">
+            <input class="govuk-radios__input" id="suppliersCorrespondenceAddressDifferent-2" name="suppliersCorrespondenceAddressDifferent" type="radio" value="false" onClick="showAdditionalFields(false)">
             <label class="govuk-label govuk-radios__label" for="suppliersCorrespondenceAddressDifferent-2">
               No
             </label>
@@ -157,6 +110,13 @@
         </div>
 
       </fieldset>
+    </div>
+
+    <div id="additional-form-fields" class="govuk-visually-hidden">
+      {{ address.fields(
+        id = "supplierCorrespondence",
+        legend = "Supplier correspondence address"
+      )}}
     </div>
 
     <div class="govuk-form-group">
