@@ -1,6 +1,7 @@
 jest.mock('govuk-frontend');
 import * as govukFrontend from 'govuk-frontend';
 import * as numericFloatInputs from './numeric-float-inputs';
+import * as changeIndustryClasses from './change-industry-classes';
 import main from './main';
 
 
@@ -16,6 +17,12 @@ describe('main.js', () => {
     numericFloatInputs.default = jest.fn();
     main();
     expect(numericFloatInputs.default).toHaveBeenCalled();
+  });
+
+  it('should call changeIndustryClasses()', () => {
+    changeIndustryClasses.default = jest.fn();
+    main();
+    expect(changeIndustryClasses.default).toHaveBeenCalled();
   });
 
 });

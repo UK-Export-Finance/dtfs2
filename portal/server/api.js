@@ -13,6 +13,8 @@ const contracts = async () => {
 };
 
 
+
+
 const banks = async () => {
   const response = await axios(`${urlRoot}/mocks/banks`);
   return response.data;
@@ -31,6 +33,16 @@ const contractBond = async (id, bondId) => {
   }
 };
 
+const countries = async () => {
+  const response = await axios(`${urlRoot}/mocks/countries`);
+  return response.data;
+}
+
+const industrySectors = async () => {
+  const response = await axios(`${urlRoot}/mocks/industry-sectors`);
+  return response.data;
+}
+
 const mandatoryCriteria = async () => {
   const response = await axios(`${urlRoot}/mocks/mandatoryCriteria`);
   return response.data;
@@ -47,6 +59,8 @@ export default {
   contract,
   contractBond,
   contracts,
+  countries,
+  industrySectors,
   mandatoryCriteria,
   transactions
 };

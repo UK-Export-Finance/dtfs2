@@ -1,0 +1,77 @@
+{% import 'macros/progress-nav.njk' as progressNav %}
+
+{% macro fields(id, legend, hint) %}  
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+    
+      <fieldset class="govuk-fieldset">
+        <legend
+          class="govuk-fieldset__legend govuk-fieldset__legend--m"
+          aria-describedby="address-hint"
+          {% if hint %}
+            aria-describedby="address-hint"
+          {% endif %}}
+        >
+          <h2 class="govuk-fieldset__heading">{{ legend }}</h2>
+        </legend>
+
+        {% if hint %}
+          <span id="address-hint" class="govuk-hint">
+            This should be the supplier's principal place of business
+          </span>
+        {% endif %}
+
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="{{ id }}-address-country">
+            Country
+          </label>
+          <select class="govuk-select govuk-!-width-full" id="{{ id }}-address-country" name="{{ id }}-address-country">
+            <option value="">Select value</option>
+            {% for country in countries %}
+              <option value="{{ country.code }}">{{ country.name}}</option>
+            {% endfor %}
+            
+          </select>
+        </div>
+        
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="{{ id }}-address-line-1">
+            Building and street <span class="govuk-visually-hidden">line 1 of 2</span>
+          </label>
+          <input class="govuk-input" id="{{ id }}-address-line-1" name="{{ id }}-address-line-1" type="text">
+        </div>
+
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="{{ id }}-address-line-2">
+            <span class="govuk-visually-hidden">Building and street line 2 of 2</span>
+          </label>
+          <input class="govuk-input" id="{{ id }}-address-line-2" name="{{ id }}-address-line-2" type="text">
+        </div>
+
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="{{ id }}-address-town">
+            Town or city
+          </label>
+          <input class="govuk-input govuk-!-width-two-thirds" id="{{ id }}-address-town" name="{{ id }}-address-town" type="text">
+        </div>
+
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="{{ id }}-address-county">
+            County
+          </label>
+          <input class="govuk-input govuk-!-width-two-thirds" id="{{ id }}-address-county" name="{{ id }}-address-county" type="text">
+        </div>
+
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="{{ id }}-address-postcode">
+            Postcode
+          </label>
+          <input class="govuk-input govuk-input--width-10" id="{{ id }}-address-postcode" name="{{ id }}-address-postcode" type="text">
+        </div>
+
+      </fieldset>
+    </div>
+  </div>  
+  
+{% endmacro %}
