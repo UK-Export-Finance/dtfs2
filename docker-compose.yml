@@ -15,6 +15,8 @@ services:
       - ./portal/templates:/app/templates:ro
       - ./portal/server:/app/server:ro
       - ./portal/.env.full-local-docker-environment:/app/.env:ro
+    environment:
+      - DEBUG=express:*
     command: node dist/server.js
 
   deal-api:
@@ -29,6 +31,8 @@ services:
     volumes:
       - ./deal-api/src:/app/src:ro
       - ./deal-api/.env.full-local-docker-environment:/app/.env:ro
+    environment:
+      - DEBUG=express:*
     entrypoint: npx nodemon src/index.js
 
   deal-api-data:

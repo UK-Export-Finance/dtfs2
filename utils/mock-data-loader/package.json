@@ -1,5 +1,5 @@
 {
-  "name": "dealdata",
+  "name": "mock-data-loader",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mongodb": "^3.5.4",
-    "xml2js": "^0.4.23"
+    "axios": "^0.19.2",
+    "dotenv": "^8.2.0"
   }
 }
