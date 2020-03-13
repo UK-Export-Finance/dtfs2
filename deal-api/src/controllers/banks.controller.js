@@ -2,8 +2,8 @@ const assert = require('assert');
 
 const db = require('../db-driver/client');
 
-const findBanks = async (callback) => {
-  const collection = await db.getCollection('banks');
+const findDeals = async (callback) => {
+  const collection = await db.getCollection('deals');
 
   collection.find({}).toArray((err, result) => {
     assert.equal(err, null);
@@ -11,8 +11,8 @@ const findBanks = async (callback) => {
   });
 };
 
-const findOneBank = async (id, callback) => {
-  const collection = await db.getCollection('banks');
+const findOneDeal = async (id, callback) => {
+  const collection = await db.getCollection('deals');
 
   collection.findOne({ id }, (err, result) => {
     assert.equal(err, null);
@@ -21,18 +21,18 @@ const findOneBank = async (id, callback) => {
 };
 
 exports.create = async (req, res) => {
-  const collection = await db.getCollection('banks');
+  const collection = await db.getCollection('deals');
   const deal = await collection.insertOne(req.body);
 
   res.status(200).send(deal);
 };
 
 exports.findAll = (req, res) => (
-  findBanks((banks) => res.status(200).send(banks))
+  findDeals((deals) => res.status(200).send(deals))
 );
 
 exports.findOne = (req, res) => (
-  findOneBank(req.params.id, (deal) => res.status(200).send(deal))
+  findOneDeal(req.params.id, (deal) => res.status(200).send(deal))
 );
 
 exports.update = (req, res) => {};
