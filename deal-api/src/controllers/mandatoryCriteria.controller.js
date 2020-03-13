@@ -28,11 +28,11 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findDeals((mandatoryCriteria) => res.status(200).send(mandatoryCriteria))
+  findMandatoryCriteria((mandatoryCriteria) => res.status(200).send(mandatoryCriteria))
 );
 
 exports.findOne = (req, res) => (
-  findOneDeal(req.params.id, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria))
+  findOneMandatoryCriteria(req.params.id, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria))
 );
 
 exports.update = (req, res) => {};

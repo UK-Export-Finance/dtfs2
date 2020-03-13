@@ -18,7 +18,7 @@ const banks = async () => {
 };
 
 const bondCurrencies = async () => {
-  const response = await axios(`${urlRoot}/api/bondCurrencies`);
+  const response = await axios(`${urlRoot}/api/bond-currencies`);
   return response.data;
 };
 
@@ -41,9 +41,6 @@ const transactions = async () => {
   const response = await axios(`${urlRoot}/api/transactions`);
   return response.data;
 };
-
-
-//-------------
 
 const contractBond = async (id, bondId) => {
   const response = await contract(id);
