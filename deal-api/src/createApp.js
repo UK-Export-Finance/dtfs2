@@ -2,10 +2,14 @@ const bodyParser = require('body-parser');
 const express = require('express');
 
 const deals = require('./controllers/deal.controller');
+const banks = require('./controllers/banks.controller');
 const MOCKS = require('./mocks/index');
 
 const app = express();
 app.use(bodyParser.json({ type: 'application/json' }));
+
+//----
+// things that should be in this file
 
 app.get('/api/deals', deals.findAll);
 app.post('/api/deals', deals.create);
@@ -13,22 +17,22 @@ app.post('/api/deals', deals.create);
 app.get('/api/deals/:id', deals.findOne);
 app.put('/api/deals/:id', deals.update);
 
+//-----
+// things that feel like candidates to move to another service
+
+app.get('/api/banks', banks.findAll);
+app.post('/api/banks', banks.create);
+
+
+//-----
+// mocks we should be working our way through, moving them into a mongo instance
+
 app.get('/mocks/contract/:id/comments', (req, res) => {
   res.status(200).send(getMockContractById(req.params.id));
 });
 
-const getMockContractById = (id) => MOCKS.CONTRACTS.find((c) => c.id === id) || MOCKS.CONTRACTS[0];
-
-app.get('/mocks/banks', (req, res) => {
-  res.status(200).send(MOCKS.BANKS);
-});
-
 app.get('/mocks/bondCurrencies', (req, res) => {
   res.status(200).send(MOCKS.BOND_CURRENCIES);
-});
-
-app.get('/mocks/banks', (req, res) => {
-  res.status(200).send(MOCKS.BANKS);
 });
 
 app.get('/mocks/countries', (req, res) => {

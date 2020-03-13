@@ -12,13 +12,12 @@ const contracts = async () => {
   return response.data;
 };
 
-
-
-
 const banks = async () => {
-  const response = await axios(`${urlRoot}/mocks/banks`);
+  const response = await axios(`${urlRoot}/api/banks`);
   return response.data;
 };
+
+//-------------
 
 const bondCurrencies = async () => {
   const response = await axios(`${urlRoot}/mocks/bondCurrencies`);

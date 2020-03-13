@@ -20,6 +20,21 @@ const createDeal = async (deal) => {
   return response.data;
 };
 
+const createBank = async (bank) => {
+  const response = await axios({
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/banks`,
+    data: bank,
+  });
+
+  return response.data;
+};
+
 module.exports = {
   createDeal,
+  createBank,
 };
