@@ -82,6 +82,7 @@
     {{ address.fields(
       id = "supplier",
       legend = "Supplier address",
+      countries = countries,
       hint = "This should be the supplier's principal place of business"
     )}}
 
@@ -115,7 +116,8 @@
     <div id="additional-form-fields" class="govuk-visually-hidden">
       {{ address.fields(
         id = "supplierCorrespondence",
-        legend = "Supplier correspondence address"
+        legend = "Supplier correspondence address",
+        countries = countries
       )}}
     </div>
 
