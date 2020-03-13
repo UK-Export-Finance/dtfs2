@@ -1,9 +1,9 @@
 const request = require('supertest');
 
-const wipeDB = require('./wipeDB');
-const aDeal = require('./dealBuilder');
+const wipeDB = require('../wipeDB');
+const aDeal = require('./deal-builder');
 
-const app = require('../src/createApp');
+const app = require('../../src/createApp');
 
 describe('a deal', () => {
 

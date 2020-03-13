@@ -1,15 +1,23 @@
+
+const collections = ["deals","banks","transactions"];
+
 module.exports = async () => {
+  const db = require('../src/db-driver/client');
 
-  return new Promise( async(resolve, reject ) => {
-    const db = require('../src/db-driver/client');
-    const collection = await db.getCollection("deals");
+  const drop = async(collection) => {
 
-    collection.drop(function(err, delOK) {
-      if (err)
-        reject(err);
-      else
+    return new Promise( async(resolve, reject ) => {
+      const collectionToDrop = await db.getCollection(collection);
+
+      collectionToDrop.drop(function(err, delOK) {
         resolve();
-    });
 
-  });
+      });
+
+    });
+  }
+
+  for (collection of collections) {
+    await drop(collection);
+  }
 }
