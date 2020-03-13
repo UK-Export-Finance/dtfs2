@@ -20,3 +20,11 @@ for (country of MOCKS.COUNTRIES) {
 for (industrySector of MOCKS.INDUSTRY_SECTORS) {
   api.createIndustrySector(industrySector);
 }
+
+for (mandatoryCriteria of MOCKS.MANDATORY_CRITERIA) {
+  api.createMandatoryCriteria(mandatoryCriteria);
+}
+
+for (transaction of MOCKS.TRANSACTIONS) {
+  api.createTransaction(transaction);
+}
