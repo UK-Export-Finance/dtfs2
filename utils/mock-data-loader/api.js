@@ -76,10 +76,40 @@ const createIndustrySector = async (industrySector) => {
   return response.data;
 };
 
+const createMandatoryCriteria = async (mandatoryCriteria) => {
+  const response = await axios({
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/mandatory-criteria`,
+    data: mandatoryCriteria,
+  });
+
+  return response.data;
+};
+
+const createTransaction = async (transaction) => {
+  const response = await axios({
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/transactions`,
+    data: transaction,
+  });
+
+  return response.data;
+};
+
 module.exports = {
   createDeal,
   createBank,
   createBondCurrency,
   createCountry,
   createIndustrySector,
+  createMandatoryCriteria,
+  createTransaction,
 };

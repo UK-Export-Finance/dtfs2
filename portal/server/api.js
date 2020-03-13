@@ -32,6 +32,16 @@ const industrySectors = async () => {
   return response.data;
 }
 
+const mandatoryCriteria = async () => {
+  const response = await axios(`${urlRoot}/api/mandatory-criteria`);
+  return response.data;
+};
+
+const transactions = async () => {
+  const response = await axios(`${urlRoot}/api/transactions`);
+  return response.data;
+};
+
 
 //-------------
 
@@ -41,16 +51,6 @@ const contractBond = async (id, bondId) => {
     contractId: response.id,
     bond: response.bondTransactions.items.find(bond => bond.id === bondId)
   }
-};
-
-const mandatoryCriteria = async () => {
-  const response = await axios(`${urlRoot}/mocks/mandatoryCriteria`);
-  return response.data;
-};
-
-const transactions = async () => {
-  const response = await axios(`${urlRoot}/mocks/transactions`);
-  return response.data;
 };
 
 export default {
