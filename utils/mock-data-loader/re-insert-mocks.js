@@ -8,3 +8,7 @@ for (contract of MOCKS.CONTRACTS) {
 for (bank of MOCKS.BANKS) {
   api.createBank(bank);
 }
+
+for (bondCurrency of MOCKS.BOND_CURRENCIES) {
+  api.createBondCurrency(bondCurrency);
+}
