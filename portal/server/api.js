@@ -27,6 +27,11 @@ const countries = async () => {
   return response.data;
 }
 
+const industrySectors = async () => {
+  const response = await axios(`${urlRoot}/api/industry-sectors`);
+  return response.data;
+}
+
 
 //-------------
 
@@ -37,11 +42,6 @@ const contractBond = async (id, bondId) => {
     bond: response.bondTransactions.items.find(bond => bond.id === bondId)
   }
 };
-
-const industrySectors = async () => {
-  const response = await axios(`${urlRoot}/mocks/industry-sectors`);
-  return response.data;
-}
 
 const mandatoryCriteria = async () => {
   const response = await axios(`${urlRoot}/mocks/mandatoryCriteria`);
