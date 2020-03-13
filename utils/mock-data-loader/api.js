@@ -41,7 +41,7 @@ const createBondCurrency = async (bondCurrency) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/bondCurrencies`,
+    url: `${urlRoot}/api/bond-currencies`,
     data: bondCurrency,
   });
 
