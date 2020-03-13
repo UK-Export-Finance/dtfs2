@@ -17,12 +17,18 @@ const banks = async () => {
   return response.data;
 };
 
-//-------------
-
 const bondCurrencies = async () => {
-  const response = await axios(`${urlRoot}/mocks/bondCurrencies`);
+  const response = await axios(`${urlRoot}/api/bondCurrencies`);
   return response.data;
 };
+
+const countries = async () => {
+  const response = await axios(`${urlRoot}/api/countries`);
+  return response.data;
+}
+
+
+//-------------
 
 const contractBond = async (id, bondId) => {
   const response = await contract(id);
@@ -31,11 +37,6 @@ const contractBond = async (id, bondId) => {
     bond: response.bondTransactions.items.find(bond => bond.id === bondId)
   }
 };
-
-const countries = async () => {
-  const response = await axios(`${urlRoot}/mocks/countries`);
-  return response.data;
-}
 
 const industrySectors = async () => {
   const response = await axios(`${urlRoot}/mocks/industry-sectors`);

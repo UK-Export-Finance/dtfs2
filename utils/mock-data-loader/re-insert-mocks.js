@@ -12,3 +12,7 @@ for (bank of MOCKS.BANKS) {
 for (bondCurrency of MOCKS.BOND_CURRENCIES) {
   api.createBondCurrency(bondCurrency);
 }
+
+for (country of MOCKS.COUNTRIES) {
+  api.createCountry(country);
+}
