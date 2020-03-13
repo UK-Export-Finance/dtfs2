@@ -62,9 +62,24 @@ const createCountry = async (country) => {
   return response.data;
 };
 
+const createIndustrySector = async (industrySector) => {
+  const response = await axios({
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/industry-sectors`,
+    data: industrySector,
+  });
+
+  return response.data;
+};
+
 module.exports = {
   createDeal,
   createBank,
   createBondCurrency,
   createCountry,
+  createIndustrySector,
 };

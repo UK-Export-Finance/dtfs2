@@ -16,3 +16,7 @@ for (bondCurrency of MOCKS.BOND_CURRENCIES) {
 for (country of MOCKS.COUNTRIES) {
   api.createCountry(country);
 }
+
+for (industrySector of MOCKS.INDUSTRY_SECTORS) {
+  api.createIndustrySector(industrySector);
+}

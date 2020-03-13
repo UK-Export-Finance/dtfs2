@@ -6,6 +6,7 @@ const deals = require('./controllers/deal.controller');
 const banks = require('./controllers/banks.controller');
 const bondCurrencies = require('./controllers/bondCurrencies.controller');
 const countries = require('./controllers/countries.controller');
+const industrySectors = require('./controllers/industrySectors.controller');
 
 const MOCKS = require('./mocks/index');
 
@@ -33,15 +34,15 @@ app.post('/api/bondCurrencies', bondCurrencies.create);
 app.get('/api/countries', countries.findAll);
 app.post('/api/countries', countries.create);
 
+app.get('/api/industry-sectors', industrySectors.findAll);
+app.post('/api/industry-sectors', industrySectors.create);
+
+
 //-----
 // mocks we should be working our way through, moving them into a mongo instance
 
 app.get('/mocks/contract/:id/comments', (req, res) => {
   res.status(200).send(getMockContractById(req.params.id));
-});
-
-app.get('/mocks/industry-sectors', (req, res) => {
-  res.status(200).send(MOCKS.INDUSTRY_SECTORS);
 });
 
 app.get('/mocks/mandatoryCriteria', (req, res) => {
