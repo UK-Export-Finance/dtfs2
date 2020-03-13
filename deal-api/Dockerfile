@@ -5,6 +5,6 @@ WORKDIR /app
 ADD package.json .
 RUN npm install
 
-ADD . .
+ADD ./src ./src
 
 CMD node src/index.js
