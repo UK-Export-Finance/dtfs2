@@ -48,8 +48,23 @@ const createBondCurrency = async (bondCurrency) => {
   return response.data;
 };
 
+const createCountry = async (country) => {
+  const response = await axios({
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/countries`,
+    data: country,
+  });
+
+  return response.data;
+};
+
 module.exports = {
   createDeal,
   createBank,
   createBondCurrency,
+  createCountry,
 };
