@@ -1,0 +1,21 @@
+{
+  "name": "dtfs2",
+  "version": "1.0.0",
+  "description": "DTFS2",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "postinstall": "cp git-hooks/pre-push .git/hooks && cp update-heroku.sh .git/hooks && chmod +x .git/hooks/pre-push",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notbinary/dtfs2.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/notbinary/dtfs2/issues"
+  },
+  "homepage": "https://github.com/notbinary/dtfs2#readme"
+}
