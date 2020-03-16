@@ -11,10 +11,10 @@ const findIndustrySectors = async (callback) => {
   });
 };
 
-const findOneIndustrySector = async (id, callback) => {
+const findOneIndustrySector = async (code, callback) => {
   const collection = await db.getCollection('industrySectors');
 
-  collection.findOne({ id }, (err, result) => {
+  collection.findOne({ code }, (err, result) => {
     assert.equal(err, null);
     callback(result);
   });
@@ -28,13 +28,21 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findIndustrySectors((industrySectors) => res.status(200).send(industrySectors))
+  findIndustrySectors(industrySectors => res.status(200).send(industrySectors))
 );
 
 exports.findOne = (req, res) => (
-  findOneIndustrySector(req.params.id, (industrySector) => res.status(200).send(industrySector))
+  findOneIndustrySector(req.params.code, industrySector => res.status(200).send(industrySector))
 );
 
-exports.update = (req, res) => {};
+exports.update = async (req, res) => {
+  const collection = await db.getCollection('industrySectors');
+  const status = await collection.update({ code: req.params.code }, req.body);
+  res.status(200).send(status);
+};
 
-exports.delete = (req, res) => {};
+exports.delete = async (req, res) => {
+  const collection = await db.getCollection('industrySectors');
+  const status = await collection.deleteOne({ code: req.params.code });
+  res.status(200).send(status);
+};
