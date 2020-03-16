@@ -1,0 +1,23 @@
+# !/bin/bash
+# cd ../../
+echo Running pre-push script
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "$BRANCH" != "master" ]
+then
+  echo
+  exit 0
+
+else
+  echo On master branch
+  git fetch origin
+  reslog=$(git log HEAD..origin/master --oneline)
+  echo reslog: "$reslog"
+
+  if [[ "${reslog}" = "" ]] ;
+  then
+    echo No updates needed. Running other script...
+    sh update-heroku.sh
+  fi
+
+fi
