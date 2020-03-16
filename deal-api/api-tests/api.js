@@ -1,17 +1,36 @@
-module.exports = (app) {
+const request = require('supertest');
+
+module.exports = (app) => {
 
   return {
+
     post: (data) => {
-      return async to(url) {
+      return {
+        to: async (url) => {
 
-        return request(app)
-                 .post(url)
-                 .send(data)
-                 .expect(200)
+          return request(app)
+                   .post(url)
+                   .send(data)
+                   .expect(200)
 
+        }
       }
     },
-    get: async (url) {
+
+    put: (data) => {
+      return {
+        to: async (url) => {
+
+          return request(app)
+                   .put(url)
+                   .send(data)
+                   .expect(200)
+
+        }
+      }
+    },
+
+    get: async (url) => {
       return new Promise( (resolve, reject) => {
 
         request(app)
@@ -24,6 +43,6 @@ module.exports = (app) {
 
       });
     }
-  }
 
+  }
 }

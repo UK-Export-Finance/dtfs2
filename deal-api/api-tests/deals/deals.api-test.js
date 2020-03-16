@@ -1,10 +1,8 @@
-const request = require('supertest');
-
 const wipeDB = require('../wipeDB');
 const aDeal = require('./deal-builder');
 
 const app = require('../../src/createApp');
-const {post, get} = require('../api')(app);
+const {get, post, put} = require('../api')(app);
 
 describe('a deal', () => {
 
@@ -17,7 +15,7 @@ describe('a deal', () => {
 
     await post(newDeal).to('/api/deals');
 
-    const listOfDeals = await get('api/deals');
+    const listOfDeals = await get('/api/deals');
 
     expect(listOfDeals).toMatch('\"id\":\"1994\"')
   });
@@ -37,7 +35,7 @@ describe('a deal', () => {
     const updatedDeal = aDeal({id: "1996", supplyContractName: 'Updated Value'});
 
     await post(newDeal).to('/api/deals');
-    await post(updatedDeal).to('/api/deal/1996');
+    await put(updatedDeal).to('/api/deals/1996');
 
     const ourDeal = await get('/api/deals/1996');
 

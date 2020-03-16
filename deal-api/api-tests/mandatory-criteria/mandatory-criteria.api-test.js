@@ -12,7 +12,7 @@ describe('a mandatory criteria', () => {
   });
 
   it('a newly added mandatory criteria is returned when we list all mandatory criteria', async () => {
-    const newMandatoryCriteria = aMandatoryCriteria({code: "1066"})
+    const newMandatoryCriteria = aMandatoryCriteria({title: "An Item"})
 
     await request(app)
        .post('/api/mandatory-criteria')
@@ -25,7 +25,7 @@ describe('a mandatory criteria', () => {
       .then(response => {
         //TODO rough match; we're getting a string, we just check it contains an id that matches what we inserted
         // would be nice to move to ContentType=application/json and we could do nicer "check the first result in the list == our deal"
-        expect(response.text).toMatch('\"code\":\"1066\"')
+        expect(response.text).toMatch('\"title\":\"An Item\"')
       })
 
   });

@@ -1,7 +1,8 @@
+const builder = require('../builder');
+
 module.exports = (overrides) => {
 
-  // some default json. Could be an actual deal; at time of writing we just need 'some json'..
-  const deal = {
+  const template = {
     "supplyContractName": "AAAA",
     "id": "1234",
     "details": {
@@ -9,11 +10,5 @@ module.exports = (overrides) => {
     }
   };
 
-  // loop through the provided overrides and override the key/value pairs
-  //TODO get clever and let us override 'details.bankSupplyContractID'
-  for (key of Object.keys(overrides)) {
-    deal[key]=overrides[key];
-  };
-
-  return deal;
+  return builder(template, overrides);
 }
