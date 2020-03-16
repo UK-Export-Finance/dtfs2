@@ -5,9 +5,9 @@
 {% block content %}
 
   {{ aboutSupplyContract.nav(
-    completedStatus = supplyContract.completedStatus,
+    completedStatus = contract.supplyContract.completedStatus,
     current = 'supplierAndGuarantor',
-    contractId = id
+    contractId = contract.id
   )}}
 
   <script type="text/javascript">

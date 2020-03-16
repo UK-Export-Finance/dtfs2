@@ -1,0 +1,67 @@
+{% extends "index.njk" %}
+{% import 'macros/about-supply-contract-nav.njk' as aboutSupplyContract %}
+
+{% block content %}
+
+  {{ aboutSupplyContract.nav(
+    completedStatus = contract.supplyContract.completedStatus,
+    current = 'buyer',
+    contractId = contract.id
+  )}}
+
+  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+  
+  <form autocomplete="off">
+
+    <div class="govuk-form-group">
+
+      <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="buyerName">
+            Buyer name
+          </label>
+
+          <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="buyerName" name="buyerName" type="text" maxlength="150" aria-describedby="buyerName-info">
+        </div>
+
+        <span id="buyerName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+          You can enter up to 150 characters
+        </span>
+      </div>
+    </div>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="countrOfBuyer">
+        Country of buyer
+      </label>
+      <select class="govuk-select govuk-!-width-one-half" id="countrOfBuyer" name="countrOfBuyer">
+        <option value="">Select value</option>
+        {% for country in countries %}
+          <option value="{{ country.code }}">{{ country.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="destinationOfGoodsAndServices">
+        Destination of goods and services
+      </label>
+      <span id="destinationOfGoodsAndServices-hint" class="govuk-hint">
+        Destination country of the goods covered by this Supply Contract
+      </span>
+
+      <select class="govuk-select govuk-!-width-one-half" id="destinationOfGoodsAndServices" name="destinationOfGoodsAndServices" aria-describedby="destinationOfGoodsAndServices-hint">
+        <option value="">Select value</option>
+        {% for country in countries %}
+          <option value="{{ country.code }}">{{ country.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <input type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" value="Next page" />
+
+    <button class="govuk-button govuk-button--secondary" data-module="govuk-button">Save and go back to deal</a>
+    
+  </form>
+
+{% endblock %}
