@@ -28,13 +28,22 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findBanks((banks) => res.status(200).send(banks))
+  findBanks(banks => res.status(200).send(banks))
 );
 
 exports.findOne = (req, res) => (
-  findOneBank(req.params.id, (deal) => res.status(200).send(deal))
+  findOneBank(req.params.id, deal => res.status(200).send(deal))
 );
 
-exports.update = (req, res) => {};
 
-exports.delete = (req, res) => {};
+exports.update = async (req, res) => {
+  const collection = await db.getCollection('banks');
+  const status = await collection.update({ id: req.params.id }, req.body);
+  res.status(200).send(status);
+};
+
+exports.delete = async (req, res) => {
+  const collection = await db.getCollection('banks');
+  const status = await collection.deleteOne({ id: req.params.id });
+  res.status(200).send(status);
+};
