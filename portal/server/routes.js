@@ -57,6 +57,13 @@ router.get('/contract/:id/about/supplier', async (req, res) =>
   })
 )
 
+router.get('/contract/:id/about/finance', async (req, res) =>
+  res.render('about-supply-contract-finance.njk', {
+    contract: await api.contract(req.params.id),
+    currencies: await api.bondCurrencies()
+  })
+)
+
 router.get('/contract/:id/eligibility/criteria', async (req, res) =>
   res.render('confirm-eligibility-criteria.njk', await api.contract(req.params.id))
 )
