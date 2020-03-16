@@ -12,11 +12,10 @@ else
   echo On master branch
   git fetch origin
   reslog=$(git log HEAD..origin/master --oneline)
-  echo reslog: "$reslog"
 
   if [[ "${reslog}" = "" ]] ;
   then
-    echo No updates needed. Running other script...
+    echo No updates needed.
     sh update-heroku.sh
   fi
 
