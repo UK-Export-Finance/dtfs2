@@ -11,10 +11,10 @@ const findTransactions = async (callback) => {
   });
 };
 
-const findOneTransaction = async (id, callback) => {
+const findOneTransaction = async (bankFacilityId, callback) => {
   const collection = await db.getCollection('transactions');
 
-  collection.findOne({ id }, (err, result) => {
+  collection.findOne({ bankFacilityId }, (err, result) => {
     assert.equal(err, null);
     callback(result);
   });
@@ -28,13 +28,21 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findTransactions((transaction) => res.status(200).send(transaction))
+  findTransactions(transaction => res.status(200).send(transaction))
 );
 
 exports.findOne = (req, res) => (
-  findOneTransaction(req.params.id, (transaction) => res.status(200).send(transaction))
+  findOneTransaction(req.params.bankFacilityId, transaction => res.status(200).send(transaction))
 );
 
-exports.update = (req, res) => {};
+exports.update = async (req, res) => {
+  const collection = await db.getCollection('transactions');
+  const status = await collection.update({ bankFacilityId: req.params.bankFacilityId }, req.body);
+  res.status(200).send(status);
+};
 
-exports.delete = (req, res) => {};
+exports.delete = async (req, res) => {
+  const collection = await db.getCollection('transactions');
+  const status = await collection.deleteOne({ bankFacilityId: req.params.bankFacilityId });
+  res.status(200).send(status);
+};
