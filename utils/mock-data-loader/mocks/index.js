@@ -31,6 +31,7 @@ const BANKS = [
 
 const MANDATORY_CRITERIA = [
   {
+    id: '999',
     title: 'Supply contract/Transaction',
     items: [
       {
@@ -48,6 +49,7 @@ const MANDATORY_CRITERIA = [
     ]
   },
   {
+    id: '998',
     title: 'Financial',
     items: [
       {
@@ -57,6 +59,7 @@ const MANDATORY_CRITERIA = [
     ]
   },
   {
+    id: '997',
     title: 'Credit',
     items: [
       {
@@ -66,6 +69,7 @@ const MANDATORY_CRITERIA = [
     ]
   },
   {
+    id: '996',
     title: 'Bank Facility Letter',
     items: [
       {
@@ -75,6 +79,7 @@ const MANDATORY_CRITERIA = [
     ]
   },
   {
+    id: '995',
     title: 'Legal',
     items: [
       {
