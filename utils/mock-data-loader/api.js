@@ -6,20 +6,6 @@ require('dotenv').config();
 
 const urlRoot = process.env.DEAL_API_URL;
 
-const createDeal = async (deal) => {
-  const response = await axios({
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-    },
-    url: `${urlRoot}/api/deals`,
-    data: deal,
-  });
-
-  return response.data;
-};
-
 const createBank = async (bank) => {
   const response = await axios({
     method: 'post',
@@ -57,6 +43,20 @@ const createCountry = async (country) => {
     },
     url: `${urlRoot}/api/countries`,
     data: country,
+  });
+
+  return response.data;
+};
+
+const createDeal = async (deal) => {
+  const response = await axios({
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/deals`,
+    data: deal,
   });
 
   return response.data;
@@ -104,12 +104,208 @@ const createTransaction = async (transaction) => {
   return response.data;
 };
 
+const deleteBank = async (deal) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/banks/${deal.id}`
+  });
+
+  return response.data;
+};
+
+const deleteBondCurrency = async (bondCurrency) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/bond-currencies/${bondCurrency.id}`
+  });
+
+  return response.data;
+};
+
+const deleteCountry = async (country) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/countries/${country.code}`
+  });
+
+  return response.data;
+};
+
+const deleteDeal = async (deal) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/deals/${deal.id}`
+  });
+
+  return response.data;
+};
+
+const deleteIndustrySector = async (industrySector) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/industry-sectors/${industrySector.code}`
+  });
+
+  return response.data;
+};
+
+const deleteMandatoryCriteria = async (mandatoryCriteria) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/mandatory-criteria/${mandatoryCriteria.id}`
+  });
+
+  return response.data;
+};
+
+const deleteTransaction = async (transaction) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/transactions/${transaction.bankFacilityId}`
+  });
+
+  return response.data;
+};
+
+const listBanks = async () => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/banks`
+  });
+
+  return response.data;
+};
+
+const listBondCurrencies = async () => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/bond-currencies`
+  });
+
+  return response.data;
+};
+
+const listCountries = async () => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/countries`
+  });
+
+  return response.data;
+};
+
+const listDeals = async () => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/deals`
+  });
+
+  return response.data;
+};
+
+const listIndustrySectors = async () => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/industry-sectors`
+  });
+
+  return response.data;
+};
+
+const listMandatoryCriteria = async () => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/mandatory-criteria`
+  });
+
+  return response.data;
+};
+
+const listTransactions = async () => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/transactions`
+  });
+
+  return response.data;
+};
+
 module.exports = {
-  createDeal,
   createBank,
   createBondCurrency,
   createCountry,
+  createDeal,
   createIndustrySector,
   createMandatoryCriteria,
   createTransaction,
+  deleteBank,
+  deleteBondCurrency,
+  deleteCountry,
+  deleteDeal,
+  deleteIndustrySector,
+  deleteMandatoryCriteria,
+  deleteTransaction,
+  listBanks,
+  listBondCurrencies,
+  listCountries,
+  listDeals,
+  listIndustrySectors,
+  listMandatoryCriteria,
+  listTransactions
 };

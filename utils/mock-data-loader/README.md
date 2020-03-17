@@ -1,8 +1,6 @@
 # utilities
 
-at time of writing i'm afraid you have to manually clear down your db; use a client (eg https://robomongo.org) to drop the collections. i'll fix once we've got some delete endpoints in place..
-
-
+uses api calls to list all our data, delete all our data, and insert out mock data
 ```
 node ./re-insert-mocks.js
 ```
