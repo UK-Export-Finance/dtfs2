@@ -12,6 +12,8 @@
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
 
+  {% include "partials/print-button.njk" %}
+
   {{ submissionDetails.general(contract = contract) }}
 
   <p class="govuk-body"><a class="govuk-link" href="/contract/{{ contract.id }}">Save and go back to deal</a></p>
