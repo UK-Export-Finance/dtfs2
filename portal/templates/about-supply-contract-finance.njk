@@ -48,12 +48,13 @@
       <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="conversionRateToGBP" name="conversionRateToGBP" type="text" size="60" maxlength="255" pattern="[0-9]{0,6}(\.\d{0,6}|\.?)" placeholder="Number with up to 6 decimal places" aria-describedby="conversionRateToGBP-hint">
     </div>
 
-
-    {{ dateFields.inputs(
-      legend = 'Supply Contract conversion date, as determined by the bank (Supply Contract currency to GBP)',
-      id = 'supplyContractConversionDate',
-      hint = 'For example, 31 05 2017'
-    )}}
+    <div class="govuk-form-group">
+      {{ dateFields.inputs(
+        legend = 'Supply Contract conversion date, as determined by the bank (Supply Contract currency to GBP)',
+        id = 'supplyContractConversionDate',
+        hint = 'For example, 31 05 2017'
+      )}}
+    </div>
 
     <input type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" value="Next page" />
 
