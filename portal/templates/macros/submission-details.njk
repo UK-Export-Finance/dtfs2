@@ -1,3 +1,196 @@
+{% macro supplierAndCounterIndemnifier(submissionDetails) %}
+  
+  <h4 class="govuk-heading-m">Supplier and counter-indemnifier/guarantor</h4>
+
+  <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        Supplier type
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        {{ submissionDetails.supplierType }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        UK Supplier’s Companies House registration number, if UK registered
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        {{ submissionDetails.supplierCompaniesHouseRegistrationNumber }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        Supplier name
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        {{ submissionDetails.supplierName }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        Supplier address
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        {{ submissionDetails.supplierAddress | safe }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        Is the Supplier's correspondence address different for the Company's Registered Address?
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        {{ submissionDetails.suppliersCorrespondenceAddressDifferent }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        Industry sector
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        {{ submissionDetails.industrySector }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        Industry class
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        {{ submissionDetails.industryClass }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        SME type
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        {{ submissionDetails.smeType }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        Description of supply contract
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        {{ submissionDetails.supplyContractDescription }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        Is the counter-indemnifier (for bonds) or guarantor (for loans) legally distinct from the supplier? 
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        {% if submissionDetails.legallyDistinct %}
+          Yes
+        {% else %}
+          No
+        {% endif %}
+      </dd>
+    </div>
+  </dl>
+{% endmacro %}
+
+{% macro buyer(buyerDetails) %}
+  
+  <h4 class="govuk-heading-m">Buyer</h4>
+
+  <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        Buyer name
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        {{ buyerDetails.name }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        Country of buyer
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        {{ buyerDetails.country }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        Destination of goods and services 
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        {{ buyerDetails.goodsServicesDestination }}
+      </dd>
+    </div>
+
+  </dl>
+{% endmacro %}
+
+{% macro financial(financialDetails) %}
+
+  <h4 class="govuk-heading-m">Financial information</h4>
+
+  <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-9">
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        Supply Contract value (in Supply Contract currency)
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        {{ financialDetails.value }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        Supply Contract currency
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        {{ financialDetails.currency }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        Conversion rate from Supply Contract currency to GBP
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        {{ financialDetails.conversionRateToGBP }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        Supply Contract conversion date, as determined by the bank(Supply Contract currency to GBP)
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        {{ financialDetails.conversionDate }}
+      </dd>
+    </div>
+
+  </dl>
+{% endmacro %}
+
+{% macro general(contract) %}
+
+  {{ supplierAndCounterIndemnifier(submissionDetails = contract.submissionDetails)}}
+
+  {{ buyer(buyerDetails = contract.submissionDetails.buyer)}}
+
+  {{ financial(financialDetails = contract.submissionDetails.supplyContractFinancials) }}
+
+{% endmacro %}
+
 {% macro bond(bondDetails) %}
 
   <h4 class="govuk-heading-m">Bond details</h4>
@@ -68,7 +261,6 @@
     </div>
 
   </dl>
-
 
   <h4 class="govuk-heading-m">Bond financial details</h4>
 

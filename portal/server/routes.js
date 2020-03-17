@@ -57,8 +57,8 @@ router.get('/contract/:id/about/supplier', async (req, res) =>
   })
 )
 
-router.get('/contract/:id/about/finance', async (req, res) =>
-  res.render('about-supply-contract-finance.njk', {
+router.get('/contract/:id/about/financial', async (req, res) =>
+  res.render('about-supply-contract-financial.njk', {
     contract: await api.contract(req.params.id),
     currencies: await api.bondCurrencies()
   })
@@ -68,6 +68,12 @@ router.get('/contract/:id/about/buyer', async (req, res) =>
   res.render('about-supply-contract-buyer.njk', {
     contract: await api.contract(req.params.id),
     countries: await api.countries()
+  })
+)
+
+router.get('/contract/:id/about/preview', async (req, res) =>
+  res.render('about-supply-contract-preview.njk', {
+    contract: await api.contract(req.params.id)
   })
 )
 
