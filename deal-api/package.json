@@ -31,8 +31,8 @@
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
-    "jest": "^24.9.0",
-    "jest-cli": "^24.8.0",
+    "jest": "^25.1.0",
+    "jest-cli": "^25.1.0",
     "nodemon": "^2.0.2",
     "supertest": "^4.0.2"
   }
