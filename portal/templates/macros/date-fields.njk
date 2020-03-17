@@ -1,47 +1,53 @@
-{% macro inputs(id, legend, hint) %}
+{% macro inputs(id, legend, hint, secondaryHint) %}
       
-  <div class="govuk-form-group">
-    <fieldset class="govuk-fieldset" role="group">
-      <legend
-        class="govuk-fieldset__legend"
-        {% if hint %}
-          aria-describedby="{{ id }}-hint"
-        {% endif %}
-      >{{ legend }}</legend>
-
-      {% if hint %}
-        <span id="{{ id }}-hint" class="govuk-hint">
-            {{ hint }}
-        </span>
+  <fieldset class="govuk-fieldset" role="group">
+    <legend
+      class="govuk-fieldset__legend"
+      {% if hint and secondaryHint %}
+        aria-describedby="{{ id }}-hint {{ id }}-hint-2"
+      {% elif hint %}
+        aria-describedby="{{ id }}-hint"
       {% endif %}
+    >{{ legend }}</legend>
 
-      <div class="govuk-date-input" id="{{ id }}">
-        <div class="govuk-date-input__item">
-          <div class="govuk-form-group">
-            <label class="govuk-label govuk-date-input__label" for="{{ id }}-day">
-              Day
-            </label>
-            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="{{ id }}-day" name="{{ id }}-day" type="text" pattern="[0-9]*" inputmode="numeric">
-          </div>
-        </div>
-        <div class="govuk-date-input__item">
-          <div class="govuk-form-group">
-            <label class="govuk-label govuk-date-input__label" for="{{ id }}-month">
-              Month
-            </label>
-            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="{{ id }}-month" name="{{ id }}-month" type="text" pattern="[0-9]*" inputmode="numeric">
-          </div>
-        </div>
-        <div class="govuk-date-input__item">
-          <div class="govuk-form-group">
-            <label class="govuk-label govuk-date-input__label" for="{{ id }}-year">
-              Year
-            </label>
-            <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="{{ id }}-year" name="{{ id }}-year" type="text" pattern="[0-9]*" inputmode="numeric">
-          </div>
+    {% if hint %}
+      <span id="{{ id }}-hint" class="govuk-hint">
+        {{ hint }}
+      </span>
+    {% endif %}
+
+    {% if secondaryHint %}
+      <span id="{{ id }}-hint-2" class="govuk-hint">
+        {{ secondaryHint }}
+      </span>
+    {% endif %}
+
+    <div class="govuk-date-input" id="{{ id }}">
+      <div class="govuk-date-input__item">
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-date-input__label" for="{{ id }}-day">
+            Day
+          </label>
+          <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="{{ id }}-day" name="{{ id }}-day" type="text" pattern="[0-9]*" inputmode="numeric">
         </div>
       </div>
-    </fieldset>
-  </div>
+      <div class="govuk-date-input__item">
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-date-input__label" for="{{ id }}-month">
+            Month
+          </label>
+          <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="{{ id }}-month" name="{{ id }}-month" type="text" pattern="[0-9]*" inputmode="numeric">
+        </div>
+      </div>
+      <div class="govuk-date-input__item">
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-date-input__label" for="{{ id }}-year">
+            Year
+          </label>
+          <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="{{ id }}-year" name="{{ id }}-year" type="text" pattern="[0-9]*" inputmode="numeric">
+        </div>
+      </div>
+    </div>
+  </fieldset>
 
 {% endmacro %}

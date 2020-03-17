@@ -1,5 +1,6 @@
 {% extends "index.njk" %}
 {% import 'macros/bond-nav.njk' as bondNav %}
+{% import 'macros/date-fields.njk' as dateFields %}
 
 {% block content %}
 
@@ -112,83 +113,20 @@
         <div id="issued-form-fields" class="govuk-visually-hidden">
 
           <div class="govuk-form-group">
-            <fieldset class="govuk-fieldset" role="group" aria-describedby="requested-cover-start-date-hint requested-cover-start-date-hint-2">
-              <legend class="govuk-fieldset__legend">
-                  Requested Cover Start Date (optional)
-              </legend>
-              <span id="requested-cover-start-date-hint" class="govuk-hint">
-                For example, 27 11 2019
-              </span>
-
-              <span id="requested-cover-start-date-hint-2" class="govuk-hint">
-                This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date.
-              </span>
-
-              <div class="govuk-date-input" id="requested-cover-start-date">
-                <div class="govuk-date-input__item">
-                  <div class="govuk-form-group">
-                    <label class="govuk-label govuk-date-input__label" for="requested-cover-start-date-day">
-                      Day
-                    </label>
-                    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="requested-cover-start-date-day" name="requested-cover-start-date-day" type="text" pattern="[0-9]*" inputmode="numeric">
-                  </div>
-                </div>
-                <div class="govuk-date-input__item">
-                  <div class="govuk-form-group">
-                    <label class="govuk-label govuk-date-input__label" for="requested-cover-start-date-month">
-                      Month
-                    </label>
-                    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="requested-cover-start-date-month" name="requested-cover-start-date-month" type="text" pattern="[0-9]*" inputmode="numeric">
-                  </div>
-                </div>
-                <div class="govuk-date-input__item">
-                  <div class="govuk-form-group">
-                    <label class="govuk-label govuk-date-input__label" for="requested-cover-start-date-year">
-                      Year
-                    </label>
-                    <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="requested-cover-start-date-year" name="requested-cover-start-date-year" type="text" pattern="[0-9]*" inputmode="numeric">
-                  </div>
-                </div>
-              </div>
-            </fieldset>
+            {{ dateFields.inputs(
+              legend = 'Requested Cover Start Date (optional)',
+              id = 'requestedCoverStartDate',
+              hint = 'For example, 27 11 2019',
+              secondaryHint = 'This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date.'
+            )}}
           </div>
 
-
           <div class="govuk-form-group">
-            <fieldset class="govuk-fieldset" role="group" aria-describedby="cover-end-date-hint">
-              <legend class="govuk-fieldset__legend">
-                  Cover End Date
-              </legend>
-              <span id="cover-end-date-hint" class="govuk-hint">
-                For example, 27 11 2019
-              </span>
-              <div class="govuk-date-input" id="cover-end-date">
-                <div class="govuk-date-input__item">
-                  <div class="govuk-form-group">
-                    <label class="govuk-label govuk-date-input__label" for="cover-end-date-day">
-                      Day
-                    </label>
-                    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="cover-end-date-day" name="cover-end-date-day" type="text" pattern="[0-9]*" inputmode="numeric">
-                  </div>
-                </div>
-                <div class="govuk-date-input__item">
-                  <div class="govuk-form-group">
-                    <label class="govuk-label govuk-date-input__label" for="cover-end-date-month">
-                      Month
-                    </label>
-                    <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="cover-end-date-month" name="cover-end-date-month" type="text" pattern="[0-9]*" inputmode="numeric">
-                  </div>
-                </div>
-                <div class="govuk-date-input__item">
-                  <div class="govuk-form-group">
-                    <label class="govuk-label govuk-date-input__label" for="cover-end-date-year">
-                      Year
-                    </label>
-                    <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="cover-end-date-year" name="cover-end-date-year" type="text" pattern="[0-9]*" inputmode="numeric">
-                  </div>
-                </div>
-              </div>
-            </fieldset>
+            {{ dateFields.inputs(
+              legend = 'Cover End Date',
+              id = 'coverEndDate',
+              hint = 'For example, 27 11 2025'
+            )}}
           </div>
 
           <div class="govuk-form-group">
