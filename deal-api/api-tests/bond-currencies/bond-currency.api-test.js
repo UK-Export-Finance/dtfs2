@@ -1,75 +1,40 @@
-const request = require('supertest');
-
 const wipeDB = require('../wipeDB');
 const aBondCurrency = require('./bond-currency-builder');
 
 const app = require('../../src/createApp');
+const {get, post, put, remove} = require('../api')(app);
 
 describe('a bond currency', () => {
+  const newBondCurrency = aBondCurrency({ id: 'USD' });
+  const updatedBondCurrency = aBondCurrency({
+    id: 'USD',
+    text: 'Updated currency',
+  });
+
   beforeEach(async () => {
     await wipeDB();
   });
 
   it('a newly added bond currency is returned when we list all bond currencies', async () => {
-    const newBondCurrency = aBondCurrency({ id: 'USD' });
+    await post(newBondCurrency).to('/api/bond-currencies');
 
-    await request(app)
-       .post('/api/bond-currencies')
-       .send(newBondCurrency)
-       .expect(200);
-
-    return request(app)
-      .get('/api/bond-currencies')
-      .set('Accept', 'application/json')
-      .expect(200)
-      .then((response) => {
-        // TODO rough match; we're getting a string, we just check it contains an id that matches what we inserted
-        // would be nice to move to ContentType=application/json and we could do nicer "check the first result in the list == our deal"
-        expect(response.body[0]).toMatchObject(newBondCurrency);
-      });
+    const bondCurrencies = await get('/api/bond-currencies');
+    expect(bondCurrencies[0]).toMatchObject(newBondCurrency);
   });
 
   it('a bond currency can be updated', async () => {
-    const newBondCurrency = aBondCurrency({ id: 'USD' });
-    const updatedBondCurrency = aBondCurrency({
-      id: 'USD',
-      text: 'Updated currency',
-    });
+    await post(newBondCurrency).to('/api/bond-currencies');
+    await put(updatedBondCurrency).to('/api/bond-currencies/USD');
 
-    await request(app)
-      .post('/api/bond-currencies')
-      .send(newBondCurrency);
-
-    await request(app)
-      .put('/api/bond-currencies/USD')
-      .send(updatedBondCurrency);
-
-    return request(app)
-      .get('/api/bond-currencies')
-      .set('Accept', 'application/json')
-      .expect(200)
-      .then((response) => {
-        expect(response.body[0]).toMatchObject(updatedBondCurrency);
-      });
+    const bondCurrencies = await get('/api/bond-currencies/USD');
+    expect(bondCurrencies).toMatchObject(updatedBondCurrency);
   });
 
-  it('a bank can be deleted', async () => {
-    const newBank = aBondCurrency({ id: 'USD' });
+  it('a bond currency can be deleted', async () => {
+    await post(newBondCurrency).to('/api/bond-currencies');
+    await remove('/api/bond-currencies/usd');
 
-    await request(app)
-      .post('/api/bond-currencies')
-      .send(newBank);
-
-    await request(app)
-      .delete('/api/bond-currencies/usd')
-      .send();
-
-    return request(app)
-      .get('/api/bond-currencies/usd')
-      .set('Accept', 'application/json')
-      .expect(200)
-      .then((response) => {
-        expect(response.body.id).toBeUndefined();
-      });
+    const bondCurrency = get('/api/bond-currencies/usd');
+    expect(bondCurrency).toMatchObject({});
   });
 });
