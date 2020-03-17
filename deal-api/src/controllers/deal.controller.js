@@ -35,6 +35,14 @@ exports.findOne = (req, res) => (
   findOneDeal(req.params.id, (deal) => res.status(200).send(deal))
 );
 
-exports.update = (req, res) => {};
+exports.update = async (req, res) => {
+  const collection = await db.getCollection('deals');
+  const status = await collection.update({ id: req.params.id }, req.body);
+  res.status(200).send(status);
+};
 
-exports.delete = (req, res) => {};
+exports.delete = async (req, res) => {
+  const collection = await db.getCollection('deals');
+  const status = await collection.deleteOne({ id: req.params.id });
+  res.status(200).send(status);
+};

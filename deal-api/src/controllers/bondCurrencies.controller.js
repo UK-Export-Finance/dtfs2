@@ -28,13 +28,21 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findBondCurrencies((bondCurrencies) => res.status(200).send(bondCurrencies))
+  findBondCurrencies(bondCurrencies => res.status(200).send(bondCurrencies))
 );
 
 exports.findOne = (req, res) => (
-  findOneBondCurrency(req.params.id, (bondCurrency) => res.status(200).send(bondCurrency))
+  findOneBondCurrency(req.params.id, bondCurrency => res.status(200).send(bondCurrency))
 );
 
-exports.update = (req, res) => {};
+exports.update = async (req, res) => {
+  const collection = await db.getCollection('bondCurrencies');
+  const status = await collection.update({ id: req.params.id }, req.body);
+  res.status(200).send(status);
+};
 
-exports.delete = (req, res) => {};
+exports.delete = async (req, res) => {
+  const collection = await db.getCollection('bondCurrencies');
+  const status = await collection.deleteOne({ id: req.params.id });
+  res.status(200).send(status);
+};
