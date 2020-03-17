@@ -1,75 +1,41 @@
-const request = require('supertest');
-
 const wipeDB = require('../wipeDB');
 const anIndustrySector = require('./industry-sector-builder');
 
 const app = require('../../src/createApp');
 
+const {get, post, put, remove} = require('../api')(app);
+
 describe('an industry sector', () => {
+  const newSector = anIndustrySector({ code: '1066' });
+  const updatedSector = anIndustrySector({
+    code: '1066',
+    name: 'Updated sector name',
+  });
+
   beforeEach(async () => {
     await wipeDB();
   });
 
   it('a newly added industry sector is returned when we list all industry sectors', async () => {
-    const newIndustrySector = anIndustrySector({ code: '1066' });
+    await post(newSector).to('/api/industry-sectors');
 
-    await request(app)
-       .post('/api/industry-sectors')
-       .send(newIndustrySector)
-       .expect(200);
-
-    return request(app)
-      .get('/api/industry-sectors')
-      .set('Accept', 'application/json')
-      .expect(200)
-      .then((response) => {
-        // TODO rough match; we're getting a string, we just check it contains an id that matches what we inserted
-        // would be nice to move to ContentType=application/json and we could do nicer "check the first result in the list == our deal"
-        expect(response.body[0]).toMatchObject(newIndustrySector);
-      });
+    const industrySectors = await get('/api/industry-sectors');
+    expect(industrySectors[0]).toMatchObject(newSector);
   });
 
   it('an industry sector can be updated', async () => {
-    const newSector = anIndustrySector({ code: '1066' });
-    const updatedSector = anIndustrySector({
-      code: '1066',
-      name: 'Updated sector name',
-    });
+    await post(newSector).to('/api/industry-sectors');
+    await put(updatedSector).to('/api/industry-sectors/1066');
 
-    await request(app)
-      .post('/api/industry-sectors')
-      .send(newSector);
-
-    await request(app)
-      .put('/api/industry-sectors/1066')
-      .send(updatedSector);
-
-    return request(app)
-      .get('/api/industry-sectors/1066')
-      .set('Accept', 'application/json')
-      .expect(200)
-      .then((response) => {
-        expect(response.body).toMatchObject(updatedSector);
-      });
+    const sector = await get('/api/industry-sectors/1066');
+    expect(sector).toMatchObject(updatedSector);
   });
 
-  it('an industry section can be deleted', async () => {
-    const newSector = anIndustrySector({ code: '1066' });
+  it('an industry sector can be deleted', async () => {
+    await post(newSector).to('/api/industry-sectors');
+    await remove('/api/industry-sectors/1066');
 
-    await request(app)
-      .post('/api/industry-sectors')
-      .send(newSector);
-
-    await request(app)
-      .delete('/api/industry-sectors/1066')
-      .send();
-
-    return request(app)
-      .get('/api/industry-sectors/1066')
-      .set('Accept', 'application/json')
-      .expect(200)
-      .then((response) => {
-        expect(response.body.code).toBeUndefined();
-      });
+    const sector = await get('/api/industry-sectors/1066');
+    expect(sector).toMatchObject({});
   });
 });
