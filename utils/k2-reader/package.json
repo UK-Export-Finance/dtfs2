@@ -22,8 +22,8 @@
   },
   "homepage": "https://github.com/notbinary/dtfs2#readme",
   "devDependencies": {
-    "jest": "^24.9.0",
-    "jest-cli": "^24.8.0"
+    "jest": "^25.1.0",
+    "jest-cli": "^25.1.0"
   },
   "dependencies": {
     "autodetect-decoder-stream": "^1.0.3",
