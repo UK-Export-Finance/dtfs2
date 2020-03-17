@@ -11,10 +11,10 @@ const findCountries = async (callback) => {
   });
 };
 
-const findOneCountry = async (id, callback) => {
+const findOneCountry = async (code, callback) => {
   const collection = await db.getCollection('countries');
 
-  collection.findOne({ id }, (err, result) => {
+  collection.findOne({ code }, (err, result) => {
     assert.equal(err, null);
     callback(result);
   });
@@ -28,13 +28,22 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findCountries((countries) => res.status(200).send(countries))
+  findCountries(countries => res.status(200).send(countries))
 );
 
 exports.findOne = (req, res) => (
-  findOneCountry(req.params.id, (country) => res.status(200).send(country))
+  findOneCountry(req.params.code, country => res.status(200).send(country))
 );
 
-exports.update = (req, res) => {};
 
-exports.delete = (req, res) => {};
+exports.update = async (req, res) => {
+  const collection = await db.getCollection('countries');
+  const status = await collection.update({ code: req.params.code }, req.body);
+  res.status(200).send(status);
+};
+
+exports.delete = async (req, res) => {
+  const collection = await db.getCollection('countries');
+  const status = await collection.deleteOne({ code: req.params.code });
+  res.status(200).send(status);
+};
