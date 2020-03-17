@@ -3,7 +3,7 @@ const anIndustrySector = require('./industry-sector-builder');
 
 const app = require('../../src/createApp');
 
-const {get, post, put, remove} = require('../api')(app);
+const { get, post, put, remove } = require('../api')(app);
 
 describe('an industry sector', () => {
   const newSector = anIndustrySector({ code: '1066' });
@@ -19,8 +19,8 @@ describe('an industry sector', () => {
   it('a newly added industry sector is returned when we list all industry sectors', async () => {
     await post(newSector).to('/api/industry-sectors');
 
-    const industrySectors = await get('/api/industry-sectors');
-    expect(industrySectors[0]).toMatchObject(newSector);
+    const industrySectorList = await get('/api/industry-sectors');
+    expect(industrySectorList.industrySectors[0]).toMatchObject(newSector);
   });
 
   it('an industry sector can be updated', async () => {
