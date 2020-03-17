@@ -111,7 +111,7 @@ const deleteBank = async (deal) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/banks/${deal.id}`
+    url: `${urlRoot}/api/banks/${deal.id}`,
   });
 
   return response.data;
@@ -124,7 +124,7 @@ const deleteBondCurrency = async (bondCurrency) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/bond-currencies/${bondCurrency.id}`
+    url: `${urlRoot}/api/bond-currencies/${bondCurrency.id}`,
   });
 
   return response.data;
@@ -137,7 +137,7 @@ const deleteCountry = async (country) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/countries/${country.code}`
+    url: `${urlRoot}/api/countries/${country.code}`,
   });
 
   return response.data;
@@ -150,7 +150,7 @@ const deleteDeal = async (deal) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/deals/${deal.id}`
+    url: `${urlRoot}/api/deals/${deal.id}`,
   });
 
   return response.data;
@@ -163,7 +163,7 @@ const deleteIndustrySector = async (industrySector) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/industry-sectors/${industrySector.code}`
+    url: `${urlRoot}/api/industry-sectors/${industrySector.code}`,
   });
 
   return response.data;
@@ -176,7 +176,7 @@ const deleteMandatoryCriteria = async (mandatoryCriteria) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/mandatory-criteria/${mandatoryCriteria.id}`
+    url: `${urlRoot}/api/mandatory-criteria/${mandatoryCriteria.id}`,
   });
 
   return response.data;
@@ -189,7 +189,7 @@ const deleteTransaction = async (transaction) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/transactions/${transaction.bankFacilityId}`
+    url: `${urlRoot}/api/transactions/${transaction.bankFacilityId}`,
   });
 
   return response.data;
@@ -202,10 +202,10 @@ const listBanks = async () => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/banks`
+    url: `${urlRoot}/api/banks`,
   });
 
-  return response.data;
+  return response.data.banks;
 };
 
 const listBondCurrencies = async () => {
@@ -215,10 +215,10 @@ const listBondCurrencies = async () => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/bond-currencies`
+    url: `${urlRoot}/api/bond-currencies`,
   });
 
-  return response.data;
+  return response.data.bondCurrencies;
 };
 
 const listCountries = async () => {
@@ -228,10 +228,10 @@ const listCountries = async () => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/countries`
+    url: `${urlRoot}/api/countries`,
   });
 
-  return response.data;
+  return response.data.countries;
 };
 
 const listDeals = async () => {
@@ -241,10 +241,10 @@ const listDeals = async () => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/deals`
+    url: `${urlRoot}/api/deals`,
   });
 
-  return response.data;
+  return response.data.deals;
 };
 
 const listIndustrySectors = async () => {
@@ -254,10 +254,10 @@ const listIndustrySectors = async () => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/industry-sectors`
+    url: `${urlRoot}/api/industry-sectors`,
   });
 
-  return response.data;
+  return response.data.industrySectors;
 };
 
 const listMandatoryCriteria = async () => {
@@ -267,10 +267,10 @@ const listMandatoryCriteria = async () => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/mandatory-criteria`
+    url: `${urlRoot}/api/mandatory-criteria`,
   });
 
-  return response.data;
+  return response.data.mandatoryCriteria;
 };
 
 const listTransactions = async () => {
@@ -280,10 +280,10 @@ const listTransactions = async () => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/transactions`
+    url: `${urlRoot}/api/transactions`,
   });
 
-  return response.data;
+  return response.data.transactions;
 };
 
 module.exports = {
@@ -307,5 +307,5 @@ module.exports = {
   listDeals,
   listIndustrySectors,
   listMandatoryCriteria,
-  listTransactions
+  listTransactions,
 };
