@@ -3,8 +3,15 @@
   "version": "1.0.0",
   "description": "DTFS2",
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.1"
+  },
   "scripts": {
+
+    "lint": "eslint ./deal-api/src ./portal/server ./portal/scripts",
+    "lint:fix": "eslint ./deal-api/src ./portal/server ./portal/scripts --fix",
     "postinstall": "cp git-hooks/pre-push .git/hooks && cp update-heroku.sh .git/hooks && chmod +x .git/hooks/pre-push",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
