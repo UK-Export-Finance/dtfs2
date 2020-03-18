@@ -14,7 +14,7 @@ export const handleDecimalPlaces = (str) => {
 // on change, only allow 2 decimal places and filter out non-numeric characters
 export const setInputFilter = (input, inputFilter) => {
   ['input', 'keydown', 'keyup', 'mousedown', 'mouseup', 'select', 'contextmenu', 'drop'].forEach((event) => {
-    input.addEventListener(event, () => {
+    input.addEventListener(event, function () {
       if (this.value) {
         this.value = handleDecimalPlaces(this.value);
       }
