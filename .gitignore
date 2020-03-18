@@ -2,3 +2,4 @@ dist
 node_modules
 Reports
 deal-api-data-volume
+cypress/videos

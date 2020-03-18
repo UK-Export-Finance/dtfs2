@@ -1,15 +1,13 @@
 echo Running execute-e2e-tests script
-HOME=$(pwd)
 
+echo Updating dependencies
+npm install
+
+echo Launching docker-compose environment
 docker-compose up -d --build
 
-echo "Waiting for portal to be available on localhost:5000..."
+echo Executing tests
+npx cypress run
 
-while ! nc -z localhost 5000; do
-  sleep 0.1 # wait for 1/10 of the second before check again
-done
-
-#//TODO - why can't cypress find itself when i call it like this!>!?!?!?!
-( cd "$HOME/e2e-tests" ; npx cypress run )
-
+echo Cleaning docker-compose environment
 docker-compose down

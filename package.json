@@ -4,14 +4,14 @@
   "description": "DTFS2",
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.20.1"
+    "cypress": "^4.1.0",
+    "cypress-xpath": "^1.4.0"
   },
   "scripts": {
     "pipeline": "./update-environment.sh && npm run lint && ./execute-unit-tests.sh && ./execute-api-tests.sh",
     "lint": "eslint ./deal-api/src ./portal/server ./portal/scripts",
     "lint:fix": "eslint ./deal-api/src ./portal/server ./portal/scripts --fix",
+    "test:e2e": "cypress run",
     "postinstall": "cp git-hooks/pre-push .git/hooks && cp update-heroku.sh .git/hooks && chmod +x .git/hooks/pre-push",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
