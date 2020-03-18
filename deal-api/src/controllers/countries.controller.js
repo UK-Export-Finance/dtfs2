@@ -28,9 +28,10 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findCountries(countries => res.status(200).send({
+  findCountries((countries) => res.status(200).send({
     count: countries.length,
-    countries }))
+    countries,
+  }))
 );
 
 exports.findOne = (req, res) => (

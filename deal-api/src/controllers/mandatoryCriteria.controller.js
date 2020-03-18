@@ -28,7 +28,7 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findMandatoryCriteria(mandatoryCriteria => res.status(200).send({
+  findMandatoryCriteria((mandatoryCriteria) => res.status(200).send({
     count: mandatoryCriteria.length,
     mandatoryCriteria,
   }))

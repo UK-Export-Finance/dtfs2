@@ -1,5 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
+
 const urlRoot = process.env.DEAL_API_URL;
 
 const contract = async (id) => {
@@ -46,7 +47,7 @@ const contractBond = async (id, bondId) => {
   const response = await contract(id);
   return {
     contractId: response.id,
-    bond: response.bondTransactions.items.find(bond => bond.id === bondId),
+    bond: response.bondTransactions.items.find((bond) => bond.id === bondId),
   };
 };
 

@@ -28,14 +28,14 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findDeals(deals => res.status(200).send({
+  findDeals((deals) => res.status(200).send({
     count: deals.length,
     deals,
   }))
 );
 
 exports.findOne = (req, res) => (
-  findOneDeal(req.params.id, deal => res.status(200).send(deal))
+  findOneDeal(req.params.id, (deal) => res.status(200).send(deal))
 );
 
 exports.update = async (req, res) => {

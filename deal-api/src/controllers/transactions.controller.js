@@ -28,7 +28,7 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findTransactions(transactions => res.status(200).send({
+  findTransactions((transactions) => res.status(200).send({
     count: transactions.length,
     transactions,
   }))
