@@ -32,7 +32,10 @@ exports.findAll = (req, res) => (
 );
 
 exports.findOne = (req, res) => (
-  findOneMandatoryCriteria(req.params.id, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria))
+  findOneMandatoryCriteria(
+    req.params.id,
+    (mandatoryCriteria) => res.status(200).send(mandatoryCriteria),
+  )
 );
 
 exports.update = async (req, res) => {

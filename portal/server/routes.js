@@ -1,5 +1,4 @@
 import express from 'express';
-import nunjucks from 'nunjucks';
 import api from './api';
 
 const router = express.Router();

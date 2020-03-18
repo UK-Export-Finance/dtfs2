@@ -7,7 +7,10 @@ export const appendSelectOption = (selectElement, option) => {
   selectElement.appendChild(optionElement);
 };
 
-export const getIndustryClassesFromSectorCode = (sectors, sectorCode) => sectors.find((sector) => sector.code === sectorCode).classes;
+export const getIndustryClassesFromSectorCode = (sectors, sectorCode) => {
+  const foundSector = sectors.find((sector) => sector.code === sectorCode);
+  return foundSector.classes;
+};
 
 export const changeIndustryClasses = (event, sectors) => {
   if (event) {
