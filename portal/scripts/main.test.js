@@ -1,12 +1,12 @@
-jest.mock('govuk-frontend');
 import * as govukFrontend from 'govuk-frontend';
 import * as numericFloatInputs from './numeric-float-inputs';
 import * as changeIndustryClasses from './change-industry-classes';
 import main from './main';
 
+jest.mock('govuk-frontend');
+
 
 describe('main.js', () => {
-  
   it('should call initAll() from govuk-frontend', () => {
     const spy = jest.spyOn(govukFrontend, 'initAll');
     main();
@@ -24,5 +24,4 @@ describe('main.js', () => {
     main();
     expect(changeIndustryClasses.default).toHaveBeenCalled();
   });
-
 });

@@ -3,13 +3,11 @@ import {
   trimDecimalPlaces,
   handleDecimalPlaces,
   setInputFilter,
-  numericFloatInputs
+  numericFloatInputs,
 } from './numeric-float-inputs';
 
 describe('numericFloatInputs', () => {
-
   describe('hasDecimalPlaces', () => {
-
     it('should return true when a string has decimal places', () => {
       expect(hasDecimalPlaces('12.34')).toBeTruthy();
     });
@@ -17,7 +15,6 @@ describe('numericFloatInputs', () => {
     it('should return false when a string does not have decimal places', () => {
       expect(hasDecimalPlaces('12')).toBeFalsy();
     });
-
   });
 
   describe('trimDecimalPlaces', () => {
@@ -30,7 +27,7 @@ describe('numericFloatInputs', () => {
     it('should return a trimmed string when a string has more than 2 decimal places', () => {
       const str = '12.3456';
       expect(handleDecimalPlaces(str)).toEqual(
-        trimDecimalPlaces(str)
+        trimDecimalPlaces(str),
       );
     });
 
@@ -43,18 +40,16 @@ describe('numericFloatInputs', () => {
       const str = '1234';
       expect(handleDecimalPlaces(str)).toEqual(str);
     });
-
   });
 
   describe('setInputFilter', () => {
-    let elements,
-        input;
+    let elements;
+    let input;
 
     beforeEach(() => {
-      document.body.innerHTML =
-        '<div>' +
-        '  <input type="text" class="input--numeric-float" />'
-        '</div>';
+      document.body.innerHTML = '<div>'
+        + '  <input type="text" class="input--numeric-float" />';
+      '</div>';
 
       numericFloatInputs();
 
@@ -63,11 +58,11 @@ describe('numericFloatInputs', () => {
     });
 
     it('should trim the given value', () => {
-      input.value = '123.12.123'
+      input.value = '123.12.123';
 
       const event = new Event('input', {
-        'bubbles': true,
-        'cancelable': true
+        bubbles: true,
+        cancelable: true,
       });
 
       input.dispatchEvent(event);
@@ -76,14 +71,13 @@ describe('numericFloatInputs', () => {
 
     it('should return empy string when there is no value', () => {
       const event = new Event('input', {
-        'bubbles': true,
-        'cancelable': true
+        bubbles: true,
+        cancelable: true,
       });
 
       input.dispatchEvent(event);
 
       expect(document.getElementsByTagName('input')[0].value).toEqual('');
-    });  
+    });
   });
-
 });

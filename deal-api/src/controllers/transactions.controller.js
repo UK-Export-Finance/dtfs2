@@ -28,11 +28,11 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findTransactions(transaction => res.status(200).send(transaction))
+  findTransactions((transaction) => res.status(200).send(transaction))
 );
 
 exports.findOne = (req, res) => (
-  findOneTransaction(req.params.bankFacilityId, transaction => res.status(200).send(transaction))
+  findOneTransaction(req.params.bankFacilityId, (transaction) => res.status(200).send(transaction))
 );
 
 exports.update = async (req, res) => {
