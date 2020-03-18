@@ -2,7 +2,7 @@ const wipeDB = require('../wipeDB');
 const aBank = require('./bank-builder');
 
 const app = require('../../src/createApp');
-const {get, post, put, remove} = require('../api')(app);
+const { get, post, put, remove } = require('../api')(app);
 
 describe('a bank', () => {
   const newBank = aBank({ id: '112233' });
@@ -18,8 +18,8 @@ describe('a bank', () => {
   it('a newly added bank is returned when we list all banks', async () => {
     await post(newBank).to('/api/banks');
 
-    const banks = await get('/api/banks');
-    expect(banks[0]).toMatchObject(newBank);
+    const bankList = await get('/api/banks');
+    expect(bankList.banks[0]).toMatchObject(newBank);
   });
 
   it('a bank can be updated', async () => {

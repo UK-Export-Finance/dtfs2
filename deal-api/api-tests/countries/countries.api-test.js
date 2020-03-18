@@ -3,7 +3,7 @@ const aCountry = require('./country-builder');
 
 const app = require('../../src/createApp');
 
-const {get, post, put, remove} = require('../api')(app);
+const { get, post, put, remove } = require('../api')(app);
 
 describe('a country', () => {
   const newCountry = aCountry({ code: 'DUB' });
@@ -19,8 +19,8 @@ describe('a country', () => {
   it('a newly added country is returned when we list all countries', async () => {
     await post(newCountry).to('/api/countries');
 
-    const countries = await get('/api/countries');
-    expect(countries[0]).toMatchObject(newCountry);
+    const countryList = await get('/api/countries');
+    expect(countryList.countries[0]).toMatchObject(newCountry);
   });
 
   it('a country can be updated', async () => {

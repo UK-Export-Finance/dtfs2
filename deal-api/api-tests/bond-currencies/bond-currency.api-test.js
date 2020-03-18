@@ -2,7 +2,7 @@ const wipeDB = require('../wipeDB');
 const aBondCurrency = require('./bond-currency-builder');
 
 const app = require('../../src/createApp');
-const {get, post, put, remove} = require('../api')(app);
+const { get, post, put, remove } = require('../api')(app);
 
 describe('a bond currency', () => {
   const newBondCurrency = aBondCurrency({ id: 'USD' });
@@ -18,8 +18,8 @@ describe('a bond currency', () => {
   it('a newly added bond currency is returned when we list all bond currencies', async () => {
     await post(newBondCurrency).to('/api/bond-currencies');
 
-    const bondCurrencies = await get('/api/bond-currencies');
-    expect(bondCurrencies[0]).toMatchObject(newBondCurrency);
+    const bondCurrencyList = await get('/api/bond-currencies');
+    expect(bondCurrencyList.bondCurrencies[0]).toMatchObject(newBondCurrency);
   });
 
   it('a bond currency can be updated', async () => {
