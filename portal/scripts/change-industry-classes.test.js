@@ -2,33 +2,31 @@ import attachToWindow, {
   industryClassElement,
   appendSelectOption,
   getIndustryClassesFromSectorCode,
-  changeIndustryClasses
+  changeIndustryClasses,
 } from './change-industry-classes';
 
 describe('changeIndustryClasses', () => {
-
   const mockSectors = [
     {
       code: '100',
       classes: [
         { code: '12', name: 'Hotels and similar accommodation' },
-        { code: '34', name: 'Holiday centres and villages' }
-      ]
+        { code: '34', name: 'Holiday centres and villages' },
+      ],
     },
     {
       code: '200',
       classes: [
         { code: '12', name: 'Renting and leasing of cars and light motor vehicles' },
-        { code: '34', name: 'Renting and leasing of trucks and other heavy vehicles' }
-      ]
+        { code: '34', name: 'Renting and leasing of trucks and other heavy vehicles' },
+      ],
     },
   ];
 
   beforeEach(() => {
-    document.body.innerHTML =
-      '<select id="industryClass">' +
-      '  <option value="1">test</option>' +
-      '</select>';
+    document.body.innerHTML = '<select id="industryClass">'
+      + '  <option value="1">test</option>'
+      + '</select>';
   });
 
   describe('appendSelectOption', () => {
@@ -51,7 +49,7 @@ describe('changeIndustryClasses', () => {
       const mockSectorCode = '200';
       const result = getIndustryClassesFromSectorCode(mockSectors, mockSectorCode);
 
-      const expected = mockSectors.find(sector => sector.code === mockSectorCode).classes;
+      const expected = mockSectors.find((sector) => sector.code === mockSectorCode).classes;
       expect(result).toEqual(expected);
     });
   });
@@ -61,8 +59,8 @@ describe('changeIndustryClasses', () => {
       const sectorCode = '200';
       const mockEvent = {
         target: {
-          value: sectorCode
-        }
+          value: sectorCode,
+        },
       };
 
       changeIndustryClasses(mockEvent, mockSectors);
@@ -82,5 +80,4 @@ describe('changeIndustryClasses', () => {
       expect(global.window.dtfs.changeIndustryClasses).toEqual(changeIndustryClasses);
     });
   });
-
 });

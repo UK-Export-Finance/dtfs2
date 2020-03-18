@@ -28,11 +28,11 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findIndustrySectors(industrySectors => res.status(200).send(industrySectors))
+  findIndustrySectors((industrySectors) => res.status(200).send(industrySectors))
 );
 
 exports.findOne = (req, res) => (
-  findOneIndustrySector(req.params.code, industrySector => res.status(200).send(industrySector))
+  findOneIndustrySector(req.params.code, (industrySector) => res.status(200).send(industrySector))
 );
 
 exports.update = async (req, res) => {

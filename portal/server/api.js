@@ -1,8 +1,9 @@
-const axios = require("axios");
-require("dotenv").config();
+const axios = require('axios');
+require('dotenv').config();
+
 const urlRoot = process.env.DEAL_API_URL;
 
-const contract = async id => {
+const contract = async (id) => {
   const response = await axios(`${urlRoot}/api/deals/${id}`);
   return response.data;
 };
@@ -25,12 +26,12 @@ const bondCurrencies = async () => {
 const countries = async () => {
   const response = await axios(`${urlRoot}/api/countries`);
   return response.data;
-}
+};
 
 const industrySectors = async () => {
   const response = await axios(`${urlRoot}/api/industry-sectors`);
   return response.data;
-}
+};
 
 const mandatoryCriteria = async () => {
   const response = await axios(`${urlRoot}/api/mandatory-criteria`);
@@ -46,8 +47,8 @@ const contractBond = async (id, bondId) => {
   const response = await contract(id);
   return {
     contractId: response.id,
-    bond: response.bondTransactions.items.find(bond => bond.id === bondId)
-  }
+    bond: response.bondTransactions.items.find((bond) => bond.id === bondId),
+  };
 };
 
 export default {
@@ -59,5 +60,5 @@ export default {
   countries,
   industrySectors,
   mandatoryCriteria,
-  transactions
+  transactions,
 };

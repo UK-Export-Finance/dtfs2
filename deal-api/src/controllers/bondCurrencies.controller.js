@@ -28,11 +28,11 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findBondCurrencies(bondCurrencies => res.status(200).send(bondCurrencies))
+  findBondCurrencies((bondCurrencies) => res.status(200).send(bondCurrencies))
 );
 
 exports.findOne = (req, res) => (
-  findOneBondCurrency(req.params.id, bondCurrency => res.status(200).send(bondCurrency))
+  findOneBondCurrency(req.params.id, (bondCurrency) => res.status(200).send(bondCurrency))
 );
 
 exports.update = async (req, res) => {

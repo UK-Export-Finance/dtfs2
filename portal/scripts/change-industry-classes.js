@@ -7,8 +7,7 @@ export const appendSelectOption = (selectElement, option) => {
   selectElement.appendChild(optionElement);
 };
 
-export const getIndustryClassesFromSectorCode = (sectors, sectorCode) =>
-  sectors.find(sector => sector.code === sectorCode).classes;
+export const getIndustryClassesFromSectorCode = (sectors, sectorCode) => sectors.find((sector) => sector.code === sectorCode).classes;
 
 export const changeIndustryClasses = (event, sectors) => {
   if (event) {
@@ -20,16 +19,16 @@ export const changeIndustryClasses = (event, sectors) => {
 
     appendSelectOption(
       selectElement,
-      { value: '', name: 'Select value' }
+      { value: '', name: 'Select value' },
     );
 
-    industryClasses.forEach(i => {
+    industryClasses.forEach((i) => {
       appendSelectOption(
         selectElement,
         {
           value: i.code,
-          name: i.name
-        }
+          name: i.name,
+        },
       );
     });
   }
@@ -38,7 +37,7 @@ export const changeIndustryClasses = (event, sectors) => {
 const attachToWindow = () => {
   window.dtfs = {
     ...window.dtfs,
-    changeIndustryClasses
+    changeIndustryClasses,
   };
 };
 
