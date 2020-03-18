@@ -3,7 +3,7 @@ const aTransaction = require('./transaction-builder');
 
 const app = require('../../src/createApp');
 
-const {get, post, put, remove} = require('../api')(app);
+const { get, post, put, remove } = require('../api')(app);
 
 describe('a transaction', () => {
   const newTransaction = aTransaction({ bankFacilityId: '1a2b3c' });
@@ -19,8 +19,8 @@ describe('a transaction', () => {
   it('a newly added transaction is returned when we list all transactions', async () => {
     await post(newTransaction).to('/api/transactions');
 
-    const transactions = await get('/api/transactions');
-    expect(transactions[0]).toMatchObject(newTransaction);
+    const transactionList = await get('/api/transactions');
+    expect(transactionList.transactions[0]).toMatchObject(newTransaction);
   });
 
   it('a transaction can be updated', async () => {
