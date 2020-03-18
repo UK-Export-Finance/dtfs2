@@ -12,5 +12,6 @@ module.exports = {
       ignoreStrings: true,
       ignoreTemplateLiterals: true,
     }],
+    "import/no-named-as-default": 0
   }
 };

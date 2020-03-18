@@ -28,7 +28,7 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findIndustrySectors(industrySectors => res.status(200).send({
+  findIndustrySectors((industrySectors) => res.status(200).send({
     count: industrySectors.length,
     industrySectors,
   }))

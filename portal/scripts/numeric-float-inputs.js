@@ -14,7 +14,7 @@ export const handleDecimalPlaces = (str) => {
 // on change, only allow 2 decimal places and filter out non-numeric characters
 export const setInputFilter = (input, inputFilter) => {
   ['input', 'keydown', 'keyup', 'mousedown', 'mouseup', 'select', 'contextmenu', 'drop'].forEach((event) => {
-    input.addEventListener(event, function () {
+    input.addEventListener(event, function eventListener() {
       if (this.value) {
         this.value = handleDecimalPlaces(this.value);
       }
@@ -23,7 +23,7 @@ export const setInputFilter = (input, inputFilter) => {
         this.oldValue = this.value;
         this.oldSelectionStart = this.selectionStart;
         this.oldSelectionEnd = this.selectionEnd;
-      } else if (this.hasOwnProperty('oldValue')) {
+      } else if (Object.prototype.hasOwnProperty.call(this, 'oldValue')) {
         this.value = this.oldValue;
         this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
       }
@@ -34,10 +34,10 @@ export const setInputFilter = (input, inputFilter) => {
 // get all HTML inputs with `numeric float` class
 // apply a filter to each input, to filter out non-numeric characters
 export const numericFloatInputs = () => {
-  const numericFloatInputs = document.getElementsByClassName('input--numeric-float');
+  const inputs = document.getElementsByClassName('input--numeric-float');
 
-  if (numericFloatInputs) {
-    Array.from(numericFloatInputs).forEach((element) => {
+  if (inputs) {
+    Array.from(inputs).forEach((element) => {
       setInputFilter(element, (value) => /^-?\d*[.,]?\d*$/.test(value));
     });
   }

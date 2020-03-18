@@ -22,4 +22,4 @@ app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 app.get('*', (req, res) => res.render('page-not-found.njk'));
 
-app.listen(PORT, () => console.log(`DTFS2 app listening on port ${PORT}!`));
+app.listen(PORT, () => console.log(`DTFS2 app listening on port ${PORT}!`)); // eslint-disable-line no-console
