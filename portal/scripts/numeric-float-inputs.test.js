@@ -2,7 +2,6 @@ import {
   hasDecimalPlaces,
   trimDecimalPlaces,
   handleDecimalPlaces,
-  setInputFilter,
   numericFloatInputs,
 } from './numeric-float-inputs';
 
@@ -48,8 +47,8 @@ describe('numericFloatInputs', () => {
 
     beforeEach(() => {
       document.body.innerHTML = '<div>'
-        + '  <input type="text" class="input--numeric-float" />';
-      '</div>';
+        + '  <input type="text" class="input--numeric-float" />'
+        + '</div>';
 
       numericFloatInputs();
 
