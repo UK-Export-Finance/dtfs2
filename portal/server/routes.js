@@ -33,22 +33,22 @@ router.get('/dashboard/transactions', async (req, res) =>
 )
 
 router.get('/contract/:id', async (req, res) =>
-  res.render('contract-view.njk', await api.contract(req.params.id))
+  res.render('contract/contract-view.njk', await api.contract(req.params.id))
 )
 
 router.get('/contract/:id/comments', async (req, res) =>
-  res.render('contract-view-comments.njk', await api.contract(req.params.id))
+  res.render('contract/contract-view-comments.njk', await api.contract(req.params.id))
 )
 
 router.get('/contract/:id/submission-details', async (req, res) =>
-  res.render('contract-submission-details.njk', {
+  res.render('contract/contract-submission-details.njk', {
     contract: await api.contract(req.params.id),
     mandatoryCriteria: await api.mandatoryCriteria()
   })
 )
 
 router.get('/contract/:id/delete', async (req, res) =>
-  res.render('contract-delete.njk', await api.contract(req.params.id))
+  res.render('contract/contract-delete.njk', await api.contract(req.params.id))
 )
 
 router.get('/contract/:id/about/supplier', async (req, res) =>

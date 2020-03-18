@@ -1,6 +1,6 @@
 {% extends "index.njk" %}
-{% import 'macros/bond-nav.njk' as bondNav %}
-{% import 'macros/submission-details.njk' as submissionDetails %}
+{% import '_macros/bond-nav.njk' as bondNav %}
+{% import '_macros/submission-details.njk' as submissionDetails %}
 
 {% block content %}
 
@@ -13,7 +13,7 @@
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
 
-  {% include "partials/print-button.njk" %}
+  {% include "_partials/print-button.njk" %}
     
   {{ submissionDetails.bond(bondDetails = contract.submissionDetails.bond)}}
 
