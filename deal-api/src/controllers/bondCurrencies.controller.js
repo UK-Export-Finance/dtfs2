@@ -40,7 +40,7 @@ exports.findOne = (req, res) => (
 
 exports.update = async (req, res) => {
   const collection = await db.getCollection('bondCurrencies');
-  const status = await collection.updateOne({ id: {$eq: req.params.id} }, {$set: req.body}, {});
+  const status = await collection.updateOne({ id: { $eq: req.params.id } }, { $set: req.body }, {});
   res.status(200).send(status);
 };
 
