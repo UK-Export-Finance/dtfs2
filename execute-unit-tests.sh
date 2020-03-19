@@ -6,4 +6,4 @@ HOME=$(pwd)
 #cp -rf "$HOME/deal-api/reports" ./reports
 
 echo Executing unit tests for portal
-cd "$HOME/portal" && npm test
+cd "$HOME/portal" && npm run test-quick

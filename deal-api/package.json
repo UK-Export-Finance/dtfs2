@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node src/index.js",
     "unit-test": "jest --notify --coverage --verbose --config=unit.jest.config.js --detectOpenHandles --forceExit",
-    "api-test": "jest --notify --coverage --verbose --config=api-test.jest.config.js --detectOpenHandles --forceExit"
+    "unit-test-quick": "jest --notify --config=unit.jest.config.js --detectOpenHandles --forceExit",
+    "api-test": "jest --notify --coverage --verbose --config=api-test.jest.config.js --detectOpenHandles --forceExit",
+    "api-test-quick": "jest --notify --config=api-test.jest.config.js --detectOpenHandles --forceExit"
   },
   "repository": {
     "type": "git",
