@@ -5,6 +5,18 @@ Placeholder repo
 
 ![AWS Build badge](https://codebuild.eu-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiSCtEaG55WDRnelpIclk4NzAzWWE5ZVp4alB2RHJtQU9rUXgzT2ZaTW1jbDhUd3RLUDFBMGhjTHpocGRlVThzUGxoUXErUUR4cmZFYkFQU3haKzNNT21rPSIsIml2UGFyYW1ldGVyU3BlYyI6IkRTemxBeUhUWDVxSG1IZEEiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
 
+### Testing
+
+With docker running, execute all tests with:
+```
+npm install && npm run pipeline
+```
+
+Note, at time of writing this script does not execute our end to end tests; they don't currently have business value so adding a minute to the script's execution didn't seem helpful. The e2e tests can be run in the meantime with:
+```
+./execute-e2e-tests.sh
+```
+
 ### Running the world locally
 
 Launch everything with:
