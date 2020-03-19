@@ -8,7 +8,7 @@ let connection = null;
 
 
 const dbConnect = async () => {
-  client = await MongoClient.connect(url, { useNewUrlParser: true });
+  client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
   connection = client.db(dbName);
   return connection;
 };
