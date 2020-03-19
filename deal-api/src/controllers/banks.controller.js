@@ -1,7 +1,6 @@
 const assert = require('assert');
 
 const db = require('../db-driver/client');
-
 const findBanks = async (callback) => {
   const collection = await db.getCollection('banks');
 
@@ -41,7 +40,7 @@ exports.findOne = (req, res) => (
 
 exports.update = async (req, res) => {
   const collection = await db.getCollection('banks');
-  const status = await collection.update({ id: req.params.id }, req.body);
+  const status = await collection.updateOne({ id: {$eq: req.params.id} }, {$set: req.body}, {});
   res.status(200).send(status);
 };
 

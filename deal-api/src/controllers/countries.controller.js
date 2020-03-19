@@ -41,7 +41,7 @@ exports.findOne = (req, res) => (
 
 exports.update = async (req, res) => {
   const collection = await db.getCollection('countries');
-  const status = await collection.update({ code: req.params.code }, req.body);
+  const status = await collection.updateOne({ code: {$eq: req.params.code} }, {$set: req.body}, {});
   res.status(200).send(status);
 };
 
