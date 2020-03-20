@@ -8,7 +8,26 @@ const OK = 200,
 describe('a user', () => {
   const aUser = {
       username: "zach",
-      password: "123"
+      password: "123",
+      roles: []
+  }
+
+  const aMaker = {
+      username: "some maker",
+      password: "bananas",
+      roles: ['maker']
+  }
+
+  const aChecker = {
+      username: "some checker",
+      password: "kartoffelkopf",
+      roles: ['checker']
+  }
+
+  const aMakerAndChecker = {
+    username: "some checker",
+    password: "kartoffelkopf",
+    roles: ['checker', 'maker']
   }
 
   beforeEach(async () => {
@@ -64,4 +83,68 @@ describe('a user', () => {
 
   });
 
+  it('users can be blocked from endpoint on the basis of their role', async () => {
+    await request(app)
+      .post("/users/register")
+      .send(aMaker)
+      .expect(OK)
+
+    const loginResponse = await request(app)
+      .post("/users/login")
+      .send(aMaker)
+      .expect(OK)
+
+    const token = loginResponse.body.token;
+
+    await request(app)
+      .get("/users/protected/checker")
+      .set('Authorization', token)
+      .expect(UNAUTHORIZED)
+
+  });
+
+  it('users can be granted access to an endpoint on the basis of their role', async () => {
+    await request(app)
+      .post("/users/register")
+      .send(aMaker)
+      .expect(OK)
+
+    const loginResponse = await request(app)
+      .post("/users/login")
+      .send(aMaker)
+      .expect(OK)
+
+    const token = loginResponse.body.token;
+
+    await request(app)
+      .get("/users/protected/maker")
+      .set('Authorization', token)
+      .expect(OK)
+
+  });
+
+  it('users can have multiple roles', async () => {
+    await request(app)
+      .post("/users/register")
+      .send(aMakerAndChecker)
+      .expect(OK)
+
+    const loginResponse = await request(app)
+      .post("/users/login")
+      .send(aMakerAndChecker)
+      .expect(OK)
+
+    const token = loginResponse.body.token;
+
+    await request(app)
+      .get("/users/protected/maker")
+      .set('Authorization', token)
+      .expect(OK)
+
+    await request(app)
+      .get("/users/protected/checker")
+      .set('Authorization', token)
+      .expect(OK)
+
+  });
 });

@@ -38,7 +38,8 @@ router.post('/register', function(req, res, next){
     const newUser = new User({
         username: req.body.username,
         hash: hash,
-        salt: salt
+        salt: salt,
+        roles: req.body.roles
     });
 
     newUser.save()
@@ -51,6 +52,20 @@ router.post('/register', function(req, res, next){
 
 router.get('/protected', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     res.status(200).json({ success: true, msg: "You are successfully authenticated to this route!"});
+});
+
+router.get('/protected/maker', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+    if (!req.user.roles.includes("maker")) {
+      res.status(401).json({ succes:false, msg: "you don't have the right role"})
+    }
+    res.status(200).json({ success: true, msg: "You are successfully authenticated to this route!"});
+});
+
+router.get('/protected/checker', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  if (!req.user.roles.includes("checker")) {
+    res.status(401).json({ succes:false, msg: "you don't have the right role"})
+  }
+  res.status(200).json({ success: true, msg: "You are successfully authenticated to this route!"});
 });
 
 module.exports = router;
