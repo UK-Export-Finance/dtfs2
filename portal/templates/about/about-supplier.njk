@@ -1,6 +1,7 @@
 {% extends "index.njk" %}
 {% import '_macros/about-supply-contract-nav.njk' as aboutSupplyContract %}
 {% import '_macros/address-fields.njk' as address %}
+{% import '_macros/input-companies-house-reg-number.njk' as companiesHouse %}
 
 {% block content %}
 
@@ -16,8 +17,8 @@
       window.dtfs.changeIndustryClasses(event, industrySectors);
     };
 
-    function showAdditionalFields(bool) {
-      var additionalFormFields = document.getElementById('additional-form-fields');
+    function showAdditionalSupplierFields(bool) {
+      var additionalFormFields = document.getElementById('additional-form-fields-supplier');
 
       if (bool) {
         additionalFormFields.className = '';
@@ -25,6 +26,27 @@
         additionalFormFields.className = 'govuk-visually-hidden';
       }
     }
+
+    function showAdditionalIndemnifierFields(bool) {
+      var additionalFormFields = document.getElementById('additional-form-fields-indemnifier');
+
+      if (bool) {
+        additionalFormFields.className = '';
+      } else {
+        additionalFormFields.className = 'govuk-visually-hidden';
+      }
+    }
+
+    function showAdditionalIndemnifierCorrespondenceAddressFields(bool) {
+      var additionalFormFields = document.getElementById('additional-form-fields-indemnifier-correspondence-address');
+
+      if (bool) {
+        additionalFormFields.className = '';
+      } else {
+        additionalFormFields.className = 'govuk-visually-hidden';
+      }
+    }
+
   </script>
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
@@ -46,7 +68,7 @@
       </select>
     </div>
 
-    <div class="govuk-form-group">
+    {# <div class="govuk-form-group">
       <label class="govuk-label" for="supplierCompaniesHouseRegistrationNumber">
         UK Supplier’s Companies House registration number, if UK registered (optional) 
       </label>
@@ -61,7 +83,13 @@
 
       <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button">Search</button>
 
-    </div>
+    </div> #}
+
+
+    {{ companiesHouse.input(
+      id = 'supplierCompaniesHouseRegistrationNumber',
+      label = 'UK Supplier’s Companies House registration number, if UK registered (optional)'
+    )}}
   
     <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
       <div class="govuk-form-group">
@@ -96,14 +124,14 @@
         <div class="govuk-radios govuk-radios--inline">
 
           <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="suppliersCorrespondenceAddressDifferent" name="suppliersCorrespondenceAddressDifferent" type="radio" value="true" onClick="showAdditionalFields(true)">
+            <input class="govuk-radios__input" id="suppliersCorrespondenceAddressDifferent" name="suppliersCorrespondenceAddressDifferent" type="radio" value="true" onClick="showAdditionalSupplierFields(true)">
             <label class="govuk-label govuk-radios__label" for="suppliersCorrespondenceAddressDifferent">
               Yes
             </label>
           </div>
 
           <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="suppliersCorrespondenceAddressDifferent-2" name="suppliersCorrespondenceAddressDifferent" type="radio" value="false" onClick="showAdditionalFields(false)">
+            <input class="govuk-radios__input" id="suppliersCorrespondenceAddressDifferent-2" name="suppliersCorrespondenceAddressDifferent" type="radio" value="false" onClick="showAdditionalSupplierFields(false)">
             <label class="govuk-label govuk-radios__label" for="suppliersCorrespondenceAddressDifferent-2">
               No
             </label>
@@ -113,7 +141,7 @@
       </fieldset>
     </div>
 
-    <div id="additional-form-fields" class="govuk-visually-hidden">
+    <div id="additional-form-fields-supplier" class="govuk-visually-hidden">
       {{ address.fields(
         id = "supplierCorrespondence",
         legend = "Supplier correspondence address",
@@ -213,14 +241,14 @@
         <div class="govuk-radios govuk-radios--inline">
 
           <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="legallyDistinct" name="legallyDistinct" type="radio" value="true">
+            <input class="govuk-radios__input" id="legallyDistinct" name="legallyDistinct" type="radio" value="true" onClick="showAdditionalIndemnifierFields(true)">
             <label class="govuk-label govuk-radios__label" for="legallyDistinct">
               Yes
             </label>
           </div>
 
           <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="legallyDistinct-2" name="legallyDistinct" type="radio" value="false">
+            <input class="govuk-radios__input" id="legallyDistinct-2" name="legallyDistinct" type="radio" value="false" onClick="showAdditionalIndemnifierFields(true)">
             <label class="govuk-label govuk-radios__label" for="legallyDistinct-2">
               No
             </label>
@@ -228,6 +256,74 @@
         </div>
 
       </fieldset>
+    </div>
+
+    <div id="additional-form-fields-indemnifier" class="govuk-visually-hidden">
+
+      {{ companiesHouse.input(
+        id = 'indemnifierCompaniesHouseRegistrationNumber',
+        label = 'Indemnifier Companies House registration number (optional)'
+      )}}
+
+      <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="indemnifierName">
+            Indemnifier name
+          </label>
+          <span id="indemnifierName-hint" class="govuk-hint">
+            This should be the legal name of the entity
+          </span>
+          <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="indemnifierName" name="indemnifierName" aria-describedby="indemnifierName-info indemnifierName-hint" />
+        </div>
+
+        <span id="indemnifierName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+          You can enter up to 150 characters
+        </span>
+      </div>
+
+      {{ address.fields(
+        id = "indemnifierAddress",
+        legend = "Indemnifier address",
+        countries = countries
+      )}}
+
+
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend">
+            Is the Indemnifier's correspondence address different for the Company's Registered Address?
+          </legend>
+
+          <div class="govuk-radios govuk-radios--inline">
+
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="indemnifiersCorrespondenceAddressDifferent" name="indemnifiersCorrespondenceAddressDifferent" type="radio" value="true" onClick="showAdditionalIndemnifierCorrespondenceAddressFields(true)">
+              <label class="govuk-label govuk-radios__label" for="indemnifiersCorrespondenceAddressDifferent">
+                Yes
+              </label>
+            </div>
+
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="indemnifiersCorrespondenceAddressDifferent-2" name="indemnifiersCorrespondenceAddressDifferent" type="radio" value="false" onClick="showAdditionalIndemnifierCorrespondenceAddressFields(false)">
+              <label class="govuk-label govuk-radios__label" for="indemnifiersCorrespondenceAddressDifferent-2">
+                No
+              </label>
+            </div>
+          </div>
+
+        </fieldset>
+      </div>
+
+
+      <div id="additional-form-fields-indemnifier-correspondence-address" class="govuk-visually-hidden">
+        {{ address.fields(
+          id = 'Indemnifier correspondence address',
+          legend = 'Indemnifier correspondence address',
+          countries = countries
+        )}}
+      </div>
+
     </div>
 
     <input type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" value="Next page" />
