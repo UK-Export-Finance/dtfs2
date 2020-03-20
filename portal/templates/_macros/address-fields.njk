@@ -1,6 +1,6 @@
 {% import '_macros/progress-nav.njk' as progressNav %}
 
-{% macro fields(id, legend, countries, hint) %}  
+{% macro fields(id, legend, hint, countries, showCountryPleaseSelect) %}  
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
@@ -27,7 +27,9 @@
             Country
           </label>
           <select class="govuk-select govuk-!-width-full" id="{{ id }}-address-country" name="{{ id }}-address-country">
+          {% if showCountryPleaseSelect %}
             <option value="">Select value</option>
+          {% endif %}
             {% for country in countries %}
               <option value="{{ country.code }}">{{ country.name}}</option>
             {% endfor %}
