@@ -17,36 +17,9 @@
       window.dtfs.changeIndustryClasses(event, industrySectors);
     };
 
-    function showAdditionalSupplierFields(bool) {
-      var additionalFormFields = document.getElementById('additional-form-fields-supplier');
-
-      if (bool) {
-        additionalFormFields.className = '';
-      } else {
-        additionalFormFields.className = 'govuk-visually-hidden';
-      }
+    function onChangeRadioButton(element, shouldShow) {
+      window.dtfs.showHideElement(element, shouldShow);
     }
-
-    function showAdditionalIndemnifierFields(bool) {
-      var additionalFormFields = document.getElementById('additional-form-fields-indemnifier');
-
-      if (bool) {
-        additionalFormFields.className = '';
-      } else {
-        additionalFormFields.className = 'govuk-visually-hidden';
-      }
-    }
-
-    function showAdditionalIndemnifierCorrespondenceAddressFields(bool) {
-      var additionalFormFields = document.getElementById('additional-form-fields-indemnifier-correspondence-address');
-
-      if (bool) {
-        additionalFormFields.className = '';
-      } else {
-        additionalFormFields.className = 'govuk-visually-hidden';
-      }
-    }
-
   </script>
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
@@ -67,24 +40,6 @@
         <option value="UK Supplier">UK Supplier</option>
       </select>
     </div>
-
-    {# <div class="govuk-form-group">
-      <label class="govuk-label" for="supplierCompaniesHouseRegistrationNumber">
-        UK Supplier’s Companies House registration number, if UK registered (optional) 
-      </label>
-
-      <span id="supplierCompaniesHouseRegistrationNumberHint" class="govuk-hint">
-        We use a Companies House service to provide you with company details. If the company is not UK registered or the Companies House service is unavailable, then you will need to complete the company details fields manually.
-      </span>
-
-      <input class="govuk-input govuk-!-width-one-half govuk-!-margin-bottom-6" id="supplierCompaniesHouseRegistrationNumber" name="supplierCompaniesHouseRegistrationNumber" type="text" aria-describedby="supplierCompaniesHouseRegistrationNumberHint">
-
-      <hr class="govuk-section-break" />
-
-      <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button">Search</button>
-
-    </div> #}
-
 
     {{ companiesHouse.input(
       id = 'supplierCompaniesHouseRegistrationNumber',
@@ -124,24 +79,39 @@
         <div class="govuk-radios govuk-radios--inline">
 
           <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="suppliersCorrespondenceAddressDifferent" name="suppliersCorrespondenceAddressDifferent" type="radio" value="true" onClick="showAdditionalSupplierFields(true)">
+            <input
+              class="govuk-radios__input"
+              id="suppliersCorrespondenceAddressDifferent"
+              name="suppliersCorrespondenceAddressDifferent"
+              type="radio"
+              value="true"
+              onClick="onChangeRadioButton('additional-form-fields-supplier-correspondence', true)"
+            >
             <label class="govuk-label govuk-radios__label" for="suppliersCorrespondenceAddressDifferent">
               Yes
             </label>
           </div>
 
           <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="suppliersCorrespondenceAddressDifferent-2" name="suppliersCorrespondenceAddressDifferent" type="radio" value="false" onClick="showAdditionalSupplierFields(false)">
+            <input
+              class="govuk-radios__input"
+              id="suppliersCorrespondenceAddressDifferent-2"
+              name="suppliersCorrespondenceAddressDifferent"
+              type="radio"
+              value="false"
+              onClick="onChangeRadioButton('additional-form-fields-supplier-correspondence', false)"
+              >
             <label class="govuk-label govuk-radios__label" for="suppliersCorrespondenceAddressDifferent-2">
               No
             </label>
           </div>
+
         </div>
 
       </fieldset>
     </div>
 
-    <div id="additional-form-fields-supplier" class="govuk-visually-hidden">
+    <div id="additional-form-fields-supplier-correspondence" class="govuk-visually-hidden">
       {{ address.fields(
         id = "supplierCorrespondence",
         legend = "Supplier correspondence address",
@@ -241,18 +211,31 @@
         <div class="govuk-radios govuk-radios--inline">
 
           <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="legallyDistinct" name="legallyDistinct" type="radio" value="true" onClick="showAdditionalIndemnifierFields(true)">
+            <input
+              class="govuk-radios__input"
+              id="legallyDistinct"
+              name="legallyDistinct"
+              type="radio" value="true"
+              onClick="onChangeRadioButton('additional-form-fields-indemnifier', true)"
+            >
             <label class="govuk-label govuk-radios__label" for="legallyDistinct">
               Yes
             </label>
           </div>
 
           <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="legallyDistinct-2" name="legallyDistinct" type="radio" value="false" onClick="showAdditionalIndemnifierFields(true)">
+            <input
+              class="govuk-radios__input"
+              id="legallyDistinct-2"
+              name="legallyDistinct"
+              type="radio" value="false"
+              onClick="onChangeRadioButton('additional-form-fields-indemnifier', false)"
+              >
             <label class="govuk-label govuk-radios__label" for="legallyDistinct-2">
               No
             </label>
           </div>
+
         </div>
 
       </fieldset>
@@ -298,14 +281,28 @@
           <div class="govuk-radios govuk-radios--inline">
 
             <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="indemnifiersCorrespondenceAddressDifferent" name="indemnifiersCorrespondenceAddressDifferent" type="radio" value="true" onClick="showAdditionalIndemnifierCorrespondenceAddressFields(true)">
+              <input
+                class="govuk-radios__input"
+                id="indemnifiersCorrespondenceAddressDifferent" 
+                name="indemnifiersCorrespondenceAddressDifferent"
+                type="radio"
+                value="true"
+                onClick="onChangeRadioButton('additional-form-fields-indemnifier-correspondence-address', true)"
+              >
               <label class="govuk-label govuk-radios__label" for="indemnifiersCorrespondenceAddressDifferent">
                 Yes
               </label>
             </div>
 
             <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="indemnifiersCorrespondenceAddressDifferent-2" name="indemnifiersCorrespondenceAddressDifferent" type="radio" value="false" onClick="showAdditionalIndemnifierCorrespondenceAddressFields(false)">
+              <input
+                class="govuk-radios__input"
+                id="indemnifiersCorrespondenceAddressDifferent-2"
+                name="indemnifiersCorrespondenceAddressDifferent"
+                type="radio"
+                value="false"
+                onClick="onChangeRadioButton('additional-form-fields-indemnifier-correspondence-address', false)"
+              >
               <label class="govuk-label govuk-radios__label" for="indemnifiersCorrespondenceAddressDifferent-2">
                 No
               </label>
@@ -314,7 +311,6 @@
 
         </fieldset>
       </div>
-
 
       <div id="additional-form-fields-indemnifier-correspondence-address" class="govuk-visually-hidden">
         {{ address.fields(
