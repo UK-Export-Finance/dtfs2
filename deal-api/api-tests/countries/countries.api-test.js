@@ -43,25 +43,32 @@ describe('a country', () => {
 
   it('a newly added country is returned when we list all countries', async () => {
     await post(newCountry).to('/api/countries');
-    const countryList = await get('/api/countries');
-    const addedCountry = countryList.countries.find((c) => c.code === mockCountres.dub.code);
-    expect(addedCountry).toMatchObject(addedCountry);
+
+    const {status, body} = await get('/api/countries');
+    const addedCountry = body.countries.find((c) => c.code === mockCountres.dub.code);
+
+    expect(status).toEqual(200);
+    expect(addedCountry).toMatchObject(newCountry);
   });
 
   it('a country can be updated', async () => {
     await post(newCountry).to('/api/countries');
     await put(updatedCountry).to('/api/countries/DUB');
 
-    const country = await get('/api/countries/DUB');
-    expect(country).toMatchObject(updatedCountry);
+    const {status, body} = await get('/api/countries/DUB');
+
+    expect(status).toEqual(200);
+    expect(body).toMatchObject(updatedCountry);
   });
 
   it('a country can be deleted', async () => {
     await post(newCountry).to('/api/countries');
     await remove('/api/countries/DUB');
 
-    const country = await get('/api/countries/DUB');
-    expect(country).toMatchObject({});
+    const {status, body} = await get('/api/countries/DUB');
+
+    expect(status).toEqual(200);
+    expect(body).toMatchObject({});
   });
 
   it('lists countries in alphabetical order, with GBR as the first country', async () => {

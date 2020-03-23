@@ -1,5 +1,5 @@
 
-const collections = ['deals', 'banks', 'transactions', 'bondCurrencies', 'countries', 'industrySectors', 'mandatoryCriteria'];
+const collections = ['deals', 'banks', 'transactions', 'bondCurrencies', 'countries', 'industrySectors', 'mandatoryCriteria', 'users'];
 
 module.exports = async () => {
   const db = require('../src/db-driver/client');

@@ -1,9 +1,11 @@
 const crypto = require('crypto');
-const jsonwebtoken = require('jsonwebtoken');
+const dotenv = require('dotenv');
 const fs = require('fs');
-const path = require('path');
+const jsonwebtoken = require('jsonwebtoken');
 
-const pathToKey = path.join(__dirname, '../..', 'private.pem');
+dotenv.config();
+
+const pathToKey = process.env.JWT_SIGNING_CERT;
 const PRIV_KEY = fs.readFileSync(pathToKey, 'utf8');
 
 /**
@@ -53,6 +55,8 @@ function issueJWT(user) {
   const payload = {
     sub: _id,
     iat: Date.now(),
+    username: user.username,
+    roles: user.roles,
   };
 
   const signedToken = jsonwebtoken.sign(payload, PRIV_KEY, { expiresIn, algorithm: 'RS256' });
