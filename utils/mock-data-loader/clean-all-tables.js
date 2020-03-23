@@ -42,6 +42,12 @@ const cleanTransactions = async () => {
   }
 }
 
+const cleanUsers = async () => {
+  for (user of await api.listUsers()) {
+    api.deleteUser(user);
+  }
+}
+
 const cleanAllTables = async () => {
   await cleanBanks();
   await cleanBondCurrencies();
@@ -50,6 +56,7 @@ const cleanAllTables = async () => {
   await cleanIndustrySectors();
   await cleanMandatoryCriteria();
   await cleanTransactions();
+  await cleanUsers();
 }
 
 module.exports = cleanAllTables;

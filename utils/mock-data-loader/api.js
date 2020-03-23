@@ -104,6 +104,20 @@ const createTransaction = async (transaction) => {
   return response.data;
 };
 
+const createUser = async (user) => {
+  const response = await axios({
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/users`,
+    data: user,
+  });
+
+  return response.data;
+};
+
 const deleteBank = async (deal) => {
   const response = await axios({
     method: 'delete',
@@ -190,6 +204,19 @@ const deleteTransaction = async (transaction) => {
       Accepts: 'application/json',
     },
     url: `${urlRoot}/api/transactions/${transaction.bankFacilityId}`,
+  });
+
+  return response.data;
+};
+
+const deleteUser = async (user) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/users/${user.username}`,
   });
 
   return response.data;
@@ -286,6 +313,19 @@ const listTransactions = async () => {
   return response.data.transactions;
 };
 
+const listUsers = async () => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${urlRoot}/api/users`,
+  });
+
+  return response.data.users;
+};
+
 module.exports = {
   createBank,
   createBondCurrency,
@@ -294,6 +334,7 @@ module.exports = {
   createIndustrySector,
   createMandatoryCriteria,
   createTransaction,
+  createUser,
   deleteBank,
   deleteBondCurrency,
   deleteCountry,
@@ -301,6 +342,7 @@ module.exports = {
   deleteIndustrySector,
   deleteMandatoryCriteria,
   deleteTransaction,
+  deleteUser,
   listBanks,
   listBondCurrencies,
   listCountries,
@@ -308,4 +350,5 @@ module.exports = {
   listIndustrySectors,
   listMandatoryCriteria,
   listTransactions,
+  listUsers,
 };
