@@ -2,6 +2,19 @@ const assert = require('assert');
 
 const db = require('../db-driver/client');
 
+const getCountryFromArray = (arr, code) => arr.filter((country) => country.code === code)[0];
+
+const sortCountries = (arr, callback) => {
+  const countriesWithoutUK = arr.filter((country) => country.code !== 'GBR');
+  const uk = getCountryFromArray(arr, 'GBR');
+
+  const sortedArray = [
+    uk,
+    ...countriesWithoutUK.sort((a, b) => a.name.localeCompare(b.name)),
+  ];
+  return callback(sortedArray);
+};
+
 const findCountries = async (callback) => {
   const collection = await db.getCollection('countries');
 
@@ -28,16 +41,15 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findCountries((countries) => res.status(200).send({
-    count: countries.length,
-    countries,
-  }))
+  findCountries((countries) => sortCountries(countries, (sortedCountries) => res.status(200).send({
+    count: sortedCountries.length,
+    countries: sortedCountries,
+  })))
 );
 
 exports.findOne = (req, res) => (
   findOneCountry(req.params.code, (country) => res.status(200).send(country))
 );
-
 
 exports.update = async (req, res) => {
   const collection = await db.getCollection('countries');
