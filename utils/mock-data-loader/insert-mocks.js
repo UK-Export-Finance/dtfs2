@@ -30,6 +30,10 @@ const insertMocks = () => {
     api.createTransaction(transaction);
   }
 
+  for (user of MOCKS.USERS) {
+    api.createUser(user);
+  }
+
 }
 
 module.exports = insertMocks;
