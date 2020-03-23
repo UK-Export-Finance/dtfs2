@@ -8,10 +8,17 @@ const sortCountries = (arr, callback) => {
   const countriesWithoutUK = arr.filter((country) => country.code !== 'GBR');
   const uk = getCountryFromArray(arr, 'GBR');
 
-  const sortedArray = [
-    uk,
+  let sortedArray = [
     ...countriesWithoutUK.sort((a, b) => a.name.localeCompare(b.name)),
   ];
+
+  if (uk) {
+    sortedArray = [
+      uk,
+      ...sortedArray,
+    ];
+  }
+
   return callback(sortedArray);
 };
 
