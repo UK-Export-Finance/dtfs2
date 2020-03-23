@@ -1,5 +1,4 @@
 {
-  "username": "username",
-  "password": "password",
-  "roles": ["maker", "checker"]
+  "username": "MAKER",
+  "password": "MAKER"
 }
