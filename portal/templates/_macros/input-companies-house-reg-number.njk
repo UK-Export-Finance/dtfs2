@@ -1,0 +1,20 @@
+{% macro input(id, label) %}
+
+  <div class="govuk-form-group">
+    <label class="govuk-label" for="{{ id }}">
+      {{ label }}
+    </label>
+
+    <span id="{{ id }}-hint" class="govuk-hint">
+      We use a Companies House service to provide you with company details. If the company is not UK registered or the Companies House service is unavailable, then you will need to complete the company details fields manually.
+    </span>
+
+    <input class="govuk-input govuk-!-width-one-half govuk-!-margin-bottom-6" id="{{ id }}" name="{{ id }}" type="text" aria-describedby="{{ id }}-hint">
+
+    <hr class="govuk-section-break" />
+
+    <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button">Search</button>
+
+  </div>
+
+{% endmacro %}

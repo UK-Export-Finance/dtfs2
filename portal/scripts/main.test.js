@@ -1,4 +1,5 @@
 import * as govukFrontend from 'govuk-frontend';
+import * as showHideElement from './show-hide-element';
 import * as numericFloatInputs from './numeric-float-inputs';
 import * as changeIndustryClasses from './change-industry-classes';
 import main from './main';
@@ -11,6 +12,12 @@ describe('main.js', () => {
     const spy = jest.spyOn(govukFrontend, 'initAll');
     main();
     expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call showHideElement()', () => {
+    showHideElement.default = jest.fn();
+    main();
+    expect(showHideElement.default).toHaveBeenCalled();
   });
 
   it('should call numericFloatInputs()', () => {
