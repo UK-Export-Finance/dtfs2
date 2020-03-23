@@ -76,7 +76,7 @@ describe('a country', () => {
     await post(mockCountres.hkg).to('/api/countries');
     await post(mockCountres.gbr).to('/api/countries');
 
-    const response = await get('/api/countries');
+    const {status, body} = await get('/api/countries');
 
     const expected = [
       mockCountres.gbr,
@@ -84,7 +84,9 @@ describe('a country', () => {
       mockCountres.hkg,
       mockCountres.nzl,
     ];
-    expect(response.countries).toMatchObject(expected);
+
+    expect(status).toEqual(200);
+    expect(body.countries).toMatchObject(expected);
   });
 
 });
