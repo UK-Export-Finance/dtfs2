@@ -19,23 +19,29 @@ describe('an industry sector', () => {
   it('a newly added industry sector is returned when we list all industry sectors', async () => {
     await post(newSector).to('/api/industry-sectors');
 
-    const industrySectorList = await get('/api/industry-sectors');
-    expect(industrySectorList.industrySectors[0]).toMatchObject(newSector);
+    const {status, body} = await get('/api/industry-sectors');
+
+    expect(status).toEqual(200);
+    expect(body.industrySectors[0]).toMatchObject(newSector);
   });
 
   it('an industry sector can be updated', async () => {
     await post(newSector).to('/api/industry-sectors');
     await put(updatedSector).to('/api/industry-sectors/1066');
 
-    const sector = await get('/api/industry-sectors/1066');
-    expect(sector).toMatchObject(updatedSector);
+    const {status, body} = await get('/api/industry-sectors/1066');
+
+    expect(status).toEqual(200);
+    expect(body).toMatchObject(updatedSector);
   });
 
   it('an industry sector can be deleted', async () => {
     await post(newSector).to('/api/industry-sectors');
     await remove('/api/industry-sectors/1066');
 
-    const sector = await get('/api/industry-sectors/1066');
-    expect(sector).toMatchObject({});
+    const {status, body} = await get('/api/industry-sectors/1066');
+
+    expect(status).toEqual(200);
+    expect(body).toMatchObject({});
   });
 });

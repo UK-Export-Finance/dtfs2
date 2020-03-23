@@ -19,30 +19,38 @@ describe('a deal', () => {
   it('a newly added deal is returned when we list all deals', async () => {
     await post(newDeal).to('/api/deals');
 
-    const dealList = await get('/api/deals');
-    expect(dealList.deals[0]).toMatchObject(newDeal);
+    const {status, body} = await get('/api/deals');
+
+    expect(status).toEqual(200);
+    expect(body.deals[0]).toMatchObject(newDeal);
   });
 
   it('a newly added deal can be looked up by id', async () => {
     await post(newDeal).to('/api/deals');
 
-    const deal = await get('/api/deals/1996');
-    expect(deal).toMatchObject(newDeal);
+    const {status, body} = await get('/api/deals/1996');
+
+    expect(status).toEqual(200);
+    expect(body).toMatchObject(newDeal);
   });
 
   it('a deal can be updated', async () => {
     await post(newDeal).to('/api/deals');
     await put(updatedDeal).to('/api/deals/1996');
 
-    const deal = await get('/api/deals/1996');
-    expect(deal).toMatchObject(updatedDeal);
+    const {status, body} = await get('/api/deals/1996');
+
+    expect(status).toEqual(200);
+    expect(body).toMatchObject(updatedDeal);
   });
 
   it('a deal can be deleted', async () => {
     await post(newDeal).to('/api/deals');
     await remove('/api/deals/1996');
 
-    const deal = await get('/api/deals/1996');
-    expect(deal).toMatchObject({});
+    const {status, body} = await get('/api/deals/1996');
+
+    expect(status).toEqual(200);
+    expect(body).toMatchObject({});
   });
 });

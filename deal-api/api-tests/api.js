@@ -11,7 +11,6 @@ module.exports = (app) => {
           return request(app)
                    .post(url)
                    .send(data)
-                   .expect(200)
 
         }
       }
@@ -24,20 +23,19 @@ module.exports = (app) => {
           return request(app)
                    .put(url)
                    .send(data)
-                   .expect(200)
 
         }
       }
     },
 
-    get: async (url) => {
+    get: async (url, token) => {
       return new Promise( (resolve, reject) => {
 
         request(app)
             .get(url)
-            .expect(200)
+            .set({ Authorization: token?token:'' })
             .then(response => {
-              resolve(response.body);
+              resolve(response);
             })
 
       });
@@ -48,9 +46,8 @@ module.exports = (app) => {
         request(app)
             .delete(url)
             .send()
-            .expect(200)
             .then(response => {
-              resolve(response.body);
+              resolve(response);
             })
 
       });

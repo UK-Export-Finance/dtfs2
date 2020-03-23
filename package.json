@@ -12,8 +12,8 @@
   },
   "scripts": {
     "pipeline": "./update-environment.sh && npm run lint && ./execute-unit-tests.sh && ./execute-api-tests.sh",
-    "lint": "eslint ./deal-api/src ./portal/server ./portal/scripts ./users/service/src",
-    "lint:fix": "eslint ./deal-api/src ./portal/server ./portal/scripts ./users/service/src --fix",
+    "lint": "eslint ./deal-api/src ./portal/server ./portal/scripts",
+    "lint:fix": "eslint ./deal-api/src ./portal/server ./portal/scripts --fix",
     "postinstall": "cp git-hooks/pre-push .git/hooks && cp update-heroku.sh .git/hooks && chmod +x .git/hooks/pre-push",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -18,23 +18,29 @@ describe('a bank', () => {
   it('a newly added bank is returned when we list all banks', async () => {
     await post(newBank).to('/api/banks');
 
-    const bankList = await get('/api/banks');
-    expect(bankList.banks[0]).toMatchObject(newBank);
+    const {status, body} = await get('/api/banks');
+
+    expect(status).toEqual(200);
+    expect(body.banks[0]).toMatchObject(newBank);
   });
 
   it('a bank can be updated', async () => {
     await post(newBank).to('/api/banks');
     await put(updatedBank).to('/api/banks/112233');
 
-    const bank = await get('/api/banks/112233');
-    expect(bank).toMatchObject(updatedBank);
+    const {status, body} = await get('/api/banks/112233');
+
+    expect(status).toEqual(200);
+    expect(body).toMatchObject(updatedBank);
   });
 
   it('a bank can be deleted', async () => {
     await post(newBank).to('/api/banks');
     await remove('/api/banks/112233');
 
-    const bank = await get('/api/banks/112233');
-    expect(bank).toMatchObject({});
+    const {status, body} = await get('/api/banks/112233');
+
+    expect(status).toEqual(200);
+    expect(body).toMatchObject({});
   });
 });

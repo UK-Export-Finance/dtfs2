@@ -19,23 +19,29 @@ describe('a transaction', () => {
   it('a newly added transaction is returned when we list all transactions', async () => {
     await post(newTransaction).to('/api/transactions');
 
-    const transactionList = await get('/api/transactions');
-    expect(transactionList.transactions[0]).toMatchObject(newTransaction);
+    const {status, body} = await get('/api/transactions');
+
+    expect(status).toEqual(200);
+    expect(body.transactions[0]).toMatchObject(newTransaction);
   });
 
   it('a transaction can be updated', async () => {
     await post(newTransaction).to('/api/transactions');
     await put(updatedTransaction).to('/api/transactions/1a2b3c');
 
-    const transaction = await get('/api/transactions/1a2b3c');
-    expect(transaction).toMatchObject(updatedTransaction);
+    const {status, body} = await get('/api/transactions/1a2b3c');
+
+    expect(status).toEqual(200);
+    expect(body).toMatchObject(updatedTransaction);
   });
 
   it('a transaction can be deleted', async () => {
     await post(newTransaction).to('/api/transactions');
     await remove('/api/transactions/1a2b3c');
 
-    const transaction = await get('/api/transactions/1a2b3c');
-    expect(transaction).toMatchObject({});
+    const {status, body} = await get('/api/transactions/1a2b3c');
+
+    expect(status).toEqual(200);
+    expect(body).toMatchObject({});
   });
 });
