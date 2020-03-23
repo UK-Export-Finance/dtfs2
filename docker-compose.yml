@@ -31,8 +31,6 @@ services:
     volumes:
       - ./deal-api/src:/app/src:ro
       - ./deal-api/.env.full-local-docker-environment:/app/.env:ro
-      - ./deal-api/.ssl/private.pem:/app/.ssl/private.pem:ro
-      - ./deal-api/.ssl/public.pem:/app/.ssl/public.pem:ro
     environment:
       - DEBUG=express:*
     entrypoint: npx nodemon src/index.js
