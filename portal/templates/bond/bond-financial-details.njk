@@ -71,7 +71,7 @@
         <select class="govuk-select" id="currency" name="currency">
           <option value="">Select value</option>
           {% for currency in currencies %}
-            <option value={{ currency.id }}>{{ currency.text }}</option>
+            <option value={{ currency.id }}>{{ currency.name }}</option>
           {% endfor %}
         </select>
       </div>
