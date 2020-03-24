@@ -73,11 +73,28 @@ router.get('/api/bond-currencies/:id', bondCurrencies.findOne);
 router.put('/api/bond-currencies/:id', bondCurrencies.update);
 router.delete('/api/bond-currencies/:id', bondCurrencies.delete);
 
-router.get('/api/countries', countries.findAll);
-router.post('/api/countries', countries.create);
-router.get('/api/countries/:code', countries.findOne);
-router.put('/api/countries/:code', countries.update);
-router.delete('/api/countries/:code', countries.delete);
+router.get('/api/countries',
+  passport.authenticate('jwt', { session: false }),
+  countries.findAll);
+
+router.get('/api/countries/:code',
+  passport.authenticate('jwt', { session: false }),
+  countries.findOne);
+
+router.post('/api/countries',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  countries.create);
+
+router.put('/api/countries/:code',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  countries.update);
+
+router.delete('/api/countries/:code',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  countries.delete);
 
 router.get('/api/industry-sectors', industrySectors.findAll);
 router.post('/api/industry-sectors', industrySectors.create);

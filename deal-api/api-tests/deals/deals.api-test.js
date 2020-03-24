@@ -117,7 +117,7 @@ describe('/api/deals', () => {
       expect(status).toEqual(200);
     });
 
-    it('updates the bank', async () => {
+    it('updates the deal', async () => {
       await post(newDeal, aTokenWithEditorRole).to('/api/deals');
       await put(updatedDeal, aTokenWithEditorRole).to('/api/deals/1996');
 
@@ -149,7 +149,7 @@ describe('/api/deals', () => {
       expect(status).toEqual(200);
     });
 
-    it('deletes the bank', async () => {
+    it('deletes the deal', async () => {
       await post(newDeal, aTokenWithEditorRole).to('/api/deals');
       await remove('/api/deals/1996', aTokenWithEditorRole);
 
