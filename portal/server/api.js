@@ -51,7 +51,17 @@ const banks = async () => {
 };
 
 const bondCurrencies = async () => {
-  const response = await axios(`${urlRoot}/api/bond-currencies`);
+  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
+
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/api/bond-currencies`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
   return response.data.bondCurrencies;
 };
 
@@ -71,17 +81,47 @@ const countries = async () => {
 };
 
 const industrySectors = async () => {
-  const response = await axios(`${urlRoot}/api/industry-sectors`);
+  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
+
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/api/industry-sectors`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
   return response.data.industrySectors;
 };
 
 const mandatoryCriteria = async () => {
-  const response = await axios(`${urlRoot}/api/mandatory-criteria`);
+  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
+
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/api/mandatory-criteria`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
   return response.data.mandatoryCriteria;
 };
 
 const transactions = async () => {
-  const response = await axios(`${urlRoot}/api/transactions`);
+  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
+
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/api/transactions`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
   return response.data.transactions;
 };
 

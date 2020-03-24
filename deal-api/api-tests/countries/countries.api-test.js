@@ -54,7 +54,7 @@ describe('/api/countries', () => {
     });
   });
 
-  describe('GET /api/countries/:id', () => {
+  describe('GET /api/countries/:code', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const {status} = await get('/api/countries/123');
 
@@ -99,7 +99,7 @@ describe('/api/countries', () => {
 
   });
 
-  describe('PUT /api/countries/:id', () => {
+  describe('PUT /api/countries/:code', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const {status} = await put(updatedCountry).to('/api/countries/NZL');
 
@@ -131,7 +131,7 @@ describe('/api/countries', () => {
     });
   });
 
-  describe('DELETE /api/countries/:id', () => {
+  describe('DELETE /api/countries/:code', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const {status} = await remove('/api/countries/NZL');
 
