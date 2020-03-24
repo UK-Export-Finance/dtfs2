@@ -16,15 +16,15 @@ const contracts = async () => {
 };
 
 const banks = async () => {
-  const token = await tokenFor({username:'bob',password:'bananas',roles:[]})
+  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
 
   const response = await axios({
     method: 'get',
     url: `${urlRoot}/api/banks`,
     headers: {
-      'Authorization': token,
-      'Content-Type': 'application/json'
-    }
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
   });
 
   return response.data.banks;
