@@ -1,6 +1,11 @@
 const assert = require('assert');
-
 const db = require('../db-driver/client');
+const utils = require('../utils/array');
+
+const sortIndustrySectors = (industrySectors) => utils.sortArrayAlphabetically(industrySectors).map((sector) => ({
+  ...sector,
+  classes: utils.sortArrayAlphabetically(sector.classes),
+}));
 
 const findIndustrySectors = async (callback) => {
   const collection = await db.getCollection('industrySectors');
@@ -30,7 +35,7 @@ exports.create = async (req, res) => {
 exports.findAll = (req, res) => (
   findIndustrySectors((industrySectors) => res.status(200).send({
     count: industrySectors.length,
-    industrySectors,
+    industrySectors: sortIndustrySectors(industrySectors),
   }))
 );
 
