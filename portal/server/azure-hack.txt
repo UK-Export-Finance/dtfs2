@@ -1,0 +1,13 @@
+
+router.get('/.well-known/microsoft-identity-association.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json')
+  let jsonString = JSON.stringify({"associatedApplications": [
+    {"applicationId": "131ec5af-72ab-42e9-9739-84438eea3371"}
+  ]});
+  // Using a Buffer is how you prevent Express from adding a charset.
+  // Azure's domain verification barfs if you include one:
+  let b = Buffer.from(jsonString)
+  res.setHeader('Content-Length', b.length.toString())
+  res.write(b)
+  res.end()
+});
