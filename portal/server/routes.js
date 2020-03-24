@@ -3,6 +3,13 @@ import api from './api';
 
 const router = express.Router();
 
+router.get('/.well-known/microsoft-identity-association.json',function(req,res) {
+  res.status(200).setHeader('Content-Type', 'application/json');
+  res.json({"associatedApplications": [
+      {"applicationId": "131ec5af-72ab-42e9-9739-84438eea3371"}
+    ]});
+});
+
 router.get('/', (req, res) => res.render('login.njk'));
 
 router.get('/start-now', (req, res) => res.render('start-now.njk'));
