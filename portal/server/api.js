@@ -1,6 +1,8 @@
 const axios = require('axios');
 require('dotenv').config();
 
+const tokenFor = require('./temporary-token-handler');
+
 const urlRoot = process.env.DEAL_API_URL;
 
 const contract = async (id) => {
@@ -14,7 +16,17 @@ const contracts = async () => {
 };
 
 const banks = async () => {
-  const response = await axios(`${urlRoot}/api/banks`);
+  const token = await tokenFor({username:'bob',password:'bananas',roles:[]})
+
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/api/banks`,
+    headers: {
+      'Authorization': token,
+      'Content-Type': 'application/json'
+    }
+  });
+
   return response.data.banks;
 };
 

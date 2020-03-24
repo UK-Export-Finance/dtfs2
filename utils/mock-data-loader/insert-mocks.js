@@ -1,13 +1,17 @@
 const api = require('./api');
 const MOCKS = require('./mocks');
 
-const insertMocks = () => {
+const tokenFor = require('./temporary-token-handler');
+
+const insertMocks = async() => {
+  const token = await tokenFor({username:'script', password:'temporary', roles:['editor']});
+
   for (contract of MOCKS.CONTRACTS) {
     api.createDeal(contract);
   }
 
   for (bank of MOCKS.BANKS) {
-    api.createBank(bank);
+    api.createBank(bank, token);
   }
 
   for (bondCurrency of MOCKS.BOND_CURRENCIES) {
