@@ -1,6 +1,6 @@
 const assert = require('assert');
-
 const db = require('../db-driver/client');
+const utils = require('../utils/array');
 
 const getCountryFromArray = (arr, code) => arr.filter((country) => country.code === code)[0];
 
@@ -9,7 +9,7 @@ const sortCountries = (arr, callback) => {
   const uk = getCountryFromArray(arr, 'GBR');
 
   let sortedArray = [
-    ...countriesWithoutUK.sort((a, b) => a.name.localeCompare(b.name)),
+    ...utils.sortArrayAlphabetically(countriesWithoutUK),
   ];
 
   if (uk) {
