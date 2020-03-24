@@ -56,7 +56,17 @@ const bondCurrencies = async () => {
 };
 
 const countries = async () => {
-  const response = await axios(`${urlRoot}/api/countries`);
+  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
+
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/api/countries`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
   return response.data.countries;
 };
 
