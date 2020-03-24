@@ -7,7 +7,6 @@ const { expectMongoId, expectMongoIds} = require('../expectMongoIds');
 
 const getToken = require('../getToken')(app);
 
-
 describe('/api/banks', () => {
   const newBank = aBank({ id: '112233' });
   const updatedBank = aBank({

@@ -6,12 +6,32 @@ const tokenFor = require('./temporary-token-handler');
 const urlRoot = process.env.DEAL_API_URL;
 
 const contract = async (id) => {
-  const response = await axios(`${urlRoot}/api/deals/${id}`);
+  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
+
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/api/deals/${id}`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
   return response.data;
 };
 
 const contracts = async () => {
-  const response = await axios(`${urlRoot}/api/deals`);
+  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
+
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/api/deals`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
   return response.data.deals;
 };
 
