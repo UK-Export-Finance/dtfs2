@@ -9,7 +9,7 @@ const sortCountries = (arr, callback) => {
   const uk = getCountryFromArray(arr, 'GBR');
 
   let sortedArray = [
-    ...utils.sortArrayAlphabetically(countriesWithoutUK),
+    ...utils.sortArrayAlphabetically(countriesWithoutUK, 'code'),
   ];
 
   if (uk) {

@@ -21,12 +21,13 @@ const createBank = async (bank, token) => {
   return response.data;
 };
 
-const createBondCurrency = async (bondCurrency) => {
+const createBondCurrency = async (bondCurrency, token) => {
   const response = await axios({
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/bond-currencies`,
     data: bondCurrency,
@@ -35,12 +36,13 @@ const createBondCurrency = async (bondCurrency) => {
   return response.data;
 };
 
-const createCountry = async (country) => {
+const createCountry = async (country, token) => {
   const response = await axios({
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/countries`,
     data: country,
@@ -49,12 +51,13 @@ const createCountry = async (country) => {
   return response.data;
 };
 
-const createDeal = async (deal) => {
+const createDeal = async (deal, token) => {
   const response = await axios({
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/deals`,
     data: deal,
@@ -63,12 +66,13 @@ const createDeal = async (deal) => {
   return response.data;
 };
 
-const createIndustrySector = async (industrySector) => {
+const createIndustrySector = async (industrySector, token) => {
   const response = await axios({
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/industry-sectors`,
     data: industrySector,
@@ -77,12 +81,13 @@ const createIndustrySector = async (industrySector) => {
   return response.data;
 };
 
-const createMandatoryCriteria = async (mandatoryCriteria) => {
+const createMandatoryCriteria = async (mandatoryCriteria, token) => {
   const response = await axios({
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/mandatory-criteria`,
     data: mandatoryCriteria,
@@ -91,12 +96,13 @@ const createMandatoryCriteria = async (mandatoryCriteria) => {
   return response.data;
 };
 
-const createTransaction = async (transaction) => {
+const createTransaction = async (transaction, token) => {
   const response = await axios({
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/transactions`,
     data: transaction,
@@ -133,12 +139,13 @@ const deleteBank = async (deal, token) => {
   return response.data;
 };
 
-const deleteBondCurrency = async (bondCurrency) => {
+const deleteBondCurrency = async (bondCurrency, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/bond-currencies/${bondCurrency.id}`,
   });
@@ -146,12 +153,13 @@ const deleteBondCurrency = async (bondCurrency) => {
   return response.data;
 };
 
-const deleteCountry = async (country) => {
+const deleteCountry = async (country, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/countries/${country.code}`,
   });
@@ -159,12 +167,13 @@ const deleteCountry = async (country) => {
   return response.data;
 };
 
-const deleteDeal = async (deal) => {
+const deleteDeal = async (deal, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/deals/${deal.id}`,
   });
@@ -172,12 +181,13 @@ const deleteDeal = async (deal) => {
   return response.data;
 };
 
-const deleteIndustrySector = async (industrySector) => {
+const deleteIndustrySector = async (industrySector, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/industry-sectors/${industrySector.code}`,
   });
@@ -185,12 +195,13 @@ const deleteIndustrySector = async (industrySector) => {
   return response.data;
 };
 
-const deleteMandatoryCriteria = async (mandatoryCriteria) => {
+const deleteMandatoryCriteria = async (mandatoryCriteria, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/mandatory-criteria/${mandatoryCriteria.id}`,
   });
@@ -198,12 +209,13 @@ const deleteMandatoryCriteria = async (mandatoryCriteria) => {
   return response.data;
 };
 
-const deleteTransaction = async (transaction) => {
+const deleteTransaction = async (transaction, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/transactions/${transaction.bankFacilityId}`,
   });
@@ -238,25 +250,29 @@ const listBanks = async (token) => {
   return response.data.banks;
 };
 
-const listBondCurrencies = async () => {
+const listBondCurrencies = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/bond-currencies`,
+  }).catch( (err) => {
+    console.log(err);
   });
 
   return response.data.bondCurrencies;
 };
 
-const listCountries = async () => {
+const listCountries = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/countries`,
   });
@@ -264,12 +280,13 @@ const listCountries = async () => {
   return response.data.countries;
 };
 
-const listDeals = async () => {
+const listDeals = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/deals`,
   });
@@ -277,12 +294,13 @@ const listDeals = async () => {
   return response.data.deals;
 };
 
-const listIndustrySectors = async () => {
+const listIndustrySectors = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/industry-sectors`,
   });
@@ -290,12 +308,13 @@ const listIndustrySectors = async () => {
   return response.data.industrySectors;
 };
 
-const listMandatoryCriteria = async () => {
+const listMandatoryCriteria = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/mandatory-criteria`,
   });
@@ -303,11 +322,12 @@ const listMandatoryCriteria = async () => {
   return response.data.mandatoryCriteria;
 };
 
-const listTransactions = async () => {
+const listTransactions = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: token?token:'',
       Accepts: 'application/json',
     },
     url: `${urlRoot}/api/transactions`,
