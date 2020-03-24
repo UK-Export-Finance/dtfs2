@@ -68,7 +68,8 @@ module.exports = {
       template: 'nunjucks-html-loader!./templates/index.njk',
     }),
     new CopyPlugin([
-      { from: './node_modules/govuk-frontend/govuk/assets', to: './assets' }
+      { from: './node_modules/govuk-frontend/govuk/assets', to: './assets' },
+      { from: './static', to: './.well-known' }
     ])
   ]
 }
