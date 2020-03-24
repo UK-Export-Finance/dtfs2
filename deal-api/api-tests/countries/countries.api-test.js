@@ -44,7 +44,7 @@ describe('a country', () => {
   it('a newly added country is returned when we list all countries', async () => {
     await post(newCountry).to('/api/countries');
 
-    const {status, body} = await get('/api/countries');
+    const { status, body } = await get('/api/countries');
     const addedCountry = body.countries.find((c) => c.code === mockCountres.dub.code);
 
     expect(status).toEqual(200);
@@ -55,7 +55,7 @@ describe('a country', () => {
     await post(newCountry).to('/api/countries');
     await put(updatedCountry).to('/api/countries/DUB');
 
-    const {status, body} = await get('/api/countries/DUB');
+    const { status, body } = await get('/api/countries/DUB');
 
     expect(status).toEqual(200);
     expect(body).toMatchObject(updatedCountry);
@@ -65,7 +65,7 @@ describe('a country', () => {
     await post(newCountry).to('/api/countries');
     await remove('/api/countries/DUB');
 
-    const {status, body} = await get('/api/countries/DUB');
+    const { status, body } = await get('/api/countries/DUB');
 
     expect(status).toEqual(200);
     expect(body).toMatchObject({});
@@ -76,7 +76,7 @@ describe('a country', () => {
     await post(mockCountres.hkg).to('/api/countries');
     await post(mockCountres.gbr).to('/api/countries');
 
-    const {status, body} = await get('/api/countries');
+    const { status, body } = await get('/api/countries');
 
     const expected = [
       mockCountres.gbr,
