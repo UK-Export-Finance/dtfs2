@@ -18,12 +18,28 @@ const router = express.Router();
 //----
 // things that should be in this file
 
-router.get('/api/deals', deals.findAll);
-router.post('/api/deals', deals.create);
+router.get('/api/deals',
+  passport.authenticate('jwt', { session: false }),
+  deals.findAll);
 
-router.get('/api/deals/:id', deals.findOne);
-router.put('/api/deals/:id', deals.update);
-router.delete('/api/deals/:id', deals.delete);
+router.get('/api/deals/:id',
+  passport.authenticate('jwt', { session: false }),
+  deals.findOne);
+
+router.post('/api/deals',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  deals.create);
+
+router.put('/api/deals/:id',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  deals.update);
+
+router.delete('/api/deals/:id',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  deals.delete);
 
 //-----
 // things that feel like candidates to move to another service
