@@ -1,0 +1,31 @@
+version: "3"
+services:
+  deal-api:
+    container_name: deal-api_portal
+    build: ../deal-api
+    image: dtfs/deal-api
+    restart: always
+    depends_on:
+      - deal-api-data
+    ports:
+      - "5001:5000"
+    volumes:
+      - ../deal-api/src:/app/src:ro
+      - ../deal-api/.env.full-local-docker-environment:/app/.env:ro
+    environment:
+      - DEBUG=express:*
+    entrypoint: npx nodemon src/index.js
+
+  deal-api-data:
+    container_name: deal-api-data_portal
+    image: mongo
+    restart: always
+    env_file:
+      - ../deal-api/.env.full-local-docker-environment
+    volumes:
+      - ../deal-api-data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./deal-api-data-volume:/data/db
+    ports:
+      - "27017-27019:27017-27019"
+networks:
+  default:

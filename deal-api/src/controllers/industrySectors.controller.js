@@ -2,9 +2,9 @@ const assert = require('assert');
 const db = require('../db-driver/client');
 const utils = require('../utils/array');
 
-const sortIndustrySectors = (industrySectors) => utils.sortArrayAlphabetically(industrySectors).map((sector) => ({
+const sortIndustrySectors = (industrySectors) => utils.sortArrayAlphabetically(industrySectors, 'name').map((sector) => ({
   ...sector,
-  classes: utils.sortArrayAlphabetically(sector.classes),
+  classes: utils.sortArrayAlphabetically(sector.classes, 'name'),
 }));
 
 const findIndustrySectors = async (callback) => {

@@ -2,91 +2,164 @@ const wipeDB = require('../wipeDB');
 const aCountry = require('./country-builder');
 
 const app = require('../../src/createApp');
+const { get, post, put, remove } = require('../api')(app);
+const { expectMongoId, expectMongoIds} = require('../expectMongoIds');
 
-const {
-  get,
-  post,
-  put,
-  remove,
-} = require('../api')(app);
+const getToken = require('../getToken')(app);
 
-describe('a country', () => {
-  const mockCountres = {
-    nzl: {
-      code: 'NZL',
-      name: 'New Zealand',
-    },
-    hkg: {
-      code: 'HKG',
-      name: 'Hong Kong',
-    },
-    dub: {
-      code: 'DUB',
-      name: 'Country name',
-    },
-    gbr: {
-      code: 'GBR',
-      name: 'United Kingdom',
-    },
-  };
+describe('/api/countries', () => {
+  const nzl = aCountry({ code: 'NZL', name: 'New Zealand'});
+  const hkg = aCountry({ code: 'HKG', name: 'Hong Kong'});
+  const dub = aCountry({ code: 'DUB', name: 'Dubai'});
+  const gbr = aCountry({ code: 'GBR', name: 'United Kingdom'});
 
-  const newCountry = aCountry({ code: mockCountres.dub.code });
-  const updatedCountry = aCountry({
-    code: mockCountres.dub.code,
-    name: mockCountres.dub.name,
-  });
+  const newCountry = nzl;
+  const updatedCountry = aCountry({code: 'NZL', name: 'Old Zealand'});
+
+  let aTokenWithNoRoles;
+  let aTokenWithEditorRole;
 
   beforeEach(async () => {
     await wipeDB();
-    await post(mockCountres.dub).to('/api/countries');
+
+    aTokenWithNoRoles    = await getToken({username:'1',password:'2',roles:[]});
+    aTokenWithEditorRole = await getToken({username:'3',password:'4',roles:['editor']});
   });
 
-  it('a newly added country is returned when we list all countries', async () => {
-    await post(newCountry).to('/api/countries');
+  describe('GET /api/countries', () => {
+    it('rejects requests that do not present a valid Authorization token', async () => {
+      const {status} = await get('/api/countries');
 
-    const { status, body } = await get('/api/countries');
-    const addedCountry = body.countries.find((c) => c.code === mockCountres.dub.code);
+      expect(status).toEqual(401);
+    });
 
-    expect(status).toEqual(200);
-    expect(addedCountry).toMatchObject(newCountry);
+    it('accepts requests that present a valid Authorization token', async () => {
+      const {status} = await get('/api/countries', aTokenWithNoRoles);
+
+      expect(status).toEqual(200);
+    });
+
+    it('returns a list of countries, alphebetized but with GBR/United Kingdom at the top', async () => {
+      await post(nzl, aTokenWithEditorRole).to('/api/countries');
+      await post(hkg, aTokenWithEditorRole).to('/api/countries');
+      await post(dub, aTokenWithEditorRole).to('/api/countries');
+      await post(gbr, aTokenWithEditorRole).to('/api/countries');
+
+      const {status, body} = await get('/api/countries', aTokenWithNoRoles);
+
+      const expectedOrder = [gbr, dub, hkg, nzl];
+
+      expect(status).toEqual(200);
+      expect(body.countries).toEqual(expectMongoIds(expectedOrder));
+    });
   });
 
-  it('a country can be updated', async () => {
-    await post(newCountry).to('/api/countries');
-    await put(updatedCountry).to('/api/countries/DUB');
+  describe('GET /api/countries/:code', () => {
+    it('rejects requests that do not present a valid Authorization token', async () => {
+      const {status} = await get('/api/countries/123');
 
-    const { status, body } = await get('/api/countries/DUB');
+      expect(status).toEqual(401);
+    });
 
-    expect(status).toEqual(200);
-    expect(body).toMatchObject(updatedCountry);
+    it('accepts requests that do present a valid Authorization token', async () => {
+      const {status} = await get('/api/countries/123', aTokenWithNoRoles);
+
+      expect(status).toEqual(200);
+    });
+
+    it('returns a country', async () => {
+      await post(newCountry, aTokenWithEditorRole).to('/api/countries');
+
+      const {status, body} = await get('/api/countries/NZL', aTokenWithNoRoles);
+
+      expect(status).toEqual(200);
+      expect(body).toEqual(expectMongoId(newCountry));
+    });
+
   });
 
-  it('a country can be deleted', async () => {
-    await post(newCountry).to('/api/countries');
-    await remove('/api/countries/DUB');
+  describe('POST /api/countries', () => {
+    it('rejects requests that do not present a valid Authorization token', async () => {
+      const {status} = await post(newCountry).to('/api/countries');
 
-    const { status, body } = await get('/api/countries/DUB');
+      expect(status).toEqual(401);
+    });
 
-    expect(status).toEqual(200);
-    expect(body).toMatchObject({});
+    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
+      const {status} = await post(newCountry, aTokenWithNoRoles).to('/api/countries');
+
+      expect(status).toEqual(401);
+    });
+
+    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
+      const {status} = await post(newCountry, aTokenWithEditorRole).to('/api/countries');
+
+      expect(status).toEqual(200);
+    });
+
   });
 
-  it('lists countries in alphabetical order, with GBR as the first country', async () => {
-    await post(mockCountres.nzl).to('/api/countries');
-    await post(mockCountres.hkg).to('/api/countries');
-    await post(mockCountres.gbr).to('/api/countries');
+  describe('PUT /api/countries/:code', () => {
+    it('rejects requests that do not present a valid Authorization token', async () => {
+      const {status} = await put(updatedCountry).to('/api/countries/NZL');
 
-    const { status, body } = await get('/api/countries');
+      expect(status).toEqual(401);
+    });
 
-    const expected = [
-      mockCountres.gbr,
-      mockCountres.dub,
-      mockCountres.hkg,
-      mockCountres.nzl,
-    ];
+    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
+      await post(newCountry, aTokenWithEditorRole).to('/api/countries');
+      const {status} = await put(updatedCountry, aTokenWithNoRoles).to('/api/countries/NZL');
 
-    expect(status).toEqual(200);
-    expect(body.countries).toMatchObject(expected);
+      expect(status).toEqual(401);
+    });
+
+    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
+      await post(newCountry, aTokenWithEditorRole).to('/api/countries');
+      const {status} = await put(updatedCountry, aTokenWithEditorRole).to('/api/countries/NZL');
+
+      expect(status).toEqual(200);
+    });
+
+    it('updates the country', async () => {
+      await post(newCountry, aTokenWithEditorRole).to('/api/countries');
+      await put(updatedCountry, aTokenWithEditorRole).to('/api/countries/NZL');
+
+      const {status, body} = await get('/api/countries/NZL', aTokenWithEditorRole);
+
+      expect(status).toEqual(200);
+      expect(body).toEqual(expectMongoId(updatedCountry));
+    });
   });
 
+  describe('DELETE /api/countries/:code', () => {
+    it('rejects requests that do not present a valid Authorization token', async () => {
+      const {status} = await remove('/api/countries/NZL');
+
+      expect(status).toEqual(401);
+    });
+
+    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
+      await post(newCountry, aTokenWithEditorRole).to('/api/countries');
+      const {status} = await remove('/api/countries/NZL', aTokenWithNoRoles);
+
+      expect(status).toEqual(401);
+    });
+
+    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
+      await post(newCountry, aTokenWithEditorRole).to('/api/countries');
+      const {status} = await remove('/api/countries/NZL', aTokenWithEditorRole);
+
+      expect(status).toEqual(200);
+    });
+
+    it('deletes the country', async () => {
+      await post(newCountry, aTokenWithEditorRole).to('/api/countries');
+      await remove('/api/countries/NZL', aTokenWithEditorRole);
+
+      const {status, body} = await get('/api/countries/NZL', aTokenWithEditorRole);
+
+      expect(status).toEqual(200);
+      expect(body).toEqual({});
+    });
+  });
 });

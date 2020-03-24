@@ -4,24 +4,26 @@ module.exports = (app) => {
 
   return {
 
-    post: (data) => {
+    post: (data, token) => {
       return {
         to: async (url) => {
 
           return request(app)
                    .post(url)
+                   .set({ Authorization: token?token:'' })
                    .send(data)
 
         }
       }
     },
 
-    put: (data) => {
+    put: (data, token) => {
       return {
         to: async (url) => {
 
           return request(app)
                    .put(url)
+                   .set({ Authorization: token?token:'' })
                    .send(data)
 
         }
@@ -29,28 +31,16 @@ module.exports = (app) => {
     },
 
     get: async (url, token) => {
-      return new Promise( (resolve, reject) => {
-
-        request(app)
-            .get(url)
-            .set({ Authorization: token?token:'' })
-            .then(response => {
-              resolve(response);
-            })
-
-      });
+      return request(app)
+        .get(url)
+        .set({ Authorization: token?token:'' })
     },
-    remove: async (url) => {
-      return new Promise( (resolve, reject) => {
 
-        request(app)
-            .delete(url)
-            .send()
-            .then(response => {
-              resolve(response);
-            })
-
-      });
+    remove: async (url, token) => {
+      return request(app)
+          .delete(url)
+          .set({ Authorization: token?token:'' })
+          .send()
     }
 
   }

@@ -3,7 +3,7 @@ import api from './api';
 
 const router = express.Router();
 
-router.get('/.well-known/microsoft-identity-association.json',function(req,res) {
+router.get('/.well-known/microsoft-identity-association.json', (req, res) => {
   // res.status(200)
   res.setHeader('Content-Type', 'application/json')
   //res.set({ 'Content-Type': 'application/json' });
@@ -14,12 +14,12 @@ router.get('/.well-known/microsoft-identity-association.json',function(req,res) 
   res.setHeader('Content-Length', b.length.toString())
   // Using a Buffer is how you prevent Express from adding a charset,
   // just so we can work around Azure.
-  // 
+  //
   //res.send(b);
   //res.type('json').send(b)
   res.write(b)
   res.end()
-}); 
+});
 
 // router.get('/.well-known/microsoft-identity-association',function(req,res) {
 //   // res.status(200)
@@ -31,7 +31,7 @@ router.get('/.well-known/microsoft-identity-association.json',function(req,res) 
 //   let b = Buffer.from(jsonString)
 //   // Using a Buffer is how you prevent Express from adding a charset,
 //   // just so we can work around Azure.
-//   // 
+//   //
 //   //res.send(b);
 //   //res.type('json').send(b)
 //   res.write(b)

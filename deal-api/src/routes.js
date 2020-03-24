@@ -1,6 +1,8 @@
 const express = require('express');
 const passport = require('passport');
 
+const validate = require('./role-validator');
+
 const deals = require('./controllers/deal.controller');
 const banks = require('./controllers/banks.controller');
 const bondCurrencies = require('./controllers/bondCurrencies.controller');
@@ -13,54 +15,171 @@ const users = require('./users/routes');
 
 const router = express.Router();
 
-//----
-// things that should be in this file
+router.get('/api/deals',
+  passport.authenticate('jwt', { session: false }),
+  deals.findAll);
 
-router.get('/api/deals', deals.findAll);
-router.post('/api/deals', deals.create);
+router.get('/api/deals/:id',
+  passport.authenticate('jwt', { session: false }),
+  deals.findOne);
 
-router.get('/api/deals/:id', deals.findOne);
-router.put('/api/deals/:id', deals.update);
-router.delete('/api/deals/:id', deals.delete);
+router.post('/api/deals',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  deals.create);
 
-//-----
-// things that feel like candidates to move to another service
+router.put('/api/deals/:id',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  deals.update);
 
-router.get('/api/banks', banks.findAll);
-router.post('/api/banks', banks.create);
-router.get('/api/banks/:id', banks.findOne);
-router.put('/api/banks/:id', banks.update);
-router.delete('/api/banks/:id', banks.delete);
+router.delete('/api/deals/:id',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  deals.delete);
 
-router.get('/api/bond-currencies', bondCurrencies.findAll);
-router.post('/api/bond-currencies', bondCurrencies.create);
-router.get('/api/bond-currencies/:id', bondCurrencies.findOne);
-router.put('/api/bond-currencies/:id', bondCurrencies.update);
-router.delete('/api/bond-currencies/:id', bondCurrencies.delete);
 
-router.get('/api/countries', countries.findAll);
-router.post('/api/countries', countries.create);
-router.get('/api/countries/:code', countries.findOne);
-router.put('/api/countries/:code', countries.update);
-router.delete('/api/countries/:code', countries.delete);
+router.get('/api/banks',
+  passport.authenticate('jwt', { session: false }),
+  banks.findAll);
 
-router.get('/api/industry-sectors', industrySectors.findAll);
-router.post('/api/industry-sectors', industrySectors.create);
-router.get('/api/industry-sectors/:code', industrySectors.findOne);
-router.put('/api/industry-sectors/:code', industrySectors.update);
-router.delete('/api/industry-sectors/:code', industrySectors.delete);
+router.get('/api/banks/:id',
+  passport.authenticate('jwt', { session: false }),
+  banks.findOne);
 
-router.get('/api/mandatory-criteria', mandatoryCriteria.findAll);
-router.post('/api/mandatory-criteria', mandatoryCriteria.create);
-router.get('/api/mandatory-criteria/:id', mandatoryCriteria.findOne);
-router.put('/api/mandatory-criteria/:id', mandatoryCriteria.update);
-router.delete('/api/mandatory-criteria/:id', mandatoryCriteria.delete);
+router.post('/api/banks',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  banks.create);
 
-router.get('/api/transactions', transactions.findAll);
-router.post('/api/transactions', transactions.create);
-router.get('/api/transactions/:bankFacilityId', transactions.findOne);
-router.put('/api/transactions/:bankFacilityId', transactions.update);
-router.delete('/api/transactions/:bankFacilityId', transactions.delete);
+router.put('/api/banks/:id',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  banks.update);
+
+router.delete('/api/banks/:id',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  banks.delete);
+
+
+router.get('/api/bond-currencies',
+  passport.authenticate('jwt', { session: false }),
+  bondCurrencies.findAll);
+
+router.get('/api/bond-currencies/:id',
+  passport.authenticate('jwt', { session: false }),
+  bondCurrencies.findOne);
+
+router.post('/api/bond-currencies',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  bondCurrencies.create);
+
+router.put('/api/bond-currencies/:id',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  bondCurrencies.update);
+
+router.delete('/api/bond-currencies/:id',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  bondCurrencies.delete);
+
+
+router.get('/api/countries',
+  passport.authenticate('jwt', { session: false }),
+  countries.findAll);
+
+router.get('/api/countries/:code',
+  passport.authenticate('jwt', { session: false }),
+  countries.findOne);
+
+router.post('/api/countries',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  countries.create);
+
+router.put('/api/countries/:code',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  countries.update);
+
+router.delete('/api/countries/:code',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  countries.delete);
+
+router.get('/api/industry-sectors',
+  passport.authenticate('jwt', { session: false }),
+  industrySectors.findAll);
+
+router.get('/api/industry-sectors/:code',
+  passport.authenticate('jwt', { session: false }),
+  industrySectors.findOne);
+
+router.post('/api/industry-sectors',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  industrySectors.create);
+
+router.put('/api/industry-sectors/:code',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  industrySectors.update);
+
+router.delete('/api/industry-sectors/:code',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  industrySectors.delete);
+
+
+router.get('/api/mandatory-criteria',
+  passport.authenticate('jwt', { session: false }),
+  mandatoryCriteria.findAll);
+
+router.get('/api/mandatory-criteria/:id',
+  passport.authenticate('jwt', { session: false }),
+  mandatoryCriteria.findOne);
+
+router.post('/api/mandatory-criteria',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  mandatoryCriteria.create);
+
+router.put('/api/mandatory-criteria/:id',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  mandatoryCriteria.update);
+
+router.delete('/api/mandatory-criteria/:id',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  mandatoryCriteria.delete);
+
+router.get('/api/transactions',
+  passport.authenticate('jwt', { session: false }),
+  transactions.findAll);
+
+router.get('/api/transactions/:bankFacilityId',
+  passport.authenticate('jwt', { session: false }),
+  transactions.findOne);
+
+router.post('/api/transactions',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  transactions.create);
+
+router.put('/api/transactions/:bankFacilityId',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  transactions.update);
+
+router.delete('/api/transactions/:bankFacilityId',
+  passport.authenticate('jwt', { session: false }),
+  validate({ role: 'editor' }),
+  transactions.delete);
+
 
 router.get('/api/users', users.list);
 router.post('/api/users', users.create);
