@@ -22,9 +22,9 @@ const findOneBank = async (id, callback) => {
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection('banks');
-  const deal = await collection.insertOne(req.body);
+  const bank = await collection.insertOne(req.body);
 
-  res.status(200).send(deal);
+  res.status(200).json(bank);
 };
 
 exports.findAll = (req, res) => (
@@ -41,8 +41,9 @@ exports.findOne = (req, res) => (
 
 exports.update = async (req, res) => {
   const collection = await db.getCollection('banks');
-  const status = await collection.updateOne({ id: { $eq: req.params.id } }, { $set: req.body }, {});
-  res.status(200).send(status);
+  const updatedBank = await collection.updateOne({ id: { $eq: req.params.id } }, { $set: req.body }, {});
+
+  res.status(200).json(updatedBank);
 };
 
 exports.delete = async (req, res) => {

@@ -5,10 +5,7 @@ const fs = require('fs');
 
 const { findOne } = require('./controller');
 
-
 dotenv.config();
-// const path = require('path');
-// const User = require('mongoose').model('User');
 
 const pathToKey = process.env.JWT_VALIDATING_CERT;
 const PUB_KEY = fs.readFileSync(pathToKey, 'utf8');

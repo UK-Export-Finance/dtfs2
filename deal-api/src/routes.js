@@ -26,11 +26,32 @@ router.delete('/api/deals/:id', deals.delete);
 //-----
 // things that feel like candidates to move to another service
 
-router.get('/api/banks', banks.findAll);
-router.post('/api/banks', banks.create);
-router.get('/api/banks/:id', banks.findOne);
-router.put('/api/banks/:id', banks.update);
-router.delete('/api/banks/:id', banks.delete);
+router.get('/api/banks', passport.authenticate('jwt', { session: false }), banks.findAll);
+router.post('/api/banks', passport.authenticate('jwt', { session: false }), (req, res) => {
+  if (!req.user.roles.includes('editor')) {
+    res.status(401).json({ succes: false, msg: "you don't have the right role" });
+  } else {
+    banks.create(req, res);
+  }
+});
+
+router.get('/api/banks/:id', passport.authenticate('jwt', { session: false }), banks.findOne);
+
+router.put('/api/banks/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+  if (!req.user.roles.includes('editor')) {
+    res.status(401).json({ succes: false, msg: "you don't have the right role" });
+  } else {
+    banks.update(req, res);
+  }
+});
+
+router.delete('/api/banks/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+  if (!req.user.roles.includes('editor')) {
+    res.status(401).json({ succes: false, msg: "you don't have the right role" });
+  } else {
+    banks.delete(req, res);
+  }
+});
 
 router.get('/api/bond-currencies', bondCurrencies.findAll);
 router.post('/api/bond-currencies', bondCurrencies.create);
