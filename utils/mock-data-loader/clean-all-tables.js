@@ -1,8 +1,9 @@
 const api = require('./api');
+const tokenFor = require('./temporary-token-handler');
 
-const cleanBanks = async () => {
-  for (bank of await api.listBanks()) {
-    api.deleteBank(bank);
+const cleanBanks = async (token) => {
+  for (bank of await api.listBanks(token)) {
+    api.deleteBank(bank, token);
   }
 }
 
@@ -49,7 +50,9 @@ const cleanUsers = async () => {
 }
 
 const cleanAllTables = async () => {
-  await cleanBanks();
+  const token = await tokenFor({username:'script', password:'temporary', roles:['editor']});
+
+  await cleanBanks(token);
   await cleanBondCurrencies();
   await cleanCountries();
   await cleanDeals();

@@ -6,12 +6,13 @@ require('dotenv').config();
 
 const urlRoot = process.env.DEAL_API_URL;
 
-const createBank = async (bank) => {
+const createBank = async (bank, token) => {
   const response = await axios({
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/banks`,
     data: bank,
@@ -118,12 +119,13 @@ const createUser = async (user) => {
   return response.data;
 };
 
-const deleteBank = async (deal) => {
+const deleteBank = async (deal, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/banks/${deal.id}`,
   });
@@ -222,12 +224,13 @@ const deleteUser = async (user) => {
   return response.data;
 };
 
-const listBanks = async () => {
+const listBanks = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token?token:'',
     },
     url: `${urlRoot}/api/banks`,
   });
