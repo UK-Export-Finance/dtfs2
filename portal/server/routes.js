@@ -11,6 +11,7 @@ router.get('/.well-known/microsoft-identity-association.json',function(req,res) 
     {"applicationId": "131ec5af-72ab-42e9-9739-84438eea3371"}
   ]});
   let b = Buffer.from(jsonString)
+  res.setHeader('Content-Length', b.length.toString())
   // Using a Buffer is how you prevent Express from adding a charset,
   // just so we can work around Azure.
   // 
@@ -18,24 +19,24 @@ router.get('/.well-known/microsoft-identity-association.json',function(req,res) 
   //res.type('json').send(b)
   res.write(b)
   res.end()
-});
+}); 
 
-router.get('/.well-known/microsoft-identity-association',function(req,res) {
-  // res.status(200)
-  res.setHeader('Content-Type', 'application/json')
-  //res.set({ 'Content-Type': 'application/json' });
-  let jsonString = JSON.stringify({"associatedApplications": [
-    {"applicationId": "131ec5af-72ab-42e9-9739-84438eea3371"}
-  ]});
-  let b = Buffer.from(jsonString)
-  // Using a Buffer is how you prevent Express from adding a charset,
-  // just so we can work around Azure.
-  // 
-  //res.send(b);
-  //res.type('json').send(b)
-  res.write(b)
-  res.end()
-});
+// router.get('/.well-known/microsoft-identity-association',function(req,res) {
+//   // res.status(200)
+//   res.setHeader('Content-Type', 'application/json')
+//   //res.set({ 'Content-Type': 'application/json' });
+//   let jsonString = JSON.stringify({"associatedApplications": [
+//     {"applicationId": "131ec5af-72ab-42e9-9739-84438eea3371"}
+//   ]});
+//   let b = Buffer.from(jsonString)
+//   // Using a Buffer is how you prevent Express from adding a charset,
+//   // just so we can work around Azure.
+//   // 
+//   //res.send(b);
+//   //res.type('json').send(b)
+//   res.write(b)
+//   res.end()
+// });
 
 router.get('/', (req, res) => res.render('login.njk'));
 
