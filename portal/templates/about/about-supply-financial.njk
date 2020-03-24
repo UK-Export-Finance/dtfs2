@@ -31,7 +31,7 @@
       <select class="govuk-select govuk-!-width-one-half" id="supplyContractCurrency" name="supplyContractCurrency">
         <option value="">Select value</option>
         {% for currency in currencies %}
-          <option value={{ currency.id }}>{{ currency.text }}</option>
+          <option value={{ currency.id }}>{{ currency.name }}</option>
         {% endfor %}
       </select>
     </div>
