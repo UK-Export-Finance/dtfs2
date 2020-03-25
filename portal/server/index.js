@@ -14,6 +14,8 @@ nunjucks.configure('templates', {
   watch: true,
 });
 
+app.use(express.urlencoded())
+
 app.use('/', routes);
 
 app.use(express.static('dist'));

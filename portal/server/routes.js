@@ -5,6 +5,18 @@ const router = express.Router();
 
 router.get('/', (req, res) => res.render('login.njk'));
 
+router.post('/validate-login', async (req, res) => {
+  const {email, password} = req.body;
+
+  const token = await api.login(email, password);
+
+  if (token) {
+    res.status(200).json(token);
+  } else {
+    res.status(401).render('login.njk');
+  }
+});
+
 router.get('/start-now', (req, res) => res.render('start-now.njk'));
 
 router.get('/before-you-start', async (req, res) => res.render('before-you-start/before-you-start.njk', { mandatoryCriteria: await api.mandatoryCriteria() }));
