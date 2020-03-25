@@ -22,11 +22,15 @@ context('Red Line eligibility checking', () => {
 
     // click 'Create new Submission'
     cy.contains('Create new submission').click();
+
     // confirm that we're on '/before-you-start'
+    cy.url().should('eq', 'http://localhost:5000/before-you-start');
 
     // click 'criteria met false' radio button
     cy.get('#criteriaMet-2').click();
-    cy.get('#submit-red-line').click();
+
+    // submit 'before you start' form
+    cy.get('button').click();
 
     // confirm we're in the fail case
     cy.url().should('eq', 'http://localhost:5000/unable-to-proceed');
@@ -40,6 +44,7 @@ context('Red Line eligibility checking', () => {
     cy.get('#email').type('MAKER');
     cy.get('#password').type('MAKER');
     cy.get('#LogIn').click();
+
     // confirm that we're on '/start-now'
     cy.url().should('eq', 'http://localhost:5000/start-now');
 
@@ -51,7 +56,9 @@ context('Red Line eligibility checking', () => {
 
     // click 'criteria met true' radio button
     cy.get('#criteriaMet').click();
-    cy.get('#submit-red-line').click();
+
+    // submit 'before you start' form
+    cy.get('button').click();
 
     // confirm we're in the success case
     cy.url().should('eq', 'http://localhost:5000/before-you-start/bank-deal');
