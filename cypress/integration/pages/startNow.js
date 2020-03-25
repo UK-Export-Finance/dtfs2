@@ -1,7 +1,7 @@
 const page = {
   confirm: () => {
-    cy.location('href').then((url) => {
-      return url.matches(/start-now/g);
+    cy.url().then((url) => {
+      return url.match(/start-now/g);
     })
   },
   dashboard: () => '//TODO',
