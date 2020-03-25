@@ -1,3 +1,6 @@
+const missions = require('../missions');
+const {unableToProceed} = require('../pages');
+
 context('Red Line eligibility checking', () => {
 
   beforeEach(() => {
@@ -10,47 +13,24 @@ context('Red Line eligibility checking', () => {
 
   });
 
-  it('A deal that fails red-line checks is rejected.', () => {
+  it('A deal that fails red-line checks is rejected.', async () => {
+    missions.logInAs('MAKER', 'MAKER');
 
-// go to the homepage
-    cy.visit('http://localhost:5000/');
+    const beforeYouStartPage = missions.createNewSubmission();
+    beforeYouStartPage.false().click();
+    beforeYouStartPage.submit().click();
 
-// log in
-    cy.get('#email').type('MAKER');
-    cy.get('#password').type('MAKER');
-    cy.get('#LogIn').click();
-    // confirm that we're on '/start-now'
-
-// click 'Create new Submission'
-    cy.contains('Create new submission').click();
-    // confirm that we're on '/before-you-start'
-
-    cy.get('#criteriaMet-2').click();
-    cy.get('#submit-red-line').click();
-
-    // confirm we're in the fail case
-    cy.url().should('eq', 'http://localhost:5000/unable-to-proceed');
+    cy.url().should('include', '/unable-to-proceed');
   });
 
   it('A deal that passes red-line checks can progress to enter supply details.', () => {
-    // go to the homepage
-        cy.visit('http://localhost:5000/');
+    missions.logInAs('MAKER', 'MAKER');
 
-    // log in
-        cy.get('#email').type('MAKER');
-        cy.get('#password').type('MAKER');
-        cy.get('#LogIn').click();
-        // confirm that we're on '/start-now'
+    const beforeYouStartPage = missions.createNewSubmission();
+    beforeYouStartPage.true().click();
+    beforeYouStartPage.submit().click();
 
-    // click 'Create new Submission'
-        cy.contains('Create new submission').click();
-        // confirm that we're on '/before-you-start'
-
-        cy.get('#criteriaMet').click();
-        cy.get('#submit-red-line').click();
-
-        // confirm we're in the success case
-        cy.url().should('eq', 'http://localhost:5000/before-you-start/bank-deal');
+    cy.url().should('include', '/before-you-start/bank-deal');
   });
 
 })
