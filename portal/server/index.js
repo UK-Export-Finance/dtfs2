@@ -25,7 +25,7 @@ app.use(express.urlencoded());
 
 // TODO: temp for dev
 const tempLogSession = (req, res, next) => {
-  console.log('PORTAL token \n', req.session.userToken);
+  console.log('PORTAL token \n', req.session.userToken);// eslint-disable-line no-console
   next();
 };
 app.use(tempLogSession);
