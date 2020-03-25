@@ -16,8 +16,8 @@ context('Red Line eligibility checking', () => {
     cy.visit('http://localhost:5000/');
 
 // log in
-    cy.get('#email').type('testing');
-    cy.get('#password').type('testing');
+    cy.get('#email').type('MAKER');
+    cy.get('#password').type('MAKER');
     cy.get('#LogIn').click();
     // confirm that we're on '/start-now'
 
@@ -25,10 +25,11 @@ context('Red Line eligibility checking', () => {
     cy.contains('Create new submission').click();
     // confirm that we're on '/before-you-start'
 
-    cy.get('#criteria-met-2').click();
+    cy.get('#criteriaMet-2').click();
     cy.get('#submit-red-line').click();
 
     // confirm we're in the fail case
+    cy.url().should('eq', 'http://localhost:5000/unable-to-proceed');
   });
 
   it('A deal that passes red-line checks can progress to enter supply details.', () => {
@@ -36,8 +37,8 @@ context('Red Line eligibility checking', () => {
         cy.visit('http://localhost:5000/');
 
     // log in
-        cy.get('#email').type('testing');
-        cy.get('#password').type('testing');
+        cy.get('#email').type('MAKER');
+        cy.get('#password').type('MAKER');
         cy.get('#LogIn').click();
         // confirm that we're on '/start-now'
 
@@ -45,10 +46,11 @@ context('Red Line eligibility checking', () => {
         cy.contains('Create new submission').click();
         // confirm that we're on '/before-you-start'
 
-        cy.get('#criteria-met').click();
+        cy.get('#criteriaMet').click();
         cy.get('#submit-red-line').click();
 
         // confirm we're in the success case
+        cy.url().should('eq', 'http://localhost:5000/before-you-start/bank-deal');
   });
 
 })
