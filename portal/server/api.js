@@ -14,7 +14,10 @@ const login = async (username, password) => {
       data: { username, password },
     });
 
-    return response.data ? response.data.token : '';
+    return response.data ? {
+      success: response.data.success,
+      token: response.data.token,
+    } : '';
   } catch (err) {
     return new Error('error with token');// do something proper here, but for now just reject failed logins..
   }
