@@ -5,6 +5,24 @@ const tokenFor = require('./temporary-token-handler');
 
 const urlRoot = process.env.DEAL_API_URL;
 
+const login = async(username, password) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${urlRoot}/api/login`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {username, password}
+    });
+
+    return response.data?response.data.token:'';
+  } catch (err) {
+    return;// do something proper here, but for now just reject failed logins..
+  }
+
+}
+
 const contract = async (id) => {
   const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
 
@@ -134,6 +152,7 @@ const contractBond = async (id, bondId) => {
 };
 
 export default {
+  login,
   banks,
   bondCurrencies,
   contract,
