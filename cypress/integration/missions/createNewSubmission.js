@@ -1,8 +1,8 @@
-const appUnderTest = require('../appUnderTest');
 const pages = require('../pages');
+const login = require('./login');
 
-module.exports = () => {
-  const startNowPage = pages.startNow;
+module.exports = (opts) => {
+  login(opts);
 
-  startNowPage.createNewSubmission().click();
+  pages.startNow.createNewSubmission().click();
 }

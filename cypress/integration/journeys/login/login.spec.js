@@ -1,7 +1,8 @@
-const missions = require('../../missions');
+const {login} = require('../../missions');
 const pages = require('../../pages');
+const relative = require('../../relativeURL');
 
-context('Login failure', () => {
+context('Login', () => {
   beforeEach(() => {
     //[ dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
@@ -11,15 +12,15 @@ context('Login failure', () => {
   });
 
   it('A failed login leaves the user on the landing page', () => {
-    missions.logInAs('shaker', 'MAKER');
+    login({username: 'shaker', password: 'MAKER'});
 
-    cy.url().should('eq', 'http://localhost:5000/'); //TODO can't include hostname:port etc here..
+    cy.url().should('eq', relative('/'));
   });
 
   it('A successful login takes the user to the /start-now page', () => {
-    missions.logInAs('MAKER', 'MAKER');
+    login({username: 'MAKER', password: 'MAKER'});
 
-    cy.url().should('include', '/start-now');
+    cy.url().should('eq', relative('/start-now'));
   });
 
 })
