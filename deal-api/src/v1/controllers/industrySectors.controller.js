@@ -1,6 +1,6 @@
 const assert = require('assert');
-const db = require('../db-driver/client');
-const utils = require('../utils/array');
+const db = require('../../db-driver/client');
+const utils = require('../../utils/array');
 
 const sortIndustrySectors = (industrySectors) => utils.sortArrayAlphabetically(industrySectors, 'name').map((sector) => ({
   ...sector,

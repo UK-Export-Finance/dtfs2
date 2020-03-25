@@ -1,4 +1,4 @@
-const utils = require('../crypto/utils');
+const utils = require('../../crypto/utils');
 
 const {
   create, update, remove, list, findOne,

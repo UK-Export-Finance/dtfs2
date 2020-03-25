@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const db = require('../db-driver/client');
+const db = require('../../db-driver/client');
 
 const findMandatoryCriteria = async (callback) => {
   const collection = await db.getCollection('mandatoryCriteria');
