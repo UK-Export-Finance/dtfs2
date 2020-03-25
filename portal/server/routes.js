@@ -8,9 +8,14 @@ router.get('/', (req, res) => res.render('login.njk'));
 router.post('/', async (req, res) => {
   const { email, password } = req.body;
 
-  const token = await api.login(email, password);
+  const tokenResponse = await api.login(email, password);
 
-  if (token) {
+  const {
+    success,
+    token,
+  } = tokenResponse;
+
+  if (success) {
     req.session.userToken = token;
     res.redirect('/start-now');
   } else {
