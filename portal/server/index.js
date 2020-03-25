@@ -1,4 +1,5 @@
 import express from 'express';
+import morgan from 'morgan';
 import session from 'express-session';
 import path from 'path';
 import nunjucks from 'nunjucks';
@@ -22,6 +23,10 @@ nunjucks.configure('templates', {
 });
 
 app.use(express.urlencoded());
+
+app.use(morgan('dev', {
+  skip: (req) => req.url.startsWith('/assets')
+}));
 
 app.use('/', routes);
 
