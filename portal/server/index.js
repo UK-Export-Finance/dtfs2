@@ -25,7 +25,7 @@ nunjucks.configure('templates', {
 app.use(express.urlencoded());
 
 app.use(morgan('dev', {
-  skip: (req) => req.url.startsWith('/assets')
+  skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
 }));
 
 app.use('/', routes);
