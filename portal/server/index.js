@@ -1,4 +1,5 @@
 import express from 'express';
+import session from 'express-session';
 import path from 'path';
 import nunjucks from 'nunjucks';
 import routes from './routes';
@@ -7,6 +8,12 @@ const app = express();
 
 const PORT = process.env.PORT || 5000;
 
+app.use(session({
+  secret: 'test test test',
+  resave: false,
+  saveUninitialized: true,
+}));
+
 nunjucks.configure('templates', {
   autoescape: true,
   express: app,
@@ -14,7 +21,14 @@ nunjucks.configure('templates', {
   watch: true,
 });
 
-app.use(express.urlencoded())
+app.use(express.urlencoded());
+
+// TODO: temp for dev
+const tempLogSession = (req, res, next) => {
+  console.log('PORTAL token \n', req.session.userToken);
+  next();
+};
+app.use(tempLogSession);
 
 app.use('/', routes);
 

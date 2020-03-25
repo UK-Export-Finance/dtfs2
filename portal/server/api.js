@@ -5,7 +5,7 @@ const tokenFor = require('./temporary-token-handler');
 
 const urlRoot = process.env.DEAL_API_URL;
 
-const login = async(username, password) => {
+const login = async (username, password) => {
   try {
     const response = await axios({
       method: 'post',
@@ -13,14 +13,13 @@ const login = async(username, password) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      data: {username, password}
+      data: { username, password },
     });
 
-    return response.data?response.data.token:'';
+    return response.data ? response.data.token : '';
   } catch (err) {
-    return;// do something proper here, but for now just reject failed logins..
+    return new Error('error with token');// do something proper here, but for now just reject failed logins..
   }
-
 }
 
 const contract = async (id) => {
@@ -38,34 +37,37 @@ const contract = async (id) => {
   return response.data;
 };
 
-const contracts = async () => {
-  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
-
-  const response = await axios({
-    method: 'get',
-    url: `${urlRoot}/api/deals`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return response.data.deals;
+const contracts = async (token) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${urlRoot}/api/deals`,
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data.deals;
+  } catch (err) {
+    return new Error('error with token');// do something proper here, but for now just reject failed logins..
+  }
 };
 
-const banks = async () => {
-  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
+const banks = async (token) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${urlRoot}/api/banks`,
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+    });
 
-  const response = await axios({
-    method: 'get',
-    url: `${urlRoot}/api/banks`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return response.data.banks;
+    return response.data.banks;
+  } catch (err) {
+    return new Error('error with token');// do something proper here, but for now just reject failed logins..
+  }
 };
 
 const bondCurrencies = async () => {
@@ -160,6 +162,7 @@ export default {
   contracts,
   countries,
   industrySectors,
+  login,
   mandatoryCriteria,
   transactions,
 };
