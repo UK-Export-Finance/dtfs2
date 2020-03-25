@@ -3,4 +3,5 @@ module.exports = {
   startNow: require('./startNow'),
   beforeYouStart: require('./beforeYouStart'),
   unableToProceed: require('./unableToProceed'),
+  bankDetails: require('./bankDetails'),
 }

@@ -1,7 +1,9 @@
 const appUnderTest = require('../appUnderTest');
 const pages = require('../pages');
 
-module.exports = (username, password) => {
+module.exports = (opts) => {
+  const {username, password} = opts;
+
   // visit the homepage
   const landingPage = appUnderTest.start();
 

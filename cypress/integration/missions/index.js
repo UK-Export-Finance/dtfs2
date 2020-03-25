@@ -1,4 +1,5 @@
 module.exports = {
-  logInAs: require('./logInAs'),
+  login: require('./login'),
   createNewSubmission: require('./createNewSubmission'),
+  passRedLine: require('./passRedLine'),
 }

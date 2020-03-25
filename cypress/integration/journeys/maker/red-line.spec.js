@@ -1,4 +1,4 @@
-const missions = require('../../missions');
+const {createNewSubmission} = require('../../missions');
 const {beforeYouStart, unableToProceed} = require('../../pages');
 
 context('Red Line eligibility checking', () => {
@@ -11,8 +11,7 @@ context('Red Line eligibility checking', () => {
   });
 
   it('A deal that fails red-line checks is rejected.', () => {
-    missions.logInAs('MAKER', 'MAKER');
-    missions.createNewSubmission();
+    createNewSubmission({username: 'MAKER', password: 'MAKER'});
 
     beforeYouStart.false().click();
     beforeYouStart.submit().click();
@@ -21,8 +20,7 @@ context('Red Line eligibility checking', () => {
   });
 
   it('A deal that passes red-line checks can progress to enter supply details.', () => {
-    missions.logInAs('MAKER', 'MAKER');
-    missions.createNewSubmission();
+    createNewSubmission({username: 'MAKER', password: 'MAKER'});
 
     beforeYouStart.true().click();
     beforeYouStart.submit().click();
