@@ -5,13 +5,14 @@ const router = express.Router();
 
 router.get('/', (req, res) => res.render('login.njk'));
 
-router.post('/validate-login', async (req, res) => {
-  const {email, password} = req.body;
+router.post('/', async (req, res) => {
+  const { email, password } = req.body;
 
   const token = await api.login(email, password);
 
   if (token) {
-    res.status(200).json(token);
+    req.session.userToken = token;
+    res.redirect('/start-now');
   } else {
     res.status(401).render('login.njk');
   }
@@ -26,9 +27,12 @@ router.get('/before-you-start/bank-deal', (req, res) => res.render('before-you-s
 router.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk'));
 
 router.get('/dashboard', async (req, res) => res.render('dashboard/deals.njk', {
-  contracts: await api.contracts(),
-  banks: await api.banks(),
+  contracts: await api.contracts(req.session.userToken),
+  banks: await api.banks(req.session.userToken),
 }));
+
+// TODO: maybe something like
+// const doApiCall = async (call) => call(req.userToken)
 
 router.get('/dashboard/transactions', async (req, res) => res.render('dashboard/transactions.njk', {
   transactions: await api.transactions(),
