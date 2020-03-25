@@ -27,10 +27,12 @@ context('Create deal', () => {
 
     // click 'criteria met true' radio button
     cy.get('#criteriaMet').click();
-    cy.get('#submit-red-line').click();
 
-    // confirm that we're on '/before-you-start'
-    cy.url().should('eq', 'http://localhost:5000/before-you-start');
+    // submit 'before you start' form
+    cy.get('button').click();
+
+    // confirm that we're on '/before-you-start/bank-deal'
+    cy.url().should('eq', 'http://localhost:5000/before-you-start/bank-deal');
 
     // complete 'before you start' form fields
     cy.get('#bankDealId').type('TEST1234');
