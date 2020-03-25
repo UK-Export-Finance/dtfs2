@@ -1,7 +1,7 @@
 const page = {
   confirm: () => {
-    cy.location('href').then((url) => {
-      return url.matches(/before-you-start/g);
+    cy.url().then((url) => {
+      return url.match(/before-you-start/g);
     })
   },
   true: () => cy.get('#criteriaMet'),
