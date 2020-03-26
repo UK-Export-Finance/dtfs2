@@ -193,7 +193,6 @@ const MOCKS = {
   CONTRACTS: [
     {
       supplyContractName: 'UKEF plc',
-      id: '1',
       details: {
         bank: 'UKEF test bank',
         bankSupplyContractID: 'MIA/Msstar/BSS/DGR',
@@ -392,7 +391,6 @@ const MOCKS = {
     },
     {
       supplyContractName: 'CT-TestPrep-170220',
-      id: '2',
       details: {
         bank: 'UKEF test bank',
         bankSupplyContractID: 'AIN MIA/Msstar/BSS/DGR ',

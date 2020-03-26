@@ -66,7 +66,7 @@ const cleanUsers = async () => {
 }
 
 const cleanAllTables = async () => {
-  const token = await tokenFor({username:'script', password:'temporary', roles:['editor']});
+  const token = await tokenFor({username:'script', password:'temporary', roles:['maker','editor']});
 
   await cleanBanks(token);
   await cleanBondCurrencies(token);

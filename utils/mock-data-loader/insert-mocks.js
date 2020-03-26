@@ -4,7 +4,7 @@ const MOCKS = require('./mocks');
 const tokenFor = require('./temporary-token-handler');
 
 const insertMocks = async() => {
-  const token = await tokenFor({username:'script', password:'temporary', roles:['editor']});
+  const token = await tokenFor({username:'script', password:'temporary', roles:['maker','editor']});
 
   console.log('inserting deals');
   for (contract of MOCKS.CONTRACTS) {
