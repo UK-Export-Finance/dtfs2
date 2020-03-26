@@ -13,7 +13,7 @@ const createDeal = async (deal) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/deals`,
+    url: `${urlRoot}/v1/deals`,
     data: deal,
   });
 

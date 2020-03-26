@@ -7,7 +7,7 @@ const login = async (username, password) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${urlRoot}/api/login`,
+      url: `${urlRoot}/v1/login`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -26,7 +26,7 @@ const login = async (username, password) => {
 const contract = async (id, token) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/api/deals/${id}`,
+    url: `${urlRoot}/v1/deals/${id}`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ const contracts = async (token) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${urlRoot}/api/deals`,
+      url: `${urlRoot}/v1/deals`,
       headers: {
         Authorization: token,
         'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ const banks = async (token) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${urlRoot}/api/banks`,
+      url: `${urlRoot}/v1/banks`,
       headers: {
         Authorization: token,
         'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ const banks = async (token) => {
 const bondCurrencies = async (token) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/api/bond-currencies`,
+    url: `${urlRoot}/v1/bond-currencies`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ const bondCurrencies = async (token) => {
 const countries = async (token) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/api/countries`,
+    url: `${urlRoot}/v1/countries`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ const countries = async (token) => {
 const industrySectors = async (token) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/api/industry-sectors`,
+    url: `${urlRoot}/v1/industry-sectors`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -111,7 +111,7 @@ const industrySectors = async (token) => {
 const mandatoryCriteria = async (token) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/api/mandatory-criteria`,
+    url: `${urlRoot}/v1/mandatory-criteria`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ const mandatoryCriteria = async (token) => {
 const transactions = async (token) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/api/transactions`,
+    url: `${urlRoot}/v1/transactions`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
