@@ -54,7 +54,7 @@ const contracts = async (token) => {
 const createDeal = async (deal, token) => {
   const response = await axios({
     method: 'post',
-    url: `${urlRoot}/api/deals`,
+    url: `${urlRoot}/v1/deals`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ const createDeal = async (deal, token) => {
 const updateDeal = async (deal, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/api/deals/${deal._id}`, // eslint-disable-line no-underscore-dangle
+    url: `${urlRoot}/v1/deals/${deal._id}`, // eslint-disable-line no-underscore-dangle
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',

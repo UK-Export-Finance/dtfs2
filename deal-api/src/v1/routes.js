@@ -18,21 +18,22 @@ const openRouter = express.Router();
 
 authRouter.use(passport.authenticate('jwt', { session: false }));
 
-authRouter.post('*',
-  validate({ role: 'editor' }));
-
-authRouter.put('*',
-  validate({ role: 'editor' }));
-
-authRouter.delete('*',
-  validate({ role: 'editor' }));
-
+// authRouter.post('*',
+//   validate({ role: 'editor' }));
+//
+// authRouter.put('*',
+//   validate({ role: 'editor' }));
+//
+// authRouter.delete('*',
+//   validate({ role: 'editor' }));
+//
 
 authRouter.route('/deals')
   .get(
     deals.findAll,
   )
   .post(
+    validate({ role: 'maker' }),
     deals.create,
   );
 
@@ -41,9 +42,11 @@ authRouter.route('/deals/:id')
     deals.findOne,
   )
   .put(
+    validate({ role: 'maker' }),
     deals.update,
   )
   .delete(
+    validate({ role: 'maker' }),
     deals.delete,
   );
 
@@ -52,6 +55,7 @@ authRouter.route('/banks')
     banks.findAll,
   )
   .post(
+    validate({ role: 'editor' }),
     banks.create,
   );
 
@@ -60,9 +64,11 @@ authRouter.route('/banks/:id')
     banks.findOne,
   )
   .put(
+    validate({ role: 'editor' }),
     banks.update,
   )
   .delete(
+    validate({ role: 'editor' }),
     banks.delete,
   );
 
@@ -71,6 +77,7 @@ authRouter.route('/bond-currencies')
     bondCurrencies.findAll,
   )
   .post(
+    validate({ role: 'editor' }),
     bondCurrencies.create,
   );
 
@@ -79,9 +86,11 @@ authRouter.route('/bond-currencies/:id')
     bondCurrencies.findOne,
   )
   .put(
+    validate({ role: 'editor' }),
     bondCurrencies.update,
   )
   .delete(
+    validate({ role: 'editor' }),
     bondCurrencies.delete,
   );
 
@@ -90,6 +99,7 @@ authRouter.route('/countries')
     countries.findAll,
   )
   .post(
+    validate({ role: 'editor' }),
     countries.create,
   );
 
@@ -98,9 +108,11 @@ authRouter.route('/countries/:code')
     countries.findOne,
   )
   .put(
+    validate({ role: 'editor' }),
     countries.update,
   )
   .delete(
+    validate({ role: 'editor' }),
     countries.delete,
   );
 
@@ -109,6 +121,7 @@ authRouter.route('/industry-sectors')
     industrySectors.findAll,
   )
   .post(
+    validate({ role: 'editor' }),
     industrySectors.create,
   );
 
@@ -117,9 +130,11 @@ authRouter.route('/industry-sectors/:code')
     industrySectors.findOne,
   )
   .put(
+    validate({ role: 'editor' }),
     industrySectors.update,
   )
   .delete(
+    validate({ role: 'editor' }),
     industrySectors.delete,
   );
 
@@ -128,6 +143,7 @@ authRouter.route('/mandatory-criteria')
     mandatoryCriteria.findAll,
   )
   .post(
+    validate({ role: 'editor' }),
     mandatoryCriteria.create,
   );
 
@@ -136,9 +152,11 @@ authRouter.route('/mandatory-criteria/:id')
     mandatoryCriteria.findOne,
   )
   .put(
+    validate({ role: 'editor' }),
     mandatoryCriteria.update,
   )
   .delete(
+    validate({ role: 'editor' }),
     mandatoryCriteria.delete,
   );
 
@@ -147,6 +165,7 @@ authRouter.route('/transactions')
     transactions.findAll,
   )
   .post(
+    validate({ role: 'editor' }),
     transactions.create,
   );
 
@@ -155,9 +174,11 @@ authRouter.route('/transactions/:bankFacilityId')
     transactions.findOne,
   )
   .put(
+    validate({ role: 'editor' }),
     transactions.update,
   )
   .delete(
+    validate({ role: 'editor' }),
     transactions.delete,
   );
 
