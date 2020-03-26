@@ -19,23 +19,23 @@ router.get('/api/deals',
   passport.authenticate('jwt', { session: false }),
   deals.findAll);
 
-router.get('/api/deals/:_id',
+router.get('/api/deals/:id',
   passport.authenticate('jwt', { session: false }),
   deals.findOne);
 
 router.post('/api/deals',
   passport.authenticate('jwt', { session: false }),
-  validate({ role: 'editor' }),
+  validate({ role: 'maker' }),
   deals.create);
 
-router.put('/api/deals/:_id',
+router.put('/api/deals/:id',
   passport.authenticate('jwt', { session: false }),
-  validate({ role: 'editor' }),
+  validate({ role: 'maker' }),
   deals.update);
 
-router.delete('/api/deals/:_id',
+router.delete('/api/deals/:id',
   passport.authenticate('jwt', { session: false }),
-  validate({ role: 'editor' }),
+  validate({ role: 'maker' }),
   deals.delete);
 
 

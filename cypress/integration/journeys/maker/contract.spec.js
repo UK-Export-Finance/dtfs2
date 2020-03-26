@@ -13,8 +13,8 @@ context('View a deal', () => {
 
   it('The deal page contains the data entered in /before-you-start/bank-details', () => {
     createADeal({
-      username:'editor',
-      password:'editor',
+      username:'MAKER',
+      password:'MAKER',
       bankDealId: 'someDealId',
       bankDealName: 'someDealName'
     });

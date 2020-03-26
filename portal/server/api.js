@@ -53,7 +53,6 @@ const contracts = async (token) => {
 };
 
 const upsertDeal = async (deal, token) => {
-  console.log(`upserting: \n${JSON.stringify(deal)}`)
   if (deal._id) {
     return updateDeal(deal, token);
   } else {
@@ -62,45 +61,31 @@ const upsertDeal = async (deal, token) => {
 }
 
 const createDeal = async (deal, token) => {
-  console.log(`creating: \n${JSON.stringify(deal)}`)
+  const response = await axios({
+    method: 'post',
+    url: `${urlRoot}/api/deals`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: deal
+  });
 
-  try {
-    const response = await axios({
-      method: 'post',
-      url: `${urlRoot}/api/deals`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
-      data: deal
-    });
-
-    return response.data;
-  } catch (err) {
-    console.log(err.stack)
-    throw err;
-  }
+  return response.data;
 }
 
 const updateDeal = async (deal, token) => {
-  console.log(`updating: \n${JSON.stringify(deal)}`)
+  const response = await axios({
+    method: 'put',
+    url: `${urlRoot}/api/deals/${deal._id}`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: deal
+  });
 
-  try {
-    const response = await axios({
-      method: 'put',
-      url: `${urlRoot}/api/deals/${deal._id}`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
-      data: deal
-    });
-
-    return response.data;
-  } catch (err) {
-    console.log(err.stack)
-    throw err;
-  }
+  return response.data;
 }
 
 

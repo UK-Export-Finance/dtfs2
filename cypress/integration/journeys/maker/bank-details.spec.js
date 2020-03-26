@@ -23,7 +23,7 @@ context('Create deal', () => {
     bankDetails.create().click();
 
     // confirm that we're on the newly created deal '/contract/XYZ'
-    cy.url().should('eq', relative('/contract/1'));
+    cy.url().should('include', '/contract/');
 
   });
 
