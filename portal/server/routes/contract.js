@@ -5,9 +5,6 @@ const router = express.Router();
 
 router.get('/contract/:_id', async (req, res) => {
   const contract = await api.contract(req.params._id, req.session.userToken);
-
-console.log(`contract received from api call:: ${JSON.stringify(contract)}`)
-
   res.render('contract/contract-view.njk', contract);
 });
 
