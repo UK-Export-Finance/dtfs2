@@ -11,7 +11,7 @@
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8">
   
-  <form autocomplete="off">
+  <form method="POST" autocomplete="off">
 
     <ol class="govuk-list govuk-list--number">
       {% for documentation in submissionDetails.supportingDocumentation %}
@@ -45,9 +45,17 @@
 
     <div class="govuk-grid-row govuk-!-margin-0">
       <div class="govuk-grid-column-full">
-        <button class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">Preview</button>
 
-        <button class="govuk-button govuk-button--secondary" data-module="govuk-button">Save and go back to deal</a>
+        <input type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" value="Next page" />
+
+        <input
+          type="submit"
+          formaction="/contract/{{ id }}/eligibility/supporting-documentation/save-go-back"
+          class="govuk-button govuk-button--secondary"
+          data-module="govuk-button"
+          value="Save and go back to deal"
+        />
+
       </div>
     </div>
   
