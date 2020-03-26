@@ -14,7 +14,4 @@ app.use(bodyParser.json({ type: 'application/json' }));
 app.use('/v1', openRouter);
 app.use('/v1', authRouter);
 
-app.use('/api', openRouter);
-app.use('/api', authRouter);
-
 module.exports = app;

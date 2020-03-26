@@ -12,9 +12,9 @@ const createBank = async (bank, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/banks`,
+    url: `${urlRoot}/v1/banks`,
     data: bank,
   });
 
@@ -27,9 +27,9 @@ const createBondCurrency = async (bondCurrency, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/bond-currencies`,
+    url: `${urlRoot}/v1/bond-currencies`,
     data: bondCurrency,
   });
 
@@ -42,9 +42,9 @@ const createCountry = async (country, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/countries`,
+    url: `${urlRoot}/v1/countries`,
     data: country,
   });
 
@@ -57,9 +57,9 @@ const createDeal = async (deal, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/deals`,
+    url: `${urlRoot}/v1/deals`,
     data: deal,
   });
 
@@ -72,9 +72,9 @@ const createIndustrySector = async (industrySector, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/industry-sectors`,
+    url: `${urlRoot}/v1/industry-sectors`,
     data: industrySector,
   });
 
@@ -87,9 +87,9 @@ const createMandatoryCriteria = async (mandatoryCriteria, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/mandatory-criteria`,
+    url: `${urlRoot}/v1/mandatory-criteria`,
     data: mandatoryCriteria,
   });
 
@@ -102,9 +102,9 @@ const createTransaction = async (transaction, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/transactions`,
+    url: `${urlRoot}/v1/transactions`,
     data: transaction,
   });
 
@@ -118,7 +118,7 @@ const createUser = async (user) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/users`,
+    url: `${urlRoot}/v1/users`,
     data: user,
   });
 
@@ -131,9 +131,9 @@ const deleteBank = async (deal, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/banks/${deal.id}`,
+    url: `${urlRoot}/v1/banks/${deal.id}`,
   });
 
   return response.data;
@@ -145,9 +145,9 @@ const deleteBondCurrency = async (bondCurrency, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/bond-currencies/${bondCurrency.id}`,
+    url: `${urlRoot}/v1/bond-currencies/${bondCurrency.id}`,
   });
 
   return response.data;
@@ -159,9 +159,9 @@ const deleteCountry = async (country, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/countries/${country.code}`,
+    url: `${urlRoot}/v1/countries/${country.code}`,
   });
 
   return response.data;
@@ -173,9 +173,9 @@ const deleteDeal = async (deal, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/deals/${deal.id}`,
+    url: `${urlRoot}/v1/deals/${deal.id}`,
   });
 
   return response.data;
@@ -187,9 +187,9 @@ const deleteIndustrySector = async (industrySector, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/industry-sectors/${industrySector.code}`,
+    url: `${urlRoot}/v1/industry-sectors/${industrySector.code}`,
   });
 
   return response.data;
@@ -201,9 +201,9 @@ const deleteMandatoryCriteria = async (mandatoryCriteria, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/mandatory-criteria/${mandatoryCriteria.id}`,
+    url: `${urlRoot}/v1/mandatory-criteria/${mandatoryCriteria.id}`,
   });
 
   return response.data;
@@ -215,9 +215,9 @@ const deleteTransaction = async (transaction, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/transactions/${transaction.bankFacilityId}`,
+    url: `${urlRoot}/v1/transactions/${transaction.bankFacilityId}`,
   });
 
   return response.data;
@@ -230,7 +230,7 @@ const deleteUser = async (user) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/users/${user.username}`,
+    url: `${urlRoot}/v1/users/${user.username}`,
   });
 
   return response.data;
@@ -242,9 +242,9 @@ const listBanks = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/banks`,
+    url: `${urlRoot}/v1/banks`,
   });
 
   return response.data.banks;
@@ -256,10 +256,10 @@ const listBondCurrencies = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/bond-currencies`,
-  }).catch( (err) => {
+    url: `${urlRoot}/v1/bond-currencies`,
+  }).catch((err) => {
     console.log(err);
   });
 
@@ -272,9 +272,9 @@ const listCountries = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/countries`,
+    url: `${urlRoot}/v1/countries`,
   });
 
   return response.data.countries;
@@ -286,9 +286,9 @@ const listDeals = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/deals`,
+    url: `${urlRoot}/v1/deals`,
   });
 
   return response.data.deals;
@@ -300,9 +300,9 @@ const listIndustrySectors = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/industry-sectors`,
+    url: `${urlRoot}/v1/industry-sectors`,
   });
 
   return response.data.industrySectors;
@@ -314,9 +314,9 @@ const listMandatoryCriteria = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
     },
-    url: `${urlRoot}/api/mandatory-criteria`,
+    url: `${urlRoot}/v1/mandatory-criteria`,
   });
 
   return response.data.mandatoryCriteria;
@@ -327,10 +327,10 @@ const listTransactions = async (token) => {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: token?token:'',
+      Authorization: token || '',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/transactions`,
+    url: `${urlRoot}/v1/transactions`,
   });
 
   return response.data.transactions;
@@ -343,7 +343,7 @@ const listUsers = async () => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/api/users`,
+    url: `${urlRoot}/v1/users`,
   });
 
   return response.data.users;
