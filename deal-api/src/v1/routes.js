@@ -18,16 +18,6 @@ const openRouter = express.Router();
 
 authRouter.use(passport.authenticate('jwt', { session: false }));
 
-// authRouter.post('*',
-//   validate({ role: 'editor' }));
-//
-// authRouter.put('*',
-//   validate({ role: 'editor' }));
-//
-// authRouter.delete('*',
-//   validate({ role: 'editor' }));
-//
-
 authRouter.route('/deals')
   .get(
     deals.findAll,
