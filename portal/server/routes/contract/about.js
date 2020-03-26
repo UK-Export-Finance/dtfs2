@@ -15,7 +15,6 @@ router.post('/contract/:id/about/supplier', (req, res) => {
 });
 
 router.post('/contract/:id/about/supplier/save-go-back', (req, res) => {
-  // TODO: check if the 'go back' action takes you back to this page (currently staging is down so can't check)
   const redirectUrl = `/contract/${req.params.id}`;
   return res.redirect(redirectUrl);
 });
@@ -31,7 +30,6 @@ router.post('/contract/:id/about/buyer', (req, res) => {
 });
 
 router.post('/contract/:id/about/buyer/save-go-back', (req, res) => {
-  // TODO: check if the 'go back' action takes you back to this page (currently staging is down so can't check)
   const redirectUrl = `/contract/${req.params.id}`;
   return res.redirect(redirectUrl);
 });
@@ -47,7 +45,6 @@ router.post('/contract/:id/about/financial', (req, res) => {
 });
 
 router.post('/contract/:id/about/financial/save-go-back', (req, res) => {
-  // TODO: check if the 'go back' action takes you back to this page (currently staging is down so can't check)
   const redirectUrl = `/contract/${req.params.id}`;
   return res.redirect(redirectUrl);
 });
