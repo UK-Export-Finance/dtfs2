@@ -42,7 +42,7 @@ http://localhost:5001/mocks/contract/2
 
 real API services that are interacting with mongoDB can be seen for eg. on:
 ```
-http://localhost:5001/api/deals
+http://localhost:5001/v1/deals
 ```
 
 a mongoDB instance will have been started:
