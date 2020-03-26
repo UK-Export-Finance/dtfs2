@@ -48,6 +48,7 @@ http://localhost:5001/api/deals
 a mongoDB instance will have been started:
 * to connect a client from your local machine, connect to localhost:27017 as root/r00t
 
+
 ### Git workflow
 
 Setup git hooks with:
