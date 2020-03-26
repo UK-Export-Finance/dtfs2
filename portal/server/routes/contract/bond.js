@@ -7,7 +7,7 @@ router.get('/contract/:id/bond/:bondId/details', async (req, res) => res.render(
   await api.contractBond(req.params.id, req.params.bondId, req.session.userToken)));
 
 router.post('/contract/:id/bond/:bondId/details', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}/bond/${req.params.bondId}/details`;
+  const redirectUrl = `/contract/${req.params.id}/bond/${req.params.bondId}/financial-details`;
   return res.redirect(redirectUrl);
 });
 
@@ -22,7 +22,7 @@ router.get('/contract/:id/bond/:bondId/financial-details', async (req, res) => r
 }));
 
 router.post('/contract/:id/bond/:bondId/financial-details', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}/bond/${req.params.bondId}/financial-details`;
+  const redirectUrl = `/contract/${req.params.id}/bond/${req.params.bondId}/fee-details`;
   return res.redirect(redirectUrl);
 });
 
@@ -35,7 +35,7 @@ router.get('/contract/:id/bond/:bondId/fee-details', async (req, res) => res.ren
   await api.contractBond(req.params.id, req.params.bondId, req.session.userToken)));
 
 router.post('/contract/:id/bond/:bondId/fee-details', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}/bond/${req.params.bondId}/fee-details`;
+  const redirectUrl = `/contract/${req.params.id}/bond/${req.params.bondId}/preview`;
   return res.redirect(redirectUrl);
 });
 

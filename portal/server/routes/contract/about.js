@@ -10,7 +10,7 @@ router.get('/contract/:id/about/supplier', async (req, res) => res.render('about
 }));
 
 router.post('/contract/:id/about/supplier', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}/about/supplier`;
+  const redirectUrl = `/contract/${req.params.id}/about/buyer`;
   return res.redirect(redirectUrl);
 });
 
@@ -25,7 +25,7 @@ router.get('/contract/:id/about/buyer', async (req, res) => res.render('about/ab
 }));
 
 router.post('/contract/:id/about/buyer', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}/about/buyer`;
+  const redirectUrl = `/contract/${req.params.id}/about/financial`;
   return res.redirect(redirectUrl);
 });
 
@@ -40,7 +40,7 @@ router.get('/contract/:id/about/financial', async (req, res) => res.render('abou
 }));
 
 router.post('/contract/:id/about/financial', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}/about/financial`;
+  const redirectUrl = `/contract/${req.params.id}/about/preview`;
   return res.redirect(redirectUrl);
 });
 

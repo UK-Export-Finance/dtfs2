@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/contract/:id/eligibility/criteria', async (req, res) => res.render('eligibility/eligibility-criteria.njk', await api.contract(req.params.id, req.session.userToken)));
 
 router.post('/contract/:id/eligibility/criteria', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}/eligibility/criteria`;
+  const redirectUrl = `/contract/${req.params.id}/eligibility/supporting-documentation`;
   return res.redirect(redirectUrl);
 });
 
@@ -18,7 +18,7 @@ router.post('/contract/:id/eligibility/criteria/save-go-back', (req, res) => {
 router.get('/contract/:id/eligibility/supporting-documentation', async (req, res) => res.render('eligibility/eligibility-supporting-documentation.njk', await api.contract(req.params.id, req.session.userToken)));
 
 router.post('/contract/:id/eligibility/supporting-documentation', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}/eligibility/supporting-documentation`;
+  const redirectUrl = `/contract/${req.params.id}/eligibility/preview`;
   return res.redirect(redirectUrl);
 });
 
