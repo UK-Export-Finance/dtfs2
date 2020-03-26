@@ -1,12 +1,12 @@
 import api from './api';
 
 const template = {
-  details: {}
-}
+  details: {},
+};
 const workflow = (existingDeal) => {
-  const initialDeal = existingDeal?existingDeal:{... template}
+  const initialDeal = existingDeal || { ...template };
 
-  let updatedDeal = {... initialDeal};
+  let updatedDeal = { ...initialDeal };
 
   const workflowObject = {
     updatedDeal: () => updatedDeal,
@@ -18,10 +18,10 @@ const workflow = (existingDeal) => {
       updatedDeal.details.bankDealId = bankDealId;
       updatedDeal.details.bankDealName = bankDealName;
       updatedDeal = await api.upsertDeal(updatedDeal, token);
-    }
-  }
+    },
+  };
 
   return workflowObject;
-}
+};
 
 export default workflow;

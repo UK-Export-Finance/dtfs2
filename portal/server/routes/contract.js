@@ -4,6 +4,7 @@ import api from '../api';
 const router = express.Router();
 
 router.get('/contract/:_id', async (req, res) => {
+  // eslint-disable-next-line no-underscore-dangle
   const contract = await api.contract(req.params._id, req.session.userToken);
   res.render('contract/contract-view.njk', contract);
 });

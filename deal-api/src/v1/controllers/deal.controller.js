@@ -1,11 +1,11 @@
 const assert = require('assert');
-const ObjectId = require('mongodb').ObjectId;
+const { ObjectId } = require('mongodb');
 
 const db = require('../../db-driver/client');
 
 const withoutId = (obj) => {
-  cleanedObject = {... obj};
-  delete cleanedObject._id;
+  const cleanedObject = { ...obj };
+  delete cleanedObject._id; // eslint-disable-line no-underscore-dangle
   return cleanedObject;
 };
 
@@ -48,8 +48,14 @@ exports.findOne = (req, res) => (
 
 exports.update = async (req, res) => {
   const collection = await db.getCollection('deals');
-  const status = await collection.updateOne({ _id: { $eq: new ObjectId(req.params.id) } }, { $set: withoutId(req.body) }, {});
-  res.status(200).send(req.body);
+  await collection.updateOne(
+    { _id: { $eq: new ObjectId(req.params.id) } },
+    { $set: withoutId(req.body) }, {},
+  );
+  // TODO feels like there's a better way to achieve this...
+  const fixedDeal = { ...req.body, _id: req.params.id };
+
+  res.status(200).send(fixedDeal);
 };
 
 exports.delete = async (req, res) => {

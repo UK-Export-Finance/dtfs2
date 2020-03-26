@@ -32,7 +32,6 @@ const contract = async (id, token) => {
       'Content-Type': 'application/json',
     },
   });
-  console.log(`api.contract() => `, response.data)
   return response.data;
 };
 
@@ -52,14 +51,6 @@ const contracts = async (token) => {
   }
 };
 
-const upsertDeal = async (deal, token) => {
-  if (deal._id) {
-    return updateDeal(deal, token);
-  } else {
-    return createDeal(deal, token);
-  }
-}
-
 const createDeal = async (deal, token) => {
   const response = await axios({
     method: 'post',
@@ -68,26 +59,32 @@ const createDeal = async (deal, token) => {
       Authorization: token,
       'Content-Type': 'application/json',
     },
-    data: deal
+    data: deal,
   });
 
   return response.data;
-}
+};
 
 const updateDeal = async (deal, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/api/deals/${deal._id}`,
+    url: `${urlRoot}/api/deals/${deal._id}`, // eslint-disable-line no-underscore-dangle
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
     },
-    data: deal
+    data: deal,
   });
 
   return response.data;
-}
+};
 
+const upsertDeal = async (deal, token) => {
+  if (deal._id) { // eslint-disable-line no-underscore-dangle
+    return updateDeal(deal, token);
+  }
+  return createDeal(deal, token);
+};
 
 const banks = async (token) => {
   try {
