@@ -11,7 +11,7 @@
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
   
-  <form autocomplete="off">
+  <form method="POST" autocomplete="off">
 
     {% for criterion in eligibility.criteria %}
 
@@ -48,9 +48,15 @@
 
     {% endfor %}
 
-    <button class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">Next page</button>
+    <input type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" value="Next page" />
 
-    <button class="govuk-button govuk-button--secondary" data-module="govuk-button">Save and go back to deal</a>
+    <input
+      type="submit"
+      formaction="/contract/{{ id }}/eligibility/criteria/save-go-back"
+      class="govuk-button govuk-button--secondary"
+      data-module="govuk-button"
+      value="Save and go back to deal"
+    />
     
   </form>
 
