@@ -12,7 +12,6 @@ router.post('/contract/:id/bond/:bondId/details', (req, res) => {
 });
 
 router.post('/contract/:id/bond/:bondId/details/save-go-back', (req, res) => {
-  // TODO: check if the 'go back' action takes you back to this page (currently staging is down so can't check)
   const redirectUrl = `/contract/${req.params.id}`;
   return res.redirect(redirectUrl);
 });
@@ -28,7 +27,6 @@ router.post('/contract/:id/bond/:bondId/financial-details', (req, res) => {
 });
 
 router.post('/contract/:id/bond/:bondId/financial-details/save-go-back', (req, res) => {
-  // TODO: check if the 'go back' action takes you back to this page (currently staging is down so can't check)
   const redirectUrl = `/contract/${req.params.id}`;
   return res.redirect(redirectUrl);
 });
@@ -42,7 +40,6 @@ router.post('/contract/:id/bond/:bondId/fee-details', (req, res) => {
 });
 
 router.post('/contract/:id/bond/:bondId/fee-details/save-go-back', (req, res) => {
-  // TODO: check if the 'go back' action takes you back to this page (currently staging is down so can't check)
   const redirectUrl = `/contract/${req.params.id}`;
   return res.redirect(redirectUrl);
 });

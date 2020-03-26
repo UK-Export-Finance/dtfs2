@@ -11,7 +11,6 @@ router.post('/contract/:id/eligibility/criteria', (req, res) => {
 });
 
 router.post('/contract/:id/eligibility/criteria/save-go-back', (req, res) => {
-  // TODO: check if the 'go back' action takes you back to this page (currently staging is down so can't check)
   const redirectUrl = `/contract/${req.params.id}`;
   return res.redirect(redirectUrl);
 });
@@ -24,7 +23,6 @@ router.post('/contract/:id/eligibility/supporting-documentation', (req, res) => 
 });
 
 router.post('/contract/:id/eligibility/supporting-documentation/save-go-back', (req, res) => {
-  // TODO: check if the 'go back' action takes you back to this page (currently staging is down so can't check)
   const redirectUrl = `/contract/${req.params.id}`;
   return res.redirect(redirectUrl);
 });
