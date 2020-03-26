@@ -175,7 +175,7 @@ const deleteDeal = async (deal, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/deals/${deal.id}`,
+    url: `${urlRoot}/v1/deals/${deal._id}`,
   });
 
   return response.data;
