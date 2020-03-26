@@ -27,7 +27,7 @@ services:
     depends_on:
       - deal-api-data
     ports:
-      - "5001:5000"
+      - "5001:5001"
     volumes:
       - ./deal-api/src:/app/src:ro
       - ./deal-api/.env.full-local-docker-environment:/app/.env:ro

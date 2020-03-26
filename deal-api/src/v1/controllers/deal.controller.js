@@ -1,6 +1,13 @@
 const assert = require('assert');
+const ObjectId = require('mongodb').ObjectId;
 
 const db = require('../../db-driver/client');
+
+const withoutId = (obj) => {
+  cleanedObject = {... obj};
+  delete cleanedObject._id;
+  return cleanedObject;
+};
 
 const findDeals = async (callback) => {
   const collection = await db.getCollection('deals');
@@ -11,10 +18,10 @@ const findDeals = async (callback) => {
   });
 };
 
-const findOneDeal = async (id, callback) => {
+const findOneDeal = async (_id, callback) => {
   const collection = await db.getCollection('deals');
 
-  collection.findOne({ id }, (err, result) => {
+  collection.findOne({ _id: new ObjectId(_id) }, (err, result) => {
     assert.equal(err, null);
     callback(result);
   });
@@ -22,8 +29,9 @@ const findOneDeal = async (id, callback) => {
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection('deals');
-  const deal = await collection.insertOne(req.body);
+  const response = await collection.insertOne(req.body);
 
+  const deal = response.ops[0];
   res.status(200).send(deal);
 };
 
@@ -35,17 +43,17 @@ exports.findAll = (req, res) => (
 );
 
 exports.findOne = (req, res) => (
-  findOneDeal(req.params.id, (deal) => res.status(200).send(deal))
+  findOneDeal(req.params._id, (deal) => res.status(200).send(deal))
 );
 
 exports.update = async (req, res) => {
   const collection = await db.getCollection('deals');
-  const status = await collection.updateOne({ id: { $eq: req.params.id } }, { $set: req.body }, {});
-  res.status(200).send(status);
+  const status = await collection.updateOne({ _id: { $eq: new ObjectId(req.params._id) } }, { $set: withoutId(req.body) }, {});
+  res.status(200).send(req.body);
 };
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection('deals');
-  const status = await collection.deleteOne({ id: req.params.id });
+  const status = await collection.deleteOne({ _id: req.params._id });
   res.status(200).send(status);
 };

@@ -10,7 +10,7 @@
 
     <h1 class="govuk-heading-l">
       Supply Contract name:
-      <span class="govuk-body govuk-!-font-size-24">{{ supplyContractName }}</span>
+      <span id="supplyContractName" class="govuk-body govuk-!-font-size-24">{{ details.bankDealName }}</span>
       <a class="govuk-link govuk-!-font-size-14" href="#">Edit</a>
     </h1>
 
@@ -42,7 +42,7 @@
             <div class="govuk-grid-column-three-quarters">
               <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
                 <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
-                  About the Supply Contract 
+                  About the Supply Contract
                 </span>
                 <span class="govuk-!-margin-left-6">
                   {{ status.statusText(aboutSupplyContract.status) }}
@@ -222,7 +222,7 @@
                   <td class="govuk-table__cell govuk-!-font-size-14">
                     {{ summary.dealBondsLoans.totalValue.bondInGbp }}
                   </td>
-                  
+
                   <td class="govuk-table__cell govuk-!-font-size-14">
                     {{ summary.dealBondsLoans.totalValue.loanCurrency }}
                   </td>
@@ -252,7 +252,7 @@
                   <td class="govuk-table__cell govuk-!-font-size-14">
                     {{ summary.dealBondsLoans.totalUkefExposure.bondInGbp }}
                   </td>
-                  
+
                   <td class="govuk-table__cell govuk-!-font-size-14">
                     {{ summary.dealBondsLoans.totalUkefExposure.loanCurrency }}
                   </td>
@@ -277,11 +277,11 @@
         <button class="govuk-button govuk-button--secondary" disabled data-module="govuk-button">
           Abandon
         </button>
-        
+
       </section>
 
     </div>
 
   </div>
-  
+
 {% endblock %}

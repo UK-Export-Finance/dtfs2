@@ -32,7 +32,7 @@ const contract = async (id, token) => {
       'Content-Type': 'application/json',
     },
   });
-
+  console.log(`api.contract() => `, response.data)
   return response.data;
 };
 
@@ -51,6 +51,58 @@ const contracts = async (token) => {
     return new Error('error with token');// do something proper here, but for now just reject failed logins..
   }
 };
+
+const upsertDeal = async (deal, token) => {
+  console.log(`upserting: \n${JSON.stringify(deal)}`)
+  if (deal._id) {
+    return updateDeal(deal, token);
+  } else {
+    return createDeal(deal, token);
+  }
+}
+
+const createDeal = async (deal, token) => {
+  console.log(`creating: \n${JSON.stringify(deal)}`)
+
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${urlRoot}/api/deals`,
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+      data: deal
+    });
+
+    return response.data;
+  } catch (err) {
+    console.log(err.stack)
+    throw err;
+  }
+}
+
+const updateDeal = async (deal, token) => {
+  console.log(`updating: \n${JSON.stringify(deal)}`)
+
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${urlRoot}/api/deals/${deal._id}`,
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+      data: deal
+    });
+
+    return response.data;
+  } catch (err) {
+    console.log(err.stack)
+    throw err;
+  }
+}
+
 
 const banks = async (token) => {
   try {
@@ -153,4 +205,5 @@ export default {
   login,
   mandatoryCriteria,
   transactions,
+  upsertDeal,
 };

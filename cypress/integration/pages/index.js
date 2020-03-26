@@ -4,4 +4,5 @@ module.exports = {
   beforeYouStart: require('./beforeYouStart'),
   unableToProceed: require('./unableToProceed'),
   bankDetails: require('./bankDetails'),
+  contract: require('./contract'),
 }
