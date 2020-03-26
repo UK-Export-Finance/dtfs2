@@ -11,7 +11,7 @@ context('Create deal', () => {
     });
   });
 
-  it('A created deal takes you to the deal page', () => {
+  it('When the a user fills in the bank detais they progress to the deal page', () => {
     passRedLine({username:'MAKER', password:'MAKER'});
 
     // confirm that we're on '/before-you-start/bank-deal'
