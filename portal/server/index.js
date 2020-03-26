@@ -1,4 +1,6 @@
 import express from 'express';
+import morgan from 'morgan';
+import session from 'express-session';
 import path from 'path';
 import nunjucks from 'nunjucks';
 import routes from './routes';
@@ -7,12 +9,24 @@ const app = express();
 
 const PORT = process.env.PORT || 5000;
 
+app.use(session({
+  secret: 'test test test',
+  resave: false,
+  saveUninitialized: true,
+}));
+
 nunjucks.configure('templates', {
   autoescape: true,
   express: app,
   noCache: true,
   watch: true,
 });
+
+app.use(express.urlencoded());
+
+app.use(morgan('dev', {
+  skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
+}));
 
 app.use('/', routes);
 

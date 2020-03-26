@@ -7,7 +7,7 @@ echo Launching docker-compose environment
 docker-compose up -d --build
 
 echo Executing tests
-npx cypress run
+npx cypress run --spec "cypress/integration/**/*.spec.js"
 
 echo Cleaning docker-compose environment
 docker-compose down

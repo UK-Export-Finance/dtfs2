@@ -1,13 +1,29 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const tokenFor = require('./temporary-token-handler');
-
 const urlRoot = process.env.DEAL_API_URL;
 
-const contract = async (id) => {
-  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
+const login = async (username, password) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${urlRoot}/api/login`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: { username, password },
+    });
 
+    return response.data ? {
+      success: response.data.success,
+      token: response.data.token,
+    } : '';
+  } catch (err) {
+    return new Error('error with token');// do something proper here, but for now just reject failed logins..
+  }
+};
+
+const contract = async (id, token) => {
   const response = await axios({
     method: 'get',
     url: `${urlRoot}/api/deals/${id}`,
@@ -20,39 +36,40 @@ const contract = async (id) => {
   return response.data;
 };
 
-const contracts = async () => {
-  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
-
-  const response = await axios({
-    method: 'get',
-    url: `${urlRoot}/api/deals`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return response.data.deals;
+const contracts = async (token) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${urlRoot}/api/deals`,
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data.deals;
+  } catch (err) {
+    return new Error('error with token');// do something proper here, but for now just reject failed logins..
+  }
 };
 
-const banks = async () => {
-  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
+const banks = async (token) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${urlRoot}/api/banks`,
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+    });
 
-  const response = await axios({
-    method: 'get',
-    url: `${urlRoot}/api/banks`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return response.data.banks;
+    return response.data.banks;
+  } catch (err) {
+    return new Error('error with token');// do something proper here, but for now just reject failed logins..
+  }
 };
 
-const bondCurrencies = async () => {
-  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
-
+const bondCurrencies = async (token) => {
   const response = await axios({
     method: 'get',
     url: `${urlRoot}/api/bond-currencies`,
@@ -65,9 +82,7 @@ const bondCurrencies = async () => {
   return response.data.bondCurrencies;
 };
 
-const countries = async () => {
-  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
-
+const countries = async (token) => {
   const response = await axios({
     method: 'get',
     url: `${urlRoot}/api/countries`,
@@ -80,9 +95,7 @@ const countries = async () => {
   return response.data.countries;
 };
 
-const industrySectors = async () => {
-  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
-
+const industrySectors = async (token) => {
   const response = await axios({
     method: 'get',
     url: `${urlRoot}/api/industry-sectors`,
@@ -95,9 +108,7 @@ const industrySectors = async () => {
   return response.data.industrySectors;
 };
 
-const mandatoryCriteria = async () => {
-  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
-
+const mandatoryCriteria = async (token) => {
   const response = await axios({
     method: 'get',
     url: `${urlRoot}/api/mandatory-criteria`,
@@ -110,9 +121,7 @@ const mandatoryCriteria = async () => {
   return response.data.mandatoryCriteria;
 };
 
-const transactions = async () => {
-  const token = await tokenFor({ username: 'bob', password: 'bananas', roles: [] });
-
+const transactions = async (token) => {
   const response = await axios({
     method: 'get',
     url: `${urlRoot}/api/transactions`,
@@ -125,8 +134,8 @@ const transactions = async () => {
   return response.data.transactions;
 };
 
-const contractBond = async (id, bondId) => {
-  const response = await contract(id);
+const contractBond = async (id, bondId, token) => {
+  const response = await contract(id, token);
   return {
     contractId: response.id,
     bond: response.bondTransactions.items.find((bond) => bond.id === bondId),
@@ -141,6 +150,7 @@ export default {
   contracts,
   countries,
   industrySectors,
+  login,
   mandatoryCriteria,
   transactions,
 };
