@@ -1,6 +1,7 @@
 import express from 'express';
 import api from '../api';
-import workflow from '../portal-workflow'
+import workflow from '../portal-workflow';
+
 const router = express.Router();
 
 router.get('/start-now', (req, res) => res.render('start-now.njk'));
@@ -27,14 +28,14 @@ router.post('/before-you-start', async (req, res) => {
 router.get('/before-you-start/bank-deal', (req, res) => res.render('before-you-start/before-you-start-bank-deal.njk'));
 
 router.post('/before-you-start/bank-deal', async (req, res) => {
-  const {bankDealId, bankDealName} = req.body;
+  const { bankDealId, bankDealName } = req.body;
 
   const state = workflow(req.session.deal);
-  await state.setBankDetails(bankDealId, bankDealName, req.session.userToken)
+  await state.setBankDetails(bankDealId, bankDealName, req.session.userToken);
 
   req.session.deal = state.updatedDeal();
 
-  res.redirect(`/contract/${req.session.deal._id}`);
+  res.redirect(`/contract/${req.session.deal._id}`); // eslint-disable-line no-underscore-dangle
 });
 
 router.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk'));

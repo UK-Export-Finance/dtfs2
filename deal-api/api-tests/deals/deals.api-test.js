@@ -8,9 +8,10 @@ const { expectMongoId, expectMongoIds} = require('../expectMongoIds');
 const getToken = require('../getToken')(app);
 
 describe('/api/deals', () => {
-  const newDeal = aDeal({ _id: '1996', supplyContractName: 'Original Value' });
+  const newDeal = aDeal({
+    supplyContractName: 'Original Value' });
+
   const updatedDeal = aDeal({
-    _id: '1996',
     supplyContractName: 'Updated Value',
   });
 
@@ -51,23 +52,25 @@ describe('/api/deals', () => {
     });
   });
 
-  describe('GET /api/deals/:_id', () => {
+  describe('GET /api/deals/:id', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const {status} = await get('/api/deals/123');
+      const {status} = await get('/api/deals/123456789012');
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that do present a valid Authorization token', async () => {
-      const {status} = await get('/api/deals/123', aTokenWithNoRoles);
+      const {status} = await get('/api/deals/123456789012', aTokenWithNoRoles);
 
       expect(status).toEqual(200);
     });
 
     it('returns a deal', async () => {
-      await post(newDeal, aTokenWithMakerRole).to('/api/deals');
+      const postResult = await post(newDeal, aTokenWithMakerRole).to('/api/deals');
 
-      const {status, body} = await get('/api/deals/1996', aTokenWithNoRoles);
+      const newId = postResult.body._id;
+
+      const {status, body} = await get(`/api/deals/${newId}`, aTokenWithNoRoles);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId(newDeal));
@@ -104,38 +107,40 @@ describe('/api/deals', () => {
 
   describe('PUT /api/deals/:_id', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const {status} = await put(updatedDeal).to('/api/deals/1996');
+      const {status} = await put(updatedDeal).to('/api/deals/123456789012');
 
       expect(status).toEqual(401);
     });
 
     it('rejects requests that present a valid Authorization token but do not have "maker" role', async () => {
       await post(newDeal, aTokenWithMakerRole).to('/api/deals');
-      const {status} = await put(updatedDeal, aTokenWithNoRoles).to('/api/deals/1996');
+      const {status} = await put(updatedDeal, aTokenWithNoRoles).to('/api/deals/123456789012');
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
       await post(newDeal, aTokenWithMakerRole).to('/api/deals');
-      const {status} = await put(updatedDeal, aTokenWithMakerRole).to('/api/deals/1996');
+      const {status} = await put(updatedDeal, aTokenWithMakerRole).to('/api/deals/123456789012');
 
       expect(status).toEqual(200);
     });
 
     it('updates the deal', async () => {
-      await post(newDeal, aTokenWithMakerRole).to('/api/deals');
-      await put(updatedDeal, aTokenWithMakerRole).to('/api/deals/1996');
+      const postResult = await post(newDeal, aTokenWithMakerRole).to('/api/deals');
+      const newId = postResult.body._id;
+      await put(updatedDeal, aTokenWithMakerRole).to(`/api/deals/${newId}`);
 
-      const {status, body} = await get('/api/deals/1996', aTokenWithMakerRole);
+      const {status, body} = await get(`/api/deals/${newId}`, aTokenWithMakerRole);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId(updatedDeal));
     });
 
     it('returns the updated deal', async () => {
-      await post(newDeal, aTokenWithMakerRole).to('/api/deals');
-      const {status, body} = await put(updatedDeal, aTokenWithMakerRole).to('/api/deals/1996');
+      const postResult = await post(newDeal, aTokenWithMakerRole).to('/api/deals');
+      const newId = postResult.body._id;
+      const {status, body} = await put(updatedDeal, aTokenWithMakerRole).to(`/api/deals/${newId}`);
 
       expect(body).toEqual(expectMongoId(updatedDeal));
     });
@@ -143,30 +148,30 @@ describe('/api/deals', () => {
 
   describe('DELETE /api/deals/:_id', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const {status} = await remove('/api/deals/1996');
+      const {status} = await remove('/api/deals/123456789012');
 
       expect(status).toEqual(401);
     });
 
     it('rejects requests that present a valid Authorization token but do not have "maker" role', async () => {
       await post(newDeal, aTokenWithMakerRole).to('/api/deals');
-      const {status} = await remove('/api/deals/1996', aTokenWithNoRoles);
+      const {status} = await remove('/api/deals/123456789012', aTokenWithNoRoles);
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
       await post(newDeal, aTokenWithMakerRole).to('/api/deals');
-      const {status} = await remove('/api/deals/1996', aTokenWithMakerRole);
+      const {status} = await remove('/api/deals/123456789012', aTokenWithMakerRole);
 
       expect(status).toEqual(200);
     });
 
     it('deletes the deal', async () => {
       await post(newDeal, aTokenWithMakerRole).to('/api/deals');
-      await remove('/api/deals/1996', aTokenWithMakerRole);
+      await remove('/api/deals/123456789012', aTokenWithMakerRole);
 
-      const {status, body} = await get('/api/deals/1996', aTokenWithMakerRole);
+      const {status, body} = await get('/api/deals/123456789012', aTokenWithMakerRole);
 
       expect(status).toEqual(200);
       expect(body).toEqual({});
