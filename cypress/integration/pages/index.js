@@ -5,4 +5,5 @@ module.exports = {
   unableToProceed: require('./unableToProceed'),
   bankDetails: require('./bankDetails'),
   contract: require('./contract'),
+  dashboard: require('./dashboard'),
 }

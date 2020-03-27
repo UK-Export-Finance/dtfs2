@@ -120,7 +120,7 @@
             </div>
 
           </div>
-         
+
         </details>
 
         <button class="govuk-button" data-module="govuk-button">
@@ -152,7 +152,7 @@
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14">
-                <a href="/contract/{{ contract.id }}" class="govuk-link">{{ contract.details.bankSupplyContractID }}</a>
+                <a href="/contract/{{ contract._id }}" class="govuk-link">{{ contract.details.bankDealId }}</a>
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14">
@@ -166,7 +166,7 @@
               <td class="govuk-table__cell govuk-!-font-size-14">
                 {{ contract.details.submissionType }}
               </td>
-              
+
               <td class="govuk-table__cell govuk-!-font-size-14">
                 {{ contract.details.maker }}
               </td>
@@ -191,5 +191,5 @@
     </section>
 
   </div>
-  
+
 {% endblock %}
