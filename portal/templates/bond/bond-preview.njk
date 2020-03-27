@@ -7,7 +7,7 @@
   {{ bondNav.nav(
     completedStatus = bond.completedStatus,
     current = 'bondPreview',
-    contractId = contract.id,
+    contractId = contract._id,
     childId = bond.id
   )}}
 
@@ -17,6 +17,6 @@
     
   {{ submissionDetails.bond(bondDetails = contract.submissionDetails.bond)}}
 
-  <p class="govuk-body"><a class="govuk-link" href="/contract/{{ contract.id }}">Save and go back to deal</a></p>
+  <p class="govuk-body"><a class="govuk-link" href="/contract/{{ contract._id }}">Save and go back to deal</a></p>
 
 {% endblock %}

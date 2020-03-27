@@ -12,6 +12,7 @@ module.exports = {
       ignoreStrings: true,
       ignoreTemplateLiterals: true,
     }],
-    "import/no-named-as-default": 0
+    "import/no-named-as-default": 0,
+    "implicit-arrow-linebreak": 0
   }
 };

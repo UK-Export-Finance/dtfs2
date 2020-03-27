@@ -8,7 +8,7 @@
   {{ aboutSupplyContract.nav(
     completedStatus = contract.supplyContract.completedStatus,
     current = 'supplierAndGuarantor',
-    contractId = contract.id
+    contractId = contract._id
   )}}
 
   <script type="text/javascript">
@@ -334,7 +334,7 @@
 
     <input
       type="submit"
-      formaction="/contract/{{ contract.id }}/about/supplier/save-go-back"
+      formaction="/contract/{{ contract._id }}/about/supplier/save-go-back"
       class="govuk-button govuk-button--secondary"
       data-module="govuk-button"
       value="Save and go back to deal"
