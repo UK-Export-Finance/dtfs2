@@ -7,7 +7,7 @@
   {{ aboutSupplyContract.nav(
     completedStatus = contract.supplyContract.completedStatus,
     current = 'preview',
-    contractId = contract.id
+    contractId = contract._id
   )}}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
@@ -16,6 +16,6 @@
 
   {{ submissionDetails.general(contract = contract) }}
 
-  <p class="govuk-body"><a class="govuk-link" href="/contract/{{ contract.id }}">Save and go back to deal</a></p>
+  <p class="govuk-body"><a class="govuk-link" href="/contract/{{ contract._id }}">Save and go back to deal</a></p>
 
 {% endblock %}

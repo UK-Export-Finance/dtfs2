@@ -9,7 +9,7 @@
   {{ confirmEligibility.nav(
     completedStatus = contract.eligibility.completedStatus,
     current = 'preview',
-    contractId = contract.id
+    contractId = contract._id
   )}}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8">
@@ -24,6 +24,6 @@
 
   <hr class="govuk-section-break govuk-!-margin-bottom-8">
 
-  <p class="govuk-body"><a href="/contract/{{ contract.id }}" class="govuk-link">Save and go back to deal</a></p>
+  <p class="govuk-body"><a href="/contract/{{ contract._id }}" class="govuk-link">Save and go back to deal</a></p>
 
 {% endblock %}

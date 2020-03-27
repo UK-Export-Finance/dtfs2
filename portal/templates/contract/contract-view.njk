@@ -106,7 +106,7 @@
               <div class="govuk-grid-column-full">
                 {{ transactionsTable.table(
                   items = bondTransactions.items,
-                  contractId = id,
+                  contractId = _id,
                   hrefRoot = 'bond',
                   hrefPage = 'details'
                 ) }}
@@ -139,7 +139,7 @@
               <div class="govuk-grid-column-full">
                 {{ transactionsTable.table(
                   items = loanTransactions.items,
-                  contractId = id,
+                  contractId = _id,
                   hrefRoot = 'loan',
                   hrefPage = 'guarantee-details'
                 ) }}

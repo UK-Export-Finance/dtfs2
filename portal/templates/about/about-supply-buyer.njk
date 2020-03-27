@@ -6,7 +6,7 @@
   {{ aboutSupplyContract.nav(
     completedStatus = contract.supplyContract.completedStatus,
     current = 'buyer',
-    contractId = contract.id
+    contractId = contract._id
   )}}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
@@ -62,7 +62,7 @@
 
     <input
       type="submit"
-      formaction="/contract/{{ contract.id }}/about/buyer/save-go-back"
+      formaction="/contract/{{ contract._id }}/about/buyer/save-go-back"
       class="govuk-button govuk-button--secondary"
       data-module="govuk-button"
       value="Save and go back to deal"

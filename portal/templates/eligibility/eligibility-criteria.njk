@@ -6,7 +6,7 @@
   {{ confirmEligibility.nav(
     completedStatus = eligibility.completedStatus,
     current = 'eligibilityCriteria',
-    contractId = id
+    contractId = _id
   )}}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
@@ -52,7 +52,7 @@
 
     <input
       type="submit"
-      formaction="/contract/{{ id }}/eligibility/criteria/save-go-back"
+      formaction="/contract/{{ _id }}/eligibility/criteria/save-go-back"
       class="govuk-button govuk-button--secondary"
       data-module="govuk-button"
       value="Save and go back to deal"
