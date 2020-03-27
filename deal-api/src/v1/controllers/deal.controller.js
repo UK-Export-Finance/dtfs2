@@ -1,6 +1,8 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
 
+const DEFAULTS = require('../defaults');
+
 const db = require('../../db-driver/client');
 
 const withoutId = (obj) => {
@@ -29,7 +31,14 @@ const findOneDeal = async (id, callback) => {
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection('deals');
-  const response = await collection.insertOne(req.body);
+
+  const newDeal = {
+    ...DEFAULTS.DEALS,
+    ...req.body,
+  };
+
+
+  const response = await collection.insertOne(newDeal);
 
   const deal = response.ops[0];
   res.status(200).send(deal);
