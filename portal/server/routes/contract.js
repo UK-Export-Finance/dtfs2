@@ -3,10 +3,31 @@ import api from '../api';
 
 const router = express.Router();
 
+const makeApiCall = async (query) => {
+  try {
+    const result = await query;
+    return result;
+  } catch (catchErr) {
+    throw new Error(catchErr);
+  }
+};
+
+/* eslint-disable */
+const getApiData = (query, res) => new Promise((resolve) =>
+  makeApiCall(query).then((data) => resolve(data)) // eslint-disable-line implicit-arrow-linebreak
+    .catch(() => { // eslint-disable-line arrow-body-style
+      // redirect to login (currently assuming all errors are Auth errors)
+      return res.redirect('/');
+    }));
+/* eslint-enable */
+
 router.get('/contract/:_id', async (req, res) => {
   // eslint-disable-next-line no-underscore-dangle
-  const contract = await api.contract(req.params._id, req.session.userToken);
-  res.render('contract/contract-view.njk', contract);
+  const contract = await getApiData(
+    api.contract(req.params._id, req.session.userToken),
+    res,
+  );
+  return res.render('contract/contract-view.njk', contract);
 });
 
 router.get('/contract/:id/comments', async (req, res) => res.render('contract/contract-view-comments.njk', await api.contract(req.params.id, req.session.userToken)));
