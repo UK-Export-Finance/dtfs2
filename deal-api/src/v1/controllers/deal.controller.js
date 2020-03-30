@@ -55,6 +55,7 @@ exports.create = async (req, res) => {
     updated: timestamp,
   };
 
+console.log(`creating new deal :: \n ${JSON.stringify(newDeal)}`)
   const response = await collection.insertOne(newDeal);
 
   const deal = response.ops[0];

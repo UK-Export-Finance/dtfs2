@@ -2,7 +2,9 @@
   "name": "dtfs2",
   "version": "1.0.0",
   "description": "DTFS2",
-  "dependencies": {},
+  "dependencies": {
+    "axios": "^0.19.2"
+  },
   "devDependencies": {
     "cypress": "^4.1.0",
     "cypress-xpath": "^1.4.0",
