@@ -27,6 +27,11 @@ authRouter.route('/deals')
     deals.create,
   );
 
+authRouter.route('/deals/:start/:pagesize')
+  .get(
+    deals.findPage,
+  );
+
 authRouter.route('/deals/:id')
   .get(
     deals.findOne,
