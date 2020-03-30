@@ -49,6 +49,7 @@ const findOneDeal = async (id, callback) => {
     callback(result);
   });
 };
+exports.findOneDeal = findOneDeal;
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection('deals');
