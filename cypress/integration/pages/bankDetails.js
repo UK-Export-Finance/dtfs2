@@ -5,6 +5,6 @@ const page = {
   cancel: () => '//TODO',
   bondSupportScheme: () => '//TODO',
   exportWorkingCapitalScheme: () => '//TODO',
-}
+};
 
 module.exports = page;
