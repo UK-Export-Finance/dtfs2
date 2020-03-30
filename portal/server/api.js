@@ -36,19 +36,15 @@ const contract = async (id, token) => {
 };
 
 const contracts = async (token) => {
-  try {
-    const response = await axios({
-      method: 'get',
-      url: `${urlRoot}/v1/deals`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
-    });
-    return response.data.deals;
-  } catch (err) {
-    return new Error('error with token');// do something proper here, but for now just reject failed logins..
-  }
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/v1/deals`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+  return response.data.deals;
 };
 
 const createDeal = async (deal, token) => {
@@ -87,20 +83,16 @@ const upsertDeal = async (deal, token) => {
 };
 
 const banks = async (token) => {
-  try {
-    const response = await axios({
-      method: 'get',
-      url: `${urlRoot}/v1/banks`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
-    });
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/v1/banks`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
 
-    return response.data.banks;
-  } catch (err) {
-    return new Error('error with token');// do something proper here, but for now just reject failed logins..
-  }
+  return response.data.banks;
 };
 
 const bondCurrencies = async (token) => {
