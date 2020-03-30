@@ -1,14 +1,25 @@
 import express from 'express';
 import api from '../api';
+import {
+  getApiData,
+  getDealIdAndToken,
+} from '../helpers';
 import workflow from '../portal-workflow';
 
 const router = express.Router();
 
 router.get('/start-now', (req, res) => res.render('start-now.njk'));
 
-router.get('/before-you-start', async (req, res) => res.render('before-you-start/before-you-start.njk', {
-  mandatoryCriteria: await api.mandatoryCriteria(req.session.userToken),
-}));
+router.get('/before-you-start', async (req, res) => {
+  const { userToken } = getDealIdAndToken(req);
+
+  return res.render('before-you-start/before-you-start.njk', {
+    mandatoryCriteria: await getApiData(
+      api.mandatoryCriteria(userToken),
+      res,
+    ),
+  });
+});
 
 router.post('/before-you-start', async (req, res) => {
   const { criteriaMet } = req.body;
