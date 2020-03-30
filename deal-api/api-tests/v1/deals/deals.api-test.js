@@ -5,7 +5,8 @@ const app = require('../../../src/createApp');
 const {
   get, post, put, remove,
 } = require('../../api')(app);
-const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
+
+const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
 
 const getToken = require('../../getToken')(app);
 
@@ -44,22 +45,67 @@ describe('/v1/deals', () => {
       expect(status).toEqual(200);
     });
 
-    it('returns a list of deals', async () => {
+    it('returns a list of deals ordered by "updated"', async () => {
       const deals = [
-        aDeal({ id: '1' }),
-        aDeal({ id: '2' }),
-        aDeal({ id: '3' }),
+        aDeal({ supplyContractName: '0' }),
+        aDeal({ supplyContractName: '1' }),
+        aDeal({ supplyContractName: '2' }),
+      ];
+
+      await post(deals[1], aTokenWithMakerRole).to('/v1/deals');
+      await post(deals[2], aTokenWithMakerRole).to('/v1/deals');
+      await post(deals[0], aTokenWithMakerRole).to('/v1/deals');
+
+      const { status, body } = await get('/v1/deals', aTokenWithNoRoles);
+
+      expect(status).toEqual(200);
+      expect(body.deals).toEqual(expectAllAddedFields([
+        deals[1],
+        deals[2],
+        deals[0]
+      ]));
+    });
+  });
+
+    describe('GET /v1/deals/:start/:pagesize', () => {
+    it('rejects requests that do not present a valid Authorization token', async () => {
+      const { status } = await get('/v1/deals/0/1');
+
+      expect(status).toEqual(401);
+    });
+
+    it('accepts requests that present a valid Authorization token', async () => {
+      const { status } = await get('/v1/deals/0/1', aTokenWithNoRoles);
+
+      expect(status).toEqual(200);
+    });
+
+    it('returns a list of deals, ordered by "updated", paginated by start/pagesize', async () => {
+      const deals = [
+        aDeal({ supplyContractName: '0' }),
+        aDeal({ supplyContractName: '1' }),
+        aDeal({ supplyContractName: '2' }),
+        aDeal({ supplyContractName: '3' }),
+        aDeal({ supplyContractName: '4' }),
+        aDeal({ supplyContractName: '5' }),
       ];
 
       await post(deals[0], aTokenWithMakerRole).to('/v1/deals');
       await post(deals[1], aTokenWithMakerRole).to('/v1/deals');
       await post(deals[2], aTokenWithMakerRole).to('/v1/deals');
+      await post(deals[3], aTokenWithMakerRole).to('/v1/deals');
+      await post(deals[4], aTokenWithMakerRole).to('/v1/deals');
+      await post(deals[5], aTokenWithMakerRole).to('/v1/deals');
 
-      const { status, body } = await get('/v1/deals', aTokenWithNoRoles);
+      const { status, body } = await get('/v1/deals/2/2', aTokenWithNoRoles);
 
       expect(status).toEqual(200);
-      expect(body.deals).toEqual(expectMongoIds(deals));
+      expect(body.deals).toEqual(expectAllAddedFields([
+        deals[2],
+        deals[3],
+      ]));
     });
+
   });
 
   describe('GET /v1/deals/:id', () => {
@@ -82,7 +128,7 @@ describe('/v1/deals', () => {
       const { status, body } = await get(`/v1/deals/${newId}`, aTokenWithNoRoles);
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectMongoId(newDeal));
+      expect(body).toEqual(expectAddedFields(newDeal));
     });
   });
 
@@ -145,7 +191,7 @@ describe('/v1/deals', () => {
       );
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectMongoId(updatedDeal));
+      expect(body).toEqual(expectAddedFields(updatedDeal));
     });
   });
 

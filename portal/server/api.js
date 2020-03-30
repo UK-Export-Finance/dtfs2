@@ -35,10 +35,10 @@ const contract = async (id, token) => {
   return response.data;
 };
 
-const contracts = async (token) => {
+const contracts = async (start, pagesize, token) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/v1/deals`,
+    url: `${urlRoot}/v1/deals/${start}/${pagesize}`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',

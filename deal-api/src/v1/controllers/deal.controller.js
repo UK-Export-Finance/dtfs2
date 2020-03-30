@@ -1,5 +1,6 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
+const moment = require('moment');
 
 const DEFAULTS = require('../defaults');
 
@@ -14,10 +15,24 @@ const withoutId = (obj) => {
 const findDeals = async (callback) => {
   const collection = await db.getCollection('deals');
 
-  collection.find({}).toArray((err, result) => {
-    assert.equal(err, null);
-    callback(result);
-  });
+  collection.find({})
+    .sort({ updated: +1 })
+    .toArray((err, result) => {
+      assert.equal(err, null);
+      callback(result);
+    });
+};
+
+const findPaginatedDeals = async (start, pagesize, callback) => {
+  const collection = await db.getCollection('deals');
+
+  collection.find({})
+    .skip(start)
+    .limit(pagesize)
+    .toArray((err, result) => {
+      assert.equal(err, null);
+      callback(result);
+    });
 };
 
 const findOneDeal = async (id, callback) => {
@@ -32,11 +47,13 @@ const findOneDeal = async (id, callback) => {
 exports.create = async (req, res) => {
   const collection = await db.getCollection('deals');
 
+  const timestamp = moment().format('YYYY MM DD HH:mm:ss:SSS ZZ');
   const newDeal = {
     ...DEFAULTS.DEALS,
     ...req.body,
+    created: timestamp,
+    updated: timestamp,
   };
-
 
   const response = await collection.insertOne(newDeal);
 
@@ -50,6 +67,16 @@ exports.findAll = (req, res) => (
     deals,
   }))
 );
+
+exports.findPage = (req, res) => {
+  const start = parseInt(req.params.start, 10);
+  const pagesize = parseInt(req.params.pagesize, 10);
+
+  findPaginatedDeals(start, pagesize, (deals) => res.status(200).send({
+    count: deals.length,
+    deals,
+  }));
+};
 
 exports.findOne = (req, res) => (
   findOneDeal(req.params.id, (deal) => res.status(200).send(deal))

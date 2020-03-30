@@ -6,13 +6,14 @@ import {
 } from '../helpers';
 
 const router = express.Router();
+const PAGESIZE = 20;
 
 router.get('/dashboard', async (req, res) => {
   const { userToken } = requestParams(req);
 
   return res.render('dashboard/deals.njk', {
     contracts: await getApiData(
-      api.contracts(userToken),
+      api.contracts(0, PAGESIZE, userToken),
       res,
     ),
     banks: await getApiData(
