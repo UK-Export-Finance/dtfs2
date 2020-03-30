@@ -17,9 +17,23 @@ router.get('/contract/:_id/eligibility/criteria', async (req, res) => {
     ));
 });
 
-router.post('/contract/:id/eligibility/criteria', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}/eligibility/supporting-documentation`;
-  return res.redirect(redirectUrl);
+router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+  const { body } = req;
+
+  const updatedDeal = await getApiData(
+    api.updateEligibilityCriteria(_id, body, userToken),
+    res,
+  );
+
+  if (updatedDeal.eligibility.status === 'Complete') {
+    return res.redirect(`/contract/${_id}/eligibility/supporting-documentation`);
+  }
+
+  res.render('eligibility/eligibility-criteria.njk', {
+    criteriaStatus: updatedDeal.eligibility.status,
+    eligibility: updatedDeal.eligibility,
+  });
 });
 
 router.post('/contract/:id/eligibility/criteria/save-go-back', (req, res) => {
