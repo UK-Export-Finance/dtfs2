@@ -1,4 +1,4 @@
-{% macro pagination(totalPages, currentPage, totalItems) %}
+{% macro pagination(totalPages, currentPage, totalItems, paginationRoot) %}
 
   <div class="breadcrumbs" role="navigation">
 
@@ -9,13 +9,13 @@
 
         <ul class="govuk-!-margin-bottom-0">
 
-          {% if currentPage !== 1 %}
+          {% if currentPage !== 0 %}
             <li class="govuk-body govuk-!-margin-bottom-3">
-              <a href="#" class="govuk-link">First</a>
+              <a href="{{paginationRoot}}/0" class="govuk-link">First</a>
             </li>
 
             <li class="govuk-body govuk-!-margin-bottom-3">
-              <a href="#" class="govuk-link">Previous</a>
+              <a href="{{paginationRoot}}/{{currentPage-1}}" class="govuk-link">Previous</a>
             </li>
 
             <li class="govuk-body govuk-!-margin-bottom-3">
@@ -33,22 +33,22 @@
                   class="govuk-body govuk-!-margin-bottom-3"
                 {% endif %}
               >
-                <a href="#" class="govuk-link">{{ i + 1 }}</a>
+                <a href="{{paginationRoot}}/{{i}}" class="govuk-link">{{ i + 1 }}</a>
               </li>
             {% endif %}
           {%- endfor %}
 
-          {% if currentPage !== totalPages %}
+          {% if currentPage !== (totalPages-1) %}
             <li class="govuk-body govuk-!-margin-bottom-3">
               ...
             </li>
 
             <li class="govuk-body govuk-!-margin-bottom-3">
-              <a href="#" class="govuk-link">Next</a>
+              <a href="{{paginationRoot}}/{{currentPage+1}}" class="govuk-link">Next</a>
             </li>
 
             <li class="govuk-body govuk-!-margin-bottom-3">
-              <a href="#" class="govuk-link">Last</a>
+              <a href="{{paginationRoot}}/{{totalPages-1}}" class="govuk-link">Last</a>
             </li>
           {% endif %}
 
@@ -57,7 +57,7 @@
       </div>
     {% endif %}
 
-    <p class="govuk-body-s">({{ totalItems }} items)</p>
+    <p id="totalItems" class="govuk-body-s">({{ totalItems }} items)</p>
 
   </div>
 
