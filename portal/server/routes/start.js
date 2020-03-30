@@ -2,7 +2,7 @@ import express from 'express';
 import api from '../api';
 import {
   getApiData,
-  getDealIdAndToken,
+  requestParams,
 } from '../helpers';
 import workflow from '../portal-workflow';
 
@@ -11,7 +11,7 @@ const router = express.Router();
 router.get('/start-now', (req, res) => res.render('start-now.njk'));
 
 router.get('/before-you-start', async (req, res) => {
-  const { userToken } = getDealIdAndToken(req);
+  const { userToken } = requestParams(req);
 
   return res.render('before-you-start/before-you-start.njk', {
     mandatoryCriteria: await getApiData(

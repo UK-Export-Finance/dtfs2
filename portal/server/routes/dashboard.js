@@ -2,13 +2,13 @@ import express from 'express';
 import api from '../api';
 import {
   getApiData,
-  getDealIdAndToken,
+  requestParams,
 } from '../helpers';
 
 const router = express.Router();
 
 router.get('/dashboard', async (req, res) => {
-  const { userToken } = getDealIdAndToken(req);
+  const { userToken } = requestParams(req);
 
   return res.render('dashboard/deals.njk', {
     contracts: await getApiData(
@@ -23,7 +23,7 @@ router.get('/dashboard', async (req, res) => {
 });
 
 router.get('/dashboard/transactions', async (req, res) => {
-  const { userToken } = getDealIdAndToken(req);
+  const { userToken } = requestParams(req);
 
   return res.render('dashboard/transactions.njk', {
     transactions: await getApiData(

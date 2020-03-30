@@ -171,7 +171,6 @@ const transactions = async (token) => {
 const contractBond = async (id, bondId, token) => {
   const response = await contract(id, token);
   const { _id } = response;
-  console.log('HELLO TEST contractId \n ', _id);
   return {
     contractId: _id,
     bond: response.bondTransactions.items.find((bond) => bond.id === bondId),

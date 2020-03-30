@@ -5,13 +5,13 @@ import bondRoutes from './bond';
 import eligibilityRoutes from './eligibility';
 import {
   getApiData,
-  getDealIdAndToken,
+  requestParams,
 } from '../../helpers';
 
 const router = express.Router();
 
 router.get('/contract/:_id', async (req, res) => {
-  const { _id, userToken } = getDealIdAndToken(req);
+  const { _id, userToken } = requestParams(req);
 
   return res.render('contract/contract-view.njk',
     await getApiData(
@@ -21,7 +21,7 @@ router.get('/contract/:_id', async (req, res) => {
 });
 
 router.get('/contract/:_id/comments', async (req, res) => {
-  const { _id, userToken } = getDealIdAndToken(req);
+  const { _id, userToken } = requestParams(req);
 
   return res.render('contract/contract-view-comments.njk',
     await getApiData(
@@ -31,7 +31,7 @@ router.get('/contract/:_id/comments', async (req, res) => {
 });
 
 router.get('/contract/:_id/submission-details', async (req, res) => {
-  const { _id, userToken } = getDealIdAndToken(req);
+  const { _id, userToken } = requestParams(req);
 
   return res.render('contract/contract-submission-details.njk', {
     contract: await getApiData(
@@ -46,7 +46,7 @@ router.get('/contract/:_id/submission-details', async (req, res) => {
 });
 
 router.get('/contract/:_id/delete', async (req, res) => {
-  const { _id, userToken } = getDealIdAndToken(req);
+  const { _id, userToken } = requestParams(req);
 
   return res.render('contract/contract-delete.njk',
     await getApiData(
