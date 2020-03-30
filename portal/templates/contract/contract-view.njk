@@ -10,8 +10,8 @@
 
     <h1 class="govuk-heading-l">
       Supply Contract name:
-      <span id="supplyContractName" class="govuk-body govuk-!-font-size-24">{{ details.bankDealName }}</span>
-      <a class="govuk-link govuk-!-font-size-14" href="#">Edit</a>
+      <span id="supplyContractName" class="govuk-body govuk-!-font-size-24">{{ supplyContractName }}</span>
+      <a class="govuk-link govuk-!-font-size-14" href="/contract/{{ _id }}/edit-name">Edit</a>
     </h1>
 
     <div class="govuk-tabs" data-module="govuk-tabs">
@@ -99,7 +99,7 @@
             </div>
 
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <a href="/contract/{{ _id }}/bond/new/details" class="govuk-link">Add a Bond</a>
+              <a href="/contract/{{ _id }}/bond/1/details" class="govuk-link">Add a Bond</a>
             </div>
 
             {% if bondTransactions.items %}
@@ -270,9 +270,9 @@
 
         <p class="govuk-body">Please complete all form sections in order to submit your Supply Contract.</p>
 
-        <button class="govuk-button govuk-!-margin-right-1" disabled data-module="govuk-button">
+        <a href="/contract/{{ _id }}/ready-for-review" class="govuk-button govuk-!-margin-right-1"  data-module="govuk-button">
           Proceed to review
-        </button>
+        </a>
 
         <button class="govuk-button govuk-button--secondary" disabled data-module="govuk-button">
           Abandon
