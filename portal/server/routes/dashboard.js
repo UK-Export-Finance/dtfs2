@@ -1,18 +1,40 @@
 import express from 'express';
 import api from '../api';
+import {
+  getApiData,
+  getDealIdAndToken,
+} from '../helpers';
 
 const router = express.Router();
 
 router.get('/dashboard', async (req, res) => {
-  res.render('dashboard/deals.njk', {
-    contracts: await api.contracts(req.session.userToken),
-    banks: await api.banks(req.session.userToken),
+  const { userToken } = getDealIdAndToken(req);
+
+  return res.render('dashboard/deals.njk', {
+    contracts: await getApiData(
+      api.contracts(userToken),
+      res,
+    ),
+    banks: await getApiData(
+      api.banks(userToken),
+      res,
+    ),
   });
 });
 
-router.get('/dashboard/transactions', async (req, res) => res.render('dashboard/transactions.njk', {
-  transactions: await api.transactions(req.session.userToken),
-  banks: await api.banks(req.session.userToken),
-}));
+router.get('/dashboard/transactions', async (req, res) => {
+  const { userToken } = getDealIdAndToken(req);
+
+  return res.render('dashboard/transactions.njk', {
+    transactions: await getApiData(
+      api.transactions(userToken),
+      res,
+    ),
+    banks: await getApiData(
+      api.banks(userToken),
+      res,
+    ),
+  });
+});
 
 export default router;
