@@ -44,9 +44,10 @@ router.post('/before-you-start/bank-deal', async (req, res) => {
   const state = workflow(req.session.deal);
   await state.setBankDetails(bankDealId, bankDealName, req.session.userToken);
 
-  req.session.deal = state.updatedDeal();
+  const id = req.session.deal._id; // eslint-disable-line no-underscore-dangle
+  req.session.deal = null;
 
-  res.redirect(`/contract/${req.session.deal._id}`); // eslint-disable-line no-underscore-dangle
+  res.redirect(`/contract/${id}`);
 });
 
 router.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk'));
