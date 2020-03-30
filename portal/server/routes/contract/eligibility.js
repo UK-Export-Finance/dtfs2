@@ -2,13 +2,13 @@ import express from 'express';
 import api from '../../api';
 import {
   getApiData,
-  getDealIdAndToken,
+  requestParams,
 } from '../../helpers';
 
 const router = express.Router();
 
 router.get('/contract/:_id/eligibility/criteria', async (req, res) => {
-  const { _id, userToken } = getDealIdAndToken(req);
+  const { _id, userToken } = requestParams(req);
 
   return res.render('eligibility/eligibility-criteria.njk',
     await getApiData(
@@ -28,7 +28,7 @@ router.post('/contract/:id/eligibility/criteria/save-go-back', (req, res) => {
 });
 
 router.get('/contract/:_id/eligibility/supporting-documentation', async (req, res) => {
-  const { _id, userToken } = getDealIdAndToken(req);
+  const { _id, userToken } = requestParams(req);
 
   return res.render('eligibility/eligibility-supporting-documentation.njk',
     await getApiData(
@@ -48,7 +48,7 @@ router.post('/contract/:id/eligibility/supporting-documentation/save-go-back', (
 });
 
 router.get('/contract/:_id/eligibility/preview', async (req, res) => {
-  const { _id, userToken } = getDealIdAndToken(req);
+  const { _id, userToken } = requestParams(req);
 
   return res.render('eligibility/eligibility-preview.njk', {
     contract: await getApiData(

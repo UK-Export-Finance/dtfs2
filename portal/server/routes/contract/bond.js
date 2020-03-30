@@ -2,13 +2,13 @@ import express from 'express';
 import api from '../../api';
 import {
   getApiData,
-  getDealIdAndToken,
+  requestParams,
 } from '../../helpers';
 
 const router = express.Router();
 
 router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
-  const { _id, bondId, userToken } = getDealIdAndToken(req);
+  const { _id, bondId, userToken } = requestParams(req);
 
   return res.render('bond/bond-details.njk',
     await getApiData(
@@ -29,7 +29,7 @@ router.post('/contract/:id/bond/:bondId/details/save-go-back', (req, res) => {
 
 
 router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => {
-  const { _id, bondId, userToken } = getDealIdAndToken(req);
+  const { _id, bondId, userToken } = requestParams(req);
 
   return res.render('bond/bond-financial-details.njk', {
     ...await getApiData(
@@ -54,7 +54,7 @@ router.post('/contract/:id/bond/:bondId/financial-details/save-go-back', (req, r
 });
 
 router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
-  const { _id, bondId, userToken } = getDealIdAndToken(req);
+  const { _id, bondId, userToken } = requestParams(req);
 
   return res.render('bond/bond-fee-details.njk', {
     ...await getApiData(
@@ -75,7 +75,7 @@ router.post('/contract/:id/bond/:bondId/fee-details/save-go-back', (req, res) =>
 });
 
 router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
-  const { _id, bondId, userToken } = getDealIdAndToken(req);
+  const { _id, bondId, userToken } = requestParams(req);
 
   return res.render('bond/bond-preview.njk', {
     contract: await getApiData(
@@ -90,7 +90,7 @@ router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
 });
 
 router.get('/contract/:_id/bond/:bondId/delete', async (req, res) => {
-  const { _id, bondId, userToken } = getDealIdAndToken(req);
+  const { _id, bondId, userToken } = requestParams(req);
 
   return res.render('bond/bond-delete.njk', {
     contract: await getApiData(

@@ -2,14 +2,14 @@ import express from 'express';
 import api from '../../api';
 import {
   getApiData,
-  getDealIdAndToken,
+  requestParams,
 } from '../../helpers';
 
 
 const router = express.Router();
 
 router.get('/contract/:_id/about/supplier', async (req, res) => {
-  const { _id, userToken } = getDealIdAndToken(req);
+  const { _id, userToken } = requestParams(req);
 
   return res.render('about/about-supplier.njk', {
     contract: await getApiData(
@@ -38,7 +38,7 @@ router.post('/contract/:id/about/supplier/save-go-back', (req, res) => {
 });
 
 router.get('/contract/:_id/about/buyer', async (req, res) => {
-  const { _id, userToken } = getDealIdAndToken(req);
+  const { _id, userToken } = requestParams(req);
 
   return res.render('about/about-supply-buyer.njk', {
     contract: await getApiData(
@@ -63,7 +63,7 @@ router.post('/contract/:id/about/buyer/save-go-back', (req, res) => {
 });
 
 router.get('/contract/:_id/about/financial', async (req, res) => {
-  const { _id, userToken } = getDealIdAndToken(req);
+  const { _id, userToken } = requestParams(req);
 
   res.render('about/about-supply-financial.njk', {
     contract: await getApiData(
@@ -88,7 +88,7 @@ router.post('/contract/:id/about/financial/save-go-back', (req, res) => {
 });
 
 router.get('/contract/:_id/about/preview', async (req, res) => {
-  const { _id, userToken } = getDealIdAndToken(req);
+  const { _id, userToken } = requestParams(req);
 
   return res.render('about/about-supply-preview.njk',
     await getApiData(
