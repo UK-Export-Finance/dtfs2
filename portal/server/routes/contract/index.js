@@ -65,6 +65,16 @@ router.get('/contract/:_id/ready-for-review', async (req, res) => {
     ));
 });
 
+router.get('/contract/:_id/edit-name', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+
+  return res.render('contract/contract-edit-name.njk',
+    await getApiData(
+      api.contract(_id, userToken),
+      res,
+    ));
+});
+
 router.use('/',
   aboutRoutes,
   bondRoutes,
