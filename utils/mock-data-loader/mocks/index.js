@@ -192,7 +192,7 @@ const MOCKS = {
   MANDATORY_CRITERIA,
   CONTRACTS: [
     {
-      bankDealName: 'UKEF plc',
+      supplyContractName: 'UKEF plc',
       details: {
         bank: 'UKEF test bank',
         bankSupplyContractID: 'MIA/Msstar/BSS/DGR',
@@ -390,7 +390,7 @@ const MOCKS = {
       }
     },
     {
-      bankDealName: 'CT-TestPrep-170220',
+      supplyContractName: 'CT-TestPrep-170220',
       details: {
         bank: 'UKEF test bank',
         bankSupplyContractID: 'AIN MIA/Msstar/BSS/DGR ',
