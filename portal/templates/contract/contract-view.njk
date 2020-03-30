@@ -17,7 +17,7 @@
     <div class="govuk-tabs" data-module="govuk-tabs">
       <h2 class="govuk-tabs__title">Contents</h2>
 
-      {{ contractTabs.nav(selected = 'view', id = id ) }}
+      {{ contractTabs.nav(selected = 'view', id = _id ) }}
 
       <section class="govuk-tabs__panel" id="view">
 
@@ -27,7 +27,7 @@
           </div>
           <div class="govuk-grid-column-one-quarter box__header-link">
             <a href="#" class="govuk-link govuk-!-font-size-14">Clone</a>
-            <a href="/contract/{{ id }}/delete" class="govuk-link govuk-!-font-size-14 govuk-!-margin-left-2">Abandon</a>
+            <a href="/contract/{{ _id }}/delete" class="govuk-link govuk-!-font-size-14 govuk-!-margin-left-2">Abandon</a>
           </div>
         </div>
 
@@ -50,7 +50,7 @@
               </h2>
             </div>
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <a href="/contract/{{ id }}/about/supplier" class="govuk-link">View details</a>
+              <a href="/contract/{{ _id }}/about/supplier" class="govuk-link">View details</a>
             </div>
           </div>
         </div>
@@ -99,7 +99,7 @@
             </div>
 
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <a href="/contract/{{ id }}/bond/new/details" class="govuk-link">Add a Bond</a>
+              <a href="/contract/{{ _id }}/bond/new/details" class="govuk-link">Add a Bond</a>
             </div>
 
             {% if bondTransactions.items %}
@@ -132,7 +132,7 @@
             </div>
 
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <a href="/contract/{{ id }}/loan/new/details" class="govuk-link">Add a working capital Loan</a>
+              <a href="/contract/{{ _id }}/loan/new/details" class="govuk-link">Add a working capital Loan</a>
             </div>
 
             {% if loanTransactions.items %}
