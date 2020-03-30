@@ -186,7 +186,7 @@
 
       </table>
 
-      {{ pagination.pagination(totalPages = 12, currentPage = 1, totalItems = contracts.length) }}
+      {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/dashboard') }}
 
     </section>
 

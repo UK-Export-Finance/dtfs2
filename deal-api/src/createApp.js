@@ -6,7 +6,7 @@ const passport = require('passport');
 
 dotenv.config();
 
-const CORS_ORIGIN = process.env.CORS_ORIGIN;
+const { CORS_ORIGIN } = process.env;
 
 const configurePassport = require('./v1/users/passport');
 const { authRouter, openRouter } = require('./v1/routes');
@@ -18,8 +18,8 @@ app.use(passport.initialize());
 app.use(bodyParser.json({ type: 'application/json' }));
 
 app.use(cors({
-    origin: CORS_ORIGIN,
-    allowedHeaders: ["Content-Type", "Authorization"]
+  origin: CORS_ORIGIN,
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 app.use('/v1', openRouter);

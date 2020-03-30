@@ -102,8 +102,6 @@ context('Pick a deal from the dashboard', async () => {
       }];
 
 
-console.log(`assembled deals to create :: ${JSON.stringify(deals)}`)
-
     createManyDeals({
       ...user,
       deals
@@ -135,11 +133,70 @@ console.log(`assembled deals to create :: ${JSON.stringify(deals)}`)
       'abc/20/def',
     ]);
 
+    dashboard.totalItems().invoke('text').then((text) => {
+      expect(text.trim()).equal('(21 items)');
+    });
+
     dashboard.next().click();
 
     dashboard.confirmDealsPresent([
       'abc/21/def',
     ]);
 
+    dashboard.previous().click();
+
+    dashboard.confirmDealsPresent([
+      'abc/1/def',
+      'abc/2/def',
+      'abc/3/def',
+      'abc/4/def',
+      'abc/5/def',
+      'abc/6/def',
+      'abc/7/def',
+      'abc/8/def',
+      'abc/9/def',
+      'abc/10/def',
+      'abc/11/def',
+      'abc/12/def',
+      'abc/13/def',
+      'abc/14/def',
+      'abc/15/def',
+      'abc/16/def',
+      'abc/17/def',
+      'abc/18/def',
+      'abc/19/def',
+      'abc/20/def',
+    ]);
+
+    dashboard.last().click();
+
+    dashboard.confirmDealsPresent([
+      'abc/21/def',
+    ]);
+
+    dashboard.first().click();
+
+    dashboard.confirmDealsPresent([
+      'abc/1/def',
+      'abc/2/def',
+      'abc/3/def',
+      'abc/4/def',
+      'abc/5/def',
+      'abc/6/def',
+      'abc/7/def',
+      'abc/8/def',
+      'abc/9/def',
+      'abc/10/def',
+      'abc/11/def',
+      'abc/12/def',
+      'abc/13/def',
+      'abc/14/def',
+      'abc/15/def',
+      'abc/16/def',
+      'abc/17/def',
+      'abc/18/def',
+      'abc/19/def',
+      'abc/20/def',
+    ]);
   });
 });

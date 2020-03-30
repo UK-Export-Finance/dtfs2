@@ -104,6 +104,8 @@ describe('/v1/deals', () => {
         deals[2],
         deals[3],
       ]));
+
+      expect(body.count).toEqual(6);
     });
 
   });

@@ -26,12 +26,18 @@ const findDeals = async (callback) => {
 const findPaginatedDeals = async (start, pagesize, callback) => {
   const collection = await db.getCollection('deals');
 
+  const count = await collection.find({}).count();
+
   collection.find({})
     .skip(start)
     .limit(pagesize)
     .toArray((err, result) => {
       assert.equal(err, null);
-      callback(result);
+
+      callback({
+        count,
+        deals: result,
+      });
     });
 };
 
@@ -55,7 +61,6 @@ exports.create = async (req, res) => {
     updated: timestamp,
   };
 
-console.log(`creating new deal :: \n ${JSON.stringify(newDeal)}`)
   const response = await collection.insertOne(newDeal);
 
   const deal = response.ops[0];
@@ -73,10 +78,7 @@ exports.findPage = (req, res) => {
   const start = parseInt(req.params.start, 10);
   const pagesize = parseInt(req.params.pagesize, 10);
 
-  findPaginatedDeals(start, pagesize, (deals) => res.status(200).send({
-    count: deals.length,
-    deals,
-  }));
+  findPaginatedDeals(start, pagesize, (paginatedResults) => res.status(200).send(paginatedResults));
 };
 
 exports.findOne = (req, res) => (

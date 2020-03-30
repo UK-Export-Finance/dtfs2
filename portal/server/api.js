@@ -44,7 +44,7 @@ const contracts = async (start, pagesize, token) => {
       'Content-Type': 'application/json',
     },
   });
-  return response.data.deals;
+  return response.data;
 };
 
 const createDeal = async (deal, token) => {
