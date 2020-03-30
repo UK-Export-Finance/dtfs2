@@ -1,10 +1,21 @@
 import express from 'express';
-// import api from '../../api';
+import api from '../../api';
+import {
+  getApiData,
+  getDealIdAndToken,
+} from '../../helpers';
 
 const router = express.Router();
 
-// router.get('/contract/:id/bond/:bondId/details', async (req, res) => res.render('bond/bond-details.njk',
-//   await api.contractBond(req.params.id, req.params.bondId, req.session.userToken)));
+router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
+  const { _id, bondId, userToken } = getDealIdAndToken(req);
+
+  return res.render('bond/bond-details.njk',
+    await getApiData(
+      api.contractBond(_id, bondId, userToken),
+      res,
+    ));
+});
 
 router.post('/contract/:id/bond/:bondId/details', (req, res) => {
   const redirectUrl = `/contract/${req.params.id}/bond/${req.params.bondId}/financial-details`;
@@ -16,10 +27,21 @@ router.post('/contract/:id/bond/:bondId/details/save-go-back', (req, res) => {
   return res.redirect(redirectUrl);
 });
 
-// router.get('/contract/:id/bond/:bondId/financial-details', async (req, res) => res.render('bond/bond-financial-details.njk', {
-//   ...await api.contractBond(req.params.id, req.params.bondId, req.session.userToken),
-//   currencies: await api.bondCurrencies(req.session.userToken),
-// }));
+
+router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => {
+  const { _id, bondId, userToken } = getDealIdAndToken(req);
+
+  return res.render('bond/bond-financial-details.njk', {
+    ...await getApiData(
+      api.contractBond(_id, bondId, userToken),
+      res,
+    ),
+    currencies: await getApiData(
+      api.bondCurrencies(userToken),
+      res,
+    ),
+  });
+});
 
 router.post('/contract/:id/bond/:bondId/financial-details', (req, res) => {
   const redirectUrl = `/contract/${req.params.id}/bond/${req.params.bondId}/fee-details`;
@@ -31,8 +53,16 @@ router.post('/contract/:id/bond/:bondId/financial-details/save-go-back', (req, r
   return res.redirect(redirectUrl);
 });
 
-// router.get('/contract/:id/bond/:bondId/fee-details', async (req, res) => res.render('bond/bond-fee-details.njk',
-//   await api.contractBond(req.params.id, req.params.bondId, req.session.userToken)));
+router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
+  const { _id, bondId, userToken } = getDealIdAndToken(req);
+
+  return res.render('bond/bond-fee-details.njk', {
+    ...await getApiData(
+      api.contractBond(_id, bondId, userToken),
+      res,
+    ),
+  });
+});
 
 router.post('/contract/:id/bond/:bondId/fee-details', (req, res) => {
   const redirectUrl = `/contract/${req.params.id}/bond/${req.params.bondId}/preview`;
@@ -44,14 +74,35 @@ router.post('/contract/:id/bond/:bondId/fee-details/save-go-back', (req, res) =>
   return res.redirect(redirectUrl);
 });
 
-// router.get('/contract/:id/bond/:bondId/preview', async (req, res) => res.render('bond/bond-preview.njk', {
-//   contract: await api.contract(req.params.id, req.session.userToken),
-//   bond: api.contractBond(req.params.id, req.params.bondId, req.session.userToken),
-// }));
+router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
+  const { _id, bondId, userToken } = getDealIdAndToken(req);
 
-// router.get('/contract/:id/bond/:bondId/delete', async (req, res) => res.render('bond/bond-delete.njk', {
-//   contract: await api.contract(req.params.id, req.session.userToken),
-//   bond: api.contractBond(req.params.id, req.params.bondId, req.session.userToken),
-// }));
+  return res.render('bond/bond-preview.njk', {
+    contract: await getApiData(
+      api.contract(_id, userToken),
+      res,
+    ),
+    ...await getApiData(
+      api.contractBond(_id, bondId, userToken),
+      res,
+    ),
+  });
+});
+
+router.get('/contract/:_id/bond/:bondId/delete', async (req, res) => {
+  const { _id, bondId, userToken } = getDealIdAndToken(req);
+
+  return res.render('bond/bond-delete.njk', {
+    contract: await getApiData(
+      api.contract(_id, userToken),
+      res,
+    ),
+    ...await getApiData(
+      api.contractBond(_id, bondId, userToken),
+      res,
+    ),
+  });
+});
+
 
 export default router;
