@@ -14,16 +14,16 @@ exports.findOne = async (username, callback) => {
 
 exports.create = async (user, callback) => {
   const collection = await db.getCollection('users');
-  const createdUser = await collection.insertOne(user);
+  const createUserResult = await collection.insertOne(user);
 
-  callback(null, createdUser);
+  callback(null, createUserResult.ops[0]);
 };
 
 exports.update = async (username, user, callback) => {
   const collection = await db.getCollection('users');
-  const status = await collection.updateOne({ username: { $eq: username } }, { $set: user }, {});
+  await collection.updateOne({ username: { $eq: username } }, { $set: user }, {});
 
-  callback(null, status);
+  callback(null, user);
 };
 
 exports.remove = async (username, callback) => {

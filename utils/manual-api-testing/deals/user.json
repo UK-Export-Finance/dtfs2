@@ -1,5 +1,9 @@
 {
   "username": "MAKER",
   "password": "MAKER",
-  "roles": ["maker"]
+  "roles": ["maker"],
+  "bank": {
+    "id": "1",
+    "name": "aBank"
+  }
 }
