@@ -46,7 +46,7 @@ router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
 
   const eligibilityErrors = getEligibilityErrors(updatedDeal.eligibility);
 
-  res.render('eligibility/eligibility-criteria.njk', {
+  return res.render('eligibility/eligibility-criteria.njk', {
     _id,
     criteriaStatus: updatedDeal.eligibility.status,
     eligibility: updatedDeal.eligibility,
