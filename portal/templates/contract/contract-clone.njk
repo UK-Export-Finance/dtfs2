@@ -1,0 +1,59 @@
+{% extends "index.njk" %}
+
+{% block content %}
+
+  <h1 class="govuk-heading-l">Clone Deal ABC</h1>
+
+  <form method="POST" autocomplete="off">
+
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-one-half">
+
+        <div class="govuk-form-group">
+          <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="100">
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="bankDealID">
+                Bank deal ID
+              </label>
+
+              <span id="bankDealID-hint" class="govuk-hint">
+                It's not possible to change this later. 
+              </span>
+
+              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="bankDealID" name="bankDealID" type="text" maxlength="30" aria-describedby="bankDealID-info bankDealID-hint" value="{{ details.bankDealId }}">
+            </div>
+
+            <span id="bankDealID-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+              You can enter up to 30 characters
+            </span>
+          </div>
+        </div>
+
+        <div class="govuk-form-group">
+          <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="100">
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="bankDealName">
+                Bank deal name
+              </label>
+
+              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="bankDealName" name="bankDealName" type="text" maxlength="100" aria-describedby="bankDealName-info" value="{{ details.bankDealName }}">
+            </div>
+
+            <span id="bankDealName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+              You can enter up to 100 characters
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <button class="govuk-button" data-module="govuk-button">
+      Clone
+    </button>
+
+  </form>
+
+{% endblock %}
+
