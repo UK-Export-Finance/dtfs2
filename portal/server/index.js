@@ -15,7 +15,12 @@ app.use(session({
   saveUninitialized: true,
 }));
 
-nunjucks.configure('templates', {
+const appViews = [
+  'node_modules/govuk-frontend',
+  'templates',
+];
+
+nunjucks.configure(appViews, {
   autoescape: true,
   express: app,
   noCache: true,
