@@ -1,0 +1,43 @@
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+{% extends "index.njk" %}
+
+{% block content %}
+
+  <form method="PUT" autocomplete="off">
+
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-three-quarters">
+
+        {{ govukCheckboxes({
+          idPrefix: "confirmSubmit",
+          name: "confirmSubmit",
+          fieldset: {
+            legend: {
+              text: "Confirm your submission",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          items: [
+            {
+              value: "carcasses",
+              text: "I understand that by clicking 'Accept and submit' below, I confirm that I have reviewed all of the information provided and would like to proceed with the submission."
+            }
+          ]
+        }) }}
+
+      </div>
+    </div>
+
+    <button class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
+      Accept and submit
+    </button>
+
+    <a href="/contract/{{ _id }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+
+  </form>
+
+{% endblock %}
+
