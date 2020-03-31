@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
+    "start:dev": "npx nodemon src/index.js",
     "unit-test": "jest --notify --coverage --verbose --config=unit.jest.config.js --detectOpenHandles --forceExit",
     "unit-test-quick": "jest --notify --config=unit.jest.config.js --detectOpenHandles --forceExit",
     "api-test": "jest --notify --coverage --verbose --config=api-test.jest.config.js --detectOpenHandles --forceExit",
