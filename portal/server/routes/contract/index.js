@@ -95,6 +95,16 @@ router.get('/contract/:_id/confirm-submission', async (req, res) => {
     ));
 });
 
+router.get('/contract/:_id/clone', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+
+  return res.render('contract/contract-clone.njk',
+    await getApiData(
+      api.contract(_id, userToken),
+      res,
+    ));
+});
+
 
 router.use('/',
   aboutRoutes,
