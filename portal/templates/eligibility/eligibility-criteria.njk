@@ -4,7 +4,7 @@
 
 {% block content %}
 
-    {% if eligibilityErrors %}
+    {% if eligibilityErrors | length %}
     {{
       govukErrorSummary({
         titleText: "There is a problem",
@@ -24,8 +24,8 @@
   <form method="POST" autocomplete="off">
 
     {% for criterion in eligibility.criteria %}
-      {% set hasValidationError = eligibility.status !== "Initial" and not criterion.answer and criterion.answer !== false %}
-      <div id="criterion-{{criterion.id}}" class="govuk-form-group {% if hasValidationError %}govuk-form-group--error{% endif %}" data-cy="eligibility-criteria-item">
+      {% set hasValidationError = eligibilityErrors and not criterion.answer and criterion.answer !== false %}
+      <div id="criterion-group-{{criterion.id}}" class="govuk-form-group {% if hasValidationError %}govuk-form-group--error{% endif %}" data-cy="eligibility-criteria-item">
 
         <fieldset class="govuk-fieldset">
 

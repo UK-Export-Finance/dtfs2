@@ -7,14 +7,28 @@ import {
 
 const router = express.Router();
 
+const getEligibilityErrors = ({ status, criteria }) => status !== 'Initial' && criteria.filter((c) => typeof c.answer === 'undefined')
+  .map((c) => ({
+    text: `Eligibility criterion ${c.id} is required`,
+    href: `#criterion-group-${c.id}`,
+  }));
+
 router.get('/contract/:_id/eligibility/criteria', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
+  const deal = await getApiData(
+    api.contract(_id, userToken),
+    res,
+  );
+
+  const eligibilityErrors = getEligibilityErrors(deal.eligibility);
+
   return res.render('eligibility/eligibility-criteria.njk',
-    await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ));
+    {
+      _id,
+      eligibility: deal.eligibility,
+      eligibilityErrors,
+    });
 });
 
 router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
@@ -30,21 +44,26 @@ router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
     return res.redirect(`/contract/${_id}/eligibility/supporting-documentation`);
   }
 
-  const eligibilityErrors = updatedDeal.eligibility.criteria.filter((c) => typeof c.answer === 'undefined')
-    .map((c) => ({
-      text: `Eligibility criterion ${c.id} is required`,
-      href: `#criterion-${c.id}`,
-    }));
+  const eligibilityErrors = getEligibilityErrors(updatedDeal.eligibility);
 
   res.render('eligibility/eligibility-criteria.njk', {
+    _id,
     criteriaStatus: updatedDeal.eligibility.status,
     eligibility: updatedDeal.eligibility,
     eligibilityErrors,
   });
 });
 
-router.post('/contract/:id/eligibility/criteria/save-go-back', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}`;
+router.post('/contract/:_id/eligibility/criteria/save-go-back', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+  const { body } = req;
+
+  await getApiData(
+    api.updateEligibilityCriteria(_id, body, userToken),
+    res,
+  );
+
+  const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
 });
 
