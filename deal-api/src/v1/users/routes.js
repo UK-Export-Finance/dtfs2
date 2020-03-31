@@ -7,6 +7,7 @@ const {
 const sanitizeUser = (user) => ({
   username: user.username,
   roles: user.roles,
+  bank: user.bank,
   _id: user._id, // eslint-disable-line no-underscore-dangle
 });
 
@@ -27,7 +28,9 @@ module.exports.list = (req, res, next) => {
 };
 
 module.exports.create = (req, res, next) => {
-  const { username, password, roles } = req.body;
+  const {
+    username, password, roles, bank,
+  } = req.body;
   const saltHash = utils.genPassword(password);
 
   const { salt, hash } = saltHash;
@@ -37,6 +40,7 @@ module.exports.create = (req, res, next) => {
     hash,
     salt,
     roles,
+    bank,
   };
 
   create(newUser, (err, user) => {
