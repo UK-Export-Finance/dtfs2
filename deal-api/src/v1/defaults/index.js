@@ -39,7 +39,7 @@ const DEFAULTS = {
     details: {
     },
     eligibility: {
-      status: 'Incomplete',
+      status: 'Initial',
       criteria: ELIGIBILITY_CRITERIA,
     },
     bondTransactions: {
