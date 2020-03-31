@@ -268,7 +268,8 @@
 
         </div>
 
-        <p class="govuk-body">Please complete all form sections in order to submit your Supply Contract.</p>
+        {# MAKER #}
+        {# <p class="govuk-body">Please complete all form sections in order to submit your Supply Contract.</p>
 
         <a href="/contract/{{ _id }}/ready-for-review" class="govuk-button govuk-!-margin-right-1"  data-module="govuk-button">
           Proceed to review
@@ -276,7 +277,25 @@
 
         <button class="govuk-button govuk-button--secondary" disabled data-module="govuk-button">
           Abandon
-        </button>
+        </button> #}
+
+
+        {# CHECKER #}
+        <p class="govuk-body">You may now proceed to submit an Automatic Inclusion Notice.</p>
+
+        <p class="govuk-body">
+          <a href="/contract/{{ _id }}/eligibility/supporting-documentation" class="govuk-body govuk-link">
+            Review your eligibility checklist form
+          </a>
+        </p>
+
+        <a href="#" class="govuk-button govuk-!-margin-right-1"  data-module="govuk-button">
+          Proceed to submit
+        </a>
+
+        <a href="/contract/{{ _id }}/return-to-maker" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+          Return to Maker
+        </a>
 
       </section>
 

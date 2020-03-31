@@ -75,6 +75,16 @@ router.get('/contract/:_id/edit-name', async (req, res) => {
     ));
 });
 
+router.get('/contract/:_id/return-to-maker', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+
+  return res.render('contract/contract-return-to-maker.njk',
+    await getApiData(
+      api.contract(_id, userToken),
+      res,
+    ));
+});
+
 router.use('/',
   aboutRoutes,
   bondRoutes,
