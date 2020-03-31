@@ -1,7 +1,17 @@
 {% extends "index.njk" %}
 {% import '_macros/confirm-eligibility-nav.njk' as confirmEligibility %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% block content %}
+
+    {% if eligibilityErrors %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: eligibilityErrors
+      })
+    }}
+    {% endif %}
 
   {{ confirmEligibility.nav(
     completedStatus = eligibility.completedStatus,
@@ -14,8 +24,8 @@
   <form method="POST" autocomplete="off">
 
     {% for criterion in eligibility.criteria %}
-
-      <div class="govuk-form-group" data-cy="eligibility-criteria-item">
+      {% set hasValidationError = eligibility.status !== "Initial" and not criterion.answer and criterion.answer !== false %}
+      <div id="criterion-{{criterion.id}}" class="govuk-form-group {% if hasValidationError %}govuk-form-group--error{% endif %}" data-cy="eligibility-criteria-item">
 
         <fieldset class="govuk-fieldset">
 
@@ -24,18 +34,23 @@
           </legend>
 
           <p class="govuk-body govuk-hint">{{ criterion.description }}</p>
+          {% if hasValidationError %}
+          <span class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Eligibility criterion {{ criterion.id }} is required
+          </span>
+          {% endif %}
 
           <div class="govuk-radios govuk-radios--inline">
 
             <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="criterion-{{ criterion.id }}" name="criterion-{{ criterion.id }}" type="radio" value="true">
+              <input class="govuk-radios__input" id="criterion-{{ criterion.id }}" name="criterion-{{ criterion.id }}" type="radio" value="true" {% if eligibility.status !== "Initial" and criterion.answer %}checked{% endif %}>
               <label class="govuk-label govuk-radios__label" for="criterion-{{ criterion.id }}">
                 True
               </label>
             </div>
 
             <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="criterion-{{ criterion.id }}-2" name="criterion-{{ criterion.id }}" type="radio" value="false">
+              <input class="govuk-radios__input" id="criterion-{{ criterion.id }}-2" name="criterion-{{ criterion.id }}" type="radio" value="false" {% if eligibility.status !== "Initial" and criterion.answer === false %}checked{% endif %}>
               <label class="govuk-label govuk-radios__label" for="criterion-{{ criterion.id }}-2">
                 False
               </label>

@@ -30,9 +30,16 @@ router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
     return res.redirect(`/contract/${_id}/eligibility/supporting-documentation`);
   }
 
+  const eligibilityErrors = updatedDeal.eligibility.criteria.filter((c) => typeof c.answer === 'undefined')
+    .map((c) => ({
+      text: `Eligibility criterion ${c.id} is required`,
+      href: `#criterion-${c.id}`,
+    }));
+
   res.render('eligibility/eligibility-criteria.njk', {
     criteriaStatus: updatedDeal.eligibility.status,
     eligibility: updatedDeal.eligibility,
+    eligibilityErrors,
   });
 });
 
