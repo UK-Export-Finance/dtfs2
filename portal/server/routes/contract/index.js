@@ -110,13 +110,16 @@ router.post('/contract/:_id/clone', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
   req.session.cloneDealId = null;
-  const cloneDealRes = await api.cloneDeal(_id, req.body, userToken);
-  // TODO: what do we get back if there is an error
-  if (cloneDealRes) {
-    // TODO: go to the right place
-    return res.redirect('/success');
-  }
-  return res.redirect('/whooopps');
+  await api.cloneDeal(_id, req.body, userToken);
+
+  // TODO: display flash message 'cloned successfully'
+  return res.redirect('/dashboard');
+
+  // if (cloneDealRes) {
+  // TODO: display flash message 'cloned successfully'
+  // return res.redirect('/dashboard');
+  // }
+  // return res.redirect('/whooopps');
 });
 
 router.use('/',

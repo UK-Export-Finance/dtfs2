@@ -113,6 +113,8 @@ exports.clone = async (req, res) => {
   await findOneDeal(req.params.id, (existingDeal) => {
     const { bankDealId, bankDealName } = req.body;
 
+    // TODO do NOT include 'transactions' depending on user/form input
+
     const modifiedDeal = {
       ...existingDeal,
       _id: new ObjectId(),
