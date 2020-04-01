@@ -96,6 +96,19 @@ const cloneDeal = async (dealId, newDealData, token) => {
   return response.data;
 };
 
+const updateEligibilityCriteria = async (dealId, criteria, token) => {
+  const response = await axios({
+    method: 'put',
+    url: `${urlRoot}/v1/deals/${dealId}/eligibility-criteria`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: criteria,
+  });
+  return response.data;
+};
+
 const banks = async (token) => {
   const response = await axios({
     method: 'get',
@@ -196,4 +209,5 @@ export default {
   mandatoryCriteria,
   transactions,
   upsertDeal,
+  updateEligibilityCriteria,
 };
