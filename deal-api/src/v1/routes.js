@@ -45,6 +45,12 @@ authRouter.route('/deals/:id')
     deals.delete,
   );
 
+authRouter.route('/deals/:id/clone')
+  .post(
+    validate({ role: 'maker' }),
+    deals.clone,
+  );
+
 authRouter.route('/banks')
   .get(
     banks.findAll,

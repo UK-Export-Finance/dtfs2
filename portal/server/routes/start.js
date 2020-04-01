@@ -21,6 +21,31 @@ router.get('/before-you-start', async (req, res) => {
   });
 });
 
+router.get('/before-you-start/clone', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  return res.render('before-you-start/before-you-start.njk', {
+    mandatoryCriteria: await getApiData(
+      api.mandatoryCriteria(userToken),
+      res,
+    ),
+  });
+});
+
+// TOOD: handle criteriaMet and redirections in one route?
+router.post('/before-you-start/clone', async (req, res) => {
+  const { cloneDealId } = req.session;
+  const { criteriaMet } = req.body;
+
+  // TODO: check as boolean
+  if (criteriaMet === 'true') {
+    return res.redirect(`/contract/${cloneDealId}/clone`);
+  }
+  // TODO: if it's a clone, does it go to the same error page as a new deal?
+  // as if it *was* a new deal and not a clone?
+  return res.redirect('/unable-to-proceed');
+});
+
 router.post('/before-you-start', async (req, res) => {
   const { criteriaMet } = req.body;
 
@@ -47,7 +72,7 @@ router.post('/before-you-start/bank-deal', async (req, res) => {
   const id = req.session.deal._id; // eslint-disable-line no-underscore-dangle
   req.session.deal = null;
 
-  res.redirect(`/contract/${id}`);
+  return res.redirect(`/contract/${id}`);
 });
 
 router.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk'));
