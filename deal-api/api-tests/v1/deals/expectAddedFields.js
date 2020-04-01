@@ -4,7 +4,7 @@ const expectAddedFields = (obj) => {
   const expectation = expectMongoId({
     details: {},
     eligibility: {
-      status: 'Incomplete',
+      status: 'Initial',
       criteria: expect.any(Array),
     },
     bondTransactions: {
@@ -26,9 +26,9 @@ const expectAddedFields = (obj) => {
   return expectation;
 }
 
-const expectAllAddedFields = list => list.map(expectAddedFields);
+const expectAllAddedFields = (list) => list.map(expectAddedFields);
 
 module.exports = {
   expectAddedFields,
-  expectAllAddedFields
-}
+  expectAllAddedFields,
+};

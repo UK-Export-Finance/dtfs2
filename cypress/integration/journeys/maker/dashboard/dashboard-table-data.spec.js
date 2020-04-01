@@ -57,9 +57,9 @@ context('View a deal', () => {
     //TODO - other fields as we start to populate them...
 
 
-    row.bankDealId().click();
-    
-    cy.url().should('eq', `/contract/${deal._id}`);
+    row.bankDealId().contains(`abc/1/def`).click();
+
+    cy.url().should('eq', relative(`/contract/${deal._id}`));
   });
 
 });

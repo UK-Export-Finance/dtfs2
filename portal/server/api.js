@@ -82,6 +82,19 @@ const upsertDeal = async (deal, token) => {
   return createDeal(deal, token);
 };
 
+const updateEligibilityCriteria = async (dealId, criteria, token) => {
+  const response = await axios({
+    method: 'put',
+    url: `${urlRoot}/v1/deals/${dealId}/eligibility-criteria`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: criteria,
+  });
+  return response.data;
+};
+
 const banks = async (token) => {
   const response = await axios({
     method: 'get',
@@ -181,4 +194,5 @@ export default {
   mandatoryCriteria,
   transactions,
   upsertDeal,
+  updateEligibilityCriteria,
 };
