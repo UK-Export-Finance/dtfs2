@@ -114,12 +114,6 @@ router.post('/contract/:_id/clone', async (req, res) => {
 
   // TODO: display flash message 'cloned successfully'
   return res.redirect('/dashboard');
-
-  // if (cloneDealRes) {
-  // TODO: display flash message 'cloned successfully'
-  // return res.redirect('/dashboard');
-  // }
-  // return res.redirect('/whooopps');
 });
 
 router.use('/',
