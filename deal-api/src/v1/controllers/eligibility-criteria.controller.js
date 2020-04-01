@@ -1,4 +1,5 @@
 const { findOneDeal, update: updateDeal } = require('./deal.controller');
+const { getEligibilityErrors } = require('../validation/eligibility-criteria');
 
 exports.update = async (req, res) => {
   await findOneDeal(req.params.id, (deal) => {
@@ -17,11 +18,14 @@ exports.update = async (req, res) => {
       };
     });
 
+    const validationErrors = getEligibilityErrors(updatedCriteria);
+
     const updatedDeal = {
       ...deal,
       eligibility: {
         status: criteriaComplete ? 'Complete' : 'Incomplete',
         criteria: updatedCriteria,
+        validationErrors,
       },
     };
 

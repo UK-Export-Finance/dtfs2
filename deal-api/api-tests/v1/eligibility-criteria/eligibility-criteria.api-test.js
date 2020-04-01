@@ -12,9 +12,14 @@ const getToken = require('../../getToken')(app);
 
 describe('/v1/deals/:id/eligibility-criteria', () => {
   const newDeal = aDeal({ supplyContractName: 'Original Value' });
-  const updatedDeal = aDeal({ supplyContractName: 'Updated Value' });
 
-  const updatedEC = {
+  const updatedECPartial = {
+    'criterion-11': 'true',
+    'criterion-12': 'true',
+    'criterion-14': 'false',
+  };
+
+  const updatedECCompleted = {
     'criterion-11': 'true',
     'criterion-12': 'true',
     'criterion-13': 'true',
@@ -44,19 +49,25 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
   });
 
   describe('PUT /v1/deals/:id/eligibility-criteria', () => {
-    it('updates the eligibility criteria', async () => {
+    it('updates all the eligibility criteria without validation error', async () => {
       const postResult = await post(newDeal, aTokenWithMakerRole).to('/v1/deals');
       const newId = postResult.body._id;
 
-      await put(updatedEC, aTokenWithMakerRole).to(`/v1/deals/${newId}/eligibility-criteria`);
-
-      const { status, body } = await get(
-        `/v1/deals/${newId}`,
-        aTokenWithMakerRole,
-      );
+      const { status, body } = await put(updatedECCompleted, aTokenWithMakerRole).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
-      //      expect(body.eligibilityCriteria).toEqual(expectAddedFields(updatedEC));
+      expect(body.eligibility.validationErrors.count).toEqual(0);
+    });
+
+    it('updates some of the eligibility criteria and generates validation errors', async () => {
+      const postResult = await post(newDeal, aTokenWithMakerRole).to('/v1/deals');
+      const newId = postResult.body._id;
+
+      const { status, body } = await put(updatedECPartial, aTokenWithMakerRole).to(`/v1/deals/${newId}/eligibility-criteria`);
+
+      expect(status).toEqual(200);
+      expect(body.eligibility.validationErrors.count).toEqual(5);
+      expect(Object.keys(body.eligibility.validationErrors.errorList)).toEqual(['13', '15', '16', '17', '18']);
     });
   });
 });
