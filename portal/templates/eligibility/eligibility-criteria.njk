@@ -4,11 +4,11 @@
 
 {% block content %}
 
-    {% if eligibilityErrors | length %}
+    {% if validationErrors.count %}
     {{
       govukErrorSummary({
         titleText: "There is a problem",
-        errorList: eligibilityErrors
+        errorList: validationErrors.summary
       })
     }}
     {% endif %}
@@ -24,7 +24,8 @@
   <form method="POST" autocomplete="off">
 
     {% for criterion in eligibility.criteria %}
-      {% set hasValidationError = eligibilityErrors and not criterion.answer and criterion.answer !== false %}
+      {% set hasValidationError = validationErrors.errorList[criterion.id] %}
+
       <div id="criterion-group-{{criterion.id}}" class="govuk-form-group {% if hasValidationError %}govuk-form-group--error{% endif %}" data-cy="eligibility-criteria-item">
 
         <fieldset class="govuk-fieldset">
@@ -43,14 +44,14 @@
           <div class="govuk-radios govuk-radios--inline">
 
             <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="criterion-{{ criterion.id }}" name="criterion-{{ criterion.id }}" type="radio" value="true" {% if eligibility.status !== "Initial" and criterion.answer %}checked{% endif %}>
+              <input class="govuk-radios__input" id="criterion-{{ criterion.id }}" name="criterion-{{ criterion.id }}" type="radio" value="true" {% if eligibility.status !== "Initial" and criterion.answer %}checked{% endif %} data-cy="criteria-true">
               <label class="govuk-label govuk-radios__label" for="criterion-{{ criterion.id }}">
                 True
               </label>
             </div>
 
             <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="criterion-{{ criterion.id }}-2" name="criterion-{{ criterion.id }}" type="radio" value="false" {% if eligibility.status !== "Initial" and criterion.answer === false %}checked{% endif %}>
+              <input class="govuk-radios__input" id="criterion-{{ criterion.id }}-2" name="criterion-{{ criterion.id }}" type="radio" value="false" {% if eligibility.status !== "Initial" and criterion.answer === false %}checked{% endif %} data-cy="criteria-false>
               <label class="govuk-label govuk-radios__label" for="criterion-{{ criterion.id }}-2">
                 False
               </label>
@@ -63,7 +64,7 @@
 
     {% endfor %}
 
-    <input type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" value="Next page" />
+    <input type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" value="Next page" data-cy="next-page" />
 
     <input
       type="submit"
