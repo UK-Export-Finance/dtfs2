@@ -1,3 +1,4 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% extends "index.njk" %}
 
 {% block content %}
@@ -49,9 +50,30 @@
       </div>
     </div>
 
-    {# TODO
-      Do you want to clone this deal with transactions? yes/no radio buttons
-    #}
+    {{
+      govukRadios({
+        classes: "govuk-radios--inline",
+        idPrefix: "cloneTransactions",
+        name: "cloneTransactions",
+        fieldset: {
+          legend: {
+            text: "Do you want to clone this deal with transactions?",
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend"
+          }
+        },
+        items: [
+          {
+            value: "true",
+            text: "Yes"
+          },
+          {
+            value: "false",
+            text: "No"
+          }
+        ]
+      })
+    }}
 
     <button class="govuk-button" data-module="govuk-button">
       Clone
