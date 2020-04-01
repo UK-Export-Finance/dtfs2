@@ -146,37 +146,37 @@
         <tbody class="govuk-table__body">
 
           {% for contract in contracts %}
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell govuk-!-font-size-14">
-                {{ contract.details.bank }}
+            <tr id="deal_{{contract._id}}" class="govuk-table__row">
+              <td class="govuk-table__cell govuk-!-font-size-14 _bank">
+                {{ contract.details.owningBank.name }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
+              <td class="govuk-table__cell govuk-!-font-size-14 _bankDealId">
                 <a href="/contract/{{ contract._id }}" class="govuk-link">{{ contract.details.bankDealId }}</a>
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
+              <td class="govuk-table__cell govuk-!-font-size-14 _ukefDealId">
                 {{ contract.details.ukefDealId }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
+              <td class="govuk-table__cell govuk-!-font-size-14 _status">
                 {{ contract.details.status }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
+              <td class="govuk-table__cell govuk-!-font-size-14 _submissionType">
                 {{ contract.details.submissionType }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
-                {{ contract.details.maker }}
+              <td class="govuk-table__cell govuk-!-font-size-14 _maker">
+                {{ contract.details.maker.username }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
+              <td class="govuk-table__cell govuk-!-font-size-14 _checker">
                 {{ contract.details.checker }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
-                {{ contract.details.dateOfLastAction }}
+              <td class="govuk-table__cell govuk-!-font-size-14 _updated">
+                {{ contract.updated }}
               </td>
 
             </tr>
