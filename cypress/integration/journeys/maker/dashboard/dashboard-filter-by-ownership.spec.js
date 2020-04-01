@@ -20,29 +20,27 @@ context('Dashboard Deals pagination controls', () => {
       return false;
     });
 
+    // clean down anything our test-users have created
     await deleteAllDeals(maker1);
     await deleteAllDeals(maker2);
+    // insert deals as each user
     await createManyDeals(fiveDealsFromMaker1, { ...maker1 });
     await createManyDeals(fiveDealsFromMaker2, { ...maker2 });
   });
 
   it('The Dashboard only displays deals from the users organisation', () => {
+
+    // confirm that maker1 sees maker1's deals
     login({...maker1});
     dashboard.visit();
-
-    //test ininital dashboard page
-    dashboard.confirmDealsPresent(fiveDealsFromMaker1.map(deal=>deal.details.bankDealId));
-
     dashboard.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(5 items)');
     });
 
+    // confirm that maker2 sees maker2's deals
     login({...maker2});
     dashboard.visit();
-
-    //test ininital dashboard page
     dashboard.confirmDealsPresent(fiveDealsFromMaker2.map(deal=>deal.details.bankDealId));
-
     dashboard.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(5 items)');
     });
