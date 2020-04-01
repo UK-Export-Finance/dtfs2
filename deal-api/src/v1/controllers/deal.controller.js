@@ -4,9 +4,10 @@ const moment = require('moment');
 
 const DEFAULTS = require('../defaults');
 const db = require('../../db-driver/client');
-const { sanitizeUser } = require('../users/sanitizeUserData');
 
 const isSuperUser = (user) => user.bank.id === '*';
+
+const userHasAccessTo = (user, resource) => isSuperUser(user) || user.bank.id === resource.details.owningBank.id;
 
 const dealsByOwningBank = (user) => {
   if (isSuperUser(user)) {
@@ -69,7 +70,7 @@ exports.create = async (req, res) => {
     updated: timestamp,
   };
 
-  newDeal.details.maker = sanitizeUser(req.user);
+  newDeal.details.maker = req.user;
   newDeal.details.owningBank = req.user.bank;
 
   const response = await collection.insertOne(newDeal);
@@ -79,7 +80,7 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findDeals(sanitizeUser(req.user), (deals) => res.status(200).send({
+  findDeals(req.user, (deals) => res.status(200).send({
     count: deals.length,
     deals,
   }))
@@ -90,7 +91,7 @@ exports.findPage = (req, res) => {
   const pagesize = parseInt(req.params.pagesize, 10);
 
   findPaginatedDeals(
-    sanitizeUser(req.user),
+    req.user,
     start,
     pagesize,
     (paginatedResults) => res.status(200).send(paginatedResults),
@@ -101,18 +102,22 @@ exports.findOne = (req, res) => {
   findOneDeal(req.params.id, (deal) => {
     if (!deal) {
       res.status(404).send();
-    } else if (isSuperUser(req.user) || (req.user.bank.id === deal.details.owningBank.id)) {
-      res.status(200).send(deal);
-    } else {
+    } else if (!userHasAccessTo(req.user, deal)) {
       res.status(401).send();
+    } else {
+      res.status(200).send(deal);
     }
   });
 };
 
 exports.update = (req, res) => {
   findOneDeal(req.params.id, async (deal) => {
+    if (!deal) res.status(404).send();
+
     if (deal) {
-      if (isSuperUser(req.user) || (req.user.bank.id === deal.details.owningBank.id)) {
+      if (!userHasAccessTo(req.user, deal)) {
+        res.status(401).send();
+      } else {
         const collection = await db.getCollection('deals');
         await collection.updateOne(
           { _id: { $eq: new ObjectId(req.params.id) } },
@@ -122,27 +127,23 @@ exports.update = (req, res) => {
         const fixedDeal = { ...req.body, _id: req.params.id };
 
         res.status(200).send(fixedDeal);
-      } else {
-        res.status(401).send();
       }
-    } else {
-      res.status(404).send();
     }
   });
 };
 
 exports.delete = async (req, res) => {
   findOneDeal(req.params.id, async (deal) => {
+    if (!deal) res.status(404).send();
+
     if (deal) {
-      if (isSuperUser(req.user) || (req.user.bank.id === deal.details.owningBank.id)) {
+      if (!userHasAccessTo(req.user, deal)) {
+        res.status(401).send();
+      } else {
         const collection = await db.getCollection('deals');
         const status = await collection.deleteOne({ _id: new ObjectId(req.params.id) });
         res.status(200).send(status);
-      } else {
-        res.status(401).send();
       }
-    } else {
-      res.status(404).send();
     }
   });
 };
