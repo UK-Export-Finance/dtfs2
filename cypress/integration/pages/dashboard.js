@@ -10,7 +10,9 @@ const page = {
     for (const bankId of bankIds) {
       cy.contains(bankId).should('be.visible');
     }
-  }
-}
+  },
+  tableBodyRow: () => cy.get('table tbody tr'),
+  bankDealIdLink: (tableRow) => tableRow.find('[data-cy="bank-deal-id-link"]'),
+};
 
 module.exports = page;
