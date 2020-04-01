@@ -1,6 +1,10 @@
 const { createADeal } = require('../../missions');
 const { contract, eligibilityCriteria } = require('../../pages');
+const { errorSummary } = require('../../partials');
+
 const relative = require('../../relativeURL');
+
+const criteriaCount = 8;
 
 context('Eligibility Criteria', () => {
   beforeEach(() => {
@@ -25,10 +29,28 @@ context('Eligibility Criteria', () => {
   });
 
   it('should display the correct number of eligibility criteria', () => {
-    eligibilityCriteria.eligibilityCriteriaItems().should('have.length', 8);
+    eligibilityCriteria.eligibilityCriteriaItems().should('have.length', criteriaCount);
   });
 
   it('should initially display radio buttons in unselected state', () => {
-    eligibilityCriteria.eligibilityCriteriaItemsRadioButtons().should('not.be.checked');
+    eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().should('not.be.checked');
+    eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.falseInput().should('not.be.checked');
+  });
+
+  it('should display validation errors when partially submitted', () => {
+    eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().first().click();
+    eligibilityCriteria.nextPageButton().click();
+
+    cy.url().should('include', '/eligibility/criteria');
+
+    const criteriaItems = eligibilityCriteria.eligibilityCriteriaItems();
+    errorSummary.errorSummaryLinks().should('have.length', criteriaCount - 1);
+  });
+
+  it('should redirect to supporting docs page when all criteria answered', () => {
+    eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().click({ multiple: true });
+    eligibilityCriteria.nextPageButton().click();
+
+    cy.url().should('include', '/eligibility/supporting-documentation');
   });
 });

@@ -1,6 +1,10 @@
 const page = {
   eligibilityCriteriaItems: () => cy.get('[data-cy="eligibility-criteria-item"]'),
-  eligibilityCriteriaItemsRadioButtons: () => cy.get('[data-cy="eligibility-criteria-item"] input[type="radio"]'),
+  eligibilityCriteriaItemsRadioButtons: {
+    trueInput: () => cy.get('[data-cy="criteria-true"]'),
+    falseInput: () => cy.get('[data-cy="criteria-false"]'),
+  },
+  nextPageButton: () => cy.get('[data-cy="next-page"]'),
 };
 
 module.exports = page;
