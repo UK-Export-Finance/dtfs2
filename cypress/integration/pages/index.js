@@ -6,5 +6,6 @@ module.exports = {
   bankDetails: require('./bankDetails'),
   contract: require('./contract'),
   dashboard: require('./dashboard'),
+  cloneDeal: require('./cloneDeal'),
   eligibilityCriteria: require('./eligibilityCriteria'),
 };
