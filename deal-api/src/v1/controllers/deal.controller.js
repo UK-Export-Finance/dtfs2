@@ -5,9 +5,7 @@ const moment = require('moment');
 const DEFAULTS = require('../defaults');
 const db = require('../../db-driver/client');
 
-const isSuperUser = (user) => user.bank.id === '*';
-
-const userHasAccessTo = (user, resource) => isSuperUser(user) || user.bank.id === resource.details.owningBank.id;
+const { isSuperUser, userHasAccessTo } = require('../users/checks');
 
 const dealsByOwningBank = (user) => {
   if (isSuperUser(user)) {
@@ -58,6 +56,7 @@ const findOneDeal = async (id, callback) => {
     callback(result);
   });
 };
+exports.findOneDeal = findOneDeal;
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection('deals');
