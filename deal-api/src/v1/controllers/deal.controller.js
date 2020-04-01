@@ -111,9 +111,7 @@ exports.delete = async (req, res) => {
 
 exports.clone = async (req, res) => {
   await findOneDeal(req.params.id, (existingDeal) => {
-    const { bankDealId, bankDealName } = req.body;
-
-    // TODO do NOT include 'transactions' depending on user/form input
+    const { bankDealId, bankDealName, cloneTransactions } = req.body;
 
     const modifiedDeal = {
       ...existingDeal,
@@ -123,6 +121,11 @@ exports.clone = async (req, res) => {
         bankDealName,
       },
     };
+
+    if (cloneTransactions === 'false') {
+      modifiedDeal.bondTransactions = DEFAULTS.DEALS.bondTransactions;
+      modifiedDeal.loanTransactions = DEFAULTS.DEALS.loanTransactions;
+    }
     return createDeal(res, modifiedDeal);
   });
 };
