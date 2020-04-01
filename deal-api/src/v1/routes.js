@@ -20,6 +20,7 @@ authRouter.use(passport.authenticate('jwt', { session: false }));
 
 authRouter.route('/deals')
   .get(
+    validate({ role: 'maker' }),
     deals.findAll,
   )
   .post(
@@ -29,11 +30,13 @@ authRouter.route('/deals')
 
 authRouter.route('/deals/:start/:pagesize')
   .get(
+    validate({ role: 'maker' }),
     deals.findPage,
   );
 
 authRouter.route('/deals/:id')
   .get(
+    validate({ role: 'maker' }),
     deals.findOne,
   )
   .put(

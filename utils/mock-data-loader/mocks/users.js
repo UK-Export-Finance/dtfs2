@@ -5,6 +5,15 @@ const USERS = [
     roles: [],
   },
   {
+    username: 'ADMIN',
+    password: 'ADMIN',
+    roles: ['maker', 'editor'],
+    bank: {
+      //_id: '', //TODO [dw] better linking of mock data
+      id: '*',
+    },
+  },
+  {
     username: 'MAKER',
     password: 'MAKER',
     roles: ['maker'],

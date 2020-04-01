@@ -34,17 +34,4 @@ context('View a deal', () => {
 
   });
 
-  it('A created deal appears on the dashboard', () => {
-    createADeal({
-      ... user,
-      bankDealId: 'abc/1/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
-    });
-
-    dashboard.visit();
-    dashboard.deal('abc/1/def').click();
-
-    cy.url().should('include', '/contract/');
-  });
-
 });
