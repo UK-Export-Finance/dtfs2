@@ -50,21 +50,26 @@ const findOneDeal = async (id, callback) => {
   });
 };
 
-exports.create = async (req, res) => {
+const createDeal = async (res, deal) => {
   const collection = await db.getCollection('deals');
 
   const timestamp = moment().format('YYYY MM DD HH:mm:ss:SSS ZZ');
   const newDeal = {
     ...DEFAULTS.DEALS,
-    ...req.body,
+    ...deal,
     created: timestamp,
     updated: timestamp,
   };
 
   const response = await collection.insertOne(newDeal);
 
-  const deal = response.ops[0];
-  res.status(200).send(deal);
+  const createdDeal = response.ops[0];
+  return res.status(200).send(createdDeal);
+};
+
+exports.create = async (req, res) => {
+  const result = await createDeal(res, req.body);
+  return result;
 };
 
 exports.findAll = (req, res) => (
@@ -101,4 +106,20 @@ exports.delete = async (req, res) => {
   const collection = await db.getCollection('deals');
   const status = await collection.deleteOne({ _id: new ObjectId(req.params.id) });
   res.status(200).send(status);
+};
+
+exports.clone = async (req, res) => {
+  await findOneDeal(req.params.id, (existingDeal) => {
+    const { bankDealId, bankDealName } = req.body;
+
+    const modifiedDeal = {
+      ...existingDeal,
+      _id: new ObjectId(),
+      details: {
+        bankDealId,
+        bankDealName,
+      },
+    };
+    return createDeal(res, modifiedDeal);
+  });
 };

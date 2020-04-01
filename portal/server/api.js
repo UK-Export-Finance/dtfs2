@@ -82,6 +82,20 @@ const upsertDeal = async (deal, token) => {
   return createDeal(deal, token);
 };
 
+const cloneDeal = async (dealId, newDealData, token) => {
+  const response = await axios({
+    method: 'post',
+    url: `${urlRoot}/v1/deals/${dealId}/clone`, // eslint-disable-line no-underscore-dangle
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: newDealData,
+  });
+
+  return response.data;
+};
+
 const banks = async (token) => {
   const response = await axios({
     method: 'get',
@@ -172,6 +186,7 @@ const contractBond = async (id, bondId, token) => {
 export default {
   banks,
   bondCurrencies,
+  cloneDeal,
   contract,
   contractBond,
   contracts,
