@@ -152,7 +152,7 @@
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14 _bankDealId">
-                <a href="/contract/{{ contract._id }}" class="govuk-link">{{ contract.details.bankDealId }}</a>
+                <a href="/contract/{{ contract._id }}" class="govuk-link">{{ contract.details.bankSupplyContractID }}</a>
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14 _ukefDealId">
@@ -176,7 +176,7 @@
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14 _updated">
-                {{ contract.updated }}
+                {{ contract.details.dateOfLastAction }}
               </td>
 
             </tr>

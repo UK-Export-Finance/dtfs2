@@ -11,7 +11,11 @@ const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields
 const getToken = require('../../getToken')(app);
 
 describe('/v1/deals', () => {
-  const newDeal = aDeal({supplyContractName: 'Original Value'});
+  const newDeal = aDeal({
+    details: {
+      supplyContractName: 'Original Value'
+    },
+  });
 
   let aUserWithoutRoles;
   let user1;
@@ -72,11 +76,11 @@ describe('/v1/deals', () => {
 
     it('returns a list of deals ordered by "updated", filtered by <user>.bank.id', async () => {
       const deals = [
-        aDeal({ supplyContractName: 'bank1/0' }),
-        aDeal({ supplyContractName: 'bank1/1' }),
-        aDeal({ supplyContractName: 'bank1/2' }),
-        aDeal({ supplyContractName: 'bank2/0' }),
-        aDeal({ supplyContractName: 'bank2/1' }),
+        aDeal({ details: {supplyContractName: 'bank1/0' }}),
+        aDeal({ details: {supplyContractName: 'bank1/1' }}),
+        aDeal({ details: {supplyContractName: 'bank1/2' }}),
+        aDeal({ details: {supplyContractName: 'bank2/0' }}),
+        aDeal({ details: {supplyContractName: 'bank2/1' }}),
       ];
 
       await post(deals[4], user2).to('/v1/deals');
@@ -98,11 +102,11 @@ describe('/v1/deals', () => {
 
     it('returns a list of deals ordered by "updated" if <user>.bank.id == *', async () => {
       const deals = [
-        aDeal({ supplyContractName: 'bank1/0' }),
-        aDeal({ supplyContractName: 'bank1/1' }),
-        aDeal({ supplyContractName: 'bank1/2' }),
-        aDeal({ supplyContractName: 'bank2/0' }),
-        aDeal({ supplyContractName: 'bank2/1' }),
+        aDeal({ details: {supplyContractName: 'bank1/0' }}),
+        aDeal({ details: {supplyContractName: 'bank1/1' }}),
+        aDeal({ details: {supplyContractName: 'bank1/2' }}),
+        aDeal({ details: {supplyContractName: 'bank2/0' }}),
+        aDeal({ details: {supplyContractName: 'bank2/1' }}),
       ];
 
       await post(deals[4], user2).to('/v1/deals');
@@ -141,14 +145,14 @@ describe('/v1/deals', () => {
 
     it('returns a list of deals, ordered by "updated", paginated by start/pagesize, filtered by <user>.bank.id', async () => {
       const deals = [
-        aDeal({ supplyContractName: 'bank1/0' }),
-        aDeal({ supplyContractName: 'bank1/1' }),
-        aDeal({ supplyContractName: 'bank1/2' }),
-        aDeal({ supplyContractName: 'bank1/3' }),
-        aDeal({ supplyContractName: 'bank1/4' }),
-        aDeal({ supplyContractName: 'bank1/5' }),
-        aDeal({ supplyContractName: 'bank2/0' }),
-        aDeal({ supplyContractName: 'bank2/1' }),
+        aDeal({ details: {supplyContractName: 'bank1/0' }}),
+        aDeal({ details: {supplyContractName: 'bank1/1' }}),
+        aDeal({ details: {supplyContractName: 'bank1/2' }}),
+        aDeal({ details: {supplyContractName: 'bank1/3' }}),
+        aDeal({ details: {supplyContractName: 'bank1/4' }}),
+        aDeal({ details: {supplyContractName: 'bank1/5' }}),
+        aDeal({ details: {supplyContractName: 'bank2/0' }}),
+        aDeal({ details: {supplyContractName: 'bank2/1' }}),
       ];
 
       await post(deals[0], user1).to('/v1/deals');
@@ -174,14 +178,14 @@ describe('/v1/deals', () => {
 
     it('returns a list of deals, ordered by "updated", paginated by start/pagesize, if <user>.bank.id == *', async () => {
       const deals = [
-        aDeal({ supplyContractName: 'bank1/0' }),
-        aDeal({ supplyContractName: 'bank1/1' }),
-        aDeal({ supplyContractName: 'bank1/2' }),
-        aDeal({ supplyContractName: 'bank1/3' }),
-        aDeal({ supplyContractName: 'bank1/4' }),
-        aDeal({ supplyContractName: 'bank1/5' }),
-        aDeal({ supplyContractName: 'bank2/0' }),
-        aDeal({ supplyContractName: 'bank2/1' }),
+        aDeal({ details: {supplyContractName: 'bank1/0' }}),
+        aDeal({ details: {supplyContractName: 'bank1/1' }}),
+        aDeal({ details: {supplyContractName: 'bank1/2' }}),
+        aDeal({ details: {supplyContractName: 'bank1/3' }}),
+        aDeal({ details: {supplyContractName: 'bank1/4' }}),
+        aDeal({ details: {supplyContractName: 'bank1/5' }}),
+        aDeal({ details: {supplyContractName: 'bank2/0' }}),
+        aDeal({ details: {supplyContractName: 'bank2/1' }}),
       ];
 
       await post(deals[0], user1).to('/v1/deals');
@@ -317,7 +321,10 @@ describe('/v1/deals', () => {
       const createdDeal = postResult.body;
       const updatedDeal = {
         ...createdDeal,
-        supplyContractName: 'change this field',
+        details: {
+          ...createdDeal.details,
+          supplyContractName: 'change this field',
+        }
       };
 
       const { status, body } = await put(updatedDeal, superuser)
@@ -331,7 +338,10 @@ describe('/v1/deals', () => {
       const createdDeal = postResult.body;
       const updatedDeal = {
         ...createdDeal,
-        supplyContractName: 'change this field',
+        details: {
+          ...createdDeal.details,
+          supplyContractName: 'change this field',
+        }
       };
 
       const { status, body } = await put(updatedDeal, user1).to(`/v1/deals/${createdDeal._id}`);
@@ -340,13 +350,40 @@ describe('/v1/deals', () => {
       expect(body).toEqual(expectAddedFields(updatedDeal));
     });
 
+    it('handles partial updates', async () => {
+      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const createdDeal = postResult.body;
+
+      const partialUpdate = {
+        details: {
+          supplyContractName: 'change this field',
+        }
+      }
+
+      const expectedDataIncludingUpdate = {
+        ...createdDeal,
+        details: {
+          ...createdDeal.details,
+          supplyContractName: 'change this field',
+        }
+      };
+
+      const { status, body } = await put(partialUpdate, user1).to(`/v1/deals/${createdDeal._id}`);
+
+      expect(status).toEqual(200);
+      expect(body).toEqual(expectAddedFields(expectedDataIncludingUpdate));
+    });
+
     it('updates the deal', async () => {
       const postResult = await post(newDeal, user1).to('/v1/deals');
       const createdDeal = postResult.body;
       const updatedDeal = {
         ...createdDeal,
-        supplyContractName: 'change this field',
-      }
+        details: {
+          ...createdDeal.details,
+          supplyContractName: 'change this field',
+        }
+      };
       await put(updatedDeal, user1).to(`/v1/deals/${createdDeal._id}`);
 
       const { status, body } = await get(

@@ -8,4 +8,5 @@ module.exports = {
   dashboard: require('./dashboard'),
   cloneDeal: require('./cloneDeal'),
   eligibilityCriteria: require('./eligibilityCriteria'),
+  header: require('./header'),
 };

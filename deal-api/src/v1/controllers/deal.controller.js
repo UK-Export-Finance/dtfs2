@@ -1,6 +1,7 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
 const moment = require('moment');
+const $ = require('mongo-dot-notation');
 
 const DEFAULTS = require('../defaults');
 const db = require('../../db-driver/client');
@@ -24,7 +25,7 @@ const findDeals = async (requestingUser, callback) => {
   const collection = await db.getCollection('deals');
 
   collection.find(dealsByOwningBank(requestingUser))
-    .sort({ updated: +1 })
+    .sort({ 'details.dateOfLastAction': +1 })
     .toArray((err, result) => {
       assert.equal(err, null);
       callback(result);
@@ -65,12 +66,15 @@ const createDeal = async (req, res) => {
   const newDeal = {
     ...DEFAULTS.DEALS,
     ...req.body,
-    created: timestamp,
-    updated: timestamp,
+    details: {
+      ...req.body.details,
+      submissionDate: timestamp,
+      dateOfLastAction: timestamp,
+      maker: req.user,
+      owningBank: req.user.bank,
+    },
   };
 
-  newDeal.details.maker = req.user;
-  newDeal.details.owningBank = req.user.bank;
 
   const response = await collection.insertOne(newDeal);
 
@@ -123,14 +127,13 @@ exports.update = (req, res) => {
         res.status(401).send();
       } else {
         const collection = await db.getCollection('deals');
-        await collection.updateOne(
+        const { value } = await collection.findOneAndUpdate(
           { _id: { $eq: new ObjectId(req.params.id) } },
-          { $set: withoutId(req.body) }, {},
+          $.flatten(withoutId(req.body)),
+          { returnOriginal: false },
         );
-        // TODO feels like there's a better way to achieve this...
-        const fixedDeal = { ...req.body, _id: req.params.id };
 
-        res.status(200).send(fixedDeal);
+        res.status(200).json(value);
       }
     }
   });

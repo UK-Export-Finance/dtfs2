@@ -22,9 +22,9 @@ const page = {
   lastTableRowBankDealIdLink: (row) => {
     return row.find('._bankDealId a');
   },
-  confirmDealsPresent: (bankIds) => {
-    for (const bankId of bankIds) {
-      cy.contains(bankId).should('be.visible');
+  confirmDealsPresent: (deals) => {
+    for (const deal of deals) {
+      cy.get(`#deal_${deal._id}`)
     }
   }
 };

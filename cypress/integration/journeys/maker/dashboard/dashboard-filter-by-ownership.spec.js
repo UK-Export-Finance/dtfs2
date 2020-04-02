@@ -8,10 +8,11 @@ const maker2 = {username:'MAKER-2', password: 'MAKER-2'};
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('./twentyOneDeals');
-const fiveDealsFromMaker1 = twentyOneDeals.slice(0,5);
-const fiveDealsFromMaker2 = twentyOneDeals.slice(5,10);
 
 context('Dashboard Deals pagination controls', () => {
+
+  let fiveDealsFromMaker1 = twentyOneDeals.slice(0,5);
+  let fiveDealsFromMaker2 = twentyOneDeals.slice(5,10);
 
   before( async() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -24,8 +25,8 @@ context('Dashboard Deals pagination controls', () => {
     await deleteAllDeals(maker1);
     await deleteAllDeals(maker2);
     // insert deals as each user
-    await createManyDeals(fiveDealsFromMaker1, { ...maker1 });
-    await createManyDeals(fiveDealsFromMaker2, { ...maker2 });
+    fiveDealsFromMaker1 = await createManyDeals(fiveDealsFromMaker1, { ...maker1 });
+    fiveDealsFromMaker2 = await createManyDeals(fiveDealsFromMaker2, { ...maker2 });
   });
 
   it('The Dashboard only displays deals from the users organisation', () => {
@@ -33,6 +34,7 @@ context('Dashboard Deals pagination controls', () => {
     // confirm that maker1 sees maker1's deals
     login({...maker1});
     dashboard.visit();
+    dashboard.confirmDealsPresent(fiveDealsFromMaker1);
     dashboard.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(5 items)');
     });
@@ -40,7 +42,7 @@ context('Dashboard Deals pagination controls', () => {
     // confirm that maker2 sees maker2's deals
     login({...maker2});
     dashboard.visit();
-    dashboard.confirmDealsPresent(fiveDealsFromMaker2.map(deal=>deal.details.bankDealId));
+    dashboard.confirmDealsPresent(fiveDealsFromMaker2);
     dashboard.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(5 items)');
     });
