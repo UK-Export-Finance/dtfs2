@@ -28,11 +28,12 @@ const loginGoToDealPage = (deal) => {
 
 const goToCloneDealPage = () => {
   pages.contract.cloneDealLink().click();
-  cy.url().should('eq', relative('/before-you-start/clone'));
+  cy.url().should('include', '/clone/before-you-start');
 
   pages.beforeYouStart.true().click();
   pages.beforeYouStart.submit().click();
 
+  cy.url().should('include', '/contract');
   cy.url().should('include', '/clone');
 };
 
