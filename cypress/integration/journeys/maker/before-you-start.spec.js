@@ -1,5 +1,6 @@
 const {createNewSubmission} = require('../../missions');
 const {beforeYouStart, unableToProceed} = require('../../pages');
+const relative = require('../../relativeURL');
 
 context('Red Line eligibility checking', () => {
   beforeEach(() => {
@@ -16,7 +17,20 @@ context('Red Line eligibility checking', () => {
     beforeYouStart.false().click();
     beforeYouStart.submit().click();
 
-    cy.url().should('include', '/unable-to-proceed');
+    cy.url().should('eq', relative('/unable-to-proceed'));
+
+    unableToProceed.goToHomepage().click();
+    cy.url().should('eq', relative('/start-now'));
+  });
+
+  it('the Unable To Proceed page links back to the homepage.', () => {
+    createNewSubmission({username: 'MAKER', password: 'MAKER'});
+
+    beforeYouStart.false().click();
+    beforeYouStart.submit().click();
+
+    unableToProceed.goToHomepage().click();
+    cy.url().should('eq', relative('/start-now'));
   });
 
   it('A deal that passes red-line checks can progress to enter supply details.', () => {
