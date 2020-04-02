@@ -10,22 +10,26 @@ const router = express.Router();
 router.get('/start-now', async (req, res) => {
   const { userToken } = requestParams(req);
 
-  if (await api.validateToken(userToken)) {
-    res.render('start-now.njk');
-  } else {
+  if (!await api.validateToken(userToken)) {
     res.redirect('/');
+  } else {
+    res.render('start-now.njk');
   }
 });
 
 router.get('/before-you-start', async (req, res) => {
   const { userToken } = requestParams(req);
 
-  return res.render('before-you-start/before-you-start.njk', {
-    mandatoryCriteria: await getApiData(
-      api.mandatoryCriteria(userToken),
-      res,
-    ),
-  });
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  } else {
+    res.render('before-you-start/before-you-start.njk', {
+      mandatoryCriteria: await getApiData(
+        api.mandatoryCriteria(userToken),
+        res,
+      ),
+    });
+  }
 });
 
 router.post('/before-you-start', async (req, res) => {
