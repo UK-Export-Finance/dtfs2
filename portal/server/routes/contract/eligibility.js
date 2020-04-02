@@ -3,15 +3,12 @@ import api from '../../api';
 import {
   getApiData,
   requestParams,
+  generateErrorSummary,
 } from '../../helpers';
 
 const router = express.Router();
 
-const getEligibilityErrors = ({ status, criteria }) => status !== 'Initial' && criteria.filter((c) => typeof c.answer === 'undefined')
-  .map((c) => ({
-    text: `Eligibility criterion ${c.id} is required`,
-    href: `#criterion-group-${c.id}`,
-  }));
+const eligibilityErrorHref = (id) => `#criterion-group-${id}`;
 
 router.get('/contract/:_id/eligibility/criteria', async (req, res) => {
   const { _id, userToken } = requestParams(req);
@@ -21,13 +18,13 @@ router.get('/contract/:_id/eligibility/criteria', async (req, res) => {
     res,
   );
 
-  const eligibilityErrors = getEligibilityErrors(deal.eligibility);
+  const validationErrors = generateErrorSummary(deal.eligibility.validationErrors, eligibilityErrorHref);
 
   return res.render('eligibility/eligibility-criteria.njk',
     {
       _id,
       eligibility: deal.eligibility,
-      eligibilityErrors,
+      validationErrors,
     });
 });
 
@@ -44,13 +41,13 @@ router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
     return res.redirect(`/contract/${_id}/eligibility/supporting-documentation`);
   }
 
-  const eligibilityErrors = getEligibilityErrors(updatedDeal.eligibility);
+  const validationErrors = generateErrorSummary(updatedDeal.eligibility.validationErrors, eligibilityErrorHref);
 
   return res.render('eligibility/eligibility-criteria.njk', {
     _id,
     criteriaStatus: updatedDeal.eligibility.status,
     eligibility: updatedDeal.eligibility,
-    eligibilityErrors,
+    validationErrors,
   });
 });
 

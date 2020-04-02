@@ -6,43 +6,20 @@ const {
   get, post, put, remove,
 } = require('../../api')(app);
 
+const users = require('./test-data');
+const aUserWithNoRoles = users.find(user=>user.username==='NOBODY');
+const aMaker = users.find(user=>user.username==='MAKER');
+const aChecker = users.find(user=>user.username==='CHECKER');
+const aMakerChecker = users.find(user=>user.username==='MAKENCHECK');
+
 describe('a user', () => {
-  const newUserCredentials = {
-    username: 'someone',
-    password: 'some password',
-    roles: [],
-  };
-
-  const updatedUserCredentials = {
-    username: 'someone',
-    password: 'some password',
-    roles: ['checker', 'maker'],
-  };
-
-  const aMaker = {
-    username: 'a maker',
-    password: 'makin all day',
-    roles: ['maker'],
-  };
-
-  const aChecker = {
-    username: 'a checker',
-    password: 'watchin u',
-    roles: ['checker'],
-  };
-
-  const aMakerChecker = {
-    username: 'a maker checker',
-    password: 'chekin myself',
-    roles: ['maker', 'checker'],
-  };
 
   beforeEach(async () => {
     await wipeDB();
   });
 
   it('a newly added user is returned when we list all users', async () => {
-    await post(newUserCredentials).to('/v1/users');
+    await post(aMaker).to('/v1/users');
 
     const { status, body } = await get('/v1/users');
 
@@ -52,8 +29,9 @@ describe('a user', () => {
       count: 1,
       users: [
         {
-          username: newUserCredentials.username,
-          roles: newUserCredentials.roles,
+          username: aMaker.username,
+          roles: aMaker.roles,
+          bank: aMaker.bank,
           _id: expect.any(String),
         },
       ],
@@ -61,21 +39,28 @@ describe('a user', () => {
   });
 
   it('a user can be updated', async () => {
-    await post(newUserCredentials).to('/v1/users');
-    await put(updatedUserCredentials).to('/v1/users/someone');
+    await post(aMaker).to('/v1/users');
 
-    const { status, body } = await get('/v1/users/someone');
+    const updatedUserCredentials = {
+      ...aMaker,
+      roles: ['checker', 'maker'],
+    };
+
+    await put(updatedUserCredentials).to(`/v1/users/${aMaker.username}`);
+
+    const { status, body } = await get(`/v1/users/${aMaker.username}`);
 
     expect(status).toEqual(200);
     expect(body).toEqual({
       username: updatedUserCredentials.username,
       roles: updatedUserCredentials.roles,
+      bank: updatedUserCredentials.bank,
       _id: expect.any(String),
     });
   });
 
   it('a user can be deleted', async () => {
-    await post(newUserCredentials).to('/v1/users');
+    await post(aMaker).to('/v1/users');
     await remove('/v1/users/someone');
 
     const { status, body } = await get('/v1/users/someone');
@@ -85,15 +70,15 @@ describe('a user', () => {
   });
 
   it('an unknown user cannot log in', async () => {
-    const { username, password } = newUserCredentials;
+    const { username, password } = aMaker;
     const { status, body } = await post({ username, password }).to('/v1/login');
 
     expect(status).toEqual(401);
   });
 
   it('a known user can log in', async () => {
-    const { username, password } = newUserCredentials;
-    await post(newUserCredentials).to('/v1/users');
+    const { username, password } = aMaker;
+    await post(aMaker).to('/v1/users');
 
     const { status, body } = await post({ username, password }).to('/v1/login');
 
@@ -111,8 +96,8 @@ describe('a user', () => {
   });
 
   it('a known user can access a protected endpoint', async () => {
-    const { username, password } = newUserCredentials;
-    await post(newUserCredentials).to('/v1/users');
+    const { username, password } = aUserWithNoRoles;
+    await post(aUserWithNoRoles).to('/v1/users');
 
     const { body } = await post({ username, password }).to('/v1/login');
     const { token } = body;

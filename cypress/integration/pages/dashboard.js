@@ -5,7 +5,18 @@ const page = {
   first: () => cy.contains('First'),
   last: () => cy.contains('Last'),
   totalItems: () => cy.get('#totalItems'),
-  deal: (bankDealId) => cy.contains(bankDealId),
+  row: (deal) => {
+    return {
+      bank: () => cy.get(`#deal_${deal._id}`).get('._bank'),
+      bankDealId: () => cy.get(`#deal_${deal._id}`).get('._bankDealId'),
+      ukefDealId: () => cy.get(`#deal_${deal._id}`).get('._ukefDealId'),
+      status: () => cy.get(`#deal_${deal._id}`).get('._status'),
+      submissionType: () => cy.get(`#deal_${deal._id}`).get('._submissionType'),
+      maker: () => cy.get(`#deal_${deal._id}`).get('._maker'),
+      checker: () => cy.get(`#deal_${deal._id}`).get('._checker'),
+      updated: () => cy.get(`#deal_${deal._id}`).get('._updated'),
+    }
+  },
   confirmDealsPresent: (bankIds) => {
     for (const bankId of bankIds) {
       cy.contains(bankId).should('be.visible');

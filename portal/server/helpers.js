@@ -23,3 +23,17 @@ export const requestParams = (req) => {
 
   return { _id, bondId, userToken };
 };
+
+export const generateErrorSummary = (validationErrors, hrefGenerator = (id) => id) => {
+  if (!validationErrors) { return false; }
+
+  const summary = Object.keys(validationErrors.errorList).map((id) => ({
+    text: validationErrors.errorList[id],
+    href: hrefGenerator(id),
+  }));
+
+  return {
+    ...validationErrors,
+    summary,
+  };
+};

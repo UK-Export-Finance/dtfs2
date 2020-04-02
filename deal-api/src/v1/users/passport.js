@@ -16,6 +16,13 @@ const options = {
   algorithms: ['RS256'],
 };
 
+const sanitize = (user) => ({
+  username: user.username,
+  roles: user.roles,
+  bank: user.bank,
+  _id: user._id, // eslint-disable-line no-underscore-dangle
+});
+
 module.exports = (passport) => {
   passport.use(new JwtStrategy(options, ((jwtPayload, done) => {
     findOne(jwtPayload.username, (err, user) => {
@@ -23,7 +30,7 @@ module.exports = (passport) => {
         return done(err, false);
       }
       if (user) {
-        return done(null, user);
+        return done(null, sanitize(user));
       }
       return done(null, false);
     });

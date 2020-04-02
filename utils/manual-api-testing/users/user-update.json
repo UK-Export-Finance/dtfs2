@@ -3,7 +3,7 @@
   "password": "maker",
   "roles": ["maker"],
   "bank": {
-      "id": "956",
-      "name": "Barclays Bank"
+      "id": "666",
+      "name": "New Bank?"
   }
 }
