@@ -42,7 +42,15 @@ router.post('/before-you-start', async (req, res) => {
   return res.redirect('/unable-to-proceed');
 });
 
-router.get('/before-you-start/bank-deal', (req, res) => res.render('before-you-start/before-you-start-bank-deal.njk'));
+router.get('/before-you-start/bank-deal', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  } else {
+    res.render('before-you-start/before-you-start-bank-deal.njk');
+  }
+});
 
 router.post('/before-you-start/bank-deal', async (req, res) => {
   const { bankDealId, bankDealName } = req.body;
