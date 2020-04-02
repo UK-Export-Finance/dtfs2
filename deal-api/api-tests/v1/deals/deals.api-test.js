@@ -12,51 +12,80 @@ const getToken = require('../../getToken')(app);
 
 describe('/v1/deals', () => {
   const newDeal = aDeal({supplyContractName: 'Original Value'});
-  const updatedDeal = aDeal({supplyContractName: 'Updated Value'});
 
-  let aTokenWithNoRoles;
-  let aTokenWithMakerRole;
+  let aUserWithoutRoles;
+  let user1;
+  let user2;
 
   beforeEach(async () => {
     await wipeDB();
 
-    aTokenWithNoRoles = await getToken({
+    aUserWithoutRoles = await getToken({
       username: '1',
       password: '2',
       roles: [],
     });
-    aTokenWithMakerRole = await getToken({
+
+    user1 = await getToken({
       username: '3',
       password: '4',
       roles: ['maker'],
+      bank: {
+        id: '1',
+        name: 'Bank of Never Never Land',
+      },
     });
+
+    user2 = await getToken({
+      username: '5',
+      password: '6',
+      roles: ['maker'],
+      bank: {
+        id: '2',
+        name: 'Pot o Gold',
+      },
+    });
+
+    superuser = await getToken({
+      username: '7',
+      password: '8',
+      roles: ['maker'],
+      bank: {
+        id: '*',
+      },
+    });
+
   });
 
   describe('GET /v1/deals', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
+    it('401s requests that do not present a valid Authorization token', async () => {
       const { status } = await get('/v1/deals');
 
       expect(status).toEqual(401);
     });
 
-    it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await get('/v1/deals', aTokenWithNoRoles);
+    it('401s requests that do not come from a user with role=maker', async () => {
+      const { status } = await get('/v1/deals', aUserWithoutRoles);
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(401);
     });
 
-    it('returns a list of deals ordered by "updated"', async () => {
+    it('returns a list of deals ordered by "updated", filtered by <user>.bank.id', async () => {
       const deals = [
-        aDeal({ supplyContractName: '0' }),
-        aDeal({ supplyContractName: '1' }),
-        aDeal({ supplyContractName: '2' }),
+        aDeal({ supplyContractName: 'bank1/0' }),
+        aDeal({ supplyContractName: 'bank1/1' }),
+        aDeal({ supplyContractName: 'bank1/2' }),
+        aDeal({ supplyContractName: 'bank2/0' }),
+        aDeal({ supplyContractName: 'bank2/1' }),
       ];
 
-      await post(deals[1], aTokenWithMakerRole).to('/v1/deals');
-      await post(deals[2], aTokenWithMakerRole).to('/v1/deals');
-      await post(deals[0], aTokenWithMakerRole).to('/v1/deals');
+      await post(deals[4], user2).to('/v1/deals');
+      await post(deals[1], user1).to('/v1/deals');
+      await post(deals[2], user1).to('/v1/deals');
+      await post(deals[0], user1).to('/v1/deals');
+      await post(deals[3], user2).to('/v1/deals');
 
-      const { status, body } = await get('/v1/deals', aTokenWithNoRoles);
+      let { status, body } = await get('/v1/deals', user1);
 
       expect(status).toEqual(200);
       expect(body.deals).toEqual(expectAllAddedFields([
@@ -64,40 +93,75 @@ describe('/v1/deals', () => {
         deals[2],
         deals[0]
       ]));
+
     });
+
+    it('returns a list of deals ordered by "updated" if <user>.bank.id == *', async () => {
+      const deals = [
+        aDeal({ supplyContractName: 'bank1/0' }),
+        aDeal({ supplyContractName: 'bank1/1' }),
+        aDeal({ supplyContractName: 'bank1/2' }),
+        aDeal({ supplyContractName: 'bank2/0' }),
+        aDeal({ supplyContractName: 'bank2/1' }),
+      ];
+
+      await post(deals[4], user2).to('/v1/deals');
+      await post(deals[1], user1).to('/v1/deals');
+      await post(deals[2], user1).to('/v1/deals');
+      await post(deals[0], user1).to('/v1/deals');
+      await post(deals[3], user2).to('/v1/deals');
+
+      let { status, body } = await get('/v1/deals', superuser);
+
+      expect(status).toEqual(200);
+      expect(body.deals).toEqual(expectAllAddedFields([
+        deals[4],
+        deals[1],
+        deals[2],
+        deals[0],
+        deals[3],
+      ]));
+
+    });
+
   });
 
-    describe('GET /v1/deals/:start/:pagesize', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
+  describe('GET /v1/deals/:start/:pagesize', () => {
+    it('401s requests that do not present a valid Authorization token', async () => {
       const { status } = await get('/v1/deals/0/1');
 
       expect(status).toEqual(401);
     });
 
-    it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await get('/v1/deals/0/1', aTokenWithNoRoles);
+    it('401s requests that do not come from a user with role=maker', async () => {
+      const { status } = await get('/v1/deals/0/1', aUserWithoutRoles);
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(401);
     });
 
-    it('returns a list of deals, ordered by "updated", paginated by start/pagesize', async () => {
+    it('returns a list of deals, ordered by "updated", paginated by start/pagesize, filtered by <user>.bank.id', async () => {
       const deals = [
-        aDeal({ supplyContractName: '0' }),
-        aDeal({ supplyContractName: '1' }),
-        aDeal({ supplyContractName: '2' }),
-        aDeal({ supplyContractName: '3' }),
-        aDeal({ supplyContractName: '4' }),
-        aDeal({ supplyContractName: '5' }),
+        aDeal({ supplyContractName: 'bank1/0' }),
+        aDeal({ supplyContractName: 'bank1/1' }),
+        aDeal({ supplyContractName: 'bank1/2' }),
+        aDeal({ supplyContractName: 'bank1/3' }),
+        aDeal({ supplyContractName: 'bank1/4' }),
+        aDeal({ supplyContractName: 'bank1/5' }),
+        aDeal({ supplyContractName: 'bank2/0' }),
+        aDeal({ supplyContractName: 'bank2/1' }),
       ];
 
-      await post(deals[0], aTokenWithMakerRole).to('/v1/deals');
-      await post(deals[1], aTokenWithMakerRole).to('/v1/deals');
-      await post(deals[2], aTokenWithMakerRole).to('/v1/deals');
-      await post(deals[3], aTokenWithMakerRole).to('/v1/deals');
-      await post(deals[4], aTokenWithMakerRole).to('/v1/deals');
-      await post(deals[5], aTokenWithMakerRole).to('/v1/deals');
+      await post(deals[0], user1).to('/v1/deals');
+      await post(deals[1], user1).to('/v1/deals');
+      await post(deals[2], user1).to('/v1/deals');
+      await post(deals[3], user1).to('/v1/deals');
+      await post(deals[4], user1).to('/v1/deals');
+      await post(deals[5], user1).to('/v1/deals');
 
-      const { status, body } = await get('/v1/deals/2/2', aTokenWithNoRoles);
+      await post(deals[6], user2).to('/v1/deals');
+      await post(deals[7], user2).to('/v1/deals');
+
+      const { status, body } = await get('/v1/deals/2/2', user1);
 
       expect(status).toEqual(200);
       expect(body.deals).toEqual(expectAllAddedFields([
@@ -108,26 +172,81 @@ describe('/v1/deals', () => {
       expect(body.count).toEqual(6);
     });
 
+    it('returns a list of deals, ordered by "updated", paginated by start/pagesize, if <user>.bank.id == *', async () => {
+      const deals = [
+        aDeal({ supplyContractName: 'bank1/0' }),
+        aDeal({ supplyContractName: 'bank1/1' }),
+        aDeal({ supplyContractName: 'bank1/2' }),
+        aDeal({ supplyContractName: 'bank1/3' }),
+        aDeal({ supplyContractName: 'bank1/4' }),
+        aDeal({ supplyContractName: 'bank1/5' }),
+        aDeal({ supplyContractName: 'bank2/0' }),
+        aDeal({ supplyContractName: 'bank2/1' }),
+      ];
+
+      await post(deals[0], user1).to('/v1/deals');
+      await post(deals[1], user1).to('/v1/deals');
+      await post(deals[2], user1).to('/v1/deals');
+      await post(deals[3], user1).to('/v1/deals');
+      await post(deals[4], user1).to('/v1/deals');
+      await post(deals[5], user1).to('/v1/deals');
+
+      await post(deals[6], user2).to('/v1/deals');
+      await post(deals[7], user2).to('/v1/deals');
+
+      const { status, body } = await get('/v1/deals/5/3', superuser);
+
+      expect(status).toEqual(200);
+      expect(body.deals).toEqual(expectAllAddedFields([
+        deals[5],
+        deals[6],
+        deals[7],
+      ]));
+
+      expect(body.count).toEqual(8);
+    });
   });
 
   describe('GET /v1/deals/:id', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
+    it('401s requests that do not present a valid Authorization token', async () => {
       const { status } = await get('/v1/deals/123456789012');
 
       expect(status).toEqual(401);
     });
 
-    it('accepts requests that do present a valid Authorization token', async () => {
-      const { status } = await get('/v1/deals/123456789012', aTokenWithNoRoles);
+    it('401s requests that do not come from a user with role=maker', async () => {
+      const { status } = await get('/v1/deals/123456789012', aUserWithoutRoles);
+
+      expect(status).toEqual(401);
+    });
+
+    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+      const {body} = await post(newDeal, user1).to('/v1/deals');
+
+      const { status } = await get(`/v1/deals/${body._id}`, user2);
+
+      expect(status).toEqual(401);
+    });
+
+    it('404s requests for unkonwn ids', async () => {
+      const { status } = await get(`/v1/deals/123456789012`, user2);
+
+      expect(status).toEqual(404);
+    });
+
+    it('accepts requests if <user>.bank.id == *', async () => {
+      const {body} = await post(newDeal, user1).to('/v1/deals');
+
+      const { status } = await get(`/v1/deals/${body._id}`, superuser);
 
       expect(status).toEqual(200);
     });
 
-    it('returns a deal', async () => {
-      const postResult = await post(newDeal, aTokenWithMakerRole).to('/v1/deals');
+    it('returns the requested resource', async () => {
+      const postResult = await post(newDeal, user1).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status, body } = await get(`/v1/deals/${newId}`, aTokenWithNoRoles);
+      const { status, body } = await get(`/v1/deals/${newId}`, user1);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectAddedFields(newDeal));
@@ -135,61 +254,104 @@ describe('/v1/deals', () => {
   });
 
   describe('POST /v1/deals', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
+    it('401s requests that do not present a valid Authorization token', async () => {
       const { status } = await post(newDeal).to('/v1/deals');
 
       expect(status).toEqual(401);
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "maker" role', async () => {
-      const { status } = await post(newDeal, aTokenWithNoRoles).to('/v1/deals');
+    it('401s requests that do not come from a user with role=maker', async () => {
+      const { status } = await post(newDeal, aUserWithoutRoles).to('/v1/deals');
 
       expect(status).toEqual(401);
     });
 
-    it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const { status } = await post(newDeal, aTokenWithMakerRole).to(
+    it('returns the created deal', async () => {
+      const { body, status } = await post(newDeal, user1).to(
         '/v1/deals',
       );
 
       expect(status).toEqual(200);
+      expect(body).toEqual(expectAddedFields(newDeal));
     });
   });
 
   describe('PUT /v1/deals/:id', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await put(updatedDeal).to('/v1/deals/123456789012');
+    it('401s requests that do not present a valid Authorization token', async () => {
+      const { status } = await put(newDeal).to('/v1/deals/123456789012');
 
       expect(status).toEqual(401);
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "maker" role', async () => {
-      await post(newDeal, aTokenWithMakerRole).to('/v1/deals');
-      const { status } = await put(updatedDeal, aTokenWithNoRoles).to(
+    it('401s requests that do not come from a user with role=maker', async () => {
+      const { status } = await put(newDeal, aUserWithoutRoles).to(
         '/v1/deals/123456789012',
       );
 
       expect(status).toEqual(401);
     });
 
-    it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      await post(newDeal, aTokenWithMakerRole).to('/v1/deals');
-      const { status } = await put(updatedDeal, aTokenWithMakerRole).to(
+    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+      const {body} = await post(newDeal, user1).to('/v1/deals');
+
+      const updatedDeal = {
+        ...body,
+        supplyContractName: 'change this field',
+      }
+
+      const {status} = await put(updatedDeal, user2).to(`/v1/deals/${body._id}`);
+
+      expect(status).toEqual(401);
+    });
+
+    it('404s requests for unknown ids', async () => {
+      const { status } = await put(newDeal, user1).to(
         '/v1/deals/123456789012',
       );
+
+      expect(status).toEqual(404);
+    });
+
+    it('accepts requests if <user>.bank.id == *', async () => {
+      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const updatedDeal = {
+        ...createdDeal,
+        supplyContractName: 'change this field',
+      };
+
+      const { status, body } = await put(updatedDeal, superuser)
+        .to(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
     });
 
-    it('updates the deal', async () => {
-      const postResult = await post(newDeal, aTokenWithMakerRole).to('/v1/deals');
-      const newId = postResult.body._id;
+    it('returns the updated deal', async () => {
+      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const updatedDeal = {
+        ...createdDeal,
+        supplyContractName: 'change this field',
+      };
 
-      await put(updatedDeal, aTokenWithMakerRole).to(`/v1/deals/${newId}`);
+      const { status, body } = await put(updatedDeal, user1).to(`/v1/deals/${createdDeal._id}`);
+
+      expect(status).toEqual(200);
+      expect(body).toEqual(expectAddedFields(updatedDeal));
+    });
+
+    it('updates the deal', async () => {
+      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const updatedDeal = {
+        ...createdDeal,
+        supplyContractName: 'change this field',
+      }
+      await put(updatedDeal, user1).to(`/v1/deals/${createdDeal._id}`);
 
       const { status, body } = await get(
-        `/v1/deals/${newId}`,
-        aTokenWithMakerRole,
+        `/v1/deals/${createdDeal._id}`,
+        user1,
       );
 
       expect(status).toEqual(200);
@@ -198,37 +360,52 @@ describe('/v1/deals', () => {
   });
 
   describe('DELETE /v1/deals/:id', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
+    it('401s requests that do not present a valid Authorization token', async () => {
       const { status } = await remove('/v1/deals/123456789012');
 
       expect(status).toEqual(401);
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "maker" role', async () => {
-      await post(newDeal, aTokenWithMakerRole).to('/v1/deals');
-      const { status } = await remove('/v1/deals/123456789012', aTokenWithNoRoles);
+    it('401s requests that do not come from a user with role=maker', async () => {
+      await post(newDeal, user1).to('/v1/deals');
+      const { status } = await remove('/v1/deals/123456789012', aUserWithoutRoles);
 
       expect(status).toEqual(401);
     });
 
-    it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      await post(newDeal, aTokenWithMakerRole).to('/v1/deals');
-      const { status } = await remove('/v1/deals/123456789012', aTokenWithMakerRole);
+    it('401s requests from users if <user>.bank != <resource>.details.owningBank', async () => {
+      const {body} = await post(newDeal, user1).to('/v1/deals');
+
+      const { status } = await remove(`/v1/deals/${body._id}`, user2);
+
+      expect(status).toEqual(401);
+    });
+
+    it('404s requests to delete unkonwn ids', async () => {
+      const { status } = await remove('/v1/deals/123456789012', user1);
+
+      expect(status).toEqual(404);
+    });
+
+    it('accepts requests if <user>.bank.id == *', async () => {
+      const {body} = await post(newDeal, user1).to('/v1/deals');
+
+      const { status } = await remove(`/v1/deals/${body._id}`, superuser);
 
       expect(status).toEqual(200);
     });
 
     it('deletes the deal', async () => {
-      await post(newDeal, aTokenWithMakerRole).to('/v1/deals');
-      await remove('/v1/deals/123456789012', aTokenWithMakerRole);
+      const {body} = await post(newDeal, user1).to('/v1/deals');
 
-      const { status, body } = await get(
-        '/v1/deals/123456789012',
-        aTokenWithMakerRole,
+      await remove(`/v1/deals/${body._id}`, user1);
+
+      const { status } = await get(
+        `/v1/deals/${body._id}`,
+        user1,
       );
 
-      expect(status).toEqual(200);
-      expect(body).toEqual({});
+      expect(status).toEqual(404);
     });
   });
 });

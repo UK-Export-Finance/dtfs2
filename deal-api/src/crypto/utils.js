@@ -57,6 +57,7 @@ function issueJWT(user) {
     iat: Date.now(),
     username: user.username,
     roles: user.roles,
+    bank: user.bank,
   };
 
   const signedToken = jsonwebtoken.sign(payload, PRIV_KEY, { expiresIn, algorithm: 'RS256' });

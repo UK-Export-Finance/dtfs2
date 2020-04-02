@@ -4,13 +4,7 @@ const {
   create, update, remove, list, findOne,
 } = require('./controller');
 
-const sanitizeUser = (user) => ({
-  username: user.username,
-  roles: user.roles,
-  _id: user._id, // eslint-disable-line no-underscore-dangle
-});
-
-const sanitizeUsers = (users) => users.map(sanitizeUser);
+const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 
 module.exports.list = (req, res, next) => {
   list((err, users) => {
@@ -27,7 +21,9 @@ module.exports.list = (req, res, next) => {
 };
 
 module.exports.create = (req, res, next) => {
-  const { username, password, roles } = req.body;
+  const {
+    username, password, roles, bank,
+  } = req.body;
   const saltHash = utils.genPassword(password);
 
   const { salt, hash } = saltHash;
@@ -37,6 +33,7 @@ module.exports.create = (req, res, next) => {
     hash,
     salt,
     roles,
+    bank,
   };
 
   create(newUser, (err, user) => {

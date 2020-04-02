@@ -3,8 +3,16 @@ const { ObjectId } = require('mongodb');
 const moment = require('moment');
 
 const DEFAULTS = require('../defaults');
-
 const db = require('../../db-driver/client');
+
+const { isSuperUser, userHasAccessTo } = require('../users/checks');
+
+const dealsByOwningBank = (user) => {
+  if (isSuperUser(user)) {
+    return {};
+  }
+  return { 'details.owningBank.id': { $eq: user.bank.id } };
+};
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -12,10 +20,10 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const findDeals = async (callback) => {
+const findDeals = async (requestingUser, callback) => {
   const collection = await db.getCollection('deals');
 
-  collection.find({})
+  collection.find(dealsByOwningBank(requestingUser))
     .sort({ updated: +1 })
     .toArray((err, result) => {
       assert.equal(err, null);
@@ -23,12 +31,12 @@ const findDeals = async (callback) => {
     });
 };
 
-const findPaginatedDeals = async (start, pagesize, callback) => {
+const findPaginatedDeals = async (requestingUser, start, pagesize, callback) => {
   const collection = await db.getCollection('deals');
 
-  const count = await collection.find({}).count();
+  const count = await collection.find(dealsByOwningBank(requestingUser)).count();
 
-  collection.find({})
+  collection.find(dealsByOwningBank(requestingUser))
     .skip(start)
     .limit(pagesize)
     .toArray((err, result) => {
@@ -43,7 +51,6 @@ const findPaginatedDeals = async (start, pagesize, callback) => {
 
 const findOneDeal = async (id, callback) => {
   const collection = await db.getCollection('deals');
-
   collection.findOne({ _id: new ObjectId(id) }, (err, result) => {
     assert.equal(err, null);
     callback(result);
@@ -62,6 +69,9 @@ const createDeal = async (res, deal) => {
     updated: timestamp,
   };
 
+  newDeal.details.maker = req.user;
+  newDeal.details.owningBank = req.user.bank;
+
   const response = await collection.insertOne(newDeal);
 
   const createdDeal = response.ops[0];
@@ -74,7 +84,7 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findDeals((deals) => res.status(200).send({
+  findDeals(req.user, (deals) => res.status(200).send({
     count: deals.length,
     deals,
   }))
@@ -84,29 +94,62 @@ exports.findPage = (req, res) => {
   const start = parseInt(req.params.start, 10);
   const pagesize = parseInt(req.params.pagesize, 10);
 
-  findPaginatedDeals(start, pagesize, (paginatedResults) => res.status(200).send(paginatedResults));
+  findPaginatedDeals(
+    req.user,
+    start,
+    pagesize,
+    (paginatedResults) => res.status(200).send(paginatedResults),
+  );
 };
 
-exports.findOne = (req, res) => (
-  findOneDeal(req.params.id, (deal) => res.status(200).send(deal))
-);
+exports.findOne = (req, res) => {
+  findOneDeal(req.params.id, (deal) => {
+    if (!deal) {
+      res.status(404).send();
+    } else if (!userHasAccessTo(req.user, deal)) {
+      res.status(401).send();
+    } else {
+      res.status(200).send(deal);
+    }
+  });
+};
 
-exports.update = async (req, res) => {
-  const collection = await db.getCollection('deals');
-  await collection.updateOne(
-    { _id: { $eq: new ObjectId(req.params.id) } },
-    { $set: withoutId(req.body) }, {},
-  );
-  // TODO feels like there's a better way to achieve this...
-  const fixedDeal = { ...req.body, _id: req.params.id };
+exports.update = (req, res) => {
+  findOneDeal(req.params.id, async (deal) => {
+    if (!deal) res.status(404).send();
 
-  res.status(200).send(fixedDeal);
+    if (deal) {
+      if (!userHasAccessTo(req.user, deal)) {
+        res.status(401).send();
+      } else {
+        const collection = await db.getCollection('deals');
+        await collection.updateOne(
+          { _id: { $eq: new ObjectId(req.params.id) } },
+          { $set: withoutId(req.body) }, {},
+        );
+        // TODO feels like there's a better way to achieve this...
+        const fixedDeal = { ...req.body, _id: req.params.id };
+
+        res.status(200).send(fixedDeal);
+      }
+    }
+  });
 };
 
 exports.delete = async (req, res) => {
-  const collection = await db.getCollection('deals');
-  const status = await collection.deleteOne({ _id: new ObjectId(req.params.id) });
-  res.status(200).send(status);
+  findOneDeal(req.params.id, async (deal) => {
+    if (!deal) res.status(404).send();
+
+    if (deal) {
+      if (!userHasAccessTo(req.user, deal)) {
+        res.status(401).send();
+      } else {
+        const collection = await db.getCollection('deals');
+        const status = await collection.deleteOne({ _id: new ObjectId(req.params.id) });
+        res.status(200).send(status);
+      }
+    }
+  });
 };
 
 exports.clone = async (req, res) => {
