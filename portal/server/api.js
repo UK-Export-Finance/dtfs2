@@ -1,7 +1,9 @@
 const axios = require('axios');
+const { translateDatesToExpectedFormat, translateAllDatesToExpectedFormat } = require('./dateFormatter');
 require('dotenv').config();
 
 const urlRoot = process.env.DEAL_API_URL;
+
 
 const login = async (username, password) => {
   try {
@@ -32,7 +34,7 @@ const contract = async (id, token) => {
       'Content-Type': 'application/json',
     },
   });
-  return response.data;
+  return translateDatesToExpectedFormat(response.data);
 };
 
 const contracts = async (start, pagesize, token) => {
@@ -44,7 +46,13 @@ const contracts = async (start, pagesize, token) => {
       'Content-Type': 'application/json',
     },
   });
-  return response.data;
+
+  const fixed = {
+    ...response.data,
+    deals: await translateAllDatesToExpectedFormat(response.data.deals),
+  };
+
+  return fixed;
 };
 
 const createDeal = async (deal, token) => {
@@ -58,7 +66,7 @@ const createDeal = async (deal, token) => {
     data: deal,
   });
 
-  return response.data;
+  return translateDatesToExpectedFormat(response.data);
 };
 
 const updateDeal = async (deal, token) => {
@@ -72,14 +80,7 @@ const updateDeal = async (deal, token) => {
     data: deal,
   });
 
-  return response.data;
-};
-
-const upsertDeal = async (deal, token) => {
-  if (deal._id) { // eslint-disable-line no-underscore-dangle
-    return updateDeal(deal, token);
-  }
-  return createDeal(deal, token);
+  return translateDatesToExpectedFormat(response.data);
 };
 
 const cloneDeal = async (dealId, newDealData, token) => {
@@ -196,6 +197,21 @@ const contractBond = async (id, bondId, token) => {
   };
 };
 
+const validateToken = async (token) => {
+  if (!token) return false;
+
+  const response = await axios({
+    method: 'get',
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    url: `${urlRoot}/v1/validate`,
+  });
+
+  return response.status === 200;
+};
+
 export default {
   banks,
   bondCurrencies,
@@ -204,10 +220,12 @@ export default {
   contractBond,
   contracts,
   countries,
+  createDeal,
   industrySectors,
   login,
   mandatoryCriteria,
   transactions,
-  upsertDeal,
+  updateDeal,
   updateEligibilityCriteria,
+  validateToken,
 };

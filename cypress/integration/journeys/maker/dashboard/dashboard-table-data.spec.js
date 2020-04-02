@@ -10,8 +10,8 @@ context('View a deal', () => {
 
   let deal = {
     details: {
-      bankDealId: 'abc/1/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/1/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   };
 
@@ -53,6 +53,9 @@ context('View a deal', () => {
       //TODO - check formatting once formatting known
       expect(text.trim()).to.not.equal('')
     });
+
+    // submissionDate: '12/02/2020',
+    // dateOfLastAction: '12/02/2020 - 13:45',
 
     //TODO - other fields as we start to populate them...
 

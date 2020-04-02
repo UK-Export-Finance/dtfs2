@@ -4,30 +4,36 @@ import {
   getApiData,
   requestParams,
 } from '../helpers';
-import workflow from '../portal-workflow';
 
 const router = express.Router();
 
-router.get('/start-now', (req, res) => res.render('start-now.njk'));
+router.get('/start-now', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  } else {
+    res.render('start-now.njk');
+  }
+});
 
 router.get('/before-you-start', async (req, res) => {
   const { userToken } = requestParams(req);
 
-  return res.render('before-you-start/before-you-start.njk', {
-    mandatoryCriteria: await getApiData(
-      api.mandatoryCriteria(userToken),
-      res,
-    ),
-  });
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  } else {
+    res.render('before-you-start/before-you-start.njk', {
+      mandatoryCriteria: await getApiData(
+        api.mandatoryCriteria(userToken),
+        res,
+      ),
+    });
+  }
 });
 
 router.post('/before-you-start', async (req, res) => {
   const { criteriaMet } = req.body;
-
-  const state = workflow(req.session.deal);
-  await state.setCriteriaMet(criteriaMet, req.session.userToken);
-
-  req.session.deal = state.updatedDeal();
 
   // TODO: check as boolean
   if (criteriaMet === 'true') {
@@ -41,13 +47,17 @@ router.get('/before-you-start/bank-deal', (req, res) => res.render('before-you-s
 router.post('/before-you-start/bank-deal', async (req, res) => {
   const { bankDealId, bankDealName } = req.body;
 
-  const state = workflow(req.session.deal);
-  await state.setBankDetails(bankDealId, bankDealName, req.session.userToken);
+  const newDeal = {
+    details: {
+      bankSupplyContractID: bankDealId,
+      supplyContractName: bankDealName,
+    },
+    criteriaMet: true, // choosing only to create deals where this criteria is met, rather than record failures..
+  };
 
-  const id = req.session.deal._id; // eslint-disable-line no-underscore-dangle
-  req.session.deal = null;
+  const persistedDeal = await api.createDeal(newDeal, req.session.userToken);
 
-  return res.redirect(`/contract/${id}`);
+  res.redirect(`/contract/${persistedDeal._id}`);// eslint-disable-line no-underscore-dangle
 });
 
 router.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk'));

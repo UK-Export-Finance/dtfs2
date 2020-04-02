@@ -32,6 +32,21 @@ context('View a deal', () => {
       expect(text.trim()).equal('someDealName')
     });
 
+    contract.maker().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('MAKER')
+    });
+
+    const regexDate = /[\d][\d]\/[\d][\d]\/[\d][\d][\d][\d]/
+    contract.submissionDate().invoke('text').then((text) => {
+      expect(text.trim()).to.match(regexDate)
+    });
+
+    const regexDateTime = /[\d][\d]\/[\d][\d]\/[\d][\d][\d][\d] [\d][\d]:[\d][\d]/
+    contract.dateOfLastAction().invoke('text').then((text) => {
+      expect(text.trim()).to.match(regexDateTime)
+    });
+
+
   });
 
 });
