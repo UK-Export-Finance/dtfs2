@@ -9,6 +9,7 @@ const page = {
     return {
       bank: () => cy.get(`#deal_${deal._id}`).get('._bank'),
       bankDealId: () => cy.get(`#deal_${deal._id}`).get('._bankDealId'),
+      bankDealIdLink: () => cy.get(`#deal_${deal._id}`).get('._bankDealId a'),
       ukefDealId: () => cy.get(`#deal_${deal._id}`).get('._ukefDealId'),
       status: () => cy.get(`#deal_${deal._id}`).get('._status'),
       submissionType: () => cy.get(`#deal_${deal._id}`).get('._submissionType'),
@@ -17,13 +18,15 @@ const page = {
       updated: () => cy.get(`#deal_${deal._id}`).get('._updated'),
     }
   },
+  lastTableRow: () => cy.get('table tbody tr').last(),
+  lastTableRowBankDealIdLink: (row) => {
+    return row.find('._bankDealId a');
+  },
   confirmDealsPresent: (bankIds) => {
     for (const bankId of bankIds) {
       cy.contains(bankId).should('be.visible');
     }
-  },
-  tableBodyRow: () => cy.get('table tbody tr'),
-  bankDealIdLink: (tableRow) => tableRow.find('[data-cy="bank-deal-id-link"]'),
+  }
 };
 
 module.exports = page;
