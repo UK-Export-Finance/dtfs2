@@ -58,13 +58,13 @@ const findOneDeal = async (id, callback) => {
 };
 exports.findOneDeal = findOneDeal;
 
-const createDeal = async (req, res, deal) => {
+const createDeal = async (req, res, dealData) => {
   const collection = await db.getCollection('deals');
 
   const timestamp = moment().format('YYYY MM DD HH:mm:ss:SSS ZZ');
   const newDeal = {
     ...DEFAULTS.DEALS,
-    ...deal,
+    ...dealData,
     created: timestamp,
     updated: timestamp,
   };
@@ -78,8 +78,8 @@ const createDeal = async (req, res, deal) => {
   return res.status(200).send(createdDeal);
 };
 
-exports.create = async (req, res) => {
-  const result = await createDeal(req, res, req.body); // this feels naughty
+exports.create = async (req, res, dealData) => {
+  const result = await createDeal(req, res, dealData);
   return result;
 };
 
