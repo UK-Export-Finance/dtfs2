@@ -58,13 +58,13 @@ const findOneDeal = async (id, callback) => {
 };
 exports.findOneDeal = findOneDeal;
 
-const createDeal = async (req, res, dealData) => {
+const createDeal = async (req, res) => {
   const collection = await db.getCollection('deals');
 
   const timestamp = moment().format('YYYY MM DD HH:mm:ss:SSS ZZ');
   const newDeal = {
     ...DEFAULTS.DEALS,
-    ...dealData,
+    ...req.body,
     created: timestamp,
     updated: timestamp,
   };
@@ -78,8 +78,8 @@ const createDeal = async (req, res, dealData) => {
   return res.status(200).send(createdDeal);
 };
 
-exports.create = async (req, res, dealData) => {
-  const result = await createDeal(req, res, dealData);
+exports.create = async (req, res) => {
+  const result = await createDeal(req, res);
   return result;
 };
 
@@ -169,6 +169,7 @@ exports.clone = async (req, res) => {
       modifiedDeal.bondTransactions = DEFAULTS.DEALS.bondTransactions;
       modifiedDeal.loanTransactions = DEFAULTS.DEALS.loanTransactions;
     }
-    return createDeal(req, res, modifiedDeal);
+    req.body = modifiedDeal;
+    return createDeal(req, res);
   });
 };
