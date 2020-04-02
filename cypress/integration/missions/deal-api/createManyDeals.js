@@ -7,6 +7,8 @@ const loginViaAPI = require('./loginViaAPI');
 const insertDeal = (deal, token, callback) => {
   const json = JSON.stringify(deal);
 
+  console.log(`insertDeal json: \n\n ${json}`)
+
   const options = {
     hostname: api().host,
     port: api().port,
@@ -19,9 +21,10 @@ const insertDeal = (deal, token, callback) => {
   };
 
   const req = http.request(options, res => {
-    res.on('data', data => {
-      callback();
-    })
+    res.setEncoding('utf8');
+    res.on('data', function (data) {
+      callback(null, JSON.parse(data));
+    });
   });
 
   req.on('error', error => {
@@ -32,17 +35,16 @@ const insertDeal = (deal, token, callback) => {
   req.end();
 };
 
+
 const insertDeals = (deals, token, callback) => {
-  const inserted = [];
-
+  const persisted = [];
   for (const dealToInsert of deals) {
-    insertDeal(dealToInsert, token, () => {
 
-      inserted.push(dealToInsert);
-      console.log(`inserted ${inserted.length} of ${deals.length}`)
+    insertDeal(dealToInsert, token, (err, persistedDeal) => {
+      persisted.push(persistedDeal);
 
-      if (inserted.length  === deals.length) {
-        callback();
+      if (persisted.length  === deals.length) {
+        callback(persisted);
       }
 
     })
@@ -58,11 +60,11 @@ module.exports = async (deals, opts) => {
         reject(err)
       } else {
 
-        insertDeals(deals, token, () => {
+        insertDeals(deals, token, (persistedDeals) => {
           if (err) {
             reject(err);
           } else {
-            resolve();
+            resolve(persistedDeals);
           }
 
         })

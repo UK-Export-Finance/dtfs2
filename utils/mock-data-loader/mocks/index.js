@@ -196,13 +196,11 @@ const MOCKS = {
       details: {
         bank: 'UKEF test bank',
         bankSupplyContractID: 'MIA/Msstar/BSS/DGR',
+        supplyContractName: 'MIA deal',
         ukefDealId: '20010739',
         status: 'Acknowledged by UKEF',
         previousStatus: 'Submitted',
-        maker: 'MAKER DURGA',
         checker: 'CHECKER DURGA',
-        submissionDate: '12/02/2020',
-        dateOfLastAction: '12/02/2020 - 13:45',
         submissionType: 'Automatic Inclusion Notice'
       },
       aboutSupplyContract: {
@@ -394,13 +392,11 @@ const MOCKS = {
       details: {
         bank: 'UKEF test bank',
         bankSupplyContractID: 'AIN MIA/Msstar/BSS/DGR ',
+        supplyContractName: 'AIN deal',
         ukefDealId: '20010740',
         status: 'Acknowledged by UKEF',
         previousStatus: 'Submitted',
-        maker: 'Durga Rao',
         checker: 'CHECKER DURGA',
-        submissionDate: '14/01/2020',
-        dateOfLastAction: '14/02/2020 - 19:15',
         submissionType: 'Automatic Inclusion Notice'
       },
       aboutSupplyContract: {

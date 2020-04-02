@@ -4,108 +4,108 @@
 module.exports = [
   {
     details: {
-      bankDealId: 'abc/1/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/1/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/2/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/2/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/3/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/3/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/4/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/4/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/5/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/5/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/6/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/6/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/7/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/7/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/8/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/8/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/9/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/9/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/10/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/10/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/11/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/11/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/12/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/12/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/13/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/13/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/14/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/14/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/15/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/15/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/16/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/16/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/17/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/17/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/18/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/18/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/19/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/19/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/20/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/20/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }, {
     details: {
-      bankDealId: 'abc/21/def',
-      bankDealName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractID: 'abc/21/def',
+      supplyContractName: 'Tibettan submarine acquisition scheme'
     }
   }
 ];

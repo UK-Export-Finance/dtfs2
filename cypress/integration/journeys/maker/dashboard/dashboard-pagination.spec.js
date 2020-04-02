@@ -7,10 +7,12 @@ const user = {username: 'MAKER', password: 'MAKER'};
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('./twentyOneDeals');
-const page1 = twentyOneDeals.map(deal=>deal.details.bankDealId).slice(0,20);
-const page2 = [twentyOneDeals[20].details.bankDealId];
-
 context('Dashboard Deals pagination controls', () => {
+
+  let persistedDeals;
+  let page1;
+  let page2;
+
 
   before( async() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -21,7 +23,9 @@ context('Dashboard Deals pagination controls', () => {
 
     // clear down our test users's old deals and insert our test data
     await deleteAllDeals(user);
-    await createManyDeals(twentyOneDeals, { ...user });
+    persistedDeals = await createManyDeals(twentyOneDeals, { ...user });
+    page1 = persistedDeals.slice(0,20);
+    page2 = [persistedDeals[20]];
   });
 
   it('Dashboard Deals displays 20 results, the total number of items, and working First/Previous/Next/Last links.', () => {
