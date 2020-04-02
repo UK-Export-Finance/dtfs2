@@ -58,7 +58,7 @@ const findOneDeal = async (id, callback) => {
 };
 exports.findOneDeal = findOneDeal;
 
-const createDeal = async (res, deal) => {
+const createDeal = async (req, res, deal) => {
   const collection = await db.getCollection('deals');
 
   const timestamp = moment().format('YYYY MM DD HH:mm:ss:SSS ZZ');
@@ -79,7 +79,7 @@ const createDeal = async (res, deal) => {
 };
 
 exports.create = async (req, res) => {
-  const result = await createDeal(res, req.body);
+  const result = await createDeal(req, res, req.body); // this feels naughty
   return result;
 };
 
@@ -169,6 +169,6 @@ exports.clone = async (req, res) => {
       modifiedDeal.bondTransactions = DEFAULTS.DEALS.bondTransactions;
       modifiedDeal.loanTransactions = DEFAULTS.DEALS.loanTransactions;
     }
-    return createDeal(res, modifiedDeal);
+    return createDeal(req, res, modifiedDeal);
   });
 };
