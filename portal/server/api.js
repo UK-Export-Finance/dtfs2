@@ -183,6 +183,21 @@ const contractBond = async (id, bondId, token) => {
   };
 };
 
+const validateToken = async (token) => {
+  if (!token) return false;
+
+  const response = await axios({
+    method: 'get',
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    url: `${urlRoot}/v1/validate`,
+  });
+
+  return response.status === 200;
+};
+
 export default {
   banks,
   bondCurrencies,
@@ -197,4 +212,5 @@ export default {
   transactions,
   updateDeal,
   updateEligibilityCriteria,
+  validateToken,
 };

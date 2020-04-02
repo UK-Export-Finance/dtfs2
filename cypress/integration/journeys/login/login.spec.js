@@ -1,5 +1,6 @@
 const {login} = require('../../missions');
-const pages = require('../../pages');
+const {header} = require('../../pages');
+const appUnderTest = require('../../appUnderTest');
 const relative = require('../../relativeURL');
 
 context('Login', () => {
@@ -11,6 +12,13 @@ context('Login', () => {
     });
   });
 
+  it('When a user that is not logged in navigates to a protected route, they progress to the login page', () => {
+    appUnderTest.start();
+    header.home().click();
+
+    cy.url().should('eq', relative('/'));
+  });
+
   it('A failed login leaves the user on the landing page', () => {
     login({username: 'shaker', password: 'MAKER'});
 
@@ -19,6 +27,14 @@ context('Login', () => {
 
   it('A successful login takes the user to the /start-now page', () => {
     login({username: 'MAKER', password: 'MAKER'});
+
+    cy.url().should('eq', relative('/start-now'));
+  });
+
+  it('When a logged-in user clicks the home link they go to the /start-now page', () => {
+    login({username: 'MAKER', password: 'MAKER'});
+
+    header.home().click();
 
     cy.url().should('eq', relative('/start-now'));
   });
