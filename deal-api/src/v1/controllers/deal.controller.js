@@ -154,6 +154,10 @@ exports.delete = async (req, res) => {
 
 exports.clone = async (req, res) => {
   await findOneDeal(req.params.id, (existingDeal) => {
+    if (!existingDeal) {
+      return res.status(404).send();
+    }
+
     const { bankDealId, bankDealName, cloneTransactions } = req.body;
 
     const modifiedDeal = {
@@ -170,6 +174,7 @@ exports.clone = async (req, res) => {
       modifiedDeal.loanTransactions = DEFAULTS.DEALS.loanTransactions;
     }
     req.body = modifiedDeal;
+
     return createDeal(req, res);
   });
 };
