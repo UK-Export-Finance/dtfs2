@@ -1,8 +1,18 @@
 {% extends "index.njk" %}
 {% import '_macros/confirm-eligibility-nav.njk' as confirmEligibility %}
+
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 
 {% block content %}
+
+  <script type="text/javascript">
+    function onChangeRadioButton(element, shouldShow) {
+      window.dtfs.showHideElement(element, shouldShow);
+    }
+  </script>
 
     {% if validationErrors.count %}
     {{
@@ -44,14 +54,30 @@
           <div class="govuk-radios govuk-radios--inline">
 
             <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="criterion-{{ criterion.id }}" name="criterion-{{ criterion.id }}" type="radio" value="true" {% if eligibility.status !== "Initial" and criterion.answer %}checked{% endif %} data-cy="criteria-true">
+              <input  class="govuk-radios__input"
+                      id="criterion-{{ criterion.id }}"
+                      name="criterion-{{ criterion.id }}"
+                      type="radio"
+                      value="true"
+                      {% if eligibility.status !== "Initial" and criterion.answer %}checked{% endif %}
+                      {% if criterion.id == "11" %}onClick="onChangeRadioButton('criterion-group-additional-{{ criterion.id }}', false)"{% endif %}
+                      data-cy="criteria-true"
+              >
               <label class="govuk-label govuk-radios__label" for="criterion-{{ criterion.id }}">
                 True
               </label>
             </div>
 
             <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="criterion-{{ criterion.id }}-2" name="criterion-{{ criterion.id }}" type="radio" value="false" {% if eligibility.status !== "Initial" and criterion.answer === false %}checked{% endif %} data-cy="criteria-false">
+              <input  class="govuk-radios__input"
+                      id="criterion-{{ criterion.id }}-2"
+                      name="criterion-{{ criterion.id }}"
+                      type="radio"
+                      value="false"
+                      {% if eligibility.status !== "Initial" and criterion.answer === false %}checked{% endif %}
+                      {% if criterion.id == "11" %}onClick="onChangeRadioButton('criterion-group-additional-{{ criterion.id }}', true)"{% endif %}
+                      data-cy="criteria-false"
+              >
               <label class="govuk-label govuk-radios__label" for="criterion-{{ criterion.id }}-2">
                 False
               </label>
@@ -61,6 +87,97 @@
         </fieldset>
 
       </div>
+      
+      {% if criterion.id == "11" %}
+        <div id="criterion-group-additional-{{criterion.id}}" class="{% if criterion.answer != false  %}govuk-visually-hidden{% endif %}">
+          {{ govukInput({
+            label: {
+              text: "Agent's corporate name"
+            },
+            hint: {
+              text: "This should be the legal name of the entity."
+            },
+            id: "criterion-group-agent-name",
+            name: "agent-name",
+            classes: "govuk-!-width-one-half",
+            value: eligibility.agentName,
+            errorMessage: validationErrors.errorList['agent-name']
+         }) }}
+
+          {% call govukFieldset({
+            classes: "govuk-!-padding-3 box-solid",
+            legend: {
+              text: "Agent's corporate address",
+              classes: "govuk-!-margin-2",
+              isPageHeading: false
+            }
+          }) %}
+          
+            {{ govukSelect({
+                id: "criterion-group-agent-country",
+                name: "agent-country",
+                label: {
+                  text: "Country"
+                },
+                items: countries,
+                errorMessage: validationErrors.errorList['agent-country']
+              }) }}
+                
+            {{ govukInput({
+              label: {
+                html: 'Address line 1 <span class="govuk-visually-hidden">line 1 of 4</span>'
+              },
+              classes: "govuk-!-width-one-half",
+              id: "criterion-group-agent-address-line-1",
+              name: "agent-address-line-1",
+              value: eligibility.agentAddress1,
+              errorMessage: validationErrors.errorList['agent-address-line-1']
+            }) }}
+
+            {{ govukInput({
+              label: {
+                html: 'Address line 2 (optional) <span class="govuk-visually-hidden">line 2 of 4</span>'
+              },
+              classes: "govuk-!-width-one-half",
+              id: "criterion-group-agent-address-line-2",
+              name: "agent-address-line-2",
+              value: eligibility.agentAddress2
+            }) }}
+
+            {{ govukInput({
+              label: {
+                html: 'Address line 3 (optional) <span class="govuk-visually-hidden">line 3 of 4</span>'
+              },
+              classes: "govuk-!-width-one-half",
+              id: "criterion-group-agent-address-line-3",
+              name: "agent-address-line-3",
+              value: eligibility.agentAddress3
+            }) }}
+
+            {{ govukInput({
+              label: {
+                html: 'City/Town (optional) <span class="govuk-visually-hidden">line 4 of 4</span>'
+              },
+              classes: "govuk-!-width-one-half",
+              id: "criterion-group-agent-address-town",
+              name: "agent-address-town",
+              value: eligibility.agentTown
+            }) }}
+
+            {{ govukInput({
+              label: {
+                text: "Postcode"
+              },
+              classes: "govuk-input--width-10",
+              id: "criterion-group-agent-postcode",
+              name: "agent-postcode",
+              value: eligibility.agentPostcode,
+              errorMessage: validationErrors.errorList['agent-postcode']
+            }) }}
+
+          {% endcall %}
+        </div>
+      {% endif %}
 
     {% endfor %}
 

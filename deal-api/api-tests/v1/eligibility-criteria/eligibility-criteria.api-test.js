@@ -6,7 +6,7 @@ const {
   get, post, put, remove,
 } = require('../../api')(app);
 
-const {expectAddedFields} = require('../deals/expectAddedFields');
+const { expectAddedFields } = require('../deals/expectAddedFields');
 
 const getToken = require('../../getToken')(app);
 
@@ -51,7 +51,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       bank: {
         id: '1',
         name: 'Mammon',
-      }
+      },
     });
 
     user2 = await getToken({
@@ -61,7 +61,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       bank: {
         id: '2',
         name: 'Temple of cash',
-      }
+      },
     });
 
     superuser = await getToken({
@@ -70,20 +70,19 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       roles: ['maker'],
       bank: {
         id: '*',
-      }
+      },
     });
-
   });
 
   describe('PUT /v1/deals/:id/eligibility-criteria', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const {status} = await put(updatedECPartial).to(`/v1/deals/123456789012/eligibility-criteria`);
+      const { status } = await put(updatedECPartial).to('/v1/deals/123456789012/eligibility-criteria');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const {status} = await put(updatedECPartial, aUserWithoutRoles).to(`/v1/deals/123456789012/eligibility-criteria`);
+      const { status } = await put(updatedECPartial, aUserWithoutRoles).to('/v1/deals/123456789012/eligibility-criteria');
 
       expect(status).toEqual(401);
     });
@@ -92,13 +91,13 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       const postResult = await post(newDeal, user1).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const {status} = await put(updatedECPartial, user2).to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status } = await put(updatedECPartial, user2).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown resources', async () => {
-      const {status} = await put(updatedECPartial, user1).to(`/v1/deals/123456789012/eligibility-criteria`);
+      const { status } = await put(updatedECPartial, user1).to('/v1/deals/123456789012/eligibility-criteria');
 
       expect(status).toEqual(404);
     });
@@ -107,7 +106,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       const postResult = await post(newDeal, user1).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const {status} = await put(updatedECPartial, superuser).to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status } = await put(updatedECPartial, superuser).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
     });
@@ -150,7 +149,14 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
 
       expect(status).toEqual(200);
       expect(body.eligibility.validationErrors.count).toEqual(5);
-      expect(Object.keys(body.eligibility.validationErrors.errorList)).toEqual(['13', '15', '16', '17', '18']);
+
+      const errorIdList = [];
+      Object.entries(body.eligibility.validationErrors.errorList).forEach(([key, value]) => {
+        if (value.text) {
+          errorIdList.push(key);
+        }
+      });
+      expect(errorIdList).toEqual(['13', '15', '16', '17', '18']);
     });
   });
 });
