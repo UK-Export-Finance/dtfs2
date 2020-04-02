@@ -12,7 +12,6 @@ const router = express.Router();
 
 router.get('/contract/:_id', async (req, res) => {
   const { _id, userToken } = requestParams(req);
-  req.session.cloneDealId = _id;
 
   return res.render('contract/contract-view.njk',
     await getApiData(
@@ -109,11 +108,33 @@ router.get('/contract/:_id/clone', async (req, res) => {
 router.post('/contract/:_id/clone', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  req.session.cloneDealId = null;
   await api.cloneDeal(_id, req.body, userToken);
 
   // TODO: display flash message 'cloned successfully'
   return res.redirect('/dashboard');
+});
+
+
+router.get('/contract/:_id/clone/before-you-start', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  return res.render('before-you-start/before-you-start.njk', {
+    mandatoryCriteria: await getApiData(
+      api.mandatoryCriteria(userToken),
+      res,
+    ),
+  });
+});
+
+router.post('/contract/:_id/clone/before-you-start', async (req, res) => {
+  const { _id } = requestParams(req);
+  const { criteriaMet } = req.body;
+
+  // TODO: check as boolean
+  if (criteriaMet === 'true') {
+    return res.redirect(`/contract/${_id}/clone`);
+  }
+  return res.redirect('/unable-to-proceed');
 });
 
 router.use('/',
