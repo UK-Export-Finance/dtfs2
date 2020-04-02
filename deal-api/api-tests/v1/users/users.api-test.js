@@ -90,6 +90,27 @@ describe('a user', () => {
     });
   });
 
+  it('a token can be validated', async () => {
+    const { username, password } = aMaker;
+    await post(aMaker).to('/v1/users');
+
+    const loginResult = await post({ username, password }).to('/v1/login');
+
+    const token = loginResult.body.token;
+
+    const {status} = await get('/v1/validate', token);
+
+    expect(status).toEqual(200);
+  });
+
+  it('invalid tokens fail validation', async () => {
+    const token = 'some characters i think maybe look like a token';
+
+    const {status} = await get('/v1/validate', token);
+
+    expect(status).toEqual(401);
+  });
+
   it('an uknown user cannot access a protected endpoint', async () => {
     const { status } = await get('/v1/test/protected');
     expect(status).toEqual(401);

@@ -212,6 +212,15 @@ openRouter.route('/login')
     users.login,
   );
 
+// simplest token-validator
+authRouter.get(
+  '/validate',
+  validate(),
+  (req, res) => {
+    res.status(200).send();
+  },
+);
+
 authRouter.get('/test/protected', (req, res) => {
   res.status(200).json({ success: true, msg: 'You are successfully authenticated to this route!' });
 });

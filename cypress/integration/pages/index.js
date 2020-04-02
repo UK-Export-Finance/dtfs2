@@ -7,4 +7,5 @@ module.exports = {
   contract: require('./contract'),
   dashboard: require('./dashboard'),
   eligibilityCriteria: require('./eligibilityCriteria'),
+  header: require('./header'),
 };

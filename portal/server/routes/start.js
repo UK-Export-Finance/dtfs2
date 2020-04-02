@@ -7,7 +7,15 @@ import {
 
 const router = express.Router();
 
-router.get('/start-now', (req, res) => res.render('start-now.njk'));
+router.get('/start-now', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  if (await api.validateToken(userToken)) {
+    res.render('start-now.njk');
+  } else {
+    res.redirect('/');
+  }
+});
 
 router.get('/before-you-start', async (req, res) => {
   const { userToken } = requestParams(req);
