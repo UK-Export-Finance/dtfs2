@@ -2,7 +2,6 @@ const { expectMongoId } = require('../../expectMongoIds');
 
 const expectAddedFields = (obj) => {
   const expectation = expectMongoId({
-    details: {},
     eligibility: {
       status: 'Initial',
       criteria: expect.any(Array),
@@ -16,12 +15,14 @@ const expectAddedFields = (obj) => {
     summary: {},
     comments: [],
     ... obj,
-    created: expect.any(String),
-    updated: expect.any(String),
+    details: {
+      ... obj.details,
+      dateOfLastAction: expect.any(String),
+      submissionDate: expect.any(String),
+      maker: expect.any(Object),
+      owningBank: expect.any(Object),
+    },
   });
-
-  expectation.details.maker = expect.any(Object);
-  expectation.details.owningBank = expect.any(Object);
 
   return expectation;
 }

@@ -17,9 +17,9 @@ const page = {
       updated: () => cy.get(`#deal_${deal._id}`).get('._updated'),
     }
   },
-  confirmDealsPresent: (bankIds) => {
-    for (const bankId of bankIds) {
-      cy.contains(bankId).should('be.visible');
+  confirmDealsPresent: (deals) => {
+    for (const deal of deals) {
+      cy.get(`#deal_${deal._id}`)
     }
   }
 }
