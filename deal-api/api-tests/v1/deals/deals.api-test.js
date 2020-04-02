@@ -408,4 +408,68 @@ describe('/v1/deals', () => {
       expect(status).toEqual(404);
     });
   });
+
+  describe('POST /v1/deals/:id/clone', () => {
+    it('401s requests that do not present a valid Authorization token', async () => {
+      const { status } = await post(newDeal).to('/v1/deals/123456789012/clone');
+
+      expect(status).toEqual(401);
+    });
+
+    it('401s requests that do not come from a user with role=maker', async () => {
+      const { status } = await post(newDeal, aUserWithoutRoles).to(
+        '/v1/deals/123456789012/clone',
+      );
+
+      expect(status).toEqual(401);
+    });
+
+    it('404s requests for unknown ids', async () => {
+      const { status } = await post(newDeal, user1).to(
+        '/v1/deals/123456789012/clone',
+      );
+      expect(status).toEqual(404);
+    });
+
+    describe('with post body', () => {
+      let originalDealId;
+
+      beforeEach(async () => {
+        const { body: originalDealBody } = await post(newDeal, user1).to('/v1/deals');
+        originalDealId = originalDealBody._id;
+      });
+
+      it('clones a deal with modified _id, bankDealId and bankDealName', async () => {
+        const clonePostBody = {
+          bankDealId: 'new-bank-deal-id',
+          bankDealName: 'new-bank-deal-name',
+          cloneTransactions: 'true',
+        };
+
+        const { body } = await post(clonePostBody, user1).to(`/v1/deals/${originalDealId}/clone`);
+
+        expect(body._id).not.toEqual(clonePostBody.bankDealId);
+        expect(body.details.bankDealId).toEqual(clonePostBody.bankDealId);
+        expect(body.details.bankDealName).toEqual(clonePostBody.bankDealName);
+      });
+
+      describe('when req.body has cloneTransactions set to false', () => {
+        it('clones a deal with empty transactions', async () => {
+          const clonePostBody = {
+            bankDealId: 'new-bank-deal-id',
+            bankDealName: 'new-bank-deal-name',
+            cloneTransactions: 'false',
+          };
+          const { body } = await post(clonePostBody, user1).to(`/v1/deals/${originalDealId}/clone`);
+
+          expect(body.bondTransactions).toEqual({
+            items: [],
+          });
+          expect(body.loanTransactions).toEqual({
+            items: [],
+          });
+        });
+      });
+    });
+  });
 });
