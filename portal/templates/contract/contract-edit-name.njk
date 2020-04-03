@@ -4,7 +4,7 @@
 
   <h1 class="govuk-heading-l">Change name of Supply Contract</h1>
 
-  <form method="PUT" autocomplete="off">
+  <form method="POST" autocomplete="off">
 
     <div class="govuk-grid-row">
 
@@ -14,13 +14,13 @@
           <label class="govuk-label" for="supplyContractName">
             Supply Contract name
           </label>
-          <input class="govuk-input" id="supplyContractName" name="supplyContractName" type="text" value="{{ supplyContractName }}">
+          <input data-cy="supplyContractName" class="govuk-input" id="supplyContractName" name="supplyContractName" type="text" value="{{ details.supplyContractName }}">
         </div>
 
       </div>
     </div>
 
-    <button class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
+    <button data-cy="Submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
       Update Supply Contract Name
     </button>
 
@@ -29,4 +29,3 @@
   </form>
 
 {% endblock %}
-

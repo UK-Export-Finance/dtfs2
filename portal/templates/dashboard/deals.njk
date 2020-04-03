@@ -12,7 +12,7 @@
 
     {{ dashboardTabs.nav(selected = 'deals', id = id ) }}
 
-    <section class="govuk-tabs__panel" id="deals">
+    <section class="govuk-tabs__panel">
 
       <form autocomplete="off">
 
@@ -146,36 +146,36 @@
         <tbody class="govuk-table__body">
 
           {% for contract in contracts %}
-            <tr id="deal_{{contract._id}}" class="govuk-table__row">
-              <td class="govuk-table__cell govuk-!-font-size-14 _bank">
+            <tr data-cy="deal_{{contract._id}}" class="govuk-table__row">
+              <td data-cy="bank" class="govuk-table__cell govuk-!-font-size-14">
                 {{ contract.details.owningBank.name }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14 _bankDealId">
-                <a href="/contract/{{ contract._id }}" class="govuk-link">{{ contract.details.bankDealId }}</a>
+              <td data-cy="bankSupplyContractID" class="govuk-table__cell govuk-!-font-size-14">
+                <a href="/contract/{{ contract._id }}" class="govuk-link">{{ contract.details.bankSupplyContractID }}</a>
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14 _ukefDealId">
+              <td data-cy="ukefDealId" class="govuk-table__cell govuk-!-font-size-14">
                 {{ contract.details.ukefDealId }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14 _status">
+              <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
                 {{ contract.details.status }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14 _submissionType">
+              <td data-cy="submissionType" class="govuk-table__cell govuk-!-font-size-14">
                 {{ contract.details.submissionType }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14 _maker">
+              <td data-cy="maker" class="govuk-table__cell govuk-!-font-size-14">
                 {{ contract.details.maker.username }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14 _checker">
+              <td data-cy="checker" class="govuk-table__cell govuk-!-font-size-14">
                 {{ contract.details.checker }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14 _updated">
+              <td data-cy="updated" class="govuk-table__cell govuk-!-font-size-14">
                 {{ contract.details.dateOfLastAction }}
               </td>
 

@@ -1,6 +1,25 @@
-const isSuperUser = (user) => user.bank.id === '*';
+const isSuperUser = (user) => user && user.bank && user.bank.id === '*';
 
-const userHasAccessTo = (user, resource) => isSuperUser(user) || user.bank.id === resource.details.owningBank.id;
+const userHasAccessTo = (user, resource) => {
+  // super-users can get at anything
+  if (isSuperUser(user)) {
+    return true;
+  }
+
+  // if we've somehow got a user that doesn't have bank details; reject
+  if (!user || !user.bank || !user.bank.id) {
+    return false;
+  }
+
+  // if we've somehow got a resource that doesn't have an owning bank; reject
+  // this one is up for some debate but i figure better safe than sorry...
+  if (!resource || !resource.details || !resource.details.owningBank) {
+    return false;
+  }
+
+  // ownership check..
+  return user.bank.id === resource.details.owningBank.id;
+};
 
 module.exports = {
   isSuperUser,
