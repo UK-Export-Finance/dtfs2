@@ -8,8 +8,8 @@ const user = { username: 'MAKER', password: 'MAKER' };
 
 const MOCK_DEAL = {
   details: {
-    bankDealId: 'someDealId',
-    bankDealName: 'someDealName',
+    bankSupplyContractID: 'someDealId',
+    bankSupplyContractName: 'someDealName',
   },
 };
 
@@ -22,7 +22,7 @@ const loginGoToDealPage = (deal) => {
   const row = pages.dashboard.row(deal);
 
   // go to deal page
-  row.bankDealIdLink().click();
+  row.bankSupplyContractIDLink().click();
   cy.url().should('include', '/contract/');
 };
 
@@ -49,33 +49,40 @@ context('Clone a deal', () => {
     });
 
     await deleteAllDeals(user);
+  });
+
+  it('When a user creates a deal and clicks `clone deal` they progress to the clone page with inputs prepopulated', async () => {
     deal = await createADeal(MOCK_DEAL, user);
-  });
 
-  it('When a user creates a deal and clicks `clone deal` they progress to the clone page with inputs prepopulated', () => {
     loginGoToDealPage(deal);
 
     goToCloneDealPage();
 
-    // confirm that inputs are populated with the deal's initial bank deal ID
-    cloneDeal.bankDealIdInput().should('have.value', MOCK_DEAL.details.bankDealId);
-    cloneDeal.bankDealNameInput().should('have.value', MOCK_DEAL.details.bankDealName);
+    // confirm that inputs are populated with the deal's initial bankSupplyContractID/bankSupplyContractName
+    cloneDeal.bankSupplyContractIDInput().should('have.value', MOCK_DEAL.details.bankSupplyContractID);
+    cloneDeal.supplyContractNameInput().should('have.value', MOCK_DEAL.details.bankSupplyContractName);
   });
 
-  it('When a user clones a deal they progress to the dashboard page and the edited bank deal id/name is displayed in the deal page', () => {
+  it('When a user clones a deal they progress to the dashboard page and the edited bankSupplyContractID/bankSupplyContractName is displayed in the deal page', async () => {
+    deal = await createADeal(MOCK_DEAL, user);
+
     loginGoToDealPage(deal);
     goToCloneDealPage();
 
-    pages.cloneDeal.bankDealIdInput().type('-cloned');
-    pages.cloneDeal.bankDealNameInput().type('-cloned');
+    pages.cloneDeal.bankSupplyContractIDInput().type('-cloned');
+    pages.cloneDeal.supplyContractNameInput().type('-cloned');
+    pages.cloneDeal.cloneTransactionsInput().click();
 
     pages.cloneDeal.submit().click();
 
     cy.url().should('include', '/dashboard');
 
+    // TODO
+    // when we have 'success' notification appearing in dashboard
+    // click the 'success link' to get to the new deal page for testing the below.
     // go to deal page
-    const lastTableRowBankDealIdLink = pages.dashboard.lastTableRowBankDealIdLink(pages.dashboard.lastTableRow());
-    lastTableRowBankDealIdLink.click();
+    /*
+    pages.dashboard.row(deal).bankSupplyContractIDLink().click();
 
     cy.url().should('include', '/contract');
 
@@ -83,12 +90,13 @@ context('Clone a deal', () => {
     // confirm that the cloned deal has the bank deal ID and bank name submitted in the 'clone deal' form
 
     pages.contract.supplyContractName().invoke('text').then((text) => {
-      expect(text.trim()).equal(`${MOCK_DEAL.details.bankDealName}-cloned`);
+      expect(text.trim()).equal(`${MOCK_DEAL.details.bankSupplyContractID}-cloned`);
     });
 
     pages.contract.bankSupplyContractID().invoke('text').then((text) => {
-      expect(text.trim()).equal(`${MOCK_DEAL.details.bankDealId}-cloned`);
+      expect(text.trim()).equal(`${MOCK_DEAL.details.bankSupplyContractName}-cloned`);
     });
+    */
   });
 
   // TODO when we have bonds/transactions setup

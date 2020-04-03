@@ -12,6 +12,7 @@ const page = {
   submissionDate: ()=> cy.get('[data-cy="submissionDate"]'),
   dateOfLastAction: ()=> cy.get('[data-cy="dateOfLastAction"]'),
   submissionType: ()=> cy.get('[data-cy="submissionType"]'),
+  cloneDealLink: () => cy.get('[data-cy="clone-deal-link"]'),
 };
 
 module.exports = page;
