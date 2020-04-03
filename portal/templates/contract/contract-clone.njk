@@ -1,7 +1,18 @@
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% extends "index.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
 
   <h1 class="govuk-heading-l">Clone Deal ABC</h1>
 

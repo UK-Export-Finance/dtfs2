@@ -5,6 +5,7 @@ const $ = require('mongo-dot-notation');
 
 const DEFAULTS = require('../defaults');
 const db = require('../../db-driver/client');
+const { getDealErrors } = require('../validation/deal');
 
 const { isSuperUser, userHasAccessTo } = require('../users/checks');
 
@@ -176,7 +177,17 @@ exports.clone = async (req, res) => {
       modifiedDeal.bondTransactions = DEFAULTS.DEALS.bondTransactions;
       modifiedDeal.loanTransactions = DEFAULTS.DEALS.loanTransactions;
     }
-    req.body = modifiedDeal;
+
+
+    const validationErrors = getDealErrors(modifiedDeal);
+
+    req.body = {
+      ...modifiedDeal,
+      validationErrors,
+    };
+
+    // TODO  move validationErrors to createDeal, only create if valid
+    // return 400 if invalid
 
     return createDeal(req, res);
   });
