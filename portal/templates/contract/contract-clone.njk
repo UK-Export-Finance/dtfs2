@@ -46,7 +46,7 @@
                 </span>
               {% endif %}
 
-              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="bankSupplyContractID" name="bankSupplyContractID" type="text" maxlength="30" aria-describedby="bankSupplyContractID-info bankSupplyContractID-hint bankSupplyContractID-error" value="{{ details.bankSupplyContractID }}" data-cy="bank-deal-id">
+              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="bankSupplyContractID" name="bankSupplyContractID" type="text" maxlength="30" aria-describedby="bankSupplyContractID-info bankSupplyContractID-hint bankSupplyContractID-error" value="{{ details.bankSupplyContractID }}" data-cy="bank-supply-contract-id">
             </div>
 
             <span id="bankSupplyContractID-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
@@ -75,7 +75,7 @@
                 </span>
               {% endif %}
 
-              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="supplyContractName" name="supplyContractName" type="text" maxlength="100" aria-describedby="supplyContractName-info supplyContractName-error" value="{{ details.supplyContractName }}" data-cy="bank-deal-name">
+              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="supplyContractName" name="supplyContractName" type="text" maxlength="100" aria-describedby="supplyContractName-info supplyContractName-error" value="{{ details.supplyContractName }}" data-cy="bank-supply-contract-name">
             </div>
 
             <span id="supplyContractName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
@@ -102,7 +102,10 @@
         items: [
           {
             value: "true",
-            text: "Yes"
+            text: "Yes",
+            attributes: {
+              "data-cy": "clone-transactions"
+            }
           },
           {
             value: "false",

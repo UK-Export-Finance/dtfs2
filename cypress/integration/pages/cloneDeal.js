@@ -1,6 +1,7 @@
 const page = {
-  bankDealIdInput: () => cy.get('[data-cy="bank-deal-id"]'),
-  bankDealNameInput: () => cy.get('[data-cy="bank-deal-name"]'),
+  bankSupplyContractIDInput: () => cy.get('[data-cy="bank-supply-contract-id"]'),
+  supplyContractNameInput: () => cy.get('[data-cy="bank-supply-contract-name"]'),
+  cloneTransactionsInput: () => cy.get('[data-cy="clone-transactions"]'),
   submit: () => cy.get('button'),
 };
 
