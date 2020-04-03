@@ -41,7 +41,7 @@ context('View a deal', () => {
       expect(text.trim()).equal('Barclays Bank')
     });
 
-    row.bankDealId().invoke('text').then((text) => {
+    row.bankSupplyContractID().invoke('text').then((text) => {
       expect(text.trim()).equal('abc/1/def')
     });
 
@@ -60,7 +60,7 @@ context('View a deal', () => {
     //TODO - other fields as we start to populate them...
 
 
-    row.bankDealId().contains(`abc/1/def`).click();
+    row.bankSupplyContractID().contains(`abc/1/def`).click();
 
     cy.url().should('eq', relative(`/contract/${deal._id}`));
   });
