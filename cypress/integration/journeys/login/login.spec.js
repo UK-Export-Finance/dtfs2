@@ -1,5 +1,5 @@
 const {login} = require('../../missions');
-const {header, startNow, beforeYouStart} = require('../../pages');
+const {header, startNow, beforeYouStart, bankDetails} = require('../../pages');
 const appUnderTest = require('../../appUnderTest');
 const relative = require('../../relativeURL');
 
@@ -20,6 +20,8 @@ context('Login', () => {
     beforeYouStart.visit();
     cy.url().should('eq', relative('/'));
 
+    bankDetails.visit();
+    cy.url().should('eq', relative('/'));
   });
 
   it('A failed login leaves the user on the landing page', () => {
