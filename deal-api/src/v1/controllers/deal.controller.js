@@ -178,8 +178,7 @@ exports.clone = async (req, res) => {
       modifiedDeal.loanTransactions = DEFAULTS.DEALS.loanTransactions;
     }
 
-
-    const validationErrors = getDealErrors(modifiedDeal);
+    const validationErrors = getDealErrors(modifiedDeal, cloneTransactions);
 
     req.body = {
       ...modifiedDeal,

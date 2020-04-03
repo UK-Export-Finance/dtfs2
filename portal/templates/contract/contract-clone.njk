@@ -1,4 +1,5 @@
 {% extends "index.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
@@ -22,7 +23,13 @@
 
       <div class="govuk-grid-column-one-half">
 
-        <div class="govuk-form-group">
+        <div
+          {% if validationErrors.errorList.bankDealId %}
+            class="govuk-form-group govuk-form-group--error"
+          {% else %}
+            class="govuk-form-group"
+          {% endif %}
+        >
           <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="100">
             <div class="govuk-form-group">
               <label class="govuk-label" for="bankDealId">
@@ -33,7 +40,13 @@
                 It's not possible to change this later. 
               </span>
 
-              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="bankDealId" name="bankDealId" type="text" maxlength="30" aria-describedby="bankDealId-info bankDealId-hint" value="{{ details.bankDealId }}" data-cy="bank-deal-id">
+              {% if validationErrors.errorList.bankDealId %}
+                <span id="bankDealId-error" class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.bankDealId }}
+                </span>
+              {% endif %}
+
+              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="bankDealId" name="bankDealId" type="text" maxlength="30" aria-describedby="bankDealId-info bankDealId-hint bankDealId-error" value="{{ details.bankDealId }}" data-cy="bank-deal-id">
             </div>
 
             <span id="bankDealId-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
@@ -42,14 +55,27 @@
           </div>
         </div>
 
-        <div class="govuk-form-group">
+        <div
+          {% if validationErrors.errorList.bankDealName %}
+            class="govuk-form-group govuk-form-group--error"
+          {% else %}
+            class="govuk-form-group"
+          {% endif %}
+        >
+
           <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="100">
             <div class="govuk-form-group">
               <label class="govuk-label" for="bankDealName">
                 Bank deal name
               </label>
 
-              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="bankDealName" name="bankDealName" type="text" maxlength="100" aria-describedby="bankDealName-info" value="{{ details.bankDealName }}" data-cy="bank-deal-name">
+              {% if validationErrors.errorList.bankDealName %}
+                <span id="bankDealName-error" class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.bankDealName }}
+                </span>
+              {% endif %}
+
+              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="bankDealName" name="bankDealName" type="text" maxlength="100" aria-describedby="bankDealName-info bankDealName-error" value="{{ details.bankDealName }}" data-cy="bank-deal-name">
             </div>
 
             <span id="bankDealName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
@@ -82,7 +108,10 @@
             value: "false",
             text: "No"
           }
-        ]
+        ],
+        errorMessage: {
+          text: validationErrors.errorList.cloneTransactions
+        }
       })
     }}
 

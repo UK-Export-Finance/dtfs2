@@ -31,9 +31,10 @@ export const generateErrorSummary = (validationErrors, hrefGenerator = (id) => i
     text: validationErrors.errorList[id],
     href: hrefGenerator(id),
   }));
-  
+
   return {
     ...validationErrors,
     summary,
   };
+
 };

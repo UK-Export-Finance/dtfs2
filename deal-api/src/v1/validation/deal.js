@@ -1,4 +1,4 @@
-exports.getDealErrors = (deal) => {
+exports.getDealErrors = (deal, cloneTransactions) => {
   const { details } = deal;
   const {
     bankDealId,
@@ -15,8 +15,18 @@ exports.getDealErrors = (deal) => {
     errorList.bankDealName = 'Bank deal name is required';
   }
 
+  if (!cloneTransactions) {
+    errorList.cloneTransactions = 'Do you want to clone this deal with transactions is required';
+  }
+
+  const totalErrors = Object.keys(errorList).length;
+
+  if (totalErrors === 0) {
+    return false;
+  }
+
   return {
-    count: Object.keys(errorList).length,
+    count: totalErrors,
     errorList,
   };
 };
