@@ -76,6 +76,22 @@ router.get('/contract/:_id/edit-name', async (req, res) => {
     ));
 });
 
+router.post('/contract/:_id/edit-name', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+  const { supplyContractName } = req.body;
+
+  const updateToApply = {
+    _id,
+    details: {
+      supplyContractName,
+    },
+  };
+
+  await api.updateDeal(updateToApply, userToken);
+
+  return res.redirect(`/contract/${_id}`);
+});
+
 router.get('/contract/:_id/return-to-maker', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 

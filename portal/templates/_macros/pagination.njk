@@ -11,11 +11,11 @@
 
           {% if currentPage !== 0 %}
             <li class="govuk-body govuk-!-margin-bottom-3">
-              <a href="{{paginationRoot}}/0" class="govuk-link">First</a>
+              <a data-cy="First" href="{{paginationRoot}}/0" class="govuk-link">First</a>
             </li>
 
             <li class="govuk-body govuk-!-margin-bottom-3">
-              <a href="{{paginationRoot}}/{{currentPage-1}}" class="govuk-link">Previous</a>
+              <a data-cy="Previous" href="{{paginationRoot}}/{{currentPage-1}}" class="govuk-link">Previous</a>
             </li>
 
             <li class="govuk-body govuk-!-margin-bottom-3">
@@ -33,7 +33,7 @@
                   class="govuk-body govuk-!-margin-bottom-3"
                 {% endif %}
               >
-                <a href="{{paginationRoot}}/{{i}}" class="govuk-link">{{ i + 1 }}</a>
+                <a data-cy="Page_{{i}}" href="{{paginationRoot}}/{{i}}" class="govuk-link">{{ i + 1 }}</a>
               </li>
             {% endif %}
           {%- endfor %}
@@ -44,11 +44,11 @@
             </li>
 
             <li class="govuk-body govuk-!-margin-bottom-3">
-              <a href="{{paginationRoot}}/{{currentPage+1}}" class="govuk-link">Next</a>
+              <a data-cy="Next" href="{{paginationRoot}}/{{currentPage+1}}" class="govuk-link">Next</a>
             </li>
 
             <li class="govuk-body govuk-!-margin-bottom-3">
-              <a href="{{paginationRoot}}/{{totalPages-1}}" class="govuk-link">Last</a>
+              <a data-cy="Last" href="{{paginationRoot}}/{{totalPages-1}}" class="govuk-link">Last</a>
             </li>
           {% endif %}
 
@@ -57,7 +57,7 @@
       </div>
     {% endif %}
 
-    <p id="totalItems" class="govuk-body-s">({{ totalItems }} items)</p>
+    <p data-cy="totalItems" class="govuk-body-s">({{ totalItems }} items)</p>
 
   </div>
 

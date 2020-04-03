@@ -1,22 +1,23 @@
 const page = {
   visit: () => cy.visit('/dashboard'),
-  next: () => cy.contains('Next'),
-  previous: () => cy.contains('Previous'),
-  first: () => cy.contains('First'),
-  last: () => cy.contains('Last'),
-  totalItems: () => cy.get('#totalItems'),
+  first: () => cy.get('[data-cy="First"]'),
+  previous: () => cy.get('[data-cy="Previous"]'),
+  next: () => cy.get('[data-cy="Next"]'),
+  last: () => cy.get('[data-cy="Last"]'),
+  totalItems: () => cy.get('[data-cy="totalItems"]'),
   row: (deal) => {
+    const row = cy.get(`[data-cy="deal_${deal._id}"]`);
     return {
-      bank: () => cy.get(`#deal_${deal._id}`).get('._bank'),
-      bankDealId: () => cy.get(`#deal_${deal._id}`).get('._bankDealId'),
+      bank: () => row.get('[data-cy="bank"]'),
+      bankSupplyContractID: () => row.get('[data-cy="bankSupplyContractID"]'),
       bankDealIdLink: () => cy.get(`#deal_${deal._id}`).get('._bankDealId a'),
-      ukefDealId: () => cy.get(`#deal_${deal._id}`).get('._ukefDealId'),
-      status: () => cy.get(`#deal_${deal._id}`).get('._status'),
-      submissionType: () => cy.get(`#deal_${deal._id}`).get('._submissionType'),
-      maker: () => cy.get(`#deal_${deal._id}`).get('._maker'),
-      checker: () => cy.get(`#deal_${deal._id}`).get('._checker'),
-      updated: () => cy.get(`#deal_${deal._id}`).get('._updated'),
-    }
+      ukefDealId: () => row.get('[data-cy="ukefDealId"]'),
+      status: () => row.get('[data-cy="status"]'),
+      submissionType: () => row.get('[data-cy="submissionType"]'),
+      maker: () => row.get('[data-cy="maker"]'),
+      checker: () => row.get('[data-cy="checker"]'),
+      updated: () => row.get('[data-cy="updated"]'),
+    },
   },
   lastTableRow: () => cy.get('table tbody tr').last(),
   lastTableRowBankDealIdLink: (row) => {
@@ -24,7 +25,7 @@ const page = {
   },
   confirmDealsPresent: (deals) => {
     for (const deal of deals) {
-      cy.get(`#deal_${deal._id}`)
+      cy.get(`[data-cy="deal_${deal._id}"]`)
     }
   }
 };

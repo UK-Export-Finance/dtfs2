@@ -5,6 +5,7 @@ module.exports = {
   unableToProceed: require('./unableToProceed'),
   bankDetails: require('./bankDetails'),
   contract: require('./contract'),
+  editDealName: require('./editDealName'),
   dashboard: require('./dashboard'),
   cloneDeal: require('./cloneDeal'),
   eligibilityCriteria: require('./eligibilityCriteria'),
