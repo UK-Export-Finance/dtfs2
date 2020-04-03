@@ -134,7 +134,7 @@ router.post('/contract/:_id/clone', async (req, res) => {
 
   if (validationErrors) {
     return res.render('contract/contract-clone.njk', {
-      dealResponse,
+      ...dealResponse,
       validationErrors,
     });
   }

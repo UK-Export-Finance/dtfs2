@@ -162,14 +162,20 @@ exports.clone = async (req, res) => {
       return res.status(404).send();
     }
 
-    const { bankDealId, bankDealName, cloneTransactions } = req.body;
+    console.log('CLONE - REQ BODY \n', req.body);
+
+    const {
+      bankSupplyContractID,
+      supplyContractName,
+      cloneTransactions,
+    } = req.body;
 
     const modifiedDeal = {
       ...existingDeal,
       _id: new ObjectId(),
       details: {
-        bankDealId,
-        bankDealName,
+        bankSupplyContractID,
+        supplyContractName,
       },
     };
 
