@@ -2,7 +2,6 @@ const { login  } = require('../../missions');
 const { createADeal, deleteAllDeals } = require('../../missions/deal-api');
 const relative = require('../../relativeURL');
 const pages = require('../../pages');
-const { cloneDeal } = require('../../pages');
 
 const user = { username: 'MAKER', password: 'MAKER' };
 
@@ -59,8 +58,8 @@ context('Clone a deal', () => {
     goToCloneDealPage();
 
     // confirm that inputs are populated with the deal's initial bankSupplyContractID/bankSupplyContractName
-    cloneDeal.bankSupplyContractIDInput().should('have.value', MOCK_DEAL.details.bankSupplyContractID);
-    cloneDeal.supplyContractNameInput().should('have.value', MOCK_DEAL.details.bankSupplyContractName);
+    pages.cloneDeal.bankSupplyContractIDInput().should('have.value', MOCK_DEAL.details.bankSupplyContractID);
+    pages.cloneDeal.supplyContractNameInput().should('have.value', MOCK_DEAL.details.bankSupplyContractName);
   });
 
   it('When a user clones a deal they progress to the dashboard page and the edited bankSupplyContractID/bankSupplyContractName is displayed in the deal page', async () => {
@@ -75,7 +74,10 @@ context('Clone a deal', () => {
 
     pages.cloneDeal.submit().click();
 
-    cy.url().should('include', '/dashboard');
+    cy.url().should('include', '/dashboard/');
+
+    // TODO
+    // why does cypress time out here....
 
     // TODO
     // when we have 'success' notification appearing in dashboard
