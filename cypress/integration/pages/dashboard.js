@@ -6,20 +6,21 @@ const page = {
   last: () => cy.get('[data-cy="Last"]'),
   totalItems: () => cy.get('[data-cy="totalItems"]'),
   row: (deal) => {
+    const row = cy.get(`[data-cy="deal_${deal._id}"]`);
     return {
-      bank: () => cy.get('[data-cy="bank"]'),
-      bankSupplyContractID: () => cy.get('[data-cy="bankSupplyContractID"]'),
-      ukefDealId: () => cy.get('[data-cy="ukefDealId"]'),
-      status: () => cy.get('[data-cy="status"]'),
-      submissionType: () => cy.get('[data-cy="submissionType"]'),
-      maker: () => cy.get('[data-cy="maker"]'),
-      checker: () => cy.get('[data-cy="checker"]'),
-      updated: () => cy.get('[data-cy="updated"]'),
+      bank: () => row.get('[data-cy="bank"]'),
+      bankSupplyContractID: () => row.get('[data-cy="bankSupplyContractID"]'),
+      ukefDealId: () => row.get('[data-cy="ukefDealId"]'),
+      status: () => row.get('[data-cy="status"]'),
+      submissionType: () => row.get('[data-cy="submissionType"]'),
+      maker: () => row.get('[data-cy="maker"]'),
+      checker: () => row.get('[data-cy="checker"]'),
+      updated: () => row.get('[data-cy="updated"]'),
     }
   },
   confirmDealsPresent: (deals) => {
     for (const deal of deals) {
-      cy.get(`#deal_${deal._id}`)
+      cy.get(`[data-cy="deal_${deal._id}"]`)
     }
   }
 }
