@@ -1,15 +1,15 @@
 const page = {
-  eligibilityCriteriaLink: () => cy.get('#eligibilityCriteriaLink'),
-  supplyContractName: () => cy.get('#supplyContractName'),
-  bankSupplyContractID: () => cy.get('#bankSupplyContractID'),
-  ukefDealId: ()=> cy.get('#ukefDealId'),
-  status: ()=> cy.get('#status'),
-  previousStatus: ()=> cy.get('#previousStatus'),
-  maker: ()=> cy.get('#maker'),
-  checker: ()=> cy.get('#checker'),
-  submissionDate: ()=> cy.get('#submissionDate'),
-  dateOfLastAction: ()=> cy.get('#dateOfLastAction'),
-  submissionType: ()=> cy.get('#submissionType'),
+  eligibilityCriteriaLink: () => cy.get('[data-cy="ViewDetails"]'),
+  supplyContractName: () => cy.get('[data-cy="supplyContractName"]'),
+  bankSupplyContractID: () => cy.get('[data-cy="bankSupplyContractID"]'),
+  ukefDealId: ()=> cy.get('[data-cy="ukefDealId"]'),
+  status: ()=> cy.get('[data-cy="status"]'),
+  previousStatus: ()=> cy.get('[data-cy="previousStatus"]'),
+  maker: ()=> cy.get('[data-cy="maker"]'),
+  checker: ()=> cy.get('[data-cy="checker"]'),
+  submissionDate: ()=> cy.get('[data-cy="submissionDate"]'),
+  dateOfLastAction: ()=> cy.get('[data-cy="dateOfLastAction"]'),
+  submissionType: ()=> cy.get('[data-cy="submissionType"]'),
 };
 
 module.exports = page;
