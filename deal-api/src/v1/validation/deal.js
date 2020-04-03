@@ -1,18 +1,18 @@
 exports.getDealErrors = (deal, cloneTransactions) => {
   const { details } = deal;
   const {
-    bankDealId,
-    bankDealName,
+    bankSupplyContractID,
+    supplyContractName,
   } = details;
 
   const errorList = {};
 
-  if (!bankDealId) {
-    errorList.bankDealId = 'Bank deal ID is required';
+  if (!bankSupplyContractID) {
+    errorList.bankSupplyContractID = 'Bank deal ID is required';
   }
 
-  if (!bankDealName) {
-    errorList.bankDealName = 'Bank deal name is required';
+  if (!supplyContractName) {
+    errorList.supplyContractName = 'Bank deal name is required';
   }
 
   if (!cloneTransactions) {

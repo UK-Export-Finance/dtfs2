@@ -24,7 +24,7 @@
       <div class="govuk-grid-column-one-half">
 
         <div
-          {% if validationErrors.errorList.bankDealId %}
+          {% if validationErrors.errorList.bankSupplyContractID %}
             class="govuk-form-group govuk-form-group--error"
           {% else %}
             class="govuk-form-group"
@@ -32,31 +32,31 @@
         >
           <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="100">
             <div class="govuk-form-group">
-              <label class="govuk-label" for="bankDealId">
+              <label class="govuk-label" for="bankSupplyContractID">
                 Bank deal ID
               </label>
 
-              <span id="bankDealId-hint" class="govuk-hint">
+              <span id="bankSupplyContractID-hint" class="govuk-hint">
                 It's not possible to change this later. 
               </span>
 
-              {% if validationErrors.errorList.bankDealId %}
-                <span id="bankDealId-error" class="govuk-error-message">
-                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.bankDealId }}
+              {% if validationErrors.errorList.bankSupplyContractID %}
+                <span id="bankSupplyContractID-error" class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.bankSupplyContractID }}
                 </span>
               {% endif %}
 
-              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="bankDealId" name="bankDealId" type="text" maxlength="30" aria-describedby="bankDealId-info bankDealId-hint bankDealId-error" value="{{ details.bankDealId }}" data-cy="bank-deal-id">
+              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="bankSupplyContractID" name="bankSupplyContractID" type="text" maxlength="30" aria-describedby="bankSupplyContractID-info bankSupplyContractID-hint bankSupplyContractID-error" value="{{ details.bankSupplyContractID }}" data-cy="bank-deal-id">
             </div>
 
-            <span id="bankDealId-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+            <span id="bankSupplyContractID-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
               You can enter up to 30 characters
             </span>
           </div>
         </div>
 
         <div
-          {% if validationErrors.errorList.bankDealName %}
+          {% if validationErrors.errorList.supplyContractName %}
             class="govuk-form-group govuk-form-group--error"
           {% else %}
             class="govuk-form-group"
@@ -65,20 +65,20 @@
 
           <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="100">
             <div class="govuk-form-group">
-              <label class="govuk-label" for="bankDealName">
+              <label class="govuk-label" for="supplyContractName">
                 Bank deal name
               </label>
 
-              {% if validationErrors.errorList.bankDealName %}
-                <span id="bankDealName-error" class="govuk-error-message">
-                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.bankDealName }}
+              {% if validationErrors.errorList.supplyContractName %}
+                <span id="supplyContractName-error" class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.supplyContractName }}
                 </span>
               {% endif %}
 
-              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="bankDealName" name="bankDealName" type="text" maxlength="100" aria-describedby="bankDealName-info bankDealName-error" value="{{ details.bankDealName }}" data-cy="bank-deal-name">
+              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="supplyContractName" name="supplyContractName" type="text" maxlength="100" aria-describedby="supplyContractName-info supplyContractName-error" value="{{ details.supplyContractName }}" data-cy="bank-deal-name">
             </div>
 
-            <span id="bankDealName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+            <span id="supplyContractName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
               You can enter up to 100 characters
             </span>
           </div>
