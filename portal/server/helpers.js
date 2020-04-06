@@ -24,6 +24,8 @@ export const requestParams = (req) => {
   return { _id, bondId, userToken };
 };
 
+export const getFlashSuccessMessage = (req) => req.flash('successMessage')[0];
+
 export const generateErrorSummary = (validationErrors, hrefGenerator = (id) => id) => {
   if (!validationErrors) { return false; }
 
