@@ -56,7 +56,7 @@
         </div>
 
         <div
-          {% if validationErrors.errorList.supplyContractName %}
+          {% if validationErrors.errorList.bankSupplyContractName %}
             class="govuk-form-group govuk-form-group--error"
           {% else %}
             class="govuk-form-group"
@@ -65,20 +65,20 @@
 
           <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="100">
             <div class="govuk-form-group">
-              <label class="govuk-label" for="supplyContractName">
+              <label class="govuk-label" for="bankSupplyContractName">
                 Bank deal name
               </label>
 
-              {% if validationErrors.errorList.supplyContractName %}
-                <span id="supplyContractName-error" class="govuk-error-message">
-                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.supplyContractName.text }}
+              {% if validationErrors.errorList.bankSupplyContractName %}
+                <span id="bankSupplyContractName-error" class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.bankSupplyContractName.text }}
                 </span>
               {% endif %}
 
-              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="supplyContractName" name="supplyContractName" type="text" maxlength="100" aria-describedby="supplyContractName-info supplyContractName-error" value="{{ details.supplyContractName }}" data-cy="bank-supply-contract-name">
+              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="bankSupplyContractName" name="bankSupplyContractName" type="text" maxlength="100" aria-describedby="bankSupplyContractName-info bankSupplyContractName-error" value="{{ details.bankSupplyContractName }}" data-cy="bank-supply-contract-name">
             </div>
 
-            <span id="supplyContractName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+            <span id="bankSupplyContractName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
               You can enter up to 100 characters
             </span>
           </div>

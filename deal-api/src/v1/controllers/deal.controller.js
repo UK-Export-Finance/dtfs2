@@ -162,11 +162,9 @@ exports.clone = async (req, res) => {
       return res.status(404).send();
     }
 
-    console.log('CLONE - REQ BODY \n', req.body);
-
     const {
       bankSupplyContractID,
-      supplyContractName,
+      bankSupplyContractName,
       cloneTransactions,
     } = req.body;
 
@@ -175,7 +173,7 @@ exports.clone = async (req, res) => {
       _id: new ObjectId(),
       details: {
         bankSupplyContractID,
-        supplyContractName,
+        bankSupplyContractName,
       },
     };
 
