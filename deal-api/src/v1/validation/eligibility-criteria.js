@@ -52,7 +52,7 @@ exports.getCriteria11Errors = ((criteria11Additional, criteria11IsFalse) => {
     };
   }
 
-  if (!criteria11Additional.agentPostcode) {
+  if (criteria11Additional.agentCountry === 'GBR' && !criteria11Additional.agentPostcode) {
     errorList['agent-postcode'] = {
       order: '11-4',
       text: 'Agent\'s corporate postcode is required',

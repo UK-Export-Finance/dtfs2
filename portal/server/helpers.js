@@ -83,5 +83,5 @@ export const formatCountriesForGDSComponent = ((countries, selectedCountryCode) 
     selected: c.code === selectedCountryCode,
   }));
 
-  return [{ text: 'Select a country' }].concat(countryOptions);
+  return countryOptions;
 });
