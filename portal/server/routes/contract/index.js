@@ -140,6 +140,7 @@ router.post('/contract/:_id/clone', async (req, res) => {
   }
 
   // TODO: display flash message 'cloned successfully'
+  req.flash('successMessage', 'yay success!');
   return res.redirect('/dashboard');
 });
 

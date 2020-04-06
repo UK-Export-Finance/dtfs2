@@ -33,6 +33,7 @@ router.get('/dashboard/:page', async (req, res) => {
       api.banks(userToken),
       res,
     ),
+    successMessage: req.flash('successMessage'),
   });
 });
 
