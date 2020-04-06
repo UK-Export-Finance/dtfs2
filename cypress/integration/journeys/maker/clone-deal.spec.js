@@ -1,8 +1,8 @@
-const { login  } = require('../../missions');
+const { login } = require('../../missions');
 const { createADeal, deleteAllDeals } = require('../../missions/deal-api');
 const relative = require('../../relativeURL');
 const pages = require('../../pages');
-const { errorSummary } = require('../../partials');
+const partials = require('../../partials');
 
 const user = { username: 'MAKER', password: 'MAKER' };
 
@@ -64,45 +64,6 @@ context('Clone a deal', () => {
     });
   });
 
-  describe('When a user clones a deal', () => {
-    it('should progress to the dashboard page and the edited bankSupplyContractID/bankSupplyContractName is displayed in the deal page', () => {
-      loginGoToDealPage(deal);
-      goToCloneDealPage();
-
-      pages.cloneDeal.bankSupplyContractIDInput().type('-cloned');
-      pages.cloneDeal.bankSupplyContractNameInput().type('-cloned');
-      pages.cloneDeal.cloneTransactionsInput().click();
-
-      pages.cloneDeal.submit().click();
-
-      cy.url().should('include', '/dashboard/');
-
-      // TODO
-      // why does cypress time out here....
-
-      // TODO
-      // when we have 'success' notification appearing in dashboard
-      // click the 'success link' to get to the new deal page for testing the below.
-      // go to deal page
-      /*
-      pages.dashboard.row(deal).bankSupplyContractIDLink().click();
-
-      cy.url().should('include', '/contract');
-
-
-      // confirm that the cloned deal has the bank deal ID and bank name submitted in the 'clone deal' form
-
-      pages.contract.supplyContractName().invoke('text').then((text) => {
-        expect(text.trim()).equal(`${MOCK_DEAL.details.bankSupplyContractID}-cloned`);
-      });
-
-      pages.contract.bankSupplyContractID().invoke('text').then((text) => {
-        expect(text.trim()).equal(`${MOCK_DEAL.details.bankSupplyContractName}-cloned`);
-      });
-      */
-    });
-  });
-
   describe('When an empty form is submitted', () => {
     it('should display validation errors', () => {
       loginGoToDealPage(deal);
@@ -115,12 +76,44 @@ context('Clone a deal', () => {
 
       cy.url().should('include', '/clone');
 
-      errorSummary.errorSummaryLinks().should('have.length', TOTAL_FORM_FIELDS);
+      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_FORM_FIELDS);
     });
   });
 
-  // TODO when we have bonds/transactions setup
-  //
-  // When a user clones a deal and chooses to not clone transactions
-  // the cloned deal should not include transactions
+  describe('When a user clones a deal', () => {
+    it('should progress to the dashboard page and display a success message', () => {
+      loginGoToDealPage(deal);
+      goToCloneDealPage();
+
+      pages.cloneDeal.bankSupplyContractIDInput().type('-cloned');
+      pages.cloneDeal.bankSupplyContractNameInput().type('-cloned');
+      pages.cloneDeal.cloneTransactionsInput().click();
+
+      pages.cloneDeal.submit().click();
+
+      cy.url().should('include', '/dashboard/');
+
+      // confirm success message is displayed
+      partials.successMessage.successMessage().should('be.visible');
+      partials.successMessage.successMessageListItem().contains('cloned successfully');
+
+      // click link to cloned deal
+      partials.successMessage.successMessageLink().click();
+      cy.url().should('include', '/contract/');
+
+      // confirm that the cloned deal has the bankSupplyContractID/bankSupplyContractName submitted in the 'clone deal' form
+      pages.contract.bankSupplyContractName().invoke('text').then((text) => {
+        expect(text.trim()).equal(`${MOCK_DEAL.details.bankSupplyContractName}-cloned`);
+      });
+
+      pages.contract.bankSupplyContractID().invoke('text').then((text) => {
+        expect(text.trim()).equal(`${MOCK_DEAL.details.bankSupplyContractID}-cloned`);
+      });
+    });
+
+    // TODO when we have bonds/transactions setup
+    //
+    // When a user clones a deal and chooses to not clone transactions
+    // the cloned deal should not include transactions
+  });
 });
