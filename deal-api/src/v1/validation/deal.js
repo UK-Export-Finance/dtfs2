@@ -2,7 +2,7 @@ exports.getDealErrors = (deal, cloneTransactions) => {
   const { details } = deal;
   const {
     bankSupplyContractID,
-    supplyContractName,
+    bankSupplyContractName,
   } = details;
 
   const errorList = {};
@@ -14,8 +14,8 @@ exports.getDealErrors = (deal, cloneTransactions) => {
     };
   }
 
-  if (!supplyContractName) {
-    errorList.supplyContractName = {
+  if (!bankSupplyContractName) {
+    errorList.bankSupplyContractName = {
       order: '2',
       text: 'Bank deal name is required',
     };
