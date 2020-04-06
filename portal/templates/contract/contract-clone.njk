@@ -42,7 +42,7 @@
 
               {% if validationErrors.errorList.bankSupplyContractID %}
                 <span id="bankSupplyContractID-error" class="govuk-error-message">
-                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.bankSupplyContractID }}
+                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.bankSupplyContractID.text }}
                 </span>
               {% endif %}
 
@@ -71,7 +71,7 @@
 
               {% if validationErrors.errorList.supplyContractName %}
                 <span id="supplyContractName-error" class="govuk-error-message">
-                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.supplyContractName }}
+                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.supplyContractName.text }}
                 </span>
               {% endif %}
 
@@ -112,9 +112,7 @@
             text: "No"
           }
         ],
-        errorMessage: {
-          text: validationErrors.errorList.cloneTransactions
-        }
+        errorMessage: validationErrors.errorList.cloneTransactions
       })
     }}
 
