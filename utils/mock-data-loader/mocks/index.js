@@ -192,11 +192,11 @@ const MOCKS = {
   MANDATORY_CRITERIA,
   CONTRACTS: [
     {
-      supplyContractName: 'UKEF plc',
+      bankSupplyContractName: 'UKEF plc',
       details: {
         bank: 'UKEF test bank',
         bankSupplyContractID: 'MIA/Msstar/BSS/DGR',
-        supplyContractName: 'MIA deal',
+        bankSupplyContractName: 'MIA deal',
         ukefDealId: '20010739',
         status: 'Acknowledged by UKEF',
         previousStatus: 'Submitted',
@@ -388,11 +388,11 @@ const MOCKS = {
       }
     },
     {
-      supplyContractName: 'CT-TestPrep-170220',
+      bankSupplyContractName: 'CT-TestPrep-170220',
       details: {
         bank: 'UKEF test bank',
         bankSupplyContractID: 'AIN MIA/Msstar/BSS/DGR ',
-        supplyContractName: 'AIN deal',
+        bankSupplyContractName: 'AIN deal',
         ukefDealId: '20010740',
         status: 'Acknowledged by UKEF',
         previousStatus: 'Submitted',
