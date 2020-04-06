@@ -78,12 +78,12 @@ router.get('/contract/:_id/edit-name', async (req, res) => {
 
 router.post('/contract/:_id/edit-name', async (req, res) => {
   const { _id, userToken } = requestParams(req);
-  const { supplyContractName } = req.body;
+  const { bankSupplyContractName } = req.body;
 
   const updateToApply = {
     _id,
     details: {
-      supplyContractName,
+      bankSupplyContractName,
     },
   };
 
