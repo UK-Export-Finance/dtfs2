@@ -30,6 +30,8 @@ context('Eligibility Criteria', () => {
 
   it('should display the correct number of eligibility criteria', () => {
     eligibilityCriteria.eligibilityCriteriaItems().should('have.length', criteriaCount);
+    eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().should('have.length', criteriaCount);
+    eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.falseInput().should('have.length', criteriaCount);
   });
 
   it('should initially display radio buttons in unselected state', () => {
@@ -43,7 +45,6 @@ context('Eligibility Criteria', () => {
 
     cy.url().should('include', '/eligibility/criteria');
 
-    const criteriaItems = eligibilityCriteria.eligibilityCriteriaItems();
     errorSummary.errorSummaryLinks().should('have.length', criteriaCount - 1);
   });
 

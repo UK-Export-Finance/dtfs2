@@ -4,6 +4,7 @@ import {
   getApiData,
   requestParams,
   generateErrorSummary,
+  formatCountriesForGDSComponent,
 } from '../../helpers';
 
 const router = express.Router();
@@ -18,11 +19,17 @@ router.get('/contract/:_id/eligibility/criteria', async (req, res) => {
     res,
   );
 
+  const countries = await getApiData(
+    api.countries(userToken),
+    res,
+  );
+
   const validationErrors = generateErrorSummary(deal.eligibility.validationErrors, eligibilityErrorHref);
 
   return res.render('eligibility/eligibility-criteria.njk',
     {
       _id,
+      countries: formatCountriesForGDSComponent(countries, deal.eligibility.agentCountry),
       eligibility: deal.eligibility,
       validationErrors,
     });
@@ -41,10 +48,16 @@ router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
     return res.redirect(`/contract/${_id}/eligibility/supporting-documentation`);
   }
 
+  const countries = await getApiData(
+    api.countries(userToken),
+    res,
+  );
+
   const validationErrors = generateErrorSummary(updatedDeal.eligibility.validationErrors, eligibilityErrorHref);
 
   return res.render('eligibility/eligibility-criteria.njk', {
     _id,
+    countries: formatCountriesForGDSComponent(countries, updatedDeal.eligibility.agentCountry),
     criteriaStatus: updatedDeal.eligibility.status,
     eligibility: updatedDeal.eligibility,
     validationErrors,
