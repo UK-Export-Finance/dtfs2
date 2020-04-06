@@ -33,10 +33,10 @@ context('View a deal', () => {
     contract.editDealName().click();
 
 
-    editDealName.supplyContractName().type('{selectall}{backspace}asdfasfasf');
+    editDealName.bankSupplyContractName().type('{selectall}{backspace}asdfasfasf');
     editDealName.submit().click();
 
-    contract.supplyContractName().invoke('text').then((text) => {
+    contract.bankSupplyContractName().invoke('text').then((text) => {
       expect(text.trim()).equal('asdfasfasf')
     });
 
