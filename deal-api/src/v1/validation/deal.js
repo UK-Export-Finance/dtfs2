@@ -8,15 +8,24 @@ exports.getDealErrors = (deal, cloneTransactions) => {
   const errorList = {};
 
   if (!bankSupplyContractID) {
-    errorList.bankSupplyContractID = 'Bank deal ID is required';
+    errorList.bankSupplyContractID = {
+      order: '1',
+      text: 'Bank deal ID is required',
+    };
   }
 
   if (!supplyContractName) {
-    errorList.supplyContractName = 'Bank deal name is required';
+    errorList.supplyContractName = {
+      order: '2',
+      text: 'Bank deal name is required',
+    };
   }
 
   if (!cloneTransactions) {
-    errorList.cloneTransactions = 'Do you want to clone this deal with transactions is required';
+    errorList.cloneTransactions = {
+      order: '3',
+      text: 'Do you want to clone this deal with transactions is required',
+    };
   }
 
   const totalErrors = Object.keys(errorList).length;
