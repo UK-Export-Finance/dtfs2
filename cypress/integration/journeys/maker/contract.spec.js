@@ -28,7 +28,7 @@ context('View a deal', () => {
       expect(text.trim()).equal('someDealId')
     });
 
-    contract.supplyContractName().invoke('text').then((text) => {
+    contract.bankSupplyContractName().invoke('text').then((text) => {
       expect(text.trim()).equal('someDealName')
     });
 
