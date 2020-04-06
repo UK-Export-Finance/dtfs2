@@ -11,7 +11,7 @@ const { expectAddedFields } = require('../deals/expectAddedFields');
 const getToken = require('../../getToken')(app);
 
 describe('/v1/deals/:id/eligibility-criteria', () => {
-  const newDeal = aDeal({ supplyContractName: 'Original Value' });
+  const newDeal = aDeal({ bankSupplyContractName: 'Original Value' });
 
   const updatedECPartial = {
     'criterion-11': 'true',

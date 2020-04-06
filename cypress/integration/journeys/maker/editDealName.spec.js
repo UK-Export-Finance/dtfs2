@@ -11,7 +11,7 @@ context('View a deal', () => {
   let deal = {
     details: {
       bankSupplyContractID: 'abc/1/def',
-      supplyContractName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractName: 'Tibettan submarine acquisition scheme'
     }
   };
 

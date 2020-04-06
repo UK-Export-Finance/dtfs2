@@ -58,7 +58,7 @@ router.post('/before-you-start/bank-deal', async (req, res) => {
   const newDeal = {
     details: {
       bankSupplyContractID: bankDealId,
-      supplyContractName: bankDealName,
+      bankSupplyContractName: bankDealName,
     },
     criteriaMet: true, // choosing only to create deals where this criteria is met, rather than record failures..
   };

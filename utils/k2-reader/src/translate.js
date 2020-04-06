@@ -14,7 +14,7 @@ const map = async (k2xml) => {
   const k2Deal = k2xml.Deal;
 
   let mapped = {
-    supplyContractName:   k2Deal.Deal_information[0].Exporter_and_indemnifier[0].Exporter_name[0],
+    bankSupplyContractName:   k2Deal.Deal_information[0].Exporter_and_indemnifier[0].Exporter_name[0],
     id:                   k2Deal.$.portal_deal_id,
     details:              details(k2Deal),
     aboutSupplyContract:  aboutSupplyContract(k2Deal),
