@@ -1,6 +1,6 @@
 export const getElement = (id) => document.getElementById(id);
 
-export const showHideElement = (elementId, showBoolean) => {
+export const changeScreenVisibilityOfElement = (elementId, showBoolean) => {
   const element = getElement(elementId);
 
   if (showBoolean) {
@@ -10,9 +10,20 @@ export const showHideElement = (elementId, showBoolean) => {
   }
 };
 
+export const showHideElement = (elementId, showBoolean) => {
+  const element = getElement(elementId);
+
+  if (showBoolean) {
+    element.removeAttribute('hidden');
+  } else {
+    element.setAttribute('hidden', true);
+  }
+};
+
 const attachToWindow = () => {
   window.dtfs = {
     ...window.dtfs,
+    changeScreenVisibilityOfElement,
     showHideElement,
   };
 };

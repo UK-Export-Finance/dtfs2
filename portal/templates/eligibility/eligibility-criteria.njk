@@ -62,6 +62,7 @@
                       {% if eligibility.status !== "Initial" and criterion.answer %}checked{% endif %}
                       {% if criterion.id == "11" %}onClick="onChangeRadioButton('criterion-group-additional-{{ criterion.id }}', false)"{% endif %}
                       data-cy="criteria-true"
+                      data-id="criteria-{{ criterion.id }}-true"
               >
               <label class="govuk-label govuk-radios__label" for="criterion-{{ criterion.id }}">
                 True
@@ -77,6 +78,7 @@
                       {% if eligibility.status !== "Initial" and criterion.answer === false %}checked{% endif %}
                       {% if criterion.id == "11" %}onClick="onChangeRadioButton('criterion-group-additional-{{ criterion.id }}', true)"{% endif %}
                       data-cy="criteria-false"
+                      data-id="criteria-{{ criterion.id }}-false"
               >
               <label class="govuk-label govuk-radios__label" for="criterion-{{ criterion.id }}-2">
                 False
@@ -89,7 +91,7 @@
       </div>
       
       {% if criterion.id == "11" %}
-        <div id="criterion-group-additional-{{criterion.id}}" class="{% if criterion.answer != false  %}govuk-visually-hidden{% endif %}">
+        <div id="criterion-group-additional-{{criterion.id}}" {% if criterion.answer != false  %}hidden{% endif %} aria-hidden="{% if criterion.answer != false %}true{% else %}false{% endif %}" data-cy="criteria-11-extra-info">
           {{ govukInput({
             label: {
               text: "Agent's corporate name"
