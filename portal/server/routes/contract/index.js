@@ -123,14 +123,17 @@ router.get('/contract/:_id/clone', async (req, res) => {
 });
 
 
-const errorHref = (id) => `#${id}`;
-
 router.post('/contract/:_id/clone', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
   const dealResponse = await api.cloneDeal(_id, req.body, userToken);
 
-  const validationErrors = generateErrorSummary(dealResponse.validationErrors, errorHref);
+  const errorHref = (id) => `#${id}`;
+
+  const validationErrors = generateErrorSummary(
+    dealResponse.validationErrors,
+    errorHref,
+  );
 
   if (validationErrors) {
     return res.render('contract/contract-clone.njk', {
