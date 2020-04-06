@@ -1,8 +1,10 @@
 import express from 'express';
 import morgan from 'morgan';
 import session from 'express-session';
-import path from 'path';
+import cookieParser from 'cookie-parser';
+import flash from 'connect-flash';
 import nunjucks from 'nunjucks';
+import path from 'path';
 import routes from './routes';
 
 const app = express();
@@ -14,6 +16,9 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
 }));
+
+app.use(cookieParser()); // could optionally use a secret here
+app.use(flash());
 
 const appViews = [
   'node_modules/govuk-frontend',
