@@ -2,6 +2,7 @@ const { login } = require('../../missions');
 const { createADeal, deleteAllDeals } = require('../../missions/deal-api');
 const relative = require('../../relativeURL');
 const pages = require('../../pages');
+const missions = require('../../missions');
 const partials = require('../../partials');
 
 const user = { username: 'MAKER', password: 'MAKER' };
@@ -11,19 +12,6 @@ const MOCK_DEAL = {
     bankSupplyContractID: 'someDealId',
     bankSupplyContractName: 'someDealName',
   },
-};
-
-const loginGoToDealPage = (deal) => {
-  // login and go to dashboard
-  login(user);
-  pages.dashboard.visit();
-
-  // get the row that corresponds to our deal
-  const row = pages.dashboard.row(deal);
-
-  // go to deal page
-  row.bankSupplyContractIDLink().click();
-  cy.url().should('include', '/contract/');
 };
 
 const goToCloneDealPage = () => {
@@ -55,7 +43,7 @@ context('Clone a deal', () => {
 
   describe('When a user creates a deal and clicks `clone deal`', () => {
     it('should progress to the clone page with inputs prepopulated', () => {
-      loginGoToDealPage(deal);
+      missions.loginGoToDealPage(user, deal);
       goToCloneDealPage();
 
       // confirm that inputs are populated with the deal's initial bankSupplyContractID/bankSupplyContractName
@@ -66,7 +54,7 @@ context('Clone a deal', () => {
 
   describe('When an empty form is submitted', () => {
     it('should display validation errors', () => {
-      loginGoToDealPage(deal);
+      missions.loginGoToDealPage(user, deal);
       goToCloneDealPage();
 
       pages.cloneDeal.bankSupplyContractIDInput().clear();
@@ -82,7 +70,7 @@ context('Clone a deal', () => {
 
   describe('When a user clones a deal', () => {
     it('should progress to the dashboard page and display a success message', () => {
-      loginGoToDealPage(deal);
+      missions.loginGoToDealPage(user, deal);
       goToCloneDealPage();
 
       pages.cloneDeal.bankSupplyContractIDInput().type('-cloned');

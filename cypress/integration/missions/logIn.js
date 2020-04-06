@@ -1,5 +1,4 @@
 const appUnderTest = require('../appUnderTest');
-const pages = require('../pages');
 
 module.exports = (opts) => {
   const {username, password} = opts;
