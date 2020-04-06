@@ -3,6 +3,7 @@ import api from '../api';
 import {
   getApiData,
   requestParams,
+  getFlashSuccessMessage,
 } from '../helpers';
 
 const router = express.Router();
@@ -33,7 +34,7 @@ router.get('/dashboard/:page', async (req, res) => {
       api.banks(userToken),
       res,
     ),
-    successMessage: req.flash('successMessage'),
+    successMessage: getFlashSuccessMessage(req),
   });
 });
 

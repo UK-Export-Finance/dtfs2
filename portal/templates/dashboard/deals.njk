@@ -1,13 +1,18 @@
 {% extends "index.njk" %}
+{% import '_macros/success-message.njk' as success %}
 {% import '_macros/dashboard-tabs.njk' as dashboardTabs %}
 {% import '_macros/date-range.njk' as dateRange %}
 {% import '_macros/pagination.njk' as pagination %}
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">Deals</h1>
+  {% if successMessage %}
+    {{ success.message(
+      message = successMessage
+    )}}
+  {% endif %}
 
-  <p>successMessage: {{ successMessage }}</p>
+  <h1 class="govuk-heading-l">Deals</h1>
 
   <div class="govuk-tabs" data-module="govuk-tabs">
     <h2 class="govuk-tabs__title">Contents</h2>

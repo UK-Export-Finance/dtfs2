@@ -139,8 +139,11 @@ router.post('/contract/:_id/clone', async (req, res) => {
     });
   }
 
-  // TODO: display flash message 'cloned successfully'
-  req.flash('successMessage', 'yay success!');
+  req.flash('successMessage', {
+    text: 'Supply Contract cloned successfully. We have cleared some values to ensure data quality. Please complete.',
+    href: `/contract/${dealResponse._id}`, // eslint-disable-line no-underscore-dangle
+    hrefText: 'View cloned Supply Contract',
+  });
   return res.redirect('/dashboard');
 });
 
