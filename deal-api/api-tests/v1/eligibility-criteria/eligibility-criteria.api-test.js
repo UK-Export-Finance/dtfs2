@@ -247,6 +247,22 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       expect(body.eligibility).toMatchObject(criteria11ExtraInfo);
     });
 
+    it('limits length of agent name to 150 characters', async () => {
+      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const newId = postResult.body._id;
+      const characterCount = 150;
+
+      const updatedECCriteria11WithExtraInfoLongAgent = {
+        ...updatedECCriteria11WithExtraInfo,
+        'agent-name': 'a'.repeat(characterCount + 1),
+      };
+
+      const { status, body } = await put(updatedECCriteria11WithExtraInfoLongAgent, user1).to(`/v1/deals/${newId}/eligibility-criteria`);
+
+      expect(status).toEqual(200);
+      expect(body.eligibility.agentName).toEqual(updatedECCriteria11WithExtraInfoLongAgent['agent-name'].substring(0, characterCount));
+    });
+
     it('removes criteria 11 extra info when criteria11 is changed from false to true', async () => {
       const postResult = await post(newDeal, user1).to('/v1/deals');
       const newId = postResult.body._id;
