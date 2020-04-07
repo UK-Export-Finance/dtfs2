@@ -507,6 +507,22 @@ describe('/v1/deals', () => {
           });
         });
       });
+
+      describe('when required fields are missing', () => {
+        it('returns validation errors', async () => {
+          const clonePostBody = {
+            bankSupplyContractID: '',
+            bankSupplyContractName: '',
+            cloneTransactions: '',
+          };
+          const { body } = await post(clonePostBody, user1).to(`/v1/deals/${originalDealId}/clone`);
+
+          expect(body.validationErrors.count).toEqual(3);
+          expect(body.validationErrors.errorList.bankSupplyContractID).toBeDefined();
+          expect(body.validationErrors.errorList.bankSupplyContractName).toBeDefined();
+          expect(body.validationErrors.errorList.cloneTransactions).toBeDefined();
+        });
+      });
     });
   });
 });
