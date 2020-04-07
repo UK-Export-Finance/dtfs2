@@ -32,9 +32,9 @@
               </label>
 
               <select data-cy="filterBySubmissionUser" class="govuk-select govuk-!-width-full" id="filterBySubmissionUser" name="filterBySubmissionUser">
-                <option value="all" selected>Any</option>
-                <option value="createdByMe">Submissions created by me</option>
-                <option value="createdByColleagues">Submissions created by my colleagues</option>
+                <option value="all" {% if filter.filterBySubmissionUser==='all' %}selected{%endif%}>Any</option>
+                <option value="createdByMe" {% if filter.filterBySubmissionUser==='createdByMe' %}selected{%endif%}>Submissions created by me</option>
+                <option value="createdByColleagues" {% if filter.filterBySubmissionUser==='createdByColleagues' %}selected{%endif%}>Submissions created by my colleagues</option>
               </select>
             </div>
           </div>

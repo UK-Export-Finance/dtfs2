@@ -1,5 +1,8 @@
 const buildDashboardFilters = (params, user) => {
   const filters = {};
+
+  if (!params) return filters;
+
   const { filterBySubmissionUser } = params;
 
   if (filterBySubmissionUser === 'all') {

@@ -17,7 +17,8 @@ router.get('/dashboard', async (req, res) => {
 
 router.get('/dashboard/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-  const filters = buildDashboardFilters(req.params, req.session.user);
+
+  const filters = buildDashboardFilters(req.session.dashboardFilters, req.session.user);
 
   const dealData = await getApiData(
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
@@ -38,12 +39,16 @@ router.get('/dashboard/:page', async (req, res) => {
       res,
     ),
     successMessage: getFlashSuccessMessage(req),
+    filter: req.session.dashboardFilters,
   });
 });
 
 router.post('/dashboard/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-  const filters = buildDashboardFilters(req.body, req.session.user);
+
+  req.session.dashboardFilters = req.body;
+
+  const filters = buildDashboardFilters(req.session.dashboardFilters, req.session.user);
 
   const dealData = await getApiData(
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
@@ -63,6 +68,7 @@ router.post('/dashboard/:page', async (req, res) => {
       api.banks(userToken),
       res,
     ),
+    filter: req.session.dashboardFilters,
   });
 });
 
