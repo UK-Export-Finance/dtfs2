@@ -13,10 +13,12 @@ router.post('/', async (req, res) => {
   const {
     success,
     token,
+    user,
   } = tokenResponse;
 
   if (success) {
     req.session.userToken = token;
+    req.session.user = user;
     res.redirect('/start-now');
   } else {
     res.status(401).render('login.njk');

@@ -90,7 +90,9 @@ module.exports.login = (req, res, next) => {
 
       if (isValid) {
         const tokenObject = utils.issueJWT(user);
-        res.status(200).json({ success: true, token: tokenObject.token, expiresIn: tokenObject.expires });
+        res.status(200).json({
+          success: true, token: tokenObject.token, user: sanitizeUser(user), expiresIn: tokenObject.expires,
+        });
       } else {
         res.status(401).json({ success: false, msg: 'you entered the wrong password' });
       }
