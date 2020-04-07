@@ -58,6 +58,28 @@ context('Eligibility Criteria', () => {
     eligibilityCriteria.eligibilityCriteria11ExtraInfo().should('not.be.visible');
   });
 
+  it('should update character count on agents name', () => {
+    const characterCount = 150;
+    const agentsName = 'Agents name text';
+
+    eligibilityCriteria.eligibilityCriteria11False().click();
+    eligibilityCriteria.agentsName.count().should('have.text', `You have ${characterCount} characters remaining`);
+
+    eligibilityCriteria.agentsName.input().type(agentsName);
+    eligibilityCriteria.agentsName.count().should('have.text', `You have ${characterCount - agentsName.length} characters remaining`);
+  });
+
+  it('should limit agents name to 150 characters', () => {
+    const characterCount = 150;
+    const longString = 'a'.repeat(characterCount + 1);
+
+    eligibilityCriteria.eligibilityCriteria11False().click();
+    eligibilityCriteria.agentsName.input().type(longString);
+
+    eligibilityCriteria.agentsName.count().should('have.text', 'You have 0 characters remaining');
+    eligibilityCriteria.agentsName.input().should('have.value', longString.substring(0, characterCount));
+  });
+
   it('should redirect to supporting docs page when all criteria answered', () => {
     eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().click({ multiple: true });
     eligibilityCriteria.nextPageButton().click();
