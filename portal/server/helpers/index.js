@@ -4,6 +4,7 @@ import requestParams from './requestParams';
 import getFlashSuccessMessage from './getFlashSuccessMessage';
 import generateErrorSummary from './generateErrorSummary';
 import formatCountriesForGDSComponent from './formatCountriesForGDSComponent';
+import errorHref from './errorHref';
 
 export {
   getApiData,
@@ -11,4 +12,5 @@ export {
   getFlashSuccessMessage,
   generateErrorSummary,
   formatCountriesForGDSComponent,
+  errorHref,
 };
