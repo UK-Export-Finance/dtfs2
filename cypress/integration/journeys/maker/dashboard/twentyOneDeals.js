@@ -5,27 +5,32 @@ module.exports = [
   {
     details: {
       bankSupplyContractID: 'abc/1/def',
-      bankSupplyContractName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+      submissionType: 'Automatic Inclusion Notice',
     }
   }, {
     details: {
       bankSupplyContractID: 'abc/2/def',
-      bankSupplyContractName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+      submissionType: 'Automatic Inclusion Notice',
     }
   }, {
     details: {
       bankSupplyContractID: 'abc/3/def',
-      bankSupplyContractName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+      submissionType: 'Automatic Inclusion Notice',
     }
   }, {
     details: {
       bankSupplyContractID: 'abc/4/def',
-      bankSupplyContractName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+      submissionType: 'Manual Inclusion Notice',
     }
   }, {
     details: {
       bankSupplyContractID: 'abc/5/def',
-      bankSupplyContractName: 'Tibettan submarine acquisition scheme'
+      bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+      submissionType: 'Manual Inclusion Application',
     }
   }, {
     details: {
