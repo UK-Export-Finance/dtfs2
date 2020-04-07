@@ -32,7 +32,7 @@ const BANKS = [
 
 const MANDATORY_CRITERIA = [
   {
-    groupId: 1,
+    id: 1,
     title: 'Supply contract/Transaction',
     items: [
       {
@@ -50,7 +50,7 @@ const MANDATORY_CRITERIA = [
     ]
   },
   {
-    groupId: 2,
+    id: 2,
     title: 'Financial',
     items: [
       {
@@ -60,7 +60,7 @@ const MANDATORY_CRITERIA = [
     ]
   },
   {
-    groupId: 3,
+    id: 3,
     title: 'Credit',
     items: [
       {
@@ -70,7 +70,7 @@ const MANDATORY_CRITERIA = [
     ]
   },
   {
-    groupId: 4,
+    id: 4,
     title: 'Bank Facility Letter',
     items: [
       {
@@ -80,7 +80,7 @@ const MANDATORY_CRITERIA = [
     ]
   },
   {
-    groupId: 5,
+    id: 5,
     title: 'Legal',
     items: [
       {

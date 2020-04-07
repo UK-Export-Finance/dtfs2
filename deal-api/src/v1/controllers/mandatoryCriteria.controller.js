@@ -3,7 +3,7 @@ const assert = require('assert');
 const db = require('../../db-driver/client');
 
 const sortMandatoryCriteria = (arr, callback) => {
-  const sortedArray = arr.sort((a, b) => a.groupId - b.groupId);
+  const sortedArray = arr.sort((a, b) => Number(a.id) - Number(b.id));
   return callback(sortedArray);
 };
 
@@ -18,7 +18,6 @@ const findMandatoryCriteria = async (callback) => {
 
 const findOneMandatoryCriteria = async (id, callback) => {
   const collection = await db.getCollection('mandatoryCriteria');
-
   collection.findOne({ id }, (err, result) => {
     assert.equal(err, null);
     callback(result);
