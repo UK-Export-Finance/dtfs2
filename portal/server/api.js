@@ -35,6 +35,7 @@ const contract = async (id, token) => {
       'Content-Type': 'application/json',
     },
   });
+
   return translateDatesToExpectedFormat(response.data);
 };
 

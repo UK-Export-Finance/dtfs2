@@ -28,14 +28,18 @@ const translateDatesToExpectedFormat = async (deal) => {
 };
 
 const translateAllDatesToExpectedFormat = async (deals) => new Promise((resolve) => {
-  const translated = [];
+  if (deals.length === 0) {
+    resolve([]);
+  } else {
+    const translated = [];
 
-  deals.forEach(async (deal) => {
-    translated.push(await translateDatesToExpectedFormat(deal));
-    if (translated.length === deals.length) {
-      resolve(translated);
-    }
-  });
+    deals.forEach(async (deal) => {
+      translated.push(await translateDatesToExpectedFormat(deal));
+      if (translated.length === deals.length) {
+        resolve(translated);
+      }
+    });
+  }
 });
 
 module.exports = {

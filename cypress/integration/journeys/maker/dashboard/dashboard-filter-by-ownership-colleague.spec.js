@@ -35,14 +35,14 @@ context('Dashboard Deals pagination controls', () => {
   });
 
   it('The Dashboard only displays deals from the users organisation', () => {
-    // confirm that maker2 sees maker2's deals
+    // confirm that maker2 sees maker3's deals
     login({...maker2});
     dashboard.visit();
 
-    dashboard.filterBySubmissionUser().select('createdByMe');
+    dashboard.filterBySubmissionUser().select('createdByColleagues');
     dashboard.applyFilters().click();
 
-    dashboard.confirmDealsPresent(fiveDealsFromMaker2);
+    dashboard.confirmDealsPresent(fiveDealsFromMaker3);
     dashboard.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(5 items)');
     });
