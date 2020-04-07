@@ -82,10 +82,17 @@ describe('a user', () => {
 
     const { status, body } = await post({ username, password }).to('/v1/login');
 
+    const expectedUserData = {
+      ...aMaker,
+      _id: expect.any(String),
+    };
+    delete expectedUserData.password;
+
     expect(status).toEqual(200);
     expect(body).toEqual({
       success: true,
       token: expect.any(String),
+      user: expectedUserData,
       expiresIn: '1d',
     });
   });

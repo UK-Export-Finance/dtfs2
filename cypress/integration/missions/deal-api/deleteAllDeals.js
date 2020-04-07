@@ -31,42 +31,57 @@ const currentDeals = (token, callback) => {
 };
 
 const deleteDeal = (id, token, callback) => {
-  const options = {
-    hostname: api().host,
-    port: api().port,
-    path: `/v1/deals/${id}`,
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': token,
-    }
-  };
 
-  const req = http.request(options, res => {
-    res.on('data', data => {
-      callback();
-    })
-  });
+  try {
+    const options = {
+      hostname: api().host,
+      port: api().port,
+      path: `/v1/deals/${id}`,
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token,
+      }
+    };
 
-  req.on('error', error => {
+    const req = http.request(options, res => {
+      res.on('data', data => {
+        callback();
+      })
+
+      res.on('error', error => {
+        callback(error);
+      });
+    });
+
+    req.on('error', error => {
+      callback(error);
+    });
+
+    req.end();
+  } catch (error) {
     callback(error);
-  });
+  }
 
-  req.end();
 };
 
 const deleteDeals = (deals, token, callback) => {
   const deleted = [];
   for (const dealToDelete of deals) {
-    deleteDeal(dealToDelete, token, () => {
-
-      deleted.push(dealToDelete);
-      console.log(`deleted ${deleted.length} of ${deals.length}`)
-
-      if (deleted.length  === deals.length) {
-        callback();
+    deleteDeal(dealToDelete, token, (err) => {
+      if (err) {
+        callback(err);
       }
 
+      if (!err) {
+        deleted.push(dealToDelete);
+        console.log(`deleted ${deleted.length} of ${deals.length}`)
+
+        if (deleted.length  === deals.length) {
+          callback();
+        }
+
+      }
     })
   };
 }
@@ -82,6 +97,9 @@ module.exports = async (opts) => {
         reject(err)
       } else {
         currentDeals(token, (err, deals) => {
+
+          console.log(`identified current deals: ${JSON.stringify(deals)}`);
+
           if (err) {
             reject(err);
           } else {
@@ -89,7 +107,8 @@ module.exports = async (opts) => {
             if (deals.length >0) {
               deleteDeals(deals, token, (err) => {
                 if (err) {
-                  reject(err);
+                  console.log(err)
+                  // reject(err);
                 } else {
                   resolve();
                 }

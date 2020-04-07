@@ -18,7 +18,7 @@ module.exports = (opts, callback) => {
   };
 
   const req = http.request(options, res => {
-    console.log(`loginViaAPI :: statusCode :: ${res.statusCode}`)
+    console.log(`loginViaAPI :: ${username} -> ${res.statusCode}`)
 
     res.on('data', data => {
       const json = JSON.parse(data);
