@@ -165,7 +165,6 @@ router.post('/contract/:_id/clone/before-you-start', async (req, res) => {
   const { _id } = requestParams(req);
   const { criteriaMet } = req.body;
 
-  // TODO: check as boolean
   if (criteriaMet === 'true') {
     return res.redirect(`/contract/${_id}/clone`);
   }

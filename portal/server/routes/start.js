@@ -77,8 +77,7 @@ router.post('/before-you-start/bank-deal', async (req, res) => {
     details: {
       bankSupplyContractID: bankDealId,
       bankSupplyContractName: bankDealName,
-    },
-    criteriaMet: true, // choosing only to create deals where this criteria is met, rather than record failures..
+    }
   };
 
   const persistedDeal = await api.createDeal(newDeal, req.session.userToken);
