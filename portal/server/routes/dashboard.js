@@ -1,5 +1,7 @@
 import express from 'express';
 import api from '../api';
+import buildDashboardFilters from './buildDashboardFilters';
+
 import {
   getApiData,
   requestParams,
@@ -9,27 +11,13 @@ import {
 const router = express.Router();
 const PAGESIZE = 20;
 
-const buildFilters = (params, user) => {
-  const filters = {};
-  const { filterBySubmissionUser } = params;
-
-  if (filterBySubmissionUser === 'all') {
-    // default
-  }
-  if (filterBySubmissionUser === 'createdByMe') {
-    filters['details.maker.username'] = { $eq: user.username };
-  }
-
-  return filters;
-};
-
 router.get('/dashboard', async (req, res) => {
   res.redirect('/dashboard/0');
 });
 
 router.get('/dashboard/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-  const filters = buildFilters(req.params, req.session.user);
+  const filters = buildDashboardFilters(req.params, req.session.user);
 
   const dealData = await getApiData(
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
@@ -55,7 +43,7 @@ router.get('/dashboard/:page', async (req, res) => {
 
 router.post('/dashboard/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-  const filters = buildFilters(req.body, req.session.user);
+  const filters = buildDashboardFilters(req.body, req.session.user);
 
   const dealData = await getApiData(
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
