@@ -2,6 +2,11 @@ const assert = require('assert');
 
 const db = require('../../db-driver/client');
 
+const sortMandatoryCriteria = (arr, callback) => {
+  const sortedArray = arr.sort((a, b) => a.groupId - b.groupId);
+  return callback(sortedArray);
+};
+
 const findMandatoryCriteria = async (callback) => {
   const collection = await db.getCollection('mandatoryCriteria');
 
@@ -28,10 +33,12 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => (
-  findMandatoryCriteria((mandatoryCriteria) => res.status(200).send({
-    count: mandatoryCriteria.length,
-    mandatoryCriteria,
-  }))
+  findMandatoryCriteria((mandatoryCriteria) =>
+    sortMandatoryCriteria(mandatoryCriteria, (sortedMandatoryCriteria) =>
+      res.status(200).send({
+        count: mandatoryCriteria.length,
+        mandatoryCriteria: sortedMandatoryCriteria,
+      })))
 );
 
 exports.findOne = (req, res) => (
