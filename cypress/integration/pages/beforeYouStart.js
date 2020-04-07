@@ -1,8 +1,8 @@
 const page = {
   visit: () => cy.visit('/before-you-start'),
-  true: () => cy.get('[data-cy="True"]'),
-  false: () => cy.get('[data-cy="False"]'),
-  submit: () => cy.get('[data-cy="Submit"]'),
+  true: () => cy.get('[data-cy="criteriaMet-true"]'),
+  false: () => cy.get('[data-cy="criteriaMet-false"]'),
+  submit: () => cy.get('button'),
   eligiblePerson: () => '//TODO'
 }
 
