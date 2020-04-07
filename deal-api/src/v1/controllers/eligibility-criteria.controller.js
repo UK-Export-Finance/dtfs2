@@ -35,8 +35,9 @@ exports.update = async (req, res) => {
       const criteria11 = updatedCriteria.find((c) => c.id === 11);
 
       const criteria11IsFalse = (typeof criteria11.answer !== 'undefined' && criteria11.answer === false);
+
       const criteria11Additional = {
-        agentName: criteria11IsFalse ? req.body['agent-name'] : '',
+        agentName: criteria11IsFalse && req.body['agent-name'] ? req.body['agent-name'].substring(0, 150) : '',
         agentCountry: criteria11IsFalse ? req.body['agent-country'] : '',
         agentAddress1: criteria11IsFalse ? req.body['agent-address-line-1'] : '',
         agentAddress2: criteria11IsFalse ? req.body['agent-address-line-2'] : '',
