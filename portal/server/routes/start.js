@@ -3,7 +3,10 @@ import api from '../api';
 import {
   getApiData,
   requestParams,
+  generateErrorSummary,
+  errorHref,
 } from '../helpers';
+import beforeYouStartValidation from '../validation/before-you-start';
 
 const router = express.Router();
 
@@ -33,13 +36,28 @@ router.get('/before-you-start', async (req, res) => {
 });
 
 router.post('/before-you-start', async (req, res) => {
-  const { criteriaMet } = req.body;
+  const { userToken } = requestParams(req);
 
-  // TODO: check as boolean
-  if (criteriaMet === 'true') {
-    return res.redirect('/before-you-start/bank-deal');
+  const validationErrors = generateErrorSummary(
+    beforeYouStartValidation(req.body),
+    errorHref,
+  );
+
+  if (validationErrors) {
+    return res.render('before-you-start/before-you-start.njk', {
+      mandatoryCriteria: await getApiData(
+        api.mandatoryCriteria(userToken),
+        res,
+      ),
+      validationErrors,
+    });
   }
-  return res.redirect('/unable-to-proceed');
+
+  if (req.body.criteriaMet === 'false') {
+    return res.redirect('/unable-to-proceed');
+  }
+
+  return res.redirect('/before-you-start/bank-deal');
 });
 
 router.get('/before-you-start/bank-deal', async (req, res) => {
