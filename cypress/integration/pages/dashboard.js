@@ -6,6 +6,7 @@ const page = {
   last: () => cy.get('[data-cy="Last"]'),
   totalItems: () => cy.get('[data-cy="totalItems"]'),
   filterBySubmissionUser: () => cy.get('[data-cy="filterBySubmissionUser"]'),
+  filterBySubmissionType: () => cy.get('[data-cy="filterBySubmissionType"]'),
   applyFilters: () => cy.get('[data-cy="ApplyFilters"]'),
   row: (deal) => {
     const row = cy.get(`[data-cy="deal_${deal._id}"]`);
