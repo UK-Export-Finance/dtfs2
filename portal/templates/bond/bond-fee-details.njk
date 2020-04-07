@@ -3,11 +3,12 @@
 
 {% block content %}
 
+  {# childId = bond.id #}
   {{ bondNav.nav(
     completedStatus = bond.completedStatus,
     current = 'feeDetails',
     contractId = contractId,
-    childId = bond.id
+    childId = 123
   )}}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
@@ -110,7 +111,7 @@
 
     <input
       type="submit"
-      formaction="/contract/{{ contractId }}/bond/{{ bond.id }}/fee-details/save-go-back"
+      formaction="/contract/{{ contractId }}/bond/123/fee-details/save-go-back"
       class="govuk-button govuk-button--secondary"
       data-module="govuk-button"
       value="Save and go back to deal"
