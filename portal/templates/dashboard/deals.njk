@@ -21,7 +21,7 @@
 
     <section class="govuk-tabs__panel">
 
-      <form autocomplete="off">
+      <form method="POST" autocomplete="off">
 
         <div class="govuk-grid-row">
 
@@ -31,7 +31,7 @@
                 Show me
               </label>
 
-              <select class="govuk-select govuk-!-width-full" id="filterBySubmissionUser" name="filterBySubmissionUser">
+              <select data-cy="filterBySubmissionUser" class="govuk-select govuk-!-width-full" id="filterBySubmissionUser" name="filterBySubmissionUser">
                 <option value="all" selected>Any</option>
                 <option value="createdByMe">Submissions created by me</option>
                 <option value="createdByColleagues">Submissions created by my colleagues</option>
@@ -130,7 +130,7 @@
 
         </details>
 
-        <button class="govuk-button" data-module="govuk-button">
+        <button data-cy="ApplyFilters" class="govuk-button" data-module="govuk-button">
           Apply filters
         </button>
 
