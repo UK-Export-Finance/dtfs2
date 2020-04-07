@@ -48,6 +48,16 @@ context('Eligibility Criteria', () => {
     errorSummary.errorSummaryLinks().should('have.length', criteriaCount - 1);
   });
 
+  it('should toggle display of criteria 11 extra info if criteria 11 is true/false', () => {
+    eligibilityCriteria.eligibilityCriteria11ExtraInfo().should('not.be.visible');
+
+    eligibilityCriteria.eligibilityCriteria11False().click();
+    eligibilityCriteria.eligibilityCriteria11ExtraInfo().should('be.visible');
+
+    eligibilityCriteria.eligibilityCriteria11True().click();
+    eligibilityCriteria.eligibilityCriteria11ExtraInfo().should('not.be.visible');
+  });
+
   it('should redirect to supporting docs page when all criteria answered', () => {
     eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().click({ multiple: true });
     eligibilityCriteria.nextPageButton().click();
