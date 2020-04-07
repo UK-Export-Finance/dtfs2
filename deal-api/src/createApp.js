@@ -22,6 +22,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
+
 app.use('/v1', openRouter);
 app.use('/v1', authRouter);
 

@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const db = require('../../db-driver/client');
+const db = require('../../drivers/db-client');
 
 const sortMandatoryCriteria = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.id) - Number(b.id));

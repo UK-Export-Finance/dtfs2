@@ -1,4 +1,5 @@
 const axios = require('axios');
+const FormData = require('form-data');
 const { translateDatesToExpectedFormat, translateAllDatesToExpectedFormat } = require('./dateFormatter');
 require('dotenv').config();
 
@@ -136,6 +137,35 @@ const updateEligibilityCriteria = async (dealId, criteria, token) => {
   return response.data;
 };
 
+const updateEligibilityDocumentation = async (dealId, body, files, token) => {
+  const formData = new FormData();
+
+  Object.entries(body).forEach(([fieldname, value]) => {
+    formData.append(fieldname, value);
+  });
+
+  // formData.append('test', 'test1');
+  files.forEach((file) => {
+    const { fieldname, originalname } = file;
+    formData.append(file.fieldname, file.buffer, file.originalname);
+  });
+
+
+  const formHeaders = formData.getHeaders();
+
+  const response = await axios({
+    method: 'put',
+    url: `${urlRoot}/v1/deals/${dealId}/eligibility-documentation`,
+    headers: {
+      Authorization: token,
+      ...formHeaders,
+    },
+    data: formData.getBuffer(),
+  });
+
+  return response.data;
+};
+
 const banks = async (token) => {
   const response = await axios({
     method: 'get',
@@ -254,5 +284,6 @@ export default {
   updateDeal,
   updateDealStatus,
   updateEligibilityCriteria,
+  updateEligibilityDocumentation,
   validateToken,
 };

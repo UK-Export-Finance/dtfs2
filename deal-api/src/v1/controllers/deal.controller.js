@@ -4,7 +4,7 @@ const moment = require('moment');
 const $ = require('mongo-dot-notation');
 
 const DEFAULTS = require('../defaults');
-const db = require('../../db-driver/client');
+const db = require('../../drivers/db-client');
 const { getDealErrors } = require('../validation/deal');
 const { getCloneDealErrors } = require('../validation/clone-deal');
 

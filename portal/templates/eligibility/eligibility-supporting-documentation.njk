@@ -1,5 +1,7 @@
 {% extends "index.njk" %}
 {% import '_macros/confirm-eligibility-nav.njk' as confirmEligibility %}
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 
 {% block content %}
 
@@ -11,36 +13,57 @@
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8">
   
-  <form method="POST" autocomplete="off">
+  <form method="POST" autocomplete="off" enctype="multipart/form-data">
 
     <ol class="govuk-list govuk-list--number">
-      {% for documentation in submissionDetails.supportingDocumentation %}
+    <li class="govuk-form-group govuk-!-margin-bottom-8">
+      {{ govukFileUpload({
+        id: "manualInclusionQuestionnaire",
+        name: "manual-inclusion-questionnaire",
+        label: {
+          text: "Manual Inclusion Questionnaire"
+        },
+        hint: {
+          html: 'Please upload a completed Manual Inclusion Questionnaire. You can download the template here: <a href="#">Manual Inclusion Questionnaire</a>'
+        },
+        attributes: {
+          multiple: true,
+          accept: '.gif, .jpg, .jpeg, .png, .bmp, .tif, .txt, .pdf, .doc, .docx, .ppt, .pptx, .xls, .xlsx, .msg, .zip'
+        }
+      }) }}
+    </li>
 
-        <li class="govuk-form-group govuk-!-margin-bottom-8">
-          <label for="{{ documentation.fieldName }}">{{ documentation.title }}</label>
-          <p class="govuk-body govuk-hint" id="{{ documentation.fieldName }}-hint">{{ documentation.description | safe }}</p>
+    <li class="govuk-form-group govuk-!-margin-bottom-8">
+        {{ govukFileUpload({
+          id: "financialStatements",
+          name: "financial-statements",
+          label: {
+            text: "Financial statements for the past 3 years"
+          },
+          hint: {
+            text: 'Financial statements (audited if available) for the past 3 years, including a Profit & Loss, Balance Sheet and Cash Flow Statement, (with notes, if applicable). If the company is part of a larger group, separate accounts should be provided for the company and group.'
+          },
+          attributes: {
+            multiple: true,
+            accept: '.gif, .jpg, .jpeg, .png, .bmp, .tif, .txt, .pdf, .doc, .docx, .ppt, .pptx, .xls, .xlsx, .msg, .zip'
+          }
+        }) }}
+    </li>
 
-          {% if documentation.inputType === 'file'%}
-            <input class="govuk-file-upload" id="{{ documentation.fieldName }}" name="{{ documentation.fieldName }}" type="file" multiple>
+    <li class="govuk-form-group govuk-!-margin-bottom-8">
+      {{ govukCharacterCount({
+          name: "security",
+          id: "security",
+          maxlength: 300,
+          label: {
+            text: "Security"
+          },
+          hint: {
+             text: 'Details of the overarching general facility taken by the bank in relation to the exporter, for example debenture, fixed and floating charge, but not including any security that is specific to the Transaction.'
+          }
+        }) }}
+    </li>
 
-            {% elif documentation.inputType === 'textarea'%}
-              <div class="govuk-grid-column-one-half govuk-!-padding-0">
-
-                <div class="govuk-character-count govuk-!-margin-bottom-0" data-module="govuk-character-count" data-maxlength="300">
-                  <textarea class="govuk-textarea govuk-js-character-count" id="{{ documentation.fieldName }}" name="{{ documentation.fieldName }}" rows="5" aria-describedby="{{ documentation.fieldName }}-info {{ documentation.fieldName }}-hint"></textarea>
-
-                  <span id="{{ documentation.fieldName }}-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-                    You can enter up to 300 characters
-                  </span>
-                </div>
-
-              </div>
-            
-          {% endif %}
-
-        </li>
-
-      {% endfor %}
     </ol>
 
     <div class="govuk-grid-row govuk-!-margin-0">
