@@ -478,23 +478,23 @@ describe('/v1/deals', () => {
 
       it('clones a deal with modified _id, bankDealId and bankDealName', async () => {
         const clonePostBody = {
-          bankDealId: 'new-bank-deal-id',
-          bankDealName: 'new-bank-deal-name',
+          bankSupplyContractID: 'new-bank-deal-id',
+          bankSupplyContractName: 'new-bank-deal-name',
           cloneTransactions: 'true',
         };
 
         const { body } = await post(clonePostBody, user1).to(`/v1/deals/${originalDealId}/clone`);
 
         expect(body._id).not.toEqual(clonePostBody.bankDealId);
-        expect(body.details.bankDealId).toEqual(clonePostBody.bankDealId);
-        expect(body.details.bankDealName).toEqual(clonePostBody.bankDealName);
+        expect(body.details.bankSupplyContractID).toEqual(clonePostBody.bankSupplyContractID);
+        expect(body.details.bankSupplyContractName).toEqual(clonePostBody.bankSupplyContractName);
       });
 
       describe('when req.body has cloneTransactions set to false', () => {
         it('clones a deal with empty transactions', async () => {
           const clonePostBody = {
-            bankDealId: 'new-bank-deal-id',
-            bankDealName: 'new-bank-deal-name',
+            bankSupplyContractID: 'new-bank-deal-id',
+            bankSupplyContractName: 'new-bank-deal-name',
             cloneTransactions: 'false',
           };
           const { body } = await post(clonePostBody, user1).to(`/v1/deals/${originalDealId}/clone`);
