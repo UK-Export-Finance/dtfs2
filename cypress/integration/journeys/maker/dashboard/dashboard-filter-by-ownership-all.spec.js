@@ -51,6 +51,8 @@ context('Dashboard Deals pagination controls', () => {
     dashboard.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(10 items)');
     });
+
+    dashboard.filterBySubmissionUser().should('have.value', 'all')
   });
 
 });
