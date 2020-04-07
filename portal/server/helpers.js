@@ -56,13 +56,21 @@ export const generateErrorSummary = (validationErrors, hrefGenerator = (id) => i
     }
   */
 
-  // Need to remove validation errors without a text value (as db does a partial update and doesn't remove previous validation errors. fixed validation errors are set to {} instead
-  // and then order the validation errors so their displayed in correct order
-  const filteredValidationErrorListArray = Object.entries(validationErrors.errorList).filter(([key, value]) => value.text).sort(([aKey, aValue], [bKey, bValue]) => {
-    if (aValue.order < bValue.order) return -1;
-    if (aValue.order > bValue.order) return 1;
-    return 0;
-  });
+  /*
+    Need to remove validation errors without a text value
+    (as db does a partial update and doesn't remove previous validation errors.
+    fixed validation errors are set to {} instead
+    and then order the validation errors so their displayed in correct order
+  */
+  const filteredValidationErrorListArray = Object.entries(validationErrors.errorList)
+    .filter(([, value]) => value.text)
+    .sort(([, aValue], [, bValue]) => {
+      if (aValue.order < bValue.order) return -1;
+      if (aValue.order > bValue.order) return 1;
+      return 0;
+    });
+    // note: [,value] used to prevent 'no unused vars' eslint warning
+    // see https://github.com/babel/babel-eslint/issues/274
 
   const filteredValidationErrorList = Object.fromEntries(filteredValidationErrorListArray);
 
@@ -76,7 +84,6 @@ export const generateErrorSummary = (validationErrors, hrefGenerator = (id) => i
     errorList: filteredValidationErrorList,
     summary,
   };
-
 };
 
 export const formatCountriesForGDSComponent = ((countries, selectedCountryCode) => {
@@ -85,6 +92,5 @@ export const formatCountriesForGDSComponent = ((countries, selectedCountryCode) 
     text: c.name,
     selected: c.code === selectedCountryCode,
   }));
-
   return countryOptions;
 });
