@@ -1,6 +1,17 @@
 {% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 
 {% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
 
   <h1 class="govuk-heading-l">Mandatory criteria</h1>
 
@@ -24,29 +35,36 @@
   <p class="govuk-body">Confirmation</p>
 
   <form autocomplete="off" method="POST">
-    <div class="govuk-form-group">
-      <fieldset class="govuk-fieldset">
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
-          <p class="govuk-body">
-            All of the above mandatory criteria are true for this supply contract.
-          </p>
-        </legend>
-        <div class="govuk-radios govuk-radios--inline">
-          <div class="govuk-radios__item">
-            <input data-cy="True" class="govuk-radios__input" id="criteriaMet" name="criteriaMet" type="radio" value="true">
-            <label class="govuk-label govuk-radios__label" for="criteriaMet">
-              True
-            </label>
-          </div>
-          <div class="govuk-radios__item">
-            <input data-cy="False" class="govuk-radios__input" id="criteriaMet-2" name="criteriaMet" type="radio" value="false">
-            <label class="govuk-label govuk-radios__label" for="criteriaMet-2">
-              False
-            </label>
-          </div>
-        </div>
-      </fieldset>
-    </div>
+    {{
+      govukRadios({
+        classes: "govuk-radios--inline",
+        idPrefix: "criteriaMet",
+        name: "criteriaMet",
+        fieldset: {
+          legend: {
+            text: "All of the above mandatory criteria are true for this supply contract.",
+            classes: "govuk-fieldset__legend"
+          }
+        },
+        items: [
+          {
+            value: "true",
+            text: "True",
+            attributes: {
+              "data-cy": "true"
+            }
+          },
+          {
+            value: "false",
+            text: "False",
+            attributes: {
+              "data-cy": "false"
+            }
+          }
+        ],
+        errorMessage: validationErrors.errorList.criteriaMet
+      })
+    }}
 
     <button data-cy="Submit" class="govuk-button" data-module="govuk-button">Submit</button>
 

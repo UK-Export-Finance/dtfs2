@@ -7,6 +7,7 @@ import {
   getApiData,
   requestParams,
   generateErrorSummary,
+  errorHref,
 } from '../../helpers';
 
 const router = express.Router();
@@ -127,8 +128,6 @@ router.post('/contract/:_id/clone', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
   const dealResponse = await api.cloneDeal(_id, req.body, userToken);
-
-  const errorHref = (id) => `#${id}`;
 
   const validationErrors = generateErrorSummary(
     dealResponse.validationErrors,

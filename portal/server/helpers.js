@@ -26,6 +26,9 @@ export const requestParams = (req) => {
 
 export const getFlashSuccessMessage = (req) => req.flash('successMessage')[0];
 
+
+export const errorHref = (id) => `#${id}`;
+
 export const generateErrorSummary = (validationErrors, hrefGenerator = (id) => id) => {
   if (!validationErrors) { return false; }
 
