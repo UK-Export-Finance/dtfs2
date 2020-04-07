@@ -1,0 +1,199 @@
+const ELIGIBILITY_CRITERIA = require('../eligibilityCriteria');
+const SUPPORTING_DOCUMENTATION = require('../supportingDocumentation');
+
+module.exports = {
+  bankSupplyContractName: 'CT-TestPrep-170220',
+  details: {
+    bank: 'UKEF test bank',
+    bankSupplyContractID: 'AIN MIA/Msstar/BSS/DGR ',
+    bankSupplyContractName: 'AIN deal',
+    ukefDealId: '20010740',
+    status: 'Acknowledged by UKEF',
+    previousStatus: 'Submitted',
+    checker: 'CHECKER DURGA',
+    submissionType: 'Automatic Inclusion Notice'
+  },
+  aboutSupplyContract: {
+    status: 'Incomplete'
+  },
+  eligibility: {
+    status: 'Complete',
+    submissionType: 'Manual Inclusion Notice',
+    criteria: ELIGIBILITY_CRITERIA,
+    completedStatus: {
+      eligibilityCriteria: true,
+      supportingDocumentation: true
+    }
+  },
+  bondTransactions: {
+    items: [
+      {
+        id: '1',
+        bankReferenceNumber: 'Not entered',
+        ukefFacilityID: '12345678',
+        value: 'GBP 123,456.00',
+        stage: 'Unconditional',
+        startDate: '12/02/2020',
+        endDate: '14/03/2027',
+        action: '?',
+        completedStatus: {
+          bondDetails: false,
+          bondFinancialDetails: false,
+          feeDetails: false
+        }
+      },
+      {
+        id: '2',
+        bankReferenceNumber: 'test',
+        ukefFacilityID: '12345678',
+        value: 'GBP 123,456.00',
+        stage: 'Unconditional',
+        startDate: '12/02/2020',
+        endDate: '14/03/2027',
+        action: '?',
+        completedStatus: {
+          bondDetails: false,
+          bondFinancialDetails: false,
+          feeDetails: false
+        }
+      }
+    ]
+  },
+  loanTransactions: {
+    items: [
+      {
+        id: '1',
+        bankReferenceNumber: 'Not entered',
+        ukefFacilityID: '12345678',
+        status: 'Not started',
+        value: 'GBP 123,456.00',
+        stage: 'Unconditional',
+        startDate: '12/02/2020',
+        endDate: '14/03/2027',
+        action: '?',
+        completedStatus: {
+          bondDetails: false,
+          bondFinancialDetails: false,
+          feeDetails: false
+        }
+      },
+      {
+        id: '2',
+        bankReferenceNumber: 'test',
+        ukefFacilityID: '12345678',
+        status: 'Incomplete',
+        value: 'GBP 123,456.00',
+        stage: '',
+        startDate: '',
+        endDate: '',
+        action: '?',
+        completedStatus: {
+          bondDetails: false,
+          bondFinancialDetails: false,
+          feeDetails: false
+        }
+      }
+    ]
+  },
+  summary: {
+    dealCurrency: 'GBP',
+    totals: {
+      bonds: '1',
+      loans: '0',
+      transactions: '3'
+    },
+    dealBondsLoans: {
+      totalValue: {
+        dealCurrency: '1.23',
+        dealInGbp: '1.23',
+        bondCurrency: '1.23',
+        bondInGbp: '1.23',
+        loanCurrency: '0.00',
+        loanInGbp: '0.00'
+      },
+      totalUkefExposure: {
+        dealCurrency: '1.23',
+        dealInGbp: '1.23',
+        bondCurrency: '1.23',
+        bondInGbp: '1.23',
+        loanCurrency: '0.00',
+        loanInGbp: '0.00'
+      }
+    }
+  },
+  comments: [
+    {
+      firstName: 'Durga',
+      lastName: 'Rao',
+      created: '15/02/2020 - 12:30',
+      body: 'Testing'
+    },
+    {
+      firstName: 'Joe',
+      lastName: 'Bloggs',
+      created: '16/02/2020 - 09:43',
+      body: 'Please see: <a href="https://staging.ukexportfinance.gov.uk">https://staging.ukexportfinance.gov.uk</a>'
+    }
+  ],
+  submissionDetails: {
+    supplierType: 'Exporter',
+    supplierCompaniesHouseRegistrationNumber: '123',
+    supplierName: 'TEST',
+    supplierAddress: 'Test <br/> PO1 3AX <br/>GBR',
+    suppliersCorrespondenceAddressDifferent: false,
+    industrySector: '5678',
+    industryClass: '12345',
+    smeType: 'Micro',
+    supplyContractDescription: 'Test',
+    legallyDistinct: false,
+    buyer: {
+      name: 'TESTING',
+      country: 'United Kingdom',
+      goodsServicesDestination: 'France'
+    },
+    supplyContractFinancials: {
+      value: '456.00',
+      currency: 'USD - US Dollars',
+      conversionRateToGBP: '0.8',
+      conversionDate: '01/02/2020'
+    },
+    bond: {
+      issuer: 'test',
+      type: 'Advance payment guarantee',
+      stage: 'Issued',
+      cover: {
+        requestedStartDate: '13/02/2020',
+        endDate: '01/01/2023'
+      },
+      uniqueIdentificationNumber: 'TEST',
+      beneficiary: 'TEST',
+      financial: {
+        value: '1.50',
+        transactionCurrencySameAsSupplyContractCurrency: true,
+        riskMarginFee: '1%',
+        coveredPercentage: '70%',
+        minimumRiskMarginFee: '0.00',
+        guaranteeFeePayableByBank: '2.4500%',
+        uKefExposure: '0.25'
+      },
+      fee: {
+        type: 'In advance',
+        frequency: 'Quarterly',
+        dayCountBasis: '365'
+      }
+    },
+    supportingDocumentation: SUPPORTING_DOCUMENTATION.map(d => {
+      return {
+        ...d,
+        href: d.id === 7 ? null : 'test.docx',
+        value: d.id === 7 ? 'Test' : null
+      }
+    }),
+    eligibilityCriteria: ELIGIBILITY_CRITERIA.map(c => {
+      return {
+        ...c,
+        answer: (c.id === 14 || c.id === 16) ? false : true
+      }
+    })
+  }
+}
