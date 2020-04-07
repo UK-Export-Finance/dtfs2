@@ -10,9 +10,9 @@ const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 const getToken = require('../../getToken')(app);
 
 describe('/v1/mandatory-criteria', () => {
-  const newMandatoryCriteria = aMandatoryCriteria({ id: '2' });
+  const newMandatoryCriteria = aMandatoryCriteria({ groupId: '2' });
   const updatedMandatoryCriteria = aMandatoryCriteria({
-    id: '2',
+    groupId: '2',
     title: 'Updated mandatory criteria',
   });
 
@@ -47,11 +47,11 @@ describe('/v1/mandatory-criteria', () => {
       expect(status).toEqual(200);
     });
 
-    it('returns a list of mandatory-criteria', async () => {
+    it('returns a list of mandatory-criteria sorted by groupId', async () => {
       const criteria = [
-        aMandatoryCriteria({ id: '1' }),
-        aMandatoryCriteria({ id: '2' }),
-        aMandatoryCriteria({ id: '3' }),
+        aMandatoryCriteria({ groupId: '4' }),
+        aMandatoryCriteria({ groupId: '1' }),
+        aMandatoryCriteria({ groupId: '2' }),
       ];
 
       await post(criteria[0], aTokenWithEditorRole).to(
@@ -69,8 +69,14 @@ describe('/v1/mandatory-criteria', () => {
         aTokenWithNoRoles,
       );
 
+      const expectedSortedMandatoryCriteria = [
+        criteria[1],
+        criteria[2],
+        criteria[0],
+      ];
+
       expect(status).toEqual(200);
-      expect(body.mandatoryCriteria).toEqual(expectMongoIds(criteria));
+      expect(body.mandatoryCriteria).toEqual(expectMongoIds(expectedSortedMandatoryCriteria));
     });
   });
 
