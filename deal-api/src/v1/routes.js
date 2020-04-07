@@ -35,6 +35,12 @@ authRouter.route('/deals/:start/:pagesize')
     deals.findPage,
   );
 
+authRouter.route('/deals/:start/:pagesize/:filters')
+  .get(
+    validate({ role: 'maker' }),
+    deals.findPage,
+  );
+
 authRouter.route('/deals/:id')
   .get(
     validate({ role: 'maker' }),

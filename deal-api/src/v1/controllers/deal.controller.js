@@ -9,23 +9,29 @@ const { getDealErrors } = require('../validation/deal');
 
 const { isSuperUser, userHasAccessTo } = require('../users/checks');
 
-const dealsByOwningBank = (user) => {
-  if (isSuperUser(user)) {
-    return {};
-  }
-  return { 'details.owningBank.id': { $eq: user.bank.id } };
-};
-
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
   delete cleanedObject._id; // eslint-disable-line no-underscore-dangle
   return cleanedObject;
 };
 
+const dealsQuery = (user, filter) => {
+  let query = {};
+  if (filter && filter !== {}) {
+    query = { ...filter };
+  }
+
+  if (!isSuperUser(user)) {
+    query['details.owningBank.id'] = { $eq: user.bank.id };
+  }
+
+  return query;
+};
+
 const findDeals = async (requestingUser, callback) => {
   const collection = await db.getCollection('deals');
 
-  collection.find(dealsByOwningBank(requestingUser))
+  collection.find(dealsQuery(requestingUser))
     .sort({ 'details.dateOfLastAction': +1 })
     .toArray((err, result) => {
       assert.equal(err, null);
@@ -33,12 +39,13 @@ const findDeals = async (requestingUser, callback) => {
     });
 };
 
-const findPaginatedDeals = async (requestingUser, start, pagesize, callback) => {
+const findPaginatedDeals = async (requestingUser, start, pagesize, filter, callback) => {
   const collection = await db.getCollection('deals');
+  const query = dealsQuery(requestingUser, filter);
 
-  const count = await collection.find(dealsByOwningBank(requestingUser)).count();
+  const count = await collection.find(query).count();
 
-  collection.find(dealsByOwningBank(requestingUser))
+  collection.find(query)
     .skip(start)
     .limit(pagesize)
     .toArray((err, result) => {
@@ -98,11 +105,13 @@ exports.findAll = (req, res) => (
 exports.findPage = (req, res) => {
   const start = parseInt(req.params.start, 10);
   const pagesize = parseInt(req.params.pagesize, 10);
+  const filters = req.params.filters ? JSON.parse(req.params.filters) : {};
 
   findPaginatedDeals(
     req.user,
     start,
     pagesize,
+    filters,
     (paginatedResults) => res.status(200).send(paginatedResults),
   );
 };

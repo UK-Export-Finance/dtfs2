@@ -19,6 +19,7 @@ const login = async (username, password) => {
     return response.data ? {
       success: response.data.success,
       token: response.data.token,
+      user: response.data.user,
     } : '';
   } catch (err) {
     return new Error('error with token');// do something proper here, but for now just reject failed logins..
@@ -34,13 +35,18 @@ const contract = async (id, token) => {
       'Content-Type': 'application/json',
     },
   });
+
   return translateDatesToExpectedFormat(response.data);
 };
 
-const contracts = async (start, pagesize, token) => {
+const serialiseFilters = (filters) => JSON.stringify(filters);
+
+const contracts = async (start, pagesize, filters, token) => {
+  const serialisedFilters = serialiseFilters(filters);
+
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/v1/deals/${start}/${pagesize}`,
+    url: `${urlRoot}/v1/deals/${start}/${pagesize}/${serialisedFilters}`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',

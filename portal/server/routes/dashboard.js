@@ -1,5 +1,7 @@
 import express from 'express';
 import api from '../api';
+import buildDashboardFilters from './buildDashboardFilters';
+
 import {
   getApiData,
   requestParams,
@@ -16,8 +18,10 @@ router.get('/dashboard', async (req, res) => {
 router.get('/dashboard/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
+  const filters = buildDashboardFilters(req.session.dashboardFilters, req.session.user);
+
   const dealData = await getApiData(
-    api.contracts(req.params.page * PAGESIZE, PAGESIZE, userToken),
+    api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
 
@@ -35,9 +39,38 @@ router.get('/dashboard/:page', async (req, res) => {
       res,
     ),
     successMessage: getFlashSuccessMessage(req),
+    filter: req.session.dashboardFilters,
   });
 });
 
+router.post('/dashboard/:page', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  req.session.dashboardFilters = req.body;
+
+  const filters = buildDashboardFilters(req.session.dashboardFilters, req.session.user);
+
+  const dealData = await getApiData(
+    api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+    res,
+  );
+
+  const pages = {
+    totalPages: Math.ceil(dealData.count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: dealData.count,
+  };
+
+  return res.render('dashboard/deals.njk', {
+    pages,
+    contracts: dealData.deals,
+    banks: await getApiData(
+      api.banks(userToken),
+      res,
+    ),
+    filter: req.session.dashboardFilters,
+  });
+});
 
 router.get('/dashboard/transactions', async (req, res) => {
   const { userToken } = requestParams(req);

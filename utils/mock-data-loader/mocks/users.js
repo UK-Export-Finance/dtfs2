@@ -64,6 +64,16 @@ const USERS = [
     },
   },
   {
+    username: 'MAKER-3',
+    password: 'MAKER-3',
+    roles: ['maker'],
+    bank: {
+      //_id: '', //TODO [dw] better linking of mock data
+      id: '961',
+      name: 'HSBC'
+    },
+  },
+  {
     username: 'CHECKER-2',
     password: 'CHECKER-2',
     roles: ['checker'],
