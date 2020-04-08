@@ -1,0 +1,52 @@
+{% import '_macros/date-range.njk' as dateRange %}
+{% import '_macros/dashboardAdvancedFilters.njk' as dashboardAdvancedFilters %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% macro render(filter, user) %}
+<form method="POST" autocomplete="off">
+
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="filterBySubmissionUser">
+          Show me
+        </label>
+
+        <select data-cy="filterBySubmissionUser" class="govuk-select govuk-!-width-full" id="filterBySubmissionUser" name="filterBySubmissionUser">
+          <option value="all" {% if filter.filterBySubmissionUser==='all' %}selected{%endif%}>Any</option>
+          <option value="createdByMe" {% if filter.filterBySubmissionUser==='createdByMe' %}selected{%endif%}>Submissions created by me</option>
+          <option value="createdByColleagues" {% if filter.filterBySubmissionUser==='createdByColleagues' %}selected{%endif%}>Submissions created by my colleagues</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="filterBySubmissionType">
+          Submission type
+        </label>
+
+        <select data-cy="filterBySubmissionType" class="govuk-select govuk-!-width-full" id="filterBySubmissionType" name="filterBySubmissionType">
+          <option value="all" {% if filter.filterBySubmissionUser==='all' %}selected{%endif%}>Any</option>
+          <option value="manualInclusionApplication" {% if filter.filterBySubmissionType==='manualInclusionApplication' %}selected{%endif%}>Manual Inclusion Application</option>
+          <option value="automaticInclusionNotice" {% if filter.filterBySubmissionType==='automaticInclusionNotice' %}selected{%endif%}>Automatic Inclusion Notice</option>
+          <option value="manualInclusionNotice" {% if filter.filterBySubmissionType==='manualInclusionNotice' %}selected{%endif%}>Manual Inclusion Notice</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  {{ govukDetails({
+    summaryText: "Show filters",
+    html: dashboardAdvancedFilters.render(filters, user),
+    open: user.roles.includes('checker')
+  }) }}
+
+  <button data-cy="ApplyFilters" class="govuk-button" data-module="govuk-button">
+    Apply filters
+  </button>
+
+</form>
+{% endmacro %}

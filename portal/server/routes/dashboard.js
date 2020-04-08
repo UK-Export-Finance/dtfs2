@@ -39,6 +39,7 @@ router.get('/dashboard/:page', async (req, res) => {
     ),
     successMessage: getFlashSuccessMessage(req),
     filter: req.session.dashboardFilters,
+    user: req.session.user,
   });
 });
 
@@ -68,6 +69,7 @@ router.post('/dashboard/:page', async (req, res) => {
       res,
     ),
     filter: req.session.dashboardFilters,
+    user: req.session.user,
   });
 });
 
