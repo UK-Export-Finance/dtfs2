@@ -10,17 +10,17 @@
           Status
         </label>
 
-        <select class="govuk-select" id="filterByStatus" name="filterByStatus">
-          <option value="all" selected>Any</option>
-          <option value="draft">Draft</option>
-          <option value="readyForApproval">Ready for Checker's approval</option>
-          <option value="inputRequired">Further Maker's input required</option>
-          <option value="abandoned">Abandoned Deal</option>
-          <option value="submitted">Submitted</option>
-          <option value="submissionAcknowledged">Acknowledged by UKEF</option>
-          <option value="approved">Accepted by UKEF (without conditions)</option>
-          <option value="approvedWithConditions">Accepted by UKEF (with conditions)</option>
-          <option value="refused">Rejected by UKEF</option></select>
+        <select data-cy="filterByStatus" class="govuk-select" id="filterByStatus" name="filterByStatus">
+          <option value="all" {% if filter.filterByStatus==='all' %}selected{%endif%}>Any</option>
+          <option value="draft" {% if filter.filterByStatus==='draft' %}selected{%endif%}>Draft</option>
+          <option value="readyForApproval" {% if filter.filterByStatus==='readyForApproval' %}selected{%endif%}>Ready for Checker's approval</option>
+          <option value="inputRequired" {% if filter.filterByStatus==='inputRequired' %}selected{%endif%}>Further Maker's input required</option>
+          <option value="abandoned" {% if filter.filterByStatus==='abandoned' %}selected{%endif%}>Abandoned Deal</option>
+          <option value="submitted" {% if filter.filterByStatus==='submitted' %}selected{%endif%}>Submitted</option>
+          <option value="submissionAcknowledged" {% if filter.filterByStatus==='submissionAcknowledged' %}selected{%endif%}>Acknowledged by UKEF</option>
+          <option value="approved" {% if filter.filterByStatus==='approved' %}selected{%endif%}>Accepted by UKEF (without conditions)</option>
+          <option value="approvedWithConditions" {% if filter.filterByStatus==='approvedWithConditions' %}selected{%endif%}>Accepted by UKEF (with conditions)</option>
+          <option value="refused" {% if filter.filterByStatus==='refused' %}selected{%endif%}>Rejected by UKEF</option></select>
         </select>
       </div>
     </div>
