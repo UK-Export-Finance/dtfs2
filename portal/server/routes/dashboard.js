@@ -17,7 +17,6 @@ router.get('/dashboard', async (req, res) => {
 
 router.get('/dashboard/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-
   const filters = buildDashboardFilters(req.session.dashboardFilters, req.session.user);
 
   const dealData = await getApiData(

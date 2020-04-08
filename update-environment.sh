@@ -1,10 +1,10 @@
 echo Running update-environment script
 
+echo Ensuring root dependencies are up to date..
+npm install
+
 echo Ensuring deal-api dependencies are up to date..
 cd deal-api && npm install
-
-echo Ensuring users service dependencies are up to date..
-cd ../../users/service && npm install
 
 echo Ensuring portal dependencies are up to date..
 cd ../portal && npm install
