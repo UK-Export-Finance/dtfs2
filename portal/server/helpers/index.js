@@ -5,6 +5,7 @@ import getFlashSuccessMessage from './getFlashSuccessMessage';
 import generateErrorSummary from './generateErrorSummary';
 import formatCountriesForGDSComponent from './formatCountriesForGDSComponent';
 import errorHref from './errorHref';
+import postToApi from './postToApi';
 
 export {
   getApiData,
@@ -13,4 +14,5 @@ export {
   generateErrorSummary,
   formatCountriesForGDSComponent,
   errorHref,
+  postToApi,
 };

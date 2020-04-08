@@ -8,6 +8,7 @@ import {
   requestParams,
   generateErrorSummary,
   errorHref,
+  postToApi,
 } from '../../helpers';
 
 const router = express.Router();
@@ -127,9 +128,9 @@ router.get('/contract/:_id/clone', async (req, res) => {
 router.post('/contract/:_id/clone', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  try {
-    const cloneDealResponse = await api.cloneDeal(_id, req.body, userToken);
-
+  postToApi(
+    api.cloneDeal(_id, req.body, userToken),
+  ).then((cloneDealResponse) => {
     req.flash('successMessage', {
       text: 'Supply Contract cloned successfully. We have cleared some values to ensure data quality. Please complete.',
       href: `/contract/${cloneDealResponse._id}`, // eslint-disable-line no-underscore-dangle
@@ -137,19 +138,18 @@ router.post('/contract/:_id/clone', async (req, res) => {
     });
 
     return res.redirect('/dashboard');
-  } catch (catchErr) {
-    const validationErrors = generateErrorSummary(
-      catchErr.response.data.validationErrors,
-      errorHref,
-    );
+  })
+    .catch((catchErr) => {
+      const validationErrors = generateErrorSummary(
+        catchErr.response.data.validationErrors,
+        errorHref,
+      );
 
-    if (validationErrors) {
       return res.status(400).render('contract/contract-clone.njk', {
         ...catchErr.response.data,
         validationErrors,
       });
-    }
-  }
+    });
 });
 
 router.get('/contract/:_id/clone/before-you-start', async (req, res) => {

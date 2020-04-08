@@ -5,6 +5,7 @@ import {
   requestParams,
   generateErrorSummary,
   errorHref,
+  postToApi,
 } from '../helpers';
 import beforeYouStartValidation from '../validation/before-you-start';
 
@@ -70,7 +71,7 @@ router.get('/before-you-start/bank-deal', async (req, res) => {
   }
 });
 
-router.post('/before-you-start/bank-deal', async (req, res) => {
+router.post('/before-you-start/bank-deal', (req, res) => {
   const { userToken } = requestParams(req);
   const { bankDealId, bankDealName } = req.body;
 
@@ -81,28 +82,28 @@ router.post('/before-you-start/bank-deal', async (req, res) => {
     },
   };
 
-  try {
-    const dealResponse = await api.createDeal(newDeal, userToken);
-    return res.redirect(`/contract/${dealResponse._id}`);// eslint-disable-line no-underscore-dangle
-  } catch (catchErr) {
-    const validationErrors = generateErrorSummary(
-      catchErr.response.data.validationErrors,
-      errorHref,
-    );
+  // TODO: could use await-to-js package to have nicer try/catch handling
+  postToApi(
+    api.createDeal(newDeal, userToken),
+  ).then((dealResponse) =>
+    res.redirect(`/contract/${dealResponse._id}`)) // eslint-disable-line no-underscore-dangle
+    .catch((catchErr) => {
+      const validationErrors = generateErrorSummary(
+        catchErr.response.data.validationErrors,
+        errorHref,
+      );
 
-    const {
-      bankSupplyContractID,
-      bankSupplyContractName,
-    } = catchErr.response.data.details;
+      const {
+        bankSupplyContractID,
+        bankSupplyContractName,
+      } = catchErr.response.data.details;
 
-    if (validationErrors) {
       return res.render('before-you-start/before-you-start-bank-deal.njk', {
         bankSupplyContractID,
         bankSupplyContractName,
         validationErrors,
       });
-    }
-  }
+    });
 });
 
 router.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk'));
