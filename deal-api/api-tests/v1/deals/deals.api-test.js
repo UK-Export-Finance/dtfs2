@@ -13,7 +13,8 @@ const getToken = require('../../getToken')(app);
 describe('/v1/deals', () => {
   const newDeal = aDeal({
     details: {
-      bankSupplyContractName: 'Original Value'
+      bankSupplyContractName: 'mock name',
+      bankSupplyContractID: 'mock id',
     },
   });
 
@@ -99,11 +100,11 @@ describe('/v1/deals', () => {
 
     it('returns a list of deals ordered by "updated", filtered by <user>.bank.id', async () => {
       const deals = [
-        aDeal({ details: {bankSupplyContractName: 'bank1/0' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank1/1' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank1/2' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank2/0' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank2/1' }}),
+        aDeal({ details: { bankSupplyContractName: 'bank1/0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1/1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1/2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2/0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
 
       await post(deals[4], maker2).to('/v1/deals');
@@ -125,11 +126,11 @@ describe('/v1/deals', () => {
 
     it('returns a list of deals ordered by "updated" if <user>.bank.id == *', async () => {
       const deals = [
-        aDeal({ details: {bankSupplyContractName: 'bank1/0' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank1/1' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank1/2' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank2/0' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank2/1' }}),
+        aDeal({ details: { bankSupplyContractName: 'bank1/0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1/1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1/2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2/0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
 
       await post(deals[4], maker2).to('/v1/deals');
@@ -180,14 +181,14 @@ describe('/v1/deals', () => {
 
     it('returns a list of deals, ordered by "updated", paginated by start/pagesize, filtered by <user>.bank.id', async () => {
       const deals = [
-        aDeal({ details: {bankSupplyContractName: 'bank1/0' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank1/1' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank1/2' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank1/3' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank1/4' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank1/5' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank2/0' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank2/1' }}),
+        aDeal({ details: { bankSupplyContractName: 'bank1/0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1/1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1/2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1/3', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1/4', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1/5', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2/0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
 
       await post(deals[0], maker1).to('/v1/deals');
@@ -213,14 +214,14 @@ describe('/v1/deals', () => {
 
     it('returns a list of deals, ordered by "updated", paginated by start/pagesize, if <user>.bank.id == *', async () => {
       const deals = [
-        aDeal({ details: {bankSupplyContractName: 'bank1/0' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank1/1' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank1/2' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank1/3' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank1/4' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank1/5' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank2/0' }}),
-        aDeal({ details: {bankSupplyContractName: 'bank2/1' }}),
+        aDeal({ details: { bankSupplyContractName: 'bank1/0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1/1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1/2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1/3', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1/4', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1/5', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2/0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
 
       await post(deals[0], maker1).to('/v1/deals');
