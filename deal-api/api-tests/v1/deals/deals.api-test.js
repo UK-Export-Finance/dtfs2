@@ -18,8 +18,9 @@ describe('/v1/deals', () => {
   });
 
   let aUserWithoutRoles;
-  let user1;
-  let user2;
+  let maker1;
+  let maker2;
+  let checker;
 
   beforeEach(async () => {
     await wipeDB();
@@ -30,7 +31,7 @@ describe('/v1/deals', () => {
       roles: [],
     });
 
-    user1 = await getToken({
+    maker1 = await getToken({
       username: '3',
       password: '4',
       roles: ['maker'],
@@ -40,7 +41,7 @@ describe('/v1/deals', () => {
       },
     });
 
-    user2 = await getToken({
+    maker2 = await getToken({
       username: '5',
       password: '6',
       roles: ['maker'],
@@ -59,6 +60,16 @@ describe('/v1/deals', () => {
       },
     });
 
+    checker = await getToken({
+      username: '9',
+      password: '10',
+      roles: ['checker'],
+      bank: {
+        id: '2',
+        name: 'Pot o Gold',
+      },
+    });
+
   });
 
   describe('GET /v1/deals', () => {
@@ -68,10 +79,22 @@ describe('/v1/deals', () => {
       expect(status).toEqual(401);
     });
 
-    it('401s requests that do not come from a user with role=maker', async () => {
+    it('401s requests that do not come from a user with role=maker || role=checker', async () => {
       const { status } = await get('/v1/deals', aUserWithoutRoles);
 
       expect(status).toEqual(401);
+    });
+
+    it('accepts requests that come from a user with role=maker', async () => {
+      const { status } = await get('/v1/deals', maker1);
+
+      expect(status).toEqual(200);
+    });
+
+    it('accepts requests that come from a user with role=checker', async () => {
+      const { status } = await get('/v1/deals', checker);
+
+      expect(status).toEqual(200);
     });
 
     it('returns a list of deals ordered by "updated", filtered by <user>.bank.id', async () => {
@@ -83,13 +106,13 @@ describe('/v1/deals', () => {
         aDeal({ details: {bankSupplyContractName: 'bank2/1' }}),
       ];
 
-      await post(deals[4], user2).to('/v1/deals');
-      await post(deals[1], user1).to('/v1/deals');
-      await post(deals[2], user1).to('/v1/deals');
-      await post(deals[0], user1).to('/v1/deals');
-      await post(deals[3], user2).to('/v1/deals');
+      await post(deals[4], maker2).to('/v1/deals');
+      await post(deals[1], maker1).to('/v1/deals');
+      await post(deals[2], maker1).to('/v1/deals');
+      await post(deals[0], maker1).to('/v1/deals');
+      await post(deals[3], maker2).to('/v1/deals');
 
-      let { status, body } = await get('/v1/deals', user1);
+      let { status, body } = await get('/v1/deals', maker1);
 
       expect(status).toEqual(200);
       expect(body.deals).toEqual(expectAllAddedFields([
@@ -109,11 +132,11 @@ describe('/v1/deals', () => {
         aDeal({ details: {bankSupplyContractName: 'bank2/1' }}),
       ];
 
-      await post(deals[4], user2).to('/v1/deals');
-      await post(deals[1], user1).to('/v1/deals');
-      await post(deals[2], user1).to('/v1/deals');
-      await post(deals[0], user1).to('/v1/deals');
-      await post(deals[3], user2).to('/v1/deals');
+      await post(deals[4], maker2).to('/v1/deals');
+      await post(deals[1], maker1).to('/v1/deals');
+      await post(deals[2], maker1).to('/v1/deals');
+      await post(deals[0], maker1).to('/v1/deals');
+      await post(deals[3], maker2).to('/v1/deals');
 
       let { status, body } = await get('/v1/deals', superuser);
 
@@ -137,10 +160,22 @@ describe('/v1/deals', () => {
       expect(status).toEqual(401);
     });
 
-    it('401s requests that do not come from a user with role=maker', async () => {
+    it('401s requests that do not come from a user with role=maker || role=checker', async () => {
       const { status } = await get('/v1/deals/0/1', aUserWithoutRoles);
 
       expect(status).toEqual(401);
+    });
+
+    it('accepts requests that come from a user with role=maker', async () => {
+      const { status } = await get('/v1/deals/0/1', maker1);
+
+      expect(status).toEqual(200);
+    });
+
+    it('accepts requests that come from a user with role=checker', async () => {
+      const { status } = await get('/v1/deals/0/1', checker);
+
+      expect(status).toEqual(200);
     });
 
     it('returns a list of deals, ordered by "updated", paginated by start/pagesize, filtered by <user>.bank.id', async () => {
@@ -155,17 +190,17 @@ describe('/v1/deals', () => {
         aDeal({ details: {bankSupplyContractName: 'bank2/1' }}),
       ];
 
-      await post(deals[0], user1).to('/v1/deals');
-      await post(deals[1], user1).to('/v1/deals');
-      await post(deals[2], user1).to('/v1/deals');
-      await post(deals[3], user1).to('/v1/deals');
-      await post(deals[4], user1).to('/v1/deals');
-      await post(deals[5], user1).to('/v1/deals');
+      await post(deals[0], maker1).to('/v1/deals');
+      await post(deals[1], maker1).to('/v1/deals');
+      await post(deals[2], maker1).to('/v1/deals');
+      await post(deals[3], maker1).to('/v1/deals');
+      await post(deals[4], maker1).to('/v1/deals');
+      await post(deals[5], maker1).to('/v1/deals');
 
-      await post(deals[6], user2).to('/v1/deals');
-      await post(deals[7], user2).to('/v1/deals');
+      await post(deals[6], maker2).to('/v1/deals');
+      await post(deals[7], maker2).to('/v1/deals');
 
-      const { status, body } = await get('/v1/deals/2/2', user1);
+      const { status, body } = await get('/v1/deals/2/2', maker1);
 
       expect(status).toEqual(200);
       expect(body.deals).toEqual(expectAllAddedFields([
@@ -188,15 +223,15 @@ describe('/v1/deals', () => {
         aDeal({ details: {bankSupplyContractName: 'bank2/1' }}),
       ];
 
-      await post(deals[0], user1).to('/v1/deals');
-      await post(deals[1], user1).to('/v1/deals');
-      await post(deals[2], user1).to('/v1/deals');
-      await post(deals[3], user1).to('/v1/deals');
-      await post(deals[4], user1).to('/v1/deals');
-      await post(deals[5], user1).to('/v1/deals');
+      await post(deals[0], maker1).to('/v1/deals');
+      await post(deals[1], maker1).to('/v1/deals');
+      await post(deals[2], maker1).to('/v1/deals');
+      await post(deals[3], maker1).to('/v1/deals');
+      await post(deals[4], maker1).to('/v1/deals');
+      await post(deals[5], maker1).to('/v1/deals');
 
-      await post(deals[6], user2).to('/v1/deals');
-      await post(deals[7], user2).to('/v1/deals');
+      await post(deals[6], maker2).to('/v1/deals');
+      await post(deals[7], maker2).to('/v1/deals');
 
       const { status, body } = await get('/v1/deals/5/3', superuser);
 
@@ -225,21 +260,21 @@ describe('/v1/deals', () => {
     });
 
     it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
-      const {body} = await post(newDeal, user1).to('/v1/deals');
+      const {body} = await post(newDeal, maker1).to('/v1/deals');
 
-      const { status } = await get(`/v1/deals/${body._id}`, user2);
+      const { status } = await get(`/v1/deals/${body._id}`, maker2);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unkonwn ids', async () => {
-      const { status } = await get(`/v1/deals/123456789012`, user2);
+      const { status } = await get(`/v1/deals/123456789012`, maker2);
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const {body} = await post(newDeal, user1).to('/v1/deals');
+      const {body} = await post(newDeal, maker1).to('/v1/deals');
 
       const { status } = await get(`/v1/deals/${body._id}`, superuser);
 
@@ -247,10 +282,10 @@ describe('/v1/deals', () => {
     });
 
     it('returns the requested resource', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, maker1).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status, body } = await get(`/v1/deals/${newId}`, user1);
+      const { status, body } = await get(`/v1/deals/${newId}`, maker1);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectAddedFields(newDeal));
@@ -271,7 +306,7 @@ describe('/v1/deals', () => {
     });
 
     it('returns the created deal', async () => {
-      const { body, status } = await post(newDeal, user1).to(
+      const { body, status } = await post(newDeal, maker1).to(
         '/v1/deals',
       );
 
@@ -296,20 +331,20 @@ describe('/v1/deals', () => {
     });
 
     it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
-      const {body} = await post(newDeal, user1).to('/v1/deals');
+      const {body} = await post(newDeal, maker1).to('/v1/deals');
 
       const updatedDeal = {
         ...body,
         bankSupplyContractName: 'change this field',
       }
 
-      const {status} = await put(updatedDeal, user2).to(`/v1/deals/${body._id}`);
+      const {status} = await put(updatedDeal, maker2).to(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown ids', async () => {
-      const { status } = await put(newDeal, user1).to(
+      const { status } = await put(newDeal, maker1).to(
         '/v1/deals/123456789012',
       );
 
@@ -317,7 +352,7 @@ describe('/v1/deals', () => {
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, maker1).to('/v1/deals');
       const createdDeal = postResult.body;
       const updatedDeal = {
         ...createdDeal,
@@ -334,7 +369,7 @@ describe('/v1/deals', () => {
     });
 
     it('returns the updated deal', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, maker1).to('/v1/deals');
       const createdDeal = postResult.body;
       const updatedDeal = {
         ...createdDeal,
@@ -344,14 +379,14 @@ describe('/v1/deals', () => {
         }
       };
 
-      const { status, body } = await put(updatedDeal, user1).to(`/v1/deals/${createdDeal._id}`);
+      const { status, body } = await put(updatedDeal, maker1).to(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectAddedFields(updatedDeal));
     });
 
     it('handles partial updates', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, maker1).to('/v1/deals');
       const createdDeal = postResult.body;
 
       const partialUpdate = {
@@ -368,14 +403,14 @@ describe('/v1/deals', () => {
         }
       };
 
-      const { status, body } = await put(partialUpdate, user1).to(`/v1/deals/${createdDeal._id}`);
+      const { status, body } = await put(partialUpdate, maker1).to(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectAddedFields(expectedDataIncludingUpdate));
     });
 
     it('updates the deal', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, maker1).to('/v1/deals');
       const createdDeal = postResult.body;
       const updatedDeal = {
         ...createdDeal,
@@ -384,11 +419,11 @@ describe('/v1/deals', () => {
           bankSupplyContractName: 'change this field',
         }
       };
-      await put(updatedDeal, user1).to(`/v1/deals/${createdDeal._id}`);
+      await put(updatedDeal, maker1).to(`/v1/deals/${createdDeal._id}`);
 
       const { status, body } = await get(
         `/v1/deals/${createdDeal._id}`,
-        user1,
+        maker1,
       );
 
       expect(status).toEqual(200);
@@ -404,28 +439,28 @@ describe('/v1/deals', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      await post(newDeal, user1).to('/v1/deals');
+      await post(newDeal, maker1).to('/v1/deals');
       const { status } = await remove('/v1/deals/123456789012', aUserWithoutRoles);
 
       expect(status).toEqual(401);
     });
 
     it('401s requests from users if <user>.bank != <resource>.details.owningBank', async () => {
-      const {body} = await post(newDeal, user1).to('/v1/deals');
+      const {body} = await post(newDeal, maker1).to('/v1/deals');
 
-      const { status } = await remove(`/v1/deals/${body._id}`, user2);
+      const { status } = await remove(`/v1/deals/${body._id}`, maker2);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests to delete unkonwn ids', async () => {
-      const { status } = await remove('/v1/deals/123456789012', user1);
+      const { status } = await remove('/v1/deals/123456789012', maker1);
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const {body} = await post(newDeal, user1).to('/v1/deals');
+      const {body} = await post(newDeal, maker1).to('/v1/deals');
 
       const { status } = await remove(`/v1/deals/${body._id}`, superuser);
 
@@ -433,13 +468,13 @@ describe('/v1/deals', () => {
     });
 
     it('deletes the deal', async () => {
-      const {body} = await post(newDeal, user1).to('/v1/deals');
+      const {body} = await post(newDeal, maker1).to('/v1/deals');
 
-      await remove(`/v1/deals/${body._id}`, user1);
+      await remove(`/v1/deals/${body._id}`, maker1);
 
       const { status } = await get(
         `/v1/deals/${body._id}`,
-        user1,
+        maker1,
       );
 
       expect(status).toEqual(404);
@@ -462,7 +497,7 @@ describe('/v1/deals', () => {
     });
 
     it('404s requests for unknown ids', async () => {
-      const { status } = await post(newDeal, user1).to(
+      const { status } = await post(newDeal, maker1).to(
         '/v1/deals/123456789012/clone',
       );
       expect(status).toEqual(404);
@@ -472,7 +507,7 @@ describe('/v1/deals', () => {
       let originalDealId;
 
       beforeEach(async () => {
-        const { body: originalDealBody } = await post(newDeal, user1).to('/v1/deals');
+        const { body: originalDealBody } = await post(newDeal, maker1).to('/v1/deals');
         originalDealId = originalDealBody._id;
       });
 
@@ -483,7 +518,7 @@ describe('/v1/deals', () => {
           cloneTransactions: 'true',
         };
 
-        const { body } = await post(clonePostBody, user1).to(`/v1/deals/${originalDealId}/clone`);
+        const { body } = await post(clonePostBody, maker1).to(`/v1/deals/${originalDealId}/clone`);
 
         expect(body._id).not.toEqual(clonePostBody.bankDealId);
         expect(body.details.bankSupplyContractID).toEqual(clonePostBody.bankSupplyContractID);
@@ -497,7 +532,7 @@ describe('/v1/deals', () => {
             bankSupplyContractName: 'new-bank-deal-name',
             cloneTransactions: 'false',
           };
-          const { body } = await post(clonePostBody, user1).to(`/v1/deals/${originalDealId}/clone`);
+          const { body } = await post(clonePostBody, maker1).to(`/v1/deals/${originalDealId}/clone`);
 
           expect(body.bondTransactions).toEqual({
             items: [],
@@ -515,7 +550,7 @@ describe('/v1/deals', () => {
             bankSupplyContractName: '',
             cloneTransactions: '',
           };
-          const { body } = await post(clonePostBody, user1).to(`/v1/deals/${originalDealId}/clone`);
+          const { body } = await post(clonePostBody, maker1).to(`/v1/deals/${originalDealId}/clone`);
 
           expect(body.validationErrors.count).toEqual(3);
           expect(body.validationErrors.errorList.bankSupplyContractID).toBeDefined();
