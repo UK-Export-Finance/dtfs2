@@ -6,6 +6,6 @@ module.exports = (opts) => {
 
   pages.bankDetails.bankDealId().type(opts.bankDealId);
   pages.bankDetails.bankDealName().type(opts.bankDealName);
-  pages.bankDetails.create().click();
+  pages.bankDetails.submit().click();
 
 }
