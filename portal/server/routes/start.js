@@ -77,7 +77,7 @@ router.post('/before-you-start/bank-deal', async (req, res) => {
     details: {
       bankSupplyContractID: bankDealId,
       bankSupplyContractName: bankDealName,
-    }
+    },
   };
 
   const persistedDeal = await api.createDeal(newDeal, req.session.userToken);
