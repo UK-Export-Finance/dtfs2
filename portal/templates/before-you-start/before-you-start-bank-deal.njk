@@ -1,6 +1,17 @@
 {% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
 
   <h1 class="govuk-heading-l">Before you start</h1>
 
@@ -20,19 +31,32 @@
     <div class="govuk-grid-column-one-third">
 
       <form method="POST" autocomplete="off">
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="bankDealId">
-            Bank deal ID
-          </label>
-          <input data-cy="bankDealId" class="govuk-input" id="bankDealId" name="bankDealId" type="text" />
-        </div>
 
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="bankDealName">
-            Bank deal Name
-          </label>
-          <input data-cy="bankDealName" class="govuk-input" id="bankDealName" name="bankDealName" type="text" />
-        </div>
+        {{ govukInput({
+          label: {
+            text: "Bank deal ID"
+          },
+          id: "bankDealId",
+          name: "bankDealId",
+          value: "testing",
+          attributes: {
+            "data-cy": "bankDealId"
+          },
+          errorMessage: validationErrors.errorList.bankSupplyContractID
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Bank deal Name"
+          },
+          id: "bankDealName",
+          name: "bankDealName",
+          value: "testinggggg",
+          attributes: {
+            "data-cy": "bankDealName"
+          },
+          errorMessage: validationErrors.errorList.bankSupplyContractName
+        }) }}
 
         <button data-cy="Create" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">Create</button>
 
