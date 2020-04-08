@@ -90,9 +90,15 @@ router.post('/before-you-start/bank-deal', async (req, res) => {
       errorHref,
     );
 
+    const {
+      bankSupplyContractID,
+      bankSupplyContractName,
+    } = catchErr.response.data.details;
+
     if (validationErrors) {
       return res.render('before-you-start/before-you-start-bank-deal.njk', {
-        ...catchErr.response,
+        bankSupplyContractID,
+        bankSupplyContractName,
         validationErrors,
       });
     }
