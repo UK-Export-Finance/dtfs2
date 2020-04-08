@@ -1,0 +1,69 @@
+{% import '_macros/date-range.njk' as dateRange %}
+
+{% macro render(filter, user) %}
+
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="filterByStatus">
+          Status
+        </label>
+
+        <select class="govuk-select" id="filterByStatus" name="filterByStatus">
+          <option value="all" selected>Any</option>
+          <option value="draft">Draft</option>
+          <option value="readyForApproval">Ready for Checker's approval</option>
+          <option value="inputRequired">Further Maker's input required</option>
+          <option value="abandoned">Abandoned Deal</option>
+          <option value="submitted">Submitted</option>
+          <option value="submissionAcknowledged">Acknowledged by UKEF</option>
+          <option value="approved">Accepted by UKEF (without conditions)</option>
+          <option value="approvedWithConditions">Accepted by UKEF (with conditions)</option>
+          <option value="refused">Rejected by UKEF</option></select>
+        </select>
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="supplyContractID">
+          Supply contract ID
+        </label>
+        <input class="govuk-input" id="supplyContractID" name="supplyContractID" type="text">
+      </div>
+    </div>
+
+  </div>
+
+  {{ dateRange.inputs(fromLegend = 'Select created date between', toLegend = 'And' ) }}
+
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-form-group govuk-!-margin-bottom-0">
+        <label class="govuk-label" for="supplierName">
+          Supplier name
+        </label>
+        <input class="govuk-input" id="supplierName" name="supplierName" type="text">
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-form-group govuk-!-margin-bottom-0">
+        <label class="govuk-label" for="bank">
+          Bank
+        </label>
+
+        <select class="govuk-select govuk-!-width-full" id="bank" name="bank">
+          <option value="all" selected>Any</option>
+          {% for bank in banks %}
+            <option value="{{ bank.id }}">{{ bank.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+{% endmacro %}
