@@ -12,11 +12,20 @@ const router = express.Router();
 const PAGESIZE = 20;
 
 router.get('/dashboard', async (req, res) => {
+  req.session.dashboardFilters = null;
   res.redirect('/dashboard/0');
 });
 
 router.get('/dashboard/:page', async (req, res) => {
   const { userToken } = requestParams(req);
+
+  // when checker views the dashboard it defaults to status=readyForApproval
+  if (req.session.dashboardFilters === null && req.session.user.roles.includes('checker')) {
+    req.session.dashboardFilters = {
+      filterByStatus: 'readyForApproval',
+      isUsingAdvancedFilter: true,
+    };
+  }
   const filters = buildDashboardFilters(req.session.dashboardFilters, req.session.user);
 
   const dealData = await getApiData(
