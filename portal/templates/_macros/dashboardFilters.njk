@@ -3,6 +3,7 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% macro render(filter, user) %}
+
 <form method="POST" autocomplete="off">
 
   <div class="govuk-grid-row">
@@ -28,7 +29,7 @@
         </label>
 
         <select data-cy="filterBySubmissionType" class="govuk-select govuk-!-width-full" id="filterBySubmissionType" name="filterBySubmissionType">
-          <option value="all" {% if filter.filterBySubmissionUser==='all' %}selected{%endif%}>Any</option>
+          <option value="all" {% if filter.filterBySubmissionType==='all' %}selected{%endif%}>Any</option>
           <option value="manualInclusionApplication" {% if filter.filterBySubmissionType==='manualInclusionApplication' %}selected{%endif%}>Manual Inclusion Application</option>
           <option value="automaticInclusionNotice" {% if filter.filterBySubmissionType==='automaticInclusionNotice' %}selected{%endif%}>Automatic Inclusion Notice</option>
           <option value="manualInclusionNotice" {% if filter.filterBySubmissionType==='manualInclusionNotice' %}selected{%endif%}>Manual Inclusion Notice</option>
@@ -40,8 +41,8 @@
 
   {{ govukDetails({
     summaryText: "Show filters",
-    html: dashboardAdvancedFilters.render(filters, user),
-    open: user.roles.includes('checker')
+    html: dashboardAdvancedFilters.render(filter, user),
+    open: filter.isUsingAdvancedFilter
   }) }}
 
   <button data-cy="ApplyFilters" class="govuk-button" data-module="govuk-button">

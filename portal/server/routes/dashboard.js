@@ -47,6 +47,9 @@ router.post('/dashboard/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
   req.session.dashboardFilters = req.body;
+  // TODO add other advanced filter types
+  // TODO and find a nicer way to wrap this up..
+  req.session.dashboardFilters.isUsingAdvancedFilter = (req.body.filterByStatus !== 'all');
 
   const filters = buildDashboardFilters(req.session.dashboardFilters, req.session.user);
 
