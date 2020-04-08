@@ -314,6 +314,29 @@ describe('/v1/deals', () => {
       expect(status).toEqual(200);
       expect(body).toEqual(expectAddedFields(newDeal));
     });
+
+    describe('when required fields are missing', () => {
+      it('returns 400 with validation errors', async () => {
+        const postBody = {
+          details: {
+            bankSupplyContractID: '',
+            bankSupplyContractName: '',
+          },
+        };
+
+        const { body, status } = await post(postBody, maker1).to(
+          '/v1/deals',
+        );
+
+        expect(status).toEqual(400);
+        expect(body.details.bankSupplyContractID).toEqual(postBody.details.bankSupplyContractID);
+        expect(body.details.bankSupplyContractName).toEqual(postBody.details.bankSupplyContractName);
+        expect(body.validationErrors.count).toEqual(2);
+        expect(body.validationErrors.errorList.bankSupplyContractID).toBeDefined();
+        expect(body.validationErrors.errorList.bankSupplyContractName).toBeDefined();
+      });
+    });
+
   });
 
   describe('PUT /v1/deals/:id', () => {
