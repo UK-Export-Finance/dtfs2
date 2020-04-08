@@ -1,8 +1,9 @@
 const page = {
   visit: () => cy.visit('/start-now'),
-  dashboard: () => '//TODO',
+  dashboardLink1: () => cy.get('[data-cy="dashboardLink1"]'),
+  dashboardLink2: () => cy.get('[data-cy="dashboardLink2"]'),
   createNewSubmission: () => cy.get('[data-cy="CreateNewSubmission"]'),
-  dashboardView: () => '//TODO',
+  viewDashboard: () => cy.get('[data-cy="ViewDashboard"]'),
 }
 
 module.exports = page;
