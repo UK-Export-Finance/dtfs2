@@ -71,18 +71,32 @@ router.get('/before-you-start/bank-deal', async (req, res) => {
 });
 
 router.post('/before-you-start/bank-deal', async (req, res) => {
+  const { userToken } = requestParams(req);
   const { bankDealId, bankDealName } = req.body;
 
   const newDeal = {
     details: {
       bankSupplyContractID: bankDealId,
       bankSupplyContractName: bankDealName,
-    }
+    },
   };
 
-  const persistedDeal = await api.createDeal(newDeal, req.session.userToken);
+  try {
+    const dealResponse = await api.createDeal(newDeal, userToken);
+    return res.redirect(`/contract/${dealResponse._id}`);// eslint-disable-line no-underscore-dangle
+  } catch (catchErr) {
+    const validationErrors = generateErrorSummary(
+      catchErr.response.data.validationErrors,
+      errorHref,
+    );
 
-  res.redirect(`/contract/${persistedDeal._id}`);// eslint-disable-line no-underscore-dangle
+    if (validationErrors) {
+      return res.render('before-you-start/before-you-start-bank-deal.njk', {
+        ...catchErr.response,
+        validationErrors,
+      });
+    }
+  }
 });
 
 router.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk'));

@@ -127,28 +127,30 @@ router.get('/contract/:_id/clone', async (req, res) => {
 router.post('/contract/:_id/clone', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  const dealResponse = await api.cloneDeal(_id, req.body, userToken);
+  try {
+    const cloneDealResponse = await api.cloneDeal(_id, req.body, userToken);
 
-  const validationErrors = generateErrorSummary(
-    dealResponse.validationErrors,
-    errorHref,
-  );
-
-  if (validationErrors) {
-    return res.render('contract/contract-clone.njk', {
-      ...dealResponse,
-      validationErrors,
+    req.flash('successMessage', {
+      text: 'Supply Contract cloned successfully. We have cleared some values to ensure data quality. Please complete.',
+      href: `/contract/${cloneDealResponse._id}`, // eslint-disable-line no-underscore-dangle
+      hrefText: 'View cloned Supply Contract',
     });
+
+    return res.redirect('/dashboard');
+  } catch (catchErr) {
+    const validationErrors = generateErrorSummary(
+      catchErr.response.data.validationErrors,
+      errorHref,
+    );
+
+    if (validationErrors) {
+      return res.status(400).render('contract/contract-clone.njk', {
+        ...catchErr.response.data,
+        validationErrors,
+      });
+    }
   }
-
-  req.flash('successMessage', {
-    text: 'Supply Contract cloned successfully. We have cleared some values to ensure data quality. Please complete.',
-    href: `/contract/${dealResponse._id}`, // eslint-disable-line no-underscore-dangle
-    hrefText: 'View cloned Supply Contract',
-  });
-  return res.redirect('/dashboard');
 });
-
 
 router.get('/contract/:_id/clone/before-you-start', async (req, res) => {
   const { userToken } = requestParams(req);

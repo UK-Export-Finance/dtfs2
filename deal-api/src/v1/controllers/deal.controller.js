@@ -6,6 +6,7 @@ const $ = require('mongo-dot-notation');
 const DEFAULTS = require('../defaults');
 const db = require('../../db-driver/client');
 const { getDealErrors } = require('../validation/deal');
+const { getCloneDealErrors } = require('../validation/clone-deal');
 
 const { isSuperUser, userHasAccessTo } = require('../users/checks');
 
@@ -71,6 +72,7 @@ const createDeal = async (req, res) => {
   const collection = await db.getCollection('deals');
 
   const timestamp = moment().format('YYYY MM DD HH:mm:ss:SSS ZZ');
+
   const newDeal = {
     ...DEFAULTS.DEALS,
     ...req.body,
@@ -83,6 +85,14 @@ const createDeal = async (req, res) => {
     },
   };
 
+  const validationErrors = getDealErrors(newDeal);
+
+  if (validationErrors) {
+    return res.status(400).send({
+      ...newDeal,
+      validationErrors,
+    });
+  }
 
   const response = await collection.insertOne(newDeal);
 
@@ -191,16 +201,16 @@ exports.clone = async (req, res) => {
       modifiedDeal.loanTransactions = DEFAULTS.DEALS.loanTransactions;
     }
 
-    const validationErrors = getDealErrors(modifiedDeal, cloneTransactions);
+    const validationErrors = getCloneDealErrors(modifiedDeal, cloneTransactions);
 
-    req.body = {
-      ...modifiedDeal,
-      validationErrors,
-    };
+    if (validationErrors) {
+      return res.status(400).send({
+        ...modifiedDeal,
+        validationErrors,
+      });
+    }
 
-    // TODO  move validationErrors to createDeal, only create if valid
-    // return 400 if invalid
-
+    req.body = modifiedDeal;
     return createDeal(req, res);
   });
 };
