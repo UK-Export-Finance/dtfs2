@@ -16,7 +16,7 @@ router.get('/start-now', async (req, res) => {
   if (!await api.validateToken(userToken)) {
     res.redirect('/');
   } else {
-    res.render('start-now.njk');
+    res.render('start-now.njk', { user: req.session.user });
   }
 });
 
