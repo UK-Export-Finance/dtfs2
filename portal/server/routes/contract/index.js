@@ -117,40 +117,55 @@ router.get('/contract/:_id/confirm-submission', async (req, res) => {
 router.get('/contract/:_id/clone', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  return res.render('contract/contract-clone.njk',
-    await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ));
-});
+  const deal = await getApiData(
+    api.contract(_id, userToken),
+    res,
+  );
 
+  const {
+    bankSupplyContractID,
+    bankSupplyContractName,
+  } = deal.details;
+
+  return res.render('contract/contract-clone.njk', {
+    bankSupplyContractID,
+    bankSupplyContractName,
+  });
+});
 
 router.post('/contract/:_id/clone', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  // TODO: could use await-to-js package to have nicer try/catch handling
-  postToApi(
+  const apiResponse = await postToApi(
     api.cloneDeal(_id, req.body, userToken),
-  ).then((cloneDealResponse) => {
-    req.flash('successMessage', {
-      text: 'Supply Contract cloned successfully. We have cleared some values to ensure data quality. Please complete.',
-      href: `/contract/${cloneDealResponse._id}`, // eslint-disable-line no-underscore-dangle
-      hrefText: 'View cloned Supply Contract',
-    });
+    errorHref,
+  );
 
-    return res.redirect('/dashboard');
-  })
-    .catch((catchErr) => {
-      const validationErrors = generateErrorSummary(
-        catchErr.validationErrors,
-        errorHref,
-      );
+  const {
+    validationErrors,
+    details,
+  } = apiResponse;
 
-      return res.status(400).render('contract/contract-clone.njk', {
-        ...catchErr,
-        validationErrors,
-      });
+  const {
+    bankSupplyContractID,
+    bankSupplyContractName,
+  } = details;
+
+  if (validationErrors) {
+    return res.status(400).render('contract/contract-clone.njk', {
+      bankSupplyContractID,
+      bankSupplyContractName,
+      validationErrors,
     });
+  }
+
+  req.flash('successMessage', {
+    text: 'Supply Contract cloned successfully. We have cleared some values to ensure data quality. Please complete.',
+    href: `/contract/${apiResponse._id}`, // eslint-disable-line no-underscore-dangle
+    hrefText: 'View cloned Supply Contract',
+  });
+
+  return res.redirect('/dashboard');
 });
 
 router.get('/contract/:_id/clone/before-you-start', async (req, res) => {
