@@ -73,12 +73,10 @@ router.get('/before-you-start/bank-deal', async (req, res) => {
 
 router.post('/before-you-start/bank-deal', async (req, res) => {
   const { userToken } = requestParams(req);
-  const { bankDealId, bankDealName } = req.body;
 
   const newDeal = {
     details: {
-      bankSupplyContractID: bankDealId,
-      bankSupplyContractName: bankDealName,
+      ...req.body,
     },
   };
 
