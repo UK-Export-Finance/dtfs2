@@ -12,49 +12,42 @@ import {
 
 const router = express.Router();
 
-//TODO once we need to validate whether a deal can be Submitted
+// TODO once we need to validate whether a deal can be Submitted
 // this will need to get a lot more sophisticated...
 const shouldDisplayOptions = (deal) => {
   const dontDisplay = [
-    "Submitted",
-    "Rejected by UKEF",
+    'Submitted',
+    'Rejected by UKEF',
   ];
 
   return !dontDisplay.includes(deal.details.status);
-}
+};
 
 const shouldDisplayAbandon = (deal) => {
   const display = [
-    "Draft",
+    'Draft',
     "Further Maker's input required",
-    "Abandoned Deal",
-    "Acknowledged by UKEF",
-    "Accepted by UKEF (without conditions)",
-    "Accepted by UKEF (with conditions)",
+    'Abandoned Deal',
+    'Acknowledged by UKEF',
+    'Accepted by UKEF (without conditions)',
+    'Accepted by UKEF (with conditions)',
     "Ready for Checker's approval",
   ];
 
   return display.includes(deal.details.status);
+};
+const shouldDisplayProceedToReview = () => true;
 
-}
-const shouldDisplayProceedToReview = (deal) => {
-  return true;
-}
+const shouldDisplayProceedToSubmit = () => false;
 
-const shouldDisplayProceedToSubmit = (deal) => {
-  return false;
-}
-
-const shouldDisplayReturnToMaker = (deal) => {
-  return false;
-}
+const shouldDisplayReturnToMaker = () => false;
 
 const disableAbandon = (deal) => {
   const disable = [
-    "Abandoned Deal",
-    "Acknowledged by UKEF",
-    "Accepted by UKEF (without conditions)",
-    "Accepted by UKEF (with conditions)",
+    'Abandoned Deal',
+    'Acknowledged by UKEF',
+    'Accepted by UKEF (without conditions)',
+    'Accepted by UKEF (with conditions)',
     "Ready for Checker's approval",
   ];
 
@@ -63,22 +56,18 @@ const disableAbandon = (deal) => {
 
 const disableProceedToReview = (deal) => {
   const statusesThatCanSubmitForReview = [
-    "Draft",
+    'Draft',
     "Further Maker's input required",
-    "Accepted by UKEF (without conditions)",
-    "Accepted by UKEF (with conditions)",
+    'Accepted by UKEF (without conditions)',
+    'Accepted by UKEF (with conditions)',
   ];
 
   return !statusesThatCanSubmitForReview.includes(deal.details.status);
 };
 
-const disableProceedToSubmit = (deal) => {
-  return true;
-};
+const disableProceedToSubmit = () => true;
 
-const disableReturnToMaker = (deal) => {
-  return true;
-};
+const disableReturnToMaker = () => true;
 // /TODO
 
 router.get('/contract/:_id', async (req, res) => {
@@ -87,12 +76,12 @@ router.get('/contract/:_id', async (req, res) => {
   const contract = await getApiData(
     api.contract(_id, userToken),
     res,
-  )
+  );
 
-  //TODO - we probably need to re-plumb the page to accept 2 objects
+  // TODO - we probably need to re-plumb the page to accept 2 objects
   // rather than munge the user in amongst the rest of the data..
-  const user = req.session.user;
-  return res.render('contract/contract-view.njk',{
+  const { user } = req.session;
+  return res.render('contract/contract-view.njk', {
     ...contract,
     user,
     shouldDisplayOptions: shouldDisplayOptions(contract),

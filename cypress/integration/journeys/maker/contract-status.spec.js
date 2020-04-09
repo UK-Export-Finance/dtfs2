@@ -9,7 +9,7 @@ const maker1 = {username: 'MAKER', password: 'MAKER'};
 const twentyOneDeals = require('./dashboard/twentyOneDeals');
 
 
-context('Contracts viewed by status', () => {
+context('Contracts viewed by role=maker, by status', () => {
 
   let dealsFromMaker1 = twentyOneDeals;
 
@@ -34,7 +34,7 @@ context('Contracts viewed by status', () => {
     dealsFromMaker1 = await createManyDeals(dealsFromMaker1, { ...maker1 });
   });
 
-  it('Status = Draft, (//TODO validation) can be submitted, cannot be returned to Maker', () => {
+  it('Status = Draft, (//TODO validation) abandon = disabled, proceed to review = enabled', () => {
     login({...maker1});
     contract.visit(aDealInStatus('Draft'));
 
@@ -48,7 +48,7 @@ context('Contracts viewed by status', () => {
     contract.proceedToSubmit().should('not.exist');
   });
 
-  it("Status = Further Maker's input required, (//TODO validation) can be submitted, cannot be returned to Maker", () => {
+  it("Status = Further Maker's input required, (//TODO validation)  abandon = enabled, proceed to review = enabled", () => {
     login({...maker1});
     contract.visit(aDealInStatus("Further Maker's input required"));
 
@@ -62,7 +62,7 @@ context('Contracts viewed by status', () => {
     contract.proceedToSubmit().should('not.exist');
   });
 
-  it("Status = Abandoned Deal, cannot be submitted, cannot be returned to Maker", () => {
+  it("Status = Abandoned Deal, abandon = disabled, proceed to review = disabled", () => {
     login({...maker1});
     contract.visit(aDealInStatus("Abandoned Deal"));
 
@@ -77,7 +77,7 @@ context('Contracts viewed by status', () => {
     contract.proceedToSubmit().should('not.exist');
   });
 
-  it("Status = Acknowledged by UKEF, cannot be submitted, cannot be returned to Maker", () => {
+  it("Status = Acknowledged by UKEF, abandon = disabled, proceed to review = disabled", () => {
     login({...maker1});
     contract.visit(aDealInStatus("Acknowledged by UKEF"));
 
@@ -91,7 +91,7 @@ context('Contracts viewed by status', () => {
     contract.proceedToSubmit().should('not.exist');
   });
 
-  it("Status = Accepted by UKEF (without conditions), cannot be submitted, cannot be returned to Maker", () => {
+  it("Status = Accepted by UKEF (without conditions), abandon = disabled, proceed to review = enabled", () => {
     login({...maker1});
     contract.visit(aDealInStatus("Accepted by UKEF (without conditions)"));
 
@@ -105,7 +105,7 @@ context('Contracts viewed by status', () => {
     contract.proceedToSubmit().should('not.exist');
   });
 
-  it("Status = Accepted by UKEF (with conditions), cannot be submitted, cannot be returned to Maker", () => {
+  it("Status = Accepted by UKEF (with conditions), abandon = disabled, proceed to review = enabled", () => {
     login({...maker1});
     contract.visit(aDealInStatus("Accepted by UKEF (with conditions)"));
 
@@ -119,7 +119,7 @@ context('Contracts viewed by status', () => {
     contract.proceedToSubmit().should('not.exist');
   });
 
-  it("Status = Ready for Checker's approval, cannot be submitted, cannot be returned to Maker", () => {
+  it("Status = Ready for Checker's approval, abandon = disabled, proceed to review = disabled", () => {
     login({...maker1});
     contract.visit(aDealInStatus("Ready for Checker's approval"));
 
@@ -133,7 +133,7 @@ context('Contracts viewed by status', () => {
     contract.proceedToSubmit().should('not.exist');
   });
 
-  it("Status = Submitted, no buttons to submit/return are displayed", () => {
+  it("Status = Submitted, no options displayed", () => {
     login({...maker1});
     contract.visit(aDealInStatus("Submitted"));
 
@@ -143,7 +143,7 @@ context('Contracts viewed by status', () => {
     contract.proceedToSubmit().should('not.exist');
   });
 
-  it("Status = Rejected by UKEF, no buttons to submit/return are displayed", () => {
+  it("Status = Rejected by UKEF, no options displayed", () => {
     login({...maker1});
     contract.visit(aDealInStatus("Rejected by UKEF"));
 
