@@ -12,14 +12,103 @@ import {
 
 const router = express.Router();
 
+//TODO once we need to validate whether a deal can be Submitted
+// this will need to get a lot more sophisticated...
+const shouldDisplayOptions = (deal) => {
+  const dontDisplay = [
+    "Submitted",
+    "Rejected by UKEF",
+  ];
+
+  return !dontDisplay.includes(deal.details.status);
+}
+
+const shouldDisplayAbandon = (deal) => {
+  const display = [
+    "Draft",
+    "Further Maker's input required",
+    "Abandoned Deal",
+    "Acknowledged by UKEF",
+    "Accepted by UKEF (without conditions)",
+    "Accepted by UKEF (with conditions)",
+    "Ready for Checker's approval",
+  ];
+
+  return display.includes(deal.details.status);
+
+}
+const shouldDisplayProceedToReview = (deal) => {
+  return true;
+}
+
+const shouldDisplayProceedToSubmit = (deal) => {
+  return false;
+}
+
+const shouldDisplayReturnToMaker = (deal) => {
+  return false;
+}
+
+const disableAbandon = (deal) => {
+  const disable = [
+    "Abandoned Deal",
+    "Acknowledged by UKEF",
+    "Accepted by UKEF (without conditions)",
+    "Accepted by UKEF (with conditions)",
+    "Ready for Checker's approval",
+  ];
+
+  return disable.includes(deal.details.status);
+};
+
+const disableProceedToReview = (deal) => {
+  const statusesThatCanSubmitForReview = [
+    "Draft",
+    "Further Maker's input required",
+    "Accepted by UKEF (without conditions)",
+    "Accepted by UKEF (with conditions)",
+  ];
+
+  return !statusesThatCanSubmitForReview.includes(deal.details.status);
+};
+
+const disableProceedToSubmit = (deal) => {
+  return true;
+};
+
+const disableReturnToMaker = (deal) => {
+  return true;
+};
+// /TODO
+
 router.get('/contract/:_id', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  return res.render('contract/contract-view.njk',
-    await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ));
+  const contract = await getApiData(
+    api.contract(_id, userToken),
+    res,
+  )
+
+  //TODO - we probably need to re-plumb the page to accept 2 objects
+  // rather than munge the user in amongst the rest of the data..
+  const user = req.session.user;
+  return res.render('contract/contract-view.njk',{
+    ...contract,
+    user,
+    shouldDisplayOptions: shouldDisplayOptions(contract),
+
+    shouldDisplayAbandon: shouldDisplayAbandon(contract),
+    disableAbandon: disableAbandon(contract),
+
+    shouldDisplayProceedToReview: shouldDisplayProceedToReview(contract),
+    disableProceedToReview: disableProceedToReview(contract),
+
+    shouldDisplayProceedToSubmit: shouldDisplayProceedToSubmit(contract),
+    disableProceedToSubmit: disableProceedToSubmit(contract),
+
+    shouldDisplayReturnToMaker: shouldDisplayReturnToMaker(contract),
+    disableReturnToMaker: disableReturnToMaker(contract),
+  });
 });
 
 router.get('/contract/:_id/comments', async (req, res) => {
