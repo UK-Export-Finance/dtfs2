@@ -93,22 +93,21 @@ router.get('/contract/:_id/eligibility/supporting-documentation', async (req, re
 router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { body, files } = req;
-  console.log(JSON.stringify(body, null, 4));
-  console.log(JSON.stringify(Object.keys(files[0]), null, 4));
+
   const updatedDeal = await getApiData(
     api.updateEligibilityDocumentation(_id, body, files, userToken),
     res,
   );
 
-  console.log({ updatedDeal });
-
   return res.render('eligibility/eligibility-supporting-documentation.njk', {
     _id,
+    eligibility: updatedDeal.eligibility,
   });
 });
 
 router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', (req, res) => {
-  const redirectUrl = `/contract/${req.params._id}/eligibility/criteria`;
+  const { _id } = requestParams(req);
+  const redirectUrl = `/contract/${_id}/eligibility/criteria`;
   return res.redirect(redirectUrl);
 });
 

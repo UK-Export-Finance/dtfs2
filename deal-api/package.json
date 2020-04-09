@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/notbinary/dtfs2#readme",
   "dependencies": {
-    "azure-storage": "^2.10.3",
+    "@azure/storage-file-share": "^12.1.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
