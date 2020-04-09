@@ -11,7 +11,7 @@ const makeApiCall = async (query) => {
 const postToApi = (query) => new Promise((resolve, reject) =>
   makeApiCall(query).then((apiResponse) => {
     if (apiResponse.response && apiResponse.response.status === 400) {
-      return reject(apiResponse);
+      return reject(apiResponse.response.data);
     }
     return resolve(apiResponse);
   }).catch((err) => err));

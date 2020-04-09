@@ -128,6 +128,7 @@ router.get('/contract/:_id/clone', async (req, res) => {
 router.post('/contract/:_id/clone', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
+  // TODO: could use await-to-js package to have nicer try/catch handling
   postToApi(
     api.cloneDeal(_id, req.body, userToken),
   ).then((cloneDealResponse) => {
@@ -141,12 +142,12 @@ router.post('/contract/:_id/clone', async (req, res) => {
   })
     .catch((catchErr) => {
       const validationErrors = generateErrorSummary(
-        catchErr.response.data.validationErrors,
+        catchErr.validationErrors,
         errorHref,
       );
 
       return res.status(400).render('contract/contract-clone.njk', {
-        ...catchErr.response.data,
+        ...catchErr,
         validationErrors,
       });
     });
