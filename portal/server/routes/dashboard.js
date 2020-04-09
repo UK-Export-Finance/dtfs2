@@ -12,11 +12,20 @@ const router = express.Router();
 const PAGESIZE = 20;
 
 router.get('/dashboard', async (req, res) => {
+  req.session.dashboardFilters = null;
   res.redirect('/dashboard/0');
 });
 
 router.get('/dashboard/:page', async (req, res) => {
   const { userToken } = requestParams(req);
+
+  // when checker views the dashboard it defaults to status=readyForApproval
+  if (req.session.dashboardFilters === null && req.session.user.roles.includes('checker')) {
+    req.session.dashboardFilters = {
+      filterByStatus: 'readyForApproval',
+      isUsingAdvancedFilter: true,
+    };
+  }
   const filters = buildDashboardFilters(req.session.dashboardFilters, req.session.user);
 
   const dealData = await getApiData(
@@ -39,6 +48,7 @@ router.get('/dashboard/:page', async (req, res) => {
     ),
     successMessage: getFlashSuccessMessage(req),
     filter: req.session.dashboardFilters,
+    user: req.session.user,
   });
 });
 
@@ -46,6 +56,9 @@ router.post('/dashboard/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
   req.session.dashboardFilters = req.body;
+  // TODO add other advanced filter types
+  // TODO and find a nicer way to wrap this up..
+  req.session.dashboardFilters.isUsingAdvancedFilter = (req.body.filterByStatus !== 'all');
 
   const filters = buildDashboardFilters(req.session.dashboardFilters, req.session.user);
 
@@ -68,6 +81,7 @@ router.post('/dashboard/:page', async (req, res) => {
       res,
     ),
     filter: req.session.dashboardFilters,
+    user: req.session.user,
   });
 });
 

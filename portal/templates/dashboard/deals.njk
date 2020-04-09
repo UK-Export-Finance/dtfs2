@@ -1,8 +1,9 @@
 {% extends "index.njk" %}
 {% import '_macros/success-message.njk' as success %}
 {% import '_macros/dashboard-tabs.njk' as dashboardTabs %}
-{% import '_macros/date-range.njk' as dateRange %}
 {% import '_macros/pagination.njk' as pagination %}
+{% import '_macros/dashboardFilters.njk' as dashboardFilters %}
+
 
 {% block content %}
 
@@ -21,120 +22,7 @@
 
     <section class="govuk-tabs__panel">
 
-      <form method="POST" autocomplete="off">
-
-        <div class="govuk-grid-row">
-
-          <div class="govuk-grid-column-one-third">
-            <div class="govuk-form-group">
-              <label class="govuk-label" for="filterBySubmissionUser">
-                Show me
-              </label>
-
-              <select data-cy="filterBySubmissionUser" class="govuk-select govuk-!-width-full" id="filterBySubmissionUser" name="filterBySubmissionUser">
-                <option value="all" {% if filter.filterBySubmissionUser==='all' %}selected{%endif%}>Any</option>
-                <option value="createdByMe" {% if filter.filterBySubmissionUser==='createdByMe' %}selected{%endif%}>Submissions created by me</option>
-                <option value="createdByColleagues" {% if filter.filterBySubmissionUser==='createdByColleagues' %}selected{%endif%}>Submissions created by my colleagues</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="govuk-grid-column-one-third">
-            <div class="govuk-form-group">
-              <label class="govuk-label" for="filterBySubmissionType">
-                Submission type
-              </label>
-
-              <select data-cy="filterBySubmissionType" class="govuk-select govuk-!-width-full" id="filterBySubmissionType" name="filterBySubmissionType">
-                <option value="all" {% if filter.filterBySubmissionUser==='all' %}selected{%endif%}>Any</option>
-                <option value="manualInclusionApplication" {% if filter.filterBySubmissionType==='manualInclusionApplication' %}selected{%endif%}>Manual Inclusion Application</option>
-                <option value="automaticInclusionNotice" {% if filter.filterBySubmissionType==='automaticInclusionNotice' %}selected{%endif%}>Automatic Inclusion Notice</option>
-                <option value="manualInclusionNotice" {% if filter.filterBySubmissionType==='manualInclusionNotice' %}selected{%endif%}>Manual Inclusion Notice</option>
-              </select>
-            </div>
-          </div>
-
-        </div>
-
-        <details class="govuk-details" data-module="govuk-details">
-          <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">
-              Show filters
-            </span>
-          </summary>
-
-
-          <div class="govuk-grid-row">
-
-            <div class="govuk-grid-column-one-third">
-              <div class="govuk-form-group">
-                <label class="govuk-label" for="filterByStatus">
-                  Status
-                </label>
-
-                <select class="govuk-select" id="filterByStatus" name="filterByStatus">
-                  <option value="all" selected>Any</option>
-                  <option value="draft">Draft</option>
-                  <option value="readyForApproval">Ready for Checker's approval</option>
-                  <option value="inputRequired">Further Maker's input required</option>
-                  <option value="abandoned">Abandoned Deal</option>
-                  <option value="submitted">Submitted</option>
-                  <option value="submissionAcknowledged">Acknowledged by UKEF</option>
-                  <option value="approved">Accepted by UKEF (without conditions)</option>
-                  <option value="approvedWithConditions">Accepted by UKEF (with conditions)</option>
-                  <option value="refused">Rejected by UKEF</option></select>
-                </select>
-              </div>
-            </div>
-
-            <div class="govuk-grid-column-one-third">
-              <div class="govuk-form-group">
-                <label class="govuk-label" for="supplyContractID">
-                  Supply contract ID
-                </label>
-                <input class="govuk-input" id="supplyContractID" name="supplyContractID" type="text">
-              </div>
-            </div>
-
-          </div>
-
-          {{ dateRange.inputs(fromLegend = 'Select created date between', toLegend = 'And' ) }}
-
-          <div class="govuk-grid-row">
-
-            <div class="govuk-grid-column-one-third">
-              <div class="govuk-form-group govuk-!-margin-bottom-0">
-                <label class="govuk-label" for="supplierName">
-                  Supplier name
-                </label>
-                <input class="govuk-input" id="supplierName" name="supplierName" type="text">
-              </div>
-            </div>
-
-            <div class="govuk-grid-column-one-third">
-              <div class="govuk-form-group govuk-!-margin-bottom-0">
-                <label class="govuk-label" for="bank">
-                  Bank
-                </label>
-
-                <select class="govuk-select govuk-!-width-full" id="bank" name="bank">
-                  <option value="all" selected>Any</option>
-                  {% for bank in banks %}
-                    <option value="{{ bank.id }}">{{ bank.name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-
-          </div>
-
-        </details>
-
-        <button data-cy="ApplyFilters" class="govuk-button" data-module="govuk-button">
-          Apply filters
-        </button>
-
-      </form>
+    {{ dashboardFilters.render(filter, user) }}
 
       <table class="govuk-table govuk-!-margin-bottom-0">
         <thead class="govuk-table__head">

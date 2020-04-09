@@ -2,10 +2,6 @@ const { findOneDeal, update: updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { getEligibilityErrors, getCriteria11Errors } = require('../validation/eligibility-criteria');
 
-// Agent name is used as sharepoint store names so can only include [0-9a-zA-Z_-\s] characters
-// see: https://ukef-dtfs.atlassian.net/browse/DTFS2-509
-const formatForSharepoint = (string) => string.replace(/[^0-9a-zA-Z_-\s]/g, '');
-
 exports.update = async (req, res) => {
   await findOneDeal(req.params.id, (deal) => {
     if (!deal) {
@@ -41,7 +37,7 @@ exports.update = async (req, res) => {
       const criteria11IsFalse = (typeof criteria11.answer !== 'undefined' && criteria11.answer === false);
 
       const criteria11Additional = {
-        agentName: criteria11IsFalse && req.body['agent-name'] ? formatForSharepoint(req.body['agent-name'].substring(0, 150)) : '',
+        agentName: criteria11IsFalse && req.body['agent-name'] ? req.body['agent-name'].substring(0, 150) : '',
         agentCountry: criteria11IsFalse ? req.body['agent-country'] : '',
         agentAddress1: criteria11IsFalse ? req.body['agent-address-line-1'] : '',
         agentAddress2: criteria11IsFalse ? req.body['agent-address-line-2'] : '',
