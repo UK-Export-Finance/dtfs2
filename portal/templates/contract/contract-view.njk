@@ -4,6 +4,8 @@
 {% import '_macros/status.njk' as status %}
 {% import '_macros/transactions-table.njk' as transactionsTable %}
 
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
 {% block content %}
 
   <div class="contract-container">
@@ -281,21 +283,79 @@
 
 
         {# CHECKER #}
-        <p class="govuk-body">You may now proceed to submit an Automatic Inclusion Notice.</p>
+        {% if shouldDisplayOptions %}
+          <p class="govuk-body">You may now proceed to submit an Automatic Inclusion Notice.</p>
 
-        <p class="govuk-body">
-          <a href="/contract/{{ _id }}/eligibility/supporting-documentation" class="govuk-body govuk-link">
-            Review your eligibility checklist form
-          </a>
-        </p>
+          <p class="govuk-body">
+            <a href="/contract/{{ _id }}/eligibility/supporting-documentation" class="govuk-body govuk-link">
+              Review your eligibility checklist form
+            </a>
+          </p>
 
-        <a href="/contract/{{ _id }}/confirm-submission" class="govuk-button govuk-!-margin-right-1"  data-module="govuk-button">
-          Proceed to submit
-        </a>
+          {% if shouldDisplayAbandon %}
 
-        <a href="/contract/{{ _id }}/return-to-maker" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-          Return to Maker
-        </a>
+            {% if not disableAbandon %}
+              {% set disableAbandonLink = "/contract/" + _id + "/abandon" %}
+            {% endif %}
+
+            {{ govukButton({
+              "disabled": disableAbandon,
+              "text": "Abandon",
+              "classes": "govuk-button--secondary",
+              "attributes" : {
+                "data-cy" : "Abandon"
+              },
+              "href": disableAbandonLink
+            }) }}
+          {% endif %}
+
+          {% if shouldDisplayProceedToReview %}
+            {% if not disableProceedToReview %}
+              {% set disableProceedToReviewLink = "/contract/" + _id + "/ready-for-review" %}
+            {% endif %}
+
+            {{ govukButton({
+              "disabled": disableProceedToReview,
+              "text": "Proceed to review",
+              "attributes" : {
+                "data-cy" : "ProceedToReview"
+              },
+              "href": disableProceedToReviewLink
+            }) }}
+          {% endif %}
+
+          {% if shouldDisplayProceedToSubmit %}
+            {% if not disableProceedToSubmit %}
+              {% set proceedToSubmitLink = "/contract/" + _id + "/confirm-submission" %}
+            {% endif %}
+
+            {{ govukButton({
+              "disabled": disableProceedToSubmit,
+              "text": "Proceed to submit",
+              "attributes" : {
+                "data-cy" : "ProceedToSubmit"
+              },
+              "href": proceedToSubmitLink
+            }) }}
+          {% endif %}
+
+          {% if shouldDisplayReturnToMaker %}
+            {% if not disableReturnToMaker %}
+              {% set returnToMakerLink = "/contract/" + _id + "/confirm-submission" %}
+            {% endif %}
+
+            {{ govukButton({
+              "disabled": disableReturnToMaker,
+              "text": "Return to Maker",
+              "classes": "govuk-button--secondary",
+              "attributes" : {
+                "data-cy" : "ReturnToMaker"
+              },
+              "href": returnToMakerLink
+            }) }}
+          {% endif %}
+
+        {% endif %}
 
       </section>
 
