@@ -89,14 +89,14 @@ router.post('/before-you-start/bank-deal', (req, res) => {
     res.redirect(`/contract/${dealResponse._id}`)) // eslint-disable-line no-underscore-dangle
     .catch((catchErr) => {
       const validationErrors = generateErrorSummary(
-        catchErr.response.data.validationErrors,
+        catchErr.validationErrors,
         errorHref,
       );
 
       const {
         bankSupplyContractID,
         bankSupplyContractName,
-      } = catchErr.response.data.details;
+      } = catchErr.details;
 
       return res.render('before-you-start/before-you-start-bank-deal.njk', {
         bankSupplyContractID,
