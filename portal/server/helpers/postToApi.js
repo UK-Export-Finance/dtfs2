@@ -1,3 +1,5 @@
+import generateErrorSummary from './generateErrorSummary';
+
 const makeApiCall = async (query) => {
   try {
     const response = await query;
@@ -7,13 +9,27 @@ const makeApiCall = async (query) => {
   }
 };
 
-// TODO: generate and return validationErrors object here?
-const postToApi = (query) => new Promise((resolve, reject) =>
-  makeApiCall(query).then((apiResponse) => {
-    if (apiResponse.response && apiResponse.response.status === 400) {
-      return reject(apiResponse.response.data);
-    }
-    return resolve(apiResponse);
-  }).catch((err) => err));
+const isErrorResponse = (apiResponse) => (apiResponse.response && apiResponse.response.status === 400);
+
+const responseWithValidationErrors = (apiResponse, errorHref) => {
+  const validationErrors = generateErrorSummary(
+    apiResponse.response.data.validationErrors,
+    errorHref,
+  );
+
+  return {
+    ...apiResponse.response.data,
+    validationErrors,
+  };
+};
+
+const postToApi = async (query, errorHref) => {
+  const apiResponse = await makeApiCall(query);
+  if (isErrorResponse(apiResponse)) {
+    return responseWithValidationErrors(apiResponse, errorHref);
+  }
+
+  return apiResponse;
+};
 
 export default postToApi;
