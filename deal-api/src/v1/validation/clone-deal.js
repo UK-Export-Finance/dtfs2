@@ -9,10 +9,10 @@ exports.getCloneDealErrors = (deal, cloneTransactions) => {
     errorList = dealErrors.errorList;
   }
 
-  // TODO: get cloneTransactions order to be based on deal errorList
   if (!cloneTransactions) {
+    const cloneTransactionsOrder = dealErrors.errorList ? Object.keys(dealErrors.errorList).length + 1 : 1;
     cloneDealErrorList.cloneTransactions = {
-      order: '3',
+      order: cloneTransactionsOrder,
       text: 'Do you want to clone this deal with transactions is required',
     };
   }
