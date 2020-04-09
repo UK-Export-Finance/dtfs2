@@ -263,24 +263,6 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       expect(body.eligibility.agentName).toEqual(updatedECCriteria11WithExtraInfoLongAgent['agent-name'].substring(0, characterCount));
     });
 
-    it('removes non alphanumeric characters from agent name', async () => {
-      // Agent name is used as sharepoint store names so can only include [0-9a-zA-Z_-\s] characters
-      // see: https://ukef-dtfs.atlassian.net/browse/DTFS2-509
-      const postResult = await post(newDeal, user1).to('/v1/deals');
-      const newId = postResult.body._id;
-      const validAgentName = 'Agent name 1 with _ - ';
-
-      const updatedECCriteria11WithInvalidAgent = {
-        ...updatedECCriteria11WithExtraInfo,
-        'agent-name': `${validAgentName}\\.?:`,
-      };
-
-      const { status, body } = await put(updatedECCriteria11WithInvalidAgent, user1).to(`/v1/deals/${newId}/eligibility-criteria`);
-
-      expect(status).toEqual(200);
-      expect(body.eligibility.agentName).toEqual(validAgentName);
-    });
-
     it('removes criteria 11 extra info when criteria11 is changed from false to true', async () => {
       const postResult = await post(newDeal, user1).to('/v1/deals');
       const newId = postResult.body._id;

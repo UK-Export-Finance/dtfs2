@@ -51,7 +51,6 @@ const findPaginatedDeals = async (requestingUser, start, pagesize, filter, callb
     .limit(pagesize)
     .toArray((err, result) => {
       assert.equal(err, null);
-
       callback({
         count,
         deals: result,

@@ -17,9 +17,9 @@ context('When a checker views the /start-now page', () => {
     startNow.dashboardLink1().click();
     cy.url().should('eq', relative('/dashboard/0'));
 
-    // startNow.visit();
-    // startNow.viewDashboard().click();
-    // cy.url().should('eq', relative('/dashboard/0'));
+    startNow.visit();
+    startNow.viewDashboard().click();
+    cy.url().should('eq', relative('/dashboard/0'));
 
   });
 
