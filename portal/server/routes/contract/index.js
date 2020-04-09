@@ -6,7 +6,6 @@ import eligibilityRoutes from './eligibility';
 import {
   getApiData,
   requestParams,
-  generateErrorSummary,
   errorHref,
   postToApi,
 } from '../../helpers';
