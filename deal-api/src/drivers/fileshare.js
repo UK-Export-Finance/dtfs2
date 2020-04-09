@@ -1,37 +1,53 @@
-const azure = require('azure-storage');
+const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
 const stream = require('stream');
 
-const fileshare = 'ukef';
+const fileshareName = 'ukef';
 const AZURE_STORAGE_ACCOUNT = 'dtfsmediaserver';
 const AZURE_STORAGE_ACCESS_KEY = '98DED/hkaR6GHfPauH9h1u+YMSG4FQThsIzQDJoFmTf2uHocIbq+ruyDAbkzXas3E/ilbcQS8sYBzvQx0qnUhw==';
 
-const uploadStream = async (folder, { fieldname, originalname, buffer }) => {
+const credential = new StorageSharedKeyCredential(AZURE_STORAGE_ACCOUNT, AZURE_STORAGE_ACCESS_KEY);
+const serviceClient = new ShareServiceClient(
+  `https://${AZURE_STORAGE_ACCOUNT}.file.core.windows.net`,
+  credential,
+);
+
+const shareClient = serviceClient.getShareClient(fileshareName);
+shareClient.create().catch(({ details }) => {
+  if (!details) return;
+  if (details.errorCode === 'ShareAlreadyExists') return;
+  throw new Error(details.message);
+});
+
+
+const uploadStream = async (folder, { fieldname: subfolder, originalname: filename, buffer }) => {
   const fileStream = new stream.Readable();
   fileStream.push(buffer);
   fileStream.push(null);
-  console.log('uploadStream');
-  const fileService = azure.createFileService(AZURE_STORAGE_ACCOUNT, AZURE_STORAGE_ACCESS_KEY);
 
-  await fileService.createShareIfNotExists(fileshare, (error, result, response) => {
-    if (!error) {
-    }
+
+  const directoryClient = await shareClient.getDirectoryClient(folder);
+  await directoryClient.create().catch(({ details }) => {
+    if (!details) return;
+    if (details.errorCode === 'ResourceAlreadyExists') return;
+    console.error('Fileshare create resource error', details);
   });
 
-  await fileService.createDirectoryIfNotExists(fileshare, folder, (error, result, response) => {
-    if (!error) {
-    } else {
-      console.log({ error });
-    }
+  const subDirectoryClient = await directoryClient.getDirectoryClient(subfolder);
+  await subDirectoryClient.create().catch(({ details }) => {
+    if (!details) return;
+    if (details.errorCode === 'ResourceAlreadyExists') return;
+    console.error('Fileshare create resource error', details);
   });
 
-  const result = await fileService.createFileFromStream(fileshare, folder, `${fieldname}-${originalname}`, fileStream, buffer.length, (error, result, response) => {
-    if (!error) {
-      // file uploaded
-      console.log({ result });
-    }
-  });
+  const fileClient = await subDirectoryClient.getFileClient(`${filename}`);
+  await fileClient.uploadStream(fileStream, buffer.length, 4 * 1024 * 1024, 20);
 
-  return result;
+  return {
+    folder,
+    subfolder,
+    filename,
+    fullPath: `${folder}/${subfolder}/${filename}`,
+  };
 };
 
 module.exports = {

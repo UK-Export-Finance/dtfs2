@@ -146,7 +146,6 @@ const updateEligibilityDocumentation = async (dealId, body, files, token) => {
 
   // formData.append('test', 'test1');
   files.forEach((file) => {
-    const { fieldname, originalname } = file;
     formData.append(file.fieldname, file.buffer, file.originalname);
   });
 
