@@ -3,6 +3,8 @@ import api from '../../api';
 import {
   getApiData,
   requestParams,
+  errorHref,
+  postToApi,
 } from '../../helpers';
 
 const router = express.Router();
@@ -20,7 +22,8 @@ router.get('/contract/:_id/bond/create', async (req, res) => {
   return res.redirect(`/contract/${dealId}/bond/${createdBondId}/details`); // eslint-disable-line no-underscore-dangle
 });
 
-
+// TODO: if some details have been submitted
+// display validationErrors for the remaining required fields
 router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
@@ -32,8 +35,23 @@ router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
   });
 });
 
-router.post('/contract/:id/bond/:bondId/details', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}/bond/${req.params.bondId}/financial-details`;
+router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
+  const { _id, bondId, userToken } = requestParams(req);
+
+  // console.log('*** bond details POST req body \n', req.body);
+
+  const apiResponse = await postToApi(
+    api.updateBond(_id, bondId, req.body, userToken),
+    errorHref,
+  );
+
+  // if (validationErrors) {
+  //   return res.render('bond/bond-details.njk', {
+  //     validationErrors,
+  //   });
+  // }
+
+  const redirectUrl = `/contract/${req.params._id}/bond/${req.params.bondId}/financial-details`;
   return res.redirect(redirectUrl);
 });
 

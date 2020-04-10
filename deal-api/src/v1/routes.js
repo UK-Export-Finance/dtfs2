@@ -74,6 +74,12 @@ authRouter.route('/deals/:id/bond/create')
     bonds.create,
   );
 
+authRouter.route('/deals/:id/bond/:bondId')
+  .put(
+    validate({ role: ['maker'] }),
+    bonds.updateBond,
+  );
+
 authRouter.route('/banks')
   .get(
     banks.findAll,

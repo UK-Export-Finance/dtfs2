@@ -128,6 +128,19 @@ const createBond = async (dealId, token) => {
   return response.data;
 };
 
+const updateBond = async (dealId, bondId, formData, token) => {
+  const response = await axios({
+    method: 'put',
+    url: `${urlRoot}/v1/deals/${dealId}/bond/${bondId}`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: formData,
+  });
+  return response.data;
+};
+
 const banks = async (token) => {
   const response = await axios({
     method: 'get',
@@ -240,6 +253,7 @@ export default {
   contracts,
   countries,
   createBond,
+  updateBond,
   createDeal,
   industrySectors,
   login,

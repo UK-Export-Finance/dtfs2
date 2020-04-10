@@ -13,6 +13,7 @@ const page = {
   dateOfLastAction: ()=> cy.get('[data-cy="dateOfLastAction"]'),
   submissionType: ()=> cy.get('[data-cy="submissionType"]'),
   cloneDealLink: () => cy.get('[data-cy="clone-deal-link"]'),
+  addBondButton: () => cy.get('[data-cy="button-add-bond"]'),
 
   canProceed: () => cy.get('[data-cy="canProceed"]'),
   cannotProceed: () => cy.get('[data-cy="cannotProceed"]'),
