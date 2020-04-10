@@ -1,0 +1,18 @@
+{% import '_macros/contract-options-panel-maker.njk' as makerPanel %}
+{% import '_macros/contract-options-panel-checker.njk' as checkerPanel %}
+
+{% macro render(contract, user) %}
+
+  {% if contract.details.status %}
+
+    {% if user.roles.includes('checker') %}
+      {{ checkerPanel[contract.details.status](contract) }}
+
+    {% elif user.roles.includes('maker') %}
+      {{ makerPanel[contract.details.status](contract) }}
+
+    {% endif %}
+
+  {% endif %}
+
+{% endmacro %}
