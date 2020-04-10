@@ -43,7 +43,7 @@ authRouter.route('/deals/:start/:pagesize/:filters')
 
 authRouter.route('/deals/:id')
   .get(
-    validate({ role: ['maker'] }),
+    validate({ role: ['maker', 'checker'] }),
     deals.findOne,
   )
   .put(
