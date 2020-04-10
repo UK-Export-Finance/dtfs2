@@ -116,6 +116,18 @@ const updateEligibilityCriteria = async (dealId, criteria, token) => {
   return response.data;
 };
 
+const createBond = async (dealId, token) => {
+  const response = await axios({
+    method: 'put',
+    url: `${urlRoot}/v1/deals/${dealId}/bond/create`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+  return response.data;
+};
+
 const banks = async (token) => {
   const response = await axios({
     method: 'get',
@@ -199,7 +211,8 @@ const contractBond = async (id, bondId, token) => {
   const { _id } = response;
   return {
     contractId: _id,
-    bond: response.bondTransactions.items.find((bond) => bond.id === bondId),
+    bond: response.bondTransactions.items.find((bond) =>
+      bond._id === bondId), // eslint-disable-line no-underscore-dangle
   };
 };
 
@@ -226,6 +239,7 @@ export default {
   contractBond,
   contracts,
   countries,
+  createBond,
   createDeal,
   industrySectors,
   login,

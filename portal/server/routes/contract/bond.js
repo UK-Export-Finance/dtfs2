@@ -7,14 +7,29 @@ import {
 
 const router = express.Router();
 
+router.get('/contract/:_id/bond/create', async (req, res) => {
+  const { _id: dealId, userToken } = requestParams(req);
+
+  const updatedDeal = await api.createBond(dealId, userToken);
+
+  // TODO: this is assuming the _last_ bond in the array is the created one.
+  // somehow get the created bond ID back from API.
+  const { items: bonds } = updatedDeal.bondTransactions;
+  const createdBondId = bonds[bonds.length - 1]._id; // eslint-disable-line no-underscore-dangle
+
+  return res.redirect(`/contract/${dealId}/bond/${createdBondId}/details`); // eslint-disable-line no-underscore-dangle
+});
+
+
 router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
-  return res.render('bond/bond-details.njk',
-    await getApiData(
+  return res.render('bond/bond-details.njk', {
+    ...await getApiData(
       api.contractBond(_id, bondId, userToken),
       res,
-    ));
+    ),
+  });
 });
 
 router.post('/contract/:id/bond/:bondId/details', (req, res) => {
