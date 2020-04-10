@@ -1,0 +1,145 @@
+const wipeDB = require('../../wipeDB');
+const aDeal = require('../deals/deal-builder');
+
+const app = require('../../../src/createApp');
+const {
+  get, post, put,
+} = require('../../api')(app);
+
+const { expectAddedFields } = require('../deals/expectAddedFields');
+
+const getToken = require('../../getToken')(app);
+
+describe('/v1/deals/:id/bond/create', () => {
+  const newDeal = aDeal({
+    details: {
+      bankSupplyContractName: 'mock name',
+      bankSupplyContractID: 'mock id',
+    },
+  });
+
+  let aUserWithoutRoles;
+  let user1;
+  let user2;
+  let superuser;
+
+  beforeEach(async () => {
+    await wipeDB();
+
+    aUserWithoutRoles = await getToken({
+      username: '1',
+      password: '2',
+      roles: [],
+    });
+
+    user1 = await getToken({
+      username: '3',
+      password: '4',
+      roles: ['maker'],
+      bank: {
+        id: '1',
+        name: 'Mammon',
+      },
+    });
+
+    user2 = await getToken({
+      username: '5',
+      password: '6',
+      roles: ['maker'],
+      bank: {
+        id: '2',
+        name: 'Temple of cash',
+      },
+    });
+
+    superuser = await getToken({
+      username: '7',
+      password: '8',
+      roles: ['maker'],
+      bank: {
+        id: '*',
+      },
+    });
+  });
+
+  describe('PUT /v1/deals/:id/bond/create', () => {
+    it('401s requests that do not present a valid Authorization token', async () => {
+      const { status } = await put().to('/v1/deals/123456789012/bond/create');
+
+      expect(status).toEqual(401);
+    });
+
+    it('401s requests that do not come from a user with role=maker', async () => {
+      const { status } = await put(aUserWithoutRoles).to('/v1/deals/123456789012/bond/create');
+
+      expect(status).toEqual(401);
+    });
+
+    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+      const { status } = await put(user2).to(`/v1/deals/${dealId}/bond/create`);
+
+      expect(status).toEqual(401);
+    });
+
+    it('404s requests for unknown resources', async () => {
+      const { status } = await put({}, user1).to('/v1/deals/123456789012/bond/create');
+
+      expect(status).toEqual(404);
+    });
+
+    it('accepts requests if <user>.bank.id == *', async () => {
+      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+      const { status } = await put({}, superuser).to(`/v1/deals/${dealId}/bond/create`);
+
+      expect(status).toEqual(200);
+    });
+
+    it('adds an empty bond to a deal', async () => {
+      const postResult = await post(newDeal, user1).to('/v1/deals/');
+      const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+      await put({}, user1).to(`/v1/deals/${dealId}/bond/create`);
+
+      const { status, body } = await get(
+        `/v1/deals/${dealId}`,
+        user1,
+      );
+      expect(status).toEqual(200);
+      expect(body.bondTransactions.items.length).toEqual(1);
+      expect(body.bondTransactions.items[0]._id).toBeDefined(); // eslint-disable-line no-underscore-dangle
+    });
+
+    it('adds an empty bond to a deal whilst retaining existing bonds', async () => {
+      const mockBond = { _id: '123456789' };
+      const newDealWithExistingBonds = {
+        ...newDeal,
+        bondTransactions: {
+          items: [
+            mockBond,
+          ],
+        },
+      };
+
+      const postResult = await post(newDealWithExistingBonds, user1).to('/v1/deals/');
+      const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+      await put({}, user1).to(`/v1/deals/${dealId}/bond/create`);
+
+      const { status, body } = await get(
+        `/v1/deals/${dealId}`,
+        user1,
+      );
+      expect(status).toEqual(200);
+      expect(body.bondTransactions.items.length).toEqual(2);
+
+      const existingBond = body.bondTransactions.items.find((b) =>
+        b._id === mockBond._id); // eslint-disable-line no-underscore-dangle
+      expect(Object.keys(existingBond).length).toEqual(1);
+    });
+  });
+});

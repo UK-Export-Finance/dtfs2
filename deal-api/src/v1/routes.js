@@ -11,6 +11,7 @@ const industrySectors = require('./controllers/industrySectors.controller');
 const mandatoryCriteria = require('./controllers/mandatoryCriteria.controller');
 const transactions = require('./controllers/transactions.controller');
 const eligibilityCriteria = require('./controllers/eligibility-criteria.controller');
+const bonds = require('./controllers/bonds.controller');
 
 const users = require('./users/routes');
 
@@ -65,6 +66,12 @@ authRouter.route('/deals/:id/eligibility-criteria')
   .put(
     validate({ role: ['maker'] }),
     eligibilityCriteria.update,
+  );
+
+authRouter.route('/deals/:id/bond/create')
+  .put(
+    validate({ role: ['maker'] }),
+    bonds.create,
   );
 
 authRouter.route('/banks')
