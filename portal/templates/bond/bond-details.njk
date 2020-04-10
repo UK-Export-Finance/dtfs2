@@ -48,7 +48,7 @@
 
               <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
-                  <input class="govuk-input govuk-js-character-count" id="bondIssuer" name="bondIssuer" type="text" maxlength="150" aria-describedby="bond-issuer-hint">
+                  <input class="govuk-input govuk-js-character-count" id="bondIssuer" name="bondIssuer" type="text" maxlength="150" aria-describedby="bond-issuer-hint" value="{{ bond.bondIssuer }}">
                 </div>
               </div>
             </div>
@@ -161,7 +161,7 @@
 
               <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
-                  <input class="govuk-input govuk-js-character-count" id="bondBeneficiary" name="bondBeneficiary" type="text" maxlength="150" aria-describedby="bond-beneficiary-info bond-beneficiary-hint">
+                  <input class="govuk-input govuk-js-character-count" id="bondBeneficiary" name="bondBeneficiary" type="text" maxlength="150" aria-describedby="bond-beneficiary-info bond-beneficiary-hint" value="{{ bond.bondBeneficiary }}">
                 </div>
               </div>
 
@@ -176,15 +176,15 @@
       </div>
     </div>
 
-    <input type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" value="Next page" />
+    <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">Next page</button>
 
-    <input
+    {# <input
       type="submit"
       formaction="/contract/{{ contractId }}/bond/{{ bond._id }}/details/save-go-back"
       class="govuk-button govuk-button--secondary"
       data-module="govuk-button"
       value="Save and go back to deal"
-    />
+    /> #}
 
   </form>
 
