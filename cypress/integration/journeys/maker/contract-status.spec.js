@@ -38,11 +38,23 @@ context('Contracts viewed by role=maker, by status', () => {
     login({...maker1});
     contract.visit(aDealInStatus('Draft'));
 
-    contract.abandon().should('exist')
-                      .and('not.be.disabled');
+    // since we're deliberately not applying validation at this point we check this
+    contract.canProceed().should('exist');
+    contract.cannotProceed().should('not.exist');
 
     contract.proceedToReview().should('exist')
                               .and('not.be.disabled');
+
+    // once we validate properly we'll need a test case that also covers invalid Drafts:
+    // contract.cannotProceed().should('exist');
+    // contract.canProceed().should('not.exist');
+    //
+    // contract.proceedToReview().should('exist')
+    //                           .and('be.disabled');
+
+
+    contract.abandon().should('exist')
+                      .and('not.be.disabled');
 
     contract.returnToMaker().should('not.exist');
     contract.proceedToSubmit().should('not.exist');
@@ -52,11 +64,23 @@ context('Contracts viewed by role=maker, by status', () => {
     login({...maker1});
     contract.visit(aDealInStatus("Further Maker's input required"));
 
-    contract.abandon().should('exist')
-                      .and('not.be.disabled');
+    // since we're deliberately not applying validation at this point we check this
+    contract.canProceed().should('exist');
+    contract.cannotProceed().should('not.exist');
 
     contract.proceedToReview().should('exist')
                               .and('not.be.disabled');
+
+    // once we validate properly we'll need a test case that also covers invalid Drafts:
+    // contract.cannotProceed().should('exist');
+    // contract.canProceed().should('not.exist');
+    //
+    // contract.proceedToReview().should('exist')
+    //                           .and('be.disabled');
+
+
+    contract.abandon().should('exist')
+                      .and('not.be.disabled');
 
     contract.returnToMaker().should('not.exist');
     contract.proceedToSubmit().should('not.exist');
@@ -66,6 +90,8 @@ context('Contracts viewed by role=maker, by status', () => {
     login({...maker1});
     contract.visit(aDealInStatus("Abandoned Deal"));
 
+    contract.canProceed().should('not.exist');
+    contract.cannotProceed().should('not.exist');
 
     contract.abandon().should('exist')
                       .and('be.disabled');
@@ -81,6 +107,9 @@ context('Contracts viewed by role=maker, by status', () => {
     login({...maker1});
     contract.visit(aDealInStatus("Acknowledged by UKEF"));
 
+    contract.canProceed().should('not.exist');
+    contract.cannotProceed().should('not.exist');
+
     contract.abandon().should('exist')
                       .and('be.disabled');
 
@@ -94,6 +123,9 @@ context('Contracts viewed by role=maker, by status', () => {
   it("Status = Accepted by UKEF (without conditions), abandon = disabled, proceed to review = enabled", () => {
     login({...maker1});
     contract.visit(aDealInStatus("Accepted by UKEF (without conditions)"));
+
+    contract.canProceed().should('not.exist');
+    contract.cannotProceed().should('not.exist');
 
     contract.abandon().should('exist')
                       .and('be.disabled');
@@ -109,6 +141,9 @@ context('Contracts viewed by role=maker, by status', () => {
     login({...maker1});
     contract.visit(aDealInStatus("Accepted by UKEF (with conditions)"));
 
+    contract.canProceed().should('not.exist');
+    contract.cannotProceed().should('not.exist');
+
     contract.abandon().should('exist')
                       .and('be.disabled');
 
@@ -122,6 +157,9 @@ context('Contracts viewed by role=maker, by status', () => {
   it("Status = Ready for Checker's approval, abandon = disabled, proceed to review = disabled", () => {
     login({...maker1});
     contract.visit(aDealInStatus("Ready for Checker's approval"));
+
+    contract.canProceed().should('not.exist');
+    contract.cannotProceed().should('not.exist');
 
     contract.abandon().should('exist')
                       .and('be.disabled');
@@ -137,6 +175,8 @@ context('Contracts viewed by role=maker, by status', () => {
     login({...maker1});
     contract.visit(aDealInStatus("Submitted"));
 
+    contract.canProceed().should('not.exist');
+    contract.cannotProceed().should('not.exist');
     contract.abandon().should('not.exist');
     contract.proceedToReview().should('not.exist');
     contract.returnToMaker().should('not.exist');
@@ -147,6 +187,8 @@ context('Contracts viewed by role=maker, by status', () => {
     login({...maker1});
     contract.visit(aDealInStatus("Rejected by UKEF"));
 
+    contract.canProceed().should('not.exist');
+    contract.cannotProceed().should('not.exist');
     contract.abandon().should('not.exist');
     contract.proceedToReview().should('not.exist');
     contract.returnToMaker().should('not.exist');

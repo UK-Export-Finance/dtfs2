@@ -3,8 +3,7 @@
 {% import '_macros/contract-details.njk' as contractDetails %}
 {% import '_macros/status.njk' as status %}
 {% import '_macros/transactions-table.njk' as transactionsTable %}
-
-{% from "govuk/components/button/macro.njk" import govukButton %}
+{% import '_macros/contract-options-panel.njk' as optionsPanel %}
 
 {% block content %}
 
@@ -12,14 +11,14 @@
 
     <h1 class="govuk-heading-l">
       Supply Contract name:
-      <span data-cy="bankSupplyContractName" class="govuk-body govuk-!-font-size-24">{{ details.bankSupplyContractName }}</span>
-      <a data-cy="EditDealName" class="govuk-link govuk-!-font-size-14" href="/contract/{{ _id }}/edit-name">Edit</a>
+      <span data-cy="bankSupplyContractName" class="govuk-body govuk-!-font-size-24">{{ contract.details.bankSupplyContractName }}</span>
+      <a data-cy="EditDealName" class="govuk-link govuk-!-font-size-14" href="/contract/{{ contract._id }}/edit-name">Edit</a>
     </h1>
 
     <div class="govuk-tabs" data-module="govuk-tabs">
       <h2 class="govuk-tabs__title">Contents</h2>
 
-      {{ contractTabs.nav(selected = 'view', id = _id ) }}
+      {{ contractTabs.nav(selected = 'view', id = contract._id ) }}
 
       <section class="govuk-tabs__panel" id="view">
 
@@ -28,15 +27,15 @@
             &nbsp;
           </div>
           <div class="govuk-grid-column-one-quarter box__header-link">
-            <a href="/contract/{{ _id }}/clone/before-you-start" class="govuk-link govuk-!-font-size-14" data-cy="clone-deal-link">Clone</a>
-            <a href="/contract/{{ _id }}/delete" class="govuk-link govuk-!-font-size-14 govuk-!-margin-left-2">Abandon</a>
+            <a href="/contract/{{ contract._id }}/clone/before-you-start" class="govuk-link govuk-!-font-size-14" data-cy="clone-deal-link">Clone</a>
+            <a href="/contract/{{ contract._id }}/delete" class="govuk-link govuk-!-font-size-14 govuk-!-margin-left-2">Abandon</a>
           </div>
         </div>
 
         <hr class="govuk-section-break" />
 
         <div class="govuk-grid-row govuk-!-padding-2 govuk-!-margin-bottom-8 box">
-          {{ contractDetails.table(details) }}
+          {{ contractDetails.table(contract.details) }}
         </div>
 
         <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
@@ -47,12 +46,12 @@
                   About the Supply Contract
                 </span>
                 <span class="govuk-!-margin-left-6">
-                  {{ status.statusText(aboutSupplyContract.status) }}
+                  {{ status.statusText(contract.aboutSupplyContract.status) }}
                 </span>
               </h2>
             </div>
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <a href="/contract/{{ _id }}/about/supplier" class="govuk-link">View details</a>
+              <a href="/contract/{{ contract._id }}/about/supplier" class="govuk-link">View details</a>
             </div>
           </div>
         </div>
@@ -62,9 +61,9 @@
             <div class="govuk-grid-column-three-quarters">
               <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
 
-                {% if confirmEligibility.status %}
+                {% if contract.confirmEligibility.status %}
                   <span class="govuk-!-margin-left-6 box__header-inline-message">
-                    {{ status.statusText(confirmEligibility.status) }}
+                    {{ status.statusText(contract.confirmEligibility.status) }}
                   </span>
                 {% endif %}
 
@@ -72,17 +71,17 @@
                   Confirm eligibility
                 </span>
 
-                {% if eligibility.submissionType %}
+                {% if contract.eligibility.submissionType %}
                   <span class="govuk-!-margin-bottom-0 govuk-!-margin-left-6 govuk-!-font-weight-regular govuk-!-font-size-16 box__header-inline-message">
                     <span class="govuk-!-font-weight-bold">Submission type: </span> <br />
-                    {{ eligibility.submissionType }}
+                    {{ contract.eligibility.submissionType }}
                   </span>
                 {% endif %}
 
               </h2>
             </div>
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <a data-cy="ViewDetails" href="/contract/{{ _id }}/eligibility/criteria" class="govuk-link">View details</a>
+              <a data-cy="ViewDetails" href="/contract/{{ contract._id }}/eligibility/criteria" class="govuk-link">View details</a>
             </div>
           </div>
         </div>
@@ -95,20 +94,20 @@
                   Bond transactions
                 </span>
                 <span class="govuk-!-margin-left-6">
-                  {{ status.statusText(bondTransactions.status) }}
+                  {{ status.statusText(contract.bondTransactions.status) }}
                 </span>
               </h2>
             </div>
 
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <a href="/contract/{{ _id }}/bond/123/details" class="govuk-link">Add a Bond</a>
+              <a href="/contract/{{ contract._id }}/bond/123/details" class="govuk-link">Add a Bond</a>
             </div>
 
-            {% if bondTransactions.items %}
+            {% if contract.bondTransactions.items %}
               <div class="govuk-grid-column-full">
                 {{ transactionsTable.table(
-                  items = bondTransactions.items,
-                  contractId = _id,
+                  items = contract.bondTransactions.items,
+                  contractId = contract._id,
                   hrefRoot = 'bond',
                   hrefPage = 'details'
                 ) }}
@@ -127,21 +126,21 @@
                 </span>
 
                 <span class="govuk-!-margin-left-6">
-                  {{ status.statusText(loanTransactions.status) }}
+                  {{ status.statusText(contract.loanTransactions.status) }}
                 </span>
 
               </h2>
             </div>
 
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <a href="/contract/{{ _id }}/loan/new/details" class="govuk-link">Add a Loan</a>
+              <a href="/contract/{{ contract._id }}/loan/new/details" class="govuk-link">Add a Loan</a>
             </div>
 
-            {% if loanTransactions.items %}
+            {% if contract.loanTransactions.items %}
               <div class="govuk-grid-column-full">
                 {{ transactionsTable.table(
-                  items = loanTransactions.items,
-                  contractId = _id,
+                  items = contract.loanTransactions.items,
+                  contractId = contract._id,
                   hrefRoot = 'loan',
                   hrefPage = 'guarantee-details'
                 ) }}
@@ -159,19 +158,19 @@
               <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                   <th scope="row" class="govuk-table__header">Deal currency</th>
-                  <td class="govuk-table__cell">{{ summary.dealCurrency }}</td>
+                  <td class="govuk-table__cell">{{ contract.summary.dealCurrency }}</td>
                 </tr>
                 <tr class="govuk-table__row">
                   <th scope="row" class="govuk-table__header">Number of bonds</th>
-                  <td class="govuk-table__cell">{{ summary.totals.bonds }}</td>
+                  <td class="govuk-table__cell">{{ contract.summary.totals.bonds }}</td>
                 </tr>
                 <tr class="govuk-table__row">
                   <th scope="row" class="govuk-table__header">Number of loans</th>
-                  <td class="govuk-table__cell">{{ summary.totals.loans }}</td>
+                  <td class="govuk-table__cell">{{ contract.summary.totals.loans }}</td>
                 </tr>
                 <tr class="govuk-table__row">
                   <th scope="row" class="govuk-table__header">Number of transactions</th>
-                  <td class="govuk-table__cell">{{ summary.totals.transactions }}</td>
+                  <td class="govuk-table__cell">{{ contract.summary.totals.transactions }}</td>
                 </tr>
               </tbody>
             </table>
@@ -210,27 +209,27 @@
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ summary.dealBondsLoans.totalValue.dealCurrency }}
+                    {{ contract.summary.dealBondsLoans.totalValue.dealCurrency }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ summary.dealBondsLoans.totalValue.dealInGbp }}
+                    {{ contract.summary.dealBondsLoans.totalValue.dealInGbp }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ summary.dealBondsLoans.totalValue.bondCurrency }}
+                    {{ contract.summary.dealBondsLoans.totalValue.bondCurrency }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ summary.dealBondsLoans.totalValue.bondInGbp }}
+                    {{ contract.summary.dealBondsLoans.totalValue.bondInGbp }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ summary.dealBondsLoans.totalValue.loanCurrency }}
+                    {{ contract.summary.dealBondsLoans.totalValue.loanCurrency }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ summary.dealBondsLoans.totalValue.loanInGbp }}
+                    {{ contract.summary.dealBondsLoans.totalValue.loanInGbp }}
                   </td>
                 </tr>
 
@@ -240,27 +239,27 @@
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ summary.dealBondsLoans.totalUkefExposure.dealCurrency }}
+                    {{ contract.summary.dealBondsLoans.totalUkefExposure.dealCurrency }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ summary.dealBondsLoans.totalUkefExposure.dealInGbp }}
+                    {{ contract.summary.dealBondsLoans.totalUkefExposure.dealInGbp }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ summary.dealBondsLoans.totalUkefExposure.bondCurrency }}
+                    {{ contract.summary.dealBondsLoans.totalUkefExposure.bondCurrency }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ summary.dealBondsLoans.totalUkefExposure.bondInGbp }}
+                    {{ contract.summary.dealBondsLoans.totalUkefExposure.bondInGbp }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ summary.dealBondsLoans.totalUkefExposure.loanCurrency }}
+                    {{ contract.summary.dealBondsLoans.totalUkefExposure.loanCurrency }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ summary.dealBondsLoans.totalUkefExposure.loanInGbp }}
+                    {{ contract.summary.dealBondsLoans.totalUkefExposure.loanInGbp }}
                   </td>
                 </tr>
 
@@ -270,97 +269,14 @@
 
         </div>
 
-        {# MAKER #}
-        {# <p class="govuk-body">Please complete all form sections in order to submit your Supply Contract.</p>
 
-        <a href="/contract/{{ _id }}/ready-for-review" class="govuk-button govuk-!-margin-right-1"  data-module="govuk-button">
-          Proceed to review
-        </a>
+        {{ optionsPanel.render(contract, user) }}
 
-        <button class="govuk-button govuk-button--secondary" disabled data-module="govuk-button">
-          Abandon
-        </button> #}
-
-
-        {# CHECKER #}
-        {% if shouldDisplayOptions %}
-          <p class="govuk-body">You may now proceed to submit an Automatic Inclusion Notice.</p>
-
-          <p class="govuk-body">
-            <a href="/contract/{{ _id }}/eligibility/supporting-documentation" class="govuk-body govuk-link">
-              Review your eligibility checklist form
-            </a>
-          </p>
-
-          {% if shouldDisplayAbandon %}
-
-            {% if not disableAbandon %}
-              {% set disableAbandonLink = "/contract/" + _id + "/abandon" %}
-            {% endif %}
-
-            {{ govukButton({
-              "disabled": disableAbandon,
-              "text": "Abandon",
-              "classes": "govuk-button--secondary",
-              "attributes" : {
-                "data-cy" : "Abandon"
-              },
-              "href": disableAbandonLink
-            }) }}
-          {% endif %}
-
-          {% if shouldDisplayProceedToReview %}
-            {% if not disableProceedToReview %}
-              {% set disableProceedToReviewLink = "/contract/" + _id + "/ready-for-review" %}
-            {% endif %}
-
-            {{ govukButton({
-              "disabled": disableProceedToReview,
-              "text": "Proceed to review",
-              "attributes" : {
-                "data-cy" : "ProceedToReview"
-              },
-              "href": disableProceedToReviewLink
-            }) }}
-          {% endif %}
-
-          {% if shouldDisplayProceedToSubmit %}
-            {% if not disableProceedToSubmit %}
-              {% set proceedToSubmitLink = "/contract/" + _id + "/confirm-submission" %}
-            {% endif %}
-
-            {{ govukButton({
-              "disabled": disableProceedToSubmit,
-              "text": "Proceed to submit",
-              "attributes" : {
-                "data-cy" : "ProceedToSubmit"
-              },
-              "href": proceedToSubmitLink
-            }) }}
-          {% endif %}
-
-          {% if shouldDisplayReturnToMaker %}
-            {% if not disableReturnToMaker %}
-              {% set returnToMakerLink = "/contract/" + _id + "/confirm-submission" %}
-            {% endif %}
-
-            {{ govukButton({
-              "disabled": disableReturnToMaker,
-              "text": "Return to Maker",
-              "classes": "govuk-button--secondary",
-              "attributes" : {
-                "data-cy" : "ReturnToMaker"
-              },
-              "href": returnToMakerLink
-            }) }}
-          {% endif %}
-
-        {% endif %}
 
       </section>
 
     </div>
 
   </div>
-
+</div>
 {% endblock %}
