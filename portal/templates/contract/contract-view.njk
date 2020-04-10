@@ -99,7 +99,11 @@
             </div>
 
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <a href="/contract/{{ _id }}/bond/123/details" class="govuk-link">Add a Bond</a>
+              {# <a href="/contract/{{ _id }}/bond/123/details" class="govuk-link">Add a Bond</a> #}
+              
+              <form action="/contract/{{ _id }}/bond/create" method="PUT">
+                <button>Add a Bond</button>
+              </form>
             </div>
 
             {% if bondTransactions.items %}

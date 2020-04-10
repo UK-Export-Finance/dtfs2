@@ -4,12 +4,11 @@
 
 {% block content %}
 
-  {# childId = bond.id #}
   {{ bondNav.nav(
     completedStatus = bond.completedStatus,
     current = 'bondPreview',
     contractId = contract._id,
-    childId = 123
+    childId = bond._id
   )}}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
