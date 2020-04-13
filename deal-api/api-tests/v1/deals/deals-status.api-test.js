@@ -290,7 +290,7 @@ describe('/v1/deals/:id/status', () => {
       })
     });
 
-    it('rejects Abandoned Deal updates if no comment provided.', async () => {
+    it('rejects "Abandoned Deal" updates if no comment provided.', async () => {
       const postResult = await post(newDeal, maker1).to('/v1/deals');
       const createdDeal = postResult.body;
       const statusUpdate = {
@@ -311,7 +311,7 @@ describe('/v1/deals/:id/status', () => {
       });
     });
 
-    it('rejects Further makers Input Required updates if no comment provided.', async () => {
+    it('rejects "Further makers Input Required" updates if no comment provided.', async () => {
       const postResult = await post(newDeal, maker2).to('/v1/deals');
       const createdDeal = postResult.body;
       const statusUpdate = {
@@ -327,6 +327,27 @@ describe('/v1/deals/:id/status', () => {
           comments: {
             order: "1",
             text: "Comment is required when returning a deal to maker."
+          }
+        }
+      });
+    });
+
+    it('rejects "Submitted" updates if t+cs not confirmed.', async () => {
+      const postResult = await post(newDeal, maker2).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        status: "Submitted",
+      };
+
+      const { status, body } = await put(statusUpdate, checker).to(`/v1/deals/${createdDeal._id}/status`);
+
+      expect(body).toEqual({
+        success: false,
+        count: 1,
+        errorList: {
+          confirmSubmit: {
+            order: "1",
+            text: "Acceptance is required.",
           }
         }
       });

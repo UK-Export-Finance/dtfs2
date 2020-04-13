@@ -24,6 +24,17 @@ module.exports = (deal, requestedUpdate, user) => {
     }
   }
 
+  if (requestedUpdate.status === 'Submitted') {
+    if (!user.roles.includes('checker')) {
+      // TODO reject this?
+    } else if (!requestedUpdate.confirmSubmit) {
+      errorList.confirmSubmit = {
+        order: '1',
+        text: 'Acceptance is required.',
+      };
+    }
+  }
+
   const totalErrors = Object.keys(errorList).length;
 
   if (totalErrors === 0) {

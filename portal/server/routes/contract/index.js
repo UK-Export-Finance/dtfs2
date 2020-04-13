@@ -227,6 +227,43 @@ router.get('/contract/:_id/confirm-submission', async (req, res) => {
     ));
 });
 
+router.post('/contract/:_id/confirm-submission', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+  const { confirmSubmit } = req.body;
+
+  const updateToSend = {
+    _id,
+    confirmSubmit,
+    status: 'Submitted',
+  };
+
+  const { data } = await api.updateDealStatus(updateToSend, userToken);
+
+  const validationErrors = {
+    count: data.count,
+    errorList: data.errorList,
+  };
+
+  if (validationErrors.count) {
+    return res.status(400).render('contract/contract-confirm-submission.njk', {
+      contract: await getApiData(
+        api.contract(_id, userToken),
+        res,
+      ),
+      confirmSubmit,
+      validationErrors,
+    });
+  }
+
+  req.flash('successMessage', {
+    text: 'Supply Contract submitted to UKEF.',
+    href: `/contract/${_id}`, // eslint-disable-line no-underscore-dangle
+    hrefText: 'View Supply Contract',
+  });
+
+  return res.redirect('/start-now');
+});
+
 router.get('/contract/:_id/clone', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
