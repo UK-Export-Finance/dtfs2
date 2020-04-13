@@ -44,7 +44,7 @@ context('Clone a deal', () => {
     it('should progress to the clone page with inputs prepopulated', () => {
       cy.uncacheDeals().then( (deals) => {
         const deal = deals[0];
-console.log(`deal : ${JSON.stringify(deal)}`)
+
         missions.loginGoToDealPage(user, deal);
         goToCloneDealPage();
 
