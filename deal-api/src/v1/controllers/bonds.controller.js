@@ -42,8 +42,12 @@ exports.updateBond = async (req, res) => {
         res.status(401).send();
       }
 
+      const existingBond = deal.bondTransactions.items.find((bond) =>
+        String(bond._id) === bondId); // eslint-disable-line no-underscore-dangle
+
       const updatedBond = {
         _id: ObjectId(bondId),
+        ...existingBond,
         ...req.body,
       };
 
