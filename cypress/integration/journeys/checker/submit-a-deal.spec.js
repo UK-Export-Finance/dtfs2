@@ -1,6 +1,6 @@
 const {login} = require('../../missions');
 const {deleteAllDeals, createADeal} = require('../../missions/deal-api');
-const {contract, contractReturnToMaker} = require('../../pages');
+const {contract, contractConfirmSubmission} = require('../../pages');
 const {errorSummary, successMessage} = require('../../partials');
 const relative = require('../../relativeURL');
 
@@ -11,7 +11,7 @@ const checker = {username: 'CHECKER', password: 'CHECKER'};
 const twentyOneDeals = require('../maker/dashboard/twentyOneDeals');
 
 
-context('A checker selects to return a deal to maker from the view-contract page', () => {
+context('A checker selects to submit a contract from the view-contract page', () => {
   let deal;
   const aDealInStatus = (status) => {
     const candidates = twentyOneDeals.filter(deal=>deal.details.status===status);
@@ -38,50 +38,50 @@ context('A checker selects to return a deal to maker from the view-contract page
     // log in, visit a deal, select abandon
     login({...checker});
     contract.visit(deal);
-    contract.returnToMaker().click();
+    contract.proceedToSubmit().click();
 
     // cancel
-    contractReturnToMaker.cancel().click();
+    contractConfirmSubmission.cancel().click();
 
     // check we've gone to the right page
     cy.url().should('eq', relative(`/contract/${deal._id}`));
   });
 
-  it('The Return to Maker button generates an error if no comment has been entered.', () => {
+  it('The Accept and Submit button generates an error if the checkbox has not been ticked.', () => {
     // log in, visit a deal, select abandon
     login({...checker});
     contract.visit(deal);
-    contract.returnToMaker().click();
+    contract.proceedToSubmit().click();
 
-    // submit without a comment
-    contractReturnToMaker.returnToMaker().click();
+    // submit without checking the checkbox
+    contractConfirmSubmission.acceptAndSubmit().click();
 
     // expect to stay on the abandon page, and see an error
-    cy.url().should('eq', relative(`/contract/${deal._id}/return-to-maker`));
-    contractReturnToMaker.expectError('Comment is required when returning a deal to maker.');
+    cy.url().should('eq', relative(`/contract/${deal._id}/confirm-submission`));
+    contractConfirmSubmission.expectError('Acceptance is required.');
   });
 
-  it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /start-now.', () => {
+  it('If the terms are accepted, the Accept and Submit button submits the deal and takes the user to /start-now.', () => {
     // log in, visit a deal, select abandon
     login({...checker});
     contract.visit(deal);
-    contract.returnToMaker().click();
+    contract.proceedToSubmit().click();
 
-    // submit with a comment
-    contractReturnToMaker.comments().type('a mandatory comment');
-    contractReturnToMaker.returnToMaker().click();
+    // submit with checkbox checked
+    contractConfirmSubmission.confirmSubmit().check();
+    contractConfirmSubmission.acceptAndSubmit().click();
 
     // expect to land on the /start-now page with a success message
     cy.url().should('eq', relative(`/start-now`));
     successMessage.successMessageListItem().invoke('text').then((text) => {
-      expect(text.trim()).to.match(/Supply Contract returned to maker./);
+      expect(text.trim()).to.match(/Supply Contract submitted to UKEF./);
     });
 
 
     // visit the deal and confirm the updates have been made
     contract.visit(deal);
     contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal("Further Maker's input required");
+      expect(text.trim()).to.equal("Submitted");
     });
     contract.previousStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal("Ready for Checker's approval");

@@ -4,7 +4,7 @@
 
 {% block content %}
 
-  <form method="PUT" autocomplete="off">
+  <form method="POST" autocomplete="off">
 
     <div class="govuk-grid-row">
 
@@ -13,6 +13,9 @@
         {{ govukCheckboxes({
           idPrefix: "confirmSubmit",
           name: "confirmSubmit",
+          attributes: {
+            "data-cy": "confirmSubmit"
+          },
           fieldset: {
             legend: {
               text: "Confirm your submission",
@@ -25,19 +28,19 @@
               value: "carcasses",
               text: "I understand that by clicking 'Accept and submit' below, I confirm that I have reviewed all of the information provided and would like to proceed with the submission."
             }
-          ]
+          ],
+          errorMessage: validationErrors.errorList.confirmSubmit
         }) }}
 
       </div>
     </div>
 
-    <button class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
+    <button data-cy="AcceptAndSubmit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
       Accept and submit
     </button>
 
-    <a href="/contract/{{ _id }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+    <a data-cy="Cancel" href="/contract/{{ _id }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
 
   </form>
 
 {% endblock %}
-
