@@ -1,32 +1,42 @@
 {% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 
 {% block content %}
 
   <h1 class="govuk-heading-l">Are you sure you want to return to Maker?</h1>
 
-  <form method="PUT" autocomplete="off">
+  <form method="POST" autocomplete="off">
 
     <div class="govuk-grid-row">
 
       <div class="govuk-grid-column-three-quarters">
 
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="comments">Comments</label>
-          <span id="comments-hint" class="govuk-hint">
-             This information will be visible to the Maker. 
-          </span>
-          <textarea class="govuk-textarea" id="comments" name="comments" rows="5" aria-describedby="comments-hint"></textarea>
-        </div>
+        {{ govukTextarea({
+          name: "comments",
+          id: "comments",
+          "attributes" : {
+            "data-cy" : "comments"
+          },
+          label: {
+            text: "Comments"
+          },
+          hint: {
+            text: "This information will be visible to the Maker."
+          },
+          value: comments,
+          errorMessage: validationErrors.errorList.comments
+        }) }}
+
       </div>
     </div>
 
-    <button class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
+    <button data-cy="ReturnToMaker" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
       Return to Maker
     </button>
 
-    <a href="/contract/{{ _id }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+    <a data-cy="Cancel" href="/contract/{{ _id }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
 
   </form>
 
 {% endblock %}
-

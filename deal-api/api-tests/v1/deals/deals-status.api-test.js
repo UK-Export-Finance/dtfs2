@@ -311,6 +311,27 @@ describe('/v1/deals/:id/status', () => {
       });
     });
 
+    it('rejects Further makers Input Required updates if no comment provided.', async () => {
+      const postResult = await post(newDeal, maker2).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        status: "Further Maker's input required",
+      };
+
+      const { status, body } = await put(statusUpdate, checker).to(`/v1/deals/${createdDeal._id}/status`);
+
+      expect(body).toEqual({
+        success: false,
+        count: 1,
+        errorList: {
+          comments: {
+            order: "1",
+            text: "Comment is required when returning a deal to maker."
+          }
+        }
+      });
+    });
+
   });
 
 });
