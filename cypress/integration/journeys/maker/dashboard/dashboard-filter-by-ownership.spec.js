@@ -10,19 +10,13 @@ const maker3 = {username:'MAKER-3', password: 'MAKER-3'};
 // test data we want to set up + work with..
 const twentyOneDeals = require('./twentyOneDeals');
 
-context('Dashboard Deals pagination controls', () => {
+context('Dashboard Deals filter by ownership', () => {
 
   let fiveDealsFromMaker1 = twentyOneDeals.slice(0,5);
   let fiveDealsFromMaker2 = twentyOneDeals.slice(5,10);
   let fiveDealsFromMaker3 = twentyOneDeals.slice(10,15);
 
-  beforeEach( async() => {
-    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
-    cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
-      return false;
-    });
-
+  before( async() => {
     // clean down anything our test-users have created
     // await deleteAllDeals(maker3);
     await deleteAllDeals(maker1);
@@ -34,7 +28,15 @@ context('Dashboard Deals pagination controls', () => {
     fiveDealsFromMaker3 = await createManyDeals(fiveDealsFromMaker3, { ...maker3 });
   });
 
-  it('The Dashboard only displays deals from the users organisation', () => {
+  beforeEach( () => {
+    // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
+    cy.on('uncaught:exception', (err, runnable) => {
+      console.log(err.stack);
+      return false;
+    });
+  });
+
+  it('Show me: All - shows all deals from the users bank', () => {
     // confirm that maker1 sees maker1's deals
     login({...maker1});
     dashboard.visit();
@@ -53,6 +55,38 @@ context('Dashboard Deals pagination controls', () => {
     });
 
     dashboard.filterBySubmissionUser().should('have.value', 'all')
+  });
+
+  it('Show me: created by colleagues - shows all deals created by other users from the users bank', () => {
+    // confirm that maker2 sees maker3's deals
+    login({...maker2});
+    dashboard.visit();
+
+    dashboard.filterBySubmissionUser().select('createdByColleagues');
+    dashboard.applyFilters().click();
+
+    dashboard.confirmDealsPresent(fiveDealsFromMaker3);
+    dashboard.totalItems().invoke('text').then((text) => {
+      expect(text.trim()).equal('(5 items)');
+    });
+
+    dashboard.filterBySubmissionUser().should('have.value', 'createdByColleagues')
+  });
+
+  it('Show me: created by me - shows all deals created by the user', () => {
+    // confirm that maker2 sees maker2's deals
+    login({...maker2});
+    dashboard.visit();
+
+    dashboard.filterBySubmissionUser().select('createdByMe');
+    dashboard.applyFilters().click();
+
+    dashboard.confirmDealsPresent(fiveDealsFromMaker2);
+    dashboard.totalItems().invoke('text').then((text) => {
+      expect(text.trim()).equal('(5 items)');
+    });
+
+    dashboard.filterBySubmissionUser().should('have.value', 'createdByMe')
   });
 
 });
