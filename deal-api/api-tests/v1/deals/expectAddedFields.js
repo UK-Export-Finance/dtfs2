@@ -21,6 +21,7 @@ const expectAddedFields = (obj) => {
       submissionDate: expect.any(String),
       maker: expect.any(Object),
       owningBank: expect.any(Object),
+      status: 'Draft',
     },
   });
 
