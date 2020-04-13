@@ -1,5 +1,4 @@
 const {createADeal, login} = require('../../../missions');
-const {deleteAllDeals, createManyDeals} = require('../../../missions/deal-api');
 const {dashboard} = require('../../../pages');
 const relative = require('../../../relativeURL');
 
@@ -12,20 +11,16 @@ const twentyOneDeals = require('./twentyOneDeals');
 
 context('Dashboard Deals filter by ownership', () => {
 
-  let fiveDealsFromMaker1 = twentyOneDeals.slice(0,5);
-  let fiveDealsFromMaker2 = twentyOneDeals.slice(5,10);
-  let fiveDealsFromMaker3 = twentyOneDeals.slice(10,15);
-
-  before( async() => {
+  before( () => {
     // clean down anything our test-users have created
     // await deleteAllDeals(maker3);
-    await deleteAllDeals(maker1);
-    await deleteAllDeals(maker2);
-    await deleteAllDeals(maker3);
+    cy.deleteAllDeals(maker1);
+    cy.deleteAllDeals(maker2);
+    cy.deleteAllDeals(maker3);
     // insert deals as each user
-    fiveDealsFromMaker1 = await createManyDeals(fiveDealsFromMaker1, { ...maker1 });
-    fiveDealsFromMaker2 = await createManyDeals(fiveDealsFromMaker2, { ...maker2 });
-    fiveDealsFromMaker3 = await createManyDeals(fiveDealsFromMaker3, { ...maker3 });
+    cy.createManyDeals(twentyOneDeals.slice(0,5), { ...maker1 });
+    cy.createManyDeals(twentyOneDeals.slice(5,10), { ...maker2 });
+    cy.createManyDeals(twentyOneDeals.slice(10,15), { ...maker3 });
   });
 
   beforeEach( () => {
@@ -37,27 +32,34 @@ context('Dashboard Deals filter by ownership', () => {
   });
 
   it('Show me: All - shows all deals from the users bank', () => {
-    // confirm that maker1 sees maker1's deals
-    login({...maker1});
-    dashboard.visit();
-    dashboard.confirmDealsPresent(fiveDealsFromMaker1);
-    dashboard.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(5 items)');
-    });
+      // confirm that maker1 sees maker1's deals
+      login({...maker1});
+      dashboard.visit();
+      cy.dealsAssociatedWithBank('Barclays Bank').then( (deals) => {
+        dashboard.confirmDealsPresent(deals);
+        dashboard.totalItems().invoke('text').then((text) => {
+          expect(text.trim()).equal('(5 items)');
+        });
+      });
 
     // confirm that maker2 sees maker2's deals AND maker3's deals
     login({...maker2});
     dashboard.visit();
-    dashboard.confirmDealsPresent(fiveDealsFromMaker2);
-    dashboard.confirmDealsPresent(fiveDealsFromMaker3);
-    dashboard.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(10 items)');
-    });
+    cy.dealsAssociatedWithBank('HSBC').then( (deals) => {
+      dashboard.confirmDealsPresent(deals);
+      dashboard.totalItems().invoke('text').then((text) => {
+        expect(text.trim()).equal('(10 items)');
+      });
 
-    dashboard.filterBySubmissionUser().should('have.value', 'all')
+      dashboard.filterBySubmissionUser().should('have.value', 'all')
+    });
   });
 
   it('Show me: created by colleagues - shows all deals created by other users from the users bank', () => {
+    const notCreatedByMe = (allDeals) => {
+      return allDeals.filter(deal=>deal.details.maker.username!==maker2.username);
+    }
+
     // confirm that maker2 sees maker3's deals
     login({...maker2});
     dashboard.visit();
@@ -65,15 +67,21 @@ context('Dashboard Deals filter by ownership', () => {
     dashboard.filterBySubmissionUser().select('createdByColleagues');
     dashboard.applyFilters().click();
 
-    dashboard.confirmDealsPresent(fiveDealsFromMaker3);
-    dashboard.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(5 items)');
-    });
+    cy.dealsAssociatedWithBank('HSBC').then( (deals) => {
+      dashboard.confirmDealsPresent(notCreatedByMe(deals));
+      dashboard.totalItems().invoke('text').then((text) => {
+        expect(text.trim()).equal('(5 items)');
+      });
 
-    dashboard.filterBySubmissionUser().should('have.value', 'createdByColleagues')
+      dashboard.filterBySubmissionUser().should('have.value', 'createdByColleagues')
+    });
   });
 
   it('Show me: created by me - shows all deals created by the user', () => {
+    const createdByMe = (allDeals) => {
+      return allDeals.filter(deal=>deal.details.maker.username===maker2.username);
+    }
+
     // confirm that maker2 sees maker2's deals
     login({...maker2});
     dashboard.visit();
@@ -81,12 +89,14 @@ context('Dashboard Deals filter by ownership', () => {
     dashboard.filterBySubmissionUser().select('createdByMe');
     dashboard.applyFilters().click();
 
-    dashboard.confirmDealsPresent(fiveDealsFromMaker2);
-    dashboard.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(5 items)');
-    });
+    cy.dealsAssociatedWithBank('HSBC').then( (deals) => {
+      dashboard.confirmDealsPresent(createdByMe(deals));
+      dashboard.totalItems().invoke('text').then((text) => {
+        expect(text.trim()).equal('(5 items)');
+      });
 
-    dashboard.filterBySubmissionUser().should('have.value', 'createdByMe')
+      dashboard.filterBySubmissionUser().should('have.value', 'createdByMe')
+    });
   });
 
 });
