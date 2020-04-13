@@ -1,12 +1,11 @@
 const {login} = require('../../missions');
-const {createADeal, deleteAllDeals} = require('../../missions/deal-api');
 
 const {contract, editDealName} = require('../../pages');
 const relative = require('../../relativeURL');
 
 const user = {username: 'MAKER', password: 'MAKER'};
 
-context('View a deal', () => {
+context('Edit deal name', () => {
 
   let deal = {
     details: {
@@ -15,7 +14,7 @@ context('View a deal', () => {
     }
   };
 
-  beforeEach( async() => {
+  beforeEach( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
       console.log(err.stack);
@@ -23,23 +22,27 @@ context('View a deal', () => {
     });
 
     // clear down our test users old deals, and insert a new one - updating our deal object
-    await deleteAllDeals(user);
-    deal = await createADeal(deal, user);
+    cy.deleteAllDeals(user);
+    cy.createADeal(deal, user);
   });
 
-  it('The deal page contains the data entered in /before-you-start/bank-details', () => {
+  it('updates deal.details.bankSupplyContractName', () => {
     login(user);
-    contract.visit(deal);
-    contract.editDealName().click();
+
+    cy.uncacheDeals().then( (deals) => {
+      const deal = deals[0];
+
+      contract.visit(deal);
+      contract.editDealName().click();
 
 
-    editDealName.bankSupplyContractName().type('{selectall}{backspace}asdfasfasf');
-    editDealName.submit().click();
+      editDealName.bankSupplyContractName().type('{selectall}{backspace}asdfasfasf');
+      editDealName.submit().click();
 
-    contract.bankSupplyContractName().invoke('text').then((text) => {
-      expect(text.trim()).equal('asdfasfasf')
+      contract.bankSupplyContractName().invoke('text').then((text) => {
+        expect(text.trim()).equal('asdfasfasf')
+      });
     });
-
   });
 
 });
