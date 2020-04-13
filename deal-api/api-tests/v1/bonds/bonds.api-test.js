@@ -144,6 +144,52 @@ describe('/v1/deals/:id/bond/create', () => {
   });
 
   describe('PUT /v1/deals/:id/bond/:bondId', () => {
+    it('401s requests that do not present a valid Authorization token', async () => {
+      const { status } = await put().to('/v1/deals/123456789012/bond/123456789012');
+
+      expect(status).toEqual(401);
+    });
+
+    it('401s requests that do not come from a user with role=maker', async () => {
+      const { status } = await put(aUserWithoutRoles).to('/v1/deals/123456789012/bond/123456789012');
+
+      expect(status).toEqual(401);
+    });
+
+    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+      const { status } = await put(user2).to(`/v1/deals/${dealId}/bond/123456789012`);
+
+      expect(status).toEqual(401);
+    });
+
+    it('404s requests for unknown resources', async () => {
+      const { status } = await put({}, user1).to('/v1/deals/123456789012/bond/123456789012');
+
+      expect(status).toEqual(404);
+    });
+
+    it('accepts requests if <user>.bank.id == *', async () => {
+      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+      const { status } = await put({}, superuser).to(`/v1/deals/${dealId}/bond/123456789012`);
+
+      expect(status).toEqual(200);
+    });
+
+    // it('404s a request if bond cannot be found', async () => {
+    //   const postResult = await post(newDeal, user1).to('/v1/deals/');
+    //   const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+    //   await put({}, user1).to(`/v1/deals/${dealId}/bond/create`);
+
+    //   const { status } = await put({}, user1).to(`/v1/deals/${dealId}/bond/012345789012`);
+
+    //   expect(status).toEqual(404);
+    // });
 
     it('updates an existing bond', async () => {
       const postResult = await post(newDeal, user1).to('/v1/deals/');
@@ -177,11 +223,11 @@ describe('/v1/deals/:id/bond/create', () => {
         `/v1/deals/${dealId}`,
         user1,
       );
+
       expect(status).toEqual(200);
 
       const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
         b._id === bondId); // eslint-disable-line no-underscore-dangle
-
 
       expect(updatedBond).toEqual({
         _id: bondId, // eslint-disable-line no-underscore-dangle
