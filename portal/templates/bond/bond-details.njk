@@ -7,6 +7,9 @@
 
 {% block content %}
 
+  {% set showUnissuedFormFieldsByDefault = bond.bondStage === "unissued" %}
+  {% set showIssuedFormFieldsByDefault = bond.bondStage === "issued" %}
+
   <script type="text/javascript">
     function toggleFormFields(bondStage) {
       var unissuedFormFields = document.getElementById('unissued-form-fields');
@@ -164,7 +167,12 @@
           </fieldset>
         </div>
 
-        <div id="unissued-form-fields" class="govuk-visually-hidden">
+        <div
+          id="unissued-form-fields"
+          {% if showUnissuedFormFieldsByDefault === false %}
+          class="govuk-visually-hidden"
+          {% endif %}
+        >
           
           <div class="govuk-form-group">
             <label class="govuk-label" for="ukefGuaranteeInMonths">
@@ -180,8 +188,12 @@
 
         </div>
 
-        {# TODO: if bondStage is already selected, auto expand #}
-        <div id="issued-form-fields" class="govuk-visually-hidden">
+        <div
+          id="issued-form-fields"
+          {% if showIssuedFormFieldsByDefault === false %}
+          class="govuk-visually-hidden"
+          {% endif %}
+        >
 
           <div class="govuk-form-group">
             {{ dateFields.inputs(
