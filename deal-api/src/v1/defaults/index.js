@@ -37,6 +37,7 @@ const ELIGIBILITY_CRITERIA = [
 const DEFAULTS = {
   DEALS: {
     details: {
+      status: 'Draft',
     },
     eligibility: {
       status: 'Initial',

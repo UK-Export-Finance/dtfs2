@@ -76,6 +76,7 @@ const createDeal = async (req, res) => {
     ...DEFAULTS.DEALS,
     ...req.body,
     details: {
+      ...DEFAULTS.DEALS.details,
       ...req.body.details,
       submissionDate: timestamp,
       dateOfLastAction: timestamp,
