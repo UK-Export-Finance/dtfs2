@@ -21,8 +21,6 @@ exports.create = async (req, res) => {
         { returnOriginal: false },
       );
 
-      // TODO: if !updatedDeal.ok (?)
-
       return res.status(200).send({
         ...updatedDeal.value,
         bondId: newBondObj._id, // eslint-disable-line no-underscore-dangle
@@ -38,23 +36,32 @@ exports.updateBond = async (req, res) => {
     bondId,
   } = req.params;
 
-  const updatedBond = {
-    _id: ObjectId(bondId),
-    ...req.body,
-  };
+  await findOneDeal(req.params.id, async (deal) => {
+    if (deal) {
+      if (!userHasAccessTo(req.user, deal)) {
+        res.status(401).send();
+      }
 
-  const collection = await db.getCollection('deals');
-  const result = await collection.findOneAndUpdate(
-    {
-      _id: ObjectId(dealId),
-      'bondTransactions.items._id': ObjectId(bondId),
-    }, {
-      $set: { 'bondTransactions.items.$': { ...updatedBond } },
-    },
-    { upsert: false },
-  );
+      const updatedBond = {
+        _id: ObjectId(bondId),
+        ...req.body,
+      };
 
-  // TODO: if !updatedDeal.ok (?)
+      const collection = await db.getCollection('deals');
+      const result = await collection.findOneAndUpdate(
+        {
+          _id: ObjectId(dealId),
+          'bondTransactions.items._id': ObjectId(bondId),
+        }, {
+          $set: { 'bondTransactions.items.$': { ...updatedBond } },
+        },
+        { upsert: false },
+      );
 
-  return res.status(200).send(result.value);
+      // TODO: error handling for if deal not found.
+
+      return res.status(200).send(result.value);
+    }
+    return res.status(404).send();
+  });
 };
