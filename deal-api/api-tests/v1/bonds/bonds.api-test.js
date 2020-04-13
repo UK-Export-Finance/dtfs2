@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deals/deal-builder');
 
@@ -6,7 +7,6 @@ const {
   get, post, put,
 } = require('../../api')(app);
 
-const { expectAddedFields } = require('../deals/expectAddedFields');
 
 const getToken = require('../../getToken')(app);
 
@@ -115,7 +115,7 @@ describe('/v1/deals/:id/bond/create', () => {
     });
 
     it('adds an empty bond to a deal whilst retaining existing bonds', async () => {
-      const mockBond = { _id: '123456789' };
+      const mockBond = { _id: '123456789012' };
       const newDealWithExistingBonds = {
         ...newDeal,
         bondTransactions: {
@@ -140,6 +140,53 @@ describe('/v1/deals/:id/bond/create', () => {
       const existingBond = body.bondTransactions.items.find((b) =>
         b._id === mockBond._id); // eslint-disable-line no-underscore-dangle
       expect(Object.keys(existingBond).length).toEqual(1);
+    });
+  });
+
+  describe('PUT /v1/deals/:id/bond/:bondId', () => {
+
+    it('updates an existing bond', async () => {
+      const postResult = await post(newDeal, user1).to('/v1/deals/');
+      const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+      const bondBody = {
+        bondIssuer: 'issuer',
+        bondType: 'bond type',
+        bondStage: 'unissued',
+        ukefGuaranteeInMonths: '24',
+        'requestedCoverStartDate-day': '01',
+        'requestedCoverStartDate-month': '02',
+        'requestedCoverStartDate-year': '2020',
+        'coverEndDate-day': '01',
+        'coverEndDate-month': '02',
+        'coverEndDate-year': '2022',
+        uniqueIdentificationNumber: '1234',
+        bondBeneficiary: 'test',
+      };
+
+      const createBondResponse = await put({}, user1).to(`/v1/deals/${dealId}/bond/create`);
+
+      const { body: createBondBody } = createBondResponse;
+      const { bondId } = createBondBody;
+
+      const { status } = await put(bondBody, user1).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+      expect(status).toEqual(200);
+
+      const { body: updatedDeal } = await get(
+        `/v1/deals/${dealId}`,
+        user1,
+      );
+      expect(status).toEqual(200);
+
+      const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
+        b._id === bondId); // eslint-disable-line no-underscore-dangle
+
+
+      expect(updatedBond).toEqual({
+        _id: bondId, // eslint-disable-line no-underscore-dangle
+        ...bondBody,
+      });
     });
   });
 });
