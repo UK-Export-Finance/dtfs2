@@ -16,6 +16,15 @@ describe('/v1/deals', () => {
       bankSupplyContractName: 'mock name',
       bankSupplyContractID: 'mock id',
     },
+    comments: [{
+      username: 'bananaman',
+      timestamp: '1984/12/25 00:00:00:001',
+      text: 'Merry Christmas from the 80s',
+    }, {
+      username: 'supergran',
+      timestamp: '1982/12/25 00:00:00:001',
+      text: 'Also Merry Christmas from the 80s',
+    }],
   });
 
   let aUserWithoutRoles;

@@ -146,12 +146,15 @@ exports.update = (req, res) => {
         res.status(401).send();
       } else {
         const collection = await db.getCollection('deals');
-        const { value } = await collection.findOneAndUpdate(
+
+
+        const findAndUpdateResponse = await collection.findOneAndUpdate(
           { _id: { $eq: new ObjectId(req.params.id) } },
           $.flatten(withoutId(req.body)),
           { returnOriginal: false },
         );
 
+        const { value } = findAndUpdateResponse;
         res.status(200).json(value);
       }
     }

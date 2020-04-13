@@ -1,6 +1,14 @@
+{% import '_macros/success-message.njk' as success %}
+
 {% extends "index.njk" %}
 
 {% block content %}
+
+{% if successMessage %}
+  {{ success.message(
+    message = successMessage
+  )}}
+{% endif %}
 
   <h1 class="govuk-heading-l">Manage trade finance transactions</h1>
 

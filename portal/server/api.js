@@ -86,7 +86,27 @@ const updateDeal = async (deal, token) => {
     data: deal,
   });
 
-  return translateDatesToExpectedFormat(response.data);
+  return {
+    status: response.status,
+    data: await translateDatesToExpectedFormat(response.data),
+  };
+};
+
+const updateDealStatus = async (statusUpdate, token) => {
+  const response = await axios({
+    method: 'put',
+    url: `${urlRoot}/v1/deals/${statusUpdate._id}/status`, // eslint-disable-line no-underscore-dangle
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: statusUpdate,
+  });
+
+  return {
+    status: response.status,
+    data: response.data,
+  };
 };
 
 const cloneDeal = async (dealId, newDealData, token) => {
@@ -232,6 +252,7 @@ export default {
   mandatoryCriteria,
   transactions,
   updateDeal,
+  updateDealStatus,
   updateEligibilityCriteria,
   validateToken,
 };

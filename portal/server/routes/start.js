@@ -6,7 +6,9 @@ import {
   generateErrorSummary,
   errorHref,
   postToApi,
+  getFlashSuccessMessage,
 } from '../helpers';
+
 import beforeYouStartValidation from '../validation/before-you-start';
 
 const router = express.Router();
@@ -17,7 +19,10 @@ router.get('/start-now', async (req, res) => {
   if (!await api.validateToken(userToken)) {
     res.redirect('/');
   } else {
-    res.render('start-now.njk', { user: req.session.user });
+    res.render('start-now.njk', {
+      user: req.session.user,
+      successMessage: getFlashSuccessMessage(req),
+    });
   }
 });
 
