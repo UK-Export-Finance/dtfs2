@@ -1,9 +1,9 @@
 {% extends "index.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import '_macros/bond-nav.njk' as bondNav %}
 
 {% block content %}
 
-  {# childId = bond.id #}
   {{ bondNav.nav(
     completedStatus = bond.completedStatus,
     current = 'feeDetails',
@@ -19,89 +19,86 @@
 
       <div class="govuk-grid-column-three-quarters">
 
-        <div class="govuk-form-group">
-          <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend">
-                Fee type
-            </legend>
-            <div class="govuk-radios">
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="fee-type" name="fee-type" type="radio" value="In advance">
-                <label class="govuk-label govuk-radios__label" for="fee-type">
-                  In advance
-                </label>
-              </div>
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="fee-type-2" name="fee-type" type="radio" value="In arrear">
-                <label class="govuk-label govuk-radios__label" for="fee-type-2">
-                  In arrear
-                </label>
-              </div>
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="fee-type-3" name="fee-type" type="radio" value="At maturity">
-                <label class="govuk-label govuk-radios__label" for="fee-type-3">
-                  At maturity
-                </label>
-              </div>
-            </div>
-          </fieldset>
-        </div>
+        {{ govukRadios({
+          idPrefix: "feeType",
+          name: "feeType",
+          fieldset: {
+            legend: {
+              text: "Fee type"
+            }
+          },
+          items: [
+            {
+              value: "In advance",
+              text: "In advance",
+              checked: bond.feeType === "In advance"
+            },
+            {
+              value: "In arrear",
+              text: "In arrear",
+              checked: bond.feeType === "In arrear"
+            },
+            {
+              value: "At maturity",
+              text: "At maturity",
+              checked: bond.feeType === "At maturity"
+            }
+          ]
+        }) }}
 
-        <div class="govuk-form-group">
-          <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend">
-                Fee frequency
-            </legend>
-            <div class="govuk-radios">
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="fee-frequency" name="fee-frequency" type="radio" value="Monthly">
-                <label class="govuk-label govuk-radios__label" for="fee-frequency">
-                  Monthly
-                </label>
-              </div>
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="fee-frequency-2" name="fee-frequency" type="radio" value="Quarterly">
-                <label class="govuk-label govuk-radios__label" for="fee-frequency-2">
-                  Quarterly
-                </label>
-              </div>
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="fee-frequency-3" name="fee-frequency" type="radio" value="Semi-annually">
-                <label class="govuk-label govuk-radios__label" for="fee-frequency-3">
-                  Semi-annually
-                </label>
-              </div>
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="fee-frequency-4" name="fee-frequency" type="radio" value="Annually">
-                <label class="govuk-label govuk-radios__label" for="fee-frequency-4">
-                  Annually
-                </label>
-              </div>
-            </div>
-          </fieldset>
-        </div>
+        {{ govukRadios({
+          idPrefix: "feeFrequency",
+          name: "feeFrequency",
+          fieldset: {
+            legend: {
+              text: "Fee frequency"
+            }
+          },
+          items: [
+            {
+              value: "Monthly",
+              text: "Monthly",
+              checked: bond.feeFrequency === "Monthly"
+            },
+            {
+              value: "Quarterly",
+              text: "Quarterly",
+              checked: bond.feeFrequency === "Quarterly"
+            },
+            {
+              value: "Semi-annually",
+              text: "Semi-annually",
+              checked: bond.feeFrequency === "Semi-annually"
+            },
+            {
+              value: "Annually",
+              text: "Annually",
+              checked: bond.feeFrequency === "Annually"
+            }
+          ]
+        }) }}
 
-        <div class="govuk-form-group">
-          <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend">
-                Day count basis
-            </legend>
-            <div class="govuk-radios">
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="day-count-basis" name="day-count-basis" type="radio" value="360">
-                <label class="govuk-label govuk-radios__label" for="day-count-basis">
-                  360
-                </label>
-              </div>
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="day-count-basis-2" name="day-count-basis" type="radio" value="365">
-                <label class="govuk-label govuk-radios__label" for="day-count-basis-2">
-                  365
-                </label>
-              </div>
-            </div>
-          </fieldset>
-        </div>
+        {{ govukRadios({
+          idPrefix: "dayCountBasis",
+          name: "dayCountBasis",
+          fieldset: {
+            legend: {
+              text: "Day count basis"
+            }
+          },
+          items: [
+            {
+              value: "360",
+              text: "360",
+              checked: bond.dayCountBasis === "360"
+            },
+            {
+              value: "365",
+              text: "365",
+              checked: bond.dayCountBasis === "365"
+            }
+          ]
+        }) }}
 
       </div>
 

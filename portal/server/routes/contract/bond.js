@@ -47,7 +47,8 @@ router.post('/contract/:id/bond/:bondId/details/save-go-back', (req, res) => {
   return res.redirect(redirectUrl);
 });
 
-
+// TODO: if some details have been submitted
+// display validationErrors for the remaining required fields
 router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
@@ -80,6 +81,8 @@ router.post('/contract/:_id/bond/:bondId/financial-details/save-go-back', (req, 
   return res.redirect(redirectUrl);
 });
 
+// TODO: if some details have been submitted
+// display validationErrors for the remaining required fields
 router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
@@ -91,8 +94,15 @@ router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   });
 });
 
-router.post('/contract/:id/bond/:bondId/fee-details', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}/bond/${req.params.bondId}/preview`;
+router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
+  const { _id: dealId, bondId, userToken } = requestParams(req);
+
+  await postToApi(
+    api.updateBond(dealId, bondId, req.body, userToken),
+    errorHref,
+  );
+
+  const redirectUrl = `/contract/${dealId}/bond/${bondId}/preview`;
   return res.redirect(redirectUrl);
 });
 
