@@ -1,6 +1,9 @@
 {% extends "index.njk" %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import '_macros/bond-nav.njk' as bondNav %}
 {% import '_macros/date-fields.njk' as dateFields %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% block content %}
 
@@ -59,22 +62,65 @@
           </div>
         </div>
 
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="bondType">
-            Bond type
-          </label>
-          <select class="govuk-select" id="bondType" name="bondType">
-            <option value="">Select value</option>
-            <option value="Advance payment guarantee">Advance payment guarantee</option>
-            <option value="Bid bond">Bid bond</option>
-            <option value="Maintenance bond">Maintenance bond</option>
-            <option value="Performance bond">Performance bond</option>
-            <option value="Progress payment bond">Progress payment bond</option>
-            <option value="Retention bond">Retention bond</option>
-            <option value="Standby letter of credit">Standby letter of credit</option>
-            <option value="Warranty letter">Warranty letter</option>
-          </select>
-        </div>
+        {{ govukSelect({
+          id: "bondType",
+          name: "bondType",
+          label: {
+            text: "Bond type"
+          },
+          items: [
+            {
+              text: "Select value"
+            },
+            {
+              text: "Advance payment guarantee",
+              value: "advancePaymentguarantee",
+              selected: bond.bondType === "advancePaymentguarantee"
+            },
+            {
+              text: "Bid bond",
+              value: "bidBond",
+              selected: bond.bondType === "bidBond"
+            },
+
+            {
+              text: "Maintenance bond",
+              value: "maintenanceBond",
+              selected: bond.bondType === "maintenanceBond"
+            },
+
+            {
+              text: "Performance bond",
+              value: "performanceBond",
+              selected: bond.bondType === "performanceBond"
+            },
+
+            {
+              text: "Progress payment bond",
+              value: "progressPaymentBond",
+              selected: bond.bondType === "progressPaymentBond"
+            },
+
+            {
+              text: "Retention bond",
+              value: "retentionBond",
+              selected: bond.bondType === "retentionBond"
+            },
+
+            {
+              text: "Standby letter of credit",
+              value: "standbyLetterOfCredit",
+              selected: bond.bondType === "standbyLetterOfCredit"
+            },
+
+            {
+              text: "Warranty letter",
+              value: "warrantyLetter",
+              selected: bond.bondType === "warrantyLetter"
+            }
+
+          ]
+        }) }}
 
         <div class="govuk-form-group">
           <fieldset class="govuk-fieldset">
@@ -83,13 +129,33 @@
             </legend>
             <div class="govuk-radios govuk-radios--inline">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="bondStage" name="bondStage" type="radio" value="unissued" onClick="toggleFormFields('unissued')">
+                <input
+                  class="govuk-radios__input"
+                  id="bondStage"
+                  name="bondStage"
+                  type="radio"
+                  value="unissued"
+                  onClick="toggleFormFields('unissued')"
+                  {% if bond.bondStage === "unissued" %}
+                    checked
+                  {% endif %}
+                >
                 <label class="govuk-label govuk-radios__label" for="bondStage">
                   Unissued
                 </label>
               </div>
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="bondStage2" name="bondStage" type="radio" value="issued" onClick="toggleFormFields('issued')">
+                <input
+                  class="govuk-radios__input"
+                  id="bondStage2"
+                  name="bondStage"
+                  type="radio"
+                  value="issued"
+                  onClick="toggleFormFields('issued')"
+                  {% if bond.bondStage === "issued" %}
+                    checked
+                  {% endif %}
+                >
                 <label class="govuk-label govuk-radios__label" for="bondStage2">
                   Issued
                 </label>
@@ -107,13 +173,14 @@
 
             <div class="govuk-grid-row">
               <div class="govuk-grid-column-one-half">
-                <input class="govuk-input" id="ukefGuaranteeInMonths" name="ukefGuaranteeInMonths" type="text">
+                <input class="govuk-input" id="ukefGuaranteeInMonths" name="ukefGuaranteeInMonths" type="text" value="{{ bond.ukefGuaranteeInMonths }}">
               </div>
             </div>
           </div>
 
         </div>
 
+        {# TODO: if bondStage is already selected, auto expand #}
         <div id="issued-form-fields" class="govuk-visually-hidden">
 
           <div class="govuk-form-group">
@@ -121,7 +188,10 @@
               legend = 'Requested Cover Start Date (optional)',
               id = 'requestedCoverStartDate',
               hint = 'For example, 27 11 2019',
-              secondaryHint = 'This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date.'
+              secondaryHint = 'This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date.',
+              dayValue = bond['requestedCoverStartDate-day'],
+              monthValue = bond['requestedCoverStartDate-month'],
+              yearValue = bond['requestedCoverStartDate-year']
             )}}
           </div>
 
@@ -129,7 +199,10 @@
             {{ dateFields.inputs(
               legend = 'Cover End Date',
               id = 'coverEndDate',
-              hint = 'For example, 27 11 2025'
+              hint = 'For example, 27 11 2025',
+              dayValue = bond['coverEndDate-day'],
+              monthValue = bond['coverEndDate-month'],
+              yearValue = bond['coverEndDate-year']
             )}}
           </div>
 
@@ -140,7 +213,7 @@
 
               <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
-                  <input class="govuk-input" id="uniqueIdentificationNumber" name="uniqueIdentificationNumber" type="text">
+                  <input class="govuk-input" id="uniqueIdentificationNumber" name="uniqueIdentificationNumber" type="text" value="{{ bond.uniqueIdentificationNumber }}">
                 </div>
               </div>
 
