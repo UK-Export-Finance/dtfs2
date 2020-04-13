@@ -1,35 +1,34 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../db-driver/client');
-const { findOneDeal, update: updateDeal } = require('./deal.controller');
+const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 
 exports.create = async (req, res) => {
-  // await findOneDeal(req.params.id, async (deal) => {
-  //   if (!deal) {
-  //     res.status(404).send();
-  //   }
+  await findOneDeal(req.params.id, async (deal) => {
+    if (deal) {
+      if (!userHasAccessTo(req.user, deal)) {
+        res.status(401).send();
+      }
 
-  //   if (deal) {
-  //     if (!userHasAccessTo(req.user, deal)) {
-  //       res.status(401).send();
-  //     }
+      const collection = await db.getCollection('deals');
 
-  const collection = await db.getCollection('deals');
+      const newBondObj = { _id: new ObjectId() };
 
-  const newBondObj = { _id: new ObjectId() };
+      const updatedDeal = await collection.findOneAndUpdate(
+        { _id: ObjectId(req.params.id) },
+        { $push: { 'bondTransactions.items': { ...newBondObj } } },
+        { upsert: false },
+        { returnOriginal: false },
+      );
 
-  const updatedDeal = await collection.findOneAndUpdate(
-    { _id: ObjectId(req.params.id) },
-    { $push: { 'bondTransactions.items': { ...newBondObj } } },
-    { upsert: false },
-    { returnOriginal: false },
-  );
+      // TODO: if !updatedDeal.ok (?)
 
-  // TOOD: if !updatedDeal.ok (?)
-
-  return res.status(200).send({
-    ...updatedDeal.value,
-    bondId: newBondObj._id, // eslint-disable-line no-underscore-dangle
+      return res.status(200).send({
+        ...updatedDeal.value,
+        bondId: newBondObj._id, // eslint-disable-line no-underscore-dangle
+      });
+    }
+    return res.status(404).send();
   });
 };
 
@@ -54,5 +53,8 @@ exports.updateBond = async (req, res) => {
     },
     { upsert: false },
   );
+
+  // TODO: if !updatedDeal.ok (?)
+
   return res.status(200).send(result.value);
 };
