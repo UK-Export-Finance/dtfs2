@@ -1,8 +1,11 @@
 {% extends "index.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 {% import '_macros/bond-nav.njk' as bondNav %}
 {% import '_macros/date-fields.njk' as dateFields %}
 
 {% block content %}
+
+  {% set showAdditionalFieldsByDefault = bond.transactionCurrencySameAsSupplyContractCurrency === "false" %}
 
   <script type="text/javascript">
     function showAdditionalFields(bool) {
@@ -28,14 +31,25 @@
   <form method="POST" autocomplete="off">
 
     {# TODO: pattern validations #}
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="bondValue">
-        Bond value
-      </label>
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <input class="govuk-input input--numeric-float" id="bondValue" name="bondValue" type="text" size="60" maxlength="255" pattern="[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)" step="0.25" value="0.00">
-        </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter">
+        {{ govukInput({
+          label: {
+            text: "Bond value"
+          },
+          id: "bondValue",
+          name: "bondValue",
+          value: bond.bondValue,
+          classes: "input--numeric-float",
+          pattern: "[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)",
+          attributes: {
+            size: "60",
+            maxlength: "255",
+            step: "0.25",
+            placeholder: "0.00"
+          }
+        }) }}
       </div>
     </div>
 
@@ -46,13 +60,33 @@
         </legend>
         <div class="govuk-radios govuk-radios--inline">
           <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="transactionCurrencySameAsSupplyContractCurrency" name="transactionCurrencySameAsSupplyContractCurrency" type="radio" value="unissued" onClick="showAdditionalFields(false)">
+            <input
+              class="govuk-radios__input"
+              id="transactionCurrencySameAsSupplyContractCurrency"
+              name="transactionCurrencySameAsSupplyContractCurrency"
+              type="radio"
+              value="true"
+              {% if bond.transactionCurrencySameAsSupplyContractCurrency === "true" %}
+                checked
+              {% endif %}
+              onClick="showAdditionalFields(false)"
+            >
             <label class="govuk-label govuk-radios__label" for="transactionCurrencySameAsSupplyContractCurrency">
               Yes
             </label>
           </div>
           <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="transactionCurrencySameAsSupplyContractCurrency2" name="transactionCurrencySameAsSupplyContractCurrency" type="radio" value="issued" onClick="showAdditionalFields(true)">
+            <input
+              class="govuk-radios__input"
+              id="transactionCurrencySameAsSupplyContractCurrency2"
+              name="transactionCurrencySameAsSupplyContractCurrency"
+              type="radio"
+              value="false"
+              {% if bond.transactionCurrencySameAsSupplyContractCurrency === "false" %}
+                checked
+              {% endif %}
+              onClick="showAdditionalFields(true)"
+            >
             <label class="govuk-label govuk-radios__label" for="transactionCurrencySameAsSupplyContractCurrency2">
               No
             </label>
@@ -61,7 +95,12 @@
       </fieldset>
     </div>
 
-    <div id="additional-form-fields" class="govuk-visually-hidden">
+    <div
+      id="additional-form-fields"
+      {% if showUnissuedFormFieldsByDefault === false %}
+      class="govuk-visually-hidden"
+      {% endif %}
+    >
       
       <div class="govuk-form-group">
         <label class="govuk-label" for="currency">
@@ -87,7 +126,7 @@
 
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-quarter">
-            <input class="govuk-input" id="conversionRate" name="conversionRate" type="text" size="60" maxlength="@55" pattern="[0-9]{0,6}(\.\d{0,6}|\.?)" aria-describedby="conversion-rate-hint">
+            <input class="govuk-input" id="conversionRate" name="conversionRate" type="text" size="60" maxlength="@55" pattern="[0-9]{0,6}(\.\d{0,6}|\.?)" aria-describedby="conversion-rate-hint" value="{{ bond.conversionRate }}">
           </div>
         </div>
       </div>
@@ -96,7 +135,10 @@
         {{ dateFields.inputs(
           legend = 'Conversion rate date',
           id = 'conversionRateDate',
-          hint = 'For example, 27 11 2019'
+          hint = 'For example, 27 11 2019',
+          dayValue = bond['conversionRateDate-day'],
+          monthValue = bond['conversionRateDate-month'],
+          yearValue = bond['conversionRateDate-year']
         )}}
       </div>
 
@@ -115,7 +157,7 @@
         <div class="govuk-grid-column-one-quarter">
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
-              <input class="govuk-input" id="riskMarginFee" name="riskMarginFee" type="number" step="any" min="0" max="99" aria-describedby="risk-margin-fee-hint">
+              <input class="govuk-input" id="riskMarginFee" name="riskMarginFee" type="number" step="any" min="0" max="99" aria-describedby="risk-margin-fee-hint" value="{{ bond.riskMarginFee }}">
             </div>
           </div>
         </div>
@@ -137,7 +179,7 @@
         <div class="govuk-grid-column-one-quarter">
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
-              <input class="govuk-input" id="coveredPercentage" name="coveredPercentage" type="number" step="any" min="0" max="80" aria-describedby="covered-percentage-hint">
+              <input class="govuk-input" id="coveredPercentage" name="coveredPercentage" type="number" step="any" min="0" max="80" aria-describedby="covered-percentage-hint" value="{{ bond.coveredPercentage }}">
             </div>
           </div>
         </div>
@@ -156,7 +198,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <input class="govuk-input input--numeric-float" id="minimumRiskMarginFee" name="minimumRiskMarginFee" type="text" size="60" maxlength="255" pattern="[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)" aria-describedby="minimum-risk-margin-fee-hint" value="0.00">
+          <input class="govuk-input input--numeric-float" id="minimumRiskMarginFee" name="minimumRiskMarginFee" type="text" size="60" maxlength="255" pattern="[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)" aria-describedby="minimum-risk-margin-fee-hint" placeholder="0.00" value="{{ bond.minimumRiskMarginFee }}">
         </div>
       </div>
       
@@ -175,7 +217,7 @@
         <div class="govuk-grid-column-one-quarter">
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
-              <input class="govuk-input form-group-disabled--input" id="guaranteeFeePayableByBank" name="guaranteeFeePayableByBank" type="number" step="0.0001" min="0" max="100" aria-describedby="guarantee-fee-payable-by-bank-hint" value="0" disabled>
+              <input class="govuk-input form-group-disabled--input" id="guaranteeFeePayableByBank" name="guaranteeFeePayableByBank" type="number" step="0.0001" min="0" max="100" aria-describedby="guarantee-fee-payable-by-bank-hint" placeholder="0" disabled value="{{ bond.guaranteeFeePayableByBank }}">
             </div>
           </div>
         </div>
@@ -194,7 +236,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <input class="govuk-input form-group-disabled--input input__text-align-right" id="ukefExposure" name="ukefExposure" type="number" size="60" maxlength="255" aria-describedby="ukef-exposure-hint" value="0.00" disabled>
+          <input class="govuk-input form-group-disabled--input input__text-align-right" id="ukefExposure" name="ukefExposure" type="number" size="60" maxlength="255" aria-describedby="ukef-exposure-hint" placeholder="0.00" disabled value="{{ bond.ukefExposure }}">
         </div>
       </div>
     </div>

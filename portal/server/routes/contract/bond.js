@@ -63,12 +63,19 @@ router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => 
   });
 });
 
-router.post('/contract/:id/bond/:bondId/financial-details', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}/bond/${req.params.bondId}/fee-details`;
+router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) => {
+  const { _id: dealId, bondId, userToken } = requestParams(req);
+
+  await postToApi(
+    api.updateBond(dealId, bondId, req.body, userToken),
+    errorHref,
+  );
+
+  const redirectUrl = `/contract/${dealId}/bond/${bondId}/fee-details`;
   return res.redirect(redirectUrl);
 });
 
-router.post('/contract/:id/bond/:bondId/financial-details/save-go-back', (req, res) => {
+router.post('/contract/:_id/bond/:bondId/financial-details/save-go-back', (req, res) => {
   const redirectUrl = `/contract/${req.params.id}`;
   return res.redirect(redirectUrl);
 });
