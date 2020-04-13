@@ -180,6 +180,43 @@ router.get('/contract/:_id/return-to-maker', async (req, res) => {
     ));
 });
 
+router.post('/contract/:_id/return-to-maker', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+  const { comments } = req.body;
+
+  const updateToSend = {
+    _id,
+    comments,
+    status: "Further Maker's input required",
+  };
+
+  const { data } = await api.updateDealStatus(updateToSend, userToken);
+
+  const validationErrors = {
+    count: data.count,
+    errorList: data.errorList,
+  };
+
+  if (validationErrors.count) {
+    return res.status(400).render('contract/contract-return-to-maker.njk', {
+      contract: await getApiData(
+        api.contract(_id, userToken),
+        res,
+      ),
+      comments,
+      validationErrors,
+    });
+  }
+
+  req.flash('successMessage', {
+    text: 'Supply Contract returned to maker.',
+    href: `/contract/${_id}`, // eslint-disable-line no-underscore-dangle
+    hrefText: 'View Supply Contract',
+  });
+
+  return res.redirect('/start-now');
+});
+
 router.get('/contract/:_id/confirm-submission', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 

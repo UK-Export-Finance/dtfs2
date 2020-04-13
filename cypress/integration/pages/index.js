@@ -7,6 +7,7 @@ module.exports = {
   contract: require('./contract'),
   contractDelete: require('./contract/contract-delete'),
   contractReadyForReview: require('./contract/contract-readyForReview'),
+  contractReturnToMaker: require('./contract/contract-returnToMaker'),
   editDealName: require('./editDealName'),
   dashboard: require('./dashboard'),
   cloneDeal: require('./cloneDeal'),
