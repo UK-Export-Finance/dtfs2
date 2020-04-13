@@ -1,4 +1,4 @@
-const {createADeal, login} = require('../../missions');
+const {login} = require('../../missions');
 const {deleteAllDeals, createManyDeals} = require('../../missions/deal-api');
 const {contract} = require('../../pages');
 const relative = require('../../relativeURL');
