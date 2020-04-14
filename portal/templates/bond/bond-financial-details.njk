@@ -1,5 +1,6 @@
 {% extends "index.njk" %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import '_macros/bond-nav.njk' as bondNav %}
 {% import '_macros/date-fields.njk' as dateFields %}
 
@@ -54,50 +55,37 @@
       </div>
     </div>
 
-    <div class="govuk-form-group">
-      <fieldset class="govuk-fieldset">
-        <legend class="govuk-fieldset__legend">
-          Is the currency for this Transaction the same as your Supply Contract currency?
-        </legend>
-        <div class="govuk-radios govuk-radios--inline">
-          <div class="govuk-radios__item">
-            <input
-              class="govuk-radios__input"
-              id="transactionCurrencySameAsSupplyContractCurrency"
-              name="transactionCurrencySameAsSupplyContractCurrency"
-              type="radio"
-              value="true"
-              {% if bond.transactionCurrencySameAsSupplyContractCurrency === "true" %}
-                checked
-              {% endif %}
-              onClick="showAdditionalFields(false)"
-              data-cy='transaction-currency-same-as-supply-contract-currency-yes'
-            >
-            <label class="govuk-label govuk-radios__label" for="transactionCurrencySameAsSupplyContractCurrency">
-              Yes
-            </label>
-          </div>
-          <div class="govuk-radios__item">
-            <input
-              class="govuk-radios__input"
-              id="transactionCurrencySameAsSupplyContractCurrency2"
-              name="transactionCurrencySameAsSupplyContractCurrency"
-              type="radio"
-              value="false"
-              {% if bond.transactionCurrencySameAsSupplyContractCurrency === "false" %}
-                checked
-              {% endif %}
-              onClick="showAdditionalFields(true)"
-              data-cy='transaction-currency-same-as-supply-contract-currency-no'
-            >
-            <label class="govuk-label govuk-radios__label" for="transactionCurrencySameAsSupplyContractCurrency2">
-              No
-            </label>
-          </div>
-        </div>
-      </fieldset>
-    </div>
-
+    {{ govukRadios({
+        classes: "govuk-radios--inline",
+        idPrefix: "transactionCurrencySameAsSupplyContractCurrency",
+        name: "transactionCurrencySameAsSupplyContractCurrency",
+        fieldset: {
+          legend: {
+            text: "Is the currency for this Transaction the same as your Supply Contract currency?"
+          }
+        },
+        items: [
+          {
+            value: "true",
+            text: "Yes",
+            checked: bond.transactionCurrencySameAsSupplyContractCurrency === "true",
+            attributes: {
+              'data-cy': 'transaction-currency-same-as-supply-contract-currency-yes',
+              onClick: "showAdditionalFields(false)"
+            }
+          },
+          {
+            value: "false",
+            text: "No",
+            checked: bond.transactionCurrencySameAsSupplyContractCurrency === "false",
+            attributes: {
+              'data-cy': 'transaction-currency-same-as-supply-contract-currency-no',
+              onClick: "showAdditionalFields(true)"
+            }
+          }
+        ]
+      }) }}
+  
     <div
       id="additional-form-fields"
       {% if showUnissuedFormFieldsByDefault === false %}

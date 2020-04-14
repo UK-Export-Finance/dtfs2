@@ -1,5 +1,6 @@
 {% extends "index.njk" %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import '_macros/bond-nav.njk' as bondNav %}
 {% import '_macros/date-fields.njk' as dateFields %}
 
@@ -125,49 +126,36 @@
           ]
         }) }}
 
-        <div class="govuk-form-group">
-          <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend">
-              Bond stage
-            </legend>
-            <div class="govuk-radios govuk-radios--inline">
-              <div class="govuk-radios__item">
-                <input
-                  class="govuk-radios__input"
-                  id="bondStage"
-                  name="bondStage"
-                  type="radio"
-                  value="unissued"
-                  data-cy="bond-stage-unissued"
-                  onClick="toggleFormFields('unissued')"
-                  {% if bond.bondStage === "unissued" %}
-                    checked
-                  {% endif %}
-                >
-                <label class="govuk-label govuk-radios__label" for="bondStage">
-                  Unissued
-                </label>
-              </div>
-              <div class="govuk-radios__item">
-                <input
-                  class="govuk-radios__input"
-                  id="bondStage2"
-                  name="bondStage"
-                  type="radio"
-                  value="issued"
-                  data-cy="bond-stage-issued"
-                  onClick="toggleFormFields('issued')"
-                  {% if bond.bondStage === "issued" %}
-                    checked
-                  {% endif %}
-                >
-                <label class="govuk-label govuk-radios__label" for="bondStage2">
-                  Issued
-                </label>
-              </div>
-            </div>
-          </fieldset>
-        </div>
+        {{ govukRadios({
+          classes: "govuk-radios--inline",
+          idPrefix: "bondStage",
+          name: "bondStage",
+          fieldset: {
+            legend: {
+              text: "Bond stage"
+            }
+          },
+          items: [
+            {
+              value: "unissued",
+              text: "Unissued",
+              checked: bond.bondStage === "unissued",
+              attributes: {
+                'data-cy': "bond-stage-unissued",
+                onClick: "toggleFormFields('unissued')"
+              }
+            },
+            {
+              value: "issued",
+              text: "Issued",
+              checked: bond.bondStage === "issued",
+              attributes: {
+                'data-cy': "bond-stage-issued",
+                onClick: "toggleFormFields('issued')"
+              }
+            }
+          ]
+        }) }}
 
         <div
           id="unissued-form-fields"
