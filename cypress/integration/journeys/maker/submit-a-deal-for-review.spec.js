@@ -1,4 +1,3 @@
-const {login} = require('../../missions');
 const {contract, contractReadyForReview} = require('../../pages');
 const {errorSummary, successMessage} = require('../../partials');
 const relative = require('../../relativeURL');
@@ -30,7 +29,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
 
   it('The cancel button returns the user to the view-contract page.', () => {
     // log in, visit a deal, select abandon
-    login({...maker1});
+    cy.login({...maker1});
 
     cy.aDealInStatus("Draft").then( (deal) => {
       contract.visit(deal);
@@ -47,7 +46,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
 
   xit('The ReadyForCheckersApproval button generates an error if no comment has been entered.', () => {
     // log in, visit a deal, select abandon
-    login({...maker1});
+    cy.login({...maker1});
     cy.aDealInStatus("Draft").then( (deal) => {
       contract.visit(deal);
       contract.proceedToReview().click();
@@ -69,7 +68,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
 
   it('The Ready for Checkers Review button updates the deal and takes the user to /start-now.', () => {
     // log in, visit a deal, select abandon
-    login({...maker1});
+    cy.login({...maker1});
 
     cy.aDealInStatus("Draft").then( (deal) => {
       contract.visit(deal);

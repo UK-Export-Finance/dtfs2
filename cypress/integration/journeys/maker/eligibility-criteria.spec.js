@@ -1,4 +1,3 @@
-const { createADeal } = require('../../missions');
 const { contract, eligibilityCriteria } = require('../../pages');
 const { errorSummary } = require('../../partials');
 
@@ -14,7 +13,7 @@ context('Eligibility Criteria', () => {
       return false;
     });
 
-    createADeal({
+    cy.createADeal({
       username: 'MAKER',
       password: 'MAKER',
       bankDealId: 'someDealId',

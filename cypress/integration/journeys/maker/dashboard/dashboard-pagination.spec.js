@@ -1,4 +1,3 @@
-const {createADeal, login} = require('../../../missions');
 const {dashboard} = require('../../../pages');
 const relative = require('../../../relativeURL');
 
@@ -20,7 +19,6 @@ context('Dashboard Deals pagination controls', () => {
       return false;
     });
 
-    // clear down our test users's old deals and insert our test data
     cy.deleteDeals(user);
     cy.insertManyDeals(twentyOneDeals, { ...user });
   });
@@ -28,7 +26,7 @@ context('Dashboard Deals pagination controls', () => {
   it('Dashboard Deals displays 20 results, the total number of items, and working First/Previous/Next/Last links.', () => {
 
     // login and go to the dashboard
-    login({...user});
+    cy.login({...user});
     dashboard.visit();
 
     cy.allDeals().then( (deals) => {

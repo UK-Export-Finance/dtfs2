@@ -1,4 +1,3 @@
-const {login} = require('../../missions');
 const {contract, contractConfirmSubmission} = require('../../pages');
 const {errorSummary, successMessage} = require('../../partials');
 const relative = require('../../relativeURL');
@@ -33,7 +32,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
   it('The cancel button returns the user to the view-contract page.', () => {
     cy.aDealInStatus("Ready for Checker's approval").then( (deal) => {
       // log in, visit a deal, select abandon
-      login({...checker});
+      cy.login({...checker});
       contract.visit(deal);
       contract.proceedToSubmit().click();
 
@@ -48,7 +47,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
   it('The Accept and Submit button generates an error if the checkbox has not been ticked.', () => {
     cy.aDealInStatus("Ready for Checker's approval").then( (deal) => {
       // log in, visit a deal, select abandon
-      login({...checker});
+      cy.login({...checker});
       contract.visit(deal);
       contract.proceedToSubmit().click();
 
@@ -64,7 +63,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
   it('If the terms are accepted, the Accept and Submit button submits the deal and takes the user to /start-now.', () => {
     cy.aDealInStatus("Ready for Checker's approval").then( (deal) => {
       // log in, visit a deal, select abandon
-      login({...checker});
+      cy.login({...checker});
       contract.visit(deal);
       contract.proceedToSubmit().click();
 

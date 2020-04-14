@@ -1,7 +1,5 @@
-const { login } = require('../../missions');
 const relative = require('../../relativeURL');
 const pages = require('../../pages');
-const missions = require('../../missions');
 const partials = require('../../partials');
 
 const user = { username: 'MAKER', password: 'MAKER' };
@@ -27,7 +25,6 @@ const goToCloneDealPage = () => {
 const TOTAL_FORM_FIELDS = 3;
 
 context('Clone a deal', () => {
-  let deal;
 
   beforeEach( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -45,7 +42,7 @@ context('Clone a deal', () => {
       cy.allDeals().then( (deals) => {
         const deal = deals[0];
 
-        missions.loginGoToDealPage(user, deal);
+        cy.loginGoToDealPage(user, deal);
         goToCloneDealPage();
 
         // confirm that inputs are populated with the deal's initial bankSupplyContractID/bankSupplyContractName
@@ -61,7 +58,7 @@ context('Clone a deal', () => {
       cy.allDeals().then( (deals) => {
         const deal = deals[0];
 
-        missions.loginGoToDealPage(user, deal);
+        cy.loginGoToDealPage(user, deal);
         goToCloneDealPage();
 
         pages.cloneDeal.bankSupplyContractIDInput().clear();
@@ -81,7 +78,7 @@ context('Clone a deal', () => {
       cy.allDeals().then( (deals) => {
         const deal = deals[0];
 
-        missions.loginGoToDealPage(user, deal);
+        cy.loginGoToDealPage(user, deal);
         goToCloneDealPage();
 
         pages.cloneDeal.bankSupplyContractIDInput().type('-cloned');
