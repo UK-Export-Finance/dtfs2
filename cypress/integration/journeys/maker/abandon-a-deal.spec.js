@@ -50,6 +50,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
       contract.abandon().click();
 
       // submit without a comment
+      contractDelete.comments().should('have.value', '');
       contractDelete.abandon().click();
 
       // expect to stay on the abandon page, and see an error

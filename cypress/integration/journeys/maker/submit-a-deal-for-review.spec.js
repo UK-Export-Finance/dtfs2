@@ -37,6 +37,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
       contract.proceedToReview().click();
 
       // cancel
+      contractReadyForReview.comments().should('have.value', '');
       contractReadyForReview.cancel().click();
 
       // check we've gone to the right page
