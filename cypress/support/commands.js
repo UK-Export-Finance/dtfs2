@@ -24,9 +24,10 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
+
 const {
   cacheDeals,
-  uncacheDeals,
+  allDeals,
   aDealInStatus,
   clearCache,
   dealsCreatedBy,
@@ -36,18 +37,29 @@ const {
   clearDeals,
 } = require('./deal-api/cache');
 
+// commands used to maintain a cache of 'deals we have loaded as part of our tests'
 Cypress.Commands.add("cacheDeals", cacheDeals);
-Cypress.Commands.add("clearCache", cacheDeals);
-Cypress.Commands.add("uncacheDeals", uncacheDeals);
+Cypress.Commands.add("clearDeals", clearDeals);
+
+
+// commands used to interact directly with deal-api
+Cypress.Commands.add("insertOneDeal", require('./deal-api/insertOneDeal'));
+Cypress.Commands.add("insertManyDeals", require('./deal-api/insertManyDeals'));
+Cypress.Commands.add("deleteDeals", require('./deal-api/deleteDeals'));
+
+
+// commands used to get hold of loaded test-data'
+Cypress.Commands.add("allDeals", allDeals);
 Cypress.Commands.add("aDealInStatus", aDealInStatus);
 Cypress.Commands.add("dealsInStatus", dealsInStatus);
 Cypress.Commands.add("dealsCreatedBy", dealsCreatedBy);
 Cypress.Commands.add("dealsAssociatedWithBank", dealsAssociatedWithBank);
 Cypress.Commands.add("dealsBySubmissionType", dealsBySubmissionType);
-Cypress.Commands.add("clearDeals", clearDeals);
 
 
-Cypress.Commands.add("loginViaAPI", require('./deal-api/loginViaAPI'));
-Cypress.Commands.add("createADeal", require('./deal-api/createADeal'));
-Cypress.Commands.add("createManyDeals", require('./deal-api/createManyDeals'));
-Cypress.Commands.add("deleteAllDeals", require('./deal-api/deleteAllDeals'));
+// commands that abstract common tasks you might perform while clicking round the portal..
+Cypress.Commands.add("createADeal", require('./portal/createADeal'));
+Cypress.Commands.add("createNewSubmission", require('./portal/createNewSubmission'));
+Cypress.Commands.add("login", require('./portal/login'));
+Cypress.Commands.add("loginGoToDealPage", require('./portal/loginGoToDealPage'));
+Cypress.Commands.add("passRedLine", require('./portal/passRedLine'));

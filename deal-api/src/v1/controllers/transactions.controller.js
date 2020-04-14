@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const db = require('../../db-driver/client');
+const db = require('../../drivers/db-client');
 
 const findTransactions = async (callback) => {
   const collection = await db.getCollection('transactions');

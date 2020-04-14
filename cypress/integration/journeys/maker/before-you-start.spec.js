@@ -1,4 +1,3 @@
-const { createNewSubmission } = require('../../missions');
 const pages = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
@@ -14,7 +13,7 @@ context('Red Line eligibility checking', () => {
 
   describe('When the `Mandatory criteria` form is submitted without confirming an answer', () => {
     it('should display validation error', () => {
-      createNewSubmission({ username: 'MAKER', password: 'MAKER' });
+      cy.createNewSubmission({ username: 'MAKER', password: 'MAKER' });
 
       pages.beforeYouStart.submit().click();
 
@@ -25,7 +24,7 @@ context('Red Line eligibility checking', () => {
   });
 
   it('A deal that fails red-line checks is rejected and links back to home page', () => {
-    createNewSubmission({username: 'MAKER', password: 'MAKER'});
+    cy.createNewSubmission({username: 'MAKER', password: 'MAKER'});
 
     pages.beforeYouStart.false().click();
     pages.beforeYouStart.submit().click();
@@ -37,7 +36,7 @@ context('Red Line eligibility checking', () => {
   });
 
   it('the Unable To Proceed page links back to the home page', () => {
-    createNewSubmission({username: 'MAKER', password: 'MAKER'});
+    cy.createNewSubmission({username: 'MAKER', password: 'MAKER'});
 
     pages.beforeYouStart.false().click();
     pages.beforeYouStart.submit().click();
@@ -47,7 +46,7 @@ context('Red Line eligibility checking', () => {
   });
 
   it('A deal that passes red-line checks can progress to enter supply detaile', () => {
-    createNewSubmission({username: 'MAKER', password: 'MAKER'});
+    cy.createNewSubmission({username: 'MAKER', password: 'MAKER'});
 
     pages.beforeYouStart.true().click();
     pages.beforeYouStart.submit().click();

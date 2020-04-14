@@ -1,4 +1,3 @@
-const {createADeal, login} = require('../../../missions');
 const {dashboard} = require('../../../pages');
 const relative = require('../../../relativeURL');
 
@@ -18,18 +17,18 @@ context('Dashboard Deals filter by submissionType', () => {
   });
 
   before( () => {
-    cy.deleteAllDeals(maker1);
-    cy.createManyDeals(twentyOneDeals, { ...maker1 });
+    cy.deleteDeals(maker1);
+    cy.insertManyDeals(twentyOneDeals, { ...maker1 });
   });
 
   it('submissionType=all -> all deals displayed', () => {
-    login({...maker1});
+    cy.login({...maker1});
     dashboard.visit();
 
     dashboard.filterBySubmissionType().select('all');
     dashboard.applyFilters().click();
 
-    cy.uncacheDeals().then( (deals) => {
+    cy.allDeals().then( (deals) => {
       dashboard.confirmDealsPresent(deals.slice(0,20));
       dashboard.totalItems().invoke('text').then((text) => {
         expect(text.trim()).equal('(21 items)');
@@ -40,7 +39,7 @@ context('Dashboard Deals filter by submissionType', () => {
   });
 
   it('submissionType=automaticInclusionNotice -> filtered', () => {
-    login({...maker1});
+    cy.login({...maker1});
     dashboard.visit();
 
     dashboard.filterBySubmissionType().select('automaticInclusionNotice');
@@ -59,7 +58,7 @@ context('Dashboard Deals filter by submissionType', () => {
 
   it('submissionType=manualInclusionApplication -> filtered', () => {
     // confirm that maker2 sees maker2's deals
-    login({...maker1});
+    cy.login({...maker1});
     dashboard.visit();
 
     dashboard.filterBySubmissionType().select('manualInclusionApplication');
@@ -77,7 +76,7 @@ context('Dashboard Deals filter by submissionType', () => {
   });
 
   it('submissionType=manualInclusionNotice -> filtered', () => {
-    login({...maker1});
+    cy.login({...maker1});
     dashboard.visit();
 
     dashboard.filterBySubmissionType().select('manualInclusionNotice');

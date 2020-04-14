@@ -1,5 +1,3 @@
-const {createADeal} = require('../../missions');
-
 const {contract, dashboard} = require('../../pages');
 const relative = require('../../relativeURL');
 
@@ -13,11 +11,11 @@ context('View a deal', () => {
       return false;
     });
 
-    cy.deleteAllDeals(user);
+    cy.deleteDeals(user);
   });
 
   it('The deal page contains the data entered in /before-you-start/bank-details', () => {
-    createADeal({
+    cy.createADeal({
       ... user,
       bankDealId: 'someDealId',
       bankDealName: 'someDealName'

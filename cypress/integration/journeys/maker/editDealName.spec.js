@@ -1,5 +1,3 @@
-const {login} = require('../../missions');
-
 const {contract, editDealName} = require('../../pages');
 const relative = require('../../relativeURL');
 
@@ -21,15 +19,14 @@ context('Edit deal name', () => {
       return false;
     });
 
-    // clear down our test users old deals, and insert a new one - updating our deal object
-    cy.deleteAllDeals(user);
-    cy.createADeal(deal, user);
+    cy.deleteDeals(user);
+    cy.insertOneDeal(deal, user);
   });
 
   it('updates deal.details.bankSupplyContractName', () => {
-    login(user);
+    cy.login(user);
 
-    cy.uncacheDeals().then( (deals) => {
+    cy.allDeals().then( (deals) => {
       const deal = deals[0];
 
       contract.visit(deal);

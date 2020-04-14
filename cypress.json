@@ -1,5 +1,6 @@
 {
   "baseUrl": "http://localhost:5000",
+  "apiProtocol": "http://",
   "apiHost": "localhost",
   "apiPort": "5001"
 }
