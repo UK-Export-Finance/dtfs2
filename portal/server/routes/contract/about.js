@@ -65,15 +65,26 @@ router.post('/contract/:id/about/buyer/save-go-back', (req, res) => {
 router.get('/contract/:_id/about/financial', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
+  const currencies = await getApiData(
+    api.bondCurrencies(userToken),
+    res,
+  );
+
+  // TODO: move to helper as used in multiple places
+  const mappedCurrencies = currencies.map((c) => {
+    const currency = {
+      ...c,
+      value: c.id,
+    };
+    return currency;
+  });
+
   res.render('about/about-supply-financial.njk', {
     contract: await getApiData(
       api.contract(_id, userToken),
       res,
     ),
-    currencies: await getApiData(
-      api.bondCurrencies(userToken),
-      res,
-    ),
+    currencies: mappedCurrencies,
   });
 });
 

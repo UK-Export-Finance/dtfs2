@@ -1,6 +1,7 @@
 {% extends "index.njk" %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 {% import '_macros/bond-nav.njk' as bondNav %}
 {% import '_macros/date-fields.njk' as dateFields %}
 
@@ -92,19 +93,18 @@
       class="govuk-visually-hidden"
       {% endif %}
     >
-      
-      <div class="govuk-form-group">
-        <label class="govuk-label" for="currency">
-          Currency
-        </label>
 
-        <select class="govuk-select" id="currency" name="currency" data-cy="currency">
-          <option value="">Select value</option>
-          {% for currency in currencies %}
-            <option value={{ currency.id }}>{{ currency.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
+      {{ govukSelect({
+        id: "currency",
+        name: "currency",
+        label: {
+          text: "Currency"
+        },
+        attributes: {
+          'data-cy': 'currency'
+        },
+        items: currencies
+      }) }}
 
       <div class="govuk-form-group">
         <label class="govuk-label" for="conversionRate">
