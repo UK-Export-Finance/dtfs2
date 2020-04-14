@@ -15,6 +15,16 @@ const MOCK_DEAL = {
   },
 };
 
+const BOND_DETAILS_FORM_VALUES = {
+  bondIssuer: 'mock issuer',
+  bondType: {
+    value: 'maintenanceBond',
+    text: 'Maintenance bond',
+  },
+  ukefGuaranteeInMonths: '12',
+  bondBeneficiary: 'mock beneficiary',
+};
+
 context('Add a bond', () => {
   let deal;
 
@@ -32,7 +42,7 @@ context('Add a bond', () => {
   });
 
   describe('When a user clicks `Add a Bond` from the deal page', () => {
-    it('should progress to the bond details page', () => {
+    it('should progress to the `Bond Details` page', () => {
       cy.url().should('include', '/contract');
 
       pages.contract.addBondButton().click();
@@ -43,4 +53,29 @@ context('Add a bond', () => {
     });
   });
 
+  describe('When a user completes the `Bond Details` form', () => {
+    it('should progress to the `Bond Financial Details` page', () => {
+      pages.contract.addBondButton().click();
+      pages.bondDetails.bondIssuerInput().type(BOND_DETAILS_FORM_VALUES.bondIssuer);
+      pages.bondDetails.bondTypeInput().select(BOND_DETAILS_FORM_VALUES.bondType.value);
+      pages.bondDetails.bondStageUnissuedInput().click();
+      pages.bondDetails.ukefGuaranteeInMonthsInput().type(BOND_DETAILS_FORM_VALUES.ukefGuaranteeInMonths);
+      pages.bondDetails.bondBeneficiaryInput().type(BOND_DETAILS_FORM_VALUES.bondBeneficiary);
+      // pages.bondDetails.submit();
+    });
+  });
+
+  // TODO: when selected issued/unissued correct form fields appear
+
+  // describe('When a user completes the `Bond Financial Details` form', () => {
+  //   it('should progress to the bond `Fee Details` page', () => {
+
+  //   });
+  // });
+
+  // describe('When a user completes the `Bond Fee Details` form', () => {
+  //   it('should progress to the `Bond Preview` page', () => {
+
+  //   });
+  // });
 });
