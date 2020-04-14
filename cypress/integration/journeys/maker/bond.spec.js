@@ -35,6 +35,28 @@ const BOND_FINANCIAL_DETAILS_FORM_VALUES = {
   minimumRiskMarginFee: '1.23',
 };
 
+const fillBondDetailsForm = () => {
+  pages.bondDetails.bondIssuerInput().type(BOND_DETAILS_FORM_VALUES.bondIssuer);
+  pages.bondDetails.bondTypeInput().select(BOND_DETAILS_FORM_VALUES.bondType.value);
+  pages.bondDetails.bondStageUnissuedInput().click();
+  pages.bondDetails.ukefGuaranteeInMonthsInput().type(BOND_DETAILS_FORM_VALUES.ukefGuaranteeInMonths);
+  pages.bondDetails.bondBeneficiaryInput().type(BOND_DETAILS_FORM_VALUES.bondBeneficiary);
+};
+
+const fillBondFinancialDetailsForm = () => {
+  pages.bondFinancialDetails.bondValueInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.bondValue);
+  pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyYesInput().click();
+  pages.bondFinancialDetails.riskMarginFeeInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.riskMarginFee);
+  pages.bondFinancialDetails.coveredPercentageInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.coveredPercentage);
+  pages.bondFinancialDetails.minimumRiskMarginFeeInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.minimumRiskMarginFee);
+};
+
+const fillBondFeeDetailsForm = () => {
+  pages.bondFeeDetails.feeTypeAtMaturityInput().click();
+  pages.bondFeeDetails.feeFrequencyAnnuallyInput().click();
+  pages.bondFeeDetails.dayCountBasis365Input().click();
+};
+
 context('Add a bond', () => {
   // let deal;
 
@@ -72,11 +94,8 @@ context('Add a bond', () => {
         cy.loginGoToDealPage(user, deal);
 
         pages.contract.addBondButton().click();
-        pages.bondDetails.bondIssuerInput().type(BOND_DETAILS_FORM_VALUES.bondIssuer);
-        pages.bondDetails.bondTypeInput().select(BOND_DETAILS_FORM_VALUES.bondType.value);
-        pages.bondDetails.bondStageUnissuedInput().click();
-        pages.bondDetails.ukefGuaranteeInMonthsInput().type(BOND_DETAILS_FORM_VALUES.ukefGuaranteeInMonths);
-        pages.bondDetails.bondBeneficiaryInput().type(BOND_DETAILS_FORM_VALUES.bondBeneficiary);
+
+        fillBondDetailsForm();
         pages.bondDetails.submit().click();
 
         cy.url().should('include', '/contract');
@@ -100,11 +119,7 @@ context('Add a bond', () => {
         cy.url().should('include', '/bond/');
         cy.url().should('include', '/financial-details');
 
-        pages.bondFinancialDetails.bondValueInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.bondValue);
-        pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyYesInput().click()
-        pages.bondFinancialDetails.riskMarginFeeInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.riskMarginFee);
-        pages.bondFinancialDetails.coveredPercentageInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.coveredPercentage);
-        pages.bondFinancialDetails.minimumRiskMarginFeeInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.minimumRiskMarginFee);
+        fillBondFinancialDetailsForm();
         pages.bondFinancialDetails.submit().click();
 
         cy.url().should('include', '/contract');
@@ -121,7 +136,6 @@ context('Add a bond', () => {
   // pages.bondFinancialDetails.conversionRateDateMonthInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.conversionRateDatMonth);
   // pages.bondFinancialDetails.conversionRateDateYearInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.conversionRateDateYear);
 
-
   // TODO: financial details - disabled inputs guaranteeFeePayableByBank and ukefExposure work as expected
   // functionality needs to be done first - assuming these get automatically populated
 
@@ -137,9 +151,7 @@ context('Add a bond', () => {
         cy.url().should('include', '/bond/');
         cy.url().should('include', '/fee-details');
 
-        pages.bondFeeDetails.feeTypeAtMaturityInput().click();
-        pages.bondFeeDetails.feeFrequencyAnnuallyInput().click();
-        pages.bondFeeDetails.dayCountBasis365Input().click();
+        fillBondFeeDetailsForm();
         pages.bondFeeDetails.submit().click();
 
         cy.url().should('include', '/contract');
@@ -149,5 +161,91 @@ context('Add a bond', () => {
     });
   });
 
-  // TODO: preview page should be populated with submitted data
+  describe('When a user completes all Bond forms', () => {
+    it('should populate Bond Preview page with the submitted data', () => {
+      cy.allDeals().then((deals) => {
+        const deal = deals[0];
+        cy.loginGoToDealPage(user, deal);
+
+        pages.contract.addBondButton().click();
+
+        fillBondDetailsForm();
+        pages.bondDetails.submit().click();
+
+        fillBondFinancialDetailsForm();
+        pages.bondFinancialDetails.submit().click();
+
+        fillBondFeeDetailsForm();
+        pages.bondFeeDetails.submit().click();
+
+        cy.url().should('include', '/preview');
+
+        // bond details
+        pages.bondPreview.bondIssuer().invoke('text').then((text) => {
+          expect(text.trim()).equal(BOND_DETAILS_FORM_VALUES.bondIssuer);
+        });
+
+        pages.bondPreview.bondType().invoke('text').then((text) => {
+          expect(text.trim()).equal(BOND_DETAILS_FORM_VALUES.bondType.value);
+        });
+
+        pages.bondPreview.bondStage().invoke('text').then((text) => {
+          expect(text.trim()).equal('unissued');
+        });
+
+        // pages.bondPreview.requestedCoverStartDate().should('have.text', 'TBD');
+        // pages.bondPreview.coverEndDate().should('have.text', 'TBD');
+        // pages.bondPreview.uniqueIdentificationNumber().should('have.text', 'TBD');
+
+        pages.bondPreview.bondBeneficiary().invoke('text').then((text) => {
+          expect(text.trim()).equal(BOND_DETAILS_FORM_VALUES.bondBeneficiary);
+        });
+
+        // bond financial details
+        pages.bondPreview.bondValue().invoke('text').then((text) => {
+          expect(text.trim()).equal(BOND_FINANCIAL_DETAILS_FORM_VALUES.bondValue);
+        });
+
+        // TODO: hook up
+        // pages.bondPreview.transactionCurrencySameAsSupplyContractCurrency().invoke('text').then((text) => {
+        //   expect(text.trim()).equal(BOND_FINANCIAL_DETAILS_FORM_VALUES.currency.value);
+        // });
+
+        pages.bondPreview.riskMarginFee().invoke('text').then((text) => {
+          expect(text.trim()).equal(BOND_FINANCIAL_DETAILS_FORM_VALUES.riskMarginFee);
+        });
+
+        pages.bondPreview.coveredPercentage().invoke('text').then((text) => {
+          expect(text.trim()).equal(BOND_FINANCIAL_DETAILS_FORM_VALUES.coveredPercentage);
+        });
+
+        pages.bondPreview.minimumRiskMarginFee().invoke('text').then((text) => {
+          expect(text.trim()).equal(BOND_FINANCIAL_DETAILS_FORM_VALUES.minimumRiskMarginFee);
+        });
+
+        // TODO: this is currently disabled and not hooked up to anything
+        // pages.bondPreview.guaranteeFeePayableByBank().invoke('text').then((text) => {
+        //   expect(text.trim()).equal('?');
+        // });
+
+        // TODO: this is currently disabled and not hooked up to anything
+        // pages.bondPreview.ukefExposure().invoke('text').then((text) => {
+        //   expect(text.trim()).equal(BOND_DETAILS_FORM_VALUES.TEST);
+        // });
+
+        // bond fee details
+        pages.bondPreview.feeType().invoke('text').then((text) => {
+          expect(text.trim()).equal('At maturity');
+        });
+
+        pages.bondPreview.feeFrequency().invoke('text').then((text) => {
+          expect(text.trim()).equal('Annually');
+        });
+
+        pages.bondPreview.dayCountBasis().invoke('text').then((text) => {
+          expect(text.trim()).equal('365');
+        });
+      });
+    });
+  });
 });
