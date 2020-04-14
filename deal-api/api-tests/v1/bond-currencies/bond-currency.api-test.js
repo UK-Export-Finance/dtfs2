@@ -10,12 +10,12 @@ const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 const getToken = require('../../getToken')(app);
 
 describe('/v1/bond-currencies', () => {
-  const usd = aBondCurrency({ id: 'USD', name: 'USD - US Dollars' });
-  const gbp = aBondCurrency({ id: 'GBP', name: 'GBP - UK Sterling' });
-  const cad = aBondCurrency({ id: 'CAD', name: 'CAD - Canadian Dollars' });
+  const usd = aBondCurrency({ id: 'USD', text: 'USD - US Dollars' });
+  const gbp = aBondCurrency({ id: 'GBP', text: 'GBP - UK Sterling' });
+  const cad = aBondCurrency({ id: 'CAD', text: 'CAD - Canadian Dollars' });
 
   const newCurrency = usd;
-  const updatedCurrency = aBondCurrency({ id: 'USD', name: 'USD - US Denari' });
+  const updatedCurrency = aBondCurrency({ id: 'USD', text: 'USD - US Denari' });
 
   let aTokenWithNoRoles;
   let aTokenWithEditorRole;

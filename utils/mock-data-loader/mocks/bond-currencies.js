@@ -1,203 +1,203 @@
 const BOND_CURRENCIES = [
   {
     id: 'AED',
-    name: 'AED - U.A.E. Dirham'
+    text: 'AED - U.A.E. Dirham'
   },
   {
     id: 'AUD',
-    name: 'AUD - Australian Dollars'
+    text: 'AUD - Australian Dollars'
   },
   {
     id: 'BHD',
-    name: 'BHD - Bahrain Dinar'
+    text: 'BHD - Bahrain Dinar'
   },
   {
     id: 'BRL',
-    name: 'BRL - Brazilian Real'
+    text: 'BRL - Brazilian Real'
   },
   {
     id: 'BWP',
-    name: 'BWP - Botswana Pula'
+    text: 'BWP - Botswana Pula'
   },
   {
     id: 'CAD',
-    name: 'CAD - Canadian Dollars'
+    text: 'CAD - Canadian Dollars'
   },
   {
     id: 'CHF',
-    name: 'CHF - Swiss Francs'
+    text: 'CHF - Swiss Francs'
   },
   {
     id: 'CLP',
-    name: 'CLP - Chilean Peso'
+    text: 'CLP - Chilean Peso'
   },
   {
     id: 'CZK',
-    name: 'CZK - Czech Koruna'
+    text: 'CZK - Czech Koruna'
   },
   {
     id: 'DKK',
-    name: 'DKK - Danish Krone'
+    text: 'DKK - Danish Krone'
   },
   {
     id: 'EGP',
-    name: 'EGP - Egyptian Pounds'
+    text: 'EGP - Egyptian Pounds'
   },
   {
     id: 'EUR',
-    name: 'EUR - Euros'
+    text: 'EUR - Euros'
   },
   {
     id: 'GBP',
-    name: 'GBP - UK Sterling'
+    text: 'GBP - UK Sterling'
   },
   {
     id: 'HKD',
-    name: 'HKD - Hong Kong Dollars'
+    text: 'HKD - Hong Kong Dollars'
   },
   {
     id: 'HUF',
-    name: 'HUF - Hungarian Forint'
+    text: 'HUF - Hungarian Forint'
   },
   {
     id: 'IDR',
-    name: 'IDR - Indonesian Rupiah'
+    text: 'IDR - Indonesian Rupiah'
   },
   {
     id: 'ILS',
-    name: 'ILS - Israeli Shekels'
+    text: 'ILS - Israeli Shekels'
   },
   {
     id: 'INR',
-    name: 'INR - Indian Rupees'
+    text: 'INR - Indian Rupees'
   },
   {
     id: 'ISK',
-    name: 'ISK - Icelandic Krona'
+    text: 'ISK - Icelandic Krona'
   },
   {
     id: 'JOD',
-    name: 'JOD - Jordanian Dinar'
+    text: 'JOD - Jordanian Dinar'
   },
   {
     id: 'JPY',
-    name: 'JPY - Japanese Yen'
+    text: 'JPY - Japanese Yen'
   },
   {
     id: 'KES',
-    name: 'KES - Kenyan Shilling'
+    text: 'KES - Kenyan Shilling'
   },
   {
     id: 'KRW',
-    name: 'KRW - South Korean Won'
+    text: 'KRW - South Korean Won'
   },
   {
     id: 'KWD',
-    name: 'KWD - Kuwaiti Dinar'
+    text: 'KWD - Kuwaiti Dinar'
   },
   {
     id: 'LKR',
-    name: 'LKR - Sri Lankan Rupees'
+    text: 'LKR - Sri Lankan Rupees'
   },
   {
     id: 'MAD',
-    name: 'MAD - Moroccan Dirham'
+    text: 'MAD - Moroccan Dirham'
   },
   {
     id: 'MUR',
-    name: 'MUR - Mauritian Rupee'
+    text: 'MUR - Mauritian Rupee'
   },
   {
     id: 'MXN',
-    name: 'MXN - Mexican Pesos'
+    text: 'MXN - Mexican Pesos'
   },
   {
     id: 'MYR',
-    name: 'MYR - Malaysian Ringgitts'
+    text: 'MYR - Malaysian Ringgitts'
   },
   {
     id: 'NGN',
-    name: 'NGN - Nigerian Naira'
+    text: 'NGN - Nigerian Naira'
   },
   {
     id: 'NOK',
-    name: 'NOK - Norwegian Krone'
+    text: 'NOK - Norwegian Krone'
   },
   {
     id: 'NZD',
-    name: 'NZD - New Zealand Dollars'
+    text: 'NZD - New Zealand Dollars'
   },
   {
     id: 'OMR',
-    name: 'OMR - Omani Rials'
+    text: 'OMR - Omani Rials'
   },
   {
     id: 'PEN',
-    name: 'PEN - Peruvian Sol'
+    text: 'PEN - Peruvian Sol'
   },
   {
     id: 'PHP',
-    name: 'PHP - Philippine Peso'
+    text: 'PHP - Philippine Peso'
   },
   {
     id: 'PKR',
-    name: 'PKR - Pakistan Rupees'
+    text: 'PKR - Pakistan Rupees'
   },
   {
     id: 'PLN',
-    name: 'PLN - Polish Zloty'
+    text: 'PLN - Polish Zloty'
   },
   {
     id: 'QAR',
-    name: 'QAR - Qatar Rials'
+    text: 'QAR - Qatar Rials'
   },
   {
     id: 'RUB',
-    name: 'RUB - Russian Ruble'
+    text: 'RUB - Russian Ruble'
   },
   {
     id: 'SAR',
-    name: 'SAR - Saudi Arabian Riyals'
+    text: 'SAR - Saudi Arabian Riyals'
   },
   {
     id: 'SEK',
-    name: 'SEK - Swedish Krona'
+    text: 'SEK - Swedish Krona'
   },
   {
     id: 'SGD',
-    name: 'SGD - Singapore Dollars'
+    text: 'SGD - Singapore Dollars'
   },
   {
     id: 'THB',
-    name: 'THB - Thai Bahts'
+    text: 'THB - Thai Bahts'
   },
   {
     id: 'TRY',
-    name: 'TRY - Turkish Lira'
+    text: 'TRY - Turkish Lira'
   },
   {
     id: 'TWD',
-    name: 'TWD - Taiwan Dollars'
+    text: 'TWD - Taiwan Dollars'
   },
   {
     id: 'UGX',
-    name: 'UGX - Uganda Shilling'
+    text: 'UGX - Uganda Shilling'
   },
   {
     id: 'USD',
-    name: 'USD - US Dollars'
+    text: 'USD - US Dollars'
   },
   {
     id: 'UYU',
-    name: 'UYU - Uruguayan Peso'
+    text: 'UYU - Uruguayan Peso'
   },
   {
     id: 'XAF',
-    name: 'XAF - CFA Francs'
+    text: 'XAF - CFA Francs'
   },
   {
     id: 'ZAR',
-    name: 'ZAR - South African Rand'
+    text: 'ZAR - South African Rand'
   }
 ];
 
