@@ -18,8 +18,8 @@ context('Dashboard Deals filter by submissionType', () => {
   });
 
   before( () => {
-    cy.deleteAllDeals(maker1);
-    cy.createManyDeals(twentyOneDeals, { ...maker1 });
+    cy.deleteDeals(maker1);
+    cy.insertManyDeals(twentyOneDeals, { ...maker1 });
   });
 
   it('submissionType=all -> all deals displayed', () => {

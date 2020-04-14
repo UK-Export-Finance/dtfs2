@@ -19,9 +19,9 @@ context('Dashboard Deals filter by status', () => {
 
   before( () => {
     // clean down anything our test-users have created
-    cy.deleteAllDeals(maker1);
+    cy.deleteDeals(maker1);
     // insert deals as each user
-    cy.createManyDeals(twentyOneDeals, { ...maker1 });
+    cy.insertManyDeals(twentyOneDeals, { ...maker1 });
   });
 
   it('The Dashboard: status=all -> all deals displayed', () => {

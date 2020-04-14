@@ -13,7 +13,7 @@ context('Dashboard Deals pagination controls', () => {
       return false;
     });
 
-    cy.deleteAllDeals(maker1);
+    cy.deleteDeals(maker1);
   });
 
   it('The Dashboard only displays deals from the users organisation', () => {

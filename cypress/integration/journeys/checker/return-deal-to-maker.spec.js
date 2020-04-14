@@ -25,8 +25,8 @@ context('A checker selects to return a deal to maker from the view-contract page
       return twentyOneDeals.filter( deal=>status === deal.details.status)[0];
     };
 
-    cy.deleteAllDeals(maker1);
-    cy.createADeal(aDealInStatus("Ready for Checker's approval"), { ...maker1 });
+    cy.deleteDeals(maker1);
+    cy.insertOneDeal(aDealInStatus("Ready for Checker's approval"), { ...maker1 });
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {

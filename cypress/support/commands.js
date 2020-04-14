@@ -37,7 +37,6 @@ const {
 } = require('./deal-api/cache');
 
 Cypress.Commands.add("cacheDeals", cacheDeals);
-Cypress.Commands.add("clearCache", cacheDeals);
 Cypress.Commands.add("uncacheDeals", uncacheDeals);
 Cypress.Commands.add("aDealInStatus", aDealInStatus);
 Cypress.Commands.add("dealsInStatus", dealsInStatus);
@@ -47,7 +46,6 @@ Cypress.Commands.add("dealsBySubmissionType", dealsBySubmissionType);
 Cypress.Commands.add("clearDeals", clearDeals);
 
 
-Cypress.Commands.add("loginViaAPI", require('./deal-api/loginViaAPI'));
-Cypress.Commands.add("createADeal", require('./deal-api/createADeal'));
-Cypress.Commands.add("createManyDeals", require('./deal-api/createManyDeals'));
-Cypress.Commands.add("deleteAllDeals", require('./deal-api/deleteAllDeals'));
+Cypress.Commands.add("insertOneDeal", require('./deal-api/insertOneDeal'));
+Cypress.Commands.add("insertManyDeals", require('./deal-api/insertManyDeals'));
+Cypress.Commands.add("deleteDeals", require('./deal-api/deleteDeals'));

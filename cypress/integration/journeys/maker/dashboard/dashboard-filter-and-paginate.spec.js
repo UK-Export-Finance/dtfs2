@@ -29,11 +29,11 @@ context('Dashboard Deals pagination controls', () => {
     });
 
     // clean down anything our test-users have created
-    cy.deleteAllDeals(maker2);
-    cy.deleteAllDeals(maker3);
+    cy.deleteDeals(maker2);
+    cy.deleteDeals(maker3);
     // insert deals as each user
-    cy.createManyDeals(twentyOneDeals, { ...maker2 });
-    cy.createManyDeals(renameDeals(twentyOneDeals), { ...maker3 });
+    cy.insertManyDeals(twentyOneDeals, { ...maker2 });
+    cy.insertManyDeals(renameDeals(twentyOneDeals), { ...maker3 });
   });
 
   it('Pagination and filtering work together', () => {

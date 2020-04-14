@@ -22,8 +22,8 @@ context('Edit deal name', () => {
     });
 
     // clear down our test users old deals, and insert a new one - updating our deal object
-    cy.deleteAllDeals(user);
-    cy.createADeal(deal, user);
+    cy.deleteDeals(user);
+    cy.insertOneDeal(deal, user);
   });
 
   it('updates deal.details.bankSupplyContractName', () => {

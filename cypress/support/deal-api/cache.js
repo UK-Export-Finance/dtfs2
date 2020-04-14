@@ -8,6 +8,7 @@ module.exports.clearDeals = (listOfDeals) => {
 }
 
 module.exports.cacheDeals = (deals) => {
+  console.log(`caching deals: ${deals}`);
   dealsWeHaveLoaded = dealsWeHaveLoaded.concat(deals);
   console.log(`cache now contains: ${dealsWeHaveLoaded.length}`);
 }

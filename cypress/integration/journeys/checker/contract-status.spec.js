@@ -20,8 +20,8 @@ context('Contracts viewed by role=checker, by status', () => {
   });
 
   before( () => {
-    cy.deleteAllDeals(maker);
-    cy.createManyDeals(twentyOneDeals, { ...maker });
+    cy.deleteDeals(maker);
+    cy.insertManyDeals(twentyOneDeals, { ...maker });
   });
 
   it('Status = Draft, returnToMaker = disabled, proceed to sbumit = disabled', () => {

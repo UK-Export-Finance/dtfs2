@@ -13,7 +13,7 @@ context('View a deal', () => {
       return false;
     });
 
-    cy.deleteAllDeals(user);
+    cy.deleteDeals(user);
   });
 
   it('The deal page contains the data entered in /before-you-start/bank-details', () => {

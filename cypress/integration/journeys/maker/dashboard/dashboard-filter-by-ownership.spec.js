@@ -14,13 +14,13 @@ context('Dashboard Deals filter by ownership', () => {
   before( () => {
     // clean down anything our test-users have created
     // await deleteAllDeals(maker3);
-    cy.deleteAllDeals(maker1);
-    cy.deleteAllDeals(maker2);
-    cy.deleteAllDeals(maker3);
+    cy.deleteDeals(maker1);
+    cy.deleteDeals(maker2);
+    cy.deleteDeals(maker3);
     // insert deals as each user
-    cy.createManyDeals(twentyOneDeals.slice(0,5), { ...maker1 });
-    cy.createManyDeals(twentyOneDeals.slice(5,10), { ...maker2 });
-    cy.createManyDeals(twentyOneDeals.slice(10,15), { ...maker3 });
+    cy.insertManyDeals(twentyOneDeals.slice(0,5), { ...maker1 });
+    cy.insertManyDeals(twentyOneDeals.slice(5,10), { ...maker2 });
+    cy.insertManyDeals(twentyOneDeals.slice(10,15), { ...maker3 });
   });
 
   beforeEach( () => {

@@ -21,8 +21,8 @@ context('Dashboard Deals pagination controls', () => {
     });
 
     // clear down our test users's old deals and insert our test data
-    cy.deleteAllDeals(user);
-    cy.createManyDeals(twentyOneDeals, { ...user });
+    cy.deleteDeals(user);
+    cy.insertManyDeals(twentyOneDeals, { ...user });
   });
 
   it('Dashboard Deals displays 20 results, the total number of items, and working First/Previous/Next/Last links.', () => {
