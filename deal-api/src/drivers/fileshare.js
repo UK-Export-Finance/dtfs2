@@ -18,6 +18,7 @@ shareClient.create().catch(({ details }) => {
   throw new Error(details.message);
 });
 
+const FILESHARE_URL = `${shareClient.url}/`;
 
 const uploadStream = async ({
   folder, subfolder, filename, buffer,
@@ -52,6 +53,14 @@ const uploadStream = async ({
   };
 };
 
+const deleteFile = async (filePath) => shareClient.deleteFile(filePath).catch(({ details }) => {
+  if (!details) return;
+  if (details.errorCode === 'ResourceNotFound') return;
+  console.error('Fileshare delete file not found', details);
+});
+
 module.exports = {
   uploadStream,
+  deleteFile,
+  FILESHARE_URL,
 };

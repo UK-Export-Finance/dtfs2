@@ -141,7 +141,11 @@ const updateEligibilityDocumentation = async (dealId, body, files, token) => {
   const formData = new FormData();
 
   Object.entries(body).forEach(([fieldname, value]) => {
-    formData.append(fieldname, value);
+    if (Array.isArray(value)) {
+      value.forEach((v) => formData.append(fieldname, v));
+    } else {
+      formData.append(`${fieldname}[]`, value);
+    }
   });
 
   // formData.append('test', 'test1');
@@ -267,6 +271,22 @@ const validateToken = async (token) => {
   return response.status === 200;
 };
 
+const fileshareURL = async (token) => {
+  if (!token) return false;
+
+  const response = await axios({
+    method: 'get',
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    url: `${urlRoot}/v1/fileshare/url`,
+  });
+
+  return response.data;
+};
+
+
 export default {
   banks,
   bondCurrencies,
@@ -285,4 +305,5 @@ export default {
   updateEligibilityCriteria,
   updateEligibilityDocumentation,
   validateToken,
+  fileshareURL,
 };

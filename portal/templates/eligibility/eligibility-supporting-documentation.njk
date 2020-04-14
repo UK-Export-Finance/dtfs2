@@ -12,14 +12,14 @@
   )}}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8">
-  
+
   <form method="POST" autocomplete="off" enctype="multipart/form-data">
 
     <ol class="govuk-list govuk-list--number">
     <li class="govuk-form-group govuk-!-margin-bottom-8">
       {{ govukFileUpload({
-        id: "manualInclusionQuestionnaire",
-        name: "manual-inclusion-questionnaire",
+        id: "exporterQuestionnaire",
+        name: "exporterQuestionnaire",
         label: {
           text: "Manual Inclusion Questionnaire"
         },
@@ -31,6 +31,30 @@
           accept: '.gif, .jpg, .jpeg, .png, .bmp, .tif, .txt, .pdf, .doc, .docx, .ppt, .pptx, .xls, .xlsx, .msg, .zip'
         }
       }) }}
+
+        {% if dealFiles.exporterQuestionnaire | length %}
+       <input type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" value="Remove selected" />
+
+        <div class="govuk-form-group">
+          <fieldset class="govuk-fieldset" aria-describedby="delete-hint-exporter-questionnaire">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+              <h1 class="govuk-fieldset__heading">
+                Select files to delete
+              </h1>
+            </legend>
+            <div class="govuk-checkboxes">
+              {% for exporterQuestionnaire in dealFiles.exporterQuestionnaire %}
+                    <div class="govuk-checkboxes__item">
+                      <input class="govuk-checkboxes__input" id="delete-hint-exporter-questionnaire-{{ loop.index }}" name="deleteFile" type="checkbox" value="{{ exporterQuestionnaire.fullPath }}">
+                      <label class="govuk-label govuk-checkboxes__label">
+                        <a href="{{ fileshareURL }}{{ exporterQuestionnaire.fullPath}}" target="_blank">{{exporterQuestionnaire.filename}}</a>
+                      </label>
+                    </div>
+              {% endfor %}
+            </div>
+          </fieldset>
+        </div>
+        {% endif %}
     </li>
 
     <li class="govuk-form-group govuk-!-margin-bottom-8">
