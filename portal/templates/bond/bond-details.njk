@@ -1,6 +1,5 @@
 {% extends "index.njk" %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import '_macros/bond-nav.njk' as bondNav %}
 {% import '_macros/date-fields.njk' as dateFields %}
 
@@ -72,7 +71,7 @@
           },
           attributes: {
             'data-cy': 'bond-type'
-          }
+          },
           items: [
             {
               text: "Select value"
@@ -266,13 +265,13 @@
 
     <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">Next page</button>
 
-    {# <input
+    <input
       type="submit"
       formaction="/contract/{{ contractId }}/bond/{{ bond._id }}/details/save-go-back"
       class="govuk-button govuk-button--secondary"
       data-module="govuk-button"
       value="Save and go back to deal"
-    /> #}
+    />
 
   </form>
 

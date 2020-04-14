@@ -47,7 +47,8 @@
             size: "60",
             maxlength: "255",
             step: "0.25",
-            placeholder: "0.00"
+            placeholder: "0.00",
+            'data-cy': 'bond-value'
           }
         }) }}
       </div>
@@ -70,6 +71,7 @@
                 checked
               {% endif %}
               onClick="showAdditionalFields(false)"
+              data-cy='transaction-currency-same-as-supply-contract-currency-yes'
             >
             <label class="govuk-label govuk-radios__label" for="transactionCurrencySameAsSupplyContractCurrency">
               Yes
@@ -86,6 +88,7 @@
                 checked
               {% endif %}
               onClick="showAdditionalFields(true)"
+              data-cy='transaction-currency-same-as-supply-contract-currency-no'
             >
             <label class="govuk-label govuk-radios__label" for="transactionCurrencySameAsSupplyContractCurrency2">
               No
@@ -107,7 +110,7 @@
           Currency
         </label>
 
-        <select class="govuk-select" id="currency" name="currency">
+        <select class="govuk-select" id="currency" name="currency" data-cy="currency">
           <option value="">Select value</option>
           {% for currency in currencies %}
             <option value={{ currency.id }}>{{ currency.name }}</option>
@@ -157,7 +160,7 @@
         <div class="govuk-grid-column-one-quarter">
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
-              <input class="govuk-input" id="riskMarginFee" name="riskMarginFee" type="number" step="any" min="0" max="99" aria-describedby="risk-margin-fee-hint" value="{{ bond.riskMarginFee }}">
+              <input class="govuk-input" id="riskMarginFee" name="riskMarginFee" type="number" step="any" min="0" max="99" aria-describedby="risk-margin-fee-hint" value="{{ bond.riskMarginFee }}" data-cy="risk-margin-fee">
             </div>
           </div>
         </div>
@@ -179,7 +182,7 @@
         <div class="govuk-grid-column-one-quarter">
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
-              <input class="govuk-input" id="coveredPercentage" name="coveredPercentage" type="number" step="any" min="0" max="80" aria-describedby="covered-percentage-hint" value="{{ bond.coveredPercentage }}">
+              <input class="govuk-input" id="coveredPercentage" name="coveredPercentage" type="number" step="any" min="0" max="80" aria-describedby="covered-percentage-hint" value="{{ bond.coveredPercentage }}" data-cy="covered-percentage">
             </div>
           </div>
         </div>
@@ -198,7 +201,7 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <input class="govuk-input input--numeric-float" id="minimumRiskMarginFee" name="minimumRiskMarginFee" type="text" size="60" maxlength="255" pattern="[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)" aria-describedby="minimum-risk-margin-fee-hint" placeholder="0.00" value="{{ bond.minimumRiskMarginFee }}">
+          <input class="govuk-input input--numeric-float" id="minimumRiskMarginFee" name="minimumRiskMarginFee" type="text" size="60" maxlength="255" pattern="[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)" aria-describedby="minimum-risk-margin-fee-hint" placeholder="0.00" value="{{ bond.minimumRiskMarginFee }}" data-cy="minimum-risk-margin-fee">
         </div>
       </div>
       
@@ -217,7 +220,7 @@
         <div class="govuk-grid-column-one-quarter">
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
-              <input class="govuk-input form-group-disabled--input" id="guaranteeFeePayableByBank" name="guaranteeFeePayableByBank" type="number" step="0.0001" min="0" max="100" aria-describedby="guarantee-fee-payable-by-bank-hint" placeholder="0" disabled value="{{ bond.guaranteeFeePayableByBank }}">
+              <input class="govuk-input form-group-disabled--input" id="guaranteeFeePayableByBank" name="guaranteeFeePayableByBank" type="number" step="0.0001" min="0" max="100" aria-describedby="guarantee-fee-payable-by-bank-hint" placeholder="0" disabled value="{{ bond.guaranteeFeePayableByBank }}" data-cy="guarantee-fee-payable-by-bank">
             </div>
           </div>
         </div>
@@ -236,13 +239,13 @@
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter">
-          <input class="govuk-input form-group-disabled--input input__text-align-right" id="ukefExposure" name="ukefExposure" type="number" size="60" maxlength="255" aria-describedby="ukef-exposure-hint" placeholder="0.00" disabled value="{{ bond.ukefExposure }}">
+          <input class="govuk-input form-group-disabled--input input__text-align-right" id="ukefExposure" name="ukefExposure" type="number" size="60" maxlength="255" aria-describedby="ukef-exposure-hint" placeholder="0.00" disabled value="{{ bond.ukefExposure }}" data-cy="ukef-exposure">
         </div>
       </div>
     </div>
 
 
-    <input type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" value="Next page" />
+    <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">Next page</button>
 
     <input
       type="submit"

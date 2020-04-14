@@ -41,7 +41,10 @@
             {
               value: "At maturity",
               text: "At maturity",
-              checked: bond.feeType === "At maturity"
+              checked: bond.feeType === "At maturity",
+              attributes: {
+                'data-cy': 'fee-type-at-maturity'
+              }
             }
           ]
         }) }}
@@ -73,7 +76,10 @@
             {
               value: "Annually",
               text: "Annually",
-              checked: bond.feeFrequency === "Annually"
+              checked: bond.feeFrequency === "Annually",
+              attributes: {
+                'data-cy': 'fee-frequency-annually'
+              }
             }
           ]
         }) }}
@@ -95,7 +101,10 @@
             {
               value: "365",
               text: "365",
-              checked: bond.dayCountBasis === "365"
+              checked: bond.dayCountBasis === "365",
+              attributes: {
+                'data-cy': 'day-count-basis-365'
+              }
             }
           ]
         }) }}
@@ -104,7 +113,7 @@
 
     </div>
 
-    <input type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" value="Preview" />
+    <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">Preview</button>
 
     <input
       type="submit"
