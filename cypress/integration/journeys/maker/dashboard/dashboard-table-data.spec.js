@@ -32,7 +32,7 @@ context('View a deal', () => {
     login(user);
     dashboard.visit();
 
-    cy.uncacheDeals().then( (deals) => {
+    cy.allDeals().then( (deals) => {
       const deal = deals[0];
 
       // get the row that corresponds to our deal

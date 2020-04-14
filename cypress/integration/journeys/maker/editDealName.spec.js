@@ -29,7 +29,7 @@ context('Edit deal name', () => {
   it('updates deal.details.bankSupplyContractName', () => {
     login(user);
 
-    cy.uncacheDeals().then( (deals) => {
+    cy.allDeals().then( (deals) => {
       const deal = deals[0];
 
       contract.visit(deal);

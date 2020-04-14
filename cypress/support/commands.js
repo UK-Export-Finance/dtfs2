@@ -26,7 +26,7 @@
 
 const {
   cacheDeals,
-  uncacheDeals,
+  allDeals,
   aDealInStatus,
   clearCache,
   dealsCreatedBy,
@@ -36,16 +36,19 @@ const {
   clearDeals,
 } = require('./deal-api/cache');
 
+// commands used to maintain a cache of 'deals we have loaded as part of our tests'
 Cypress.Commands.add("cacheDeals", cacheDeals);
-Cypress.Commands.add("uncacheDeals", uncacheDeals);
+Cypress.Commands.add("clearDeals", clearDeals);
+
+// commands used to interact directly with deal-api
+Cypress.Commands.add("insertOneDeal", require('./deal-api/insertOneDeal'));
+Cypress.Commands.add("insertManyDeals", require('./deal-api/insertManyDeals'));
+Cypress.Commands.add("deleteDeals", require('./deal-api/deleteDeals'));
+
+// commands used to get hold of loaded test-data'
+Cypress.Commands.add("allDeals", allDeals);
 Cypress.Commands.add("aDealInStatus", aDealInStatus);
 Cypress.Commands.add("dealsInStatus", dealsInStatus);
 Cypress.Commands.add("dealsCreatedBy", dealsCreatedBy);
 Cypress.Commands.add("dealsAssociatedWithBank", dealsAssociatedWithBank);
 Cypress.Commands.add("dealsBySubmissionType", dealsBySubmissionType);
-Cypress.Commands.add("clearDeals", clearDeals);
-
-
-Cypress.Commands.add("insertOneDeal", require('./deal-api/insertOneDeal'));
-Cypress.Commands.add("insertManyDeals", require('./deal-api/insertManyDeals'));
-Cypress.Commands.add("deleteDeals", require('./deal-api/deleteDeals'));

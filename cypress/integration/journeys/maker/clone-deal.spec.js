@@ -42,7 +42,7 @@ context('Clone a deal', () => {
 
   describe('When a user creates a deal and clicks `clone deal`', () => {
     it('should progress to the clone page with inputs prepopulated', () => {
-      cy.uncacheDeals().then( (deals) => {
+      cy.allDeals().then( (deals) => {
         const deal = deals[0];
 
         missions.loginGoToDealPage(user, deal);
@@ -58,7 +58,7 @@ context('Clone a deal', () => {
 
   describe('When an empty form is submitted', () => {
     it('should display validation errors', () => {
-      cy.uncacheDeals().then( (deals) => {
+      cy.allDeals().then( (deals) => {
         const deal = deals[0];
 
         missions.loginGoToDealPage(user, deal);
@@ -78,7 +78,7 @@ context('Clone a deal', () => {
 
   describe('When a user clones a deal', () => {
     it('should progress to the dashboard page and display a success message', () => {
-      cy.uncacheDeals().then( (deals) => {
+      cy.allDeals().then( (deals) => {
         const deal = deals[0];
 
         missions.loginGoToDealPage(user, deal);

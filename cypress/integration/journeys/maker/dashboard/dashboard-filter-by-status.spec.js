@@ -25,7 +25,7 @@ context('Dashboard Deals filter by status', () => {
   });
 
   it('The Dashboard: status=all -> all deals displayed', () => {
-    cy.uncacheDeals().then( (deals) => {
+    cy.allDeals().then( (deals) => {
       login({...maker1});
       dashboard.visit();
 
