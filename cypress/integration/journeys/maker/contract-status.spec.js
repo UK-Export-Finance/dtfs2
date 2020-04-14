@@ -19,8 +19,8 @@ context('Contracts viewed by role=maker, by status', () => {
   });
 
   before( () => {
-    cy.deleteAllDeals(maker1);
-    cy.createManyDeals(twentyOneDeals, { ...maker1 });
+    cy.deleteDeals(maker1);
+    cy.insertManyDeals(twentyOneDeals, { ...maker1 });
   });
 
   it('Status = Draft, (//TODO validation) abandon = disabled, proceed to review = enabled', () => {

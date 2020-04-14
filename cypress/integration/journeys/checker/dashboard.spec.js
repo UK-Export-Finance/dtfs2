@@ -21,8 +21,8 @@ context('Dashboard Deals viewed by a user with role=checker', () => {
   });
 
   before( () => {
-    cy.deleteAllDeals(maker1);
-    cy.createManyDeals(dealsFromMaker1, { ...maker1 });
+    cy.deleteDeals(maker1);
+    cy.insertManyDeals(dealsFromMaker1, { ...maker1 });
   });
 
   it('Dashboard defaults to showing status=readyForApproval', () => {

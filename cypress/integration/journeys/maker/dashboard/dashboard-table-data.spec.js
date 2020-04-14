@@ -22,8 +22,8 @@ context('View a deal', () => {
     });
 
     // clear down our test users old deals, and insert a new one - updating our deal object
-    cy.deleteAllDeals(user);
-    cy.createADeal(deal, user);
+    cy.deleteDeals(user);
+    cy.insertOneDeal(deal, user);
   });
 
   it('A created deal appears on the dashboard', () => {
@@ -34,7 +34,7 @@ context('View a deal', () => {
 
     cy.uncacheDeals().then( (deals) => {
       const deal = deals[0];
-      
+
       // get the row that corresponds to our deal
       const row = dashboard.row(deal);
 

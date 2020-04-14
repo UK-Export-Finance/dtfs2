@@ -36,8 +36,8 @@ context('Clone a deal', () => {
       return false;
     });
 
-    cy.deleteAllDeals(user);
-    cy.createADeal(MOCK_DEAL, user);
+    cy.deleteDeals(user);
+    cy.insertOneDeal(MOCK_DEAL, user);
   });
 
   describe('When a user creates a deal and clicks `clone deal`', () => {

@@ -23,8 +23,8 @@ context('A maker selects to abandon a contract from the view-contract page', () 
       return twentyOneDeals.filter( deal=>status === deal.details.status)[0];
     };
 
-    cy.deleteAllDeals(maker1);
-    cy.createADeal(aDealInStatus('Draft'), { ...maker1 });
+    cy.deleteDeals(maker1);
+    cy.insertOneDeal(aDealInStatus('Draft'), { ...maker1 });
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {
