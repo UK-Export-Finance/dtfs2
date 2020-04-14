@@ -1,18 +1,18 @@
 let dealsWeHaveLoaded = [];
 
-module.exports.clearDeals = (listOfDeals) => {
-  const listOfIds = listOfDeals.filter(deal=>deal._id);
-
-  dealsWeHaveLoaded = dealsWeHaveLoaded.filter(deal=>listOfIds.includes(deal._id));
-  console.log(`cache now contains: ${dealsWeHaveLoaded.length}`);
-}
-
 module.exports.cacheDeals = (deals) => {
+  console.log(`caching deals: ${deals}`);
   dealsWeHaveLoaded = dealsWeHaveLoaded.concat(deals);
   console.log(`cache now contains: ${dealsWeHaveLoaded.length}`);
 }
 
-module.exports.uncacheDeals = () => {
+module.exports.clearDeals = (listOfDeals) => {
+  const listOfIds = listOfDeals.filter(deal=>deal._id);
+  dealsWeHaveLoaded = dealsWeHaveLoaded.filter(deal=>listOfIds.includes(deal._id));
+  console.log(`cache now contains: ${dealsWeHaveLoaded.length}`);
+}
+
+module.exports.allDeals = () => {
   return dealsWeHaveLoaded;
 }
 

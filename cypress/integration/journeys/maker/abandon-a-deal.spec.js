@@ -1,4 +1,3 @@
-const {login} = require('../../missions');
 const {contract, contractDelete} = require('../../pages');
 const {errorSummary, successMessage} = require('../../partials');
 const relative = require('../../relativeURL');
@@ -23,14 +22,14 @@ context('A maker selects to abandon a contract from the view-contract page', () 
       return twentyOneDeals.filter( deal=>status === deal.details.status)[0];
     };
 
-    cy.deleteAllDeals(maker1);
-    cy.createADeal(aDealInStatus('Draft'), { ...maker1 });
+    cy.deleteDeals(maker1);
+    cy.insertOneDeal(aDealInStatus('Draft'), { ...maker1 });
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {
     cy.aDealInStatus("Draft").then( (deal) => {
       // log in, visit a deal, select abandon
-      login({...maker1});
+      cy.login({...maker1});
       contract.visit(deal);
       contract.abandon().click();
 
@@ -45,7 +44,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
   it('The abandon button generates an error if no comment has been entered.', () => {
     cy.aDealInStatus("Draft").then( (deal) => {
       // log in, visit a deal, select abandon
-      login({...maker1});
+      cy.login({...maker1});
       contract.visit(deal);
       contract.abandon().click();
 
@@ -62,7 +61,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
   it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /start-now.', () => {
     cy.aDealInStatus("Draft").then( (deal) => {
       // log in, visit a deal, select abandon
-      login({...maker1});
+      cy.login({...maker1});
       contract.visit(deal);
       contract.abandon().click();
 

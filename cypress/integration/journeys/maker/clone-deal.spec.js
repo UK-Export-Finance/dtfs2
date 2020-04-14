@@ -1,7 +1,5 @@
-const { login } = require('../../missions');
 const relative = require('../../relativeURL');
 const pages = require('../../pages');
-const missions = require('../../missions');
 const partials = require('../../partials');
 
 const user = { username: 'MAKER', password: 'MAKER' };
@@ -27,7 +25,6 @@ const goToCloneDealPage = () => {
 const TOTAL_FORM_FIELDS = 3;
 
 context('Clone a deal', () => {
-  let deal;
 
   beforeEach( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -36,16 +33,16 @@ context('Clone a deal', () => {
       return false;
     });
 
-    cy.deleteAllDeals(user);
-    cy.createADeal(MOCK_DEAL, user);
+    cy.deleteDeals(user);
+    cy.insertOneDeal(MOCK_DEAL, user);
   });
 
   describe('When a user creates a deal and clicks `clone deal`', () => {
     it('should progress to the clone page with inputs prepopulated', () => {
-      cy.uncacheDeals().then( (deals) => {
+      cy.allDeals().then( (deals) => {
         const deal = deals[0];
 
-        missions.loginGoToDealPage(user, deal);
+        cy.loginGoToDealPage(user, deal);
         goToCloneDealPage();
 
         // confirm that inputs are populated with the deal's initial bankSupplyContractID/bankSupplyContractName
@@ -58,10 +55,10 @@ context('Clone a deal', () => {
 
   describe('When an empty form is submitted', () => {
     it('should display validation errors', () => {
-      cy.uncacheDeals().then( (deals) => {
+      cy.allDeals().then( (deals) => {
         const deal = deals[0];
 
-        missions.loginGoToDealPage(user, deal);
+        cy.loginGoToDealPage(user, deal);
         goToCloneDealPage();
 
         pages.cloneDeal.bankSupplyContractIDInput().clear();
@@ -78,10 +75,10 @@ context('Clone a deal', () => {
 
   describe('When a user clones a deal', () => {
     it('should progress to the dashboard page and display a success message', () => {
-      cy.uncacheDeals().then( (deals) => {
+      cy.allDeals().then( (deals) => {
         const deal = deals[0];
 
-        missions.loginGoToDealPage(user, deal);
+        cy.loginGoToDealPage(user, deal);
         goToCloneDealPage();
 
         pages.cloneDeal.bankSupplyContractIDInput().type('-cloned');

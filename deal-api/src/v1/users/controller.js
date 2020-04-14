@@ -1,4 +1,4 @@
-const db = require('../../db-driver/client');
+const db = require('../../drivers/db-client');
 
 exports.list = async (callback) => {
   const collection = await db.getCollection('users');

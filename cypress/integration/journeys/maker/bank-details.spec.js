@@ -1,4 +1,3 @@
-const { passRedLine } = require('../../missions');
 const { bankDetails } = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
@@ -15,7 +14,7 @@ context('Create deal', () => {
 
   describe('When an empty form is submitted', () => {
     it('should display validation errors', () => {
-      passRedLine({ username: 'MAKER', password: 'MAKER' });
+      cy.passRedLine({ username: 'MAKER', password: 'MAKER' });
       bankDetails.bankDealId().clear();
       bankDetails.bankDealName().clear();
 
@@ -28,7 +27,7 @@ context('Create deal', () => {
   });
 
   it('When the a user fills in the bank detais they progress to the deal page', () => {
-    passRedLine({ username: 'MAKER', password: 'MAKER' });
+    cy.passRedLine({ username: 'MAKER', password: 'MAKER' });
 
     // confirm that we're on '/before-you-start/bank-deal'
     cy.url().should('eq', relative('/before-you-start/bank-deal'));

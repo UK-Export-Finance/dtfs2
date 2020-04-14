@@ -1,4 +1,3 @@
-const {login} = require('../../missions');
 const {contract, contractReturnToMaker} = require('../../pages');
 const {errorSummary, successMessage} = require('../../partials');
 const relative = require('../../relativeURL');
@@ -25,14 +24,14 @@ context('A checker selects to return a deal to maker from the view-contract page
       return twentyOneDeals.filter( deal=>status === deal.details.status)[0];
     };
 
-    cy.deleteAllDeals(maker1);
-    cy.createADeal(aDealInStatus("Ready for Checker's approval"), { ...maker1 });
+    cy.deleteDeals(maker1);
+    cy.insertOneDeal(aDealInStatus("Ready for Checker's approval"), { ...maker1 });
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {
     cy.aDealInStatus("Ready for Checker's approval").then( (deal) => {
       // log in, visit a deal, select abandon
-      login({...checker});
+      cy.login({...checker});
       contract.visit(deal);
       contract.returnToMaker().click();
 
@@ -49,7 +48,7 @@ context('A checker selects to return a deal to maker from the view-contract page
     cy.aDealInStatus("Ready for Checker's approval").then( (deal) => {
 
       // log in, visit a deal, select abandon
-      login({...checker});
+      cy.login({...checker});
       contract.visit(deal);
       contract.returnToMaker().click();
 
@@ -65,7 +64,7 @@ context('A checker selects to return a deal to maker from the view-contract page
   it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /start-now.', () => {
     cy.aDealInStatus("Ready for Checker's approval").then( (deal) => {
       // log in, visit a deal, select abandon
-      login({...checker});
+      cy.login({...checker});
       contract.visit(deal);
       contract.returnToMaker().click();
 

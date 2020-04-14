@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 
+const multer = require('multer');
 const validate = require('../role-validator');
 
 const deals = require('./controllers/deal.controller');
@@ -13,11 +14,14 @@ const mandatoryCriteria = require('./controllers/mandatoryCriteria.controller');
 const transactions = require('./controllers/transactions.controller');
 const eligibilityCriteria = require('./controllers/eligibility-criteria.controller');
 const bonds = require('./controllers/bonds.controller');
+const eligibilityDocumentation = require('./controllers/eligibility-documentation.controller');
 
 const users = require('./users/routes');
 
 const authRouter = express.Router();
 const openRouter = express.Router();
+
+const upload = multer();
 
 authRouter.use(passport.authenticate('jwt', { session: false }));
 
@@ -77,6 +81,13 @@ authRouter.route('/deals/:id/eligibility-criteria')
   .put(
     validate({ role: ['maker'] }),
     eligibilityCriteria.update,
+  );
+
+authRouter.route('/deals/:id/eligibility-documentation')
+  .put(
+    validate({ role: ['maker'] }),
+    upload.any(),
+    eligibilityDocumentation.update,
   );
 
 authRouter.route('/deals/:id/bond/create')

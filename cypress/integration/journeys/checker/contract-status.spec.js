@@ -1,4 +1,3 @@
-const {createADeal, login} = require('../../missions');
 const {contract} = require('../../pages');
 const relative = require('../../relativeURL');
 
@@ -20,14 +19,14 @@ context('Contracts viewed by role=checker, by status', () => {
   });
 
   before( () => {
-    cy.deleteAllDeals(maker);
-    cy.createManyDeals(twentyOneDeals, { ...maker });
+    cy.deleteDeals(maker);
+    cy.insertManyDeals(twentyOneDeals, { ...maker });
   });
 
   it('Status = Draft, returnToMaker = disabled, proceed to sbumit = disabled', () => {
     cy.aDealInStatus("Draft").then((deal) => {
 
-      login({...checker});
+      cy.login({...checker});
       contract.visit(deal);
 
       // contract.canProceed().should('exist');
@@ -48,7 +47,7 @@ context('Contracts viewed by role=checker, by status', () => {
   it("Status = Further Maker's input required, returnToMaker = disabled, proceed to sbumit = disabled", () => {
     cy.aDealInStatus("Further Maker's input required").then((deal) => {
 
-      login({...checker});
+      cy.login({...checker});
       contract.visit(deal);
 
       // contract.canProceed().should('exist');
@@ -68,7 +67,7 @@ context('Contracts viewed by role=checker, by status', () => {
 
   it("Status = Abandoned Deal, returnToMaker = disabled, proceed to sbumit = disabled", () => {
     cy.aDealInStatus("Abandoned Deal").then((deal) => {
-      login({...checker});
+      cy.login({...checker});
       contract.visit(deal);
 
       // contract.canProceed().should('exist');
@@ -87,7 +86,7 @@ context('Contracts viewed by role=checker, by status', () => {
 
   it("Status = Acknowledged by UKEF, returnToMaker = disabled, proceed to sbumit = disabled", () => {
     cy.aDealInStatus("Acknowledged by UKEF").then((deal) => {
-      login({...checker});
+      cy.login({...checker});
       contract.visit(deal);
 
       // contract.canProceed().should('exist');
@@ -107,7 +106,7 @@ context('Contracts viewed by role=checker, by status', () => {
 
   it("Status = Accepted by UKEF (without conditions), returnToMaker = disabled, proceed to sbumit = disabled", () => {
     cy.aDealInStatus("Accepted by UKEF (without conditions)").then((deal) => {
-      login({...checker});
+      cy.login({...checker});
       contract.visit(deal);
 
       // contract.canProceed().should('exist');
@@ -127,7 +126,7 @@ context('Contracts viewed by role=checker, by status', () => {
 
   it("Status = Accepted by UKEF (with conditions), returnToMaker = disabled, proceed to sbumit = disabled", () => {
     cy.aDealInStatus("Accepted by UKEF (with conditions)").then((deal) => {
-      login({...checker});
+      cy.login({...checker});
       contract.visit(deal);
 
       // contract.canProceed().should('exist');
@@ -147,7 +146,7 @@ context('Contracts viewed by role=checker, by status', () => {
 
   it("Status = Ready for Checker's approval, returnToMaker = enabled, proceed to sbumit = enabled", () => {
     cy.aDealInStatus("Ready for Checker's approval").then((deal) => {
-      login({...checker});
+      cy.login({...checker});
       contract.visit(deal);
 
       //TODO any situation where these should not be enabled for a checker?
@@ -169,7 +168,7 @@ context('Contracts viewed by role=checker, by status', () => {
 
   it("Status = Submitted, no options displayed", () => {
     cy.aDealInStatus("Submitted").then((deal) => {
-      login({...checker});
+      cy.login({...checker});
       contract.visit(deal);
 
       contract.canProceed().should('not.exist');
@@ -183,7 +182,7 @@ context('Contracts viewed by role=checker, by status', () => {
 
   it("Status = Rejected by UKEF, no options displayed", () => {
     cy.aDealInStatus("Rejected by UKEF").then((deal) => {
-      login({...checker});
+      cy.login({...checker});
       contract.visit(deal);
 
       contract.canProceed().should('not.exist');

@@ -1,5 +1,3 @@
-const {login} = require('../../../missions');
-
 const {dashboard} = require('../../../pages');
 const relative = require('../../../relativeURL');
 
@@ -22,19 +20,19 @@ context('View a deal', () => {
     });
 
     // clear down our test users old deals, and insert a new one - updating our deal object
-    cy.deleteAllDeals(user);
-    cy.createADeal(deal, user);
+    cy.deleteDeals(user);
+    cy.insertOneDeal(deal, user);
   });
 
   it('A created deal appears on the dashboard', () => {
 
     // login and go to dashboard
-    login(user);
+    cy.login(user);
     dashboard.visit();
 
-    cy.uncacheDeals().then( (deals) => {
+    cy.allDeals().then( (deals) => {
       const deal = deals[0];
-      
+
       // get the row that corresponds to our deal
       const row = dashboard.row(deal);
 

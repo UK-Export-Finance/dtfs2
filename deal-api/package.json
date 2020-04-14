@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/notbinary/dtfs2#readme",
   "dependencies": {
+    "@azure/storage-file-share": "^12.1.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -36,6 +37,7 @@
     "mongo-dot-notation": "^2.0.0",
     "mongodb": "^3.5.4",
     "mongoose": "^5.9.3",
+    "multer": "^1.4.2",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "xml2js": "^0.4.23"

@@ -1,4 +1,3 @@
-const {createADeal, login} = require('../../../missions');
 const {dashboard} = require('../../../pages');
 const relative = require('../../../relativeURL');
 
@@ -18,15 +17,13 @@ context('Dashboard Deals filter by status', () => {
   });
 
   before( () => {
-    // clean down anything our test-users have created
-    cy.deleteAllDeals(maker1);
-    // insert deals as each user
-    cy.createManyDeals(twentyOneDeals, { ...maker1 });
+    cy.deleteDeals(maker1);
+    cy.insertManyDeals(twentyOneDeals, { ...maker1 });
   });
 
   it('The Dashboard: status=all -> all deals displayed', () => {
-    cy.uncacheDeals().then( (deals) => {
-      login({...maker1});
+    cy.allDeals().then( (deals) => {
+      cy.login({...maker1});
       dashboard.visit();
 
       dashboard.showFilters().click();
@@ -44,7 +41,7 @@ context('Dashboard Deals filter by status', () => {
   });
 
   it('The Dashboard: status=draft -> filters deals displayed', () => {
-    login({...maker1});
+    cy.login({...maker1});
     dashboard.visit();
 
     dashboard.showFilters().click();
@@ -63,7 +60,7 @@ context('Dashboard Deals filter by status', () => {
   });
 
   it('The Dashboard: status=readyForApproval -> filters deals displayed', () => {
-    login({...maker1});
+    cy.login({...maker1});
     dashboard.visit();
 
     dashboard.showFilters().click();
@@ -82,7 +79,7 @@ context('Dashboard Deals filter by status', () => {
   });
 
   it('The Dashboard: status=inputRequired -> filters deals displayed', () => {
-    login({...maker1});
+    cy.login({...maker1});
     dashboard.visit();
 
     dashboard.showFilters().click();
@@ -101,7 +98,7 @@ context('Dashboard Deals filter by status', () => {
   });
 
   it('The Dashboard: status=abandoned -> filters deals displayed', () => {
-    login({...maker1});
+    cy.login({...maker1});
     dashboard.visit();
 
     dashboard.showFilters().click();
@@ -120,7 +117,7 @@ context('Dashboard Deals filter by status', () => {
   });
 
   it('The Dashboard: status=submitted -> filters deals displayed', () => {
-    login({...maker1});
+    cy.login({...maker1});
     dashboard.visit();
 
     dashboard.showFilters().click();
@@ -139,7 +136,7 @@ context('Dashboard Deals filter by status', () => {
   });
 
   it('The Dashboard: status=submissionAcknowledged -> filters deals displayed', () => {
-    login({...maker1});
+    cy.login({...maker1});
     dashboard.visit();
 
     dashboard.showFilters().click();
@@ -158,7 +155,7 @@ context('Dashboard Deals filter by status', () => {
   });
 
   it('The Dashboard: status=approved -> filters deals displayed', () => {
-    login({...maker1});
+    cy.login({...maker1});
     dashboard.visit();
 
     dashboard.showFilters().click();
@@ -177,7 +174,7 @@ context('Dashboard Deals filter by status', () => {
   });
 
   it('The Dashboard: status=approvedWithConditions -> filters deals displayed', () => {
-    login({...maker1});
+    cy.login({...maker1});
     dashboard.visit();
 
     dashboard.showFilters().click();
@@ -196,7 +193,7 @@ context('Dashboard Deals filter by status', () => {
   });
 
   it('The Dashboard: status=refused -> filters deals displayed', () => {
-    login({...maker1});
+    cy.login({...maker1});
     dashboard.visit();
 
     dashboard.showFilters().click();

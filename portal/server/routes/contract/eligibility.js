@@ -1,4 +1,5 @@
 import express from 'express';
+import multer from 'multer';
 import api from '../../api';
 import {
   getApiData,
@@ -6,6 +7,8 @@ import {
   generateErrorSummary,
   formatCountriesForGDSComponent,
 } from '../../helpers';
+
+const upload = multer();
 
 const router = express.Router();
 
@@ -87,13 +90,24 @@ router.get('/contract/:_id/eligibility/supporting-documentation', async (req, re
     ));
 });
 
-router.post('/contract/:id/eligibility/supporting-documentation', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}/eligibility/preview`;
-  return res.redirect(redirectUrl);
+router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(), async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+  const { body, files } = req;
+
+  const updatedDeal = await getApiData(
+    api.updateEligibilityDocumentation(_id, body, files, userToken),
+    res,
+  );
+
+  return res.render('eligibility/eligibility-supporting-documentation.njk', {
+    _id,
+    eligibility: updatedDeal.eligibility,
+  });
 });
 
-router.post('/contract/:id/eligibility/supporting-documentation/save-go-back', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}`;
+router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', (req, res) => {
+  const { _id } = requestParams(req);
+  const redirectUrl = `/contract/${_id}/eligibility/criteria`;
   return res.redirect(redirectUrl);
 });
 
