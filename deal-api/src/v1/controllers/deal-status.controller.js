@@ -3,7 +3,7 @@ const $ = require('mongo-dot-notation');
 const moment = require('moment');
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
-const db = require('../../db-driver/client');
+const db = require('../../drivers/db-client');
 
 const validateStateChange = require('../validation/deal-status');
 

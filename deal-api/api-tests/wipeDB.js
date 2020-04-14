@@ -2,7 +2,7 @@
 const collections = ['deals', 'banks', 'transactions', 'bondCurrencies', 'countries', 'industrySectors', 'mandatoryCriteria', 'users'];
 
 module.exports = async () => {
-  const db = require('../src/db-driver/client');
+  const db = require('../src/drivers/db-client');
 
   const drop = async collection => new Promise(async (resolve, reject) => {
     const collectionToDrop = await db.getCollection(collection);
