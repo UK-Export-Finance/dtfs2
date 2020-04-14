@@ -37,6 +37,7 @@ context('A checker selects to return a deal to maker from the view-contract page
       contract.returnToMaker().click();
 
       // cancel
+      contractReturnToMaker.comments().should('have.value', '');
       contractReturnToMaker.cancel().click();
 
       // check we've gone to the right page
@@ -88,7 +89,7 @@ context('A checker selects to return a deal to maker from the view-contract page
         expect(text.trim()).to.equal("Ready for Checker's approval");
       });
     });
-  
+
   });
 
 });
