@@ -1,5 +1,4 @@
 const {createADeal, login} = require('../../missions');
-const {deleteAllDeals, createManyDeals} = require('../../missions/deal-api');
 const {dashboard} = require('../../pages');
 const relative = require('../../relativeURL');
 
@@ -21,11 +20,9 @@ context('Dashboard Deals viewed by a user with role=checker', () => {
     });
   });
 
-  before( async() => {
-    // clean down anything our test-users have created
-    await deleteAllDeals(maker1);
-    // insert deals as each user
-    dealsFromMaker1 = await createManyDeals(dealsFromMaker1, { ...maker1 });
+  before( () => {
+    cy.deleteAllDeals(maker1);
+    cy.createManyDeals(dealsFromMaker1, { ...maker1 });
   });
 
   it('Dashboard defaults to showing status=readyForApproval', () => {

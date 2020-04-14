@@ -4,6 +4,7 @@ const passport = require('passport');
 const validate = require('../role-validator');
 
 const deals = require('./controllers/deal.controller');
+const dealStatus = require('./controllers/deal-status.controller');
 const banks = require('./controllers/banks.controller');
 const bondCurrencies = require('./controllers/bondCurrencies.controller');
 const countries = require('./controllers/countries.controller');
@@ -30,6 +31,16 @@ authRouter.route('/deals')
     deals.create,
   );
 
+authRouter.route('/deals/:id/status')
+  .get(
+    validate({ role: ['maker', 'checker'] }),
+    dealStatus.findOne,
+  )
+  .put(
+    validate({ role: ['maker', 'checker'] }),
+    dealStatus.update,
+  );
+
 authRouter.route('/deals/:start/:pagesize')
   .get(
     validate({ role: ['maker', 'checker'] }),
@@ -44,7 +55,7 @@ authRouter.route('/deals/:start/:pagesize/:filters')
 
 authRouter.route('/deals/:id')
   .get(
-    validate({ role: ['maker'] }),
+    validate({ role: ['maker', 'checker'] }),
     deals.findOne,
   )
   .put(
