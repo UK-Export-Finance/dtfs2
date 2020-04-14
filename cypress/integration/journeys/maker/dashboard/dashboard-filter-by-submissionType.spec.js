@@ -29,7 +29,7 @@ context('Dashboard Deals filter by submissionType', () => {
     dashboard.filterBySubmissionType().select('all');
     dashboard.applyFilters().click();
 
-    cy.uncacheDeals().then( (deals) => {
+    cy.allDeals().then( (deals) => {
       dashboard.confirmDealsPresent(deals.slice(0,20));
       dashboard.totalItems().invoke('text').then((text) => {
         expect(text.trim()).equal('(21 items)');

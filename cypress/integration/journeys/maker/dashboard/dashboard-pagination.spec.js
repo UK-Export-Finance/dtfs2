@@ -31,7 +31,7 @@ context('Dashboard Deals pagination controls', () => {
     login({...user});
     dashboard.visit();
 
-    cy.uncacheDeals().then( (deals) => {
+    cy.allDeals().then( (deals) => {
       page1 = deals.slice(0,20);
       page2 = [deals[20]];
 
