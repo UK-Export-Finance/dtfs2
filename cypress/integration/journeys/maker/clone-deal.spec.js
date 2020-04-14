@@ -1,5 +1,4 @@
 const { login } = require('../../missions');
-const { createADeal, deleteAllDeals } = require('../../missions/deal-api');
 const relative = require('../../relativeURL');
 const pages = require('../../pages');
 const missions = require('../../missions');
@@ -30,72 +29,85 @@ const TOTAL_FORM_FIELDS = 3;
 context('Clone a deal', () => {
   let deal;
 
-  beforeEach(async () => {
+  beforeEach( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
       console.log(err.stack);
       return false;
     });
 
-    await deleteAllDeals(user);
-    deal = await createADeal(MOCK_DEAL, user);
+    cy.deleteAllDeals(user);
+    cy.createADeal(MOCK_DEAL, user);
   });
 
   describe('When a user creates a deal and clicks `clone deal`', () => {
     it('should progress to the clone page with inputs prepopulated', () => {
-      missions.loginGoToDealPage(user, deal);
-      goToCloneDealPage();
+      cy.uncacheDeals().then( (deals) => {
+        const deal = deals[0];
 
-      // confirm that inputs are populated with the deal's initial bankSupplyContractID/bankSupplyContractName
-      pages.cloneDeal.bankSupplyContractIDInput().should('have.value', MOCK_DEAL.details.bankSupplyContractID);
-      pages.cloneDeal.bankSupplyContractNameInput().should('have.value', MOCK_DEAL.details.bankSupplyContractName);
+        missions.loginGoToDealPage(user, deal);
+        goToCloneDealPage();
+
+        // confirm that inputs are populated with the deal's initial bankSupplyContractID/bankSupplyContractName
+        pages.cloneDeal.bankSupplyContractIDInput().should('have.value', MOCK_DEAL.details.bankSupplyContractID);
+        pages.cloneDeal.bankSupplyContractNameInput().should('have.value', MOCK_DEAL.details.bankSupplyContractName);
+      });
+
     });
   });
 
   describe('When an empty form is submitted', () => {
     it('should display validation errors', () => {
-      missions.loginGoToDealPage(user, deal);
-      goToCloneDealPage();
+      cy.uncacheDeals().then( (deals) => {
+        const deal = deals[0];
 
-      pages.cloneDeal.bankSupplyContractIDInput().clear();
-      pages.cloneDeal.bankSupplyContractNameInput().clear();
+        missions.loginGoToDealPage(user, deal);
+        goToCloneDealPage();
 
-      pages.cloneDeal.submit().click();
+        pages.cloneDeal.bankSupplyContractIDInput().clear();
+        pages.cloneDeal.bankSupplyContractNameInput().clear();
 
-      cy.url().should('include', '/clone');
+        pages.cloneDeal.submit().click();
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_FORM_FIELDS);
+        cy.url().should('include', '/clone');
+
+        partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_FORM_FIELDS);
+      });
     });
   });
 
   describe('When a user clones a deal', () => {
     it('should progress to the dashboard page and display a success message', () => {
-      missions.loginGoToDealPage(user, deal);
-      goToCloneDealPage();
+      cy.uncacheDeals().then( (deals) => {
+        const deal = deals[0];
 
-      pages.cloneDeal.bankSupplyContractIDInput().type('-cloned');
-      pages.cloneDeal.bankSupplyContractNameInput().type('-cloned');
-      pages.cloneDeal.cloneTransactionsInput().click();
+        missions.loginGoToDealPage(user, deal);
+        goToCloneDealPage();
 
-      pages.cloneDeal.submit().click();
+        pages.cloneDeal.bankSupplyContractIDInput().type('-cloned');
+        pages.cloneDeal.bankSupplyContractNameInput().type('-cloned');
+        pages.cloneDeal.cloneTransactionsInput().click();
 
-      cy.url().should('include', '/dashboard/');
+        pages.cloneDeal.submit().click();
 
-      // confirm success message is displayed
-      partials.successMessage.successMessage().should('be.visible');
-      partials.successMessage.successMessageListItem().contains('cloned successfully');
+        cy.url().should('include', '/dashboard/');
 
-      // click link to cloned deal
-      partials.successMessage.successMessageLink().click();
-      cy.url().should('include', '/contract/');
+        // confirm success message is displayed
+        partials.successMessage.successMessage().should('be.visible');
+        partials.successMessage.successMessageListItem().contains('cloned successfully');
 
-      // confirm that the cloned deal has the bankSupplyContractID/bankSupplyContractName submitted in the 'clone deal' form
-      pages.contract.bankSupplyContractName().invoke('text').then((text) => {
-        expect(text.trim()).equal(`${MOCK_DEAL.details.bankSupplyContractName}-cloned`);
-      });
+        // click link to cloned deal
+        partials.successMessage.successMessageLink().click();
+        cy.url().should('include', '/contract/');
 
-      pages.contract.bankSupplyContractID().invoke('text').then((text) => {
-        expect(text.trim()).equal(`${MOCK_DEAL.details.bankSupplyContractID}-cloned`);
+        // confirm that the cloned deal has the bankSupplyContractID/bankSupplyContractName submitted in the 'clone deal' form
+        pages.contract.bankSupplyContractName().invoke('text').then((text) => {
+          expect(text.trim()).equal(`${MOCK_DEAL.details.bankSupplyContractName}-cloned`);
+        });
+
+        pages.contract.bankSupplyContractID().invoke('text').then((text) => {
+          expect(text.trim()).equal(`${MOCK_DEAL.details.bankSupplyContractID}-cloned`);
+        });
       });
     });
 

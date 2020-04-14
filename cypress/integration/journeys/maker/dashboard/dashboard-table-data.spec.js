@@ -1,5 +1,4 @@
 const {login} = require('../../../missions');
-const {createADeal, deleteAllDeals} = require('../../../missions/deal-api');
 
 const {dashboard} = require('../../../pages');
 const relative = require('../../../relativeURL');
@@ -15,7 +14,7 @@ context('View a deal', () => {
     }
   };
 
-  beforeEach( async() => {
+  beforeEach( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
       console.log(err.stack);
@@ -23,8 +22,8 @@ context('View a deal', () => {
     });
 
     // clear down our test users old deals, and insert a new one - updating our deal object
-    await deleteAllDeals(user);
-    deal = await createADeal(deal, user);
+    cy.deleteAllDeals(user);
+    cy.createADeal(deal, user);
   });
 
   it('A created deal appears on the dashboard', () => {
@@ -33,36 +32,40 @@ context('View a deal', () => {
     login(user);
     dashboard.visit();
 
-    // get the row that corresponds to our deal
-    const row = dashboard.row(deal);
+    cy.uncacheDeals().then( (deals) => {
+      const deal = deals[0];
+      
+      // get the row that corresponds to our deal
+      const row = dashboard.row(deal);
 
-    //check the fields we understand
-    row.bank().invoke('text').then((text) => {
-      expect(text.trim()).equal('Barclays Bank')
-    });
+      //check the fields we understand
+      row.bank().invoke('text').then((text) => {
+        expect(text.trim()).equal('Barclays Bank')
+      });
 
-    row.bankSupplyContractID().invoke('text').then((text) => {
-      expect(text.trim()).equal('abc/1/def')
-    });
+      row.bankSupplyContractID().invoke('text').then((text) => {
+        expect(text.trim()).equal('abc/1/def')
+      });
 
-    row.maker().invoke('text').then((text) => {
-      expect(text.trim()).equal('MAKER')
-    });
+      row.maker().invoke('text').then((text) => {
+        expect(text.trim()).equal('MAKER')
+      });
 
-    row.updated().invoke('text').then((text) => {
-      //TODO - check formatting once formatting known
-      expect(text.trim()).to.not.equal('')
-    });
+      row.updated().invoke('text').then((text) => {
+        //TODO - check formatting once formatting known
+        expect(text.trim()).to.not.equal('')
+      });
 
-    // submissionDate: '12/02/2020',
-    // dateOfLastAction: '12/02/2020 - 13:45',
+      // submissionDate: '12/02/2020',
+      // dateOfLastAction: '12/02/2020 - 13:45',
 
-    //TODO - other fields as we start to populate them...
+      //TODO - other fields as we start to populate them...
 
 
-    row.bankSupplyContractID().contains(`abc/1/def`).click();
+      row.bankSupplyContractID().contains(`abc/1/def`).click();
 
-    cy.url().should('eq', relative(`/contract/${deal._id}`));
+      cy.url().should('eq', relative(`/contract/${deal._id}`));    });
+
   });
 
 });

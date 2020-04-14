@@ -52,11 +52,49 @@ router.get('/contract/:_id/submission-details', async (req, res) => {
 router.get('/contract/:_id/delete', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  return res.render('contract/contract-delete.njk',
-    await getApiData(
+  return res.render('contract/contract-delete.njk', {
+    contract: await getApiData(
       api.contract(_id, userToken),
       res,
-    ));
+    ),
+  });
+});
+
+router.post('/contract/:_id/delete', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+  const { comments } = req.body;
+
+  const updateToSend = {
+    _id,
+    comments,
+    status: 'Abandoned Deal',
+  };
+
+  const { data } = await api.updateDealStatus(updateToSend, userToken);
+
+  const validationErrors = {
+    count: data.count,
+    errorList: data.errorList,
+  };
+
+  if (validationErrors.count) {
+    return res.status(400).render('contract/contract-delete.njk', {
+      contract: await getApiData(
+        api.contract(_id, userToken),
+        res,
+      ),
+      comments,
+      validationErrors,
+    });
+  }
+
+  req.flash('successMessage', {
+    text: 'Supply Contract abandoned.',
+    href: `/contract/${_id}`, // eslint-disable-line no-underscore-dangle
+    hrefText: 'View abandoned Supply Contract',
+  });
+
+  return res.redirect('/start-now');
 });
 
 router.get('/contract/:_id/ready-for-review', async (req, res) => {
@@ -67,6 +105,43 @@ router.get('/contract/:_id/ready-for-review', async (req, res) => {
       api.contract(_id, userToken),
       res,
     ));
+});
+
+router.post('/contract/:_id/ready-for-review', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+  const { comments } = req.body;
+
+  const updateToSend = {
+    _id,
+    comments,
+    status: "Ready for Checker's approval",
+  };
+
+  const { data } = await api.updateDealStatus(updateToSend, userToken);
+
+  const validationErrors = {
+    count: data.count,
+    errorList: data.errorList,
+  };
+
+  if (validationErrors.count) {
+    return res.status(400).render('contract/contract-delete.njk', {
+      contract: await getApiData(
+        api.contract(_id, userToken),
+        res,
+      ),
+      comments,
+      validationErrors,
+    });
+  }
+
+  req.flash('successMessage', {
+    text: 'Supply Contract submitted for review.',
+    href: `/contract/${_id}`, // eslint-disable-line no-underscore-dangle
+    hrefText: 'View Supply Contract',
+  });
+
+  return res.redirect('/start-now');
 });
 
 router.get('/contract/:_id/edit-name', async (req, res) => {
@@ -105,6 +180,43 @@ router.get('/contract/:_id/return-to-maker', async (req, res) => {
     ));
 });
 
+router.post('/contract/:_id/return-to-maker', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+  const { comments } = req.body;
+
+  const updateToSend = {
+    _id,
+    comments,
+    status: "Further Maker's input required",
+  };
+
+  const { data } = await api.updateDealStatus(updateToSend, userToken);
+
+  const validationErrors = {
+    count: data.count,
+    errorList: data.errorList,
+  };
+
+  if (validationErrors.count) {
+    return res.status(400).render('contract/contract-return-to-maker.njk', {
+      contract: await getApiData(
+        api.contract(_id, userToken),
+        res,
+      ),
+      comments,
+      validationErrors,
+    });
+  }
+
+  req.flash('successMessage', {
+    text: 'Supply Contract returned to maker.',
+    href: `/contract/${_id}`, // eslint-disable-line no-underscore-dangle
+    hrefText: 'View Supply Contract',
+  });
+
+  return res.redirect('/start-now');
+});
+
 router.get('/contract/:_id/confirm-submission', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
@@ -113,6 +225,43 @@ router.get('/contract/:_id/confirm-submission', async (req, res) => {
       api.contract(_id, userToken),
       res,
     ));
+});
+
+router.post('/contract/:_id/confirm-submission', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+  const { confirmSubmit } = req.body;
+
+  const updateToSend = {
+    _id,
+    confirmSubmit,
+    status: 'Submitted',
+  };
+
+  const { data } = await api.updateDealStatus(updateToSend, userToken);
+
+  const validationErrors = {
+    count: data.count,
+    errorList: data.errorList,
+  };
+
+  if (validationErrors.count) {
+    return res.status(400).render('contract/contract-confirm-submission.njk', {
+      contract: await getApiData(
+        api.contract(_id, userToken),
+        res,
+      ),
+      confirmSubmit,
+      validationErrors,
+    });
+  }
+
+  req.flash('successMessage', {
+    text: 'Supply Contract submitted to UKEF.',
+    href: `/contract/${_id}`, // eslint-disable-line no-underscore-dangle
+    hrefText: 'View Supply Contract',
+  });
+
+  return res.redirect('/start-now');
 });
 
 router.get('/contract/:_id/clone', async (req, res) => {

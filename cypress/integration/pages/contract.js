@@ -16,8 +16,9 @@ const page = {
   addBondButton: () => cy.get('[data-cy="button-add-bond"]'),
 
   canProceed: () => cy.get('[data-cy="canProceed"]'),
+  reviewEligibilityChecklistForm: () => cy.get('[data-cy="reviewEligibilityChecklistForm"]'),
   cannotProceed: () => cy.get('[data-cy="cannotProceed"]'),
-  
+
   abandon: () => cy.get('[data-cy="Abandon"]'),
   proceedToReview: () => cy.get('[data-cy="ProceedToReview"]'),
   proceedToSubmit: () => cy.get('[data-cy="ProceedToSubmit"]'),

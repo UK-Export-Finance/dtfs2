@@ -16,6 +16,15 @@ describe('/v1/deals', () => {
       bankSupplyContractName: 'mock name',
       bankSupplyContractID: 'mock id',
     },
+    comments: [{
+      username: 'bananaman',
+      timestamp: '1984/12/25 00:00:00:001',
+      text: 'Merry Christmas from the 80s',
+    }, {
+      username: 'supergran',
+      timestamp: '1982/12/25 00:00:00:001',
+      text: 'Also Merry Christmas from the 80s',
+    }],
   });
 
   let aUserWithoutRoles;
@@ -254,10 +263,26 @@ describe('/v1/deals', () => {
       expect(status).toEqual(401);
     });
 
-    it('401s requests that do not come from a user with role=maker', async () => {
+    it('401s requests that do not come from a user with role=maker || role=checker', async () => {
       const { status } = await get('/v1/deals/123456789012', aUserWithoutRoles);
 
       expect(status).toEqual(401);
+    });
+
+    it('accepts requests from a user with role=maker', async () => {
+      const {body} = await post(newDeal, maker1).to('/v1/deals');
+
+      const { status } = await get(`/v1/deals/${body._id}`, maker1);
+
+      expect(status).toEqual(200);
+    });
+
+    it('accepts requests from a user with role=checker', async () => {
+      const {body} = await post(newDeal, maker2).to('/v1/deals');
+
+      const { status } = await get(`/v1/deals/${body._id}`, checker);
+
+      expect(status).toEqual(200);
     });
 
     it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
