@@ -52,15 +52,26 @@ router.post('/contract/:id/bond/:bondId/details/save-go-back', (req, res) => {
 router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
+  const currencies = await getApiData(
+    api.bondCurrencies(userToken),
+    res,
+  );
+
+  // TODO: move to helper as used in multiple places
+  const mappedCurrencies = currencies.map((c) => {
+    const currency = {
+      ...c,
+      value: c.id,
+    };
+    return currency;
+  });
+
   return res.render('bond/bond-financial-details.njk', {
     ...await getApiData(
       api.contractBond(_id, bondId, userToken),
       res,
     ),
-    currencies: await getApiData(
-      api.bondCurrencies(userToken),
-      res,
-    ),
+    currencies: mappedCurrencies,
   });
 });
 
