@@ -1,16 +1,12 @@
-const { createADeal } = require('../../missions');
-
 const pages = require('../../pages');
 const partials = require('../../partials');
-// const relative = require('../../relativeURL');
 
 const user = { username: 'MAKER', password: 'MAKER' };
 
 const MOCK_DEAL = {
   details: {
-    // TODO rename to bankSupplyContractID and bankSupplyContractName
-    bankDealId: 'someDealId',
-    bankDealName: 'someDealName',
+    bankSupplyContractID: 'someDealId',
+    bankSupplyContractName: 'someDealName',
   },
 };
 
@@ -40,7 +36,7 @@ const BOND_FINANCIAL_DETAILS_FORM_VALUES = {
 };
 
 context('Add a bond', () => {
-  let deal;
+  // let deal;
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -48,42 +44,45 @@ context('Add a bond', () => {
       console.log(err.stack);
       return false;
     });
-
-    deal = createADeal({
-      ...MOCK_DEAL.details,
-      ...user,
-    });
-  });
-
-  before(() => {
-    cy.deleteAllDeals(user);
+    cy.deleteDeals(user);
+    cy.insertOneDeal(MOCK_DEAL, user);
   });
 
   describe('When a user clicks `Add a Bond` from the deal page', () => {
     it('should progress to the `Bond Details` page', () => {
-      cy.url().should('include', '/contract');
+      cy.allDeals().then((deals) => {
+        const deal = deals[0];
+        cy.loginGoToDealPage(user, deal);
 
-      pages.contract.addBondButton().click();
+        cy.url().should('include', '/contract');
 
-      cy.url().should('include', '/contract');
-      cy.url().should('include', '/bond/');
-      cy.url().should('include', '/details');
+        pages.contract.addBondButton().click();
+
+        cy.url().should('include', '/contract');
+        cy.url().should('include', '/bond/');
+        cy.url().should('include', '/details');
+      });
     });
   });
 
   describe('When a user completes the `Bond Details` form', () => {
     it('should progress to the `Bond Financial Details` page', () => {
-      pages.contract.addBondButton().click();
-      pages.bondDetails.bondIssuerInput().type(BOND_DETAILS_FORM_VALUES.bondIssuer);
-      pages.bondDetails.bondTypeInput().select(BOND_DETAILS_FORM_VALUES.bondType.value);
-      pages.bondDetails.bondStageUnissuedInput().click();
-      pages.bondDetails.ukefGuaranteeInMonthsInput().type(BOND_DETAILS_FORM_VALUES.ukefGuaranteeInMonths);
-      pages.bondDetails.bondBeneficiaryInput().type(BOND_DETAILS_FORM_VALUES.bondBeneficiary);
-      pages.bondDetails.submit().click();
+      cy.allDeals().then((deals) => {
+        const deal = deals[0];
+        cy.loginGoToDealPage(user, deal);
 
-      cy.url().should('include', '/contract');
-      cy.url().should('include', '/bond/');
-      cy.url().should('include', '/financial-details');
+        pages.contract.addBondButton().click();
+        pages.bondDetails.bondIssuerInput().type(BOND_DETAILS_FORM_VALUES.bondIssuer);
+        pages.bondDetails.bondTypeInput().select(BOND_DETAILS_FORM_VALUES.bondType.value);
+        pages.bondDetails.bondStageUnissuedInput().click();
+        pages.bondDetails.ukefGuaranteeInMonthsInput().type(BOND_DETAILS_FORM_VALUES.ukefGuaranteeInMonths);
+        pages.bondDetails.bondBeneficiaryInput().type(BOND_DETAILS_FORM_VALUES.bondBeneficiary);
+        pages.bondDetails.submit().click();
+
+        cy.url().should('include', '/contract');
+        cy.url().should('include', '/bond/');
+        cy.url().should('include', '/financial-details');
+      });
     });
   });
 
@@ -91,22 +90,27 @@ context('Add a bond', () => {
 
   describe('When a user completes the `Bond Financial Details` form', () => {
     it('should progress to the bond `Fee Details` page', () => {
-      pages.contract.addBondButton().click();
-      partials.bondProgressNav.progressNavBondFinancialDetails().click();
-      cy.url().should('include', '/contract');
-      cy.url().should('include', '/bond/');
-      cy.url().should('include', '/financial-details');
+      cy.allDeals().then((deals) => {
+        const deal = deals[0];
+        cy.loginGoToDealPage(user, deal);
 
-      pages.bondFinancialDetails.bondValueInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.bondValue);
-      pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyYesInput().click()
-      pages.bondFinancialDetails.riskMarginFeeInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.riskMarginFee);
-      pages.bondFinancialDetails.coveredPercentageInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.coveredPercentage);
-      pages.bondFinancialDetails.minimumRiskMarginFeeInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.minimumRiskMarginFee);
-      pages.bondFinancialDetails.submit().click();
+        pages.contract.addBondButton().click();
+        partials.bondProgressNav.progressNavBondFinancialDetails().click();
+        cy.url().should('include', '/contract');
+        cy.url().should('include', '/bond/');
+        cy.url().should('include', '/financial-details');
 
-      cy.url().should('include', '/contract');
-      cy.url().should('include', '/bond/');
-      cy.url().should('include', '/fee-details');
+        pages.bondFinancialDetails.bondValueInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.bondValue);
+        pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyYesInput().click()
+        pages.bondFinancialDetails.riskMarginFeeInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.riskMarginFee);
+        pages.bondFinancialDetails.coveredPercentageInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.coveredPercentage);
+        pages.bondFinancialDetails.minimumRiskMarginFeeInput().type(BOND_FINANCIAL_DETAILS_FORM_VALUES.minimumRiskMarginFee);
+        pages.bondFinancialDetails.submit().click();
+
+        cy.url().should('include', '/contract');
+        cy.url().should('include', '/bond/');
+        cy.url().should('include', '/fee-details');
+      });
     });
   });
 
@@ -123,20 +127,25 @@ context('Add a bond', () => {
 
   describe('When a user completes the `Bond Fee Details` form', () => {
     it('should progress to the `Bond Preview` page', () => {
-      pages.contract.addBondButton().click();
-      partials.bondProgressNav.progressNavBondFeeDetails().click();
-      cy.url().should('include', '/contract');
-      cy.url().should('include', '/bond/');
-      cy.url().should('include', '/fee-details');
+      cy.allDeals().then((deals) => {
+        const deal = deals[0];
+        cy.loginGoToDealPage(user, deal);
 
-      pages.bondFeeDetails.feeTypeAtMaturityInput().click();
-      pages.bondFeeDetails.feeFrequencyAnnuallyInput().click();
-      pages.bondFeeDetails.dayCountBasis365Input().click();
-      pages.bondFeeDetails.submit().click();
+        pages.contract.addBondButton().click();
+        partials.bondProgressNav.progressNavBondFeeDetails().click();
+        cy.url().should('include', '/contract');
+        cy.url().should('include', '/bond/');
+        cy.url().should('include', '/fee-details');
 
-      cy.url().should('include', '/contract');
-      cy.url().should('include', '/bond/');
-      cy.url().should('include', '/preview');
+        pages.bondFeeDetails.feeTypeAtMaturityInput().click();
+        pages.bondFeeDetails.feeFrequencyAnnuallyInput().click();
+        pages.bondFeeDetails.dayCountBasis365Input().click();
+        pages.bondFeeDetails.submit().click();
+
+        cy.url().should('include', '/contract');
+        cy.url().should('include', '/bond/');
+        cy.url().should('include', '/preview');
+      });
     });
   });
 
