@@ -272,7 +272,7 @@ const contractBond = async (id, bondId, token) => {
   const response = await contract(id, token);
   const { _id } = response;
   return {
-    contractId: _id,
+    dealId: _id,
     bond: response.bondTransactions.items.find((bond) =>
       bond._id === bondId), // eslint-disable-line no-underscore-dangle
   };

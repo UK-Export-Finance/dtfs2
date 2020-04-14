@@ -115,10 +115,6 @@ router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
   return res.render('bond/bond-preview.njk', {
-    contract: await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ),
     ...await getApiData(
       api.contractBond(_id, bondId, userToken),
       res,

@@ -202,7 +202,7 @@
         Bond issuer
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ bondDetails.issuer }}
+        {{ bondDetails.bondIssuer }}
       </dd>
     </div>
 
@@ -211,7 +211,7 @@
         Bond type
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ bondDetails.type }}
+        {{ bondDetails.bondType }}
       </dd>
     </div>
 
@@ -220,7 +220,7 @@
         Bond stage
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ bondDetails.stage }}
+        {{ bondDetails.bondStage }}
       </dd>
     </div>
 
@@ -229,7 +229,9 @@
         Requested Cover Start Date
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ bondDetails.cover.requestedStartDate }}
+        {{ bondDetails.requestedStartDate-day }}
+        {{ bondDetails.requestedStartDate-month }}
+        {{ bondDetails.requestedStartDate-year }}
       </dd>
     </div>
 
@@ -238,7 +240,9 @@
         Cover End Date
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ bondDetails.cover.endDate }}
+        {{ bondDetails.coverEndDate-day }}
+        {{ bondDetails.coverEndDate-month }}
+        {{ bondDetails.coverEndDate-year }}
       </dd>
     </div>
 
@@ -256,7 +260,7 @@
         Bond beneficiary
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ bondDetails.beneficiary }}
+        {{ bondDetails.bondBeneficiary }}
       </dd>
     </div>
 
@@ -271,7 +275,7 @@
         Bond value
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ bondDetails.financial.value }}
+        {{ bondDetails.bondValue }}
       </dd>
     </div>
 
@@ -280,7 +284,7 @@
         Is the currency for this Transaction the same as your Supply Contract currency?
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {% if bondDetails.financial.transactionCurrencySameAsSupplyContractCurrency %}
+        {% if bondDetails.transactionCurrencySameAsSupplyContractCurrency %}
           Yes
         {% else %}
           No
@@ -293,7 +297,7 @@
         Risk Margin Fee %
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ bondDetails.financial.riskMarginFee }}
+        {{ bondDetails.riskMarginFee }}
       </dd>
     </div>
 
@@ -302,7 +306,7 @@
         Covered Percentage
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ bondDetails.financial.coveredPercentage }}
+        {{ bondDetails.coveredPercentage }}
       </dd>
     </div>
 
@@ -311,7 +315,7 @@
         Minimum risk margin fee
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ bondDetails.financial.minimumRiskMarginFee }}
+        {{ bondDetails.minimumRiskMarginFee }}
       </dd>
     </div>
 
@@ -320,7 +324,7 @@
         Guarantee fee payable by bank
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ bondDetails.financial.guaranteeFeePayableByBank }}
+        {{ bondDetails.guaranteeFeePayableByBank }}
       </dd>
     </div>
 
@@ -329,7 +333,7 @@
         UKEF exposure
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ bondDetails.financial.uKefExposure }}
+        {{ bondDetails.ukefExposure }}
       </dd>
     </div>
 
@@ -345,7 +349,7 @@
         Fee type
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ bondDetails.fee.type }}
+        {{ bondDetails.feeType }}
       </dd>
     </div>
 
@@ -354,7 +358,7 @@
         Fee frequency
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ bondDetails.fee.frequency }}
+        {{ bondDetails.feeFrequency }}
       </dd>
     </div>
 
@@ -363,7 +367,7 @@
         Day count basis
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ bondDetails.fee.dayCountBasis }}
+        {{ bondDetails.dayCountBasis }}
       </dd>
     </div>
 
