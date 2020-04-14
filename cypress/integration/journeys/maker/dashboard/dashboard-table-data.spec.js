@@ -1,5 +1,3 @@
-const {login} = require('../../../missions');
-
 const {dashboard} = require('../../../pages');
 const relative = require('../../../relativeURL');
 
@@ -29,7 +27,7 @@ context('View a deal', () => {
   it('A created deal appears on the dashboard', () => {
 
     // login and go to dashboard
-    login(user);
+    cy.login(user);
     dashboard.visit();
 
     cy.allDeals().then( (deals) => {

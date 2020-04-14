@@ -1,4 +1,3 @@
-const {createADeal, login} = require('../../../missions');
 const {dashboard} = require('../../../pages');
 const relative = require('../../../relativeURL');
 
@@ -28,10 +27,9 @@ context('Dashboard Deals pagination controls', () => {
       return false;
     });
 
-    // clean down anything our test-users have created
     cy.deleteDeals(maker2);
     cy.deleteDeals(maker3);
-    // insert deals as each user
+
     cy.insertManyDeals(twentyOneDeals, { ...maker2 });
     cy.insertManyDeals(renameDeals(twentyOneDeals), { ...maker3 });
   });
@@ -39,7 +37,7 @@ context('Dashboard Deals pagination controls', () => {
   it('Pagination and filtering work together', () => {
     cy.dealsCreatedBy(maker2).then( (deals) => {
       // confirm that maker2 sees maker2's deals
-      login({...maker2});
+      cy.login({...maker2});
       dashboard.visit();
 
       // filter

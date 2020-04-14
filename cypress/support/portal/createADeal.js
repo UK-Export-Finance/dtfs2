@@ -1,8 +1,7 @@
-const pages = require('../pages');
-const passRedLine = require('./passRedLine');
+const pages = require('../../integration/pages');
 
 module.exports = (opts) => {
-  passRedLine(opts);
+  cy.passRedLine(opts);
 
   pages.bankDetails.bankDealId().type(opts.bankDealId);
   pages.bankDetails.bankDealName().type(opts.bankDealName);

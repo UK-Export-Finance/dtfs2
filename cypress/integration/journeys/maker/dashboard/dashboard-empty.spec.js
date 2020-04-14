@@ -1,10 +1,9 @@
-const {createADeal, login} = require('../../../missions');
 const {dashboard} = require('../../../pages');
 const relative = require('../../../relativeURL');
 
 const maker1 = {username: 'MAKER', password: 'MAKER'};
 
-context('Dashboard Deals pagination controls', () => {
+context('Dashboard Deals', () => {
 
   beforeEach( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -16,9 +15,8 @@ context('Dashboard Deals pagination controls', () => {
     cy.deleteDeals(maker1);
   });
 
-  it('The Dashboard only displays deals from the users organisation', () => {
-    // confirm that maker1 sees maker1's deals
-    login({...maker1});
+  it('Can display an empty dashboard', () => {
+    cy.login({...maker1});
     dashboard.visit();
   });
 

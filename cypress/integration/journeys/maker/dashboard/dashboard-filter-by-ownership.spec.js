@@ -1,4 +1,3 @@
-const {createADeal, login} = require('../../../missions');
 const {dashboard} = require('../../../pages');
 const relative = require('../../../relativeURL');
 
@@ -12,12 +11,10 @@ const twentyOneDeals = require('./twentyOneDeals');
 context('Dashboard Deals filter by ownership', () => {
 
   before( () => {
-    // clean down anything our test-users have created
-    // await deleteAllDeals(maker3);
     cy.deleteDeals(maker1);
     cy.deleteDeals(maker2);
     cy.deleteDeals(maker3);
-    // insert deals as each user
+
     cy.insertManyDeals(twentyOneDeals.slice(0,5), { ...maker1 });
     cy.insertManyDeals(twentyOneDeals.slice(5,10), { ...maker2 });
     cy.insertManyDeals(twentyOneDeals.slice(10,15), { ...maker3 });
@@ -33,7 +30,7 @@ context('Dashboard Deals filter by ownership', () => {
 
   it('Show me: All - shows all deals from the users bank', () => {
       // confirm that maker1 sees maker1's deals
-      login({...maker1});
+      cy.login({...maker1});
       dashboard.visit();
       cy.dealsAssociatedWithBank('Barclays Bank').then( (deals) => {
         dashboard.confirmDealsPresent(deals);
@@ -43,7 +40,7 @@ context('Dashboard Deals filter by ownership', () => {
       });
 
     // confirm that maker2 sees maker2's deals AND maker3's deals
-    login({...maker2});
+    cy.login({...maker2});
     dashboard.visit();
     cy.dealsAssociatedWithBank('HSBC').then( (deals) => {
       dashboard.confirmDealsPresent(deals);
@@ -61,7 +58,7 @@ context('Dashboard Deals filter by ownership', () => {
     }
 
     // confirm that maker2 sees maker3's deals
-    login({...maker2});
+    cy.login({...maker2});
     dashboard.visit();
 
     dashboard.filterBySubmissionUser().select('createdByColleagues');
@@ -83,7 +80,7 @@ context('Dashboard Deals filter by ownership', () => {
     }
 
     // confirm that maker2 sees maker2's deals
-    login({...maker2});
+    cy.login({...maker2});
     dashboard.visit();
 
     dashboard.filterBySubmissionUser().select('createdByMe');
