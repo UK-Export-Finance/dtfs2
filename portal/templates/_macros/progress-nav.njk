@@ -24,11 +24,19 @@
           {% else %}
 
             {% if childId and childHref %}
-              <a class="govuk-link" href="/contract/{{ contractId }}/{{ href }}/{{ childId }}/{{ childHref }}">
+              <a
+                class="govuk-link"
+                href="/contract/{{ contractId }}/{{ href }}/{{ childId }}/{{ childHref }}"
+                data-cy="nav-item{{ href }}-{{ childHref }}"
+              >
                 {{ title }}
               </a>
             {% else %}
-            <a class="govuk-link" href="/contract/{{ contractId }}/{{ href }}">
+            <a
+              class="govuk-link"
+              href="/contract/{{ contractId }}/{{ href }}"
+              data-cy="progress-nav-item-{{ href }}"
+            >
               {{ title }}
             </a>
             {% endif %}
@@ -51,11 +59,19 @@
         {% else %}
 
             {% if childId and childHref %}
-            <a class="govuk-link" href="/contract/{{ contractId }}/{{ href }}/{{ childId }}/{{ childHref }}">
+            <a
+              class="govuk-link"
+              href="/contract/{{ contractId }}/{{ href }}/{{ childId }}/{{ childHref }}"
+              data-cy="progress-nav-item-{{ href }}-{{ childHref }}"
+            >
               {{ title }}
             </a>
             {% else %}
-            <a class="govuk-link" href="/contract/{{ contractId }}/{{ href }}">
+            <a
+              class="govuk-link"
+              href="/contract/{{ contractId }}/{{ href }}"
+              data-cy="progress-nav-item-{{ href }}"
+            >
               {{ title }}
             </a>
 
