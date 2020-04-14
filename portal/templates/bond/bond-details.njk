@@ -53,7 +53,7 @@
 
               <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
-                  <input class="govuk-input govuk-js-character-count" id="bondIssuer" name="bondIssuer" type="text" maxlength="150" aria-describedby="bond-issuer-hint" value="{{ bond.bondIssuer }}">
+                  <input class="govuk-input govuk-js-character-count" id="bondIssuer" name="bondIssuer" type="text" maxlength="150" aria-describedby="bond-issuer-hint" value="{{ bond.bondIssuer }}" data-cy="bond-issuer">
                 </div>
               </div>
             </div>
@@ -70,6 +70,9 @@
           label: {
             text: "Bond type"
           },
+          attributes: {
+            'data-cy': 'bond-type'
+          }
           items: [
             {
               text: "Select value"
@@ -120,7 +123,6 @@
               value: "warrantyLetter",
               selected: bond.bondType === "warrantyLetter"
             }
-
           ]
         }) }}
 
@@ -137,6 +139,7 @@
                   name="bondStage"
                   type="radio"
                   value="unissued"
+                  data-cy="bond-stage-unissued"
                   onClick="toggleFormFields('unissued')"
                   {% if bond.bondStage === "unissued" %}
                     checked
@@ -153,6 +156,7 @@
                   name="bondStage"
                   type="radio"
                   value="issued"
+                  data-cy="bond-stage-issued"
                   onClick="toggleFormFields('issued')"
                   {% if bond.bondStage === "issued" %}
                     checked
@@ -180,7 +184,7 @@
 
             <div class="govuk-grid-row">
               <div class="govuk-grid-column-one-half">
-                <input class="govuk-input" id="ukefGuaranteeInMonths" name="ukefGuaranteeInMonths" type="text" value="{{ bond.ukefGuaranteeInMonths }}">
+                <input class="govuk-input" id="ukefGuaranteeInMonths" name="ukefGuaranteeInMonths" type="text" value="{{ bond.ukefGuaranteeInMonths }}" data-cy="ukef-guarantee-in-months">
               </div>
             </div>
           </div>
@@ -245,7 +249,7 @@
 
               <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
-                  <input class="govuk-input govuk-js-character-count" id="bondBeneficiary" name="bondBeneficiary" type="text" maxlength="150" aria-describedby="bond-beneficiary-info bond-beneficiary-hint" value="{{ bond.bondBeneficiary }}">
+                  <input class="govuk-input govuk-js-character-count" id="bondBeneficiary" name="bondBeneficiary" type="text" maxlength="150" aria-describedby="bond-beneficiary-info bond-beneficiary-hint" value="{{ bond.bondBeneficiary }}" data-cy="bond-beneficiary">
                 </div>
               </div>
 
