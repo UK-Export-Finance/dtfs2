@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const db = require('../../db-driver/client');
+const db = require('../../drivers/db-client');
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 
