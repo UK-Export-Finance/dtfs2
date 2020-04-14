@@ -5,12 +5,12 @@ exports.update = async (req, res) => {
   const dealFiles = [];
 
   req.files.forEach(async (file) => {
-    const sharepointFriendlyFile = {
-      ...file,
-      originalname: formatFilenameForSharepoint(file.originalname),
-    };
-
-    const { filename, fullPath } = await fileshare.uploadStream(req.params.id, sharepointFriendlyFile);
+    const { filename, fullPath } = await fileshare.uploadStream({
+      folder: req.params.id,
+      subfolder: file.fieldname,
+      filename: formatFilenameForSharepoint(file.originalname),
+      buffer: file.buffer,
+    });
 
     dealFiles.push({
       filename,

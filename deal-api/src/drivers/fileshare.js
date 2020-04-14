@@ -19,7 +19,9 @@ shareClient.create().catch(({ details }) => {
 });
 
 
-const uploadStream = async (folder, { fieldname: subfolder, originalname: filename, buffer }) => {
+const uploadStream = async ({
+  folder, subfolder, filename, buffer,
+}) => {
   const fileStream = new stream.Readable();
   fileStream.push(buffer);
   fileStream.push(null);
