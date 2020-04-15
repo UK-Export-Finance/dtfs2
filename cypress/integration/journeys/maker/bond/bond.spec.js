@@ -1,6 +1,7 @@
 const pages = require('../../../pages');
 const BOND_FORM_VALUES = require('./bond-form-values');
 const fillBondForm = require('./fill-bond-forms');
+const relative = require('../../../relativeURL');
 
 const user = { username: 'MAKER', password: 'MAKER' };
 
@@ -22,6 +23,7 @@ context('Add a bond', () => {
     cy.insertOneDeal(MOCK_DEAL, user);
   });
 
+  /*
   describe('When a user clicks `Add a Bond` from the deal page', () => {
     it('should progress to the `Bond Details` page', () => {
       cy.allDeals().then((deals) => {
@@ -125,5 +127,68 @@ context('Add a bond', () => {
         });
       });
     });
+    */
+  describe('When a user completes all Bond forms', () => {
+    it('should populate Deal page with the submitted bond', () => {
+      cy.allDeals().then((deals) => {
+        const deal = deals[0];
+        cy.loginGoToDealPage(user, deal);
+
+        pages.contract.addBondButton().click();
+
+        fillBondForm.details();
+        pages.bondDetails.submit().click();
+
+        fillBondForm.financialDetails();
+        pages.bondFinancialDetails.submit().click();
+
+        fillBondForm.feeDetails();
+
+        pages.bondFeeDetails.submit().click();
+
+        cy.url().should('include', '/preview');
+
+        // get bondId, go back to deal page
+        // assert that some inputted bond data is displayed in the table
+        pages.bondPreview.bondId().then((bondIdHiddenInput) => {
+          const bondId = bondIdHiddenInput[0].value;
+
+          pages.bondPreview.goBackLink().click();
+          cy.url().should('eq', relative(`/contract/${deal._id}`));
+
+          const row = pages.contract.bondTransactionsTable.row(bondId);
+
+          row.uniqueNumber().invoke('text').then((text) => {
+            expect(text.trim()).equal('Not entered');
+          });
+
+          // TODO: UKEF facility ID
+
+          // TODO: status
+
+          row.bondValue().invoke('text').then((text) => {
+            const expectedValue = `GBP ${BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue}`;
+            expect(text.trim()).equal(expectedValue);
+          });
+
+          // TODO: stage
+
+          // TODO in 'issued' scenario - start date
+
+          // row.requestedCoverStartDate().invoke('text').then((text) => {
+          //   const expectedValue = `
+          //     ${BOND_FORM_VALUES.DETAILS['requestedCoverStartDate-day']}
+          //     ${BOND_FORM_VALUES.DETAILS['requestedCoverStartDate-month']}
+          //     ${BOND_FORM_VALUES.DETAILS['requestedCoverStartDate-year']}
+          //   `;
+          //   expect(text.trim()).equal(expectedValue);
+          // });
+
+          // TODO in 'issued' scenario - end date
+
+        });
+      });
+    });
+
   });
 });
