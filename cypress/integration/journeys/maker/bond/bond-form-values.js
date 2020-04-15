@@ -11,8 +11,8 @@ const DETAILS = {
 const FINANCIAL_DETAILS = {
   bondValue: '123',
   currency: {
-    value: 'GBP',
-    text: 'GBP - UK Sterling',
+    value: 'EUR',
+    text: 'EUR - Euros',
   },
   conversionRate: '100',
   conversionRateDateDay: '01',

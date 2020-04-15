@@ -1,4 +1,5 @@
 const pages = require('../../../pages');
+const partials = require('../../../partials');
 const BOND_FORM_VALUES = require('./bond-form-values');
 const fillBondForm = require('./fill-bond-forms');
 const relative = require('../../../relativeURL');
@@ -23,7 +24,6 @@ context('Add a bond', () => {
     cy.insertOneDeal(MOCK_DEAL, user);
   });
 
-  /*
   describe('When a user clicks `Add a Bond` from the deal page', () => {
     it('should progress to the `Bond Details` page', () => {
       cy.allDeals().then((deals) => {
@@ -127,9 +127,8 @@ context('Add a bond', () => {
         });
       });
     });
-    */
-  describe('When a user completes all Bond forms', () => {
-    it('should populate Deal page with the submitted bond', () => {
+
+    it('should populate Deal page with the submitted bond and have a link to bond details page', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
         cy.loginGoToDealPage(user, deal);
@@ -150,7 +149,7 @@ context('Add a bond', () => {
 
         // get bondId, go back to deal page
         // assert that some inputted bond data is displayed in the table
-        pages.bondPreview.bondId().then((bondIdHiddenInput) => {
+        partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
           const bondId = bondIdHiddenInput[0].value;
 
           pages.bondPreview.goBackLink().click();
@@ -167,7 +166,7 @@ context('Add a bond', () => {
           // TODO: status
 
           row.bondValue().invoke('text').then((text) => {
-            const expectedValue = `GBP ${BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue}`;
+            const expectedValue = `${deal.supplyContractCurrency} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue}`;
             expect(text.trim()).equal(expectedValue);
           });
 
@@ -186,6 +185,12 @@ context('Add a bond', () => {
 
           // TODO in 'issued' scenario - end date
 
+
+          // assert that clicking the `unique number` link progesses you to the bond page
+          row.uniqueNumber().click();
+          cy.url().should('include', '/contract');
+          cy.url().should('include', '/bond/');
+          cy.url().should('include', '/details');
         });
       });
     });

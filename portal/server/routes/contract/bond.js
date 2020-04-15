@@ -42,8 +42,8 @@ router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
   return res.redirect(redirectUrl);
 });
 
-router.post('/contract/:id/bond/:bondId/details/save-go-back', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}`;
+router.post('/contract/:_id/bond/:bondId/details/save-go-back', (req, res) => {
+  const redirectUrl = `/contract/${req.params._id}`;
   return res.redirect(redirectUrl);
 });
 
@@ -58,13 +58,16 @@ router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => 
   );
 
   // TODO: move to helper as used in multiple places
-  const mappedCurrencies = currencies.map((c) => {
-    const currency = {
-      ...c,
-      value: c.id,
-    };
-    return currency;
-  });
+  const mappedCurrencies = [
+    { text: 'Select value' },
+    ...currencies.map((c) => {
+      const currency = {
+        ...c,
+        value: c.id,
+      };
+      return currency;
+    }),
+  ];
 
   return res.render('bond/bond-financial-details.njk', {
     ...await getApiData(
@@ -88,7 +91,7 @@ router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) =>
 });
 
 router.post('/contract/:_id/bond/:bondId/financial-details/save-go-back', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}`;
+  const redirectUrl = `/contract/${req.params._id}`;
   return res.redirect(redirectUrl);
 });
 
@@ -117,8 +120,8 @@ router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   return res.redirect(redirectUrl);
 });
 
-router.post('/contract/:id/bond/:bondId/fee-details/save-go-back', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}`;
+router.post('/contract/:_id/bond/:bondId/fee-details/save-go-back', (req, res) => {
+  const redirectUrl = `/contract/${req.params._id}`;
   return res.redirect(redirectUrl);
 });
 

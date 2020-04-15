@@ -88,10 +88,6 @@
       }) }}
   
     <div
-      id="additional-form-fields"
-      {% if showAdditionalFieldsByDefault === false %}
-      class="govuk-visually-hidden"
-      {% endif %}
     >
 
       {{ govukSelect({
@@ -241,6 +237,7 @@
       class="govuk-button govuk-button--secondary"
       data-module="govuk-button"
       value="Save and go back to deal"
+      data-cy="go-back-button"
     />
 
   </form>

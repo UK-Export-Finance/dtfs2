@@ -1,6 +1,8 @@
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const fillBondForm = require('./fill-bond-forms');
+const BOND_FORM_VALUES = require('./bond-form-values');
+const relative = require('../../../relativeURL');
 
 const user = { username: 'MAKER', password: 'MAKER' };
 
@@ -44,8 +46,47 @@ context('Bond financial details', () => {
     });
   });
 
+  describe('when a user selects that the currency is NOT the same as the Supply Contract currency', () => {
+    it('should populate the bond\'s `value` in Deal page with the submitted bond currency', () => {
+      cy.allDeals().then((deals) => {
+        const deal = deals[0];
+        cy.loginGoToDealPage(user, deal);
+
+        pages.contract.addBondButton().click();
+        partials.bondProgressNav.progressNavBondFinancialDetails().click();
+        cy.url().should('include', '/contract');
+        cy.url().should('include', '/bond/');
+        cy.url().should('include', '/financial-details');
+
+        pages.bondFinancialDetails.bondValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
+        pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
+
+        pages.bondFinancialDetails.currencyInput().should('be.visible');
+        pages.bondFinancialDetails.currencyInput().select(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
+
+        // get bondId, go back to deal page
+        // assert that some inputted bond data is displayed in the table
+        partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+          const bondId = bondIdHiddenInput[0].value;
+
+          pages.bondFinancialDetails.submit().click();
+          pages.bondFeeDetails.goBackButton().click();
+          cy.url().should('eq', relative(`/contract/${deal._id}`));
+
+          const row = pages.contract.bondTransactionsTable.row(bondId);
+          row.bondValue().invoke('text').then((text) => {
+            const expectedValue = `${BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue}`;
+            expect(text.trim()).equal(expectedValue);
+          });
+        });
+
+
+        cy.url().should('include', '/contract');
+      });
+    });
+  });
+
   // TODO: financial details - when selected yes/no currency, correct form fields appear
-  // pages.bondFinancialDetails.currencyInput().select(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
   // pages.bondFinancialDetails.conversionRateInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
   // pages.bondFinancialDetails.conversionRateDateDayInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateDay);
   // pages.bondFinancialDetails.conversionRateDateMonthInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDatMonth);

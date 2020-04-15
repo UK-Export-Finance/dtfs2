@@ -1,5 +1,4 @@
 const page = {
-  bondId: () => cy.get('[data-cy="bond-id"]'),
   goBackLink: () => cy.get('[data-cy="go-back-link"]'),
 
   // bond details
