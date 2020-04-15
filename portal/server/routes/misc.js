@@ -8,4 +8,6 @@ router.post('/feedback', (req, res) => res.redirect('/feedback'));
 
 router.get('/contact-us', (req, res) => res.render('contact.njk'));
 
+router.get('/cookies', (req, res) => res.render('cookies.njk'));
+
 export default router;
