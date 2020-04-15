@@ -69,9 +69,18 @@ const deleteFile = async (filePath) => shareClient.deleteFile(filePath).catch(({
   console.error('Fileshare delete file not found', details);
 });
 
+const deleteMultipleFiles = (fileList) => {
+  if (!Array.isArray(fileList)) return false;
+
+  return fileList.map(async (filePath) => {
+    await deleteFile(filePath);
+  });
+};
+
 module.exports = {
   uploadStream,
   deleteFile,
+  deleteMultipleFiles,
   readFile,
   FILESHARE_URL,
 };
