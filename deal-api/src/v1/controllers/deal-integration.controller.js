@@ -1,6 +1,7 @@
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const fileshare = require('../../drivers/fileshare');
+const { generateTypeA } = require('./integration/k2-messages');
 
 exports.findOne = (req, res) => {
   findOneDeal(req.params.id, async (deal) => {
@@ -24,8 +25,6 @@ exports.findOne = (req, res) => {
     return res.status(200).send(document);
   });
 };
-
-const generateTypeA = async (deal) => `<xml><Deal id="${deal._id}/>"`; // eslint-disable-line no-underscore-dangle
 
 exports.createTypeA = async (deal) => {
   const typeA = await generateTypeA(deal);
