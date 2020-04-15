@@ -51,6 +51,12 @@ exports.updateBond = async (req, res) => {
         ...req.body,
       };
 
+      const { transactionCurrencySameAsSupplyContractCurrency } = req.body;
+
+      if (transactionCurrencySameAsSupplyContractCurrency && transactionCurrencySameAsSupplyContractCurrency === 'true') {
+        updatedBond.currency = deal.supplyContractCurrency;
+      }
+
       const collection = await db.getCollection('deals');
       const result = await collection.findOneAndUpdate(
         {
