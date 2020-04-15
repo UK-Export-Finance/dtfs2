@@ -83,11 +83,18 @@ router.post('/contract/:_id/eligibility/criteria/save-go-back', async (req, res)
 router.get('/contract/:_id/eligibility/supporting-documentation', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
+  const { eligibility, dealFiles } = await getApiData(
+    api.contract(_id, userToken),
+    res,
+  );
+
+  const fileshareURL = await getApiData(
+    api.fileshareURL(userToken),
+    res,
+  );
+
   return res.render('eligibility/eligibility-supporting-documentation.njk',
-    await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ));
+    { dealFiles, eligibility, fileshareURL });
 });
 
 router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(), async (req, res) => {
@@ -99,9 +106,18 @@ router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(),
     res,
   );
 
+  const { eligibility, dealFiles } = updatedDeal;
+
+  const fileshareURL = await getApiData(
+    api.fileshareURL(userToken),
+    res,
+  );
+
   return res.render('eligibility/eligibility-supporting-documentation.njk', {
     _id,
-    eligibility: updatedDeal.eligibility,
+    eligibility,
+    dealFiles,
+    fileshareURL,
   });
 });
 
