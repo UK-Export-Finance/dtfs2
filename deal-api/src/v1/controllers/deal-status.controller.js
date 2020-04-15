@@ -4,6 +4,7 @@ const moment = require('moment');
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const db = require('../../drivers/db-client');
+const dealIntegration = require('./deal-integration.controller');
 
 const validateStateChange = require('../validation/deal-status');
 
@@ -77,10 +78,17 @@ exports.update = (req, res) => {
         } else {
           const collection = await db.getCollection('deals');
 
-          await updateStatus(collection, req.params.id, deal.details.status, req.body.status);
 
-          const value = await updateComments(collection, req.params.id, req.body.comments, req.user);
-          res.status(200).send(value.details.status);
+          // TODO find a nicer way to do this than a random if statement...
+          if (req.body.status === 'Submitted') {
+            await dealIntegration.createTypeA(deal);
+          }
+
+
+          await updateStatus(collection, req.params.id, deal.details.status, req.body.status);
+          const dealAfterAllUpdates = await updateComments(collection, req.params.id, req.body.comments, req.user);
+
+          res.status(200).send(dealAfterAllUpdates.details.status);
         }
       }
     }

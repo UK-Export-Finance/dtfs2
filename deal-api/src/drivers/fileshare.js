@@ -53,6 +53,16 @@ const uploadStream = async ({
   };
 };
 
+const readFile = async ({
+  folder, subfolder, filename, stringEncoding = 'utf-8',
+}) => {
+  const directoryClient = await shareClient.getDirectoryClient(folder);
+  const subDirectoryClient = await directoryClient.getDirectoryClient(subfolder);
+  const fileClient = await subDirectoryClient.getFileClient(`${filename}`);
+  const bufferedFile = await fileClient.downloadToBuffer();
+  return bufferedFile.toString(stringEncoding);
+};
+
 const deleteFile = async (filePath) => shareClient.deleteFile(filePath).catch(({ details }) => {
   if (!details) return;
   if (details.errorCode === 'ResourceNotFound') return;
@@ -62,5 +72,6 @@ const deleteFile = async (filePath) => shareClient.deleteFile(filePath).catch(({
 module.exports = {
   uploadStream,
   deleteFile,
+  readFile,
   FILESHARE_URL,
 };
