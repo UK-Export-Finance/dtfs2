@@ -23,6 +23,18 @@ const page = {
   proceedToReview: () => cy.get('[data-cy="ProceedToReview"]'),
   proceedToSubmit: () => cy.get('[data-cy="ProceedToSubmit"]'),
   returnToMaker: () => cy.get('[data-cy="ReturnToMaker"]'),
+  bondTransactionsTable: {
+    row: (bondId) => {
+      const row = cy.get(`[data-cy="bond-${bondId}"]`);
+      return {
+        uniqueNumber: () => row.get('[data-cy="unique-number"]'),
+        bondValue: () => row.get('[data-cy="bond-value"]'),
+        requestedCoverStartDate: () => row.get('[data-cy="requested-cover-start-date"]'),
+        coverEndDate: () => row.get('[data-cy="cover-end-date"]'),
+        deleteLink: () => row.get('[data-cy="delete-link"]'),
+      };
+    },
+  },
 };
 
 module.exports = page;
