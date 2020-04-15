@@ -5,8 +5,8 @@ const { findOneDeal, update: updateDeal } = require('./deal.controller');
 
 const getFileType = (fieldname) => {
   switch (fieldname) {
-    case 'exporter-questionnaire':
-    case 'corporate_structure':
+    case 'exporterQuestionnaire':
+    case 'corporateStructure':
       return 'general_correspondence';
 
     default:

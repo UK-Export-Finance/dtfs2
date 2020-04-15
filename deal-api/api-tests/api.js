@@ -1,47 +1,46 @@
 const request = require('supertest');
 
-module.exports = (app) => {
+module.exports = (app) => ({
 
-  return {
+  post: (data, token) => ({
+    to: async (url) => request(app)
+      .post(url)
+      .set({ Authorization: token || '' })
+      .send(data),
+  }),
 
-    post: (data, token) => {
-      return {
-        to: async (url) => {
+  put: (data, token) => ({
+    to: async (url) => request(app)
+      .put(url)
+      .set({ Authorization: token || '' })
+      .send(data),
+  }),
 
-          return request(app)
-                   .post(url)
-                   .set({ Authorization: token?token:'' })
-                   .send(data)
+  putWithFileUploads: (data, token, files = []) => ({
+    to: async (url) => {
+      const apiRequest = request(app)
+        .put(url)
+        .set({ Authorization: token || '' });
 
-        }
+      if (files.length) {
+        files.forEach((file) => apiRequest.attach(file.fieldname, file.filepath));
       }
+
+      Object.entries(data).forEach(([fieldname, value]) => {
+        apiRequest.field(fieldname, value);
+      });
+
+      return apiRequest;
     },
+  }),
 
-    put: (data, token) => {
-      return {
-        to: async (url) => {
+  get: async (url, token) => request(app)
+    .get(url)
+    .set({ Authorization: token || '' }),
 
-          return request(app)
-                   .put(url)
-                   .set({ Authorization: token?token:'' })
-                   .send(data)
+  remove: async (url, token) => request(app)
+    .delete(url)
+    .set({ Authorization: token || '' })
+    .send(),
 
-        }
-      }
-    },
-
-    get: async (url, token) => {
-      return request(app)
-        .get(url)
-        .set({ Authorization: token?token:'' })
-    },
-
-    remove: async (url, token) => {
-      return request(app)
-          .delete(url)
-          .set({ Authorization: token?token:'' })
-          .send()
-    }
-
-  }
-}
+});
