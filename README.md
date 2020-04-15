@@ -13,11 +13,6 @@ With docker running, execute all tests with:
 npm install && npm run pipeline
 ```
 
-Note, at time of writing this script does not execute our end to end tests; they don't currently have business value so adding a minute to the script's execution didn't seem helpful. The e2e tests can be run in the meantime with:
-```
-./execute-e2e-tests.sh
-```
-
 ### Running the world locally
 
 Launch everything with:
@@ -35,12 +30,11 @@ Portal can then be seen on:
 http://localhost:5000
 ```
 
-mock API services can be seen for eg. on:
+mock API services are exposed on:
 ```
-http://localhost:5001/mocks/contract/2
+http://localhost:5001/
 ```
-
-real API services that are interacting with mongoDB can be seen for eg. on:
+(although these endpoints mostly require access tokens to interact with..)
 ```
 http://localhost:5001/v1/deals
 ```
