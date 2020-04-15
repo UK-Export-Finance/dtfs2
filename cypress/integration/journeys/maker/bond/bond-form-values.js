@@ -1,0 +1,29 @@
+const DETAILS = {
+  bondIssuer: 'mock issuer',
+  bondType: {
+    value: 'maintenanceBond',
+    text: 'Maintenance bond',
+  },
+  ukefGuaranteeInMonths: '12',
+  bondBeneficiary: 'mock beneficiary',
+};
+
+const FINANCIAL_DETAILS = {
+  bondValue: '123',
+  currency: {
+    value: 'GBP',
+    text: 'GBP - UK Sterling',
+  },
+  conversionRate: '100',
+  conversionRateDateDay: '01',
+  conversionRateDateMonth: '02',
+  conversionRateDateYear: '2020',
+  riskMarginFee: '20',
+  coveredPercentage: '80',
+  minimumRiskMarginFee: '1.23',
+};
+
+module.exports = {
+  DETAILS,
+  FINANCIAL_DETAILS,
+};
