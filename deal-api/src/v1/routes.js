@@ -15,6 +15,7 @@ const transactions = require('./controllers/transactions.controller');
 const eligibilityCriteria = require('./controllers/eligibility-criteria.controller');
 const bonds = require('./controllers/bonds.controller');
 const eligibilityDocumentation = require('./controllers/eligibility-documentation.controller');
+const fileshare = require('./controllers/fileshare.controller');
 
 const users = require('./users/routes');
 
@@ -100,6 +101,12 @@ authRouter.route('/deals/:id/bond/:bondId')
   .put(
     validate({ role: ['maker'] }),
     bonds.updateBond,
+  );
+
+authRouter.route('/fileshare/url')
+  .get(
+    validate({ role: ['maker', 'checker'] }),
+    fileshare.getFileshareUrl,
   );
 
 authRouter.route('/banks')
