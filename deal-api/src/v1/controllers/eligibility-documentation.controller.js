@@ -1,4 +1,4 @@
-const { deleteFile, uploadStream } = require('../../drivers/fileshare');
+const { deleteMultipleFiles, uploadStream } = require('../../drivers/fileshare');
 const { formatFilenameForSharepoint } = require('../../utils');
 const { userHasAccessTo } = require('../users/checks');
 const { findOneDeal, update: updateDeal } = require('./deal.controller');
@@ -32,13 +32,7 @@ exports.update = async (req, res) => {
       res.status(401).send();
     }
 
-    let deletePromises;
-    if (Array.isArray(req.body.deleteFile)) {
-      deletePromises = req.body.deleteFile.map(async (filePath) => {
-        const deletedFile = await deleteFile(filePath);
-        return deletedFile;
-      });
-    }
+    const deletePromises = deleteMultipleFiles(req.body.deleteFile);
 
     const uploadPromises = req.files.map(async (file) => {
       const { fieldname, originalname, buffer } = file;
