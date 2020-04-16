@@ -192,8 +192,8 @@ describe('/v1/deals/:id/bond/create', () => {
     // });
 
     it('updates an existing bond', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals/');
-      const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+      const deal = await post(newDeal, user1).to('/v1/deals/');
+      const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
       const bondBody = {
         bondIssuer: 'issuer',
@@ -232,6 +232,41 @@ describe('/v1/deals/:id/bond/create', () => {
       expect(updatedBond).toEqual({
         _id: bondId, // eslint-disable-line no-underscore-dangle
         ...bondBody,
+      });
+    });
+    describe('when a bond has transactionCurrencySameAsSupplyContractCurrency in the req.body', () => {
+      it('should use the deal\'s supplyContractCurrency to the bond\'s currency', async () => {
+        const deal = await post(newDeal, user1).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bondBody = {
+          transactionCurrencySameAsSupplyContractCurrency: 'true',
+        };
+
+        const createBondResponse = await put({}, user1).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status } = await put(bondBody, user1).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(status).toEqual(200);
+
+        const { body: updatedDeal } = await get(
+          `/v1/deals/${dealId}`,
+          user1,
+        );
+
+        expect(status).toEqual(200);
+
+        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
+          b._id === bondId); // eslint-disable-line no-underscore-dangle
+
+        expect(updatedBond).toEqual({
+          _id: bondId, // eslint-disable-line no-underscore-dangle
+          ...bondBody,
+          currency: deal.body.supplyContractCurrency,
+        });
       });
     });
   });
