@@ -4,10 +4,10 @@ const api = () => {
     return url;
 }
 
-module.exports.logIn = (opts, callback) => {
+module.exports.logIn = (opts) => {
   const { username, password } = opts;
 
-  cy.request({
+  return cy.request({
     url: `${api()}/v1/login`,
     method: 'POST',
     body: {username, password},
@@ -16,27 +16,26 @@ module.exports.logIn = (opts, callback) => {
     },
   }).then((resp) => {
     expect(resp.status).to.equal(200);
-    callback && callback(resp.body.token);
+    return resp.body.token;
   });
 }
 
 
-module.exports.deleteDeal = (token, deal, callback) => {
-    cy.request({
-      url: `${api()}/v1/deals/${deal._id}`,
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token,
-      },
-    }).then((resp) => {
-      expect(resp.status).to.equal(200);
-      callback && callback();
-    });
+module.exports.deleteDeal = (token, deal) => {
+  return cy.request({
+    url: `${api()}/v1/deals/${deal._id}`,
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': token,
+    },
+  }).then((resp) => {
+    return expect(resp.status).to.equal(200);
+  });
 };
 
-module.exports.listAllDeals = (token, callback) => {
-  cy.request({
+module.exports.listAllDeals = (token) => {
+  return cy.request({
     url: `${api()}/v1/deals`,
     method: 'GET',
     headers: {
@@ -45,12 +44,12 @@ module.exports.listAllDeals = (token, callback) => {
     },
   }).then((resp) => {
     expect(resp.status).to.equal(200);
-    callback(resp.body.deals);
+    return resp.body.deals;
   });
 };
 
-module.exports.insertDeal = (deal, token, callback) => {
-  cy.request({
+module.exports.insertDeal = (deal, token) => {
+  return cy.request({
     url: `${api()}/v1/deals`,
     method: 'POST',
     body: deal,
@@ -60,6 +59,20 @@ module.exports.insertDeal = (deal, token, callback) => {
     },
   }).then((resp) => {
     expect(resp.status).to.equal(200);
-    callback && callback(resp.body);
+    return resp.body;
+  });
+}
+
+module.exports.downloadFile = (token, deal) => {
+  return cy.request({
+    url: `${api()}/v1/deals/${deal._id}/integration/type-a`,
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': token,
+    },
+  }).then((resp) => {
+    expect(resp.status).to.equal(200);
+    return resp.body;
   });
 }

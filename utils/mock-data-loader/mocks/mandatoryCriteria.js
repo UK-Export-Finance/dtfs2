@@ -1,6 +1,6 @@
 const MANDATORY_CRITERIA = [
   {
-    id: 1,
+    id: '1',
     title: 'Supply contract/Transaction',
     items: [
       {
@@ -18,7 +18,7 @@ const MANDATORY_CRITERIA = [
     ]
   },
   {
-    id: 2,
+    id: '2',
     title: 'Financial',
     items: [
       {
@@ -28,7 +28,7 @@ const MANDATORY_CRITERIA = [
     ]
   },
   {
-    id: 3,
+    id: '3',
     title: 'Credit',
     items: [
       {
@@ -38,7 +38,7 @@ const MANDATORY_CRITERIA = [
     ]
   },
   {
-    id: 4,
+    id: '4',
     title: 'Bank Facility Letter',
     items: [
       {
@@ -48,7 +48,7 @@ const MANDATORY_CRITERIA = [
     ]
   },
   {
-    id: 5,
+    id: '5',
     title: 'Legal',
     items: [
       {

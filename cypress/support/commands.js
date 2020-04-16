@@ -37,6 +37,8 @@ const {
   clearDeals,
 } = require('./deal-api/cache');
 
+const {downloadFile} = require('./deal-api/fileshare');
+
 // commands used to maintain a cache of 'deals we have loaded as part of our tests'
 Cypress.Commands.add("cacheDeals", cacheDeals);
 Cypress.Commands.add("clearDeals", clearDeals);
@@ -46,6 +48,7 @@ Cypress.Commands.add("clearDeals", clearDeals);
 Cypress.Commands.add("insertOneDeal", require('./deal-api/insertOneDeal'));
 Cypress.Commands.add("insertManyDeals", require('./deal-api/insertManyDeals'));
 Cypress.Commands.add("deleteDeals", require('./deal-api/deleteDeals'));
+Cypress.Commands.add("downloadFile", downloadFile);
 
 
 // commands used to get hold of loaded test-data'
