@@ -35,6 +35,7 @@ context('Contracts viewed by role=checker, by status', () => {
       contract.proceedToReview().should('not.exist');
       contract.abandonButton().should('not.exist');
       contract.abandonLink().should('not.exist');
+      contract.cloneDealLink().should('not.exist');
     })
   });
 
@@ -50,6 +51,7 @@ context('Contracts viewed by role=checker, by status', () => {
       contract.proceedToReview().should('not.exist');
       contract.abandonButton().should('not.exist');
       contract.abandonLink().should('not.exist');
+      contract.cloneDealLink().should('not.exist');
     });
   });
 
@@ -64,6 +66,7 @@ context('Contracts viewed by role=checker, by status', () => {
       contract.proceedToReview().should('not.exist');
       contract.abandonButton().should('not.exist');
       contract.abandonLink().should('not.exist');
+      contract.cloneDealLink().should('not.exist');
     });
   });
 
@@ -78,6 +81,7 @@ context('Contracts viewed by role=checker, by status', () => {
       contract.proceedToReview().should('not.exist');
       contract.abandonButton().should('not.exist');
       contract.abandonLink().should('not.exist');
+      contract.cloneDealLink().should('not.exist');
     });
   });
 
@@ -92,6 +96,7 @@ context('Contracts viewed by role=checker, by status', () => {
       contract.proceedToReview().should('not.exist');
       contract.abandonButton().should('not.exist');
       contract.abandonLink().should('not.exist');
+      contract.cloneDealLink().should('not.exist');
     });
   });
 
@@ -106,6 +111,7 @@ context('Contracts viewed by role=checker, by status', () => {
       contract.proceedToReview().should('not.exist');
       contract.abandonButton().should('not.exist');
       contract.abandonLink().should('not.exist');
+      contract.cloneDealLink().should('not.exist');
     });
   });
 
@@ -123,6 +129,7 @@ context('Contracts viewed by role=checker, by status', () => {
       contract.proceedToReview().should('not.exist');
       contract.abandonButton().should('not.exist');
       contract.abandonLink().should('not.exist');
+      contract.cloneDealLink().should('not.exist');
     });
   });
 
@@ -139,6 +146,7 @@ context('Contracts viewed by role=checker, by status', () => {
       contract.proceedToReview().should('not.exist');
       contract.returnToMaker().should('not.exist');
       contract.proceedToSubmit().should('not.exist');
+      contract.cloneDealLink().should('not.exist');
     });
   });
 
