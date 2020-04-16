@@ -44,26 +44,22 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     });
   });
 
-  xit('The ReadyForCheckersApproval button generates an error if no comment has been entered.', () => {
+  it('The ReadyForCheckersApproval button generates an error if no comment has been entered.', () => {
     // log in, visit a deal, select abandon
     cy.login({...maker1});
+
     cy.aDealInStatus("Draft").then( (deal) => {
       contract.visit(deal);
       contract.proceedToReview().click();
 
       // submit without a comment
+      contractReadyForReview.comments().should('have.value', '');
       contractReadyForReview.readyForCheckersApproval().click();
 
-      // expect to land on the /start-now page with a success message
-      cy.url().should('eq', relative(`/start-now`));
-      successMessage.successMessageListItem().invoke('text').then((text) => {
-        expect(text.trim()).to.match(/Supply Contract submitted for review./);
-      });
-      // expect to stay on the /ready-for-review page, and see an error
+      // expect to stay on the submit-for-review page, and see an error
       cy.url().should('eq', relative(`/contract/${deal._id}/ready-for-review`));
-      contractDelete.expectError('Comment is required when submitting a deal for review.');
+      contractReadyForReview.expectError('Comment is required when submitting a deal for review.');
     });
-
   });
 
   it('The Ready for Checkers Review button updates the deal and takes the user to /start-now.', () => {
