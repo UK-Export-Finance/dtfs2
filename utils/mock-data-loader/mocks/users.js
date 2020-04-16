@@ -24,6 +24,26 @@ const USERS = [
     },
   },
   {
+    username: 'BARCLAYS-MAKER-1',
+    password: 'BARCLAYS-MAKER-1',
+    roles: ['maker'],
+    bank: {
+      //_id: '', //TODO [dw] better linking of mock data
+      id: '956',
+      name: 'Barclays Bank'
+    },
+  },
+  {
+    username: 'BARCLAYS-MAKER-2',
+    password: 'BARCLAYS-MAKER-2',
+    roles: ['maker'],
+    bank: {
+      //_id: '', //TODO [dw] better linking of mock data
+      id: '956',
+      name: 'Barclays Bank'
+    },
+  },
+  {
     username: 'CHECKER',
     password: 'CHECKER',
     roles: ['checker'],

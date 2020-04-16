@@ -6,10 +6,10 @@
   {% if contract.details.status %}
 
     {% if user.roles.includes('checker') %}
-      {{ checkerPanel[contract.details.status](contract) }}
+      {{ checkerPanel[contract.details.status](contract, user) }}
 
     {% elif user.roles.includes('maker') %}
-      {{ makerPanel[contract.details.status](contract) }}
+      {{ makerPanel[contract.details.status](contract, user) }}
 
     {% endif %}
 

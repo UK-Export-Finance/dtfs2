@@ -29,27 +29,20 @@ exports.update = (req, res) => {
   const { bankSupplyContractName } = req.body;
 
   findOneDeal(req.params.id, async (deal) => {
-    if (!deal) res.status(404).send();
+    if (!deal) return res.status(404).send();
+    if (!userOwns(user, deal)) return res.status(401).send();
 
-    if (deal) {
-      if (userOwns(user, deal)) {
-        res.status(401).send();
-      } else {
-        const validationFailures = validateNameChange(deal, bankSupplyContractName);
+    const validationFailures = validateNameChange(deal, bankSupplyContractName);
 
-        if (validationFailures) {
-          res.status(200).send({
-            success: false,
-            ...validationFailures,
-          });
-        } else {
-          const collection = await db.getCollection('deals');
-
-          const dealAfterAllUpdates = await updateName(collection, deal, bankSupplyContractName);
-
-          res.status(200).send(dealAfterAllUpdates.details.bankSupplyContractName);
-        }
-      }
+    if (validationFailures) {
+      return res.status(200).send({
+        success: false,
+        ...validationFailures,
+      });
     }
+
+    const collection = await db.getCollection('deals');
+    const dealAfterAllUpdates = await updateName(collection, deal, bankSupplyContractName);
+    return res.status(200).send(dealAfterAllUpdates.details.bankSupplyContractName);
   });
 };

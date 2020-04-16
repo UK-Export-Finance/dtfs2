@@ -31,7 +31,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
       // log in, visit a deal, select abandon
       cy.login({...maker1});
       contract.visit(deal);
-      contract.abandon().click();
+      contract.abandonButton().click();
 
       // cancel
       contractDelete.cancel().click();
@@ -46,7 +46,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
       // log in, visit a deal, select abandon
       cy.login({...maker1});
       contract.visit(deal);
-      contract.abandon().click();
+      contract.abandonButton().click();
 
       // submit without a comment
       contractDelete.comments().should('have.value', '');
@@ -63,7 +63,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
       // log in, visit a deal, select abandon
       cy.login({...maker1});
       contract.visit(deal);
-      contract.abandon().click();
+      contract.abandonButton().click();
 
       // submit with a comment
       contractDelete.comments().type('a mandatory comment');
