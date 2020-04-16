@@ -38,5 +38,37 @@ context('Bond details', () => {
       });
     });
   });
-  // TODO: bond details - when selected issued/unissued, correct form fields appear
+
+  describe('When a user clicks `unissued` bond stage', () => {
+    it('should render additional form fields', () => {
+      cy.allDeals().then((deals) => {
+        const deal = deals[0];
+        cy.loginGoToDealPage(user, deal);
+
+        pages.contract.addBondButton().click();
+
+        pages.bondDetails.bondStageUnissuedInput().click();
+
+        pages.bondDetails.ukefGuaranteeInMonthsInput().should('be.visible');
+      });
+    });
+  });
+
+  describe('When a user clicks `issued` bond stage', () => {
+    it('should render additional form fields', () => {
+      cy.allDeals().then((deals) => {
+        const deal = deals[0];
+        cy.loginGoToDealPage(user, deal);
+
+        pages.contract.addBondButton().click();
+
+        pages.bondDetails.bondStageIssuedInput().click();
+
+        pages.bondDetails.requestedCoverStartDateDayInput().should('be.visible');
+        pages.bondDetails.requestedCoverStartDateMonthInput().should('be.visible');
+        pages.bondDetails.requestedCoverStartDateYearInput().should('be.visible');
+        pages.bondDetails.uniqueIdentificationNumberInput().should('be.visible');
+      });
+    });
+  });
 });
