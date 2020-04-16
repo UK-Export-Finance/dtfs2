@@ -1,6 +1,6 @@
-import mapBondCurrencies from './mapBondCurrencies';
+import mapCurrencies from './mapCurrencies';
 
-describe('mapBondCurrencies', () => {
+describe('mapCurrencies', () => {
   it('should return an array of objects with value and text properties and first object with no value', () => {
     const mockCurrencies = [
       { id: 'CAD', text: 'CAD - Canadian Dollars' },
@@ -15,6 +15,6 @@ describe('mapBondCurrencies', () => {
       { value: 'EGP', text: 'EGP - Egyptian Pounds' },
     ];
 
-    expect(mapBondCurrencies(mockCurrencies)).toEqual(expected);
+    expect(mapCurrencies(mockCurrencies)).toEqual(expected);
   });
 });

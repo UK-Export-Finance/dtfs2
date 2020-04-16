@@ -5,7 +5,7 @@ import {
   requestParams,
   errorHref,
   postToApi,
-  mapBondCurrencies,
+  mapCurrencies,
 } from '../../helpers';
 
 const router = express.Router();
@@ -63,7 +63,7 @@ router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => 
       api.contractBond(_id, bondId, userToken),
       res,
     ),
-    currencies: mapBondCurrencies(currencies),
+    currencies: mapCurrencies(currencies),
   });
 });
 
