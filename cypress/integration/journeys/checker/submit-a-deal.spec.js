@@ -25,7 +25,6 @@ context('A checker selects to submit a contract from the view-contract page', ()
     };
 
     cy.deleteDeals(maker1);
-    // insert deals as each user
     cy.insertOneDeal(aDealInStatus("Ready for Checker's approval"), { ...maker1 });
   });
 
@@ -85,6 +84,10 @@ context('A checker selects to submit a contract from the view-contract page', ()
       });
       contract.previousStatus().invoke('text').then((text) => {
         expect(text.trim()).to.equal("Ready for Checker's approval");
+      });
+
+      cy.downloadFile( deal, {...checker}).then( (typeA) =>{
+        expect(typeA).not.to.equal('');
       });
     });
 
