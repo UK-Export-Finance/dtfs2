@@ -6,7 +6,7 @@ import generateErrorSummary from './generateErrorSummary';
 import formatCountriesForGDSComponent from './formatCountriesForGDSComponent';
 import errorHref from './errorHref';
 import postToApi from './postToApi';
-import mapBondCurrencies from './mapBondCurrencies';
+import mapCurrencies from './mapCurrencies';
 
 export {
   getApiData,
@@ -16,5 +16,5 @@ export {
   formatCountriesForGDSComponent,
   errorHref,
   postToApi,
-  mapBondCurrencies,
+  mapCurrencies,
 };

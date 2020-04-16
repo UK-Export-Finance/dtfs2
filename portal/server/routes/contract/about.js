@@ -3,6 +3,7 @@ import api from '../../api';
 import {
   getApiData,
   requestParams,
+  mapCurrencies,
 } from '../../helpers';
 
 
@@ -70,21 +71,12 @@ router.get('/contract/:_id/about/financial', async (req, res) => {
     res,
   );
 
-  // TODO: move to helper as used in multiple places
-  const mappedCurrencies = currencies.map((c) => {
-    const currency = {
-      ...c,
-      value: c.id,
-    };
-    return currency;
-  });
-
   res.render('about/about-supply-financial.njk', {
     contract: await getApiData(
       api.contract(_id, userToken),
       res,
     ),
-    currencies: mappedCurrencies,
+    currencies: mapCurrencies(currencies),
   });
 });
 

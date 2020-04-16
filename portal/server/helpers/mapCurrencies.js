@@ -1,7 +1,7 @@
 // add a 'value' property so it plays nicely with GDS select macro
 // also add empty first option for design.
 
-const mapBondCurrencies = (currencies) => {
+const mapCurrencies = (currencies) => {
   const mappedCurrencies = [
     { text: 'Select value' },
     ...currencies.map((c) => {
@@ -15,4 +15,4 @@ const mapBondCurrencies = (currencies) => {
   return mappedCurrencies;
 };
 
-export default mapBondCurrencies;
+export default mapCurrencies;
