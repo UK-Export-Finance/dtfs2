@@ -19,6 +19,12 @@ const page = {
   guaranteeFeePayableByBank: () => cy.get('[data-cy="guarantee-fee-payable-by-bank"]'),
   ukefExposure: () => cy.get('[data-cy="ukef-exposure"]'),
 
+  // bond financial details - 'currency NOT the same' specifics
+  currency: () => cy.get('[data-cy="currency"]'),
+  conversionRate: () => cy.get('[data-cy="conversion-rate"]'),
+  conversionRateDate: () => cy.get('[data-cy="conversion-rate-date"]'),
+
+
   // bond fee details
   feeType: () => cy.get('[data-cy="fee-type"]'),
   feeFrequency: () => cy.get('[data-cy="fee-frequency"]'),

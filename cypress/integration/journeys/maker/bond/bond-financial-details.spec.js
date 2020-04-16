@@ -13,7 +13,7 @@ const MOCK_DEAL = {
   },
 };
 
-const gotToBondFinancialDetailsPage = (deal) => {
+const goToBondFinancialDetailsPage = (deal) => {
   // const deal = deals[0];
   cy.loginGoToDealPage(user, deal);
 
@@ -60,7 +60,7 @@ context('Bond financial details', () => {
   describe('when a user selects that the currency is NOT the same as the Supply Contract currency', () => {
     it('should render additional form fields', () => {
       cy.allDeals().then((deals) => {
-        gotToBondFinancialDetailsPage(deals[0]);
+        goToBondFinancialDetailsPage(deals[0]);
 
         pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
 
@@ -72,13 +72,51 @@ context('Bond financial details', () => {
       });
     });
 
+    it('should render additional submitted form field values in Bond Preview page', () => {
+      cy.allDeals().then((deals) => {
+        goToBondFinancialDetailsPage(deals[0]);
+
+        pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
+
+        pages.bondFinancialDetails.currencyInput().select(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
+        pages.bondFinancialDetails.conversionRateInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
+        pages.bondFinancialDetails.conversionRateDateDayInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateDay);
+        pages.bondFinancialDetails.conversionRateDateMonthInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateMonth);
+        pages.bondFinancialDetails.conversionRateDateYearInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateYear);
+        pages.bondFinancialDetails.submit().click();
+
+        cy.url().should('include', '/fee-details');
+        pages.bondFeeDetails.submit().click();
+        cy.url().should('include', '/preview');
+
+        pages.bondPreview.currency().invoke('text').then((text) => {
+          expect(text.trim()).equal(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.text);
+        });
+
+        pages.bondPreview.conversionRate().invoke('text').then((text) => {
+          expect(text.trim()).equal(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
+        });
+
+        pages.bondPreview.conversionRateDate().invoke('text').then((text) => {
+          const {
+            conversionRateDateDay,
+            conversionRateDateMonth,
+            conversionRateDateYear,
+          } = BOND_FORM_VALUES.FINANCIAL_DETAILS;
+
+          const expected = `${conversionRateDateDay}/${conversionRateDateMonth}/${conversionRateDateYear}`;
+          expect(text.trim()).equal(expected);
+        });
+      });
+    });
+
     it('should populate the bond\'s `value` in Deal page with the submitted bond currency', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
-        gotToBondFinancialDetailsPage(deal);
+        goToBondFinancialDetailsPage(deal);
+
         pages.bondFinancialDetails.bondValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
         pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
-
         pages.bondFinancialDetails.currencyInput().select(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
 
         // get bondId, go back to deal page
@@ -99,13 +137,6 @@ context('Bond financial details', () => {
       });
     });
   });
-
-  // TODO: financial details - when selected yes/no currency, correct form fields appear
-  // pages.bondFinancialDetails.conversionRateInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
-  // pages.bondFinancialDetails.conversionRateDateDayInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateDay);
-  // pages.bondFinancialDetails.conversionRateDateMonthInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDatMonth);
-  // pages.bondFinancialDetails.conversionRateDateYearInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateYear);
-
   // TODO: financial details - disabled inputs guaranteeFeePayableByBank and ukefExposure work as expected
   // functionality needs to be done first - assuming these get automatically populated
 });
