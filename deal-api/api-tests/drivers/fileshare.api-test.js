@@ -1,15 +1,16 @@
+jest.unmock('@azure/storage-file-share');
+
 const fileshare = require('../../src/drivers/fileshare');
 
 const someXML = '<?xml version="1.0" encoding="UTF-8"?><Deal/>';
 
 describe('fileshare', () => {
-
   it('can upload a string and get it back', async () => {
     await fileshare.uploadStream({
       folder: 'dantest',
       fieldname: 'dansubfolder',
       originalname: 'out.xml',
-      buffer: Buffer.from(someXML, "utf-8"),
+      buffer: Buffer.from(someXML, 'utf-8'),
     }).catch((err) => {
       console.log(err);
     });

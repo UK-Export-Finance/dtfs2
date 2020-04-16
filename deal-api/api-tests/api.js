@@ -16,7 +16,7 @@ module.exports = (app) => ({
       .send(data),
   }),
 
-  putWithFileUploads: (data, token, files = []) => ({
+  putMultipartForm: (data, token, files = []) => ({
     to: async (url) => {
       const apiRequest = request(app)
         .put(url)

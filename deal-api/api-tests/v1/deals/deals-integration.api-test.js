@@ -1,3 +1,5 @@
+jest.unmock('@azure/storage-file-share');
+
 const wipeDB = require('../../wipeDB');
 const aDeal = require('./deal-builder');
 const fileshare = require('../../../src/drivers/fileshare');
@@ -16,7 +18,7 @@ describe('/v1/deals/:id/integration/', () => {
     details: {
       bankSupplyContractName: 'mock name',
       bankSupplyContractID: 'mock id',
-      status: "Draft",
+      status: 'Draft',
       dateOfLastAction: '1985/11/04 21:00:00:000',
     },
     comments: [{
@@ -82,7 +84,6 @@ describe('/v1/deals/:id/integration/', () => {
         name: 'Pot o Gold',
       },
     });
-
   });
 
   describe('GET /v1/deals/:id/integration/type-a', () => {
@@ -102,13 +103,13 @@ describe('/v1/deals/:id/integration/', () => {
       const postResult = await post(newDeal, maker2).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const someData = "<xml><Deal/>";
+      const someData = '<xml><Deal/>';
 
       await fileshare.uploadStream({
         folder: 'ukef',
         subfolder: 'type-a',
         filename: `${newId}.xml`,
-        buffer: Buffer.from(someData, "utf-8"),
+        buffer: Buffer.from(someData, 'utf-8'),
       });
 
       const { status } = await get(`/v1/deals/${newId}/integration/type-a`, checker);
@@ -117,7 +118,7 @@ describe('/v1/deals/:id/integration/', () => {
     });
 
     it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
-      const {body} = await post(newDeal, maker1).to('/v1/deals');
+      const { body } = await post(newDeal, maker1).to('/v1/deals');
 
       const { status } = await get(`/v1/deals/${body._id}/integration/type-a`, checker);
 
@@ -125,7 +126,7 @@ describe('/v1/deals/:id/integration/', () => {
     });
 
     it('404s requests for unkonwn ids', async () => {
-      const { status } = await get(`/v1/deals/123456789012/integration/type-a`, checker);
+      const { status } = await get('/v1/deals/123456789012/integration/type-a', checker);
 
       expect(status).toEqual(404);
     });
@@ -134,13 +135,13 @@ describe('/v1/deals/:id/integration/', () => {
       const postResult = await post(newDeal, maker2).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const someData = "<xml><Deal/>";
+      const someData = '<xml><Deal/>';
 
       await fileshare.uploadStream({
         folder: 'ukef',
         subfolder: 'type-a',
         filename: `${newId}.xml`,
-        buffer: Buffer.from(someData, "utf-8"),
+        buffer: Buffer.from(someData, 'utf-8'),
       });
 
       const { status } = await get(`/v1/deals/${newId}/integration/type-a`, superuser);
@@ -152,14 +153,14 @@ describe('/v1/deals/:id/integration/', () => {
       const postResult = await post(newDeal, maker2).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const someData = "<xml><Deal/>";
+      const someData = '<xml><Deal/>';
 
       await fileshare.uploadStream({
         folder: 'ukef',
         subfolder: 'type-a',
         filename: `${newId}.xml`,
-        buffer: Buffer.from(someData, "utf-8"),
-      })
+        buffer: Buffer.from(someData, 'utf-8'),
+      });
 
       const { status, text } = await get(`/v1/deals/${newId}/integration/type-a`, checker);
 
@@ -167,5 +168,4 @@ describe('/v1/deals/:id/integration/', () => {
       expect(text).toEqual(someData);
     });
   });
-
 });
