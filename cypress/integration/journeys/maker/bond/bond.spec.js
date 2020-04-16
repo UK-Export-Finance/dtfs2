@@ -166,7 +166,7 @@ context('Add a bond', () => {
           // TODO: status
 
           row.bondValue().invoke('text').then((text) => {
-            const expectedValue = `${deal.supplyContractCurrency} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue}`;
+            const expectedValue = `${deal.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue}`;
             expect(text.trim()).equal(expectedValue);
           });
 
