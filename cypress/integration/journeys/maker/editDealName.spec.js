@@ -32,6 +32,7 @@ context('Edit deal name', () => {
       contract.visit(deal);
       contract.editDealName().click();
 
+      editDealName.bankSupplyContractName().should('have.value', deal.details.bankSupplyContractName);
       editDealName.bankSupplyContractName().type('{selectall}{backspace}');
       editDealName.submit().click();
 
