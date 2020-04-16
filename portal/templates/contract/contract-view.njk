@@ -12,7 +12,12 @@
     <h1 class="govuk-heading-l">
       Supply Contract name:
       <span data-cy="bankSupplyContractName" class="govuk-body govuk-!-font-size-24">{{ contract.details.bankSupplyContractName }}</span>
-      <a data-cy="EditDealName" class="govuk-link govuk-!-font-size-14" href="/contract/{{ contract._id }}/edit-name">Edit</a>
+
+      {% if user.roles.includes('maker') %}
+        {% if ["Draft","Further Maker's input required"].includes(contract.details.status) %}
+          <a data-cy="EditDealName" class="govuk-link govuk-!-font-size-14" href="/contract/{{ contract._id }}/edit-name">Edit</a>
+        {% endif %}
+      {% endif %}
     </h1>
 
     <div class="govuk-tabs" data-module="govuk-tabs">

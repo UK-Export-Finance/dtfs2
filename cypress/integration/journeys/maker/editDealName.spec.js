@@ -23,6 +23,24 @@ context('Edit deal name', () => {
     cy.insertOneDeal(deal, user);
   });
 
+  it('rejects an empty field', () => {
+    cy.login(user);
+
+    cy.allDeals().then( (deals) => {
+      const deal = deals[0];
+
+      contract.visit(deal);
+      contract.editDealName().click();
+
+      editDealName.bankSupplyContractName().type('{selectall}{backspace}');
+      editDealName.submit().click();
+
+      cy.url().should('eq', relative(`/contract/${deal._id}/edit-name`));
+
+      editDealName.expectError('A value is required.');
+    });
+  });
+
   it('updates deal.details.bankSupplyContractName', () => {
     cy.login(user);
 
