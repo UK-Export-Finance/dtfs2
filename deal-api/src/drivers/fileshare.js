@@ -48,8 +48,8 @@ const uploadStream = async ({
   return {
     folder,
     subfolder,
-    filename,
-    fullPath: `${folder}/${subfolder}/${filename}`,
+    filename: fileClient.name,
+    fullPath: fileClient.path,
   };
 };
 

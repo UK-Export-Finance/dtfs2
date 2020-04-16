@@ -18,10 +18,15 @@ const removeDeletedFiles = (dealFiles, deletedFilesList) => {
   if (!deletedFilesList) return dealFiles;
 
   const updatedDealFiles = {};
+
   Object.keys(dealFiles).forEach((fieldname) => {
-    updatedDealFiles[fieldname] = dealFiles[fieldname].filter(
-      ({ fullPath }) => deletedFilesList.indexOf(fullPath) === -1,
-    );
+    if (Array.isArray(dealFiles[fieldname])) {
+      updatedDealFiles[fieldname] = dealFiles[fieldname].filter(
+        ({ fullPath }) => deletedFilesList.indexOf(fullPath) === -1,
+      );
+    } else {
+      updatedDealFiles[fieldname] = dealFiles[fieldname];
+    }
   });
   return updatedDealFiles;
 };
@@ -62,7 +67,9 @@ exports.update = async (req, res) => {
       if (!(fieldname in dealFiles)) {
         dealFiles[fieldname] = [];
       }
-      dealFiles[fieldname].push({ ...rest });
+      if (!dealFiles[fieldname].some((df) => df.filename === rest.filename)) {
+        dealFiles[fieldname].push({ ...rest });
+      }
     });
 
 
