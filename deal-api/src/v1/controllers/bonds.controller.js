@@ -2,6 +2,7 @@ const { ObjectId } = require('mongodb');
 const db = require('../../drivers/db-client');
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
+const { findOneBondCurrency } = require('./bondCurrencies.controller');
 
 exports.create = async (req, res) => {
   await findOneDeal(req.params.id, async (deal) => {
@@ -30,6 +31,16 @@ exports.create = async (req, res) => {
   });
 };
 
+const handleBondCurrency = async (currencyCode) => {
+  const currencyObj = await findOneBondCurrency(currencyCode);
+  const { text, id } = currencyObj;
+
+  return {
+    text,
+    id,
+  };
+};
+
 exports.updateBond = async (req, res) => {
   const {
     id: dealId,
@@ -51,10 +62,16 @@ exports.updateBond = async (req, res) => {
         ...req.body,
       };
 
-      const { transactionCurrencySameAsSupplyContractCurrency } = req.body;
+      const {
+        transactionCurrencySameAsSupplyContractCurrency,
+        currency: currencyCode,
+      } = req.body;
 
       if (transactionCurrencySameAsSupplyContractCurrency && transactionCurrencySameAsSupplyContractCurrency === 'true') {
-        updatedBond.currency = deal.supplyContractCurrency;
+        const supplyContractCurrencyCode = deal.supplyContractCurrency.id;
+        updatedBond.currency = await handleBondCurrency(supplyContractCurrencyCode);
+      } else if (currencyCode) {
+        updatedBond.currency = await handleBondCurrency(currencyCode);
       }
 
       const collection = await db.getCollection('deals');

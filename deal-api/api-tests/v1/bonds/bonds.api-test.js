@@ -22,6 +22,7 @@ describe('/v1/deals/:id/bond/create', () => {
   let user1;
   let user2;
   let superuser;
+  let editoruser;
 
   beforeEach(async () => {
     await wipeDB();
@@ -60,6 +61,20 @@ describe('/v1/deals/:id/bond/create', () => {
         id: '*',
       },
     });
+
+    editoruser = await getToken({
+      username: '9',
+      password: '10',
+      roles: ['editor'],
+    });
+
+    const mockCurrencies = [
+      { id: 'GBP', text: 'GBP - UK Sterling' },
+      { id: 'EUR', text: 'EUR - Euros' },
+    ];
+
+    await post(mockCurrencies[0], editoruser).to('/v1/bond-currencies');
+    await post(mockCurrencies[1], editoruser).to('/v1/bond-currencies');
   });
 
   describe('PUT /v1/deals/:id/bond/create', () => {
@@ -195,6 +210,7 @@ describe('/v1/deals/:id/bond/create', () => {
       const deal = await post(newDeal, user1).to('/v1/deals/');
       const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
+      // TODO: add all possible values here
       const bondBody = {
         bondIssuer: 'issuer',
         bondType: 'bond type',
@@ -208,6 +224,7 @@ describe('/v1/deals/:id/bond/create', () => {
         'coverEndDate-year': '2022',
         uniqueIdentificationNumber: '1234',
         bondBeneficiary: 'test',
+        currency: 'EUR',
       };
 
       const createBondResponse = await put({}, user1).to(`/v1/deals/${dealId}/bond/create`);
@@ -229,11 +246,24 @@ describe('/v1/deals/:id/bond/create', () => {
       const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
         b._id === bondId); // eslint-disable-line no-underscore-dangle
 
-      expect(updatedBond).toEqual({
+      const { body: getCurrencyBody } = await get(
+        `/v1/bond-currencies/${bondBody.currency}`,
+        user1,
+      );
+
+      const expectedCurrencyObj = {
+        id: getCurrencyBody.id,
+        text: getCurrencyBody.text,
+      };
+
+      const expectedUpdatedBond = {
         _id: bondId, // eslint-disable-line no-underscore-dangle
         ...bondBody,
-      });
+        currency: expectedCurrencyObj,
+      };
+      expect(updatedBond).toEqual(expectedUpdatedBond);
     });
+
     describe('when a bond has transactionCurrencySameAsSupplyContractCurrency in the req.body', () => {
       it('should use the deal\'s supplyContractCurrency to the bond\'s currency', async () => {
         const deal = await post(newDeal, user1).to('/v1/deals/');

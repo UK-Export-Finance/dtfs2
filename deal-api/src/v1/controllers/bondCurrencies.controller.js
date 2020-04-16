@@ -11,14 +11,13 @@ const findBondCurrencies = async (callback) => {
   });
 };
 
-const findOneBondCurrency = async (id, callback) => {
+const findOneBondCurrency = async (id) => {
   const collection = await db.getCollection('bondCurrencies');
 
-  collection.findOne({ id }, (err, result) => {
-    assert.equal(err, null);
-    callback(result);
-  });
+  const currency = await collection.findOne({ id });
+  return currency;
 };
+exports.findOneBondCurrency = findOneBondCurrency;
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection('bondCurrencies');
@@ -34,9 +33,10 @@ exports.findAll = (req, res) => (
   }))
 );
 
-exports.findOne = (req, res) => (
-  findOneBondCurrency(req.params.id, (bondCurrency) => res.status(200).send(bondCurrency))
-);
+exports.findOne = async (req, res) => {
+  const bondCurrency = await findOneBondCurrency(req.params.id);
+  return res.status(200).send(bondCurrency);
+};
 
 exports.update = async (req, res) => {
   const collection = await db.getCollection('bondCurrencies');
