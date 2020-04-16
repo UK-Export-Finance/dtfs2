@@ -61,7 +61,7 @@ context('A checker selects to return a deal to maker from the view-contract page
     });
   });
 
-  it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /start-now.', () => {
+  it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard.', () => {
     cy.aDealInStatus("Ready for Checker's approval").then( (deal) => {
       // log in, visit a deal, select abandon
       cy.login({...checker});
@@ -72,8 +72,8 @@ context('A checker selects to return a deal to maker from the view-contract page
       contractReturnToMaker.comments().type('a mandatory comment');
       contractReturnToMaker.returnToMaker().click();
 
-      // expect to land on the /start-now page with a success message
-      cy.url().should('eq', relative(`/start-now`));
+      // expect to land on the /dashboard page with a success message
+      cy.url().should('include', `/dashboard`)
       successMessage.successMessageListItem().invoke('text').then((text) => {
         expect(text.trim()).to.match(/Supply Contract returned to maker./);
       });

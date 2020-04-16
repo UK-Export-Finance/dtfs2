@@ -58,7 +58,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     });
   });
 
-  it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /start-now.', () => {
+  it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard.', () => {
     cy.aDealInStatus("Draft").then( (deal) => {
       // log in, visit a deal, select abandon
       cy.login({...maker1});
@@ -69,8 +69,8 @@ context('A maker selects to abandon a contract from the view-contract page', () 
       contractDelete.comments().type('a mandatory comment');
       contractDelete.abandon().click();
 
-      // expect to land on the /start-now page with a success message
-      cy.url().should('eq', relative(`/start-now`));
+      // expect to land on the /dashboard page with a success message
+      cy.url().should('include', `/dashboard`)
       successMessage.successMessageListItem().invoke('text').then((text) => {
         expect(text.trim()).to.match(/Supply Contract abandoned./);
       });
