@@ -13,6 +13,17 @@ const MOCK_DEAL = {
   },
 };
 
+const gotToBondFinancialDetailsPage = (deal) => {
+  // const deal = deals[0];
+  cy.loginGoToDealPage(user, deal);
+
+  pages.contract.addBondButton().click();
+  partials.bondProgressNav.progressNavBondFinancialDetails().click();
+  cy.url().should('include', '/contract');
+  cy.url().should('include', '/bond/');
+  cy.url().should('include', '/financial-details');
+};
+
 context('Bond financial details', () => {
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -47,21 +58,27 @@ context('Bond financial details', () => {
   });
 
   describe('when a user selects that the currency is NOT the same as the Supply Contract currency', () => {
-    it('should populate the bond\'s `value` in Deal page with the submitted bond currency', () => {
+    it('should render additional form fields', () => {
       cy.allDeals().then((deals) => {
-        const deal = deals[0];
-        cy.loginGoToDealPage(user, deal);
+        gotToBondFinancialDetailsPage(deals[0]);
 
-        pages.contract.addBondButton().click();
-        partials.bondProgressNav.progressNavBondFinancialDetails().click();
-        cy.url().should('include', '/contract');
-        cy.url().should('include', '/bond/');
-        cy.url().should('include', '/financial-details');
-
-        pages.bondFinancialDetails.bondValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
         pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
 
         pages.bondFinancialDetails.currencyInput().should('be.visible');
+        pages.bondFinancialDetails.conversionRateInput().should('be.visible');
+        pages.bondFinancialDetails.conversionRateDateDayInput().should('be.visible');
+        pages.bondFinancialDetails.conversionRateDateMonthInput().should('be.visible');
+        pages.bondFinancialDetails.conversionRateDateYearInput().should('be.visible');
+      });
+    });
+
+    it('should populate the bond\'s `value` in Deal page with the submitted bond currency', () => {
+      cy.allDeals().then((deals) => {
+        const deal = deals[0];
+        gotToBondFinancialDetailsPage(deal);
+        pages.bondFinancialDetails.bondValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
+        pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
+
         pages.bondFinancialDetails.currencyInput().select(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
 
         // get bondId, go back to deal page
@@ -79,9 +96,6 @@ context('Bond financial details', () => {
             expect(text.trim()).equal(expectedValue);
           });
         });
-
-
-        cy.url().should('include', '/contract');
       });
     });
   });

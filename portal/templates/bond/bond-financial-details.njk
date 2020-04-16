@@ -88,6 +88,10 @@
       }) }}
   
     <div
+      id="additional-form-fields"
+      {% if showAdditionalFieldsByDefault === false %}
+      class="govuk-visually-hidden"
+      {% endif %}
     >
 
       {{ govukSelect({
@@ -113,7 +117,7 @@
 
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-quarter">
-            <input class="govuk-input" id="conversionRate" name="conversionRate" type="text" size="60" maxlength="@55" pattern="[0-9]{0,6}(\.\d{0,6}|\.?)" aria-describedby="conversion-rate-hint" value="{{ bond.conversionRate }}">
+            <input class="govuk-input" id="conversionRate" name="conversionRate" type="text" size="60" maxlength="@55" pattern="[0-9]{0,6}(\.\d{0,6}|\.?)" aria-describedby="conversion-rate-hint" value="{{ bond.conversionRate }}" data-cy="conversion-rate">
           </div>
         </div>
       </div>

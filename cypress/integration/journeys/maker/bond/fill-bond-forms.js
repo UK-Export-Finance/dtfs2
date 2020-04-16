@@ -1,6 +1,7 @@
 const pages = require('../../../pages');
 const BOND_FORM_VALUES = require('./bond-form-values');
 
+// scenario: 'unissued' bond stage
 const details = () => {
   pages.bondDetails.bondIssuerInput().type(BOND_FORM_VALUES.DETAILS.bondIssuer);
   pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
@@ -9,6 +10,7 @@ const details = () => {
   pages.bondDetails.bondBeneficiaryInput().type(BOND_FORM_VALUES.DETAILS.bondBeneficiary);
 };
 
+// scenario: currency is the same as Supply Contract Currency
 const financialDetails = () => {
   pages.bondFinancialDetails.bondValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
   pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyYesInput().click();
