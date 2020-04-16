@@ -45,8 +45,9 @@ context('Dashboard Deals pagination controls', () => {
       dashboard.applyFilters().click();
 
       //confirm we're still getting our filter applied when we paginate
+      // ordered by last update; so page 2 just shows our first deal..
       dashboard.next().click();
-      dashboard.confirmDealsPresent(deals.slice(20,21));
+      dashboard.confirmDealsPresent([deals[0]]);
       dashboard.totalItems().invoke('text').then((text) => {
         expect(text.trim()).equal('(21 items)');
       });

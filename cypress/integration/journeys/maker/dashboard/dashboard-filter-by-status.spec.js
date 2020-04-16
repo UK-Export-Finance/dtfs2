@@ -29,8 +29,10 @@ context('Dashboard Deals filter by status', () => {
       dashboard.showFilters().click();
       dashboard.filterByStatus().select('all');
       dashboard.applyFilters().click();
+      // in dashbaord, these are ordered by last update, so appear reversed
+      const firstTwentyDeals = deals.slice(1,21).reverse();
 
-      dashboard.confirmDealsPresent(deals.slice(0,20));
+      dashboard.confirmDealsPresent(firstTwentyDeals);
       dashboard.totalItems().invoke('text').then((text) => {
         expect(text.trim()).equal('(21 items)');
       });
