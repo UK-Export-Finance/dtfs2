@@ -62,7 +62,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     });
   });
 
-  it('The Ready for Checkers Review button updates the deal and takes the user to /start-now.', () => {
+  it('The Ready for Checkers Review button updates the deal and takes the user to /dashboard.', () => {
     // log in, visit a deal, select abandon
     cy.login({...maker1});
 
@@ -74,8 +74,8 @@ context('A maker selects to abandon a contract from the view-contract page', () 
       contractReadyForReview.comments().type('a mandatory comment');
       contractReadyForReview.readyForCheckersApproval().click();
 
-      // expect to land on the /start-now page with a success message
-      cy.url().should('eq', relative(`/start-now`));
+      // expect to land on the /dashboard page with a success message
+      cy.url().should('include', `/dashboard`)
       successMessage.successMessageListItem().invoke('text').then((text) => {
         expect(text.trim()).to.match(/Supply Contract submitted for review./);
       });

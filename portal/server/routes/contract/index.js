@@ -94,7 +94,7 @@ router.post('/contract/:_id/delete', async (req, res) => {
     hrefText: 'View abandoned Supply Contract',
   });
 
-  return res.redirect('/start-now');
+  return res.redirect('/dashboard');
 });
 
 router.get('/contract/:_id/ready-for-review', async (req, res) => {
@@ -141,7 +141,7 @@ router.post('/contract/:_id/ready-for-review', async (req, res) => {
     hrefText: 'View Supply Contract',
   });
 
-  return res.redirect('/start-now');
+  return res.redirect('/dashboard');
 });
 
 router.get('/contract/:_id/edit-name', async (req, res) => {
@@ -214,7 +214,7 @@ router.post('/contract/:_id/return-to-maker', async (req, res) => {
     hrefText: 'View Supply Contract',
   });
 
-  return res.redirect('/start-now');
+  return res.redirect('/dashboard');
 });
 
 router.get('/contract/:_id/confirm-submission', async (req, res) => {
@@ -261,7 +261,7 @@ router.post('/contract/:_id/confirm-submission', async (req, res) => {
     hrefText: 'View Supply Contract',
   });
 
-  return res.redirect('/start-now');
+  return res.redirect('/dashboard');
 });
 
 router.get('/contract/:_id/clone', async (req, res) => {
