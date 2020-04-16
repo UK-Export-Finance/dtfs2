@@ -33,7 +33,8 @@ context('Contracts viewed by role=checker, by status', () => {
       contract.proceedToSubmit().should('exist').and('be.disabled');
       contract.editDealName().should('not.exist');
       contract.proceedToReview().should('not.exist');
-      contract.abandon().should('not.exist');
+      contract.abandonButton().should('not.exist');
+      contract.abandonLink().should('not.exist');
     })
   });
 
@@ -47,7 +48,8 @@ context('Contracts viewed by role=checker, by status', () => {
       contract.proceedToSubmit().should('exist').and('be.disabled');
       contract.editDealName().should('not.exist');
       contract.proceedToReview().should('not.exist');
-      contract.abandon().should('not.exist');
+      contract.abandonButton().should('not.exist');
+      contract.abandonLink().should('not.exist');
     });
   });
 
@@ -60,7 +62,8 @@ context('Contracts viewed by role=checker, by status', () => {
       contract.proceedToSubmit().should('exist').and('be.disabled');
       contract.editDealName().should('not.exist');
       contract.proceedToReview().should('not.exist');
-      contract.abandon().should('not.exist');
+      contract.abandonButton().should('not.exist');
+      contract.abandonLink().should('not.exist');
     });
   });
 
@@ -73,7 +76,8 @@ context('Contracts viewed by role=checker, by status', () => {
       contract.proceedToSubmit().should('exist').and('be.disabled');
       contract.editDealName().should('not.exist');
       contract.proceedToReview().should('not.exist');
-      contract.abandon().should('not.exist');
+      contract.abandonButton().should('not.exist');
+      contract.abandonLink().should('not.exist');
     });
   });
 
@@ -86,7 +90,8 @@ context('Contracts viewed by role=checker, by status', () => {
       contract.proceedToSubmit().should('exist').and('be.disabled');
       contract.editDealName().should('not.exist');
       contract.proceedToReview().should('not.exist');
-      contract.abandon().should('not.exist');
+      contract.abandonButton().should('not.exist');
+      contract.abandonLink().should('not.exist');
     });
   });
 
@@ -99,7 +104,8 @@ context('Contracts viewed by role=checker, by status', () => {
       contract.proceedToSubmit().should('exist').and('be.disabled');
       contract.editDealName().should('not.exist');
       contract.proceedToReview().should('not.exist');
-      contract.abandon().should('not.exist');
+      contract.abandonButton().should('not.exist');
+      contract.abandonLink().should('not.exist');
     });
   });
 
@@ -115,7 +121,8 @@ context('Contracts viewed by role=checker, by status', () => {
       contract.proceedToSubmit().should('exist').and('not.be.disabled');
       contract.editDealName().should('not.exist');
       contract.proceedToReview().should('not.exist');
-      contract.abandon().should('not.exist');
+      contract.abandonButton().should('not.exist');
+      contract.abandonLink().should('not.exist');
     });
   });
 
@@ -126,7 +133,8 @@ context('Contracts viewed by role=checker, by status', () => {
 
       contract.canProceed().should('not.exist');
       contract.cannotProceed().should('not.exist');
-      contract.abandon().should('not.exist');
+      contract.abandonButton().should('not.exist');
+      contract.abandonLink().should('not.exist');
       contract.editDealName().should('not.exist');
       contract.proceedToReview().should('not.exist');
       contract.returnToMaker().should('not.exist');
@@ -141,7 +149,8 @@ context('Contracts viewed by role=checker, by status', () => {
 
       contract.canProceed().should('not.exist');
       contract.cannotProceed().should('not.exist');
-      contract.abandon().should('not.exist');
+      contract.abandonButton().should('not.exist');
+      contract.abandonLink().should('not.exist');
       contract.editDealName().should('not.exist');
       contract.proceedToReview().should('not.exist');
       contract.returnToMaker().should('not.exist');
