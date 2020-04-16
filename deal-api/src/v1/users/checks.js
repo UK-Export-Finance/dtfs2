@@ -21,7 +21,12 @@ const userHasAccessTo = (user, resource) => {
   return user.bank.id === resource.details.owningBank.id;
 };
 
+const userOwns = (user, resource) =>
+  user._id.toString() !== resource.details.maker._id.toString();// eslint-disable-line no-underscore-dangle
+
+
 module.exports = {
   isSuperUser,
   userHasAccessTo,
+  userOwns,
 };

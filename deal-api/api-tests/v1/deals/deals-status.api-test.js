@@ -311,6 +311,27 @@ describe('/v1/deals/:id/status', () => {
       });
     });
 
+    it("rejects 'Ready for Checker's approval' updates if no comment provided.", async () => {
+      const postResult = await post(newDeal, maker1).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        status: "Ready for Checker's approval",
+      };
+
+      const { status, body } = await put(statusUpdate, maker1).to(`/v1/deals/${createdDeal._id}/status`);
+
+      expect(body).toEqual({
+        success: false,
+        count: 1,
+        errorList: {
+          comments: {
+            order: "1",
+            text: "Comment is required when submitting a deal for review."
+          }
+        }
+      });
+    });
+
     it('rejects "Further makers Input Required" updates if no comment provided.', async () => {
       const postResult = await post(newDeal, maker2).to('/v1/deals');
       const createdDeal = postResult.body;

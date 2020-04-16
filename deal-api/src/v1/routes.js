@@ -6,6 +6,7 @@ const validate = require('../role-validator');
 
 const deals = require('./controllers/deal.controller');
 const dealStatus = require('./controllers/deal-status.controller');
+const dealName = require('./controllers/deal-name.controller');
 const dealIntegration = require('./controllers/deal-integration.controller');
 const banks = require('./controllers/banks.controller');
 const bondCurrencies = require('./controllers/bondCurrencies.controller');
@@ -44,6 +45,12 @@ authRouter.route('/deals/:id/status')
   .put(
     validate({ role: ['maker', 'checker'] }),
     dealStatus.update,
+  );
+
+authRouter.route('/deals/:id/bankSupplyContractName')
+  .put(
+    validate({ role: ['maker'] }),
+    dealName.update,
   );
 
 authRouter.route('/deals/:id/integration/type-a')
