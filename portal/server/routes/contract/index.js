@@ -100,7 +100,7 @@ router.post('/contract/:_id/delete', async (req, res) => {
 router.get('/contract/:_id/ready-for-review', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  return res.render('contract/contract-ready-for-review.njk',
+  return res.render(`contract/ready-for-review.njk`,
     await getApiData(
       api.contract(_id, userToken),
       res,
