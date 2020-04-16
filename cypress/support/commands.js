@@ -66,3 +66,4 @@ Cypress.Commands.add("createNewSubmission", require('./portal/createNewSubmissio
 Cypress.Commands.add("login", require('./portal/login'));
 Cypress.Commands.add("loginGoToDealPage", require('./portal/loginGoToDealPage'));
 Cypress.Commands.add("passRedLine", require('./portal/passRedLine'));
+Cypress.Commands.add("renameDeal", require('./portal/renameDeal'));

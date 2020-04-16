@@ -7,6 +7,7 @@ const page = {
   filterByStatus: () => cy.get('[data-cy="filterByStatus"]'),
   applyFilters: () => cy.get('[data-cy="ApplyFilters"]'),
 
+  rows: () => cy.get('.govuk-table__row'),
   row: (deal) => {
     const row = cy.get(`[data-cy="deal_${deal._id}"]`);
     return {
