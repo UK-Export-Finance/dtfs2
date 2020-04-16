@@ -58,12 +58,14 @@ router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => 
     res,
   );
 
+  const bondResponse = await getApiData(
+    api.contractBond(_id, bondId, userToken),
+    res,
+  );
+
   return res.render('bond/bond-financial-details.njk', {
-    ...await getApiData(
-      api.contractBond(_id, bondId, userToken),
-      res,
-    ),
-    currencies: mapCurrencies(currencies),
+    ...bondResponse,
+    currencies: mapCurrencies(currencies, bondResponse.bond.currency),
   });
 });
 
