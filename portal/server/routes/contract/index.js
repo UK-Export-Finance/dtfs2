@@ -125,7 +125,7 @@ router.post('/contract/:_id/ready-for-review', async (req, res) => {
   };
 
   if (validationErrors.count) {
-    return res.status(400).render('contract/contract-delete.njk', {
+    return res.status(400).render('contract/ready-for-review.njk', {
       contract: await getApiData(
         api.contract(_id, userToken),
         res,
