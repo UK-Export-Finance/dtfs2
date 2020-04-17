@@ -1,0 +1,58 @@
+{% import '_macros/date-range.njk' as dateRange %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% macro render(filter, user) %}
+
+<form method="POST" autocomplete="off">
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="filterByStatus">
+          Status
+        </label>
+
+        <select data-cy="filterByStatus" class="govuk-select" id="filterByStatus" name="filterByStatus">
+          <option value="all" {% if filter.filterByStatus==='all' %}selected{%endif%}>Any</option>
+          <option value="draft" {% if filter.filterByStatus==='draft' %}selected{%endif%}>Draft</option>
+          <option value="readyForApproval" {% if filter.filterByStatus==='readyForApproval' %}selected{%endif%}>Ready for Checker's approval</option>
+          <option value="inputRequired" {% if filter.filterByStatus==='inputRequired' %}selected{%endif%}>Further Maker's input required</option>
+          <option value="abandoned" {% if filter.filterByStatus==='abandoned' %}selected{%endif%}>Abandoned Deal</option>
+          <option value="submitted" {% if filter.filterByStatus==='submitted' %}selected{%endif%}>Submitted</option>
+          <option value="submissionAcknowledged" {% if filter.filterByStatus==='submissionAcknowledged' %}selected{%endif%}>Acknowledged by UKEF</option>
+          <option value="approved" {% if filter.filterByStatus==='approved' %}selected{%endif%}>Accepted by UKEF (without conditions)</option>
+          <option value="approvedWithConditions" {% if filter.filterByStatus==='approvedWithConditions' %}selected{%endif%}>Accepted by UKEF (with conditions)</option>
+          <option value="refused" {% if filter.filterByStatus==='refused' %}selected{%endif%}>Rejected by UKEF</option></select>
+        </select>
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="bankSupplyContractID">
+          Bank Supply contract ID
+        </label>
+        <input class="govuk-input" id="bankSupplyContractID" name="bankSupplyContractID" type="text">
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="ukefSupplyContractID">
+          UKEF Supply contract ID
+        </label>
+        <input class="govuk-input" id="ukefSupplyContractID" name="ukefSupplyContractID" type="text">
+      </div>
+    </div>
+
+  </div>
+
+  {{ dateRange.inputs(fromLegend = 'Select created date between', toLegend = 'And' ) }}
+
+  <button data-cy="ApplyFilters" class="govuk-button" data-module="govuk-button">
+    Apply
+  </button>
+
+</form>
+{% endmacro %}
