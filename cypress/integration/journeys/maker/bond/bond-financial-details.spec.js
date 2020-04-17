@@ -34,7 +34,7 @@ context('Bond financial details', () => {
     cy.insertOneDeal(MOCK_DEAL, user);
   });
 
-  describe('When a user completes the `Bond Financial Details` form', () => {
+  describe('When a user submits the `Bond Financial Details` form', () => {
     it('should progress to the bond `Fee Details` page', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
@@ -54,6 +54,30 @@ context('Bond financial details', () => {
         cy.url().should('include', '/fee-details');
       });
     });
+
+    it('should prepopulate submitted form fields when returning back to Bond Financial Details page', () => {
+      cy.allDeals().then((deals) => {
+        const deal = deals[0];
+        cy.loginGoToDealPage(user, deal);
+
+        pages.contract.addBondButton().click();
+        partials.bondProgressNav.progressNavBondFinancialDetails().click();
+        cy.url().should('include', '/financial-details');
+
+        fillBondForm.financialDetails();
+        pages.bondFinancialDetails.submit().click();
+
+        cy.url().should('include', '/fee-details');
+        partials.bondProgressNav.progressNavBondFinancialDetails().click();
+        cy.url().should('include', '/financial-details');
+
+        pages.bondFinancialDetails.bondValueInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
+        pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyYesInput().should('be.checked');
+        pages.bondFinancialDetails.riskMarginFeeInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.riskMarginFee);
+        pages.bondFinancialDetails.coveredPercentageInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
+        pages.bondFinancialDetails.minimumRiskMarginFeeInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
+      });
+    });
   });
 
   describe('when a user selects that the currency is NOT the same as the Supply Contract currency', () => {
@@ -68,6 +92,45 @@ context('Bond financial details', () => {
         pages.bondFinancialDetails.conversionRateDateDayInput().should('be.visible');
         pages.bondFinancialDetails.conversionRateDateMonthInput().should('be.visible');
         pages.bondFinancialDetails.conversionRateDateYearInput().should('be.visible');
+      });
+    });
+
+    it('should prepopulate submitted form fields when returning back to Bond Financial Details page', () => {
+      cy.allDeals().then((deals) => {
+        const deal = deals[0];
+        cy.loginGoToDealPage(user, deal);
+
+        pages.contract.addBondButton().click();
+        partials.bondProgressNav.progressNavBondFinancialDetails().click();
+        cy.url().should('include', '/financial-details');
+
+        pages.bondFinancialDetails.bondValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
+        pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
+        pages.bondFinancialDetails.currencyInput().select(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
+        pages.bondFinancialDetails.conversionRateInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
+        pages.bondFinancialDetails.conversionRateDateDayInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateDay);
+        pages.bondFinancialDetails.conversionRateDateMonthInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateMonth);
+        pages.bondFinancialDetails.conversionRateDateYearInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateYear);
+        pages.bondFinancialDetails.riskMarginFeeInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.riskMarginFee);
+        pages.bondFinancialDetails.coveredPercentageInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
+        pages.bondFinancialDetails.minimumRiskMarginFeeInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
+
+        pages.bondFinancialDetails.submit().click();
+
+        cy.url().should('include', '/fee-details');
+        partials.bondProgressNav.progressNavBondFinancialDetails().click();
+        cy.url().should('include', '/financial-details');
+
+        pages.bondFinancialDetails.bondValueInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
+        pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().should('be.checked');
+        pages.bondFinancialDetails.currencyInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
+        pages.bondFinancialDetails.conversionRateInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
+        pages.bondFinancialDetails.conversionRateDateDayInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateDay);
+        pages.bondFinancialDetails.conversionRateDateMonthInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateMonth);
+        pages.bondFinancialDetails.conversionRateDateYearInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateYear);
+        pages.bondFinancialDetails.riskMarginFeeInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.riskMarginFee);
+        pages.bondFinancialDetails.coveredPercentageInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
+        pages.bondFinancialDetails.minimumRiskMarginFeeInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
       });
     });
 
