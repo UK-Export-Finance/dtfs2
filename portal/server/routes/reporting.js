@@ -8,14 +8,12 @@ import {
 const router = express.Router();
 const PAGESIZE = 20;
 
-router.get('/reporting/audit-supply-contracts', async (req, res) => {
-  return res.redirect('/reporting/audit-supply-contracts/0')
-});
+router.get('/reporting/audit-supply-contracts', async (req, res) => res.redirect('/reporting/audit-supply-contracts/0'));
 
 router.get('/reporting/audit-supply-contracts/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
-  const filters = {}; //TODO wire up filters; probably do same as dashboard +use session
+  const filters = {}; // TODO wire up filters; probably do same as dashboard +use session
   const dealData = await getApiData(
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
@@ -32,7 +30,6 @@ router.get('/reporting/audit-supply-contracts/:page', async (req, res) => {
     contracts: dealData.deals,
     user: req.session.user,
   });
-  ;
 });
 
 export default router;
