@@ -13,6 +13,7 @@ const page = {
   uniqueIdentificationNumberInput: () => cy.get('[data-cy="unique-identification-number"]'),
   bondBeneficiaryInput: () => cy.get('[data-cy="bond-beneficiary"]'),
   submit: () => cy.get('button'),
+  goBackButton: () => cy.get('[data-cy="go-back-button"]'),
 };
 
 module.exports = page;

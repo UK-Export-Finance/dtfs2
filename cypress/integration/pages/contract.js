@@ -30,6 +30,7 @@ const page = {
       return {
         uniqueNumber: () => row.get('[data-cy="unique-number"]'),
         bondValue: () => row.get('[data-cy="bond-value"]'),
+        bondStage: () => row.get('[data-cy="bond-stage"]'),
         requestedCoverStartDate: () => row.get('[data-cy="requested-cover-start-date"]'),
         coverEndDate: () => row.get('[data-cy="cover-end-date"]'),
         deleteLink: () => row.get('[data-cy="delete-link"]'),

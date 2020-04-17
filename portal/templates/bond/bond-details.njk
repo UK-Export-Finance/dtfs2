@@ -137,18 +137,18 @@
           },
           items: [
             {
-              value: "unissued",
+              value: "Unissued",
               text: "Unissued",
-              checked: bond.bondStage === "unissued",
+              checked: bond.bondStage === "Unissued",
               attributes: {
                 'data-cy': "bond-stage-unissued",
                 onClick: "toggleFormFields('unissued')"
               }
             },
             {
-              value: "issued",
+              value: "Issued",
               text: "Issued",
-              checked: bond.bondStage === "issued",
+              checked: bond.bondStage === "Issued",
               attributes: {
                 'data-cy': "bond-stage-issued",
                 onClick: "toggleFormFields('issued')"
@@ -259,6 +259,7 @@
       class="govuk-button govuk-button--secondary"
       data-module="govuk-button"
       value="Save and go back to deal"
+      data-cy="go-back-button"
     />
 
   </form>

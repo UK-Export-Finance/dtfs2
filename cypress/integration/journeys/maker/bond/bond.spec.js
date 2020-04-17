@@ -41,8 +41,8 @@ context('Add a bond', () => {
     });
   });
 
-  describe('When a user completes all Bond forms', () => {
-    it('should populate Bond Preview page with the submitted data', () => {
+  describe('When a user completes all Bond forms (`issued` bond stage, currency same as Supply Contract Currency)', () => {
+    it('should populate Bond Preview page with all submitted data', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
         cy.loginGoToDealPage(user, deal);
@@ -70,12 +70,24 @@ context('Add a bond', () => {
         });
 
         pages.bondPreview.bondStage().invoke('text').then((text) => {
-          expect(text.trim()).equal('unissued');
+          expect(text.trim()).equal('issued');
         });
 
-        // pages.bondPreview.requestedCoverStartDate().should('have.text', 'TBD');
-        // pages.bondPreview.coverEndDate().should('have.text', 'TBD');
-        // pages.bondPreview.uniqueIdentificationNumber().should('have.text', 'TBD');
+        const expectedCoverStartDate = `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`;
+
+        pages.bondPreview.requestedCoverStartDate().invoke('text').then((text) => {
+          expect(text.trim()).equal(expectedCoverStartDate);
+        });
+
+        const expectedCoverEndDate = `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}/${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}/${BOND_FORM_VALUES.DETAILS.coverEndDateYear}`;
+
+        pages.bondPreview.coverEndDate().invoke('text').then((text) => {
+          expect(text.trim()).equal(expectedCoverEndDate);
+        });
+
+        pages.bondPreview.uniqueIdentificationNumber().invoke('text').then((text) => {
+          expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
+        });
 
         pages.bondPreview.bondBeneficiary().invoke('text').then((text) => {
           expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.bondBeneficiary);
@@ -86,17 +98,12 @@ context('Add a bond', () => {
           expect(text.trim()).equal(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
         });
 
-        // TODO: hook up
-        // pages.bondPreview.transactionCurrencySameAsSupplyContractCurrency().invoke('text').then((text) => {
-        //   expect(text.trim()).equal(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
-        // });
-
         pages.bondPreview.riskMarginFee().invoke('text').then((text) => {
-          expect(text.trim()).equal(BOND_FORM_VALUES.FINANCIAL_DETAILS.riskMarginFee);
+          expect(text.trim()).equal(`${BOND_FORM_VALUES.FINANCIAL_DETAILS.riskMarginFee}%`);
         });
 
         pages.bondPreview.coveredPercentage().invoke('text').then((text) => {
-          expect(text.trim()).equal(BOND_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
+          expect(text.trim()).equal(`${BOND_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage}%`);
         });
 
         pages.bondPreview.minimumRiskMarginFee().invoke('text').then((text) => {
@@ -128,7 +135,7 @@ context('Add a bond', () => {
       });
     });
 
-    it('should populate Deal page with the submitted bond and have a link to bond details page', () => {
+    it('should populate Deal page with the submitted bond and link to bond details page', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
         cy.loginGoToDealPage(user, deal);
@@ -152,13 +159,13 @@ context('Add a bond', () => {
         partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
           const bondId = bondIdHiddenInput[0].value;
 
-          pages.bondPreview.goBackLink().click();
+          pages.bondPreview.goBackButton().click();
           cy.url().should('eq', relative(`/contract/${deal._id}`));
 
           const row = pages.contract.bondTransactionsTable.row(bondId);
 
           row.uniqueNumber().invoke('text').then((text) => {
-            expect(text.trim()).equal('Not entered');
+            expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
           });
 
           // TODO: UKEF facility ID
@@ -170,23 +177,21 @@ context('Add a bond', () => {
             expect(text.trim()).equal(expectedValue);
           });
 
-          // TODO: stage
+          row.bondStage().invoke('text').then((text) => {
+            expect(text.trim()).equal('Issued');
+          });
 
-          // TODO in 'issued' scenario - start date
+          row.requestedCoverStartDate().invoke('text').then((text) => {
+            const expectedDate = `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`;
+            expect(text.trim()).equal(expectedDate);
+          });
 
-          // row.requestedCoverStartDate().invoke('text').then((text) => {
-          //   const expectedValue = `
-          //     ${BOND_FORM_VALUES.DETAILS['requestedCoverStartDate-day']}
-          //     ${BOND_FORM_VALUES.DETAILS['requestedCoverStartDate-month']}
-          //     ${BOND_FORM_VALUES.DETAILS['requestedCoverStartDate-year']}
-          //   `;
-          //   expect(text.trim()).equal(expectedValue);
-          // });
+          row.coverEndDate().invoke('text').then((text) => {
+            const expectedDate = `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}/${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}/${BOND_FORM_VALUES.DETAILS.coverEndDateYear}`;
+            expect(text.trim()).equal(expectedDate);
+          });
 
-          // TODO in 'issued' scenario - end date
-
-
-          // assert that clicking the `unique number` link progesses you to the bond page
+          // assert that clicking the `unique number` link progesses to the bond page
           row.uniqueNumber().click();
           cy.url().should('include', '/contract');
           cy.url().should('include', '/bond/');
@@ -194,6 +199,5 @@ context('Add a bond', () => {
         });
       });
     });
-
   });
 });

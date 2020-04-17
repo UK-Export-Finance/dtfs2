@@ -1,12 +1,18 @@
 const pages = require('../../../pages');
 const BOND_FORM_VALUES = require('./bond-form-values');
 
-// scenario: 'unissued' bond stage
+// scenario: 'issued' bond stage
 const details = () => {
   pages.bondDetails.bondIssuerInput().type(BOND_FORM_VALUES.DETAILS.bondIssuer);
   pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
-  pages.bondDetails.bondStageUnissuedInput().click();
-  pages.bondDetails.ukefGuaranteeInMonthsInput().type(BOND_FORM_VALUES.DETAILS.ukefGuaranteeInMonths);
+  pages.bondDetails.bondStageIssuedInput().click();
+  pages.bondDetails.requestedCoverStartDateDayInput().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
+  pages.bondDetails.requestedCoverStartDateMonthInput().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth);
+  pages.bondDetails.requestedCoverStartDateYearInput().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear);
+  pages.bondDetails.coverEndDateDayInput().type(BOND_FORM_VALUES.DETAILS.coverEndDateDay);
+  pages.bondDetails.coverEndDateMonthInput().type(BOND_FORM_VALUES.DETAILS.coverEndDateMonth);
+  pages.bondDetails.coverEndDateYearInput().type(BOND_FORM_VALUES.DETAILS.coverEndDateYear);
+  pages.bondDetails.uniqueIdentificationNumberInput().type(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
   pages.bondDetails.bondBeneficiaryInput().type(BOND_FORM_VALUES.DETAILS.bondBeneficiary);
 };
 
