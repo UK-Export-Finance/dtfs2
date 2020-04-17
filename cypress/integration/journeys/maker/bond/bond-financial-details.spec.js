@@ -14,7 +14,6 @@ const MOCK_DEAL = {
 };
 
 const goToBondFinancialDetailsPage = (deal) => {
-  // const deal = deals[0];
   cy.loginGoToDealPage(user, deal);
 
   pages.contract.addBondButton().click();
