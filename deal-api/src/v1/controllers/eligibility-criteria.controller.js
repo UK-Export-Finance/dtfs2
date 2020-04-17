@@ -1,6 +1,7 @@
 const { findOneDeal, update: updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { getEligibilityErrors, getCriteria11Errors } = require('../validation/eligibility-criteria');
+const { getDocumentationErrors } = require('../validation/eligibility-documentation');
 
 exports.update = async (req, res) => {
   await findOneDeal(req.params.id, (deal) => {
@@ -14,7 +15,7 @@ exports.update = async (req, res) => {
       }
 
 
-      const { eligibility: { criteria } } = deal;
+      const { eligibility: { criteria }, dealFiles = {} } = deal;
       let criteriaComplete = true;
 
       const updatedCriteria = criteria.map((c) => {
@@ -30,6 +31,7 @@ exports.update = async (req, res) => {
       });
 
       const validationErrors = getEligibilityErrors(updatedCriteria);
+      const documentationErrors = getDocumentationErrors(updatedCriteria, dealFiles);
 
       // Special case for criteria 11 - must add agents name & address if criteria 11 === false
       const criteria11 = updatedCriteria.find((c) => c.id === 11);
@@ -61,6 +63,10 @@ exports.update = async (req, res) => {
           criteria: updatedCriteria,
           ...criteria11Additional,
           validationErrors,
+        },
+        dealFiles: {
+          ...dealFiles,
+          validationErrors: documentationErrors,
         },
       };
 

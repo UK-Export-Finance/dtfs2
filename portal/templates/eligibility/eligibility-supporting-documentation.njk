@@ -1,11 +1,20 @@
 {% extends "index.njk" %}
-{% import '_macros/confirm-eligibility-nav.njk' as confirmEligibility %}
 {% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
 {% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
-
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import '_macros/confirm-eligibility-nav.njk' as confirmEligibility %}
 {% import '_macros/eligibility-documentation-file-input.njk' as eligibilityDocumentationInput %}
 
 {% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
 
   {{ confirmEligibility.nav(
     completedStatus = eligibility.completedStatus,
@@ -17,72 +26,77 @@
 
   <form method="POST" autocomplete="off" enctype="multipart/form-data">
 
-    <ol class="govuk-list govuk-list--number">
-    <li class="govuk-form-group govuk-!-margin-bottom-6">
+    <ol class="govuk-list">
+    <li>
         {{
           eligibilityDocumentationInput.fileInput(
             fieldname = "exporterQuestionnaire",
-            label = "Manual Inclusion Questionnaire",
+            label = "1. Manual Inclusion Questionnaire",
             hint = 'Please upload a completed Manual Inclusion Questionnaire. You can download the template here: <a href="#">Manual Inclusion Questionnaire</a>',
             fileList = dealFiles.exporterQuestionnaire,
-            fileshareURL = fileshareURL
+            fileshareURL = fileshareURL,
+            validationError = validationErrors.errorList.exporterQuestionnaire
           )
         }}
     </li>
 
-    <li class="govuk-form-group govuk-!-margin-bottom-6">
+    <li>
         {{
           eligibilityDocumentationInput.fileInput(
             fieldname = "auditedFinancialStatements",
-            label = "Financial statements for the past 3 years",
+            label = "2. Financial statements for the past 3 years",
             hint = "Financial statements (audited if available) for the past 3 years, including a Profit & Loss, Balance Sheet and Cash Flow Statement, (with notes, if applicable). If the company is part of a larger group, separate accounts should be provided for the company and group.",
             fileList = dealFiles.auditedFinancialStatements,
-            fileshareURL = fileshareURL
+            fileshareURL = fileshareURL,
+            validationError = validationErrors.errorList.auditedFinancialStatements
           )
         }}
     </li>
 
-    <li class="govuk-form-group govuk-!-margin-bottom-6">
+    <li>
         {{
           eligibilityDocumentationInput.fileInput(
             fieldname = "yearToDateManagement",
-            label = "Year to date management accounts",
+            label = "3. Year to date management accounts",
             hint = "Including Profit & Loss, Balance Sheet and Cash Flow where available.",
             fileList = dealFiles.yearToDateManagement,
-            fileshareURL = fileshareURL
+            fileshareURL = fileshareURL,
+            validationError = validationErrors.errorList.yearToDateManagement
           )
         }}
     </li>
 
-    <li class="govuk-form-group govuk-!-margin-bottom-6">
+    <li>
         {{
           eligibilityDocumentationInput.fileInput(
             fieldname = "financialForecasts",
-            label = "Financial forecasts for the next 3 years",
+            label = "4. Financial forecasts for the next 3 years",
             hint = "Including monthly cash-flow projections for the business as a whole. If unavailable provide for at least the projected facility/guarantee term. If there are any cash flow shortfalls, explain how these will be filled.",
             fileList = dealFiles.financialForecasts,
-            fileshareURL = fileshareURL
+            fileshareURL = fileshareURL,
+            validationError = validationErrors.errorList.financialForecasts
           )
         }}
     </li>
 
-    <li class="govuk-form-group govuk-!-margin-bottom-6">
+    <li>
         {{
           eligibilityDocumentationInput.fileInput(
             fieldname = "financialInformationCommentary",
-            label = "Brief commentary on the financial information",
+            label = "5. Brief commentary on the financial information",
             hint = "A brief commentary on the financial information in 2-4, with particular focus on turnover, gross and net profit, dividends (if any), debt profile including bank borrowing and net worth, and any other information with explains any exceptions, anomalies or volatility. If the company has experienced any unusual or off-trend financial performance in the last 3 years please also explain this.",
             fileList = dealFiles.financialInformationCommentary,
-            fileshareURL = fileshareURL
+            fileshareURL = fileshareURL,
+            validationError = validationErrors.errorList.financialInformationCommentary
           )
         }}
     </li>
 
-    <li class="govuk-form-group govuk-!-margin-bottom-6">
+    <li>
         {{
           eligibilityDocumentationInput.fileInput(
             fieldname = "corporateStructure",
-            label = "Corporate structure diagram",
+            label = "6. Corporate structure diagram",
             hint = "Showing corporate structure including parent, subsidiary and associated companies.",
             fileList = dealFiles.corporateStructure,
             fileshareURL = fileshareURL
@@ -96,7 +110,7 @@
           id: "security",
           maxlength: 300,
           label: {
-            text: "Security"
+            text: "7. Security"
           },
           hint: {
              text: 'Details of the overarching general facility taken by the bank in relation to the exporter, for example debenture, fixed and floating charge, but not including any security that is specific to the Transaction.'

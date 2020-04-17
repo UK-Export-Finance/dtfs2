@@ -1,34 +1,41 @@
-{% macro fileInput(fieldname, label, hint, fileList, fileshareURL ) %}
-        <label class="govuk-label" for="{{ fieldname }}">
-          {{ label}}
-        </label>
-        <span id="{{ fieldname }}-hint" class="govuk-hint">
-          {{ hint | safe}}
-        </span>
-        <input
-          class="govuk-file-upload govuk-!-width-one-half box-input "
-          id={{ fieldname }}
-          name={{ fieldname }}
-          type="file"
-          accept= ".gif, .jpg, .jpeg, .png, .bmp, .tif, .txt, .pdf, .doc, .docx, .ppt, .pptx, .xls, .xlsx, .msg, .zip"
-          multiple
-        >
-        {% if fileList | length %}
-        <input type="submit" class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" value="Remove selected" />
+{% macro fileInput(fieldname, label, hint, fileList, fileshareURL, validationError ) %}
+  <div id="criterion-group-{{ fieldname }}" class="govuk-form-group govuk-!-margin-bottom-6 {% if validationError %}govuk-form-group--error{% endif %}">
+    <label class="govuk-label" for="{{ fieldname }}">
+      {{ label}}
+    </label>
+    <span id="{{ fieldname }}-hint" class="govuk-hint">
+      {{ hint | safe}}
+    </span>
+    {% if validationError %}
+      <span class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ validationError.text }}
+      </span>
+    {% endif %}
+    <input
+      class="govuk-file-upload govuk-!-width-one-half box-input "
+      id={{ fieldname }}
+      name={{ fieldname }}
+      type="file"
+      accept= ".gif, .jpg, .jpeg, .png, .bmp, .tif, .txt, .pdf, .doc, .docx, .ppt, .pptx, .xls, .xlsx, .msg, .zip"
+      multiple
+    >
+    {% if fileList | length %}
+    <input type="submit" class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" value="Remove selected" />
 
-         <div class="govuk-form-group">
-          <fieldset class="govuk-fieldset">
-            <div class="govuk-checkboxes">
-              {% for file in fileList %}
-                    <div class="govuk-checkboxes__item">
-                      <input class="govuk-checkboxes__input" id="delete-hint-{{ fieldname }}-{{ loop.index }}" name="deleteFile" type="checkbox" value="{{ file.fullPath }}">
-                      <label class="govuk-label govuk-checkboxes__label">
-                        <a href="{{ fileshareURL }}{{ file.fullPath}}" target="_blank">{{file.filename}}</a>
-                      </label>
-                    </div>
-              {% endfor %}
-            </div>
-          </fieldset>
+      <div class="govuk-form-group">
+      <fieldset class="govuk-fieldset">
+        <div class="govuk-checkboxes">
+          {% for file in fileList %}
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="delete-hint-{{ fieldname }}-{{ loop.index }}" name="deleteFile" type="checkbox" value="{{ file.fullPath }}">
+                  <label class="govuk-label govuk-checkboxes__label">
+                    <a href="{{ fileshareURL }}{{ file.fullPath}}" target="_blank">{{file.filename}}</a>
+                  </label>
+                </div>
+          {% endfor %}
         </div>
-        {% endif %}
+      </fieldset>
+    </div>
+    {% endif %}
+    </div>
 {% endmacro %}
