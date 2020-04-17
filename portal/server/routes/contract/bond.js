@@ -44,7 +44,7 @@ router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
 });
 
 router.post('/contract/:_id/bond/:bondId/details/save-go-back', (req, res) => {
-  const redirectUrl = `/contract/${req.params._id}`;
+  const redirectUrl = `/contract/${req.params._id}`; // eslint-disable-line no-underscore-dangle
   return res.redirect(redirectUrl);
 });
 
@@ -82,7 +82,7 @@ router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) =>
 });
 
 router.post('/contract/:_id/bond/:bondId/financial-details/save-go-back', (req, res) => {
-  const redirectUrl = `/contract/${req.params._id}`;
+  const redirectUrl = `/contract/${req.params._id}`; // eslint-disable-line no-underscore-dangle
   return res.redirect(redirectUrl);
 });
 
@@ -112,7 +112,7 @@ router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
 });
 
 router.post('/contract/:_id/bond/:bondId/fee-details/save-go-back', (req, res) => {
-  const redirectUrl = `/contract/${req.params._id}`;
+  const redirectUrl = `/contract/${req.params._id}`; // eslint-disable-line no-underscore-dangle
   return res.redirect(redirectUrl);
 });
 
