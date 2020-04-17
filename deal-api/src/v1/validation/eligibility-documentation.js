@@ -4,7 +4,6 @@ exports.getDocumentationErrors = (criteria = [], dealFiles) => {
   let order = 0;
 
   const generateError = (fieldname, text, isMandatory) => {
-    console.log({ isMandatory });
     if (!isMandatory) { return {}; }
 
     if (dealFiles[fieldname] && dealFiles[fieldname].length) {

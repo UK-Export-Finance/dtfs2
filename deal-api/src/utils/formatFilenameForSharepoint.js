@@ -1,5 +1,5 @@
 /*
-File names for the documentation upload feature shouldn’t include special characters as this breaks the sharepoint/estore,
+Filenames for the documentation upload  shouldn’t include special characters as this breaks the sharepoint/estore,
 valid characters listed below:
 
 1. alphabetic characters A through Z
@@ -8,8 +8,8 @@ valid characters listed below:
 4. _
 5. space
 
-
-https://ukef-dtfs.atlassian.net/jira/software/projects/DTFS2/boards/2?assignee=5e42c0d090dfb70c9e60741b&selectedIssue=DTFS2-509
+see
+https://ukef-dtfs.atlassian.net/jira/software/projects/DTFS2/boards/2?assignee=5e42c0d090dfb70c9e60741b&selectedIssue=DTFS2-509 // eslint-disable-line max-len
 */
 
 const formatFilenameForSharepoint = (filenameWithExtension) => {
