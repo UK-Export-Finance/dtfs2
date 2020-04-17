@@ -17,6 +17,7 @@ describe('mapCurrencies', () => {
 
     expect(mapCurrencies(mockCurrencies)).toEqual(expected);
   });
+
   it('should mark a currency as `selected` when selectedCurrency param matches currency value', () => {
     const mockCurrencies = [
       { id: 'CAD', text: 'CAD - Canadian Dollars' },
@@ -31,7 +32,8 @@ describe('mapCurrencies', () => {
       { value: 'EGP', text: 'EGP - Egyptian Pounds' },
     ];
 
-    const result = mapCurrencies(mockCurrencies, 'CHF');
+    const selectedCurrency = { id: 'CHF', text: 'CHF - Swiss Francs' };
+    const result = mapCurrencies(mockCurrencies, selectedCurrency);
     expect(result).toEqual(expected);
   });
 });
