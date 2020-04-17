@@ -32,4 +32,27 @@ router.get('/reporting/audit-supply-contracts/:page', async (req, res) => {
   });
 });
 
+router.get('/reporting/transactions-report', async (req, res) => res.redirect('/reporting/transactions-report/0'));
+
+router.get('/reporting/transactions-report/:page', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  const { transactions, count } = await getApiData(api.transactions(userToken), res);
+
+  const banks = await getApiData(api.banks(userToken), res);
+
+  const pages = {
+    totalPages: Math.ceil(transactions.count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: count,
+  };
+
+  return res.render('reporting/transactions-report.njk', {
+    pages,
+    transactions,
+    banks,
+    user: req.session.user,
+  });
+});
+
 export default router;

@@ -260,7 +260,10 @@ const transactions = async (token) => {
     },
   });
 
-  return response.data.transactions;
+  return {
+    count: response.data.count,
+    transactions: response.data.transactions,
+  };
 };
 
 const contractBond = async (id, bondId, token) => {
