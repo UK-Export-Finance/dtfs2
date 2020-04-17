@@ -69,12 +69,12 @@ exports.updateBond = async (req, res) => {
       } = req.body;
 
       if (bondStage === 'Issued') {
-        // remove `Unissued Bond Stage` specific values
+        // remove any `Unissued Bond Stage` specific values
         delete updatedBond.ukefGuaranteeInMonths;
       }
 
       if (bondStage === 'Unissued') {
-        // remove `Issued Bond Stage` specific values
+        // remove any `Issued Bond Stage` specific values
         delete updatedBond['requestedCoverStartDate-day'];
         delete updatedBond['requestedCoverStartDate-month'];
         delete updatedBond['requestedCoverStartDate-year'];
@@ -85,14 +85,17 @@ exports.updateBond = async (req, res) => {
       }
 
       if (transactionCurrencySameAsSupplyContractCurrency && transactionCurrencySameAsSupplyContractCurrency === 'true') {
+        // remove any 'currency is NOT the same values'
+        delete updatedBond.conversionRate;
+        delete updatedBond['conversionRateDate-day'];
+        delete updatedBond['conversionRateDate-month'];
+        delete updatedBond['conversionRateDate-year'];
+
         const supplyContractCurrencyCode = deal.supplyContractCurrency.id;
         updatedBond.currency = await handleBondCurrency(supplyContractCurrencyCode);
       } else if (currencyCode) {
         updatedBond.currency = await handleBondCurrency(currencyCode);
       }
-
-      // TODO: if currency is NOT the same, remove 'is the same' fields
-      // TODO: if currency is the same, remove 'not the same' fields
 
       const collection = await db.getCollection('deals');
       const result = await collection.findOneAndUpdate(
