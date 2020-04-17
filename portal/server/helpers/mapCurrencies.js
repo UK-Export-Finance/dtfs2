@@ -9,7 +9,7 @@ const mapCurrencies = (currencies, selectedCurrency) => {
       const currency = {
         value: c.id,
         text: c.text,
-        selected: selectedCurrency === c.id,
+        selected: selectedCurrency && selectedCurrency.id === c.id,
       };
       return currency;
     }),
