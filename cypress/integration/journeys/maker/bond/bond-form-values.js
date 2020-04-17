@@ -5,6 +5,13 @@ const DETAILS = {
     text: 'Maintenance bond',
   },
   ukefGuaranteeInMonths: '12',
+  requestedCoverStartDateDay: '16',
+  requestedCoverStartDateMonth: '10',
+  requestedCoverStartDateYear: '2021',
+  coverEndDateDay: '14',
+  coverEndDateMonth: '12',
+  coverEndDateYear: '2025',
+  uniqueIdentificationNumber: '123456',
   bondBeneficiary: 'mock beneficiary',
 };
 

@@ -230,7 +230,7 @@
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s"  data-cy="requested-cover-start-date">
           {% if bondDetails['requestedCoverStartDate-day'] and bondDetails['requestedCoverStartDate-month'] and bondDetails['requestedCoverStartDate-year'] %}
-            {{ bondDetails['requestedStartDate-day'] }}/{{ bondDetails['requestedStartDate-month'] }}/{{ bondDetails['requestedStartDate-year'] }}
+            {{ bondDetails['requestedCoverStartDate-day'] }}/{{ bondDetails['requestedCoverStartDate-month'] }}/{{ bondDetails['requestedCoverStartDate-year'] }}
           {% endif %}
         </dd>
       </div>
@@ -259,7 +259,7 @@
       <dt class="govuk-summary-list__key govuk-body-s">
         Length of time that the UKEF's guarantee will be in place for (in months, rounded up)
       </dt>
-      <dd class="govuk-summary-list__value govuk-body-s">
+      <dd class="govuk-summary-list__value govuk-body-s" data-cy="ukef-guarantee-in-months">
         {{ bondDetails.ukefGuaranteeInMonths }}
       </dd>
     </div>

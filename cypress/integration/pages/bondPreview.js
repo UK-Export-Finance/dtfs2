@@ -10,6 +10,9 @@ const page = {
   uniqueIdentificationNumber: () => cy.get('[data-cy="unique-identification-number"]'),
   bondBeneficiary: () => cy.get('[data-cy="bond-beneficiary"]'),
 
+  // bond details - 'unissued' bond stage specifics
+  ukefGuaranteeInMonths: () => cy.get('[data-cy="ukef-guarantee-in-months"]'),
+
   // bond financial details
   bondValue: () => cy.get('[data-cy="bond-value"]'),
   transactionCurrencySameAsSupplyContractCurrency: () => cy.get('[data-cy="transaction-currency-same-as-supply-contract-currency"]'),
