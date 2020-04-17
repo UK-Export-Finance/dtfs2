@@ -32,6 +32,7 @@ describe('/v1/deals/:id/status', () => {
   let aUserWithoutRoles;
   let maker1;
   let maker2;
+  let maker3;
   let checker;
 
   beforeEach(async () => {
@@ -56,6 +57,16 @@ describe('/v1/deals/:id/status', () => {
     maker2 = await getToken({
       username: '5',
       password: '6',
+      roles: ['maker'],
+      bank: {
+        id: '2',
+        name: 'Pot o Gold',
+      },
+    });
+
+    maker3 = await getToken({
+      username: '15',
+      password: '16',
       roles: ['maker'],
       bank: {
         id: '2',
@@ -184,20 +195,6 @@ describe('/v1/deals/:id/status', () => {
       expect(status).toEqual(404);
     });
 
-    it('accepts requests if <user>.bank.id == *', async () => {
-      const postResult = await post(newDeal, maker1).to('/v1/deals');
-      const createdDeal = postResult.body;
-      const statusUpdate = {
-        comments: 'Flee!',
-        status: 'Abandoned Deal',
-      };
-
-      const { status, body } = await put(statusUpdate, superuser)
-        .to(`/v1/deals/${createdDeal._id}/status`);
-
-      expect(status).toEqual(200);
-    });
-
     it('returns the updated status', async () => {
       const postResult = await post(newDeal, maker1).to('/v1/deals');
       const createdDeal = postResult.body;
@@ -290,6 +287,18 @@ describe('/v1/deals/:id/status', () => {
       })
     });
 
+    it('401s "Abandoned Deal" updates if not from the deals owner.', async () => {
+      const postResult = await post(newDeal, maker2).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        status: 'Abandoned Deal',
+      };
+
+      const { status, body } = await put(statusUpdate, maker3).to(`/v1/deals/${createdDeal._id}/status`);
+
+      expect(status).toEqual(401);
+    });
+
     it('rejects "Abandoned Deal" updates if no comment provided.', async () => {
       const postResult = await post(newDeal, maker1).to('/v1/deals');
       const createdDeal = postResult.body;
@@ -306,6 +315,27 @@ describe('/v1/deals/:id/status', () => {
           comments: {
             order: "1",
             text: "Comment is required when abandoning a deal."
+          }
+        }
+      });
+    });
+
+    it("rejects 'Ready for Checker's approval' updates if no comment provided.", async () => {
+      const postResult = await post(newDeal, maker1).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        status: "Ready for Checker's approval",
+      };
+
+      const { status, body } = await put(statusUpdate, maker1).to(`/v1/deals/${createdDeal._id}/status`);
+
+      expect(body).toEqual({
+        success: false,
+        count: 1,
+        errorList: {
+          comments: {
+            order: "1",
+            text: "Comment is required when submitting a deal for review."
           }
         }
       });

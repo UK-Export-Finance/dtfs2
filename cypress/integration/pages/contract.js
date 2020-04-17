@@ -19,7 +19,8 @@ const page = {
   reviewEligibilityChecklistForm: () => cy.get('[data-cy="reviewEligibilityChecklistForm"]'),
   cannotProceed: () => cy.get('[data-cy="cannotProceed"]'),
 
-  abandon: () => cy.get('[data-cy="Abandon"]'),
+  abandonButton: () => cy.get('[data-cy="Abandon"]'),
+  abandonLink: () => cy.get('[data-cy="AbandonLink"]'),
   proceedToReview: () => cy.get('[data-cy="ProceedToReview"]'),
   proceedToSubmit: () => cy.get('[data-cy="ProceedToSubmit"]'),
   returnToMaker: () => cy.get('[data-cy="ReturnToMaker"]'),

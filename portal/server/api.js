@@ -93,6 +93,23 @@ const updateDeal = async (deal, token) => {
   };
 };
 
+const updateDealName = async (id, newName, token) => {
+  const response = await axios({
+    method: 'put',
+    url: `${urlRoot}/v1/deals/${id}/bankSupplyContractName`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: { bankSupplyContractName: newName },
+  });
+
+  return {
+    status: response.status,
+    data: response.data,
+  };
+};
+
 const updateDealStatus = async (statusUpdate, token) => {
   const response = await axios({
     method: 'put',
@@ -329,6 +346,7 @@ export default {
   mandatoryCriteria,
   transactions,
   updateDeal,
+  updateDealName,
   updateDealStatus,
   updateEligibilityCriteria,
   updateEligibilityDocumentation,

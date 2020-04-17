@@ -12,7 +12,12 @@
     <h1 class="govuk-heading-l">
       Supply Contract name:
       <span data-cy="bankSupplyContractName" class="govuk-body govuk-!-font-size-24">{{ contract.details.bankSupplyContractName }}</span>
-      <a data-cy="EditDealName" class="govuk-link govuk-!-font-size-14" href="/contract/{{ contract._id }}/edit-name">Edit</a>
+
+      {% if user.roles.includes('maker') %}
+        {% if ["Draft","Further Maker's input required"].includes(contract.details.status) %}
+          <a data-cy="EditDealName" class="govuk-link govuk-!-font-size-14" href="/contract/{{ contract._id }}/edit-name">Edit</a>
+        {% endif %}
+      {% endif %}
     </h1>
 
     <div class="govuk-tabs" data-module="govuk-tabs">
@@ -27,8 +32,14 @@
             &nbsp;
           </div>
           <div class="govuk-grid-column-one-quarter box__header-link">
-            <a href="/contract/{{ contract._id }}/clone/before-you-start" class="govuk-link govuk-!-font-size-14" data-cy="clone-deal-link">Clone</a>
-            <a href="/contract/{{ contract._id }}/delete" class="govuk-link govuk-!-font-size-14 govuk-!-margin-left-2">Abandon</a>
+            {% if user.roles.includes('maker') %}
+              <a href="/contract/{{ contract._id }}/clone/before-you-start" class="govuk-link govuk-!-font-size-14" data-cy="clone-deal-link">Clone</a>
+            {% endif %}
+            {% if user._id === contract.details.maker._id %}
+              {% if ["Draft", "Further Maker's input required"].includes(contract.details.status) %}
+                <a data-cy="AbandonLink" href="/contract/{{ contract._id }}/delete" class="govuk-link govuk-!-font-size-14 govuk-!-margin-left-2">Abandon</a>
+              {% endif %}
+            {% endif %}
           </div>
         </div>
 

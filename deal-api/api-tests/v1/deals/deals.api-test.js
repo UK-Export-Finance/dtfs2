@@ -125,10 +125,11 @@ describe('/v1/deals', () => {
       let { status, body } = await get('/v1/deals', maker1);
 
       expect(status).toEqual(200);
+      // expect to see deals in reverse order; most recent on top..
       expect(body.deals).toEqual(expectAllAddedFields([
-        deals[1],
+        deals[0],
         deals[2],
-        deals[0]
+        deals[1],
       ]));
 
     });
@@ -151,12 +152,13 @@ describe('/v1/deals', () => {
       let { status, body } = await get('/v1/deals', superuser);
 
       expect(status).toEqual(200);
+      // expect deals in reverse order;  most recent should be first..
       expect(body.deals).toEqual(expectAllAddedFields([
-        deals[4],
-        deals[1],
-        deals[2],
-        deals[0],
         deals[3],
+        deals[0],
+        deals[2],
+        deals[1],
+        deals[4],
       ]));
 
     });
@@ -213,9 +215,10 @@ describe('/v1/deals', () => {
       const { status, body } = await get('/v1/deals/2/2', maker1);
 
       expect(status).toEqual(200);
+      // expect deals in reverse order; most recent first..
       expect(body.deals).toEqual(expectAllAddedFields([
-        deals[2],
         deals[3],
+        deals[2],
       ]));
 
       expect(body.count).toEqual(6);
@@ -246,10 +249,11 @@ describe('/v1/deals', () => {
       const { status, body } = await get('/v1/deals/5/3', superuser);
 
       expect(status).toEqual(200);
+      // expect deals in reverse order - when we slice the last 3 deals we should get 2/1/0
       expect(body.deals).toEqual(expectAllAddedFields([
-        deals[5],
-        deals[6],
-        deals[7],
+        deals[2],
+        deals[1],
+        deals[0],
       ]));
 
       expect(body.count).toEqual(8);

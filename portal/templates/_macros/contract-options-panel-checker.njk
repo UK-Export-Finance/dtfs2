@@ -1,6 +1,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% macro "Draft"(contract) %}
+{% macro "Draft"(contract, user) %}
 
   <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
 
@@ -27,7 +27,7 @@
 {% endmacro %}
 
 
-{% macro "Further Maker's input required"(contract) %}
+{% macro "Further Maker's input required"(contract, user) %}
 
   <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
 
@@ -54,7 +54,7 @@
 {% endmacro %}
 
 
-{% macro "Abandoned Deal"(contract) %}
+{% macro "Abandoned Deal"(contract, user) %}
 
   <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
 
@@ -81,7 +81,7 @@
 {% endmacro %}
 
 
-{% macro "Acknowledged by UKEF"(contract) %}
+{% macro "Acknowledged by UKEF"(contract, user) %}
 
   <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
 
@@ -108,7 +108,7 @@
 {% endmacro %}
 
 
-{% macro "Accepted by UKEF (without conditions)"(contract) %}
+{% macro "Accepted by UKEF (without conditions)"(contract, user) %}
 
   <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
 
@@ -135,7 +135,7 @@
 {% endmacro %}
 
 
-{% macro "Accepted by UKEF (with conditions)"(contract) %}
+{% macro "Accepted by UKEF (with conditions)"(contract, user) %}
 
   <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
 
@@ -161,7 +161,7 @@
   </div>
 {% endmacro %}
 
-{% macro "Ready for Checker's approval"(contract) %}
+{% macro "Ready for Checker's approval"(contract, user) %}
 
   <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
 
@@ -193,8 +193,8 @@
   </div>
 {% endmacro %}
 
-{% macro "Submitted"(contract) %}
+{% macro "Submitted"(contract, user) %}
 {% endmacro %}
 
-{% macro "Rejected by UKEF"(contract) %}
+{% macro "Rejected by UKEF"(contract, user) %}
 {% endmacro %}

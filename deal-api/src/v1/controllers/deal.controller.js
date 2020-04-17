@@ -33,7 +33,7 @@ const findDeals = async (requestingUser, callback) => {
   const collection = await db.getCollection('deals');
 
   collection.find(dealsQuery(requestingUser))
-    .sort({ 'details.dateOfLastAction': +1 })
+    .sort({ 'details.dateOfLastAction': -1 })
     .toArray((err, result) => {
       assert.equal(err, null);
       callback(result);
@@ -47,6 +47,7 @@ const findPaginatedDeals = async (requestingUser, start, pagesize, filter, callb
   const count = await collection.find(query).count();
 
   collection.find(query)
+    .sort({ 'details.dateOfLastAction': -1 })
     .skip(start)
     .limit(pagesize)
     .toArray((err, result) => {

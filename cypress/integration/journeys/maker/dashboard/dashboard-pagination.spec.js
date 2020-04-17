@@ -30,8 +30,9 @@ context('Dashboard Deals pagination controls', () => {
     dashboard.visit();
 
     cy.allDeals().then( (deals) => {
-      page1 = deals.slice(0,20);
-      page2 = [deals[20]];
+      // deals will be shown in update order, so expect them upsidedown..
+      page1 = deals.slice(1,21).reverse();
+      page2 = [deals[0]];
 
       //test ininital dashboard page
       dashboard.confirmDealsPresent(page1);

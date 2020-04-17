@@ -13,6 +13,17 @@ module.exports = (deal, requestedUpdate, user) => {
     }
   }
 
+  if (requestedUpdate.status === "Ready for Checker's approval") {
+    if (!user.roles.includes('maker')) {
+      // TODO reject this?
+    } else if (!requestedUpdate.comments) {
+      errorList.comments = {
+        order: '1',
+        text: 'Comment is required when submitting a deal for review.',
+      };
+    }
+  }
+
   if (requestedUpdate.status === "Further Maker's input required") {
     if (!user.roles.includes('checker')) {
       // TODO reject this?
