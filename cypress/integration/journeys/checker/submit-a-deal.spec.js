@@ -59,7 +59,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
     });
   });
 
-  it('If the terms are accepted, the Accept and Submit button submits the deal and takes the user to /start-now.', () => {
+  it('If the terms are accepted, the Accept and Submit button submits the deal and takes the user to /dashboard.', () => {
     cy.aDealInStatus("Ready for Checker's approval").then( (deal) => {
       // log in, visit a deal, select abandon
       cy.login({...checker});
@@ -70,8 +70,8 @@ context('A checker selects to submit a contract from the view-contract page', ()
       contractConfirmSubmission.confirmSubmit().check();
       contractConfirmSubmission.acceptAndSubmit().click();
 
-      // expect to land on the /start-now page with a success message
-      cy.url().should('eq', relative(`/start-now`));
+      // expect to land on the /dashboard page with a success message
+      cy.url().should('include', `/dashboard`)
       successMessage.successMessageListItem().invoke('text').then((text) => {
         expect(text.trim()).to.match(/Supply Contract submitted to UKEF./);
       });

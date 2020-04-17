@@ -1,6 +1,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% macro "Draft"(contract) %}
+{% macro "Draft"(contract, user) %}
 
   {# if contract in suitable state to proceed... #}
   <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
@@ -15,13 +15,22 @@
       "href": "/contract/" + contract._id + "/ready-for-review"
     }) }}
 
+    {# only the owner can abandon a deal..#}
+
+    {% set disabled = true %}
+    {% if user._id === contract.details.maker._id %}
+      {% set url="/contract/" + contract._id + "/delete" %}
+      {% set disabled = false %}
+    {% endif %}
+
     {{ govukButton({
+      "disabled": disabled,
       "text": "Abandon",
       "classes": "govuk-button--secondary",
       "attributes" : {
         "data-cy" : "Abandon"
       },
-      "href": "/contract/" + contract._id + "/delete"
+      "href": url
     }) }}
 
   </div>
@@ -38,7 +47,7 @@
 {% endmacro %}
 
 
-{% macro "Further Maker's input required"(contract) %}
+{% macro "Further Maker's input required"(contract, user) %}
 
   {# if contract in suitable state to proceed... #}
   <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
@@ -53,13 +62,22 @@
       "href": "/contract/" + contract._id + "/ready-for-review"
     }) }}
 
+    {# only the owner can abandon a deal..#}
+
+    {% set disabled = true %}
+    {% if user._id === contract.details.maker._id %}
+      {% set url="/contract/" + contract._id + "/delete" %}
+      {% set disabled = false %}
+    {% endif %}
+
     {{ govukButton({
+      "disabled": disabled,
       "text": "Abandon",
       "classes": "govuk-button--secondary",
       "attributes" : {
         "data-cy" : "Abandon"
       },
-      "href": "/contract/" + contract._id + "/delete"
+      "href": url
     }) }}
 
   </div>
@@ -76,7 +94,7 @@
 {% endmacro %}
 
 
-{% macro "Abandoned Deal"(contract) %}
+{% macro "Abandoned Deal"(contract, user) %}
 
   <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
 
@@ -103,7 +121,7 @@
 {% endmacro %}
 
 
-{% macro "Acknowledged by UKEF"(contract) %}
+{% macro "Acknowledged by UKEF"(contract, user) %}
 
   <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
 
@@ -130,33 +148,7 @@
 {% endmacro %}
 
 
-{% macro "Accepted by UKEF (without conditions)"(contract) %}
-
-  <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
-
-    {{ govukButton({
-      "text": "Proceed to review",
-      "attributes" : {
-        "data-cy" : "ProceedToReview"
-      },
-      "href": "/contract/" + contract._id + "/ready-for-review"
-    }) }}
-
-    {{ govukButton({
-      "disabled": true,
-      "text": "Abandon",
-      "classes": "govuk-button--secondary",
-      "attributes" : {
-        "data-cy" : "Abandon"
-      },
-      "href": null
-    }) }}
-
-  </div>
-{% endmacro %}
-
-
-{% macro "Accepted by UKEF (with conditions)"(contract) %}
+{% macro "Accepted by UKEF (without conditions)"(contract, user) %}
 
   <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
 
@@ -181,7 +173,33 @@
   </div>
 {% endmacro %}
 
-{% macro "Ready for Checker's approval"(contract) %}
+
+{% macro "Accepted by UKEF (with conditions)"(contract, user) %}
+
+  <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
+
+    {{ govukButton({
+      "text": "Proceed to review",
+      "attributes" : {
+        "data-cy" : "ProceedToReview"
+      },
+      "href": "/contract/" + contract._id + "/ready-for-review"
+    }) }}
+
+    {{ govukButton({
+      "disabled": true,
+      "text": "Abandon",
+      "classes": "govuk-button--secondary",
+      "attributes" : {
+        "data-cy" : "Abandon"
+      },
+      "href": null
+    }) }}
+
+  </div>
+{% endmacro %}
+
+{% macro "Ready for Checker's approval"(contract, user) %}
 
   <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
 
@@ -207,8 +225,8 @@
   </div>
 {% endmacro %}
 
-{% macro "Submitted"(contract) %}
+{% macro "Submitted"(contract, user) %}
 {% endmacro %}
 
-{% macro "Rejected by UKEF"(contract) %}
+{% macro "Rejected by UKEF"(contract, user) %}
 {% endmacro %}

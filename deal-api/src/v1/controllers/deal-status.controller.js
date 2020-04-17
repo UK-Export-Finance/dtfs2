@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const moment = require('moment');
 const { findOneDeal } = require('./deal.controller');
-const { userHasAccessTo } = require('../users/checks');
+const { userHasAccessTo, userOwns } = require('../users/checks');
 const db = require('../../drivers/db-client');
 const dealIntegration = require('./deal-integration.controller');
 
@@ -61,36 +61,34 @@ const updateComments = async (collection, id, commentToAdd, user) => {
 };
 
 exports.update = (req, res) => {
+  const { user } = req;
+
   findOneDeal(req.params.id, async (deal) => {
-    if (!deal) res.status(404).send();
+    if (!deal) return res.status(404).send();
+    if (!userHasAccessTo(req.user, deal)) return res.status(401).send();
 
-    if (deal) {
-      if (!userHasAccessTo(req.user, deal)) {
-        res.status(401).send();
-      } else {
-        const validationFailures = validateStateChange(deal, req.body, req.user);
-
-        if (validationFailures) {
-          res.status(200).send({
-            success: false,
-            ...validationFailures,
-          });
-        } else {
-          const collection = await db.getCollection('deals');
-
-
-          // TODO find a nicer way to do this than a random if statement...
-          if (req.body.status === 'Submitted') {
-            await dealIntegration.createTypeA(deal);
-          }
-
-
-          await updateStatus(collection, req.params.id, deal.details.status, req.body.status);
-          const dealAfterAllUpdates = await updateComments(collection, req.params.id, req.body.comments, req.user);
-
-          res.status(200).send(dealAfterAllUpdates.details.status);
-        }
-      }
+    if (req.body.status === 'Abandoned Deal' && !userOwns(user, deal)) {
+      return res.status(401).send();
     }
+
+    const validationFailures = validateStateChange(deal, req.body, user);
+
+    if (validationFailures) {
+      return res.status(200).send({
+        success: false,
+        ...validationFailures,
+      });
+    }
+
+    // TODO find a nicer way to do this than a random if statement...
+    if (req.body.status === 'Submitted') {
+      await dealIntegration.createTypeA(deal);
+    }
+
+    const collection = await db.getCollection('deals');
+    await updateStatus(collection, req.params.id, deal.details.status, req.body.status);
+    const dealAfterAllUpdates = await updateComments(collection, req.params.id, req.body.comments, user);
+
+    return res.status(200).send(dealAfterAllUpdates.details.status);
   });
 };

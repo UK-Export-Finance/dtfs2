@@ -29,7 +29,10 @@ context('Dashboard Deals filter by submissionType', () => {
     dashboard.applyFilters().click();
 
     cy.allDeals().then( (deals) => {
-      dashboard.confirmDealsPresent(deals.slice(0,20));
+      // in dashbaord, these are ordered by last update, so appear reversed
+      const firstTwentyDeals = deals.slice(1,21).reverse();
+
+      dashboard.confirmDealsPresent(firstTwentyDeals);
       dashboard.totalItems().invoke('text').then((text) => {
         expect(text.trim()).equal('(21 items)');
       });

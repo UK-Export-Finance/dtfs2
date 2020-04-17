@@ -94,7 +94,7 @@ router.post('/contract/:_id/delete', async (req, res) => {
     hrefText: 'View abandoned Supply Contract',
   });
 
-  return res.redirect('/start-now');
+  return res.redirect('/dashboard');
 });
 
 router.get('/contract/:_id/ready-for-review', async (req, res) => {
@@ -125,7 +125,7 @@ router.post('/contract/:_id/ready-for-review', async (req, res) => {
   };
 
   if (validationErrors.count) {
-    return res.status(400).render('contract/contract-delete.njk', {
+    return res.status(400).render('contract/contract-ready-for-review.njk', {
       contract: await getApiData(
         api.contract(_id, userToken),
         res,
@@ -141,31 +141,46 @@ router.post('/contract/:_id/ready-for-review', async (req, res) => {
     hrefText: 'View Supply Contract',
   });
 
-  return res.redirect('/start-now');
+  return res.redirect('/dashboard');
 });
 
 router.get('/contract/:_id/edit-name', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  return res.render('contract/contract-edit-name.njk',
-    await getApiData(
+  return res.render('contract/contract-edit-name.njk', {
+    contract: await getApiData(
       api.contract(_id, userToken),
       res,
-    ));
+    ),
+  });
 });
 
 router.post('/contract/:_id/edit-name', async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { bankSupplyContractName } = req.body;
 
-  const updateToApply = {
-    _id,
-    details: {
-      bankSupplyContractName,
-    },
-  };
+  const { data } = await api.updateDealName(_id, bankSupplyContractName, userToken);
 
-  await api.updateDeal(updateToApply, userToken);
+  const validationErrors = {
+    count: data.count,
+    errorList: data.errorList,
+  };
+  if (validationErrors.count) {
+    return res.status(400).render('contract/contract-edit-name.njk', {
+      contract: await getApiData(
+        api.contract(_id, userToken),
+        res,
+      ),
+      bankSupplyContractName,
+      validationErrors,
+    });
+  }
+
+  req.flash('successMessage', {
+    text: `Supply Contract renamed: ${bankSupplyContractName}`,
+    href: `/contract/${_id}`, // eslint-disable-line no-underscore-dangle
+    hrefText: 'View Supply Contract',
+  });
 
   return res.redirect(`/contract/${_id}`);
 });
@@ -214,7 +229,7 @@ router.post('/contract/:_id/return-to-maker', async (req, res) => {
     hrefText: 'View Supply Contract',
   });
 
-  return res.redirect('/start-now');
+  return res.redirect('/dashboard');
 });
 
 router.get('/contract/:_id/confirm-submission', async (req, res) => {
@@ -261,7 +276,7 @@ router.post('/contract/:_id/confirm-submission', async (req, res) => {
     hrefText: 'View Supply Contract',
   });
 
-  return res.redirect('/start-now');
+  return res.redirect('/dashboard');
 });
 
 router.get('/contract/:_id/clone', async (req, res) => {
