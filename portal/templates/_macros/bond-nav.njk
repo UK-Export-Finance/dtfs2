@@ -50,10 +50,11 @@
 
     <div class="govuk-grid-column-one-half">
    
+    {# completed = completedStatus.bondDetails and completedStatus.bondFinancialDetails and completedStatus.feeDetails, #}
       {{ progressNav.navItem(
           title = 'Preview',
           id = 'preview',
-          completed = completedStatus.bondDetails and completedStatus.bondFinancialDetails and completedStatus.feeDetails,
+          completed = true,
           href = 'bond',
           childId = childId,
           childHref = 'preview',
