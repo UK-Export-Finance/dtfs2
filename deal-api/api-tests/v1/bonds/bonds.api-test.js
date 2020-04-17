@@ -369,6 +369,55 @@ describe('/v1/deals/:id/bond/create', () => {
     });
 
     describe('when a bond has req.body.transactionCurrencySameAsSupplyContractCurrency', () => {
+      it('should remove `currency is NOT the same` values from the bond', async () => {
+        const deal = await post(newDeal, user1).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bondBody = {
+          transactionCurrencySameAsSupplyContractCurrency: 'false',
+          bondValue: '123',
+          conversionRate: '100',
+          'conversionRateDate-day': '14',
+          'conversionRateDate-month': '12',
+          'conversionRateDate-year': '2019',
+        };
+
+        const createBondResponse = await put({}, user1).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status } = await put(bondBody, user1).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        expect(status).toEqual(200);
+
+
+        const bondWithSameCurrencyAsContract = {
+          bondValue: '456',
+          transactionCurrencySameAsSupplyContractCurrency: 'true',
+        };
+
+        const { status: secondUpdateStatus } = await put(bondWithSameCurrencyAsContract, user1).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        expect(secondUpdateStatus).toEqual(200);
+
+        const { body: updatedDeal } = await get(
+          `/v1/deals/${dealId}`,
+          user1,
+        );
+
+        expect(status).toEqual(200);
+
+        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
+          b._id === bondId); // eslint-disable-line no-underscore-dangle
+
+        expect(updatedBond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
+        expect(updatedBond.bondValue).toEqual(bondWithSameCurrencyAsContract.bondValue);
+        expect(updatedBond.transactionCurrencySameAsSupplyContractCurrency).toEqual(bondWithSameCurrencyAsContract.transactionCurrencySameAsSupplyContractCurrency);
+        expect(updatedBond.conversionRate).toEqual(undefined);
+        expect(updatedBond['conversionRateDate-day']).toEqual(undefined);
+        expect(updatedBond['conversionRateDate-month']).toEqual(undefined);
+        expect(updatedBond['conversionRateDate-year']).toEqual(undefined);
+      });
+
       it('should use the deal\'s supplyContractCurrency to the bond\'s currency', async () => {
         const deal = await post(newDeal, user1).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
