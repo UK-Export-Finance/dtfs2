@@ -161,11 +161,10 @@ const updateEligibilityDocumentation = async (dealId, body, files, token) => {
     if (Array.isArray(value)) {
       value.forEach((v) => formData.append(fieldname, v));
     } else {
-      formData.append(`${fieldname}[]`, value);
+      formData.append(`${fieldname}`, value);
     }
   });
 
-  // formData.append('test', 'test1');
   files.forEach((file) => {
     formData.append(file.fieldname, file.buffer, file.originalname);
   });
@@ -326,7 +325,7 @@ const fileshareURL = async (token) => {
     url: `${urlRoot}/v1/fileshare/url`,
   });
 
-  return response.data;
+  return response.data.FILESHARE_URL;
 };
 
 
