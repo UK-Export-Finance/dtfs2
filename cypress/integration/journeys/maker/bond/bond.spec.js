@@ -70,7 +70,7 @@ context('Add a bond', () => {
         });
 
         pages.bondPreview.bondStage().invoke('text').then((text) => {
-          expect(text.trim()).equal('issued');
+          expect(text.trim()).equal('Issued');
         });
 
         const expectedCoverStartDate = `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`;

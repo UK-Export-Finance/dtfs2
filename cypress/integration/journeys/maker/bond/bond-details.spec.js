@@ -23,7 +23,7 @@ context('Bond details', () => {
     cy.insertOneDeal(MOCK_DEAL, user);
   });
 
-  describe('When a user completes the `Bond Details` form', () => {
+  describe('When a user submits the `Bond Details` form', () => {
     it('should progress to the `Bond Financial Details` page', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
@@ -41,7 +41,7 @@ context('Bond details', () => {
     });
   });
 
-  describe('When a user clicks `unissued` bond stage', () => {
+  describe('When a user selects `unissued` bond stage', () => {
     it('should render additional form fields', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
@@ -113,9 +113,35 @@ context('Bond details', () => {
         });
       });
     });
+
+    it('should prepopulate submitted form fields when returning back to Bond Details page', () => {
+      cy.allDeals().then((deals) => {
+        const deal = deals[0];
+        cy.loginGoToDealPage(user, deal);
+
+        pages.contract.addBondButton().click();
+
+        pages.bondDetails.bondStageUnissuedInput().click()
+        pages.bondDetails.bondIssuerInput().type(BOND_FORM_VALUES.DETAILS.bondIssuer);
+        pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
+        pages.bondDetails.ukefGuaranteeInMonthsInput().type(BOND_FORM_VALUES.DETAILS.ukefGuaranteeInMonths);
+        pages.bondDetails.bondBeneficiaryInput().type(BOND_FORM_VALUES.DETAILS.bondBeneficiary);
+        pages.bondDetails.submit().click();
+
+        cy.url().should('include', '/financial-details');
+        partials.bondProgressNav.progressNavBondDetails().click();
+        cy.url().should('include', '/details');
+
+        pages.bondDetails.bondStageUnissuedInput().should('be.checked');
+        pages.bondDetails.bondIssuerInput().should('have.value', BOND_FORM_VALUES.DETAILS.bondIssuer);
+        pages.bondDetails.bondTypeInput().should('have.value', BOND_FORM_VALUES.DETAILS.bondType.value);
+        pages.bondDetails.ukefGuaranteeInMonthsInput().should('have.value', BOND_FORM_VALUES.DETAILS.ukefGuaranteeInMonths);
+        pages.bondDetails.bondBeneficiaryInput().should('have.value', BOND_FORM_VALUES.DETAILS.bondBeneficiary);
+      });
+    });
   });
 
-  describe('When a user clicks `issued` bond stage', () => {
+  describe('When a user selects `issued` bond stage', () => {
     it('should render additional form fields', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
@@ -132,6 +158,35 @@ context('Bond details', () => {
         pages.bondDetails.coverEndDateMonthInput().should('be.visible');
         pages.bondDetails.coverEndDateYearInput().should('be.visible');
         pages.bondDetails.uniqueIdentificationNumberInput().should('be.visible');
+      });
+    });
+
+    // TODO USE fill bond form
+    it('should prepopulate submitted form fields when returning back to Bond Details page', () => {
+      cy.allDeals().then((deals) => {
+        const deal = deals[0];
+        cy.loginGoToDealPage(user, deal);
+
+        pages.contract.addBondButton().click();
+
+        fillBondForm.details();
+        pages.bondDetails.submit().click();
+
+        cy.url().should('include', '/financial-details');
+        partials.bondProgressNav.progressNavBondDetails().click();
+        cy.url().should('include', '/details');
+
+        pages.bondDetails.bondIssuerInput().should('have.value', BOND_FORM_VALUES.DETAILS.bondIssuer);
+        pages.bondDetails.bondTypeInput().should('have.value', BOND_FORM_VALUES.DETAILS.bondType.value);
+        pages.bondDetails.bondStageIssuedInput().should('be.checked');
+        pages.bondDetails.requestedCoverStartDateDayInput().should('have.value', BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
+        pages.bondDetails.requestedCoverStartDateMonthInput().should('have.value', BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth);
+        pages.bondDetails.requestedCoverStartDateYearInput().should('have.value', BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear);
+        pages.bondDetails.coverEndDateDayInput().should('have.value', BOND_FORM_VALUES.DETAILS.coverEndDateDay);
+        pages.bondDetails.coverEndDateMonthInput().should('have.value', BOND_FORM_VALUES.DETAILS.coverEndDateMonth);
+        pages.bondDetails.coverEndDateYearInput().should('have.value', BOND_FORM_VALUES.DETAILS.coverEndDateYear);
+        pages.bondDetails.uniqueIdentificationNumberInput().should('have.value', BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
+        pages.bondDetails.bondBeneficiaryInput().should('have.value', BOND_FORM_VALUES.DETAILS.bondBeneficiary);
       });
     });
   });

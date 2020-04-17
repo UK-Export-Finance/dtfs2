@@ -4,7 +4,10 @@ const DETAILS = {
     value: 'maintenanceBond',
     text: 'Maintenance bond',
   },
+  // 'unissued' bond stage specifics
   ukefGuaranteeInMonths: '12',
+
+  // 'issued' bond stage specifics
   requestedCoverStartDateDay: '16',
   requestedCoverStartDateMonth: '10',
   requestedCoverStartDateYear: '2021',
