@@ -264,7 +264,111 @@ describe('/v1/deals/:id/bond/create', () => {
       expect(updatedBond).toEqual(expectedUpdatedBond);
     });
 
-    describe('when a bond has transactionCurrencySameAsSupplyContractCurrency in the req.body', () => {
+    describe('when a bond has req.body.bondStage as `Issued`', () => {
+      it('should remove `unissued` related values from the bond', async () => {
+        const deal = await post(newDeal, user1).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bondAsUnissued = {
+          bondStage: 'Unissued',
+          bondIssuer: 'test',
+          ukefGuaranteeInMonths: '12',
+        };
+
+        const createBondResponse = await put({}, user1).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status } = await put(bondAsUnissued, user1).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        expect(status).toEqual(200);
+
+        const updatedBondAsIssued = {
+          bondStage: 'Issued',
+          bondIssuer: 'test',
+          'requestedCoverStartDate-day': '01',
+          'requestedCoverStartDate-month': '02',
+          'requestedCoverStartDate-year': '2020',
+          'coverEndDate-day': '01',
+          'coverEndDate-month': '02',
+          'coverEndDate-year': '2022',
+          uniqueIdentificationNumber: '1234',
+        };
+
+        const { status: secondUpdateStatus } = await put(updatedBondAsIssued, user1).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        expect(secondUpdateStatus).toEqual(200);
+
+        const { body: updatedDeal } = await get(
+          `/v1/deals/${dealId}`,
+          user1,
+        );
+        expect(status).toEqual(200);
+
+        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
+          b._id === bondId); // eslint-disable-line no-underscore-dangle
+
+        const expectedBond = {
+          _id: bondId, // eslint-disable-line no-underscore-dangle
+          ...updatedBondAsIssued,
+        };
+
+        expect(updatedBond).toEqual(expectedBond);
+      });
+    });
+
+    describe('when a bond has req.body.bondStage as `Unissued`', () => {
+      it('should remove `unissued` related values from the bond', async () => {
+        const deal = await post(newDeal, user1).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bondAsIssued = {
+          bondStage: 'Issued',
+          bondIssuer: 'test',
+          'requestedCoverStartDate-day': '01',
+          'requestedCoverStartDate-month': '02',
+          'requestedCoverStartDate-year': '2020',
+          'coverEndDate-day': '01',
+          'coverEndDate-month': '02',
+          'coverEndDate-year': '2022',
+          uniqueIdentificationNumber: '1234',
+        };
+
+        const createBondResponse = await put({}, user1).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status } = await put(bondAsIssued, user1).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        expect(status).toEqual(200);
+
+        const updatedBondAsUnissued = {
+          bondStage: 'Unissued',
+          bondIssuer: 'test',
+          ukefGuaranteeInMonths: '12',
+        };
+
+        const { status: secondUpdateStatus } = await put(updatedBondAsUnissued, user1).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        expect(secondUpdateStatus).toEqual(200);
+
+        const { body: updatedDeal } = await get(
+          `/v1/deals/${dealId}`,
+          user1,
+        );
+        expect(status).toEqual(200);
+
+        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
+          b._id === bondId); // eslint-disable-line no-underscore-dangle
+
+        const expectedBond = {
+          _id: bondId, // eslint-disable-line no-underscore-dangle
+          ...updatedBondAsUnissued,
+        };
+
+        expect(updatedBond).toEqual(expectedBond);
+      });
+    });
+
+    describe('when a bond has req.body.transactionCurrencySameAsSupplyContractCurrency', () => {
       it('should use the deal\'s supplyContractCurrency to the bond\'s currency', async () => {
         const deal = await post(newDeal, user1).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle

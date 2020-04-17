@@ -6,8 +6,8 @@
 
 {% block content %}
 
-  {% set showUnissuedFormFieldsByDefault = bond.bondStage === "unissued" %}
-  {% set showIssuedFormFieldsByDefault = bond.bondStage === "issued" %}
+  {% set showUnissuedFormFieldsByDefault = bond.bondStage === "Unissued" %}
+  {% set showIssuedFormFieldsByDefault = bond.bondStage === "Issued" %}
 
   <script type="text/javascript">
     function toggleFormFields(bondStage) {
