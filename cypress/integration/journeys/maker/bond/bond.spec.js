@@ -13,7 +13,7 @@ const MOCK_DEAL = {
   },
 };
 
-context('Add a bond', () => {
+context('Add a Bond to a Deal', () => {
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
@@ -24,21 +24,33 @@ context('Add a bond', () => {
     cy.insertOneDeal(MOCK_DEAL, user);
   });
 
-  describe('When a user clicks `Add a Bond` from the deal page', () => {
-    it('should progress to the `Bond Details` page', () => {
-      cy.allDeals().then((deals) => {
-        const deal = deals[0];
-        cy.loginGoToDealPage(user, deal);
+  it('should allow a user to create a Deal, pass Red Line and add a Bond to the deal', () => {
+    cy.passRedLine(user);
 
-        cy.url().should('include', '/contract');
+    // complete 'before you start' form fields
+    pages.bankDetails.bankDealId().type('TEST1234');
+    pages.bankDetails.bankDealName().type('TESTING');
+    pages.bankDetails.submit().click();
 
-        pages.contract.addBondButton().click();
+    cy.url().should('include', '/contract/');
 
-        cy.url().should('include', '/contract');
-        cy.url().should('include', '/bond/');
-        cy.url().should('include', '/details');
-      });
-    });
+    pages.contract.addBondButton().click();
+
+    cy.url().should('include', '/contract');
+    cy.url().should('include', '/bond/');
+    cy.url().should('include', '/details');
+
+    fillBondForm.details();
+    pages.bondDetails.submit().click();
+
+    fillBondForm.financialDetails();
+    pages.bondFinancialDetails.submit().click();
+
+    fillBondForm.feeDetails();
+    pages.bondFeeDetails.submit().click();
+
+    cy.url().should('include', '/preview');
+    // TODO: check preview details? (done below)
   });
 
   describe('When a user completes all Bond forms (`issued` bond stage, currency same as Supply Contract Currency)', () => {
@@ -201,7 +213,7 @@ context('Add a bond', () => {
     });
   });
 
-  describe('When a user clicks `save and go back` button', () => {
+  describe('When a user clicks `save and go back` button in Bond Preview page', () => {
     it('should return to Deal page', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
@@ -228,5 +240,4 @@ context('Add a bond', () => {
       });
     });
   });
-
 });
