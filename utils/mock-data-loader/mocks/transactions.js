@@ -6,8 +6,25 @@ const TRANSACTIONS = [
     value: 'USD 12,345,678.00',
     stage: 'Unissued',
     issuedDate: '',
+    issuedBy: 'Mr. A.',
+    created: '2020/04/25 13:45',
     maker: 'MAKERDURGA',
-    checker: 'CHECKER DURGA'
+    checker: 'CHECKER DURGA',
+    deal: {
+      details: {
+        bankSupplyContractID: 'MIA/Msstar/BSS/DGR',
+        status: 'Acknowledged by UKEF',
+        maker: {
+          username: 'MAKERDURGA',
+        },
+        checker: {
+          username: 'CHECKER DURGA',
+        },
+      },
+      submissionDetails: {
+        supplierName: 'TEST'
+      }
+    }
   },
   {
     bankFacilityId: '012345',
@@ -16,8 +33,25 @@ const TRANSACTIONS = [
     value: 'GBP 12,345,678.00',
     stage: 'Conditional',
     issuedDate: '',
+    issuedBy: 'Mr. B.',
+    created: '2020/03/22 12:41',
     maker: 'MAKERDURGA',
-    checker: 'CHECKER DURGA'
+    checker: 'CHECKER DURGA',
+    deal: {
+      details: {
+        bankSupplyContractID: 'MIA/Msstar/BSS/DGR',
+        status: 'Acknowledged by UKEF',
+        maker: {
+          username: 'MAKERDURGA',
+        },
+        checker: {
+          username: 'CHECKER DURGA',
+        },
+      },
+      submissionDetails: {
+        supplierName: 'TEST'
+      }
+    }
   },
   {
     bankFacilityId: '789101',
@@ -26,8 +60,25 @@ const TRANSACTIONS = [
     value: 'USD 123,000,000.00',
     stage: 'Issued',
     issuedDate: '',
+    issuedBy: 'Mr. C.',
+    created: '2020/02/11 06:12',
     maker: 'MAKERDURGA',
-    checker: 'CHECKER DURGA'
+    checker: 'CHECKER DURGA',
+    deal: {
+      details: {
+        bankSupplyContractID: 'MIA/Msstar/BSS/DGR',
+        status: 'Acknowledged by UKEF',
+        maker: {
+          username: 'MAKERDURGA',
+        },
+        checker: {
+          username: 'CHECKER DURGA',
+        },
+      },
+      submissionDetails: {
+        supplierName: 'TEST'
+      }
+    }
   }
 ];
 

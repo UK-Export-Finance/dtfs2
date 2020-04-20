@@ -88,11 +88,13 @@ router.post('/dashboard/:page', async (req, res) => {
 router.get('/dashboard/transactions', async (req, res) => {
   const { userToken } = requestParams(req);
 
+  const { transactions } = await getApiData(
+    api.transactions(userToken),
+    res,
+  );
+
   return res.render('dashboard/transactions.njk', {
-    transactions: await getApiData(
-      api.transactions(userToken),
-      res,
-    ),
+    transactions,
     banks: await getApiData(
       api.banks(userToken),
       res,

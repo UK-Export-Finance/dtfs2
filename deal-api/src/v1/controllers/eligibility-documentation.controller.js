@@ -2,6 +2,7 @@ const { deleteMultipleFiles, uploadStream } = require('../../drivers/fileshare')
 const { formatFilenameForSharepoint } = require('../../utils');
 const { userHasAccessTo } = require('../users/checks');
 const { findOneDeal, update: updateDeal } = require('./deal.controller');
+const { getDocumentationErrors } = require('../validation/eligibility-documentation');
 
 const getFileType = (fieldname) => {
   switch (fieldname) {
@@ -72,10 +73,14 @@ exports.update = async (req, res) => {
       }
     });
 
+    const validationErrors = getDocumentationErrors(deal.eligibility.criteria, dealFiles);
 
     const updatedDeal = {
       ...deal,
-      dealFiles,
+      dealFiles: {
+        ...dealFiles,
+        validationErrors,
+      },
     };
 
     const newReq = {
