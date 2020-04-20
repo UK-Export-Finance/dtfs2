@@ -2,7 +2,8 @@
 {% import '_macros/contract-tabs.njk' as contractTabs %}
 {% import '_macros/contract-details.njk' as contractDetails %}
 {% import '_macros/status.njk' as status %}
-{% import '_macros/transactions-table.njk' as transactionsTable %}
+{% import '_macros/bond-transactions-table.njk' as bondTransactionsTable %}
+{% import '_macros/loan-transactions-table.njk' as loanTransactionsTable %}
 {% import '_macros/contract-options-panel.njk' as optionsPanel %}
 
 {% block content %}
@@ -118,12 +119,10 @@
 
             {% if contract.bondTransactions.items %}
               <div class="govuk-grid-column-full">
-                {{ transactionsTable.table(
-                  items = contract.bondTransactions.items,
-                  dealId = contract._id,
-                  hrefRoot = 'bond',
-                  hrefPage = 'details'
-                ) }}
+                {{ bondTransactionsTable.render(
+                  bonds = contract.bondTransactions.items,
+                  dealId = contract._id
+                )}}
               </div>
             {% endif %}
 
@@ -151,12 +150,11 @@
 
             {% if contract.loanTransactions.items %}
               <div class="govuk-grid-column-full">
-                {{ transactionsTable.table(
-                  items = contract.loanTransactions.items,
-                  dealId = contract._id,
-                  hrefRoot = 'loan',
-                  hrefPage = 'guarantee-details'
-                ) }}
+                {{ loanTransactionsTable.render(
+                  loans = contract.loanTransactions.items,
+                  dealId = contract._id
+                )}}
+
               </div>
             {% endif %}
 

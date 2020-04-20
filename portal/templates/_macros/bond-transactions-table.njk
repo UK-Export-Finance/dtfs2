@@ -1,11 +1,6 @@
 {% import '_macros/status.njk' as status %}
 
-{#
-  TODO: make this NOT reusable so it's specific to bonds
-  Otherwise could be lots of conditions for it to work with bonds and loans
-#}
-
-{% macro table(items, dealId, hrefRoot, hrefPage) %}
+{% macro render(bonds, dealId) %}
 
   <table class="govuk-table contract-table govuk-!-margin-bottom-0">
     <thead class="govuk-table__head">
@@ -23,46 +18,46 @@
 
     <tbody class="govuk-table__body">
 
-      {% for item in items %}
-        <tr class="govuk-table__row" data-cy="bond-{{ item._id }}">
+      {% for bond in bonds %}
+        <tr class="govuk-table__row" data-cy="bond-{{ bond._id }}">
           <td class="govuk-table__cell govuk-!-font-size-14">
-            {% if item.uniqueIdentificationNumber %}
-              <a href="/contract/{{ dealId }}/{{ hrefRoot }}/{{ item._id}}/{{ hrefPage }}" class="govuk-link" data-cy="unique-number">{{ item.uniqueIdentificationNumber }}</a>
+            {% if bond.uniqueIdentificationNumber %}
+              <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/details" class="govuk-link" data-cy="unique-number">{{ bond.uniqueIdentificationNumber }}</a>
             {% else %}
-              <a href="/contract/{{ dealId }}/{{ hrefRoot }}/{{ item._id}}/{{ hrefPage }}" class="govuk-link" data-cy="unique-number">Not entered</a>
+              <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/details" class="govuk-link" data-cy="unique-number">Not entered</a>
             {% endif %}
           </td>
 
           <td class="govuk-table__cell govuk-!-font-size-14">
-            {{ item.ukefFacilityID }}
+            {{ bond.ukefFacilityID }}
           </td>
 
           <td class="govuk-table__cell govuk-!-font-size-14 contract-table--status-cell">
-            {{ status.statusText(item.status) }}
+            {{ status.statusText(bond.status) }}
           </td>
 
           <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-value">
-            {{ item.currency.id}} {{ item.bondValue }}
+            {{ bond.currency.id}} {{ bond.bondValue }}
           </td>
           
           <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-stage">
-            {{ item.bondStage }}
+            {{ bond.bondStage }}
           </td>
 
           <td class="govuk-table__cell govuk-!-font-size-14" data-cy="requested-cover-start-date">
-            {% if item['requestedCoverStartDate-day'] and item['requestedCoverStartDate-month'] and item['requestedCoverStartDate-year'] %}
-            {{ item['requestedCoverStartDate-day'] }}/{{ item['requestedCoverStartDate-month'] }}/{{ item['requestedCoverStartDate-year'] }}
+            {% if bond['requestedCoverStartDate-day'] and bond['requestedCoverStartDate-month'] and bond['requestedCoverStartDate-year'] %}
+            {{ bond['requestedCoverStartDate-day'] }}/{{ bond['requestedCoverStartDate-month'] }}/{{ bond['requestedCoverStartDate-year'] }}
             {% endif %}
           </td>
 
           <td class="govuk-table__cell govuk-!-font-size-14" data-cy="cover-end-date">
-            {% if item['coverEndDate-day'] and item['coverEndDate-month'] and item['coverEndDate-year'] %}
-              {{ item['coverEndDate-day'] }}/{{ item['coverEndDate-month'] }}/{{ item['coverEndDate-year'] }}
+            {% if bond['coverEndDate-day'] and bond['coverEndDate-month'] and bond['coverEndDate-year'] %}
+              {{ bond['coverEndDate-day'] }}/{{ bond['coverEndDate-month'] }}/{{ bond['coverEndDate-year'] }}
             {% endif %}
           </td>
 
           <td class="govuk-table__cell govuk-!-font-size-14">
-            <a href="/contract/{{ dealId }}/{{ hrefRoot }}/{{ item._id}}/delete" class="govuk-link" data-cy="delete-link">Delete</a>
+            <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/delete" class="govuk-link" data-cy="delete-link">Delete</a>
           </td>
         </tr>
 
