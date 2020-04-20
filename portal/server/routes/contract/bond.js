@@ -18,8 +18,6 @@ router.get('/contract/:_id/bond/create', async (req, res) => {
   return res.redirect(`/contract/${_id}/bond/${bondId}/details`); // eslint-disable-line no-underscore-dangle
 });
 
-// TODO: if some details have been submitted
-// display validationErrors for the remaining required fields
 router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
@@ -43,8 +41,6 @@ router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
   return res.redirect(redirectUrl);
 });
 
-// TODO: if some details have been submitted
-// display validationErrors for the remaining required fields
 router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
@@ -76,8 +72,6 @@ router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) =>
   return res.redirect(redirectUrl);
 });
 
-// TODO: if some details have been submitted
-// display validationErrors for the remaining required fields
 router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
