@@ -32,7 +32,7 @@ context('Bond details', () => {
 
         pages.contract.addBondButton().click();
 
-        fillBondForm.details();
+        fillBondForm.details.bondStageIssued();
         pages.bondDetails.submit().click();
 
         cy.url().should('include', '/contract');
@@ -63,9 +63,7 @@ context('Bond details', () => {
 
         pages.contract.addBondButton().click();
 
-        pages.bondDetails.bondStageUnissuedInput().click();
-
-        pages.bondDetails.ukefGuaranteeInMonthsInput().type(BOND_FORM_VALUES.DETAILS.ukefGuaranteeInMonths);
+        fillBondForm.details.bondStageUnissued();
 
         // go to preview page
         pages.bondDetails.submit().click();
@@ -91,7 +89,7 @@ context('Bond details', () => {
         partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
           const bondId = bondIdHiddenInput[0].value;
 
-          pages.bondDetails.bondStageUnissuedInput().click();
+          fillBondForm.details.bondStageUnissued();
           pages.bondDetails.submit().click();
 
           pages.bondFinancialDetails.saveGoBackButton().click();
@@ -165,7 +163,7 @@ context('Bond details', () => {
 
         pages.contract.addBondButton().click();
 
-        fillBondForm.details();
+        fillBondForm.details.bondStageIssued();
         pages.bondDetails.submit().click();
 
         cy.url().should('include', '/financial-details');
@@ -184,7 +182,7 @@ context('Bond details', () => {
 
           pages.contract.addBondButton().click();
 
-          fillBondForm.details();
+          fillBondForm.details.bondStageIssued();
 
           partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
             const bondId = bondIdHiddenInput[0].value;

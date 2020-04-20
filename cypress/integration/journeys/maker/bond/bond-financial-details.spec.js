@@ -47,7 +47,7 @@ context('Bond financial details', () => {
         cy.url().should('include', '/bond/');
         cy.url().should('include', '/financial-details');
 
-        fillBondForm.financialDetails();
+        fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
         pages.bondFinancialDetails.submit().click();
 
         cy.url().should('include', '/contract');
@@ -65,7 +65,7 @@ context('Bond financial details', () => {
         partials.bondProgressNav.progressNavBondFinancialDetails().click();
         cy.url().should('include', '/financial-details');
 
-        fillBondForm.financialDetails();
+        fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
         pages.bondFinancialDetails.submit().click();
 
         cy.url().should('include', '/fee-details');
@@ -87,7 +87,7 @@ context('Bond financial details', () => {
         partials.bondProgressNav.progressNavBondFinancialDetails().click();
         cy.url().should('include', '/financial-details');
 
-        fillBondForm.financialDetails();
+        fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
 
         partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
           const bondId = bondIdHiddenInput[0].value;
@@ -133,16 +133,7 @@ context('Bond financial details', () => {
         partials.bondProgressNav.progressNavBondFinancialDetails().click();
         cy.url().should('include', '/financial-details');
 
-        pages.bondFinancialDetails.bondValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
-        pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
-        pages.bondFinancialDetails.currencyInput().select(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
-        pages.bondFinancialDetails.conversionRateInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
-        pages.bondFinancialDetails.conversionRateDateDayInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateDay);
-        pages.bondFinancialDetails.conversionRateDateMonthInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateMonth);
-        pages.bondFinancialDetails.conversionRateDateYearInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateYear);
-        pages.bondFinancialDetails.riskMarginFeeInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.riskMarginFee);
-        pages.bondFinancialDetails.coveredPercentageInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
-        pages.bondFinancialDetails.minimumRiskMarginFeeInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
+        fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
 
         pages.bondFinancialDetails.submit().click();
 
@@ -160,11 +151,8 @@ context('Bond financial details', () => {
 
         pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
 
-        pages.bondFinancialDetails.currencyInput().select(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
-        pages.bondFinancialDetails.conversionRateInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
-        pages.bondFinancialDetails.conversionRateDateDayInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateDay);
-        pages.bondFinancialDetails.conversionRateDateMonthInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateMonth);
-        pages.bondFinancialDetails.conversionRateDateYearInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateYear);
+        fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
+
         pages.bondFinancialDetails.submit().click();
 
         cy.url().should('include', '/fee-details');
