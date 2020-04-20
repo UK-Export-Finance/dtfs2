@@ -9,10 +9,8 @@
         <h7 class="govuk-heading-s govuk-!-margin-bottom-1">
           Eligibility criterion {{ criterion.id }}
           <span class="govuk-body-s govuk-!-font-weight-regular govuk-!-margin-left-4">
-            {% if criterion.answer %}
-              True
-              {% else %}
-              False
+            {% if criterion.answer != undefined %}
+              {{ criterion.answer | string | capitalize }}
             {% endif %}
           </span>
         </h7>

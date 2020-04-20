@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
 {% import '_macros/pagination.njk' as pagination %}
 
-{% import '_macros/auditSupplyContractsFilters.njk' as auditSupplyContractsFilters %}
+{% import '_macros/reporting-audit-supply-contracts-filters.njk' as filterControls %}
 
 
 {% block content %}
@@ -9,7 +9,7 @@
   <h1 class="govuk-heading-l">Audit Report</h1>
 
 
-  {{ auditSupplyContractsFilters.render(filter, user) }}
+  {{ filterControls.render(filter, user) }}
 
   <table class="govuk-table govuk-!-margin-bottom-0">
     <thead class="govuk-table__head">
@@ -58,7 +58,7 @@
 
   </table>
 
-  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/dashboard') }}
+  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/reporting/audit-supply-contracts') }}
 
 
 {% endblock %}
