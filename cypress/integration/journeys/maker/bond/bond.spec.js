@@ -50,7 +50,6 @@ context('Add a Bond to a Deal', () => {
     pages.bondFeeDetails.submit().click();
 
     cy.url().should('include', '/preview');
-    // TODO: check preview details? (done below)
   });
 
   describe('When a user completes all Bond forms (`issued` bond stage, currency same as Supply Contract Currency)', () => {
@@ -180,9 +179,9 @@ context('Add a Bond to a Deal', () => {
             expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
           });
 
-          // TODO: UKEF facility ID
+          // TODO: UKEF facility ID (when built)
 
-          // TODO: status
+          // TODO: status (when built)
 
           row.bondValue().invoke('text').then((text) => {
             const expectedValue = `${deal.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue}`;
