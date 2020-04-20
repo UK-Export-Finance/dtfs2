@@ -97,7 +97,7 @@ router.get('/contract/:_id/eligibility/supporting-documentation', async (req, re
 
   return res.render('eligibility/eligibility-supporting-documentation.njk',
     {
-      dealFiles, eligibility, fileshareURL, validationErrors,
+      _id, dealFiles, eligibility, fileshareURL, validationErrors,
     });
 });
 
@@ -128,8 +128,15 @@ router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(),
   });
 });
 
-router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', (req, res) => {
-  const { _id } = requestParams(req);
+router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', upload.any(), async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+  const { body, files } = req;
+
+  await getApiData(
+    api.updateEligibilityDocumentation(_id, body, files, userToken),
+    res,
+  );
+
   const redirectUrl = `/contract/${_id}/eligibility/criteria`;
   return res.redirect(redirectUrl);
 });
