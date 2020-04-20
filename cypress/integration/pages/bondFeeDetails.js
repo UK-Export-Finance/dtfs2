@@ -3,7 +3,7 @@ const page = {
   feeFrequencyAnnuallyInput: () => cy.get('[data-cy="fee-frequency-annually"]'),
   dayCountBasis365Input: () => cy.get('[data-cy="day-count-basis-365"]'),
   submit: () => cy.get('button'),
-  goBackButton: () => cy.get('[data-cy="go-back-button"]'),
+  saveGoBackButton: () => cy.get('[data-cy="save-go-back-button"]'),
 };
 
 module.exports = page;

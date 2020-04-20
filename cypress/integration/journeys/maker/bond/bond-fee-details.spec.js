@@ -1,6 +1,7 @@
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const fillBondForm = require('./fill-bond-forms');
+const assertBondFormValues = require('./assert-bond-form-values');
 
 const user = { username: 'MAKER', password: 'MAKER' };
 
@@ -59,9 +60,39 @@ context('Bond fee details', () => {
         partials.bondProgressNav.progressNavBondFeeDetails().click();
         cy.url().should('include', '/fee-details');
 
-        pages.bondFeeDetails.feeTypeAtMaturityInput().should('be.checked');
-        pages.bondFeeDetails.feeFrequencyAnnuallyInput().should('be.checked');
-        pages.bondFeeDetails.dayCountBasis365Input().should('be.checked');
+        assertBondFormValues.feeDetails();
+      });
+    });
+
+    describe('When a user clicks `save and go back` button', () => {
+      it('should save the form data, return to Deal page and prepopulate form fields when returning back to Bond Details page', () => {
+        cy.allDeals().then((deals) => {
+          const deal = deals[0];
+          cy.loginGoToDealPage(user, deal);
+
+          pages.contract.addBondButton().click();
+          partials.bondProgressNav.progressNavBondFeeDetails().click();
+          cy.url().should('include', '/fee-details');
+
+          fillBondForm.feeDetails();
+
+          partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+            const bondId = bondIdHiddenInput[0].value;
+
+            pages.bondFeeDetails.saveGoBackButton().click();
+
+            cy.url().should('not.include', '/fee-details');
+            cy.url().should('include', '/contract');
+
+            const row = pages.contract.bondTransactionsTable.row(bondId);
+
+            row.uniqueNumber().click();
+            partials.bondProgressNav.progressNavBondFeeDetails().click();
+            cy.url().should('include', '/fee-details');
+
+            assertBondFormValues.feeDetails();
+          });
+        });
       });
     });
   });

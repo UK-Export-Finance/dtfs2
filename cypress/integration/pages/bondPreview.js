@@ -1,5 +1,5 @@
 const page = {
-  goBackButton: () => cy.get('[data-cy="go-back-button"]'),
+  saveGoBackButton: () => cy.get('[data-cy="save-go-back-button"]'),
 
   // bond details
   bondIssuer: () => cy.get('[data-cy="bond-issuer"]'),
