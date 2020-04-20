@@ -1,4 +1,5 @@
 const axios = require('axios');
+
 const FormData = require('form-data');
 const { translateDatesToExpectedFormat, translateAllDatesToExpectedFormat } = require('./dateFormatter');
 require('dotenv').config();
@@ -180,6 +181,8 @@ const updateEligibilityDocumentation = async (dealId, body, files, token) => {
       ...formHeaders,
     },
     data: formData.getBuffer(),
+    maxContentLength: Infinity,
+    maxBodyLength: Infinity,
   });
 
   return response.data;
