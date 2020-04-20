@@ -40,10 +40,10 @@ context('Add a Bond to a Deal', () => {
     cy.url().should('include', '/bond/');
     cy.url().should('include', '/details');
 
-    fillBondForm.details();
+    fillBondForm.details.bondStageIssued();
     pages.bondDetails.submit().click();
 
-    fillBondForm.financialDetails();
+    fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
     pages.bondFinancialDetails.submit().click();
 
     fillBondForm.feeDetails();
@@ -60,10 +60,10 @@ context('Add a Bond to a Deal', () => {
 
         pages.contract.addBondButton().click();
 
-        fillBondForm.details();
+        fillBondForm.details.bondStageIssued();
         pages.bondDetails.submit().click();
 
-        fillBondForm.financialDetails();
+        fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
         pages.bondFinancialDetails.submit().click();
 
         fillBondForm.feeDetails();
@@ -153,10 +153,10 @@ context('Add a Bond to a Deal', () => {
 
         pages.contract.addBondButton().click();
 
-        fillBondForm.details();
+        fillBondForm.details.bondStageIssued();
         pages.bondDetails.submit().click();
 
-        fillBondForm.financialDetails();
+        fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
         pages.bondFinancialDetails.submit().click();
 
         fillBondForm.feeDetails();

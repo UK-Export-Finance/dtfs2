@@ -4,8 +4,6 @@ const DETAILS = {
     value: 'maintenanceBond',
     text: 'Maintenance bond',
   },
-  // 'unissued' bond stage specifics
-  ukefGuaranteeInMonths: '12',
 
   // 'issued' bond stage specifics
   requestedCoverStartDateDay: '16',
@@ -16,10 +14,18 @@ const DETAILS = {
   coverEndDateYear: '2025',
   uniqueIdentificationNumber: '123456',
   bondBeneficiary: 'mock beneficiary',
+
+  // 'unissued' bond stage specifics
+  ukefGuaranteeInMonths: '12',
 };
 
 const FINANCIAL_DETAILS = {
   bondValue: '123',
+  riskMarginFee: '20',
+  coveredPercentage: '80',
+  minimumRiskMarginFee: '1.23',
+
+  // 'transaction currency not the same as supply contract currency' specifics
   currency: {
     value: 'EUR',
     text: 'EUR - Euros',
@@ -28,9 +34,6 @@ const FINANCIAL_DETAILS = {
   conversionRateDateDay: '01',
   conversionRateDateMonth: '02',
   conversionRateDateYear: '2020',
-  riskMarginFee: '20',
-  coveredPercentage: '80',
-  minimumRiskMarginFee: '1.23',
 };
 
 module.exports = {
