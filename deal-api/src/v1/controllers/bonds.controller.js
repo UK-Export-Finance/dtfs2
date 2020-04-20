@@ -1,6 +1,5 @@
 const { ObjectId } = require('mongodb');
-const db = require('../../drivers/db-client');
-const { findOneDeal } = require('./deal.controller');
+const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { findOneBondCurrency } = require('./bondCurrencies.controller');
 
@@ -11,19 +10,28 @@ exports.create = async (req, res) => {
         res.status(401).send();
       }
 
-      const collection = await db.getCollection('deals');
-
       const newBondObj = { _id: new ObjectId() };
 
-      const updatedDeal = await collection.findOneAndUpdate(
-        { _id: ObjectId(req.params.id) },
-        { $push: { 'bondTransactions.items': { ...newBondObj } } },
-        { upsert: false },
-        { returnOriginal: false },
-      );
+      const updatedDeal = {
+        ...deal,
+        bondTransactions: {
+          items: [
+            ...deal.bondTransactions.items,
+            newBondObj,
+          ],
+        },
+      };
+
+      const newReq = {
+        params: req.params,
+        body: updatedDeal,
+        user: req.user,
+      };
+
+      const updateDealResponse = await updateDeal(newReq, res);
 
       return res.status(200).send({
-        ...updatedDeal.value,
+        ...updateDealResponse,
         bondId: newBondObj._id, // eslint-disable-line no-underscore-dangle
       });
     }
@@ -43,7 +51,6 @@ const handleBondCurrency = async (currencyCode) => {
 
 exports.updateBond = async (req, res) => {
   const {
-    id: dealId,
     bondId,
   } = req.params;
 
@@ -55,6 +62,13 @@ exports.updateBond = async (req, res) => {
 
       const existingBond = deal.bondTransactions.items.find((bond) =>
         String(bond._id) === bondId); // eslint-disable-line no-underscore-dangle
+
+      if (!existingBond) {
+        return res.status(404).send();
+      }
+
+      const allOtherBonds = deal.bondTransactions.items.filter((bond) =>
+        String(bond._id) !== bondId); // eslint-disable-line no-underscore-dangle
 
       const updatedBond = {
         _id: ObjectId(bondId),
@@ -85,7 +99,7 @@ exports.updateBond = async (req, res) => {
       }
 
       if (transactionCurrencySameAsSupplyContractCurrency && transactionCurrencySameAsSupplyContractCurrency === 'true') {
-        // remove any 'currency is NOT the same values'
+        // remove any 'currency is NOT the same' specific values
         delete updatedBond.conversionRate;
         delete updatedBond['conversionRateDate-day'];
         delete updatedBond['conversionRateDate-month'];
@@ -97,20 +111,25 @@ exports.updateBond = async (req, res) => {
         updatedBond.currency = await handleBondCurrency(currencyCode);
       }
 
-      const collection = await db.getCollection('deals');
-      const result = await collection.findOneAndUpdate(
-        {
-          _id: ObjectId(dealId),
-          'bondTransactions.items._id': ObjectId(bondId),
-        }, {
-          $set: { 'bondTransactions.items.$': { ...updatedBond } },
+      const updatedDeal = {
+        ...deal,
+        bondTransactions: {
+          items: [
+            ...allOtherBonds,
+            updatedBond,
+          ],
         },
-        { upsert: false },
-      );
+      };
 
-      // TODO: error handling for if deal not found.
+      const newReq = {
+        params: req.params,
+        body: updatedDeal,
+        user: req.user,
+      };
 
-      return res.status(200).send(result.value);
+      const updateDealResponse = await updateDeal(newReq, res);
+
+      return res.status(200).send(updateDealResponse);
     }
     return res.status(404).send();
   });

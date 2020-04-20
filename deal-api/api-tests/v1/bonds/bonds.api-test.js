@@ -190,7 +190,10 @@ describe('/v1/deals/:id/bond/create', () => {
       const postResult = await post(newDeal, user1).to('/v1/deals');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
-      const { status } = await put({}, superuser).to(`/v1/deals/${dealId}/bond/123456789012`);
+      const { body } = await put({}, user1).to(`/v1/deals/${dealId}/bond/create`);
+      const bondId = body.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+
+      const { status } = await put({}, superuser).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
       expect(status).toEqual(200);
     });
