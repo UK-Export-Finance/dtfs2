@@ -1,6 +1,7 @@
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const fillBondForm = require('./fill-bond-forms');
+const assertBondFormValues = require('./assert-bond-form-values');
 const BOND_FORM_VALUES = require('./bond-form-values');
 const relative = require('../../../relativeURL');
 
@@ -71,11 +72,39 @@ context('Bond financial details', () => {
         partials.bondProgressNav.progressNavBondFinancialDetails().click();
         cy.url().should('include', '/financial-details');
 
-        pages.bondFinancialDetails.bondValueInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
-        pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyYesInput().should('be.checked');
-        pages.bondFinancialDetails.riskMarginFeeInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.riskMarginFee);
-        pages.bondFinancialDetails.coveredPercentageInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
-        pages.bondFinancialDetails.minimumRiskMarginFeeInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
+        assertBondFormValues.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
+      });
+    });
+  });
+
+  describe('When a user clicks `save and go back` button', () => {
+    it('should save the form data, return to Deal page and prepopulate form fields when returning back to Bond Details page', () => {
+      cy.allDeals().then((deals) => {
+        const deal = deals[0];
+        cy.loginGoToDealPage(user, deal);
+
+        pages.contract.addBondButton().click();
+        partials.bondProgressNav.progressNavBondFinancialDetails().click();
+        cy.url().should('include', '/financial-details');
+
+        fillBondForm.financialDetails();
+
+        partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+          const bondId = bondIdHiddenInput[0].value;
+
+          pages.bondFinancialDetails.saveGoBackButton().click();
+
+          cy.url().should('not.include', '/financial-details');
+          cy.url().should('include', '/contract');
+
+          const row = pages.contract.bondTransactionsTable.row(bondId);
+
+          row.uniqueNumber().click();
+          partials.bondProgressNav.progressNavBondFinancialDetails().click();
+          cy.url().should('include', '/financial-details');
+
+          assertBondFormValues.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
+        });
       });
     });
   });
@@ -121,16 +150,7 @@ context('Bond financial details', () => {
         partials.bondProgressNav.progressNavBondFinancialDetails().click();
         cy.url().should('include', '/financial-details');
 
-        pages.bondFinancialDetails.bondValueInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
-        pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().should('be.checked');
-        pages.bondFinancialDetails.currencyInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
-        pages.bondFinancialDetails.conversionRateInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
-        pages.bondFinancialDetails.conversionRateDateDayInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateDay);
-        pages.bondFinancialDetails.conversionRateDateMonthInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateMonth);
-        pages.bondFinancialDetails.conversionRateDateYearInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateYear);
-        pages.bondFinancialDetails.riskMarginFeeInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.riskMarginFee);
-        pages.bondFinancialDetails.coveredPercentageInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
-        pages.bondFinancialDetails.minimumRiskMarginFeeInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
+        assertBondFormValues.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
       });
     });
 
@@ -187,7 +207,7 @@ context('Bond financial details', () => {
           const bondId = bondIdHiddenInput[0].value;
 
           pages.bondFinancialDetails.submit().click();
-          pages.bondFeeDetails.goBackButton().click();
+          pages.bondFeeDetails.saveGoBackButton().click();
           cy.url().should('eq', relative(`/contract/${deal._id}`));
 
           const row = pages.contract.bondTransactionsTable.row(bondId);
@@ -199,6 +219,7 @@ context('Bond financial details', () => {
       });
     });
   });
+
   // TODO: financial details - disabled inputs guaranteeFeePayableByBank and ukefExposure work as expected
   // functionality needs to be done first - assuming these get automatically populated
 });

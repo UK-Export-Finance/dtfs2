@@ -1,6 +1,7 @@
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const fillBondForm = require('./fill-bond-forms');
+const assertBondFormValues = require('./assert-bond-form-values');
 const BOND_FORM_VALUES = require('./bond-form-values');
 
 const user = { username: 'MAKER', password: 'MAKER' };
@@ -93,7 +94,7 @@ context('Bond details', () => {
           pages.bondDetails.bondStageUnissuedInput().click();
           pages.bondDetails.submit().click();
 
-          pages.bondFinancialDetails.goBackButton().click();
+          pages.bondFinancialDetails.saveGoBackButton().click();
 
           const row = pages.contract.bondTransactionsTable.row(bondId);
 
@@ -121,7 +122,7 @@ context('Bond details', () => {
 
         pages.contract.addBondButton().click();
 
-        pages.bondDetails.bondStageUnissuedInput().click()
+        pages.bondDetails.bondStageUnissuedInput().click();
         pages.bondDetails.bondIssuerInput().type(BOND_FORM_VALUES.DETAILS.bondIssuer);
         pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
         pages.bondDetails.ukefGuaranteeInMonthsInput().type(BOND_FORM_VALUES.DETAILS.ukefGuaranteeInMonths);
@@ -132,11 +133,7 @@ context('Bond details', () => {
         partials.bondProgressNav.progressNavBondDetails().click();
         cy.url().should('include', '/details');
 
-        pages.bondDetails.bondStageUnissuedInput().should('be.checked');
-        pages.bondDetails.bondIssuerInput().should('have.value', BOND_FORM_VALUES.DETAILS.bondIssuer);
-        pages.bondDetails.bondTypeInput().should('have.value', BOND_FORM_VALUES.DETAILS.bondType.value);
-        pages.bondDetails.ukefGuaranteeInMonthsInput().should('have.value', BOND_FORM_VALUES.DETAILS.ukefGuaranteeInMonths);
-        pages.bondDetails.bondBeneficiaryInput().should('have.value', BOND_FORM_VALUES.DETAILS.bondBeneficiary);
+        assertBondFormValues.details.unissued();
       });
     });
   });
@@ -161,7 +158,6 @@ context('Bond details', () => {
       });
     });
 
-    // TODO USE fill bond form
     it('should prepopulate submitted form fields when returning back to Bond Details page', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
@@ -176,17 +172,37 @@ context('Bond details', () => {
         partials.bondProgressNav.progressNavBondDetails().click();
         cy.url().should('include', '/details');
 
-        pages.bondDetails.bondIssuerInput().should('have.value', BOND_FORM_VALUES.DETAILS.bondIssuer);
-        pages.bondDetails.bondTypeInput().should('have.value', BOND_FORM_VALUES.DETAILS.bondType.value);
-        pages.bondDetails.bondStageIssuedInput().should('be.checked');
-        pages.bondDetails.requestedCoverStartDateDayInput().should('have.value', BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
-        pages.bondDetails.requestedCoverStartDateMonthInput().should('have.value', BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth);
-        pages.bondDetails.requestedCoverStartDateYearInput().should('have.value', BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear);
-        pages.bondDetails.coverEndDateDayInput().should('have.value', BOND_FORM_VALUES.DETAILS.coverEndDateDay);
-        pages.bondDetails.coverEndDateMonthInput().should('have.value', BOND_FORM_VALUES.DETAILS.coverEndDateMonth);
-        pages.bondDetails.coverEndDateYearInput().should('have.value', BOND_FORM_VALUES.DETAILS.coverEndDateYear);
-        pages.bondDetails.uniqueIdentificationNumberInput().should('have.value', BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
-        pages.bondDetails.bondBeneficiaryInput().should('have.value', BOND_FORM_VALUES.DETAILS.bondBeneficiary);
+        assertBondFormValues.details.issued();
+      });
+    });
+
+    describe('When a user clicks `save and go back` button', () => {
+      it('should save the form data, return to Deal page and prepopulate form fields when returning back to Bond Details page', () => {
+        cy.allDeals().then((deals) => {
+          const deal = deals[0];
+          cy.loginGoToDealPage(user, deal);
+
+          pages.contract.addBondButton().click();
+
+          fillBondForm.details();
+
+          partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+            const bondId = bondIdHiddenInput[0].value;
+
+            pages.bondDetails.saveGoBackButton().click();
+
+            cy.url().should('not.include', '/details');
+            cy.url().should('include', '/contract');
+
+            const row = pages.contract.bondTransactionsTable.row(bondId);
+
+            row.uniqueNumber().click();
+            cy.url().should('include', '/bond/');
+            cy.url().should('include', '/details');
+
+            assertBondFormValues.details.issued();
+          });
+        });
       });
     });
   });

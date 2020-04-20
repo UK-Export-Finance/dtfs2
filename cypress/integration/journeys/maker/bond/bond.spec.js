@@ -159,7 +159,7 @@ context('Add a bond', () => {
         partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
           const bondId = bondIdHiddenInput[0].value;
 
-          pages.bondPreview.goBackButton().click();
+          pages.bondPreview.saveGoBackButton().click();
           cy.url().should('eq', relative(`/contract/${deal._id}`));
 
           const row = pages.contract.bondTransactionsTable.row(bondId);
@@ -200,4 +200,33 @@ context('Add a bond', () => {
       });
     });
   });
+
+  describe('When a user clicks `save and go back` button', () => {
+    it('should return to Deal page', () => {
+      cy.allDeals().then((deals) => {
+        const deal = deals[0];
+        cy.loginGoToDealPage(user, deal);
+
+        pages.contract.addBondButton().click();
+        partials.bondProgressNav.progressNavBondPreview().click();
+        cy.url().should('include', '/preview');
+
+        partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+          const bondId = bondIdHiddenInput[0].value;
+
+          pages.bondPreview.saveGoBackButton().click();
+
+          cy.url().should('not.include', '/preview');
+          cy.url().should('include', '/contract');
+
+          const row = pages.contract.bondTransactionsTable.row(bondId);
+
+          row.uniqueNumber().click();
+          partials.bondProgressNav.progressNavBondPreview().click();
+          cy.url().should('include', '/preview');
+        });
+      });
+    });
+  });
+
 });
