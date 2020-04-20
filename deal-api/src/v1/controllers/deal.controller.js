@@ -139,27 +139,33 @@ exports.findOne = (req, res) => {
   });
 };
 
-exports.update = (req, res) => {
-  findOneDeal(req.params.id, async (deal) => {
+const updateDeal = async (req) => {
+  const collection = await db.getCollection('deals');
+
+  const findAndUpdateResponse = await collection.findOneAndUpdate(
+    { _id: { $eq: new ObjectId(req.params.id) } },
+    $.flatten(withoutId(req.body)),
+    { returnOriginal: false },
+  );
+
+  const { value } = findAndUpdateResponse;
+  return value;
+};
+exports.updateDeal = updateDeal;
+
+exports.update = async (req, res) => {
+  await findOneDeal(req.params.id, async (deal) => {
     if (!deal) res.status(404).send();
 
     if (deal) {
       if (!userHasAccessTo(req.user, deal)) {
         res.status(401).send();
       } else {
-        const collection = await db.getCollection('deals');
-
-
-        const findAndUpdateResponse = await collection.findOneAndUpdate(
-          { _id: { $eq: new ObjectId(req.params.id) } },
-          $.flatten(withoutId(req.body)),
-          { returnOriginal: false },
-        );
-
-        const { value } = findAndUpdateResponse;
-        res.status(200).json(value);
+        const updatedDeal = await updateDeal(req);
+        res.status(200).json(updatedDeal);
       }
     }
+    res.status(404).send();
   });
 };
 
