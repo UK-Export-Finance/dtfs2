@@ -13,6 +13,7 @@ module.exports = {
   dashboard: require('./dashboard'),
   cloneDeal: require('./cloneDeal'),
   eligibilityCriteria: require('./eligibilityCriteria'),
+  eligibilityDocumentation: require('./eligibilityDocumentation'),
   header: require('./header'),
   bondDetails: require('./bondDetails'),
   bondFinancialDetails: require('./bondFinancialDetails'),
