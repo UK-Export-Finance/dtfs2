@@ -1,0 +1,129 @@
+{% extends "index.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% import '_macros/loan-nav.njk' as loanNav %}
+
+{% block content %}
+
+  {{ loanNav.nav(
+    completedStatus = loan.completedStatus,
+    current = 'premiumDetails',
+    contractId = dealId,
+    childId = loan._id
+  )}}
+
+  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+
+  <form method="POST" autocomplete="off">
+
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-three-quarters">
+
+        {{ govukRadios({
+          idPrefix: "premiumType",
+          name: "premiumType",
+          fieldset: {
+            legend: {
+              text: "Premium type"
+            }
+          },
+          items: [
+            {
+              value: "In advance",
+              text: "In advance",
+              checked: loan.premiumType === "In advance"
+            },
+            {
+              value: "In arrear",
+              text: "In arrear",
+              checked: loan.premiumType === "In arrear"
+            },
+            {
+              value: "At maturity",
+              text: "At maturity",
+              checked: loan.premiumType === "At maturity",
+              attributes: {
+                'data-cy': 'premium-type-at-maturity'
+              }
+            }
+          ]
+        }) }}
+
+        {{ govukRadios({
+          idPrefix: "premiumFrequency",
+          name: "premiumFrequency",
+          fieldset: {
+            legend: {
+              text: "Premium frequency"
+            }
+          },
+          items: [
+            {
+              value: "Monthly",
+              text: "Monthly",
+              checked: loan.premiumFrequency === "Monthly"
+            },
+            {
+              value: "Quarterly",
+              text: "Quarterly",
+              checked: loan.premiumFrequency === "Quarterly"
+            },
+            {
+              value: "Semi-annually",
+              text: "Semi-annually",
+              checked: loan.premiumFrequency === "Semi-annually"
+            },
+            {
+              value: "Annually",
+              text: "Annually",
+              checked: loan.premiumFrequency === "Annually",
+              attributes: {
+                'data-cy': 'premium-frequency-annually'
+              }
+            }
+          ]
+        }) }}
+
+        {{ govukRadios({
+          idPrefix: "dayCountBasis",
+          name: "dayCountBasis",
+          fieldset: {
+            legend: {
+              text: "Day count basis"
+            }
+          },
+          items: [
+            {
+              value: "360",
+              text: "360",
+              checked: loan.dayCountBasis === "360"
+            },
+            {
+              value: "365",
+              text: "365",
+              checked: loan.dayCountBasis === "365",
+              attributes: {
+                'data-cy': 'day-count-basis-365'
+              }
+            }
+          ]
+        }) }}
+
+      </div>
+
+    </div>
+
+    <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">Preview</button>
+
+    <input
+      type="submit"
+      formaction="/contract/{{ dealId }}/loan/{{ loan._id }}/dates-repayments/save-go-back"
+      class="govuk-button govuk-button--secondary"
+      data-module="govuk-button"
+      value="Save and go back to deal"
+      data-cy="go-back-button"
+    />
+
+  </form>
+
+{% endblock %}

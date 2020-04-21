@@ -213,6 +213,31 @@ const updateBond = async (dealId, bondId, formData, token) => {
   return response.data;
 };
 
+const createLoan = async (dealId, token) => {
+  const response = await axios({
+    method: 'put',
+    url: `${urlRoot}/v1/deals/${dealId}/loan/create`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+  return response.data;
+};
+
+const updateLoan = async (dealId, loanId, formData, token) => {
+  const response = await axios({
+    method: 'put',
+    url: `${urlRoot}/v1/deals/${dealId}/loan/${loanId}`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: formData,
+  });
+  return response.data;
+};
+
 const banks = async (token) => {
   const response = await axios({
     method: 'get',
@@ -339,22 +364,24 @@ export default {
   banks,
   bondCurrencies,
   cloneDeal,
+  createLoan,
   contract,
   contractBond,
   contracts,
   countries,
   createBond,
-  updateBond,
   createDeal,
   industrySectors,
   login,
   mandatoryCriteria,
   transactions,
+  updateBond,
   updateDeal,
   updateDealName,
   updateDealStatus,
   updateEligibilityCriteria,
   updateEligibilityDocumentation,
+  updateLoan,
   validateToken,
   fileshareURL,
 };

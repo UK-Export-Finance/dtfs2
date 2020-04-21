@@ -1,0 +1,166 @@
+
+{% extends "index.njk" %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% import '_macros/loan-nav.njk' as loanNav %}
+{% import '_macros/date-fields.njk' as dateFields %}
+
+{% block content %}
+
+  {% set showConditionalFormFieldsByDefault = loan.facilityStage === "conditional" %}
+  {% set showUnconditionalFormFieldsByDefault = loan.facilityStage === "unconditional" %}
+
+  <script type="text/javascript">
+    function toggleFormFields(facilityStage) {
+      var conditionalFormFields = document.getElementById('conditional-form-fields');
+      var unconditionalFormFields = document.getElementById('unconditional-form-fields');
+      if (facilityStage === 'conditional') {
+        conditionalFormFields.className = '';
+        unconditionalFormFields.className = 'govuk-visually-hidden';
+      }
+      if (facilityStage === 'unconditional') {
+        unconditionalFormFields.className = '';
+        conditionalFormFields.className = 'govuk-visually-hidden';
+      }
+    }
+  </script>
+
+  {{ loanNav.nav(
+    completedStatus = loan.completedStatus,
+    current = 'loanDetails',
+    contractId = dealId,
+    childId = loan._id
+  )}}
+
+  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+
+  <form method="POST" autocomplete="off">
+
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-three-quarters">
+
+        <div class="govuk-form-group">
+
+          <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="30">
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="bankReferenceNumber">
+                Bank reference number (optional)
+              </label>
+
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                  <input class="govuk-input govuk-js-character-count" id="bankReferenceNumber" name="bankReferenceNumber" type="text" maxlength="150" aria-describedby="bank-reference-number-hint" value="{{ loan.bankReferenceNumber }}" data-cy="bank-reference-number">
+                </div>
+              </div>
+            </div>
+
+            <span id="bank-reference-number-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+              You can enter up to 30 characters
+            </span>
+          </div>
+        </div>
+
+        {{ govukRadios({
+          classes: "govuk-radios--inline",
+          idPrefix: "facilityStage",
+          name: "facilityStage",
+          fieldset: {
+            legend: {
+              text: "Facility stage"
+            }
+          },
+          hint: {
+            text: "Conditional where Conditions Precedent are not yet satisfied (uncommitted) or unconditional when Conditions Precedent are satisfied (committed)."
+          },
+          items: [
+            {
+              value: "conditional",
+              text: "Conditional",
+              checked: loan.facilityStage === "conditional",
+              attributes: {
+                'data-cy': "loan-stage-conditional",
+                onClick: "toggleFormFields('conditional')"
+              }
+            },
+            {
+              value: "unconditional",
+              text: "Unconditional",
+              checked: loan.facilityStage === "unconditional",
+              attributes: {
+                'data-cy': "loan-stage-unconditional",
+                onClick: "toggleFormFields('unconditional')"
+              }
+            }
+          ]
+        }) }}
+
+        <div
+          id="conditional-form-fields"
+          {% if showConditionalFormFieldsByDefault === false %}
+          class="govuk-visually-hidden"
+          {% endif %}
+        >
+
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="ukefGuaranteeInMonths">
+              Length of time that the UKEF's guarantee will be in place for (in months, rounded up) 
+            </label>
+
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                <input class="govuk-input" id="ukefGuaranteeInMonths" name="ukefGuaranteeInMonths" type="text" value="{{ loan.ukefGuaranteeInMonths }}" data-cy="ukef-guarantee-in-months">
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div
+          id="unconditional-form-fields"
+          {% if showUnconditionalFormFieldsByDefault === false %}
+          class="govuk-visually-hidden"
+          {% endif %}
+        >
+
+          <div class="govuk-form-group">
+            {{ dateFields.inputs(
+              legend = 'Requested Cover Start Date (optional)',
+              id = 'requestedCoverStartDate',
+              hint = 'For example, 31 05 2017',
+              secondaryHint = 'This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date.',
+              dayValue = loan['requestedCoverStartDate-day'],
+              monthValue = loan['requestedCoverStartDate-month'],
+              yearValue = loan['requestedCoverStartDate-year']
+            )}}
+          </div>
+
+          <div class="govuk-form-group">
+            {{ dateFields.inputs(
+              legend = 'Cover End Date',
+              id = 'coverEndDate',
+              hint = 'For example, 31 05 2017',
+              dayValue = loan['coverEndDate-day'],
+              monthValue = loan['coverEndDate-month'],
+              yearValue = loan['coverEndDate-year']
+            )}}
+          </div>
+
+        </div>
+
+        <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">Next page</button>
+
+        <input
+          type="submit"
+          formaction="/contract/{{ dealId }}/loan/{{ loan._id }}/details/save-go-back"
+          class="govuk-button govuk-button--secondary"
+          data-module="govuk-button"
+          value="Save and go back to deal"
+        />
+
+      </div>
+    </div>
+
+  </form>
+
+{% endblock %}

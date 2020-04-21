@@ -1,0 +1,68 @@
+{% import '_macros/progress-nav.njk' as progressNav %}
+
+{% macro nav(completedStatus, current, contractId, childId) %}  
+
+  <h1 class="govuk-heading-l">Loan</h1>
+
+  <input type="hidden" value="{{ childId }}" data-cy="loan-id"/>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-8">
+
+    <div class="govuk-grid-column-one-half">
+
+      {{ progressNav.navItem(
+          title = 'Loan guarantee details',
+          id = 'loanDetails',
+          step = 1,
+          completed = completedStatus.loanDetails,
+          href = 'loan',
+          childId = childId,
+          childHref = 'details',
+          contractId = contractId,
+          current = current
+      )}}
+
+      {{ progressNav.navItem(
+          title = 'Loan financial details',
+          id = 'loanDatesRepayments',
+          step = 2,
+          completed = completedStatus.loanDatesRepayments,
+          href = 'loan',
+          childId = childId,
+          childHref = 'financial-details',
+          contractId = contractId,
+          current = current
+      )}}
+
+      {{ progressNav.navItem(
+          title = 'Dates and repayments',
+          id = 'feeDetails',
+          step = 3,
+          completed = completedStatus.feeDetails,
+          href = 'loan',
+          childId = childId,
+          childHref = 'fee-details',
+          contractId = contractId,
+          current = current
+      )}}
+
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+
+      {{ progressNav.navItem(
+          title = 'Preview',
+          id = 'preview',
+          completed = completedStatus.loanDetails and completedStatus.loanDatesRepayments and completedStatus.feeDetails,
+          href = 'loan',
+          childId = childId,
+          childHref = 'preview',
+          contractId = contractId,
+          current = current
+      )}}
+
+    </div>
+
+  </div>    
+
+{% endmacro %}
