@@ -1,4 +1,4 @@
-{% import '_macros/dashboardAdvancedFilters.njk' as dashboardAdvancedFilters %}
+{% import './deal-advanced-filters.njk' as advancedFilters %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% macro render(filter, user) %}
@@ -40,7 +40,7 @@
 
   {{ govukDetails({
     summaryText: "Show filters",
-    html: dashboardAdvancedFilters.render(filter, user),
+    html: advancedFilters.render(filter, user),
     open: filter.isUsingAdvancedFilter
   }) }}
 
