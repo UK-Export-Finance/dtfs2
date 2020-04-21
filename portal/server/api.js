@@ -334,6 +334,21 @@ const fileshareURL = async (token) => {
   return response.data.FILESHARE_URL;
 };
 
+const users = async (token) => {
+  if (!token) return false;
+
+  const response = await axios({
+    method: 'get',
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    url: `${urlRoot}/v1/users`,
+  });
+
+  return response.data;
+};
+
 
 export default {
   banks,
@@ -357,4 +372,5 @@ export default {
   updateEligibilityDocumentation,
   validateToken,
   fileshareURL,
+  users,
 };
