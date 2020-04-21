@@ -27,9 +27,9 @@ describe('mapCurrencies', () => {
 
     const expected = [
       { text: 'Select value' },
-      { value: 'CAD', text: 'CAD - Canadian Dollars' },
+      { value: 'CAD', text: 'CAD - Canadian Dollars', selected: false },
       { value: 'CHF', text: 'CHF - Swiss Francs', selected: true },
-      { value: 'EGP', text: 'EGP - Egyptian Pounds' },
+      { value: 'EGP', text: 'EGP - Egyptian Pounds', selected: false },
     ];
 
     const selectedCurrency = { id: 'CHF', text: 'CHF - Swiss Francs' };
