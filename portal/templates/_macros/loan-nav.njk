@@ -17,16 +17,16 @@
           completed = completedStatus.loanDetails,
           href = 'loan',
           childId = childId,
-          childHref = 'details',
+          childHref = 'guarantee-details',
           contractId = contractId,
           current = current
       )}}
 
       {{ progressNav.navItem(
           title = 'Loan financial details',
-          id = 'loanDatesRepayments',
+          id = 'loanFinancialDetails',
           step = 2,
-          completed = completedStatus.loanDatesRepayments,
+          completed = completedStatus.loanFinancialDetails,
           href = 'loan',
           childId = childId,
           childHref = 'financial-details',
@@ -36,12 +36,12 @@
 
       {{ progressNav.navItem(
           title = 'Dates and repayments',
-          id = 'feeDetails',
+          id = 'loanDatesRepayments',
           step = 3,
-          completed = completedStatus.feeDetails,
+          completed = completedStatus.loanDatesRepayments,
           href = 'loan',
           childId = childId,
-          childHref = 'fee-details',
+          childHref = 'dates-repayments',
           contractId = contractId,
           current = current
       )}}
@@ -50,10 +50,11 @@
 
     <div class="govuk-grid-column-one-half">
 
+      {# completed = completedStatus.loanDetails and completedStatus.loanDatesRepayments and completedStatus.loanDatesRepayments, #}
       {{ progressNav.navItem(
           title = 'Preview',
           id = 'preview',
-          completed = completedStatus.loanDetails and completedStatus.loanDatesRepayments and completedStatus.feeDetails,
+          completed = true,
           href = 'loan',
           childId = childId,
           childHref = 'preview',
