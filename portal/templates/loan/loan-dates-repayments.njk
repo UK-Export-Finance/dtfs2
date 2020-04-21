@@ -6,7 +6,7 @@
 
   {{ loanNav.nav(
     completedStatus = loan.completedStatus,
-    current = 'premiumDetails',
+    current = 'loanDatesRepayments',
     contractId = dealId,
     childId = loan._id
   )}}
@@ -117,7 +117,7 @@
 
     <input
       type="submit"
-      formaction="/contract/{{ dealId }}/loan/{{ loan._id }}/dates-repayments/save-go-back"
+      formaction="/contract/{{ dealId }}/loan/{{ loan._id }}/save-go-back"
       class="govuk-button govuk-button--secondary"
       data-module="govuk-button"
       value="Save and go back to deal"

@@ -145,7 +145,9 @@
             </div>
 
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <a href="/contract/{{ contract._id }}/loan/new/details" class="govuk-link">Add a Loan</a>
+              <form action="/contract/{{ contract._id }}/loan/create" method="PUT">
+                <button class="govuk-body-s button-as-link" data-cy="button-add-bond">Add a Loan</button>
+              </form>
             </div>
 
             {% if contract.loanTransactions.items %}

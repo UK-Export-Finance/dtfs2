@@ -1,42 +1,44 @@
 import express from 'express';
-import api from '../../api';
-import {
-  getApiData,
-  requestParams,
-  errorHref,
-  postToApi,
-  mapCurrencies,
-} from '../../helpers';
+import { requestParams } from '../../helpers';
 
 const router = express.Router();
 
-router.get('/contract/:_id/loan/create', async (req, res) => {
-  const { _id: dealId, userToken } = requestParams(req);
+const MOCK_LOAN = {
+  _id: '1',
+  bankReferenceNumber: 'Not entered',
+  ukefFacilityID: '12345678',
+  status: 'Not started',
+  value: 'GBP 123,456.00',
+  stage: 'Unconditional',
+  startDate: '12/02/2020',
+  endDate: '14/03/2027',
+};
 
-  //const { _id, loanId } = await api.createLoan(dealId, userToken); // eslint-disable-line no-underscore-dangle
-  const loanId = "1";
-  const _id = dealId
-  return res.redirect(`/contract/${_id}/loan/${loanId}/guarantee-details`); // eslint-disable-line no-underscore-dangle
+router.get('/contract/:_id/loan/create', async (req, res) => {
+  const { _id: dealId } = requestParams(req);
+  // const { _id, loanId } = await api.createLoan(dealId, userToken); // eslint-disable-line no-underscore-dangle
+  const loanId = '1';
+  return res.redirect(`/contract/${dealId}/loan/${loanId}/guarantee-details`); // eslint-disable-line no-underscore-dangle
 });
 
-// TODO: if some details have been submitted
-// display validationErrors for the remaining required fields
 router.get('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) => {
-  const { _id, loanId, userToken } = requestParams(req);
+  const { _id: dealId } = requestParams(req);
 
   return res.render('loan/loan-guarantee-details.njk', {
+    dealId, // eslint-disable-line no-underscore-dangle
+    loan: MOCK_LOAN,
     // ...await getApiData(
-    //   api.contractBond(_id, loanId, userToken),
+    //   api.contractLoan(_id, loanId, userToken),
     //   res,
     // ),
   });
 });
 
 router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) => {
-  const { _id: dealId, loanId, userToken } = requestParams(req);
+  const { _id: dealId, loanId } = requestParams(req);
 
   //   await postToApi(
-  //     api.updateBond(dealId, loanId, req.body, userToken),
+  //     api.updateLoan(dealId, loanId, req.body, userToken),
   //     errorHref,
   //   );
 
@@ -44,36 +46,24 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) =>
   return res.redirect(redirectUrl);
 });
 
-router.post('/contract/:_id/loan/:loanId/guarantee-details/save-go-back', (req, res) => {
-  // TODO: save
-  const redirectUrl = `/contract/${req.params._id}`;
-  return res.redirect(redirectUrl);
-});
-
-// TODO: if some details have been submitted
-// display validationErrors for the remaining required fields
 router.get('/contract/:_id/loan/:loanId/financial-details', async (req, res) => {
-  const { _id, loanId, userToken } = requestParams(req);
-
-  //   // const currencies = await getApiData(
-  //   //   api.loanCurrencies(userToken),
-  //   //   res,
-  //   // );
+  const { _id: dealId } = requestParams(req);
 
   return res.render('loan/loan-financial-details.njk', {
+    dealId,
+    loan: MOCK_LOAN,
     // ...await getApiData(
-    //   api.contractBond(_id, loanId, userToken),
+    //   api.contractLoan(_id, loanId, userToken),
     //   res,
     // ),
-    // currencies: mapCurrencies(currencies),
   });
 });
 
 router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) => {
-  const { _id: dealId, loanId, userToken } = requestParams(req);
+  const { _id: dealId, loanId } = requestParams(req);
 
   // await postToApi(
-  //   api.updateBond(dealId, loanId, req.body, userToken),
+  //   api.updateLoan(dealId, loanId, req.body, userToken),
   //   errorHref,
   // );
 
@@ -81,29 +71,24 @@ router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) =>
   return res.redirect(redirectUrl);
 });
 
-router.post('/contract/:_id/loan/:loanId/financial-details/save-go-back', (req, res) => {
-  const redirectUrl = `/contract/${req.params._id}`;
-  return res.redirect(redirectUrl);
-});
-
-// TODO: if some details have been submitted
-// display validationErrors for the remaining required fields
 router.get('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => {
-  const { _id, loanId, userToken } = requestParams(req);
+  const { _id: dealId } = requestParams(req);
 
   return res.render('loan/loan-dates-repayments.njk', {
+    dealId,
+    loan: MOCK_LOAN,
     // ...await getApiData(
-    //   api.contractBond(_id, loanId, userToken),
+    //   api.contractLoan(_id, loanId, userToken),
     //   res,
     // ),
   });
 });
 
 router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => {
-  const { _id: dealId, loanId, userToken } = requestParams(req);
+  const { _id: dealId, loanId } = requestParams(req);
 
   // await postToApi(
-  //   api.updateBond(dealId, loanId, req.body, userToken),
+  //   api.updateLoan(dealId, loanId, req.body, userToken),
   //   errorHref,
   // );
 
@@ -111,42 +96,31 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => 
   return res.redirect(redirectUrl);
 });
 
-router.post('/contract/:_id/loan/:loanId/fee-details/save-go-back', (req, res) => {
-  const redirectUrl = `/contract/${req.params._id}`;
+router.get('/contract/:_id/loan/:loanId/preview', async (req, res) => {
+  const { dealId } = requestParams(req);
+
+  return res.render('loan/loan-preview.njk', {
+    dealId,
+    loan: MOCK_LOAN,
+    // ...await getApiData(
+    //   api.contractLoan(_id, loanId, userToken),
+    //   res,
+    // ),
+  });
+});
+
+router.post('/contract/:_id/loan/:loanId/save-go-back', (req, res) => {
+  const redirectUrl = `/contract/${req.params._id}`; // eslint-disable-line no-underscore-dangle
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/loan/:loanId/preview', async (req, res) => {
-  const { _id, loanId, userToken } = requestParams(req);
-
-  return res.render('loan/loan-preview.njk', {
-    "_id": _id,
-    "loanId": loanId,
-    "loan": {
-      "_id": loanId,
-      "dealId": _id
-    }
-    // ...await getApiData(
-    //   api.contractBond(_id, loanId, userToken),
-    //   res,
-    // ),
-  });
-});
-
 router.get('/contract/:_id/loan/:loanId/delete', async (req, res) => {
-  const { _id, loanId, userToken } = requestParams(req);
+  const { dealId } = requestParams(req);
 
   return res.render('loan/loan-delete.njk', {
-    // contract: await getApiData(
-    //   api.contract(_id, userToken),
-    //   res,
-    // ),
-    // ...await getApiData(
-    //   api.contractBond(_id, loanId, userToken),
-    //   res,
-    // ),
+    dealId,
+    loan: MOCK_LOAN,
   });
 });
-
 
 export default router;
