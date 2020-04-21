@@ -1,3 +1,5 @@
+const ukefAdminRoles = ['ukef_operations'];
+
 module.exports = (opts) => {
   const requiredRoles = opts ? opts.role : null;
 
@@ -5,13 +7,8 @@ module.exports = (opts) => {
     if (!requiredRoles || requiredRoles.length === 0) {
       next();
     } else {
-      let userHasOneOfTheRequiredRoles = false;
-
-      for (let i = 0; i <= requiredRoles.length; i += 1) {
-        if (req.user.roles.includes(requiredRoles[i])) {
-          userHasOneOfTheRequiredRoles = true;
-        }
-      }
+      const userHasOneOfTheRequiredRoles = ukefAdminRoles.some((adminRole) => req.user.roles.includes(adminRole))
+        || requiredRoles.some((role) => req.user.roles.includes(role));
 
       if (userHasOneOfTheRequiredRoles) {
         next();
