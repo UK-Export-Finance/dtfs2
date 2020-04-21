@@ -24,7 +24,7 @@ const goToBondFinancialDetailsPage = (deal) => {
   cy.url().should('include', '/financial-details');
 };
 
-context('Bond financial details', () => {
+context('Bond Financial Details', () => {
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
@@ -36,27 +36,7 @@ context('Bond financial details', () => {
   });
 
   describe('When a user submits the `Bond Financial Details` form', () => {
-    it('should progress to the bond `Fee Details` page', () => {
-      cy.allDeals().then((deals) => {
-        const deal = deals[0];
-        cy.loginGoToDealPage(user, deal);
-
-        pages.contract.addBondButton().click();
-        partials.bondProgressNav.progressNavBondFinancialDetails().click();
-        cy.url().should('include', '/contract');
-        cy.url().should('include', '/bond/');
-        cy.url().should('include', '/financial-details');
-
-        fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
-        pages.bondFinancialDetails.submit().click();
-
-        cy.url().should('include', '/contract');
-        cy.url().should('include', '/bond/');
-        cy.url().should('include', '/fee-details');
-      });
-    });
-
-    it('should prepopulate submitted form fields when returning back to Bond Financial Details page', () => {
+    it('form submit should progress to `Bond Fee Details` page and prepopulate submitted form fields when returning back to `Bond Financial Details` page', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
         cy.loginGoToDealPage(user, deal);
@@ -68,43 +48,14 @@ context('Bond financial details', () => {
         fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
         pages.bondFinancialDetails.submit().click();
 
+        cy.url().should('include', '/contract');
+        cy.url().should('include', '/bond/');
         cy.url().should('include', '/fee-details');
+
         partials.bondProgressNav.progressNavBondFinancialDetails().click();
         cy.url().should('include', '/financial-details');
 
         assertBondFormValues.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
-      });
-    });
-  });
-
-  describe('When a user clicks `save and go back` button', () => {
-    it('should save the form data, return to Deal page and prepopulate form fields when returning back to Bond Details page', () => {
-      cy.allDeals().then((deals) => {
-        const deal = deals[0];
-        cy.loginGoToDealPage(user, deal);
-
-        pages.contract.addBondButton().click();
-        partials.bondProgressNav.progressNavBondFinancialDetails().click();
-        cy.url().should('include', '/financial-details');
-
-        fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
-
-        partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
-          const bondId = bondIdHiddenInput[0].value;
-
-          pages.bondFinancialDetails.saveGoBackButton().click();
-
-          cy.url().should('not.include', '/financial-details');
-          cy.url().should('include', '/contract');
-
-          const row = pages.contract.bondTransactionsTable.row(bondId);
-
-          row.uniqueNumber().click();
-          partials.bondProgressNav.progressNavBondFinancialDetails().click();
-          cy.url().should('include', '/financial-details');
-
-          assertBondFormValues.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
-        });
       });
     });
   });
@@ -124,7 +75,7 @@ context('Bond financial details', () => {
       });
     });
 
-    it('should prepopulate submitted form fields when returning back to Bond Financial Details page', () => {
+    it('form submit should progress to `Bond Fee Details` page and prepopulate submitted form fields when returning back to `Bond Financial Details` page', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
         cy.loginGoToDealPage(user, deal);
@@ -137,7 +88,10 @@ context('Bond financial details', () => {
 
         pages.bondFinancialDetails.submit().click();
 
+        cy.url().should('include', '/contract');
+        cy.url().should('include', '/bond/');
         cy.url().should('include', '/fee-details');
+
         partials.bondProgressNav.progressNavBondFinancialDetails().click();
         cy.url().should('include', '/financial-details');
 
@@ -145,7 +99,7 @@ context('Bond financial details', () => {
       });
     });
 
-    it('should render additional submitted form field values in Bond Preview page', () => {
+    it('should render additional submitted form field values in `Bond Preview` page', () => {
       cy.allDeals().then((deals) => {
         goToBondFinancialDetailsPage(deals[0]);
 
@@ -189,7 +143,7 @@ context('Bond financial details', () => {
         pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
         pages.bondFinancialDetails.currencyInput().select(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
 
-        // get bondId, go back to deal page
+        // get bondId, go back to Deal page
         // assert that some inputted bond data is displayed in the table
         partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
           const bondId = bondIdHiddenInput[0].value;
@@ -208,6 +162,38 @@ context('Bond financial details', () => {
     });
   });
 
-  // TODO: financial details - disabled inputs guaranteeFeePayableByBank and ukefExposure work as expected
+  describe('When a user clicks `save and go back` button', () => {
+    it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Bond Financial Details` page', () => {
+      cy.allDeals().then((deals) => {
+        const deal = deals[0];
+        cy.loginGoToDealPage(user, deal);
+
+        pages.contract.addBondButton().click();
+        partials.bondProgressNav.progressNavBondFinancialDetails().click();
+        cy.url().should('include', '/financial-details');
+
+        fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
+
+        partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+          const bondId = bondIdHiddenInput[0].value;
+
+          pages.bondFinancialDetails.saveGoBackButton().click();
+
+          cy.url().should('not.include', '/financial-details');
+          cy.url().should('include', '/contract');
+
+          const row = pages.contract.bondTransactionsTable.row(bondId);
+
+          row.uniqueNumber().click();
+          partials.bondProgressNav.progressNavBondFinancialDetails().click();
+          cy.url().should('include', '/financial-details');
+
+          assertBondFormValues.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
+        });
+      });
+    });
+  });
+
+  // TODO: disabled inputs guaranteeFeePayableByBank and ukefExposure work as expected
   // functionality needs to be done first - assuming these get automatically populated
 });

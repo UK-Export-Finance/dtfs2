@@ -13,7 +13,7 @@ const MOCK_DEAL = {
   },
 };
 
-context('Bond details', () => {
+context('Bond Details', () => {
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
@@ -22,24 +22,6 @@ context('Bond details', () => {
     });
     cy.deleteDeals(user);
     cy.insertOneDeal(MOCK_DEAL, user);
-  });
-
-  describe('When a user submits the `Bond Details` form', () => {
-    it('should progress to the `Bond Financial Details` page', () => {
-      cy.allDeals().then((deals) => {
-        const deal = deals[0];
-        cy.loginGoToDealPage(user, deal);
-
-        pages.contract.addBondButton().click();
-
-        fillBondForm.details.bondStageIssued();
-        pages.bondDetails.submit().click();
-
-        cy.url().should('include', '/contract');
-        cy.url().should('include', '/bond/');
-        cy.url().should('include', '/financial-details');
-      });
-    });
   });
 
   describe('When a user selects `unissued` bond stage', () => {
@@ -56,7 +38,7 @@ context('Bond details', () => {
       });
     });
 
-    it('should render additional submitted form field values in Bond Preview page', () => {
+    it('form submit should progess to `Bond Financial Details` page and render additional submitted form field values in `Bond Preview` page', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
         cy.loginGoToDealPage(user, deal);
@@ -65,8 +47,13 @@ context('Bond details', () => {
 
         fillBondForm.details.bondStageUnissued();
 
-        // go to preview page
         pages.bondDetails.submit().click();
+
+        cy.url().should('include', '/contract');
+        cy.url().should('include', '/bond/');
+        cy.url().should('include', '/financial-details');
+
+        // progress to preview page
         partials.bondProgressNav.progressNavBondFeeDetails().click();
         pages.bondFeeDetails.submit().click();
         cy.url().should('include', '/preview');
@@ -77,7 +64,7 @@ context('Bond details', () => {
       });
     });
 
-    it('should populate Deal page with `unissued` specific text/values and link to bond details page', () => {
+    it('form submit should populate Deal page with `unissued` specific text/values and link to `Bond Details` page', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
         cy.loginGoToDealPage(user, deal);
@@ -113,7 +100,7 @@ context('Bond details', () => {
       });
     });
 
-    it('should prepopulate submitted form fields when returning back to Bond Details page', () => {
+    it('form submit should prepopulate submitted form fields when returning back to `Bond Details` page', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
         cy.loginGoToDealPage(user, deal);
@@ -156,7 +143,7 @@ context('Bond details', () => {
       });
     });
 
-    it('should prepopulate submitted form fields when returning back to Bond Details page', () => {
+    it('form submit should progress to `Bond Financial Details` page and prepopulate submitted form fields when returning back to `Bond Details` page', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
         cy.loginGoToDealPage(user, deal);
@@ -166,7 +153,10 @@ context('Bond details', () => {
         fillBondForm.details.bondStageIssued();
         pages.bondDetails.submit().click();
 
+        cy.url().should('include', '/contract');
+        cy.url().should('include', '/bond/');
         cy.url().should('include', '/financial-details');
+
         partials.bondProgressNav.progressNavBondDetails().click();
         cy.url().should('include', '/details');
 
@@ -175,7 +165,7 @@ context('Bond details', () => {
     });
 
     describe('When a user clicks `save and go back` button', () => {
-      it('should save the form data, return to Deal page and prepopulate form fields when returning back to Bond Details page', () => {
+      it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Bond Details` page', () => {
         cy.allDeals().then((deals) => {
           const deal = deals[0];
           cy.loginGoToDealPage(user, deal);
