@@ -1,7 +1,222 @@
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
 {% extends "index.njk" %}
 
 {% block content %}
 
   <h1 class="govuk-heading-l">User create</h1>
+  
+  {{ govukCheckboxes({
+    idPrefix: "roles",
+    name: "roles",
+    classes: "govuk-checkboxes--small",
+    fieldset: {
+      legend: {
+        text: "Roles",
+        classes: "govuk-fieldset__legend--s"
+      }
+    },
+    items: [
+      {
+        value: "maker/checker",
+        text: "Maker/Checker"
+      },
+      {
+        value: "mhecker",
+        text: "Checker"
+      },
+      {
+        value: "maker",
+        text: "Maker"
+      },
+      {
+        value: "ukef_operations",
+        text: "UKEF Operations"
+      },
+      {
+        value: "EFM",
+        text: "EFM"
+      }
+    ]
+  }) }}
+
+
+  {% if _id %}
+
+    <div class="govuk-form-group">
+      <label class="govuk-label">
+        Email
+      </label>
+      {{ user.username }}
+    </div>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label">
+        Display name
+      </label>
+      {{ user.username }}
+    </div>
+  
+  {% else %}
+
+    {{ govukInput({
+      label: {
+        text: "Email address"
+      },
+      hint: {
+        text: "A valid email address. All emails from the system will be sent to this address. The email address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by email."
+      },
+      classes: "govuk-!-width-one-third",
+      id: "email",
+      name: "email"
+    }) }}
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="password">
+          Password
+        </label>
+        <input class="govuk-input govuk-!-width-one-third" id="password" name="password" type="password">
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="password">
+          Confirm password
+        </label>
+        <input class="govuk-input govuk-!-width-one-third" id="confirmPassord" name="confirmPassord" type="password">
+      </div>
+
+      <table id="edit-password-policy-status" class="govuk-table" >
+        <thead>
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Policy</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Constraint</th>
+          </tr>
+        </thead>
+  
+        <tbody class="govuk-table__body">
+          <tr class="govuk-table__row">
+              <td class="govuk-table__cell govuk-!-font-size-14">Base</td>
+              <td class="govuk-table__cell govuk-!-font-size-14">Fail - Password must contain at least 1 numeric character.</td>
+              <td class="govuk-table__cell govuk-!-font-size-14">Password must contain 1 numeric characters</td>
+          </tr>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell govuk-!-font-size-14">Base</td>
+            <td class="govuk-table__cell govuk-!-font-size-14">Fail - Password must contain at least 1 uppercase character.</td>
+            <td class="govuk-table__cell govuk-!-font-size-14">Password must contain 1 uppercase characters</td>
+          </tr>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell govuk-!-font-size-14">Base</td>
+            <td class="govuk-table__cell govuk-!-font-size-14">Fail - Password must contain at least 1 lowercase character.</td>
+            <td class="govuk-table__cell govuk-!-font-size-14">Password must contain 1 lowercase characters</td>
+          </tr>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell govuk-!-font-size-14">Base</td>
+            <td class="govuk-table__cell govuk-!-font-size-14">Fail - Password length must be at least 8 characters.</td>
+            <td class="govuk-table__cell govuk-!-font-size-14">>Password character length of at least 8</td>
+          </tr>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell govuk-!-font-size-14">Base</td>
+            <td class="govuk-table__cell govuk-!-font-size-14">Fail - Password must contain at least 1 special character.</td>
+            <td class="govuk-table__cell govuk-!-font-size-14">Password must contain 1 special characters</td>
+          </tr>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell govuk-!-font-size-14">Base</td>
+            <td class="govuk-table__cell govuk-!-font-size-14">Fail - New role was added or existing password policy changed. Please update your password.</td>
+            <td class="govuk-table__cell govuk-!-font-size-14">Number of allowed repeated passwords: 0</td>
+          </tr>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell govuk-!-font-size-14">Base</td>
+            <td class="govuk-table__cell govuk-!-font-size-14">Fail - New role was added or existing password policy changed. Please update your password.</td>
+            <td class="govuk-table__cell govuk-!-font-size-14">Password must be harder to guess</td>
+          </tr>
+        </tbody>
+      </table>
+  {% endif %}
+
+
+
+{{ govukRadios({
+  classes: "govuk-radios--inline",
+  idPrefix: "changed-name",
+  name: "changed-name",
+  fieldset: {
+    legend: {
+      text: "Status",
+      classes: "govuk-fieldset__legend--s"
+    }
+  },
+  items: [
+    {
+      value: "blocked",
+      text: "Blocked"
+    },
+    {
+      value: "active",
+      text: "Active"
+    }
+  ]
+}) }}
+
+
+
+ {{ govukCheckboxes({
+    idPrefix: "notify",
+    name: "notify",
+    classes: "govuk-checkboxes--small",
+    items: [
+      {
+        value: "true",
+        text: "Notify user of new account?"
+      }
+    ]
+  }) }}
+
+    {{ govukInput({
+      label: {
+        text: "First name"
+      },
+      classes: "govuk-!-width-one-third",
+      id: "firstname",
+      name: "firstname"
+    }) }}
+
+    {{ govukInput({
+      label: {
+        text: "Surname"
+      },
+      classes: "govuk-!-width-one-third",
+      id: "surname",
+      name: "surname"
+    }) }}
+
+
+  <div class="govuk-form-group">
+    <label class="govuk-label" for="bank">
+      Bank
+    </label>
+    <span class="govuk-hint">
+      This field is required when the user has a role "Bank staff".
+    </span>
+    <select class="govuk-select govuk-!-width-one-third" id="bank" name="bank">
+      <option value="all">Any</option>
+      {% for bank in banks %}
+        <option value="{{ bank.id}}">{{ bank.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  {% if _id %}
+    <button class="govuk-button" data-module="govuk-button">
+      Create user
+    </button>
+  {% else %}
+    <button class="govuk-button" data-module="govuk-button">
+     Save
+    </button>
+  {% endif %}
 
 {% endblock %}
