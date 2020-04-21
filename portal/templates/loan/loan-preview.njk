@@ -1,0 +1,22 @@
+{% extends "index.njk" %}
+{% import '_macros/loan-nav.njk' as loanNav %}
+{% import '_macros/submission-details.njk' as submissionDetails %}
+
+{% block content %}
+
+  {{ loanNav.nav(
+    completedStatus = loan.completedStatus,
+    current = 'loanPreview',
+    contractId = dealId,
+    childId = loan._id
+  )}}
+
+  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+
+  {% include "_partials/print-button.njk" %}
+
+  {{ submissionDetails.loan(loanDetails = loan)}}
+
+  <p class="govuk-body"><a class="govuk-link" href="/contract/{{ dealId }}" data-cy="go-back-link">Save and go back to deal</a></p>
+
+{% endblock %}

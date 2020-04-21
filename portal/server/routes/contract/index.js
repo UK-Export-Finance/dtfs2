@@ -3,6 +3,7 @@ import api from '../../api';
 import aboutRoutes from './about';
 import bondRoutes from './bond';
 import eligibilityRoutes from './eligibility';
+import loanRoutes from './loan';
 import {
   getApiData,
   requestParams,
@@ -356,6 +357,7 @@ router.post('/contract/:_id/clone/before-you-start', async (req, res) => {
 
 router.use('/',
   aboutRoutes,
+  loanRoutes,
   bondRoutes,
   eligibilityRoutes);
 
