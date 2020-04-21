@@ -181,12 +181,86 @@ router.get('/reporting/abandoned-supply-contracts/:page', async (req, res) => {
     res,
   );
 
-  console.log(JSON.stringify(banks));
-
   return res.render('reporting/abandoned-supply-contracts.njk', {
     pages,
     contracts,
     banks,
+    user: req.session.user,
+  });
+});
+
+
+
+router.get('/reporting/red-line-answers', async (req, res) => res.redirect('/reporting/red-line-answers/0'));
+
+router.get('/reporting/red-line-answers/:page', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  // only mocking; not trying to plumb data model
+  //  should really be sending filter/order-by queries to deal-api
+  const deal1 = {
+    dealId: '1234', // not obvious which id. would say its from k2 but abandoned deals wouldn't have this.. so _id??
+    details: {
+      bank: {
+        name: 'HSBC',
+      },
+      bankSupplyContractID: 'Memsstar/BSS/APG',
+      status: 'Abandoned Deal',
+      submissionType: 'Automatic Inclusion Notice',
+      maker: {
+        username: 'maker1',
+      },
+      dateOfCreation: '13/12/2018 - 12:23',
+      abandoned: '14/12/2018 - 12:23',
+    },
+  };
+
+  const deal2 = {
+    dealId: '4321', // not obvious which id. would say its from k2 but abandoned deals wouldn't have this.. so _id??
+    details: {
+      bank: {
+        name: 'HSBC',
+      },
+      bankSupplyContractID: 'Memsstar/BSS/APG',
+      status: 'Abandoned Deal',
+      submissionType: 'Automatic Inclusion Notice',
+      maker: {
+        username: 'maker2',
+      },
+      dateOfCreation: '13/12/2018 - 12:23',
+      abandoned: '14/12/2018 - 12:23',
+    },
+  };
+
+  const mandatoryCriteria = [
+    {
+      _id: '123456789012',
+      dateOfCreation: '20/04/2020 - 14:40',
+      outcome: 'Passed',
+      question: '1. All of the above mandatory criteria are true for this supply contract.',
+      answer: true,
+      deal: deal1,
+    }, {
+      _id: '210987654321',
+      dateOfCreation: '20/04/2020 - 14:45',
+      outcome: 'Failed',
+      question: '1. All of the above mandatory criteria are true for this supply contract.',
+      answer: false,
+      deal: deal2,
+    }
+
+  ];
+  const count = mandatoryCriteria.length; // in case people want to add more examples..
+
+  const pages = {
+    totalPages: Math.ceil(count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: count,
+  };
+
+  return res.render('reporting/red-line-answers.njk', {
+    pages,
+    mandatoryCriteria,
     user: req.session.user,
   });
 });
