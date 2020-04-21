@@ -20,6 +20,9 @@ const TRANSACTIONS = [
         checker: {
           username: 'CHECKER DURGA',
         },
+        bank: {
+          name: 'Barclays',
+        },
       },
       submissionDetails: {
         supplierName: 'TEST'
@@ -47,6 +50,9 @@ const TRANSACTIONS = [
         checker: {
           username: 'CHECKER DURGA',
         },
+        bank: {
+          name: 'Barclays',
+        },
       },
       submissionDetails: {
         supplierName: 'TEST'
@@ -73,6 +79,9 @@ const TRANSACTIONS = [
         },
         checker: {
           username: 'CHECKER DURGA',
+        },
+        bank: {
+          name: 'HSBC',
         },
       },
       submissionDetails: {
