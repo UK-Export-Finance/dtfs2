@@ -55,6 +55,29 @@ router.get('/reporting/transactions-report/:page', async (req, res) => {
   });
 });
 
+router.get('/reporting/all-transactions-report', async (req, res) => res.redirect('/reporting/all-transactions-report/0'));
+
+router.get('/reporting/all-transactions-report/:page', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  const { transactions, count } = await getApiData(api.transactions(userToken), res);
+
+  const banks = await getApiData(api.banks(userToken), res);
+
+  const pages = {
+    totalPages: Math.ceil(transactions.count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: count,
+  };
+
+  return res.render('reporting/all-transactions-report.njk', {
+    pages,
+    transactions,
+    banks,
+    user: req.session.user,
+  });
+});
+
 router.get('/reporting/mia_min-cover-start-date-changes', async (req, res) => res.redirect('/reporting/mia_min-cover-start-date-changes/0'));
 
 router.get('/reporting/mia_min-cover-start-date-changes/:page', async (req, res) => {
@@ -188,8 +211,6 @@ router.get('/reporting/abandoned-supply-contracts/:page', async (req, res) => {
     user: req.session.user,
   });
 });
-
-
 
 router.get('/reporting/red-line-answers', async (req, res) => res.redirect('/reporting/red-line-answers/0'));
 
