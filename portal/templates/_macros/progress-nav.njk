@@ -59,6 +59,7 @@
         {% else %}
 
             {% if childId and childHref %}
+<<<<<<< HEAD
             <a
               class="govuk-link"
               href="/contract/{{ contractId }}/{{ href }}/{{ childId }}/{{ childHref }}"
@@ -72,6 +73,13 @@
               href="/contract/{{ contractId }}/{{ href }}"
               data-cy="progress-nav-item-{{ href }}"
             >
+=======
+            <a class="govuk-link" href="/contract/{{ contractId }}/{{ href }}/{{ childId }}/{{ childHref }}" data-cy={{id}}>
+              {{ title }}
+            </a>
+            {% else %}
+            <a class="govuk-link" href="/contract/{{ contractId }}/{{ href }}" data-cy={{id}}>
+>>>>>>> master
               {{ title }}
             </a>
 

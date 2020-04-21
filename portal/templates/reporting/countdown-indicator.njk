@@ -1,0 +1,34 @@
+{% extends "index.njk" %}
+{% import '_macros/reporting-countdown-indicator-chart-panel.njk' as chartPanel %}
+
+
+{% block content %}
+
+  <h1 class="govuk-heading-l">Countdown Indicator</h1>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-padding-right-2">
+      <div class="box govuk-!-padding-left-4 govuk-!-padding-right-4 govuk-!-padding-top-4">
+        {{ chartPanel.render(reportData.issueOrMakeFirstAdvance) }}
+      </div>
+    </div>
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-padding-right-2">
+      <div class="box govuk-!-padding-left-4 govuk-!-padding-right-4 govuk-!-padding-top-4">
+        {{ chartPanel.render(reportData.manualInclusionsWithConditions) }}
+      </div>
+    </div>
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-padding-right-2">
+      <div class="box govuk-!-padding-left-4 govuk-!-padding-right-4 govuk-!-padding-top-4">
+        {{ chartPanel.render(reportData.manualInclusionsWithoutConditions) }}
+      </div>
+    </div>
+  </div
+
+  <div>
+  Please note that the countdown indicator provides indicative time periods only.
+  For example, the indicator may approximate calendar months into periods of 30 days
+  and ignore bank holidays. The Bank shoulr rely on its own records to determine
+  accurate time periods calculcated in accordance with the Master Guarentee Agreement.
+  </div
+
+{% endblock %}
