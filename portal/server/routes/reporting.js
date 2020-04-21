@@ -93,4 +93,54 @@ router.get('/reporting/mia_min-cover-start-date-changes/:page', async (req, res)
   });
 });
 
+router.get('/reporting/countdown-indicator', async (req, res) => {
+  // [dw] while mocking this report out, I don't think we really understand the data-model involved
+  //  so I'm, just mocking this out the old way rather than trying to work out how to re-plumb the API.
+
+  const issueOrMakeFirstAdvance = {
+    caption: 'You have 3 months to issue or make first advance under a transaction.',
+    firstCellIsHeader: true,
+    head: [ { text: 'Days remaining' }, { text: 'Facilities' } ],
+    rows: [
+      [ { text: "0 to 15" }, { html: '<strong class="govuk-tag govuk-tag--red">10</strong> <a href="TODO" >view</a>'} ],
+      [ { text: "16 to 45" }, { html: '<strong class="govuk-tag govuk-tag--red">8</strong> <a href="TODO" >view</a>'} ],
+      [ { text: "46 to 90" }, { html: '<strong class="govuk-tag govuk-tag--red">5</strong> <a href="TODO" >view</a>'} ],
+    ]
+  };
+
+  const manualInclusionsWithConditions = {
+    caption: 'Manual Inclusion Applications accepted by UKEF (with conditions)',
+    firstCellIsHeader: true,
+    head: [ { text: 'Days remaining' }, { text: 'Supply Contracts' }, { text: '' } ],
+    rows: [
+      [ { text: "0 to 6" }, { html: '<strong class="govuk-tag govuk-tag--red">1</strong> <a href="TODO" >view</a>'} ],
+      [ { text: "7 to 13" }, { html: '<strong class="govuk-tag govuk-tag--red">0</strong> <a href="TODO" >view</a>'} ],
+      [ { text: "14 to 20" }, { html: '<strong class="govuk-tag govuk-tag--red">0</strong> <a href="TODO" >view</a>'} ],
+    ]
+  };
+
+  const manualInclusionsWithoutConditions = {
+    caption: 'Manual Inclusion Applications accepted by UKEF (without conditions)',
+    firstCellIsHeader: true,
+    head: [ { text: 'Days remaining' }, { text: 'Supply Contracts' }, { text: '' } ],
+    rows: [
+      [ { text: "0 to 6" }, { html: '<strong class="govuk-tag govuk-tag--red">1</strong> <a href="TODO" >view</a>'} ],
+      [ { text: "7 to 13" }, { html: '<strong class="govuk-tag govuk-tag--red">0</strong> <a href="TODO" >view</a>'} ],
+      [ { text: "14 to 20" }, { html: '<strong class="govuk-tag govuk-tag--red">0</strong> <a href="TODO" >view</a>'} ],
+    ]
+  };
+
+  const reportData = {
+    issueOrMakeFirstAdvance,
+    manualInclusionsWithConditions,
+    manualInclusionsWithoutConditions,
+  };
+
+  return res.render('reporting/countdown-indicator.njk', {
+    reportData,
+    user: req.session.user,
+  });
+});
+
+
 export default router;
