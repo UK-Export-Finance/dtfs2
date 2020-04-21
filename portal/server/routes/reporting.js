@@ -102,9 +102,9 @@ router.get('/reporting/countdown-indicator', async (req, res) => {
     firstCellIsHeader: true,
     head: [{ text: 'Days remaining' }, { text: 'Facilities' }],
     rows: [
-      [{ text: '0 to 15' }, { html: '<strong class="govuk-tag govuk-tag--red">10</strong> <a href="TODO" >view</a>' }],
-      [{ text: '16 to 45' }, { html: '<strong class="govuk-tag govuk-tag--red">8</strong> <a href="TODO" >view</a>' }],
-      [{ text: '46 to 90' }, { html: '<strong class="govuk-tag govuk-tag--red">5</strong> <a href="TODO" >view</a>' }],
+      [{ text: '0 to 15' }, { html: '<strong class="govuk-tag govuk-tag--red">10</strong> &nbsp; <a href="TODO" >view</a>' }],
+      [{ text: '16 to 45' }, { html: '<strong class="govuk-tag govuk-tag--orange">8</strong> &nbsp; <a href="TODO" >view</a>' }],
+      [{ text: '46 to 90' }, { html: '<strong class="govuk-tag govuk-tag--green">5</strong> &nbsp; <a href="TODO" >view</a>' }],
     ],
   };
 
@@ -113,9 +113,9 @@ router.get('/reporting/countdown-indicator', async (req, res) => {
     firstCellIsHeader: true,
     head: [{ text: 'Days remaining' }, { text: 'Supply Contracts' }, { text: '' }],
     rows: [
-      [{ text: '0 to 6' }, { html: '<strong class="govuk-tag govuk-tag--red">1</strong> <a href="TODO" >view</a>' }],
-      [{ text: '7 to 13' }, { html: '<strong class="govuk-tag govuk-tag--red">0</strong> <a href="TODO" >view</a>' }],
-      [{ text: '14 to 20' }, { html: '<strong class="govuk-tag govuk-tag--red">0</strong> <a href="TODO" >view</a>' }],
+      [{ text: '0 to 6' }, { html: '<strong class="govuk-tag govuk-tag--red">1</strong> &nbsp; <a href="TODO" >view</a>' }],
+      [{ text: '7 to 13' }, { html: '<strong class="govuk-tag govuk-tag--orange">0</strong> &nbsp; <a href="TODO" >view</a>' }],
+      [{ text: '14 to 20' }, { html: '<strong class="govuk-tag govuk-tag--green">0</strong> &nbsp; <a href="TODO" >view</a>' }],
     ],
   };
 
@@ -124,9 +124,9 @@ router.get('/reporting/countdown-indicator', async (req, res) => {
     firstCellIsHeader: true,
     head: [{ text: 'Days remaining' }, { text: 'Supply Contracts' }, { text: '' }],
     rows: [
-      [{ text: '0 to 6' }, { html: '<strong class="govuk-tag govuk-tag--red">1</strong> <a href="TODO" >view</a>' }],
-      [{ text: '7 to 13' }, { html: '<strong class="govuk-tag govuk-tag--red">0</strong> <a href="TODO" >view</a>' }],
-      [{ text: '14 to 20' }, { html: '<strong class="govuk-tag govuk-tag--red">0</strong> <a href="TODO" >view</a>' }],
+      [{ text: '0 to 6' }, { html: '<strong class="govuk-tag govuk-tag--red">1</strong> &nbsp; <a href="TODO" >view</a>' }],
+      [{ text: '7 to 13' }, { html: '<strong class="govuk-tag govuk-tag--orange">0</strong> &nbsp; <a href="TODO" >view</a>' }],
+      [{ text: '14 to 20' }, { html: '<strong class="govuk-tag govuk-tag--green">0</strong> &nbsp; <a href="TODO" >view</a>' }],
     ],
   };
 

@@ -7,14 +7,20 @@
   <h1 class="govuk-heading-l">Countdown Indicator</h1>
 
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
-      {{ chartPanel.render(reportData.issueOrMakeFirstAdvance) }}
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-padding-right-2">
+      <div class="box govuk-!-padding-left-4 govuk-!-padding-right-4 govuk-!-padding-top-4">
+        {{ chartPanel.render(reportData.issueOrMakeFirstAdvance) }}
+      </div>
     </div>
-    <div class="govuk-grid-column-one-third">
-      {{ chartPanel.render(reportData.manualInclusionsWithConditions) }}
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-padding-right-2">
+      <div class="box govuk-!-padding-left-4 govuk-!-padding-right-4 govuk-!-padding-top-4">
+        {{ chartPanel.render(reportData.manualInclusionsWithConditions) }}
+      </div>
     </div>
-    <div class="govuk-grid-column-one-third">
-      {{ chartPanel.render(reportData.manualInclusionsWithoutConditions) }}
+    <div class="govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-padding-right-2">
+      <div class="box govuk-!-padding-left-4 govuk-!-padding-right-4 govuk-!-padding-top-4">
+        {{ chartPanel.render(reportData.manualInclusionsWithoutConditions) }}
+      </div>
     </div>
   </div
 
