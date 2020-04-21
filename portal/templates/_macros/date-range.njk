@@ -2,26 +2,22 @@
 
 {% macro inputs(fromLegend, toLegend) %}
 
-  <div class="govuk-grid-row govuk-!-margin-bottom-4">
-
-    <div class="govuk-grid-column-one-third">
-      <div class="govuk-form-group govuk-!-margin-bottom-0">
-        {{ dateFields.inputs(
-          legend = fromLegend,
-          id = 'createdFrom'
-        )}}
-      </div>
+  <div class="govuk-grid-column-one-third">
+    <div class="govuk-form-group govuk-!-margin-bottom-0">
+      {{ dateFields.inputs(
+        legend = fromLegend,
+        id = 'createdFrom'
+      )}}
     </div>
+  </div>
 
-    <div class="govuk-grid-column-one-third">
-      <div class="govuk-form-group govuk-!-margin-bottom-0">
-        {{ dateFields.inputs(
-          legend = toLegend,
-          id = 'createdTo'
-        )}}
-      </div>
+  <div class="govuk-grid-column-one-third">
+    <div class="govuk-form-group govuk-!-margin-bottom-0">
+      {{ dateFields.inputs(
+        legend = toLegend,
+        id = 'createdTo'
+      )}}
     </div>
-
   </div>
 
 {% endmacro %}

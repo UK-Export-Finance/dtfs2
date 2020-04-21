@@ -78,7 +78,9 @@
 
           </div>
 
-          {{ dateRange.inputs(fromLegend = 'Creation date', toLegend = 'And' ) }}
+          <div class="govuk-grid-row govuk-!-margin-bottom-4">
+            {{ dateRange.inputs(fromLegend = 'Creation date', toLegend = 'And' ) }}
+          </div>
 
           <div class="govuk-grid-row">
 
@@ -97,8 +99,8 @@
               </div>
             </div>
 
-          </div>          
-         
+          </div>
+
         </details>
 
         <button class="govuk-button" data-module="govuk-button">
@@ -168,5 +170,5 @@
     </section>
 
   </div>
-  
+
 {% endblock %}
