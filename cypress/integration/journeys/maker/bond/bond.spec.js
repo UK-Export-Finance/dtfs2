@@ -49,11 +49,13 @@ context('Add a Bond to a Deal', () => {
     fillBondForm.feeDetails();
     pages.bondFeeDetails.submit().click();
 
+    cy.url().should('include', '/contract');
+    cy.url().should('include', '/bond/');
     cy.url().should('include', '/preview');
   });
 
   describe('When a user completes all Bond forms (`issued` bond stage, currency same as Supply Contract Currency)', () => {
-    it('should populate Bond Preview page with all submitted data', () => {
+    it('should populate `Bond Preview` page with all submitted data', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
         cy.loginGoToDealPage(user, deal);
@@ -71,7 +73,7 @@ context('Add a Bond to a Deal', () => {
 
         cy.url().should('include', '/preview');
 
-        // bond details
+        // Bond Details
         pages.bondPreview.bondIssuer().invoke('text').then((text) => {
           expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.bondIssuer);
         });
@@ -104,7 +106,7 @@ context('Add a Bond to a Deal', () => {
           expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.bondBeneficiary);
         });
 
-        // bond financial details
+        // Bond Financial Details
         pages.bondPreview.bondValue().invoke('text').then((text) => {
           expect(text.trim()).equal(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
         });
@@ -131,7 +133,7 @@ context('Add a Bond to a Deal', () => {
         //   expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.TEST);
         // });
 
-        // bond fee details
+        // Bond Fee Details
         pages.bondPreview.feeType().invoke('text').then((text) => {
           expect(text.trim()).equal('At maturity');
         });
@@ -146,7 +148,7 @@ context('Add a Bond to a Deal', () => {
       });
     });
 
-    it('should populate Deal page with the submitted bond and link to bond details page', () => {
+    it('should populate Deal page with the submitted bond and link to `Bond Details` page', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];
         cy.loginGoToDealPage(user, deal);
@@ -165,8 +167,8 @@ context('Add a Bond to a Deal', () => {
 
         cy.url().should('include', '/preview');
 
-        // get bondId, go back to deal page
-        // assert that some inputted bond data is displayed in the table
+        // get bondId, go back to Deal page
+        // assert that some inputted Bond data is displayed in the table
         partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
           const bondId = bondIdHiddenInput[0].value;
 
@@ -202,7 +204,7 @@ context('Add a Bond to a Deal', () => {
             expect(text.trim()).equal(expectedDate);
           });
 
-          // assert that clicking the `unique number` link progesses to the bond page
+          // assert that clicking the `unique number` link progesses to the Bond Details page
           row.uniqueNumber().click();
           cy.url().should('include', '/contract');
           cy.url().should('include', '/bond/');
@@ -212,7 +214,7 @@ context('Add a Bond to a Deal', () => {
     });
   });
 
-  describe('When a user clicks `save and go back` button in Bond Preview page', () => {
+  describe('When a user clicks `save and go back` button in `Bond Preview` page', () => {
     it('should return to Deal page', () => {
       cy.allDeals().then((deals) => {
         const deal = deals[0];

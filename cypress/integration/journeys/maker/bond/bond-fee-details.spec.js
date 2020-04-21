@@ -12,7 +12,7 @@ const MOCK_DEAL = {
   },
 };
 
-context('Bond fee details', () => {
+context('Bond Fee Details', () => {
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
@@ -23,49 +23,30 @@ context('Bond fee details', () => {
     cy.insertOneDeal(MOCK_DEAL, user);
   });
 
-  describe('When a user submits the `Bond Fee Details` form', () => {
-    it('should progress to the `Bond Preview` page', () => {
-      cy.allDeals().then((deals) => {
-        const deal = deals[0];
-        cy.loginGoToDealPage(user, deal);
+  it('form submit should progress to the `Bond Preview` page and prepopulate submitted form fields when returning back to `Bond Fee Details` page', () => {
+    cy.allDeals().then((deals) => {
+      const deal = deals[0];
+      cy.loginGoToDealPage(user, deal);
 
-        pages.contract.addBondButton().click();
-        partials.bondProgressNav.progressNavBondFeeDetails().click();
-        cy.url().should('include', '/contract');
-        cy.url().should('include', '/bond/');
-        cy.url().should('include', '/fee-details');
+      pages.contract.addBondButton().click();
+      partials.bondProgressNav.progressNavBondFeeDetails().click();
+      cy.url().should('include', '/fee-details');
 
-        fillBondForm.feeDetails();
-        pages.bondFeeDetails.submit().click();
+      fillBondForm.feeDetails();
+      pages.bondFeeDetails.submit().click();
 
-        cy.url().should('include', '/contract');
-        cy.url().should('include', '/bond/');
-        cy.url().should('include', '/preview');
-      });
-    });
+      cy.url().should('include', '/contract');
+      cy.url().should('include', '/bond/');
+      cy.url().should('include', '/preview');
 
-    it('should prepopulate submitted form fields when returning back to Bond Fee Details page', () => {
-      cy.allDeals().then((deals) => {
-        const deal = deals[0];
-        cy.loginGoToDealPage(user, deal);
+      partials.bondProgressNav.progressNavBondFeeDetails().click();
+      cy.url().should('include', '/fee-details');
 
-        pages.contract.addBondButton().click();
-        partials.bondProgressNav.progressNavBondFeeDetails().click();
-        cy.url().should('include', '/fee-details');
-
-        fillBondForm.feeDetails();
-        pages.bondFeeDetails.submit().click();
-
-        cy.url().should('include', '/preview');
-        partials.bondProgressNav.progressNavBondFeeDetails().click();
-        cy.url().should('include', '/fee-details');
-
-        assertBondFormValues.feeDetails();
-      });
+      assertBondFormValues.feeDetails();
     });
 
     describe('When a user clicks `save and go back` button', () => {
-      it('should save the form data, return to Deal page and prepopulate form fields when returning back to Bond Details page', () => {
+      it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Bond Fee Details` page', () => {
         cy.allDeals().then((deals) => {
           const deal = deals[0];
           cy.loginGoToDealPage(user, deal);
