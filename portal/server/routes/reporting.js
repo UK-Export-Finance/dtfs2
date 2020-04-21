@@ -142,5 +142,53 @@ router.get('/reporting/countdown-indicator', async (req, res) => {
   });
 });
 
+router.get('/reporting/abandoned-supply-contracts', async (req, res) => res.redirect('/reporting/abandoned-supply-contracts/0'));
+
+router.get('/reporting/abandoned-supply-contracts/:page', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  // only mocking; not trying to plumb data model
+  //  should really be sending filter/order-by queries to deal-api
+  const contracts = [
+    {
+      dealId: '1234', // not obvious which id. would say its from k2 but abandoned deals wouldn't have this.. so _id??
+      details: {
+        bank: {
+          name: 'HSBC',
+        },
+        bankSupplyContractID: 'Memsstar/BSS/APG',
+        status: 'Abandoned Deal',
+        submissionType: 'Automatic Inclusion Notice',
+        maker: {
+          username: 'a maker',
+        },
+        dateOfCreation: '13/12/2018 - 12:23',
+        abandoned: '14/12/2018 - 12:23',
+      },
+    },
+  ];
+
+  const count = contracts.length; // in case people want to add more examples..
+
+  const pages = {
+    totalPages: Math.ceil(count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: count,
+  };
+
+  const banks = await getApiData(
+    api.banks(userToken),
+    res,
+  );
+
+  console.log(JSON.stringify(banks));
+
+  return res.render('reporting/abandoned-supply-contracts.njk', {
+    pages,
+    contracts,
+    banks,
+    user: req.session.user,
+  });
+});
 
 export default router;
