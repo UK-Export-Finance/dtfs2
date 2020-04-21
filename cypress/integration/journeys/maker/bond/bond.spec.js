@@ -25,191 +25,161 @@ context('Add a Bond to a Deal', () => {
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Bond to the deal', () => {
-    cy.passRedLine(user);
-
-    // complete 'before you start' form fields
-    pages.bankDetails.bankDealId().type('TEST1234');
-    pages.bankDetails.bankDealName().type('TESTING');
-    pages.bankDetails.submit().click();
+    cy.createADeal({
+      username: user.username,
+      password: user.password,
+      bankDealId: MOCK_DEAL.details.bankSupplyContractID,
+      bankDealName: MOCK_DEAL.details.bankSupplyContractName,
+    });
 
     cy.url().should('include', '/contract/');
 
-    pages.contract.addBondButton().click();
-
-    cy.url().should('include', '/contract');
-    cy.url().should('include', '/bond/');
-    cy.url().should('include', '/details');
-
-    fillBondForm.details.bondStageIssued();
-    pages.bondDetails.submit().click();
-
-    fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
-    pages.bondFinancialDetails.submit().click();
-
-    fillBondForm.feeDetails();
-    pages.bondFeeDetails.submit().click();
+    cy.addBondToDeal();
 
     cy.url().should('include', '/contract');
     cy.url().should('include', '/bond/');
     cy.url().should('include', '/preview');
   });
 
-  describe('When a user completes all Bond forms (`issued` bond stage, currency same as Supply Contract Currency)', () => {
+  describe('When a user submits all Bond forms (`issued` bond stage, currency same as Supply Contract Currency)', () => {
     it('should populate `Bond Preview` page with all submitted data', () => {
-      cy.allDeals().then((deals) => {
-        const deal = deals[0];
-        cy.loginGoToDealPage(user, deal);
+      cy.createADeal({
+        username: user.username,
+        password: user.password,
+        bankDealId: MOCK_DEAL.details.bankSupplyContractID,
+        bankDealName: MOCK_DEAL.details.bankSupplyContractName,
+      });
 
-        pages.contract.addBondButton().click();
+      cy.addBondToDeal();
 
-        fillBondForm.details.bondStageIssued();
-        pages.bondDetails.submit().click();
+      cy.url().should('include', '/preview');
 
-        fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
-        pages.bondFinancialDetails.submit().click();
+      // Bond Details
+      pages.bondPreview.bondIssuer().invoke('text').then((text) => {
+        expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.bondIssuer);
+      });
 
-        fillBondForm.feeDetails();
-        pages.bondFeeDetails.submit().click();
+      pages.bondPreview.bondType().invoke('text').then((text) => {
+        expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.bondType.value);
+      });
 
-        cy.url().should('include', '/preview');
+      pages.bondPreview.bondStage().invoke('text').then((text) => {
+        expect(text.trim()).equal('Issued');
+      });
 
-        // Bond Details
-        pages.bondPreview.bondIssuer().invoke('text').then((text) => {
-          expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.bondIssuer);
-        });
+      const expectedCoverStartDate = `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`;
 
-        pages.bondPreview.bondType().invoke('text').then((text) => {
-          expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.bondType.value);
-        });
+      pages.bondPreview.requestedCoverStartDate().invoke('text').then((text) => {
+        expect(text.trim()).equal(expectedCoverStartDate);
+      });
 
-        pages.bondPreview.bondStage().invoke('text').then((text) => {
-          expect(text.trim()).equal('Issued');
-        });
+      const expectedCoverEndDate = `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}/${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}/${BOND_FORM_VALUES.DETAILS.coverEndDateYear}`;
 
-        const expectedCoverStartDate = `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`;
+      pages.bondPreview.coverEndDate().invoke('text').then((text) => {
+        expect(text.trim()).equal(expectedCoverEndDate);
+      });
 
-        pages.bondPreview.requestedCoverStartDate().invoke('text').then((text) => {
-          expect(text.trim()).equal(expectedCoverStartDate);
-        });
+      pages.bondPreview.uniqueIdentificationNumber().invoke('text').then((text) => {
+        expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
+      });
 
-        const expectedCoverEndDate = `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}/${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}/${BOND_FORM_VALUES.DETAILS.coverEndDateYear}`;
+      pages.bondPreview.bondBeneficiary().invoke('text').then((text) => {
+        expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.bondBeneficiary);
+      });
 
-        pages.bondPreview.coverEndDate().invoke('text').then((text) => {
-          expect(text.trim()).equal(expectedCoverEndDate);
-        });
+      // Bond Financial Details
+      pages.bondPreview.bondValue().invoke('text').then((text) => {
+        expect(text.trim()).equal(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
+      });
 
-        pages.bondPreview.uniqueIdentificationNumber().invoke('text').then((text) => {
+      pages.bondPreview.riskMarginFee().invoke('text').then((text) => {
+        expect(text.trim()).equal(`${BOND_FORM_VALUES.FINANCIAL_DETAILS.riskMarginFee}%`);
+      });
+
+      pages.bondPreview.coveredPercentage().invoke('text').then((text) => {
+        expect(text.trim()).equal(`${BOND_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage}%`);
+      });
+
+      pages.bondPreview.minimumRiskMarginFee().invoke('text').then((text) => {
+        expect(text.trim()).equal(BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
+      });
+
+      // TODO: this is currently disabled and not hooked up to anything
+      // pages.bondPreview.guaranteeFeePayableByBank().invoke('text').then((text) => {
+      //   expect(text.trim()).equal('?');
+      // });
+
+      // TODO: this is currently disabled and not hooked up to anything
+      // pages.bondPreview.ukefExposure().invoke('text').then((text) => {
+      //   expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.TEST);
+      // });
+
+      // Bond Fee Details
+      pages.bondPreview.feeType().invoke('text').then((text) => {
+        expect(text.trim()).equal('At maturity');
+      });
+
+      pages.bondPreview.feeFrequency().invoke('text').then((text) => {
+        expect(text.trim()).equal('Annually');
+      });
+
+      pages.bondPreview.dayCountBasis().invoke('text').then((text) => {
+        expect(text.trim()).equal('365');
+      });
+    });
+  });
+
+  it('should populate Deal page with the submitted bond and link to `Bond Details` page', () => {
+    cy.allDeals().then((deals) => {
+      const deal = deals[0];
+      cy.loginGoToDealPage(user, deal);
+
+      cy.addBondToDeal();
+
+      cy.url().should('include', '/preview');
+
+      // get bondId, go back to Deal page
+      // assert that some inputted Bond data is displayed in the table
+      partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+        const bondId = bondIdHiddenInput[0].value;
+
+        pages.bondPreview.saveGoBackButton().click();
+        cy.url().should('eq', relative(`/contract/${deal._id}`));
+
+        const row = pages.contract.bondTransactionsTable.row(bondId);
+
+        row.uniqueNumber().invoke('text').then((text) => {
           expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
         });
 
-        pages.bondPreview.bondBeneficiary().invoke('text').then((text) => {
-          expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.bondBeneficiary);
+        // TODO: UKEF facility ID (when built)
+
+        // TODO: status (when built)
+
+        row.bondValue().invoke('text').then((text) => {
+          const expectedValue = `${deal.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue}`;
+          expect(text.trim()).equal(expectedValue);
         });
 
-        // Bond Financial Details
-        pages.bondPreview.bondValue().invoke('text').then((text) => {
-          expect(text.trim()).equal(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
+        row.bondStage().invoke('text').then((text) => {
+          expect(text.trim()).equal('Issued');
         });
 
-        pages.bondPreview.riskMarginFee().invoke('text').then((text) => {
-          expect(text.trim()).equal(`${BOND_FORM_VALUES.FINANCIAL_DETAILS.riskMarginFee}%`);
+        row.requestedCoverStartDate().invoke('text').then((text) => {
+          const expectedDate = `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`;
+          expect(text.trim()).equal(expectedDate);
         });
 
-        pages.bondPreview.coveredPercentage().invoke('text').then((text) => {
-          expect(text.trim()).equal(`${BOND_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage}%`);
+        row.coverEndDate().invoke('text').then((text) => {
+          const expectedDate = `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}/${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}/${BOND_FORM_VALUES.DETAILS.coverEndDateYear}`;
+          expect(text.trim()).equal(expectedDate);
         });
 
-        pages.bondPreview.minimumRiskMarginFee().invoke('text').then((text) => {
-          expect(text.trim()).equal(BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
-        });
-
-        // TODO: this is currently disabled and not hooked up to anything
-        // pages.bondPreview.guaranteeFeePayableByBank().invoke('text').then((text) => {
-        //   expect(text.trim()).equal('?');
-        // });
-
-        // TODO: this is currently disabled and not hooked up to anything
-        // pages.bondPreview.ukefExposure().invoke('text').then((text) => {
-        //   expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.TEST);
-        // });
-
-        // Bond Fee Details
-        pages.bondPreview.feeType().invoke('text').then((text) => {
-          expect(text.trim()).equal('At maturity');
-        });
-
-        pages.bondPreview.feeFrequency().invoke('text').then((text) => {
-          expect(text.trim()).equal('Annually');
-        });
-
-        pages.bondPreview.dayCountBasis().invoke('text').then((text) => {
-          expect(text.trim()).equal('365');
-        });
-      });
-    });
-
-    it('should populate Deal page with the submitted bond and link to `Bond Details` page', () => {
-      cy.allDeals().then((deals) => {
-        const deal = deals[0];
-        cy.loginGoToDealPage(user, deal);
-
-        pages.contract.addBondButton().click();
-
-        fillBondForm.details.bondStageIssued();
-        pages.bondDetails.submit().click();
-
-        fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
-        pages.bondFinancialDetails.submit().click();
-
-        fillBondForm.feeDetails();
-
-        pages.bondFeeDetails.submit().click();
-
-        cy.url().should('include', '/preview');
-
-        // get bondId, go back to Deal page
-        // assert that some inputted Bond data is displayed in the table
-        partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
-          const bondId = bondIdHiddenInput[0].value;
-
-          pages.bondPreview.saveGoBackButton().click();
-          cy.url().should('eq', relative(`/contract/${deal._id}`));
-
-          const row = pages.contract.bondTransactionsTable.row(bondId);
-
-          row.uniqueNumber().invoke('text').then((text) => {
-            expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
-          });
-
-          // TODO: UKEF facility ID (when built)
-
-          // TODO: status (when built)
-
-          row.bondValue().invoke('text').then((text) => {
-            const expectedValue = `${deal.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue}`;
-            expect(text.trim()).equal(expectedValue);
-          });
-
-          row.bondStage().invoke('text').then((text) => {
-            expect(text.trim()).equal('Issued');
-          });
-
-          row.requestedCoverStartDate().invoke('text').then((text) => {
-            const expectedDate = `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`;
-            expect(text.trim()).equal(expectedDate);
-          });
-
-          row.coverEndDate().invoke('text').then((text) => {
-            const expectedDate = `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}/${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}/${BOND_FORM_VALUES.DETAILS.coverEndDateYear}`;
-            expect(text.trim()).equal(expectedDate);
-          });
-
-          // assert that clicking the `unique number` link progesses to the Bond Details page
-          row.uniqueNumber().click();
-          cy.url().should('include', '/contract');
-          cy.url().should('include', '/bond/');
-          cy.url().should('include', '/details');
-        });
+        // assert that clicking the `unique number` link progesses to the Bond Details page
+        row.uniqueNumber().click();
+        cy.url().should('include', '/contract');
+        cy.url().should('include', '/bond/');
+        cy.url().should('include', '/details');
       });
     });
   });

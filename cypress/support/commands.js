@@ -61,6 +61,7 @@ Cypress.Commands.add("dealsBySubmissionType", dealsBySubmissionType);
 
 
 // commands that abstract common tasks you might perform while clicking round the portal..
+Cypress.Commands.add("addBondToDeal", require('./portal/addBondToDeal'));
 Cypress.Commands.add("createADeal", require('./portal/createADeal'));
 Cypress.Commands.add("createNewSubmission", require('./portal/createNewSubmission'));
 Cypress.Commands.add("login", require('./portal/login'));
