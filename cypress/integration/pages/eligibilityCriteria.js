@@ -15,8 +15,8 @@ const page = {
   },
   nextPageButton: () => cy.get('[data-cy="next-page"]'),
   eligibiityProgressNav: {
-    eligibilityCriteria: () => cy.get('[data-cy="progress-nav-item-eligibilityCriteria"]'),
-    supportingDocumentation: () => cy.get('[data-cy="progress-nav-item-supportingDocumentation"]'),
+    eligibilityCriteria: () => cy.get('[data-cy="progress-nav-item-eligibility/eligibility-criteria"]'),
+    supportingDocumentation: () => cy.get('[data-cy="progress-nav-item-eligibility/supporting-documentation"]'),
     preview: () => cy.get('[data-cy="preview"]'),
   },
 };
