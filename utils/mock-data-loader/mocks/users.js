@@ -9,7 +9,7 @@ const USERS = [
     password: 'ADMIN',
     roles: ['maker', 'editor'],
     bank: {
-      //_id: '', //TODO [dw] better linking of mock data
+      // _id: '', //TODO [dw] better linking of mock data
       id: '*',
     },
   },
@@ -18,9 +18,9 @@ const USERS = [
     password: 'MAKER',
     roles: ['maker'],
     bank: {
-      //_id: '', //TODO [dw] better linking of mock data
+      // _id: '', //TODO [dw] better linking of mock data
       id: '956',
-      name: 'Barclays Bank'
+      name: 'Barclays Bank',
     },
   },
   {
@@ -28,9 +28,9 @@ const USERS = [
     password: 'BARCLAYS-MAKER-1',
     roles: ['maker'],
     bank: {
-      //_id: '', //TODO [dw] better linking of mock data
+      // _id: '', //TODO [dw] better linking of mock data
       id: '956',
-      name: 'Barclays Bank'
+      name: 'Barclays Bank',
     },
   },
   {
@@ -38,9 +38,9 @@ const USERS = [
     password: 'BARCLAYS-MAKER-2',
     roles: ['maker'],
     bank: {
-      //_id: '', //TODO [dw] better linking of mock data
+      // _id: '', //TODO [dw] better linking of mock data
       id: '956',
-      name: 'Barclays Bank'
+      name: 'Barclays Bank',
     },
   },
   {
@@ -48,9 +48,9 @@ const USERS = [
     password: 'CHECKER',
     roles: ['checker'],
     bank: {
-      //_id: '', //TODO [dw] better linking of mock data
+      // _id: '', //TODO [dw] better linking of mock data
       id: '956',
-      name: 'Barclays Bank'
+      name: 'Barclays Bank',
     },
   },
   {
@@ -58,9 +58,9 @@ const USERS = [
     password: 'MAKENCHECK',
     roles: ['maker', 'checker'],
     bank: {
-      //_id: '', //TODO [dw] better linking of mock data
+      // _id: '', //TODO [dw] better linking of mock data
       id: '956',
-      name: 'Barclays Bank'
+      name: 'Barclays Bank',
     },
   },
   {
@@ -68,9 +68,9 @@ const USERS = [
     password: 'READER',
     roles: ['reader'],
     bank: {
-      //_id: '', //TODO [dw] better linking of mock data
+      // _id: '', //TODO [dw] better linking of mock data
       id: '956',
-      name: 'Barclays Bank'
+      name: 'Barclays Bank',
     },
   },
   {
@@ -78,9 +78,9 @@ const USERS = [
     password: 'MAKER-2',
     roles: ['maker'],
     bank: {
-      //_id: '', //TODO [dw] better linking of mock data
+      // _id: '', //TODO [dw] better linking of mock data
       id: '961',
-      name: 'HSBC'
+      name: 'HSBC',
     },
   },
   {
@@ -88,9 +88,9 @@ const USERS = [
     password: 'MAKER-3',
     roles: ['maker'],
     bank: {
-      //_id: '', //TODO [dw] better linking of mock data
+      // _id: '', //TODO [dw] better linking of mock data
       id: '961',
-      name: 'HSBC'
+      name: 'HSBC',
     },
   },
   {
@@ -98,9 +98,9 @@ const USERS = [
     password: 'CHECKER-2',
     roles: ['checker'],
     bank: {
-      //_id: '', //TODO [dw] better linking of mock data
+      // _id: '', //TODO [dw] better linking of mock data
       id: '961',
-      name: 'HSBC'
+      name: 'HSBC',
     },
   },
   {
@@ -108,9 +108,9 @@ const USERS = [
     password: 'MAKENCHECK-2',
     roles: ['maker', 'checker'],
     bank: {
-      //_id: '', //TODO [dw] better linking of mock data
+      // _id: '', //TODO [dw] better linking of mock data
       id: '961',
-      name: 'HSBC'
+      name: 'HSBC',
     },
   },
   {
@@ -118,11 +118,21 @@ const USERS = [
     password: 'READER-2',
     roles: ['reader'],
     bank: {
-      //_id: '', //TODO [dw] better linking of mock data
+      // _id: '', //TODO [dw] better linking of mock data
       id: '961',
-      name: 'HSBC'
+      name: 'HSBC',
     },
-  }
+  },
+  {
+    username: 'UKEF_OPERATIONS',
+    password: 'UKEF_OPERATIONS',
+    roles: ['ukef_operations'],
+    bank: {
+      // _id: '', //TODO [dw] better linking of mock data
+      id: '*',
+    },
+  },
+
 
 ];
 
