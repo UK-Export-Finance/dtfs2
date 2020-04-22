@@ -286,4 +286,62 @@ router.get('/reporting/red-line-answers/:page', async (req, res) => {
   });
 });
 
+router.get('/reporting/audit-log-all-changes', async (req, res) => res.redirect('/reporting/audit-log-all-changes/0'));
+
+router.get('/reporting/audit-log-all-changes/:page', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  // only mocking; not trying to plumb data model
+  //  should really be sending filter/order-by queries to deal-api
+  const changes = [{
+    no: '69297',
+    entityId: '18331',
+    entityType: 'webform_submission',
+    user: 'maker1@ukexportfinance.gov.uk',
+    created: '21/04/202 - 14:07',
+    doneTo: 'Bond',
+    changes: [
+      [{ text: 'Is the currency for this Transaction the same as your Supply Contract currency?' },
+       { text: '' },
+       { text: 'yes' }],
+    ],
+  }, {
+    no: '69296',
+    entityId: '18331',
+    entityType: 'webform_submission',
+    user: 'maker1@ukexportfinance.gov.uk',
+    created: '21/04/202 - 14:06',
+    doneTo: 'Bond',
+    changes: [
+      [
+        { text: 'Risk Margin Fee %' },
+        { text: '' },
+        { text: '12' }
+      ], [
+        { text: 'Covered Percentage' },
+        { text: '' },
+        { text: '10' }
+      ], [
+        { text: 'Guarnetee fee payable by bank' },
+        { text: '0.0000' },
+        { text: '10.8000' }
+      ],
+    ]
+  }]
+
+  const count = changes.length; // in case people want to add more examples..
+
+  const pages = {
+    totalPages: Math.ceil(count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: count,
+  };
+
+  return res.render('reporting/audit-log-all-changes.njk', {
+    pages,
+    changes,
+    user: req.session.user,
+  });
+});
+
 export default router;
