@@ -1,7 +1,7 @@
 const DETAILS = {
   bondIssuer: 'mock issuer',
   bondType: {
-    value: 'maintenanceBond',
+    value: 'Maintenance bond',
     text: 'Maintenance bond',
   },
 
