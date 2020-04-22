@@ -37,7 +37,7 @@ router.get('/users/create', async (req, res) => {
     res,
   );
 
-  return res.render('admin/user-create.njk',
+  return res.render('admin/user-edit.njk',
     {
       banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
       user: req.session.user,
@@ -52,10 +52,16 @@ router.get('/users/edit/:_id', async (req, res) => {
     res,
   );
 
-  return res.render('admin/user-create.njk',
+  const user = await getApiData(
+    api.user(_id, userToken),
+    res,
+  );
+
+  return res.render('admin/user-edit.njk',
     {
       _id,
       banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
+      user,
     });
 });
 

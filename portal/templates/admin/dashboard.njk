@@ -161,7 +161,7 @@
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14">
-                <a href="/admin/user/edit/{{ user._id }}}" class="govuk-link" >{{ user.username }}</a>
+                <a href="/admin/users/edit/{{ user.username | urlencode }}" class="govuk-link" >{{ user.username }}</a>
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14">
@@ -190,7 +190,7 @@
 
               <td class="govuk-table__cell govuk-!-font-size-14">
                 <ul class="govuk-!-margin-0 govuk-!-margin-left-4 govuk-!-padding-left-0">
-                <li><a href="/admin/users/edit/{{ user._id }}}" class="govuk-link" >Edit <span class="govuk-visually-hidden">{{ user.username }}</span></a></li>
+                <li><a href="/admin/users/edit/{{ user.username | urlencode }}" class="govuk-link" >Edit <span class="govuk-visually-hidden">{{ user.username }}</span></a></li>
                 <li><a href="#" class="govuk-link" >Disable <span class="govuk-visually-hidden">{{ user.username }}</span></a></li>
                 </ul>
               </td>
