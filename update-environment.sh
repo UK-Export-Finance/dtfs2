@@ -1,5 +1,10 @@
-echo Running update-environment script
+HOME=$(pwd)
+LOG="$HOME/pipeline.log"
 
+echo Running update-environment script
+start=`date +%s`
+
+runtime=$((end-start))
 echo Ensuring root dependencies are up to date..
 npm install
 
@@ -11,3 +16,6 @@ cd ../portal && npm install
 
 echo Ensuring utils/mock-data-loader dependencies are up to date..
 cd ../utils/mock-data-loader && npm install
+
+end=`date +%s`
+echo "update-environment execution time (seconds): $((end-start)) : pass" >> "$LOG"
