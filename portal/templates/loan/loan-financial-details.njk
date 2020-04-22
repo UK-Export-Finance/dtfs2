@@ -7,7 +7,7 @@
 
 {% block content %}
 
-  {% set showAdditionalFieldsByDefault = loan.transactionCurrencySameAsSupplyContractCurrency === "false" %}
+  {% set showAdditionalFieldsByDefault = loan.currencySameAsSupplyContractCurrency === "false" %}
 
   <script type="text/javascript">
     function showAdditionalFields(bool) {
@@ -57,8 +57,8 @@
 
     {{ govukRadios({
         classes: "govuk-radios--inline",
-        idPrefix: "transactionCurrencySameAsSupplyContractCurrency",
-        name: "transactionCurrencySameAsSupplyContractCurrency",
+        idPrefix: "currencySameAsSupplyContractCurrency",
+        name: "currencySameAsSupplyContractCurrency",
         fieldset: {
           legend: {
             text: "Is the currency of this loan the same as your Supply Contract currency?"
@@ -68,7 +68,7 @@
           {
             value: "true",
             text: "Yes",
-            checked: loan.transactionCurrencySameAsSupplyContractCurrency === "true",
+            checked: loan.currencySameAsSupplyContractCurrency === "true",
             attributes: {
               'data-cy': 'transaction-currency-same-as-supply-contract-currency-yes',
               onClick: "showAdditionalFields(false)"
@@ -77,7 +77,7 @@
           {
             value: "false",
             text: "No",
-            checked: loan.transactionCurrencySameAsSupplyContractCurrency === "false",
+            checked: loan.currencySameAsSupplyContractCurrency === "false",
             attributes: {
               'data-cy': 'transaction-currency-same-as-supply-contract-currency-no',
               onClick: "showAdditionalFields(true)"

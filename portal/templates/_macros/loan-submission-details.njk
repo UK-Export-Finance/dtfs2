@@ -37,6 +37,28 @@
       </div>
     {% endif %}
 
+    {% if loanDetails['requestedCoverStartDate-day'] and loanDetails['requestedCoverStartDate-month'] and loanDetails['requestedCoverStartDate-year'] %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Requested Cover Start Date
+        </dt>
+        <dd class="govuk-summary-list__value govuk-body-s">
+          {{ loanDetails['requestedCoverStartDate-day'] }}/{{ loanDetails['requestedCoverStartDate-month'] }}/{{ loanDetails['requestedCoverStartDate-year'] }}
+        </dd>
+      </div>
+    {% endif %}
+
+    {% if loanDetails['coverEndDate-day'] and loanDetails['coverEndDate-month'] and loanDetails['coverEndDate-year'] %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Requested Cover Start Date
+        </dt>
+        <dd class="govuk-summary-list__value govuk-body-s">
+          {{ loanDetails['coverEndDate-day'] }}/{{ loanDetails['coverEndDate-month'] }}/{{ loanDetails['coverEndDate-year'] }}
+        </dd>
+      </div>
+    {% endif %}
+
   </dl>
 
   <h2 class="govuk-heading-m">Loan financial details</h2>
@@ -91,15 +113,13 @@
       </div>
     {% endif %}
     
-    {% if bondDetails['conversionRateDate-day'] and bondDetails['conversionRateDate-month'] and bondDetails['conversionRateDate-year'] %}
+    {% if loanDetails['conversionRateDate-day'] and loanDetails['conversionRateDate-month'] and loanDetails['conversionRateDate-year'] %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Conversion rate date
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s">
-          {{ loanDetails['conversionRateDate-day'] }}
-          {{ loanDetails['conversionRateDate-month'] }}
-          {{ loanDetails['conversionRateDate-year'] }}
+          {{ loanDetails['conversionRateDate-day'] }}/{{ loanDetails['conversionRateDate-month'] }}/{{ loanDetails['conversionRateDate-year'] }}
         </dd>
       </div>
     {% endif %}
@@ -172,6 +192,17 @@
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s">
           {{ loanDetails.premiumType }}
+        </dd>
+      </div>
+    {% endif %}
+
+    {% if loanDetails.premiumType %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Premium frequency
+        </dt>
+        <dd class="govuk-summary-list__value govuk-body-s">
+          {{ loanDetails.premiumFrequency }}
         </dd>
       </div>
     {% endif %}

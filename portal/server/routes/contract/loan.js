@@ -8,6 +8,12 @@ const MOCK_LOAN = {
   bankReferenceNumber: 'Not entered',
   facilityStage: 'Conditional',
   ukefGuaranteeLengthInMonths: '12',
+  'requestedCoverStartDate-day': '01',
+  'requestedCoverStartDate-month': '02',
+  'requestedCoverStartDate-year': '2020',
+  'coverEndDate-day': '02',
+  'coverEndDate-month': '03',
+  'coverEndDate-year': '2020',
   loanFacilityValue: '3,000,000.00',
   currencySameAsSupplyContractCurrency: 'false',
   currency: 'EGP - Egyptian Pounds',
@@ -21,14 +27,8 @@ const MOCK_LOAN = {
   guaranteeFeePayableByBank: '2.7000',
   ukefExposure: '2,100,000.00',
   premiumType: 'At maturity',
+  premiumFrequency: 'Monthly',
   dayCountBasis: '365',
-
-  // ukefFacilityID: '12345678',
-  // status: 'Not started',
-  // value: 'GBP 123,456.00',
-  // stage: 'Unconditional',
-  // startDate: '12/02/2020',
-  // endDate: '14/03/2027',
 };
 
 router.get('/contract/:_id/loan/create', async (req, res) => {
@@ -42,8 +42,8 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) => 
   const { _id: dealId } = requestParams(req);
 
   return res.render('loan/loan-guarantee-details.njk', {
-    dealId, // eslint-disable-line no-underscore-dangle
-    loan: MOCK_LOAN,
+    dealId,
+    loan: { _id: MOCK_LOAN._id }, // eslint-disable-line no-underscore-dangle
     // ...await getApiData(
     //   api.contractLoan(_id, loanId, userToken),
     //   res,
@@ -68,7 +68,7 @@ router.get('/contract/:_id/loan/:loanId/financial-details', async (req, res) => 
 
   return res.render('loan/loan-financial-details.njk', {
     dealId,
-    loan: MOCK_LOAN,
+    loan: { _id: MOCK_LOAN._id }, // eslint-disable-line no-underscore-dangle
     // ...await getApiData(
     //   api.contractLoan(_id, loanId, userToken),
     //   res,
@@ -93,7 +93,7 @@ router.get('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => {
 
   return res.render('loan/loan-dates-repayments.njk', {
     dealId,
-    loan: MOCK_LOAN,
+    loan: { _id: MOCK_LOAN._id }, // eslint-disable-line no-underscore-dangle
     // ...await getApiData(
     //   api.contractLoan(_id, loanId, userToken),
     //   res,
@@ -114,7 +114,7 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => 
 });
 
 router.get('/contract/:_id/loan/:loanId/preview', async (req, res) => {
-  const { dealId } = requestParams(req);
+  const { _id: dealId } = requestParams(req);
 
   return res.render('loan/loan-preview.njk', {
     dealId,
