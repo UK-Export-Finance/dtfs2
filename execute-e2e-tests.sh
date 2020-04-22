@@ -17,6 +17,6 @@ echo Cleaning docker-compose environment
 docker-compose down
 
 end=`date +%s`
-[ $testResult -eq 0 ] && echo "api-tests execution time (seconds): $((end-start)) : pass" >> "$LOG" || echo "api-tests execution time (seconds): $((end-start)) : fail" >> "$LOG"
+[ $testResult -eq 0 ] && echo "e2e-tests execution time (seconds): $((end-start)) : pass" >> "$LOG" || echo "e2e-tests execution time (seconds): $((end-start)) : fail" >> "$LOG"
 
 exit $testResult
