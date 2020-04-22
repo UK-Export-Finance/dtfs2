@@ -374,6 +374,21 @@ const users = async (token) => {
   return response.data;
 };
 
+const user = async (id, token) => {
+  if (!token) return false;
+
+  const response = await axios({
+    method: 'get',
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    url: `${urlRoot}/v1/users/${id}`,
+  });
+
+  return response.data;
+};
+
 
 export default {
   banks,
@@ -400,4 +415,5 @@ export default {
   validateToken,
   fileshareURL,
   users,
+  user,
 };

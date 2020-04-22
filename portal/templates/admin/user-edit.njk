@@ -6,7 +6,13 @@
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">User create</h1>
+  <h1 class="govuk-heading-l">
+    {% if _id %}
+      Edit user {{ user.username }}
+    {% else %}
+      User create
+    {% endif %}
+  </h1>
   
   {{ govukCheckboxes({
     idPrefix: "roles",
@@ -24,7 +30,7 @@
         text: "Maker/Checker"
       },
       {
-        value: "mhecker",
+        value: "checker",
         text: "Checker"
       },
       {
@@ -44,20 +50,9 @@
 
 
   {% if _id %}
-
-    <div class="govuk-form-group">
-      <label class="govuk-label">
-        Email
-      </label>
-      {{ user.username }}
-    </div>
-
-    <div class="govuk-form-group">
-      <label class="govuk-label">
-        Display name
-      </label>
-      {{ user.username }}
-    </div>
+    <p class="govuk-body">Email<br/>{{ user.username }}</p>
+    
+    <p class="govuk-body">Display name<br/>{{ user.username }}</p>
   
   {% else %}
 
@@ -138,17 +133,13 @@
   {% endif %}
 
 
-
+<div class="govuk-label">
+Status
+</div>
 {{ govukRadios({
   classes: "govuk-radios--inline",
   idPrefix: "changed-name",
   name: "changed-name",
-  fieldset: {
-    legend: {
-      text: "Status",
-      classes: "govuk-fieldset__legend--s"
-    }
-  },
   items: [
     {
       value: "blocked",
@@ -193,29 +184,32 @@
       name: "surname"
     }) }}
 
-
-  <div class="govuk-form-group">
-    <label class="govuk-label" for="bank">
-      Bank
-    </label>
-    <span class="govuk-hint">
-      This field is required when the user has a role "Bank staff".
-    </span>
-    <select class="govuk-select govuk-!-width-one-third" id="bank" name="bank">
-      <option value="all">Any</option>
-      {% for bank in banks %}
-        <option value="{{ bank.id}}">{{ bank.name }}</option>
-      {% endfor %}
-    </select>
-  </div>
+  {% if _id %}
+    <p class="govuk-body">Bank<br/>{{ user.bank.name }}</p>
+  {% else %}
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="bank">
+        Bank
+      </label>
+      <span class="govuk-hint">
+        This field is required when the user has a role "Bank staff".
+      </span>
+      <select class="govuk-select govuk-!-width-one-third" id="bank" name="bank">
+        <option value="all">Any</option>
+        {% for bank in banks %}
+          <option value="{{ bank.id}}">{{ bank.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  {% endif %}
 
   {% if _id %}
     <button class="govuk-button" data-module="govuk-button">
-      Create user
+      Save
     </button>
   {% else %}
     <button class="govuk-button" data-module="govuk-button">
-     Save
+      Create user
     </button>
   {% endif %}
 
