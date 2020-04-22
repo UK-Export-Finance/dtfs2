@@ -2,12 +2,12 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% import '_macros/pagination.njk' as pagination %}
 
-{% import './_macros/audit-log-all-changes-filters.njk' as filterControls %}
+{% import './_macros/audit-log-user-changes-filters.njk' as filterControls %}
 
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">UKEF Audit Log - All changes</h1>
+  <h1 class="govuk-heading-l">UKEF Audit Log - User changes</h1>
 
   {{ filterControls.render(filter, banks, user) }}
 
@@ -15,8 +15,6 @@
     <thead class="govuk-table__head">
       <tr class="govuk-table__row govuk-!-margin-bottom-4">
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">No</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Entity Id</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Entity type</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">User who did changes</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Changes done to</th>
@@ -30,14 +28,6 @@
         <tr data-cy="change_{{contract._id}}" class="govuk-table__row">
           <td data-cy="no" class="govuk-table__cell govuk-!-font-size-14">
             {{ change.no }}
-          </td>
-
-          <td data-cy="entityId" class="govuk-table__cell govuk-!-font-size-14">
-            {{ change.entityId }}
-          </td>
-
-          <td data-cy="entityType" class="govuk-table__cell govuk-!-font-size-14">
-            {{ change.entityType }}
           </td>
 
           <td data-cy="user" class="govuk-table__cell govuk-!-font-size-14">

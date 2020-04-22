@@ -344,4 +344,48 @@ router.get('/reporting/audit-log-all-changes/:page', async (req, res) => {
   });
 });
 
+router.get('/reporting/audit-log-user-changes', async (req, res) => res.redirect('/reporting/audit-log-user-changes/0'));
+
+router.get('/reporting/audit-log-user-changes/:page', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  // only mocking; not trying to plumb data model
+  //  should really be sending filter/order-by queries to deal-api
+  const changes = [{
+    no: '69295',
+    user: 'maker1@ukexportfinance.gov.uk',
+    created: '21/04/202 - 14:07',
+    doneTo: 'Some User (user@bank.com)',
+    changes: [
+      [{ text: 'Roles' },
+       { text: '' },
+       { text: 'ukef_operations' }],
+    ],
+  }, {
+    no: '69296',
+    user: 'maker1@ukexportfinance.gov.uk',
+    created: '21/04/202 - 14:06',
+    doneTo: 'Bond',
+    changes: [
+      [{ text: 'Roleds' },
+        { text: '' },
+        { text: 'cont' }],
+    ]
+  }]
+
+  const count = changes.length; // in case people want to add more examples..
+
+  const pages = {
+    totalPages: Math.ceil(count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: count,
+  };
+
+  return res.render('reporting/audit-log-user-changes.njk', {
+    pages,
+    changes,
+    user: req.session.user,
+  });
+});
+
 export default router;
