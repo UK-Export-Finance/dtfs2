@@ -9,7 +9,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Bank reference number
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="bank-reference-number">
           {{ loanDetails.bankReferenceNumber }}
         </dd>
       </div>
@@ -20,7 +20,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Facility stage
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="facility-stage">
           {{ loanDetails.facilityStage }}
         </dd>
       </div>
@@ -31,7 +31,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Length of time that the UKEF's guarantee will be in place for (in months, rounded up)
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="ukef-guarantee-length-in-months">
           {{ loanDetails.ukefGuaranteeLengthInMonths }}
         </dd>
       </div>
@@ -42,7 +42,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Requested Cover Start Date
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="requested-cover-start-date">
           {{ loanDetails['requestedCoverStartDate-day'] }}/{{ loanDetails['requestedCoverStartDate-month'] }}/{{ loanDetails['requestedCoverStartDate-year'] }}
         </dd>
       </div>
@@ -53,7 +53,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Requested Cover Start Date
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="cover-end-date">
           {{ loanDetails['coverEndDate-day'] }}/{{ loanDetails['coverEndDate-month'] }}/{{ loanDetails['coverEndDate-year'] }}
         </dd>
       </div>
@@ -70,7 +70,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Loan facility value
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="loan-facility-value">
           {{ loanDetails.loanFacilityValue }}
         </dd>
       </div>
@@ -81,7 +81,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Is the currency of this loan the same as your Supply Contract currency?
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="currency-same-as-supply-contract-currency">
           {% if loanDetails.currencySameAsSupplyContractCurrency === "true" %}
             Yes
           {% elif loanDetails.currencySameAsSupplyContractCurrency === "false" %}
@@ -96,19 +96,19 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Currency
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="currency">
           {{ loanDetails.currency }}
         </dd>
       </div>
     {% endif %}
 
-    {% if loanDetails.conversionRateToTheSupplyContractCurrency %}
+    {% if loanDetails.conversionRate %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Conversion rate to the supply contract currency
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
-          {{ loanDetails.conversionRateToTheSupplyContractCurrency }}
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="conversion-rate">
+          {{ loanDetails.conversionRate }}
         </dd>
       </div>
     {% endif %}
@@ -118,7 +118,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Conversion rate date
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="conversion-rate-date">
           {{ loanDetails['conversionRateDate-day'] }}/{{ loanDetails['conversionRateDate-month'] }}/{{ loanDetails['conversionRateDate-year'] }}
         </dd>
       </div>
@@ -129,7 +129,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Interest Margin %
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="interest-margin">
           {{ loanDetails.interestMargin }}%
         </dd>
       </div>
@@ -140,7 +140,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Covered Percentage
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="covered-percentage">
           {{ loanDetails.coveredPercentage }}%
         </dd>
       </div>
@@ -151,7 +151,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Minimum quarterly fee 
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="minimim-quarterly-fee">
           {{ loanDetails.minimumQuarterlyFee  }}
         </dd>
       </div>
@@ -162,7 +162,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Guarantee fee payable by bank
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="guarantee-fee-payable-by-bank">
           {{ loanDetails.guaranteeFeePayableByBank }}%
         </dd>
       </div>
@@ -173,7 +173,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           UKEF Exposure
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="ukef-exposure">
           {{ loanDetails.ukefExposure }}
         </dd>
       </div>
@@ -190,7 +190,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Premium type
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="premium-type">
           {{ loanDetails.premiumType }}
         </dd>
       </div>
@@ -201,7 +201,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Premium frequency
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="premium-frequency">
           {{ loanDetails.premiumFrequency }}
         </dd>
       </div>
@@ -212,7 +212,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Day count basis 
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="day-count-basis">
           {{ loanDetails.dayCountBasis  }}
         </dd>
       </div>

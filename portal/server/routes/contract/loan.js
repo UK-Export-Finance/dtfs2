@@ -17,7 +17,7 @@ const MOCK_LOAN = {
   loanFacilityValue: '3,000,000.00',
   currencySameAsSupplyContractCurrency: 'false',
   currency: 'EGP - Egyptian Pounds',
-  conversionRateToTheSupplyContractCurrency: '1.75',
+  conversionRate: '1.75',
   'conversionRateDate-day': '01',
   'conversionRateDate-month': '02',
   'conversionRateDate-year': '2020',

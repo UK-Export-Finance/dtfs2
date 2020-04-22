@@ -70,7 +70,7 @@
             text: "Yes",
             checked: loan.currencySameAsSupplyContractCurrency === "true",
             attributes: {
-              'data-cy': 'transaction-currency-same-as-supply-contract-currency-yes',
+              'data-cy': 'currency-same-as-supply-contract-currency-yes',
               onClick: "showAdditionalFields(false)"
             }
           },
@@ -79,7 +79,7 @@
             text: "No",
             checked: loan.currencySameAsSupplyContractCurrency === "false",
             attributes: {
-              'data-cy': 'transaction-currency-same-as-supply-contract-currency-no',
+              'data-cy': 'currency-same-as-supply-contract-currency-no',
               onClick: "showAdditionalFields(true)"
             }
           }
@@ -240,7 +240,7 @@
       class="govuk-button govuk-button--secondary"
       data-module="govuk-button"
       value="Save and go back to deal"
-      data-cy="go-back-button"
+      data-cy="save-go-back-button"
     />
 
   </form>
