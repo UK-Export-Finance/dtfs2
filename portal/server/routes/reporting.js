@@ -382,4 +382,46 @@ router.get('/reporting/audit-log-user-changes/:page', async (req, res) => {
   });
 });
 
+router.get('/reporting/audit-log-webform-changes', async (req, res) => res.redirect('/reporting/audit-log-webform-changes/0'));
+
+router.get('/reporting/audit-log-webform-changes/:page', async (req, res) => {
+  // only mocking; not trying to plumb data model
+  //  should really be sending filter/order-by queries to deal-api
+  const changes = [{
+    no: '69295',
+    user: 'maker1@ukexportfinance.gov.uk',
+    created: '21/04/202 - 14:07',
+    doneTo: 'Confirm eligibility',
+    changes: [
+      [{ text: 'elements -> general_criteria -> ec_requested_cover_start_date -> #description' },
+        { text: 'The Requested Cover Start Date is no more than one month from the date of submission.' },
+        { text: 'The Requested Cover Start Date is no more than three months from the date of submission.' }],
+    ],
+  }, {
+    no: '69296',
+    user: 'maker1@ukexportfinance.gov.uk',
+    created: '21/04/202 - 14:06',
+    doneTo: 'Confirm eligibility',
+    changes: [
+      [{ text: 'elements -> general_criteria -> question_3 -> #description' },
+        { text: 'The total UKEF exposure for this Transaction and any prior live covered Transactions for this Obligor does not exceed &pound;2 million, or such other limit approved by UKEF (that has not lapsed or been withdrawn) in relation to this Obligor.' },
+        { text: 'The total UKEF exposure, across all short-term schemes (including bond support and export working capital transactions), for this Obligor (including this Transaction) does not exceed £2 million, or such other limit approved by UKEF (that has not lapsed or been withdrawn).' }],
+    ],
+  }];
+
+  const count = changes.length; // in case people want to add more examples..
+
+  const pages = {
+    totalPages: Math.ceil(count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: count,
+  };
+
+  return res.render('reporting/audit-log-webform-changes.njk', {
+    pages,
+    changes,
+    user: req.session.user,
+  });
+});
+
 export default router;
