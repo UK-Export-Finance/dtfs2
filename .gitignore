@@ -1,5 +1,6 @@
 .config
 .npm
+pipeline.log
 dist
 node_modules
 Reports

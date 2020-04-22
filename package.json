@@ -13,7 +13,7 @@
     "eslint-plugin-import": "^2.20.1"
   },
   "scripts": {
-    "pipeline": "./update-environment.sh && npm run lint && ./execute-unit-tests.sh && ./execute-api-tests.sh && ./execute-e2e-tests.sh",
+    "pipeline": "./update-environment.sh && ./execute-lint.sh && ./execute-unit-tests.sh && ./execute-api-tests.sh && ./execute-e2e-tests.sh",
     "lint": "eslint ./deal-api/src ./portal/server ./portal/scripts",
     "lint:fix": "eslint ./deal-api/src ./portal/server ./portal/scripts --fix",
     "postinstall": "cp git-hooks/pre-push .git/hooks && cp update-heroku.sh .git/hooks && chmod +x .git/hooks/pre-push",
