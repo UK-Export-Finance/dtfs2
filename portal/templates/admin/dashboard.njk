@@ -6,8 +6,10 @@
 
   <h1 class="govuk-heading-l">User admin</h1>
 
-  <a class="govuk-link" href="/admin/users/create">Add user</a>
-
+  <p class="govuk-body">
+    <a class="govuk-link" href="/admin/users/create">Add user</a>
+  </p>
+  
   <form method="POST" autocomplete="off" class="govuk-!-margin-top-4">
 
     <div class="govuk-grid-row">
@@ -70,7 +72,7 @@
           <select class="govuk-select govuk-!-width-full" id="filterByStatus" name="filterByStatus">
             <option value="all">Any</option>
             <option value="active">Active</option>
-            <option value="active">Blocked</option>
+            <option value="blocked">Blocked</option>
           </select>
         </div>
 
@@ -143,6 +145,8 @@
     </thead>
 
         <tbody class="govuk-table__body">
+          <!-- cycler only used for mocks to demo enable/disable links. Remove for real data-->
+          {% set cls = cycler("odd", "even") %}
 
           {% for user in users %}
             <tr class="govuk-table__row">
@@ -169,7 +173,11 @@
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14">
-                Active
+               {% if cls.current == "odd" %}
+                  Active
+                {% else %}
+                  Disabled
+                {% endif %}
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14">
@@ -191,7 +199,14 @@
               <td class="govuk-table__cell govuk-!-font-size-14">
                 <ul class="govuk-!-margin-0 govuk-!-margin-left-4 govuk-!-padding-left-0">
                 <li><a href="/admin/users/edit/{{ user.username | urlencode }}" class="govuk-link" >Edit <span class="govuk-visually-hidden">{{ user.username }}</span></a></li>
-                <li><a href="#" class="govuk-link" >Disable <span class="govuk-visually-hidden">{{ user.username }}</span></a></li>
+                <li>
+
+                {% if cls.next() == "odd" %}
+                  <a href="/admin/users/enable/{{ user.username | urlencode }}" class="govuk-link" >Enable<span class="govuk-visually-hidden">{{ user.username }}</span></a> 
+                {% else %}
+                  <a href="/admin/users/disable/{{ user.username | urlencode }}" class="govuk-link" >Disable<span class="govuk-visually-hidden">{{ user.username }}</span></a> 
+                {% endif %}
+                </li>
                 </ul>
               </td>
 
