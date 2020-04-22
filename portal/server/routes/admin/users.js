@@ -65,4 +65,50 @@ router.get('/users/edit/:_id', async (req, res) => {
     });
 });
 
+router.get('/users/disable/:_id', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+
+  const user = await getApiData(
+    api.user(_id, userToken),
+    res,
+  );
+
+  return res.render('admin/user-disable.njk',
+    {
+      _id,
+      user,
+    });
+});
+
+router.get('/users/enable/:_id', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+
+  const user = await getApiData(
+    api.user(_id, userToken),
+    res,
+  );
+
+  return res.render('admin/user-enable.njk',
+    {
+      _id,
+      user,
+    });
+});
+
+
+router.get('/users/change-password/:_id', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+
+  const user = await getApiData(
+    api.user(_id, userToken),
+    res,
+  );
+
+  return res.render('admin/user-change-password.njk',
+    {
+      _id,
+      user,
+    });
+});
+
 export default router;
