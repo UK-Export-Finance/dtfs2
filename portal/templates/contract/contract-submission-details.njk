@@ -5,6 +5,7 @@
 {% import '_macros/eligibility-criteria-answers.njk' as eligibilityCriteria %}
 {% import '_macros/supporting-documentation-answers.njk' as supportingDocumentation %}
 {% import '_macros/submission-details.njk' as submissionDetails %}
+{% import 'bond/_macros/bond-submission-details.njk' as bondSubmissionDetails %}
 
 {% block content %}
 
@@ -45,7 +46,7 @@
         <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="#">edit</a>
       </h3>
 
-      {{ submissionDetails.bond(bondDetails = contract.submissionDetails.bond)}}
+      {{ bondSubmissionDetails.render(bondDetails = contract.submissionDetails.bond)}}
 
       <p class="govuk-body"><a href="/contract/{{ _id }}" class="govuk-link">Back to Supply Contract page</a></p>
 
