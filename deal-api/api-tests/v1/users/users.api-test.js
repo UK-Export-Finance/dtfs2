@@ -15,7 +15,7 @@ const aMakerChecker = users.find(user=>user.username==='MAKENCHECK');
 describe('a user', () => {
 
   beforeEach(async () => {
-    await wipeDB();
+    await wipeDB.wipe(['users']);
   });
 
   it('a newly added user is returned when we list all users', async () => {

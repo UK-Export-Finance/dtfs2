@@ -38,7 +38,7 @@ describe('/v1/deals/:id/integration/', () => {
   let checker;
 
   beforeEach(async () => {
-    await wipeDB();
+    await wipeDB.wipe(['deals', 'users']);
 
     aUserWithoutRoles = await getToken({
       username: '1',

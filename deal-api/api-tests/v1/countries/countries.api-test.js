@@ -22,7 +22,7 @@ describe('/v1/countries', () => {
   let aTokenWithEditorRole;
 
   beforeEach(async () => {
-    await wipeDB();
+    await wipeDB.wipe(['countries', 'users']);
 
     aTokenWithNoRoles = await getToken({
       username: '1',
