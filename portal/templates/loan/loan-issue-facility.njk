@@ -3,6 +3,8 @@
 
 {% block content %}
 
-  {{ issueFacility.render() }}
+  {{ issueFacility.render(
+    dealId = dealId
+  ) }}
 
 {% endblock %}
