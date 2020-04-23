@@ -16,7 +16,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
   const newDeal = aDeal({ id: 'dealApiTest', bankSupplyContractName: 'Original Value' });
 
   beforeEach(async () => {
-    await wipeDB();
+    await wipeDB.wipe(['deals', 'users']);
 
     aUserWithoutRoles = await getToken({
       username: '1',

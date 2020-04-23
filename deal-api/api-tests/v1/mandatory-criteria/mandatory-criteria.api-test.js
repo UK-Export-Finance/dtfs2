@@ -20,7 +20,7 @@ describe('/v1/mandatory-criteria', () => {
   let aTokenWithEditorRole;
 
   beforeEach(async () => {
-    await wipeDB();
+    await wipeDB.wipe(['mandatoryCriteria', 'users']);
 
     aTokenWithNoRoles = await getToken({
       username: '1',

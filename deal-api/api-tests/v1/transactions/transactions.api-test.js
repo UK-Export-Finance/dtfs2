@@ -20,7 +20,7 @@ describe('/v1/transactions', () => {
   let aTokenWithEditorRole;
 
   beforeEach(async () => {
-    await wipeDB();
+    await wipeDB.wipe(['transactions', 'users']);
 
     aTokenWithNoRoles = await getToken({
       username: '1',
