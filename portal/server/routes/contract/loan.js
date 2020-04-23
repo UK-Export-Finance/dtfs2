@@ -131,6 +131,10 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', (req, res) => {
   return res.redirect(redirectUrl);
 });
 
+router.get('/contract/:_id/loan/:_loanId/issue-facility', async (req, res) => res.render('loan/loan-issue-facility.njk'));
+
+router.get('/contract/:_id/loan/:_loanId/confirm-requested-cover-start-date', async (req, res) => res.render('_shared-pages/confirm-requested-cover-start-date.njk'));
+
 router.get('/contract/:_id/loan/:loanId/delete', async (req, res) => {
   const { dealId } = requestParams(req);
 
