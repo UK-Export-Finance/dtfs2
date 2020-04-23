@@ -12,7 +12,7 @@ const page = {
   minimumRiskMarginFeeInput: () => cy.get('[data-cy="minimum-risk-margin-fee"]'),
   guaranteeFeePayableByBankInput: () => cy.get('[data-cy="guarantee-fee-payable-by-bank"]'),
   ukefExposureInput: () => cy.get('[data-cy="ukef-exposure"]'),
-  submit: () => cy.get('button'),
+  submit: () => cy.get('[data-cy="submit-button"]'),
   saveGoBackButton: () => cy.get('[data-cy="save-go-back-button"]'),
 };
 

@@ -17,7 +17,7 @@ const page = {
   uniqueIdentificationNumberInput: () => cy.get('[data-cy="unique-identification-number"]'),
 
   bondBeneficiaryInput: () => cy.get('[data-cy="bond-beneficiary"]'),
-  submit: () => cy.get('button'),
+  submit: () => cy.get('[data-cy="submit-button"]'),
   saveGoBackButton: () => cy.get('[data-cy="save-go-back-button"]'),
 };
 
