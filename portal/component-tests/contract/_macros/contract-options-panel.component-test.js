@@ -1,9 +1,9 @@
-const component = require('../../component');
-const componentLocation = 'contract/_macros/contract-options-panel.njk';
+const componentRenderer = require('../../componentRenderer');
+const component = 'contract/_macros/contract-options-panel.njk';
 
-const render = component(componentLocation).render;
+const render = componentRenderer(component);
 
-describe(componentLocation, () => {
+describe(component, () => {
   let $;
   let user, deal;
 
