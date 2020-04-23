@@ -1,0 +1,50 @@
+{% extends "index.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% import '_macros/date-fields.njk' as dateFields %}
+
+{% block content %}
+
+  <h1 class="govuk-heading-l">Change name of Supply Contract</h1>
+
+  <form method="POST" autocomplete="off">
+
+    {{ dateFields.inputs(
+      legend = 'Issued Date',
+      id = 'issuedDate',
+      hint = 'For example, 27 11 2019'
+    )}}
+
+    {{ dateFields.inputs(
+      legend = 'Requested Cover Start Date',
+      id = 'requestedCoverStartDate',
+      hint = 'For example, 27 11 2019',
+      secondaryHint = 'If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date'
+    )}}
+
+    {{ dateFields.inputs(
+      legend = 'Cover End Date',
+      id = 'coverEndDate',
+      hint = 'For example, 27 11 2025'
+    )}}
+
+    {{ govukInput({
+      label: {
+        text: "Bond's unique ID"
+      },
+      classes: "govuk-!-width-one-third",
+      id: "uniqueIdentificationNumber",
+      name: "uniqueIdentificationNumber"
+    }) }}
+
+    <p class="govuk-body">If you no longer wish to issue facility, please clear all fields and save.</p>
+
+    <button data-cy="Submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
+      Save
+    </button>
+
+    <a href="/contract/{{ contract._id }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+
+  </form>
+
+{% endblock %}
