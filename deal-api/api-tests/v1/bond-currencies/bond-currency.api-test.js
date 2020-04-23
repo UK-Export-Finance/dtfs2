@@ -21,7 +21,7 @@ describe('/v1/bond-currencies', () => {
   let aTokenWithEditorRole;
 
   beforeEach(async () => {
-    await wipeDB();
+    await wipeDB.wipe(['bondCurrencies', 'users']);
 
     aTokenWithNoRoles = await getToken({
       username: '1',

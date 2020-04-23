@@ -36,7 +36,7 @@ describe('/v1/deals/:id/status', () => {
   let checker;
 
   beforeEach(async () => {
-    await wipeDB();
+    await wipeDB.wipe(['deals', 'users']);
 
     aUserWithoutRoles = await getToken({
       username: '1',

@@ -27,7 +27,7 @@ describe('/v1/industry-sectors', () => {
   let aTokenWithEditorRole;
 
   beforeEach(async () => {
-    await wipeDB();
+    await wipeDB.wipe(['industrySectors', 'users']);
 
     aTokenWithNoRoles = await getToken({ username: '1', password: '2', roles: [] });
     aTokenWithEditorRole = await getToken({ username: '3', password: '4', roles: ['editor'] });
