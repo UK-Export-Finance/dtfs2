@@ -1,6 +1,17 @@
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
 {% extends "index.njk" %}
 
 {% block content %}
+
+  {% if passwordreset %}
+
+    {{ govukInsetText({
+      classes: "govuk-!-margin-top-0",
+      text: "Further instructions have been sent to your email address."
+    }) }}
+
+  {% endif %}
 
   <h1 class="govuk-heading-l">Log in</h1>
 
@@ -31,7 +42,7 @@
     </div>
   </div>
 
-  <p class="govuk-body govuk-!-margin-bottom-6"><a class="govuk-link" href="/user/password">Forgot your password?</a></p>
+  <p class="govuk-body govuk-!-margin-bottom-6"><a class="govuk-link" href="/reset-password">Forgot your password?</a></p>
 
   <h2 class="govuk-heading-m">Having trouble with this page?</h2>
 

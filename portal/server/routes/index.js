@@ -6,6 +6,7 @@ import contractRoutes from './contract';
 import miscRoutes from './misc';
 import reportingRoutes from './reporting';
 import adminRoutes from './admin';
+import userRoutes from './user';
 
 const router = express.Router();
 
@@ -16,5 +17,6 @@ router.use('/', contractRoutes);
 router.use('/', miscRoutes);
 router.use('/', reportingRoutes);
 router.use('/', adminRoutes);
+router.use('/', userRoutes);
 
 export default router;
