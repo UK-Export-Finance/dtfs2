@@ -10,7 +10,7 @@ echo Launching docker-compose environment
 docker-compose up -d --build
 
 echo Executing tests
-npx cypress run --spec "cypress/integration/**/*.spec.js"
+npx cypress run --spec "cypress/integration/**/*.spec.js" --config video=false
 testResult=$?
 
 echo Cleaning docker-compose environment
