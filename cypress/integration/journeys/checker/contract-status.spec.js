@@ -29,11 +29,7 @@ context('Contracts viewed by role=checker, by status', () => {
       cy.login({...checker});
       contract.visit(deal);
 
-      contract.returnToMaker().should('exist').and('be.disabled');
-      contract.proceedToSubmit().should('exist').and('be.disabled');
       contract.editDealName().should('not.exist');
-      contract.proceedToReview().should('not.exist');
-      contract.abandonButton().should('not.exist');
       contract.abandonLink().should('not.exist');
       contract.cloneDealLink().should('not.exist');
     })
@@ -45,11 +41,7 @@ context('Contracts viewed by role=checker, by status', () => {
       cy.login({...checker});
       contract.visit(deal);
 
-      contract.returnToMaker().should('exist').and('be.disabled');
-      contract.proceedToSubmit().should('exist').and('be.disabled');
       contract.editDealName().should('not.exist');
-      contract.proceedToReview().should('not.exist');
-      contract.abandonButton().should('not.exist');
       contract.abandonLink().should('not.exist');
       contract.cloneDealLink().should('not.exist');
     });
@@ -60,11 +52,7 @@ context('Contracts viewed by role=checker, by status', () => {
       cy.login({...checker});
       contract.visit(deal);
 
-      contract.returnToMaker().should('exist').and('be.disabled');
-      contract.proceedToSubmit().should('exist').and('be.disabled');
       contract.editDealName().should('not.exist');
-      contract.proceedToReview().should('not.exist');
-      contract.abandonButton().should('not.exist');
       contract.abandonLink().should('not.exist');
       contract.cloneDealLink().should('not.exist');
     });
@@ -75,11 +63,7 @@ context('Contracts viewed by role=checker, by status', () => {
       cy.login({...checker});
       contract.visit(deal);
 
-      contract.returnToMaker().should('exist').and('be.disabled');
-      contract.proceedToSubmit().should('exist').and('be.disabled');
       contract.editDealName().should('not.exist');
-      contract.proceedToReview().should('not.exist');
-      contract.abandonButton().should('not.exist');
       contract.abandonLink().should('not.exist');
       contract.cloneDealLink().should('not.exist');
     });
@@ -90,11 +74,7 @@ context('Contracts viewed by role=checker, by status', () => {
       cy.login({...checker});
       contract.visit(deal);
 
-      contract.returnToMaker().should('exist').and('be.disabled');
-      contract.proceedToSubmit().should('exist').and('be.disabled');
       contract.editDealName().should('not.exist');
-      contract.proceedToReview().should('not.exist');
-      contract.abandonButton().should('not.exist');
       contract.abandonLink().should('not.exist');
       contract.cloneDealLink().should('not.exist');
     });
@@ -105,11 +85,7 @@ context('Contracts viewed by role=checker, by status', () => {
       cy.login({...checker});
       contract.visit(deal);
 
-      contract.returnToMaker().should('exist').and('be.disabled');
-      contract.proceedToSubmit().should('exist').and('be.disabled');
       contract.editDealName().should('not.exist');
-      contract.proceedToReview().should('not.exist');
-      contract.abandonButton().should('not.exist');
       contract.abandonLink().should('not.exist');
       contract.cloneDealLink().should('not.exist');
     });
@@ -120,14 +96,7 @@ context('Contracts viewed by role=checker, by status', () => {
       cy.login({...checker});
       contract.visit(deal);
 
-      contract.canProceed().should('exist');
-      contract.reviewEligibilityChecklistForm().should('exist');
-      contract.cannotProceed().should('not.exist');
-      contract.returnToMaker().should('exist').and('not.be.disabled');
-      contract.proceedToSubmit().should('exist').and('not.be.disabled');
       contract.editDealName().should('not.exist');
-      contract.proceedToReview().should('not.exist');
-      contract.abandonButton().should('not.exist');
       contract.abandonLink().should('not.exist');
       contract.cloneDealLink().should('not.exist');
     });
@@ -138,14 +107,8 @@ context('Contracts viewed by role=checker, by status', () => {
       cy.login({...checker});
       contract.visit(deal);
 
-      contract.canProceed().should('not.exist');
-      contract.cannotProceed().should('not.exist');
-      contract.abandonButton().should('not.exist');
       contract.abandonLink().should('not.exist');
       contract.editDealName().should('not.exist');
-      contract.proceedToReview().should('not.exist');
-      contract.returnToMaker().should('not.exist');
-      contract.proceedToSubmit().should('not.exist');
       contract.cloneDealLink().should('not.exist');
     });
   });
@@ -155,14 +118,9 @@ context('Contracts viewed by role=checker, by status', () => {
       cy.login({...checker});
       contract.visit(deal);
 
-      contract.canProceed().should('not.exist');
-      contract.cannotProceed().should('not.exist');
-      contract.abandonButton().should('not.exist');
       contract.abandonLink().should('not.exist');
       contract.editDealName().should('not.exist');
-      contract.proceedToReview().should('not.exist');
-      contract.returnToMaker().should('not.exist');
-      contract.proceedToSubmit().should('not.exist');
+      contract.cloneDealLink().should('not.exist');
     });
   });
 
