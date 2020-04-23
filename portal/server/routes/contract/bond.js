@@ -120,7 +120,7 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', async (req, res) => {
 
 router.get('/contract/:_id/bond/:_bondId/issue-facility', async (req, res) => res.render('bond/bond-issue-facility.njk'));
 
-router.get('/contract/:_id/bond/:_bondId/confirm-requested-cover-start-date', async (req, res) => res.render('bond/bond-confirm-requested-cover-start-date.njk'));
+router.get('/contract/:_id/bond/:_bondId/confirm-requested-cover-start-date', async (req, res) => res.render('_shared-pages/confirm-requested-cover-start-date.njk'));
 
 router.get('/contract/:_id/bond/:bondId/delete', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
