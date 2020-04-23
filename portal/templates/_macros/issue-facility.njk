@@ -3,7 +3,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% import '_macros/date-fields.njk' as dateFields %}
 
-{% macro render(isBond) %}
+{% macro render(dealId, isBond) %}
 
   <h1 class="govuk-heading-l">Issue Facility</h1>
 
@@ -45,7 +45,7 @@
       Save
     </button>
 
-    <a href="/contract/{{ contract._id }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+    <a href="/contract/{{ dealId }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
 
   </form>
 

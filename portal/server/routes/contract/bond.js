@@ -118,9 +118,21 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', async (req, res) => {
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/bond/:_bondId/issue-facility', async (req, res) => res.render('bond/bond-issue-facility.njk'));
+router.get('/contract/:_id/bond/:_bondId/issue-facility', async (req, res) => {
+  const { _id: dealId } = requestParams(req);
 
-router.get('/contract/:_id/bond/:_bondId/confirm-requested-cover-start-date', async (req, res) => res.render('_shared-pages/confirm-requested-cover-start-date.njk'));
+  return res.render('bond/bond-issue-facility.njk', {
+    dealId,
+  });
+});
+
+router.get('/contract/:_id/bond/:_bondId/confirm-requested-cover-start-date', async (req, res) => {
+  const { _id: dealId } = requestParams(req);
+
+  return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
+    dealId,
+  });
+});
 
 router.get('/contract/:_id/bond/:bondId/delete', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
