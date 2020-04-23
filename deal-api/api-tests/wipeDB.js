@@ -1,7 +1,6 @@
 
-const collections = ['deals', 'banks', 'transactions', 'bondCurrencies', 'countries', 'industrySectors', 'mandatoryCriteria', 'users'];
 
-module.exports = async () => {
+const wipe = async (collections) => {
   const db = require('../src/drivers/db-client');
 
   const drop = async collection => new Promise(async (resolve, reject) => {
@@ -16,3 +15,12 @@ module.exports = async () => {
     await drop(collection);
   }
 };
+
+const wipeAll = async () => {
+  await wipe(['deals', 'banks', 'transactions', 'bondCurrencies', 'countries', 'industrySectors', 'mandatoryCriteria', 'users']);
+};
+
+module.exports = {
+  wipe,
+  wipeAll,
+}
