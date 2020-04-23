@@ -36,7 +36,7 @@
 
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
-    {% if user and user.roles.includes('ukef_operations') %}
+    {% if user and user.roles and user.roles.includes('ukef_operations') %}
       {% include "_partials/admin-header.njk" %}
     {% endif %}
 
