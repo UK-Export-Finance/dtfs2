@@ -88,16 +88,11 @@ router.get('/contract/:_id/eligibility/supporting-documentation', async (req, re
     res,
   );
 
-  const fileshareURL = await getApiData(
-    api.fileshareURL(userToken),
-    res,
-  );
-
   const validationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
 
   return res.render('eligibility/eligibility-supporting-documentation.njk',
     {
-      _id, dealFiles, eligibility, fileshareURL, validationErrors,
+      _id, dealFiles, eligibility, validationErrors,
     });
 });
 
@@ -112,18 +107,12 @@ router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(),
 
   const { eligibility, dealFiles = {} } = updatedDeal;
 
-  const fileshareURL = await getApiData(
-    api.fileshareURL(userToken),
-    res,
-  );
-
   const validationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
 
   return res.render('eligibility/eligibility-supporting-documentation.njk', {
     _id,
     eligibility,
     dealFiles,
-    fileshareURL,
     validationErrors,
   });
 });

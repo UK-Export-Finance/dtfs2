@@ -1,0 +1,37 @@
+
+{% import './eligibility-documentation-preview-file.njk' as eligibilityDocumentationPreviewFiles %}
+
+{% macro answers(dealFiles, fileshareURL) %}
+  
+  <h4 class="govuk-heading-m">Supporting documentation</h4>
+
+  <ol class="govuk-list govuk-list--number">
+
+    {{ eligibilityDocumentationPreviewFiles.list('Manual Inclusion Questionnaire', dealFiles.exporterQuestionnaire, fileshareURL)  }}
+    {{ eligibilityDocumentationPreviewFiles.list('Financial statements for the past 3 years', dealFiles.auditedFinancialStatements, fileshareURL)  }}
+    {{ eligibilityDocumentationPreviewFiles.list('Year to date management accounts', dealFiles.yearToDateManagement, fileshareURL)  }}
+    {{ eligibilityDocumentationPreviewFiles.list('Financial forecasts for the next 3 years', dealFiles.financialForecasts, fileshareURL)  }}
+    {{ eligibilityDocumentationPreviewFiles.list('Brief commentary on the financial information', dealFiles.financialInformationCommentary, fileshareURL)  }}
+    {{ eligibilityDocumentationPreviewFiles.list('Corporate structure diagram', dealFiles.corporateStructure, fileshareURL)  }}
+    
+    
+
+    {% for documentation in supportingDocumentation %}
+
+      <li class="govuk-body-s">
+        <span class="govuk-!-font-weight-bold">{{ documentation.title }}</span>
+        {% if documentation.href %}
+          <a href="#{{ documentation.href }}" class="govuk-link govuk-!-margin-left-4">{{ documentation.href }}</a>
+        {% endif %}
+
+        {% if documentation.value %}
+          <span class="govuk-body-s govuk-!-margin-left-4">{{ documentation.value }}</span>
+        {% endif %}
+
+      </li>
+
+    {% endfor %}
+  </ol>
+      
+{% endmacro %}
+

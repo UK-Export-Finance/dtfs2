@@ -50,6 +50,7 @@ const uploadStream = async ({
     subfolder,
     filename: fileClient.name,
     fullPath: fileClient.path,
+    url: fileClient.url,
   };
 };
 

@@ -2,7 +2,7 @@
 {% import '_macros/confirm-eligibility-nav.njk' as confirmEligibility %}
 {% import '_macros/mandatory-criteria-box.njk' as mandatoryCriteriaBox %}
 {% import '_macros/eligibility-criteria-answers.njk' as eligibilityCriteria %}
-{% import '_macros/supporting-documentation-answers.njk' as supportingDocumentation %}
+{% import '_macros/eligibility-documentation-preview.njk' as eligibilityDocumentation %}
 
 {% block content %}
 
@@ -20,7 +20,7 @@
 
   {{ eligibilityCriteria.answers(contract.eligibility.criteria)}}
 
-  {{ supportingDocumentation.answers(contract.submissionDetails.supportingDocumentation)}}
+  {{ eligibilityDocumentation.answers(contract.dealFiles, fileshareURL)}}
 
   <hr class="govuk-section-break govuk-!-margin-bottom-8">
 

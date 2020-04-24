@@ -34,7 +34,6 @@
             label = "1. Manual Inclusion Questionnaire",
             hint = 'Please upload a completed Manual Inclusion Questionnaire. You can download the template here: <a href="#">Manual Inclusion Questionnaire</a>',
             fileList = dealFiles.exporterQuestionnaire,
-            fileshareURL = fileshareURL,
             validationError = validationErrors.errorList.exporterQuestionnaire
           )
         }}
@@ -47,7 +46,6 @@
             label = "2. Financial statements for the past 3 years",
             hint = "Financial statements (audited if available) for the past 3 years, including a Profit & Loss, Balance Sheet and Cash Flow Statement, (with notes, if applicable). If the company is part of a larger group, separate accounts should be provided for the company and group.",
             fileList = dealFiles.auditedFinancialStatements,
-            fileshareURL = fileshareURL,
             validationError = validationErrors.errorList.auditedFinancialStatements
           )
         }}
@@ -60,7 +58,6 @@
             label = "3. Year to date management accounts",
             hint = "Including Profit & Loss, Balance Sheet and Cash Flow where available.",
             fileList = dealFiles.yearToDateManagement,
-            fileshareURL = fileshareURL,
             validationError = validationErrors.errorList.yearToDateManagement
           )
         }}
@@ -73,7 +70,6 @@
             label = "4. Financial forecasts for the next 3 years",
             hint = "Including monthly cash-flow projections for the business as a whole. If unavailable provide for at least the projected facility/guarantee term. If there are any cash flow shortfalls, explain how these will be filled.",
             fileList = dealFiles.financialForecasts,
-            fileshareURL = fileshareURL,
             validationError = validationErrors.errorList.financialForecasts
           )
         }}
@@ -86,7 +82,6 @@
             label = "5. Brief commentary on the financial information",
             hint = "A brief commentary on the financial information in 2-4, with particular focus on turnover, gross and net profit, dividends (if any), debt profile including bank borrowing and net worth, and any other information with explains any exceptions, anomalies or volatility. If the company has experienced any unusual or off-trend financial performance in the last 3 years please also explain this.",
             fileList = dealFiles.financialInformationCommentary,
-            fileshareURL = fileshareURL,
             validationError = validationErrors.errorList.financialInformationCommentary
           )
         }}
@@ -98,8 +93,7 @@
             fieldname = "corporateStructure",
             label = "6. Corporate structure diagram",
             hint = "Showing corporate structure including parent, subsidiary and associated companies.",
-            fileList = dealFiles.corporateStructure,
-            fileshareURL = fileshareURL
+            fileList = dealFiles.corporateStructure
           )
         }}
     </li>
