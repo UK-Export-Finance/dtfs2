@@ -17,7 +17,7 @@ router.get('/contract/:_id', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
   return res.render('contract/contract-view.njk', {
-    contract: await getApiData(
+    deal: await getApiData(
       api.contract(_id, userToken),
       res,
     ),

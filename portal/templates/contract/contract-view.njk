@@ -17,13 +17,13 @@
 
 {% block content %}
 
-  {% set componentData = {user: user, deal: contract} %}
+  {% set componentData = {user: user, deal: deal} %}
 
   <div class="contract-container">
 
     <h1 class="govuk-heading-l">
       Supply Contract name:
-      <span data-cy="bankSupplyContractName" class="govuk-body govuk-!-font-size-24">{{ contract.details.bankSupplyContractName }}</span>
+      <span data-cy="bankSupplyContractName" class="govuk-body govuk-!-font-size-24">{{ deal.details.bankSupplyContractName }}</span>
 
       {{ editDealNameLink.render(componentData) }}
     </h1>
@@ -31,7 +31,7 @@
     <div class="govuk-tabs" data-module="govuk-tabs">
       <h2 class="govuk-tabs__title">Contents</h2>
 
-      {{ contractTabs.nav(selected = 'view', id = contract._id ) }}
+      {{ contractTabs.nav(selected = 'view', id = deal._id ) }}
 
       <section class="govuk-tabs__panel" id="view">
 
@@ -48,7 +48,7 @@
         <hr class="govuk-section-break" />
 
         <div class="govuk-grid-row govuk-!-padding-2 govuk-!-margin-bottom-8 box">
-          {{ contractDetails.table(contract.details) }}
+          {{ contractDetails.table(deal.details) }}
         </div>
 
         <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
@@ -59,12 +59,12 @@
                   About the Supply Contract
                 </span>
                 <span class="govuk-!-margin-left-6">
-                  {{ status.statusText(contract.aboutSupplyContract.status) }}
+                  {{ status.statusText(deal.aboutSupplydeal.status) }}
                 </span>
               </h2>
             </div>
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <a href="/contract/{{ contract._id }}/about/supplier" class="govuk-link">View details</a>
+              <a href="/contract/{{ deal._id }}/about/supplier" class="govuk-link">View details</a>
             </div>
           </div>
         </div>
@@ -74,9 +74,9 @@
             <div class="govuk-grid-column-three-quarters">
               <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
 
-                {% if contract.confirmEligibility.status %}
+                {% if deal.confirmEligibility.status %}
                   <span class="govuk-!-margin-left-6 box__header-inline-message">
-                    {{ status.statusText(contract.confirmEligibility.status) }}
+                    {{ status.statusText(deal.confirmEligibility.status) }}
                   </span>
                 {% endif %}
 
@@ -84,17 +84,17 @@
                   Confirm eligibility
                 </span>
 
-                {% if contract.eligibility.submissionType %}
+                {% if deal.eligibility.submissionType %}
                   <span class="govuk-!-margin-bottom-0 govuk-!-margin-left-6 govuk-!-font-weight-regular govuk-!-font-size-16 box__header-inline-message">
                     <span class="govuk-!-font-weight-bold">Submission type: </span> <br />
-                    {{ contract.eligibility.submissionType }}
+                    {{ deal.eligibility.submissionType }}
                   </span>
                 {% endif %}
 
               </h2>
             </div>
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <a data-cy="ViewDetails" href="/contract/{{ contract._id }}/eligibility/criteria" class="govuk-link">View details</a>
+              <a data-cy="ViewDetails" href="/contract/{{ deal._id }}/eligibility/criteria" class="govuk-link">View details</a>
             </div>
           </div>
         </div>
@@ -107,22 +107,22 @@
                   Bond transactions
                 </span>
                 <span class="govuk-!-margin-left-6">
-                  {{ status.statusText(contract.bondTransactions.status) }}
+                  {{ status.statusText(deal.bondTransactions.status) }}
                 </span>
               </h2>
             </div>
 
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <form action="/contract/{{ contract._id }}/bond/create" method="PUT">
+              <form action="/contract/{{ deal._id }}/bond/create" method="PUT">
                 <button class="govuk-body-s button-as-link" data-cy="button-add-bond">Add a Bond</button>
               </form>
             </div>
 
-            {% if contract.bondTransactions.items %}
+            {% if deal.bondTransactions.items %}
               <div class="govuk-grid-column-full">
                 {{ bondTransactionsTable.render(
-                  bonds = contract.bondTransactions.items,
-                  dealId = contract._id
+                  bonds = deal.bondTransactions.items,
+                  dealId = deal._id
                 )}}
               </div>
             {% endif %}
@@ -139,23 +139,23 @@
                 </span>
 
                 <span class="govuk-!-margin-left-6">
-                  {{ status.statusText(contract.loanTransactions.status) }}
+                  {{ status.statusText(deal.loanTransactions.status) }}
                 </span>
 
               </h2>
             </div>
 
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <form action="/contract/{{ contract._id }}/loan/create" method="PUT">
+              <form action="/contract/{{ deal._id }}/loan/create" method="PUT">
                 <button class="govuk-body-s button-as-link" data-cy="button-add-loan">Add a Loan</button>
               </form>
             </div>
 
-            {% if contract.loanTransactions.items %}
+            {% if deal.loanTransactions.items %}
               <div class="govuk-grid-column-full">
                 {{ loanTransactionsTable.render(
-                  loans = contract.loanTransactions.items,
-                  dealId = contract._id
+                  loans = deal.loanTransactions.items,
+                  dealId = deal._id
                 )}}
 
               </div>
@@ -172,19 +172,19 @@
               <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                   <th scope="row" class="govuk-table__header">Deal currency</th>
-                  <td class="govuk-table__cell">{{ contract.summary.dealCurrency }}</td>
+                  <td class="govuk-table__cell">{{ deal.summary.dealCurrency }}</td>
                 </tr>
                 <tr class="govuk-table__row">
                   <th scope="row" class="govuk-table__header">Number of bonds</th>
-                  <td class="govuk-table__cell">{{ contract.summary.totals.bonds }}</td>
+                  <td class="govuk-table__cell">{{ deal.summary.totals.bonds }}</td>
                 </tr>
                 <tr class="govuk-table__row">
                   <th scope="row" class="govuk-table__header">Number of loans</th>
-                  <td class="govuk-table__cell">{{ contract.summary.totals.loans }}</td>
+                  <td class="govuk-table__cell">{{ deal.summary.totals.loans }}</td>
                 </tr>
                 <tr class="govuk-table__row">
                   <th scope="row" class="govuk-table__header">Number of transactions</th>
-                  <td class="govuk-table__cell">{{ contract.summary.totals.transactions }}</td>
+                  <td class="govuk-table__cell">{{ deal.summary.totals.transactions }}</td>
                 </tr>
               </tbody>
             </table>
@@ -223,27 +223,27 @@
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ contract.summary.dealBondsLoans.totalValue.dealCurrency }}
+                    {{ deal.summary.dealBondsLoans.totalValue.dealCurrency }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ contract.summary.dealBondsLoans.totalValue.dealInGbp }}
+                    {{ deal.summary.dealBondsLoans.totalValue.dealInGbp }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ contract.summary.dealBondsLoans.totalValue.bondCurrency }}
+                    {{ deal.summary.dealBondsLoans.totalValue.bondCurrency }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ contract.summary.dealBondsLoans.totalValue.bondInGbp }}
+                    {{ deal.summary.dealBondsLoans.totalValue.bondInGbp }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ contract.summary.dealBondsLoans.totalValue.loanCurrency }}
+                    {{ deal.summary.dealBondsLoans.totalValue.loanCurrency }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ contract.summary.dealBondsLoans.totalValue.loanInGbp }}
+                    {{ deal.summary.dealBondsLoans.totalValue.loanInGbp }}
                   </td>
                 </tr>
 
@@ -253,27 +253,27 @@
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ contract.summary.dealBondsLoans.totalUkefExposure.dealCurrency }}
+                    {{ deal.summary.dealBondsLoans.totalUkefExposure.dealCurrency }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ contract.summary.dealBondsLoans.totalUkefExposure.dealInGbp }}
+                    {{ deal.summary.dealBondsLoans.totalUkefExposure.dealInGbp }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ contract.summary.dealBondsLoans.totalUkefExposure.bondCurrency }}
+                    {{ deal.summary.dealBondsLoans.totalUkefExposure.bondCurrency }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ contract.summary.dealBondsLoans.totalUkefExposure.bondInGbp }}
+                    {{ deal.summary.dealBondsLoans.totalUkefExposure.bondInGbp }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ contract.summary.dealBondsLoans.totalUkefExposure.loanCurrency }}
+                    {{ deal.summary.dealBondsLoans.totalUkefExposure.loanCurrency }}
                   </td>
 
                   <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ contract.summary.dealBondsLoans.totalUkefExposure.loanInGbp }}
+                    {{ deal.summary.dealBondsLoans.totalUkefExposure.loanInGbp }}
                   </td>
                 </tr>
 
