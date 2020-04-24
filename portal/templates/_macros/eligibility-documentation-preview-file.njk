@@ -1,0 +1,15 @@
+{% macro list(title, fileList) %}
+     <li class="govuk-body-s">
+       <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third govuk-!-font-weight-bold govuk-!-margin-bottom-1">{{ title }}</div>
+        <div class="govuk-grid-column-one-third">
+        {% for file in fileList %}
+          <ul class="govuk-list--bullet">
+            <li>
+              <a href="{{ file.url }}" target="_blank" class="govuk-link">{{ file.filename }}</a>
+            </li>
+          </ul>
+        {% endfor %}
+        </div>
+    </li>
+{% endmacro %}
