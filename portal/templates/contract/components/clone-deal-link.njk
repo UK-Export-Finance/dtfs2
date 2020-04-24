@@ -1,0 +1,11 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  {% if params.deal.details.status %}
+
+    {% if params.user.roles.includes('maker') %}
+      <a href="/contract/{{ params.deal._id }}/clone/before-you-start" class="govuk-link govuk-!-font-size-14" data-cy="clone-deal-link">Clone</a>
+    {% endif %}
+
+  {% endif %}
+{% endmacro %}

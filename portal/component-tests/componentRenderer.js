@@ -6,25 +6,49 @@ nunjucks.configure([
   'templates',
 ]);
 
-const componentRenderer = (componentLocation) => {
-  return (...args) => {
-    const pageVariables = {};
-
-    for (let i = 0; i < args.length; i++) {
-      pageVariables[`variable_${i}`] = args[i];
+const assertions = ($, html, params) => {
+  return {
+    expectLink: (selector) => {
+      return {
+        notToExist: () => {
+          expect($(selector).html()).toBeNull();
+        },
+        toBeDisabled: () => {
+          expect($(selector).attr('href') ).toBeUndefined();
+          expect($(selector).attr('disabled') ).toEqual('disabled');
+        },
+        toLinkTo: (href) => {
+          expect($(selector).attr('href') ).toEqual(href);
+          expect($(selector).attr('disabled') ).toBeUndefined();
+        }
+      };
+    },
+    expectText: (selector) => {
+      return {
+        notToExist: () => {
+          expect($(selector).html()).toBeNull();
+        },
+        toRead: (text) => {
+          expect($(selector).text()).toEqual(text);
+        },
+      }
     }
+  };
+}
 
-    const variablesToInjectIntoComponent = Object.keys(pageVariables).join(',');
+const componentRenderer = (componentLocation) => {
+  return (params) => {
+
     const fakePage = `
     {% import '${componentLocation}' as componentUnderTest %}
     <div>
-      {{ componentUnderTest.render(${variablesToInjectIntoComponent}) }}
+      {{ componentUnderTest.render(payload) }}
     </div>
     `;
 
-    const html = nunjucks.renderString(fakePage, pageVariables);
-
-    return cheerio.load(html);
+    const html = nunjucks.renderString(fakePage, {payload: params});
+    const $ = cheerio.load(html);
+    return assertions($, html, params);
   }
 }
 
