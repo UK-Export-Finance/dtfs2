@@ -14,7 +14,8 @@ describe(component, () => {
 
       for (const deal of deals) {
         const $ = render({user, deal});
-        $.expectLink('[data-cy="ReturnToMaker"]').toLinkTo(`/contract/${deal._id}/return-to-maker`);
+        $.expectSecondaryButton('[data-cy="ReturnToMaker"]')
+          .toLinkTo(`/contract/${deal._id}/return-to-maker`, 'Return to Maker');
       }
     });
 
@@ -27,7 +28,8 @@ describe(component, () => {
 
       for (const deal of deals) {
         const $ = render({user, deal});
-        $.expectLink('[data-cy="ReturnToMaker"]').notToExist();
+        $.expectSecondaryButton('[data-cy="ReturnToMaker"]')
+          .notToExist();
       }
     });
 
@@ -44,7 +46,8 @@ describe(component, () => {
 
       for (const deal of deals) {
         const $ = render({user, deal});
-        $.expectLink('[data-cy="ReturnToMaker"]').toBeDisabled();
+        $.expectSecondaryButton('[data-cy="ReturnToMaker"]')
+          .toBeDisabled();
       }
     });
 
@@ -67,7 +70,8 @@ describe(component, () => {
 
       for (const deal of deals) {
         const $ = render({user, deal});
-        $.expectLink('[data-cy="ReturnToMaker"]').notToExist();
+        $.expectSecondaryButton('[data-cy="ReturnToMaker"]')
+          .notToExist();
       }
     });
   });
