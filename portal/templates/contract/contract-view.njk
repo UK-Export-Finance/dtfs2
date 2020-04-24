@@ -4,9 +4,20 @@
 {% import '_macros/status.njk' as status %}
 {% import 'bond/_macros/bond-transactions-table.njk' as bondTransactionsTable %}
 {% import 'loan/_macros/loan-transactions-table.njk' as loanTransactionsTable %}
-{% import './_macros/contract-options-panel.njk' as optionsPanel %}
+
+{% import './components/abandon-deal-button.njk' as abandonButton %}
+{% import './components/abandon-deal-link.njk' as abandonLink %}
+{% import './components/can-proceed-text.njk' as canProceedText %}
+{% import './components/clone-deal-link.njk' as cloneLink %}
+{% import './components/edit-deal-name-link.njk' as editDealNameLink %}
+{% import './components/proceed-to-review-button.njk' as proceedToReviewButton %}
+{% import './components/proceed-to-submit-button.njk' as proceedToSubmitButton %}
+{% import './components/return-to-maker-button.njk' as returnToMakerButton %}
+{% import './components/review-eligibility-checklist-link.njk' as reviewLink %}
 
 {% block content %}
+
+  {% set componentData = {user: user, deal: contract} %}
 
   <div class="contract-container">
 
@@ -14,11 +25,7 @@
       Supply Contract name:
       <span data-cy="bankSupplyContractName" class="govuk-body govuk-!-font-size-24">{{ contract.details.bankSupplyContractName }}</span>
 
-      {% if user.roles.includes('maker') %}
-        {% if ["Draft","Further Maker's input required"].includes(contract.details.status) %}
-          <a data-cy="EditDealName" class="govuk-link govuk-!-font-size-14" href="/contract/{{ contract._id }}/edit-name">Edit</a>
-        {% endif %}
-      {% endif %}
+      {{ editDealNameLink.render(componentData) }}
     </h1>
 
     <div class="govuk-tabs" data-module="govuk-tabs">
@@ -33,14 +40,8 @@
             &nbsp;
           </div>
           <div class="govuk-grid-column-one-quarter box__header-link">
-            {% if user.roles.includes('maker') %}
-              <a href="/contract/{{ contract._id }}/clone/before-you-start" class="govuk-link govuk-!-font-size-14" data-cy="clone-deal-link">Clone</a>
-            {% endif %}
-            {% if user._id === contract.details.maker._id %}
-              {% if ["Draft", "Further Maker's input required"].includes(contract.details.status) %}
-                <a data-cy="AbandonLink" href="/contract/{{ contract._id }}/delete" class="govuk-link govuk-!-font-size-14 govuk-!-margin-left-2">Abandon</a>
-              {% endif %}
-            {% endif %}
+            {{ cloneLink.render(componentData) }}
+            {{ abandonLink.render(componentData) }}
           </div>
         </div>
 
@@ -282,9 +283,12 @@
 
         </div>
 
-
-        {{ optionsPanel.render(contract, user) }}
-
+        {{ canProceedText.render(componentData)}}
+        {{ reviewLink.render(componentData)}}
+        {{ proceedToReviewButton.render(componentData)}}
+        {{ proceedToSubmitButton.render(componentData)}}
+        {{ abandonButton.render(componentData)}}
+        {{ returnToMakerButton.render(componentData)}}
 
       </section>
 

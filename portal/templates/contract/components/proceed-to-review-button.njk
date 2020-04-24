@@ -1,0 +1,34 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  {% if params.deal.details.status %}
+
+    {% if params.user.roles.includes('maker') %}
+
+        {% if ["Draft", "Further Maker's input required"].includes(params.deal.details.status) %}
+
+          {{ govukButton({
+            "disabled": false,
+            "text": "Proceed to review",
+            "attributes" : {
+              "data-cy" : "ProceedToReview"
+            },
+            "href": "/contract/" + params.deal._id + "/ready-for-review"
+          }) }}
+
+        {% elseif  ["Abandoned Deal", "Acknowledged by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)", "Ready for Checker's approval"].includes(params.deal.details.status) %}
+
+          {{ govukButton({
+            "disabled": true,
+            "text": "Proceed to review",
+            "attributes" : {
+              "data-cy" : "ProceedToReview"
+            },
+            "href":""
+          }) }}
+
+        {% endif %}
+    {% endif %}
+
+  {% endif %}
+{% endmacro %}
