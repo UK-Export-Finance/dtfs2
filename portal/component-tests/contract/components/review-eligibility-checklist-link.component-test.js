@@ -14,8 +14,8 @@ describe(component, () => {
 
       for (const deal of deals) {
         const $ = render({user, deal});
-        //TODO text?
-        $.expectLink('[data-cy="reviewEligibilityChecklistForm"]').toLinkTo(`/contract/${deal._id}/eligibility/supporting-documentation`);
+        $.expectLink('[data-cy="reviewEligibilityChecklistForm"]')
+          .toLinkTo(`/contract/${deal._id}/eligibility/supporting-documentation`, 'Review your eligibility checklist form');
       }
     });
 
@@ -34,7 +34,8 @@ describe(component, () => {
 
       for (const deal of deals) {
         const $ = render({user, deal});
-        $.expectText('[data-cy="reviewEligibilityChecklistForm"]').notToExist();
+        $.expectText('[data-cy="reviewEligibilityChecklistForm"]')
+          .notToExist();
       }
     });
 
@@ -58,7 +59,8 @@ describe(component, () => {
 
       for (const deal of deals) {
         const $ = render({user, deal});
-        $.expectText('[data-cy="reviewEligibilityChecklistForm"]').notToExist();
+        $.expectText('[data-cy="reviewEligibilityChecklistForm"]')
+          .notToExist();
       }
     });
   });

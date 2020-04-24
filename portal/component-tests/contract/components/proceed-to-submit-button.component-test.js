@@ -14,7 +14,8 @@ describe(component, () => {
 
       for (const deal of deals) {
         const $ = render({user, deal});
-        $.expectLink('[data-cy="ProceedToSubmit"]').toLinkTo(`/contract/${deal._id}/confirm-submission`);
+        $.expectPrimaryButton('[data-cy="ProceedToSubmit"]')
+          .toLinkTo(`/contract/${deal._id}/confirm-submission`, 'Proceed to submit');
       }
     });
 
@@ -27,7 +28,8 @@ describe(component, () => {
 
       for (const deal of deals) {
         const $ = render({user, deal});
-        $.expectLink('[data-cy="ProceedToSubmit"]').notToExist();
+        $.expectPrimaryButton('[data-cy="ProceedToSubmit"]')
+          .notToExist();
       }
     });
 
@@ -44,7 +46,8 @@ describe(component, () => {
 
       for (const deal of deals) {
         const $ = render({user, deal});
-        $.expectLink('[data-cy="ProceedToSubmit"]').toBeDisabled();
+        $.expectPrimaryButton('[data-cy="ProceedToSubmit"]')
+          .toBeDisabled();
       }
     });
 
@@ -67,7 +70,8 @@ describe(component, () => {
 
       for (const deal of deals) {
         const $ = render({user, deal});
-        $.expectLink('[data-cy="ProceedToSubmit"]').notToExist();
+        $.expectPrimaryButton('[data-cy="ProceedToSubmit"]')
+          .notToExist();
       }
     });
   });
