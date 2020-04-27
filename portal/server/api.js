@@ -319,14 +319,16 @@ const transactions = async (token) => {
   };
 };
 
-const contractBond = async (id, bondId, token) => {
-  const response = await contract(id, token);
-  const { _id } = response;
-  return {
-    dealId: _id,
-    bond: response.bondTransactions.items.find((bond) =>
-      bond._id === bondId), // eslint-disable-line no-underscore-dangle
-  };
+const contractBond = async (dealId, bondId, token) => {
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/v1/deals/${dealId}/bond/${bondId}`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+  return response.data;
 };
 
 const validateToken = async (token) => {

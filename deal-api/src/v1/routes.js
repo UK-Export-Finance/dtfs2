@@ -59,6 +59,16 @@ authRouter.route('/deals/:id/integration/type-a')
     dealIntegration.findOne,
   );
 
+authRouter.route('/deals/:id/bond/:bondId')
+  .get(
+    validate({ role: ['maker'] }),
+    bonds.getBond,
+  )
+  .put(
+    validate({ role: ['maker'] }),
+    bonds.updateBond,
+  );
+
 authRouter.route('/deals/:start/:pagesize')
   .get(
     validate({ role: ['maker', 'checker'] }),
@@ -108,12 +118,6 @@ authRouter.route('/deals/:id/bond/create')
   .put(
     validate({ role: ['maker'] }),
     bonds.create,
-  );
-
-authRouter.route('/deals/:id/bond/:bondId')
-  .put(
-    validate({ role: ['maker'] }),
-    bonds.updateBond,
   );
 
 authRouter.route('/banks')

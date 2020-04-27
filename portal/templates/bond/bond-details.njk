@@ -1,6 +1,8 @@
 {% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 {% import './_macros/bond-nav.njk' as bondNav %}
 {% import '_macros/date-fields.njk' as dateFields %}
 
@@ -31,6 +33,15 @@
     contractId = dealId,
     childId = bond._id
   )}}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
 
@@ -123,7 +134,8 @@
               value: "Warranty letter",
               selected: bond.bondType === "Warranty letter"
             }
-          ]
+          ],
+          errorMessage: validationErrors.errorList.bondType
         }) }}
 
         {{ govukRadios({
@@ -154,7 +166,8 @@
                 onClick: "toggleFormFields('issued')"
               }
             }
-          ]
+          ],
+          errorMessage: validationErrors.errorList.bondStage
         }) }}
 
         <div
@@ -164,17 +177,21 @@
           {% endif %}
         >
           
-          <div class="govuk-form-group">
-            <label class="govuk-label" for="ukefGuaranteeInMonths">
-              Length of time that the UKEF's guarantee will be in place for (in months, rounded up) 
-            </label>
-
-            <div class="govuk-grid-row">
-              <div class="govuk-grid-column-one-half">
-                <input class="govuk-input" id="ukefGuaranteeInMonths" name="ukefGuaranteeInMonths" type="text" value="{{ bond.ukefGuaranteeInMonths }}" data-cy="ukef-guarantee-in-months">
-              </div>
-            </div>
-          </div>
+          {{ govukInput({
+            label: {
+              text: "Length of time that the UKEF's guarantee will be in place for (in months, rounded up)"
+            },
+            classes: "govuk-!-width-one-half",
+            id: "ukefGuaranteeInMonths",
+            name: "ukefGuaranteeInMonths",
+            value: bond.ukefGuaranteeInMonths,
+            attributes: {
+              'data-cy': 'ukef-guarantee-in-months'
+            },
+            errorMessage: {
+              text: validationErrors.errorList.ukefGuaranteeInMonths
+            }
+          }) }}
 
         </div>
 
