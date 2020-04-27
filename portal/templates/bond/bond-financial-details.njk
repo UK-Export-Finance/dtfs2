@@ -1,4 +1,5 @@
 {% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
@@ -20,6 +21,15 @@
       }
     }
   </script>
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
 
   {{ bondNav.nav(
     completedStatus = bond.completedStatus,
@@ -49,7 +59,8 @@
             step: "0.25",
             placeholder: "0.00",
             'data-cy': 'bond-value'
-          }
+          },
+          errorMessage: validationErrors.errorList.bondValue
         }) }}
       </div>
     </div>
@@ -82,7 +93,8 @@
               onClick: "showAdditionalFields(true)"
             }
           }
-        ]
+        ],
+        errorMessage: validationErrors.errorList.transactionCurrencySameAsSupplyContractCurrency
       }) }}
   
     <div
@@ -101,7 +113,8 @@
         attributes: {
           'data-cy': 'currency'
         },
-        items: currencies
+        items: currencies,
+        errorMessage: validationErrors.errorList.currency
       }) }}
 
       <div class="govuk-form-group">
@@ -133,48 +146,39 @@
 
     </div>
 
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="riskMarginFee">
-        Risk Margin Fee %
-      </label>
+    {{ govukInput({
+      label: {
+        text: "Risk Margin Fee %"
+      },
+      hint: {
+        text: "The ongoing fee charged by the bank to the Supplier for the provision of the bond to the beneficiary. It excludes any arrangement, issuance or other up-front fees."
+      },
+      classes: "govuk-input--width-5",
+      id: "riskMarginFee",
+      name: "riskMarginFee",
+      value: bond.riskMarginFee,
+      attributes: {
+        'data-cy': 'risk-margin-fee'
+      },
+      errorMessage: validationErrors.errorList.riskMarginFee
+    }) }}          
 
-      <span id="risk-margin-fee-hint" class="govuk-hint">
-        The ongoing fee charged by the bank to the Supplier for the provision of the bond to the beneficiary. It excludes any arrangement, issuance or other up-front fees.
-      </span>
-
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-              <input class="govuk-input" id="riskMarginFee" name="riskMarginFee" type="number" step="any" min="0" max="99" aria-describedby="risk-margin-fee-hint" value="{{ bond.riskMarginFee }}" data-cy="risk-margin-fee">
-            </div>
-          </div>
-        </div>
-      </div>
-      
-    </div>
-
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="coveredPercentage">
-        Covered Percentage
-      </label>
-
-      <span id="covered-percentage-hint" class="govuk-hint">
-        Percentage of UKEF cover requested by the bank. This can be any value up to 80%.
-      </span>
-
-
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-              <input class="govuk-input" id="coveredPercentage" name="coveredPercentage" type="number" step="any" min="0" max="80" aria-describedby="covered-percentage-hint" value="{{ bond.coveredPercentage }}" data-cy="covered-percentage">
-            </div>
-          </div>
-        </div>
-      </div>
-      
-    </div>
+    {{ govukInput({
+      label: {
+        text: "Covered Percentage"
+      },
+      hint: {
+        text: "Percentage of UKEF cover requested by the bank. This can be any value up to 80%."
+      },
+      classes: "govuk-input--width-5",
+      id: "coveredPercentage",
+      name: "coveredPercentage",
+      value: bond.coveredPercentage,
+      attributes: {
+        'data-cy': 'covered-percentage'
+      },
+      errorMessage: validationErrors.errorList.coveredPercentage
+    }) }}    
 
     <div class="govuk-form-group">
       <label class="govuk-label" for="minimumRiskMarginFee">
@@ -229,7 +233,6 @@
         </div>
       </div>
     </div>
-
 
     <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Next page</button>
 

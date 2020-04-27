@@ -70,8 +70,21 @@ router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => 
     res,
   );
 
+  const {
+    dealId,
+    bond,
+    validationErrors,
+  } = bondResponse;
+
+  const formattedValidationErrors = generateErrorSummary(
+    validationErrors,
+    errorHref,
+  );
+
   return res.render('bond/bond-financial-details.njk', {
-    ...bondResponse,
+    dealId,
+    bond,
+    validationErrors: formattedValidationErrors,
     currencies: mapCurrencies(currencies, bondResponse.bond.currency),
   });
 });
@@ -91,11 +104,26 @@ router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) =>
 router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
+  const apiResponse = await getApiData(
+    api.contractBond(_id, bondId, userToken),
+    res,
+  );
+
+  const {
+    dealId,
+    bond,
+    validationErrors,
+  } = apiResponse;
+
+  const formattedValidationErrors = generateErrorSummary(
+    validationErrors,
+    errorHref,
+  );
+
   return res.render('bond/bond-fee-details.njk', {
-    ...await getApiData(
-      api.contractBond(_id, bondId, userToken),
-      res,
-    ),
+    dealId,
+    bond,
+    validationErrors: formattedValidationErrors,
   });
 });
 
