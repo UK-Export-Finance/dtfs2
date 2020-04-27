@@ -1,0 +1,34 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro input(opts) %}
+
+  {% set id=opts.id %}
+  {% set label=opts.label %}
+  {% set deal=opts.deal %}
+
+  <div class="govuk-form-group">
+
+    {{ govukInput({
+      label: {
+        text: label
+      },
+      hint: {
+        text: 'We use a Companies House service to provide you with company details. If the company is not UK registered or the Companies House service is unavailable, then you will need to complete the company details fields manually.'
+      },
+      classes: "govuk-!-width-one-half",
+      id: id,
+      name: id,
+      value: deal.submissionDetails[id],
+      attributes: {
+        "data-cy": id
+      },
+      errorMessage: validationErrors.errorList[id]
+    }) }}
+
+    {# not able to use govuk button here while using formaction attribute.. would need to rethink endpoints to do this...#}
+    <button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-top-4" data-module="govuk-button" formaction="/contract/{{ deal._id }}/about/supplier/companies-house-search">Search</button>
+
+  </div>
+
+{% endmacro %}
