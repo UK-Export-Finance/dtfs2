@@ -3,6 +3,7 @@ const aDeal = require('./deal-builder');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
+const completedDeal = require('../../fixtures/deal-full-completed');
 
 const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
@@ -11,7 +12,7 @@ const newDeal = aDeal({
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
-    status: "Draft",
+    status: 'Draft',
     dateOfLastAction: '1985/11/04 21:00:00:000',
   },
   comments: [{
@@ -62,7 +63,7 @@ describe('/v1/deals/:id/status', () => {
     });
 
     it('accepts requests from a user with role=maker', async () => {
-      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(anHSBCMaker).get(`/v1/deals/${body._id}/status`);
 
@@ -70,7 +71,7 @@ describe('/v1/deals/:id/status', () => {
     });
 
     it('accepts requests from a user with role=checker', async () => {
-      const {body} = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(aBarclaysChecker).get(`/v1/deals/${body._id}/status`);
 
@@ -78,7 +79,7 @@ describe('/v1/deals/:id/status', () => {
     });
 
     it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
-      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}/status`);
 
@@ -86,13 +87,13 @@ describe('/v1/deals/:id/status', () => {
     });
 
     it('404s requests for unkonwn ids', async () => {
-      const { status } = await as(aBarclaysMaker).get(`/v1/deals/123456789012/status`);
+      const { status } = await as(aBarclaysMaker).get('/v1/deals/123456789012/status');
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(aSuperuser).get(`/v1/deals/${body._id}/status`);
 
@@ -125,14 +126,14 @@ describe('/v1/deals/:id/status', () => {
     });
 
     it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
-      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const statusUpdate = {
         comments: 'Flee!',
         status: 'Abandoned Deal',
       };
 
-      const {status} = await as(aBarclaysMaker).put(statusUpdate).to(`/v1/deals/${body._id}/status`);
+      const { status } = await as(aBarclaysMaker).put(statusUpdate).to(`/v1/deals/${body._id}/status`);
 
       expect(status).toEqual(401);
     });
@@ -220,7 +221,7 @@ describe('/v1/deals/:id/status', () => {
         text: 'Flee!',
         username: anHSBCMaker.username,
         timestamp: expect.any(String),
-      })
+      });
     });
 
     it('401s "Abandoned Deal" updates if not from the deals owner.', async () => {
@@ -249,10 +250,10 @@ describe('/v1/deals/:id/status', () => {
         count: 1,
         errorList: {
           comments: {
-            order: "1",
-            text: "Comment is required when abandoning a deal."
-          }
-        }
+            order: '1',
+            text: 'Comment is required when abandoning a deal.',
+          },
+        },
       });
     });
 
@@ -270,10 +271,10 @@ describe('/v1/deals/:id/status', () => {
         count: 1,
         errorList: {
           comments: {
-            order: "1",
-            text: "Comment is required when submitting a deal for review."
-          }
-        }
+            order: '1',
+            text: 'Comment is required when submitting a deal for review.',
+          },
+        },
       });
     });
 
@@ -291,10 +292,10 @@ describe('/v1/deals/:id/status', () => {
         count: 1,
         errorList: {
           comments: {
-            order: "1",
-            text: "Comment is required when returning a deal to maker."
-          }
-        }
+            order: '1',
+            text: 'Comment is required when returning a deal to maker.',
+          },
+        },
       });
     });
 
@@ -302,7 +303,7 @@ describe('/v1/deals/:id/status', () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const statusUpdate = {
-        status: "Submitted",
+        status: 'Submitted',
       };
 
       const { status, body } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
@@ -312,13 +313,27 @@ describe('/v1/deals/:id/status', () => {
         count: 1,
         errorList: {
           confirmSubmit: {
-            order: "1",
-            text: "Acceptance is required.",
-          }
-        }
+            order: '1',
+            text: 'Acceptance is required.',
+          },
+        },
       });
     });
 
-  });
+    xit('creates type_a xml if deal successfully submitted', async () => {
+      const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
+      const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        status: 'Submitted',
+        confirmSubmit: true,
+      };
+
+      const { status, body } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+
+      expect(body).toEqual({});
+    });
+  });
 });
