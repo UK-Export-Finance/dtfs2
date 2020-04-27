@@ -6,6 +6,7 @@ import {
   errorHref,
   postToApi,
   mapCurrencies,
+  generateErrorSummary,
 } from '../../helpers';
 
 const router = express.Router();
@@ -21,11 +22,26 @@ router.get('/contract/:_id/bond/create', async (req, res) => {
 router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
+  const apiResponse = await getApiData(
+    api.contractBond(_id, bondId, userToken),
+    res,
+  );
+
+  const {
+    dealId,
+    bond,
+    validationErrors,
+  } = apiResponse;
+
+  const formattedValidationErrors = generateErrorSummary(
+    validationErrors,
+    errorHref,
+  );
+
   return res.render('bond/bond-details.njk', {
-    ...await getApiData(
-      api.contractBond(_id, bondId, userToken),
-      res,
-    ),
+    dealId,
+    bond,
+    validationErrors: formattedValidationErrors,
   });
 });
 

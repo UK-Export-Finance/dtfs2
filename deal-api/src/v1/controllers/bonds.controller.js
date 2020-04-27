@@ -2,6 +2,35 @@ const { ObjectId } = require('mongodb');
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { findOneBondCurrency } = require('./bondCurrencies.controller');
+const { getBondErrors } = require('../validation/bond');
+
+exports.getBond = async (req, res) => {
+  const {
+    id: dealId,
+    bondId,
+  } = req.params;
+
+  await findOneDeal(req.params.id, async (deal) => {
+    if (deal) {
+      if (!userHasAccessTo(req.user, deal)) {
+        res.status(401).send();
+      }
+
+      const bond = deal.bondTransactions.items.find((b) =>
+        String(b._id) === bondId); // eslint-disable-line no-underscore-dangle
+
+      const validationErrors = getBondErrors(bond);
+      console.log('*** bond validationErrors \n', validationErrors);
+
+      return res.json({
+        dealId,
+        bond,
+        validationErrors,
+      });
+    }
+    return res.status(404).send();
+  });
+};
 
 exports.create = async (req, res) => {
   await findOneDeal(req.params.id, async (deal) => {
