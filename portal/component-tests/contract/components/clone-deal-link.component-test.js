@@ -20,8 +20,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectLink('[data-cy="clone-deal-link"]')
+        const wrapper = render({user, deal});
+        wrapper.expectLink('[data-cy="clone-deal-link"]')
           .toLinkTo(`/contract/${deal._id}/clone/before-you-start`, 'Clone');
       }
     });
@@ -43,8 +43,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectLink('[data-cy="clone-deal-link"]')
+        const wrapper = render({user, deal});
+        wrapper.expectLink('[data-cy="clone-deal-link"]')
           .notToExist();
       }
     });

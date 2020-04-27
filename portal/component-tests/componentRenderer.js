@@ -19,8 +19,8 @@ const componentRenderer = (componentLocation) => {
     `;
 
     const html = nunjucks.renderString(fakePage, {payload: params});
-    const $ = cheerio.load(html);
-    return assertions($, html, params);
+    const wrapper = cheerio.load(html);
+    return assertions(wrapper, html, params);
   }
 }
 

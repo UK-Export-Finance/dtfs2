@@ -13,8 +13,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectSecondaryButton('[data-cy="ReturnToMaker"]')
+        const wrapper = render({user, deal});
+        wrapper.expectSecondaryButton('[data-cy="ReturnToMaker"]')
           .toLinkTo(`/contract/${deal._id}/return-to-maker`, 'Return to Maker');
       }
     });
@@ -27,8 +27,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectSecondaryButton('[data-cy="ReturnToMaker"]')
+        const wrapper = render({user, deal});
+        wrapper.expectSecondaryButton('[data-cy="ReturnToMaker"]')
           .notToExist();
       }
     });
@@ -45,8 +45,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectSecondaryButton('[data-cy="ReturnToMaker"]')
+        const wrapper = render({user, deal});
+        wrapper.expectSecondaryButton('[data-cy="ReturnToMaker"]')
           .toBeDisabled();
       }
     });
@@ -69,8 +69,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectSecondaryButton('[data-cy="ReturnToMaker"]')
+        const wrapper = render({user, deal});
+        wrapper.expectSecondaryButton('[data-cy="ReturnToMaker"]')
           .notToExist();
       }
     });

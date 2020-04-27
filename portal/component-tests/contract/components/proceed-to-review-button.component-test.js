@@ -14,8 +14,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectPrimaryButton('[data-cy="ProceedToReview"]')
+        const wrapper = render({user, deal});
+        wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]')
           .toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
       }
     });
@@ -28,8 +28,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectPrimaryButton('[data-cy="ProceedToReview"]')
+        const wrapper = render({user, deal});
+        wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]')
           .notToExist();
       }
     });
@@ -45,8 +45,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectPrimaryButton('[data-cy="ProceedToReview"]')
+        const wrapper = render({user, deal});
+        wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]')
           .toBeDisabled();
       }
     });
@@ -69,8 +69,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectPrimaryButton('[data-cy="ProceedToReview"]')
+        const wrapper = render({user, deal});
+        wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]')
           .notToExist();
       }
     });
