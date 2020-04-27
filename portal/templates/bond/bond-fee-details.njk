@@ -1,8 +1,18 @@
 {% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import './_macros/bond-nav.njk' as bondNav %}
 
 {% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
 
   {{ bondNav.nav(
     completedStatus = bond.completedStatus,
@@ -46,7 +56,8 @@
                 'data-cy': 'fee-type-at-maturity'
               }
             }
-          ]
+          ],
+          errorMessage: validationErrors.errorList.feeType
         }) }}
 
         {{ govukRadios({
@@ -81,7 +92,8 @@
                 'data-cy': 'fee-frequency-annually'
               }
             }
-          ]
+          ],
+          errorMessage: validationErrors.errorList.feeFrequency
         }) }}
 
         {{ govukRadios({
@@ -106,7 +118,8 @@
                 'data-cy': 'day-count-basis-365'
               }
             }
-          ]
+          ],
+          errorMessage: validationErrors.errorList.dayCountBasis
         }) }}
 
       </div>
