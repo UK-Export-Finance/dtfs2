@@ -29,6 +29,9 @@ exports.findOne = (req, res) => {
 exports.createTypeA = async (deal) => {
   const typeA = await generateTypeA(deal);
 
+  if (typeA.errorCount) {
+    return typeA;
+  }
   const upload = {
     folder: 'ukef',
     subfolder: 'type-a',
