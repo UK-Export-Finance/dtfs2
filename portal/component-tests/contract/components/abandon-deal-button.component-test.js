@@ -13,8 +13,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectSecondaryButton('[data-cy="Abandon"]')
+        const wrapper = render({user, deal});
+        wrapper.expectSecondaryButton('[data-cy="Abandon"]')
           .toLinkTo(`/contract/${deal._id}/delete`, 'Abandon');
       }
     });
@@ -27,8 +27,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectSecondaryButton('[data-cy="Abandon"]')
+        const wrapper = render({user, deal});
+        wrapper.expectSecondaryButton('[data-cy="Abandon"]')
           .notToExist();
       }
     });
@@ -44,8 +44,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectSecondaryButton('[data-cy="Abandon"]')
+        const wrapper = render({user, deal});
+        wrapper.expectSecondaryButton('[data-cy="Abandon"]')
           .toBeDisabled();
       }
     });
@@ -62,8 +62,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectSecondaryButton('[data-cy="Abandon"]')
+        const wrapper = render({user, deal});
+        wrapper.expectSecondaryButton('[data-cy="Abandon"]')
           .notToExist();
       }
     });
@@ -79,8 +79,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectSecondaryButton('[data-cy="Abandon"]')
+        const wrapper = render({user, deal});
+        wrapper.expectSecondaryButton('[data-cy="Abandon"]')
           .toBeDisabled();
       }
     });
@@ -103,8 +103,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectSecondaryButton('[data-cy="Abandon"]')
+        const wrapper = render({user, deal});
+        wrapper.expectSecondaryButton('[data-cy="Abandon"]')
           .notToExist();
       }
     });

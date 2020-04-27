@@ -3,7 +3,7 @@ const page = 'contract/contract-view.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
-  let $;
+  let wrapper;
 
   const deal = {
     details: {
@@ -20,29 +20,29 @@ describe(page, () => {
   };
 
   beforeAll( ()=>{
-    $ = render({user, deal})
+    wrapper = render({user, deal})
   });
 
   it('displays bankSupplyContractName', () => {
-    $.expectText('[data-cy="bankSupplyContractName"]').toRead('bankId123');
+    wrapper.expectText('[data-cy="bankSupplyContractName"]').toRead('bankId123');
   });
 
   it('displays bankSupplyContractID', () => {
-    $.expectText('[data-cy="bankSupplyContractID"]').toRead('321');
+    wrapper.expectText('[data-cy="bankSupplyContractID"]').toRead('321');
   });
 
   it('displays the maker', () => {
-    $.expectText('[data-cy="maker"]').toRead('bob');
+    wrapper.expectText('[data-cy="maker"]').toRead('bob');
   });
 
   it('displays the submissionDate', () => {
     const regexDate = /[\d][\d]\/[\d][\d]\/[\d][\d][\d][\d]/
-    $.expectText('[data-cy="submissionDate"]').toMatch(regexDate);
+    wrapper.expectText('[data-cy="submissionDate"]').toMatch(regexDate);
   });
 
   it('displays the dateOfLastAction', () => {
     const regexDateTime = /[\d][\d]\/[\d][\d]\/[\d][\d][\d][\d] [\d][\d]:[\d][\d]/
-    $.expectText('[data-cy="dateOfLastAction"]').toMatch(regexDateTime);
+    wrapper.expectText('[data-cy="dateOfLastAction"]').toMatch(regexDateTime);
   });
 
 });

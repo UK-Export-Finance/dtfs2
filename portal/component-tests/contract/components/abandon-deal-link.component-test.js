@@ -13,8 +13,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectLink('[data-cy="AbandonLink"]')
+        const wrapper = render({user, deal});
+        wrapper.expectLink('[data-cy="AbandonLink"]')
           .toLinkTo(`/contract/${deal._id}/delete`, 'Abandon');
       }
     });
@@ -32,8 +32,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectLink('[data-cy="AbandonLink"]')
+        const wrapper = render({user, deal});
+        wrapper.expectLink('[data-cy="AbandonLink"]')
           .notToExist();
       }
     });
@@ -57,8 +57,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectLink('[data-cy="AbandonLink"]')
+        const wrapper = render({user, deal});
+        wrapper.expectLink('[data-cy="AbandonLink"]')
           .notToExist();
       }
     });
@@ -81,8 +81,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectLink('[data-cy="AbandonLink"]')
+        const wrapper = render({user, deal});
+        wrapper.expectLink('[data-cy="AbandonLink"]')
           .notToExist();
       }
     });

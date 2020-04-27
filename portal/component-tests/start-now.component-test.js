@@ -3,7 +3,7 @@ const page = 'start-now.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
-  let $;
+  let wrapper;
 
   describe('viewed by a maker', () => {
     const user = {
@@ -11,18 +11,18 @@ describe(page, () => {
     };
 
     beforeAll( ()=>{
-      $ = render({user})
+      wrapper = render({user})
     });
 
     it('displays 2 links to the dashboard', () => {
-      $.expectLink('[data-cy="dashboardLink1"]')
+      wrapper.expectLink('[data-cy="dashboardLink1"]')
         .toLinkTo('/dashboard', 'dashboard');
-      $.expectLink('[data-cy="dashboardLink2"]')
+      wrapper.expectLink('[data-cy="dashboardLink2"]')
         .toLinkTo('/dashboard', 'View dashboard');
     });
 
     it('displays a primary button linking to /before-you-start', () => {
-      $.expectPrimaryButton('[data-cy="CreateNewSubmission"]')
+      wrapper.expectPrimaryButton('[data-cy="CreateNewSubmission"]')
         .toLinkTo('/before-you-start', 'Create new submission');
     });
   })
@@ -33,16 +33,16 @@ describe(page, () => {
     };
 
     beforeAll( ()=>{
-      $ = render({user})
+      wrapper = render({user})
     });
 
     it('displays 1 link to the dashboard', () => {
-      $.expectLink('[data-cy="dashboardLink1"]')
+      wrapper.expectLink('[data-cy="dashboardLink1"]')
         .toLinkTo('/dashboard', 'dashboard');
     });
 
     it('displays a primary button linking to /dashboard', () => {
-      $.expectPrimaryButton('[data-cy="ViewDashboard"]')
+      wrapper.expectPrimaryButton('[data-cy="ViewDashboard"]')
         .toLinkTo('/dashboard', 'View dashboard');
     });
   })

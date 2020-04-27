@@ -14,8 +14,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectText('[data-cy="canProceed"]').toRead(`You may now proceed to submit an Automatic Inclusion Notice.`);
+        const wrapper = render({user, deal});
+        wrapper.expectText('[data-cy="canProceed"]').toRead(`You may now proceed to submit an Automatic Inclusion Notice.`);
       }
     });
 
@@ -32,8 +32,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectText('[data-cy="canProceed"]').notToExist();
+        const wrapper = render({user, deal});
+        wrapper.expectText('[data-cy="canProceed"]').notToExist();
       }
     });
   });
@@ -47,8 +47,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectText('[data-cy="canProceed"]').toRead(`You may now proceed to submit an Automatic Inclusion Notice.`);
+        const wrapper = render({user, deal});
+        wrapper.expectText('[data-cy="canProceed"]').toRead(`You may now proceed to submit an Automatic Inclusion Notice.`);
       }
     });
 
@@ -66,8 +66,8 @@ describe(component, () => {
       ];
 
       for (const deal of deals) {
-        const $ = render({user, deal});
-        $.expectText('[data-cy="canProceed"]').notToExist();
+        const wrapper = render({user, deal});
+        wrapper.expectText('[data-cy="canProceed"]').notToExist();
       }
     });
 
