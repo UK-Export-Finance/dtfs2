@@ -20,7 +20,6 @@ exports.getBond = async (req, res) => {
         String(b._id) === bondId); // eslint-disable-line no-underscore-dangle
 
       const validationErrors = getBondErrors(bond);
-      console.log('*** bond validationErrors \n', validationErrors);
 
       return res.json({
         dealId,

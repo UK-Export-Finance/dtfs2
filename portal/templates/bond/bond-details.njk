@@ -27,13 +27,6 @@
     }
   </script>
 
-  {{ bondNav.nav(
-    completedStatus = bond.completedStatus,
-    current = 'bondDetails',
-    contractId = dealId,
-    childId = bond._id
-  )}}
-
   {% if validationErrors.count %}
     {{
       govukErrorSummary({
@@ -42,6 +35,13 @@
       })
     }}
   {% endif %}
+
+  {{ bondNav.nav(
+    completedStatus = bond.completedStatus,
+    current = 'bondDetails',
+    contractId = dealId,
+    childId = bond._id
+  )}}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
 
@@ -188,9 +188,7 @@
             attributes: {
               'data-cy': 'ukef-guarantee-in-months'
             },
-            errorMessage: {
-              text: validationErrors.errorList.ukefGuaranteeInMonths
-            }
+            errorMessage: validationErrors.errorList.ukefGuaranteeInMonths
           }) }}
 
         </div>
@@ -225,18 +223,20 @@
             )}}
           </div>
 
-          <div class="govuk-form-group">
-            <label class="govuk-label" for="uniqueIdentificationNumber">
-              Bond's unique identification number
-            </label>
+          {{ govukInput({
+            label: {
+              text: "Bond's unique identification number"
+            },
+            classes: "govuk-!-width-one-half",
+            id: "uniqueIdentificationNumber",
+            name: "uniqueIdentificationNumber",
+            value: bond.uniqueIdentificationNumber,
+            attributes: {
+              'data-cy': 'unique-identification-number'
+            },
+            errorMessage: validationErrors.errorList.uniqueIdentificationNumber
+          }) }}
 
-              <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-half">
-                  <input class="govuk-input" id="uniqueIdentificationNumber" name="uniqueIdentificationNumber" type="text" value="{{ bond.uniqueIdentificationNumber }}" data-cy="unique-identification-number">
-                </div>
-              </div>
-
-          </div>
         </div>
 
 
