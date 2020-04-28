@@ -1,4 +1,4 @@
-{% import '_macros/status.njk' as status %}
+{% import '_macros/status.njk' as statusText %}
 
 {% macro render(bonds, dealId) %}
 
@@ -33,7 +33,7 @@
           </td>
 
           <td class="govuk-table__cell govuk-!-font-size-14 contract-table--status-cell">
-            {{ status.statusText(bond.status) }}
+            {{ statusText.render(bond.status) }}
           </td>
 
           <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-value">

@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
 {% import '_macros/contract-tabs.njk' as contractTabs %}
 {% import '_macros/contract-details.njk' as contractDetails %}
-{% import '_macros/status.njk' as status %}
+{% import '_macros/status.njk' as statusText %}
 {% import 'bond/_macros/bond-transactions-table.njk' as bondTransactionsTable %}
 {% import 'loan/_macros/loan-transactions-table.njk' as loanTransactionsTable %}
 
@@ -59,7 +59,7 @@
                   About the Supply Contract
                 </span>
                 <span class="govuk-!-margin-left-6">
-                  {{ status.statusText(deal.aboutSupplyContract.status) }}
+                  {{ statusText.render(deal.aboutSupplyContract.status) }}
                 </span>
               </h2>
             </div>
@@ -76,7 +76,7 @@
 
                 {% if deal.confirmEligibility.status %}
                   <span class="govuk-!-margin-left-6 box__header-inline-message">
-                    {{ status.statusText(deal.confirmEligibility.status) }}
+                    {{ statusText.render(deal.confirmEligibility.status) }}
                   </span>
                 {% endif %}
 
@@ -107,7 +107,7 @@
                   Bond transactions
                 </span>
                 <span class="govuk-!-margin-left-6">
-                  {{ status.statusText(deal.bondTransactions.status) }}
+                  {{ statusText.render(deal.bondTransactions.status) }}
                 </span>
               </h2>
             </div>
@@ -139,7 +139,7 @@
                 </span>
 
                 <span class="govuk-!-margin-left-6">
-                  {{ status.statusText(deal.loanTransactions.status) }}
+                  {{ statusText.render(deal.loanTransactions.status) }}
                 </span>
 
               </h2>

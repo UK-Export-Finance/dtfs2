@@ -1,4 +1,4 @@
-{% macro statusText(status) %}
+{% macro render(status) %}
   {% if status %}
     <span
       {% if status === 'Incomplete' or status === 'Not started' %}
