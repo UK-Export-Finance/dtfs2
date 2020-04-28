@@ -1,5 +1,6 @@
 module.exports = {
   collectCoverageFrom: [
+    'server/routes/**/*.{js,}',
     'server/helpers/**/*.{js,}',
     'scripts/**/*.{js,}',
   ],
