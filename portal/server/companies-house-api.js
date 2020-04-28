@@ -5,14 +5,13 @@ const urlRoot = process.env.COMPANIES_HOUSE_API_URL;
 const apiKey = process.env.COMPANIES_HOUSE_API_KEY;
 
 const searchByRegistrationNumber = async (registrationNumber) => {
-
   try {
     const response = await axios({
       method: 'get',
       url: `${urlRoot}/search/companies?q=${registrationNumber}`,
       auth: {
         username: apiKey,
-      }
+      },
     });
 
     return response.data.items[0];
