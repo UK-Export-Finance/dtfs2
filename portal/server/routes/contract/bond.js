@@ -12,6 +12,7 @@ import {
   handleBondDetailsValidationErrors,
   handleBondFinancialDetailsValidationErrors,
   handleBondFeeDetailsValidationErrors,
+  handleBondPreviewValidationErrors,
 } from './validationMapping/bond';
 
 const router = express.Router();
@@ -144,7 +145,7 @@ router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
   } = apiResponse;
 
   const formattedValidationErrors = generateErrorSummary(
-    validationErrors,
+    handleBondPreviewValidationErrors(validationErrors, dealId, bondId),
     errorHref,
   );
 
