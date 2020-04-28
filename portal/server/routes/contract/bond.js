@@ -8,6 +8,11 @@ import {
   mapCurrencies,
   generateErrorSummary,
 } from '../../helpers';
+import {
+  mapBondDetailsValidationErrors,
+  mapBondFinancialDetailsValidationErrors,
+  mapBondFeeDetailsValidationErrors,
+} from './validationMapping/bond';
 
 const router = express.Router();
 
@@ -34,7 +39,7 @@ router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
   } = apiResponse;
 
   const formattedValidationErrors = generateErrorSummary(
-    validationErrors,
+    mapBondDetailsValidationErrors(validationErrors),
     errorHref,
   );
 
@@ -77,7 +82,7 @@ router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => 
   } = bondResponse;
 
   const formattedValidationErrors = generateErrorSummary(
-    validationErrors,
+    mapBondFinancialDetailsValidationErrors(validationErrors),
     errorHref,
   );
 
@@ -116,7 +121,7 @@ router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   } = apiResponse;
 
   const formattedValidationErrors = generateErrorSummary(
-    validationErrors,
+    mapBondFeeDetailsValidationErrors(validationErrors),
     errorHref,
   );
 
