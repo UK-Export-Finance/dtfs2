@@ -3,7 +3,7 @@ import {
   generateErrorSummary,
 } from '../../../helpers';
 
-const REQUIRED_FIELDS = {
+export const REQUIRED_FIELDS = {
   DETAILS: [
     'bondIssuer',
     'bondType',
