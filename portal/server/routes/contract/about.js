@@ -49,8 +49,8 @@ router.post('/contract/:_id/about/supplier/companies-house-search', async (req, 
 
   if (!company) {
     return res.render('about/about-supplier.njk', {
-      validation: { //TODO do this properly
-        'supplierCompaniesHouseRegistrationNumber': 'not found',
+      validation: { // TODO do this properly
+        supplierCompaniesHouseRegistrationNumber: 'not found',
       },
       deal,
       countries: await getApiData(
@@ -66,12 +66,14 @@ router.post('/contract/:_id/about/supplier/companies-house-search', async (req, 
 
   // munge data back into form data
   deal.submissionDetails.supplierName = company.title;
-  deal.submissionDetails["supplier-address-line-1"] = company.address.premises;
-  deal.submissionDetails["supplier-address-line-2"] = company.address.address_line_1;
-  deal.submissionDetails["supplier-address-town"] = company.address.locality;
-  deal.submissionDetails["supplier-address-postcode"] = company.address.postal_code;
-  // contract.submissionDetails["supplier-address-county"] = company.address.?????; // looks like CH don't use this?
-  // contract.submissionDetails["supplier-address-country"] = company.address.?????;  // CH-> 'england', portal->United Kingdom
+  deal.submissionDetails['supplier-address-line-1'] = company.address.premises;
+  deal.submissionDetails['supplier-address-line-2'] = company.address.address_line_1;
+  deal.submissionDetails['supplier-address-town'] = company.address.locality;
+  deal.submissionDetails['supplier-address-postcode'] = company.address.postal_code;
+  // looks like CH don't use this?
+  // contract.submissionDetails["supplier-address-county"] = company.address.?????;
+  // CH-> 'england', portal->United Kingdom
+  // contract.submissionDetails["supplier-address-country"] = company.address.?????;
 
   // re-render
   return res.render('about/about-supplier.njk', {
