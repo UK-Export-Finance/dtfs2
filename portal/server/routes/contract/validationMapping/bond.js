@@ -5,10 +5,8 @@ import {
 
 export const REQUIRED_FIELDS = {
   DETAILS: [
-    'bondIssuer',
     'bondType',
     'bondStage',
-    'bondBeneficiary',
   ],
   FINANCIAL_DETAILS: [
     'bondValue',
@@ -42,11 +40,42 @@ const mapValidationErrors = (validationErrors, requiredFields) => {
   );
 };
 
-export const mapBondDetailsValidationErrors = (validationErrors) =>
-  mapValidationErrors(validationErrors, REQUIRED_FIELDS.DETAILS);
+export const shouldReturnValidation = (errorsCount, fieldsCount) =>
+  errorsCount < fieldsCount;
 
-export const mapBondFinancialDetailsValidationErrors = (validationErrors) =>
-  mapValidationErrors(validationErrors, REQUIRED_FIELDS.FINANCIAL_DETAILS);
 
-export const mapBondFeeDetailsValidationErrors = (validationErrors) =>
-  mapValidationErrors(validationErrors, REQUIRED_FIELDS.FEE_DETAILS);
+export const handleBondDetailsValidationErrors = (validationErrors) => {
+  const mappedValidationErrors = mapValidationErrors(validationErrors, REQUIRED_FIELDS.DETAILS);
+
+  if (shouldReturnValidation(
+    mappedValidationErrors.count,
+    REQUIRED_FIELDS.DETAILS.length,
+  )) {
+    return mappedValidationErrors;
+  }
+  return {};
+};
+
+export const handleBondFinancialDetailsValidationErrors = (validationErrors) => {
+  const mappedValidationErrors = mapValidationErrors(validationErrors, REQUIRED_FIELDS.FINANCIAL_DETAILS);
+
+  if (shouldReturnValidation(
+    mappedValidationErrors.count,
+    REQUIRED_FIELDS.FINANCIAL_DETAILS.length,
+  )) {
+    return mappedValidationErrors;
+  }
+  return {};
+};
+
+export const handleBondFeeDetailsValidationErrors = (validationErrors) => {
+  const mappedValidationErrors = mapValidationErrors(validationErrors, REQUIRED_FIELDS.FEE_DETAILS);
+
+  if (shouldReturnValidation(
+    mappedValidationErrors.count,
+    REQUIRED_FIELDS.FEE_DETAILS.length,
+  )) {
+    return mappedValidationErrors;
+  }
+  return {};
+};

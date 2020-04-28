@@ -1,8 +1,9 @@
 import {
   REQUIRED_FIELDS,
-  mapBondDetailsValidationErrors,
-  mapBondFinancialDetailsValidationErrors,
-  mapBondFeeDetailsValidationErrors,
+  shouldReturnValidation,
+  handleBondDetailsValidationErrors,
+  handleBondFinancialDetailsValidationErrors,
+  handleBondFeeDetailsValidationErrors,
 } from './bond';
 
 describe('bond validation errors mapping', () => {
@@ -11,10 +12,35 @@ describe('bond validation errors mapping', () => {
     otherField: { order: '2', text: 'Field is required' },
   };
 
-  describe('mapBondDetailsValidationErrors', () => {
-    it('should only return `bond details` specific errors in errorList', () => {
+  describe('shouldReturnValidation', () => {
+    it('should return true when errorsCount is less than fieldsCount', () => {
+      const result = shouldReturnValidation(3, 4);
+      expect(result).toEqual(true);
+    });
+  });
+
+  describe('handleBondDetailsValidationErrors', () => {
+    it('should return `details` specific errorList', () => {
       const mockErrorList = {
         ...mockBondErrors,
+        [REQUIRED_FIELDS.DETAILS[1]]: { order: '4', text: 'Field is required' },
+      };
+
+      const mockValidationErrors = {
+        errorList: mockErrorList,
+        count: mockErrorList.length,
+      };
+
+      const result = handleBondDetailsValidationErrors(mockValidationErrors);
+
+      const expectedErrorList = {
+        [REQUIRED_FIELDS.DETAILS[1]]: mockErrorList[REQUIRED_FIELDS.DETAILS[1]],
+      };
+      expect(result.errorList).toEqual(expectedErrorList);
+    });
+
+    it('should return an empty object when errorsCount is the same as required fields count', () => {
+      const mockErrorList = {
         [REQUIRED_FIELDS.DETAILS[0]]: { order: '3', text: 'Field is required' },
         [REQUIRED_FIELDS.DETAILS[1]]: { order: '4', text: 'Field is required' },
       };
@@ -24,22 +50,18 @@ describe('bond validation errors mapping', () => {
         count: mockErrorList.length,
       };
 
-      const result = mapBondDetailsValidationErrors(mockValidationErrors);
-
-      const expected = {
-        [REQUIRED_FIELDS.DETAILS[0]]: mockErrorList[REQUIRED_FIELDS.DETAILS[0]],
-        [REQUIRED_FIELDS.DETAILS[1]]: mockErrorList[REQUIRED_FIELDS.DETAILS[1]],
-      };
-      expect(result.errorList).toEqual(expected);
+      const result = handleBondDetailsValidationErrors(mockValidationErrors);
+      expect(result).toEqual({});
     });
   });
 
-  describe('mapBondFinancialDetailsValidationErrors', () => {
-    it('should only return `bond details` specific errors in errorList', () => {
+  describe('handleBondFinancialDetailsValidationErrors', () => {
+    it('should only return `financial details` specific errors in errorList', () => {
       const mockErrorList = {
         ...mockBondErrors,
         [REQUIRED_FIELDS.FINANCIAL_DETAILS[0]]: { order: '3', text: 'Field is required' },
         [REQUIRED_FIELDS.FINANCIAL_DETAILS[1]]: { order: '4', text: 'Field is required' },
+        [REQUIRED_FIELDS.FINANCIAL_DETAILS[2]]: { order: '5', text: 'Field is required' },
       };
 
       const mockValidationErrors = {
@@ -47,18 +69,36 @@ describe('bond validation errors mapping', () => {
         count: mockErrorList.length,
       };
 
-      const result = mapBondFinancialDetailsValidationErrors(mockValidationErrors);
+      const result = handleBondFinancialDetailsValidationErrors(mockValidationErrors);
 
       const expected = {
         [REQUIRED_FIELDS.FINANCIAL_DETAILS[0]]: mockErrorList[REQUIRED_FIELDS.FINANCIAL_DETAILS[0]],
         [REQUIRED_FIELDS.FINANCIAL_DETAILS[1]]: mockErrorList[REQUIRED_FIELDS.FINANCIAL_DETAILS[1]],
+        [REQUIRED_FIELDS.FINANCIAL_DETAILS[2]]: mockErrorList[REQUIRED_FIELDS.FINANCIAL_DETAILS[2]],
       };
       expect(result.errorList).toEqual(expected);
     });
+
+    it('should return an empty object when errorsCount is the same as required fields count', () => {
+      const mockErrorList = {
+        [REQUIRED_FIELDS.FINANCIAL_DETAILS[0]]: { order: '3', text: 'Field is required' },
+        [REQUIRED_FIELDS.FINANCIAL_DETAILS[1]]: { order: '4', text: 'Field is required' },
+        [REQUIRED_FIELDS.FINANCIAL_DETAILS[2]]: { order: '5', text: 'Field is required' },
+        [REQUIRED_FIELDS.FINANCIAL_DETAILS[3]]: { order: '6', text: 'Field is required' },
+      };
+
+      const mockValidationErrors = {
+        errorList: mockErrorList,
+        count: mockErrorList.length,
+      };
+
+      const result = handleBondFinancialDetailsValidationErrors(mockValidationErrors);
+      expect(result).toEqual({});
+    });
   });
 
-  describe('mapBondFeeDetailsValidationErrors', () => {
-    it('should only return `bond details` specific errors in errorList', () => {
+  describe('handleBondFeeDetailsValidationErrors', () => {
+    it('should only return `fee details` specific errors in errorList', () => {
       const mockErrorList = {
         ...mockBondErrors,
         [REQUIRED_FIELDS.FEE_DETAILS[0]]: { order: '3', text: 'Field is required' },
@@ -70,13 +110,29 @@ describe('bond validation errors mapping', () => {
         count: mockErrorList.length,
       };
 
-      const result = mapBondFeeDetailsValidationErrors(mockValidationErrors);
+      const result = handleBondFeeDetailsValidationErrors(mockValidationErrors);
 
       const expected = {
         [REQUIRED_FIELDS.FEE_DETAILS[0]]: mockErrorList[REQUIRED_FIELDS.FEE_DETAILS[0]],
         [REQUIRED_FIELDS.FEE_DETAILS[1]]: mockErrorList[REQUIRED_FIELDS.FEE_DETAILS[1]],
       };
       expect(result.errorList).toEqual(expected);
+    });
+
+    it('should return an empty object when errorsCount is the same as required fields count', () => {
+      const mockErrorList = {
+        [REQUIRED_FIELDS.FEE_DETAILS[0]]: { order: '3', text: 'Field is required' },
+        [REQUIRED_FIELDS.FEE_DETAILS[1]]: { order: '4', text: 'Field is required' },
+        [REQUIRED_FIELDS.FEE_DETAILS[2]]: { order: '5', text: 'Field is required' },
+      };
+
+      const mockValidationErrors = {
+        errorList: mockErrorList,
+        count: mockErrorList.length,
+      };
+
+      const result = handleBondFeeDetailsValidationErrors(mockValidationErrors);
+      expect(result).toEqual({});
     });
   });
 });

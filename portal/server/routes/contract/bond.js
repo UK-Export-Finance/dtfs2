@@ -9,9 +9,9 @@ import {
   generateErrorSummary,
 } from '../../helpers';
 import {
-  mapBondDetailsValidationErrors,
-  mapBondFinancialDetailsValidationErrors,
-  mapBondFeeDetailsValidationErrors,
+  handleBondDetailsValidationErrors,
+  handleBondFinancialDetailsValidationErrors,
+  handleBondFeeDetailsValidationErrors,
 } from './validationMapping/bond';
 
 const router = express.Router();
@@ -41,7 +41,7 @@ router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
   return res.render('bond/bond-details.njk', {
     dealId,
     bond,
-    validationErrors: mapBondDetailsValidationErrors(validationErrors),
+    validationErrors: handleBondDetailsValidationErrors(validationErrors),
   });
 });
 
@@ -79,7 +79,7 @@ router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => 
   return res.render('bond/bond-financial-details.njk', {
     dealId,
     bond,
-    validationErrors: mapBondFinancialDetailsValidationErrors(validationErrors),
+    validationErrors: handleBondFinancialDetailsValidationErrors(validationErrors),
     currencies: mapCurrencies(currencies, bondResponse.bond.currency),
   });
 });
@@ -113,7 +113,7 @@ router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   return res.render('bond/bond-fee-details.njk', {
     dealId,
     bond,
-    validationErrors: mapBondFeeDetailsValidationErrors(validationErrors),
+    validationErrors: handleBondFeeDetailsValidationErrors(validationErrors),
   });
 });
 
