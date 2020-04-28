@@ -1,4 +1,7 @@
-const generateErrorSummary = (validationErrors, hrefGenerator = (id) => id) => {
+const generateErrorSummary = (
+  validationErrors,
+  hrefGenerator = (id) => id,
+) => {
   if (!validationErrors) { return false; }
 
   // Example validationErrors format
@@ -46,10 +49,16 @@ const generateErrorSummary = (validationErrors, hrefGenerator = (id) => id) => {
 
   const filteredValidationErrorList = Object.fromEntries(filteredValidationErrorListArray);
 
-  const summary = filteredValidationErrorListArray.map(([id, value]) => ({
-    text: value.text,
-    href: hrefGenerator(id),
-  }));
+  const summary = filteredValidationErrorListArray.map(([id, value]) => {
+    const { text, hrefRoot } = value;
+
+    const href = hrefRoot ? `${value.hrefRoot}${hrefGenerator(id)}` : hrefGenerator(id);
+
+    return {
+      text,
+      href,
+    };
+  });
 
   return {
     count: filteredValidationErrorListArray.length,

@@ -79,3 +79,24 @@ export const handleBondFeeDetailsValidationErrors = (validationErrors) => {
   }
   return {};
 };
+
+
+export const handleBondPreviewValidationErrors = (validationErrors, dealId, bondId) => {
+  const mappedValidationErrors = validationErrors;
+
+  Object.keys(mappedValidationErrors.errorList).forEach((error) => {
+    if (REQUIRED_FIELDS.DETAILS.includes(error)) {
+      mappedValidationErrors.errorList[error].hrefRoot = `/contract/${dealId}/bond/${bondId}/details`;
+    }
+
+    if (REQUIRED_FIELDS.FINANCIAL_DETAILS.includes(error)) {
+      mappedValidationErrors.errorList[error].hrefRoot = `/contract/${dealId}/bond/${bondId}/financial-details`;
+    }
+
+    if (REQUIRED_FIELDS.FEE_DETAILS.includes(error)) {
+      mappedValidationErrors.errorList[error].hrefRoot = `/contract/${dealId}/bond/${bondId}/fee-details`;
+    }
+  });
+
+  return mappedValidationErrors;
+};
