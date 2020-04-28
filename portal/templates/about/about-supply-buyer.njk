@@ -1,5 +1,5 @@
 {% extends "index.njk" %}
-{% import '_macros/about-supply-contract-nav.njk' as aboutSupplyContract %}
+{% import './components/about-supply-contract-nav.njk' as aboutSupplyContract %}
 
 {% block content %}
 
@@ -10,7 +10,7 @@
   )}}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
-  
+
   <form method="POST" autocomplete="off">
 
     <div class="govuk-form-group">
@@ -67,7 +67,7 @@
       data-module="govuk-button"
       value="Save and go back to deal"
     />
-    
+
   </form>
 
 {% endblock %}

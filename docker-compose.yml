@@ -17,6 +17,7 @@ services:
       - ./portal/.env.full-local-docker-environment:/app/.env:ro
     environment:
       - DEBUG=express:*
+      - COMPANIES_HOUSE_API_KEY=${COMPANIES_HOUSE_API_KEY}
     command: node dist/server.js
 
   deal-api:
