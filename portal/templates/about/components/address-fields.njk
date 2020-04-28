@@ -7,7 +7,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
 
-      <fieldset class="govuk-fieldset">
+      <fieldset data-cy="{{ id }}" class="govuk-fieldset">
         <legend
           class="govuk-fieldset__legend govuk-fieldset__legend--m"
           aria-describedby="address-hint"
@@ -25,10 +25,11 @@
         {% endif %}
 
         <div class="govuk-form-group">
-          <label class="govuk-label" for="{{ id }}-address-country">
+          {% set thisField=id+"-country" %}
+          <label class="govuk-label" for="{{ thisField }}">
             Country
           </label>
-          <select class="govuk-select govuk-!-width-full" id="{{ id }}-address-country" name="{{ id }}-address-country">
+          <select data-cy="{{ thisField }}" class="govuk-select govuk-!-width-full" id="{{ thisField }}" name="{{ thisField }}">
           {% if showCountryPleaseSelect %}
             <option value="">Select value</option>
           {% endif %}
@@ -39,7 +40,7 @@
           </select>
         </div>
 
-        {% set thisField=id+"-address-line-1" %}
+        {% set thisField=id+"-line-1" %}
         {{ govukInput({
           label: {
             html: 'Building and street <span class="govuk-visually-hidden">line 1 of 2</span>'
@@ -53,7 +54,7 @@
           errorMessage: validationErrors.errorList[thisField]
         }) }}
 
-        {% set thisField=id+"-address-line-2" %}
+        {% set thisField=id+"-line-2" %}
         {{ govukInput({
           label: {
             html: '<span class="govuk-visually-hidden">Building and street line 2 of 2</span>'
@@ -67,7 +68,7 @@
           errorMessage: validationErrors.errorList[thisField]
         }) }}
 
-        {% set thisField=id+"-address-town" %}
+        {% set thisField=id+"-town" %}
         {{ govukInput({
           label: {
             text: 'Town or city'
@@ -81,7 +82,7 @@
           errorMessage: validationErrors.errorList[thisField]
         }) }}
 
-        {% set thisField=id+"-address-county" %}
+        {% set thisField=id+"-county" %}
         {{ govukInput({
           label: {
             text: 'County'
@@ -95,7 +96,7 @@
           errorMessage: validationErrors.errorList[thisField]
         }) }}
 
-        {% set thisField=id+"-address-postcode" %}
+        {% set thisField=id+"-postcode" %}
         {{ govukInput({
           label: {
             text: 'Postcode'

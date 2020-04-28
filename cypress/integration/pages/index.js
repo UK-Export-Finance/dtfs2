@@ -5,6 +5,7 @@ module.exports = {
   unableToProceed: require('./unableToProceed'),
   bankDetails: require('./bankDetails'),
   contract: require('./contract'),
+  contractAboutSupplier: require('./contract/contract-about-supplier'),
   contractDelete: require('./contract/contract-delete'),
   contractReadyForReview: require('./contract/contract-readyForReview'),
   contractReturnToMaker: require('./contract/contract-returnToMaker'),
