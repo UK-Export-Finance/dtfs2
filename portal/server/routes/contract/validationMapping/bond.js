@@ -1,3 +1,8 @@
+import {
+  errorHref,
+  generateErrorSummary,
+} from '../../../helpers';
+
 const REQUIRED_FIELDS = {
   DETAILS: [
     'bondIssuer',
@@ -31,7 +36,10 @@ const mapValidationErrors = (validationErrors, requiredFields) => {
 
   mappedErrors.errorList = filteredErrorList;
 
-  return mappedErrors;
+  return generateErrorSummary(
+    mappedErrors,
+    errorHref,
+  );
 };
 
 export const mapBondDetailsValidationErrors = (validationErrors) =>

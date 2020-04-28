@@ -38,15 +38,10 @@ router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
     validationErrors,
   } = apiResponse;
 
-  const formattedValidationErrors = generateErrorSummary(
-    mapBondDetailsValidationErrors(validationErrors),
-    errorHref,
-  );
-
   return res.render('bond/bond-details.njk', {
     dealId,
     bond,
-    validationErrors: formattedValidationErrors,
+    validationErrors: mapBondDetailsValidationErrors(validationErrors),
   });
 });
 
@@ -81,15 +76,10 @@ router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => 
     validationErrors,
   } = bondResponse;
 
-  const formattedValidationErrors = generateErrorSummary(
-    mapBondFinancialDetailsValidationErrors(validationErrors),
-    errorHref,
-  );
-
   return res.render('bond/bond-financial-details.njk', {
     dealId,
     bond,
-    validationErrors: formattedValidationErrors,
+    validationErrors: mapBondFinancialDetailsValidationErrors(validationErrors),
     currencies: mapCurrencies(currencies, bondResponse.bond.currency),
   });
 });
@@ -120,15 +110,10 @@ router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
     validationErrors,
   } = apiResponse;
 
-  const formattedValidationErrors = generateErrorSummary(
-    mapBondFeeDetailsValidationErrors(validationErrors),
-    errorHref,
-  );
-
   return res.render('bond/bond-fee-details.njk', {
     dealId,
     bond,
-    validationErrors: formattedValidationErrors,
+    validationErrors: mapBondFeeDetailsValidationErrors(validationErrors),
   });
 });
 
