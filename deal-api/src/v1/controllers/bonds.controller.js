@@ -34,6 +34,7 @@ exports.getBond = async (req, res) => {
 exports.create = async (req, res) => {
   await findOneDeal(req.params.id, async (deal) => {
     if (deal) {
+
       if (!userHasAccessTo(req.user, deal)) {
         res.status(401).send();
       }
