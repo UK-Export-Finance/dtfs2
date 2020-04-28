@@ -35,7 +35,7 @@
           Where the supplier is a UK Supplier, please ensure that it has provided a UK Supplier Declaration
       </span>
 
-      <select class="govuk-select govuk-!-width-one-half" id="supplierType" name="supplierType" aria-describedby="supplierType-hint">
+      <select data-cy="supplierType" class="govuk-select govuk-!-width-one-half" id="supplierType" name="supplierType" aria-describedby="supplierType-hint">
         <option value="">Select value</option>
         <option value="Exporter" {% if deal.submissionDetails.supplierType==='Exporter'%} selected {%endif%}>Exporter</option>
         <option value="UK Supplier" {% if deal.submissionDetails.supplierType==='UK Supplier'%} selected {%endif%}>UK Supplier</option>
@@ -61,7 +61,7 @@
         name: supplierName,
         value: deal.submissionDetails.supplierName,
         attributes: {
-          "data-cy": supplierName
+          "data-cy": "supplierName"
         },
         errorMessage: validationErrors.errorList.supplierName
       }) }}
@@ -69,7 +69,7 @@
 
     {{ address.fields(
       deal = deal,
-      id = "supplier",
+      id = "supplier-address",
       legend = "Supplier address",
       countries = countries,
       hint = "This should be the supplier's principal place of business"

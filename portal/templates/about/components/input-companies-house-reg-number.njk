@@ -27,7 +27,7 @@
     }) }}
 
     {# not able to use govuk button here while using formaction attribute.. would need to rethink endpoints to do this...#}
-    <button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-top-4" data-module="govuk-button" formaction="/contract/{{ deal._id }}/about/supplier/companies-house-search">Search</button>
+    <button data-cy="DoSearch-{{id}}" class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-top-4" data-module="govuk-button" formaction="/contract/{{ deal._id }}/about/supplier/companies-house-search">Search</button>
 
   </div>
 
