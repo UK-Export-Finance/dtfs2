@@ -34,7 +34,6 @@ exports.getBond = async (req, res) => {
 exports.create = async (req, res) => {
   await findOneDeal(req.params.id, async (deal) => {
     if (deal) {
-
       if (!userHasAccessTo(req.user, deal)) {
         res.status(401).send();
       }
@@ -139,6 +138,16 @@ exports.updateBond = async (req, res) => {
       } else if (currencyCode) {
         updatedBond.currency = await handleBondCurrency(currencyCode);
       }
+
+      const requiredFieldsCompleted = false;
+
+      if (!requiredFieldsCompleted) {
+        updatedBond.status = 'Incomplete';
+      }
+
+      // if (requiredFieldsCompleted) {
+      //   updatedBond.status = 'Complete';
+      // }
 
       const updatedDeal = {
         ...deal,
