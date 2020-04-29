@@ -8,6 +8,9 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',
+    },
+    submissionDetails: {
+      status: 'Not Started',
     }
   }, {
     details: {
@@ -15,7 +18,7 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',
-    }
+    },
   }, {
     details: {
       bankSupplyContractID: 'abc/3/def',

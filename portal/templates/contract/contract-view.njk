@@ -58,8 +58,8 @@
                 <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
                   About the Supply Contract
                 </span>
-                <span class="govuk-!-margin-left-6">
-                  {{ statusText.render(deal.aboutSupplyContract.status) }}
+                <span data-cy="aboutSupplierDetailsStatus" class="govuk-!-margin-left-6">
+                  {{ status.render(deal.submissionDetails.status) }}
                 </span>
               </h2>
             </div>

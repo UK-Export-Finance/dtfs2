@@ -14,6 +14,8 @@ const MOCK_DEAL = {
 };
 
 context('Add a Bond to a Deal', () => {
+  let deal;
+
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
@@ -21,7 +23,8 @@ context('Add a Bond to a Deal', () => {
       return false;
     });
     cy.deleteDeals(user);
-    cy.insertOneDeal(MOCK_DEAL, user);
+    cy.insertOneDeal(MOCK_DEAL, user)
+      .then( insertedDeal => deal=insertedDeal );
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Bond to the deal', () => {
@@ -130,84 +133,78 @@ context('Add a Bond to a Deal', () => {
   });
 
   it('should populate Deal page with the submitted bond and link to `Bond Details` page', () => {
-    cy.allDeals().then((deals) => {
-      const deal = deals[0];
-      cy.loginGoToDealPage(user, deal);
+    cy.loginGoToDealPage(user, deal);
 
-      cy.addBondToDeal();
+    cy.addBondToDeal();
 
-      cy.url().should('include', '/preview');
+    cy.url().should('include', '/preview');
 
-      // get bondId, go back to Deal page
-      // assert that some inputted Bond data is displayed in the table
-      partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
-        const bondId = bondIdHiddenInput[0].value;
+    // get bondId, go back to Deal page
+    // assert that some inputted Bond data is displayed in the table
+    partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+      const bondId = bondIdHiddenInput[0].value;
 
-        pages.bondPreview.saveGoBackButton().click();
-        cy.url().should('eq', relative(`/contract/${deal._id}`));
+      pages.bondPreview.saveGoBackButton().click();
+      cy.url().should('eq', relative(`/contract/${deal._id}`));
 
-        const row = pages.contract.bondTransactionsTable.row(bondId);
+      const row = pages.contract.bondTransactionsTable.row(bondId);
 
-        row.uniqueNumber().invoke('text').then((text) => {
-          expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
-        });
-
-        // TODO: UKEF facility ID (when built)
-
-        // TODO: status (when built)
-
-        row.bondValue().invoke('text').then((text) => {
-          const expectedValue = `${deal.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue}`;
-          expect(text.trim()).equal(expectedValue);
-        });
-
-        row.bondStage().invoke('text').then((text) => {
-          expect(text.trim()).equal('Issued');
-        });
-
-        row.requestedCoverStartDate().invoke('text').then((text) => {
-          const expectedDate = `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`;
-          expect(text.trim()).equal(expectedDate);
-        });
-
-        row.coverEndDate().invoke('text').then((text) => {
-          const expectedDate = `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}/${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}/${BOND_FORM_VALUES.DETAILS.coverEndDateYear}`;
-          expect(text.trim()).equal(expectedDate);
-        });
-
-        // assert that clicking the `unique number` link progesses to the Bond Details page
-        row.uniqueNumber().click();
-        cy.url().should('include', '/contract');
-        cy.url().should('include', '/bond/');
-        cy.url().should('include', '/details');
+      row.uniqueNumber().invoke('text').then((text) => {
+        expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
       });
+
+      // TODO: UKEF facility ID (when built)
+
+      // TODO: status (when built)
+
+      row.bondValue().invoke('text').then((text) => {
+        const expectedValue = `${deal.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue}`;
+        expect(text.trim()).equal(expectedValue);
+      });
+
+      row.bondStage().invoke('text').then((text) => {
+        expect(text.trim()).equal('Issued');
+      });
+
+      row.requestedCoverStartDate().invoke('text').then((text) => {
+        const expectedDate = `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`;
+        expect(text.trim()).equal(expectedDate);
+      });
+
+      row.coverEndDate().invoke('text').then((text) => {
+        const expectedDate = `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}/${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}/${BOND_FORM_VALUES.DETAILS.coverEndDateYear}`;
+        expect(text.trim()).equal(expectedDate);
+      });
+
+      // assert that clicking the `unique number` link progesses to the Bond Details page
+      row.uniqueNumber().click();
+      cy.url().should('include', '/contract');
+      cy.url().should('include', '/bond/');
+      cy.url().should('include', '/details');
     });
   });
 
   describe('When a user clicks `save and go back` button in `Bond Preview` page', () => {
     it('should return to Deal page', () => {
-      cy.allDeals().then((deals) => {
-        const deal = deals[0];
-        cy.loginGoToDealPage(user, deal);
+      cy.loginGoToDealPage(user, deal);
 
-        pages.contract.addBondButton().click();
+      pages.contract.addBondButton().click();
+      partials.bondProgressNav.progressNavBondPreview().click();
+      cy.url().should('include', '/preview');
+
+      partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+        const bondId = bondIdHiddenInput[0].value;
+
+        pages.bondPreview.saveGoBackButton().click();
+
+        cy.url().should('not.include', '/preview');
+        cy.url().should('include', '/contract');
+
+        const row = pages.contract.bondTransactionsTable.row(bondId);
+
+        row.uniqueNumber().click();
         partials.bondProgressNav.progressNavBondPreview().click();
         cy.url().should('include', '/preview');
-
-        partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
-          const bondId = bondIdHiddenInput[0].value;
-
-          pages.bondPreview.saveGoBackButton().click();
-
-          cy.url().should('not.include', '/preview');
-          cy.url().should('include', '/contract');
-
-          const row = pages.contract.bondTransactionsTable.row(bondId);
-
-          row.uniqueNumber().click();
-          partials.bondProgressNav.progressNavBondPreview().click();
-          cy.url().should('include', '/preview');
-        });
       });
     });
   });
