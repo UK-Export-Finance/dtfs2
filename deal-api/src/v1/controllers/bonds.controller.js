@@ -19,13 +19,17 @@ exports.getBond = async (req, res) => {
       const bond = deal.bondTransactions.items.find((b) =>
         String(b._id) === bondId); // eslint-disable-line no-underscore-dangle
 
-      const validationErrors = getBondErrors(bond);
+      if (bond) {
+        const validationErrors = getBondErrors(bond);
 
-      return res.json({
-        dealId,
-        bond,
-        validationErrors,
-      });
+        // TODO: should we do ...bond ?
+        return res.json({
+          dealId,
+          bond,
+          validationErrors,
+        });
+      }
+      return res.status(404).send();
     }
     return res.status(404).send();
   });

@@ -1,16 +1,12 @@
-const { ObjectId } = require('mongodb');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deals/deal-builder');
-
 const app = require('../../../src/createApp');
 const {
   get, post, put,
 } = require('../../api')(app);
-
-
 const getToken = require('../../getToken')(app);
 
-describe('/v1/deals/:id/bond/create', () => {
+describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({
     details: {
       bankSupplyContractName: 'mock name',
@@ -75,6 +71,71 @@ describe('/v1/deals/:id/bond/create', () => {
 
     await post(mockCurrencies[0], editoruser).to('/v1/bond-currencies');
     await post(mockCurrencies[1], editoruser).to('/v1/bond-currencies');
+  });
+
+  describe('GET /v1/deals/:id/bond/:id', () => {
+    it('401s requests that do not present a valid Authorization token', async () => {
+      const { status } = await get('/v1/deals/123456789012/bond/123456789012');
+
+      expect(status).toEqual(401);
+    });
+
+    it('401s requests that do not come from a user with role=maker', async () => {
+      const { status } = await get('/v1/deals/123456789012/bond/123456789012', aUserWithoutRoles);
+
+      expect(status).toEqual(401);
+    });
+
+    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+      const { status } = await get(`/v1/deals/${dealId}/bond/123456789012`, user2);
+
+      expect(status).toEqual(401);
+    });
+
+    it('404s requests for unknown resources', async () => {
+      const { status } = await get('/v1/deals/123456789012/bond/123456789012', user1);
+
+      expect(status).toEqual(404);
+    });
+
+    it('accepts requests if <user>.bank.id == *', async () => {
+      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+      const createBondResponse = await put({}, user1).to(`/v1/deals/${dealId}/bond/create`);
+      const { bondId } = createBondResponse.body;
+
+      const { status } = await get(`/v1/deals/${dealId}/bond/${bondId}`, superuser);
+
+      expect(status).toEqual(200);
+    });
+
+    it('returns a bond with dealId and validationErrors', async () => {
+      const postResult = await post(newDeal, user1).to('/v1/deals/');
+      const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+      const createBondResponse = await put({}, user1).to(`/v1/deals/${dealId}/bond/create`);
+      const { bondId } = createBondResponse.body;
+
+      const { status, body } = await get(`/v1/deals/${dealId}/bond/${bondId}`, user1);
+
+      expect(status).toEqual(200);
+      expect(body.bond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
+      expect(body.dealId).toEqual(dealId);
+      expect(body.validationErrors.count).toEqual(9);
+      expect(body.validationErrors.errorList.bondType).toBeDefined();
+      expect(body.validationErrors.errorList.bondStage).toBeDefined();
+      expect(body.validationErrors.errorList.bondValue).toBeDefined();
+      expect(body.validationErrors.errorList.transactionCurrencySameAsSupplyContractCurrency).toBeDefined();
+      expect(body.validationErrors.errorList.riskMarginFee).toBeDefined();
+      expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
+      expect(body.validationErrors.errorList.feeType).toBeDefined();
+      expect(body.validationErrors.errorList.feeFrequency).toBeDefined();
+      expect(body.validationErrors.errorList.dayCountBasis).toBeDefined();
+    });
   });
 
   describe('PUT /v1/deals/:id/bond/create', () => {
@@ -180,8 +241,17 @@ describe('/v1/deals/:id/bond/create', () => {
       expect(status).toEqual(401);
     });
 
-    it('404s requests for unknown resources', async () => {
+    it('404s requests for unknown deal', async () => {
       const { status } = await put({}, user1).to('/v1/deals/123456789012/bond/123456789012');
+
+      expect(status).toEqual(404);
+    });
+
+    it('404s requests for unknown bond', async () => {
+      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+      const { status } = await put({}, user1).to(`/v1/deals/${dealId}/bond/123456789012`);
 
       expect(status).toEqual(404);
     });
@@ -228,6 +298,7 @@ describe('/v1/deals/:id/bond/create', () => {
         uniqueIdentificationNumber: '1234',
         bondBeneficiary: 'test',
         currency: 'EUR',
+        status: 'Incomplete',
       };
 
       const createBondResponse = await put({}, user1).to(`/v1/deals/${dealId}/bond/create`);
@@ -313,6 +384,7 @@ describe('/v1/deals/:id/bond/create', () => {
         const expectedBond = {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsIssued,
+          status: 'Incomplete',
         };
 
         expect(updatedBond).toEqual(expectedBond);
@@ -365,6 +437,7 @@ describe('/v1/deals/:id/bond/create', () => {
         const expectedBond = {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsUnissued,
+          status: 'Incomplete',
         };
 
         expect(updatedBond).toEqual(expectedBond);
@@ -452,6 +525,7 @@ describe('/v1/deals/:id/bond/create', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...bondBody,
           currency: deal.body.supplyContractCurrency,
+          status: 'Incomplete',
         });
       });
     });
