@@ -51,7 +51,6 @@ context('Red Line eligibility checking', () => {
     pages.beforeYouStart.true().click();
     pages.beforeYouStart.submit().click();
 
-    // cy.url().should('include', '/before-you-start/bank-deal');
     cy.url().should('eq', relative('/before-you-start/bank-deal'));
   });
 

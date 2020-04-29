@@ -1,6 +1,5 @@
 const api = () => {
     const url = `${Cypress.config('apiProtocol')}${Cypress.config('apiHost')}:${Cypress.config('apiPort')}`;
-    console.log(`url for api: ${url}`);
     return url;
 }
 

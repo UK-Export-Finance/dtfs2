@@ -6,6 +6,7 @@ const twentyOneDeals = require('../dashboard/twentyOneDeals');
 
 
 context('about-supply-contract', () => {
+  let deal;
 
   beforeEach( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -16,21 +17,44 @@ context('about-supply-contract', () => {
   });
 
   before( () => {
-    const aDealInStatus = (status) => {
-      return twentyOneDeals.filter( deal=>status === deal.details.status)[0];
+    const aDealWith_AboutSupplyContract_InStatus = (status) => {
+      const candidates = twentyOneDeals
+        .filter( deal=> (deal.submissionDetails && status === deal.submissionDetails.status) )
+        .filter( deal=> (deal.details && deal.details.status === 'Draft'));
+
+      const deal = candidates[0];
+      if (!deal) {
+        throw new Error("no suitable test data found");
+      } else {
+        return deal;
+      }
     };
 
     cy.deleteDeals(maker1);
-    cy.insertOneDeal(aDealInStatus('Draft'), { ...maker1 });
+
+    cy.insertOneDeal(aDealWith_AboutSupplyContract_InStatus('Not Started'), { ...maker1 })
+    // cy.insertOneDeal(twentyOneDeals[0], { ...maker1 })
+      .then( (insertedDeal) => {
+        console.log(`insertOneDeal.then => ${insertedDeal}`)
+        deal=insertedDeal
+      })
   });
 
   it('A maker picks up a deal in status=Draft, and fills in the about-supply-contract section, using the companies house search.', () => {
     cy.login({...maker1});
-    cy.aDealInStatus("Draft").then( (deal) => {
+    // cy.aDealInStatus("Draft").then( (deal) => {
       // go the long way for the first test- actually clicking via the contract page to prove the link..
       contract.visit(deal);
+      // check the status is displaying correctly
+      contract.aboutSupplierDetailsStatus().invoke('text').then((text) => {
+        expect(text.trim()).equal('Not Started');
+      });
       contract.aboutSupplierDetailsLink().click();
 
+
+      //---
+      // use companies-house lookup
+      //---
       contractAboutSupplier.supplierType().select('Exporter');
       contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('08547313'); //TODO better test company?
       contractAboutSupplier.searchCompaniesHouse().click();
@@ -40,7 +64,7 @@ context('about-supply-contract', () => {
       contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().should('have.value', '08547313');
 
       // // the search should populate the supplier address fields
-      //contractAboutSupplier.supplierAddressCountry().should('?', '?'); //TODO country; mapping company house "england"-> portal "United Kingdom"
+      // contractAboutSupplier.supplierAddressCountry().should('?', '?'); //TODO country; mapping company house "england"-> portal "United Kingdom"
       // contractAboutSupplier.supplierAddress().county().should('not.have.value', ''); //TODO don't believe CH store county...
       contractAboutSupplier.supplierName().should('not.have.value', ''); //TODO if we had 'proper' test company we might assert real data
       contractAboutSupplier.supplierAddress().line1().should('not.have.value', ''); //TODO
@@ -49,7 +73,19 @@ context('about-supply-contract', () => {
       contractAboutSupplier.supplierAddress().postcode().should('not.have.value', ''); //TODO
 
 
-    });
+      //---
+      // fill in the simplest version of the form so we can submit it and save it..
+      //---
+      contractAboutSupplier.correspondenceAddressSame().click();
+      contractAboutSupplier.industrySector().select('1009'); //Information and communication
+      contractAboutSupplier.industryClass().select('62012'); //Business and domestic software development
+      contractAboutSupplier.smeTypeMicro().click();
+      contractAboutSupplier.supplyContractDescription().type('Typing in tests takes time.')
+      contractAboutSupplier.notLegallyDistinct().click();
+
+      contractAboutSupplier.saveAndGoBack().click();
+
+    // });
 
   });
 

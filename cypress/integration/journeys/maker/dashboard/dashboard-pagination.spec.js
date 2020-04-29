@@ -6,11 +6,7 @@ const user = {username: 'MAKER', password: 'MAKER'};
 // test data we want to set up + work with..
 const twentyOneDeals = require('./twentyOneDeals');
 context('Dashboard Deals pagination controls', () => {
-
-  let persistedDeals;
-  let page1;
-  let page2;
-
+  let deals;
 
   before( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -20,7 +16,8 @@ context('Dashboard Deals pagination controls', () => {
     });
 
     cy.deleteDeals(user);
-    cy.insertManyDeals(twentyOneDeals, { ...user });
+    cy.insertManyDeals(twentyOneDeals, { ...user })
+      .then( insertedDeals => deals=insertedDeals );
   });
 
   it('Dashboard Deals displays 20 results, the total number of items, and working First/Previous/Next/Last links.', () => {
@@ -29,32 +26,30 @@ context('Dashboard Deals pagination controls', () => {
     cy.login({...user});
     dashboard.visit();
 
-    cy.allDeals().then( (deals) => {
-      // deals will be shown in update order, so expect them upsidedown..
-      page1 = deals.slice(1,21).reverse();
-      page2 = [deals[0]];
+    // deals will be shown in update order, so expect them upsidedown..
+    const page1 = deals.slice(1,21).reverse();
+    const page2 = [deals[0]];
 
-      //test ininital dashboard page
-      dashboard.confirmDealsPresent(page1);
-      dashboard.totalItems().invoke('text').then((text) => {
-        expect(text.trim()).equal('(21 items)');
-      });
-
-      //prove the Next button
-      dashboard.next().click();
-      dashboard.confirmDealsPresent(page2);
-
-      //prove the Previous button
-      dashboard.previous().click();
-      dashboard.confirmDealsPresent(page1);
-
-      //prove the Last button
-      dashboard.last().click();
-      dashboard.confirmDealsPresent(page2);
-
-      //prove the First button
-      dashboard.first().click();
-      dashboard.confirmDealsPresent(page1);
+    //test ininital dashboard page
+    dashboard.confirmDealsPresent(page1);
+    dashboard.totalItems().invoke('text').then((text) => {
+      expect(text.trim()).equal('(21 items)');
     });
+
+    //prove the Next button
+    dashboard.next().click();
+    dashboard.confirmDealsPresent(page2);
+
+    //prove the Previous button
+    dashboard.previous().click();
+    dashboard.confirmDealsPresent(page1);
+
+    //prove the Last button
+    dashboard.last().click();
+    dashboard.confirmDealsPresent(page2);
+
+    //prove the First button
+    dashboard.first().click();
+    dashboard.confirmDealsPresent(page1);
   });
 });

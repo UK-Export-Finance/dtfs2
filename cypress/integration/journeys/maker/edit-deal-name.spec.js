@@ -4,8 +4,9 @@ const relative = require('../../relativeURL');
 const user = {username: 'MAKER', password: 'MAKER'};
 
 context('Edit deal name', () => {
+  let deal;
 
-  let deal = {
+  let dummyDeal = {
     details: {
       bankSupplyContractID: 'abc/1/def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme'
@@ -18,46 +19,39 @@ context('Edit deal name', () => {
       console.log(err.stack);
       return false;
     });
+  });
 
+  before( () => {
     cy.deleteDeals(user);
-    cy.insertOneDeal(deal, user);
+    cy.insertOneDeal(dummyDeal, user)
+      .then( insertedDeal => deal=insertedDeal );
   });
 
   it('rejects an empty field', () => {
     cy.login(user);
+    contract.visit(deal);
+    contract.editDealName().click();
 
-    cy.allDeals().then( (deals) => {
-      const deal = deals[0];
+    editDealName.bankSupplyContractName().should('have.value', deal.details.bankSupplyContractName);
+    editDealName.bankSupplyContractName().type('{selectall}{backspace}');
+    editDealName.submit().click();
 
-      contract.visit(deal);
-      contract.editDealName().click();
+    cy.url().should('eq', relative(`/contract/${deal._id}/edit-name`));
 
-      editDealName.bankSupplyContractName().should('have.value', deal.details.bankSupplyContractName);
-      editDealName.bankSupplyContractName().type('{selectall}{backspace}');
-      editDealName.submit().click();
-
-      cy.url().should('eq', relative(`/contract/${deal._id}/edit-name`));
-
-      editDealName.expectError('A value is required.');
-    });
+    editDealName.expectError('A value is required.');
   });
 
   it('updates deal.details.bankSupplyContractName', () => {
     cy.login(user);
-
-    cy.allDeals().then( (deals) => {
-      const deal = deals[0];
-
-      contract.visit(deal);
-      contract.editDealName().click();
+    contract.visit(deal);
+    contract.editDealName().click();
 
 
-      editDealName.bankSupplyContractName().type('{selectall}{backspace}asdfasfasf');
-      editDealName.submit().click();
+    editDealName.bankSupplyContractName().type('{selectall}{backspace}asdfasfasf');
+    editDealName.submit().click();
 
-      contract.bankSupplyContractName().invoke('text').then((text) => {
-        expect(text.trim()).equal('asdfasfasf')
-      });
+    contract.bankSupplyContractName().invoke('text').then((text) => {
+      expect(text.trim()).equal('asdfasfasf')
     });
   });
 
