@@ -19,6 +19,7 @@ const renameDeals = (deals) => {
   });
 }
 context('Dashboard Deals pagination controls', () => {
+  let maker2deals, maker3deals;
 
   beforeEach( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -30,32 +31,32 @@ context('Dashboard Deals pagination controls', () => {
     cy.deleteDeals(maker2);
     cy.deleteDeals(maker3);
 
-    cy.insertManyDeals(twentyOneDeals, { ...maker2 });
-    cy.insertManyDeals(renameDeals(twentyOneDeals), { ...maker3 });
+    cy.insertManyDeals(twentyOneDeals, { ...maker2 })
+      .then( insertedDeals => maker2deals=insertedDeals );
+
+    cy.insertManyDeals(renameDeals(twentyOneDeals), { ...maker3 })
+      .then( insertedDeals => maker3deals=insertedDeals );
   });
 
   it('Pagination and filtering work together', () => {
-    cy.dealsCreatedBy(maker2).then( (deals) => {
-      // confirm that maker2 sees maker2's deals
-      cy.login({...maker2});
-      dashboard.visit();
+    // confirm that maker2 sees maker2's deals
+    cy.login({...maker2});
+    dashboard.visit();
 
-      // filter
-      dashboard.filterBySubmissionUser().select('createdByMe');
-      dashboard.applyFilters().click();
+    // filter
+    dashboard.filterBySubmissionUser().select('createdByMe');
+    dashboard.applyFilters().click();
 
-      //confirm we're still getting our filter applied when we paginate
-      // ordered by last update; so page 2 just shows our first deal..
-      dashboard.next().click();
-      dashboard.confirmDealsPresent([deals[0]]);
-      dashboard.totalItems().invoke('text').then((text) => {
-        expect(text.trim()).equal('(21 items)');
-      });
+    //confirm we're still getting our filter applied when we paginate
+    // ordered by last update; so page 2 just shows our first deal..
+    dashboard.next().click();
+    dashboard.confirmDealsPresent([maker2deals[0]]);
+    dashboard.totalItems().invoke('text').then((text) => {
+      expect(text.trim()).equal('(21 items)');
+    });
 
-      //confirm we're still getting our filter applied when we paginate
-      dashboard.filterBySubmissionUser().should('have.value', 'createdByMe')
-    })
-
+    //confirm we're still getting our filter applied when we paginate
+    dashboard.filterBySubmissionUser().should('have.value', 'createdByMe')
   });
 
 });

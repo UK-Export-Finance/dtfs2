@@ -3,6 +3,9 @@
 {% import './components/about-supply-contract-nav.njk' as aboutSupplyContract %}
 {% import './components/input-companies-house-reg-number.njk' as companiesHouse %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block content %}
 
@@ -86,6 +89,7 @@
 
           <div class="govuk-radios__item">
             <input
+              data-cy="correspondenceAddressDifferent-true"
               class="govuk-radios__input"
               id="suppliersCorrespondenceAddressDifferent"
               name="suppliersCorrespondenceAddressDifferent"
@@ -100,6 +104,7 @@
 
           <div class="govuk-radios__item">
             <input
+            data-cy="correspondenceAddressDifferent-false"
               class="govuk-radios__input"
               id="suppliersCorrespondenceAddressDifferent-2"
               name="suppliersCorrespondenceAddressDifferent"
@@ -127,11 +132,13 @@
       )}}
     </div>
 
+
+    {# not able to switch these -> govuk components while we are applying javascript hooks #}
     <div class="govuk-form-group">
       <label class="govuk-label" for="industrySector">
         Industry sector
       </label>
-      <select class="govuk-select govuk-!-width-one-half" id="industrySector" name="industrySector" onChange="onChangeIndustrySector(event)">
+      <select data-cy="industrySector" class="govuk-select govuk-!-width-one-half" id="industrySector" name="industrySector" onChange="onChangeIndustrySector(event)">
         <option value="">Select value</option>
         {% for sector in industrySectors %}
           <option value="{{ sector.code }}">{{ sector.name}}</option>
@@ -143,72 +150,56 @@
       <label class="govuk-label" for="industryClass">
         Industry class
       </label>
-      <select class="govuk-select govuk-!-width-one-half" id="industryClass" name="industryClass">
+      <select data-cy="industryClass" class="govuk-select govuk-!-width-one-half" id="industryClass" name="industryClass">
         <option value="">Select value</option>
       </select>
     </div>
 
-    <div class="govuk-form-group">
+    {{
+      govukRadios({
+        fieldset: {
+          legend: { text: "SME type" }
+        },
+        hint: { html: 'Confirm the SME type based on the <a href="https://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition" target="_blank">European Commission definitions</a>' },
+        idPrefix: "smeType-",
+        name: "smeType",
+        classes: "govuk-radios--inline",
+        items: [
+          {
+            value: "Micro",
+            text: "Micro",
+            attributes: { "data-cy": "smeType-Micro" }
+          },
+          {
+            value: "Small",
+            text: "Small",
+            attributes: { "data-cy": "smeType-Small" }
+          },
+          {
+            value: "Medium",
+            text: "Medium",
+            attributes: { "data-cy": "smeType-Medium" }
+          },
+          {
+            value: "Non-SME",
+            text: "Non-SME",
+            attributes: { "data-cy": "smeType-Non-SME" }
+          }
+        ],
+        errorMessage: validationErrors.errorList.smeType
+      })
+    }}
 
-      <fieldset class="govuk-fieldset">
+    {{ govukTextarea({
+      label: { text: "Description of supply contract" },
+      hint: { text: "You can enter up to 300 characters" },
+      attributes : { "data-cy" : "supplyContractDescription" },
+      name: "supplyContractDescription",
+      id: "supplyContractDescription",
+      errorMessage: validationErrors.errorList.supplyContractDescription
+    }) }}
 
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend" aria-describedby="smeType-hint">
-          SME type
-        </legend>
-
-        <span id="smeType-hint" class="govuk-hint">
-          Confirm the SME type based on the <a href="https://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition" target="_blank">European Commission definitions</a>
-        </span>
-
-        <div class="govuk-radios govuk-radios--inline">
-
-          <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="smeType" name="smeType" type="radio" value="Micro">
-            <label class="govuk-label govuk-radios__label" for="smeType">
-              Micro
-            </label>
-          </div>
-
-          <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="smeType-2" name="smeType" type="radio" value="Small">
-            <label class="govuk-label govuk-radios__label" for="smeType-2">
-              Small
-            </label>
-          </div>
-
-          <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="smeType-3" name="smeType" type="radio" value="Medium">
-            <label class="govuk-label govuk-radios__label" for="smeType-3">
-              Medium
-            </label>
-          </div>
-
-          <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="smeType-4" name="smeType" type="radio" value="Non-SME">
-            <label class="govuk-label govuk-radios__label" for="smeType-4">
-              Non-SME
-            </label>
-          </div>
-
-        </div>
-
-      </fieldset>
-
-    </div>
-
-    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="300">
-      <div class="govuk-form-group">
-        <label class="govuk-label" for="supplyContractDescription">
-          Description of supply contract
-        </label>
-        <textarea class="govuk-textarea govuk-!-width-one-half govuk-js-character-count" id="supplyContractDescription" name="supplyContractDescription" rows="5" aria-describedby="supplyContractDescription-info"></textarea>
-      </div>
-
-      <span id="supplyContractDescription-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-        You can enter up to 300 characters
-      </span>
-    </div>
-
+    {# again, inline javascript- not able to switch to govuk component #}
     <div class="govuk-form-group">
       <fieldset class="govuk-fieldset">
 
@@ -220,6 +211,7 @@
 
           <div class="govuk-radios__item">
             <input
+              data-cy="legallyDistinct-true"
               class="govuk-radios__input"
               id="legallyDistinct"
               name="legallyDistinct"
@@ -233,6 +225,7 @@
 
           <div class="govuk-radios__item">
             <input
+              data-cy="legallyDistinct-false"
               class="govuk-radios__input"
               id="legallyDistinct-2"
               name="legallyDistinct"
@@ -334,14 +327,14 @@
 
     </div>
 
-    <input
-      type="submit"
-      class="govuk-button govuk-!-margin-right-1"
-      data-module="govuk-button"
-      value="Next page"
-    />
+    {{ govukButton({
+      "text": "NextPage",
+      "attributes" : { "data-cy" : "NextPage" }
+    }) }}
 
+    {# use of formaction; we can't do that with govuk buttons.. #}
     <input
+      data-cy="SaveAndGoBack"
       type="submit"
       formaction="/contract/{{ deal._id }}/about/supplier/save-go-back"
       class="govuk-button govuk-button--secondary"

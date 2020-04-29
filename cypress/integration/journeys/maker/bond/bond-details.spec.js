@@ -14,6 +14,8 @@ const MOCK_DEAL = {
 };
 
 context('Bond Details', () => {
+  let deal;
+
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
@@ -21,175 +23,154 @@ context('Bond Details', () => {
       return false;
     });
     cy.deleteDeals(user);
-    cy.insertOneDeal(MOCK_DEAL, user);
+    cy.insertOneDeal(MOCK_DEAL, user)
+      .then( insertedDeal => deal=insertedDeal );
   });
 
   describe('When a user selects `unissued` bond stage', () => {
     it('should render additional form fields', () => {
-      cy.allDeals().then((deals) => {
-        const deal = deals[0];
-        cy.loginGoToDealPage(user, deal);
+      cy.loginGoToDealPage(user, deal);
 
-        pages.contract.addBondButton().click();
+      pages.contract.addBondButton().click();
+      pages.bondDetails.bondStageUnissuedInput().click();
 
-        pages.bondDetails.bondStageUnissuedInput().click();
-
-        pages.bondDetails.ukefGuaranteeInMonthsInput().should('be.visible');
-      });
+      pages.bondDetails.ukefGuaranteeInMonthsInput().should('be.visible');
     });
 
     it('form submit should progess to `Bond Financial Details` page and render additional submitted form field values in `Bond Preview` page', () => {
-      cy.allDeals().then((deals) => {
-        const deal = deals[0];
-        cy.loginGoToDealPage(user, deal);
+      cy.loginGoToDealPage(user, deal);
 
-        pages.contract.addBondButton().click();
+      pages.contract.addBondButton().click();
 
-        fillBondForm.details.bondStageUnissued();
+      fillBondForm.details.bondStageUnissued();
 
-        pages.bondDetails.submit().click();
+      pages.bondDetails.submit().click();
 
-        cy.url().should('include', '/contract');
-        cy.url().should('include', '/bond/');
-        cy.url().should('include', '/financial-details');
+      cy.url().should('include', '/contract');
+      cy.url().should('include', '/bond/');
+      cy.url().should('include', '/financial-details');
 
-        // progress to preview page
-        partials.bondProgressNav.progressNavBondFeeDetails().click();
-        pages.bondFeeDetails.submit().click();
-        cy.url().should('include', '/preview');
+      // progress to preview page
+      partials.bondProgressNav.progressNavBondFeeDetails().click();
+      pages.bondFeeDetails.submit().click();
+      cy.url().should('include', '/preview');
 
-        pages.bondPreview.ukefGuaranteeInMonths().invoke('text').then((text) => {
-          expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.ukefGuaranteeInMonths);
-        });
+      pages.bondPreview.ukefGuaranteeInMonths().invoke('text').then((text) => {
+        expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.ukefGuaranteeInMonths);
       });
     });
 
     it('form submit should populate Deal page with `unissued` specific text/values and link to `Bond Details` page', () => {
-      cy.allDeals().then((deals) => {
-        const deal = deals[0];
-        cy.loginGoToDealPage(user, deal);
+      cy.loginGoToDealPage(user, deal);
 
-        pages.contract.addBondButton().click();
+      pages.contract.addBondButton().click();
 
-        // get bondId, go back to deal page
-        // assert uniqueNumber text and link
-        partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
-          const bondId = bondIdHiddenInput[0].value;
+      // get bondId, go back to deal page
+      // assert uniqueNumber text and link
+      partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+        const bondId = bondIdHiddenInput[0].value;
 
-          fillBondForm.details.bondStageUnissued();
-          pages.bondDetails.submit().click();
+        fillBondForm.details.bondStageUnissued();
+        pages.bondDetails.submit().click();
 
-          pages.bondFinancialDetails.saveGoBackButton().click();
+        pages.bondFinancialDetails.saveGoBackButton().click();
 
-          const row = pages.contract.bondTransactionsTable.row(bondId);
+        const row = pages.contract.bondTransactionsTable.row(bondId);
 
-          row.uniqueNumber().invoke('text').then((text) => {
-            expect(text.trim()).equal('Not entered');
-          });
-
-          row.bondStage().invoke('text').then((text) => {
-            expect(text.trim()).equal('Unissued');
-          });
-
-          // assert that clicking the `unique number` link progesses to the bond page
-          row.uniqueNumber().click();
-          cy.url().should('include', '/contract');
-          cy.url().should('include', '/bond/');
-          cy.url().should('include', '/details');
+        row.uniqueNumber().invoke('text').then((text) => {
+          expect(text.trim()).equal('Not entered');
         });
+
+        row.bondStage().invoke('text').then((text) => {
+          expect(text.trim()).equal('Unissued');
+        });
+
+        // assert that clicking the `unique number` link progesses to the bond page
+        row.uniqueNumber().click();
+        cy.url().should('include', '/contract');
+        cy.url().should('include', '/bond/');
+        cy.url().should('include', '/details');
       });
     });
 
     it('form submit should prepopulate submitted form fields when returning back to `Bond Details` page', () => {
-      cy.allDeals().then((deals) => {
-        const deal = deals[0];
-        cy.loginGoToDealPage(user, deal);
+      cy.loginGoToDealPage(user, deal);
 
-        pages.contract.addBondButton().click();
+      pages.contract.addBondButton().click();
 
-        pages.bondDetails.bondStageUnissuedInput().click();
-        pages.bondDetails.bondIssuerInput().type(BOND_FORM_VALUES.DETAILS.bondIssuer);
-        pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
-        pages.bondDetails.ukefGuaranteeInMonthsInput().type(BOND_FORM_VALUES.DETAILS.ukefGuaranteeInMonths);
-        pages.bondDetails.bondBeneficiaryInput().type(BOND_FORM_VALUES.DETAILS.bondBeneficiary);
-        pages.bondDetails.submit().click();
+      pages.bondDetails.bondStageUnissuedInput().click();
+      pages.bondDetails.bondIssuerInput().type(BOND_FORM_VALUES.DETAILS.bondIssuer);
+      pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
+      pages.bondDetails.ukefGuaranteeInMonthsInput().type(BOND_FORM_VALUES.DETAILS.ukefGuaranteeInMonths);
+      pages.bondDetails.bondBeneficiaryInput().type(BOND_FORM_VALUES.DETAILS.bondBeneficiary);
+      pages.bondDetails.submit().click();
 
-        cy.url().should('include', '/financial-details');
-        partials.bondProgressNav.progressNavBondDetails().click();
-        cy.url().should('include', '/details');
+      cy.url().should('include', '/financial-details');
+      partials.bondProgressNav.progressNavBondDetails().click();
+      cy.url().should('include', '/details');
 
-        assertBondFormValues.details.unissued();
-      });
+      assertBondFormValues.details.unissued();
     });
   });
 
   describe('When a user selects `issued` bond stage', () => {
     it('should render additional form fields', () => {
-      cy.allDeals().then((deals) => {
-        const deal = deals[0];
-        cy.loginGoToDealPage(user, deal);
+      cy.loginGoToDealPage(user, deal);
 
-        pages.contract.addBondButton().click();
+      pages.contract.addBondButton().click();
 
-        pages.bondDetails.bondStageIssuedInput().click();
+      pages.bondDetails.bondStageIssuedInput().click();
 
-        pages.bondDetails.requestedCoverStartDateDayInput().should('be.visible');
-        pages.bondDetails.requestedCoverStartDateMonthInput().should('be.visible');
-        pages.bondDetails.requestedCoverStartDateYearInput().should('be.visible');
-        pages.bondDetails.coverEndDateDayInput().should('be.visible');
-        pages.bondDetails.coverEndDateMonthInput().should('be.visible');
-        pages.bondDetails.coverEndDateYearInput().should('be.visible');
-        pages.bondDetails.uniqueIdentificationNumberInput().should('be.visible');
-      });
+      pages.bondDetails.requestedCoverStartDateDayInput().should('be.visible');
+      pages.bondDetails.requestedCoverStartDateMonthInput().should('be.visible');
+      pages.bondDetails.requestedCoverStartDateYearInput().should('be.visible');
+      pages.bondDetails.coverEndDateDayInput().should('be.visible');
+      pages.bondDetails.coverEndDateMonthInput().should('be.visible');
+      pages.bondDetails.coverEndDateYearInput().should('be.visible');
+      pages.bondDetails.uniqueIdentificationNumberInput().should('be.visible');
     });
 
     it('form submit should progress to `Bond Financial Details` page and prepopulate submitted form fields when returning back to `Bond Details` page', () => {
-      cy.allDeals().then((deals) => {
-        const deal = deals[0];
+      cy.loginGoToDealPage(user, deal);
+
+      pages.contract.addBondButton().click();
+
+      fillBondForm.details.bondStageIssued();
+      pages.bondDetails.submit().click();
+
+      cy.url().should('include', '/contract');
+      cy.url().should('include', '/bond/');
+      cy.url().should('include', '/financial-details');
+
+      partials.bondProgressNav.progressNavBondDetails().click();
+      cy.url().should('include', '/details');
+
+      assertBondFormValues.details.issued();
+    });
+
+    describe('When a user clicks `save and go back` button', () => {
+      it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Bond Details` page', () => {
         cy.loginGoToDealPage(user, deal);
 
         pages.contract.addBondButton().click();
 
         fillBondForm.details.bondStageIssued();
-        pages.bondDetails.submit().click();
 
-        cy.url().should('include', '/contract');
-        cy.url().should('include', '/bond/');
-        cy.url().should('include', '/financial-details');
+        partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+          const bondId = bondIdHiddenInput[0].value;
 
-        partials.bondProgressNav.progressNavBondDetails().click();
-        cy.url().should('include', '/details');
+          pages.bondDetails.saveGoBackButton().click();
 
-        assertBondFormValues.details.issued();
-      });
-    });
+          cy.url().should('not.include', '/details');
+          cy.url().should('include', '/contract');
 
-    describe('When a user clicks `save and go back` button', () => {
-      it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Bond Details` page', () => {
-        cy.allDeals().then((deals) => {
-          const deal = deals[0];
-          cy.loginGoToDealPage(user, deal);
+          const row = pages.contract.bondTransactionsTable.row(bondId);
 
-          pages.contract.addBondButton().click();
+          row.uniqueNumber().click();
+          cy.url().should('include', '/bond/');
+          cy.url().should('include', '/details');
 
-          fillBondForm.details.bondStageIssued();
-
-          partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
-            const bondId = bondIdHiddenInput[0].value;
-
-            pages.bondDetails.saveGoBackButton().click();
-
-            cy.url().should('not.include', '/details');
-            cy.url().should('include', '/contract');
-
-            const row = pages.contract.bondTransactionsTable.row(bondId);
-
-            row.uniqueNumber().click();
-            cy.url().should('include', '/bond/');
-            cy.url().should('include', '/details');
-
-            assertBondFormValues.details.issued();
-          });
+          assertBondFormValues.details.issued();
         });
       });
     });

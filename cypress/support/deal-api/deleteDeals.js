@@ -14,7 +14,6 @@ module.exports =  (opts) => {
 
       return new Cypress.Promise((resolve, reject) => {
         deleteAllDeals(token, deals);
-        cy.clearDeals(deals);
         resolve();
       })
 
