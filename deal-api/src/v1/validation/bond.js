@@ -1,7 +1,14 @@
+const { orderNumber } = require('../../utils/error-list-order-number');
+
 exports.getBondErrors = (bond) => {
   const {
     bondType,
     bondStage,
+    ukefGuaranteeInMonths,
+    'coverEndDate-day': coverEndDateDay,
+    'coverEndDate-month': coverEndDateMonth,
+    'coverEndDate-year': coverEndDateYear,
+    uniqueIdentificationNumber,
     bondValue,
     transactionCurrencySameAsSupplyContractCurrency,
     riskMarginFee,
@@ -20,24 +27,57 @@ exports.getBondErrors = (bond) => {
 
   if (!bondType) {
     errorList.bondType = {
-      order: '1',
+      order: orderNumber(errorList),
       text: 'Bond type is required',
     };
   }
 
   if (!bondStage) {
     errorList.bondStage = {
-      order: '2',
+      order: orderNumber(errorList),
       text: 'Bond stage is required',
     };
   }
 
-  // if unissued
-  // ukefGuaranteeInMonths
+  if (bondStage === 'Unissued') {
+    if (!ukefGuaranteeInMonths) {
+      errorList.ukefGuaranteeInMonths = {
+        order: orderNumber(errorList),
+        text: 'Length of time that the UKEF\'s guarantee will be in place for is required',
+      };
+    }
+  }
 
-  // if issued
-  // coverEndDate
-  // uniqueIdentificationNumber
+  if (bondStage === 'Issued') {
+    if (!coverEndDateDay && !coverEndDateMonth && !coverEndDateYear) {
+      errorList.coverEndDate = {
+        order: orderNumber(errorList),
+        text: 'Cover End Date is required',
+      };
+    } else if (!coverEndDateDay) {
+      errorList['coverEndDate-day'] = {
+        order: orderNumber(errorList),
+        text: 'Cover End Date must include a day',
+      };
+    } else if (!coverEndDateMonth) {
+      errorList['coverEndDate-month'] = {
+        order: orderNumber(errorList),
+        text: 'Cover End Date must include a month',
+      };
+    } else if (!coverEndDateYear) {
+      errorList['coverEndDate-year'] = {
+        order: orderNumber(errorList),
+        text: 'Cover End Date must include a year',
+      };
+    }
+
+    if (!uniqueIdentificationNumber) {
+      errorList.uniqueIdentificationNumber = {
+        order: orderNumber(errorList),
+        text: 'Bond\'s unique identification number is required',
+      };
+    }
+  }
 
 
   /* ************************************
@@ -47,33 +87,32 @@ exports.getBondErrors = (bond) => {
 
   if (!bondValue) {
     errorList.bondValue = {
-      order: '3',
+      order: orderNumber(errorList),
       text: 'Bond value is required',
     };
   }
 
   if (!transactionCurrencySameAsSupplyContractCurrency) {
     errorList.transactionCurrencySameAsSupplyContractCurrency = {
-      order: '4',
+      order: orderNumber(errorList),
       text: 'Is the currency for this Transaction the same as your Supply Contract currency? is required',
     };
   }
 
-  // todo: add 'currency is the same'
-
   if (!riskMarginFee) {
     errorList.riskMarginFee = {
-      order: '5',
+      order: orderNumber(errorList),
       text: 'Risk Margin Fee is required',
     };
   }
 
   if (!coveredPercentage) {
     errorList.coveredPercentage = {
-      order: '6',
+      order: orderNumber(errorList),
       text: 'Covered Percentage is required',
     };
   }
+
   // if currency NOT the same
   // currency
   // conversionRate
@@ -86,21 +125,21 @@ exports.getBondErrors = (bond) => {
   */
   if (!feeType) {
     errorList.feeType = {
-      order: '7',
+      order: orderNumber(errorList),
       text: 'Fee type is required',
     };
   }
 
   if (!feeFrequency) {
     errorList.feeFrequency = {
-      order: '8',
+      order: orderNumber(errorList),
       text: 'Fee frequency is required',
     };
   }
 
   if (!dayCountBasis) {
     errorList.dayCountBasis = {
-      order: '9',
+      order: orderNumber(errorList),
       text: 'Day count basis is required',
     };
   }
