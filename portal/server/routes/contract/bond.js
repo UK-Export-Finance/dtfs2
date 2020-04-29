@@ -7,6 +7,7 @@ import {
   postToApi,
   mapCurrencies,
   generateErrorSummary,
+  removeEmptyStringsFromObject,
 } from '../../helpers';
 import {
   handleBondDetailsValidationErrors,
@@ -46,18 +47,6 @@ router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
   });
 });
 
-const stripEmptyValues = (obj) => {
-  const valuesObj = obj;
-
-  Object.entries(valuesObj).forEach(([key, value]) => {
-    if (!value.length) {
-      delete valuesObj[key];
-    }
-  });
-
-  return valuesObj;
-};
-
 router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
@@ -65,7 +54,7 @@ router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
     api.updateBond(
       dealId,
       bondId,
-      stripEmptyValues(req.body),
+      removeEmptyStringsFromObject(req.body),
       userToken,
     ),
     errorHref,
