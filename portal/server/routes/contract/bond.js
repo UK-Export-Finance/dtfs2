@@ -95,7 +95,12 @@ router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) =>
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
   await postToApi(
-    api.updateBond(dealId, bondId, req.body, userToken),
+    api.updateBond(
+      dealId,
+      bondId,
+      removeEmptyStringsFromObject(req.body),
+      userToken,
+    ),
     errorHref,
   );
 
@@ -128,7 +133,12 @@ router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
   await postToApi(
-    api.updateBond(dealId, bondId, req.body, userToken),
+    api.updateBond(
+      dealId,
+      bondId,
+      removeEmptyStringsFromObject(req.body),
+      userToken,
+    ),
     errorHref,
   );
 
@@ -166,7 +176,12 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
   await postToApi(
-    api.updateBond(dealId, bondId, req.body, userToken),
+    api.updateBond(
+      dealId,
+      bondId,
+      removeEmptyStringsFromObject(req.body),
+      userToken,
+    ),
     errorHref,
   );
 
