@@ -3,10 +3,23 @@ import {
   generateErrorSummary,
 } from '../../../helpers';
 
+export const POSSIBLE_BOND_DETAILS_REQUIRED_FIELDS = [
+  // required if bondStage is 'Unissued'
+  'ukefGuaranteeInMonths',
+
+  // required if bondStage is 'Issued'
+  'coverEndDate',
+  'coverEndDateDay',
+  'coverEndDateMonth',
+  'coverEndDateYear',
+  'uniqueIdentificationNumber',
+];
+
 export const REQUIRED_FIELDS = {
   DETAILS: [
     'bondType',
     'bondStage',
+    ...POSSIBLE_BOND_DETAILS_REQUIRED_FIELDS,
   ],
   FINANCIAL_DETAILS: [
     'bondValue',
