@@ -40,8 +40,7 @@ const mapValidationErrors = (validationErrors, requiredFields) => {
   );
 };
 
-export const shouldReturnValidation = (errorsCount, fieldsCount) =>
-  errorsCount < fieldsCount;
+export const shouldReturnValidation = (errorsCount, fieldsCount) => errorsCount < fieldsCount;
 
 
 export const handleBondDetailsValidationErrors = (validationErrors) => {
@@ -84,17 +83,17 @@ export const handleBondFeeDetailsValidationErrors = (validationErrors) => {
 export const handleBondPreviewValidationErrors = (validationErrors, dealId, bondId) => {
   const mappedValidationErrors = validationErrors;
 
-  Object.keys(mappedValidationErrors.errorList).forEach((error) => {
-    if (REQUIRED_FIELDS.DETAILS.includes(error)) {
-      mappedValidationErrors.errorList[error].hrefRoot = `/contract/${dealId}/bond/${bondId}/details`;
+  Object.keys(mappedValidationErrors.errorList).forEach((fieldName) => {
+    if (REQUIRED_FIELDS.DETAILS.includes(fieldName)) {
+      mappedValidationErrors.errorList[fieldName].hrefRoot = `/contract/${dealId}/bond/${bondId}/details`;
     }
 
-    if (REQUIRED_FIELDS.FINANCIAL_DETAILS.includes(error)) {
-      mappedValidationErrors.errorList[error].hrefRoot = `/contract/${dealId}/bond/${bondId}/financial-details`;
+    if (REQUIRED_FIELDS.FINANCIAL_DETAILS.includes(fieldName)) {
+      mappedValidationErrors.errorList[fieldName].hrefRoot = `/contract/${dealId}/bond/${bondId}/financial-details`;
     }
 
-    if (REQUIRED_FIELDS.FEE_DETAILS.includes(error)) {
-      mappedValidationErrors.errorList[error].hrefRoot = `/contract/${dealId}/bond/${bondId}/fee-details`;
+    if (REQUIRED_FIELDS.FEE_DETAILS.includes(fieldName)) {
+      mappedValidationErrors.errorList[fieldName].hrefRoot = `/contract/${dealId}/bond/${bondId}/fee-details`;
     }
   });
 

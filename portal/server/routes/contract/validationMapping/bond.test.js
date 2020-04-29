@@ -4,6 +4,7 @@ import {
   handleBondDetailsValidationErrors,
   handleBondFinancialDetailsValidationErrors,
   handleBondFeeDetailsValidationErrors,
+  handleBondPreviewValidationErrors,
 } from './bond';
 
 describe('bond validation errors mapping', () => {
@@ -133,6 +134,72 @@ describe('bond validation errors mapping', () => {
 
       const result = handleBondFeeDetailsValidationErrors(mockValidationErrors);
       expect(result).toEqual({});
+    });
+  });
+
+  describe('handleBondPreviewValidationErrors', () => {
+    it('should add `hrefRoot` to each required field error with link to relevant page', () => {
+      const mockErrorList = {
+        [REQUIRED_FIELDS.DETAILS[0]]: { order: '1', text: 'Field is required' },
+        [REQUIRED_FIELDS.DETAILS[1]]: { order: '2', text: 'Field is required' },
+        [REQUIRED_FIELDS.FINANCIAL_DETAILS[0]]: { order: '3', text: 'Field is required' },
+        [REQUIRED_FIELDS.FINANCIAL_DETAILS[1]]: { order: '4', text: 'Field is required' },
+        [REQUIRED_FIELDS.FEE_DETAILS[0]]: { order: '5', text: 'Field is required' },
+        [REQUIRED_FIELDS.FEE_DETAILS[1]]: { order: '6', text: 'Field is required' },
+      };
+
+      const mockValidationErrors = {
+        errorList: mockErrorList,
+        count: mockErrorList.length,
+      };
+
+
+      const mockDealId = '123';
+      const mockBondId = '456';
+
+      const result = handleBondPreviewValidationErrors(
+        mockValidationErrors,
+        mockDealId,
+        mockBondId,
+      );
+
+      const expected = {
+        errorList: {
+          [REQUIRED_FIELDS.DETAILS[0]]: {
+            order: '1',
+            text: 'Field is required',
+            hrefRoot: `/contract/${mockDealId}/bond/${mockBondId}/details`,
+          },
+          [REQUIRED_FIELDS.DETAILS[1]]: {
+            order: '2',
+            text: 'Field is required',
+            hrefRoot: `/contract/${mockDealId}/bond/${mockBondId}/details`,
+          },
+          [REQUIRED_FIELDS.FINANCIAL_DETAILS[0]]: {
+            order: '3',
+            text: 'Field is required',
+            hrefRoot: `/contract/${mockDealId}/bond/${mockBondId}/financial-details`,
+          },
+          [REQUIRED_FIELDS.FINANCIAL_DETAILS[1]]: {
+            order: '4',
+            text: 'Field is required',
+            hrefRoot: `/contract/${mockDealId}/bond/${mockBondId}/financial-details`,
+          },
+          [REQUIRED_FIELDS.FEE_DETAILS[0]]: {
+            order: '5',
+            text: 'Field is required',
+            hrefRoot: `/contract/${mockDealId}/bond/${mockBondId}/fee-details`,
+          },
+          [REQUIRED_FIELDS.FEE_DETAILS[1]]: {
+            order: '6',
+            text: 'Field is required',
+            hrefRoot: `/contract/${mockDealId}/bond/${mockBondId}/fee-details`,
+          },
+        },
+        count: mockErrorList.length,
+      };
+
+      expect(result).toEqual(expected);
     });
   });
 });
