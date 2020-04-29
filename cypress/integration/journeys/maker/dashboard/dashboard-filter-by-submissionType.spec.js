@@ -7,6 +7,7 @@ const maker1 = {username: 'MAKER', password: 'MAKER'};
 const twentyOneDeals = require('./twentyOneDeals');
 
 context('Dashboard Deals filter by submissionType', () => {
+  let deals;
 
   beforeEach( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -18,7 +19,8 @@ context('Dashboard Deals filter by submissionType', () => {
 
   before( () => {
     cy.deleteDeals(maker1);
-    cy.insertManyDeals(twentyOneDeals, { ...maker1 });
+    cy.insertManyDeals(twentyOneDeals, { ...maker1 })
+      .then( insertedDeals => deals=insertedDeals );
   });
 
   it('submissionType=all -> all deals displayed', () => {
@@ -28,71 +30,42 @@ context('Dashboard Deals filter by submissionType', () => {
     dashboard.filterBySubmissionType().select('all');
     dashboard.applyFilters().click();
 
-    cy.allDeals().then( (deals) => {
-      // in dashbaord, these are ordered by last update, so appear reversed
-      const firstTwentyDeals = deals.slice(1,21).reverse();
+    // in dashbaord, these are ordered by last update, so appear reversed
+    const firstTwentyDeals = deals.slice(1,21).reverse();
 
-      dashboard.confirmDealsPresent(firstTwentyDeals);
-      dashboard.totalItems().invoke('text').then((text) => {
-        expect(text.trim()).equal('(21 items)');
-      });
-
-      dashboard.filterBySubmissionType().should('have.value', 'all')
-    });
-  });
-
-  it('submissionType=automaticInclusionNotice -> filtered', () => {
-    cy.login({...maker1});
-    dashboard.visit();
-
-    dashboard.filterBySubmissionType().select('automaticInclusionNotice');
-    dashboard.applyFilters().click();
-
-    cy.dealsBySubmissionType('Automatic Inclusion Notice').then( (deals) => {
-      dashboard.confirmDealsPresent(deals);
-      dashboard.totalItems().invoke('text').then((text) => {
-        expect(text.trim()).equal(`(${deals.length} items)`);
-      });
-
-      dashboard.filterBySubmissionType().should('have.value', 'automaticInclusionNotice')
+    dashboard.confirmDealsPresent(firstTwentyDeals);
+    dashboard.totalItems().invoke('text').then((text) => {
+      expect(text.trim()).equal('(21 items)');
     });
 
-  });
+    dashboard.filterBySubmissionType().should('have.value', 'all')
 
-  it('submissionType=manualInclusionApplication -> filtered', () => {
-    // confirm that maker2 sees maker2's deals
-    cy.login({...maker1});
-    dashboard.visit();
+    const testCases = [
+      { code: 'automaticInclusionNotice', submissionType: "Automatic Inclusion Notice"},
+      { code: 'manualInclusionApplication', submissionType: "Manual Inclusion Application"},
+      { code: 'manualInclusionNotice', submissionType: "Manual Inclusion Notice"},
+    ]
 
-    dashboard.filterBySubmissionType().select('manualInclusionApplication');
-    dashboard.applyFilters().click();
+    for (const testCase of testCases) {
+      // select the filter option
+      dashboard.filterBySubmissionType().select( testCase.code );
+      dashboard.applyFilters().click();
 
-    cy.dealsBySubmissionType('Manual Inclusion Application').then( (deals) => {
-      dashboard.confirmDealsPresent(deals);
+      // get the test-data we are expecting to see
+      const filteredDeals = deals.filter( deal => deal.details.submissionType === testCase.submissionType);
+      expect( filteredDeals.length ).to.be.greaterThan(0);
+
+      // confirm the test-data
+      dashboard.confirmDealsPresent(filteredDeals);
       dashboard.totalItems().invoke('text').then((text) => {
-        expect(text.trim()).equal(`(${deals.length} items)`);
+        expect(text.trim()).equal(`(${filteredDeals.length} items)`);
       });
 
-      dashboard.filterBySubmissionType().should('have.value', 'manualInclusionApplication')
-    });
+      // confirm the filter retains its state
+      dashboard.filterBySubmissionType().should('be.visible');
+      dashboard.filterBySubmissionType().should('have.value', testCase.code);
 
-  });
-
-  it('submissionType=manualInclusionNotice -> filtered', () => {
-    cy.login({...maker1});
-    dashboard.visit();
-
-    dashboard.filterBySubmissionType().select('manualInclusionNotice');
-    dashboard.applyFilters().click();
-
-    cy.dealsBySubmissionType('Manual Inclusion Notice').then( (deals) => {
-      dashboard.confirmDealsPresent(deals);
-      dashboard.totalItems().invoke('text').then((text) => {
-        expect(text.trim()).equal(`(${deals.length} items)`);
-      });
-
-      dashboard.filterBySubmissionType().should('have.value', 'manualInclusionNotice')
-    });
+    }
 
   });
 

@@ -89,8 +89,10 @@ router.post('/contract/:_id/about/supplier/companies-house-search', async (req, 
   });
 });
 
-router.post('/contract/:id/about/supplier/save-go-back', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}`;
+router.post('/contract/:_id/about/supplier/save-go-back', (req, res) => {
+  const { _id } = requestParams(req);
+
+  const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
 });
 

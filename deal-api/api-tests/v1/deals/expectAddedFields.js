@@ -6,6 +6,9 @@ const expectAddedFields = (obj) => {
       status: 'Initial',
       criteria: expect.any(Array),
     },
+    submissionDetails: {
+      status: 'Not Started',
+    },
     bondTransactions: {
       items: [],
     },

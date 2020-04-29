@@ -6,7 +6,8 @@ const maker1 = {username: 'MAKER', password: 'MAKER'};
 // test data we want to set up + work with..
 const twentyOneDeals = require('./twentyOneDeals');
 
-context('Dashboard Deals filter by status', () => {
+context('The deals dashboard', () => {
+  let deals;
 
   beforeEach( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -18,198 +19,63 @@ context('Dashboard Deals filter by status', () => {
 
   before( () => {
     cy.deleteDeals(maker1);
-    cy.insertManyDeals(twentyOneDeals, { ...maker1 });
+    cy.insertManyDeals(twentyOneDeals, { ...maker1 })
+      .then( insertedDeals => deals=insertedDeals );
   });
 
-  it('The Dashboard: status=all -> all deals displayed', () => {
-    cy.allDeals().then( (deals) => {
-      cy.login({...maker1});
-      dashboard.visit();
+  it('can be filtered by status', () => {
+    cy.login({...maker1});
+    dashboard.visit();
 
-      dashboard.showFilters().click();
-      dashboard.filterByStatus().select('all');
+    //-----
+    // status = all
+    //-----
+    dashboard.showFilters().click();
+    dashboard.filterByStatus().select('all');
+    dashboard.applyFilters().click();
+    // in dashbaord, these are ordered by last update, so appear reversed
+    const firstTwentyDeals = deals.slice(1,21).reverse();
+
+    dashboard.confirmDealsPresent(firstTwentyDeals);
+    dashboard.totalItems().invoke('text').then((text) => {
+      expect(text.trim()).equal('(21 items)');
+    });
+
+    dashboard.showFilters().click();
+    dashboard.filterByStatus().should('have.value', 'all');
+
+    const testCases = [
+      { code: 'draft', status: "Draft"},
+      { code: 'readyForApproval', status: "Ready for Checker's approval"},
+      { code: 'inputRequired', status: "Further Maker's input required"},
+      { code: 'abandoned', status: "Abandoned Deal"},
+      { code: 'submitted', status: "Submitted"},
+      { code: 'submissionAcknowledged', status: "Acknowledged by UKEF"},
+      { code: 'approved', status: "Accepted by UKEF (without conditions)"},
+      { code: 'approvedWithConditions', status: "Accepted by UKEF (with conditions)"},
+      { code: 'refused', status: "Rejected by UKEF"},
+    ]
+
+    for (const testCase of testCases) {
+      // select the filter option
+      dashboard.filterByStatus().select( testCase.code );
       dashboard.applyFilters().click();
-      // in dashbaord, these are ordered by last update, so appear reversed
-      const firstTwentyDeals = deals.slice(1,21).reverse();
 
-      dashboard.confirmDealsPresent(firstTwentyDeals);
+      // get the test-data we are expecting to see
+      const filteredDeals = deals.filter( deal => deal.details.status === testCase.status);
+      expect( filteredDeals.length ).to.be.greaterThan(0);
+
+      // confirm the test-data
+      dashboard.confirmDealsPresent(filteredDeals);
       dashboard.totalItems().invoke('text').then((text) => {
-        expect(text.trim()).equal('(21 items)');
+        expect(text.trim()).equal(`(${filteredDeals.length} items)`);
       });
 
-      dashboard.showFilters().click();
-      dashboard.filterByStatus().should('have.value', 'all');
-    });
-  });
-
-  it('The Dashboard: status=draft -> filters deals displayed', () => {
-    cy.login({...maker1});
-    dashboard.visit();
-
-    dashboard.showFilters().click();
-    dashboard.filterByStatus().select('draft');
-    dashboard.applyFilters().click();
-
-    cy.dealsInStatus('Draft').then( (deals) => {
-      dashboard.confirmDealsPresent(deals);
-      dashboard.totalItems().invoke('text').then((text) => {
-        expect(text.trim()).equal(`(${deals.length} items)`);
-      });
-
+      // confirm the filter retains its state
       dashboard.filterByStatus().should('be.visible');
-      dashboard.filterByStatus().should('have.value', 'draft');
-    });
+      dashboard.filterByStatus().should('have.value', testCase.code);
+
+    }
   });
 
-  it('The Dashboard: status=readyForApproval -> filters deals displayed', () => {
-    cy.login({...maker1});
-    dashboard.visit();
-
-    dashboard.showFilters().click();
-    dashboard.filterByStatus().select('readyForApproval');
-    dashboard.applyFilters().click();
-
-    cy.dealsInStatus("Ready for Checker's approval").then( (deals) => {
-      dashboard.confirmDealsPresent(deals);
-      dashboard.totalItems().invoke('text').then((text) => {
-        expect(text.trim()).equal(`(${deals.length} items)`);
-      });
-
-      dashboard.filterByStatus().should('be.visible');
-      dashboard.filterByStatus().should('have.value', 'readyForApproval');
-    });
-  });
-
-  it('The Dashboard: status=inputRequired -> filters deals displayed', () => {
-    cy.login({...maker1});
-    dashboard.visit();
-
-    dashboard.showFilters().click();
-    dashboard.filterByStatus().select('inputRequired');
-    dashboard.applyFilters().click();
-
-    cy.dealsInStatus("Further Maker's input required").then( (deals) => {
-      dashboard.confirmDealsPresent(deals);
-      dashboard.totalItems().invoke('text').then((text) => {
-        expect(text.trim()).equal(`(${deals.length} items)`);
-      });
-
-      dashboard.filterByStatus().should('be.visible');
-      dashboard.filterByStatus().should('have.value', 'inputRequired');
-    });
-  });
-
-  it('The Dashboard: status=abandoned -> filters deals displayed', () => {
-    cy.login({...maker1});
-    dashboard.visit();
-
-    dashboard.showFilters().click();
-    dashboard.filterByStatus().select('abandoned');
-    dashboard.applyFilters().click();
-
-    cy.dealsInStatus("Abandoned Deal").then( (deals) => {
-      dashboard.confirmDealsPresent(deals);
-      dashboard.totalItems().invoke('text').then((text) => {
-        expect(text.trim()).equal(`(${deals.length} items)`);
-      });
-
-      dashboard.filterByStatus().should('be.visible');
-      dashboard.filterByStatus().should('have.value', 'abandoned');
-    });
-  });
-
-  it('The Dashboard: status=submitted -> filters deals displayed', () => {
-    cy.login({...maker1});
-    dashboard.visit();
-
-    dashboard.showFilters().click();
-    dashboard.filterByStatus().select('submitted');
-    dashboard.applyFilters().click();
-
-    cy.dealsInStatus("Submitted").then( (deals) => {
-      dashboard.confirmDealsPresent(deals);
-      dashboard.totalItems().invoke('text').then((text) => {
-        expect(text.trim()).equal(`(${deals.length} items)`);
-      });
-
-      dashboard.filterByStatus().should('be.visible');
-      dashboard.filterByStatus().should('have.value', 'submitted');
-    });
-  });
-
-  it('The Dashboard: status=submissionAcknowledged -> filters deals displayed', () => {
-    cy.login({...maker1});
-    dashboard.visit();
-
-    dashboard.showFilters().click();
-    dashboard.filterByStatus().select('submissionAcknowledged');
-    dashboard.applyFilters().click();
-
-    cy.dealsInStatus("Acknowledged by UKEF").then( (deals) => {
-      dashboard.confirmDealsPresent(deals);
-      dashboard.totalItems().invoke('text').then((text) => {
-        expect(text.trim()).equal(`(${deals.length} items)`);
-      });
-
-      dashboard.filterByStatus().should('be.visible');
-      dashboard.filterByStatus().should('have.value', 'submissionAcknowledged');
-    });
-  });
-
-  it('The Dashboard: status=approved -> filters deals displayed', () => {
-    cy.login({...maker1});
-    dashboard.visit();
-
-    dashboard.showFilters().click();
-    dashboard.filterByStatus().select('approved');
-    dashboard.applyFilters().click();
-
-    cy.dealsInStatus("Accepted by UKEF (without conditions)").then( (deals) => {
-      dashboard.confirmDealsPresent(deals);
-      dashboard.totalItems().invoke('text').then((text) => {
-        expect(text.trim()).equal(`(${deals.length} items)`);
-      });
-
-      dashboard.filterByStatus().should('be.visible');
-      dashboard.filterByStatus().should('have.value', 'approved');
-    });
-  });
-
-  it('The Dashboard: status=approvedWithConditions -> filters deals displayed', () => {
-    cy.login({...maker1});
-    dashboard.visit();
-
-    dashboard.showFilters().click();
-    dashboard.filterByStatus().select('approvedWithConditions');
-    dashboard.applyFilters().click();
-
-    cy.dealsInStatus("Accepted by UKEF (with conditions)").then( (deals) => {
-      dashboard.confirmDealsPresent(deals);
-      dashboard.totalItems().invoke('text').then((text) => {
-        expect(text.trim()).equal(`(${deals.length} items)`);
-      });
-
-      dashboard.filterByStatus().should('be.visible');
-      dashboard.filterByStatus().should('have.value', 'approvedWithConditions');
-    });
-  });
-
-  it('The Dashboard: status=refused -> filters deals displayed', () => {
-    cy.login({...maker1});
-    dashboard.visit();
-
-    dashboard.showFilters().click();
-    dashboard.filterByStatus().select('refused');
-    dashboard.applyFilters().click();
-
-    cy.dealsInStatus("Rejected by UKEF").then( (deals) => {
-      dashboard.confirmDealsPresent(deals);
-      dashboard.totalItems().invoke('text').then((text) => {
-        expect(text.trim()).equal(`(${deals.length} items)`);
-      });
-
-      dashboard.filterByStatus().should('be.visible');
-      dashboard.filterByStatus().should('have.value', 'refused');
-    });
-  });
 });
