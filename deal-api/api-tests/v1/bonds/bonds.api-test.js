@@ -95,8 +95,17 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(401);
     });
 
-    it('404s requests for unknown resources', async () => {
+    it('404s requests for unknown deal', async () => {
       const { status } = await get('/v1/deals/123456789012/bond/123456789012', user1);
+
+      expect(status).toEqual(404);
+    });
+
+    it('404s requests for unknown bond', async () => {
+      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+      const { status } = await get(`/v1/deals/${dealId}/bond/123456789012`, user1);
 
       expect(status).toEqual(404);
     });
