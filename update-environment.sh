@@ -14,8 +14,10 @@ cd deal-api && npm install
 echo Ensuring portal dependencies are up to date..
 cd ../portal && npm install
 
-echo Ensuring utils/mock-data-loader dependencies are up to date..
-cd ../utils/mock-data-loader && npm install
+# [dw] removing this dependency for now;
+# //TODO think about where these 'utils' really live; presumably under their 'owning' service?
+#echo Ensuring utils/mock-data-loader dependencies are up to date..
+#cd ../utils/mock-data-loader && npm install
 
 end=`date +%s`
 echo "update-environment execution time (seconds): $((end-start)) : pass" >> "$LOG"
