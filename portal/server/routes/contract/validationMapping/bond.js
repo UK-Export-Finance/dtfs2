@@ -47,15 +47,20 @@ const mapValidationErrors = (validationErrors, requiredFields) => {
 
   mappedErrors.errorList = filteredErrorList;
 
-  return generateErrorSummary(
-    mappedErrors,
-    errorHref,
-  );
+  return {
+    ...generateErrorSummary(
+      mappedErrors,
+      errorHref,
+    ),
+    conditionalErrorList: validationErrors.conditionalErrorList,
+  };
 };
 
 export const shouldReturnValidation = (errorsCount, fieldsCount) => errorsCount < fieldsCount;
 
 
+// NOTE: this is failing because we now pass
+// POSSIBLE_BOND_DETAILS_REQUIRED_FIELDS into REQUIRED_FIELDS.DETAILS.
 export const handleBondDetailsValidationErrors = (validationErrors) => {
   const mappedValidationErrors = mapValidationErrors(validationErrors, REQUIRED_FIELDS.DETAILS);
 
