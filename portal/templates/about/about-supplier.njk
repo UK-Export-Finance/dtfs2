@@ -2,10 +2,11 @@
 {% import './components/address-fields.njk' as address %}
 {% import './components/about-supply-contract-nav.njk' as aboutSupplyContract %}
 {% import './components/input-companies-house-reg-number.njk' as companiesHouse %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block content %}
 
@@ -31,31 +32,35 @@
 
   <form method="POST" autocomplete="off">
 
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="supplierType">
-        Supplier type
-      </label>
-      <span id="supplierType-hint" class="govuk-hint">
-          Where the supplier is a UK Supplier, please ensure that it has provided a UK Supplier Declaration
-      </span>
+    {{ govukSelect({
+      id: "supplierType",
+      name: "supplierType",
+      label: { text: "Supplier type" },
+      hint: { text: "Where the supplier is a UK Supplier, please ensure that it has provided a UK Supplier Declaration" },
+      attributes: { "data-cy": "supplierType" },
+      items: [
+        {
+          value: "",
+          text: "Select value"
+        }, {
+          value: "Exporter",
+          text: "Exporter",
+          selected: deal.submissionDetails.supplierType === "Exporter"
+        }, {
+          value: "UK Supplier",
+          text: "UK Supplier",
+          selected: deal.submissionDetails.supplierType === "UK Supplier"
+        }
+      ]
+    }) }}
 
-      <select data-cy="supplierType" class="govuk-select govuk-!-width-one-half" id="supplierType" name="supplierType" aria-describedby="supplierType-hint">
-        <option value="">Select value</option>
-        <option value="Exporter" {% if deal.submissionDetails.supplierType==='Exporter'%} selected {%endif%}>Exporter</option>
-        <option value="UK Supplier" {% if deal.submissionDetails.supplierType==='UK Supplier'%} selected {%endif%}>UK Supplier</option>
-      </select>
-    </div>
-
-    <div class="govuk-form-group">
-      {{ companiesHouse.input({
-        deal: deal,
-        id: 'supplierCompaniesHouseRegistrationNumber',
-        label: 'UK Supplier’s Companies House registration number, if UK registered (optional)'
-      }) }}
-    </div>
+    {{ companiesHouse.input({
+      deal: deal,
+      id: 'supplierCompaniesHouseRegistrationNumber',
+      label: 'UK Supplier’s Companies House registration number, if UK registered (optional)'
+    }) }}
 
     <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
-
       {{ govukInput({
         label: {
           html: 'Supplier name <span id="supplierName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">You can enter up to 150 characters</span>'
@@ -79,58 +84,38 @@
       hint = "This should be the supplier's principal place of business"
     )}}
 
-    <div class="govuk-form-group">
-      <fieldset class="govuk-fieldset">
+    {{
+      govukRadios({
+        fieldset: {
+          legend: { text: "Is the Supplier's correspondence address different for the Company's Registered Address?" }
+        },
+        idPrefix: "suppliersCorrespondenceAddressDifferent-",
+        name: "suppliersCorrespondenceAddressDifferent",
+        classes: "govuk-radios--inline",
+        items: [
+          {
+            value: "true",
+            text: "Yes",
+            attributes: {
+              "data-cy": "suppliersCorrespondenceAddressDifferent-true",
+              "onClick": "onChangeRadioButton('additional-form-fields-supplier-correspondence', true)"
+            },
+            checked: deal.submissionDetails.suppliersCorrespondenceAddressDifferent === 'true'
+          },
+          {
+            value: "false",
+            text: "No",
+            attributes: {
+              "data-cy": "suppliersCorrespondenceAddressDifferent-false",
+              "onClick": "onChangeRadioButton('additional-form-fields-supplier-correspondence', false)"
+            },
+            checked: deal.submissionDetails.suppliersCorrespondenceAddressDifferent === 'false'
+          }
+        ],
+        errorMessage: validationErrors.errorList.suppliersCorrespondenceAddressDifferent
+      })
+    }}
 
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend">
-          Is the Supplier's correspondence address different for the Company's Registered Address?
-        </legend>
-
-        <div class="govuk-radios govuk-radios--inline">
-          {# //TODO i refuse to believe this is the right way to do anything... #}
-          {% if deal.submissionDetails.suppliersCorrespondenceAddressDifferent %}
-            {% set isTrue=true %}
-            {% set isFalse=false %}
-          {% else %}
-            {% set isTrue=false %}
-            {% set isFalse=true %}
-          {% endif %}
-          <div class="govuk-radios__item">
-            <input
-              data-cy="correspondenceAddressDifferent-true"
-              class="govuk-radios__input"
-              id="suppliersCorrespondenceAddressDifferent"
-              name="suppliersCorrespondenceAddressDifferent"
-              type="radio"
-              value="true"
-              checked={{ isTrue }}
-              onClick="onChangeRadioButton('additional-form-fields-supplier-correspondence', true)"
-            >
-            <label class="govuk-label govuk-radios__label" for="suppliersCorrespondenceAddressDifferent">
-              Yes
-            </label>
-          </div>
-
-          <div class="govuk-radios__item">
-            <input
-            data-cy="correspondenceAddressDifferent-false"
-              class="govuk-radios__input"
-              id="suppliersCorrespondenceAddressDifferent-2"
-              name="suppliersCorrespondenceAddressDifferent"
-              type="radio"
-              value="false"
-              checked={{ isFalse }}
-              onClick="onChangeRadioButton('additional-form-fields-supplier-correspondence', false)"
-              >
-            <label class="govuk-label govuk-radios__label" for="suppliersCorrespondenceAddressDifferent-2">
-              No
-            </label>
-          </div>
-
-        </div>
-
-      </fieldset>
-    </div>
 
     <div id="additional-form-fields-supplier-correspondence" class="govuk-visually-hidden">
       {{ address.fields(
@@ -222,50 +207,39 @@
       errorMessage: validationErrors.errorList.supplyContractDescription
     }) }}
 
-    {# again, inline javascript- not able to switch to govuk component #}
-    <div class="govuk-form-group">
-      <fieldset class="govuk-fieldset">
 
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend">
-          Is the counter-indemnifier (for bonds) or guarantor (for loans) legally distinct from the supplier?
-        </legend>
+    {{
+      govukRadios({
+        fieldset: {
+          legend: { text: "Is the counter-indemnifier (for bonds) or guarantor (for loans) legally distinct from the supplier?" }
+        },
+        idPrefix: "legallyDistinct-",
+        name: "legallyDistinct",
+        classes: "govuk-radios--inline",
+        items: [
+          {
+            value: "true",
+            text: "Yes",
+            attributes: {
+              "data-cy": "legallyDistinct-true",
+              "onClick": "onChangeRadioButton('additional-form-fields-indemnifier', true)"
+            },
+            checked: deal.submissionDetails.legallyDistinct === 'true'
+          },
+          {
+            value: "false",
+            text: "No",
+            attributes: {
+              "data-cy": "legallyDistinct-false",
+              "onClick": "onChangeRadioButton('additional-form-fields-indemnifier', false)"
+            },
+            checked: deal.submissionDetails.legallyDistinct === 'false'
+          }
+        ],
+        errorMessage: validationErrors.errorList.legallyDistinct
+      })
+    }}
 
-        <div class="govuk-radios govuk-radios--inline">
-
-          <div class="govuk-radios__item">
-            <input
-              data-cy="legallyDistinct-true"
-              class="govuk-radios__input"
-              id="legallyDistinct"
-              name="legallyDistinct"
-              type="radio" value="true"
-              {% if deal.submissionDetails.legallyDistinct === "true" %} checked {% endif %}
-              onClick="onChangeRadioButton('additional-form-fields-indemnifier', true)"
-            >
-            <label class="govuk-label govuk-radios__label" for="legallyDistinct">
-              Yes
-            </label>
-          </div>
-
-          <div class="govuk-radios__item">
-            <input
-              data-cy="legallyDistinct-false"
-              class="govuk-radios__input"
-              id="legallyDistinct-2"
-              name="legallyDistinct"
-              type="radio" value="false"
-              {% if deal.submissionDetails.legallyDistinct === "false" %} checked {% endif %}
-              onClick="onChangeRadioButton('additional-form-fields-indemnifier', false)"
-              >
-            <label class="govuk-label govuk-radios__label" for="legallyDistinct-2">
-              No
-            </label>
-          </div>
-
-        </div>
-
-      </fieldset>
-    </div>
 
     <div id="additional-form-fields-indemnifier" class="govuk-visually-hidden">
 
@@ -357,15 +331,14 @@
       "attributes" : { "data-cy" : "NextPage" }
     }) }}
 
-    {# use of formaction; we can't do that with govuk buttons.. #}
-    <input
-      data-cy="SaveAndGoBack"
-      type="submit"
-      formaction="/contract/{{ deal._id }}/about/supplier/save-go-back"
-      class="govuk-button govuk-button--secondary"
-      data-module="govuk-button"
-      value="Save and go back to deal"
-    />
+    {{ govukButton({
+      "text": "Save and go back to deal",
+      "classes" : "govuk-button govuk-button--secondary",
+      "attributes" : {
+        "data-cy" : "SaveAndGoBack",
+        "formaction" : "/contract/"+ deal._id +"/about/supplier/save-go-back"
+      }
+    }) }}
 
   </form>
 
