@@ -6,7 +6,6 @@ import formatCountriesForGDSComponent from './formatCountriesForGDSComponent';
 import errorHref from './errorHref';
 import postToApi from './postToApi';
 import mapCurrencies from './mapCurrencies';
-import removeEmptyStringsFromObject from './removeEmptyStringsFromObject';
 
 export {
   getApiData,
@@ -17,5 +16,4 @@ export {
   errorHref,
   postToApi,
   mapCurrencies,
-  removeEmptyStringsFromObject,
 };

@@ -7,7 +7,6 @@ import {
   postToApi,
   mapCurrencies,
   generateErrorSummary,
-  removeEmptyStringsFromObject,
 } from '../../helpers';
 import {
   handleBondDetailsValidationErrors,
@@ -40,10 +39,14 @@ router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
     validationErrors,
   } = apiResponse;
 
+  const theValidationErrors = handleBondDetailsValidationErrors(validationErrors);
+
+  console.log('bond details theValidationErrors \n', theValidationErrors);
+
   return res.render('bond/bond-details.njk', {
     dealId,
     bond,
-    validationErrors: handleBondDetailsValidationErrors(validationErrors),
+    validationErrors: theValidationErrors,
   });
 });
 
@@ -54,7 +57,7 @@ router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
     api.updateBond(
       dealId,
       bondId,
-      removeEmptyStringsFromObject(req.body),
+      req.body,
       userToken,
     ),
     errorHref,
@@ -98,7 +101,7 @@ router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) =>
     api.updateBond(
       dealId,
       bondId,
-      removeEmptyStringsFromObject(req.body),
+      req.body,
       userToken,
     ),
     errorHref,
@@ -136,7 +139,7 @@ router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
     api.updateBond(
       dealId,
       bondId,
-      removeEmptyStringsFromObject(req.body),
+      req.body,
       userToken,
     ),
     errorHref,
@@ -179,7 +182,7 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', async (req, res) => {
     api.updateBond(
       dealId,
       bondId,
-      removeEmptyStringsFromObject(req.body),
+      req.body,
       userToken,
     ),
     errorHref,
