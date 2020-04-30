@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "description": "DTFS2",
   "dependencies": {
-    "axios": "^0.19.2"
+    "axios": "0.19.2"
   },
   "devDependencies": {
-    "cypress": "^4.1.0",
-    "cypress-xpath": "^1.4.0",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.20.1"
+    "cypress": "4.1.0",
+    "cypress-xpath": "1.4.0",
+    "eslint": "6.8.0",
+    "eslint-config-airbnb-base": "14.1.0",
+    "eslint-plugin-import": "2.20.1"
   },
   "scripts": {
     "pipeline": "./update-environment.sh && ./execute-lint.sh && ./execute-unit-tests.sh && ./execute-component-tests.sh && ./execute-api-tests.sh && ./execute-e2e-tests.sh",
