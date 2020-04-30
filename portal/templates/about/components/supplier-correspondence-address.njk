@@ -1,0 +1,51 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% import './address-fields.njk' as address %}
+
+
+
+{% macro render(opts) %}
+  {% set deal = opts.deal %}
+  {% set validationErrors = opts.validationErrors %}
+  
+    {{
+      govukRadios({
+        fieldset: {
+          legend: { text: "Is the Supplier's correspondence address different for the Company's Registered Address?" }
+        },
+        idPrefix: "suppliersCorrespondenceAddressDifferent-",
+        name: "suppliersCorrespondenceAddressDifferent",
+        classes: "govuk-radios--inline",
+        items: [
+          {
+            text: "Yes", value: "true",
+            checked: deal.submissionDetails.suppliersCorrespondenceAddressDifferent === 'true',
+            attributes: {
+              "data-cy": "suppliersCorrespondenceAddressDifferent-true",
+              "onClick": "onChangeRadioButton('additional-form-fields-supplier-correspondence', true)"
+            }
+          },
+          {
+            text: "No", value: "false",
+            checked: deal.submissionDetails.suppliersCorrespondenceAddressDifferent === 'false',
+            attributes: {
+              "data-cy": "suppliersCorrespondenceAddressDifferent-false",
+              "onClick": "onChangeRadioButton('additional-form-fields-supplier-correspondence', false)"
+            }
+          }
+        ],
+        errorMessage: validationErrors.errorList.suppliersCorrespondenceAddressDifferent
+      })
+    }}
+
+
+    <div id="additional-form-fields-supplier-correspondence" class="govuk-visually-hidden">
+      {{ address.fields(
+        deal = deal,
+        id = "supplierCorrespondence",
+        legend = "Supplier correspondence address",
+        countries = countries,
+        showCountryPleaseSelect = true
+      )}}
+    </div>
+
+{% endmacro %}
