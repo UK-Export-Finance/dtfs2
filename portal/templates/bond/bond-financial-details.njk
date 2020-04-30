@@ -3,8 +3,8 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% import './_macros/bond-nav.njk' as bondNav %}
-{% import '_macros/date-fields.njk' as dateFields %}
 
 {% block content %}
 
@@ -133,16 +133,35 @@
         </div>
       </div>
 
-      <div class="govuk-form-group">
-        {{ dateFields.inputs(
-          legend = 'Conversion rate date',
-          id = 'conversionRateDate',
-          hint = 'For example, 27 11 2019',
-          dayValue = bond['conversionRateDate-day'],
-          monthValue = bond['conversionRateDate-month'],
-          yearValue = bond['conversionRateDate-year']
-        )}}
-      </div>
+      {{ govukDateInput({
+        id: "conversionRateDate",
+        namePrefix: "conversionRateDate",
+        fieldset: {
+          legend: {
+            text: "Conversion rate date"
+          }
+        },
+        hint: {
+          text: "For example, 27 11 2019"
+        },
+        items: [
+          {
+            classes: "govuk-input--width-2",
+            name: "day",
+            value: bond['conversionRateDate-day']
+          },
+          {
+            classes: "govuk-input--width-2",
+            name: "month",
+            value: bond['conversionRateDate-month']
+          },
+          {
+            classes: "govuk-input--width-2",
+            name: "year",
+            value: bond['conversionRateDate-year']
+          }
+        ]
+      }) }}
 
     </div>
 
