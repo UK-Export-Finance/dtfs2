@@ -89,8 +89,28 @@ router.post('/contract/:_id/about/supplier/companies-house-search', async (req, 
   });
 });
 
-router.post('/contract/:_id/about/supplier/save-go-back', (req, res) => {
-  const { _id } = requestParams(req);
+router.post('/contract/:_id/about/supplier/save-go-back', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+  const deal = await getApiData(
+    api.contract(_id, userToken),
+    res,
+  );
+
+  const submissionDetails = req.body;
+
+  // fix industrySector/industryClass data; is nested in source data, and the way it's rendered makes this preferable
+  if (submissionDetails.industrySector && submissionDetails.industryClass) {
+    submissionDetails.industrySector = {
+      code: submissionDetails.industrySector,
+      name: '', // TODO
+      class: {
+        code: submissionDetails.industryClass,
+        name: '', // TODO
+      },
+    };
+  }
+
+  await api.updateSubmissionDetails(deal, submissionDetails, userToken);
 
   const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);

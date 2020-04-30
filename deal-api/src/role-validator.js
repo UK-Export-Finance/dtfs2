@@ -13,7 +13,7 @@ module.exports = (opts) => {
       if (userHasOneOfTheRequiredRoles) {
         next();
       } else {
-        res.status(401).json({ succes: false, msg: "you don't have the right role" });
+        res.status(401).json({ success: false, msg: "you don't have the right role" });
       }
     }
   };
