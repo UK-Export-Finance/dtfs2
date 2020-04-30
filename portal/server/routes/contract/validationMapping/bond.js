@@ -9,9 +9,6 @@ export const POSSIBLE_BOND_DETAILS_REQUIRED_FIELDS = [
 
   // required if bondStage is 'Issued'
   'coverEndDate',
-  'coverEndDateDay',
-  'coverEndDateMonth',
-  'coverEndDateYear',
   'uniqueIdentificationNumber',
 ];
 

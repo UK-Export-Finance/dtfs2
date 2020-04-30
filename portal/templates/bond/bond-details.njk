@@ -2,9 +2,9 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% import './_macros/bond-nav.njk' as bondNav %}
-{% import '_macros/date-fields.njk' as dateFields %}
 
 {% block content %}
 
@@ -200,28 +200,68 @@
           {% endif %}
         >
 
-          <div class="govuk-form-group">
-            {{ dateFields.inputs(
-              legend = 'Requested Cover Start Date (optional)',
-              id = 'requestedCoverStartDate',
-              hint = 'For example, 27 11 2019',
-              secondaryHint = 'This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date.',
-              dayValue = bond['requestedCoverStartDate-day'],
-              monthValue = bond['requestedCoverStartDate-month'],
-              yearValue = bond['requestedCoverStartDate-year']
-            )}}
-          </div>
 
-          <div class="govuk-form-group">
-            {{ dateFields.inputs(
-              legend = 'Cover End Date',
-              id = 'coverEndDate',
-              hint = 'For example, 27 11 2025',
-              dayValue = bond['coverEndDate-day'],
-              monthValue = bond['coverEndDate-month'],
-              yearValue = bond['coverEndDate-year']
-            )}}
-          </div>
+          {{ govukDateInput({
+            id: "requestedCoverStartDate",
+            namePrefix: "requestedCoverStartDate",
+            fieldset: {
+              legend: {
+                text: "Requested Cover Start Date (optional)"
+              }
+            },
+            hint: {
+              html: "<p>For example, 27 11 2019<p>This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date</p>"
+            },
+            errorMessage: validationErrors.errorList.requestedCoverStartDate or (not (requestedCoverStartDate-day or requestedCoverStartDate-month or requestedCoverStartDate-year) and validationErrors.conditionalErrorList.bondStageIssued.requestedCoverStartDate),
+            items: [
+              {
+                classes: "govuk-input--width-2",
+                name: "day",
+                value: bond['requestedCoverStartDate-day']
+              },
+              {
+                classes: "govuk-input--width-2",
+                name: "month",
+                value: bond['requestedCoverStartDate-month']
+              },
+              {
+                classes: "govuk-input--width-2",
+                name: "year",
+                value: bond['requestedCoverStartDate-year']
+              }
+            ]
+          }) }}
+
+          {{ govukDateInput({
+            id: "coverEndDate",
+            namePrefix: "coverEndDate",
+            fieldset: {
+              legend: {
+                text: "Cover End Date"
+              }
+            },
+            hint: {
+              text: "For example, 27 11 2025"
+            },
+            errorMessage: validationErrors.errorList.coverEndDate or (not (coverEndDate-day or coverEndDate-month or coverEndDate-year) and validationErrors.conditionalErrorList.bondStageIssued.coverEndDate),
+            items: [
+              {
+                classes: "govuk-input--width-2",
+                name: "day",
+                value: bond['coverEndDate-day']
+              },
+              {
+                classes: "govuk-input--width-2",
+                name: "month",
+                value: bond['coverEndDate-month']
+              },
+              {
+                classes: "govuk-input--width-2",
+                name: "year",
+                value: bond['coverEndDate-year']
+              }
+            ]
+          }) }}
 
           {{ govukInput({
             label: {
@@ -234,7 +274,7 @@
             attributes: {
               'data-cy': 'unique-identification-number'
             },
-            errorMessage: validationErrors.errorList.uniqueIdentificationNumber
+            errorMessage: validationErrors.errorList.uniqueIdentificationNumber or (not bond.uniqueIdentificationNumber and validationErrors.conditionalErrorList.bondStageIssued.uniqueIdentificationNumber)
           }) }}
 
         </div>

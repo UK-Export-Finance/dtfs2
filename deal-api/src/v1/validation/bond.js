@@ -101,25 +101,17 @@ exports.getBondErrors = (bond) => {
   if (bondStage === 'Issued') {
     const hasNoDateValues = (!hasValue(coverEndDateDay) && !hasValue(coverEndDateMonth) && !hasValue(coverEndDateYear));
 
+    // TODO: message should account for everthing that is missing
+    // so if no month and no day, say 'month and day is required'
     if (hasNoDateValues) {
       errorList.coverEndDate = {
         order: orderNumber(errorList),
-        text: 'Cover End Date is required',
+        text: 'Enter the Cover End Date',
       };
-    } else if (!coverEndDateDay) {
-      errorList['coverEndDate-day'] = {
+    } else if (!hasValue(coverEndDateDay) || !hasValue(coverEndDateMonth) || !hasValue(coverEndDateYear)) {
+      errorList.coverEndDate = {
         order: orderNumber(errorList),
-        text: 'Cover End Date must include a day',
-      };
-    } else if (!coverEndDateMonth) {
-      errorList['coverEndDate-month'] = {
-        order: orderNumber(errorList),
-        text: 'Cover End Date must include a month',
-      };
-    } else if (!coverEndDateYear) {
-      errorList['coverEndDate-year'] = {
-        order: orderNumber(errorList),
-        text: 'Cover End Date must include a year',
+        text: 'Cover End Date must include day month and year (temp message)',
       };
     }
 
