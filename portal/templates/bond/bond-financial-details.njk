@@ -148,17 +148,26 @@
           {
             classes: "govuk-input--width-2",
             name: "day",
-            value: bond['conversionRateDate-day']
+            value: bond['conversionRateDate-day'],
+            attributes: {
+              'data-cy': "conversionRateDate-day"
+            }
           },
           {
             classes: "govuk-input--width-2",
             name: "month",
-            value: bond['conversionRateDate-month']
+            value: bond['conversionRateDate-month'],
+            attributes: {
+              'data-cy': "conversionRateDate-month"
+            }
           },
           {
             classes: "govuk-input--width-2",
             name: "year",
-            value: bond['conversionRateDate-year']
+            value: bond['conversionRateDate-year'],
+            attributes: {
+              'data-cy': "conversionRateDate-year"
+            }
           }
         ]
       }) }}
