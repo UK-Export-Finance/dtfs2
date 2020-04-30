@@ -188,7 +188,7 @@
             attributes: {
               'data-cy': 'ukef-guarantee-in-months'
             },
-            errorMessage: validationErrors.errorList.ukefGuaranteeInMonths
+            errorMessage: validationErrors.errorList.ukefGuaranteeInMonths or (not bond.ukefGuaranteeInMonths and validationErrors.conditionalErrorList.bondStageUnissued.ukefGuaranteeInMonths)
           }) }}
 
         </div>

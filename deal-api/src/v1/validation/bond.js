@@ -1,5 +1,19 @@
 const { orderNumber } = require('../../utils/error-list-order-number');
 
+const isEmptyString = (str) => {
+  if ((typeof value === 'string' || str instanceof String) && !str.length) {
+    return true;
+  }
+  return false;
+};
+
+const hasValue = (str) => {
+  if (str && !isEmptyString(str)) {
+    return true;
+  }
+  return false;
+};
+
 exports.getBondErrors = (bond) => {
   const {
     bondType,
@@ -20,19 +34,55 @@ exports.getBondErrors = (bond) => {
 
   const errorList = {};
 
+  // maybe conditionalErrorList should be more like this, to match properties/values
+  // {
+  //   bondStage: {
+  //     Issued: {
+  //       coverEndDate: {
+  //         text: 'Cover End Date is required',
+  //       },
+  //     },
+  //     Unissued: {
+  //       someField: {
+  //         text: is required',
+  //       }
+  //     },
+  //   },
+  // }
+
+  const conditionalErrorList = {
+    // details
+    bondStageUnissued: {
+      ukefGuaranteeInMonths: {
+        text: 'Length of time that the UKEF\'s guarantee will be in place for is required',
+      },
+    },
+    bondStageIssued: {
+      coverEndDate: {
+        text: 'Cover End Date is required',
+      },
+      uniqueIdentificationNumber: {
+        text: 'Bond\'s unique identification number is required',
+      },
+    },
+    // todo: financial details
+
+    // todo: fee details
+  };
+
   /* ************************************
   // details
   ***************************************
   */
 
-  if (!bondType) {
+  if (!hasValue(bondType)) {
     errorList.bondType = {
       order: orderNumber(errorList),
       text: 'Bond type is required',
     };
   }
 
-  if (!bondStage) {
+  if (!hasValue(bondStage)) {
     errorList.bondStage = {
       order: orderNumber(errorList),
       text: 'Bond stage is required',
@@ -40,7 +90,7 @@ exports.getBondErrors = (bond) => {
   }
 
   if (bondStage === 'Unissued') {
-    if (!ukefGuaranteeInMonths) {
+    if (!hasValue(ukefGuaranteeInMonths)) {
       errorList.ukefGuaranteeInMonths = {
         order: orderNumber(errorList),
         text: 'Length of time that the UKEF\'s guarantee will be in place for is required',
@@ -49,7 +99,9 @@ exports.getBondErrors = (bond) => {
   }
 
   if (bondStage === 'Issued') {
-    if (!coverEndDateDay && !coverEndDateMonth && !coverEndDateYear) {
+    const hasNoDateValues = (!hasValue(coverEndDateDay) && !hasValue(coverEndDateMonth) && !hasValue(coverEndDateYear));
+
+    if (hasNoDateValues) {
       errorList.coverEndDate = {
         order: orderNumber(errorList),
         text: 'Cover End Date is required',
@@ -85,28 +137,28 @@ exports.getBondErrors = (bond) => {
   ***************************************
   */
 
-  if (!bondValue) {
+  if (!hasValue(bondValue)) {
     errorList.bondValue = {
       order: orderNumber(errorList),
       text: 'Bond value is required',
     };
   }
 
-  if (!transactionCurrencySameAsSupplyContractCurrency) {
+  if (!hasValue(transactionCurrencySameAsSupplyContractCurrency)) {
     errorList.transactionCurrencySameAsSupplyContractCurrency = {
       order: orderNumber(errorList),
       text: 'Is the currency for this Transaction the same as your Supply Contract currency? is required',
     };
   }
 
-  if (!riskMarginFee) {
+  if (!hasValue(riskMarginFee)) {
     errorList.riskMarginFee = {
       order: orderNumber(errorList),
       text: 'Risk Margin Fee is required',
     };
   }
 
-  if (!coveredPercentage) {
+  if (!hasValue(coveredPercentage)) {
     errorList.coveredPercentage = {
       order: orderNumber(errorList),
       text: 'Covered Percentage is required',
@@ -123,21 +175,21 @@ exports.getBondErrors = (bond) => {
   // fee details
   ***************************************
   */
-  if (!feeType) {
+  if (!hasValue(feeType)) {
     errorList.feeType = {
       order: orderNumber(errorList),
       text: 'Fee type is required',
     };
   }
 
-  if (!feeFrequency) {
+  if (!hasValue(feeFrequency)) {
     errorList.feeFrequency = {
       order: orderNumber(errorList),
       text: 'Fee frequency is required',
     };
   }
 
-  if (!dayCountBasis) {
+  if (!hasValue(dayCountBasis)) {
     errorList.dayCountBasis = {
       order: orderNumber(errorList),
       text: 'Day count basis is required',
@@ -153,5 +205,6 @@ exports.getBondErrors = (bond) => {
   return {
     count: totalErrors,
     errorList,
+    conditionalErrorList,
   };
 };
