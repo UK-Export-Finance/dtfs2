@@ -4,6 +4,9 @@ export const appendSelectOption = (selectElement, option) => {
   const optionElement = document.createElement('option');
   optionElement.value = option.value;
   optionElement.innerHTML = option.name;
+  if (option.code === option.selectedValue) {
+    optionElement.selected = true;
+  }
   selectElement.appendChild(optionElement);
 };
 
@@ -12,7 +15,7 @@ export const getIndustryClassesFromSectorCode = (sectors, sectorCode) => {
   return foundSector.classes;
 };
 
-export const changeIndustryClasses = (event, sectors) => {
+export const changeIndustryClasses = (event, sectors, selectedValue) => {
   if (event) {
     const sectorCode = event.target.value;
     const selectElement = industryClassElement();
@@ -31,6 +34,7 @@ export const changeIndustryClasses = (event, sectors) => {
         {
           value: i.code,
           name: i.name,
+          selectedValue,
         },
       );
     });

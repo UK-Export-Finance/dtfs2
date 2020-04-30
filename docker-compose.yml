@@ -15,6 +15,7 @@ services:
       - ./portal/templates:/app/templates:ro
       - ./portal/server:/app/server:ro
       - ./portal/.env.full-local-docker-environment:/app/.env:ro
+      - ./portal/node_modules:/app/node_modules:rw
     environment:
       - DEBUG=express:*
       - COMPANIES_HOUSE_API_KEY=${COMPANIES_HOUSE_API_KEY}
@@ -32,6 +33,7 @@ services:
     volumes:
       - ./deal-api/src:/app/src:ro
       - ./deal-api/.env.full-local-docker-environment:/app/.env:ro
+      - ./deal-api/node_modules:/app/node_modules:rw
     environment:
       - DEBUG=express:*
     entrypoint: npx nodemon src/index.js

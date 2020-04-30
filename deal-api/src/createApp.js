@@ -26,9 +26,8 @@ app.use(cors({
 app.use('/v1', openRouter);
 app.use('/v1', authRouter);
 
-const errorHandler = (err, req, res) => {
-  console.log(err.stack);
-  res.sendStatus(500);
+const errorHandler = (err) => {
+  console.log(err);
 };
 
 app.use(errorHandler);
