@@ -128,6 +128,23 @@ const updateDealStatus = async (statusUpdate, token) => {
   };
 };
 
+const updateSubmissionDetails = async (deal, submissionDetails, token) => {
+  const response = await axios({
+    method: 'put',
+    url: `${urlRoot}/v1/deals/${deal._id}/submission-details`, // eslint-disable-line no-underscore-dangle
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: submissionDetails,
+  });
+
+  return {
+    status: response.status,
+    data: response.data,
+  };
+};
+
 const cloneDeal = async (dealId, newDealData, token) => {
   const response = await axios({
     method: 'post',
@@ -397,6 +414,7 @@ export default {
   updateEligibilityCriteria,
   updateEligibilityDocumentation,
   updateLoan,
+  updateSubmissionDetails,
   validateToken,
   users,
   user,
