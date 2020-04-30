@@ -34,35 +34,41 @@ exports.getBondErrors = (bond) => {
 
   const errorList = {};
 
-  // maybe conditionalErrorList should be more like this, to match properties/values
-  // {
-  //   bondStage: {
-  //     Issued: {
-  //       coverEndDate: {
-  //         text: 'Cover End Date is required',
-  //       },
-  //     },
-  //     Unissued: {
-  //       someField: {
-  //         text: is required',
-  //       }
-  //     },
-  //   },
-  // }
-
+  // conditionalErrorList pattern is:
+  /*
   const conditionalErrorList = {
-    // details
-    bondStageUnissued: {
-      ukefGuaranteeInMonths: {
-        text: 'Length of time that the UKEF\'s guarantee will be in place for is required',
+    fieldName: {
+      possibleFieldValue: {
+        requiredFieldWhenThisValueIsSet: {
+          text: 'X Field is required',
+        },
+        requiredFieldWhenThisValueIsSet: {
+          text: 'Y Field is required',
+        },
+      },
+      possibleFieldValue: {
+        requiredFieldWhenThisValueIsSet: {
+          text: 'Field is required',
+        }
       },
     },
-    bondStageIssued: {
-      coverEndDate: {
-        text: 'Cover End Date is required',
+  }
+  */
+
+  const conditionalErrorList = {
+    bondStage: {
+      Unissued: {
+        ukefGuaranteeInMonths: {
+          text: 'Length of time that the UKEF\'s guarantee will be in place for is required',
+        },
       },
-      uniqueIdentificationNumber: {
-        text: 'Bond\'s unique identification number is required',
+      Issued: {
+        coverEndDate: {
+          text: 'Cover End Date is required',
+        },
+        uniqueIdentificationNumber: {
+          text: 'Bond\'s unique identification number is required',
+        },
       },
     },
     // todo: financial details
