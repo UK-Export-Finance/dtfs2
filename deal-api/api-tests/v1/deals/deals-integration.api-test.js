@@ -5,13 +5,10 @@ const aDeal = require('./deal-builder');
 const fileshare = require('../../../src/drivers/fileshare');
 
 const app = require('../../../src/createApp');
-const {
-  get, post, put, remove,
-} = require('../../api')(app);
+const testUserCache = require('../../api-test-users');
 
+const { get, post, put, remove } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
-
-const getToken = require('../../getToken')(app);
 
 describe('/v1/deals/:id/integration/', () => {
   const newDeal = aDeal({
@@ -32,58 +29,19 @@ describe('/v1/deals/:id/integration/', () => {
     }],
   });
 
-  let aUserWithoutRoles;
-  let maker1;
-  let maker2;
-  let checker;
+  let noRoles;
+  let aBarclaysMaker;
+  let anHSBCMaker;
+  let aBarclaysChecker;
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals', 'users']);
+    await wipeDB.wipe(['deals']);
 
-    aUserWithoutRoles = await getToken({
-      username: '1',
-      password: '2',
-      roles: [],
-    });
-
-    maker1 = await getToken({
-      username: 'maker1username',
-      password: '4',
-      roles: ['maker'],
-      bank: {
-        id: '1',
-        name: 'Bank of Never Never Land',
-      },
-    });
-
-    maker2 = await getToken({
-      username: '5',
-      password: '6',
-      roles: ['maker'],
-      bank: {
-        id: '2',
-        name: 'Pot o Gold',
-      },
-    });
-
-    superuser = await getToken({
-      username: '7',
-      password: '8',
-      roles: ['maker', 'checker'],
-      bank: {
-        id: '*',
-      },
-    });
-
-    checker = await getToken({
-      username: '9',
-      password: '10',
-      roles: ['checker'],
-      bank: {
-        id: '2',
-        name: 'Pot o Gold',
-      },
-    });
+    const testUsers = await testUserCache.initialise(app);
+    noRoles = testUsers().withoutAnyRoles().one();
+    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
+    anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
   });
 
   describe('GET /v1/deals/:id/integration/type-a', () => {
@@ -94,13 +52,13 @@ describe('/v1/deals/:id/integration/', () => {
     });
 
     it('401s requests that do not come from a user with role=checker', async () => {
-      const { status } = await get('/v1/deals/123456789012/integration/type-a', aUserWithoutRoles);
+      const { status } = await get('/v1/deals/123456789012/integration/type-a', noRoles.token);
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests from a user with role=checker', async () => {
-      const postResult = await post(newDeal, maker2).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
       const someData = '<xml><Deal/>';
@@ -112,45 +70,27 @@ describe('/v1/deals/:id/integration/', () => {
         buffer: Buffer.from(someData, 'utf-8'),
       });
 
-      const { status } = await get(`/v1/deals/${newId}/integration/type-a`, checker);
+      const { status } = await get(`/v1/deals/${newId}/integration/type-a`, aBarclaysChecker.token);
 
       expect(status).toEqual(200);
     });
 
     it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
-      const { body } = await post(newDeal, maker1).to('/v1/deals');
+      const { body } = await post(newDeal, anHSBCMaker.token).to('/v1/deals');
 
-      const { status } = await get(`/v1/deals/${body._id}/integration/type-a`, checker);
+      const { status } = await get(`/v1/deals/${body._id}/integration/type-a`, aBarclaysChecker.token);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unkonwn ids', async () => {
-      const { status } = await get('/v1/deals/123456789012/integration/type-a', checker);
+      const { status } = await get('/v1/deals/123456789012/integration/type-a', aBarclaysChecker.token);
 
       expect(status).toEqual(404);
     });
 
-    it('accepts requests if <user>.bank.id == *', async () => {
-      const postResult = await post(newDeal, maker2).to('/v1/deals');
-      const newId = postResult.body._id;
-
-      const someData = '<xml><Deal/>';
-
-      await fileshare.uploadStream({
-        folder: 'ukef',
-        subfolder: 'type-a',
-        filename: `${newId}.xml`,
-        buffer: Buffer.from(someData, 'utf-8'),
-      });
-
-      const { status } = await get(`/v1/deals/${newId}/integration/type-a`, superuser);
-
-      expect(status).toEqual(200);
-    });
-
     it('returns the requested resource', async () => {
-      const postResult = await post(newDeal, maker2).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
       const someData = '<xml><Deal/>';
@@ -162,7 +102,7 @@ describe('/v1/deals/:id/integration/', () => {
         buffer: Buffer.from(someData, 'utf-8'),
       });
 
-      const { status, text } = await get(`/v1/deals/${newId}/integration/type-a`, checker);
+      const { status, text } = await get(`/v1/deals/${newId}/integration/type-a`, aBarclaysChecker.token);
 
       expect(status).toEqual(200);
       expect(text).toEqual(someData);

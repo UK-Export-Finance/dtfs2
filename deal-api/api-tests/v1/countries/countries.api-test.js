@@ -2,14 +2,15 @@ const wipeDB = require('../../wipeDB');
 const aCountry = require('./country-builder');
 
 const app = require('../../../src/createApp');
-const {
-  get, post, put, remove,
-} = require('../../api')(app);
+const testUserCache = require('../../api-test-users');
+
+const { get, post, put, remove } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
-const getToken = require('../../getToken')(app);
-
 describe('/v1/countries', () => {
+  let noRoles;
+  let anEditor;
+
   const nzl = aCountry({ code: 'NZL', name: 'New Zealand' });
   const hkg = aCountry({ code: 'HKG', name: 'Hong Kong' });
   const dub = aCountry({ code: 'DUB', name: 'Dubai' });
@@ -18,22 +19,12 @@ describe('/v1/countries', () => {
   const newCountry = nzl;
   const updatedCountry = aCountry({ code: 'NZL', name: 'Old Zealand' });
 
-  let aTokenWithNoRoles;
-  let aTokenWithEditorRole;
-
   beforeEach(async () => {
-    await wipeDB.wipe(['countries', 'users']);
+    await wipeDB.wipe(['countries']);
 
-    aTokenWithNoRoles = await getToken({
-      username: '1',
-      password: '2',
-      roles: [],
-    });
-    aTokenWithEditorRole = await getToken({
-      username: '3',
-      password: '4',
-      roles: ['editor'],
-    });
+    const testUsers = await testUserCache.initialise(app);
+    noRoles = testUsers().withoutAnyRoles().one();
+    anEditor = testUsers().withRole('editor').one();
   });
 
   describe('GET /v1/countries', () => {
@@ -44,18 +35,18 @@ describe('/v1/countries', () => {
     });
 
     it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await get('/v1/countries', aTokenWithNoRoles);
+      const { status } = await get('/v1/countries', noRoles.token);
 
       expect(status).toEqual(200);
     });
 
     it('returns a list of countries, alphebetized but with GBR/United Kingdom at the top', async () => {
-      await post(nzl, aTokenWithEditorRole).to('/v1/countries');
-      await post(hkg, aTokenWithEditorRole).to('/v1/countries');
-      await post(dub, aTokenWithEditorRole).to('/v1/countries');
-      await post(gbr, aTokenWithEditorRole).to('/v1/countries');
+      await post(nzl, anEditor.token).to('/v1/countries');
+      await post(hkg, anEditor.token).to('/v1/countries');
+      await post(dub, anEditor.token).to('/v1/countries');
+      await post(gbr, anEditor.token).to('/v1/countries');
 
-      const { status, body } = await get('/v1/countries', aTokenWithNoRoles);
+      const { status, body } = await get('/v1/countries', noRoles.token);
 
       const expectedOrder = [gbr, dub, hkg, nzl];
 
@@ -72,17 +63,17 @@ describe('/v1/countries', () => {
     });
 
     it('accepts requests that do present a valid Authorization token', async () => {
-      const { status } = await get('/v1/countries/123', aTokenWithNoRoles);
+      const { status } = await get('/v1/countries/123', noRoles.token);
 
       expect(status).toEqual(200);
     });
 
     it('returns a country', async () => {
-      await post(newCountry, aTokenWithEditorRole).to('/v1/countries');
+      await post(newCountry, anEditor.token).to('/v1/countries');
 
       const { status, body } = await get(
         '/v1/countries/NZL',
-        aTokenWithNoRoles,
+        noRoles.token,
       );
 
       expect(status).toEqual(200);
@@ -98,7 +89,7 @@ describe('/v1/countries', () => {
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      const { status } = await post(newCountry, aTokenWithNoRoles).to(
+      const { status } = await post(newCountry, noRoles.token).to(
         '/v1/countries',
       );
 
@@ -106,7 +97,7 @@ describe('/v1/countries', () => {
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      const { status } = await post(newCountry, aTokenWithEditorRole).to(
+      const { status } = await post(newCountry, anEditor.token).to(
         '/v1/countries',
       );
 
@@ -122,8 +113,8 @@ describe('/v1/countries', () => {
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await post(newCountry, aTokenWithEditorRole).to('/v1/countries');
-      const { status } = await put(updatedCountry, aTokenWithNoRoles).to(
+      await post(newCountry, anEditor.token).to('/v1/countries');
+      const { status } = await put(updatedCountry, noRoles.token).to(
         '/v1/countries/NZL',
       );
 
@@ -131,8 +122,8 @@ describe('/v1/countries', () => {
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await post(newCountry, aTokenWithEditorRole).to('/v1/countries');
-      const { status } = await put(updatedCountry, aTokenWithEditorRole).to(
+      await post(newCountry, anEditor.token).to('/v1/countries');
+      const { status } = await put(updatedCountry, anEditor.token).to(
         '/v1/countries/NZL',
       );
 
@@ -140,12 +131,12 @@ describe('/v1/countries', () => {
     });
 
     it('updates the country', async () => {
-      await post(newCountry, aTokenWithEditorRole).to('/v1/countries');
-      await put(updatedCountry, aTokenWithEditorRole).to('/v1/countries/NZL');
+      await post(newCountry, anEditor.token).to('/v1/countries');
+      await put(updatedCountry, anEditor.token).to('/v1/countries/NZL');
 
       const { status, body } = await get(
         '/v1/countries/NZL',
-        aTokenWithEditorRole,
+        anEditor.token,
       );
 
       expect(status).toEqual(200);
@@ -161,29 +152,29 @@ describe('/v1/countries', () => {
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await post(newCountry, aTokenWithEditorRole).to('/v1/countries');
-      const { status } = await remove('/v1/countries/NZL', aTokenWithNoRoles);
+      await post(newCountry, anEditor.token).to('/v1/countries');
+      const { status } = await remove('/v1/countries/NZL', noRoles.token);
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await post(newCountry, aTokenWithEditorRole).to('/v1/countries');
+      await post(newCountry, anEditor.token).to('/v1/countries');
       const { status } = await remove(
         '/v1/countries/NZL',
-        aTokenWithEditorRole,
+        anEditor.token,
       );
 
       expect(status).toEqual(200);
     });
 
     it('deletes the country', async () => {
-      await post(newCountry, aTokenWithEditorRole).to('/v1/countries');
-      await remove('/v1/countries/NZL', aTokenWithEditorRole);
+      await post(newCountry, anEditor.token).to('/v1/countries');
+      await remove('/v1/countries/NZL', anEditor.token);
 
       const { status, body } = await get(
         '/v1/countries/NZL',
-        aTokenWithEditorRole,
+        anEditor.token,
       );
 
       expect(status).toEqual(200);
