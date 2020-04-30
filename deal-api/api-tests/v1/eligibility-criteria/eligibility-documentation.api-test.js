@@ -2,52 +2,29 @@ const wipeDB = require('../../wipeDB');
 const aDeal = require('../deals/deal-builder');
 
 const app = require('../../../src/createApp');
-const {
-  post, put, putMultipartForm,
-} = require('../../api')(app);
+const testUserCache = require('../../api-test-users');
 
-const getToken = require('../../getToken')(app);
+const { post, put, putMultipartForm } = require('../../api')(app);
 
-let aUserWithoutRoles;
-let user1;
-let user2;
+let noRoles;
+let aBarclaysMaker;
+let anHSBCMaker;
 
 describe('/v1/deals/:id/eligibility-documentation', () => {
   const newDeal = aDeal({ id: 'dealApiTest', bankSupplyContractName: 'Original Value' });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals', 'users']);
+    await wipeDB.wipe(['deals']);
 
-    aUserWithoutRoles = await getToken({
-      username: '1',
-      password: '2',
-      roles: [],
-    });
-
-    user1 = await getToken({
-      username: '3',
-      password: '4',
-      roles: ['maker'],
-      bank: {
-        id: '1',
-        name: 'Mammon',
-      },
-    });
-
-    user2 = await getToken({
-      username: '5',
-      password: '6',
-      roles: ['maker'],
-      bank: {
-        id: '2',
-        name: 'Temple of cash',
-      },
-    });
+    const testUsers = await testUserCache.initialise(app);
+    noRoles = testUsers().withoutAnyRoles().one();
+    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
+    anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
   });
 
   describe('PUT /v1/deals/:id/eligibility-documentation', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
       const filename = 'test-file-1.txt';
@@ -66,7 +43,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
       const filename = 'test-file-1.txt';
@@ -79,13 +56,13 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
         type,
       }];
 
-      const { status } = await putMultipartForm({}, aUserWithoutRoles, files).to(`/v1/deals/${newId}/eligibility-documentation`);
+      const { status } = await putMultipartForm({}, noRoles.token, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(401);
     });
 
     it('401s requests if user tries to update deal it doesn\'t have permission for', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
       const filename = 'test-file-1.txt';
@@ -98,13 +75,13 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
         type,
       }];
 
-      const { status } = await putMultipartForm({}, user2, files).to(`/v1/deals/${newId}/eligibility-documentation`);
+      const { status } = await putMultipartForm({}, anHSBCMaker.token, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(401);
     });
 
     it('uploads a file with the correct type', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
       const filename = 'test-file-1.txt';
@@ -117,7 +94,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
         type,
       }];
 
-      const { status, body } = await putMultipartForm({}, user1, files).to(`/v1/deals/${newId}/eligibility-documentation`);
+      const { status, body } = await putMultipartForm({}, aBarclaysMaker.token, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(200);
       expect(body.dealFiles[fieldname][0]).toMatchObject({
@@ -128,7 +105,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
     });
 
     it('uploads multiple files from same fieldname with the correct type', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
       const fieldname = 'financialStatements';
@@ -154,7 +131,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
         type,
       }));
 
-      const { status, body } = await putMultipartForm({}, user1, files).to(`/v1/deals/${newId}/eligibility-documentation`);
+      const { status, body } = await putMultipartForm({}, aBarclaysMaker.token, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(200);
       expect(body.dealFiles[fieldname].length).toEqual(files.length);
@@ -162,7 +139,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
     });
 
     it('uploads files from different fieldname with the correct type', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
       const files = [
@@ -186,7 +163,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
         type,
       }]));
 
-      const { status, body } = await putMultipartForm({}, user1, files).to(`/v1/deals/${newId}/eligibility-documentation`);
+      const { status, body } = await putMultipartForm({}, aBarclaysMaker.token, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(200);
       expect(body.dealFiles[files[0].fieldname].length).toEqual(1);
@@ -197,7 +174,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
     });
 
     it('does not create duplicate entry if same file is reuploaded', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
       const filename = 'test-file-1.txt';
@@ -210,16 +187,16 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
         type,
       }];
 
-      await putMultipartForm({}, user1, files).to(`/v1/deals/${newId}/eligibility-documentation`);
+      await putMultipartForm({}, aBarclaysMaker.token, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
-      const { status, body } = await putMultipartForm({}, user1, files).to(`/v1/deals/${newId}/eligibility-documentation`);
+      const { status, body } = await putMultipartForm({}, aBarclaysMaker.token, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(200);
       expect(body.dealFiles[fieldname].length).toEqual(1);
     });
 
     it('deletes an uploaded file', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
       const filename = 'test-file-1.txt';
@@ -233,7 +210,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       }];
 
 
-      const uploadedDealRes = await putMultipartForm({}, user1, files).to(`/v1/deals/${newId}/eligibility-documentation`);
+      const uploadedDealRes = await putMultipartForm({}, aBarclaysMaker.token, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       const filePath = uploadedDealRes.body.dealFiles[fieldname][0].fullPath;
 
@@ -241,7 +218,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
         deleteFile: [filePath],
       };
 
-      const { status, body } = await putMultipartForm(deleteFileData, user1, []).to(`/v1/deals/${newId}/eligibility-documentation`);
+      const { status, body } = await putMultipartForm(deleteFileData, aBarclaysMaker.token, []).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(200);
       expect(body.dealFiles[fieldname].length).toEqual(0);

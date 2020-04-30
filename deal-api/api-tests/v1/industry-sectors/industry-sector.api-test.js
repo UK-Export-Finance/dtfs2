@@ -2,14 +2,15 @@ const wipeDB = require('../../wipeDB');
 const anIndustrySector = require('./industry-sector-builder');
 
 const app = require('../../../src/createApp');
-const {
-  get, post, put, remove,
-} = require('../../api')(app);
+const testUserCache = require('../../api-test-users');
+
+const { get, post, put, remove } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
-const getToken = require('../../getToken')(app);
-
 describe('/v1/industry-sectors', () => {
+  let noRoles;
+  let anEditor;
+
   const mockClasses = [
     { code: 'b', name: 'b' },
     { code: 'c', name: 'c' },
@@ -23,14 +24,12 @@ describe('/v1/industry-sectors', () => {
   const newIndustrySector = anIndustrySector({ code: '101', name: 'AAAB', classes: mockClasses });
   const updatedIndustrySector = anIndustrySector({ code: '101', name: 'BBBA', classes: mockClasses });
 
-  let aTokenWithNoRoles;
-  let aTokenWithEditorRole;
-
   beforeEach(async () => {
-    await wipeDB.wipe(['industrySectors', 'users']);
+    await wipeDB.wipe(['industrySectors']);
 
-    aTokenWithNoRoles = await getToken({ username: '1', password: '2', roles: [] });
-    aTokenWithEditorRole = await getToken({ username: '3', password: '4', roles: ['editor'] });
+    const testUsers = await testUserCache.initialise(app);
+    noRoles = testUsers().withoutAnyRoles().one();
+    anEditor = testUsers().withRole('editor').one();
   });
 
   describe('GET /v1/industry-sectors', () => {
@@ -41,17 +40,17 @@ describe('/v1/industry-sectors', () => {
     });
 
     it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await get('/v1/industry-sectors', aTokenWithNoRoles);
+      const { status } = await get('/v1/industry-sectors', noRoles.token);
 
       expect(status).toEqual(200);
     });
 
     it('returns a list of industry-sectors', async () => {
-      await post(aaaa, aTokenWithEditorRole).to('/v1/industry-sectors');
-      await post(pppp, aTokenWithEditorRole).to('/v1/industry-sectors');
-      await post(mmmm, aTokenWithEditorRole).to('/v1/industry-sectors');
+      await post(aaaa, anEditor.token).to('/v1/industry-sectors');
+      await post(pppp, anEditor.token).to('/v1/industry-sectors');
+      await post(mmmm, anEditor.token).to('/v1/industry-sectors');
 
-      const { status, body } = await get('/v1/industry-sectors', aTokenWithNoRoles);
+      const { status, body } = await get('/v1/industry-sectors', noRoles.token);
 
       const expectedClasses = [
         { code: 'a', name: 'a' },
@@ -78,15 +77,15 @@ describe('/v1/industry-sectors', () => {
     });
 
     it('accepts requests that do present a valid Authorization token', async () => {
-      const { status } = await get('/v1/industry-sectors/101', aTokenWithNoRoles);
+      const { status } = await get('/v1/industry-sectors/101', noRoles.token);
 
       expect(status).toEqual(200);
     });
 
     it('returns an industry-sector', async () => {
-      await post(newIndustrySector, aTokenWithEditorRole).to('/v1/industry-sectors');
+      await post(newIndustrySector, anEditor.token).to('/v1/industry-sectors');
 
-      const { status, body } = await get('/v1/industry-sectors/101', aTokenWithNoRoles);
+      const { status, body } = await get('/v1/industry-sectors/101', noRoles.token);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId(newIndustrySector));
@@ -101,13 +100,13 @@ describe('/v1/industry-sectors', () => {
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      const { status } = await post(newIndustrySector, aTokenWithNoRoles).to('/v1/industry-sectors');
+      const { status } = await post(newIndustrySector, noRoles.token).to('/v1/industry-sectors');
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      const { status } = await post(newIndustrySector, aTokenWithEditorRole).to('/v1/industry-sectors');
+      const { status } = await post(newIndustrySector, anEditor.token).to('/v1/industry-sectors');
 
       expect(status).toEqual(200);
     });
@@ -121,24 +120,24 @@ describe('/v1/industry-sectors', () => {
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await post(newIndustrySector, aTokenWithEditorRole).to('/v1/industry-sectors');
-      const { status } = await put(updatedIndustrySector, aTokenWithNoRoles).to('/v1/industry-sectors/101');
+      await post(newIndustrySector, anEditor.token).to('/v1/industry-sectors');
+      const { status } = await put(updatedIndustrySector, noRoles.token).to('/v1/industry-sectors/101');
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await post(newIndustrySector, aTokenWithEditorRole).to('/v1/industry-sectors');
-      const { status } = await put(updatedIndustrySector, aTokenWithEditorRole).to('/v1/industry-sectors/101');
+      await post(newIndustrySector, anEditor.token).to('/v1/industry-sectors');
+      const { status } = await put(updatedIndustrySector, anEditor.token).to('/v1/industry-sectors/101');
 
       expect(status).toEqual(200);
     });
 
     it('updates the industry-sector', async () => {
-      await post(newIndustrySector, aTokenWithEditorRole).to('/v1/industry-sectors');
-      await put(updatedIndustrySector, aTokenWithEditorRole).to('/v1/industry-sectors/101');
+      await post(newIndustrySector, anEditor.token).to('/v1/industry-sectors');
+      await put(updatedIndustrySector, anEditor.token).to('/v1/industry-sectors/101');
 
-      const { status, body } = await get('/v1/industry-sectors/101', aTokenWithEditorRole);
+      const { status, body } = await get('/v1/industry-sectors/101', anEditor.token);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId(updatedIndustrySector));
@@ -153,24 +152,24 @@ describe('/v1/industry-sectors', () => {
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await post(newIndustrySector, aTokenWithEditorRole).to('/v1/industry-sectors');
-      const { status } = await remove('/v1/industry-sectors/101', aTokenWithNoRoles);
+      await post(newIndustrySector, anEditor.token).to('/v1/industry-sectors');
+      const { status } = await remove('/v1/industry-sectors/101', noRoles.token);
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await post(newIndustrySector, aTokenWithEditorRole).to('/v1/industry-sectors');
-      const { status } = await remove('/v1/industry-sectors/101', aTokenWithEditorRole);
+      await post(newIndustrySector, anEditor.token).to('/v1/industry-sectors');
+      const { status } = await remove('/v1/industry-sectors/101', anEditor.token);
 
       expect(status).toEqual(200);
     });
 
     it('deletes the industry-sector', async () => {
-      await post(newIndustrySector, aTokenWithEditorRole).to('/v1/industry-sectors');
-      await remove('/v1/industry-sectors/101', aTokenWithEditorRole);
+      await post(newIndustrySector, anEditor.token).to('/v1/industry-sectors');
+      await remove('/v1/industry-sectors/101', anEditor.token);
 
-      const { status, body } = await get('/v1/industry-sectors/101', aTokenWithEditorRole);
+      const { status, body } = await get('/v1/industry-sectors/101', anEditor.token);
 
       expect(status).toEqual(200);
       expect(body).toEqual({});
