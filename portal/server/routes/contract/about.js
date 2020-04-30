@@ -110,6 +110,9 @@ router.post('/contract/:_id/about/supplier/save-go-back', async (req, res) => {
     };
   }
 
+  console.log(`about to send update::\n ${JSON.stringify(submissionDetails, null, 2)}`);
+
+
   await api.updateSubmissionDetails(deal, submissionDetails, userToken);
 
   const redirectUrl = `/contract/${_id}`;

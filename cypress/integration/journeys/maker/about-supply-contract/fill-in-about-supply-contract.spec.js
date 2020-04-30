@@ -71,7 +71,7 @@ context('about-supply-contract', () => {
     //---
     // fill in the simplest version of the form so we can submit it and save it..
     //---
-    contractAboutSupplier.correspondenceAddressSame().click();
+    contractAboutSupplier.suppliersCorrespondenceAddressSame().click();
     contractAboutSupplier.industrySector().select('1009'); //Information and communication
     contractAboutSupplier.industryClass().select('62012'); //Business and domestic software development
     contractAboutSupplier.smeTypeMicro().click();
@@ -98,7 +98,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.supplierAddress().town().should('not.have.value', ''); //TODO
     contractAboutSupplier.supplierAddress().postcode().should('not.have.value', ''); //TODO
 
-    contractAboutSupplier.correspondenceAddressSame().should('be.checked');
+    contractAboutSupplier.suppliersCorrespondenceAddressSame().should('be.checked');
     contractAboutSupplier.industrySector().should('have.value', '1009'); //Information and communication
     contractAboutSupplier.industryClass().should('have.value', '62012'); //Business and domestic software development
     contractAboutSupplier.smeTypeMicro().should('be.checked');
