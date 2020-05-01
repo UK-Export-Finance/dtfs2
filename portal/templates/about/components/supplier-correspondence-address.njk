@@ -1,12 +1,11 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import './address-fields.njk' as address %}
 
-
-
 {% macro render(opts) %}
   {% set deal = opts.deal %}
+  {% set countries = opts.countries %}
   {% set validationErrors = opts.validationErrors %}
-  
+
     {{
       govukRadios({
         fieldset: {
@@ -38,10 +37,10 @@
     }}
 
 
-    <div id="additional-form-fields-supplier-correspondence" class="govuk-visually-hidden">
+    <div id="additional-form-fields-supplier-correspondence" class="{% if deal.submissionDetails.suppliersCorrespondenceAddressDifferent === 'false'%}govuk-visually-hidden{% endif %}">
       {{ address.fields(
         deal = deal,
-        id = "supplierCorrespondence",
+        id = "supplier-correspondence-address",
         legend = "Supplier correspondence address",
         countries = countries,
         showCountryPleaseSelect = true
