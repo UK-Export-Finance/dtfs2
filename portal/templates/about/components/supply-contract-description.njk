@@ -1,0 +1,17 @@
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+
+{% macro render(opts) %}
+  {% set deal = opts.deal %}
+  {% set validationErrors = opts.validationErrors %}
+
+  {{ govukTextarea({
+    label: { text: "Description of supply contract" },
+    hint: { text: "You can enter up to 300 characters" },
+    attributes : { "data-cy" : "supplyContractDescription" },
+    name: "supplyContractDescription",
+    id: "supplyContractDescription",
+    value: deal.submissionDetails.supplyContractDescription,
+    errorMessage: validationErrors.errorList.supplyContractDescription
+  }) }}
+
+{% endmacro %}

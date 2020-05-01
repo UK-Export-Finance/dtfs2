@@ -2,36 +2,27 @@ const wipeDB = require('../../wipeDB');
 const aTransaction = require('./transaction-builder');
 
 const app = require('../../../src/createApp');
-const {
-  get, post, put, remove,
-} = require('../../api')(app);
+const testUserCache = require('../../api-test-users');
+const { get, post, put, remove } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
-const getToken = require('../../getToken')(app);
-
 describe('/v1/transactions', () => {
+  let noRoles;
+  let anEditor;
+
   const newTransaction = aTransaction({ bankFacilityId: '1a2b3c' });
   const updatedTransaction = aTransaction({
     bankFacilityId: '1a2b3c',
     stage: 'Updated transaction stage',
   });
 
-  let aTokenWithNoRoles;
-  let aTokenWithEditorRole;
 
   beforeEach(async () => {
-    await wipeDB.wipe(['transactions', 'users']);
+    await wipeDB.wipe(['transactions']);
 
-    aTokenWithNoRoles = await getToken({
-      username: '1',
-      password: '2',
-      roles: [],
-    });
-    aTokenWithEditorRole = await getToken({
-      username: '3',
-      password: '4',
-      roles: ['editor'],
-    });
+    const testUsers = await testUserCache.initialise(app);
+    noRoles = testUsers().withoutAnyRoles().one();
+    anEditor = testUsers().withRole('editor').one();
   });
 
   describe('GET /v1/transactions', () => {
@@ -42,7 +33,7 @@ describe('/v1/transactions', () => {
     });
 
     it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await get('/v1/transactions', aTokenWithNoRoles);
+      const { status } = await get('/v1/transactions', noRoles.token);
 
       expect(status).toEqual(200);
     });
@@ -54,11 +45,11 @@ describe('/v1/transactions', () => {
         aTransaction({ bankFacilityId: '3a4b5c', stage: 'CCC' }),
       ];
 
-      await post(transactions[0], aTokenWithEditorRole).to('/v1/transactions');
-      await post(transactions[1], aTokenWithEditorRole).to('/v1/transactions');
-      await post(transactions[2], aTokenWithEditorRole).to('/v1/transactions');
+      await post(transactions[0], anEditor.token).to('/v1/transactions');
+      await post(transactions[1], anEditor.token).to('/v1/transactions');
+      await post(transactions[2], anEditor.token).to('/v1/transactions');
 
-      const { status, body } = await get('/v1/transactions', aTokenWithNoRoles);
+      const { status, body } = await get('/v1/transactions', noRoles.token);
 
       expect(status).toEqual(200);
       expect(body.transactions).toEqual(expectMongoIds(transactions));
@@ -75,18 +66,18 @@ describe('/v1/transactions', () => {
     it('accepts requests that do present a valid Authorization token', async () => {
       const { status } = await get(
         '/v1/transactions/1a2b3c',
-        aTokenWithNoRoles,
+        noRoles.token,
       );
 
       expect(status).toEqual(200);
     });
 
     it('returns a transaction', async () => {
-      await post(newTransaction, aTokenWithEditorRole).to('/v1/transactions');
+      await post(newTransaction, anEditor.token).to('/v1/transactions');
 
       const { status, body } = await get(
         '/v1/transactions/1a2b3c',
-        aTokenWithNoRoles,
+        noRoles.token,
       );
 
       expect(status).toEqual(200);
@@ -102,7 +93,7 @@ describe('/v1/transactions', () => {
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      const { status } = await post(newTransaction, aTokenWithNoRoles).to(
+      const { status } = await post(newTransaction, noRoles.token).to(
         '/v1/transactions',
       );
 
@@ -110,7 +101,7 @@ describe('/v1/transactions', () => {
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      const { status } = await post(newTransaction, aTokenWithEditorRole).to(
+      const { status } = await post(newTransaction, anEditor.token).to(
         '/v1/transactions',
       );
 
@@ -128,8 +119,8 @@ describe('/v1/transactions', () => {
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await post(newTransaction, aTokenWithEditorRole).to('/v1/transactions');
-      const { status } = await put(updatedTransaction, aTokenWithNoRoles).to(
+      await post(newTransaction, anEditor.token).to('/v1/transactions');
+      const { status } = await put(updatedTransaction, noRoles.token).to(
         '/v1/transactions/1a2b3c',
       );
 
@@ -137,8 +128,8 @@ describe('/v1/transactions', () => {
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await post(newTransaction, aTokenWithEditorRole).to('/v1/transactions');
-      const { status } = await put(updatedTransaction, aTokenWithEditorRole).to(
+      await post(newTransaction, anEditor.token).to('/v1/transactions');
+      const { status } = await put(updatedTransaction, anEditor.token).to(
         '/v1/transactions/1a2b3c',
       );
 
@@ -146,14 +137,14 @@ describe('/v1/transactions', () => {
     });
 
     it('updates the transaction', async () => {
-      await post(newTransaction, aTokenWithEditorRole).to('/v1/transactions');
-      await put(updatedTransaction, aTokenWithEditorRole).to(
+      await post(newTransaction, anEditor.token).to('/v1/transactions');
+      await put(updatedTransaction, anEditor.token).to(
         '/v1/transactions/1a2b3c',
       );
 
       const { status, body } = await get(
         '/v1/transactions/1a2b3c',
-        aTokenWithEditorRole,
+        anEditor.token,
       );
 
       expect(status).toEqual(200);
@@ -169,32 +160,32 @@ describe('/v1/transactions', () => {
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await post(newTransaction, aTokenWithEditorRole).to('/v1/transactions');
+      await post(newTransaction, anEditor.token).to('/v1/transactions');
       const { status } = await remove(
         '/v1/transactions/1a2b3c',
-        aTokenWithNoRoles,
+        noRoles.token,
       );
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await post(newTransaction, aTokenWithEditorRole).to('/v1/transactions');
+      await post(newTransaction, anEditor.token).to('/v1/transactions');
       const { status } = await remove(
         '/v1/transactions/1a2b3c',
-        aTokenWithEditorRole,
+        anEditor.token,
       );
 
       expect(status).toEqual(200);
     });
 
     it('deletes the transaction', async () => {
-      await post(newTransaction, aTokenWithEditorRole).to('/v1/transactions');
-      await remove('/v1/transactions/1a2b3c', aTokenWithEditorRole);
+      await post(newTransaction, anEditor.token).to('/v1/transactions');
+      await remove('/v1/transactions/1a2b3c', anEditor.token);
 
       const { status, body } = await get(
         '/v1/transactions/1a2b3c',
-        aTokenWithEditorRole,
+        anEditor.token,
       );
 
       expect(status).toEqual(200);

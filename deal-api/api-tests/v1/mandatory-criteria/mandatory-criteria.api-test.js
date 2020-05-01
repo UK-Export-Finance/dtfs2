@@ -2,36 +2,27 @@ const wipeDB = require('../../wipeDB');
 const aMandatoryCriteria = require('./mandatory-criteria-builder');
 
 const app = require('../../../src/createApp');
-const {
-  get, post, put, remove,
-} = require('../../api')(app);
+const testUserCache = require('../../api-test-users');
+
+const { get, post, put, remove } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
-const getToken = require('../../getToken')(app);
-
 describe('/v1/mandatory-criteria', () => {
+  let noRoles;
+  let anEditor;
+
   const newMandatoryCriteria = aMandatoryCriteria({ id: '2' });
   const updatedMandatoryCriteria = aMandatoryCriteria({
     id: '2',
     title: 'Updated mandatory criteria',
   });
 
-  let aTokenWithNoRoles;
-  let aTokenWithEditorRole;
-
   beforeEach(async () => {
-    await wipeDB.wipe(['mandatoryCriteria', 'users']);
+    await wipeDB.wipe(['mandatoryCriteria']);
 
-    aTokenWithNoRoles = await getToken({
-      username: '1',
-      password: '2',
-      roles: [],
-    });
-    aTokenWithEditorRole = await getToken({
-      username: '3',
-      password: '4',
-      roles: ['editor'],
-    });
+    const testUsers = await testUserCache.initialise(app);
+    noRoles = testUsers().withoutAnyRoles().one();
+    anEditor = testUsers().withRole('editor').one();
   });
 
   describe('GET /v1/mandatory-criteria', () => {
@@ -42,7 +33,7 @@ describe('/v1/mandatory-criteria', () => {
     });
 
     it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await get('/v1/mandatory-criteria', aTokenWithNoRoles);
+      const { status } = await get('/v1/mandatory-criteria', noRoles.token);
 
       expect(status).toEqual(200);
     });
@@ -54,19 +45,19 @@ describe('/v1/mandatory-criteria', () => {
         aMandatoryCriteria({ id: '2' }),
       ];
 
-      await post(criteria[0], aTokenWithEditorRole).to(
+      await post(criteria[0], anEditor.token).to(
         '/v1/mandatory-criteria',
       );
-      await post(criteria[1], aTokenWithEditorRole).to(
+      await post(criteria[1], anEditor.token).to(
         '/v1/mandatory-criteria',
       );
-      await post(criteria[2], aTokenWithEditorRole).to(
+      await post(criteria[2], anEditor.token).to(
         '/v1/mandatory-criteria',
       );
 
       const { status, body } = await get(
         '/v1/mandatory-criteria',
-        aTokenWithNoRoles,
+        noRoles.token,
       );
 
       const expectedSortedMandatoryCriteria = [
@@ -90,20 +81,20 @@ describe('/v1/mandatory-criteria', () => {
     it('accepts requests that do present a valid Authorization token', async () => {
       const { status } = await get(
         '/v1/mandatory-criteria/2',
-        aTokenWithNoRoles,
+        noRoles.token,
       );
 
       expect(status).toEqual(200);
     });
 
     it('returns a mandatory-criteria', async () => {
-      await post(newMandatoryCriteria, aTokenWithEditorRole).to(
+      await post(newMandatoryCriteria, anEditor.token).to(
         '/v1/mandatory-criteria',
       );
 
       const { status, body } = await get(
         '/v1/mandatory-criteria/2',
-        aTokenWithNoRoles,
+        noRoles.token,
       );
 
       expect(status).toEqual(200);
@@ -121,7 +112,7 @@ describe('/v1/mandatory-criteria', () => {
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      const { status } = await post(newMandatoryCriteria, aTokenWithNoRoles).to(
+      const { status } = await post(newMandatoryCriteria, noRoles.token).to(
         '/v1/mandatory-criteria',
       );
 
@@ -131,7 +122,7 @@ describe('/v1/mandatory-criteria', () => {
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
       const { status } = await post(
         newMandatoryCriteria,
-        aTokenWithEditorRole,
+        anEditor.token,
       ).to('/v1/mandatory-criteria');
 
       expect(status).toEqual(200);
@@ -148,40 +139,40 @@ describe('/v1/mandatory-criteria', () => {
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await post(newMandatoryCriteria, aTokenWithEditorRole).to(
+      await post(newMandatoryCriteria, anEditor.token).to(
         '/v1/mandatory-criteria',
       );
       const { status } = await put(
         updatedMandatoryCriteria,
-        aTokenWithNoRoles,
+        noRoles.token,
       ).to('/v1/mandatory-criteria/2');
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await post(newMandatoryCriteria, aTokenWithEditorRole).to(
+      await post(newMandatoryCriteria, anEditor.token).to(
         '/v1/mandatory-criteria',
       );
       const { status } = await put(
         updatedMandatoryCriteria,
-        aTokenWithEditorRole,
+        anEditor.token,
       ).to('/v1/mandatory-criteria/2');
 
       expect(status).toEqual(200);
     });
 
     it('updates the mandatory-criteria', async () => {
-      await post(newMandatoryCriteria, aTokenWithEditorRole).to(
+      await post(newMandatoryCriteria, anEditor.token).to(
         '/v1/mandatory-criteria',
       );
-      await put(updatedMandatoryCriteria, aTokenWithEditorRole).to(
+      await put(updatedMandatoryCriteria, anEditor.token).to(
         '/v1/mandatory-criteria/2',
       );
 
       const { status, body } = await get(
         '/v1/mandatory-criteria/2',
-        aTokenWithEditorRole,
+        anEditor.token,
       );
 
       expect(status).toEqual(200);
@@ -197,38 +188,38 @@ describe('/v1/mandatory-criteria', () => {
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await post(newMandatoryCriteria, aTokenWithEditorRole).to(
+      await post(newMandatoryCriteria, anEditor.token).to(
         '/v1/mandatory-criteria',
       );
       const { status } = await remove(
         '/v1/mandatory-criteria/2',
-        aTokenWithNoRoles,
+        noRoles.token,
       );
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await post(newMandatoryCriteria, aTokenWithEditorRole).to(
+      await post(newMandatoryCriteria, anEditor.token).to(
         '/v1/mandatory-criteria',
       );
       const { status } = await remove(
         '/v1/mandatory-criteria/2',
-        aTokenWithEditorRole,
+        anEditor.token,
       );
 
       expect(status).toEqual(200);
     });
 
     it('deletes the mandatory-criteria', async () => {
-      await post(newMandatoryCriteria, aTokenWithEditorRole).to(
+      await post(newMandatoryCriteria, anEditor.token).to(
         '/v1/mandatory-criteria',
       );
-      await remove('/v1/mandatory-criteria/2', aTokenWithEditorRole);
+      await remove('/v1/mandatory-criteria/2', anEditor.token);
 
       const { status, body } = await get(
         '/v1/mandatory-criteria/2',
-        aTokenWithEditorRole,
+        anEditor.token,
       );
 
       expect(status).toEqual(200);

@@ -1,10 +1,14 @@
 {% extends "index.njk" %}
-{% import './components/address-fields.njk' as address %}
 {% import './components/about-supply-contract-nav.njk' as aboutSupplyContract %}
-{% import './components/input-companies-house-reg-number.njk' as companiesHouse %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% import './components/supplier-type-dropdown.njk' as supplierTypeDropdown %}
+{% import './components/supplier-name-and-address-lookup.njk' as supplierNameAndAddressLookup %}
+{% import './components/supplier-correspondence-address.njk' as supplierCorrespondenceAddress %}
+{% import './components/legally-distinct-counter-indemnifier_slash_guarentor.njk' as legallyDistinct %}
+{% import './components/industry-sectors-dropdown.njk' as industrySectorsDropdown %}
+{% import './components/industry-classes-dropdown.njk' as industryClassesDropdown %}
+{% import './components/sme-type-radios.njk' as smeTypeRadios %}
+{% import './components/supply-contract-description.njk' as supplyContractDescription %}
+
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block content %}
@@ -31,341 +35,61 @@
 
   <form method="POST" autocomplete="off">
 
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="supplierType">
-        Supplier type
-      </label>
-      <span id="supplierType-hint" class="govuk-hint">
-          Where the supplier is a UK Supplier, please ensure that it has provided a UK Supplier Declaration
-      </span>
-
-      <select data-cy="supplierType" class="govuk-select govuk-!-width-one-half" id="supplierType" name="supplierType" aria-describedby="supplierType-hint">
-        <option value="">Select value</option>
-        <option value="Exporter" {% if deal.submissionDetails.supplierType==='Exporter'%} selected {%endif%}>Exporter</option>
-        <option value="UK Supplier" {% if deal.submissionDetails.supplierType==='UK Supplier'%} selected {%endif%}>UK Supplier</option>
-      </select>
-    </div>
-
-    <div class="govuk-form-group">
-      {{ companiesHouse.input({
-        deal: deal,
-        id: 'supplierCompaniesHouseRegistrationNumber',
-        label: 'UK Supplier’s Companies House registration number, if UK registered (optional)'
-      }) }}
-    </div>
-
-    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
-
-      {{ govukInput({
-        label: {
-          html: 'Supplier name <span id="supplierName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">You can enter up to 150 characters</span>'
-        },
-        classes: "govuk-!-width-one-half",
-        id: 'supplierName',
-        name: 'supplierName',
-        value: deal.submissionDetails.supplierName,
-        attributes: {
-          "data-cy": "supplierName"
-        },
-        errorMessage: validationErrors.errorList.supplierName
-      }) }}
-    </div>
-
-    {{ address.fields(
-      deal = deal,
-      id = "supplier-address",
-      legend = "Supplier address",
-      countries = countries,
-      hint = "This should be the supplier's principal place of business"
-    )}}
-
-    <div class="govuk-form-group">
-      <fieldset class="govuk-fieldset">
-
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend">
-          Is the Supplier's correspondence address different for the Company's Registered Address?
-        </legend>
-
-        <div class="govuk-radios govuk-radios--inline">
-          {# //TODO i refuse to believe this is the right way to do anything... #}
-          {% if deal.submissionDetails.suppliersCorrespondenceAddressDifferent %}
-            {% set isTrue=true %}
-            {% set isFalse=false %}
-          {% else %}
-            {% set isTrue=false %}
-            {% set isFalse=true %}
-          {% endif %}
-          <div class="govuk-radios__item">
-            <input
-              data-cy="correspondenceAddressDifferent-true"
-              class="govuk-radios__input"
-              id="suppliersCorrespondenceAddressDifferent"
-              name="suppliersCorrespondenceAddressDifferent"
-              type="radio"
-              value="true"
-              checked={{ isTrue }}
-              onClick="onChangeRadioButton('additional-form-fields-supplier-correspondence', true)"
-            >
-            <label class="govuk-label govuk-radios__label" for="suppliersCorrespondenceAddressDifferent">
-              Yes
-            </label>
-          </div>
-
-          <div class="govuk-radios__item">
-            <input
-            data-cy="correspondenceAddressDifferent-false"
-              class="govuk-radios__input"
-              id="suppliersCorrespondenceAddressDifferent-2"
-              name="suppliersCorrespondenceAddressDifferent"
-              type="radio"
-              value="false"
-              checked={{ isFalse }}
-              onClick="onChangeRadioButton('additional-form-fields-supplier-correspondence', false)"
-              >
-            <label class="govuk-label govuk-radios__label" for="suppliersCorrespondenceAddressDifferent-2">
-              No
-            </label>
-          </div>
-
-        </div>
-
-      </fieldset>
-    </div>
-
-    <div id="additional-form-fields-supplier-correspondence" class="govuk-visually-hidden">
-      {{ address.fields(
-        deal = deal,
-        id = "supplierCorrespondence",
-        legend = "Supplier correspondence address",
-        countries = countries,
-        showCountryPleaseSelect = true
-      )}}
-    </div>
-
-    {# not able to switch these -> govuk components while we are applying javascript hooks #}
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="industrySector">
-        Industry sector
-      </label>
-      <select data-cy="industrySector" class="govuk-select govuk-!-width-one-half" id="industrySector" name="industrySector" onChange="onChangeIndustrySector(event)">
-        <option value="">Select value</option>
-        {% for sector in industrySectors %}
-          <option value="{{ sector.code }}" {% if deal.submissionDetails.industrySector.code === sector.code %}selected{% endif %}>{{ sector.name}}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="industryClass">
-        Industry class
-      </label>
-      <select data-cy="industryClass" class="govuk-select govuk-!-width-one-half" id="industryClass" name="industryClass">
-        <option value="">Select value</option>
-
-        {# [dw] slight hack; pre-populating this 'manually' in the case of rendering with industrySector pre-selected rather than add to weight of in-browser js #}
-          {% for industrySector in industrySectors %}
-            {% if deal.submissionDetails.industrySector.code === industrySector.code %}
-              {% for industryClass in industrySector.classes %}
-                <option value="{{ industryClass.code }}" {% if deal.submissionDetails.industrySector.class.code === industryClass.code %}selected{% endif %}>{{industryClass.name}}</option>
-              {% endfor %}
-            {% endif %}
-          {% endfor %}
-
-      </select>
-    </div>
-
-    {{
-      govukRadios({
-        fieldset: {
-          legend: { text: "SME type" }
-        },
-        hint: { html: 'Confirm the SME type based on the <a href="https://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition" target="_blank">European Commission definitions</a>' },
-        idPrefix: "smeType-",
-        name: "smeType",
-        classes: "govuk-radios--inline",
-        items: [
-          {
-            value: "Micro",
-            text: "Micro",
-            attributes: { "data-cy": "smeType-Micro" },
-            checked: deal.submissionDetails.smeType === 'Micro'
-          },
-          {
-            value: "Small",
-            text: "Small",
-            attributes: { "data-cy": "smeType-Small" },
-            checked: deal.submissionDetails.smeType === 'Small'
-          },
-          {
-            value: "Medium",
-            text: "Medium",
-            attributes: { "data-cy": "smeType-Medium" },
-            checked: deal.submissionDetails.smeType === 'Medium'
-          },
-          {
-            value: "Non-SME",
-            text: "Non-SME",
-            attributes: { "data-cy": "smeType-Non-SME" },
-            checked: deal.submissionDetails.smeType === 'Non-SME'
-          }
-        ],
-        errorMessage: validationErrors.errorList.smeType
-      })
-    }}
-
-    {{ govukTextarea({
-      label: { text: "Description of supply contract" },
-      hint: { text: "You can enter up to 300 characters" },
-      attributes : { "data-cy" : "supplyContractDescription" },
-      name: "supplyContractDescription",
-      id: "supplyContractDescription",
-      value: deal.submissionDetails.supplyContractDescription,
-      errorMessage: validationErrors.errorList.supplyContractDescription
+    {{ supplierTypeDropdown.render({
+      deal: deal,
+      validationErrors: validationErrors
     }) }}
 
-    {# again, inline javascript- not able to switch to govuk component #}
-    <div class="govuk-form-group">
-      <fieldset class="govuk-fieldset">
+    {{ supplierNameAndAddressLookup.render({
+      deal: deal,
+      validationErrors: validationErrors
+    }) }}
 
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend">
-          Is the counter-indemnifier (for bonds) or guarantor (for loans) legally distinct from the supplier?
-        </legend>
+    {{ supplierCorrespondenceAddress.render({
+      deal: deal,
+      validationErrors: validationErrors
+    }) }}
 
-        <div class="govuk-radios govuk-radios--inline">
+    {{ industrySectorsDropdown.render({
+      industrySectors: industrySectors,
+      deal: deal,
+      validationErrors: validationErrors
+    }) }}
 
-          <div class="govuk-radios__item">
-            <input
-              data-cy="legallyDistinct-true"
-              class="govuk-radios__input"
-              id="legallyDistinct"
-              name="legallyDistinct"
-              type="radio" value="true"
-              {% if deal.submissionDetails.legallyDistinct === "true" %} checked {% endif %}
-              onClick="onChangeRadioButton('additional-form-fields-indemnifier', true)"
-            >
-            <label class="govuk-label govuk-radios__label" for="legallyDistinct">
-              Yes
-            </label>
-          </div>
+    {{ industryClassesDropdown.render({
+      industrySectors: industrySectors,
+      deal: deal,
+      validationErrors: validationErrors
+    }) }}
 
-          <div class="govuk-radios__item">
-            <input
-              data-cy="legallyDistinct-false"
-              class="govuk-radios__input"
-              id="legallyDistinct-2"
-              name="legallyDistinct"
-              type="radio" value="false"
-              {% if deal.submissionDetails.legallyDistinct === "false" %} checked {% endif %}
-              onClick="onChangeRadioButton('additional-form-fields-indemnifier', false)"
-              >
-            <label class="govuk-label govuk-radios__label" for="legallyDistinct-2">
-              No
-            </label>
-          </div>
+    {{ smeTypeRadios.render({
+      deal: deal,
+      validationErrors: validationErrors
+    }) }}
 
-        </div>
+    {{ supplyContractDescription.render({
+      deal: deal,
+      validationErrors: validationErrors
+    }) }}
 
-      </fieldset>
-    </div>
-
-    <div id="additional-form-fields-indemnifier" class="govuk-visually-hidden">
-
-      {{ companiesHouse.input(
-        id = 'indemnifierCompaniesHouseRegistrationNumber',
-        label = 'Indemnifier Companies House registration number (optional)'
-      )}}
-
-      <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="indemnifierName">
-            Indemnifier name
-          </label>
-          <span id="indemnifierName-hint" class="govuk-hint">
-            This should be the legal name of the entity
-          </span>
-          <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="indemnifierName" name="indemnifierName" aria-describedby="indemnifierName-info indemnifierName-hint" />
-        </div>
-
-        <span id="indemnifierName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-          You can enter up to 150 characters
-        </span>
-      </div>
-
-      {{ address.fields(
-        deal = deal,
-        id = "indemnifierAddress",
-        legend = "Indemnifier address",
-        countries = countries,
-        showCountryPleaseSelect = true
-      )}}
-
-
-      <div class="govuk-form-group">
-        <fieldset class="govuk-fieldset">
-
-          <legend class="govuk-fieldset__legend govuk-fieldset__legend">
-            Is the Indemnifier's correspondence address different for the Company's Registered Address?
-          </legend>
-
-          <div class="govuk-radios govuk-radios--inline">
-
-            <div class="govuk-radios__item">
-              <input
-                class="govuk-radios__input"
-                id="indemnifiersCorrespondenceAddressDifferent"
-                name="indemnifiersCorrespondenceAddressDifferent"
-                type="radio"
-                value="true"
-                onClick="onChangeRadioButton('additional-form-fields-indemnifier-correspondence-address', true)"
-              >
-              <label class="govuk-label govuk-radios__label" for="indemnifiersCorrespondenceAddressDifferent">
-                Yes
-              </label>
-            </div>
-
-            <div class="govuk-radios__item">
-              <input
-                class="govuk-radios__input"
-                id="indemnifiersCorrespondenceAddressDifferent-2"
-                name="indemnifiersCorrespondenceAddressDifferent"
-                type="radio"
-                value="false"
-                onClick="onChangeRadioButton('additional-form-fields-indemnifier-correspondence-address', false)"
-              >
-              <label class="govuk-label govuk-radios__label" for="indemnifiersCorrespondenceAddressDifferent-2">
-                No
-              </label>
-            </div>
-          </div>
-
-        </fieldset>
-      </div>
-
-      <div id="additional-form-fields-indemnifier-correspondence-address" class="govuk-visually-hidden">
-        {{ address.fields(
-          deal = deal,
-          id = 'Indemnifier correspondence address',
-          legend = 'Indemnifier correspondence address',
-          countries = countries,
-          showCountryPleaseSelect = true
-        )}}
-      </div>
-
-    </div>
+    {{ legallyDistinct.render({
+      deal: deal,
+      validationErrors: validationErrors
+    }) }}
 
     {{ govukButton({
       "text": "NextPage",
       "attributes" : { "data-cy" : "NextPage" }
     }) }}
 
-    {# use of formaction; we can't do that with govuk buttons.. #}
-    <input
-      data-cy="SaveAndGoBack"
-      type="submit"
-      formaction="/contract/{{ deal._id }}/about/supplier/save-go-back"
-      class="govuk-button govuk-button--secondary"
-      data-module="govuk-button"
-      value="Save and go back to deal"
-    />
+    {{ govukButton({
+      "text": "Save and go back to deal",
+      "classes" : "govuk-button govuk-button--secondary",
+      "attributes" : {
+        "data-cy" : "SaveAndGoBack",
+        "formaction" : "/contract/"+ deal._id +"/about/supplier/save-go-back"
+      }
+    }) }}
 
   </form>
 
