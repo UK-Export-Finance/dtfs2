@@ -1,5 +1,5 @@
 import {
-  REQUIRED_FIELDS,
+  FIELDS,
   shouldReturnValidation,
   mapValidationErrors,
   handleValidationErrors,
@@ -30,8 +30,8 @@ describe('bond validation errors mapping', () => {
     it('should return errorList from errorSummary function with only validationErrors that are included in requiredFields', () => {
       const mockErrorList = {
         ...mockBondErrors,
-        [REQUIRED_FIELDS.FEE_DETAILS[1]]: { order: '3', text: 'Field is required' },
-        [REQUIRED_FIELDS.FEE_DETAILS[2]]: { order: '4', text: 'Field is required' },
+        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[1]]: { order: '3', text: 'Field is required' },
+        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[2]]: { order: '4', text: 'Field is required' },
       };
 
       const mockValidationErrors = {
@@ -40,11 +40,11 @@ describe('bond validation errors mapping', () => {
       };
 
       const expectedRequiredErrorList = {
-        [REQUIRED_FIELDS.FEE_DETAILS[1]]: { order: '3', text: 'Field is required' },
-        [REQUIRED_FIELDS.FEE_DETAILS[2]]: { order: '4', text: 'Field is required' },
+        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[1]]: { order: '3', text: 'Field is required' },
+        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[2]]: { order: '4', text: 'Field is required' },
       };
 
-      const result = mapValidationErrors(mockValidationErrors, REQUIRED_FIELDS.FEE_DETAILS);
+      const result = mapValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
 
       const expectedErrorList = generateErrorSummary(
         { errorList: expectedRequiredErrorList },
@@ -57,8 +57,8 @@ describe('bond validation errors mapping', () => {
     it('should return summary and count from errorSummary with only validationErrors that are included in requiredFields', () => {
       const mockErrorList = {
         ...mockBondErrors,
-        [REQUIRED_FIELDS.FEE_DETAILS[1]]: { order: '3', text: 'Field is required' },
-        [REQUIRED_FIELDS.FEE_DETAILS[2]]: { order: '4', text: 'Field is required' },
+        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[1]]: { order: '3', text: 'Field is required' },
+        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[2]]: { order: '4', text: 'Field is required' },
       };
 
       const mockValidationErrors = {
@@ -67,11 +67,11 @@ describe('bond validation errors mapping', () => {
       };
 
       const expectedRequiredErrorList = {
-        [REQUIRED_FIELDS.FEE_DETAILS[1]]: { order: '3', text: 'Field is required' },
-        [REQUIRED_FIELDS.FEE_DETAILS[2]]: { order: '4', text: 'Field is required' },
+        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[1]]: { order: '3', text: 'Field is required' },
+        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[2]]: { order: '4', text: 'Field is required' },
       };
 
-      const result = mapValidationErrors(mockValidationErrors, REQUIRED_FIELDS.FEE_DETAILS);
+      const result = mapValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
 
       const expectedSummary = generateErrorSummary(
         { errorList: expectedRequiredErrorList },
@@ -104,13 +104,13 @@ describe('bond validation errors mapping', () => {
         },
       };
 
-      const result = mapValidationErrors(mockValidationErrors, REQUIRED_FIELDS.FEE_DETAILS);
+      const result = mapValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
       expect(result.conditionalErrorList).toEqual(mockValidationErrors.conditionalErrorList);
     });
 
     describe('when there is no validationErrors object passed', () => {
       it('should use an empty object', () => {
-        const result = mapValidationErrors(undefined, REQUIRED_FIELDS.FEE_DETAILS);
+        const result = mapValidationErrors(undefined, FIELDS.FEE_DETAILS);
 
         const expected = generateErrorSummary(
           {
@@ -128,8 +128,8 @@ describe('bond validation errors mapping', () => {
     it('should return mapValidationErrors result', () => {
       const mockErrorList = {
         ...mockBondErrors,
-        [REQUIRED_FIELDS.FEE_DETAILS[1]]: { order: '3', text: 'Field is required' },
-        [REQUIRED_FIELDS.FEE_DETAILS[2]]: { order: '4', text: 'Field is required' },
+        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[1]]: { order: '3', text: 'Field is required' },
+        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[2]]: { order: '4', text: 'Field is required' },
       };
 
       const mockValidationErrors = {
@@ -137,17 +137,17 @@ describe('bond validation errors mapping', () => {
         count: mockErrorList.length,
       };
 
-      const result = handleValidationErrors(mockValidationErrors, REQUIRED_FIELDS.FEE_DETAILS);
-      const expected = mapValidationErrors(mockValidationErrors, REQUIRED_FIELDS.FEE_DETAILS);
+      const result = handleValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
+      const expected = mapValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
       expect(result).toEqual(expected);
     });
 
     describe('when errorsCount is equal to/greater than the requiredFields count', () => {
       it('should return an empty object', () => {
         const mockErrorList = {
-          [REQUIRED_FIELDS.FEE_DETAILS[0]]: { order: '1', text: 'Field is required' },
-          [REQUIRED_FIELDS.FEE_DETAILS[1]]: { order: '2', text: 'Field is required' },
-          [REQUIRED_FIELDS.FEE_DETAILS[2]]: { order: '3', text: 'Field is required' },
+          [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[0]]: { order: '1', text: 'Field is required' },
+          [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[1]]: { order: '2', text: 'Field is required' },
+          [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[2]]: { order: '3', text: 'Field is required' },
         };
 
         const mockValidationErrors = {
@@ -155,7 +155,7 @@ describe('bond validation errors mapping', () => {
           count: mockErrorList.length,
         };
 
-        const result = handleValidationErrors(mockValidationErrors, REQUIRED_FIELDS.FEE_DETAILS);
+        const result = handleValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
         expect(result).toEqual({});
       });
     });
@@ -165,7 +165,7 @@ describe('bond validation errors mapping', () => {
     it('should return handleValidationErrors result', () => {
       const mockErrorList = {
         ...mockBondErrors,
-        [REQUIRED_FIELDS.DETAILS[0]]: { order: '3', text: 'Field is required' },
+        [FIELDS.DETAILS.REQUIRED_FIELDS[0]]: { order: '3', text: 'Field is required' },
       };
 
       const mockValidationErrors = {
@@ -175,7 +175,7 @@ describe('bond validation errors mapping', () => {
 
       const result = handleBondDetailsValidationErrors(mockValidationErrors);
 
-      const expected = handleValidationErrors(mockValidationErrors, REQUIRED_FIELDS.DETAILS);
+      const expected = handleValidationErrors(mockValidationErrors, FIELDS.DETAILS);
       expect(result).toEqual(expected);
     });
   });
@@ -184,7 +184,7 @@ describe('bond validation errors mapping', () => {
     it('should return handleValidationErrors result', () => {
       const mockErrorList = {
         ...mockBondErrors,
-        [REQUIRED_FIELDS.FINANCIAL_DETAILS[0]]: { order: '3', text: 'Field is required' },
+        [FIELDS.FINANCIAL_DETAILS.REQUIRED_FIELDS[0]]: { order: '3', text: 'Field is required' },
       };
 
       const mockValidationErrors = {
@@ -194,7 +194,7 @@ describe('bond validation errors mapping', () => {
 
       const result = handleBondFinancialDetailsValidationErrors(mockValidationErrors);
 
-      const expected = handleValidationErrors(mockValidationErrors, REQUIRED_FIELDS.FINANCIAL_DETAILS);
+      const expected = handleValidationErrors(mockValidationErrors, FIELDS.FINANCIAL_DETAILS);
       expect(result).toEqual(expected);
     });
   });
@@ -203,7 +203,7 @@ describe('bond validation errors mapping', () => {
     it('should return handleValidationErrors result', () => {
       const mockErrorList = {
         ...mockBondErrors,
-        [REQUIRED_FIELDS.FEE_DETAILS[0]]: { order: '3', text: 'Field is required' },
+        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[0]]: { order: '3', text: 'Field is required' },
       };
 
       const mockValidationErrors = {
@@ -213,7 +213,7 @@ describe('bond validation errors mapping', () => {
 
       const result = handleBondFeeDetailsValidationErrors(mockValidationErrors);
 
-      const expected = handleValidationErrors(mockValidationErrors, REQUIRED_FIELDS.FEE_DETAILS);
+      const expected = handleValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
       expect(result).toEqual(expected);
     });
   });
@@ -221,12 +221,12 @@ describe('bond validation errors mapping', () => {
   describe('handleBondPreviewValidationErrors', () => {
     it('should add `hrefRoot` to each required field error with link to relevant page', () => {
       const mockErrorList = {
-        [REQUIRED_FIELDS.DETAILS[0]]: { order: '1', text: 'Field is required' },
-        [REQUIRED_FIELDS.DETAILS[1]]: { order: '2', text: 'Field is required' },
-        [REQUIRED_FIELDS.FINANCIAL_DETAILS[0]]: { order: '3', text: 'Field is required' },
-        [REQUIRED_FIELDS.FINANCIAL_DETAILS[1]]: { order: '4', text: 'Field is required' },
-        [REQUIRED_FIELDS.FEE_DETAILS[0]]: { order: '5', text: 'Field is required' },
-        [REQUIRED_FIELDS.FEE_DETAILS[1]]: { order: '6', text: 'Field is required' },
+        [FIELDS.DETAILS.REQUIRED_FIELDS[0]]: { order: '1', text: 'Field is required' },
+        [FIELDS.DETAILS.REQUIRED_FIELDS[1]]: { order: '2', text: 'Field is required' },
+        [FIELDS.FINANCIAL_DETAILS.REQUIRED_FIELDS[0]]: { order: '3', text: 'Field is required' },
+        [FIELDS.FINANCIAL_DETAILS.REQUIRED_FIELDS[1]]: { order: '4', text: 'Field is required' },
+        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[0]]: { order: '5', text: 'Field is required' },
+        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[1]]: { order: '6', text: 'Field is required' },
       };
 
       const mockValidationErrors = {
@@ -246,32 +246,32 @@ describe('bond validation errors mapping', () => {
 
       const expected = {
         errorList: {
-          [REQUIRED_FIELDS.DETAILS[0]]: {
+          [FIELDS.DETAILS.REQUIRED_FIELDS[0]]: {
             order: '1',
             text: 'Field is required',
             hrefRoot: `/contract/${mockDealId}/bond/${mockBondId}/details`,
           },
-          [REQUIRED_FIELDS.DETAILS[1]]: {
+          [FIELDS.DETAILS.REQUIRED_FIELDS[1]]: {
             order: '2',
             text: 'Field is required',
             hrefRoot: `/contract/${mockDealId}/bond/${mockBondId}/details`,
           },
-          [REQUIRED_FIELDS.FINANCIAL_DETAILS[0]]: {
+          [FIELDS.FINANCIAL_DETAILS.REQUIRED_FIELDS[0]]: {
             order: '3',
             text: 'Field is required',
             hrefRoot: `/contract/${mockDealId}/bond/${mockBondId}/financial-details`,
           },
-          [REQUIRED_FIELDS.FINANCIAL_DETAILS[1]]: {
+          [FIELDS.FINANCIAL_DETAILS.REQUIRED_FIELDS[1]]: {
             order: '4',
             text: 'Field is required',
             hrefRoot: `/contract/${mockDealId}/bond/${mockBondId}/financial-details`,
           },
-          [REQUIRED_FIELDS.FEE_DETAILS[0]]: {
+          [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[0]]: {
             order: '5',
             text: 'Field is required',
             hrefRoot: `/contract/${mockDealId}/bond/${mockBondId}/fee-details`,
           },
-          [REQUIRED_FIELDS.FEE_DETAILS[1]]: {
+          [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[1]]: {
             order: '6',
             text: 'Field is required',
             hrefRoot: `/contract/${mockDealId}/bond/${mockBondId}/fee-details`,

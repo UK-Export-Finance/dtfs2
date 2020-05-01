@@ -3,44 +3,51 @@ import {
   generateErrorSummary,
 } from '../../../helpers';
 
-export const POSSIBLE_BOND_DETAILS_REQUIRED_FIELDS = [
-  // required if bondStage is 'Unissued'
-  'ukefGuaranteeInMonths',
+export const FIELDS = {
+  DETAILS: {
+    REQUIRED_FIELDS: [
+      'bondType',
+      'bondStage',
+    ],
+    CONDITIONALLY_REQUIRED_FIELDS: [
+      // required if bondStage is 'Unissued'
+      'ukefGuaranteeInMonths',
 
-  // required if bondStage is 'Issued'
-  'coverEndDate',
-  'uniqueIdentificationNumber',
-];
-
-export const REQUIRED_FIELDS = {
-  DETAILS: [
-    'bondType',
-    'bondStage',
-    ...POSSIBLE_BOND_DETAILS_REQUIRED_FIELDS,
-  ],
-  FINANCIAL_DETAILS: [
-    'bondValue',
-    'transactionCurrencySameAsSupplyContractCurrency',
-    'riskMarginFee',
-    'coveredPercentage',
-  ],
-  FEE_DETAILS: [
-    'feeType',
-    'feeFrequency',
-    'dayCountBasis',
-  ],
+      // required if bondStage is 'Issued'
+      'coverEndDate',
+      'uniqueIdentificationNumber',
+    ],
+  },
+  FINANCIAL_DETAILS: {
+    REQUIRED_FIELDS: [
+      'bondValue',
+      'transactionCurrencySameAsSupplyContractCurrency',
+      'riskMarginFee',
+      'coveredPercentage',
+    ],
+  },
+  FEE_DETAILS: {
+    REQUIRED_FIELDS: [
+      'feeType',
+      'feeFrequency',
+      'dayCountBasis',
+    ],
+  },
 };
 
 export const shouldReturnValidation = (errorsCount, fieldsCount) => errorsCount < fieldsCount;
 
-export const mapValidationErrors = (validationErrors, requiredFields) => {
+export const mapValidationErrors = (validationErrors, fields) => {
   const mappedErrors = validationErrors || {};
+  const { REQUIRED_FIELDS, CONDITIONALLY_REQUIRED_FIELDS } = fields;
 
   const filteredErrorList = {};
 
   if (validationErrors) {
     Object.keys(validationErrors.errorList).forEach((error) => {
-      if (requiredFields.includes(error)) {
+      if (REQUIRED_FIELDS.includes(error)) {
+        filteredErrorList[error] = validationErrors.errorList[error];
+      } else if (CONDITIONALLY_REQUIRED_FIELDS && CONDITIONALLY_REQUIRED_FIELDS.includes(error)) {
         filteredErrorList[error] = validationErrors.errorList[error];
       }
     });
@@ -57,41 +64,41 @@ export const mapValidationErrors = (validationErrors, requiredFields) => {
   };
 };
 
-export const handleValidationErrors = (validationErrors, requiredFields) => {
-  const mappedValidationErrors = mapValidationErrors(validationErrors, requiredFields);
+export const handleValidationErrors = (validationErrors, fields) => {
+  const { REQUIRED_FIELDS } = fields;
 
-  if (shouldReturnValidation(mappedValidationErrors.count, requiredFields.length)) {
+  const mappedValidationErrors = mapValidationErrors(validationErrors, fields);
+
+  if (shouldReturnValidation(mappedValidationErrors.count, REQUIRED_FIELDS.length)) {
     return mappedValidationErrors;
   }
   return {};
 };
 
-// NOTE: this is failing because we now pass
-// POSSIBLE_BOND_DETAILS_REQUIRED_FIELDS into REQUIRED_FIELDS.DETAILS
 export const handleBondDetailsValidationErrors = (validationErrors) =>
-  handleValidationErrors(validationErrors, REQUIRED_FIELDS.DETAILS);
+  handleValidationErrors(validationErrors, FIELDS.DETAILS);
 
 export const handleBondFinancialDetailsValidationErrors = (validationErrors) =>
-  handleValidationErrors(validationErrors, REQUIRED_FIELDS.FINANCIAL_DETAILS);
+  handleValidationErrors(validationErrors, FIELDS.FINANCIAL_DETAILS);
 
 export const handleBondFeeDetailsValidationErrors = (validationErrors) =>
-  handleValidationErrors(validationErrors, REQUIRED_FIELDS.FEE_DETAILS);
-
+  handleValidationErrors(validationErrors, FIELDS.FEE_DETAILS);
 
 export const handleBondPreviewValidationErrors = (validationErrors, dealId, bondId) => {
   const mappedValidationErrors = validationErrors;
 
   if (mappedValidationErrors && mappedValidationErrors.errorList) {
+    // TODO update - this won't work as DETAILS... no longer an array
     Object.keys(mappedValidationErrors.errorList).forEach((fieldName) => {
-      if (REQUIRED_FIELDS.DETAILS.includes(fieldName)) {
+      if (FIELDS.DETAILS.REQUIRED_FIELDS.includes(fieldName)) {
         mappedValidationErrors.errorList[fieldName].hrefRoot = `/contract/${dealId}/bond/${bondId}/details`;
       }
 
-      if (REQUIRED_FIELDS.FINANCIAL_DETAILS.includes(fieldName)) {
+      if (FIELDS.FINANCIAL_DETAILS.REQUIRED_FIELDS.includes(fieldName)) {
         mappedValidationErrors.errorList[fieldName].hrefRoot = `/contract/${dealId}/bond/${bondId}/financial-details`;
       }
 
-      if (REQUIRED_FIELDS.FEE_DETAILS.includes(fieldName)) {
+      if (FIELDS.FEE_DETAILS.REQUIRED_FIELDS.includes(fieldName)) {
         mappedValidationErrors.errorList[fieldName].hrefRoot = `/contract/${dealId}/bond/${bondId}/fee-details`;
       }
     });
