@@ -39,14 +39,10 @@ router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
     validationErrors,
   } = apiResponse;
 
-  const theValidationErrors = handleBondDetailsValidationErrors(validationErrors);
-
-  console.log('bond details theValidationErrors \n', theValidationErrors);
-
   return res.render('bond/bond-details.njk', {
     dealId,
     bond,
-    validationErrors: theValidationErrors,
+    validationErrors: handleBondDetailsValidationErrors(validationErrors),
   });
 });
 
