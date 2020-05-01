@@ -86,7 +86,7 @@ const finder = () => {
 
 module.exports.initialise = async(app) => {
   if (notYetInitialised) {
-    const { get, post, put, remove } = api(app);
+    const { get, post, put, remove } = api(app).as();
 
     const currentUsersResponse = await get('/v1/users');
     const existingUsers = currentUsersResponse.body.users;

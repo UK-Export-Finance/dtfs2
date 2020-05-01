@@ -5,37 +5,36 @@ const { findOneBondCurrency } = require('./bondCurrencies.controller');
 
 exports.create = async (req, res) => {
   await findOneDeal(req.params.id, async (deal) => {
-    if (deal) {
-      if (!userHasAccessTo(req.user, deal)) {
-        res.status(401).send();
-      }
+    if (!deal) return res.status(404).send();
 
-      const newBondObj = { _id: new ObjectId() };
-
-      const updatedDeal = {
-        ...deal,
-        bondTransactions: {
-          items: [
-            ...deal.bondTransactions.items,
-            newBondObj,
-          ],
-        },
-      };
-
-      const newReq = {
-        params: req.params,
-        body: updatedDeal,
-        user: req.user,
-      };
-
-      const updateDealResponse = await updateDeal(newReq, res);
-
-      return res.status(200).send({
-        ...updateDealResponse,
-        bondId: newBondObj._id, // eslint-disable-line no-underscore-dangle
-      });
+    if (!userHasAccessTo(req.user, deal)) {
+      return res.status(401).send();
     }
-    return res.status(404).send();
+
+    const newBondObj = { _id: new ObjectId() };
+
+    const updatedDeal = {
+      ...deal,
+      bondTransactions: {
+        items: [
+          ...deal.bondTransactions.items,
+          newBondObj,
+        ],
+      },
+    };
+
+    const newReq = {
+      params: req.params,
+      body: updatedDeal,
+      user: req.user,
+    };
+
+    const updateDealResponse = await updateDeal(newReq, res);
+
+    return res.status(200).send({
+      ...updateDealResponse,
+      bondId: newBondObj._id, // eslint-disable-line no-underscore-dangle
+    });
   });
 };
 
