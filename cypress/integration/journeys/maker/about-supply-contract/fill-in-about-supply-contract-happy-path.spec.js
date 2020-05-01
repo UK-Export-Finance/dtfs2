@@ -52,7 +52,7 @@ context('about-supply-contract', () => {
     //---
     contractAboutSupplier.supplierType().select('Exporter');
     contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('08547313'); //TODO better test company?
-    contractAboutSupplier.searchCompaniesHouse().click();
+    contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     // the fields we already filled in should still be present
     contractAboutSupplier.supplierType().should('have.value', 'Exporter');
@@ -71,7 +71,7 @@ context('about-supply-contract', () => {
     //---
     // fill in the simplest version of the form so we can submit it and save it..
     //---
-    contractAboutSupplier.suppliersCorrespondenceAddressSame().click();
+    contractAboutSupplier.supplierCorrespondenceAddressSame().click();
     contractAboutSupplier.industrySector().select('1009'); //Information and communication
     contractAboutSupplier.industryClass().select('62012'); //Business and domestic software development
     contractAboutSupplier.smeTypeMicro().click();
@@ -98,7 +98,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.supplierAddress().town().should('not.have.value', ''); //TODO
     contractAboutSupplier.supplierAddress().postcode().should('not.have.value', ''); //TODO
 
-    contractAboutSupplier.suppliersCorrespondenceAddressSame().should('be.checked');
+    contractAboutSupplier.supplierCorrespondenceAddressSame().should('be.checked');
     contractAboutSupplier.industrySector().should('have.value', '1009'); //Information and communication
     contractAboutSupplier.industryClass().should('have.value', '62012'); //Business and domestic software development
     contractAboutSupplier.smeTypeMicro().should('be.checked');

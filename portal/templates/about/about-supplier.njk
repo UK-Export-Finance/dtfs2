@@ -21,9 +21,9 @@
 
   <script type="text/javascript">
     const industrySectors = {{ industrySectors | dump | safe }};
-    const selectedValue = {{ deal.submissionDetails.industryClass | dump | safe }};
+
     function onChangeIndustrySector(event) {
-      window.dtfs.changeIndustryClasses(event, industrySectors, selectedValue);
+      window.dtfs.changeIndustryClasses(event, industrySectors);
     };
 
     function onChangeRadioButton(element, shouldShow) {
@@ -42,11 +42,13 @@
 
     {{ supplierNameAndAddressLookup.render({
       deal: deal,
+      countries: countries,
       validationErrors: validationErrors
     }) }}
 
     {{ supplierCorrespondenceAddress.render({
       deal: deal,
+      countries: countries,
       validationErrors: validationErrors
     }) }}
 
@@ -74,6 +76,7 @@
 
     {{ legallyDistinct.render({
       deal: deal,
+      countries: countries,
       validationErrors: validationErrors
     }) }}
 
