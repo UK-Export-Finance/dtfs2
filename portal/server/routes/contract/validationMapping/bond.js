@@ -31,7 +31,9 @@ export const REQUIRED_FIELDS = {
   ],
 };
 
-const mapValidationErrors = (validationErrors, requiredFields) => {
+export const shouldReturnValidation = (errorsCount, fieldsCount) => errorsCount < fieldsCount;
+
+export const mapValidationErrors = (validationErrors, requiredFields) => {
   const mappedErrors = validationErrors || {};
 
   const filteredErrorList = {};
@@ -51,41 +53,29 @@ const mapValidationErrors = (validationErrors, requiredFields) => {
       mappedErrors,
       errorHref,
     ),
-    conditionalErrorList: validationErrors.conditionalErrorList,
+    conditionalErrorList: mappedErrors.conditionalErrorList,
   };
 };
 
-export const shouldReturnValidation = (errorsCount, fieldsCount) => errorsCount < fieldsCount;
+export const handleValidationErrors = (validationErrors, requiredFields) => {
+  const mappedValidationErrors = mapValidationErrors(validationErrors, requiredFields);
 
+  if (shouldReturnValidation(mappedValidationErrors.count, requiredFields.length)) {
+    return mappedValidationErrors;
+  }
+  return {};
+};
 
 // NOTE: this is failing because we now pass
-// POSSIBLE_BOND_DETAILS_REQUIRED_FIELDS into REQUIRED_FIELDS.DETAILS.
-export const handleBondDetailsValidationErrors = (validationErrors) => {
-  const mappedValidationErrors = mapValidationErrors(validationErrors, REQUIRED_FIELDS.DETAILS);
+// POSSIBLE_BOND_DETAILS_REQUIRED_FIELDS into REQUIRED_FIELDS.DETAILS
+export const handleBondDetailsValidationErrors = (validationErrors) =>
+  handleValidationErrors(validationErrors, REQUIRED_FIELDS.DETAILS);
 
-  if (shouldReturnValidation(mappedValidationErrors.count, REQUIRED_FIELDS.DETAILS.length)) {
-    return mappedValidationErrors;
-  }
-  return {};
-};
+export const handleBondFinancialDetailsValidationErrors = (validationErrors) =>
+  handleValidationErrors(validationErrors, REQUIRED_FIELDS.FINANCIAL_DETAILS);
 
-export const handleBondFinancialDetailsValidationErrors = (validationErrors) => {
-  const mappedValidationErrors = mapValidationErrors(validationErrors, REQUIRED_FIELDS.FINANCIAL_DETAILS);
-
-  if (shouldReturnValidation(mappedValidationErrors.count, REQUIRED_FIELDS.FINANCIAL_DETAILS.length)) {
-    return mappedValidationErrors;
-  }
-  return {};
-};
-
-export const handleBondFeeDetailsValidationErrors = (validationErrors) => {
-  const mappedValidationErrors = mapValidationErrors(validationErrors, REQUIRED_FIELDS.FEE_DETAILS);
-
-  if (shouldReturnValidation(mappedValidationErrors.count, REQUIRED_FIELDS.FEE_DETAILS.length)) {
-    return mappedValidationErrors;
-  }
-  return {};
-};
+export const handleBondFeeDetailsValidationErrors = (validationErrors) =>
+  handleValidationErrors(validationErrors, REQUIRED_FIELDS.FEE_DETAILS);
 
 
 export const handleBondPreviewValidationErrors = (validationErrors, dealId, bondId) => {
