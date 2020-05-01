@@ -5,14 +5,16 @@
   "private": true,
   "main": "index.js",
   "scripts": {
+    "lint": "eslint ./server ./scripts",
     "buildDev": "rm -rf dist && webpack --mode development --config webpack.server.config.js && webpack --mode development --config webpack.dev.config.js",
     "buildProd": "rm -rf dist && webpack --mode production --config webpack.server.config.js && webpack --mode production --config webpack.prod.config.js",
     "start": "npm run buildProd && node ./dist/server.js",
     "dev": "npm run buildDev && node ./dist/server.js",
     "test": "jest --notify --coverage --verbose --config=jest.config.js --detectOpenHandles",
-    "test-quick": "jest --notify --config=jest.config.js --detectOpenHandles",
+    "test-quick": "jest --config=jest.config.js --detectOpenHandles",
     "test-watch": "jest --watchAll --notify --coverage --verbose --config=jest.config.js --detectOpenHandles",
-    "component-test": "jest --notify --config=jest.component-test.config.js --detectOpenHandles"
+    "component-test": "jest --notify --config=jest.component-test.config.js --detectOpenHandles",
+    "ci:dockerise": "./bin/updateDependencies.sh && ./bin/executeStaticTests.sh && ./bin/buildDockerImage.sh"
   },
   "repository": {
     "type": "git",
