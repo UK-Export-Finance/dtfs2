@@ -4,7 +4,7 @@ const aCountry = require('./country-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
-const { get, post, put, remove } = require('../../api')(app);
+const { as } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
 describe('/v1/countries', () => {
@@ -29,24 +29,21 @@ describe('/v1/countries', () => {
 
   describe('GET /v1/countries', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await get('/v1/countries');
+      const { status } = await as().get('/v1/countries');
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await get('/v1/countries', noRoles.token);
+      const { status } = await as(noRoles).get('/v1/countries');
 
       expect(status).toEqual(200);
     });
 
     it('returns a list of countries, alphebetized but with GBR/United Kingdom at the top', async () => {
-      await post(nzl, anEditor.token).to('/v1/countries');
-      await post(hkg, anEditor.token).to('/v1/countries');
-      await post(dub, anEditor.token).to('/v1/countries');
-      await post(gbr, anEditor.token).to('/v1/countries');
+      await as(anEditor).postEach([nzl, hkg,dub,gbr]).to('/v1/countries');
 
-      const { status, body } = await get('/v1/countries', noRoles.token);
+      const { status, body } = await as(noRoles).get('/v1/countries');
 
       const expectedOrder = [gbr, dub, hkg, nzl];
 
@@ -57,24 +54,21 @@ describe('/v1/countries', () => {
 
   describe('GET /v1/countries/:code', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await get('/v1/countries/123');
+      const { status } = await as().get('/v1/countries/123');
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that do present a valid Authorization token', async () => {
-      const { status } = await get('/v1/countries/123', noRoles.token);
+      const { status } = await as(noRoles).get('/v1/countries/123');
 
       expect(status).toEqual(200);
     });
 
     it('returns a country', async () => {
-      await post(newCountry, anEditor.token).to('/v1/countries');
+      await as(anEditor).post(newCountry).to('/v1/countries');
 
-      const { status, body } = await get(
-        '/v1/countries/NZL',
-        noRoles.token,
-      );
+      const { status, body } = await as(noRoles).get('/v1/countries/NZL');
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId(newCountry));
@@ -83,13 +77,13 @@ describe('/v1/countries', () => {
 
   describe('POST /v1/countries', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await post(newCountry).to('/v1/countries');
+      const { status } = await as().post(newCountry).to('/v1/countries');
 
       expect(status).toEqual(401);
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      const { status } = await post(newCountry, noRoles.token).to(
+      const { status } = await as(noRoles).post(newCountry).to(
         '/v1/countries',
       );
 
@@ -97,7 +91,7 @@ describe('/v1/countries', () => {
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      const { status } = await post(newCountry, anEditor.token).to(
+      const { status } = await as(anEditor).post(newCountry).to(
         '/v1/countries',
       );
 
@@ -107,37 +101,32 @@ describe('/v1/countries', () => {
 
   describe('PUT /v1/countries/:code', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await put(updatedCountry).to('/v1/countries/NZL');
+      const { status } = await as().put(updatedCountry).to('/v1/countries/NZL');
 
       expect(status).toEqual(401);
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await post(newCountry, anEditor.token).to('/v1/countries');
-      const { status } = await put(updatedCountry, noRoles.token).to(
-        '/v1/countries/NZL',
-      );
+      await as(anEditor).post(newCountry).to('/v1/countries');
+
+      const { status } = await as(noRoles).put(updatedCountry).to('/v1/countries/NZL');
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await post(newCountry, anEditor.token).to('/v1/countries');
-      const { status } = await put(updatedCountry, anEditor.token).to(
-        '/v1/countries/NZL',
-      );
+      await as(anEditor).post(newCountry, anEditor).to('/v1/countries');
+
+      const { status } = await as(anEditor).put(updatedCountry).to('/v1/countries/NZL');
 
       expect(status).toEqual(200);
     });
 
     it('updates the country', async () => {
-      await post(newCountry, anEditor.token).to('/v1/countries');
-      await put(updatedCountry, anEditor.token).to('/v1/countries/NZL');
+      await as(anEditor).post(newCountry).to('/v1/countries');
+      await as(anEditor).put(updatedCountry).to('/v1/countries/NZL');
 
-      const { status, body } = await get(
-        '/v1/countries/NZL',
-        anEditor.token,
-      );
+      const { status, body } = await as(anEditor).get('/v1/countries/NZL');
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId(updatedCountry));
@@ -146,36 +135,32 @@ describe('/v1/countries', () => {
 
   describe('DELETE /v1/countries/:code', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await remove('/v1/countries/NZL');
+      const { status } = await as().remove('/v1/countries/NZL');
 
       expect(status).toEqual(401);
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await post(newCountry, anEditor.token).to('/v1/countries');
-      const { status } = await remove('/v1/countries/NZL', noRoles.token);
+      await as(anEditor).post(newCountry).to('/v1/countries');
+
+      const { status } = await as(noRoles).remove('/v1/countries/NZL');
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await post(newCountry, anEditor.token).to('/v1/countries');
-      const { status } = await remove(
-        '/v1/countries/NZL',
-        anEditor.token,
-      );
+      await as(anEditor).post(newCountry).to('/v1/countries');
+
+      const { status } = await as(anEditor).remove('/v1/countries/NZL');
 
       expect(status).toEqual(200);
     });
 
     it('deletes the country', async () => {
-      await post(newCountry, anEditor.token).to('/v1/countries');
-      await remove('/v1/countries/NZL', anEditor.token);
-
-      const { status, body } = await get(
-        '/v1/countries/NZL',
-        anEditor.token,
-      );
+      await as(anEditor).post(newCountry).to('/v1/countries');
+      await as(anEditor).remove('/v1/countries/NZL');
+      
+      const { status, body } = await as(anEditor).get('/v1/countries/NZL');
 
       expect(status).toEqual(200);
       expect(body).toEqual({});

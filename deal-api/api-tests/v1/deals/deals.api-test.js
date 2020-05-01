@@ -4,35 +4,33 @@ const aDeal = require('./deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
-const { get, post, put, remove } = require('../../api')(app);
+const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
 
-describe('/v1/deals', () => {
-  const newDeal = aDeal({
-    details: {
-      bankSupplyContractName: 'mock name',
-      bankSupplyContractID: 'mock id',
-    },
-    comments: [{
-      username: 'bananaman',
-      timestamp: '1984/12/25 00:00:00:001',
-      text: 'Merry Christmas from the 80s',
-    }, {
-      username: 'supergran',
-      timestamp: '1982/12/25 00:00:00:001',
-      text: 'Also Merry Christmas from the 80s',
-    }],
-  });
+const newDeal = aDeal({
+  details: {
+    bankSupplyContractName: 'mock name',
+    bankSupplyContractID: 'mock id',
+  },
+  comments: [{
+    username: 'bananaman',
+    timestamp: '1984/12/25 00:00:00:001',
+    text: 'Merry Christmas from the 80s',
+  }, {
+    username: 'supergran',
+    timestamp: '1982/12/25 00:00:00:001',
+    text: 'Also Merry Christmas from the 80s',
+  }],
+});
 
+describe('/v1/deals', () => {
   let noRoles;
   let anHSBCMaker;
   let aBarclaysMaker;
   let aBarclaysChecker;
   let aSuperuser;
 
-  beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-
+  beforeAll(async() => {
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
@@ -41,27 +39,31 @@ describe('/v1/deals', () => {
     aSuperuser = testUsers().superuser().one();
   });
 
+  beforeEach(async () => {
+    await wipeDB.wipe(['deals']);
+  });
+
   describe('GET /v1/deals', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await get('/v1/deals');
+      const { status } = await as().get('/v1/deals');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker || role=checker', async () => {
-      const { status } = await get('/v1/deals', noRoles.token);
+      const { status } = await as(noRoles).get('/v1/deals');
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that come from a user with role=maker', async () => {
-      const { status } = await get('/v1/deals', anHSBCMaker.token);
+      const { status } = await as(anHSBCMaker).get('/v1/deals');
 
       expect(status).toEqual(200);
     });
 
     it('accepts requests that come from a user with role=checker', async () => {
-      const { status } = await get('/v1/deals', aBarclaysChecker.token);
+      const { status } = await as(aBarclaysChecker).get('/v1/deals');
 
       expect(status).toEqual(200);
     });
@@ -75,13 +77,13 @@ describe('/v1/deals', () => {
         aDeal({ details: { bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
 
-      await post(deals[4], aBarclaysMaker.token).to('/v1/deals');
-      await post(deals[1], anHSBCMaker.token).to('/v1/deals');
-      await post(deals[2], anHSBCMaker.token).to('/v1/deals');
-      await post(deals[0], anHSBCMaker.token).to('/v1/deals');
-      await post(deals[3], aBarclaysMaker.token).to('/v1/deals');
+      await as(aBarclaysMaker).post(deals[4]).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[1]).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[2]).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
+      await as(aBarclaysMaker).post(deals[3]).to('/v1/deals');
 
-      let { status, body } = await get('/v1/deals', anHSBCMaker.token);
+      let { status, body } = await as(anHSBCMaker).get('/v1/deals', anHSBCMaker.token);
 
       expect(status).toEqual(200);
       // expect to see deals in reverse order; most recent on top..
@@ -102,13 +104,13 @@ describe('/v1/deals', () => {
         aDeal({ details: { bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
 
-      await post(deals[4], aBarclaysMaker.token).to('/v1/deals');
-      await post(deals[1], anHSBCMaker.token).to('/v1/deals');
-      await post(deals[2], anHSBCMaker.token).to('/v1/deals');
-      await post(deals[0], anHSBCMaker.token).to('/v1/deals');
-      await post(deals[3], aBarclaysMaker.token).to('/v1/deals');
+      await as(aBarclaysMaker).post(deals[4]).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[1]).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[2]).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
+      await as(aBarclaysMaker).post(deals[3]).to('/v1/deals');
 
-      let { status, body } = await get('/v1/deals', aSuperuser.token);
+      let { status, body } = await as(aSuperuser).get('/v1/deals');
 
       expect(status).toEqual(200);
       // expect deals in reverse order;  most recent should be first..
@@ -126,25 +128,25 @@ describe('/v1/deals', () => {
 
   describe('GET /v1/deals/:start/:pagesize', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await get('/v1/deals/0/1');
+      const { status } = await as().get('/v1/deals/0/1');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker || role=checker', async () => {
-      const { status } = await get('/v1/deals/0/1', noRoles.token);
+      const { status } = await as(noRoles).get('/v1/deals/0/1');
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that come from a user with role=maker', async () => {
-      const { status } = await get('/v1/deals/0/1', anHSBCMaker.token);
+      const { status } = await as(anHSBCMaker).get('/v1/deals/0/1');
 
       expect(status).toEqual(200);
     });
 
     it('accepts requests that come from a user with role=checker', async () => {
-      const { status } = await get('/v1/deals/0/1', aBarclaysChecker.token);
+      const { status } = await as(aBarclaysChecker).get('/v1/deals/0/1');
 
       expect(status).toEqual(200);
     });
@@ -161,17 +163,17 @@ describe('/v1/deals', () => {
         aDeal({ details: { bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
 
-      await post(deals[0], anHSBCMaker.token).to('/v1/deals');
-      await post(deals[1], anHSBCMaker.token).to('/v1/deals');
-      await post(deals[2], anHSBCMaker.token).to('/v1/deals');
-      await post(deals[3], anHSBCMaker.token).to('/v1/deals');
-      await post(deals[4], anHSBCMaker.token).to('/v1/deals');
-      await post(deals[5], anHSBCMaker.token).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[1]).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[2]).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[3]).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[4]).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[5]).to('/v1/deals');
 
-      await post(deals[6], aBarclaysMaker.token).to('/v1/deals');
-      await post(deals[7], aBarclaysMaker.token).to('/v1/deals');
+      await as(aBarclaysMaker).post(deals[6]).to('/v1/deals');
+      await as(aBarclaysMaker).post(deals[7]).to('/v1/deals');
 
-      const { status, body } = await get('/v1/deals/2/2', anHSBCMaker.token);
+      const { status, body } = await as(anHSBCMaker).get('/v1/deals/2/2');
 
       expect(status).toEqual(200);
       // expect deals in reverse order; most recent first..
@@ -195,17 +197,17 @@ describe('/v1/deals', () => {
         aDeal({ details: { bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
 
-      await post(deals[0], anHSBCMaker.token).to('/v1/deals');
-      await post(deals[1], anHSBCMaker.token).to('/v1/deals');
-      await post(deals[2], anHSBCMaker.token).to('/v1/deals');
-      await post(deals[3], anHSBCMaker.token).to('/v1/deals');
-      await post(deals[4], anHSBCMaker.token).to('/v1/deals');
-      await post(deals[5], anHSBCMaker.token).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[1]).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[2]).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[3]).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[4]).to('/v1/deals');
+      await as(anHSBCMaker).post(deals[5]).to('/v1/deals');
 
-      await post(deals[6], aBarclaysMaker.token).to('/v1/deals');
-      await post(deals[7], aBarclaysMaker.token).to('/v1/deals');
+      await as(aBarclaysMaker).post(deals[6]).to('/v1/deals');
+      await as(aBarclaysMaker).post(deals[7]).to('/v1/deals');
 
-      const { status, body } = await get('/v1/deals/5/3', aSuperuser.token);
+      const { status, body } = await as(aSuperuser).get('/v1/deals/5/3');
 
       expect(status).toEqual(200);
       // expect deals in reverse order - when we slice the last 3 deals we should get 2/1/0
@@ -221,60 +223,60 @@ describe('/v1/deals', () => {
 
   describe('GET /v1/deals/:id', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await get('/v1/deals/123456789012');
+      const { status } = await as().get('/v1/deals/123456789012');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker || role=checker', async () => {
-      const { status } = await get('/v1/deals/123456789012', noRoles.token);
+      const { status } = await as(noRoles).get('/v1/deals/123456789012');
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests from a user with role=maker', async () => {
-      const {body} = await post(newDeal, anHSBCMaker.token).to('/v1/deals');
+      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
-      const { status } = await get(`/v1/deals/${body._id}`, anHSBCMaker.token);
+      const { status } = await as(anHSBCMaker).get(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(200);
     });
 
     it('accepts requests from a user with role=checker', async () => {
-      const {body} = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
+      const {body} = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
 
-      const { status } = await get(`/v1/deals/${body._id}`, aBarclaysChecker.token);
+      const { status } = await as(aBarclaysChecker).get(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(200);
     });
 
     it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
-      const {body} = await post(newDeal, anHSBCMaker.token).to('/v1/deals');
+      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
-      const { status } = await get(`/v1/deals/${body._id}`, aBarclaysMaker.token);
+      const { status } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unkonwn ids', async () => {
-      const { status } = await get(`/v1/deals/123456789012`, aBarclaysMaker.token);
+      const { status } = await as(aBarclaysMaker).get(`/v1/deals/123456789012`);
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const {body} = await post(newDeal, anHSBCMaker.token).to('/v1/deals');
+      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
-      const { status } = await get(`/v1/deals/${body._id}`, aSuperuser.token);
+      const { status } = await as(aSuperuser).get(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(200);
     });
 
     it('returns the requested resource', async () => {
-      const postResult = await post(newDeal, anHSBCMaker.token).to('/v1/deals');
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status, body } = await get(`/v1/deals/${newId}`, anHSBCMaker.token);
+      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${newId}`);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectAddedFields(newDeal));
@@ -283,21 +285,19 @@ describe('/v1/deals', () => {
 
   describe('POST /v1/deals', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await post(newDeal).to('/v1/deals');
+      const { status } = await as().post(newDeal).to('/v1/deals');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await post(newDeal, noRoles.token).to('/v1/deals');
+      const { status } = await as(noRoles).post(newDeal).to('/v1/deals');
 
       expect(status).toEqual(401);
     });
 
     it('returns the created deal', async () => {
-      const { body, status } = await post(newDeal, anHSBCMaker.token).to(
-        '/v1/deals',
-      );
+      const { body, status } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectAddedFields(newDeal));
@@ -312,9 +312,7 @@ describe('/v1/deals', () => {
           },
         };
 
-        const { body, status } = await post(postBody, anHSBCMaker.token).to(
-          '/v1/deals',
-        );
+        const { body, status } = await as(anHSBCMaker).post(postBody).to('/v1/deals');
 
         expect(status).toEqual(400);
         expect(body.details.bankSupplyContractID).toEqual(postBody.details.bankSupplyContractID);
@@ -329,42 +327,38 @@ describe('/v1/deals', () => {
 
   describe('PUT /v1/deals/:id', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await put(newDeal).to('/v1/deals/123456789012');
+      const { status } = await as().put(newDeal).to('/v1/deals/123456789012');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await put(newDeal, noRoles.token).to(
-        '/v1/deals/123456789012',
-      );
+      const { status } = await as(noRoles).put(newDeal).to('/v1/deals/123456789012');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
-      const {body} = await post(newDeal, anHSBCMaker.token).to('/v1/deals');
+      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const updatedDeal = {
         ...body,
         bankSupplyContractName: 'change this field',
       }
 
-      const {status} = await put(updatedDeal, aBarclaysMaker.token).to(`/v1/deals/${body._id}`);
+      const {status} = await as(aBarclaysMaker).put(updatedDeal).to(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown ids', async () => {
-      const { status } = await put(newDeal, anHSBCMaker.token).to(
-        '/v1/deals/123456789012',
-      );
+      const { status } = await as(anHSBCMaker).put(newDeal).to('/v1/deals/123456789012');
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const postResult = await post(newDeal, anHSBCMaker.token).to('/v1/deals');
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const updatedDeal = {
         ...createdDeal,
@@ -374,14 +368,13 @@ describe('/v1/deals', () => {
         }
       };
 
-      const { status, body } = await put(updatedDeal, aSuperuser.token)
-        .to(`/v1/deals/${createdDeal._id}`);
+      const { status, body } = await as(aSuperuser).put(updatedDeal).to(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
     });
 
     it('returns the updated deal', async () => {
-      const postResult = await post(newDeal, anHSBCMaker.token).to('/v1/deals');
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const updatedDeal = {
         ...createdDeal,
@@ -391,14 +384,14 @@ describe('/v1/deals', () => {
         }
       };
 
-      const { status, body } = await put(updatedDeal, anHSBCMaker.token).to(`/v1/deals/${createdDeal._id}`);
+      const { status, body } = await as(anHSBCMaker).put(updatedDeal).to(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectAddedFields(updatedDeal));
     });
 
     it('handles partial updates', async () => {
-      const postResult = await post(newDeal, anHSBCMaker.token).to('/v1/deals');
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
       const partialUpdate = {
@@ -415,14 +408,14 @@ describe('/v1/deals', () => {
         }
       };
 
-      const { status, body } = await put(partialUpdate, anHSBCMaker.token).to(`/v1/deals/${createdDeal._id}`);
+      const { status, body } = await as(anHSBCMaker).put(partialUpdate).to(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectAddedFields(expectedDataIncludingUpdate));
     });
 
     it('updates the deal', async () => {
-      const postResult = await post(newDeal, anHSBCMaker.token).to('/v1/deals');
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const updatedDeal = {
         ...createdDeal,
@@ -431,12 +424,9 @@ describe('/v1/deals', () => {
           bankSupplyContractName: 'change this field',
         }
       };
-      await put(updatedDeal, anHSBCMaker.token).to(`/v1/deals/${createdDeal._id}`);
+      await as(anHSBCMaker).put(updatedDeal).to(`/v1/deals/${createdDeal._id}`);
 
-      const { status, body } = await get(
-        `/v1/deals/${createdDeal._id}`,
-        anHSBCMaker.token,
-      );
+      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectAddedFields(updatedDeal));
@@ -445,49 +435,46 @@ describe('/v1/deals', () => {
 
   describe('DELETE /v1/deals/:id', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await remove('/v1/deals/123456789012');
+      const { status } = await as().remove('/v1/deals/123456789012');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      await post(newDeal, anHSBCMaker.token).to('/v1/deals');
-      const { status } = await remove('/v1/deals/123456789012', noRoles.token);
+      await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { status } = await as(noRoles).remove('/v1/deals/123456789012');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests from users if <user>.bank != <resource>.details.owningBank', async () => {
-      const {body} = await post(newDeal, anHSBCMaker.token).to('/v1/deals');
+      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
-      const { status } = await remove(`/v1/deals/${body._id}`, aBarclaysMaker.token);
+      const { status } = await as(aBarclaysMaker).remove(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests to delete unkonwn ids', async () => {
-      const { status } = await remove('/v1/deals/123456789012', anHSBCMaker.token);
+      const { status } = await as(anHSBCMaker).remove('/v1/deals/123456789012');
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const {body} = await post(newDeal, anHSBCMaker.token).to('/v1/deals');
+      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
-      const { status } = await remove(`/v1/deals/${body._id}`, aSuperuser.token);
+      const { status } = await as(aSuperuser).remove(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(200);
     });
 
     it('deletes the deal', async () => {
-      const {body} = await post(newDeal, anHSBCMaker.token).to('/v1/deals');
+      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
-      await remove(`/v1/deals/${body._id}`, anHSBCMaker.token);
+      await as(anHSBCMaker).remove(`/v1/deals/${body._id}`);
 
-      const { status } = await get(
-        `/v1/deals/${body._id}`,
-        anHSBCMaker.token,
-      );
+      const { status } = await as(anHSBCMaker).get(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(404);
     });
@@ -495,23 +482,20 @@ describe('/v1/deals', () => {
 
   describe('POST /v1/deals/:id/clone', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await post(newDeal).to('/v1/deals/123456789012/clone');
+      const { status } = await as().post(newDeal).to('/v1/deals/123456789012/clone');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await post(newDeal, noRoles.token).to(
-        '/v1/deals/123456789012/clone',
-      );
+      const { status } = await as(noRoles).post(newDeal).to('/v1/deals/123456789012/clone');
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown ids', async () => {
-      const { status } = await post(newDeal, anHSBCMaker.token).to(
-        '/v1/deals/123456789012/clone',
-      );
+      const { status } = await as(anHSBCMaker).post(newDeal).to('/v1/deals/123456789012/clone');
+
       expect(status).toEqual(404);
     });
 
@@ -519,7 +503,7 @@ describe('/v1/deals', () => {
       let originalDealId;
 
       beforeEach(async () => {
-        const { body: originalDealBody } = await post(newDeal, anHSBCMaker.token).to('/v1/deals');
+        const { body: originalDealBody } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
         originalDealId = originalDealBody._id;
       });
 
@@ -530,7 +514,7 @@ describe('/v1/deals', () => {
           cloneTransactions: 'true',
         };
 
-        const { body } = await post(clonePostBody, anHSBCMaker.token).to(`/v1/deals/${originalDealId}/clone`);
+        const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDealId}/clone`);
 
         expect(body._id).not.toEqual(clonePostBody.bankDealId);
         expect(body.details.bankSupplyContractID).toEqual(clonePostBody.bankSupplyContractID);
@@ -544,7 +528,7 @@ describe('/v1/deals', () => {
             bankSupplyContractName: 'new-bank-deal-name',
             cloneTransactions: 'false',
           };
-          const { body } = await post(clonePostBody, anHSBCMaker.token).to(`/v1/deals/${originalDealId}/clone`);
+          const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDealId}/clone`);
 
           expect(body.bondTransactions).toEqual({
             items: [],
@@ -562,7 +546,7 @@ describe('/v1/deals', () => {
             bankSupplyContractName: '',
             cloneTransactions: '',
           };
-          const { body } = await post(clonePostBody, anHSBCMaker.token).to(`/v1/deals/${originalDealId}/clone`);
+          const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDealId}/clone`);
 
           expect(body.validationErrors.count).toEqual(3);
           expect(body.validationErrors.errorList.bankSupplyContractID).toBeDefined();

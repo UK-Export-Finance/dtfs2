@@ -2,9 +2,7 @@ const wipeDB = require('../../wipeDB');
 
 const app = require('../../../src/createApp');
 
-const {
-  get, post, put, remove,
-} = require('../../api')(app);
+const { as } = require('../../api')(app);
 
 const users = require('./test-data');
 const aUserWithNoRoles = users.find(user=>user.username==='NOBODY');
@@ -19,9 +17,9 @@ describe('a user', () => {
   });
 
   it('a newly added user is returned when we list all users', async () => {
-    await post(aMaker).to('/v1/users');
+    await as().post(aMaker).to('/v1/users');
 
-    const { status, body } = await get('/v1/users');
+    const { status, body } = await as().get('/v1/users');
 
     expect(status).toEqual(200);
     expect(body).toEqual({
@@ -39,16 +37,16 @@ describe('a user', () => {
   });
 
   it('a user can be updated', async () => {
-    await post(aMaker).to('/v1/users');
+    await as().post(aMaker).to('/v1/users');
 
     const updatedUserCredentials = {
       ...aMaker,
       roles: ['checker', 'maker'],
     };
 
-    await put(updatedUserCredentials).to(`/v1/users/${aMaker.username}`);
+    await as().put(updatedUserCredentials).to(`/v1/users/${aMaker.username}`);
 
-    const { status, body } = await get(`/v1/users/${aMaker.username}`);
+    const { status, body } = await as().get(`/v1/users/${aMaker.username}`);
 
     expect(status).toEqual(200);
     expect(body).toEqual({
@@ -60,10 +58,10 @@ describe('a user', () => {
   });
 
   it('a user can be deleted', async () => {
-    await post(aMaker).to('/v1/users');
-    await remove('/v1/users/someone');
+    await as().post(aMaker).to('/v1/users');
+    await as().remove('/v1/users/someone');
 
-    const { status, body } = await get('/v1/users/someone');
+    const { status, body } = await as().get('/v1/users/someone');
 
     expect(status).toEqual(200);
     expect(body).toMatchObject({});
@@ -71,16 +69,16 @@ describe('a user', () => {
 
   it('an unknown user cannot log in', async () => {
     const { username, password } = aMaker;
-    const { status, body } = await post({ username, password }).to('/v1/login');
+    const { status, body } = await as().post({ username, password }).to('/v1/login');
 
     expect(status).toEqual(401);
   });
 
   it('a known user can log in', async () => {
     const { username, password } = aMaker;
-    await post(aMaker).to('/v1/users');
+    await as().post(aMaker).to('/v1/users');
 
-    const { status, body } = await post({ username, password }).to('/v1/login');
+    const { status, body } = await as().post({ username, password }).to('/v1/login');
 
     const expectedUserData = {
       ...aMaker,
@@ -99,13 +97,13 @@ describe('a user', () => {
 
   it('a token can be validated', async () => {
     const { username, password } = aMaker;
-    await post(aMaker).to('/v1/users');
+    await as().post(aMaker).to('/v1/users');
 
-    const loginResult = await post({ username, password }).to('/v1/login');
+    const loginResult = await as().post({ username, password }).to('/v1/login');
 
     const token = loginResult.body.token;
 
-    const {status} = await get('/v1/validate', token);
+    const {status} = await as({token}).get('/v1/validate');
 
     expect(status).toEqual(200);
   });
@@ -113,46 +111,46 @@ describe('a user', () => {
   it('invalid tokens fail validation', async () => {
     const token = 'some characters i think maybe look like a token';
 
-    const {status} = await get('/v1/validate', token);
+    const {status} = await as({token}).get('/v1/validate');
 
     expect(status).toEqual(401);
   });
 
   it('an uknown user cannot access a protected endpoint', async () => {
-    const { status } = await get('/v1/test/protected');
+    const { status } = await as().get('/v1/test/protected');
     expect(status).toEqual(401);
   });
 
   it('a known user can access a protected endpoint', async () => {
     const { username, password } = aUserWithNoRoles;
-    await post(aUserWithNoRoles).to('/v1/users');
+    await as().post(aUserWithNoRoles).to('/v1/users');
 
-    const { body } = await post({ username, password }).to('/v1/login');
+    const { body } = await as().post({ username, password }).to('/v1/login');
     const { token } = body;
 
-    const { status } = await get('/v1/test/protected', token);
+    const { status } = await as({token}).get('/v1/test/protected', token);
     expect(status).toEqual(200);
   });
 
   it('an endpoint can be blocked to users without a given role', async () => {
     const { username, password } = aChecker;
-    await post(aChecker).to('/v1/users');
+    await as().post(aChecker).to('/v1/users');
 
-    const { body } = await post({ username, password }).to('/v1/login');
+    const { body } = await as().post({ username, password }).to('/v1/login');
     const { token } = body;
 
-    const { status } = await get('/v1/test/protected/maker', token);
+    const { status } = await as({token}).get('/v1/test/protected/maker');
     expect(status).toEqual(401);
   });
 
   it('an endpoint can be opened to users with a given role', async () => {
     const { username, password } = aMaker;
-    await post(aMaker).to('/v1/users');
+    await as().post(aMaker).to('/v1/users');
 
-    const { body } = await post({ username, password }).to('/v1/login');
+    const { body } = await as().post({ username, password }).to('/v1/login');
     const { token } = body;
 
-    const response = await get('/v1/test/protected/maker', token);
+    const response = await as({token}).get('/v1/test/protected/maker');
     const { status } = response;
 
     expect(status).toEqual(200);
@@ -160,15 +158,15 @@ describe('a user', () => {
 
   it('a user can have multiple roles', async () => {
     const { username, password } = aMakerChecker;
-    await post(aMakerChecker).to('/v1/users');
+    await as().post(aMakerChecker).to('/v1/users');
 
-    const { body } = await post({ username, password }).to('/v1/login');
+    const { body } = await as().post({ username, password }).to('/v1/login');
     const { token } = body;
 
-    const makerResponse = await get('/v1/test/protected/maker', token);
+    const makerResponse = await as({token}).get('/v1/test/protected/maker');
     expect(makerResponse.status).toEqual(200);
 
-    const checkerResponse = await get('/v1/test/protected/checker', token);
+    const checkerResponse = await as({token}).get('/v1/test/protected/checker');
     expect(makerResponse.status).toEqual(200);
   });
 });
