@@ -7,7 +7,7 @@
     "start": "node src/index.js",
     "start:dev": "npx nodemon src/index.js",
     "unit-test": "jest --notify --coverage --verbose --config=unit.jest.config.js --detectOpenHandles --forceExit",
-    "unit-test-quick": "jest --notify --config=unit.jest.config.js --detectOpenHandles --forceExit",
+    "unit-test-quick": "jest --notify --config=unit.jest.config.js --detectOpenHandles --forceExit --testTimeout=10000",
     "api-test": "jest --notify --coverage --verbose --config=api-test.jest.config.js --detectOpenHandles --forceExit",
     "api-test-file": "jest --verbose --detectOpenHandles --forceExit --testMatch ",
     "api-test-quick": "jest --notify --config=api-test.jest.config.js --detectOpenHandles --forceExit"

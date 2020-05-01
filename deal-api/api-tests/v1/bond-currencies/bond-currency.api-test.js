@@ -2,12 +2,10 @@ const wipeDB = require('../../wipeDB');
 const aBondCurrency = require('./bond-currency-builder');
 
 const app = require('../../../src/createApp');
-const {
-  get, post, put, remove,
-} = require('../../api')(app);
-const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
+const testUserCache = require('../../api-test-users');
 
-const getToken = require('../../getToken')(app);
+const { get, post, put, remove } = require('../../api')(app);
+const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
 describe('/v1/bond-currencies', () => {
   const usd = aBondCurrency({ id: 'USD', text: 'USD - US Dollars' });
@@ -17,22 +15,15 @@ describe('/v1/bond-currencies', () => {
   const newCurrency = usd;
   const updatedCurrency = aBondCurrency({ id: 'USD', text: 'USD - US Denari' });
 
-  let aTokenWithNoRoles;
-  let aTokenWithEditorRole;
+  let anEditor;
+  let aNonEditor;
 
   beforeEach(async () => {
-    await wipeDB.wipe(['bondCurrencies', 'users']);
+    await wipeDB.wipe(['bondCurrencies']);
 
-    aTokenWithNoRoles = await getToken({
-      username: '1',
-      password: '2',
-      roles: [],
-    });
-    aTokenWithEditorRole = await getToken({
-      username: '3',
-      password: '4',
-      roles: ['editor'],
-    });
+    const testUsers = await testUserCache.initialise(app);
+    anEditor = testUsers().withRole('editor').one();
+    aNonEditor = testUsers().withoutRole('editor').one();
   });
 
   describe('GET /v1/bond-currencies', () => {
@@ -43,19 +34,19 @@ describe('/v1/bond-currencies', () => {
     });
 
     it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await get('/v1/bond-currencies', aTokenWithNoRoles);
+      const { status } = await get('/v1/bond-currencies', aNonEditor.token);
 
       expect(status).toEqual(200);
     });
 
     it('returns a list of bond-currencies, alphebetized', async () => {
-      await post(gbp, aTokenWithEditorRole).to('/v1/bond-currencies');
-      await post(usd, aTokenWithEditorRole).to('/v1/bond-currencies');
-      await post(cad, aTokenWithEditorRole).to('/v1/bond-currencies');
+      await post(gbp, anEditor.token).to('/v1/bond-currencies');
+      await post(usd, anEditor.token).to('/v1/bond-currencies');
+      await post(cad, anEditor.token).to('/v1/bond-currencies');
 
       const { status, body } = await get(
         '/v1/bond-currencies',
-        aTokenWithNoRoles,
+        aNonEditor.token,
       );
 
       const expectedOrder = [cad, gbp, usd];
@@ -75,18 +66,18 @@ describe('/v1/bond-currencies', () => {
     it('accepts requests that do present a valid Authorization token', async () => {
       const { status } = await get(
         '/v1/bond-currencies/123',
-        aTokenWithNoRoles,
+        aNonEditor.token,
       );
 
       expect(status).toEqual(200);
     });
 
     it('returns a bond-currency', async () => {
-      await post(newCurrency, aTokenWithEditorRole).to('/v1/bond-currencies');
+      await post(newCurrency, anEditor.token).to('/v1/bond-currencies');
 
       const { status, body } = await get(
         '/v1/bond-currencies/USD',
-        aTokenWithNoRoles,
+        aNonEditor.token,
       );
 
       expect(status).toEqual(200);
@@ -102,7 +93,7 @@ describe('/v1/bond-currencies', () => {
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      const { status } = await post(newCurrency, aTokenWithNoRoles).to(
+      const { status } = await post(newCurrency, aNonEditor.token).to(
         '/v1/bond-currencies',
       );
 
@@ -110,7 +101,7 @@ describe('/v1/bond-currencies', () => {
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      const { status } = await post(newCurrency, aTokenWithEditorRole).to(
+      const { status } = await post(newCurrency, anEditor.token).to(
         '/v1/bond-currencies',
       );
 
@@ -128,8 +119,8 @@ describe('/v1/bond-currencies', () => {
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await post(newCurrency, aTokenWithEditorRole).to('/v1/bond-currencies');
-      const { status } = await put(updatedCurrency, aTokenWithNoRoles).to(
+      await post(newCurrency, anEditor.token).to('/v1/bond-currencies');
+      const { status } = await put(updatedCurrency, aNonEditor.token).to(
         '/v1/bond-currencies/USD',
       );
 
@@ -137,8 +128,8 @@ describe('/v1/bond-currencies', () => {
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await post(newCurrency, aTokenWithEditorRole).to('/v1/bond-currencies');
-      const { status } = await put(updatedCurrency, aTokenWithEditorRole).to(
+      await post(newCurrency, anEditor.token).to('/v1/bond-currencies');
+      const { status } = await put(updatedCurrency, anEditor.token).to(
         '/v1/bond-currencies/USD',
       );
 
@@ -146,14 +137,14 @@ describe('/v1/bond-currencies', () => {
     });
 
     it('updates the bond-currency', async () => {
-      await post(newCurrency, aTokenWithEditorRole).to('/v1/bond-currencies');
-      await put(updatedCurrency, aTokenWithEditorRole).to(
+      await post(newCurrency, anEditor.token).to('/v1/bond-currencies');
+      await put(updatedCurrency, anEditor.token).to(
         '/v1/bond-currencies/USD',
       );
 
       const { status, body } = await get(
         '/v1/bond-currencies/USD',
-        aTokenWithEditorRole,
+        anEditor.token,
       );
 
       expect(status).toEqual(200);
@@ -169,32 +160,32 @@ describe('/v1/bond-currencies', () => {
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await post(newCurrency, aTokenWithEditorRole).to('/v1/bond-currencies');
+      await post(newCurrency, anEditor.token).to('/v1/bond-currencies');
       const { status } = await remove(
         '/v1/bond-currencies/USD',
-        aTokenWithNoRoles,
+        aNonEditor.token,
       );
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await post(newCurrency, aTokenWithEditorRole).to('/v1/bond-currencies');
+      await post(newCurrency, anEditor.token).to('/v1/bond-currencies');
       const { status } = await remove(
         '/v1/bond-currencies/USD',
-        aTokenWithEditorRole,
+        anEditor.token,
       );
 
       expect(status).toEqual(200);
     });
 
     it('deletes the bond-currency', async () => {
-      await post(newCurrency, aTokenWithEditorRole).to('/v1/bond-currencies');
-      await remove('/v1/bond-currencies/USD', aTokenWithEditorRole);
+      await post(newCurrency, anEditor.token).to('/v1/bond-currencies');
+      await remove('/v1/bond-currencies/USD', anEditor.token);
 
       const { status, body } = await get(
         '/v1/bond-currencies/USD',
-        aTokenWithEditorRole,
+        anEditor.token,
       );
 
       expect(status).toEqual(200);

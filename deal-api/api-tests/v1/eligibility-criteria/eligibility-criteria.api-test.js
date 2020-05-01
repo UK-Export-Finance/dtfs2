@@ -2,13 +2,10 @@ const wipeDB = require('../../wipeDB');
 const aDeal = require('../deals/deal-builder');
 
 const app = require('../../../src/createApp');
-const {
-  get, post, put, remove,
-} = require('../../api')(app);
+const testUserCache = require('../../api-test-users');
 
+const { get, post, put, remove } = require('../../api')(app);
 const { expectAddedFields } = require('../deals/expectAddedFields');
-
-const getToken = require('../../getToken')(app);
 
 describe('/v1/deals/:id/eligibility-criteria', () => {
   const newDeal = aDeal({ bankSupplyContractName: 'Original Value' });
@@ -68,48 +65,19 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
   };
 
 
-  let aUserWithoutRoles;
-  let user1;
-  let user2;
-  let superuser;
+  let noRoles;
+  let anHSBCMaker;
+  let aBarclaysMaker;
+  let aSuperuser;
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals', 'users']);
+    await wipeDB.wipe(['deals']);
 
-    aUserWithoutRoles = await getToken({
-      username: '1',
-      password: '2',
-      roles: [],
-    });
-
-    user1 = await getToken({
-      username: '3',
-      password: '4',
-      roles: ['maker'],
-      bank: {
-        id: '1',
-        name: 'Mammon',
-      },
-    });
-
-    user2 = await getToken({
-      username: '5',
-      password: '6',
-      roles: ['maker'],
-      bank: {
-        id: '2',
-        name: 'Temple of cash',
-      },
-    });
-
-    superuser = await getToken({
-      username: '7',
-      password: '8',
-      roles: ['maker'],
-      bank: {
-        id: '*',
-      },
-    });
+    const testUsers = await testUserCache.initialise(app);
+    noRoles = testUsers().withoutAnyRoles().one();
+    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
+    anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    aSuperuser = testUsers().superuser().one();
   });
 
   describe('PUT /v1/deals/:id/eligibility-criteria', () => {
@@ -120,44 +88,44 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await put(updatedECPartial, aUserWithoutRoles).to('/v1/deals/123456789012/eligibility-criteria');
+      const { status } = await put(updatedECPartial, noRoles.token).to('/v1/deals/123456789012/eligibility-criteria');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status } = await put(updatedECPartial, user2).to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status } = await put(updatedECPartial, anHSBCMaker.token).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown resources', async () => {
-      const { status } = await put(updatedECPartial, user1).to('/v1/deals/123456789012/eligibility-criteria');
+      const { status } = await put(updatedECPartial, aBarclaysMaker.token).to('/v1/deals/123456789012/eligibility-criteria');
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status } = await put(updatedECPartial, superuser).to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status } = await put(updatedECPartial, aSuperuser.token).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
     });
 
     it('updates the eligibility criteria', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
-      await put(updatedECPartial, user1).to(`/v1/deals/${newId}/eligibility-criteria`);
+      await put(updatedECPartial, aBarclaysMaker.token).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       const { status, body } = await get(
         `/v1/deals/${newId}`,
-        user1,
+        aBarclaysMaker.token,
       );
 
       expect(status).toEqual(200);
@@ -170,20 +138,20 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
     });
 
     it('updates all the eligibility criteria without validation error', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status, body } = await put(updatedECCompleted, user1).to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await put(updatedECCompleted, aBarclaysMaker.token).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
       expect(body.eligibility.validationErrors.count).toEqual(0);
     });
 
     it('updates some of the eligibility criteria and generates validation errors', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status, body } = await put(updatedECPartial, user1).to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await put(updatedECPartial, aBarclaysMaker.token).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
       expect(body.eligibility.validationErrors.count).toEqual(5);
@@ -198,7 +166,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
     });
 
     it('generated validation errors if criteria11 is false but extra info not entered', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
       const updatedECPostcode = {
@@ -206,7 +174,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
         'agent-country': 'GBR',
       };
 
-      const { status, body } = await put(updatedECPostcode, user1).to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await put(updatedECPostcode, aBarclaysMaker.token).to(`/v1/deals/${newId}/eligibility-criteria`);
       expect(status).toEqual(200);
       expect(body.eligibility.validationErrors.count).toEqual(8);
 
@@ -221,10 +189,10 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
     });
 
     it('generated postcode validation error if criteria11 is false and country = GBR but postcode not entered', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status, body } = await put(updatedECCriteria11NoExtraInfo, user1).to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await put(updatedECCriteria11NoExtraInfo, aBarclaysMaker.token).to(`/v1/deals/${newId}/eligibility-criteria`);
       expect(status).toEqual(200);
       expect(body.eligibility.validationErrors.count).toEqual(8);
 
@@ -239,16 +207,16 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
     });
 
     it('updates criteria 11 extra info in criteria11 is false', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status, body } = await put(updatedECCriteria11WithExtraInfo, user1).to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await put(updatedECCriteria11WithExtraInfo, aBarclaysMaker.token).to(`/v1/deals/${newId}/eligibility-criteria`);
       expect(status).toEqual(200);
       expect(body.eligibility).toMatchObject(criteria11ExtraInfo);
     });
 
     it('limits length of agent name to 150 characters', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
       const characterCount = 150;
 
@@ -257,17 +225,17 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
         'agent-name': 'a'.repeat(characterCount + 1),
       };
 
-      const { status, body } = await put(updatedECCriteria11WithExtraInfoLongAgent, user1).to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body } = await put(updatedECCriteria11WithExtraInfoLongAgent, aBarclaysMaker.token).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
       expect(body.eligibility.agentName).toEqual(updatedECCriteria11WithExtraInfoLongAgent['agent-name'].substring(0, characterCount));
     });
 
     it('removes criteria 11 extra info when criteria11 is changed from false to true', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { body } = await put(updatedECCriteria11WithExtraInfo, user1).to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { body } = await put(updatedECCriteria11WithExtraInfo, aBarclaysMaker.token).to(`/v1/deals/${newId}/eligibility-criteria`);
       expect(body.eligibility).toMatchObject(criteria11ExtraInfo);
 
       const updateCriteria11Eligibility = {
@@ -275,7 +243,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
         'criterion-11': 'true',
       };
 
-      const { status, body: body2 } = await put(updateCriteria11Eligibility, user1).to(`/v1/deals/${newId}/eligibility-criteria`);
+      const { status, body: body2 } = await put(updateCriteria11Eligibility, aBarclaysMaker.token).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
       expect(body2.eligibility).toMatchObject(criteria11ExtraInfoEmpty);

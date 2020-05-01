@@ -2,13 +2,10 @@ const wipeDB = require('../../wipeDB');
 const aDeal = require('./deal-builder');
 
 const app = require('../../../src/createApp');
-const {
-  get, post, put, remove,
-} = require('../../api')(app);
+const testUserCache = require('../../api-test-users');
 
+const { get, post, put, remove } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
-
-const getToken = require('../../getToken')(app);
 
 describe('/v1/deals/:id/bankSupplyContractName', () => {
   const newDeal = aDeal({
@@ -29,59 +26,18 @@ describe('/v1/deals/:id/bankSupplyContractName', () => {
     }],
   });
 
-  let aUserWithoutRoles;
-  let maker1;
-  let maker2;
-  let checker;
+  let noRoles;
+  let aBarclaysMaker;
+  let anotherBarclaysMaker;
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals', 'users']);
+    await wipeDB.wipe(['deals']);
 
-    aUserWithoutRoles = await getToken({
-      username: '1',
-      password: '2',
-      roles: [],
-    });
-
-    maker1 = await getToken({
-      username: 'maker1username',
-      password: '4',
-      roles: ['maker'],
-      bank: {
-        id: '1',
-        name: 'Bank of Never Never Land',
-      },
-    });
-
-    maker2 = await getToken({
-      username: '5',
-      password: '6',
-      roles: ['maker'],
-      bank: {
-        id: '2',
-        name: 'Pot o Gold',
-      },
-    });
-
-    superuser = await getToken({
-      username: '7',
-      password: '8',
-      roles: ['maker'],
-      bank: {
-        id: '*',
-      },
-    });
-
-    checker = await getToken({
-      username: '9',
-      password: '10',
-      roles: ['checker'],
-      bank: {
-        id: '2',
-        name: 'Pot o Gold',
-      },
-    });
-
+    const testUsers = await testUserCache.initialise(app);
+    noRoles = testUsers().withoutAnyRoles().one();
+    const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
+    aBarclaysMaker = barclaysMakers[0];
+    anotherBarclaysMaker = barclaysMakers[1];
   });
 
   describe('PUT /v1/deals/:id/bankSupplyContractName', () => {
@@ -92,7 +48,7 @@ describe('/v1/deals/:id/bankSupplyContractName', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await put({bankSupplyContractName:'a new name'}, aUserWithoutRoles).to(
+      const { status } = await put({bankSupplyContractName:'a new name'}, noRoles.token).to(
         '/v1/deals/123456789012/bankSupplyContractName',
       );
 
@@ -100,7 +56,7 @@ describe('/v1/deals/:id/bankSupplyContractName', () => {
     });
 
     it('404s requests for unknown ids', async () => {
-      const { status } = await put({bankSupplyContractName:'a new name'}, maker1).to(
+      const { status } = await put({bankSupplyContractName:'a new name'}, aBarclaysMaker.token).to(
         '/v1/deals/123456789012/bankSupplyContractName',
       );
 
@@ -108,32 +64,32 @@ describe('/v1/deals/:id/bankSupplyContractName', () => {
     });
 
     it('401s requests if <user> != <resource>/details.maker', async () => {
-      const {body} = await post(newDeal, maker1).to('/v1/deals');
+      const {body} = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
 
-      const {status} = await put({bankSupplyContractName:'a new name'}, maker2).to(`/v1/deals/${body._id}/bankSupplyContractName`);
+      const {status} = await put({bankSupplyContractName:'a new name'}, anotherBarclaysMaker.token).to(`/v1/deals/${body._id}/bankSupplyContractName`);
 
       expect(status).toEqual(401);
     });
 
     it('returns the updated bankSupplyContractName', async () => {
-      const postResult = await post(newDeal, maker1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const createdDeal = postResult.body;
 
-      const { status, text } = await put({bankSupplyContractName:'a new name'}, maker1).to(`/v1/deals/${createdDeal._id}/bankSupplyContractName`);
+      const { status, text } = await put({bankSupplyContractName:'a new name'}, aBarclaysMaker.token).to(`/v1/deals/${createdDeal._id}/bankSupplyContractName`);
 
       expect(status).toEqual(200);
       expect(text).toEqual('a new name');
     });
 
     it('updates the deal', async () => {
-      const postResult = await post(newDeal, maker1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const createdDeal = postResult.body;
 
-      await put({bankSupplyContractName:'a new name'}, maker1).to(`/v1/deals/${createdDeal._id}/bankSupplyContractName`);
+      await put({bankSupplyContractName:'a new name'}, aBarclaysMaker.token).to(`/v1/deals/${createdDeal._id}/bankSupplyContractName`);
 
       const { status, body } = await get(
         `/v1/deals/${createdDeal._id}`,
-        maker1,
+        aBarclaysMaker.token,
       );
 
       expect(status).toEqual(200);
@@ -141,14 +97,14 @@ describe('/v1/deals/:id/bankSupplyContractName', () => {
     });
 
     it('updates the deals details.dateOfLastAction field', async () => {
-      const postResult = await post(newDeal, maker1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const createdDeal = postResult.body;
 
-      await put({bankSupplyContractName:'a new name'}, maker1).to(`/v1/deals/${createdDeal._id}/bankSupplyContractName`);
+      await put({bankSupplyContractName:'a new name'}, aBarclaysMaker.token).to(`/v1/deals/${createdDeal._id}/bankSupplyContractName`);
 
       const { status, body } = await get(
         `/v1/deals/${createdDeal._id}`,
-        maker1,
+        aBarclaysMaker.token,
       );
 
       expect(status).toEqual(200);

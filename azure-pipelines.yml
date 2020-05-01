@@ -10,7 +10,7 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '8beaa40a-2fb6-49d1-b080-ff1871b6276f'
+  dockerRegistryServiceConnection: '32eceb8d-a137-4355-86e0-e055e687e67b'
   imageRepository: 'dealapi'
   containerRegistry: 'dtfs2.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/deal-api/Dockerfile'
