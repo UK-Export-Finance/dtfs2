@@ -215,22 +215,17 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(401);
     });
 
-<<<<<<< HEAD
     it('404s requests for unknown deal', async () => {
-      const { status } = await put({}, user1).to('/v1/deals/123456789012/bond/123456789012');
-=======
-    it('404s requests for unknown resources', async () => {
       const { status } = await put({}, aBarclaysMaker.token).to('/v1/deals/123456789012/bond/123456789012');
->>>>>>> master
 
       expect(status).toEqual(404);
     });
 
     it('404s requests for unknown bond', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
-      const { status } = await put({}, user1).to(`/v1/deals/${dealId}/bond/123456789012`);
+      const { status } = await put({}, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/123456789012`);
 
       expect(status).toEqual(404);
     });
@@ -246,17 +241,6 @@ describe('/v1/deals/:id/bond', () => {
 
       expect(status).toEqual(200);
     });
-
-    // it('404s a request if bond cannot be found', async () => {
-    //   const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals/');
-    //   const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
-
-    //   await put({}, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/create`);
-
-    //   const { status } = await put({}, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/012345789012`);
-
-    //   expect(status).toEqual(404);
-    // });
 
     it('updates an existing bond', async () => {
       const deal = await post(newDeal, aBarclaysMaker.token).to('/v1/deals/');
