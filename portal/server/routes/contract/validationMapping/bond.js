@@ -41,7 +41,8 @@ export const FIELDS = {
 };
 
 // only return validation if any single field has been submitted (required, conditionally required or optional).
-export const shouldReturnRequirdValidation = (fields, fieldValues) => {
+export const shouldReturnRequiredValidation = (fields, fieldValues) => {
+  // TODO: why did we add allFields? seems don't need it anymore.
   const allFields = [];
 
   Object.keys(fields).forEach((fieldTypeGroup) => {
@@ -97,7 +98,7 @@ export const mapRequiredValidationErrors = (validationErrors, fields) => {
 };
 
 export const handleValidationErrors = (validationErrors, fields, bond) => {
-  if (shouldReturnRequirdValidation(fields, bond)) {
+  if (shouldReturnRequiredValidation(fields, bond)) {
     return mapRequiredValidationErrors(validationErrors, fields);
   }
   return {
