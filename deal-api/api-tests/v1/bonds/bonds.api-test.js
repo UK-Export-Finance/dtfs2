@@ -42,61 +42,61 @@ describe('/v1/deals/:id/bond', () => {
 
   describe('GET /v1/deals/:id/bond/:id', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await get('/v1/deals/123456789012/bond/123456789012');
+      const { status } = await as().get('/v1/deals/123456789012/bond/123456789012');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await get('/v1/deals/123456789012/bond/123456789012', aUserWithoutRoles);
+      const { status } = await as(noRoles).get('/v1/deals/123456789012/bond/123456789012');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
-      const { status } = await get(`/v1/deals/${dealId}/bond/123456789012`, user2);
+      const { status } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/bond/123456789012`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await get('/v1/deals/123456789012/bond/123456789012', user1);
+      const { status } = await as(aBarclaysMaker).get('/v1/deals/123456789012/bond/123456789012');
 
       expect(status).toEqual(404);
     });
 
     it('404s requests for unknown bond', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
-      const { status } = await get(`/v1/deals/${dealId}/bond/123456789012`, user1);
+      const { status } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/bond/123456789012`);
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals');
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
-      const createBondResponse = await put({}, user1).to(`/v1/deals/${dealId}/bond/create`);
+      const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
       const { bondId } = createBondResponse.body;
 
-      const { status } = await get(`/v1/deals/${dealId}/bond/${bondId}`, superuser);
+      const { status } = await as(aSuperuser).get(`/v1/deals/${dealId}/bond/${bondId}`);
 
       expect(status).toEqual(200);
     });
 
     it('returns a bond with dealId and validationErrors', async () => {
-      const postResult = await post(newDeal, user1).to('/v1/deals/');
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
-      const createBondResponse = await put({}, user1).to(`/v1/deals/${dealId}/bond/create`);
+      const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
       const { bondId } = createBondResponse.body;
 
-      const { status, body } = await get(`/v1/deals/${dealId}/bond/${bondId}`, user1);
+      const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/bond/${bondId}`);
 
       expect(status).toEqual(200);
       expect(body.bond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
@@ -220,7 +220,7 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     it('404s requests for unknown bond', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDea).to('/v1/deals');
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
       const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/123456789012`);
@@ -395,7 +395,7 @@ describe('/v1/deals/:id/bond', () => {
 
     describe('when a bond has req.body.transactionCurrencySameAsSupplyContractCurrency', () => {
       it('should remove `currency is NOT the same` values from the bond', async () => {
-        const deal = await as(aBarclaysMaker).post(newDeal, ).to('/v1/deals/');
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
         const bondBody = {
