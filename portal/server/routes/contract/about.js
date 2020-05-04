@@ -34,24 +34,41 @@ router.post('/contract/:id/about/supplier', (req, res) => {
   return res.redirect(redirectUrl);
 });
 
-router.post('/contract/:_id/about/supplier/companies-house-search', async (req, res) => {
+router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', async (req, res) => {
   const { _id, userToken } = requestParams(req);
+  const { prefix } = req.params;
 
   const deal = await getApiData(
     api.contract(_id, userToken),
     res,
   );
 
-  const company = await companiesHouseAPI.searchByRegistrationNumber(req.body.supplierCompaniesHouseRegistrationNumber);
+  const searchTerm = `${prefix}-companies-house-registration-number`;
+  const company = await companiesHouseAPI.searchByRegistrationNumber(req.body[searchTerm]);
+
+  // fix industrySector/industryClass data; is nested in source data, and the way it's rendered makes this preferable
+  const submissionDetails = req.body;
+  if (submissionDetails.industrySector && submissionDetails.industryClass) {
+    submissionDetails.industrySector = {
+      code: submissionDetails.industrySector,
+      name: '', // TODO
+      class: {
+        code: submissionDetails.industryClass,
+        name: '', // TODO
+      },
+    };
+  }
 
   // cache the current form status in the deal so it gets re-displayed when we re-render..
-  deal.submissionDetails = req.body;
+  deal.submissionDetails = submissionDetails;
 
   if (!company) {
+    // TODO - send a real message?
+    const validation = {};
+    validation[`${prefix}-companies-house-registration-number`] = 'not found';
+
     return res.render('about/about-supplier.njk', {
-      validation: { // TODO do this properly
-        supplierCompaniesHouseRegistrationNumber: 'not found',
-      },
+      validation,
       deal,
       countries: await getApiData(
         api.countries(userToken),
@@ -65,11 +82,11 @@ router.post('/contract/:_id/about/supplier/companies-house-search', async (req, 
   }
 
   // munge data back into form data
-  deal.submissionDetails.supplierName = company.title;
-  deal.submissionDetails['supplier-address-line-1'] = company.address.premises;
-  deal.submissionDetails['supplier-address-line-2'] = company.address.address_line_1;
-  deal.submissionDetails['supplier-address-town'] = company.address.locality;
-  deal.submissionDetails['supplier-address-postcode'] = company.address.postal_code;
+  deal.submissionDetails[`${prefix}-name`] = company.title;
+  deal.submissionDetails[`${prefix}-address-line-1`] = company.address.premises;
+  deal.submissionDetails[`${prefix}-address-line-2`] = company.address.address_line_1;
+  deal.submissionDetails[`${prefix}-address-town`] = company.address.locality;
+  deal.submissionDetails[`${prefix}-address-postcode`] = company.address.postal_code;
   // looks like CH don't use this?
   // contract.submissionDetails["supplier-address-county"] = company.address.?????;
   // CH-> 'england', portal->United Kingdom
@@ -109,9 +126,6 @@ router.post('/contract/:_id/about/supplier/save-go-back', async (req, res) => {
       },
     };
   }
-
-  console.log(`about to send update::\n ${JSON.stringify(submissionDetails, null, 2)}`);
-
 
   await api.updateSubmissionDetails(deal, submissionDetails, userToken);
 

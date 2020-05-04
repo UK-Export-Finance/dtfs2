@@ -3,31 +3,32 @@
 
 {% macro input(opts) %}
 
-  {% set id=opts.id %}
+  {% set prefix=opts.prefix %}
   {% set label=opts.label %}
   {% set deal=opts.deal %}
 
   <div class="govuk-form-group">
 
     {{ govukInput({
-      label: {
-        text: label
-      },
-      hint: {
-        text: 'We use a Companies House service to provide you with company details. If the company is not UK registered or the Companies House service is unavailable, then you will need to complete the company details fields manually.'
-      },
+      label: { text: label },
+      hint: { text: 'We use a Companies House service to provide you with company details. If the company is not UK registered or the Companies House service is unavailable, then you will need to complete the company details fields manually.' },
       classes: "govuk-!-width-one-half",
-      id: id,
-      name: id,
-      value: deal.submissionDetails[id],
+      id: prefix+'-companies-house-registration-number',
+      name: prefix+'-companies-house-registration-number',
+      value: deal.submissionDetails[prefix+'-companies-house-registration-number'],
       attributes: {
-        "data-cy": id
+        "data-cy": prefix+'-companies-house-registration-number'
       },
-      errorMessage: validationErrors.errorList[id]
+      errorMessage: validationErrors.errorList[prefix+'-companies-house-registration-number']
     }) }}
 
-    {# not able to use govuk button here while using formaction attribute.. would need to rethink endpoints to do this...#}
-    <button data-cy="DoSearch-{{id}}" class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-top-4" data-module="govuk-button" formaction="/contract/{{ deal._id }}/about/supplier/companies-house-search">Search</button>
+    {{ govukButton({
+      "text": "Search",
+      "attributes" : {
+        "data-cy" : "DoSearch-" + prefix+'-companies-house-registration-number',
+        "formaction" : "/contract/" + deal._id + "/about/supplier/companies-house-search/" + prefix
+      }
+    }) }}
 
   </div>
 

@@ -3,7 +3,7 @@ const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
-const { get, post, put } = require('../../api')(app);
+const { as } = require('../../api')(app);
 
 describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({
@@ -13,29 +13,31 @@ describe('/v1/deals/:id/bond', () => {
     },
   });
 
+  const mockCurrencies = [
+    { id: 'GBP', text: 'GBP - UK Sterling' },
+    { id: 'EUR', text: 'EUR - Euros' },
+  ];
+
   let noRoles;
   let aBarclaysMaker;
   let anHSBCMaker;
   let aSuperuser;
   let anEditor;
 
-  beforeEach(async () => {
-    await wipeDB.wipe(['bondCurrencies', 'deals']);
-
+  beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
+
     noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
     anEditor = testUsers().withRole('editor').one();
+  });
 
-    const mockCurrencies = [
-      { id: 'GBP', text: 'GBP - UK Sterling' },
-      { id: 'EUR', text: 'EUR - Euros' },
-    ];
+  beforeEach(async () => {
+    await wipeDB.wipe(['bondCurrencies', 'deals']);
 
-    await post(mockCurrencies[0], anEditor.token).to('/v1/bond-currencies');
-    await post(mockCurrencies[1], anEditor.token).to('/v1/bond-currencies');
+    await as(anEditor).postEach(mockCurrencies).to('/v1/bond-currencies');
   });
 
   describe('GET /v1/deals/:id/bond/:id', () => {
@@ -114,51 +116,49 @@ describe('/v1/deals/:id/bond', () => {
 
   describe('PUT /v1/deals/:id/bond/create', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await put().to('/v1/deals/123456789012/bond/create');
+      const { status } = await as().put().to('/v1/deals/123456789012/bond/create');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await put(noRoles.token).to('/v1/deals/123456789012/bond/create');
+      const { status } = await as(noRoles).put().to('/v1/deals/123456789012/bond/create');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
-      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
-      const { status } = await put(anHSBCMaker.token).to(`/v1/deals/${dealId}/bond/create`);
+      const { status } = await as(anHSBCMaker).put().to(`/v1/deals/${dealId}/bond/create`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown resources', async () => {
-      const { status } = await put({}, aBarclaysMaker.token).to('/v1/deals/123456789012/bond/create');
+      const { status } = await as(aBarclaysMaker).put().to('/v1/deals/123456789012/bond/create');
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
-      const { status } = await put({}, aSuperuser.token).to(`/v1/deals/${dealId}/bond/create`);
+      const { status } = await as(aSuperuser).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
       expect(status).toEqual(200);
     });
 
     it('adds an empty bond to a deal', async () => {
-      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals/');
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
-      await put({}, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/create`);
+      await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
-      const { status, body } = await get(
-        `/v1/deals/${dealId}`,
-        aBarclaysMaker.token,
-      );
+      const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+
       expect(status).toEqual(200);
       expect(body.bondTransactions.items.length).toEqual(1);
       expect(body.bondTransactions.items[0]._id).toBeDefined(); // eslint-disable-line no-underscore-dangle
@@ -175,15 +175,13 @@ describe('/v1/deals/:id/bond', () => {
         },
       };
 
-      const postResult = await post(newDealWithExistingBonds, aBarclaysMaker.token).to('/v1/deals/');
+      const postResult = await as(aBarclaysMaker).post(newDealWithExistingBonds).to('/v1/deals/');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
-      await put({}, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/create`);
+      await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
-      const { status, body } = await get(
-        `/v1/deals/${dealId}`,
-        aBarclaysMaker.token,
-      );
+      const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+
       expect(status).toEqual(200);
       expect(body.bondTransactions.items.length).toEqual(2);
 
@@ -195,55 +193,55 @@ describe('/v1/deals/:id/bond', () => {
 
   describe('PUT /v1/deals/:id/bond/:bondId', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await put().to('/v1/deals/123456789012/bond/123456789012');
+      const { status } = await as().put().to('/v1/deals/123456789012/bond/123456789012');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await put(noRoles.token).to('/v1/deals/123456789012/bond/123456789012');
+      const { status } = await as(noRoles).put().to('/v1/deals/123456789012/bond/123456789012');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
-      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
-      const { status } = await put(anHSBCMaker.token).to(`/v1/deals/${dealId}/bond/123456789012`);
+      const { status } = await as(anHSBCMaker).put().to(`/v1/deals/${dealId}/bond/123456789012`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await put({}, aBarclaysMaker.token).to('/v1/deals/123456789012/bond/123456789012');
+      const { status } = await as(aBarclaysMaker).put({}).to('/v1/deals/123456789012/bond/123456789012');
 
       expect(status).toEqual(404);
     });
 
     it('404s requests for unknown bond', async () => {
-      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
+      const postResult = await as(aBarclaysMaker).post(newDea).to('/v1/deals');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
-      const { status } = await put({}, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/123456789012`);
+      const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/123456789012`);
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const postResult = await post(newDeal, aBarclaysMaker.token).to('/v1/deals');
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
-      const { body } = await put({}, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/create`);
+      const { body } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
       const bondId = body.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
 
-      const { status } = await put({}, aSuperuser.token).to(`/v1/deals/${dealId}/bond/${bondId}`);
+      const { status } = await as(aSuperuser).put({}).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
       expect(status).toEqual(200);
     });
 
     it('updates an existing bond', async () => {
-      const deal = await post(newDeal, aBarclaysMaker.token).to('/v1/deals/');
+      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
       // TODO: add all possible values here
@@ -264,29 +262,23 @@ describe('/v1/deals/:id/bond', () => {
         status: 'Incomplete',
       };
 
-      const createBondResponse = await put({}, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/create`);
+      const createBondResponse = await as(aBarclaysMaker).put({}, ).to(`/v1/deals/${dealId}/bond/create`);
 
       const { body: createBondBody } = createBondResponse;
       const { bondId } = createBondBody;
 
-      const { status } = await put(bondBody, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/${bondId}`);
+      const { status } = await as(aBarclaysMaker).put(bondBody).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
       expect(status).toEqual(200);
 
-      const { body: updatedDeal } = await get(
-        `/v1/deals/${dealId}`,
-        aBarclaysMaker.token,
-      );
+      const { body: updatedDeal } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
 
       expect(status).toEqual(200);
 
       const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
         b._id === bondId); // eslint-disable-line no-underscore-dangle
 
-      const { body: getCurrencyBody } = await get(
-        `/v1/bond-currencies/${bondBody.currency}`,
-        aBarclaysMaker.token,
-      );
+      const { body: getCurrencyBody } = await as(aBarclaysMaker).get(`/v1/bond-currencies/${bondBody.currency}`);
 
       const expectedCurrencyObj = {
         id: getCurrencyBody.id,
@@ -303,7 +295,7 @@ describe('/v1/deals/:id/bond', () => {
 
     describe('when a bond has req.body.bondStage as `Issued`', () => {
       it('should remove `unissued` related values from the bond', async () => {
-        const deal = await post(newDeal, aBarclaysMaker.token).to('/v1/deals/');
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
         const bondAsUnissued = {
@@ -312,12 +304,12 @@ describe('/v1/deals/:id/bond', () => {
           ukefGuaranteeInMonths: '12',
         };
 
-        const createBondResponse = await put({}, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/create`);
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
         const { body: createBondBody } = createBondResponse;
         const { bondId } = createBondBody;
 
-        const { status } = await put(bondAsUnissued, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status } = await as(aBarclaysMaker).put(bondAsUnissued).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(status).toEqual(200);
 
         const updatedBondAsIssued = {
@@ -332,13 +324,10 @@ describe('/v1/deals/:id/bond', () => {
           uniqueIdentificationNumber: '1234',
         };
 
-        const { status: secondUpdateStatus } = await put(updatedBondAsIssued, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status: secondUpdateStatus } = await as(aBarclaysMaker).put(updatedBondAsIssued).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(secondUpdateStatus).toEqual(200);
 
-        const { body: updatedDeal } = await get(
-          `/v1/deals/${dealId}`,
-          aBarclaysMaker.token,
-        );
+        const { body: updatedDeal } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
         expect(status).toEqual(200);
 
         const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
@@ -356,7 +345,7 @@ describe('/v1/deals/:id/bond', () => {
 
     describe('when a bond has req.body.bondStage as `Unissued`', () => {
       it('should remove `unissued` related values from the bond', async () => {
-        const deal = await post(newDeal, aBarclaysMaker.token).to('/v1/deals/');
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
         const bondAsIssued = {
@@ -371,12 +360,12 @@ describe('/v1/deals/:id/bond', () => {
           uniqueIdentificationNumber: '1234',
         };
 
-        const createBondResponse = await put({}, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/create`);
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
         const { body: createBondBody } = createBondResponse;
         const { bondId } = createBondBody;
 
-        const { status } = await put(bondAsIssued, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status } = await as(aBarclaysMaker).put(bondAsIssued).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(status).toEqual(200);
 
         const updatedBondAsUnissued = {
@@ -385,13 +374,10 @@ describe('/v1/deals/:id/bond', () => {
           ukefGuaranteeInMonths: '12',
         };
 
-        const { status: secondUpdateStatus } = await put(updatedBondAsUnissued, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status: secondUpdateStatus } = await as(aBarclaysMaker).put(updatedBondAsUnissued).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(secondUpdateStatus).toEqual(200);
 
-        const { body: updatedDeal } = await get(
-          `/v1/deals/${dealId}`,
-          aBarclaysMaker.token,
-        );
+        const { body: updatedDeal } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
         expect(status).toEqual(200);
 
         const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
@@ -409,7 +395,7 @@ describe('/v1/deals/:id/bond', () => {
 
     describe('when a bond has req.body.transactionCurrencySameAsSupplyContractCurrency', () => {
       it('should remove `currency is NOT the same` values from the bond', async () => {
-        const deal = await post(newDeal, aBarclaysMaker.token).to('/v1/deals/');
+        const deal = await as(aBarclaysMaker).post(newDeal, ).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
         const bondBody = {
@@ -421,12 +407,12 @@ describe('/v1/deals/:id/bond', () => {
           'conversionRateDate-year': '2019',
         };
 
-        const createBondResponse = await put({}, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/create`);
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
         const { body: createBondBody } = createBondResponse;
         const { bondId } = createBondBody;
 
-        const { status } = await put(bondBody, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status } = await as(aBarclaysMaker).put(bondBody).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(status).toEqual(200);
 
 
@@ -435,13 +421,10 @@ describe('/v1/deals/:id/bond', () => {
           transactionCurrencySameAsSupplyContractCurrency: 'true',
         };
 
-        const { status: secondUpdateStatus } = await put(bondWithSameCurrencyAsContract, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status: secondUpdateStatus } = await as(aBarclaysMaker).put(bondWithSameCurrencyAsContract).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(secondUpdateStatus).toEqual(200);
 
-        const { body: updatedDeal } = await get(
-          `/v1/deals/${dealId}`,
-          aBarclaysMaker.token,
-        );
+        const { body: updatedDeal } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
 
         expect(status).toEqual(200);
 
@@ -458,26 +441,23 @@ describe('/v1/deals/:id/bond', () => {
       });
 
       it('should use the deal\'s supplyContractCurrency to the bond\'s currency', async () => {
-        const deal = await post(newDeal, aBarclaysMaker.token).to('/v1/deals/');
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
         const bondBody = {
           transactionCurrencySameAsSupplyContractCurrency: 'true',
         };
 
-        const createBondResponse = await put({}, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/create`);
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
         const { body: createBondBody } = createBondResponse;
         const { bondId } = createBondBody;
 
-        const { status } = await put(bondBody, aBarclaysMaker.token).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status } = await as(aBarclaysMaker).put(bondBody).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
         expect(status).toEqual(200);
 
-        const { body: updatedDeal } = await get(
-          `/v1/deals/${dealId}`,
-          aBarclaysMaker.token,
-        );
+        const { body: updatedDeal } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
 
         expect(status).toEqual(200);
 
