@@ -1,5 +1,7 @@
 const { orderNumber } = require('../../utils/error-list-order-number');
+const { dateIsValid, dateValidationText } = require('./date-field');
 
+// TODO: extract
 const isEmptyString = (str) => {
   if ((typeof value === 'string' || str instanceof String) && !str.length) {
     return true;
@@ -7,6 +9,7 @@ const isEmptyString = (str) => {
   return false;
 };
 
+// TODO: extract
 const hasValue = (str) => {
   if (str && !isEmptyString(str)) {
     return true;
@@ -105,19 +108,15 @@ exports.getBondErrors = (bond) => {
   }
 
   if (bondStage === 'Issued') {
-    const hasNoDateValues = (!hasValue(coverEndDateDay) && !hasValue(coverEndDateMonth) && !hasValue(coverEndDateYear));
-
-    // TODO: message should account for everthing that is missing
-    // so if no month and no day, say 'month and day is required'
-    if (hasNoDateValues) {
+    if (!dateIsValid(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
       errorList.coverEndDate = {
+        text: dateValidationText(
+          'Cover End Date',
+          coverEndDateDay,
+          coverEndDateMonth,
+          coverEndDateYear,
+        ),
         order: orderNumber(errorList),
-        text: 'Enter the Cover End Date',
-      };
-    } else if (!hasValue(coverEndDateDay) || !hasValue(coverEndDateMonth) || !hasValue(coverEndDateYear)) {
-      errorList.coverEndDate = {
-        order: orderNumber(errorList),
-        text: 'Cover End Date must include day month and year (temp message)',
       };
     }
 
@@ -128,7 +127,6 @@ exports.getBondErrors = (bond) => {
       };
     }
   }
-
 
   /* ************************************
   // financial details
