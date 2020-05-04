@@ -135,7 +135,13 @@
               selected: bond.bondType === "Warranty letter"
             }
           ],
-          errorMessage: validationErrors.errorList.bondType
+          errorMessage: validationErrors.errorList.bondType and {
+            text: validationErrors.errorList.bondType.text,
+            attributes: {
+              'data-cy': 'bond-type-error-message'
+            }
+          }
+
         }) }}
 
         {{ govukRadios({
@@ -167,7 +173,12 @@
               }
             }
           ],
-          errorMessage: validationErrors.errorList.bondStage
+          errorMessage: validationErrors.errorList.bondStage and {
+            text: validationErrors.errorList.bondStage.text,
+            attributes: {
+              'data-cy': 'bond-stage-error-message'
+            }
+          }
         }) }}
 
         <div
@@ -188,7 +199,12 @@
             attributes: {
               'data-cy': 'ukef-guarantee-in-months'
             },
-            errorMessage: validationErrors.errorList.ukefGuaranteeInMonths or (not bond.ukefGuaranteeInMonths and validationErrors.conditionalErrorList.bondStage.Unissued.ukefGuaranteeInMonths)
+            errorMessage: {
+              text: validationErrors.errorList.ukefGuaranteeInMonths.text or (not bond.ukefGuaranteeInMonths and validationErrors.conditionalErrorList.bondStage.Unissued.ukefGuaranteeInMonths.text),
+              attributes: {
+                'data-cy': 'ukef-guarantee-in-months-error-message'
+              }
+            }
           }) }}
 
         </div>

@@ -27,14 +27,56 @@ context('Bond Details', () => {
       .then( insertedDeal => deal=insertedDeal );
   });
 
+  describe('after submitting one optional form field and navigating back to `Bond Details` page', () => {
+    it('should display validation errors for all required fields', () => {
+      cy.loginGoToDealPage(user, deal);
+
+      pages.contract.addBondButton().click();
+
+      pages.bondDetails.bondIssuerInput().type(BOND_FORM_VALUES.DETAILS.bondIssuer);
+      pages.bondDetails.submit().click();
+
+      cy.url().should('include', '/financial-details');
+      partials.bondProgressNav.progressNavBondDetails().click();
+
+      const TOTAL_REQUIRED_FORM_FIELDS = 2;
+
+      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+
+      pages.bondDetails.bondTypeInputErrorMessage().should('be.visible');
+      pages.bondDetails.bondStageInputErrorMessage().should('be.visible');
+    });
+  });
+
   describe('When a user selects `unissued` bond stage', () => {
-    it('should render additional form fields', () => {
+    it('should render additional form fields and display `unissued` specific validation errors without submit', () => {
       cy.loginGoToDealPage(user, deal);
 
       pages.contract.addBondButton().click();
       pages.bondDetails.bondStageUnissuedInput().click();
 
       pages.bondDetails.ukefGuaranteeInMonthsInput().should('be.visible');
+      pages.bondDetails.ukefGuaranteeInMonthsInputErrorMessage().should('be.visible');
+    });
+
+    describe('after form submit and navigating back to `Bond Details` page', () => {
+      it('should display validation errors for required fields and `unissued` required fields', () => {
+        cy.loginGoToDealPage(user, deal);
+
+        pages.contract.addBondButton().click();
+        pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
+        pages.bondDetails.bondStageUnissuedInput().click();
+
+        pages.bondDetails.submit().click();
+        cy.url().should('include', '/financial-details');
+        partials.bondProgressNav.progressNavBondDetails().click();
+
+        const UNISSUED_REQUIRED_FORM_FIELDS = 1;
+        const TOTAL_REQUIRED_FORM_FIELDS = UNISSUED_REQUIRED_FORM_FIELDS;
+
+        partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+        pages.bondDetails.ukefGuaranteeInMonthsInputErrorMessage().should('be.visible');
+      });
     });
 
     it('form submit should progess to `Bond Financial Details` page and render additional submitted form field values in `Bond Preview` page', () => {
