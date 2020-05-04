@@ -1,16 +1,9 @@
-const address = (prefix) => {
-  return {
-    line1: () => cy.get(`[data-cy="${prefix}-line-1"]`),
-    line2: () => cy.get(`[data-cy="${prefix}-line-2"]`),
-    town: () => cy.get(`[data-cy="${prefix}-town"]`),
-    county: () => cy.get(`[data-cy="${prefix}-county"]`),
-    postcode: () => cy.get(`[data-cy="${prefix}-postcode"]`),
-    country: () => cy.get(`[data-cy="${prefix}-country"]`),
-  }
-};
+const address = require('./address');
+const nav = require('./about-supply-contract-nav');
 
 const page = {
   visit: (deal) => cy.visit(`/contract/${deal._id}/about/supplier`),
+  nav: () => nav,
   supplierType: () => cy.get('[data-cy="supplierType"]'),
   supplierCompaniesHouseRegistrationNumber: () => cy.get('[data-cy="supplier-companies-house-registration-number"]'),
   supplierSearchCompaniesHouse: () => cy.get('[data-cy="DoSearch-supplier-companies-house-registration-number"]'),
