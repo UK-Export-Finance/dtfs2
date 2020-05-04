@@ -1,7 +1,7 @@
 import {
   FIELDS,
-  shouldReturnValidation,
-  mapValidationErrors,
+  shouldReturnRequiredValidation,
+  mapRequiredValidationErrors,
   handleValidationErrors,
   handleBondDetailsValidationErrors,
   handleBondFinancialDetailsValidationErrors,
@@ -19,14 +19,29 @@ describe('bond validation errors mapping', () => {
     otherField: { order: '2', text: 'Field is required' },
   };
 
-  describe('shouldReturnValidation', () => {
-    it('should return true when errorsCount is less than requiredFields count', () => {
-      const result = shouldReturnValidation(3, 4);
+  describe('shouldReturnRequiredValidation', () => {
+    it('should return true when field values length is greater than 0', () => {
+      const mockFields = FIELDS.FEE_DETAILS.REQUIRED_FIELDS;
+
+      const mockFieldValues = {
+        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[0]]: 'Test',
+      };
+
+      const result = shouldReturnRequiredValidation(mockFields, mockFieldValues);
       expect(result).toEqual(true);
+    });
+
+    it('should return false when field values length is NOT greater than 0', () => {
+      const mockFields = FIELDS.FEE_DETAILS.REQUIRED_FIELDS;
+
+      const mockFieldValues = {};
+
+      const result = shouldReturnRequiredValidation(mockFields, mockFieldValues);
+      expect(result).toEqual(false);
     });
   });
 
-  describe('mapValidationErrors', () => {
+  describe('mapRequiredValidationErrors', () => {
     it('should return errorList from errorSummary function with only validationErrors that are included in requiredFields', () => {
       const mockErrorList = {
         ...mockBondErrors,
@@ -44,7 +59,7 @@ describe('bond validation errors mapping', () => {
         [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[2]]: { order: '4', text: 'Field is required' },
       };
 
-      const result = mapValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
+      const result = mapRequiredValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
 
       const expectedErrorList = generateErrorSummary(
         { errorList: expectedRequiredErrorList },
@@ -71,7 +86,7 @@ describe('bond validation errors mapping', () => {
         [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[2]]: { order: '4', text: 'Field is required' },
       };
 
-      const result = mapValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
+      const result = mapRequiredValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
 
       const expectedSummary = generateErrorSummary(
         { errorList: expectedRequiredErrorList },
@@ -104,13 +119,13 @@ describe('bond validation errors mapping', () => {
         },
       };
 
-      const result = mapValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
+      const result = mapRequiredValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
       expect(result.conditionalErrorList).toEqual(mockValidationErrors.conditionalErrorList);
     });
 
     describe('when there is no validationErrors object passed', () => {
       it('should use an empty object', () => {
-        const result = mapValidationErrors(undefined, FIELDS.FEE_DETAILS);
+        const result = mapRequiredValidationErrors(undefined, FIELDS.FEE_DETAILS);
 
         const expected = generateErrorSummary(
           {
@@ -125,7 +140,7 @@ describe('bond validation errors mapping', () => {
   });
 
   describe('handleValidationErrors', () => {
-    it('should return mapValidationErrors result', () => {
+    it('should return mapRequiredValidationErrors result', () => {
       const mockErrorList = {
         ...mockBondErrors,
         [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[1]]: { order: '3', text: 'Field is required' },
@@ -137,8 +152,12 @@ describe('bond validation errors mapping', () => {
         count: mockErrorList.length,
       };
 
-      const result = handleValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
-      const expected = mapValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
+      const mockBond = {
+        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[0]]: 'Test',
+      };
+
+      const result = handleValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS, mockBond);
+      const expected = mapRequiredValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
       expect(result).toEqual(expected);
     });
 
