@@ -42,7 +42,7 @@ router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
   return res.render('bond/bond-details.njk', {
     dealId,
     bond,
-    validationErrors: handleBondDetailsValidationErrors(validationErrors),
+    validationErrors: handleBondDetailsValidationErrors(validationErrors, bond),
   });
 });
 
@@ -85,7 +85,7 @@ router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => 
   return res.render('bond/bond-financial-details.njk', {
     dealId,
     bond,
-    validationErrors: handleBondFinancialDetailsValidationErrors(validationErrors),
+    validationErrors: handleBondFinancialDetailsValidationErrors(validationErrors, bond),
     currencies: mapCurrencies(currencies, bondResponse.bond.currency),
   });
 });
@@ -124,7 +124,7 @@ router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   return res.render('bond/bond-fee-details.njk', {
     dealId,
     bond,
-    validationErrors: handleBondFeeDetailsValidationErrors(validationErrors),
+    validationErrors: handleBondFeeDetailsValidationErrors(validationErrors, bond),
   });
 });
 
