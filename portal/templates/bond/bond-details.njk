@@ -266,15 +266,15 @@
             hint: {
               text: "For example, 27 11 2025"
             },
-            errorMessage: {
-              text: validationErrors.errorList.coverEndDate.text or (not (coverEndDate-day or coverEndDate-month or coverEndDate-year) and validationErrors.conditionalErrorList.bondStage.Issued.coverEndDate.text),
+            errorMessage: (validationErrors.errorList.coverEndDate.text or (not bond['coverEndDate-day']) or (not bond['coverEndDate-month']) or (not bond['coverEndDate-year'])) and {
+              text: validationErrors.errorList.coverEndDate.text or validationErrors.conditionalErrorList.bondStage.Issued.coverEndDate.text,
               attributes: {
                 'data-cy': "coverEndDate-error-message"
               }
             },
             items: [
               {
-                classes: "govuk-input--width-2",
+                classes: (not bond['coverEndDate-day']) and "govuk-input--width-2 govuk-input--error" or "govuk-input--width-2",
                 name: "day",
                 value: bond['coverEndDate-day'],
                 attributes: {
@@ -282,7 +282,7 @@
                 }
               },
               {
-                classes: "govuk-input--width-2",
+                classes: (not bond['coverEndDate-month']) and "govuk-input--width-2 govuk-input--error" or "govuk-input--width-2",
                 name: "month",
                 value: bond['coverEndDate-month'],
                 attributes: {
@@ -290,7 +290,7 @@
                 }
               },
               {
-                classes: "govuk-input--width-2",
+                classes: (not bond['coverEndDate-year']) and "govuk-input--width-2 govuk-input--error" or "govuk-input--width-2",
                 name: "year",
                 value: bond['coverEndDate-year'],
                 attributes: {
