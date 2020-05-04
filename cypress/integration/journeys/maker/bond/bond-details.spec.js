@@ -156,7 +156,7 @@ context('Bond Details', () => {
   });
 
   describe('When a user selects `issued` bond stage', () => {
-    it('should render additional form fields', () => {
+    it('should render additional form fields and display `issued` specific validation errors without submit', () => {
       cy.loginGoToDealPage(user, deal);
 
       pages.contract.addBondButton().click();
@@ -170,6 +170,30 @@ context('Bond Details', () => {
       pages.bondDetails.coverEndDateMonthInput().should('be.visible');
       pages.bondDetails.coverEndDateYearInput().should('be.visible');
       pages.bondDetails.uniqueIdentificationNumberInput().should('be.visible');
+
+      pages.bondDetails.coverEndDateInputErrorMessage().should('be.visible');
+      pages.bondDetails.uniqueIdentificationNumberInputErrorMessage().should('be.visible');
+    });
+
+    describe('after form submit and navigating back to `Bond Details` page', () => {
+      it('should display validation errors for required fields and `issued` required fields', () => {
+        cy.loginGoToDealPage(user, deal);
+
+        pages.contract.addBondButton().click();
+        pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
+        pages.bondDetails.bondStageIssuedInput().click();
+
+        pages.bondDetails.submit().click();
+        cy.url().should('include', '/financial-details');
+        partials.bondProgressNav.progressNavBondDetails().click();
+
+        const ISSUED_REQUIRED_FORM_FIELDS = 2;
+        const TOTAL_REQUIRED_FORM_FIELDS = ISSUED_REQUIRED_FORM_FIELDS;
+
+        partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+        pages.bondDetails.coverEndDateInputErrorMessage().should('be.visible');
+        pages.bondDetails.uniqueIdentificationNumberInputErrorMessage().should('be.visible');
+      });
     });
 
     it('form submit should progress to `Bond Financial Details` page and prepopulate submitted form fields when returning back to `Bond Details` page', () => {

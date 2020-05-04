@@ -17,12 +17,13 @@ const page = {
   coverEndDateDayInput: () => cy.get('[data-cy="coverEndDate-day"]'),
   coverEndDateMonthInput: () => cy.get('[data-cy="coverEndDate-month"]'),
   coverEndDateYearInput: () => cy.get('[data-cy="coverEndDate-year"]'),
+  coverEndDateInputErrorMessage: () => cy.get('[data-cy="coverEndDate-error-message"]'),
   uniqueIdentificationNumberInput: () => cy.get('[data-cy="unique-identification-number"]'),
+  uniqueIdentificationNumberInputErrorMessage: () => cy.get('[data-cy="unique-identification-number-error-message"]'),
 
   bondBeneficiaryInput: () => cy.get('[data-cy="bond-beneficiary"]'),
   submit: () => cy.get('[data-cy="submit-button"]'),
   saveGoBackButton: () => cy.get('[data-cy="save-go-back-button"]'),
-
 };
 
 module.exports = page;

@@ -227,7 +227,6 @@
             hint: {
               html: "<p>For example, 27 11 2019<p>This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date</p>"
             },
-            errorMessage: validationErrors.errorList.requestedCoverStartDate or (not (requestedCoverStartDate-day or requestedCoverStartDate-month or requestedCoverStartDate-year) and validationErrors.conditionalErrorList.bondStage.Issued.requestedCoverStartDate),
             items: [
               {
                 classes: "govuk-input--width-2",
@@ -267,7 +266,12 @@
             hint: {
               text: "For example, 27 11 2025"
             },
-            errorMessage: validationErrors.errorList.coverEndDate or (not (coverEndDate-day or coverEndDate-month or coverEndDate-year) and validationErrors.conditionalErrorList.bondStage.Issued.coverEndDate),
+            errorMessage: {
+              text: validationErrors.errorList.coverEndDate.text or (not (coverEndDate-day or coverEndDate-month or coverEndDate-year) and validationErrors.conditionalErrorList.bondStage.Issued.coverEndDate.text),
+              attributes: {
+                'data-cy': "coverEndDate-error-message"
+              }
+            },
             items: [
               {
                 classes: "govuk-input--width-2",
@@ -307,7 +311,12 @@
             attributes: {
               'data-cy': 'unique-identification-number'
             },
-            errorMessage: validationErrors.errorList.uniqueIdentificationNumber or (not bond.uniqueIdentificationNumber and validationErrors.conditionalErrorList.bondStage.Issued.uniqueIdentificationNumber)
+            errorMessage: {
+              text: validationErrors.errorList.uniqueIdentificationNumber.text or (not bond.uniqueIdentificationNumber and validationErrors.conditionalErrorList.bondStage.Issued.uniqueIdentificationNumber.text),
+              attributes: {
+                'data-cy': 'unique-identification-number-error-message'
+              }
+            }
           }) }}
 
         </div>
