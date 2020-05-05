@@ -33,6 +33,7 @@
     "cors": "2.8.5",
     "dotenv": "8.2.0",
     "express": "4.17.1",
+    "js2xmlparser": "4.0.1",
     "jsonwebtoken": "8.5.1",
     "moment": "2.24.0",
     "mongo-dot-notation": "2.0.0",
@@ -41,6 +42,7 @@
     "multer": "1.4.2",
     "passport": "0.4.1",
     "passport-jwt": "4.0.0",
+    "validatorjs": "3.18.1",
     "xml2js": "0.4.23"
   },
   "devDependencies": {

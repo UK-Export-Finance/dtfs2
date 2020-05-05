@@ -9,7 +9,7 @@ const sortCountries = (arr, callback) => {
   const uk = getCountryFromArray(arr, 'GBR');
 
   let sortedArray = [
-    ...utils.sortArrayAlphabetically(countriesWithoutUK, 'code'),
+    ...utils.sortArrayAlphabetically(countriesWithoutUK, 'name'),
   ];
 
   if (uk) {
@@ -34,11 +34,19 @@ const findCountries = async (callback) => {
 const findOneCountry = async (code, callback) => {
   const collection = await db.getCollection('countries');
 
-  collection.findOne({ code }, (err, result) => {
-    assert.equal(err, null);
-    callback(result);
-  });
+  let cb;
+
+  if (typeof callback === 'function') {
+    cb = (err, result) => {
+      assert.equal(err, null);
+      callback(result);
+    };
+  }
+
+  return collection.findOne({ code }, cb);
 };
+
+exports.findOneCountry = findOneCountry;
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection('countries');
