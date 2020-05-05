@@ -1,12 +1,15 @@
 {% import '_macros/date-fields.njk' as dateFields %}
 
-{% macro inputs(fromLegend, toLegend) %}
+{% macro inputs(fromLegend, toLegend, values) %}
 
   <div class="govuk-grid-column-one-third">
     <div class="govuk-form-group govuk-!-margin-bottom-0">
       {{ dateFields.inputs(
         legend = fromLegend,
-        id = 'createdFrom'
+        id = 'createdFrom',
+        dayValue = values['createdFrom-day'],
+        monthValue = values['createdFrom-month'],
+        yearValue = values['createdFrom-year']
       )}}
     </div>
   </div>
@@ -15,7 +18,10 @@
     <div class="govuk-form-group govuk-!-margin-bottom-0">
       {{ dateFields.inputs(
         legend = toLegend,
-        id = 'createdTo'
+        id = 'createdTo',
+        dayValue = values['createdTo-day'],
+        monthValue = values['createdTo-month'],
+        yearValue = values['createdTo-year']
       )}}
     </div>
   </div>

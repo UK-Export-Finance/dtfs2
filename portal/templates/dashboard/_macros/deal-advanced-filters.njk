@@ -1,6 +1,6 @@
 {% import '_macros/date-range.njk' as dateRange %}
 
-{% macro render(filter, user) %}
+{% macro render(filter, user, banks) %}
 
   <div class="govuk-grid-row">
 
@@ -27,44 +27,46 @@
 
     <div class="govuk-grid-column-one-third">
       <div class="govuk-form-group">
-        <label class="govuk-label" for="supplyContractID">
+        <label class="govuk-label" for="filterBySupplyContractID">
           Supply contract ID
         </label>
-        <input class="govuk-input" id="supplyContractID" name="supplyContractID" type="text">
+        <input class="govuk-input" id="filterBySupplyContractID" name="filterBySupplyContractID" type="text" value="{{filter.filterBySupplyContractID}}" data-cy="filterBySupplyContractId">
       </div>
     </div>
 
   </div>
 
   <div class="govuk-grid-row govuk-!-margin-bottom-4">
-    {{ dateRange.inputs(fromLegend = 'Select created date between', toLegend = 'And' ) }}
+    {{ dateRange.inputs(fromLegend = 'Select created date between', toLegend = 'And', values = filter ) }}
   </div>
 
   <div class="govuk-grid-row">
 
     <div class="govuk-grid-column-one-third">
       <div class="govuk-form-group govuk-!-margin-bottom-0">
-        <label class="govuk-label" for="supplier-name">
+        <label class="govuk-label" for="filterBySupplierName">
           Supplier name
         </label>
-        <input class="govuk-input" id="supplier-name" name="supplier-name" type="text">
+        <input class="govuk-input" id="filterBySupplierName" name="filterBySupplierName" type="text"  value="{{filter.filterBySupplierName}}" data-cy="filterBySupplierName">
       </div>
     </div>
 
+    {% if user.bank.id == "*" %}
     <div class="govuk-grid-column-one-third">
       <div class="govuk-form-group govuk-!-margin-bottom-0">
-        <label class="govuk-label" for="bank">
+        <label class="govuk-label" for="filterByBank">
           Bank
         </label>
 
-        <select class="govuk-select govuk-!-width-full" id="bank" name="bank">
-          <option value="all" selected>Any</option>
+        <select class="govuk-select govuk-!-width-full" id="filterByBank" name="filterByBank" data-cy="filterByBank">
+          <option value="">Any</option>
           {% for bank in banks %}
-            <option value="{{ bank.id }}">{{ bank.name }}</option>
+            <option value="{{ bank.id }}" {%if filter.filterByBank == bank.id %}selected{%endif%}>{{ bank.name }}</option>
           {% endfor %}
         </select>
       </div>
     </div>
+    {% endif %}
 
   </div>
 

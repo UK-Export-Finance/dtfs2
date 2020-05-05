@@ -1,7 +1,7 @@
-const {dashboard} = require('../../../pages');
+const { dashboard } = require('../../../pages');
 const relative = require('../../../relativeURL');
 
-const maker1 = {username: 'MAKER', password: 'MAKER'};
+const maker1 = { username: 'MAKER', password: 'MAKER' };
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('./twentyOneDeals');
@@ -9,7 +9,7 @@ const twentyOneDeals = require('./twentyOneDeals');
 context('The deals dashboard', () => {
   let deals;
 
-  beforeEach( () => {
+  beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
       console.log(err.stack);
@@ -17,14 +17,14 @@ context('The deals dashboard', () => {
     });
   });
 
-  before( () => {
+  before(() => {
     cy.deleteDeals(maker1);
     cy.insertManyDeals(twentyOneDeals, { ...maker1 })
-      .then( insertedDeals => deals=insertedDeals );
+      .then((insertedDeals) => deals = insertedDeals);
   });
 
   it('can be filtered by status', () => {
-    cy.login({...maker1});
+    cy.login({ ...maker1 });
     dashboard.visit();
 
     //-----
@@ -34,7 +34,7 @@ context('The deals dashboard', () => {
     dashboard.filterByStatus().select('all');
     dashboard.applyFilters().click();
     // in dashbaord, these are ordered by last update, so appear reversed
-    const firstTwentyDeals = deals.slice(1,21).reverse();
+    const firstTwentyDeals = deals.slice(1, 21).reverse();
 
     dashboard.confirmDealsPresent(firstTwentyDeals);
     dashboard.totalItems().invoke('text').then((text) => {
@@ -45,25 +45,25 @@ context('The deals dashboard', () => {
     dashboard.filterByStatus().should('have.value', 'all');
 
     const testCases = [
-      { code: 'draft', status: "Draft"},
-      { code: 'readyForApproval', status: "Ready for Checker's approval"},
-      { code: 'inputRequired', status: "Further Maker's input required"},
-      { code: 'abandoned', status: "Abandoned Deal"},
-      { code: 'submitted', status: "Submitted"},
-      { code: 'submissionAcknowledged', status: "Acknowledged by UKEF"},
-      { code: 'approved', status: "Accepted by UKEF (without conditions)"},
-      { code: 'approvedWithConditions', status: "Accepted by UKEF (with conditions)"},
-      { code: 'refused', status: "Rejected by UKEF"},
-    ]
+      { code: 'draft', status: 'Draft' },
+      { code: 'readyForApproval', status: "Ready for Checker's approval" },
+      { code: 'inputRequired', status: "Further Maker's input required" },
+      { code: 'abandoned', status: 'Abandoned Deal' },
+      { code: 'submitted', status: 'Submitted' },
+      { code: 'submissionAcknowledged', status: 'Acknowledged by UKEF' },
+      { code: 'approved', status: 'Accepted by UKEF (without conditions)' },
+      { code: 'approvedWithConditions', status: 'Accepted by UKEF (with conditions)' },
+      { code: 'refused', status: 'Rejected by UKEF' },
+    ];
 
     for (const testCase of testCases) {
       // select the filter option
-      dashboard.filterByStatus().select( testCase.code );
+      dashboard.filterByStatus().select(testCase.code);
       dashboard.applyFilters().click();
 
       // get the test-data we are expecting to see
-      const filteredDeals = deals.filter( deal => deal.details.status === testCase.status);
-      expect( filteredDeals.length ).to.be.greaterThan(0);
+      const filteredDeals = deals.filter((deal) => deal.details.status === testCase.status);
+      expect(filteredDeals.length).to.be.greaterThan(0);
 
       // confirm the test-data
       dashboard.confirmDealsPresent(filteredDeals);
@@ -74,8 +74,6 @@ context('The deals dashboard', () => {
       // confirm the filter retains its state
       dashboard.filterByStatus().should('be.visible');
       dashboard.filterByStatus().should('have.value', testCase.code);
-
     }
   });
-
 });

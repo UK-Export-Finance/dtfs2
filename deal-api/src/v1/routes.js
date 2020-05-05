@@ -2,7 +2,7 @@ const express = require('express');
 const passport = require('passport');
 
 const multer = require('multer');
-const validate = require('../role-validator');
+const { validate } = require('../role-validator');
 
 const deals = require('./controllers/deal.controller');
 const dealIntegration = require('./controllers/deal-integration.controller');
@@ -29,10 +29,6 @@ const upload = multer();
 authRouter.use(passport.authenticate('jwt', { session: false }));
 
 authRouter.route('/deals')
-  .get(
-    validate({ role: ['maker', 'checker'] }),
-    deals.findAll,
-  )
   .post(
     validate({ role: ['maker'] }),
     deals.create,
@@ -86,7 +82,7 @@ authRouter.route('/deals/:id/bond/:bondId')
     bonds.updateBond,
   );
 
-
+/*
 authRouter.route('/deals/:start/:pagesize')
   .get(
     validate({ role: ['maker', 'checker'] }),
@@ -98,6 +94,7 @@ authRouter.route('/deals/:start/:pagesize/:filters')
     validate({ role: ['maker', 'checker'] }),
     deals.findPage,
   );
+*/
 
 authRouter.route('/deals/:id')
   .get(

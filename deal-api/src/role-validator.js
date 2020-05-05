@@ -1,20 +1,27 @@
 const ukefAdminRoles = ['ukef_operations'];
 
-module.exports = (opts) => {
+const userRoleIsValid = (requiredRoles, user) => {
+  if (!requiredRoles || requiredRoles.length === 0) {
+    return true;
+  }
+  const userHasOneOfTheRequiredRoles = ukefAdminRoles.some((adminRole) => user.roles.includes(adminRole))
+        || requiredRoles.some((role) => user.roles.includes(role));
+  return userHasOneOfTheRequiredRoles;
+};
+
+const validate = (opts) => {
   const requiredRoles = opts ? opts.role : null;
 
   return (req, res, next) => {
-    if (!requiredRoles || requiredRoles.length === 0) {
+    if (userRoleIsValid(requiredRoles, req.user)) {
       next();
     } else {
-      const userHasOneOfTheRequiredRoles = ukefAdminRoles.some((adminRole) => req.user.roles.includes(adminRole))
-        || requiredRoles.some((role) => req.user.roles.includes(role));
-
-      if (userHasOneOfTheRequiredRoles) {
-        next();
-      } else {
-        res.status(401).json({ success: false, msg: "you don't have the right role" });
-      }
+      res.status(401).json({ success: false, msg: "you don't have the right role" });
     }
   };
+};
+
+module.exports = {
+  userRoleIsValid,
+  validate,
 };

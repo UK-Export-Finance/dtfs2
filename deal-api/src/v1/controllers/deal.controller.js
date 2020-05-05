@@ -29,42 +29,53 @@ const dealsQuery = (user, filter) => {
   return query;
 };
 
-const findDeals = async (requestingUser, callback) => {
+const findDeals = async (requestingUser, filter) => {
   const collection = await db.getCollection('deals');
 
-  collection.find(dealsQuery(requestingUser))
+  const dealResults = collection.find(dealsQuery(requestingUser, filter));
+
+  const count = await dealResults.count();
+  const deals = await dealResults
     .sort({ 'details.dateOfLastAction': -1 })
-    .toArray((err, result) => {
-      assert.equal(err, null);
-      callback(result);
-    });
-};
+    .toArray();
 
-const findPaginatedDeals = async (requestingUser, start, pagesize, filter, callback) => {
+  return {
+    count,
+    deals,
+  };
+};
+exports.findDeals = findDeals;
+
+const findPaginatedDeals = async (requestingUser, start = 0, pagesize = 20, filter) => {
   const collection = await db.getCollection('deals');
+
   const query = dealsQuery(requestingUser, filter);
 
-  const count = await collection.find(query).count();
+  const dealResults = collection.find(query);
 
-  collection.find(query)
+  const count = await dealResults.count();
+  const deals = await dealResults
     .sort({ 'details.dateOfLastAction': -1 })
     .skip(start)
     .limit(pagesize)
-    .toArray((err, result) => {
-      assert.equal(err, null);
-      callback({
-        count,
-        deals: result,
-      });
-    });
+    .toArray();
+
+  return {
+    count,
+    deals,
+  };
 };
+exports.findPaginatedDeals = findPaginatedDeals;
 
 const findOneDeal = async (id, callback) => {
   const collection = await db.getCollection('deals');
-  collection.findOne({ _id: new ObjectId(id) }, (err, result) => {
-    assert.equal(err, null);
-    callback(result);
-  });
+  if (callback) {
+    collection.findOne({ _id: new ObjectId(id) }, (err, result) => {
+      assert.equal(err, null);
+      callback(result);
+    });
+  }
+  return collection.findOne({ _id: new ObjectId(id) });
 };
 exports.findOneDeal = findOneDeal;
 
@@ -104,27 +115,6 @@ const createDeal = async (req, res) => {
 exports.create = async (req, res) => {
   const result = await createDeal(req, res);
   return result;
-};
-
-exports.findAll = (req, res) => (
-  findDeals(req.user, (deals) => res.status(200).send({
-    count: deals.length,
-    deals,
-  }))
-);
-
-exports.findPage = (req, res) => {
-  const start = parseInt(req.params.start, 10);
-  const pagesize = parseInt(req.params.pagesize, 10);
-  const filters = req.params.filters ? JSON.parse(req.params.filters) : {};
-
-  findPaginatedDeals(
-    req.user,
-    start,
-    pagesize,
-    filters,
-    (paginatedResults) => res.status(200).send(paginatedResults),
-  );
 };
 
 exports.findOne = (req, res) => {

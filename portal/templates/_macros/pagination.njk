@@ -26,13 +26,7 @@
 
           {% for i in range(currentPage - 5, totalPages) %}
             {% if loop.index < 10 and i + 1 > 0 %}
-              <li
-                {% if i + 1 === currentPage %}
-                  class="govuk-body govuk-!-margin-bottom-3 active"
-                {% else %}
-                  class="govuk-body govuk-!-margin-bottom-3"
-                {% endif %}
-              >
+              <li class="govuk-body govuk-!-margin-bottom-3 {%if i === currentPage %}active{% endif %}">
                 <a data-cy="Page_{{i}}" href="{{paginationRoot}}/{{i}}" class="govuk-link">{{ i + 1 }}</a>
               </li>
             {% endif %}

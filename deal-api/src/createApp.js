@@ -3,6 +3,12 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
 const passport = require('passport');
+const { ApolloServer } = require('apollo-server-express');
+const { applyMiddleware } = require('graphql-middleware');
+const { makeExecutableSchema } = require('graphql-tools');
+
+const { resolvers, typeDefs, graphQlRouter } = require('./graphql');
+const { validateUserMiddleware } = require('./graphql/middleware');
 
 dotenv.config();
 
@@ -25,6 +31,21 @@ app.use(cors({
 
 app.use('/v1', openRouter);
 app.use('/v1', authRouter);
+app.use(graphQlRouter);
+
+const schema = makeExecutableSchema({ typeDefs, resolvers });
+const schemaWithMiddleware = applyMiddleware(schema, validateUserMiddleware);
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: ({ req }) => ({
+    user: req.user,
+  }),
+  schema: schemaWithMiddleware,
+});
+
+server.applyMiddleware({ app });
 
 const errorHandler = (err) => {
   console.log(err);

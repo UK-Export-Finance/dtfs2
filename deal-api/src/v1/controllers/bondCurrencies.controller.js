@@ -1,15 +1,11 @@
-const assert = require('assert');
 const db = require('../../drivers/db-client');
 const utils = require('../../utils/array');
 
-const findBondCurrencies = async (callback) => {
+const findBondCurrencies = async () => {
   const collection = await db.getCollection('bondCurrencies');
-
-  collection.find({}).toArray((err, result) => {
-    assert.equal(err, null);
-    callback(result);
-  });
+  return collection.find({}).toArray();
 };
+exports.findBondCurrencies = findBondCurrencies;
 
 const findOneBondCurrency = async (id) => {
   const collection = await db.getCollection('bondCurrencies');
@@ -26,12 +22,13 @@ exports.create = async (req, res) => {
   res.status(200).send(deal);
 };
 
-exports.findAll = (req, res) => (
-  findBondCurrencies((bondCurrencies) => res.status(200).send({
+exports.findAll = async (req, res) => {
+  const bondCurrencies = await findBondCurrencies();
+  res.status(200).send({
     count: bondCurrencies.length,
     bondCurrencies: utils.sortArrayAlphabetically(bondCurrencies, 'id'),
-  }))
-);
+  });
+};
 
 exports.findOne = async (req, res) => {
   const bondCurrency = await findOneBondCurrency(req.params.id);

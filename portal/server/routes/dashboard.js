@@ -26,7 +26,8 @@ router.get('/dashboard/:page', async (req, res) => {
       isUsingAdvancedFilter: true,
     };
   }
-  const filters = buildDashboardFilters(req.session.dashboardFilters, req.session.user);
+
+  const { isUsingAdvancedFilter, filters } = buildDashboardFilters(req.session.dashboardFilters, req.session.user);
 
   const dealData = await getApiData(
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
@@ -47,7 +48,10 @@ router.get('/dashboard/:page', async (req, res) => {
       res,
     ),
     successMessage: getFlashSuccessMessage(req),
-    filter: req.session.dashboardFilters,
+    filter: {
+      isUsingAdvancedFilter,
+      ...req.session.dashboardFilters,
+    },
     user: req.session.user,
   });
 });
@@ -55,12 +59,11 @@ router.get('/dashboard/:page', async (req, res) => {
 router.post('/dashboard/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
-  req.session.dashboardFilters = req.body;
-  // TODO add other advanced filter types
-  // TODO and find a nicer way to wrap this up..
-  req.session.dashboardFilters.isUsingAdvancedFilter = (req.body.filterByStatus !== 'all');
+  const dashboardFilters = req.body;
 
-  const filters = buildDashboardFilters(req.session.dashboardFilters, req.session.user);
+  req.session.dashboardFilters = dashboardFilters;
+
+  const { isUsingAdvancedFilter, filters } = buildDashboardFilters(dashboardFilters, req.session.user);
 
   const dealData = await getApiData(
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
@@ -80,7 +83,10 @@ router.post('/dashboard/:page', async (req, res) => {
       api.banks(userToken),
       res,
     ),
-    filter: req.session.dashboardFilters,
+    filter: {
+      isUsingAdvancedFilter,
+      ...dashboardFilters,
+    },
     user: req.session.user,
   });
 });

@@ -1,9 +1,9 @@
 {% import './deal-advanced-filters.njk' as advancedFilters %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
-{% macro render(filter, user) %}
+{% macro render(filter, user, banks) %}
 
-<form method="POST" autocomplete="off">
+<form method="POST" autocomplete="off" action="/dashboard/0">
 
   <div class="govuk-grid-row">
 
@@ -40,7 +40,7 @@
 
   {{ govukDetails({
     summaryText: "Show filters",
-    html: advancedFilters.render(filter, user),
+    html: advancedFilters.render(filter, user, banks),
     open: filter.isUsingAdvancedFilter
   }) }}
 
