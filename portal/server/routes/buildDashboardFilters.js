@@ -1,102 +1,114 @@
-const applyUserFilters = (params, user, filters) => {
-  const { filterBySubmissionUser } = params;
-  const updated = { ...filters };
+import CONSTANTS from '../constants';
 
-  if (filterBySubmissionUser === 'all') {
-    // default
-  }
+const getUserFilters = (params, user = {}) => {
+  const { filterBySubmissionUser } = params;
 
   if (filterBySubmissionUser === 'createdByMe') {
-    updated['details.maker.username'] = { $eq: user.username };
+    return {
+      field: 'details.maker.username',
+      value: user.username,
+    };
   }
 
   if (filterBySubmissionUser === 'createdByColleagues') {
-    updated['details.maker.username'] = { $ne: user.username };
+    return {
+      field: 'details.maker.username',
+      value: user.username,
+      operator: 'ne',
+    };
+    //    updated['details.maker.username'] = { $ne: user.username };
   }
 
-  return updated;
-};
-
-const applyTypeFilters = (params, user, filters) => {
-  const { filterBySubmissionType } = params;
-  const updated = { ...filters };
-
-  if (filterBySubmissionType === 'all') {
-    // default
-  }
-
-  if (filterBySubmissionType === 'manualInclusionApplication') {
-    updated['details.submissionType'] = { $eq: 'Manual Inclusion Application' };
-  }
-
-  if (filterBySubmissionType === 'automaticInclusionNotice') {
-    updated['details.submissionType'] = { $eq: 'Automatic Inclusion Notice' };
-  }
-
-  if (filterBySubmissionType === 'manualInclusionNotice') {
-    updated['details.submissionType'] = { $eq: 'Manual Inclusion Notice' };
-  }
-
-  return updated;
-};
-
-const applyStatusFilters = (params, user, filters) => {
-  const { filterByStatus } = params;
-  const updated = { ...filters };
-
-  if (filterByStatus === 'all') {
-    // default
-  }
-
-  if (filterByStatus === 'draft') {
-    updated['details.status'] = { $eq: 'Draft' };
-  }
-
-  if (filterByStatus === 'readyForApproval') {
-    updated['details.status'] = { $eq: "Ready for Checker's approval" };
-  }
-
-  if (filterByStatus === 'inputRequired') {
-    updated['details.status'] = { $eq: "Further Maker's input required" };
-  }
-
-  if (filterByStatus === 'abandoned') {
-    updated['details.status'] = { $eq: 'Abandoned Deal' };
-  }
-
-  if (filterByStatus === 'submitted') {
-    updated['details.status'] = { $eq: 'Submitted' };
-  }
-
-  if (filterByStatus === 'submissionAcknowledged') {
-    updated['details.status'] = { $eq: 'Acknowledged by UKEF' };
-  }
-
-  if (filterByStatus === 'approved') {
-    updated['details.status'] = { $eq: 'Accepted by UKEF (without conditions)' };
-  }
-
-  if (filterByStatus === 'approvedWithConditions') {
-    updated['details.status'] = { $eq: 'Accepted by UKEF (with conditions)' };
-  }
-
-  if (filterByStatus === 'refused') {
-    updated['details.status'] = { $eq: 'Rejected by UKEF' };
-  }
-
-  return updated;
+  return false;
 };
 
 const buildDashboardFilters = (params, user) => {
-  let filters = {};
+  const filters = [];
+  let isUsingAdvancedFilter = false;
 
-  if (!params) return filters;
+  if (!params) {
+    return {
+      isUsingAdvancedFilter,
+      filters,
+    };
+  }
 
-  if (params.filterBySubmissionUser) filters = applyUserFilters(params, user, filters);
-  if (params.filterBySubmissionType) filters = applyTypeFilters(params, user, filters);
-  if (params.filterByStatus) filters = applyStatusFilters(params, user, filters);
+  const userFilter = getUserFilters(params, user);
+  if (userFilter) {
+    filters.push(userFilter);
+  }
 
-  return filters;
+  //  if (params.filterBySubmissionUser) filters = applyUserFilters(params, user, filters);
+  if (CONSTANTS.SUBMISSION_TYPE[params.filterBySubmissionType]) {
+    filters.push(
+      {
+        field: 'details.submissionType',
+        value: CONSTANTS.SUBMISSION_TYPE[params.filterBySubmissionType],
+      },
+    );
+  }
+
+  if (CONSTANTS.STATUS[params.filterByStatus]) {
+    isUsingAdvancedFilter = true;
+    filters.push(
+      {
+        field: 'details.status',
+        value: CONSTANTS.STATUS[params.filterByStatus],
+      },
+    );
+  }
+
+  if (params.filterBySupplyContractID) {
+    isUsingAdvancedFilter = true;
+    filters.push({
+      field: 'details.bankSupplyContractID',
+      value: params.filterBySupplyContractID,
+    });
+  }
+
+  if (params['createdFrom-year']) {
+    isUsingAdvancedFilter = true;
+
+    const createdFrom = [params['createdFrom-year'].padStart(4, '20'), params['createdFrom-month'].padStart(2, '0'), params['createdFrom-day'].padStart(2, '0')].join(' ');
+    filters.push({
+      field: 'details.submissionDate',
+      value: createdFrom,
+      operator: 'gte',
+    });
+  }
+
+  if (params['createdTo-year']) {
+    isUsingAdvancedFilter = true;
+
+    const createdTo = [params['createdTo-year'].padStart(4, '20'), params['createdTo-month'].padStart(2, '0'), params['createdTo-day'].padStart(2, '0') + 1].join(' ');
+
+    filters.push({
+      field: 'details.submissionDate',
+      value: `${createdTo}`,
+      operator: 'lt',
+    });
+  }
+
+  if (params.filterBySupplierName) {
+    isUsingAdvancedFilter = true;
+    filters.push({
+      field: 'submissionDetails.supplier-name',
+      value: params.filterBySupplierName,
+    });
+  }
+
+  if (params.filterByBank) {
+    isUsingAdvancedFilter = true;
+    filters.push({
+      field: 'details.owningBank.id',
+      value: params.filterByBank,
+    });
+  }
+
+  return {
+    isUsingAdvancedFilter,
+    filters,
+  };
 };
 
 export default buildDashboardFilters;

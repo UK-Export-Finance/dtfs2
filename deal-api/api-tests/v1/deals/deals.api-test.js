@@ -30,7 +30,7 @@ describe('/v1/deals', () => {
   let aBarclaysChecker;
   let aSuperuser;
 
-  beforeAll(async() => {
+  beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
@@ -41,184 +41,6 @@ describe('/v1/deals', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
-  });
-
-  describe('GET /v1/deals', () => {
-    it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/deals');
-
-      expect(status).toEqual(401);
-    });
-
-    it('401s requests that do not come from a user with role=maker || role=checker', async () => {
-      const { status } = await as(noRoles).get('/v1/deals');
-
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests that come from a user with role=maker', async () => {
-      const { status } = await as(anHSBCMaker).get('/v1/deals');
-
-      expect(status).toEqual(200);
-    });
-
-    it('accepts requests that come from a user with role=checker', async () => {
-      const { status } = await as(aBarclaysChecker).get('/v1/deals');
-
-      expect(status).toEqual(200);
-    });
-
-    it('returns a list of deals ordered by "updated", filtered by <user>.bank.id', async () => {
-      const deals = [
-        aDeal({ details: { bankSupplyContractName: 'bank1/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
-      ];
-
-      await as(aBarclaysMaker).post(deals[4]).to('/v1/deals');
-      await as(anHSBCMaker).post(deals[1]).to('/v1/deals');
-      await as(anHSBCMaker).post(deals[2]).to('/v1/deals');
-      await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
-      await as(aBarclaysMaker).post(deals[3]).to('/v1/deals');
-
-      let { status, body } = await as(anHSBCMaker).get('/v1/deals', anHSBCMaker.token);
-
-      expect(status).toEqual(200);
-      // expect to see deals in reverse order; most recent on top..
-      expect(body.deals).toEqual(expectAllAddedFields([
-        deals[0],
-        deals[2],
-        deals[1],
-      ]));
-
-    });
-
-    it('returns a list of deals ordered by "updated" if <user>.bank.id == *', async () => {
-      const deals = [
-        aDeal({ details: { bankSupplyContractName: 'bank1/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
-      ];
-
-      await as(aBarclaysMaker).post(deals[4]).to('/v1/deals');
-      await as(anHSBCMaker).post(deals[1]).to('/v1/deals');
-      await as(anHSBCMaker).post(deals[2]).to('/v1/deals');
-      await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
-      await as(aBarclaysMaker).post(deals[3]).to('/v1/deals');
-
-      let { status, body } = await as(aSuperuser).get('/v1/deals');
-
-      expect(status).toEqual(200);
-      // expect deals in reverse order;  most recent should be first..
-      expect(body.deals).toEqual(expectAllAddedFields([
-        deals[3],
-        deals[0],
-        deals[2],
-        deals[1],
-        deals[4],
-      ]));
-
-    });
-
-  });
-
-  describe('GET /v1/deals/:start/:pagesize', () => {
-    it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/deals/0/1');
-
-      expect(status).toEqual(401);
-    });
-
-    it('401s requests that do not come from a user with role=maker || role=checker', async () => {
-      const { status } = await as(noRoles).get('/v1/deals/0/1');
-
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests that come from a user with role=maker', async () => {
-      const { status } = await as(anHSBCMaker).get('/v1/deals/0/1');
-
-      expect(status).toEqual(200);
-    });
-
-    it('accepts requests that come from a user with role=checker', async () => {
-      const { status } = await as(aBarclaysChecker).get('/v1/deals/0/1');
-
-      expect(status).toEqual(200);
-    });
-
-    it('returns a list of deals, ordered by "updated", paginated by start/pagesize, filtered by <user>.bank.id', async () => {
-      const deals = [
-        aDeal({ details: { bankSupplyContractName: 'bank1/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/3', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/4', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/5', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
-      ];
-
-      await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
-      await as(anHSBCMaker).post(deals[1]).to('/v1/deals');
-      await as(anHSBCMaker).post(deals[2]).to('/v1/deals');
-      await as(anHSBCMaker).post(deals[3]).to('/v1/deals');
-      await as(anHSBCMaker).post(deals[4]).to('/v1/deals');
-      await as(anHSBCMaker).post(deals[5]).to('/v1/deals');
-
-      await as(aBarclaysMaker).post(deals[6]).to('/v1/deals');
-      await as(aBarclaysMaker).post(deals[7]).to('/v1/deals');
-
-      const { status, body } = await as(anHSBCMaker).get('/v1/deals/2/2');
-
-      expect(status).toEqual(200);
-      // expect deals in reverse order; most recent first..
-      expect(body.deals).toEqual(expectAllAddedFields([
-        deals[3],
-        deals[2],
-      ]));
-
-      expect(body.count).toEqual(6);
-    });
-
-    it('returns a list of deals, ordered by "updated", paginated by start/pagesize, if <user>.bank.id == *', async () => {
-      const deals = [
-        aDeal({ details: { bankSupplyContractName: 'bank1/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/3', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/4', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/5', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
-      ];
-
-      await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
-      await as(anHSBCMaker).post(deals[1]).to('/v1/deals');
-      await as(anHSBCMaker).post(deals[2]).to('/v1/deals');
-      await as(anHSBCMaker).post(deals[3]).to('/v1/deals');
-      await as(anHSBCMaker).post(deals[4]).to('/v1/deals');
-      await as(anHSBCMaker).post(deals[5]).to('/v1/deals');
-
-      await as(aBarclaysMaker).post(deals[6]).to('/v1/deals');
-      await as(aBarclaysMaker).post(deals[7]).to('/v1/deals');
-
-      const { status, body } = await as(aSuperuser).get('/v1/deals/5/3');
-
-      expect(status).toEqual(200);
-      // expect deals in reverse order - when we slice the last 3 deals we should get 2/1/0
-      expect(body.deals).toEqual(expectAllAddedFields([
-        deals[2],
-        deals[1],
-        deals[0],
-      ]));
-
-      expect(body.count).toEqual(8);
-    });
   });
 
   describe('GET /v1/deals/:id', () => {
@@ -235,7 +57,7 @@ describe('/v1/deals', () => {
     });
 
     it('accepts requests from a user with role=maker', async () => {
-      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(anHSBCMaker).get(`/v1/deals/${body._id}`);
 
@@ -243,7 +65,7 @@ describe('/v1/deals', () => {
     });
 
     it('accepts requests from a user with role=checker', async () => {
-      const {body} = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(aBarclaysChecker).get(`/v1/deals/${body._id}`);
 
@@ -251,7 +73,7 @@ describe('/v1/deals', () => {
     });
 
     it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
-      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
 
@@ -259,13 +81,13 @@ describe('/v1/deals', () => {
     });
 
     it('404s requests for unkonwn ids', async () => {
-      const { status } = await as(aBarclaysMaker).get(`/v1/deals/123456789012`);
+      const { status } = await as(aBarclaysMaker).get('/v1/deals/123456789012');
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(aSuperuser).get(`/v1/deals/${body._id}`);
 
@@ -322,7 +144,6 @@ describe('/v1/deals', () => {
         expect(body.validationErrors.errorList.bankSupplyContractName).toBeDefined();
       });
     });
-
   });
 
   describe('PUT /v1/deals/:id', () => {
@@ -339,14 +160,14 @@ describe('/v1/deals', () => {
     });
 
     it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
-      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const updatedDeal = {
         ...body,
         bankSupplyContractName: 'change this field',
-      }
+      };
 
-      const {status} = await as(aBarclaysMaker).put(updatedDeal).to(`/v1/deals/${body._id}`);
+      const { status } = await as(aBarclaysMaker).put(updatedDeal).to(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(401);
     });
@@ -365,7 +186,7 @@ describe('/v1/deals', () => {
         details: {
           ...createdDeal.details,
           bankSupplyContractName: 'change this field',
-        }
+        },
       };
 
       const { status, body } = await as(aSuperuser).put(updatedDeal).to(`/v1/deals/${createdDeal._id}`);
@@ -381,7 +202,7 @@ describe('/v1/deals', () => {
         details: {
           ...createdDeal.details,
           bankSupplyContractName: 'change this field',
-        }
+        },
       };
 
       const { status, body } = await as(anHSBCMaker).put(updatedDeal).to(`/v1/deals/${createdDeal._id}`);
@@ -397,15 +218,15 @@ describe('/v1/deals', () => {
       const partialUpdate = {
         details: {
           bankSupplyContractName: 'change this field',
-        }
-      }
+        },
+      };
 
       const expectedDataIncludingUpdate = {
         ...createdDeal,
         details: {
           ...createdDeal.details,
           bankSupplyContractName: 'change this field',
-        }
+        },
       };
 
       const { status, body } = await as(anHSBCMaker).put(partialUpdate).to(`/v1/deals/${createdDeal._id}`);
@@ -422,7 +243,7 @@ describe('/v1/deals', () => {
         details: {
           ...createdDeal.details,
           bankSupplyContractName: 'change this field',
-        }
+        },
       };
       await as(anHSBCMaker).put(updatedDeal).to(`/v1/deals/${createdDeal._id}`);
 
@@ -448,7 +269,7 @@ describe('/v1/deals', () => {
     });
 
     it('401s requests from users if <user>.bank != <resource>.details.owningBank', async () => {
-      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(aBarclaysMaker).remove(`/v1/deals/${body._id}`);
 
@@ -462,7 +283,7 @@ describe('/v1/deals', () => {
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(aSuperuser).remove(`/v1/deals/${body._id}`);
 
@@ -470,7 +291,7 @@ describe('/v1/deals', () => {
     });
 
     it('deletes the deal', async () => {
-      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       await as(anHSBCMaker).remove(`/v1/deals/${body._id}`);
 

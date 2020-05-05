@@ -7,7 +7,7 @@ const cleanBanks = async (token) => {
   for (bank of await api.listBanks(token)) {
     await api.deleteBank(bank, token);
   }
-}
+};
 
 const cleanBondCurrencies = async (token) => {
   console.log('cleaning bond-currencies');
@@ -15,7 +15,7 @@ const cleanBondCurrencies = async (token) => {
   for (bondCurrency of await api.listBondCurrencies(token)) {
     await api.deleteBondCurrency(bondCurrency, token);
   }
-}
+};
 
 const cleanCountries = async (token) => {
   console.log('cleaning countries');
@@ -23,7 +23,7 @@ const cleanCountries = async (token) => {
   for (country of await api.listCountries(token)) {
     await api.deleteCountry(country, token);
   }
-}
+};
 
 const cleanDeals = async (token) => {
   console.log('cleaning deals');
@@ -31,7 +31,7 @@ const cleanDeals = async (token) => {
   for (deal of await api.listDeals(token)) {
     await api.deleteDeal(deal, token);
   }
-}
+};
 
 const cleanIndustrySectors = async (token) => {
   console.log('cleaning industry-sectors');
@@ -39,7 +39,7 @@ const cleanIndustrySectors = async (token) => {
   for (industrySector of await api.listIndustrySectors(token)) {
     await api.deleteIndustrySector(industrySector, token);
   }
-}
+};
 
 const cleanMandatoryCriteria = async (token) => {
   console.log('cleaning mandatory-criteria');
@@ -47,7 +47,7 @@ const cleanMandatoryCriteria = async (token) => {
   for (mandatoryCriteria of await api.listMandatoryCriteria(token)) {
     await api.deleteMandatoryCriteria(mandatoryCriteria, token);
   }
-}
+};
 
 const cleanTransactions = async (token) => {
   console.log('cleaning transactions');
@@ -55,7 +55,7 @@ const cleanTransactions = async (token) => {
   for (transaction of await api.listTransactions(token)) {
     await api.deleteTransaction(transaction, token);
   }
-}
+};
 
 const cleanUsers = async () => {
   console.log('cleaning users');
@@ -63,13 +63,14 @@ const cleanUsers = async () => {
   for (user of await api.listUsers()) {
     await api.deleteUser(user);
   }
-}
+};
 
 const cleanAllTables = async () => {
   const token = await tokenFor({
-    username:'admin', password:'admin',
-    roles:['maker','editor'],
-    bank: {id:'*'}
+    username: 'admin',
+    password: 'admin',
+    roles: ['maker', 'editor'],
+    bank: { id: '*' },
   });
 
   await cleanBanks(token);
@@ -80,6 +81,6 @@ const cleanAllTables = async () => {
   await cleanMandatoryCriteria(token);
   await cleanTransactions(token);
   await cleanUsers();
-}
+};
 
 module.exports = cleanAllTables;

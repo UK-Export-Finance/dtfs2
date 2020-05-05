@@ -1,6 +1,9 @@
 const makeApiCall = async (query) => {
   try {
     const result = await query;
+    if (result.networkError && result.networkError.statusCode === 401) {
+      throw new Error(result.networkError);
+    }
     return result;
   } catch (catchErr) {
     throw new Error(catchErr);

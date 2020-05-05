@@ -1,7 +1,11 @@
 const axios = require('axios');
-
 const FormData = require('form-data');
+const apollo = require('./graphql/apollo');
+
 const { translateDatesToExpectedFormat, translateAllDatesToExpectedFormat } = require('./dateFormatter');
+
+const { dealsQuery } = require('./graphql/queries');
+
 require('dotenv').config();
 
 const urlRoot = process.env.DEAL_API_URL;
@@ -41,23 +45,19 @@ const contract = async (id, token) => {
   return translateDatesToExpectedFormat(response.data);
 };
 
-const serialiseFilters = (filters) => JSON.stringify(filters);
 
 const contracts = async (start, pagesize, filters, token) => {
-  const serialisedFilters = serialiseFilters(filters);
+  const params = {
+    start,
+    pagesize,
+    filters,
+  };
 
-  const response = await axios({
-    method: 'get',
-    url: `${urlRoot}/v1/deals/${start}/${pagesize}/${serialisedFilters}`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
+  const response = await apollo('GET', dealsQuery, params, token);
 
   const fixed = {
-    ...response.data,
-    deals: await translateAllDatesToExpectedFormat(response.data.deals),
+    ...response.data.deals,
+    deals: await translateAllDatesToExpectedFormat(response.data.deals.deals),
   };
 
   return fixed;
