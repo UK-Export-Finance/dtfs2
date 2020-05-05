@@ -7,6 +7,6 @@ cd "$HERE/utils/mock-data-loader" && node ./re-insert-mocks.js
 dockerComposeResult=$?
 
 end=`date +%s`
-[ $dockerComposeResult -eq 0 ] && echo "{\"stage\": \"cypress:loadData\", \"duration\": \"$((end-start))\", \"result\": \"pass\"}" >> "$LOG" || echo "{\"stage\": \"cypress:loadData\", \"duration\": \"$((end-start))\", \"result\": \"fail\"}" >> "$LOG"
+[ $dockerComposeResult -eq 0 ] && echo "{\"stage\": \"mockData:load\", \"duration\": \"$((end-start))\", \"result\": \"pass\"}" >> "$LOG" || echo "{\"stage\": \"mockData:load\", \"duration\": \"$((end-start))\", \"result\": \"fail\"}" >> "$LOG"
 
 exit $dockerComposeResult
