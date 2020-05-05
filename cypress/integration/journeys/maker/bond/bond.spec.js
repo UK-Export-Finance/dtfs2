@@ -44,6 +44,28 @@ context('Add a Bond to a Deal', () => {
     cy.url().should('include', '/preview');
   });
 
+  describe('when a user sumits all Bond forms without completing any fields', () => {
+    it('should display all validation errors for required fields in `Bond Preview`', () => {
+      cy.createADeal({
+        username: user.username,
+        password: user.password,
+        bankDealId: MOCK_DEAL.details.bankSupplyContractID,
+        bankDealName: MOCK_DEAL.details.bankSupplyContractName,
+      });
+      pages.contract.addBondButton().click();
+      pages.bondDetails.submit().click();
+      pages.bondFinancialDetails.submit().click();
+      pages.bondFeeDetails.submit().click();
+
+      cy.url().should('include', '/contract');
+      cy.url().should('include', '/bond/');
+      cy.url().should('include', '/preview');
+
+      const TOTAL_REQUIRED_FORM_FIELDS = 9;
+      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+    });
+  });
+
   describe('When a user submits all Bond forms (`issued` bond stage, currency same as Supply Contract Currency)', () => {
     it('should populate `Bond Preview` page with all submitted data', () => {
       cy.createADeal({
