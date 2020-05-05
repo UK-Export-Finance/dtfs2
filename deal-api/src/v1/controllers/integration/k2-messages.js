@@ -119,7 +119,9 @@ module.exports.generateTypeA = async (deal) => {
         .BSS_stage(k2Map.TRANSACTIONS.STAGE[bond.bondStage])
         .BSS_beneficiary(bond.bondBeneficiary)
         .BSS_value(bond.bondValue)
-        .BSS_currency_code(await convertCurrencyCodeToId(bond.currency.id)) // eslint-disable-line no-await-in-loop
+        .BSS_currency_code(
+          await convertCurrencyCodeToId(bond.currency && bond.currency.id), // eslint-disable-line no-await-in-loop
+        )
         .BSS_conversion_rate_deal('//TODO')
         .BSS_conversion_date_deal('//TODO')
         .BSS_fee_rate(bond.riskMarginFee)

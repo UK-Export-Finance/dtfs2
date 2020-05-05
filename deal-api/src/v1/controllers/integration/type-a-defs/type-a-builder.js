@@ -396,12 +396,16 @@ module.exports = () => {
 
     build: () => {
       const validation = new Validator(deal, typeASchema);
+      // TODO - how to handle failed validation
       if (validation.fails()) {
+        /*
         return {
           errors: validation.errors,
           errorCount: validation.errorCount,
         };
+        */
       }
+
       return {
         deal: js2xmlparser.parse('Deal', deal),
       };
