@@ -1,6 +1,7 @@
 HERE=$(pwd)
 LOG="$HERE/pipeline.log"
 
+pipelinestart=`date +%s`
 
 start=`date +%s`
 
@@ -26,7 +27,7 @@ end=`date +%s`
 
 start=`date +%s`
 
-cd "$HERE" && ./bin/updateDependencies.sh && ./bin/launchEnvironment.sh
+cd "$HERE" && docker-compose up -d --build
 testResult=$?
 
 end=`date +%s`
@@ -56,7 +57,7 @@ end=`date +%s`
 
 start=`date +%s`
 
-cd "$HERE" && ./bin/loadMockData.sh
+cd "$HERE/utils/mock-data-loader" && node ./re-insert-mocks.js
 loadDataResult=$?
 
 end=`date +%s`
@@ -66,12 +67,12 @@ end=`date +%s`
 
 start=`date +%s`
 
-cd "$HERE" && ./bin/executeE2ETests.sh
+cd "$HERE" && ./bin/updateDependencies.sh && ./bin/executeE2ETests.sh
 cypressResult=$?
 
 end=`date +%s`
 
-[ $cypressResult -eq 0 ] && echo "{\"stage\": \"cypress:environment-startup\", \"duration\": \"$((end-start))\", \"result\": \"pass\"}" >> "$LOG" || echo "{\"stage\": \"cypress\", \"duration\": \"$((end-start))\", \"result\": \"fail\"}" >> "$LOG"
+[ $cypressResult -eq 0 ] && echo "{\"stage\": \"pipeline:cypress\", \"duration\": \"$((end-start))\", \"result\": \"pass\"}" >> "$LOG" || echo "{\"stage\": \"pipeline:cypress\", \"duration\": \"$((end-start))\", \"result\": \"fail\"}" >> "$LOG"
 
 start=`date +%s`
 docker-compose down
@@ -79,5 +80,5 @@ dockerDownResult=$?
 end=`date +%s`
 [ $dockerDownResult -eq 0 ] && echo "{\"stage\": \"pipeline:environment-shutdown\", \"duration\": \"$((end-start))\", \"result\": \"pass\"}" >> "$LOG" || echo "{\"stage\": \"pipeline:environment-shutdown\", \"duration\": \"$((end-start))\", \"result\": \"fail\"}" >> "$LOG"
 
-
+echo "{\"stage\": \"pipeline\", \"duration\": \"$((end-pipelinestart))\", \"result\": \"pass\"}" >> "$LOG"
 exit $cypressResult
