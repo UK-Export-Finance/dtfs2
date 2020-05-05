@@ -80,10 +80,12 @@ exports.update = (req, res) => {
       });
     }
 
+
     if (req.body.status === 'Submitted') {
       const typeA = await dealIntegration.createTypeA(deal);
       if (typeA.errorCount) {
-        return res.status(200).send(typeA);
+        // TODO - how do we deal with invalid typeA xml?
+        // return res.status(200).send(typeA);
       }
     }
 
