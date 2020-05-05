@@ -9,11 +9,11 @@ import {
   generateErrorSummary,
 } from '../../helpers';
 import {
-  handleBondDetailsValidationErrors,
-  handleBondFinancialDetailsValidationErrors,
-  handleBondFeeDetailsValidationErrors,
-  handleBondPreviewValidationErrors,
-} from './validationMapping/bond';
+  bondDetailsValidationErrors,
+  bondFinancialDetailsValidationErrors,
+  bondFeeDetailsValidationErrors,
+  bondPreviewValidationErrors,
+} from './pageSpecificValidationErrors/bond';
 
 const router = express.Router();
 
@@ -42,7 +42,7 @@ router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
   return res.render('bond/bond-details.njk', {
     dealId,
     bond,
-    validationErrors: handleBondDetailsValidationErrors(validationErrors, bond),
+    validationErrors: bondDetailsValidationErrors(validationErrors, bond),
   });
 });
 
@@ -85,7 +85,7 @@ router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => 
   return res.render('bond/bond-financial-details.njk', {
     dealId,
     bond,
-    validationErrors: handleBondFinancialDetailsValidationErrors(validationErrors, bond),
+    validationErrors: bondFinancialDetailsValidationErrors(validationErrors, bond),
     currencies: mapCurrencies(currencies, bondResponse.bond.currency),
   });
 });
@@ -124,7 +124,7 @@ router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   return res.render('bond/bond-fee-details.njk', {
     dealId,
     bond,
-    validationErrors: handleBondFeeDetailsValidationErrors(validationErrors, bond),
+    validationErrors: bondFeeDetailsValidationErrors(validationErrors, bond),
   });
 });
 
@@ -160,7 +160,7 @@ router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
   } = apiResponse;
 
   const formattedValidationErrors = generateErrorSummary(
-    handleBondPreviewValidationErrors(validationErrors, dealId, bondId),
+    bondPreviewValidationErrors(validationErrors, dealId, bondId),
     errorHref,
   );
 
