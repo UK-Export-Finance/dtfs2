@@ -164,7 +164,9 @@ describe('bond validation errors mapping', () => {
       };
 
       const mockBond = {
-        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[0]]: 'Test',
+        _id: '1234',
+        status: 'Incomplete',
+        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[0]]: 'test',
       };
 
       const result = handleValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS, mockBond);
@@ -185,7 +187,10 @@ describe('bond validation errors mapping', () => {
           count: mockErrorList.length,
         };
 
-        const result = handleValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
+        const mockBond = { _id: '1234', status: 'Incomplete' };
+
+
+        const result = handleValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS, mockBond);
         expect(result).toEqual({});
       });
     });
@@ -203,9 +208,11 @@ describe('bond validation errors mapping', () => {
         count: mockErrorList.length,
       };
 
-      const result = handleBondDetailsValidationErrors(mockValidationErrors);
+      const mockBond = { _id: '1234', status: 'Incomplete' };
 
-      const expected = handleValidationErrors(mockValidationErrors, FIELDS.DETAILS);
+      const result = handleBondDetailsValidationErrors(mockValidationErrors, mockBond);
+
+      const expected = handleValidationErrors(mockValidationErrors, FIELDS.DETAILS, mockBond);
       expect(result).toEqual(expected);
     });
   });
@@ -222,9 +229,11 @@ describe('bond validation errors mapping', () => {
         count: mockErrorList.length,
       };
 
-      const result = handleBondFinancialDetailsValidationErrors(mockValidationErrors);
+      const mockBond = { _id: '1234', status: 'Incomplete' };
 
-      const expected = handleValidationErrors(mockValidationErrors, FIELDS.FINANCIAL_DETAILS);
+      const result = handleBondFinancialDetailsValidationErrors(mockValidationErrors, mockBond);
+
+      const expected = handleValidationErrors(mockValidationErrors, FIELDS.FINANCIAL_DETAILS, mockBond);
       expect(result).toEqual(expected);
     });
   });
@@ -241,9 +250,11 @@ describe('bond validation errors mapping', () => {
         count: mockErrorList.length,
       };
 
-      const result = handleBondFeeDetailsValidationErrors(mockValidationErrors);
+      const mockBond = { _id: '1234', status: 'Incomplete' };
 
-      const expected = handleValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
+      const result = handleBondFeeDetailsValidationErrors(mockValidationErrors, mockBond);
+
+      const expected = handleValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS, mockBond);
       expect(result).toEqual(expected);
     });
   });
