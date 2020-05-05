@@ -1,18 +1,4 @@
-// TODO: extract
-const isEmptyString = (str) => {
-  if ((typeof value === 'string' || str instanceof String) && !str.length) {
-    return true;
-  }
-  return false;
-};
-
-// TODO: extract
-const hasValue = (str) => {
-  if (str && !isEmptyString(str)) {
-    return true;
-  }
-  return false;
-};
+const { hasValue } = require('../../utils/string');
 
 exports.dateIsValid = (day, month, year) => {
   const hasDay = hasValue(day);
@@ -55,10 +41,6 @@ exports.dateValidationText = (
 
   if (!hasDay && !hasMonth && hasYear) {
     return `${fieldCopy} must include day and month`;
-  }
-
-  if (!hasDay && hasMonth && hasYear) {
-    return `${fieldCopy} must include a day`;
   }
 
   return `Enter the ${fieldCopy}`;
