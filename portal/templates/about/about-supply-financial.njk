@@ -1,66 +1,76 @@
 {% extends "index.njk" %}
-{% from "govuk/components/select/macro.njk" import govukSelect %}
 {% import '_macros/date-fields.njk' as dateFields %}
 {% import './components/about-supply-contract-nav.njk' as aboutSupplyContract %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block content %}
 
   {{ aboutSupplyContract.nav(
-    completedStatus = contract.supplyContract.completedStatus,
+    completedStatus = deal.supplyContract.completedStatus,
     current = 'financialInformation',
-    contractId = contract._id
+    contractId = deal._id
   )}}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
 
   <form method="POST" autocomplete="off">
 
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="supplyContractValue">
-        Supply Contract value (in Supply Contract currency)
-      </label>
-
-      <input class="govuk-input govuk-!-width-one-half govuk-js-character-count input--numeric-float" id="supplyContractValue" name="supplyContractValue" type="text" placeholder="0.00" size="60" maxlength="255" pattern="[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)">
-    </div>
+    {{ govukInput({
+      label: { text: 'Supply Contract value (in Supply Contract currency)' },
+      classes: "govuk-!-width-one-half govuk-js-character-count input--numeric-float",
+      id: 'supplyContractValue',
+      name: 'supplyContractValue',
+      value: deal.submissionDetails["supplyContractValue"],
+      attributes: {
+        "data-cy": "supplyContractValue",
+        "placeholder": "0.00",
+        "size": "60",
+        "maxlength": "255"
+      },
+      errorMessage: validationErrors.errorList["supplyContractValue"]
+    }) }}
 
     {{ govukSelect({
         id: "supplyContractCurrency",
         name: "supplyContractCurrency",
-        label: {
-          text: "Supply Contract currency"
+        label: { text: "Supply Contract currency" },
+        attributes: {
+          "data-cy": "supplyContractCurrency"
         },
         items: currencies
       }) }}
 
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="conversionRateToGBP">
-        Conversion rate from Supply Contract currency to GBP
-      </label>
+    {{ govukInput({
+      label: { text: 'Conversion rate from Supply Contract currency to GBP' },
+      hint: { text: 'E.g. USD to GBP (100 USD /1.3 = 76.92 GBP)' },
+      classes: "govuk-!-width-one-half govuk-js-character-count input--numeric-float",
+      id: 'conversionRateToGBP',
+      name: 'conversionRateToGBP',
+      value: deal.submissionDetails["conversionRateToGBP"],
+      attributes: {
+        "data-cy": "conversionRateToGBP",
+        "placeholder": "0.00",
+        "size": "60",
+        "maxlength": "255"
+      },
+      errorMessage: validationErrors.errorList["conversionRateToGBP"]
+    }) }}
 
-      <span id="conversionRateToGBP-hint" class="govuk-hint">
-          E.g. USD to GBP (100 USD /1.3 = 76.92 GBP)
-      </span>
+    {{ govukButton({
+      "text": "Preview",
+      "attributes" : { "data-cy" : "Preview" }
+    }) }}
 
-      <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="conversionRateToGBP" name="conversionRateToGBP" type="text" size="60" maxlength="255" pattern="[0-9]{0,6}(\.\d{0,6}|\.?)" placeholder="Number with up to 6 decimal places" aria-describedby="conversionRateToGBP-hint">
-    </div>
-
-    <div class="govuk-form-group">
-      {{ dateFields.inputs(
-        legend = 'Supply Contract conversion date, as determined by the bank (Supply Contract currency to GBP)',
-        id = 'supplyContractConversionDate',
-        hint = 'For example, 31 05 2017'
-      )}}
-    </div>
-
-    <input type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" value="Preview" />
-
-    <input
-      type="submit"
-      formaction="/contract/{{ contract._id }}/about/supplier/save-go-back"
-      class="govuk-button govuk-button--secondary"
-      data-module="govuk-button"
-      value="Save and go back to deal"
-    />
+    {{ govukButton({
+      "text": "Save and go back to deal",
+      "classes" : "govuk-button govuk-button--secondary",
+      "attributes" : {
+        "data-cy" : "SaveAndGoBack",
+        "formaction" : "/contract/"+ deal._id +"/about/financial/save-go-back"
+      }
+    }) }}
 
   </form>
 
