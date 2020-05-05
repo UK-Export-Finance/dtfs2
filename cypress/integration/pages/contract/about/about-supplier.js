@@ -1,5 +1,5 @@
 const address = require('./address');
-const nav = require('./about-supply-contract-nav');
+const nav = require('./nav');
 
 const page = {
   visit: (deal) => cy.visit(`/contract/${deal._id}/about/supplier`),
