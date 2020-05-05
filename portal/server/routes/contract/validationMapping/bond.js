@@ -42,22 +42,16 @@ export const FIELDS = {
 
 // only return validation if any single field has been submitted (required, conditionally required or optional).
 export const shouldReturnRequiredValidation = (fields, fieldValues) => {
-  // probably better way to do this...
-  const fieldValuesWithoutIdAndStatus = {
-    ...fieldValues,
-  };
-  delete fieldValuesWithoutIdAndStatus._id; // eslint-disable-line no-underscore-dangle
-  delete fieldValuesWithoutIdAndStatus.status;
+  const { _id, status, ...strippedFieldValues } = fieldValues;
 
-  const totalFieldValues = Object.keys(fieldValuesWithoutIdAndStatus).filter((fieldName) =>
-    fieldValuesWithoutIdAndStatus[fieldName].length > 0);
+  const totalFieldValues = Object.keys(strippedFieldValues).filter((fieldName) =>
+    strippedFieldValues[fieldName].length > 0);
 
   if (totalFieldValues.length > 0) {
     return true;
   }
   return false;
 };
-
 
 export const mapRequiredValidationErrors = (validationErrors, fields) => {
   const mappedErrors = validationErrors || {};
