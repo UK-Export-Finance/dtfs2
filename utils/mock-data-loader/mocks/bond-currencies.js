@@ -1,204 +1,294 @@
 const BOND_CURRENCIES = [
   {
+    currencyId: 1,
+    text: 'AED - U.A.E. Dirham',
     id: 'AED',
-    text: 'AED - U.A.E. Dirham'
   },
   {
+    currencyId: 2,
+    text: 'AUD - Australian Dollars',
     id: 'AUD',
-    text: 'AUD - Australian Dollars'
   },
   {
-    id: 'BHD',
-    text: 'BHD - Bahrain Dinar'
-  },
-  {
+    currencyId: 3,
+    text: 'BRL - Brazilian Real',
     id: 'BRL',
-    text: 'BRL - Brazilian Real'
   },
   {
+    currencyId: 4,
+    text: 'BWP - Botswana Pula',
     id: 'BWP',
-    text: 'BWP - Botswana Pula'
   },
   {
+    currencyId: 5,
+    text: 'CAD - Canadian Dollars',
     id: 'CAD',
-    text: 'CAD - Canadian Dollars'
   },
   {
+    currencyId: 6,
+    text: 'CHF - Swiss Francs',
     id: 'CHF',
-    text: 'CHF - Swiss Francs'
   },
   {
-    id: 'CLP',
-    text: 'CLP - Chilean Peso'
-  },
-  {
+    currencyId: 7,
+    text: 'CZK - Czech Koruna',
     id: 'CZK',
-    text: 'CZK - Czech Koruna'
   },
   {
+    currencyId: 8,
+    text: 'DKK - Danish Krone',
     id: 'DKK',
-    text: 'DKK - Danish Krone'
   },
   {
+    currencyId: 9,
+    text: 'DZD - Algerian Dinar',
+    id: 'DZD',
+  },
+  {
+    currencyId: 10,
+    text: 'EGP - Egyptian Pounds',
     id: 'EGP',
-    text: 'EGP - Egyptian Pounds'
   },
   {
+    currencyId: 11,
+    text: 'EUR - Euros',
     id: 'EUR',
-    text: 'EUR - Euros'
   },
   {
+    currencyId: 12,
+    text: 'GBP - UK Sterling',
     id: 'GBP',
-    text: 'GBP - UK Sterling'
   },
   {
+    currencyId: 13,
+    text: 'HKD - Hong Kong Dollars',
     id: 'HKD',
-    text: 'HKD - Hong Kong Dollars'
   },
   {
-    id: 'HUF',
-    text: 'HUF - Hungarian Forint'
-  },
-  {
-    id: 'IDR',
-    text: 'IDR - Indonesian Rupiah'
-  },
-  {
+    currencyId: 14,
+    text: 'ILS - Israeli Shekels',
     id: 'ILS',
-    text: 'ILS - Israeli Shekels'
   },
   {
+    currencyId: 15,
+    text: 'INR - Indian Rupees',
     id: 'INR',
-    text: 'INR - Indian Rupees'
   },
   {
-    id: 'ISK',
-    text: 'ISK - Icelandic Krona'
+    currencyId: 16,
+    text: 'IQD - Iraqi Dinar',
+    id: 'IQD',
   },
   {
+    currencyId: 17,
+    text: 'JOD - Jordanian Dinar',
     id: 'JOD',
-    text: 'JOD - Jordanian Dinar'
   },
   {
+    currencyId: 18,
+    text: 'JPY - Japanese Yen',
     id: 'JPY',
-    text: 'JPY - Japanese Yen'
   },
   {
-    id: 'KES',
-    text: 'KES - Kenyan Shilling'
-  },
-  {
-    id: 'KRW',
-    text: 'KRW - South Korean Won'
-  },
-  {
+    currencyId: 19,
+    text: 'KWD - Kuwaiti Dinar',
     id: 'KWD',
-    text: 'KWD - Kuwaiti Dinar'
   },
   {
+    currencyId: 20,
+    text: 'LKR - Sri Lankan Rupees',
     id: 'LKR',
-    text: 'LKR - Sri Lankan Rupees'
   },
   {
-    id: 'MAD',
-    text: 'MAD - Moroccan Dirham'
+    currencyId: 21,
+    text: 'LSL - Lesotho Maluti',
+    id: 'LSL',
   },
   {
-    id: 'MUR',
-    text: 'MUR - Mauritian Rupee'
+    currencyId: 22,
+    text: 'MWK - Malawi Kwacha',
+    id: 'MWK',
   },
   {
+    currencyId: 23,
+    text: 'MXN - Mexican Pesos',
     id: 'MXN',
-    text: 'MXN - Mexican Pesos'
   },
   {
+    currencyId: 24,
+    text: 'MYR - Malaysian Ringgitts',
     id: 'MYR',
-    text: 'MYR - Malaysian Ringgitts'
   },
   {
+    currencyId: 25,
+    text: 'NGN - Nigerian Naira',
     id: 'NGN',
-    text: 'NGN - Nigerian Naira'
   },
   {
+    currencyId: 26,
+    text: 'NOK - Norwegian Krone',
     id: 'NOK',
-    text: 'NOK - Norwegian Krone'
   },
   {
+    currencyId: 27,
+    text: 'NZD - New Zealand Dollars',
     id: 'NZD',
-    text: 'NZD - New Zealand Dollars'
   },
   {
+    currencyId: 28,
+    text: 'OMR - Omani Rials',
     id: 'OMR',
-    text: 'OMR - Omani Rials'
   },
   {
-    id: 'PEN',
-    text: 'PEN - Peruvian Sol'
-  },
-  {
-    id: 'PHP',
-    text: 'PHP - Philippine Peso'
-  },
-  {
+    currencyId: 29,
+    text: 'PKR - Pakistan Rupees',
     id: 'PKR',
-    text: 'PKR - Pakistan Rupees'
   },
   {
+    currencyId: 30,
+    text: 'PLN - Polish Zloty',
     id: 'PLN',
-    text: 'PLN - Polish Zloty'
   },
   {
+    currencyId: 31,
+    text: 'QAR - Qatar Rials',
     id: 'QAR',
-    text: 'QAR - Qatar Rials'
   },
   {
-    id: 'RUB',
-    text: 'RUB - Russian Ruble'
-  },
-  {
+    currencyId: 32,
+    text: 'SAR - Saudi Arabian Riyals',
     id: 'SAR',
-    text: 'SAR - Saudi Arabian Riyals'
   },
   {
+    currencyId: 33,
+    text: 'SEK - Swedish Krona',
     id: 'SEK',
-    text: 'SEK - Swedish Krona'
   },
   {
+    currencyId: 34,
+    text: 'SGD - Singapore Dollars',
     id: 'SGD',
-    text: 'SGD - Singapore Dollars'
   },
   {
+    currencyId: 35,
+    text: 'THB - Thai Bahts',
     id: 'THB',
-    text: 'THB - Thai Bahts'
   },
   {
-    id: 'TRY',
-    text: 'TRY - Turkish Lira'
-  },
-  {
+    currencyId: 36,
+    text: 'TWD - Taiwan Dollars',
     id: 'TWD',
-    text: 'TWD - Taiwan Dollars'
   },
   {
-    id: 'UGX',
-    text: 'UGX - Uganda Shilling'
-  },
-  {
+    currencyId: 37,
+    text: 'USD - US Dollars',
     id: 'USD',
-    text: 'USD - US Dollars'
   },
   {
-    id: 'UYU',
-    text: 'UYU - Uruguayan Peso'
-  },
-  {
+    currencyId: 38,
+    text: 'XAF - CFA Francs',
     id: 'XAF',
-    text: 'XAF - CFA Francs'
   },
   {
+    currencyId: 39,
+    text: 'XAU - Gold',
+    id: 'XAU',
+  },
+  {
+    currencyId: 40,
+    text: 'ZAR - South African Rand',
     id: 'ZAR',
-    text: 'ZAR - South African Rand'
-  }
+  },
+  {
+    currencyId: 41,
+    text: 'BHD - Bahrain Dinar',
+    id: 'BHD',
+  },
+  {
+    currencyId: 42,
+    text: 'CNY - Chinese Yuan Renminbi',
+    id: 'CNY',
+  },
+  {
+    currencyId: 43,
+    text: 'PHP - Philippine Peso',
+    id: 'PHP',
+  },
+  {
+    currencyId: 44,
+    text: 'UGX - Uganda Shilling',
+    id: 'UGX',
+  },
+  {
+    currencyId: 46,
+    text: 'KES - Kenyan Shilling',
+    id: 'KES',
+  },
+  {
+    currencyId: 47,
+    text: 'MOP - Pataca',
+    id: 'MOP',
+  },
+  {
+    currencyId: 48,
+    text: 'CLP - Chilean Peso',
+    id: 'CLP',
+  },
+  {
+    currencyId: 49,
+    text: 'HUF - Hungarian Forint',
+    id: 'HUF',
+  },
+  {
+    currencyId: 50,
+    text: 'ISK - Icelandic Krona',
+    id: 'ISK',
+  },
+  {
+    currencyId: 51,
+    text: 'IDR - Indonesian Rupiah',
+    id: 'IDR',
+  },
+  {
+    currencyId: 52,
+    text: 'MUR - Mauritian Rupee',
+    id: 'MUR',
+  },
+  {
+    currencyId: 53,
+    text: 'PEN - Peruvian Sol',
+    id: 'PEN',
+  },
+  {
+    currencyId: 54,
+    text: 'RUB - Russian Ruble ',
+    id: 'RUB',
+  },
+  {
+    currencyId: 55,
+    text: 'KRW - South Korean Won',
+    id: 'KRW',
+  },
+  {
+    currencyId: 56,
+    text: 'TRY - Turkish Lira',
+    id: 'TRY',
+  },
+  {
+    currencyId: 57,
+    text: 'UYU - Uruguayan Peso',
+    id: 'UYU',
+  },
+  {
+    currencyId: 58,
+    text: 'ZMK - Zambian Kwacha',
+    id: 'ZMK',
+  },
+  {
+    currencyId: 59,
+    text: 'MAD  - Moroccan Dirham',
+    id: 'MAD',
+  },
 ];
 
 module.exports = BOND_CURRENCIES;

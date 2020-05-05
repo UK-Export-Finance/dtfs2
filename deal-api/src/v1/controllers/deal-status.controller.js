@@ -80,9 +80,13 @@ exports.update = (req, res) => {
       });
     }
 
-    // TODO find a nicer way to do this than a random if statement...
+
     if (req.body.status === 'Submitted') {
-      await dealIntegration.createTypeA(deal);
+      const typeA = await dealIntegration.createTypeA(deal);
+      if (typeA.errorCount) {
+        // TODO - how do we deal with invalid typeA xml?
+        // return res.status(200).send(typeA);
+      }
     }
 
     const collection = await db.getCollection('deals');

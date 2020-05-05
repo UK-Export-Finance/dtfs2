@@ -29,11 +29,17 @@ exports.findOne = (req, res) => {
 exports.createTypeA = async (deal) => {
   const typeA = await generateTypeA(deal);
 
+  // TODO - Decide what to do with invalid typeA xml
+  /*
+  if (typeA.errorCount) {
+    return typeA;
+  }
+  */
   const upload = {
     folder: 'ukef',
     subfolder: 'type-a',
     filename: `${deal._id}.xml`, // eslint-disable-line no-underscore-dangle
-    buffer: Buffer.from(typeA, 'utf-8'),
+    buffer: Buffer.from(JSON.stringify(typeA), 'utf-8'),
   };
 
   return fileshare.uploadStream(upload);
