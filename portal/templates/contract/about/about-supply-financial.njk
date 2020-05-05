@@ -1,0 +1,77 @@
+{% extends "index.njk" %}
+{% import '_macros/date-fields.njk' as dateFields %}
+{% import './components/about-supply-contract-nav.njk' as aboutSupplyContract %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+
+  {{ aboutSupplyContract.nav(
+    completedStatus = deal.supplyContract.completedStatus,
+    current = 'financialInformation',
+    contractId = deal._id
+  )}}
+
+  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+
+  <form method="POST" autocomplete="off">
+
+    {{ govukInput({
+      label: { text: 'Supply Contract value (in Supply Contract currency)' },
+      classes: "govuk-!-width-one-half govuk-js-character-count input--numeric-float",
+      id: 'supplyContractValue',
+      name: 'supplyContractValue',
+      value: deal.submissionDetails["supplyContractValue"],
+      attributes: {
+        "data-cy": "supplyContractValue",
+        "placeholder": "0.00",
+        "size": "60",
+        "maxlength": "255"
+      },
+      errorMessage: validationErrors.errorList["supplyContractValue"]
+    }) }}
+
+    {{ govukSelect({
+        id: "supplyContractCurrency",
+        name: "supplyContractCurrency",
+        label: { text: "Supply Contract currency" },
+        attributes: {
+          "data-cy": "supplyContractCurrency"
+        },
+        items: currencies
+      }) }}
+
+    {{ govukInput({
+      label: { text: 'Conversion rate from Supply Contract currency to GBP' },
+      hint: { text: 'E.g. USD to GBP (100 USD /1.3 = 76.92 GBP)' },
+      classes: "govuk-!-width-one-half govuk-js-character-count input--numeric-float",
+      id: 'conversionRateToGBP',
+      name: 'conversionRateToGBP',
+      value: deal.submissionDetails["conversionRateToGBP"],
+      attributes: {
+        "data-cy": "conversionRateToGBP",
+        "placeholder": "0.00",
+        "size": "60",
+        "maxlength": "255"
+      },
+      errorMessage: validationErrors.errorList["conversionRateToGBP"]
+    }) }}
+
+    {{ govukButton({
+      "text": "Preview",
+      "attributes" : { "data-cy" : "Preview" }
+    }) }}
+
+    {{ govukButton({
+      "text": "Save and go back to deal",
+      "classes" : "govuk-button govuk-button--secondary",
+      "attributes" : {
+        "data-cy" : "SaveAndGoBack",
+        "formaction" : "/contract/"+ deal._id +"/about/financial/save-go-back"
+      }
+    }) }}
+
+  </form>
+
+{% endblock %}
