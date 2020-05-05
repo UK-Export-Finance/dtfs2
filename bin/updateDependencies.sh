@@ -11,5 +11,5 @@ testResult=$?
 
 end=`date +%s`
 
-[ $testResult -eq 0 ] && echo "{\"stage\": \"cypress:updateDependencies\", \"duration\": \"$((end-start))\", \"result\": \"pass\"}" >> "$LOG" || echo "{\"stage\": \"cypress:updateDependencies\", \"duration\": \"$((end-start))\", \"result\": \"fail\"}" >> "$LOG"
+[ $testResult -eq 0 ] && echo "{\"stage\": \"pipeline:updateCypressDependencies\", \"duration\": \"$((end-start))\", \"result\": \"pass\"}" >> "$LOG" || echo "{\"stage\": \"pipeline:updateCypressDependencies\", \"duration\": \"$((end-start))\", \"result\": \"fail\"}" >> "$LOG"
 exit $testResult

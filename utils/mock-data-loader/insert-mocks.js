@@ -15,42 +15,42 @@ const insertMocks = async() => {
 
   console.log('inserting deals');
   for (contract of MOCKS.CONTRACTS) {
-    api.createDeal(contract, token);
+    await api.createDeal(contract, token);
   }
 
   console.log('inserting banks');
   for (bank of MOCKS.BANKS) {
-    api.createBank(bank, token);
+    await api.createBank(bank, token);
   }
 
   console.log('inserting bond-currencies');
   for (bondCurrency of MOCKS.BOND_CURRENCIES) {
-    api.createBondCurrency(bondCurrency, token);
+    await api.createBondCurrency(bondCurrency, token);
   }
 
   console.log('inserting countries');
   for (country of MOCKS.COUNTRIES) {
-    api.createCountry(country, token);
+    await api.createCountry(country, token);
   }
 
   console.log('inserting industry-sectors');
   for (industrySector of MOCKS.INDUSTRY_SECTORS) {
-    api.createIndustrySector(industrySector, token);
+    await api.createIndustrySector(industrySector, token);
   }
 
   console.log('inserting mandatory-criteria');
   for (mandatoryCriteria of MOCKS.MANDATORY_CRITERIA) {
-    api.createMandatoryCriteria(mandatoryCriteria, token);
+    await api.createMandatoryCriteria(mandatoryCriteria, token);
   }
 
   console.log('inserting transactions');
   for (transaction of MOCKS.TRANSACTIONS) {
-    api.createTransaction(transaction, token);
+    await api.createTransaction(transaction, token);
   }
 
   console.log('inserting users');
   for (user of MOCKS.USERS) {
-    api.createUser(user);
+    await api.createUser(user);
   }
 
 }
