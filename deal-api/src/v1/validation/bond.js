@@ -1,21 +1,6 @@
 const { orderNumber } = require('../../utils/error-list-order-number');
+const { hasValue } = require('../../utils/string');
 const { dateIsValid, dateValidationText } = require('./date-field');
-
-// TODO: extract
-const isEmptyString = (str) => {
-  if ((typeof value === 'string' || str instanceof String) && !str.length) {
-    return true;
-  }
-  return false;
-};
-
-// TODO: extract
-const hasValue = (str) => {
-  if (str && !isEmptyString(str)) {
-    return true;
-  }
-  return false;
-};
 
 exports.getBondErrors = (bond) => {
   const {

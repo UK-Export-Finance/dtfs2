@@ -1,6 +1,6 @@
 const { orderNumber } = require('../../src/utils/error-list-order-number');
 
-describe('orderNumber', () => {
+describe('utils - orderNumber', () => {
   it('should return a number as string that is incremented from the `order` value of the last property from the given errorList\'s', () => {
     const mockErrorList = {
       someField: { order: '1', text: 'This is required' },
