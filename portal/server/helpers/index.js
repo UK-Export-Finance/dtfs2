@@ -6,6 +6,7 @@ import formatCountriesForGDSComponent from './formatCountriesForGDSComponent';
 import errorHref from './errorHref';
 import postToApi from './postToApi';
 import mapCurrencies from './mapCurrencies';
+import pageSpecificValidationErrors from './pageSpecificValidationErrors';
 
 export {
   getApiData,
@@ -16,4 +17,5 @@ export {
   errorHref,
   postToApi,
   mapCurrencies,
+  pageSpecificValidationErrors,
 };
