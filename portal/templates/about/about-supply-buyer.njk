@@ -6,9 +6,9 @@
 {% block content %}
 
   {{ aboutSupplyContract.nav(
-    completedStatus = contract.supplyContract.completedStatus,
+    completedStatus = deal.supplyContract.completedStatus,
     current = 'buyer',
-    contractId = contract._id
+    contractId = deal._id
   )}}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />

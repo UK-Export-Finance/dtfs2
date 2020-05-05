@@ -211,22 +211,40 @@ router.get('/contract/:_id/about/financial', async (req, res) => {
     res,
   );
 
+  const deal = await getApiData(
+    api.contract(_id, userToken),
+    res,
+  );
+
   res.render('about/about-supply-financial.njk', {
-    contract: await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ),
-    currencies: mapCurrencies(currencies),
+    deal,
+    currencies: mapCurrencies(currencies, deal.submissionDetails.supplyContractCurrency),
   });
 });
 
-router.post('/contract/:id/about/financial', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}/about/preview`;
+router.post('/contract/:_id/about/financial', (req, res) => {
+  const redirectUrl = `/contract/${req.params._id}/about/preview`; // eslint-disable-line no-underscore-dangle
   return res.redirect(redirectUrl);
 });
 
-router.post('/contract/:id/about/financial/save-go-back', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}`;
+router.post('/contract/:_id/about/financial/save-go-back', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+
+  const deal = await getApiData(
+    api.contract(_id, userToken),
+    res,
+  );
+
+  const submissionDetails = req.body;
+  if (submissionDetails.supplyContractCurrency) {
+    submissionDetails.supplyContractCurrency = {
+      id: submissionDetails.supplyContractCurrency,
+    };
+  }
+
+  await api.updateSubmissionDetails(deal, submissionDetails, userToken);
+
+  const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
 });
 

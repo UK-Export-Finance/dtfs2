@@ -7,6 +7,7 @@ module.exports = {
   contract: require('./contract'),
   contractAboutSupplier: require('./contract/contract-about-supplier'),
   contractAboutBuyer: require('./contract/contract-about-buyer'),
+  contractAboutFinancial: require('./contract/contract-about-financial'),
   contractDelete: require('./contract/contract-delete'),
   contractReadyForReview: require('./contract/contract-readyForReview'),
   contractReturnToMaker: require('./contract/contract-returnToMaker'),
