@@ -13,7 +13,7 @@ const router = express.Router();
 router.get('/contract/:_id/about/supplier', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  return res.render('about/about-supplier.njk', {
+  return res.render('contract/about/about-supplier.njk', {
     deal: await getApiData(
       api.contract(_id, userToken),
       res,
@@ -89,7 +89,7 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', asyn
     const validation = {};
     validation[`${prefix}-companies-house-registration-number`] = 'not found';
 
-    return res.render('about/about-supplier.njk', {
+    return res.render('contract/about/about-supplier.njk', {
       validation,
       deal,
       countries: await getApiData(
@@ -115,7 +115,7 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', asyn
   // contract.submissionDetails["supplier-address-country"] = company.address.?????;
 
   // re-render
-  return res.render('about/about-supplier.njk', {
+  return res.render('contract/about/about-supplier.njk', {
     deal,
     countries: await getApiData(
       api.countries(userToken),
@@ -159,7 +159,7 @@ router.post('/contract/:_id/about/supplier/save-go-back', async (req, res) => {
 router.get('/contract/:_id/about/buyer', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  return res.render('about/about-supply-buyer.njk', {
+  return res.render('contract/about/about-supply-buyer.njk', {
     deal: await getApiData(
       api.contract(_id, userToken),
       res,
@@ -211,29 +211,47 @@ router.get('/contract/:_id/about/financial', async (req, res) => {
     res,
   );
 
-  res.render('about/about-supply-financial.njk', {
-    contract: await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ),
-    currencies: mapCurrencies(currencies),
+  const deal = await getApiData(
+    api.contract(_id, userToken),
+    res,
+  );
+
+  res.render('contract/about/about-supply-financial.njk', {
+    deal,
+    currencies: mapCurrencies(currencies, deal.submissionDetails.supplyContractCurrency),
   });
 });
 
-router.post('/contract/:id/about/financial', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}/about/preview`;
+router.post('/contract/:_id/about/financial', (req, res) => {
+  const redirectUrl = `/contract/${req.params._id}/about/preview`; // eslint-disable-line no-underscore-dangle
   return res.redirect(redirectUrl);
 });
 
-router.post('/contract/:id/about/financial/save-go-back', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}`;
+router.post('/contract/:_id/about/financial/save-go-back', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+
+  const deal = await getApiData(
+    api.contract(_id, userToken),
+    res,
+  );
+
+  const submissionDetails = req.body;
+  if (submissionDetails.supplyContractCurrency) {
+    submissionDetails.supplyContractCurrency = {
+      id: submissionDetails.supplyContractCurrency,
+    };
+  }
+
+  await api.updateSubmissionDetails(deal, submissionDetails, userToken);
+
+  const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
 });
 
 router.get('/contract/:_id/about/preview', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  return res.render('about/about-supply-preview.njk',
+  return res.render('contract/about/about-supply-preview.njk',
     await getApiData(
       api.contract(_id, userToken),
       res,
