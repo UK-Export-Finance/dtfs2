@@ -29,8 +29,30 @@ router.get('/contract/:_id/about/supplier', async (req, res) => {
   });
 });
 
-router.post('/contract/:id/about/supplier', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}/about/buyer`;
+router.post('/contract/:_id/about/supplier', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+  const deal = await getApiData(
+    api.contract(_id, userToken),
+    res,
+  );
+
+  const submissionDetails = req.body;
+
+  // fix industrySector/industryClass data; is nested in source data, and the way it's rendered makes this preferable
+  if (submissionDetails.industrySector && submissionDetails.industryClass) {
+    submissionDetails.industrySector = {
+      code: submissionDetails.industrySector,
+      name: '', // TODO
+      class: {
+        code: submissionDetails.industryClass,
+        name: '', // TODO
+      },
+    };
+    delete submissionDetails.industryClass;
+  }
+  await api.updateSubmissionDetails(deal, submissionDetails, userToken);
+
+  const redirectUrl = `/contract/${_id}/about/buyer`;
   return res.redirect(redirectUrl);
 });
 
@@ -125,6 +147,7 @@ router.post('/contract/:_id/about/supplier/save-go-back', async (req, res) => {
         name: '', // TODO
       },
     };
+    delete submissionDetails.industryClass;
   }
 
   await api.updateSubmissionDetails(deal, submissionDetails, userToken);
@@ -137,7 +160,7 @@ router.get('/contract/:_id/about/buyer', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
   return res.render('about/about-supply-buyer.njk', {
-    contract: await getApiData(
+    deal: await getApiData(
       api.contract(_id, userToken),
       res,
     ),
@@ -148,13 +171,35 @@ router.get('/contract/:_id/about/buyer', async (req, res) => {
   });
 });
 
-router.post('/contract/:id/about/buyer', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}/about/financial`;
+router.post('/contract/:id/about/buyer', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+
+  const deal = await getApiData(
+    api.contract(_id, userToken),
+    res,
+  );
+
+  const submissionDetails = req.body;
+
+  await api.updateSubmissionDetails(deal, submissionDetails, userToken);
+
+  const redirectUrl = `/contract/${_id}/about/financial`;
   return res.redirect(redirectUrl);
 });
 
-router.post('/contract/:id/about/buyer/save-go-back', (req, res) => {
-  const redirectUrl = `/contract/${req.params.id}`;
+router.post('/contract/:_id/about/buyer/save-go-back', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+
+  const deal = await getApiData(
+    api.contract(_id, userToken),
+    res,
+  );
+
+  const submissionDetails = req.body;
+
+  await api.updateSubmissionDetails(deal, submissionDetails, userToken);
+
+  const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
 });
 

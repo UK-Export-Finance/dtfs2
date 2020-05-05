@@ -1,4 +1,4 @@
-const {contract, contractAboutSupplier} = require('../../../pages');
+const {contract, contractAboutSupplier, contractAboutBuyer} = require('../../../pages');
 const maker1 = {username: 'MAKER', password: 'MAKER'};
 
 // test data we want to set up + work with..
@@ -23,15 +23,26 @@ context('about-supply-contract', () => {
   it('A maker picks up a deal with the supplier details completed, and fills in the about-buyer-contract section, using the companies house search.', () => {
     cy.login({...maker1});
 
-    // go the long way for the first test- actually clicking via the contract page to prove the link..
+    // navigate to the about-buyer page
     contract.visit(deal);
-    // check the status is displaying correctly
-    contract.aboutSupplierDetailsStatus().invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
     contract.aboutSupplierDetailsLink().click();
+    contractAboutSupplier.nextPage().click();
 
-    contractAboutSupplier.nav().aboutBuyerLink().click();
+    // fill in the fields
+    contractAboutBuyer.buyerName().type('Huggy Bear');
+    contractAboutBuyer.countryOfBuyer().select('USA');
+    contractAboutBuyer.destinationOfGoodsAndServices().select('USA');
+
+    // save
+    contractAboutBuyer.saveAndGoBack().click();
+
+    // come back to the page
+    contractAboutBuyer.visit(deal);
+
+    // confirm the data is still there...
+    contractAboutBuyer.buyerName().should('have.value', 'Huggy Bear');
+    contractAboutBuyer.countryOfBuyer().should('have.value', 'USA');
+    contractAboutBuyer.destinationOfGoodsAndServices().should('have.value', 'USA');
 
   });
 
