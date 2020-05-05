@@ -69,32 +69,43 @@ describe('bond validation errors mapping', () => {
       expect(result.errorList).toEqual(expectedErrorList);
     });
 
-    it('should return summary and count from errorSummary with only validationErrors that are included in requiredFields', () => {
+    it('should return summary and count from errorSummary with only validationErrors that are included in REQUIRED_FIELDS CONDITIONALLY_REQUIRED_FIELDS', () => {
+      const mockFeeDetailsFields = {
+        ...FIELDS.FEE_DETAILS,
+        CONDITIONALLY_REQUIRED_FIELDS: [
+          'a',
+          'b',
+        ],
+      };
+
       const mockErrorList = {
         ...mockBondErrors,
         [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[1]]: { order: '3', text: 'Field is required' },
         [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[2]]: { order: '4', text: 'Field is required' },
+        [mockFeeDetailsFields.CONDITIONALLY_REQUIRED_FIELDS[0]]: { order: '5', text: 'Field is required' },
+        [mockFeeDetailsFields.CONDITIONALLY_REQUIRED_FIELDS[1]]: { order: '6', text: 'Field is required' },
       };
 
       const mockValidationErrors = {
         errorList: mockErrorList,
         count: mockErrorList.length,
       };
-
-      const expectedRequiredErrorList = {
+      const expectedErrorList = {
         [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[1]]: { order: '3', text: 'Field is required' },
         [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[2]]: { order: '4', text: 'Field is required' },
+        [mockFeeDetailsFields.CONDITIONALLY_REQUIRED_FIELDS[0]]: { order: '5', text: 'Field is required' },
+        [mockFeeDetailsFields.CONDITIONALLY_REQUIRED_FIELDS[1]]: { order: '6', text: 'Field is required' },
       };
 
-      const result = mapRequiredValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
+      const result = mapRequiredValidationErrors(mockValidationErrors, mockFeeDetailsFields);
 
       const expectedSummary = generateErrorSummary(
-        { errorList: expectedRequiredErrorList },
+        { errorList: expectedErrorList },
         errorHref,
       ).summary;
 
       expect(result.summary).toEqual(expectedSummary);
-      expect(result.count).toEqual(Object.keys(expectedRequiredErrorList).length);
+      expect(result.count).toEqual(Object.keys(expectedErrorList).length);
     });
 
     it('should return conditionalErrorList from validationErrors object', () => {

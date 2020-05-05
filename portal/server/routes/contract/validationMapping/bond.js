@@ -42,13 +42,6 @@ export const FIELDS = {
 
 // only return validation if any single field has been submitted (required, conditionally required or optional).
 export const shouldReturnRequiredValidation = (fields, fieldValues) => {
-  // TODO: why did we add allFields? seems don't need it anymore.
-  const allFields = [];
-
-  Object.keys(fields).forEach((fieldTypeGroup) => {
-    allFields.push(...fields[fieldTypeGroup]);
-  });
-
   // probably better way to do this...
   const fieldValuesWithoutIdAndStatus = {
     ...fieldValues,
@@ -56,12 +49,8 @@ export const shouldReturnRequiredValidation = (fields, fieldValues) => {
   delete fieldValuesWithoutIdAndStatus._id; // eslint-disable-line no-underscore-dangle
   delete fieldValuesWithoutIdAndStatus.status;
 
-  const totalFieldValues = Object.keys(fieldValuesWithoutIdAndStatus).filter((fieldName) => {
-    if (fieldValuesWithoutIdAndStatus[fieldName].length > 0) {
-      return fieldName;
-    }
-    return null;
-  });
+  const totalFieldValues = Object.keys(fieldValuesWithoutIdAndStatus).filter((fieldName) =>
+    fieldValuesWithoutIdAndStatus[fieldName].length > 0);
 
   if (totalFieldValues.length > 0) {
     return true;
