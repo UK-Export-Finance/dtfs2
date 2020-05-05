@@ -192,6 +192,29 @@ describe('/v1/deals/:id/bond', () => {
   });
 
   describe('PUT /v1/deals/:id/bond/:bondId', () => {
+    const allBondFields = {
+      bondIssuer: 'issuer',
+      bondType: 'bond type',
+      bondStage: 'unissued',
+      ukefGuaranteeInMonths: '24',
+      'requestedCoverStartDate-day': '01',
+      'requestedCoverStartDate-month': '02',
+      'requestedCoverStartDate-year': '2020',
+      'coverEndDate-day': '01',
+      'coverEndDate-month': '02',
+      'coverEndDate-year': '2022',
+      uniqueIdentificationNumber: '1234',
+      bondBeneficiary: 'test',
+      bondValue: '123',
+      transactionCurrencySameAsSupplyContractCurrency: 'true',
+      riskMarginFee: '1',
+      coveredPercentage: '2',
+      feeType: 'test',
+      feeFrequency: 'test',
+      dayCountBasis: 'test',
+      status: 'Incomplete',
+    };
+
     it('401s requests that do not present a valid Authorization token', async () => {
       const { status } = await as().put().to('/v1/deals/123456789012/bond/123456789012');
 
@@ -235,60 +258,63 @@ describe('/v1/deals/:id/bond', () => {
       const { body } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
       const bondId = body.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
 
-      const { status } = await as(aSuperuser).put({}).to(`/v1/deals/${dealId}/bond/${bondId}`);
+      const { status } = await as(aSuperuser).put(allBondFields).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
       expect(status).toEqual(200);
     });
 
-    it('updates an existing bond', async () => {
+    describe('when required fields are missing', () => {
+      it('returns 400 with validation errors', async () => {
+        const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+        const { bondId } = createBondResponse.body;
+
+        const { status, body } = await as(aBarclaysMaker).put({ _id: bondId }).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(status).toEqual(400);
+        expect(body.bond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
+        expect(body.validationErrors.count).toEqual(9);
+        expect(body.validationErrors.errorList.bondType).toBeDefined();
+        expect(body.validationErrors.errorList.bondStage).toBeDefined();
+        expect(body.validationErrors.errorList.bondValue).toBeDefined();
+        expect(body.validationErrors.errorList.transactionCurrencySameAsSupplyContractCurrency).toBeDefined();
+        expect(body.validationErrors.errorList.riskMarginFee).toBeDefined();
+        expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
+        expect(body.validationErrors.errorList.feeType).toBeDefined();
+        expect(body.validationErrors.errorList.feeFrequency).toBeDefined();
+        expect(body.validationErrors.errorList.dayCountBasis).toBeDefined();
+      });
+    });
+
+    it('updates an existing bond and returns it', async () => {
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
-      // TODO: add all possible values here
-      const bondBody = {
-        bondIssuer: 'issuer',
-        bondType: 'bond type',
-        bondStage: 'unissued',
-        ukefGuaranteeInMonths: '24',
-        'requestedCoverStartDate-day': '01',
-        'requestedCoverStartDate-month': '02',
-        'requestedCoverStartDate-year': '2020',
-        'coverEndDate-day': '01',
-        'coverEndDate-month': '02',
-        'coverEndDate-year': '2022',
-        uniqueIdentificationNumber: '1234',
-        bondBeneficiary: 'test',
-        currency: 'EUR',
-        status: 'Incomplete',
-      };
-
-      const createBondResponse = await as(aBarclaysMaker).put({}, ).to(`/v1/deals/${dealId}/bond/create`);
+      const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
       const { body: createBondBody } = createBondResponse;
       const { bondId } = createBondBody;
 
-      const { status } = await as(aBarclaysMaker).put(bondBody).to(`/v1/deals/${dealId}/bond/${bondId}`);
+      const { status } = await as(aBarclaysMaker).put(allBondFields).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
       expect(status).toEqual(200);
 
-      const { body: updatedDeal } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+      const {
+        status: updatedDealStatus,
+        body: updatedDeal,
+      } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
 
-      expect(status).toEqual(200);
+      expect(updatedDealStatus).toEqual(200);
 
       const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
         b._id === bondId); // eslint-disable-line no-underscore-dangle
 
-      const { body: getCurrencyBody } = await as(aBarclaysMaker).get(`/v1/bond-currencies/${bondBody.currency}`);
-
-      const expectedCurrencyObj = {
-        id: getCurrencyBody.id,
-        text: getCurrencyBody.text,
-      };
-
       const expectedUpdatedBond = {
         _id: bondId, // eslint-disable-line no-underscore-dangle
-        ...bondBody,
-        currency: expectedCurrencyObj,
+        ...allBondFields,
+        currency: deal.body.supplyContractCurrency,
       };
       expect(updatedBond).toEqual(expectedUpdatedBond);
     });
@@ -299,8 +325,8 @@ describe('/v1/deals/:id/bond', () => {
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
         const bondAsUnissued = {
+          ...allBondFields,
           bondStage: 'Unissued',
-          bondIssuer: 'test',
           ukefGuaranteeInMonths: '12',
         };
 
@@ -313,6 +339,7 @@ describe('/v1/deals/:id/bond', () => {
         expect(status).toEqual(200);
 
         const updatedBondAsIssued = {
+          ...allBondFields,
           bondStage: 'Issued',
           bondIssuer: 'test',
           'requestedCoverStartDate-day': '01',
@@ -327,8 +354,11 @@ describe('/v1/deals/:id/bond', () => {
         const { status: secondUpdateStatus } = await as(aBarclaysMaker).put(updatedBondAsIssued).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(secondUpdateStatus).toEqual(200);
 
-        const { body: updatedDeal } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
-        expect(status).toEqual(200);
+        const {
+          status: updatedDealStatus,
+          body: updatedDeal,
+        } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+        expect(updatedDealStatus).toEqual(200);
 
         const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
           b._id === bondId); // eslint-disable-line no-underscore-dangle
@@ -336,8 +366,10 @@ describe('/v1/deals/:id/bond', () => {
         const expectedBond = {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsIssued,
+          currency: deal.body.supplyContractCurrency,
           status: 'Incomplete',
         };
+        delete expectedBond.ukefGuaranteeInMonths;
 
         expect(updatedBond).toEqual(expectedBond);
       });
@@ -349,15 +381,8 @@ describe('/v1/deals/:id/bond', () => {
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
         const bondAsIssued = {
+          ...allBondFields,
           bondStage: 'Issued',
-          bondIssuer: 'test',
-          'requestedCoverStartDate-day': '01',
-          'requestedCoverStartDate-month': '02',
-          'requestedCoverStartDate-year': '2020',
-          'coverEndDate-day': '01',
-          'coverEndDate-month': '02',
-          'coverEndDate-year': '2022',
-          uniqueIdentificationNumber: '1234',
         };
 
         const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
@@ -369,6 +394,7 @@ describe('/v1/deals/:id/bond', () => {
         expect(status).toEqual(200);
 
         const updatedBondAsUnissued = {
+          ...allBondFields,
           bondStage: 'Unissued',
           bondIssuer: 'test',
           ukefGuaranteeInMonths: '12',
@@ -377,8 +403,11 @@ describe('/v1/deals/:id/bond', () => {
         const { status: secondUpdateStatus } = await as(aBarclaysMaker).put(updatedBondAsUnissued).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(secondUpdateStatus).toEqual(200);
 
-        const { body: updatedDeal } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
-        expect(status).toEqual(200);
+        const {
+          status: updatedDealStatus,
+          body: updatedDeal,
+        } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+        expect(updatedDealStatus).toEqual(200);
 
         const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
           b._id === bondId); // eslint-disable-line no-underscore-dangle
@@ -386,19 +415,28 @@ describe('/v1/deals/:id/bond', () => {
         const expectedBond = {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsUnissued,
+          currency: deal.body.supplyContractCurrency,
           status: 'Incomplete',
         };
+        delete expectedBond['requestedCoverStartDate-day'];
+        delete expectedBond['requestedCoverStartDate-month'];
+        delete expectedBond['requestedCoverStartDate-year'];
+        delete expectedBond['coverEndDate-day'];
+        delete expectedBond['coverEndDate-month'];
+        delete expectedBond['coverEndDate-year'];
+        delete expectedBond.uniqueIdentificationNumber;
 
         expect(updatedBond).toEqual(expectedBond);
       });
     });
 
-    describe('when a bond has req.body.transactionCurrencySameAsSupplyContractCurrency', () => {
+    describe('when a bond has req.body.transactionCurrencySameAsSupplyContractCurrency set to false', () => {
       it('should remove `currency is NOT the same` values from the bond', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
         const bondBody = {
+          ...allBondFields,
           transactionCurrencySameAsSupplyContractCurrency: 'false',
           bondValue: '123',
           conversionRate: '100',
@@ -414,7 +452,6 @@ describe('/v1/deals/:id/bond', () => {
 
         const { status } = await as(aBarclaysMaker).put(bondBody).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(status).toEqual(200);
-
 
         const bondWithSameCurrencyAsContract = {
           bondValue: '456',
@@ -440,11 +477,12 @@ describe('/v1/deals/:id/bond', () => {
         expect(updatedBond['conversionRateDate-year']).toEqual(undefined);
       });
 
-      it('should use the deal\'s supplyContractCurrency to the bond\'s currency', async () => {
+      it('should add the deal\'s supplyContractCurrency to the bond\'s currency', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
         const bondBody = {
+          ...allBondFields,
           transactionCurrencySameAsSupplyContractCurrency: 'true',
         };
 

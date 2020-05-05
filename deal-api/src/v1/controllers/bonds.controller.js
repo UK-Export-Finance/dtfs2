@@ -22,7 +22,6 @@ exports.getBond = async (req, res) => {
       if (bond) {
         const validationErrors = getBondErrors(bond);
 
-        // TODO: should we do ...bond ?
         return res.json({
           dealId,
           bond,
@@ -162,6 +161,8 @@ exports.updateBond = async (req, res) => {
         },
       };
 
+      const validationErrors = getBondErrors(updatedBond);
+
       const newReq = {
         params: req.params,
         body: updatedDeal,
@@ -169,8 +170,17 @@ exports.updateBond = async (req, res) => {
       };
 
       const updateDealResponse = await updateDeal(newReq, res);
+      const updateDealResponseBond = updateDealResponse.bondTransactions.items.find((b) =>
+        String(b._id) === bondId); // eslint-disable-line no-underscore-dangle
 
-      return res.status(200).send(updateDealResponse);
+      if (validationErrors) {
+        return res.status(400).send({
+          validationErrors,
+          bond: updateDealResponseBond,
+        });
+      }
+
+      return res.status(200).send(updateDealResponseBond);
     }
     return res.status(404).send();
   });
