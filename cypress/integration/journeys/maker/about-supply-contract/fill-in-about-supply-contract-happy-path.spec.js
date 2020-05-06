@@ -60,12 +60,12 @@ context('about-supply-contract', () => {
 
     // // the search should populate the supplier address fields
     // contractAboutSupplier.supplierAddressCountry().should('?', '?'); //TODO country; mapping company house "england"-> portal "United Kingdom"
-    // contractAboutSupplier.supplierAddress().county().should('not.have.value', ''); //TODO don't believe CH store county...
     contractAboutSupplier.supplierName().should('not.have.value', ''); //TODO if we had 'proper' test company we might assert real data
     contractAboutSupplier.supplierAddress().line1().should('not.have.value', ''); //TODO
     contractAboutSupplier.supplierAddress().line2().should('not.have.value', ''); //TODO
     contractAboutSupplier.supplierAddress().town().should('not.have.value', ''); //TODO
     contractAboutSupplier.supplierAddress().postcode().should('not.have.value', ''); //TODO
+    contractAboutSupplier.supplierAddress().country().should('not.have.value', ''); //TODO
 
     //---
     // fill in the simplest version of the form so we can submit it and save it..
@@ -109,6 +109,10 @@ context('about-supply-contract', () => {
       expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
     });
     contractAboutPreview.supplierAddress().postcode().invoke('text').then((text) => {
+      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+    });
+
+    contractAboutPreview.supplierAddress().country().invoke('text').then((text) => {
       expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
     });
 

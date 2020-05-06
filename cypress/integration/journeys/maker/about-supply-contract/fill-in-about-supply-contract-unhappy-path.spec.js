@@ -80,13 +80,13 @@ context('about-supply-contract', () => {
     //------
     // the search should populate the indemnifier address fields
     //
-    // contractAboutSupplier.supplierAddressCountry().should('?', '?'); //TODO country; mapping company house "england"-> portal "United Kingdom"
     // contractAboutSupplier.supplierAddress().county().should('not.have.value', ''); //TODO don't believe CH store county...
     contractAboutSupplier.indemnifierName().should('not.have.value', ''); //TODO if we had 'proper' test company we might assert real data
     contractAboutSupplier.indemnifierAddress().line1().should('not.have.value', ''); //TODO
     contractAboutSupplier.indemnifierAddress().line2().should('not.have.value', ''); //TODO
     contractAboutSupplier.indemnifierAddress().town().should('not.have.value', ''); //TODO
     contractAboutSupplier.indemnifierAddress().postcode().should('not.have.value', ''); //TODO
+    contractAboutSupplier.indemnifierAddress().country().should('not.have.value', ''); //TODO
 
     //-----
     // continue filling in the form..
@@ -136,10 +136,7 @@ context('about-supply-contract', () => {
     contractAboutPreview.supplierCorrespondenceAddressDifferent().invoke('text').then((text) => {
       expect(text.trim()).equal('Yes');
     });
-    //TODO - country seems to be a weak spot.. need to think about it..
-    // contractAboutPreview.supplierCorrespondenceAddress().country().invoke('text').then((text) => {
-    //   expect(text.trim()).equal('GBR');
-    // });
+
     contractAboutPreview.supplierCorrespondenceAddress().line1().invoke('text').then((text) => {
       expect(text.trim()).equal('2 Horseguards Road');
     });
@@ -173,8 +170,7 @@ context('about-supply-contract', () => {
     contractAboutPreview.indemnifierCompaniesHouseRegistrationNumber().invoke('text').then((text) => {
       expect(text.trim()).equal('08547313');
     });
-    // contractAboutSupplier.supplierAddressCountry().should('?', '?'); //TODO country; mapping company house "england"-> portal "United Kingdom"
-    // contractAboutSupplier.supplierAddress().county().should('not.have.value', ''); //TODO don't believe CH store county...
+
     contractAboutPreview.indemnifierName().invoke('text').then((text) => {
       expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
     });
@@ -190,10 +186,10 @@ context('about-supply-contract', () => {
     contractAboutPreview.indemnifierAddress().postcode().invoke('text').then((text) => {
       expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
     });
+    contractAboutPreview.indemnifierAddress().country().invoke('text').then((text) => {
+      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+    });
 
-    //-----
-    // continue filling in the form..
-    // select a different correspondence address for the indemnifier..
     contractAboutPreview.indemnifierCorrespondenceAddressDifferent().invoke('text').then((text) => {
       expect(text.trim()).equal('Yes');
     });
