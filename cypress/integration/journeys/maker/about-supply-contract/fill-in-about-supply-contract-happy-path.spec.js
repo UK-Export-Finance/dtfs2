@@ -1,4 +1,4 @@
-const {contract, contractAboutSupplier} = require('../../../pages');
+const {contract, contractAboutSupplier, contractAboutPreview} = require('../../../pages');
 const maker1 = {username: 'MAKER', password: 'MAKER'};
 
 // test data we want to set up + work with..
@@ -54,10 +54,6 @@ context('about-supply-contract', () => {
     contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('08547313'); //TODO better test company?
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
-    // the fields we already filled in should still be present
-    contractAboutSupplier.supplierType().should('have.value', 'Exporter');
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().should('have.value', '08547313');
-
     // // the search should populate the supplier address fields
     // contractAboutSupplier.supplierAddressCountry().should('?', '?'); //TODO country; mapping company house "england"-> portal "United Kingdom"
     // contractAboutSupplier.supplierAddress().county().should('not.have.value', ''); //TODO don't believe CH store county...
@@ -83,27 +79,54 @@ context('about-supply-contract', () => {
     contract.aboutSupplierDetailsStatus().invoke('text').then((text) => {
       expect(text.trim()).equal('Incomplete');
     });
-    contract.aboutSupplierDetailsLink().click();
 
 
-    // the fields we already filled in should still be present
-    contractAboutSupplier.supplierType().should('have.value', 'Exporter');
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().should('have.value', '08547313');
+    // prove everything persisted by finding it on the preview page..
+    contractAboutPreview.visit(deal);
+
+    contractAboutPreview.supplierType().invoke('text').then((text) => {
+      expect(text.trim()).equal('Exporter');
+    });
+    contractAboutPreview.supplierCompaniesHouseRegistrationNumber().invoke('text').then((text) => {
+      expect(text.trim()).equal('08547313');
+    });
     // // the search should populate the supplier address fields
-    // contractAboutSupplier.supplierAddressCountry().should('?', '?'); //TODO country; mapping company house "england"-> portal "United Kingdom"
-    // contractAboutSupplier.supplierAddress().county().should('not.have.value', ''); //TODO don't believe CH store county...
-    contractAboutSupplier.supplierName().should('not.have.value', ''); //TODO if we had 'proper' test company we might assert real data
-    contractAboutSupplier.supplierAddress().line1().should('not.have.value', ''); //TODO
-    contractAboutSupplier.supplierAddress().line2().should('not.have.value', ''); //TODO
-    contractAboutSupplier.supplierAddress().town().should('not.have.value', ''); //TODO
-    contractAboutSupplier.supplierAddress().postcode().should('not.have.value', ''); //TODO
+    // contractAboutPreview.supplierAddressCountry().should('?', '?'); //TODO country; mapping company house "england"-> portal "United Kingdom"
+    // contractAboutPreview.supplierAddress().county().should('not.have.value', ''); //TODO don't believe CH store county...
+    contractAboutPreview.supplierName().invoke('text').then((text) => {
+      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+    });
+    contractAboutPreview.supplierAddress().line1().invoke('text').then((text) => {
+      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+    });
+    contractAboutPreview.supplierAddress().line2().invoke('text').then((text) => {
+      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+    });
+    contractAboutPreview.supplierAddress().town().invoke('text').then((text) => {
+      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+    });
+    contractAboutPreview.supplierAddress().postcode().invoke('text').then((text) => {
+      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+    });
 
-    contractAboutSupplier.supplierCorrespondenceAddressSame().should('be.checked');
-    contractAboutSupplier.industrySector().should('have.value', '1009'); //Information and communication
-    contractAboutSupplier.industryClass().should('have.value', '62012'); //Business and domestic software development
-    contractAboutSupplier.smeTypeMicro().should('be.checked');
-    contractAboutSupplier.supplyContractDescription().should('have.value', 'Typing in tests takes time.')
-    contractAboutSupplier.notLegallyDistinct().should('be.checked');
+    contractAboutPreview.suppliersCorrespondenceAddressDifferent().invoke('text').then((text) => {
+      expect(text.trim()).equal('No');
+    });
+    contractAboutPreview.industrySector().invoke('text').then((text) => {
+      expect(text.trim()).equal('1009');
+    });
+    contractAboutPreview.industryClass().invoke('text').then((text) => {
+      expect(text.trim()).equal('62012');
+    });
+    contractAboutPreview.smeType().invoke('text').then((text) => {
+      expect(text.trim()).equal('Micro');
+    });
+    contractAboutPreview.supplyContractDescription().invoke('text').then((text) => {
+      expect(text.trim()).equal('Typing in tests takes time.');
+    });
+    contractAboutPreview.legallyDistinct().invoke('text').then((text) => {
+      expect(text.trim()).equal('No');
+    });
 
   });
 
