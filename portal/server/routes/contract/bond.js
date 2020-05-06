@@ -159,6 +159,23 @@ router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
     validationErrors,
   } = apiResponse;
 
+  // POST to api to flag that we have viewed preview page.
+  // this is required specifically for other Bond forms/pages, to match the existing UX/UI.
+  // viewedPreviewPage
+  const updatedBond = {
+    ...bond,
+    viewedPreviewPage: true,
+  };
+
+  await postToApi(
+    api.updateBond(
+      dealId,
+      bondId,
+      updatedBond,
+      userToken,
+    ),
+  );
+
   const formattedValidationErrors = generateErrorSummary(
     bondPreviewValidationErrors(validationErrors, dealId, bondId),
     errorHref,

@@ -44,8 +44,8 @@ context('Add a Bond to a Deal', () => {
     cy.url().should('include', '/preview');
   });
 
-  describe('when a user sumits all Bond forms without completing any fields', () => {
-    it('should display all validation errors for required fields in `Bond Preview`', () => {
+  describe('when a user submits all Bond forms without completing any fields', () => {
+    it('should display all validation errors for required fields in `Bond Preview` page', () => {
       cy.createADeal({
         username: user.username,
         password: user.password,
@@ -63,6 +63,34 @@ context('Add a Bond to a Deal', () => {
 
       const TOTAL_REQUIRED_FORM_FIELDS = 9;
       partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+    });
+
+    describe('after viewing the `Bond Preview` page', () => {
+      it('should display validation errors in `Bond Details`, `Bond Financial Details` and `Bond Fee Details` pages', () => {
+        cy.createADeal({
+          username: user.username,
+          password: user.password,
+          bankDealId: MOCK_DEAL.details.bankSupplyContractID,
+          bankDealName: MOCK_DEAL.details.bankSupplyContractName,
+        });
+        pages.contract.addBondButton().click();
+        pages.bondDetails.submit().click();
+        pages.bondFinancialDetails.submit().click();
+        pages.bondFeeDetails.submit().click();
+
+        cy.url().should('include', '/contract');
+        cy.url().should('include', '/bond/');
+        cy.url().should('include', '/preview');
+
+        partials.bondProgressNav.progressNavBondDetails().click();
+        partials.errorSummary.errorSummaryLinks().should('have.length', 2);
+
+        partials.bondProgressNav.progressNavBondFinancialDetails().click();
+        partials.errorSummary.errorSummaryLinks().should('have.length', 4);
+
+        partials.bondProgressNav.progressNavBondFeeDetails().click();
+        partials.errorSummary.errorSummaryLinks().should('have.length', 3);
+      });
     });
   });
 

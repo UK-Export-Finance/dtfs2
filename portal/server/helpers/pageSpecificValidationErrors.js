@@ -1,14 +1,22 @@
 import errorHref from './errorHref';
 import generateErrorSummary from './generateErrorSummary';
 
-// only return validation if any single field has been submitted (required, conditionally required or optional).
+// NOTE:
+// pageSpecificValidationErrors are required specifically to match the existing UX/UI.
+// by having pageSpecificValidationErrors logic in the UI, we remain decoupled from the API.
+// when the UX/UI is redesigned, we should only have to update the UI.
+
+
+// only return validation if:
+// any single field has been submitted (required, conditionally required or optional)
+// or the Preview page has been viewed (flag from api/db)
 export const shouldReturnRequiredValidation = (fields, fieldValues) => {
   const { _id, status, ...strippedFieldValues } = fieldValues;
 
   const totalFieldValues = Object.keys(strippedFieldValues).filter((fieldName) =>
     strippedFieldValues[fieldName].length > 0);
 
-  if (totalFieldValues.length > 0) {
+  if (totalFieldValues.length > 0 || fieldValues.viewedPreviewPage) {
     return true;
   }
   return false;
