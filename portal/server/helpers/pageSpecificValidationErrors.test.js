@@ -1,4 +1,6 @@
 import pageSpecificValidationErrors, {
+  allRequiredFieldsArray,
+  allFieldsArray,
   shouldReturnRequiredValidation,
   mapRequiredValidationErrors,
 } from './pageSpecificValidationErrors';
@@ -11,6 +13,40 @@ describe('page specific validation errors', () => {
     someField: { order: '1', text: 'Field is required' },
     otherField: { order: '2', text: 'Field is required' },
   };
+
+  describe('allRequiredFieldsArray', () => {
+    it('should return REQUIRED_FIELDS and CONDITIONALLY_REQUIRED_FIELDS from given fields object', () => {
+      const mockFields = {
+        REQUIRED_FIELDS: ['a', 'b', 'c'],
+        CONDITIONALLY_REQUIRED_FIELDS: ['d', 'e', 'f'],
+      };
+
+      const result = allRequiredFieldsArray(mockFields);
+      const expected = [
+        ...mockFields.REQUIRED_FIELDS,
+        ...mockFields.CONDITIONALLY_REQUIRED_FIELDS,
+      ];
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('allFieldsArray', () => {
+    it('should return REQUIRED_FIELDS, CONDITIONALLY_REQUIRED_FIELDS and OPTIONAL_FIELDS from given fields object', () => {
+      const mockFields = {
+        REQUIRED_FIELDS: ['a', 'b', 'c'],
+        CONDITIONALLY_REQUIRED_FIELDS: ['d', 'e', 'f'],
+        OPTIONAL_FIELDS: ['g', 'h', 'i'],
+      };
+
+      const result = allFieldsArray(mockFields);
+      const expected = [
+        ...mockFields.REQUIRED_FIELDS,
+        ...mockFields.CONDITIONALLY_REQUIRED_FIELDS,
+        ...mockFields.OPTIONAL_FIELDS,
+      ];
+      expect(result).toEqual(expected);
+    });
+  });
 
   describe('shouldReturnRequiredValidation', () => {
     it('should return true when field values length is greater than 0', () => {
