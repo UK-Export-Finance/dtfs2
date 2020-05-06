@@ -112,7 +112,7 @@ context('about-supply-contract', () => {
       expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
     });
 
-    contractAboutPreview.suppliersCorrespondenceAddressDifferent().invoke('text').then((text) => {
+    contractAboutPreview.supplierCorrespondenceAddressDifferent().invoke('text').then((text) => {
       expect(text.trim()).equal('No');
     });
     contractAboutPreview.industrySector().invoke('text').then((text) => {
