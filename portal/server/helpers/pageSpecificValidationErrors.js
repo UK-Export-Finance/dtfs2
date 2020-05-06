@@ -5,24 +5,35 @@
 import errorHref from './errorHref';
 import generateErrorSummary from './generateErrorSummary';
 
-// only return validation if:
-// any single field has been submitted for the given page (required, conditionally required or optional)
-// or if the Preview page has been viewed (flag from api/db)
-export const shouldReturnRequiredValidation = (fields, fieldValues) => {
-  const { REQUIRED_FIELDS, CONDITIONALLY_REQUIRED_FIELDS, OPTIONAL_FIELDS } = fields;
-  const allFields = [...REQUIRED_FIELDS];
+export const allRequiredFieldsArray = (fields) => {
+  const { REQUIRED_FIELDS, CONDITIONALLY_REQUIRED_FIELDS } = fields;
+  const allRequiredFields = [...REQUIRED_FIELDS];
 
   if (CONDITIONALLY_REQUIRED_FIELDS) {
-    allFields.push(...CONDITIONALLY_REQUIRED_FIELDS);
+    allRequiredFields.push(...CONDITIONALLY_REQUIRED_FIELDS);
   }
+
+  return allRequiredFields;
+};
+
+export const allFieldsArray = (fields) => {
+  const { OPTIONAL_FIELDS } = fields;
+  const allFields = allRequiredFieldsArray(fields);
 
   if (OPTIONAL_FIELDS) {
     allFields.push(...OPTIONAL_FIELDS);
   }
 
+  return allFields;
+};
+
+// only return validation if:
+// any single field has been submitted for the given page (required, conditionally required or optional)
+// or if the Preview page has been viewed (flag from api/db)
+export const shouldReturnRequiredValidation = (fields, fieldValues) => {
+  const allFields = allFieldsArray(fields);
   const { _id, status, ...strippedFieldValues } = fieldValues;
 
-  // TODO feels like there should be 'getFieldsForThisPage' function as almost repeated below
   const totalFieldValues = Object.keys(strippedFieldValues).filter((fieldName) =>
     allFields.includes(fieldName) && strippedFieldValues[fieldName].length > 0);
 
@@ -34,15 +45,13 @@ export const shouldReturnRequiredValidation = (fields, fieldValues) => {
 
 export const mapRequiredValidationErrors = (validationErrors, fields) => {
   const mappedErrors = validationErrors || {};
-  const { REQUIRED_FIELDS, CONDITIONALLY_REQUIRED_FIELDS } = fields;
+  const allRequiredFields = allRequiredFieldsArray(fields);
 
   const filteredErrorList = {};
 
   if (validationErrors) {
     Object.keys(validationErrors.errorList).forEach((error) => {
-      if (REQUIRED_FIELDS.includes(error)) {
-        filteredErrorList[error] = validationErrors.errorList[error];
-      } else if (CONDITIONALLY_REQUIRED_FIELDS && CONDITIONALLY_REQUIRED_FIELDS.includes(error)) {
+      if (allRequiredFields.includes(error)) {
         filteredErrorList[error] = validationErrors.errorList[error];
       }
     });
