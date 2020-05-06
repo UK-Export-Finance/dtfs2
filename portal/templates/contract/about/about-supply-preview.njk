@@ -1,21 +1,21 @@
 {% extends "index.njk" %}
-{% import '_macros/submission-details.njk' as submissionDetails %}
+{% import './components/submission-details.njk' as submissionDetails %}
 {% import './components/about-supply-contract-nav.njk' as aboutSupplyContract %}
 
 {% block content %}
 
   {{ aboutSupplyContract.nav(
-    completedStatus = contract.supplyContract.completedStatus,
+    completedStatus = deal.supplyContract.completedStatus,
     current = 'preview',
-    contractId = contract._id
+    contractId = deal._id
   )}}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
 
   {% include "_partials/print-button.njk" %}
 
-  {{ submissionDetails.general(contract = contract) }}
+  {{ submissionDetails.general(deal) }}
 
-  <p class="govuk-body"><a class="govuk-link" href="/contract/{{ contract._id }}">Save and go back to deal</a></p>
+  <p class="govuk-body"><a class="govuk-link" href="/contract/{{ deal._id }}">Save and go back to deal</a></p>
 
 {% endblock %}
