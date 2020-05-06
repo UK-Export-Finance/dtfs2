@@ -167,7 +167,7 @@ router.get('/contract/:_id/about/buyer', async (req, res) => {
   });
 });
 
-router.post('/contract/:id/about/buyer', async (req, res) => {
+router.post('/contract/:_id/about/buyer', async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const submissionDetails = req.body;
 
@@ -229,11 +229,12 @@ router.post('/contract/:_id/about/financial/save-go-back', async (req, res) => {
 router.get('/contract/:_id/about/preview', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  return res.render('contract/about/about-supply-preview.njk',
-    await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ));
+  const deal = await getApiData(
+    api.contract(_id, userToken),
+    res,
+  );
+  console.log(JSON.stringify(deal));
+  return res.render('contract/about/about-supply-preview.njk', { deal });
 });
 
 
