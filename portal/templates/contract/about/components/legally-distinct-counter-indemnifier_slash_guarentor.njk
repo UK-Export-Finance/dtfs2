@@ -41,8 +41,11 @@
     })
   }}
 
-
-  <div id="additional-form-fields-indemnifier" class="{% if deal.submissionDetails.legallyDistinct === 'false' %}govuk-visually-hidden{% endif %}">
+  {% set renderByDefault=deal.submissionDetails.legallyDistinct %}
+  {% if renderByDefault !=='true' %}
+    {% set renderByDefault='false'%}
+  {% endif %}
+  <div id="additional-form-fields-indemnifier" class="{% if renderByDefault === 'false' %}govuk-visually-hidden{% endif %}">
 
     {{ companiesHouse.input({
       label: 'Indemnifier Companies House registration number (optional)',

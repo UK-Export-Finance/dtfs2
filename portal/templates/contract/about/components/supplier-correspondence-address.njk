@@ -36,8 +36,11 @@
       })
     }}
 
-
-    <div id="additional-form-fields-supplier-correspondence" class="{% if deal.submissionDetails.suppliersCorrespondenceAddressDifferent === 'false'%}govuk-visually-hidden{% endif %}">
+    {% set renderByDefault=deal.submissionDetails.suppliersCorrespondenceAddressDifferent %}
+    {% if renderByDefault !=='true' %}
+      {% set renderByDefault='false'%}
+    {% endif %}
+    <div id="additional-form-fields-supplier-correspondence" class="{% if renderByDefault === 'false'%}govuk-visually-hidden{% endif %}">
       {{ address.fields(
         deal = deal,
         id = "supplier-correspondence-address",
