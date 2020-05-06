@@ -138,7 +138,11 @@ exports.updateBond = async (req, res) => {
         const supplyContractCurrencyCode = deal.supplyContractCurrency.id;
         updatedBond.currency = await handleBondCurrency(supplyContractCurrencyCode);
       } else if (currencyCode) {
-        updatedBond.currency = await handleBondCurrency(currencyCode);
+        // TODO: make this clearer
+        // currencyCode can be a single string (from form),
+        // or an object with ID, if has been previously submitted.
+        const actualCurrencyCode = currencyCode.id ? currencyCode.id : currencyCode;
+        updatedBond.currency = await handleBondCurrency(actualCurrencyCode);
       }
 
       const requiredFieldsCompleted = false;
