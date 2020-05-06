@@ -15,7 +15,6 @@ const page = {
   industryClass: () => cy.get('[data-cy="industryClass"]'),
   smeType: () => cy.get('[data-cy="smeType"]'),
   supplyContractDescription: () => cy.get('[data-cy="supplyContractDescription"]'),
-
   legallyDistinct: () => cy.get('[data-cy="legallyDistinct"]'),
   indemnifierCompaniesHouseRegistrationNumber: () => cy.get('[data-cy="indemnifier-companies-house-registration-number"]'),
   indemnifierName: () => cy.get('[data-cy="indemnifier-name"]'),
@@ -26,6 +25,10 @@ const page = {
   buyerName: () => cy.get('[data-cy="buyer-name"]'),
   countryOfBuyer: () => cy.get('[data-cy="countryOfBuyer"]'),
   destinationOfGoodsAndServices: () => cy.get('[data-cy="destinationOfGoodsAndServices"]'),
+
+  supplyContractValue: () => cy.get('[data-cy="supplyContractValue"]'),
+  supplyContractCurrency: () => cy.get('[data-cy="supplyContractCurrency"]'),
+  conversionRateToGBP: () => cy.get('[data-cy="conversionRateToGBP"]'),
 
   saveAndGoBack: () => cy.get('[data-cy="SaveAndGoBack"]'),
 
