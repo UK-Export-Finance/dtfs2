@@ -46,6 +46,10 @@ context('about-supply-contract', () => {
     });
     contract.aboutSupplierDetailsLink().click();
 
+    // confirm the supplier correspondence sections is hidden by default
+    contractAboutSupplier.supplierCorrespondenceAddress().line1().should('be.hidden');
+    // confirm the indemnifier section is hidden by default
+    contractAboutSupplier.indemnifierName().should('be.hidden');
 
     //---
     // use companies-house lookup
@@ -62,7 +66,6 @@ context('about-supply-contract', () => {
     contractAboutSupplier.supplierAddress().line2().should('not.have.value', ''); //TODO
     contractAboutSupplier.supplierAddress().town().should('not.have.value', ''); //TODO
     contractAboutSupplier.supplierAddress().postcode().should('not.have.value', ''); //TODO
-
 
     //---
     // fill in the simplest version of the form so we can submit it and save it..
