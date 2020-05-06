@@ -1,4 +1,4 @@
-const {contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial} = require('../../../pages');
+const {contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview} = require('../../../pages');
 const maker1 = {username: 'MAKER', password: 'MAKER'};
 
 // test data we want to set up + work with..
@@ -35,12 +35,18 @@ context('about-supply-contract', () => {
 
     contractAboutFinancial.saveAndGoBack().click();
 
-    contractAboutFinancial.visit(deal);
-    contractAboutFinancial.supplyContractValue().should('have.value', '10,000');
-    contractAboutFinancial.supplyContractCurrency().should('have.value', 'USD');
-    contractAboutFinancial.conversionRateToGBP().should('have.value', '76.92');
+    // check the data is now on the preview page..
+    contractAboutPreview.visit(deal);
+    contractAboutPreview.supplyContractValue().invoke('text').then((text) => {
+      expect(text.trim()).equal('10,000');
+    });
+    contractAboutPreview.supplyContractCurrency().invoke('text').then((text) => {
+      expect(text.trim()).equal('USD');
+    });
+    contractAboutPreview.conversionRateToGBP().invoke('text').then((text) => {
+      expect(text.trim()).equal('76.92');
+    });
 
-    contractAboutFinancial.preview().click();
   });
 
 });
