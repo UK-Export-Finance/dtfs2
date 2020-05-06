@@ -14,7 +14,7 @@ describe('page specific validation errors', () => {
 
   describe('shouldReturnRequiredValidation', () => {
     it('should return true when field values length is greater than 0', () => {
-      const mockFields = FIELDS.FEE_DETAILS.REQUIRED_FIELDS;
+      const mockFields = { ...FIELDS.FEE_DETAILS };
 
       const mockFieldValues = {
         [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[0]]: 'Test',
@@ -25,17 +25,18 @@ describe('page specific validation errors', () => {
     });
 
     it('should return true when there is a fields.viewedPreviewPage is true', () => {
+      const mockFields = { ...FIELDS.FEE_DETAILS };
       const mockFieldValues = {
         viewedPreviewPage: true,
       };
 
-      const result = shouldReturnRequiredValidation({}, mockFieldValues);
+      const result = shouldReturnRequiredValidation(mockFields, mockFieldValues);
       expect(result).toEqual(true);
     });
 
 
     it('should return false when field values length is NOT greater than 0', () => {
-      const mockFields = FIELDS.FEE_DETAILS.REQUIRED_FIELDS;
+      const mockFields = { ...FIELDS.FEE_DETAILS };
 
       const mockFieldValues = {};
 
