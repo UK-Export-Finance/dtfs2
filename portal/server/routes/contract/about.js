@@ -8,6 +8,37 @@ import {
 } from '../../helpers';
 
 
+const updateSubmissionDetails = async (dealId, postedSubmissionDetails, userToken, res) => {
+  const deal = await getApiData(
+    api.contract(dealId, userToken),
+    res,
+  );
+
+  const submissionDetails = { ...postedSubmissionDetails };
+
+  // fix industrySector/industryClass data; is nested in source data, and the way it's rendered makes this preferable
+  if (submissionDetails.industrySector && submissionDetails.industryClass) {
+    submissionDetails.industrySector = {
+      code: submissionDetails.industrySector,
+      name: '', // TODO
+      class: {
+        code: submissionDetails.industryClass,
+        name: '', // TODO
+      },
+    };
+    delete submissionDetails.industryClass;
+  }
+
+  // fix currency
+  if (submissionDetails.supplyContractCurrency && !submissionDetails.supplyContractCurrency.id) {
+    submissionDetails.supplyContractCurrency = {
+      id: submissionDetails.supplyContractCurrency,
+    };
+  }
+
+  await api.updateSubmissionDetails(deal, submissionDetails, userToken, res);
+};
+
 const router = express.Router();
 
 router.get('/contract/:_id/about/supplier', async (req, res) => {
@@ -31,26 +62,9 @@ router.get('/contract/:_id/about/supplier', async (req, res) => {
 
 router.post('/contract/:_id/about/supplier', async (req, res) => {
   const { _id, userToken } = requestParams(req);
-  const deal = await getApiData(
-    api.contract(_id, userToken),
-    res,
-  );
-
   const submissionDetails = req.body;
 
-  // fix industrySector/industryClass data; is nested in source data, and the way it's rendered makes this preferable
-  if (submissionDetails.industrySector && submissionDetails.industryClass) {
-    submissionDetails.industrySector = {
-      code: submissionDetails.industrySector,
-      name: '', // TODO
-      class: {
-        code: submissionDetails.industryClass,
-        name: '', // TODO
-      },
-    };
-    delete submissionDetails.industryClass;
-  }
-  await api.updateSubmissionDetails(deal, submissionDetails, userToken);
+  await updateSubmissionDetails(_id, submissionDetails, userToken, res);
 
   const redirectUrl = `/contract/${_id}/about/buyer`;
   return res.redirect(redirectUrl);
@@ -130,27 +144,9 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', asyn
 
 router.post('/contract/:_id/about/supplier/save-go-back', async (req, res) => {
   const { _id, userToken } = requestParams(req);
-  const deal = await getApiData(
-    api.contract(_id, userToken),
-    res,
-  );
-
   const submissionDetails = req.body;
 
-  // fix industrySector/industryClass data; is nested in source data, and the way it's rendered makes this preferable
-  if (submissionDetails.industrySector && submissionDetails.industryClass) {
-    submissionDetails.industrySector = {
-      code: submissionDetails.industrySector,
-      name: '', // TODO
-      class: {
-        code: submissionDetails.industryClass,
-        name: '', // TODO
-      },
-    };
-    delete submissionDetails.industryClass;
-  }
-
-  await api.updateSubmissionDetails(deal, submissionDetails, userToken);
+  await updateSubmissionDetails(_id, submissionDetails, userToken, res);
 
   const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
@@ -173,15 +169,9 @@ router.get('/contract/:_id/about/buyer', async (req, res) => {
 
 router.post('/contract/:id/about/buyer', async (req, res) => {
   const { _id, userToken } = requestParams(req);
-
-  const deal = await getApiData(
-    api.contract(_id, userToken),
-    res,
-  );
-
   const submissionDetails = req.body;
 
-  await api.updateSubmissionDetails(deal, submissionDetails, userToken);
+  await updateSubmissionDetails(_id, submissionDetails, userToken, res);
 
   const redirectUrl = `/contract/${_id}/about/financial`;
   return res.redirect(redirectUrl);
@@ -189,15 +179,9 @@ router.post('/contract/:id/about/buyer', async (req, res) => {
 
 router.post('/contract/:_id/about/buyer/save-go-back', async (req, res) => {
   const { _id, userToken } = requestParams(req);
-
-  const deal = await getApiData(
-    api.contract(_id, userToken),
-    res,
-  );
-
   const submissionDetails = req.body;
 
-  await api.updateSubmissionDetails(deal, submissionDetails, userToken);
+  await updateSubmissionDetails(_id, submissionDetails, userToken, res);
 
   const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
@@ -222,27 +206,21 @@ router.get('/contract/:_id/about/financial', async (req, res) => {
   });
 });
 
-router.post('/contract/:_id/about/financial', (req, res) => {
+router.post('/contract/:_id/about/financial', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+  const submissionDetails = req.body;
+
+  await updateSubmissionDetails(_id, submissionDetails, userToken, res);
+
   const redirectUrl = `/contract/${req.params._id}/about/preview`; // eslint-disable-line no-underscore-dangle
   return res.redirect(redirectUrl);
 });
 
 router.post('/contract/:_id/about/financial/save-go-back', async (req, res) => {
   const { _id, userToken } = requestParams(req);
-
-  const deal = await getApiData(
-    api.contract(_id, userToken),
-    res,
-  );
-
   const submissionDetails = req.body;
-  if (submissionDetails.supplyContractCurrency) {
-    submissionDetails.supplyContractCurrency = {
-      id: submissionDetails.supplyContractCurrency,
-    };
-  }
 
-  await api.updateSubmissionDetails(deal, submissionDetails, userToken);
+  await updateSubmissionDetails(_id, submissionDetails, userToken, res);
 
   const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
