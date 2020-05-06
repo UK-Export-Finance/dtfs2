@@ -1,5 +1,5 @@
 {% macro supplierAndCounterIndemnifier(submissionDetails) %}
-  
+
   <h2 class="govuk-heading-m">Supplier and counter-indemnifier/guarantor</h2>
 
   <dl class="govuk-summary-list govuk-summary-list--no-border">
@@ -18,7 +18,7 @@
         UK Supplier’s Companies House registration number, if UK registered
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ submissionDetails.supplierCompaniesHouseRegistrationNumber }}
+        {{ submissionDetails["supplier-companies-house-registration-number"] }}
       </dd>
     </div>
 
@@ -27,7 +27,7 @@
         Supplier name
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ submissionDetails.supplierName }}
+        {{ submissionDetails["buyer-name"] }}
       </dd>
     </div>
 
@@ -36,7 +36,12 @@
         Supplier address
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ submissionDetails.supplierAddress | safe }}
+        <p data-cy="supplier-address-line-1">{{ submissionDetails["supplier-address-line-1"] | safe }}</p>
+        <p data-cy="supplier-address-line-2">{{ submissionDetails["supplier-address-line-2"] | safe }}</p>
+        <p data-cy="supplier-address-town">{{ submissionDetails["supplier-address-town"] | safe }}</p>
+        <p data-cy="supplier-address-county">{{ submissionDetails["supplier-address-county"] | safe }}</p>
+        <p data-cy="supplier-address-postcode">{{ submissionDetails["supplier-address-postcode"] | safe }}</p>
+        <p data-cy="supplier-address-country">{{ submissionDetails["supplier-address-country"] | safe }}</p>
       </dd>
     </div>
 
@@ -54,7 +59,7 @@
         Industry sector
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ submissionDetails.industrySector }}
+        {{ submissionDetails.industrySector.code }}
       </dd>
     </div>
 
@@ -63,7 +68,7 @@
         Industry class
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ submissionDetails.industryClass }}
+        {{ submissionDetails.industrySector.class.code }}
       </dd>
     </div>
 
@@ -87,7 +92,7 @@
 
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key govuk-body-s">
-        Is the counter-indemnifier (for bonds) or guarantor (for loans) legally distinct from the supplier? 
+        Is the counter-indemnifier (for bonds) or guarantor (for loans) legally distinct from the supplier?
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
         {% if submissionDetails.legallyDistinct %}
@@ -100,8 +105,8 @@
   </dl>
 {% endmacro %}
 
-{% macro buyer(buyerDetails) %}
-  
+{% macro buyer(submissionDetails) %}
+
   <h2 class="govuk-heading-m">Buyer</h2>
 
   <dl class="govuk-summary-list govuk-summary-list--no-border">
@@ -111,7 +116,7 @@
         Buyer name
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ buyerDetails.name }}
+        {{ submissionDetails["buyer-name"] }}
       </dd>
     </div>
 
@@ -120,23 +125,23 @@
         Country of buyer
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ buyerDetails.country }}
+        {{ submissionDetails.countryOfBuyer }}
       </dd>
     </div>
 
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key govuk-body-s">
-        Destination of goods and services 
+        Destination of goods and services
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ buyerDetails.goodsServicesDestination }}
+        {{ submissionDetails.destinationOfGoodsAndServices }}
       </dd>
     </div>
 
   </dl>
 {% endmacro %}
 
-{% macro financial(financialDetails) %}
+{% macro financial(submissionDetails) %}
 
   <h2 class="govuk-heading-m">Financial information</h2>
 
@@ -147,7 +152,7 @@
         Supply Contract value (in Supply Contract currency)
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ financialDetails.value }}
+        {{ submissionDetails.supplyContractValue }}
       </dd>
     </div>
 
@@ -156,7 +161,7 @@
         Supply Contract currency
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ financialDetails.currency }}
+        {{ submissionDetails.supplyContractCurrency.id }}
       </dd>
     </div>
 
@@ -165,7 +170,7 @@
         Conversion rate from Supply Contract currency to GBP
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ financialDetails.conversionRateToGBP }}
+        {{ submissionDetails.conversionRateToGBP }}
       </dd>
     </div>
 
@@ -174,19 +179,19 @@
         Supply Contract conversion date, as determined by the bank(Supply Contract currency to GBP)
       </dt>
       <dd class="govuk-summary-list__value govuk-body-s">
-        {{ financialDetails.conversionDate }}
+        {{ submissionDetails.conversionDate }}
       </dd>
     </div>
 
   </dl>
 {% endmacro %}
 
-{% macro general(contract) %}
+{% macro general(deal) %}
 
-  {{ supplierAndCounterIndemnifier(submissionDetails = contract.submissionDetails)}}
+  {{ supplierAndCounterIndemnifier(deal.submissionDetails)}}
 
-  {{ buyer(buyerDetails = contract.submissionDetails.buyer)}}
+  {{ buyer(deal.submissionDetails)}}
 
-  {{ financial(financialDetails = contract.submissionDetails.supplyContractFinancials) }}
+  {{ financial(deal.submissionDetails) }}
 
 {% endmacro %}
