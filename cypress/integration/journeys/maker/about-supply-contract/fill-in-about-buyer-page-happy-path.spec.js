@@ -1,4 +1,4 @@
-const {contract, contractAboutSupplier, contractAboutBuyer} = require('../../../pages');
+const {contract, contractAboutSupplier, contractAboutBuyer, contractAboutPreview} = require('../../../pages');
 const maker1 = {username: 'MAKER', password: 'MAKER'};
 
 // test data we want to set up + work with..
@@ -36,13 +36,19 @@ context('about-supply-contract', () => {
     // save
     contractAboutBuyer.saveAndGoBack().click();
 
-    // come back to the page
-    contractAboutBuyer.visit(deal);
+    // check the data on the preview page
+    contractAboutPreview.visit(deal);
 
     // confirm the data is still there...
-    contractAboutBuyer.buyerName().should('have.value', 'Huggy Bear');
-    contractAboutBuyer.countryOfBuyer().should('have.value', 'USA');
-    contractAboutBuyer.destinationOfGoodsAndServices().should('have.value', 'USA');
+    contractAboutPreview.buyerName().invoke('text').then((text) => {
+      expect(text.trim()).equal('Huggy Bear');
+    });
+    contractAboutPreview.countryOfBuyer().invoke('text').then((text) => {
+      expect(text.trim()).equal('USA');
+    });
+    contractAboutPreview.destinationOfGoodsAndServices().invoke('text').then((text) => {
+      expect(text.trim()).equal('USA');
+    });
 
   });
 

@@ -233,7 +233,7 @@ router.get('/contract/:_id/about/preview', async (req, res) => {
     api.contract(_id, userToken),
     res,
   );
-  console.log(JSON.stringify(deal));
+
   return res.render('contract/about/about-supply-preview.njk', { deal });
 });
 

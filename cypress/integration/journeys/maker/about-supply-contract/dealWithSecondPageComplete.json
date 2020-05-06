@@ -1,12 +1,13 @@
 {
     "details" : {
         "status" : "Draft",
-        "bankSupplyContractName" : "a new name",
-        "bankSupplyContractID" : "mock id",
-        "dateOfLastAction" : "2020 05 05 10:39:14:097 +0100",
-        "submissionDate" : "2020 05 05 10:39:14:074 +0100",
+        "bankSupplyContractID" : "abc/1/def",
+        "bankSupplyContractName" : "Tibettan submarine acquisition scheme",
+        "submissionType" : "Automatic Inclusion Notice",
+        "submissionDate" : "2020 05 06 13:53:53:340 +0100",
+        "dateOfLastAction" : "2020 05 06 13:53:56:437 +0100",
         "maker" : {
-            "username" : "Barclays-maker-1",
+            "username" : "MAKER",
             "roles" : [
                 "maker"
             ],
@@ -58,7 +59,52 @@
         ]
     },
     "submissionDetails" : {
-        "status" : "Not Started"
+        "status" : "Incomplete",
+        "indemnifier-address-country" : "",
+        "indemnifier-address-county" : "",
+        "indemnifier-address-line-1" : "27a",
+        "indemnifier-address-line-2" : "Maxwell Road",
+        "indemnifier-address-postcode" : "HA6 2XY",
+        "indemnifier-address-town" : "Northwood",
+        "indemnifier-companies-house-registration-number" : "08547313",
+        "indemnifier-correspondence-address-country" : "",
+        "indemnifier-correspondence-address-county" : "Essex",
+        "indemnifier-correspondence-address-line-1" : "27 Petersfield",
+        "indemnifier-correspondence-address-line-2" : "",
+        "indemnifier-correspondence-address-postcode" : "CM1 4EP",
+        "indemnifier-correspondence-address-town" : "Chelmsford",
+        "indemnifier-name" : "WATKINSON TRADING LIMITED",
+        "indemnifierCorrespondenceAddressDifferent" : "true",
+        "industrySector" : {
+            "class" : {
+                "code" : "62012",
+                "name" : ""
+            },
+            "code" : "1009",
+            "name" : ""
+        },
+        "legallyDistinct" : "true",
+        "smeType" : "Small",
+        "supplier-address-country" : "GBR",
+        "supplier-address-county" : "London",
+        "supplier-address-line-1" : "1 Horseguards Road",
+        "supplier-address-line-2" : "",
+        "supplier-address-postcode" : "SW1A 2HQ",
+        "supplier-address-town" : "Westminster",
+        "supplier-companies-house-registration-number" : "",
+        "supplier-correspondence-address-country" : "",
+        "supplier-correspondence-address-county" : "Edinburgh",
+        "supplier-correspondence-address-line-1" : "2 Horseguards Road",
+        "supplier-correspondence-address-line-2" : "",
+        "supplier-correspondence-address-postcode" : "ED1 23S",
+        "supplier-correspondence-address-town" : "Eastminster",
+        "supplier-name" : "UKFS",
+        "supplierType" : "Exporter",
+        "suppliersCorrespondenceAddressDifferent" : "true",
+        "supplyContractDescription" : "Description.",
+        "buyer-name" : "Huggy Bear",
+        "countryOfBuyer" : "USA",
+        "destinationOfGoodsAndServices" : "USA"
     },
     "bondTransactions" : {
         "items" : []
@@ -67,18 +113,7 @@
         "items" : []
     },
     "summary" : {},
-    "comments" : [
-        {
-            "username" : "bananaman",
-            "timestamp" : "1984/12/25 00:00:00:001",
-            "text" : "Merry Christmas from the 80s"
-        },
-        {
-            "username" : "supergran",
-            "timestamp" : "1982/12/25 00:00:00:001",
-            "text" : "Also Merry Christmas from the 80s"
-        }
-    ],
+    "comments" : [],
     "supplyContractCurrency" : {
         "id" : "GBP",
         "text" : "GBP - UK Sterling"
