@@ -8,7 +8,7 @@
       <dt class="govuk-summary-list__key govuk-body-s">
         Supplier type
       </dt>
-      <dd class="govuk-summary-list__value govuk-body-s">
+      <dd data-cy= "supplierType" class="govuk-summary-list__value govuk-body-s">
         {{ submissionDetails.supplierType }}
       </dd>
     </div>
@@ -17,7 +17,7 @@
       <dt class="govuk-summary-list__key govuk-body-s">
         UK Supplier’s Companies House registration number, if UK registered
       </dt>
-      <dd class="govuk-summary-list__value govuk-body-s">
+      <dd data-cy="supplier-companies-house-registration-number" class="govuk-summary-list__value govuk-body-s">
         {{ submissionDetails["supplier-companies-house-registration-number"] }}
       </dd>
     </div>
@@ -26,8 +26,8 @@
       <dt class="govuk-summary-list__key govuk-body-s">
         Supplier name
       </dt>
-      <dd class="govuk-summary-list__value govuk-body-s">
-        {{ submissionDetails["buyer-name"] }}
+      <dd data-cy="supplier-name" class="govuk-summary-list__value govuk-body-s">
+        {{ submissionDetails["supplier-name"] }}
       </dd>
     </div>
 
@@ -49,8 +49,12 @@
       <dt class="govuk-summary-list__key govuk-body-s">
         Is the Supplier's correspondence address different for the Company's Registered Address?
       </dt>
-      <dd class="govuk-summary-list__value govuk-body-s">
-        {{ submissionDetails.suppliersCorrespondenceAddressDifferent }}
+      <dd data-cy="suppliersCorrespondenceAddressDifferent" class="govuk-summary-list__value govuk-body-s">
+      {% if submissionDetails.suppliersCorrespondenceAddressDifferent==='true' %}
+        Yes
+      {% else %}
+        No
+      {% endif %}
       </dd>
     </div>
 
@@ -58,7 +62,7 @@
       <dt class="govuk-summary-list__key govuk-body-s">
         Industry sector
       </dt>
-      <dd class="govuk-summary-list__value govuk-body-s">
+      <dd data-cy="industrySector" class="govuk-summary-list__value govuk-body-s">
         {{ submissionDetails.industrySector.code }}
       </dd>
     </div>
@@ -67,7 +71,7 @@
       <dt class="govuk-summary-list__key govuk-body-s">
         Industry class
       </dt>
-      <dd class="govuk-summary-list__value govuk-body-s">
+      <dd data-cy="industryClass" class="govuk-summary-list__value govuk-body-s">
         {{ submissionDetails.industrySector.class.code }}
       </dd>
     </div>
@@ -76,7 +80,7 @@
       <dt class="govuk-summary-list__key govuk-body-s">
         SME type
       </dt>
-      <dd class="govuk-summary-list__value govuk-body-s">
+      <dd data-cy="smeType" class="govuk-summary-list__value govuk-body-s">
         {{ submissionDetails.smeType }}
       </dd>
     </div>
@@ -85,7 +89,7 @@
       <dt class="govuk-summary-list__key govuk-body-s">
         Description of supply contract
       </dt>
-      <dd class="govuk-summary-list__value govuk-body-s">
+      <dd data-cy="supplyContractDescription" class="govuk-summary-list__value govuk-body-s">
         {{ submissionDetails.supplyContractDescription }}
       </dd>
     </div>
@@ -94,8 +98,8 @@
       <dt class="govuk-summary-list__key govuk-body-s">
         Is the counter-indemnifier (for bonds) or guarantor (for loans) legally distinct from the supplier?
       </dt>
-      <dd class="govuk-summary-list__value govuk-body-s">
-        {% if submissionDetails.legallyDistinct %}
+      <dd data-cy="legallyDistinct" class="govuk-summary-list__value govuk-body-s">
+        {% if submissionDetails.legallyDistinct ==='true' %}
           Yes
         {% else %}
           No
