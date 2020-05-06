@@ -7,6 +7,15 @@ import {
   mapCurrencies,
 } from '../../helpers';
 
+// https://developer.companieshouse.gov.uk/api/docs/company/company_number/registered-office-address/registeredOfficeAddress-resource.html
+// England, Wales, Scotland, Northern Ireland, Great Britain, United Kingdom, Not specified
+const countriesThatWeConsiderGBR = ['England', 'Wales', 'Scotland', 'Northern Ireland', 'Great Britain', 'United Kingdom'];
+const getPortalCountryForCompaniesHouseCountry = (companiesHouseCountry) => {
+  if (countriesThatWeConsiderGBR.includes(companiesHouseCountry)) {
+    return 'GBR';
+  }
+  return '';
+};
 
 const updateSubmissionDetails = async (dealId, postedSubmissionDetails, userToken, res) => {
   const deal = await getApiData(
@@ -123,10 +132,9 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', asyn
   deal.submissionDetails[`${prefix}-address-line-2`] = company.address.address_line_1;
   deal.submissionDetails[`${prefix}-address-town`] = company.address.locality;
   deal.submissionDetails[`${prefix}-address-postcode`] = company.address.postal_code;
+  deal.submissionDetails[`${prefix}-address-country`] = getPortalCountryForCompaniesHouseCountry(company.address.country);
   // looks like CH don't use this?
   // contract.submissionDetails["supplier-address-county"] = company.address.?????;
-  // CH-> 'england', portal->United Kingdom
-  // contract.submissionDetails["supplier-address-country"] = company.address.?????;
 
   // re-render
   return res.render('contract/about/about-supplier.njk', {

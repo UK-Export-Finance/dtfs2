@@ -34,7 +34,7 @@
             <option value="">Select value</option>
           {% endif %}
             {% for country in countries %}
-              <option value="{{ country.code }}">{{ country.name}}</option>
+              <option value="{{ country.code }}" {% if country.code === deal.submissionDetails[thisField] %}selected{% endif %} >{{ country.name}}</option>
             {% endfor %}
 
           </select>
