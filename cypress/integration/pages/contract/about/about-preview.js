@@ -23,6 +23,10 @@ const page = {
   indemnifierCorrespondenceAddressDifferent: () => cy.get('[data-cy="indemnifierCorrespondenceAddressDifferent"]'),
   indemnifierCorrespondenceAddress: () => address('indemnifier-correspondence-address'),
 
+  buyerName: () => cy.get('[data-cy="buyer-name"]'),
+  countryOfBuyer: () => cy.get('[data-cy="countryOfBuyer"]'),
+  destinationOfGoodsAndServices: () => cy.get('[data-cy="destinationOfGoodsAndServices"]'),
+
   saveAndGoBack: () => cy.get('[data-cy="SaveAndGoBack"]'),
 
   // expectError: (text) => cy.get('.govuk-error-message').contains(text),
