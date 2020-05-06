@@ -199,7 +199,7 @@
             attributes: {
               'data-cy': 'ukef-guarantee-in-months'
             },
-            errorMessage: {
+            errorMessage: (validationErrors.errorList.ukefGuaranteeInMonths.text or (not bond.ukefGuaranteeInMonths and validationErrors.conditionalErrorList.bondStage.Unissued.ukefGuaranteeInMonths.text)) and {
               text: validationErrors.errorList.ukefGuaranteeInMonths.text or (not bond.ukefGuaranteeInMonths and validationErrors.conditionalErrorList.bondStage.Unissued.ukefGuaranteeInMonths.text),
               attributes: {
                 'data-cy': 'ukef-guarantee-in-months-error-message'
@@ -311,7 +311,7 @@
             attributes: {
               'data-cy': 'unique-identification-number'
             },
-            errorMessage: {
+            errorMessage: (validationErrors.errorList.uniqueIdentificationNumber.text or (not bond.uniqueIdentificationNumber and validationErrors.conditionalErrorList.bondStage.Issued.uniqueIdentificationNumber.text)) and {
               text: validationErrors.errorList.uniqueIdentificationNumber.text or (not bond.uniqueIdentificationNumber and validationErrors.conditionalErrorList.bondStage.Issued.uniqueIdentificationNumber.text),
               attributes: {
                 'data-cy': 'unique-identification-number-error-message'

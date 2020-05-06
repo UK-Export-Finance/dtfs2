@@ -24,6 +24,16 @@ describe('page specific validation errors', () => {
       expect(result).toEqual(true);
     });
 
+    it('should return true when there is a fields.viewedPreviewPage is true', () => {
+      const mockFieldValues = {
+        viewedPreviewPage: true,
+      };
+
+      const result = shouldReturnRequiredValidation({}, mockFieldValues);
+      expect(result).toEqual(true);
+    });
+
+
     it('should return false when field values length is NOT greater than 0', () => {
       const mockFields = FIELDS.FEE_DETAILS.REQUIRED_FIELDS;
 
