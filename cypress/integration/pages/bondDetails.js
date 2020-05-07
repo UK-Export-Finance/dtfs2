@@ -1,7 +1,9 @@
 const page = {
   bondIssuerInput: () => cy.get('[data-cy="bond-issuer"]'),
+
   bondTypeInput: () => cy.get('[data-cy="bond-type"]'),
   bondTypeInputErrorMessage: () => cy.get('[data-cy="bond-type-error-message"]'),
+
   bondStageUnissuedInput: () => cy.get('[data-cy="bond-stage-unissued"]'),
   bondStageIssuedInput: () => cy.get('[data-cy="bond-stage-issued"]'),
   bondStageInputErrorMessage: () => cy.get('[data-cy="bond-stage-error-message"]'),
@@ -14,13 +16,16 @@ const page = {
   requestedCoverStartDateDayInput: () => cy.get('[data-cy="requestedCoverStartDate-day"]'),
   requestedCoverStartDateMonthInput: () => cy.get('[data-cy="requestedCoverStartDate-month"]'),
   requestedCoverStartDateYearInput: () => cy.get('[data-cy="requestedCoverStartDate-year"]'),
+
   coverEndDateDayInput: () => cy.get('[data-cy="coverEndDate-day"]'),
   coverEndDateMonthInput: () => cy.get('[data-cy="coverEndDate-month"]'),
   coverEndDateYearInput: () => cy.get('[data-cy="coverEndDate-year"]'),
   coverEndDateInputErrorMessage: () => cy.get('[data-cy="coverEndDate-error-message"]'),
+
   uniqueIdentificationNumberInput: () => cy.get('[data-cy="unique-identification-number"]'),
   uniqueIdentificationNumberInputErrorMessage: () => cy.get('[data-cy="unique-identification-number-error-message"]'),
 
+  // always present in page
   bondBeneficiaryInput: () => cy.get('[data-cy="bond-beneficiary"]'),
   submit: () => cy.get('[data-cy="submit-button"]'),
   saveGoBackButton: () => cy.get('[data-cy="save-go-back-button"]'),
