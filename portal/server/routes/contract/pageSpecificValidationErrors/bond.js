@@ -27,6 +27,14 @@ export const FIELDS = {
       'riskMarginFee',
       'coveredPercentage',
     ],
+    CONDITIONALLY_REQUIRED_FIELDS: [
+      'currency',
+      'conversionRate',
+      'conversionRateDate',
+    ],
+    OPTIONAL_FIELDS: [
+      'minimumRiskMarginFee',
+    ],
   },
   FEE_DETAILS: {
     REQUIRED_FIELDS: [
