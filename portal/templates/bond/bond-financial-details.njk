@@ -114,24 +114,33 @@
           'data-cy': 'currency'
         },
         items: currencies,
-        errorMessage: validationErrors.errorList.currency
+        errorMessage: validationErrors.errorList.currency or (not bond['currency'] and validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].currency) and {
+          text: validationErrors.errorList.currency.text or validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].currency.text,
+          attributes: {
+            'data-cy': 'currency-error-message'
+          }
+        }
       }) }}
 
-      <div class="govuk-form-group">
-        <label class="govuk-label" for="conversionRate">
-          Conversion rate to the Supply Contract currency 
-        </label>
-
-        <span id="conversion-rate-hint" class="govuk-hint">
-          E.g. EUR to USD (100 EUR/ 0.91 = 109.89 USD)
-        </span>
-
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-quarter">
-            <input class="govuk-input" id="conversionRate" name="conversionRate" type="text" size="60" maxlength="@55" pattern="[0-9]{0,6}(\.\d{0,6}|\.?)" aria-describedby="conversion-rate-hint" value="{{ bond.conversionRate }}" data-cy="conversion-rate">
-          </div>
-        </div>
-      </div>
+      {{ govukInput({
+        label: {
+          text: "Conversion rate to the Supply Contract currency"
+        },
+        hint: {
+          text: "E.g. EUR to USD (100 EUR/ 0.91 = 109.89 USD)"
+        },
+        classes: "govuk-input--width-5",
+        id: "conversionRate",
+        name: "conversionRate",
+        value: bond.conversionRate,
+        attributes: {
+          'data-cy': 'conversion-rate',
+          size: '60',
+          maxlength: '5',
+          pattern: '[0-9]{0,6}(\.\d{0,6}|\.?)'
+        },
+        errorMessage: validationErrors.errorList.conversionRate or (not bond['conversionRate'] and validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].conversionRate)
+      }) }}             
 
       {{ govukDateInput({
         id: "conversionRateDate",
@@ -144,9 +153,15 @@
         hint: {
           text: "For example, 27 11 2019"
         },
+        errorMessage: (validationErrors.errorList.conversionRateDate.text or (not bond['conversionRateDate-day']) or (not bond['conversionRateDate-month']) or (not bond['conversionRateDate-year'])) and {
+          text: validationErrors.errorList.conversionRateDate.text or validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].conversionRateDate.text,
+          attributes: {
+            'data-cy': "conversionRateDate-error-message"
+          }
+        },
         items: [
           {
-            classes: "govuk-input--width-2",
+            classes: (not bond['conversionRateDate-day']) and "govuk-input--width-2 govuk-input--error" or "govuk-input--width-2",
             name: "day",
             value: bond['conversionRateDate-day'],
             attributes: {
@@ -154,7 +169,7 @@
             }
           },
           {
-            classes: "govuk-input--width-2",
+            classes: (not bond['conversionRateDate-month']) and "govuk-input--width-2 govuk-input--error" or "govuk-input--width-2",
             name: "month",
             value: bond['conversionRateDate-month'],
             attributes: {
@@ -162,7 +177,7 @@
             }
           },
           {
-            classes: "govuk-input--width-2",
+            classes: (not bond['conversionRateDate-year']) and "govuk-input--width-2 govuk-input--error" or "govuk-input--width-2",
             name: "year",
             value: bond['conversionRateDate-year'],
             attributes: {

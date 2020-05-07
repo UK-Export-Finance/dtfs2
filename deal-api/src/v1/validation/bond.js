@@ -13,6 +13,11 @@ exports.getBondErrors = (bond) => {
     uniqueIdentificationNumber,
     bondValue,
     transactionCurrencySameAsSupplyContractCurrency,
+    currency,
+    conversionRate,
+    'conversionRateDate-day': conversionRateDateDay,
+    'conversionRateDate-month': conversionRateDateMonth,
+    'conversionRateDate-year': conversionRateDateYear,
     riskMarginFee,
     coveredPercentage,
     feeType,
@@ -59,8 +64,19 @@ exports.getBondErrors = (bond) => {
         },
       },
     },
-    // todo: financial details
-
+    transactionCurrencySameAsSupplyContractCurrency: {
+      false: {
+        currency: {
+          text: 'Currency is required',
+        },
+        conversionRate: {
+          text: 'Conversion rate to the Supply Contract currency is required',
+        },
+        conversionRateDate: {
+          text: 'Conversion rate date is required',
+        },
+      },
+    },
     // todo: fee details
   };
 
@@ -132,10 +148,38 @@ exports.getBondErrors = (bond) => {
     };
   }
 
+  if (transactionCurrencySameAsSupplyContractCurrency === 'false') {
+    if (!hasValue(currency)) {
+      errorList.currency = {
+        order: orderNumber(errorList),
+        text: 'Currency is required',
+      };
+    }
+
+    if (!hasValue(conversionRate)) {
+      errorList.conversionRate = {
+        order: orderNumber(errorList),
+        text: 'Conversion rate is required',
+      };
+    }
+
+    if (!dateIsValid(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear)) {
+      errorList.conversionRateDate = {
+        text: dateValidationText(
+          'Conversion rate date',
+          conversionRateDateDay,
+          conversionRateDateMonth,
+          conversionRateDateYear,
+        ),
+        order: orderNumber(errorList),
+      };
+    }
+  }
+
   if (!hasValue(riskMarginFee)) {
     errorList.riskMarginFee = {
       order: orderNumber(errorList),
-      text: 'Risk Margin Fee is required',
+      text: 'Risk Margin Fee % is required',
     };
   }
 
@@ -145,12 +189,6 @@ exports.getBondErrors = (bond) => {
       text: 'Covered Percentage is required',
     };
   }
-
-  // if currency NOT the same
-  // currency
-  // conversionRate
-  // conversionRateDate
-
 
   /* ************************************
   // fee details
