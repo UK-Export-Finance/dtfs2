@@ -38,6 +38,31 @@ context('Bond Financial Details', () => {
       .then( insertedDeal => deal=insertedDeal );
   });
 
+  describe('after submitting one optional form field and navigating back to `Bond Financial Details` page', () => {
+    it('should display validation errors for all required fields', () => {
+      cy.loginGoToDealPage(user, deal);
+
+      pages.contract.addBondButton().click();
+      partials.bondProgressNav.progressNavBondFinancialDetails().click();
+      cy.url().should('include', '/financial-details');
+
+      pages.bondFinancialDetails.minimumRiskMarginFeeInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
+      pages.bondFinancialDetails.submit().click();
+
+      cy.url().should('include', '/fee-details');
+      partials.bondProgressNav.progressNavBondFinancialDetails().click();
+
+      const TOTAL_REQUIRED_FORM_FIELDS = 4;
+
+      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+
+      pages.bondFinancialDetails.bondValueInputErrorMessage().should('be.visible');
+      pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyInputErrorMessage().should('be.visible');
+      pages.bondFinancialDetails.riskMarginFeeInputErrorMessage().should('be.visible');
+      pages.bondFinancialDetails.coveredPercentageInputErrorMessage().should('be.visible');
+    });
+  });
+
   describe('When a user submits the `Bond Financial Details` form', () => {
     it('form submit should progress to `Bond Fee Details` page and prepopulate submitted form fields when returning back to `Bond Financial Details` page', () => {
       cy.loginGoToDealPage(user, deal);
@@ -61,27 +86,25 @@ context('Bond Financial Details', () => {
   });
 
   describe('when a user selects that the currency is NOT the same as the Supply Contract currency', () => {
-    it('should render additional form fields', () => {
+    it('should render additional form fields and display validation errors without submit', () => {
       goToBondFinancialDetailsPage(deal);
-
       pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
 
       pages.bondFinancialDetails.currencyInput().should('be.visible');
+      pages.bondFinancialDetails.currencyInputErrorMessage().should('be.visible');
+
       pages.bondFinancialDetails.conversionRateInput().should('be.visible');
+      pages.bondFinancialDetails.conversionRateInputErrorMessage().should('be.visible');
+
       pages.bondFinancialDetails.conversionRateDateDayInput().should('be.visible');
       pages.bondFinancialDetails.conversionRateDateMonthInput().should('be.visible');
       pages.bondFinancialDetails.conversionRateDateYearInput().should('be.visible');
+      pages.bondFinancialDetails.conversionRateDateInputErrorMessage().should('be.visible');
     });
 
     it('form submit should progress to `Bond Fee Details` page and prepopulate submitted form fields when returning back to `Bond Financial Details` page', () => {
-      cy.loginGoToDealPage(user, deal);
-
-      pages.contract.addBondButton().click();
-      partials.bondProgressNav.progressNavBondFinancialDetails().click();
-      cy.url().should('include', '/financial-details');
-
+      goToBondFinancialDetailsPage(deal);
       fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
-
       pages.bondFinancialDetails.submit().click();
 
       cy.url().should('include', '/contract');
@@ -92,6 +115,29 @@ context('Bond Financial Details', () => {
       cy.url().should('include', '/financial-details');
 
       assertBondFormValues.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
+    });
+
+    describe('after form submit and navigating back to `Bond Financal Details` page', () => {
+      it('should display validation errors for required fields and `currency is NOT the same` required fields', () => {
+        goToBondFinancialDetailsPage(deal);
+        pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
+        pages.bondFinancialDetails.submit().click();
+
+        partials.bondProgressNav.progressNavBondFinancialDetails().click();
+        cy.url().should('include', '/financial-details');
+
+        const TOTAL_REQUIRED_FORM_FIELDS = 6;
+
+        partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+
+        pages.bondFinancialDetails.bondValueInputErrorMessage().should('be.visible');
+        pages.bondFinancialDetails.riskMarginFeeInputErrorMessage().should('be.visible');
+        pages.bondFinancialDetails.coveredPercentageInputErrorMessage().should('be.visible');
+
+        pages.bondFinancialDetails.currencyInputErrorMessage().should('be.visible');
+        pages.bondFinancialDetails.conversionRateInputErrorMessage().should('be.visible');
+        pages.bondFinancialDetails.conversionRateDateInputErrorMessage().should('be.visible');
+      });
     });
 
     it('should render additional submitted form field values in `Bond Preview` page', () => {

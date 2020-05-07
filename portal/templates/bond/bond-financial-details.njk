@@ -60,7 +60,12 @@
             placeholder: "0.00",
             'data-cy': 'bond-value'
           },
-          errorMessage: validationErrors.errorList.bondValue
+          errorMessage: validationErrors.errorList.bondValue and {
+            text: validationErrors.errorList.bondValue.text,
+            attributes: {
+              'data-cy': 'bond-value-error-message'
+            }
+          }
         }) }}
       </div>
     </div>
@@ -94,7 +99,12 @@
             }
           }
         ],
-        errorMessage: validationErrors.errorList.transactionCurrencySameAsSupplyContractCurrency
+        errorMessage: validationErrors.errorList.transactionCurrencySameAsSupplyContractCurrency and {
+          text: validationErrors.errorList.transactionCurrencySameAsSupplyContractCurrency.text,
+          attributes: {
+            'data-cy': 'transactionCurrencySameAsSupplyContractCurrency-error-message'
+          }
+        }
       }) }}
   
     <div
@@ -114,11 +124,11 @@
           'data-cy': 'currency'
         },
         items: currencies,
-        errorMessage: validationErrors.errorList.currency or (not bond['currency'] and validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].currency) and {
-          text: validationErrors.errorList.currency.text or validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].currency.text,
+        errorMessage: (validationErrors.errorList.currency or (not bond['currency'] and validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].currency)) and {
           attributes: {
-            'data-cy': 'currency-error-message'
-          }
+            "data-cy": "currency-error-message"
+          },
+          text: validationErrors.errorList.currency.text or validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].currency.text
         }
       }) }}
 
@@ -133,13 +143,18 @@
         id: "conversionRate",
         name: "conversionRate",
         value: bond.conversionRate,
+        pattern: '[0-9]{0,6}(\.\d{0,6}|\.?)',
         attributes: {
           'data-cy': 'conversion-rate',
           size: '60',
-          maxlength: '5',
-          pattern: '[0-9]{0,6}(\.\d{0,6}|\.?)'
+          maxlength: '5'
         },
-        errorMessage: validationErrors.errorList.conversionRate or (not bond['conversionRate'] and validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].conversionRate)
+        errorMessage: (validationErrors.errorList.conversionRate or (not bond['conversionRate'] and validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].conversionRate)) and {
+          text: validationErrors.errorList.conversionRate.text or validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].conversionRate.text,
+          attributes: {
+            'data-cy': 'conversion-rate-error-message'
+          }
+        }
       }) }}             
 
       {{ govukDateInput({
@@ -203,7 +218,12 @@
       attributes: {
         'data-cy': 'risk-margin-fee'
       },
-      errorMessage: validationErrors.errorList.riskMarginFee
+      errorMessage: validationErrors.errorList.riskMarginFee and {
+        text: validationErrors.errorList.riskMarginFee.text,
+        attributes: {
+          'data-cy': 'risk-margin-fee-error-message'
+        }
+      }
     }) }}          
 
     {{ govukInput({
@@ -220,25 +240,32 @@
       attributes: {
         'data-cy': 'covered-percentage'
       },
-      errorMessage: validationErrors.errorList.coveredPercentage
-    }) }}    
+      errorMessage: validationErrors.errorList.coveredPercentage and {
+        text: validationErrors.errorList.coveredPercentage.text,
+        attributes: {
+          'data-cy': 'covered-percentage-error-message'
+        }
+      }
+    }) }}
 
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="minimumRiskMarginFee">
-        Minimum risk margin fee (optional)
-      </label>
-
-      <span id="minimum-risk-margin-fee-hint" class="govuk-hint">
-        The minimum fee payable in the currency of the bond, if any, by the supplier.
-      </span>
-
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <input class="govuk-input input--numeric-float" id="minimumRiskMarginFee" name="minimumRiskMarginFee" type="text" size="60" maxlength="255" pattern="[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)" aria-describedby="minimum-risk-margin-fee-hint" placeholder="0.00" value="{{ bond.minimumRiskMarginFee }}" data-cy="minimum-risk-margin-fee">
-        </div>
-      </div>
-      
-    </div>
+     {{ govukInput({
+        label: {
+          text: "Minimum risk margin fee (optional)"
+        },
+        hint: {
+          text: "The minimum fee payable in the currency of the bond, if any, by the supplier."
+        },
+        id: "minimumRiskMarginFee",
+        name: "minimumRiskMarginFee",
+        value: bond.minimumRiskMarginFee,
+        classes: "input--numeric-float govuk-input--width-5",
+        attributes: {
+          size: "60",
+          maxlength: "255",
+          placeholder: "0.00",
+          'data-cy': 'minimum-risk-margin-fee'
+        }
+      }) }}
 
     <div class="govuk-form-group form-group-disabled">
       <label class="govuk-label" for="guaranteeFeePayableByBank">
