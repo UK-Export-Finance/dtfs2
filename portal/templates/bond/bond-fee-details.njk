@@ -2,6 +2,7 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import './_macros/bond-nav.njk' as bondNav %}
+{% import './_macros/bond-fee-frequency.njk' as bondFeeFrequency %}
 
 {% block content %}
 
@@ -41,12 +42,26 @@
             {
               value: "In advance",
               text: "In advance",
-              checked: bond.feeType === "In advance"
+              checked: bond.feeType === "In advance",
+              conditional: {
+                html: bondFeeFrequency.render(
+                  'inAdvanceFeeFrequency',
+                  bond.feeFrequency,
+                  validationErrors.errorList.feeFrequency
+                )
+              }
             },
             {
               value: "In arrear",
               text: "In arrear",
-              checked: bond.feeType === "In arrear"
+              checked: bond.feeType === "In arrear",
+              conditional: {
+                html: bondFeeFrequency.render(
+                  'inArrearFeeFrequency',
+                  bond.feeFrequency,
+                  validationErrors.errorList.feeFrequency
+                )
+              }
             },
             {
               value: "At maturity",
@@ -58,42 +73,6 @@
             }
           ],
           errorMessage: validationErrors.errorList.feeType
-        }) }}
-
-        {{ govukRadios({
-          idPrefix: "feeFrequency",
-          name: "feeFrequency",
-          fieldset: {
-            legend: {
-              text: "Fee frequency"
-            }
-          },
-          items: [
-            {
-              value: "Monthly",
-              text: "Monthly",
-              checked: bond.feeFrequency === "Monthly"
-            },
-            {
-              value: "Quarterly",
-              text: "Quarterly",
-              checked: bond.feeFrequency === "Quarterly"
-            },
-            {
-              value: "Semi-annually",
-              text: "Semi-annually",
-              checked: bond.feeFrequency === "Semi-annually"
-            },
-            {
-              value: "Annually",
-              text: "Annually",
-              checked: bond.feeFrequency === "Annually",
-              attributes: {
-                'data-cy': 'fee-frequency-annually'
-              }
-            }
-          ],
-          errorMessage: validationErrors.errorList.feeFrequency
         }) }}
 
         {{ govukRadios({

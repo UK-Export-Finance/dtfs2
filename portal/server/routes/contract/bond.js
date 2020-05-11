@@ -131,11 +131,24 @@ router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
 router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
+  const {
+    inAdvanceFeeFrequency,
+    inArrearFeeFrequency,
+  } = req.body;
+
+  const postBody = {
+    ...req.body,
+    feeFrequency: inAdvanceFeeFrequency || inArrearFeeFrequency,
+  };
+
+  delete postBody.inAdvanceFeeFrequency;
+  delete postBody.inArrearFeeFrequency;
+
   await postToApi(
     api.updateBond(
       dealId,
       bondId,
-      req.body,
+      postBody,
       userToken,
     ),
     errorHref,
