@@ -437,8 +437,9 @@ describe('/v1/deals/:id/bond', () => {
 
         const bondBody = {
           ...allBondFields,
-          transactionCurrencySameAsSupplyContractCurrency: 'false',
           bondValue: '123',
+          transactionCurrencySameAsSupplyContractCurrency: 'false',
+          currency: 'EUR',
           conversionRate: '100',
           'conversionRateDate-day': '14',
           'conversionRateDate-month': '12',
@@ -509,6 +510,30 @@ describe('/v1/deals/:id/bond', () => {
           status: 'Incomplete',
         });
       });
+
+      it('should return additional validationErrors when values are missing', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bond = {
+          ...allBondFields,
+          transactionCurrencySameAsSupplyContractCurrency: 'false',
+        };
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(status).toEqual(400);
+        expect(body.validationErrors.count).toEqual(3);
+        expect(body.validationErrors.errorList.currency).toBeDefined();
+        expect(body.validationErrors.errorList.conversionRate).toBeDefined();
+        expect(body.validationErrors.errorList.conversionRateDate).toBeDefined();
+      });
+
     });
   });
 });
