@@ -5,11 +5,11 @@
   {% set validationErrors = opts.validationErrors %}
 
   {{ govukSelect({
-    id: "supplierType",
-    name: "supplierType",
+    id: "supplier-type",
+    name: "supplier-type",
     label: { text: "Supplier type" },
     hint: { text: "Where the supplier is a UK Supplier, please ensure that it has provided a UK Supplier Declaration" },
-    attributes: { "data-cy": "supplierType" },
+    attributes: { "data-cy": "supplier-type" },
     items: [
       {
         value: "",
@@ -17,11 +17,11 @@
       }, {
         value: "Exporter",
         text: "Exporter",
-        selected: deal.submissionDetails.supplierType === "Exporter"
+        selected: deal.submissionDetails['supplier-type'] === "Exporter"
       }, {
         value: "UK Supplier",
         text: "UK Supplier",
-        selected: deal.submissionDetails.supplierType === "UK Supplier"
+        selected: deal.submissionDetails['supplier-type'] === "UK Supplier"
       }
     ]
   }) }}

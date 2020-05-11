@@ -25,7 +25,7 @@ const TRANSACTIONS = [
         },
       },
       submissionDetails: {
-        supplierName: 'TEST'
+        "supplier-name": 'TEST'
       }
     }
   },
@@ -55,7 +55,7 @@ const TRANSACTIONS = [
         },
       },
       submissionDetails: {
-        supplierName: 'TEST'
+        "supplier-name": 'TEST'
       }
     }
   },
@@ -85,7 +85,7 @@ const TRANSACTIONS = [
         },
       },
       submissionDetails: {
-        supplierName: 'TEST'
+        "supplier-name": 'TEST'
       }
     }
   }

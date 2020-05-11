@@ -32,12 +32,12 @@ exports.update = (req, res) => {
     if (!deal) return res.status(404).send();
     if (!userOwns(user, deal)) return res.status(401).send();
 
-    const validationFailures = validateNameChange(deal, bankSupplyContractName);
+    const validationErrors = validateNameChange(deal, bankSupplyContractName);
 
-    if (validationFailures) {
+    if (validationErrors) {
       return res.status(200).send({
         success: false,
-        ...validationFailures,
+        ...validationErrors,
       });
     }
 

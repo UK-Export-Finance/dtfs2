@@ -4,7 +4,7 @@ const nav = require('./nav');
 const page = {
   visit: (deal) => cy.visit(`/contract/${deal._id}/about/supplier`),
   nav: () => nav,
-  supplierType: () => cy.get('[data-cy="supplierType"]'),
+  supplierType: () => cy.get('[data-cy="supplier-type"]'),
   supplierCompaniesHouseRegistrationNumber: () => cy.get('[data-cy="supplier-companies-house-registration-number"]'),
   supplierSearchCompaniesHouse: () => cy.get('[data-cy="DoSearch-supplier-companies-house-registration-number"]'),
   supplierName: () => cy.get('[data-cy="supplier-name"]'),

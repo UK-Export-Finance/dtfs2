@@ -136,9 +136,9 @@ module.exports = {
     }
   ],
   submissionDetails: {
-    supplierType: 'Exporter',
+    "supplier-type": 'Exporter',
     supplierCompaniesHouseRegistrationNumber: '123',
-    supplierName: 'TEST',
+    "supplier-name": 'TEST',
     supplierAddress: 'Test <br/> PO1 3AX <br/>GBR',
     suppliersCorrespondenceAddressDifferent: false,
     industrySector: '5678',

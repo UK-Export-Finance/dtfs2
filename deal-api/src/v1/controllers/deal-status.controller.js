@@ -71,12 +71,12 @@ exports.update = (req, res) => {
       return res.status(401).send();
     }
 
-    const validationFailures = validateStateChange(deal, req.body, user);
+    const validationErrors = validateStateChange(deal, req.body, user);
 
-    if (validationFailures) {
+    if (validationErrors) {
       return res.status(200).send({
         success: false,
-        ...validationFailures,
+        ...validationErrors,
       });
     }
 
