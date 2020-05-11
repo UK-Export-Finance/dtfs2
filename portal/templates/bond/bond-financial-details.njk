@@ -267,42 +267,52 @@
         }
       }) }}
 
-    <div class="govuk-form-group form-group-disabled">
-      <label class="govuk-label" for="guaranteeFeePayableByBank">
-        Guarantee fee payable by bank
-      </label>
+    {{ govukInput({
+      formGroup: {
+        classes: "form-group-disabled"
+      },
+      label: {
+        text: "Guarantee fee payable by bank"
+      },
+      hint: {
+        text: "The fee to be paid by the bank to UKEF, which represents the Risk Margin Fee multiplied by the Covered Percentage, minus the 10% retained by the bank as an administrative fee. It is a calculated field. No input is required."
+      },
+      id: "guaranteeFeePayableByBank",
+      name: "guaranteeFeePayableByBank",
+      classes: "form-group-disabled--input govuk-input--width-5",
+      type: "number",
+      attributes: {
+        step: "0.0001",
+        min: "0",
+        max: "100",
+        placeholder: "0",
+        disabled: "true",
+        'data-cy': "guarantee-fee-payable-by-bank"
+      }
+    }) }}
 
-      <span id="guarantee-fee-payable-by-bank-hint" class="govuk-hint">
-        The fee to be paid by the bank to UKEF, which represents the Risk Margin Fee multiplied by the Covered Percentage, minus the 10% retained by the bank as an administrative fee. It is a calculated field. No input is required.
-      </span>
-
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-              <input class="govuk-input form-group-disabled--input" id="guaranteeFeePayableByBank" name="guaranteeFeePayableByBank" type="number" step="0.0001" min="0" max="100" aria-describedby="guarantee-fee-payable-by-bank-hint" placeholder="0" disabled value="{{ bond.guaranteeFeePayableByBank }}" data-cy="guarantee-fee-payable-by-bank">
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="govuk-form-group form-group-disabled">
-      <label class="govuk-label" for="ukefExposure">
-        UKEF exposure
-      </label>
-
-      <span id="ukef-exposure-hint" class="govuk-hint">
-        The amount of UKEF's exposure for this Transaction in the bond currency. It is the bond value multiplied by the Covered Percentage. It is a calculated field. No input is required.
-      </span>
-
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <input class="govuk-input form-group-disabled--input input__text-align-right" id="ukefExposure" name="ukefExposure" type="number" size="60" maxlength="255" aria-describedby="ukef-exposure-hint" placeholder="0.00" disabled value="{{ bond.ukefExposure }}" data-cy="ukef-exposure">
-        </div>
-      </div>
-    </div>
+    {{ govukInput({
+      formGroup: {
+        classes: "form-group-disabled"
+      },
+      label: {
+        text: "UKEF exposure"
+      },
+      hint: {
+        text: "The amount of UKEF's exposure for this Transaction in the bond currency. It is the bond value multiplied by the Covered Percentage. It is a calculated field. No input is required."
+      },
+      id: "ukefExposure",
+      name: "ukefExposure",
+      classes: "form-group-disabled--input govuk-input--width-10",
+      type: "number",
+      attributes: {
+        size: "60",
+        maxlength: "255",
+        placeholder: "0.00",
+        disabled: "true",
+        'data-cy': "ukef-exposure"
+      }
+    }) }}
 
     <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Next page</button>
 
