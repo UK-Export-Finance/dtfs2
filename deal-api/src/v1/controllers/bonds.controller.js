@@ -130,6 +130,7 @@ exports.updateBond = async (req, res) => {
 
       if (transactionCurrencySameAsSupplyContractCurrency && transactionCurrencySameAsSupplyContractCurrency === 'true') {
         // remove any 'currency is NOT the same' specific values
+        delete updatedBond.currency;
         delete updatedBond.conversionRate;
         delete updatedBond['conversionRateDate-day'];
         delete updatedBond['conversionRateDate-month'];

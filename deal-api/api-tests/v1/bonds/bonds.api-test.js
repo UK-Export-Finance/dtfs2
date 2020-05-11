@@ -430,7 +430,7 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
-    describe('when a bond has req.body.transactionCurrencySameAsSupplyContractCurrency set to false', () => {
+    describe('when a bond has req.body.transactionCurrencySameAsSupplyContractCurrency changed from false to true', () => {
       it('should remove `currency is NOT the same` values from the bond', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
