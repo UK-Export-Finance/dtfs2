@@ -101,7 +101,7 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(200);
       expect(body.bond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
       expect(body.dealId).toEqual(dealId);
-      expect(body.validationErrors.count).toEqual(9);
+      expect(body.validationErrors.count).toEqual(8);
       expect(body.validationErrors.errorList.bondType).toBeDefined();
       expect(body.validationErrors.errorList.bondStage).toBeDefined();
       expect(body.validationErrors.errorList.bondValue).toBeDefined();
@@ -109,7 +109,6 @@ describe('/v1/deals/:id/bond', () => {
       expect(body.validationErrors.errorList.riskMarginFee).toBeDefined();
       expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
       expect(body.validationErrors.errorList.feeType).toBeDefined();
-      expect(body.validationErrors.errorList.feeFrequency).toBeDefined();
       expect(body.validationErrors.errorList.dayCountBasis).toBeDefined();
     });
   });
@@ -275,7 +274,7 @@ describe('/v1/deals/:id/bond', () => {
 
         expect(status).toEqual(400);
         expect(body.bond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
-        expect(body.validationErrors.count).toEqual(9);
+        expect(body.validationErrors.count).toEqual(8);
         expect(body.validationErrors.errorList.bondType).toBeDefined();
         expect(body.validationErrors.errorList.bondStage).toBeDefined();
         expect(body.validationErrors.errorList.bondValue).toBeDefined();
@@ -283,7 +282,6 @@ describe('/v1/deals/:id/bond', () => {
         expect(body.validationErrors.errorList.riskMarginFee).toBeDefined();
         expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
         expect(body.validationErrors.errorList.feeType).toBeDefined();
-        expect(body.validationErrors.errorList.feeFrequency).toBeDefined();
         expect(body.validationErrors.errorList.dayCountBasis).toBeDefined();
       });
     });
@@ -533,7 +531,52 @@ describe('/v1/deals/:id/bond', () => {
         expect(body.validationErrors.errorList.conversionRate).toBeDefined();
         expect(body.validationErrors.errorList.conversionRateDate).toBeDefined();
       });
+    });
 
+    describe('when a bond has req.body.feeType as `In advance`', () => {
+      it('should return additional validationError for feeFrequency', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bond = {
+          ...allBondFields,
+          feeFrequency: undefined,
+          feeType: 'In advance',
+        };
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(status).toEqual(400);
+        expect(body.validationErrors.errorList.feeFrequency).toBeDefined();
+      });
+    });
+
+    describe('when a bond has req.body.feeType as `In arrear`', () => {
+      it('should return additional validationError for feeFrequency', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bond = {
+          ...allBondFields,
+          feeFrequency: undefined,
+          feeType: 'In arrear',
+        };
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(status).toEqual(400);
+        expect(body.validationErrors.errorList.feeFrequency).toBeDefined();
+      });
     });
   });
 });

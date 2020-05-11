@@ -45,8 +45,8 @@ const financialDetails = {
 };
 
 const feeDetails = () => {
-  pages.bondFeeDetails.feeTypeAtMaturityInput().click();
-  pages.bondFeeDetails.feeFrequencyAnnuallyInput().click();
+  pages.bondFeeDetails.feeTypeInAdvanceInput().click();
+  pages.bondFeeDetails.feeTypeInAdvanceFeeFrequencyAnnuallyInput().click();
   pages.bondFeeDetails.dayCountBasis365Input().click();
 };
 

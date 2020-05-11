@@ -204,11 +204,25 @@ router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
 router.post('/contract/:_id/bond/:bondId/save-go-back', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
+  const {
+    inAdvanceFeeFrequency,
+    inArrearFeeFrequency,
+  } = req.body;
+
+  const postBody = req.body;
+
+  if (inAdvanceFeeFrequency || inArrearFeeFrequency) {
+    postBody.feeFrequency = inAdvanceFeeFrequency || inArrearFeeFrequency;
+
+    delete postBody.inAdvanceFeeFrequency;
+    delete postBody.inArrearFeeFrequency;
+  }
+
   await postToApi(
     api.updateBond(
       dealId,
       bondId,
-      req.body,
+      postBody,
       userToken,
     ),
     errorHref,
