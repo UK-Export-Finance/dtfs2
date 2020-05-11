@@ -77,7 +77,6 @@ exports.getBondErrors = (bond) => {
         },
       },
     },
-    // todo: fee details
   };
 
   /* ************************************
@@ -201,11 +200,13 @@ exports.getBondErrors = (bond) => {
     };
   }
 
-  if (!hasValue(feeFrequency)) {
-    errorList.feeFrequency = {
-      order: orderNumber(errorList),
-      text: 'Fee frequency is required',
-    };
+  if (feeType === 'In advance' || feeType === 'In arrear') {
+    if (!hasValue(feeFrequency)) {
+      errorList.feeFrequency = {
+        order: orderNumber(errorList),
+        text: 'Fee frequency is required',
+      };
+    }
   }
 
   if (!hasValue(dayCountBasis)) {

@@ -12,6 +12,14 @@ const MOCK_DEAL = {
   },
 };
 
+const goToBondFeeDetailsPage = (deal) => {
+  cy.loginGoToDealPage(user, deal);
+
+  pages.contract.addBondButton().click();
+  partials.bondProgressNav.progressNavBondFeeDetails().click();
+  cy.url().should('include', '/fee-details');
+};
+
 context('Bond Fee Details', () => {
   let deal;
 
@@ -27,11 +35,7 @@ context('Bond Fee Details', () => {
   });
 
   it('form submit should progress to the `Bond Preview` page and prepopulate submitted form fields when returning back to `Bond Fee Details` page', () => {
-    cy.loginGoToDealPage(user, deal);
-
-    pages.contract.addBondButton().click();
-    partials.bondProgressNav.progressNavBondFeeDetails().click();
-    cy.url().should('include', '/fee-details');
+    goToBondFeeDetailsPage(deal);
 
     fillBondForm.feeDetails();
     pages.bondFeeDetails.submit().click();
@@ -46,13 +50,18 @@ context('Bond Fee Details', () => {
     assertBondFormValues.feeDetails();
   });
 
+  describe('when a user selects that the Fee Type is `At maturity`', () => {
+    it('should NOT render `Fee frequency` radio buttons', () => {
+      goToBondFeeDetailsPage(deal);
+
+      pages.bondFeeDetails.feeTypeAtMaturityInput().click();
+      pages.bondFeeDetails.feeTypeAtMaturityFeeFrequencyRadioGroup().should('not.be.visible');
+    });
+  });
+
   describe('When a user clicks `save and go back` button', () => {
     it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Bond Fee Details` page', () => {
-      cy.loginGoToDealPage(user, deal);
-
-      pages.contract.addBondButton().click();
-      partials.bondProgressNav.progressNavBondFeeDetails().click();
-      cy.url().should('include', '/fee-details');
+      goToBondFeeDetailsPage(deal);
 
       fillBondForm.feeDetails();
 

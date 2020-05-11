@@ -1,6 +1,7 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
 {% macro render(id, checkedValue, errorObj) %}
+
   {{ govukRadios({
     idPrefix: id,
     name: id,
@@ -8,6 +9,9 @@
       legend: {
         text: "Fee frequency"
       }
+    },
+    formGroup: {
+      classes: id + "-form-group"
     },
     items: [
       {
@@ -30,7 +34,7 @@
         text: "Annually",
         checked: checkedValue === "Annually",
         attributes: {
-          'data-cy': 'fee-frequency-annually'
+          "data-cy": id + "-annually"
         }
       }
     ],
