@@ -4,6 +4,7 @@ const moment = require('moment');
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const db = require('../../drivers/db-client');
+const validateSubmissionDetails = require('../validation/submission-details');
 
 exports.findOne = (req, res) => {
   findOneDeal(req.params.id, (deal) => {
@@ -12,7 +13,11 @@ exports.findOne = (req, res) => {
     } else if (!userHasAccessTo(req.user, deal)) {
       res.status(401).send();
     } else {
-      res.status(200).json(deal.submissionDetails);
+      const validationErrors = validateSubmissionDetails(deal.submissionDetails);
+      res.status(200).json({
+        validationErrors,
+        data: deal.submissionDetails,
+      });
     }
   });
 };
@@ -44,22 +49,22 @@ exports.update = (req, res) => {
     if (!deal) return res.status(404).send();
     if (!userHasAccessTo(user, deal)) return res.status(401).send();
 
-    // const validationFailures = validateStateChange(deal, req.body, user);
-    //
-    // if (validationFailures) {
-    //   return res.status(200).send({
-    //     success: false,
-    //     ...validationFailures,
-    //   });
-    // }
-    //
+    const validationErrors = validateSubmissionDetails({ ...deal.submissionDetails, ...req.body });
 
-    // TODO until we validate...
+    // if (validationErrors.count === 0) {
+    //   submissionDetails.status = 'Complete';
+    // } else {
     submissionDetails.status = 'Incomplete';
+    // }
 
     const collection = await db.getCollection('deals');
     const dealAfterAllUpdates = await updateSubmissionDetails(collection, req.params.id, submissionDetails);
 
-    return res.status(200).json(dealAfterAllUpdates.submissionDetails);
+    const response = {
+      validationErrors,
+      data: dealAfterAllUpdates.submissionDetails,
+    };
+
+    return res.status(200).json(response);
   });
 };

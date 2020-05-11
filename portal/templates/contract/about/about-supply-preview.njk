@@ -1,8 +1,18 @@
 {% extends "index.njk" %}
 {% import './components/submission-details.njk' as submissionDetails %}
 {% import './components/about-supply-contract-nav.njk' as aboutSupplyContract %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
 
   {{ aboutSupplyContract.nav(
     completedStatus = deal.supplyContract.completedStatus,

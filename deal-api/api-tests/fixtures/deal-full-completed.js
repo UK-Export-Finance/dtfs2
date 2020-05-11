@@ -175,7 +175,7 @@ const deal = {
     'supplier-correspondence-address-postcode': 'ED1 23S',
     'supplier-correspondence-address-town': 'Eastminster',
     'supplier-name': 'UKFS',
-    supplierType: 'Exporter',
+    'supplier-type': 'Exporter',
     suppliersCorrespondenceAddressDifferent: 'true',
     supplyContractDescription: 'Description.',
   },

@@ -5,7 +5,7 @@ const page = {
   visit: (deal) => cy.visit(`/contract/${deal._id}/about/preview`),
   nav: () => nav,
 
-  supplierType: () => cy.get('[data-cy="supplierType"]'),
+  supplierType: () => cy.get('[data-cy="supplier-type"]'),
   supplierCompaniesHouseRegistrationNumber: () => cy.get('[data-cy="supplier-companies-house-registration-number"]'),
   supplierName: () => cy.get('[data-cy="supplier-name"]'),
   supplierAddress: () => address('supplier-address'),
@@ -32,7 +32,7 @@ const page = {
 
   saveAndGoBack: () => cy.get('[data-cy="SaveAndGoBack"]'),
 
-  // expectError: (text) => cy.get('.govuk-error-message').contains(text),
+  expectError: (text) => cy.get('.govuk-error-summary__list').contains(text),
 };
 
 module.exports = page;

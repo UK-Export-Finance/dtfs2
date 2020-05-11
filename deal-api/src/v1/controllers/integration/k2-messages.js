@@ -20,7 +20,7 @@ module.exports.generateTypeA = async (deal) => {
     .Application_bank('//TODO')
     .Application_bank_co_hse_reg_number('//TODO')
 
-    .Customer_type(k2Map.ABOUT_DEAL.SUPPLIER_TYPE[deal.submissionDetails.supplierType])
+    .Customer_type(k2Map.ABOUT_DEAL.SUPPLIER_TYPE[deal.submissionDetails['supplier-type']])
     .Exporter_co_hse_reg_number(deal.submissionDetails['supplier-companies-house-registration-number'])
     .Exporter_registration_source('Companies House')
     .Exporter_name(deal.submissionDetails['supplier-name'])

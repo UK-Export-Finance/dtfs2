@@ -5,6 +5,8 @@ import {
   getApiData,
   requestParams,
   mapCurrencies,
+  errorHref,
+  generateErrorSummary,
 } from '../../helpers';
 
 // https://developer.companieshouse.gov.uk/api/docs/company/company_number/registered-office-address/registeredOfficeAddress-resource.html
@@ -17,13 +19,39 @@ const getPortalCountryForCompaniesHouseCountry = (companiesHouseCountry) => {
   return '';
 };
 
+
+const copyAddressData = (submissionDetails, sourcePrefix, targetPrefix) => {
+  const response = { ...submissionDetails };
+  response[`${targetPrefix}-line-1`] = submissionDetails[`${sourcePrefix}-line-1`];
+  response[`${targetPrefix}-line-2`] = submissionDetails[`${sourcePrefix}-line-2`];
+  response[`${targetPrefix}-town`] = submissionDetails[`${sourcePrefix}-town`];
+  response[`${targetPrefix}-county`] = submissionDetails[`${sourcePrefix}-county`];
+  response[`${targetPrefix}-postcode`] = submissionDetails[`${sourcePrefix}-postcode`];
+  response[`${targetPrefix}-country`] = submissionDetails[`${sourcePrefix}-country`];
+
+  return response;
+};
+
 const updateSubmissionDetails = async (dealId, postedSubmissionDetails, userToken, res) => {
   const deal = await getApiData(
     api.contract(dealId, userToken),
     res,
   );
 
-  const submissionDetails = { ...postedSubmissionDetails };
+  let submissionDetails = { ...postedSubmissionDetails };
+
+  // autopopulation of addresses based on user selection
+  if (submissionDetails.suppliersCorrespondenceAddressDifferent !== 'true') {
+    submissionDetails = copyAddressData(submissionDetails, 'supplier-address', 'supplier-correspondence-address');
+  }
+
+  if (submissionDetails.legallyDistinct !== 'true') {
+    submissionDetails = copyAddressData(submissionDetails, 'supplier-address', 'indemnifier-address');
+  }
+
+  if (submissionDetails.indemnifierCorrespondenceAddressDifferent !== 'true') {
+    submissionDetails = copyAddressData(submissionDetails, 'indemnifier-address', 'indemnifier-correspondence-address');
+  }
 
   // fix industrySector/industryClass data; is nested in source data, and the way it's rendered makes this preferable
   if (submissionDetails.industrySector && submissionDetails.industryClass) {
@@ -53,11 +81,20 @@ const router = express.Router();
 router.get('/contract/:_id/about/supplier', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
+  const deal = await getApiData(
+    api.contract(_id, userToken),
+    res,
+  );
+
+  const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
+  const formattedValidationErrors = generateErrorSummary(
+    validationErrors,
+    errorHref,
+  );
+
   return res.render('contract/about/about-supplier.njk', {
-    deal: await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ),
+    deal,
+    validationErrors: formattedValidationErrors,
     countries: await getApiData(
       api.countries(userToken),
       res,
@@ -163,11 +200,20 @@ router.post('/contract/:_id/about/supplier/save-go-back', async (req, res) => {
 router.get('/contract/:_id/about/buyer', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
+  const deal = await getApiData(
+    api.contract(_id, userToken),
+    res,
+  );
+
+  const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
+  const formattedValidationErrors = generateErrorSummary(
+    validationErrors,
+    errorHref,
+  );
+
   return res.render('contract/about/about-supply-buyer.njk', {
-    deal: await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ),
+    deal,
+    validationErrors: formattedValidationErrors,
     countries: await getApiData(
       api.countries(userToken),
       res,
@@ -208,8 +254,15 @@ router.get('/contract/:_id/about/financial', async (req, res) => {
     res,
   );
 
+  const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
+  const formattedValidationErrors = generateErrorSummary(
+    validationErrors,
+    errorHref,
+  );
+
   res.render('contract/about/about-supply-financial.njk', {
     deal,
+    validationErrors: formattedValidationErrors,
     currencies: mapCurrencies(currencies, deal.submissionDetails.supplyContractCurrency),
   });
 });
@@ -237,12 +290,18 @@ router.post('/contract/:_id/about/financial/save-go-back', async (req, res) => {
 router.get('/contract/:_id/about/preview', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
+  const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
+  const formattedValidationErrors = generateErrorSummary(
+    validationErrors,
+    errorHref,
+  );
+
   const deal = await getApiData(
     api.contract(_id, userToken),
     res,
   );
 
-  return res.render('contract/about/about-supply-preview.njk', { deal });
+  return res.render('contract/about/about-supply-preview.njk', { deal, validationErrors: formattedValidationErrors });
 });
 
 

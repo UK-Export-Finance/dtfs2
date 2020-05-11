@@ -128,6 +128,23 @@ const updateDealStatus = async (statusUpdate, token) => {
   };
 };
 
+const getSubmissionDetails = async (id, token) => {
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/v1/deals/${id}/submission-details`, // eslint-disable-line no-underscore-dangle
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return {
+    status: response.status,
+    validationErrors: response.data.validationErrors,
+    data: response.data.data,
+  };
+};
+
 const updateSubmissionDetails = async (deal, submissionDetails, token) => {
   const response = await axios({
     method: 'put',
@@ -141,7 +158,8 @@ const updateSubmissionDetails = async (deal, submissionDetails, token) => {
 
   return {
     status: response.status,
-    data: response.data,
+    validationErrors: response.data.validationErrors,
+    data: response.data.data,
   };
 };
 
@@ -416,6 +434,7 @@ export default {
   updateEligibilityCriteria,
   updateEligibilityDocumentation,
   updateLoan,
+  getSubmissionDetails,
   updateSubmissionDetails,
   validateToken,
   users,

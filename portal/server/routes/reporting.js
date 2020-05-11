@@ -92,7 +92,7 @@ router.get('/reporting/mia_min-cover-start-date-changes/:page', async (req, res)
       bankSupplyContractID: 'Memsstar/BSS/APG',
       bankFacilityId: 'Loan 3',
       transactionType: 'Loan',
-      supplierName: 'TEST DO NOT TOUCH',
+      'supplier-name': 'TEST DO NOT TOUCH',
       oldRequestedCoverStartDate: '08/08/2018',
       newRequestedCoverStartDate: '18/08/2018',
       dateTimeOfChange: '08/08/2018 - 09:37',

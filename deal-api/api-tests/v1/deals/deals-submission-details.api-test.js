@@ -103,7 +103,7 @@ describe('/v1/deals/:id/submission-details', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${newId}/submission-details`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual({ status: 'Not Started'});
+      expect(body.data).toEqual({ status: 'Not Started'});
     });
   });
 
@@ -156,7 +156,7 @@ describe('/v1/deals/:id/submission-details', () => {
       const { status, body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectedResponse);
+      expect(body.data).toEqual(expectedResponse);
     });
 
     it('updates the deal', async () => {
@@ -195,6 +195,34 @@ describe('/v1/deals/:id/submission-details', () => {
       expect(body.details.dateOfLastAction).not.toEqual(createdDeal.details.dateOfLastAction);
     });
 
+    describe('validation rules', () => {
+      let validationErrors;
+
+      beforeAll( async() => {
+        const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+        const createdDeal = postResult.body;
+        const submissionDetails = {};
+
+        const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+        validationErrors = body.validationErrors;
+      });
+
+      it('expects supplier-type', () => {
+        expect(validationErrors.errorList['supplier-type']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier type is required',
+        });
+      });
+
+      it('expects supplier-name', () => {
+        expect(validationErrors.errorList['supplier-name']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier name is required',
+        });
+      });
+
+    })
   });
 
 });
