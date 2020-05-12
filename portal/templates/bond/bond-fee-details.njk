@@ -45,7 +45,7 @@
               checked: bond.feeType === "In advance",
               conditional: {
                 html: bondFeeFrequency.render(
-                  'inAdvanceFeeFrequency',
+                  'inAdvance',
                   bond.feeFrequency,
                   validationErrors.errorList.feeFrequency
                 )
@@ -60,7 +60,7 @@
               checked: bond.feeType === "In arrear",
               conditional: {
                 html: bondFeeFrequency.render(
-                  'inArrearFeeFrequency',
+                  'inArrear',
                   bond.feeFrequency,
                   validationErrors.errorList.feeFrequency
                 )
