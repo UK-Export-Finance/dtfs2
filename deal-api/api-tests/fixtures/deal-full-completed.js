@@ -177,7 +177,7 @@ const deal = {
     'supplier-name': 'UKFS',
     'supplier-type': 'Exporter',
     'supplier-correspondence-address-is-different': 'true',
-    supplyContractDescription: 'Description.',
+    'supply-contract-description': 'Description.',
   },
 };
 

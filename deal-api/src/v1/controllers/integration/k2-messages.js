@@ -45,7 +45,7 @@ module.exports.generateTypeA = async (deal) => {
     .Industry_class_code(deal.submissionDetails['industy-sector'] && deal.submissionDetails['industy-sector'].class && deal.submissionDetails['industy-sector'].class.code)
     .Industry_class_name(deal.submissionDetails['industy-sector'] && deal.submissionDetails['industy-sector'].class && deal.submissionDetails['industy-sector'].class.name)
     .Sme_type(k2Map.ABOUT_DEAL.SME_TYPE[deal.submissionDetails['sme-type'] || 'Not known'])
-    .Description_of_export(deal.submissionDetails.supplyContractDescription)
+    .Description_of_export(deal.submissionDetails['supply-contract-description'])
     .Bank_security('//TODO')
 
     .Indemnifier_co_hse_reg_number(deal.submissionDetails['indemnifier-companies-house-registration-number'])

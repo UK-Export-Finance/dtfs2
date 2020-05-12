@@ -14,7 +14,7 @@ const page = {
   industrySector: () => cy.get('[data-cy="industry-sector"]'),
   industryClass: () => cy.get('[data-cy="industry-class"]'),
   smeType: () => cy.get('[data-cy="sme-type"]'),
-  supplyContractDescription: () => cy.get('[data-cy="supplyContractDescription"]'),
+  supplyContractDescription: () => cy.get('[data-cy="supply-contract-description"]'),
   legallyDistinct: () => cy.get('[data-cy="legallyDistinct"]'),
   indemnifierCompaniesHouseRegistrationNumber: () => cy.get('[data-cy="indemnifier-companies-house-registration-number"]'),
   indemnifierName: () => cy.get('[data-cy="indemnifier-name"]'),

@@ -171,4 +171,11 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     });
   });
 
+  it('expects supply-contract-description', () => {
+    expect(validationErrors.errorList['supply-contract-description']).toEqual({
+      order: expect.any(String),
+      text: 'Supply Contract Description is required',
+    });
+  });
+
 });
