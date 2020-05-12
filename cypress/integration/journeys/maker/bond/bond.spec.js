@@ -61,7 +61,7 @@ context('Add a Bond to a Deal', () => {
       cy.url().should('include', '/bond/');
       cy.url().should('include', '/preview');
 
-      const TOTAL_REQUIRED_FORM_FIELDS = 9;
+      const TOTAL_REQUIRED_FORM_FIELDS = 8;
       partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
     });
 
@@ -89,7 +89,7 @@ context('Add a Bond to a Deal', () => {
         partials.errorSummary.errorSummaryLinks().should('have.length', 4);
 
         partials.bondProgressNav.progressNavBondFeeDetails().click();
-        partials.errorSummary.errorSummaryLinks().should('have.length', 3);
+        partials.errorSummary.errorSummaryLinks().should('have.length', 2);
       });
     });
   });
@@ -169,7 +169,7 @@ context('Add a Bond to a Deal', () => {
 
       // Bond Fee Details
       pages.bondPreview.feeType().invoke('text').then((text) => {
-        expect(text.trim()).equal('At maturity');
+        expect(text.trim()).equal('In advance');
       });
 
       pages.bondPreview.feeFrequency().invoke('text').then((text) => {

@@ -34,6 +34,44 @@ context('Bond Fee Details', () => {
       .then( insertedDeal => deal=insertedDeal );
   });
 
+  describe('when submitting an empty form and navigating back to `Bond Fee Details` page', () => {
+    it('should display validation errors for all required fields', () => {
+      goToBondFeeDetailsPage(deal);
+
+      pages.bondFeeDetails.submit().click();
+
+      cy.url().should('include', '/preview');
+      partials.bondProgressNav.progressNavBondFeeDetails().click();
+
+      const TOTAL_REQUIRED_FORM_FIELDS = 2;
+
+      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+
+      pages.bondFeeDetails.feeTypeInputErrorMessage().should('be.visible');
+      pages.bondFeeDetails.dayCountBasisInputErrorMessage().should('be.visible');
+    });
+  });
+
+  describe('after submitting one form field and navigating back to `Bond Fee Details` page', () => {
+    it('should display validation errors for all required fields (including nested radio group)', () => {
+      goToBondFeeDetailsPage(deal);
+
+      pages.bondFeeDetails.feeTypeInAdvanceInput().click();
+
+      pages.bondFeeDetails.submit().click();
+
+      cy.url().should('include', '/preview');
+      partials.bondProgressNav.progressNavBondFeeDetails().click();
+
+      const TOTAL_REQUIRED_FORM_FIELDS = 2;
+
+      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+
+      pages.bondFeeDetails.feeTypeInAdvanceFeeFrequencyInputErrorMessage().should('be.visible');
+      pages.bondFeeDetails.dayCountBasisInputErrorMessage().should('be.visible');
+    });
+  });
+
   it('form submit should progress to the `Bond Preview` page and prepopulate submitted form fields when returning back to `Bond Fee Details` page', () => {
     goToBondFeeDetailsPage(deal);
 

@@ -78,7 +78,12 @@
               }
             }
           ],
-          errorMessage: validationErrors.errorList.feeType
+          errorMessage: validationErrors.errorList.feeType and {
+            text: validationErrors.errorList.feeType.text,
+            attributes: {
+              "data-cy": "fee-type-error-message"
+            }
+          }
         }) }}
 
         {{ govukRadios({
@@ -104,7 +109,12 @@
               }
             }
           ],
-          errorMessage: validationErrors.errorList.dayCountBasis
+          errorMessage: validationErrors.errorList.dayCountBasis and {
+            text: validationErrors.errorList.dayCountBasis.text,
+            attributes: {
+              "data-cy": "day-count-basis-error-message"
+            }
+          }
         }) }}
 
       </div>
