@@ -54,9 +54,9 @@ const updateSubmissionDetails = async (dealId, postedSubmissionDetails, userToke
   }
 
   // fix industrySector/industryClass data; is nested in source data, and the way it's rendered makes this preferable
-  if (submissionDetails.industrySector && submissionDetails.industryClass) {
-    submissionDetails.industrySector = {
-      code: submissionDetails.industrySector,
+  if (submissionDetails['industry-sector'] && submissionDetails.industryClass) {
+    submissionDetails['industry-sector'] = {
+      code: submissionDetails['industry-sector'],
       name: '', // TODO
       class: {
         code: submissionDetails.industryClass,
@@ -130,9 +130,9 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', asyn
 
   // fix industrySector/industryClass data; is nested in source data, and the way it's rendered makes this preferable
   const submissionDetails = req.body;
-  if (submissionDetails.industrySector && submissionDetails.industryClass) {
-    submissionDetails.industrySector = {
-      code: submissionDetails.industrySector,
+  if (submissionDetails['industry-sector'] && submissionDetails.industryClass) {
+    submissionDetails['industry-sector'] = {
+      code: submissionDetails['industry-sector'],
       name: '', // TODO
       class: {
         code: submissionDetails.industryClass,

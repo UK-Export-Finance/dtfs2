@@ -141,7 +141,7 @@ module.exports = {
     "supplier-name": 'TEST',
     supplierAddress: 'Test <br/> PO1 3AX <br/>GBR',
     "supplier-correspondence-address-is-different": false,
-    industrySector: '1234',
+    "industry-sector": '1234',
     industryClass: '56789',
     smeType: 'Micro',
     supplyContractDescription: 'Test',

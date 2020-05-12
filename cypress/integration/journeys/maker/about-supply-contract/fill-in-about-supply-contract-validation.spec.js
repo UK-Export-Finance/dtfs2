@@ -39,10 +39,10 @@ context('about-supply-contract', () => {
     cy.login({...maker1});
 
     contractAboutSupplier.visit(deal);
-    // open up all the optional areas
-    contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();
-    contractAboutSupplier.legallyDistinct().click();
-    contractAboutSupplier.indemnifierCorrespondenceAddressDifferent().click();
+    // // open up all the optional areas
+    // contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();
+    // contractAboutSupplier.legallyDistinct().click();
+    // contractAboutSupplier.indemnifierCorrespondenceAddressDifferent().click();
 
     // submit everything without adding any data
     contractAboutSupplier.nextPage().click();
@@ -58,10 +58,10 @@ context('about-supply-contract', () => {
     contractAboutPreview.expectError('Supplier address line 2 is required');
     contractAboutPreview.expectError('Supplier town is required');
     // companies house doesnt provide this so not mandatory
-    //contractAboutPreview.expectError('Supplier county is required');
+    // contractAboutPreview.expectError('Supplier county is required');
     contractAboutPreview.expectError('Supplier postcode is required');
-    // for some reason the defaulting is different for this address, so we always get a value here..
-    //contractAboutPreview.expectError('Supplier country is required');
+    // default value applied so we always get a value here..
+    //  contractAboutPreview.expectError('Supplier country is required');
 
     contractAboutPreview.expectError('Supplier correspondence address line 1 is required');
     contractAboutPreview.expectError('Supplier correspondence address line 2 is required');
@@ -69,7 +69,13 @@ context('about-supply-contract', () => {
     // companies house doesnt provide this so not mandatory
     //contractAboutPreview.expectError('Supplier correspondence county is required');
     contractAboutPreview.expectError('Supplier correspondence postcode is required');
-    contractAboutPreview.expectError('Supplier correspondence country is required');
+    // default value applied so we always get a value here..
+    //contractAboutPreview.expectError('Supplier correspondence country is required');
+
+    contractAboutPreview.expectError('Industry Sector is required');
+    contractAboutPreview.expectError('Industry Class is required');
+
+
 
     // contractAboutPreview.indemnifierCorrespondenceAddress().postcode().invoke('text').then((text) => {
     //   expect(text.trim()).equal('CM1 4EP');

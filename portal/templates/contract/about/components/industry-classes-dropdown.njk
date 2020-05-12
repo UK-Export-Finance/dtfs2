@@ -13,9 +13,9 @@
 
       {# [dw] slight hack; pre-populating this 'manually' in the case of rendering with industrySector pre-selected rather than add to weight of in-browser js #}
         {% for industrySector in industrySectors %}
-          {% if deal.submissionDetails.industrySector.code === industrySector.code %}
+          {% if deal.submissionDetails["industry-sector"].code === industrySector.code %}
             {% for industryClass in industrySector.classes %}
-              <option value="{{ industryClass.code }}" {% if deal.submissionDetails.industrySector.class.code === industryClass.code %}selected{% endif %}>{{industryClass.name}}</option>
+              <option value="{{ industryClass.code }}" {% if deal.submissionDetails["industry-sector"].class.code === industryClass.code %}selected{% endif %}>{{industryClass.name}}</option>
             {% endfor %}
           {% endif %}
         {% endfor %}
