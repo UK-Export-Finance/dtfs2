@@ -176,7 +176,7 @@ const deal = {
     'supplier-correspondence-address-town': 'Eastminster',
     'supplier-name': 'UKFS',
     'supplier-type': 'Exporter',
-    suppliersCorrespondenceAddressDifferent: 'true',
+    'supplier-correspondence-address-is-different': 'true',
     supplyContractDescription: 'Description.',
   },
 };

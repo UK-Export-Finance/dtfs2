@@ -140,7 +140,7 @@ module.exports = {
     supplierCompaniesHouseRegistrationNumber: '123',
     "supplier-name": 'TEST',
     supplierAddress: 'Test <br/> PO1 3AX <br/>GBR',
-    suppliersCorrespondenceAddressDifferent: false,
+    "supplier-correspondence-address-is-different": false,
     industrySector: '5678',
     industryClass: '12345',
     smeType: 'Micro',

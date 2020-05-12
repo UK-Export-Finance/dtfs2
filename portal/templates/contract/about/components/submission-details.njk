@@ -49,8 +49,8 @@
       <dt class="govuk-summary-list__key govuk-body-s">
         Is the Supplier's correspondence address different for the Company's Registered Address?
       </dt>
-      <dd data-cy="suppliersCorrespondenceAddressDifferent" class="govuk-summary-list__value govuk-body-s">
-      {% if submissionDetails.suppliersCorrespondenceAddressDifferent==='true' %}
+      <dd data-cy="supplier-correspondence-address-is-different" class="govuk-summary-list__value govuk-body-s">
+      {% if submissionDetails["supplier-correspondence-address-is-different"]==='true' %}
         Yes
       {% else %}
         No
@@ -59,7 +59,7 @@
     </div>
 
 
-    <div class="govuk-summary-list__row {% if submissionDetails.suppliersCorrespondenceAddressDifferent==='false' %}govuk-visually-hidden{% endif %}">
+    <div class="govuk-summary-list__row {% if submissionDetails["supplier-correspondence-address-is-different"]==='false' %}govuk-visually-hidden{% endif %}">
       <dt class="govuk-summary-list__key govuk-body-s">
         Supplier correspondence address
       </dt>
