@@ -10,9 +10,6 @@
         text: "Fee frequency"
       }
     },
-    formGroup: {
-      classes: id + "FeeFrequency-form-group"
-    },
     items: [
       {
         value: "Monthly",
@@ -34,7 +31,7 @@
         text: "Annually",
         checked: checkedValue === "Annually",
         attributes: {
-          "data-cy": id + "FeeFrequency-annually"
+          "data-cy": id + "-fee-frequency-annually"
         }
       }
     ],
