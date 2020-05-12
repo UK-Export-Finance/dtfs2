@@ -39,12 +39,12 @@ module.exports.generateTypeA = async (deal) => {
     .Exporter_correspondence_address_PostalCode(deal.submissionDetails['supplier-correspondence-address-postcode'])
     .Exporter_correspondence_address_Country(await convertCountryCodeToId((deal.submissionDetails['supplier-correspondence-address-country'])))
 
-    .Industry_sector_code(deal.submissionDetails.industySector && deal.submissionDetails.industySector.code)
-    .Industry_sector_name(deal.submissionDetails.industySector && deal.submissionDetails.industySector.name)
+    .Industry_sector_code(deal.submissionDetails['industy-sector'] && deal.submissionDetails['industy-sector'].code)
+    .Industry_sector_name(deal.submissionDetails['industy-sector'] && deal.submissionDetails['industy-sector'].name)
   // TODO confirm Industry_class_code & Industry_class_name correct fields - Drupal sets both to same value
-    .Industry_class_code(deal.submissionDetails.industyClass)
-    .Industry_class_name(deal.submissionDetails.industyClass)
-    .Sme_type(k2Map.ABOUT_DEAL.SME_TYPE[deal.submissionDetails.smeType || 'Not known'])
+    .Industry_class_code(deal.submissionDetails['industy-sector'] && deal.submissionDetails['industy-sector'].class && deal.submissionDetails['industy-sector'].class.code)
+    .Industry_class_name(deal.submissionDetails['industy-sector'] && deal.submissionDetails['industy-sector'].class && deal.submissionDetails['industy-sector'].class.name)
+    .Sme_type(k2Map.ABOUT_DEAL.SME_TYPE[deal.submissionDetails['sme-type'] || 'Not known'])
     .Description_of_export(deal.submissionDetails.supplyContractDescription)
     .Bank_security('//TODO')
 

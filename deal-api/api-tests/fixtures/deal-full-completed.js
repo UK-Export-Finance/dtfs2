@@ -160,7 +160,7 @@ const deal = {
       name: '',
     },
     legallyDistinct: 'true',
-    smeType: 'Small',
+    'sme-type': 'Small',
     'supplier-address-country': 'GBR',
     'supplier-address-county': 'London',
     'supplier-address-line-1': '1 Horseguards Road',

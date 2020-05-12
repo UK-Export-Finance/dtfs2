@@ -74,6 +74,7 @@ context('about-supply-contract', () => {
 
     contractAboutPreview.expectError('Industry Sector is required');
     contractAboutPreview.expectError('Industry Class is required');
+    contractAboutPreview.expectError('SME type is required');
 
 
 
