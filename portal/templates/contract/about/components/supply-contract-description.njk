@@ -7,11 +7,11 @@
   {{ govukTextarea({
     label: { text: "Description of supply contract" },
     hint: { text: "You can enter up to 300 characters" },
-    attributes : { "data-cy" : "supplyContractDescription" },
-    name: "supplyContractDescription",
-    id: "supplyContractDescription",
-    value: deal.submissionDetails.supplyContractDescription,
-    errorMessage: validationErrors.errorList.supplyContractDescription
+    attributes : { "data-cy" : "supply-contract-description" },
+    name: "supply-contract-description",
+    id: "supply-contract-description",
+    value: deal.submissionDetails["supply-contract-description"],
+    errorMessage: validationErrors.errorList["supply-contract-description"]
   }) }}
 
 {% endmacro %}

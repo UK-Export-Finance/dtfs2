@@ -144,7 +144,7 @@ module.exports = {
     "industry-sector": '1234',
     "industry-class": '56789',
     "sme-type": 'Micro',
-    supplyContractDescription: 'Test',
+    "supply-contract-description": 'Test',
     legallyDistinct: false,
     buyer: {
       name: 'TESTING',

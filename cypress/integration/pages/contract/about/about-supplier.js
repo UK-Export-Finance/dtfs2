@@ -18,7 +18,7 @@ const page = {
   smeTypeSmall: () => cy.get('[data-cy="sme-type-Small"]'),
   smeTypeMedium: () => cy.get('[data-cy="sme-type-Medium"]'),
   smeTypeNotSME: () => cy.get('[data-cy="sme-type-Non-SME"]'),
-  supplyContractDescription: () => cy.get('[data-cy="supplyContractDescription"]'),
+  supplyContractDescription: () => cy.get('[data-cy="supply-contract-description"]'),
 
   legallyDistinct: () => cy.get('[data-cy="legallyDistinct-true"]'),
   notLegallyDistinct: () => cy.get('[data-cy="legallyDistinct-false"]'),
