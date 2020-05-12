@@ -164,4 +164,11 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     });
   });
 
+  it('expects sme-type', () => {
+    expect(validationErrors.errorList['sme-type']).toEqual({
+      order: expect.any(String),
+      text: 'SME type is required',
+    });
+  });
+
 });

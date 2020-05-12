@@ -13,7 +13,7 @@ const page = {
   supplierCorrespondenceAddress: () => address('supplier-correspondence-address'),
   industrySector: () => cy.get('[data-cy="industry-sector"]'),
   industryClass: () => cy.get('[data-cy="industry-class"]'),
-  smeType: () => cy.get('[data-cy="smeType"]'),
+  smeType: () => cy.get('[data-cy="sme-type"]'),
   supplyContractDescription: () => cy.get('[data-cy="supplyContractDescription"]'),
   legallyDistinct: () => cy.get('[data-cy="legallyDistinct"]'),
   indemnifierCompaniesHouseRegistrationNumber: () => cy.get('[data-cy="indemnifier-companies-house-registration-number"]'),

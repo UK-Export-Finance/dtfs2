@@ -4,6 +4,7 @@ const supplierAddressIsRequired = require('./supplier-address-is-required');
 const supplierCorrespondenceAddressIsRequired = require('./supplier-correspondence-address-is-required');
 const industrySectorIsRequired = require('./industry-sector-is-required');
 const industryClassIsRequired = require('./industry-class-is-required');
+const smeTypeIsRequired = require('./sme-type-is-required');
 
 const rules = [
   supplierTypeIsRequired,
@@ -12,6 +13,7 @@ const rules = [
   supplierCorrespondenceAddressIsRequired,
   industrySectorIsRequired,
   industryClassIsRequired,
+  smeTypeIsRequired,
 ];
 
 module.exports = (submissionDetails) => {
