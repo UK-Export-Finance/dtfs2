@@ -24,7 +24,7 @@ describe('changeIndustryClasses', () => {
   ];
 
   beforeEach(() => {
-    document.body.innerHTML = '<select id="industryClass">'
+    document.body.innerHTML = '<select id="industry-class">'
       + '  <option value="1">test</option>'
       + '</select>';
   });

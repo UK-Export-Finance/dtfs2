@@ -54,16 +54,16 @@ const updateSubmissionDetails = async (dealId, postedSubmissionDetails, userToke
   }
 
   // fix industrySector/industryClass data; is nested in source data, and the way it's rendered makes this preferable
-  if (submissionDetails['industry-sector'] && submissionDetails.industryClass) {
+  if (submissionDetails['industry-sector'] && submissionDetails['industry-class']) {
     submissionDetails['industry-sector'] = {
       code: submissionDetails['industry-sector'],
       name: '', // TODO
       class: {
-        code: submissionDetails.industryClass,
+        code: submissionDetails['industry-class'],
         name: '', // TODO
       },
     };
-    delete submissionDetails.industryClass;
+    delete submissionDetails['industry-class'];
   }
 
   // fix currency
@@ -130,12 +130,12 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', asyn
 
   // fix industrySector/industryClass data; is nested in source data, and the way it's rendered makes this preferable
   const submissionDetails = req.body;
-  if (submissionDetails['industry-sector'] && submissionDetails.industryClass) {
+  if (submissionDetails['industry-sector'] && submissionDetails['industry-class']) {
     submissionDetails['industry-sector'] = {
       code: submissionDetails['industry-sector'],
       name: '', // TODO
       class: {
-        code: submissionDetails.industryClass,
+        code: submissionDetails['industry-class'],
         name: '', // TODO
       },
     };

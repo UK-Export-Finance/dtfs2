@@ -1,4 +1,4 @@
-export const industryClassElement = () => document.getElementById('industryClass');
+export const industryClassElement = () => document.getElementById('industry-class');
 
 export const appendSelectOption = (selectElement, option) => {
   const optionElement = document.createElement('option');
