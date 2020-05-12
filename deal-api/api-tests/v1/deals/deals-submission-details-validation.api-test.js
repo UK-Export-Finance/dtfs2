@@ -147,5 +147,21 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         text: 'Supplier correspondence country is required',
       });
     });
-  })
+
+  });
+
+  it('expects industry-sector', () => {
+    expect(validationErrors.errorList['industry-sector']).toEqual({
+      order: expect.any(String),
+      text: 'Industry Sector is required',
+    });
+  });
+
+  it('expects industry-class', () => {
+    expect(validationErrors.errorList['industry-class']).toEqual({
+      order: expect.any(String),
+      text: 'Industry Class is required',
+    });
+  });
+
 });

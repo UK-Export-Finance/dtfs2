@@ -6,13 +6,13 @@
 
   {# not able to switch these -> govuk components while we are applying javascript hooks #}
   <div class="govuk-form-group">
-    <label class="govuk-label" for="industrySector">
+    <label class="govuk-label" for="industry-sector">
       Industry sector
     </label>
-    <select data-cy="industrySector" class="govuk-select govuk-!-width-one-half" id="industrySector" name="industrySector" onChange="onChangeIndustrySector(event)">
+    <select data-cy="industry-sector" class="govuk-select govuk-!-width-one-half" id="industry-sector" name="industry-sector" onChange="onChangeIndustrySector(event)">
       <option value="">Select value</option>
       {% for sector in industrySectors %}
-        <option value="{{ sector.code }}" {% if deal.submissionDetails.industrySector.code === sector.code %}selected{% endif %}>{{ sector.name}}</option>
+        <option value="{{ sector.code }}" {% if deal.submissionDetails["industry-sector"].code === sector.code %}selected{% endif %}>{{ sector.name}}</option>
       {% endfor %}
     </select>
   </div>

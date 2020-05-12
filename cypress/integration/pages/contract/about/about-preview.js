@@ -11,7 +11,7 @@ const page = {
   supplierAddress: () => address('supplier-address'),
   supplierCorrespondenceAddressDifferent: () => cy.get('[data-cy="supplier-correspondence-address-is-different"]'),
   supplierCorrespondenceAddress: () => address('supplier-correspondence-address'),
-  industrySector: () => cy.get('[data-cy="industrySector"]'),
+  industrySector: () => cy.get('[data-cy="industry-sector"]'),
   industryClass: () => cy.get('[data-cy="industryClass"]'),
   smeType: () => cy.get('[data-cy="smeType"]'),
   supplyContractDescription: () => cy.get('[data-cy="supplyContractDescription"]'),
