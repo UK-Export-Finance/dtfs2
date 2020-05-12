@@ -39,16 +39,37 @@ context('about-supply-contract', () => {
     cy.login({...maker1});
 
     contractAboutSupplier.visit(deal);
+    // open up all the optional areas
     contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();
     contractAboutSupplier.legallyDistinct().click();
     contractAboutSupplier.indemnifierCorrespondenceAddressDifferent().click();
 
+    // submit everything without adding any data
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
 
+    // expect every error message -except- errors covering the 3 radio-buttons we selected ^^
+    // separate test to cover those.
     contractAboutPreview.expectError('Supplier type is required');
     contractAboutPreview.expectError('Supplier name is required');
+
+    contractAboutPreview.expectError('Supplier address line 1 is required');
+    contractAboutPreview.expectError('Supplier address line 2 is required');
+    contractAboutPreview.expectError('Supplier town is required');
+    // companies house doesnt provide this so not mandatory
+    //contractAboutPreview.expectError('Supplier county is required');
+    contractAboutPreview.expectError('Supplier postcode is required');
+    // for some reason the defaulting is different for this address, so we always get a value here..
+    //contractAboutPreview.expectError('Supplier country is required');
+
+    contractAboutPreview.expectError('Supplier correspondence address line 1 is required');
+    contractAboutPreview.expectError('Supplier correspondence address line 2 is required');
+    contractAboutPreview.expectError('Supplier correspondence town is required');
+    // companies house doesnt provide this so not mandatory
+    //contractAboutPreview.expectError('Supplier correspondence county is required');
+    contractAboutPreview.expectError('Supplier correspondence postcode is required');
+    contractAboutPreview.expectError('Supplier correspondence country is required');
 
     // contractAboutPreview.indemnifierCorrespondenceAddress().postcode().invoke('text').then((text) => {
     //   expect(text.trim()).equal('CM1 4EP');

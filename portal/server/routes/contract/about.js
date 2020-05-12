@@ -41,7 +41,7 @@ const updateSubmissionDetails = async (dealId, postedSubmissionDetails, userToke
   let submissionDetails = { ...postedSubmissionDetails };
 
   // autopopulation of addresses based on user selection
-  if (submissionDetails.suppliersCorrespondenceAddressDifferent !== 'true') {
+  if (submissionDetails['supplier-correspondence-address-is-different'] !== 'true') {
     submissionDetails = copyAddressData(submissionDetails, 'supplier-address', 'supplier-correspondence-address');
   }
 

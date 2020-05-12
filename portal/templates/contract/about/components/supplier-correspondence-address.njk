@@ -11,32 +11,32 @@
         fieldset: {
           legend: { text: "Is the Supplier's correspondence address different for the Company's Registered Address?" }
         },
-        idPrefix: "suppliersCorrespondenceAddressDifferent-",
-        name: "suppliersCorrespondenceAddressDifferent",
+        idPrefix: "supplier-correspondence-address-is-different-",
+        name: "supplier-correspondence-address-is-different",
         classes: "govuk-radios--inline",
         items: [
           {
             text: "Yes", value: "true",
-            checked: deal.submissionDetails.suppliersCorrespondenceAddressDifferent === 'true',
+            checked: deal.submissionDetails["supplier-correspondence-address-is-different"] === 'true',
             attributes: {
-              "data-cy": "suppliersCorrespondenceAddressDifferent-true",
+              "data-cy": "supplier-correspondence-address-is-different-true",
               "onClick": "onChangeRadioButton('additional-form-fields-supplier-correspondence', true)"
             }
           },
           {
             text: "No", value: "false",
-            checked: deal.submissionDetails.suppliersCorrespondenceAddressDifferent === 'false',
+            checked: deal.submissionDetails["supplier-correspondence-address-is-different"] === 'false',
             attributes: {
-              "data-cy": "suppliersCorrespondenceAddressDifferent-false",
+              "data-cy": "supplier-correspondence-address-is-different-false",
               "onClick": "onChangeRadioButton('additional-form-fields-supplier-correspondence', false)"
             }
           }
         ],
-        errorMessage: validationErrors.errorList.suppliersCorrespondenceAddressDifferent
+        errorMessage: validationErrors.errorList["supplier-correspondence-address-is-different"]
       })
     }}
 
-    {% set renderByDefault=deal.submissionDetails.suppliersCorrespondenceAddressDifferent %}
+    {% set renderByDefault=deal.submissionDetails["supplier-correspondence-address-is-different"] %}
     {% if renderByDefault !=='true' %}
       {% set renderByDefault='false'%}
     {% endif %}

@@ -1,9 +1,13 @@
 const supplierTypeIsRequired = require('./supplier-type-is-required');
 const supplierNameIsRequired = require('./supplier-name-is-required');
+const supplierAddressIsRequired = require('./supplier-address-is-required');
+const supplierCorrespondenceAddressIsRequired = require('./supplier-correspondence-address-is-required');
 
 const rules = [
   supplierTypeIsRequired,
   supplierNameIsRequired,
+  supplierAddressIsRequired,
+  supplierCorrespondenceAddressIsRequired,
 ];
 
 module.exports = (submissionDetails) => {

@@ -9,7 +9,7 @@ const page = {
   supplierCompaniesHouseRegistrationNumber: () => cy.get('[data-cy="supplier-companies-house-registration-number"]'),
   supplierName: () => cy.get('[data-cy="supplier-name"]'),
   supplierAddress: () => address('supplier-address'),
-  supplierCorrespondenceAddressDifferent: () => cy.get('[data-cy="suppliersCorrespondenceAddressDifferent"]'),
+  supplierCorrespondenceAddressDifferent: () => cy.get('[data-cy="supplier-correspondence-address-is-different"]'),
   supplierCorrespondenceAddress: () => address('supplier-correspondence-address'),
   industrySector: () => cy.get('[data-cy="industrySector"]'),
   industryClass: () => cy.get('[data-cy="industryClass"]'),

@@ -222,6 +222,49 @@ describe('/v1/deals/:id/submission-details', () => {
         });
       });
 
+      it('expects supplier-address-line-1', () => {
+        expect(validationErrors.errorList['supplier-address-line-1']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier address line 1 is required',
+        });
+      });
+
+      it('expects supplier-address-line-2', () => {
+        expect(validationErrors.errorList['supplier-address-line-2']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier address line 2 is required',
+        });
+      });
+
+      it('expects supplier-address-town', () => {
+        expect(validationErrors.errorList['supplier-address-town']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier town is required',
+        });
+      });
+
+      // companies-house lookup does not provide county, so we can't make it mandatory...
+      xit('expects supplier-address-county', () => {
+        expect(validationErrors.errorList['supplier-address-county']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier county is required',
+        });
+      });
+
+      it('expects supplier-address-postcode', () => {
+        expect(validationErrors.errorList['supplier-address-postcode']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier postcode is required',
+        });
+      });
+
+      it('expects supplier-address-country', () => {
+        expect(validationErrors.errorList['supplier-address-country']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier country is required',
+        });
+      });
+
     })
   });
 
