@@ -64,6 +64,28 @@ context('Add a Bond to a Deal', () => {
       const TOTAL_REQUIRED_FORM_FIELDS = 8;
       partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
     });
+  });
+
+  describe('when a user submits a Bond form without completing any fields', () => {
+    it('bond should display `Incomplete` status in Deal page', () => {
+      cy.loginGoToDealPage(user, deal);
+
+      pages.contract.addBondButton().click();
+
+      // get bondId, go back to Deal page
+      partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+        const bondId = bondIdHiddenInput[0].value;
+
+        pages.bondDetails.saveGoBackButton().click();
+        cy.url().should('eq', relative(`/contract/${deal._id}`));
+
+        const row = pages.contract.bondTransactionsTable.row(bondId);
+
+        row.bondStatus().invoke('text').then((text) => {
+          expect(text.trim()).equal('Incomplete');
+        });
+      });
+    });
 
     describe('after viewing the `Bond Preview` page', () => {
       it('should display validation errors in `Bond Details`, `Bond Financial Details` and `Bond Fee Details` pages', () => {
@@ -94,7 +116,7 @@ context('Add a Bond to a Deal', () => {
     });
   });
 
-  describe('When a user submits all Bond forms (`issued` bond stage, currency same as Supply Contract Currency)', () => {
+  describe('When a user submits all required Bond form fields (`issued` bond stage, currency same as Supply Contract Currency)', () => {
     it('should populate `Bond Preview` page with all submitted data', () => {
       cy.createADeal({
         username: user.username,
@@ -182,7 +204,7 @@ context('Add a Bond to a Deal', () => {
     });
   });
 
-  it('should populate Deal page with the submitted bond and link to `Bond Details` page', () => {
+  it('should populate Deal page with the submitted bond, display `Complete` status and link to `Bond Details` page', () => {
     cy.loginGoToDealPage(user, deal);
 
     cy.addBondToDeal();
@@ -205,7 +227,9 @@ context('Add a Bond to a Deal', () => {
 
       // TODO: UKEF facility ID (when built)
 
-      // TODO: status (when built)
+      row.bondStatus().invoke('text').then((text) => {
+        expect(text.trim()).equal('Complete');
+      });
 
       row.bondValue().invoke('text').then((text) => {
         const expectedValue = `${deal.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue}`;

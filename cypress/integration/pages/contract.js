@@ -31,6 +31,7 @@ const page = {
       const row = cy.get(`[data-cy="bond-${bondId}"]`);
       return {
         uniqueNumber: () => row.get('[data-cy="unique-number"]'),
+        bondStatus: () => row.get('[data-cy="bond-status"]'),
         bondValue: () => row.get('[data-cy="bond-value"]'),
         bondStage: () => row.get('[data-cy="bond-stage"]'),
         requestedCoverStartDate: () => row.get('[data-cy="requested-cover-start-date"]'),
