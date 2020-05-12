@@ -67,7 +67,7 @@ context('Bond Fee Details', () => {
 
       partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
 
-      pages.bondFeeDetails.feeTypeInAdvanceFeeFrequencyInputErrorMessage().should('be.visible');
+      pages.bondFeeDetails.feeFrequencyInputErrorMessage().should('be.visible');
       pages.bondFeeDetails.dayCountBasisInputErrorMessage().should('be.visible');
     });
   });
@@ -89,7 +89,7 @@ context('Bond Fee Details', () => {
   });
 
   describe('when a user selects that the Fee Type is `At maturity`', () => {
-    it('should NOT render `Fee frequency` radio buttons', () => {
+    it('should NOT render `Fee frequency` radio buttons and should not display in `Bond Preview` after submit', () => {
       goToBondFeeDetailsPage(deal);
 
       pages.bondFeeDetails.feeTypeAtMaturityInput().click();
@@ -97,6 +97,11 @@ context('Bond Fee Details', () => {
       const mainContent = cy.get('#main-content');
       const visibleRadioButtons = mainContent.find('input[type=radio]:visible');
       visibleRadioButtons.should('have.length', 5);
+
+      pages.bondFeeDetails.submit().click();
+      cy.url().should('include', '/preview');
+
+      pages.bondPreview.feeFrequency().should('not.be.visible');
     });
   });
 
