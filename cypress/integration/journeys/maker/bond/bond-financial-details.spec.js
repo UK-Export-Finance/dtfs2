@@ -64,7 +64,7 @@ context('Bond Financial Details', () => {
   });
 
   describe('When a user submits the `Bond Financial Details` form', () => {
-    it('form submit should progress to `Bond Fee Details` page and prepopulate submitted form fields when returning back to `Bond Financial Details` page', () => {
+    it('should progress to `Bond Fee Details` page and prepopulate submitted form fields when returning back to `Bond Financial Details` page', () => {
       cy.loginGoToDealPage(user, deal);
 
       pages.contract.addBondButton().click();

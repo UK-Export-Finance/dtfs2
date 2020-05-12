@@ -35,6 +35,11 @@
         }
       }
     ],
-    errorMessage: errorObj
+    errorMessage: errorObj and {
+      text: errorObj.text,
+      attributes: {
+        "data-cy": "fee-frequency-error-message"
+      }
+    }
   }) }}
 {% endmacro %}
