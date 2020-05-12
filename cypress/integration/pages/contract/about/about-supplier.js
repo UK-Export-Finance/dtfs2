@@ -13,7 +13,7 @@ const page = {
   supplierCorrespondenceAddressDifferent: () => cy.get('[data-cy="supplier-correspondence-address-is-different-true"]'),
   supplierCorrespondenceAddress: () => address('supplier-correspondence-address'),
   industrySector: () => cy.get('[data-cy="industry-sector"]'),
-  industryClass: () => cy.get('[data-cy="industryClass"]'),
+  industryClass: () => cy.get('[data-cy="industry-class"]'),
   smeTypeMicro: () => cy.get('[data-cy="smeType-Micro"]'),
   smeTypeSmall: () => cy.get('[data-cy="smeType-Small"]'),
   smeTypeMedium: () => cy.get('[data-cy="smeType-Medium"]'),

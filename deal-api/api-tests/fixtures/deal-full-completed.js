@@ -150,7 +150,7 @@ const deal = {
     'indemnifier-correspondence-address-town': 'Chelmsford',
     'indemnifier-name': 'WATKINSON TRADING LIMITED',
     indemnifierCorrespondenceAddressDifferent: 'true',
-    industryClass: '62012',
+    'industry-class': '62012',
     'industry-sector': {
       class: {
         code: '62012',
