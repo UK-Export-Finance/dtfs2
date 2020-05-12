@@ -42,7 +42,10 @@ exports.create = async (req, res) => {
       return res.status(401).send();
     }
 
-    const newBondObj = { _id: new ObjectId() };
+    const newBondObj = {
+      _id: new ObjectId(),
+      status: 'Not started',
+    };
 
     const updatedDeal = {
       ...deal,
@@ -146,15 +149,13 @@ exports.updateBond = async (req, res) => {
         updatedBond.currency = await handleBondCurrency(actualCurrencyCode);
       }
 
-      const requiredFieldsCompleted = false;
+      const validationErrors = getBondErrors(updatedBond);
 
-      if (!requiredFieldsCompleted) {
+      if (!validationErrors) {
+        updatedBond.status = 'Complete';
+      } else {
         updatedBond.status = 'Incomplete';
       }
-
-      // if (requiredFieldsCompleted) {
-      //   updatedBond.status = 'Complete';
-      // }
 
       const updatedDeal = {
         ...deal,
@@ -165,8 +166,6 @@ exports.updateBond = async (req, res) => {
           ],
         },
       };
-
-      const validationErrors = getBondErrors(updatedBond);
 
       const newReq = {
         params: req.params,
