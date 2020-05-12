@@ -55,7 +55,10 @@ context('Bond Fee Details', () => {
       goToBondFeeDetailsPage(deal);
 
       pages.bondFeeDetails.feeTypeAtMaturityInput().click();
-      pages.bondFeeDetails.feeTypeAtMaturityFeeFrequencyRadioGroup().should('not.be.visible');
+
+      const mainContent = cy.get('#main-content');
+      const visibleRadioButtons = mainContent.find('input[type=radio]:visible');
+      visibleRadioButtons.should('have.length', 5);
     });
   });
 

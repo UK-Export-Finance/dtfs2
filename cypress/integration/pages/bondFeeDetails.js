@@ -1,11 +1,10 @@
 const page = {
   feeTypeInAdvanceInput: () => cy.get('[data-cy="fee-type-in-advance"]'),
-  feeTypeInAdvanceFeeFrequencyAnnuallyInput: () => cy.get('[data-cy="inAdvanceFeeFrequency-annually"]'),
+  feeTypeInAdvanceFeeFrequencyAnnuallyInput: () => cy.get('[data-cy="inAdvance-fee-frequency-annually"]'),
 
   feeTypeInArrearInput: () => cy.get('[data-cy="fee-type-in-arrear"]'),
 
   feeTypeAtMaturityInput: () => cy.get('[data-cy="fee-type-at-maturity"]'),
-  feeTypeAtMaturityFeeFrequencyRadioGroup: () => cy.get('[data-cy="atMaturity-radio-group"]'),
 
   dayCountBasis365Input: () => cy.get('[data-cy="day-count-basis-365"]'),
   submit: () => cy.get('[data-cy="submit-button"]'),
