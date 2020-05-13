@@ -4,7 +4,7 @@
 
 {% block content %}
 
-  {{ loanNav.nav(
+  {{ loanNav.render(
     completedStatus = loan.completedStatus,
     current = 'loanPreview',
     contractId = dealId,
