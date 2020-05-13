@@ -26,156 +26,180 @@ const newDeal = aDeal({
 });
 
 describe('PUT /v1/deals/:id/submission-details validation rules', () => {
-  let validationErrors;
+  let anHSBCMaker;
 
   beforeAll(async()=>{
     const testUsers = await testUserCache.initialise(app);
-    const anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
-
-    const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-    const createdDeal = postResult.body;
-    const submissionDetails = {};
-
-    const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
-
-    validationErrors = body.validationErrors;
+    anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
   });
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
   });
 
-  it('expects supplier-type', () => {
-    expect(validationErrors.errorList['supplier-type']).toEqual({
-      order: expect.any(String),
-      text: 'Supplier type is required',
+  describe('For all cases', () => {
+    let validationErrors;
+
+    beforeAll(async()=>{
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const submissionDetails = {};
+
+      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      validationErrors = body.validationErrors;
     });
+
+    it('expects supplier-type', () => {
+      expect(validationErrors.errorList['supplier-type']).toEqual({
+        order: expect.any(String),
+        text: 'Supplier type is required',
+      });
+    });
+
+    it('expects supplier-name', () => {
+      expect(validationErrors.errorList['supplier-name']).toEqual({
+        order: expect.any(String),
+        text: 'Supplier name is required',
+      });
+    });
+
+    describe('expects supplier address', () => {
+      it('expects supplier-address-line-1', () => {
+        expect(validationErrors.errorList['supplier-address-line-1']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier address line 1 is required',
+        });
+      });
+
+      it('expects supplier-address-line-2', () => {
+        expect(validationErrors.errorList['supplier-address-line-2']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier address line 2 is required',
+        });
+      });
+
+      it('expects supplier-address-town', () => {
+        expect(validationErrors.errorList['supplier-address-town']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier town is required',
+        });
+      });
+
+      // companies-house lookup does not provide county, so we can't make it mandatory...
+      xit('expects supplier-address-county', () => {
+        expect(validationErrors.errorList['supplier-address-county']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier county is required',
+        });
+      });
+
+      it('expects supplier-address-postcode', () => {
+        expect(validationErrors.errorList['supplier-address-postcode']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier postcode is required',
+        });
+      });
+
+      it('expects supplier-address-country', () => {
+        expect(validationErrors.errorList['supplier-address-country']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier country is required',
+        });
+      });
+    })
+
+    it('expects industry-sector', () => {
+      expect(validationErrors.errorList['industry-sector']).toEqual({
+        order: expect.any(String),
+        text: 'Industry Sector is required',
+      });
+    });
+
+    it('expects industry-class', () => {
+      expect(validationErrors.errorList['industry-class']).toEqual({
+        order: expect.any(String),
+        text: 'Industry Class is required',
+      });
+    });
+
+    it('expects sme-type', () => {
+      expect(validationErrors.errorList['sme-type']).toEqual({
+        order: expect.any(String),
+        text: 'SME type is required',
+      });
+    });
+
+    it('expects supply-contract-description', () => {
+      expect(validationErrors.errorList['supply-contract-description']).toEqual({
+        order: expect.any(String),
+        text: 'Supply Contract Description is required',
+      });
+    });
+
   });
 
-  it('expects supplier-name', () => {
-    expect(validationErrors.errorList['supplier-name']).toEqual({
-      order: expect.any(String),
-      text: 'Supplier name is required',
-    });
-  });
+  describe('if the supplier is flagged as having a separate correspondence address', () => {
+    let validationErrors;
 
-  describe('supplier address', () => {
-    it('expects supplier-address-line-1', () => {
-      expect(validationErrors.errorList['supplier-address-line-1']).toEqual({
-        order: expect.any(String),
-        text: 'Supplier address line 1 is required',
-      });
+    beforeAll(async()=>{
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const submissionDetails = {"supplier-correspondence-address-is-different":"true"};
+
+      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      validationErrors = body.validationErrors;
     });
 
-    it('expects supplier-address-line-2', () => {
-      expect(validationErrors.errorList['supplier-address-line-2']).toEqual({
-        order: expect.any(String),
-        text: 'Supplier address line 2 is required',
+
+    describe('expects supplier correspondence address', () => {
+
+      it('expects supplier-correspondence-address-line-1', () => {
+        expect(validationErrors.errorList['supplier-correspondence-address-line-1']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier correspondence address line 1 is required',
+        });
       });
+
+      it('expects supplier-correspondence-address-line-2', () => {
+        expect(validationErrors.errorList['supplier-correspondence-address-line-2']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier correspondence address line 2 is required',
+        });
+      });
+
+      it('expects supplier-correspondence-address-town', () => {
+        expect(validationErrors.errorList['supplier-correspondence-address-town']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier correspondence town is required',
+        });
+      });
+
+      // companies-house lookup does not provide county, so we can't make it mandatory...
+      xit('expects supplier-correspondence-address-county', () => {
+        expect(validationErrors.errorList['supplier-correspondence-address-county']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier correspondence county is required',
+        });
+      });
+
+      it('expects supplier-correspondence-address-postcode', () => {
+        expect(validationErrors.errorList['supplier-correspondence-address-postcode']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier correspondence postcode is required',
+        });
+      });
+
+      it('expects supplier-correspondence-address-country', () => {
+        expect(validationErrors.errorList['supplier-correspondence-address-country']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier correspondence country is required',
+        });
+      });
+
     });
 
-    it('expects supplier-address-town', () => {
-      expect(validationErrors.errorList['supplier-address-town']).toEqual({
-        order: expect.any(String),
-        text: 'Supplier town is required',
-      });
-    });
-
-    // companies-house lookup does not provide county, so we can't make it mandatory...
-    xit('expects supplier-address-county', () => {
-      expect(validationErrors.errorList['supplier-address-county']).toEqual({
-        order: expect.any(String),
-        text: 'Supplier county is required',
-      });
-    });
-
-    it('expects supplier-address-postcode', () => {
-      expect(validationErrors.errorList['supplier-address-postcode']).toEqual({
-        order: expect.any(String),
-        text: 'Supplier postcode is required',
-      });
-    });
-
-    it('expects supplier-address-country', () => {
-      expect(validationErrors.errorList['supplier-address-country']).toEqual({
-        order: expect.any(String),
-        text: 'Supplier country is required',
-      });
-    });
   })
-
-  describe('supplier correspondence address', () => {
-    it('expects supplier-correspondence-address-line-1', () => {
-      expect(validationErrors.errorList['supplier-correspondence-address-line-1']).toEqual({
-        order: expect.any(String),
-        text: 'Supplier correspondence address line 1 is required',
-      });
-    });
-
-    it('expects supplier-correspondence-address-line-2', () => {
-      expect(validationErrors.errorList['supplier-correspondence-address-line-2']).toEqual({
-        order: expect.any(String),
-        text: 'Supplier correspondence address line 2 is required',
-      });
-    });
-
-    it('expects supplier-correspondence-address-town', () => {
-      expect(validationErrors.errorList['supplier-correspondence-address-town']).toEqual({
-        order: expect.any(String),
-        text: 'Supplier correspondence town is required',
-      });
-    });
-
-    // companies-house lookup does not provide county, so we can't make it mandatory...
-    xit('expects supplier-correspondence-address-county', () => {
-      expect(validationErrors.errorList['supplier-correspondence-address-county']).toEqual({
-        order: expect.any(String),
-        text: 'Supplier correspondence county is required',
-      });
-    });
-
-    it('expects supplier-correspondence-address-postcode', () => {
-      expect(validationErrors.errorList['supplier-correspondence-address-postcode']).toEqual({
-        order: expect.any(String),
-        text: 'Supplier correspondence postcode is required',
-      });
-    });
-
-    it('expects supplier-correspondence-address-country', () => {
-      expect(validationErrors.errorList['supplier-correspondence-address-country']).toEqual({
-        order: expect.any(String),
-        text: 'Supplier correspondence country is required',
-      });
-    });
-
-  });
-
-  it('expects industry-sector', () => {
-    expect(validationErrors.errorList['industry-sector']).toEqual({
-      order: expect.any(String),
-      text: 'Industry Sector is required',
-    });
-  });
-
-  it('expects industry-class', () => {
-    expect(validationErrors.errorList['industry-class']).toEqual({
-      order: expect.any(String),
-      text: 'Industry Class is required',
-    });
-  });
-
-  it('expects sme-type', () => {
-    expect(validationErrors.errorList['sme-type']).toEqual({
-      order: expect.any(String),
-      text: 'SME type is required',
-    });
-  });
-
-  it('expects supply-contract-description', () => {
-    expect(validationErrors.errorList['supply-contract-description']).toEqual({
-      order: expect.any(String),
-      text: 'Supply Contract Description is required',
-    });
-  });
 
 });
