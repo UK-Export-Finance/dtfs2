@@ -4,7 +4,14 @@ const { hasValue } = require('../../../utils/string');
 module.exports = (submissionDetails, errorList) => {
   const newErrorList = { ...errorList };
 
-  if (submissionDetails.legallyDistinct === 'true') {
+  const { legallyDistinct } = submissionDetails;
+
+  if (legallyDistinct !== 'false' && legallyDistinct !== 'true') {
+    newErrorList.legallyDistinct = {
+      order: orderNumber(newErrorList),
+      text: 'Guarantor/Indemnifier is required',
+    };
+  } else if (legallyDistinct === 'true') {
     if (!hasValue(submissionDetails['indemnifier-name'])) {
       newErrorList['indemnifier-name'] = {
         order: orderNumber(newErrorList),

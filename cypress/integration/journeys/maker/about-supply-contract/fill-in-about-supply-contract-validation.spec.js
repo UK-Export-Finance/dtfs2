@@ -74,16 +74,36 @@ context('about-supply-contract', () => {
 
     // open up the correspondence address to generate more errors..
     contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();
+    // save + skip ahead to the preview
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
 
+    // prove the errors show on the preview page
     contractAboutPreview.expectError('Supplier correspondence address line 1 is required');
     contractAboutPreview.expectError('Supplier correspondence address line 2 is required');
     contractAboutPreview.expectError('Supplier correspondence town is required');
     contractAboutPreview.expectError('Supplier correspondence postcode is required');
 
+    // prove the errors show on the about-supplier page
+    contractAboutSupplier.visit(deal);
+    contractAboutSupplier.expectError('Supplier correspondence address line 1 is required');
+    contractAboutSupplier.expectError('Supplier correspondence address line 2 is required');
+    contractAboutSupplier.expectError('Supplier correspondence town is required');
+    contractAboutSupplier.expectError('Supplier correspondence postcode is required');
 
+    // open up the legally-distinct indemnifier section to generate more errors...
+    contractAboutSupplier.legallyDistinct().click();
+    // save + skip ahead to the preview
+    contractAboutSupplier.nextPage().click();
+    contractAboutBuyer.nextPage().click();
+    contractAboutFinancial.preview().click();
+
+    contractAboutPreview.expectError('Indemnifier address line 1 is required');
+    contractAboutPreview.expectError('Indemnifier address line 2 is required');
+    contractAboutPreview.expectError('Indemnifier town is required');
+    contractAboutPreview.expectError('Indemnifier postcode is required');
+    contractAboutPreview.expectError('Indemnifier country is required');
 
   });
 

@@ -71,6 +71,13 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       });
     });
 
+    it('expects legallyDistinct', () => {
+      expect(validationErrors.errorList.legallyDistinct).toEqual({
+        order: expect.any(String),
+        text: 'Guarantor/Indemnifier is required',
+      });
+    });
+
     describe('expects supplier address', () => {
       it('expects supplier-address-line-1', () => {
         expect(validationErrors.errorList['supplier-address-line-1']).toEqual({
@@ -207,6 +214,75 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
 
     });
 
-  })
+  });
+
+  describe('if the guarantor/indemnifier is flagged as being legally distinct from the supplier', () => {
+    let validationErrors;
+
+    beforeAll(async()=>{
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const submissionDetails = {"legallyDistinct":"true"};
+
+      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      validationErrors = body.validationErrors;
+    });
+
+    it('expects indemnifier-name', () => {
+      expect(validationErrors.errorList['indemnifier-name']).toEqual({
+        order: expect.any(String),
+        text: 'Indemnifier name is required',
+      });
+    });
+
+    describe('expects indemnifier address', () => {
+
+      it('expects indemnifier-address-line-1', () => {
+        expect(validationErrors.errorList['indemnifier-address-line-1']).toEqual({
+          order: expect.any(String),
+          text: 'Indemnifier address line 1 is required',
+        });
+      });
+
+      it('expects indemnifier-address-line-2', () => {
+        expect(validationErrors.errorList['indemnifier-address-line-2']).toEqual({
+          order: expect.any(String),
+          text: 'Indemnifier address line 2 is required',
+        });
+      });
+
+      it('expects indemnifier-address-town', () => {
+        expect(validationErrors.errorList['indemnifier-address-town']).toEqual({
+          order: expect.any(String),
+          text: 'Indemnifier town is required',
+        });
+      });
+
+      // companies-house lookup does not provide county, so we can't make it mandatory...
+      xit('expects indemnifier-address-county', () => {
+        expect(validationErrors.errorList['indemnifier-address-county']).toEqual({
+          order: expect.any(String),
+          text: 'Indemnifier county is required',
+        });
+      });
+
+      it('expects indemnifier-address-postcode', () => {
+        expect(validationErrors.errorList['indemnifier-address-postcode']).toEqual({
+          order: expect.any(String),
+          text: 'Indemnifier postcode is required',
+        });
+      });
+
+      it('expects indemnifier-address-country', () => {
+        expect(validationErrors.errorList['indemnifier-address-country']).toEqual({
+          order: expect.any(String),
+          text: 'Indemnifier country is required',
+        });
+      });
+
+    });
+
+  });
 
 });
