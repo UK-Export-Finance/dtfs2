@@ -39,48 +39,35 @@ context('about-supply-contract', () => {
     cy.login({...maker1});
 
     contractAboutSupplier.visit(deal);
-    // // open up all the optional areas
-    // contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();
-    // contractAboutSupplier.legallyDistinct().click();
-    // contractAboutSupplier.indemnifierCorrespondenceAddressDifferent().click();
-
-    // submit everything without adding any data
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
 
-    // expect every error message -except- errors covering the 3 radio-buttons we selected ^^
-    // separate test to cover those.
+    // prove validation of all non-conditional pieces
     contractAboutPreview.expectError('Supplier type is required');
     contractAboutPreview.expectError('Supplier name is required');
-
     contractAboutPreview.expectError('Supplier address line 1 is required');
     contractAboutPreview.expectError('Supplier address line 2 is required');
     contractAboutPreview.expectError('Supplier town is required');
-    // companies house doesnt provide this so not mandatory
-    // contractAboutPreview.expectError('Supplier county is required');
+    // contractAboutPreview.expectError('Supplier county is required');    // not provided by companies-house lookup
     contractAboutPreview.expectError('Supplier postcode is required');
-    // default value applied so we always get a value here..
-    //  contractAboutPreview.expectError('Supplier country is required');
-
-    contractAboutPreview.expectError('Supplier correspondence address line 1 is required');
-    contractAboutPreview.expectError('Supplier correspondence address line 2 is required');
-    contractAboutPreview.expectError('Supplier correspondence town is required');
-    // companies house doesnt provide this so not mandatory
-    //contractAboutPreview.expectError('Supplier correspondence county is required');
-    contractAboutPreview.expectError('Supplier correspondence postcode is required');
-    // default value applied so we always get a value here..
-    //contractAboutPreview.expectError('Supplier correspondence country is required');
-
+    //  contractAboutPreview.expectError('Supplier country is required'); // default value applied
     contractAboutPreview.expectError('Industry Sector is required');
     contractAboutPreview.expectError('Industry Class is required');
     contractAboutPreview.expectError('SME type is required');
 
+    // go back and start opening up optional areas and coming back to look for errors..
+    contractAboutSupplier.visit(deal);
+    contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();
+    contractAboutSupplier.nextPage().click();
+    contractAboutBuyer.nextPage().click();
+    contractAboutFinancial.preview().click();
 
+    contractAboutPreview.expectError('Supplier correspondence address line 1 is required');
+    contractAboutPreview.expectError('Supplier correspondence address line 2 is required');
+    contractAboutPreview.expectError('Supplier correspondence town is required');
+    contractAboutPreview.expectError('Supplier correspondence postcode is required');
 
-    // contractAboutPreview.indemnifierCorrespondenceAddress().postcode().invoke('text').then((text) => {
-    //   expect(text.trim()).equal('CM1 4EP');
-    // });
 
 
   });
