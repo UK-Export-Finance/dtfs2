@@ -31,8 +31,8 @@
     }}
   {% endif %}
 
-  {{ bondNav.nav(
-    completedStatus = bond.completedStatus,
+  {{ bondNav.render(
+    completedStatus = completedStatus,
     current = 'bondFinancialDetails',
     contractId = dealId,
     childId = bond._id
