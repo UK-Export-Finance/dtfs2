@@ -6,6 +6,7 @@ const industrySectorIsRequired = require('./industry-sector-is-required');
 const industryClassIsRequired = require('./industry-class-is-required');
 const smeTypeIsRequired = require('./sme-type-is-required');
 const supplyContractDescriptionIsRequired = require('./supply-contract-description-is-required');
+const indemnifierDataIsRequired = require('./indemnifier-data-is-required-if-legally-distinct');
 
 const rules = [
   supplierTypeIsRequired,
@@ -16,6 +17,7 @@ const rules = [
   industryClassIsRequired,
   smeTypeIsRequired,
   supplyContractDescriptionIsRequired,
+  indemnifierDataIsRequired,
 ];
 
 module.exports = (submissionDetails) => {
