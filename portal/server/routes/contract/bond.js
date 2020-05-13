@@ -14,6 +14,7 @@ import {
   bondFeeDetailsValidationErrors,
   bondPreviewValidationErrors,
 } from './pageSpecificValidationErrors/bond';
+import bondCompletedStatus from './completedStatus/bond';
 
 const router = express.Router();
 
@@ -39,10 +40,13 @@ router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
     validationErrors,
   } = apiResponse;
 
+  const completedStatus = bondCompletedStatus(validationErrors);
+
   return res.render('bond/bond-details.njk', {
     dealId,
     bond,
     validationErrors: bondDetailsValidationErrors(validationErrors, bond),
+    completedStatus,
   });
 });
 
@@ -82,11 +86,14 @@ router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => 
     validationErrors,
   } = bondResponse;
 
+  const completedStatus = bondCompletedStatus(validationErrors);
+
   return res.render('bond/bond-financial-details.njk', {
     dealId,
     bond,
     validationErrors: bondFinancialDetailsValidationErrors(validationErrors, bond),
     currencies: mapCurrencies(currencies, bondResponse.bond.currency),
+    completedStatus,
   });
 });
 
@@ -121,10 +128,13 @@ router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
     validationErrors,
   } = apiResponse;
 
+  const completedStatus = bondCompletedStatus(validationErrors);
+
   return res.render('bond/bond-fee-details.njk', {
     dealId,
     bond,
     validationErrors: bondFeeDetailsValidationErrors(validationErrors, bond),
+    completedStatus,
   });
 });
 
