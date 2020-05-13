@@ -5,6 +5,8 @@ import {
   getApiData,
   requestParams,
   mapCurrencies,
+  mapIndustrySectors,
+  mapIndustryClasses,
   errorHref,
   generateErrorSummary,
 } from '../../helpers';
@@ -19,52 +21,13 @@ const getPortalCountryForCompaniesHouseCountry = (companiesHouseCountry) => {
   return '';
 };
 
-
-const copyAddressData = (submissionDetails, sourcePrefix, targetPrefix) => {
-  const response = { ...submissionDetails };
-  response[`${targetPrefix}-line-1`] = submissionDetails[`${sourcePrefix}-line-1`];
-  response[`${targetPrefix}-line-2`] = submissionDetails[`${sourcePrefix}-line-2`];
-  response[`${targetPrefix}-town`] = submissionDetails[`${sourcePrefix}-town`];
-  response[`${targetPrefix}-county`] = submissionDetails[`${sourcePrefix}-county`];
-  response[`${targetPrefix}-postcode`] = submissionDetails[`${sourcePrefix}-postcode`];
-  response[`${targetPrefix}-country`] = submissionDetails[`${sourcePrefix}-country`];
-
-  return response;
-};
-
 const updateSubmissionDetails = async (dealId, postedSubmissionDetails, userToken, res) => {
   const deal = await getApiData(
     api.contract(dealId, userToken),
     res,
   );
 
-  let submissionDetails = { ...postedSubmissionDetails };
-
-  // autopopulation of addresses based on user selection
-  if (submissionDetails['supplier-correspondence-address-is-different'] !== 'true') {
-    submissionDetails = copyAddressData(submissionDetails, 'supplier-address', 'supplier-correspondence-address');
-  }
-
-  if (submissionDetails.legallyDistinct !== 'true') {
-    submissionDetails = copyAddressData(submissionDetails, 'supplier-address', 'indemnifier-address');
-  }
-
-  if (submissionDetails.indemnifierCorrespondenceAddressDifferent !== 'true') {
-    submissionDetails = copyAddressData(submissionDetails, 'indemnifier-address', 'indemnifier-correspondence-address');
-  }
-
-  // fix industrySector/industryClass data; is nested in source data, and the way it's rendered makes this preferable
-  if (submissionDetails['industry-sector'] && submissionDetails['industry-class']) {
-    submissionDetails['industry-sector'] = {
-      code: submissionDetails['industry-sector'],
-      name: '', // TODO
-      class: {
-        code: submissionDetails['industry-class'],
-        name: '', // TODO
-      },
-    };
-    delete submissionDetails['industry-class'];
-  }
+  const submissionDetails = { ...postedSubmissionDetails };
 
   // fix currency
   if (submissionDetails.supplyContractCurrency && !submissionDetails.supplyContractCurrency.id) {
@@ -92,6 +55,14 @@ router.get('/contract/:_id/about/supplier', async (req, res) => {
     errorHref,
   );
 
+  const industrySectors = await getApiData(
+    api.industrySectors(userToken),
+    res,
+  );
+
+  const mappedIndustrySectors = mapIndustrySectors(industrySectors, deal.submissionDetails['industry-sector']);
+  const mappedIndustryClasses = mapIndustryClasses(industrySectors, deal.submissionDetails['industry-sector'], deal.submissionDetails['industry-class']);
+
   return res.render('contract/about/about-supplier.njk', {
     deal,
     validationErrors: formattedValidationErrors,
@@ -99,10 +70,9 @@ router.get('/contract/:_id/about/supplier', async (req, res) => {
       api.countries(userToken),
       res,
     ),
-    industrySectors: await getApiData(
-      api.industrySectors(userToken),
-      res,
-    ),
+    industrySectors,
+    mappedIndustrySectors,
+    mappedIndustryClasses,
   });
 });
 
@@ -128,26 +98,20 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', asyn
   const searchTerm = `${prefix}-companies-house-registration-number`;
   const company = await companiesHouseAPI.searchByRegistrationNumber(req.body[searchTerm]);
 
-  // fix industrySector/industryClass data; is nested in source data, and the way it's rendered makes this preferable
-  const submissionDetails = req.body;
-  if (submissionDetails['industry-sector'] && submissionDetails['industry-class']) {
-    submissionDetails['industry-sector'] = {
-      code: submissionDetails['industry-sector'],
-      name: '', // TODO
-      class: {
-        code: submissionDetails['industry-class'],
-        name: '', // TODO
-      },
-    };
-  }
-
-  // cache the current form status in the deal so it gets re-displayed when we re-render..
-  deal.submissionDetails = submissionDetails;
+  deal.submissionDetails = req.body;
 
   if (!company) {
     // TODO - send a real message?
     const validation = {};
     validation[`${prefix}-companies-house-registration-number`] = 'not found';
+
+    const industrySectors = await getApiData(
+      api.industrySectors(userToken),
+      res,
+    );
+
+    const mappedIndustrySectors = mapIndustrySectors(industrySectors, deal.submissionDetails['industry-sector']);
+    const mappedIndustryClasses = mapIndustryClasses(industrySectors, deal.submissionDetails['industry-sector'], deal.submissionDetails['industry-class']);
 
     return res.render('contract/about/about-supplier.njk', {
       validation,
@@ -156,10 +120,9 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', asyn
         api.countries(userToken),
         res,
       ),
-      industrySectors: await getApiData(
-        api.industrySectors(userToken),
-        res,
-      ),
+      industrySectors,
+      mappedIndustrySectors,
+      mappedIndustryClasses,
     });
   }
 
@@ -174,16 +137,24 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', asyn
   // contract.submissionDetails["supplier-address-county"] = company.address.?????;
 
   // re-render
+
+  const industrySectors = await getApiData(
+    api.industrySectors(userToken),
+    res,
+  );
+
+  const mappedIndustrySectors = mapIndustrySectors(industrySectors, deal.submissionDetails['industry-sector']);
+  const mappedIndustryClasses = mapIndustryClasses(industrySectors, deal.submissionDetails['industry-sector'], deal.submissionDetails['industry-class']);
+
   return res.render('contract/about/about-supplier.njk', {
     deal,
     countries: await getApiData(
       api.countries(userToken),
       res,
     ),
-    industrySectors: await getApiData(
-      api.industrySectors(userToken),
-      res,
-    ),
+    industrySectors,
+    mappedIndustrySectors,
+    mappedIndustryClasses,
   });
 });
 

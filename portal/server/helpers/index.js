@@ -6,6 +6,8 @@ import formatCountriesForGDSComponent from './formatCountriesForGDSComponent';
 import errorHref from './errorHref';
 import postToApi from './postToApi';
 import mapCurrencies from './mapCurrencies';
+import mapIndustryClasses from './mapIndustryClasses';
+import mapIndustrySectors from './mapIndustrySectors';
 import pageSpecificValidationErrors from './pageSpecificValidationErrors';
 
 export {
@@ -17,5 +19,7 @@ export {
   errorHref,
   postToApi,
   mapCurrencies,
+  mapIndustryClasses,
+  mapIndustrySectors,
   pageSpecificValidationErrors,
 };

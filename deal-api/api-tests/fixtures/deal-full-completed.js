@@ -151,14 +151,7 @@ const deal = {
     'indemnifier-name': 'WATKINSON TRADING LIMITED',
     indemnifierCorrespondenceAddressDifferent: 'true',
     'industry-class': '62012',
-    'industry-sector': {
-      class: {
-        code: '62012',
-        name: '',
-      },
-      code: '1009',
-      name: '',
-    },
+    'industry-sector': '1009',
     legallyDistinct: 'true',
     'sme-type': 'Small',
     'supplier-address-country': 'GBR',

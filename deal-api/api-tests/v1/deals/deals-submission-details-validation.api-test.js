@@ -64,6 +64,13 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       });
     });
 
+    it('expects supplier-correspondence-address-is-different', () => {
+      expect(validationErrors.errorList['supplier-correspondence-address-is-different']).toEqual({
+        order: expect.any(String),
+        text: 'Supplier correspondence address is required',
+      });
+    });
+
     describe('expects supplier address', () => {
       it('expects supplier-address-line-1', () => {
         expect(validationErrors.errorList['supplier-address-line-1']).toEqual({
