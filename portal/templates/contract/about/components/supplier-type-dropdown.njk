@@ -23,7 +23,8 @@
         text: "UK Supplier",
         selected: deal.submissionDetails['supplier-type'] === "UK Supplier"
       }
-    ]
+    ],
+    errorMessage: validationErrors.errorList["supplier-type"]
   }) }}
 
 {% endmacro %}

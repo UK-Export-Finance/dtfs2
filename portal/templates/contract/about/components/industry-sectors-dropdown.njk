@@ -1,21 +1,21 @@
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 
 {% macro render(opts) %}
   {% set deal = opts.deal %}
   {% set validationErrors = opts.validationErrors %}
-  {% set industrySectors = opts.industrySectors %}
+  {% set mappedIndustrySectors = opts.mappedIndustrySectors %}
 
-  {# not able to switch these -> govuk components while we are applying javascript hooks #}
-  <div class="govuk-form-group">
-    <label class="govuk-label" for="industry-sector">
-      Industry sector
-    </label>
-    <select data-cy="industry-sector" class="govuk-select govuk-!-width-one-half" id="industry-sector" name="industry-sector" onChange="onChangeIndustrySector(event)">
-      <option value="">Select value</option>
-      {% for sector in industrySectors %}
-        <option value="{{ sector.code }}" {% if deal.submissionDetails["industry-sector"].code === sector.code %}selected{% endif %}>{{ sector.name}}</option>
-      {% endfor %}
-    </select>
-  </div>
-
+  {{ govukSelect({
+    id: "industry-sector",
+    name: "industry-sector",
+    label: { text: "Industry sector" },
+    classes: "govuk-!-width-one-half",
+    attributes: {
+      "data-cy": "industry-sector",
+      "onChange": "onChangeIndustrySector(event)"
+    },
+    items: mappedIndustrySectors,
+    errorMessage: validationErrors.errorList["industry-sector"]
+  }) }}
 
 {% endmacro %}

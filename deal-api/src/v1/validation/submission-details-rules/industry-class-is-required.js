@@ -4,7 +4,7 @@ const { hasValue } = require('../../../utils/string');
 module.exports = (submissionDetails, errorList) => {
   const newErrorList = { ...errorList };
 
-  if (!hasValue(submissionDetails['industry-sector']) || !hasValue(submissionDetails['industry-sector'].class)) {
+  if (!hasValue(submissionDetails['industry-sector'])) {
     newErrorList['industry-class'] = {
       order: orderNumber(newErrorList),
       text: 'Industry Class is required',

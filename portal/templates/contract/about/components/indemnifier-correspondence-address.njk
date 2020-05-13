@@ -43,6 +43,7 @@
   <div id="additional-form-fields-indemnifier-correspondence-address" class="{% if deal.submissionDetails.indemnifierCorrespondenceAddressDifferent === 'false' %}govuk-visually-hidden{% endif %}">
     {{ address.fields(
       deal = deal,
+      validationErrors = validationErrors,
       id = "indemnifier-correspondence-address",
       legend = "Indemnifier correspondence address",
       countries = countries,

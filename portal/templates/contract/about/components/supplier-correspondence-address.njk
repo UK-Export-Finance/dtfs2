@@ -43,6 +43,7 @@
     <div id="additional-form-fields-supplier-correspondence" class="{% if renderByDefault === 'false'%}govuk-visually-hidden{% endif %}">
       {{ address.fields(
         deal = deal,
+        validationErrors = validationErrors,
         id = "supplier-correspondence-address",
         legend = "Supplier correspondence address",
         countries = countries,

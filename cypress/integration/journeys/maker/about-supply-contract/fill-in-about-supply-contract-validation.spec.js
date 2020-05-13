@@ -52,12 +52,27 @@ context('about-supply-contract', () => {
     // contractAboutPreview.expectError('Supplier county is required');    // not provided by companies-house lookup
     contractAboutPreview.expectError('Supplier postcode is required');
     //  contractAboutPreview.expectError('Supplier country is required'); // default value applied
+    contractAboutPreview.expectError('Supplier correspondence address is required');
     contractAboutPreview.expectError('Industry Sector is required');
     contractAboutPreview.expectError('Industry Class is required');
     contractAboutPreview.expectError('SME type is required');
 
-    // go back and start opening up optional areas and coming back to look for errors..
+    // prove the errors are on the about-supplier page
     contractAboutSupplier.visit(deal);
+    contractAboutSupplier.expectError('Supplier type is required');
+    contractAboutSupplier.expectError('Supplier name is required');
+    contractAboutSupplier.expectError('Supplier address line 1 is required');
+    contractAboutSupplier.expectError('Supplier address line 2 is required');
+    contractAboutSupplier.expectError('Supplier town is required');
+    // contractAboutSupplier.expectError('Supplier county is required');    // not provided by companies-house lookup
+    contractAboutSupplier.expectError('Supplier postcode is required');
+    //  contractAboutSupplier.expectError('Supplier country is required'); // default value applied
+    contractAboutSupplier.expectError('Supplier correspondence address is required');
+    contractAboutSupplier.expectError('Industry Sector is required');
+    contractAboutSupplier.expectError('Industry Class is required');
+    contractAboutSupplier.expectError('SME type is required');
+
+    // open up the correspondence address to generate more errors..
     contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();

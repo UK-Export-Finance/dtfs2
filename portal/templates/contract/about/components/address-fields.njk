@@ -2,7 +2,7 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
-{% macro fields(deal, id, legend, hint, countries, showCountryPleaseSelect) %}
+{% macro fields(deal, validationErrors, id, legend, hint, countries, showCountryPleaseSelect) %}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">

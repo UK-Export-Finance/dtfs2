@@ -25,12 +25,13 @@
       attributes: {
         "data-cy": "supplier-name"
       },
-      errorMessage: validationErrors.errorList.supplier-name
+      errorMessage: validationErrors.errorList["supplier-name"]
     }) }}
   </div>
 
   {{ address.fields(
     deal = deal,
+    validationErrors = validationErrors,
     id = "supplier-address",
     legend = "Supplier address",
     countries = countries,
