@@ -1,6 +1,6 @@
 {% import '_macros/progress-nav.njk' as progressNav %}
 
-{% macro render(completedStatus, current, contractId, childId) %}  
+{% macro render(completedStatus, current, contractId, childId, bondStatus) %}  
 
   <h1 class="govuk-heading-l">Bond</h1>
 
@@ -49,12 +49,11 @@
     </div>
 
     <div class="govuk-grid-column-one-half">
-   
-    {# completed = completedStatus.bondDetails and completedStatus.bondFinancialDetails and completedStatus.feeDetails, #}
+
       {{ progressNav.navItem(
           title = 'Preview',
           id = 'preview',
-          completed = true,
+          completed = bondStatus === "Complete",
           href = 'bond',
           childId = childId,
           childHref = 'preview',
