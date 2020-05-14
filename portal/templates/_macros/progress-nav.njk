@@ -17,7 +17,16 @@
 
     {% if completed %}
       <div class="govuk-checkboxes__item">
-        <input class="govuk-checkboxes__input" id="{{ id }}" name="{{ id }}" type="checkbox" value="{{ id }}" checked="true" disabled>
+        <input
+          class="govuk-checkboxes__input"
+          id="{{ id }}"
+          name="{{ id }}"
+          type="checkbox"
+          value="{{ id }}"
+          checked="true"
+          disabled
+          data-cy="progress-nav-item-{{ href }}-{{ childHref }}-completed-checkbox"
+        >
         <label class="govuk-label govuk-checkboxes__label" for="{{ id }}">
           {% if current === id %}
             {{ title }}

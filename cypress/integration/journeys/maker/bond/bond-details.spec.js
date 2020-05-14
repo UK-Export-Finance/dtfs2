@@ -27,7 +27,7 @@ context('Bond Details', () => {
       .then( insertedDeal => deal=insertedDeal );
   });
 
-  describe('after submitting one optional form field and navigating back to `Bond Details` page', () => {
+  describe('after submitting one form field and navigating back to `Bond Details` page', () => {
     it('should display validation errors for all required fields', () => {
       cy.loginGoToDealPage(user, deal);
 
@@ -46,6 +46,19 @@ context('Bond Details', () => {
       pages.bondDetails.bondTypeInputErrorMessage().should('be.visible');
       pages.bondDetails.bondStageInputErrorMessage().should('be.visible');
     });
+  });
+
+  it('form submit of all required fields should display a checked `Bond Details` checkbox in progress nav', () => {
+    cy.loginGoToDealPage(user, deal);
+
+    pages.contract.addBondButton().click();
+
+    fillBondForm.details.bondStageIssued();
+
+    pages.bondDetails.submit().click();
+
+    partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('be.visible');
+    partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('be.checked');
   });
 
   describe('When a user selects `unissued` bond stage', () => {
