@@ -203,13 +203,29 @@ context('Add a Bond to a Deal', () => {
       });
     });
 
-    // TODO: it should display a checked checkbox for all progress nav items with
+    // TODO: preview progress item sholud NOT be visiblle when incomplete.
+
+    it('should display a checked checkbox for all progress nav items', () => {
+      cy.loginGoToDealPage(user, deal);
+      cy.addBondToDeal();
+      cy.url().should('include', '/preview');
+
+      partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('be.visible');
+      partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('be.checked');
+
+      partials.bondProgressNav.progressNavBondFinancialDetailsCompletedCheckbox().should('be.visible');
+      partials.bondProgressNav.progressNavBondFinancialDetailsCompletedCheckbox().should('be.checked');
+
+      partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('be.visible');
+      partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('be.checked');
+
+      partials.bondProgressNav.progressNavBondPreviewCompletedCheckbox().should('be.visible');
+      partials.bondProgressNav.progressNavBondPreviewCompletedCheckbox().should('be.checked');
+    });
 
     it('should populate Deal page with the submitted bond, display `Complete` status and link to `Bond Details` page', () => {
       cy.loginGoToDealPage(user, deal);
-
       cy.addBondToDeal();
-
       cy.url().should('include', '/preview');
 
       // get bondId, go back to Deal page
@@ -263,9 +279,7 @@ context('Add a Bond to a Deal', () => {
   describe('When a user clicks `save and go back` button in `Bond Preview` page', () => {
     it('should return to Deal page', () => {
       cy.loginGoToDealPage(user, deal);
-
-      pages.contract.addBondButton().click();
-      partials.bondProgressNav.progressNavBondPreview().click();
+      cy.addBondToDeal();
       cy.url().should('include', '/preview');
 
       partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
