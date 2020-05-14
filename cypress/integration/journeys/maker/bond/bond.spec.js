@@ -203,8 +203,6 @@ context('Add a Bond to a Deal', () => {
       });
     });
 
-    // TODO: preview progress item sholud NOT be visiblle when incomplete.
-
     it('should display a checked checkbox for all progress nav items', () => {
       cy.loginGoToDealPage(user, deal);
       cy.addBondToDeal();

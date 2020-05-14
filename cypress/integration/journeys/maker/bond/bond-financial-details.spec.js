@@ -63,7 +63,7 @@ context('Bond Financial Details', () => {
     });
   });
 
-  it('form submit of all required fields should display a checked `Bond Financial Details` checkbox in progress nav', () => {
+  it('form submit of all required fields should display a checked checkbox only for `Bond Financial Details` in progress nav', () => {
     cy.loginGoToDealPage(user, deal);
 
     pages.contract.addBondButton().click();
@@ -75,6 +75,10 @@ context('Bond Financial Details', () => {
 
     partials.bondProgressNav.progressNavBondFinancialDetailsCompletedCheckbox().should('be.visible');
     partials.bondProgressNav.progressNavBondFinancialDetailsCompletedCheckbox().should('be.checked');
+
+    partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('not.be.visible');
+    partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('not.be.visible');
+    partials.bondProgressNav.progressNavBondPreviewCompletedCheckbox().should('not.be.visible');
   });
 
   describe('When a user submits the `Bond Financial Details` form', () => {
