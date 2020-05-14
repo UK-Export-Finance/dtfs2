@@ -1,29 +1,8 @@
 import FIELDS from '../pageFields/bond';
-
-export const allRequiredFieldsArray = (fields) => {
-  const { REQUIRED_FIELDS, CONDITIONALLY_REQUIRED_FIELDS } = fields;
-  const allRequiredFields = [...REQUIRED_FIELDS];
-
-  if (CONDITIONALLY_REQUIRED_FIELDS) {
-    allRequiredFields.push(...CONDITIONALLY_REQUIRED_FIELDS);
-  }
-
-  return allRequiredFields;
-};
-
-const getFieldErrors = (validationErrors, fields) => {
-  const filteredErrorList = {};
-
-  if (validationErrors) {
-    Object.keys(validationErrors.errorList).forEach((error) => {
-      if (fields.includes(error)) {
-        filteredErrorList[error] = validationErrors.errorList[error];
-      }
-    });
-  }
-
-  return filteredErrorList;
-};
+import {
+  allRequiredFieldsArray,
+  getFieldErrors,
+} from '../../../helpers/pageFields';
 
 export const validationErrorsCount = (validationErrors, fields) => {
   const allRequiredFields = allRequiredFieldsArray(fields);
@@ -32,20 +11,13 @@ export const validationErrorsCount = (validationErrors, fields) => {
   return Object.keys(requiredFieldErrors).length;
 };
 
-const hasValidationErrors = (validationErrors, fields) => {
+const isCompleted = (validationErrors, fields) => {
   const errorsCount = validationErrorsCount(validationErrors, fields);
 
   if (errorsCount === 0) {
-    return false;
+    return true;
   }
-  return true;
-};
-
-const isCompleted = (validationErrors, fields) => {
-  if (hasValidationErrors(validationErrors, fields)) {
-    return false;
-  }
-  return true;
+  return false;
 };
 
 const bondCompletedStatus = (validationErrors) => ({

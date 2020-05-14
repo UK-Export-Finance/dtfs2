@@ -4,17 +4,10 @@
 // when the UX/UI is redesigned, we should only have to update the UI.
 import errorHref from './errorHref';
 import generateErrorSummary from './generateErrorSummary';
-
-export const allRequiredFieldsArray = (fields) => {
-  const { REQUIRED_FIELDS, CONDITIONALLY_REQUIRED_FIELDS } = fields;
-  const allRequiredFields = [...REQUIRED_FIELDS];
-
-  if (CONDITIONALLY_REQUIRED_FIELDS) {
-    allRequiredFields.push(...CONDITIONALLY_REQUIRED_FIELDS);
-  }
-
-  return allRequiredFields;
-};
+import {
+  allRequiredFieldsArray,
+  getFieldErrors,
+} from './pageFields';
 
 export const allFieldsArray = (fields) => {
   const { OPTIONAL_FIELDS } = fields;
@@ -47,17 +40,7 @@ export const mapRequiredValidationErrors = (validationErrors, fields) => {
   const mappedErrors = validationErrors || {};
   const allRequiredFields = allRequiredFieldsArray(fields);
 
-  const filteredErrorList = {};
-
-  if (validationErrors) {
-    Object.keys(validationErrors.errorList).forEach((error) => {
-      if (allRequiredFields.includes(error)) {
-        filteredErrorList[error] = validationErrors.errorList[error];
-      }
-    });
-  }
-
-  mappedErrors.errorList = filteredErrorList;
+  mappedErrors.errorList = getFieldErrors(validationErrors, allRequiredFields);
 
   return {
     ...generateErrorSummary(
