@@ -1,9 +1,12 @@
 import pageSpecificValidationErrors, {
-  allRequiredFieldsArray,
   allFieldsArray,
   shouldReturnRequiredValidation,
   mapRequiredValidationErrors,
 } from './pageSpecificValidationErrors';
+import {
+  allRequiredFieldsArray,
+  getFieldErrors,
+} from './pageFields';
 import errorHref from './errorHref';
 import generateErrorSummary from './generateErrorSummary';
 import FIELDS from '../routes/contract/pageFields/bond';
@@ -13,22 +16,6 @@ describe('page specific validation errors', () => {
     someField: { order: '1', text: 'Field is required' },
     otherField: { order: '2', text: 'Field is required' },
   };
-
-  describe('allRequiredFieldsArray', () => {
-    it('should return REQUIRED_FIELDS and CONDITIONALLY_REQUIRED_FIELDS from given fields object', () => {
-      const mockFields = {
-        REQUIRED_FIELDS: ['a', 'b', 'c'],
-        CONDITIONALLY_REQUIRED_FIELDS: ['d', 'e', 'f'],
-      };
-
-      const result = allRequiredFieldsArray(mockFields);
-      const expected = [
-        ...mockFields.REQUIRED_FIELDS,
-        ...mockFields.CONDITIONALLY_REQUIRED_FIELDS,
-      ];
-      expect(result).toEqual(expected);
-    });
-  });
 
   describe('allFieldsArray', () => {
     it('should return REQUIRED_FIELDS, CONDITIONALLY_REQUIRED_FIELDS and OPTIONAL_FIELDS from given fields object', () => {
@@ -94,10 +81,10 @@ describe('page specific validation errors', () => {
         count: mockErrorList.length,
       };
 
-      const expectedRequiredErrorList = {
-        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[1]]: { order: '3', text: 'Field is required' },
-        [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[2]]: { order: '4', text: 'Field is required' },
-      };
+      const expectedRequiredErrorList = getFieldErrors(
+        mockValidationErrors,
+        allRequiredFieldsArray(FIELDS.FEE_DETAILS),
+      );
 
       const result = mapRequiredValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
 
