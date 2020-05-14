@@ -1,39 +1,4 @@
-const FIELDS = {
-  DETAILS: {
-    REQUIRED_FIELDS: [
-      'bondType',
-      'bondStage',
-    ],
-    CONDITIONALLY_REQUIRED_FIELDS: [
-      // required if bondStage is 'Unissued'
-      'ukefGuaranteeInMonths',
-
-      // required if bondStage is 'Issued'
-      'coverEndDate',
-      'uniqueIdentificationNumber',
-    ],
-  },
-  FINANCIAL_DETAILS: {
-    REQUIRED_FIELDS: [
-      'bondValue',
-      'transactionCurrencySameAsSupplyContractCurrency',
-      'riskMarginFee',
-      'coveredPercentage',
-    ],
-    CONDITIONALLY_REQUIRED_FIELDS: [
-      'currency',
-      'conversionRate',
-      'conversionRateDate',
-    ],
-  },
-  FEE_DETAILS: {
-    REQUIRED_FIELDS: [
-      'feeType',
-      'feeFrequency',
-      'dayCountBasis',
-    ],
-  },
-};
+import FIELDS from '../pageFields/bond';
 
 export const allRequiredFieldsArray = (fields) => {
   const { REQUIRED_FIELDS, CONDITIONALLY_REQUIRED_FIELDS } = fields;

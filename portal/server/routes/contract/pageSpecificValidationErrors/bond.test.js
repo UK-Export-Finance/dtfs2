@@ -1,10 +1,10 @@
 import {
-  FIELDS,
   bondDetailsValidationErrors,
   bondFinancialDetailsValidationErrors,
   bondFeeDetailsValidationErrors,
   bondPreviewValidationErrors,
 } from './bond';
+import FIELDS from '../pageFields/bond';
 import { pageSpecificValidationErrors } from '../../../helpers/pageSpecificValidationErrors';
 
 describe('bond page specific validation errors', () => {
