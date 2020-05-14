@@ -6,7 +6,7 @@ import pageSpecificValidationErrors, {
 } from './pageSpecificValidationErrors';
 import errorHref from './errorHref';
 import generateErrorSummary from './generateErrorSummary';
-import { FIELDS } from '../routes/contract/pageSpecificValidationErrors/bond';
+import FIELDS from '../routes/contract/pageFields/bond';
 
 describe('page specific validation errors', () => {
   const mockBondErrors = {
