@@ -48,7 +48,7 @@ context('Bond Details', () => {
     });
   });
 
-  it('form submit of all required fields should display a checked `Bond Details` checkbox in progress nav', () => {
+  it('form submit of all required fields should display a checked checkbox only for `Bond Details` in progress nav', () => {
     cy.loginGoToDealPage(user, deal);
 
     pages.contract.addBondButton().click();
@@ -59,6 +59,10 @@ context('Bond Details', () => {
 
     partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('be.visible');
     partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('be.checked');
+
+    partials.bondProgressNav.progressNavBondFinancialDetailsCompletedCheckbox().should('not.be.visible');
+    partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('not.be.visible');
+    partials.bondProgressNav.progressNavBondPreviewCompletedCheckbox().should('not.be.visible');
   });
 
   describe('When a user selects `unissued` bond stage', () => {

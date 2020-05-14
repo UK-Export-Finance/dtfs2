@@ -84,6 +84,10 @@ context('Bond Fee Details', () => {
 
     partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('be.visible');
     partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('be.checked');
+
+    partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('not.be.visible');
+    partials.bondProgressNav.progressNavBondFinancialDetailsCompletedCheckbox().should('not.be.visible');
+    partials.bondProgressNav.progressNavBondPreviewCompletedCheckbox().should('not.be.visible');
   });
 
   it('form submit should progress to the `Bond Preview` page and prepopulate submitted form fields when returning back to `Bond Fee Details` page', () => {
