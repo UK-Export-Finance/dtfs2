@@ -204,10 +204,13 @@ router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
     errorHref,
   );
 
+  const completedStatus = bondCompletedStatus(validationErrors);
+
   return res.render('bond/bond-preview.njk', {
     dealId,
     bond,
     validationErrors: formattedValidationErrors,
+    completedStatus,
   });
 });
 
