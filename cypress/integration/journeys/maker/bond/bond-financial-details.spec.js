@@ -38,7 +38,7 @@ context('Bond Financial Details', () => {
       .then( insertedDeal => deal=insertedDeal );
   });
 
-  describe('after submitting one optional form field and navigating back to `Bond Financial Details` page', () => {
+  describe('after submitting one form field and navigating back to `Bond Financial Details` page', () => {
     it('should display validation errors for all required fields', () => {
       cy.loginGoToDealPage(user, deal);
 
@@ -61,6 +61,20 @@ context('Bond Financial Details', () => {
       pages.bondFinancialDetails.riskMarginFeeInputErrorMessage().should('be.visible');
       pages.bondFinancialDetails.coveredPercentageInputErrorMessage().should('be.visible');
     });
+  });
+
+  it('form submit of all required fields should display a checked `Bond Financial Details` checkbox in progress nav', () => {
+    cy.loginGoToDealPage(user, deal);
+
+    pages.contract.addBondButton().click();
+    partials.bondProgressNav.progressNavBondFinancialDetails().click();
+
+    fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
+
+    pages.bondFinancialDetails.submit().click();
+
+    partials.bondProgressNav.progressNavBondFinancialDetailsCompletedCheckbox().should('be.visible');
+    partials.bondProgressNav.progressNavBondFinancialDetailsCompletedCheckbox().should('be.checked');
   });
 
   describe('When a user submits the `Bond Financial Details` form', () => {

@@ -72,6 +72,20 @@ context('Bond Fee Details', () => {
     });
   });
 
+  it('form submit of all required fields should display a checked `Bond Fee Details` checkbox in progress nav', () => {
+    cy.loginGoToDealPage(user, deal);
+
+    pages.contract.addBondButton().click();
+    partials.bondProgressNav.progressNavBondFeeDetails().click();
+
+    fillBondForm.feeDetails();
+
+    pages.bondFeeDetails.submit().click();
+
+    partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('be.visible');
+    partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('be.checked');
+  });
+
   it('form submit should progress to the `Bond Preview` page and prepopulate submitted form fields when returning back to `Bond Fee Details` page', () => {
     goToBondFeeDetailsPage(deal);
 

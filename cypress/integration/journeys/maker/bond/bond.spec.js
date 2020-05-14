@@ -202,59 +202,61 @@ context('Add a Bond to a Deal', () => {
         expect(text.trim()).equal('365');
       });
     });
-  });
 
-  it('should populate Deal page with the submitted bond, display `Complete` status and link to `Bond Details` page', () => {
-    cy.loginGoToDealPage(user, deal);
+    // TODO: it should display a checked checkbox for all progress nav items with
 
-    cy.addBondToDeal();
+    it('should populate Deal page with the submitted bond, display `Complete` status and link to `Bond Details` page', () => {
+      cy.loginGoToDealPage(user, deal);
 
-    cy.url().should('include', '/preview');
+      cy.addBondToDeal();
 
-    // get bondId, go back to Deal page
-    // assert that some inputted Bond data is displayed in the table
-    partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
-      const bondId = bondIdHiddenInput[0].value;
+      cy.url().should('include', '/preview');
 
-      pages.bondPreview.saveGoBackButton().click();
-      cy.url().should('eq', relative(`/contract/${deal._id}`));
+      // get bondId, go back to Deal page
+      // assert that some inputted Bond data is displayed in the table
+      partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+        const bondId = bondIdHiddenInput[0].value;
 
-      const row = pages.contract.bondTransactionsTable.row(bondId);
+        pages.bondPreview.saveGoBackButton().click();
+        cy.url().should('eq', relative(`/contract/${deal._id}`));
 
-      row.uniqueNumber().invoke('text').then((text) => {
-        expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
+        const row = pages.contract.bondTransactionsTable.row(bondId);
+
+        row.uniqueNumber().invoke('text').then((text) => {
+          expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
+        });
+
+        // TODO: UKEF facility ID (when built)
+
+        row.bondStatus().invoke('text').then((text) => {
+          expect(text.trim()).equal('Complete');
+        });
+
+        row.bondValue().invoke('text').then((text) => {
+          const expectedValue = `${deal.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue}`;
+          expect(text.trim()).equal(expectedValue);
+        });
+
+        row.bondStage().invoke('text').then((text) => {
+          expect(text.trim()).equal('Issued');
+        });
+
+        row.requestedCoverStartDate().invoke('text').then((text) => {
+          const expectedDate = `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`;
+          expect(text.trim()).equal(expectedDate);
+        });
+
+        row.coverEndDate().invoke('text').then((text) => {
+          const expectedDate = `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}/${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}/${BOND_FORM_VALUES.DETAILS.coverEndDateYear}`;
+          expect(text.trim()).equal(expectedDate);
+        });
+
+        // assert that clicking the `unique number` link progesses to the Bond Details page
+        row.uniqueNumber().click();
+        cy.url().should('include', '/contract');
+        cy.url().should('include', '/bond/');
+        cy.url().should('include', '/details');
       });
-
-      // TODO: UKEF facility ID (when built)
-
-      row.bondStatus().invoke('text').then((text) => {
-        expect(text.trim()).equal('Complete');
-      });
-
-      row.bondValue().invoke('text').then((text) => {
-        const expectedValue = `${deal.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue}`;
-        expect(text.trim()).equal(expectedValue);
-      });
-
-      row.bondStage().invoke('text').then((text) => {
-        expect(text.trim()).equal('Issued');
-      });
-
-      row.requestedCoverStartDate().invoke('text').then((text) => {
-        const expectedDate = `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`;
-        expect(text.trim()).equal(expectedDate);
-      });
-
-      row.coverEndDate().invoke('text').then((text) => {
-        const expectedDate = `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}/${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}/${BOND_FORM_VALUES.DETAILS.coverEndDateYear}`;
-        expect(text.trim()).equal(expectedDate);
-      });
-
-      // assert that clicking the `unique number` link progesses to the Bond Details page
-      row.uniqueNumber().click();
-      cy.url().should('include', '/contract');
-      cy.url().should('include', '/bond/');
-      cy.url().should('include', '/details');
     });
   });
 
