@@ -1,5 +1,5 @@
 import express from 'express';
-import api from '../../api';
+import api from '../../../api';
 import {
   getApiData,
   requestParams,
@@ -7,14 +7,14 @@ import {
   postToApi,
   mapCurrencies,
   generateErrorSummary,
-} from '../../helpers';
+} from '../../../helpers';
 import {
   bondDetailsValidationErrors,
   bondFinancialDetailsValidationErrors,
   bondFeeDetailsValidationErrors,
   bondPreviewValidationErrors,
-} from './pageSpecificValidationErrors/bond';
-import bondCompletedStatus from './completedStatus/bond';
+} from './pageSpecificValidationErrors';
+import bondCompletedStatus from './completedStatus';
 
 const router = express.Router();
 

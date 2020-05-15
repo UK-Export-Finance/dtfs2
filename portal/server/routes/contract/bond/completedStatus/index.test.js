@@ -1,6 +1,6 @@
-import bondCompletedStatus from './bond';
-import FIELDS from '../pageFields/bond';
-import isCompleted from '../../../helpers/pageCompletedStatus';
+import bondCompletedStatus from '.';
+import FIELDS from '../pageFields';
+import isCompleted from '../../../../helpers/pageCompletedStatus';
 
 describe('bondCompletedStatus', () => {
   it('should return an object with each bond page/form\'s completed status', () => {

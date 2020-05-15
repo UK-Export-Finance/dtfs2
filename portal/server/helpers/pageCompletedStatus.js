@@ -3,7 +3,6 @@ import {
   filterErrorList,
 } from './pageFields';
 
-// TODO: should it be something like pageValidationErrorsCount / field...
 export const validationErrorsCount = (validationErrors, fields) => {
   if (validationErrors.errorList) {
     const allRequiredFields = requiredFieldsArray(fields);

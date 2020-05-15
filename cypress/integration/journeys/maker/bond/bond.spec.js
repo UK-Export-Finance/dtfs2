@@ -66,6 +66,12 @@ context('Add a Bond to a Deal', () => {
     });
   });
 
+  // TODO
+  // describe('when a user creates a Bond without submitting anything', () => {
+  //   it('bond should display `Not started` status in Deal page', () => {
+  //   });
+  // });
+
   describe('when a user submits a Bond form without completing any fields', () => {
     it('bond should display `Incomplete` status in Deal page', () => {
       cy.loginGoToDealPage(user, deal);
