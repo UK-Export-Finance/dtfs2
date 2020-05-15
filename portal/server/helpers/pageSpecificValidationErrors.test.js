@@ -9,7 +9,7 @@ import {
 } from './pageFields';
 import errorHref from './errorHref';
 import generateErrorSummary from './generateErrorSummary';
-import FIELDS from '../routes/contract/pageFields/bond';
+import FIELDS from '../routes/contract/bond/pageFields';
 
 describe('page specific validation errors', () => {
   const mockBondErrors = {

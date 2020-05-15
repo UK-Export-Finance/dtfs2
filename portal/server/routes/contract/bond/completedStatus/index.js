@@ -1,5 +1,5 @@
-import FIELDS from '../pageFields/bond';
-import isCompleted from '../../../helpers/pageCompletedStatus';
+import FIELDS from '../pageFields';
+import isCompleted from '../../../../helpers/pageCompletedStatus';
 
 const bondCompletedStatus = (validationErrors) => ({
   bondDetails: isCompleted(validationErrors, FIELDS.DETAILS),

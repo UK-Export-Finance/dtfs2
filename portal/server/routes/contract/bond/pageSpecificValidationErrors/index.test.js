@@ -3,9 +3,9 @@ import {
   bondFinancialDetailsValidationErrors,
   bondFeeDetailsValidationErrors,
   bondPreviewValidationErrors,
-} from './bond';
-import FIELDS from '../pageFields/bond';
-import { pageSpecificValidationErrors } from '../../../helpers/pageSpecificValidationErrors';
+} from '.';
+import FIELDS from '../pageFields';
+import { pageSpecificValidationErrors } from '../../../../helpers/pageSpecificValidationErrors';
 
 describe('bond page specific validation errors', () => {
   const mockBondErrors = {

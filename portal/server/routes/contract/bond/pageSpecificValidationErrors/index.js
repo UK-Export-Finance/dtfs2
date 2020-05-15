@@ -1,5 +1,5 @@
-import { pageSpecificValidationErrors } from '../../../helpers';
-import FIELDS from '../pageFields/bond';
+import { pageSpecificValidationErrors } from '../../../../helpers';
+import FIELDS from '../pageFields';
 
 export const bondDetailsValidationErrors = (validationErrors, bond) =>
   pageSpecificValidationErrors(validationErrors, FIELDS.DETAILS, bond);
