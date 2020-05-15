@@ -1,14 +1,18 @@
 import FIELDS from '../pageFields/bond';
 import {
-  allRequiredFieldsArray,
-  getFieldErrors,
+  requiredFieldsArray,
+  filterErrorList,
 } from '../../../helpers/pageFields';
 
+// TODO: should it be something like pageValidationErrorsCount / field...
 export const validationErrorsCount = (validationErrors, fields) => {
-  const allRequiredFields = allRequiredFieldsArray(fields);
-  const requiredFieldErrors = getFieldErrors(validationErrors, allRequiredFields);
+  if (validationErrors.errorList) {
+    const allRequiredFields = requiredFieldsArray(fields);
+    const requiredFieldErrors = filterErrorList(validationErrors.errorList, allRequiredFields);
 
-  return Object.keys(requiredFieldErrors).length;
+    return Object.keys(requiredFieldErrors).length;
+  }
+  return 0;
 };
 
 const isCompleted = (validationErrors, fields) => {

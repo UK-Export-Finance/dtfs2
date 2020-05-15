@@ -1,18 +1,17 @@
 import {
-  allRequiredFieldsArray,
-  getFieldErrors,
+  requiredFieldsArray,
+  filterErrorList,
 } from './pageFields';
-import FIELDS from '../routes/contract/pageFields/bond';
 
-describe('page specific validation errors', () => {
-  describe('allRequiredFieldsArray', () => {
+describe('page fields', () => {
+  describe('requiredFieldsArray', () => {
     it('should return REQUIRED_FIELDS and CONDITIONALLY_REQUIRED_FIELDS from given fields object', () => {
       const mockFields = {
         REQUIRED_FIELDS: ['a', 'b', 'c'],
         CONDITIONALLY_REQUIRED_FIELDS: ['d', 'e', 'f'],
       };
 
-      const result = allRequiredFieldsArray(mockFields);
+      const result = requiredFieldsArray(mockFields);
       const expected = [
         ...mockFields.REQUIRED_FIELDS,
         ...mockFields.CONDITIONALLY_REQUIRED_FIELDS,
@@ -21,7 +20,7 @@ describe('page specific validation errors', () => {
     });
   });
 
-  describe('getFieldErrors', () => {
+  describe('filterErrorList', () => {
     const mockFields = ['a', 'b', 'c'];
 
     it('should only return validationErrors that are in the fields object', () => {
@@ -40,7 +39,7 @@ describe('page specific validation errors', () => {
         errorList: mockErrorList,
         count: mockErrorList.length,
       };
-      const result = getFieldErrors(mockValidationErrors, mockFields);
+      const result = filterErrorList(mockValidationErrors.errorList, mockFields);
       const expected = {
         a: mockErrorList.a,
         b: mockErrorList.b,
@@ -48,12 +47,14 @@ describe('page specific validation errors', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should return empty object when there are no validationErrors', () => {
-      const result = getFieldErrors(
-        {},
-        mockFields,
-      );
-      expect(result).toEqual({});
+    describe('when there is no errorList passed', () => {
+      it('should return empty object', () => {
+        const result = filterErrorList(
+          undefined,
+          mockFields,
+        );
+        expect(result).toEqual({});
+      });
     });
   });
 });
