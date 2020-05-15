@@ -284,39 +284,42 @@ describe('/v1/deals/:id/bond', () => {
         expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
         expect(body.validationErrors.errorList.feeType).toBeDefined();
         expect(body.validationErrors.errorList.dayCountBasis).toBeDefined();
+        expect(body.validationErrors.conditionalErrorList).toBeDefined();
       });
     });
 
-    it('updates an existing bond and returns it with status property as `Complete`', async () => {
-      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
-      const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+    describe('with all required fields in body', () => {
+      it('updates an existing bond and returns it with status property as `Complete`', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
-      const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
-      const { body: createBondBody } = createBondResponse;
-      const { bondId } = createBondBody;
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
 
-      const { status } = await as(aBarclaysMaker).put(allBondFields).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status } = await as(aBarclaysMaker).put(allBondFields).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
-      expect(status).toEqual(200);
+        expect(status).toEqual(200);
 
-      const {
-        status: updatedDealStatus,
-        body: updatedDeal,
-      } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+        const {
+          status: updatedDealStatus,
+          body: updatedDeal,
+        } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
 
-      expect(updatedDealStatus).toEqual(200);
+        expect(updatedDealStatus).toEqual(200);
 
-      const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
-        b._id === bondId); // eslint-disable-line no-underscore-dangle
+        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
+          b._id === bondId); // eslint-disable-line no-underscore-dangle
 
-      const expectedUpdatedBond = {
-        _id: bondId, // eslint-disable-line no-underscore-dangle
-        ...allBondFields,
-        currency: deal.body.supplyContractCurrency,
-        status: 'Complete',
-      };
-      expect(updatedBond).toEqual(expectedUpdatedBond);
+        const expectedUpdatedBond = {
+          _id: bondId, // eslint-disable-line no-underscore-dangle
+          ...allBondFields,
+          currency: deal.body.supplyContractCurrency,
+          status: 'Complete',
+        };
+        expect(updatedBond).toEqual(expectedUpdatedBond);
+      });
     });
 
     describe('when a bond has req.body.bondStage as `Issued`', () => {

@@ -219,7 +219,10 @@ exports.getBondErrors = (bond) => {
   const totalErrors = Object.keys(errorList).length;
 
   if (totalErrors === 0) {
-    return false;
+    return {
+      count: totalErrors,
+      conditionalErrorList,
+    };
   }
 
   return {
