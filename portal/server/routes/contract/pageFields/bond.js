@@ -26,6 +26,7 @@ const FIELDS = {
       'coveredPercentage',
     ],
     CONDITIONALLY_REQUIRED_FIELDS: [
+      // required if `transactionCurrencySameAsSupplyContractCurrency` is false
       'currency',
       'conversionRate',
       'conversionRateDate',

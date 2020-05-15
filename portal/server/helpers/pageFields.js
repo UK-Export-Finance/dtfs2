@@ -1,4 +1,4 @@
-export const allRequiredFieldsArray = (fields) => {
+export const requiredFieldsArray = (fields) => {
   const { REQUIRED_FIELDS, CONDITIONALLY_REQUIRED_FIELDS } = fields;
   const allRequiredFields = [...REQUIRED_FIELDS];
 
@@ -9,13 +9,13 @@ export const allRequiredFieldsArray = (fields) => {
   return allRequiredFields;
 };
 
-export const getFieldErrors = (validationErrors, fields) => {
+export const filterErrorList = (errorList, fields) => {
   const filteredErrorList = {};
 
-  if (validationErrors && validationErrors.errorList) {
-    Object.keys(validationErrors.errorList).forEach((error) => {
+  if (errorList) {
+    Object.keys(errorList).forEach((error) => {
       if (fields.includes(error)) {
-        filteredErrorList[error] = validationErrors.errorList[error];
+        filteredErrorList[error] = errorList[error];
       }
     });
   }

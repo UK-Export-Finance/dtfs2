@@ -4,8 +4,8 @@ import pageSpecificValidationErrors, {
   mapRequiredValidationErrors,
 } from './pageSpecificValidationErrors';
 import {
-  allRequiredFieldsArray,
-  getFieldErrors,
+  requiredFieldsArray,
+  filterErrorList,
 } from './pageFields';
 import errorHref from './errorHref';
 import generateErrorSummary from './generateErrorSummary';
@@ -81,9 +81,9 @@ describe('page specific validation errors', () => {
         count: mockErrorList.length,
       };
 
-      const expectedRequiredErrorList = getFieldErrors(
-        mockValidationErrors,
-        allRequiredFieldsArray(FIELDS.FEE_DETAILS),
+      const expectedRequiredErrorList = filterErrorList(
+        mockValidationErrors.errorList,
+        requiredFieldsArray(FIELDS.FEE_DETAILS),
       );
 
       const result = mapRequiredValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
@@ -160,21 +160,6 @@ describe('page specific validation errors', () => {
       const result = mapRequiredValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
       expect(result.conditionalErrorList).toEqual(mockValidationErrors.conditionalErrorList);
     });
-
-    describe('when there is no validationErrors object passed', () => {
-      it('should use an empty object', () => {
-        const result = mapRequiredValidationErrors(undefined, FIELDS.FEE_DETAILS);
-
-        const expected = generateErrorSummary(
-          {
-            errorList: {},
-          },
-          errorHref,
-        );
-
-        expect(result).toEqual(expected);
-      });
-    });
   });
 
   describe('pageSpecificValidationErrors', () => {
@@ -201,24 +186,23 @@ describe('page specific validation errors', () => {
       expect(result).toEqual(expected);
     });
 
-    describe('when errorsCount is equal to/greater than the requiredFields count', () => {
-      it('should return an empty object', () => {
-        const mockErrorList = {
-          [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[0]]: { order: '1', text: 'Field is required' },
-          [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[1]]: { order: '2', text: 'Field is required' },
-          [FIELDS.FEE_DETAILS.REQUIRED_FIELDS[2]]: { order: '3', text: 'Field is required' },
-        };
-
+    describe('when there is no errorList in validationErrors', () => {
+      it('should only return validationErrors.conditionalErrorList', () => {
         const mockValidationErrors = {
-          errorList: mockErrorList,
-          count: mockErrorList.length,
+          conditionalErrorList: {
+            bondStage: {
+              Unissued: {
+                ukefGuaranteeInMonths: {
+                  text: 'Length of time that the UKEF\'s guarantee will be in place for is required',
+                },
+              },
+            },
+          },
         };
-
-        const mockBond = { _id: '1234', status: 'Incomplete' };
-
-
-        const result = pageSpecificValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS, mockBond);
-        expect(result).toEqual({});
+        const result = pageSpecificValidationErrors(mockValidationErrors);
+        expect(result).toEqual({
+          conditionalErrorList: mockValidationErrors.conditionalErrorList,
+        });
       });
     });
   });

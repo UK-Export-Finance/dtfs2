@@ -5,13 +5,13 @@
 import errorHref from './errorHref';
 import generateErrorSummary from './generateErrorSummary';
 import {
-  allRequiredFieldsArray,
-  getFieldErrors,
+  requiredFieldsArray,
+  filterErrorList,
 } from './pageFields';
 
 export const allFieldsArray = (fields) => {
   const { OPTIONAL_FIELDS } = fields;
-  const allFields = allRequiredFieldsArray(fields);
+  const allFields = requiredFieldsArray(fields);
 
   if (OPTIONAL_FIELDS) {
     allFields.push(...OPTIONAL_FIELDS);
@@ -37,10 +37,10 @@ export const shouldReturnRequiredValidation = (fields, fieldValues) => {
 };
 
 export const mapRequiredValidationErrors = (validationErrors, fields) => {
-  const mappedErrors = validationErrors || {};
-  const allRequiredFields = allRequiredFieldsArray(fields);
+  const mappedErrors = validationErrors;
+  const allRequiredFields = requiredFieldsArray(fields);
 
-  mappedErrors.errorList = getFieldErrors(validationErrors, allRequiredFields);
+  mappedErrors.errorList = filterErrorList(validationErrors.errorList, allRequiredFields);
 
   return {
     ...generateErrorSummary(
@@ -52,9 +52,12 @@ export const mapRequiredValidationErrors = (validationErrors, fields) => {
 };
 
 export const pageSpecificValidationErrors = (validationErrors, fields, bond) => {
-  if (shouldReturnRequiredValidation(fields, bond)) {
-    return mapRequiredValidationErrors(validationErrors, fields);
+  if (validationErrors && validationErrors.errorList) {
+    if (shouldReturnRequiredValidation(fields, bond)) {
+      return mapRequiredValidationErrors(validationErrors, fields);
+    }
   }
+
   return {
     conditionalErrorList: validationErrors.conditionalErrorList,
   };

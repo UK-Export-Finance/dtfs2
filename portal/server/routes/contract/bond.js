@@ -199,10 +199,14 @@ router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
     ),
   );
 
-  const formattedValidationErrors = generateErrorSummary(
-    bondPreviewValidationErrors(validationErrors, dealId, bondId),
-    errorHref,
-  );
+  // TODO: make similar to other routes, using page specific function.
+  let formattedValidationErrors;
+  if (validationErrors.count !== 0) {
+    formattedValidationErrors = generateErrorSummary(
+      bondPreviewValidationErrors(validationErrors, dealId, bondId),
+      errorHref,
+    );
+  }
 
   const completedStatus = bondCompletedStatus(validationErrors);
 
