@@ -151,7 +151,7 @@ exports.updateBond = async (req, res) => {
 
       const validationErrors = getBondErrors(updatedBond);
 
-      if (!validationErrors) {
+      if (validationErrors.count === 0) {
         updatedBond.status = 'Complete';
       } else {
         updatedBond.status = 'Incomplete';
@@ -177,7 +177,7 @@ exports.updateBond = async (req, res) => {
       const updateDealResponseBond = updateDealResponse.bondTransactions.items.find((b) =>
         String(b._id) === bondId); // eslint-disable-line no-underscore-dangle
 
-      if (validationErrors) {
+      if (validationErrors.count !== 0) {
         return res.status(400).send({
           validationErrors,
           bond: updateDealResponseBond,
