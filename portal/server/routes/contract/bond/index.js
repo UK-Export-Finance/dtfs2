@@ -14,7 +14,7 @@ import {
   bondFeeDetailsValidationErrors,
   bondPreviewValidationErrors,
 } from './pageSpecificValidationErrors';
-import bondCompletedStatus from './completedStatus';
+import completedBondForms from './completedForms';
 
 const router = express.Router();
 
@@ -40,13 +40,13 @@ router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
     validationErrors,
   } = apiResponse;
 
-  const completedStatus = bondCompletedStatus(validationErrors);
+  const completedForms = completedBondForms(validationErrors);
 
   return res.render('bond/bond-details.njk', {
     dealId,
     bond,
     validationErrors: bondDetailsValidationErrors(validationErrors, bond),
-    completedStatus,
+    completedForms,
   });
 });
 
@@ -86,14 +86,14 @@ router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => 
     validationErrors,
   } = bondResponse;
 
-  const completedStatus = bondCompletedStatus(validationErrors);
+  const completedForms = completedBondForms(validationErrors);
 
   return res.render('bond/bond-financial-details.njk', {
     dealId,
     bond,
     validationErrors: bondFinancialDetailsValidationErrors(validationErrors, bond),
     currencies: mapCurrencies(currencies, bondResponse.bond.currency),
-    completedStatus,
+    completedForms,
   });
 });
 
@@ -128,13 +128,13 @@ router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
     validationErrors,
   } = apiResponse;
 
-  const completedStatus = bondCompletedStatus(validationErrors);
+  const completedForms = completedBondForms(validationErrors);
 
   return res.render('bond/bond-fee-details.njk', {
     dealId,
     bond,
     validationErrors: bondFeeDetailsValidationErrors(validationErrors, bond),
-    completedStatus,
+    completedForms,
   });
 });
 
@@ -208,13 +208,13 @@ router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
     );
   }
 
-  const completedStatus = bondCompletedStatus(validationErrors);
+  const completedForms = completedBondForms(validationErrors);
 
   return res.render('bond/bond-preview.njk', {
     dealId,
     bond,
     validationErrors: formattedValidationErrors,
-    completedStatus,
+    completedForms,
   });
 });
 

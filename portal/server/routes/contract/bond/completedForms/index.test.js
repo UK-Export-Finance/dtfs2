@@ -1,8 +1,8 @@
-import bondCompletedStatus from '.';
+import completedBondForms from '.';
 import FIELDS from '../pageFields';
-import isCompleted from '../../../../helpers/pageCompletedStatus';
+import isCompleted from '../../../../helpers/formCompleted';
 
-describe('bondCompletedStatus', () => {
+describe('completedBondForms', () => {
   it('should return an object with each bond page/form\'s completed status', () => {
     const mockValidationErrors = {
       errorList: {
@@ -11,7 +11,7 @@ describe('bondCompletedStatus', () => {
       },
     };
 
-    const result = bondCompletedStatus(mockValidationErrors, FIELDS);
+    const result = completedBondForms(mockValidationErrors, FIELDS);
 
     expect(result).toEqual({
       bondDetails: isCompleted(mockValidationErrors, FIELDS.DETAILS),

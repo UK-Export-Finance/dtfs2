@@ -1,6 +1,6 @@
 {% import '_macros/progress-nav.njk' as progressNav %}
 
-{% macro render(completedStatus, current, contractId, childId, bondStatus) %}  
+{% macro render(completedForms, current, contractId, childId, bondStatus) %}  
 
   <h1 class="govuk-heading-l">Bond</h1>
 
@@ -14,7 +14,7 @@
           title = 'Bond details',
           id = 'bondDetails',
           step = 1,
-          completed = completedStatus.bondDetails,
+          completed = completedForms.bondDetails,
           href = 'bond',
           childId = childId,
           childHref = 'details',
@@ -26,7 +26,7 @@
           title = 'Bond financial details',
           id = 'bondFinancialDetails',
           step = 2,
-          completed = completedStatus.bondFinancialDetails,
+          completed = completedForms.bondFinancialDetails,
           href = 'bond',
           childId = childId,
           childHref = 'financial-details',
@@ -38,7 +38,7 @@
           title = 'Fee details',
           id = 'feeDetails',
           step = 3,
-          completed = completedStatus.bondFeeDetails,
+          completed = completedForms.bondFeeDetails,
           href = 'bond',
           childId = childId,
           childHref = 'fee-details',
