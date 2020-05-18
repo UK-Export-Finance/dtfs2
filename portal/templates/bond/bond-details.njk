@@ -37,11 +37,11 @@
   {% endif %}
 
   {{ bondNav.render(
-    completedStatus = completedStatus,
+    completedForms = completedForms,
+    bondStatus = bond.status,
     current = 'bondDetails',
     contractId = dealId,
-    childId = bond._id,
-    bondStatus = bond.status
+    childId = bond._id
   )}}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
