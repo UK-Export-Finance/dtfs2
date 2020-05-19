@@ -1,12 +1,24 @@
 const { orderNumber } = require('../../utils/error-list-order-number');
 const { hasValue } = require('../../utils/string');
-const { dateIsValid, dateValidationText } = require('./date-field');
+const {
+  dateHasAllValues,
+  dateHasSomeValues,
+  dateValidationText,
+  addDaysToDate,
+  now,
+  dateIsInTimeframe,
+} = require('./date-field');
 
 exports.getBondErrors = (bond) => {
   const {
     bondType,
     bondStage,
     ukefGuaranteeInMonths,
+
+    'requestedCoverStartDate-day': requestedCoverStartDateDay,
+    'requestedCoverStartDate-month': requestedCoverStartDateMonth,
+    'requestedCoverStartDate-year': requestedCoverStartDateYear,
+
     'coverEndDate-day': coverEndDateDay,
     'coverEndDate-month': coverEndDateMonth,
     'coverEndDate-year': coverEndDateYear,
@@ -108,7 +120,39 @@ exports.getBondErrors = (bond) => {
   }
 
   if (bondStage === 'Issued') {
-    if (!dateIsValid(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
+    if (dateHasAllValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear)) {
+      const MAX_DAYS_FROM_NOW = 93;
+      const nowDate = now();
+
+      if (!dateIsInTimeframe(
+        requestedCoverStartDateDay,
+        requestedCoverStartDateMonth,
+        requestedCoverStartDateYear,
+        nowDate,
+        addDaysToDate(nowDate, MAX_DAYS_FROM_NOW),
+      )) {
+        errorList.requestedCoverStartDate = {
+          text: `(temp message): Requested Cover Start Date must be within ${MAX_DAYS_FROM_NOW} day timeframe`,
+          order: orderNumber(errorList),
+        };
+      }
+    } else if (dateHasSomeValues(
+      requestedCoverStartDateDay,
+      requestedCoverStartDateMonth,
+      requestedCoverStartDateYear,
+    )) {
+      errorList.requestedCoverStartDate = {
+        text: dateValidationText(
+          '(temp message): Requested Cover Start Date',
+          requestedCoverStartDateDay,
+          requestedCoverStartDateMonth,
+          requestedCoverStartDateYear,
+        ),
+        order: orderNumber(errorList),
+      };
+    }
+
+    if (!dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
       errorList.coverEndDate = {
         text: dateValidationText(
           'Cover End Date',
@@ -162,7 +206,7 @@ exports.getBondErrors = (bond) => {
       };
     }
 
-    if (!dateIsValid(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear)) {
+    if (!dateHasAllValues(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear)) {
       errorList.conversionRateDate = {
         text: dateValidationText(
           'Conversion rate date',

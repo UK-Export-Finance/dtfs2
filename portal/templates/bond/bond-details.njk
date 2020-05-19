@@ -228,7 +228,13 @@
               }
             },
             hint: {
-              html: "<p>For example, 27 11 2019<p>This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date</p>"
+              html: "<p>For example, 27 11 2019</p><p>This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date</p>"
+            },
+            errorMessage: validationErrors.errorList.requestedCoverStartDate.text and {
+              text: validationErrors.errorList.requestedCoverStartDate.text,
+              attributes: {
+                'data-cy': "requestedCoverStartDate-error-message"
+              }
             },
             items: [
               {
@@ -248,7 +254,7 @@
                 }
               },
               {
-                classes: "govuk-input--width-2",
+                classes: "govuk-input--width-4",
                 name: "year",
                 value: bond['requestedCoverStartDate-year'],
                 attributes: {
@@ -293,7 +299,7 @@
                 }
               },
               {
-                classes: (not bond['coverEndDate-year']) and "govuk-input--width-2 govuk-input--error" or "govuk-input--width-2",
+                classes: (not bond['coverEndDate-year']) and "govuk-input--width-4 govuk-input--error" or "govuk-input--width-4",
                 name: "year",
                 value: bond['coverEndDate-year'],
                 attributes: {
