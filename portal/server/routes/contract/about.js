@@ -50,11 +50,14 @@ router.get('/contract/:_id/about/supplier', async (req, res) => {
     res,
   );
 
-  const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
-  const formattedValidationErrors = generateErrorSummary(
-    validationErrors,
-    errorHref,
-  );
+  let formattedValidationErrors = {};
+  if (deal.submissionDetails.hasBeenPreviewed) {
+    const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
+    formattedValidationErrors = generateErrorSummary(
+      validationErrors,
+      errorHref,
+    );
+  }
 
   const industrySectors = await getApiData(
     api.industrySectors(userToken),
@@ -289,15 +292,19 @@ router.post('/contract/:_id/about/financial/save-go-back', async (req, res) => {
 router.get('/contract/:_id/about/preview', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
+  const deal = await getApiData(
+    api.contract(_id, userToken),
+    res,
+  );
+
+  // TODO dirty hack; this is how we apply the business rule
+  //  "don't display error messages unless the user has viewed the preview page"
+  await api.updateSubmissionDetails(deal, { hasBeenPreviewed: true }, userToken, res);
+
   const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
   const formattedValidationErrors = generateErrorSummary(
     validationErrors,
     errorHref,
-  );
-
-  const deal = await getApiData(
-    api.contract(_id, userToken),
-    res,
   );
 
   return res.render('contract/about/about-supply-preview.njk', { deal, validationErrors: formattedValidationErrors });

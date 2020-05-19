@@ -51,7 +51,6 @@ context('about-supply-contract', () => {
     contractAboutPreview.expectError('Supplier town is required');
     // contractAboutPreview.expectError('Supplier county is required');    // not provided by companies-house lookup
     contractAboutPreview.expectError('Supplier postcode is required');
-    //  contractAboutPreview.expectError('Supplier country is required'); // default value applied
     contractAboutPreview.expectError('Supplier correspondence address is required');
     contractAboutPreview.expectError('Industry Sector is required');
     contractAboutPreview.expectError('Industry Class is required');
@@ -66,7 +65,6 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('Supplier town is required');
     // contractAboutSupplier.expectError('Supplier county is required');    // not provided by companies-house lookup
     contractAboutSupplier.expectError('Supplier postcode is required');
-    //  contractAboutSupplier.expectError('Supplier country is required'); // default value applied
     contractAboutSupplier.expectError('Supplier correspondence address is required');
     contractAboutSupplier.expectError('Industry Sector is required');
     contractAboutSupplier.expectError('Industry Class is required');
@@ -104,7 +102,6 @@ context('about-supply-contract', () => {
     contractAboutPreview.expectError('Indemnifier address line 2 is required');
     contractAboutPreview.expectError('Indemnifier town is required');
     contractAboutPreview.expectError('Indemnifier postcode is required');
-    contractAboutPreview.expectError('Indemnifier country is required');
 
     // prove the errors show on the about-supplier page
     contractAboutSupplier.visit(deal);
@@ -112,7 +109,6 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('Indemnifier address line 2 is required');
     contractAboutSupplier.expectError('Indemnifier town is required');
     contractAboutSupplier.expectError('Indemnifier postcode is required');
-    contractAboutSupplier.expectError('Indemnifier country is required');
 
     // open up the indemnifier correspondence address section to generate more errors...
     contractAboutSupplier.indemnifierCorrespondenceAddressDifferent().click();
@@ -125,7 +121,6 @@ context('about-supply-contract', () => {
     contractAboutPreview.expectError('Indemnifier correspondence address line 2 is required');
     contractAboutPreview.expectError('Indemnifier correspondence town is required');
     contractAboutPreview.expectError('Indemnifier correspondence postcode is required');
-    contractAboutPreview.expectError('Indemnifier correspondence country is required');
 
     // prove the errors show on the about-supplier page
     contractAboutSupplier.visit(deal);
@@ -133,7 +128,6 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('Indemnifier correspondence address line 2 is required');
     contractAboutSupplier.expectError('Indemnifier correspondence town is required');
     contractAboutSupplier.expectError('Indemnifier correspondence postcode is required');
-    contractAboutSupplier.expectError('Indemnifier correspondence country is required');
   });
 
 });
