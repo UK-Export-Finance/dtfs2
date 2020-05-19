@@ -211,8 +211,9 @@ describe('/v1/deals/:id/bond', () => {
       bondType: 'bond type',
       bondStage: 'unissued',
       ukefGuaranteeInMonths: '24',
-      'requestedCoverStartDate-day': '01',
-      'requestedCoverStartDate-month': '02',
+      // TODO: generate dates on the fly.
+      'requestedCoverStartDate-day': '25',
+      'requestedCoverStartDate-month': '05',
       'requestedCoverStartDate-year': '2020',
       'coverEndDate-day': '01',
       'coverEndDate-month': '02',
@@ -359,8 +360,9 @@ describe('/v1/deals/:id/bond', () => {
           ...allBondFields,
           bondStage: 'Issued',
           bondIssuer: 'test',
-          'requestedCoverStartDate-day': '01',
-          'requestedCoverStartDate-month': '02',
+          // TODO: generate dates on the fly.
+          'requestedCoverStartDate-day': '25',
+          'requestedCoverStartDate-month': '05',
           'requestedCoverStartDate-year': '2020',
           'coverEndDate-day': '01',
           'coverEndDate-month': '02',
