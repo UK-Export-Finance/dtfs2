@@ -45,11 +45,16 @@ context('about-supply-contract', () => {
       expect(text.trim()).equal('Not Started');
     });
     contract.aboutSupplierDetailsLink().click();
+    //---
+    // check initial page state..
+    //---
 
-    // confirm the supplier correspondence sections is hidden by default
+    // sections of the page that start hidden should be hidden
     contractAboutSupplier.supplierCorrespondenceAddress().line1().should('be.hidden');
-    // confirm the indemnifier section is hidden by default
     contractAboutSupplier.indemnifierName().should('be.hidden');
+    // default values should be in place
+    contractAboutSupplier.supplierAddress().country().should('have.value', 'GBR');
+    contractAboutSupplier.errors().should('not.exist');
 
     //---
     // use companies-house lookup

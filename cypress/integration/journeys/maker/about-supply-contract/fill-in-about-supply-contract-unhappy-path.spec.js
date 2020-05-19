@@ -57,12 +57,13 @@ context('about-supply-contract', () => {
     //-----
     // select a different correspondence address so we are forced to fill it in
     contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();
-    contractAboutSupplier.supplierCorrespondenceAddress().country().select('GBR');
+    // check default state
+    contractAboutSupplier.supplierCorrespondenceAddress().country().should('have.value', 'GBR');
+    // fill in form..
     contractAboutSupplier.supplierCorrespondenceAddress().line1().type('2 Horseguards Road');
     contractAboutSupplier.supplierCorrespondenceAddress().town().type('Eastminster');
     contractAboutSupplier.supplierCorrespondenceAddress().county().type('Edinburgh');
     contractAboutSupplier.supplierCorrespondenceAddress().postcode().type('ED1 23S');
-
     contractAboutSupplier.industrySector().select('1009'); //Information and communication
     contractAboutSupplier.industryClass().select('62012'); //Business and domestic software development
     contractAboutSupplier.smeTypeSmall().click();
@@ -71,6 +72,8 @@ context('about-supply-contract', () => {
     //-----
     // select a legally-distinct indemnifier
     contractAboutSupplier.legallyDistinct().click();
+    // check default state
+    contractAboutSupplier.indemnifierAddress().country().should('have.value', 'GBR');
 
     //-----
     // use the companies house search to find the indemnifier
@@ -92,7 +95,9 @@ context('about-supply-contract', () => {
     // continue filling in the form..
     // select a different correspondence address for the indemnifier..
     contractAboutSupplier.indemnifierCorrespondenceAddressDifferent().click();
-    contractAboutSupplier.indemnifierCorrespondenceAddress().country().select('GBR');
+    // check default state
+    contractAboutSupplier.indemnifierCorrespondenceAddress().country().should('have.value', 'GBR');
+    // fill in form
     contractAboutSupplier.indemnifierCorrespondenceAddress().line1().type('27 Petersfield');
     contractAboutSupplier.indemnifierCorrespondenceAddress().town().type('Chelmsford');
     contractAboutSupplier.indemnifierCorrespondenceAddress().county().type('Essex');

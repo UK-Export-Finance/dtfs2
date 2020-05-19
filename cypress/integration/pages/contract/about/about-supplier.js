@@ -33,6 +33,7 @@ const page = {
   saveAndGoBack: () => cy.get('[data-cy="SaveAndGoBack"]'),
 
   expectError: (text) => cy.get('.govuk-error-message').contains(text),
+  errors: () => cy.get('.govuk-error-message'),
 };
 
 module.exports = page;
