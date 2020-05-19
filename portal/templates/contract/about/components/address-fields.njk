@@ -79,9 +79,6 @@
 
         {% set thisField=id+"-county" %}
         {{ govukInput({
-          label: {
-            text: 'County'
-          },
           id: thisField,
           name: thisField,
           value: deal.submissionDetails[thisField],
