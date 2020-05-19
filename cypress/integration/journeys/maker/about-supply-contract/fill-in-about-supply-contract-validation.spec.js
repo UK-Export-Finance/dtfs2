@@ -1,5 +1,8 @@
-const {contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview} = require('../../../pages');
-const maker1 = {username: 'MAKER', password: 'MAKER'};
+const {
+  contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
+} = require('../../../pages');
+
+const maker1 = { username: 'MAKER', password: 'MAKER' };
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('../dashboard/twentyOneDeals');
@@ -8,7 +11,7 @@ const twentyOneDeals = require('../dashboard/twentyOneDeals');
 context('about-supply-contract', () => {
   let deal;
 
-  beforeEach( () => {
+  beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
       console.log(err.stack);
@@ -16,15 +19,15 @@ context('about-supply-contract', () => {
     });
   });
 
-  before( () => {
+  before(() => {
     const aDealWith_AboutSupplyContract_InStatus = (status) => {
       const candidates = twentyOneDeals
-        .filter( deal=> (deal.submissionDetails && status === deal.submissionDetails.status) )
-        .filter( deal=> (deal.details && deal.details.status === 'Draft'));
+        .filter((deal) => (deal.submissionDetails && status === deal.submissionDetails.status))
+        .filter((deal) => (deal.details && deal.details.status === 'Draft'));
 
       const deal = candidates[0];
       if (!deal) {
-        throw new Error("no suitable test data found");
+        throw new Error('no suitable test data found');
       } else {
         return deal;
       }
@@ -32,13 +35,14 @@ context('about-supply-contract', () => {
 
     cy.deleteDeals(maker1);
     cy.insertOneDeal(aDealWith_AboutSupplyContract_InStatus('Not Started'), { ...maker1 })
-      .then( insertedDeal =>  deal=insertedDeal );
+      .then((insertedDeal) => deal = insertedDeal);
   });
 
   it('A maker picks up a deal in status=Draft, and triggers all validation errors.', () => {
-    cy.login({...maker1});
+    cy.login({ ...maker1 });
 
     contractAboutSupplier.visit(deal);
+    contractAboutSupplier.supplierName().clear();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
@@ -129,5 +133,4 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('Indemnifier correspondence town is required');
     contractAboutSupplier.expectError('Indemnifier correspondence postcode is required');
   });
-
 });
