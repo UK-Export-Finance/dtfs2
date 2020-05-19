@@ -36,21 +36,13 @@ module.exports = (submissionDetails, errorList) => {
         };
       }
 
-      // Cannot make county mandatory, as companies house does not provide a county field,
-      //   so we would have validation failures for all addresses that come from CH lookup..
-      //
-      // if (!hasValue(submissionDetails['indemnifier-correspondence-address-county'])) {
-      //   newErrorList['indemnifier-correspondence-address-county'] = {
-      //     order: orderNumber(newErrorList),
-      //     text: 'Indemnifier correspondence county is required',
-      //   };
-      // }
-
-      if (!hasValue(submissionDetails['indemnifier-correspondence-address-postcode'])) {
-        newErrorList['indemnifier-correspondence-address-postcode'] = {
-          order: orderNumber(newErrorList),
-          text: 'Indemnifier correspondence postcode is required',
-        };
+      if (submissionDetails['indemnifier-correspondence-address-country'] === 'GBR') {
+        if (!hasValue(submissionDetails['indemnifier-correspondence-address-postcode'])) {
+          newErrorList['indemnifier-correspondence-address-postcode'] = {
+            order: orderNumber(newErrorList),
+            text: 'Indemnifier correspondence postcode is required for UK addresses',
+          };
+        }
       }
 
       if (!hasValue(submissionDetails['indemnifier-correspondence-address-country'])) {
