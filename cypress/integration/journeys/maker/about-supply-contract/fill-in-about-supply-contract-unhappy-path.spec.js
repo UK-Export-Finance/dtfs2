@@ -1,5 +1,6 @@
-const {contract, contractAboutSupplier, contractAboutPreview} = require('../../../pages');
-const maker1 = {username: 'MAKER', password: 'MAKER'};
+const { contract, contractAboutSupplier, contractAboutPreview } = require('../../../pages');
+
+const maker1 = { username: 'MAKER', password: 'MAKER' };
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('../dashboard/twentyOneDeals');
@@ -8,7 +9,7 @@ const twentyOneDeals = require('../dashboard/twentyOneDeals');
 context('about-supply-contract', () => {
   let deal;
 
-  beforeEach( () => {
+  beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
       console.log(err.stack);
@@ -16,15 +17,15 @@ context('about-supply-contract', () => {
     });
   });
 
-  before( () => {
+  before(() => {
     const aDealWith_AboutSupplyContract_InStatus = (status) => {
       const candidates = twentyOneDeals
-        .filter( deal=> (deal.submissionDetails && status === deal.submissionDetails.status) )
-        .filter( deal=> (deal.details && deal.details.status === 'Draft'));
+        .filter((deal) => (deal.submissionDetails && status === deal.submissionDetails.status))
+        .filter((deal) => (deal.details && deal.details.status === 'Draft'));
 
       const deal = candidates[0];
       if (!deal) {
-        throw new Error("no suitable test data found");
+        throw new Error('no suitable test data found');
       } else {
         return deal;
       }
@@ -32,11 +33,11 @@ context('about-supply-contract', () => {
 
     cy.deleteDeals(maker1);
     cy.insertOneDeal(aDealWith_AboutSupplyContract_InStatus('Not Started'), { ...maker1 })
-      .then( insertedDeal =>  deal=insertedDeal );
+      .then((insertedDeal) => deal = insertedDeal);
   });
 
   it('A maker picks up a deal in status=Draft, and fills in the about-supply-contract section, selecting every option that requires more data.', () => {
-    cy.login({...maker1});
+    cy.login({ ...maker1 });
 
     // go the long way for the first test- actually clicking via the contract page to prove the link..
     contract.visit(deal);
@@ -47,7 +48,7 @@ context('about-supply-contract', () => {
     contract.aboutSupplierDetailsLink().click();
 
     contractAboutSupplier.supplierType().select('Exporter');
-    contractAboutSupplier.supplierName().type('UKFS');
+    contractAboutSupplier.supplierName().clear().type('UKFS');
     contractAboutSupplier.supplierAddress().country().select('GBR');
     contractAboutSupplier.supplierAddress().line1().type('1 Horseguards Road');
     contractAboutSupplier.supplierAddress().town().type('Westminster');
@@ -67,7 +68,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.industrySector().select('1009'); //Information and communication
     contractAboutSupplier.industryClass().select('62012'); //Business and domestic software development
     contractAboutSupplier.smeTypeSmall().click();
-    contractAboutSupplier.supplyContractDescription().type('Description.')
+    contractAboutSupplier.supplyContractDescription().type('Description.');
 
     //-----
     // select a legally-distinct indemnifier
@@ -84,12 +85,12 @@ context('about-supply-contract', () => {
     // the search should populate the indemnifier address fields
     //
     // contractAboutSupplier.supplierAddress().county().should('not.have.value', ''); //TODO don't believe CH store county...
-    contractAboutSupplier.indemnifierName().should('not.have.value', ''); //TODO if we had 'proper' test company we might assert real data
-    contractAboutSupplier.indemnifierAddress().line1().should('not.have.value', ''); //TODO
-    contractAboutSupplier.indemnifierAddress().line2().should('not.have.value', ''); //TODO
-    contractAboutSupplier.indemnifierAddress().town().should('not.have.value', ''); //TODO
-    contractAboutSupplier.indemnifierAddress().postcode().should('not.have.value', ''); //TODO
-    contractAboutSupplier.indemnifierAddress().country().should('not.have.value', ''); //TODO
+    contractAboutSupplier.indemnifierName().should('not.have.value', ''); // TODO if we had 'proper' test company we might assert real data
+    contractAboutSupplier.indemnifierAddress().line1().should('not.have.value', ''); // TODO
+    contractAboutSupplier.indemnifierAddress().line2().should('not.have.value', ''); // TODO
+    contractAboutSupplier.indemnifierAddress().town().should('not.have.value', ''); // TODO
+    contractAboutSupplier.indemnifierAddress().postcode().should('not.have.value', ''); // TODO
+    contractAboutSupplier.indemnifierAddress().country().should('not.have.value', ''); // TODO
 
     //-----
     // continue filling in the form..
@@ -156,10 +157,10 @@ context('about-supply-contract', () => {
     });
 
     contractAboutPreview.industrySector().invoke('text').then((text) => {
-      expect(text.trim()).equal('1009');//Information and communication
+      expect(text.trim()).equal('1009');// Information and communication
     });
     contractAboutPreview.industryClass().invoke('text').then((text) => {
-      expect(text.trim()).equal('62012');//Business and domestic software development
+      expect(text.trim()).equal('62012');// Business and domestic software development
     });
     contractAboutPreview.smeType().invoke('text').then((text) => {
       expect(text.trim()).equal('Small');
@@ -177,22 +178,22 @@ context('about-supply-contract', () => {
     });
 
     contractAboutPreview.indemnifierName().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
     });
     contractAboutPreview.indemnifierAddress().line1().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
     });
     contractAboutPreview.indemnifierAddress().line2().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
     });
     contractAboutPreview.indemnifierAddress().town().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
     });
     contractAboutPreview.indemnifierAddress().postcode().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
     });
     contractAboutPreview.indemnifierAddress().country().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
     });
 
     contractAboutPreview.indemnifierCorrespondenceAddressDifferent().invoke('text').then((text) => {
@@ -213,8 +214,5 @@ context('about-supply-contract', () => {
     contractAboutPreview.indemnifierCorrespondenceAddress().postcode().invoke('text').then((text) => {
       expect(text.trim()).equal('CM1 4EP');
     });
-
-
   });
-
 });
