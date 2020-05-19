@@ -1,12 +1,12 @@
 {% import '_macros/progress-nav.njk' as progressNav %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 
 {% macro fields(deal, validationErrors, id, legend, hint, countries, showCountryPleaseSelect) %}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
-
       <fieldset data-cy="{{ id }}" class="govuk-fieldset">
         <legend
           class="govuk-fieldset__legend govuk-fieldset__legend--m"
@@ -24,21 +24,16 @@
           </span>
         {% endif %}
 
-        <div class="govuk-form-group">
-          {% set thisField=id+"-country" %}
-          <label class="govuk-label" for="{{ thisField }}">
-            Country
-          </label>
-          <select data-cy="{{ thisField }}" class="govuk-select govuk-!-width-full" id="{{ thisField }}" name="{{ thisField }}">
-          {% if showCountryPleaseSelect %}
-            <option value="">Select value</option>
-          {% endif %}
-            {% for country in countries %}
-              <option value="{{ country.code }}" {% if country.code === deal.submissionDetails[thisField] %}selected{% endif %} >{{ country.name}}</option>
-            {% endfor %}
+        {% set thisField=id+"-country" %}
 
-          </select>
-        </div>
+        {{ govukSelect({
+          id: thisField,
+          name: thisField,
+          label: { text: "Country" },
+          attributes: { "data-cy": thisField },
+          items: countries[thisField],
+          errorMessage: validationErrors.errorList[thisField]
+        }) }}
 
         {% set thisField=id+"-line-1" %}
         {{ govukInput({

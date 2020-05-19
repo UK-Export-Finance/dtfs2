@@ -4,6 +4,7 @@ import companiesHouseAPI from '../../companies-house-api';
 import {
   getApiData,
   requestParams,
+  mapCountries,
   mapCurrencies,
   mapIndustrySectors,
   mapIndustryClasses,
@@ -59,17 +60,24 @@ router.get('/contract/:_id/about/supplier', async (req, res) => {
     api.industrySectors(userToken),
     res,
   );
+  const countries = await getApiData(
+    api.countries(userToken),
+    res,
+  );
 
   const mappedIndustrySectors = mapIndustrySectors(industrySectors, deal.submissionDetails['industry-sector']);
   const mappedIndustryClasses = mapIndustryClasses(industrySectors, deal.submissionDetails['industry-sector'], deal.submissionDetails['industry-class']);
+  const mappedCountries = {
+    'supplier-address-country': mapCountries(countries, deal.submissionDetails['supplier-address-country']),
+    'supplier-correspondence-address-country': mapCountries(countries, deal.submissionDetails['supplier-correspondence-address-country']),
+    'indemnifier-address-country': mapCountries(countries, deal.submissionDetails['indemnifier-address-country']),
+    'indemnifier-correspondence-address-country': mapCountries(countries, deal.submissionDetails['indemnifier-correspondence-address-country']),
+  };
 
   return res.render('contract/about/about-supplier.njk', {
     deal,
     validationErrors: formattedValidationErrors,
-    countries: await getApiData(
-      api.countries(userToken),
-      res,
-    ),
+    mappedCountries,
     industrySectors,
     mappedIndustrySectors,
     mappedIndustryClasses,
@@ -109,17 +117,24 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', asyn
       api.industrySectors(userToken),
       res,
     );
+    const countries = await getApiData(
+      api.countries(userToken),
+      res,
+    );
 
     const mappedIndustrySectors = mapIndustrySectors(industrySectors, deal.submissionDetails['industry-sector']);
     const mappedIndustryClasses = mapIndustryClasses(industrySectors, deal.submissionDetails['industry-sector'], deal.submissionDetails['industry-class']);
+    const mappedCountries = {
+      'supplier-address-country': mapCountries(countries, deal.submissionDetails['supplier-address-country']),
+      'supplier-correspondence-address-country': mapCountries(countries, deal.submissionDetails['supplier-correspondence-address-country']),
+      'indemnifier-address-country': mapCountries(countries, deal.submissionDetails['indemnifier-address-country']),
+      'indemnifier-correspondence-address-country': mapCountries(countries, deal.submissionDetails['indemnifier-correspondence-address-country']),
+    };
 
     return res.render('contract/about/about-supplier.njk', {
       validation,
       deal,
-      countries: await getApiData(
-        api.countries(userToken),
-        res,
-      ),
+      mappedCountries,
       industrySectors,
       mappedIndustrySectors,
       mappedIndustryClasses,
@@ -142,16 +157,23 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', asyn
     api.industrySectors(userToken),
     res,
   );
+  const countries = await getApiData(
+    api.countries(userToken),
+    res,
+  );
 
   const mappedIndustrySectors = mapIndustrySectors(industrySectors, deal.submissionDetails['industry-sector']);
   const mappedIndustryClasses = mapIndustryClasses(industrySectors, deal.submissionDetails['industry-sector'], deal.submissionDetails['industry-class']);
+  const mappedCountries = {
+    'supplier-address-country': mapCountries(countries, deal.submissionDetails['supplier-address-country']),
+    'supplier-correspondence-address-country': mapCountries(countries, deal.submissionDetails['supplier-correspondence-address-country']),
+    'indemnifier-address-country': mapCountries(countries, deal.submissionDetails['indemnifier-address-country']),
+    'indemnifier-correspondence-address-country': mapCountries(countries, deal.submissionDetails['indemnifier-correspondence-address-country']),
+  };
 
   return res.render('contract/about/about-supplier.njk', {
     deal,
-    countries: await getApiData(
-      api.countries(userToken),
-      res,
-    ),
+    mappedCountries,
     industrySectors,
     mappedIndustrySectors,
     mappedIndustryClasses,
@@ -182,13 +204,19 @@ router.get('/contract/:_id/about/buyer', async (req, res) => {
     errorHref,
   );
 
+  const countries = await getApiData(
+    api.countries(userToken),
+    res,
+  );
+  const mappedCountries = {
+    countryOfBuyer: mapCountries(countries, deal.submissionDetails.countryOfBuyer),
+    destinationOfGoodsAndServices: mapCountries(countries, deal.submissionDetails.destinationOfGoodsAndServices),
+  };
+
   return res.render('contract/about/about-supply-buyer.njk', {
     deal,
     validationErrors: formattedValidationErrors,
-    countries: await getApiData(
-      api.countries(userToken),
-      res,
-    ),
+    mappedCountries,
   });
 });
 

@@ -99,12 +99,41 @@ context('about-supply-contract', () => {
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
 
+    contractAboutPreview.expectError('Indemnifier name is required');
     contractAboutPreview.expectError('Indemnifier address line 1 is required');
     contractAboutPreview.expectError('Indemnifier address line 2 is required');
     contractAboutPreview.expectError('Indemnifier town is required');
     contractAboutPreview.expectError('Indemnifier postcode is required');
     contractAboutPreview.expectError('Indemnifier country is required');
 
+    // prove the errors show on the about-supplier page
+    contractAboutSupplier.visit(deal);
+    contractAboutSupplier.expectError('Indemnifier address line 1 is require');
+    contractAboutSupplier.expectError('Indemnifier address line 2 is required');
+    contractAboutSupplier.expectError('Indemnifier town is required');
+    contractAboutSupplier.expectError('Indemnifier postcode is required');
+    contractAboutSupplier.expectError('Indemnifier country is required');
+
+    // open up the indemnifier correspondence address section to generate more errors...
+    contractAboutSupplier.indemnifierCorrespondenceAddressDifferent().click();
+    // save + skip ahead to the preview
+    contractAboutSupplier.nextPage().click();
+    contractAboutBuyer.nextPage().click();
+    contractAboutFinancial.preview().click();
+
+    contractAboutPreview.expectError('Indemnifier correspondence address line 1 is required');
+    contractAboutPreview.expectError('Indemnifier correspondence address line 2 is required');
+    contractAboutPreview.expectError('Indemnifier correspondence town is required');
+    contractAboutPreview.expectError('Indemnifier correspondence postcode is required');
+    contractAboutPreview.expectError('Indemnifier correspondence country is required');
+
+    // prove the errors show on the about-supplier page
+    contractAboutSupplier.visit(deal);
+    contractAboutSupplier.expectError('Indemnifier correspondence address line 1 is required');
+    contractAboutSupplier.expectError('Indemnifier correspondence address line 2 is required');
+    contractAboutSupplier.expectError('Indemnifier correspondence town is required');
+    contractAboutSupplier.expectError('Indemnifier correspondence postcode is required');
+    contractAboutSupplier.expectError('Indemnifier correspondence country is required');
   });
 
 });

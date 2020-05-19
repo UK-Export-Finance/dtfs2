@@ -2,6 +2,7 @@
 {% import './components/about-supply-contract-nav.njk' as aboutSupplyContract %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 
 {% block content %}
 
@@ -33,33 +34,26 @@
       }) }}
     </div>
 
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="countryOfBuyer">
-        Country of buyer
-      </label>
-      <select data-cy="countryOfBuyer" class="govuk-select govuk-!-width-one-half" id="countryOfBuyer" name="countryOfBuyer">
-        <option value="">Select value</option>
-        {% for country in countries %}
-          <option value="{{ country.code }}" {% if country.code === deal.submissionDetails.countryOfBuyer%}selected{% endif %}>{{ country.name}}</option>
-        {% endfor %}
-      </select>
-    </div>
+    {{ govukSelect({
+      id: "countryOfBuyer",
+      name: "countryOfBuyer",
+      label: { text: "Country of Buyer" },
+      attributes: { "data-cy": "countryOfBuyer" },
+      classes: "govuk-!-width-one-half",
+      items: mappedCountries["countryOfBuyer"],
+      errorMessage: validationErrors.errorList["countryOfBuyer"]
+    }) }}
 
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="destinationOfGoodsAndServices">
-        Destination of goods and services
-      </label>
-      <span id="destinationOfGoodsAndServices-hint" class="govuk-hint">
-        Destination country of the goods covered by this Supply Contract
-      </span>
-
-      <select data-cy="destinationOfGoodsAndServices" class="govuk-select govuk-!-width-one-half" id="destinationOfGoodsAndServices" name="destinationOfGoodsAndServices" aria-describedby="destinationOfGoodsAndServices-hint">
-        <option value="">Select value</option>
-        {% for country in countries %}
-          <option value="{{ country.code }}" {% if country.code === deal.submissionDetails.destinationOfGoodsAndServices%}selected{% endif %}>{{ country.name}}</option>
-        {% endfor %}
-      </select>
-    </div>
+    {{ govukSelect({
+      id: "destinationOfGoodsAndServices",
+      name: "destinationOfGoodsAndServices",
+      label: { text: "Destination of goods and services" },
+      hint: { text: "Destination country of the goods covered by this Supply Contract" },
+      attributes: { "data-cy": "destinationOfGoodsAndServices" },
+      classes: "govuk-!-width-one-half",
+      items: mappedCountries["destinationOfGoodsAndServices"],
+      errorMessage: validationErrors.errorList["destinationOfGoodsAndServices"]
+    }) }}
 
     {{ govukButton({
       "text": "NextPage",
