@@ -33,13 +33,6 @@ module.exports = (submissionDetails, errorList) => {
       };
     }
 
-    if (!hasValue(submissionDetails['indemnifier-address-town'])) {
-      newErrorList['indemnifier-address-town'] = {
-        order: orderNumber(newErrorList),
-        text: 'Indemnifier town is required',
-      };
-    }
-
     if (submissionDetails['indemnifier-address-country'] === 'GBR') {
       if (!hasValue(submissionDetails['indemnifier-address-postcode'])) {
         newErrorList['indemnifier-address-postcode'] = {
@@ -47,6 +40,11 @@ module.exports = (submissionDetails, errorList) => {
           text: 'Indemnifier postcode is required for UK addresses',
         };
       }
+    } else if (!hasValue(submissionDetails['indemnifier-address-town'])) {
+      newErrorList['indemnifier-address-town'] = {
+        order: orderNumber(newErrorList),
+        text: 'Indemnifier town is required for non-UK addresses',
+      };
     }
 
     if (!hasValue(submissionDetails['indemnifier-address-country'])) {
