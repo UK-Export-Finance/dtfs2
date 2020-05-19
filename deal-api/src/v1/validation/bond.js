@@ -1,3 +1,4 @@
+const moment = require('moment');
 const { orderNumber } = require('../../utils/error-list-order-number');
 const { hasValue } = require('../../utils/string');
 const {
@@ -143,7 +144,7 @@ exports.getBondErrors = (bond) => {
     )) {
       errorList.requestedCoverStartDate = {
         text: dateValidationText(
-          '(temp message): Requested Cover Start Date',
+          'Requested Cover Start Date',
           requestedCoverStartDateDay,
           requestedCoverStartDateMonth,
           requestedCoverStartDateYear,
@@ -162,6 +163,32 @@ exports.getBondErrors = (bond) => {
         ),
         order: orderNumber(errorList),
       };
+    }
+
+    const hasValidRequestedCoverStartDate = dateHasAllValues(
+      requestedCoverStartDateDay,
+      requestedCoverStartDateMonth,
+      requestedCoverStartDateYear,
+    ) && !errorList.requestedCoverStartDate;
+
+    const hasValidCoverEndDate = dateHasAllValues(
+      coverEndDateDay,
+      coverEndDateMonth,
+      coverEndDateYear,
+    ) && !errorList.requestedCoverStartDate;
+
+    const hasValidCoverStartAndEndDates = (hasValidRequestedCoverStartDate && hasValidCoverEndDate);
+
+    if (hasValidCoverStartAndEndDates) {
+      const requestedCoverStartDate = `${requestedCoverStartDateYear}-${requestedCoverStartDateMonth}-${requestedCoverStartDateDay}`;
+      const coverEndDate = `${coverEndDateYear}-${coverEndDateMonth}-${coverEndDateDay}`;
+
+      if (moment(coverEndDate).isBefore(requestedCoverStartDate)) {
+        errorList.coverEndDate = {
+          text: 'Cover End Date cannot be before Requested Cover Start Date',
+          order: orderNumber(errorList),
+        };
+      }
     }
 
     if (!uniqueIdentificationNumber) {
