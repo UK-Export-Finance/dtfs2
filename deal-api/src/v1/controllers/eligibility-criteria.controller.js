@@ -66,7 +66,7 @@ exports.update = async (req, res) => {
         },
         dealFiles: {
           ...dealFiles,
-          validationErrors: documentationErrors,
+          validationErrors: documentationErrors.validationErrors,
         },
       };
 
