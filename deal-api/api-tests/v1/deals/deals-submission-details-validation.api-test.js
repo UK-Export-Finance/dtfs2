@@ -93,13 +93,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         });
       });
 
-      it('expects supplier-address-town', () => {
-        expect(validationErrors.errorList['supplier-address-town']).toEqual({
-          order: expect.any(String),
-          text: 'Supplier town is required',
-        });
-      });
-
       it('expects supplier-address-country', () => {
         expect(validationErrors.errorList['supplier-address-country']).toEqual({
           order: expect.any(String),
@@ -161,6 +154,29 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     });
   });
 
+  describe('If supplier-address !== GBR, town is required', () => {
+    let validationErrors;
+
+    beforeAll(async()=>{
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const submissionDetails = {'supplier-address-country':'USA'};
+
+      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      validationErrors = body.validationErrors;
+    });
+
+    describe('expects supplier address', () => {
+      it('expects supplier-address-town', () => {
+        expect(validationErrors.errorList['supplier-address-town']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier town is required for non-UK addresses',
+        });
+      });
+    });
+  });
+
   describe('if the supplier is flagged as having a separate correspondence address', () => {
     let validationErrors;
 
@@ -188,13 +204,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         expect(validationErrors.errorList['supplier-correspondence-address-line-2']).toEqual({
           order: expect.any(String),
           text: 'Supplier correspondence address line 2 is required',
-        });
-      });
-
-      it('expects supplier-correspondence-address-town', () => {
-        expect(validationErrors.errorList['supplier-correspondence-address-town']).toEqual({
-          order: expect.any(String),
-          text: 'Supplier correspondence town is required',
         });
       });
 
@@ -228,6 +237,32 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
           expect(validationErrors.errorList['supplier-correspondence-address-postcode']).toEqual({
             order: expect.any(String),
             text: 'Supplier correspondence postcode is required for UK addresses',
+          });
+        });
+      });
+    });
+
+    describe('If supplier-correspondence-address !== GBR, town is required', () => {
+      let validationErrors;
+
+      beforeAll(async()=>{
+        const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+        const createdDeal = postResult.body;
+        const submissionDetails = {
+          "supplier-correspondence-address-is-different":"true",
+          "supplier-correspondence-address-country":"USA"
+        };
+
+        const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+        validationErrors = body.validationErrors;
+      });
+
+      describe('expects supplier correspondence address', () => {
+        it('expects supplier-correspondence-address-town', () => {
+          expect(validationErrors.errorList['supplier-correspondence-address-town']).toEqual({
+            order: expect.any(String),
+            text: 'Supplier correspondence town is required for non-UK addresses',
           });
         });
       });
@@ -278,13 +313,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         });
       });
 
-      it('expects indemnifier-address-town', () => {
-        expect(validationErrors.errorList['indemnifier-address-town']).toEqual({
-          order: expect.any(String),
-          text: 'Indemnifier town is required',
-        });
-      });
-
       it('expects indemnifier-address-country', () => {
         expect(validationErrors.errorList['indemnifier-address-country']).toEqual({
           order: expect.any(String),
@@ -315,6 +343,32 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
           expect(validationErrors.errorList['indemnifier-address-postcode']).toEqual({
             order: expect.any(String),
             text: 'Indemnifier postcode is required for UK addresses',
+          });
+        });
+      });
+    });
+
+    describe('If indemnifier-address !== GBR, town is required', () => {
+      let validationErrors;
+
+      beforeAll(async()=>{
+        const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+        const createdDeal = postResult.body;
+        const submissionDetails = {
+          "legallyDistinct":"true",
+          "indemnifier-address-country":"USA"
+        };
+
+        const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+        validationErrors = body.validationErrors;
+      });
+
+      describe('expects indemnifier address', () => {
+        it('expects indemnifier-address-town', () => {
+          expect(validationErrors.errorList['indemnifier-address-town']).toEqual({
+            order: expect.any(String),
+            text: 'Indemnifier town is required for non-UK addresses',
           });
         });
       });
@@ -354,13 +408,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         });
       });
 
-      it('expects indemnifier-correspondence-address-town', () => {
-        expect(validationErrors.errorList['indemnifier-correspondence-address-town']).toEqual({
-          order: expect.any(String),
-          text: 'Indemnifier correspondence town is required',
-        });
-      });
-
       it('expects indemnifier-correspondence-address-country', () => {
         expect(validationErrors.errorList['indemnifier-correspondence-address-country']).toEqual({
           order: expect.any(String),
@@ -392,6 +439,33 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
           expect(validationErrors.errorList['indemnifier-correspondence-address-postcode']).toEqual({
             order: expect.any(String),
             text: 'Indemnifier correspondence postcode is required for UK addresses',
+          });
+        });
+      });
+    });
+
+    describe('If indemnifier-correspondence-address !== GBR, town is required', () => {
+      let validationErrors;
+
+      beforeAll(async()=>{
+        const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+        const createdDeal = postResult.body;
+        const submissionDetails = {
+          "legallyDistinct":"true",
+          "indemnifierCorrespondenceAddressDifferent":"true",
+          "indemnifier-correspondence-address-country":"USA"
+        };
+
+        const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+        validationErrors = body.validationErrors;
+      });
+
+      describe('expects indemnifier address', () => {
+        it('expects indemnifier-address-town', () => {
+          expect(validationErrors.errorList['indemnifier-correspondence-address-town']).toEqual({
+            order: expect.any(String),
+            text: 'Indemnifier correspondence town is required for non-UK addresses',
           });
         });
       });

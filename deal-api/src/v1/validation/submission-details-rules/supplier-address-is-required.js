@@ -18,13 +18,6 @@ module.exports = (submissionDetails, errorList) => {
     };
   }
 
-  if (!hasValue(submissionDetails['supplier-address-town'])) {
-    newErrorList['supplier-address-town'] = {
-      order: orderNumber(newErrorList),
-      text: 'Supplier town is required',
-    };
-  }
-
   if (submissionDetails['supplier-address-country'] === 'GBR') {
     if (!hasValue(submissionDetails['supplier-address-postcode'])) {
       newErrorList['supplier-address-postcode'] = {
@@ -32,6 +25,11 @@ module.exports = (submissionDetails, errorList) => {
         text: 'Supplier postcode is required for UK addresses',
       };
     }
+  } else if (!hasValue(submissionDetails['supplier-address-town'])) {
+    newErrorList['supplier-address-town'] = {
+      order: orderNumber(newErrorList),
+      text: 'Supplier town is required for non-UK addresses',
+    };
   }
 
   if (!hasValue(submissionDetails['supplier-address-country'])) {

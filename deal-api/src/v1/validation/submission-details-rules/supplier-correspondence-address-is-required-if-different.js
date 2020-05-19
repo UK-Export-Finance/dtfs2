@@ -26,13 +26,6 @@ module.exports = (submissionDetails, errorList) => {
       };
     }
 
-    if (!hasValue(submissionDetails['supplier-correspondence-address-town'])) {
-      newErrorList['supplier-correspondence-address-town'] = {
-        order: orderNumber(newErrorList),
-        text: 'Supplier correspondence town is required',
-      };
-    }
-
     if (submissionDetails['supplier-correspondence-address-country'] === 'GBR') {
       if (!hasValue(submissionDetails['supplier-correspondence-address-postcode'])) {
         newErrorList['supplier-correspondence-address-postcode'] = {
@@ -40,6 +33,11 @@ module.exports = (submissionDetails, errorList) => {
           text: 'Supplier correspondence postcode is required for UK addresses',
         };
       }
+    } else if (!hasValue(submissionDetails['supplier-correspondence-address-town'])) {
+      newErrorList['supplier-correspondence-address-town'] = {
+        order: orderNumber(newErrorList),
+        text: 'Supplier correspondence town is required for non-UK addresses',
+      };
     }
 
     if (!hasValue(submissionDetails['supplier-correspondence-address-country'])) {

@@ -52,7 +52,6 @@ context('about-supply-contract', () => {
     contractAboutPreview.expectError('Supplier name is required');
     contractAboutPreview.expectError('Supplier address line 1 is required');
     contractAboutPreview.expectError('Supplier address line 2 is required');
-    contractAboutPreview.expectError('Supplier town is required');
     contractAboutPreview.expectError('Supplier correspondence address is required');
     contractAboutPreview.expectError('Industry Sector is required');
     contractAboutPreview.expectError('Industry Class is required');
@@ -67,7 +66,6 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('Supplier name is required');
     contractAboutSupplier.expectError('Supplier address line 1 is required');
     contractAboutSupplier.expectError('Supplier address line 2 is required');
-    contractAboutSupplier.expectError('Supplier town is required');
     contractAboutSupplier.expectError('Supplier correspondence address is required');
     contractAboutSupplier.expectError('Industry Sector is required');
     contractAboutSupplier.expectError('Industry Class is required');
@@ -83,6 +81,7 @@ context('about-supply-contract', () => {
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
     contractAboutPreview.errors().should('not.contain', 'Supplier postcode is required for UK addresses')
+    contractAboutPreview.errors().should('contain', 'Supplier town is required for non-UK addresses')
 
     contractAboutSupplier.visit(deal);
     // open up the correspondence address to generate more errors..
@@ -95,7 +94,6 @@ context('about-supply-contract', () => {
     // prove the errors show on the preview page
     contractAboutPreview.expectError('Supplier correspondence address line 1 is required');
     contractAboutPreview.expectError('Supplier correspondence address line 2 is required');
-    contractAboutPreview.expectError('Supplier correspondence town is required');
     // since we are on default country (UK) we require postcode
     contractAboutPreview.expectError('Supplier correspondence postcode is required for UK addresses');
 
@@ -103,7 +101,6 @@ context('about-supply-contract', () => {
     contractAboutSupplier.visit(deal);
     contractAboutSupplier.expectError('Supplier correspondence address line 1 is required');
     contractAboutSupplier.expectError('Supplier correspondence address line 2 is required');
-    contractAboutSupplier.expectError('Supplier correspondence town is required');
     // since we are on default country (UK) we require postcode
     contractAboutSupplier.expectError('Supplier correspondence postcode is required for UK addresses');
 
@@ -114,6 +111,7 @@ context('about-supply-contract', () => {
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
     contractAboutPreview.errors().should('not.contain', 'Supplier correspondence postcode is required for UK addresses')
+    contractAboutPreview.errors().should('contain', 'Supplier correspondence town is required for non-UK addresses')
 
     contractAboutSupplier.visit(deal);
     // open up the legally-distinct indemnifier section to generate more errors...
@@ -126,7 +124,6 @@ context('about-supply-contract', () => {
     contractAboutPreview.expectError('Indemnifier name is required');
     contractAboutPreview.expectError('Indemnifier address line 1 is required');
     contractAboutPreview.expectError('Indemnifier address line 2 is required');
-    contractAboutPreview.expectError('Indemnifier town is required');
     // since we are on default country (UK) we require postcode
     contractAboutPreview.expectError('Indemnifier postcode is required for UK addresses');
 
@@ -134,7 +131,6 @@ context('about-supply-contract', () => {
     contractAboutSupplier.visit(deal);
     contractAboutSupplier.expectError('Indemnifier address line 1 is require');
     contractAboutSupplier.expectError('Indemnifier address line 2 is required');
-    contractAboutSupplier.expectError('Indemnifier town is required');
     // since we are on default country (UK) we require postcode
     contractAboutSupplier.expectError('Indemnifier postcode is required');
 
@@ -145,6 +141,7 @@ context('about-supply-contract', () => {
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
     contractAboutPreview.errors().should('not.contain', 'Indemnifier postcode is required for UK addresses')
+    contractAboutPreview.errors().should('contain', 'Indemnifier town is required for non-UK addresses')
 
     // open up the indemnifier correspondence address section to generate more errors...
     contractAboutSupplier.visit(deal);
@@ -156,7 +153,6 @@ context('about-supply-contract', () => {
 
     contractAboutPreview.expectError('Indemnifier correspondence address line 1 is required');
     contractAboutPreview.expectError('Indemnifier correspondence address line 2 is required');
-    contractAboutPreview.expectError('Indemnifier correspondence town is required');
     // since we are on default country (UK) we require postcode
     contractAboutPreview.expectError('Indemnifier correspondence postcode is required');
 
@@ -164,7 +160,6 @@ context('about-supply-contract', () => {
     contractAboutSupplier.visit(deal);
     contractAboutSupplier.expectError('Indemnifier correspondence address line 1 is required');
     contractAboutSupplier.expectError('Indemnifier correspondence address line 2 is required');
-    contractAboutSupplier.expectError('Indemnifier correspondence town is required');
     // since we are on default country (UK) we require postcode
     contractAboutSupplier.expectError('Indemnifier correspondence postcode is required');
 
@@ -175,5 +170,6 @@ context('about-supply-contract', () => {
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
     contractAboutPreview.errors().should('not.contain', 'Indemnifier correspondence postcode is required for UK addresses')
+    contractAboutPreview.errors().should('contain', 'Indemnifier correspondence town is required for non-UK addresses')
   });
 });
