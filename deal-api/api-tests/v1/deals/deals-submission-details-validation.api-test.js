@@ -100,21 +100,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         });
       });
 
-      // companies-house lookup does not provide county, so we can't make it mandatory...
-      xit('expects supplier-address-county', () => {
-        expect(validationErrors.errorList['supplier-address-county']).toEqual({
-          order: expect.any(String),
-          text: 'Supplier county is required',
-        });
-      });
-
-      it('expects supplier-address-postcode', () => {
-        expect(validationErrors.errorList['supplier-address-postcode']).toEqual({
-          order: expect.any(String),
-          text: 'Supplier postcode is required',
-        });
-      });
-
       it('expects supplier-address-country', () => {
         expect(validationErrors.errorList['supplier-address-country']).toEqual({
           order: expect.any(String),
@@ -151,6 +136,29 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       });
     });
 
+  });
+
+  describe('If supplier-address === GBR, postcode is required', () => {
+    let validationErrors;
+
+    beforeAll(async()=>{
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const submissionDetails = {'supplier-address-country':'GBR'};
+
+      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      validationErrors = body.validationErrors;
+    });
+
+    describe('expects supplier address', () => {
+      it('expects supplier-address-postcode', () => {
+        expect(validationErrors.errorList['supplier-address-postcode']).toEqual({
+          order: expect.any(String),
+          text: 'Supplier postcode is required for UK addresses',
+        });
+      });
+    });
   });
 
   describe('if the supplier is flagged as having a separate correspondence address', () => {
@@ -190,21 +198,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         });
       });
 
-      // companies-house lookup does not provide county, so we can't make it mandatory...
-      xit('expects supplier-correspondence-address-county', () => {
-        expect(validationErrors.errorList['supplier-correspondence-address-county']).toEqual({
-          order: expect.any(String),
-          text: 'Supplier correspondence county is required',
-        });
-      });
-
-      it('expects supplier-correspondence-address-postcode', () => {
-        expect(validationErrors.errorList['supplier-correspondence-address-postcode']).toEqual({
-          order: expect.any(String),
-          text: 'Supplier correspondence postcode is required',
-        });
-      });
-
       it('expects supplier-correspondence-address-country', () => {
         expect(validationErrors.errorList['supplier-correspondence-address-country']).toEqual({
           order: expect.any(String),
@@ -212,6 +205,32 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         });
       });
 
+    });
+
+    describe('If supplier-correspondence-address === GBR, postcode is required', () => {
+      let validationErrors;
+
+      beforeAll(async()=>{
+        const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+        const createdDeal = postResult.body;
+        const submissionDetails = {
+          "supplier-correspondence-address-is-different":"true",
+          "supplier-correspondence-address-country":"GBR"
+        };
+
+        const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+        validationErrors = body.validationErrors;
+      });
+
+      describe('expects supplier correspondence address', () => {
+        it('expects supplier-correspondence-address-postcode', () => {
+          expect(validationErrors.errorList['supplier-correspondence-address-postcode']).toEqual({
+            order: expect.any(String),
+            text: 'Supplier correspondence postcode is required for UK addresses',
+          });
+        });
+      });
     });
 
   });
@@ -266,21 +285,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         });
       });
 
-      // companies-house lookup does not provide county, so we can't make it mandatory...
-      xit('expects indemnifier-address-county', () => {
-        expect(validationErrors.errorList['indemnifier-address-county']).toEqual({
-          order: expect.any(String),
-          text: 'Indemnifier county is required',
-        });
-      });
-
-      it('expects indemnifier-address-postcode', () => {
-        expect(validationErrors.errorList['indemnifier-address-postcode']).toEqual({
-          order: expect.any(String),
-          text: 'Indemnifier postcode is required',
-        });
-      });
-
       it('expects indemnifier-address-country', () => {
         expect(validationErrors.errorList['indemnifier-address-country']).toEqual({
           order: expect.any(String),
@@ -290,6 +294,31 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
 
     });
 
+    describe('If indemnifier-address === GBR, postcode is required', () => {
+      let validationErrors;
+
+      beforeAll(async()=>{
+        const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+        const createdDeal = postResult.body;
+        const submissionDetails = {
+          "legallyDistinct":"true",
+          "indemnifier-address-country":"GBR"
+        };
+
+        const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+        validationErrors = body.validationErrors;
+      });
+
+      describe('expects indemnifier address', () => {
+        it('expects indemnifier-address-postcode', () => {
+          expect(validationErrors.errorList['indemnifier-address-postcode']).toEqual({
+            order: expect.any(String),
+            text: 'Indemnifier postcode is required for UK addresses',
+          });
+        });
+      });
+    });
 
   });
 
@@ -332,21 +361,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         });
       });
 
-      // companies-house lookup does not provide county, so we can't make it mandatory...
-      xit('expects indemnifier-correspondence-address-county', () => {
-        expect(validationErrors.errorList['indemnifier-correspondence-address-county']).toEqual({
-          order: expect.any(String),
-          text: 'Indemnifier correspondence county is required',
-        });
-      });
-
-      it('expects indemnifier-correspondence-address-postcode', () => {
-        expect(validationErrors.errorList['indemnifier-correspondence-address-postcode']).toEqual({
-          order: expect.any(String),
-          text: 'Indemnifier correspondence postcode is required',
-        });
-      });
-
       it('expects indemnifier-correspondence-address-country', () => {
         expect(validationErrors.errorList['indemnifier-correspondence-address-country']).toEqual({
           order: expect.any(String),
@@ -355,6 +369,34 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       });
 
     });
+
+    describe('If indemnifier-corresdpondence-address === GBR, postcode is required', () => {
+      let validationErrors;
+
+      beforeAll(async()=>{
+        const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+        const createdDeal = postResult.body;
+        const submissionDetails = {
+          "legallyDistinct":"true",
+          "indemnifierCorrespondenceAddressDifferent":"true",
+          "indemnifier-correspondence-address-country":"GBR"
+        };
+
+        const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+        validationErrors = body.validationErrors;
+      });
+
+      describe('expects indemnifier correspondence address', () => {
+        it('expects indemnifier-correspondence-address-postcode', () => {
+          expect(validationErrors.errorList['indemnifier-correspondence-address-postcode']).toEqual({
+            order: expect.any(String),
+            text: 'Indemnifier correspondence postcode is required for UK addresses',
+          });
+        });
+      });
+    });
+
   });
 
 });
