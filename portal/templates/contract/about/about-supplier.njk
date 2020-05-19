@@ -42,13 +42,13 @@
 
     {{ supplierNameAndAddressLookup.render({
       deal: deal,
-      countries: countries,
+      mappedCountries: mappedCountries,
       validationErrors: validationErrors
     }) }}
 
     {{ supplierCorrespondenceAddress.render({
       deal: deal,
-      countries: countries,
+      mappedCountries: mappedCountries,
       validationErrors: validationErrors
     }) }}
 
@@ -76,7 +76,7 @@
 
     {{ legallyDistinct.render({
       deal: deal,
-      countries: countries,
+      mappedCountries: mappedCountries,
       validationErrors: validationErrors
     }) }}
 
