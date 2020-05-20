@@ -94,6 +94,8 @@ context('about-supply-contract', () => {
 
     //-----
     // continue filling in the form..
+    // confirm that the indemnifier correspondence address is hidden until we click the radio-button...
+    contractAboutSupplier.indemnifierCorrespondenceAddress().line1().should('not.be.visible');
     // select a different correspondence address for the indemnifier..
     contractAboutSupplier.indemnifierCorrespondenceAddressDifferent().click();
     // check default state
