@@ -5,6 +5,7 @@ const {
   dateValidationText,
   now,
   addDaysToDate,
+  addMonthsToDate,
   removeDaysFromDate,
   dateIsInTimeframe,
 } = require('../../../src/v1/validation/date-field');
@@ -94,6 +95,16 @@ describe('validation - date-field', () => {
       const result = addDaysToDate(date, 10);
 
       const expected = moment(date).add(10, 'day');
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('addMonthsToDate', () => {
+    it('should add X months to a given date', () => {
+      const date = moment();
+      const result = addMonthsToDate(date, 10);
+
+      const expected = moment(date).add(10, 'months');
       expect(result).toEqual(expected);
     });
   });

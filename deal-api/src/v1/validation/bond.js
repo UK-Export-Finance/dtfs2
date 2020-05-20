@@ -5,7 +5,7 @@ const {
   dateHasAllValues,
   dateHasSomeValues,
   dateValidationText,
-  addDaysToDate,
+  addMonthsToDate,
   now,
   dateIsInTimeframe,
 } = require('./date-field');
@@ -122,7 +122,7 @@ exports.getBondErrors = (bond) => {
 
   if (bondStage === 'Issued') {
     if (dateHasAllValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear)) {
-      const MAX_DAYS_FROM_NOW = 93;
+      const MAX_MONTHS_FROM_NOW = 3;
       const nowDate = now();
 
       if (!dateIsInTimeframe(
@@ -130,10 +130,10 @@ exports.getBondErrors = (bond) => {
         requestedCoverStartDateMonth,
         requestedCoverStartDateYear,
         nowDate,
-        addDaysToDate(nowDate, MAX_DAYS_FROM_NOW),
+        addMonthsToDate(nowDate, MAX_MONTHS_FROM_NOW),
       )) {
         errorList.requestedCoverStartDate = {
-          text: `(temp message): Requested Cover Start Date must be within ${MAX_DAYS_FROM_NOW} day timeframe`,
+          text: `(temp message): Requested Cover Start Date must be within ${MAX_MONTHS_FROM_NOW} day timeframe`,
           order: orderNumber(errorList),
         };
       }
