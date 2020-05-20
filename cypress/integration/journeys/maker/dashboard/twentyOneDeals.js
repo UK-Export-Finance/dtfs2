@@ -10,7 +10,7 @@ module.exports = [
       status: 'Draft',
     },
     submissionDetails: {
-      status: 'Not Started',
+      status: 'Not started',
       'supplier-name': 'Supplier name 1',
     },
   }, {
