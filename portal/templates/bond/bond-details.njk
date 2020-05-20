@@ -219,6 +219,12 @@
           {% endif %}
         >
 
+
+          {# generic #}
+          {% set dateInputClass = "govuk-input--width-2" %}
+          {% set dateInputErrorClass = "govuk-input--width-2 govuk-input--error" %}
+
+          {# cover start date specific #}
           {% set requestedCoverStartDateDay = bond['requestedCoverStartDate-day'] %}
           {% set requestedCoverStartDateMonth = bond['requestedCoverStartDate-month'] %}
           {% set requestedCoverStartDateYear = bond['requestedCoverStartDate-year'] %}
@@ -229,9 +235,6 @@
           {% set requestedCoverStartDateDayError = (requestedCoverStartDateErrorWithAllValues or (requestedCoverStartDateError and not requestedCoverStartDateDay)) %}
           {% set requestedCoverStartDateMonthError = requestedCoverStartDateErrorWithAllValues or (requestedCoverStartDateError and not requestedCoverStartDateMonth) %}
           {% set requestedCoverStartDateYearError = requestedCoverStartDateErrorWithAllValues or (requestedCoverStartDateError and not requestedCoverStartDateYear) %}
-
-          {% set dateInputClass = "govuk-input--width-2" %}
-          {% set dateInputErrorClass = "govuk-input--width-2 govuk-input--error" %}
 
           {{ govukDateInput({
             id: "requestedCoverStartDate",
@@ -278,6 +281,21 @@
             ]
           }) }}
 
+          {# cover end date specific #}
+          {% set coverEndDateDay = bond['coverEndDate-day'] %}
+          {% set coverEndDateMonth = bond['coverEndDate-month'] %}
+          {% set coverEndDateYear = bond['coverEndDate-year'] %}
+
+          {% set coverEndDateError = validationErrors.errorList.coverEndDate %}
+          {% set coverEndDateErrorWithAllValues = (coverEndDateError and (coverEndDateDay and coverEndDateMonth and coverEndDateYear) and coverEndDateError.text) %}
+
+          {% set coverEndDateDayError = (coverEndDateErrorWithAllValues or (coverEndDateError and not coverEndDateDay)) %}
+          {% set coverEndDateMonthError = coverEndDateErrorWithAllValues or (coverEndDateError and not coverEndDateMonth) %}
+          {% set coverEndDateYearError = coverEndDateErrorWithAllValues or (coverEndDateError and not coverEndDateYear) %}
+
+          {% set dateInputClass = "govuk-input--width-2" %}
+          {% set dateInputErrorClass = "govuk-input--width-2 govuk-input--error" %}
+
           {{ govukDateInput({
             id: "coverEndDate",
             namePrefix: "coverEndDate",
@@ -297,7 +315,7 @@
             },
             items: [
               {
-                classes: (not bond['coverEndDate-day']) and "govuk-input--width-2 govuk-input--error" or "govuk-input--width-2",
+                classes: (coverEndDateDayError and dateInputErrorClass) or dateInputClass,
                 name: "day",
                 value: bond['coverEndDate-day'],
                 attributes: {
@@ -305,7 +323,7 @@
                 }
               },
               {
-                classes: (not bond['coverEndDate-month']) and "govuk-input--width-2 govuk-input--error" or "govuk-input--width-2",
+                classes: (coverEndDateMonthError and dateInputErrorClass) or dateInputClass,
                 name: "month",
                 value: bond['coverEndDate-month'],
                 attributes: {
@@ -313,7 +331,7 @@
                 }
               },
               {
-                classes: (not bond['coverEndDate-year']) and "govuk-input--width-4 govuk-input--error" or "govuk-input--width-4",
+                classes: (coverEndDateYearError and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
                 name: "year",
                 value: bond['coverEndDate-year'],
                 attributes: {
