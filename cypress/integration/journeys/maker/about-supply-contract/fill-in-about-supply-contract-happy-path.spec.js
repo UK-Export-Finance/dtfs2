@@ -77,6 +77,7 @@ context('about-supply-contract', () => {
     //---
     contractAboutSupplier.supplierCorrespondenceAddressSame().click();
     contractAboutSupplier.industrySector().select('1009'); //Information and communication
+    contractAboutSupplier.industryClass().should('have.value', '');
     contractAboutSupplier.industryClass().select('62012'); //Business and domestic software development
     contractAboutSupplier.smeTypeMicro().click();
     contractAboutSupplier.supplyContractDescription().type('Typing in tests takes time.')
