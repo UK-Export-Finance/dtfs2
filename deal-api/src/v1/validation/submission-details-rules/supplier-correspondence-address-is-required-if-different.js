@@ -19,13 +19,6 @@ module.exports = (submissionDetails, errorList) => {
       };
     }
 
-    if (!hasValue(submissionDetails['supplier-correspondence-address-line-2'])) {
-      newErrorList['supplier-correspondence-address-line-2'] = {
-        order: orderNumber(newErrorList),
-        text: 'Supplier correspondence address line 2 is required',
-      };
-    }
-
     if (submissionDetails['supplier-correspondence-address-country'] === 'GBR') {
       if (!hasValue(submissionDetails['supplier-correspondence-address-postcode'])) {
         newErrorList['supplier-correspondence-address-postcode'] = {

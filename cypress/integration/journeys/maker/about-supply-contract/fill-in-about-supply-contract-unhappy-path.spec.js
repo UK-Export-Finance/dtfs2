@@ -51,8 +51,8 @@ context('about-supply-contract', () => {
     contractAboutSupplier.supplierName().clear().type('UKFS');
     contractAboutSupplier.supplierAddress().country().select('GBR');
     contractAboutSupplier.supplierAddress().line1().type('1 Horseguards Road');
-    contractAboutSupplier.supplierAddress().town().type('Westminster');
-    contractAboutSupplier.supplierAddress().county().type('London');
+    contractAboutSupplier.supplierAddress().line3().type('Westminster');
+    contractAboutSupplier.supplierAddress().town().type('London');
     contractAboutSupplier.supplierAddress().postcode().type('SW1A 2HQ');
 
     //-----
@@ -62,8 +62,8 @@ context('about-supply-contract', () => {
     contractAboutSupplier.supplierCorrespondenceAddress().country().should('have.value', 'GBR');
     // fill in form..
     contractAboutSupplier.supplierCorrespondenceAddress().line1().type('2 Horseguards Road');
-    contractAboutSupplier.supplierCorrespondenceAddress().town().type('Eastminster');
-    contractAboutSupplier.supplierCorrespondenceAddress().county().type('Edinburgh');
+    contractAboutSupplier.supplierCorrespondenceAddress().line3().type('Eastminster');
+    contractAboutSupplier.supplierCorrespondenceAddress().town().type('Edinburgh');
     contractAboutSupplier.supplierCorrespondenceAddress().postcode().type('ED1 23S');
     contractAboutSupplier.industrySector().select('1009'); //Information and communication
     contractAboutSupplier.industryClass().select('62012'); //Business and domestic software development
@@ -84,7 +84,6 @@ context('about-supply-contract', () => {
     //------
     // the search should populate the indemnifier address fields
     //
-    // contractAboutSupplier.supplierAddress().county().should('not.have.value', ''); //TODO don't believe CH store county...
     contractAboutSupplier.indemnifierName().should('not.have.value', ''); // TODO if we had 'proper' test company we might assert real data
     contractAboutSupplier.indemnifierAddress().line1().should('not.have.value', ''); // TODO
     contractAboutSupplier.indemnifierAddress().line2().should('not.have.value', ''); // TODO
@@ -102,8 +101,8 @@ context('about-supply-contract', () => {
     contractAboutSupplier.indemnifierCorrespondenceAddress().country().should('have.value', 'GBR');
     // fill in form
     contractAboutSupplier.indemnifierCorrespondenceAddress().line1().type('27 Petersfield');
+    contractAboutSupplier.indemnifierCorrespondenceAddress().line3().type('Broomfield');
     contractAboutSupplier.indemnifierCorrespondenceAddress().town().type('Chelmsford');
-    contractAboutSupplier.indemnifierCorrespondenceAddress().county().type('Essex');
     contractAboutSupplier.indemnifierCorrespondenceAddress().postcode().type('CM1 4EP');
 
 
@@ -131,10 +130,10 @@ context('about-supply-contract', () => {
     contractAboutPreview.supplierAddress().line1().invoke('text').then((text) => {
       expect(text.trim()).equal('1 Horseguards Road');
     });
-    contractAboutPreview.supplierAddress().town().invoke('text').then((text) => {
+    contractAboutPreview.supplierAddress().line3().invoke('text').then((text) => {
       expect(text.trim()).equal('Westminster');
     });
-    contractAboutPreview.supplierAddress().county().invoke('text').then((text) => {
+    contractAboutPreview.supplierAddress().town().invoke('text').then((text) => {
       expect(text.trim()).equal('London');
     });
     contractAboutPreview.supplierAddress().postcode().invoke('text').then((text) => {
@@ -148,10 +147,10 @@ context('about-supply-contract', () => {
     contractAboutPreview.supplierCorrespondenceAddress().line1().invoke('text').then((text) => {
       expect(text.trim()).equal('2 Horseguards Road');
     });
-    contractAboutPreview.supplierCorrespondenceAddress().town().invoke('text').then((text) => {
+    contractAboutPreview.supplierCorrespondenceAddress().line3().invoke('text').then((text) => {
       expect(text.trim()).equal('Eastminster');
     });
-    contractAboutPreview.supplierCorrespondenceAddress().county().invoke('text').then((text) => {
+    contractAboutPreview.supplierCorrespondenceAddress().town().invoke('text').then((text) => {
       expect(text.trim()).equal('Edinburgh');
     });
     contractAboutPreview.supplierCorrespondenceAddress().postcode().invoke('text').then((text) => {
@@ -207,11 +206,11 @@ context('about-supply-contract', () => {
     contractAboutPreview.indemnifierCorrespondenceAddress().line1().invoke('text').then((text) => {
       expect(text.trim()).equal('27 Petersfield');
     });
+    contractAboutPreview.indemnifierCorrespondenceAddress().line3().invoke('text').then((text) => {
+      expect(text.trim()).equal('Broomfield');
+    });
     contractAboutPreview.indemnifierCorrespondenceAddress().town().invoke('text').then((text) => {
       expect(text.trim()).equal('Chelmsford');
-    });
-    contractAboutPreview.indemnifierCorrespondenceAddress().county().invoke('text').then((text) => {
-      expect(text.trim()).equal('Essex');
     });
     contractAboutPreview.indemnifierCorrespondenceAddress().postcode().invoke('text').then((text) => {
       expect(text.trim()).equal('CM1 4EP');

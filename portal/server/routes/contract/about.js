@@ -151,8 +151,6 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', asyn
   deal.submissionDetails[`${prefix}-address-town`] = company.address.locality;
   deal.submissionDetails[`${prefix}-address-postcode`] = company.address.postal_code;
   deal.submissionDetails[`${prefix}-address-country`] = getPortalCountryForCompaniesHouseCountry(company.address.country);
-  // looks like CH don't use this?
-  // contract.submissionDetails["supplier-address-county"] = company.address.?????;
 
   // re-render
 

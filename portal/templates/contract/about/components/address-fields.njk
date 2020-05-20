@@ -30,7 +30,9 @@
           id: thisField,
           name: thisField,
           label: { text: "Country" },
-          attributes: { "data-cy": thisField },
+          attributes: {
+            "data-cy": thisField
+          },
           items: countries[thisField],
           errorMessage: validationErrors.errorList[thisField]
         }) }}
@@ -44,7 +46,8 @@
           name: thisField,
           value: deal.submissionDetails[thisField],
           attributes: {
-            "data-cy": thisField
+            "data-cy": thisField,
+            "maxlength": "50"
           },
           errorMessage: validationErrors.errorList[thisField]
         }) }}
@@ -58,7 +61,20 @@
           name: thisField,
           value: deal.submissionDetails[thisField],
           attributes: {
-            "data-cy": thisField
+            "data-cy": thisField,
+            "maxlength": "50"
+          },
+          errorMessage: validationErrors.errorList[thisField]
+        }) }}
+
+        {% set thisField=id+"-line-3" %}
+        {{ govukInput({
+          id: thisField,
+          name: thisField,
+          value: deal.submissionDetails[thisField],
+          attributes: {
+            "data-cy": thisField,
+            "maxlength": "50"
           },
           errorMessage: validationErrors.errorList[thisField]
         }) }}
@@ -72,18 +88,8 @@
           name: thisField,
           value: deal.submissionDetails[thisField],
           attributes: {
-            "data-cy": thisField
-          },
-          errorMessage: validationErrors.errorList[thisField]
-        }) }}
-
-        {% set thisField=id+"-county" %}
-        {{ govukInput({
-          id: thisField,
-          name: thisField,
-          value: deal.submissionDetails[thisField],
-          attributes: {
-            "data-cy": thisField
+            "data-cy": thisField,
+            "maxlength": "50"
           },
           errorMessage: validationErrors.errorList[thisField]
         }) }}
@@ -97,7 +103,8 @@
           name: thisField,
           value: deal.submissionDetails[thisField],
           attributes: {
-            "data-cy": thisField
+            "data-cy": thisField,
+            "maxlength": "50"
           },
           errorMessage: validationErrors.errorList[thisField]
         }) }}
