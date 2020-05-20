@@ -1,7 +1,7 @@
 const { deleteMultipleFiles, uploadStream } = require('../../drivers/fileshare');
 const { formatFilenameForSharepoint } = require('../../utils');
 const { userHasAccessTo } = require('../users/checks');
-const { findOneDeal, update: updateDeal } = require('./deal.controller');
+const { findOneDeal, updateDeal } = require('./deal.controller');
 const { getDocumentationErrors } = require('../validation/eligibility-documentation');
 
 const getFileType = (fieldname) => {
@@ -32,30 +32,47 @@ const removeDeletedFiles = (dealFiles, deletedFilesList) => {
   return updatedDealFiles;
 };
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
 exports.update = async (req, res) => {
+  const uploadErrors = [];
+
   await findOneDeal(req.params.id, async (deal) => {
     if (!userHasAccessTo(req.user, deal)) {
       res.status(401).send();
+      return;
     }
 
     const deletePromises = deleteMultipleFiles(req.body.deleteFile);
 
     const uploadPromises = req.files.map(async (file) => {
-      const { fieldname, originalname, buffer } = file;
-      const fileInfo = await uploadStream({
-        folder: req.params.id,
-        subfolder: fieldname,
-        filename: formatFilenameForSharepoint(originalname),
-        buffer,
+      const {
+        fieldname, originalname, buffer, size,
+      } = file;
+      if (size <= MAX_FILE_SIZE) {
+        const fileInfo = await uploadStream({
+          folder: req.params.id,
+          subfolder: fieldname,
+          filename: formatFilenameForSharepoint(originalname),
+          buffer,
+        });
+
+        return {
+          fieldname,
+          type: getFileType(fieldname),
+          fullPath: fileInfo.fullPath,
+          filename: fileInfo.filename,
+          url: fileInfo.url,
+        };
+      }
+
+      uploadErrors.push({
+        field: fieldname,
+        originalname,
+        message: 'could not be saved. The maximum allowed size for upload is 10Mb',
       });
 
-      return {
-        fieldname,
-        type: getFileType(fieldname),
-        fullPath: fileInfo.fullPath,
-        filename: fileInfo.filename,
-        url: fileInfo.url,
-      };
+      return {};
     });
 
     const uploadedDealFiles = await Promise.all(uploadPromises, deletePromises);
@@ -74,10 +91,11 @@ exports.update = async (req, res) => {
       }
     });
 
-    const validationErrors = getDocumentationErrors(deal.eligibility.criteria, dealFiles);
+    const { validationErrors, validationUploadErrors } = getDocumentationErrors(
+      deal.eligibility.criteria, dealFiles, uploadErrors,
+    );
 
-    const updatedDeal = {
-      ...deal,
+    const updatedDealData = {
       dealFiles: {
         ...dealFiles,
         validationErrors,
@@ -86,10 +104,35 @@ exports.update = async (req, res) => {
 
     const newReq = {
       params: req.params,
-      body: updatedDeal,
+      body: updatedDealData,
       user: req.user,
     };
 
-    updateDeal(newReq, res);
+    const updatedDeal = await updateDeal(newReq);
+
+    // Don't want to save upload errors to db, only display on this request
+    Object.entries(validationUploadErrors.errorList).forEach(([key, value]) => {
+      if (!value) { delete (validationUploadErrors.errorList[key]); }
+    });
+
+    const validationPlusUploadErrors = {
+      validationErrors: {
+        count: validationErrors.count + validationUploadErrors.count,
+        errorList: {
+          ...validationErrors.errorList,
+          ...validationUploadErrors.errorList,
+        },
+      },
+    };
+
+    const dealWithUploadErrors = {
+      ...updatedDeal,
+      dealFiles: {
+        ...updatedDeal.dealFiles,
+        ...validationPlusUploadErrors,
+      },
+    };
+
+    res.status(200).json(dealWithUploadErrors);
   });
 };
