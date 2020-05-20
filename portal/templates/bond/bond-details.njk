@@ -219,6 +219,20 @@
           {% endif %}
         >
 
+          {% set requestedCoverStartDateDay = bond['requestedCoverStartDate-day'] %}
+          {% set requestedCoverStartDateMonth = bond['requestedCoverStartDate-month'] %}
+          {% set requestedCoverStartDateYear = bond['requestedCoverStartDate-year'] %}
+
+          {% set requestedCoverStartDateError = validationErrors.errorList.requestedCoverStartDate %}
+          {% set requestedCoverStartDateErrorWithAllValues = (requestedCoverStartDateError and (requestedCoverStartDateDay and requestedCoverStartDateMonth and requestedCoverStartDateYear) and requestedCoverStartDateError.text) %}
+
+          {% set requestedCoverStartDateDayError = (requestedCoverStartDateErrorWithAllValues or (requestedCoverStartDateError and not requestedCoverStartDateDay)) %}
+          {% set requestedCoverStartDateMonthError = requestedCoverStartDateErrorWithAllValues or (requestedCoverStartDateError and not requestedCoverStartDateMonth) %}
+          {% set requestedCoverStartDateYearError = requestedCoverStartDateErrorWithAllValues or (requestedCoverStartDateError and not requestedCoverStartDateYear) %}
+
+          {% set dateInputClass = "govuk-input--width-2" %}
+          {% set dateInputErrorClass = "govuk-input--width-2 govuk-input--error" %}
+
           {{ govukDateInput({
             id: "requestedCoverStartDate",
             namePrefix: "requestedCoverStartDate",
@@ -230,15 +244,15 @@
             hint: {
               html: "<p>For example, 27 11 2019</p><p>This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date</p>"
             },
-            errorMessage: validationErrors.errorList.requestedCoverStartDate.text and {
-              text: validationErrors.errorList.requestedCoverStartDate.text,
+            errorMessage: requestedCoverStartDateError and {
+              text: requestedCoverStartDateError.text,
               attributes: {
                 'data-cy': "requestedCoverStartDate-error-message"
               }
             },
             items: [
               {
-                classes: "govuk-input--width-2",
+                classes: (requestedCoverStartDateDayError and dateInputErrorClass) or dateInputClass,
                 name: "day",
                 value: bond['requestedCoverStartDate-day'],
                 attributes: {
@@ -246,7 +260,7 @@
                 }
               },
               {
-                classes: "govuk-input--width-2",
+                classes: (requestedCoverStartDateMonthError and dateInputErrorClass) or dateInputClass,
                 name: "month",
                 value: bond['requestedCoverStartDate-month'],
                 attributes: {
@@ -254,7 +268,7 @@
                 }
               },
               {
-                classes: "govuk-input--width-4",
+                classes: (requestedCoverStartDateYearError and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
                 name: "year",
                 value: bond['requestedCoverStartDate-year'],
                 attributes: {
