@@ -60,6 +60,8 @@ exports.now = () => moment();
 
 exports.addDaysToDate = (date, days) => moment(date).add(days, 'day');
 
+exports.addMonthsToDate = (date, months) => moment(date).add(months, 'months');
+
 exports.removeDaysFromDate = (date, days) => moment(date).subtract(days, 'day');
 
 exports.dateIsInTimeframe = (day, month, year, start, end) => {
