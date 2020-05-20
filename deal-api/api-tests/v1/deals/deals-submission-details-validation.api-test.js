@@ -86,13 +86,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         });
       });
 
-      it('expects supplier-address-line-2', () => {
-        expect(validationErrors.errorList['supplier-address-line-2']).toEqual({
-          order: expect.any(String),
-          text: 'Supplier address line 2 is required',
-        });
-      });
-
       it('expects supplier-address-country', () => {
         expect(validationErrors.errorList['supplier-address-country']).toEqual({
           order: expect.any(String),
@@ -200,13 +193,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         });
       });
 
-      it('expects supplier-correspondence-address-line-2', () => {
-        expect(validationErrors.errorList['supplier-correspondence-address-line-2']).toEqual({
-          order: expect.any(String),
-          text: 'Supplier correspondence address line 2 is required',
-        });
-      });
-
       it('expects supplier-correspondence-address-country', () => {
         expect(validationErrors.errorList['supplier-correspondence-address-country']).toEqual({
           order: expect.any(String),
@@ -306,13 +292,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         });
       });
 
-      it('expects indemnifier-address-line-2', () => {
-        expect(validationErrors.errorList['indemnifier-address-line-2']).toEqual({
-          order: expect.any(String),
-          text: 'Indemnifier address line 2 is required',
-        });
-      });
-
       it('expects indemnifier-address-country', () => {
         expect(validationErrors.errorList['indemnifier-address-country']).toEqual({
           order: expect.any(String),
@@ -398,13 +377,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         expect(validationErrors.errorList['indemnifier-correspondence-address-line-1']).toEqual({
           order: expect.any(String),
           text: 'Indemnifier correspondence address line 1 is required',
-        });
-      });
-
-      it('expects indemnifier-correspondence-address-line-2', () => {
-        expect(validationErrors.errorList['indemnifier-correspondence-address-line-2']).toEqual({
-          order: expect.any(String),
-          text: 'Indemnifier correspondence address line 2 is required',
         });
       });
 

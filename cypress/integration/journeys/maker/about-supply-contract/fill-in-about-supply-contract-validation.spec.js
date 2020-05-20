@@ -51,7 +51,6 @@ context('about-supply-contract', () => {
     contractAboutPreview.expectError('Supplier type is required');
     contractAboutPreview.expectError('Supplier name is required');
     contractAboutPreview.expectError('Supplier address line 1 is required');
-    contractAboutPreview.expectError('Supplier address line 2 is required');
     contractAboutPreview.expectError('Supplier correspondence address is required');
     contractAboutPreview.expectError('Industry Sector is required');
     contractAboutPreview.expectError('Industry Class is required');
@@ -65,7 +64,6 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('Supplier type is required');
     contractAboutSupplier.expectError('Supplier name is required');
     contractAboutSupplier.expectError('Supplier address line 1 is required');
-    contractAboutSupplier.expectError('Supplier address line 2 is required');
     contractAboutSupplier.expectError('Supplier correspondence address is required');
     contractAboutSupplier.expectError('Industry Sector is required');
     contractAboutSupplier.expectError('Industry Class is required');
@@ -93,14 +91,12 @@ context('about-supply-contract', () => {
 
     // prove the errors show on the preview page
     contractAboutPreview.expectError('Supplier correspondence address line 1 is required');
-    contractAboutPreview.expectError('Supplier correspondence address line 2 is required');
     // since we are on default country (UK) we require postcode
     contractAboutPreview.expectError('Supplier correspondence postcode is required for UK addresses');
 
     // prove the errors show on the about-supplier page
     contractAboutSupplier.visit(deal);
     contractAboutSupplier.expectError('Supplier correspondence address line 1 is required');
-    contractAboutSupplier.expectError('Supplier correspondence address line 2 is required');
     // since we are on default country (UK) we require postcode
     contractAboutSupplier.expectError('Supplier correspondence postcode is required for UK addresses');
 
@@ -123,14 +119,12 @@ context('about-supply-contract', () => {
 
     contractAboutPreview.expectError('Indemnifier name is required');
     contractAboutPreview.expectError('Indemnifier address line 1 is required');
-    contractAboutPreview.expectError('Indemnifier address line 2 is required');
     // since we are on default country (UK) we require postcode
     contractAboutPreview.expectError('Indemnifier postcode is required for UK addresses');
 
     // prove the errors show on the about-supplier page
     contractAboutSupplier.visit(deal);
     contractAboutSupplier.expectError('Indemnifier address line 1 is require');
-    contractAboutSupplier.expectError('Indemnifier address line 2 is required');
     // since we are on default country (UK) we require postcode
     contractAboutSupplier.expectError('Indemnifier postcode is required');
 
@@ -152,14 +146,12 @@ context('about-supply-contract', () => {
     contractAboutFinancial.preview().click();
 
     contractAboutPreview.expectError('Indemnifier correspondence address line 1 is required');
-    contractAboutPreview.expectError('Indemnifier correspondence address line 2 is required');
     // since we are on default country (UK) we require postcode
     contractAboutPreview.expectError('Indemnifier correspondence postcode is required');
 
     // prove the errors show on the about-supplier page
     contractAboutSupplier.visit(deal);
     contractAboutSupplier.expectError('Indemnifier correspondence address line 1 is required');
-    contractAboutSupplier.expectError('Indemnifier correspondence address line 2 is required');
     // since we are on default country (UK) we require postcode
     contractAboutSupplier.expectError('Indemnifier correspondence postcode is required');
 

@@ -99,8 +99,7 @@ context('about-supply-contract', () => {
       expect(text.trim()).equal('08547313');
     });
     // // the search should populate the supplier address fields
-    // contractAboutPreview.supplierAddressCountry().should('?', '?'); //TODO country; mapping company house "england"-> portal "United Kingdom"
-    // contractAboutPreview.supplierAddress().county().should('not.have.value', ''); //TODO don't believe CH store county...
+    // contractAboutPreview.supplierAddressCountry().should('?', '?'); //TODO can never be empty, so what to validate?
     contractAboutPreview.supplierName().invoke('text').then((text) => {
       expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
     });
