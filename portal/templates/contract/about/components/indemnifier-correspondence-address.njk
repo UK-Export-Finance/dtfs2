@@ -40,7 +40,7 @@
     })
   }}
 
-  <div id="additional-form-fields-indemnifier-correspondence-address" class="{% if deal.submissionDetails.indemnifierCorrespondenceAddressDifferent === 'false' %}govuk-visually-hidden{% endif %}">
+  <div id="additional-form-fields-indemnifier-correspondence-address" class="{% if deal.submissionDetails.indemnifierCorrespondenceAddressDifferent !== 'true' %}govuk-visually-hidden{% endif %}">
     {{ address.fields(
       deal = deal,
       validationErrors = validationErrors,
