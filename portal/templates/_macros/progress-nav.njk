@@ -1,4 +1,4 @@
-{% macro navItem(title, id, step, completed, href, childId, childHref, contractId, current) %}
+{% macro navItem(title, id, step, completed, status, href, childId, childHref, contractId, current) %}
 
   <div
     {% if completed and current === id %}
@@ -63,7 +63,7 @@
             &nbsp;
           {% endif %}
         </span>
-        {% if id === 'preview' or current === id %}
+        {% if (id === 'preview' and status === 'Complete') or current === id %}
           {{ title }}
         {% else %}
 
