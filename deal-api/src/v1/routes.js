@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
-
 const multer = require('multer');
+
 const { validate } = require('../role-validator');
 
 const deals = require('./controllers/deal.controller');
@@ -27,6 +27,7 @@ const openRouter = express.Router();
 const upload = multer();
 
 authRouter.use(passport.authenticate('jwt', { session: false }));
+
 
 authRouter.route('/deals')
   .post(

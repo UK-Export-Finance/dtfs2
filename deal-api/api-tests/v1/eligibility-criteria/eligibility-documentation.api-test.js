@@ -13,7 +13,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
   let aBarclaysMaker;
   let anHSBCMaker;
 
-  beforeAll(async() => {
+  beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
@@ -104,6 +104,30 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
         fullPath: `${newId}/${fieldname}/${filename}`,
         type,
       });
+    });
+
+    it('returns validation error if file exceeds max file size', async () => {
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const newId = postResult.body._id;
+
+      const filename = 'large-file.zip';
+      const fieldname = 'exporterQuestionnaire';
+      const type = 'general_correspondence';
+
+      const files = [{
+        fieldname,
+        filepath: `api-tests/fixtures/${filename}`,
+        type,
+      }];
+
+      const { status, body } = await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
+
+      expect(status).toEqual(200);
+
+      expect(body.dealFiles[fieldname]).toBeUndefined();
+
+      expect(body.dealFiles.validationErrors.errorList[fieldname]).toBeDefined();
+      expect(body.dealFiles.validationErrors.errorList[fieldname].text).toMatch(`${filename} could not be saved`);
     });
 
     it('uploads multiple files from same fieldname with the correct type', async () => {
