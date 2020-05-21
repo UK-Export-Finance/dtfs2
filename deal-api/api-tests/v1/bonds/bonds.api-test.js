@@ -1,7 +1,12 @@
+const moment = require('moment');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
+const {
+  addMonthsToDate,
+  now,
+} = require('../../../src/v1/validation/date-field');
 
 const { as } = require('../../api')(app);
 
@@ -206,18 +211,27 @@ describe('/v1/deals/:id/bond', () => {
   });
 
   describe('PUT /v1/deals/:id/bond/:bondId', () => {
+    const coverStartAndEndDate = () => {
+      const nowDate = now();
+      const requestedCoverStartDate = nowDate;
+      const coverEndDate = addMonthsToDate(nowDate, 1);
+
+      return {
+        'requestedCoverStartDate-day': moment(requestedCoverStartDate).format('DD'),
+        'requestedCoverStartDate-month': moment(requestedCoverStartDate).format('MM'),
+        'requestedCoverStartDate-year': moment(requestedCoverStartDate).format('YYYY'),
+        'coverEndDate-day': moment(coverEndDate).format('DD'),
+        'coverEndDate-month': moment(coverEndDate).format('MM'),
+        'coverEndDate-year': moment(coverEndDate).format('YYYY'),
+      };
+    };
+
     const allBondFields = {
       bondIssuer: 'issuer',
       bondType: 'bond type',
       bondStage: 'unissued',
       ukefGuaranteeInMonths: '24',
-      // TODO: generate dates on the fly.
-      'requestedCoverStartDate-day': '25',
-      'requestedCoverStartDate-month': '05',
-      'requestedCoverStartDate-year': '2020',
-      'coverEndDate-day': '01',
-      'coverEndDate-month': '02',
-      'coverEndDate-year': '2022',
+      ...coverStartAndEndDate(),
       uniqueIdentificationNumber: '1234',
       bondBeneficiary: 'test',
       bondValue: '123',
@@ -360,13 +374,7 @@ describe('/v1/deals/:id/bond', () => {
           ...allBondFields,
           bondStage: 'Issued',
           bondIssuer: 'test',
-          // TODO: generate dates on the fly.
-          'requestedCoverStartDate-day': '25',
-          'requestedCoverStartDate-month': '05',
-          'requestedCoverStartDate-year': '2020',
-          'coverEndDate-day': '01',
-          'coverEndDate-month': '02',
-          'coverEndDate-year': '2022',
+          ...coverStartAndEndDate(),
           uniqueIdentificationNumber: '1234',
         };
 
