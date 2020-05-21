@@ -14,7 +14,7 @@ module.exports = {
     submissionType: 'Automatic Inclusion Notice'
   },
   aboutSupplyContract: {
-    status: 'Complete'
+    status: 'Completed'
   },
   eligibility: {
     status: 'Incomplete',

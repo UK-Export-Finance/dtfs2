@@ -17,7 +17,7 @@ module.exports = {
     status: 'Incomplete'
   },
   eligibility: {
-    status: 'Complete',
+    status: 'Completed',
     submissionType: 'Manual Inclusion Notice',
     criteria: ELIGIBILITY_CRITERIA,
     completedStatus: {

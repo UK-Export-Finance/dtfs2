@@ -14,7 +14,7 @@ module.exports = {
     submissionType: 'Manual Inclusion Application'
   },
   aboutSupplyContract: {
-    status: 'Complete'
+    status: 'Completed'
   },
   eligibility: {
     status: 'Incomplete',
