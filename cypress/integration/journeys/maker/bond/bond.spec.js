@@ -110,15 +110,31 @@ context('Add a Bond to a Deal', () => {
         cy.url().should('include', '/bond/');
         cy.url().should('include', '/preview');
 
-        partials.bondProgressNav.progressNavBondDetails().click();
+        partials.bondProgressNav.progressNavLinkBondDetails().click();
         partials.errorSummary.errorSummaryLinks().should('have.length', 2);
 
-        partials.bondProgressNav.progressNavBondFinancialDetails().click();
+        partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
         partials.errorSummary.errorSummaryLinks().should('have.length', 4);
 
-        partials.bondProgressNav.progressNavBondFeeDetails().click();
+        partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
         partials.errorSummary.errorSummaryLinks().should('have.length', 2);
       });
+    });
+
+    it('should display a progress nav link to `Preview`', () => {
+      cy.loginGoToDealPage(user, deal);
+
+      pages.contract.addBondButton().click();
+      pages.bondDetails.submit().click();
+
+      cy.url().should('include', '/bond/');
+      cy.url().should('include', '/financial-details');
+
+      partials.bondProgressNav.progressNavLinkBondPreview().should('be.visible');
+      partials.bondProgressNav.progressNavLinkBondPreview().click();
+
+      cy.url().should('include', '/bond/');
+      cy.url().should('include', '/preview');
     });
   });
 
@@ -209,7 +225,7 @@ context('Add a Bond to a Deal', () => {
       });
     });
 
-    it('should display a checked checkbox for all progress nav items', () => {
+    it('should display a checked checkbox for all progress nav items and only text for `Preview`', () => {
       cy.loginGoToDealPage(user, deal);
       cy.addBondToDeal();
       cy.url().should('include', '/preview');
@@ -223,8 +239,11 @@ context('Add a Bond to a Deal', () => {
       partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('be.visible');
       partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('be.checked');
 
-      partials.bondProgressNav.progressNavBondPreviewCompletedCheckbox().should('be.visible');
-      partials.bondProgressNav.progressNavBondPreviewCompletedCheckbox().should('be.checked');
+      partials.bondProgressNav.progressNavLinkBondPreview().should('not.be.visible');
+      partials.bondProgressNav.progressNavBondTextPreview().should('be.visible');
+      partials.bondProgressNav.progressNavBondTextPreview().invoke('text').then((text) => {
+        expect(text.trim()).equal('Preview');
+      });
     });
 
     it('should populate Deal page with the submitted bond, display `Complete` status and link to `Bond Details` page', () => {
@@ -286,20 +305,11 @@ context('Add a Bond to a Deal', () => {
       cy.addBondToDeal();
       cy.url().should('include', '/preview');
 
-      partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
-        const bondId = bondIdHiddenInput[0].value;
+      pages.bondPreview.saveGoBackButton().click();
 
-        pages.bondPreview.saveGoBackButton().click();
-
-        cy.url().should('not.include', '/preview');
-        cy.url().should('include', '/contract');
-
-        const row = pages.contract.bondTransactionsTable.row(bondId);
-
-        row.uniqueNumber().click();
-        partials.bondProgressNav.progressNavBondPreview().click();
-        cy.url().should('include', '/preview');
-      });
+      cy.url().should('not.include', '/preview');
+      cy.url().should('include', '/contract');
+      cy.url().should('not.include', '/bond');
     });
   });
 });

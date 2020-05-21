@@ -18,7 +18,7 @@ const goToBondFinancialDetailsPage = (deal) => {
   cy.loginGoToDealPage(user, deal);
 
   pages.contract.addBondButton().click();
-  partials.bondProgressNav.progressNavBondFinancialDetails().click();
+  partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
   cy.url().should('include', '/contract');
   cy.url().should('include', '/bond/');
   cy.url().should('include', '/financial-details');
@@ -43,14 +43,14 @@ context('Bond Financial Details', () => {
       cy.loginGoToDealPage(user, deal);
 
       pages.contract.addBondButton().click();
-      partials.bondProgressNav.progressNavBondFinancialDetails().click();
+      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
       cy.url().should('include', '/financial-details');
 
       pages.bondFinancialDetails.minimumRiskMarginFeeInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
       pages.bondFinancialDetails.submit().click();
 
       cy.url().should('include', '/fee-details');
-      partials.bondProgressNav.progressNavBondFinancialDetails().click();
+      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
 
       const TOTAL_REQUIRED_FORM_FIELDS = 4;
 
@@ -67,7 +67,7 @@ context('Bond Financial Details', () => {
     cy.loginGoToDealPage(user, deal);
 
     pages.contract.addBondButton().click();
-    partials.bondProgressNav.progressNavBondFinancialDetails().click();
+    partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
 
     fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
 
@@ -78,7 +78,6 @@ context('Bond Financial Details', () => {
 
     partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('not.be.visible');
     partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('not.be.visible');
-    partials.bondProgressNav.progressNavBondPreviewCompletedCheckbox().should('not.be.visible');
   });
 
   describe('When a user submits the `Bond Financial Details` form', () => {
@@ -86,7 +85,7 @@ context('Bond Financial Details', () => {
       cy.loginGoToDealPage(user, deal);
 
       pages.contract.addBondButton().click();
-      partials.bondProgressNav.progressNavBondFinancialDetails().click();
+      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
       cy.url().should('include', '/financial-details');
 
       fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
@@ -96,7 +95,7 @@ context('Bond Financial Details', () => {
       cy.url().should('include', '/bond/');
       cy.url().should('include', '/fee-details');
 
-      partials.bondProgressNav.progressNavBondFinancialDetails().click();
+      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
       cy.url().should('include', '/financial-details');
 
       assertBondFormValues.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
@@ -129,7 +128,7 @@ context('Bond Financial Details', () => {
       cy.url().should('include', '/bond/');
       cy.url().should('include', '/fee-details');
 
-      partials.bondProgressNav.progressNavBondFinancialDetails().click();
+      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
       cy.url().should('include', '/financial-details');
 
       assertBondFormValues.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
@@ -141,7 +140,7 @@ context('Bond Financial Details', () => {
         pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
         pages.bondFinancialDetails.submit().click();
 
-        partials.bondProgressNav.progressNavBondFinancialDetails().click();
+        partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
         cy.url().should('include', '/financial-details');
 
         const TOTAL_REQUIRED_FORM_FIELDS = 6;
@@ -221,7 +220,7 @@ context('Bond Financial Details', () => {
       cy.loginGoToDealPage(user, deal);
 
       pages.contract.addBondButton().click();
-      partials.bondProgressNav.progressNavBondFinancialDetails().click();
+      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
       cy.url().should('include', '/financial-details');
 
       fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
@@ -237,7 +236,7 @@ context('Bond Financial Details', () => {
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
         row.uniqueNumber().click();
-        partials.bondProgressNav.progressNavBondFinancialDetails().click();
+        partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
         cy.url().should('include', '/financial-details');
 
         assertBondFormValues.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
