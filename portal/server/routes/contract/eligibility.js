@@ -121,12 +121,23 @@ router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', 
   const { _id, userToken } = requestParams(req);
   const { body, files } = req;
 
-  await getApiData(
+  const { eligibility, dealFiles } = await getApiData(
     api.updateEligibilityDocumentation(_id, body, files, userToken),
     res,
   );
 
-  const redirectUrl = `/contract/${_id}/eligibility/criteria`;
+  if (dealFiles && dealFiles.validationErrors && dealFiles.validationErrors.uploadErrorCount) {
+    const validationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
+
+    return res.render('eligibility/eligibility-supporting-documentation.njk', {
+      _id,
+      eligibility,
+      dealFiles,
+      validationErrors,
+    });
+  }
+
+  const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
 });
 

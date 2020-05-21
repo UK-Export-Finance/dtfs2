@@ -79,15 +79,16 @@ exports.update = async (req, res) => {
 
     const dealFiles = {
       ...removeDeletedFiles(deal.dealFiles, req.body.deleteFile),
-      security: req.body.security,
     };
 
-    Object.values(uploadedDealFiles).forEach(({ fieldname, ...rest }) => {
-      if (!(fieldname in dealFiles)) {
-        dealFiles[fieldname] = [];
-      }
-      if (!dealFiles[fieldname].some((df) => df.filename === rest.filename)) {
-        dealFiles[fieldname].push({ ...rest });
+    uploadedDealFiles.forEach(({ fieldname, ...rest }) => {
+      if (fieldname) {
+        if (!(fieldname in dealFiles)) {
+          dealFiles[fieldname] = [];
+        }
+        if (!dealFiles[fieldname].some((df) => df.filename === rest.filename)) {
+          dealFiles[fieldname].push({ ...rest });
+        }
       }
     });
 
@@ -115,13 +116,18 @@ exports.update = async (req, res) => {
       if (!value) { delete (validationUploadErrors.errorList[key]); }
     });
 
+    const errorList = {
+      ...validationErrors.errorList,
+      ...validationUploadErrors.errorList,
+    };
+
+    const activeErrors = Object.values(errorList).filter((el) => el.text);
+
     const validationPlusUploadErrors = {
       validationErrors: {
-        count: validationErrors.count + validationUploadErrors.count,
-        errorList: {
-          ...validationErrors.errorList,
-          ...validationUploadErrors.errorList,
-        },
+        count: activeErrors.length,
+        uploadErrorCount: validationUploadErrors.count,
+        errorList,
       },
     };
 
