@@ -15,9 +15,9 @@ const page = {
   },
   nextPageButton: () => cy.get('[data-cy="next-page"]'),
   eligibiityProgressNav: {
-    eligibilityCriteria: () => cy.get('[data-cy="progress-nav-item-eligibility/eligibility-criteria"]'),
-    supportingDocumentation: () => cy.get('[data-cy="progress-nav-item-eligibility/supporting-documentation"]'),
-    preview: () => cy.get('[data-cy="preview"]'),
+    eligibilityCriteria: () => cy.get('[data-cy="progress-nav-item-link-eligibility/eligibility-criteria"]'),
+    supportingDocumentation: () => cy.get('[data-cy="progress-nav-item-link-eligibility/supporting-documentation"]'),
+    preview: () => cy.get('[data-cy="progress-nav-item-link-eligibility/preview"]'),
   },
 };
 
