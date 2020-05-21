@@ -58,13 +58,15 @@ exports.getDocumentationErrors = (criteria = [], dealFiles, uploadErrors = []) =
   errorList.financialInformationCommentary = generateError('financialInformationCommentary', 'Brief commentary on the financial information', '', financialMandatory);
   uploadErrorList.financialInformationCommentary = generateUploadErrors('financialInformationCommentary', 'Brief commentary on the financial information');
 
+  uploadErrorList.corporateStructure = generateUploadErrors('corporateStructure', 'Corporate structure diagram');
+
   return {
     validationErrors: {
       count: Object.values(errorList).filter((e) => e.text).length,
       errorList,
     },
     validationUploadErrors: {
-      count: Object.values(uploadErrorList).length,
+      count: Object.values(uploadErrorList).filter((e) => e.text).length,
       errorList: uploadErrorList,
     },
   };
