@@ -52,7 +52,7 @@ exports.update = (req, res) => {
     const validationErrors = validateSubmissionDetails({ ...deal.submissionDetails, ...req.body });
 
     // if (validationErrors.count === 0) {
-    //   submissionDetails.status = 'Complete';
+    //   submissionDetails.status = 'Completed';
     // } else {
     submissionDetails.status = 'Incomplete';
     // }

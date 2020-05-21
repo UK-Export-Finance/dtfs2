@@ -59,7 +59,7 @@ exports.update = async (req, res) => {
       const updatedDeal = {
         ...deal,
         eligibility: {
-          status: criteriaComplete ? 'Complete' : 'Incomplete',
+          status: criteriaComplete ? 'Completed' : 'Incomplete',
           criteria: updatedCriteria,
           ...criteria11Additional,
           validationErrors,

@@ -47,7 +47,7 @@ router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
     res,
   );
 
-  if (updatedDeal.eligibility.status === 'Complete') {
+  if (updatedDeal.eligibility.status === 'Completed') {
     return res.redirect(`/contract/${_id}/eligibility/supporting-documentation`);
   }
 
