@@ -16,7 +16,7 @@ const goToBondFeeDetailsPage = (deal) => {
   cy.loginGoToDealPage(user, deal);
 
   pages.contract.addBondButton().click();
-  partials.bondProgressNav.progressNavBondFeeDetails().click();
+  partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
   cy.url().should('include', '/fee-details');
 };
 
@@ -41,7 +41,7 @@ context('Bond Fee Details', () => {
       pages.bondFeeDetails.submit().click();
 
       cy.url().should('include', '/preview');
-      partials.bondProgressNav.progressNavBondFeeDetails().click();
+      partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
 
       const TOTAL_REQUIRED_FORM_FIELDS = 2;
 
@@ -61,7 +61,7 @@ context('Bond Fee Details', () => {
       pages.bondFeeDetails.submit().click();
 
       cy.url().should('include', '/preview');
-      partials.bondProgressNav.progressNavBondFeeDetails().click();
+      partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
 
       const TOTAL_REQUIRED_FORM_FIELDS = 2;
 
@@ -76,7 +76,7 @@ context('Bond Fee Details', () => {
     cy.loginGoToDealPage(user, deal);
 
     pages.contract.addBondButton().click();
-    partials.bondProgressNav.progressNavBondFeeDetails().click();
+    partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
 
     fillBondForm.feeDetails();
 
@@ -87,7 +87,6 @@ context('Bond Fee Details', () => {
 
     partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('not.be.visible');
     partials.bondProgressNav.progressNavBondFinancialDetailsCompletedCheckbox().should('not.be.visible');
-    partials.bondProgressNav.progressNavBondPreviewCompletedCheckbox().should('not.be.visible');
   });
 
   it('form submit should progress to the `Bond Preview` page and prepopulate submitted form fields when returning back to `Bond Fee Details` page', () => {
@@ -100,7 +99,7 @@ context('Bond Fee Details', () => {
     cy.url().should('include', '/bond/');
     cy.url().should('include', '/preview');
 
-    partials.bondProgressNav.progressNavBondFeeDetails().click();
+    partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
     cy.url().should('include', '/fee-details');
 
     assertBondFormValues.feeDetails();
@@ -140,7 +139,7 @@ context('Bond Fee Details', () => {
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
         row.uniqueNumber().click();
-        partials.bondProgressNav.progressNavBondFeeDetails().click();
+        partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
         cy.url().should('include', '/fee-details');
 
         assertBondFormValues.feeDetails();

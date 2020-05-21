@@ -37,7 +37,7 @@ context('Bond Details', () => {
       pages.bondDetails.submit().click();
 
       cy.url().should('include', '/financial-details');
-      partials.bondProgressNav.progressNavBondDetails().click();
+      partials.bondProgressNav.progressNavLinkBondDetails().click();
 
       const TOTAL_REQUIRED_FORM_FIELDS = 2;
 
@@ -62,7 +62,6 @@ context('Bond Details', () => {
 
     partials.bondProgressNav.progressNavBondFinancialDetailsCompletedCheckbox().should('not.be.visible');
     partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('not.be.visible');
-    partials.bondProgressNav.progressNavBondPreviewCompletedCheckbox().should('not.be.visible');
   });
 
   describe('When a user selects `unissued` bond stage', () => {
@@ -86,7 +85,7 @@ context('Bond Details', () => {
 
         pages.bondDetails.submit().click();
         cy.url().should('include', '/financial-details');
-        partials.bondProgressNav.progressNavBondDetails().click();
+        partials.bondProgressNav.progressNavLinkBondDetails().click();
 
         const UNISSUED_REQUIRED_FORM_FIELDS = 1;
         const TOTAL_REQUIRED_FORM_FIELDS = UNISSUED_REQUIRED_FORM_FIELDS;
@@ -110,7 +109,7 @@ context('Bond Details', () => {
       cy.url().should('include', '/financial-details');
 
       // progress to preview page
-      partials.bondProgressNav.progressNavBondFeeDetails().click();
+      partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
       pages.bondFeeDetails.submit().click();
       cy.url().should('include', '/preview');
 
@@ -165,7 +164,7 @@ context('Bond Details', () => {
       pages.bondDetails.submit().click();
 
       cy.url().should('include', '/financial-details');
-      partials.bondProgressNav.progressNavBondDetails().click();
+      partials.bondProgressNav.progressNavLinkBondDetails().click();
       cy.url().should('include', '/details');
 
       assertBondFormValues.details.unissued();
@@ -202,7 +201,7 @@ context('Bond Details', () => {
 
         pages.bondDetails.submit().click();
         cy.url().should('include', '/financial-details');
-        partials.bondProgressNav.progressNavBondDetails().click();
+        partials.bondProgressNav.progressNavLinkBondDetails().click();
 
         const ISSUED_REQUIRED_FORM_FIELDS = 2;
         const TOTAL_REQUIRED_FORM_FIELDS = ISSUED_REQUIRED_FORM_FIELDS;
@@ -225,7 +224,7 @@ context('Bond Details', () => {
       cy.url().should('include', '/bond/');
       cy.url().should('include', '/financial-details');
 
-      partials.bondProgressNav.progressNavBondDetails().click();
+      partials.bondProgressNav.progressNavLinkBondDetails().click();
       cy.url().should('include', '/details');
 
       assertBondFormValues.details.issued();
