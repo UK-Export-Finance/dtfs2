@@ -36,7 +36,7 @@
               <a
                 class="govuk-link"
                 href="/contract/{{ contractId }}/{{ href }}/{{ childId }}/{{ childHref }}"
-                data-cy="progress-nav-item-{{ href }}-{{ childHref }}"
+                data-cy="progress-nav-item-link-{{ href }}-{{ childHref }}"
               >
                 {{ title }}
               </a>
@@ -44,7 +44,7 @@
             <a
               class="govuk-link"
               href="/contract/{{ contractId }}/{{ href }}"
-              data-cy="progress-nav-item-{{ href }}"
+              data-cy="progress-nav-item-link-{{ href }}"
             >
               {{ title }}
             </a>
@@ -55,7 +55,7 @@
       </div>
 
     {% else %}
-      <p class="govuk-body govuk-!-margin-bottom-0">
+      <p class="govuk-body govuk-!-margin-bottom-0" data-cy="progress-nav-item-{{ href }}-{{ childHref }}">
         <span class="govuk-!-font-weight-bold criteria__nav-item-progress-number">
           {% if step %}
             {{ step }}
@@ -71,7 +71,7 @@
             <a
               class="govuk-link"
               href="/contract/{{ contractId }}/{{ href }}/{{ childId }}/{{ childHref }}"
-              data-cy="progress-nav-item-{{ href }}-{{ childHref }}"
+              data-cy="progress-nav-item-link-{{ href }}-{{ childHref }}"
             >
               {{ title }}
             </a>
@@ -79,7 +79,7 @@
             <a
               class="govuk-link"
               href="/contract/{{ contractId }}/{{ href }}"
-              data-cy="progress-nav-item-{{ href }}"
+              data-cy="progress-nav-item-link-{{ href }}"
             >
               {{ title }}
             </a>

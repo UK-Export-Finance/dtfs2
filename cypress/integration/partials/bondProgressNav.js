@@ -1,13 +1,13 @@
 const partial = {
   bondId: () => cy.get('[data-cy="bond-id"]'),
-  progressNavBondDetails: () => cy.get('[data-cy="progress-nav-item-bond-details"]'),
+  progressNavLinkBondDetails: () => cy.get('[data-cy="progress-nav-item-link-bond-details"]'),
   progressNavBondDetailsCompletedCheckbox: () => cy.get('[data-cy="progress-nav-item-bond-details-completed-checkbox"]'),
-  progressNavBondFinancialDetails: () => cy.get('[data-cy="progress-nav-item-bond-financial-details"]'),
+  progressNavLinkBondFinancialDetails: () => cy.get('[data-cy="progress-nav-item-link-bond-financial-details"]'),
   progressNavBondFinancialDetailsCompletedCheckbox: () => cy.get('[data-cy="progress-nav-item-bond-financial-details-completed-checkbox"]'),
-  progressNavBondFeeDetails: () => cy.get('[data-cy="progress-nav-item-bond-fee-details"]'),
+  progressNavLinkBondFeeDetails: () => cy.get('[data-cy="progress-nav-item-link-bond-fee-details"]'),
   progressNavBondFeeDetailsCompletedCheckbox: () => cy.get('[data-cy="progress-nav-item-bond-fee-details-completed-checkbox"]'),
-  progressNavBondPreview: () => cy.get('[data-cy="progress-nav-item-bond-preview"]'),
-  progressNavBondPreviewCompletedCheckbox: () => cy.get('[data-cy="progress-nav-item-bond-preview-completed-checkbox"]'),
+  progressNavBondTextPreview: () => cy.get('[data-cy="progress-nav-item-bond-preview"]'),
+  progressNavLinkBondPreview: () => cy.get('[data-cy="progress-nav-item-link-bond-preview"]'),
 };
 
 module.exports = partial;
