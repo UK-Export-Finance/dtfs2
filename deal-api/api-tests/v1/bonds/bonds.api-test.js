@@ -4,7 +4,9 @@ const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const {
+  addDaysToDate,
   addMonthsToDate,
+  removeDaysFromDate,
   now,
 } = require('../../../src/v1/validation/date-field');
 
@@ -211,18 +213,24 @@ describe('/v1/deals/:id/bond', () => {
   });
 
   describe('PUT /v1/deals/:id/bond/:bondId', () => {
-    const coverStartAndEndDate = () => {
-      const nowDate = now();
-      const requestedCoverStartDate = nowDate;
-      const coverEndDate = addMonthsToDate(nowDate, 1);
+    const nowDate = now();
+    const requestedCoverStartDate = () => {
+      const date = nowDate;
 
       return {
-        'requestedCoverStartDate-day': moment(requestedCoverStartDate).format('DD'),
-        'requestedCoverStartDate-month': moment(requestedCoverStartDate).format('MM'),
-        'requestedCoverStartDate-year': moment(requestedCoverStartDate).format('YYYY'),
-        'coverEndDate-day': moment(coverEndDate).format('DD'),
-        'coverEndDate-month': moment(coverEndDate).format('MM'),
-        'coverEndDate-year': moment(coverEndDate).format('YYYY'),
+        'requestedCoverStartDate-day': moment(date).format('DD'),
+        'requestedCoverStartDate-month': moment(date).format('MM'),
+        'requestedCoverStartDate-year': moment(date).format('YYYY')
+      };
+    };
+
+    const coverEndDate = () => {
+      const date = addMonthsToDate(nowDate, 1);
+
+      return {
+        'coverEndDate-day': moment(date).format('DD'),
+        'coverEndDate-month': moment(date).format('MM'),
+        'coverEndDate-year': moment(date).format('YYYY'),
       };
     };
 
@@ -231,7 +239,6 @@ describe('/v1/deals/:id/bond', () => {
       bondType: 'bond type',
       bondStage: 'unissued',
       ukefGuaranteeInMonths: '24',
-      ...coverStartAndEndDate(),
       uniqueIdentificationNumber: '1234',
       bondBeneficiary: 'test',
       bondValue: '123',
@@ -327,7 +334,12 @@ describe('/v1/deals/:id/bond', () => {
         const { body: createBondBody } = createBondResponse;
         const { bondId } = createBondBody;
 
-        const { status } = await as(aBarclaysMaker).put(allBondFields).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const bond = {
+          ...allBondFields,
+          ...coverEndDate(),
+        };
+
+        const { status } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
         expect(status).toEqual(200);
 
@@ -344,6 +356,7 @@ describe('/v1/deals/:id/bond', () => {
         const expectedUpdatedBond = {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...allBondFields,
+          ...coverEndDate(),
           currency: deal.body.supplyContractCurrency,
           status: 'Completed',
         };
@@ -371,10 +384,10 @@ describe('/v1/deals/:id/bond', () => {
         expect(status).toEqual(200);
 
         const updatedBondAsIssued = {
-          ...allBondFields,
+          ...bondAsUnissued,
           bondStage: 'Issued',
           bondIssuer: 'test',
-          ...coverStartAndEndDate(),
+          ...coverEndDate(),
           uniqueIdentificationNumber: '1234',
         };
 
@@ -400,15 +413,89 @@ describe('/v1/deals/:id/bond', () => {
 
         expect(updatedBond).toEqual(expectedBond);
       });
+
+      describe('when the requestedCoverStartDate has a value of 3 months or more', () => {
+        it('should return requestedCoverStartDate validationError', async () => {
+          const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+          const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+          const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+          const { bondId } = createBondResponse.body;
+
+          const date = now();
+          const updatedRequestedCoverStartDate = addDaysToDate(addMonthsToDate(date, 3), 1);
+          const updatedCoverEndDate = addMonthsToDate(date, 4);
+
+          const bondAsIssued = {
+            _id: bondId,
+            ...allBondFields,
+            bondStage: 'Issued',
+            bondIssuer: 'test',
+            uniqueIdentificationNumber: '1234',
+            'requestedCoverStartDate-day': moment(updatedRequestedCoverStartDate).format('DD'),
+            'requestedCoverStartDate-month': moment(updatedRequestedCoverStartDate).format('MM'),
+            'requestedCoverStartDate-year': moment(updatedRequestedCoverStartDate).format('YYYY'),
+            'coverEndDate-day': moment(updatedCoverEndDate).format('DD'),
+            'coverEndDate-month': moment(updatedCoverEndDate).format('MM'),
+            'coverEndDate-year': moment(updatedCoverEndDate).format('YYYY'),
+          };
+
+          const { status, body } = await as(aBarclaysMaker).put(bondAsIssued).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+          expect(status).toEqual(400);
+          expect(body.bond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
+          expect(body.bond.status).toEqual('Incomplete');
+          expect(body.validationErrors.count).toEqual(1);
+          expect(body.validationErrors.errorList.requestedCoverStartDate).toBeDefined();
+        });
+      });
+
+      describe('when the coverEndDate is before requestedCoverStartDate', () => {
+        it('should return coverEndDate validationError', async () => {
+          const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+          const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+          const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+          const { bondId } = createBondResponse.body;
+
+          const date = now();
+          const updatedRequestedCoverStartDate = addMonthsToDate(date, 2);
+          const updatedCoverEndDate = removeDaysFromDate(addMonthsToDate(date, 2), 1);
+
+          const bondAsIssued = {
+            _id: bondId,
+            ...allBondFields,
+            bondStage: 'Issued',
+            bondIssuer: 'test',
+            uniqueIdentificationNumber: '1234',
+            'requestedCoverStartDate-day': moment(updatedRequestedCoverStartDate).format('DD'),
+            'requestedCoverStartDate-month': moment(updatedRequestedCoverStartDate).format('MM'),
+            'requestedCoverStartDate-year': moment(updatedRequestedCoverStartDate).format('YYYY'),
+            'coverEndDate-day': moment(updatedCoverEndDate).format('DD'),
+            'coverEndDate-month': moment(updatedCoverEndDate).format('MM'),
+            'coverEndDate-year': moment(updatedCoverEndDate).format('YYYY'),
+          };
+
+          const { status, body } = await as(aBarclaysMaker).put(bondAsIssued).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+          expect(status).toEqual(400);
+          expect(body.bond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
+          expect(body.bond.status).toEqual('Incomplete');
+          expect(body.validationErrors.count).toEqual(1);
+          expect(body.validationErrors.errorList.coverEndDate).toBeDefined();
+        });
+      });
     });
 
     describe('when a bond has req.body.bondStage as `Unissued`', () => {
-      it('should remove `unissued` related values from the bond', async () => {
+      it('should remove `issued` related values from the bond', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
         const bondAsIssued = {
           ...allBondFields,
+          ...requestedCoverStartDate(),
+          ...coverEndDate(),
           bondStage: 'Issued',
         };
 
