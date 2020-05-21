@@ -38,7 +38,6 @@ const generateErrorSummary = (
     and then order the validation errors so their displayed in correct order
   */
 
-  console.log(JSON.stringify(validationErrors, null, 4));
   const filteredValidationErrorListArray = Object.entries(validationErrors.errorList)
     .filter(([, value]) => value.text)
     .sort(([, aValue], [, bValue]) => {
@@ -48,9 +47,8 @@ const generateErrorSummary = (
     });
     // note: [,value] used to prevent 'no unused vars' eslint warning
     // see https://github.com/babel/babel-eslint/issues/274
-  console.log({ filteredValidationErrorListArray });
   const filteredValidationErrorList = Object.fromEntries(filteredValidationErrorListArray);
-  console.log({ filteredValidationErrorList });
+
   const summary = filteredValidationErrorListArray.map(([id, value]) => {
     const { text, hrefRoot } = value;
 
