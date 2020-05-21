@@ -120,6 +120,22 @@ context('Add a Bond to a Deal', () => {
         partials.errorSummary.errorSummaryLinks().should('have.length', 2);
       });
     });
+
+    it('should display a progress nav link to `Preview`', () => {
+      cy.loginGoToDealPage(user, deal);
+
+      pages.contract.addBondButton().click();
+      pages.bondDetails.submit().click();
+
+      cy.url().should('include', '/bond/');
+      cy.url().should('include', '/financial-details');
+
+      partials.bondProgressNav.progressNavLinkBondPreview().should('be.visible');
+      partials.bondProgressNav.progressNavLinkBondPreview().click();
+
+      cy.url().should('include', '/bond/');
+      cy.url().should('include', '/preview');
+    });
   });
 
   describe('When a user submits all required Bond form fields (`issued` bond stage, currency same as Supply Contract Currency)', () => {
@@ -209,7 +225,7 @@ context('Add a Bond to a Deal', () => {
       });
     });
 
-    it('should display a checked checkbox for all progress nav items an only text for `Preview`', () => {
+    it('should display a checked checkbox for all progress nav items and only text for `Preview`', () => {
       cy.loginGoToDealPage(user, deal);
       cy.addBondToDeal();
       cy.url().should('include', '/preview');
