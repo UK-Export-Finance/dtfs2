@@ -44,7 +44,7 @@ exports.create = async (req, res) => {
 
     const newBondObj = {
       _id: new ObjectId(),
-      status: 'Not started',
+      status: 'Incomplete',
     };
 
     const updatedDeal = {
