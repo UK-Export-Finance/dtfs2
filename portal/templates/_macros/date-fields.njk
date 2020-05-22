@@ -1,53 +1,62 @@
-{% macro inputs(id, legend, hint, secondaryHint, dayValue, monthValue, yearValue) %}
-      
-  <fieldset class="govuk-fieldset" role="group">
-    <legend
-      class="govuk-fieldset__legend"
-      {% if hint and secondaryHint %}
-        aria-describedby="{{ id }}-hint {{ id }}-hint-2"
-      {% elif hint %}
-        aria-describedby="{{ id }}-hint"
-      {% endif %}
-    >{{ legend }}</legend>
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 
-    {% if hint %}
-      <span id="{{ id }}-hint" class="govuk-hint">
-        {{ hint }}
-      </span>
-    {% endif %}
+{% macro inputs(id, legend, hint, dayValue, monthValue, yearValue, error, conditionalError) %}
 
-    {% if secondaryHint %}
-      <span id="{{ id }}-hint-2" class="govuk-hint">
-        {{ secondaryHint }}
-      </span>
-    {% endif %}
+  {% set inputClass = "govuk-input--width-2" %}
+  {% set inputErrorClass = "govuk-input--width-2 govuk-input--error" %}
 
-    <div class="govuk-date-input" id="{{ id }}">
-      <div class="govuk-date-input__item">
-        <div class="govuk-form-group">
-          <label class="govuk-label govuk-date-input__label" for="{{ id }}-day">
-            Day
-          </label>
-          <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="{{ id }}-day" name="{{ id }}-day" type="text" pattern="[0-9]*" inputmode="numeric" value="{{ dayValue }}" data-cy="{{ id }}-day">
-        </div>
-      </div>
-      <div class="govuk-date-input__item">
-        <div class="govuk-form-group">
-          <label class="govuk-label govuk-date-input__label" for="{{ id }}-month">
-            Month
-          </label>
-          <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="{{ id }}-month" name="{{ id }}-month" type="text" pattern="[0-9]*" inputmode="numeric" value="{{ monthValue }}" data-cy="{{ id }}-month">
-        </div>
-      </div>
-      <div class="govuk-date-input__item">
-        <div class="govuk-form-group">
-          <label class="govuk-label govuk-date-input__label" for="{{ id }}-year">
-            Year
-          </label>
-          <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="{{ id }}-year" name="{{ id }}-year" type="text" pattern="[0-9]*" inputmode="numeric" value="{{ yearValue }}" data-cy="{{ id }}-year">
-        </div>
-      </div>
-    </div>
-  </fieldset>
+  {% set dateHasAllValues = (dayValue and monthValue and yearValue) %}
+  {% set dateDoesNotHaveAllValues = (not dayValue) or (not monthValue) or (not yearValue) %}
+
+  {% set dateError = error or (dateDoesNotHaveAllValues and conditionalError) %}
+
+  {% set dayError = (dateError or (error and not dayValue)) %}
+  {% set monthError = (dateError or (error and not monthValue)) %}
+  {% set yearError = (dateError or (error and not yearValue)) %}
+
+  {{ govukDateInput({
+    id: id,
+    namePrefix: id,
+    fieldset: {
+      legend: {
+        text: legend
+      }
+    },
+    hint: {
+      html: hint
+    },
+    errorMessage: dateError and {
+      text: dateError.text,
+      attributes: {
+        'data-cy': id + "-error-message"
+      }
+    },
+    items: [
+      {
+        classes: (dayError and inputErrorClass) or inputClass,
+        name: "day",
+        value: dayValue,
+        attributes: {
+          'data-cy': id + "-day"
+        }
+      },
+      {
+        classes: (monthError and inputErrorClass) or inputClass,
+        name: "month",
+        value: monthValue,
+        attributes: {
+          'data-cy': id + "-month"
+        }
+      },
+      {
+        classes: (yearError and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
+        name: "year",
+        value: yearValue,
+        attributes: {
+          'data-cy': id + "-year"
+        }
+      }
+    ]
+  }) }}      
 
 {% endmacro %}
