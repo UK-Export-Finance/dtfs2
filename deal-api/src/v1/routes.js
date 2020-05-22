@@ -18,6 +18,7 @@ const transactions = require('./controllers/transactions.controller');
 const eligibilityCriteria = require('./controllers/eligibility-criteria.controller');
 const bonds = require('./controllers/bonds.controller');
 const eligibilityDocumentation = require('./controllers/eligibility-documentation.controller');
+const idCounters = require('./controllers/id-counters.controller');
 
 const users = require('./users/routes');
 
@@ -262,6 +263,11 @@ authRouter.route('/transactions/:bankFacilityId')
     transactions.delete,
   );
 
+authRouter.route('/counters/reset')
+  .post(
+    validate({ role: ['data-admin'] }),
+    idCounters.reset,
+  );
 
 openRouter.route('/users')
   .get(
