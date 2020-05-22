@@ -255,7 +255,7 @@ context('Bond Details', () => {
 
           const date = moment();
           const requestedCoverStartDate = date;
-          const coverEndDate = moment(date).remove(1, 'day');
+          const coverEndDate = moment(date).subtract(1, 'day');
 
           pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
           pages.bondDetails.bondStageIssuedInput().click();
