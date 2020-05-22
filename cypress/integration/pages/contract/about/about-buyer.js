@@ -1,3 +1,4 @@
+const address = require('./address');
 const nav = require('./nav');
 
 const page = {
@@ -5,7 +6,7 @@ const page = {
   nav: () => nav,
 
   buyerName: () => cy.get('[data-cy="buyer-name"]'),
-  countryOfBuyer: () => cy.get('[data-cy="countryOfBuyer"]'),
+  buyerAddress: () => address('buyer-address'),
   destinationOfGoodsAndServices: () => cy.get('[data-cy="destinationOfGoodsAndServices"]'),
 
   nextPage: () => cy.get('[data-cy="NextPage"]'),

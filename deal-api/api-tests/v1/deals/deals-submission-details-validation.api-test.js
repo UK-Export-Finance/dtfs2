@@ -122,6 +122,30 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       });
     });
 
+    it('expects buyer-name', () => {
+      expect(validationErrors.errorList['buyer-name']).toEqual({
+        order: expect.any(String),
+        text: 'Buyer name is required',
+      });
+    });
+
+    describe('expects buyer address', () => {
+      it('expects buyer-address-line-1', () => {
+        expect(validationErrors.errorList['buyer-address-line-1']).toEqual({
+          order: expect.any(String),
+          text: 'Buyer address line 1 is required',
+        });
+      });
+
+      it('expects buyer-address-country', () => {
+        expect(validationErrors.errorList['buyer-address-country']).toEqual({
+          order: expect.any(String),
+          text: 'Buyer country is required',
+        });
+      });
+    })
+
+
   });
 
   describe('If supplier-address === GBR, postcode is required', () => {
@@ -165,6 +189,52 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         expect(validationErrors.errorList['supplier-address-town']).toEqual({
           order: expect.any(String),
           text: 'Supplier town is required for non-UK addresses',
+        });
+      });
+    });
+  });
+
+  describe('If buyer-address === GBR, postcode is required', () => {
+    let validationErrors;
+
+    beforeAll(async()=>{
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const submissionDetails = {'buyer-address-country':'GBR'};
+
+      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      validationErrors = body.validationErrors;
+    });
+
+    describe('expects buyer address', () => {
+      it('expects buyer-address-postcode', () => {
+        expect(validationErrors.errorList['buyer-address-postcode']).toEqual({
+          order: expect.any(String),
+          text: 'Buyer postcode is required for UK addresses',
+        });
+      });
+    });
+  });
+
+  describe('If buyer-address !== GBR, town is required', () => {
+    let validationErrors;
+
+    beforeAll(async()=>{
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const submissionDetails = {'buyer-address-country':'USA'};
+
+      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      validationErrors = body.validationErrors;
+    });
+
+    describe('expects buyer address', () => {
+      it('expects buyer-address-town', () => {
+        expect(validationErrors.errorList['buyer-address-town']).toEqual({
+          order: expect.any(String),
+          text: 'Buyer town is required for non-UK addresses',
         });
       });
     });

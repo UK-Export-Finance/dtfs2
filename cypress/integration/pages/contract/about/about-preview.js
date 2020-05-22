@@ -23,7 +23,7 @@ const page = {
   indemnifierCorrespondenceAddress: () => address('indemnifier-correspondence-address'),
 
   buyerName: () => cy.get('[data-cy="buyer-name"]'),
-  countryOfBuyer: () => cy.get('[data-cy="countryOfBuyer"]'),
+  buyerAddress: () => address('buyer-address'),
   destinationOfGoodsAndServices: () => cy.get('[data-cy="destinationOfGoodsAndServices"]'),
 
   supplyContractValue: () => cy.get('[data-cy="supplyContractValue"]'),

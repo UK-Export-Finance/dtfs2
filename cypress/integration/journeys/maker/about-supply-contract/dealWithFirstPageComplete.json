@@ -60,7 +60,7 @@
     },
     "submissionDetails" : {
         "status" : "Incomplete",
-        "indemnifier-address-country" : "",
+        "indemnifier-address-country" : "GBR",
         "indemnifier-address-line-3" : "",
         "indemnifier-address-line-1" : "27a",
         "indemnifier-address-line-2" : "Maxwell Road",
@@ -75,14 +75,8 @@
         "indemnifier-correspondence-address-town" : "Chelmsford",
         "indemnifier-name" : "WATKINSON TRADING LIMITED",
         "indemnifierCorrespondenceAddressDifferent" : "true",
-        "industrySector" : {
-            "class" : {
-                "code" : "62012",
-                "name" : ""
-            },
-            "code" : "1009",
-            "name" : ""
-        },
+        "industry-sector" : "1008",
+        "industry-class" : "56210",
         "legallyDistinct" : "true",
         "sme-type" : "Small",
         "supplier-address-country" : "GBR",
@@ -92,7 +86,7 @@
         "supplier-address-postcode" : "SW1A 2HQ",
         "supplier-address-town" : "Westminster",
         "supplier-companies-house-registration-number" : "",
-        "supplier-correspondence-address-country" : "",
+        "supplier-correspondence-address-country" : "GBR",
         "supplier-correspondence-address-line-3" : "Edinburgh",
         "supplier-correspondence-address-line-1" : "2 Horseguards Road",
         "supplier-correspondence-address-line-2" : "",

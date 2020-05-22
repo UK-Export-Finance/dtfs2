@@ -150,7 +150,7 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(200);
     });
 
-    it('adds an empty bond to a deal with `Not started` status property', async () => {
+    it('adds an empty bond to a deal with `Incomplete` status property', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -161,7 +161,7 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(200);
       expect(body.bondTransactions.items.length).toEqual(1);
       expect(body.bondTransactions.items[0]._id).toBeDefined(); // eslint-disable-line no-underscore-dangle
-      expect(body.bondTransactions.items[0].status).toEqual('Not started'); // eslint-disable-line no-underscore-dangle
+      expect(body.bondTransactions.items[0].status).toEqual('Incomplete'); // eslint-disable-line no-underscore-dangle
     });
 
     it('adds an empty bond to a deal whilst retaining existing bonds', async () => {
@@ -289,7 +289,7 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     describe('with all required fields in body', () => {
-      it('updates an existing bond and returns it with status property as `Complete`', async () => {
+      it('updates an existing bond and returns it with status property as `Completed`', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -316,7 +316,7 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...allBondFields,
           currency: deal.body.supplyContractCurrency,
-          status: 'Complete',
+          status: 'Completed',
         };
         expect(updatedBond).toEqual(expectedUpdatedBond);
       });
@@ -370,7 +370,7 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsIssued,
           currency: deal.body.supplyContractCurrency,
-          status: 'Complete',
+          status: 'Completed',
         };
         delete expectedBond.ukefGuaranteeInMonths;
 
@@ -419,7 +419,7 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsUnissued,
           currency: deal.body.supplyContractCurrency,
-          status: 'Complete',
+          status: 'Completed',
         };
         delete expectedBond['requestedCoverStartDate-day'];
         delete expectedBond['requestedCoverStartDate-month'];
@@ -510,7 +510,7 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...bondBody,
           currency: deal.body.supplyContractCurrency,
-          status: 'Complete',
+          status: 'Completed',
         });
       });
 
