@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const moment = require('moment');
 const { findOneDeal } = require('./deal.controller');
@@ -20,7 +19,7 @@ exports.findOne = (req, res) => {
   });
 };
 
-const updateStatus = async (collection, id, from, to) => {
+const updateStatus = async (collection, _id, from, to) => {
   const statusUpdate = {
     details: {
       previousStatus: from,
@@ -30,7 +29,7 @@ const updateStatus = async (collection, id, from, to) => {
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: { $eq: new ObjectId(id) } },
+    { _id },
     $.flatten(statusUpdate),
     { returnOriginal: false },
   );
@@ -40,7 +39,7 @@ const updateStatus = async (collection, id, from, to) => {
   return value;
 };
 
-const updateComments = async (collection, id, commentToAdd, user) => {
+const updateComments = async (collection, _id, commentToAdd, user) => {
   const commentToInsert = {
     comments: {
       username: user.username,
@@ -50,7 +49,7 @@ const updateComments = async (collection, id, commentToAdd, user) => {
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: { $eq: new ObjectId(id) } },
+    { _id },
     { $push: commentToInsert },
     { returnOriginal: false },
   );

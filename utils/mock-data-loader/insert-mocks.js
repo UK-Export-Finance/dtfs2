@@ -7,7 +7,7 @@ const insertMocks = async () => {
   const token = await tokenFor({
     username: 're-insert-mocks',
     password: 'temporary',
-    roles: ['maker', 'editor'],
+    roles: ['maker', 'editor', 'data-admin'],
     bank: MOCKS.BANKS.find((bank) => bank.id === '956'),
   });
 
@@ -16,6 +16,11 @@ const insertMocks = async () => {
     password: 'temporary',
     roles: ['maker', 'editor'],
     bank: MOCKS.BANKS.find((bank) => bank.id === '964'),
+  });
+
+  console.log('resetting id counters');
+  await api.resetIdCounters(token).catch((error) => {
+    console.log({ error });
   });
 
   console.log('inserting deals');
