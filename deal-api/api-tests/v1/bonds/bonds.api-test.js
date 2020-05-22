@@ -150,6 +150,20 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(200);
     });
 
+    it('creates incremental integer bond IDs', async () => {
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+      await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      const { body } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+      const bondIds = body.bondTransactions.items.map((bond) => bond._id);
+
+      expect(bondIds[1] - bondIds[0]).toEqual(1);
+      expect(bondIds[2] - bondIds[1]).toEqual(1);
+    });
+
     it('adds an empty bond to a deal with `Incomplete` status property', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
