@@ -1,3 +1,14 @@
+// TODO: move to root utils directory
+const {
+  now,
+  formatDate,
+  addMonthsToDate,
+} = require('../../../../../deal-api/src/v1/validation/date-field');
+
+const date = now();
+const requestedCoverStartDate = date;
+const coverEndDate = addMonthsToDate(date, 1);
+
 const DETAILS = {
   bondIssuer: 'mock issuer',
   bondType: {
@@ -6,12 +17,13 @@ const DETAILS = {
   },
 
   // 'issued' bond stage specifics
-  requestedCoverStartDateDay: '16',
-  requestedCoverStartDateMonth: '10',
-  requestedCoverStartDateYear: '2021',
-  coverEndDateDay: '14',
-  coverEndDateMonth: '12',
-  coverEndDateYear: '2025',
+  // TOD: dynamically generate
+  requestedCoverStartDateDay: formatDate(requestedCoverStartDate, 'DD'),
+  requestedCoverStartDateMonth: formatDate(requestedCoverStartDate, 'MM'),
+  requestedCoverStartDateYear: formatDate(requestedCoverStartDate, 'YYYY'),
+  coverEndDateDay: formatDate(coverEndDate, 'DD'),
+  coverEndDateMonth: formatDate(coverEndDate, 'MM'),
+  coverEndDateYear: formatDate(coverEndDate, 'YYYY'),
   uniqueIdentificationNumber: '123456',
   bondBeneficiary: 'mock beneficiary',
 

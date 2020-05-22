@@ -56,7 +56,10 @@ exports.dateValidationText = (
   return `Enter the ${fieldCopy}`;
 };
 
+// TODO: move to root utils directory
 exports.now = () => moment();
+
+exports.formatDate = (date, format) => moment(date).format(format);
 
 exports.addDaysToDate = (date, days) => moment(date).add(days, 'day');
 

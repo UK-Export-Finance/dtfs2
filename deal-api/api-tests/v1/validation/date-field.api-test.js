@@ -4,6 +4,7 @@ const {
   dateHasSomeValues,
   dateValidationText,
   now,
+  formatDate,
   addDaysToDate,
   addMonthsToDate,
   removeDaysFromDate,
@@ -85,6 +86,16 @@ describe('validation - date-field', () => {
 
       result = dateValidationText(mockFieldCopy);
       expected = `Enter the ${mockFieldCopy}`;
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('formatDate', () => {
+    it('should return formatted date', () => {
+      const date = moment();
+      const result = formatDate(date, 'DD');
+
+      const expected = moment(date).format('DD');
       expect(result).toEqual(expected);
     });
   });
