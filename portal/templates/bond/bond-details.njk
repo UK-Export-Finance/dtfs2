@@ -5,6 +5,7 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% import './_macros/bond-nav.njk' as bondNav %}
+{% import '_macros/date-fields.njk' as dateFields %}
 
 {% block pageTitle %}Bond Details{% endblock %}
 
@@ -219,127 +220,26 @@
           {% endif %}
         >
 
+          {{ dateFields.inputs(
+            legend = 'Requested Cover Start Date (optional)',
+            id = 'requestedCoverStartDate',
+            hint = '<p>For example, 27 11 2019</p><p>This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date</p>',
+            dayValue = bond['requestedCoverStartDate-day'],
+            monthValue = bond['requestedCoverStartDate-month'],
+            yearValue = bond['requestedCoverStartDate-year'],
+            error = validationErrors.errorList.requestedCoverStartDate
+          )}}
 
-          {# generic #}
-          {% set dateInputClass = "govuk-input--width-2" %}
-          {% set dateInputErrorClass = "govuk-input--width-2 govuk-input--error" %}
-
-          {# cover start date specific #}
-          {% set requestedCoverStartDateDay = bond['requestedCoverStartDate-day'] %}
-          {% set requestedCoverStartDateMonth = bond['requestedCoverStartDate-month'] %}
-          {% set requestedCoverStartDateYear = bond['requestedCoverStartDate-year'] %}
-
-          {% set requestedCoverStartDateError = validationErrors.errorList.requestedCoverStartDate %}
-          {% set requestedCoverStartDateErrorWithAllValues = (requestedCoverStartDateError and (requestedCoverStartDateDay and requestedCoverStartDateMonth and requestedCoverStartDateYear) and requestedCoverStartDateError.text) %}
-
-          {% set requestedCoverStartDateDayError = (requestedCoverStartDateErrorWithAllValues or (requestedCoverStartDateError and not requestedCoverStartDateDay)) %}
-          {% set requestedCoverStartDateMonthError = requestedCoverStartDateErrorWithAllValues or (requestedCoverStartDateError and not requestedCoverStartDateMonth) %}
-          {% set requestedCoverStartDateYearError = requestedCoverStartDateErrorWithAllValues or (requestedCoverStartDateError and not requestedCoverStartDateYear) %}
-
-          {{ govukDateInput({
-            id: "requestedCoverStartDate",
-            namePrefix: "requestedCoverStartDate",
-            fieldset: {
-              legend: {
-                text: "Requested Cover Start Date (optional)"
-              }
-            },
-            hint: {
-              html: "<p>For example, 27 11 2019</p><p>This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date</p>"
-            },
-            errorMessage: requestedCoverStartDateError and {
-              text: requestedCoverStartDateError.text,
-              attributes: {
-                'data-cy': "requestedCoverStartDate-error-message"
-              }
-            },
-            items: [
-              {
-                classes: (requestedCoverStartDateDayError and dateInputErrorClass) or dateInputClass,
-                name: "day",
-                value: bond['requestedCoverStartDate-day'],
-                attributes: {
-                  'data-cy': "requestedCoverStartDate-day"
-                }
-              },
-              {
-                classes: (requestedCoverStartDateMonthError and dateInputErrorClass) or dateInputClass,
-                name: "month",
-                value: bond['requestedCoverStartDate-month'],
-                attributes: {
-                  'data-cy': "requestedCoverStartDate-month"
-                }
-              },
-              {
-                classes: (requestedCoverStartDateYearError and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
-                name: "year",
-                value: bond['requestedCoverStartDate-year'],
-                attributes: {
-                  'data-cy': "requestedCoverStartDate-year"
-                }
-              }
-            ]
-          }) }}
-
-          {# cover end date specific #}
-          {% set coverEndDateDay = bond['coverEndDate-day'] %}
-          {% set coverEndDateMonth = bond['coverEndDate-month'] %}
-          {% set coverEndDateYear = bond['coverEndDate-year'] %}
-
-          {% set coverEndDateError = validationErrors.errorList.coverEndDate %}
-          {% set coverEndDateErrorWithAllValues = (coverEndDateError and (coverEndDateDay and coverEndDateMonth and coverEndDateYear) and coverEndDateError.text) %}
-
-          {% set coverEndDateDayError = (coverEndDateErrorWithAllValues or (coverEndDateError and not coverEndDateDay)) %}
-          {% set coverEndDateMonthError = coverEndDateErrorWithAllValues or (coverEndDateError and not coverEndDateMonth) %}
-          {% set coverEndDateYearError = coverEndDateErrorWithAllValues or (coverEndDateError and not coverEndDateYear) %}
-
-          {% set dateInputClass = "govuk-input--width-2" %}
-          {% set dateInputErrorClass = "govuk-input--width-2 govuk-input--error" %}
-
-          {{ govukDateInput({
-            id: "coverEndDate",
-            namePrefix: "coverEndDate",
-            fieldset: {
-              legend: {
-                text: "Cover End Date"
-              }
-            },
-            hint: {
-              text: "For example, 27 11 2025"
-            },
-            errorMessage: (validationErrors.errorList.coverEndDate.text or (not bond['coverEndDate-day']) or (not bond['coverEndDate-month']) or (not bond['coverEndDate-year'])) and {
-              text: validationErrors.errorList.coverEndDate.text or validationErrors.conditionalErrorList.bondStage.Issued.coverEndDate.text,
-              attributes: {
-                'data-cy': "coverEndDate-error-message"
-              }
-            },
-            items: [
-              {
-                classes: (coverEndDateDayError and dateInputErrorClass) or dateInputClass,
-                name: "day",
-                value: bond['coverEndDate-day'],
-                attributes: {
-                  'data-cy': "coverEndDate-day"
-                }
-              },
-              {
-                classes: (coverEndDateMonthError and dateInputErrorClass) or dateInputClass,
-                name: "month",
-                value: bond['coverEndDate-month'],
-                attributes: {
-                  'data-cy': "coverEndDate-month"
-                }
-              },
-              {
-                classes: (coverEndDateYearError and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
-                name: "year",
-                value: bond['coverEndDate-year'],
-                attributes: {
-                  'data-cy': "coverEndDate-year"
-                }
-              }
-            ]
-          }) }}
+          {{ dateFields.inputs(
+            legend = 'Cover End Date',
+            id = 'coverEndDate',
+            hint = 'For example, 27 11 2025',
+            dayValue = bond['coverEndDate-day'],
+            monthValue = bond['coverEndDate-month'],
+            yearValue = bond['coverEndDate-year'],
+            error = validationErrors.errorList.coverEndDate,
+            conditionalError = validationErrors.conditionalErrorList.bondStage.Issued.coverEndDate
+          )}}
 
           {{ govukInput({
             label: {
@@ -361,7 +261,6 @@
           }) }}
 
         </div>
-
 
         <div class="govuk-form-group">
 
