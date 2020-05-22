@@ -8,6 +8,8 @@ const smeTypeIsRequired = require('./sme-type-is-required');
 const supplyContractDescriptionIsRequired = require('./supply-contract-description-is-required');
 const indemnifierDataIsRequired = require('./indemnifier-data-is-required-if-legally-distinct');
 const indemnifierCorrespondenceAddressIsRequired = require('./indemnifier-correspondence-address-is-required-if-different');
+const buyerNameIsRequired = require('./buyer-name-is-required');
+const buyerAddressIsRequired = require('./buyer-address-is-required');
 
 const rules = [
   supplierTypeIsRequired,
@@ -20,6 +22,8 @@ const rules = [
   supplyContractDescriptionIsRequired,
   indemnifierDataIsRequired,
   indemnifierCorrespondenceAddressIsRequired,
+  buyerNameIsRequired,
+  buyerAddressIsRequired,
 ];
 
 module.exports = (submissionDetails) => {

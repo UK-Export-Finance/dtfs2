@@ -38,8 +38,8 @@
       <dd class="govuk-summary-list__value govuk-body-s">
         <p data-cy="supplier-address-line-1">{{ submissionDetails["supplier-address-line-1"] | safe }}</p>
         <p data-cy="supplier-address-line-2">{{ submissionDetails["supplier-address-line-2"] | safe }}</p>
-        <p data-cy="supplier-address-town">{{ submissionDetails["supplier-address-town"] | safe }}</p>
         <p data-cy="supplier-address-line-3">{{ submissionDetails["supplier-address-line-3"] | safe }}</p>
+        <p data-cy="supplier-address-town">{{ submissionDetails["supplier-address-town"] | safe }}</p>
         <p data-cy="supplier-address-postcode">{{ submissionDetails["supplier-address-postcode"] | safe }}</p>
         <p data-cy="supplier-address-country">{{ submissionDetails["supplier-address-country"] | safe }}</p>
       </dd>
@@ -66,8 +66,8 @@
       <dd class="govuk-summary-list__value govuk-body-s">
         <p data-cy="supplier-correspondence-address-line-1">{{ submissionDetails["supplier-correspondence-address-line-1"] | safe }}</p>
         <p data-cy="supplier-correspondence-address-line-2">{{ submissionDetails["supplier-correspondence-address-line-2"] | safe }}</p>
-        <p data-cy="supplier-correspondence-address-town">{{ submissionDetails["supplier-correspondence-address-town"] | safe }}</p>
         <p data-cy="supplier-correspondence-address-line-3">{{ submissionDetails["supplier-correspondence-address-line-3"] | safe }}</p>
+        <p data-cy="supplier-correspondence-address-town">{{ submissionDetails["supplier-correspondence-address-town"] | safe }}</p>
         <p data-cy="supplier-correspondence-address-postcode">{{ submissionDetails["supplier-correspondence-address-postcode"] | safe }}</p>
         <p data-cy="supplier-correspondence-address-country">{{ submissionDetails["supplier-correspondence-address-country"] | safe }}</p>
       </dd>
@@ -147,8 +147,8 @@
       <dd class="govuk-summary-list__value govuk-body-s">
         <p data-cy="indemnifier-address-line-1">{{ submissionDetails["indemnifier-address-line-1"] | safe }}</p>
         <p data-cy="indemnifier-address-line-2">{{ submissionDetails["indemnifier-address-line-2"] | safe }}</p>
-        <p data-cy="indemnifier-address-town">{{ submissionDetails["indemnifier-address-town"] | safe }}</p>
         <p data-cy="indemnifier-address-line-3">{{ submissionDetails["indemnifier-address-line-3"] | safe }}</p>
+        <p data-cy="indemnifier-address-town">{{ submissionDetails["indemnifier-address-town"] | safe }}</p>
         <p data-cy="indemnifier-address-postcode">{{ submissionDetails["indemnifier-address-postcode"] | safe }}</p>
         <p data-cy="indemnifier-address-country">{{ submissionDetails["indemnifier-address-country"] | safe }}</p>
       </dd>
@@ -174,8 +174,8 @@
       <dd class="govuk-summary-list__value govuk-body-s">
         <p data-cy="indemnifier-correspondence-address-line-1">{{ submissionDetails["indemnifier-correspondence-address-line-1"] | safe }}</p>
         <p data-cy="indemnifier-correspondence-address-line-2">{{ submissionDetails["indemnifier-correspondence-address-line-2"] | safe }}</p>
-        <p data-cy="indemnifier-correspondence-address-town">{{ submissionDetails["indemnifier-correspondence-address-town"] | safe }}</p>
         <p data-cy="indemnifier-correspondence-address-line-3">{{ submissionDetails["indemnifier-correspondence-address-line-3"] | safe }}</p>
+        <p data-cy="indemnifier-correspondence-address-town">{{ submissionDetails["indemnifier-correspondence-address-town"] | safe }}</p>
         <p data-cy="indemnifier-correspondence-address-postcode">{{ submissionDetails["indemnifier-correspondence-address-postcode"] | safe }}</p>
         <p data-cy="indemnifier-correspondence-address-country">{{ submissionDetails["indemnifier-correspondence-address-country"] | safe }}</p>
       </dd>
@@ -196,6 +196,20 @@
       </dt>
       <dd data-cy="buyer-name" class="govuk-summary-list__value govuk-body-s">
         {{ submissionDetails["buyer-name"] }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-body-s">
+        Buyer address
+      </dt>
+      <dd class="govuk-summary-list__value govuk-body-s">
+        <p data-cy="buyer-address-line-1">{{ submissionDetails["buyer-address-line-1"] | safe }}</p>
+        <p data-cy="buyer-address-line-2">{{ submissionDetails["buyer-address-line-2"] | safe }}</p>
+        <p data-cy="buyer-address-line-3">{{ submissionDetails["buyer-address-line-3"] | safe }}</p>
+        <p data-cy="buyer-address-town">{{ submissionDetails["buyer-address-town"] | safe }}</p>
+        <p data-cy="buyer-address-postcode">{{ submissionDetails["buyer-address-postcode"] | safe }}</p>
+        <p data-cy="buyer-address-country">{{ submissionDetails["buyer-address-country"] | safe }}</p>
       </dd>
     </div>
 
