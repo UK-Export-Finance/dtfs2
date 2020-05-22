@@ -619,7 +619,7 @@
   <xs:element name="EWCS_disbursement_amount">
     <xs:simpleType>
       <xs:restriction base="xs:string">
-        <xs:pattern value="(\d{0,14}(\.\d{0,4}|\.?))?"/>
+        <xs:pattern value="(\d{0,8}(\.\d{0,4}|\.?))?"/>
       </xs:restriction>
     </xs:simpleType>
   </xs:element>
