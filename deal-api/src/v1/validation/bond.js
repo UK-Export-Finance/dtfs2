@@ -5,10 +5,8 @@ const {
   dateHasAllValues,
   dateHasSomeValues,
   dateValidationText,
-  addMonthsToDate,
-  now,
-  dateIsInTimeframe,
 } = require('./date-field');
+const { dateIsInTimeframe } = require('../../../../utils/date');
 
 exports.getBondErrors = (bond) => {
   const {
@@ -123,14 +121,14 @@ exports.getBondErrors = (bond) => {
   if (bondStage === 'Issued') {
     if (dateHasAllValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear)) {
       const MAX_MONTHS_FROM_NOW = 3;
-      const nowDate = now();
+      const nowDate = moment();
 
       if (!dateIsInTimeframe(
         requestedCoverStartDateDay,
         requestedCoverStartDateMonth,
         requestedCoverStartDateYear,
         nowDate,
-        addMonthsToDate(nowDate, MAX_MONTHS_FROM_NOW),
+        moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months'),
       )) {
         errorList.requestedCoverStartDate = {
           text: `(temp message): Requested Cover Start Date must be within ${MAX_MONTHS_FROM_NOW} month  timeframe`,

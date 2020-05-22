@@ -4,7 +4,8 @@
   "description": "DTFS2",
   "dependencies": {
     "axios": "0.19.2",
-    "graphql-tools": "^5.0.0"
+    "graphql-tools": "^5.0.0",
+    "moment": "^2.26.0"
   },
   "devDependencies": {
     "cypress": "4.5.0",

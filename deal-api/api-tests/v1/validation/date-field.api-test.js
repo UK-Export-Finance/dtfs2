@@ -1,14 +1,7 @@
-const moment = require('moment');
 const {
   dateHasAllValues,
   dateHasSomeValues,
   dateValidationText,
-  now,
-  formatDate,
-  addDaysToDate,
-  addMonthsToDate,
-  removeDaysFromDate,
-  dateIsInTimeframe,
 } = require('../../../src/v1/validation/date-field');
 
 describe('validation - date-field', () => {
@@ -87,128 +80,6 @@ describe('validation - date-field', () => {
       result = dateValidationText(mockFieldCopy);
       expected = `Enter the ${mockFieldCopy}`;
       expect(result).toEqual(expected);
-    });
-  });
-
-  describe('formatDate', () => {
-    it('should return formatted date', () => {
-      const date = moment();
-      const result = formatDate(date, 'DD');
-
-      const expected = moment(date).format('DD');
-      expect(result).toEqual(expected);
-    });
-  });
-
-  describe('addDaysToDate', () => {
-    it('should add X days to a given date', () => {
-      const date = moment();
-      const result = addDaysToDate(date, 10);
-
-      const expected = moment(date).add(10, 'day');
-      expect(result).toEqual(expected);
-    });
-  });
-
-  describe('addMonthsToDate', () => {
-    it('should add X months to a given date', () => {
-      const date = moment();
-      const result = addMonthsToDate(date, 10);
-
-      const expected = moment(date).add(10, 'months');
-      expect(result).toEqual(expected);
-    });
-  });
-
-  describe('removeDaysFromDate', () => {
-    it('should remove X days to a given date', () => {
-      const date = moment();
-      const result = removeDaysFromDate(date, 10);
-
-      const expected = moment(date).subtract(10, 'day');
-      expect(result).toEqual(expected);
-    });
-  });
-
-  describe('dateIsInTimeframe', () => {
-    describe('when a date is within the given timeframe', () => {
-      it('should return true', () => {
-        const nowDate = now();
-        const day = moment(nowDate).format('DD');
-        const month = moment(nowDate).format('MM');
-        const year = moment(nowDate).format('YYYY');
-        const startDate = removeDaysFromDate(nowDate, 1);
-        const endDate = addDaysToDate(nowDate, 7);
-
-        const result = dateIsInTimeframe(
-          day,
-          month,
-          year,
-          startDate,
-          endDate,
-        );
-        expect(result).toEqual(true);
-      });
-    });
-
-    describe('when a date is the same as the start of the given timeframe', () => {
-      it('should return true', () => {
-        const nowDate = now();
-        const day = moment(nowDate).format('DD');
-        const month = moment(nowDate).format('MM');
-        const year = moment(nowDate).format('YYYY');
-        const startDate = nowDate;
-        const endDate = addDaysToDate(nowDate, 7);
-
-        const result = dateIsInTimeframe(
-          day,
-          month,
-          year,
-          startDate,
-          endDate,
-        );
-        expect(result).toEqual(true);
-      });
-    });
-
-    describe('when a date is the same as the end of the given timeframe', () => {
-      it('should return true', () => {
-        const nowDate = now();
-        const day = addDaysToDate(nowDate, 7).format('DD');
-        const month = addDaysToDate(nowDate, 7).format('MM');
-        const year = addDaysToDate(nowDate, 7).format('YYYY');
-        const startDate = nowDate;
-        const endDate = addDaysToDate(nowDate, 7);
-
-        const result = dateIsInTimeframe(
-          day,
-          month,
-          year,
-          startDate,
-          endDate,
-        );
-        expect(result).toEqual(true);
-      });
-    });
-
-    describe('when a date is NOT within the given timeframe', () => {
-      it('should return false', () => {
-        const nowDate = now();
-        const day = addDaysToDate(nowDate, 8).format('DD');
-        const month = addDaysToDate(nowDate, 8).format('MM');
-        const year = addDaysToDate(nowDate, 8).format('YYYY');
-        const startDate = removeDaysFromDate(nowDate, 1);
-        const endDate = addDaysToDate(nowDate, 7);
-
-        const result = dateIsInTimeframe(
-          day,
-          month,
-          year,
-          startDate,
-          endDate,
-        );
-        expect(result).toEqual(false);
-      });
     });
   });
 });

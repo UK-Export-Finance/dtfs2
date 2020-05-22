@@ -1,18 +1,9 @@
-// const moment = require('moment');
+const moment = require('moment');
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const fillBondForm = require('./fill-bond-forms');
 const assertBondFormValues = require('./assert-bond-form-values');
 const BOND_FORM_VALUES = require('./bond-form-values');
-
-// TODO: move to root utils directory
-const {
-  now,
-  formatDate,
-  addDaysToDate,
-  addMonthsToDate,
-  removeDaysFromDate,
-} = require('../../../../../deal-api/src/v1/validation/date-field');
 
 const user = { username: 'MAKER', password: 'MAKER' };
 
@@ -231,15 +222,15 @@ context('Bond Details', () => {
           pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
           pages.bondDetails.bondStageIssuedInput().click();
 
-          const date = now();
-          const requestedCoverStartDate = addDaysToDate(addMonthsToDate(date, 3), 1);
+          const date = moment();
+          const requestedCoverStartDate = moment(date).add(3, 'months').add('1', 'day');
 
           pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
           pages.bondDetails.bondStageIssuedInput().click();
 
-          pages.bondDetails.requestedCoverStartDateDayInput().type(formatDate(requestedCoverStartDate, 'DD'));
-          pages.bondDetails.requestedCoverStartDateMonthInput().type(formatDate(requestedCoverStartDate, 'MM'));
-          pages.bondDetails.requestedCoverStartDateYearInput().type(formatDate(requestedCoverStartDate, 'YYYY'));
+          pages.bondDetails.requestedCoverStartDateDayInput().type(moment(requestedCoverStartDate).format('DD'));
+          pages.bondDetails.requestedCoverStartDateMonthInput().type(moment(requestedCoverStartDate).format('MM'));
+          pages.bondDetails.requestedCoverStartDateYearInput().type(moment(requestedCoverStartDate).format('YYYY'));
 
           pages.bondDetails.coverEndDateDayInput().type(BOND_FORM_VALUES.DETAILS.coverEndDateDay);
           pages.bondDetails.coverEndDateMonthInput().type(BOND_FORM_VALUES.DETAILS.coverEndDateMonth);
@@ -262,20 +253,20 @@ context('Bond Details', () => {
           pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
           pages.bondDetails.bondStageIssuedInput().click();
 
-          const date = now();
+          const date = moment();
           const requestedCoverStartDate = date;
-          const coverEndDate = removeDaysFromDate(date, 1);
+          const coverEndDate = moment(date).remove(1, 'day');
 
           pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
           pages.bondDetails.bondStageIssuedInput().click();
 
-          pages.bondDetails.requestedCoverStartDateDayInput().type(formatDate(requestedCoverStartDate, 'DD'));
-          pages.bondDetails.requestedCoverStartDateMonthInput().type(formatDate(requestedCoverStartDate, 'MM'));
-          pages.bondDetails.requestedCoverStartDateYearInput().type(formatDate(requestedCoverStartDate, 'YYYY'));
+          pages.bondDetails.requestedCoverStartDateDayInput().type(moment(requestedCoverStartDate).format('DD'));
+          pages.bondDetails.requestedCoverStartDateMonthInput().type(moment(requestedCoverStartDate).format('MM'));
+          pages.bondDetails.requestedCoverStartDateYearInput().type(moment(requestedCoverStartDate).format('YYYY'));
 
-          pages.bondDetails.coverEndDateDayInput().type(formatDate(coverEndDate, 'DD'));
-          pages.bondDetails.coverEndDateMonthInput().type(formatDate(coverEndDate, 'MM'));
-          pages.bondDetails.coverEndDateYearInput().type(formatDate(coverEndDate, 'YYYY'));
+          pages.bondDetails.coverEndDateDayInput().type(moment(coverEndDate).format('DD'));
+          pages.bondDetails.coverEndDateMonthInput().type(moment(coverEndDate).format('MM'));
+          pages.bondDetails.coverEndDateYearInput().type(moment(coverEndDate).format('YYYY'));
 
           pages.bondDetails.uniqueIdentificationNumberInput().type(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
 
