@@ -1,6 +1,6 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 
-{% macro inputs(id, legend, hint, dayValue, monthValue, yearValue, error, conditionalError) %}
+{% macro render(id, legend, hint, dayValue, monthValue, yearValue, error, conditionalError) %}
 
   {% set inputClass = "govuk-input--width-2" %}
   {% set inputErrorClass = "govuk-input--width-2 govuk-input--error" %}

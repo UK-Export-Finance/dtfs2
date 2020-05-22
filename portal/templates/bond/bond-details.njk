@@ -5,7 +5,7 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% import './_macros/bond-nav.njk' as bondNav %}
-{% import '_macros/date-fields.njk' as dateFields %}
+{% import '_macros/date-field.njk' as dateField %}
 
 {% block pageTitle %}Bond Details{% endblock %}
 
@@ -220,7 +220,7 @@
           {% endif %}
         >
 
-          {{ dateFields.inputs(
+          {{ dateField.render(
             legend = 'Requested Cover Start Date (optional)',
             id = 'requestedCoverStartDate',
             hint = '<p>For example, 27 11 2019</p><p>This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date</p>',
@@ -230,7 +230,7 @@
             error = validationErrors.errorList.requestedCoverStartDate
           )}}
 
-          {{ dateFields.inputs(
+          {{ dateField.render(
             legend = 'Cover End Date',
             id = 'coverEndDate',
             hint = 'For example, 27 11 2025',
