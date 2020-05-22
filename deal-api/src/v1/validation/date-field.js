@@ -1,4 +1,3 @@
-const moment = require('moment');
 const { hasValue } = require('../../utils/string');
 
 exports.dateHasAllValues = (day, month, year) => {
@@ -54,25 +53,4 @@ exports.dateValidationText = (
   }
 
   return `Enter the ${fieldCopy}`;
-};
-
-// TODO: move to root utils directory
-exports.now = () => moment();
-
-exports.formatDate = (date, format) => moment(date).format(format);
-
-exports.addDaysToDate = (date, days) => moment(date).add(days, 'day');
-
-exports.addMonthsToDate = (date, months) => moment(date).add(months, 'months');
-
-exports.removeDaysFromDate = (date, days) => moment(date).subtract(days, 'day');
-
-exports.dateIsInTimeframe = (day, month, year, start, end) => {
-  const formattedDate = moment(`${year}-${month}-${day}`);
-  const isInTimeframe = moment(formattedDate).isBetween(start, end, 'days', '[]');
-
-  if (isInTimeframe) {
-    return true;
-  }
-  return false;
 };

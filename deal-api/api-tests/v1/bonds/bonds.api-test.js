@@ -3,13 +3,6 @@ const wipeDB = require('../../wipeDB');
 const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
-const {
-  addDaysToDate,
-  addMonthsToDate,
-  removeDaysFromDate,
-  now,
-} = require('../../../src/v1/validation/date-field');
-
 const { as } = require('../../api')(app);
 
 describe('/v1/deals/:id/bond', () => {
@@ -213,19 +206,19 @@ describe('/v1/deals/:id/bond', () => {
   });
 
   describe('PUT /v1/deals/:id/bond/:bondId', () => {
-    const nowDate = now();
+    const nowDate = moment();
     const requestedCoverStartDate = () => {
       const date = nowDate;
 
       return {
         'requestedCoverStartDate-day': moment(date).format('DD'),
         'requestedCoverStartDate-month': moment(date).format('MM'),
-        'requestedCoverStartDate-year': moment(date).format('YYYY')
+        'requestedCoverStartDate-year': moment(date).format('YYYY'),
       };
     };
 
     const coverEndDate = () => {
-      const date = addMonthsToDate(nowDate, 1);
+      const date = moment(nowDate).add(1, 'months');
 
       return {
         'coverEndDate-day': moment(date).format('DD'),
@@ -422,9 +415,10 @@ describe('/v1/deals/:id/bond', () => {
           const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
           const { bondId } = createBondResponse.body;
 
-          const date = now();
-          const updatedRequestedCoverStartDate = addDaysToDate(addMonthsToDate(date, 3), 1);
-          const updatedCoverEndDate = addMonthsToDate(date, 4);
+          const date = moment();
+          const updatedRequestedCoverStartDate = moment(date).add(3, 'months').add(1, 'day');
+          
+          const updatedCoverEndDate = moment(date).add(4, 'months');
 
           const bondAsIssued = {
             _id: bondId,
@@ -458,9 +452,9 @@ describe('/v1/deals/:id/bond', () => {
           const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
           const { bondId } = createBondResponse.body;
 
-          const date = now();
-          const updatedRequestedCoverStartDate = addMonthsToDate(date, 2);
-          const updatedCoverEndDate = removeDaysFromDate(addMonthsToDate(date, 2), 1);
+          const date = moment();
+          const updatedRequestedCoverStartDate = moment(date).add(2, 'months');
+          const updatedCoverEndDate = moment(date).add(2, 'months').remove(1, 'day');
 
           const bondAsIssued = {
             _id: bondId,
