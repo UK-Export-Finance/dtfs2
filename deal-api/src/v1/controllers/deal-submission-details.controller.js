@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const moment = require('moment');
 const { findOneDeal } = require('./deal.controller');
@@ -22,7 +21,7 @@ exports.findOne = (req, res) => {
   });
 };
 
-const updateSubmissionDetails = async (collection, id, submissionDetails) => {
+const updateSubmissionDetails = async (collection, _id, submissionDetails) => {
   const update = {
     submissionDetails,
     details: {
@@ -31,7 +30,7 @@ const updateSubmissionDetails = async (collection, id, submissionDetails) => {
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: { $eq: new ObjectId(id) } },
+    { _id },
     $.flatten(update),
     { returnOriginal: false },
   );

@@ -1,44 +1,57 @@
-const api = require("./api");
+const api = require('./api');
 
 const banks = {
-  "Barclays": {
+  Barclays: {
     id: '956',
-    name: 'Barclays Bank'
+    name: 'Barclays Bank',
   },
-  "HSBC": {
+  HSBC: {
     id: '961',
-    name: 'HSBC'
+    name: 'HSBC',
   },
-  "LLOYDS": {
+  LLOYDS: {
     id: '964',
-    name: 'LLOYDS'
+    name: 'LLOYDS',
   },
-  "RBS": {
+  RBS: {
     id: '1004',
-    name: 'RBS'
+    name: 'RBS',
   },
-  "Santander": {
+  Santander: {
     id: '953',
-    name: 'Santander'
+    name: 'Santander',
   },
-  "UKEF": {
+  UKEF: {
     id: '9',
-    name: 'UKEF test bank (Delegated)'
+    name: 'UKEF test bank (Delegated)',
   },
-  "any": {
+  any: {
     id: '*',
-  }
-}
+  },
+};
 
 const testUsers = [
   { username: 'no-roles', password: 'P@ssword1234', roles: [] },
   { username: 'an-editor', password: 'P@ssword1234', roles: ['editor'] },
-  { username: 'HSBC-maker-1', password: 'P@ssword1234', roles: ['maker'], bank: banks.HSBC },
-  { username: 'HSBC-maker-2', password: 'P@ssword1234', roles: ['maker'], bank: banks.HSBC },
-  { username: 'Barclays-maker-1', password: 'P@ssword1234', roles: ['maker'], bank: banks.Barclays },
-  { username: 'Barclays-maker-2', password: 'P@ssword1234', roles: ['maker'], bank: banks.Barclays },
-  { username: 'Barclays-checker-1', password: 'P@ssword1234', roles: ['checker'], bank: banks.Barclays },
-  { username: 'super-user', password: 'P@ssword1234', roles: ['maker'], bank: banks.any },
+  {
+    username: 'HSBC-maker-1', password: 'P@ssword1234', roles: ['maker'], bank: banks.HSBC,
+  },
+  {
+    username: 'HSBC-maker-2', password: 'P@ssword1234', roles: ['maker'], bank: banks.HSBC,
+  },
+  {
+    username: 'Barclays-maker-1', password: 'P@ssword1234', roles: ['maker'], bank: banks.Barclays,
+  },
+  {
+    username: 'Barclays-maker-2', password: 'P@ssword1234', roles: ['maker'], bank: banks.Barclays,
+  },
+  {
+    username: 'Barclays-checker-1', password: 'P@ssword1234', roles: ['checker'], bank: banks.Barclays,
+  },
+  {
+    username: 'super-user', password: 'P@ssword1234', roles: ['maker'], bank: banks.any,
+  },
+  { username: 'data-admin', password: 'P@ssword1234', roles: ['data-admin'] },
 ];
 
 let notYetInitialised = true;
@@ -53,40 +66,41 @@ const finder = () => {
     all: () => users,
     one: () => users[0],
     withRole: (role) => {
-      users = users.filter( user => user.roles.includes(role) );
+      users = users.filter((user) => user.roles.includes(role));
       // console.log(`withRole ${role} => ${JSON.stringify(users)}`)
       return fluidBuilder;
     },
     withoutRole: (role) => {
-      users = users.filter( user => !user.roles.includes(role) );
+      users = users.filter((user) => !user.roles.includes(role));
       // console.log(`withoutRole ${role} => ${JSON.stringify(users)}`)
       return fluidBuilder;
     },
     withoutAnyRoles: () => {
-      users = users.filter( user => user.roles.length === 0 );
+      users = users.filter((user) => user.roles.length === 0);
       // console.log(`withoutAnyRoles => ${JSON.stringify(users)}`)
       return fluidBuilder;
     },
     withBankName: (bankName) => {
-      users = users.filter( user => user.bank && user.bank.name === bankName );
+      users = users.filter((user) => user.bank && user.bank.name === bankName);
       // console.log(`withBankName ${bankName} => ${JSON.stringify(users)}`)
       return fluidBuilder;
     },
     superuser: () => {
-      users = users.filter( user => user.bank && user.bank.id === '*');
+      users = users.filter((user) => user.bank && user.bank.id === '*');
       // console.log(`superuser => ${JSON.stringify(users)}`)
       return fluidBuilder;
-    }
+    },
   };
 
   return fluidBuilder;
-}
+};
 
 
-
-module.exports.initialise = async(app) => {
+module.exports.initialise = async (app) => {
   if (notYetInitialised) {
-    const { get, post, put, remove } = api(app).as();
+    const {
+      get, post, put, remove,
+    } = api(app).as();
 
     const currentUsersResponse = await get('/v1/users');
     const existingUsers = currentUsersResponse.body.users;
@@ -96,14 +110,14 @@ module.exports.initialise = async(app) => {
     }
 
     for (const testUser of testUsers) {
-      await post(testUser).to(`/v1/users/`);
+      await post(testUser).to('/v1/users/');
 
-      const { body } = await post({ username: testUser.username, password: testUser.password }).to("/v1/login");
+      const { body } = await post({ username: testUser.username, password: testUser.password }).to('/v1/login');
       const { token } = body;
 
       loadedUsers.push({
         ...testUser,
-        token
+        token,
       });
     }
 

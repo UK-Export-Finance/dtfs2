@@ -1,8 +1,8 @@
-const { ObjectId } = require('mongodb');
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { findOneBondCurrency } = require('./bondCurrencies.controller');
 const { getBondErrors } = require('../validation/bond');
+const { generateFacilityId } = require('../../utils/generateIds');
 
 exports.getBond = async (req, res) => {
   const {
@@ -42,8 +42,10 @@ exports.create = async (req, res) => {
       return res.status(401).send();
     }
 
+    const facilityId = await generateFacilityId();
+
     const newBondObj = {
-      _id: new ObjectId(),
+      _id: facilityId,
       status: 'Incomplete',
     };
 
@@ -104,7 +106,7 @@ exports.updateBond = async (req, res) => {
         String(bond._id) !== bondId); // eslint-disable-line no-underscore-dangle
 
       const updatedBond = {
-        _id: ObjectId(bondId),
+        _id: bondId,
         ...existingBond,
         ...req.body,
       };
