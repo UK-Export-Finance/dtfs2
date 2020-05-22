@@ -454,7 +454,7 @@ describe('/v1/deals/:id/bond', () => {
 
           const date = moment();
           const updatedRequestedCoverStartDate = moment(date).add(2, 'months');
-          const updatedCoverEndDate = moment(date).add(2, 'months').remove(1, 'day');
+          const updatedCoverEndDate = moment(date).add(2, 'months').subtract(1, 'day');
 
           const bondAsIssued = {
             _id: bondId,

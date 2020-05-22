@@ -4,9 +4,9 @@ const { hasValue } = require('../../utils/string');
 const {
   dateHasAllValues,
   dateHasSomeValues,
+  dateIsInTimeframe,
   dateValidationText,
 } = require('./date-field');
-const { dateIsInTimeframe } = require('../../../../utils/date');
 
 exports.getBondErrors = (bond) => {
   const {
