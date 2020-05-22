@@ -14,7 +14,7 @@ module.exports = {
     submissionType: 'Automatic Inclusion Notice'
   },
   aboutSupplyContract: {
-    status: 'Complete'
+    status: 'Completed'
   },
   eligibility: {
     status: 'Incomplete',
@@ -65,7 +65,7 @@ module.exports = {
         id: '1',
         bankReferenceNumber: 'Not entered',
         ukefFacilityID: '12345678',
-        status: 'Not started',
+        status: 'Incomplete',
         value: 'GBP 123,456.00',
         stage: 'Unconditional',
         startDate: '12/02/2020',

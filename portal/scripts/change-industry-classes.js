@@ -38,6 +38,8 @@ export const changeIndustryClasses = (event, sectors, selectedValue) => {
         },
       );
     });
+
+    selectElement.selectedIndex = '0';
   }
 };
 

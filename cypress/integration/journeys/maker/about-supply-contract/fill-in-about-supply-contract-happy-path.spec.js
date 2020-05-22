@@ -31,7 +31,7 @@ context('about-supply-contract', () => {
     };
 
     cy.deleteDeals(maker1);
-    cy.insertOneDeal(aDealWith_AboutSupplyContract_InStatus('Not started'), { ...maker1 })
+    cy.insertOneDeal(aDealWith_AboutSupplyContract_InStatus('Incomplete'), { ...maker1 })
       .then( insertedDeal =>  deal=insertedDeal );
   });
 
@@ -42,7 +42,7 @@ context('about-supply-contract', () => {
     contract.visit(deal);
     // check the status is displaying correctly
     contract.aboutSupplierDetailsStatus().invoke('text').then((text) => {
-      expect(text.trim()).equal('Not started');
+      expect(text.trim()).equal('Incomplete');
     });
     contract.aboutSupplierDetailsLink().click();
     //---
@@ -77,6 +77,7 @@ context('about-supply-contract', () => {
     //---
     contractAboutSupplier.supplierCorrespondenceAddressSame().click();
     contractAboutSupplier.industrySector().select('1009'); //Information and communication
+    contractAboutSupplier.industryClass().should('have.value', '');
     contractAboutSupplier.industryClass().select('62012'); //Business and domestic software development
     contractAboutSupplier.smeTypeMicro().click();
     contractAboutSupplier.supplyContractDescription().type('Typing in tests takes time.')

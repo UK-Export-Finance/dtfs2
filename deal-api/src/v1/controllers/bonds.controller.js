@@ -44,7 +44,7 @@ exports.create = async (req, res) => {
 
     const newBondObj = {
       _id: new ObjectId(),
-      status: 'Not started',
+      status: 'Incomplete',
     };
 
     const updatedDeal = {
@@ -152,7 +152,7 @@ exports.updateBond = async (req, res) => {
       const validationErrors = getBondErrors(updatedBond);
 
       if (validationErrors.count === 0) {
-        updatedBond.status = 'Complete';
+        updatedBond.status = 'Completed';
       } else {
         updatedBond.status = 'Incomplete';
       }

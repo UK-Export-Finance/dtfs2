@@ -103,7 +103,7 @@ describe('/v1/deals/:id/submission-details', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${newId}/submission-details`);
 
       expect(status).toEqual(200);
-      expect(body.data).toEqual({ status: 'Not started'});
+      expect(body.data).toEqual({ status: 'Incomplete'});
     });
   });
 

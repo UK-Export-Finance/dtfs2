@@ -68,7 +68,7 @@ context('Add a Bond to a Deal', () => {
 
   // TODO
   // describe('when a user creates a Bond without submitting anything', () => {
-  //   it('bond should display `Not started` status in Deal page', () => {
+  //   it('bond should display `Incomplete` status in Deal page', () => {
   //   });
   // });
 
@@ -246,7 +246,7 @@ context('Add a Bond to a Deal', () => {
       });
     });
 
-    it('should populate Deal page with the submitted bond, display `Complete` status and link to `Bond Details` page', () => {
+    it('should populate Deal page with the submitted bond, display `Completed` status and link to `Bond Details` page', () => {
       cy.loginGoToDealPage(user, deal);
       cy.addBondToDeal();
       cy.url().should('include', '/preview');
@@ -268,7 +268,7 @@ context('Add a Bond to a Deal', () => {
         // TODO: UKEF facility ID (when built)
 
         row.bondStatus().invoke('text').then((text) => {
-          expect(text.trim()).equal('Complete');
+          expect(text.trim()).equal('Completed');
         });
 
         row.bondValue().invoke('text').then((text) => {

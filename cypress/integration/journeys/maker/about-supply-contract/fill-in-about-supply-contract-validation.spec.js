@@ -34,7 +34,7 @@ context('about-supply-contract', () => {
     };
 
     cy.deleteDeals(maker1);
-    cy.insertOneDeal(aDealWith_AboutSupplyContract_InStatus('Not started'), { ...maker1 })
+    cy.insertOneDeal(aDealWith_AboutSupplyContract_InStatus('Incomplete'), { ...maker1 })
       .then((insertedDeal) => deal = insertedDeal);
   });
 

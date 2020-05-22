@@ -199,18 +199,21 @@ router.get('/contract/:_id/about/buyer', async (req, res) => {
     res,
   );
 
-  const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
-  const formattedValidationErrors = generateErrorSummary(
-    validationErrors,
-    errorHref,
-  );
+  let formattedValidationErrors = {};
+  if (deal.submissionDetails.hasBeenPreviewed) {
+    const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
+    formattedValidationErrors = generateErrorSummary(
+      validationErrors,
+      errorHref,
+    );
+  }
 
   const countries = await getApiData(
     api.countries(userToken),
     res,
   );
   const mappedCountries = {
-    countryOfBuyer: mapCountries(countries, deal.submissionDetails.countryOfBuyer),
+    'buyer-address-country': mapCountries(countries, deal.submissionDetails['buyer-address-country']),
     destinationOfGoodsAndServices: mapCountries(countries, deal.submissionDetails.destinationOfGoodsAndServices),
   };
 

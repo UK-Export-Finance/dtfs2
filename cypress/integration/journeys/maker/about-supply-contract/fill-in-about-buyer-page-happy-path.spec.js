@@ -30,7 +30,12 @@ context('about-supply-contract', () => {
 
     // fill in the fields
     contractAboutBuyer.buyerName().type('Huggy Bear');
-    contractAboutBuyer.countryOfBuyer().select('USA');
+    contractAboutBuyer.buyerAddress().country().select('USA');
+    contractAboutBuyer.buyerAddress().line1().type('Corner of East and Main');
+    contractAboutBuyer.buyerAddress().line3().type('The Bronx');
+    contractAboutBuyer.buyerAddress().town().type('New York');
+    contractAboutBuyer.buyerAddress().postcode().type('no-idea');
+
     contractAboutBuyer.destinationOfGoodsAndServices().select('USA');
 
     // save
@@ -43,8 +48,20 @@ context('about-supply-contract', () => {
     contractAboutPreview.buyerName().invoke('text').then((text) => {
       expect(text.trim()).equal('Huggy Bear');
     });
-    contractAboutPreview.countryOfBuyer().invoke('text').then((text) => {
+    contractAboutPreview.buyerAddress().country().invoke('text').then((text) => {
       expect(text.trim()).equal('USA');
+    });
+    contractAboutPreview.buyerAddress().line1().invoke('text').then((text) => {
+      expect(text.trim()).equal('Corner of East and Main');
+    });
+    contractAboutPreview.buyerAddress().line3().invoke('text').then((text) => {
+      expect(text.trim()).equal('The Bronx');
+    });
+    contractAboutPreview.buyerAddress().town().invoke('text').then((text) => {
+      expect(text.trim()).equal('New York');
+    });
+    contractAboutPreview.buyerAddress().postcode().invoke('text').then((text) => {
+      expect(text.trim()).equal('no-idea');
     });
     contractAboutPreview.destinationOfGoodsAndServices().invoke('text').then((text) => {
       expect(text.trim()).equal('USA');
