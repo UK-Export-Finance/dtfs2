@@ -3,8 +3,6 @@
 {% macro render(params) %}
   {% if params.deal.details.status %}
 
-    <p>yo params.deal.details.status.. {{ params.deal.details.status}}</p>
-
     {% if params.user.roles.includes('maker') %}
 
         {% if ["Draft", "Further Maker's input required"].includes(params.deal.details.status) and params.dealFormsCompleted %}

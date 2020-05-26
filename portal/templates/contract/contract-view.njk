@@ -77,9 +77,9 @@
             <div class="govuk-grid-column-three-quarters">
               <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
 
-                {% if deal.confirmEligibility.status %}
-                  <span class="govuk-!-margin-left-6 box__header-inline-message">
-                    {{ statusTag.render(deal.confirmEligibility.status) }}
+                {% if deal.eligibility.status %}
+                  <span class="govuk-!-margin-left-6 box__header-inline-message" data-cy="eligibility-status">
+                    {{ statusTag.render(deal.eligibility.status) }}
                   </span>
                 {% endif %}
 

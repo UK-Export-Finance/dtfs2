@@ -1,7 +1,9 @@
-const { contract, eligibilityCriteria, defaults } = require('../../pages');
+const {
+  contract,
+  eligibilityCriteria,
+  defaults,
+} = require('../../pages');
 const { errorSummary } = require('../../partials');
-
-const relative = require('../../relativeURL');
 
 const criteriaCount = 8;
 
