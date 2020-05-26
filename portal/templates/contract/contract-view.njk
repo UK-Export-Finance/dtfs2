@@ -7,6 +7,7 @@
 
 {% import './components/abandon-deal-button.njk' as abandonButton %}
 {% import './components/abandon-deal-link.njk' as abandonLink %}
+{% import './components/please-complete-all-forms-text.njk' as pleaseCompleteAllFormsText %}
 {% import './components/can-proceed-text.njk' as canProceedText %}
 {% import './components/clone-deal-link.njk' as cloneLink %}
 {% import './components/edit-deal-name-link.njk' as editDealNameLink %}
@@ -19,7 +20,7 @@
 
 {% block content %}
 
-  {% set componentData = {user: user, deal: deal} %}
+  {% set componentData = {user: user, deal: deal, dealFormsCompleted: dealFormsCompleted} %}
 
   <div class="contract-container">
 
@@ -285,6 +286,7 @@
 
         </div>
 
+        {{ pleaseCompleteAllFormsText.render(componentData)}}
         {{ canProceedText.render(componentData)}}
         {{ reviewLink.render(componentData)}}
         {{ proceedToReviewButton.render(componentData)}}
