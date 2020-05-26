@@ -18,6 +18,7 @@ const page = {
   cloneDealLink: () => cy.get('[data-cy="clone-deal-link"]'),
   addBondButton: () => cy.get('[data-cy="button-add-bond"]'),
 
+  pleaseCompleteAllForms: () => cy.get('[data-cy="pleaseCompleteAllForms"]'),
   canProceed: () => cy.get('[data-cy="canProceed"]'),
   reviewEligibilityChecklistForm: () => cy.get('[data-cy="reviewEligibilityChecklistForm"]'),
   cannotProceed: () => cy.get('[data-cy="cannotProceed"]'),

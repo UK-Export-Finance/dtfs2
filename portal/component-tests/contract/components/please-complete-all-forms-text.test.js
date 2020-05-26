@@ -17,7 +17,7 @@ describe(component, () => {
 
       for (const deal of deals) {
         const wrapper = render({ user, deal, dealFormsCompleted });
-        wrapper.expectText('[data-cy="canProceed"]').toRead('Please complete all form sections in order to submit your Supply Contract.');
+        wrapper.expectText('[data-cy="pleaseCompleteAllForms"]').toRead('Please complete all form sections in order to submit your Supply Contract.');
       }
     });
 
@@ -38,7 +38,7 @@ describe(component, () => {
 
       for (const deal of deals) {
         const wrapper = render({ user, deal, dealFormsCompleted });
-        wrapper.expectText('[data-cy="canProceed"]').notToExist();
+        wrapper.expectText('[data-cy="pleaseCompleteAllForms"]').notToExist();
       }
     });
   });
