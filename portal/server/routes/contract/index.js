@@ -9,39 +9,11 @@ import {
   requestParams,
   errorHref,
   postToApi,
+  dealFormsCompleted,
 } from '../../helpers';
 
 const router = express.Router();
 
-
-const allBondsCompleted = (bonds) => {
-  const incompleteBonds = bonds.filter((b) => b.status !== 'Completed');
-  if (incompleteBonds.length > 0) {
-    return false;
-  }
-  return true;
-};
-
-const dealFormsCompleted = (deal) => {
-  const {
-    eligibility,
-    bondTransactions,
-  } = deal;
-
-  // if (submissionDetails === 'Completed'
-  //     && eligibility.status === 'Completed'
-  //     && allBondsCompleted(bondTransactions.items)
-  //     && allLoansCompleted(loanTransactions.items)) {
-  //   return true;
-  // }
-
-  if (eligibility.status === 'Completed'
-      && allBondsCompleted(bondTransactions.items)) {
-    return true;
-  }
-
-  return false;
-};
 
 router.get('/contract/:_id', async (req, res) => {
   const { _id, userToken } = requestParams(req);

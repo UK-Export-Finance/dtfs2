@@ -1,3 +1,4 @@
+import dealFormsCompleted from './dealFormsCompleted';
 import getApiData from './getApiData';
 import requestParams from './requestParams';
 import getFlashSuccessMessage from './getFlashSuccessMessage';
@@ -12,6 +13,7 @@ import mapIndustrySectors from './mapIndustrySectors';
 import pageSpecificValidationErrors from './pageSpecificValidationErrors';
 
 export {
+  dealFormsCompleted,
   getApiData,
   requestParams,
   getFlashSuccessMessage,
