@@ -1,7 +1,7 @@
 {% macro render(params) %}
   {% if params.deal.details.status %}
     {% if params.user.roles.includes('maker') %}
-        {% if params.deal.details.status === 'Draft' and not params.dealFormsCompleted %}
+        {% if ["Draft", "Further Maker's input required"].includes(params.deal.details.status) and not params.dealFormsCompleted %}
           <p data-cy="pleaseCompleteAllForms" class="govuk-body">Please complete all form sections in order to submit your Supply Contract.</p>
         {% endif %}
     {% endif %}
