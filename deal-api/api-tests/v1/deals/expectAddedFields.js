@@ -3,7 +3,7 @@ const { expectMongoId } = require('../../expectMongoIds');
 const expectAddedFields = (obj) => {
   const expectation = expectMongoId({
     eligibility: {
-      status: 'Initial',
+      status: 'Incomplete',
       criteria: expect.any(Array),
     },
     submissionDetails: {
