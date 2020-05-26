@@ -2,6 +2,8 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
+{% block pageTitle %}Mandatory criteria{% endblock %}
+
 {% block content %}
 
   {% if validationErrors.count %}

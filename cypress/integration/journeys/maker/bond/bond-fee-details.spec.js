@@ -31,12 +31,13 @@ context('Bond Fee Details', () => {
     });
     cy.deleteDeals(user);
     cy.insertOneDeal(MOCK_DEAL, user)
-      .then( insertedDeal => deal=insertedDeal );
+      .then((insertedDeal) => deal = insertedDeal);
   });
 
   describe('when submitting an empty form and navigating back to `Bond Fee Details` page', () => {
     it('should display validation errors for all required fields', () => {
       goToBondFeeDetailsPage(deal);
+      cy.title().should('eq', `Bond Fee Details${pages.defaults.pageTitleAppend}`);
 
       pages.bondFeeDetails.submit().click();
 

@@ -40,4 +40,4 @@ context('Create deal', () => {
     // confirm that we're on the newly created deal '/contract/XYZ'
     cy.url().should('include', '/contract/');
   });
-})
+});

@@ -35,6 +35,7 @@ router.get('/contract/:_id/eligibility/criteria', async (req, res) => {
       countries: formatCountriesForGDSComponent(countries, deal.eligibility.agentCountry),
       eligibility: deal.eligibility,
       validationErrors,
+      bankSupplyContractName: deal.details.bankSupplyContractName,
     });
 });
 
@@ -64,6 +65,7 @@ router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
     criteriaStatus: updatedDeal.eligibility.status,
     eligibility: updatedDeal.eligibility,
     validationErrors,
+    bankSupplyContractName: updatedDeal.details.bankSupplyContractName,
   });
 });
 
@@ -83,16 +85,21 @@ router.post('/contract/:_id/eligibility/criteria/save-go-back', async (req, res)
 router.get('/contract/:_id/eligibility/supporting-documentation', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  const { eligibility, dealFiles = {} } = await getApiData(
+  const deal = await getApiData(
     api.contract(_id, userToken),
     res,
   );
+  const { eligibility, dealFiles = {} } = deal;
 
   const validationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
 
   return res.render('eligibility/eligibility-supporting-documentation.njk',
     {
-      _id, dealFiles, eligibility, validationErrors,
+      _id,
+      dealFiles,
+      eligibility,
+      validationErrors,
+      bankSupplyContractName: deal.details.bankSupplyContractName,
     });
 });
 
@@ -114,6 +121,7 @@ router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(),
     eligibility,
     dealFiles,
     validationErrors,
+    bankSupplyContractName: updatedDeal.details.bankSupplyContractName,
   });
 });
 
@@ -121,10 +129,12 @@ router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', 
   const { _id, userToken } = requestParams(req);
   const { body, files } = req;
 
-  const { eligibility, dealFiles } = await getApiData(
+  const deal = await getApiData(
     api.updateEligibilityDocumentation(_id, body, files, userToken),
     res,
   );
+
+  const { eligibility, dealFiles } = deal;
 
   if (dealFiles && dealFiles.validationErrors && dealFiles.validationErrors.uploadErrorCount) {
     const validationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
@@ -134,6 +144,7 @@ router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', 
       eligibility,
       dealFiles,
       validationErrors,
+      bankSupplyContractName: deal.details.bankSupplyContractName,
     });
   }
 
@@ -145,7 +156,7 @@ router.get('/contract/:_id/eligibility/preview', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
   return res.render('eligibility/eligibility-preview.njk', {
-    contract: await getApiData(
+    deal: await getApiData(
       api.contract(_id, userToken),
       res,
     ),

@@ -1,4 +1,4 @@
-const { contract, eligibilityCriteria } = require('../../pages');
+const { contract, eligibilityCriteria, defaults } = require('../../pages');
 const { errorSummary } = require('../../partials');
 
 const relative = require('../../relativeURL');
@@ -25,6 +25,7 @@ context('Eligibility Criteria', () => {
 
   it('The eligibility criteria page is displayed', () => {
     cy.url().should('include', '/eligibility/criteria');
+    cy.title().should('eq', `Eligibility Criteria - someDealName${defaults.pageTitleAppend}`);
   });
 
   it('should display the correct number of eligibility criteria', () => {

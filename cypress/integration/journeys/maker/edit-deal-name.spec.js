@@ -1,19 +1,19 @@
-const {contract, editDealName} = require('../../pages');
+const { contract, editDealName, defaults } = require('../../pages');
 const relative = require('../../relativeURL');
 
-const user = {username: 'MAKER', password: 'MAKER'};
+const user = { username: 'MAKER', password: 'MAKER' };
 
 context('Edit deal name', () => {
   let deal;
 
-  let dummyDeal = {
+  const dummyDeal = {
     details: {
       bankSupplyContractID: 'abc/1/def',
-      bankSupplyContractName: 'Tibettan submarine acquisition scheme'
-    }
+      bankSupplyContractName: 'Tibettan submarine acquisition scheme',
+    },
   };
 
-  beforeEach( () => {
+  beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
       console.log(err.stack);
@@ -21,10 +21,10 @@ context('Edit deal name', () => {
     });
   });
 
-  before( () => {
+  before(() => {
     cy.deleteDeals(user);
     cy.insertOneDeal(dummyDeal, user)
-      .then( insertedDeal => deal=insertedDeal );
+      .then((insertedDeal) => deal = insertedDeal);
   });
 
   it('rejects an empty field', () => {
@@ -32,6 +32,7 @@ context('Edit deal name', () => {
     contract.visit(deal);
     contract.editDealName().click();
 
+    cy.title().should('eq', `Change name - ${deal.details.bankSupplyContractName}${defaults.pageTitleAppend}`);
     editDealName.bankSupplyContractName().should('have.value', deal.details.bankSupplyContractName);
     editDealName.bankSupplyContractName().type('{selectall}{backspace}');
     editDealName.submit().click();
@@ -51,8 +52,7 @@ context('Edit deal name', () => {
     editDealName.submit().click();
 
     contract.bankSupplyContractName().invoke('text').then((text) => {
-      expect(text.trim()).equal('asdfasfasf')
+      expect(text.trim()).equal('asdfasfasf');
     });
   });
-
 });

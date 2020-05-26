@@ -2,6 +2,8 @@
 {% import '_macros/contract-details.njk' as contractDetails %}
 {% import '_macros/contract-tabs.njk' as contractTabs %}
 
+{% block pageTitle %}Comments - {{ deal.details.bankSupplyContractName }}{% endblock %}
+
 {% block content %}
 
   <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ supplyContractName }}</span></h1>

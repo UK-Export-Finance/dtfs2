@@ -5,6 +5,8 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 
+{% block pageTitle %}Buyer information - {{ deal.details.bankSupplyContractName }}{% endblock %}
+
 {% block content %}
 
   {{ aboutSupplyContract.nav(

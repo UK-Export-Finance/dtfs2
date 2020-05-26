@@ -6,6 +6,8 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% import './_macros/bond-nav.njk' as bondNav %}
 
+{% block pageTitle %}Bond Financial Details{% endblock %}
+
 {% block content %}
 
   {% set showAdditionalFieldsByDefault = bond.transactionCurrencySameAsSupplyContractCurrency === "false" %}

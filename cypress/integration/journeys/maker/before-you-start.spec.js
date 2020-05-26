@@ -18,13 +18,14 @@ context('Red Line eligibility checking', () => {
       pages.beforeYouStart.submit().click();
 
       cy.url().should('eq', relative('/before-you-start'));
+      cy.title().should('eq', `Mandatory criteria${pages.defaults.pageTitleAppend}`);
 
       partials.errorSummary.errorSummaryLinks().should('have.length', 1);
     });
   });
 
   it('A deal that fails red-line checks is rejected and links back to home page', () => {
-    cy.createNewSubmission({username: 'MAKER', password: 'MAKER'});
+    cy.createNewSubmission({ username: 'MAKER', password: 'MAKER' });
 
     pages.beforeYouStart.false().click();
     pages.beforeYouStart.submit().click();
@@ -36,7 +37,7 @@ context('Red Line eligibility checking', () => {
   });
 
   it('the Unable To Proceed page links back to the home page', () => {
-    cy.createNewSubmission({username: 'MAKER', password: 'MAKER'});
+    cy.createNewSubmission({ username: 'MAKER', password: 'MAKER' });
 
     pages.beforeYouStart.false().click();
     pages.beforeYouStart.submit().click();
@@ -46,12 +47,11 @@ context('Red Line eligibility checking', () => {
   });
 
   it('A deal that passes red-line checks can progress to enter supply detaile', () => {
-    cy.createNewSubmission({username: 'MAKER', password: 'MAKER'});
+    cy.createNewSubmission({ username: 'MAKER', password: 'MAKER' });
 
     pages.beforeYouStart.true().click();
     pages.beforeYouStart.submit().click();
 
     cy.url().should('eq', relative('/before-you-start/bank-deal'));
   });
-
-})
+});

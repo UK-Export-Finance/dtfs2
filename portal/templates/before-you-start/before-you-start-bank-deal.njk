@@ -2,6 +2,8 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
+{% block pageTitle %}Before you start{% endblock %}
+
 {% block content %}
 
   {% if validationErrors.count %}

@@ -15,6 +15,8 @@
 {% import './components/return-to-maker-button.njk' as returnToMakerButton %}
 {% import './components/review-eligibility-checklist-link.njk' as reviewLink %}
 
+{% block pageTitle %}{{ deal.details.bankSupplyContractName }}{% endblock %}
+
 {% block content %}
 
   {% set componentData = {user: user, deal: deal} %}

@@ -26,7 +26,7 @@ const TOTAL_FORM_FIELDS = 3;
 
 context('Clone a deal', () => {
   let deal;
-  beforeEach( () => {
+  beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
       console.log(err.stack);
@@ -35,19 +35,18 @@ context('Clone a deal', () => {
 
     cy.deleteDeals(user);
     cy.insertOneDeal(MOCK_DEAL, user)
-      .then( insertedDeal => deal=insertedDeal );
+      .then((insertedDeal) => deal = insertedDeal);
   });
 
   describe('When a user creates a deal and clicks `clone deal`', () => {
     it('should progress to the clone page with inputs prepopulated', () => {
-
       cy.loginGoToDealPage(user, deal);
       goToCloneDealPage();
 
+      cy.title().should('eq', `Clone Deal - ${deal.details.bankSupplyContractName}${pages.defaults.pageTitleAppend}`);
       // confirm that inputs are populated with the deal's initial bankSupplyContractID/bankSupplyContractName
       pages.cloneDeal.bankSupplyContractIDInput().should('have.value', MOCK_DEAL.details.bankSupplyContractID);
       pages.cloneDeal.bankSupplyContractNameInput().should('have.value', MOCK_DEAL.details.bankSupplyContractName);
-
     });
   });
 

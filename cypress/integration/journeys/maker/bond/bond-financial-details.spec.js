@@ -35,7 +35,7 @@ context('Bond Financial Details', () => {
     });
     cy.deleteDeals(user);
     cy.insertOneDeal(MOCK_DEAL, user)
-      .then( insertedDeal => deal=insertedDeal );
+      .then((insertedDeal) => deal = insertedDeal);
   });
 
   describe('after submitting one form field and navigating back to `Bond Financial Details` page', () => {
@@ -45,6 +45,7 @@ context('Bond Financial Details', () => {
       pages.contract.addBondButton().click();
       partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
       cy.url().should('include', '/financial-details');
+      cy.title().should('eq', `Bond Financial Details${pages.defaults.pageTitleAppend}`);
 
       pages.bondFinancialDetails.minimumRiskMarginFeeInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
       pages.bondFinancialDetails.submit().click();

@@ -24,7 +24,7 @@ context('Add a Bond to a Deal', () => {
     });
     cy.deleteDeals(user);
     cy.insertOneDeal(MOCK_DEAL, user)
-      .then( insertedDeal => deal=insertedDeal );
+      .then((insertedDeal) => deal = insertedDeal);
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Bond to the deal', () => {
@@ -60,7 +60,7 @@ context('Add a Bond to a Deal', () => {
       cy.url().should('include', '/contract');
       cy.url().should('include', '/bond/');
       cy.url().should('include', '/preview');
-
+      cy.title().should('eq', `Bond Preview${pages.defaults.pageTitleAppend}`);
       const TOTAL_REQUIRED_FORM_FIELDS = 8;
       partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
     });
