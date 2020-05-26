@@ -6,15 +6,17 @@ describe(component, () => {
 
   describe("when viewed by a maker", () => {
 
-    it("should display for deals in status=Draft and status=Further Maker's input required", () =>{
+    it("should display when deal status=Draft and status=Further Maker's input required and dealFormsCompleted flag is true", () =>{
       const user = {roles: ['maker']};
       const deals = [
         {_id: 1, details:{status:"Draft"}},
         {_id: 2, details:{status:"Further Maker's input required"}},
       ];
 
+      const dealFormsCompleted = true;
+
       for (const deal of deals) {
-        const wrapper = render({user, deal});
+        const wrapper = render({ user, deal, dealFormsCompleted });
         wrapper.expectText('[data-cy="canProceed"]').toRead(`You may now proceed to submit an Automatic Inclusion Notice.`);
       }
     });
