@@ -13,6 +13,19 @@ module.exports = [
       status: 'Incomplete',
       'supplier-name': 'Supplier name 1',
     },
+    eligibility: {
+      status: 'Completed',
+      criteria: [
+        { id: 11, answer: true },
+        { id: 12, answer: true },
+        { id: 13, answer: true },
+        { id: 14, answer: true },
+        { id: 15, answer: true },
+        { id: 16, answer: true },
+        { id: 17, answer: true },
+        { id: 18, answer: true },
+      ],
+    },
   }, {
     details: {
       bankSupplyContractID: 'abc/2/def',
@@ -43,6 +56,19 @@ module.exports = [
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
+    eligibility: {
+      status: 'Completed',
+      criteria: [
+        { id: 11, answer: true },
+        { id: 12, answer: true },
+        { id: 13, answer: true },
+        { id: 14, answer: true },
+        { id: 15, answer: true },
+        { id: 16, answer: true },
+        { id: 17, answer: true },
+        { id: 18, answer: true },
+      ],
+    },
   }, {
     details: {
       bankSupplyContractID: 'abc/5/def',
@@ -71,6 +97,19 @@ module.exports = [
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
+    eligibility: {
+      status: 'Completed',
+      criteria: [
+        { id: 11, answer: true },
+        { id: 12, answer: true },
+        { id: 13, answer: true },
+        { id: 14, answer: true },
+        { id: 15, answer: true },
+        { id: 16, answer: true },
+        { id: 17, answer: true },
+        { id: 18, answer: true },
+      ],
+    },
   }, {
     details: {
       bankSupplyContractID: 'abc/8/def',
@@ -79,6 +118,19 @@ module.exports = [
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
+    },
+    eligibility: {
+      status: 'Completed',
+      criteria: [
+        { id: 11, answer: true },
+        { id: 12, answer: true },
+        { id: 13, answer: true },
+        { id: 14, answer: true },
+        { id: 15, answer: true },
+        { id: 16, answer: true },
+        { id: 17, answer: true },
+        { id: 18, answer: true },
+      ],
     },
   }, {
     details: {

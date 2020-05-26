@@ -8,7 +8,7 @@ const maker1 = { username: 'MAKER', password: 'MAKER' };
 const twentyOneDeals = require('./dashboard/twentyOneDeals');
 
 
-context('A maker selects to abandon a contract from the view-contract page', () => {
+context('A maker selects to submit a contract for review from the view-contract page', () => {
   let deal;
 
   beforeEach(() => {
