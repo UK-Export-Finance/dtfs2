@@ -1,5 +1,8 @@
-const {contract, contractAboutSupplier, contractAboutPreview} = require('../../../pages');
-const maker1 = {username: 'MAKER', password: 'MAKER'};
+const {
+  contract, contractAboutSupplier, contractAboutPreview, defaults,
+} = require('../../../pages');
+
+const maker1 = { username: 'MAKER', password: 'MAKER' };
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('../dashboard/twentyOneDeals');
@@ -8,7 +11,7 @@ const twentyOneDeals = require('../dashboard/twentyOneDeals');
 context('about-supply-contract', () => {
   let deal;
 
-  beforeEach( () => {
+  beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
       console.log(err.stack);
@@ -16,15 +19,15 @@ context('about-supply-contract', () => {
     });
   });
 
-  before( () => {
+  before(() => {
     const aDealWith_AboutSupplyContract_InStatus = (status) => {
       const candidates = twentyOneDeals
-        .filter( deal=> (deal.submissionDetails && status === deal.submissionDetails.status) )
-        .filter( deal=> (deal.details && deal.details.status === 'Draft'));
+        .filter((deal) => (deal.submissionDetails && status === deal.submissionDetails.status))
+        .filter((deal) => (deal.details && deal.details.status === 'Draft'));
 
       const deal = candidates[0];
       if (!deal) {
-        throw new Error("no suitable test data found");
+        throw new Error('no suitable test data found');
       } else {
         return deal;
       }
@@ -32,11 +35,11 @@ context('about-supply-contract', () => {
 
     cy.deleteDeals(maker1);
     cy.insertOneDeal(aDealWith_AboutSupplyContract_InStatus('Incomplete'), { ...maker1 })
-      .then( insertedDeal =>  deal=insertedDeal );
+      .then((insertedDeal) => deal = insertedDeal);
   });
 
   it('A maker picks up a deal in status=Draft, and fills in the about-supply-contract section, using the companies house search.', () => {
-    cy.login({...maker1});
+    cy.login({ ...maker1 });
 
     // go the long way for the first test- actually clicking via the contract page to prove the link..
     contract.visit(deal);
@@ -45,6 +48,9 @@ context('about-supply-contract', () => {
       expect(text.trim()).equal('Incomplete');
     });
     contract.aboutSupplierDetailsLink().click();
+
+    cy.title().should('eq', `Supplier information - ${deal.details.bankSupplyContractName}${defaults.pageTitleAppend}`);
+
     //---
     // check initial page state..
     //---
@@ -60,27 +66,27 @@ context('about-supply-contract', () => {
     // use companies-house lookup
     //---
     contractAboutSupplier.supplierType().select('Exporter');
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('08547313'); //TODO better test company?
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('08547313'); // TODO better test company?
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     // // the search should populate the supplier address fields
     // contractAboutSupplier.supplierAddressCountry().should('?', '?'); //TODO country; mapping company house "england"-> portal "United Kingdom"
-    contractAboutSupplier.supplierName().should('not.have.value', ''); //TODO if we had 'proper' test company we might assert real data
-    contractAboutSupplier.supplierAddress().line1().should('not.have.value', ''); //TODO
-    contractAboutSupplier.supplierAddress().line2().should('not.have.value', ''); //TODO
-    contractAboutSupplier.supplierAddress().town().should('not.have.value', ''); //TODO
-    contractAboutSupplier.supplierAddress().postcode().should('not.have.value', ''); //TODO
-    contractAboutSupplier.supplierAddress().country().should('not.have.value', ''); //TODO
+    contractAboutSupplier.supplierName().should('not.have.value', ''); // TODO if we had 'proper' test company we might assert real data
+    contractAboutSupplier.supplierAddress().line1().should('not.have.value', ''); // TODO
+    contractAboutSupplier.supplierAddress().line2().should('not.have.value', ''); // TODO
+    contractAboutSupplier.supplierAddress().town().should('not.have.value', ''); // TODO
+    contractAboutSupplier.supplierAddress().postcode().should('not.have.value', ''); // TODO
+    contractAboutSupplier.supplierAddress().country().should('not.have.value', ''); // TODO
 
     //---
     // fill in the simplest version of the form so we can submit it and save it..
     //---
     contractAboutSupplier.supplierCorrespondenceAddressSame().click();
-    contractAboutSupplier.industrySector().select('1009'); //Information and communication
+    contractAboutSupplier.industrySector().select('1009'); // Information and communication
     contractAboutSupplier.industryClass().should('have.value', '');
-    contractAboutSupplier.industryClass().select('62012'); //Business and domestic software development
+    contractAboutSupplier.industryClass().select('62012'); // Business and domestic software development
     contractAboutSupplier.smeTypeMicro().click();
-    contractAboutSupplier.supplyContractDescription().type('Typing in tests takes time.')
+    contractAboutSupplier.supplyContractDescription().type('Typing in tests takes time.');
     contractAboutSupplier.notLegallyDistinct().click();
 
     contractAboutSupplier.saveAndGoBack().click();
@@ -102,23 +108,23 @@ context('about-supply-contract', () => {
     // // the search should populate the supplier address fields
     // contractAboutPreview.supplierAddressCountry().should('?', '?'); //TODO can never be empty, so what to validate?
     contractAboutPreview.supplierName().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
     });
     contractAboutPreview.supplierAddress().line1().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
     });
     contractAboutPreview.supplierAddress().line2().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
     });
     contractAboutPreview.supplierAddress().town().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
     });
     contractAboutPreview.supplierAddress().postcode().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
     });
 
     contractAboutPreview.supplierAddress().country().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');//TODO if we had 'proper' test company we might assert real data
+      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
     });
 
     contractAboutPreview.supplierCorrespondenceAddressDifferent().invoke('text').then((text) => {
@@ -139,7 +145,5 @@ context('about-supply-contract', () => {
     contractAboutPreview.legallyDistinct().invoke('text').then((text) => {
       expect(text.trim()).equal('No');
     });
-
   });
-
 });

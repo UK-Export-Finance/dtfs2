@@ -3,6 +3,8 @@
 {% import './_macros/bond-nav.njk' as bondNav %}
 {% import './_macros/bond-submission-details.njk' as bondSubmissionDetails %}
 
+{% block pageTitle %}Bond Preview{% endblock %}
+
 {% block content %}
 
   {% if validationErrors.count %}

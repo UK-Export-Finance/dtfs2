@@ -7,6 +7,8 @@
 {% import '_macros/submission-details.njk' as submissionDetails %}
 {% import 'bond/_macros/bond-submission-details.njk' as bondSubmissionDetails %}
 
+{% block pageTitle %}Preview - {{ contract.details.bankSupplyContractName }}{% endblock %}
+
 {% block content %}
 
   <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ bankSupplyContractName }}</span></h1>

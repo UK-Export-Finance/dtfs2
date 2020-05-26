@@ -5,6 +5,8 @@
 {% import './_macros/loan-nav.njk' as loanNav %}
 {% import '_macros/date-fields.njk' as dateFields %}
 
+{% block pageTitle %}Loan Financial Details{% endblock %}
+
 {% block content %}
 
   {% set showAdditionalFieldsByDefault = loan.currencySameAsSupplyContractCurrency === "false" %}

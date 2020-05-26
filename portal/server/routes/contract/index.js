@@ -102,10 +102,12 @@ router.get('/contract/:_id/ready-for-review', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
   return res.render('contract/contract-ready-for-review.njk',
-    await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ));
+    {
+      deal: await getApiData(
+        api.contract(_id, userToken),
+        res,
+      ),
+    });
 });
 
 router.post('/contract/:_id/ready-for-review', async (req, res) => {
@@ -127,7 +129,7 @@ router.post('/contract/:_id/ready-for-review', async (req, res) => {
 
   if (validationErrors.count) {
     return res.status(400).render('contract/contract-ready-for-review.njk', {
-      contract: await getApiData(
+      deal: await getApiData(
         api.contract(_id, userToken),
         res,
       ),

@@ -1,5 +1,8 @@
-const {contract, contractAboutSupplier, contractAboutBuyer, contractAboutPreview} = require('../../../pages');
-const maker1 = {username: 'MAKER', password: 'MAKER'};
+const {
+  contract, contractAboutSupplier, contractAboutBuyer, contractAboutPreview, defaults,
+} = require('../../../pages');
+
+const maker1 = { username: 'MAKER', password: 'MAKER' };
 
 // test data we want to set up + work with..
 const aDealWithAboutSupplyContractComplete = require('./dealWithFirstPageComplete.json');
@@ -7,7 +10,7 @@ const aDealWithAboutSupplyContractComplete = require('./dealWithFirstPageComplet
 context('about-supply-contract', () => {
   let deal;
 
-  beforeEach( () => {
+  beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
       console.log(err.stack);
@@ -15,18 +18,20 @@ context('about-supply-contract', () => {
     });
   });
 
-  before( () => {
+  before(() => {
     cy.insertOneDeal(aDealWithAboutSupplyContractComplete, { ...maker1 })
-      .then( insertedDeal =>  deal=insertedDeal );
+      .then((insertedDeal) => deal = insertedDeal);
   });
 
   it('A maker picks up a deal with the supplier details completed, and fills in the about-buyer-contract section, using the companies house search.', () => {
-    cy.login({...maker1});
+    cy.login({ ...maker1 });
 
     // navigate to the about-buyer page
     contract.visit(deal);
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
+
+    cy.title().should('eq', `Buyer information - ${deal.details.bankSupplyContractName}${defaults.pageTitleAppend}`);
 
     // fill in the fields
     contractAboutBuyer.buyerName().type('Huggy Bear');
@@ -66,7 +71,5 @@ context('about-supply-contract', () => {
     contractAboutPreview.destinationOfGoodsAndServices().invoke('text').then((text) => {
       expect(text.trim()).equal('USA');
     });
-
   });
-
 });

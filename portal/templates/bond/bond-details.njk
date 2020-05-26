@@ -6,6 +6,8 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% import './_macros/bond-nav.njk' as bondNav %}
 
+{% block pageTitle %}Bond Details{% endblock %}
+
 {% block content %}
 
   {% set showUnissuedFormFieldsByDefault = bond.bondStage === "Unissued" %}

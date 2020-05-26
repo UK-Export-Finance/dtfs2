@@ -1,8 +1,8 @@
-const {contract, contractDelete} = require('../../pages');
-const {errorSummary, successMessage} = require('../../partials');
+const { contract, contractDelete, defaults } = require('../../pages');
+const { errorSummary, successMessage } = require('../../partials');
 const relative = require('../../relativeURL');
 
-const maker1 = {username: 'MAKER', password: 'MAKER'};
+const maker1 = { username: 'MAKER', password: 'MAKER' };
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('./dashboard/twentyOneDeals');
@@ -10,7 +10,7 @@ const twentyOneDeals = require('./dashboard/twentyOneDeals');
 context('A maker selects to abandon a contract from the view-contract page', () => {
   let deal;
 
-  beforeEach( () => {
+  beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
       console.log(err.stack);
@@ -18,21 +18,21 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     });
   });
 
-  before( () => {
-    const aDealInStatus = (status) => {
-      return twentyOneDeals.filter( deal=>status === deal.details.status)[0];
-    };
+  before(() => {
+    const aDealInStatus = (status) => twentyOneDeals.filter((deal) => status === deal.details.status)[0];
 
     cy.deleteDeals(maker1);
     cy.insertOneDeal(aDealInStatus('Draft'), { ...maker1 })
-      .then( insertedDeal => deal=insertedDeal );
+      .then((insertedDeal) => deal = insertedDeal);
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {
     // log in, visit a deal, select abandon
-    cy.login({...maker1});
+    cy.login({ ...maker1 });
     contract.visit(deal);
     contract.abandonButton().click();
+
+    cy.title().should('eq', `Abandon Deal${defaults.pageTitleAppend}`);
 
     // cancel
     contractDelete.cancel().click();
@@ -43,7 +43,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
 
   it('The abandon button generates an error if no comment has been entered.', () => {
     // log in, visit a deal, select abandon
-    cy.login({...maker1});
+    cy.login({ ...maker1 });
     contract.visit(deal);
     contract.abandonButton().click();
 
@@ -58,7 +58,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
 
   it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard.', () => {
     // log in, visit a deal, select abandon
-    cy.login({...maker1});
+    cy.login({ ...maker1 });
     contract.visit(deal);
     contract.abandonButton().click();
 
@@ -67,7 +67,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     contractDelete.abandon().click();
 
     // expect to land on the /dashboard page with a success message
-    cy.url().should('include', `/dashboard`)
+    cy.url().should('include', '/dashboard');
     successMessage.successMessageListItem().invoke('text').then((text) => {
       expect(text.trim()).to.match(/Supply Contract abandoned./);
     });
@@ -81,7 +81,5 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     contract.previousStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Draft');
     });
-
   });
-
 });

@@ -1,6 +1,8 @@
 {% extends "index.njk" %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
+{% block pageTitle %}Change name - {{ contract.details.bankSupplyContractName }}{% endblock %}
+
 {% block content %}
 
   <h1 class="govuk-heading-l">Change name of Supply Contract</h1>

@@ -4,12 +4,14 @@
 {% import '_macros/eligibility-criteria-answers.njk' as eligibilityCriteria %}
 {% import '_macros/eligibility-documentation-preview.njk' as eligibilityDocumentation %}
 
+{% block pageTitle %}Eligibility Criteria Preview - {{ deal.details.bankSupplyContractName }}{% endblock %}
+
 {% block content %}
 
   {{ confirmEligibility.nav(
-    completedStatus = contract.eligibility.completedStatus,
+    completedStatus = deal.eligibility.completedStatus,
     current = 'preview',
-    contractId = contract._id
+    contractId = deal._id
   )}}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8">
@@ -18,12 +20,12 @@
 
   {{ mandatoryCriteriaBox.success(mandatoryCriteria)}}
 
-  {{ eligibilityCriteria.answers(contract.eligibility.criteria)}}
+  {{ eligibilityCriteria.answers(deal.eligibility.criteria)}}
 
-  {{ eligibilityDocumentation.answers(contract.dealFiles, fileshareURL)}}
+  {{ eligibilityDocumentation.answers(deal.dealFiles, fileshareURL)}}
 
   <hr class="govuk-section-break govuk-!-margin-bottom-8">
 
-  <p class="govuk-body"><a href="/contract/{{ contract._id }}" class="govuk-link">Save and go back to deal</a></p>
+  <p class="govuk-body"><a href="/contract/{{ deal._id }}" class="govuk-link">Save and go back to deal</a></p>
 
 {% endblock %}

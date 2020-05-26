@@ -24,7 +24,7 @@ context('Bond Details', () => {
     });
     cy.deleteDeals(user);
     cy.insertOneDeal(MOCK_DEAL, user)
-      .then( insertedDeal => deal=insertedDeal );
+      .then((insertedDeal) => deal = insertedDeal);
   });
 
   describe('after submitting one form field and navigating back to `Bond Details` page', () => {
@@ -32,6 +32,8 @@ context('Bond Details', () => {
       cy.loginGoToDealPage(user, deal);
 
       pages.contract.addBondButton().click();
+
+      cy.title().should('eq', `Bond Details${pages.defaults.pageTitleAppend}`);
 
       pages.bondDetails.bondIssuerInput().type(BOND_FORM_VALUES.DETAILS.bondIssuer);
       pages.bondDetails.submit().click();

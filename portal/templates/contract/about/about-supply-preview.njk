@@ -3,6 +3,8 @@
 {% import './components/about-supply-contract-nav.njk' as aboutSupplyContract %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
+{% block pageTitle %}Preview - {{ deal.details.bankSupplyContractName }}{% endblock %}
+
 {% block content %}
 
   {% if validationErrors.count %}

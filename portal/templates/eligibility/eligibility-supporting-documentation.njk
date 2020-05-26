@@ -5,6 +5,8 @@
 {% import '_macros/confirm-eligibility-nav.njk' as confirmEligibility %}
 {% import '_macros/eligibility-documentation-file-input.njk' as eligibilityDocumentationInput %}
 
+{% block pageTitle %}Eligibility Criteria Supporting Documentation - {{bankSupplyContractName }}{% endblock %}
+
 {% block content %}
 
   {% if validationErrors.count %}

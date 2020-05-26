@@ -2,8 +2,16 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{
+
 {% extends "index.njk" %}
+
+{% block pageTitle %}
+  {% if _id %}
+    Edit user {{ user.username }}
+  {% else %}
+    User create
+  {% endif %}
+{% endblock %}
 
 {% block content %}
 
