@@ -62,7 +62,7 @@
                       name="criterion-{{ criterion.id }}"
                       type="radio"
                       value="true"
-                      {% if eligibility.status !== "Initial" and criterion.answer %}checked{% endif %}
+                      {% if eligibility.status !== "Incomplete" and criterion.answer %}checked{% endif %}
                       {% if criterion.id == "11" %}onClick="onChangeRadioButton('criterion-group-additional-{{ criterion.id }}', false)"{% endif %}
                       data-cy="criteria-true"
                       data-id="criteria-{{ criterion.id }}-true"
@@ -78,7 +78,7 @@
                       name="criterion-{{ criterion.id }}"
                       type="radio"
                       value="false"
-                      {% if eligibility.status !== "Initial" and criterion.answer === false %}checked{% endif %}
+                      {% if eligibility.status !== "Incomplete" and criterion.answer === false %}checked{% endif %}
                       {% if criterion.id == "11" %}onClick="onChangeRadioButton('criterion-group-additional-{{ criterion.id }}', true)"{% endif %}
                       data-cy="criteria-false"
                       data-id="criteria-{{ criterion.id }}-false"

@@ -22,7 +22,7 @@
         }
     },
     "eligibility" : {
-        "status" : "Initial",
+        "status" : "Incomplete",
         "criteria" : [
             {
                 "id" : 11,
