@@ -1,5 +1,4 @@
 const assert = require('assert');
-const { ObjectId } = require('mongodb');
 const moment = require('moment');
 const $ = require('mongo-dot-notation');
 
@@ -9,6 +8,7 @@ const { getDealErrors } = require('../validation/deal');
 const { getCloneDealErrors } = require('../validation/clone-deal');
 
 const { isSuperUser, userHasAccessTo } = require('../users/checks');
+const { generateDealId } = require('../../utils/generateIds');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -67,15 +67,15 @@ const findPaginatedDeals = async (requestingUser, start = 0, pagesize = 20, filt
 };
 exports.findPaginatedDeals = findPaginatedDeals;
 
-const findOneDeal = async (id, callback) => {
+const findOneDeal = async (_id, callback) => {
   const collection = await db.getCollection('deals');
   if (callback) {
-    collection.findOne({ _id: new ObjectId(id) }, (err, result) => {
+    collection.findOne({ _id }, (err, result) => {
       assert.equal(err, null);
       callback(result);
     });
   }
-  return collection.findOne({ _id: new ObjectId(id) });
+  return collection.findOne({ _id });
 };
 exports.findOneDeal = findOneDeal;
 
@@ -84,7 +84,10 @@ const createDeal = async (req, res) => {
 
   const timestamp = moment().format('YYYY MM DD HH:mm:ss:SSS ZZ');
 
+  const dealId = await generateDealId();
+
   const newDeal = {
+    _id: dealId,
     ...DEFAULTS.DEALS,
     ...req.body,
     details: {
@@ -133,7 +136,7 @@ const updateDeal = async (req) => {
   const collection = await db.getCollection('deals');
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: { $eq: new ObjectId(req.params.id) } },
+    { _id: req.params.id },
     $.flatten(withoutId(req.body)),
     { returnOriginal: false },
   );
@@ -168,7 +171,7 @@ exports.delete = async (req, res) => {
         res.status(401).send();
       } else {
         const collection = await db.getCollection('deals');
-        const status = await collection.deleteOne({ _id: new ObjectId(req.params.id) });
+        const status = await collection.deleteOne({ _id: req.params.id });
         res.status(200).send(status);
       }
     }
@@ -176,7 +179,7 @@ exports.delete = async (req, res) => {
 };
 
 exports.clone = async (req, res) => {
-  await findOneDeal(req.params.id, (existingDeal) => {
+  await findOneDeal(req.params.id, async (existingDeal) => {
     if (!existingDeal) {
       return res.status(404).send();
     }
@@ -187,9 +190,11 @@ exports.clone = async (req, res) => {
       cloneTransactions,
     } = req.body;
 
+    const dealId = await generateDealId();
+
     const modifiedDeal = {
       ...existingDeal,
-      _id: new ObjectId(),
+      _id: dealId,
       details: {
         bankSupplyContractID,
         bankSupplyContractName,
