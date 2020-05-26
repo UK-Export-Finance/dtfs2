@@ -6,15 +6,17 @@ describe(component, () => {
 
   describe("when viewed by a maker", () => {
 
-    it("should be enabled for deals in status=Draft and status=Further Maker's input required", () =>{
+    it("should be enabled for deals in status=Draft and status=Further Maker's input required and when dealFormsCompleted flag is true", () =>{
       const user = {roles: ['maker']};
       const deals = [
         {_id: 1, details:{status:"Draft"}},
         {_id: 2, details:{status:"Further Maker's input required"}},
       ];
 
+      const dealFormsCompleted = true;
+
       for (const deal of deals) {
-        const wrapper = render({user, deal});
+        const wrapper = render({ user, deal, dealFormsCompleted });
         wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]')
           .toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
       }
@@ -31,6 +33,22 @@ describe(component, () => {
         const wrapper = render({user, deal});
         wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]')
           .notToExist();
+      }
+    });
+
+    it("should be disabled for deals in status=Draft and status=Further Maker's input required and when dealFormsCompleted flag is false", () =>{
+      const user = {roles: ['maker']};
+      const deals = [
+        { _id: 1, details: { status: "Draft" } },
+        { _id: 1, details: { status: "Further Maker's input required" } },
+      ];
+
+      const dealFormsCompleted = false;
+
+      for (const deal of deals) {
+        const wrapper = render({ user, deal, dealFormsCompleted});
+        wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]')
+          .toBeDisabled();
       }
     });
 
