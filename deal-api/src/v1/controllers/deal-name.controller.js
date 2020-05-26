@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const moment = require('moment');
 const { findOneDeal } = require('./deal.controller');
@@ -15,7 +14,7 @@ const updateName = async (collection, deal, to) => {
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: { $eq: new ObjectId(deal._id) } }, // eslint-disable-line no-underscore-dangle
+    { _id: deal._id }, // eslint-disable-line no-underscore-dangle
     $.flatten(update),
     { returnOriginal: false },
   );

@@ -341,6 +341,21 @@ const listUsers = async () => {
   return response.data.users;
 };
 
+const resetIdCounters = async (token) => {
+  const response = await axios({
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/counters/reset`,
+    data: {},
+  })
+    .then((response) => response.data)
+    .catch((err) => { console.log(`ERROR resetting id counters: ${err}`); });
+};
+
 module.exports = {
   createBank,
   createBondCurrency,
@@ -366,4 +381,5 @@ module.exports = {
   listMandatoryCriteria,
   listTransactions,
   listUsers,
+  resetIdCounters,
 };

@@ -125,6 +125,16 @@ describe('/v1/deals', () => {
       expect(body).toEqual(expectAddedFields(newDeal));
     });
 
+    it('creates incremental integer deal IDs', async () => {
+      const deal1 = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const deal2 = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const deal3 = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+
+      expect(parseInt(deal1.body._id).toString()).toEqual(deal1.body._id);
+      expect(deal2.body._id - deal1.body._id).toEqual(1);
+      expect(deal3.body._id - deal2.body._id).toEqual(1);
+    });
+
     describe('when required fields are missing', () => {
       it('returns 400 with validation errors', async () => {
         const postBody = {
