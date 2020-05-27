@@ -406,9 +406,7 @@ module.exports = () => {
         */
       }
 
-      return {
-        deal: js2xmlparser.parse('Deal', deal),
-      };
+      return js2xmlparser.parse('Deal', deal);
     },
 
   };

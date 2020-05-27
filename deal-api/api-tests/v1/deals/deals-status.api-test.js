@@ -405,6 +405,7 @@ describe('/v1/deals/:id/status', () => {
     });
 
     xit('creates type_a xml if deal successfully submitted', async () => {
+    it('creates type_a xml if deal successfully submitted', async () => {
       const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
       const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');

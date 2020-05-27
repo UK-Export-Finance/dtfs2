@@ -1,4 +1,9 @@
+const libxml = require('libxmljs');
+const fs = require('fs');
+const path = require('path');
+
 const typeABuilder = require('./type-a-defs/type-a-builder');
+
 const {
   eligibilityCriteriaHelper, convertCountryCodeToId, convertCurrencyCodeToId, businessRules, k2Map, dateHelpers,
 } = require('./helpers');
@@ -147,5 +152,31 @@ module.exports.generateTypeA = async (deal) => {
     // TODO - Add Loans
   }
 
-  return builder.build();
+  const typeAxml = builder.build();
+
+  // Validate XML against XSD schema
+  const typeAxsd = fs.readFileSync(path.resolve(__dirname, './type-a-defs/type-a.xsd'),
+    { encoding: 'utf8', flag: 'r' });
+
+  const parsedXml = libxml.parseXml(typeAxml);
+  const parsedXsd = libxml.parseXml(typeAxsd);
+
+  if (parsedXml.errors.length) {
+    return {
+      ...typeAxml,
+      errorCount: parsedXml.errors.length,
+    };
+  }
+
+  const isValidXml = parsedXml.validate(parsedXsd);
+
+  if (!isValidXml) {
+    console.log(parsedXml.validationErrors);
+    return {
+      ...typeAxml,
+      errorCount: parsedXml.validationErrors.length,
+    };
+  }
+
+  return typeAxml;
 };
