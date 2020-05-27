@@ -26,6 +26,72 @@ context('A maker selects to submit a contract for review from the view-contract 
       .then((insertedDeal) => deal = insertedDeal);
   });
 
+  describe('When a deal does NOT have Eligibility with `completed` status', () => {
+    let dealWithInCompleteEligibilityStatus;
+
+    beforeEach(() => {
+      dealWithInCompleteEligibilityStatus = twentyOneDeals.find((d) =>
+        (d.details.status === 'Draft' && d.eligibility && d.eligibility.status !== 'Completed'));
+
+      cy.insertOneDeal(dealWithInCompleteEligibilityStatus, { ...maker1 })
+        .then((insertedDeal) => dealWithInCompleteEligibilityStatus = insertedDeal);
+    });
+
+    it('User cannot proceed to submit the deal for review', () => {
+      cy.login({ ...maker1 });
+      contract.visit(dealWithInCompleteEligibilityStatus);
+      contract.proceedToReview().should('be.disabled');
+    });
+  });
+
+  describe('When a deal has Bonds with statuses thare are NOT `Completed`', () => {
+    let dealWithIncompleteBonds;
+
+    beforeEach(() => {
+      dealWithIncompleteBonds = twentyOneDeals.find((d) => {
+        if (d.details.status === 'Draft' &&
+          d.eligibility && d.eligibility.status === 'Completed' &&
+          d.bondTransactions && d.bondTransactions.items.find((b) => b.status !== 'Completed')) {
+          return d;
+        }
+        return null;
+      });
+
+      cy.insertOneDeal(dealWithIncompleteBonds, { ...maker1 })
+        .then((insertedDeal) => dealWithIncompleteBonds = insertedDeal);
+    });
+
+    it('User cannot proceed to submit the deal for review', () => {
+      cy.login({ ...maker1 });
+      contract.visit(dealWithIncompleteBonds);
+      contract.proceedToReview().should('be.disabled');
+    });
+  });
+
+  describe('when a deal has Eligibility and Bonds with `Completed` status', () => {
+    let dealWithCompleteEligibilityAndBonds;
+    beforeEach(() => {
+      dealWithCompleteEligibilityAndBonds = twentyOneDeals.find((d) =>
+        d.details.status === 'Draft' &&
+          d.eligibility && d.eligibility.status === 'Completed' &&
+          d.bondTransactions && d.bondTransactions.items.filter((b) => b.status !== 'Completed').length === 0);
+
+      cy.insertOneDeal(dealWithCompleteEligibilityAndBonds, { ...maker1 })
+        .then((insertedDeal) => dealWithCompleteEligibilityAndBonds = insertedDeal);
+    });
+
+    it('User can proceed to submit the deal for review', () => {
+      console.log('yo dealWithCompleteEligibilityAndBonds.... \n', dealWithCompleteEligibilityAndBonds);
+
+      cy.login({ ...maker1 });
+      contract.visit(dealWithCompleteEligibilityAndBonds);
+      contract.proceedToReview().should('not.be.disabled');
+      contract.proceedToReview().click();
+      cy.url().should('eq', relative(`/contract/${dealWithCompleteEligibilityAndBonds._id}/ready-for-review`));
+    });
+  });
+
+
   it('The cancel button returns the user to the view-contract page.', () => {
     // log in, visit a deal, select abandon
     cy.login({ ...maker1 });
@@ -80,47 +146,6 @@ context('A maker selects to submit a contract for review from the view-contract 
     });
     contract.previousStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Draft');
-    });
-  });
-
-  describe('When a deal does NOT have Eligibility with `completed` status', () => {
-    let dealWithInCompleteEligibilityStatus;
-
-    beforeEach(() => {
-      dealWithInCompleteEligibilityStatus = twentyOneDeals.find((d) =>
-        (d.details.status === 'Draft' && d.eligibility && d.eligibility.status !== 'Completed'));
-
-      cy.insertOneDeal(dealWithInCompleteEligibilityStatus, { ...maker1 })
-        .then((insertedDeal) => dealWithInCompleteEligibilityStatus = insertedDeal);
-    });
-
-    it('User cannot submit the deal for review', () => {
-      cy.login({ ...maker1 });
-      contract.visit(dealWithInCompleteEligibilityStatus);
-      contract.proceedToReview().should('be.disabled');
-    });
-  });
-
-  describe('When a deal has Bonds with statuses thare are NOT `completed`', () => {
-    let dealWithIncompleteBonds;
-
-    beforeEach(() => {
-      dealWithIncompleteBonds = twentyOneDeals.find((d) => {
-        if (d.details.status === 'Draft' &&
-          d.eligibility && d.eligibility.status === 'Completed' &&
-          d.bondTransactions && d.bondTransactions.items.find((b) => b.status !== 'Completed')) {
-          return d;
-        }
-      });
-
-      cy.insertOneDeal(dealWithIncompleteBonds, { ...maker1 })
-        .then((insertedDeal) => dealWithIncompleteBonds = insertedDeal);
-    });
-
-    it('User cannot submit the deal for review', () => {
-      cy.login({ ...maker1 });
-      contract.visit(dealWithIncompleteBonds);
-      contract.proceedToReview().should('be.disabled');
     });
   });
 });
