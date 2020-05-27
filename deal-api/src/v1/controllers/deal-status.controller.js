@@ -81,7 +81,7 @@ const updateBondDates = async (collection, deal) => {
   updatedDeal.bondTransactions.items = updatedBonds;
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: { $eq: new ObjectId(deal._id) } }, // eslint-disable-line no-underscore-dangle
+    { _id: deal._id }, // eslint-disable-line no-underscore-dangle
     $.flatten(updatedDeal),
     { returnOriginal: false },
   );

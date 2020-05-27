@@ -36,6 +36,9 @@ module.exports = [
     submissionDetails: {
       'supplier-name': 'Supplier name 1',
     },
+    eligibility: {
+      status: 'Incomplete',
+    },
   }, {
     details: {
       bankSupplyContractID: 'abc/3/def',
@@ -45,6 +48,26 @@ module.exports = [
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
+    },
+    eligibility: {
+      status: 'Completed',
+      criteria: [
+        { id: 11, answer: true },
+        { id: 12, answer: true },
+        { id: 13, answer: true },
+        { id: 14, answer: true },
+        { id: 15, answer: true },
+        { id: 16, answer: true },
+        { id: 17, answer: true },
+        { id: 18, answer: true },
+      ],
+    },
+    bondTransactions: {
+      items: [
+        { _id: '1234567', status: 'Incomplete' },
+        { _id: '1234568', status: 'Completed' },
+        { _id: '1234569', status: 'Completed' },
+      ],
     },
   }, {
     details: {

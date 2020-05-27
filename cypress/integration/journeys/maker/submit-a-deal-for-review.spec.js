@@ -21,7 +21,6 @@ context('A maker selects to submit a contract for review from the view-contract 
 
   before(() => {
     const aDealInStatus = (status) => twentyOneDeals.filter((deal) => status === deal.details.status)[0];
-
     cy.deleteDeals(maker1);
     cy.insertOneDeal(aDealInStatus('Draft'), { ...maker1 })
       .then((insertedDeal) => deal = insertedDeal);
@@ -81,6 +80,47 @@ context('A maker selects to submit a contract for review from the view-contract 
     });
     contract.previousStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Draft');
+    });
+  });
+
+  describe('When a deal does NOT have Eligibility with `completed` status', () => {
+    let dealWithInCompleteEligibilityStatus;
+
+    beforeEach(() => {
+      dealWithInCompleteEligibilityStatus = twentyOneDeals.find((d) =>
+        (d.details.status === 'Draft' && d.eligibility && d.eligibility.status !== 'Completed'));
+
+      cy.insertOneDeal(dealWithInCompleteEligibilityStatus, { ...maker1 })
+        .then((insertedDeal) => dealWithInCompleteEligibilityStatus = insertedDeal);
+    });
+
+    it('User cannot submit the deal for review', () => {
+      cy.login({ ...maker1 });
+      contract.visit(dealWithInCompleteEligibilityStatus);
+      contract.proceedToReview().should('be.disabled');
+    });
+  });
+
+  describe('When a deal has Bonds with statuses thare are NOT `completed`', () => {
+    let dealWithIncompleteBonds;
+
+    beforeEach(() => {
+      dealWithIncompleteBonds = twentyOneDeals.find((d) => {
+        if (d.details.status === 'Draft' &&
+          d.eligibility && d.eligibility.status === 'Completed' &&
+          d.bondTransactions && d.bondTransactions.items.find((b) => b.status !== 'Completed')) {
+          return d;
+        }
+      });
+
+      cy.insertOneDeal(dealWithIncompleteBonds, { ...maker1 })
+        .then((insertedDeal) => dealWithIncompleteBonds = insertedDeal);
+    });
+
+    it('User cannot submit the deal for review', () => {
+      cy.login({ ...maker1 });
+      contract.visit(dealWithIncompleteBonds);
+      contract.proceedToReview().should('be.disabled');
     });
   });
 });
