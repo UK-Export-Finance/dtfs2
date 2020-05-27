@@ -179,6 +179,24 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Draft',
     },
+    eligibility: {
+      status: 'Completed',
+      criteria: [
+        { id: 11, answer: true },
+        { id: 12, answer: true },
+        { id: 13, answer: true },
+        { id: 14, answer: true },
+        { id: 15, answer: true },
+        { id: 16, answer: true },
+        { id: 17, answer: true },
+        { id: 18, answer: true },
+      ],
+    },
+    bondTransactions: {
+      items: [
+        { _id: '1234569', status: 'Completed' },
+      ],
+    },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
