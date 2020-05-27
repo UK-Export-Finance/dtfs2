@@ -30,11 +30,12 @@ exports.createTypeA = async (deal) => {
   const typeA = await generateTypeA(deal);
 
   // TODO - Decide what to do with invalid typeA xml
-  /*
+
   if (typeA.errorCount) {
     return typeA;
   }
-  */
+
+
   const upload = {
     folder: 'ukef',
     subfolder: 'type-a',
