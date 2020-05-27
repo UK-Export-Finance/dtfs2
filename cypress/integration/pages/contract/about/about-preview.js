@@ -28,7 +28,8 @@ const page = {
 
   supplyContractValue: () => cy.get('[data-cy="supplyContractValue"]'),
   supplyContractCurrency: () => cy.get('[data-cy="supplyContractCurrency"]'),
-  conversionRateToGBP: () => cy.get('[data-cy="conversionRateToGBP"]'),
+  supplyContractConversionRateToGBP: () => cy.get('[data-cy="supplyContractConversionRateToGBP"]'),
+  supplyContractConversionDate: () => cy.get('[data-cy="supplyContractConversionDate"]'),
 
   saveAndGoBack: () => cy.get('[data-cy="SaveAndGoBack"]'),
 

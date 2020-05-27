@@ -56,6 +56,17 @@ exports.update = (req, res) => {
     submissionDetails.status = 'Incomplete';
     // }
 
+    // TODO find a neater way..
+    if (!validationErrors.errorList.supplyContractConversionDate) {
+      // if the conversion-date has been parsed without errors, store the actual date..
+      const day = submissionDetails['supplyContractConversionDate-day'];
+      const month = submissionDetails['supplyContractConversionDate-month'];
+      const year = submissionDetails['supplyContractConversionDate-year'];
+      submissionDetails.supplyContractConversionDate = `${day}/${month}/${year}`;
+      // TODO clear away the old fields? feels like there's traps there to do with entering a date,
+      // then entering an invalid date and things getting out of line...
+    }
+
     const collection = await db.getCollection('deals');
     const dealAfterAllUpdates = await updateSubmissionDetails(collection, req.params.id, submissionDetails);
 

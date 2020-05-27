@@ -4,8 +4,8 @@
         "bankSupplyContractID" : "abc/1/def",
         "bankSupplyContractName" : "Tibettan submarine acquisition scheme",
         "submissionType" : "Automatic Inclusion Notice",
-        "submissionDate" : "2020 05 06 13:53:53:340 +0100",
-        "dateOfLastAction" : "2020 05 06 13:53:56:437 +0100",
+        "submissionDate" : "2020 05 27 13:39:28:171 +0100",
+        "dateOfLastAction" : "2020 05 27 13:39:32:511 +0100",
         "maker" : {
             "username" : "MAKER",
             "roles" : [
@@ -60,14 +60,14 @@
     },
     "submissionDetails" : {
         "status" : "Incomplete",
-        "indemnifier-address-country" : "",
+        "indemnifier-address-country" : "GBR",
         "indemnifier-address-line-3" : "",
         "indemnifier-address-line-1" : "27a",
         "indemnifier-address-line-2" : "Maxwell Road",
         "indemnifier-address-postcode" : "HA6 2XY",
         "indemnifier-address-town" : "Northwood",
         "indemnifier-companies-house-registration-number" : "08547313",
-        "indemnifier-correspondence-address-country" : "",
+        "indemnifier-correspondence-address-country" : "GBR",
         "indemnifier-correspondence-address-line-3" : "Essex",
         "indemnifier-correspondence-address-line-1" : "27 Petersfield",
         "indemnifier-correspondence-address-line-2" : "",
@@ -75,14 +75,8 @@
         "indemnifier-correspondence-address-town" : "Chelmsford",
         "indemnifier-name" : "WATKINSON TRADING LIMITED",
         "indemnifierCorrespondenceAddressDifferent" : "true",
-        "industrySector" : {
-            "class" : {
-                "code" : "62012",
-                "name" : ""
-            },
-            "code" : "1009",
-            "name" : ""
-        },
+        "industry-sector" : "1008",
+        "industry-class" : "56210",
         "legallyDistinct" : "true",
         "sme-type" : "Small",
         "supplier-address-country" : "GBR",
@@ -92,7 +86,7 @@
         "supplier-address-postcode" : "SW1A 2HQ",
         "supplier-address-town" : "Westminster",
         "supplier-companies-house-registration-number" : "",
-        "supplier-correspondence-address-country" : "",
+        "supplier-correspondence-address-country" : "GBR",
         "supplier-correspondence-address-line-3" : "Edinburgh",
         "supplier-correspondence-address-line-1" : "2 Horseguards Road",
         "supplier-correspondence-address-line-2" : "",
@@ -102,9 +96,15 @@
         "supplier-type" : "Exporter",
         "supplier-correspondence-address-is-different" : "true",
         "supply-contract-description" : "Description.",
+        "buyer-address-country" : "USA",
+        "buyer-address-line-1" : "Corner of East and Main",
+        "buyer-address-line-2" : "",
+        "buyer-address-line-3" : "The Bronx",
+        "buyer-address-postcode" : "no-idea",
+        "buyer-address-town" : "New York",
         "buyer-name" : "Huggy Bear",
-        "countryOfBuyer" : "USA",
-        "destinationOfGoodsAndServices" : "USA"
+        "destinationOfGoodsAndServices" : "USA",
+        "hasBeenPreviewed" : true
     },
     "bondTransactions" : {
         "items" : []
