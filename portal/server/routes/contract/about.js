@@ -35,6 +35,10 @@ const updateSubmissionDetails = async (dealId, postedSubmissionDetails, userToke
     submissionDetails.supplyContractCurrency = {
       id: submissionDetails.supplyContractCurrency,
     };
+  } else {
+    submissionDetails.supplyContractCurrency = {
+      id: '',
+    };
   }
 
   await api.updateSubmissionDetails(deal, submissionDetails, userToken, res);

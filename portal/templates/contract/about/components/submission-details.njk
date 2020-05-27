@@ -258,24 +258,27 @@
       </dd>
     </div>
 
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key govuk-body-s">
-        Conversion rate from Supply Contract currency to GBP
-      </dt>
-      <dd data-cy="conversionRateToGBP" class="govuk-summary-list__value govuk-body-s">
-        {{ submissionDetails.conversionRateToGBP }}
-      </dd>
-    </div>
+    {% if submissionDetails.supplyContractCurrency.id != null and submissionDetails.supplyContractCurrency.id !== 'GBP'%}
 
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key govuk-body-s">
-        Supply Contract conversion date, as determined by the bank(Supply Contract currency to GBP)
-      </dt>
-      <dd data-cy="conversionDate" class="govuk-summary-list__value govuk-body-s">
-        {{ submissionDetails.conversionDate }}
-      </dd>
-    </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Conversion rate from Supply Contract currency to GBP
+        </dt>
+        <dd data-cy="supplyContractConversionRateToGBP" class="govuk-summary-list__value govuk-body-s">
+          {{ submissionDetails.supplyContractConversionRateToGBP }}
+        </dd>
+      </div>
 
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Supply Contract conversion date, as determined by the bank(Supply Contract currency to GBP)
+        </dt>
+        <dd data-cy="supplyContractConversionDate" class="govuk-summary-list__value govuk-body-s">
+          {{ submissionDetails.supplyContractConversionDate }}
+        </dd>
+      </div>
+
+    {% endif %}
   </dl>
 {% endmacro %}
 

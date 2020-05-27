@@ -145,7 +145,114 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       });
     })
 
+    it('expects supplyContractValue', () => {
+      expect(validationErrors.errorList["supplyContractValue"]).toEqual({
+        order: expect.any(String),
+        text: 'Supply Contract value is required',
+      });
+    });
 
+    it('expects supplyContractCurrency', () => {
+      expect(validationErrors.errorList["supplyContractCurrency"]).toEqual({
+        order: expect.any(String),
+        text: 'Supply Contract currency is required',
+      });
+    });
+
+  });
+
+  describe('If supplyContractCurrency !== GBP, conversion rate and conversion date are required', () => {
+    let validationErrors;
+
+    beforeAll(async()=>{
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const submissionDetails = {'supplyContractCurrency':'USD'};
+
+      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      validationErrors = body.validationErrors;
+    });
+
+    describe('expects conversion details', () => {
+      it('expects supplyContractConversionRateToGBP', () => {
+        expect(validationErrors.errorList.supplyContractConversionRateToGBP).toEqual({
+          order: expect.any(String),
+          text: 'Supply Contract conversion rate is required for non-GBP currencies',
+        });
+      });
+
+      it('expects supplyContractConversionDate', () => {
+        expect(validationErrors.errorList.supplyContractConversionDate).toEqual({
+          order: expect.any(String),
+          text: 'Supply Contract conversion date is required for non-GBP currencies',
+        });
+      });
+
+    });
+  });
+
+  describe('If supplyContractCurrency !== GBP, if any conversion date fields are entered, the missing fields are required', () => {
+
+    it('day field is required', async () => {
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const submissionDetails = {
+        'supplyContractCurrency':'USD',
+        'supplyContractConversionDate-month': '12',
+        'supplyContractConversionDate-year': '2019',
+      };
+
+      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      validationErrors = body.validationErrors;
+
+      expect(validationErrors.errorList["supplyContractConversionDate-day"]).toEqual({
+        order: expect.any(String),
+        text: 'Supply Contract conversion date Day is required for non-GBP currencies',
+      });
+
+    });
+
+    it('month field is required', async () => {
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const submissionDetails = {
+        'supplyContractCurrency':'USD',
+        'supplyContractConversionDate-day': '25',
+        'supplyContractConversionDate-year': '2019',
+      };
+
+      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      validationErrors = body.validationErrors;
+
+      expect(validationErrors.errorList["supplyContractConversionDate-month"]).toEqual({
+        order: expect.any(String),
+        text: 'Supply Contract conversion date Month is required for non-GBP currencies',
+      });
+
+    });
+
+    it('year field is required', async () => {
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const submissionDetails = {
+        'supplyContractCurrency':'USD',
+        'supplyContractConversionDate-month': '12',
+        'supplyContractConversionDate-day': '25',
+      };
+
+      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      validationErrors = body.validationErrors;
+
+      expect(validationErrors.errorList["supplyContractConversionDate-year"]).toEqual({
+        order: expect.any(String),
+        text: 'Supply Contract conversion date Year is required for non-GBP currencies',
+      });
+
+    });
   });
 
   describe('If supplier-address === GBR, postcode is required', () => {

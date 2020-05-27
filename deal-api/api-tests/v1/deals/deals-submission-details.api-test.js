@@ -149,6 +149,7 @@ describe('/v1/deals/:id/submission-details', () => {
         supplierCompaniesHouseRegistrationNumber: '12345678'
       };
       const expectedResponse = {
+        supplyContractConversionDate: expect.any(String),
         ...submissionDetails,
         status: 'Incomplete',
       }
@@ -166,6 +167,7 @@ describe('/v1/deals/:id/submission-details', () => {
         supplierCompaniesHouseRegistrationNumber: '12345678'
       };
       const expectedResponse = {
+        supplyContractConversionDate: expect.any(String),
         ...submissionDetails,
         status: 'Incomplete',
       }
