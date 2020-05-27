@@ -261,11 +261,14 @@ router.get('/contract/:_id/about/financial', async (req, res) => {
     res,
   );
 
-  const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
-  const formattedValidationErrors = generateErrorSummary(
-    validationErrors,
-    errorHref,
-  );
+  let formattedValidationErrors = {};
+  if (deal.submissionDetails.hasBeenPreviewed) {
+    const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
+    formattedValidationErrors = generateErrorSummary(
+      validationErrors,
+      errorHref,
+    );
+  }
 
   res.render('contract/about/about-supply-financial.njk', {
     deal,
