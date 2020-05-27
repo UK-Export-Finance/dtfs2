@@ -59,6 +59,38 @@ const updateComments = async (collection, _id, commentToAdd, user) => {
   return value;
 };
 
+const updateBondDates = async (collection, deal) => {
+  const updatedBonds = [
+    ...deal.bondTransactions.items,
+  ];
+
+  updatedBonds.forEach((b) => {
+    const bond = b;
+    const hasRequestedCoverStartDate = (bond['requestedCoverStartDate-day'] && bond['requestedCoverStartDate-month'] && bond['requestedCoverStartDate-year']);
+
+    if (bond.bondStage === 'Issued' && !hasRequestedCoverStartDate) {
+      const now = moment();
+
+      bond['requestedCoverStartDate-day'] = moment(now).format('DD');
+      bond['requestedCoverStartDate-month'] = moment(now).format('MM');
+      bond['requestedCoverStartDate-year'] = moment(now).format('YYYY');
+    }
+  });
+
+  const updatedDeal = deal;
+  updatedDeal.bondTransactions.items = updatedBonds;
+
+  const findAndUpdateResponse = await collection.findOneAndUpdate(
+    { _id: { $eq: new ObjectId(deal._id) } }, // eslint-disable-line no-underscore-dangle
+    $.flatten(updatedDeal),
+    { returnOriginal: false },
+  );
+
+  const { value } = findAndUpdateResponse;
+
+  return value;
+};
+
 exports.update = (req, res) => {
   const { user } = req;
 
@@ -66,7 +98,10 @@ exports.update = (req, res) => {
     if (!deal) return res.status(404).send();
     if (!userHasAccessTo(req.user, deal)) return res.status(401).send();
 
-    if (req.body.status === 'Abandoned Deal' && !userOwns(user, deal)) {
+    const fromStatus = deal.details.status;
+    const toStatus = req.body.status;
+
+    if (toStatus === 'Abandoned Deal' && !userOwns(user, deal)) {
       return res.status(401).send();
     }
 
@@ -79,8 +114,7 @@ exports.update = (req, res) => {
       });
     }
 
-
-    if (req.body.status === 'Submitted') {
+    if (toStatus === 'Submitted') {
       const typeA = await dealIntegration.createTypeA(deal);
       if (typeA.errorCount) {
         // TODO - how do we deal with invalid typeA xml?
@@ -89,7 +123,14 @@ exports.update = (req, res) => {
     }
 
     const collection = await db.getCollection('deals');
-    await updateStatus(collection, req.params.id, deal.details.status, req.body.status);
+    const updatedDeal = await updateStatus(collection, req.params.id, fromStatus, toStatus);
+    const updatedDealStatus = updatedDeal.details.status;
+
+    const shouldCheckBondDates = (fromStatus === 'Draft' && updatedDealStatus === 'Ready for Checker\'s approval');
+    if (shouldCheckBondDates) {
+      await updateBondDates(collection, updatedDeal);
+    }
+
     const dealAfterAllUpdates = await updateComments(collection, req.params.id, req.body.comments, user);
 
     return res.status(200).send(dealAfterAllUpdates.details.status);

@@ -1,3 +1,4 @@
+const moment = require('moment');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('./deal-builder');
 
@@ -110,7 +111,6 @@ describe('/v1/deals/:id/status', () => {
       expect(text).toEqual('Draft');
     });
   });
-
 
   describe('PUT /v1/deals/:id/status', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
@@ -320,6 +320,85 @@ describe('/v1/deals/:id/status', () => {
       });
     });
 
+    describe('when the status changes from `Draft` to `Ready for Checker\'s approval`', () => {
+      describe('when a deal contains bonds with an `Issued` bondStage that do NOT have a requestedCoverStartDate', () => {
+        it('it should add todays date to such bonds', async () => {
+          const baseBond = {
+            bondIssuer: 'issuer',
+            bondType: 'bond type',
+            bondBeneficiary: 'test',
+            bondValue: '123',
+            transactionCurrencySameAsSupplyContractCurrency: 'true',
+            riskMarginFee: '1',
+            coveredPercentage: '2',
+            feeType: 'test',
+            feeFrequency: 'test',
+            dayCountBasis: 'test',
+          };
+
+          const issuedBondFields = () => ({
+            bondStage: 'Issued',
+            uniqueIdentificationNumber: '1234',
+            'coverEndDate-day': moment().add(1, 'month').format('DD'),
+            'coverEndDate-month': moment().add(1, 'month').format('MM'),
+            'coverEndDate-year': moment().add(1, 'month').format('YYYY'),
+          });
+
+          const newDealWithBonds = {
+            ...newDeal,
+            bondTransactions: {
+              items: [
+                {
+                  ...baseBond,
+                  bondStage: 'Unissued',
+                  ukefGuaranteeInMonths: '24',
+                },
+                {
+                  ...baseBond,
+                  ...issuedBondFields(),
+                },
+                {
+                  ...baseBond,
+                  ...issuedBondFields(),
+                },
+              ],
+            },
+          };
+
+          const postResult = await as(anHSBCMaker).post(newDealWithBonds).to('/v1/deals');
+          const createdDeal = postResult.body;
+
+          const statusUpdate = {
+            comments: 'Ready to go!',
+            status: 'Ready for Checker\'s approval',
+          };
+
+          await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+
+          const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+
+          expect(status).toEqual(200);
+          expect(body.details.status).toEqual(statusUpdate.status);
+
+          expect(body.bondTransactions.items[0]).toEqual(newDealWithBonds.bondTransactions.items[0]);
+
+          expect(body.bondTransactions.items[1]).toEqual({
+            ...newDealWithBonds.bondTransactions.items[1],
+            'requestedCoverStartDate-day': moment().format('DD'),
+            'requestedCoverStartDate-month': moment().format('MM'),
+            'requestedCoverStartDate-year': moment().format('YYYY'),
+          });
+
+          expect(body.bondTransactions.items[2]).toEqual({
+            ...newDealWithBonds.bondTransactions.items[2],
+            'requestedCoverStartDate-day': moment().format('DD'),
+            'requestedCoverStartDate-month': moment().format('MM'),
+            'requestedCoverStartDate-year': moment().format('YYYY'),
+          });
+        });
+      });
+    });
+
     xit('creates type_a xml if deal successfully submitted', async () => {
       const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
@@ -335,5 +414,6 @@ describe('/v1/deals/:id/status', () => {
 
       expect(body).toEqual({});
     });
+
   });
 });
