@@ -1,5 +1,5 @@
 # dtfs2
-Placeholder repo
+Placeholder repo.
 
 ### AWS Bulid badge
 
