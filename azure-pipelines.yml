@@ -10,9 +10,8 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '32eceb8d-a137-4355-86e0-e055e687e67b'
-  imageRepository: 'dealapi'
-  containerRegistry: 'dtfs2.azurecr.io'
+  imageRepository: 'deal-api'
+  containerRegistry: 'dtfsdev.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/deal-api/Dockerfile'
   tag: '$(Build.BuildId)'
   
@@ -28,12 +27,19 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
+    - task: Docker@1
+      displayName: Build the image
       inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+        containerregistrytype: 'Azure Container Registry'
+        azureSubscriptionEndpoint: 'Digital-Dev-Deployment'
+        azureContainerRegistry: 'dtfsdev.azurecr.io'
+        command: 'Build an image'
+        dockerFile: 'deal-api/Dockerfile'
+        imageName: 'deal-api:$(Build.BuildId)'
+    - task: Docker@1
+      inputs:
+        containerregistrytype: 'Azure Container Registry'
+        azureSubscriptionEndpoint: 'Digital-Dev-Deployment'
+        azureContainerRegistry: 'dtfsdev.azurecr.io'
+        command: 'push'
+        imageName: 'deal-api:$(Build.BuildId)'
