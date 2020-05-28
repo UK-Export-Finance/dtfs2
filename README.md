@@ -6,6 +6,8 @@ https://dev.azure.com/sysdevukef/DTFS/_apis/build/status/notbinary.dtfs2?branchN
 
 ![build status](https://dev.azure.com/sysdevukef/DTFS/_apis/build/status/notbinary.dtfs2?branchName=master "build status")
 
+![alt](https://dev.azure.com/sysdevukef/DTFS/_apis/build/status/notbinary.dtfs2?branchName=master)
+
 ### Testing
 
 With docker running, execute all tests with:
