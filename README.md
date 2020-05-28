@@ -2,6 +2,8 @@
 
 [![Build Status](https://dev.azure.com/sysdevukef/Digital%20IAC/_apis/build/status/notbinary.dtfs2?branchName=master)](https://dev.azure.com/sysdevukef/Digital%20IAC/_build/latest?definitionId=45&branchName=master)
 
+![Build Status](https://dev.azure.com/sysdevukef/Digital%20IAC/_apis/build/status/notbinary.dtfs2?branchName=master)
+
 
 ### Testing
 
