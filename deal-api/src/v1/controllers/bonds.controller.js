@@ -23,7 +23,6 @@ exports.getBond = async (req, res) => {
         const validationErrors = getBondErrors(bond);
 
         const bondStatus = validationErrors.count === 0 ? 'Completed' : 'Incomplete';
-        console.log('-------- bondStatus ', bondStatus);
 
         return res.json({
           dealId,
