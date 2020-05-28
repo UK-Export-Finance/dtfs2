@@ -1,7 +1,7 @@
-const TRANSACTIONS = require('./transactions');
-const ABOUT_DEAL = require('./about-deal');
+const FACILITIES = require('./facilities');
+const DEAL = require('./deal');
 
 module.exports = {
-  TRANSACTIONS,
-  ABOUT_DEAL,
+  FACILITIES,
+  DEAL,
 };
