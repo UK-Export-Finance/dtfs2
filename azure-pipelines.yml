@@ -14,7 +14,8 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  imageRepository: 'deal-api'
+  portal: 'portal'
+  dealApi: 'deal-api'
   containerRegistry: 'dtfsdev.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/deal-api/Dockerfile'
   tag: '$(Build.BuildId)'
@@ -24,10 +25,10 @@ variables:
 
 stages:
 - stage: Build
-  displayName: Build and push stage
+  displayName: Build stage
   jobs:  
-  - job: Build
-    displayName: Build
+  - job: ContainerImage
+    displayName: Build and push container image
     pool:
       vmImage: $(vmImageName)
     steps:
@@ -36,14 +37,15 @@ stages:
       inputs:
         containerregistrytype: 'Azure Container Registry'
         azureSubscriptionEndpoint: 'Digital-Dev-Deployment'
-        azureContainerRegistry: 'dtfsdev.azurecr.io'
+        azureContainerRegistry: $(containerRegistry)
         command: 'Build an image'
-        dockerFile: 'deal-api/Dockerfile'
-        imageName: 'deal-api:$(Build.BuildId)'
+        dockerFile: '$(dealApi)/Dockerfile'
+        imageName: '$(dealApi):$(Build.BuildId)'
     - task: Docker@1
+      displayName: Push the image
       inputs:
         containerregistrytype: 'Azure Container Registry'
         azureSubscriptionEndpoint: 'Digital-Dev-Deployment'
-        azureContainerRegistry: 'dtfsdev.azurecr.io'
-        command: 'push'
-        imageName: 'deal-api:$(Build.BuildId)'
+        azureContainerRegistry: $(containerRegistry)
+        command: 'Push an image'
+        imageName: '$(dealApi):$(Build.BuildId)'
