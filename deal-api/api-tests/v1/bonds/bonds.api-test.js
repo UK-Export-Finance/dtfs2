@@ -473,6 +473,36 @@ describe('/v1/deals/:id/bond', () => {
         });
       });
 
+      describe('when the coverEndDate is before today', () => {
+        it('should return coverEndDate validationError', async () => {
+          const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+          const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+          const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+          const { bondId } = createBondResponse.body;
+
+          const updatedCoverEndDate = moment().subtract(1, 'day');
+
+          const bondAsIssued = {
+            _id: bondId,
+            ...allBondFields,
+            bondStage: 'Issued',
+            bondIssuer: 'test',
+            uniqueIdentificationNumber: '1234',
+            'coverEndDate-day': moment(updatedCoverEndDate).format('DD'),
+            'coverEndDate-month': moment(updatedCoverEndDate).format('MM'),
+            'coverEndDate-year': moment(updatedCoverEndDate).format('YYYY'),
+          };
+
+          const { status, body } = await as(aBarclaysMaker).put(bondAsIssued).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+          expect(status).toEqual(400);
+          expect(body.bond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
+          expect(body.validationErrors.count).toEqual(1);
+          expect(body.validationErrors.errorList.coverEndDate).toBeDefined();
+        });
+      });
+      
       describe('when the coverEndDate is before requestedCoverStartDate', () => {
         it('should return coverEndDate validationError', async () => {
           const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');

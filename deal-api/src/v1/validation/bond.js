@@ -131,7 +131,7 @@ exports.getBondErrors = (bond) => {
         moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months'),
       )) {
         errorList.requestedCoverStartDate = {
-          text: `Requested Cover Start Date must be between ${moment.now().format('Do MMMM YYYY')} and ${moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months').format('Do MMMM YYYY')}`,
+          text: `Requested Cover Start Date must be between ${moment().format('Do MMMM YYYY')} and ${moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months').format('Do MMMM YYYY')}`,
           order: orderNumber(errorList),
         };
       }
@@ -151,7 +151,17 @@ exports.getBondErrors = (bond) => {
       };
     }
 
-    if (!dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
+    if (dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
+      const formattedDate = `${coverEndDateYear}-${coverEndDateMonth}-${coverEndDateDay}`;
+      const nowDate = moment().format('YYYY-MM-DD');
+
+      if (moment(formattedDate).isBefore(nowDate)) {
+        errorList.coverEndDate = {
+          text: 'Cover End Date must be today or in the future',
+          order: orderNumber(errorList),
+        };
+      }
+    } else if (!dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
       errorList.coverEndDate = {
         text: dateValidationText(
           'Cover End Date',
@@ -162,7 +172,6 @@ exports.getBondErrors = (bond) => {
         order: orderNumber(errorList),
       };
     }
-
     const hasValidRequestedCoverStartDate = dateHasAllValues(
       requestedCoverStartDateDay,
       requestedCoverStartDateMonth,
