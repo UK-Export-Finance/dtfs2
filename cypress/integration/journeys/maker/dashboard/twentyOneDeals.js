@@ -26,6 +26,26 @@ module.exports = [
         { id: 18, answer: true },
       ],
     },
+    bondTransactions: {
+      items: [
+        {
+          _id: '1234567891',
+          bondIssuer: 'issuer',
+          bondType: 'bond type',
+          bondStage: 'unissued',
+          ukefGuaranteeInMonths: '24',
+          uniqueIdentificationNumber: '1234',
+          bondBeneficiary: 'test',
+          bondValue: '123',
+          transactionCurrencySameAsSupplyContractCurrency: 'true',
+          riskMarginFee: '1',
+          coveredPercentage: '2',
+          feeType: 'test',
+          feeFrequency: 'test',
+          dayCountBasis: 'test',
+        },
+      ],
+    },
   }, {
     details: {
       bankSupplyContractID: 'abc/2/def',
@@ -64,9 +84,9 @@ module.exports = [
     },
     bondTransactions: {
       items: [
-        { _id: '1234567', status: 'Incomplete' },
-        { _id: '1234568', status: 'Completed' },
-        { _id: '1234569', status: 'Completed' },
+        { _id: '1234567' },
+        { _id: '1234568' },
+        { _id: '1234569' },
       ],
     },
   }, {
@@ -190,11 +210,6 @@ module.exports = [
         { id: 16, answer: true },
         { id: 17, answer: true },
         { id: 18, answer: true },
-      ],
-    },
-    bondTransactions: {
-      items: [
-        { _id: '1234569', status: 'Completed' },
       ],
     },
     submissionDetails: {

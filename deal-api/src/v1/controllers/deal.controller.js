@@ -6,6 +6,7 @@ const DEFAULTS = require('../defaults');
 const db = require('../../drivers/db-client');
 const { getDealErrors } = require('../validation/deal');
 const { getCloneDealErrors } = require('../validation/clone-deal');
+const { getBondErrors } = require('../validation/bond');
 
 const { isSuperUser, userHasAccessTo } = require('../users/checks');
 const { generateDealId } = require('../../utils/generateIds');
@@ -127,6 +128,12 @@ exports.findOne = (req, res) => {
     } else if (!userHasAccessTo(req.user, deal)) {
       res.status(401).send();
     } else {
+      if (deal.bondTransactions.items.length) {
+        deal.bondTransactions.items.forEach((bond) => {
+          const bondValidationErrors = getBondErrors(bond);
+          bond.status = bondValidationErrors.count === 0 ? 'Completed' : 'Incomplete'; // eslint-disable-line
+        });
+      }
       res.status(200).send(deal);
     }
   });

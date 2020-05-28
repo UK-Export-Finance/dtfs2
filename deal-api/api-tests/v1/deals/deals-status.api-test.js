@@ -380,10 +380,14 @@ describe('/v1/deals/:id/status', () => {
           expect(status).toEqual(200);
           expect(body.details.status).toEqual(statusUpdate.status);
 
-          expect(body.bondTransactions.items[0]).toEqual(newDealWithBonds.bondTransactions.items[0]);
+          expect(body.bondTransactions.items[0]).toEqual({
+            ...newDealWithBonds.bondTransactions.items[0],
+            status: 'Completed',
+          });
 
           expect(body.bondTransactions.items[1]).toEqual({
             ...newDealWithBonds.bondTransactions.items[1],
+            status: 'Completed',
             'requestedCoverStartDate-day': moment().format('DD'),
             'requestedCoverStartDate-month': moment().format('MM'),
             'requestedCoverStartDate-year': moment().format('YYYY'),
@@ -391,6 +395,7 @@ describe('/v1/deals/:id/status', () => {
 
           expect(body.bondTransactions.items[2]).toEqual({
             ...newDealWithBonds.bondTransactions.items[2],
+            status: 'Completed',
             'requestedCoverStartDate-day': moment().format('DD'),
             'requestedCoverStartDate-month': moment().format('MM'),
             'requestedCoverStartDate-year': moment().format('YYYY'),
