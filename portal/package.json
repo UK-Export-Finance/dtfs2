@@ -30,13 +30,12 @@
   },
   "homepage": "https://github.com/notbinary/dtfs2#readme",
   "dependencies": {
-    "@babel/runtime": "7.8.4",
+    "@babel/runtime": "7.10.1",
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-client": "^2.6.8",
     "apollo-link-http": "^1.5.17",
     "axios": "0.19.2",
     "azure-storage": "2.10.3",
-    "babel-preset-env": "1.7.0",
     "connect-flash": "0.1.1",
     "cookie-parser": "1.4.5",
     "dotenv": "8.2.0",
@@ -55,9 +54,9 @@
     "path": "0.12.7"
   },
   "devDependencies": {
-    "@babel/core": "7.8.6",
-    "@babel/plugin-transform-runtime": "7.8.3",
-    "@babel/preset-env": "7.8.6",
+    "@babel/core": "7.10.1",
+    "@babel/plugin-transform-runtime": "7.10.1",
+    "@babel/preset-env": "7.10.1",
     "babel-jest": "25.1.0",
     "babel-loader": "8.0.6",
     "cheerio": "1.0.0-rc.3",
