@@ -16,6 +16,7 @@ variables:
   # Container registry service connection established during pipeline creation
   portal: 'portal'
   dealApi: 'deal-api'
+  serviceConnection: 'Digital-Dev-Deployment'
   containerRegistry: 'dtfsdev.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/deal-api/Dockerfile'
   tag: '$(Build.BuildId)'
@@ -27,8 +28,8 @@ stages:
 - stage: Build
   displayName: Build stage
   jobs:  
-  - job: ContainerImage
-    displayName: Build and push container image
+  - job: Portal
+    displayName: Build and push portal container image
     pool:
       vmImage: $(vmImageName)
     steps:
@@ -36,7 +37,7 @@ stages:
       displayName: Build the image
       inputs:
         containerregistrytype: 'Azure Container Registry'
-        azureSubscriptionEndpoint: 'Digital-Dev-Deployment'
+        azureSubscriptionEndpoint: $(serviceConnection)
         azureContainerRegistry: $(containerRegistry)
         command: 'Build an image'
         dockerFile: '$(dealApi)/Dockerfile'
@@ -45,7 +46,30 @@ stages:
       displayName: Push the image
       inputs:
         containerregistrytype: 'Azure Container Registry'
-        azureSubscriptionEndpoint: 'Digital-Dev-Deployment'
+        azureSubscriptionEndpoint: $(serviceConnection)
         azureContainerRegistry: $(containerRegistry)
         command: 'Push an image'
         imageName: '$(dealApi):$(Build.BuildId)'
+
+  - job: DealApi
+    displayName: Build and push deal-api container image
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@1
+      displayName: Build the image
+      inputs:
+        containerregistrytype: 'Azure Container Registry'
+        azureSubscriptionEndpoint: $(serviceConnection)
+        azureContainerRegistry: $(containerRegistry)
+        command: 'Build an image'
+        dockerFile: '$(portal)/Dockerfile'
+        imageName: '$(portal):$(Build.BuildId)'
+    - task: Docker@1
+      displayName: Push the image
+      inputs:
+        containerregistrytype: 'Azure Container Registry'
+        azureSubscriptionEndpoint: $(serviceConnection)
+        azureContainerRegistry: $(containerRegistry)
+        command: 'Push an image'
+        imageName: '$(portal):$(Build.BuildId)'
