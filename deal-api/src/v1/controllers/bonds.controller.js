@@ -22,9 +22,15 @@ exports.getBond = async (req, res) => {
       if (bond) {
         const validationErrors = getBondErrors(bond);
 
+        const bondStatus = validationErrors.count === 0 ? 'Completed' : 'Incomplete';
+        console.log('-------- bondStatus ', bondStatus);
+
         return res.json({
           dealId,
-          bond,
+          bond: {
+            ...bond,
+            status: bondStatus,
+          },
           validationErrors,
         });
       }
@@ -46,7 +52,6 @@ exports.create = async (req, res) => {
 
     const newBondObj = {
       _id: facilityId,
-      status: 'Incomplete',
     };
 
     const updatedDeal = {
@@ -152,12 +157,6 @@ exports.updateBond = async (req, res) => {
       }
 
       const validationErrors = getBondErrors(updatedBond);
-
-      if (validationErrors.count === 0) {
-        updatedBond.status = 'Completed';
-      } else {
-        updatedBond.status = 'Incomplete';
-      }
 
       const updatedDeal = {
         ...deal,
