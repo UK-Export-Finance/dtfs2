@@ -131,7 +131,7 @@ exports.getBondErrors = (bond) => {
         moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months'),
       )) {
         errorList.requestedCoverStartDate = {
-          text: `(temp message): Requested Cover Start Date must be within ${MAX_MONTHS_FROM_NOW} month  timeframe`,
+          text: `Requested Cover Start Date must be between ${moment.now().format('Do MMMM YYYY')} and ${moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months').format('Do MMMM YYYY')}`,
           order: orderNumber(errorList),
         };
       }
