@@ -18,6 +18,43 @@ describe('/v1/deals/:id/bond', () => {
     { id: 'EUR', text: 'EUR - Euros' },
   ];
 
+  const allBondFields = {
+    bondIssuer: 'issuer',
+    bondType: 'bond type',
+    bondStage: 'unissued',
+    ukefGuaranteeInMonths: '24',
+    uniqueIdentificationNumber: '1234',
+    bondBeneficiary: 'test',
+    bondValue: '123',
+    transactionCurrencySameAsSupplyContractCurrency: 'true',
+    riskMarginFee: '1',
+    coveredPercentage: '2',
+    feeType: 'test',
+    feeFrequency: 'test',
+    dayCountBasis: 'test',
+  };
+
+  const nowDate = moment();
+  const requestedCoverStartDate = () => {
+    const date = nowDate;
+
+    return {
+      'requestedCoverStartDate-day': moment(date).format('DD'),
+      'requestedCoverStartDate-month': moment(date).format('MM'),
+      'requestedCoverStartDate-year': moment(date).format('YYYY'),
+    };
+  };
+
+  const coverEndDate = () => {
+    const date = moment(nowDate).add(1, 'months');
+
+    return {
+      'coverEndDate-day': moment(date).format('DD'),
+      'coverEndDate-month': moment(date).format('MM'),
+      'coverEndDate-year': moment(date).format('YYYY'),
+    };
+  };
+
   let noRoles;
   let aBarclaysMaker;
   let anHSBCMaker;
@@ -89,7 +126,7 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(200);
     });
 
-    it('returns a bond with dealId and validationErrors', async () => {
+    it('returns a bond with dealId, `Incomplete` status and validationErrors', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -100,6 +137,7 @@ describe('/v1/deals/:id/bond', () => {
 
       expect(status).toEqual(200);
       expect(body.bond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
+      expect(body.bond.status).toEqual('Incomplete');
       expect(body.dealId).toEqual(dealId);
       expect(body.validationErrors.count).toEqual(8);
       expect(body.validationErrors.errorList.bondType).toBeDefined();
@@ -110,6 +148,37 @@ describe('/v1/deals/:id/bond', () => {
       expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
       expect(body.validationErrors.errorList.feeType).toBeDefined();
       expect(body.validationErrors.errorList.dayCountBasis).toBeDefined();
+    });
+
+    describe('when a bond has all required fields', () => {
+      it('returns a bond with dealId and `Completed` status', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bond = {
+          ...allBondFields,
+          ...coverEndDate(),
+        };
+
+        const createBondResponse = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/create`);
+
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const udpateBondResponse = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(udpateBondResponse.status).toEqual(200);
+
+        const getBondResponse = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(getBondResponse.status).toEqual(200);
+
+        expect(getBondResponse.body.bond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
+        expect(getBondResponse.body.dealId).toEqual(dealId);
+        expect(getBondResponse.body.validationErrors.count).toEqual(0);
+        expect(getBondResponse.body.bond.status).toEqual('Completed');
+      });
     });
   });
 
@@ -164,7 +233,7 @@ describe('/v1/deals/:id/bond', () => {
       expect(bondIds[2] - bondIds[1]).toEqual(1);
     });
 
-    it('adds an empty bond to a deal with `Incomplete` status property', async () => {
+    it('adds an empty bond to a deal', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -175,7 +244,6 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(200);
       expect(body.bondTransactions.items.length).toEqual(1);
       expect(body.bondTransactions.items[0]._id).toBeDefined(); // eslint-disable-line no-underscore-dangle
-      expect(body.bondTransactions.items[0].status).toEqual('Incomplete'); // eslint-disable-line no-underscore-dangle
     });
 
     it('adds an empty bond to a deal whilst retaining existing bonds', async () => {
@@ -206,43 +274,6 @@ describe('/v1/deals/:id/bond', () => {
   });
 
   describe('PUT /v1/deals/:id/bond/:bondId', () => {
-    const nowDate = moment();
-    const requestedCoverStartDate = () => {
-      const date = nowDate;
-
-      return {
-        'requestedCoverStartDate-day': moment(date).format('DD'),
-        'requestedCoverStartDate-month': moment(date).format('MM'),
-        'requestedCoverStartDate-year': moment(date).format('YYYY'),
-      };
-    };
-
-    const coverEndDate = () => {
-      const date = moment(nowDate).add(1, 'months');
-
-      return {
-        'coverEndDate-day': moment(date).format('DD'),
-        'coverEndDate-month': moment(date).format('MM'),
-        'coverEndDate-year': moment(date).format('YYYY'),
-      };
-    };
-
-    const allBondFields = {
-      bondIssuer: 'issuer',
-      bondType: 'bond type',
-      bondStage: 'unissued',
-      ukefGuaranteeInMonths: '24',
-      uniqueIdentificationNumber: '1234',
-      bondBeneficiary: 'test',
-      bondValue: '123',
-      transactionCurrencySameAsSupplyContractCurrency: 'true',
-      riskMarginFee: '1',
-      coveredPercentage: '2',
-      feeType: 'test',
-      feeFrequency: 'test',
-      dayCountBasis: 'test',
-    };
-
     it('401s requests that do not present a valid Authorization token', async () => {
       const { status } = await as().put().to('/v1/deals/123456789012/bond/123456789012');
 
@@ -292,7 +323,7 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     describe('when required fields are missing', () => {
-      it('returns 400 with validation errors and status property as `Incomplete`', async () => {
+      it('returns 400 with validation errors', async () => {
         const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -303,7 +334,6 @@ describe('/v1/deals/:id/bond', () => {
 
         expect(status).toEqual(400);
         expect(body.bond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
-        expect(body.bond.status).toEqual('Incomplete');
         expect(body.validationErrors.count).toEqual(8);
         expect(body.validationErrors.errorList.bondType).toBeDefined();
         expect(body.validationErrors.errorList.bondStage).toBeDefined();
@@ -318,7 +348,7 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     describe('with all required fields in body', () => {
-      it('updates an existing bond and returns it with status property as `Completed`', async () => {
+      it('updates an existing bond and returns the bond', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -351,7 +381,6 @@ describe('/v1/deals/:id/bond', () => {
           ...allBondFields,
           ...coverEndDate(),
           currency: deal.body.supplyContractCurrency,
-          status: 'Completed',
         };
         expect(updatedBond).toEqual(expectedUpdatedBond);
       });
@@ -400,7 +429,6 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsIssued,
           currency: deal.body.supplyContractCurrency,
-          status: 'Completed',
         };
         delete expectedBond.ukefGuaranteeInMonths;
 
@@ -417,7 +445,7 @@ describe('/v1/deals/:id/bond', () => {
 
           const date = moment();
           const updatedRequestedCoverStartDate = moment(date).add(3, 'months').add(1, 'day');
-          
+
           const updatedCoverEndDate = moment(date).add(4, 'months');
 
           const bondAsIssued = {
@@ -438,7 +466,6 @@ describe('/v1/deals/:id/bond', () => {
 
           expect(status).toEqual(400);
           expect(body.bond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
-          expect(body.bond.status).toEqual('Incomplete');
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.requestedCoverStartDate).toBeDefined();
         });
@@ -474,7 +501,6 @@ describe('/v1/deals/:id/bond', () => {
 
           expect(status).toEqual(400);
           expect(body.bond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
-          expect(body.bond.status).toEqual('Incomplete');
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.coverEndDate).toBeDefined();
         });
@@ -524,7 +550,6 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsUnissued,
           currency: deal.body.supplyContractCurrency,
-          status: 'Completed',
         };
         delete expectedBond['requestedCoverStartDate-day'];
         delete expectedBond['requestedCoverStartDate-month'];
@@ -615,7 +640,6 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...bondBody,
           currency: deal.body.supplyContractCurrency,
-          status: 'Completed',
         });
       });
 
