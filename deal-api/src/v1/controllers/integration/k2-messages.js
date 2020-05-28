@@ -5,14 +5,20 @@ const path = require('path');
 const typeABuilder = require('./type-a-defs/type-a-builder');
 
 const {
-  eligibilityCriteriaHelper, convertCountryCodeToId, convertCurrencyCodeToId, businessRules, k2Map, dateHelpers,
+  eligibilityCriteriaHelper,
+  convertCountryCodeToId,
+  convertCurrencyCodeToId,
+  businessRules,
+  k2Map,
+  dateHelpers,
+  getApplicationGroup,
 } = require('./helpers');
 
 module.exports.generateTypeA = async (deal) => {
   const builder = typeABuilder()
     .action_code('//TODO')
     .action_name('//TODO')
-    .application_group('//TODO')
+    .application_group(getApplicationGroup(deal))
     .message_type('A')
     .revision_id('//TODO')
     .portal_deal_id(deal._id) // eslint-disable-line no-underscore-dangle
@@ -22,10 +28,10 @@ module.exports.generateTypeA = async (deal) => {
     .Application_route(deal.eligibility)
     .Application_owner(deal.details.maker.username)
     .Application_owner_email('//TODO')
-    .Application_bank('//TODO')
+    .Application_bank(deal.details.maker.bank.name)
     .Application_bank_co_hse_reg_number('//TODO')
 
-    .Customer_type(k2Map.ABOUT_DEAL.SUPPLIER_TYPE[deal.submissionDetails['supplier-type']])
+    .Customer_type(k2Map.DEAL.SUPPLIER_TYPE[deal.submissionDetails['supplier-type']])
     .Exporter_co_hse_reg_number(deal.submissionDetails['supplier-companies-house-registration-number'])
     .Exporter_registration_source('Companies House')
     .Exporter_name(deal.submissionDetails['supplier-name'])
@@ -49,9 +55,9 @@ module.exports.generateTypeA = async (deal) => {
   // TODO confirm Industry_class_code & Industry_class_name correct fields - Drupal sets both to same value
     .Industry_class_code(deal.submissionDetails['industy-sector'] && deal.submissionDetails['industy-sector'].class && deal.submissionDetails['industy-sector'].class.code)
     .Industry_class_name(deal.submissionDetails['industy-sector'] && deal.submissionDetails['industy-sector'].class && deal.submissionDetails['industy-sector'].class.name)
-    .Sme_type(k2Map.ABOUT_DEAL.SME_TYPE[deal.submissionDetails['sme-type'] || 'Not known'])
+    .Sme_type(k2Map.DEAL.SME_TYPE[deal.submissionDetails['sme-type'] || 'Not known'])
     .Description_of_export(deal.submissionDetails['supply-contract-description'])
-    .Bank_security('//TODO')
+    .Bank_security(deal.dealFiles && deal.dealFiles.security)
 
     .Indemnifier_co_hse_reg_number(deal.submissionDetails['indemnifier-companies-house-registration-number'])
     .Indemnifier_name(deal.submissionDetails['indemnifier-name'])
@@ -69,9 +75,9 @@ module.exports.generateTypeA = async (deal) => {
     .Indemnifier_correspondence_address_PostalCode(deal.submissionDetails['indemnifier-correspondence-address-postcode'])
     .Indemnifier_correspondence_address_Country(await convertCountryCodeToId(deal.submissionDetails['indemnifier-correspondence-address-country']))
 
-    .Buyer_name('//TODO')
-    .Buyer_country_code('//TODO')
-    .Destination_country_code('//TODO')
+    .Buyer_name(deal.submissionDetails['buyer-name'])
+    .Buyer_country_code(await convertCountryCodeToId(deal.submissionDetails['buyer-address-country']))
+    .Destination_country_code(await convertCountryCodeToId(deal.submissionDetails.destinationOfGoodsAndServices))
     .Deal_currency_code('//TODO')
     .Conversion_rate('//TODO')
     .Conversion_date('//TODO')
@@ -120,8 +126,8 @@ module.exports.generateTypeA = async (deal) => {
         .UKEF_BSS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
         .BSS_portal_facility_id(bond._id) // eslint-disable-line no-underscore-dangle
         .BSS_issuer(bond.bondIssuer)
-        .BSS_type(k2Map.TRANSACTIONS.TYPE[bond.bondType])
-        .BSS_stage(k2Map.TRANSACTIONS.STAGE[bond.bondStage])
+        .BSS_type(k2Map.FACILITIES.TYPE[bond.bondType])
+        .BSS_stage(k2Map.FACILITIES.STAGE[bond.bondStage])
         .BSS_beneficiary(bond.bondBeneficiary)
         .BSS_value(bond.bondValue)
         .BSS_currency_code(
@@ -134,16 +140,16 @@ module.exports.generateTypeA = async (deal) => {
         .BSS_guarantee_perc(bond.coveredPercentage)
         .BSS_max_liability('// TODO - drupal field: maximum_liability')
         .BSS_min_quarterly_fee(bond.minimumRiskMarginFee)
-        .BSS_premium_type(k2Map.TRANSACTIONS.FEE_TYPE[bond.feeType])
+        .BSS_premium_type(k2Map.FACILITIES.FEE_TYPE[bond.feeType])
         .BSS_cover_start_date(dateHelpers.formatDate(bond['requestedCoverStartDate-day'], bond['requestedCoverStartDate-month'], bond['requestedCoverStartDate-year']))
         .BSS_issue_date('//TODO - drupal field: issue_date')
         .BSS_cover_end_date(dateHelpers.formatDate(bond['coverEndDate-day'], bond['coverEndDate-month'], bond['coverEndDate-year']))
         .BSS_cover_period(bond.ukefGuaranteeInMonths)
-        .BSS_day_basis(k2Map.TRANSACTIONS.DAY_COUNT_BASIS[bond.dayCountBasis]);
+        .BSS_day_basis(k2Map.FACILITIES.DAY_COUNT_BASIS[bond.dayCountBasis]);
 
       // Conditional fields
       if (!businessRules.transactions.isPremiumTypeAtMaturity(bond.feeType)) {
-        bss.BSS_premium_freq(k2Map.TRANSACTIONS.FEE_FREQUENCY[bond.feeFrequency]);
+        bss.BSS_premium_freq(k2Map.FACILITIES.FEE_FREQUENCY[bond.feeFrequency]);
       }
 
       builder.addBSS(bss);

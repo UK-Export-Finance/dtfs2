@@ -21,6 +21,11 @@ const STAGE = {
   ISSUED: 'Issued',
 };
 
+const STATUS = {
+  COMPLETED: 'Completed',
+  INCOMPLETE: 'Incomplete',
+};
+
 const TYPE = {
   ADVANCE_PAYMENT_GUARANTEE: 'Advance payment guarantee',
   BID_BOND: 'Bid bond',
@@ -38,4 +43,5 @@ module.exports = {
   DAY_COUNT_BASIS,
   STAGE,
   TYPE,
+  STATUS,
 };

@@ -5,6 +5,7 @@ const businessRules = require('./business-rules');
 const k2Map = require('./k2-mapping');
 const dateHelpers = require('./date-helpers');
 const whitespaceCollapse = require('./whitespace-collapse');
+const getApplicationGroup = require('./get-application-group');
 
 module.exports = {
   eligibilityCriteriaHelper,
@@ -14,4 +15,5 @@ module.exports = {
   k2Map,
   dateHelpers,
   whitespaceCollapse,
+  getApplicationGroup,
 };

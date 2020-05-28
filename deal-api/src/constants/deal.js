@@ -11,7 +11,14 @@ const SUPPLIER_TYPE = {
   UK_SUPPLIER: 'UK Supplier',
 };
 
+const APPLICATION_GROUP = {
+  BSS_AND_EWCS: 'BSS and EWCS',
+  BSS: 'BSS',
+  EWCS: 'EWCS',
+};
+
 module.exports = {
   SME_TYPE,
   SUPPLIER_TYPE,
+  APPLICATION_GROUP,
 };

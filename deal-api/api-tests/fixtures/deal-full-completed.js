@@ -30,7 +30,7 @@ const deal = {
         'coverEndDate-year': '2050',
         uniqueIdentificationNumber: '1234567890',
         bondBeneficiary: 'test',
-        status: 'Incomplete',
+        status: 'Completed',
         bondValue: '1234',
         transactionCurrencySameAsSupplyContractCurrency: 'true',
         currency: {
@@ -62,7 +62,7 @@ const deal = {
         'coverEndDate-year': '2050',
         uniqueIdentificationNumber: '1234567890',
         bondBeneficiary: 'test',
-        status: 'Incomplete',
+        status: 'Completed',
         bondValue: '5678',
         transactionCurrencySameAsSupplyContractCurrency: 'true',
         currency: {
@@ -81,6 +81,9 @@ const deal = {
         dayCountBasis: '360',
       },
     ],
+  },
+  loanTransactions: {
+    items: [],
   },
   eligibility: {
     criteria: [
@@ -171,6 +174,25 @@ const deal = {
     'supplier-type': 'Exporter',
     'supplier-correspondence-address-is-different': 'true',
     'supply-contract-description': 'Description.',
+    'buyer-address-country': 'AUS',
+    'buyer-address-line-1': '',
+    'buyer-address-line-2': '',
+    'buyer-address-line-3': '',
+    'buyer-address-postcode': '',
+    'buyer-address-town': '',
+    'buyer-name': 'BUYERNAME',
+    destinationOfGoodsAndServices: 'GBR',
+  },
+  dealFiles: {
+    exporterQuestionnaire: [
+      {
+        type: 'general_correspondence',
+        fullPath: '1000256/exporterQuestionnaire/test-file-1.txt',
+        filename: 'test-file-1.txt',
+        url: 'https://dtfsmediaserver.file.core.windows.net/ukef/1000256/exporterQuestionnaire/test-file-1.txt',
+      },
+    ],
+    security: 'security test',
   },
 };
 
