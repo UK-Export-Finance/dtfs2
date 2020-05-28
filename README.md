@@ -4,7 +4,7 @@
 
 https://dev.azure.com/sysdevukef/DTFS/_apis/build/status/notbinary.dtfs2?branchName=master
 
-![https://dev.azure.com/sysdevukef/DTFS/_apis/build/status/notbinary.dtfs2?branchName=master]
+![build status](https://dev.azure.com/sysdevukef/DTFS/_apis/build/status/notbinary.dtfs2?branchName=master "build status")
 
 ### Testing
 
