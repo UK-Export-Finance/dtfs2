@@ -592,6 +592,36 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
+    describe('when a bond has req.body.transactionCurrencySameAsSupplyContractCurrency as false and conversionRateDate is in the future', () => {
+      it('should return additional validationError for feeFrequency', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const date = nowDate.add(1, 'day');
+
+        const bondBody = {
+          ...allBondFields,
+          bondValue: '123',
+          transactionCurrencySameAsSupplyContractCurrency: 'false',
+          currency: 'EUR',
+          conversionRate: '100',
+          'conversionRateDate-day': moment(date).format('DD'),
+          'conversionRateDate-month': moment(date).format('MM'),
+          'conversionRateDate-year': moment(date).format('YYYY'),
+        };
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const updateBondResponse = await as(aBarclaysMaker).put(bondBody).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        expect(updateBondResponse.status).toEqual(400);
+        expect(updateBondResponse.body.validationErrors.count).toEqual(1);
+        expect(updateBondResponse.body.validationErrors.errorList.conversionRateDate).toBeDefined();
+      });
+    });
+
     describe('when a bond has req.body.transactionCurrencySameAsSupplyContractCurrency changed from false to true', () => {
       it('should remove `currency is NOT the same` values from the bond', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');

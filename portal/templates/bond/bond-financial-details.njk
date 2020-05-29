@@ -5,6 +5,7 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% import './_macros/bond-nav.njk' as bondNav %}
+{% import '_macros/date-field.njk' as dateField %}
 
 {% block pageTitle %}Bond Financial Details{% endblock %}
 
@@ -158,52 +159,18 @@
             'data-cy': 'conversion-rate-error-message'
           }
         }
-      }) }}             
-
-      {{ govukDateInput({
-        id: "conversionRateDate",
-        namePrefix: "conversionRateDate",
-        fieldset: {
-          legend: {
-            text: "Conversion rate date"
-          }
-        },
-        hint: {
-          text: "For example, 27 11 2019"
-        },
-        errorMessage: (validationErrors.errorList.conversionRateDate.text or (not bond['conversionRateDate-day']) or (not bond['conversionRateDate-month']) or (not bond['conversionRateDate-year'])) and {
-          text: validationErrors.errorList.conversionRateDate.text or validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].conversionRateDate.text,
-          attributes: {
-            'data-cy': "conversionRateDate-error-message"
-          }
-        },
-        items: [
-          {
-            classes: (not bond['conversionRateDate-day']) and "govuk-input--width-2 govuk-input--error" or "govuk-input--width-2",
-            name: "day",
-            value: bond['conversionRateDate-day'],
-            attributes: {
-              'data-cy': "conversionRateDate-day"
-            }
-          },
-          {
-            classes: (not bond['conversionRateDate-month']) and "govuk-input--width-2 govuk-input--error" or "govuk-input--width-2",
-            name: "month",
-            value: bond['conversionRateDate-month'],
-            attributes: {
-              'data-cy': "conversionRateDate-month"
-            }
-          },
-          {
-            classes: (not bond['conversionRateDate-year']) and "govuk-input--width-4 govuk-input--error" or "govuk-input--width-4",
-            name: "year",
-            value: bond['conversionRateDate-year'],
-            attributes: {
-              'data-cy': "conversionRateDate-year"
-            }
-          }
-        ]
       }) }}
+
+      {{ dateField.render(
+        legend = 'Conversion rate date',
+        id = 'conversionRateDate',
+        hint = 'For example, 27 11 2019',
+        dayValue = bond['conversionRateDate-day'],
+        monthValue = bond['conversionRateDate-month'],
+        yearValue = bond['conversionRateDate-year'],
+        error = validationErrors.errorList.conversionRateDate,
+        conditionalError = validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].conversionRateDate
+      )}}
 
     </div>
 

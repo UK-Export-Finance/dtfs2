@@ -240,7 +240,17 @@ exports.getBondErrors = (bond) => {
       };
     }
 
-    if (!dateHasAllValues(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear)) {
+    if (dateHasAllValues(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear)) {
+      const formattedDate = `${conversionRateDateYear}-${conversionRateDateMonth}-${conversionRateDateDay}`;
+      const nowDate = moment().format('YYYY-MM-DD');
+
+      if (moment(formattedDate).isAfter(nowDate)) {
+        errorList.conversionRateDate = {
+          text: 'Conversion rate date must be today or in the past',
+          order: orderNumber(errorList),
+        };
+      }
+    } else if (!dateHasAllValues(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear)) {
       errorList.conversionRateDate = {
         text: dateValidationText(
           'Conversion rate date',
