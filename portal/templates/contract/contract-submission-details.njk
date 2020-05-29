@@ -3,25 +3,25 @@
 {% import '_macros/contract-tabs.njk' as contractTabs %}
 {% import '_macros/mandatory-criteria-box.njk' as mandatoryCriteriaBox %}
 {% import '_macros/eligibility-criteria-answers.njk' as eligibilityCriteria %}
-{% import '_macros/supporting-documentation-answers.njk' as supportingDocumentation %}
-{% import '_macros/submission-details.njk' as submissionDetails %}
+{% import '_macros/eligibility-documentation-preview.njk' as supportingDocumentation %}
+{% import 'contract/about/components/submission-details.njk' as submissionDetails %}
 {% import 'bond/_macros/bond-submission-details.njk' as bondSubmissionDetails %}
 
-{% block pageTitle %}Preview - {{ contract.details.bankSupplyContractName }}{% endblock %}
+{% block pageTitle %}Preview - {{ deal.details.bankSupplyContractName }}{% endblock %}
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ bankSupplyContractName }}</span></h1>
+  <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ deal.details.bankSupplyContractName }}</span></h1>
 
   <div class="govuk-tabs" data-module="govuk-tabs">
     <h2 class="govuk-tabs__title">
       Contents
     </h2>
 
-    {{ contractTabs.nav(selected = 'submission-details', id = contract._id) }}
+    {{ contractTabs.nav(selected = 'submission-details', id = deal._id) }}
 
     <section class="govuk-tabs__panel" id="submission-details">
-      {{ contractDetails.table(contract.details) }}
+      {{ contractDetails.table(deal.details) }}
 
       <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8">
 
@@ -39,16 +39,16 @@
 
       {{ mandatoryCriteriaBox.success(mandatoryCriteria)}}
 
-      {{ eligibilityCriteria.answers(contract.submissionDetails.eligibilityCriteria)}}
+      {{ eligibilityCriteria.answers(deal.submissionDetails.eligibilityCriteria)}}
 
-      {{ supportingDocumentation.answers(contract.submissionDetails.supportingDocumentation)}}
+      {{ supportingDocumentation.answers(deal.submissionDetails.supportingDocumentation)}}
 
       <h3 class="govuk-heading-l">
         Bond
         <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="#">edit</a>
       </h3>
 
-      {{ bondSubmissionDetails.render(bondDetails = contract.submissionDetails.bond)}}
+      {{ bondSubmissionDetails.render(bondDetails = deal.submissionDetails.bond)}}
 
       <p class="govuk-body"><a href="/contract/{{ _id }}" class="govuk-link">Back to Supply Contract page</a></p>
 

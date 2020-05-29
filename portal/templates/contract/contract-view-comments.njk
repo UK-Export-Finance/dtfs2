@@ -2,11 +2,11 @@
 {% import '_macros/contract-details.njk' as contractDetails %}
 {% import '_macros/contract-tabs.njk' as contractTabs %}
 
-{% block pageTitle %}Comments - {{ deal.details.bankSupplyContractName }}{% endblock %}
+{% block pageTitle %}Comments - {{ details.bankSupplyContractName }}{% endblock %}
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ supplyContractName }}</span></h1>
+  <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ details.bankSupplyContractName }}</span></h1>
 
   <div class="govuk-tabs" data-module="govuk-tabs">
     <h2 class="govuk-tabs__title">
