@@ -1,13 +1,15 @@
 const moment = require('moment');
-const { contract, contractReadyForReview, defaults } = require('../../pages');
-const { successMessage } = require('../../partials');
-const relative = require('../../relativeURL');
+const { contract, contractReadyForReview, defaults } = require('../../../pages');
+const { successMessage } = require('../../../partials');
+const relative = require('../../../relativeURL');
 
 const maker1 = { username: 'MAKER', password: 'MAKER' };
 
 // test data we want to set up + work with..
-const twentyOneDeals = require('./dashboard/twentyOneDeals');
-
+const twentyOneDeals = require('../dashboard/twentyOneDeals');
+const dealWithIncompleteBonds = require('./dealWithIncompleteBonds.json');
+const dealWithCompletedEligibilityAndBonds = require('./dealWithCompletedEligibilityAndBonds.json');
+const { dealWithIssuedBondAndNoCoverStartDate } = require('./dealWithIssuedBondAndNoCoverStartDate');
 
 context('A maker selects to submit a contract for review from the view-contract page', () => {
   let deal;
@@ -46,112 +48,46 @@ context('A maker selects to submit a contract for review from the view-contract 
   });
 
   describe('When a deal has Bonds that are NOT `Completed`', () => {
-    let dealWithIncompleteBonds;
-
     beforeEach(() => {
-      dealWithIncompleteBonds = twentyOneDeals.find((d) =>
-        d.details.status === 'Draft' &&
-          d.bondTransactions && d.bondTransactions.items.find((b) => {
-          if (Object.keys(b).length === 1) {
-            return d;
-          }
-        }));
-
       cy.insertOneDeal(dealWithIncompleteBonds, { ...maker1 })
-        .then((insertedDeal) => dealWithIncompleteBonds = insertedDeal);
+        .then((insertedDeal) => deal = insertedDeal);
     });
 
     it('User cannot proceed to submit the deal for review', () => {
       cy.login({ ...maker1 });
-      contract.visit(dealWithIncompleteBonds);
+      contract.visit(deal);
       contract.proceedToReview().should('be.disabled');
     });
   });
 
   describe('when a deal has Completed Eligibility and Bonds', () => {
-    let dealWithCompletedEligibilityAndBonds;
     beforeEach(() => {
-      dealWithCompletedEligibilityAndBonds = twentyOneDeals.find((d) =>
-        (d.details.status === 'Draft' &&
-        d.eligibility && d.eligibility.status === 'Completed' &&
-        d.bondTransactions && d.bondTransactions.items.find((b) => {
-          if (Object.keys(b).length >= 14) {
-            return d;
-          }
-        })));
-
       cy.insertOneDeal(dealWithCompletedEligibilityAndBonds, { ...maker1 })
-        .then((insertedDeal) => dealWithCompletedEligibilityAndBonds = insertedDeal);
+        .then((insertedDeal) => deal = insertedDeal);
     });
 
     it('User can proceed to submit the deal for review', () => {
       cy.login({ ...maker1 });
-      contract.visit(dealWithCompletedEligibilityAndBonds);
+      contract.visit(deal);
       contract.proceedToReview().should('not.be.disabled');
       contract.proceedToReview().click();
-      cy.url().should('eq', relative(`/contract/${dealWithCompletedEligibilityAndBonds._id}/ready-for-review`));
+      cy.url().should('eq', relative(`/contract/${deal._id}/ready-for-review`));
     });
   });
 
   describe('when a deal has Completed Eligibility and a Bond with `Issued` bond stage without a Cover Start Date', () => {
-    const date = moment().add(1, 'month');
-
-    let dealWithIssuedBondAndNoCoverStartDate = {
-      details: {
-        bankSupplyContractID: 'abc/1/def',
-        bankSupplyContractName: 'Tibettan submarine acquisition scheme',
-        submissionType: 'Automatic Inclusion Notice',
-        status: 'Draft',
-      },
-      eligibility: {
-        status: 'Completed',
-        criteria: [
-          { id: 11, answer: true },
-          { id: 12, answer: true },
-          { id: 13, answer: true },
-          { id: 14, answer: true },
-          { id: 15, answer: true },
-          { id: 16, answer: true },
-          { id: 17, answer: true },
-          { id: 18, answer: true },
-        ],
-      },
-      bondTransactions: {
-        items: [
-          {
-            _id: '1234567891',
-            bondIssuer: 'issuer',
-            bondType: 'bond type',
-            bondStage: 'Issued',
-            'coverEndDate-day': moment(date).format('DD'),
-            'coverEndDate-month': moment(date).format('MM'),
-            'coverEndDate-year': moment(date).format('YYYY'),
-            uniqueIdentificationNumber: '1234',
-            bondBeneficiary: 'test',
-            bondValue: '123',
-            transactionCurrencySameAsSupplyContractCurrency: 'true',
-            riskMarginFee: '1',
-            coveredPercentage: '2',
-            feeType: 'test',
-            feeFrequency: 'test',
-            dayCountBasis: 'test',
-          },
-        ],
-      },
-    };
-
     beforeEach(() => {
       cy.insertOneDeal(dealWithIssuedBondAndNoCoverStartDate, { ...maker1 })
-        .then((insertedDeal) => dealWithIssuedBondAndNoCoverStartDate = insertedDeal);
+        .then((insertedDeal) => deal = insertedDeal);
     });
 
     it('should use todays date for the Bond in Deal page', () => {
       cy.login({ ...maker1 });
-      contract.visit(dealWithIssuedBondAndNoCoverStartDate);
+      contract.visit(deal);
 
       contract.proceedToReview().should('not.be.disabled');
       contract.proceedToReview().click();
-      cy.url().should('eq', relative(`/contract/${dealWithIssuedBondAndNoCoverStartDate._id}/ready-for-review`));
+      cy.url().should('eq', relative(`/contract/${deal._id}/ready-for-review`));
 
       contractReadyForReview.comments().type('a mandatory comment');
       contractReadyForReview.readyForCheckersApproval().click();
@@ -160,9 +96,9 @@ context('A maker selects to submit a contract for review from the view-contract 
 
       successMessage.successMessageLink().click();
 
-      cy.url().should('eq', relative(`/contract/${dealWithIssuedBondAndNoCoverStartDate._id}`));
+      cy.url().should('eq', relative(`/contract/${deal._id}`));
 
-      const bondId = dealWithIssuedBondAndNoCoverStartDate.bondTransactions.items[0]._id;
+      const bondId = deal.bondTransactions.items[0]._id;
       const row = contract.bondTransactionsTable.row(bondId);
 
       const expectedDate = moment().format('DD/MM/YYYY')
