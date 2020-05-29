@@ -13,39 +13,6 @@ module.exports = [
       status: 'Incomplete',
       'supplier-name': 'Supplier name 1',
     },
-    eligibility: {
-      status: 'Completed',
-      criteria: [
-        { id: 11, answer: true },
-        { id: 12, answer: true },
-        { id: 13, answer: true },
-        { id: 14, answer: true },
-        { id: 15, answer: true },
-        { id: 16, answer: true },
-        { id: 17, answer: true },
-        { id: 18, answer: true },
-      ],
-    },
-    bondTransactions: {
-      items: [
-        {
-          _id: '1234567891',
-          bondIssuer: 'issuer',
-          bondType: 'bond type',
-          bondStage: 'unissued',
-          ukefGuaranteeInMonths: '24',
-          uniqueIdentificationNumber: '1234',
-          bondBeneficiary: 'test',
-          bondValue: '123',
-          transactionCurrencySameAsSupplyContractCurrency: 'true',
-          riskMarginFee: '1',
-          coveredPercentage: '2',
-          feeType: 'test',
-          feeFrequency: 'test',
-          dayCountBasis: 'test',
-        },
-      ],
-    },
   }, {
     details: {
       bankSupplyContractID: 'abc/2/def',
@@ -55,9 +22,6 @@ module.exports = [
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 1',
-    },
-    eligibility: {
-      status: 'Incomplete',
     },
   }, {
     details: {
@@ -69,26 +33,6 @@ module.exports = [
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-    eligibility: {
-      status: 'Completed',
-      criteria: [
-        { id: 11, answer: true },
-        { id: 12, answer: true },
-        { id: 13, answer: true },
-        { id: 14, answer: true },
-        { id: 15, answer: true },
-        { id: 16, answer: true },
-        { id: 17, answer: true },
-        { id: 18, answer: true },
-      ],
-    },
-    bondTransactions: {
-      items: [
-        { _id: '1234567' },
-        { _id: '1234568' },
-        { _id: '1234569' },
-      ],
-    },
   }, {
     details: {
       bankSupplyContractID: 'abc/4/def',
@@ -98,19 +42,6 @@ module.exports = [
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
-    },
-    eligibility: {
-      status: 'Completed',
-      criteria: [
-        { id: 11, answer: true },
-        { id: 12, answer: true },
-        { id: 13, answer: true },
-        { id: 14, answer: true },
-        { id: 15, answer: true },
-        { id: 16, answer: true },
-        { id: 17, answer: true },
-        { id: 18, answer: true },
-      ],
     },
   }, {
     details: {
@@ -140,19 +71,6 @@ module.exports = [
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-    eligibility: {
-      status: 'Completed',
-      criteria: [
-        { id: 11, answer: true },
-        { id: 12, answer: true },
-        { id: 13, answer: true },
-        { id: 14, answer: true },
-        { id: 15, answer: true },
-        { id: 16, answer: true },
-        { id: 17, answer: true },
-        { id: 18, answer: true },
-      ],
-    },
   }, {
     details: {
       bankSupplyContractID: 'abc/8/def',
@@ -161,19 +79,6 @@ module.exports = [
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
-    },
-    eligibility: {
-      status: 'Completed',
-      criteria: [
-        { id: 11, answer: true },
-        { id: 12, answer: true },
-        { id: 13, answer: true },
-        { id: 14, answer: true },
-        { id: 15, answer: true },
-        { id: 16, answer: true },
-        { id: 17, answer: true },
-        { id: 18, answer: true },
-      ],
     },
   }, {
     details: {
@@ -198,19 +103,6 @@ module.exports = [
       bankSupplyContractID: 'abc/11/def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Draft',
-    },
-    eligibility: {
-      status: 'Completed',
-      criteria: [
-        { id: 11, answer: true },
-        { id: 12, answer: true },
-        { id: 13, answer: true },
-        { id: 14, answer: true },
-        { id: 15, answer: true },
-        { id: 16, answer: true },
-        { id: 17, answer: true },
-        { id: 18, answer: true },
-      ],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
