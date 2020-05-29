@@ -13,7 +13,7 @@ import {
 
 import {
   provide, DEAL, MANDATORY_CRITERIA,
-} from './api-data-provider';
+} from '../api-data-provider';
 
 const router = express.Router();
 

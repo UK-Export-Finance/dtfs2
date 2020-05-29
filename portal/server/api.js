@@ -31,6 +31,7 @@ const login = async (username, password) => {
     return new Error('error with token');// do something proper here, but for now just reject failed logins..
   }
 };
+
 const contract = async (id, token) => {
   const response = await axios({
     method: 'get',
@@ -43,6 +44,7 @@ const contract = async (id, token) => {
 
   return translateDatesToExpectedFormat(response.data);
 };
+
 const contracts = async (start, pagesize, filters, token) => {
   const params = {
     start,
@@ -313,7 +315,6 @@ const bondCurrencies = async (token) => {
   return response.data.bondCurrencies;
 };
 
-// TODO once world uses middleware, remove the old 'countries method'
 const getCountries = async (token) => {
   const response = await axios({
     method: 'get',
@@ -330,20 +331,6 @@ const getCountries = async (token) => {
   };
 };
 
-const countries = async (token) => {
-  const response = await axios({
-    method: 'get',
-    url: `${urlRoot}/v1/countries`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return response.data.countries;
-};
-
-// TODO once world uses middleware, remove the old 'industrySectors method'
 const getIndustrySectors = async (token) => {
   const response = await axios({
     method: 'get',
@@ -358,32 +345,6 @@ const getIndustrySectors = async (token) => {
     status: response.status,
     industrySectors: response.data.industrySectors,
   };
-};
-
-const industrySectors = async (token) => {
-  const response = await axios({
-    method: 'get',
-    url: `${urlRoot}/v1/industry-sectors`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return response.data.industrySectors;
-};
-
-const mandatoryCriteria = async (token) => {
-  const response = await axios({
-    method: 'get',
-    url: `${urlRoot}/v1/mandatory-criteria`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return response.data.mandatoryCriteria;
 };
 
 const transactions = async (token) => {
@@ -478,8 +439,6 @@ const getDeal = async (id, token) => {
   };
 };
 
-// TODO middleware uses getMandatoryCriteria; once everything uses middleware get rid of the
-//  'mandatoryCriteria' method..
 const getMandatoryCriteria = async (token) => {
   const response = await axios({
     method: 'get',
@@ -505,12 +464,9 @@ export default {
   contractBond,
   contract,
   contracts,
-  countries,
   createBond,
   createDeal,
-  industrySectors,
   login,
-  mandatoryCriteria,
   transactions,
   updateBond,
   updateDeal,

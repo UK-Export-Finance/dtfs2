@@ -10,7 +10,7 @@ import {
 
 import {
   provide, DEAL, COUNTRIES, MANDATORY_CRITERIA,
-} from './api-data-provider';
+} from '../api-data-provider';
 
 const upload = multer();
 
