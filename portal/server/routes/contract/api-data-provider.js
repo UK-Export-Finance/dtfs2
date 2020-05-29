@@ -1,20 +1,4 @@
 import api from '../../api';
-//
-// const dealProvider = async (req, res, next) => {
-//   const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
-//   const token = req.session.userToken;
-//
-//   const { status, deal } = await api.getDeal(dealId, token);
-//
-//   if (status !== 200) {
-//     // TODO presumably it would be good to provide some feedback here?
-//     console.log(`api-data-provider: received status ${status} when quering for deal ${dealId}`);
-//   }
-//   req.deal = deal;
-//   return next();
-// };
-//
-// export default dealProvider;
 
 const INDUSTRY_SECTORS = 'industrySectors';
 const COUNTRIES = 'countries';
