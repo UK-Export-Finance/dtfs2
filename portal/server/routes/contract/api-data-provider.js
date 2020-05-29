@@ -3,6 +3,7 @@ import api from '../../api';
 const INDUSTRY_SECTORS = 'industrySectors';
 const COUNTRIES = 'countries';
 const CURRENCIES = 'currencies';
+const MANDATORY_CRITERIA = 'mandatoryCriteria';
 const DEAL = 'deal';
 
 const get = async (dataType, req) => {
@@ -38,6 +39,13 @@ const get = async (dataType, req) => {
       console.log(`api-data-provider: received status ${status} when quering for currencies`);
     }
     return currencies;
+  } if (MANDATORY_CRITERIA === dataType) {
+    const { status, mandatoryCriteria } = await api.getMandatoryCriteria(token);
+    if (status !== 200) {
+      // TODO presumably it would be good to provide some feedback here?
+      console.log(`api-data-provider: received status ${status} when quering for mandatory criteria`);
+    }
+    return mandatoryCriteria;
   }
   console.log(`api-data-provider has been asked to provide ${dataType} but doesn't know how...`);
   return [];
@@ -67,6 +75,7 @@ export {
   INDUSTRY_SECTORS,
   COUNTRIES,
   CURRENCIES,
+  MANDATORY_CRITERIA,
   DEAL,
   provide,
 };

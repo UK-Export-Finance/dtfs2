@@ -31,26 +31,6 @@ const login = async (username, password) => {
     return new Error('error with token');// do something proper here, but for now just reject failed logins..
   }
 };
-
-// TODO middleware uses getDeal; once everything uses middleware get rid of the 'contract' method..
-const getDeal = async (id, token) => {
-  const response = await axios({
-    method: 'get',
-    url: `${urlRoot}/v1/deals/${id}`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  const deal = await translateDatesToExpectedFormat(response.data);
-
-  return {
-    status: response.status,
-    deal,
-  };
-};
-
 const contract = async (id, token) => {
   const response = await axios({
     method: 'get',
@@ -63,8 +43,6 @@ const contract = async (id, token) => {
 
   return translateDatesToExpectedFormat(response.data);
 };
-
-
 const contracts = async (start, pagesize, filters, token) => {
   const params = {
     start,
@@ -481,14 +459,51 @@ const user = async (id, token) => {
   return response.data;
 };
 
+// TODO middleware uses getDeal; once everything uses middleware get rid of the 'contract' method..
+const getDeal = async (id, token) => {
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/v1/deals/${id}`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const deal = await translateDatesToExpectedFormat(response.data);
+
+  return {
+    status: response.status,
+    deal,
+  };
+};
+
+// TODO middleware uses getMandatoryCriteria; once everything uses middleware get rid of the
+//  'mandatoryCriteria' method..
+const getMandatoryCriteria = async (token) => {
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/v1/mandatory-criteria`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return {
+    status: response.status,
+    mandatoryCriteria: response.data.mandatoryCriteria,
+  };
+};
+
 
 export default {
   banks,
   bondCurrencies,
   cloneDeal,
   createLoan,
-  contract,
   contractBond,
+  contract,
   contracts,
   countries,
   createBond,
@@ -513,4 +528,5 @@ export default {
   getCurrencies,
   getCountries,
   getIndustrySectors,
+  getMandatoryCriteria,
 };
