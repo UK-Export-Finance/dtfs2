@@ -73,6 +73,63 @@ context('A maker selects to submit a contract for review from the view-contract 
       contract.proceedToReview().click();
       cy.url().should('eq', relative(`/contract/${deal._id}/ready-for-review`));
     });
+
+    it('The cancel button returns the user to the view-contract page.', () => {
+      // log in, visit a deal, select abandon
+      cy.login({ ...maker1 });
+      contract.visit(deal);
+      contract.proceedToReview().click();
+
+      // cancel
+      contractReadyForReview.comments().should('have.value', '');
+      contractReadyForReview.cancel().click();
+
+      // check we've gone to the right page
+      cy.url().should('eq', relative(`/contract/${deal._id}`));
+    });
+
+    it('The ReadyForCheckersApproval button generates an error if no comment has been entered.', () => {
+      // log in, visit a deal, select abandon
+      cy.login({ ...maker1 });
+      contract.visit(deal);
+      contract.proceedToReview().click();
+
+      cy.title().should('eq', `Ready for review - ${deal.details.bankSupplyContractName}${defaults.pageTitleAppend}`);
+
+      // submit without a comment
+      contractReadyForReview.comments().should('have.value', '');
+      contractReadyForReview.readyForCheckersApproval().click();
+
+      // expect to stay on the submit-for-review page, and see an error
+      cy.url().should('eq', relative(`/contract/${deal._id}/ready-for-review`));
+      contractReadyForReview.expectError('Comment is required when submitting a deal for review.');
+    });
+
+    it('The Ready for Checkers Review button updates the deal and takes the user to /dashboard.', () => {
+      // log in, visit a deal, select abandon
+      cy.login({ ...maker1 });
+      contract.visit(deal);
+      contract.proceedToReview().click();
+
+      // submit with a comment
+      contractReadyForReview.comments().type('a mandatory comment');
+      contractReadyForReview.readyForCheckersApproval().click();
+
+      // expect to land on the /dashboard page with a success message
+      cy.url().should('include', '/dashboard');
+      successMessage.successMessageListItem().invoke('text').then((text) => {
+        expect(text.trim()).to.match(/Supply Contract submitted for review./);
+      });
+
+      // visit the deal and confirm the updates have been made
+      contract.visit(deal);
+      contract.status().invoke('text').then((text) => {
+        expect(text.trim()).to.equal("Ready for Checker's approval");
+      });
+      contract.previousStatus().invoke('text').then((text) => {
+        expect(text.trim()).to.equal('Draft');
+      });
+    });
   });
 
   describe('when a deal has Completed Eligibility and a Bond with `Issued` bond stage without a Cover Start Date', () => {
@@ -105,63 +162,6 @@ context('A maker selects to submit a contract for review from the view-contract 
       row.requestedCoverStartDate().invoke('text').then((text) => {
         expect(text.trim()).equal(expectedDate);
       });
-    });
-  });
-
-  it('The cancel button returns the user to the view-contract page.', () => {
-    // log in, visit a deal, select abandon
-    cy.login({ ...maker1 });
-    contract.visit(deal);
-    contract.proceedToReview().click();
-
-    // cancel
-    contractReadyForReview.comments().should('have.value', '');
-    contractReadyForReview.cancel().click();
-
-    // check we've gone to the right page
-    cy.url().should('eq', relative(`/contract/${deal._id}`));
-  });
-
-  it('The ReadyForCheckersApproval button generates an error if no comment has been entered.', () => {
-    // log in, visit a deal, select abandon
-    cy.login({ ...maker1 });
-    contract.visit(deal);
-    contract.proceedToReview().click();
-
-    cy.title().should('eq', `Ready for review - ${deal.details.bankSupplyContractName}${defaults.pageTitleAppend}`);
-
-    // submit without a comment
-    contractReadyForReview.comments().should('have.value', '');
-    contractReadyForReview.readyForCheckersApproval().click();
-
-    // expect to stay on the submit-for-review page, and see an error
-    cy.url().should('eq', relative(`/contract/${deal._id}/ready-for-review`));
-    contractReadyForReview.expectError('Comment is required when submitting a deal for review.');
-  });
-
-  it('The Ready for Checkers Review button updates the deal and takes the user to /dashboard.', () => {
-    // log in, visit a deal, select abandon
-    cy.login({ ...maker1 });
-    contract.visit(deal);
-    contract.proceedToReview().click();
-
-    // submit with a comment
-    contractReadyForReview.comments().type('a mandatory comment');
-    contractReadyForReview.readyForCheckersApproval().click();
-
-    // expect to land on the /dashboard page with a success message
-    cy.url().should('include', '/dashboard');
-    successMessage.successMessageListItem().invoke('text').then((text) => {
-      expect(text.trim()).to.match(/Supply Contract submitted for review./);
-    });
-
-    // visit the deal and confirm the updates have been made
-    contract.visit(deal);
-    contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal("Ready for Checker's approval");
-    });
-    contract.previousStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Draft');
     });
   });
 });
