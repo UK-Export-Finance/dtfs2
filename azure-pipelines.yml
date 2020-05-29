@@ -3,10 +3,10 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
-- master
-
-resources:
-- repo: self
+  batch: true
+  branches:
+    include:
+    - master
 
 variables:
 
@@ -74,5 +74,32 @@ stages:
 - stage: deploy
   displayName: Deploy stage
   jobs:
-    - job: portal
-      displayName: 'Portal: deploy to App Service'
+  - job: portal
+    displayName: 'Portal: deploy to App Service'
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: AzureRmWebAppDeployment@4
+      displayName: Deploy
+      inputs:
+        azureSubscription: '$(serviceConnection)'
+        appType: 'webAppContainer'
+        WebAppName: 'dtfs-$(portal)-dev'
+        DockerNamespace: '$(containerRegistry)'
+        DockerRepository: '$(portal)'
+        DockerImageTag: '$(Build.BuildId)'
+  - job: dealApi
+    displayName: 'Deal API: deploy to App Service'
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: AzureRmWebAppDeployment@4
+      displayName: Deploy
+      inputs:
+        azureSubscription: '$(serviceConnection)'
+        appType: 'webAppContainer'
+        WebAppName: 'dtfs-$(dealApi)-dev'
+        DockerNamespace: '$(containerRegistry)'
+        DockerRepository: '$(dealApi)'
+        DockerImageTag: '$(Build.BuildId)'
+
