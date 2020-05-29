@@ -266,10 +266,6 @@ describe('/v1/deals/:id/bond', () => {
 
       expect(status).toEqual(200);
       expect(body.bondTransactions.items.length).toEqual(2);
-
-      // const existingBond = body.bondTransactions.items.find((b) =>
-      //   b._id === mockBond._id); // eslint-disable-line no-underscore-dangle
-      // expect(Object.keys(existingBond).length).toEqual(1);
     });
   });
 

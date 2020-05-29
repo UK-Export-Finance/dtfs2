@@ -322,7 +322,7 @@ describe('/v1/deals/:id/status', () => {
 
     describe('when the status changes from `Draft` to `Ready for Checker\'s approval`', () => {
       describe('when a deal contains bonds with an `Issued` bondStage that do NOT have a requestedCoverStartDate', () => {
-        it('it should add todays date to such bonds', async () => {
+        it('should add todays date to such bonds', async () => {
           const baseBond = {
             bondIssuer: 'issuer',
             bondType: 'bond type',
