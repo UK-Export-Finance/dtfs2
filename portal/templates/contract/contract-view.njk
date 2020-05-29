@@ -7,6 +7,7 @@
 
 {% import './components/abandon-deal-button.njk' as abandonButton %}
 {% import './components/abandon-deal-link.njk' as abandonLink %}
+{% import './components/please-complete-all-forms-text.njk' as pleaseCompleteAllFormsText %}
 {% import './components/can-proceed-text.njk' as canProceedText %}
 {% import './components/clone-deal-link.njk' as cloneLink %}
 {% import './components/edit-deal-name-link.njk' as editDealNameLink %}
@@ -19,7 +20,7 @@
 
 {% block content %}
 
-  {% set componentData = {user: user, deal: deal} %}
+  {% set componentData = {user: user, deal: deal, dealFormsCompleted: dealFormsCompleted} %}
 
   <div class="contract-container">
 
@@ -76,9 +77,9 @@
             <div class="govuk-grid-column-three-quarters">
               <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
 
-                {% if deal.confirmEligibility.status %}
-                  <span class="govuk-!-margin-left-6 box__header-inline-message">
-                    {{ statusTag.render(deal.confirmEligibility.status) }}
+                {% if deal.eligibility.status %}
+                  <span class="govuk-!-margin-left-6 box__header-inline-message" data-cy="eligibility-status">
+                    {{ statusTag.render(deal.eligibility.status) }}
                   </span>
                 {% endif %}
 
@@ -285,6 +286,7 @@
 
         </div>
 
+        {{ pleaseCompleteAllFormsText.render(componentData)}}
         {{ canProceedText.render(componentData)}}
         {{ reviewLink.render(componentData)}}
         {{ proceedToReviewButton.render(componentData)}}

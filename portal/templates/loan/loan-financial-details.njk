@@ -3,7 +3,7 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% import './_macros/loan-nav.njk' as loanNav %}
-{% import '_macros/date-fields.njk' as dateFields %}
+{% import '_macros/date-field.njk' as dateField %}
 
 {% block pageTitle %}Loan Financial Details{% endblock %}
 
@@ -122,7 +122,7 @@
       </div>
 
       <div class="govuk-form-group">
-        {{ dateFields.inputs(
+        {{ dateField.render(
           legend = 'Conversion rate date',
           id = 'conversionRateDate',
           hint = 'For example, 27 11 2019',

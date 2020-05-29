@@ -9,6 +9,7 @@ const { getCloneDealErrors } = require('../validation/clone-deal');
 
 const { isSuperUser, userHasAccessTo } = require('../users/checks');
 const { generateDealId } = require('../../utils/generateIds');
+const { dealFacilityStatuses } = require('../facilities-status');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -127,7 +128,9 @@ exports.findOne = (req, res) => {
     } else if (!userHasAccessTo(req.user, deal)) {
       res.status(401).send();
     } else {
-      res.status(200).send(deal);
+      res.status(200).send(
+        dealFacilityStatuses(deal),
+      );
     }
   });
 };

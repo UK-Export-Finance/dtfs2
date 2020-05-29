@@ -5,6 +5,7 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% import './_macros/bond-nav.njk' as bondNav %}
+{% import '_macros/date-field.njk' as dateField %}
 
 {% block pageTitle %}Bond Details{% endblock %}
 
@@ -219,89 +220,26 @@
           {% endif %}
         >
 
-          {{ govukDateInput({
-            id: "requestedCoverStartDate",
-            namePrefix: "requestedCoverStartDate",
-            fieldset: {
-              legend: {
-                text: "Requested Cover Start Date (optional)"
-              }
-            },
-            hint: {
-              html: "<p>For example, 27 11 2019<p>This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date</p>"
-            },
-            items: [
-              {
-                classes: "govuk-input--width-2",
-                name: "day",
-                value: bond['requestedCoverStartDate-day'],
-                attributes: {
-                  'data-cy': "requestedCoverStartDate-day"
-                }
-              },
-              {
-                classes: "govuk-input--width-2",
-                name: "month",
-                value: bond['requestedCoverStartDate-month'],
-                attributes: {
-                  'data-cy': "requestedCoverStartDate-month"
-                }
-              },
-              {
-                classes: "govuk-input--width-2",
-                name: "year",
-                value: bond['requestedCoverStartDate-year'],
-                attributes: {
-                  'data-cy': "requestedCoverStartDate-year"
-                }
-              }
-            ]
-          }) }}
+          {{ dateField.render(
+            legend = 'Requested Cover Start Date (optional)',
+            id = 'requestedCoverStartDate',
+            hint = '<p>For example, 27 11 2019</p><p>This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date</p>',
+            dayValue = bond['requestedCoverStartDate-day'],
+            monthValue = bond['requestedCoverStartDate-month'],
+            yearValue = bond['requestedCoverStartDate-year'],
+            error = validationErrors.errorList.requestedCoverStartDate
+          )}}
 
-          {{ govukDateInput({
-            id: "coverEndDate",
-            namePrefix: "coverEndDate",
-            fieldset: {
-              legend: {
-                text: "Cover End Date"
-              }
-            },
-            hint: {
-              text: "For example, 27 11 2025"
-            },
-            errorMessage: (validationErrors.errorList.coverEndDate.text or (not bond['coverEndDate-day']) or (not bond['coverEndDate-month']) or (not bond['coverEndDate-year'])) and {
-              text: validationErrors.errorList.coverEndDate.text or validationErrors.conditionalErrorList.bondStage.Issued.coverEndDate.text,
-              attributes: {
-                'data-cy': "coverEndDate-error-message"
-              }
-            },
-            items: [
-              {
-                classes: (not bond['coverEndDate-day']) and "govuk-input--width-2 govuk-input--error" or "govuk-input--width-2",
-                name: "day",
-                value: bond['coverEndDate-day'],
-                attributes: {
-                  'data-cy': "coverEndDate-day"
-                }
-              },
-              {
-                classes: (not bond['coverEndDate-month']) and "govuk-input--width-2 govuk-input--error" or "govuk-input--width-2",
-                name: "month",
-                value: bond['coverEndDate-month'],
-                attributes: {
-                  'data-cy': "coverEndDate-month"
-                }
-              },
-              {
-                classes: (not bond['coverEndDate-year']) and "govuk-input--width-2 govuk-input--error" or "govuk-input--width-2",
-                name: "year",
-                value: bond['coverEndDate-year'],
-                attributes: {
-                  'data-cy': "coverEndDate-year"
-                }
-              }
-            ]
-          }) }}
+          {{ dateField.render(
+            legend = 'Cover End Date',
+            id = 'coverEndDate',
+            hint = 'For example, 27 11 2025',
+            dayValue = bond['coverEndDate-day'],
+            monthValue = bond['coverEndDate-month'],
+            yearValue = bond['coverEndDate-year'],
+            error = validationErrors.errorList.coverEndDate,
+            conditionalError = validationErrors.conditionalErrorList.bondStage.Issued.coverEndDate
+          )}}
 
           {{ govukInput({
             label: {
@@ -323,7 +261,6 @@
           }) }}
 
         </div>
-
 
         <div class="govuk-form-group">
 

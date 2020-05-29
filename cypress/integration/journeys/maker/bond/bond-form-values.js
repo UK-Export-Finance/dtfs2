@@ -1,3 +1,9 @@
+const moment = require('moment');
+
+const date = moment();
+const requestedCoverStartDate = date;
+const coverEndDate = moment(date).add(1, 'months');
+
 const DETAILS = {
   bondIssuer: 'mock issuer',
   bondType: {
@@ -6,12 +12,12 @@ const DETAILS = {
   },
 
   // 'issued' bond stage specifics
-  requestedCoverStartDateDay: '16',
-  requestedCoverStartDateMonth: '10',
-  requestedCoverStartDateYear: '2021',
-  coverEndDateDay: '14',
-  coverEndDateMonth: '12',
-  coverEndDateYear: '2025',
+  requestedCoverStartDateDay: moment(requestedCoverStartDate).format('DD'),
+  requestedCoverStartDateMonth: moment(requestedCoverStartDate).format('MM'),
+  requestedCoverStartDateYear: moment(requestedCoverStartDate).format('YYYY'),
+  coverEndDateDay: moment(coverEndDate).format('DD'),
+  coverEndDateMonth: moment(coverEndDate).format('MM'),
+  coverEndDateYear: moment(coverEndDate).format('YYYY'),
   uniqueIdentificationNumber: '123456',
   bondBeneficiary: 'mock beneficiary',
 

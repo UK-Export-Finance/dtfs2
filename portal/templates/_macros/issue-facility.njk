@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
-{% import '_macros/date-fields.njk' as dateFields %}
+{% import '_macros/date-field.njk' as dateField %}
 
 {% macro render(dealId, isBond) %}
 
@@ -9,20 +9,19 @@
 
   <form method="POST" autocomplete="off">
 
-    {{ dateFields.inputs(
+    {{ dateField.render(
       legend = 'Issued Date',
       id = 'issuedDate',
       hint = 'For example, 27 11 2019'
     )}}
 
-    {{ dateFields.inputs(
+    {{ dateField.render(
       legend = 'Requested Cover Start Date',
       id = 'requestedCoverStartDate',
-      hint = 'For example, 27 11 2019',
-      secondaryHint = 'If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date'
+      hint = '<p>For example, 27 11 2019</p><p>If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date</p>'
     )}}
 
-    {{ dateFields.inputs(
+    {{ dateField.render(
       legend = 'Cover End Date',
       id = 'coverEndDate',
       hint = 'For example, 27 11 2025'

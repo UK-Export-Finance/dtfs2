@@ -3,6 +3,7 @@ const { userHasAccessTo } = require('../users/checks');
 const { findOneBondCurrency } = require('./bondCurrencies.controller');
 const { getBondErrors } = require('../validation/bond');
 const { generateFacilityId } = require('../../utils/generateIds');
+const { bondStatus } = require('../facilities-status/bond');
 
 exports.getBond = async (req, res) => {
   const {
@@ -24,7 +25,10 @@ exports.getBond = async (req, res) => {
 
         return res.json({
           dealId,
-          bond,
+          bond: {
+            ...bond,
+            status: bondStatus(validationErrors),
+          },
           validationErrors,
         });
       }
@@ -46,7 +50,6 @@ exports.create = async (req, res) => {
 
     const newBondObj = {
       _id: facilityId,
-      status: 'Incomplete',
     };
 
     const updatedDeal = {
@@ -152,12 +155,6 @@ exports.updateBond = async (req, res) => {
       }
 
       const validationErrors = getBondErrors(updatedBond);
-
-      if (validationErrors.count === 0) {
-        updatedBond.status = 'Completed';
-      } else {
-        updatedBond.status = 'Incomplete';
-      }
 
       const updatedDeal = {
         ...deal,

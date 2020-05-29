@@ -1,6 +1,7 @@
 const page = {
   visit: (deal) => cy.visit(`/contract/${deal._id}`),
   editDealName: () => cy.get('[data-cy="EditDealName"]'),
+  eligibilityStatus: () => cy.get('[data-cy="eligibility-status"]'),
   eligibilityCriteriaLink: () => cy.get('[data-cy="ViewDetails"]'),
   aboutSupplierDetailsStatus: () => cy.get('[data-cy="aboutSupplierDetailsStatus"]'),
   aboutSupplierDetailsLink: () => cy.get('[data-cy="ViewAboutSupplierDetails"]'),
@@ -17,6 +18,7 @@ const page = {
   cloneDealLink: () => cy.get('[data-cy="clone-deal-link"]'),
   addBondButton: () => cy.get('[data-cy="button-add-bond"]'),
 
+  pleaseCompleteAllForms: () => cy.get('[data-cy="pleaseCompleteAllForms"]'),
   canProceed: () => cy.get('[data-cy="canProceed"]'),
   reviewEligibilityChecklistForm: () => cy.get('[data-cy="reviewEligibilityChecklistForm"]'),
   cannotProceed: () => cy.get('[data-cy="cannotProceed"]'),

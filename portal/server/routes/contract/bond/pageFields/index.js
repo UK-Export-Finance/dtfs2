@@ -11,6 +11,14 @@ const FIELDS = {
       // required if bondStage is 'Issued'
       'coverEndDate',
       'uniqueIdentificationNumber',
+
+      // TODO
+      // optional fields that could have validation errors
+      // feels like this should be in it's own array OR
+      // maybe change requiredFieldsArray usage in filterErrorList function
+      // requiredFieldsArray could be e.g fieldsThatCanHaveErrorsArray
+      // and then pass OPTIONAL_FIELDS in so it's not just checking for required fields
+      'requestedCoverStartDate',
     ],
     OPTIONAL_FIELDS: [
       'bondIssuer',

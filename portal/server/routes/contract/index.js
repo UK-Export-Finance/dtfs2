@@ -9,19 +9,24 @@ import {
   requestParams,
   errorHref,
   postToApi,
+  dealFormsCompleted,
 } from '../../helpers';
 
 const router = express.Router();
 
+
 router.get('/contract/:_id', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
+  const deal = await getApiData(
+    api.contract(_id, userToken),
+    res,
+  );
+
   return res.render('contract/contract-view.njk', {
-    deal: await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ),
+    deal,
     user: req.session.user,
+    dealFormsCompleted: dealFormsCompleted(deal),
   });
 });
 
