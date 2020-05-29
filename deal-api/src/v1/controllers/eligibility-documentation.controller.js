@@ -99,6 +99,7 @@ exports.update = async (req, res) => {
     const updatedDealData = {
       dealFiles: {
         ...dealFiles,
+        security: req.body.security,
         validationErrors,
       },
     };
