@@ -3,6 +3,7 @@ const { userHasAccessTo } = require('../users/checks');
 const { findOneBondCurrency } = require('./bondCurrencies.controller');
 const { getBondErrors } = require('../validation/bond');
 const { generateFacilityId } = require('../../utils/generateIds');
+const { bondStatus } = require('../facilities-status/bond');
 
 exports.getBond = async (req, res) => {
   const {
@@ -22,13 +23,11 @@ exports.getBond = async (req, res) => {
       if (bond) {
         const validationErrors = getBondErrors(bond);
 
-        const bondStatus = validationErrors.count === 0 ? 'Completed' : 'Incomplete';
-
         return res.json({
           dealId,
           bond: {
             ...bond,
-            status: bondStatus,
+            status: bondStatus(validationErrors),
           },
           validationErrors,
         });
