@@ -1,6 +1,6 @@
 {% extends "index.njk" %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% import '_macros/date-fields.njk' as dateFields %}
+{% import '_macros/date-field.njk' as dateField %}
 
 {% block content %}
 
@@ -29,7 +29,7 @@
       ]
     }) }}
 
-    {{ dateFields.inputs(
+    {{ dateField.render(
       legend = 'New Requested Cover Start Date',
       id = 'requestedCoverStartDate',
       hint = 'For example, 27 11 2019'

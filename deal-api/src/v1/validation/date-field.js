@@ -1,12 +1,32 @@
+const moment = require('moment');
 const { hasValue } = require('../../utils/string');
 
-exports.dateIsValid = (day, month, year) => {
+exports.dateHasAllValues = (day, month, year) => {
   const hasDay = hasValue(day);
   const hasMonth = hasValue(month);
   const hasYear = hasValue(year);
 
-  const isValid = (hasDay && hasMonth && hasYear);
-  return isValid;
+  const hasValues = (hasDay && hasMonth && hasYear);
+  return hasValues;
+};
+
+exports.dateHasSomeValues = (day, month, year) => {
+  const hasDay = hasValue(day);
+  const hasMonth = hasValue(month);
+  const hasYear = hasValue(year);
+
+  const hasSomeValues = (hasDay || hasMonth || hasYear);
+  return hasSomeValues;
+};
+
+exports.dateIsInTimeframe = (day, month, year, start, end) => {
+  const formattedDate = moment(`${year}-${month}-${day}`);
+  const isInTimeframe = moment(formattedDate).isBetween(start, end, 'days', '[]');
+
+  if (isInTimeframe) {
+    return true;
+  }
+  return false;
 };
 
 exports.dateValidationText = (

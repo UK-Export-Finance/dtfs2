@@ -40,7 +40,7 @@ const DEFAULTS = {
       status: 'Draft',
     },
     eligibility: {
-      status: 'Initial',
+      status: 'Incomplete',
       criteria: ELIGIBILITY_CRITERIA,
     },
     submissionDetails: {

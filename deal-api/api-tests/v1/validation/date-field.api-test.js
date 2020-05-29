@@ -1,24 +1,131 @@
+const moment = require('moment');
 const {
-  dateIsValid,
+  dateHasAllValues,
+  dateHasSomeValues,
+  dateIsInTimeframe,
   dateValidationText,
 } = require('../../../src/v1/validation/date-field');
 
 describe('validation - date-field', () => {
-  describe('dateIsValid', () => {
+  describe('dateHasAllValues', () => {
     it('should return true when day, month and year is provided', () => {
-      const result = dateIsValid('01', '02', '2020');
+      const result = dateHasAllValues('01', '02', '2020');
       expect(result).toEqual(true);
     });
 
     it('should return false when day or month or year is missing', () => {
-      expect(dateIsValid('', '02', '2020')).toEqual(false);
-      expect(dateIsValid('01', '', '2020')).toEqual(false);
-      expect(dateIsValid('01', '02', '')).toEqual(false);
-      expect(dateIsValid('01', '', '')).toEqual(false);
-      expect(dateIsValid('', '02', '2020')).toEqual(false);
-      expect(dateIsValid()).toEqual(false);
-      expect(dateIsValid('', '')).toEqual(false);
-      expect(dateIsValid('01/02/2020')).toEqual(false);
+      expect(dateHasAllValues('', '02', '2020')).toEqual(false);
+      expect(dateHasAllValues('01', '', '2020')).toEqual(false);
+      expect(dateHasAllValues('01', '02', '')).toEqual(false);
+      expect(dateHasAllValues('01', '', '')).toEqual(false);
+      expect(dateHasAllValues('', '02', '2020')).toEqual(false);
+      expect(dateHasAllValues()).toEqual(false);
+      expect(dateHasAllValues('', '')).toEqual(false);
+      expect(dateHasAllValues('01/02/2020')).toEqual(false);
+    });
+  });
+
+  describe('dateHasSomeValues', () => {
+    it('should return true when only day is provided', () => {
+      const result = dateHasSomeValues('01');
+      expect(result).toEqual(true);
+    });
+
+    it('should return true when only month is provided', () => {
+      const result = dateHasSomeValues('', '02');
+      expect(result).toEqual(true);
+    });
+
+    it('should return true when only year is provided', () => {
+      const result = dateHasSomeValues('', '', '2020');
+      expect(result).toEqual(true);
+    });
+
+    it('should return false when no values provided', () => {
+      expect(dateHasSomeValues('', '', '')).toEqual(false);
+      expect(dateHasSomeValues()).toEqual(false);
+    });
+  });
+
+  describe('dateIsInTimeframe', () => {
+    describe('when a date is within the given timeframe', () => {
+      it('should return true', () => {
+        const nowDate = moment();
+        const day = moment(nowDate).format('DD');
+        const month = moment(nowDate).format('MM');
+        const year = moment(nowDate).format('YYYY');
+        const startDate = moment(nowDate).subtract(1, 'day');
+        const endDate = moment(nowDate).add(7, 'day');
+
+        const result = dateIsInTimeframe(
+          day,
+          month,
+          year,
+          startDate,
+          endDate,
+        );
+        expect(result).toEqual(true);
+      });
+    });
+
+    describe('when a date is the same as the start of the given timeframe', () => {
+      it('should return true', () => {
+        const nowDate = moment();
+        const day = moment(nowDate).format('DD');
+        const month = moment(nowDate).format('MM');
+        const year = moment(nowDate).format('YYYY');
+        const startDate = nowDate;
+        const endDate = moment(nowDate).add(7, 'day');
+
+        const result = dateIsInTimeframe(
+          day,
+          month,
+          year,
+          startDate,
+          endDate,
+        );
+        expect(result).toEqual(true);
+      });
+    });
+
+    describe('when a date is the same as the end of the given timeframe', () => {
+      it('should return true', () => {
+        const nowDate = moment();
+        const day = moment(nowDate).add(7, 'day').format('DD');
+        const month = moment(nowDate).add(7, 'day').format('MM');
+        const year = moment(nowDate).add(7, 'day').format('YYYY');
+        const startDate = nowDate;
+        const endDate = moment(nowDate).add(7, 'day');
+
+        const result = dateIsInTimeframe(
+          day,
+          month,
+          year,
+          startDate,
+          endDate,
+        );
+        expect(result).toEqual(true);
+      });
+    });
+
+    describe('when a date is NOT within the given timeframe', () => {
+      it('should return false', () => {
+        const nowDate = moment();
+        const day = moment(nowDate).add(8, 'day').format('DD');
+        const month = moment(nowDate).add(8, 'day').format('MM');
+        const year = moment(nowDate).add(8, 'day').format('YYYY');
+        const startDate = moment(nowDate).subtract(1, 'day');
+        const endDate = moment(nowDate).add(7, 'day');
+
+        const result = dateIsInTimeframe(
+          day,
+          month,
+          year,
+          startDate,
+          endDate,
+        );
+        expect(result).toEqual(false);
+      });
     });
   });
 

@@ -3,7 +3,7 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import './_macros/loan-nav.njk' as loanNav %}
-{% import '_macros/date-fields.njk' as dateFields %}
+{% import '_macros/date-field.njk' as dateField %}
 
 {% block pageTitle %}Loan Guarantee Details{% endblock %}
 
@@ -126,11 +126,10 @@
         >
 
           <div class="govuk-form-group">
-            {{ dateFields.inputs(
+            {{ dateField.render(
               legend = 'Requested Cover Start Date (optional)',
               id = 'requestedCoverStartDate',
-              hint = 'For example, 31 05 2017',
-              secondaryHint = 'This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date.',
+              hint = '<p>For example, 31 05 2017</p><p>This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date.</p>',
               dayValue = loan['requestedCoverStartDate-day'],
               monthValue = loan['requestedCoverStartDate-month'],
               yearValue = loan['requestedCoverStartDate-year']
@@ -138,7 +137,7 @@
           </div>
 
           <div class="govuk-form-group">
-            {{ dateFields.inputs(
+            {{ dateField.render(
               legend = 'Cover End Date',
               id = 'coverEndDate',
               hint = 'For example, 31 05 2017',

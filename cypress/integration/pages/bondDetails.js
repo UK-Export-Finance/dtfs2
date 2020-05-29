@@ -16,6 +16,7 @@ const page = {
   requestedCoverStartDateDayInput: () => cy.get('[data-cy="requestedCoverStartDate-day"]'),
   requestedCoverStartDateMonthInput: () => cy.get('[data-cy="requestedCoverStartDate-month"]'),
   requestedCoverStartDateYearInput: () => cy.get('[data-cy="requestedCoverStartDate-year"]'),
+  requestedCoverStartDateInputErrorMessage: () => cy.get('[data-cy="requestedCoverStartDate-error-message"]'),
 
   coverEndDateDayInput: () => cy.get('[data-cy="coverEndDate-day"]'),
   coverEndDateMonthInput: () => cy.get('[data-cy="coverEndDate-month"]'),

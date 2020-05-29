@@ -13,6 +13,9 @@ module.exports = [
       status: 'Incomplete',
       'supplier-name': 'Supplier name 1',
     },
+    eligibility: {
+      status: 'Incomplete',
+    },
   }, {
     details: {
       bankSupplyContractID: 'abc/2/def',
