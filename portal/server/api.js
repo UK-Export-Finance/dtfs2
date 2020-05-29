@@ -32,19 +32,6 @@ const login = async (username, password) => {
   }
 };
 
-const contract = async (id, token) => {
-  const response = await axios({
-    method: 'get',
-    url: `${urlRoot}/v1/deals/${id}`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return translateDatesToExpectedFormat(response.data);
-};
-
 const contracts = async (start, pagesize, filters, token) => {
   const params = {
     start,
@@ -462,7 +449,6 @@ export default {
   cloneDeal,
   createLoan,
   contractBond,
-  contract,
   contracts,
   createBond,
   createDeal,
