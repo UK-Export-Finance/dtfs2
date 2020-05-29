@@ -12,6 +12,7 @@ const FIELDS = {
       'coverEndDate',
       'uniqueIdentificationNumber',
 
+      // TODO
       // optional fields that could have validation errors
       // feels like this should be in it's own array OR
       // maybe change requiredFieldsArray usage in filterErrorList function
