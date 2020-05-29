@@ -78,10 +78,13 @@ module.exports.generateTypeA = async (deal) => {
     .Buyer_name(deal.submissionDetails['buyer-name'])
     .Buyer_country_code(await convertCountryCodeToId(deal.submissionDetails['buyer-address-country']))
     .Destination_country_code(await convertCountryCodeToId(deal.submissionDetails.destinationOfGoodsAndServices))
-    .Deal_currency_code('//TODO')
-    .Conversion_rate('//TODO')
-    .Conversion_date('//TODO')
-    .Contract_value('//TODO')
+    .Deal_currency_code(
+      deal.submissionDetails.supplyContractCurrency
+      && await convertCurrencyCodeToId(deal.submissionDetails.supplyContractCurrency.id),
+    )
+    .Conversion_rate(deal.submissionDetails.supplyContractConversionRateToGBP)
+    .Conversion_date(dateHelpers.formatDate(deal.submissionDetails['supplyContractConversionDate-day'], deal.submissionDetails['supplyContractConversionDate-month'], deal.submissionDetails['supplyContractConversionDate-year']))
+    .Contract_value(deal.submissionDetails.supplyContractValue)
 
     .Ec_agents_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 11))
     .Ec_agents_name(deal.eligibility.agentName)
@@ -133,12 +136,12 @@ module.exports.generateTypeA = async (deal) => {
         .BSS_currency_code(
           await convertCurrencyCodeToId(bond.currency && bond.currency.id), // eslint-disable-line no-await-in-loop
         )
-        .BSS_conversion_rate_deal('//TODO')
-        .BSS_conversion_date_deal('//TODO')
+        .BSS_conversion_rate_deal(bond.conversionRate)
+        .BSS_conversion_date_deal(dateHelpers.formatDate(bond['conversionRateDate-day'], bond['conversionRateDate-month'], bond['conversionRateDate-year']))
         .BSS_fee_rate(bond.riskMarginFee)
         .BSS_fee_perc('// TODO - drupal field: guarantee_fee_')
         .BSS_guarantee_perc(bond.coveredPercentage)
-        .BSS_max_liability('// TODO - drupal field: maximum_liability')
+        .BSS_max_liability('// TODO (UKEF_Exposure) - drupal field: maximum_liability')
         .BSS_min_quarterly_fee(bond.minimumRiskMarginFee)
         .BSS_premium_type(k2Map.FACILITIES.FEE_TYPE[bond.feeType])
         .BSS_cover_start_date(dateHelpers.formatDate(bond['requestedCoverStartDate-day'], bond['requestedCoverStartDate-month'], bond['requestedCoverStartDate-year']))
@@ -156,6 +159,15 @@ module.exports.generateTypeA = async (deal) => {
     }
 
     // TODO - Add Loans
+
+    // Add Deal Files
+    Object.entries(k2Map.DEAL.DEAL_FILES).forEach(([fieldname, xmlNodeName]) => {
+      if (deal.dealFiles[fieldname]) {
+        deal.dealFiles[fieldname].forEach(((df) => {
+          builder.AddDeal(xmlNodeName, df.type, df.fullPath);
+        }));
+      }
+    });
   }
 
   const typeAxml = builder.build();
@@ -177,7 +189,6 @@ module.exports.generateTypeA = async (deal) => {
   const isValidXml = parsedXml.validate(parsedXsd);
 
   if (!isValidXml) {
-    console.log(parsedXml.validationErrors);
     return {
       ...typeAxml,
       errorCount: parsedXml.validationErrors.length,

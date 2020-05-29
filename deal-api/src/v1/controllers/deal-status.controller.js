@@ -114,6 +114,8 @@ exports.update = (req, res) => {
       });
     }
 
+    /*
+    //TODO - Reinstate typeA XML creation once Loans and Summary have been added
     if (toStatus === 'Submitted') {
       const typeA = await dealIntegration.createTypeA(deal);
       if (typeA.errorCount) {
@@ -121,6 +123,7 @@ exports.update = (req, res) => {
         // return res.status(200).send(typeA);
       }
     }
+    */
 
     const collection = await db.getCollection('deals');
     const updatedDeal = await updateStatus(collection, req.params.id, fromStatus, toStatus);

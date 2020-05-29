@@ -142,14 +142,7 @@ const typeADeal = {
     EWCS_total_exposure_deal_cur: '',
     EWCS_total_premium_deal_cur: '',
   },
-  Deal_files: {
-    Exporter_questionnaire: '',
-    Audited_financial_statements: '',
-    Year_to_date_management: '',
-    Financial_forecasts: '',
-    Financial_information_commentary: '',
-    Corporate_structure: '',
-  },
+  Deal_files: {},
 };
 
 const typeABSS = {

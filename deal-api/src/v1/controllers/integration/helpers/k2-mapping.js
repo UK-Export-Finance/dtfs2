@@ -13,6 +13,15 @@ const DEAL = {
     [CONSTANTS.DEAL.SUPPLIER_TYPE.EXPORTER]: '1',
     [CONSTANTS.DEAL.SUPPLIER_TYPE.UK_SUPPLIER]: '2',
   },
+
+  DEAL_FILES: {
+    exporterQuestionnaire: 'Exporter_questionnaire',
+    auditedFinancialStatements: 'Audited_financial_statements',
+    yearToDateManagement: 'Year_to_date_management',
+    financialForecasts: 'Financial_forecasts',
+    financialInformationCommentary: 'Financial_information_commentary',
+    corporateStructure: 'Corporate_structure',
+  },
 };
 
 const FACILITIES = {
