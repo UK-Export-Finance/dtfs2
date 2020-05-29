@@ -45,8 +45,8 @@ const updateSubmissionDetails = async (deal, postedSubmissionDetails, userToken)
 const router = express.Router();
 
 router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COUNTRIES]), async (req, res) => {
-  const { _id, userToken } = requestParams(req);
   const { deal, industrySectors, countries } = req.apiData;
+  const { _id, userToken } = requestParams(req);
 
   let formattedValidationErrors = {};
   if (deal.submissionDetails.hasBeenPreviewed) {
