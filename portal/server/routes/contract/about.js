@@ -2,7 +2,6 @@ import express from 'express';
 import api from '../../api';
 import companiesHouseAPI from '../../companies-house-api';
 import {
-  getApiData,
   requestParams,
   mapCountries,
   mapCurrencies,
@@ -11,6 +10,10 @@ import {
   errorHref,
   generateErrorSummary,
 } from '../../helpers';
+
+import {
+  provide, DEAL, INDUSTRY_SECTORS, COUNTRIES, CURRENCIES,
+} from './api-data-provider';
 
 // https://developer.companieshouse.gov.uk/api/docs/company/company_number/registered-office-address/registeredOfficeAddress-resource.html
 // England, Wales, Scotland, Northern Ireland, Great Britain, United Kingdom, Not specified
@@ -22,12 +25,7 @@ const getPortalCountryForCompaniesHouseCountry = (companiesHouseCountry) => {
   return '';
 };
 
-const updateSubmissionDetails = async (dealId, postedSubmissionDetails, userToken, res) => {
-  const deal = await getApiData(
-    api.contract(dealId, userToken),
-    res,
-  );
-
+const updateSubmissionDetails = async (deal, postedSubmissionDetails, userToken) => {
   const submissionDetails = { ...postedSubmissionDetails };
 
   // fix currency
@@ -41,18 +39,14 @@ const updateSubmissionDetails = async (dealId, postedSubmissionDetails, userToke
     };
   }
 
-  await api.updateSubmissionDetails(deal, submissionDetails, userToken, res);
+  await api.updateSubmissionDetails(deal, submissionDetails, userToken);
 };
 
 const router = express.Router();
 
-router.get('/contract/:_id/about/supplier', async (req, res) => {
+router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COUNTRIES]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
-
-  const deal = await getApiData(
-    api.contract(_id, userToken),
-    res,
-  );
+  const { deal, industrySectors, countries } = req.apiData;
 
   let formattedValidationErrors = {};
   if (deal.submissionDetails.hasBeenPreviewed) {
@@ -62,15 +56,6 @@ router.get('/contract/:_id/about/supplier', async (req, res) => {
       errorHref,
     );
   }
-
-  const industrySectors = await getApiData(
-    api.industrySectors(userToken),
-    res,
-  );
-  const countries = await getApiData(
-    api.countries(userToken),
-    res,
-  );
 
   const mappedIndustrySectors = mapIndustrySectors(industrySectors, deal.submissionDetails['industry-sector']);
   const mappedIndustryClasses = mapIndustryClasses(industrySectors, deal.submissionDetails['industry-sector'], deal.submissionDetails['industry-class']);
@@ -91,24 +76,19 @@ router.get('/contract/:_id/about/supplier', async (req, res) => {
   });
 });
 
-router.post('/contract/:_id/about/supplier', async (req, res) => {
+router.post('/contract/:_id/about/supplier', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const submissionDetails = req.body;
 
-  await updateSubmissionDetails(_id, submissionDetails, userToken, res);
+  await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
 
   const redirectUrl = `/contract/${_id}/about/buyer`;
   return res.redirect(redirectUrl);
 });
 
-router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', async (req, res) => {
-  const { _id, userToken } = requestParams(req);
+router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', provide([DEAL, INDUSTRY_SECTORS, COUNTRIES]), async (req, res) => {
   const { prefix } = req.params;
-
-  const deal = await getApiData(
-    api.contract(_id, userToken),
-    res,
-  );
+  const { deal, industrySectors, countries } = req.apiData;
 
   const searchTerm = `${prefix}-companies-house-registration-number`;
   const company = await companiesHouseAPI.searchByRegistrationNumber(req.body[searchTerm]);
@@ -119,15 +99,6 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', asyn
     // TODO - send a real message?
     const validation = {};
     validation[`${prefix}-companies-house-registration-number`] = 'not found';
-
-    const industrySectors = await getApiData(
-      api.industrySectors(userToken),
-      res,
-    );
-    const countries = await getApiData(
-      api.countries(userToken),
-      res,
-    );
 
     const mappedIndustrySectors = mapIndustrySectors(industrySectors, deal.submissionDetails['industry-sector']);
     const mappedIndustryClasses = mapIndustryClasses(industrySectors, deal.submissionDetails['industry-sector'], deal.submissionDetails['industry-class']);
@@ -157,16 +128,6 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', asyn
   deal.submissionDetails[`${prefix}-address-country`] = getPortalCountryForCompaniesHouseCountry(company.address.country);
 
   // re-render
-
-  const industrySectors = await getApiData(
-    api.industrySectors(userToken),
-    res,
-  );
-  const countries = await getApiData(
-    api.countries(userToken),
-    res,
-  );
-
   const mappedIndustrySectors = mapIndustrySectors(industrySectors, deal.submissionDetails['industry-sector']);
   const mappedIndustryClasses = mapIndustryClasses(industrySectors, deal.submissionDetails['industry-sector'], deal.submissionDetails['industry-class']);
   const mappedCountries = {
@@ -185,23 +146,20 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', asyn
   });
 });
 
-router.post('/contract/:_id/about/supplier/save-go-back', async (req, res) => {
+router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const submissionDetails = req.body;
 
-  await updateSubmissionDetails(_id, submissionDetails, userToken, res);
+  await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
 
   const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/about/buyer', async (req, res) => {
+router.get('/contract/:_id/about/buyer', provide([DEAL, COUNTRIES]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  const deal = await getApiData(
-    api.contract(_id, userToken),
-    res,
-  );
+  const { deal, countries } = req.apiData;
 
   let formattedValidationErrors = {};
   if (deal.submissionDetails.hasBeenPreviewed) {
@@ -212,10 +170,6 @@ router.get('/contract/:_id/about/buyer', async (req, res) => {
     );
   }
 
-  const countries = await getApiData(
-    api.countries(userToken),
-    res,
-  );
   const mappedCountries = {
     'buyer-address-country': mapCountries(countries, deal.submissionDetails['buyer-address-country']),
     destinationOfGoodsAndServices: mapCountries(countries, deal.submissionDetails.destinationOfGoodsAndServices),
@@ -228,38 +182,29 @@ router.get('/contract/:_id/about/buyer', async (req, res) => {
   });
 });
 
-router.post('/contract/:_id/about/buyer', async (req, res) => {
+router.post('/contract/:_id/about/buyer', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const submissionDetails = req.body;
 
-  await updateSubmissionDetails(_id, submissionDetails, userToken, res);
+  await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
 
   const redirectUrl = `/contract/${_id}/about/financial`;
   return res.redirect(redirectUrl);
 });
 
-router.post('/contract/:_id/about/buyer/save-go-back', async (req, res) => {
+router.post('/contract/:_id/about/buyer/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const submissionDetails = req.body;
 
-  await updateSubmissionDetails(_id, submissionDetails, userToken, res);
+  await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
 
   const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/about/financial', async (req, res) => {
+router.get('/contract/:_id/about/financial', provide([DEAL, CURRENCIES]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
-
-  const currencies = await getApiData(
-    api.bondCurrencies(userToken),
-    res,
-  );
-
-  const deal = await getApiData(
-    api.contract(_id, userToken),
-    res,
-  );
+  const { deal, currencies } = req.apiData;
 
   let formattedValidationErrors = {};
   if (deal.submissionDetails.hasBeenPreviewed) {
@@ -277,37 +222,34 @@ router.get('/contract/:_id/about/financial', async (req, res) => {
   });
 });
 
-router.post('/contract/:_id/about/financial', async (req, res) => {
-  const { _id, userToken } = requestParams(req);
+router.post('/contract/:_id/about/financial', provide([DEAL]), async (req, res) => {
+  const { userToken } = requestParams(req);
   const submissionDetails = req.body;
 
-  await updateSubmissionDetails(_id, submissionDetails, userToken, res);
+  await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
 
   const redirectUrl = `/contract/${req.params._id}/about/preview`; // eslint-disable-line no-underscore-dangle
   return res.redirect(redirectUrl);
 });
 
-router.post('/contract/:_id/about/financial/save-go-back', async (req, res) => {
+router.post('/contract/:_id/about/financial/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const submissionDetails = req.body;
 
-  await updateSubmissionDetails(_id, submissionDetails, userToken, res);
+  await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
 
   const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/about/preview', async (req, res) => {
+router.get('/contract/:_id/about/preview', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  const deal = await getApiData(
-    api.contract(_id, userToken),
-    res,
-  );
+  const deal = req.apiData[DEAL];
 
   // TODO dirty hack; this is how we apply the business rule
   //  "don't display error messages unless the user has viewed the preview page"
-  await api.updateSubmissionDetails(deal, { hasBeenPreviewed: true }, userToken, res);
+  await api.updateSubmissionDetails(deal, { hasBeenPreviewed: true }, userToken);
 
   const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
   const formattedValidationErrors = generateErrorSummary(
