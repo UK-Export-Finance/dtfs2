@@ -32,6 +32,25 @@ const login = async (username, password) => {
   }
 };
 
+// TODO middleware uses getDeal; once everything uses middleware get rid of the 'contract' method..
+const getDeal = async (id, token) => {
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/v1/deals/${id}`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const deal = await translateDatesToExpectedFormat(response.data);
+
+  return {
+    status: response.status,
+    deal,
+  };
+};
+
 const contract = async (id, token) => {
   const response = await axios({
     method: 'get',
@@ -286,6 +305,23 @@ const banks = async (token) => {
   return response.data.banks;
 };
 
+// TODO once world uses middleware, remove the old 'bondCurrencies' method
+const getCurrencies = async (token) => {
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/v1/bond-currencies`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return {
+    status: response.status,
+    currencies: response.data.bondCurrencies,
+  };
+};
+
 const bondCurrencies = async (token) => {
   const response = await axios({
     method: 'get',
@@ -299,6 +335,23 @@ const bondCurrencies = async (token) => {
   return response.data.bondCurrencies;
 };
 
+// TODO once world uses middleware, remove the old 'countries method'
+const getCountries = async (token) => {
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/v1/countries`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return {
+    status: response.status,
+    countries: response.data.countries,
+  };
+};
+
 const countries = async (token) => {
   const response = await axios({
     method: 'get',
@@ -310,6 +363,23 @@ const countries = async (token) => {
   });
 
   return response.data.countries;
+};
+
+// TODO once world uses middleware, remove the old 'industrySectors method'
+const getIndustrySectors = async (token) => {
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/v1/industry-sectors`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return {
+    status: response.status,
+    industrySectors: response.data.industrySectors,
+  };
 };
 
 const industrySectors = async (token) => {
@@ -439,4 +509,8 @@ export default {
   validateToken,
   users,
   user,
+  getDeal,
+  getCurrencies,
+  getCountries,
+  getIndustrySectors,
 };
