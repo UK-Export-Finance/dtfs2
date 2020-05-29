@@ -392,6 +392,23 @@ module.exports = () => {
       return builder;
     },
 
+    AddDeal: (field, type, value) => {
+      if (value) {
+        const currentFieldDealFiles = deal.Deal_files[field] || [];
+
+        deal.Deal_files[field] = [
+          ...currentFieldDealFiles,
+          {
+            '@': {
+              type,
+            },
+            '#': value,
+          }];
+      }
+      return builder;
+    },
+
+
     validationErrors,
 
     build: () => {

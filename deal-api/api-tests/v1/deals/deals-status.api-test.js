@@ -9,6 +9,11 @@ const completedDeal = require('../../fixtures/deal-full-completed');
 const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
 
+// Mock currency & country API calls as no currency/country data is in db during test
+jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 900);
+jest.mock('../../../src/v1/controllers/integration/helpers/convert-currency-code-to-id', () => () => 900);
+
+
 const newDeal = aDeal({
   details: {
     bankSupplyContractName: 'mock name',
@@ -404,22 +409,22 @@ describe('/v1/deals/:id/status', () => {
       });
     });
 
-    xit('creates type_a xml if deal successfully submitted', async () => {
-    it('creates type_a xml if deal successfully submitted', async () => {
-      const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
+    xdescribe('valid typeA xml is created', () => {
+      it('creates type_a xml if deal successfully submitted', async () => {
+        const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
-      const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+        const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
 
-      const createdDeal = postResult.body;
-      const statusUpdate = {
-        status: 'Submitted',
-        confirmSubmit: true,
-      };
+        const createdDeal = postResult.body;
+        const statusUpdate = {
+          status: 'Submitted',
+          confirmSubmit: true,
+        };
 
-      const { status, body } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+        const { status, body } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
-      expect(body).toEqual({});
+        expect(body).toEqual({});
+      });
     });
-
   });
 });
