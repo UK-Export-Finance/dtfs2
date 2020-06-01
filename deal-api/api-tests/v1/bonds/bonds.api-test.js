@@ -626,7 +626,7 @@ describe('/v1/deals/:id/bond', () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
-        const date = nowDate.add(1, 'day');
+        const date = moment().add(1, 'day');
 
         const bondBody = {
           ...allBondFields,
@@ -662,9 +662,9 @@ describe('/v1/deals/:id/bond', () => {
           transactionCurrencySameAsSupplyContractCurrency: 'false',
           currency: 'EUR',
           conversionRate: '100',
-          'conversionRateDate-day': moment(nowDate).format('DD'),
-          'conversionRateDate-month': moment(nowDate).format('MM'),
-          'conversionRateDate-year': moment(nowDate).format('YYYY'),
+          'conversionRateDate-day': moment().format('DD'),
+          'conversionRateDate-month': moment().format('MM'),
+          'conversionRateDate-year': moment().format('YYYY'),
         };
 
         const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
