@@ -5,7 +5,6 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
   const { passwordreset } = req.query;
-  console.log({ passwordreset, q: req.query });
   return res.render('login.njk', {
     passwordreset,
   });

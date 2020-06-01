@@ -1,13 +1,16 @@
 import express from 'express';
 import api from '../api';
 import {
-  getApiData,
   requestParams,
   generateErrorSummary,
   errorHref,
   postToApi,
   getFlashSuccessMessage,
 } from '../helpers';
+
+import {
+  provide, MANDATORY_CRITERIA,
+} from './api-data-provider';
 
 import beforeYouStartValidation from '../validation/before-you-start';
 
@@ -26,23 +29,19 @@ router.get('/start-now', async (req, res) => {
   }
 });
 
-router.get('/before-you-start', async (req, res) => {
+router.get('/before-you-start', provide([MANDATORY_CRITERIA]), async (req, res) => {
+  const { mandatoryCriteria } = req.apiData;
   const { userToken } = requestParams(req);
 
   if (!await api.validateToken(userToken)) {
     res.redirect('/');
   } else {
-    res.render('before-you-start/before-you-start.njk', {
-      mandatoryCriteria: await getApiData(
-        api.mandatoryCriteria(userToken),
-        res,
-      ),
-    });
+    res.render('before-you-start/before-you-start.njk', { mandatoryCriteria });
   }
 });
 
-router.post('/before-you-start', async (req, res) => {
-  const { userToken } = requestParams(req);
+router.post('/before-you-start', provide([MANDATORY_CRITERIA]), async (req, res) => {
+  const { mandatoryCriteria } = req.apiData;
 
   const validationErrors = generateErrorSummary(
     beforeYouStartValidation(req.body),
@@ -51,10 +50,7 @@ router.post('/before-you-start', async (req, res) => {
 
   if (validationErrors) {
     return res.render('before-you-start/before-you-start.njk', {
-      mandatoryCriteria: await getApiData(
-        api.mandatoryCriteria(userToken),
-        res,
-      ),
+      mandatoryCriteria,
       validationErrors,
     });
   }
