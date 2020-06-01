@@ -8,30 +8,24 @@ import {
   formatCountriesForGDSComponent,
 } from '../../helpers';
 
+import {
+  provide, DEAL, COUNTRIES, MANDATORY_CRITERIA,
+} from '../api-data-provider';
+
 const upload = multer();
 
 const router = express.Router();
 
 const eligibilityErrorHref = (id) => `#criterion-group-${id}`;
 
-router.get('/contract/:_id/eligibility/criteria', async (req, res) => {
-  const { _id, userToken } = requestParams(req);
-
-  const deal = await getApiData(
-    api.contract(_id, userToken),
-    res,
-  );
-
-  const countries = await getApiData(
-    api.countries(userToken),
-    res,
-  );
+router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), async (req, res) => {
+  const { deal, countries } = req.apiData;
 
   const validationErrors = generateErrorSummary(deal.eligibility.validationErrors, eligibilityErrorHref);
 
   return res.render('eligibility/eligibility-criteria.njk',
     {
-      _id,
+      _id: deal._id, // eslint-disable-line no-underscore-dangle
       countries: formatCountriesForGDSComponent(countries, deal.eligibility.agentCountry),
       eligibility: deal.eligibility,
       validationErrors,
@@ -39,7 +33,8 @@ router.get('/contract/:_id/eligibility/criteria', async (req, res) => {
     });
 });
 
-router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
+router.post('/contract/:_id/eligibility/criteria', provide([COUNTRIES]), async (req, res) => {
+  const { countries } = req.apiData;
   const { _id, userToken } = requestParams(req);
   const { body } = req;
 
@@ -51,11 +46,6 @@ router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
   if (updatedDeal.eligibility.status === 'Completed') {
     return res.redirect(`/contract/${_id}/eligibility/supporting-documentation`);
   }
-
-  const countries = await getApiData(
-    api.countries(userToken),
-    res,
-  );
 
   const validationErrors = generateErrorSummary(updatedDeal.eligibility.validationErrors, eligibilityErrorHref);
 
@@ -82,20 +72,16 @@ router.post('/contract/:_id/eligibility/criteria/save-go-back', async (req, res)
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/eligibility/supporting-documentation', async (req, res) => {
-  const { _id, userToken } = requestParams(req);
+router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]), async (req, res) => {
+  const { deal } = req.apiData;
 
-  const deal = await getApiData(
-    api.contract(_id, userToken),
-    res,
-  );
   const { eligibility, dealFiles = {} } = deal;
 
   const validationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
 
   return res.render('eligibility/eligibility-supporting-documentation.njk',
     {
-      _id,
+      _id: deal._id, // eslint-disable-line no-underscore-dangle
       dealFiles,
       eligibility,
       validationErrors,
@@ -152,18 +138,12 @@ router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', 
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/eligibility/preview', async (req, res) => {
-  const { _id, userToken } = requestParams(req);
+router.get('/contract/:_id/eligibility/preview', provide([DEAL, MANDATORY_CRITERIA]), async (req, res) => {
+  const { deal, mandatoryCriteria } = req.dealApi;
 
   return res.render('eligibility/eligibility-preview.njk', {
-    deal: await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ),
-    mandatoryCriteria: await getApiData(
-      api.mandatoryCriteria(userToken),
-      res,
-    ),
+    deal,
+    mandatoryCriteria,
   });
 });
 

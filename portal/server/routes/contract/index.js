@@ -5,64 +5,48 @@ import bondRoutes from './bond';
 import eligibilityRoutes from './eligibility';
 import loanRoutes from './loan';
 import {
-  getApiData,
   requestParams,
   errorHref,
   postToApi,
   dealFormsCompleted,
 } from '../../helpers';
 
+import {
+  provide, DEAL, MANDATORY_CRITERIA,
+} from '../api-data-provider';
+
 const router = express.Router();
 
-
-router.get('/contract/:_id', async (req, res) => {
-  const { _id, userToken } = requestParams(req);
-
-  const deal = await getApiData(
-    api.contract(_id, userToken),
-    res,
-  );
-
+router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
+  const { deal } = req.apiData;
+  const { user } = req.session;
   return res.render('contract/contract-view.njk', {
     deal,
-    user: req.session.user,
+    user,
     dealFormsCompleted: dealFormsCompleted(deal),
   });
 });
 
-router.get('/contract/:_id/comments', async (req, res) => {
-  const { _id, userToken } = requestParams(req);
+router.get('/contract/:_id/comments', provide([DEAL]), async (req, res) => {
+  const { deal } = req.apiData;
 
-  return res.render('contract/contract-view-comments.njk',
-    await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ));
+  return res.render('contract/contract-view-comments.njk', deal);
 });
 
-router.get('/contract/:_id/submission-details', async (req, res) => {
-  const { _id, userToken } = requestParams(req);
+router.get('/contract/:_id/submission-details', provide([DEAL, MANDATORY_CRITERIA]), async (req, res) => {
+  const { deal, mandatoryCriteria } = req.apiData;
 
   return res.render('contract/contract-submission-details.njk', {
-    contract: await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ),
-    mandatoryCriteria: await getApiData(
-      api.mandatoryCriteria(userToken),
-      res,
-    ),
+    contract: deal,
+    mandatoryCriteria,
   });
 });
 
 router.get('/contract/:_id/delete', async (req, res) => {
-  const { _id, userToken } = requestParams(req);
+  const { _id } = req.params;
 
   return res.render('contract/contract-delete.njk', {
-    contract: await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ),
+    contract: { _id },
   });
 });
 
@@ -85,10 +69,7 @@ router.post('/contract/:_id/delete', async (req, res) => {
 
   if (validationErrors.count) {
     return res.status(400).render('contract/contract-delete.njk', {
-      contract: await getApiData(
-        api.contract(_id, userToken),
-        res,
-      ),
+      contract: { _id },
       comments,
       validationErrors,
     });
@@ -103,21 +84,19 @@ router.post('/contract/:_id/delete', async (req, res) => {
   return res.redirect('/dashboard');
 });
 
-router.get('/contract/:_id/ready-for-review', async (req, res) => {
-  const { _id, userToken } = requestParams(req);
+router.get('/contract/:_id/ready-for-review', provide([DEAL]), async (req, res) => {
+  const { deal } = req.apiData;
 
   return res.render('contract/contract-ready-for-review.njk',
     {
-      deal: await getApiData(
-        api.contract(_id, userToken),
-        res,
-      ),
+      deal,
     });
 });
 
-router.post('/contract/:_id/ready-for-review', async (req, res) => {
+router.post('/contract/:_id/ready-for-review', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { comments } = req.body;
+  const { deal } = req.apiData;
 
   const updateToSend = {
     _id,
@@ -131,13 +110,9 @@ router.post('/contract/:_id/ready-for-review', async (req, res) => {
     count: data.count,
     errorList: data.errorList,
   };
-
   if (validationErrors.count) {
     return res.status(400).render('contract/contract-ready-for-review.njk', {
-      deal: await getApiData(
-        api.contract(_id, userToken),
-        res,
-      ),
+      deal,
       comments,
       validationErrors,
     });
@@ -152,14 +127,11 @@ router.post('/contract/:_id/ready-for-review', async (req, res) => {
   return res.redirect('/dashboard');
 });
 
-router.get('/contract/:_id/edit-name', async (req, res) => {
-  const { _id, userToken } = requestParams(req);
+router.get('/contract/:_id/edit-name', provide([DEAL]), async (req, res) => {
+  const { deal } = req.apiData;
 
   return res.render('contract/contract-edit-name.njk', {
-    contract: await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ),
+    contract: deal,
   });
 });
 
@@ -175,10 +147,7 @@ router.post('/contract/:_id/edit-name', async (req, res) => {
   };
   if (validationErrors.count) {
     return res.status(400).render('contract/contract-edit-name.njk', {
-      contract: await getApiData(
-        api.contract(_id, userToken),
-        res,
-      ),
+      contract: { _id },
       bankSupplyContractName,
       validationErrors,
     });
@@ -194,13 +163,9 @@ router.post('/contract/:_id/edit-name', async (req, res) => {
 });
 
 router.get('/contract/:_id/return-to-maker', async (req, res) => {
-  const { _id, userToken } = requestParams(req);
+  const { _id } = req.params;
 
-  return res.render('contract/contract-return-to-maker.njk',
-    await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ));
+  return res.render('contract/contract-return-to-maker.njk', { _id });
 });
 
 router.post('/contract/:_id/return-to-maker', async (req, res) => {
@@ -222,10 +187,7 @@ router.post('/contract/:_id/return-to-maker', async (req, res) => {
 
   if (validationErrors.count) {
     return res.status(400).render('contract/contract-return-to-maker.njk', {
-      contract: await getApiData(
-        api.contract(_id, userToken),
-        res,
-      ),
+      _id,
       comments,
       validationErrors,
     });
@@ -241,13 +203,9 @@ router.post('/contract/:_id/return-to-maker', async (req, res) => {
 });
 
 router.get('/contract/:_id/confirm-submission', async (req, res) => {
-  const { _id, userToken } = requestParams(req);
+  const { _id } = req.params;
 
-  return res.render('contract/contract-confirm-submission.njk',
-    await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ));
+  return res.render('contract/contract-confirm-submission.njk', { _id });
 });
 
 router.post('/contract/:_id/confirm-submission', async (req, res) => {
@@ -269,10 +227,7 @@ router.post('/contract/:_id/confirm-submission', async (req, res) => {
 
   if (validationErrors.count) {
     return res.status(400).render('contract/contract-confirm-submission.njk', {
-      contract: await getApiData(
-        api.contract(_id, userToken),
-        res,
-      ),
+      _id,
       confirmSubmit,
       validationErrors,
     });
@@ -287,13 +242,8 @@ router.post('/contract/:_id/confirm-submission', async (req, res) => {
   return res.redirect('/dashboard');
 });
 
-router.get('/contract/:_id/clone', async (req, res) => {
-  const { _id, userToken } = requestParams(req);
-
-  const deal = await getApiData(
-    api.contract(_id, userToken),
-    res,
-  );
+router.get('/contract/:_id/clone', provide([DEAL]), async (req, res) => {
+  const { deal } = req.apiData;
 
   const {
     bankSupplyContractID,
@@ -341,15 +291,9 @@ router.post('/contract/:_id/clone', async (req, res) => {
   return res.redirect('/dashboard');
 });
 
-router.get('/contract/:_id/clone/before-you-start', async (req, res) => {
-  const { userToken } = requestParams(req);
-
-  return res.render('before-you-start/before-you-start.njk', {
-    mandatoryCriteria: await getApiData(
-      api.mandatoryCriteria(userToken),
-      res,
-    ),
-  });
+router.get('/contract/:_id/clone/before-you-start', provide([MANDATORY_CRITERIA]), async (req, res) => {
+  const { mandatoryCriteria } = req.apiData;
+  return res.render('before-you-start/before-you-start.njk', { mandatoryCriteria });
 });
 
 router.post('/contract/:_id/clone/before-you-start', async (req, res) => {
