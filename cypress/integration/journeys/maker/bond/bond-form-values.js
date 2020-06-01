@@ -37,6 +37,7 @@ const FINANCIAL_DETAILS = {
     text: 'EUR - Euros',
   },
   conversionRate: '100',
+  // TODO: generate automatically
   conversionRateDateDay: '01',
   conversionRateDateMonth: '02',
   conversionRateDateYear: '2020',

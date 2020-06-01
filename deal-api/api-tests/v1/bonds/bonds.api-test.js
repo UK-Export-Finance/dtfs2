@@ -592,6 +592,35 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
+
+    describe('when a bond has req.body.transactionCurrencySameAsSupplyContractCurrency as false and conversionRate is an invalid format', () => {
+      it('should return additional validationError for feeFrequency', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bondBody = {
+          ...allBondFields,
+          bondValue: '123',
+          transactionCurrencySameAsSupplyContractCurrency: 'false',
+          currency: 'EUR',
+          conversionRate: '123456789',
+          'conversionRateDate-day': moment(nowDate).format('DD'),
+          'conversionRateDate-month': moment(nowDate).format('MM'),
+          'conversionRateDate-year': moment(nowDate).format('YYYY'),
+        };
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const updateBondResponse = await as(aBarclaysMaker).put(bondBody).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        expect(updateBondResponse.status).toEqual(400);
+        expect(updateBondResponse.body.validationErrors.count).toEqual(1);
+        expect(updateBondResponse.body.validationErrors.errorList.conversionRate).toBeDefined();
+      });
+    });
+
     describe('when a bond has req.body.transactionCurrencySameAsSupplyContractCurrency as false and conversionRateDate is in the future', () => {
       it('should return additional validationError for feeFrequency', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
