@@ -241,7 +241,7 @@ exports.getBondErrors = (bond) => {
       errorList.conversionRate = {
         text: conversionRateValidationText(
           conversionRate,
-          'Conversion rate',
+          'Conversion rate to the Supply Contract currency',
         ),
         order: orderNumber(errorList),
       };

@@ -158,7 +158,7 @@ context('Bond Financial Details', () => {
         pages.bondFinancialDetails.conversionRateDateInputErrorMessage().should('be.visible');
       });
 
-      describe('when `conversion rate` has invalid value', () => {
+      describe('when `conversion rate` has an invalid value', () => {
         const fillAndSubmitConversionRate = (value) => {
           pages.bondFinancialDetails.conversionRateInput().clear();
           pages.bondFinancialDetails.conversionRateInput().type(value);
@@ -176,12 +176,6 @@ context('Bond Financial Details', () => {
         };
 
         it('should render validation error', () => {
-
-          // 1 ?
-          // 1234567
-          // 123456789
-          // 123456 USD
-
           goToBondFinancialDetailsPage(deal);
           fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
 
@@ -189,7 +183,6 @@ context('Bond Financial Details', () => {
           goBackToFinancialDetails();
           assertValidationErrors();
 
-          // fillAndSubmitConversionRate('123456789');
           fillAndSubmitConversionRate('000456789');
           goBackToFinancialDetails();
           assertValidationErrors();
