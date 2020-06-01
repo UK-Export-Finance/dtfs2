@@ -70,7 +70,18 @@ stages:
         azureContainerRegistry: $(containerRegistry)
         command: 'Push an image'
         imageName: '$(dealApi):$(Build.BuildId)'
-
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'dtfstest-1967'
+        repository: '$(portal)'
+        command: 'buildAndPush'
+        Dockerfile: '$(portal)/Dockerfile'
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'dtfstest-1967'
+        repository: '$(dealApi)'
+        command: 'buildAndPush'
+        Dockerfile: '$(dealApi)/Dockerfile'
 - stage: deploy
   displayName: Deploy stage
   jobs:

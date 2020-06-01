@@ -37,9 +37,9 @@ const FINANCIAL_DETAILS = {
     text: 'EUR - Euros',
   },
   conversionRate: '100',
-  conversionRateDateDay: '01',
-  conversionRateDateMonth: '02',
-  conversionRateDateYear: '2020',
+  conversionRateDateDay: moment(date).format('DD'),
+  conversionRateDateMonth: moment(date).format('MM'),
+  conversionRateDateYear: moment(date).format('YYYY'),
 };
 
 module.exports = {
