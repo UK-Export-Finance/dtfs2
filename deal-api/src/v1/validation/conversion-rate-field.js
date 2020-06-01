@@ -1,3 +1,8 @@
+const {
+  isNumeric,
+  isInteger,
+} = require('../../utils/number');
+
 // invalid value:
 // 1234567
 // 123456789
@@ -14,33 +19,26 @@
 // 123.456789
 // 1.234567
 
-const isNumeric = (str) => {
-  const value = Number(str);
-  return (typeof value === 'number') && value === Number(value) && Number.isFinite(value);
-};
+const isValidLength = (str) => str.length <= 10;
 
-const isWholeNumber = (value) => Number.isInteger(Number(value));
-
-const isValidNumber = (str) => {
-  if (str.length > 6 && isWholeNumber(Number(str))) {
+const isValidFormat = (str) => {
+  if (str.length > 6 && isInteger(Number(str))) {
     return false;
   }
   return true;
 };
 
-const isValidLength = (str) => str.length <= 10;
-
 exports.conversionRateIsValid = (str) => {
   if (!str || !str.length) {
     return false;
   }
-  if (!isNumeric(str)) {
+  if (!isNumeric(Number(str))) {
     return false;
   }
   if (!isValidLength(str)) {
     return false;
   }
-  if (!isValidNumber(str)) {
+  if (!isValidFormat(str)) {
     return false;
   }
   return true;
@@ -53,7 +51,7 @@ exports.conversionRateIsValid = (str) => {
 // "The format of Conversion rate to the Supply Contract currency is invalid.
 // ...This number can have up to 6 digits, including up to 6 decimal places"
 exports.conversionRateValidationText = (value, fieldCopy) => {
-  if (!isNumeric(value)) {
+  if (!isNumeric(Number(value))) {
     return `${fieldCopy} must be numbers only man`;
   }
 
@@ -61,10 +59,9 @@ exports.conversionRateValidationText = (value, fieldCopy) => {
     return `${fieldCopy} length is not valid`;
   }
 
-  if (!isValidNumber(value)) {
+  if (!isValidFormat(value)) {
     return `${fieldCopy} length has invalid format`;
   }
 
-  // return `Something else is invalid in ${fieldCopy}`;
   return `Enter the ${fieldCopy}`;
 };
