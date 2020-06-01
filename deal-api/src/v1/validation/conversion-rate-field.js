@@ -3,12 +3,12 @@ const {
   isInteger,
 } = require('../../utils/number');
 
-// invalid value:
+// invalid values:
 // 1234567
 // 123456789
 // 123456 USD
 
-// valid value:
+// valid values:
 // 1
 // 12
 // 123
