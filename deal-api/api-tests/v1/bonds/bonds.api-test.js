@@ -662,9 +662,9 @@ describe('/v1/deals/:id/bond', () => {
           transactionCurrencySameAsSupplyContractCurrency: 'false',
           currency: 'EUR',
           conversionRate: '100',
-          'conversionRateDate-day': '14',
-          'conversionRateDate-month': '12',
-          'conversionRateDate-year': '2019',
+          'conversionRateDate-day': moment(nowDate).format('DD'),
+          'conversionRateDate-month': moment(nowDate).format('MM'),
+          'conversionRateDate-year': moment(nowDate).format('YYYY'),
         };
 
         const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
