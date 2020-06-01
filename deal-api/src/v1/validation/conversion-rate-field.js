@@ -44,23 +44,17 @@ exports.conversionRateIsValid = (str) => {
   return true;
 };
 
-// TODO: check messages
-// https://design-system.service.gov.uk/components/text-input/
-
-// current message on staging can be:
-// "The format of Conversion rate to the Supply Contract currency is invalid.
-// ...This number can have up to 6 digits, including up to 6 decimal places"
 exports.conversionRateValidationText = (value, fieldCopy) => {
   if (!isNumeric(Number(value))) {
-    return `${fieldCopy} must be numbers only man`;
+    return `${fieldCopy} must be a number, like 100 or 100.4`;
   }
 
   if (!isValidLength(value)) {
-    return `${fieldCopy} length is not valid`;
+    return `${fieldCopy} must be 10 characters or fewer`;
   }
 
   if (!isValidFormat(value)) {
-    return `${fieldCopy} length has invalid format`;
+    return `${fieldCopy} must be up to 6 digits, including up to 6 decimal places`;
   }
 
   return `Enter the ${fieldCopy}`;
