@@ -157,6 +157,49 @@ context('Bond Financial Details', () => {
         pages.bondFinancialDetails.conversionRateInputErrorMessage().should('be.visible');
         pages.bondFinancialDetails.conversionRateDateInputErrorMessage().should('be.visible');
       });
+
+      describe('when `conversion rate` has invalid value', () => {
+        const fillAndSubmitConversionRate = (value) => {
+          pages.bondFinancialDetails.conversionRateInput().clear();
+          pages.bondFinancialDetails.conversionRateInput().type(value);
+          pages.bondFinancialDetails.submit().click();
+        };
+
+        const goBackToFinancialDetails = () => {
+          partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+          cy.url().should('include', '/financial-details');
+        };
+
+        const assertValidationErrors = () => {
+          partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+          pages.bondFinancialDetails.conversionRateInputErrorMessage().should('be.visible');
+        };
+
+        it('should render validation error', () => {
+
+          // 1 ?
+          // 1234567
+          // 123456789
+          // 123456 USD
+
+          goToBondFinancialDetailsPage(deal);
+          fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
+
+          fillAndSubmitConversionRate('1234567');
+          goBackToFinancialDetails();
+          assertValidationErrors();
+
+          // fillAndSubmitConversionRate('123456789');
+          fillAndSubmitConversionRate('000456789');
+          goBackToFinancialDetails();
+          assertValidationErrors();
+
+          fillAndSubmitConversionRate('123456 USD');
+          goBackToFinancialDetails();
+          assertValidationErrors();
+        });
+      });
+
       describe('when `conversion rate date` is in the future', () => {
         it('should render validation error', () => {
           goToBondFinancialDetailsPage(deal);

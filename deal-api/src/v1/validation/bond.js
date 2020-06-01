@@ -7,6 +7,10 @@ const {
   dateIsInTimeframe,
   dateValidationText,
 } = require('./date-field');
+const {
+  conversionRateIsValid,
+  conversionRateValidationText,
+} = require('./conversion-rate-field');
 
 exports.getBondErrors = (bond) => {
   const {
@@ -233,10 +237,13 @@ exports.getBondErrors = (bond) => {
       };
     }
 
-    if (!hasValue(conversionRate)) {
+    if (!conversionRateIsValid(conversionRate)) {
       errorList.conversionRate = {
+        text: conversionRateValidationText(
+          conversionRate,
+          'Conversion rate',
+        ),
         order: orderNumber(errorList),
-        text: 'Conversion rate is required',
       };
     }
 
