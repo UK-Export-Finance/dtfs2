@@ -26,4 +26,5 @@ module.exports = {
   SME_TYPE,
   SUPPLIER_TYPE,
   APPLICATION_GROUP,
+  SUBMISSION_TYPE,
 };
