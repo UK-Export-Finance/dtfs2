@@ -31,6 +31,7 @@ const financialDetails = {
     pages.bondFinancialDetails.riskMarginFeeInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.riskMarginFee);
     pages.bondFinancialDetails.coveredPercentageInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
     pages.bondFinancialDetails.minimumRiskMarginFeeInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
+    pages.bondFinancialDetails.ukefExposureInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.ukefExposure);
   },
   transactionCurrencyNotTheSameAsSupplyContractCurrency: () => {
     pages.bondFinancialDetails.bondValueInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);

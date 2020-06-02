@@ -13,18 +13,6 @@
 
   {% set showAdditionalFieldsByDefault = bond.transactionCurrencySameAsSupplyContractCurrency === "false" %}
 
-  <script type="text/javascript">
-    function showAdditionalFields(bool) {
-      var additionalFormFields = document.getElementById('additional-form-fields');
-
-      if (bool) {
-        additionalFormFields.className = '';
-      } else {
-        additionalFormFields.className = 'govuk-visually-hidden';
-      }
-    }
-  </script>
-
   {% if validationErrors.count %}
     {{
       govukErrorSummary({
@@ -273,6 +261,7 @@
       },
       id: "ukefExposure",
       name: "ukefExposure",
+      value: bond.ukefExposure,
       classes: "form-group-disabled--input govuk-input--width-10",
       type: "number",
       attributes: {
@@ -296,5 +285,33 @@
     />
 
   </form>
+
+  <script type="text/javascript">
+    function showAdditionalFields(bool) {
+      var additionalFormFields = document.getElementById('additional-form-fields');
+
+      if (bool) {
+        additionalFormFields.className = '';
+      } else {
+        additionalFormFields.className = 'govuk-visually-hidden';
+      }
+    }
+
+    var bondValueInput = document.getElementById('bondValue');
+  
+    var coveredPercentageInput = document.getElementById('coveredPercentage');
+    var ukefExposure = document.getElementById('ukefExposure');
+
+    function calculateUkefExposure() {
+      var result = bondValueInput.value * coveredPercentageInput.value;
+      ukefExposure.value = result;
+    }
+    
+    [bondValueInput, coveredPercentageInput].forEach(function(element) {
+      element.addEventListener('blur', function(event) {
+        calculateUkefExposure();
+      });
+    });
+  </script>
 
 {% endblock %}
