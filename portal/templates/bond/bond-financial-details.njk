@@ -207,6 +207,7 @@
     }) }}
 
      {{ govukInput({
+       inputmode: 'numeric',
         label: {
           text: "Minimum risk margin fee (optional)"
         },
@@ -216,12 +217,18 @@
         id: "minimumRiskMarginFee",
         name: "minimumRiskMarginFee",
         value: bond.minimumRiskMarginFee,
-        classes: "input--numeric-float govuk-input--width-5",
+        classes: "govuk-input--width-5",
         attributes: {
           size: "60",
           maxlength: "255",
           placeholder: "0.00",
           'data-cy': 'minimum-risk-margin-fee'
+        },
+        errorMessage: validationErrors.errorList.minimumRiskMarginFee and {
+          text: validationErrors.errorList.minimumRiskMarginFee.text,
+          attributes: {
+            'data-cy': 'minimum-risk-margin-fee-error-message'
+          }
         }
       }) }}
 

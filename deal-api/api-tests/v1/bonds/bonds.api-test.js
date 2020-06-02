@@ -824,7 +824,7 @@ describe('/v1/deals/:id/bond', () => {
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(1);
         expect(body.validationErrors.errorList.riskMarginFee).toBeDefined();
-        expect(body.validationErrors.errorList.riskMarginFee.text).toEqual('Risk Margin Fee % must have less than 4 decimals, like 12 or 12.0010');
+        expect(body.validationErrors.errorList.riskMarginFee.text).toEqual('Risk Margin Fee % must have less than 5 decimals, like 12 or 12.0010');
       });
     });
 
@@ -851,7 +851,29 @@ describe('/v1/deals/:id/bond', () => {
         expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must be a number, like 1 or 80');
       });
 
-      it('should return validationError when coveredPercentage is not between 1 and 80', async () => {
+      it('should return validationError when coveredPercentage is less than 1', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bond = {
+          ...allBondFields,
+          coveredPercentage: '0.09',
+        };
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(status).toEqual(400);
+        expect(body.validationErrors.count).toEqual(1);
+        expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
+        expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must be between 1 and 80');
+      });
+
+      it('should return validationError when coveredPercentage is greater than 80', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -871,6 +893,118 @@ describe('/v1/deals/:id/bond', () => {
         expect(body.validationErrors.count).toEqual(1);
         expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
         expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must be between 1 and 80');
+      }); 
+    });
+
+    describe('minimumRiskMarginFee', () => {
+      it('should return validationError when minimumRiskMarginFee is not a number', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bond = {
+          ...allBondFields,
+          minimumRiskMarginFee: 'test',
+        };
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(status).toEqual(400);
+        expect(body.validationErrors.count).toEqual(1);
+        expect(body.validationErrors.errorList.minimumRiskMarginFee).toBeDefined();
+        expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must be a number, like 1 or 12.65');
+      });
+
+      it('should return validationError when minimumRiskMarginFee has more than 16 characters', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bond = {
+          ...allBondFields,
+          minimumRiskMarginFee: '12345678901234567',
+        };
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(status).toEqual(400);
+        expect(body.validationErrors.count).toEqual(1);
+        expect(body.validationErrors.errorList.minimumRiskMarginFee).toBeDefined();
+        expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must be 16 characters or fewer');
+      });
+
+      it('should return validationError when minimumRiskMarginFee is less than 0.01', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bond = {
+          ...allBondFields,
+          minimumRiskMarginFee: '0',
+        };
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(status).toEqual(400);
+        expect(body.validationErrors.count).toEqual(1);
+        expect(body.validationErrors.errorList.minimumRiskMarginFee).toBeDefined();
+        expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must be between 0.01 and 14.99');
+      });
+
+      it('should return validationError when minimumRiskMarginFee is greater than 14.99', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bond = {
+          ...allBondFields,
+          minimumRiskMarginFee: '15',
+        };
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(status).toEqual(400);
+        expect(body.validationErrors.count).toEqual(1);
+        expect(body.validationErrors.errorList.minimumRiskMarginFee).toBeDefined();
+        expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must be between 0.01 and 14.99');
+      });
+
+      it('should return validationError when minimumRiskMarginFee contains more than 2 decimals', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bond = {
+          ...allBondFields,
+          minimumRiskMarginFee: '8.123',
+        };
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(status).toEqual(400);
+        expect(body.validationErrors.count).toEqual(1);
+        expect(body.validationErrors.errorList.minimumRiskMarginFee).toBeDefined();
+        expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must have less than 3 decimals, like 12 or 12.10');
       });
     });
 

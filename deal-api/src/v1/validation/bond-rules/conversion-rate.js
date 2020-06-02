@@ -19,6 +19,8 @@ const {
 // 123.456789
 // 1.234567
 
+const MAX_CHARACTERS = 10;
+
 const isValidLength = (str) => str.length <= 10;
 
 const isValidFormat = (str) => {
@@ -50,7 +52,7 @@ exports.conversionRateValidationText = (value, fieldCopy) => {
   }
 
   if (!isValidLength(value)) {
-    return `${fieldCopy} must be 10 characters or fewer`;
+    return `${fieldCopy} must be ${MAX_CHARACTERS} characters or fewer`;
   }
 
   if (!isValidFormat(value)) {

@@ -16,10 +16,13 @@ const {
   coveredPercentageValidationText,
 } = require('./bond-rules/covered-percentage');
 const {
+  minimumRiskMarginFeeIsValid,
+  minimumRiskMarginFeeValidationText,
+} = require('./bond-rules/minimum-risk-margin-fee');
+const {
   riskMarginFeeIsValid,
   riskMarginFeeValidationText,
 } = require('./bond-rules/risk-margin-fee');
-
 
 exports.getBondErrors = (bond) => {
   const {
@@ -44,6 +47,7 @@ exports.getBondErrors = (bond) => {
     'conversionRateDate-year': conversionRateDateYear,
     riskMarginFee,
     coveredPercentage,
+    minimumRiskMarginFee,
     feeType,
     feeFrequency,
     dayCountBasis,
@@ -294,6 +298,17 @@ exports.getBondErrors = (bond) => {
       text: coveredPercentageValidationText(
         coveredPercentage,
         'Covered Percentage',
+      ),
+      order: orderNumber(errorList),
+    };
+  }
+
+  if (hasValue(minimumRiskMarginFee) && !minimumRiskMarginFeeIsValid(minimumRiskMarginFee)) {
+    console.log('**** minimumRiskMarginFeeIsValid(minimumRiskMarginFee) ? ', minimumRiskMarginFeeIsValid(minimumRiskMarginFee));
+    errorList.minimumRiskMarginFee = {
+      text: minimumRiskMarginFeeValidationText(
+        minimumRiskMarginFee,
+        'Minimum risk margin fee',
       ),
       order: orderNumber(errorList),
     };

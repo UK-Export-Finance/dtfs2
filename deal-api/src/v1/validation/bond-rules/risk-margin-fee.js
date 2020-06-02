@@ -3,10 +3,11 @@ const {
   decimalsCount,
 } = require('../../../utils/number');
 
+const MAX_DECIMALS = 4;
+
 const isInRange = (value) => value >= 1 && value <= 99;
 
 const isValidFormat = (value) => {
-  const MAX_DECIMALS = 4;
   if (decimalsCount(value) <= MAX_DECIMALS) {
     return true;
   }
@@ -43,7 +44,7 @@ exports.riskMarginFeeValidationText = (str, fieldCopy) => {
   }
 
   if (!isValidFormat(str)) {
-    return `${fieldCopy} must have less than 4 decimals, like 12 or 12.0010`;
+    return `${fieldCopy} must have less than ${MAX_DECIMALS + 1} decimals, like 12 or 12.0010`;
   }
 
   return `Enter the ${fieldCopy}`;
