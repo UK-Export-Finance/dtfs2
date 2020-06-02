@@ -25,11 +25,16 @@ const DETAILS = {
   ukefGuaranteeInMonths: '12',
 };
 
+const bondValue = '123';
+const coveredPercentage = '80';
+const ukefExposure = bondValue * coveredPercentage;
+
 const FINANCIAL_DETAILS = {
-  bondValue: '123',
+  bondValue,
   riskMarginFee: '20',
-  coveredPercentage: '80',
+  coveredPercentage,
   minimumRiskMarginFee: '1.23',
+  ukefExposure,
 
   // 'transaction currency not the same as supply contract currency' specifics
   currency: {

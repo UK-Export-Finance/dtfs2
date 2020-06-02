@@ -65,6 +65,23 @@ context('Bond Financial Details', () => {
     });
   });
 
+  describe('when changing the `bond value` or `covered percentage` field', () => {
+    it('should dynamically update the `UKEF exposure` value on blur', () => {
+      cy.loginGoToDealPage(user, deal);
+
+      pages.contract.addBondButton().click();
+      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+
+      pages.bondFinancialDetails.ukefExposureInput().should('have.value', '0');
+      pages.bondFinancialDetails.bondValueInput().type('100');
+      pages.bondFinancialDetails.coveredPercentageInput().type('10').blur();
+      pages.bondFinancialDetails.ukefExposureInput().should('have.value', String(100 * 10));
+
+      pages.bondFinancialDetails.bondValueInput().type('250').blur();
+      pages.bondFinancialDetails.ukefExposureInput().should('have.value', String(250 * 10));
+    });
+  });
+
   it('form submit of all required fields should render a checked checkbox only for `Bond Financial Details` in progress nav', () => {
     cy.loginGoToDealPage(user, deal);
 
@@ -83,7 +100,7 @@ context('Bond Financial Details', () => {
   });
 
   describe('When a user submits the `Bond Financial Details` form', () => {
-    it('should progress to `Bond Fee Details` page and prepopulate submitted form fields when returning back to `Bond Financial Details` page', () => {
+    it('should progress to `Bond Fee Details` page and prepopulate form fields when returning back to `Bond Financial Details` page', () => {
       cy.loginGoToDealPage(user, deal);
 
       pages.contract.addBondButton().click();

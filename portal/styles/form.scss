@@ -1,10 +1,13 @@
+@import "node_modules/govuk-frontend/govuk/settings/_colours-organisations.scss";
+
 .form-group-disabled {
-  opacity: .5;
+  opacity: .7;
 }
 
 .form-group-disabled--input {
-  opacity: .5;
+  opacity: .7;
   background: none;
+  color: $govuk-text-colour;
 }
 
 .form-group--input-container {

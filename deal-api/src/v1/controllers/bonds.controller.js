@@ -154,6 +154,13 @@ exports.updateBond = async (req, res) => {
         updatedBond.currency = await handleBondCurrency(actualCurrencyCode);
       }
 
+      const { bondValue, coveredPercentage } = updatedBond;
+
+      const canCalculateUkefExposure = (updatedBond.bondValue && updatedBond.coveredPercentage);
+      if (canCalculateUkefExposure) {
+        updatedBond.ukefExposure = bondValue * coveredPercentage;
+      }
+
       const validationErrors = getBondErrors(updatedBond);
 
       const updatedDeal = {
