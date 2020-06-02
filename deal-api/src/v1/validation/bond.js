@@ -10,7 +10,11 @@ const {
 const {
   conversionRateIsValid,
   conversionRateValidationText,
-} = require('./conversion-rate-field');
+} = require('./bond-rules/conversion-rate');
+const {
+  coveredPercentageIsValid,
+  coveredPercentageValidationText,
+} = require('./bond-rules/covered-percentage');
 
 exports.getBondErrors = (bond) => {
   const {
@@ -277,10 +281,13 @@ exports.getBondErrors = (bond) => {
     };
   }
 
-  if (!hasValue(coveredPercentage)) {
+  if (!coveredPercentageIsValid(coveredPercentage)) {
     errorList.coveredPercentage = {
+      text: coveredPercentageValidationText(
+        coveredPercentage,
+        'Covered Percentage',
+      ),
       order: orderNumber(errorList),
-      text: 'Enter the Covered Percentage',
     };
   }
 

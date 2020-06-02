@@ -27,7 +27,7 @@ const DETAILS = {
 
 const bondValue = '123';
 const coveredPercentage = '80';
-const ukefExposure = bondValue * coveredPercentage;
+const ukefExposure = String(Number(bondValue) * Number(coveredPercentage));
 
 const FINANCIAL_DETAILS = {
   bondValue,

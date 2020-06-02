@@ -72,11 +72,12 @@ context('Bond Financial Details', () => {
       pages.contract.addBondButton().click();
       partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
 
-      pages.bondFinancialDetails.ukefExposureInput().should('have.value', '0');
+      pages.bondFinancialDetails.ukefExposureInput().invoke('attr', 'placeholder').should('eq', '0.00');
       pages.bondFinancialDetails.bondValueInput().type('100');
       pages.bondFinancialDetails.coveredPercentageInput().type('10').blur();
       pages.bondFinancialDetails.ukefExposureInput().should('have.value', String(100 * 10));
 
+      pages.bondFinancialDetails.bondValueInput().clear();
       pages.bondFinancialDetails.bondValueInput().type('250').blur();
       pages.bondFinancialDetails.ukefExposureInput().should('have.value', String(250 * 10));
     });
@@ -187,7 +188,7 @@ context('Bond Financial Details', () => {
           cy.url().should('include', '/financial-details');
         };
 
-        const assertValidationErrors = () => {
+        const assertValidationError = () => {
           partials.errorSummary.errorSummaryLinks().should('have.length', 1);
           pages.bondFinancialDetails.conversionRateInputErrorMessage().should('be.visible');
         };
@@ -198,15 +199,15 @@ context('Bond Financial Details', () => {
 
           fillAndSubmitConversionRate('1234567');
           goBackToFinancialDetails();
-          assertValidationErrors();
+          assertValidationError();
 
           fillAndSubmitConversionRate('000456789');
           goBackToFinancialDetails();
-          assertValidationErrors();
+          assertValidationError();
 
           fillAndSubmitConversionRate('123456 USD');
           goBackToFinancialDetails();
-          assertValidationErrors();
+          assertValidationError();
         });
       });
 
@@ -236,6 +237,41 @@ context('Bond Financial Details', () => {
 
           partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
           pages.bondFinancialDetails.conversionRateDateInputErrorMessage().should('be.visible');
+        });
+      });
+
+      describe('when `covered percentage` has an invalid value', () => {
+        const fillAndSubmitCoveredPercentage = (value) => {
+          pages.bondFinancialDetails.coveredPercentageInput().clear();
+          pages.bondFinancialDetails.coveredPercentageInput().type(value);
+          pages.bondFinancialDetails.submit().click();
+        };
+
+        const goBackToFinancialDetails = () => {
+          partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+          cy.url().should('include', '/financial-details');
+        };
+
+        const assertValidationError = () => {
+          partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+          pages.bondFinancialDetails.coveredPercentageInputErrorMessage().should('be.visible');
+        };
+
+        it('should render validation error', () => {
+          goToBondFinancialDetailsPage(deal);
+          fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
+
+          fillAndSubmitCoveredPercentage('test');
+          goBackToFinancialDetails();
+          assertValidationError();
+
+          fillAndSubmitCoveredPercentage('0');
+          goBackToFinancialDetails();
+          assertValidationError();
+
+          fillAndSubmitCoveredPercentage('81');
+          goBackToFinancialDetails();
+          assertValidationError();
         });
       });
     });
@@ -326,7 +362,4 @@ context('Bond Financial Details', () => {
       });
     });
   });
-
-  // TODO: disabled inputs guaranteeFeePayableByBank and ukefExposure work as expected
-  // functionality needs to be done first - assuming these get automatically populated
 });
