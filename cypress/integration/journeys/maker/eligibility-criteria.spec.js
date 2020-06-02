@@ -94,7 +94,7 @@ context('Eligibility Criteria', () => {
 
     cy.url().should('include', '/eligibility/supporting-documentation');
 
-    // Check if MIA/AIN notice is on deal page
+    // Check if MIA/AIN notice is on deal page.
     eligibilityDocumentation.saveGoBackButton().click();
     contract.eligibilitySubmissionType().should('be.visible');
   });
