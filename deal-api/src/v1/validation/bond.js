@@ -48,15 +48,15 @@ exports.getBondErrors = (bond) => {
     fieldName: {
       possibleFieldValue: {
         requiredFieldWhenThisValueIsSet: {
-          text: 'X Field is required',
+          text: 'Enter X Field',
         },
         requiredFieldWhenThisValueIsSet: {
-          text: 'Y Field is required',
+          text: 'Enter Y Field',
         },
       },
       possibleFieldValue: {
         requiredFieldWhenThisValueIsSet: {
-          text: 'Field is required',
+          text: 'Enter Z Field ',
         }
       },
     },
@@ -67,28 +67,28 @@ exports.getBondErrors = (bond) => {
     bondStage: {
       Unissued: {
         ukefGuaranteeInMonths: {
-          text: 'Length of time that the UKEF\'s guarantee will be in place for is required',
+          text: 'Enter the Length of time that the UKEF\'s guarantee will be in place for',
         },
       },
       Issued: {
         coverEndDate: {
-          text: 'Cover End Date is required',
+          text: 'Enter the Cover End Date',
         },
         uniqueIdentificationNumber: {
-          text: 'Bond\'s unique identification number is required',
+          text: 'Enter the Bond\'s unique identification number',
         },
       },
     },
     transactionCurrencySameAsSupplyContractCurrency: {
       false: {
         currency: {
-          text: 'Currency is required',
+          text: 'Enter the Currency',
         },
         conversionRate: {
-          text: 'Conversion rate to the Supply Contract currency is required',
+          text: 'Enter the Conversion rate to the Supply Contract currency',
         },
         conversionRateDate: {
-          text: 'Conversion rate date is required',
+          text: 'Enter the Conversion rate date',
         },
       },
     },
@@ -102,14 +102,14 @@ exports.getBondErrors = (bond) => {
   if (!hasValue(bondType)) {
     errorList.bondType = {
       order: orderNumber(errorList),
-      text: 'Bond type is required',
+      text: 'Enter the Bond type',
     };
   }
 
   if (!hasValue(bondStage)) {
     errorList.bondStage = {
       order: orderNumber(errorList),
-      text: 'Bond stage is required',
+      text: 'Enter the Bond stage',
     };
   }
 
@@ -117,7 +117,7 @@ exports.getBondErrors = (bond) => {
     if (!hasValue(ukefGuaranteeInMonths)) {
       errorList.ukefGuaranteeInMonths = {
         order: orderNumber(errorList),
-        text: 'Length of time that the UKEF\'s guarantee will be in place for is required',
+        text: 'Enter the Length of time that the UKEF\'s guarantee will be in place for',
       };
     }
   }
@@ -205,7 +205,7 @@ exports.getBondErrors = (bond) => {
     if (!uniqueIdentificationNumber) {
       errorList.uniqueIdentificationNumber = {
         order: orderNumber(errorList),
-        text: 'Bond\'s unique identification number is required',
+        text: 'Enter the Bond\'s unique identification number',
       };
     }
   }
@@ -218,14 +218,14 @@ exports.getBondErrors = (bond) => {
   if (!hasValue(bondValue)) {
     errorList.bondValue = {
       order: orderNumber(errorList),
-      text: 'Bond value is required',
+      text: 'Enter the Bond value',
     };
   }
 
   if (!hasValue(transactionCurrencySameAsSupplyContractCurrency)) {
     errorList.transactionCurrencySameAsSupplyContractCurrency = {
       order: orderNumber(errorList),
-      text: 'Is the currency for this Transaction the same as your Supply Contract currency? is required',
+      text: 'Select if the currency for this Transaction is the same as your Supply Contract currency',
     };
   }
 
@@ -233,7 +233,7 @@ exports.getBondErrors = (bond) => {
     if (!hasValue(currency)) {
       errorList.currency = {
         order: orderNumber(errorList),
-        text: 'Currency is required',
+        text: 'Enter the Currency',
       };
     }
 
@@ -273,14 +273,14 @@ exports.getBondErrors = (bond) => {
   if (!hasValue(riskMarginFee)) {
     errorList.riskMarginFee = {
       order: orderNumber(errorList),
-      text: 'Risk Margin Fee % is required',
+      text: 'Enter the Risk Margin Fee %',
     };
   }
 
   if (!hasValue(coveredPercentage)) {
     errorList.coveredPercentage = {
       order: orderNumber(errorList),
-      text: 'Covered Percentage is required',
+      text: 'Enter the Covered Percentage',
     };
   }
 
@@ -291,7 +291,7 @@ exports.getBondErrors = (bond) => {
   if (!hasValue(feeType)) {
     errorList.feeType = {
       order: orderNumber(errorList),
-      text: 'Fee type is required',
+      text: 'Enter the Fee type',
     };
   }
 
@@ -299,7 +299,7 @@ exports.getBondErrors = (bond) => {
     if (!hasValue(feeFrequency)) {
       errorList.feeFrequency = {
         order: orderNumber(errorList),
-        text: 'Fee frequency is required',
+        text: 'Enter the Fee frequency',
       };
     }
   }
@@ -307,7 +307,7 @@ exports.getBondErrors = (bond) => {
   if (!hasValue(dayCountBasis)) {
     errorList.dayCountBasis = {
       order: orderNumber(errorList),
-      text: 'Day count basis is required',
+      text: 'Enter the Day count basis',
     };
   }
 
