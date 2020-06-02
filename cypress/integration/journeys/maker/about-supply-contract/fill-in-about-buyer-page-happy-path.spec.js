@@ -71,5 +71,7 @@ context('about-supply-contract', () => {
     contractAboutPreview.destinationOfGoodsAndServices().invoke('text').then((text) => {
       expect(text.trim()).equal('USA');
     });
+
+    contractAboutPreview.nav().aboutBuyerComplete().should('exist');
   });
 });

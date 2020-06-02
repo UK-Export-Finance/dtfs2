@@ -145,5 +145,8 @@ context('about-supply-contract', () => {
     contractAboutPreview.legallyDistinct().invoke('text').then((text) => {
       expect(text.trim()).equal('No');
     });
+
+    contractAboutPreview.nav().aboutSupplierComplete().should('exist');
+
   });
 });
