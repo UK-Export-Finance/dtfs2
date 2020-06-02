@@ -10,6 +10,7 @@ const { expectAddedFields } = require('../deals/expectAddedFields');
 const {
   updatedECPartial,
   updatedECCompleted,
+  updatedECCompletedAllTrue,
   updatedECCriteria11NoExtraInfo,
   updatedECCriteria11WithExtraInfo,
   criteria11ExtraInfo,
@@ -24,7 +25,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
   let aBarclaysMaker;
   let aSuperuser;
 
-  beforeAll(async() => {
+  beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
@@ -203,6 +204,36 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
 
       expect(status).toEqual(200);
       expect(body2.eligibility).toMatchObject(criteria11ExtraInfoEmpty);
+    });
+
+    it('does not update submissionType if not all answered', async () => {
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const newId = postResult.body._id;
+
+      const { status, body } = await as(aBarclaysMaker).put(updatedECPartial).to(`/v1/deals/${newId}/eligibility-criteria`);
+
+      expect(status).toEqual(200);
+      expect(body.details.submissionType).toEqual('');
+    });
+
+    it('updates the submissionType to AIN if all true answers', async () => {
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const newId = postResult.body._id;
+
+      const { status, body } = await as(aBarclaysMaker).put(updatedECCompletedAllTrue).to(`/v1/deals/${newId}/eligibility-criteria`);
+
+      expect(status).toEqual(200);
+      expect(body.details.submissionType).toEqual('Automatic Inclusion Notice');
+    });
+
+    it('updates the submissionType to MIA if all true answers', async () => {
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const newId = postResult.body._id;
+
+      const { status, body } = await as(aBarclaysMaker).put(updatedECCompleted).to(`/v1/deals/${newId}/eligibility-criteria`);
+
+      expect(status).toEqual(200);
+      expect(body.details.submissionType).toEqual('Manual Inclusion Notice');
     });
   });
 });

@@ -17,8 +17,14 @@ const APPLICATION_GROUP = {
   EWCS: 'EWCS',
 };
 
+const SUBMISSION_TYPE = {
+  AIN: 'Automatic Inclusion Notice',
+  MIA: 'Manual Inclusion Notice',
+};
+
 module.exports = {
   SME_TYPE,
   SUPPLIER_TYPE,
   APPLICATION_GROUP,
+  SUBMISSION_TYPE,
 };
