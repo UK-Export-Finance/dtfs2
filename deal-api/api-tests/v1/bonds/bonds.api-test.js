@@ -760,6 +760,52 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
+    describe('coveredPercentage', () => {
+      it('should return validationError when coveredPercentage is not a number', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bond = {
+          ...allBondFields,
+          coveredPercentage: '123test',
+        };
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(status).toEqual(400);
+        expect(body.validationErrors.count).toEqual(1);
+        expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
+        expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must be a number, like 1 or 80');
+      });
+
+      it('should return validationError when coveredPercentage is not between 1 and 80', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bond = {
+          ...allBondFields,
+          coveredPercentage: '81',
+        };
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(status).toEqual(400);
+        expect(body.validationErrors.count).toEqual(1);
+        expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
+        expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must be between 1 and 80');
+      });
+    });
+
     describe('when a bond has req.body.feeType as `In advance`', () => {
       it('should return additional validationError for feeFrequency', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');

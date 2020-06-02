@@ -1,7 +1,7 @@
 const {
   isNumeric,
   isInteger,
-} = require('../../utils/number');
+} = require('../../../utils/number');
 
 // invalid values:
 // 1234567
