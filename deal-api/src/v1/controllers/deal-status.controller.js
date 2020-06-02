@@ -3,7 +3,7 @@ const moment = require('moment');
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo, userOwns } = require('../users/checks');
 const db = require('../../drivers/db-client');
-const dealIntegration = require('./deal-integration.controller');
+// const dealIntegration = require('./deal-integration.controller');
 
 const validateStateChange = require('../validation/deal-status');
 
