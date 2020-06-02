@@ -1,6 +1,7 @@
 const {
   contract,
   eligibilityCriteria,
+  eligibilityDocumentation,
   defaults,
 } = require('../../pages');
 const { errorSummary } = require('../../partials');
@@ -82,10 +83,19 @@ context('Eligibility Criteria', () => {
     eligibilityCriteria.agentsName.input().should('have.value', longString.substring(0, characterCount));
   });
 
-  it('should redirect to supporting docs page when all criteria answered', () => {
+  it('should redirect to supporting docs page when all criteria answered and display submission type on deal page', () => {
+    eligibilityCriteria.saveGoBackButton().click();
+    contract.eligibilitySubmissionType().should('not.be.visible');
+
+    contract.eligibilityCriteriaLink().click();
+
     eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().click({ multiple: true });
     eligibilityCriteria.nextPageButton().click();
 
     cy.url().should('include', '/eligibility/supporting-documentation');
+
+    // Check if MIA/AIN notice is on deal page
+    eligibilityDocumentation.saveGoBackButton().click();
+    contract.eligibilitySubmissionType().should('be.visible');
   });
 });

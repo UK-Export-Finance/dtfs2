@@ -2,6 +2,7 @@ const { findOneDeal, update: updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { getEligibilityErrors, getCriteria11Errors } = require('../validation/eligibility-criteria');
 const { getDocumentationErrors } = require('../validation/eligibility-documentation');
+const CONSTANTS = require('../../constants');
 
 exports.update = async (req, res) => {
   await findOneDeal(req.params.id, (deal) => {
@@ -17,12 +18,16 @@ exports.update = async (req, res) => {
 
       const { eligibility: { criteria }, dealFiles = {} } = deal;
       let criteriaComplete = true;
+      let criteriaAllTrue = true;
 
       const updatedCriteria = criteria.map((c) => {
         if (typeof req.body[`criterion-${c.id}`] === 'undefined') {
+          criteriaAllTrue = false;
           criteriaComplete = false;
           return c;
         }
+
+        criteriaAllTrue = criteriaAllTrue && req.body[`criterion-${c.id}`].toLowerCase() === 'true';
 
         return {
           ...c,
@@ -56,8 +61,14 @@ exports.update = async (req, res) => {
         ...validationErrors.errorList,
       };
 
+      const submissionTypeComplete = criteriaComplete ? CONSTANTS.DEAL.SUBMISSION_TYPE.MIA : '';
+
       const updatedDeal = {
         ...deal,
+        details: {
+          ...deal.details,
+          submissionType: criteriaAllTrue ? CONSTANTS.DEAL.SUBMISSION_TYPE.AIN : submissionTypeComplete,
+        },
         eligibility: {
           status: criteriaComplete ? 'Completed' : 'Incomplete',
           criteria: updatedCriteria,

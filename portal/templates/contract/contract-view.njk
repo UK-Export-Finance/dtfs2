@@ -61,7 +61,7 @@
                 <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
                   About the Supply Contract
                 </span>
-                <span data-cy="aboutSupplierDetailsStatus" class="govuk-!-margin-left-6">
+                <span data-cy="aboutSupplierDetailsStatus" class="govuk-grid-column-one-quarter">
                   {{ statusTag.render(deal.submissionDetails.status) }}
                 </span>
               </h2>
@@ -77,20 +77,20 @@
             <div class="govuk-grid-column-three-quarters">
               <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
 
+                <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
+                  Confirm eligibility
+                </span>
+                
                 {% if deal.eligibility.status %}
-                  <span class="govuk-!-margin-left-6 box__header-inline-message" data-cy="eligibility-status">
+                  <span class="govuk-grid-column-one-quarter" data-cy="eligibility-status">
                     {{ statusTag.render(deal.eligibility.status) }}
                   </span>
                 {% endif %}
 
-                <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
-                  Confirm eligibility
-                </span>
-
-                {% if deal.eligibility.submissionType %}
-                  <span class="govuk-!-margin-bottom-0 govuk-!-margin-left-6 govuk-!-font-weight-regular govuk-!-font-size-16 box__header-inline-message">
+                {% if deal.details.submissionType %}
+                  <span class="govuk-grid-column-one-quarter govuk-!-font-weight-regular govuk-!-font-size-16"  data-cy="eligibility-submission-type">
                     <span class="govuk-!-font-weight-bold">Submission type: </span> <br />
-                    {{ deal.eligibility.submissionType }}
+                    {{ deal.details.submissionType }}
                   </span>
                 {% endif %}
 

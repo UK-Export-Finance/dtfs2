@@ -7,14 +7,14 @@ const page = {
   aboutSupplierDetailsLink: () => cy.get('[data-cy="ViewAboutSupplierDetails"]'),
   bankSupplyContractName: () => cy.get('[data-cy="bankSupplyContractName"]'),
   bankSupplyContractID: () => cy.get('[data-cy="bankSupplyContractID"]'),
-  ukefDealId: ()=> cy.get('[data-cy="ukefDealId"]'),
-  status: ()=> cy.get('[data-cy="status"]'),
-  previousStatus: ()=> cy.get('[data-cy="previousStatus"]'),
-  maker: ()=> cy.get('[data-cy="maker"]'),
-  checker: ()=> cy.get('[data-cy="checker"]'),
-  submissionDate: ()=> cy.get('[data-cy="submissionDate"]'),
-  dateOfLastAction: ()=> cy.get('[data-cy="dateOfLastAction"]'),
-  submissionType: ()=> cy.get('[data-cy="submissionType"]'),
+  ukefDealId: () => cy.get('[data-cy="ukefDealId"]'),
+  status: () => cy.get('[data-cy="status"]'),
+  previousStatus: () => cy.get('[data-cy="previousStatus"]'),
+  maker: () => cy.get('[data-cy="maker"]'),
+  checker: () => cy.get('[data-cy="checker"]'),
+  submissionDate: () => cy.get('[data-cy="submissionDate"]'),
+  dateOfLastAction: () => cy.get('[data-cy="dateOfLastAction"]'),
+  submissionType: () => cy.get('[data-cy="submissionType"]'),
   cloneDealLink: () => cy.get('[data-cy="clone-deal-link"]'),
   addBondButton: () => cy.get('[data-cy="button-add-bond"]'),
 
@@ -28,6 +28,7 @@ const page = {
   proceedToReview: () => cy.get('[data-cy="ProceedToReview"]'),
   proceedToSubmit: () => cy.get('[data-cy="ProceedToSubmit"]'),
   returnToMaker: () => cy.get('[data-cy="ReturnToMaker"]'),
+  eligibilitySubmissionType: () => cy.get('[data-cy="eligibility-submission-type"]'),
   bondTransactionsTable: {
     row: (bondId) => {
       const row = cy.get(`[data-cy="bond-${bondId}"]`);

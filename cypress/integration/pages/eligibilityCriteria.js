@@ -14,6 +14,7 @@ const page = {
     count: () => cy.get('[data-cy="agents-name-count"]'),
   },
   nextPageButton: () => cy.get('[data-cy="next-page"]'),
+  saveGoBackButton: () => cy.get('[data-cy="save-go-back-button"]'),
   eligibiityProgressNav: {
     eligibilityCriteria: () => cy.get('[data-cy="progress-nav-item-link-eligibility/eligibility-criteria"]'),
     supportingDocumentation: () => cy.get('[data-cy="progress-nav-item-link-eligibility/supporting-documentation"]'),
