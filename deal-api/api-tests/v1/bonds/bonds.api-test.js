@@ -760,8 +760,76 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
+    describe('riskMarginFee', () => {
+      it('should return validationError when riskMarginFee is not a number', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bond = {
+          ...allBondFields,
+          riskMarginFee: '123test',
+        };
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(status).toEqual(400);
+        expect(body.validationErrors.count).toEqual(1);
+        expect(body.validationErrors.errorList.riskMarginFee).toBeDefined();
+        expect(body.validationErrors.errorList.riskMarginFee.text).toEqual('Risk Margin Fee % must be a number, like 1 or 12.65');
+      });
+
+      it('should return validationError when riskMarginFee is not between 1 and 99', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bond = {
+          ...allBondFields,
+          riskMarginFee: '100',
+        };
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(status).toEqual(400);
+        expect(body.validationErrors.count).toEqual(1);
+        expect(body.validationErrors.errorList.riskMarginFee).toBeDefined();
+        expect(body.validationErrors.errorList.riskMarginFee.text).toEqual('Risk Margin Fee % must be between 1 and 99');
+      });
+
+      it('should return validationError when coveredPercentage contains more than 4 decimals', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const bond = {
+          ...allBondFields,
+          riskMarginFee: '60.12345',
+        };
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+        const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(status).toEqual(400);
+        expect(body.validationErrors.count).toEqual(1);
+        expect(body.validationErrors.errorList.riskMarginFee).toBeDefined();
+        expect(body.validationErrors.errorList.riskMarginFee.text).toEqual('Risk Margin Fee % must have less than 4 decimals, like 12 or 12.0010');
+      });
+    });
+
     describe('coveredPercentage', () => {
-      it('should return validationError when coveredPercentage is not a number', async () => {
+      it('should return validationError when coveredPercentage is not between 1 and 99', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 

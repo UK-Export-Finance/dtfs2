@@ -239,41 +239,6 @@ context('Bond Financial Details', () => {
           pages.bondFinancialDetails.conversionRateDateInputErrorMessage().should('be.visible');
         });
       });
-
-      describe('when `covered percentage` has an invalid value', () => {
-        const fillAndSubmitCoveredPercentage = (value) => {
-          pages.bondFinancialDetails.coveredPercentageInput().clear();
-          pages.bondFinancialDetails.coveredPercentageInput().type(value);
-          pages.bondFinancialDetails.submit().click();
-        };
-
-        const goBackToFinancialDetails = () => {
-          partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
-          cy.url().should('include', '/financial-details');
-        };
-
-        const assertValidationError = () => {
-          partials.errorSummary.errorSummaryLinks().should('have.length', 1);
-          pages.bondFinancialDetails.coveredPercentageInputErrorMessage().should('be.visible');
-        };
-
-        it('should render validation error', () => {
-          goToBondFinancialDetailsPage(deal);
-          fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
-
-          fillAndSubmitCoveredPercentage('test');
-          goBackToFinancialDetails();
-          assertValidationError();
-
-          fillAndSubmitCoveredPercentage('0');
-          goBackToFinancialDetails();
-          assertValidationError();
-
-          fillAndSubmitCoveredPercentage('81');
-          goBackToFinancialDetails();
-          assertValidationError();
-        });
-      });
     });
 
     it('should render additional submitted form field values in `Bond Preview` page', () => {
@@ -333,6 +298,79 @@ context('Bond Financial Details', () => {
       });
     });
   });
+
+  describe('after form submit and navigating back to `Bond Financal Details` page', () => {
+    describe('when `risk margin fee` has an invalid value', () => {
+      const fillAndSubmitRiskMarginFee = (value) => {
+        pages.bondFinancialDetails.riskMarginFeeInput().clear();
+        pages.bondFinancialDetails.riskMarginFeeInput().type(value);
+        pages.bondFinancialDetails.submit().click();
+      };
+
+      const goBackToFinancialDetails = () => {
+        partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+        cy.url().should('include', '/financial-details');
+      };
+
+      const assertValidationError = () => {
+        partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+        pages.bondFinancialDetails.riskMarginFeeInputErrorMessage().should('be.visible');
+      };
+
+      it('should render validation error', () => {
+        goToBondFinancialDetailsPage(deal);
+        fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
+
+        fillAndSubmitRiskMarginFee('test');
+        goBackToFinancialDetails();
+        assertValidationError();
+
+        fillAndSubmitRiskMarginFee('100');
+        goBackToFinancialDetails();
+        assertValidationError();
+
+        fillAndSubmitRiskMarginFee('80.12345');
+        goBackToFinancialDetails();
+        assertValidationError();
+      });
+    });
+
+    describe('when `covered percentage` has an invalid value', () => {
+      const fillAndSubmitCoveredPercentage = (value) => {
+        pages.bondFinancialDetails.coveredPercentageInput().clear();
+        pages.bondFinancialDetails.coveredPercentageInput().type(value);
+        pages.bondFinancialDetails.submit().click();
+      };
+
+      const goBackToFinancialDetails = () => {
+        partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+        cy.url().should('include', '/financial-details');
+      };
+
+      const assertValidationError = () => {
+        partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+        pages.bondFinancialDetails.coveredPercentageInputErrorMessage().should('be.visible');
+      };
+
+      it('should render validation error', () => {
+        goToBondFinancialDetailsPage(deal);
+        fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
+
+        fillAndSubmitCoveredPercentage('test');
+        goBackToFinancialDetails();
+        assertValidationError();
+
+        fillAndSubmitCoveredPercentage('0');
+        goBackToFinancialDetails();
+        assertValidationError();
+
+        fillAndSubmitCoveredPercentage('81');
+        goBackToFinancialDetails();
+        assertValidationError();
+      });
+    });
+  });
+
 
   describe('When a user clicks `save and go back` button', () => {
     it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Bond Financial Details` page', () => {

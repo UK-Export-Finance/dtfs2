@@ -15,6 +15,11 @@ const {
   coveredPercentageIsValid,
   coveredPercentageValidationText,
 } = require('./bond-rules/covered-percentage');
+const {
+  riskMarginFeeIsValid,
+  riskMarginFeeValidationText,
+} = require('./bond-rules/risk-margin-fee');
+
 
 exports.getBondErrors = (bond) => {
   const {
@@ -274,10 +279,13 @@ exports.getBondErrors = (bond) => {
     }
   }
 
-  if (!hasValue(riskMarginFee)) {
+  if (!riskMarginFeeIsValid(riskMarginFee)) {
     errorList.riskMarginFee = {
+      text: riskMarginFeeValidationText(
+        riskMarginFee,
+        'Risk Margin Fee %',
+      ),
       order: orderNumber(errorList),
-      text: 'Enter the Risk Margin Fee %',
     };
   }
 
