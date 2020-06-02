@@ -6,15 +6,13 @@ import {
   generateErrorSummary,
 } from '../../../helpers';
 
-import {
-  provide, DEAL,
-} from '../../api-data-provider';
+import { DEAL } from '../../api-data-provider';
 
 import calculateStatusOfEachPage from './navStatusCalculations';
 
 const router = express.Router();
 
-router.get('/contract/:_id/about/preview', provide([DEAL]), async (req, res) => {
+router.get('/contract/:_id/about/preview', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
   const deal = req.apiData[DEAL];
