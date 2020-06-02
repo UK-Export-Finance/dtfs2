@@ -18,11 +18,13 @@ export const bondPreviewValidationErrors = (validationErrors, dealId, bondId) =>
 
   if (mappedValidationErrors && mappedValidationErrors.errorList) {
     Object.keys(mappedValidationErrors.errorList).forEach((fieldName) => {
-      if (FIELDS.DETAILS.REQUIRED_FIELDS.includes(fieldName)) {
+      if (FIELDS.DETAILS.REQUIRED_FIELDS.includes(fieldName)
+        || FIELDS.DETAILS.CONDITIONALLY_REQUIRED_FIELDS.includes(fieldName)) {
         mappedValidationErrors.errorList[fieldName].hrefRoot = `/contract/${dealId}/bond/${bondId}/details`;
       }
 
-      if (FIELDS.FINANCIAL_DETAILS.REQUIRED_FIELDS.includes(fieldName)) {
+      if (FIELDS.FINANCIAL_DETAILS.REQUIRED_FIELDS.includes(fieldName)
+        || FIELDS.FINANCIAL_DETAILS.CONDITIONALLY_REQUIRED_FIELDS.includes(fieldName)) {
         mappedValidationErrors.errorList[fieldName].hrefRoot = `/contract/${dealId}/bond/${bondId}/financial-details`;
       }
 
