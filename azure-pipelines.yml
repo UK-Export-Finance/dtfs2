@@ -24,9 +24,11 @@ variables:
   vmImageName: 'ubuntu-latest'
 
 stages:
+
 - stage: build
-  displayName: Build stage
+  displayName: Build container images
   jobs:  
+
   - job: Portal
     displayName: 'Portal: build and push'
     pool:
@@ -50,8 +52,10 @@ stages:
         repository: '$(dealApi)'
         command: 'buildAndPush'
         Dockerfile: '$(dealApi)/Dockerfile'
+
 - stage: deploy
-  displayName: Deploy stage
+  displayName: Deploy containers
+
   jobs:
   - job: portal
     displayName: 'Portal: deploy to App Service'
@@ -67,6 +71,7 @@ stages:
         DockerNamespace: '$(containerRegistry)'
         DockerRepository: '$(portal)'
         DockerImageTag: '$(Build.BuildId)'
+        
   - job: dealApi
     displayName: 'Deal API: deploy to App Service'
     pool:
