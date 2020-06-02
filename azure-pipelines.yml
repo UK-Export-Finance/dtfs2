@@ -62,6 +62,24 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
+    - task: AzureAppServiceSettings@1
+      inputs:
+        azureSubscription: '$(serviceConnection)'
+        appName: 'dtfs-$(portal)-dev'
+        resourceGroupName: '$(resourceGroup)'
+        appSettings: |
+          [
+             {
+              "name": "DEAL_API_URL",
+              "value": "https://dtfs-deal-api-dev.azurewebsites.net/",
+              "slotSetting": false
+             },
+             {
+              "name": "COMPANIES_HOUSE_API_URL",
+              "value": "https://api.companieshouse.gov.uk",
+              "slotSetting": false
+             }
+          ]
     - task: AzureRmWebAppDeployment@4
       displayName: Deploy
       inputs:
