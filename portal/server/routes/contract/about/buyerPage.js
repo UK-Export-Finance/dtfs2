@@ -46,7 +46,7 @@ router.get('/contract/:_id/about/buyer', provide([DEAL, COUNTRIES]), async (req,
   });
 });
 
-router.post('/contract/:_id/about/buyer', provide([DEAL]), async (req, res) => {
+router.post('/contract/:_id/about/buyer', async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const submissionDetails = req.body;
 

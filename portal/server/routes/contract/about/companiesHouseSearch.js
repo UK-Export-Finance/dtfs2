@@ -7,7 +7,7 @@ import {
 } from '../../../helpers';
 
 import {
-  provide, DEAL, INDUSTRY_SECTORS, COUNTRIES,
+  provide, INDUSTRY_SECTORS, COUNTRIES,
 } from '../../api-data-provider';
 
 // https://developer.companieshouse.gov.uk/api/docs/company/company_number/registered-office-address/registeredOfficeAddress-resource.html
@@ -23,7 +23,7 @@ const getPortalCountryForCompaniesHouseCountry = (companiesHouseCountry) => {
 
 const router = express.Router();
 
-router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', provide([DEAL, INDUSTRY_SECTORS, COUNTRIES]), async (req, res) => {
+router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', provide([INDUSTRY_SECTORS, COUNTRIES]), async (req, res) => {
   const { prefix } = req.params;
   const { deal, industrySectors, countries } = req.apiData;
 
