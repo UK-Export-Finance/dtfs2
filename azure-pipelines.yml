@@ -82,6 +82,19 @@ stages:
         azureSubscription: '$(serviceConnection)'
         appName: 'dtfs-$(dealApi)-dev'
         resourceGroupName: '$(resourceGroup)'
+        appSettings: |
+          [
+             {
+              "name": "JWT_SIGNING_CERT",
+              "value": "./.ssl/private.pem",
+              "slotSetting": false
+             },
+             {
+              "name": "JWT_VALIDATING_CERT",
+              "value": "./.ssl/public.pem",
+              "slotSetting": false
+             }
+          ]
         connectionStrings: |
           [
              {
