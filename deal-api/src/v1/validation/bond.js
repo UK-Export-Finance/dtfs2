@@ -304,7 +304,6 @@ exports.getBondErrors = (bond) => {
   }
 
   if (hasValue(minimumRiskMarginFee) && !minimumRiskMarginFeeIsValid(minimumRiskMarginFee)) {
-    console.log('**** minimumRiskMarginFeeIsValid(minimumRiskMarginFee) ? ', minimumRiskMarginFeeIsValid(minimumRiskMarginFee));
     errorList.minimumRiskMarginFee = {
       text: minimumRiskMarginFeeValidationText(
         minimumRiskMarginFee,

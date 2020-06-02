@@ -65,6 +65,23 @@ context('Bond Financial Details', () => {
     });
   });
 
+  describe('when changing the `risk margin fee` field', () => {
+    it('should dynamically update the `Guarantee Fee Payable By Bank` value on blur', () => {
+      cy.loginGoToDealPage(user, deal);
+
+      pages.contract.addBondButton().click();
+      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+
+      pages.bondFinancialDetails.guaranteeFeePayableByBankInput().invoke('attr', 'placeholder').should('eq', '0');
+      pages.bondFinancialDetails.riskMarginFeeInput().type('20').blur();
+      pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', String(20 * 0.9));
+
+      pages.bondFinancialDetails.riskMarginFeeInput().clear();
+      pages.bondFinancialDetails.riskMarginFeeInput().type('30').blur();
+      pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', String(30 * 0.9));
+    });
+  });
+
   describe('when changing the `bond value` or `covered percentage` field', () => {
     it('should dynamically update the `UKEF exposure` value on blur', () => {
       cy.loginGoToDealPage(user, deal);

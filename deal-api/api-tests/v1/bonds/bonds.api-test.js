@@ -344,7 +344,7 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     describe('with all required fields in body', () => {
-      it('updates an existing bond and adds currency, status and ukefExposure values', async () => {
+      it('updates an existing bond and adds currency, status, guaranteeFeePayableByBank and ukefExposure values', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -377,6 +377,7 @@ describe('/v1/deals/:id/bond', () => {
           ...allBondFields,
           ...coverEndDate(),
           currency: deal.body.supplyContractCurrency,
+          guaranteeFeePayableByBank: allBondFields.riskMarginFee * 0.9,
           ukefExposure: allBondFields.bondValue * allBondFields.coveredPercentage,
           status: 'Completed',
         };
@@ -427,6 +428,7 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsIssued,
           currency: deal.body.supplyContractCurrency,
+          guaranteeFeePayableByBank: allBondFields.riskMarginFee * 0.9,
           ukefExposure: allBondFields.bondValue * allBondFields.coveredPercentage,
           status: 'Completed',
         };
@@ -580,6 +582,7 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsUnissued,
           currency: deal.body.supplyContractCurrency,
+          guaranteeFeePayableByBank: allBondFields.riskMarginFee * 0.9,
           ukefExposure: allBondFields.bondValue * allBondFields.coveredPercentage,
           status: 'Completed',
         };
@@ -731,6 +734,7 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...bondBody,
           currency: deal.body.supplyContractCurrency,
+          guaranteeFeePayableByBank: allBondFields.riskMarginFee * 0.9,
           ukefExposure: allBondFields.bondValue * allBondFields.coveredPercentage,
           status: 'Completed',
         });
