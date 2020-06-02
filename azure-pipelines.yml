@@ -16,6 +16,7 @@ variables:
 
   # Connections
   serviceConnection: 'Digital-Dev-Deployment'
+  registryServiceConnection: 'dtfsdev-1967'
   resourceGroup: 'Digital-Dev'
   containerRegistry: 'dtfsdev.azurecr.io'
   
@@ -26,62 +27,48 @@ stages:
 - stage: build
   displayName: Build stage
   jobs:  
-  - job: portal
-    displayName: 'Portal: build and push container image'
+  - job: Portal
+    displayName: 'Portal: build and push'
     pool:
       vmImage: $(vmImageName)
     steps:
     - task: Docker@2
       inputs:
-        containerRegistry: 'dtfsdev-1967'
+        containerRegistry: '$(registryServiceConnection)'
         repository: '$(portal)'
         command: 'buildAndPush'
         Dockerfile: '$(portal)/Dockerfile'
-    # - task: Docker@1
-    #   displayName: Build the image
-    #   inputs:
-    #     containerregistrytype: 'Azure Container Registry'
-    #     azureSubscriptionEndpoint: $(serviceConnection)
-    #     azureContainerRegistry: $(containerRegistry)
-    #     command: 'Build an image'
-    #     dockerFile: '$(portal)/Dockerfile'
-    #     imageName: '$(portal):$(Build.BuildId)'
-    # - task: Docker@1
-    #   displayName: Push the image
-    #   inputs:
-    #     containerregistrytype: 'Azure Container Registry'
-    #     azureSubscriptionEndpoint: $(serviceConnection)
-    #     azureContainerRegistry: $(containerRegistry)
-    #     command: 'Push an image'
-    #     imageName: '$(portal):$(Build.BuildId)'
 
   - job: DealApi
-    displayName: 'Deal API: build and push container image'
+    displayName: 'Deal API: build and push'
     pool:
       vmImage: $(vmImageName)
     steps:
-    - task: Docker@1
-      displayName: Build the image
+    - task: Docker@2
       inputs:
-        containerregistrytype: 'Azure Container Registry'
-        azureSubscriptionEndpoint: $(serviceConnection)
-        azureContainerRegistry: $(containerRegistry)
-        command: 'Build an image'
-        dockerFile: '$(dealApi)/Dockerfile'
-        imageName: '$(dealApi):$(Build.BuildId)'
-    - task: Docker@1
-      displayName: Push the image
-      inputs:
-        containerregistrytype: 'Azure Container Registry'
-        azureSubscriptionEndpoint: $(serviceConnection)
-        azureContainerRegistry: $(containerRegistry)
-        command: 'Push an image'
-        imageName: '$(dealApi):$(Build.BuildId)'
+        containerRegistry: '$(registryServiceConnection)'
+        repository: '$(dealApi)'
+        command: 'buildAndPush'
+        Dockerfile: '$(dealApi)/Dockerfile'
 - stage: deploy
   displayName: Deploy stage
   jobs:
   - job: portal
     displayName: 'Portal: deploy to App Service'
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: AzureRmWebAppDeployment@4
+      displayName: Deploy
+      inputs:
+        azureSubscription: '$(serviceConnection)'
+        appType: 'webAppContainer'
+        WebAppName: 'dtfs-$(portal)-dev'
+        DockerNamespace: '$(containerRegistry)'
+        DockerRepository: '$(portal)'
+        DockerImageTag: '$(Build.BuildId)'
+  - job: dealApi
+    displayName: 'Deal API: deploy to App Service'
     pool:
       vmImage: $(vmImageName)
     steps:
@@ -99,20 +86,6 @@ stages:
               "slotSetting": false
              }
           ]
-    - task: AzureRmWebAppDeployment@4
-      displayName: Deploy
-      inputs:
-        azureSubscription: '$(serviceConnection)'
-        appType: 'webAppContainer'
-        WebAppName: 'dtfs-$(portal)-dev'
-        DockerNamespace: '$(containerRegistry)'
-        DockerRepository: '$(portal)'
-        DockerImageTag: '$(Build.BuildId)'
-  - job: dealApi
-    displayName: 'Deal API: deploy to App Service'
-    pool:
-      vmImage: $(vmImageName)
-    steps:
     - task: AzureRmWebAppDeployment@4
       displayName: Deploy
       inputs:
