@@ -371,6 +371,48 @@ context('Bond Financial Details', () => {
     });
   });
 
+  describe('when `minimum risk margin fee` has an invalid value', () => {
+    const fillAndSubmitMinimumRiskMarginFee = (value) => {
+      pages.bondFinancialDetails.minimumRiskMarginFeeInput().clear();
+      pages.bondFinancialDetails.minimumRiskMarginFeeInput().type(value);
+      pages.bondFinancialDetails.submit().click();
+    };
+
+    const goBackToFinancialDetails = () => {
+      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+      cy.url().should('include', '/financial-details');
+    };
+
+    const assertValidationError = () => {
+      partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+      pages.bondFinancialDetails.minimumRiskMarginFeeInputErrorMessage().should('be.visible');
+    };
+
+    it('should render validation error', () => {
+      goToBondFinancialDetailsPage(deal);
+      fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
+
+      fillAndSubmitMinimumRiskMarginFee('test');
+      goBackToFinancialDetails();
+      assertValidationError();
+
+      fillAndSubmitMinimumRiskMarginFee('12345678901234567');
+      goBackToFinancialDetails();
+      assertValidationError();
+
+      fillAndSubmitMinimumRiskMarginFee('0');
+      goBackToFinancialDetails();
+      assertValidationError();
+
+      fillAndSubmitMinimumRiskMarginFee('15');
+      goBackToFinancialDetails();
+      assertValidationError();
+
+      fillAndSubmitMinimumRiskMarginFee('12.345');
+      goBackToFinancialDetails();
+      assertValidationError();
+    });
+  });
 
   describe('When a user clicks `save and go back` button', () => {
     it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Bond Financial Details` page', () => {

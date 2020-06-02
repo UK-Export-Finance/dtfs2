@@ -38,8 +38,10 @@ const FIELDS = {
       'currency',
       'conversionRate',
       'conversionRateDate',
-    ],
-    OPTIONAL_FIELDS: [
+
+
+      // TODO (as above)
+      // optional fields that could have validation errors
       'minimumRiskMarginFee',
     ],
   },
