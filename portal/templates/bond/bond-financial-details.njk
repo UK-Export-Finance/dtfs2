@@ -244,6 +244,7 @@
       },
       id: "guaranteeFeePayableByBank",
       name: "guaranteeFeePayableByBank",
+      value: bond.guaranteeFeePayableByBank,
       classes: "form-group-disabled--input govuk-input--width-5",
       type: "number",
       attributes: {
@@ -304,6 +305,7 @@
       }
     }
 
+    /* UKEF Exposure calculation */
     var bondValueInput = document.getElementById('bondValue');
   
     var coveredPercentageInput = document.getElementById('coveredPercentage');
@@ -318,6 +320,19 @@
       element.addEventListener('blur', function(event) {
         calculateUkefExposure();
       });
+    });
+
+    /* Guarantee fee calculation */
+    var riskMarginFeeInput = document.getElementById('riskMarginFee');
+    var guaranteeFee = document.getElementById('guaranteeFeePayableByBank');
+
+    function calculateGuaranteeFee() {
+      var result = riskMarginFeeInput.value * 0.9;
+      guaranteeFee.value = result;
+    }
+
+    riskMarginFeeInput.addEventListener('blur', function(event) {
+      calculateGuaranteeFee();
     });
   </script>
 

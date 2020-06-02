@@ -29,12 +29,16 @@ const bondValue = '123';
 const coveredPercentage = '80';
 const ukefExposure = String(Number(bondValue) * Number(coveredPercentage));
 
+const riskMarginFee = '20';
+const guaranteeFeePayableByBank = riskMarginFee * 0.9;
+
 const FINANCIAL_DETAILS = {
   bondValue,
-  riskMarginFee: '20',
+  riskMarginFee,
   coveredPercentage,
   minimumRiskMarginFee: '1.23',
   ukefExposure,
+  guaranteeFeePayableByBank,
 
   // 'transaction currency not the same as supply contract currency' specifics
   currency: {

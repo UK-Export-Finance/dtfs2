@@ -32,6 +32,7 @@ const financialDetails = {
     pages.bondFinancialDetails.coveredPercentageInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
     pages.bondFinancialDetails.minimumRiskMarginFeeInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
     pages.bondFinancialDetails.ukefExposureInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.ukefExposure);
+    pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.guaranteeFeePayableByBank);
   },
   transactionCurrencyNotTheSameAsSupplyContractCurrency: () => {
     pages.bondFinancialDetails.bondValueInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
@@ -45,6 +46,7 @@ const financialDetails = {
     pages.bondFinancialDetails.coveredPercentageInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
     pages.bondFinancialDetails.minimumRiskMarginFeeInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
     pages.bondFinancialDetails.ukefExposureInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.ukefExposure);
+    pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.guaranteeFeePayableByBank);
   },
 };
 
