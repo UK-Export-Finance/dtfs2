@@ -1,7 +1,7 @@
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { findOneBondCurrency } = require('./bondCurrencies.controller');
-const { getBondErrors } = require('../validation/bond');
+const bondValidationErrors = require('../validation/bond');
 const { generateFacilityId } = require('../../utils/generateIds');
 const { bondStatus } = require('../section-status/bond');
 
@@ -21,7 +21,7 @@ exports.getBond = async (req, res) => {
         String(b._id) === bondId); // eslint-disable-line no-underscore-dangle
 
       if (bond) {
-        const validationErrors = getBondErrors(bond);
+        const validationErrors = bondValidationErrors(bond);
 
         return res.json({
           dealId,
@@ -166,7 +166,7 @@ exports.updateBond = async (req, res) => {
         updatedBond.ukefExposure = bondValue * coveredPercentage;
       }
 
-      const validationErrors = getBondErrors(updatedBond);
+      const validationErrors = bondValidationErrors(updatedBond);
 
       const updatedDeal = {
         ...deal,

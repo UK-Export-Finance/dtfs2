@@ -2,6 +2,7 @@ const {
   isNumeric,
   decimalsCount,
 } = require('../../../utils/number');
+const { orderNumber } = require('../../../utils/error-list-order-number');
 
 const MAX_DECIMALS = 4;
 
@@ -14,7 +15,7 @@ const isValidFormat = (value) => {
   return false;
 };
 
-exports.riskMarginFeeIsValid = (str) => {
+const isValid = (str) => {
   if (!str || !str.length) {
     return false;
   }
@@ -34,7 +35,7 @@ exports.riskMarginFeeIsValid = (str) => {
   return true;
 };
 
-exports.riskMarginFeeValidationText = (str, fieldCopy) => {
+const validationText = (str, fieldCopy) => {
   if (!isNumeric(Number(str))) {
     return `${fieldCopy} must be a number, like 1 or 12.65`;
   }
@@ -48,4 +49,20 @@ exports.riskMarginFeeValidationText = (str, fieldCopy) => {
   }
 
   return `Enter the ${fieldCopy}`;
+};
+
+module.exports = (bond, errorList) => {
+  const newErrorList = { ...errorList };
+
+  if (!isValid(bond.riskMarginFee)) {
+    newErrorList.riskMarginFee = {
+      text: validationText(
+        bond.riskMarginFee,
+        'Risk Margin Fee %',
+      ),
+      order: orderNumber(newErrorList),
+    };
+  }
+
+  return newErrorList;
 };

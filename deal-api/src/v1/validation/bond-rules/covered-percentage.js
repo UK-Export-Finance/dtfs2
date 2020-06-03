@@ -1,14 +1,16 @@
+const { hasValue } = require('../../../utils/string');
 const {
   isNumeric,
 } = require('../../../utils/number');
+const { orderNumber } = require('../../../utils/error-list-order-number');
 
 const MIN_VALUE = 1;
 const MAX_VALUE = 80;
 
 const isInRange = (value) => value >= MIN_VALUE && value <= MAX_VALUE;
 
-exports.coveredPercentageIsValid = (str) => {
-  if (!str || !str.length) {
+const isValid = (str) => {
+  if (!hasValue(str)) {
     return false;
   }
 
@@ -23,7 +25,7 @@ exports.coveredPercentageIsValid = (str) => {
   return true;
 };
 
-exports.coveredPercentageValidationText = (str, fieldCopy) => {
+const validationText = (str, fieldCopy) => {
   if (!isNumeric(Number(str))) {
     return `${fieldCopy} must be a number, like ${MIN_VALUE} or ${MAX_VALUE}`;
   }
@@ -33,4 +35,20 @@ exports.coveredPercentageValidationText = (str, fieldCopy) => {
   }
 
   return `Enter the ${fieldCopy}`;
+};
+
+module.exports = (bond, errorList) => {
+  const newErrorList = { ...errorList };
+
+  if (!isValid(bond.coveredPercentage)) {
+    newErrorList.coveredPercentage = {
+      text: validationText(
+        bond.coveredPercentage,
+        'Covered Percentage',
+      ),
+      order: orderNumber(newErrorList),
+    };
+  }
+
+  return newErrorList;
 };

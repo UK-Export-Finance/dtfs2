@@ -1,7 +1,9 @@
+const { hasValue } = require('../../../../utils/string');
 const {
   isNumeric,
   isInteger,
-} = require('../../../utils/number');
+} = require('../../../../utils/number');
+const { orderNumber } = require('../../../../utils/error-list-order-number');
 
 // invalid values:
 // 1234567
@@ -30,8 +32,8 @@ const isValidFormat = (str) => {
   return true;
 };
 
-exports.conversionRateIsValid = (str) => {
-  if (!str || !str.length) {
+const isValid = (str) => {
+  if (!hasValue(str)) {
     return false;
   }
   if (!isNumeric(Number(str))) {
@@ -46,7 +48,7 @@ exports.conversionRateIsValid = (str) => {
   return true;
 };
 
-exports.conversionRateValidationText = (value, fieldCopy) => {
+const validationText = (value, fieldCopy) => {
   if (!isNumeric(Number(value))) {
     return `${fieldCopy} must be a number, like 100 or 100.4`;
   }
@@ -60,4 +62,20 @@ exports.conversionRateValidationText = (value, fieldCopy) => {
   }
 
   return `Enter the ${fieldCopy}`;
+};
+
+module.exports = (bond, errorList) => {
+  const newErrorList = { ...errorList };
+
+  if (!isValid(bond.conversionRate)) {
+    newErrorList.conversionRate = {
+      text: validationText(
+        bond.conversionRate,
+        'Conversion rate to the Supply Contract currency',
+      ),
+      order: orderNumber(newErrorList),
+    };
+  }
+
+  return newErrorList;
 };
