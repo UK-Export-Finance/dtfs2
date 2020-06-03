@@ -6,6 +6,7 @@ const k2Map = require('./k2-mapping');
 const dateHelpers = require('./date-helpers');
 const whitespaceCollapse = require('./whitespace-collapse');
 const getApplicationGroup = require('./get-application-group');
+const getActionCodeAndName = require('./get-action-code-and-name');
 
 module.exports = {
   eligibilityCriteriaHelper,
@@ -16,4 +17,5 @@ module.exports = {
   dateHelpers,
   whitespaceCollapse,
   getApplicationGroup,
+  getActionCodeAndName,
 };

@@ -22,9 +22,17 @@ const SUBMISSION_TYPE = {
   MIA: 'Manual Inclusion Notice',
 };
 
+const ACTION_NAME = {
+  '001': 'NewDeal',
+  '003': 'NewDeal',
+  '010': 'ATPConfirm',
+  '016': 'AmendDeal',
+};
+
 module.exports = {
   SME_TYPE,
   SUPPLIER_TYPE,
   APPLICATION_GROUP,
   SUBMISSION_TYPE,
+  ACTION_NAME,
 };
