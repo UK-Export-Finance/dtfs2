@@ -27,20 +27,25 @@ exports.findOne = (req, res) => {
 };
 
 exports.createTypeA = async (deal) => {
-  const typeA = await generateTypeA(deal);
+  const {
+    typeAxmlStr, filename, errorCount, errors,
+  } = await generateTypeA(deal);
 
   // TODO - Decide what to do with invalid typeA xml
+  console.log({
+    typeAxmlStr, filename, errorCount, errors,
+  });
 
-  if (typeA.errorCount) {
-    return typeA;
+  if (errorCount) {
+    return typeAxmlStr;
   }
 
 
   const upload = {
     folder: 'ukef',
     subfolder: 'type-a',
-    filename: `${deal._id}.xml`, // eslint-disable-line no-underscore-dangle
-    buffer: Buffer.from(JSON.stringify(typeA), 'utf-8'),
+    filename: `${filename}.xml`,
+    buffer: Buffer.from(JSON.stringify(typeAxmlStr), 'utf-8'),
   };
 
   return fileshare.uploadStream(upload);

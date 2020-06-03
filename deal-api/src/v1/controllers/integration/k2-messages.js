@@ -12,12 +12,15 @@ const {
   k2Map,
   dateHelpers,
   getApplicationGroup,
+  getActionCodeAndName,
 } = require('./helpers');
 
 module.exports.generateTypeA = async (deal) => {
+  const { actionCode, actionName } = getActionCodeAndName(deal);
+
   const builder = typeABuilder()
-    .action_code('//TODO')
-    .action_name('//TODO')
+    .action_code(actionCode)
+    .action_name(actionName)
     .application_group(getApplicationGroup(deal))
     .message_type('A')
     .revision_id('//TODO')
@@ -170,30 +173,33 @@ module.exports.generateTypeA = async (deal) => {
     });
   }
 
-  const typeAxml = builder.build();
+  const typeAxmlStr = builder.build();
 
   // Validate XML against XSD schema
   const typeAxsd = fs.readFileSync(path.resolve(__dirname, './type-a-defs/type-a.xsd'),
     { encoding: 'utf8', flag: 'r' });
 
-  const parsedXml = libxml.parseXml(typeAxml);
+  const parsedXml = libxml.parseXml(typeAxmlStr);
   const parsedXsd = libxml.parseXml(typeAxsd);
 
   if (parsedXml.errors.length) {
     return {
-      ...typeAxml,
+      typeAxmlStr,
       errorCount: parsedXml.errors.length,
     };
   }
 
   const isValidXml = parsedXml.validate(parsedXsd);
+  const filename = `${deal._id}_${actionName.toUpperCase()}`;
 
   if (!isValidXml) {
     return {
-      ...typeAxml,
+      typeAxmlStr,
+      filename,
       errorCount: parsedXml.validationErrors.length,
+      errors: parsedXml.validationErrors,
     };
   }
 
-  return typeAxml;
+  return { typeAxmlStr, filename };
 };

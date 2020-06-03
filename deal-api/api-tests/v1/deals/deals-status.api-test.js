@@ -456,7 +456,7 @@ describe('/v1/deals/:id/status', () => {
       });
     });
 
-    xdescribe('valid typeA xml is created', () => {
+    describe('valid typeA xml is created', () => {
       it('creates type_a xml if deal successfully submitted', async () => {
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
