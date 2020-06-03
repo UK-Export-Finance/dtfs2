@@ -1,4 +1,8 @@
 HERE=$(pwd)
+if [ -f "companies_house_api_key.txt" ]; then
+    export COMPANIES_HOUSE_API_KEY=$(cat companies_house_api_key.txt)
+    echo "Set the Companies House API key."
+fi
 LOG="$HERE/pipeline.log"
 
 pipelinestart=`date +%s`
