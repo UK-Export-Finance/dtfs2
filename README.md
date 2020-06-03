@@ -6,7 +6,7 @@
 
 Prerequisites
 
- * Version 13 or later of `node` and `npm`
+ * Version 13 or later of `node` with a corresponding `npm`
  * Docker and Docker Compose
 
 Steps
@@ -14,7 +14,13 @@ Steps
  * clone this repo
  * if you have a Companies House API key, it can be stored in a one-line text file called `companies_hous_api_key.txt` (named in `.gitignore`). This will be picked up and used by `bin/pipeline.sh`. E.g.: `echo "abc123456XYZ" > companies_house_api_key.txt`
  * run `npm install` in the root directory of the repo
- * run `npm run pipeline` to check you've got a working build
+ * run `docker-compose up --build` to start up an environment
+ * navigate to `utils/mock-data-loader`
+ * run `npm install`
+ * run `node re-insert-mocks.js`
+ * navigate back to the root directory of the repo
+ * run `docker-compose down`
+ * run `npm run pipeline` to run a full build and test that confirms you've got a working environment.
 
 NB this code has been developed on Mac OS and runs in Linux containers. You may need to adjust some instructions if you need to run it on Windows.
 
