@@ -1,4 +1,4 @@
-const { getBondErrors } = require('../validation/bond');
+const bondValidationErrors = require('../validation/bond');
 
 const bondStatus = (bondErrors) => {
   if (bondErrors.count === 0) {
@@ -11,8 +11,8 @@ const multipleBondStatus = (bondTransactions) => {
   if (bondTransactions.items.length) {
     bondTransactions.items.forEach((b) => {
       const bond = b;
-      const bondValidationErrors = getBondErrors(bond);
-      bond.status = bondStatus(bondValidationErrors);
+      const validationErrors = bondValidationErrors(bond);
+      bond.status = bondStatus(validationErrors);
     });
   }
   return bondTransactions;
