@@ -2,6 +2,21 @@
 
 [![Build Status](https://dev.azure.com/sysdevukef/DTFS/_apis/build/status/notbinary.dtfs2?branchName=master)](https://dev.azure.com/sysdevukef/DTFS/_build/latest?definitionId=45&branchName=master)
 
+### Setup
+
+Prerequisites
+
+ * Version 13 or later of `node` and `npm`
+ * Docker and Docker Compose
+
+Steps
+
+ * clone this repo
+ * run `npm install` in the root directory of the repo
+ * run `npm run pipeline` to check you've got a working build
+
+NB this code has been developed on Mac OS and runs in Linux containers. You may need to adjust some instructions if you need to run it on Windows.
+
 ### Testing
 
 With docker running, execute all tests with:
