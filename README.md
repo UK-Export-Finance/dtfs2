@@ -12,6 +12,7 @@ Prerequisites
 Steps
 
  * clone this repo
+ * if you have a Companies House API key, it can be stored in a one-line text file called `companies_hous_api_key.txt` (named in `.gitignore`). This will be picked up and used by `bin/pipeline.sh`.
  * run `npm install` in the root directory of the repo
  * run `npm run pipeline` to check you've got a working build
 
