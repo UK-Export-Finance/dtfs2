@@ -83,9 +83,9 @@ context('A checker selects to submit a contract from the view-contract page', ()
       expect(text.trim()).to.equal("Ready for Checker's approval");
     });
 
-    cy.downloadFile( deal, {...checker}).then( (typeA) =>{
-      expect(typeA).not.to.equal('');
-    });
+    // cy.downloadFile( deal, {...checker}).then( (typeA) =>{
+    //   expect(typeA).not.to.equal('');
+    // });
 
   });
 
