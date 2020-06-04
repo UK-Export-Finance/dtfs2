@@ -4,6 +4,17 @@ const { findOneBondCurrency } = require('./bondCurrencies.controller');
 const bondValidationErrors = require('../validation/bond');
 const { generateFacilityId } = require('../../utils/generateIds');
 const { bondStatus } = require('../section-status/bond');
+const { hasValue } = require('../../utils/string');
+
+const putBondInDealObject = (deal, bond, otherBonds) => ({
+  ...deal,
+  bondTransactions: {
+    items: [
+      ...otherBonds,
+      bond,
+    ],
+  },
+});
 
 exports.getBond = async (req, res) => {
   const {
@@ -52,19 +63,11 @@ exports.create = async (req, res) => {
       _id: facilityId,
     };
 
-    const updatedDeal = {
-      ...deal,
-      bondTransactions: {
-        items: [
-          ...deal.bondTransactions.items,
-          newBondObj,
-        ],
-      },
-    };
+    const modifiedDeal = putBondInDealObject(deal, newBondObj, deal.bondTransactions.items);
 
     const newReq = {
       params: req.params,
-      body: updatedDeal,
+      body: modifiedDeal,
       user: req.user,
     };
 
@@ -77,7 +80,7 @@ exports.create = async (req, res) => {
   });
 };
 
-const handleBondCurrency = async (currencyCode) => {
+const bondCurrency = async (currencyCode) => {
   const currencyObj = await findOneBondCurrency(currencyCode);
   const { text, id } = currencyObj;
 
@@ -85,6 +88,70 @@ const handleBondCurrency = async (currencyCode) => {
     text,
     id,
   };
+};
+
+const bondTransactionCurrencySameAsSupplyContractCurrency = async (bond, supplyContractCurrencyCode) => {
+  const modifiedBond = bond;
+  const {
+    transactionCurrencySameAsSupplyContractCurrency,
+    currency: currencyCode,
+  } = modifiedBond;
+
+  if (transactionCurrencySameAsSupplyContractCurrency && transactionCurrencySameAsSupplyContractCurrency === 'true') {
+    // remove any 'currency is NOT the same' specific values
+    delete modifiedBond.currency;
+    delete modifiedBond.conversionRate;
+    delete modifiedBond['conversionRateDate-day'];
+    delete modifiedBond['conversionRateDate-month'];
+    delete modifiedBond['conversionRateDate-year'];
+
+    modifiedBond.currency = await bondCurrency(supplyContractCurrencyCode);
+  } else if (currencyCode) {
+    // TODO: make this clearer
+    // currencyCode can be a single string (from form),
+    // or an object with ID, if has been previously submitted.
+    const actualCurrencyCode = currencyCode.id ? currencyCode.id : currencyCode;
+    modifiedBond.currency = await bondCurrency(actualCurrencyCode);
+  }
+
+  return modifiedBond;
+};
+
+const bondStageFields = (bond) => {
+  const modifiedBond = bond;
+  const { bondStage } = modifiedBond;
+
+  if (bondStage === 'Issued') {
+    // remove any `Unissued Bond Stage` specific fields/values
+    delete modifiedBond.ukefGuaranteeInMonths;
+  }
+
+  if (bondStage === 'Unissued') {
+    // remove any `Issued Bond Stage` specific fields/values
+    delete modifiedBond['requestedCoverStartDate-day'];
+    delete modifiedBond['requestedCoverStartDate-month'];
+    delete modifiedBond['requestedCoverStartDate-year'];
+    delete modifiedBond['coverEndDate-day'];
+    delete modifiedBond['coverEndDate-month'];
+    delete modifiedBond['coverEndDate-year'];
+    delete modifiedBond.uniqueIdentificationNumber;
+  }
+
+  return modifiedBond;
+};
+
+const calculateGuaranteeFeePayableByBank = (riskMarginFee) => {
+  if (hasValue(riskMarginFee)) {
+    return riskMarginFee * 0.9;
+  }
+  return riskMarginFee;
+};
+
+const calculateUkefExposure = (bondValue, coveredPercentage) => {
+  if (hasValue(bondValue) && hasValue(coveredPercentage)) {
+    return bondValue * coveredPercentage;
+  }
+  return '';
 };
 
 exports.updateBond = async (req, res) => {
@@ -108,94 +175,50 @@ exports.updateBond = async (req, res) => {
       const allOtherBonds = deal.bondTransactions.items.filter((bond) =>
         String(bond._id) !== bondId); // eslint-disable-line no-underscore-dangle
 
-      const updatedBond = {
+      let modifiedBond = {
         _id: bondId,
         ...existingBond,
         ...req.body,
       };
 
-      const {
-        bondStage,
-        transactionCurrencySameAsSupplyContractCurrency,
-        currency: currencyCode,
-      } = req.body;
+      modifiedBond = bondStageFields(modifiedBond);
 
-      if (bondStage === 'Issued') {
-        // remove any `Unissued Bond Stage` specific values
-        delete updatedBond.ukefGuaranteeInMonths;
-      }
+      const supplyContractCurrencyCode = deal.supplyContractCurrency.id;
 
-      if (bondStage === 'Unissued') {
-        // remove any `Issued Bond Stage` specific values
-        delete updatedBond['requestedCoverStartDate-day'];
-        delete updatedBond['requestedCoverStartDate-month'];
-        delete updatedBond['requestedCoverStartDate-year'];
-        delete updatedBond['coverEndDate-day'];
-        delete updatedBond['coverEndDate-month'];
-        delete updatedBond['coverEndDate-year'];
-        delete updatedBond.uniqueIdentificationNumber;
-      }
+      modifiedBond = await bondTransactionCurrencySameAsSupplyContractCurrency(
+        modifiedBond,
+        supplyContractCurrencyCode,
+      );
 
-      if (transactionCurrencySameAsSupplyContractCurrency && transactionCurrencySameAsSupplyContractCurrency === 'true') {
-        // remove any 'currency is NOT the same' specific values
-        delete updatedBond.currency;
-        delete updatedBond.conversionRate;
-        delete updatedBond['conversionRateDate-day'];
-        delete updatedBond['conversionRateDate-month'];
-        delete updatedBond['conversionRateDate-year'];
+      const { bondValue, coveredPercentage, riskMarginFee } = modifiedBond;
 
-        const supplyContractCurrencyCode = deal.supplyContractCurrency.id;
-        updatedBond.currency = await handleBondCurrency(supplyContractCurrencyCode);
-      } else if (currencyCode) {
-        // TODO: make this clearer
-        // currencyCode can be a single string (from form),
-        // or an object with ID, if has been previously submitted.
-        const actualCurrencyCode = currencyCode.id ? currencyCode.id : currencyCode;
-        updatedBond.currency = await handleBondCurrency(actualCurrencyCode);
-      }
+      modifiedBond.guaranteeFeePayableByBank = calculateGuaranteeFeePayableByBank(riskMarginFee);
 
-      const { bondValue, coveredPercentage, riskMarginFee } = updatedBond;
+      modifiedBond.ukefExposure = calculateUkefExposure(bondValue, coveredPercentage);
 
-      const canCalculateGuaranteeFeePayableByBank = riskMarginFee;
-      if (canCalculateGuaranteeFeePayableByBank) {
-        updatedBond.guaranteeFeePayableByBank = riskMarginFee * 0.9;
-      }
-
-      const canCalculateUkefExposure = (bondValue && coveredPercentage);
-      if (canCalculateUkefExposure) {
-        updatedBond.ukefExposure = bondValue * coveredPercentage;
-      }
-
-      const validationErrors = bondValidationErrors(updatedBond);
-
-      const updatedDeal = {
-        ...deal,
-        bondTransactions: {
-          items: [
-            ...allOtherBonds,
-            updatedBond,
-          ],
-        },
-      };
+      const modifiedDeal = putBondInDealObject(deal, modifiedBond, allOtherBonds);
 
       const newReq = {
         params: req.params,
-        body: updatedDeal,
+        body: modifiedDeal,
         user: req.user,
       };
 
-      const updateDealResponse = await updateDeal(newReq, res);
-      const updateDealResponseBond = updateDealResponse.bondTransactions.items.find((b) =>
+      const dealAfterAllUpdates = await updateDeal(newReq, res);
+
+      const bondInDealAfterAllUpdates = dealAfterAllUpdates.bondTransactions.items.find((b) =>
         String(b._id) === bondId); // eslint-disable-line no-underscore-dangle
+
+      const validationErrors = bondValidationErrors(bondInDealAfterAllUpdates);
 
       if (validationErrors.count !== 0) {
         return res.status(400).send({
           validationErrors,
-          bond: updateDealResponseBond,
+          bond: bondInDealAfterAllUpdates,
         });
       }
 
-      return res.status(200).send(updateDealResponseBond);
+      return res.status(200).send(bondInDealAfterAllUpdates);
     }
     return res.status(404).send();
   });
