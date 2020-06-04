@@ -1,3 +1,4 @@
+const { hasValue } = require('../../../utils/string');
 const {
   isNumeric,
   decimalsCount,
@@ -36,6 +37,10 @@ const isValid = (str) => {
 };
 
 const validationText = (str, fieldCopy) => {
+  if (!hasValue(str)) {
+    return `Enter the ${fieldCopy}`;
+  }
+
   if (!isNumeric(Number(str))) {
     return `${fieldCopy} must be a number, like 1 or 12.65`;
   }

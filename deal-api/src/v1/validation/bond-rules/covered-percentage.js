@@ -26,6 +26,10 @@ const isValid = (str) => {
 };
 
 const validationText = (str, fieldCopy) => {
+  if (!hasValue(str)) {
+    return `Enter the ${fieldCopy}`;
+  }
+
   if (!isNumeric(Number(str))) {
     return `${fieldCopy} must be a number, like ${MIN_VALUE} or ${MAX_VALUE}`;
   }
