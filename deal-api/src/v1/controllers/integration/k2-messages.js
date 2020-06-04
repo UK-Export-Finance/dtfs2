@@ -15,15 +15,15 @@ const {
   getActionCodeAndName,
 } = require('./helpers');
 
-module.exports.generateTypeA = async (deal) => {
-  const { actionCode, actionName } = getActionCodeAndName(deal);
+module.exports.generateTypeA = async (deal, fromStatus) => {
+  const { actionCode, actionName } = getActionCodeAndName(deal, fromStatus);
 
   const builder = typeABuilder()
     .action_code(actionCode)
     .action_name(actionName)
     .application_group(getApplicationGroup(deal))
     .message_type('A')
-    .revision_id('//TODO')
+    .revision_id(deal._id) // eslint-disable-line no-underscore-dangle
     .portal_deal_id(deal._id) // eslint-disable-line no-underscore-dangle
     .Deal_name(deal.details.bankSupplyContractName)
     .Bank_deal_id(deal.details.bankSupplyContractID)

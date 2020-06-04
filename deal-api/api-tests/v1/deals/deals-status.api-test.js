@@ -13,6 +13,7 @@ const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields
 jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 900);
 jest.mock('../../../src/v1/controllers/integration/helpers/convert-currency-code-to-id', () => () => 900);
 
+jest.unmock('@azure/storage-file-share');
 
 const newDeal = aDeal({
   details: {
