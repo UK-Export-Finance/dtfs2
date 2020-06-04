@@ -35,7 +35,7 @@ context('The deals dashboard', () => {
 
     // get the test-data we are expecting to see
     const filteredDeals = deals.filter((deal) => deal.submissionDetails['supplier-name'] === testName);
-    expect(filteredDeals.length).to.equal(2);
+    expect(filteredDeals.length).to.equal(1);
 
     // confirm the test-data
     dashboard.confirmDealsPresent(filteredDeals);

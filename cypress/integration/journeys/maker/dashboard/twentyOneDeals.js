@@ -24,7 +24,7 @@ module.exports = [
       status: 'Draft',
     },
     submissionDetails: {
-      'supplier-name': 'Supplier name 1',
+      status: 'Not Started',
     },
   }, {
     details: {
