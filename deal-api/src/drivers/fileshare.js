@@ -1,7 +1,7 @@
 const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
 const stream = require('stream');
 
-const fileshareName = 'ukef';
+const fileshareName = 'portal';
 const AZURE_STORAGE_ACCOUNT = 'dtfsmediaserver';
 const AZURE_STORAGE_ACCESS_KEY = '98DED/hkaR6GHfPauH9h1u+YMSG4FQThsIzQDJoFmTf2uHocIbq+ruyDAbkzXas3E/ilbcQS8sYBzvQx0qnUhw==';
 
@@ -21,7 +21,7 @@ shareClient.create().catch(({ details }) => {
 const FILESHARE_URL = `${shareClient.url}/`;
 
 const uploadStream = async ({
-  folder, subfolder, filename, buffer,
+  folder, subfolder, filename, buffer, createMissingFolder = true,
 }) => {
   const fileStream = new stream.Readable();
   fileStream.push(buffer);
@@ -29,17 +29,34 @@ const uploadStream = async ({
 
 
   const directoryClient = await shareClient.getDirectoryClient(folder);
-  await directoryClient.create().catch(({ details }) => {
-    if (!details) return;
-    if (details.errorCode === 'ResourceAlreadyExists') return;
-    console.error('Fileshare create resource error', details);
-  });
+  if (createMissingFolder) {
+    await directoryClient.create().catch(({ details }) => {
+      if (!details) return;
+      if (details.errorCode === 'ResourceAlreadyExists') return;
+      console.error('Fileshare create resource error', details);
+      return {
+        errorCount: 1,
+        error: {
+          errorCode: details.errorCode,
+          message: details.message,
+        },
+      };
+    });
+  }
+
 
   const subDirectoryClient = await directoryClient.getDirectoryClient(subfolder);
   await subDirectoryClient.create().catch(({ details }) => {
     if (!details) return;
     if (details.errorCode === 'ResourceAlreadyExists') return;
     console.error('Fileshare create resource error', details);
+    return {
+      error: {
+        errorCount: 1,
+        errorCode: details.errorCode,
+        message: details.message,
+      },
+    };
   });
 
   const fileClient = await subDirectoryClient.getFileClient(`${filename}`);

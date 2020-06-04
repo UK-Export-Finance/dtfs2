@@ -26,26 +26,23 @@ exports.findOne = (req, res) => {
   });
 };
 
-exports.createTypeA = async (deal) => {
+exports.createTypeA = async (deal, fromStatus) => {
   const {
     typeAxmlStr, filename, errorCount, errors,
-  } = await generateTypeA(deal);
+  } = await generateTypeA(deal, fromStatus);
 
   // TODO - Decide what to do with invalid typeA xml
-  console.log({
-    typeAxmlStr, filename, errorCount, errors,
-  });
-
   if (errorCount) {
-    return typeAxmlStr;
+    //   return typeAxmlStr;
   }
 
 
   const upload = {
-    folder: 'ukef',
-    subfolder: 'type-a',
+    folder: 'private-files/ukef_xml_workflow_export',
+    createMissingFolder: false,
+    subfolder: deal._id, // eslint-disable-line no-underscore-dangle
     filename: `${filename}.xml`,
-    buffer: Buffer.from(JSON.stringify(typeAxmlStr), 'utf-8'),
+    buffer: Buffer.from(typeAxmlStr, 'utf-8'),
   };
 
   return fileshare.uploadStream(upload);

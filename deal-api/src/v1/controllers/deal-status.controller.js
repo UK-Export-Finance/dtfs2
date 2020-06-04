@@ -120,17 +120,6 @@ exports.update = (req, res) => {
       });
     }
 
-
-    // TODO - Reinstate typeA XML creation once Loans and Summary have been added
-    if (toStatus === 'Submitted') {
-      const typeA = await dealIntegration.createTypeA(deal);
-      if (typeA.errorCount) {
-        // TODO - how do we deal with invalid typeA xml?
-        // return res.status(200).send(typeA);
-      }
-    }
-
-
     const collection = await db.getCollection('deals');
     const updatedDeal = await updateStatus(collection, req.params.id, fromStatus, toStatus);
     const updatedDealStatus = updatedDeal.details.status;
@@ -141,6 +130,15 @@ exports.update = (req, res) => {
     }
 
     const dealAfterAllUpdates = await updateComments(collection, req.params.id, req.body.comments, user);
+
+    // TODO - Reinstate typeA XML creation once Loans and Summary have been added
+    if (toStatus === 'Submitted') {
+      const typeA = await dealIntegration.createTypeA(dealAfterAllUpdates, fromStatus);
+      if (typeA.errorCount) {
+        // TODO - how do we deal with invalid typeA xml?
+        // return res.status(200).send(typeA);
+      }
+    }
 
     return res.status(200).send(dealAfterAllUpdates.details.status);
   });
