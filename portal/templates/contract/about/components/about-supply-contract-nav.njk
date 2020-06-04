@@ -1,6 +1,6 @@
 {% import '_macros/progress-nav.njk' as progressNav %}
 
-{% macro nav(completedStatus, current, contractId, childId) %}  
+{% macro nav(completedStatus, current, contractId, childId) %}
 
   <h1 class="govuk-heading-l">About the Supply Contract</h1>
 
@@ -37,22 +37,22 @@
           contractId = contractId,
           current = current
       )}}
-      
+
     </div>
 
     <div class="govuk-grid-column-one-half">
-   
+
       {{ progressNav.navItem(
           title = 'Preview',
           id = 'preview',
-          completed = completedStatus.supplierAndGuarantor and completedStatus.buyer and completedStatus.financialInformation,
+          completed = false,
           href = 'about/preview',
           contractId = contractId,
           current = current
       )}}
-      
+
     </div>
 
-  </div>    
+  </div>
 
 {% endmacro %}
