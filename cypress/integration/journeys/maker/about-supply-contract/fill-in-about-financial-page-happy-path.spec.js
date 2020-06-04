@@ -57,5 +57,11 @@ context('about-supply-contract', () => {
 
     contractAboutPreview.nav().aboutFinancialComplete().should('exist');
 
+    // since we've cleared all validation at this point the section should show as completed on the deal page
+    contract.visit(deal);
+    contract.aboutSupplierDetailsStatus().invoke('text').then((text) => {
+      expect(text.trim()).equal('Completed');
+    });
+
   });
 });

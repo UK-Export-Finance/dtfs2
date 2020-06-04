@@ -44,7 +44,7 @@ const DEFAULTS = {
       criteria: ELIGIBILITY_CRITERIA,
     },
     submissionDetails: {
-      status: 'Incomplete',
+      status: 'Not Started',
     },
     bondTransactions: {
       items: [],

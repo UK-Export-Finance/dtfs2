@@ -3,7 +3,8 @@ const aDeal = require('./deal-builder');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
-
+const dealWithAboutComplete = require('../../fixtures/deal-with-complete-about-section.json');
+const dealWithAboutIncomplete = require('../../fixtures/deal-with-incomplete-about-section.json');
 const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
 
@@ -102,6 +103,26 @@ describe('/v1/deals', () => {
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectAddedFields(newDeal));
+    });
+
+    it('calculates deal.submissionDetails.status = Incomplete if there are validation failures', async () => {
+      const postResult = await as(anHSBCMaker).post(dealWithAboutIncomplete).to('/v1/deals');
+      const newId = postResult.body._id;
+
+      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${newId}`);
+
+      expect(status).toEqual(200);
+      expect(body.submissionDetails.status).toEqual('Incomplete');
+    });
+
+    it('calculates deal.submissionDetails.status = Completed if there are no validation failures', async () => {
+      const postResult = await as(anHSBCMaker).post(dealWithAboutComplete).to('/v1/deals');
+      const newId = postResult.body._id;
+
+      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${newId}`);
+
+      expect(status).toEqual(200);
+      expect(body.submissionDetails.status).toEqual('Completed');
     });
   });
 

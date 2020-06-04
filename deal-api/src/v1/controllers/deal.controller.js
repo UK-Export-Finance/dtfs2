@@ -9,7 +9,7 @@ const { getCloneDealErrors } = require('../validation/clone-deal');
 
 const { isSuperUser, userHasAccessTo } = require('../users/checks');
 const { generateDealId } = require('../../utils/generateIds');
-const { dealFacilityStatuses } = require('../facilities-status');
+const { dealSectionStatuses } = require('../section-status');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -129,7 +129,7 @@ exports.findOne = (req, res) => {
       res.status(401).send();
     } else {
       res.status(200).send(
-        dealFacilityStatuses(deal),
+        dealSectionStatuses(deal),
       );
     }
   });

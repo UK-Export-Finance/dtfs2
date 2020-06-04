@@ -34,7 +34,7 @@ context('about-supply-contract', () => {
     };
 
     cy.deleteDeals(maker1);
-    cy.insertOneDeal(aDealWith_AboutSupplyContract_InStatus('Incomplete'), { ...maker1 })
+    cy.insertOneDeal(aDealWith_AboutSupplyContract_InStatus('Not Started'), { ...maker1 })
       .then((insertedDeal) => deal = insertedDeal);
   });
 
@@ -45,7 +45,7 @@ context('about-supply-contract', () => {
     contract.visit(deal);
     // check the status is displaying correctly
     contract.aboutSupplierDetailsStatus().invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
+      expect(text.trim()).equal('Not Started');
     });
     contract.aboutSupplierDetailsLink().click();
 
@@ -91,6 +91,7 @@ context('about-supply-contract', () => {
 
     contractAboutSupplier.saveAndGoBack().click();
 
+    // the deal page should reflect the partially-complete nature of the section
     contract.aboutSupplierDetailsStatus().invoke('text').then((text) => {
       expect(text.trim()).equal('Incomplete');
     });

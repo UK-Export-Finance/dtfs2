@@ -3,7 +3,7 @@ const { userHasAccessTo } = require('../users/checks');
 const { findOneBondCurrency } = require('./bondCurrencies.controller');
 const { getBondErrors } = require('../validation/bond');
 const { generateFacilityId } = require('../../utils/generateIds');
-const { bondStatus } = require('../facilities-status/bond');
+const { bondStatus } = require('../section-status/bond');
 
 exports.getBond = async (req, res) => {
   const {
