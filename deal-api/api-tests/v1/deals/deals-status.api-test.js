@@ -9,11 +9,11 @@ const completedDeal = require('../../fixtures/deal-full-completed');
 const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
 
-// Mock currency & country API calls as no currency/country data is in db during test
-jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 900);
-jest.mock('../../../src/v1/controllers/integration/helpers/convert-currency-code-to-id', () => () => 900);
+// Mock currency & country API calls as no currency/country data is in db during pipeline test as previous test had removed them
+jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
+jest.mock('../../../src/v1/controllers/integration/helpers/convert-currency-code-to-id', () => () => 12);
 
-jest.unmock('@azure/storage-file-share');
+// jest.unmock('@azure/storage-file-share');
 
 const newDeal = aDeal({
   details: {

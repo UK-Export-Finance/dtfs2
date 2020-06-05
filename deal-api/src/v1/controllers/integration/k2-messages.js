@@ -106,30 +106,30 @@ module.exports.generateTypeA = async (deal, fromStatus) => {
     .Ec_banks_normal_pricing_policies_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 18))
     .Ec_requested_cover_start_date_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 15))
 
-    .Deal_no_facilities('//TODO') // TODO
-    .Deal_total_value_deal_cur('//TODO') // TODO
-    .Deal_total_exposure_gbp('//TODO') // TODO
-    .Deal_total_premium_gbp('//TODO') // TODO
-    .Deal_total_exposure_deal_cur('//TODO') // TODO
-    .Deal_total_premium_deal_cur('//TODO') // TODO
+    .Deal_no_facilities('2') // TODO
+    .Deal_total_value_deal_cur(await convertCurrencyCodeToId('GBP')) // TODO
+    .Deal_total_exposure_gbp('10000') // TODO
+    .Deal_total_premium_gbp('100000') // TODO
+    .Deal_total_exposure_deal_cur(await convertCurrencyCodeToId('GBP')) // TODO
+    .Deal_total_premium_deal_cur(await convertCurrencyCodeToId('GBP')) // TODO
 
-    .BSS_no_facilities('//TODO')
-    .BSS_total_exposure_gbp('//TODO')
-    .BSS_total_premium_gbp('//TODO')
-    .BSS_total_exposure_deal_cur('//TODO')
-    .BSS_total_premium_deal_cur('//TODO')
+    .BSS_no_facilities('2') // TODO
+    .BSS_total_exposure_gbp(await convertCurrencyCodeToId('GBP')) // TODO
+    .BSS_total_premium_gbp('10000') // TODO
+    .BSS_total_exposure_deal_cur(await convertCurrencyCodeToId('GBP')) // TODO
+    .BSS_total_premium_deal_cur(await convertCurrencyCodeToId('GBP')) // TODO
 
-    .EWCS_no_facilities('//TODO')
-    .EWCS_total_exposure_gbp('//TODO')
-    .EWCS_total_premium_gbp('//TODO')
-    .EWCS_total_exposure_deal_cur('//TODO')
-    .EWCS_total_premium_deal_cur('//TODO');
+    .EWCS_no_facilities('0') // TODO
+    .EWCS_total_exposure_gbp('0') // TODO
+    .EWCS_total_premium_gbp('0') // TODO
+    .EWCS_total_exposure_deal_cur('0') // TODO
+    .EWCS_total_premium_deal_cur('0'); // TODO
 
   if (deal.bondTransactions && deal.bondTransactions.items) {
     for (let i = 0; i < deal.bondTransactions.items.length; i += 1) {
       const bond = deal.bondTransactions.items[i];
       const bss = builder.createBSS()
-        .UKEF_BSS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
+      //    .UKEF_BSS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
         .BSS_portal_facility_id(bond._id) // eslint-disable-line no-underscore-dangle
         .BSS_issuer(bond.bondIssuer)
         .BSS_type(k2Map.FACILITIES.TYPE[bond.bondType])
@@ -142,13 +142,13 @@ module.exports.generateTypeA = async (deal, fromStatus) => {
         .BSS_conversion_rate_deal(bond.conversionRate)
         .BSS_conversion_date_deal(dateHelpers.formatDate(bond['conversionRateDate-day'], bond['conversionRateDate-month'], bond['conversionRateDate-year']))
         .BSS_fee_rate(bond.riskMarginFee)
-        .BSS_fee_perc('// TODO - drupal field: guarantee_fee_')
+        .BSS_fee_perc('10') // TODO - drupal field: guarantee_fee_
         .BSS_guarantee_perc(bond.coveredPercentage)
-        .BSS_max_liability('// TODO (UKEF_Exposure) - drupal field: maximum_liability')
+        .BSS_max_liability('10') // TODO (UKEF_Exposure) - drupal field: maximum_liability
         .BSS_min_quarterly_fee(bond.minimumRiskMarginFee)
         .BSS_premium_type(k2Map.FACILITIES.FEE_TYPE[bond.feeType])
         .BSS_cover_start_date(dateHelpers.formatDate(bond['requestedCoverStartDate-day'], bond['requestedCoverStartDate-month'], bond['requestedCoverStartDate-year']))
-        .BSS_issue_date('//TODO - drupal field: issue_date')
+        .BSS_issue_date(dateHelpers.formatDate('01', '02', '2020')) // TODO - drupal field: issue_date
         .BSS_cover_end_date(dateHelpers.formatDate(bond['coverEndDate-day'], bond['coverEndDate-month'], bond['coverEndDate-year']))
         .BSS_cover_period(bond.ukefGuaranteeInMonths)
         .BSS_day_basis(k2Map.FACILITIES.DAY_COUNT_BASIS[bond.dayCountBasis]);
@@ -190,7 +190,7 @@ module.exports.generateTypeA = async (deal, fromStatus) => {
   }
 
   const isValidXml = parsedXml.validate(parsedXsd);
-  const filename = `${deal._id}_${actionName.toUpperCase()}`;
+  const filename = `${deal._id}_${actionName.toUpperCase()}`; // eslint-disable-line no-underscore-dangle
 
   if (!isValidXml) {
     return {
