@@ -169,8 +169,6 @@ describe('/v1/deals/:id/bond', () => {
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
 
-            // TODO: move _id check to somewhere else
-            // expect(body.bond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
             expect(validationErrors.errorList.requestedCoverStartDate).toBeDefined();
 
             const expectedText = `Requested Cover Start Date must be between ${moment().format('Do MMMM YYYY')} and ${moment(nowDate).add(3, 'months').format('Do MMMM YYYY')}`;
