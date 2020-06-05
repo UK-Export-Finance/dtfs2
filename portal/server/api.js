@@ -209,6 +209,43 @@ const updateEligibilityDocumentation = async (dealId, body, files, token) => {
   return response.data;
 };
 
+const createDealLoan = async (dealId, token) => {
+  const response = await axios({
+    method: 'put',
+    url: `${urlRoot}/v1/deals/${dealId}/loan/create`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+  return response.data;
+};
+
+const getDealLoan = async (dealId, loanId, token) => {
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/v1/deals/${dealId}/loan/${loanId}`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+  return response.data;
+};
+
+const updateDealLoan = async (dealId, loanId, formData, token) => {
+  const response = await axios({
+    method: 'put',
+    url: `${urlRoot}/v1/deals/${dealId}/loan/${loanId}`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: formData,
+  });
+  return response.data;
+};
+
 const createBond = async (dealId, token) => {
   const response = await axios({
     method: 'put',
@@ -221,35 +258,22 @@ const createBond = async (dealId, token) => {
   return response.data;
 };
 
-const updateBond = async (dealId, bondId, formData, token) => {
+const contractBond = async (dealId, bondId, token) => {
   const response = await axios({
-    method: 'put',
+    method: 'get',
     url: `${urlRoot}/v1/deals/${dealId}/bond/${bondId}`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
     },
-    data: formData,
   });
   return response.data;
 };
 
-const createLoan = async (dealId, token) => {
+const updateBond = async (dealId, bondId, formData, token) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/deals/${dealId}/loan/create`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
-  return response.data;
-};
-
-const updateLoan = async (dealId, loanId, formData, token) => {
-  const response = await axios({
-    method: 'put',
-    url: `${urlRoot}/v1/deals/${dealId}/loan/${loanId}`,
+    url: `${urlRoot}/v1/deals/${dealId}/bond/${bondId}`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -350,18 +374,6 @@ const transactions = async (token) => {
   };
 };
 
-const contractBond = async (dealId, bondId, token) => {
-  const response = await axios({
-    method: 'get',
-    url: `${urlRoot}/v1/deals/${dealId}/bond/${bondId}`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
-  return response.data;
-};
-
 const validateToken = async (token) => {
   if (!token) return false;
 
@@ -447,28 +459,29 @@ export default {
   banks,
   bondCurrencies,
   cloneDeal,
-  createLoan,
   contractBond,
   contracts,
   createBond,
   createDeal,
+  createDealLoan,
   login,
   transactions,
   updateBond,
   updateDeal,
+  updateDealLoan,
   updateDealName,
   updateDealStatus,
   updateEligibilityCriteria,
   updateEligibilityDocumentation,
-  updateLoan,
   getSubmissionDetails,
   updateSubmissionDetails,
   validateToken,
   users,
   user,
-  getDeal,
   getCurrencies,
   getCountries,
+  getDeal,
+  getDealLoan,
   getIndustrySectors,
   getMandatoryCriteria,
 };
