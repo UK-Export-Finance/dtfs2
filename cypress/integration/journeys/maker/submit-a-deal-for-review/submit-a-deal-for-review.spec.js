@@ -6,67 +6,70 @@ const relative = require('../../../relativeURL');
 const maker1 = { username: 'MAKER', password: 'MAKER' };
 
 // test data we want to set up + work with..
-const twentyOneDeals = require('../dashboard/twentyOneDeals');
 const dealWithIncompleteBonds = require('./dealWithIncompleteBonds.json');
-const dealWithCompletedEligibilityAndBonds = require('./dealWithCompletedEligibilityAndBonds.json');
-const { dealWithIssuedBondAndNoCoverStartDate } = require('./dealWithIssuedBondAndNoCoverStartDate');
+const dealWithIncompleteAbout = require('./dealWithIncompleteAbout.json');
+const dealWithIncompleteEligibility = require('./dealWithIncompleteEligibility.json');
+const dealReadyToSubmitForReview = require('./dealReadyToSubmitForReview.json');
+const dealWithNoCoverStartDate  = require('./dealWithNoCoverStartDate');
 
 context('A maker selects to submit a contract for review from the view-contract page', () => {
-  let deal;
+  let deals = {};
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
-      console.log(err.stack);
       return false;
     });
   });
 
   before(() => {
-    const aDealInStatus = (status) => twentyOneDeals.filter((deal) => status === deal.details.status)[0];
     cy.deleteDeals(maker1);
-    cy.insertOneDeal(aDealInStatus('Draft'), { ...maker1 })
-      .then((insertedDeal) => deal = insertedDeal);
+    cy.insertOneDeal(dealWithIncompleteBonds, { ...maker1 })
+      .then((insertedDeal) => deals.dealWithIncompleteBonds = insertedDeal);
+
+    cy.insertOneDeal(dealWithIncompleteAbout, { ...maker1 })
+      .then((insertedDeal) => deals.dealWithIncompleteAbout = insertedDeal);
+
+    cy.insertOneDeal(dealWithIncompleteEligibility, { ...maker1 })
+      .then((insertedDeal) => deals.dealWithIncompleteEligibility = insertedDeal);
+
+    cy.insertOneDeal(dealReadyToSubmitForReview, { ...maker1 })
+      .then((insertedDeal) => deals.dealReadyToSubmitForReview = insertedDeal);
+
+    cy.insertOneDeal(dealWithNoCoverStartDate, { ...maker1 })
+      .then((insertedDeal) => deals.dealWithNoCoverStartDate = insertedDeal);
+
   });
 
   describe('When a deal does NOT have Eligibility with `Completed` status', () => {
-    let dealWithInCompleteEligibilityStatus;
-
-    beforeEach(() => {
-      dealWithInCompleteEligibilityStatus = twentyOneDeals.find((d) =>
-        (d.details.status === 'Draft' && d.eligibility && d.eligibility.status !== 'Completed'));
-
-      cy.insertOneDeal(dealWithInCompleteEligibilityStatus, { ...maker1 })
-        .then((insertedDeal) => dealWithInCompleteEligibilityStatus = insertedDeal);
-    });
 
     it('User cannot proceed to submit the deal for review', () => {
       cy.login({ ...maker1 });
-      contract.visit(dealWithInCompleteEligibilityStatus);
+      contract.visit(deals.dealWithIncompleteEligibility);
       contract.proceedToReview().should('be.disabled');
     });
   });
 
   describe('When a deal has Bonds that are NOT `Completed`', () => {
-    beforeEach(() => {
-      cy.insertOneDeal(dealWithIncompleteBonds, { ...maker1 })
-        .then((insertedDeal) => deal = insertedDeal);
-    });
-
     it('User cannot proceed to submit the deal for review', () => {
       cy.login({ ...maker1 });
-      contract.visit(deal);
+      contract.visit(deals.dealWithIncompleteBonds);
+      contract.proceedToReview().should('be.disabled');
+    });
+  });
+
+  describe('When a deal has About-supply-contract that is NOT `Completed`', () => {
+    it('User cannot proceed to submit the deal for review', () => {
+      cy.login({ ...maker1 });
+      contract.visit(deals.dealWithIncompleteAbout);
       contract.proceedToReview().should('be.disabled');
     });
   });
 
   describe('when a deal has Completed Eligibility and Bonds', () => {
-    beforeEach(() => {
-      cy.insertOneDeal(dealWithCompletedEligibilityAndBonds, { ...maker1 })
-        .then((insertedDeal) => deal = insertedDeal);
-    });
-
     it('User can proceed to submit the deal for review', () => {
+      const deal = deals.dealReadyToSubmitForReview;
+
       cy.login({ ...maker1 });
       contract.visit(deal);
       contract.proceedToReview().should('not.be.disabled');
@@ -75,6 +78,8 @@ context('A maker selects to submit a contract for review from the view-contract 
     });
 
     it('The cancel button returns the user to the view-contract page.', () => {
+      const deal = deals.dealReadyToSubmitForReview;
+
       // log in, visit a deal, select abandon
       cy.login({ ...maker1 });
       contract.visit(deal);
@@ -89,6 +94,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     });
 
     it('The ReadyForCheckersApproval button generates an error if no comment has been entered.', () => {
+      const deal = deals.dealReadyToSubmitForReview;
       // log in, visit a deal, select abandon
       cy.login({ ...maker1 });
       contract.visit(deal);
@@ -106,6 +112,8 @@ context('A maker selects to submit a contract for review from the view-contract 
     });
 
     it('The Ready for Checkers Review button updates the deal and takes the user to /dashboard.', () => {
+      const deal = deals.dealReadyToSubmitForReview;
+
       // log in, visit a deal, select abandon
       cy.login({ ...maker1 });
       contract.visit(deal);
@@ -133,12 +141,9 @@ context('A maker selects to submit a contract for review from the view-contract 
   });
 
   describe('when a deal has Completed Eligibility and a Bond with `Issued` bond stage without a Cover Start Date', () => {
-    beforeEach(() => {
-      cy.insertOneDeal(dealWithIssuedBondAndNoCoverStartDate, { ...maker1 })
-        .then((insertedDeal) => deal = insertedDeal);
-    });
-
     it('should use todays date for the Bond in Deal page', () => {
+      const deal = deals.dealWithNoCoverStartDate;
+
       cy.login({ ...maker1 });
       contract.visit(deal);
 
