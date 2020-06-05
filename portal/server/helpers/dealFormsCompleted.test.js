@@ -1,53 +1,73 @@
-import dealFormsCompleted, { allBondsCompleted } from './dealFormsCompleted';
+import dealFormsCompleted from './dealFormsCompleted';
 
-describe('allBondsCompleted', () => {
-  it('should return false when any bond has a status that is NOT `Completed`', () => {
-    const mockBonds = [
-      { _id: '12345678911', status: 'Completed' },
-      { _id: '12345678910', status: 'Incomplete' },
-    ];
+const completeBonds = {
+  items: [
+    { _id: '12345678911', status: 'Completed' },
+    { _id: '12345678910', status: 'Completed' },
+  ],
+};
 
-    const result = allBondsCompleted(mockBonds);
-    expect(result).toEqual(false);
-  });
+const incompleteBonds = {
+  items: [
+    { _id: '12345678911', status: 'Completed' },
+    { _id: '12345678910', status: 'Incomplete' },
+  ],
+};
 
-  it('should return true when all bonds have a status of `Completed`', () => {
-    const mockBonds = [
-      { _id: '12345678911', status: 'Completed' },
-    ];
+const incompleteSubmissionDetails = { status: 'not completed' };
+const completeSubmissionDetails = { status: 'Completed' };
 
-    const result = allBondsCompleted(mockBonds);
-    expect(result).toEqual(true);
-  });
-});
+const incompleteEligibility = { status: 'not completed' };
+const completeEligibility = { status: 'Completed' };
 
 describe('dealFormsCompleted', () => {
   it('should return false when a deal\'s eligibility.status is NOT `Completed`', () => {
-    const mockDeal = {
-      _id: '12345678910',
-      eligibility: {
-        status: 'Incomplete',
-      },
+    const deal = {
+      eligibility: incompleteEligibility,
+      bondTransactions: completeBonds,
+      submissionDetails: completeSubmissionDetails,
     };
 
-    const result = dealFormsCompleted(mockDeal);
-    expect(result).toEqual(false);
+    expect(dealFormsCompleted(deal)).toEqual(false);
   });
 
-  it('should return true when a deal has `Completed` eligibility.status and all bondTransactions have `Completed` status', () => {
-    const mockDeal = {
-      eligibility: {
-        status: 'Completed',
-      },
-      bondTransactions: {
-        items: [
-          { _id: '12345678911', status: 'Completed' },
-          { _id: '12345678910', status: 'Completed' },
-        ],
-      },
+  it('should return false when a deal\'s submissionDetails.status is NOT `Completed`', () => {
+    const deal = {
+      submissionDetails: incompleteSubmissionDetails,
+      bondTransactions: completeBonds,
+      eligibility: completeEligibility,
     };
 
-    const result = dealFormsCompleted(mockDeal);
-    expect(result).toEqual(true);
+    expect(dealFormsCompleted(deal)).toEqual(false);
+  });
+
+  it('should return false if a deal has any bonds who\'s bond.status is NOT `Completed`', () => {
+    const deal = {
+      bondTransactions: incompleteBonds,
+      submissionDetails: completeSubmissionDetails,
+      eligibility: completeEligibility,
+    };
+
+    expect(dealFormsCompleted(deal)).toEqual(false);
+  });
+
+  xit('should return false if a deal has any loan who\'s loan.status is NOT `Completed`', () => {
+    // const deal = {
+    //   bondTransactions: incompleteBonds,
+    //   submissionDetails: completeSubmissionDetails,
+    //   eligibility: completeEligibility,
+    // };
+    //
+    // expect( dealFormsCompleted(deal) ).toEqual(false);
+  });
+
+  it('should return true if all sections are in status `Completed`', () => {
+    const deal = {
+      bondTransactions: completeBonds,
+      submissionDetails: completeSubmissionDetails,
+      eligibility: completeEligibility,
+    };
+
+    expect(dealFormsCompleted(deal)).toEqual(true);
   });
 });

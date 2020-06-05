@@ -1,31 +1,16 @@
-export const allBondsCompleted = (bonds) => {
-  const incompleteBonds = bonds.filter((b) => b.status !== 'Completed');
-  if (incompleteBonds.length > 0) {
-    return false;
-  }
-  return true;
-};
+// TODO - perhaps each of these sections should have their own rules for this that we call on here?
+const allBondsCompleted = (deal) => deal.bondTransactions
+        && deal.bondTransactions.items
+        && deal.bondTransactions.items.filter((b) => b.status !== 'Completed').length === 0;
 
-const dealFormsCompleted = (deal) => {
-  const {
-    eligibility,
-    bondTransactions,
-  } = deal;
+const submissionDetailsComplete = (deal) => deal.submissionDetails && deal.submissionDetails.status === 'Completed';
 
-  // TODO when submissionDetails/loans have status handling
-  // if (submissionDetails === 'Completed'
-  //     && eligibility.status === 'Completed'
-  //     && allBondsCompleted(bondTransactions.items)
-  //     && allLoansCompleted(loanTransactions.items)) {
-  //   return true;
-  // }
+const eligibilityComplete = (deal) => deal.eligibility && deal.eligibility.status === 'Completed';
 
-  if (eligibility.status === 'Completed'
-    && allBondsCompleted(bondTransactions.items)) {
-    return true;
-  }
+const dealFormsCompleted = (deal) =>
+// TODO loans...
 
-  return false;
-};
-
+  eligibilityComplete(deal)
+      && allBondsCompleted(deal)
+      && submissionDetailsComplete(deal);
 export default dealFormsCompleted;
