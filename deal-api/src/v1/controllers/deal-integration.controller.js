@@ -28,7 +28,7 @@ exports.findOne = (req, res) => {
 
 exports.createTypeA = async (deal, fromStatus) => {
   const {
-    typeAxmlStr, filename, errorCount, errors,
+    typeAxmlStr, filename, errorCount,
   } = await generateTypeA(deal, fromStatus);
 
   // TODO - Decide what to do with invalid typeA xml

@@ -17,10 +17,10 @@ const deal = {
   bondTransactions: {
     items: [
       {
-        _id: '5ea954bf21280f0049791448',
+        _id: '1000101',
         bondIssuer: 'my issuer',
         bondType: 'Retention bond',
-        bondStage: 'Unissued',
+        bondStage: 'Issued',
         ukefGuaranteeInMonths: '12',
         'requestedCoverStartDate-day': '12',
         'requestedCoverStartDate-month': '04',
@@ -49,10 +49,10 @@ const deal = {
         dayCountBasis: '360',
       },
       {
-        _id: '2a',
+        _id: '1000102',
         bondIssuer: 'my issuer',
         bondType: 'Retention bond',
-        bondStage: 'Unissued',
+        bondStage: 'Issued',
         ukefGuaranteeInMonths: '12',
         'requestedCoverStartDate-day': '29',
         'requestedCoverStartDate-month': '06',
@@ -193,6 +193,7 @@ const deal = {
     supplyContractValue: '999',
   },
   dealFiles: {
+    /*
     exporterQuestionnaire: [
       {
         type: 'general_correspondence',
@@ -216,6 +217,7 @@ const deal = {
       },
     ],
     security: 'security test',
+    */
   },
 };
 

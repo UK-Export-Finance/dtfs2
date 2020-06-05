@@ -5,6 +5,7 @@ const fileshareName = 'portal';
 const AZURE_STORAGE_ACCOUNT = 'dtfsmediaserver';
 const AZURE_STORAGE_ACCESS_KEY = '98DED/hkaR6GHfPauH9h1u+YMSG4FQThsIzQDJoFmTf2uHocIbq+ruyDAbkzXas3E/ilbcQS8sYBzvQx0qnUhw==';
 
+
 const credential = new StorageSharedKeyCredential(AZURE_STORAGE_ACCOUNT, AZURE_STORAGE_ACCESS_KEY);
 const serviceClient = new ShareServiceClient(
   `https://${AZURE_STORAGE_ACCOUNT}.file.core.windows.net`,
@@ -31,8 +32,8 @@ const uploadStream = async ({
   const directoryClient = await shareClient.getDirectoryClient(folder);
   if (createMissingFolder) {
     await directoryClient.create().catch(({ details }) => {
-      if (!details) return;
-      if (details.errorCode === 'ResourceAlreadyExists') return;
+      if (!details) return false;
+      if (details.errorCode === 'ResourceAlreadyExists') return false;
       console.error('Fileshare create resource error', details);
       return {
         errorCount: 1,
@@ -47,8 +48,8 @@ const uploadStream = async ({
 
   const subDirectoryClient = await directoryClient.getDirectoryClient(subfolder);
   await subDirectoryClient.create().catch(({ details }) => {
-    if (!details) return;
-    if (details.errorCode === 'ResourceAlreadyExists') return;
+    if (!details) return false;
+    if (details.errorCode === 'ResourceAlreadyExists') return false;
     console.error('Fileshare create resource error', details);
     return {
       error: {
