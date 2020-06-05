@@ -285,6 +285,22 @@ describe('/v1/deals/:id/bond', () => {
           });
         });
       });
+
+      describe('uniqueIdentificationNumber', () => {
+        describe('when missing', () => {
+          it('should return validationError', async () => {
+            const bond = {
+              ...allBondFields,
+              bondStage: 'Issued',
+              uniqueIdentificationNumber: '',
+            };
+
+            const { validationErrors } = await updateBondInDeal(dealId, bond);
+            expect(validationErrors.errorList.uniqueIdentificationNumber).toBeDefined();
+            expect(validationErrors.errorList.uniqueIdentificationNumber.text).toEqual('Enter the Bond\'s unique identification number');
+          });
+        });
+      });
     });
 
     describe('transactionCurrencySameAsSupplyContractCurrency', () => {

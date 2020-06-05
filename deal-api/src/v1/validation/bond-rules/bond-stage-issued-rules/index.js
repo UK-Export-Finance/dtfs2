@@ -2,6 +2,7 @@ const { hasValue } = require('../../../../utils/string');
 const requestedCoverStartDate = require('./requested-cover-start-date');
 const coverEndDate = require('./cover-end-date');
 const coverDates = require('./cover-dates');
+const uniqueIdentificationNumber = require('./unique-identification-number')
 
 module.exports = (bond, errorList) => {
   let newErrorList = { ...errorList };
@@ -15,6 +16,7 @@ module.exports = (bond, errorList) => {
     newErrorList = requestedCoverStartDate(bond, newErrorList);
     newErrorList = coverEndDate(bond, newErrorList);
     newErrorList = coverDates(bond, newErrorList);
+    newErrorList = uniqueIdentificationNumber(bond, newErrorList);
   }
 
   return newErrorList;
