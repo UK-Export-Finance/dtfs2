@@ -1,5 +1,8 @@
 import express from 'express';
+import api from '../../api';
 import { requestParams } from '../../helpers';
+
+import { provide, LOAN } from '../api-data-provider';
 
 const router = express.Router();
 
@@ -32,22 +35,21 @@ const MOCK_LOAN = {
 };
 
 router.get('/contract/:_id/loan/create', async (req, res) => {
-  const { _id: dealId } = requestParams(req);
-  // const { _id, loanId } = await api.createLoan(dealId, userToken); // eslint-disable-line no-underscore-dangle
-  const loanId = '1';
-  return res.redirect(`/contract/${dealId}/loan/${loanId}/guarantee-details`); // eslint-disable-line no-underscore-dangle
+  const { _id: dealId, userToken } = requestParams(req);
+  const { _id, loanId } = await api.createDealLoan(dealId, userToken); // eslint-disable-line no-underscore-dangle
+
+  return res.redirect(`/contract/${_id}/loan/${loanId}/guarantee-details`); // eslint-disable-line no-underscore-dangle
 });
 
-router.get('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) => {
-  const { _id: dealId } = requestParams(req);
+router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN]), async (req, res) => {
+  const {
+    dealId,
+    loan,
+  } = req.apiData.loan;
 
   return res.render('loan/loan-guarantee-details.njk', {
     dealId,
-    loan: { _id: MOCK_LOAN._id }, // eslint-disable-line no-underscore-dangle
-    // ...await getApiData(
-    //   api.contractLoan(_id, loanId, userToken),
-    //   res,
-    // ),
+    loan,
   });
 });
 

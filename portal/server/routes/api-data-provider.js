@@ -5,6 +5,7 @@ const COUNTRIES = 'countries';
 const CURRENCIES = 'currencies';
 const MANDATORY_CRITERIA = 'mandatoryCriteria';
 const DEAL = 'deal';
+const LOAN = 'loan';
 
 const get = async (dataType, req) => {
   const token = req.session.userToken;
@@ -51,6 +52,19 @@ const get = async (dataType, req) => {
     );
 
     return mandatoryCriteria;
+  } if (LOAN === dataType) {
+    const {
+      _id, // eslint-disable-line no-underscore-dangle
+      loanId,
+    } = req.params;
+
+    const loan = await api.getDealLoan(_id, loanId, token).catch(
+      (err) => {
+        console.log(`api-data-provider: querying for loan => ${err}`);
+        return { loan: null };
+      },
+    );
+    return loan;
   }
   console.log(`api-data-provider has been asked to provide ${dataType} but doesn't know how...`);
   return [];
@@ -82,5 +96,6 @@ export {
   CURRENCIES,
   MANDATORY_CRITERIA,
   DEAL,
+  LOAN,
   provide,
 };
