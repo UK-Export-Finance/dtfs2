@@ -57,7 +57,7 @@ const validationText = (str, fieldCopy) => {
   if (!isValidFormat(str)) {
     return `${fieldCopy} must have less than ${MAX_DECIMALS + 1} decimals, like 12 or 12.10`;
   }
-  return null;
+  return '';
 };
 
 
