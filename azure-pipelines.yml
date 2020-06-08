@@ -122,20 +122,14 @@ stages:
               "slotSetting": false
              },
              {
-              "name": "MONGO_INITDB_DATABASE",
-              "value": "$(MONGO_INITDB_DATABASE)",
+              "name": "SUPPORTING_DOCUMENT_STORE",
+              "value": "$(SUPPORTING_DOCUMENT_STORE)",
               "type": "Custom",
               "slotSetting": false
              },
              {
-              "name": "MONGO_INITDB_ROOT_USERNAME",
-              "value": "$(MONGO_INITDB_ROOT_USERNAME)",
-              "type": "Custom",
-              "slotSetting": false
-             },
-             {
-              "name": "MONGO_INITDB_ROOT_PASSWORD",
-              "value": "$(MONGO_INITDB_ROOT_PASSWORD)",
+              "name": "SUPPORTING_DOCUMENT_STORE_KEY",
+              "value": "$(SUPPORTING_DOCUMENT_STORE_KEY)",
               "type": "Custom",
               "slotSetting": false
              }
