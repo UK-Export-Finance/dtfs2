@@ -5,6 +5,8 @@ dotenv.config();
 const database = process.env.MONGO_INITDB_DATABASE;
 const connectionString = process.env.MONGODB_URI;
 
+console.log(`database.config.js providing config from environmnet variables  - ${process.env.BOB}`);
+
 module.exports = {
   database,
   url: connectionString,
