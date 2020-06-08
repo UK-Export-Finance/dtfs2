@@ -1,12 +1,14 @@
 import express from 'express';
 import api from '../../../api';
+import { provide, LOAN } from '../../api-data-provider';
 import {
   requestParams,
   postToApi,
   errorHref,
 } from '../../../helpers';
-
-import { provide, LOAN } from '../../api-data-provider';
+import {
+  loanGuaranteeDetailsValidationErrors,
+} from './pageSpecificValidationErrors';
 
 const router = express.Router();
 
@@ -14,7 +16,7 @@ const MOCK_LOAN = {
   _id: '1',
   bankReferenceNumber: 'Not entered',
   facilityStage: 'Conditional',
-  ukefGuaranteeLengthInMonths: '12',
+  ukefGuaranteeInMonths: '12',
   'requestedCoverStartDate-day': '01',
   'requestedCoverStartDate-month': '02',
   'requestedCoverStartDate-year': '2020',
@@ -55,8 +57,7 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN]), asy
   return res.render('loan/loan-guarantee-details.njk', {
     dealId,
     loan,
-    // validationErrors: loanGuaranteeDetailsValidationErrors(validationErrors, loan),
-    validationErrors,
+    validationErrors: loanGuaranteeDetailsValidationErrors(validationErrors, loan),
   });
 });
 
@@ -84,7 +85,7 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN]), asy
     validationErrors,
   } = req.apiData.loan;
 
-  return res.render('loan/loan-guarantee-details.njk', {
+  return res.render('loan/loan-financial-details.njk', {
     dealId,
     loan,
     // validationErrors: loanGuaranteeDetailsValidationErrors(validationErrors, loan),

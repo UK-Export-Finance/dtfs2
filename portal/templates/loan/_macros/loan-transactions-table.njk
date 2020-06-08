@@ -21,7 +21,11 @@
       {% for loan in loans %}
         <tr class="govuk-table__row">
           <td class="govuk-table__cell govuk-!-font-size-14">
-            <a href="{{ dealId }}/loan/{{ loan._id}}/guarantee-details" class="govuk-link">{{ loan.bankReferenceNumber }}</a>
+            {% if loan.bankReferenceNumber %}
+              <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/guarantee-details" class="govuk-link" data-cy="bank-reference-number">{{ loan.bankReferenceNumber }}</a>
+            {% else %}
+              <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/guarantee-details" class="govuk-link" data-cy="bank-reference-number">Not entered</a>
+            {% endif %}
           </td>
 
           <td class="govuk-table__cell govuk-!-font-size-14">
