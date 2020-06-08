@@ -1,8 +1,12 @@
 import express from 'express';
-import api from '../../api';
-import { requestParams } from '../../helpers';
+import api from '../../../api';
+import {
+  requestParams,
+  postToApi,
+  errorHref,
+} from '../../../helpers';
 
-import { provide, LOAN } from '../api-data-provider';
+import { provide, LOAN } from '../../api-data-provider';
 
 const router = express.Router();
 
@@ -54,12 +58,17 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN]), asy
 });
 
 router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) => {
-  const { _id: dealId, loanId } = requestParams(req);
+  const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  //   await postToApi(
-  //     api.updateLoan(dealId, loanId, req.body, userToken),
-  //     errorHref,
-  //   );
+  await postToApi(
+    api.updateDealLoan(
+      dealId,
+      loanId,
+      req.body,
+      userToken,
+    ),
+    errorHref,
+  );
 
   const redirectUrl = `/contract/${dealId}/loan/${loanId}/financial-details`;
   return res.redirect(redirectUrl);
