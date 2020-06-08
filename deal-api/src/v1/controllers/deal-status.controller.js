@@ -1,7 +1,7 @@
 const $ = require('mongo-dot-notation');
 const moment = require('moment');
 const { findOneDeal } = require('./deal.controller');
-const { userHasAccessTo, userOwns } = require('../users/checks');
+const { userHasAccessTo } = require('../users/checks');
 const db = require('../../drivers/db-client');
 // const dealIntegration = require('./deal-integration.controller');
 
@@ -100,10 +100,6 @@ exports.update = (req, res) => {
 
     const fromStatus = deal.details.status;
     const toStatus = req.body.status;
-
-    if (toStatus === 'Abandoned Deal' && !userOwns(user, deal)) {
-      return res.status(401).send();
-    }
 
     const validationErrors = validateStateChange(deal, req.body, user);
 
