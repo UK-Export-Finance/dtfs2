@@ -140,14 +140,14 @@ stages:
               "slotSetting": false
              },
              {
-              "name": "AZURE_FILE_SHARE",
-              "value": "$(AZURE_FILE_SHARE)",
+              "name": "SUPPORTING_DOCUMENT_STORE",
+              "value": "$(SUPPORTING_DOCUMENT_STORE)",
               "type": "Custom",
               "slotSetting": false
              },
              {
-              "name": "AZURE_STORAGE_KEY",
-              "value": "$(AZURE_STORAGE_KEY)",
+              "name": "SUPPORTING_DOCUMENT_STORE_KEY",
+              "value": "$(SUPPORTING_DOCUMENT_STORE_KEY)",
               "type": "Custom",
               "slotSetting": false
              }
