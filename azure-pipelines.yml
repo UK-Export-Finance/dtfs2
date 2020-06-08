@@ -138,6 +138,18 @@ stages:
               "value": "$(MONGO_INITDB_ROOT_PASSWORD)",
               "type": "Custom",
               "slotSetting": false
+             },
+             {
+              "name": "AZURE_FILE_SHARE",
+              "value": "$(AZURE_FILE_SHARE)",
+              "type": "Custom",
+              "slotSetting": false
+             },
+             {
+              "name": "AZURE_STORAGE_KEY",
+              "value": "$(AZURE_STORAGE_KEY)",
+              "type": "Custom",
+              "slotSetting": false
              }
           ]
     - task: AzureRmWebAppDeployment@4
