@@ -21,7 +21,7 @@
       {% for loan in loans %}
         <tr class="govuk-table__row">
           <td class="govuk-table__cell govuk-!-font-size-14">
-            <a href="{{ dealId }}/loans/{{ loan.id}}/guarantee-details" class="govuk-link">{{ loan.bankReferenceNumber }}</a>
+            <a href="{{ dealId }}/loan/{{ loan._id}}/guarantee-details" class="govuk-link">{{ loan.bankReferenceNumber }}</a>
           </td>
 
           <td class="govuk-table__cell govuk-!-font-size-14">

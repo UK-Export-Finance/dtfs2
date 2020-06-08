@@ -1,4 +1,5 @@
 {% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
@@ -9,8 +10,8 @@
 
 {% block content %}
 
-  {% set showConditionalFormFieldsByDefault = loan.facilityStage === "conditional" %}
-  {% set showUnconditionalFormFieldsByDefault = loan.facilityStage === "unconditional" %}
+  {% set showConditionalFormFieldsByDefault = loan.facilityStage === "Conditional" %}
+  {% set showUnconditionalFormFieldsByDefault = loan.facilityStage === "Unconditional" %}
 
   <script type="text/javascript">
     function toggleFormFields(facilityStage) {
@@ -27,6 +28,15 @@
     }
   </script>
 
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
   {{ loanNav.render(
     completedStatus = loan.completedStatus,
     current = 'loanDetails',
@@ -42,26 +52,32 @@
 
       <div class="govuk-grid-column-three-quarters">
 
-        <div class="govuk-form-group">
-
-          <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="30">
-            <div class="govuk-form-group">
-              <label class="govuk-label" for="bankReferenceNumber">
-                Bank reference number (optional)
-              </label>
-
-              <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-half">
-                  <input class="govuk-input govuk-js-character-count" id="bankReferenceNumber" name="bankReferenceNumber" type="text" maxlength="150" aria-describedby="bank-reference-number-info" value="{{ loan.bankReferenceNumber }}" data-cy="bank-reference-number">
-                </div>
-              </div>
-            </div>
-
-            <span id="bank-reference-number-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-              You can enter up to 30 characters
-            </span>
-          </div>
+        <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="30">
+          {{ govukInput({
+            label: {
+              text: "Bank reference number (optional)"
+            },
+            id: "bankReferenceNumber",
+            name: "bankReferenceNumber",
+            value: loan.bankReferenceNumber,
+            classes: 'govuk-input--width-20 govuk-js-character-count',
+            attributes: {
+              maxlength: '30',
+              'aria-describedby': 'bank-reference-number-info',
+              'data-cy': 'bank-reference-number'
+            },
+            errorMessage: validationErrors.errorList.bankReferenceNumber and {
+            text: validationErrors.errorList.bankReferenceNumber.text,
+            attributes: {
+              'data-cy': 'bank-reference-number-error-message'
+            }
+          }
+          }) }} 
+          <span id="bankReferenceNumber-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+            You can enter up to 30 characters
+          </span>
         </div>
+ 
 
         {{ govukRadios({
           classes: "govuk-radios--inline",
@@ -77,24 +93,30 @@
           },
           items: [
             {
-              value: "conditional",
+              value: "Conditional",
               text: "Conditional",
-              checked: loan.facilityStage === "conditional",
+              checked: loan.facilityStage === "Conditional",
               attributes: {
                 'data-cy': "loan-stage-conditional",
                 onClick: "toggleFormFields('conditional')"
               }
             },
             {
-              value: "unconditional",
+              value: "Unconditional",
               text: "Unconditional",
-              checked: loan.facilityStage === "unconditional",
+              checked: loan.facilityStage === "Unconditional",
               attributes: {
                 'data-cy': "loan-stage-unconditional",
                 onClick: "toggleFormFields('unconditional')"
               }
             }
-          ]
+          ],
+          errorMessage: validationErrors.errorList.facilityStage and {
+            text: validationErrors.errorList.facilityStage.text,
+            attributes: {
+              'data-cy': 'facility-stage-error-message'
+            }
+          }
         }) }}
 
         <div
@@ -116,9 +138,14 @@
             attributes: {
               'data-cy': 'ukef-guarantee-in-months',
               maxlength: '2'
+            },
+            errorMessage: validationErrors.errorList.ukefGuaranteeLengthInMonths and {
+            text: validationErrors.errorList.ukefGuaranteeLengthInMonths.text,
+            attributes: {
+              'data-cy': 'ukef-guarantee-in-months-error-message'
             }
+          }
           }) }}
-
 
         </div>
 
@@ -136,7 +163,8 @@
               hint = '<p>For example, 31 05 2017</p><p>This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date.</p>',
               dayValue = loan['requestedCoverStartDate-day'],
               monthValue = loan['requestedCoverStartDate-month'],
-              yearValue = loan['requestedCoverStartDate-year']
+              yearValue = loan['requestedCoverStartDate-year'],
+              error = validationErrors.errorList.requestedCoverStartDate
             )}}
           </div>
 
@@ -147,7 +175,8 @@
               hint = 'For example, 31 05 2017',
               dayValue = loan['coverEndDate-day'],
               monthValue = loan['coverEndDate-month'],
-              yearValue = loan['coverEndDate-year']
+              yearValue = loan['coverEndDate-year'],
+              error = validationErrors.errorList.coverEndDate
             )}}
           </div>
 
