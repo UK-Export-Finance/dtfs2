@@ -26,13 +26,13 @@
       </div>
     {% endif %}
 
-    {% if loanDetails.ukefGuaranteeLengthInMonths %}
+    {% if loanDetails.ukefGuaranteeInMonths %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Length of time that the UKEF's guarantee will be in place for (in months, rounded up)
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="ukef-guarantee-length-in-months">
-          {{ loanDetails.ukefGuaranteeLengthInMonths }}
+          {{ loanDetails.ukefGuaranteeInMonths }}
         </dd>
       </div>
     {% endif %}

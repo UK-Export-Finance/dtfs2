@@ -16,7 +16,7 @@ describe('/v1/deals/:id/loan', () => {
 
   const allLoanFields = {
     facilityStage: 'Conditional',
-    ukefGuaranteeLengthInMonths: '12',
+    ukefGuaranteeInMonths: '12',
   };
 
   let aBarclaysMaker;
@@ -92,18 +92,18 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     describe('when facilityStage is `Conditional`', () => {
-      describe('ukefGuaranteeLengthInMonths', () => {
+      describe('ukefGuaranteeInMonths', () => {
         describe('when missing', () => {
           it('should return validationError', async () => {
             const loan = {
               ...allLoanFields,
               facilityStage: 'Conditional',
-              ukefGuaranteeLengthInMonths: '',
+              ukefGuaranteeInMonths: '',
             };
 
             const body = await updateLoanInDeal(dealId, loan);
-            expect(body.validationErrors.errorList.ukefGuaranteeLengthInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeLengthInMonths.text).toEqual('Enter the Length of time that the UKEF\'s guarantee will be in place for');
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Enter the Length of time that the UKEF\'s guarantee will be in place for');
           });
         });
 
@@ -112,12 +112,12 @@ describe('/v1/deals/:id/loan', () => {
             const loan = {
               ...allLoanFields,
               facilityStage: 'Conditional',
-              ukefGuaranteeLengthInMonths: 'test',
+              ukefGuaranteeInMonths: 'test',
             };
 
             const body = await updateLoanInDeal(dealId, loan);
-            expect(body.validationErrors.errorList.ukefGuaranteeLengthInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeLengthInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be a number, like 1 or 12');
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be a number, like 1 or 12');
           });
         });
 
@@ -126,12 +126,12 @@ describe('/v1/deals/:id/loan', () => {
             const loan = {
               ...allLoanFields,
               facilityStage: 'Conditional',
-              ukefGuaranteeLengthInMonths: '6.3',
+              ukefGuaranteeInMonths: '6.3',
             };
 
             const body = await updateLoanInDeal(dealId, loan);
-            expect(body.validationErrors.errorList.ukefGuaranteeLengthInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeLengthInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be a whole number, like 12');
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be a whole number, like 12');
           });
         });
       });

@@ -47,10 +47,10 @@ const validationText = (str, fieldCopy) => {
 module.exports = (loan, errorList) => {
   const newErrorList = { ...errorList };
 
-  if (!isValid(loan.ukefGuaranteeLengthInMonths)) {
-    newErrorList.ukefGuaranteeLengthInMonths = {
+  if (!isValid(loan.ukefGuaranteeInMonths)) {
+    newErrorList.ukefGuaranteeInMonths = {
       text: validationText(
-        loan.ukefGuaranteeLengthInMonths,
+        loan.ukefGuaranteeInMonths,
         'Length of time that the UKEF\'s guarantee will be in place for',
       ),
       order: orderNumber(newErrorList),
