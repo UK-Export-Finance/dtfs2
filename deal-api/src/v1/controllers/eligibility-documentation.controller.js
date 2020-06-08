@@ -51,6 +51,7 @@ exports.update = async (req, res) => {
       } = file;
       if (size <= MAX_FILE_SIZE) {
         const fileInfo = await uploadStream({
+          fileshare: 'portal',
           folder: req.params.id,
           subfolder: fieldname,
           filename: formatFilenameForSharepoint(originalname),
