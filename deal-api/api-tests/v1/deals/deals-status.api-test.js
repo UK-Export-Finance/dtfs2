@@ -229,18 +229,6 @@ describe('/v1/deals/:id/status', () => {
       });
     });
 
-    it('401s "Abandoned Deal" updates if not from the deals owner.', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-      const createdDeal = postResult.body;
-      const statusUpdate = {
-        status: 'Abandoned Deal',
-      };
-
-      const { status, body } = await as(anotherBarclaysMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
-
-      expect(status).toEqual(401);
-    });
-
     it('rejects "Abandoned Deal" updates if no comment provided.', async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
