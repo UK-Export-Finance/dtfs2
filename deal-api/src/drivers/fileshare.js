@@ -1,10 +1,11 @@
 const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
 const stream = require('stream');
 
-const fileshareName = 'portal';
-const AZURE_STORAGE_ACCOUNT = 'dtfsmediaserver';
-const AZURE_STORAGE_ACCESS_KEY = '98DED/hkaR6GHfPauH9h1u+YMSG4FQThsIzQDJoFmTf2uHocIbq+ruyDAbkzXas3E/ilbcQS8sYBzvQx0qnUhw==';
+const { AZURE_WORKFLOW_FILESHARE_CONFIG } = require('../config/fileshare.config');
 
+const fileshareName = AZURE_WORKFLOW_FILESHARE_CONFIG.FILESHARE_NAME;
+const AZURE_STORAGE_ACCOUNT = AZURE_WORKFLOW_FILESHARE_CONFIG.STORAGE_ACCOUNT;
+const AZURE_STORAGE_ACCESS_KEY = AZURE_WORKFLOW_FILESHARE_CONFIG.STORAGE_ACCESS_KEY;
 
 const credential = new StorageSharedKeyCredential(AZURE_STORAGE_ACCOUNT, AZURE_STORAGE_ACCESS_KEY);
 const serviceClient = new ShareServiceClient(
@@ -27,7 +28,6 @@ const uploadStream = async ({
   const fileStream = new stream.Readable();
   fileStream.push(buffer);
   fileStream.push(null);
-
 
   const directoryClient = await shareClient.getDirectoryClient(folder);
   if (createMissingFolder) {

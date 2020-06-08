@@ -2,6 +2,7 @@ const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const fileshare = require('../../drivers/fileshare');
 const { generateTypeA } = require('./integration/k2-messages');
+const { AZURE_WORKFLOW_FILESHARE_CONFIG } = require('../../config/fileshare.config');
 
 exports.findOne = (req, res) => {
   findOneDeal(req.params.id, async (deal) => {
@@ -36,9 +37,8 @@ exports.createTypeA = async (deal, fromStatus) => {
     //   return typeAxmlStr;
   }
 
-
   const upload = {
-    folder: 'private-files/ukef_xml_workflow_export',
+    folder: AZURE_WORKFLOW_FILESHARE_CONFIG.EXPORT_FOLDER,
     createMissingFolder: false,
     subfolder: deal._id, // eslint-disable-line no-underscore-dangle
     filename: `${filename}.xml`,
