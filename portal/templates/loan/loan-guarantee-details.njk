@@ -1,5 +1,5 @@
-
 {% extends "index.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import './_macros/loan-nav.njk' as loanNav %}
@@ -36,7 +36,7 @@
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
 
-  <form method="POST" autocomplete="off">
+  <form method="POST" autocomplete="off" novalidate>
 
     <div class="govuk-grid-row">
 
@@ -104,17 +104,21 @@
           {% endif %}
         >
 
-          <div class="govuk-form-group">
-            <label class="govuk-label" for="ukefGuaranteeLengthInMonths">
-              Length of time that the UKEF's guarantee will be in place for (in months, rounded up) 
-            </label>
+          {{ govukInput({
+            inputmode: 'numeric',
+            label: {
+              text: "Length of time that the UKEF's guarantee will be in place for (in months, rounded up)"
+            },
+            classes: "govuk-input--width-5",
+            id: "ukefGuaranteeLengthInMonths",
+            name: "ukefGuaranteeLengthInMonths",
+            value: loan.ukefGuaranteeLengthInMonths,
+            attributes: {
+              'data-cy': 'ukef-guarantee-in-months',
+              maxlength: '2'
+            }
+          }) }}
 
-            <div class="govuk-grid-row">
-              <div class="govuk-grid-column-one-half">
-                <input class="govuk-input" id="ukefGuaranteeLengthInMonths" name="ukefGuaranteeLengthInMonths" type="text" value="{{ loan.ukefGuaranteeLengthInMonths }}" data-cy="ukef-guarantee-in-months">
-              </div>
-            </div>
-          </div>
 
         </div>
 
