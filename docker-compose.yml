@@ -34,6 +34,11 @@ services:
       - ./deal-api/.env.full-local-docker-environment:/app/.env:ro
     environment:
       - DEBUG=express:*
+      - AZURE_WORKFLOW_FILESHARE_NAME=${AZURE_WORKFLOW_FILESHARE_NAME}
+      - AZURE_WORKFLOW_STORAGE_ACCOUNT=${AZURE_WORKFLOW_STORAGE_ACCOUNT}
+      - AZURE_WORKFLOW_STORAGE_ACCESS_KEY=${AZURE_WORKFLOW_STORAGE_ACCESS_KEY}
+      - AZURE_WORKFLOW_EXPORT_FOLDER=${AZURE_WORKFLOW_EXPORT_FOLDER}
+      - AZURE_WORKFLOW_IMPORT_FOLDER=${AZURE_WORKFLOW_IMPORT_FOLDER}
     entrypoint: npx nodemon src/index.js
 
   deal-api-data:

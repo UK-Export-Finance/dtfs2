@@ -3,6 +3,16 @@ if [ -f "companies_house_api_key.txt" ]; then
     export COMPANIES_HOUSE_API_KEY=$(cat companies_house_api_key.txt)
     echo "Set the Companies House API key."
 fi
+
+if [ -f "secrets/set_azure_api_keys.sh" ]; then
+    source ./secrets/set_azure_api_keys.sh
+    echo "API keys set"
+else
+    if [ -z "$AZURE_WORKFLOW_STORAGE_ACCOUNT" ]; then
+        echo "WARNING: AZURE API KEYS NOT SET"
+    fi
+fi
+
 LOG="$HERE/pipeline.log"
 
 pipelinestart=`date +%s`
