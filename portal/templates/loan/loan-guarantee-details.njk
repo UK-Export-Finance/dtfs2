@@ -67,11 +67,11 @@
               'data-cy': 'bank-reference-number'
             },
             errorMessage: validationErrors.errorList.bankReferenceNumber and {
-            text: validationErrors.errorList.bankReferenceNumber.text,
-            attributes: {
-              'data-cy': 'bank-reference-number-error-message'
+              text: validationErrors.errorList.bankReferenceNumber.text,
+              attributes: {
+                'data-cy': 'bank-reference-number-error-message'
+              }
             }
-          }
           }) }} 
           <span id="bankReferenceNumber-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
             You can enter up to 30 characters
@@ -139,12 +139,12 @@
               'data-cy': 'ukef-guarantee-in-months',
               maxlength: '2'
             },
-            errorMessage: validationErrors.errorList.ukefGuaranteeInMonths and {
-            text: validationErrors.errorList.ukefGuaranteeInMonths.text,
-            attributes: {
-              'data-cy': 'ukef-guarantee-in-months-error-message'
+            errorMessage: (validationErrors.errorList.ukefGuaranteeInMonths.text or (not loan.ukefGuaranteeInMonths and validationErrors.conditionalErrorList.facilityStage.Conditional.ukefGuaranteeInMonths.text)) and {
+              text: validationErrors.errorList.ukefGuaranteeInMonths.text or (not loan.ukefGuaranteeInMonths and validationErrors.conditionalErrorList.facilityStage.Conditional.ukefGuaranteeInMonths.text),
+              attributes: {
+                'data-cy': 'ukef-guarantee-in-months-error-message'
+              }
             }
-          }
           }) }}
 
         </div>
@@ -176,7 +176,8 @@
               dayValue = loan['coverEndDate-day'],
               monthValue = loan['coverEndDate-month'],
               yearValue = loan['coverEndDate-year'],
-              error = validationErrors.errorList.coverEndDate
+              error = validationErrors.errorList.coverEndDate,
+              conditionalError = validationErrors.conditionalErrorList.facilityStage.Unconditional.coverEndDate
             )}}
           </div>
 
