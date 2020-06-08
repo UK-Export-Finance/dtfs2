@@ -38,9 +38,9 @@ exports.createTypeA = async (deal, fromStatus) => {
   }
 
   const upload = {
-    folder: AZURE_WORKFLOW_FILESHARE_CONFIG.EXPORT_FOLDER,
+    fileshare: 'workflow',
     createMissingFolder: false,
-    subfolder: deal._id, // eslint-disable-line no-underscore-dangle
+    folder: deal._id, // eslint-disable-line no-underscore-dangle
     filename: `${filename}.xml`,
     buffer: Buffer.from(typeAxmlStr, 'utf-8'),
   };
