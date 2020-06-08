@@ -730,8 +730,7 @@ describe('/v1/deals/:id/bond', () => {
           expect(body.validationErrors.errorList.dayCountBasis).toBeDefined();
           expect(body.validationErrors.errorList.dayCountBasis.text).toEqual('Enter the Day count basis');
         });
-      })
-      
+      });
     });
   });
 });

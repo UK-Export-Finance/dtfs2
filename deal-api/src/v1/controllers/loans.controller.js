@@ -3,7 +3,6 @@ const { userHasAccessTo } = require('../users/checks');
 const loanValidationErrors = require('../validation/loan');
 const { generateFacilityId } = require('../../utils/generateIds');
 // const { loanStatus } = require('../section-status/loan');
-const { hasValue } = require('../../utils/string');
 
 const putLoanInDealObject = (deal, loan, otherLoans) => ({
   ...deal,

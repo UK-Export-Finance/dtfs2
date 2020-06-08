@@ -1,9 +1,9 @@
-// const applyRules = require('./loan-rules');
+const applyRules = require('./loan-rules');
+// const conditionalErrorList = require('./loan-rules/conditional-error-list');
 
-module.exports = () => {
-  // const errorList = applyRules(loan);
-  // const totalErrors = Object.keys(errorList).length;
-  const totalErrors = 0;
+module.exports = (loan) => {
+  const errorList = applyRules(loan);
+  const totalErrors = Object.keys(errorList).length;
 
   if (totalErrors === 0) {
     return {
@@ -12,12 +12,9 @@ module.exports = () => {
     };
   }
 
-  // return {
-  //   count: totalErrors,
-  //   errorList,
-  //   // conditionalErrorList,
-  // };
   return {
-    count: 0,
+    count: totalErrors,
+    errorList,
+    // conditionalErrorList,
   };
 };

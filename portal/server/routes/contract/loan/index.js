@@ -49,11 +49,14 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN]), asy
   const {
     dealId,
     loan,
+    validationErrors,
   } = req.apiData.loan;
 
   return res.render('loan/loan-guarantee-details.njk', {
     dealId,
     loan,
+    // validationErrors: loanGuaranteeDetailsValidationErrors(validationErrors, loan),
+    validationErrors,
   });
 });
 
@@ -74,18 +77,21 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) =>
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/loan/:loanId/financial-details', async (req, res) => {
-  const { _id: dealId } = requestParams(req);
-
-  return res.render('loan/loan-financial-details.njk', {
+router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN]), async (req, res) => {
+  const {
     dealId,
-    loan: { _id: MOCK_LOAN._id }, // eslint-disable-line no-underscore-dangle
-    // ...await getApiData(
-    //   api.contractLoan(_id, loanId, userToken),
-    //   res,
-    // ),
+    loan,
+    validationErrors,
+  } = req.apiData.loan;
+
+  return res.render('loan/loan-guarantee-details.njk', {
+    dealId,
+    loan,
+    // validationErrors: loanGuaranteeDetailsValidationErrors(validationErrors, loan),
+    validationErrors,
   });
 });
+
 
 router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) => {
   const { _id: dealId, loanId } = requestParams(req);
