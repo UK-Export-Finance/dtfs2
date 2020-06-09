@@ -335,7 +335,7 @@ describe('/v1/deals/:id/bond', () => {
           it('should return validationError', async () => {
             const { validationErrors } = await updateBondConversionRate('');
             expect(validationErrors.errorList.conversionRate).toBeDefined();
-            expect(validationErrors.errorList.conversionRate.text).toEqual('Enter the Conversion rate to the Supply Contract currency');
+            expect(validationErrors.errorList.conversionRate.text).toEqual('Enter the Conversion rate');
           });
         });
 
@@ -343,15 +343,15 @@ describe('/v1/deals/:id/bond', () => {
           it('should return validationError', async () => {
             const { validationErrors } = await updateBondConversionRate('test');
             expect(validationErrors.errorList.conversionRate).toBeDefined();
-            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate to the Supply Contract currency must be a number, like 100 or 100.4');
+            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate must be a number, like 100 or 100.4');
           });
         });
 
-        describe('with more than 10 characters', () => {
+        describe('with more than 12 characters', () => {
           it('should return validationError', async () => {
-            const { validationErrors } = await updateBondConversionRate('12345678911');
+            const { validationErrors } = await updateBondConversionRate('1234567.123456');
             expect(validationErrors.errorList.conversionRate).toBeDefined();
-            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate to the Supply Contract currency must be 10 characters or fewer');
+            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate must be 12 numbers or fewer. You can include up to 6 decimal places as part of your number.');
           });
         });
 
@@ -359,7 +359,7 @@ describe('/v1/deals/:id/bond', () => {
           it('should return validationError', async () => {
             const { validationErrors } = await updateBondConversionRate('1234567');
             expect(validationErrors.errorList.conversionRate).toBeDefined();
-            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate to the Supply Contract currency must be up to 6 digits, including up to 6 decimal places');
+            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate can only include up to 6 decimal places');
           });
         });
 
@@ -367,7 +367,7 @@ describe('/v1/deals/:id/bond', () => {
           it('should return validationError', async () => {
             const { validationErrors } = await updateBondConversionRate('1.1234567');
             expect(validationErrors.errorList.conversionRate).toBeDefined();
-            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate to the Supply Contract currency must be up to 6 digits, including up to 6 decimal places');
+            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate can only include up to 6 decimal places');
           });
         });
       });
