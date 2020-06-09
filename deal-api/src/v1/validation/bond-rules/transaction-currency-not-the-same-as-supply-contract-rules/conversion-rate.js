@@ -6,9 +6,9 @@ const {
 } = require('../../../../utils/number');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
 
-const MAX_CHARACTERS = 10;
+const MAX_CHARACTERS = 12;
 
-const isValidLength = (str) => str.length <= 10;
+const isValidLength = (str) => str.length <= MAX_CHARACTERS + 1; // add 1 for decimal point
 
 const isValidFormat = (str) => {
   const invalidInteger = (str.length > 6 && isInteger(Number(str)));
@@ -43,11 +43,11 @@ const validationText = (value, fieldCopy) => {
   }
 
   if (!isValidLength(value)) {
-    return `${fieldCopy} must be ${MAX_CHARACTERS} characters or fewer`;
+    return `${fieldCopy} must be ${MAX_CHARACTERS} numbers or fewer. You can include up to 6 decimal places as part of your number.`;
   }
 
   if (!isValidFormat(value)) {
-    return `${fieldCopy} must be up to 6 digits, including up to 6 decimal places`;
+    return `${fieldCopy} can only include up to 6 decimal places`;
   }
 
   return `Enter the ${fieldCopy}`;
@@ -60,7 +60,7 @@ module.exports = (bond, errorList) => {
     newErrorList.conversionRate = {
       text: validationText(
         bond.conversionRate,
-        'Conversion rate to the Supply Contract currency',
+        'Conversion rate',
       ),
       order: orderNumber(newErrorList),
     };

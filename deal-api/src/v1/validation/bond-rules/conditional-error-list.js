@@ -41,7 +41,7 @@ module.exports = {
         text: 'Enter the Currency',
       },
       conversionRate: {
-        text: 'Enter the Conversion rate to the Supply Contract currency',
+        text: 'Enter the Conversion rate',
       },
       conversionRateDate: {
         text: 'Enter the Conversion rate date',
