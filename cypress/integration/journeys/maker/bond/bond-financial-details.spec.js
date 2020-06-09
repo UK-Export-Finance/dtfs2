@@ -90,13 +90,22 @@ context('Bond Financial Details', () => {
       partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
 
       pages.bondFinancialDetails.ukefExposureInput().invoke('attr', 'placeholder').should('eq', '0.00');
-      pages.bondFinancialDetails.bondValueInput().type('100');
-      pages.bondFinancialDetails.coveredPercentageInput().type('10').blur();
-      pages.bondFinancialDetails.ukefExposureInput().should('have.value', String(100 * 10));
+
+      let bondValue = '100';
+      const coveredPercentage = '10';
+
+      pages.bondFinancialDetails.bondValueInput().type(bondValue);
+      pages.bondFinancialDetails.coveredPercentageInput().type(coveredPercentage).blur();
+
+      let expectedUkefExposure = String(bondValue * (coveredPercentage / 100));
+      pages.bondFinancialDetails.ukefExposureInput().should('have.value', expectedUkefExposure);
 
       pages.bondFinancialDetails.bondValueInput().clear();
-      pages.bondFinancialDetails.bondValueInput().type('250').blur();
-      pages.bondFinancialDetails.ukefExposureInput().should('have.value', String(250 * 10));
+
+      bondValue = '250';
+      expectedUkefExposure = String(bondValue * (coveredPercentage / 100));
+      pages.bondFinancialDetails.bondValueInput().type(bondValue).blur();
+      pages.bondFinancialDetails.ukefExposureInput().should('have.value', expectedUkefExposure);
     });
   });
 

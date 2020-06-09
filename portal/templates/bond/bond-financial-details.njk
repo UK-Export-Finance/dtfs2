@@ -312,7 +312,7 @@
     var ukefExposure = document.getElementById('ukefExposure');
 
     function calculateUkefExposure() {
-      var result = bondValueInput.value * coveredPercentageInput.value;
+      var result = bondValueInput.value * (coveredPercentageInput.value / 100);
       ukefExposure.value = result;
     }
     

@@ -34,6 +34,9 @@ describe('/v1/deals/:id/bond', () => {
     dayCountBasis: 'test',
   };
 
+  const expectedUkefExposure = allBondFields.bondValue * (allBondFields.coveredPercentage / 100);
+  const expectedGuaranteeFeePayableByBank = allBondFields.riskMarginFee * 0.9;
+
   const nowDate = moment();
   const requestedCoverStartDate = () => {
     const date = nowDate;
@@ -343,8 +346,8 @@ describe('/v1/deals/:id/bond', () => {
           ...allBondFields,
           ...coverEndDate(),
           currency: deal.body.supplyContractCurrency,
-          guaranteeFeePayableByBank: allBondFields.riskMarginFee * 0.9,
-          ukefExposure: allBondFields.bondValue * allBondFields.coveredPercentage,
+          guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank,
+          ukefExposure: expectedUkefExposure,
           status: 'Completed',
         };
         expect(updatedBond).toEqual(expectedUpdatedBond);
@@ -394,8 +397,8 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsIssued,
           currency: deal.body.supplyContractCurrency,
-          guaranteeFeePayableByBank: allBondFields.riskMarginFee * 0.9,
-          ukefExposure: allBondFields.bondValue * allBondFields.coveredPercentage,
+          guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank,
+          ukefExposure: expectedUkefExposure,
           status: 'Completed',
         };
         delete expectedBond.ukefGuaranteeInMonths;
@@ -447,8 +450,8 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsUnissued,
           currency: deal.body.supplyContractCurrency,
-          guaranteeFeePayableByBank: allBondFields.riskMarginFee * 0.9,
-          ukefExposure: allBondFields.bondValue * allBondFields.coveredPercentage,
+          guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank,
+          ukefExposure: expectedUkefExposure,
           status: 'Completed',
         };
         delete expectedBond['requestedCoverStartDate-day'];
@@ -540,8 +543,8 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...bondBody,
           currency: deal.body.supplyContractCurrency,
-          guaranteeFeePayableByBank: allBondFields.riskMarginFee * 0.9,
-          ukefExposure: allBondFields.bondValue * allBondFields.coveredPercentage,
+          guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank,
+          ukefExposure: expectedUkefExposure,
           status: 'Completed',
         });
       });
