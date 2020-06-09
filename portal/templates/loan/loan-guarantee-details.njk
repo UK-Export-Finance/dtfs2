@@ -4,6 +4,7 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import './_macros/loan-nav.njk' as loanNav %}
+{% import './_macros/bank-reference-number-field.njk' as bankReferenceNumberField %}
 {% import '_macros/date-field.njk' as dateField %}
 
 {% block pageTitle %}Loan Guarantee Details{% endblock %}
@@ -51,32 +52,6 @@
     <div class="govuk-grid-row">
 
       <div class="govuk-grid-column-three-quarters">
-
-        <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="30">
-          {{ govukInput({
-            label: {
-              text: "Bank reference number (optional)"
-            },
-            id: "bankReferenceNumber",
-            name: "bankReferenceNumber",
-            value: loan.bankReferenceNumber,
-            classes: 'govuk-input--width-20 govuk-js-character-count',
-            attributes: {
-              maxlength: '30',
-              'aria-describedby': 'bank-reference-number-info',
-              'data-cy': 'bank-reference-number'
-            },
-            errorMessage: validationErrors.errorList.bankReferenceNumber and {
-              text: validationErrors.errorList.bankReferenceNumber.text,
-              attributes: {
-                'data-cy': 'bank-reference-number-error-message'
-              }
-            }
-          }) }} 
-          <span id="bankReferenceNumber-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-            You can enter up to 30 characters
-          </span>
-        </div>
  
 
         {{ govukRadios({
@@ -126,6 +101,13 @@
           {% endif %}
         >
 
+          {{bankReferenceNumberField.render(
+            id = 'facilityStageConditional-bankReferenceNumber',
+            label = 'Bank reference number (optional)',
+            value = loan.bankReferenceNumber,
+            error = validationErrors.errorList.bankReferenceNumber
+          )}}
+        
           {{ govukInput({
             inputmode: 'numeric',
             label: {
@@ -155,6 +137,14 @@
           class="govuk-visually-hidden"
           {% endif %}
         >
+
+          {{bankReferenceNumberField.render(
+            id = 'facilityStageUnconditional-bankReferenceNumber',
+            label = 'Bank reference number',
+            value = loan.bankReferenceNumber,
+            error = validationErrors.errorList.bankReferenceNumber,
+            conditionalError = validationErrors.conditionalErrorList.facilityStage.Unconditional.bankReferenceNumber
+          )}}
 
           <div class="govuk-form-group">
             {{ dateField.render(
