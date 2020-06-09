@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const wipeDB = require('../../wipeDB');
 const aDeal = require('./deal-builder');
 
@@ -189,6 +191,66 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         });
       });
 
+    });
+  });
+
+  describe('Conversion date in the future', () => {
+    let validationErrors;
+
+    beforeAll(async()=>{
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+
+      const dateInTheFuture = moment().add(1, 'days');
+      const submissionDetails = {
+        'supplyContractCurrency':'USD',
+        'supplyContractConversionDate-day': moment(dateInTheFuture).format('DD'),
+        'supplyContractConversionDate-month': moment(dateInTheFuture).format('MM'),
+        'supplyContractConversionDate-year': moment(dateInTheFuture).format('YYYY'),
+      };
+
+      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      validationErrors = body.validationErrors;
+    });
+
+    describe('Conversion Date', () => {
+      it('cannot be in the future', () => {
+        expect(validationErrors.errorList.supplyContractConversionDate).toEqual({
+          order: expect.any(String),
+          text: 'Supply Contract conversion date cannot be in the future',
+        });
+      });
+    });
+  });
+
+  describe('Conversion date in the past', () => {
+    let validationErrors;
+
+    beforeAll(async()=>{
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+
+      const dateInThePast = moment().subtract(31, 'days');
+      const submissionDetails = {
+        'supplyContractCurrency':'USD',
+        'supplyContractConversionDate-day': moment(dateInThePast).format('DD'),
+        'supplyContractConversionDate-month': moment(dateInThePast).format('MM'),
+        'supplyContractConversionDate-year': moment(dateInThePast).format('YYYY'),
+      };
+
+      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      validationErrors = body.validationErrors;
+    });
+
+    describe('Conversion Date', () => {
+      it('cannot be more than 30 days in the past', () => {
+        expect(validationErrors.errorList.supplyContractConversionDate).toEqual({
+          order: expect.any(String),
+          text: 'Supply Contract conversion date cannot be more than 30 days in the past',
+        });
+      });
     });
   });
 

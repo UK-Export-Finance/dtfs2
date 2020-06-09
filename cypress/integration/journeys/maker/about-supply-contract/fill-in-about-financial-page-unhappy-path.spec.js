@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const {contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview} = require('../../../pages');
 const maker1 = {username: 'MAKER', password: 'MAKER'};
 
@@ -33,9 +35,11 @@ context('about-supply-contract', () => {
     contractAboutFinancial.supplyContractValue().type('10,000');
     contractAboutFinancial.supplyContractCurrency().select('USD');
     contractAboutFinancial.supplyContractConversionRateToGBP().type('1.123456');
-    contractAboutFinancial.supplyContractConversionDate().day().type('27');
-    contractAboutFinancial.supplyContractConversionDate().month().type('11');
-    contractAboutFinancial.supplyContractConversionDate().year().type('2019');
+
+    const today = moment();
+    contractAboutFinancial.supplyContractConversionDate().day().type(`${moment(today).format('DD')}`);
+    contractAboutFinancial.supplyContractConversionDate().month().type(`${moment(today).format('MM')}`);
+    contractAboutFinancial.supplyContractConversionDate().year().type(`${moment(today).format('YYYY')}`);
 
     contractAboutFinancial.saveAndGoBack().click();
 
@@ -51,7 +55,7 @@ context('about-supply-contract', () => {
       expect(text.trim()).equal('1.123456');
     });
     contractAboutPreview.supplyContractConversionDate().invoke('text').then((text) => {
-      expect(text.trim()).equal('27/11/2019');
+      expect(text.trim()).equal(`${moment(today).format('DD/MM/YYYY')}`);
     });
 
   });

@@ -9,7 +9,7 @@ const maker1 = { username: 'MAKER', password: 'MAKER' };
 const dealWithIncompleteBonds = require('./dealWithIncompleteBonds.json');
 const dealWithIncompleteAbout = require('./dealWithIncompleteAbout.json');
 const dealWithIncompleteEligibility = require('./dealWithIncompleteEligibility.json');
-const dealReadyToSubmitForReview = require('./dealReadyToSubmitForReview.json');
+const dealReadyToSubmitForReview = require('./dealReadyToSubmitForReview');
 const dealWithNoCoverStartDate  = require('./dealWithNoCoverStartDate');
 
 context('A maker selects to submit a contract for review from the view-contract page', () => {

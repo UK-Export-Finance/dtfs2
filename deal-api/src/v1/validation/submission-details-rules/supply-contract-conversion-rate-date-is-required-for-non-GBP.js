@@ -12,15 +12,25 @@ module.exports = (submissionDetails, errorList) => {
     const month = submissionDetails['supplyContractConversionDate-month'];
     const year = submissionDetails['supplyContractConversionDate-year'];
 
-    // if we have all the values, check that the date is in the past..
+    // if we have all the values, check that the date..
     if (hasValue(day) && hasValue(month) && hasValue(year)) {
       const date = `${year}/${month}/${day}`;
       const now = moment().format('YYYY/MM/DD');
+      const thirtyDaysAgo = moment().subtract(1, 'day').format('YYYY/MM/DD');
 
+      // can't be in the future
       if (date > now) {
         newErrorList.supplyContractConversionDate = {
           order: orderNumber(newErrorList),
           text: 'Supply Contract conversion date cannot be in the future',
+        };
+      }
+
+      // can't be more than 30 days old
+      if (date < thirtyDaysAgo) {
+        newErrorList.supplyContractConversionDate = {
+          order: orderNumber(newErrorList),
+          text: 'Supply Contract conversion date cannot be more than 30 days in the past',
         };
       }
     } else {
