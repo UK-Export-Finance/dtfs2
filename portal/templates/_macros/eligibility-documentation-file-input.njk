@@ -1,4 +1,4 @@
-{% macro fileInput(fieldname, label, hint, fileList, validationError ) %}
+{% macro fileInput(fieldname, label, hint, fileList, validationError, dealId ) %}
   <div id="criterion-group-{{ fieldname }}" class="govuk-form-group govuk-!-margin-bottom-6 {% if validationError %}govuk-form-group--error{% endif %}" data-cy="{{fieldname}}">
     <label class="govuk-label" for="{{ fieldname }}">
       {{ label}}
@@ -30,7 +30,7 @@
                 <div class="govuk-checkboxes__item">
                   <input class="govuk-checkboxes__input" id="delete-hint-{{ fieldname }}-{{ loop.index }}" name="deleteFile" type="checkbox" value="{{ file.fullPath }}">
                   <label class="govuk-label govuk-checkboxes__label">
-                    <a href="{{ file.url }}" target="_blank">{{file.filename}}</a>
+                    <a download="{{file.filename}}" href="/contract/{{dealId}}/eligibility-documentation/{{fieldname}}/{{file.filename}}">{{file.filename}}</a>
                   </label>
                 </div>
           {% endfor %}

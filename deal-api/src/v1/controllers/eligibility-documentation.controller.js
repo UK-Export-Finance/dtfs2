@@ -1,4 +1,5 @@
-const { deleteMultipleFiles, uploadStream } = require('../../drivers/fileshare');
+const stream = require('stream');
+const { deleteMultipleFiles, uploadStream, readFile } = require('../../drivers/fileshare');
 const { formatFilenameForSharepoint } = require('../../utils');
 const { userHasAccessTo } = require('../users/checks');
 const { findOneDeal, updateDeal } = require('./deal.controller');
@@ -47,8 +48,9 @@ exports.update = async (req, res) => {
 
     const uploadPromises = req.files.map(async (file) => {
       const {
-        fieldname, originalname, buffer, size,
+        fieldname, originalname, buffer, size, mimetype,
       } = file;
+
       if (size <= MAX_FILE_SIZE) {
         const fileInfo = await uploadStream({
           fileshare: 'portal',
@@ -63,7 +65,7 @@ exports.update = async (req, res) => {
           type: getFileType(fieldname),
           fullPath: fileInfo.fullPath,
           filename: fileInfo.filename,
-          url: fileInfo.url,
+          mimetype,
         };
       }
 
@@ -142,5 +144,54 @@ exports.update = async (req, res) => {
     };
 
     res.status(200).json(dealWithUploadErrors);
+  });
+};
+
+exports.downloadFile = async (req, res) => {
+  const { id, fieldname, filename } = req.params;
+
+  findOneDeal(id, async (deal) => {
+    if (!deal) {
+      return res.status(404).send();
+    }
+
+    if (!userHasAccessTo(req.user, deal)) {
+      return res.status(401).send();
+    }
+
+    const fieldFiles = deal.dealFiles[fieldname];
+    if (!fieldFiles) {
+      return res.status(404).send();
+    }
+
+    const fileInfo = fieldFiles.find((file) => file.filename === filename);
+    if (!fileInfo) {
+      return res.status(404).send();
+    }
+
+    const documentLocation = {
+      folder: id,
+      subfolder: fieldname,
+      filename,
+    };
+
+    const bufferedFile = await readFile(documentLocation);
+
+    const readStream = new stream.PassThrough();
+    readStream.end(bufferedFile);
+
+    res.set('Content-disposition', `attachment; filename=${filename}`);
+    res.set('Content-Type', fileInfo.mimetype);
+
+    return readStream.pipe(res);
+    /*
+    return res.status(200).send({
+      properties: {
+        contentLength,
+        contentType,
+      },
+      buffer,
+    });
+    */
   });
 };

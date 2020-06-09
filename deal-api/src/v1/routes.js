@@ -148,6 +148,12 @@ authRouter.route('/deals/:id/eligibility-documentation')
     eligibilityDocumentation.update,
   );
 
+authRouter.route('/deals/:id/eligibility-documentation/:fieldname/:filename')
+  .get(
+    validate({ role: ['maker', 'checker'] }),
+    eligibilityDocumentation.downloadFile,
+  );
+
 authRouter.route('/banks')
   .get(
     banks.findAll,

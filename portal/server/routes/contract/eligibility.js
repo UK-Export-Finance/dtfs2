@@ -1,5 +1,6 @@
 import express from 'express';
 import multer from 'multer';
+import stream from 'stream';
 import api from '../../api';
 import {
   getApiData,
@@ -141,6 +142,26 @@ router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', 
   const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
 });
+
+router.get('/contract/:_id/eligibility-documentation/:fieldname/:filename', async (req, res) => {
+  const {
+    _id, userToken,
+  } = requestParams(req);
+  const { fieldname, filename } = req.params;
+
+  const fileData = await getApiData(
+    api.downloadFile(_id, fieldname, filename, userToken),
+    res,
+  );
+
+
+  res.set('Content-disposition', `attachment; filename=${filename}`);
+  res.set('Content-Type', fileData.headers['content-type']);
+
+  const readStream = new stream.PassThrough();
+  fileData.pipe(readStream).pipe(res);
+});
+
 
 router.get('/contract/:_id/eligibility/preview', provide([DEAL, MANDATORY_CRITERIA]), async (req, res) => {
   const { deal, mandatoryCriteria } = req.apiData;
