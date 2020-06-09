@@ -355,9 +355,9 @@ describe('/v1/deals/:id/bond', () => {
           });
         });
 
-        describe('with an invalid format', () => {
+        describe('with more than 6 decimal places', () => {
           it('should return validationError', async () => {
-            const { validationErrors } = await updateBondConversionRate('123456789');
+            const { validationErrors } = await updateBondConversionRate('1.1234567');
             expect(validationErrors.errorList.conversionRate).toBeDefined();
             expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate to the Supply Contract currency must be up to 6 digits, including up to 6 decimal places');
           });
