@@ -64,11 +64,28 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN]), asy
 router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
+  const modifiedBody = req.body;
+
+  const {
+    facilityStage,
+    'facilityStageConditional-bankReferenceNumber': conditionalBankReferenceNumber,
+    'facilityStageUnconditional-bankReferenceNumber': unconditionalBankReferenceNumber,
+  } = req.body;
+
+  if (facilityStage === 'Conditional') {
+    modifiedBody.bankReferenceNumber = conditionalBankReferenceNumber;
+  } else if (facilityStage === 'Unconditional') {
+    modifiedBody.bankReferenceNumber = unconditionalBankReferenceNumber;
+  }
+
+  delete modifiedBody['facilityStageConditional-bankReferenceNumber'];
+  delete modifiedBody['facilityStageUnconditional-bankReferenceNumber'];
+
   await postToApi(
     api.updateDealLoan(
       dealId,
       loanId,
-      req.body,
+      modifiedBody,
       userToken,
     ),
     errorHref,

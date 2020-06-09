@@ -28,7 +28,7 @@ module.exports = {
     },
     Unconditional: {
       bankReferenceNumber: {
-        text: 'Enter the Bank reference number'
+        text: 'Enter the Bank reference number',
       },
       requestedCoverStartDate: {
         text: 'Enter the Requested Cover Start Date',
