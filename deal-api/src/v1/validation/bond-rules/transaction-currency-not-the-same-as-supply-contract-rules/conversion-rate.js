@@ -1,6 +1,7 @@
 const { hasValue } = require('../../../../utils/string');
 const {
   isNumeric,
+  isInteger,
   decimalsCount,
 } = require('../../../../utils/number');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
@@ -10,7 +11,11 @@ const MAX_CHARACTERS = 10;
 const isValidLength = (str) => str.length <= 10;
 
 const isValidFormat = (str) => {
-  if (decimalsCount(str) > 6) {
+  const invalidInteger = (str.length > 6 && isInteger(Number(str)));
+  const invalidDecimals = decimalsCount(str) > 6;
+  const validFormat = (!invalidInteger && !invalidDecimals);
+
+  if (!validFormat) {
     return false;
   }
   return true;
