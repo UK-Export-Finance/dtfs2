@@ -149,7 +149,7 @@ const calculateGuaranteeFeePayableByBank = (riskMarginFee) => {
 
 const calculateUkefExposure = (bondValue, coveredPercentage) => {
   if (hasValue(bondValue) && hasValue(coveredPercentage)) {
-    return bondValue * coveredPercentage;
+    return bondValue * (coveredPercentage / 100);
   }
   return '';
 };

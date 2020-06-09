@@ -27,7 +27,7 @@ const DETAILS = {
 
 const bondValue = '123';
 const coveredPercentage = '80';
-const ukefExposure = String(Number(bondValue) * Number(coveredPercentage));
+const ukefExposure = String(Number(bondValue) * (Number(coveredPercentage) / 100));
 
 const riskMarginFee = '20';
 const guaranteeFeePayableByBank = String(Number(riskMarginFee * 0.9));
