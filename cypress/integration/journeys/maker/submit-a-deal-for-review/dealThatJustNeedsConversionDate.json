@@ -51,10 +51,6 @@
     "buyer-name" : "Huggy Bear",
     "destinationOfGoodsAndServices" : "USA",
     "hasBeenPreviewed" : true,
-    "supplyContractConversionDate" : "undefined/undefined/undefined",
-    "supplyContractConversionDate-day" : "27",
-    "supplyContractConversionDate-month" : "11",
-    "supplyContractConversionDate-year" : "2019",
     "supplyContractConversionRateToGBP" : "1.123456",
     "supplyContractCurrency" : {
         "id" : "USD"

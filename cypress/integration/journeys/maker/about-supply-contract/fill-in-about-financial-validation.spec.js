@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const {
   contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
 } = require('../../../pages');
@@ -86,6 +88,15 @@ context('about-buyer', () => {
     contractAboutFinancial.supplyContractConversionDate().year().type('{selectall}{backspace}3019');
     contractAboutFinancial.preview().click();
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be in the future');
+
+    const dateTooFarInThePast = moment().subtract(31, 'days');
+    contractAboutFinancial.visit(deal);
+    contractAboutFinancial.supplyContractConversionDate().day().type(`{selectall}{backspace}${moment(dateTooFarInThePast).format('DD')}`);
+    contractAboutFinancial.supplyContractConversionDate().month().type(`{selectall}{backspace}${moment(dateTooFarInThePast).format('MM')}`);
+    contractAboutFinancial.supplyContractConversionDate().year().type(`{selectall}{backspace}${moment(dateTooFarInThePast).format('YYYY')}`);
+    contractAboutFinancial.preview().click();
+    contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be more than 30 days in the past');
+
 
   });
 });

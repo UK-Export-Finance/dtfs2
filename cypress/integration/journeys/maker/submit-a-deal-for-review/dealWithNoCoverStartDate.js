@@ -1,6 +1,6 @@
 const moment = require('moment');
 const date = moment().add(1, 'month');
-const dealReadyToSubmitForReview = require('./dealReadyToSubmitForReview.json');
+const dealReadyToSubmitForReview = require('./dealReadyToSubmitForReview');
 
 const dealWithNoCoverStartDate = {...dealReadyToSubmitForReview};
 
