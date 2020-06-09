@@ -454,6 +454,18 @@ const getMandatoryCriteria = async (token) => {
   };
 };
 
+const downloadFile = async (id, fieldname, filename, token) => {
+  const response = await axios({
+    method: 'get',
+    responseType: 'stream',
+    url: `${urlRoot}/v1/deals/${id}/eligibility-documentation/${fieldname}/${filename}`,
+    headers: {
+      Authorization: token,
+    },
+  });
+
+  return response.data;
+};
 
 export default {
   banks,
@@ -484,4 +496,5 @@ export default {
   getDealLoan,
   getIndustrySectors,
   getMandatoryCriteria,
+  downloadFile,
 };

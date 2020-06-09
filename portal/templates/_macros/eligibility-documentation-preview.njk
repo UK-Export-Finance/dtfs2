@@ -1,18 +1,18 @@
 
 {% import './eligibility-documentation-preview-file.njk' as eligibilityDocumentationPreviewFiles %}
 
-{% macro answers(dealFiles, fileshareURL) %}
+{% macro answers(dealFiles, dealId) %}
   
   <h4 class="govuk-heading-m">Supporting documentation</h4>
 
   <ol class="govuk-list govuk-list--number">
 
-    {{ eligibilityDocumentationPreviewFiles.list('Manual Inclusion Questionnaire', dealFiles.exporterQuestionnaire, fileshareURL)  }}
-    {{ eligibilityDocumentationPreviewFiles.list('Financial statements for the past 3 years', dealFiles.auditedFinancialStatements, fileshareURL)  }}
-    {{ eligibilityDocumentationPreviewFiles.list('Year to date management accounts', dealFiles.yearToDateManagement, fileshareURL)  }}
-    {{ eligibilityDocumentationPreviewFiles.list('Financial forecasts for the next 3 years', dealFiles.financialForecasts, fileshareURL)  }}
-    {{ eligibilityDocumentationPreviewFiles.list('Brief commentary on the financial information', dealFiles.financialInformationCommentary, fileshareURL)  }}
-    {{ eligibilityDocumentationPreviewFiles.list('Corporate structure diagram', dealFiles.corporateStructure, fileshareURL)  }}
+    {{ eligibilityDocumentationPreviewFiles.list('Manual Inclusion Questionnaire', 'exporterQuestionnaire', dealFiles.exporterQuestionnaire, dealId)  }}
+    {{ eligibilityDocumentationPreviewFiles.list('Financial statements for the past 3 years','auditedFinancialStatements',  dealFiles.auditedFinancialStatements, dealId)  }}
+    {{ eligibilityDocumentationPreviewFiles.list('Year to date management accounts', 'yearToDateManagement', dealFiles.yearToDateManagement, dealId)  }}
+    {{ eligibilityDocumentationPreviewFiles.list('Financial forecasts for the next 3 years', 'financialForecasts',  dealFiles.financialForecasts, dealId)  }}
+    {{ eligibilityDocumentationPreviewFiles.list('Brief commentary on the financial information', 'financialInformationCommentary', dealFiles.financialInformationCommentary, dealId)  }}
+    {{ eligibilityDocumentationPreviewFiles.list('Corporate structure diagram', 'corporateStructure', dealFiles.corporateStructure, dealId)  }}
     
     
 

@@ -2,7 +2,6 @@ const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const fileshare = require('../../drivers/fileshare');
 const { generateTypeA } = require('./integration/k2-messages');
-const { AZURE_WORKFLOW_FILESHARE_CONFIG } = require('../../config/fileshare.config');
 
 exports.findOne = (req, res) => {
   findOneDeal(req.params.id, async (deal) => {
