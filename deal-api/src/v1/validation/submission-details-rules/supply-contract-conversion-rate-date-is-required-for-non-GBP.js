@@ -14,9 +14,9 @@ module.exports = (submissionDetails, errorList) => {
 
     // if we have all the values, check that the date..
     if (hasValue(day) && hasValue(month) && hasValue(year)) {
-      const date = `${year}/${month}/${day}`;
-      const now = moment().format('YYYY/MM/DD');
-      const thirtyDaysAgo = moment().subtract(1, 'day').format('YYYY/MM/DD');
+      const date = moment(`${year}-${month}-${day}`);
+      const now = moment();
+      const thirtyDaysAgo = moment().subtract(30, 'day');
 
       // can't be in the future
       if (date > now) {
