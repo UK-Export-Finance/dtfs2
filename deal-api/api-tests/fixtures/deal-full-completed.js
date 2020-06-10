@@ -2,8 +2,9 @@ const deal = {
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
-    status: 'Draft',
+    status: 'Ready for Checker\'s approval',
     dateOfLastAction: '1985/11/04 21:00:00:000',
+    previousStatus: 'Draft',
   },
   comments: [{
     username: 'bananaman',

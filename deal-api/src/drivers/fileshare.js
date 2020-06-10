@@ -1,5 +1,4 @@
 const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
-const stream = require('stream');
 
 const { AZURE_WORKFLOW_FILESHARE_CONFIG, AZURE_PORTAL_FILESHARE_CONFIG } = require('../config/fileshare.config');
 
@@ -44,6 +43,7 @@ const getExportDirectory = async (fileshare) => {
   const { EXPORT_FOLDER } = getConfig(fileshare);
 
   const exportFolderClient = shareClient.getDirectoryClient(EXPORT_FOLDER);
+
   await exportFolderClient.create().catch(({ details }) => {
     if (!details) return false;
     if (details.errorCode === 'ResourceAlreadyExists') return false;
@@ -56,16 +56,15 @@ const getExportDirectory = async (fileshare) => {
       },
     };
   });
-
   return exportFolderClient;
 };
 
 const uploadStream = async ({
   fileshare, folder, subfolder = '', filename, buffer,
 }) => {
-  const fileStream = new stream.Readable();
-  fileStream.push(buffer);
-  fileStream.push(null);
+//  const fileStream = new stream.Readable();
+//  fileStream.push(buffer);
+//  fileStream.push(null);
 
   const exportDirectory = await getExportDirectory(fileshare);
 
@@ -99,8 +98,7 @@ const uploadStream = async ({
   });
 
   const fileClient = await subDirectoryClient.getFileClient(`${filename}`);
-  await fileClient.uploadStream(fileStream, buffer.length, 4 * 1024 * 1024, 20);
-
+  await fileClient.uploadData(buffer);
   return {
     folder,
     filename: fileClient.name,
@@ -114,21 +112,32 @@ const readFile = async ({
   fileshare, folder, subfolder = '', filename,
 }) => {
   const exportDirectory = await getExportDirectory(fileshare);
-
   const directoryClient = await exportDirectory.getDirectoryClient(folder);
   const subDirectoryClient = await directoryClient.getDirectoryClient(subfolder);
 
   const fileClient = await subDirectoryClient.getFileClient(`${filename}`);
-  const bufferedFile = await fileClient.downloadToBuffer();
 
-  return bufferedFile;
+  try {
+    const bufferedFile = await fileClient.downloadToBuffer();
+    return bufferedFile;
+  } catch ({ name, statusCode }) {
+    return {
+      error: {
+        name,
+        errorCode: statusCode,
+      },
+    };
+  }
 };
 
-const deleteFile = async (filePath) => getShareClient().deleteFile(filePath).catch(({ details }) => {
-  if (!details) return;
-  if (details.errorCode === 'ResourceNotFound') return;
-  console.error('Fileshare delete file not found', details);
-});
+const deleteFile = async (filePath) => {
+  const shareClient = await getShareClient();
+  shareClient.deleteFile(filePath).catch(({ details }) => {
+    if (!details) return;
+    if (details.errorCode === 'ResourceNotFound') return;
+    console.error('Fileshare delete file not found', details);
+  });
+};
 
 const deleteMultipleFiles = (fileList) => {
   if (!Array.isArray(fileList)) return false;

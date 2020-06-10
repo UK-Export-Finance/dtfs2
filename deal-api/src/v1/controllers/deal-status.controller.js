@@ -3,7 +3,8 @@ const moment = require('moment');
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const db = require('../../drivers/db-client');
-const dealIntegration = require('./deal-integration.controller');
+
+const { createTypeA } = require('./integration/k2-messages');
 
 const validateStateChange = require('../validation/deal-status');
 
@@ -133,10 +134,12 @@ exports.update = (req, res) => {
 
     // TODO - Reinstate typeA XML creation once Loans and Summary have been added
     if (toStatus === 'Submitted') {
-      const typeA = await dealIntegration.createTypeA(dealAfterAllUpdates, fromStatus);
+      const { previousStatus } = deal.details;
+
+      const typeA = await createTypeA(dealAfterAllUpdates, previousStatus);
       if (typeA.errorCount) {
         // TODO - how do we deal with invalid typeA xml?
-        // return res.status(200).send(typeA);
+        return res.status(200).send(typeA);
       }
     }
 

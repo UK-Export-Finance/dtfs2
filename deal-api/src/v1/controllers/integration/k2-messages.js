@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const typeABuilder = require('./type-a-defs/type-a-builder');
+const fileshare = require('../../../drivers/fileshare');
 
 const {
   eligibilityCriteriaHelper,
@@ -15,7 +16,7 @@ const {
   getActionCodeAndName,
 } = require('./helpers');
 
-module.exports.generateTypeA = async (deal, fromStatus) => {
+const generateTypeA = async (deal, fromStatus) => {
   const { actionCode, actionName } = getActionCodeAndName(deal, fromStatus);
 
   const builder = typeABuilder()
@@ -164,13 +165,15 @@ module.exports.generateTypeA = async (deal, fromStatus) => {
     // TODO - Add Loans
 
     // Add Deal Files
-    Object.entries(k2Map.DEAL.DEAL_FILES).forEach(([fieldname, xmlNodeName]) => {
-      if (deal.dealFiles[fieldname]) {
-        deal.dealFiles[fieldname].forEach(((df) => {
-          builder.AddDeal(xmlNodeName, df.type, df.fullPath);
-        }));
-      }
-    });
+    if (deal.dealFiles) {
+      Object.entries(k2Map.DEAL.DEAL_FILES).forEach(([fieldname, xmlNodeName]) => {
+        if (deal.dealFiles[fieldname]) {
+          deal.dealFiles[fieldname].forEach(((df) => {
+            builder.AddDeal(xmlNodeName, df.type, df.fullPath);
+          }));
+        }
+      });
+    }
   }
 
   const typeAxmlStr = builder.build();
@@ -178,6 +181,7 @@ module.exports.generateTypeA = async (deal, fromStatus) => {
   // Validate XML against XSD schema
   const typeAxsd = fs.readFileSync(path.resolve(__dirname, './type-a-defs/type-a.xsd'),
     { encoding: 'utf8', flag: 'r' });
+
 
   const parsedXml = libxml.parseXml(typeAxmlStr);
   const parsedXsd = libxml.parseXml(typeAxsd);
@@ -189,8 +193,9 @@ module.exports.generateTypeA = async (deal, fromStatus) => {
     };
   }
 
-  const isValidXml = parsedXml.validate(parsedXsd);
   const filename = `${deal._id}_${actionName.toUpperCase()}`; // eslint-disable-line no-underscore-dangle
+
+  const isValidXml = parsedXml.validate(parsedXsd);
 
   if (!isValidXml) {
     return {
@@ -201,5 +206,30 @@ module.exports.generateTypeA = async (deal, fromStatus) => {
     };
   }
 
+
   return { typeAxmlStr, filename };
 };
+
+const createTypeA = async (deal, fromStatus) => {
+  const {
+    typeAxmlStr, filename, errorCount,
+  } = await generateTypeA(deal, fromStatus);
+
+
+  // TODO - Decide what to do with invalid typeA xml
+  if (errorCount) {
+    //   return typeAxmlStr;
+  }
+
+  const upload = {
+    fileshare: 'workflow',
+    createMissingFolder: false,
+    folder: deal._id, // eslint-disable-line no-underscore-dangle
+    filename: `${filename}.xml`,
+    buffer: Buffer.from(typeAxmlStr, 'utf-8'),
+  };
+
+  return fileshare.uploadStream(upload);
+};
+
+module.exports = { generateTypeA, createTypeA };

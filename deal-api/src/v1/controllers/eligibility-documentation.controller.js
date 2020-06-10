@@ -43,7 +43,7 @@ exports.update = async (req, res) => {
       res.status(401).send();
       return;
     }
-
+    console.log(req.body.deleteFile);
     const deletePromises = deleteMultipleFiles(req.body.deleteFile);
 
     const uploadPromises = req.files.map(async (file) => {
