@@ -4,6 +4,7 @@ const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
+const { roundNumber } = require('../../../src/utils/number')
 
 describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({
@@ -34,8 +35,23 @@ describe('/v1/deals/:id/bond', () => {
     dayCountBasis: 'test',
   };
 
-  const expectedUkefExposure = allBondFields.bondValue * (allBondFields.coveredPercentage / 100);
   const expectedGuaranteeFeePayableByBank = allBondFields.riskMarginFee * 0.9;
+
+  const expectedUkefExposure = () => {
+    const {
+      bondValue,
+      coveredPercentage,
+    } = allBondFields;
+
+    const strippedBondValue = bondValue.replace(/,/g, '');
+
+    const calculation = strippedBondValue * (coveredPercentage / 100);
+
+    const ukefExposure = roundNumber(calculation, 2);
+    const formattedUkefExposure = ukefExposure.toLocaleString('en', { minimumFractionDigits: 2 });
+    const expected = String(formattedUkefExposure);
+    return expected;
+  };
 
   const nowDate = moment();
   const requestedCoverStartDate = () => {
@@ -347,7 +363,7 @@ describe('/v1/deals/:id/bond', () => {
           ...coverEndDate(),
           currency: deal.body.supplyContractCurrency,
           guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank,
-          ukefExposure: expectedUkefExposure,
+          ukefExposure: expectedUkefExposure(),
           status: 'Completed',
         };
         expect(updatedBond).toEqual(expectedUpdatedBond);
@@ -398,7 +414,7 @@ describe('/v1/deals/:id/bond', () => {
           ...updatedBondAsIssued,
           currency: deal.body.supplyContractCurrency,
           guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank,
-          ukefExposure: expectedUkefExposure,
+          ukefExposure: expectedUkefExposure(),
           status: 'Completed',
         };
         delete expectedBond.ukefGuaranteeInMonths;
@@ -451,7 +467,7 @@ describe('/v1/deals/:id/bond', () => {
           ...updatedBondAsUnissued,
           currency: deal.body.supplyContractCurrency,
           guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank,
-          ukefExposure: expectedUkefExposure,
+          ukefExposure: expectedUkefExposure(),
           status: 'Completed',
         };
         delete expectedBond['requestedCoverStartDate-day'];
@@ -544,7 +560,7 @@ describe('/v1/deals/:id/bond', () => {
           ...bondBody,
           currency: deal.body.supplyContractCurrency,
           guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank,
-          ukefExposure: expectedUkefExposure,
+          ukefExposure: expectedUkefExposure(),
           status: 'Completed',
         });
       });
