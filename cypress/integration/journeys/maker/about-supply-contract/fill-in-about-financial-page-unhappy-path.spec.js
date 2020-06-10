@@ -43,6 +43,11 @@ context('about-supply-contract', () => {
 
     contractAboutFinancial.saveAndGoBack().click();
 
+    contract.aboutSupplierDetailsLink().click();
+    contractAboutSupplier.nextPage().click();
+    contractAboutBuyer.nextPage().click();
+    contractAboutFinancial.preview().click();
+
     // check the data is now on the preview page..
     contractAboutPreview.visit(deal);
     contractAboutPreview.supplyContractValue().invoke('text').then((text) => {

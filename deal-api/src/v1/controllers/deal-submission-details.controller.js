@@ -50,21 +50,19 @@ exports.update = (req, res) => {
 
     const validationErrors = validateSubmissionDetails({ ...deal.submissionDetails, ...req.body });
 
+    // TODO - we calculate status on the fly now, so should we ever persist this field?
     // if (validationErrors.count === 0) {
     //   submissionDetails.status = 'Completed';
     // } else {
     submissionDetails.status = 'Incomplete';
     // }
 
-    // TODO find a neater way..
-    if (!validationErrors.errorList.supplyContractConversionDate) {
-      // if the conversion-date has been parsed without errors, store the actual date..
-      const day = submissionDetails['supplyContractConversionDate-day'];
-      const month = submissionDetails['supplyContractConversionDate-month'];
-      const year = submissionDetails['supplyContractConversionDate-year'];
+    // build a date out of the conversion-date fields if we have them
+    const day = submissionDetails['supplyContractConversionDate-day'];
+    const month = submissionDetails['supplyContractConversionDate-month'];
+    const year = submissionDetails['supplyContractConversionDate-year'];
+    if (day && month && year) {
       submissionDetails.supplyContractConversionDate = `${day}/${month}/${year}`;
-      // TODO clear away the old fields? feels like there's traps there to do with entering a date,
-      // then entering an invalid date and things getting out of line...
     }
 
     const collection = await db.getCollection('deals');
