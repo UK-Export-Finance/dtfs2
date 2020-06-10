@@ -23,5 +23,8 @@ module.exports = {
   bondFinancialDetails: require('./bondFinancialDetails'),
   bondFeeDetails: require('./bondFeeDetails'),
   bondPreview: require('./bondPreview'),
+  loanGuaranteeDetails: require('./loanGuaranteeDetails'),
+  loanFinancialDetails: require('./loanFinancialDetails'),
+  loanDatesRepayments: require('./loanDatesRepayments'),
   defaults: require('./defaults'),
 };
