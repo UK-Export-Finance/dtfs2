@@ -155,7 +155,7 @@ const calculateGuaranteeFeePayableByBank = (riskMarginFee) => {
 const calculateUkefExposure = (value, coveredPercentage) => {
   let bondValue = value;
 
-  const hasBondValue = (hasValue(bondValue) && isNumeric(Number(bondValue)));
+  const hasBondValue = (hasValue(bondValue));
   const hasCoveredPercentage = (hasValue(coveredPercentage) && isNumeric(Number(coveredPercentage)));
   const canCalculate = (hasBondValue && hasCoveredPercentage);
 
