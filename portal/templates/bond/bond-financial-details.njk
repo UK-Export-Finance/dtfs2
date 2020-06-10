@@ -43,12 +43,10 @@
           id: "bondValue",
           name: "bondValue",
           value: bond.bondValue,
-          classes: "input--numeric-float",
-          pattern: "[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)",
+          pattern: '[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)',
           attributes: {
             size: "60",
             maxlength: "255",
-            step: "0.25",
             placeholder: "0.00",
             'data-cy': 'bond-value'
           },
@@ -271,7 +269,7 @@
       name: "ukefExposure",
       value: bond.ukefExposure,
       classes: "form-group-disabled--input govuk-input--width-10",
-      type: "number",
+      type: "text",
       attributes: {
         size: "60",
         maxlength: "255",
@@ -304,18 +302,57 @@
         additionalFormFields.className = 'govuk-visually-hidden';
       }
     }
-
+  
     /* UKEF Exposure calculation */
     var bondValueInput = document.getElementById('bondValue');
-  
     var coveredPercentageInput = document.getElementById('coveredPercentage');
     var ukefExposure = document.getElementById('ukefExposure');
 
-    function calculateUkefExposure() {
-      var result = bondValueInput.value * (coveredPercentageInput.value / 100);
-      ukefExposure.value = result;
-    }
+    function decimalsCount(numb) {
+      var decimals = numb.toString().split('.')[1];
+      if (decimals) {
+        return decimals.length;
+      }
+      return 0;
+    };
     
+    function roundNumber(value, digits) {
+      if(!digits) {
+          digits = 2;
+      }
+      value = value * Math.pow(10, digits);
+      value = Math.round(value);
+      value = value / Math.pow(10, digits);
+      return value;
+    }
+
+    function isNumeric (value) {
+      if((typeof value === 'number') && value === Number(value) && Number.isFinite(value)) {
+        return true;
+      }
+      return false;
+    }
+
+    function calculateUkefExposure() {
+      var bondValue = bondValueInput.value.replace(/,/g, ''); // remove commas
+
+      var calculation = bondValue * (coveredPercentageInput.value / 100);
+
+      if (isNumeric(calculation)) {
+        var result;
+        var totalDecimals = decimalsCount(calculation);
+        if (totalDecimals > 2)  {
+          result= roundNumber(calculation, 2)
+        } else {
+          result = calculation;
+        }
+
+        var formattedResult = result.toLocaleString('en', { minimumFractionDigits: 2 });
+
+        ukefExposure.value = String(formattedResult);
+      }
+    }
+
     [bondValueInput, coveredPercentageInput].forEach(function(element) {
       element.addEventListener('blur', function(event) {
         calculateUkefExposure();
