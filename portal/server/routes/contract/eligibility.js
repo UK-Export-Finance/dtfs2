@@ -102,6 +102,10 @@ router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(),
 
   const validationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
 
+  if (validationErrors.count === 0) {
+    return res.redirect(`/contract/${_id}/eligibility/preview`);
+  }
+
   return res.render('eligibility/eligibility-supporting-documentation.njk', {
     _id,
     eligibility,
@@ -139,7 +143,7 @@ router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', 
 });
 
 router.get('/contract/:_id/eligibility/preview', provide([DEAL, MANDATORY_CRITERIA]), async (req, res) => {
-  const { deal, mandatoryCriteria } = req.dealApi;
+  const { deal, mandatoryCriteria } = req.apiData;
 
   return res.render('eligibility/eligibility-preview.njk', {
     deal,

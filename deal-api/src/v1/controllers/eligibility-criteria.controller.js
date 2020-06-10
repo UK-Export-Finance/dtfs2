@@ -35,8 +35,11 @@ exports.update = async (req, res) => {
         };
       });
 
+      const submissionTypeComplete = criteriaComplete ? CONSTANTS.DEAL.SUBMISSION_TYPE.MIA : '';
+      const submissionType = criteriaAllTrue ? CONSTANTS.DEAL.SUBMISSION_TYPE.AIN : submissionTypeComplete;
+
       const validationErrors = getEligibilityErrors(updatedCriteria);
-      const documentationErrors = getDocumentationErrors(updatedCriteria, dealFiles);
+      const documentationErrors = getDocumentationErrors(submissionType, updatedCriteria, dealFiles);
 
       // Special case for criteria 11 - must add agents name & address if criteria 11 === false
       const criteria11 = updatedCriteria.find((c) => c.id === 11);
@@ -61,13 +64,11 @@ exports.update = async (req, res) => {
         ...validationErrors.errorList,
       };
 
-      const submissionTypeComplete = criteriaComplete ? CONSTANTS.DEAL.SUBMISSION_TYPE.MIA : '';
-
       const updatedDeal = {
         ...deal,
         details: {
           ...deal.details,
-          submissionType: criteriaAllTrue ? CONSTANTS.DEAL.SUBMISSION_TYPE.AIN : submissionTypeComplete,
+          submissionType,
         },
         eligibility: {
           status: criteriaComplete ? 'Completed' : 'Incomplete',

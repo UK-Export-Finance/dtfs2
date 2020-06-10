@@ -66,4 +66,25 @@ context('Eligibility Documentation', () => {
     eligibilityDocumentation.fieldErrorMessage('financialForecasts').should('have.length', 0);
     eligibilityDocumentation.fieldErrorMessage('financialInformationCommentary').should('have.length', 0);
   });
+
+  it('should make exporter questionnaire mandatory for non AIN', () => {
+    eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().click({ multiple: true });
+    eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.falseInput().first().click();
+    eligibilityCriteria.nextPageButton().click();
+    eligibilityDocumentation.fieldErrorMessage('exporterQuestionnaire').should('have.length', 1);
+  });
+
+  it('should not make exporter questionnaire mandatory for AIN', () => {
+    eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().click({ multiple: true });
+    eligibilityCriteria.nextPageButton().click();
+    eligibilityDocumentation.fieldErrorMessage('exporterQuestionnaire').should('have.length', 0);
+  });
+
+  it('should redirect to preview page if no validation errors', () => {
+    eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().click({ multiple: true });
+    eligibilityCriteria.nextPageButton().click();
+    eligibilityDocumentation.saveButton().click();
+
+    cy.url().should('include', '/eligibility/preview');
+  });
 });

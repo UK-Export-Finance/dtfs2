@@ -93,7 +93,7 @@ exports.update = async (req, res) => {
     });
 
     const { validationErrors, validationUploadErrors } = getDocumentationErrors(
-      deal.eligibility.criteria, dealFiles, uploadErrors,
+      deal.details.submissionType, deal.eligibility.criteria, dealFiles, uploadErrors,
     );
 
     const updatedDealData = {
