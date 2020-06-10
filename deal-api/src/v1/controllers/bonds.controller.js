@@ -173,7 +173,7 @@ const calculateUkefExposure = (value, coveredPercentage) => {
     }
 
     const formattedUkefExposure = ukefExposure.toLocaleString('en', { minimumFractionDigits: 2 });
-    return String(formattedUkefExposure);
+    return formattedUkefExposure;
   }
   return '';
 };
