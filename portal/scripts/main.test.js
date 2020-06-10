@@ -2,6 +2,7 @@ import * as govukFrontend from 'govuk-frontend';
 import * as showHideElement from './show-hide-element';
 import * as numericFloatInputs from './numeric-float-inputs';
 import * as changeIndustryClasses from './change-industry-classes';
+import * as number from './number';
 import main from './main';
 
 jest.mock('govuk-frontend');
@@ -30,5 +31,11 @@ describe('main.js', () => {
     changeIndustryClasses.default = jest.fn();
     main();
     expect(changeIndustryClasses.default).toHaveBeenCalled();
+  });
+
+  it('should call number()', () => {
+    number.default = jest.fn();
+    main();
+    expect(number.default).toHaveBeenCalled();
   });
 });

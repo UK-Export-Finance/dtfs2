@@ -308,41 +308,16 @@
     var coveredPercentageInput = document.getElementById('coveredPercentage');
     var ukefExposure = document.getElementById('ukefExposure');
 
-    function decimalsCount(numb) {
-      var decimals = numb.toString().split('.')[1];
-      if (decimals) {
-        return decimals.length;
-      }
-      return 0;
-    };
-    
-    function roundNumber(value, digits) {
-      if(!digits) {
-          digits = 2;
-      }
-      value = value * Math.pow(10, digits);
-      value = Math.round(value);
-      value = value / Math.pow(10, digits);
-      return value;
-    }
-
-    function isNumeric (value) {
-      if((typeof value === 'number') && value === Number(value) && Number.isFinite(value)) {
-        return true;
-      }
-      return false;
-    }
-
     function calculateUkefExposure() {
       var bondValue = bondValueInput.value.replace(/,/g, ''); // remove commas
 
       var calculation = bondValue * (coveredPercentageInput.value / 100);
 
-      if (isNumeric(calculation)) {
+      if (window.dtfs.isNumeric(calculation)) {
         var result;
-        var totalDecimals = decimalsCount(calculation);
+        var totalDecimals = window.dtfs.decimalsCount(calculation);
         if (totalDecimals > 2)  {
-          result= roundNumber(calculation, 2)
+          result = window.dtfs.roundNumber(calculation, 2);
         } else {
           result = calculation;
         }
