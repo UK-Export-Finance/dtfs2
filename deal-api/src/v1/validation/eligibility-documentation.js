@@ -1,5 +1,7 @@
 
-exports.getDocumentationErrors = (criteria = [], dealFiles, uploadErrors = []) => {
+const CONSTANTS = require('../../constants');
+
+exports.getDocumentationErrors = (submissionType, criteria = [], dealFiles, uploadErrors = []) => {
   const errorList = {};
   const uploadErrorList = {};
 
@@ -39,7 +41,8 @@ exports.getDocumentationErrors = (criteria = [], dealFiles, uploadErrors = []) =
   };
 
   // Manual Inclusion Questionnaire if mandatory
-  errorList.exporterQuestionnaire = generateError('exporterQuestionnaire', 'Manual Inclusion Questionnaire', 'is required.', true);
+  const exporterQuestionnaireMandatory = submissionType !== CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
+  errorList.exporterQuestionnaire = generateError('exporterQuestionnaire', 'Manual Inclusion Questionnaire', 'is required.', exporterQuestionnaireMandatory);
   uploadErrorList.exporterQuestionnaire = generateUploadErrors('exporterQuestionnaire', 'Manual Inclusion Questionnaire');
 
   // When the user’s answer to EC 12 or 13 is false,
