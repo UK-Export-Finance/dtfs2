@@ -1,4 +1,5 @@
 const moment = require('moment');
+const { roundNumber } = require('../../../../../deal-api/src/utils/number');
 
 const date = moment();
 const requestedCoverStartDate = date;
@@ -25,9 +26,18 @@ const DETAILS = {
   ukefGuaranteeInMonths: '12',
 };
 
-const bondValue = '123';
+const bondValue = '123456789.996';
 const coveredPercentage = '80';
-const ukefExposure = String(Number(bondValue) * (Number(coveredPercentage) / 100));
+
+const expectedUkefExposure = () => {
+  const strippedBondValue = bondValue.replace(/,/g, '');
+
+  const calculation = strippedBondValue * (coveredPercentage / 100);
+
+  const ukefExposure = roundNumber(calculation, 2);
+  const formattedUkefExposure = ukefExposure.toLocaleString('en', { minimumFractionDigits: 2 });
+  return formattedUkefExposure;
+};
 
 const riskMarginFee = '20';
 const guaranteeFeePayableByBank = String(Number(riskMarginFee * 0.9));
@@ -37,7 +47,7 @@ const FINANCIAL_DETAILS = {
   riskMarginFee,
   coveredPercentage,
   minimumRiskMarginFee: '1.23',
-  ukefExposure,
+  ukefExposure: expectedUkefExposure(),
   guaranteeFeePayableByBank,
 
   // 'transaction currency not the same as supply contract currency' specifics

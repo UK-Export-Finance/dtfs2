@@ -4,7 +4,7 @@ const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
-const { roundNumber } = require('../../../src/utils/number')
+const { roundNumber } = require('../../../src/utils/number');
 
 describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({
@@ -26,7 +26,7 @@ describe('/v1/deals/:id/bond', () => {
     ukefGuaranteeInMonths: '24',
     uniqueIdentificationNumber: '1234',
     bondBeneficiary: 'test',
-    bondValue: '123',
+    bondValue: '123456.551',
     transactionCurrencySameAsSupplyContractCurrency: 'true',
     riskMarginFee: '1',
     coveredPercentage: '2',
@@ -49,8 +49,7 @@ describe('/v1/deals/:id/bond', () => {
 
     const ukefExposure = roundNumber(calculation, 2);
     const formattedUkefExposure = ukefExposure.toLocaleString('en', { minimumFractionDigits: 2 });
-    const expected = String(formattedUkefExposure);
-    return expected;
+    return formattedUkefExposure;
   };
 
   const nowDate = moment();

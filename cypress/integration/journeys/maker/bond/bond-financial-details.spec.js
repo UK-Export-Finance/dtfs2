@@ -4,6 +4,7 @@ const partials = require('../../../partials');
 const fillBondForm = require('./fill-bond-forms');
 const assertBondFormValues = require('./assert-bond-form-values');
 const BOND_FORM_VALUES = require('./bond-form-values');
+const { roundNumber } = require('../../../../../deal-api/src/utils/number');
 const relative = require('../../../relativeURL');
 
 const user = { username: 'MAKER', password: 'MAKER' };
@@ -23,6 +24,16 @@ const goToBondFinancialDetailsPage = (deal) => {
   cy.url().should('include', '/contract');
   cy.url().should('include', '/bond/');
   cy.url().should('include', '/financial-details');
+};
+
+const calculateExpectedUkefExposure = (bondValue, coveredPercentage) => {
+  const strippedBondValue = bondValue.replace(/,/g, '');
+
+  const calculation = strippedBondValue * (coveredPercentage / 100);
+
+  const ukefExposure = roundNumber(calculation, 2);
+  const formattedUkefExposure = ukefExposure.toLocaleString('en', { minimumFractionDigits: 2 });
+  return formattedUkefExposure;
 };
 
 context('Bond Financial Details', () => {
@@ -97,15 +108,13 @@ context('Bond Financial Details', () => {
       pages.bondFinancialDetails.bondValueInput().type(bondValue);
       pages.bondFinancialDetails.coveredPercentageInput().type(coveredPercentage).blur();
 
-      let expectedUkefExposure = String(bondValue * (coveredPercentage / 100));
-      pages.bondFinancialDetails.ukefExposureInput().should('have.value', expectedUkefExposure);
+      pages.bondFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(bondValue, coveredPercentage));
 
       pages.bondFinancialDetails.bondValueInput().clear();
 
       bondValue = '250';
-      expectedUkefExposure = String(bondValue * (coveredPercentage / 100));
       pages.bondFinancialDetails.bondValueInput().type(bondValue).blur();
-      pages.bondFinancialDetails.ukefExposureInput().should('have.value', expectedUkefExposure);
+      pages.bondFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(bondValue, coveredPercentage));
     });
   });
 
