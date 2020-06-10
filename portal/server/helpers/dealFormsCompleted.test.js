@@ -9,7 +9,6 @@ const completeBonds = {
 
 const incompleteBonds = {
   items: [
-    { _id: '12345678911', status: 'Completed' },
     { _id: '12345678910', status: 'Incomplete' },
   ],
 };
@@ -35,6 +34,16 @@ describe('dealFormsCompleted', () => {
     const deal = {
       submissionDetails: incompleteSubmissionDetails,
       bondTransactions: completeBonds,
+      eligibility: completeEligibility,
+    };
+
+    expect(dealFormsCompleted(deal)).toEqual(false);
+  });
+
+  it('should return false if a deal has no bonds`', () => {
+    const deal = {
+      bondTransactions: { items: [] },
+      submissionDetails: completeSubmissionDetails,
       eligibility: completeEligibility,
     };
 
