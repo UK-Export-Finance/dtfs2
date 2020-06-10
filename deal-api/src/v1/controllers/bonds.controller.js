@@ -5,6 +5,11 @@ const bondValidationErrors = require('../validation/bond');
 const { generateFacilityId } = require('../../utils/generateIds');
 const { bondStatus } = require('../section-status/bond');
 const { hasValue } = require('../../utils/string');
+const {
+  isNumeric,
+  decimalsCount,
+  roundNumber,
+} = require('../../utils/number');
 
 const putBondInDealObject = (deal, bond, otherBonds) => ({
   ...deal,
@@ -147,12 +152,32 @@ const calculateGuaranteeFeePayableByBank = (riskMarginFee) => {
   return riskMarginFee;
 };
 
-const calculateUkefExposure = (bondValue, coveredPercentage) => {
-  if (hasValue(bondValue) && hasValue(coveredPercentage)) {
-    return bondValue * (coveredPercentage / 100);
+const calculateUkefExposure = (value, coveredPercentage) => {
+  let bondValue = value;
+
+  const hasBondValue = (hasValue(bondValue) && isNumeric(Number(bondValue)));
+  const hasCoveredPercentage = (hasValue(coveredPercentage) && isNumeric(Number(coveredPercentage)));
+  const canCalculate = (hasBondValue && hasCoveredPercentage);
+
+  if (canCalculate) {
+    let ukefExposure;
+
+    bondValue = value.replace(/,/g, '');
+    const calculation = bondValue * (coveredPercentage / 100);
+    const totalDecimals = decimalsCount(calculation);
+
+    if (totalDecimals > 2) {
+      ukefExposure = roundNumber(calculation, 2);
+    } else {
+      ukefExposure = calculation;
+    }
+
+    const formattedUkefExposure = ukefExposure.toLocaleString('en', { minimumFractionDigits: 2 });
+    return String(formattedUkefExposure);
   }
   return '';
 };
+
 
 exports.updateBond = async (req, res) => {
   const {
