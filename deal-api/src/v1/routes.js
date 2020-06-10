@@ -5,7 +5,6 @@ const multer = require('multer');
 const { validate } = require('../role-validator');
 
 const deals = require('./controllers/deal.controller');
-const dealIntegration = require('./controllers/deal-integration.controller');
 const dealName = require('./controllers/deal-name.controller');
 const dealStatus = require('./controllers/deal-status.controller');
 const dealSubmissionDetails = require('./controllers/deal-submission-details.controller');
@@ -61,12 +60,6 @@ authRouter.route('/deals/:id/bankSupplyContractName')
   .put(
     validate({ role: ['maker'] }),
     dealName.update,
-  );
-
-authRouter.route('/deals/:id/integration/type-a')
-  .get(
-    validate({ role: ['checker'] }),
-    dealIntegration.findOne,
   );
 
 authRouter.route('/deals/:id/loan/create')

@@ -1,3 +1,4 @@
+/*
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const fileshare = require('../../drivers/fileshare');
@@ -46,3 +47,4 @@ exports.createTypeA = async (deal, fromStatus) => {
 
   return fileshare.uploadStream(upload);
 };
+*/
