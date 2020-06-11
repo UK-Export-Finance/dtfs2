@@ -1,6 +1,7 @@
+/*
 const moment = require('moment');
-const wipeDB = require('../../wipeDB');
 const aDeal = require('../deals/deal-builder');
+const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
@@ -317,3 +318,4 @@ describe('/v1/deals/:id/loan', () => {
     });
   });
 });
+*/
