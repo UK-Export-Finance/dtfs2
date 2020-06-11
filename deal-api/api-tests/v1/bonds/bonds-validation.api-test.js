@@ -577,6 +577,21 @@ describe('/v1/deals/:id/bond', () => {
           expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must be between 1 and 80');
         });
       });
+
+      describe('when has more 4 decimals', () => {
+        it('should return validationError', async () => {
+          const bond = {
+            ...allBondFields,
+            coveredPercentage: '12.34567',
+          };
+
+          const body = await updateBondInDeal(dealId, bond);
+
+          expect(body.validationErrors.count).toEqual(1);
+          expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
+          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must have less than 5 decimals, like 12 or 12.3456');
+        });
+      });
     });
 
     describe('minimumRiskMarginFee', () => {
