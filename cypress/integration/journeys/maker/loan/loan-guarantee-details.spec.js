@@ -1,6 +1,7 @@
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const fillLoanForm = require('./fill-loan-forms');
+const assertLoanFormValues = require('./assert-loan-form-values');
 const LOAN_FORM_VALUES = require('./loan-form-values');
 
 const user = { username: 'MAKER', password: 'MAKER' };
@@ -52,7 +53,7 @@ context('Loan Guarantee Details', () => {
 
       partials.errorSummary.errorSummaryLinks().should('have.length', 1);
       pages.loanGuaranteeDetails.facilityStageErrorMessage().should('be.visible');
-    })
+    });
   });
 
   describe('when user selects different Facility stage options (`Conditional` or `Unconditional`)', () => {
@@ -62,15 +63,15 @@ context('Loan Guarantee Details', () => {
 
       // Facility stage = Conditional
       pages.loanGuaranteeDetails.facilityStageConditionalInput().click();
-      pages.loanGuaranteeDetails.bankReferenceNumberInput().should('be.visible');
+      pages.loanGuaranteeDetails.conditionalBankReferenceNumberInput().should('be.visible');
       pages.loanGuaranteeDetails.ukefGuaranteeInMonthsInput().should('be.visible');
       pages.loanGuaranteeDetails.ukefGuaranteeInMonthsErrorMessage().should('be.visible');
 
       // Facility stage = Unconditional
       pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
 
-      pages.loanGuaranteeDetails.bankReferenceNumberInput().should('be.visible');
-      pages.loanGuaranteeDetails.bankReferenceNumberErrorMessage().should('be.visible');
+      pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().should('be.visible');
+      pages.loanGuaranteeDetails.unconditionalBankReferenceNumberErrorMessage().should('be.visible');
 
       pages.loanGuaranteeDetails.coverEndDateDayInput().should('be.visible');
       pages.loanGuaranteeDetails.coverEndDateMonthInput().should('be.visible');
@@ -92,8 +93,7 @@ context('Loan Guarantee Details', () => {
       partials.errorSummary.errorSummaryLinks().should('have.length', 1);
 
       pages.loanGuaranteeDetails.facilityStageConditionalInput().should('be.checked');
-      pages.loanGuaranteeDetails.bankReferenceNumberInput().should('be.visible');
-      pages.loanGuaranteeDetails.bankReferenceNumberErrorMessage().should('not.be.visible');
+      pages.loanGuaranteeDetails.conditionalBankReferenceNumberInput().should('be.visible');
 
       pages.loanGuaranteeDetails.ukefGuaranteeInMonthsInput().should('be.visible');
       pages.loanGuaranteeDetails.ukefGuaranteeInMonthsErrorMessage().should('be.visible');
@@ -110,12 +110,12 @@ context('Loan Guarantee Details', () => {
 
       partials.loanProgressNav.progressNavLinkLoanGuaranteeDetails().click();
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+      partials.errorSummary.errorSummaryLinks().should('have.length', 2);
 
       pages.loanGuaranteeDetails.facilityStageUnconditionalInput().should('be.checked');
 
-      pages.loanGuaranteeDetails.bankReferenceNumberInput().should('be.visible');
-      pages.loanGuaranteeDetails.bankReferenceNumberErrorMessage().should('be.visible');
+      pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().should('be.visible');
+      pages.loanGuaranteeDetails.unconditionalBankReferenceNumberErrorMessage().should('be.visible');
 
       pages.loanGuaranteeDetails.coverEndDateDayInput().should('be.visible');
       pages.loanGuaranteeDetails.coverEndDateMonthInput().should('be.visible');
@@ -124,7 +124,25 @@ context('Loan Guarantee Details', () => {
     });
   });
 
-  // should prepopulate form inputs
+  it('should prepopulate form inputs from submitted data', () => {
+    cy.loginGoToDealPage(user, deal);
+    pages.contract.addLoanButton().click();
 
+    // Facility stage = Conditional
+    fillLoanForm.guaranteeDetails.facilityStageConditional();
+    pages.loanGuaranteeDetails.submit().click();
 
+    partials.loanProgressNav.progressNavLinkLoanGuaranteeDetails().click();
+    assertLoanFormValues.guaranteeDetails.facilityStageConditional();
+
+    // Facility stage = Unconditional
+    fillLoanForm.guaranteeDetails.facilityStageUnconditional();
+
+    // assert that bankReferenceNumber value is retained
+    pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().should('have.value', LOAN_FORM_VALUES.GUARANTEE_DETAILS.bankReferenceNumber);
+    pages.loanGuaranteeDetails.submit().click();
+
+    partials.loanProgressNav.progressNavLinkLoanGuaranteeDetails().click();
+    assertLoanFormValues.guaranteeDetails.facilityStageUnconditional();
+  });
 });

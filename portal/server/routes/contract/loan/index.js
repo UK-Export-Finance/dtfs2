@@ -105,7 +105,6 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN]), asy
   return res.render('loan/loan-financial-details.njk', {
     dealId,
     loan,
-    // validationErrors: loanGuaranteeDetailsValidationErrors(validationErrors, loan),
     validationErrors,
   });
 });
