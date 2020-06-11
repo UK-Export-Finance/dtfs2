@@ -25,14 +25,14 @@ export const allFieldsArray = (fields) => {
 // or if the Preview page has been viewed (flag from api/db)
 export const shouldReturnRequiredValidation = (fields, fieldValues) => {
   const allFields = allFieldsArray(fields);
-  const { _id, status, ...strippedFieldValues } = fieldValues;
 
-  const totalFieldValues = Object.keys(strippedFieldValues).filter((fieldName) =>
-    allFields.includes(fieldName) && strippedFieldValues[fieldName].length > 0);
+  const totalFieldValues = Object.keys(fieldValues).filter((fieldName) =>
+    allFields.includes(fieldName) && fieldValues[fieldName].length > 0);
 
   if (totalFieldValues.length > 0 || fieldValues.viewedPreviewPage) {
     return true;
   }
+
   return false;
 };
 
@@ -51,9 +51,9 @@ export const mapRequiredValidationErrors = (validationErrors, fields) => {
   };
 };
 
-export const pageSpecificValidationErrors = (validationErrors, fields, bond) => {
+export const pageSpecificValidationErrors = (validationErrors, fields, submittedFields) => {
   if (validationErrors && validationErrors.errorList) {
-    if (shouldReturnRequiredValidation(fields, bond)) {
+    if (shouldReturnRequiredValidation(fields, submittedFields)) {
       return mapRequiredValidationErrors(validationErrors, fields);
     }
   }
