@@ -479,18 +479,26 @@ describe('/v1/deals/:id/bond', () => {
         });
       });
 
-      describe('when not between 1 and 99', () => {
+      describe('when not between 0 and 99', () => {
         it('should return validationError', async () => {
           const bond = {
             ...allBondFields,
             riskMarginFee: '100',
           };
 
-          const body = await updateBondInDeal(dealId, bond);
+          let body = await updateBondInDeal(dealId, bond);
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.riskMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.riskMarginFee.text).toEqual('Risk Margin Fee % must be between 1 and 99');
+          expect(body.validationErrors.errorList.riskMarginFee.text).toEqual('Risk Margin Fee % must be between 0 and 99');
+
+          bond.riskMarginFee = '-1';
+
+          body = await updateBondInDeal(dealId, bond);
+
+          expect(body.validationErrors.count).toEqual(1);
+          expect(body.validationErrors.errorList.riskMarginFee).toBeDefined();
+          expect(body.validationErrors.errorList.riskMarginFee.text).toEqual('Risk Margin Fee % must be between 0 and 99');
         });
       });
 
