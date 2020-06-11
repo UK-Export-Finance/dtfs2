@@ -368,6 +368,10 @@ context('Bond Financial Details', () => {
         goBackToFinancialDetails();
         assertValidationError();
 
+        fillAndSubmitRiskMarginFee('-1');
+        goBackToFinancialDetails();
+        assertValidationError();
+
         fillAndSubmitRiskMarginFee('100');
         goBackToFinancialDetails();
         assertValidationError();
@@ -408,6 +412,10 @@ context('Bond Financial Details', () => {
         assertValidationError();
 
         fillAndSubmitCoveredPercentage('81');
+        goBackToFinancialDetails();
+        assertValidationError();
+
+        fillAndSubmitCoveredPercentage('12.34567');
         goBackToFinancialDetails();
         assertValidationError();
       });

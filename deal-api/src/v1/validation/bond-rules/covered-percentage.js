@@ -1,13 +1,22 @@
 const { hasValue } = require('../../../utils/string');
 const {
   isNumeric,
+  decimalsCount,
 } = require('../../../utils/number');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 
 const MIN_VALUE = 1;
 const MAX_VALUE = 80;
+const MAX_DECIMALS = 4;
 
 const isInRange = (value) => value >= MIN_VALUE && value <= MAX_VALUE;
+
+const isValidFormat = (value) => {
+  if (decimalsCount(value) <= MAX_DECIMALS) {
+    return true;
+  }
+  return false;
+};
 
 const isValid = (str) => {
   if (!hasValue(str)) {
@@ -19,6 +28,10 @@ const isValid = (str) => {
   }
 
   if (!isInRange(Number(str))) {
+    return false;
+  }
+
+  if (!isValidFormat(Number(str))) {
     return false;
   }
 
@@ -36,6 +49,10 @@ const validationText = (str, fieldCopy) => {
 
   if (!isInRange(str)) {
     return `${fieldCopy} must be between ${MIN_VALUE} and ${MAX_VALUE}`;
+  }
+
+  if (!isValidFormat(str)) {
+    return `${fieldCopy} must have less than ${MAX_DECIMALS + 1} decimals, like 12 or 12.3456`;
   }
 
   return `Enter the ${fieldCopy}`;
