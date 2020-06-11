@@ -26,6 +26,12 @@ const goToBondFinancialDetailsPage = (deal) => {
   cy.url().should('include', '/financial-details');
 };
 
+const calculateExpectedGuaranteeFeePayableByBank = (riskMarginFee) => {
+  const calculation = riskMarginFee * 0.9;
+  const formattedRiskMarginFee = calculation.toLocaleString('en', { minimumFractionDigits: 4 });
+  return formattedRiskMarginFee;
+};
+
 const calculateExpectedUkefExposure = (bondValue, coveredPercentage) => {
   const strippedBondValue = bondValue.replace(/,/g, '');
 
@@ -83,13 +89,15 @@ context('Bond Financial Details', () => {
       pages.contract.addBondButton().click();
       partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
 
+      let riskMarginFee = '20';
       pages.bondFinancialDetails.guaranteeFeePayableByBankInput().invoke('attr', 'placeholder').should('eq', '0');
-      pages.bondFinancialDetails.riskMarginFeeInput().type('20').blur();
-      pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', String(20 * 0.9));
+      pages.bondFinancialDetails.riskMarginFeeInput().type(riskMarginFee).blur();
+      pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFeePayableByBank(riskMarginFee));
 
       pages.bondFinancialDetails.riskMarginFeeInput().clear();
-      pages.bondFinancialDetails.riskMarginFeeInput().type('30').blur();
-      pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', String(30 * 0.9));
+      riskMarginFee = '9.09';
+      pages.bondFinancialDetails.riskMarginFeeInput().type(riskMarginFee).blur();
+      pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFeePayableByBank(riskMarginFee));
     });
   });
 

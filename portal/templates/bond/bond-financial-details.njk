@@ -324,7 +324,7 @@
 
         var formattedResult = result.toLocaleString('en', { minimumFractionDigits: 2 });
 
-        ukefExposure.value = String(formattedResult);
+        ukefExposure.value = formattedResult;
       }
     }
 
@@ -340,7 +340,8 @@
 
     function calculateGuaranteeFee() {
       var result = riskMarginFeeInput.value * 0.9;
-      guaranteeFee.value = result;
+      var formattedResult = result.toLocaleString('en', { minimumFractionDigits: 4 });
+      guaranteeFee.value = formattedResult;
     }
 
     riskMarginFeeInput.addEventListener('blur', function(event) {

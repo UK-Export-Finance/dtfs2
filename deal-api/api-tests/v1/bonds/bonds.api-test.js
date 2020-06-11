@@ -28,14 +28,18 @@ describe('/v1/deals/:id/bond', () => {
     bondBeneficiary: 'test',
     bondValue: '123456.551',
     transactionCurrencySameAsSupplyContractCurrency: 'true',
-    riskMarginFee: '1',
+    riskMarginFee: '9.09',
     coveredPercentage: '2',
     feeType: 'test',
     feeFrequency: 'test',
     dayCountBasis: 'test',
   };
 
-  const expectedGuaranteeFeePayableByBank = allBondFields.riskMarginFee * 0.9;
+  const expectedGuaranteeFeePayableByBank = () => {
+    const calculation = allBondFields.riskMarginFee * 0.9;
+    const formattedRiskMarginFee = calculation.toLocaleString('en', { minimumFractionDigits: 4 });
+    return formattedRiskMarginFee;
+  };
 
   const expectedUkefExposure = () => {
     const {
@@ -361,7 +365,7 @@ describe('/v1/deals/:id/bond', () => {
           ...allBondFields,
           ...coverEndDate(),
           currency: deal.body.supplyContractCurrency,
-          guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank,
+          guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank(),
           ukefExposure: expectedUkefExposure(),
           status: 'Completed',
         };
@@ -412,7 +416,7 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsIssued,
           currency: deal.body.supplyContractCurrency,
-          guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank,
+          guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank(),
           ukefExposure: expectedUkefExposure(),
           status: 'Completed',
         };
@@ -465,7 +469,7 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsUnissued,
           currency: deal.body.supplyContractCurrency,
-          guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank,
+          guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank(),
           ukefExposure: expectedUkefExposure(),
           status: 'Completed',
         };
@@ -558,7 +562,7 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...bondBody,
           currency: deal.body.supplyContractCurrency,
-          guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank,
+          guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank(),
           ukefExposure: expectedUkefExposure(),
           status: 'Completed',
         });
