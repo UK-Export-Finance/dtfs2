@@ -112,12 +112,17 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN]), asy
 
 
 router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) => {
-  const { _id: dealId, loanId } = requestParams(req);
+  const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  // await postToApi(
-  //   api.updateLoan(dealId, loanId, req.body, userToken),
-  //   errorHref,
-  // );
+  await postToApi(
+    api.updateDealLoan(
+      dealId,
+      loanId,
+      req.body,
+      userToken,
+    ),
+    errorHref,
+  );
 
   const redirectUrl = `/contract/${dealId}/loan/${loanId}/dates-repayments`;
   return res.redirect(redirectUrl);
@@ -148,12 +153,34 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => 
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/loan/:loanId/preview', async (req, res) => {
-  const { _id: dealId } = requestParams(req);
+router.get('/contract/:_id/loan/:loanId/preview', provide([LOAN]), async (req, res) => {
+  const { loanId, userToken } = requestParams(req);
+  const {
+    dealId,
+    loan,
+    // validationErrors,
+  } = req.apiData.loan;
+
+
+  // POST to api to flag that we have viewed preview page.
+  // this is required specifically for other Loan forms/pages, to match the existing UX/UI.
+  const updatedLoan = {
+    ...loan,
+    viewedPreviewPage: true,
+  };
+
+  await postToApi(
+    api.updateDealLoan(
+      dealId,
+      loanId,
+      updatedLoan,
+      userToken,
+    ),
+  );
 
   return res.render('loan/loan-preview.njk', {
     dealId,
-    loan: MOCK_LOAN,
+    loan,
     // ...await getApiData(
     //   api.contractLoan(_id, loanId, userToken),
     //   res,
