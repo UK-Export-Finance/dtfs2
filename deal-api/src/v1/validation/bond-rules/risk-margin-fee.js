@@ -7,7 +7,7 @@ const { orderNumber } = require('../../../utils/error-list-order-number');
 
 const MAX_DECIMALS = 4;
 
-const isInRange = (value) => value >= 1 && value <= 99;
+const isInRange = (value) => value >= 0 && value <= 99;
 
 const isValidFormat = (value) => {
   if (decimalsCount(value) <= MAX_DECIMALS) {
@@ -46,7 +46,7 @@ const validationText = (str, fieldCopy) => {
   }
 
   if (!isInRange(str)) {
-    return `${fieldCopy} must be between 1 and 99`;
+    return `${fieldCopy} must be between 0 and 99`;
   }
 
   if (!isValidFormat(str)) {
