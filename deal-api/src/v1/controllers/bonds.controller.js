@@ -147,7 +147,9 @@ const bondStageFields = (bond) => {
 
 const calculateGuaranteeFeePayableByBank = (riskMarginFee) => {
   if (hasValue(riskMarginFee)) {
-    return riskMarginFee * 0.9;
+    const calculation = riskMarginFee * 0.9;
+    const formattedRiskMarginFee = calculation.toLocaleString('en', { minimumFractionDigits: 4 });
+    return formattedRiskMarginFee;
   }
   return riskMarginFee;
 };

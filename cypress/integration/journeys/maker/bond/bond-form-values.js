@@ -26,6 +26,14 @@ const DETAILS = {
   ukefGuaranteeInMonths: '12',
 };
 
+const riskMarginFee = '20';
+
+const expectedGuaranteeFeePayableByBank = () => {
+  const calculation = riskMarginFee * 0.9;
+  const formattedRiskMarginFee = calculation.toLocaleString('en', { minimumFractionDigits: 4 });
+  return formattedRiskMarginFee;
+};
+
 const bondValue = '123456789.996';
 const coveredPercentage = '80';
 
@@ -39,8 +47,7 @@ const expectedUkefExposure = () => {
   return formattedUkefExposure;
 };
 
-const riskMarginFee = '20';
-const guaranteeFeePayableByBank = String(Number(riskMarginFee * 0.9));
+// const guaranteeFeePayableByBank = String(Number(riskMarginFee * 0.9));
 
 const FINANCIAL_DETAILS = {
   bondValue,
@@ -48,7 +55,7 @@ const FINANCIAL_DETAILS = {
   coveredPercentage,
   minimumRiskMarginFee: '1.23',
   ukefExposure: expectedUkefExposure(),
-  guaranteeFeePayableByBank,
+  guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank(),
 
   // 'transaction currency not the same as supply contract currency' specifics
   currency: {
