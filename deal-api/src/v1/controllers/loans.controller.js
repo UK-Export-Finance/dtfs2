@@ -78,6 +78,29 @@ exports.create = async (req, res) => {
   });
 };
 
+const loanFacilityStageFields = (loan) => {
+  const modifiedLoan = loan;
+  const { facilityStage } = modifiedLoan;
+
+  if (facilityStage === 'Conditional') {
+    // remove any 'Unconditional' specific fields
+
+    delete modifiedLoan['requestedCoverStartDate-day'];
+    delete modifiedLoan['requestedCoverStartDate-month'];
+    delete modifiedLoan['requestedCoverStartDate-year'];
+    delete modifiedLoan['coverEndDate-day'];
+    delete modifiedLoan['coverEndDate-month'];
+    delete modifiedLoan['coverEndDate-year'];
+  }
+
+  if (facilityStage === 'Unconditional') {
+    // remove any 'Conditional' specific fields
+    delete modifiedLoan.ukefGuaranteeInMonths;
+  }
+
+  return modifiedLoan;
+};
+
 exports.updateLoan = async (req, res) => {
   const {
     loanId,
@@ -99,11 +122,13 @@ exports.updateLoan = async (req, res) => {
       const allOtherLoans = deal.loanTransactions.items.filter((loan) =>
         String(loan._id) !== loanId); // eslint-disable-line no-underscore-dangle
 
-      const modifiedLoan = {
+      let modifiedLoan = {
         _id: loanId,
         ...existingLoan,
         ...req.body,
       };
+
+      modifiedLoan = loanFacilityStageFields(modifiedLoan);
 
       const modifiedDeal = putLoanInDealObject(deal, modifiedLoan, allOtherLoans);
 
@@ -115,8 +140,8 @@ exports.updateLoan = async (req, res) => {
 
       const dealAfterAllUpdates = await updateDeal(newReq, res);
 
-      const loanInDealAfterAllUpdates = dealAfterAllUpdates.loanTransactions.items.find((b) =>
-        String(b._id) === loanId); // eslint-disable-line no-underscore-dangle
+      const loanInDealAfterAllUpdates = dealAfterAllUpdates.loanTransactions.items.find((l) =>
+        String(l._id) === loanId); // eslint-disable-line no-underscore-dangle
 
       const validationErrors = loanValidationErrors(loanInDealAfterAllUpdates);
 
