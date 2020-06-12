@@ -43,7 +43,7 @@
           name: "loanFacilityValue",
           value: loan.loanFacilityValue,
           classes: "input--numeric-float",
-          pattern: "[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)",
+          pattern: '[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)',
           attributes: {
             size: "60",
             maxlength: "255",
@@ -134,65 +134,75 @@
 
     </div>
 
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="interestMargin">
-        Interest Margin %
-      </label>
+    {{ govukInput({
+      label: {
+        text: "Interest Margin %"
+      },
+      hint: {
+        text: "The ongoing fee charged by the bank to the Supplier for the provision of the loan to the beneficiary. This excludes any arrangement, issuance or other up-front fees."
+      },
+      classes: "govuk-input--width-5",
+      id: "interestMargin",
+      name: "interestMargin",
+      value: loan.interestMargin,
+      attributes: {
+        'data-cy': 'interest-margin-fee'
+      },
+      errorMessage: validationErrors.errorList.interestMargin and {
+        text: validationErrors.errorList.interestMargin.text,
+        attributes: {
+          'data-cy': 'interest-margin-fee-error-message'
+        }
+      }
+    }) }}
 
-      <span id="interest-margin-hint" class="govuk-hint">
-        The ongoing fee charged by the bank to the Supplier for the provision of the loan to the beneficiary. This excludes any arrangement, issuance or other up-front fees.
-      </span>
+    {{ govukInput({
+      label: {
+        text: "Covered Percentage"
+      },
+      hint: {
+        text: "Percentage of UKEF cover requested by the bank. This can be any value up to 80%."
+      },
+      classes: "govuk-input--width-5",
+      id: "coveredPercentage",
+      name: "coveredPercentage",
+      value: loan.coveredPercentage,
+      attributes: {
+        'data-cy': 'covered-percentage'
+      },
+      errorMessage: validationErrors.errorList.coveredPercentage and {
+        text: validationErrors.errorList.coveredPercentage.text,
+        attributes: {
+          'data-cy': 'covered-percentage-error-message'
+        }
+      }
+    }) }}
 
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-              <input class="govuk-input" id="interestMargin" name="interestMargin" type="number" step="any" min="0" max="99" aria-describedby="interest-margin-hint" value="{{ loan.interestMargin }}" data-cy="interest-margin">
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="coveredPercentage">
-        Covered Percentage
-      </label>
-
-      <span id="covered-percentage-hint" class="govuk-hint">
-        Percentage of UKEF cover requested by the bank. This can be any value up to 80%.
-      </span>
-
-
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-              <input class="govuk-input" id="coveredPercentage" name="coveredPercentage" type="number" step="any" min="0" max="80" aria-describedby="covered-percentage-hint" value="{{ loan.coveredPercentage }}" data-cy="covered-percentage">
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="minimumQuarterlyFee">
-        Minimum quarterly fee (optional)
-      </label>
-
-      <span id="minimum-quarterly-fee-hint" class="govuk-hint">
-        The minimum fee payable in the currency of the loan, if any, by the supplier.
-      </span>
-
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <input class="govuk-input input--numeric-float" id="minimumQuarterlyFee" name="minimumQuarterlyFee" type="text" size="60" maxlength="255" pattern="[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)" aria-describedby="minimum-quarterly-fee-hint" placeholder="0.00" value="{{ loan.minimumQuarterlyFee }}" data-cy="minimum-quarterly-fee">
-        </div>
-      </div>
-
-    </div>
+    {{ govukInput({
+       inputmode: 'numeric',
+        label: {
+          text: "Minimum quarterly fee (optional)"
+        },
+        hint: {
+          text: "The minimum fee payable in the currency of the loan, if any, by the supplier."
+        },
+        id: "minimumQuarterlyFee",
+        name: "minimumQuarterlyFee",
+        value: loan.minimumQuarterlyFee,
+        classes: "govuk-input--width-5",
+        attributes: {
+          size: "60",
+          maxlength: "255",
+          placeholder: "0.00",
+          'data-cy': 'minimum-risk-margin-fee'
+        },
+        errorMessage: validationErrors.errorList.minimumQuarterlyFee and {
+          text: validationErrors.errorList.minimumQuarterlyFee.text,
+          attributes: {
+            'data-cy': 'minimum-risk-margin-fee-error-message'
+          }
+        }
+      }) }}
 
     <div class="govuk-form-group form-group-disabled">
       <label class="govuk-label" for="guaranteeFeePayableByBank">

@@ -1,6 +1,6 @@
 import express from 'express';
 import api from '../../../api';
-import { provide, LOAN } from '../../api-data-provider';
+import { provide, LOAN, CURRENCIES } from '../../api-data-provider';
 import {
   requestParams,
   postToApi,
@@ -99,18 +99,20 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) =>
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, CURRENCIES]), async (req, res) => {
   const {
     dealId,
     loan,
     validationErrors,
   } = req.apiData.loan;
+  const { currencies } = req.apiData;
 
   const completedForms = completedLoanForms(validationErrors);
 
   return res.render('loan/loan-financial-details.njk', {
     dealId,
     loan,
+    currencies,
     validationErrors,
     completedForms,
   });
@@ -217,12 +219,15 @@ router.get('/contract/:_id/loan/:_loanId/confirm-requested-cover-start-date', as
   });
 });
 
-router.get('/contract/:_id/loan/:loanId/delete', async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/delete', provide([LOAN]), async (req, res) => {
   const { dealId } = requestParams(req);
+  const {
+    loan,
+  } = req.apiData.loan;
 
   return res.render('loan/loan-delete.njk', {
     dealId,
-    loan: MOCK_LOAN,
+    loan,
   });
 });
 

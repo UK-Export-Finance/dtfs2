@@ -16,6 +16,28 @@ const FIELDS = {
       'bankReferenceNumber',
     ],
   },
+  FINANCIAL_DETAILS: {
+    REQUIRED_FIELDS: [
+      'loanFacilityValue',
+      'transactionCurrencySameAsSupplyContractCurrency',
+      'interestMarginFee',
+      'coveredPercentage',
+    ],
+    CONDITIONALLY_REQUIRED_FIELDS: [
+      // required if `transactionCurrencySameAsSupplyContractCurrency` is false
+      'currency',
+      'conversionRate',
+      'conversionRateDate',
+
+      // TODO
+      // optional fields that could have validation errors
+      // find smart way to do this/rename arrays
+      'minimumQuarterlyFee',
+    ],
+    // OPTIONAL_FIELDS: [
+    //   'minimumQuarterlyFee',
+    // ],
+  },
 };
 
 export default FIELDS;
