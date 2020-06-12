@@ -9,6 +9,7 @@ const completeBonds = {
 
 const incompleteBonds = {
   items: [
+    { _id: '12345678911', status: 'Completed' },
     { _id: '12345678910', status: 'Incomplete' },
   ],
 };
