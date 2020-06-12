@@ -58,12 +58,19 @@ context('about-buyer', () => {
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion rate is required for non-GBP currencies');
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date is required for non-GBP currencies');
 
+    // prove 6-decimal-place validation
+    contractAboutFinancial.visit(deal);
+    contractAboutFinancial.supplyContractConversionRateToGBP().type('{selectall}{backspace}0.1234567');
+    contractAboutFinancial.preview().click();
+    contractAboutPreview.errors().should('contain', 'Supply Contract conversion rate must be a number with up to 6 decimal places');
+
     // fix the conversion rate
     contractAboutFinancial.visit(deal);
-    contractAboutFinancial.supplyContractConversionRateToGBP().type('0.123456');
+    contractAboutFinancial.supplyContractConversionRateToGBP().type('{selectall}{backspace}0.123456');
     contractAboutFinancial.preview().click();
 
     contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion rate is required for non-GBP currencies');
+    contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion rate must be a number with up to 6 decimal places');
 
     // fill in the conversion date field by field..
     contractAboutFinancial.visit(deal);
