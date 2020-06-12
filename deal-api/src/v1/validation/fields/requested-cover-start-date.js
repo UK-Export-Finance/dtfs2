@@ -1,25 +1,39 @@
 const moment = require('moment');
-const { orderNumber } = require('../../../../utils/error-list-order-number');
+const { orderNumber } = require('../../../utils/error-list-order-number');
 const {
   dateHasAllValues,
   dateHasSomeValues,
+  dateIsInTimeframe,
   dateValidationText,
-} = require('../../date-field');
+} = require('../date-field');
 
-module.exports = (loan, errorList) => {
+module.exports = (bond, errorList) => {
   const newErrorList = errorList;
 
   const {
     'requestedCoverStartDate-day': requestedCoverStartDateDay,
     'requestedCoverStartDate-month': requestedCoverStartDateMonth,
     'requestedCoverStartDate-year': requestedCoverStartDateYear,
-  } = loan;
+  } = bond;
 
   if (dateHasAllValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear)) {
-    const formattedDate = `${requestedCoverStartDateYear}-${requestedCoverStartDateMonth}-${requestedCoverStartDateDay}`;
+    const MAX_MONTHS_FROM_NOW = 3;
     const nowDate = moment();
+    const formattedDate = `${requestedCoverStartDateYear}-${requestedCoverStartDateMonth}-${requestedCoverStartDateDay}`;
 
-    // TODO: cannot be more than 3months from today
+
+    if (!dateIsInTimeframe(
+      requestedCoverStartDateDay,
+      requestedCoverStartDateMonth,
+      requestedCoverStartDateYear,
+      nowDate,
+      moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months'),
+    )) {
+      newErrorList.requestedCoverStartDate = {
+        text: `Requested Cover Start Date must be between ${moment().format('Do MMMM YYYY')} and ${moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months').format('Do MMMM YYYY')}`,
+        order: orderNumber(newErrorList),
+      };
+    }
 
     if (moment(formattedDate).isBefore(nowDate)) {
       newErrorList.requestedCoverStartDate = {
