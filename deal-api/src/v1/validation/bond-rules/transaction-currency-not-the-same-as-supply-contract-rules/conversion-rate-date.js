@@ -2,7 +2,7 @@ const moment = require('moment');
 const {
   dateHasAllValues,
   dateValidationText,
-} = require('../../date-field');
+} = require('../../fields/date');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
 
 module.exports = (bond, errorList) => {

@@ -1,8 +1,8 @@
 const { hasValue } = require('../../../../utils/string');
 const bankReferenceNumber = require('./bank-reference-number');
 const requestedCoverStartDate = require('../../fields/requested-cover-start-date');
-const coverEndDate = require('./cover-end-date');
-const coverDates = require('./cover-dates');
+const coverEndDate = require('../../fields/cover-end-date');
+const coverDates = require('../../fields/cover-dates');
 
 module.exports = (loan, errorList) => {
   let newErrorList = { ...errorList };

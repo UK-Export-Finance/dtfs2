@@ -1,18 +1,18 @@
 const moment = require('moment');
-const { orderNumber } = require('../../../../utils/error-list-order-number');
+const { orderNumber } = require('../../../utils/error-list-order-number');
 const {
   dateHasAllValues,
   dateValidationText,
-} = require('../../date-field');
+} = require('./date');
 
-module.exports = (loan, errorList) => {
+module.exports = (submittedValues, errorList) => {
   const newErrorList = errorList;
 
   const {
     'coverEndDate-day': coverEndDateDay,
     'coverEndDate-month': coverEndDateMonth,
     'coverEndDate-year': coverEndDateYear,
-  } = loan;
+  } = submittedValues;
 
   if (dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
     const formattedDate = `${coverEndDateYear}-${coverEndDateMonth}-${coverEndDateDay}`;

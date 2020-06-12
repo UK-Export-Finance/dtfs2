@@ -4,7 +4,7 @@ const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
-const { dateValidationText } = require('../../../src/v1/validation/date-field');
+const { dateValidationText } = require('../../../src/v1/validation/fields/date');
 
 describe('/v1/deals/:id/loan', () => {
   const newDeal = aDeal({

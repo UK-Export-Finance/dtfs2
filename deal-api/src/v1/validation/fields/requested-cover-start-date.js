@@ -5,16 +5,16 @@ const {
   dateHasSomeValues,
   dateIsInTimeframe,
   dateValidationText,
-} = require('../date-field');
+} = require('./date');
 
-module.exports = (bond, errorList) => {
+module.exports = (submittedValues, errorList) => {
   const newErrorList = errorList;
 
   const {
     'requestedCoverStartDate-day': requestedCoverStartDateDay,
     'requestedCoverStartDate-month': requestedCoverStartDateMonth,
     'requestedCoverStartDate-year': requestedCoverStartDateYear,
-  } = bond;
+  } = submittedValues;
 
   if (dateHasAllValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear)) {
     const MAX_MONTHS_FROM_NOW = 3;

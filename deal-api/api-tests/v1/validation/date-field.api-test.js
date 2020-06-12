@@ -4,7 +4,7 @@ const {
   dateHasSomeValues,
   dateIsInTimeframe,
   dateValidationText,
-} = require('../../../src/v1/validation/date-field');
+} = require('../../../src/v1/validation/fields/date');
 
 describe('validation - date-field', () => {
   describe('dateHasAllValues', () => {
