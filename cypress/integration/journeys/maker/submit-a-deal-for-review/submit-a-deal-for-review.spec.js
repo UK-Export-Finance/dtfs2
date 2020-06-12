@@ -10,7 +10,8 @@ const dealWithIncompleteBonds = require('./dealWithIncompleteBonds.json');
 const dealWithIncompleteAbout = require('./dealWithIncompleteAbout.json');
 const dealWithIncompleteEligibility = require('./dealWithIncompleteEligibility.json');
 const dealReadyToSubmitForReview = require('./dealReadyToSubmitForReview');
-const dealWithNoCoverStartDate  = require('./dealWithNoCoverStartDate');
+const dealWithNoBondCoverStartDate = require('./dealWithNoBondCoverStartDate');
+const dealWithNoLoanCoverStartDate = require('./dealWithNoLoanCoverStartDate');
 
 context('A maker selects to submit a contract for review from the view-contract page', () => {
   let deals = {};
@@ -36,9 +37,11 @@ context('A maker selects to submit a contract for review from the view-contract 
     cy.insertOneDeal(dealReadyToSubmitForReview, { ...maker1 })
       .then((insertedDeal) => deals.dealReadyToSubmitForReview = insertedDeal);
 
-    cy.insertOneDeal(dealWithNoCoverStartDate, { ...maker1 })
-      .then((insertedDeal) => deals.dealWithNoCoverStartDate = insertedDeal);
+    cy.insertOneDeal(dealWithNoBondCoverStartDate, { ...maker1 })
+      .then((insertedDeal) => deals.dealWithNoBondCoverStartDate = insertedDeal);
 
+    cy.insertOneDeal(dealWithNoLoanCoverStartDate, { ...maker1 })
+      .then((insertedDeal) => deals.dealWithNoLoanCoverStartDate = insertedDeal);
   });
 
   describe('When a deal does NOT have Eligibility with `Completed` status', () => {
@@ -140,9 +143,9 @@ context('A maker selects to submit a contract for review from the view-contract 
     });
   });
 
-  describe('when a deal has Completed Eligibility and a Bond with `Issued` bond stage without a Cover Start Date', () => {
+  describe('when a deal has Completed Eligibility and a Bond with `issued` bondStage and no Requested Cover Start Date', () => {
     it('should use todays date for the Bond in Deal page', () => {
-      const deal = deals.dealWithNoCoverStartDate;
+      const deal = deals.dealWithNoBondCoverStartDate;
 
       cy.login({ ...maker1 });
       contract.visit(deal);
@@ -163,10 +166,36 @@ context('A maker selects to submit a contract for review from the view-contract 
       const bondId = deal.bondTransactions.items[0]._id;
       const row = contract.bondTransactionsTable.row(bondId);
 
-      const expectedDate = moment().format('DD/MM/YYYY')
-      row.requestedCoverStartDate().invoke('text').then((text) => {
-        expect(text.trim()).equal(expectedDate);
-      });
+      const expectedDate = moment().format('DD/MM/YYYY');
+      row.requestedCoverStartDate().should('contain.text', expectedDate);
+    });
+  });
+
+  describe('when a deal has Completed Eligibility and a Loan with `Unconditional` facilityStage and no Requested Cover Start Date', () => {
+    it('should use todays date for the Loan in Deal page', () => {
+      const deal = deals.dealWithNoLoanCoverStartDate;
+
+      cy.login({ ...maker1 });
+      contract.visit(deal);
+
+      contract.proceedToReview().should('not.be.disabled');
+      contract.proceedToReview().click();
+      cy.url().should('eq', relative(`/contract/${deal._id}/ready-for-review`));
+
+      contractReadyForReview.comments().type('a mandatory comment');
+      contractReadyForReview.readyForCheckersApproval().click();
+
+      cy.url().should('include', '/dashboard');
+
+      successMessage.successMessageLink().click();
+
+      cy.url().should('eq', relative(`/contract/${deal._id}`));
+
+      const loanId = deal.loanTransactions.items[0]._id;
+      const row = contract.loanTransactionsTable.row(loanId);
+
+      const expectedDate = moment().format('DD/MM/YYYY');
+      row.requestedCoverStartDate().should('contain.text', expectedDate);
     });
   });
 });

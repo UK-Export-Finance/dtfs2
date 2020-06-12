@@ -97,5 +97,13 @@
           "dayCountBasis": "test"
       }
     ]
+  },
+  "loanTransactions": {
+    "items": [
+      {
+        "_id": "1234567891",
+        "facilityStage": "Unconditional",
+      }
+    ]
   }
 }

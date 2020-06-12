@@ -44,13 +44,13 @@
             {{ bond.bondStage }}
           </td>
 
-          <td class="govuk-table__cell govuk-!-font-size-14" data-cy="requested-cover-start-date">
+          <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-requested-cover-start-date">
             {% if bond['requestedCoverStartDate-day'] and bond['requestedCoverStartDate-month'] and bond['requestedCoverStartDate-year'] %}
-            {{ bond['requestedCoverStartDate-day'] }}/{{ bond['requestedCoverStartDate-month'] }}/{{ bond['requestedCoverStartDate-year'] }}
+              {{ bond['requestedCoverStartDate-day'] }}/{{ bond['requestedCoverStartDate-month'] }}/{{ bond['requestedCoverStartDate-year'] }}
             {% endif %}
           </td>
 
-          <td class="govuk-table__cell govuk-!-font-size-14" data-cy="cover-end-date">
+          <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-cover-end-date">
             {% if bond['coverEndDate-day'] and bond['coverEndDate-month'] and bond['coverEndDate-year'] %}
               {{ bond['coverEndDate-day'] }}/{{ bond['coverEndDate-month'] }}/{{ bond['coverEndDate-year'] }}
             {% endif %}
