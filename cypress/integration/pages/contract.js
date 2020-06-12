@@ -38,9 +38,18 @@ const page = {
         bondStatus: () => row.get('[data-cy="bond-status"]'),
         bondValue: () => row.get('[data-cy="bond-value"]'),
         bondStage: () => row.get('[data-cy="bond-stage"]'),
-        requestedCoverStartDate: () => row.get('[data-cy="requested-cover-start-date"]'),
-        coverEndDate: () => row.get('[data-cy="cover-end-date"]'),
+        requestedCoverStartDate: () => row.get('[data-cy="bond-requested-cover-start-date"]'),
+        coverEndDate: () => row.get('[data-cy="bond-cover-end-date"]'),
         deleteLink: () => row.get('[data-cy="delete-link"]'),
+      };
+    },
+  },
+  loanTransactionsTable: {
+    row: (loanId) => {
+      const row = cy.get(`[data-cy="loan-${loanId}"]`);
+      return {
+        requestedCoverStartDate: () => row.get('[data-cy="loan-requested-cover-start-date"]'),
+        coverEndDate: () => row.get('[data-cy="loan-cover-end-date"]'),
       };
     },
   },
