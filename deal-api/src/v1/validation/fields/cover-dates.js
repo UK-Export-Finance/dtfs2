@@ -1,8 +1,8 @@
 const moment = require('moment');
-const { orderNumber } = require('../../../../utils/error-list-order-number');
+const { orderNumber } = require('../../../utils/error-list-order-number');
 const {
   dateHasAllValues,
-} = require('../../date-field');
+} = require('./date');
 
 module.exports = (loan, errorList) => {
   const newErrorList = errorList;

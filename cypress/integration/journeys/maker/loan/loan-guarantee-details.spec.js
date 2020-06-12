@@ -1,3 +1,4 @@
+const moment = require('moment');
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const fillLoanForm = require('./fill-loan-forms');
@@ -106,6 +107,8 @@ context('Loan Guarantee Details', () => {
       pages.contract.addLoanButton().click();
 
       pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
+      // pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.bankReferenceNumber);
+
       pages.loanGuaranteeDetails.submit().click();
 
       partials.loanProgressNav.progressNavLinkLoanGuaranteeDetails().click();
@@ -117,12 +120,95 @@ context('Loan Guarantee Details', () => {
       pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().should('be.visible');
       pages.loanGuaranteeDetails.unconditionalBankReferenceNumberErrorMessage().should('be.visible');
 
+      pages.loanGuaranteeDetails.requestedCoverStartDateDayInput().should('be.visible');
+      pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput().should('be.visible');
+      pages.loanGuaranteeDetails.requestedCoverStartDateYearInput().should('be.visible');
+
       pages.loanGuaranteeDetails.coverEndDateDayInput().should('be.visible');
       pages.loanGuaranteeDetails.coverEndDateMonthInput().should('be.visible');
       pages.loanGuaranteeDetails.coverEndDateYearInput().should('be.visible');
       pages.loanGuaranteeDetails.coverEndDateErrorMessage().should('be.visible');
     });
+
+    describe('when the Requested Cover Start Date has a future date of more than 3 months', () => {
+      it('should render Requested Cover Start Date validation error', () => {
+        cy.loginGoToDealPage(user, deal);
+        pages.contract.addLoanButton().click();
+
+        pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
+        pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.bankReferenceNumber);
+
+        const date = moment();
+        const requestedCoverStartDate = moment(date).add(3, 'months').add('1', 'day');
+
+        pages.loanGuaranteeDetails.requestedCoverStartDateDayInput().type(moment(requestedCoverStartDate).format('DD'));
+        pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput().type(moment(requestedCoverStartDate).format('MM'));
+        pages.loanGuaranteeDetails.requestedCoverStartDateYearInput().type(moment(requestedCoverStartDate).format('YYYY'));
+
+        pages.loanGuaranteeDetails.coverEndDateDayInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay);
+        pages.loanGuaranteeDetails.coverEndDateMonthInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth);
+        pages.loanGuaranteeDetails.coverEndDateYearInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear);
+
+        pages.loanGuaranteeDetails.submit().click();
+
+        partials.loanProgressNav.progressNavLinkLoanGuaranteeDetails().click();
+        partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+        pages.loanGuaranteeDetails.requestedCoverStartDateErrorMessage().should('be.visible');
+      });
+    });
+
+    describe('when the Cover End Date is before today', () => {
+      it('should render Cover End Date validation error', () => {
+        cy.loginGoToDealPage(user, deal);
+        pages.contract.addLoanButton().click();
+
+        pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
+        pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.bankReferenceNumber);
+
+        const coverEndDate = moment().subtract(1, 'day');
+
+        pages.loanGuaranteeDetails.coverEndDateDayInput().type(moment(coverEndDate).format('DD'));
+        pages.loanGuaranteeDetails.coverEndDateMonthInput().type(moment(coverEndDate).format('MM'));
+        pages.loanGuaranteeDetails.coverEndDateYearInput().type(moment(coverEndDate).format('YYYY'));
+
+        pages.loanGuaranteeDetails.submit().click();
+
+        partials.loanProgressNav.progressNavLinkLoanGuaranteeDetails().click();
+        partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+        pages.loanGuaranteeDetails.coverEndDateErrorMessage().should('be.visible');
+      });
+    });
+
+    describe('when the Cover End Date is before the Requested Cover Start Date', () => {
+      it('should render Cover End Date validation error', () => {
+        cy.loginGoToDealPage(user, deal);
+        pages.contract.addLoanButton().click();
+
+        pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
+        pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.bankReferenceNumber);
+
+        const date = moment();
+        const requestedCoverStartDate = date;
+        const coverEndDate = moment(date).subtract(1, 'day');
+
+        pages.loanGuaranteeDetails.requestedCoverStartDateDayInput().type(moment(requestedCoverStartDate).format('DD'));
+        pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput().type(moment(requestedCoverStartDate).format('MM'));
+        pages.loanGuaranteeDetails.requestedCoverStartDateYearInput().type(moment(requestedCoverStartDate).format('YYYY'));
+
+        pages.loanGuaranteeDetails.coverEndDateDayInput().type(moment(coverEndDate).format('DD'));
+        pages.loanGuaranteeDetails.coverEndDateMonthInput().type(moment(coverEndDate).format('MM'));
+        pages.loanGuaranteeDetails.coverEndDateYearInput().type(moment(coverEndDate).format('YYYY'));
+
+        pages.loanGuaranteeDetails.submit().click();
+
+        partials.loanProgressNav.progressNavLinkLoanGuaranteeDetails().click();
+        partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+        pages.loanGuaranteeDetails.coverEndDateErrorMessage().should('be.visible');
+      });
+    });
+
   });
+
 
   it('should prepopulate form inputs from submitted data', () => {
     cy.loginGoToDealPage(user, deal);
