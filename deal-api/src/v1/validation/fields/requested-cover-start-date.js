@@ -18,7 +18,7 @@ module.exports = (bond, errorList) => {
 
   if (dateHasAllValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear)) {
     const MAX_MONTHS_FROM_NOW = 3;
-    const nowDate = moment();
+    const nowDate = moment().startOf('day');
     const formattedDate = `${requestedCoverStartDateYear}-${requestedCoverStartDateMonth}-${requestedCoverStartDateDay}`;
 
 

@@ -7,7 +7,7 @@
 {% block content %}
 
   {{ loanNav.render(
-    completedStatus = loan.completedStatus,
+    completedForms = completedForms,
     current = 'loanPreview',
     contractId = dealId,
     childId = loan._id
