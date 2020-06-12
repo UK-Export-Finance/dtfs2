@@ -17,6 +17,34 @@ const MOCK_DEAL = {
 context('Loan Guarantee Details', () => {
   let deal;
 
+  const assertVisibleRequestedCoverStartDateInputs = () => {
+    pages.loanGuaranteeDetails.requestedCoverStartDateDayInput().should('be.visible');
+    pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput().should('be.visible');
+    pages.loanGuaranteeDetails.requestedCoverStartDateYearInput().should('be.visible');
+  };
+
+  const assertVisibleCoverEndDateInputs = () => {
+    pages.loanGuaranteeDetails.coverEndDateDayInput().should('be.visible');
+    pages.loanGuaranteeDetails.coverEndDateMonthInput().should('be.visible');
+    pages.loanGuaranteeDetails.coverEndDateYearInput().should('be.visible');
+  };
+
+  const inputRequestedCoverStartDate = (date) => {
+    pages.loanGuaranteeDetails.requestedCoverStartDateDayInput().type(moment(date).format('DD'));
+    pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput().type(moment(date).format('MM'));
+    pages.loanGuaranteeDetails.requestedCoverStartDateYearInput().type(moment(date).format('YYYY'));
+  };
+
+  const inputCoverEndDate = (date) => {
+    const day = date ? date.format('DD') : LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay;
+    const month = date ? date.format('MM') : LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth;
+    const year = date ? date.format('YYYY') : LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear;
+
+    pages.loanGuaranteeDetails.coverEndDateDayInput().type(day);
+    pages.loanGuaranteeDetails.coverEndDateMonthInput().type(month);
+    pages.loanGuaranteeDetails.coverEndDateYearInput().type(year);
+  };
+
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
@@ -73,10 +101,8 @@ context('Loan Guarantee Details', () => {
 
       pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().should('be.visible');
       pages.loanGuaranteeDetails.unconditionalBankReferenceNumberErrorMessage().should('be.visible');
+      assertVisibleCoverEndDateInputs();
 
-      pages.loanGuaranteeDetails.coverEndDateDayInput().should('be.visible');
-      pages.loanGuaranteeDetails.coverEndDateMonthInput().should('be.visible');
-      pages.loanGuaranteeDetails.coverEndDateYearInput().should('be.visible');
       pages.loanGuaranteeDetails.coverEndDateErrorMessage().should('be.visible');
     });
   });
@@ -107,7 +133,6 @@ context('Loan Guarantee Details', () => {
       pages.contract.addLoanButton().click();
 
       pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
-      // pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.bankReferenceNumber);
 
       pages.loanGuaranteeDetails.submit().click();
 
@@ -120,13 +145,9 @@ context('Loan Guarantee Details', () => {
       pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().should('be.visible');
       pages.loanGuaranteeDetails.unconditionalBankReferenceNumberErrorMessage().should('be.visible');
 
-      pages.loanGuaranteeDetails.requestedCoverStartDateDayInput().should('be.visible');
-      pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput().should('be.visible');
-      pages.loanGuaranteeDetails.requestedCoverStartDateYearInput().should('be.visible');
+      assertVisibleRequestedCoverStartDateInputs();
+      assertVisibleCoverEndDateInputs();
 
-      pages.loanGuaranteeDetails.coverEndDateDayInput().should('be.visible');
-      pages.loanGuaranteeDetails.coverEndDateMonthInput().should('be.visible');
-      pages.loanGuaranteeDetails.coverEndDateYearInput().should('be.visible');
       pages.loanGuaranteeDetails.coverEndDateErrorMessage().should('be.visible');
     });
 
@@ -141,13 +162,8 @@ context('Loan Guarantee Details', () => {
         const date = moment();
         const requestedCoverStartDate = moment(date).add(3, 'months').add('1', 'day');
 
-        pages.loanGuaranteeDetails.requestedCoverStartDateDayInput().type(moment(requestedCoverStartDate).format('DD'));
-        pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput().type(moment(requestedCoverStartDate).format('MM'));
-        pages.loanGuaranteeDetails.requestedCoverStartDateYearInput().type(moment(requestedCoverStartDate).format('YYYY'));
-
-        pages.loanGuaranteeDetails.coverEndDateDayInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay);
-        pages.loanGuaranteeDetails.coverEndDateMonthInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth);
-        pages.loanGuaranteeDetails.coverEndDateYearInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear);
+        inputRequestedCoverStartDate(requestedCoverStartDate);
+        inputCoverEndDate();
 
         pages.loanGuaranteeDetails.submit().click();
 
@@ -166,10 +182,7 @@ context('Loan Guarantee Details', () => {
         pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.bankReferenceNumber);
 
         const coverEndDate = moment().subtract(1, 'day');
-
-        pages.loanGuaranteeDetails.coverEndDateDayInput().type(moment(coverEndDate).format('DD'));
-        pages.loanGuaranteeDetails.coverEndDateMonthInput().type(moment(coverEndDate).format('MM'));
-        pages.loanGuaranteeDetails.coverEndDateYearInput().type(moment(coverEndDate).format('YYYY'));
+        inputCoverEndDate(coverEndDate);
 
         pages.loanGuaranteeDetails.submit().click();
 
@@ -191,13 +204,8 @@ context('Loan Guarantee Details', () => {
         const requestedCoverStartDate = date;
         const coverEndDate = moment(date).subtract(1, 'day');
 
-        pages.loanGuaranteeDetails.requestedCoverStartDateDayInput().type(moment(requestedCoverStartDate).format('DD'));
-        pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput().type(moment(requestedCoverStartDate).format('MM'));
-        pages.loanGuaranteeDetails.requestedCoverStartDateYearInput().type(moment(requestedCoverStartDate).format('YYYY'));
-
-        pages.loanGuaranteeDetails.coverEndDateDayInput().type(moment(coverEndDate).format('DD'));
-        pages.loanGuaranteeDetails.coverEndDateMonthInput().type(moment(coverEndDate).format('MM'));
-        pages.loanGuaranteeDetails.coverEndDateYearInput().type(moment(coverEndDate).format('YYYY'));
+        inputRequestedCoverStartDate(requestedCoverStartDate);
+        inputCoverEndDate(coverEndDate);
 
         pages.loanGuaranteeDetails.submit().click();
 
@@ -206,9 +214,7 @@ context('Loan Guarantee Details', () => {
         pages.loanGuaranteeDetails.coverEndDateErrorMessage().should('be.visible');
       });
     });
-
   });
-
 
   it('should prepopulate form inputs from submitted data', () => {
     cy.loginGoToDealPage(user, deal);
