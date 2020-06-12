@@ -194,6 +194,58 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     });
   });
 
+  describe('conversion rate', () => {
+    let validationErrors;
+
+    beforeAll(async()=>{
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const submissionDetails = {
+        'supplyContractCurrency':'USD',
+        'supplyContractConversionRateToGBP':'not a number',
+      };
+
+      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      validationErrors = body.validationErrors;
+    });
+
+    describe('expects supplyContractConversionRateToGBP', () => {
+      it('to be  number', () => {
+        expect(validationErrors.errorList.supplyContractConversionRateToGBP).toEqual({
+          order: expect.any(String),
+          text: 'Supply Contract conversion rate must be a number with up to 6 decimal places',
+        });
+      });
+    });
+  });
+
+  describe('conversion rate', () => {
+    let validationErrors;
+
+    beforeAll(async()=>{
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const submissionDetails = {
+        'supplyContractCurrency':'USD',
+        'supplyContractConversionRateToGBP':'321.1234567',
+      };
+
+      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      validationErrors = body.validationErrors;
+    });
+
+    describe('expects supplyContractConversionRateToGBP', () => {
+      it('to have at most 6 decimal places', () => {
+        expect(validationErrors.errorList.supplyContractConversionRateToGBP).toEqual({
+          order: expect.any(String),
+          text: 'Supply Contract conversion rate must be a number with up to 6 decimal places',
+        });
+      });
+    });
+  });
+
   describe('Conversion date in the future', () => {
     let validationErrors;
 
