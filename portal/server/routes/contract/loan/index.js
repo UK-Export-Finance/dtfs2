@@ -9,6 +9,7 @@ import {
 import {
   loanGuaranteeDetailsValidationErrors,
 } from './pageSpecificValidationErrors';
+import completedLoanForms from './completedForms';
 
 const router = express.Router();
 
@@ -54,10 +55,13 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN]), asy
     validationErrors,
   } = req.apiData.loan;
 
+  const completedForms = completedLoanForms(validationErrors);
+
   return res.render('loan/loan-guarantee-details.njk', {
     dealId,
     loan,
     validationErrors: loanGuaranteeDetailsValidationErrors(validationErrors, loan),
+    completedForms,
   });
 });
 
@@ -102,10 +106,13 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN]), asy
     validationErrors,
   } = req.apiData.loan;
 
+  const completedForms = completedLoanForms(validationErrors);
+
   return res.render('loan/loan-financial-details.njk', {
     dealId,
     loan,
     validationErrors,
+    completedForms,
   });
 });
 
@@ -127,16 +134,19 @@ router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) =>
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => {
-  const { _id: dealId } = requestParams(req);
+router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN]), async (req, res) => {
+  const {
+    dealId,
+    loan,
+    validationErrors,
+  } = req.apiData.loan;
+
+  const completedForms = completedLoanForms(validationErrors);
 
   return res.render('loan/loan-dates-repayments.njk', {
     dealId,
-    loan: { _id: MOCK_LOAN._id }, // eslint-disable-line no-underscore-dangle
-    // ...await getApiData(
-    //   api.contractLoan(_id, loanId, userToken),
-    //   res,
-    // ),
+    loan,
+    completedForms,
   });
 });
 
@@ -157,7 +167,7 @@ router.get('/contract/:_id/loan/:loanId/preview', provide([LOAN]), async (req, r
   const {
     dealId,
     loan,
-    // validationErrors,
+    validationErrors,
   } = req.apiData.loan;
 
 
@@ -177,13 +187,12 @@ router.get('/contract/:_id/loan/:loanId/preview', provide([LOAN]), async (req, r
     ),
   );
 
+  const completedForms = completedLoanForms(validationErrors);
+
   return res.render('loan/loan-preview.njk', {
     dealId,
     loan,
-    // ...await getApiData(
-    //   api.contractLoan(_id, loanId, userToken),
-    //   res,
-    // ),
+    completedForms,
   });
 });
 
