@@ -1,4 +1,3 @@
-/*
 const moment = require('moment');
 const aDeal = require('../deals/deal-builder');
 const wipeDB = require('../../wipeDB');
@@ -222,6 +221,94 @@ describe('/v1/deals/:id/loan', () => {
           });
         });
 
+        describe('when is 3 months or more', () => {
+          it('should return validationError', async () => {
+            const nowDate = moment();
+            const requestedCoverStartDate = moment(nowDate).add(3, 'months').add(1, 'day');
+
+            const requestedCoverStartDateFields = {
+              'requestedCoverStartDate-day': moment(requestedCoverStartDate).format('DD'),
+              'requestedCoverStartDate-month': moment(requestedCoverStartDate).format('MM'),
+              'requestedCoverStartDate-year': moment(requestedCoverStartDate).format('YYYY'),
+            };
+
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+
+            expect(validationErrors.errorList.requestedCoverStartDate).toBeDefined();
+
+            const expectedText = `Requested Cover Start Date must be between ${moment().format('Do MMMM YYYY')} and ${moment(nowDate).add(3, 'months').format('Do MMMM YYYY')}`;
+            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
+          });
+        });
+      });
+
+      describe('coverEndDate', () => {
+        const updateCoverEndDate = async (coverEndDate) => {
+          const loan = {
+            ...allLoanFields,
+            facilityStage: 'Unconditional',
+            ...coverEndDate,
+          };
+
+          const body = await updateLoanInDeal(dealId, loan);
+          return body;
+        };
+
+        describe('when is missing', () => {
+          it('should return validationError', async () => {
+            const coverEndDateFields = {
+              'coverEndDate-day': '',
+              'coverEndDate-month': '',
+              'coverEndDate-year': '',
+            };
+
+            const { validationErrors } = await updateCoverEndDate(coverEndDateFields);
+            expect(validationErrors.errorList.coverEndDate.order).toBeDefined();
+
+            expect(validationErrors.errorList.coverEndDate.text).toEqual('Enter the Cover End Date');
+          });
+        });
+
+        describe('when has some values', () => {
+          it('should return validationError', async () => {
+            const nowDate = moment();
+            const coverEndDateFields = {
+              'coverEndDate-day': moment(nowDate).format('DD'),
+              'coverEndDate-month': '',
+              'coverEndDate-year': '',
+            };
+
+            const { validationErrors } = await updateCoverEndDate(coverEndDateFields);
+            expect(validationErrors.errorList.coverEndDate.order).toBeDefined();
+
+            const expectedText = dateValidationText(
+              'Cover End Date',
+              coverEndDateFields['coverEndDate-day'],
+              coverEndDateFields['coverEndDate-month'],
+              coverEndDateFields['coverEndDate-year'],
+            );
+            expect(validationErrors.errorList.coverEndDate.text).toEqual(expectedText);
+          });
+        });
+
+        describe('when is before today', () => {
+          it('should return validationError', async () => {
+            const beforeToday = moment().subtract(1, 'day');
+
+            const coverEndDateFields = {
+              'coverEndDate-day': moment(beforeToday).format('DD'),
+              'coverEndDate-month': moment(beforeToday).format('MM'),
+              'coverEndDate-year': moment(beforeToday).format('YYYY'),
+            };
+
+            const { validationErrors } = await updateCoverEndDate(coverEndDateFields);
+            expect(validationErrors.errorList.coverEndDate.order).toBeDefined();
+
+            const expectedText = 'Cover End Date must be today or in the future';
+            expect(validationErrors.errorList.coverEndDate.text).toEqual(expectedText);
+          });
+        });
+
         describe('when is before requestedCoverStartDate', () => {
           it('should return validationError', async () => {
             const date = moment();
@@ -245,77 +332,6 @@ describe('/v1/deals/:id/loan', () => {
           });
         });
       });
-
-      describe('coverEndDate', () => {
-        describe('requestedCoverStartDate', () => {
-          const updateCoverEndDate = async (coverEndDate) => {
-            const loan = {
-              ...allLoanFields,
-              facilityStage: 'Unconditional',
-              ...coverEndDate,
-            };
-
-            const body = await updateLoanInDeal(dealId, loan);
-            return body;
-          };
-
-          describe('when is missing', () => {
-            it('should return validationError', async () => {
-              const coverEndDateFields = {
-                'coverEndDate-day': '',
-                'coverEndDate-month': '',
-                'coverEndDate-year': '',
-              };
-
-              const { validationErrors } = await updateCoverEndDate(coverEndDateFields);
-              expect(validationErrors.errorList.coverEndDate.order).toBeDefined();
-
-              expect(validationErrors.errorList.coverEndDate.text).toEqual('Enter the Cover End Date');
-            });
-          });
-
-          describe('when has some values', () => {
-            it('should return validationError', async () => {
-              const nowDate = moment();
-              const coverEndDateFields = {
-                'coverEndDate-day': moment(nowDate).format('DD'),
-                'coverEndDate-month': '',
-                'coverEndDate-year': '',
-              };
-
-              const { validationErrors } = await updateCoverEndDate(coverEndDateFields);
-              expect(validationErrors.errorList.coverEndDate.order).toBeDefined();
-
-              const expectedText = dateValidationText(
-                'Cover End Date',
-                coverEndDateFields['coverEndDate-day'],
-                coverEndDateFields['coverEndDate-month'],
-                coverEndDateFields['coverEndDate-year'],
-              );
-              expect(validationErrors.errorList.coverEndDate.text).toEqual(expectedText);
-            });
-          });
-
-          describe('when is before today', () => {
-            it('should return validationError', async () => {
-              const beforeToday = moment().subtract(1, 'day');
-
-              const coverEndDateFields = {
-                'coverEndDate-day': moment(beforeToday).format('DD'),
-                'coverEndDate-month': moment(beforeToday).format('MM'),
-                'coverEndDate-year': moment(beforeToday).format('YYYY'),
-              };
-
-              const { validationErrors } = await updateCoverEndDate(coverEndDateFields);
-              expect(validationErrors.errorList.coverEndDate.order).toBeDefined();
-
-              const expectedText = 'Cover End Date must be today or in the future';
-              expect(validationErrors.errorList.coverEndDate.text).toEqual(expectedText);
-            });
-          });
-        });
-      });
     });
   });
 });
-*/

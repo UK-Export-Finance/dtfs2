@@ -156,6 +156,22 @@ describe('/v1/deals/:id/bond', () => {
           return body;
         };
 
+        describe('when is before today', () => {
+          it('should return validationError', async () => {
+            const beforeToday = moment().subtract(1, 'day');
+
+            const requestedCoverStartDateFields = {
+              'requestedCoverStartDate-day': moment(beforeToday).format('DD'),
+              'requestedCoverStartDate-month': moment(beforeToday).format('MM'),
+              'requestedCoverStartDate-year': moment(beforeToday).format('YYYY'),
+            };
+
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+            expect(validationErrors.errorList.requestedCoverStartDate).toBeDefined();
+            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual('Requested Cover Start Date must be today or in the future');
+          });
+        });
+
         describe('when is 3 months or more', () => {
           it('should return validationError', async () => {
             const nowDate = moment();
