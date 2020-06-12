@@ -314,6 +314,33 @@ describe('/v1/deals/:id/status', () => {
     });
 
     describe('when the status changes from `Draft` to `Ready for Checker\'s approval`', () => {
+      const coverEndDate = () => ({
+        'coverEndDate-day': moment().add(1, 'month').format('DD'),
+        'coverEndDate-month': moment().add(1, 'month').format('MM'),
+        'coverEndDate-year': moment().add(1, 'month').format('YYYY'),
+      });
+
+      const expectedRequestedCoverStartDate = () => ({
+        'requestedCoverStartDate-day': moment().format('DD'),
+        'requestedCoverStartDate-month': moment().format('MM'),
+        'requestedCoverStartDate-year': moment().format('YYYY'),
+      });
+
+      const statusUpdate = {
+        comments: 'Ready to go!',
+        status: 'Ready for Checker\'s approval',
+      };
+
+      const postDealAndUpdateStatus = async (deal, status) => {
+        const postResult = await as(anHSBCMaker).post(deal).to('/v1/deals');
+        const createdDeal = postResult.body;
+
+        await as(anHSBCMaker).put(status).to(`/v1/deals/${createdDeal._id}/status`);
+
+        const response = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+        return response;
+      };
+
       describe('when a deal contains bonds with an `Issued` bondStage that do NOT have a requestedCoverStartDate', () => {
         it('should add todays date to such bonds', async () => {
           const baseBond = {
@@ -332,9 +359,7 @@ describe('/v1/deals/:id/status', () => {
           const issuedBondFields = () => ({
             bondStage: 'Issued',
             uniqueIdentificationNumber: '1234',
-            'coverEndDate-day': moment().add(1, 'month').format('DD'),
-            'coverEndDate-month': moment().add(1, 'month').format('MM'),
-            'coverEndDate-year': moment().add(1, 'month').format('YYYY'),
+            ...coverEndDate(),
           });
 
           const newDealWithBonds = {
@@ -358,17 +383,7 @@ describe('/v1/deals/:id/status', () => {
             },
           };
 
-          const postResult = await as(anHSBCMaker).post(newDealWithBonds).to('/v1/deals');
-          const createdDeal = postResult.body;
-
-          const statusUpdate = {
-            comments: 'Ready to go!',
-            status: 'Ready for Checker\'s approval',
-          };
-
-          await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
-
-          const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+          const { status, body } = await postDealAndUpdateStatus(newDealWithBonds, statusUpdate);
 
           expect(status).toEqual(200);
           expect(body.details.status).toEqual(statusUpdate.status);
@@ -381,17 +396,61 @@ describe('/v1/deals/:id/status', () => {
           expect(body.bondTransactions.items[1]).toEqual({
             ...newDealWithBonds.bondTransactions.items[1],
             status: 'Completed',
-            'requestedCoverStartDate-day': moment().format('DD'),
-            'requestedCoverStartDate-month': moment().format('MM'),
-            'requestedCoverStartDate-year': moment().format('YYYY'),
+            ...expectedRequestedCoverStartDate(),
           });
 
           expect(body.bondTransactions.items[2]).toEqual({
             ...newDealWithBonds.bondTransactions.items[2],
             status: 'Completed',
-            'requestedCoverStartDate-day': moment().format('DD'),
-            'requestedCoverStartDate-month': moment().format('MM'),
-            'requestedCoverStartDate-year': moment().format('YYYY'),
+            ...expectedRequestedCoverStartDate(),
+          });
+        });
+      });
+
+      describe('when a deal contains loans with an `Unconditional` facilityStage that do NOT have a requestedCoverStartDate', () => {
+        it('should add todays date to such loans', async () => {
+          const unconditionalLoan = () => ({
+            facilityStage: 'Unconditional',
+            bankReferenceNumber: 'test',
+            ...coverEndDate(),
+          });
+
+          const conditionalLoan = () => ({
+            facilityStage: 'Conditional',
+            ukefGuaranteeInMonths: '24',
+          });
+
+          const newDealWithLoans = {
+            ...newDeal,
+            loanTransactions: {
+              items: [
+                conditionalLoan(),
+                unconditionalLoan(),
+                unconditionalLoan(),
+              ],
+            },
+          };
+
+          const { status, body } = await postDealAndUpdateStatus(newDealWithLoans, statusUpdate);
+
+          expect(status).toEqual(200);
+          expect(body.details.status).toEqual(statusUpdate.status);
+
+          expect(body.loanTransactions.items[0]).toEqual({
+            ...newDealWithLoans.loanTransactions.items[0],
+            // status: 'Completed',
+          });
+
+          expect(body.loanTransactions.items[1]).toEqual({
+            ...newDealWithLoans.loanTransactions.items[1],
+            // status: 'Completed',
+            ...expectedRequestedCoverStartDate(),
+          });
+
+          expect(body.loanTransactions.items[2]).toEqual({
+            ...newDealWithLoans.loanTransactions.items[2],
+            // status: 'Completed',
+            ...expectedRequestedCoverStartDate(),
           });
         });
       });

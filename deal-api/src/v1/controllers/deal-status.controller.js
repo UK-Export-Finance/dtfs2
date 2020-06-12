@@ -59,26 +59,35 @@ const updateComments = async (collection, _id, commentToAdd, user) => {
   return value;
 };
 
-const updateBondDates = async (collection, deal) => {
-  const updatedBonds = [
-    ...deal.bondTransactions.items,
-  ];
+const updateFacilityDates = async (collection, deal) => {
+  const facilities = {
+    bonds: deal.bondTransactions.items,
+    loans: deal.loanTransactions.items,
+  };
 
-  updatedBonds.forEach((b) => {
-    const bond = b;
-    const hasRequestedCoverStartDate = (bond['requestedCoverStartDate-day'] && bond['requestedCoverStartDate-month'] && bond['requestedCoverStartDate-year']);
+  const updateFacilities = (arr) => {
+    arr.forEach((f) => {
+      const facility = f;
+      const hasRequestedCoverStartDate = (facility['requestedCoverStartDate-day'] && facility['requestedCoverStartDate-month'] && facility['requestedCoverStartDate-year']);
 
-    if (bond.bondStage === 'Issued' && !hasRequestedCoverStartDate) {
-      const now = moment();
+      // TODO: rename bondStage to `facilityStage` (?)
+      const shouldUpdateRequestedCoverStartDate = (facility.bondStage === 'Issued' && !hasRequestedCoverStartDate)
+        || (facility.facilityStage === 'Unconditional' && !hasRequestedCoverStartDate);
 
-      bond['requestedCoverStartDate-day'] = moment(now).format('DD');
-      bond['requestedCoverStartDate-month'] = moment(now).format('MM');
-      bond['requestedCoverStartDate-year'] = moment(now).format('YYYY');
-    }
-  });
+      if (shouldUpdateRequestedCoverStartDate) {
+        const now = moment();
+
+        facility['requestedCoverStartDate-day'] = moment(now).format('DD');
+        facility['requestedCoverStartDate-month'] = moment(now).format('MM');
+        facility['requestedCoverStartDate-year'] = moment(now).format('YYYY');
+      }
+    });
+    return arr;
+  };
 
   const updatedDeal = deal;
-  updatedDeal.bondTransactions.items = updatedBonds;
+  updatedDeal.bondTransactions.items = updateFacilities(facilities.bonds);
+  updatedDeal.loanTransactions.items = updateFacilities(facilities.loans);
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: deal._id }, // eslint-disable-line no-underscore-dangle
@@ -90,6 +99,7 @@ const updateBondDates = async (collection, deal) => {
 
   return value;
 };
+
 
 exports.update = (req, res) => {
   const { user } = req;
@@ -125,9 +135,9 @@ exports.update = (req, res) => {
     const updatedDeal = await updateStatus(collection, req.params.id, fromStatus, toStatus);
     const updatedDealStatus = updatedDeal.details.status;
 
-    const shouldCheckBondDates = (fromStatus === 'Draft' && updatedDealStatus === 'Ready for Checker\'s approval');
-    if (shouldCheckBondDates) {
-      await updateBondDates(collection, updatedDeal);
+    const shouldCheckFacilityDates = (fromStatus === 'Draft' && updatedDealStatus === 'Ready for Checker\'s approval');
+    if (shouldCheckFacilityDates) {
+      await updateFacilityDates(collection, updatedDeal);
     }
 
     const dealAfterAllUpdates = await updateComments(collection, req.params.id, req.body.comments, user);
