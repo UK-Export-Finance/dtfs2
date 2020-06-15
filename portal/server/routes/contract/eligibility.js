@@ -27,7 +27,11 @@ router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), as
   return res.render('eligibility/eligibility-criteria.njk',
     {
       _id: deal._id, // eslint-disable-line no-underscore-dangle
-      countries: formatCountriesForGDSComponent(countries, deal.eligibility.agentCountry),
+      countries: formatCountriesForGDSComponent(
+        countries,
+        deal.eligibility.agentCountry,
+        !deal.eligibility.agentCountry,
+      ),
       eligibility: deal.eligibility,
       validationErrors,
       bankSupplyContractName: deal.details.bankSupplyContractName,
@@ -52,7 +56,11 @@ router.post('/contract/:_id/eligibility/criteria', provide([COUNTRIES]), async (
 
   return res.render('eligibility/eligibility-criteria.njk', {
     _id,
-    countries: formatCountriesForGDSComponent(countries, updatedDeal.eligibility.agentCountry),
+    countries: formatCountriesForGDSComponent(
+      countries,
+      updatedDeal.eligibility.agentCountry,
+      !updatedDeal.eligibility.agentCountry,
+    ),
     criteriaStatus: updatedDeal.eligibility.status,
     eligibility: updatedDeal.eligibility,
     validationErrors,

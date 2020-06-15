@@ -13,6 +13,7 @@ const page = {
     input: () => cy.get('[data-cy="agents-name-input"]'),
     count: () => cy.get('[data-cy="agents-name-count"]'),
   },
+  agentsCountry: () => cy.get('[data-cy="agent-country"]'),
   nextPageButton: () => cy.get('[data-cy="next-page"]'),
   saveGoBackButton: () => cy.get('[data-cy="save-go-back-button"]'),
   eligibiityProgressNav: {

@@ -21,6 +21,7 @@ exports.getCriteria11Errors = ((criteria11Additional, criteria11IsFalse) => {
     'agent-country': {},
     'agent-address-line-1': {},
     'agent-postcode': {},
+    'agent-town': {},
   };
 
   if (!criteria11IsFalse) {
@@ -52,9 +53,16 @@ exports.getCriteria11Errors = ((criteria11Additional, criteria11IsFalse) => {
     };
   }
 
+  if (criteria11Additional.agentCountry && criteria11Additional.agentCountry !== 'GBR' && !criteria11Additional.agentTown) {
+    errorList['agent-town'] = {
+      order: '11-4',
+      text: 'Agent\'s city/town is required',
+    };
+  }
+
   if (criteria11Additional.agentCountry === 'GBR' && !criteria11Additional.agentPostcode) {
     errorList['agent-postcode'] = {
-      order: '11-4',
+      order: '11-5',
       text: 'Agent\'s corporate postcode is required',
     };
   }
