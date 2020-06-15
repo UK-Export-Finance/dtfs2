@@ -83,6 +83,21 @@ context('Eligibility Criteria', () => {
     eligibilityCriteria.agentsName.input().should('have.value', longString.substring(0, characterCount));
   });
 
+  it('should not have a country selected by default', () => {
+    eligibilityCriteria.eligibilityCriteria11False().click();
+    const agentsCountry = eligibilityCriteria.agentsCountry().find(':selected');
+
+    agentsCountry.should('have.value', '');
+    agentsCountry.contains('- Select -').should('have.length', 1);
+
+    eligibilityCriteria.agentsCountry().select('GBR');
+    eligibilityCriteria.nextPageButton().click();
+
+    const agentsCountry2 = eligibilityCriteria.agentsCountry();
+    agentsCountry2.find(':selected').should('have.value', 'GBR');
+    agentsCountry2.contains('- Select -').should('have.length', 0);
+  });
+
   it('should redirect to supporting docs page when all criteria answered and display submission type on deal page', () => {
     eligibilityCriteria.saveGoBackButton().click();
     contract.eligibilitySubmissionType().should('not.be.visible');

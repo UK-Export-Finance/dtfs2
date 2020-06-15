@@ -133,7 +133,10 @@
                   text: "Country"
                 },
                 items: countries,
-                errorMessage: validationErrors.errorList['agent-country']
+                errorMessage: validationErrors.errorList['agent-country'],
+                attributes: {
+                  "data-cy":"agent-country"
+                }
               }) }}
                 
             {{ govukInput({
@@ -169,12 +172,13 @@
 
             {{ govukInput({
               label: {
-                html: 'City/Town (optional) <span class="govuk-visually-hidden">line 4 of 4</span>'
+                html: 'City/Town<span class="govuk-visually-hidden">line 4 of 4</span>'
               },
               classes: "govuk-!-width-one-half",
               id: "criterion-group-agent-address-town",
               name: "agent-address-town",
-              value: eligibility.agentTown
+              value: eligibility.agentTown,
+              errorMessage: validationErrors.errorList['agent-town']
             }) }}
 
             {{ govukInput({
