@@ -80,6 +80,15 @@ stages:
               "slotSetting": false
              }
           ]
+        connectionStrings: |
+          [
+             {
+              "name": "COMPANIES_HOUSE_API_KEY",
+              "value": "$(COMPANIES_HOUSE_API_KEY)",
+              "type": "Custom",
+              "slotSetting": false
+             }
+          ]
     - task: AzureRmWebAppDeployment@4
       displayName: Deploy
       inputs:
@@ -128,14 +137,56 @@ stages:
               "slotSetting": false
              },
              {
-              "name": "SUPPORTING_DOCUMENT_STORE",
-              "value": "$(SUPPORTING_DOCUMENT_STORE",
+              "name": "AZURE_WORKFLOW_STORAGE_ACCOUNT",
+              "value": "$(AZURE_WORKFLOW_STORAGE_ACCOUNT",
+              "type": "Custom",
+              "slotSetting": false
+             }, ,
+             {
+              "name": "AZURE_WORKFLOW_STORAGE_ACCESS_KEY",
+              "value": "$(AZURE_WORKFLOW_STORAGE_ACCESS_KEY",
               "type": "Custom",
               "slotSetting": false
              },
              {
-              "name": "SUPPORTING_DOCUMENT_STORE_KEY",
-              "value": "$(SUPPORTING_DOCUMENT_STORE_KEY)",
+              "name": "AZURE_WORKFLOW_FILESHARE_NAME",
+              "value": "$(AZURE_WORKFLOW_FILESHARE_NAME)",
+              "type": "Custom",
+              "slotSetting": false
+             },
+             {
+              "name": "AZURE_WORKFLOW_EXPORT_FOLDER",
+              "value": "$(AZURE_WORKFLOW_EXPORT_FOLDER",
+              "type": "Custom",
+              "slotSetting": false
+             },
+             {
+              "name": "AZURE_WORKFLOW_IMPORT_FOLDER",
+              "value": "$(AZURE_WORKFLOW_IMPORT_FOLDER)",
+              "type": "Custom",
+              "slotSetting": false
+             },
+             {
+              "name": "AZURE_PORTAL_STORAGE_ACCOUNT",
+              "value": "$(AZURE_PORTAL_STORAGE_ACCOUNT",
+              "type": "Custom",
+              "slotSetting": false
+             },
+             {
+              "name": "AZURE_PORTAL_STORAGE_ACCESS_KEY",
+              "value": "$(AZURE_PORTAL_STORAGE_ACCESS_KEY)",
+              "type": "Custom",
+              "slotSetting": false
+             },
+             {
+              "name": "AZURE_PORTAL_FILESHARE_NAME",
+              "value": "$(AZURE_PORTAL_FILESHARE_NAME",
+              "type": "Custom",
+              "slotSetting": false
+             },
+             {
+              "name": "AZURE_PORTAL_EXPORT_FOLDER",
+              "value": "$(AZURE_PORTAL_EXPORT_FOLDER)",
               "type": "Custom",
               "slotSetting": false
              }
