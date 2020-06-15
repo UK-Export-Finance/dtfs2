@@ -138,13 +138,13 @@ stages:
              },
              {
               "name": "AZURE_WORKFLOW_STORAGE_ACCOUNT",
-              "value": "$(AZURE_WORKFLOW_STORAGE_ACCOUNT",
+              "value": "$(AZURE_WORKFLOW_STORAGE_ACCOUNT)",
               "type": "Custom",
               "slotSetting": false
              }, ,
              {
               "name": "AZURE_WORKFLOW_STORAGE_ACCESS_KEY",
-              "value": "$(AZURE_WORKFLOW_STORAGE_ACCESS_KEY",
+              "value": "$(AZURE_WORKFLOW_STORAGE_ACCESS_KEY)",
               "type": "Custom",
               "slotSetting": false
              },
@@ -156,7 +156,7 @@ stages:
              },
              {
               "name": "AZURE_WORKFLOW_EXPORT_FOLDER",
-              "value": "$(AZURE_WORKFLOW_EXPORT_FOLDER",
+              "value": "$(AZURE_WORKFLOW_EXPORT_FOLDER)",
               "type": "Custom",
               "slotSetting": false
              },
@@ -168,7 +168,7 @@ stages:
              },
              {
               "name": "AZURE_PORTAL_STORAGE_ACCOUNT",
-              "value": "$(AZURE_PORTAL_STORAGE_ACCOUNT",
+              "value": "$(AZURE_PORTAL_STORAGE_ACCOUNT)",
               "type": "Custom",
               "slotSetting": false
              },
@@ -180,7 +180,7 @@ stages:
              },
              {
               "name": "AZURE_PORTAL_FILESHARE_NAME",
-              "value": "$(AZURE_PORTAL_FILESHARE_NAME",
+              "value": "$(AZURE_PORTAL_FILESHARE_NAME)",
               "type": "Custom",
               "slotSetting": false
              },
