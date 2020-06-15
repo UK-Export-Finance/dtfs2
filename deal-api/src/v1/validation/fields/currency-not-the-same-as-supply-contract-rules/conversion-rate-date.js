@@ -2,17 +2,17 @@ const moment = require('moment');
 const {
   dateHasAllValues,
   dateValidationText,
-} = require('../../fields/date');
+} = require('../date');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
 
-module.exports = (bond, errorList) => {
+module.exports = (facility, errorList) => {
   const newErrorList = { ...errorList };
 
   const {
     'conversionRateDate-day': conversionRateDateDay,
     'conversionRateDate-month': conversionRateDateMonth,
     'conversionRateDate-year': conversionRateDateYear,
-  } = bond;
+  } = facility;
 
   if (dateHasAllValues(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear)) {
     const formattedDate = `${conversionRateDateYear}-${conversionRateDateMonth}-${conversionRateDateDay}`;

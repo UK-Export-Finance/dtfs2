@@ -38,4 +38,17 @@ module.exports = {
       },
     },
   },
+  currencySameAsSupplyContractCurrency: {
+    false: {
+      currency: {
+        text: 'Enter the Currency',
+      },
+      conversionRate: {
+        text: 'Enter the Conversion rate',
+      },
+      conversionRateDate: {
+        text: 'Enter the Conversion rate date',
+      },
+    },
+  },
 };

@@ -58,13 +58,13 @@ const validationText = (str, fieldCopy) => {
   return `Enter the ${fieldCopy}`;
 };
 
-module.exports = (bond, errorList) => {
+module.exports = (facility, errorList) => {
   const newErrorList = { ...errorList };
 
-  if (!isValid(bond.coveredPercentage)) {
+  if (!isValid(facility.coveredPercentage)) {
     newErrorList.coveredPercentage = {
       text: validationText(
-        bond.coveredPercentage,
+        facility.coveredPercentage,
         'Covered Percentage',
       ),
       order: orderNumber(newErrorList),

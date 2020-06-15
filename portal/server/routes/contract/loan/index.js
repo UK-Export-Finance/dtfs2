@@ -9,6 +9,7 @@ import {
 } from '../../../helpers';
 import {
   loanGuaranteeDetailsValidationErrors,
+  loanFinancialDetailsValidationErrors,
 } from './pageSpecificValidationErrors';
 import completedLoanForms from './completedForms';
 
@@ -114,7 +115,7 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, CURRE
     dealId,
     loan,
     currencies: mapCurrencies(currencies, loan.currency),
-    validationErrors,
+    validationErrors: loanFinancialDetailsValidationErrors(validationErrors, loan),
     completedForms,
   });
 });
