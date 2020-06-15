@@ -7,6 +7,7 @@ const currencySameAsSupplyContractCurrency = require('../fields/currency-same-as
 const currencyNotTheSameAsSupplyContractCurrency = require('../fields/currency-not-the-same-as-supply-contract-rules');
 const interestMargin = require('./interest-margin');
 const coveredPercentage = require('../fields/covered-percentage');
+const minimumQuarterlyFee = require('./minimum-quarterly-fee');
 
 const rules = [
   bankReferenceNumber,
@@ -18,6 +19,7 @@ const rules = [
   currencyNotTheSameAsSupplyContractCurrency,
   interestMargin,
   coveredPercentage,
+  minimumQuarterlyFee,
 ];
 
 module.exports = (submissionDetails) => {

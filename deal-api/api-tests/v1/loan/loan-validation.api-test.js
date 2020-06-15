@@ -71,10 +71,10 @@ describe('/v1/deals/:id/loan', () => {
             bankReferenceNumber: 'a'.repeat(31),
           };
 
-          const body = await updateLoanInDeal(dealId, loan);
+          const { validationErrors } = await updateLoanInDeal(dealId, loan);
 
-          expect(body.validationErrors.errorList.bankReferenceNumber.order).toBeDefined();
-          expect(body.validationErrors.errorList.bankReferenceNumber.text).toEqual('Bank reference number must be 30 characters or fewer');
+          expect(validationErrors.errorList.bankReferenceNumber.order).toBeDefined();
+          expect(validationErrors.errorList.bankReferenceNumber.text).toEqual('Bank reference number must be 30 characters or fewer');
         });
       });
     });
@@ -86,10 +86,10 @@ describe('/v1/deals/:id/loan', () => {
             facilityStage: '',
           };
 
-          const body = await updateLoanInDeal(dealId, loan);
+          const { validationErrors } = await updateLoanInDeal(dealId, loan);
 
-          expect(body.validationErrors.errorList.facilityStage.order).toBeDefined();
-          expect(body.validationErrors.errorList.facilityStage.text).toEqual('Select the Facility stage');
+          expect(validationErrors.errorList.facilityStage.order).toBeDefined();
+          expect(validationErrors.errorList.facilityStage.text).toEqual('Select the Facility stage');
         });
       });
     });
@@ -103,9 +103,9 @@ describe('/v1/deals/:id/loan', () => {
               ukefGuaranteeInMonths: '',
             };
 
-            const body = await updateLoanInDeal(dealId, loan);
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Enter the Length of time that the UKEF\'s guarantee will be in place for');
+            const { validationErrors } = await updateLoanInDeal(dealId, loan);
+            expect(validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
+            expect(validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Enter the Length of time that the UKEF\'s guarantee will be in place for');
           });
         });
 
@@ -116,9 +116,9 @@ describe('/v1/deals/:id/loan', () => {
               ukefGuaranteeInMonths: 'test',
             };
 
-            const body = await updateLoanInDeal(dealId, loan);
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be a number, like 1 or 12');
+            const { validationErrors } = await updateLoanInDeal(dealId, loan);
+            expect(validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
+            expect(validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be a number, like 1 or 12');
           });
         });
 
@@ -129,9 +129,9 @@ describe('/v1/deals/:id/loan', () => {
               ukefGuaranteeInMonths: '6.3',
             };
 
-            const body = await updateLoanInDeal(dealId, loan);
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be a whole number, like 12');
+            const { validationErrors } = await updateLoanInDeal(dealId, loan);
+            expect(validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
+            expect(validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be a whole number, like 12');
           });
         });
 
@@ -142,9 +142,9 @@ describe('/v1/deals/:id/loan', () => {
               ukefGuaranteeInMonths: '-1',
             };
 
-            const body = await updateLoanInDeal(dealId, loan);
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 999');
+            const { validationErrors } = await updateLoanInDeal(dealId, loan);
+            expect(validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
+            expect(validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 999');
           });
         });
 
@@ -155,9 +155,9 @@ describe('/v1/deals/:id/loan', () => {
               ukefGuaranteeInMonths: '1000',
             };
 
-            const body = await updateLoanInDeal(dealId, loan);
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 999');
+            const { validationErrors } = await updateLoanInDeal(dealId, loan);
+            expect(validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
+            expect(validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 999');
           });
         });
       });
@@ -172,10 +172,9 @@ describe('/v1/deals/:id/loan', () => {
               bankReferenceNumber: '',
             };
 
-            const body = await updateLoanInDeal(dealId, loan);
-
-            expect(body.validationErrors.errorList.bankReferenceNumber.order).toBeDefined();
-            expect(body.validationErrors.errorList.bankReferenceNumber.text).toEqual('Enter the Bank reference number');
+            const { validationErrors } = await updateLoanInDeal(dealId, loan);
+            expect(validationErrors.errorList.bankReferenceNumber.order).toBeDefined();
+            expect(validationErrors.errorList.bankReferenceNumber.text).toEqual('Enter the Bank reference number');
           });
         });
 
@@ -186,10 +185,9 @@ describe('/v1/deals/:id/loan', () => {
               bankReferenceNumber: 'a'.repeat(31),
             };
 
-            const body = await updateLoanInDeal(dealId, loan);
-
-            expect(body.validationErrors.errorList.bankReferenceNumber.order).toBeDefined();
-            expect(body.validationErrors.errorList.bankReferenceNumber.text).toEqual('Bank reference number must be 30 characters or fewer');
+            const { validationErrors } = await updateLoanInDeal(dealId, loan);
+            expect(validationErrors.errorList.bankReferenceNumber.order).toBeDefined();
+            expect(validationErrors.errorList.bankReferenceNumber.text).toEqual('Bank reference number must be 30 characters or fewer');
           });
         });
       });
@@ -645,6 +643,44 @@ describe('/v1/deals/:id/loan', () => {
 
           expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
           expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must have less than 5 decimals, like 12 or 12.3456');
+        });
+      });
+    });
+
+    describe('minimumQuarterlyFee', () => {
+      describe('when not a number', () => {
+        it('should return validationError', async () => {
+          const loan = {
+            minimumQuarterlyFee: 'test',
+          };
+
+          const { validationErrors } = await updateLoanInDeal(dealId, loan);
+          expect(validationErrors.errorList.minimumQuarterlyFee).toBeDefined();
+          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual('Minimum quarterly fee must be a number, like 1 or 12.65');
+        });
+      });
+
+      describe('when has more than 16 characters', () => {
+        it('should return validationError', async () => {
+          const loan = {
+            minimumQuarterlyFee: '1'.repeat(17),
+          };
+
+          const { validationErrors } = await updateLoanInDeal(dealId, loan);
+          expect(validationErrors.errorList.minimumQuarterlyFee).toBeDefined();
+          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual('Minimum quarterly fee must be 16 numbers or fewer');
+        });
+      });
+
+      describe('when not a number', () => {
+        it('should return validationError', async () => {
+          const loan = {
+            minimumQuarterlyFee: '12.345',
+          };
+
+          const { validationErrors } = await updateLoanInDeal(dealId, loan);
+          expect(validationErrors.errorList.minimumQuarterlyFee).toBeDefined();
+          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual('Minimum quarterly fee must have less than 3 decimals, like 12 or 12.10');
         });
       });
     });
