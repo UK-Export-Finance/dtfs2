@@ -4,47 +4,33 @@
   {% if params.deal.details.status %}
 
     {% if params.user.roles.includes('maker') %}
-      {% if params.user._id === params.deal.details.maker._id %}
 
-        {% if ["Draft", "Further Maker's input required"].includes(params.deal.details.status) %}
+      {% if ["Draft", "Further Maker's input required"].includes(params.deal.details.status) %}
 
-          {{ govukButton({
-            "disabled": false,
-            "text": "Abandon",
-            "classes": "govuk-button--secondary",
-            "attributes" : {
-              "data-cy" : "Abandon"
-            },
-            "href": "/contract/" + params.deal._id + "/delete"
-          }) }}
+        {{ govukButton({
+          "disabled": false,
+          "text": "Abandon",
+          "classes": "govuk-button--secondary",
+          "attributes" : {
+            "data-cy" : "Abandon"
+          },
+          "href": "/contract/" + params.deal._id + "/delete"
+        }) }}
 
-        {% elseif  ["Abandoned Deal", "Acknowledged by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)", "Ready for Checker's approval"].includes(params.deal.details.status) %}
+      {% elseif  ["Abandoned Deal", "Acknowledged by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)", "Ready for Checker's approval"].includes(params.deal.details.status) %}
 
-          {{ govukButton({
-            "disabled": true,
-            "text": "Abandon",
-            "classes": "govuk-button--secondary",
-            "attributes" : {
-              "data-cy" : "Abandon"
-            },
-            "href":""
-          }) }}
+        {{ govukButton({
+          "disabled": true,
+          "text": "Abandon",
+          "classes": "govuk-button--secondary",
+          "attributes" : {
+            "data-cy" : "Abandon"
+          },
+          "href":""
+        }) }}
 
-        {% endif %}
-      {% else %}
-        {% if ["Draft", "Further Maker's input required", "Abandoned Deal", "Acknowledged by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)", "Ready for Checker's approval"].includes(params.deal.details.status) %}
-
-          {{ govukButton({
-            "disabled": true,
-            "text": "Abandon",
-            "classes": "govuk-button--secondary",
-            "attributes" : {
-              "data-cy" : "Abandon"
-            }
-          }) }}
-
-        {% endif %}
       {% endif %}
+
     {% endif %}
 
   {% endif %}
