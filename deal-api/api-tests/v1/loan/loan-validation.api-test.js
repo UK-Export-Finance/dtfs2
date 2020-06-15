@@ -134,6 +134,34 @@ describe('/v1/deals/:id/loan', () => {
             expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be a whole number, like 12');
           });
         });
+
+        describe('when less than 0', () => {
+          it('should return validationError', async () => {
+            const loan = {
+              ...allLoanFields,
+              facilityStage: 'Conditional',
+              ukefGuaranteeInMonths: '-1',
+            };
+
+            const body = await updateLoanInDeal(dealId, loan);
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 99');
+          });
+        });
+
+        describe('when greater than 999', () => {
+          it('should return validationError', async () => {
+            const loan = {
+              ...allLoanFields,
+              facilityStage: 'Conditional',
+              ukefGuaranteeInMonths: '1000',
+            };
+
+            const body = await updateLoanInDeal(dealId, loan);
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 99');
+          });
+        });
       });
     });
 

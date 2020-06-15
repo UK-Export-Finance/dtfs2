@@ -118,8 +118,7 @@
             name: "ukefGuaranteeInMonths",
             value: loan.ukefGuaranteeInMonths,
             attributes: {
-              'data-cy': 'ukef-guarantee-in-months',
-              maxlength: '2'
+              'data-cy': 'ukef-guarantee-in-months'
             },
             errorMessage: (validationErrors.errorList.ukefGuaranteeInMonths.text or (not loan.ukefGuaranteeInMonths and validationErrors.conditionalErrorList.facilityStage.Conditional.ukefGuaranteeInMonths.text)) and {
               text: validationErrors.errorList.ukefGuaranteeInMonths.text or (not loan.ukefGuaranteeInMonths and validationErrors.conditionalErrorList.facilityStage.Conditional.ukefGuaranteeInMonths.text),
