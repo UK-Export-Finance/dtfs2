@@ -95,14 +95,14 @@ const bondCurrency = async (currencyCode) => {
   };
 };
 
-const bondTransactionCurrencySameAsSupplyContractCurrency = async (bond, supplyContractCurrencyCode) => {
+const bondcurrencySameAsSupplyContractCurrency = async (bond, supplyContractCurrencyCode) => {
   const modifiedBond = bond;
   const {
-    transactionCurrencySameAsSupplyContractCurrency,
+    currencySameAsSupplyContractCurrency,
     currency: currencyCode,
   } = modifiedBond;
 
-  if (transactionCurrencySameAsSupplyContractCurrency && transactionCurrencySameAsSupplyContractCurrency === 'true') {
+  if (currencySameAsSupplyContractCurrency && currencySameAsSupplyContractCurrency === 'true') {
     // remove any 'currency is NOT the same' specific values
     delete modifiedBond.currency;
     delete modifiedBond.conversionRate;
@@ -212,7 +212,7 @@ exports.updateBond = async (req, res) => {
 
       const supplyContractCurrencyCode = deal.supplyContractCurrency.id;
 
-      modifiedBond = await bondTransactionCurrencySameAsSupplyContractCurrency(
+      modifiedBond = await bondcurrencySameAsSupplyContractCurrency(
         modifiedBond,
         supplyContractCurrencyCode,
       );

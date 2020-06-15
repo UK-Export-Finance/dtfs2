@@ -35,7 +35,7 @@ module.exports = {
       },
     },
   },
-  transactionCurrencySameAsSupplyContractCurrency: {
+  currencySameAsSupplyContractCurrency: {
     false: {
       currency: {
         text: 'Enter the Currency',

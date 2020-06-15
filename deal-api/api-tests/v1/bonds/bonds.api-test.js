@@ -27,7 +27,7 @@ describe('/v1/deals/:id/bond', () => {
     uniqueIdentificationNumber: '1234',
     bondBeneficiary: 'test',
     bondValue: '123456.551',
-    transactionCurrencySameAsSupplyContractCurrency: 'true',
+    currencySameAsSupplyContractCurrency: 'true',
     riskMarginFee: '9.09',
     coveredPercentage: '2',
     feeType: 'test',
@@ -485,7 +485,7 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
-    describe('when a bond has req.body.transactionCurrencySameAsSupplyContractCurrency changed from false to true', () => {
+    describe('when a bond has req.body.currencySameAsSupplyContractCurrency changed from false to true', () => {
       it('should remove `currency is NOT the same` values from the bond', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
@@ -493,7 +493,7 @@ describe('/v1/deals/:id/bond', () => {
         const bondBody = {
           ...allBondFields,
           bondValue: '123',
-          transactionCurrencySameAsSupplyContractCurrency: 'false',
+          currencySameAsSupplyContractCurrency: 'false',
           currency: 'EUR',
           conversionRate: '100',
           'conversionRateDate-day': moment().format('DD'),
@@ -511,7 +511,7 @@ describe('/v1/deals/:id/bond', () => {
 
         const bondWithSameCurrencyAsContract = {
           bondValue: '456',
-          transactionCurrencySameAsSupplyContractCurrency: 'true',
+          currencySameAsSupplyContractCurrency: 'true',
         };
 
         const { status: secondUpdateStatus } = await as(aBarclaysMaker).put(bondWithSameCurrencyAsContract).to(`/v1/deals/${dealId}/bond/${bondId}`);
@@ -526,7 +526,7 @@ describe('/v1/deals/:id/bond', () => {
 
         expect(updatedBond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
         expect(updatedBond.bondValue).toEqual(bondWithSameCurrencyAsContract.bondValue);
-        expect(updatedBond.transactionCurrencySameAsSupplyContractCurrency).toEqual(bondWithSameCurrencyAsContract.transactionCurrencySameAsSupplyContractCurrency);
+        expect(updatedBond.currencySameAsSupplyContractCurrency).toEqual(bondWithSameCurrencyAsContract.currencySameAsSupplyContractCurrency);
         expect(updatedBond.conversionRate).toEqual(undefined);
         expect(updatedBond['conversionRateDate-day']).toEqual(undefined);
         expect(updatedBond['conversionRateDate-month']).toEqual(undefined);
@@ -539,7 +539,7 @@ describe('/v1/deals/:id/bond', () => {
 
         const bondBody = {
           ...allBondFields,
-          transactionCurrencySameAsSupplyContractCurrency: 'true',
+          currencySameAsSupplyContractCurrency: 'true',
         };
 
         const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);

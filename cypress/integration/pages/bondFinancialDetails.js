@@ -2,9 +2,9 @@ const page = {
   bondValueInput: () => cy.get('[data-cy="bond-value"]'),
   bondValueInputErrorMessage: () => cy.get('[data-cy="bond-value-error-message"]'),
 
-  transactionCurrencySameAsSupplyContractCurrencyYesInput: () => cy.get('[data-cy="transaction-currency-same-as-supply-contract-currency-yes"]'),
-  transactionCurrencySameAsSupplyContractCurrencyNoInput: () => cy.get('[data-cy="transaction-currency-same-as-supply-contract-currency-no"]'),
-  transactionCurrencySameAsSupplyContractCurrencyInputErrorMessage: () => cy.get('[data-cy="transactionCurrencySameAsSupplyContractCurrency-error-message"]'),
+  currencySameAsSupplyContractCurrencyYesInput: () => cy.get('[data-cy="currency-same-as-supply-contract-currency-yes"]'),
+  currencySameAsSupplyContractCurrencyNoInput: () => cy.get('[data-cy="currency-same-as-supply-contract-currency-no"]'),
+  currencySameAsSupplyContractCurrencyInputErrorMessage: () => cy.get('[data-cy="currencySameAsSupplyContractCurrency-error-message"]'),
 
   // 'transaction currency NOT the same as supply contract currency' specifics
   currencyInput: () => cy.get('[data-cy="currency"]'),

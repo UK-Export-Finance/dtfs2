@@ -11,7 +11,7 @@
 
 {% block content %}
 
-  {% set showAdditionalFieldsByDefault = bond.transactionCurrencySameAsSupplyContractCurrency === "false" %}
+  {% set showAdditionalFieldsByDefault = bond.currencySameAsSupplyContractCurrency === "false" %}
 
   {% if validationErrors.count %}
     {{
@@ -62,37 +62,37 @@
 
     {{ govukRadios({
         classes: "govuk-radios--inline",
-        idPrefix: "transactionCurrencySameAsSupplyContractCurrency",
-        name: "transactionCurrencySameAsSupplyContractCurrency",
+        idPrefix: "currencySameAsSupplyContractCurrency",
+        name: "currencySameAsSupplyContractCurrency",
         fieldset: {
           legend: {
-            text: "Is the currency for this Transaction the same as your Supply Contract currency?"
+            text: "Is the currency for this Bond the same as your Supply Contract currency?"
           }
         },
         items: [
           {
             value: "true",
             text: "Yes",
-            checked: bond.transactionCurrencySameAsSupplyContractCurrency === "true",
+            checked: bond.currencySameAsSupplyContractCurrency === "true",
             attributes: {
-              'data-cy': 'transaction-currency-same-as-supply-contract-currency-yes',
+              'data-cy': 'currency-same-as-supply-contract-currency-yes',
               onClick: "showAdditionalFields(false)"
             }
           },
           {
             value: "false",
             text: "No",
-            checked: bond.transactionCurrencySameAsSupplyContractCurrency === "false",
+            checked: bond.currencySameAsSupplyContractCurrency === "false",
             attributes: {
-              'data-cy': 'transaction-currency-same-as-supply-contract-currency-no',
+              'data-cy': 'currency-same-as-supply-contract-currency-no',
               onClick: "showAdditionalFields(true)"
             }
           }
         ],
-        errorMessage: validationErrors.errorList.transactionCurrencySameAsSupplyContractCurrency and {
-          text: validationErrors.errorList.transactionCurrencySameAsSupplyContractCurrency.text,
+        errorMessage: validationErrors.errorList.currencySameAsSupplyContractCurrency and {
+          text: validationErrors.errorList.currencySameAsSupplyContractCurrency.text,
           attributes: {
-            'data-cy': 'transactionCurrencySameAsSupplyContractCurrency-error-message'
+            'data-cy': 'currencySameAsSupplyContractCurrency-error-message'
           }
         }
       }) }}
@@ -114,11 +114,11 @@
           'data-cy': 'currency'
         },
         items: currencies,
-        errorMessage: (validationErrors.errorList.currency or (not bond['currency'] and validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].currency)) and {
+        errorMessage: (validationErrors.errorList.currency or (not bond['currency'] and validationErrors.conditionalErrorList.currencySameAsSupplyContractCurrency['false'].currency)) and {
           attributes: {
             "data-cy": "currency-error-message"
           },
-          text: validationErrors.errorList.currency.text or validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].currency.text
+          text: validationErrors.errorList.currency.text or validationErrors.conditionalErrorList.currencySameAsSupplyContractCurrency['false'].currency.text
         }
       }) }}
 
@@ -139,8 +139,8 @@
           'data-cy': 'conversion-rate',
           maxlength: '13'
         },
-        errorMessage: (validationErrors.errorList.conversionRate or (not bond['conversionRate'] and validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].conversionRate)) and {
-          text: validationErrors.errorList.conversionRate.text or validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].conversionRate.text,
+        errorMessage: (validationErrors.errorList.conversionRate or (not bond['conversionRate'] and validationErrors.conditionalErrorList.currencySameAsSupplyContractCurrency['false'].conversionRate)) and {
+          text: validationErrors.errorList.conversionRate.text or validationErrors.conditionalErrorList.currencySameAsSupplyContractCurrency['false'].conversionRate.text,
           attributes: {
             'data-cy': 'conversion-rate-error-message'
           }
@@ -155,7 +155,7 @@
         monthValue = bond['conversionRateDate-month'],
         yearValue = bond['conversionRateDate-year'],
         error = validationErrors.errorList.conversionRateDate,
-        conditionalError = validationErrors.conditionalErrorList.transactionCurrencySameAsSupplyContractCurrency['false'].conversionRateDate
+        conditionalError = validationErrors.conditionalErrorList.currencySameAsSupplyContractCurrency['false'].conversionRateDate
       )}}
 
     </div>

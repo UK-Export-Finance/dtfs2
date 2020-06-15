@@ -297,7 +297,7 @@ router.get('/reporting/audit-log-all-changes/:page', async (req, res) => {
     created: '21/04/202 - 14:07',
     doneTo: 'Bond',
     changes: [
-      [{ text: 'Is the currency for this Transaction the same as your Supply Contract currency?' },
+      [{ text: 'Is the currency for this Bond the same as your Supply Contract currency?' },
         { text: '' },
         { text: 'yes' }],
     ],

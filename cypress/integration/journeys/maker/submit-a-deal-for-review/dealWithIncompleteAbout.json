@@ -41,7 +41,7 @@
           "uniqueIdentificationNumber": "1234",
           "bondBeneficiary": "test",
           "bondValue": "123",
-          "transactionCurrencySameAsSupplyContractCurrency": "true",
+          "currencySameAsSupplyContractCurrency": "true",
           "riskMarginFee": "1",
           "coveredPercentage": "2",
           "feeType": "test",

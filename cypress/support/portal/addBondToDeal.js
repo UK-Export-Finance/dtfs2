@@ -7,7 +7,7 @@ module.exports = () => {
   fillBondForm.details.bondStageIssued();
   pages.bondDetails.submit().click();
 
-  fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
+  fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
   pages.bondFinancialDetails.submit().click();
 
   fillBondForm.feeDetails();
