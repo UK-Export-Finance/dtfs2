@@ -246,6 +246,29 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     });
   });
 
+  describe('conversion rate', () => {
+    let validationErrors;
+
+    beforeAll(async()=>{
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const submissionDetails = {
+        'supplyContractCurrency':'USD',
+        'supplyContractConversionRateToGBP':'1',
+      };
+
+      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      validationErrors = body.validationErrors;
+    });
+
+    describe('expects supplyContractConversionRateToGBP', () => {
+      it('to work for whole numbers', () => {
+        expect(validationErrors.errorList.supplyContractConversionRateToGBP).toBeUndefined();
+      });
+    });
+  });
+
   describe('Conversion date in the future', () => {
     let validationErrors;
 
