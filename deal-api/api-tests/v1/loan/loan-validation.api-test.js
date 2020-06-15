@@ -43,8 +43,9 @@ describe('/v1/deals/:id/loan', () => {
     it('returns a loan with validationErrors for all required fields', async () => {
       const { body } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/loan/${loanId}`);
 
-      expect(body.validationErrors.count).toEqual(4);
+      expect(body.validationErrors.count).toEqual(5);
       expect(body.validationErrors.errorList.facilityStage).toBeDefined();
+      expect(body.validationErrors.errorList.facilityValue).toBeDefined();
       expect(body.validationErrors.errorList.currencySameAsSupplyContractCurrency).toBeDefined();
       expect(body.validationErrors.errorList.interestMargin).toBeDefined();
       expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
@@ -55,8 +56,9 @@ describe('/v1/deals/:id/loan', () => {
     it('returns 400 with validation errors', async () => {
       const { body, status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/${loanId}`);
       expect(status).toEqual(400);
-      expect(body.validationErrors.count).toEqual(4);
+      expect(body.validationErrors.count).toEqual(5);
       expect(body.validationErrors.errorList.facilityStage).toBeDefined();
+      expect(body.validationErrors.errorList.facilityValue).toBeDefined();
       expect(body.validationErrors.errorList.currencySameAsSupplyContractCurrency).toBeDefined();
       expect(body.validationErrors.errorList.interestMargin).toBeDefined();
       expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
@@ -349,6 +351,32 @@ describe('/v1/deals/:id/loan', () => {
             expect(body.validationErrors.errorList.coverEndDate.order).toBeDefined();
             expect(body.validationErrors.errorList.coverEndDate.text).toEqual('Cover End Date cannot be before Requested Cover Start Date');
           });
+        });
+      });
+    });
+
+    describe('facilityValue', () => {
+      describe('when missing', () => {
+        it('should return validationError', async () => {
+          const loan = {
+            facilityValue: '',
+          };
+
+          const { validationErrors } = await updateLoanInDeal(dealId, loan);
+          expect(validationErrors.errorList.facilityValue).toBeDefined();
+          expect(validationErrors.errorList.facilityValue.text).toEqual('Enter the Loan facility value');
+        });
+      });
+
+      describe('when not a number', () => {
+        it('should return validationError', async () => {
+          const loan = {
+            facilityValue: 'test',
+          };
+
+          const { validationErrors } = await updateLoanInDeal(dealId, loan);
+          expect(validationErrors.errorList.facilityValue).toBeDefined();
+          expect(validationErrors.errorList.facilityValue.text).toEqual('Loan facility value must be a number, like 1 or 12.65');
         });
       });
     });

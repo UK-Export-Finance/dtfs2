@@ -2,6 +2,7 @@ const bankReferenceNumber = require('./bank-reference-number');
 const facilityStage = require('./facility-stage');
 const facilityStageConditional = require('./facility-stage-conditional');
 const facilityStageUnconditional = require('./facility-stage-unconditional');
+const facilityValue = require('./facility-value');
 const currencySameAsSupplyContractCurrency = require('../fields/currency-same-as-supply-contract');
 const currencyNotTheSameAsSupplyContractCurrency = require('../fields/currency-not-the-same-as-supply-contract-rules');
 const interestMargin = require('./interest-margin');
@@ -12,7 +13,7 @@ const rules = [
   facilityStage,
   facilityStageConditional,
   facilityStageUnconditional,
-  // facilityValue
+  facilityValue,
   currencySameAsSupplyContractCurrency,
   currencyNotTheSameAsSupplyContractCurrency,
   interestMargin,
