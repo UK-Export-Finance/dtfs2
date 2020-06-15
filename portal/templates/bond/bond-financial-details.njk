@@ -1,17 +1,12 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/select/macro.njk" import govukSelect %}
-{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% import './_macros/bond-nav.njk' as bondNav %}
-{% import '_macros/date-field.njk' as dateField %}
+{% import '_macros/currency-same-as-supply-contract-currency.njk' as currencySameAsSupplyContractCurrency %}
 
 {% block pageTitle %}Bond Financial Details{% endblock %}
 
 {% block content %}
-
-  {% set showAdditionalFieldsByDefault = bond.currencySameAsSupplyContractCurrency === "false" %}
 
   {% if validationErrors.count %}
     {{
@@ -60,105 +55,12 @@
       </div>
     </div>
 
-    {{ govukRadios({
-        classes: "govuk-radios--inline",
-        idPrefix: "currencySameAsSupplyContractCurrency",
-        name: "currencySameAsSupplyContractCurrency",
-        fieldset: {
-          legend: {
-            text: "Is the currency for this Bond the same as your Supply Contract currency?"
-          }
-        },
-        items: [
-          {
-            value: "true",
-            text: "Yes",
-            checked: bond.currencySameAsSupplyContractCurrency === "true",
-            attributes: {
-              'data-cy': 'currency-same-as-supply-contract-currency-yes',
-              onClick: "showAdditionalFields(false)"
-            }
-          },
-          {
-            value: "false",
-            text: "No",
-            checked: bond.currencySameAsSupplyContractCurrency === "false",
-            attributes: {
-              'data-cy': 'currency-same-as-supply-contract-currency-no',
-              onClick: "showAdditionalFields(true)"
-            }
-          }
-        ],
-        errorMessage: validationErrors.errorList.currencySameAsSupplyContractCurrency and {
-          text: validationErrors.errorList.currencySameAsSupplyContractCurrency.text,
-          attributes: {
-            'data-cy': 'currencySameAsSupplyContractCurrency-error-message'
-          }
-        }
-      }) }}
-  
-    <div
-      id="additional-form-fields"
-      {% if showAdditionalFieldsByDefault === false %}
-      class="govuk-visually-hidden"
-      {% endif %}
-    >
-
-      {{ govukSelect({
-        id: "currency",
-        name: "currency",
-        label: {
-          text: "Currency"
-        },
-        attributes: {
-          'data-cy': 'currency'
-        },
-        items: currencies,
-        errorMessage: (validationErrors.errorList.currency or (not bond['currency'] and validationErrors.conditionalErrorList.currencySameAsSupplyContractCurrency['false'].currency)) and {
-          attributes: {
-            "data-cy": "currency-error-message"
-          },
-          text: validationErrors.errorList.currency.text or validationErrors.conditionalErrorList.currencySameAsSupplyContractCurrency['false'].currency.text
-        }
-      }) }}
-
-      {{ govukInput({
-        inputmode: 'numeric',
-        label: {
-          text: "Conversion rate to the Supply Contract currency"
-        },
-        hint: {
-          text: "E.g. EUR to USD (100 EUR/ 0.91 = 109.89 USD)"
-        },
-        classes: "govuk-input--width-10",
-        id: "conversionRate",
-        name: "conversionRate",
-        value: bond.conversionRate,
-        pattern: '[0-9]*\.[0-9]{0,6}',
-        attributes: {
-          'data-cy': 'conversion-rate',
-          maxlength: '13'
-        },
-        errorMessage: (validationErrors.errorList.conversionRate or (not bond['conversionRate'] and validationErrors.conditionalErrorList.currencySameAsSupplyContractCurrency['false'].conversionRate)) and {
-          text: validationErrors.errorList.conversionRate.text or validationErrors.conditionalErrorList.currencySameAsSupplyContractCurrency['false'].conversionRate.text,
-          attributes: {
-            'data-cy': 'conversion-rate-error-message'
-          }
-        }
-      }) }}
-
-      {{ dateField.render(
-        legend = 'Conversion rate date',
-        id = 'conversionRateDate',
-        hint = 'For example, 27 11 2019',
-        dayValue = bond['conversionRateDate-day'],
-        monthValue = bond['conversionRateDate-month'],
-        yearValue = bond['conversionRateDate-year'],
-        error = validationErrors.errorList.conversionRateDate,
-        conditionalError = validationErrors.conditionalErrorList.currencySameAsSupplyContractCurrency['false'].conversionRateDate
-      )}}
-
-    </div>
+    {{ currencySameAsSupplyContractCurrency.render(
+      facility = bond,
+      radioFieldsetText = "Is the currency of this bond the same as your Supply Contract currency?",
+      currencies = currencies,
+      validationErrors = validationErrors
+    )}}
 
     {{ govukInput({
       label: {
@@ -293,15 +195,6 @@
   </form>
 
   <script type="text/javascript">
-    function showAdditionalFields(bool) {
-      var additionalFormFields = document.getElementById('additional-form-fields');
-
-      if (bool) {
-        additionalFormFields.className = '';
-      } else {
-        additionalFormFields.className = 'govuk-visually-hidden';
-      }
-    }
   
     /* UKEF Exposure calculation */
     var bondValueInput = document.getElementById('bondValue');
