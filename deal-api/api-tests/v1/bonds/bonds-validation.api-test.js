@@ -128,17 +128,75 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     describe('when bondStage is `Unissued`', () => {
-      describe('when ukefGuaranteeInMonths is missing', () => {
-        it('should return validationError', async () => {
-          const bond = {
-            ...allBondFields,
-            bondStage: 'Unissued',
-            ukefGuaranteeInMonths: '',
-          };
+      describe('ukefGuaranteeInMonths', () => {
+        describe('when missing', () => {
+          it('should return validationError', async () => {
+            const bond = {
+              ...allBondFields,
+              bondStage: 'Unissued',
+              ukefGuaranteeInMonths: '',
+            };
 
-          const body = await updateBondInDeal(dealId, bond);
-          expect(body.validationErrors.errorList.ukefGuaranteeInMonths).toBeDefined();
-          expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Enter the Length of time that the UKEF\'s guarantee will be in place for');
+            const body = await updateBondInDeal(dealId, bond);
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths).toBeDefined();
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Enter the Length of time that the UKEF\'s guarantee will be in place for');
+          });
+        });
+
+        describe('when not numeric', () => {
+          it('should return validationError', async () => {
+            const bond = {
+              ...allBondFields,
+              bondStage: 'Unissued',
+              ukefGuaranteeInMonths: 'test',
+            };
+
+            const body = await updateBondInDeal(dealId, bond);
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be a number, like 1 or 12');
+          });
+        });
+
+        describe('when contains decimal', () => {
+          it('should return validationError', async () => {
+            const bond = {
+              ...allBondFields,
+              bondStage: 'Unissued',
+              ukefGuaranteeInMonths: '6.3',
+            };
+
+            const body = await updateBondInDeal(dealId, bond);
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be a whole number, like 12');
+          });
+        });
+
+        describe('when less than 0', () => {
+          it('should return validationError', async () => {
+            const bond = {
+              ...allBondFields,
+              bondStage: 'Unissued',
+              ukefGuaranteeInMonths: '-1',
+            };
+
+            const body = await updateBondInDeal(dealId, bond);
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 99');
+          });
+        });
+
+        describe('when greater than 999', () => {
+          it('should return validationError', async () => {
+            const bond = {
+              ...allBondFields,
+              bondStage: 'Unissued',
+              ukefGuaranteeInMonths: '1000',
+            };
+
+            const body = await updateBondInDeal(dealId, bond);
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 99');
+          });
         });
       });
     });

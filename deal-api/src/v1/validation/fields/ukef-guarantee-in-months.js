@@ -1,9 +1,11 @@
-const { hasValue } = require('../../../../utils/string');
+const { hasValue } = require('../../../utils/string');
 const {
   isNumeric,
   decimalsCount,
-} = require('../../../../utils/number');
-const { orderNumber } = require('../../../../utils/error-list-order-number');
+} = require('../../../utils/number');
+const { orderNumber } = require('../../../utils/error-list-order-number');
+
+const isInRange = (value) => value >= 0 && value <= 999;
 
 const isValidFormat = (value) => {
   if (decimalsCount(value) === 0) {
@@ -18,6 +20,10 @@ const isValid = (str) => {
   }
 
   if (!isNumeric(Number(str))) {
+    return false;
+  }
+
+  if (!isInRange(Number(str))) {
     return false;
   }
 
@@ -37,12 +43,15 @@ const validationText = (str, fieldCopy) => {
     return `${fieldCopy} must be a number, like 1 or 12`;
   }
 
+  if (!isInRange(Number(str))) {
+    return `${fieldCopy} must be between 0 and 99`;
+  }
+
   if (!isValidFormat(str)) {
     return `${fieldCopy} must be a whole number, like 12`;
   }
   return '';
 };
-
 
 module.exports = (loan, errorList) => {
   const newErrorList = { ...errorList };

@@ -1,22 +1,14 @@
 const { hasValue } = require('../../../utils/string');
-const { orderNumber } = require('../../../utils/error-list-order-number');
+const ukefGuaranteeInMonths = require('../fields/ukef-guarantee-in-months');
 
 module.exports = (bond, errorList) => {
-  const newErrorList = { ...errorList };
-  const {
-    bondStage,
-    ukefGuaranteeInMonths,
-  } = bond;
+  let newErrorList = { ...errorList };
+  const { bondStage } = bond;
 
   const isUnissued = (hasValue(bondStage) && bondStage === 'Unissued');
 
   if (isUnissued) {
-    if (!hasValue(ukefGuaranteeInMonths)) {
-      newErrorList.ukefGuaranteeInMonths = {
-        order: orderNumber(newErrorList),
-        text: 'Enter the Length of time that the UKEF\'s guarantee will be in place for',
-      };
-    }
+    newErrorList = ukefGuaranteeInMonths(bond, newErrorList);
   }
 
   return newErrorList;
