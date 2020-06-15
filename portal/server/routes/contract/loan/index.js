@@ -5,6 +5,7 @@ import {
   requestParams,
   postToApi,
   errorHref,
+  mapCurrencies,
 } from '../../../helpers';
 import {
   loanGuaranteeDetailsValidationErrors,
@@ -112,7 +113,7 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, CURRE
   return res.render('loan/loan-financial-details.njk', {
     dealId,
     loan,
-    currencies,
+    currencies: mapCurrencies(currencies, loan.currency),
     validationErrors,
     completedForms,
   });
