@@ -34,6 +34,10 @@ context('A maker selects to abandon a contract from the view-contract page', () 
 
     cy.title().should('eq', `Abandon Deal${defaults.pageTitleAppend}`);
 
+    contractDelete.heading().invoke('text').then((text) => {
+      expect(text.trim()).to.equal(`Are you sure you want to abandon ${deal.details.bankSupplyContractName}?`);
+    });
+
     // cancel
     contractDelete.cancel().click();
 
