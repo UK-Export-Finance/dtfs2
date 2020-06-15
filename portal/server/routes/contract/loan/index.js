@@ -15,34 +15,6 @@ import completedLoanForms from './completedForms';
 
 const router = express.Router();
 
-const MOCK_LOAN = {
-  _id: '1',
-  bankReferenceNumber: 'Not entered',
-  facilityStage: 'Conditional',
-  ukefGuaranteeInMonths: '12',
-  'requestedCoverStartDate-day': '01',
-  'requestedCoverStartDate-month': '02',
-  'requestedCoverStartDate-year': '2020',
-  'coverEndDate-day': '02',
-  'coverEndDate-month': '03',
-  'coverEndDate-year': '2020',
-  loanFacilityValue: '3,000,000.00',
-  currencySameAsSupplyContractCurrency: 'false',
-  currency: 'EGP - Egyptian Pounds',
-  conversionRate: '1.75',
-  'conversionRateDate-day': '01',
-  'conversionRateDate-month': '02',
-  'conversionRateDate-year': '2020',
-  interestMargin: '3',
-  coveredPercentage: '70',
-  minimumQuarterlyFee: '3.00',
-  guaranteeFeePayableByBank: '2.7000',
-  ukefExposure: '2,100,000.00',
-  premiumType: 'At maturity',
-  premiumFrequency: 'Monthly',
-  dayCountBasis: '365',
-};
-
 router.get('/contract/:_id/loan/create', async (req, res) => {
   const { _id: dealId, userToken } = requestParams(req);
   const { _id, loanId } = await api.createDealLoan(dealId, userToken); // eslint-disable-line no-underscore-dangle
