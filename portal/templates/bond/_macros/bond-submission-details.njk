@@ -109,15 +109,15 @@
       </div>
     {% endif %}
 
-    {% if bondDetails.transactionCurrencySameAsSupplyContractCurrency %}
+    {% if bondDetails.currencySameAsSupplyContractCurrency %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
-          Is the currency for this Transaction the same as your Supply Contract currency?
+          Is the currency for this Bond the same as your Supply Contract currency?
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s" data-cy="transaction-currency-same-as-supply-contract-currency">
-          {% if bondDetails.transactionCurrencySameAsSupplyContractCurrency === "true" %}
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="currency-same-as-supply-contract-currency">
+          {% if bondDetails.currencySameAsSupplyContractCurrency === "true" %}
             Yes
-          {% elif bondDetails.transactionCurrencySameAsSupplyContractCurrency === "false" %}
+          {% elif bondDetails.currencySameAsSupplyContractCurrency === "false" %}
             No
           {% endif %}
         </dd>

@@ -349,7 +349,7 @@ describe('/v1/deals/:id/status', () => {
             bondType: 'bond type',
             bondBeneficiary: 'test',
             bondValue: '123',
-            transactionCurrencySameAsSupplyContractCurrency: 'true',
+            currencySameAsSupplyContractCurrency: 'true',
             riskMarginFee: '1',
             coveredPercentage: '2',
             feeType: 'test',

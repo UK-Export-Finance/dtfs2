@@ -169,7 +169,7 @@ module.exports = {
       beneficiary: 'TEST',
       financial: {
         value: '1.50',
-        transactionCurrencySameAsSupplyContractCurrency: true,
+        currencySameAsSupplyContractCurrency: true,
         riskMarginFee: '1%',
         coveredPercentage: '70%',
         minimumRiskMarginFee: '0.00',

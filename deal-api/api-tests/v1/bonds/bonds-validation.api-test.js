@@ -27,7 +27,7 @@ describe('/v1/deals/:id/bond', () => {
     uniqueIdentificationNumber: '1234',
     bondBeneficiary: 'test',
     bondValue: '123',
-    transactionCurrencySameAsSupplyContractCurrency: 'true',
+    currencySameAsSupplyContractCurrency: 'true',
     riskMarginFee: '1',
     coveredPercentage: '2',
     feeType: 'test',
@@ -377,27 +377,27 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
-    describe('transactionCurrencySameAsSupplyContractCurrency', () => {
+    describe('currencySameAsSupplyContractCurrency', () => {
       describe('when missing', () => {
         it('should return validationError', async () => {
           const bond = {
             ...allBondFields,
-            transactionCurrencySameAsSupplyContractCurrency: '',
+            currencySameAsSupplyContractCurrency: '',
           };
 
           const { validationErrors } = await updateBondInDeal(dealId, bond);
-          expect(validationErrors.errorList.transactionCurrencySameAsSupplyContractCurrency).toBeDefined();
-          expect(validationErrors.errorList.transactionCurrencySameAsSupplyContractCurrency.text).toEqual('Select if the currency for this Transaction is the same as your Supply Contract currency');
+          expect(validationErrors.errorList.currencySameAsSupplyContractCurrency).toBeDefined();
+          expect(validationErrors.errorList.currencySameAsSupplyContractCurrency.text).toEqual('Select if the currency for this Transaction is the same as your Supply Contract currency');
         });
       });
     });
 
-    describe('when transactionCurrencySameAsSupplyContractCurrency is false ', () => {
+    describe('when currencySameAsSupplyContractCurrency is false ', () => {
       describe('conversionRate', () => {
         const updateBondConversionRate = async (conversionRate) => {
           const bond = {
             ...allBondFields,
-            transactionCurrencySameAsSupplyContractCurrency: 'false',
+            currencySameAsSupplyContractCurrency: 'false',
             conversionRate,
           };
 
@@ -450,7 +450,7 @@ describe('/v1/deals/:id/bond', () => {
         const updateBondConversionRateDate = async (conversionRateDate) => {
           const bond = {
             ...allBondFields,
-            transactionCurrencySameAsSupplyContractCurrency: 'false',
+            currencySameAsSupplyContractCurrency: 'false',
             ...conversionRateDate,
           };
 
@@ -510,7 +510,7 @@ describe('/v1/deals/:id/bond', () => {
           it('should return validationError', async () => {
             const bond = {
               ...allBondFields,
-              transactionCurrencySameAsSupplyContractCurrency: 'false',
+              currencySameAsSupplyContractCurrency: 'false',
               currency: '',
             };
 

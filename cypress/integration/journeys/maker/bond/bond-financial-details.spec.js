@@ -76,7 +76,7 @@ context('Bond Financial Details', () => {
       partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
 
       pages.bondFinancialDetails.bondValueInputErrorMessage().should('be.visible');
-      pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyInputErrorMessage().should('be.visible');
+      pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyInputErrorMessage().should('be.visible');
       pages.bondFinancialDetails.riskMarginFeeInputErrorMessage().should('be.visible');
       pages.bondFinancialDetails.coveredPercentageInputErrorMessage().should('be.visible');
     });
@@ -132,7 +132,7 @@ context('Bond Financial Details', () => {
     pages.contract.addBondButton().click();
     partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
 
-    fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
+    fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
 
     pages.bondFinancialDetails.submit().click();
 
@@ -151,7 +151,7 @@ context('Bond Financial Details', () => {
       partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
       cy.url().should('include', '/financial-details');
 
-      fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
+      fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
       pages.bondFinancialDetails.submit().click();
 
       cy.url().should('include', '/contract');
@@ -161,14 +161,14 @@ context('Bond Financial Details', () => {
       partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
       cy.url().should('include', '/financial-details');
 
-      assertBondFormValues.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
+      assertBondFormValues.financialDetails.currencySameAsSupplyContractCurrency();
     });
   });
 
   describe('when a user selects that the currency is NOT the same as the Supply Contract currency', () => {
     it('should render additional form fields and validation errors without submit', () => {
       goToBondFinancialDetailsPage(deal);
-      pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
+      pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
 
       pages.bondFinancialDetails.currencyInput().should('be.visible');
       pages.bondFinancialDetails.currencyInputErrorMessage().should('be.visible');
@@ -200,7 +200,7 @@ context('Bond Financial Details', () => {
     describe('after form submit and navigating back to `Bond Financal Details` page', () => {
       it('should render validation errors for required fields and `currency is NOT the same` required fields', () => {
         goToBondFinancialDetailsPage(deal);
-        pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
+        pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
         pages.bondFinancialDetails.submit().click();
 
         partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
@@ -258,7 +258,7 @@ context('Bond Financial Details', () => {
         it('should render validation error', () => {
           goToBondFinancialDetailsPage(deal);
           pages.bondFinancialDetails.bondValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
-          pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
+          pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
           pages.bondFinancialDetails.currencyInput().select(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
           pages.bondFinancialDetails.conversionRateInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
 
@@ -287,7 +287,7 @@ context('Bond Financial Details', () => {
     it('should render additional submitted form field values in `Bond Preview` page', () => {
       goToBondFinancialDetailsPage(deal);
 
-      pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
+      pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
 
       fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
 
@@ -321,7 +321,7 @@ context('Bond Financial Details', () => {
       goToBondFinancialDetailsPage(deal);
 
       pages.bondFinancialDetails.bondValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
-      pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
+      pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
       pages.bondFinancialDetails.currencyInput().select(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
 
       // get bondId, go back to Deal page
@@ -473,7 +473,7 @@ context('Bond Financial Details', () => {
       partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
       cy.url().should('include', '/financial-details');
 
-      fillBondForm.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
+      fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
 
       partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
@@ -489,7 +489,7 @@ context('Bond Financial Details', () => {
         partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
         cy.url().should('include', '/financial-details');
 
-        assertBondFormValues.financialDetails.transactionCurrencySameAsSupplyContractCurrency();
+        assertBondFormValues.financialDetails.currencySameAsSupplyContractCurrency();
       });
     });
   });

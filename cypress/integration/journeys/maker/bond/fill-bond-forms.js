@@ -23,16 +23,16 @@ const details = {
 };
 
 const financialDetails = {
-  transactionCurrencySameAsSupplyContractCurrency: () => {
+  currencySameAsSupplyContractCurrency: () => {
     pages.bondFinancialDetails.bondValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
-    pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyYesInput().click();
+    pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyYesInput().click();
     pages.bondFinancialDetails.riskMarginFeeInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.riskMarginFee);
     pages.bondFinancialDetails.coveredPercentageInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
     pages.bondFinancialDetails.minimumRiskMarginFeeInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
   },
   transactionCurrencyNotTheSameAsSupplyContractCurrency: () => {
     pages.bondFinancialDetails.bondValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
-    pages.bondFinancialDetails.transactionCurrencySameAsSupplyContractCurrencyNoInput().click();
+    pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
     pages.bondFinancialDetails.currencyInput().select(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
     pages.bondFinancialDetails.conversionRateInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
     pages.bondFinancialDetails.conversionRateDateDayInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateDay);

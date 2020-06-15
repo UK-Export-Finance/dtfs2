@@ -33,7 +33,7 @@ const deal = {
         bondBeneficiary: 'test',
         status: 'Completed',
         bondValue: '1234',
-        transactionCurrencySameAsSupplyContractCurrency: 'true',
+        currencySameAsSupplyContractCurrency: 'true',
         currency: {
           text: 'GBP - UK Sterling',
           id: 'GBP',
@@ -65,7 +65,7 @@ const deal = {
         bondBeneficiary: 'test',
         status: 'Completed',
         bondValue: '5678',
-        transactionCurrencySameAsSupplyContractCurrency: 'true',
+        currencySameAsSupplyContractCurrency: 'true',
         currency: {
           text: 'GBP - UK Sterling',
           id: 'GBP',

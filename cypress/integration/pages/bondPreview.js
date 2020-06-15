@@ -17,7 +17,7 @@ const page = {
 
   // bond financial details
   bondValue: () => cy.get('[data-cy="bond-value"]'),
-  transactionCurrencySameAsSupplyContractCurrency: () => cy.get('[data-cy="transaction-currency-same-as-supply-contract-currency"]'),
+  currencySameAsSupplyContractCurrency: () => cy.get('[data-cy="currency-same-as-supply-contract-currency"]'),
   riskMarginFee: () => cy.get('[data-cy="risk-margin-fee"]'),
   coveredPercentage: () => cy.get('[data-cy="covered-percentage"]'),
   minimumRiskMarginFee: () => cy.get('[data-cy="minimum-risk-margin-fee"]'),

@@ -19,12 +19,12 @@ const FIELDS = {
   FINANCIAL_DETAILS: {
     REQUIRED_FIELDS: [
       'loanFacilityValue',
-      'transactionCurrencySameAsSupplyContractCurrency',
+      'currencySameAsSupplyContractCurrency',
       'interestMarginFee',
       'coveredPercentage',
     ],
     CONDITIONALLY_REQUIRED_FIELDS: [
-      // required if `transactionCurrencySameAsSupplyContractCurrency` is false
+      // required if `currencySameAsSupplyContractCurrency` is false
       'currency',
       'conversionRate',
       'conversionRateDate',
