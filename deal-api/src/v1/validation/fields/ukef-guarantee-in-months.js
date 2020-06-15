@@ -44,7 +44,7 @@ const validationText = (str, fieldCopy) => {
   }
 
   if (!isInRange(Number(str))) {
-    return `${fieldCopy} must be between 0 and 99`;
+    return `${fieldCopy} must be between 0 and 999`;
   }
 
   if (!isValidFormat(str)) {

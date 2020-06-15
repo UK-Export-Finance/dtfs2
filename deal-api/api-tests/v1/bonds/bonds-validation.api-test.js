@@ -181,7 +181,7 @@ describe('/v1/deals/:id/bond', () => {
 
             const body = await updateBondInDeal(dealId, bond);
             expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 99');
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 999');
           });
         });
 
@@ -195,7 +195,7 @@ describe('/v1/deals/:id/bond', () => {
 
             const body = await updateBondInDeal(dealId, bond);
             expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 99');
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 999');
           });
         });
       });
