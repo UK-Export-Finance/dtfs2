@@ -6,7 +6,7 @@
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">Are you sure you want to abandon {{ contract.details.bankSupplyContractName }}?</h1>
+  <h1 class="govuk-heading-l">Are you sure you want to abandon {{ deal.details.bankSupplyContractName }}?</h1>
 
   <form method="POST" autocomplete="off">
 
@@ -36,7 +36,7 @@
       Abandon
     </button>
 
-    <a data-cy="Cancel" href="/contract/{{contract._id}}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+    <a data-cy="Cancel" href="/contract/{{deal._id}}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
 
   </form>
 

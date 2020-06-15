@@ -43,9 +43,8 @@ router.get('/contract/:_id/submission-details', provide([DEAL, MANDATORY_CRITERI
 });
 
 router.get('/contract/:_id/delete', provide([DEAL]), async (req, res) => {
-  return res.render('contract/contract-delete.njk', {
-    contract: req.apiData[DEAL],
-  });
+  const { deal } = req.apiData;
+  return res.render('contract/contract-delete.njk', { deal });
 });
 
 router.post('/contract/:_id/delete', async (req, res) => {
