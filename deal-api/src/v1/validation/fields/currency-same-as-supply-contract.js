@@ -1,11 +1,11 @@
 const { hasValue } = require('../../../utils/string');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 
-module.exports = (bond, errorList) => {
+module.exports = (facility, errorList) => {
   const newErrorList = { ...errorList };
   const {
     currencySameAsSupplyContractCurrency,
-  } = bond;
+  } = facility;
 
   if (!hasValue(currencySameAsSupplyContractCurrency)) {
     newErrorList.currencySameAsSupplyContractCurrency = {

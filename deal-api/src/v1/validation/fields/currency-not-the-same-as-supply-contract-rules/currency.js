@@ -1,10 +1,10 @@
 const { hasValue } = require('../../../../utils/string');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
 
-module.exports = (bond, errorList) => {
+module.exports = (facility, errorList) => {
   const newErrorList = { ...errorList };
 
-  if (!hasValue(bond.currency)) {
+  if (!hasValue(facility.currency)) {
     newErrorList.currency = {
       order: orderNumber(newErrorList),
       text: 'Enter the Currency',

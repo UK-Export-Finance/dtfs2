@@ -392,7 +392,7 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
-    describe('when currencySameAsSupplyContractCurrency is false ', () => {
+    describe('when currencySameAsSupplyContractCurrency is false', () => {
       describe('conversionRate', () => {
         const updateBondConversionRate = async (conversionRate) => {
           const bond = {

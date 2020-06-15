@@ -48,7 +48,12 @@ describe('/v1/deals/:id/loan', () => {
     it('returns a loan with validationErrors for all required fields', async () => {
       const { body } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/loan/${loanId}`);
 
-      expect(body.validationErrors.count).toEqual(1);
+      expect(body.validationErrors.count).toEqual(4);
+      expect(body.validationErrors.errorList.facilityStage).toBeDefined();
+      expect(body.validationErrors.errorList.currencySameAsSupplyContractCurrency).toBeDefined();
+      // TODO add specs for below fields
+      expect(body.validationErrors.errorList.interestMargin).toBeDefined();
+      expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
     });
   });
 
@@ -56,7 +61,11 @@ describe('/v1/deals/:id/loan', () => {
     it('returns 400 with validation errors', async () => {
       const { body, status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/${loanId}`);
       expect(status).toEqual(400);
-      expect(body.validationErrors.count).toEqual(1);
+      expect(body.validationErrors.count).toEqual(4);
+      expect(body.validationErrors.errorList.facilityStage).toBeDefined();
+      expect(body.validationErrors.errorList.currencySameAsSupplyContractCurrency).toBeDefined();
+      expect(body.validationErrors.errorList.interestMargin).toBeDefined();
+      expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
     });
 
     describe('bankReferenceNumber', () => {
@@ -358,6 +367,228 @@ describe('/v1/deals/:id/loan', () => {
             expect(body.validationErrors.errorList.coverEndDate.order).toBeDefined();
             expect(body.validationErrors.errorList.coverEndDate.text).toEqual('Cover End Date cannot be before Requested Cover Start Date');
           });
+        });
+      });
+    });
+
+    describe('currencySameAsSupplyContractCurrency', () => {
+      describe('when missing', () => {
+        it('should return validationError', async () => {
+          const loan = {
+            ...allLoanFields,
+            currencySameAsSupplyContractCurrency: '',
+          };
+
+          const { validationErrors } = await updateLoanInDeal(dealId, loan);
+          expect(validationErrors.errorList.currencySameAsSupplyContractCurrency).toBeDefined();
+          expect(validationErrors.errorList.currencySameAsSupplyContractCurrency.text).toEqual('Select if the currency for this Transaction is the same as your Supply Contract currency');
+        });
+      });
+    });
+
+    describe('when currencySameAsSupplyContractCurrency is false', () => {
+      describe('conversionRate', () => {
+        const updateBondConversionRate = async (conversionRate) => {
+          const loan = {
+            ...allLoanFields,
+            currencySameAsSupplyContractCurrency: 'false',
+            conversionRate,
+          };
+
+          const body = await updateLoanInDeal(dealId, loan);
+          return body;
+        };
+
+        describe('when missing', () => {  
+          it('should return validationError', async () => {
+            const { validationErrors } = await updateBondConversionRate('');
+            expect(validationErrors.errorList.conversionRate).toBeDefined();
+            expect(validationErrors.errorList.conversionRate.text).toEqual('Enter the Conversion rate');
+          });
+        });
+
+        describe('when not a number', () => {
+          it('should return validationError', async () => {
+            const { validationErrors } = await updateBondConversionRate('test');
+            expect(validationErrors.errorList.conversionRate).toBeDefined();
+            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate must be a number, like 100 or 100.4');
+          });
+        });
+
+        describe('with more than 12 characters', () => {
+          it('should return validationError', async () => {
+            const { validationErrors } = await updateBondConversionRate('1234567.123456');
+            expect(validationErrors.errorList.conversionRate).toBeDefined();
+            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate must be 12 numbers or fewer. You can include up to 6 decimal places as part of your number.');
+          });
+        });
+
+        describe('with more than 6 characters as a whole number', () => {
+          it('should return validationError', async () => {
+            const { validationErrors } = await updateBondConversionRate('1234567');
+            expect(validationErrors.errorList.conversionRate).toBeDefined();
+            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate can only include up to 6 decimal places');
+          });
+        });
+
+        describe('with more than 6 decimal places', () => {
+          it('should return validationError', async () => {
+            const { validationErrors } = await updateBondConversionRate('1.1234567');
+            expect(validationErrors.errorList.conversionRate).toBeDefined();
+            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate can only include up to 6 decimal places');
+          });
+        });
+      });
+
+      describe('conversionRateDate', () => {
+        const updateBondConversionRateDate = async (conversionRateDate) => {
+          const loan = {
+            ...allLoanFields,
+            currencySameAsSupplyContractCurrency: 'false',
+            ...conversionRateDate,
+          };
+
+          const body = await updateLoanInDeal(dealId, loan);
+          return body;
+        };
+
+        describe('when missing', () => {
+          it('should return validationError', async () => {
+            const { validationErrors } = await updateBondConversionRateDate({});
+            expect(validationErrors.errorList.conversionRateDate).toBeDefined();
+            expect(validationErrors.errorList.conversionRateDate.text).toEqual('Enter the Conversion rate date');
+          });
+        });
+
+        describe('when in the future', () => {
+          it('should return validationError', async () => {
+            const date = moment().add(1, 'day');
+            const conversionRateFields = {
+              'conversionRateDate-day': moment(date).format('DD'),
+              'conversionRateDate-month': moment(date).format('MM'),
+              'conversionRateDate-year': moment(date).format('YYYY'),
+            };
+
+            const { validationErrors } = await updateBondConversionRateDate(conversionRateFields);
+            expect(validationErrors.errorList.conversionRateDate).toBeDefined();
+            expect(validationErrors.errorList.conversionRateDate.text).toEqual('Conversion rate date must be today or in the past');
+          });
+        });
+
+        describe('when has some values', () => {
+          it('should return validationError', async () => {
+            const date = moment().add(1, 'day');
+            const conversionRateFields = {
+              'conversionRateDate-day': moment(date).format('DD'),
+              'conversionRateDate-month': '',
+              'conversionRateDate-year': '',
+            };
+
+            const { validationErrors } = await updateBondConversionRateDate(conversionRateFields);
+            expect(validationErrors.errorList.conversionRateDate).toBeDefined();
+
+            const expectedText = dateValidationText(
+              'Conversion rate date',
+              conversionRateFields['conversionRateDate-day'],
+              conversionRateFields['conversionRateDate-month'],
+              conversionRateFields['conversionRateDate-year'],
+            );
+
+            expect(validationErrors.errorList.conversionRateDate.text).toEqual(expectedText);
+          });
+        });
+      });
+
+      describe('currency', () => {
+        describe('when missing', () => {
+          it('should return validationError', async () => {
+            const loan = {
+              ...allLoanFields,
+              currencySameAsSupplyContractCurrency: 'false',
+              currency: '',
+            };
+
+            const { validationErrors } = await updateLoanInDeal(dealId, loan);
+            expect(validationErrors.errorList.currency).toBeDefined();
+            expect(validationErrors.errorList.currency.text).toEqual('Enter the Currency');
+          });
+        });
+      });
+    });
+
+    describe('coveredPercentage', () => {
+      describe('when missing', () => {
+        it('should return validationError', async () => {
+          const loan = {
+            ...allLoanFields,
+            coveredPercentage: '',
+          };
+
+          const body = await updateLoanInDeal(dealId, loan);
+
+          expect(body.validationErrors.count).toEqual(1);
+          expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
+          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Enter the Covered Percentage');
+        });
+      });
+
+      describe('when not between 1 and 99', () => {
+        it('should return validationError', async () => {
+          const loan = {
+            ...allLoanFields,
+            coveredPercentage: '123test',
+          };
+
+          const body = await updateLoanInDeal(dealId, loan);
+
+          expect(body.validationErrors.count).toEqual(1);
+          expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
+          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must be a number, like 1 or 80');
+        });
+      });
+
+      describe('when less than 1', () => {
+        it('should return validationError', async () => {
+          const loan = {
+            ...allLoanFields,
+            coveredPercentage: '0.09',
+          };
+
+          const body = await updateLoanInDeal(dealId, loan);
+
+          expect(body.validationErrors.count).toEqual(1);
+          expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
+          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must be between 1 and 80');
+        });
+      });
+
+      describe('when greater than 80', () => {
+        it('should return validationError', async () => {
+          const loan = {
+            ...allLoanFields,
+            coveredPercentage: '81',
+          };
+
+          const body = await updateLoanInDeal(dealId, loan);
+
+          expect(body.validationErrors.count).toEqual(1);
+          expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
+          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must be between 1 and 80');
+        });
+      });
+
+      describe('when has more 4 decimals', () => {
+        it('should return validationError', async () => {
+          const loan = {
+            ...allLoanFields,
+            coveredPercentage: '12.34567',
+          };
+
+          const body = await updateLoanInDeal(dealId, loan);
+
+          expect(body.validationErrors.count).toEqual(1);
+          expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
+          expect(body.validationErrors.errorList.coveredPercentage.text).toEqual('Covered Percentage must have less than 5 decimals, like 12 or 12.3456');
         });
       });
     });
