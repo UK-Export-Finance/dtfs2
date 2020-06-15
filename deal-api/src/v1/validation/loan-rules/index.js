@@ -4,6 +4,7 @@ const facilityStageConditional = require('./facility-stage-conditional');
 const facilityStageUnconditional = require('./facility-stage-unconditional');
 const currencySameAsSupplyContractCurrency = require('../fields/currency-same-as-supply-contract');
 const currencyNotTheSameAsSupplyContractCurrency = require('../fields/currency-not-the-same-as-supply-contract-rules');
+const interestMargin = require('./interest-margin');
 const coveredPercentage = require('../fields/covered-percentage');
 
 const rules = [
@@ -14,7 +15,7 @@ const rules = [
   // facilityValue
   currencySameAsSupplyContractCurrency,
   currencyNotTheSameAsSupplyContractCurrency,
-  // interestMargin
+  interestMargin,
   coveredPercentage,
 ];
 
