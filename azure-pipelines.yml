@@ -141,7 +141,7 @@ stages:
               "value": "$(AZURE_WORKFLOW_STORAGE_ACCOUNT)",
               "type": "Custom",
               "slotSetting": false
-             }, ,
+             },
              {
               "name": "AZURE_WORKFLOW_STORAGE_ACCESS_KEY",
               "value": "$(AZURE_WORKFLOW_STORAGE_ACCESS_KEY)",
