@@ -16,7 +16,7 @@
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
 
-  <form method="POST" autocomplete="off">
+  <form method="POST" autocomplete="off" novalidate>
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-quarter">
@@ -27,14 +27,18 @@
           id: "facilityValue",
           name: "facilityValue",
           value: loan.facilityValue,
-          classes: "input--numeric-float",
           pattern: '[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)',
           attributes: {
             size: "60",
             maxlength: "255",
-            step: "0.25",
             placeholder: "0.00",
-            'data-cy': 'loan-value'
+            'data-cy': 'facilty-value'
+          },
+          errorMessage: validationErrors.errorList.facilityValue and {
+            text: validationErrors.errorList.facilityValue.text,
+            attributes: {
+              'data-cy': 'facility-value-error-message'
+            }
           }
         }) }}
       </div>
