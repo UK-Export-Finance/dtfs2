@@ -2,6 +2,8 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% import './_macros/loan-nav.njk' as loanNav %}
 {% import '_macros/currency-same-as-supply-contract-currency.njk' as currencySameAsSupplyContractCurrency %}
+{% import '_macros/facility-inputs/guarantee-fee-payable-by-bank.njk' as guaranteeFeePayableByBank %}
+{% import '_macros/facility-inputs/ukef-exposure.njk' as ukefExposure %}
 
 {% block pageTitle %}Loan Financial Details{% endblock %}
 
@@ -121,43 +123,15 @@
         }
       }) }}
 
-    <div class="govuk-form-group form-group-disabled">
-      <label class="govuk-label" for="guaranteeFeePayableByBank">
-        Guarantee fee payable by bank
-      </label>
+    {{ guaranteeFeePayableByBank.render(
+      value = loan.guaranteeFeePayableByBank,
+      hintText = "The fee to be paid by the bank to UKEF, which represents the Interest Margin multiplied by the Covered Percentage, minus the 10% retained by the bank as an administrative fee. It is a calculated field. No input is required."
+    )}}
 
-      <span id="guarantee-fee-payable-by-bank-hint" class="govuk-hint">
-        The fee to be paid by the bank to UKEF, which represents the Risk Margin Fee multiplied by the Covered Percentage, minus the 10% retained by the bank as an administrative fee. It is a calculated field. No input is required.
-      </span>
-
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-              <input class="govuk-input form-group-disabled--input" id="guaranteeFeePayableByBank" name="guaranteeFeePayableByBank" type="number" step="0.0001" min="0" max="100" aria-describedby="guarantee-fee-payable-by-bank-hint" placeholder="0" disabled value="{{ loan.guaranteeFeePayableByBank }}" data-cy="guarantee-fee-payable-by-bank">
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="govuk-form-group form-group-disabled">
-      <label class="govuk-label" for="ukefExposure">
-        UKEF exposure
-      </label>
-
-      <span id="ukef-exposure-hint" class="govuk-hint">
-        The amount of UKEF's exposure for this Transaction in the loan currency. It is the loan value multiplied by the Covered Percentage. It is a calculated field. No input is required.
-      </span>
-
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <input class="govuk-input form-group-disabled--input" id="ukefExposure" name="ukefExposure" type="number" size="60" maxlength="255" aria-describedby="ukef-exposure-hint" placeholder="0.00" disabled value="{{ loan.ukefExposure }}" data-cy="ukef-exposure">
-        </div>
-      </div>
-    </div>
-
+    {{ ukefExposure.render(
+      value = bond.ukefExposure,
+      hintText = "The amount of UKEF's exposure for this Transaction in the loan currency. It is the loan value multiplied by the Covered Percentage. It is a calculated field. No input is required."
+    )}}
 
     <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Next page</button>
 
