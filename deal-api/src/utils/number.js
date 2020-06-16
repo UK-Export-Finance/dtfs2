@@ -11,6 +11,11 @@ const decimalsCount = (numb) => {
   return 0;
 };
 
+const stripDecimals = (numb) => {
+  const withoutDecimals = numb.toString().split('.')[0];
+  return Number(withoutDecimals);
+};
+
 const roundNumber = (value, digits) => {
   let modifiedValue = value;
   let d = digits;
@@ -29,5 +34,6 @@ module.exports = {
   isNumeric,
   isInteger,
   decimalsCount,
+  stripDecimals,
   roundNumber,
 };

@@ -2,13 +2,14 @@ const { hasValue } = require('../../../utils/string');
 const {
   isNumeric,
   decimalsCount,
+  stripDecimals,
 } = require('../../../utils/number');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 
 const MAX_DECIMALS = 2;
 const MAX_CHARACTERS = 16;
 
-const isValidLength = (str) => str.length <= MAX_CHARACTERS;
+const isValidLength = (str) => String(stripDecimals(str)).length <= MAX_CHARACTERS;
 
 const isValidFormat = (value) => {
   if (decimalsCount(value) <= MAX_DECIMALS) {

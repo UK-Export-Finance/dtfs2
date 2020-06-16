@@ -2,6 +2,7 @@ const {
   isNumeric,
   isInteger,
   decimalsCount,
+  stripDecimals,
   roundNumber,
 } = require('../../src/utils/number');
 
@@ -37,6 +38,14 @@ describe('utils - number', () => {
     it('should return 0 when no decimals', () => {
       expect(decimalsCount(1)).toEqual(0);
       expect(decimalsCount(1000)).toEqual(0);
+    });
+  });
+
+  describe('stripDecimals', () => {
+    it('should return number without decimals', () => {
+      expect(stripDecimals(12345678.1)).toEqual(12345678);
+      expect(stripDecimals(12345678.910111234)).toEqual(12345678);
+      expect(stripDecimals(12345678)).toEqual(12345678);
     });
   });
 
