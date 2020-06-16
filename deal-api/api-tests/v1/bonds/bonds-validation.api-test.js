@@ -109,6 +109,20 @@ describe('/v1/deals/:id/bond', () => {
           expect(body.validationErrors.errorList.facilityValue.text).toEqual('Enter the Bond value');
         });
       });
+
+      describe('when not a number', () => {
+        it('should return validationError', async () => {
+          const bond = {
+            ...allBondFields,
+            facilityValue: 'test',
+          };
+
+          const body = await updateBondInDeal(dealId, bond);
+
+          expect(body.validationErrors.errorList.facilityValue).toBeDefined();
+          expect(body.validationErrors.errorList.facilityValue.text).toEqual('Bond value must be a number, like 1 or 12.65');
+        });
+      });
     });
 
     describe('bondStage', () => {
