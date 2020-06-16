@@ -62,14 +62,14 @@
         text: "The ongoing fee charged by the bank to the Supplier for the provision of the loan to the beneficiary. This excludes any arrangement, issuance or other up-front fees."
       },
       classes: "govuk-input--width-5",
-      id: "interestMargin",
-      name: "interestMargin",
-      value: loan.interestMargin,
+      id: "interestMarginFee",
+      name: "interestMarginFee",
+      value: loan.interestMarginFee,
       attributes: {
         'data-cy': 'interest-margin-fee'
       },
-      errorMessage: validationErrors.errorList.interestMargin and {
-        text: validationErrors.errorList.interestMargin.text,
+      errorMessage: validationErrors.errorList.interestMarginFee and {
+        text: validationErrors.errorList.interestMarginFee.text,
         attributes: {
           'data-cy': 'interest-margin-fee-error-message'
         }

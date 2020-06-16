@@ -47,7 +47,7 @@ describe('/v1/deals/:id/loan', () => {
       expect(body.validationErrors.errorList.facilityStage).toBeDefined();
       expect(body.validationErrors.errorList.facilityValue).toBeDefined();
       expect(body.validationErrors.errorList.currencySameAsSupplyContractCurrency).toBeDefined();
-      expect(body.validationErrors.errorList.interestMargin).toBeDefined();
+      expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
       expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
     });
   });
@@ -60,7 +60,7 @@ describe('/v1/deals/:id/loan', () => {
       expect(body.validationErrors.errorList.facilityStage).toBeDefined();
       expect(body.validationErrors.errorList.facilityValue).toBeDefined();
       expect(body.validationErrors.errorList.currencySameAsSupplyContractCurrency).toBeDefined();
-      expect(body.validationErrors.errorList.interestMargin).toBeDefined();
+      expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
       expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
     });
 
@@ -520,62 +520,62 @@ describe('/v1/deals/:id/loan', () => {
       });
     });
 
-    describe('interestMargin', () => {
+    describe('interestMarginFee', () => {
       describe('when missing', () => {
         it('should return validationError', async () => {
           const loan = {
-            interestMargin: '',
+            interestMarginFee: '',
           };
 
           const body = await updateLoanInDeal(dealId, loan);
 
-          expect(body.validationErrors.errorList.interestMargin).toBeDefined();
-          expect(body.validationErrors.errorList.interestMargin.text).toEqual('Enter the Interest Margin %');
+          expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
+          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Enter the Interest Margin %');
         });
       });
 
       describe('when not a number', () => {
         it('should return validationError', async () => {
           const loan = {
-            interestMargin: '123test',
+            interestMarginFee: '123test',
           };
 
           const body = await updateLoanInDeal(dealId, loan);
 
-          expect(body.validationErrors.errorList.interestMargin).toBeDefined();
-          expect(body.validationErrors.errorList.interestMargin.text).toEqual('Interest Margin % must be a number, like 1 or 12.65');
+          expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
+          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Interest Margin % must be a number, like 1 or 12.65');
         });
       });
 
       describe('when not between 0 and 99', () => {
         it('should return validationError', async () => {
           const loan = {
-            interestMargin: '100',
+            interestMarginFee: '100',
           };
 
           let body = await updateLoanInDeal(dealId, loan);
 
-          expect(body.validationErrors.errorList.interestMargin).toBeDefined();
-          expect(body.validationErrors.errorList.interestMargin.text).toEqual('Interest Margin % must be between 0 and 99');
+          expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
+          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Interest Margin % must be between 0 and 99');
 
-          loan.interestMargin = '-1';
+          loan.interestMarginFee = '-1';
 
           body = await updateLoanInDeal(dealId, loan);
 
-          expect(body.validationErrors.errorList.interestMargin).toBeDefined();
-          expect(body.validationErrors.errorList.interestMargin.text).toEqual('Interest Margin % must be between 0 and 99');
+          expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
+          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Interest Margin % must be between 0 and 99');
         });
       });
 
       describe('when more than 4 decimals', () => {
         it('should return validationError when more than 4 decimals', async () => {
           const loan = {
-            interestMargin: '60.12345',
+            interestMarginFee: '60.12345',
           };
 
           const body = await updateLoanInDeal(dealId, loan);
-          expect(body.validationErrors.errorList.interestMargin).toBeDefined();
-          expect(body.validationErrors.errorList.interestMargin.text).toEqual('Interest Margin % must have less than 5 decimals, like 12 or 12.0010');
+          expect(body.validationErrors.errorList.interestMarginFee).toBeDefined();
+          expect(body.validationErrors.errorList.interestMarginFee.text).toEqual('Interest Margin % must have less than 5 decimals, like 12 or 12.0010');
         });
       });
     });

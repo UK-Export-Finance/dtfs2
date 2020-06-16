@@ -5,7 +5,7 @@ module.exports = (loan, errorList) => {
 
   newErrorList = marginFee(
     loan,
-    'interestMargin',
+    'interestMarginFee',
     'Interest Margin %',
     newErrorList,
   );

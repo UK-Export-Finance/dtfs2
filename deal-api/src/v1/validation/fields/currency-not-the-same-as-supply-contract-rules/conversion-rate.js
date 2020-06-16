@@ -37,20 +37,20 @@ const isValid = (str) => {
   return true;
 };
 
-const validationText = (value, fieldCopy) => {
+const validationText = (value, fieldTitle) => {
   if (!isNumeric(Number(value))) {
-    return `${fieldCopy} must be a number, like 100 or 100.4`;
+    return `${fieldTitle} must be a number, like 100 or 100.4`;
   }
 
   if (!isValidLength(value)) {
-    return `${fieldCopy} must be ${MAX_CHARACTERS} numbers or fewer. You can include up to 6 decimal places as part of your number.`;
+    return `${fieldTitle} must be ${MAX_CHARACTERS} numbers or fewer. You can include up to 6 decimal places as part of your number.`;
   }
 
   if (!isValidFormat(value)) {
-    return `${fieldCopy} can only include up to 6 decimal places`;
+    return `${fieldTitle} can only include up to 6 decimal places`;
   }
 
-  return `Enter the ${fieldCopy}`;
+  return `Enter the ${fieldTitle}`;
 };
 
 module.exports = (facility, errorList) => {

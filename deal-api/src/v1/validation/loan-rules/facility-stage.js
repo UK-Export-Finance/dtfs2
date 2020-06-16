@@ -9,9 +9,9 @@ const isValid = (str) => {
   return true;
 };
 
-const validationText = (str, fieldCopy) => {
+const validationText = (str, fieldTitle) => {
   if (!hasValue(str)) {
-    return `Select the ${fieldCopy}`;
+    return `Select the ${fieldTitle}`;
   }
   return '';
 };

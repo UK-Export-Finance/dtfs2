@@ -131,38 +131,38 @@ describe('validation - date-field', () => {
 
   describe('dateValidationText', () => {
     it('should return the correct string/message depending on which part of the date is missing', () => {
-      const mockFieldCopy = 'Field Name';
+      const mockFieldTitle = 'Field Name';
 
-      let result = dateValidationText(mockFieldCopy, '01', '', '');
-      let expected = `${mockFieldCopy} must include month and year`;
+      let result = dateValidationText(mockFieldTitle, '01', '', '');
+      let expected = `${mockFieldTitle} must include month and year`;
       expect(result).toEqual(expected);
 
-      result = dateValidationText(mockFieldCopy, '01', '02', '');
-      expected = `${mockFieldCopy} must include a year`;
+      result = dateValidationText(mockFieldTitle, '01', '02', '');
+      expected = `${mockFieldTitle} must include a year`;
       expect(result).toEqual(expected);
 
-      result = dateValidationText(mockFieldCopy, '01', '', '2020');
-      expected = `${mockFieldCopy} must include a month`;
+      result = dateValidationText(mockFieldTitle, '01', '', '2020');
+      expected = `${mockFieldTitle} must include a month`;
       expect(result).toEqual(expected);
 
-      result = dateValidationText(mockFieldCopy, '', '02', '');
-      expected = `${mockFieldCopy} must include day and year`;
+      result = dateValidationText(mockFieldTitle, '', '02', '');
+      expected = `${mockFieldTitle} must include day and year`;
       expect(result).toEqual(expected);
 
-      result = dateValidationText(mockFieldCopy, '', '02', '2020');
-      expected = `${mockFieldCopy} must include a day`;
+      result = dateValidationText(mockFieldTitle, '', '02', '2020');
+      expected = `${mockFieldTitle} must include a day`;
       expect(result).toEqual(expected);
 
-      result = dateValidationText(mockFieldCopy, '', '', '2020');
-      expected = `${mockFieldCopy} must include day and month`;
+      result = dateValidationText(mockFieldTitle, '', '', '2020');
+      expected = `${mockFieldTitle} must include day and month`;
       expect(result).toEqual(expected);
 
-      result = dateValidationText(mockFieldCopy, '', '', '');
-      expected = `Enter the ${mockFieldCopy}`;
+      result = dateValidationText(mockFieldTitle, '', '', '');
+      expected = `Enter the ${mockFieldTitle}`;
       expect(result).toEqual(expected);
 
-      result = dateValidationText(mockFieldCopy);
-      expected = `Enter the ${mockFieldCopy}`;
+      result = dateValidationText(mockFieldTitle);
+      expected = `Enter the ${mockFieldTitle}`;
       expect(result).toEqual(expected);
     });
   });
