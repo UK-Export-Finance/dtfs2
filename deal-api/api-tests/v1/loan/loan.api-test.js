@@ -204,6 +204,7 @@ describe('/v1/deals/:id/loan', () => {
         bankReferenceNumber: '1234',
         ...requestedCoverStartDate(),
         ...coverEndDate(),
+        disbursementAmount: '5',
       };
 
       const updatedLoanResponse = await as(aBarclaysMaker).put(updateToUnconditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
@@ -232,6 +233,7 @@ describe('/v1/deals/:id/loan', () => {
         coveredPercentage: '40',
         ...requestedCoverStartDate(),
         ...coverEndDate(),
+        disbursementAmount: '5',
       };
 
       await as(aBarclaysMaker).put(unconditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
@@ -254,6 +256,7 @@ describe('/v1/deals/:id/loan', () => {
         'coverEndDate-day': undefined,
         'coverEndDate-month': undefined,
         'coverEndDate-year': undefined,
+        disbursementAmount: undefined,
       });
     });
   });
