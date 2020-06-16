@@ -43,7 +43,7 @@ exports.update = async (req, res) => {
       res.status(401).send();
       return;
     }
-    console.log(req.body.deleteFile);
+
     const deletePromises = deleteMultipleFiles(req.body.deleteFile);
 
     const uploadPromises = req.files.map(async (file) => {
@@ -150,6 +150,7 @@ exports.update = async (req, res) => {
 exports.downloadFile = async (req, res) => {
   const { id, fieldname, filename } = req.params;
 
+
   findOneDeal(id, async (deal) => {
     if (!deal) {
       return res.status(404).send();
@@ -159,7 +160,7 @@ exports.downloadFile = async (req, res) => {
       return res.status(401).send();
     }
 
-    const fieldFiles = deal.dealFiles[fieldname];
+    const fieldFiles = deal.dealFiles && deal.dealFiles[fieldname];
     if (!fieldFiles) {
       return res.status(404).send();
     }
@@ -184,14 +185,5 @@ exports.downloadFile = async (req, res) => {
     res.set('Content-Type', fileInfo.mimetype);
 
     return readStream.pipe(res);
-    /*
-    return res.status(200).send({
-      properties: {
-        contentLength,
-        contentType,
-      },
-      buffer,
-    });
-    */
   });
 };

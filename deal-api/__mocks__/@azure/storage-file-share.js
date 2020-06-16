@@ -13,6 +13,7 @@ function createFileClient(filename) {
   const fileClient = new ShareFileClient();
   fileClient.name = filename;
   fileClient.path = `${this.folderName}/${filename}`;
+  fileClient.downloadToBuffer = () => Buffer.from('mockFile', 'utf-8');
   return fileClient;
 }
 
@@ -24,6 +25,7 @@ ShareDirectoryClient.prototype.getFileClient = createFileClient;
 
 ShareClient.catch = jest.fn;
 ShareClient.prototype.create = () => ShareClient;
+ShareClient.prototype.deleteFile = () => ShareClient;
 ShareClient.prototype.getDirectoryClient = createDirectoryClient;
 ShareClient.prototype.ShareClientdeleteFile = () => ShareClient;
 

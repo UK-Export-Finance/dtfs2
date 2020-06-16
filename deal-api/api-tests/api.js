@@ -2,7 +2,7 @@ const request = require('supertest');
 
 module.exports = (app) => ({
   as: (user) => {
-    const token = (user && user.token)?user.token:'';
+    const token = (user && user.token) ? user.token : '';
 
     return {
       post: (data) => ({
@@ -26,7 +26,7 @@ module.exports = (app) => ({
           }
 
           return results;
-        }
+        },
       }),
 
       put: (data) => ({
@@ -62,6 +62,6 @@ module.exports = (app) => ({
         .delete(url)
         .set({ Authorization: token || '' })
         .send(),
-    }
-  }
+    };
+  },
 });
