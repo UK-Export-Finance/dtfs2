@@ -34,21 +34,21 @@ const isValid = (str) => {
   return true;
 };
 
-const validationText = (str, fieldCopy) => {
+const validationText = (str, fieldTitle) => {
   if (!hasValue(str)) {
-    return `Enter the ${fieldCopy}`;
+    return `Enter the ${fieldTitle}`;
   }
 
   if (!isNumeric(Number(str))) {
-    return `${fieldCopy} must be a number, like 1 or 12`;
+    return `${fieldTitle} must be a number, like 1 or 12`;
   }
 
   if (!isInRange(Number(str))) {
-    return `${fieldCopy} must be between 0 and 999`;
+    return `${fieldTitle} must be between 0 and 999`;
   }
 
   if (!isValidFormat(str)) {
-    return `${fieldCopy} must be a whole number, like 12`;
+    return `${fieldTitle} must be a whole number, like 12`;
   }
   return '';
 };

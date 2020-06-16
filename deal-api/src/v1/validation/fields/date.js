@@ -30,7 +30,7 @@ exports.dateIsInTimeframe = (day, month, year, start, end) => {
 };
 
 exports.dateValidationText = (
-  fieldCopy,
+  fieldTitle,
   dayValue,
   monthValue,
   yearValue,
@@ -40,28 +40,28 @@ exports.dateValidationText = (
   const hasYear = hasValue(yearValue);
 
   if (hasDay && !hasMonth && !hasYear) {
-    return `${fieldCopy} must include month and year`;
+    return `${fieldTitle} must include month and year`;
   }
 
   if (hasDay && hasMonth && !hasYear) {
-    return `${fieldCopy} must include a year`;
+    return `${fieldTitle} must include a year`;
   }
 
   if (hasDay && !hasMonth && hasYear) {
-    return `${fieldCopy} must include a month`;
+    return `${fieldTitle} must include a month`;
   }
 
   if (!hasDay && hasMonth && !hasYear) {
-    return `${fieldCopy} must include day and year`;
+    return `${fieldTitle} must include day and year`;
   }
 
   if (!hasDay && hasMonth && hasYear) {
-    return `${fieldCopy} must include a day`;
+    return `${fieldTitle} must include a day`;
   }
 
   if (!hasDay && !hasMonth && hasYear) {
-    return `${fieldCopy} must include day and month`;
+    return `${fieldTitle} must include day and month`;
   }
 
-  return `Enter the ${fieldCopy}`;
+  return `Enter the ${fieldTitle}`;
 };

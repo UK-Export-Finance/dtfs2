@@ -20,7 +20,7 @@ const FIELDS = {
     REQUIRED_FIELDS: [
       'facilityValue',
       'currencySameAsSupplyContractCurrency',
-      'interestMargin',
+      'interestMarginFee',
       'coveredPercentage',
     ],
     CONDITIONALLY_REQUIRED_FIELDS: [

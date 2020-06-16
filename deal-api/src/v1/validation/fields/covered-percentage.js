@@ -38,24 +38,24 @@ const isValid = (str) => {
   return true;
 };
 
-const validationText = (str, fieldCopy) => {
+const validationText = (str, fieldTitle) => {
   if (!hasValue(str)) {
-    return `Enter the ${fieldCopy}`;
+    return `Enter the ${fieldTitle}`;
   }
 
   if (!isNumeric(Number(str))) {
-    return `${fieldCopy} must be a number, like ${MIN_VALUE} or ${MAX_VALUE}`;
+    return `${fieldTitle} must be a number, like ${MIN_VALUE} or ${MAX_VALUE}`;
   }
 
   if (!isInRange(str)) {
-    return `${fieldCopy} must be between ${MIN_VALUE} and ${MAX_VALUE}`;
+    return `${fieldTitle} must be between ${MIN_VALUE} and ${MAX_VALUE}`;
   }
 
   if (!isValidFormat(str)) {
-    return `${fieldCopy} must have less than ${MAX_DECIMALS + 1} decimals, like 12 or 12.3456`;
+    return `${fieldTitle} must have less than ${MAX_DECIMALS + 1} decimals, like 12 or 12.3456`;
   }
 
-  return `Enter the ${fieldCopy}`;
+  return `Enter the ${fieldTitle}`;
 };
 
 module.exports = (facility, errorList) => {

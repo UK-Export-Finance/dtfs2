@@ -41,21 +41,21 @@ const isValid = (str) => {
   return true;
 };
 
-const validationText = (str, fieldCopy) => {
+const validationText = (str, fieldTitle) => {
   if (!isNumeric(Number(str))) {
-    return `${fieldCopy} must be a number, like 1 or 12.65`;
+    return `${fieldTitle} must be a number, like 1 or 12.65`;
   }
 
   if (!isValidLength(str)) {
-    return `${fieldCopy} must be ${MAX_CHARACTERS} characters or fewer`;
+    return `${fieldTitle} must be ${MAX_CHARACTERS} characters or fewer`;
   }
 
   if (!isInRange(Number(str))) {
-    return `${fieldCopy} must be between ${MIN_VALUE} and ${MAX_VALUE}`;
+    return `${fieldTitle} must be between ${MIN_VALUE} and ${MAX_VALUE}`;
   }
 
   if (!isValidFormat(str)) {
-    return `${fieldCopy} must have less than ${MAX_DECIMALS + 1} decimals, like 12 or 12.10`;
+    return `${fieldTitle} must have less than ${MAX_DECIMALS + 1} decimals, like 12 or 12.10`;
   }
   return '';
 };

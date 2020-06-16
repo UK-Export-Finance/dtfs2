@@ -36,24 +36,24 @@ const isValid = (str) => {
   return true;
 };
 
-const validationText = (str, fieldCopy) => {
+const validationText = (str, fieldTitle) => {
   if (!hasValue(str)) {
-    return `Enter the ${fieldCopy}`;
+    return `Enter the ${fieldTitle}`;
   }
 
   if (!isNumeric(Number(str))) {
-    return `${fieldCopy} must be a number, like 1 or 12.65`;
+    return `${fieldTitle} must be a number, like 1 or 12.65`;
   }
 
   if (!isInRange(str)) {
-    return `${fieldCopy} must be between 0 and 99`;
+    return `${fieldTitle} must be between 0 and 99`;
   }
 
   if (!isValidFormat(str)) {
-    return `${fieldCopy} must have less than ${MAX_DECIMALS + 1} decimals, like 12 or 12.0010`;
+    return `${fieldTitle} must have less than ${MAX_DECIMALS + 1} decimals, like 12 or 12.0010`;
   }
 
-  return `Enter the ${fieldCopy}`;
+  return `Enter the ${fieldTitle}`;
 };
 
 module.exports = (entity, fieldName, fieldTitle, errorList) => {

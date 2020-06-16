@@ -16,13 +16,13 @@ const isValid = (str) => {
   return true;
 };
 
-const validationText = (str, fieldCopy) => {
+const validationText = (str, fieldTitle) => {
   if (!hasValue(str)) {
-    return `Enter the ${fieldCopy}`;
+    return `Enter the ${fieldTitle}`;
   }
 
   if (!isValidLength(str)) {
-    return `${fieldCopy} must be ${MAX_CHARACTERS} characters or fewer`;
+    return `${fieldTitle} must be ${MAX_CHARACTERS} characters or fewer`;
   }
   return '';
 };
