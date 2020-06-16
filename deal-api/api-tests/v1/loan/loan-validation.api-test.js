@@ -351,6 +351,76 @@ describe('/v1/deals/:id/loan', () => {
           });
         });
       });
+
+      describe('disbursementAmount', () => {
+        describe('when missing', () => {
+          it('should return validationError', async () => {
+            const loan = {
+              facilityStage: 'Unconditional',
+              disbursementAmount: '',
+            };
+
+            const body = await updateLoanInDeal(dealId, loan);
+
+            expect(body.validationErrors.errorList.disbursementAmount).toBeDefined();
+            expect(body.validationErrors.errorList.disbursementAmount.text).toEqual('Enter the Disbursement amount');
+          });
+        });
+
+        describe('when not a number', () => {
+          it('should return validationError', async () => {
+            const loan = {
+              facilityStage: 'Unconditional',
+              disbursementAmount: '123test',
+            };
+
+            const body = await updateLoanInDeal(dealId, loan);
+
+            expect(body.validationErrors.errorList.disbursementAmount).toBeDefined();
+            expect(body.validationErrors.errorList.disbursementAmount.text).toEqual('Disbursement amount must be a number, like 1 or 12.65');
+          });
+        });
+
+        describe('when more than 2 decimals', () => {
+          it('should return validationError', async () => {
+            const loan = {
+              facilityStage: 'Unconditional',
+              disbursementAmount: '12.345',
+            };
+
+            const body = await updateLoanInDeal(dealId, loan);
+            expect(body.validationErrors.errorList.disbursementAmount).toBeDefined();
+            expect(body.validationErrors.errorList.disbursementAmount.text).toEqual('Disbursement amount must have less than 3 decimals, like 12 or 12.65');
+          });
+        });
+
+        describe('when less than 1', () => {
+          it('should return validationError', async () => {
+            const loan = {
+              facilityStage: 'Unconditional',
+              disbursementAmount: '0',
+            };
+
+            const body = await updateLoanInDeal(dealId, loan);
+            expect(body.validationErrors.errorList.disbursementAmount).toBeDefined();
+            expect(body.validationErrors.errorList.disbursementAmount.text).toEqual('Disbursement amount must be more than 1');
+          });
+        });
+
+        describe('when more than facilityValue', () => {
+          it('should return validationError', async () => {
+            const loan = {
+              facilityStage: 'Unconditional',
+              facilityValue: '9',
+              disbursementAmount: '9.1',
+            };
+
+            const body = await updateLoanInDeal(dealId, loan);
+            expect(body.validationErrors.errorList.disbursementAmount).toBeDefined();
+            expect(body.validationErrors.errorList.disbursementAmount.text).toEqual(`Disbursement amount must be less than the Loan facility value (${loan.facilityValue})`);
+          });
+        });
+      });
     });
 
     describe('facilityValue', () => {
@@ -568,7 +638,7 @@ describe('/v1/deals/:id/loan', () => {
       });
 
       describe('when more than 4 decimals', () => {
-        it('should return validationError when more than 4 decimals', async () => {
+        it('should return validationError', async () => {
           const loan = {
             interestMarginFee: '60.12345',
           };

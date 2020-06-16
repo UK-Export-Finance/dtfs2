@@ -21,31 +21,27 @@
 
   <form method="POST" autocomplete="off" novalidate>
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-quarter">
-        {{ govukInput({
-          label: {
-            text: "Loan facility value"
-          },
-          id: "facilityValue",
-          name: "facilityValue",
-          value: loan.facilityValue,
-          pattern: '[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)',
-          attributes: {
-            size: "60",
-            maxlength: "255",
-            placeholder: "0.00",
-            'data-cy': 'facilty-value'
-          },
-          errorMessage: validationErrors.errorList.facilityValue and {
-            text: validationErrors.errorList.facilityValue.text,
-            attributes: {
-              'data-cy': 'facility-value-error-message'
-            }
-          }
-        }) }}
-      </div>
-    </div>
+    {{ govukInput({
+      label: {
+        text: "Loan facility value"
+      },
+      id: "facilityValue",
+      name: "facilityValue",
+      value: loan.facilityValue,
+      pattern: '[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)',
+      attributes: {
+        size: "60",
+        maxlength: "255",
+        placeholder: "0.00",
+        'data-cy': 'facilty-value'
+      },
+      errorMessage: validationErrors.errorList.facilityValue and {
+        text: validationErrors.errorList.facilityValue.text,
+        attributes: {
+          'data-cy': 'facility-value-error-message'
+        }
+      }
+    }) }}
 
     {{ currencySameAsSupplyContractCurrency.render(
       facility = loan,
@@ -53,6 +49,30 @@
       currencies = currencies,
       validationErrors = validationErrors
     )}}
+
+    {% if loan.facilityStage === 'Unconditional' %}
+      {{ govukInput({
+        label: {
+          text: "Disbursement amount"
+        },
+        id: "disbursementAmount",
+        name: "disbursementAmount",
+        value: loan.disbursementAmount,
+        pattern: '[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)',
+        attributes: {
+          size: "60",
+          maxlength: "255",
+          placeholder: "0.00",
+          'data-cy': 'disbursement-amount'
+        },
+        errorMessage: validationErrors.errorList.disbursementAmount and {
+          text: validationErrors.errorList.disbursementAmount.text,
+          attributes: {
+            'data-cy': 'disbursement-amount-error-message'
+          }
+        }
+      }) }}
+    {% endif %}
 
     {{ govukInput({
       label: {

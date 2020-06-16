@@ -24,6 +24,8 @@ const FIELDS = {
       'coveredPercentage',
     ],
     CONDITIONALLY_REQUIRED_FIELDS: [
+      // required if facilityStage is 'Unconditional'
+      'disbursementAmount',
       // required if `currencySameAsSupplyContractCurrency` is false
       'currency',
       'conversionRate',

@@ -91,6 +91,7 @@ const loanFacilityStageFields = (loan) => {
     delete modifiedLoan['coverEndDate-day'];
     delete modifiedLoan['coverEndDate-month'];
     delete modifiedLoan['coverEndDate-year'];
+    delete modifiedLoan.disbursementAmount;
   }
 
   if (facilityStage === 'Unconditional') {
