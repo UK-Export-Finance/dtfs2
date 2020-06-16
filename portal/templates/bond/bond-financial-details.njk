@@ -3,6 +3,8 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% import './_macros/bond-nav.njk' as bondNav %}
 {% import '_macros/currency-same-as-supply-contract-currency.njk' as currencySameAsSupplyContractCurrency %}
+{% import '_macros/facility-inputs/guarantee-fee-payable-by-bank.njk' as guaranteeFeePayableByBank %}
+{% import '_macros/facility-inputs/ukef-exposure.njk' as ukefExposure %}
 
 {% block pageTitle %}Bond Financial Details{% endblock %}
 
@@ -132,54 +134,15 @@
         }
       }) }}
 
-    {{ govukInput({
-      formGroup: {
-        classes: "form-group-disabled"
-      },
-      label: {
-        text: "Guarantee fee payable by bank"
-      },
-      hint: {
-        text: "The fee to be paid by the bank to UKEF, which represents the Risk Margin Fee multiplied by the Covered Percentage, minus the 10% retained by the bank as an administrative fee. It is a calculated field. No input is required."
-      },
-      id: "guaranteeFeePayableByBank",
-      name: "guaranteeFeePayableByBank",
-      value: bond.guaranteeFeePayableByBank,
-      classes: "form-group-disabled--input govuk-input--width-5",
-      type: "number",
-      attributes: {
-        step: "0.0001",
-        min: "0",
-        max: "100",
-        placeholder: "0",
-        disabled: "true",
-        'data-cy': "guarantee-fee-payable-by-bank"
-      }
-    }) }}
+    {{ guaranteeFeePayableByBank.render(
+      value = bond.guaranteeFeePayableByBank,
+      hintText = "The fee to be paid by the bank to UKEF, which represents the Risk Margin Fee multiplied by the Covered Percentage, minus the 10% retained by the bank as an administrative fee. It is a calculated field. No input is required."
+    )}}
 
-    {{ govukInput({
-      formGroup: {
-        classes: "form-group-disabled"
-      },
-      label: {
-        text: "UKEF exposure"
-      },
-      hint: {
-        text: "The amount of UKEF's exposure for this Transaction in the bond currency. It is the bond value multiplied by the Covered Percentage. It is a calculated field. No input is required."
-      },
-      id: "ukefExposure",
-      name: "ukefExposure",
-      value: bond.ukefExposure,
-      classes: "form-group-disabled--input govuk-input--width-10",
-      type: "text",
-      attributes: {
-        size: "60",
-        maxlength: "255",
-        placeholder: "0.00",
-        disabled: "true",
-        'data-cy': "ukef-exposure"
-      }
-    }) }}
+    {{ ukefExposure.render(
+      value = bond.ukefExposure,
+      hintText = "The amount of UKEF's exposure for this Transaction in the bond currency. It is the bond value multiplied by the Covered Percentage. It is a calculated field. No input is required."
+    )}}
 
     <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Next page</button>
 
@@ -193,53 +156,5 @@
     />
 
   </form>
-
-  <script type="text/javascript">
-  
-    /* UKEF Exposure calculation */
-    var bondValueInput = document.getElementById('bondValue');
-    var coveredPercentageInput = document.getElementById('coveredPercentage');
-    var ukefExposure = document.getElementById('ukefExposure');
-
-    function calculateUkefExposure() {
-      var bondValue = bondValueInput.value.replace(/,/g, ''); // remove commas
-
-      var calculation = bondValue * (coveredPercentageInput.value / 100);
-
-      if (window.dtfs.isNumeric(calculation)) {
-        var result;
-        var totalDecimals = window.dtfs.decimalsCount(calculation);
-        if (totalDecimals > 2)  {
-          result = window.dtfs.roundNumber(calculation, 2);
-        } else {
-          result = calculation;
-        }
-
-        var formattedResult = result.toLocaleString('en', { minimumFractionDigits: 2 });
-
-        ukefExposure.value = formattedResult;
-      }
-    }
-
-    [bondValueInput, coveredPercentageInput].forEach(function(element) {
-      element.addEventListener('blur', function(event) {
-        calculateUkefExposure();
-      });
-    });
-
-    /* Guarantee fee calculation */
-    var riskMarginFeeInput = document.getElementById('riskMarginFee');
-    var guaranteeFee = document.getElementById('guaranteeFeePayableByBank');
-
-    function calculateGuaranteeFee() {
-      var result = riskMarginFeeInput.value * 0.9;
-      var formattedResult = result.toLocaleString('en', { minimumFractionDigits: 4 });
-      guaranteeFee.value = formattedResult;
-    }
-
-    riskMarginFeeInput.addEventListener('blur', function(event) {
-      calculateGuaranteeFee();
-    });
-  </script>
 
 {% endblock %}

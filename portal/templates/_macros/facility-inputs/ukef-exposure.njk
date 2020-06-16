@@ -1,0 +1,67 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% macro render(hintText, value) %}
+
+  {{ govukInput({
+    formGroup: {
+      classes: "form-group-disabled"
+    },
+    label: {
+      text: "UKEF exposure"
+    },
+    hint: {
+      text: hintText
+    },
+    id: "ukefExposure",
+    name: "ukefExposure",
+    value: bond.ukefExposure,
+    classes: "form-group-disabled--input govuk-input--width-10",
+    type: "text",
+    attributes: {
+      size: "60",
+      maxlength: "255",
+      placeholder: "0.00",
+      disabled: "true",
+      'data-cy': "ukef-exposure"
+    }
+  }) }}
+
+  <script type="text/javascript">
+    /*
+      calculate UKEF Exposure from Facility Value and Covered Percentage
+    */
+
+    var facilityValueInput = document.getElementById('facilityValue');
+    var coveredPercentageInput = document.getElementById('coveredPercentage');
+    var ukefExposureInput = document.getElementById('ukefExposure');
+
+    function calculateUkefExposure() {
+      var facilityValue = facilityValueInput.value.replace(/,/g, ''); // remove commas
+
+      var calculation = facilityValue * (coveredPercentageInput.value / 100);
+
+      if (window.dtfs.isNumeric(calculation)) {
+        var result;
+        var totalDecimals = window.dtfs.decimalsCount(calculation);
+        if (totalDecimals > 2)  {
+          result = window.dtfs.roundNumber(calculation, 2);
+        } else {
+          result = calculation;
+        }
+
+        var formattedResult = result.toLocaleString('en', { minimumFractionDigits: 2 });
+
+        ukefExposureInput.value = formattedResult;
+      }
+    }
+
+    if (facilityValueInput && coveredPercentageInput) {
+      [facilityValueInput, coveredPercentageInput].forEach(function(element) {
+        element.addEventListener('blur', function(event) {
+          calculateUkefExposure();
+        });
+      });
+    }
+  </script>
+    
+{% endmacro %}
