@@ -3,6 +3,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% import './_macros/bond-nav.njk' as bondNav %}
 {% import '_macros/currency-same-as-supply-contract-currency.njk' as currencySameAsSupplyContractCurrency %}
+{% import '_macros/facility-inputs/covered-percentage.njk' as coveredPercentage %}
 {% import '_macros/facility-inputs/guarantee-fee-payable-by-bank.njk' as guaranteeFeePayableByBank %}
 {% import '_macros/facility-inputs/ukef-exposure.njk' as ukefExposure %}
 
@@ -86,27 +87,10 @@
       }
     }) }}
 
-    {{ govukInput({
-      label: {
-        text: "Covered Percentage"
-      },
-      hint: {
-        text: "Percentage of UKEF cover requested by the bank. This can be any value up to 80%."
-      },
-      classes: "govuk-input--width-5",
-      id: "coveredPercentage",
-      name: "coveredPercentage",
-      value: bond.coveredPercentage,
-      attributes: {
-        'data-cy': 'covered-percentage'
-      },
-      errorMessage: validationErrors.errorList.coveredPercentage and {
-        text: validationErrors.errorList.coveredPercentage.text,
-        attributes: {
-          'data-cy': 'covered-percentage-error-message'
-        }
-      }
-    }) }}
+    {{ coveredPercentage.render(
+      value = bond.coveredPercentage,
+      validationError = validationErrors.errorList.coveredPercentage
+    )}}
 
      {{ govukInput({
        inputmode: 'numeric',
