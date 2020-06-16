@@ -37,20 +37,20 @@
           label: {
             text: "Bond value"
           },
-          id: "bondValue",
-          name: "bondValue",
-          value: bond.bondValue,
+          id: "facilityValue",
+          name: "facilityValue",
+          value: bond.facilityValue,
           pattern: '[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)',
           attributes: {
             size: "60",
             maxlength: "255",
             placeholder: "0.00",
-            'data-cy': 'bond-value'
+            'data-cy': 'facility-value'
           },
-          errorMessage: validationErrors.errorList.bondValue and {
-            text: validationErrors.errorList.bondValue.text,
+          errorMessage: validationErrors.errorList.facilityValue and {
+            text: validationErrors.errorList.facilityValue.text,
             attributes: {
-              'data-cy': 'bond-value-error-message'
+              'data-cy': 'facility-value-error-message'
             }
           }
         }) }}

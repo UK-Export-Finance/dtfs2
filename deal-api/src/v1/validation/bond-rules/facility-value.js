@@ -4,8 +4,8 @@ const { hasValue } = require('../../../utils/string');
 module.exports = (bond, errorList) => {
   const newErrorList = { ...errorList };
 
-  if (!hasValue(bond.bondValue)) {
-    newErrorList.bondValue = {
+  if (!hasValue(bond.facilityValue)) {
+    newErrorList.facilityValue = {
       order: orderNumber(newErrorList),
       text: 'Enter the Bond value',
     };

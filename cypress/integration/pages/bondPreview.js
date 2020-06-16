@@ -16,7 +16,7 @@ const page = {
   uniqueIdentificationNumber: () => cy.get('[data-cy="unique-identification-number"]'),
 
   // bond financial details
-  bondValue: () => cy.get('[data-cy="bond-value"]'),
+  facilityValue: () => cy.get('[data-cy="facility-value"]'),
   currencySameAsSupplyContractCurrency: () => cy.get('[data-cy="currency-same-as-supply-contract-currency"]'),
   riskMarginFee: () => cy.get('[data-cy="risk-margin-fee"]'),
   coveredPercentage: () => cy.get('[data-cy="covered-percentage"]'),

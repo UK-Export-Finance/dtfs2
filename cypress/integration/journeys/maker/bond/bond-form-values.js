@@ -34,13 +34,13 @@ const expectedGuaranteeFeePayableByBank = () => {
   return formattedRiskMarginFee;
 };
 
-const bondValue = '123456789.996';
+const facilityValue = '123456789.996';
 const coveredPercentage = '80';
 
 const expectedUkefExposure = () => {
-  const strippedBondValue = bondValue.replace(/,/g, '');
+  const strippedFacilityValue = facilityValue.replace(/,/g, '');
 
-  const calculation = strippedBondValue * (coveredPercentage / 100);
+  const calculation = strippedFacilityValue * (coveredPercentage / 100);
 
   const ukefExposure = roundNumber(calculation, 2);
   const formattedUkefExposure = ukefExposure.toLocaleString('en', { minimumFractionDigits: 2 });
@@ -50,7 +50,7 @@ const expectedUkefExposure = () => {
 // const guaranteeFeePayableByBank = String(Number(riskMarginFee * 0.9));
 
 const FINANCIAL_DETAILS = {
-  bondValue,
+  facilityValue,
   riskMarginFee,
   coveredPercentage,
   minimumRiskMarginFee: '1.23',

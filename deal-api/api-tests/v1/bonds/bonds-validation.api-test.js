@@ -26,7 +26,7 @@ describe('/v1/deals/:id/bond', () => {
     ukefGuaranteeInMonths: '24',
     uniqueIdentificationNumber: '1234',
     bondBeneficiary: 'test',
-    bondValue: '123',
+    facilityValue: '123',
     currencySameAsSupplyContractCurrency: 'true',
     riskMarginFee: '1',
     coveredPercentage: '2',
@@ -95,18 +95,18 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
-    describe('bondValue', () => {
+    describe('facilityValue', () => {
       describe('when missing', () => {
         it('should return validationError', async () => {
           const bond = {
             ...allBondFields,
-            bondValue: '',
+            facilityValue: '',
           };
 
           const body = await updateBondInDeal(dealId, bond);
 
-          expect(body.validationErrors.errorList.bondValue).toBeDefined();
-          expect(body.validationErrors.errorList.bondValue.text).toEqual('Enter the Bond value');
+          expect(body.validationErrors.errorList.facilityValue).toBeDefined();
+          expect(body.validationErrors.errorList.facilityValue.text).toEqual('Enter the Bond value');
         });
       });
     });

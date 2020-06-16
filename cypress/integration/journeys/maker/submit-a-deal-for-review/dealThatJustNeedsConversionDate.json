@@ -88,7 +88,7 @@
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "1234",
           "bondBeneficiary": "test",
-          "bondValue": "123",
+          "facilityValue": "123",
           "currencySameAsSupplyContractCurrency": "true",
           "riskMarginFee": "1",
           "coveredPercentage": "2",

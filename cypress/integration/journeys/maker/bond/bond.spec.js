@@ -185,8 +185,8 @@ context('Add a Bond to a Deal', () => {
       });
 
       // Bond Financial Details
-      pages.bondPreview.bondValue().invoke('text').then((text) => {
-        expect(text.trim()).equal(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
+      pages.bondPreview.facilityValue().invoke('text').then((text) => {
+        expect(text.trim()).equal(BOND_FORM_VALUES.FINANCIAL_DETAILS.facilityValue);
       });
 
       pages.bondPreview.riskMarginFee().invoke('text').then((text) => {
@@ -271,8 +271,8 @@ context('Add a Bond to a Deal', () => {
           expect(text.trim()).equal('Completed');
         });
 
-        row.bondValue().invoke('text').then((text) => {
-          const expectedValue = `${deal.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue}`;
+        row.facilityValue().invoke('text').then((text) => {
+          const expectedValue = `${deal.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.facilityValue}`;
           expect(text.trim()).equal(expectedValue);
         });
 

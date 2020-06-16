@@ -2,7 +2,7 @@ const bondType = require('./bond-type');
 const bondStage = require('./bond-stage');
 const bondStageUnissued = require('./bond-stage-unissued');
 const bondStageIssued = require('./bond-stage-issued-rules');
-const bondValue = require('./bond-value');
+const facilityValue = require('./facility-value');
 const currencySameAsSupplyContractCurrency = require('../fields/currency-same-as-supply-contract');
 const currencyNotTheSameAsSupplyContractCurrency = require('../fields/currency-not-the-same-as-supply-contract-rules');
 const riskMarginFee = require('./risk-margin-fee');
@@ -16,7 +16,7 @@ const rules = [
   bondStage,
   bondStageUnissued,
   bondStageIssued,
-  bondValue,
+  facilityValue,
   currencySameAsSupplyContractCurrency,
   currencyNotTheSameAsSupplyContractCurrency,
   riskMarginFee,

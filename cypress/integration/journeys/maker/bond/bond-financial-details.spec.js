@@ -32,10 +32,10 @@ const calculateExpectedGuaranteeFeePayableByBank = (riskMarginFee) => {
   return formattedRiskMarginFee;
 };
 
-const calculateExpectedUkefExposure = (bondValue, coveredPercentage) => {
-  const strippedBondValue = bondValue.replace(/,/g, '');
+const calculateExpectedUkefExposure = (facilityValue, coveredPercentage) => {
+  const strippedFacilityValue = facilityValue.replace(/,/g, '');
 
-  const calculation = strippedBondValue * (coveredPercentage / 100);
+  const calculation = strippedFacilityValue * (coveredPercentage / 100);
 
   const ukefExposure = roundNumber(calculation, 2);
   const formattedUkefExposure = ukefExposure.toLocaleString('en', { minimumFractionDigits: 2 });
@@ -75,7 +75,7 @@ context('Bond Financial Details', () => {
 
       partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
 
-      pages.bondFinancialDetails.bondValueInputErrorMessage().should('be.visible');
+      pages.bondFinancialDetails.bondFacilityInputErrorMessage().should('be.visible');
       pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyInputErrorMessage().should('be.visible');
       pages.bondFinancialDetails.riskMarginFeeInputErrorMessage().should('be.visible');
       pages.bondFinancialDetails.coveredPercentageInputErrorMessage().should('be.visible');
@@ -110,19 +110,19 @@ context('Bond Financial Details', () => {
 
       pages.bondFinancialDetails.ukefExposureInput().invoke('attr', 'placeholder').should('eq', '0.00');
 
-      let bondValue = '100';
+      let facilityValue = '100';
       const coveredPercentage = '10';
 
-      pages.bondFinancialDetails.bondValueInput().type(bondValue);
+      pages.bondFinancialDetails.facilityValueInput().type(facilityValue);
       pages.bondFinancialDetails.coveredPercentageInput().type(coveredPercentage).blur();
 
-      pages.bondFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(bondValue, coveredPercentage));
+      pages.bondFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(facilityValue, coveredPercentage));
 
-      pages.bondFinancialDetails.bondValueInput().clear();
+      pages.bondFinancialDetails.facilityValueInput().clear();
 
-      bondValue = '250';
-      pages.bondFinancialDetails.bondValueInput().type(bondValue).blur();
-      pages.bondFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(bondValue, coveredPercentage));
+      facilityValue = '250';
+      pages.bondFinancialDetails.facilityValueInput().type(facilityValue).blur();
+      pages.bondFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(facilityValue, coveredPercentage));
     });
   });
 
@@ -210,7 +210,7 @@ context('Bond Financial Details', () => {
 
         partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
 
-        pages.bondFinancialDetails.bondValueInputErrorMessage().should('be.visible');
+        pages.bondFinancialDetails.facilityValueInputErrorMessage().should('be.visible');
         pages.bondFinancialDetails.riskMarginFeeInputErrorMessage().should('be.visible');
         pages.bondFinancialDetails.coveredPercentageInputErrorMessage().should('be.visible');
 
@@ -257,7 +257,7 @@ context('Bond Financial Details', () => {
       describe('when `conversion rate date` is in the future', () => {
         it('should render validation error', () => {
           goToBondFinancialDetailsPage(deal);
-          pages.bondFinancialDetails.bondValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
+          pages.bondFinancialDetails.facilityValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.facilityValue);
           pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
           pages.bondFinancialDetails.currencyInput().select(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
           pages.bondFinancialDetails.conversionRateInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
@@ -320,7 +320,7 @@ context('Bond Financial Details', () => {
     it('should populate the bond\'s `value` in Deal page with the submitted bond currency', () => {
       goToBondFinancialDetailsPage(deal);
 
-      pages.bondFinancialDetails.bondValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
+      pages.bondFinancialDetails.facilityValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.facilityValue);
       pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
       pages.bondFinancialDetails.currencyInput().select(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
 
@@ -334,8 +334,8 @@ context('Bond Financial Details', () => {
         cy.url().should('eq', relative(`/contract/${deal._id}`));
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
-        row.bondValue().invoke('text').then((text) => {
-          const expectedValue = `${BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue}`;
+        row.facilityValue().invoke('text').then((text) => {
+          const expectedValue = `${BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.facilityValue}`;
           expect(text.trim()).equal(expectedValue);
         });
       });

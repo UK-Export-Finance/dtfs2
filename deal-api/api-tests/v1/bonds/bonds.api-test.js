@@ -26,7 +26,7 @@ describe('/v1/deals/:id/bond', () => {
     ukefGuaranteeInMonths: '24',
     uniqueIdentificationNumber: '1234',
     bondBeneficiary: 'test',
-    bondValue: '123456.551',
+    facilityValue: '123456.551',
     currencySameAsSupplyContractCurrency: 'true',
     riskMarginFee: '9.09',
     coveredPercentage: '2',
@@ -43,13 +43,13 @@ describe('/v1/deals/:id/bond', () => {
 
   const expectedUkefExposure = () => {
     const {
-      bondValue,
+      facilityValue,
       coveredPercentage,
     } = allBondFields;
 
-    const strippedBondValue = bondValue.replace(/,/g, '');
+    const strippedFacilityValue = facilityValue.replace(/,/g, '');
 
-    const calculation = strippedBondValue * (coveredPercentage / 100);
+    const calculation = strippedFacilityValue * (coveredPercentage / 100);
 
     const ukefExposure = roundNumber(calculation, 2);
     const formattedUkefExposure = ukefExposure.toLocaleString('en', { minimumFractionDigits: 2 });
@@ -492,7 +492,7 @@ describe('/v1/deals/:id/bond', () => {
 
         const bondBody = {
           ...allBondFields,
-          bondValue: '123',
+          facilityValue: '123',
           currencySameAsSupplyContractCurrency: 'false',
           currency: 'EUR',
           conversionRate: '100',
@@ -510,7 +510,7 @@ describe('/v1/deals/:id/bond', () => {
         expect(status).toEqual(200);
 
         const bondWithSameCurrencyAsContract = {
-          bondValue: '456',
+          facilityValue: '456',
           currencySameAsSupplyContractCurrency: 'true',
         };
 
@@ -525,7 +525,7 @@ describe('/v1/deals/:id/bond', () => {
           b._id === bondId); // eslint-disable-line no-underscore-dangle
 
         expect(updatedBond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
-        expect(updatedBond.bondValue).toEqual(bondWithSameCurrencyAsContract.bondValue);
+        expect(updatedBond.facilityValue).toEqual(bondWithSameCurrencyAsContract.facilityValue);
         expect(updatedBond.currencySameAsSupplyContractCurrency).toEqual(bondWithSameCurrencyAsContract.currencySameAsSupplyContractCurrency);
         expect(updatedBond.conversionRate).toEqual(undefined);
         expect(updatedBond['conversionRateDate-day']).toEqual(undefined);
