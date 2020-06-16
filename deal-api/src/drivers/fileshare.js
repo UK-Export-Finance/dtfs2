@@ -132,6 +132,7 @@ const readFile = async ({
 
 const deleteFile = async (filePath) => {
   const shareClient = await getShareClient();
+
   shareClient.deleteFile(filePath).catch(({ details }) => {
     if (!details) return;
     if (details.errorCode === 'ResourceNotFound') return;
@@ -139,12 +140,16 @@ const deleteFile = async (filePath) => {
   });
 };
 
-const deleteMultipleFiles = (fileList) => {
-  if (!Array.isArray(fileList)) return false;
+const deleteMultipleFiles = async (fileList) => {
+  if (!fileList) return false;
+  if (Array.isArray(fileList)) {
+    return fileList.map(async (filePath) => {
+      await deleteFile(filePath);
+    });
+  }
 
-  return fileList.map(async (filePath) => {
-    await deleteFile(filePath);
-  });
+  const delFile = await deleteFile(fileList);
+  return delFile;
 };
 
 module.exports = {
