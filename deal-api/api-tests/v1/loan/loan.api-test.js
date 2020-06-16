@@ -1,3 +1,4 @@
+const moment = require('moment');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
@@ -11,6 +12,27 @@ describe('/v1/deals/:id/loan', () => {
       bankSupplyContractID: 'mock id',
     },
   });
+
+  const nowDate = moment();
+  const requestedCoverStartDate = () => {
+    const date = nowDate;
+
+    return {
+      'requestedCoverStartDate-day': moment(date).format('DD'),
+      'requestedCoverStartDate-month': moment(date).format('MM'),
+      'requestedCoverStartDate-year': moment(date).format('YYYY'),
+    };
+  };
+
+  const coverEndDate = () => {
+    const date = moment(nowDate).add(1, 'months');
+
+    return {
+      'coverEndDate-day': moment(date).format('DD'),
+      'coverEndDate-month': moment(date).format('MM'),
+      'coverEndDate-year': moment(date).format('YYYY'),
+    };
+  };
 
   let noRoles;
   let aBarclaysMaker;
@@ -147,6 +169,10 @@ describe('/v1/deals/:id/loan', () => {
       const conditionalLoan = {
         facilityStage: 'Conditional',
         ukefGuaranteeInMonths: '12',
+        facilityValue: '100',
+        currencySameAsSupplyContractCurrency: 'true',
+        interestMarginFee: '10',
+        coveredPercentage: '40',
       };
 
       const { status } = await as(aSuperuser).put(conditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
@@ -164,28 +190,29 @@ describe('/v1/deals/:id/loan', () => {
       const conditionalLoan = {
         facilityStage: 'Conditional',
         ukefGuaranteeInMonths: '12',
+        facilityValue: '100',
+        currencySameAsSupplyContractCurrency: 'true',
+        interestMarginFee: '10',
+        coveredPercentage: '40',
       };
 
       await as(aBarclaysMaker).put(conditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
 
-      const unconditionalLoan = {
+      const updateToUnconditionalLoan = {
+        ...conditionalLoan,
         facilityStage: 'Unconditional',
         bankReferenceNumber: '1234',
-        // TODO: dynamic dates
-        'requestedCoverStartDate-day': '01',
-        'requestedCoverStartDate-month': '07',
-        'requestedCoverStartDate-year': '2020',
-        'coverEndDate-day': '01',
-        'coverEndDate-month': '08',
-        'coverEndDate-year': '2020',
+        ...requestedCoverStartDate(),
+        ...coverEndDate(),
       };
 
-      const updatedLoanResponse = await as(aBarclaysMaker).put(unconditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
+      const updatedLoanResponse = await as(aBarclaysMaker).put(updateToUnconditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
 
       expect(updatedLoanResponse.status).toEqual(200);
       expect(updatedLoanResponse.body).toEqual({
         _id: loanId,
-        ...unconditionalLoan,
+        ...updateToUnconditionalLoan,
+        ukefGuaranteeInMonths: undefined,
       });
     });
 
@@ -199,30 +226,34 @@ describe('/v1/deals/:id/loan', () => {
       const unconditionalLoan = {
         facilityStage: 'Unconditional',
         bankReferenceNumber: '1234',
-        // TODO: dynamic dates
-        'requestedCoverStartDate-day': '01',
-        'requestedCoverStartDate-month': '07',
-        'requestedCoverStartDate-year': '2020',
-        'coverEndDate-day': '01',
-        'coverEndDate-month': '08',
-        'coverEndDate-year': '2020',
+        facilityValue: '100',
+        currencySameAsSupplyContractCurrency: 'true',
+        interestMarginFee: '10',
+        coveredPercentage: '40',
+        ...requestedCoverStartDate(),
+        ...coverEndDate(),
       };
 
       await as(aBarclaysMaker).put(unconditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
 
-
-      const conditionalLoan = {
+      const updateToConditionalLoan = {
+        ...unconditionalLoan,
         facilityStage: 'Conditional',
         ukefGuaranteeInMonths: '12',
       };
 
-      const updatedLoanResponse = await as(aBarclaysMaker).put(conditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
+      const updatedLoanResponse = await as(aBarclaysMaker).put(updateToConditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
 
       expect(updatedLoanResponse.status).toEqual(200);
       expect(updatedLoanResponse.body).toEqual({
         _id: loanId,
-        bankReferenceNumber: unconditionalLoan.bankReferenceNumber,
-        ...conditionalLoan,
+        ...updateToConditionalLoan,
+        'requestedCoverStartDate-day': undefined,
+        'requestedCoverStartDate-month': undefined,
+        'requestedCoverStartDate-year': undefined,
+        'coverEndDate-day': undefined,
+        'coverEndDate-month': undefined,
+        'coverEndDate-year': undefined,
       });
     });
   });
