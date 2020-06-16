@@ -1,15 +1,14 @@
-const { orderNumber } = require('../../../utils/error-list-order-number');
-const { hasValue } = require('../../../utils/string');
+const facilityValue = require('../fields/facility-value');
 
 module.exports = (bond, errorList) => {
-  const newErrorList = { ...errorList };
+  let newErrorList = { ...errorList };
 
-  if (!hasValue(bond.facilityValue)) {
-    newErrorList.facilityValue = {
-      order: orderNumber(newErrorList),
-      text: 'Enter the Bond value',
-    };
-  }
+  newErrorList = facilityValue(
+    bond,
+    'Bond value',
+    newErrorList,
+  );
 
   return newErrorList;
 };
+
