@@ -672,7 +672,7 @@ describe('/v1/deals/:id/loan', () => {
         });
       });
 
-      describe('when not a number', () => {
+      describe('when has more than 2 decimal places', () => {
         it('should return validationError', async () => {
           const loan = {
             minimumQuarterlyFee: '12.345',
