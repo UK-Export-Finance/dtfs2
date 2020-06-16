@@ -75,7 +75,7 @@ context('Bond Financial Details', () => {
 
       partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
 
-      pages.bondFinancialDetails.bondFacilityInputErrorMessage().should('be.visible');
+      pages.bondFinancialDetails.facilityValueInputErrorMessage().should('be.visible');
       pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyInputErrorMessage().should('be.visible');
       pages.bondFinancialDetails.riskMarginFeeInputErrorMessage().should('be.visible');
       pages.bondFinancialDetails.coveredPercentageInputErrorMessage().should('be.visible');
