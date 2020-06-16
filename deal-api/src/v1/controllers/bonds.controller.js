@@ -155,17 +155,17 @@ const calculateGuaranteeFeePayableByBank = (riskMarginFee) => {
 };
 
 const calculateUkefExposure = (value, coveredPercentage) => {
-  let bondValue = value;
+  let facilityValue = value;
 
-  const hasBondValue = (hasValue(bondValue));
+  const hasFacilityValue = (hasValue(facilityValue));
   const hasCoveredPercentage = (hasValue(coveredPercentage) && isNumeric(Number(coveredPercentage)));
-  const canCalculate = (hasBondValue && hasCoveredPercentage);
+  const canCalculate = (hasFacilityValue && hasCoveredPercentage);
 
   if (canCalculate) {
     let ukefExposure;
 
-    bondValue = value.replace(/,/g, '');
-    const calculation = bondValue * (coveredPercentage / 100);
+    facilityValue = facilityValue.replace(/,/g, '');
+    const calculation = facilityValue * (coveredPercentage / 100);
     const totalDecimals = decimalsCount(calculation);
 
     if (totalDecimals > 2) {
@@ -217,11 +217,11 @@ exports.updateBond = async (req, res) => {
         supplyContractCurrencyCode,
       );
 
-      const { bondValue, coveredPercentage, riskMarginFee } = modifiedBond;
+      const { facilityValue, coveredPercentage, riskMarginFee } = modifiedBond;
 
       modifiedBond.guaranteeFeePayableByBank = calculateGuaranteeFeePayableByBank(riskMarginFee);
 
-      modifiedBond.ukefExposure = calculateUkefExposure(bondValue, coveredPercentage);
+      modifiedBond.ukefExposure = calculateUkefExposure(facilityValue, coveredPercentage);
 
       const modifiedDeal = putBondInDealObject(deal, modifiedBond, allOtherBonds);
 

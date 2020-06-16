@@ -136,7 +136,7 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_type(k2Map.FACILITIES.TYPE[bond.bondType])
         .BSS_stage(k2Map.FACILITIES.STAGE[bond.bondStage])
         .BSS_beneficiary(bond.bondBeneficiary)
-        .BSS_value(bond.bondValue)
+        .BSS_value(bond.facilityValue)
         .BSS_currency_code(
           await convertCurrencyCodeToId(bond.currency && bond.currency.id), // eslint-disable-line no-await-in-loop
         )

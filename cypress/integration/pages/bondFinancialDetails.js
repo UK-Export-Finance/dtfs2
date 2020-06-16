@@ -1,6 +1,6 @@
 const page = {
-  bondValueInput: () => cy.get('[data-cy="bond-value"]'),
-  bondValueInputErrorMessage: () => cy.get('[data-cy="bond-value-error-message"]'),
+  facilityValueInput: () => cy.get('[data-cy="facility-value"]'),
+  facilityValueInputErrorMessage: () => cy.get('[data-cy="facility-value-error-message"]'),
 
   currencySameAsSupplyContractCurrencyYesInput: () => cy.get('[data-cy="currency-same-as-supply-contract-currency-yes"]'),
   currencySameAsSupplyContractCurrencyNoInput: () => cy.get('[data-cy="currency-same-as-supply-contract-currency-no"]'),

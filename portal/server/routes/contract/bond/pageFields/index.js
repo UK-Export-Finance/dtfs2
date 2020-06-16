@@ -28,7 +28,7 @@ const FIELDS = {
   },
   FINANCIAL_DETAILS: {
     REQUIRED_FIELDS: [
-      'bondValue',
+      'facilityValue',
       'currencySameAsSupplyContractCurrency',
       'riskMarginFee',
       'coveredPercentage',

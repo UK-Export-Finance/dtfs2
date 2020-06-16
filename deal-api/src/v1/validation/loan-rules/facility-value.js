@@ -28,7 +28,6 @@ const validationText = (str, fieldCopy) => {
   return '';
 };
 
-
 module.exports = (loan, errorList) => {
   const newErrorList = { ...errorList };
 

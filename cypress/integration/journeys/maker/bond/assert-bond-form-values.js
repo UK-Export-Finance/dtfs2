@@ -26,7 +26,7 @@ const details = {
 
 const financialDetails = {
   currencySameAsSupplyContractCurrency: () => {
-    pages.bondFinancialDetails.bondValueInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
+    pages.bondFinancialDetails.facilityValueInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.facilityValue);
     pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyYesInput().should('be.checked');
     pages.bondFinancialDetails.riskMarginFeeInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.riskMarginFee);
     pages.bondFinancialDetails.coveredPercentageInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
@@ -35,7 +35,7 @@ const financialDetails = {
     pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.guaranteeFeePayableByBank);
   },
   transactionCurrencyNotTheSameAsSupplyContractCurrency: () => {
-    pages.bondFinancialDetails.bondValueInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.bondValue);
+    pages.bondFinancialDetails.facilityValueInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.facilityValue);
     pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().should('be.checked');
     pages.bondFinancialDetails.currencyInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
     pages.bondFinancialDetails.conversionRateInput().should('have.value', BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
