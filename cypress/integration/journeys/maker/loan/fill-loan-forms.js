@@ -22,6 +22,23 @@ const guaranteeDetails = {
   },
 };
 
+const financialDetails = {
+  currencyNotTheSameAsSupplyContractCurrency: () => {
+    pages.loanFinancialDetails.facilityValueInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.facilityValue);
+    pages.loanFinancialDetails.currencySameAsSupplyContractCurrencyInputNo().click();
+    pages.loanFinancialDetails.currencyInput().select(LOAN_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
+    pages.loanFinancialDetails.conversionRateInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
+    pages.loanFinancialDetails.conversionRateDateDayInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateDay);
+    pages.loanFinancialDetails.conversionRateDateMonthInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateMonth);
+    pages.loanFinancialDetails.conversionRateDateYearInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateYear);
+    pages.loanFinancialDetails.disbursementAmountInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.disbursementAmount);
+    pages.loanFinancialDetails.interestMarginFeeInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.interestMarginFee);
+    pages.loanFinancialDetails.coveredPercentageInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
+    pages.loanFinancialDetails.minimumQuarterlyFeeInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.minimumQuarterlyFee);
+  },
+};
+
 module.exports = {
   guaranteeDetails,
+  financialDetails,
 };

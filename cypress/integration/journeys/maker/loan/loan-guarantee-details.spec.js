@@ -216,7 +216,7 @@ context('Loan Guarantee Details', () => {
     });
   });
 
-  it('should prepopulate form inputs from submitted data', () => {
+  it('should prepopulate form inputs from submitted data and render a checked checkbox only for `Guarantee Details` in progress nav', () => {
     cy.loginGoToDealPage(user, deal);
     pages.contract.addLoanButton().click();
 
@@ -236,18 +236,5 @@ context('Loan Guarantee Details', () => {
 
     partials.loanProgressNav.progressNavLinkLoanGuaranteeDetails().click();
     assertLoanFormValues.guaranteeDetails.facilityStageUnconditional();
-  });
-
-  describe('when all (valid) required fields are submitted', () => {
-    it('should render a checked checkbox only for `Guarantee Details` in progress nav', () => {
-      cy.loginGoToDealPage(user, deal);
-      pages.contract.addLoanButton().click();
-
-      fillLoanForm.guaranteeDetails.facilityStageUnconditional();
-      pages.loanGuaranteeDetails.submit().click();
-
-      partials.loanProgressNav.progressNavLoanGuaranteeDetailsCompletedCheckbox().should('be.visible');
-      partials.loanProgressNav.progressNavLoanGuaranteeDetailsCompletedCheckbox().should('be.checked');
-    });
   });
 });
