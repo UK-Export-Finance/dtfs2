@@ -3,12 +3,13 @@ on:
     branches: [ github-actions ]
 
 jobs:
-  build-and-deploy:
-    name: Build and Deploy
+     
+  portal:
+    name: Build and push Portal
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Portal image
+    - name: Build and push
       uses: docker/build-push-action@v1
       with:
         registry: ${{ secrets.ACR_DEV_REGISTRY }}
@@ -19,6 +20,13 @@ jobs:
         tags: github
         add_git_labels: true
     - name: Deal API image
+
+  deal-api:
+    name: Build and push Deal API
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build and push
       uses: docker/build-push-action@v1
       with:
         registry: ${{ secrets.ACR_DEV_REGISTRY }}
