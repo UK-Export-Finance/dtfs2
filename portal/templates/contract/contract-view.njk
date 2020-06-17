@@ -2,15 +2,19 @@
 {% import '_macros/contract-tabs.njk' as contractTabs %}
 {% import '_macros/contract-details.njk' as contractDetails %}
 {% import '_macros/status-tag.njk' as statusTag %}
-{% import 'bond/_macros/bond-transactions-table.njk' as bondTransactionsTable %}
 {% import 'loan/_macros/loan-transactions-table.njk' as loanTransactionsTable %}
 
 {% import './components/abandon-deal-button.njk' as abandonButton %}
 {% import './components/abandon-deal-link.njk' as abandonLink %}
-{% import './components/please-complete-all-forms-text.njk' as pleaseCompleteAllFormsText %}
+{% import './components/about-supply-contract-link.njk' as aboutSupplyContractLink %}
+{% import './components/add-a-bond-button.njk' as addABondButton %}
+{% import './components/add-a-loan-button.njk' as addALoanButton %}
+{% import './components/bond-transactions-table.njk' as bondTransactionsTable %}
 {% import './components/can-proceed-text.njk' as canProceedText %}
 {% import './components/clone-deal-link.njk' as cloneLink %}
 {% import './components/edit-deal-name-link.njk' as editDealNameLink %}
+{% import './components/eligibility-criteria-link.njk' as eligibilityCriteriaLink %}
+{% import './components/please-complete-all-forms-text.njk' as pleaseCompleteAllFormsText %}
 {% import './components/proceed-to-review-button.njk' as proceedToReviewButton %}
 {% import './components/proceed-to-submit-button.njk' as proceedToSubmitButton %}
 {% import './components/return-to-maker-button.njk' as returnToMakerButton %}
@@ -67,7 +71,7 @@
               </h2>
             </div>
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <a data-cy="ViewAboutSupplierDetails" href="/contract/{{ deal._id }}/about/supplier" class="govuk-link">View details</a>
+              {{ aboutSupplyContractLink.render(componentData) }}
             </div>
           </div>
         </div>
@@ -80,7 +84,7 @@
                 <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
                   Confirm eligibility
                 </span>
-                
+
                 {% if deal.eligibility.status %}
                   <span class="govuk-grid-column-one-quarter" data-cy="eligibility-status">
                     {{ statusTag.render(deal.eligibility.status) }}
@@ -97,7 +101,7 @@
               </h2>
             </div>
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <a data-cy="ViewDetails" href="/contract/{{ deal._id }}/eligibility/criteria" class="govuk-link">View details</a>
+              {{ eligibilityCriteriaLink.render(componentData) }}
             </div>
           </div>
         </div>
@@ -116,19 +120,10 @@
             </div>
 
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <form action="/contract/{{ deal._id }}/bond/create" method="PUT">
-                <button class="govuk-body-s button-as-link" data-cy="button-add-bond">Add a Bond</button>
-              </form>
+              {{ addABondButton.render(componentData) }}
             </div>
 
-            {% if deal.bondTransactions.items %}
-              <div class="govuk-grid-column-full">
-                {{ bondTransactionsTable.render(
-                  bonds = deal.bondTransactions.items,
-                  dealId = deal._id
-                )}}
-              </div>
-            {% endif %}
+            {{ bondTransactionsTable.render(componentData) }}
 
           </div>
         </div>
@@ -149,9 +144,7 @@
             </div>
 
             <div class="govuk-grid-column-one-quarter box__header-link">
-              <form action="/contract/{{ deal._id }}/loan/create" method="PUT">
-                <button class="govuk-body-s button-as-link" data-cy="button-add-loan">Add a Loan</button>
-              </form>
+              {{ addALoanButton.render(componentData) }}
             </div>
 
             {% if deal.loanTransactions.items %}

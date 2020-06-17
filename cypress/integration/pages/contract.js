@@ -40,7 +40,7 @@ const page = {
         bondStage: () => row.get('[data-cy="bond-stage"]'),
         requestedCoverStartDate: () => row.get('[data-cy="bond-requested-cover-start-date"]'),
         coverEndDate: () => row.get('[data-cy="bond-cover-end-date"]'),
-        deleteLink: () => row.get('[data-cy="delete-link"]'),
+        deleteLink: () => row.get(`[data-cy="delete-bond-${bondId}"]`),
       };
     },
   },
