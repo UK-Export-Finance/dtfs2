@@ -1,0 +1,9 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  {% if params.user.roles.includes('maker') %}
+  <form action="/contract/{{ params.deal._id }}/bond/create" method="PUT">
+    <button href="/contract/{{ params.deal._id }}/bond/create" class="govuk-body-s button-as-link" data-cy="button-add-bond">Add a Bond</button>
+  </form>
+  {% endif %}
+{% endmacro %}
