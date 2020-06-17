@@ -56,6 +56,18 @@ module.exports = (wrapper, html, params) => {
         }
       };
     },
+    expectButtonDisguisedAsALink: (selector) => {
+      return {
+        notToExist: () => {
+          expect(wrapper(selector).html()).toBeNull();
+        },
+        toLinkTo: (href, text) => {
+          expect(wrapper(selector).hasClass('button-as-link')).toEqual(true);
+          expect(wrapper(selector).attr('href') ).toEqual(href);
+          expect(wrapper(selector).text().trim() ).toEqual(text);
+        }
+      };
+    },
     expectText: (selector) => {
       return {
         notToExist: () => {
