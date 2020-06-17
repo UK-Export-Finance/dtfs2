@@ -3,6 +3,7 @@ const partials = require('../../../partials');
 const fillLoanForm = require('./fill-loan-forms');
 const assertLoanFormValues = require('./assert-loan-form-values');
 const LOAN_FORM_VALUES = require('./loan-form-values');
+const { roundNumber } = require('../../../../../deal-api/src/utils/number');
 
 const user = { username: 'MAKER', password: 'MAKER' };
 
@@ -33,6 +34,24 @@ const goToPage = (deal) => {
   cy.url().should('include', '/financial-details');
 };
 
+// TODO: be DRY
+const calculateExpectedGuaranteeFeePayableByBank = (riskMarginFee) => {
+  const calculation = riskMarginFee * 0.9;
+  const formattedRiskMarginFee = calculation.toLocaleString('en', { minimumFractionDigits: 4 });
+  return formattedRiskMarginFee;
+};
+
+// TODO: be DRY
+const calculateExpectedUkefExposure = (facilityValue, coveredPercentage) => {
+  const strippedFacilityValue = facilityValue.replace(/,/g, '');
+
+  const calculation = strippedFacilityValue * (coveredPercentage / 100);
+
+  const ukefExposure = roundNumber(calculation, 2);
+  const formattedUkefExposure = ukefExposure.toLocaleString('en', { minimumFractionDigits: 2 });
+  return formattedUkefExposure;
+};
+
 context('Loan Financial Details', () => {
   let deal;
 
@@ -49,14 +68,6 @@ context('Loan Financial Details', () => {
 
   describe('when submitting an empty form', () => {
     it('it should progress to `Loan Dates and Repayments` page and after proceeding to `Loan Preview` page and returning to `Loan Guarantee Details` page, should render validation errors', () => {
-      // cy.loginGoToDealPage(user, deal);
-      // pages.contract.addLoanButton().click();
-      // pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
-      // pages.loanGuaranteeDetails.submit().click();
-
-      // cy.url().should('include', '/loan/');
-      // cy.url().should('include', '/financial-details');
-
       goToPageWithUnconditionalFacilityStage(deal);
 
       partials.errorSummary.errorSummaryLinks().should('have.length', 0);
@@ -78,17 +89,7 @@ context('Loan Financial Details', () => {
   });
 
   it('should only render the disbursementAmount field when the facilityStage is `Unconditional`', () => {
-    // cy.loginGoToDealPage(user, deal);
-    // pages.contract.addLoanButton().click();
-
-    // cy.url().should('include', '/guarantee-details');
-    // pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
-    // pages.loanGuaranteeDetails.submit().click();
-
     goToPageWithUnconditionalFacilityStage(deal);
-
-    // cy.url().should('include', '/loan/');
-    // cy.url().should('include', '/financial-details');
 
     pages.loanFinancialDetails.disbursementAmountInput().should('be.visible');
 
@@ -154,5 +155,39 @@ context('Loan Financial Details', () => {
     assertLoanFormValues.financialDetails.currencyNotTheSameAsSupplyContractCurrency();
   });
 
-  // TODO: dynamic calculations
+  describe('when changing the `interestMarginFee` field', () => {
+    it('should dynamically update the `Guarantee Fee Payable By Bank` value on blur', () => {
+      let interestMarginFee = '20';
+      pages.loanFinancialDetails.guaranteeFeePayableByBankInput().invoke('attr', 'placeholder').should('eq', '0');
+      pages.loanFinancialDetails.interestMarginFeeInput().type(interestMarginFee).blur();
+      pages.loanFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFeePayableByBank(interestMarginFee));
+
+      pages.loanFinancialDetails.interestMarginFeeInput().clear();
+      interestMarginFee = '9.09';
+      pages.loanFinancialDetails.interestMarginFeeInput().type(interestMarginFee).blur();
+      pages.loanFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFeePayableByBank(interestMarginFee));
+    });
+  });
+
+  describe('when changing the `facilityValue` or `coverePercentage` field', () => {
+    it('should dynamically update the `UKEF exposure` value on blur', () => {
+      goToPage(deal);
+
+      pages.loanFinancialDetails.ukefExposureInput().invoke('attr', 'placeholder').should('eq', '0.00');
+
+      let facilityValue = '100';
+      const coveredPercentage = '10';
+
+      pages.loanFinancialDetails.facilityValueInput().type(facilityValue);
+      pages.loanFinancialDetails.coveredPercentageInput().type(coveredPercentage).blur();
+
+      pages.loanFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(facilityValue, coveredPercentage));
+
+      pages.loanFinancialDetails.facilityValueInput().clear();
+
+      facilityValue = '250';
+      pages.loanFinancialDetails.facilityValueInput().type(facilityValue).blur();
+      pages.loanFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(facilityValue, coveredPercentage));
+    });
+  });
 });
