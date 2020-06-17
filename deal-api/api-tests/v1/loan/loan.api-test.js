@@ -4,6 +4,10 @@ const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
+const {
+  calculateGuaranteeFee,
+  calculateUkefExposure,
+} = require('../../../src/v1/section-calculations');
 
 describe('/v1/deals/:id/loan', () => {
   const newDeal = aDeal({
@@ -180,83 +184,101 @@ describe('/v1/deals/:id/loan', () => {
       expect(status).toEqual(200);
     });
 
-    it('should remove `Conditional` related values from the loan when req.body.facilityStage is `Unconditional`', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-      const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+    it('should add guaranteeFeePayableByBank and ukefExposure values to the loan', async () => {
+      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
       const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
       const { loanId } = createLoanResponse.body;
 
-      const conditionalLoan = {
-        facilityStage: 'Conditional',
-        ukefGuaranteeInMonths: '12',
+      const loan = {
         facilityValue: '100',
-        currencySameAsSupplyContractCurrency: 'true',
-        interestMarginFee: '10',
         coveredPercentage: '40',
+        interestMarginFee: '10',
       };
 
-      await as(aBarclaysMaker).put(conditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
+      const { body } = await as(aBarclaysMaker).put(loan).to(`/v1/deals/${dealId}/loan/${loanId}`);
 
-      const updateToUnconditionalLoan = {
-        ...conditionalLoan,
-        facilityStage: 'Unconditional',
-        bankReferenceNumber: '1234',
-        ...requestedCoverStartDate(),
-        ...coverEndDate(),
-        disbursementAmount: '5',
-      };
+      const expectedGuaranteeFee = calculateGuaranteeFee(loan.interestMarginFee);
+      const expectedUkefExposure = calculateUkefExposure(loan.facilityValue, loan.coveredPercentage);
 
-      const updatedLoanResponse = await as(aBarclaysMaker).put(updateToUnconditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
+      expect(body.loan.guaranteeFeePayableByBank).toEqual(expectedGuaranteeFee);
+      expect(body.loan.ukefExposure).toEqual(expectedUkefExposure);
+    });
 
-      expect(updatedLoanResponse.status).toEqual(200);
-      expect(updatedLoanResponse.body).toEqual({
-        _id: loanId,
-        ...updateToUnconditionalLoan,
-        ukefGuaranteeInMonths: undefined,
+    describe('when req.body.facilityStage is `Unconditional`', () => {
+      it('should remove `Conditional` related values from the loan', async () => {
+        const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+        const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+
+        const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+        const { loanId } = createLoanResponse.body;
+
+        const conditionalLoan = {
+          facilityStage: 'Conditional',
+          ukefGuaranteeInMonths: '12',
+          facilityValue: '100',
+          currencySameAsSupplyContractCurrency: 'true',
+          interestMarginFee: '10',
+          coveredPercentage: '40',
+        };
+
+        await as(aBarclaysMaker).put(conditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
+
+        const updateToUnconditionalLoan = {
+          ...conditionalLoan,
+          facilityStage: 'Unconditional',
+          bankReferenceNumber: '1234',
+          ...requestedCoverStartDate(),
+          ...coverEndDate(),
+          disbursementAmount: '5',
+        };
+
+        const updatedLoanResponse = await as(aBarclaysMaker).put(updateToUnconditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
+
+        expect(updatedLoanResponse.status).toEqual(200);
+        expect(updatedLoanResponse.body.ukefGuaranteeInMonths).toEqual(undefined);
       });
     });
 
-    it('should remove `Unconditional` related values from the loan (but retain bankReferenceNumber) when req.body.facilityStage is `Conditional`', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-      const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
+    describe('when req.body.facilityStage is `Conditional`', () => {
+      it('should remove `Unconditional` related values from the loan (but retain bankReferenceNumber)', async () => {
+        const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+        const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
-      const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
-      const { loanId } = createLoanResponse.body;
+        const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+        const { loanId } = createLoanResponse.body;
 
-      const unconditionalLoan = {
-        facilityStage: 'Unconditional',
-        bankReferenceNumber: '1234',
-        facilityValue: '100',
-        currencySameAsSupplyContractCurrency: 'true',
-        interestMarginFee: '10',
-        coveredPercentage: '40',
-        ...requestedCoverStartDate(),
-        ...coverEndDate(),
-        disbursementAmount: '5',
-      };
+        const unconditionalLoan = {
+          facilityStage: 'Unconditional',
+          bankReferenceNumber: '1234',
+          facilityValue: '100',
+          currencySameAsSupplyContractCurrency: 'true',
+          interestMarginFee: '10',
+          coveredPercentage: '40',
+          ...requestedCoverStartDate(),
+          ...coverEndDate(),
+          disbursementAmount: '5',
+        };
 
-      await as(aBarclaysMaker).put(unconditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
+        await as(aBarclaysMaker).put(unconditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
 
-      const updateToConditionalLoan = {
-        ...unconditionalLoan,
-        facilityStage: 'Conditional',
-        ukefGuaranteeInMonths: '12',
-      };
+        const updateToConditionalLoan = {
+          ...unconditionalLoan,
+          facilityStage: 'Conditional',
+          ukefGuaranteeInMonths: '12',
+        };
 
-      const updatedLoanResponse = await as(aBarclaysMaker).put(updateToConditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
+        const updatedLoanResponse = await as(aBarclaysMaker).put(updateToConditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
 
-      expect(updatedLoanResponse.status).toEqual(200);
-      expect(updatedLoanResponse.body).toEqual({
-        _id: loanId,
-        ...updateToConditionalLoan,
-        'requestedCoverStartDate-day': undefined,
-        'requestedCoverStartDate-month': undefined,
-        'requestedCoverStartDate-year': undefined,
-        'coverEndDate-day': undefined,
-        'coverEndDate-month': undefined,
-        'coverEndDate-year': undefined,
-        disbursementAmount: undefined,
+        expect(updatedLoanResponse.status).toEqual(200);
+        expect(updatedLoanResponse.body['requestedCoverStartDate-day']).toEqual(undefined);
+        expect(updatedLoanResponse.body['requestedCoverStartDate-month']).toEqual(undefined);
+        expect(updatedLoanResponse.body['requestedCoverStartDate-year']).toEqual(undefined);
+        expect(updatedLoanResponse.body['coverEndDate-day']).toEqual(undefined);
+        expect(updatedLoanResponse.body['coverEndDate-month']).toEqual(undefined);
+        expect(updatedLoanResponse.body['coverEndDate-year']).toEqual(undefined);
+        expect(updatedLoanResponse.body.disbursementAmount).toEqual(undefined);
       });
     });
   });
