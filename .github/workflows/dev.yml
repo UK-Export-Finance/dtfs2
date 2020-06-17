@@ -11,10 +11,20 @@ jobs:
     - name: Portal image
       uses: docker/build-push-action@v1
       with:
-        registry: dtfsdev.azurecr.io
+        registry: ${{ secrets.ACR_DEV_REGISTRY }}
         username: ${{ secrets.ACR_DEV_USERNAME }}
         password: ${{ secrets.ACR_DEV_PASSWORD }}
         repository: portal
-        tags: github
         path: portal
+        tags: github
+        add_git_labels: true
+    - name: Deal API image
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.ACR_DEV_REGISTRY }}
+        username: ${{ secrets.ACR_DEV_USERNAME }}
+        password: ${{ secrets.ACR_DEV_PASSWORD }}
+        repository: deal-api
+        path: deal-api
+        tags: github
         add_git_labels: true
