@@ -2,6 +2,10 @@ const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const loanValidationErrors = require('../validation/loan');
 const { generateFacilityId } = require('../../utils/generateIds');
+const {
+  calculateGuaranteeFee,
+  calculateUkefExposure,
+} = require('../section-calculations');
 // const { loanStatus } = require('../section-status/loan');
 
 const putLoanInDealObject = (deal, loan, otherLoans) => ({
@@ -130,6 +134,12 @@ exports.updateLoan = async (req, res) => {
       };
 
       modifiedLoan = loanFacilityStageFields(modifiedLoan);
+
+      const { facilityValue, coveredPercentage, interestMarginFee } = modifiedLoan;
+
+      modifiedLoan.guaranteeFeePayableByBank = calculateGuaranteeFee(interestMarginFee);
+
+      modifiedLoan.ukefExposure = calculateUkefExposure(facilityValue, coveredPercentage);
 
       const modifiedDeal = putLoanInDealObject(deal, modifiedLoan, allOtherLoans);
 

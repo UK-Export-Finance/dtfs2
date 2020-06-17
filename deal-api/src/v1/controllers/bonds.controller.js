@@ -4,12 +4,10 @@ const { findOneBondCurrency } = require('./bondCurrencies.controller');
 const bondValidationErrors = require('../validation/bond');
 const { generateFacilityId } = require('../../utils/generateIds');
 const { bondStatus } = require('../section-status/bond');
-const { hasValue } = require('../../utils/string');
 const {
-  isNumeric,
-  decimalsCount,
-  roundNumber,
-} = require('../../utils/number');
+  calculateGuaranteeFee,
+  calculateUkefExposure,
+} = require('../section-calculations');
 
 const putBondInDealObject = (deal, bond, otherBonds) => ({
   ...deal,
@@ -145,42 +143,6 @@ const bondStageFields = (bond) => {
   return modifiedBond;
 };
 
-const calculateGuaranteeFeePayableByBank = (riskMarginFee) => {
-  if (hasValue(riskMarginFee)) {
-    const calculation = riskMarginFee * 0.9;
-    const formattedRiskMarginFee = calculation.toLocaleString('en', { minimumFractionDigits: 4 });
-    return formattedRiskMarginFee;
-  }
-  return riskMarginFee;
-};
-
-const calculateUkefExposure = (value, coveredPercentage) => {
-  let facilityValue = value;
-
-  const hasFacilityValue = (hasValue(facilityValue));
-  const hasCoveredPercentage = (hasValue(coveredPercentage) && isNumeric(Number(coveredPercentage)));
-  const canCalculate = (hasFacilityValue && hasCoveredPercentage);
-
-  if (canCalculate) {
-    let ukefExposure;
-
-    facilityValue = facilityValue.replace(/,/g, '');
-    const calculation = facilityValue * (coveredPercentage / 100);
-    const totalDecimals = decimalsCount(calculation);
-
-    if (totalDecimals > 2) {
-      ukefExposure = roundNumber(calculation, 2);
-    } else {
-      ukefExposure = calculation;
-    }
-
-    const formattedUkefExposure = ukefExposure.toLocaleString('en', { minimumFractionDigits: 2 });
-    return formattedUkefExposure;
-  }
-  return '';
-};
-
-
 exports.updateBond = async (req, res) => {
   const {
     bondId,
@@ -219,7 +181,7 @@ exports.updateBond = async (req, res) => {
 
       const { facilityValue, coveredPercentage, riskMarginFee } = modifiedBond;
 
-      modifiedBond.guaranteeFeePayableByBank = calculateGuaranteeFeePayableByBank(riskMarginFee);
+      modifiedBond.guaranteeFeePayableByBank = calculateGuaranteeFee(riskMarginFee);
 
       modifiedBond.ukefExposure = calculateUkefExposure(facilityValue, coveredPercentage);
 

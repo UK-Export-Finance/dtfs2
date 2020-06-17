@@ -4,7 +4,10 @@ const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
-const { roundNumber } = require('../../../src/utils/number');
+const {
+  calculateGuaranteeFee,
+  calculateUkefExposure,
+} = require('../../../src/v1/section-calculations');
 
 describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({
@@ -35,26 +38,8 @@ describe('/v1/deals/:id/bond', () => {
     dayCountBasis: 'test',
   };
 
-  const expectedGuaranteeFeePayableByBank = () => {
-    const calculation = allBondFields.riskMarginFee * 0.9;
-    const formattedRiskMarginFee = calculation.toLocaleString('en', { minimumFractionDigits: 4 });
-    return formattedRiskMarginFee;
-  };
-
-  const expectedUkefExposure = () => {
-    const {
-      facilityValue,
-      coveredPercentage,
-    } = allBondFields;
-
-    const strippedFacilityValue = facilityValue.replace(/,/g, '');
-
-    const calculation = strippedFacilityValue * (coveredPercentage / 100);
-
-    const ukefExposure = roundNumber(calculation, 2);
-    const formattedUkefExposure = ukefExposure.toLocaleString('en', { minimumFractionDigits: 2 });
-    return formattedUkefExposure;
-  };
+  const expectedGuaranteeFee = calculateGuaranteeFee(allBondFields.riskMarginFee);
+  const expectedUkefExposure = calculateUkefExposure(allBondFields.facilityValue, allBondFields.coveredPercentage);
 
   const nowDate = moment();
   const requestedCoverStartDate = () => {
@@ -365,8 +350,8 @@ describe('/v1/deals/:id/bond', () => {
           ...allBondFields,
           ...coverEndDate(),
           currency: deal.body.supplyContractCurrency,
-          guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank(),
-          ukefExposure: expectedUkefExposure(),
+          guaranteeFeePayableByBank: expectedGuaranteeFee,
+          ukefExposure: expectedUkefExposure,
           status: 'Completed',
         };
         expect(updatedBond).toEqual(expectedUpdatedBond);
@@ -416,8 +401,8 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsIssued,
           currency: deal.body.supplyContractCurrency,
-          guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank(),
-          ukefExposure: expectedUkefExposure(),
+          guaranteeFeePayableByBank: expectedGuaranteeFee,
+          ukefExposure: expectedUkefExposure,
           status: 'Completed',
         };
         delete expectedBond.ukefGuaranteeInMonths;
@@ -469,8 +454,8 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsUnissued,
           currency: deal.body.supplyContractCurrency,
-          guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank(),
-          ukefExposure: expectedUkefExposure(),
+          guaranteeFeePayableByBank: expectedGuaranteeFee,
+          ukefExposure: expectedUkefExposure,
           status: 'Completed',
         };
         delete expectedBond['requestedCoverStartDate-day'];
@@ -562,8 +547,8 @@ describe('/v1/deals/:id/bond', () => {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...bondBody,
           currency: deal.body.supplyContractCurrency,
-          guaranteeFeePayableByBank: expectedGuaranteeFeePayableByBank(),
-          ukefExposure: expectedUkefExposure(),
+          guaranteeFeePayableByBank: expectedGuaranteeFee,
+          ukefExposure: expectedUkefExposure,
           status: 'Completed',
         });
       });
