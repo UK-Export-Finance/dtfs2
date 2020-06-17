@@ -3,7 +3,7 @@ LOG="$HERE/../pipeline.log"
 
 start=`date +%s`
 
-npm run api-test-quick
+npx jest --config=api-test.jest.config.js --detectOpenHandles --forceExit  --testTimeout=10000
 testResult=$?
 
 end=`date +%s`
