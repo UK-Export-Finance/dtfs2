@@ -56,10 +56,18 @@ exports.update = async (req, res) => {
         const fileInfo = await uploadStream({
           fileshare: 'portal',
           folder: req.params.id,
-          subfolder: fieldname,
           filename: formatFilenameForSharepoint(originalname),
           buffer,
         });
+
+        if (fileInfo.error) {
+          uploadErrors.push({
+            field: fieldname,
+            originalname,
+            message: fileInfo.error.message,
+          });
+          return {};
+        }
 
         return {
           fieldname,

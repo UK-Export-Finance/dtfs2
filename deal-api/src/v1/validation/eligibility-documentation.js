@@ -31,12 +31,13 @@ exports.getDocumentationErrors = (submissionType, dealFiles, uploadErrors = []) 
     }
 
     const filenameList = fieldUploadErrors.map((fieldError) => fieldError.originalname);
-    const text = `${fieldText} - ${filenameList.join(', ')} ${fieldUploadErrors[0].message}`;
+    const text = ` ${filenameList.join(', ')} ${fieldUploadErrors[0].message}`;
 
     order += 1;
     return {
       order,
       text,
+      summaryText: `${fieldText} - ${text}`,
     };
   };
 
