@@ -7,6 +7,7 @@ on:
     
 env:
   ENVIRONMENT: dev
+  TAG: latest
 
 jobs:
 
@@ -23,7 +24,7 @@ jobs:
         password: ${{ secrets.ACR_DEV_PASSWORD }}
         repository: portal
         path: portal
-        tags: ci
+        tags: ${{ TAG }}
         add_git_labels: true
         
   deal-api:
@@ -39,6 +40,38 @@ jobs:
         password: ${{ secrets.ACR_DEV_PASSWORD }}
         repository: deal-api
         path: deal-api
-        tags: ci
+        tags: ${{ TAG }}
         add_git_labels: true
+  
+  test:
+    needs: [portal, deal-api]
+    name: End-to-end tests
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "Testing... for now let's imagine this passes cleanly."
 
+  promote:
+    needs: test
+    name: Promote from Dev to Test environment
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_DEV_REGISTRY }}
+        username: ${{ secrets.ACR_DEV_USERNAME }}
+        password: ${{ secrets.ACR_DEV_PASSWORD }}
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_TEST_REGISTRY }}
+        username: ${{ secrets.ACR_TEST_USERNAME }}
+        password: ${{ secrets.ACR_TEST_PASSWORD }}
+    - run: |
+        echo "Promoting portal..."
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal:${{ TAG }}
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal:${{ TAG }} ${{ secrets.ACR_TEST_REGISTRY }}/portal:${{ TAG }}
+        docker push ${{ secrets.ACR_TEST_REGISTRY }}/portal:${{ TAG }}
+        echo "Promoting deal-api..."
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ TAG }}
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ TAG }} ${{ secrets.ACR_TEST_REGISTRY }}/deal-api:${{ TAG }}
+        docker push ${{ secrets.ACR_TEST_REGISTRY }}/deal-api:${{ TAG }}
+        echo "Done."
