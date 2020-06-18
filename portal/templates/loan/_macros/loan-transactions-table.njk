@@ -22,9 +22,9 @@
         <tr class="govuk-table__row" data-cy="loan-{{ loan._id }}">
           <td class="govuk-table__cell govuk-!-font-size-14">
             {% if loan.bankReferenceNumber %}
-              <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/guarantee-details" class="govuk-link" data-cy="bank-reference-number">{{ loan.bankReferenceNumber }}</a>
+              <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/guarantee-details" class="govuk-link" data-cy="loan-bank-reference-number">{{ loan.bankReferenceNumber }}</a>
             {% else %}
-              <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/guarantee-details" class="govuk-link" data-cy="bank-reference-number">Not entered</a>
+              <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/guarantee-details" class="govuk-link" data-cy="loan-bank-reference-number">Not entered</a>
             {% endif %}
           </td>
 
@@ -32,15 +32,15 @@
             {{ loan.ukefFacilityID }}
           </td>
 
-          <td class="govuk-table__cell govuk-!-font-size-14 contract-table--status-cell">
+          <td class="govuk-table__cell govuk-!-font-size-14 contract-table--status-cell" data-cy="loan-status">
             {{ statusTag.render(loan.status) }}
           </td>
 
-          <td class="govuk-table__cell govuk-!-font-size-14">
+          <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-facility-value">
             {{ loan.currency.id}} {{ loan.facilityValue }}
           </td>
           
-          <td class="govuk-table__cell govuk-!-font-size-14">
+          <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-facility-stage">
             {{ loan.facilityStage }}
           </td>
 

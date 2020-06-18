@@ -26,5 +26,6 @@ module.exports = {
   loanGuaranteeDetails: require('./loanGuaranteeDetails'),
   loanFinancialDetails: require('./loanFinancialDetails'),
   loanDatesRepayments: require('./loanDatesRepayments'),
+  loanPreview: require('./loanPreview'),
   defaults: require('./defaults'),
 };
