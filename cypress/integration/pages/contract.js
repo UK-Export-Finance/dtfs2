@@ -36,7 +36,7 @@ const page = {
       return {
         uniqueNumber: () => row.get('[data-cy="unique-number"]'),
         bondStatus: () => row.get('[data-cy="bond-status"]'),
-        facilityValue: () => row.get('[data-cy="facility-bond-value"]'),
+        facilityValue: () => row.get('[data-cy="bond-facility-value"]'),
         bondStage: () => row.get('[data-cy="bond-stage"]'),
         requestedCoverStartDate: () => row.get('[data-cy="bond-requested-cover-start-date"]'),
         coverEndDate: () => row.get('[data-cy="bond-cover-end-date"]'),
@@ -44,10 +44,14 @@ const page = {
       };
     },
   },
-  loanTransactionsTable: {
+  loansTransactionsTable: {
     row: (loanId) => {
       const row = cy.get(`[data-cy="loan-${loanId}"]`);
       return {
+        bankReferenceNumber: () => row.get('[data-cy="loan-bank-reference-number"]'),
+        loanStatus: () => row.get('[data-cy="loan-status"]'),
+        facilityValue: () => row.get('[data-cy="loan-facility-value"]'),
+        facilityStage: () => row.get('[data-cy="loan-facility-stage"]'),
         requestedCoverStartDate: () => row.get('[data-cy="loan-requested-cover-start-date"]'),
         coverEndDate: () => row.get('[data-cy="loan-cover-end-date"]'),
       };

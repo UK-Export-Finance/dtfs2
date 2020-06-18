@@ -23,6 +23,13 @@ const guaranteeDetails = {
 };
 
 const financialDetails = {
+  currencySameAsSupplyContractCurrency: () => {
+    pages.loanFinancialDetails.facilityValueInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.facilityValue);
+    pages.loanFinancialDetails.currencySameAsSupplyContractCurrencyInputYes().click();
+    pages.loanFinancialDetails.interestMarginFeeInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.interestMarginFee);
+    pages.loanFinancialDetails.coveredPercentageInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
+    pages.loanFinancialDetails.minimumQuarterlyFeeInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.minimumQuarterlyFee);
+  },
   currencyNotTheSameAsSupplyContractCurrency: () => {
     pages.loanFinancialDetails.facilityValueInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.facilityValue);
     pages.loanFinancialDetails.currencySameAsSupplyContractCurrencyInputNo().click();

@@ -1,4 +1,5 @@
 const partial = {
+  loanId: () => cy.get('[data-cy="loan-id"]'),
   progressNavLinkLoanGuaranteeDetails: () => cy.get('[data-cy="progress-nav-item-link-loan-guarantee-details"]'),
   progressNavLoanGuaranteeDetailsCompletedCheckbox: () => cy.get('[data-cy="progress-nav-item-loan-guarantee-details-completed-checkbox"]'),
 
