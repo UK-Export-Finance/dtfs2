@@ -50,9 +50,9 @@ jobs:
     steps:
     - run: echo "Testing... for now let's imagine this passes cleanly."
 
-  promote:
+  promote-portal:
     needs: test
-    name: Promote from Dev to Test environment
+    name: Promote Portal from Dev to Test
     runs-on: ubuntu-latest
     steps:
     - uses: azure/docker-login@v1
@@ -66,12 +66,26 @@ jobs:
         username: ${{ secrets.ACR_TEST_USERNAME }}
         password: ${{ secrets.ACR_TEST_PASSWORD }}
     - run: |
-        echo "Promoting portal..."
         docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal:${{ env.TAG }}
         docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal:${{ env.TAG }} ${{ secrets.ACR_TEST_REGISTRY }}/portal:${{ env.TAG }}
         docker push ${{ secrets.ACR_TEST_REGISTRY }}/portal:${{ env.TAG }}
-        echo "Promoting deal-api..."
+
+  promote-deal-api:
+    needs: test
+    name: Promote Deal API from Dev to Test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_DEV_REGISTRY }}
+        username: ${{ secrets.ACR_DEV_USERNAME }}
+        password: ${{ secrets.ACR_DEV_PASSWORD }}
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_TEST_REGISTRY }}
+        username: ${{ secrets.ACR_TEST_USERNAME }}
+        password: ${{ secrets.ACR_TEST_PASSWORD }}
+    - run: |
         docker pull ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }}
         docker tag ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }} ${{ secrets.ACR_TEST_REGISTRY }}/deal-api:${{ env.TAG }}
         docker push ${{ secrets.ACR_TEST_REGISTRY }}/deal-api:${{ env.TAG }}
-        echo "Done."
