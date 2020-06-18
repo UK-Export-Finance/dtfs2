@@ -24,6 +24,10 @@ function createFileClient(filename) {
 
     return Buffer.from('mockFile', 'utf-8');
   };
+  fileClient.downloadToBuffer = () => Buffer.from('mockFile', 'utf-8');
+  fileClient.getProperties = () => ({
+    catch: () => {},
+  });
   return fileClient;
 }
 

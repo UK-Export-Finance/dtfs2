@@ -1,5 +1,5 @@
 const stream = require('stream');
-const { deleteMultipleFiles, uploadStream, readFile } = require('../../drivers/fileshare');
+const { deleteMultipleFiles, uploadFile, readFile } = require('../../drivers/fileshare');
 const { formatFilenameForSharepoint } = require('../../utils');
 const { userHasAccessTo } = require('../users/checks');
 const { findOneDeal, updateDeal } = require('./deal.controller');
@@ -53,7 +53,7 @@ exports.update = async (req, res) => {
       } = file;
 
       if (size <= MAX_FILE_SIZE) {
-        const fileInfo = await uploadStream({
+        const fileInfo = await uploadFile({
           fileshare: 'portal',
           folder: req.params.id,
           filename: formatFilenameForSharepoint(originalname),
@@ -168,7 +168,6 @@ exports.update = async (req, res) => {
 exports.downloadFile = async (req, res) => {
   const { id, fieldname, filename } = req.params;
 
-
   findOneDeal(id, async (deal) => {
     if (!deal) {
       return res.status(404).send();
@@ -190,7 +189,6 @@ exports.downloadFile = async (req, res) => {
 
     const documentLocation = {
       folder: id,
-      subfolder: fieldname,
       filename,
     };
 

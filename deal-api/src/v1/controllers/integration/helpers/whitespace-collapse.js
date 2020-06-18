@@ -1,3 +1,3 @@
-const whitespaceCollapse = (value) => value.trim().replace(/\s+/g, ' ');
+const whitespaceCollapse = (value) => value && value.trim().replace(/\s+/g, ' ');
 
 module.exports = whitespaceCollapse;

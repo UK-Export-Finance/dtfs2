@@ -59,13 +59,9 @@ const getExportDirectory = async (fileshare) => {
   return exportFolderClient;
 };
 
-const uploadStream = async ({
+const uploadFile = async ({
   fileshare, folder, subfolder = '', filename, buffer,
 }) => {
-//  const fileStream = new stream.Readable();
-//  fileStream.push(buffer);
-//  fileStream.push(null);
-
   const exportDirectory = await getExportDirectory(fileshare);
 
   const directoryClient = await exportDirectory.getDirectoryClient(folder);
@@ -83,21 +79,27 @@ const uploadStream = async ({
     };
   });
 
-  const subDirectoryClient = await directoryClient.getDirectoryClient(subfolder);
-  await subDirectoryClient.create().catch(({ details }) => {
-    if (!details) return false;
-    if (details.errorCode === 'ResourceAlreadyExists') return false;
-    console.error('Fileshare create resource error', details);
-    return {
-      error: {
-        errorCount: 1,
-        errorCode: details.errorCode,
-        message: details.message,
-      },
-    };
-  });
+  let subDirectoryClient;
 
-  const fileClient = await subDirectoryClient.getFileClient(`${filename}`);
+  if (subfolder) {
+    subDirectoryClient = await directoryClient.getDirectoryClient(subfolder);
+    await subDirectoryClient.create().catch(({ details }) => {
+      if (!details) return false;
+      if (details.errorCode === 'ResourceAlreadyExists') return false;
+      console.error('Fileshare create resource error', details);
+      return {
+        error: {
+          errorCount: 1,
+          errorCode: details.errorCode,
+          message: details.message,
+        },
+      };
+    });
+  }
+
+  const dirClient = subDirectoryClient || directoryClient;
+
+  const fileClient = await dirClient.getFileClient(`${filename}`);
   const existingFileProps = await fileClient.getProperties().catch(() => {});
 
   if (!existingFileProps) {
@@ -162,9 +164,30 @@ const deleteMultipleFiles = async (fileList) => {
   return delFile;
 };
 
+const copyFile = async ({ from, to }) => {
+  const fromFile = {
+    fileshare: from.fileshare,
+    folder: from.folder,
+    filename: from.filename,
+  };
+  const bufferedFile = await readFile(fromFile);
+
+  const toFile = {
+    fileshare: to.fileshare,
+    folder: to.folder,
+    subfolder: to.subfolder,
+    filename: to.filename,
+    buffer: bufferedFile,
+  };
+
+  const uploadedFile = await uploadFile(toFile);
+  return uploadedFile;
+};
+
 module.exports = {
-  uploadStream,
+  uploadFile,
   deleteFile,
   deleteMultipleFiles,
   readFile,
+  copyFile,
 };

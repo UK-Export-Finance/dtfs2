@@ -137,7 +137,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       expect(status).toEqual(200);
       expect(body.dealFiles[fieldname][0]).toMatchObject({
         filename,
-        fullPath: `private-files/ukef_portal_storage/${newId}/${fieldname}/${filename}`,
+        fullPath: `private-files/ukef_portal_storage/${newId}/${filename}`,
         type,
       });
     });
@@ -189,7 +189,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
       const expectedFiles = files.map(({ filename, type }) => ({
         filename,
-        fullPath: `private-files/ukef_portal_storage/${newId}/${fieldname}/${filename}`,
+        fullPath: `private-files/ukef_portal_storage/${newId}/${filename}`,
         type,
       }));
 
@@ -221,7 +221,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
       const expectedFiles = files.map(({ filename, fieldname, type }) => ([{
         filename,
-        fullPath: `private-files/ukef_portal_storage/${newId}/${fieldname}/${filename}`,
+        fullPath: `private-files/ukef_portal_storage/${newId}/${filename}`,
         type,
       }]));
 
