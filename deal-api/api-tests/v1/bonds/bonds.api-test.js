@@ -15,6 +15,10 @@ describe('/v1/deals/:id/bond', () => {
       bankSupplyContractName: 'mock name',
       bankSupplyContractID: 'mock id',
     },
+    supplyContractCurrency: {
+      id: 'GBP',
+      text: 'GBP - UK Sterling',
+    },
   });
 
   const mockCurrencies = [
@@ -470,6 +474,41 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
+    it('should add the deal\'s supplyContractCurrency to the bond\'s currency', async () => {
+      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+      const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+      const bondBody = {
+        ...allBondFields,
+        currencySameAsSupplyContractCurrency: 'true',
+      };
+
+      const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+      const { body: createBondBody } = createBondResponse;
+      const { bondId } = createBondBody;
+
+      const { status } = await as(aBarclaysMaker).put(bondBody).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+      expect(status).toEqual(200);
+
+      const { body: updatedDeal } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+
+      expect(status).toEqual(200);
+
+      const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
+        b._id === bondId); // eslint-disable-line no-underscore-dangle
+
+      expect(updatedBond).toEqual({
+        _id: bondId, // eslint-disable-line no-underscore-dangle
+        ...bondBody,
+        currency: deal.body.supplyContractCurrency,
+        guaranteeFeePayableByBank: expectedGuaranteeFee,
+        ukefExposure: expectedUkefExposure,
+        status: 'Completed',
+      });
+    });
+
     describe('when a bond has req.body.currencySameAsSupplyContractCurrency changed from false to true', () => {
       it('should remove `currency is NOT the same` values from the bond', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
@@ -516,41 +555,6 @@ describe('/v1/deals/:id/bond', () => {
         expect(updatedBond['conversionRateDate-day']).toEqual(undefined);
         expect(updatedBond['conversionRateDate-month']).toEqual(undefined);
         expect(updatedBond['conversionRateDate-year']).toEqual(undefined);
-      });
-
-      it('should add the deal\'s supplyContractCurrency to the bond\'s currency', async () => {
-        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
-        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
-
-        const bondBody = {
-          ...allBondFields,
-          currencySameAsSupplyContractCurrency: 'true',
-        };
-
-        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
-
-        const { body: createBondBody } = createBondResponse;
-        const { bondId } = createBondBody;
-
-        const { status } = await as(aBarclaysMaker).put(bondBody).to(`/v1/deals/${dealId}/bond/${bondId}`);
-
-        expect(status).toEqual(200);
-
-        const { body: updatedDeal } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
-
-        expect(status).toEqual(200);
-
-        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
-          b._id === bondId); // eslint-disable-line no-underscore-dangle
-
-        expect(updatedBond).toEqual({
-          _id: bondId, // eslint-disable-line no-underscore-dangle
-          ...bondBody,
-          currency: deal.body.supplyContractCurrency,
-          guaranteeFeePayableByBank: expectedGuaranteeFee,
-          ukefExposure: expectedUkefExposure,
-          status: 'Completed',
-        });
       });
     });
   });

@@ -1,12 +1,13 @@
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
-const { findOneBondCurrency } = require('./bondCurrencies.controller');
 const loanValidationErrors = require('../validation/loan');
 const { generateFacilityId } = require('../../utils/generateIds');
 const {
   calculateGuaranteeFee,
   calculateUkefExposure,
 } = require('../section-calculations');
+
+const sectionCurrency = require('../section-currency');
 // const { loanStatus } = require('../section-status/loan');
 
 const putLoanInDealObject = (deal, loan, otherLoans) => ({
@@ -107,43 +108,6 @@ const loanFacilityStageFields = (loan) => {
   return modifiedLoan;
 };
 
-const loanCurrency = async (currencyCode) => {
-  const currencyObj = await findOneBondCurrency(currencyCode);
-  const { text, id } = currencyObj;
-
-  return {
-    text,
-    id,
-  };
-};
-
-const loanCurrencySameAsSupplyContractCurrency = async (loan, supplyContractCurrencyCode) => {
-  const modifiedLoan = loan;
-  const {
-    currencySameAsSupplyContractCurrency,
-    currency: currencyCode,
-  } = modifiedLoan;
-
-  if (currencySameAsSupplyContractCurrency && currencySameAsSupplyContractCurrency === 'true') {
-    // remove any 'currency is NOT the same' specific values
-    delete modifiedLoan.currency;
-    delete modifiedLoan.conversionRate;
-    delete modifiedLoan['conversionRateDate-day'];
-    delete modifiedLoan['conversionRateDate-month'];
-    delete modifiedLoan['conversionRateDate-year'];
-
-    modifiedLoan.currency = await loanCurrency(supplyContractCurrencyCode);
-  } else if (currencyCode) {
-    // TODO: make this clearer
-    // currencyCode can be a single string (from form),
-    // or an object with ID, if has been previously submitted.
-    const actualCurrencyCode = currencyCode.id ? currencyCode.id : currencyCode;
-    modifiedLoan.currency = await loanCurrency(actualCurrencyCode);
-  }
-
-  return modifiedLoan;
-};
-
 exports.updateLoan = async (req, res) => {
   const {
     loanId,
@@ -173,11 +137,9 @@ exports.updateLoan = async (req, res) => {
 
       modifiedLoan = loanFacilityStageFields(modifiedLoan);
 
-      const supplyContractCurrencyCode = deal.supplyContractCurrency.id;
-
-      modifiedLoan = await loanCurrencySameAsSupplyContractCurrency(
+      modifiedLoan = await sectionCurrency(
         modifiedLoan,
-        supplyContractCurrencyCode,
+        deal,
       );
 
       const { facilityValue, coveredPercentage, interestMarginFee } = modifiedLoan;
