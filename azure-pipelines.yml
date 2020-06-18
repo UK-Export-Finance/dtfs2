@@ -1,203 +1,203 @@
-# Docker
-# Build and push an image to Azure Container Registry
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+# # Docker
+# # Build and push an image to Azure Container Registry
+# # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
-trigger:
-  batch: true
-  branches:
-    include:
-    - master
+# trigger:
+#   batch: true
+#   branches:
+#     include:
+#     - master
 
-variables:
+# variables:
 
-  # Components
-  portal: 'portal'
-  dealApi: 'deal-api'
+#   # Components
+#   portal: 'portal'
+#   dealApi: 'deal-api'
 
-  # Connections
-  serviceConnection: 'Digital-Dev-Deployment'
-  registryServiceConnection: 'dtfsdev-1967'
-  resourceGroup: 'Digital-Dev'
-  containerRegistry: 'dtfsdev.azurecr.io'
+#   # Connections
+#   serviceConnection: 'Digital-Dev-Deployment'
+#   registryServiceConnection: 'dtfsdev-1967'
+#   resourceGroup: 'Digital-Dev'
+#   containerRegistry: 'dtfsdev.azurecr.io'
   
-  # Build agent VM image
-  vmImageName: 'ubuntu-latest'
+#   # Build agent VM image
+#   vmImageName: 'ubuntu-latest'
 
-stages:
+# stages:
 
-- stage: build
-  displayName: Build container images
-  jobs:  
+# - stage: build
+#   displayName: Build container images
+#   jobs:  
 
-  - job: Portal
-    displayName: 'Portal: build and push'
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: Docker@2
-      inputs:
-        containerRegistry: '$(registryServiceConnection)'
-        repository: '$(portal)'
-        command: 'buildAndPush'
-        Dockerfile: '$(portal)/Dockerfile'
+#   - job: Portal
+#     displayName: 'Portal: build and push'
+#     pool:
+#       vmImage: $(vmImageName)
+#     steps:
+#     - task: Docker@2
+#       inputs:
+#         containerRegistry: '$(registryServiceConnection)'
+#         repository: '$(portal)'
+#         command: 'buildAndPush'
+#         Dockerfile: '$(portal)/Dockerfile'
 
-  - job: DealApi
-    displayName: 'Deal API: build and push'
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: Docker@2
-      inputs:
-        containerRegistry: '$(registryServiceConnection)'
-        repository: '$(dealApi)'
-        command: 'buildAndPush'
-        Dockerfile: '$(dealApi)/Dockerfile'
+#   - job: DealApi
+#     displayName: 'Deal API: build and push'
+#     pool:
+#       vmImage: $(vmImageName)
+#     steps:
+#     - task: Docker@2
+#       inputs:
+#         containerRegistry: '$(registryServiceConnection)'
+#         repository: '$(dealApi)'
+#         command: 'buildAndPush'
+#         Dockerfile: '$(dealApi)/Dockerfile'
 
-- stage: deploy
-  displayName: Deploy containers
+# - stage: deploy
+#   displayName: Deploy containers
 
-  jobs:
-  - job: portal
-    displayName: 'Portal: deploy to App Service'
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: AzureAppServiceSettings@1
-      inputs:
-        azureSubscription: '$(serviceConnection)'
-        appName: 'dtfs-$(portal)-dev'
-        resourceGroupName: '$(resourceGroup)'
-        appSettings: |
-          [
-             {
-              "name": "DEAL_API_URL",
-              "value": "https://dtfs-deal-api-dev.azurewebsites.net/",
-              "slotSetting": false
-             },
-             {
-              "name": "COMPANIES_HOUSE_API_URL",
-              "value": "https://api.companieshouse.gov.uk",
-              "slotSetting": false
-             }
-          ]
-        connectionStrings: |
-          [
-             {
-              "name": "COMPANIES_HOUSE_API_KEY",
-              "value": "$(COMPANIES_HOUSE_API_KEY)",
-              "type": "Custom",
-              "slotSetting": false
-             }
-          ]
-    - task: AzureRmWebAppDeployment@4
-      displayName: Deploy
-      inputs:
-        azureSubscription: '$(serviceConnection)'
-        appType: 'webAppContainer'
-        WebAppName: 'dtfs-$(portal)-dev'
-        DockerNamespace: '$(containerRegistry)'
-        DockerRepository: '$(portal)'
-        DockerImageTag: '$(Build.BuildId)'
+#   jobs:
+#   - job: portal
+#     displayName: 'Portal: deploy to App Service'
+#     pool:
+#       vmImage: $(vmImageName)
+#     steps:
+#     - task: AzureAppServiceSettings@1
+#       inputs:
+#         azureSubscription: '$(serviceConnection)'
+#         appName: 'dtfs-$(portal)-dev'
+#         resourceGroupName: '$(resourceGroup)'
+#         appSettings: |
+#           [
+#              {
+#               "name": "DEAL_API_URL",
+#               "value": "https://dtfs-deal-api-dev.azurewebsites.net/",
+#               "slotSetting": false
+#              },
+#              {
+#               "name": "COMPANIES_HOUSE_API_URL",
+#               "value": "https://api.companieshouse.gov.uk",
+#               "slotSetting": false
+#              }
+#           ]
+#         connectionStrings: |
+#           [
+#              {
+#               "name": "COMPANIES_HOUSE_API_KEY",
+#               "value": "$(COMPANIES_HOUSE_API_KEY)",
+#               "type": "Custom",
+#               "slotSetting": false
+#              }
+#           ]
+#     - task: AzureRmWebAppDeployment@4
+#       displayName: Deploy
+#       inputs:
+#         azureSubscription: '$(serviceConnection)'
+#         appType: 'webAppContainer'
+#         WebAppName: 'dtfs-$(portal)-dev'
+#         DockerNamespace: '$(containerRegistry)'
+#         DockerRepository: '$(portal)'
+#         DockerImageTag: '$(Build.BuildId)'
         
-  - job: dealApi
-    displayName: 'Deal API: deploy to App Service'
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: AzureAppServiceSettings@1
-      inputs:
-        azureSubscription: '$(serviceConnection)'
-        appName: 'dtfs-$(dealApi)-dev'
-        resourceGroupName: '$(resourceGroup)'
-        appSettings: |
-          [
-             {
-              "name": "JWT_SIGNING_CERT",
-              "value": "./.ssl/private.pem",
-              "slotSetting": false
-             },
-             {
-              "name": "JWT_VALIDATING_CERT",
-              "value": "./.ssl/public.pem",
-              "slotSetting": false
-             }
-          ]
-        connectionStrings: |
-          [
-             {
-              "name": "MONGODB_URI",
-              "value": "$(MONGODB_URI)",
-              "type": "Custom",
-              "slotSetting": false
-             },
-             {
-              "name": "MONGO_INITDB_DATABASE",
-              "value": "$(MONGO_INITDB_DATABASE)",
-              "type": "Custom",
-              "slotSetting": false
-             },
-             {
-              "name": "AZURE_WORKFLOW_STORAGE_ACCOUNT",
-              "value": "$(AZURE_WORKFLOW_STORAGE_ACCOUNT)",
-              "type": "Custom",
-              "slotSetting": false
-             },
-             {
-              "name": "AZURE_WORKFLOW_STORAGE_ACCESS_KEY",
-              "value": "$(AZURE_WORKFLOW_STORAGE_ACCESS_KEY)",
-              "type": "Custom",
-              "slotSetting": false
-             },
-             {
-              "name": "AZURE_WORKFLOW_FILESHARE_NAME",
-              "value": "$(AZURE_WORKFLOW_FILESHARE_NAME)",
-              "type": "Custom",
-              "slotSetting": false
-             },
-             {
-              "name": "AZURE_WORKFLOW_EXPORT_FOLDER",
-              "value": "$(AZURE_WORKFLOW_EXPORT_FOLDER)",
-              "type": "Custom",
-              "slotSetting": false
-             },
-             {
-              "name": "AZURE_WORKFLOW_IMPORT_FOLDER",
-              "value": "$(AZURE_WORKFLOW_IMPORT_FOLDER)",
-              "type": "Custom",
-              "slotSetting": false
-             },
-             {
-              "name": "AZURE_PORTAL_STORAGE_ACCOUNT",
-              "value": "$(AZURE_PORTAL_STORAGE_ACCOUNT)",
-              "type": "Custom",
-              "slotSetting": false
-             },
-             {
-              "name": "AZURE_PORTAL_STORAGE_ACCESS_KEY",
-              "value": "$(AZURE_PORTAL_STORAGE_ACCESS_KEY)",
-              "type": "Custom",
-              "slotSetting": false
-             },
-             {
-              "name": "AZURE_PORTAL_FILESHARE_NAME",
-              "value": "$(AZURE_PORTAL_FILESHARE_NAME)",
-              "type": "Custom",
-              "slotSetting": false
-             },
-             {
-              "name": "AZURE_PORTAL_EXPORT_FOLDER",
-              "value": "$(AZURE_PORTAL_EXPORT_FOLDER)",
-              "type": "Custom",
-              "slotSetting": false
-             }
-          ]
-    - task: AzureRmWebAppDeployment@4
-      displayName: Deploy
-      inputs:
-        azureSubscription: '$(serviceConnection)'
-        appType: 'webAppContainer'
-        WebAppName: 'dtfs-$(dealApi)-dev'
-        DockerNamespace: '$(containerRegistry)'
-        DockerRepository: '$(dealApi)'
-        DockerImageTag: '$(Build.BuildId)'
+#   - job: dealApi
+#     displayName: 'Deal API: deploy to App Service'
+#     pool:
+#       vmImage: $(vmImageName)
+#     steps:
+#     - task: AzureAppServiceSettings@1
+#       inputs:
+#         azureSubscription: '$(serviceConnection)'
+#         appName: 'dtfs-$(dealApi)-dev'
+#         resourceGroupName: '$(resourceGroup)'
+#         appSettings: |
+#           [
+#              {
+#               "name": "JWT_SIGNING_CERT",
+#               "value": "./.ssl/private.pem",
+#               "slotSetting": false
+#              },
+#              {
+#               "name": "JWT_VALIDATING_CERT",
+#               "value": "./.ssl/public.pem",
+#               "slotSetting": false
+#              }
+#           ]
+#         connectionStrings: |
+#           [
+#              {
+#               "name": "MONGODB_URI",
+#               "value": "$(MONGODB_URI)",
+#               "type": "Custom",
+#               "slotSetting": false
+#              },
+#              {
+#               "name": "MONGO_INITDB_DATABASE",
+#               "value": "$(MONGO_INITDB_DATABASE)",
+#               "type": "Custom",
+#               "slotSetting": false
+#              },
+#              {
+#               "name": "AZURE_WORKFLOW_STORAGE_ACCOUNT",
+#               "value": "$(AZURE_WORKFLOW_STORAGE_ACCOUNT)",
+#               "type": "Custom",
+#               "slotSetting": false
+#              },
+#              {
+#               "name": "AZURE_WORKFLOW_STORAGE_ACCESS_KEY",
+#               "value": "$(AZURE_WORKFLOW_STORAGE_ACCESS_KEY)",
+#               "type": "Custom",
+#               "slotSetting": false
+#              },
+#              {
+#               "name": "AZURE_WORKFLOW_FILESHARE_NAME",
+#               "value": "$(AZURE_WORKFLOW_FILESHARE_NAME)",
+#               "type": "Custom",
+#               "slotSetting": false
+#              },
+#              {
+#               "name": "AZURE_WORKFLOW_EXPORT_FOLDER",
+#               "value": "$(AZURE_WORKFLOW_EXPORT_FOLDER)",
+#               "type": "Custom",
+#               "slotSetting": false
+#              },
+#              {
+#               "name": "AZURE_WORKFLOW_IMPORT_FOLDER",
+#               "value": "$(AZURE_WORKFLOW_IMPORT_FOLDER)",
+#               "type": "Custom",
+#               "slotSetting": false
+#              },
+#              {
+#               "name": "AZURE_PORTAL_STORAGE_ACCOUNT",
+#               "value": "$(AZURE_PORTAL_STORAGE_ACCOUNT)",
+#               "type": "Custom",
+#               "slotSetting": false
+#              },
+#              {
+#               "name": "AZURE_PORTAL_STORAGE_ACCESS_KEY",
+#               "value": "$(AZURE_PORTAL_STORAGE_ACCESS_KEY)",
+#               "type": "Custom",
+#               "slotSetting": false
+#              },
+#              {
+#               "name": "AZURE_PORTAL_FILESHARE_NAME",
+#               "value": "$(AZURE_PORTAL_FILESHARE_NAME)",
+#               "type": "Custom",
+#               "slotSetting": false
+#              },
+#              {
+#               "name": "AZURE_PORTAL_EXPORT_FOLDER",
+#               "value": "$(AZURE_PORTAL_EXPORT_FOLDER)",
+#               "type": "Custom",
+#               "slotSetting": false
+#              }
+#           ]
+#     - task: AzureRmWebAppDeployment@4
+#       displayName: Deploy
+#       inputs:
+#         azureSubscription: '$(serviceConnection)'
+#         appType: 'webAppContainer'
+#         WebAppName: 'dtfs-$(dealApi)-dev'
+#         DockerNamespace: '$(containerRegistry)'
+#         DockerRepository: '$(dealApi)'
+#         DockerImageTag: '$(Build.BuildId)'
 
