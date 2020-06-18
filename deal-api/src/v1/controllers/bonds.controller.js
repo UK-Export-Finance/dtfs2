@@ -1,6 +1,5 @@
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
-const { findOneBondCurrency } = require('./bondCurrencies.controller');
 const bondValidationErrors = require('../validation/bond');
 const { generateFacilityId } = require('../../utils/generateIds');
 const { bondStatus } = require('../section-status/bond');
@@ -8,6 +7,7 @@ const {
   calculateGuaranteeFee,
   calculateUkefExposure,
 } = require('../section-calculations');
+const sectionCurrency = require('../section-currency');
 
 const putBondInDealObject = (deal, bond, otherBonds) => ({
   ...deal,
@@ -83,43 +83,6 @@ exports.create = async (req, res) => {
   });
 };
 
-const bondCurrency = async (currencyCode) => {
-  const currencyObj = await findOneBondCurrency(currencyCode);
-  const { text, id } = currencyObj;
-
-  return {
-    text,
-    id,
-  };
-};
-
-const bondcurrencySameAsSupplyContractCurrency = async (bond, supplyContractCurrencyCode) => {
-  const modifiedBond = bond;
-  const {
-    currencySameAsSupplyContractCurrency,
-    currency: currencyCode,
-  } = modifiedBond;
-
-  if (currencySameAsSupplyContractCurrency && currencySameAsSupplyContractCurrency === 'true') {
-    // remove any 'currency is NOT the same' specific values
-    delete modifiedBond.currency;
-    delete modifiedBond.conversionRate;
-    delete modifiedBond['conversionRateDate-day'];
-    delete modifiedBond['conversionRateDate-month'];
-    delete modifiedBond['conversionRateDate-year'];
-
-    modifiedBond.currency = await bondCurrency(supplyContractCurrencyCode);
-  } else if (currencyCode) {
-    // TODO: make this clearer
-    // currencyCode can be a single string (from form),
-    // or an object with ID, if has been previously submitted.
-    const actualCurrencyCode = currencyCode.id ? currencyCode.id : currencyCode;
-    modifiedBond.currency = await bondCurrency(actualCurrencyCode);
-  }
-
-  return modifiedBond;
-};
-
 const bondStageFields = (bond) => {
   const modifiedBond = bond;
   const { bondStage } = modifiedBond;
@@ -172,11 +135,9 @@ exports.updateBond = async (req, res) => {
 
       modifiedBond = bondStageFields(modifiedBond);
 
-      const supplyContractCurrencyCode = deal.supplyContractCurrency.id;
-
-      modifiedBond = await bondcurrencySameAsSupplyContractCurrency(
+      modifiedBond = await sectionCurrency(
         modifiedBond,
-        supplyContractCurrencyCode,
+        deal,
       );
 
       const { facilityValue, coveredPercentage, riskMarginFee } = modifiedBond;
