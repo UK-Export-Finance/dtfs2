@@ -45,6 +45,6 @@ exports.createTypeA = async (deal, fromStatus) => {
     buffer: Buffer.from(typeAxmlStr, 'utf-8'),
   };
 
-  return fileshare.uploadStream(upload);
+  return fileshare.uploadFile(upload);
 };
 */

@@ -170,7 +170,7 @@ const generateTypeA = async (deal, fromStatus) => {
       Object.entries(k2Map.DEAL.DEAL_FILES).forEach(([fieldname, xmlNodeName]) => {
         if (deal.dealFiles[fieldname]) {
           deal.dealFiles[fieldname].forEach(((df) => {
-            builder.AddDeal(xmlNodeName, df.type, df.fullPath);
+            builder.AddDeal(xmlNodeName, df.type, df.filename);
           }));
         }
       });
@@ -231,7 +231,28 @@ const createTypeA = async (deal, fromStatus) => {
     buffer: Buffer.from(typeAxmlStr, 'utf-8'),
   };
 
-  return fileshare.uploadStream(upload);
+  const dealUpload = fileshare.uploadFile(upload);
+
+  // Upload corresponding supporting docs
+  const dealUploadPromises = [];
+  if (deal.dealFiles) {
+    Object.entries(deal.dealFiles).forEach(([field, fileList]) => {
+      if (field === 'validationErrors' || field === 'security') { return; }
+
+      fileList.forEach((file) => {
+        dealUploadPromises.push(
+          fileshare.copyFile({
+            from: { fileshare: 'portal', folder: deal._id, filename: file.filename }, // eslint-disable-line no-underscore-dangle
+            to: { fileshare: 'workflow', folder: deal._id, filename: file.filename }, // eslint-disable-line no-underscore-dangle
+          }),
+        );
+      });
+    });
+  }
+
+  await Promise.all(dealUploadPromises);
+
+  return dealUpload;
 };
 
 module.exports = { generateTypeA, createTypeA };

@@ -12,7 +12,7 @@ const subfolder = 'fileshare';
 
 describe('fileshare', () => {
   it('can upload a string and get it back', async () => {
-    await fileshare.uploadStream({
+    await fileshare.uploadFile({
       fileshare: 'portal',
       folder,
       subfolder,
@@ -43,7 +43,7 @@ describe('fileshare', () => {
 
     fileList.forEach((filename) => {
       fileshareWritePromises.push(
-        fileshare.uploadStream({
+        fileshare.uploadFile({
           fileshare: 'portal',
           folder,
           subfolder,
