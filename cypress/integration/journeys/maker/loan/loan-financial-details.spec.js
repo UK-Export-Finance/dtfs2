@@ -3,7 +3,10 @@ const partials = require('../../../partials');
 const fillLoanForm = require('./fill-loan-forms');
 const assertLoanFormValues = require('./assert-loan-form-values');
 const LOAN_FORM_VALUES = require('./loan-form-values');
-const { roundNumber } = require('../../../../../deal-api/src/utils/number');
+const {
+  calculateExpectedGuaranteeFee,
+  calculateExpectedUkefExposure,
+} = require('../../../../support/portal/sectionCalculations');
 
 const user = { username: 'MAKER', password: 'MAKER' };
 
@@ -35,22 +38,22 @@ const goToPage = (deal) => {
 };
 
 // TODO: be DRY
-const calculateExpectedGuaranteeFeePayableByBank = (riskMarginFee) => {
-  const calculation = riskMarginFee * 0.9;
-  const formattedRiskMarginFee = calculation.toLocaleString('en', { minimumFractionDigits: 4 });
-  return formattedRiskMarginFee;
-};
+// const calculateExpectedGuaranteeFeePayableByBank = (riskMarginFee) => {
+//   const calculation = riskMarginFee * 0.9;
+//   const formattedRiskMarginFee = calculation.toLocaleString('en', { minimumFractionDigits: 4 });
+//   return formattedRiskMarginFee;
+// };
 
 // TODO: be DRY
-const calculateExpectedUkefExposure = (facilityValue, coveredPercentage) => {
-  const strippedFacilityValue = facilityValue.replace(/,/g, '');
+// const calculateExpectedUkefExposure = (facilityValue, coveredPercentage) => {
+//   const strippedFacilityValue = facilityValue.replace(/,/g, '');
 
-  const calculation = strippedFacilityValue * (coveredPercentage / 100);
+//   const calculation = strippedFacilityValue * (coveredPercentage / 100);
 
-  const ukefExposure = roundNumber(calculation, 2);
-  const formattedUkefExposure = ukefExposure.toLocaleString('en', { minimumFractionDigits: 2 });
-  return formattedUkefExposure;
-};
+//   const ukefExposure = roundNumber(calculation, 2);
+//   const formattedUkefExposure = ukefExposure.toLocaleString('en', { minimumFractionDigits: 2 });
+//   return formattedUkefExposure;
+// };
 
 context('Loan Financial Details', () => {
   let deal;
@@ -160,12 +163,12 @@ context('Loan Financial Details', () => {
       let interestMarginFee = '20';
       pages.loanFinancialDetails.guaranteeFeePayableByBankInput().invoke('attr', 'placeholder').should('eq', '0');
       pages.loanFinancialDetails.interestMarginFeeInput().type(interestMarginFee).blur();
-      pages.loanFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFeePayableByBank(interestMarginFee));
+      pages.loanFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFee(interestMarginFee));
 
       pages.loanFinancialDetails.interestMarginFeeInput().clear();
       interestMarginFee = '9.09';
       pages.loanFinancialDetails.interestMarginFeeInput().type(interestMarginFee).blur();
-      pages.loanFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFeePayableByBank(interestMarginFee));
+      pages.loanFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFee(interestMarginFee));
     });
   });
 

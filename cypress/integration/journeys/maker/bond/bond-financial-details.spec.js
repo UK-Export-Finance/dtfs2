@@ -6,6 +6,10 @@ const assertBondFormValues = require('./assert-bond-form-values');
 const BOND_FORM_VALUES = require('./bond-form-values');
 const { roundNumber } = require('../../../../../deal-api/src/utils/number');
 const relative = require('../../../relativeURL');
+const {
+  calculateExpectedGuaranteeFee,
+  calculateExpectedUkefExposure,
+} = require('../../../../support/portal/sectionCalculations');
 
 const user = { username: 'MAKER', password: 'MAKER' };
 
@@ -24,22 +28,6 @@ const goToBondFinancialDetailsPage = (deal) => {
   cy.url().should('include', '/contract');
   cy.url().should('include', '/bond/');
   cy.url().should('include', '/financial-details');
-};
-
-const calculateExpectedGuaranteeFeePayableByBank = (riskMarginFee) => {
-  const calculation = riskMarginFee * 0.9;
-  const formattedRiskMarginFee = calculation.toLocaleString('en', { minimumFractionDigits: 4 });
-  return formattedRiskMarginFee;
-};
-
-const calculateExpectedUkefExposure = (facilityValue, coveredPercentage) => {
-  const strippedFacilityValue = facilityValue.replace(/,/g, '');
-
-  const calculation = strippedFacilityValue * (coveredPercentage / 100);
-
-  const ukefExposure = roundNumber(calculation, 2);
-  const formattedUkefExposure = ukefExposure.toLocaleString('en', { minimumFractionDigits: 2 });
-  return formattedUkefExposure;
 };
 
 context('Bond Financial Details', () => {
@@ -92,12 +80,12 @@ context('Bond Financial Details', () => {
       let riskMarginFee = '20';
       pages.bondFinancialDetails.guaranteeFeePayableByBankInput().invoke('attr', 'placeholder').should('eq', '0');
       pages.bondFinancialDetails.riskMarginFeeInput().type(riskMarginFee).blur();
-      pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFeePayableByBank(riskMarginFee));
+      pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFee(riskMarginFee));
 
       pages.bondFinancialDetails.riskMarginFeeInput().clear();
       riskMarginFee = '9.09';
       pages.bondFinancialDetails.riskMarginFeeInput().type(riskMarginFee).blur();
-      pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFeePayableByBank(riskMarginFee));
+      pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFee(riskMarginFee));
     });
   });
 

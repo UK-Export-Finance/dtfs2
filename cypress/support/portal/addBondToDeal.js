@@ -12,5 +12,4 @@ module.exports = () => {
 
   fillBondForm.feeDetails();
   pages.bondFeeDetails.submit().click();
-
 }
