@@ -98,12 +98,22 @@ const uploadStream = async ({
   });
 
   const fileClient = await subDirectoryClient.getFileClient(`${filename}`);
-  await fileClient.uploadData(buffer);
+  const existingFileProps = await fileClient.getProperties().catch(() => {});
+
+  if (!existingFileProps) {
+    await fileClient.uploadData(buffer);
+    return {
+      folder,
+      filename: fileClient.name,
+      fullPath: fileClient.path,
+      url: fileClient.url,
+    };
+  }
+
   return {
-    folder,
-    filename: fileClient.name,
-    fullPath: fileClient.path,
-    url: fileClient.url,
+    error: {
+      message: 'could not be uploaded. Each file must have unique filename',
+    },
   };
 };
 

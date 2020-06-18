@@ -50,12 +50,12 @@ const generateErrorSummary = (
   const filteredValidationErrorList = Object.fromEntries(filteredValidationErrorListArray);
 
   const summary = filteredValidationErrorListArray.map(([id, value]) => {
-    const { text, hrefRoot } = value;
+    const { text, summaryText, hrefRoot } = value;
 
     const href = hrefRoot ? `${value.hrefRoot}${hrefGenerator(id)}` : hrefGenerator(id);
 
     return {
-      text,
+      text: summaryText || text,
       href,
     };
   });
