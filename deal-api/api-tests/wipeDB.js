@@ -17,7 +17,7 @@ const wipe = async (collections) => {
 };
 
 const wipeAll = async () => {
-  await wipe(['deals', 'banks', 'transactions', 'bondCurrencies', 'countries', 'industrySectors', 'mandatoryCriteria', 'users']);
+  await wipe(['deals', 'banks', 'transactions', 'currencies', 'countries', 'industrySectors', 'mandatoryCriteria', 'users']);
 };
 
 module.exports = {

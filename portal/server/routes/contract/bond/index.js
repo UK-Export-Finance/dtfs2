@@ -1,5 +1,6 @@
 import express from 'express';
 import api from '../../../api';
+import { provide, CURRENCIES } from '../../api-data-provider';
 import {
   getApiData,
   requestParams,
@@ -67,13 +68,10 @@ router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/bond/:bondId/financial-details', async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/financial-details', provide([CURRENCIES]), async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
-  const currencies = await getApiData(
-    api.bondCurrencies(userToken),
-    res,
-  );
+  const { currencies } = req.apiData;
 
   const bondResponse = await getApiData(
     api.contractBond(_id, bondId, userToken),

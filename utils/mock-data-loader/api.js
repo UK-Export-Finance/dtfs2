@@ -23,7 +23,7 @@ const createBank = async (bank, token) => {
   return response.data;
 };
 
-const createBondCurrency = async (bondCurrency, token) => {
+const createCurrency = async (currency, token) => {
   const response = await axios({
     method: 'post',
     headers: {
@@ -31,8 +31,8 @@ const createBondCurrency = async (bondCurrency, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/bond-currencies`,
-    data: bondCurrency,
+    url: `${urlRoot}/v1/currencies`,
+    data: currency,
   }).catch((err) => { console.log(`err: ${err}`); });
 
   return response.data;
@@ -141,7 +141,7 @@ const deleteBank = async (deal, token) => {
   return response.data;
 };
 
-const deleteBondCurrency = async (bondCurrency, token) => {
+const deleteCurrency = async (currency, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
@@ -149,7 +149,7 @@ const deleteBondCurrency = async (bondCurrency, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/bond-currencies/${bondCurrency.id}`,
+    url: `${urlRoot}/v1/currencies/${currency.id}`,
   }).catch((err) => { console.log(`err: ${err}`); });
 
   return response.data;
@@ -252,7 +252,7 @@ const listBanks = async (token) => {
   return response.data.banks;
 };
 
-const listBondCurrencies = async (token) => {
+const listCurrencies = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
@@ -260,10 +260,10 @@ const listBondCurrencies = async (token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/bond-currencies`,
+    url: `${urlRoot}/v1/currencies`,
   }).catch((err) => { console.log(`err: ${err}`); });
 
-  return response.data.bondCurrencies;
+  return response.data.currencies;
 };
 
 const listCountries = async (token) => {
@@ -358,7 +358,7 @@ const resetIdCounters = async (token) => {
 
 module.exports = {
   createBank,
-  createBondCurrency,
+  createCurrency,
   createCountry,
   createDeal,
   createIndustrySector,
@@ -366,7 +366,7 @@ module.exports = {
   createTransaction,
   createUser,
   deleteBank,
-  deleteBondCurrency,
+  deleteCurrency,
   deleteCountry,
   deleteDeal,
   deleteIndustrySector,
@@ -374,7 +374,7 @@ module.exports = {
   deleteTransaction,
   deleteUser,
   listBanks,
-  listBondCurrencies,
+  listCurrencies,
   listCountries,
   listDeals,
   listIndustrySectors,

@@ -83,9 +83,9 @@ describe('/v1/deals/:id/bond', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['bondCurrencies', 'deals']);
+    await wipeDB.wipe(['currencies', 'deals']);
 
-    await as(anEditor).postEach(mockCurrencies).to('/v1/bond-currencies');
+    await as(anEditor).postEach(mockCurrencies).to('/v1/currencies');
   });
 
   describe('GET /v1/deals/:id/bond/:id', () => {

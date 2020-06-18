@@ -9,7 +9,7 @@ const dealName = require('./controllers/deal-name.controller');
 const dealStatus = require('./controllers/deal-status.controller');
 const dealSubmissionDetails = require('./controllers/deal-submission-details.controller');
 const banks = require('./controllers/banks.controller');
-const bondCurrencies = require('./controllers/bondCurrencies.controller');
+const currencies = require('./controllers/currencies.controller');
 const countries = require('./controllers/countries.controller');
 const industrySectors = require('./controllers/industrySectors.controller');
 const mandatoryCriteria = require('./controllers/mandatoryCriteria.controller');
@@ -169,26 +169,26 @@ authRouter.route('/banks/:id')
     banks.delete,
   );
 
-authRouter.route('/bond-currencies')
+authRouter.route('/currencies')
   .get(
-    bondCurrencies.findAll,
+    currencies.findAll,
   )
   .post(
     validate({ role: ['editor'] }),
-    bondCurrencies.create,
+    currencies.create,
   );
 
-authRouter.route('/bond-currencies/:id')
+authRouter.route('/currencies/:id')
   .get(
-    bondCurrencies.findOne,
+    currencies.findOne,
   )
   .put(
     validate({ role: ['editor'] }),
-    bondCurrencies.update,
+    currencies.update,
   )
   .delete(
     validate({ role: ['editor'] }),
-    bondCurrencies.delete,
+    currencies.delete,
   );
 
 authRouter.route('/countries')
