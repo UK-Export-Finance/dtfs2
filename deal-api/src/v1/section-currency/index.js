@@ -1,7 +1,7 @@
-const { findOneBondCurrency } = require('../controllers/bondCurrencies.controller');
+const { findOneCurrency } = require('../controllers/currencies.controller');
 
 const currencyObject = async (currencyCode) => {
-  const currencyObj = await findOneBondCurrency(currencyCode);
+  const currencyObj = await findOneCurrency(currencyCode);
   const { text, id } = currencyObj;
 
   return {

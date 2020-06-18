@@ -296,11 +296,10 @@ const banks = async (token) => {
   return response.data.banks;
 };
 
-// TODO once world uses middleware, remove the old 'bondCurrencies' method
 const getCurrencies = async (token) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/v1/bond-currencies`,
+    url: `${urlRoot}/v1/currencies`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -309,21 +308,8 @@ const getCurrencies = async (token) => {
 
   return {
     status: response.status,
-    currencies: response.data.bondCurrencies,
+    currencies: response.data.currencies,
   };
-};
-
-const bondCurrencies = async (token) => {
-  const response = await axios({
-    method: 'get',
-    url: `${urlRoot}/v1/bond-currencies`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return response.data.bondCurrencies;
 };
 
 const getCountries = async (token) => {
@@ -469,7 +455,6 @@ const downloadFile = async (id, fieldname, filename, token) => {
 
 export default {
   banks,
-  bondCurrencies,
   cloneDeal,
   contractBond,
   contracts,

@@ -1,4 +1,4 @@
-const BOND_CURRENCIES = [
+const CURRENCIES = [
   {
     currencyId: 1,
     text: 'AED - U.A.E. Dirham',
@@ -291,4 +291,4 @@ const BOND_CURRENCIES = [
   },
 ];
 
-module.exports = BOND_CURRENCIES;
+module.exports = CURRENCIES;
