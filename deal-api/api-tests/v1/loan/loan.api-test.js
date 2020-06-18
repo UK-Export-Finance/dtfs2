@@ -47,6 +47,23 @@ describe('/v1/deals/:id/loan', () => {
   let anHSBCMaker;
   let aSuperuser;
 
+  const addLoanToDeal = async () => {
+    const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+    const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+    const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+    const { loanId } = createLoanResponse.body;
+    return {
+      dealId,
+      loanId,
+    };
+  };
+
+  const updateLoan = async (dealId, loanId, loanBody) => {
+    const updatedLoan = await as(aBarclaysMaker).put(loanBody).to(`/v1/deals/${dealId}/loan/${loanId}`);
+    return updatedLoan;
+  };
+
   beforeAll(async () => {
     await wipeDB.wipe(['deals']);
 
@@ -189,11 +206,7 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('should add guaranteeFeePayableByBank and ukefExposure values to the loan', async () => {
-      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-      const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
-
-      const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
-      const { loanId } = createLoanResponse.body;
+      const { dealId, loanId } = await addLoanToDeal();
 
       const loan = {
         facilityValue: '100',
@@ -201,7 +214,7 @@ describe('/v1/deals/:id/loan', () => {
         interestMarginFee: '10',
       };
 
-      const { body } = await as(aBarclaysMaker).put(loan).to(`/v1/deals/${dealId}/loan/${loanId}`);
+      const { body } = await updateLoan(dealId, loanId, loan);
 
       const expectedGuaranteeFee = calculateGuaranteeFee(loan.interestMarginFee);
       const expectedUkefExposure = calculateUkefExposure(loan.facilityValue, loan.coveredPercentage);
@@ -212,11 +225,7 @@ describe('/v1/deals/:id/loan', () => {
 
     describe('when req.body.facilityStage is `Unconditional`', () => {
       it('should remove `Conditional` related values from the loan', async () => {
-        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
-
-        const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
-        const { loanId } = createLoanResponse.body;
+        const { dealId, loanId } = await addLoanToDeal();
 
         const conditionalLoan = {
           facilityStage: 'Conditional',
@@ -227,7 +236,7 @@ describe('/v1/deals/:id/loan', () => {
           coveredPercentage: '40',
         };
 
-        await as(aBarclaysMaker).put(conditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
+        await updateLoan(dealId, loanId, conditionalLoan);
 
         const updateToUnconditionalLoan = {
           ...conditionalLoan,
@@ -238,20 +247,16 @@ describe('/v1/deals/:id/loan', () => {
           disbursementAmount: '5',
         };
 
-        const updatedLoanResponse = await as(aBarclaysMaker).put(updateToUnconditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
+        const { status, body } = await updateLoan(dealId, loanId, updateToUnconditionalLoan);
 
-        expect(updatedLoanResponse.status).toEqual(200);
-        expect(updatedLoanResponse.body.ukefGuaranteeInMonths).toEqual(undefined);
+        expect(status).toEqual(200);
+        expect(body.ukefGuaranteeInMonths).toEqual(undefined);
       });
     });
 
     describe('when req.body.facilityStage is `Conditional`', () => {
       it('should remove `Unconditional` related values from the loan (but retain bankReferenceNumber)', async () => {
-        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
-
-        const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
-        const { loanId } = createLoanResponse.body;
+        const { dealId, loanId } = await addLoanToDeal();
 
         const unconditionalLoan = {
           facilityStage: 'Unconditional',
@@ -265,7 +270,7 @@ describe('/v1/deals/:id/loan', () => {
           disbursementAmount: '5',
         };
 
-        await as(aBarclaysMaker).put(unconditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
+        await updateLoan(dealId, loanId, unconditionalLoan);
 
         const updateToConditionalLoan = {
           ...unconditionalLoan,
@@ -273,24 +278,23 @@ describe('/v1/deals/:id/loan', () => {
           ukefGuaranteeInMonths: '12',
         };
 
-        const updatedLoanResponse = await as(aBarclaysMaker).put(updateToConditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
+        const { status, body } = await updateLoan(dealId, loanId, updateToConditionalLoan);
 
-        expect(updatedLoanResponse.status).toEqual(200);
-        expect(updatedLoanResponse.body['requestedCoverStartDate-day']).toEqual(undefined);
-        expect(updatedLoanResponse.body['requestedCoverStartDate-month']).toEqual(undefined);
-        expect(updatedLoanResponse.body['requestedCoverStartDate-year']).toEqual(undefined);
-        expect(updatedLoanResponse.body['coverEndDate-day']).toEqual(undefined);
-        expect(updatedLoanResponse.body['coverEndDate-month']).toEqual(undefined);
-        expect(updatedLoanResponse.body['coverEndDate-year']).toEqual(undefined);
-        expect(updatedLoanResponse.body.disbursementAmount).toEqual(undefined);
+        expect(status).toEqual(200);
+        expect(body['requestedCoverStartDate-day']).toEqual(undefined);
+        expect(body['requestedCoverStartDate-month']).toEqual(undefined);
+        expect(body['requestedCoverStartDate-year']).toEqual(undefined);
+        expect(body['coverEndDate-day']).toEqual(undefined);
+        expect(body['coverEndDate-month']).toEqual(undefined);
+        expect(body['coverEndDate-year']).toEqual(undefined);
+        expect(body.disbursementAmount).toEqual(undefined);
       });
     });
 
     it('should add the deal\'s supplyContractCurrency to the loan\'s currency', async () => {
-      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
-      const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+      const { dealId, loanId } = await addLoanToDeal();
 
-      const conditionalLoan = {
+      const loan = {
         facilityStage: 'Conditional',
         ukefGuaranteeInMonths: '12',
         facilityValue: '100',
@@ -299,20 +303,15 @@ describe('/v1/deals/:id/loan', () => {
         coveredPercentage: '40',
       };
 
-      const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
-      const { loanId } = createLoanResponse.body;
-
-      const { body, status } = await as(aBarclaysMaker).put(conditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
+      const { status, body } = await updateLoan(dealId, loanId, loan);
 
       expect(status).toEqual(200);
-
-      expect(body.currency).toEqual(deal.body.supplyContractCurrency);
+      expect(body.currency).toEqual(newDeal.supplyContractCurrency);
     });
 
     describe('when req.body.currencySameAsSupplyContractCurrency is changed from false to true', () => {
       it('should remove `currency is NOT the same` values from the loan and add the deal\'s supplyContractCurrency', async () => {
-        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
-        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+        const { dealId, loanId } = await addLoanToDeal();
 
         const loan = {
           facilityStage: 'Conditional',
@@ -328,24 +327,21 @@ describe('/v1/deals/:id/loan', () => {
           'conversionRateDate-year': moment().format('YYYY'),
         };
 
-        const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
-        const { loanId } = createLoanResponse.body;
-
-        await as(aBarclaysMaker).put(loan).to(`/v1/deals/${dealId}/loan/${loanId}`);
+        await updateLoan(dealId, loanId, loan);
 
         const updatedLoan = {
           ...loan,
           currencySameAsSupplyContractCurrency: 'true',
         };
 
-        const { body, status } = await as(aBarclaysMaker).put(updatedLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
+        const { status, body } = await updateLoan(dealId, loanId, updatedLoan);
 
         expect(status).toEqual(200);
         expect(body.conversionRate).toEqual(undefined);
         expect(body['conversionRateDate-day']).toEqual(undefined);
         expect(body['conversionRateDate-month']).toEqual(undefined);
         expect(body['conversionRateDate-year']).toEqual(undefined);
-        expect(body.currency).toEqual(deal.body.supplyContractCurrency);
+        expect(body.currency).toEqual(newDeal.supplyContractCurrency);
       });
     });
   });
