@@ -41,3 +41,4 @@ jobs:
         path: deal-api
         tags: github
         add_git_labels: true
+
