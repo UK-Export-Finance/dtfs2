@@ -24,7 +24,7 @@ jobs:
         password: ${{ secrets.ACR_DEV_PASSWORD }}
         repository: portal
         path: portal
-        tags: ${{ TAG }}
+        tags: ${{ env.TAG }}
         add_git_labels: true
         
   deal-api:
@@ -40,7 +40,7 @@ jobs:
         password: ${{ secrets.ACR_DEV_PASSWORD }}
         repository: deal-api
         path: deal-api
-        tags: ${{ TAG }}
+        tags: ${{ env.TAG }}
         add_git_labels: true
   
   test:
@@ -67,11 +67,11 @@ jobs:
         password: ${{ secrets.ACR_TEST_PASSWORD }}
     - run: |
         echo "Promoting portal..."
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal:${{ TAG }}
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal:${{ TAG }} ${{ secrets.ACR_TEST_REGISTRY }}/portal:${{ TAG }}
-        docker push ${{ secrets.ACR_TEST_REGISTRY }}/portal:${{ TAG }}
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal:${{ env.TAG }}
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal:${{ env.TAG }} ${{ secrets.ACR_TEST_REGISTRY }}/portal:${{ env.TAG }}
+        docker push ${{ secrets.ACR_TEST_REGISTRY }}/portal:${{ env.TAG }}
         echo "Promoting deal-api..."
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ TAG }}
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ TAG }} ${{ secrets.ACR_TEST_REGISTRY }}/deal-api:${{ TAG }}
-        docker push ${{ secrets.ACR_TEST_REGISTRY }}/deal-api:${{ TAG }}
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }}
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }} ${{ secrets.ACR_TEST_REGISTRY }}/deal-api:${{ env.TAG }}
+        docker push ${{ secrets.ACR_TEST_REGISTRY }}/deal-api:${{ env.TAG }}
         echo "Done."
