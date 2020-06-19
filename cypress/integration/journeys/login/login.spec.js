@@ -1,5 +1,9 @@
 const {
-  header, startNow, beforeYouStart, bankDetails,
+  header,
+  startNow,
+  beforeYouStart,
+  bankDetails,
+  dashboard,
 } = require('../../pages');
 const relative = require('../../relativeURL');
 
@@ -20,6 +24,9 @@ context('Login', () => {
     cy.url().should('eq', relative('/'));
 
     bankDetails.visit();
+    cy.url().should('eq', relative('/'));
+
+    dashboard.visit();
     cy.url().should('eq', relative('/'));
   });
 
@@ -43,5 +50,13 @@ context('Login', () => {
     header.home().click();
 
     cy.url().should('eq', relative('/start-now'));
+  });
+
+  it('When a logged-in user clicks the dashboard link they go to the /dashboard page', () => {
+    cy.login({ username: 'MAKER', password: 'MAKER' });
+
+    header.dashboard().click();
+
+    cy.url().should('eq', relative('/dashboard/0'));
   });
 });
