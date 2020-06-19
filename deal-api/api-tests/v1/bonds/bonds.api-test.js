@@ -33,7 +33,7 @@ describe('/v1/deals/:id/bond', () => {
     ukefGuaranteeInMonths: '24',
     uniqueIdentificationNumber: '1234',
     bondBeneficiary: 'test',
-    facilityValue: '123456.551',
+    facilityValue: '123456.55',
     currencySameAsSupplyContractCurrency: 'true',
     riskMarginFee: '9.09',
     coveredPercentage: '2',
