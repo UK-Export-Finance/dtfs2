@@ -28,32 +28,52 @@
     </div>
 
       <div class="govuk-header__content">
-        <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="profileNavigation" aria-label="Show or hide Profile Menu">Profile Menu</button>
-        <nav aria-labelledby="profilemenu">
-          <h2 id="profilemenu" class="govuk-visually-hidden">Profile Menu</h2>
-          <ul id="profileNavigation" class="govuk-header__navigation govuk-header__navigation--end" aria-label="Profile Navigation">
+
+        <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
+
+        <nav>
+
+          <ul id="navigation" class="govuk-header__navigation " aria-label="Top Level Navigation">
+
+            <div class="govuk-header__navigation--end">
+
+              {% if user %}
+                <li class="govuk-header__navigation-item govuk-header__navigation-item">
+                  {{ user.username }}
+                </li>
+
+                <li class="govuk-header__navigation-item govuk-header__navigation-item">
+                  <a class="govuk-header__link" href="/user/{{ user.username | urlencode }}">
+                    Profile
+                  </a>
+                </li>
+
+                <li class="govuk-header__navigation-item">
+                  <a class="govuk-header__link" href="#">
+                    Log out
+                  </a>
+                </li>
+
+              {% else %}
+                <li class="govuk-header__navigation-item">
+                  <a class="govuk-header__link" href="/">
+                    Log in
+                  </a>
+                </li>
+              {% endif %}
+
+            </div>
+
             {% if user %}
-            <li class="govuk-header__navigation-item govuk-header__navigation-item--active">
-            {{ user.username }}
-            </li>
-            <li class="govuk-header__navigation-item govuk-header__navigation-item--active">
-              <a class="govuk-header__link" href="/user/{{ user.username | urlencode }}">
-                Profile
+            <li class="govuk-header__navigation-item govuk-header__navigation-item">
+              <a class="govuk-header__link" href="#1">
+                Dashboard
               </a>
             </li>
-            <li class="govuk-header__navigation-item">
-              <a class="govuk-header__link" href="#">
-                Log out
-              </a>
-            </li>
-            {% else %}
-              <li class="govuk-header__navigation-item">
-                <a class="govuk-header__link" href="/">
-                  Log in
-                </a>
-              </li>
             {% endif %}
+
           </ul>
+
         </nav>
       </div>
   </div>
