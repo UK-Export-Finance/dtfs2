@@ -47,8 +47,6 @@ const expectedUkefExposure = () => {
   return formattedUkefExposure;
 };
 
-// const guaranteeFeePayableByBank = String(Number(riskMarginFee * 0.9));
-
 const FINANCIAL_DETAILS = {
   facilityValue,
   riskMarginFee,
