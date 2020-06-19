@@ -193,7 +193,8 @@ const generateTypeA = async (deal, fromStatus) => {
     };
   }
 
-  const filename = `${deal._id}_${actionName.toUpperCase()}`; // eslint-disable-line no-underscore-dangle
+  const ucActionName = actionName ? actionName.toUpperCase() : '';
+  const filename = `${deal._id}_${ucActionName}`; // eslint-disable-line no-underscore-dangle
 
   const isValidXml = parsedXml.validate(parsedXsd);
 

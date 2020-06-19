@@ -1,16 +1,17 @@
-const {contract, contractConfirmSubmission} = require('../../pages');
-const {errorSummary, successMessage} = require('../../partials');
-const relative = require('../../relativeURL');
+const {contract, contractConfirmSubmission} = require('../../../pages');
+const {errorSummary, successMessage} = require('../../../partials');
+const relative = require('../../../relativeURL');
 
 const maker1 = {username: 'MAKER', password: 'MAKER'};
 const checker = {username: 'CHECKER', password: 'CHECKER'};
 
 // test data we want to set up + work with..
-const twentyOneDeals = require('../maker/dashboard/twentyOneDeals');
+const dealWithInvalidCoverStartDate = require('./test-data/dealWithInvalidLoanCoverStartDate');
+const dealReadyToSubmit = require('./test-data/dealReadyToSubmit');
 
 
 context('A checker selects to submit a contract from the view-contract page', () => {
-  let deal;
+  let goodDeal, badDeal;
 
   beforeEach( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -21,46 +22,65 @@ context('A checker selects to submit a contract from the view-contract page', ()
   });
 
   before( () => {
-    const aDealInStatus = (status) => {
-      return twentyOneDeals.filter( deal=>status === deal.details.status)[0];
-    };
-
-    cy.deleteDeals(maker1);
-    cy.insertOneDeal(aDealInStatus("Ready for Checker's approval"), { ...maker1 })
-      .then(insertedDeal => deal=insertedDeal);
+    cy.insertManyDeals([dealReadyToSubmit(), dealWithInvalidCoverStartDate()], {...maker1})
+      .then(insertedDeals => {
+        goodDeal=insertedDeals[0];
+        badDeal=insertedDeals[1];
+      });
+    //
+    // cy.insertOneDeal(dealReadyToSubmit, { ...maker1 })
+    //   .then(insertedDeal => goodDeal=insertedDeal);
+    //
+    // cy.insertOneDeal(dealWithInvalidCoverStartDate, { ...maker1 })
+    //   .then(insertedDeal => badDeal=insertedDeal);
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {
     // log in, visit a deal, select abandon
     cy.login({...checker});
-    contract.visit(deal);
+    contract.visit(goodDeal);
     contract.proceedToSubmit().click();
 
     // cancel
     contractConfirmSubmission.cancel().click();
 
     // check we've gone to the right page
-    cy.url().should('eq', relative(`/contract/${deal._id}`));
+    cy.url().should('eq', relative(`/contract/${goodDeal._id}`));
   });
 
   it('The Accept and Submit button generates an error if the checkbox has not been ticked.', () => {
     // log in, visit a deal, select abandon
     cy.login({...checker});
-    contract.visit(deal);
+    contract.visit(goodDeal);
     contract.proceedToSubmit().click();
 
     // submit without checking the checkbox
     contractConfirmSubmission.acceptAndSubmit().click();
 
     // expect to stay on the abandon page, and see an error
-    cy.url().should('eq', relative(`/contract/${deal._id}/confirm-submission`));
+    cy.url().should('eq', relative(`/contract/${goodDeal._id}/confirm-submission`));
     contractConfirmSubmission.expectError('Acceptance is required.');
+  });
+
+  it('If the deal contains a loan with a cover start date that is now in the past, an error should be generated.', () => {
+    // log in, visit a deal, select abandon
+    cy.login({...checker});
+    contract.visit(badDeal);
+    contract.proceedToSubmit().click();
+
+    // submit with checkbox checked
+    contractConfirmSubmission.confirmSubmit().check();
+    contractConfirmSubmission.acceptAndSubmit().click();
+
+    // expect to stay on the abandon page, and see an error
+    cy.url().should('eq', relative(`/contract/${badDeal._id}/confirm-submission`));
+    contractConfirmSubmission.expectError('Requested Cover Start Date must be today or in the future');
   });
 
   it('If the terms are accepted, the Accept and Submit button submits the deal and takes the user to /dashboard.', () => {
     // log in, visit a deal, select abandon
     cy.login({...checker});
-    contract.visit(deal);
+    contract.visit(goodDeal);
     contract.proceedToSubmit().click();
 
     // submit with checkbox checked
@@ -75,7 +95,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
 
     // visit the deal and confirm the updates have been made
-    contract.visit(deal);
+    contract.visit(goodDeal);
     contract.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal("Submitted");
     });
