@@ -15,6 +15,27 @@ import completedLoanForms from './completedForms';
 
 const router = express.Router();
 
+const handleBankReferenceNumberField = (loanBody) => {
+  const modifiedLoan = loanBody;
+  const {
+    facilityStage,
+    'facilityStageConditional-bankReferenceNumber': conditionalBankReferenceNumber,
+    'facilityStageUnconditional-bankReferenceNumber': unconditionalBankReferenceNumber,
+  } = modifiedLoan;
+
+  if (facilityStage === 'Conditional') {
+    modifiedLoan.bankReferenceNumber = conditionalBankReferenceNumber;
+  } else if (facilityStage === 'Unconditional') {
+    modifiedLoan.bankReferenceNumber = unconditionalBankReferenceNumber;
+  }
+
+  delete modifiedLoan['facilityStageConditional-bankReferenceNumber'];
+  delete modifiedLoan['facilityStageUnconditional-bankReferenceNumber'];
+
+  return modifiedLoan;
+};
+
+
 router.get('/contract/:_id/loan/create', async (req, res) => {
   const { _id: dealId, userToken } = requestParams(req);
   const { _id, loanId } = await api.createDealLoan(dealId, userToken); // eslint-disable-line no-underscore-dangle
@@ -42,22 +63,7 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN]), asy
 router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  const modifiedBody = req.body;
-
-  const {
-    facilityStage,
-    'facilityStageConditional-bankReferenceNumber': conditionalBankReferenceNumber,
-    'facilityStageUnconditional-bankReferenceNumber': unconditionalBankReferenceNumber,
-  } = req.body;
-
-  if (facilityStage === 'Conditional') {
-    modifiedBody.bankReferenceNumber = conditionalBankReferenceNumber;
-  } else if (facilityStage === 'Unconditional') {
-    modifiedBody.bankReferenceNumber = unconditionalBankReferenceNumber;
-  }
-
-  delete modifiedBody['facilityStageConditional-bankReferenceNumber'];
-  delete modifiedBody['facilityStageUnconditional-bankReferenceNumber'];
+  const modifiedBody = handleBankReferenceNumberField(req.body);
 
   await postToApi(
     api.updateDealLoan(
@@ -172,7 +178,20 @@ router.get('/contract/:_id/loan/:loanId/preview', provide([LOAN]), async (req, r
   });
 });
 
-router.post('/contract/:_id/loan/:loanId/save-go-back', (req, res) => {
+router.post('/contract/:_id/loan/:loanId/save-go-back', async (req, res) => {
+  const { _id: dealId, loanId, userToken } = requestParams(req);
+
+  const modifiedBody = handleBankReferenceNumberField(req.body);
+
+  await postToApi(
+    api.updateDealLoan(
+      dealId,
+      loanId,
+      modifiedBody,
+      userToken,
+    ),
+  );
+
   const redirectUrl = `/contract/${req.params._id}`; // eslint-disable-line no-underscore-dangle
   return res.redirect(redirectUrl);
 });

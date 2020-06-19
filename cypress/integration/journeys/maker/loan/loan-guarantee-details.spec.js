@@ -237,4 +237,31 @@ context('Loan Guarantee Details', () => {
     partials.loanProgressNav.progressNavLinkLoanGuaranteeDetails().click();
     assertLoanFormValues.guaranteeDetails.facilityStageUnconditional();
   });
+
+  describe('When a user clicks `save and go back` button', () => {
+    it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Loan Guarantee Details` page', () => {
+      cy.loginGoToDealPage(user, deal);
+
+      pages.contract.addLoanButton().click();
+
+      fillLoanForm.guaranteeDetails.facilityStageUnconditional();
+
+      partials.loanProgressNav.loanId().then((loanIdHiddenInput) => {
+        const loanId = loanIdHiddenInput[0].value;
+
+        pages.loanGuaranteeDetails.saveGoBackButton().click();
+
+        cy.url().should('not.include', '/guarantee-details');
+        cy.url().should('include', '/contract');
+
+        const row = pages.contract.loansTransactionsTable.row(loanId);
+
+        row.bankReferenceNumber().click();
+        cy.url().should('include', '/loan/');
+        cy.url().should('include', '/guarantee-details');
+
+        assertLoanFormValues.guaranteeDetails.facilityStageUnconditional();
+      });
+    });
+  });
 });

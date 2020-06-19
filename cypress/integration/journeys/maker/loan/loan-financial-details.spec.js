@@ -174,4 +174,30 @@ context('Loan Financial Details', () => {
       pages.loanFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(facilityValue, coveredPercentage));
     });
   });
+
+  describe('When a user clicks `save and go back` button', () => {
+    it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Loan Financial Details` page', () => {
+      goToPageWithUnconditionalFacilityStage(deal);
+
+      fillLoanForm.financialDetails.currencyNotTheSameAsSupplyContractCurrency();
+
+      partials.loanProgressNav.loanId().then((loanIdHiddenInput) => {
+        const loanId = loanIdHiddenInput[0].value;
+
+        pages.loanFinancialDetails.saveGoBackButton().click();
+
+        cy.url().should('not.include', '/financial-details');
+        cy.url().should('include', '/contract');
+
+        const row = pages.contract.loansTransactionsTable.row(loanId);
+
+        row.bankReferenceNumber().click();
+        partials.loanProgressNav.progressNavLinkLoanFinancialDetails().click();
+        cy.url().should('include', '/loan/');
+        cy.url().should('include', '/financial-details');
+
+        assertLoanFormValues.financialDetails.currencyNotTheSameAsSupplyContractCurrency();
+      });
+    });
+  });
 });
