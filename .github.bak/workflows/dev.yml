@@ -2,7 +2,7 @@ name: dev
 
 on:
   push:
-    branches: [ master ]
+    branches: [ github-actions ]
   # schedule: add e.g. a montly patch update for the container
     
 env:
