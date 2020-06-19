@@ -459,6 +459,42 @@ describe('/v1/deals/:id/loan', () => {
           expect(validationErrors.errorList.facilityValue.text).toEqual('Loan facility value must be 0.01 or more');
         });
       });
+
+      describe('with more than 2 decimal points', () => {
+        it('should return validationError', async () => {
+          const loan = {
+            facilityValue: '0.123',
+          };
+
+          const { validationErrors } = await updateLoanInDeal(dealId, loan);
+          expect(validationErrors.errorList.facilityValue).toBeDefined();
+          expect(validationErrors.errorList.facilityValue.text).toEqual('Loan facility value must have less than 3 decimals, like 12 or 12.10');
+        });
+      });
+
+      describe('with more than 14 digits and no decimal points', () => {
+        it('should return validationError', async () => {
+          const loan = {
+            facilityValue: '123456789112345',
+          };
+
+          const { validationErrors } = await updateLoanInDeal(dealId, loan);
+          expect(validationErrors.errorList.facilityValue).toBeDefined();
+          expect(validationErrors.errorList.facilityValue.text).toEqual('Loan facility value must be 14 numbers or fewer');
+        });
+      });
+
+      describe('with more than 14 digits and decimal points', () => {
+        it('should return validationError', async () => {
+          const loan = {
+            facilityValue: '123456789112345.12',
+          };
+
+          const { validationErrors } = await updateLoanInDeal(dealId, loan);
+          expect(validationErrors.errorList.facilityValue).toBeDefined();
+          expect(validationErrors.errorList.facilityValue.text).toEqual('Loan facility value must be 14 numbers or fewer');
+        });
+      });
     });
 
     describe('currencySameAsSupplyContractCurrency', () => {

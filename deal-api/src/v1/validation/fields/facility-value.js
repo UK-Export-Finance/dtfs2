@@ -1,10 +1,24 @@
 const { hasValue } = require('../../../utils/string');
 const {
   isNumeric,
+  stripDecimals,
+  decimalsCount,
 } = require('../../../utils/number');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 
 const MIN_VALUE = 0.01;
+const MAX_DECIMALS = 2;
+const MAX_CHARACTERS = 14;
+
+const isValidLength = (str) => String(stripDecimals(str)).length <= MAX_CHARACTERS;
+
+const isValidFormat = (value) => {
+  if (decimalsCount(value) <= MAX_DECIMALS) {
+    return true;
+  }
+  return false;
+};
+
 
 const isInRange = (value) => value >= MIN_VALUE;
 
@@ -18,6 +32,14 @@ const isValid = (str) => {
   }
 
   if (!isInRange(Number(str))) {
+    return false;
+  }
+
+  if (!isValidLength(str)) {
+    return false;
+  }
+
+  if (!isValidFormat(Number(str))) {
     return false;
   }
 
@@ -35,6 +57,14 @@ const validationText = (str, fieldTitle) => {
 
   if (!isInRange(Number(str))) {
     return `${fieldTitle} must be ${MIN_VALUE} or more`;
+  }
+
+  if (!isValidLength(str)) {
+    return `${fieldTitle} must be ${MAX_CHARACTERS} numbers or fewer`;
+  }
+
+  if (!isValidFormat(str)) {
+    return `${fieldTitle} must have less than ${MAX_DECIMALS + 1} decimals, like 12 or 12.10`;
   }
 
   return '';
