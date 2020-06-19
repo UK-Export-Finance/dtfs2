@@ -9,10 +9,11 @@ import {
   errorHref,
   postToApi,
   dealFormsCompleted,
+  generateErrorSummary,
 } from '../../helpers';
 
 import {
-  provide, DEAL, MANDATORY_CRITERIA,
+  provide, DEAL, DEAL_VALIDATION, MANDATORY_CRITERIA,
 } from '../api-data-provider';
 
 const router = express.Router();
@@ -205,7 +206,7 @@ router.get('/contract/:_id/confirm-submission', async (req, res) => {
   return res.render('contract/contract-confirm-submission.njk', { _id });
 });
 
-router.post('/contract/:_id/confirm-submission', async (req, res) => {
+router.post('/contract/:_id/confirm-submission', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { confirmSubmit } = req.body;
 
@@ -217,16 +218,54 @@ router.post('/contract/:_id/confirm-submission', async (req, res) => {
 
   const { data } = await api.updateDealStatus(updateToSend, userToken);
 
-  const validationErrors = {
-    count: data.count,
-    errorList: data.errorList,
+  const validationOfExistingDeal = req.apiData[DEAL_VALIDATION];
+
+  let combinedErrorList = {
+    ...data.errorList,
+    ...validationOfExistingDeal.submissionDetailsErrors,
   };
+
+  // TODO right now this crunches duplicate errors over the top of eachother..
+  // ie. if 2 bonds have the same error, they'll get munged into 1 error..
+  //  right now that's all i need
+  // if this ceases to be good enough we likely need to start putting id's into our cy-data
+  // so that errors on a 'generic' page (eg. confirm submission page) can conceivably link back
+  // to the deal/bond/loan/whatever that had the error..
+  const bondsWithErrors = Object.keys(validationOfExistingDeal.bondErrors);
+  for (let i = 0; i < bondsWithErrors.length; i += 1) {
+    const bondId = bondsWithErrors[i];
+    const bondErrors = validationOfExistingDeal.bondErrors[bondId].errorList;
+    combinedErrorList = {
+      ...combinedErrorList,
+      ...bondErrors,
+    };
+  }
+
+  const loansWithErrors = Object.keys(validationOfExistingDeal.loanErrors);
+  for (let i = 0; i < loansWithErrors.lenght; i += 1) {
+    const loanId = loansWithErrors[i];
+    const loanErrors = validationOfExistingDeal.loanErrors[loanId].errorList;
+    combinedErrorList = {
+      ...combinedErrorList,
+      ...loanErrors,
+    };
+  }
+
+  const validationErrors = {
+    count: Object.keys(combinedErrorList).length,
+    errorList: combinedErrorList,
+  };
+
+  const formattedValidationErrors = generateErrorSummary(
+    validationErrors,
+    errorHref,
+  );
 
   if (validationErrors.count) {
     return res.status(400).render('contract/contract-confirm-submission.njk', {
       _id,
       confirmSubmit,
-      validationErrors,
+      validationErrors: formattedValidationErrors,
     });
   }
 

@@ -416,11 +416,13 @@ const getDeal = async (id, token) => {
     },
   });
 
-  const deal = await translateDatesToExpectedFormat(response.data);
+  const dealWithUnformattedDates = response.data.deal;
+  const deal = await translateDatesToExpectedFormat(dealWithUnformattedDates);
 
   return {
     status: response.status,
     deal,
+    validationErrors: response.data.validationErrors,
   };
 };
 

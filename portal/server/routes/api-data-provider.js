@@ -5,6 +5,7 @@ const COUNTRIES = 'countries';
 const CURRENCIES = 'currencies';
 const MANDATORY_CRITERIA = 'mandatoryCriteria';
 const DEAL = 'deal';
+const DEAL_VALIDATION = 'dealValidation';
 const LOAN = 'loan';
 
 const get = async (dataType, req) => {
@@ -12,29 +13,31 @@ const get = async (dataType, req) => {
 
   if (DEAL === dataType) {
     const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
-    const { deal } = await api.getDeal(dealId, token).catch(
+    const { deal, validationErrors } = await api.getDeal(dealId, token).catch(
       (err) => {
         console.log(`api-data-provider: querying for deal(${dealId}) => ${err}`);
-        return { deal: null };
       },
     );
-    return deal;
+
+    req.apiData[DEAL_VALIDATION] = validationErrors || { count: 0, errorList: [] };
+    req.apiData[DEAL] = deal;
+    return;
   } if (INDUSTRY_SECTORS === dataType) {
     const { industrySectors } = await api.getIndustrySectors(token).catch(
       (err) => {
         console.log(`api-data-provider: querying for industry sectors => ${err}`);
-        return { industrySectors: [] };
       },
     );
-    return industrySectors;
+    req.apiData[INDUSTRY_SECTORS] = industrySectors;
+    return;
   } if (COUNTRIES === dataType) {
     const { countries } = await api.getCountries(token).catch(
       (err) => {
         console.log(`api-data-provider: querying for countries => ${err}`);
-        return { countries: [] };
       },
     );
-    return countries;
+    req.apiData[COUNTRIES] = countries;
+    return;
   } if (CURRENCIES === dataType) {
     const { currencies } = await api.getCurrencies(token).catch(
       (err) => {
@@ -42,16 +45,17 @@ const get = async (dataType, req) => {
         return { currencies: [] };
       },
     );
-    return currencies;
+    req.apiData[CURRENCIES] = currencies;
+    return;
   } if (MANDATORY_CRITERIA === dataType) {
     const { mandatoryCriteria } = await api.getMandatoryCriteria(token).catch(
       (err) => {
         console.log(`api-data-provider: querying for mandatory criteria => ${err}`);
-        return { mandatoryCriteria: [] };
       },
     );
 
-    return mandatoryCriteria;
+    req.apiData[MANDATORY_CRITERIA] = mandatoryCriteria;
+    return;
   } if (LOAN === dataType) {
     const {
       _id, // eslint-disable-line no-underscore-dangle
@@ -61,13 +65,12 @@ const get = async (dataType, req) => {
     const loan = await api.getDealLoan(_id, loanId, token).catch(
       (err) => {
         console.log(`api-data-provider: querying for loan => ${err}`);
-        return { loan: null };
       },
     );
-    return loan;
+    req.apiData[LOAN] = loan;
+    return;
   }
   console.log(`api-data-provider has been asked to provide ${dataType} but doesn't know how...`);
-  return [];
 };
 
 const provide = (listOfDataTypes) => async (req, res, next) => {
@@ -80,13 +83,7 @@ const provide = (listOfDataTypes) => async (req, res, next) => {
     promises.push(get(dataType, req));
   });
 
-  const resolvedData = await Promise.all(promises);
-
-  for (let i = 0; i < listOfDataTypes.length; i += 1) {
-    const dataType = listOfDataTypes[i];
-    req.apiData[dataType] = resolvedData[i];
-  }
-
+  await Promise.all(promises);
   return next();
 };
 
@@ -96,6 +93,7 @@ export {
   CURRENCIES,
   MANDATORY_CRITERIA,
   DEAL,
+  DEAL_VALIDATION,
   LOAN,
   provide,
 };
