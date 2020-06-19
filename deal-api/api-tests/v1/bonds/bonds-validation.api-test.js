@@ -123,6 +123,18 @@ describe('/v1/deals/:id/bond', () => {
           expect(body.validationErrors.errorList.facilityValue.text).toEqual('Bond value must be a number, like 1 or 12.65');
         });
       });
+
+      describe('when less than 0.01', () => {
+        it('should return validationError', async () => {
+          const bond = {
+            facilityValue: '0',
+          };
+
+          const { validationErrors } = await updateBondInDeal(dealId, bond);
+          expect(validationErrors.errorList.facilityValue).toBeDefined();
+          expect(validationErrors.errorList.facilityValue.text).toEqual('Bond value must be 0.01 or more');
+        });
+      });
     });
 
     describe('bondStage', () => {
@@ -492,6 +504,22 @@ describe('/v1/deals/:id/bond', () => {
             const { validationErrors } = await updateBondConversionRateDate(conversionRateFields);
             expect(validationErrors.errorList.conversionRateDate).toBeDefined();
             expect(validationErrors.errorList.conversionRateDate.text).toEqual('Conversion rate date must be today or in the past');
+          });
+        });
+
+        describe('when more than 30 days in the past', () => {
+          it('should return validationError', async () => {
+            const date = moment().subtract(31, 'day');
+            const conversionRateFields = {
+              'conversionRateDate-day': moment(date).format('DD'),
+              'conversionRateDate-month': moment(date).format('MM'),
+              'conversionRateDate-year': moment(date).format('YYYY'),
+            };
+
+            const { validationErrors } = await updateBondConversionRateDate(conversionRateFields);
+            expect(validationErrors.errorList.conversionRateDate).toBeDefined();
+            const expectedText = `Conversion rate date must be between ${moment().subtract(30, 'day').format('Do MMMM YYYY')} and ${moment().format('Do MMMM YYYY')}`;
+            expect(validationErrors.errorList.conversionRateDate.text).toEqual(expectedText);
           });
         });
 

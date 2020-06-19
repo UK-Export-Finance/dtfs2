@@ -24,6 +24,15 @@ module.exports = (facility, errorList) => {
         order: orderNumber(newErrorList),
       };
     }
+
+    const MAX_DAYS_FROM_NOW = moment(nowDate).subtract(30, 'day');
+
+    if (moment(formattedDate).isBefore(MAX_DAYS_FROM_NOW)) {
+      newErrorList.conversionRateDate = {
+        text: `Conversion rate date must be between ${moment(MAX_DAYS_FROM_NOW).format('Do MMMM YYYY')} and ${moment(nowDate).format('Do MMMM YYYY')}`,
+        order: orderNumber(newErrorList),
+      };
+    }
   } else if (!dateHasAllValues(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear)) {
     newErrorList.conversionRateDate = {
       text: dateValidationText(

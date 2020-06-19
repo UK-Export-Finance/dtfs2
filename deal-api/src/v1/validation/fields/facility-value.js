@@ -4,12 +4,20 @@ const {
 } = require('../../../utils/number');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 
+const MIN_VALUE = 0.01;
+
+const isInRange = (value) => value >= MIN_VALUE;
+
 const isValid = (str) => {
   if (!hasValue(str)) {
     return false;
   }
 
   if (!isNumeric(Number(str))) {
+    return false;
+  }
+
+  if (!isInRange(Number(str))) {
     return false;
   }
 
@@ -23,6 +31,10 @@ const validationText = (str, fieldTitle) => {
 
   if (!isNumeric(Number(str))) {
     return `${fieldTitle} must be a number, like 1 or 12.65`;
+  }
+
+  if (!isInRange(Number(str))) {
+    return `${fieldTitle} must be ${MIN_VALUE} or more`;
   }
 
   return '';
