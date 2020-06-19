@@ -11,4 +11,3 @@ module.exports = (bond, errorList) => {
 
   return newErrorList;
 };
-

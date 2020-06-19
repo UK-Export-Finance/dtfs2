@@ -192,7 +192,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       cy.url().should('eq', relative(`/contract/${deal._id}`));
 
       const loanId = deal.loanTransactions.items[0]._id;
-      const row = contract.loanTransactionsTable.row(loanId);
+      const row = contract.loansTransactionsTable.row(loanId);
 
       const expectedDate = moment().format('DD/MM/YYYY');
       row.requestedCoverStartDate().should('contain.text', expectedDate);
