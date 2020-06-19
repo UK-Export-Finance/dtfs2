@@ -564,7 +564,7 @@ describe('/v1/deals/:id/loan', () => {
 
         describe('when more than 30 days in the past', () => {
           it('should return validationError', async () => {
-            const date = moment().subtract(31, 'day');
+            const date = moment().subtract(30, 'day');
             const conversionRateFields = {
               'conversionRateDate-day': moment(date).format('DD'),
               'conversionRateDate-month': moment(date).format('MM'),
@@ -573,7 +573,7 @@ describe('/v1/deals/:id/loan', () => {
 
             const { validationErrors } = await updateBondConversionRateDate(conversionRateFields);
             expect(validationErrors.errorList.conversionRateDate).toBeDefined();
-            const expectedText = `Conversion rate date must be between ${moment().subtract(30, 'day').format('Do MMMM YYYY')} and ${moment().format('Do MMMM YYYY')}`;
+            const expectedText = `Conversion rate date must be between ${moment().subtract(29, 'day').format('Do MMMM YYYY')} and ${moment().format('Do MMMM YYYY')}`;
             expect(validationErrors.errorList.conversionRateDate.text).toEqual(expectedText);
           });
         });

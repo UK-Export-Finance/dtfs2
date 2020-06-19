@@ -25,7 +25,7 @@ module.exports = (facility, errorList) => {
       };
     }
 
-    const MAX_DAYS_FROM_NOW = moment(nowDate).subtract(30, 'day');
+    const MAX_DAYS_FROM_NOW = moment(nowDate).subtract(29, 'day');
 
     if (moment(formattedDate).isBefore(MAX_DAYS_FROM_NOW)) {
       newErrorList.conversionRateDate = {
