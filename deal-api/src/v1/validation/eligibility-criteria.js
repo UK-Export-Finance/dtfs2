@@ -72,3 +72,11 @@ exports.getCriteria11Errors = ((criteria11Additional, criteria11IsFalse) => {
     errorList,
   };
 });
+
+exports.getEligibilityStatus = ({ criteriaComplete, ecErrorCount, dealFilesErrorCount }) => {
+  const status = (ecErrorCount === 0 && dealFilesErrorCount === 0 && criteriaComplete)
+    ? 'Completed'
+    : 'Incomplete';
+
+  return status;
+};

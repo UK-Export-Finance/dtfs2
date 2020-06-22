@@ -5,6 +5,9 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
 const { as } = require('../../api')(app);
+const {
+  updatedECCompleted,
+} = require('./mocks');
 
 const newDeal = aDeal({ id: 'dealApiTest', bankSupplyContractName: 'Original Value' });
 
@@ -80,6 +83,39 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const { status } = await as(anHSBCMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(401);
+    });
+
+    it('updates eligibility status depending on whether validation errors occur', async () => {
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const newId = postResult.body._id;
+
+      // Update deal so it requires manual inclusion questionnaire
+      const updatedDeal = await as(aBarclaysMaker).put(updatedECCompleted).to(`/v1/deals/${newId}/eligibility-criteria`);
+      expect(updatedDeal.body.eligibility.status).toEqual('Incomplete');
+
+      const filename = 'test-file-1.txt';
+      const fieldname = 'exporterQuestionnaire';
+      const type = 'general_correspondence';
+
+      const files = [{
+        fieldname,
+        filepath: `api-tests/fixtures/${filename}`,
+        type,
+      }];
+
+      const updatedValidDeal = await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
+      expect(updatedValidDeal.status).toEqual(200);
+      expect(updatedValidDeal.body.eligibility.status).toEqual('Completed');
+
+      // Removing exporterQuestionnaire should change status to incomplete
+      const filePath = updatedValidDeal.body.dealFiles[fieldname][0].fullPath;
+      const deleteFileData = {
+        deleteFile: filePath,
+      };
+
+      const updatedInvalidDeal = await as(aBarclaysMaker).putMultipartForm(deleteFileData, []).to(`/v1/deals/${newId}/eligibility-documentation`);
+      expect(updatedInvalidDeal.status).toEqual(200);
+      expect(updatedInvalidDeal.body.eligibility.status).toEqual('Incomplete');
     });
 
     it('uploads a file with the correct type', async () => {

@@ -3,6 +3,7 @@ const { deleteMultipleFiles, uploadStream, readFile } = require('../../drivers/f
 const { formatFilenameForSharepoint } = require('../../utils');
 const { userHasAccessTo } = require('../users/checks');
 const { findOneDeal, updateDeal } = require('./deal.controller');
+const { getEligibilityStatus } = require('../validation/eligibility-criteria');
 const { getDocumentationErrors } = require('../validation/eligibility-documentation');
 
 const getFileType = (fieldname) => {
@@ -99,7 +100,16 @@ exports.update = async (req, res) => {
       deal.details.submissionType, deal.eligibility.criteria, dealFiles, uploadErrors,
     );
 
+    const status = getEligibilityStatus({
+      criteriaComplete: Boolean(deal.details.submissionType),
+      ecErrorCount: deal.eligibility.validationErrors && deal.eligibility.validationErrors.count,
+      dealFilesErrorCount: validationErrors.count,
+    });
+
     const updatedDealData = {
+      eligibility: {
+        status,
+      },
       dealFiles: {
         ...dealFiles,
         security: req.body.security,
