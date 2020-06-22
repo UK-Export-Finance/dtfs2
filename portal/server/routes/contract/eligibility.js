@@ -38,34 +38,16 @@ router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), as
     });
 });
 
-router.post('/contract/:_id/eligibility/criteria', provide([COUNTRIES]), async (req, res) => {
-  const { countries } = req.apiData;
+router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { body } = req;
 
-  const updatedDeal = await getApiData(
+  await getApiData(
     api.updateEligibilityCriteria(_id, body, userToken),
     res,
   );
 
-  if (updatedDeal.eligibility.status === 'Completed') {
-    return res.redirect(`/contract/${_id}/eligibility/supporting-documentation`);
-  }
-
-  const validationErrors = generateErrorSummary(updatedDeal.eligibility.validationErrors, eligibilityErrorHref);
-
-  return res.render('eligibility/eligibility-criteria.njk', {
-    _id,
-    countries: formatCountriesForGDSComponent(
-      countries,
-      updatedDeal.eligibility.agentCountry,
-      !updatedDeal.eligibility.agentCountry,
-    ),
-    criteriaStatus: updatedDeal.eligibility.status,
-    eligibility: updatedDeal.eligibility,
-    validationErrors,
-    bankSupplyContractName: updatedDeal.details.bankSupplyContractName,
-  });
+  return res.redirect(`/contract/${_id}/eligibility/supporting-documentation`);
 });
 
 router.post('/contract/:_id/eligibility/criteria/save-go-back', async (req, res) => {

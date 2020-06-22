@@ -30,7 +30,6 @@ context('Eligibility Documentation', () => {
   it('should display validation error for finance fields if EC12 is false', () => {
     eligibilityCriteria.eligibilityCriteriaFalse(12).click();
     eligibilityCriteria.nextPageButton().click();
-    eligibilityCriteria.eligibiityProgressNav.supportingDocumentation().click();
 
     eligibilityDocumentation.saveButton().click();
 
@@ -43,7 +42,6 @@ context('Eligibility Documentation', () => {
   it('should display validation error for finance fields if EC13 is false', () => {
     eligibilityCriteria.eligibilityCriteriaFalse(13).click();
     eligibilityCriteria.nextPageButton().click();
-    eligibilityCriteria.eligibiityProgressNav.supportingDocumentation().click();
 
     eligibilityDocumentation.saveButton().click();
 
@@ -57,7 +55,6 @@ context('Eligibility Documentation', () => {
     eligibilityCriteria.eligibilityCriteriaTrue(12).click();
     eligibilityCriteria.eligibilityCriteriaTrue(13).click();
     eligibilityCriteria.nextPageButton().click();
-    eligibilityCriteria.eligibiityProgressNav.supportingDocumentation().click();
 
     eligibilityDocumentation.saveButton().click();
 
@@ -69,7 +66,7 @@ context('Eligibility Documentation', () => {
 
   it('should make exporter questionnaire mandatory for non AIN', () => {
     eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().click({ multiple: true });
-    eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.falseInput().first().click();
+    eligibilityCriteria.eligibilityCriteriaFalse(14).click();
     eligibilityCriteria.nextPageButton().click();
     eligibilityDocumentation.fieldErrorMessage('exporterQuestionnaire').should('have.length', 1);
   });

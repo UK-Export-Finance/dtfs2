@@ -46,7 +46,7 @@ context('Eligibility Criteria', () => {
     eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().first().click();
     eligibilityCriteria.nextPageButton().click();
 
-    cy.url().should('include', '/eligibility/criteria');
+    eligibilityCriteria.eligibiityProgressNav.eligibilityCriteria().click();
 
     errorSummary.errorSummaryLinks().should('have.length', criteriaCount - 1);
   });
@@ -92,6 +92,7 @@ context('Eligibility Criteria', () => {
 
     eligibilityCriteria.agentsCountry().select('GBR');
     eligibilityCriteria.nextPageButton().click();
+    eligibilityCriteria.eligibiityProgressNav.eligibilityCriteria().click();
 
     const agentsCountry2 = eligibilityCriteria.agentsCountry();
     agentsCountry2.find(':selected').should('have.value', 'GBR');
