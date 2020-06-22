@@ -36,7 +36,10 @@ router.get('/before-you-start', provide([MANDATORY_CRITERIA]), async (req, res) 
   if (!await api.validateToken(userToken)) {
     res.redirect('/');
   } else {
-    res.render('before-you-start/before-you-start.njk', { mandatoryCriteria });
+    res.render('before-you-start/before-you-start.njk', {
+      mandatoryCriteria,
+      user: req.session.user,
+    });
   }
 });
 
@@ -68,7 +71,9 @@ router.get('/before-you-start/bank-deal', async (req, res) => {
   if (!await api.validateToken(userToken)) {
     res.redirect('/');
   } else {
-    res.render('before-you-start/before-you-start-bank-deal.njk');
+    res.render('before-you-start/before-you-start-bank-deal.njk', {
+      user: req.session.user,
+    });
   }
 });
 
@@ -101,12 +106,15 @@ router.post('/before-you-start/bank-deal', async (req, res) => {
       bankSupplyContractID,
       bankSupplyContractName,
       validationErrors,
+      user: req.session.user,
     });
   }
 
   return res.redirect(`/contract/${apiResponse._id}`); // eslint-disable-line no-underscore-dangle
 });
 
-router.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk'));
+router.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk', {
+  user: req.session.user,
+}));
 
 export default router;

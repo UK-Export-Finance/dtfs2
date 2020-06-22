@@ -37,6 +37,7 @@ router.get('/contract/:_id/about/financial', provide([CURRENCIES]), async (req, 
     deal,
     validationErrors: formattedValidationErrors,
     currencies: mapCurrencies(currencies, deal.submissionDetails.supplyContractCurrency),
+    user: req.session.user,
   });
 });
 

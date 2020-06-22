@@ -35,6 +35,7 @@ router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), as
       eligibility: deal.eligibility,
       validationErrors,
       bankSupplyContractName: deal.details.bankSupplyContractName,
+      user: req.session.user,
     });
 });
 
@@ -77,6 +78,7 @@ router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]
       eligibility,
       validationErrors,
       bankSupplyContractName: deal.details.bankSupplyContractName,
+      user: req.session.user,
     });
 });
 
@@ -159,6 +161,7 @@ router.get('/contract/:_id/eligibility/preview', provide([DEAL, MANDATORY_CRITER
   return res.render('eligibility/eligibility-preview.njk', {
     deal,
     mandatoryCriteria,
+    user: req.session.user,
   });
 });
 

@@ -7,6 +7,7 @@ router.get('/', (req, res) => {
   const { passwordreset } = req.query;
   return res.render('login.njk', {
     passwordreset,
+    user: req.session.user,
   });
 });
 
