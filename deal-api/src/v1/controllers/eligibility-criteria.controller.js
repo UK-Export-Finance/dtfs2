@@ -1,6 +1,6 @@
 const { findOneDeal, update: updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
-const { getEligibilityErrors, getCriteria11Errors } = require('../validation/eligibility-criteria');
+const { getEligibilityErrors, getCriteria11Errors, getEligibilityStatus } = require('../validation/eligibility-criteria');
 const { getDocumentationErrors } = require('../validation/eligibility-documentation');
 const CONSTANTS = require('../../constants');
 
@@ -64,6 +64,12 @@ exports.update = async (req, res) => {
         ...validationErrors.errorList,
       };
 
+      const status = getEligibilityStatus({
+        criteriaComplete,
+        ecErrorCount: validationErrors.count,
+        dealFilesErrorCount: documentationErrors.validationErrors.count,
+      });
+
       const updatedDeal = {
         ...deal,
         details: {
@@ -71,7 +77,7 @@ exports.update = async (req, res) => {
           submissionType,
         },
         eligibility: {
-          status: criteriaComplete ? 'Completed' : 'Incomplete',
+          status,
           criteria: updatedCriteria,
           ...criteria11Additional,
           validationErrors,
