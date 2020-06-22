@@ -22,7 +22,7 @@ router.get('/dashboard', async (req, res) => {
   }
 });
 
-router.get('/dashboard/:page', async (req, res) => {
+router.get('/dashboard/:page', async (req, res) => { // eslint-disable-line consistent-return
   const { userToken } = requestParams(req);
 
   if (!await api.validateToken(userToken)) {
@@ -66,7 +66,7 @@ router.get('/dashboard/:page', async (req, res) => {
   }
 });
 
-router.post('/dashboard/:page', async (req, res) => {
+router.post('/dashboard/:page', async (req, res) => { // eslint-disable-line consistent-return
   const { userToken } = requestParams(req);
 
   if (!await api.validateToken(userToken)) {
@@ -105,7 +105,7 @@ router.post('/dashboard/:page', async (req, res) => {
   }
 });
 
-router.get('/dashboard/transactions', async (req, res) => {
+router.get('/dashboard/transactions', async (req, res) => { // eslint-disable-line consistent-return
   const { userToken } = requestParams(req);
 
   if (!await api.validateToken(userToken)) {
