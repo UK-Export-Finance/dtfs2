@@ -175,7 +175,7 @@ describe('/v1/deals/:id/submission-details', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.submissionDetails).toEqual(expectedResponse);
+      expect(body.deal.submissionDetails).toEqual(expectedResponse);
     });
 
     it('updates the deals details.dateOfLastAction field', async () => {
@@ -192,7 +192,7 @@ describe('/v1/deals/:id/submission-details', () => {
 
       expect(status).toEqual(200);
 
-      expect(body.details.dateOfLastAction).not.toEqual(createdDeal.details.dateOfLastAction);
+      expect(body.deal.details.dateOfLastAction).not.toEqual(createdDeal.details.dateOfLastAction);
     });
 
   });

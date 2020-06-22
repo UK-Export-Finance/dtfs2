@@ -88,7 +88,7 @@ describe('/v1/deals/:id/bankSupplyContractName', () => {
       const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.details.bankSupplyContractName).toEqual('a new name');
+      expect(body.deal.details.bankSupplyContractName).toEqual('a new name');
     });
 
     it('updates the deals details.dateOfLastAction field', async () => {
@@ -100,7 +100,7 @@ describe('/v1/deals/:id/bankSupplyContractName', () => {
       const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.details.dateOfLastAction).not.toEqual(newDeal.details.dateOfLastAction);
+      expect(body.deal.details.dateOfLastAction).not.toEqual(newDeal.details.dateOfLastAction);
     });
 
   });

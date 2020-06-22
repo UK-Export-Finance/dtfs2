@@ -102,7 +102,7 @@ describe('/v1/deals', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${newId}`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectAddedFields(newDeal));
+      expect(body.deal).toEqual(expectAddedFields(newDeal));
     });
 
     it('calculates deal.submissionDetails.status = Incomplete if there are validation failures', async () => {
@@ -112,7 +112,7 @@ describe('/v1/deals', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${newId}`);
 
       expect(status).toEqual(200);
-      expect(body.submissionDetails.status).toEqual('Incomplete');
+      expect(body.deal.submissionDetails.status).toEqual('Incomplete');
     });
 
     it('calculates deal.submissionDetails.status = Completed if there are no validation failures', async () => {
@@ -122,7 +122,7 @@ describe('/v1/deals', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${newId}`);
 
       expect(status).toEqual(200);
-      expect(body.submissionDetails.status).toEqual('Completed');
+      expect(body.deal.submissionDetails.status).toEqual('Completed');
     });
   });
 
@@ -281,7 +281,7 @@ describe('/v1/deals', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectAddedFields(updatedDeal));
+      expect(body.deal).toEqual(expectAddedFields(updatedDeal));
     });
   });
 
