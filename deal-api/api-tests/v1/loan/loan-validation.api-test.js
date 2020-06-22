@@ -794,6 +794,18 @@ describe('/v1/deals/:id/loan', () => {
         });
       });
 
+      describe('when less than 0', () => {
+        it('should return validationError', async () => {
+          const loan = {
+            minimumQuarterlyFee: '-1',
+          };
+
+          const { validationErrors } = await updateLoanInDeal(dealId, loan);
+          expect(validationErrors.errorList.minimumQuarterlyFee).toBeDefined();
+          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual('Minimum quarterly fee must be between 0 and 14.2');
+        });
+      });
+
       describe('when greater than 14.2', () => {
         it('should return validationError', async () => {
           const loan = {
@@ -802,7 +814,7 @@ describe('/v1/deals/:id/loan', () => {
 
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
           expect(validationErrors.errorList.minimumQuarterlyFee).toBeDefined();
-          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual('Minimum quarterly fee must be between 0.00 and 14.2');
+          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual('Minimum quarterly fee must be between 0 and 14.2');
         });
       });
 
