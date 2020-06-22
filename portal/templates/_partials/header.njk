@@ -64,17 +64,21 @@
 
             </div>
 
-            {% if user %}
-            <li class="govuk-header__navigation-item govuk-header__navigation-item">
-              <a class="govuk-header__link" href="/dashboard" data-cy="dashboard">
-                Dashboard
-              </a>
-            </li>
-            {% endif %}
-
           </ul>
 
         </nav>
       </div>
   </div>
 </header>
+
+<nav class="app-navigation govuk-header__container">
+  <ul class="app-navigation__list govuk-width-container govuk-list">
+    {% if user %}
+      <li class="app-navigation__list-item">
+        <a class="govuk-link govuk-link--no-visited-state app-navigation__link" href="/dashboard" data-cy="dashboard">
+          Dashboard
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
