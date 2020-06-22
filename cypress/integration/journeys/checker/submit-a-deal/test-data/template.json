@@ -87,8 +87,8 @@
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "1234",
           "bondBeneficiary": "test",
-          "bondValue": "123",
-          "transactionCurrencySameAsSupplyContractCurrency": "true",
+          "facilityValue": "123",
+          "currencySameAsSupplyContractCurrency": "true",
           "riskMarginFee": "1",
           "coveredPercentage": "2",
           "feeType": "test",
@@ -101,7 +101,12 @@
     "items": [
       {
         "facilityStage": "Unconditional",
-        "bankReferenceNumber": "123"
+        "bankReferenceNumber": "123",
+        "facilityValue": "123",
+        "disbursementAmount": "12",
+        "currencySameAsSupplyContractCurrency": "true",
+        "interestMarginFee": "10",
+        "coveredPercentage": "9",
       }
     ]
   }

@@ -18,5 +18,12 @@ ADD package.json .
 RUN npm install
 
 ADD ./src ./src
+ADD ./.eslintrc.js ./.eslintrc.js
+RUN npm run lint
+
+ADD ./api-tests ./api-tests
+ADD ./__mocks__ ./__mocks__
+ADD ./api-test.jest.config.js ./api-test.jest.config.js
+ADD ./bin ./bin
 
 CMD node src/index.js

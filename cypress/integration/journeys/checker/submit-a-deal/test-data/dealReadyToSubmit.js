@@ -1,5 +1,5 @@
 const moment = require('moment');
-const dealThatJustNeedsConversionDate = require('./dealThatJustNeedsConversionDate.json');
+const dealThatJustNeedsConversionDate = require('./dealThatJustNeedsConversionDate');
 
 module.exports = () => {
   const now = moment();
@@ -7,7 +7,7 @@ module.exports = () => {
   // doing a complete serialize+deserialize here...
   // ran into issues destructuring things into our new object; cypress was keeping references
   // between my bits of test data, so updating 1 deal would cause the other to update..
-  const deal = JSON.parse(JSON.stringify(dealThatJustNeedsConversionDate));
+  const deal = JSON.parse(JSON.stringify(dealThatJustNeedsConversionDate()));
 
   deal.submissionDetails["supplyContractConversionDate-day"] = `${now.format('DD')}`;
   deal.submissionDetails["supplyContractConversionDate-month"] = `${now.format('MM')}`;

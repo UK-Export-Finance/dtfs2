@@ -348,7 +348,7 @@ describe('/v1/deals/:id/bond', () => {
 
         expect(updatedDealStatus).toEqual(200);
 
-        const updatedBond = updatedDeal.deal.bondTransactions.items.find((b) =>
+        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
           b._id === bondId); // eslint-disable-line no-underscore-dangle
 
         const expectedUpdatedBond = {
@@ -402,7 +402,7 @@ describe('/v1/deals/:id/bond', () => {
 
         const updatedDeal = updatedDealBody.deal;
 
-        const updatedBond = updatedDeal.deal.bondTransactions.items.find((b) =>
+        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
           b._id === bondId); // eslint-disable-line no-underscore-dangle
 
         const expectedBond = {
@@ -457,7 +457,7 @@ describe('/v1/deals/:id/bond', () => {
 
         const updatedDeal = updatedDealBody.deal;
 
-        const updatedBond = updatedDeal.deal.bondTransactions.items.find((b) =>
+        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
           b._id === bondId); // eslint-disable-line no-underscore-dangle
 
         const expectedBond = {
@@ -552,7 +552,7 @@ describe('/v1/deals/:id/bond', () => {
 
         expect(status).toEqual(200);
 
-        const updatedBond = updatedDeal.deal.bondTransactions.items.find((b) =>
+        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
           b._id === bondId); // eslint-disable-line no-underscore-dangle
 
         expect(updatedBond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle
