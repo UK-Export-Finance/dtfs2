@@ -31,7 +31,10 @@ router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
 router.get('/contract/:_id/comments', provide([DEAL]), async (req, res) => {
   const { deal } = req.apiData;
 
-  return res.render('contract/contract-view-comments.njk', deal);
+  return res.render('contract/contract-view-comments.njk', {
+    deal,
+    user: req.session.user,
+  });
 });
 
 router.get('/contract/:_id/submission-details', provide([DEAL, MANDATORY_CRITERIA]), async (req, res) => {
@@ -40,12 +43,16 @@ router.get('/contract/:_id/submission-details', provide([DEAL, MANDATORY_CRITERI
   return res.render('contract/contract-submission-details.njk', {
     contract: deal,
     mandatoryCriteria,
+    user: req.session.user,
   });
 });
 
 router.get('/contract/:_id/delete', provide([DEAL]), async (req, res) => {
   const { deal } = req.apiData;
-  return res.render('contract/contract-delete.njk', { deal });
+  return res.render('contract/contract-delete.njk', {
+    deal,
+    user: req.session.user,
+  });
 });
 
 router.post('/contract/:_id/delete', async (req, res) => {
@@ -88,6 +95,7 @@ router.get('/contract/:_id/ready-for-review', provide([DEAL]), async (req, res) 
   return res.render('contract/contract-ready-for-review.njk',
     {
       deal,
+      user: req.session.user,
     });
 });
 
@@ -130,6 +138,7 @@ router.get('/contract/:_id/edit-name', provide([DEAL]), async (req, res) => {
 
   return res.render('contract/contract-edit-name.njk', {
     contract: deal,
+    user: req.session.user,
   });
 });
 
@@ -163,7 +172,10 @@ router.post('/contract/:_id/edit-name', async (req, res) => {
 router.get('/contract/:_id/return-to-maker', async (req, res) => {
   const { _id } = req.params;
 
-  return res.render('contract/contract-return-to-maker.njk', { _id });
+  return res.render('contract/contract-return-to-maker.njk', {
+    _id,
+    user: req.session.user,
+  });
 });
 
 router.post('/contract/:_id/return-to-maker', async (req, res) => {
@@ -203,7 +215,10 @@ router.post('/contract/:_id/return-to-maker', async (req, res) => {
 router.get('/contract/:_id/confirm-submission', async (req, res) => {
   const { _id } = req.params;
 
-  return res.render('contract/contract-confirm-submission.njk', { _id });
+  return res.render('contract/contract-confirm-submission.njk', {
+    _id,
+    user: req.session.user,
+  });
 });
 
 router.post('/contract/:_id/confirm-submission', provide([DEAL]), async (req, res) => {
@@ -289,6 +304,7 @@ router.get('/contract/:_id/clone', provide([DEAL]), async (req, res) => {
   return res.render('contract/contract-clone.njk', {
     bankSupplyContractID,
     bankSupplyContractName,
+    user: req.session.user,
   });
 });
 
@@ -329,7 +345,10 @@ router.post('/contract/:_id/clone', async (req, res) => {
 
 router.get('/contract/:_id/clone/before-you-start', provide([MANDATORY_CRITERIA]), async (req, res) => {
   const { mandatoryCriteria } = req.apiData;
-  return res.render('before-you-start/before-you-start.njk', { mandatoryCriteria });
+  return res.render('before-you-start/before-you-start.njk', {
+    mandatoryCriteria,
+    user: req.session.user,
+  });
 });
 
 router.post('/contract/:_id/clone/before-you-start', async (req, res) => {

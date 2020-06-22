@@ -22,11 +22,33 @@ router.get('/dashboard', async (req, res) => {
   }
 });
 
-router.get('/dashboard/:page', async (req, res) => { // eslint-disable-line consistent-return
+router.get('/dashboard/transactions', async (req, res) => {
   const { userToken } = requestParams(req);
 
   if (!await api.validateToken(userToken)) {
-    return res.redirect('/');
+    res.redirect('/');
+  }
+
+  const { transactions } = await getApiData(
+    api.transactions(userToken),
+    res,
+  );
+
+  return res.render('dashboard/transactions.njk', {
+    transactions,
+    banks: await getApiData(
+      api.banks(userToken),
+      res,
+    ),
+    user: req.session.user,
+  });
+});
+
+router.get('/dashboard/:page', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
   }
 
   // when checker views the dashboard it defaults to status=readyForApproval
@@ -66,11 +88,11 @@ router.get('/dashboard/:page', async (req, res) => { // eslint-disable-line cons
   });
 });
 
-router.post('/dashboard/:page', async (req, res) => { // eslint-disable-line consistent-return
+router.post('/dashboard/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
   if (!await api.validateToken(userToken)) {
-    return res.redirect('/');
+    res.redirect('/');
   }
 
   const dashboardFilters = req.body;
@@ -102,27 +124,6 @@ router.post('/dashboard/:page', async (req, res) => { // eslint-disable-line con
       ...dashboardFilters,
     },
     user: req.session.user,
-  });
-});
-
-router.get('/dashboard/transactions', async (req, res) => { // eslint-disable-line consistent-return
-  const { userToken } = requestParams(req);
-
-  if (!await api.validateToken(userToken)) {
-    return res.redirect('/');
-  }
-
-  const { transactions } = await getApiData(
-    api.transactions(userToken),
-    res,
-  );
-
-  return res.render('dashboard/transactions.njk', {
-    transactions,
-    banks: await getApiData(
-      api.banks(userToken),
-      res,
-    ),
   });
 });
 

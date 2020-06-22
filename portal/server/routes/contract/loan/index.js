@@ -57,6 +57,7 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN]), asy
     loan,
     validationErrors: loanGuaranteeDetailsValidationErrors(validationErrors, loan),
     completedForms,
+    user: req.session.user,
   });
 });
 
@@ -95,6 +96,7 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, CURRE
     currencies: mapCurrencies(currencies, loan.currency),
     validationErrors: loanFinancialDetailsValidationErrors(validationErrors, loan),
     completedForms,
+    user: req.session.user,
   });
 });
 
@@ -129,6 +131,7 @@ router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN]), asyn
     dealId,
     loan,
     completedForms,
+    user: req.session.user,
   });
 });
 
@@ -175,6 +178,7 @@ router.get('/contract/:_id/loan/:loanId/preview', provide([LOAN]), async (req, r
     dealId,
     loan,
     completedForms,
+    user: req.session.user,
   });
 });
 
@@ -201,6 +205,7 @@ router.get('/contract/:_id/loan/:_loanId/issue-facility', async (req, res) => {
 
   return res.render('loan/loan-issue-facility.njk', {
     dealId,
+    user: req.session.user,
   });
 });
 
@@ -209,6 +214,7 @@ router.get('/contract/:_id/loan/:_loanId/confirm-requested-cover-start-date', as
 
   return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
     dealId,
+    user: req.session.user,
   });
 });
 
@@ -221,6 +227,7 @@ router.get('/contract/:_id/loan/:loanId/delete', provide([LOAN]), async (req, re
   return res.render('loan/loan-delete.njk', {
     dealId,
     loan,
+    user: req.session.user,
   });
 });
 

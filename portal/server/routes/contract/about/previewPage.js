@@ -30,7 +30,11 @@ router.get('/contract/:_id/about/preview', async (req, res) => {
     completedStatus: calculateStatusOfEachPage(Object.keys(formattedValidationErrors.errorList)),
   };
 
-  return res.render('contract/about/about-supply-preview.njk', { deal, validationErrors: formattedValidationErrors });
+  return res.render('contract/about/about-supply-preview.njk', {
+    deal,
+    validationErrors: formattedValidationErrors,
+    user: req.session.user,
+  });
 });
 
 

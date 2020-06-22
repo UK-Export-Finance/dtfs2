@@ -51,6 +51,7 @@ router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COU
     industrySectors,
     mappedIndustrySectors,
     mappedIndustryClasses,
+    user: req.session.user,
   });
 });
 

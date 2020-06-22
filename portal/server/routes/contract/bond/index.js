@@ -48,6 +48,7 @@ router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
     bond,
     validationErrors: bondDetailsValidationErrors(validationErrors, bond),
     completedForms,
+    user: req.session.user,
   });
 });
 
@@ -92,6 +93,7 @@ router.get('/contract/:_id/bond/:bondId/financial-details', provide([CURRENCIES]
     validationErrors: bondFinancialDetailsValidationErrors(validationErrors, bond),
     currencies: mapCurrencies(currencies, bondResponse.bond.currency),
     completedForms,
+    user: req.session.user,
   });
 });
 
@@ -133,6 +135,7 @@ router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
     bond,
     validationErrors: bondFeeDetailsValidationErrors(validationErrors, bond),
     completedForms,
+    user: req.session.user,
   });
 });
 
@@ -213,6 +216,7 @@ router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
     bond,
     validationErrors: formattedValidationErrors,
     completedForms,
+    user: req.session.user,
   });
 });
 
@@ -252,6 +256,7 @@ router.get('/contract/:_id/bond/:_bondId/issue-facility', async (req, res) => {
 
   return res.render('bond/bond-issue-facility.njk', {
     dealId,
+    user: req.session.user,
   });
 });
 
@@ -260,6 +265,7 @@ router.get('/contract/:_id/bond/:_bondId/confirm-requested-cover-start-date', as
 
   return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
     dealId,
+    user: req.session.user,
   });
 });
 
@@ -275,6 +281,7 @@ router.get('/contract/:_id/bond/:bondId/delete', async (req, res) => {
       api.contractBond(_id, bondId, userToken),
       res,
     ),
+    user: req.session.user,
   });
 });
 

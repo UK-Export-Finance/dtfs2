@@ -43,6 +43,7 @@ router.get('/contract/:_id/about/buyer', provide([DEAL, COUNTRIES]), async (req,
     deal,
     validationErrors: formattedValidationErrors,
     mappedCountries,
+    user: req.session.user,
   });
 });
 
