@@ -794,15 +794,15 @@ describe('/v1/deals/:id/loan', () => {
         });
       });
 
-      describe('when has more than 16 characters', () => {
+      describe('when greater than 14.2', () => {
         it('should return validationError', async () => {
           const loan = {
-            minimumQuarterlyFee: '1'.repeat(17),
+            minimumQuarterlyFee: '14.21',
           };
 
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
           expect(validationErrors.errorList.minimumQuarterlyFee).toBeDefined();
-          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual('Minimum quarterly fee must be 16 numbers or fewer');
+          expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual('Minimum quarterly fee must be between 0.00 and 14.2');
         });
       });
 
