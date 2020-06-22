@@ -177,7 +177,7 @@ describe('/v1/deals/:id/status', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.details.status).toEqual('Abandoned Deal');
+      expect(body.deal.details.status).toEqual('Abandoned Deal');
     });
 
     it('updates the deals details.dateOfLastAction field', async () => {
@@ -193,7 +193,7 @@ describe('/v1/deals/:id/status', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.details.dateOfLastAction).not.toEqual(newDeal.details.dateOfLastAction);
+      expect(body.deal.details.dateOfLastAction).not.toEqual(newDeal.details.dateOfLastAction);
     });
 
     it('updates details.previousStatus', async () => {
@@ -208,7 +208,7 @@ describe('/v1/deals/:id/status', () => {
 
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
-      expect(body.details.previousStatus).toEqual('Draft');
+      expect(body.deal.details.previousStatus).toEqual('Draft');
     });
 
     it('adds the comment to the existing comments', async () => {
@@ -223,7 +223,7 @@ describe('/v1/deals/:id/status', () => {
 
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
-      expect(body.comments[2]).toEqual({
+      expect(body.deal.comments[2]).toEqual({
         text: 'Flee!',
         username: anHSBCMaker.username,
         timestamp: expect.any(String),
@@ -387,20 +387,20 @@ describe('/v1/deals/:id/status', () => {
           const { status, body } = await postDealAndUpdateStatus(newDealWithBonds, statusUpdate);
 
           expect(status).toEqual(200);
-          expect(body.details.status).toEqual(statusUpdate.status);
+          expect(body.deal.details.status).toEqual(statusUpdate.status);
 
-          expect(body.bondTransactions.items[0]).toEqual({
+          expect(body.deal.bondTransactions.items[0]).toEqual({
             ...newDealWithBonds.bondTransactions.items[0],
             status: 'Completed',
           });
 
-          expect(body.bondTransactions.items[1]).toEqual({
+          expect(body.deal.bondTransactions.items[1]).toEqual({
             ...newDealWithBonds.bondTransactions.items[1],
             status: 'Completed',
             ...expectedRequestedCoverStartDate(),
           });
 
-          expect(body.bondTransactions.items[2]).toEqual({
+          expect(body.deal.bondTransactions.items[2]).toEqual({
             ...newDealWithBonds.bondTransactions.items[2],
             status: 'Completed',
             ...expectedRequestedCoverStartDate(),
@@ -435,20 +435,20 @@ describe('/v1/deals/:id/status', () => {
           const { status, body } = await postDealAndUpdateStatus(newDealWithLoans, statusUpdate);
 
           expect(status).toEqual(200);
-          expect(body.details.status).toEqual(statusUpdate.status);
+          expect(body.deal.details.status).toEqual(statusUpdate.status);
 
-          expect(body.loanTransactions.items[0]).toEqual({
+          expect(body.deal.loanTransactions.items[0]).toEqual({
             ...newDealWithLoans.loanTransactions.items[0],
             // status: 'Completed',
           });
 
-          expect(body.loanTransactions.items[1]).toEqual({
+          expect(body.deal.loanTransactions.items[1]).toEqual({
             ...newDealWithLoans.loanTransactions.items[1],
             // status: 'Completed',
             ...expectedRequestedCoverStartDate(),
           });
 
-          expect(body.loanTransactions.items[2]).toEqual({
+          expect(body.deal.loanTransactions.items[2]).toEqual({
             ...newDealWithLoans.loanTransactions.items[2],
             // status: 'Completed',
             ...expectedRequestedCoverStartDate(),

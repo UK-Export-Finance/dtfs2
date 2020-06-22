@@ -16,6 +16,7 @@ const get = async (dataType, req) => {
     const { deal, validationErrors } = await api.getDeal(dealId, token).catch(
       (err) => {
         console.log(`api-data-provider: querying for deal(${dealId}) => ${err}`);
+        return { deal: {}, validationErrors: {} };
       },
     );
 
@@ -26,6 +27,7 @@ const get = async (dataType, req) => {
     const { industrySectors } = await api.getIndustrySectors(token).catch(
       (err) => {
         console.log(`api-data-provider: querying for industry sectors => ${err}`);
+        return { industrySectors: [] };
       },
     );
     req.apiData[INDUSTRY_SECTORS] = industrySectors;
@@ -34,6 +36,7 @@ const get = async (dataType, req) => {
     const { countries } = await api.getCountries(token).catch(
       (err) => {
         console.log(`api-data-provider: querying for countries => ${err}`);
+        return { countries: [] };
       },
     );
     req.apiData[COUNTRIES] = countries;
@@ -51,6 +54,7 @@ const get = async (dataType, req) => {
     const { mandatoryCriteria } = await api.getMandatoryCriteria(token).catch(
       (err) => {
         console.log(`api-data-provider: querying for mandatory criteria => ${err}`);
+        return { mandatoryCriteria: [] };
       },
     );
 
@@ -65,6 +69,7 @@ const get = async (dataType, req) => {
     const loan = await api.getDealLoan(_id, loanId, token).catch(
       (err) => {
         console.log(`api-data-provider: querying for loan => ${err}`);
+        return { loan: {} };
       },
     );
     req.apiData[LOAN] = loan;

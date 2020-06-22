@@ -244,8 +244,8 @@ describe('/v1/deals/:id/bond', () => {
       const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
 
       expect(status).toEqual(200);
-      expect(body.bondTransactions.items.length).toEqual(1);
-      expect(body.bondTransactions.items[0]._id).toBeDefined(); // eslint-disable-line no-underscore-dangle
+      expect(body.deal.bondTransactions.items.length).toEqual(1);
+      expect(body.deal.bondTransactions.items[0]._id).toBeDefined(); // eslint-disable-line no-underscore-dangle
     });
 
     it('adds an empty bond to a deal whilst retaining existing bonds', async () => {
@@ -267,7 +267,7 @@ describe('/v1/deals/:id/bond', () => {
       const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
 
       expect(status).toEqual(200);
-      expect(body.bondTransactions.items.length).toEqual(2);
+      expect(body.deal.bondTransactions.items.length).toEqual(2);
     });
   });
 
@@ -341,12 +341,14 @@ describe('/v1/deals/:id/bond', () => {
 
         const {
           status: updatedDealStatus,
-          body: updatedDeal,
+          body: updatedDealBody,
         } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+
+        const updatedDeal = updatedDealBody.deal;
 
         expect(updatedDealStatus).toEqual(200);
 
-        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
+        const updatedBond = updatedDeal.deal.bondTransactions.items.find((b) =>
           b._id === bondId); // eslint-disable-line no-underscore-dangle
 
         const expectedUpdatedBond = {
@@ -394,11 +396,13 @@ describe('/v1/deals/:id/bond', () => {
 
         const {
           status: updatedDealStatus,
-          body: updatedDeal,
+          body: updatedDealBody,
         } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
         expect(updatedDealStatus).toEqual(200);
 
-        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
+        const updatedDeal = updatedDealBody.deal;
+
+        const updatedBond = updatedDeal.deal.bondTransactions.items.find((b) =>
           b._id === bondId); // eslint-disable-line no-underscore-dangle
 
         const expectedBond = {
@@ -447,11 +451,13 @@ describe('/v1/deals/:id/bond', () => {
 
         const {
           status: updatedDealStatus,
-          body: updatedDeal,
+          body: updatedDealBody,
         } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
         expect(updatedDealStatus).toEqual(200);
 
-        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
+        const updatedDeal = updatedDealBody.deal;
+
+        const updatedBond = updatedDeal.deal.bondTransactions.items.find((b) =>
           b._id === bondId); // eslint-disable-line no-underscore-dangle
 
         const expectedBond = {
@@ -496,7 +502,7 @@ describe('/v1/deals/:id/bond', () => {
 
       expect(status).toEqual(200);
 
-      const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
+      const updatedBond = updatedDeal.deal.bondTransactions.items.find((b) =>
         b._id === bondId); // eslint-disable-line no-underscore-dangle
 
       expect(updatedBond).toEqual({
@@ -541,11 +547,12 @@ describe('/v1/deals/:id/bond', () => {
         const { status: secondUpdateStatus } = await as(aBarclaysMaker).put(bondWithSameCurrencyAsContract).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(secondUpdateStatus).toEqual(200);
 
-        const { body: updatedDeal } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+        const { body: updatedDealBody } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+        const updatedDeal = updatedDealBody.deal;
 
         expect(status).toEqual(200);
 
-        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
+        const updatedBond = updatedDeal.deal.bondTransactions.items.find((b) =>
           b._id === bondId); // eslint-disable-line no-underscore-dangle
 
         expect(updatedBond._id).toEqual(bondId); // eslint-disable-line no-underscore-dangle

@@ -410,8 +410,8 @@ describe('/v1/deals/:id/loan', () => {
       const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
 
       expect(status).toEqual(200);
-      expect(body.loanTransactions.items.length).toEqual(1);
-      expect(body.loanTransactions.items[0]._id).toBeDefined(); // eslint-disable-line no-underscore-dangle
+      expect(body.deal.loanTransactions.items.length).toEqual(1);
+      expect(body.deal.loanTransactions.items[0]._id).toBeDefined(); // eslint-disable-line no-underscore-dangle
     });
 
     it('adds an empty loan to a deal whilst retaining existing loans', async () => {
@@ -433,7 +433,7 @@ describe('/v1/deals/:id/loan', () => {
       const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
 
       expect(status).toEqual(200);
-      expect(body.loanTransactions.items.length).toEqual(2);
+      expect(body.deal.loanTransactions.items.length).toEqual(2);
     });
   });
 });
