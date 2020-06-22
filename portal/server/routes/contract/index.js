@@ -242,7 +242,7 @@ router.post('/contract/:_id/confirm-submission', provide([DEAL]), async (req, re
   }
 
   const loansWithErrors = Object.keys(validationOfExistingDeal.loanErrors);
-  for (let i = 0; i < loansWithErrors.lenght; i += 1) {
+  for (let i = 0; i < loansWithErrors.length; i += 1) {
     const loanId = loansWithErrors[i];
     const loanErrors = validationOfExistingDeal.loanErrors[loanId].errorList;
     combinedErrorList = {

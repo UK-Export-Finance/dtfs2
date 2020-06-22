@@ -19,28 +19,6 @@ pipelinestart=`date +%s`
 
 start=`date +%s`
 
-cd "$HERE/portal" && ./bin/updateDependencies.sh && ./bin/executeStaticTests.sh
-portalResult=$?
-
-end=`date +%s`
-
-[ $portalResult -eq 0 ] && echo "{\"stage\": \"pipeline:prepare-portal\", \"duration\": \"$((end-start))\", \"result\": \"pass\"}" >> "$LOG" || echo "{\"stage\": \"pipeline:prepare-portal\", \"duration\": \"$((end-start))\", \"result\": \"fail\"}" >> "$LOG"
-[ $portalResult -ne 0 ] && exit $portalResult
-
-
-start=`date +%s`
-
-cd "$HERE/deal-api" && ./bin/updateDependencies.sh && ./bin/executeStaticTests.sh
-apiResult=$?
-
-end=`date +%s`
-
-[ $apiResult -eq 0 ] && echo "{\"stage\": \"pipeline:prepare-deal-api\", \"duration\": \"$((end-start))\", \"result\": \"pass\"}" >> "$LOG" || echo "{\"stage\": \"pipeline:prepare-deal-api\", \"duration\": \"$((end-start))\", \"result\": \"fail\"}" >> "$LOG"
-[ $apiResult -ne 0 ] && exit $apiResult
-
-
-start=`date +%s`
-
 cd "$HERE" && docker-compose up -d --build
 testResult=$?
 
@@ -60,7 +38,7 @@ echo "{\"stage\": \"pipeline:wait-for-mongo\", \"duration\": \"$((end-start))\",
 
 start=`date +%s`
 
-cd "$HERE/deal-api" && ./bin/executeIntegrationTests.sh
+docker exec deal-api /bin/sh ./bin/api-test.sh
 apiTestResults=$?
 
 end=`date +%s`
