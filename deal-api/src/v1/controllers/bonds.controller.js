@@ -106,6 +106,16 @@ const bondStageFields = (bond) => {
   return modifiedBond;
 };
 
+const feeTypeFields = (loan) => {
+  const modifiedLoan = loan;
+  const { feeType } = modifiedLoan;
+  if (feeType === 'At maturity') {
+    delete modifiedLoan.feeFrequency;
+  }
+
+  return modifiedLoan;
+};
+
 exports.updateBond = async (req, res) => {
   const {
     bondId,
@@ -139,6 +149,8 @@ exports.updateBond = async (req, res) => {
         modifiedBond,
         deal,
       );
+
+      modifiedBond = feeTypeFields(modifiedBond);
 
       const { facilityValue, coveredPercentage, riskMarginFee } = modifiedBond;
 

@@ -564,5 +564,34 @@ describe('/v1/deals/:id/bond', () => {
         expect(updatedBond['conversionRateDate-year']).toEqual(undefined);
       });
     });
+
+    describe('when req.body.feeType is changed to \'At maturity\'', () => {
+      it('should remove feeFrequency from the loan', async () => {
+        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+        const { body: createBondBody } = createBondResponse;
+        const { bondId } = createBondBody;
+
+
+        const bond = {
+          feeType: 'In advance',
+          feeFrequency: 'Quarterly',
+        };
+
+        await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        const updatedBond = {
+          ...bond,
+          feeType: 'At maturity',
+        };
+
+        const { body } = await as(aBarclaysMaker).put(updatedBond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+        expect(body.feeFrequency).toEqual(undefined);
+      });
+    });
   });
 });
