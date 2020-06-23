@@ -108,6 +108,16 @@ const loanFacilityStageFields = (loan) => {
   return modifiedLoan;
 };
 
+const premiumTypeFields = (loan) => {
+  const modifiedLoan = loan;
+  const { premiumType } = modifiedLoan;
+  if (premiumType === 'At maturity') {
+    delete modifiedLoan.premiumFrequency;
+  }
+
+  return modifiedLoan;
+};
+
 exports.updateLoan = async (req, res) => {
   const {
     loanId,
@@ -141,6 +151,8 @@ exports.updateLoan = async (req, res) => {
         modifiedLoan,
         deal,
       );
+
+      modifiedLoan = premiumTypeFields(modifiedLoan);
 
       const { facilityValue, coveredPercentage, interestMarginFee } = modifiedLoan;
 

@@ -198,6 +198,8 @@ describe('/v1/deals/:id/loan', () => {
         currencySameAsSupplyContractCurrency: 'true',
         interestMarginFee: '10',
         coveredPercentage: '40',
+        premiumType: 'At maturity',
+        dayCountBasis: '365',
       };
 
       const { status } = await as(aSuperuser).put(conditionalLoan).to(`/v1/deals/${dealId}/loan/${loanId}`);
@@ -234,6 +236,8 @@ describe('/v1/deals/:id/loan', () => {
           currencySameAsSupplyContractCurrency: 'true',
           interestMarginFee: '10',
           coveredPercentage: '40',
+          premiumType: 'At maturity',
+          dayCountBasis: '365',
         };
 
         await updateLoan(dealId, loanId, conditionalLoan);
@@ -268,6 +272,8 @@ describe('/v1/deals/:id/loan', () => {
           ...requestedCoverStartDate(),
           ...coverEndDate(),
           disbursementAmount: '5',
+          premiumType: 'At maturity',
+          dayCountBasis: '365',
         };
 
         await updateLoan(dealId, loanId, unconditionalLoan);
@@ -301,6 +307,8 @@ describe('/v1/deals/:id/loan', () => {
         currencySameAsSupplyContractCurrency: 'true',
         interestMarginFee: '10',
         coveredPercentage: '40',
+        premiumType: 'At maturity',
+        dayCountBasis: '365',
       };
 
       const { status, body } = await updateLoan(dealId, loanId, loan);
@@ -325,6 +333,8 @@ describe('/v1/deals/:id/loan', () => {
           'conversionRateDate-day': moment().format('DD'),
           'conversionRateDate-month': moment().format('MM'),
           'conversionRateDate-year': moment().format('YYYY'),
+          premiumType: 'At maturity',
+          dayCountBasis: '365',
         };
 
         await updateLoan(dealId, loanId, loan);
@@ -342,6 +352,28 @@ describe('/v1/deals/:id/loan', () => {
         expect(body['conversionRateDate-month']).toEqual(undefined);
         expect(body['conversionRateDate-year']).toEqual(undefined);
         expect(body.currency).toEqual(newDeal.supplyContractCurrency);
+      });
+    });
+
+    describe('when req.body.premiumType is changed to \'At maturity\'', () => {
+      it('should remove premiumFrequency from the loan', async () => {
+        const { dealId, loanId } = await addLoanToDeal();
+
+        const loan = {
+          premiumType: 'In advance',
+          premiumFrequency: 'Quarterly',
+        };
+
+        await updateLoan(dealId, loanId, loan);
+
+        const updatedLoan = {
+          ...loan,
+          premiumType: 'At maturity',
+        };
+
+        const { body } = await updateLoan(dealId, loanId, updatedLoan);
+
+        expect(body.premiumFrequency).toEqual(undefined);
       });
     });
   });
