@@ -38,7 +38,7 @@ Cypress.Commands.add("downloadFile", downloadFile);
 Cypress.Commands.add("addBondToDeal", require('./portal/addBondToDeal'));
 Cypress.Commands.add("createADeal", require('./portal/createADeal'));
 Cypress.Commands.add("createNewSubmission", require('./portal/createNewSubmission'));
-Cypress.Commands.add("login", require('./portal/login'));
+Cypress.Commands.add("login", require('./portal/logIn'));
 Cypress.Commands.add("loginGoToDealPage", require('./portal/loginGoToDealPage'));
 Cypress.Commands.add("passRedLine", require('./portal/passRedLine'));
 Cypress.Commands.add("renameDeal", require('./portal/renameDeal'));
