@@ -5,7 +5,7 @@ const {
 } = require('../../../../utils/number');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
 
-const MIN_VALUE = 1;
+const MIN_VALUE = 0.01;
 const MAX_DECIMALS = 2;
 
 const isGreaterThanMinValue = (disbursementAmount) => disbursementAmount >= MIN_VALUE;
