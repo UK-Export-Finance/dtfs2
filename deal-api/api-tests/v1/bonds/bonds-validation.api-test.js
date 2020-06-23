@@ -842,8 +842,8 @@ describe('/v1/deals/:id/bond', () => {
         it('should return validationError for feeFrequency', async () => {
           const bond = {
             ...allBondFields,
-            feeFrequency: '',
             feeType: 'In advance',
+            feeFrequency: '',
           };
 
           const body = await updateBondInDeal(dealId, bond);
@@ -857,8 +857,8 @@ describe('/v1/deals/:id/bond', () => {
         it('should return validationError for feeFrequency', async () => {
           const bond = {
             ...allBondFields,
-            feeFrequency: '',
             feeType: 'In arrear',
+            feeFrequency: '',
           };
 
           const body = await updateBondInDeal(dealId, bond);
