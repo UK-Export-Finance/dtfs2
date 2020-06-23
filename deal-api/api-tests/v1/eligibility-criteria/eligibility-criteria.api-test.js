@@ -265,7 +265,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
       const { status, body } = await as(aBarclaysMaker).put(updatedECCompleted).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
-      expect(body.details.submissionType).toEqual('Manual Inclusion Notice');
+      expect(body.details.submissionType).toEqual('Manual Inclusion Application');
     });
   });
 });

@@ -19,7 +19,7 @@ const APPLICATION_GROUP = {
 
 const SUBMISSION_TYPE = {
   AIN: 'Automatic Inclusion Notice',
-  MIA: 'Manual Inclusion Notice',
+  MIA: 'Manual Inclusion Application',
 };
 
 const ACTION_NAME = {
