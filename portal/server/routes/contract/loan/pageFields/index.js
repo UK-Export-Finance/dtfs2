@@ -40,6 +40,13 @@ const FIELDS = {
     //   'minimumQuarterlyFee',
     // ],
   },
+  DATES_REPAYMENTS: {
+    REQUIRED_FIELDS: [
+      'premiumType',
+      'premiumFrequency',
+      'dayCountBasis',
+    ],
+  },
 };
 
 export default FIELDS;

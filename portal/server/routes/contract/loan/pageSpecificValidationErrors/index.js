@@ -6,3 +6,6 @@ export const loanGuaranteeDetailsValidationErrors = (validationErrors, loan) =>
 
 export const loanFinancialDetailsValidationErrors = (validationErrors, loan) =>
   pageSpecificValidationErrors(validationErrors, FIELDS.FINANCIAL_DETAILS, loan);
+
+export const loanDatesRepaymentsValidationErrors = (validationErrors, loan) =>
+  pageSpecificValidationErrors(validationErrors, FIELDS.DATES_REPAYMENTS, loan);
