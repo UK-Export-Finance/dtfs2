@@ -4,6 +4,7 @@ const ELIGIBILITY_CRITERIA = require('../eligibilityCriteria');
 const SUPPORTING_DOCUMENTATION = require('../supportingDocumentation');
 
 const now = moment();
+const yesterday = moment().subtract(1, 'day');
 const aMonthFromNow = moment().add(1, 'month');
 
 module.exports = {
@@ -13,7 +14,7 @@ module.exports = {
       "id" : "956",
       "name" : "Barclays Bank"
     },
-    "bankSupplyContractID": "DTFS2-1092-deal-in-good-state",
+    "bankSupplyContractID": "DTFS2-1092-bad-cover-dates",
     "bankSupplyContractName": "Tibettan submarine acquisition scheme",
     "submissionType": "Automatic Inclusion Notice",
     "previousStatus": "Draft",
@@ -98,27 +99,27 @@ module.exports = {
   "bondTransactions": {
     "items": [
       {
-        "_id": 4,
-        "bondIssuer": "issuer",
-        "bondType": "bond type",
-        "bondStage": "unissued",
-        "ukefGuaranteeInMonths": "24",
-        "uniqueIdentificationNumber": "1234",
-        "bondBeneficiary": "test",
-        "facilityValue": "123",
-        "currencySameAsSupplyContractCurrency": "true",
-        "riskMarginFee": "1",
-        "coveredPercentage": "2",
-        "feeType": "test",
-        "feeFrequency": "test",
-        "dayCountBasis": "test"
+          "id":1,
+          "bondIssuer": "issuer",
+          "bondType": "bond type",
+          "bondStage": "unissued",
+          "ukefGuaranteeInMonths": "24",
+          "uniqueIdentificationNumber": "1234",
+          "bondBeneficiary": "test",
+          "facilityValue": "123",
+          "currencySameAsSupplyContractCurrency": "true",
+          "riskMarginFee": "1",
+          "coveredPercentage": "2",
+          "feeType": "test",
+          "feeFrequency": "test",
+          "dayCountBasis": "test"
       }
     ]
   },
   "loanTransactions": {
     "items": [
       {
-        "_id": 3,
+        "id":2,
         "facilityStage": "Unconditional",
         "bankReferenceNumber": "123",
         "facilityValue": "123",
@@ -126,9 +127,9 @@ module.exports = {
         "currencySameAsSupplyContractCurrency": "true",
         "interestMarginFee": "10",
         "coveredPercentage": "9",
-        "requestedCoverStartDate-day" : `${now.format('DD')}`,
-        "requestedCoverStartDate-month" : `${now.format('MM')}`,
-        "requestedCoverStartDate-year" : `${now.format('YYYY')}`,
+        "requestedCoverStartDate-day" : `${yesterday.format('DD')}`,
+        "requestedCoverStartDate-month" : `${yesterday.format('MM')}`,
+        "requestedCoverStartDate-year" : `${yesterday.format('YYYY')}`,
         "coverEndDate-day" : `${aMonthFromNow.format('DD')}`,
         "coverEndDate-month" : `${aMonthFromNow.format('MM')}`,
         "coverEndDate-year" : `${aMonthFromNow.format('YYYY')}`,

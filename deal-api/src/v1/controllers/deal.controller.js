@@ -9,7 +9,6 @@ const { getCloneDealErrors } = require('../validation/clone-deal');
 
 const { isSuperUser, userHasAccessTo } = require('../users/checks');
 const { generateDealId } = require('../../utils/generateIds');
-// const { dealSectionStatuses } = require('../section-status');
 const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
 
@@ -130,9 +129,10 @@ exports.findOne = (req, res) => {
     } else if (!userHasAccessTo(req.user, deal)) {
       res.status(401).send();
     } else {
+      // apply realtime validation so we catch any time-dependent fields
+      //  that have -become- invalid..
       const validationErrors = validate(deal);
       const dealWithStatuses = calculateStatuses(deal, validationErrors);
-      //  dealSectionStatuses(deal),
 
       res.status(200).send({
         deal: dealWithStatuses,
