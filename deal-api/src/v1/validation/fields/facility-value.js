@@ -8,9 +8,9 @@ const { orderNumber } = require('../../../utils/error-list-order-number');
 
 const MIN_VALUE = 0.01;
 const MAX_DECIMALS = 2;
-const MAX_CHARACTERS = 14;
+const MAX_DIGITS = 14;
 
-const isValidLength = (str) => String(stripDecimals(str)).length <= MAX_CHARACTERS;
+const isValidLength = (str) => String(stripDecimals(str)).length <= MAX_DIGITS;
 
 const isValidFormat = (value) => {
   if (decimalsCount(value) <= MAX_DECIMALS) {
@@ -60,7 +60,7 @@ const validationText = (str, fieldTitle) => {
   }
 
   if (!isValidLength(str)) {
-    return `${fieldTitle} must be ${MAX_CHARACTERS} numbers or fewer`;
+    return `${fieldTitle} must be ${MAX_DIGITS} numbers or fewer`;
   }
 
   if (!isValidFormat(str)) {
