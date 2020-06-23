@@ -10,6 +10,7 @@ import {
 import {
   loanGuaranteeDetailsValidationErrors,
   loanFinancialDetailsValidationErrors,
+  loanDatesRepaymentsValidationErrors,
 } from './pageSpecificValidationErrors';
 import completedLoanForms from './completedForms';
 
@@ -130,18 +131,24 @@ router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN]), asyn
   return res.render('loan/loan-dates-repayments.njk', {
     dealId,
     loan,
+    validationErrors: loanDatesRepaymentsValidationErrors(validationErrors, loan),
     completedForms,
     user: req.session.user,
   });
 });
 
 router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => {
-  const { _id: dealId, loanId } = requestParams(req);
+  const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  // await postToApi(
-  //   api.updateLoan(dealId, loanId, req.body, userToken),
-  //   errorHref,
-  // );
+  await postToApi(
+    api.updateDealLoan(
+      dealId,
+      loanId,
+      req.body,
+      userToken,
+    ),
+    errorHref,
+  );
 
   const redirectUrl = `/contract/${dealId}/loan/${loanId}/preview`;
   return res.redirect(redirectUrl);

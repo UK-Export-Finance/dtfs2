@@ -1,13 +1,13 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
-{% macro render(id, checkedValue, errorObj) %}
+{% macro render(id, label, checkedValue, errorObj) %}
 
   {{ govukRadios({
     idPrefix: id + "FeeFrequency",
     name: id + "FeeFrequency",
     fieldset: {
       legend: {
-        text: "Fee frequency"
+        text: label
       }
     },
     items: [

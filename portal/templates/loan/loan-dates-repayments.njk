@@ -1,10 +1,21 @@
 {% extends "index.njk" %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% import './_macros/loan-nav.njk' as loanNav %}
+{% import '../_macros/facility-inputs/facility-payment-type.njk' as facilityPaymentType %}
+{% import '../_macros/facility-inputs/day-count-radios.njk' as dayCountRadios %}
 
 {% block pageTitle %}Loan Dates and Repayments{% endblock %}
 
 {% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
 
   {{ loanNav.render(
     completedForms = completedForms,
@@ -21,95 +32,20 @@
 
       <div class="govuk-grid-column-three-quarters">
 
-        {{ govukRadios({
-          idPrefix: "premiumType",
-          name: "premiumType",
-          fieldset: {
-            legend: {
-              text: "Premium type"
-            }
-          },
-          items: [
-            {
-              value: "In advance",
-              text: "In advance",
-              checked: loan.premiumType === "In advance"
-            },
-            {
-              value: "In arrear",
-              text: "In arrear",
-              checked: loan.premiumType === "In arrear"
-            },
-            {
-              value: "At maturity",
-              text: "At maturity",
-              checked: loan.premiumType === "At maturity",
-              attributes: {
-                'data-cy': 'premium-type-at-maturity'
-              }
-            }
-          ]
-        }) }}
+        {{facilityPaymentType.render(
+          id = 'premiumType',
+          label = 'Premium type',
+          checkedValue = loan.premiumType,
+          frequencyId = 'premiumFrequency',
+          frequencyLabel = 'Premium frequency',
+          frequencyCheckedValue = loan.premiumFrequency,
+          validationErrors = validationErrors
+        )}}
 
-        {{ govukRadios({
-          idPrefix: "premiumFrequency",
-          name: "premiumFrequency",
-          fieldset: {
-            legend: {
-              text: "Premium frequency"
-            }
-          },
-          items: [
-            {
-              value: "Monthly",
-              text: "Monthly",
-              checked: loan.premiumFrequency === "Monthly"
-            },
-            {
-              value: "Quarterly",
-              text: "Quarterly",
-              checked: loan.premiumFrequency === "Quarterly"
-            },
-            {
-              value: "Semi-annually",
-              text: "Semi-annually",
-              checked: loan.premiumFrequency === "Semi-annually"
-            },
-            {
-              value: "Annually",
-              text: "Annually",
-              checked: loan.premiumFrequency === "Annually",
-              attributes: {
-                'data-cy': 'premium-frequency-annually'
-              }
-            }
-          ]
-        }) }}
-
-        {{ govukRadios({
-          idPrefix: "dayCountBasis",
-          name: "dayCountBasis",
-          fieldset: {
-            legend: {
-              text: "Day count basis"
-            }
-          },
-          items: [
-            {
-              value: "360",
-              text: "360",
-              checked: loan.dayCountBasis === "360"
-            },
-            {
-              value: "365",
-              text: "365",
-              checked: loan.dayCountBasis === "365",
-              attributes: {
-                'data-cy': 'day-count-basis-365'
-              }
-            }
-          ]
-        }) }}
+        {{dayCountRadios.render(
+          checkedValue = loan.dayCountBasis,
+          errorObj = validationErrors.errorList.dayCountBasis
+        )}}
 
       </div>
 
