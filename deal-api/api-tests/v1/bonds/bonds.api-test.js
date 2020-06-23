@@ -137,7 +137,7 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(200);
     });
 
-    it('returns a bond with dealId, `Incomplete` status and validationErrors', async () => {
+    it('returns a bond with dealId, `Incomplete` status', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 

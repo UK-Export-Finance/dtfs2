@@ -124,24 +124,44 @@ describe('/v1/deals/:id/loan', () => {
       expect(status).toEqual(200);
     });
 
-    // it('returns a loan with dealId, `Incomplete` status and validationErrors', async () => {
-    //   const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
-    //   const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+    it('returns a loan with dealId, `Incomplete` status', async () => {
+      const { dealId, loanId } = await addLoanToDeal();
 
-    //   const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
-    //   const { loanId } = createLoanResponse.body;
+      await updateLoan(dealId, loanId, {});
 
-    //   const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/loan/${loanId}`);
+      const { status, body } = await as(aSuperuser).get(`/v1/deals/${dealId}/loan/${loanId}`);
 
-    //   expect(status).toEqual(200);
-    //   expect(body.loan._id).toEqual(loanId); // eslint-disable-line no-underscore-dangle
-    //   expect(body.loan.status).toEqual('Incomplete');
-    //   expect(body.dealId).toEqual(dealId);
-    // });
+      expect(status).toEqual(200);
+      expect(body.loan._id).toEqual(loanId); // eslint-disable-line no-underscore-dangle
+      expect(body.loan.status).toEqual('Incomplete');
+      expect(body.dealId).toEqual(dealId);
+    });
 
-    // describe('when a loan has all required fields', () => {
+    describe('when a loan has all required fields', () => {
+      it('retuns a loan with dealId and `Completed` status', async () => {
+        const { dealId, loanId } = await addLoanToDeal();
 
-    // });
+        const loan = {
+          facilityStage: 'Conditional',
+          ukefGuaranteeInMonths: '12',
+          facilityValue: '100',
+          currencySameAsSupplyContractCurrency: 'true',
+          interestMarginFee: '10',
+          coveredPercentage: '40',
+          premiumType: 'At maturity',
+          dayCountBasis: '365',
+        };
+
+        await updateLoan(dealId, loanId, loan);
+        const { status, body } = await as(aSuperuser).get(`/v1/deals/${dealId}/loan/${loanId}`);
+
+        expect(status).toEqual(200);
+        expect(body.loan._id).toEqual(loanId); // eslint-disable-line no-underscore-dangle
+        expect(body.validationErrors.count).toEqual(0);
+        expect(body.loan.status).toEqual('Completed');
+        expect(body.dealId).toEqual(dealId);
+      });
+    });
   });
 
   describe('PUT /v1/deals/:id/loan/:id', () => {

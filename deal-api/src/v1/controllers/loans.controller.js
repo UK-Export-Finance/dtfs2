@@ -6,9 +6,8 @@ const {
   calculateGuaranteeFee,
   calculateUkefExposure,
 } = require('../section-calculations');
-
 const sectionCurrency = require('../section-currency');
-// const { loanStatus } = require('../section-status/loan');
+const { loanStatus } = require('../section-status/loan');
 
 const putLoanInDealObject = (deal, loan, otherLoans) => ({
   ...deal,
@@ -42,7 +41,7 @@ exports.getLoan = async (req, res) => {
           dealId,
           loan: {
             ...loan,
-            // status: loanStatus(validationErrors),
+            status: loanStatus(validationErrors),
           },
           validationErrors,
         });
