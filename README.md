@@ -12,7 +12,7 @@ Prerequisites
 Steps
 
  * clone this repo
- * if you have a Companies House API key, it can be stored in a one-line text file called `companies_hous_api_key.txt` (named in `.gitignore`). This will be picked up and used by `bin/pipeline.sh`. E.g.: `echo "abc123456XYZ" > companies_house_api_key.txt`
+ * if you have a Companies House API key, it can be stored in a one-line text file called `companies_house_api_key.txt` (named in `.gitignore`). This will be picked up and used by `bin/pipeline.sh`. E.g.: `echo "abc123456XYZ" > companies_house_api_key.txt`
  * API keys for Azure filestore requires file './secrets/set_azure_api_keys.sh' ( ./secrets folder is added to .gitignore), whcih set the relevant .env variables. add 'source [YOUR_PROJECT_PATH]/secrets/set_azure_api_keys.sh' to .bashrc to automatically set env variables. set_azure_api_keys.sh has been pinned to dtfs2-dev channel on UKEF-DTFS slack
  * run `npm install` in the root directory of the repo
  * run `docker-compose up --build` to start up an environment
