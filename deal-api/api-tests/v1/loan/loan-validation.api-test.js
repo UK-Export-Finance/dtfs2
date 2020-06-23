@@ -43,7 +43,7 @@ describe('/v1/deals/:id/loan', () => {
     it('returns a loan with validationErrors for all required fields', async () => {
       const { body } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/loan/${loanId}`);
 
-      expect(body.validationErrors.count).toEqual(5);
+      expect(body.validationErrors.count).toEqual(7);
       expect(body.validationErrors.errorList.facilityStage).toBeDefined();
       expect(body.validationErrors.errorList.facilityValue).toBeDefined();
       expect(body.validationErrors.errorList.currencySameAsSupplyContractCurrency).toBeDefined();
@@ -56,7 +56,7 @@ describe('/v1/deals/:id/loan', () => {
     it('returns 400 with validation errors', async () => {
       const { body, status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/${loanId}`);
       expect(status).toEqual(400);
-      expect(body.validationErrors.count).toEqual(5);
+      expect(body.validationErrors.count).toEqual(7);
       expect(body.validationErrors.errorList.facilityStage).toBeDefined();
       expect(body.validationErrors.errorList.facilityValue).toBeDefined();
       expect(body.validationErrors.errorList.currencySameAsSupplyContractCurrency).toBeDefined();
@@ -839,6 +839,62 @@ describe('/v1/deals/:id/loan', () => {
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
           expect(validationErrors.errorList.minimumQuarterlyFee).toBeDefined();
           expect(validationErrors.errorList.minimumQuarterlyFee.text).toEqual('Minimum quarterly fee must have less than 3 decimals, like 12 or 12.10');
+        });
+      });
+    });
+
+    describe('premiumType', () => {
+      describe('when missing', () => {
+        it('should return validationError', async () => {
+          const loan = {
+            premiumType: '',
+          };
+
+          const body = await updateLoanInDeal(dealId, loan);
+
+          expect(body.validationErrors.errorList.premiumType).toBeDefined();
+          expect(body.validationErrors.errorList.premiumType.text).toEqual('Enter the Premium type');
+        });
+      });
+
+      describe('when premiumType is `In advance`', () => {
+        it('should return validationError for premiumFrequency', async () => {
+          const loan = {
+            premiumType: 'In advance',
+          };
+
+          const body = await updateLoanInDeal(dealId, loan);
+
+          expect(body.validationErrors.errorList.premiumFrequency).toBeDefined();
+          expect(body.validationErrors.errorList.premiumFrequency.text).toEqual('Enter the Premium frequency');
+        });
+      });
+
+      describe('when premiumType as `In arrear`', () => {
+        it('should return validationError for premiumFrequency', async () => {
+          const loan = {
+            premiumType: 'In arrear',
+          };
+
+          const body = await updateLoanInDeal(dealId, loan);
+
+          expect(body.validationErrors.errorList.premiumFrequency).toBeDefined();
+          expect(body.validationErrors.errorList.premiumFrequency.text).toEqual('Enter the Premium frequency');
+        });
+      });
+    });
+
+    describe('dayCountBasis', () => {
+      describe('when missing', () => {
+        it('should return validationError', async () => {
+          const loan = {
+            dayCountBasis: '',
+          };
+
+          const body = await updateLoanInDeal(dealId, loan);
+
+          expect(body.validationErrors.errorList.dayCountBasis).toBeDefined();
+          expect(body.validationErrors.errorList.dayCountBasis.text).toEqual('Enter the Day count basis');
         });
       });
     });

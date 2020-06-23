@@ -9,7 +9,7 @@ const riskMarginFee = require('./risk-margin-fee');
 const coveredPercentage = require('../fields/covered-percentage');
 const minimumRiskMarginFee = require('./minimum-risk-margin-fee');
 const feeType = require('./fee-type');
-const dayCountBasis = require('./day-count-basis');
+const dayCountBasis = require('../fields/day-count-basis');
 
 const rules = [
   bondType,
