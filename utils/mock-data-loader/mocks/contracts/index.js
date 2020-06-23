@@ -5,6 +5,7 @@ module.exports = [
   require('./04-manual-inclusion-application'),
   require('./05-status-draft'),
   require('./06-status-readyForApproval'),
+  require('./06.5-status-readyForApproval-bad-cover-date'),
   require('./07-status-inputRequired'),
   require('./08-status-abandoned'),
   require('./09-status-submitted'),

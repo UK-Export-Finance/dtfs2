@@ -94,20 +94,6 @@ authRouter.route('/deals/:id/bond/:bondId')
     bonds.updateBond,
   );
 
-/*
-authRouter.route('/deals/:start/:pagesize')
-  .get(
-    validate({ role: ['maker', 'checker'] }),
-    deals.findPage,
-  );
-
-authRouter.route('/deals/:start/:pagesize/:filters')
-  .get(
-    validate({ role: ['maker', 'checker'] }),
-    deals.findPage,
-  );
-*/
-
 authRouter.route('/deals/:id')
   .get(
     validate({ role: ['maker', 'checker'] }),

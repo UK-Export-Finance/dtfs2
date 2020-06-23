@@ -27,12 +27,6 @@ context('A checker selects to submit a contract from the view-contract page', ()
         goodDeal=insertedDeals[0];
         badDeal=insertedDeals[1];
       });
-    //
-    // cy.insertOneDeal(dealReadyToSubmit, { ...maker1 })
-    //   .then(insertedDeal => goodDeal=insertedDeal);
-    //
-    // cy.insertOneDeal(dealWithInvalidCoverStartDate, { ...maker1 })
-    //   .then(insertedDeal => badDeal=insertedDeal);
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {
@@ -60,6 +54,12 @@ context('A checker selects to submit a contract from the view-contract page', ()
     // expect to stay on the abandon page, and see an error
     cy.url().should('eq', relative(`/contract/${goodDeal._id}/confirm-submission`));
     contractConfirmSubmission.expectError('Acceptance is required.');
+
+    // expect the deal status to be unchanged
+    contract.visit(goodDeal);
+    contract.status().invoke('text').then((text) => {
+      expect(text.trim()).to.equal("Ready for Checker's approval");
+    });
   });
 
   it('If the deal contains a loan with a cover start date that is now in the past, an error should be generated.', () => {
@@ -75,6 +75,12 @@ context('A checker selects to submit a contract from the view-contract page', ()
     // expect to stay on the abandon page, and see an error
     cy.url().should('eq', relative(`/contract/${badDeal._id}/confirm-submission`));
     contractConfirmSubmission.expectError('Requested Cover Start Date must be today or in the future');
+
+    // expect the deal status to be unchanged
+    contract.visit(goodDeal);
+    contract.status().invoke('text').then((text) => {
+      expect(text.trim()).to.equal("Ready for Checker's approval");
+    });
   });
 
   it('If the terms are accepted, the Accept and Submit button submits the deal and takes the user to /dashboard.', () => {

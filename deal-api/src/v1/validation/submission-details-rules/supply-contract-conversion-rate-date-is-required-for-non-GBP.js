@@ -15,11 +15,11 @@ module.exports = (submissionDetails, errorList) => {
     // if we have all the values, check that the date..
     if (hasValue(day) && hasValue(month) && hasValue(year)) {
       const date = moment(`${year}-${month}-${day}`);
-      const now = moment();
-      const thirtyDaysAgo = moment().subtract(30, 'day');
+      const now = moment(`${moment().format('YYYY')}-${moment().format('MM')}-${moment().format('DD')}`);
+      const thirtyDaysAgo = moment(`${moment().format('YYYY')}-${moment().format('MM')}-${moment().format('DD')}`).subtract(30, 'day');
 
       // can't be in the future
-      if (date > now) {
+      if (date.isAfter(now)) {
         newErrorList.supplyContractConversionDate = {
           order: orderNumber(newErrorList),
           text: 'Supply Contract conversion date cannot be in the future',
@@ -27,7 +27,7 @@ module.exports = (submissionDetails, errorList) => {
       }
 
       // can't be more than 30 days old
-      if (date < thirtyDaysAgo) {
+      if (date.isBefore(thirtyDaysAgo)) {
         newErrorList.supplyContractConversionDate = {
           order: orderNumber(newErrorList),
           text: 'Supply Contract conversion date cannot be more than 30 days in the past',
