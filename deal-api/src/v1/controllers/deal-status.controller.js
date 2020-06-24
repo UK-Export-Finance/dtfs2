@@ -161,8 +161,10 @@ exports.update = (req, res) => {
       const { previousStatus } = deal.details;
 
       const typeA = await createTypeA(dealAfterAllUpdates, previousStatus);
+
       if (typeA.errorCount) {
-        // TODO - how do we deal with invalid typeA xml?
+        // Revert status
+        await updateStatus(collection, req.params.id, previousStatus, fromStatus);
         return res.status(200).send(typeA);
       }
     }
