@@ -38,7 +38,9 @@ context('about-supply-contract', () => {
     contractAboutFinancial.supplyContractConversionRateToGBP().should('not.be.visible');
 
     // set a GBP value, so we don't need to fill in the exchange-rate fields
-    contractAboutFinancial.supplyContractValue().type('10,000');
+    contractAboutFinancial.supplyContractValue().type('10000');
+    contractAboutFinancial.supplyContractValue().should('have.value', '10,000');
+
     contractAboutFinancial.supplyContractCurrency().select('GBP');
 
     // prove the exchange-rate fields stay hidden..
@@ -62,6 +64,5 @@ context('about-supply-contract', () => {
     contract.aboutSupplierDetailsStatus().invoke('text').then((text) => {
       expect(text.trim()).equal('Completed');
     });
-
   });
 });

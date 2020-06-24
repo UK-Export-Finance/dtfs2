@@ -11,7 +11,7 @@ const newDeal = aDeal({
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
-    status: "Draft",
+    status: 'Draft',
     dateOfLastAction: '1985/11/04 21:00:00:000',
   },
   comments: [{
@@ -32,7 +32,7 @@ describe('/v1/deals/:id/submission-details', () => {
   let aBarclaysChecker;
   let aSuperuser;
 
-  beforeAll(async()=>{
+  beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
@@ -59,7 +59,7 @@ describe('/v1/deals/:id/submission-details', () => {
     });
 
     it('accepts requests from a user with role=maker', async () => {
-      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(anHSBCMaker).get(`/v1/deals/${body._id}/submission-details`);
 
@@ -67,7 +67,7 @@ describe('/v1/deals/:id/submission-details', () => {
     });
 
     it('accepts requests from a user with role=checker', async () => {
-      const {body} = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(aBarclaysChecker).get(`/v1/deals/${body._id}/submission-details`);
 
@@ -75,7 +75,7 @@ describe('/v1/deals/:id/submission-details', () => {
     });
 
     it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
-      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}/submission-details`);
 
@@ -83,13 +83,13 @@ describe('/v1/deals/:id/submission-details', () => {
     });
 
     it('404s requests for unkonwn ids', async () => {
-      const { status } = await as(aBarclaysMaker).get(`/v1/deals/123456789012/submission-details`);
+      const { status } = await as(aBarclaysMaker).get('/v1/deals/123456789012/submission-details');
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(aSuperuser).get(`/v1/deals/${body._id}/submission-details`);
 
@@ -103,7 +103,7 @@ describe('/v1/deals/:id/submission-details', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${newId}/submission-details`);
 
       expect(status).toEqual(200);
-      expect(body.data).toEqual({ status: 'Not Started'});
+      expect(body.data).toEqual({ status: 'Not Started' });
     });
   });
 
@@ -124,14 +124,14 @@ describe('/v1/deals/:id/submission-details', () => {
     });
 
     it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
-      const {body} = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
       const statusUpdate = {
         comments: 'Flee!',
         status: 'Abandoned Deal',
       };
 
-      const {status} = await as(aBarclaysMaker).put(statusUpdate).to(`/v1/deals/${body._id}/submission-details`);
+      const { status } = await as(aBarclaysMaker).put(statusUpdate).to(`/v1/deals/${body._id}/submission-details`);
 
       expect(status).toEqual(401);
     });
@@ -146,12 +146,12 @@ describe('/v1/deals/:id/submission-details', () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const submissionDetails = {
-        supplierCompaniesHouseRegistrationNumber: '12345678'
+        supplierCompaniesHouseRegistrationNumber: '12345678',
       };
       const expectedResponse = {
         ...submissionDetails,
         status: 'Incomplete',
-      }
+      };
 
       const { status, body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
 
@@ -163,12 +163,12 @@ describe('/v1/deals/:id/submission-details', () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const submissionDetails = {
-        supplierCompaniesHouseRegistrationNumber: '12345678'
+        supplierCompaniesHouseRegistrationNumber: '12345678',
       };
       const expectedResponse = {
         ...submissionDetails,
         status: 'Incomplete',
-      }
+      };
 
       await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
 
@@ -183,7 +183,7 @@ describe('/v1/deals/:id/submission-details', () => {
       const createdDeal = postResult.body;
 
       const submissionDetails = {
-        supplierCompaniesHouseRegistrationNumber: '12345678'
+        supplierCompaniesHouseRegistrationNumber: '12345678',
       };
 
       await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
@@ -195,6 +195,61 @@ describe('/v1/deals/:id/submission-details', () => {
       expect(body.deal.details.dateOfLastAction).not.toEqual(createdDeal.details.dateOfLastAction);
     });
 
-  });
+    it('updates the deal supply contract value 123,456.78 with a valid currency value', async () => {
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
 
+      const submissionDetails = {
+        supplyContractValue: '123,456.78',
+      };
+      const expectedResponse = {
+        supplyContractValue: '123456.78',
+        status: 'Incomplete',
+      };
+      await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+
+      expect(status).toEqual(200);
+      expect(body.deal.submissionDetails).toEqual(expectedResponse);
+    });
+
+    it('updates the deal supply contract value 123,456 with a valid currency value', async () => {
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+
+      const submissionDetails = {
+        supplyContractValue: '123,456',
+      };
+      const expectedResponse = {
+        supplyContractValue: '123456',
+        status: 'Incomplete',
+      };
+      await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+
+      expect(status).toEqual(200);
+      expect(body.deal.submissionDetails).toEqual(expectedResponse);
+    });
+
+    it('it doesn\'t update an invalid currency format', async () => {
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+
+      const submissionDetails = {
+        supplyContractValue: '123,456.7',
+      };
+      const expectedResponse = {
+        supplyContractValue: '123,456.7',
+        status: 'Incomplete',
+      };
+      await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+
+      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+
+      expect(status).toEqual(200);
+      expect(body.deal.submissionDetails).toEqual(expectedResponse);
+    });
+  });
 });
