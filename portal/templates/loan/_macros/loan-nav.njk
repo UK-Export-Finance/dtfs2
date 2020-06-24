@@ -1,6 +1,6 @@
 {% import '_macros/progress-nav.njk' as progressNav %}
 
-{% macro render(completedForms, current, contractId, childId) %}  
+{% macro render(completedForms, current, contractId, childId, loanStatus) %}  
 
   <h1 class="govuk-heading-l">Loan</h1>
 
@@ -53,7 +53,6 @@
       {{ progressNav.navItem(
           title = 'Preview',
           id = 'preview',
-          completed = false,
           href = 'loan',
           childId = childId,
           childHref = 'preview',
