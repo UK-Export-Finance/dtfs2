@@ -46,6 +46,7 @@
     "govuk-frontend": "3.6.0",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
+    "imask": "^6.0.5",
     "moment": "2.24.0",
     "morgan": "1.10.0",
     "multer": "1.4.2",

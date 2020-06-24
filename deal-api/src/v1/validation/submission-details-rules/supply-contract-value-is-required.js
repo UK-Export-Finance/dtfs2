@@ -1,5 +1,6 @@
 const { orderNumber } = require('../../../utils/error-list-order-number');
 const { hasValue } = require('../../../utils/string');
+const { sanitizeCurrency } = require('../../../utils/number');
 
 module.exports = (submissionDetails, errorList) => {
   const newErrorList = { ...errorList };
@@ -7,6 +8,15 @@ module.exports = (submissionDetails, errorList) => {
     newErrorList.supplyContractValue = {
       order: orderNumber(newErrorList),
       text: 'Supply Contract value is required',
+    };
+    return newErrorList;
+  }
+
+  const { isCurrency } = sanitizeCurrency(submissionDetails.supplyContractValue);
+  if (!isCurrency) {
+    newErrorList.supplyContractValue = {
+      order: orderNumber(newErrorList),
+      text: 'Supply Contract value must be in currency format',
     };
   }
 
