@@ -395,15 +395,28 @@ describe('/v1/deals/:id/status', () => {
 
       describe('when a deal contains loans with an `Unconditional` facilityStage that do NOT have a requestedCoverStartDate', () => {
         it('should add todays date to such loans', async () => {
-          const unconditionalLoan = () => ({
-            facilityStage: 'Unconditional',
-            bankReferenceNumber: 'test',
-            ...coverEndDate(),
-          });
-
           const conditionalLoan = () => ({
             facilityStage: 'Conditional',
-            ukefGuaranteeInMonths: '24',
+            ukefGuaranteeInMonths: '12',
+            facilityValue: '100',
+            currencySameAsSupplyContractCurrency: 'true',
+            interestMarginFee: '10',
+            coveredPercentage: '40',
+            premiumType: 'At maturity',
+            dayCountBasis: '365',
+          });
+
+          const unconditionalLoan = () => ({
+            facilityStage: 'Unconditional',
+            facilityValue: '100',
+            bankReferenceNumber: '1234',
+            ...coverEndDate(),
+            disbursementAmount: '5',
+            currencySameAsSupplyContractCurrency: 'true',
+            interestMarginFee: '10',
+            coveredPercentage: '40',
+            premiumType: 'At maturity',
+            dayCountBasis: '365',
           });
 
           const newDealWithLoans = {
@@ -424,18 +437,18 @@ describe('/v1/deals/:id/status', () => {
 
           expect(body.deal.loanTransactions.items[0]).toEqual({
             ...newDealWithLoans.loanTransactions.items[0],
-            // status: 'Completed',
+            status: 'Completed',
           });
 
           expect(body.deal.loanTransactions.items[1]).toEqual({
             ...newDealWithLoans.loanTransactions.items[1],
-            // status: 'Completed',
+            status: 'Completed',
             ...expectedRequestedCoverStartDate(),
           });
 
           expect(body.deal.loanTransactions.items[2]).toEqual({
             ...newDealWithLoans.loanTransactions.items[2],
-            // status: 'Completed',
+            status: 'Completed',
             ...expectedRequestedCoverStartDate(),
           });
         });
