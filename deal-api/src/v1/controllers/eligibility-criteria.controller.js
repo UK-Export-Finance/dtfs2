@@ -39,7 +39,7 @@ exports.update = async (req, res) => {
       const submissionType = criteriaAllTrue ? CONSTANTS.DEAL.SUBMISSION_TYPE.AIN : submissionTypeComplete;
 
       const validationErrors = getEligibilityErrors(updatedCriteria);
-      const documentationErrors = getDocumentationErrors(submissionType, updatedCriteria, dealFiles);
+      const documentationErrors = getDocumentationErrors(submissionType, dealFiles);
 
       // Special case for criteria 11 - must add agents name & address if criteria 11 === false
       const criteria11 = updatedCriteria.find((c) => c.id === 11);

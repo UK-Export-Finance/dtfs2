@@ -27,43 +27,6 @@ context('Eligibility Documentation', () => {
     eligibilityDocumentation.fieldErrorMessage('exporterQuestionnaire').should('have.length', 1);
   });
 
-  it('should display validation error for finance fields if EC12 is false', () => {
-    eligibilityCriteria.eligibilityCriteriaFalse(12).click();
-    eligibilityCriteria.nextPageButton().click();
-
-    eligibilityDocumentation.saveButton().click();
-
-    eligibilityDocumentation.fieldErrorMessage('auditedFinancialStatements').should('have.length', 1);
-    eligibilityDocumentation.fieldErrorMessage('yearToDateManagement').should('have.length', 1);
-    eligibilityDocumentation.fieldErrorMessage('financialForecasts').should('have.length', 1);
-    eligibilityDocumentation.fieldErrorMessage('financialInformationCommentary').should('have.length', 1);
-  });
-
-  it('should display validation error for finance fields if EC13 is false', () => {
-    eligibilityCriteria.eligibilityCriteriaFalse(13).click();
-    eligibilityCriteria.nextPageButton().click();
-
-    eligibilityDocumentation.saveButton().click();
-
-    eligibilityDocumentation.fieldErrorMessage('auditedFinancialStatements').should('have.length', 1);
-    eligibilityDocumentation.fieldErrorMessage('yearToDateManagement').should('have.length', 1);
-    eligibilityDocumentation.fieldErrorMessage('financialForecasts').should('have.length', 1);
-    eligibilityDocumentation.fieldErrorMessage('financialInformationCommentary').should('have.length', 1);
-  });
-
-  it('should not display validation error for finance fields if both EC12 & EC13 are true', () => {
-    eligibilityCriteria.eligibilityCriteriaTrue(12).click();
-    eligibilityCriteria.eligibilityCriteriaTrue(13).click();
-    eligibilityCriteria.nextPageButton().click();
-
-    eligibilityDocumentation.saveButton().click();
-
-    eligibilityDocumentation.fieldErrorMessage('auditedFinancialStatements').should('have.length', 0);
-    eligibilityDocumentation.fieldErrorMessage('yearToDateManagement').should('have.length', 0);
-    eligibilityDocumentation.fieldErrorMessage('financialForecasts').should('have.length', 0);
-    eligibilityDocumentation.fieldErrorMessage('financialInformationCommentary').should('have.length', 0);
-  });
-
   it('should make exporter questionnaire mandatory for non AIN', () => {
     eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().click({ multiple: true });
     eligibilityCriteria.eligibilityCriteriaFalse(14).click();
