@@ -55,6 +55,8 @@ const deal = {
         feeType: 'In advance',
         feeFrequency: 'Quarterly',
         dayCountBasis: '360',
+        guaranteeFeePayableByBank: '9.000',
+        ukefExposure: '100',
       },
       {
         _id: '1000102',
@@ -87,6 +89,8 @@ const deal = {
         feeType: 'In arrear',
         feeFrequency: 'Monthly',
         dayCountBasis: '360',
+        guaranteeFeePayableByBank: '9.000',
+        ukefExposure: '100',
       },
     ],
   },

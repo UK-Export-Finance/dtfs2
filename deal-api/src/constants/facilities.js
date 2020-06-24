@@ -13,7 +13,7 @@ const FEE_FREQUENCY = {
 
 const DAY_COUNT_BASIS = {
   360: '360',
-  300: '300',
+  365: '365',
 };
 
 const STAGE = {

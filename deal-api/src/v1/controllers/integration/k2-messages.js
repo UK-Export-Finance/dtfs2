@@ -13,6 +13,7 @@ const {
   businessRules,
   k2Map,
   dateHelpers,
+  numberHelpers,
   getApplicationGroup,
   getActionCodeAndName,
 } = require('./helpers');
@@ -144,9 +145,9 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_conversion_rate_deal(bond.conversionRate)
         .BSS_conversion_date_deal(dateHelpers.formatDate(bond['conversionRateDate-day'], bond['conversionRateDate-month'], bond['conversionRateDate-year']))
         .BSS_fee_rate(bond.riskMarginFee)
-        .BSS_fee_perc('10') // TODO - drupal field: guarantee_fee_
+        .BSS_fee_perc(bond.guaranteeFeePayableByBank)
         .BSS_guarantee_perc(bond.coveredPercentage)
-        .BSS_max_liability('10') // TODO (UKEF_Exposure) - drupal field: maximum_liability
+        .BSS_max_liability(bond.ukefExposure)
         .BSS_min_quarterly_fee(bond.minimumRiskMarginFee)
         .BSS_premium_type(k2Map.FACILITIES.FEE_TYPE[bond.feeType])
         .BSS_cover_start_date(dateHelpers.formatDate(bond['requestedCoverStartDate-day'], bond['requestedCoverStartDate-month'], bond['requestedCoverStartDate-year']))
@@ -200,11 +201,14 @@ const generateTypeA = async (deal, fromStatus) => {
   const isValidXml = parsedXml.validate(parsedXsd);
 
   if (!isValidXml) {
+    console.log({ typeAxmlStr });
+    const errorList = parsedXml.validationErrors.map((ve) => { console.log(ve.toString()); return { text: ve.message }; });
+
     return {
       typeAxmlStr,
       filename,
       errorCount: parsedXml.validationErrors.length,
-      errors: parsedXml.validationErrors,
+      errorList,
     };
   }
 
@@ -214,13 +218,16 @@ const generateTypeA = async (deal, fromStatus) => {
 
 const createTypeA = async (deal, fromStatus) => {
   const {
-    typeAxmlStr, filename, errorCount,
+    typeAxmlStr, filename, errorCount, errorList,
   } = await generateTypeA(deal, fromStatus);
 
 
   // TODO - Decide what to do with invalid typeA xml
   if (errorCount) {
-    //   return typeAxmlStr;
+    return {
+      errorCount,
+      errorList,
+    };
   }
 
   const upload = {
