@@ -1,7 +1,7 @@
 
 const CONSTANTS = require('../../constants');
 
-exports.getDocumentationErrors = (submissionType, criteria = [], dealFiles, uploadErrors = []) => {
+exports.getDocumentationErrors = (submissionType, dealFiles, uploadErrors = []) => {
   const errorList = {};
   const uploadErrorList = {};
 
@@ -45,20 +45,9 @@ exports.getDocumentationErrors = (submissionType, criteria = [], dealFiles, uplo
   errorList.exporterQuestionnaire = generateError('exporterQuestionnaire', 'Manual Inclusion Questionnaire', 'is required.', exporterQuestionnaireMandatory);
   uploadErrorList.exporterQuestionnaire = generateUploadErrors('exporterQuestionnaire', 'Manual Inclusion Questionnaire');
 
-  // When the user’s answer to EC 12 or 13 is false,
-  // user must upload the Manual Inclusion Questionnaire and all the  financial supporting documentation
-  const financialMandatory = Boolean(criteria.find((c) => [12, 13].includes(c.id) && !c.answer));
-
-  errorList.auditedFinancialStatements = generateError('auditedFinancialStatements', 'Financial statements for the past 3 years', 'are required', financialMandatory);
   uploadErrorList.auditedFinancialStatements = generateUploadErrors('auditedFinancialStatements', 'Financial statements for the past 3 years');
-
-  errorList.yearToDateManagement = generateError('yearToDateManagement', 'Year to date management accounts', 'are required.', financialMandatory);
   uploadErrorList.yearToDateManagement = generateUploadErrors('yearToDateManagement', 'Year to date management accounts');
-
-  errorList.financialForecasts = generateError('financialForecasts', 'Financial forecasts for the next 3 years', 'are required.', financialMandatory);
   uploadErrorList.financialForecasts = generateUploadErrors('financialForecasts', 'Financial forecasts for the next 3 years');
-
-  errorList.financialInformationCommentary = generateError('financialInformationCommentary', 'Brief commentary on the financial information', '', financialMandatory);
   uploadErrorList.financialInformationCommentary = generateUploadErrors('financialInformationCommentary', 'Brief commentary on the financial information');
 
   uploadErrorList.corporateStructure = generateUploadErrors('corporateStructure', 'Corporate structure diagram');
