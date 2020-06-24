@@ -142,11 +142,24 @@ router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN]), asyn
 router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
+  const {
+    inAdvanceFrequency,
+    inArrearFrequency,
+  } = req.body;
+
+  const postBody = {
+    ...req.body,
+    premiumFrequency: inAdvanceFrequency || inArrearFrequency,
+  };
+
+  delete postBody.inAdvanceFrequency;
+  delete postBody.inArrearFrequency;
+
   await postToApi(
     api.updateDealLoan(
       dealId,
       loanId,
-      req.body,
+      postBody,
       userToken,
     ),
     errorHref,
@@ -204,7 +217,20 @@ router.get('/contract/:_id/loan/:loanId/preview', provide([LOAN]), async (req, r
 router.post('/contract/:_id/loan/:loanId/save-go-back', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  const modifiedBody = handleBankReferenceNumberField(req.body);
+  let modifiedBody = handleBankReferenceNumberField(req.body);
+
+  const {
+    inAdvanceFrequency,
+    inArrearFrequency,
+  } = modifiedBody;
+
+  modifiedBody = {
+    ...modifiedBody,
+    premiumFrequency: inAdvanceFrequency || inArrearFrequency,
+  };
+
+  delete modifiedBody.inAdvanceFrequency;
+  delete modifiedBody.inArrearFrequency;
 
   await postToApi(
     api.updateDealLoan(
