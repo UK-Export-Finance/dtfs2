@@ -46,7 +46,7 @@ const financialDetails = {
 
 const feeDetails = () => {
   pages.bondFeeDetails.feeTypeInAdvanceInput().click();
-  pages.bondFeeDetails.feeTypeInAdvanceFeeFrequencyAnnuallyInput().click();
+  pages.bondFeeDetails.feeTypeInAdvanceFrequencyAnnuallyInput().click();
   pages.bondFeeDetails.dayCountBasis365Input().click();
 };
 

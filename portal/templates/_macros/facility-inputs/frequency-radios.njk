@@ -3,8 +3,8 @@
 {% macro render(id, label, checkedValue, errorObj) %}
 
   {{ govukRadios({
-    idPrefix: id + "FeeFrequency",
-    name: id + "FeeFrequency",
+    idPrefix: id + "Frequency",
+    name: id + "Frequency",
     fieldset: {
       legend: {
         text: label
@@ -31,14 +31,14 @@
         text: "Annually",
         checked: checkedValue === "Annually",
         attributes: {
-          "data-cy": id + "-fee-frequency-annually"
+          "data-cy": id + "-frequency-annually"
         }
       }
     ],
     errorMessage: errorObj and {
       text: errorObj.text,
       attributes: {
-        "data-cy": "fee-frequency-error-message"
+        "data-cy": "frequency-error-message"
       }
     }
   }) }}

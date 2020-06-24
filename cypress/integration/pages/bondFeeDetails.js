@@ -2,9 +2,9 @@ const page = {
   feeTypeInputErrorMessage: () => cy.get('[data-cy="fee-type-error-message"]'),
 
   feeTypeInAdvanceInput: () => cy.get('[data-cy="fee-type-in-advance"]'),
-  feeTypeInAdvanceFeeFrequencyAnnuallyInput: () => cy.get('[data-cy="inAdvance-fee-frequency-annually"]'),
+  feeTypeInAdvanceFrequencyAnnuallyInput: () => cy.get('[data-cy="inAdvance-frequency-annually"]'),
 
-  feeFrequencyInputErrorMessage: () => cy.get('[data-cy="fee-frequency-error-message"]'),
+  frequencyInputErrorMessage: () => cy.get('[data-cy="frequency-error-message"]'),
 
   feeTypeAtMaturityInput: () => cy.get('[data-cy="fee-type-at-maturity"]'),
 

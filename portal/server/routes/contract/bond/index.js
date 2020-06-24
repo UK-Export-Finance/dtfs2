@@ -143,17 +143,17 @@ router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
   const {
-    inAdvanceFeeFrequency,
-    inArrearFeeFrequency,
+    inAdvanceFrequency,
+    inArrearFrequency,
   } = req.body;
 
   const postBody = {
     ...req.body,
-    feeFrequency: inAdvanceFeeFrequency || inArrearFeeFrequency,
+    feeFrequency: inAdvanceFrequency || inArrearFrequency,
   };
 
-  delete postBody.inAdvanceFeeFrequency;
-  delete postBody.inArrearFeeFrequency;
+  delete postBody.inAdvanceFrequency;
+  delete postBody.inArrearFrequency;
 
   await postToApi(
     api.updateBond(
@@ -224,18 +224,17 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
   const {
-    inAdvanceFeeFrequency,
-    inArrearFeeFrequency,
+    inAdvanceFrequency,
+    inArrearFrequency,
   } = req.body;
 
-  const postBody = req.body;
+  const postBody = {
+    ...req.body,
+    feeFrequency: inAdvanceFrequency || inArrearFrequency,
+  };
 
-  if (inAdvanceFeeFrequency || inArrearFeeFrequency) {
-    postBody.feeFrequency = inAdvanceFeeFrequency || inArrearFeeFrequency;
-
-    delete postBody.inAdvanceFeeFrequency;
-    delete postBody.inArrearFeeFrequency;
-  }
+  delete postBody.inAdvanceFrequency;
+  delete postBody.inArrearFrequency;
 
   await postToApi(
     api.updateBond(
