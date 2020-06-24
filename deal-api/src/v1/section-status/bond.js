@@ -1,3 +1,5 @@
+// TODO: be DRY, this is very similar to addAccurateStatusesToBonds
+
 const bondValidationErrors = require('../validation/bond');
 
 const bondStatus = (bondErrors) => {

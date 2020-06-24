@@ -1,18 +1,24 @@
 import dealFormsCompleted from './dealFormsCompleted';
 
-const completeBonds = {
+const completeFacilities = {
   items: [
     { _id: '12345678911', status: 'Completed' },
     { _id: '12345678910', status: 'Completed' },
   ],
 };
 
-const incompleteBonds = {
+const incompleteFacilities = {
   items: [
     { _id: '12345678911', status: 'Completed' },
     { _id: '12345678910', status: 'Incomplete' },
   ],
 };
+
+const completeBonds = completeFacilities;
+const incompleteBonds = incompleteFacilities;
+
+const completeLoans = completeFacilities;
+const incompleteLoans = incompleteFacilities;
 
 const incompleteSubmissionDetails = { status: 'not completed' };
 const completeSubmissionDetails = { status: 'Completed' };
@@ -35,6 +41,7 @@ describe('dealFormsCompleted', () => {
     const deal = {
       submissionDetails: incompleteSubmissionDetails,
       bondTransactions: completeBonds,
+      loanTransactions: completeLoans,
       eligibility: completeEligibility,
     };
 
@@ -61,19 +68,20 @@ describe('dealFormsCompleted', () => {
     expect(dealFormsCompleted(deal)).toEqual(false);
   });
 
-  xit('should return false if a deal has any loan who\'s loan.status is NOT `Completed`', () => {
-    // const deal = {
-    //   bondTransactions: incompleteBonds,
-    //   submissionDetails: completeSubmissionDetails,
-    //   eligibility: completeEligibility,
-    // };
-    //
-    // expect( dealFormsCompleted(deal) ).toEqual(false);
+  it('should return false if a deal has any loan who\'s loan.status is NOT `Completed`', () => {
+    const deal = {
+      bondTransactions: incompleteLoans,
+      submissionDetails: completeSubmissionDetails,
+      eligibility: completeEligibility,
+    };
+
+    expect(dealFormsCompleted(deal)).toEqual(false);
   });
 
   it('should return true if all sections are in status `Completed`', () => {
     const deal = {
       bondTransactions: completeBonds,
+      loanTransactions: completeLoans,
       submissionDetails: completeSubmissionDetails,
       eligibility: completeEligibility,
     };

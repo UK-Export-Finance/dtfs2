@@ -12,6 +12,18 @@ const hasCompletedBonds = (deal) => {
   return false;
 };
 
+const hasCompletedLoans = (deal) => {
+  const allLoans = deal.loanTransactions && deal.loanTransactions.items;
+  const totalLoans = allLoans.length;
+  const completed = allLoans.filter((l) => l.status === 'Completed');
+
+  if (totalLoans >= 1 && totalLoans === completed.length) {
+    return true;
+  }
+
+  return false;
+};
+
 const submissionDetailsComplete = (deal) => deal.submissionDetails && deal.submissionDetails.status === 'Completed';
 
 const eligibilityComplete = (deal) => deal.eligibility && deal.eligibility.status === 'Completed';
@@ -19,6 +31,7 @@ const eligibilityComplete = (deal) => deal.eligibility && deal.eligibility.statu
 const dealFormsCompleted = (deal) =>
   eligibilityComplete(deal)
   && hasCompletedBonds(deal)
+  && hasCompletedLoans(deal)
   && submissionDetailsComplete(deal);
 
 export default dealFormsCompleted;

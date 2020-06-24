@@ -15,6 +15,7 @@ describe('completedLoanForms', () => {
     expect(result).toEqual({
       loanGuaranteeDetails: isCompleted(mockValidationErrors, FIELDS.GUARANTEE_DETAILS),
       loanFinancialDetails: isCompleted(mockValidationErrors, FIELDS.FINANCIAL_DETAILS),
+      loanDatesRepayments: isCompleted(mockValidationErrors, FIELDS.DATES_REPAYMENTS),
     });
   });
 });

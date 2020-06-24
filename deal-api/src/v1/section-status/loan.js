@@ -9,8 +9,8 @@ const loanStatus = (loanErrors) => {
 
 const multipleLoanStatus = (loanTransactions) => {
   if (loanTransactions.items.length) {
-    loanTransactions.items.forEach((b) => {
-      const loan = b;
+    loanTransactions.items.forEach((l) => {
+      const loan = l;
       const validationErrors = loanValidationErrors(loan);
       loan.status = loanStatus(validationErrors);
     });
