@@ -1,3 +1,5 @@
+// TODO: be DRY, this is very similar to section-status.
+
 const bondStatus = (bondErrors) => {
   if (!bondErrors || bondErrors.count === 0) {
     return 'Completed';

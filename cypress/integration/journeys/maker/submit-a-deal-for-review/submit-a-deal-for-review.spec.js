@@ -7,6 +7,7 @@ const maker1 = { username: 'MAKER', password: 'MAKER' };
 
 // test data we want to set up + work with..
 const dealWithIncompleteBonds = require('./dealWithIncompleteBonds.json');
+const dealWithIncompleteLoans = require('./dealWithIncompleteLoans.json');
 const dealWithIncompleteAbout = require('./dealWithIncompleteAbout.json');
 const dealWithIncompleteEligibility = require('./dealWithIncompleteEligibility.json');
 const dealReadyToSubmitForReview = require('./dealReadyToSubmitForReview');
@@ -28,11 +29,17 @@ context('A maker selects to submit a contract for review from the view-contract 
     cy.insertOneDeal(dealWithIncompleteBonds, { ...maker1 })
       .then((insertedDeal) => deals.dealWithIncompleteBonds = insertedDeal);
 
+    cy.insertOneDeal(dealWithIncompleteLoans, { ...maker1 })
+      .then((insertedDeal) => deals.dealWithIncompleteLoans = insertedDeal);
+
     cy.insertOneDeal(dealWithIncompleteAbout, { ...maker1 })
       .then((insertedDeal) => deals.dealWithIncompleteAbout = insertedDeal);
 
     cy.insertOneDeal(dealWithIncompleteEligibility, { ...maker1 })
       .then((insertedDeal) => deals.dealWithIncompleteEligibility = insertedDeal);
+
+    cy.insertOneDeal(dealReadyToSubmitForReview, { ...maker1 })
+      .then((insertedDeal) => deals.dealReadyToSubmitForReview = insertedDeal);
 
     cy.insertOneDeal(dealReadyToSubmitForReview, { ...maker1 })
       .then((insertedDeal) => deals.dealReadyToSubmitForReview = insertedDeal);
@@ -45,7 +52,6 @@ context('A maker selects to submit a contract for review from the view-contract 
   });
 
   describe('When a deal does NOT have Eligibility with `Completed` status', () => {
-
     it('User cannot proceed to submit the deal for review', () => {
       cy.login({ ...maker1 });
       contract.visit(deals.dealWithIncompleteEligibility);
@@ -61,6 +67,14 @@ context('A maker selects to submit a contract for review from the view-contract 
     });
   });
 
+  describe('When a deal has Loans that are NOT `Completed`', () => {
+    it('User cannot proceed to submit the deal for review', () => {
+      cy.login({ ...maker1 });
+      contract.visit(deals.dealWithIncompleteLoans);
+      contract.proceedToReview().should('be.disabled');
+    });
+  });
+
   describe('When a deal has About-supply-contract that is NOT `Completed`', () => {
     it('User cannot proceed to submit the deal for review', () => {
       cy.login({ ...maker1 });
@@ -69,7 +83,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     });
   });
 
-  describe('when a deal has Completed Eligibility and Bonds', () => {
+  describe('when a deal has Completed Eligibility, Bonds and Loans', () => {
     it('User can proceed to submit the deal for review', () => {
       const deal = deals.dealReadyToSubmitForReview;
 

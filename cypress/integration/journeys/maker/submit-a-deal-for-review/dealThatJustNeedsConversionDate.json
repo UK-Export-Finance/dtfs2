@@ -103,6 +103,15 @@
       {
         "_id": "1234567891",
         "facilityStage": "Unconditional",
+        "bankReferenceNumber": "123",
+        "facilityValue": "123",
+        "disbursementAmount": "12",
+        "ukefGuaranteeInMonths": "12",
+        "currencySameAsSupplyContractCurrency": "true",
+        "interestMarginFee": "5",
+        "coveredPercentage": "40",
+        "premiumType": "At maturity",
+        "dayCountBasis": "365"
       }
     ]
   }
