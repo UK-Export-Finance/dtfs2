@@ -30,10 +30,20 @@ const roundNumber = (value, digits) => {
   return modifiedValue;
 };
 
+const sanitizeCurrency = (originalValue = '') => {
+  const sanitizedValue = originalValue.replace(/[,]/g, '');
+  return {
+    originalValue,
+    sanitizedValue,
+    isCurrency: Number(sanitizedValue).toFixed(2) === sanitizedValue,
+  };
+};
+
 module.exports = {
   isNumeric,
   isInteger,
   decimalsCount,
   stripDecimals,
   roundNumber,
+  sanitizeCurrency,
 };

@@ -33,12 +33,13 @@
       id: "supplyContractValue",
       name: "supplyContractValue",
       value: deal.submissionDetails["supplyContractValue"],
-      classes: "govuk-!-width-one-half input--numeric-float",
+      classes: "govuk-!-width-one-half",
       attributes: {
         size: "60",
         maxlength: "255",
         placeholder: "0.00",
-        "data-cy": "supplyContractValue"
+        "data-cy": "supplyContractValue",
+        "data-mask": "currency"
       },
       errorMessage: validationErrors.errorList["supplyContractValue"]
     }) }}
