@@ -57,7 +57,7 @@ context('Loan Guarantee Details', () => {
   });
 
   describe('when submitting an empty form', () => {
-    it('it should progress to `Loan Financial Details` page and after proceeding to `Loan Preview` page and returning to `Loan Guarantee Details` page, should render Facility stage validation error', () => {
+    it('it should progress to `Loan Financial Details` page and after proceeding to `Loan Preview` page and when returning to `Loan Guarantee Details` page, should render Facility stage validation error', () => {
       cy.loginGoToDealPage(user, deal);
       pages.contract.addLoanButton().click();
 
