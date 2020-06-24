@@ -6,11 +6,13 @@ import {
   postToApi,
   errorHref,
   mapCurrencies,
+  generateErrorSummary,
 } from '../../../helpers';
 import {
   loanGuaranteeDetailsValidationErrors,
   loanFinancialDetailsValidationErrors,
   loanDatesRepaymentsValidationErrors,
+  loanPreviewValidationErrors,
 } from './pageSpecificValidationErrors';
 import completedLoanForms from './completedForms';
 
@@ -179,11 +181,21 @@ router.get('/contract/:_id/loan/:loanId/preview', provide([LOAN]), async (req, r
     ),
   );
 
+  // TODO: make similar to other routes, using page specific function.
+  let formattedValidationErrors;
+  if (validationErrors.count !== 0) {
+    formattedValidationErrors = generateErrorSummary(
+      loanPreviewValidationErrors(validationErrors, dealId, loanId),
+      errorHref,
+    );
+  }
+
   const completedForms = completedLoanForms(validationErrors);
 
   return res.render('loan/loan-preview.njk', {
     dealId,
     loan,
+    validationErrors: formattedValidationErrors,
     completedForms,
     user: req.session.user,
   });
