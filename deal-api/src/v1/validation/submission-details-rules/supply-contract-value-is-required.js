@@ -13,6 +13,7 @@ module.exports = (submissionDetails, errorList) => {
   }
 
   const { isCurrency } = sanitizeCurrency(submissionDetails.supplyContractValue);
+
   if (!isCurrency) {
     newErrorList.supplyContractValue = {
       order: orderNumber(newErrorList),

@@ -67,6 +67,7 @@ exports.update = (req, res) => {
     }
 
     const sanitizedSupplyContractValue = sanitizeCurrency(submissionDetails.supplyContractValue);
+
     if (sanitizedSupplyContractValue.isCurrency) {
       submissionDetails.supplyContractValue = sanitizedSupplyContractValue.sanitizedValue;
     }

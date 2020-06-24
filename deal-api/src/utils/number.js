@@ -3,6 +3,8 @@ const isNumeric = (value) =>
 
 const isInteger = (value) => Number.isInteger(value);
 
+const isDecimalPlaces = (value, decimalPlaces = 2) => Number(value).toFixed(decimalPlaces) === value;
+
 const decimalsCount = (numb) => {
   const decimals = numb.toString().split('.')[1];
   if (decimals) {
@@ -32,16 +34,18 @@ const roundNumber = (value, digits) => {
 
 const sanitizeCurrency = (originalValue = '') => {
   const sanitizedValue = originalValue.replace(/[,]/g, '');
+
   return {
     originalValue,
     sanitizedValue,
-    isCurrency: Number(sanitizedValue).toFixed(2) === sanitizedValue,
+    isCurrency: sanitizedValue !== '' && (isInteger(Number(sanitizedValue)) || isDecimalPlaces(sanitizedValue)),
   };
 };
 
 module.exports = {
   isNumeric,
   isInteger,
+  isDecimalPlaces,
   decimalsCount,
   stripDecimals,
   roundNumber,
