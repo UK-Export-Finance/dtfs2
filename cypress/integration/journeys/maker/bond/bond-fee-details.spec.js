@@ -68,7 +68,7 @@ context('Bond Fee Details', () => {
 
       partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
 
-      pages.bondFeeDetails.frequencyInputErrorMessage().should('be.visible');
+      pages.bondFeeDetails.feeFrequencyInputErrorMessage().should('be.visible');
       pages.bondFeeDetails.dayCountBasisInputErrorMessage().should('be.visible');
     });
   });

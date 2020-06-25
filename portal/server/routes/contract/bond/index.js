@@ -143,17 +143,31 @@ router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
   const {
-    inAdvanceFrequency,
-    inArrearFrequency,
+    feeFrequency: existingFeeFrequency,
+    inAdvanceFeeFrequency,
+    inArrearFeeFrequency,
   } = req.body;
+
+  // make sure we get a changed feeFrequency
+  const feeFrequencyValue = () => {
+    if (inAdvanceFeeFrequency !== existingFeeFrequency) {
+      return inAdvanceFeeFrequency;
+    }
+
+    if (inArrearFeeFrequency !== existingFeeFrequency) {
+      return inArrearFeeFrequency;
+    }
+
+    return existingFeeFrequency;
+  };
 
   const postBody = {
     ...req.body,
-    feeFrequency: inAdvanceFrequency || inArrearFrequency,
+    feeFrequency: feeFrequencyValue(),
   };
 
-  delete postBody.inAdvanceFrequency;
-  delete postBody.inArrearFrequency;
+  delete postBody.inAdvanceFeeFrequency;
+  delete postBody.inArrearFeeFrequency;
 
   await postToApi(
     api.updateBond(
@@ -224,17 +238,31 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
   const {
-    inAdvanceFrequency,
-    inArrearFrequency,
+    feeFrequency: existingFeeFrequency,
+    inAdvanceFeeFrequency,
+    inArrearFeeFrequency,
   } = req.body;
+
+  // make sure we get a changed feeFrequency
+  const feeFrequencyValue = () => {
+    if (inAdvanceFeeFrequency !== existingFeeFrequency) {
+      return inAdvanceFeeFrequency;
+    }
+
+    if (inArrearFeeFrequency !== existingFeeFrequency) {
+      return inArrearFeeFrequency;
+    }
+
+    return existingFeeFrequency;
+  };
 
   const postBody = {
     ...req.body,
-    feeFrequency: inAdvanceFrequency || inArrearFrequency,
+    feeFrequency: feeFrequencyValue(),
   };
 
-  delete postBody.inAdvanceFrequency;
-  delete postBody.inArrearFrequency;
+  delete postBody.inAdvanceFeeFrequency;
+  delete postBody.inArrearFeeFrequency;
 
   await postToApi(
     api.updateBond(

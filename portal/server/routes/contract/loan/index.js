@@ -143,23 +143,37 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => 
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
   const {
-    inAdvanceFrequency,
-    inArrearFrequency,
+    premiumFrequency: existingPremiumFrequency,
+    inAdvancePremiumFrequency,
+    inArrearPremiumFrequency,
   } = req.body;
+
+  // make sure we get a changed premiumFrequency
+  const premiumFrequencyValue = () => {
+    if (inAdvancePremiumFrequency !== existingPremiumFrequency) {
+      return inAdvancePremiumFrequency;
+    }
+
+    if (inArrearPremiumFrequency !== existingPremiumFrequency) {
+      return inArrearPremiumFrequency;
+    }
+
+    return existingPremiumFrequency;
+  };
 
   const postBody = {
     ...req.body,
-    premiumFrequency: inAdvanceFrequency || inArrearFrequency,
+    premiumFrequency: premiumFrequencyValue(),
   };
 
-  delete postBody.inAdvanceFrequency;
-  delete postBody.inArrearFrequency;
+  delete postBody.inAdvancePremiumFrequency;
+  delete postBody.inArrearPremiumFrequency;
 
   await postToApi(
     api.updateDealLoan(
       dealId,
       loanId,
-      postBody,
+      req.body,
       userToken,
     ),
     errorHref,
@@ -217,20 +231,31 @@ router.get('/contract/:_id/loan/:loanId/preview', provide([LOAN]), async (req, r
 router.post('/contract/:_id/loan/:loanId/save-go-back', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  let modifiedBody = handleBankReferenceNumberField(req.body);
+  const modifiedBody = handleBankReferenceNumberField(req.body);
 
   const {
-    inAdvanceFrequency,
-    inArrearFrequency,
+    premiumFrequency: existingPremiumFrequency,
+    inAdvancePremiumFrequency,
+    inArrearPremiumFrequency,
   } = modifiedBody;
 
-  modifiedBody = {
-    ...modifiedBody,
-    premiumFrequency: inAdvanceFrequency || inArrearFrequency,
+  // make sure we get a changed premiumFrequency
+  const premiumFrequencyValue = () => {
+    if (inAdvancePremiumFrequency !== existingPremiumFrequency) {
+      return inAdvancePremiumFrequency;
+    }
+
+    if (inArrearPremiumFrequency !== existingPremiumFrequency) {
+      return inArrearPremiumFrequency;
+    }
+
+    return existingPremiumFrequency;
   };
 
-  delete modifiedBody.inAdvanceFrequency;
-  delete modifiedBody.inArrearFrequency;
+  modifiedBody.premiumFrequency = premiumFrequencyValue();
+
+  delete modifiedBody.inAdvancePremiumFrequency;
+  delete modifiedBody.inArrearPremiumFrequency;
 
   await postToApi(
     api.updateDealLoan(
