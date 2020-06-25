@@ -232,7 +232,7 @@ const deleteUser = async (user) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/v1/users/${user.username}`,
+    url: `${urlRoot}/v1/users/${user._id}`,
   }).catch((err) => { console.log(`err: ${err}`); });
 
   return response.data;

@@ -9,10 +9,10 @@
   <h1 class="govuk-heading-l">User admin</h1>
 
   <p class="govuk-body">
-    <a class="govuk-link" href="/admin/users/create">Add user</a>
+    <a data-cy="AddUser" class="govuk-link" href="/admin/users/create">Add user</a>
   </p>
-  
-  <form method="POST" autocomplete="off" class="govuk-!-margin-top-4">
+
+  {# <form method="POST" autocomplete="off" class="govuk-!-margin-top-4">
 
     <div class="govuk-grid-row">
 
@@ -118,12 +118,12 @@
     </div>
     <button class="govuk-button" data-module="govuk-button">
       Apply to selectes items
-    </button>
+    </button> #}
 
   <table class="govuk-table govuk-!-margin-bottom-0 govuk-!-margin-top-4">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
-      <th scope="col" class="govuk-table__header govuk-!-font-size-14">
+      {# <th scope="col" class="govuk-table__header govuk-!-font-size-14">
        <div class="govuk-form-group user-admin-form-group--checkboxes">
         <fieldset class="govuk-fieldset">
           <div class="govuk-checkboxes govuk-checkboxes--small">
@@ -135,14 +135,14 @@
           </div>
         </fieldset>
       </div>
-      </th>
+      </th> #}
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Username</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Organisation - Bank</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th>
+        {# <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th> #}
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Roles</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Member for</th>
+        {# <th scope="col" class="govuk-table__header govuk-!-font-size-14">Member for</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Last access</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Operations</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Operations</th> #}
       </tr>
     </thead>
 
@@ -151,8 +151,8 @@
           {% set cls = cycler("odd", "even") %}
 
           {% for user in users %}
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell govuk-!-font-size-14">
+            <tr class="govuk-table__row" data-cy="user-{{user.username}}">
+              {# <td class="govuk-table__cell govuk-!-font-size-14">
                 <div class="govuk-form-group user-admin-form-group--checkboxes">
                   <fieldset class="govuk-fieldset">
                     <div class="govuk-checkboxes govuk-checkboxes--small">
@@ -164,23 +164,23 @@
                     </div>
                   </fieldset>
                 </div>
-              </td>
+              </td> #}
 
               <td class="govuk-table__cell govuk-!-font-size-14">
-                <a href="/admin/users/edit/{{ user.username | urlencode }}" class="govuk-link" >{{ user.username }}</a>
+                <a href="/admin/users/edit/{{ user.username | urlencode }}" class="govuk-link" data-cy="username">{{ user.username }}</a>
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
+              <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bank">
                 {{ user.bank.name }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
+              {# <td class="govuk-table__cell govuk-!-font-size-14">
                {% if cls.current == "odd" %}
                   Active
                 {% else %}
                   Disabled
                 {% endif %}
-              </td>
+              </td> #}
 
               <td class="govuk-table__cell govuk-!-font-size-14">
                 <ul class="govuk-!-margin-0 govuk-!-margin-left-4 govuk-!-padding-left-0">
@@ -190,7 +190,7 @@
                 </ul>
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
+              {# <td class="govuk-table__cell govuk-!-font-size-14">
               2 years 7 months
               </td>
 
@@ -204,13 +204,13 @@
                 <li>
 
                 {% if cls.next() == "odd" %}
-                  <a href="/admin/users/enable/{{ user.username | urlencode }}" class="govuk-link" >Enable<span class="govuk-visually-hidden">{{ user.username }}</span></a> 
+                  <a href="/admin/users/enable/{{ user.username | urlencode }}" class="govuk-link" >Enable<span class="govuk-visually-hidden">{{ user.username }}</span></a>
                 {% else %}
-                  <a href="/admin/users/disable/{{ user.username | urlencode }}" class="govuk-link" >Disable<span class="govuk-visually-hidden">{{ user.username }}</span></a> 
+                  <a href="/admin/users/disable/{{ user.username | urlencode }}" class="govuk-link" >Disable<span class="govuk-visually-hidden">{{ user.username }}</span></a>
                 {% endif %}
                 </li>
                 </ul>
-              </td>
+              </td> #}
 
             </tr>
           {% endfor %}

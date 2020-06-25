@@ -405,6 +405,22 @@ const user = async (id, token) => {
   return response.data;
 };
 
+const createUser = async (userToCreate, token) => {
+  if (!token) return false;
+
+  const response = await axios({
+    method: 'post',
+    url: `${urlRoot}/v1/users`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: userToCreate,
+  });
+
+  return response.data;
+};
+
 // TODO middleware uses getDeal; once everything uses middleware get rid of the 'contract' method..
 const getDeal = async (id, token) => {
   const response = await axios({
@@ -477,6 +493,7 @@ export default {
   validateToken,
   users,
   user,
+  createUser,
   getCurrencies,
   getCountries,
   getDeal,

@@ -37,31 +37,28 @@ describe('a user', () => {
   });
 
   it('a user can be updated', async () => {
-    await as().post(aMaker).to('/v1/users');
+    const response = await as().post(aMaker).to('/v1/users');
+    const createdUser = response.body.user;
 
     const updatedUserCredentials = {
-      ...aMaker,
       roles: ['checker', 'maker'],
     };
 
-    await as().put(updatedUserCredentials).to(`/v1/users/${aMaker.username}`);
+    await as().put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
-    const { status, body } = await as().get(`/v1/users/${aMaker.username}`);
+    const { status, body } = await as().get(`/v1/users/${createdUser._id}`);
 
     expect(status).toEqual(200);
-    expect(body).toEqual({
-      username: updatedUserCredentials.username,
-      roles: updatedUserCredentials.roles,
-      bank: updatedUserCredentials.bank,
-      _id: expect.any(String),
-    });
+    expect(body.roles).toEqual(['checker', 'maker']);
   });
 
   it('a user can be deleted', async () => {
-    await as().post(aMaker).to('/v1/users');
-    await as().remove('/v1/users/someone');
+    const response = await as().post(aMaker).to('/v1/users');
+    const createdUser = response.body.user;
 
-    const { status, body } = await as().get('/v1/users/someone');
+    await as().remove(`/v1/users/${createdUser._id}`);
+
+    const { status, body } = await as().get(`/v1/users/${createdUser._id}`);
 
     expect(status).toEqual(200);
     expect(body).toMatchObject({});

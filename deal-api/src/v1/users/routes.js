@@ -1,7 +1,7 @@
 const utils = require('../../crypto/utils');
 
 const {
-  create, update, remove, list, findOne,
+  create, update, remove, list, findOne, findByUsername,
 } = require('./controller');
 
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
@@ -45,8 +45,8 @@ module.exports.create = (req, res, next) => {
   });
 };
 
-module.exports.findByUsername = (req, res, next) => {
-  findOne(req.params.username, (err, user) => {
+module.exports.findById = (req, res, next) => {
+  findOne(req.params._id, (err, user) => { // eslint-disable-line no-underscore-dangle
     if (err) {
       next(err);
     } else if (user) {
@@ -57,8 +57,8 @@ module.exports.findByUsername = (req, res, next) => {
   });
 };
 
-module.exports.updateByUsername = (req, res, next) => {
-  update(req.params.username, req.body, (err, user) => {
+module.exports.updateById = (req, res, next) => {
+  update(req.params._id, req.body, (err, user) => { // eslint-disable-line no-underscore-dangle
     if (err) {
       next(err);
     } else {
@@ -80,7 +80,7 @@ module.exports.remove = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { username, password } = req.body;
 
-  findOne(username, (err, user) => {
+  findByUsername(username, (err, user) => {
     if (err) {
       next(err);
     } else if (user === null) {

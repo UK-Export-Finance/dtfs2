@@ -80,5 +80,13 @@
         </a>
       </li>
     {% endif %}
+
+    {% if user and user.roles.includes('admin')%}
+      <li class="app-navigation__list-item">
+        <a class="govuk-link govuk-link--no-visited-state app-navigation__link" href="/admin/users/" data-cy="manageUsers">
+          Manage Users
+        </a>
+      </li>
+    {% endif %}
   </ul>
 </nav>
