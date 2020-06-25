@@ -28,19 +28,21 @@ const isValid = (str) => {
     return false;
   }
 
-  if (!isNumeric(Number(str))) {
+  const { isCurrency, sanitizedValue } = sanitizeCurrency(str);
+
+  if (!isCurrency) {
     return false;
   }
 
-  if (!isInRange(Number(str))) {
+  if (!isInRange(Number(sanitizedValue))) {
     return false;
   }
 
-  if (!isValidLength(str)) {
+  if (!isValidLength(Number(sanitizedValue))) {
     return false;
   }
 
-  if (!isValidFormat(Number(str))) {
+  if (!isValidFormat(Number(sanitizedValue))) {
     return false;
   }
 

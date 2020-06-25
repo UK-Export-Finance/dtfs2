@@ -51,7 +51,7 @@ context('about-supply-contract', () => {
     // check the data is now on the preview page..
     contractAboutPreview.visit(deal);
     contractAboutPreview.supplyContractValue().invoke('text').then((text) => {
-      expect(text.trim()).equal('10,000');
+      expect(text.trim()).equal('10,000.00');
     });
     contractAboutPreview.supplyContractCurrency().invoke('text').then((text) => {
       expect(text.trim()).equal('GBP');
