@@ -9,6 +9,7 @@ const {
   eligibilityCriteriaHelper,
   convertCountryCodeToId,
   convertCurrencyCodeToId,
+  convertCurrencyFormat,
   businessRules,
   k2Map,
   dateHelpers,
@@ -88,7 +89,7 @@ const generateTypeA = async (deal, fromStatus) => {
     )
     .Conversion_rate(deal.submissionDetails.supplyContractConversionRateToGBP)
     .Conversion_date(dateHelpers.formatDate(deal.submissionDetails['supplyContractConversionDate-day'], deal.submissionDetails['supplyContractConversionDate-month'], deal.submissionDetails['supplyContractConversionDate-year']))
-    .Contract_value(deal.submissionDetails.supplyContractValue)
+    .Contract_value(convertCurrencyFormat(deal.submissionDetails.supplyContractValue))
 
     .Ec_agents_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 11))
     .Ec_agents_name(deal.eligibility.agentName)
@@ -136,7 +137,7 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_type(k2Map.FACILITIES.TYPE[bond.bondType])
         .BSS_stage(k2Map.FACILITIES.STAGE[bond.bondStage])
         .BSS_beneficiary(bond.bondBeneficiary)
-        .BSS_value(bond.facilityValue)
+        .BSS_value(convertCurrencyFormat(bond.facilityValue))
         .BSS_currency_code(
           await convertCurrencyCodeToId(bond.currency && bond.currency.id), // eslint-disable-line no-await-in-loop
         )
