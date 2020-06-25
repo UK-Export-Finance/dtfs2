@@ -16,7 +16,6 @@ services:
       - ./portal/server:/app/server:ro
       - ./portal/.env.full-local-docker-environment:/app/.env:ro
     environment:
-      - DEBUG=express:*
       - COMPANIES_HOUSE_API_KEY=${COMPANIES_HOUSE_API_KEY}
     command: node dist/server.js
 
@@ -43,7 +42,7 @@ services:
       - AZURE_PORTAL_STORAGE_ACCOUNT=${AZURE_PORTAL_STORAGE_ACCOUNT}
       - AZURE_PORTAL_STORAGE_ACCESS_KEY=${AZURE_PORTAL_STORAGE_ACCESS_KEY}
       - AZURE_PORTAL_EXPORT_FOLDER=${AZURE_PORTAL_EXPORT_FOLDER}
-      
+
     entrypoint: npx nodemon src/index.js
 
   deal-api-data:
