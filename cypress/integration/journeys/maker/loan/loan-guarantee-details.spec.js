@@ -128,7 +128,7 @@ context('Loan Guarantee Details', () => {
   });
 
   describe('when user submits Facility stage as `Unconditional`', () => {
-    it('should render additional form fields and validation errors when returning to the page ', () => {
+    it('should render additional form fields and validation errors when returning to the page and render a `Not entered` link in the Deal page', () => {
       cy.loginGoToDealPage(user, deal);
       pages.contract.addLoanButton().click();
 
@@ -149,6 +149,23 @@ context('Loan Guarantee Details', () => {
       assertVisibleCoverEndDateInputs();
 
       pages.loanGuaranteeDetails.coverEndDateErrorMessage().should('be.visible');
+
+      partials.loanProgressNav.loanId().then((loanIdHiddenInput) => {
+        const loanId = loanIdHiddenInput[0].value;
+
+        pages.loanGuaranteeDetails.saveGoBackButton().click();
+
+        const row = pages.contract.loansTransactionsTable.row(loanId);
+
+        row.bankReferenceNumber().invoke('text').then((text) => {
+          expect(text.trim()).equal('Not entered');
+          // assert that clicking the `bank reference number` link progesses to the guarantee details page
+          row.bankReferenceNumber().click();
+          cy.url().should('include', '/contract');
+          cy.url().should('include', '/loan/');
+          cy.url().should('include', '/guarantee-details');
+        });
+      });
     });
 
     describe('when the Requested Cover Start Date has a future date of more than 3 months', () => {

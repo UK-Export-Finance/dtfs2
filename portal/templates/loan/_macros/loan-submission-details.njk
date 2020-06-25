@@ -70,7 +70,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Loan facility value
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s" data-cy="loan-facility-value">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="facility-value">
           {{ loanDetails.facilityValue }}
         </dd>
       </div>
@@ -97,7 +97,7 @@
           Currency
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="currency">
-          {{ loanDetails.currency }}
+          {{ loanDetails.currency.text }}
         </dd>
       </div>
     {% endif %}
@@ -124,12 +124,23 @@
       </div>
     {% endif %}
 
+    {% if loanDetails.disbursementAmount %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Disbursement amount
+        </dt>
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="disbursement-amount">
+          {{ loanDetails.disbursementAmount }}
+        </dd>
+      </div>
+    {% endif %}
+
     {% if loanDetails.interestMarginFee %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Interest Margin %
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s" data-cy="interest-margin">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="interest-margin-fee">
           {{ loanDetails.interestMarginFee }}%
         </dd>
       </div>
@@ -151,7 +162,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Minimum quarterly fee 
         </dt>
-        <dd class="govuk-summary-list__value govuk-body-s" data-cy="minimim-quarterly-fee">
+        <dd class="govuk-summary-list__value govuk-body-s" data-cy="minimum-quarterly-fee">
           {{ loanDetails.minimumQuarterlyFee  }}
         </dd>
       </div>
@@ -163,7 +174,7 @@
           Guarantee fee payable by bank
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="guarantee-fee-payable-by-bank">
-          {{ loanDetails.guaranteeFeePayableByBank }}%
+          {{ loanDetails.guaranteeFeePayableByBank }}
         </dd>
       </div>
     {% endif %}

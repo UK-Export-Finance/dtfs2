@@ -45,6 +45,23 @@ const financialDetails = {
   },
 };
 
+const unconditionalWithCurrencySameAsSupplyContractCurrency = () => {
+  guaranteeDetails.facilityStageUnconditional();
+  pages.loanGuaranteeDetails.submit().click();
+
+  financialDetails.currencySameAsSupplyContractCurrency();
+  pages.loanFinancialDetails.disbursementAmountInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.disbursementAmount);
+  pages.loanFinancialDetails.submit().click();
+};
+
+const unconditionalWithCurrencyNotTheSameAsSupplyContractCurrency = () => {
+  guaranteeDetails.facilityStageUnconditional();
+  pages.loanGuaranteeDetails.submit().click();
+
+  financialDetails.currencyNotTheSameAsSupplyContractCurrency();
+  pages.loanFinancialDetails.submit().click();
+};
+
 const datesRepayments = {
   inAdvanceAnnually: () => {
     pages.loanDatesRepayments.premiumTypeInAdvanceInput().click();
@@ -61,5 +78,7 @@ const datesRepayments = {
 module.exports = {
   guaranteeDetails,
   financialDetails,
+  unconditionalWithCurrencySameAsSupplyContractCurrency,
+  unconditionalWithCurrencyNotTheSameAsSupplyContractCurrency,
   datesRepayments,
 };
