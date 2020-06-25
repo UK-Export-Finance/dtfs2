@@ -56,13 +56,13 @@ context('Loan Dates and Repayments', () => {
     it('should NOT render `Premium frequency` radio buttons and frequency validation error after submit', () => {
       goToPage(deal);
       pages.loanDatesRepayments.premiumTypeAtMaturityInput().click();
-      pages.loanDatesRepayments.premiumTypeInAdvanceFrequencyAnnuallyInput().should('not.be.visible');
+      pages.loanDatesRepayments.premiumFrequencyAnnuallyInput().should('not.be.visible');
       pages.loanDatesRepayments.submit().click();
       cy.url().should('include', '/preview');
       partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
       cy.url().should('include', '/dates-repayments');
-      pages.loanDatesRepayments.premiumTypeInAdvanceFrequencyAnnuallyInput().should('not.be.visible');
-      pages.loanDatesRepayments.frequencyInputErrorMessage().should('not.be.visible');
+      pages.loanDatesRepayments.premiumFrequencyAnnuallyInput().should('not.be.visible');
+      pages.loanDatesRepayments.premiumFrequencyInputErrorMessage().should('not.be.visible');
     });
   });
 
@@ -75,7 +75,7 @@ context('Loan Dates and Repayments', () => {
       partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
       partials.errorSummary.errorSummaryLinks().should('have.length', 2);
       pages.loanDatesRepayments.premiumTypeInputErrorMessage().should('not.be.visible');
-      pages.loanDatesRepayments.frequencyInputErrorMessage().should('be.visible');
+      pages.loanDatesRepayments.premiumFrequencyInputErrorMessage().should('be.visible');
     });
   });
 });

@@ -1,14 +1,17 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
-{% macro render(id, label, checkedValue, errorObj) %}
+{% macro render(dataCyValue, checkedValue, errorObj) %}
 
   {{ govukRadios({
-    idPrefix: id + "Frequency",
-    name: id + "Frequency",
+    idPrefix: "premiumFrequency",
+    name: "premiumFrequency",
     fieldset: {
       legend: {
-        text: label
+        text: "Premium frequency"
       }
+    },
+    attributes: {
+      'data-cy': dataCyValue + "-premium-frequency-radios"
     },
     items: [
       {
@@ -31,14 +34,14 @@
         text: "Annually",
         checked: checkedValue === "Annually",
         attributes: {
-          "data-cy": id + "-frequency-annually"
+          "data-cy": "premium-frequency-annually"
         }
       }
     ],
     errorMessage: errorObj and {
       text: errorObj.text,
       attributes: {
-        "data-cy": "frequency-error-message"
+        "data-cy": "premium-frequency-error-message"
       }
     }
   }) }}

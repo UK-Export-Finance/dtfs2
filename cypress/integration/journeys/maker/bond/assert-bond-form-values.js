@@ -52,7 +52,7 @@ const financialDetails = {
 
 const feeDetails = () => {
   pages.bondFeeDetails.feeTypeInAdvanceInput().should('be.checked');
-  pages.bondFeeDetails.feeTypeInAdvanceFrequencyAnnuallyInput().should('be.checked');
+  pages.bondFeeDetails.feeFrequencyAnnuallyInput().should('be.checked');
   pages.bondFeeDetails.dayCountBasis365Input().should('be.checked');
 };
 

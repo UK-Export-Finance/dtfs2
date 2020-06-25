@@ -1,7 +1,8 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import './_macros/bond-nav.njk' as bondNav %}
-{% import '../_macros/facility-inputs/facility-payment-type.njk' as facilityPaymentType %}
+{% import './_macros/fee-frequency-radios.njk' as feeFrequencyRadios %}
 {% import '../_macros/facility-inputs/day-count-radios.njk' as dayCountRadios %}
 
 {% block pageTitle %}Bond Fee Details{% endblock %}
@@ -29,19 +30,69 @@
 
   <form method="POST" autocomplete="off">
 
+    <input type="hidden" name="feeFrequency" value="{{ bond.feeFrequency }}" />
+
     <div class="govuk-grid-row">
 
       <div class="govuk-grid-column-three-quarters">
 
-        {{facilityPaymentType.render(
-          id = 'feeType',
-          label = 'Fee type',
-          checkedValue = bond.feeType,
-          frequencyId = 'feeFrequency',
-          frequencyLabel = 'Fee frequency',
-          frequencyCheckedValue = bond.feeFrequency,
-          validationErrors = validationErrors
-        )}}
+        {{ govukRadios({
+          idPrefix: "feeType",
+          name: "feeType",
+          fieldset: {
+            legend: {
+              text: "Fee type"
+            }
+          },
+          items: [
+            {
+              value: "In advance",
+              text: "In advance",
+              checked: bond.feeType === "In advance",
+              conditional: {
+                html: feeFrequencyRadios.render(
+                  'inAdvance',
+                  'in-advance',
+                  bond.feeFrequency,
+                  validationErrors.errorList.feeFrequency
+                )
+              },
+              attributes: {
+                'data-cy': 'fee-type-in-advance'
+              }
+            },
+            {
+              value: "In arrear",
+              text: "In arrear",
+              checked: bond.feeType === "In arrear",
+              conditional: {
+                html: feeFrequencyRadios.render(
+                  'inArrear',
+                  'in-arrear',
+                  bond.feeFrequency,
+                  validationErrors.errorList.feeFrequency
+                )
+              },
+              attributes: {
+                'data-cy': 'fee-type-in-arrear'
+              }
+            },
+            {
+              value: "At maturity",
+              text: "At maturity",
+              checked: bond.feeType === "At maturity",
+              attributes: {
+                'data-cy': 'fee-type-at-maturity'
+              }
+            }
+          ],
+          errorMessage: validationErrors.errorList.feeType and {
+            text: validationErrors.errorList.feeType.text,
+            attributes: {
+              "data-cy": "fee-type-error-message"
+            }
+          }
+        }) }}
 
         {{dayCountRadios.render(
           checkedValue = bond.dayCountBasis,
