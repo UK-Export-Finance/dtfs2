@@ -13,7 +13,7 @@ const newDeal = aDeal({
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
-    status: "Draft",
+    status: 'Draft',
     dateOfLastAction: '1985/11/04 21:00:00:000',
   },
   comments: [{
@@ -30,7 +30,7 @@ const newDeal = aDeal({
 describe('PUT /v1/deals/:id/submission-details validation rules', () => {
   let anHSBCMaker;
 
-  beforeAll(async()=>{
+  beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
   });
@@ -42,7 +42,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
   describe('For all cases', () => {
     let validationErrors;
 
-    beforeAll(async()=>{
+    beforeAll(async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const submissionDetails = {};
@@ -94,7 +94,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
           text: 'Supplier country is required',
         });
       });
-    })
+    });
 
     it('expects industry-sector', () => {
       expect(validationErrors.errorList['industry-sector']).toEqual({
@@ -145,31 +145,30 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
           text: 'Buyer country is required',
         });
       });
-    })
+    });
 
     it('expects supplyContractValue', () => {
-      expect(validationErrors.errorList["supplyContractValue"]).toEqual({
+      expect(validationErrors.errorList.supplyContractValue).toEqual({
         order: expect.any(String),
         text: 'Supply Contract value is required',
       });
     });
 
     it('expects supplyContractCurrency', () => {
-      expect(validationErrors.errorList["supplyContractCurrency"]).toEqual({
+      expect(validationErrors.errorList.supplyContractCurrency).toEqual({
         order: expect.any(String),
         text: 'Supply Contract currency is required',
       });
     });
-
   });
 
   describe('If supplyContractCurrency !== GBP, conversion rate and conversion date are required', () => {
     let validationErrors;
 
-    beforeAll(async()=>{
+    beforeAll(async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
-      const submissionDetails = {'supplyContractCurrency':'USD'};
+      const submissionDetails = { supplyContractCurrency: 'USD' };
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
 
@@ -190,19 +189,18 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
           text: 'Supply Contract conversion date is required for non-GBP currencies',
         });
       });
-
     });
   });
 
   describe('conversion rate', () => {
     let validationErrors;
 
-    beforeAll(async()=>{
+    beforeAll(async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const submissionDetails = {
-        'supplyContractCurrency':'USD',
-        'supplyContractConversionRateToGBP':'not a number',
+        supplyContractCurrency: 'USD',
+        supplyContractConversionRateToGBP: 'not a number',
       };
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
@@ -223,12 +221,12 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
   describe('conversion rate', () => {
     let validationErrors;
 
-    beforeAll(async()=>{
+    beforeAll(async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const submissionDetails = {
-        'supplyContractCurrency':'USD',
-        'supplyContractConversionRateToGBP':'321.1234567',
+        supplyContractCurrency: 'USD',
+        supplyContractConversionRateToGBP: '321.1234567',
       };
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
@@ -249,12 +247,12 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
   describe('conversion rate', () => {
     let validationErrors;
 
-    beforeAll(async()=>{
+    beforeAll(async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const submissionDetails = {
-        'supplyContractCurrency':'USD',
-        'supplyContractConversionRateToGBP':'1',
+        supplyContractCurrency: 'USD',
+        supplyContractConversionRateToGBP: '1',
       };
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
@@ -272,13 +270,13 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
   describe('Conversion date in the future', () => {
     let validationErrors;
 
-    beforeAll(async()=>{
+    beforeAll(async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
       const dateInTheFuture = moment().add(1, 'days');
       const submissionDetails = {
-        'supplyContractCurrency':'USD',
+        supplyContractCurrency: 'USD',
         'supplyContractConversionDate-day': moment(dateInTheFuture).format('DD'),
         'supplyContractConversionDate-month': moment(dateInTheFuture).format('MM'),
         'supplyContractConversionDate-year': moment(dateInTheFuture).format('YYYY'),
@@ -302,13 +300,13 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
   describe('Conversion date in the past', () => {
     let validationErrors;
 
-    beforeAll(async()=>{
+    beforeAll(async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
       const dateInThePast = moment().subtract(31, 'days');
       const submissionDetails = {
-        'supplyContractCurrency':'USD',
+        supplyContractCurrency: 'USD',
         'supplyContractConversionDate-day': moment(dateInThePast).format('DD'),
         'supplyContractConversionDate-month': moment(dateInThePast).format('MM'),
         'supplyContractConversionDate-year': moment(dateInThePast).format('YYYY'),
@@ -330,12 +328,11 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
   });
 
   describe('If supplyContractCurrency !== GBP, if any conversion date fields are entered, the missing fields are required', () => {
-
     it('day field is required', async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const submissionDetails = {
-        'supplyContractCurrency':'USD',
+        supplyContractCurrency: 'USD',
         'supplyContractConversionDate-month': '12',
         'supplyContractConversionDate-year': '2019',
       };
@@ -344,18 +341,17 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
 
       validationErrors = body.validationErrors;
 
-      expect(validationErrors.errorList["supplyContractConversionDate-day"]).toEqual({
+      expect(validationErrors.errorList['supplyContractConversionDate-day']).toEqual({
         order: expect.any(String),
         text: 'Supply Contract conversion date Day is required for non-GBP currencies',
       });
-
     });
 
     it('month field is required', async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const submissionDetails = {
-        'supplyContractCurrency':'USD',
+        supplyContractCurrency: 'USD',
         'supplyContractConversionDate-day': '25',
         'supplyContractConversionDate-year': '2019',
       };
@@ -364,18 +360,17 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
 
       validationErrors = body.validationErrors;
 
-      expect(validationErrors.errorList["supplyContractConversionDate-month"]).toEqual({
+      expect(validationErrors.errorList['supplyContractConversionDate-month']).toEqual({
         order: expect.any(String),
         text: 'Supply Contract conversion date Month is required for non-GBP currencies',
       });
-
     });
 
     it('year field is required', async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const submissionDetails = {
-        'supplyContractCurrency':'USD',
+        supplyContractCurrency: 'USD',
         'supplyContractConversionDate-month': '12',
         'supplyContractConversionDate-day': '25',
       };
@@ -384,21 +379,20 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
 
       validationErrors = body.validationErrors;
 
-      expect(validationErrors.errorList["supplyContractConversionDate-year"]).toEqual({
+      expect(validationErrors.errorList['supplyContractConversionDate-year']).toEqual({
         order: expect.any(String),
         text: 'Supply Contract conversion date Year is required for non-GBP currencies',
       });
-
     });
   });
 
   describe('If supplier-address === GBR, postcode is required', () => {
     let validationErrors;
 
-    beforeAll(async()=>{
+    beforeAll(async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
-      const submissionDetails = {'supplier-address-country':'GBR'};
+      const submissionDetails = { 'supplier-address-country': 'GBR' };
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
 
@@ -418,10 +412,10 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
   describe('If supplier-address !== GBR, town is required', () => {
     let validationErrors;
 
-    beforeAll(async()=>{
+    beforeAll(async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
-      const submissionDetails = {'supplier-address-country':'USA'};
+      const submissionDetails = { 'supplier-address-country': 'USA' };
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
 
@@ -441,10 +435,10 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
   describe('If buyer-address === GBR, postcode is required', () => {
     let validationErrors;
 
-    beforeAll(async()=>{
+    beforeAll(async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
-      const submissionDetails = {'buyer-address-country':'GBR'};
+      const submissionDetails = { 'buyer-address-country': 'GBR' };
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
 
@@ -464,10 +458,10 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
   describe('If buyer-address !== GBR, town is required', () => {
     let validationErrors;
 
-    beforeAll(async()=>{
+    beforeAll(async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
-      const submissionDetails = {'buyer-address-country':'USA'};
+      const submissionDetails = { 'buyer-address-country': 'USA' };
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
 
@@ -487,10 +481,10 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
   describe('if the supplier is flagged as having a separate correspondence address', () => {
     let validationErrors;
 
-    beforeAll(async()=>{
+    beforeAll(async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
-      const submissionDetails = {"supplier-correspondence-address-is-different":"true"};
+      const submissionDetails = { 'supplier-correspondence-address-is-different': 'true' };
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
 
@@ -499,7 +493,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
 
 
     describe('expects supplier correspondence address', () => {
-
       it('expects supplier-correspondence-address-line-1', () => {
         expect(validationErrors.errorList['supplier-correspondence-address-line-1']).toEqual({
           order: expect.any(String),
@@ -513,18 +506,17 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
           text: 'Supplier correspondence country is required',
         });
       });
-
     });
 
     describe('If supplier-correspondence-address === GBR, postcode is required', () => {
       let validationErrors;
 
-      beforeAll(async()=>{
+      beforeAll(async () => {
         const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
         const createdDeal = postResult.body;
         const submissionDetails = {
-          "supplier-correspondence-address-is-different":"true",
-          "supplier-correspondence-address-country":"GBR"
+          'supplier-correspondence-address-is-different': 'true',
+          'supplier-correspondence-address-country': 'GBR',
         };
 
         const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
@@ -545,12 +537,12 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     describe('If supplier-correspondence-address !== GBR, town is required', () => {
       let validationErrors;
 
-      beforeAll(async()=>{
+      beforeAll(async () => {
         const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
         const createdDeal = postResult.body;
         const submissionDetails = {
-          "supplier-correspondence-address-is-different":"true",
-          "supplier-correspondence-address-country":"USA"
+          'supplier-correspondence-address-is-different': 'true',
+          'supplier-correspondence-address-country': 'USA',
         };
 
         const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
@@ -567,16 +559,15 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         });
       });
     });
-
   });
 
   describe('if the guarantor/indemnifier is flagged as being legally distinct from the supplier', () => {
     let validationErrors;
 
-    beforeAll(async()=>{
+    beforeAll(async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
-      const submissionDetails = {"legallyDistinct":"true"};
+      const submissionDetails = { legallyDistinct: 'true' };
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
 
@@ -591,14 +582,13 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     });
 
     it('expects indemnifierCorrespondenceAddressDifferent', () => {
-      expect(validationErrors.errorList['indemnifierCorrespondenceAddressDifferent']).toEqual({
+      expect(validationErrors.errorList.indemnifierCorrespondenceAddressDifferent).toEqual({
         order: expect.any(String),
         text: 'Guarantor/Indemnifier correspondence address is required',
       });
     });
 
     describe('expects indemnifier address', () => {
-
       it('expects indemnifier-address-line-1', () => {
         expect(validationErrors.errorList['indemnifier-address-line-1']).toEqual({
           order: expect.any(String),
@@ -612,18 +602,17 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
           text: 'Indemnifier country is required',
         });
       });
-
     });
 
     describe('If indemnifier-address === GBR, postcode is required', () => {
       let validationErrors;
 
-      beforeAll(async()=>{
+      beforeAll(async () => {
         const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
         const createdDeal = postResult.body;
         const submissionDetails = {
-          "legallyDistinct":"true",
-          "indemnifier-address-country":"GBR"
+          legallyDistinct: 'true',
+          'indemnifier-address-country': 'GBR',
         };
 
         const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
@@ -644,12 +633,12 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     describe('If indemnifier-address !== GBR, town is required', () => {
       let validationErrors;
 
-      beforeAll(async()=>{
+      beforeAll(async () => {
         const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
         const createdDeal = postResult.body;
         const submissionDetails = {
-          "legallyDistinct":"true",
-          "indemnifier-address-country":"USA"
+          legallyDistinct: 'true',
+          'indemnifier-address-country': 'USA',
         };
 
         const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
@@ -666,18 +655,17 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         });
       });
     });
-
   });
 
   describe('if the guarantor/indemnifier is flagged as being legally distinct and as having a different correspondence address', () => {
     let validationErrors;
 
-    beforeAll(async()=>{
+    beforeAll(async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const submissionDetails = {
-        "legallyDistinct":"true",
-        "indemnifierCorrespondenceAddressDifferent":"true",
+        legallyDistinct: 'true',
+        indemnifierCorrespondenceAddressDifferent: 'true',
       };
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
@@ -686,7 +674,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     });
 
     describe('expects indemnifier correspondence address', () => {
-
       it('expects indemnifier-correspondence-address-line-1', () => {
         expect(validationErrors.errorList['indemnifier-correspondence-address-line-1']).toEqual({
           order: expect.any(String),
@@ -700,19 +687,18 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
           text: 'Indemnifier correspondence country is required',
         });
       });
-
     });
 
     describe('If indemnifier-corresdpondence-address === GBR, postcode is required', () => {
       let validationErrors;
 
-      beforeAll(async()=>{
+      beforeAll(async () => {
         const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
         const createdDeal = postResult.body;
         const submissionDetails = {
-          "legallyDistinct":"true",
-          "indemnifierCorrespondenceAddressDifferent":"true",
-          "indemnifier-correspondence-address-country":"GBR"
+          legallyDistinct: 'true',
+          indemnifierCorrespondenceAddressDifferent: 'true',
+          'indemnifier-correspondence-address-country': 'GBR',
         };
 
         const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
@@ -733,13 +719,13 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     describe('If indemnifier-correspondence-address !== GBR, town is required', () => {
       let validationErrors;
 
-      beforeAll(async()=>{
+      beforeAll(async () => {
         const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
         const createdDeal = postResult.body;
         const submissionDetails = {
-          "legallyDistinct":"true",
-          "indemnifierCorrespondenceAddressDifferent":"true",
-          "indemnifier-correspondence-address-country":"USA"
+          legallyDistinct: 'true',
+          indemnifierCorrespondenceAddressDifferent: 'true',
+          'indemnifier-correspondence-address-country': 'USA',
         };
 
         const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
@@ -757,6 +743,26 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       });
     });
 
-  });
+    describe('Supply contract value is not correct currency format', () => {
+      let validationErrors;
 
+      beforeAll(async () => {
+        const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+        const createdDeal = postResult.body;
+        const submissionDetails = {
+          supplyContractValue: '12x.34',
+        };
+
+        const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+        validationErrors = body.validationErrors;
+      });
+
+      it('expects currency validation message if not in correct format', async () => {
+        expect(validationErrors.errorList.supplyContractValue).toEqual({
+          order: expect.any(String),
+          text: 'Supply Contract value must be in currency format',
+        });
+      });
+    });
+  });
 });

@@ -19,7 +19,7 @@ const GUARANTEE_DETAILS = {
 };
 
 const FINANCIAL_DETAILS = {
-  facilityValue: '1234',
+  facilityValue: '1,234.00',
   currency: {
     value: 'EUR',
     text: 'EUR - Euros',
@@ -28,7 +28,7 @@ const FINANCIAL_DETAILS = {
   conversionRateDateDay: moment(date).format('DD'),
   conversionRateDateMonth: moment(date).format('MM'),
   conversionRateDateYear: moment(date).format('YYYY'),
-  disbursementAmount: '10',
+  disbursementAmount: '10.00',
   interestMarginFee: '20',
   coveredPercentage: '5',
   minimumQuarterlyFee: '1',

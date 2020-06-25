@@ -377,7 +377,7 @@ describe('/v1/deals/:id/loan', () => {
             const body = await updateLoanInDeal(dealId, loan);
 
             expect(body.validationErrors.errorList.disbursementAmount).toBeDefined();
-            expect(body.validationErrors.errorList.disbursementAmount.text).toEqual('Disbursement amount must be a number, like 1 or 12.65');
+            expect(body.validationErrors.errorList.disbursementAmount.text).toEqual('Disbursement amount must be a currency format, like 1,345 or 1345.54');
           });
         });
 
@@ -412,7 +412,7 @@ describe('/v1/deals/:id/loan', () => {
             const loan = {
               facilityStage: 'Unconditional',
               facilityValue: '9',
-              disbursementAmount: '9.1',
+              disbursementAmount: '9.10',
             };
 
             const body = await updateLoanInDeal(dealId, loan);
@@ -444,7 +444,7 @@ describe('/v1/deals/:id/loan', () => {
 
           const { validationErrors } = await updateLoanInDeal(dealId, loan);
           expect(validationErrors.errorList.facilityValue).toBeDefined();
-          expect(validationErrors.errorList.facilityValue.text).toEqual('Loan facility value must be a number, like 1 or 12.65');
+          expect(validationErrors.errorList.facilityValue.text).toEqual('Loan facility value must be a currency format, like 1,345 or 1345.54');
         });
       });
 
@@ -523,7 +523,7 @@ describe('/v1/deals/:id/loan', () => {
           return body;
         };
 
-        describe('when missing', () => {  
+        describe('when missing', () => {
           it('should return validationError', async () => {
             const { validationErrors } = await updateBondConversionRate('');
             expect(validationErrors.errorList.conversionRate).toBeDefined();

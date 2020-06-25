@@ -1,6 +1,6 @@
 import * as govukFrontend from 'govuk-frontend';
 import * as showHideElement from './show-hide-element';
-import * as numericFloatInputs from './numeric-float-inputs';
+import * as maskedInputs from './masked-inputs';
 import * as changeIndustryClasses from './change-industry-classes';
 import * as number from './number';
 import main from './main';
@@ -21,10 +21,10 @@ describe('main.js', () => {
     expect(showHideElement.default).toHaveBeenCalled();
   });
 
-  it('should call numericFloatInputs()', () => {
-    numericFloatInputs.default = jest.fn();
+  it('should call maskedInputs()', () => {
+    maskedInputs.default = jest.fn();
     main();
-    expect(numericFloatInputs.default).toHaveBeenCalled();
+    expect(maskedInputs.default).toHaveBeenCalled();
   });
 
   it('should call changeIndustryClasses()', () => {

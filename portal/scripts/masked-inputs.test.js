@@ -4,7 +4,6 @@ import {
 
 describe('maskedInputs', () => {
   describe('setInputMask', () => {
-    let elements;
     let input;
 
     beforeEach(() => {

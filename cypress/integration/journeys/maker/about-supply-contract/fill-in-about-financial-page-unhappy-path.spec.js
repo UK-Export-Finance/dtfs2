@@ -1,7 +1,10 @@
 const moment = require('moment');
 
-const {contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview} = require('../../../pages');
-const maker1 = {username: 'MAKER', password: 'MAKER'};
+const {
+  contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
+} = require('../../../pages');
+
+const maker1 = { username: 'MAKER', password: 'MAKER' };
 
 // test data we want to set up + work with..
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
@@ -9,7 +12,7 @@ const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json')
 context('about-supply-contract', () => {
   let deal;
 
-  beforeEach( () => {
+  beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
       console.log(err.stack);
@@ -17,13 +20,13 @@ context('about-supply-contract', () => {
     });
   });
 
-  before( () => {
+  before(() => {
     cy.insertOneDeal(aDealWithAboutBuyerComplete, { ...maker1 })
-      .then( insertedDeal =>  deal=insertedDeal );
+      .then((insertedDeal) => deal = insertedDeal);
   });
 
   it('A maker picks up a deal with the supplier details completed, and fills in the about-buyer-contract section, using the companies house search.', () => {
-    cy.login({...maker1});
+    cy.login({ ...maker1 });
 
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
     contract.visit(deal);
@@ -51,7 +54,7 @@ context('about-supply-contract', () => {
     // check the data is now on the preview page..
     contractAboutPreview.visit(deal);
     contractAboutPreview.supplyContractValue().invoke('text').then((text) => {
-      expect(text.trim()).equal('10,000');
+      expect(text.trim()).equal('10,000.00');
     });
     contractAboutPreview.supplyContractCurrency().invoke('text').then((text) => {
       expect(text.trim()).equal('USD');
@@ -62,7 +65,5 @@ context('about-supply-contract', () => {
     contractAboutPreview.supplyContractConversionDate().invoke('text').then((text) => {
       expect(text.trim()).equal(`${moment(today).format('DD/MM/YYYY')}`);
     });
-
   });
-
 });

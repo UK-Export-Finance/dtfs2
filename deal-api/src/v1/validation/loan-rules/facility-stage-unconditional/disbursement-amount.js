@@ -2,6 +2,7 @@ const { hasValue } = require('../../../../utils/string');
 const {
   isNumeric,
   decimalsCount,
+  sanitizeCurrency,
 } = require('../../../../utils/number');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
 
@@ -24,19 +25,24 @@ const isValid = (disbursementAmount, facilityValue) => {
     return false;
   }
 
-  if (!isNumeric(Number(disbursementAmount))) {
+  const sanitizedFacilityValue = sanitizeCurrency(facilityValue);
+  const { sanitizedValue } = sanitizeCurrency(disbursementAmount);
+
+  if (!isNumeric(Number(sanitizedValue))) {
     return false;
   }
 
-  if (!isGreaterThanMinValue(Number(disbursementAmount))) {
+  if (!isGreaterThanMinValue(Number(sanitizedValue))) {
     return false;
   }
 
-  if (!isValidFormat(Number(disbursementAmount))) {
+  if (!isValidFormat(Number(sanitizedValue))) {
     return false;
   }
 
-  if (hasValue(facilityValue) && !isLessThanFacilityValue(Number(disbursementAmount), Number(facilityValue))) {
+  if (hasValue(facilityValue)
+      && !isLessThanFacilityValue(Number(sanitizedValue), Number(sanitizedFacilityValue.sanitizedValue))
+  ) {
     return false;
   }
 
@@ -59,20 +65,23 @@ const validationText = (disbursementAmount, facilityValue, fieldTitle) => {
     return `Enter the ${fieldTitle}`;
   }
 
-  if (!isNumeric(Number(disbursementAmount))) {
-    return `${fieldTitle} must be a number, like 1 or 12.65`;
+  const sanitizedFacilityValue = sanitizeCurrency(facilityValue);
+  const { isCurrency, sanitizedValue } = sanitizeCurrency(disbursementAmount);
+
+  if (!isCurrency) {
+    return `${fieldTitle} must be a currency format, like 1,345 or 1345.54`;
   }
 
-  if (!isGreaterThanMinValue(Number(disbursementAmount))) {
+  if (!isGreaterThanMinValue(Number(sanitizedValue))) {
     return `${fieldTitle} must be more than ${MIN_VALUE}`;
   }
 
-  if (!isValidFormat(disbursementAmount)) {
+  if (!isValidFormat(Number(sanitizedValue))) {
     return `${fieldTitle} must have less than ${MAX_DECIMALS + 1} decimals, like 12 or 12.65`;
   }
 
-  if (canValidateAgainstFacilityValue(disbursementAmount, facilityValue)) {
-    if (!isLessThanFacilityValue(Number(disbursementAmount), Number(facilityValue))) {
+  if (canValidateAgainstFacilityValue(sanitizedValue, sanitizedFacilityValue.sanitizedValue)) {
+    if (!isLessThanFacilityValue(Number(sanitizedValue), Number(sanitizedFacilityValue.sanitizedValue))) {
       return `${fieldTitle} must be less than the Loan facility value (${facilityValue})`;
     }
   }
