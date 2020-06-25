@@ -3,6 +3,7 @@ const {
   isNumeric,
   stripDecimals,
   decimalsCount,
+  sanitizeCurrency,
 } = require('../../../utils/number');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 
@@ -51,19 +52,21 @@ const validationText = (str, fieldTitle) => {
     return `Enter the ${fieldTitle}`;
   }
 
-  if (!isNumeric(Number(str))) {
-    return `${fieldTitle} must be a number, like 1 or 12.65`;
+  const { isCurrency, sanitizedValue } = sanitizeCurrency(str);
+
+  if (!isCurrency) {
+    return `${fieldTitle} must be a currency format, like 1,345 or 1345.54`;
   }
 
-  if (!isInRange(Number(str))) {
+  if (!isInRange(Number(sanitizedValue))) {
     return `${fieldTitle} must be ${MIN_VALUE} or more`;
   }
 
-  if (!isValidLength(str)) {
+  if (!isValidLength(Number(sanitizedValue))) {
     return `${fieldTitle} must be ${MAX_DIGITS} numbers or fewer`;
   }
 
-  if (!isValidFormat(str)) {
+  if (!isValidFormat(Number(sanitizedValue))) {
     return `${fieldTitle} must have less than ${MAX_DECIMALS + 1} decimals, like 12 or 12.10`;
   }
 

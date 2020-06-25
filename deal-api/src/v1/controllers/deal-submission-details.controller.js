@@ -4,7 +4,6 @@ const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const db = require('../../drivers/db-client');
 const validateSubmissionDetails = require('../validation/submission-details');
-const { sanitizeCurrency } = require('../../utils/number');
 
 exports.findOne = (req, res) => {
   findOneDeal(req.params.id, (deal) => {
@@ -64,12 +63,6 @@ exports.update = (req, res) => {
     const year = submissionDetails['supplyContractConversionDate-year'];
     if (day && month && year) {
       submissionDetails.supplyContractConversionDate = `${day}/${month}/${year}`;
-    }
-
-    const sanitizedSupplyContractValue = sanitizeCurrency(submissionDetails.supplyContractValue);
-
-    if (sanitizedSupplyContractValue.isCurrency) {
-      submissionDetails.supplyContractValue = sanitizedSupplyContractValue.sanitizedValue;
     }
 
     const collection = await db.getCollection('deals');

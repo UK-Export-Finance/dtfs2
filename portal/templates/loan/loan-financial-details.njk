@@ -44,7 +44,8 @@
         size: "60",
         maxlength: "255",
         placeholder: "0.00",
-        'data-cy': 'facility-value'
+        'data-cy': 'facility-value',
+        "data-mask": "currency"
       },
       classes: "govuk-input--width-10",
       errorMessage: validationErrors.errorList.facilityValue and {
@@ -75,7 +76,8 @@
           size: "60",
           maxlength: "255",
           placeholder: "0.00",
-          'data-cy': 'disbursement-amount'
+          'data-cy': 'disbursement-amount',
+          "data-mask": "currency"
         },
         classes: "govuk-input--width-10",
         errorMessage: validationErrors.errorList.disbursementAmount and {

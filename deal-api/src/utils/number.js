@@ -33,7 +33,7 @@ const roundNumber = (value, digits) => {
 };
 
 const sanitizeCurrency = (originalValue = '') => {
-  const sanitizedValue = originalValue.replace(/[,]/g, '');
+  const sanitizedValue = originalValue.replace(/,(\d{3})/g, '$1');
 
   return {
     originalValue,
