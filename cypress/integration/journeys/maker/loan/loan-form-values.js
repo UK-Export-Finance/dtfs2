@@ -5,8 +5,6 @@ const requestedCoverStartDate = date;
 const coverEndDate = moment(date).add(1, 'months');
 
 const GUARANTEE_DETAILS = {
-  facilityStage: 'Conditional',
-
   // 'Conditional' facility stage specifics
   ukefGuaranteeInMonths: '12',
 

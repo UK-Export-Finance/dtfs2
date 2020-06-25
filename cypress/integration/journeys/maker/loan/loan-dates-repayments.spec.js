@@ -75,13 +75,14 @@ context('Loan Dates and Repayments', () => {
   });
 
   describe('when a user selects that the Premium Type is NOT `At maturity`', () => {
-    it('should render `Premium frequency` radio button, render submitted value in `Loan Preview` after submit and when returning to page, render `Premium frequency` validation error', () => {
+    it('should render `Premium frequency` radio button and after submit, when returning to page, render `Premium frequency` validation error', () => {
       goToPage(deal);
       pages.loanDatesRepayments.premiumTypeInAdvanceInput().click();
       pages.loanDatesRepayments.submit().click();
       cy.url().should('include', '/preview');
 
       pages.loanPreview.premiumType().should('be.visible');
+      // TODO: should be checked
       pages.loanPreview.premiumType().contains('In advance');
 
       partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
@@ -92,17 +93,19 @@ context('Loan Dates and Repayments', () => {
   });
 
   describe('when a user changes and submits the premiumType and premiumFrequency multiple times', () => {
-    it('should repopulate correct values when returning to the page', () => {
+    it('should prepopulate correct values when returning to the page', () => {
       goToPage(deal);
       fillLoanForm.datesRepayments.inAdvanceAnnually();
       pages.loanDatesRepayments.submit().click();
       partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
+      // TODO: should be checked
       assertNoValidationErrors();
 
       fillLoanForm.datesRepayments.inArrearQuarterly();
       pages.loanDatesRepayments.submit().click();
 
       partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
+      // TODO: should be checked
       assertNoValidationErrors();
     });
   });
