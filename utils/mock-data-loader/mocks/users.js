@@ -7,7 +7,7 @@ const USERS = [
   {
     username: 'ADMIN',
     password: 'ADMIN',
-    roles: ['maker', 'editor'],
+    roles: ['maker', 'editor', 'admin'],
     bank: {
       // _id: '', //TODO [dw] better linking of mock data
       id: '*',

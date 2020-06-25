@@ -3,7 +3,7 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
 const fs = require('fs');
 
-const { findOne } = require('./controller');
+const { findByUsername } = require('./controller');
 
 dotenv.config();
 
@@ -25,7 +25,7 @@ const sanitize = (user) => ({
 
 module.exports = (passport) => {
   passport.use(new JwtStrategy(options, ((jwtPayload, done) => {
-    findOne(jwtPayload.username, (err, user) => {
+    findByUsername(jwtPayload.username, (err, user) => {
       if (err) {
         return done(err, false);
       }

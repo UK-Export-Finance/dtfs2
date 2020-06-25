@@ -279,12 +279,12 @@ openRouter.route('/users')
     users.create,
   );
 
-openRouter.route('/users/:username')
+openRouter.route('/users/:_id')
   .get(
-    users.findByUsername,
+    users.findById,
   )
   .put(
-    users.updateByUsername,
+    users.updateById,
   ).delete(
     users.remove,
   );

@@ -44,6 +44,51 @@ router.get('/users/create', async (req, res) => {
     });
 });
 
+router.post('/users/create', async (req, res) => {
+  const { userToken } = requestParams(req);
+  const userToCreate = { ...req.body };
+  console.log(userToCreate);
+
+  // fix up data from create user page..
+  //-----
+  // roles are fed in from checkboxes, so we either get a string or an array..
+  // -if string, push it into an array...
+  if (!Array.isArray(userToCreate.roles)) {
+    userToCreate.roles = [userToCreate.roles];
+  }
+
+  // inflate the bank object
+  const banks = await getApiData(
+    api.banks(userToken),
+    res,
+  );
+
+  const selectedBank = banks.find((bank) => bank.id === userToCreate.bank);
+  userToCreate.bank = selectedBank;
+
+  // rename email->username.. not sure which it should be but we currently care about username..
+  userToCreate.username = userToCreate.email;
+
+  //------
+
+  console.log('->');
+  console.log(userToCreate);
+
+  const createdUser = await api.createUser(userToCreate, userToken);
+
+  console.log(createdUser);
+
+  return res.redirect('/admin/users/');
+  //
+  //
+  //
+  // return res.render('admin/user-edit.njk',
+  //   {
+  //     banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
+  //     user: req.session.user,
+  //   });
+});
+
 router.get('/users/edit/:_id', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 

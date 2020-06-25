@@ -50,6 +50,29 @@ module.exports.listAllDeals = (token) => {
   });
 };
 
+module.exports.listAllUsers = (token) => {
+  return cy.request({
+    url: `${api()}/v1/users`,
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+  }).then((resp) => {
+    expect(resp.status).to.equal(200);
+    return resp.body.data;
+  });
+};
+
+module.exports.deleteUser = (token, user) => cy.request({
+  url: `${api()}/v1/user/${user._id}`,
+  method: 'DELETE',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((resp) => expect(resp.status).to.equal(200));
+
 module.exports.insertDeal = (deal, token) => cy.request({
   url: `${api()}/v1/deals`,
   method: 'POST',

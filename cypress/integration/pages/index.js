@@ -28,4 +28,6 @@ module.exports = {
   loanDatesRepayments: require('./loanDatesRepayments'),
   loanPreview: require('./loanPreview'),
   defaults: require('./defaults'),
+  users: require('./admin/users/users'),
+  createUser: require('./admin/users/createUser'),
 };

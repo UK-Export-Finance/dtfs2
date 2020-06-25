@@ -22,7 +22,7 @@
       User create
     {% endif %}
   </h1>
-  
+
   {% if _id %}
     <p class="govuk-body">
       <a href="/admin/users/change-password/{{_id}}">Change password</a>
@@ -44,23 +44,28 @@
       items: [
         {
           value: "maker/checker",
-          text: "Maker/Checker"
+          text: "Maker/Checker",
+          attributes: {"data-cy": "role-maker/checker"}
         },
         {
           value: "checker",
-          text: "Checker"
+          text: "Checker",
+          attributes: {"data-cy": "role-checker"}
         },
         {
           value: "maker",
-          text: "Maker"
+          text: "Maker",
+          attributes: {"data-cy": "role-maker"}
         },
         {
           value: "ukef_operations",
-          text: "UKEF Operations"
+          text: "UKEF Operations",
+          attributes: {"data-cy": "role-ukef_operations"}
         },
         {
           value: "EFM",
-          text: "EFM"
+          text: "EFM",
+          attributes: {"data-cy": "role-efm"}
         }
       ]
     }) }}
@@ -68,12 +73,13 @@
 
     {% if _id %}
       <p class="govuk-body">Email<br/>{{ user.username }}</p>
-      
+
       <p class="govuk-body">Display name<br/>{{ user.username }}</p>
-    
+
     {% else %}
 
       {{ govukInput({
+        attributes: {"data-cy": "username"},
         label: {
           text: "Email address"
         },
@@ -85,11 +91,36 @@
         name: "email"
       }) }}
 
-       {% include "../_partials/password-create.njk" %}
+       {# {% include "../_partials/password-create.njk" %} #}
+       <div class="govuk-form-group">
+           {{ govukInput({
+             attributes: {"data-cy": "password"},
+             label: {
+               text: "New password"
+             },
+             formGroup: {
+               classes: "govuk-!-width-one-third govuk-!-margin-bottom-1"
+             },
+             id: "password",
+             name: "password"
+           }) }}
+
+           {{ govukInput({
+             attributes: {"data-cy": "confirm-password"},
+             label: {
+               text: "Confirm password"
+             },
+             formGroup: {
+               classes: "govuk-!-width-one-third govuk-!-margin-bottom-1"
+             },
+             id: "passwordConfirm",
+             name: "passwordConfirm"
+           }) }}
+       </div>
     {% endif %}
 
 
-  <div class="govuk-label">
+  {# <div class="govuk-label">
   Status
   </div>
   {{ govukRadios({
@@ -118,9 +149,10 @@
           text: "Notify user of new account?"
         }
       ]
-    }) }}
+    }) }} #}
 
       {{ govukInput({
+        attributes: {"data-cy": "firstname"},
         label: {
           text: "First name"
         },
@@ -130,6 +162,7 @@
       }) }}
 
       {{ govukInput({
+        attributes: {"data-cy": "surname"},
         label: {
           text: "Surname"
         },
@@ -148,7 +181,7 @@
         <span class="govuk-hint">
           This field is required when the user has a role "Bank staff".
         </span>
-        <select class="govuk-select govuk-!-width-one-third" id="bank" name="bank">
+        <select class="govuk-select govuk-!-width-one-third" id="bank" name="bank" data-cy="bank">
           <option value="all">Any</option>
           {% for bank in banks %}
             <option value="{{ bank.id}}">{{ bank.name }}</option>
@@ -166,11 +199,11 @@
 
     {% else %}
       {{ govukButton({
-        text: "Create user",
-        href: "/admin/users/"
+        attributes: {"data-cy": "CreateUser"},
+        text: "Create user"
       }) }}
     {% endif %}
-  
+
   </form>
 
 {% endblock %}
