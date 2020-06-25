@@ -1,10 +1,10 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
-{% macro render(dataCyValue, checkedValue, errorObj) %}
+{% macro render(parentId, dataCyValue, checkedValue, errorObj) %}
 
   {{ govukRadios({
-    idPrefix: "premiumFrequency",
-    name: "premiumFrequency",
+    idPrefix: parentId + "PremiumFrequency",
+    name: parentId + "PremiumFrequency",
     fieldset: {
       legend: {
         text: "Premium frequency"
@@ -22,7 +22,10 @@
       {
         value: "Quarterly",
         text: "Quarterly",
-        checked: checkedValue === "Quarterly"
+        checked: checkedValue === "Quarterly",
+        attributes: {
+          "data-cy": "premium-frequency-quarterly"
+        }
       },
       {
         value: "Semi-annually",
