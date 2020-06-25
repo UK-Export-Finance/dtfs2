@@ -50,6 +50,7 @@
               checked: loan.premiumType === "In advance",
               conditional: {
                 html: premiumFrequencyRadios.render(
+                  'inAdvance',
                   'in-advance',
                   loan.premiumFrequency,
                   validationErrors.errorList.premiumFrequency
@@ -65,6 +66,7 @@
               checked: loan.premiumType === "In arrear",
               conditional: {
                 html: premiumFrequencyRadios.render(
+                  'inArrear',
                   'in-arrear',
                   loan.premiumFrequency,
                   validationErrors.errorList.premiumFrequency

@@ -161,19 +161,19 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => 
     return existingPremiumFrequency;
   };
 
-  const postBody = {
+  const modifiedBody = {
     ...req.body,
     premiumFrequency: premiumFrequencyValue(),
   };
 
-  delete postBody.inAdvancePremiumFrequency;
-  delete postBody.inArrearPremiumFrequency;
+  delete modifiedBody.inAdvancePremiumFrequency;
+  delete modifiedBody.inArrearPremiumFrequency;
 
   await postToApi(
     api.updateDealLoan(
       dealId,
       loanId,
-      req.body,
+      modifiedBody,
       userToken,
     ),
     errorHref,

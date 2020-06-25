@@ -45,7 +45,21 @@ const financialDetails = {
   },
 };
 
+const datesRepayments = {
+  inAdvanceAnnually: () => {
+    pages.loanDatesRepayments.premiumTypeInAdvanceInput().click();
+    pages.loanDatesRepayments.premiumFrequencyAnnuallyInput().click();
+    pages.loanDatesRepayments.dayCountBasis365Input().click();
+  },
+  inArrearQuarterly: () => {
+    pages.loanDatesRepayments.premiumTypeInArrearInput().click();
+    pages.loanDatesRepayments.premiumFrequencyQuarterlyInput().click();
+    pages.loanDatesRepayments.dayCountBasis365Input().click();
+  },
+};
+
 module.exports = {
   guaranteeDetails,
   financialDetails,
+  datesRepayments,
 };
