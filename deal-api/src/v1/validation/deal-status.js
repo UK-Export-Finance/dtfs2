@@ -1,6 +1,7 @@
+const validate = require('./completeDealValidation-flat');
 
 module.exports = (deal, requestedUpdate, user) => {
-  const errorList = {};
+  let errorList = {};
 
   if (requestedUpdate.status === 'Abandoned Deal') {
     if (!user.roles.includes('maker')) {
@@ -38,11 +39,22 @@ module.exports = (deal, requestedUpdate, user) => {
   if (requestedUpdate.status === 'Submitted') {
     if (!user.roles.includes('checker')) {
       // TODO reject this?
-    } else if (!requestedUpdate.confirmSubmit) {
-      errorList.confirmSubmit = {
-        order: '1',
-        text: 'Acceptance is required.',
-      };
+    } else {
+      if (!requestedUpdate.confirmSubmit) {
+        errorList.confirmSubmit = {
+          order: '1',
+          text: 'Acceptance is required.',
+        };
+      }
+
+      const validationOfExistingDeal = validate(deal);
+
+      if (validationOfExistingDeal) {
+        errorList = {
+          ...validationOfExistingDeal,
+          ...errorList,
+        };
+      }
     }
   }
 

@@ -13,7 +13,7 @@ import {
 } from '../../helpers';
 
 import {
-  provide, DEAL, DEAL_VALIDATION, MANDATORY_CRITERIA,
+  provide, DEAL, MANDATORY_CRITERIA,
 } from '../api-data-provider';
 
 const router = express.Router();
@@ -233,43 +233,18 @@ router.post('/contract/:_id/confirm-submission', provide([DEAL]), async (req, re
 
   const { data } = await api.updateDealStatus(updateToSend, userToken);
 
-  const validationOfExistingDeal = req.apiData[DEAL_VALIDATION];
-
-  let combinedErrorList = {
-    ...data.errorList,
-    ...validationOfExistingDeal.submissionDetailsErrors,
-  };
-
-  // TODO right now this crunches duplicate errors over the top of eachother..
-  // ie. if 2 bonds have the same error, they'll get munged into 1 error..
-  //  right now that's all i need
-  // if this ceases to be good enough we likely need to start putting id's into our cy-data
-  // so that errors on a 'generic' page (eg. confirm submission page) can conceivably link back
-  // to the deal/bond/loan/whatever that had the error..
-  const bondsWithErrors = Object.keys(validationOfExistingDeal.bondErrors);
-  for (let i = 0; i < bondsWithErrors.length; i += 1) {
-    const bondId = bondsWithErrors[i];
-    const bondErrors = validationOfExistingDeal.bondErrors[bondId].errorList;
-    combinedErrorList = {
-      ...combinedErrorList,
-      ...bondErrors,
+  let validationErrors;
+  if (data.errorList) {
+    validationErrors = {
+      count: Object.keys(data.errorList).length,
+      errorList: data.errorList,
+    };
+  } else {
+    validationErrors = {
+      count: 0,
+      errorList: {},
     };
   }
-
-  const loansWithErrors = Object.keys(validationOfExistingDeal.loanErrors);
-  for (let i = 0; i < loansWithErrors.length; i += 1) {
-    const loanId = loansWithErrors[i];
-    const loanErrors = validationOfExistingDeal.loanErrors[loanId].errorList;
-    combinedErrorList = {
-      ...combinedErrorList,
-      ...loanErrors,
-    };
-  }
-
-  const validationErrors = {
-    count: Object.keys(combinedErrorList).length,
-    errorList: combinedErrorList,
-  };
 
   const formattedValidationErrors = generateErrorSummary(
     validationErrors,

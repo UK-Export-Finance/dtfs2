@@ -8,14 +8,12 @@ exports.list = async (callback) => {
 };
 
 exports.findOne = async (_id, callback) => {
-  console.log(`findOne: _id :: ${_id}`);
   const collection = await db.getCollection('users');
 
   collection.findOne({ _id: new ObjectID(_id) }, callback);
 };
 
 exports.findByUsername = async (username, callback) => {
-  console.log(`findByUsername: username :: ${username}`);
   const collection = await db.getCollection('users');
 
   collection.findOne({ username }, callback);

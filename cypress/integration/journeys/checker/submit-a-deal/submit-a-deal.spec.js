@@ -77,7 +77,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
     contractConfirmSubmission.expectError('Requested Cover Start Date must be today or in the future');
 
     // expect the deal status to be unchanged
-    contract.visit(goodDeal);
+    contract.visit(badDeal);
     contract.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal("Ready for Checker's approval");
     });
