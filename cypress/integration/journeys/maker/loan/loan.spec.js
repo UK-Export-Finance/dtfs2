@@ -63,7 +63,7 @@ context('Add a Loan to a Deal', () => {
 
     // Loan financial details
     pages.loanPreview.facilityValue().invoke('text').then((text) => {
-      expect(text.trim()).equal(LOAN_FORM_VALUES.FINANCIAL_DETAILS.facilityValue);
+      expect(text.trim()).equal(LOAN_FORM_VALUES.FINANCIAL_DETAILS.facilityValueFormatted);
     });
 
     pages.loanPreview.currencySameAsSupplyContractCurrency().invoke('text').then((text) => {

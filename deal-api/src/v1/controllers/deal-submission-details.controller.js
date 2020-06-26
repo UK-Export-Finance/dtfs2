@@ -67,7 +67,9 @@ exports.update = (req, res) => {
     }
 
     const { sanitizedValue } = sanitizeCurrency(submissionDetails.supplyContractValue);
-    submissionDetails.supplyContractValue = sanitizedValue;
+    if (sanitizedValue) {
+      submissionDetails.supplyContractValue = sanitizedValue;
+    }
 
     const collection = await db.getCollection('deals');
     const dealAfterAllUpdates = await updateSubmissionDetails(collection, req.params.id, submissionDetails);

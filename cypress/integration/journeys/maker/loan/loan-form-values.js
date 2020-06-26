@@ -19,7 +19,8 @@ const GUARANTEE_DETAILS = {
 };
 
 const FINANCIAL_DETAILS = {
-  facilityValue: '1,234.00',
+  facilityValue: '1234.00',
+  facilityValueFormatted: '1,234.00',
   currency: {
     value: 'EUR',
     text: 'EUR - Euros',

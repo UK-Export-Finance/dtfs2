@@ -151,7 +151,6 @@ describe('/v1/deals/:id/submission-details', () => {
       const expectedResponse = {
         ...submissionDetails,
         status: 'Incomplete',
-        supplyContractValue: '',
       };
 
       const { status, body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
@@ -169,7 +168,6 @@ describe('/v1/deals/:id/submission-details', () => {
       const expectedResponse = {
         ...submissionDetails,
         status: 'Incomplete',
-        supplyContractValue: '',
       };
 
       await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
