@@ -1,4 +1,3 @@
-const moment = require('moment');
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const fillBondForm = require('./fill-bond-forms');
@@ -212,97 +211,6 @@ context('Bond Details', () => {
         partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
         pages.bondDetails.coverEndDateInputErrorMessage().should('be.visible');
         pages.bondDetails.uniqueIdentificationNumberInputErrorMessage().should('be.visible');
-      });
-
-      describe('when the Requested Cover Start Date has a future date of more than 3 months', () => {
-        it('should render Requested Cover Start Date validation error', () => {
-          cy.loginGoToDealPage(user, deal);
-
-          pages.contract.addBondButton().click();
-          pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
-          pages.bondDetails.bondStageIssuedInput().click();
-
-          const date = moment();
-          const requestedCoverStartDate = moment(date).add(3, 'months').add('1', 'day');
-
-          pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
-          pages.bondDetails.bondStageIssuedInput().click();
-
-          pages.bondDetails.requestedCoverStartDateDayInput().type(moment(requestedCoverStartDate).format('DD'));
-          pages.bondDetails.requestedCoverStartDateMonthInput().type(moment(requestedCoverStartDate).format('MM'));
-          pages.bondDetails.requestedCoverStartDateYearInput().type(moment(requestedCoverStartDate).format('YYYY'));
-
-          pages.bondDetails.coverEndDateDayInput().type(BOND_FORM_VALUES.DETAILS.coverEndDateDay);
-          pages.bondDetails.coverEndDateMonthInput().type(BOND_FORM_VALUES.DETAILS.coverEndDateMonth);
-          pages.bondDetails.coverEndDateYearInput().type(BOND_FORM_VALUES.DETAILS.coverEndDateYear);
-          pages.bondDetails.uniqueIdentificationNumberInput().type(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
-
-          pages.bondDetails.submit().click();
-          cy.url().should('include', '/financial-details');
-          partials.bondProgressNav.progressNavLinkBondDetails().click();
-          partials.errorSummary.errorSummaryLinks().should('have.length', 1);
-          pages.bondDetails.requestedCoverStartDateInputErrorMessage().should('be.visible');
-        });
-      });
-
-      describe('when the Cover End Date is before today', () => {
-        it('should render Cover End Date validation error', () => {
-          cy.loginGoToDealPage(user, deal);
-
-          pages.contract.addBondButton().click();
-          pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
-          pages.bondDetails.bondStageIssuedInput().click();
-
-          pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
-          pages.bondDetails.bondStageIssuedInput().click();
-
-          const coverEndDate = moment().subtract(1, 'day');
-
-          pages.bondDetails.coverEndDateDayInput().type(moment(coverEndDate).format('DD'));
-          pages.bondDetails.coverEndDateMonthInput().type(moment(coverEndDate).format('MM'));
-          pages.bondDetails.coverEndDateYearInput().type(moment(coverEndDate).format('YYYY'));
-
-          pages.bondDetails.uniqueIdentificationNumberInput().type(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
-
-          pages.bondDetails.submit().click();
-          cy.url().should('include', '/financial-details');
-          partials.bondProgressNav.progressNavLinkBondDetails().click();
-          partials.errorSummary.errorSummaryLinks().should('have.length', 1);
-          pages.bondDetails.coverEndDateInputErrorMessage().should('be.visible');
-        });
-      });
-
-      describe('when the Cover End Date is before the Requested Cover Start Date', () => {
-        it('should render Cover End Date validation error', () => {
-          cy.loginGoToDealPage(user, deal);
-
-          pages.contract.addBondButton().click();
-          pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
-          pages.bondDetails.bondStageIssuedInput().click();
-
-          const date = moment();
-          const requestedCoverStartDate = date;
-          const coverEndDate = moment(date).subtract(1, 'day');
-
-          pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
-          pages.bondDetails.bondStageIssuedInput().click();
-
-          pages.bondDetails.requestedCoverStartDateDayInput().type(moment(requestedCoverStartDate).format('DD'));
-          pages.bondDetails.requestedCoverStartDateMonthInput().type(moment(requestedCoverStartDate).format('MM'));
-          pages.bondDetails.requestedCoverStartDateYearInput().type(moment(requestedCoverStartDate).format('YYYY'));
-
-          pages.bondDetails.coverEndDateDayInput().type(moment(coverEndDate).format('DD'));
-          pages.bondDetails.coverEndDateMonthInput().type(moment(coverEndDate).format('MM'));
-          pages.bondDetails.coverEndDateYearInput().type(moment(coverEndDate).format('YYYY'));
-
-          pages.bondDetails.uniqueIdentificationNumberInput().type(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
-
-          pages.bondDetails.submit().click();
-          cy.url().should('include', '/financial-details');
-          partials.bondProgressNav.progressNavLinkBondDetails().click();
-          partials.errorSummary.errorSummaryLinks().should('have.length', 1);
-          pages.bondDetails.coverEndDateInputErrorMessage().should('be.visible');
-        });
       });
     });
 
