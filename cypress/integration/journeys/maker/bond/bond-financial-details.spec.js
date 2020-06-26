@@ -1,4 +1,3 @@
-const moment = require('moment');
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const fillBondForm = require('./fill-bond-forms');
@@ -153,7 +152,7 @@ context('Bond Financial Details', () => {
   });
 
   describe('when a user selects that the currency is NOT the same as the Supply Contract currency', () => {
-    it('should render additional form fields and validation errors without submit', () => {
+    it('should render additional form fields and validation errors without leaving the page', () => {
       goToBondFinancialDetailsPage(deal);
       pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
 
@@ -204,70 +203,6 @@ context('Bond Financial Details', () => {
         pages.bondFinancialDetails.currencyInputErrorMessage().should('be.visible');
         pages.bondFinancialDetails.conversionRateInputErrorMessage().should('be.visible');
         pages.bondFinancialDetails.conversionRateDateInputErrorMessage().should('be.visible');
-      });
-
-      describe('when `conversion rate` has an invalid value', () => {
-        const fillAndSubmitConversionRate = (value) => {
-          pages.bondFinancialDetails.conversionRateInput().clear();
-          pages.bondFinancialDetails.conversionRateInput().type(value);
-          pages.bondFinancialDetails.submit().click();
-        };
-
-        const goBackToFinancialDetails = () => {
-          partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
-          cy.url().should('include', '/financial-details');
-        };
-
-        const assertValidationError = () => {
-          partials.errorSummary.errorSummaryLinks().should('have.length', 1);
-          pages.bondFinancialDetails.conversionRateInputErrorMessage().should('be.visible');
-        };
-
-        it('should render validation error', () => {
-          goToBondFinancialDetailsPage(deal);
-          fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
-
-          fillAndSubmitConversionRate('1234567');
-          goBackToFinancialDetails();
-          assertValidationError();
-
-          fillAndSubmitConversionRate('000456789');
-          goBackToFinancialDetails();
-          assertValidationError();
-
-          fillAndSubmitConversionRate('123456 USD');
-          goBackToFinancialDetails();
-          assertValidationError();
-        });
-      });
-
-      describe('when `conversion rate date` is in the future', () => {
-        it('should render validation error', () => {
-          goToBondFinancialDetailsPage(deal);
-          pages.bondFinancialDetails.facilityValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.facilityValue);
-          pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
-          pages.bondFinancialDetails.currencyInput().select(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
-          pages.bondFinancialDetails.conversionRateInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
-
-          const date = moment();
-          const conversionRateDate = moment(date).add(1, 'day');
-
-          pages.bondFinancialDetails.conversionRateDateDayInput().type(conversionRateDate.format('DD'));
-          pages.bondFinancialDetails.conversionRateDateMonthInput().type(conversionRateDate.format('MM'));
-          pages.bondFinancialDetails.conversionRateDateYearInput().type(conversionRateDate.format('YYYY'));
-          pages.bondFinancialDetails.riskMarginFeeInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.riskMarginFee);
-          pages.bondFinancialDetails.coveredPercentageInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
-
-          pages.bondFinancialDetails.submit().click();
-
-          partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
-          cy.url().should('include', '/financial-details');
-
-          const TOTAL_REQUIRED_FORM_FIELDS = 1;
-
-          partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
-          pages.bondFinancialDetails.conversionRateDateInputErrorMessage().should('be.visible');
-        });
       });
     });
 
