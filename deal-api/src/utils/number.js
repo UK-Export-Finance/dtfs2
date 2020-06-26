@@ -32,11 +32,11 @@ const roundNumber = (value, digits) => {
 
 const sanitizeCurrency = (originalValue = '') => {
   const sanitizedValue = originalValue.replace(/,(\d{3})/g, '$1');
+  const isCurrency = Boolean(Number(sanitizedValue) || sanitizedValue === '0');
 
   return {
-    originalValue,
-    sanitizedValue,
-    isCurrency: Number(sanitizedValue) || sanitizedValue === '0',
+    sanitizedValue: isCurrency ? sanitizedValue : originalValue,
+    isCurrency,
     decimalPlaces: decimalsCount(Number(sanitizedValue)) < 3,
   };
 };

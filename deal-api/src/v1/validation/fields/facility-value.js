@@ -1,6 +1,5 @@
 const { hasValue } = require('../../../utils/string');
 const {
-  isNumeric,
   stripDecimals,
   decimalsCount,
   sanitizeCurrency,

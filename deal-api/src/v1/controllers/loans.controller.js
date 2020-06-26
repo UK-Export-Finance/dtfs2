@@ -8,6 +8,9 @@ const {
 } = require('../section-calculations');
 const sectionCurrency = require('../section-currency');
 const { loanStatus } = require('../section-status/loan');
+const { sanitizeCurrency } = require('../../utils/number');
+
+// const { loanStatus } = require('../section-status/loan');
 
 const putLoanInDealObject = (deal, loan, otherLoans) => ({
   ...deal,
@@ -154,10 +157,15 @@ exports.updateLoan = async (req, res) => {
       modifiedLoan = premiumTypeFields(modifiedLoan);
 
       const { facilityValue, coveredPercentage, interestMarginFee } = modifiedLoan;
+      const sanitizedFacilityValue = sanitizeCurrency(facilityValue);
 
       modifiedLoan.guaranteeFeePayableByBank = calculateGuaranteeFee(interestMarginFee);
 
-      modifiedLoan.ukefExposure = calculateUkefExposure(facilityValue, coveredPercentage);
+      modifiedLoan.ukefExposure = calculateUkefExposure(sanitizedFacilityValue.sanitizedValue, coveredPercentage);
+      modifiedLoan.facilityValue = sanitizedFacilityValue.sanitizedValue;
+
+      const sanitizedFacilityDisbursement = sanitizeCurrency(modifiedLoan.disbursementAmount);
+      modifiedLoan.disbursementAmount = sanitizedFacilityDisbursement.sanitizedValue;
 
       const modifiedDeal = putLoanInDealObject(deal, modifiedLoan, allOtherLoans);
 
