@@ -1,7 +1,6 @@
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const fillLoanForm = require('./fill-loan-forms');
-const assertLoanFormValues = require('./assert-loan-form-values');
 
 const user = { username: 'MAKER', password: 'MAKER' };
 
@@ -43,7 +42,7 @@ context('Loan Dates and Repayments', () => {
   });
 
   describe('when submitting an empty form', () => {
-    it('should progress to `Loan Preview` page and when returning to `Loan Dates and Repayments` page, should render validation errors', () => {
+    it('should progress to `Loan Preview` page, should render validation errors in `Loan Dates and Repayments` page', () => {
       goToPage(deal);
       assertNoValidationErrors();
       pages.loanDatesRepayments.submit().click();
@@ -67,26 +66,32 @@ context('Loan Dates and Repayments', () => {
       pages.loanDatesRepayments.premiumFrequencyAnnuallyInput().should('not.be.visible');
       pages.loanDatesRepayments.submit().click();
       cy.url().should('include', '/preview');
+
       partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
       cy.url().should('include', '/dates-repayments');
+
       pages.loanDatesRepayments.premiumFrequencyAnnuallyInput().should('not.be.visible');
       pages.loanDatesRepayments.premiumFrequencyInputErrorMessage().should('not.be.visible');
     });
   });
 
   describe('when a user selects that the Premium Type is NOT `At maturity`', () => {
-    it('should render `Premium frequency` radio button and after submit, when returning to page, render `Premium frequency` validation error', () => {
+    it('should render `Premium frequency` radio buttons and after submit, when returning to page, render `Premium frequency` validation error', () => {
       goToPage(deal);
       pages.loanDatesRepayments.premiumTypeInAdvanceInput().click();
+      pages.loanDatesRepayments.premiumFrequencyAnnuallyInput().should('be.visible');
+
+      pages.loanDatesRepayments.premiumTypeInArrearInput().click();
+      pages.loanDatesRepayments.premiumFrequencyQuarterlyInput().should('be.visible');
+
+      pages.loanDatesRepayments.premiumTypeInAdvanceInput().click();
+
       pages.loanDatesRepayments.submit().click();
       cy.url().should('include', '/preview');
 
-      pages.loanPreview.premiumType().should('be.visible');
-      // TODO: should be checked
-      pages.loanPreview.premiumType().contains('In advance');
-
       partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
       partials.errorSummary.errorSummaryLinks().should('have.length', 2);
+
       pages.loanDatesRepayments.premiumTypeInputErrorMessage().should('not.be.visible');
       pages.loanDatesRepayments.premiumFrequencyInputErrorMessage().should('be.visible');
     });
@@ -97,15 +102,18 @@ context('Loan Dates and Repayments', () => {
       goToPage(deal);
       fillLoanForm.datesRepayments.inAdvanceAnnually();
       pages.loanDatesRepayments.submit().click();
+
       partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
-      // TODO: should be checked
+      pages.loanDatesRepayments.premiumTypeInAdvanceInput().should('be.checked');
+      pages.loanDatesRepayments.premiumFrequencyAnnuallyInput().should('be.checked');
       assertNoValidationErrors();
 
       fillLoanForm.datesRepayments.inArrearQuarterly();
       pages.loanDatesRepayments.submit().click();
 
       partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
-      // TODO: should be checked
+      pages.loanDatesRepayments.premiumTypeInArrearInput().should('be.checked');
+      pages.loanDatesRepayments.premiumFrequencyQuarterlyInput().should('be.checked');
       assertNoValidationErrors();
     });
   });

@@ -1,7 +1,6 @@
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const LOAN_FORM_VALUES = require('./loan-form-values');
-const fillLoanForm = require('./fill-loan-forms');
 const relative = require('../../../relativeURL');
 const {
   calculateExpectedGuaranteeFee,
@@ -31,12 +30,146 @@ context('Add a Loan to a Deal', () => {
       .then((insertedDeal) => deal = insertedDeal);
   });
 
+  it('should allow a user to create a Deal, pass Red Line and add a Loan to the deal, populating Loan Preview page with submitted data', () => {
+    cy.createADeal({
+      username: user.username,
+      password: user.password,
+      bankDealId: MOCK_DEAL.details.bankSupplyContractID,
+      bankDealName: MOCK_DEAL.details.bankSupplyContractName,
+    });
+    cy.addLoanToDeal();
+
+    cy.url().should('include', '/preview');
+
+    // Loan gurantee details
+    pages.loanPreview.facilityStage().invoke('text').then((text) => {
+      expect(text.trim()).equal('Unconditional');
+    });
+
+    pages.loanPreview.bankReferenceNumber().invoke('text').then((text) => {
+      expect(text.trim()).equal(LOAN_FORM_VALUES.GUARANTEE_DETAILS.bankReferenceNumber);
+    });
+
+    pages.loanPreview.requestedCoverStartDate().invoke('text').then((text) => {
+      const expectedDate = `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear}`;
+      expect(text.trim()).equal(expectedDate);
+    });
+
+    pages.loanPreview.coverEndDate().invoke('text').then((text) => {
+      const expectedDate = `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear}`;
+      expect(text.trim()).equal(expectedDate);
+    });
+
+    // Loan financial details
+    pages.loanPreview.facilityValue().invoke('text').then((text) => {
+      expect(text.trim()).equal(LOAN_FORM_VALUES.FINANCIAL_DETAILS.facilityValue);
+    });
+
+    pages.loanPreview.currencySameAsSupplyContractCurrency().invoke('text').then((text) => {
+      expect(text.trim()).equal('No');
+    });
+
+    pages.loanPreview.currency().invoke('text').then((text) => {
+      expect(text.trim()).equal(LOAN_FORM_VALUES.FINANCIAL_DETAILS.currency.text);
+    });
+
+    pages.loanPreview.conversionRate().invoke('text').then((text) => {
+      expect(text.trim()).equal(LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
+    });
+
+    pages.loanPreview.conversionRateDate().invoke('text').then((text) => {
+      const expectedDate = `${LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateDay}/${LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateMonth}/${LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateYear}`;
+      expect(text.trim()).equal(expectedDate);
+    });
+
+    pages.loanPreview.disbursementAmount().invoke('text').then((text) => {
+      expect(text.trim()).equal(LOAN_FORM_VALUES.FINANCIAL_DETAILS.disbursementAmount);
+    });
+
+    pages.loanPreview.interestMarginFee().invoke('text').then((text) => {
+      expect(text.trim()).equal(`${LOAN_FORM_VALUES.FINANCIAL_DETAILS.interestMarginFee}%`);
+    });
+
+    pages.loanPreview.coveredPercentage().invoke('text').then((text) => {
+      expect(text.trim()).equal(`${LOAN_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage}%`);
+    });
+
+    pages.loanPreview.minimumQuarterlyFee().invoke('text').then((text) => {
+      expect(text.trim()).equal(LOAN_FORM_VALUES.FINANCIAL_DETAILS.minimumQuarterlyFee);
+    });
+
+    pages.loanPreview.guaranteeFeePayableByBank().invoke('text').then((text) => {
+      const expected = calculateExpectedGuaranteeFee(LOAN_FORM_VALUES.FINANCIAL_DETAILS.interestMarginFee);
+      expect(text.trim()).equal(expected);
+    });
+
+    pages.loanPreview.ukefExposure().invoke('text').then((text) => {
+      const expected = calculateExpectedUkefExposure(LOAN_FORM_VALUES.FINANCIAL_DETAILS.facilityValue, LOAN_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
+      expect(text.trim()).equal(expected);
+    });
+
+    // Loan dates and repayments
+    pages.loanPreview.premiumType().invoke('text').then((text) => {
+      expect(text.trim()).equal('In advance');
+    });
+
+    pages.loanPreview.premiumFrequency().invoke('text').then((text) => {
+      expect(text.trim()).equal('Annually');
+    });
+
+    pages.loanPreview.dayCountBasis().invoke('text').then((text) => {
+      expect(text.trim()).equal('365');
+    });
+  });
+
+  it('should populate Deal page with the submitted loan with `Completed` status and link to `Loan Gurantee Details` page', () => {
+    cy.loginGoToDealPage(user, deal);
+    cy.addLoanToDeal();
+
+    // get loanId, go back to Deal page
+    // assert that some inputted Loan data is displayed in the table
+    partials.loanProgressNav.loanId().then((loanIdHiddenInput) => {
+      const loanId = loanIdHiddenInput[0].value;
+
+      pages.loanPreview.saveGoBackButton().click();
+      cy.url().should('eq', relative(`/contract/${deal._id}`));
+
+      const row = pages.contract.loansTransactionsTable.row(loanId);
+
+      row.bankReferenceNumber().invoke('text').then((text) => {
+        expect(text.trim()).equal(LOAN_FORM_VALUES.GUARANTEE_DETAILS.bankReferenceNumber);
+      });
+
+      row.loanStatus().invoke('text').then((text) => {
+        expect(text.trim()).equal('Completed');
+      });
+
+      row.facilityValue().invoke('text').then((text) => {
+        const expectedValue = `${deal.supplyContractCurrency.id} ${LOAN_FORM_VALUES.FINANCIAL_DETAILS.facilityValue}`;
+
+        expect(text.trim()).equal(expectedValue);
+      });
+
+      row.facilityStage().invoke('text').then((text) => {
+        expect(text.trim()).equal('Unconditional');
+      });
+
+      row.requestedCoverStartDate().invoke('text').then((text) => {
+        const expectedDate = `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear}`;
+        expect(text.trim()).equal(expectedDate);
+      });
+
+      row.coverEndDate().invoke('text').then((text) => {
+        const expectedDate = `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear}`;
+        expect(text.trim()).equal(expectedDate);
+      });
+    });
+  });
+
   describe('when a user submits Loan forms without completing required fields', () => {
     it('loan should display all validation errors in `Loan Preview` page and `Incomplete` status in Deal page', () => {
       cy.loginGoToDealPage(user, deal);
       pages.contract.addLoanButton().click();
-
-      // TODO: cy.addLoanToDeal();
 
       pages.loanGuaranteeDetails.submit().click();
       pages.loanFinancialDetails.submit().click();
@@ -58,171 +191,6 @@ context('Add a Loan to a Deal', () => {
 
         row.loanStatus().invoke('text').then((text) => {
           expect(text.trim()).equal('Incomplete');
-        });
-      });
-    });
-  });
-
-  it('should allow a user to create a Deal, pass Red Line and add a Loan to the deal', () => {
-    cy.createADeal({
-      username: user.username,
-      password: user.password,
-      bankDealId: MOCK_DEAL.details.bankSupplyContractID,
-      bankDealName: MOCK_DEAL.details.bankSupplyContractName,
-    });
-
-    cy.url().should('include', '/contract/');
-
-    // TODO: cy.addLoanToDeal();
-
-    pages.contract.addLoanButton().click();
-    fillLoanForm.unconditionalWithCurrencySameAsSupplyContractCurrency();
-    fillLoanForm.datesRepayments.inAdvanceAnnually();
-    pages.loanDatesRepayments.submit().click();
-
-    cy.url().should('include', '/preview');
-  });
-
-  describe('When a user submits all required Loan form fields (Unconditional facilityStage, currency not the same as Supply Contract Currency)', () => {
-    it('should populate `Loan Preview` page with all submitted data', () => {
-      cy.loginGoToDealPage(user, deal);
-      pages.contract.addLoanButton().click();
-
-      fillLoanForm.unconditionalWithCurrencyNotTheSameAsSupplyContractCurrency();
-      fillLoanForm.datesRepayments.inAdvanceAnnually();
-      pages.loanDatesRepayments.submit().click();
-
-      cy.url().should('include', '/preview');
-
-      // Loan gurantee details
-      pages.loanPreview.facilityStage().invoke('text').then((text) => {
-        expect(text.trim()).equal('Unconditional');
-      });
-
-      pages.loanPreview.bankReferenceNumber().invoke('text').then((text) => {
-        expect(text.trim()).equal(LOAN_FORM_VALUES.GUARANTEE_DETAILS.bankReferenceNumber);
-      });
-
-      pages.loanPreview.requestedCoverStartDate().invoke('text').then((text) => {
-        const expectedDate = `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear}`;
-        expect(text.trim()).equal(expectedDate);
-      });
-
-      pages.loanPreview.coverEndDate().invoke('text').then((text) => {
-        const expectedDate = `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear}`;
-        expect(text.trim()).equal(expectedDate);
-      });
-
-      // Loan financial details
-      pages.loanPreview.facilityValue().invoke('text').then((text) => {
-        expect(text.trim()).equal(LOAN_FORM_VALUES.FINANCIAL_DETAILS.facilityValue);
-      });
-
-      pages.loanPreview.currencySameAsSupplyContractCurrency().invoke('text').then((text) => {
-        expect(text.trim()).equal('No');
-      });
-
-      pages.loanPreview.currency().invoke('text').then((text) => {
-        expect(text.trim()).equal(LOAN_FORM_VALUES.FINANCIAL_DETAILS.currency.text);
-      });
-
-      pages.loanPreview.conversionRate().invoke('text').then((text) => {
-        expect(text.trim()).equal(LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
-      });
-
-      pages.loanPreview.conversionRateDate().invoke('text').then((text) => {
-        const expectedDate = `${LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateDay}/${LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateMonth}/${LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateYear}`;
-        expect(text.trim()).equal(expectedDate);
-      });
-
-      pages.loanPreview.disbursementAmount().invoke('text').then((text) => {
-        expect(text.trim()).equal(LOAN_FORM_VALUES.FINANCIAL_DETAILS.disbursementAmount);
-      });
-
-      pages.loanPreview.interestMarginFee().invoke('text').then((text) => {
-        expect(text.trim()).equal(`${LOAN_FORM_VALUES.FINANCIAL_DETAILS.interestMarginFee}%`);
-      });
-
-      pages.loanPreview.coveredPercentage().invoke('text').then((text) => {
-        expect(text.trim()).equal(`${LOAN_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage}%`);
-      });
-
-      pages.loanPreview.minimumQuarterlyFee().invoke('text').then((text) => {
-        expect(text.trim()).equal(LOAN_FORM_VALUES.FINANCIAL_DETAILS.minimumQuarterlyFee);
-      });
-
-      pages.loanPreview.guaranteeFeePayableByBank().invoke('text').then((text) => {
-        const expected = calculateExpectedGuaranteeFee(LOAN_FORM_VALUES.FINANCIAL_DETAILS.interestMarginFee);
-        expect(text.trim()).equal(expected);
-      });
-
-      pages.loanPreview.ukefExposure().invoke('text').then((text) => {
-        const expected = calculateExpectedUkefExposure(LOAN_FORM_VALUES.FINANCIAL_DETAILS.facilityValue, LOAN_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
-        expect(text.trim()).equal(expected);
-      });
-
-      // Loan dates and repayments
-      pages.loanPreview.premiumType().invoke('text').then((text) => {
-        expect(text.trim()).equal('In advance');
-      });
-
-      pages.loanPreview.premiumFrequency().invoke('text').then((text) => {
-        expect(text.trim()).equal('Annually');
-      });
-
-      pages.loanPreview.dayCountBasis().invoke('text').then((text) => {
-        expect(text.trim()).equal('365');
-      });
-    });
-
-    it('should populate Deal page with the submitted loan with `Completed` status and link to `Loan Gurantee Details` page', () => {
-      cy.loginGoToDealPage(user, deal);
-      pages.contract.addLoanButton().click();
-
-      // TODO: cy.addLoanToDeal();
-
-      fillLoanForm.unconditionalWithCurrencySameAsSupplyContractCurrency();
-      fillLoanForm.datesRepayments.inAdvanceAnnually();
-      pages.loanDatesRepayments.submit().click();
-
-      cy.url().should('include', '/preview');
-
-      // get loanId, go back to Deal page
-      // assert that some inputted Loan data is displayed in the table
-      partials.loanProgressNav.loanId().then((loanIdHiddenInput) => {
-        const loanId = loanIdHiddenInput[0].value;
-
-        pages.loanPreview.saveGoBackButton().click();
-        cy.url().should('eq', relative(`/contract/${deal._id}`));
-
-        const row = pages.contract.loansTransactionsTable.row(loanId);
-
-        row.bankReferenceNumber().invoke('text').then((text) => {
-          expect(text.trim()).equal(LOAN_FORM_VALUES.GUARANTEE_DETAILS.bankReferenceNumber);
-        });
-
-        row.loanStatus().invoke('text').then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
-
-        row.facilityValue().invoke('text').then((text) => {
-          const expectedValue = `${deal.supplyContractCurrency.id} ${LOAN_FORM_VALUES.FINANCIAL_DETAILS.facilityValue}`;
-
-          expect(text.trim()).equal(expectedValue);
-        });
-
-        row.facilityStage().invoke('text').then((text) => {
-          expect(text.trim()).equal('Unconditional');
-        });
-
-        row.requestedCoverStartDate().invoke('text').then((text) => {
-          const expectedDate = `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear}`;
-          expect(text.trim()).equal(expectedDate);
-        });
-
-        row.coverEndDate().invoke('text').then((text) => {
-          const expectedDate = `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear}`;
-          expect(text.trim()).equal(expectedDate);
         });
       });
     });
