@@ -160,12 +160,15 @@ exports.updateLoan = async (req, res) => {
       const sanitizedFacilityValue = sanitizeCurrency(facilityValue);
 
       modifiedLoan.guaranteeFeePayableByBank = calculateGuaranteeFee(interestMarginFee);
-
-      modifiedLoan.ukefExposure = calculateUkefExposure(sanitizedFacilityValue.sanitizedValue, coveredPercentage);
-      modifiedLoan.facilityValue = sanitizedFacilityValue.sanitizedValue;
+      if (sanitizedFacilityValue.sanitizedValue) {
+        modifiedLoan.ukefExposure = calculateUkefExposure(sanitizedFacilityValue.sanitizedValue, coveredPercentage);
+        modifiedLoan.facilityValue = sanitizedFacilityValue.sanitizedValue;
+      }
 
       const sanitizedFacilityDisbursement = sanitizeCurrency(modifiedLoan.disbursementAmount);
-      modifiedLoan.disbursementAmount = sanitizedFacilityDisbursement.sanitizedValue;
+      if (sanitizedFacilityDisbursement.sanitizedValue) {
+        modifiedLoan.disbursementAmount = sanitizedFacilityDisbursement.sanitizedValue;
+      }
 
       const modifiedDeal = putLoanInDealObject(deal, modifiedLoan, allOtherLoans);
 

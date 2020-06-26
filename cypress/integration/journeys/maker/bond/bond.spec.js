@@ -186,7 +186,7 @@ context('Add a Bond to a Deal', () => {
 
       // Bond Financial Details
       pages.bondPreview.facilityValue().invoke('text').then((text) => {
-        expect(text.trim()).equal(BOND_FORM_VALUES.FINANCIAL_DETAILS.facilityValue);
+        expect(text.trim()).equal(BOND_FORM_VALUES.FINANCIAL_DETAILS.facilityValueFormatted);
       });
 
       pages.bondPreview.riskMarginFee().invoke('text').then((text) => {

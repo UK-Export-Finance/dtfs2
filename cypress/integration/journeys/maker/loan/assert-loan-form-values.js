@@ -24,7 +24,7 @@ const guaranteeDetails = {
 
 const financialDetails = {
   currencyNotTheSameAsSupplyContractCurrency: () => {
-    pages.loanFinancialDetails.facilityValueInput().should('have.value', LOAN_FORM_VALUES.FINANCIAL_DETAILS.facilityValue);
+    pages.loanFinancialDetails.facilityValueInput().should('have.value', LOAN_FORM_VALUES.FINANCIAL_DETAILS.facilityValueFormatted);
     pages.loanFinancialDetails.currencySameAsSupplyContractCurrencyInputNo().click();
     pages.loanFinancialDetails.currencyInput().should('have.value', LOAN_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
     pages.loanFinancialDetails.conversionRateInput().should('have.value', LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);

@@ -158,9 +158,10 @@ exports.updateBond = async (req, res) => {
 
       modifiedBond.guaranteeFeePayableByBank = calculateGuaranteeFee(riskMarginFee);
 
-      modifiedBond.ukefExposure = calculateUkefExposure(sanitizedFacilityValue.sanitizedValue, coveredPercentage);
-
-      modifiedBond.facilityValue = sanitizedFacilityValue.sanitizedValue;
+      if (sanitizedFacilityValue.sanitizedValue) {
+        modifiedBond.ukefExposure = calculateUkefExposure(sanitizedFacilityValue.sanitizedValue, coveredPercentage);
+        modifiedBond.facilityValue = sanitizedFacilityValue.sanitizedValue;
+      }
 
       const modifiedDeal = putBondInDealObject(deal, modifiedBond, allOtherBonds);
 

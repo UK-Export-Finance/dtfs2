@@ -34,7 +34,8 @@ const expectedGuaranteeFeePayableByBank = () => {
   return formattedRiskMarginFee;
 };
 
-const facilityValue = '23,456,789.99';
+const facilityValue = '23456789.99';
+const facilityValueFormatted = '23,456,789.99';
 const coveredPercentage = '80';
 
 const expectedUkefExposure = () => {
@@ -49,6 +50,7 @@ const expectedUkefExposure = () => {
 
 const FINANCIAL_DETAILS = {
   facilityValue,
+  facilityValueFormatted,
   riskMarginFee,
   coveredPercentage,
   minimumRiskMarginFee: '1.23',

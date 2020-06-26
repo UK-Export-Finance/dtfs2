@@ -18,7 +18,14 @@ const masks = [
 export const maskedInputs = () => {
   masks.forEach(({ maskname, maskOptions }) => {
     const inputs = document.querySelectorAll(`[data-mask="${maskname}"]`);
+
     inputs.forEach((element) => {
+      if (element.innerText) {
+        const maskPipe = IMask.createPipe(maskOptions);
+        element.innerText = maskPipe(element.innerText); // eslint-disable-line no-param-reassign
+        return;
+      }
+
       element.setAttribute('aria-live', 'assertive');
       IMask(element, maskOptions);
     });
