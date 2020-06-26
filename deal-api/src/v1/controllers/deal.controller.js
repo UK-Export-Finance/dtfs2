@@ -206,6 +206,7 @@ exports.clone = async (req, res) => {
       ...existingDeal,
       _id: dealId,
       details: {
+        ...existingDeal.details,
         bankSupplyContractID,
         bankSupplyContractName,
       },

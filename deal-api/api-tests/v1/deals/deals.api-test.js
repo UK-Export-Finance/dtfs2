@@ -352,25 +352,33 @@ describe('/v1/deals', () => {
     });
 
     describe('with post body', () => {
-      let originalDealId;
+      let originalDeal;
 
       beforeEach(async () => {
-        const { body: originalDealBody } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-        originalDealId = originalDealBody._id;
+        const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+        originalDeal = body;
       });
 
-      it('clones a deal with modified _id, bankDealId and bankDealName', async () => {
+      it('clones a deal with modified _id, bankSupplyContractID, bankSupplyContractName and dates', async () => {
         const clonePostBody = {
           bankSupplyContractID: 'new-bank-deal-id',
           bankSupplyContractName: 'new-bank-deal-name',
           cloneTransactions: 'true',
         };
 
-        const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDealId}/clone`);
+        const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
-        expect(body._id).not.toEqual(clonePostBody.bankDealId);
-        expect(body.details.bankSupplyContractID).toEqual(clonePostBody.bankSupplyContractID);
-        expect(body.details.bankSupplyContractName).toEqual(clonePostBody.bankSupplyContractName);
+        expect(body).toEqual({
+          ...originalDeal,
+          _id: body._id,
+          details: {
+            ...originalDeal.details,
+            bankSupplyContractID: clonePostBody.bankSupplyContractID,
+            bankSupplyContractName: clonePostBody.bankSupplyContractName,
+            submissionDate: body.details.submissionDate,
+            dateOfLastAction: body.details.dateOfLastAction,
+          },
+        });
       });
 
       describe('when req.body has cloneTransactions set to false', () => {
@@ -380,7 +388,7 @@ describe('/v1/deals', () => {
             bankSupplyContractName: 'new-bank-deal-name',
             cloneTransactions: 'false',
           };
-          const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDealId}/clone`);
+          const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
           expect(body.bondTransactions).toEqual({
             items: [],
@@ -398,7 +406,7 @@ describe('/v1/deals', () => {
             bankSupplyContractName: '',
             cloneTransactions: '',
           };
-          const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDealId}/clone`);
+          const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
           expect(body.validationErrors.count).toEqual(3);
           expect(body.validationErrors.errorList.bankSupplyContractID).toBeDefined();
