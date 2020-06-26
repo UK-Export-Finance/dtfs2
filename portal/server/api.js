@@ -471,6 +471,31 @@ const downloadFile = async (id, fieldname, filename, token) => {
   return response.data;
 };
 
+const mga = async (token) => {
+  const response = await axios({
+    method: 'get',
+    url: `${urlRoot}/v1/mga`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.data;
+};
+
+const downloadMga = async (filename, token) => {
+  const response = await axios({
+    method: 'get',
+    responseType: 'stream',
+    url: `${urlRoot}/v1/mga/${filename}`,
+    headers: {
+      Authorization: token,
+    },
+  });
+  return response.data;
+};
+
 export default {
   banks,
   cloneDeal,
@@ -501,4 +526,6 @@ export default {
   getIndustrySectors,
   getMandatoryCriteria,
   downloadFile,
+  mga,
+  downloadMga,
 };

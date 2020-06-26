@@ -49,6 +49,9 @@ const testUsers = [
     username: 'Barclays-checker-1', password: 'P@ssword1234', roles: ['checker'], bank: banks.Barclays,
   },
   {
+    username: 'Ukef-maker-1', password: 'P@ssword1234', roles: ['maker'], bank: banks.UKEF,
+  },
+  {
     username: 'super-user', password: 'P@ssword1234', roles: ['maker'], bank: banks.any,
   },
   { username: 'data-admin', password: 'P@ssword1234', roles: ['data-admin'] },
