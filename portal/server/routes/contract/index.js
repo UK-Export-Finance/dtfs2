@@ -278,7 +278,7 @@ router.get('/contract/:_id/clone', provide([DEAL]), async (req, res) => {
 
   return res.render('contract/contract-clone.njk', {
     bankSupplyContractID,
-    bankSupplyContractName,
+    bankSupplyContractName: `Copy of ${bankSupplyContractName}`,
     user: req.session.user,
   });
 });

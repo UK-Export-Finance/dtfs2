@@ -43,10 +43,9 @@ context('Clone a deal', () => {
       cy.loginGoToDealPage(user, deal);
       goToCloneDealPage();
 
-      cy.title().should('eq', `Clone Deal - ${deal.details.bankSupplyContractName}${pages.defaults.pageTitleAppend}`);
-      // confirm that inputs are populated with the deal's initial bankSupplyContractID/bankSupplyContractName
+      cy.title().should('eq', `Clone Deal - Copy of ${deal.details.bankSupplyContractName}${pages.defaults.pageTitleAppend}`);
       pages.cloneDeal.bankSupplyContractIDInput().should('have.value', MOCK_DEAL.details.bankSupplyContractID);
-      pages.cloneDeal.bankSupplyContractNameInput().should('have.value', MOCK_DEAL.details.bankSupplyContractName);
+      pages.cloneDeal.bankSupplyContractNameInput().should('have.value', `Copy of ${MOCK_DEAL.details.bankSupplyContractName}`);
     });
   });
 
@@ -67,7 +66,7 @@ context('Clone a deal', () => {
   });
 
   describe('When a user clones a deal', () => {
-    it('should progress to the dashboard page and display a success message', () => {
+    it('should progress to the dashboard page, display a success message and render correct contract name and id', () => {
       cy.loginGoToDealPage(user, deal);
       goToCloneDealPage();
 
@@ -87,18 +86,17 @@ context('Clone a deal', () => {
       partials.successMessage.successMessageLink().click();
       cy.url().should('include', '/contract/');
 
-      // confirm that the cloned deal has the bankSupplyContractID/bankSupplyContractName submitted in the 'clone deal' form
-      pages.contract.bankSupplyContractName().invoke('text').then((text) => {
-        expect(text.trim()).equal(`${MOCK_DEAL.details.bankSupplyContractName}-cloned`);
-      });
-
+      // 
       pages.contract.bankSupplyContractID().invoke('text').then((text) => {
         expect(text.trim()).equal(`${MOCK_DEAL.details.bankSupplyContractID}-cloned`);
       });
+
+      pages.contract.bankSupplyContractName().invoke('text').then((text) => {
+        expect(text.trim()).equal(`Copy of ${MOCK_DEAL.details.bankSupplyContractName}-cloned`);
+      });
     });
 
-    // TODO when we have bonds/transactions setup
-    //
+    // TODO
     // When a user clones a deal and chooses to not clone transactions
     // the cloned deal should not include transactions
   });
