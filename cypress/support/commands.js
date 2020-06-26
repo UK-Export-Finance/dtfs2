@@ -37,6 +37,7 @@ Cypress.Commands.add("removeUserIfPresent", require('./deal-api/removeUserIfPres
 
 // commands that abstract common tasks you might perform while clicking round the portal..
 Cypress.Commands.add("addBondToDeal", require('./portal/addBondToDeal'));
+Cypress.Commands.add("addLoanToDeal", require('./portal/addLoanToDeal'));
 Cypress.Commands.add("createADeal", require('./portal/createADeal'));
 Cypress.Commands.add("createNewSubmission", require('./portal/createNewSubmission'));
 Cypress.Commands.add("login", require('./portal/logIn'));

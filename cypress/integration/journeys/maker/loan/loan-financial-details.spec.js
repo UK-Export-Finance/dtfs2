@@ -51,7 +51,7 @@ context('Loan Financial Details', () => {
   });
 
   describe('when submitting an empty form', () => {
-    it('it should progress to `Loan Dates and Repayments` page and after proceeding to `Loan Preview` page and when returning to `Loan Guarantee Details` page, should render validation errors', () => {
+    it('it should progress to `Loan Dates and Repayments` page and after proceeding to `Loan Preview` page, should render validation errors `Loan Guarantee Details` page', () => {
       goToPageWithUnconditionalFacilityStage(deal);
 
       partials.errorSummary.errorSummaryLinks().should('have.length', 0);
@@ -125,7 +125,7 @@ context('Loan Financial Details', () => {
     });
   });
 
-  it('should prepopulate form inputs from submitted data and render a checked checkbox only for `Financial Details` in progress nav', () => {
+  it('should prepopulate form inputs from submitted data and render a checked checkbox in progress nav', () => {
     goToPageWithUnconditionalFacilityStage(deal);
 
     fillLoanForm.financialDetails.currencyNotTheSameAsSupplyContractCurrency();

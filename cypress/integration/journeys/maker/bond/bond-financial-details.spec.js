@@ -4,7 +4,6 @@ const partials = require('../../../partials');
 const fillBondForm = require('./fill-bond-forms');
 const assertBondFormValues = require('./assert-bond-form-values');
 const BOND_FORM_VALUES = require('./bond-form-values');
-const { roundNumber } = require('../../../../../deal-api/src/utils/number');
 const relative = require('../../../relativeURL');
 const {
   calculateExpectedGuaranteeFee,
