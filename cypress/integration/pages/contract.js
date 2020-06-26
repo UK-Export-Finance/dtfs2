@@ -34,7 +34,7 @@ const page = {
     row: (bondId) => {
       const row = cy.get(`[data-cy="bond-${bondId}"]`);
       return {
-        uniqueNumber: () => row.get('[data-cy="unique-number"]'),
+        uniqueNumber: () => row.get(`[data-cy="unique-number-${bondId}"]`),
         bondStatus: () => row.get('[data-cy="bond-status"]'),
         facilityValue: () => row.get('[data-cy="bond-facility-value"]'),
         bondStage: () => row.get('[data-cy="bond-stage"]'),
@@ -48,7 +48,7 @@ const page = {
     row: (loanId) => {
       const row = cy.get(`[data-cy="loan-${loanId}"]`);
       return {
-        bankReferenceNumber: () => row.get('[data-cy="loan-bank-reference-number"]'),
+        bankReferenceNumber: () => row.get(`[data-cy="loan-bank-reference-number-${loanId}"]`),
         loanStatus: () => row.get('[data-cy="loan-status"]'),
         facilityValue: () => row.get('[data-cy="loan-facility-value"]'),
         facilityStage: () => row.get('[data-cy="loan-facility-stage"]'),

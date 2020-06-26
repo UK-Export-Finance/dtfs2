@@ -1,4 +1,5 @@
 {% import '_macros/status-tag.njk' as statusTag %}
+{% import './bond-link.njk' as bondLink %}
 
 {% macro render(params) %}
   {% if params.deal.bondTransactions.items %}
@@ -25,11 +26,7 @@
             {% for bond in bonds %}
               <tr class="govuk-table__row" data-cy="bond-{{ bond._id }}">
                 <td class="govuk-table__cell govuk-!-font-size-14">
-                  {% if bond.uniqueIdentificationNumber %}
-                    <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/details" class="govuk-link" data-cy="unique-number">{{ bond.uniqueIdentificationNumber }}</a>
-                  {% else %}
-                    <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/details" class="govuk-link" data-cy="unique-number">Not entered</a>
-                  {% endif %}
+                  {{ bondLink.render(params, bond) }}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14">
