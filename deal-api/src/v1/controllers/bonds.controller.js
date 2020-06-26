@@ -8,6 +8,7 @@ const {
   calculateUkefExposure,
 } = require('../section-calculations');
 const sectionCurrency = require('../section-currency');
+const { sanitizeCurrency } = require('../../utils/number');
 
 const putBondInDealObject = (deal, bond, otherBonds) => ({
   ...deal,
@@ -153,10 +154,13 @@ exports.updateBond = async (req, res) => {
       modifiedBond = feeTypeFields(modifiedBond);
 
       const { facilityValue, coveredPercentage, riskMarginFee } = modifiedBond;
+      const sanitizedFacilityValue = sanitizeCurrency(facilityValue);
 
       modifiedBond.guaranteeFeePayableByBank = calculateGuaranteeFee(riskMarginFee);
 
-      modifiedBond.ukefExposure = calculateUkefExposure(facilityValue, coveredPercentage);
+      modifiedBond.ukefExposure = calculateUkefExposure(sanitizedFacilityValue.sanitizedValue, coveredPercentage);
+
+      modifiedBond.facilityValue = sanitizedFacilityValue.sanitizedValue;
 
       const modifiedDeal = putBondInDealObject(deal, modifiedBond, allOtherBonds);
 

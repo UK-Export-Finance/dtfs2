@@ -313,7 +313,7 @@ describe('/v1/deals/:id/loan', () => {
         expect(body['coverEndDate-day']).toEqual(undefined);
         expect(body['coverEndDate-month']).toEqual(undefined);
         expect(body['coverEndDate-year']).toEqual(undefined);
-        expect(body.disbursementAmount).toEqual(undefined);
+        expect(body.disbursementAmount).toEqual('');
       });
     });
 
