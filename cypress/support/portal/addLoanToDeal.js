@@ -3,7 +3,7 @@ const fillLoanForm = require('../../integration/journeys/maker/loan/fill-loan-fo
 
 module.exports = () => {
   pages.contract.addLoanButton().click();
-  fillLoanForm.unconditionalWithCurrencySameAsSupplyContractCurrency();
+  fillLoanForm.unconditionalWithCurrencyNotTheSameAsSupplyContractCurrency();
   fillLoanForm.datesRepayments.inAdvanceAnnually();
   pages.loanDatesRepayments.submit().click();
 };

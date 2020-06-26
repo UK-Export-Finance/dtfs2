@@ -1,9 +1,9 @@
-const {contract, contractConfirmSubmission} = require('../../../pages');
-const {errorSummary, successMessage} = require('../../../partials');
+const { contract, contractConfirmSubmission } = require('../../../pages');
+const { successMessage } = require('../../../partials');
 const relative = require('../../../relativeURL');
 
-const maker1 = {username: 'MAKER', password: 'MAKER'};
-const checker = {username: 'CHECKER', password: 'CHECKER'};
+const maker1 = { username: 'MAKER', password: 'MAKER' };
+const checker = { username: 'CHECKER', password: 'CHECKER' };
 
 // test data we want to set up + work with..
 const dealWithInvalidCoverStartDate = require('./test-data/dealWithInvalidLoanCoverStartDate');

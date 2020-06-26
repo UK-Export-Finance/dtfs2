@@ -2,6 +2,7 @@ const pages = require('../../../pages');
 const partials = require('../../../partials');
 const LOAN_FORM_VALUES = require('./loan-form-values');
 const relative = require('../../../relativeURL');
+const fillLoanForm = require('./fill-loan-forms');
 const {
   calculateExpectedGuaranteeFee,
   calculateExpectedUkefExposure,
@@ -122,9 +123,12 @@ context('Add a Loan to a Deal', () => {
     });
   });
 
-  it('should populate Deal page with the submitted loan with `Completed` status and link to `Loan Gurantee Details` page', () => {
+  it('should populate Deal page with the submitted loan, with `Completed` status and link to `Loan Gurantee Details` page', () => {
     cy.loginGoToDealPage(user, deal);
-    cy.addLoanToDeal();
+    pages.contract.addLoanButton().click();
+    fillLoanForm.unconditionalWithCurrencySameAsSupplyContractCurrency();
+    fillLoanForm.datesRepayments.inAdvanceAnnually();
+    pages.loanDatesRepayments.submit().click();
 
     // get loanId, go back to Deal page
     // assert that some inputted Loan data is displayed in the table

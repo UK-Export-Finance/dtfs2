@@ -107,6 +107,9 @@
         "currencySameAsSupplyContractCurrency": "true",
         "interestMarginFee": "10",
         "coveredPercentage": "9",
+        "premiumType": "In advance",
+        "premiumFrequency": "Annually",
+        "dayCountBasis": "365"
       }
     ]
   }
