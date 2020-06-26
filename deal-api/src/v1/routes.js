@@ -20,6 +20,7 @@ const loans = require('./controllers/loans.controller');
 const bonds = require('./controllers/bonds.controller');
 const eligibilityDocumentation = require('./controllers/eligibility-documentation.controller');
 const idCounters = require('./controllers/id-counters.controller');
+const mga = require('./controllers/mga.controller');
 
 const users = require('./users/routes');
 
@@ -265,6 +266,17 @@ authRouter.route('/transactions/:bankFacilityId')
     validate({ role: ['editor'] }),
     transactions.delete,
   );
+
+authRouter.route('/mga')
+  .get(
+    mga.findAllByUserOrganisation,
+  );
+
+authRouter.route('/mga/:filename')
+  .get(
+    mga.downloadMga,
+  );
+
 
 authRouter.route('/counters/reset')
   .post(

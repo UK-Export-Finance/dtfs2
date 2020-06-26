@@ -19,6 +19,7 @@ const findOneBank = async (id, callback) => {
     callback(result);
   });
 };
+exports.findOneBank = findOneBank;
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection('banks');

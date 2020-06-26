@@ -7,6 +7,7 @@ import miscRoutes from './misc';
 import reportingRoutes from './reporting';
 import adminRoutes from './admin';
 import userRoutes from './user';
+import mgaRoutes from './mga';
 
 const router = express.Router();
 
@@ -18,5 +19,6 @@ router.use('/', miscRoutes);
 router.use('/', reportingRoutes);
 router.use('/', adminRoutes);
 router.use('/', userRoutes);
+router.use('/', mgaRoutes);
 
 export default router;

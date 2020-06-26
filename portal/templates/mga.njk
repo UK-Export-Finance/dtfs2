@@ -8,6 +8,9 @@
 
   <h1 class="govuk-heading-l">MGA documents</h1>
 
-  <p class="govuk-body"><a class="govuk-link" href="#">MGA - UKEF TEST BANK DELEGATED.docx</a></p>
-
+  <ul class="govuk-list govuk-list--bullet">
+  {% for mga in mgaList %}
+    <li><a class="govuk-link" href="/mga/{{ mga }}" data-cy="mga-link">{{ mga }}</a></li>
+  {% endfor %}
+  </ul>
 {% endblock %}

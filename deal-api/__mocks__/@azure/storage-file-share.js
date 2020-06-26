@@ -13,7 +13,17 @@ function createFileClient(filename) {
   const fileClient = new ShareFileClient();
   fileClient.name = filename;
   fileClient.path = `${this.folderName}/${filename}`;
-  fileClient.downloadToBuffer = () => Buffer.from('mockFile', 'utf-8');
+  fileClient.downloadToBuffer = () => {
+    if (filename === 'not-found.txt') {
+      return {
+        error: {
+          errorCode: 404,
+        },
+      };
+    }
+
+    return Buffer.from('mockFile', 'utf-8');
+  };
   return fileClient;
 }
 
