@@ -2,7 +2,6 @@
 {% import '_macros/contract-tabs.njk' as contractTabs %}
 {% import '_macros/contract-details.njk' as contractDetails %}
 {% import '_macros/status-tag.njk' as statusTag %}
-{% import 'loan/_macros/loan-transactions-table.njk' as loanTransactionsTable %}
 
 {% import './components/abandon-deal-button.njk' as abandonButton %}
 {% import './components/abandon-deal-link.njk' as abandonLink %}
@@ -14,6 +13,7 @@
 {% import './components/clone-deal-link.njk' as cloneLink %}
 {% import './components/edit-deal-name-link.njk' as editDealNameLink %}
 {% import './components/eligibility-criteria-link.njk' as eligibilityCriteriaLink %}
+{% import './components/loan-transactions-table.njk' as loanTransactionsTable %}
 {% import './components/please-complete-all-forms-text.njk' as pleaseCompleteAllFormsText %}
 {% import './components/proceed-to-review-button.njk' as proceedToReviewButton %}
 {% import './components/proceed-to-submit-button.njk' as proceedToSubmitButton %}
@@ -147,15 +147,7 @@
               {{ addALoanButton.render(componentData) }}
             </div>
 
-            {% if deal.loanTransactions.items %}
-              <div class="govuk-grid-column-full">
-                {{ loanTransactionsTable.render(
-                  loans = deal.loanTransactions.items,
-                  dealId = deal._id
-                )}}
-
-              </div>
-            {% endif %}
+            {{ loanTransactionsTable.render(componentData) }}
 
           </div>
         </div>

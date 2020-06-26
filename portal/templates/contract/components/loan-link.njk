@@ -1,0 +1,21 @@
+{% macro render(params, loan) %}
+  {% set dealId = params.deal._id %}
+  loan: {{ loan }}
+  bankReferenceNumber: {{ loan }}
+  user: {{ params.user }}
+  user.roles: {{ params.user.roles }}
+  {% if loan.bankReferenceNumber %}
+    {% if params.user.roles.includes('maker') %}
+      <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/guarantee-details" class="govuk-link" data-cy="loan-bank-reference-number-{{loan._id}}">{{ loan.bankReferenceNumber }}</a>
+    {% else %}
+      {{ loan.bankReferenceNumber }}
+    {% endif %}
+  {% else %}
+    {% if params.user.roles.includes('maker') %}
+      <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/guarantee-details" class="govuk-link" data-cy="loan-bank-reference-number-{{loan._id}}">Not entered</a>
+    {% else %}
+      Not entered
+    {% endif %}
+  {% endif %}
+
+{% endmacro %}

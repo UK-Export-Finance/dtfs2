@@ -1,40 +1,10 @@
 const pageRenderer = require('../pageRenderer');
 const page = 'contract/contract-view.njk';
 const render = pageRenderer(page);
+const deal = require('../fixtures/deal-full-completed');
 
 describe(page, () => {
   let wrapper;
-
-  const deal = {
-    _id: 123456,
-    details: {
-      bankSupplyContractName: 'bankId123',
-      bankSupplyContractID: '321',
-      maker: {username: 'bob'},
-      submissionDate: '01/01/2020',
-      dateOfLastAction: '02/02/2020 12:12',
-    },
-    bondTransactions: {
-      items: [
-      {
-          _id: "1234567891",
-          bondIssuer: "issuer",
-          bondType: "bond type",
-          bondStage: "unissued",
-          ukefGuaranteeInMonths: "24",
-          uniqueIdentificationNumber: "1234",
-          bondBeneficiary: "test",
-          bondValue: "123",
-          transactionCurrencySameAsSupplyContractCurrency: "true",
-          riskMarginFee: "1",
-          coveredPercentage: "2",
-          feeType: "test",
-          feeFrequency: "test",
-          dayCountBasis: "test"
-      }
-    ]
-  }
-  };
 
   describe('viewed by a maker:', () => {
     const user = {
@@ -46,15 +16,15 @@ describe(page, () => {
     });
 
     it('displays bankSupplyContractName', () => {
-      wrapper.expectText('[data-cy="bankSupplyContractName"]').toRead('bankId123');
+      wrapper.expectText('[data-cy="bankSupplyContractName"]').toRead(deal.details.bankSupplyContractName);
     });
 
     it('displays bankSupplyContractID', () => {
-      wrapper.expectText('[data-cy="bankSupplyContractID"]').toRead('321');
+      wrapper.expectText('[data-cy="bankSupplyContractID"]').toRead(deal.details.bankSupplyContractID);
     });
 
     it('displays the maker', () => {
-      wrapper.expectText('[data-cy="maker"]').toRead('bob');
+      wrapper.expectText('[data-cy="maker"]').toRead(deal.details.maker.username);
     });
 
     it('displays the submissionDate', () => {
@@ -86,9 +56,24 @@ describe(page, () => {
       wrapper.expectLink(`[data-cy="delete-bond-${bondId}"]`).toLinkTo(`/contract/${dealId}/bond/${bondId}/delete`, 'Delete');
     });
 
+    it('provides a link to the bond', () => {
+      const dealId = deal._id;
+      const bondId = deal.bondTransactions.items[0]._id;
+
+      wrapper.expectLink(`[data-cy="unique-number-${bondId}"]`).toLinkTo(`/contract/${dealId}/bond/${bondId}/details`, deal.bondTransactions.items[0].uniqueIdentificationNumber);
+    });
+
     it('allows the user to add a loan', () => {
       wrapper.expectButtonDisguisedAsALink('[data-cy="button-add-loan"]').toLinkTo(`/contract/${deal._id}/loan/create`, 'Add a Loan');
     });
+
+    it('provides a link to the loan', () => {
+      const dealId = deal._id;
+      const loanId = deal.loanTransactions.items[0]._id;
+
+      wrapper.expectLink(`[data-cy="loan-bank-reference-number-${loanId}"]`).toLinkTo(`/contract/${dealId}/loan/${loanId}/guarantee-details`, deal.loanTransactions.items[0].bankReferenceNumber);
+    });
+
   });
 
   describe('viewed by a checker:', () => {
@@ -101,15 +86,15 @@ describe(page, () => {
     });
 
     it('displays bankSupplyContractName', () => {
-      wrapper.expectText('[data-cy="bankSupplyContractName"]').toRead('bankId123');
+      wrapper.expectText('[data-cy="bankSupplyContractName"]').toRead(deal.details.bankSupplyContractName);
     });
 
     it('displays bankSupplyContractID', () => {
-      wrapper.expectText('[data-cy="bankSupplyContractID"]').toRead('321');
+      wrapper.expectText('[data-cy="bankSupplyContractID"]').toRead(deal.details.bankSupplyContractID);
     });
 
     it('displays the maker', () => {
-      wrapper.expectText('[data-cy="maker"]').toRead('bob');
+      wrapper.expectText('[data-cy="maker"]').toRead(deal.details.maker.username);
     });
 
     it('displays the submissionDate', () => {
@@ -139,9 +124,24 @@ describe(page, () => {
       wrapper.expectLink(`[data-cy="delete-bond-${bondId}"]`).notToExist();
     });
 
+    it('hides the link to the bond', () => {
+      const dealId = deal._id;
+      const bondId = deal.bondTransactions.items[0]._id;
+
+      wrapper.expectLink(`[data-cy="unique-number-${bondId}"]`).notToExist();
+    });
+
     it('hides the link to add a bond', () => {
       wrapper.expectButtonDisguisedAsALink('[data-cy="button-add-loan"]').notToExist();
     });
+
+    it('hides the link to the loan', () => {
+      const dealId = deal._id;
+      const loanId = deal.loanTransactions.items[0]._id;
+
+      wrapper.expectLink(`[data-cy="loan-bank-reference-number-${loanId}"]`).notToExist();
+    });
+
   });
 
 });
