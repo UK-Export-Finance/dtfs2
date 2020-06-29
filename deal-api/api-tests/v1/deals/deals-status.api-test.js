@@ -3,7 +3,7 @@ const wipeDB = require('../../wipeDB');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
-const completedDeal = require('../../fixtures/deal-full-completed');
+const completedDeal = require('../../fixtures/deal-fully-completed');
 
 const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');

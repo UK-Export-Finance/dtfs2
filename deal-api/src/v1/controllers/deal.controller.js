@@ -6,7 +6,6 @@ const DEFAULTS = require('../defaults');
 const db = require('../../drivers/db-client');
 const { getDealErrors } = require('../validation/deal');
 
-// const { getCloneDealErrors } = require('../validation/clone-deal');
 const { isSuperUser, userHasAccessTo } = require('../users/checks');
 const { generateDealId } = require('../../utils/generateIds');
 const validate = require('../validation/completeDealValidation');
