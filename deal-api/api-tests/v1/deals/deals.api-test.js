@@ -5,6 +5,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const dealWithAboutComplete = require('../../fixtures/deal-with-complete-about-section.json');
 const dealWithAboutIncomplete = require('../../fixtures/deal-with-incomplete-about-section.json');
+const completedDeal = require('../../fixtures/deal-full-completed');
 const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
 
@@ -355,11 +356,11 @@ describe('/v1/deals', () => {
       let originalDeal;
 
       beforeEach(async () => {
-        const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+        const { body } = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
         originalDeal = body;
       });
 
-      it('clones a deal with modified _id, bankSupplyContractID, bankSupplyContractName and dates', async () => {
+      it('clones a deal with modified _id, bankSupplyContractID, bankSupplyContractName and new dates', async () => {
         const clonePostBody = {
           bankSupplyContractID: 'new-bank-deal-id',
           bankSupplyContractName: 'new-bank-deal-name',
@@ -368,17 +369,114 @@ describe('/v1/deals', () => {
 
         const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
-        expect(body).toEqual({
-          ...originalDeal,
-          _id: body._id,
-          details: {
-            ...originalDeal.details,
-            bankSupplyContractID: clonePostBody.bankSupplyContractID,
-            bankSupplyContractName: clonePostBody.bankSupplyContractName,
-            submissionDate: body.details.submissionDate,
-            dateOfLastAction: body.details.dateOfLastAction,
-          },
+        expect(body._id).toEqual(body._id);
+        expect(body.details).toEqual({
+          ...originalDeal.details,
+          bankSupplyContractID: clonePostBody.bankSupplyContractID,
+          bankSupplyContractName: clonePostBody.bankSupplyContractName,
+          submissionDate: body.details.submissionDate, // TODO: should this now be 'NOT submitted'
+          dateOfLastAction: body.details.dateOfLastAction,
         });
+      });
+
+      it('clones a deal with only specific bondTransactions fields', async () => {
+        const clonePostBody = {
+          bankSupplyContractID: 'new-bank-deal-id',
+          bankSupplyContractName: 'new-bank-deal-name',
+          cloneTransactions: 'true',
+        };
+
+        const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+
+        const firstOriginalBond = originalDeal.bondTransactions.items[0];
+        const lastOriginalBond = originalDeal.bondTransactions.items[1];
+
+        const expectedBondTransactions = {
+          items: [
+            {
+              _id: firstOriginalBond._id,
+              bondStage: firstOriginalBond.bondStage,
+              'requestedCoverStartDate-day': firstOriginalBond['requestedCoverStartDate-day'],
+              'requestedCoverStartDate-month': firstOriginalBond['requestedCoverStartDate-month'],
+              'requestedCoverStartDate-year': firstOriginalBond['requestedCoverStartDate-year'],
+              'coverEndDate-day': firstOriginalBond['coverEndDate-day'],
+              'coverEndDate-month': firstOriginalBond['coverEndDate-month'],
+              'coverEndDate-year': firstOriginalBond['coverEndDate-year'],
+              facilityValue: firstOriginalBond.facilityValue,
+              currencySameAsSupplyContractCurrency: firstOriginalBond.currencySameAsSupplyContractCurrency,
+              currency: firstOriginalBond.currency,
+              conversionRate: firstOriginalBond.conversionRate,
+              'conversionRateDate-day': firstOriginalBond['conversionRateDate-day'],
+              'conversionRateDate-month': firstOriginalBond['conversionRateDate-month'],
+              'conversionRateDate-year': firstOriginalBond['conversionRateDate-year'],
+              uniqueIdentificationNumber: firstOriginalBond.uniqueIdentificationNumber,
+              ukefGuaranteeInMonths: firstOriginalBond.ukefGuaranteeInMonths,
+            },
+            {
+              _id: lastOriginalBond._id,
+              bondStage: lastOriginalBond.bondStage,
+              'requestedCoverStartDate-day': lastOriginalBond['requestedCoverStartDate-day'],
+              'requestedCoverStartDate-month': lastOriginalBond['requestedCoverStartDate-month'],
+              'requestedCoverStartDate-year': lastOriginalBond['requestedCoverStartDate-year'],
+              'coverEndDate-day': lastOriginalBond['coverEndDate-day'],
+              'coverEndDate-month': lastOriginalBond['coverEndDate-month'],
+              'coverEndDate-year': lastOriginalBond['coverEndDate-year'],
+              facilityValue: lastOriginalBond.facilityValue,
+              currencySameAsSupplyContractCurrency: lastOriginalBond.currencySameAsSupplyContractCurrency,
+              currency: lastOriginalBond.currency,
+              uniqueIdentificationNumber: lastOriginalBond.uniqueIdentificationNumber,
+              ukefGuaranteeInMonths: lastOriginalBond.ukefGuaranteeInMonths,
+            },
+          ],
+        };
+
+        expect(body.bondTransactions).toEqual(expectedBondTransactions);
+      });
+
+      it('clones a deal with only specific loanTransactions fields', async () => {
+        const clonePostBody = {
+          bankSupplyContractID: 'new-bank-deal-id',
+          bankSupplyContractName: 'new-bank-deal-name',
+          cloneTransactions: 'true',
+        };
+
+        const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+
+        const firstOriginalLoan = originalDeal.loanTransactions.items[0];
+        const lastOriginalLoan = originalDeal.loanTransactions.items[1];
+
+        const expectedLoanTransactions = {
+          items: [
+            {
+              _id: firstOriginalLoan._id,
+              bankReferenceNumber: firstOriginalLoan.bankReferenceNumber,
+              facilityValue: firstOriginalLoan.facilityValue,
+              currencySameAsSupplyContractCurrency: firstOriginalLoan.currencySameAsSupplyContractCurrency,
+              currency: firstOriginalLoan.currency,
+              ukefGuaranteeInMonths: firstOriginalLoan.ukefGuaranteeInMonths,
+            },
+            {
+              _id: lastOriginalLoan._id,
+              bankReferenceNumber: lastOriginalLoan.bankReferenceNumber,
+              'requestedCoverStartDate-day': lastOriginalLoan['requestedCoverStartDate-day'],
+              'requestedCoverStartDate-month': lastOriginalLoan['requestedCoverStartDate-month'],
+              'requestedCoverStartDate-year': lastOriginalLoan['requestedCoverStartDate-year'],
+              'coverEndDate-day': lastOriginalLoan['coverEndDate-day'],
+              'coverEndDate-month': lastOriginalLoan['coverEndDate-month'],
+              'coverEndDate-year': lastOriginalLoan['coverEndDate-year'],
+              facilityValue: lastOriginalLoan.facilityValue,
+              currencySameAsSupplyContractCurrency: lastOriginalLoan.currencySameAsSupplyContractCurrency,
+              currency: lastOriginalLoan.currency,
+              conversionRate: lastOriginalLoan.conversionRate,
+              'conversionRateDate-day': lastOriginalLoan['conversionRateDate-day'],
+              'conversionRateDate-month': lastOriginalLoan['conversionRateDate-month'],
+              'conversionRateDate-year': lastOriginalLoan['conversionRateDate-year'],
+              disbursementAmount: lastOriginalLoan.disbursementAmount,
+            },
+          ],
+        };
+
+        expect(body.loanTransactions).toEqual(expectedLoanTransactions);
       });
 
       describe('when req.body has cloneTransactions set to false', () => {
