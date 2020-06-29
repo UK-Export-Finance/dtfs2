@@ -8,6 +8,7 @@ const deals = require('./controllers/deal.controller');
 const dealName = require('./controllers/deal-name.controller');
 const dealStatus = require('./controllers/deal-status.controller');
 const dealSubmissionDetails = require('./controllers/deal-submission-details.controller');
+const dealClone = require('./controllers/deal-clone.controller');
 const banks = require('./controllers/banks.controller');
 const currencies = require('./controllers/currencies.controller');
 const countries = require('./controllers/countries.controller');
@@ -111,7 +112,7 @@ authRouter.route('/deals/:id')
 authRouter.route('/deals/:id/clone')
   .post(
     validate({ role: ['maker'] }),
-    deals.clone,
+    dealClone.clone,
   );
 
 authRouter.route('/deals/:id/eligibility-criteria')
