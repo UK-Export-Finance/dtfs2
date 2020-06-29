@@ -1,7 +1,7 @@
 const utils = require('../../crypto/utils');
 
 const {
-  create, update, remove, list, findOne, findByUsername,
+  create, update, remove, list, findOne, findByUsername, updateLastLogin,
 } = require('./controller');
 
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
@@ -68,7 +68,7 @@ module.exports.updateById = (req, res, next) => {
 };
 
 module.exports.remove = (req, res, next) => {
-  remove(req.params.username, (err, status) => {
+  remove(req.params._id, (err, status) => { // eslint-disable-line no-underscore-dangle
     if (err) {
       next(err);
     } else {
@@ -90,8 +90,11 @@ module.exports.login = (req, res, next) => {
 
       if (isValid) {
         const tokenObject = utils.issueJWT(user);
-        res.status(200).json({
-          success: true, token: tokenObject.token, user: sanitizeUser(user), expiresIn: tokenObject.expires,
+
+        updateLastLogin(user, () => {
+          res.status(200).json({
+            success: true, token: tokenObject.token, user: sanitizeUser(user), expiresIn: tokenObject.expires,
+          });
         });
       } else {
         res.status(401).json({ success: false, msg: 'you entered the wrong password' });

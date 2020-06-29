@@ -65,7 +65,7 @@ module.exports.listAllUsers = (token) => {
 };
 
 module.exports.deleteUser = (token, user) => cy.request({
-  url: `${api()}/v1/user/${user._id}`,
+  url: `${api()}/v1/users/${user._id}`,
   method: 'DELETE',
   headers: {
     'Content-Type': 'application/json',

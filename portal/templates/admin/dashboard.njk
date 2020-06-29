@@ -140,9 +140,9 @@
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Organisation - Bank</th>
         {# <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th> #}
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Roles</th>
-        {# <th scope="col" class="govuk-table__header govuk-!-font-size-14">Member for</th>
+        {# <th scope="col" class="govuk-table__header govuk-!-font-size-14">Member for</th> #}
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Last access</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Operations</th> #}
+        {# <th scope="col" class="govuk-table__header govuk-!-font-size-14">Operations</th> #}
       </tr>
     </thead>
 
@@ -167,7 +167,7 @@
               </td> #}
 
               <td class="govuk-table__cell govuk-!-font-size-14">
-                <a href="/admin/users/edit/{{ user.username | urlencode }}" class="govuk-link" data-cy="username">{{ user.username }}</a>
+                <a href="/admin/users/edit/{{ user.username | urlencode }}" class="govuk-link" data-cy="username-{{user.username}}">{{ user.username }}</a>
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bank">
@@ -192,13 +192,13 @@
 
               {# <td class="govuk-table__cell govuk-!-font-size-14">
               2 years 7 months
+              </td> #}
+
+              <td class="govuk-table__cell govuk-!-font-size-14" data-cy="lastLogin-{{user.username}}">
+                {{ user.lastLogin}}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
-                10 minutes 42 seconds ago
-              </td>
-
-              <td class="govuk-table__cell govuk-!-font-size-14">
+              {# <td class="govuk-table__cell govuk-!-font-size-14">
                 <ul class="govuk-!-margin-0 govuk-!-margin-left-4 govuk-!-padding-left-0">
                 <li><a href="/admin/users/edit/{{ user.username | urlencode }}" class="govuk-link" >Edit <span class="govuk-visually-hidden">{{ user.username }}</span></a></li>
                 <li>
