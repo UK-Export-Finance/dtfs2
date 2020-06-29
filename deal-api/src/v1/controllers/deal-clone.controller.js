@@ -1,0 +1,105 @@
+const { findOneDeal, create: createDeal } = require('./deal.controller');
+const DEFAULTS = require('../defaults');
+const { generateDealId } = require('../../utils/generateIds');
+const { getCloneDealErrors } = require('../validation/clone-deal');
+
+exports.clone = async (req, res) => {
+  await findOneDeal(req.params.id, async (existingDeal) => {
+    if (!existingDeal) {
+      return res.status(404).send();
+    }
+
+    const {
+      bankSupplyContractID,
+      bankSupplyContractName,
+      cloneTransactions,
+    } = req.body;
+
+    const dealId = await generateDealId();
+
+    const modifiedDeal = {
+      ...existingDeal,
+      _id: dealId,
+      details: {
+        ...existingDeal.details,
+        bankSupplyContractID,
+        bankSupplyContractName,
+      },
+    };
+
+    if (cloneTransactions === 'false') {
+      modifiedDeal.bondTransactions = DEFAULTS.DEALS.bondTransactions;
+      modifiedDeal.loanTransactions = DEFAULTS.DEALS.loanTransactions;
+    } else {
+      const CLONE_BOND_FIELDS = [
+        '_id',
+        'bondStage',
+        'requestedCoverStartDate-day',
+        'requestedCoverStartDate-month',
+        'requestedCoverStartDate-year',
+        'coverEndDate-day',
+        'coverEndDate-month',
+        'coverEndDate-year',
+        'facilityValue',
+        'currencySameAsSupplyContractCurrency',
+        'currency',
+        'conversionRate',
+        'conversionRateDate-day',
+        'conversionRateDate-month',
+        'conversionRateDate-year',
+        'uniqueIdentificationNumber',
+        'ukefGuaranteeInMonths',
+      ];
+
+      const CLONE_LOAN_FIELDS = [
+        '_id',
+        'bankReferenceNumber',
+        'facilityValue',
+        'currency',
+        'currencySameAsSupplyContractCurrency',
+        'conversionRate',
+        'conversionRateDate-day',
+        'conversionRateDate-month',
+        'conversionRateDate-year',
+        'disbursementAmount',
+        'requestedCoverStartDate-day',
+        'requestedCoverStartDate-month',
+        'requestedCoverStartDate-year',
+        'coverEndDate-day',
+        'coverEndDate-month',
+        'coverEndDate-year',
+        'ukefGuaranteeInMonths',
+      ];
+
+      const stripTransaction = (transaction, allowedFields) => {
+        const strippedBond = {};
+
+        Object.keys(transaction).forEach((key) => {
+          if (allowedFields.includes(key)) {
+            strippedBond[key] = transaction[key];
+          }
+        });
+
+        return strippedBond;
+      };
+
+      modifiedDeal.bondTransactions.items = modifiedDeal.bondTransactions.items.map((bond) =>
+        stripTransaction(bond, CLONE_BOND_FIELDS));
+
+      modifiedDeal.loanTransactions.items = modifiedDeal.loanTransactions.items.map((loan) =>
+        stripTransaction(loan, CLONE_LOAN_FIELDS));
+    }
+
+    const validationErrors = getCloneDealErrors(modifiedDeal, cloneTransactions);
+
+    if (validationErrors) {
+      return res.status(400).send({
+        ...modifiedDeal,
+        validationErrors,
+      });
+    }
+
+    req.body = modifiedDeal;
+    return createDeal(req, res);
+  });
+};
