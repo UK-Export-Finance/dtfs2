@@ -48,5 +48,19 @@ context('Admin user creates a new user', () => {
     cy.url().should('eq', relative('/admin/users/'));
     users.user(userToCreate).should('exist');
 
+
+    // login as the new user
+    cy.login(userToCreate);
+    cy.url().should('eq', relative('/start-now'));
+
+    // prove the lastLogin timestamp
+    cy.login(admin);
+    cy.url().should('eq', relative('/start-now'));
+    startNow.header().manageUsers().click();
+
+    users.row(userToCreate).lastLogin().invoke('text').then((text) => {
+      expect(text.trim()).to.not.equal('');
+    });
+
   });
 });

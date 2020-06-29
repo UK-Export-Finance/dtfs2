@@ -1,3 +1,4 @@
+const moment = require('moment');
 const { ObjectID } = require('mongodb');
 const db = require('../../drivers/db-client');
 
@@ -33,9 +34,23 @@ exports.update = async (_id, user, callback) => {
   callback(null, user);
 };
 
+exports.updateLastLogin = async (user, callback) => {
+  const collection = await db.getCollection('users');
+  const update = {
+    lastLogin: moment().format('YYYY-MM-DD HH:mm'),
+  };
+  await collection.updateOne(
+    { _id: { $eq: new ObjectID(user._id) } }, // eslint-disable-line no-underscore-dangle
+    { $set: update },
+    {},
+  );
+
+  callback();
+};
+
 exports.remove = async (_id, callback) => {
   const collection = await db.getCollection('users');
-  const status = await collection.deleteOne({ _id });
+  const status = await collection.deleteOne({ _id: new ObjectID(_id) });
 
   callback(null, status);
 };

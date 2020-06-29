@@ -106,7 +106,7 @@ module.exports.initialise = async (app) => {
     const existingUsers = currentUsersResponse.body.users;
 
     for (const existingUser of existingUsers) {
-      await remove(`/v1/users/${existingUser.username}`);
+      await remove(`/v1/users/${existingUser._id}`);
     }
 
     for (const testUser of testUsers) {

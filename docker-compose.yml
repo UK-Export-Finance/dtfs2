@@ -32,7 +32,6 @@ services:
       - ./deal-api/src:/app/src:ro
       - ./deal-api/.env.full-local-docker-environment:/app/.env:ro
     environment:
-      - DEBUG=express:*
       - AZURE_WORKFLOW_FILESHARE_NAME=${AZURE_WORKFLOW_FILESHARE_NAME}
       - AZURE_WORKFLOW_STORAGE_ACCOUNT=${AZURE_WORKFLOW_STORAGE_ACCOUNT}
       - AZURE_WORKFLOW_STORAGE_ACCESS_KEY=${AZURE_WORKFLOW_STORAGE_ACCESS_KEY}

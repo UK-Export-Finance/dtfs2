@@ -47,8 +47,6 @@ router.get('/users/create', async (req, res) => {
 router.post('/users/create', async (req, res) => {
   const { userToken } = requestParams(req);
   const userToCreate = { ...req.body };
-  console.log(userToCreate);
-
   // fix up data from create user page..
   //-----
   // roles are fed in from checkboxes, so we either get a string or an array..
@@ -71,12 +69,7 @@ router.post('/users/create', async (req, res) => {
 
   //------
 
-  console.log('->');
-  console.log(userToCreate);
-
-  const createdUser = await api.createUser(userToCreate, userToken);
-
-  console.log(createdUser);
+  await api.createUser(userToCreate, userToken);
 
   return res.redirect('/admin/users/');
   //

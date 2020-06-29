@@ -5,7 +5,8 @@ const page = {
   row: (user) => {
     const row = cy.get(`[data-cy="user-${user.username}"]`);
     return {
-      username: () => row.get('[data-cy="data-cy="username""]'),
+      username: () => cy.get(`[data-cy="username-${user.username}"]`),
+      lastLogin: () => cy.get(`[data-cy="lastLogin-${user.username}"]`),
     };
   },
 
