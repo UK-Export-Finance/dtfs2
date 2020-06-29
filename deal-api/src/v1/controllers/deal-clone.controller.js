@@ -3,6 +3,58 @@ const DEFAULTS = require('../defaults');
 const { generateDealId } = require('../../utils/generateIds');
 const { getCloneDealErrors } = require('../validation/clone-deal');
 
+const CLONE_BOND_FIELDS = [
+  '_id',
+  'bondStage',
+  'requestedCoverStartDate-day',
+  'requestedCoverStartDate-month',
+  'requestedCoverStartDate-year',
+  'coverEndDate-day',
+  'coverEndDate-month',
+  'coverEndDate-year',
+  'facilityValue',
+  'currencySameAsSupplyContractCurrency',
+  'currency',
+  'conversionRate',
+  'conversionRateDate-day',
+  'conversionRateDate-month',
+  'conversionRateDate-year',
+  'uniqueIdentificationNumber',
+  'ukefGuaranteeInMonths',
+];
+
+const CLONE_LOAN_FIELDS = [
+  '_id',
+  'bankReferenceNumber',
+  'facilityValue',
+  'currency',
+  'currencySameAsSupplyContractCurrency',
+  'conversionRate',
+  'conversionRateDate-day',
+  'conversionRateDate-month',
+  'conversionRateDate-year',
+  'disbursementAmount',
+  'requestedCoverStartDate-day',
+  'requestedCoverStartDate-month',
+  'requestedCoverStartDate-year',
+  'coverEndDate-day',
+  'coverEndDate-month',
+  'coverEndDate-year',
+  'ukefGuaranteeInMonths',
+];
+
+const stripTransaction = (transaction, allowedFields) => {
+  const stripped = {};
+
+  Object.keys(transaction).forEach((key) => {
+    if (allowedFields.includes(key)) {
+      stripped[key] = transaction[key];
+    }
+  });
+
+  return stripped;
+};
+
 exports.clone = async (req, res) => {
   await findOneDeal(req.params.id, async (existingDeal) => {
     if (!existingDeal) {
@@ -31,63 +83,18 @@ exports.clone = async (req, res) => {
       modifiedDeal.bondTransactions = DEFAULTS.DEALS.bondTransactions;
       modifiedDeal.loanTransactions = DEFAULTS.DEALS.loanTransactions;
     } else {
-      const CLONE_BOND_FIELDS = [
-        '_id',
-        'bondStage',
-        'requestedCoverStartDate-day',
-        'requestedCoverStartDate-month',
-        'requestedCoverStartDate-year',
-        'coverEndDate-day',
-        'coverEndDate-month',
-        'coverEndDate-year',
-        'facilityValue',
-        'currencySameAsSupplyContractCurrency',
-        'currency',
-        'conversionRate',
-        'conversionRateDate-day',
-        'conversionRateDate-month',
-        'conversionRateDate-year',
-        'uniqueIdentificationNumber',
-        'ukefGuaranteeInMonths',
-      ];
+      const hasBonds = modifiedDeal.bondTransactions.items.length > 0;
+      const hasLoans = modifiedDeal.loanTransactions.items.length > 0;
 
-      const CLONE_LOAN_FIELDS = [
-        '_id',
-        'bankReferenceNumber',
-        'facilityValue',
-        'currency',
-        'currencySameAsSupplyContractCurrency',
-        'conversionRate',
-        'conversionRateDate-day',
-        'conversionRateDate-month',
-        'conversionRateDate-year',
-        'disbursementAmount',
-        'requestedCoverStartDate-day',
-        'requestedCoverStartDate-month',
-        'requestedCoverStartDate-year',
-        'coverEndDate-day',
-        'coverEndDate-month',
-        'coverEndDate-year',
-        'ukefGuaranteeInMonths',
-      ];
+      if (hasBonds) {
+        modifiedDeal.bondTransactions.items = modifiedDeal.bondTransactions.items.map((bond) =>
+          stripTransaction(bond, CLONE_BOND_FIELDS));
+      }
 
-      const stripTransaction = (transaction, allowedFields) => {
-        const strippedBond = {};
-
-        Object.keys(transaction).forEach((key) => {
-          if (allowedFields.includes(key)) {
-            strippedBond[key] = transaction[key];
-          }
-        });
-
-        return strippedBond;
-      };
-
-      modifiedDeal.bondTransactions.items = modifiedDeal.bondTransactions.items.map((bond) =>
-        stripTransaction(bond, CLONE_BOND_FIELDS));
-
-      modifiedDeal.loanTransactions.items = modifiedDeal.loanTransactions.items.map((loan) =>
-        stripTransaction(loan, CLONE_LOAN_FIELDS));
+      if (hasLoans) {
+        modifiedDeal.loanTransactions.items = modifiedDeal.loanTransactions.items.map((loan) =>
+          stripTransaction(loan, CLONE_LOAN_FIELDS));
+      }
     }
 
     const validationErrors = getCloneDealErrors(modifiedDeal, cloneTransactions);

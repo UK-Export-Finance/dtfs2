@@ -181,6 +181,32 @@ describe('/v1/deals/:id/clone', () => {
         expect(body.loanTransactions).toEqual(expectedLoanTransactions);
       });
 
+      it('returns empty bondTransactions and loanTransactions when empty in original deal', async () => {
+        const dealWithEmptyBondsAndLoans = {
+          ...completedDeal,
+          bondTransactions: { items: [] },
+          loanTransactions: { items: [] },
+        };
+
+        const { body } = await as(anHSBCMaker).post(dealWithEmptyBondsAndLoans).to('/v1/deals');
+        originalDeal = body;
+
+        const clonePostBody = {
+          bankSupplyContractID: 'new-bank-deal-id',
+          bankSupplyContractName: 'new-bank-deal-name',
+          cloneTransactions: 'true',
+        };
+
+        const { body: responseBody } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+
+        expect(responseBody.bondTransactions).toEqual({
+          items: [],
+        });
+        expect(responseBody.loanTransactions).toEqual({
+          items: [],
+        });
+      });
+
       describe('when req.body has cloneTransactions set to false', () => {
         it('clones a deal with empty transactions', async () => {
           const clonePostBody = {
