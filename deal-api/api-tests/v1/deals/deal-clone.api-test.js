@@ -62,7 +62,7 @@ describe('/v1/deals/:id/clone', () => {
         originalDeal = body;
       });
 
-      it('clones a deal with modified _id, bankSupplyContractID, bankSupplyContractName and new dates', async () => {
+      it('clones a deal with only specific properties in `details` object, marking status `Draft`', async () => {
         const clonePostBody = {
           bankSupplyContractID: 'new-bank-deal-id',
           bankSupplyContractName: 'new-bank-deal-name',
@@ -72,14 +72,23 @@ describe('/v1/deals/:id/clone', () => {
         const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
         expect(body._id).toEqual(body._id);
-        expect(body.details).toEqual({
-          ...originalDeal.details,
-          bankSupplyContractID: clonePostBody.bankSupplyContractID,
-          bankSupplyContractName: clonePostBody.bankSupplyContractName,
-          submissionDate: body.details.submissionDate, // TODO: should this now be 'NOT submitted'
-          dateOfLastAction: body.details.dateOfLastAction,
-        });
+        expect(body.details.bankSupplyContractID).toEqual(clonePostBody.bankSupplyContractID);
+        expect(body.details.bankSupplyContractName).toEqual(clonePostBody.bankSupplyContractName);
+        expect(body.details.dateOfLastAction).toBeDefined();
+        expect(body.details.submissionType).toEqual(originalDeal.details.submissionType);
+        expect(body.details.checker).toEqual(originalDeal.details.checker);
+        expect(body.details.maker).toEqual(originalDeal.details.maker);
+        expect(body.details.owningBank).toEqual(originalDeal.details.owningBank);
+        expect(body.details.status).toEqual('Draft');
+
       });
+
+      // TODO: test other things in deal object.
+      // eligibility
+      // submissionDetails
+      // summary
+      // comments
+      // supplyContractCurrency
 
       it('clones a deal with only specific bondTransactions fields', async () => {
         const clonePostBody = {
