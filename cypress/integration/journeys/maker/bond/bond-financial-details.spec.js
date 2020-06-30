@@ -377,11 +377,6 @@ context('Bond Financial Details', () => {
       goBackToFinancialDetails();
       assertValidationError();
 
-      //TODO - update or remove this step
-      // fillAndSubmitMinimumRiskMarginFee('15');
-      // goBackToFinancialDetails();
-      // assertValidationError();
-
       fillAndSubmitMinimumRiskMarginFee('12.345');
       goBackToFinancialDetails();
       assertValidationError();
