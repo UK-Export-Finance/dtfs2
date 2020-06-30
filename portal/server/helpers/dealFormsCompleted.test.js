@@ -48,9 +48,10 @@ describe('dealFormsCompleted', () => {
     expect(dealFormsCompleted(deal)).toEqual(false);
   });
 
-  it('should return false if a deal has no bonds`', () => {
+  it('should return false if a deal has no bonds and no loans`', () => {
     const deal = {
       bondTransactions: { items: [] },
+      loanTransactions: { items: [] },
       submissionDetails: completeSubmissionDetails,
       eligibility: completeEligibility,
     };
@@ -61,6 +62,7 @@ describe('dealFormsCompleted', () => {
   it('should return false if a deal has any bonds who\'s bond.status is NOT `Completed`', () => {
     const deal = {
       bondTransactions: incompleteBonds,
+      loanTransactions: { items: [] },
       submissionDetails: completeSubmissionDetails,
       eligibility: completeEligibility,
     };
@@ -70,7 +72,8 @@ describe('dealFormsCompleted', () => {
 
   it('should return false if a deal has any loan who\'s loan.status is NOT `Completed`', () => {
     const deal = {
-      bondTransactions: incompleteLoans,
+      bondTransactions: { items: [] },
+      loanTransactions: incompleteLoans,
       submissionDetails: completeSubmissionDetails,
       eligibility: completeEligibility,
     };
@@ -78,7 +81,29 @@ describe('dealFormsCompleted', () => {
     expect(dealFormsCompleted(deal)).toEqual(false);
   });
 
-  it('should return true if all sections are in status `Completed`', () => {
+  it('If there are 1+ loans, should return true if all sections are in status `Completed`', () => {
+    const deal = {
+      bondTransactions: { items: [] },
+      loanTransactions: completeLoans,
+      submissionDetails: completeSubmissionDetails,
+      eligibility: completeEligibility,
+    };
+
+    expect(dealFormsCompleted(deal)).toEqual(true);
+  });
+
+  it('If there are 1+ bonds, should return true if all sections are in status `Completed`', () => {
+    const deal = {
+      loanTransactions: { items: [] },
+      bondTransactions: completeBonds,
+      submissionDetails: completeSubmissionDetails,
+      eligibility: completeEligibility,
+    };
+
+    expect(dealFormsCompleted(deal)).toEqual(true);
+  });
+
+  it('If there are 1+ bonds and 1+ loans, should return true if all sections are in status `Completed`', () => {
     const deal = {
       bondTransactions: completeBonds,
       loanTransactions: completeLoans,
