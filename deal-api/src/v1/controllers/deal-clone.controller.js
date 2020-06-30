@@ -67,15 +67,19 @@ exports.clone = async (req, res) => {
       cloneTransactions,
     } = req.body;
 
-    const dealId = await generateDealId();
+    const newDealId = await generateDealId();
 
     const modifiedDeal = {
       ...existingDeal,
-      _id: dealId,
+      _id: newDealId,
       details: {
-        ...existingDeal.details,
         bankSupplyContractID,
         bankSupplyContractName,
+        dateOfLastAction: existingDeal.details.dateOfLastAction,
+        submissionType: existingDeal.details.submissionType,
+        checker: existingDeal.details.checker,
+        maker: existingDeal.details.maker,
+        owningBank: existingDeal.details.owningBank,
       },
     };
 
