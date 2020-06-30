@@ -10,7 +10,10 @@ exports.findAllByUserOrganisation = async (req, res) => {
     return res.status(200).json([]);
   }
 
-  return findOneBank(bank.id, async (bankDetails) => res.status(200).json(bankDetails.mga || []));
+  return findOneBank(bank.id, async (bankDetails) => {
+    const mga = bankDetails && bankDetails.mga ? bankDetails.mga : [];
+    res.status(200).json(mga);
+  });
 };
 
 exports.downloadMga = async (req, res) => {
