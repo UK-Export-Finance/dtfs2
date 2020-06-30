@@ -455,21 +455,37 @@ describe('/v1/deals/:id/status', () => {
       });
     });
 
-    describe('valid typeA xml is created', () => {
-      it('creates type_a xml if deal successfully submitted', async () => {
+    describe('when the status changes to `Submitted`', () => {
+      let createdDeal;
+      let updatedDeal;
+
+      beforeEach(async () => {
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
         const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
 
-        const createdDeal = postResult.body;
+        createdDeal = postResult.body;
         const statusUpdate = {
           status: 'Submitted',
           confirmSubmit: true,
         };
 
-        const { status, body } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      });
 
-        expect(body).toEqual({});
+      it('adds a submissionDate to the deal', async () => {
+        expect(updatedDeal.status).toEqual(200);
+        expect(updatedDeal.body).toEqual({});
+
+        const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+        expect(body.deal.details.submissionDate).toBeDefined();
+        expect(moment(body.deal.details.submissionDate, 'YYYY MM DD HH:mm:ss:SSS ZZ').isValid()).toEqual(true);
+      });
+
+      it('creates type_a xml', async () => {
+        expect(updatedDeal.status).toEqual(200);
+        expect(updatedDeal.body).toEqual({});
       });
     });
   });
