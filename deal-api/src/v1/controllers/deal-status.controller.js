@@ -101,6 +101,23 @@ const updateFacilityDates = async (collection, deal) => {
   return value;
 };
 
+const createSubmissionDate = async (collection, _id) => {
+  const submissionDate = {
+    details: {
+      submissionDate: moment().format('YYY MM DD HH:mm:ss:SSS'),
+    },
+  };
+
+  const findAndUpdateResponse = await collection.findOneAndUpdate(
+    { _id },
+    $.flatten(submissionDate),
+    { returnOriginal: false },
+  );
+
+  const { value } = findAndUpdateResponse;
+
+  return value;
+};
 
 exports.update = (req, res) => {
   const { user } = req;
@@ -130,10 +147,12 @@ exports.update = (req, res) => {
       await updateFacilityDates(collection, updatedDeal);
     }
 
-    const dealAfterAllUpdates = await updateComments(collection, req.params.id, req.body.comments, user);
+    const dealAfterCommentsUpdate = await updateComments(collection, req.params.id, req.body.comments, user);
 
-    // TODO - Reinstate typeA XML creation once Loans and Summary have been added
     if (toStatus === 'Submitted') {
+      const dealAfterAllUpdates = await createSubmissionDate(collection, req.params.id);
+
+      // TODO - Reinstate typeA XML creation once Loans and Summary have been added
       const { previousStatus } = deal.details;
 
       const typeA = await createTypeA(dealAfterAllUpdates, previousStatus);
@@ -142,6 +161,8 @@ exports.update = (req, res) => {
         return res.status(200).send(typeA);
       }
     }
+
+    const dealAfterAllUpdates = dealAfterCommentsUpdate;
 
     return res.status(200).send(dealAfterAllUpdates.details.status);
   });
