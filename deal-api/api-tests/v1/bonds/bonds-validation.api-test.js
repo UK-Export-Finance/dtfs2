@@ -762,21 +762,6 @@ describe('/v1/deals/:id/bond', () => {
         });
       });
 
-      describe('when more than 16 characters', () => {
-        it('should return validationError', async () => {
-          const bond = {
-            ...allBondFields,
-            minimumRiskMarginFee: '12345678901234567',
-          };
-
-          const body = await updateBondInDeal(dealId, bond);
-
-          expect(body.validationErrors.count).toEqual(1);
-          expect(body.validationErrors.errorList.minimumRiskMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must be 16 characters or fewer');
-        });
-      });
-
       describe('when less than 0.01', () => {
         it('should return validationError', async () => {
           const bond = {
@@ -788,22 +773,22 @@ describe('/v1/deals/:id/bond', () => {
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.minimumRiskMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must be between 0.01 and 14.99');
+          expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must be 0.01 or more');
         });
       });
 
-      describe('when greater than 14.99', () => {
+      describe('when more than 14 digits', () => {
         it('should return validationError', async () => {
           const bond = {
             ...allBondFields,
-            minimumRiskMarginFee: '15',
+            minimumRiskMarginFee: '123456789012345',
           };
 
           const body = await updateBondInDeal(dealId, bond);
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.minimumRiskMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must be between 0.01 and 14.99');
+          expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must be 14 numbers or fewer');
         });
       });
 
@@ -818,7 +803,7 @@ describe('/v1/deals/:id/bond', () => {
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.minimumRiskMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must have less than 3 decimals, like 12 or 12.10');
+          expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must have less than 3 decimals, like 1 or 12.10');
         });
       });
     });
