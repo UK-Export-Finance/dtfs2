@@ -494,9 +494,45 @@ describe('/v1/deals/:id/status', () => {
         expect(moment(body.deal.details.submissionDate, 'YYYY MM DD HH:mm:ss:SSS ZZ').isValid()).toEqual(true);
       });
 
-      it('creates type_a xml', async () => {
-        expect(updatedDeal.status).toEqual(200);
-        expect(updatedDeal.body).toEqual({});
+      it('creates type_a xml if deal successfully submitted', async () => {
+        const files = [
+          {
+            filename: 'test-file-1.txt',
+            filepath: 'api-tests/fixtures/test-file-1.txt',
+            fieldname: 'exporterQuestionnaire',
+            type: 'general_correspondence',
+          },
+          {
+            filename: 'test-file-2.txt',
+            filepath: 'api-tests/fixtures/test-file-2.txt',
+            fieldname: 'exporterQuestionnaire',
+            type: 'general_correspondence',
+          },
+          {
+            filename: 'test-file-3.txt',
+            filepath: 'api-tests/fixtures/test-file-3.txt',
+            fieldname: 'auditedFinancialStatements',
+            type: 'financials',
+          },
+        ];
+
+        const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
+
+        const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+
+        const createdDeal = postResult.body;
+
+        // Upload supporting docs
+        await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${createdDeal._id}/eligibility-documentation`);
+
+        const statusUpdate = {
+          status: 'Submitted',
+          confirmSubmit: true,
+        };
+
+        const { status, body } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+
+        expect(body).toEqual({});
       });
     });
   });
