@@ -143,19 +143,19 @@ router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
   const {
+    feeType,
     feeFrequency: existingFeeFrequency,
     inAdvanceFeeFrequency,
     inArrearFeeFrequency,
   } = req.body;
 
-  // make sure we get a changed feeFrequency
+  // make sure we get the correct feeFrequency
   const feeFrequencyValue = () => {
-    if (inAdvanceFeeFrequency !== existingFeeFrequency) {
-      return inAdvanceFeeFrequency;
-    }
-
-    if (inArrearFeeFrequency !== existingFeeFrequency) {
+    if (feeType === 'In arrear') {
       return inArrearFeeFrequency;
+    }
+    if (feeType === 'In advance') {
+      return inAdvanceFeeFrequency;
     }
 
     return existingFeeFrequency;
@@ -238,18 +238,19 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
   const {
+    feeType,
     feeFrequency: existingFeeFrequency,
     inAdvanceFeeFrequency,
     inArrearFeeFrequency,
   } = req.body;
 
-  // make sure we get a changed feeFrequency
+  // make sure we get the correct feeFrequency
   const feeFrequencyValue = () => {
-    if (inAdvanceFeeFrequency !== existingFeeFrequency) {
+    if (feeType === 'In advance') {
       return inAdvanceFeeFrequency;
     }
 
-    if (inArrearFeeFrequency !== existingFeeFrequency) {
+    if (feeType === 'In arrear') {
       return inArrearFeeFrequency;
     }
 
