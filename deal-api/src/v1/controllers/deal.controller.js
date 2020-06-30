@@ -94,7 +94,6 @@ const createDeal = async (req, res) => {
     details: {
       ...DEFAULTS.DEALS.details,
       ...req.body.details,
-      submissionDate: timestamp,
       dateOfLastAction: timestamp,
       maker: req.user,
       owningBank: req.user.bank,
