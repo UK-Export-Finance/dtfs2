@@ -1,1 +1,1 @@
-npm run api-test
+npx jest --notify --coverage --verbose --config=api-test.jest.config.js --detectOpenHandles --forceExit
