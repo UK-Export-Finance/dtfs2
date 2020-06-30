@@ -13,7 +13,6 @@ const {
   businessRules,
   k2Map,
   dateHelpers,
-  numberHelpers,
   getApplicationGroup,
   getActionCodeAndName,
 } = require('./helpers');
@@ -147,7 +146,7 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_fee_rate(bond.riskMarginFee)
         .BSS_fee_perc(bond.guaranteeFeePayableByBank)
         .BSS_guarantee_perc(bond.coveredPercentage)
-        .BSS_max_liability(bond.ukefExposure)
+        .BSS_max_liability(convertCurrencyFormat(bond.ukefExposure))
         .BSS_min_quarterly_fee(bond.minimumRiskMarginFee)
         .BSS_premium_type(k2Map.FACILITIES.FEE_TYPE[bond.feeType])
         .BSS_cover_start_date(dateHelpers.formatDate(bond['requestedCoverStartDate-day'], bond['requestedCoverStartDate-month'], bond['requestedCoverStartDate-year']))
@@ -202,7 +201,9 @@ const generateTypeA = async (deal, fromStatus) => {
 
   if (!isValidXml) {
     console.log({ typeAxmlStr });
-    const errorList = parsedXml.validationErrors.map((ve) => { console.log(ve.toString()); return { text: ve.message }; });
+    const errorList = parsedXml.validationErrors.map((ve) => {
+      console.log(ve.toString()); return { text: ve.message };
+    });
 
     return {
       typeAxmlStr,

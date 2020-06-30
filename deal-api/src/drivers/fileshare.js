@@ -62,7 +62,6 @@ const getExportDirectory = async (fileshare) => {
 const uploadFile = async ({
   fileshare, folder, subfolder = '', filename, buffer,
 }) => {
-  console.log({ fileshare }, getConfig(fileshare));
   const exportDirectory = await getExportDirectory(fileshare);
 
   const directoryClient = await exportDirectory.getDirectoryClient(folder);

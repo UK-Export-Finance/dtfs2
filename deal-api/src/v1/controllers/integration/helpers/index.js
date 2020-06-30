@@ -8,7 +8,6 @@ const dateHelpers = require('./date-helpers');
 const whitespaceCollapse = require('./whitespace-collapse');
 const getApplicationGroup = require('./get-application-group');
 const getActionCodeAndName = require('./get-action-code-and-name');
-const numberHelpers = require('./number-helpers');
 
 module.exports = {
   eligibilityCriteriaHelper,
@@ -18,7 +17,6 @@ module.exports = {
   businessRules,
   k2Map,
   dateHelpers,
-  numberHelpers,
   whitespaceCollapse,
   getApplicationGroup,
   getActionCodeAndName,
