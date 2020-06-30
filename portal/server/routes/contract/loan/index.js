@@ -143,18 +143,19 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => 
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
   const {
+    premiumType,
     premiumFrequency: existingPremiumFrequency,
     inAdvancePremiumFrequency,
     inArrearPremiumFrequency,
   } = req.body;
 
-  // make sure we get a changed premiumFrequency
+  // make sure we get the correct premiumFrequency
   const premiumFrequencyValue = () => {
-    if (inAdvancePremiumFrequency !== existingPremiumFrequency) {
+    if (premiumType === 'In advance') {
       return inAdvancePremiumFrequency;
     }
 
-    if (inArrearPremiumFrequency !== existingPremiumFrequency) {
+    if (premiumType === 'In arrear') {
       return inArrearPremiumFrequency;
     }
 
@@ -234,18 +235,19 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', async (req, res) => {
   const modifiedBody = handleBankReferenceNumberField(req.body);
 
   const {
+    premiumType,
     premiumFrequency: existingPremiumFrequency,
     inAdvancePremiumFrequency,
     inArrearPremiumFrequency,
   } = modifiedBody;
 
-  // make sure we get a changed premiumFrequency
+  // make sure we get the correct premiumFrequency
   const premiumFrequencyValue = () => {
-    if (inAdvancePremiumFrequency !== existingPremiumFrequency) {
+    if (premiumType === 'In advance') {
       return inAdvancePremiumFrequency;
     }
 
-    if (inArrearPremiumFrequency !== existingPremiumFrequency) {
+    if (premiumType === 'In arrear') {
       return inArrearPremiumFrequency;
     }
 
