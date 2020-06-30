@@ -13,6 +13,7 @@ describe('/v1/mga', () => {
   let barclaysBank;
   let hsbcBank;
   let noMGABank;
+  let aSuperuser;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
@@ -22,6 +23,7 @@ describe('/v1/mga', () => {
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
     aNoMGABankUser = testUsers().withRole('maker').withBankName('UKEF test bank (Delegated)').one();
+    aSuperuser = testUsers().superuser().one();
 
     barclaysBank = aBank({ id: aBarclaysMaker.bank.id, mga: ['mga_doc_1.docx', 'mga_doc_1b.docx'] });
     hsbcBank = aBank({ id: anHSBCMaker.bank.id, mga: ['mga_doc_2.docx'] });
@@ -45,6 +47,12 @@ describe('/v1/mga', () => {
 
     it('returns an empty list of docs for a user without a bank', async () => {
       const { status, body } = await as(noBank).get('/v1/mga');
+      expect(status).toEqual(200);
+      expect(body).toEqual([]);
+    });
+
+    it('returns an empty list of docs for a superuser', async () => {
+      const { status, body } = await as(aSuperuser).get('/v1/mga');
       expect(status).toEqual(200);
       expect(body).toEqual([]);
     });
