@@ -316,30 +316,15 @@ context('Bond Financial Details', () => {
         cy.url().should('include', '/financial-details');
       };
 
-      const assertValidationError = () => {
-        partials.errorSummary.errorSummaryLinks().should('have.length', 1);
-        pages.bondFinancialDetails.coveredPercentageInputErrorMessage().should('be.visible');
-      };
-
       it('should render validation error', () => {
         goToBondFinancialDetailsPage(deal);
         fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
 
-        fillAndSubmitCoveredPercentage('test');
-        goBackToFinancialDetails();
-        assertValidationError();
-
-        fillAndSubmitCoveredPercentage('0');
-        goBackToFinancialDetails();
-        assertValidationError();
-
-        fillAndSubmitCoveredPercentage('81');
-        goBackToFinancialDetails();
-        assertValidationError();
-
         fillAndSubmitCoveredPercentage('12.34567');
         goBackToFinancialDetails();
-        assertValidationError();
+
+        partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+        pages.bondFinancialDetails.coveredPercentageInputErrorMessage().should('be.visible');
       });
     });
   });
@@ -356,30 +341,15 @@ context('Bond Financial Details', () => {
       cy.url().should('include', '/financial-details');
     };
 
-    const assertValidationError = () => {
-      partials.errorSummary.errorSummaryLinks().should('have.length', 1);
-      pages.bondFinancialDetails.minimumRiskMarginFeeInputErrorMessage().should('be.visible');
-    };
-
     it('should render validation error', () => {
       goToBondFinancialDetailsPage(deal);
       fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
 
-      fillAndSubmitMinimumRiskMarginFee('test');
-      goBackToFinancialDetails();
-      assertValidationError();
-
-      fillAndSubmitMinimumRiskMarginFee('12345678901234567');
-      goBackToFinancialDetails();
-      assertValidationError();
-
-      fillAndSubmitMinimumRiskMarginFee('0');
-      goBackToFinancialDetails();
-      assertValidationError();
-
       fillAndSubmitMinimumRiskMarginFee('12.345');
       goBackToFinancialDetails();
-      assertValidationError();
+
+      partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+      pages.bondFinancialDetails.minimumRiskMarginFeeInputErrorMessage().should('be.visible');
     });
   });
 
