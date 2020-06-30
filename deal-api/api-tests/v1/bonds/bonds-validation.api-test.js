@@ -762,18 +762,18 @@ describe('/v1/deals/:id/bond', () => {
         });
       });
 
-      describe('when less than 0.01', () => {
+      describe('when less than 0', () => {
         it('should return validationError', async () => {
           const bond = {
             ...allBondFields,
-            minimumRiskMarginFee: '0',
+            minimumRiskMarginFee: '-1',
           };
 
           const body = await updateBondInDeal(dealId, bond);
 
           expect(body.validationErrors.count).toEqual(1);
           expect(body.validationErrors.errorList.minimumRiskMarginFee).toBeDefined();
-          expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must be 0.01 or more');
+          expect(body.validationErrors.errorList.minimumRiskMarginFee.text).toEqual('Minimum risk margin fee must be 0 or more');
         });
       });
 
