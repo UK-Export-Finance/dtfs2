@@ -1,6 +1,9 @@
+const moment = require('moment');
+
 // NOTE!!
 // these objects are to be pushed straight into the deal-api,
 // so the fields need to go into the correct places in the object..
+
 module.exports = [
   {
     details: {
@@ -8,6 +11,7 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',
+      submissionDate: moment().format('YYYY MM DD'),
     },
     submissionDetails: {
       status: 'Incomplete',
@@ -22,6 +26,7 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',
+      submissionDate: moment().format('YYYY MM DD'),
     },
     submissionDetails: {
       status: 'Not Started',
@@ -32,6 +37,7 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',
+      submissionDate: moment().format('YYYY MM DD'),
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -43,6 +49,7 @@ module.exports = [
       submissionType: 'Manual Inclusion Notice',
       status: "Ready for Checker's approval",
       previousStatus: 'Draft',
+      submissionDate: moment().format('YYYY MM DD'),
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -54,6 +61,7 @@ module.exports = [
       submissionType: 'Manual Inclusion Application',
       status: "Further Maker's input required",
       previousStatus: "Ready for Checker's approval",
+      submissionDate: moment().format('YYYY MM DD'),
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -64,6 +72,7 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Abandoned Deal',
       previousStatus: 'Draft',
+      submissionDate: moment().format('YYYY MM DD'),
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -179,7 +188,7 @@ module.exports = [
     details: {
       bankSupplyContractID: 'abc/18/def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
-      status: "Further Maker's input required",
+      status: "HELLO Further Maker's input required",
       previousStatus: "Ready for Checker's approval",
     },
     submissionDetails: {
