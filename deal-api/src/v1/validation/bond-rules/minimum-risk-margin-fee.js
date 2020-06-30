@@ -6,7 +6,7 @@ const {
 } = require('../../../utils/number');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 
-const MIN_VALUE = 0.01;
+const MIN_VALUE = 0;
 const MAX_DECIMALS = 2;
 const MAX_DIGITS = 14;
 
