@@ -227,11 +227,11 @@ describe('/v1/deals/:id/loan', () => {
 
         describe('when is before today', () => {
           it('should return validationError', async () => {
-            const nowDate = moment();
+            const yesterday = moment().subtract(1, 'day');
             const requestedCoverStartDateFields = {
-              'requestedCoverStartDate-day': moment(nowDate).subtract(1, 'day').format('DD'),
-              'requestedCoverStartDate-month': moment(nowDate).format('MM'),
-              'requestedCoverStartDate-year': moment(nowDate).format('YYYY'),
+              'requestedCoverStartDate-day': moment(yesterday).format('DD'),
+              'requestedCoverStartDate-month': moment(yesterday).format('MM'),
+              'requestedCoverStartDate-year': moment(yesterday).format('YYYY'),
             };
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
