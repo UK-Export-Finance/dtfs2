@@ -1,12 +1,15 @@
-name: dev
+name: Build
 
 on:
   push:
-    branches: [ master ]
-  # schedule: add e.g. a montly patch update for the container
+    - branches: [ master ]
+  schedule:
+    # A weekly run to roll up any base image patches,
+    # in office hours, avoiding bank holiday Mondays:
+    # "At 12:00 on Tuesday." - https://crontab.guru/
+    - cron: '0 12 * * 2'
     
 env:
-  ENVIRONMENT: dev
   TAG: latest
 
 jobs:
