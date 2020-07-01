@@ -170,7 +170,7 @@ exports.findOne = (req, res) => {
           });
         }
 
-        const dealCurrency = roundNumber(bondCurrency + loanCurrency, 2);
+        const dealCurrency = bondCurrency + loanCurrency;
 
         // TODO: dealInGbp maybe incorrect. Need business clarification
         const bondsAndLoansTotalFacilityValue = (bondsTotalFacilityValue + loansTotalFacilityValue);
@@ -179,18 +179,25 @@ exports.findOne = (req, res) => {
         const bondInGbp = (bondCurrency / supplyContractConversionRateToGbp);
         const loanInGbp = (loanCurrency / supplyContractConversionRateToGbp);
 
+        const formattedNumber = (numb) => roundNumber(numb, 2).toLocaleString('en', { minimumFractionDigits: 2 });
+
+        const formattedDealCurrency = formattedNumber(dealCurrency);
+        const formattedBondCurrency = formattedNumber(bondCurrency);
+        const formattedLoanCurrency = formattedNumber(loanCurrency);
+        const formattedBondInGbp = formattedNumber(bondInGbp);
+        const formattedLoanInGbp = formattedNumber(loanInGbp);
 
         temp = {
           ...dealWithStatuses,
           summary: {
             dealBondsLoans: {
               totalValue: {
-                dealCurrency,
+                dealCurrency: formattedDealCurrency,
                 dealInGbp,
-                bondCurrency,
-                loanCurrency,
-                bondInGbp,
-                loanInGbp,
+                bondCurrency: formattedBondCurrency,
+                loanCurrency: formattedLoanCurrency,
+                bondInGbp: formattedBondInGbp,
+                loanInGbp: formattedLoanInGbp,
               },
             },
           },
