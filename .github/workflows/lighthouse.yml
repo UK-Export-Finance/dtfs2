@@ -1,8 +1,8 @@
-name: Technical baseline accessibility audit
+name: Baseline accessibility
 # https://github.com/marketplace/actions/web-performance-audits-with-lighthouse
 on: [pull_request]
 jobs:
-  perf:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
