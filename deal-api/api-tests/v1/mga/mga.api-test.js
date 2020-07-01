@@ -29,6 +29,7 @@ describe('/v1/mga', () => {
     hsbcBank = aBank({ id: anHSBCMaker.bank.id, mga: ['mga_doc_2.docx'] });
     noMGABank = aBank({ id: aNoMGABankUser.bank.id });
 
+    await wipeDB.wipe(['banks']);
     const banks = [barclaysBank, hsbcBank, noMGABank];
 
     await as(anEditor).postEach(banks).to('/v1/banks');
