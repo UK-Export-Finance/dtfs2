@@ -123,6 +123,7 @@ const typeADeal = {
   },
   Facilities: {
     BSS: [],
+    EWCS: [],
   },
   Deal_summary: {
     Deal_no_facilities: '',
@@ -178,41 +179,40 @@ const typeABSS = {
 
 };
 
-const typeAECWS = {
-  EWCS: {
-    UKEF_EWCS_facility_id: '',
-    EWCS_Guarantee_details: {
-      EWCS_portal_facility_id: '',
-      EWCS_bank_id: '',
-      EWCS_stage: '',
-    },
-    EWCS_Financial_details: {
-      EWCS_value: '',
-      EWCS_currency_code: '',
-      EWCS_conversion_rate_deal: '',
-      EWCS_conversion_date_deal: '',
-      EWCS_disbursement_amount: '',
-      EWCS_interest_rate: '',
-      EWCS_fee_perc: '',
-      EWCS_guarantee_perc: '',
-      EWCS_max_liability: '',
-      EWCS_min_quarterly_fee: '',
-    },
-    EWCS_Dates_repayments: {
-      EWCS_premium_type: '',
-      EWCS_premium_freq: nillableNode,
-      EWCS_cover_start_date: '',
-      EWCS_issue_date: '',
-      EWCS_cover_end_date: '',
-      EWCS_cover_period: '',
-      EWCS_day_basis: '',
-    },
+const typeAEWCS = {
+  UKEF_EWCS_facility_id: '',
+  EWCS_Guarantee_details: {
+    EWCS_portal_facility_id: '',
+    EWCS_bank_id: '',
+    EWCS_stage: '',
   },
+  EWCS_Financial_details: {
+    EWCS_value: '',
+    EWCS_currency_code: '',
+    EWCS_conversion_rate_deal: '',
+    EWCS_conversion_date_deal: '',
+    EWCS_disbursement_amount: '',
+    EWCS_interest_rate: '',
+    EWCS_fee_perc: '',
+    EWCS_guarantee_perc: '',
+    EWCS_max_liability: '',
+    EWCS_min_quarterly_fee: '',
+  },
+  EWCS_Dates_repayments: {
+    EWCS_premium_type: '',
+    EWCS_premium_freq: nillableNode,
+    EWCS_cover_start_date: '',
+    EWCS_issue_date: '',
+    EWCS_cover_end_date: '',
+    EWCS_cover_period: '',
+    EWCS_day_basis: '',
+  },
+
 };
 
 module.exports = {
   typeADeal,
   typeABSS,
-  typeAECWS,
+  typeAEWCS,
   nillableNode,
 };

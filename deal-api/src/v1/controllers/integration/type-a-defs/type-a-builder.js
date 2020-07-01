@@ -1,8 +1,6 @@
 const js2xmlparser = require('js2xmlparser');
-const Validator = require('validatorjs');
-const typeASchema = require('./type-a-schema');
 const typeABSSBuilder = require('./type-a-bss-builder');
-const typeAECWSBuilder = require('./type-a-ecws-builder');
+const typeAEWCSBuilder = require('./type-a-ewcs-builder');
 
 const { typeADeal, nillableNode } = require('./type-a-template');
 
@@ -10,9 +8,6 @@ const { whitespaceCollapse } = require('../helpers');
 
 // Contains details of fields that fail the validation according to what was specifie in type_a.xsd
 const validationErrors = [];
-Validator.register('nillableNode', (value, requirement) => typeof value === requirement // eslint-disable-line valid-typeof
-  || JSON.stringify(value) === JSON.stringify(nillableNode), 'The :attribute must either be nillableNode or of correct type');
-
 
 module.exports = () => {
   const deal = {
@@ -320,9 +315,9 @@ module.exports = () => {
       deal.Facilities.BSS.push(bssBuilder.bss);
       return builder;
     },
-    createECWS: typeAECWSBuilder,
-    addECWS: (bssBuilder) => {
-      deal.Facilities.ECWS.push(bssBuilder.ecws);
+    createEWCS: typeAEWCSBuilder,
+    addEWCS: (ewcsBuilder) => {
+      deal.Facilities.EWCS.push(ewcsBuilder.ewcs);
       return builder;
     },
     Deal_no_facilities: (value = '') => {
@@ -392,7 +387,7 @@ module.exports = () => {
       return builder;
     },
 
-    AddDeal: (field, type, value) => {
+    AddDealFile: (field, type, value) => {
       if (value) {
         const currentFieldDealFiles = deal.Deal_files[field] || [];
 
@@ -411,21 +406,7 @@ module.exports = () => {
 
     validationErrors,
 
-    build: () => {
-      const validation = new Validator(deal, typeASchema);
-      // TODO - how to handle failed validation
-      if (validation.fails()) {
-        /*
-        return {
-          errors: validation.errors,
-          errorCount: validation.errorCount,
-        };
-        */
-      }
-
-      return js2xmlparser.parse('Deal', deal);
-    },
-
+    build: () => js2xmlparser.parse('Deal', deal),
   };
 
   return builder;
