@@ -21,6 +21,8 @@ const sanitize = (user) => ({
   roles: user.roles,
   bank: user.bank,
   lastLogin: user.lastLogin,
+  firstname: user.firstname,
+  surname: user.surname,
   _id: user._id, // eslint-disable-line no-underscore-dangle
 });
 

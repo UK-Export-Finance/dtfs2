@@ -1,5 +1,7 @@
 const page = {
   visit: (deal) => cy.visit(`/contract/${deal._id}`),
+  commentsTab: () => cy.get('[data-cy="comments-tab"]'),
+  
   editDealName: () => cy.get('[data-cy="EditDealName"]'),
   eligibilityStatus: () => cy.get('[data-cy="eligibility-status"]'),
   eligibilityCriteriaLink: () => cy.get('[data-cy="ViewDetails"]'),

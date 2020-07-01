@@ -31,6 +31,8 @@ describe('a user', () => {
           roles: aMaker.roles,
           bank: aMaker.bank,
           _id: expect.any(String),
+          firstname: aMaker.firstname,
+          surname: aMaker.surname,
         },
       ],
     });

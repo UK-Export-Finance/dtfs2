@@ -1,9 +1,9 @@
 const moment = require('moment');
-const { contract, contractReadyForReview, defaults } = require('../../../pages');
+const { contract, contractReadyForReview, contractComments, defaults } = require('../../../pages');
 const { successMessage } = require('../../../partials');
 const relative = require('../../../relativeURL');
 
-const maker1 = { username: 'MAKER', password: 'MAKER' };
+const maker1 = { username: 'MAKER', password: 'MAKER', firstname: 'Hugo', surname: 'Drax' };
 
 // test data we want to set up + work with..
 const dealWithIncompleteBonds = require('./dealWithIncompleteBonds.json');
@@ -153,6 +153,15 @@ context('A maker selects to submit a contract for review from the view-contract 
       });
       contract.previousStatus().invoke('text').then((text) => {
         expect(text.trim()).to.equal('Draft');
+      });
+
+      // visit the comments page and prove that the comment has been added
+      contract.commentsTab().click();
+      contractComments.row(0).comment().invoke('text').then((text) => {
+        expect(text.trim()).to.equal('a mandatory comment');
+      });
+      contractComments.row(0).commentorName().invoke('text').then((text) => {
+        expect(text.trim()).to.equal(`${maker1.firstname} ${maker1.surname}`);
       });
     });
   });

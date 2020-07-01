@@ -1,9 +1,9 @@
-const {contract, contractReturnToMaker} = require('../../pages');
+const {contract, contractReturnToMaker, contractComments} = require('../../pages');
 const {errorSummary, successMessage} = require('../../partials');
 const relative = require('../../relativeURL');
 
 const maker1 = {username: 'MAKER', password: 'MAKER'};
-const checker = {username: 'CHECKER', password: 'CHECKER'};
+const checker = {username: 'CHECKER', password: 'CHECKER', firstname: 'Emilio', surname: 'Largo'};
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('../maker/dashboard/twentyOneDeals');
@@ -59,13 +59,21 @@ context('A checker selects to return a deal to maker from the view-contract page
   });
 
   it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard.', () => {
+
+console.log(`=====>>>>> ${JSON.stringify(deal,null,2)}`);
     // log in, visit a deal, select abandon
     cy.login({...checker});
     contract.visit(deal);
+
+//-----
+    contract.commentsTab().click();
+    contract.visit(deal);
+//-----
+
     contract.returnToMaker().click();
 
     // submit with a comment
-    contractReturnToMaker.comments().type('a mandatory comment');
+    contractReturnToMaker.comments().type('to you');
     contractReturnToMaker.returnToMaker().click();
 
     // expect to land on the /dashboard page with a success message
@@ -82,6 +90,15 @@ context('A checker selects to return a deal to maker from the view-contract page
     });
     contract.previousStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal("Ready for Checker's approval");
+    });
+
+    // visit the comments page and prove that the comment has been added
+    contract.commentsTab().click();
+    contractComments.row(0).comment().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('to you');
+    });
+    contractComments.row(0).commentorName().invoke('text').then((text) => {
+      expect(text.trim()).to.equal(`${checker.firstname} ${checker.surname}`);
     });
 
   });

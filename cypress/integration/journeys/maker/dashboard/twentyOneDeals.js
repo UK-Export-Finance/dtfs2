@@ -54,6 +54,14 @@ module.exports = [
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
+    comments: [{
+      "user" : {
+          "firstname" : "bob",
+          "surname" : "builder",
+      },
+      "timestamp" : "2020 07 01 11:12:08:194 +0100",
+      "text" : "to me"
+    }],
   }, {
     details: {
       bankSupplyContractID: 'abc/5/def',
@@ -66,6 +74,14 @@ module.exports = [
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
+    comments: [{
+      "user" : {
+          "firstname" : "bob",
+          "surname" : "builder",
+      },
+      "timestamp" : "2020 07 01 11:12:08:194 +0100",
+      "text" : "to me"
+    }],
   }, {
     details: {
       bankSupplyContractID: 'abc/6/def',
@@ -87,6 +103,14 @@ module.exports = [
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
+    comments: [{
+      "user" : {
+          "firstname" : "bob",
+          "surname" : "builder",
+      },
+      "timestamp" : "2020 07 01 11:12:08:194 +0100",
+      "text" : "to me"
+    }],
   }, {
     details: {
       bankSupplyContractID: 'abc/8/def',
@@ -97,6 +121,14 @@ module.exports = [
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
+    comments: [{
+      "user" : {
+          "firstname" : "bob",
+          "surname" : "builder",
+      },
+      "timestamp" : "2020 07 01 11:12:08:194 +0100",
+      "text" : "to me"
+    }],
   }, {
     details: {
       bankSupplyContractID: 'abc/9/def',
@@ -107,6 +139,14 @@ module.exports = [
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
+    comments: [{
+      "user" : {
+          "firstname" : "bob",
+          "surname" : "builder",
+      },
+      "timestamp" : "2020 07 01 11:12:08:194 +0100",
+      "text" : "to me"
+    }],
   }, {
     details: {
       bankSupplyContractID: 'abc/10/def',
