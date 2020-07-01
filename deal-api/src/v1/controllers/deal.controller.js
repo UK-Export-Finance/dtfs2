@@ -140,7 +140,10 @@ exports.findOne = (req, res) => {
       const bonds = deal.bondTransactions.items;
       const loans = deal.loanTransactions.items;
 
-      const hasBondsOrLoans = (bonds.length > 0 || loans.length > 0);
+      const hasBonds = bonds.length > 0;
+      const hasLoans = loans.length > 0;
+
+      const hasBondsOrLoans = (hasBonds || hasLoans);
 
       let temp = dealWithStatuses;
 
@@ -153,15 +156,19 @@ exports.findOne = (req, res) => {
         let bondCurrency = 0;
         let loanCurrency = 0;
 
-        bonds.forEach((bond) => {
-          bondsTotalFacilityValue += Number(bond.facilityValue);
-          bondCurrency += (Number(bond.facilityValue) / Number(bond.conversionRate));
-        });
+        if (hasBonds) {
+          bonds.forEach((bond) => {
+            bondsTotalFacilityValue += Number(bond.facilityValue);
+            bondCurrency += (Number(bond.facilityValue) / Number(bond.conversionRate));
+          });
+        }
 
-        loans.forEach((loan) => {
-          loansTotalFacilityValue += Number(loan.facilityValue);
-          loanCurrency += (Number(loan.facilityValue) / Number(loan.conversionRate));
-        });
+        if (hasLoans) {
+          loans.forEach((loan) => {
+            loansTotalFacilityValue += Number(loan.facilityValue);
+            loanCurrency += (Number(loan.facilityValue) / Number(loan.conversionRate));
+          });
+        }
 
         const dealCurrency = roundNumber(bondCurrency + loanCurrency, 2);
 
