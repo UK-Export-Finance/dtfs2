@@ -10,8 +10,7 @@ const { isSuperUser, userHasAccessTo } = require('../users/checks');
 const { generateDealId } = require('../../utils/generateIds');
 const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
-
-const { roundNumber } = require('../../utils/number');
+const calculateDealSummary = require('../deal-summary');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -134,71 +133,13 @@ exports.findOne = (req, res) => {
       const validationErrors = validate(deal);
       const dealWithStatuses = calculateStatuses(deal, validationErrors);
 
-      // TODO: should the summary only be generated when XYZ completed?
-      // TODO should be calculated on PUT and added to the deal
-
-      const bonds = deal.bondTransactions.items;
-      const loans = deal.loanTransactions.items;
-
-      const hasBonds = bonds.length > 0;
-      const hasLoans = loans.length > 0;
-
-      const hasBondsOrLoans = (hasBonds || hasLoans);
-
-      let temp = dealWithStatuses;
-
-      if (hasBondsOrLoans) {
-        const { supplyContractConversionRateToGBP } = deal.submissionDetails;
-        const supplyContractConversionRateToGbp = Number(supplyContractConversionRateToGBP);
-
-        let bondCurrency = 0;
-        let loanCurrency = 0;
-
-        if (hasBonds) {
-          bonds.forEach((bond) => {
-            bondCurrency += (Number(bond.facilityValue) / Number(bond.conversionRate));
-          });
-        }
-
-        if (hasLoans) {
-          loans.forEach((loan) => {
-            loanCurrency += (Number(loan.facilityValue) / Number(loan.conversionRate));
-          });
-        }
-
-        const dealCurrency = bondCurrency + loanCurrency;
-        const bondInGbp = (bondCurrency / supplyContractConversionRateToGbp);
-        const loanInGbp = (loanCurrency / supplyContractConversionRateToGbp);
-        const dealInGbp = (bondInGbp + loanInGbp);
-
-        const formattedNumber = (numb) => roundNumber(numb, 2).toLocaleString('en', { minimumFractionDigits: 2 });
-
-        const formattedDealCurrency = formattedNumber(dealCurrency);
-        const formattedDealInGbp = formattedNumber(dealInGbp);
-        const formattedBondCurrency = formattedNumber(bondCurrency);
-        const formattedBondInGbp = formattedNumber(bondInGbp);
-        const formattedLoanCurrency = formattedNumber(loanCurrency);
-        const formattedLoanInGbp = formattedNumber(loanInGbp);
-
-        temp = {
-          ...dealWithStatuses,
-          summary: {
-            dealBondsLoans: {
-              totalValue: {
-                dealCurrency: formattedDealCurrency,
-                dealInGbp: formattedDealInGbp,
-                bondCurrency: formattedBondCurrency,
-                bondInGbp: formattedBondInGbp,
-                loanCurrency: formattedLoanCurrency,
-                loanInGbp: formattedLoanInGbp,
-              },
-            },
-          },
-        };
-      }
+      const dealWithSummary = {
+        ...dealWithStatuses,
+        summary: calculateDealSummary(deal),
+      };
 
       res.status(200).send({
-        deal: temp,
+        deal: dealWithSummary,
         validationErrors,
       });
     }
