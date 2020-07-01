@@ -1,5 +1,7 @@
 const sanitizeUser = (user) => ({
   username: user.username,
+  firstname: user.firstname,
+  surname: user.surname,
   roles: user.roles,
   bank: user.bank,
   lastLogin: user.lastLogin,

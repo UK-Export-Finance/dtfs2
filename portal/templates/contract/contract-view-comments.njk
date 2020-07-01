@@ -6,6 +6,9 @@
 
 {% block content %}
 
+  {% set componentData = {user: user, deal: deal} %}
+  {% set comments = deal.comments %}
+
   <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ details.bankSupplyContractName }}</span></h1>
 
   <div class="govuk-tabs" data-module="govuk-tabs">
@@ -13,12 +16,12 @@
       Contents
     </h2>
 
-    {{ contractTabs.nav(selected = 'comments', id = _id) }}
+    {{ contractTabs.nav(selected = 'comments', id = deal._id) }}
 
     <section class="govuk-tabs__panel" id="comments">
-      {{ contractDetails.table(details) }}
+      {{ contractDetails.table(deal.details) }}
     </section>
-    
+
   </div>
 
   <h2 class="govuk-heading-s">Maker/Checker comments:</h2>
@@ -26,24 +29,26 @@
   {% if comments.length %}
 
     <ul class="govuk-list">
+      {% set count=0 %}
       {% for comment in comments %}
-        <li class="govuk-!-padding-3 govuk-!-margin-bottom-3 comment">
+        <li class="govuk-!-padding-3 govuk-!-margin-bottom-3 comment" data-cy="comments-{{count}}">
 
           <p class="govuk-body">
-            <span class="govuk-!-font-weight-bold">{{ comment.firstName }} {{ comment.lastName }}</span>
-            {{ comment.created }}
+            <span class="govuk-!-font-weight-bold" data-cy="commentor-name-{{count}}">{{ comment.user.firstname }} {{ comment.user.surname }}</span>
+            {{ comment.timestamp }}
           </p>
 
-          <div class="govuk-body govuk-!-padding-left-3">
-            {{ comment.body | safe }}
+          <div class="govuk-body govuk-!-padding-left-3" data-cy="comment-{{count}}">
+            {{ comment.text | safe }}
           </div>
+          {% set count = count+1 %}
         </li>
       {% endfor %}
     </ul>
 
     {% else %}
       <p class="govuk-body">No comments between Maker and Checker</p>
-  
+
   {% endif %}
 
 {% endblock %}

@@ -42,16 +42,21 @@ const updateStatus = async (collection, _id, from, to) => {
 
 const updateComments = async (collection, _id, commentToAdd, user) => {
   const commentToInsert = {
-    comments: {
-      username: user.username,
-      timestamp: moment().format('YYYY MM DD HH:mm:ss:SSS ZZ'),
-      text: commentToAdd,
-    },
+    user,
+    timestamp: moment().format('YYYY MM DD HH:mm:ss:SSS ZZ'),
+    text: commentToAdd,
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id },
-    { $push: commentToInsert },
+    {
+      $push: {
+        comments: {
+          $each: [commentToInsert],
+          $position: 0,
+        },
+      },
+    },
     { returnOriginal: false },
   );
 

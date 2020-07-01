@@ -204,10 +204,18 @@ describe('/v1/deals/:id/status', () => {
 
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
-      expect(body.deal.comments[2]).toEqual({
+      expect(body.deal.comments[0]).toEqual({
         text: 'Flee!',
-        username: anHSBCMaker.username,
         timestamp: expect.any(String),
+        user: {
+          _id: expect.any(String),
+          bank: anHSBCMaker.bank,
+          roles: anHSBCMaker.roles,
+          lastLogin: expect.any(String),
+          username: anHSBCMaker.username,
+          firstname: anHSBCMaker.firstname,
+          surname: anHSBCMaker.surname,
+        }
       });
     });
 
