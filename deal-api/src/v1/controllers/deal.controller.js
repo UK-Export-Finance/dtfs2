@@ -134,40 +134,61 @@ exports.findOne = (req, res) => {
       const validationErrors = validate(deal);
       const dealWithStatuses = calculateStatuses(deal, validationErrors);
 
-      // TODO should be calculated on PUT.
-      const firstBond = deal.bondTransactions.items[0];
-      const firstLoan = deal.loanTransactions.items[0];
+      // TODO: should the summary only be generated when XYZ completed?
+      // TODO should be calculated on PUT and added to the deal
 
-      let dealCurrencyFigure;
+      const bonds = deal.bondTransactions.items;
+      const loans = deal.loanTransactions.items;
 
-      if (firstBond && firstLoan) {
-        dealCurrencyFigure = (firstBond.facilityValue / firstBond.conversionRate) + (firstLoan.facilityValue / firstLoan.conversionRate);
-      }
+      const hasBondsOrLoans = (bonds.length > 0 || loans.length > 0);
 
-      // TODO: dealInGbp maybe incorrect. Need business clarification
-      const dealInGbpFigure = ((Number(firstBond.facilityValue) + Number(firstLoan.facilityValue)) / Number(deal.submissionDetails.supplyContractConversionRateToGBP));
+      let temp = dealWithStatuses;
 
-      const bondCurrencyFigure = (Number(firstBond.facilityValue) / Number(firstBond.conversionRate));
-      const loanCurrencyFigure = (Number(firstLoan.facilityValue) / Number(firstLoan.conversionRate));
+      if (hasBondsOrLoans) {
+        const { supplyContractConversionRateToGBP } = deal.submissionDetails;
+        const supplyContractConversionRateToGbp = Number(supplyContractConversionRateToGBP);
 
-      const bondInGbpFigure = ((Number(firstBond.facilityValue) / Number(firstBond.conversionRate)) / Number(deal.submissionDetails.supplyContractConversionRateToGBP));
-      const loanInGbpFigure = ((Number(firstLoan.facilityValue) / Number(firstLoan.conversionRate)) / Number(deal.submissionDetails.supplyContractConversionRateToGBP));
+        let bondsTotalFacilityValue = 0;
+        let loansTotalFacilityValue = 0;
+        let bondCurrency = 0;
+        let loanCurrency = 0;
 
-      const temp = {
-        ...dealWithStatuses,
-        summary: {
-          dealBondsLoans: {
-            totalValue: {
-              dealCurrency: roundNumber(dealCurrencyFigure, 2),
-              dealInGbp: dealInGbpFigure,
-              bondCurrency: bondCurrencyFigure,
-              loanCurrency: loanCurrencyFigure,
-              bondInGbp: bondInGbpFigure,
-              loanInGbp: loanInGbpFigure,
+        bonds.forEach((bond) => {
+          bondsTotalFacilityValue += Number(bond.facilityValue);
+          bondCurrency += (Number(bond.facilityValue) / Number(bond.conversionRate));
+        });
+
+        loans.forEach((loan) => {
+          loansTotalFacilityValue += Number(loan.facilityValue);
+          loanCurrency += (Number(loan.facilityValue) / Number(loan.conversionRate));
+        });
+
+        const dealCurrency = roundNumber(bondCurrency + loanCurrency, 2);
+
+        // TODO: dealInGbp maybe incorrect. Need business clarification
+        const bondsAndLoansTotalFacilityValue = (bondsTotalFacilityValue + loansTotalFacilityValue);
+        const dealInGbp = (bondsAndLoansTotalFacilityValue / supplyContractConversionRateToGbp);
+
+        const bondInGbp = (bondCurrency / supplyContractConversionRateToGbp);
+        const loanInGbp = (loanCurrency / supplyContractConversionRateToGbp);
+
+
+        temp = {
+          ...dealWithStatuses,
+          summary: {
+            dealBondsLoans: {
+              totalValue: {
+                dealCurrency,
+                dealInGbp,
+                bondCurrency,
+                loanCurrency,
+                bondInGbp,
+                loanInGbp,
+              },
             },
           },
-        },
-      };
+        };
+      }
 
       res.status(200).send({
         deal: temp,
