@@ -11,6 +11,8 @@ const { generateDealId } = require('../../utils/generateIds');
 const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
 
+const { roundNumber } = require('../../utils/number');
+
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
   delete cleanedObject._id; // eslint-disable-line no-underscore-dangle
@@ -132,8 +134,43 @@ exports.findOne = (req, res) => {
       const validationErrors = validate(deal);
       const dealWithStatuses = calculateStatuses(deal, validationErrors);
 
+      // TODO should be calculated on PUT.
+      const firstBond = deal.bondTransactions.items[0];
+      const firstLoan = deal.loanTransactions.items[0];
+
+      let dealCurrencyFigure;
+
+      if (firstBond && firstLoan) {
+        dealCurrencyFigure = (firstBond.facilityValue / firstBond.conversionRate) + (firstLoan.facilityValue / firstLoan.conversionRate);
+      }
+
+      // TODO: dealInGbp maybe incorrect. Need business clarification
+      const dealInGbpFigure = ((Number(firstBond.facilityValue) + Number(firstLoan.facilityValue)) / Number(deal.submissionDetails.supplyContractConversionRateToGBP));
+
+      const bondCurrencyFigure = (Number(firstBond.facilityValue) / Number(firstBond.conversionRate));
+      const loanCurrencyFigure = (Number(firstLoan.facilityValue) / Number(firstLoan.conversionRate));
+
+      const bondInGbpFigure = ((Number(firstBond.facilityValue) / Number(firstBond.conversionRate)) / Number(deal.submissionDetails.supplyContractConversionRateToGBP));
+      const loanInGbpFigure = ((Number(firstLoan.facilityValue) / Number(firstLoan.conversionRate)) / Number(deal.submissionDetails.supplyContractConversionRateToGBP));
+
+      const temp = {
+        ...dealWithStatuses,
+        summary: {
+          dealBondsLoans: {
+            totalValue: {
+              dealCurrency: roundNumber(dealCurrencyFigure, 2),
+              dealInGbp: dealInGbpFigure,
+              bondCurrency: bondCurrencyFigure,
+              loanCurrency: loanCurrencyFigure,
+              bondInGbp: bondInGbpFigure,
+              loanInGbp: loanInGbpFigure,
+            },
+          },
+        },
+      };
+
       res.status(200).send({
-        deal: dealWithStatuses,
+        deal: temp,
         validationErrors,
       });
     }
