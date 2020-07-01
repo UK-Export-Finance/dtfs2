@@ -1,8 +1,9 @@
-const { roundNumber } = require('../../utils/number');
+const {
+  isNumeric,
+  roundNumber,
+} = require('../../utils/number');
 
 const calculateDealSummary = (deal) => {
-  // TODO: should the summary only be generated when XYZ completed?
-
   const bonds = deal.bondTransactions.items;
   const loans = deal.loanTransactions.items;
 
@@ -11,27 +12,40 @@ const calculateDealSummary = (deal) => {
 
   const hasBondsOrLoans = (hasBonds || hasLoans);
 
-  if (hasBondsOrLoans) {
-    const { supplyContractConversionRateToGBP } = deal.submissionDetails;
+  // can only do this calculation if the deal:
+  // has supplyContractConversionRateToGBP
+  // has at least one bond or loan completed
+
+  const { supplyContractConversionRateToGBP } = deal.submissionDetails;
+
+  if (isNumeric(supplyContractConversionRateToGBP) && hasBondsOrLoans) {
     const supplyContractConversionRateToGbp = Number(supplyContractConversionRateToGBP);
+
+    const completedBonds = bonds.filter((b) => b.status === 'Completed');
+    const completedLoans = loans.filter((l) => l.status === 'Completed');
+
+    if (completedBonds.length < 1 && completedLoans.length < 1) {
+      return null;
+    }
 
     let bondCurrency = 0;
     let loanCurrency = 0;
 
-    if (hasBonds) {
-      bonds.forEach((bond) => {
+    if (completedBonds.length > 0) {
+      completedBonds.forEach((bond) => {
         bondCurrency += (Number(bond.facilityValue) / Number(bond.conversionRate));
       });
     }
 
-    if (hasLoans) {
-      loans.forEach((loan) => {
+    if (completedLoans.length > 0) {
+      completedLoans.forEach((loan) => {
         loanCurrency += (Number(loan.facilityValue) / Number(loan.conversionRate));
       });
     }
 
     const dealCurrency = bondCurrency + loanCurrency;
     const bondInGbp = (bondCurrency / supplyContractConversionRateToGbp);
+
     const loanInGbp = (loanCurrency / supplyContractConversionRateToGbp);
     const dealInGbp = (bondInGbp + loanInGbp);
 
