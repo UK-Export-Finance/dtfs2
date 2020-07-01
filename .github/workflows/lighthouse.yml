@@ -12,7 +12,7 @@ jobs:
           secret: ${{ secrets.GITHUB_TOKEN }}
           url: https://dtfs-portal-dev.azurewebsites.net
           wptConnectionSpeed: threegfast
-          lighthouseScoringBudget: .github/lighthouse/scores.js
+          #lighthouseScoringBudget: .github/lighthouse/scores.js
       - name: Save Lighthouse Audit Artifacts
         uses: actions/upload-artifact@master
         with:
