@@ -20,6 +20,14 @@ const {
 const generateTypeA = async (deal, fromStatus) => {
   const { actionCode, actionName } = getActionCodeAndName(deal, fromStatus);
 
+  const bondCount = deal.bondTransactions && deal.bondTransactions.items
+    ? deal.bondTransactions.items.length
+    : 0;
+
+  const loanCount = deal.loanTransactions && deal.loanTransactions.items
+    ? deal.loanTransactions.items.length
+    : 0;
+
   const builder = typeABuilder()
     .action_code(actionCode)
     .action_name(actionName)
@@ -108,20 +116,20 @@ const generateTypeA = async (deal, fromStatus) => {
     .Ec_banks_normal_pricing_policies_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 18))
     .Ec_requested_cover_start_date_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 15))
 
-    .Deal_no_facilities('2') // TODO
+    .Deal_no_facilities(bondCount + loanCount)
     .Deal_total_value_deal_cur(await convertCurrencyCodeToId('GBP')) // TODO
-    .Deal_total_exposure_gbp('10000') // TODO
-    .Deal_total_premium_gbp('100000') // TODO
+    .Deal_total_exposure_gbp('0') // TODO
+    .Deal_total_premium_gbp('0') // TODO
     .Deal_total_exposure_deal_cur(await convertCurrencyCodeToId('GBP')) // TODO
     .Deal_total_premium_deal_cur(await convertCurrencyCodeToId('GBP')) // TODO
 
-    .BSS_no_facilities('2') // TODO
+    .BSS_no_facilities(bondCount)
     .BSS_total_exposure_gbp(await convertCurrencyCodeToId('GBP')) // TODO
-    .BSS_total_premium_gbp('10000') // TODO
+    .BSS_total_premium_gbp('0') // TODO
     .BSS_total_exposure_deal_cur(await convertCurrencyCodeToId('GBP')) // TODO
     .BSS_total_premium_deal_cur(await convertCurrencyCodeToId('GBP')) // TODO
 
-    .EWCS_no_facilities('0') // TODO
+    .EWCS_no_facilities(loanCount)
     .EWCS_total_exposure_gbp('0') // TODO
     .EWCS_total_premium_gbp('0') // TODO
     .EWCS_total_exposure_deal_cur('0') // TODO
@@ -133,9 +141,10 @@ const generateTypeA = async (deal, fromStatus) => {
       const bss = builder.createBSS()
       //    .UKEF_BSS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
         .BSS_portal_facility_id(bond._id) // eslint-disable-line no-underscore-dangle
+        .BSS_bank_id(bond.uniqueIdentificationNumber)
         .BSS_issuer(bond.bondIssuer)
         .BSS_type(k2Map.FACILITIES.TYPE[bond.bondType])
-        .BSS_stage(k2Map.FACILITIES.STAGE[bond.bondStage])
+        .BSS_stage(k2Map.FACILITIES.BOND_STAGE[bond.bondStage])
         .BSS_beneficiary(bond.bondBeneficiary)
         .BSS_value(convertCurrencyFormat(bond.facilityValue))
         .BSS_currency_code(
@@ -150,9 +159,9 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_min_quarterly_fee(bond.minimumRiskMarginFee)
         .BSS_premium_type(k2Map.FACILITIES.FEE_TYPE[bond.feeType])
         .BSS_cover_start_date(dateHelpers.formatDate(bond['requestedCoverStartDate-day'], bond['requestedCoverStartDate-month'], bond['requestedCoverStartDate-year']))
-        .BSS_issue_date(dateHelpers.formatDate('01', '02', '2020')) // TODO - drupal field: issue_date
+        .BSS_issue_date('') // TODO - drupal field: issue_date
         .BSS_cover_end_date(dateHelpers.formatDate(bond['coverEndDate-day'], bond['coverEndDate-month'], bond['coverEndDate-year']))
-        .BSS_cover_period(bond.ukefGuaranteeInMonths)
+        .BSS_cover_period('0') // TODO Calculate cover period from start & end dates
         .BSS_day_basis(k2Map.FACILITIES.DAY_COUNT_BASIS[bond.dayCountBasis]);
 
       // Conditional fields
@@ -164,18 +173,58 @@ const generateTypeA = async (deal, fromStatus) => {
     }
 
     // TODO - Add Loans
+    if (deal.loanTransactions && deal.loanTransactions.items) {
+      for (let i = 0; i < deal.loanTransactions.items.length; i += 1) {
+        const loan = deal.loanTransactions.items[i];
+        const ewcs = builder.createEWCS()
+        //    .UKEF_EWCS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
+          .EWCS_portal_facility_id(loan._id) // eslint-disable-line no-underscore-dangle
+          .EWCS_bank_id(
+            loan['facilityStageUnconditional-bankReferenceNumber']
+            || loan['facilityStageUnconditional-bankReferenceNumber'],
+          )
+          .EWCS_stage(k2Map.FACILITIES.FACILITIES_STAGE[loan.facilityStage])
+          .EWCS_value(convertCurrencyFormat(loan.facilityValue))
+          .EWCS_currency_code(
+            await convertCurrencyCodeToId(loan.currency && loan.currency.id), // eslint-disable-line no-await-in-loop
+          )
+          .EWCS_conversion_rate_deal(loan.conversionRate)
+          .EWCS_conversion_date_deal(dateHelpers.formatDate(loan['conversionRateDate-day'], loan['conversionRateDate-month'], loan['conversionRateDate-year']))
+          .EWCS_disbursement_amount(convertCurrencyFormat(loan.disbursementAmount))
+          .EWCS_interest_rate(loan.interestMarginFee)
+          .EWCS_fee_perc(loan.guaranteeFeePayableByBank)
+          .EWCS_guarantee_perc(loan.coveredPercentage)
+          .EWCS_max_liability(convertCurrencyFormat(loan.ukefExposure))
+          .EWCS_min_quarterly_fee(loan.minimumQuarterlyFee)
+          .EWCS_premium_type(k2Map.FACILITIES.FEE_TYPE[loan.premiumType])
+          .EWCS_cover_start_date(dateHelpers.formatDate(loan['requestedCoverStartDate-day'], loan['requestedCoverStartDate-month'], loan['requestedCoverStartDate-year']))
+          .EWCS_issue_date('') // TODO - drupal field: issue_date
+          .EWCS_cover_end_date(dateHelpers.formatDate(loan['coverEndDate-day'], loan['coverEndDate-month'], loan['coverEndDate-year']))
+          .EWCS_cover_period('0') // TODO Calculate cover period from start & end dates
+          .EWCS_day_basis(k2Map.FACILITIES.DAY_COUNT_BASIS[loan.dayCountBasis]);
+
+        // Conditional fields
+        if (!businessRules.transactions.isPremiumTypeAtMaturity(loan.feeType)) {
+          ewcs.EWCS_premium_freq(k2Map.FACILITIES.FEE_FREQUENCY[loan.feeFrequency]);
+        }
+
+        builder.addEWCS(ewcs);
+      }
+    }
+
 
     // Add Deal Files
     if (deal.dealFiles) {
       Object.entries(k2Map.DEAL.DEAL_FILES).forEach(([fieldname, xmlNodeName]) => {
         if (deal.dealFiles[fieldname]) {
           deal.dealFiles[fieldname].forEach(((df) => {
-            builder.AddDeal(xmlNodeName, df.type, df.filename);
+            builder.AddDealFile(xmlNodeName, df.type, df.filename);
           }));
         }
       });
     }
   }
+
 
   const typeAxmlStr = builder.build();
 
@@ -200,10 +249,7 @@ const generateTypeA = async (deal, fromStatus) => {
   const isValidXml = parsedXml.validate(parsedXsd);
 
   if (!isValidXml) {
-    console.log({ typeAxmlStr });
-    const errorList = parsedXml.validationErrors.map((ve) => {
-      console.log(ve.toString()); return { text: ve.message };
-    });
+    const errorList = parsedXml.validationErrors.map((ve) => ({ text: ve.message }));
 
     return {
       typeAxmlStr,
@@ -212,7 +258,6 @@ const generateTypeA = async (deal, fromStatus) => {
       errorList,
     };
   }
-
 
   return { typeAxmlStr, filename };
 };

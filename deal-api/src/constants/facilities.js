@@ -16,9 +16,14 @@ const DAY_COUNT_BASIS = {
   365: '365',
 };
 
-const STAGE = {
+const BOND_STAGE = {
   UNISSUED: 'Unissued',
   ISSUED: 'Issued',
+};
+
+const FACILITIES_STAGE = {
+  CONDITIONAL: 'Conditional',
+  UNCONDITIONAL: 'Unconditional',
 };
 
 const STATUS = {
@@ -41,7 +46,8 @@ module.exports = {
   FEE_TYPE,
   FEE_FREQUENCY,
   DAY_COUNT_BASIS,
-  STAGE,
+  BOND_STAGE,
+  FACILITIES_STAGE,
   TYPE,
   STATUS,
 };
