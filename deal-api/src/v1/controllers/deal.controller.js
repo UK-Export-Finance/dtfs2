@@ -151,40 +151,33 @@ exports.findOne = (req, res) => {
         const { supplyContractConversionRateToGBP } = deal.submissionDetails;
         const supplyContractConversionRateToGbp = Number(supplyContractConversionRateToGBP);
 
-        let bondsTotalFacilityValue = 0;
-        let loansTotalFacilityValue = 0;
         let bondCurrency = 0;
         let loanCurrency = 0;
 
         if (hasBonds) {
           bonds.forEach((bond) => {
-            bondsTotalFacilityValue += Number(bond.facilityValue);
             bondCurrency += (Number(bond.facilityValue) / Number(bond.conversionRate));
           });
         }
 
         if (hasLoans) {
           loans.forEach((loan) => {
-            loansTotalFacilityValue += Number(loan.facilityValue);
             loanCurrency += (Number(loan.facilityValue) / Number(loan.conversionRate));
           });
         }
 
         const dealCurrency = bondCurrency + loanCurrency;
-
-        // TODO: dealInGbp maybe incorrect. Need business clarification
-        const bondsAndLoansTotalFacilityValue = (bondsTotalFacilityValue + loansTotalFacilityValue);
-        const dealInGbp = (bondsAndLoansTotalFacilityValue / supplyContractConversionRateToGbp);
-
         const bondInGbp = (bondCurrency / supplyContractConversionRateToGbp);
         const loanInGbp = (loanCurrency / supplyContractConversionRateToGbp);
+        const dealInGbp = (bondInGbp + loanInGbp);
 
         const formattedNumber = (numb) => roundNumber(numb, 2).toLocaleString('en', { minimumFractionDigits: 2 });
 
         const formattedDealCurrency = formattedNumber(dealCurrency);
+        const formattedDealInGbp = formattedNumber(dealInGbp);
         const formattedBondCurrency = formattedNumber(bondCurrency);
-        const formattedLoanCurrency = formattedNumber(loanCurrency);
         const formattedBondInGbp = formattedNumber(bondInGbp);
+        const formattedLoanCurrency = formattedNumber(loanCurrency);
         const formattedLoanInGbp = formattedNumber(loanInGbp);
 
         temp = {
@@ -193,10 +186,10 @@ exports.findOne = (req, res) => {
             dealBondsLoans: {
               totalValue: {
                 dealCurrency: formattedDealCurrency,
-                dealInGbp,
+                dealInGbp: formattedDealInGbp,
                 bondCurrency: formattedBondCurrency,
-                loanCurrency: formattedLoanCurrency,
                 bondInGbp: formattedBondInGbp,
+                loanCurrency: formattedLoanCurrency,
                 loanInGbp: formattedLoanInGbp,
               },
             },
