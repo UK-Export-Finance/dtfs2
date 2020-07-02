@@ -210,6 +210,16 @@ const deal = {
     "supplyContractConversionDate-month" : `${now.format('MM')}`,
     "supplyContractConversionDate-year" : `${now.format('YYYY')}`,
   },
+  summary: {
+    totalValue: {
+      dealCurrency: '10,000',
+      dealInGbp: '12,000',
+      bondCurrency: '8,000',
+      bondInGbp: '16,000',
+      loanCurrency: '4,000',
+      loanInGbp: '8,000',
+    },
+  },
   dealFiles: {
     /*
     exporterQuestionnaire: [
