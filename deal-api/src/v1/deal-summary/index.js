@@ -1,10 +1,9 @@
 const {
   isNumeric,
   roundNumber,
+  formattedNumber,
 } = require('../../utils/number');
 const { hasValue } = require('../../utils/string');
-
-const formattedNumber = (numb) => roundNumber(numb, 2).toLocaleString('en', { minimumFractionDigits: 2 });
 
 const calculateTotalValue = (supplyContractConversionRateToGbp, bonds, loans) => {
   let bondCurrency = 0;
@@ -28,12 +27,12 @@ const calculateTotalValue = (supplyContractConversionRateToGbp, bonds, loans) =>
   const dealInGbp = (bondInGbp + loanInGbp);
 
   return {
-    dealCurrency: formattedNumber(dealCurrency),
-    dealInGbp: formattedNumber(dealInGbp),
-    bondCurrency: formattedNumber(bondCurrency),
-    bondInGbp: formattedNumber(bondInGbp),
-    loanCurrency: formattedNumber(loanCurrency),
-    loanInGbp: formattedNumber(loanInGbp),
+    dealCurrency: formattedNumber(roundNumber(dealCurrency, 2)),
+    dealInGbp: formattedNumber(roundNumber(dealInGbp, 2)),
+    bondCurrency: formattedNumber(roundNumber(bondCurrency, 2)),
+    bondInGbp: formattedNumber(roundNumber(bondInGbp, 2)),
+    loanCurrency: formattedNumber(roundNumber(loanCurrency, 2)),
+    loanInGbp: formattedNumber(roundNumber(loanInGbp, 2)),
   };
 };
 
@@ -65,7 +64,4 @@ const calculateDealSummary = (deal) => {
   return {};
 };
 
-module.exports = {
-  formattedNumber,
-  calculateDealSummary,
-};
+module.exports = calculateDealSummary;

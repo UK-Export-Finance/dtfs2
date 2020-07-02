@@ -41,6 +41,8 @@ const sanitizeCurrency = (originalValue = '') => {
   };
 };
 
+const formattedNumber = (numb) => numb.toLocaleString('en', { minimumFractionDigits: 2 });
+
 module.exports = {
   isNumeric,
   isInteger,
@@ -48,4 +50,5 @@ module.exports = {
   stripDecimals,
   roundNumber,
   sanitizeCurrency,
+  formattedNumber,
 };
