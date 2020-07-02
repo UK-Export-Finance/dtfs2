@@ -26,4 +26,5 @@ ADD ./__mocks__ ./__mocks__
 ADD ./api-test.jest.config.js ./api-test.jest.config.js
 ADD ./bin ./bin
 
+USER 1000
 CMD node src/index.js

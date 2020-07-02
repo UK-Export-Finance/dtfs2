@@ -26,4 +26,5 @@ COPY --from=build /build/scripts scripts/
 COPY --from=build /build/styles styles/
 COPY --from=build /build/templates templates/
 
+USER 1000
 CMD node dist/server.js
