@@ -204,7 +204,7 @@ describe('deal-summary', () => {
           let expected;
 
           beforeEach(() => {
-            mockDeal.bondTransactionloanTransactions = mockTransactions;
+            mockDeal.loanTransactions = mockTransactions;
             mockDeal.bondTransactions = { items: [] };
 
             result = calculateDealSummary(mockDeal);
@@ -223,7 +223,7 @@ describe('deal-summary', () => {
 
         describe('when both completed loans and bonds have a GBP currency', () => {
           it('should have formatted dealInGbp calculation without using supplyContractConversionRateToGbp', () => {
-            mockDeal.bondTransactionloanTransactions = mockTransactions;
+            mockDeal.loanTransactions = mockTransactions;
             mockDeal.bondTransactions = mockTransactions;
 
             result = calculateDealSummary(mockDeal);
