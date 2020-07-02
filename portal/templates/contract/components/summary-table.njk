@@ -1,0 +1,25 @@
+{% macro render() %}
+
+  <table class="govuk-table">
+    <caption class="govuk-table__caption govuk-!-font-size-24">Supply Contract summary</caption>
+    <tbody class="govuk-table__body">
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header">Deal currency</th>
+        <td class="govuk-table__cell">{{ deal.summary.dealCurrency }}</td>
+      </tr>
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header">Number of bonds</th>
+        <td class="govuk-table__cell">{{ deal.summary.totals.bonds }}</td>
+      </tr>
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header">Number of loans</th>
+        <td class="govuk-table__cell">{{ deal.summary.totals.loans }}</td>
+      </tr>
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header">Number of transactions</th>
+        <td class="govuk-table__cell">{{ deal.summary.totals.transactions }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+{% endmacro %}

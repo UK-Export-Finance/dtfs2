@@ -1,0 +1,80 @@
+{% macro render(summary) %}
+
+  <table class="govuk-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">&nbsp;</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Deal in Deal currency</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Deal in GBP</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bond in Deal currency</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bond in GBP</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Loan in Deal currency</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Loan in GBP</th>
+      </tr>
+    </thead>
+
+    <tbody class="govuk-table__body">
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__cell govuk-!-font-size-14">
+          Total value
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ summary.totalValue.dealCurrency }}
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ summary.totalValue.dealInGbp }}
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ summary.totalValue.bondCurrency }}
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ summary.totalValue.bondInGbp }}
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ summary.totalValue.loanCurrency }}
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ summary.totalValue.loanInGbp }}
+        </td>
+      </tr>
+
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__cell govuk-!-font-size-14">
+          Total UKEF exposure
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ summary.totalUkefExposure.dealCurrency }}
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ summary.totalUkefExposure.dealInGbp }}
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ summary.totalUkefExposure.bondCurrency }}
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ summary.totalUkefExposure.bondInGbp }}
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ summary.totalUkefExposure.loanCurrency }}
+        </td>
+
+        <td class="govuk-table__cell govuk-!-font-size-14">
+          {{ summary.totalUkefExposure.loanInGbp }}
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+  
+{% endmacro %}

@@ -15,6 +15,9 @@
 {% import './components/eligibility-criteria-link.njk' as eligibilityCriteriaLink %}
 {% import './components/loan-transactions-table.njk' as loanTransactionsTable %}
 {% import './components/please-complete-all-forms-text.njk' as pleaseCompleteAllFormsText %}
+{% import './components/summary-table.njk' as summaryTable %}
+{% import './components/forms-incomplete-text.njk' as formsIncompleteText %}
+{% import './components/detailed-summary-table.njk' as detailedSummaryTable %}
 {% import './components/proceed-to-review-button.njk' as proceedToReviewButton %}
 {% import './components/proceed-to-submit-button.njk' as proceedToSubmitButton %}
 {% import './components/return-to-maker-button.njk' as returnToMakerButton %}
@@ -155,118 +158,15 @@
         <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
 
           <div class="govuk-grid-column-one-half">
-            <table class="govuk-table">
-              <caption class="govuk-table__caption govuk-!-font-size-24">Supply Contract summary</caption>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">Deal currency</th>
-                  <td class="govuk-table__cell">{{ deal.summary.dealCurrency }}</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">Number of bonds</th>
-                  <td class="govuk-table__cell">{{ deal.summary.totals.bonds }}</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">Number of loans</th>
-                  <td class="govuk-table__cell">{{ deal.summary.totals.loans }}</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">Number of transactions</th>
-                  <td class="govuk-table__cell">{{ deal.summary.totals.transactions }}</td>
-                </tr>
-              </tbody>
-            </table>
+            {{ summaryTable.render()}}
           </div>
 
           <div class="govuk-grid-column-full">
-            <div class="govuk-error-summary govuk-!-padding-0" data-module="govuk-error-summary">
-              <div class="govuk-error-summary__body">
-                <ul class="govuk-list govuk-error-summary__list">
-                  <li>
-                    <a href="#">Warning: Some of your Transaction forms are incomplete. Only the complete facilities will be processed in the financial summary data below.</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
+            {{ formsIncompleteText.render()}}
           </div>
 
           <div class="govuk-grid-column-full">
-            <table class="govuk-table">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header govuk-!-font-size-14">&nbsp;</th>
-                  <th scope="col" class="govuk-table__header govuk-!-font-size-14">Deal in Deal currency</th>
-                  <th scope="col" class="govuk-table__header govuk-!-font-size-14">Deal in GBP</th>
-                  <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bond in Deal currency</th>
-                  <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bond in GBP</th>
-                  <th scope="col" class="govuk-table__header govuk-!-font-size-14">Loan in Deal currency</th>
-                  <th scope="col" class="govuk-table__header govuk-!-font-size-14">Loan in GBP</th>
-                </tr>
-              </thead>
-
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__cell govuk-!-font-size-14">
-                    Total value
-                  </td>
-
-                  <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ deal.summary.totalValue.dealCurrency }}
-                  </td>
-
-                  <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ deal.summary.totalValue.dealInGbp }}
-                  </td>
-
-                  <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ deal.summary.totalValue.bondCurrency }}
-                  </td>
-
-                  <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ deal.summary.totalValue.bondInGbp }}
-                  </td>
-
-                  <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ deal.summary.totalValue.loanCurrency }}
-                  </td>
-
-                  <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ deal.summary.totalValue.loanInGbp }}
-                  </td>
-                </tr>
-
-                <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__cell govuk-!-font-size-14">
-                    Total UKEF exposure
-                  </td>
-
-                  <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ deal.summary.totalUkefExposure.dealCurrency }}
-                  </td>
-
-                  <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ deal.summary.totalUkefExposure.dealInGbp }}
-                  </td>
-
-                  <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ deal.summary.totalUkefExposure.bondCurrency }}
-                  </td>
-
-                  <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ deal.summary.totalUkefExposure.bondInGbp }}
-                  </td>
-
-                  <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ deal.summary.totalUkefExposure.loanCurrency }}
-                  </td>
-
-                  <td class="govuk-table__cell govuk-!-font-size-14">
-                    {{ deal.summary.totalUkefExposure.loanInGbp }}
-                  </td>
-                </tr>
-
-              </tbody>
-            </table>
+            {{ detailedSummaryTable.render(deal.summary)}}
           </div>
 
         </div>
