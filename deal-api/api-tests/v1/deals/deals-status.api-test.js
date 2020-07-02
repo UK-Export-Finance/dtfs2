@@ -344,6 +344,7 @@ describe('/v1/deals/:id/status', () => {
             feeType: 'test',
             feeFrequency: 'test',
             dayCountBasis: 'test',
+            currency: { id: 'EUR', text: 'Euros' },
           };
 
           const issuedBondFields = () => ({
@@ -375,7 +376,7 @@ describe('/v1/deals/:id/status', () => {
 
           // explicitly set the status of the deal we're using to be Draft..
           //  -switched to a different test file and got caught by this..
-          newDealWithBonds.details.status='Draft';
+          newDealWithBonds.details.status = 'Draft';
 
           const { status, body } = await postDealAndUpdateStatus(newDealWithBonds, statusUpdate);
 
@@ -412,6 +413,7 @@ describe('/v1/deals/:id/status', () => {
             coveredPercentage: '40',
             premiumType: 'At maturity',
             dayCountBasis: '365',
+            currency: { id: 'EUR', text: 'Euros' },
           });
 
           const unconditionalLoan = () => ({
@@ -425,6 +427,7 @@ describe('/v1/deals/:id/status', () => {
             coveredPercentage: '40',
             premiumType: 'At maturity',
             dayCountBasis: '365',
+            currency: { id: 'EUR', text: 'Euros' },
           });
 
           const newDealWithLoans = {
