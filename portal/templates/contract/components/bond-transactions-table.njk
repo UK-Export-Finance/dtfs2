@@ -58,7 +58,7 @@
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14">
-                  {% if params.user.roles.includes('maker') %}
+                  {% if params.editable %}
                     <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/delete" class="govuk-link" data-cy="delete-bond-{{ bond._id}}">Delete</a>
                   {% endif %}
                 </td>
