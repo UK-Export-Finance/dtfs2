@@ -10,6 +10,4 @@ cypress/screenshots
 
 Library/
 
-companies_house_api_key.txt
-
 secrets/**
