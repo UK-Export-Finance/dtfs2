@@ -1,13 +1,13 @@
 {% macro render(params, bond) %}
   {% set dealId = params.deal._id %}
   {% if bond.uniqueIdentificationNumber %}
-    {% if params.user.roles.includes('maker') %}
+    {% if params.editable %}
       <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/details" class="govuk-link" data-cy="unique-number-{{bond._id}}">{{ bond.uniqueIdentificationNumber }}</a>
     {% else %}
       {{ bond.uniqueIdentificationNumber }}
     {% endif %}
   {% else %}
-    {% if params.user.roles.includes('maker') %}
+    {% if params.editable %}
       <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/details" class="govuk-link" data-cy="unique-number-{{bond._id}}">Not entered</a>
     {% else %}
       Not entered

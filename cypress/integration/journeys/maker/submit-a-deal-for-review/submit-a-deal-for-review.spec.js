@@ -155,6 +155,20 @@ context('A maker selects to submit a contract for review from the view-contract 
         expect(text.trim()).to.equal('Draft');
       });
 
+      // while on the deal page: confirm that the various edit features have been
+      //  disabled since we're now in a new state
+      contract.aboutSupplierDetailsLink().should('not.exist');
+      contract.eligibilityCriteriaLink().should('not.exist');
+      contract.addBondButton().should('not.exist');
+
+      const aBond = contract.bondTransactionsTable.row(deal.bondTransactions.items[0]._id);
+      aBond.deleteLink().should('not.exist');
+      aBond.uniqueNumber().should('not.exist');
+
+      contract.addLoanButton().should('not.exist');
+      const aLoan = contract.loansTransactionsTable.row(deal.loanTransactions.items[0]._id);
+      aLoan.bankReferenceNumber().should('not.exist');
+
       // visit the comments page and prove that the comment has been added
       contract.commentsTab().click();
       contractComments.row(0).comment().invoke('text').then((text) => {
