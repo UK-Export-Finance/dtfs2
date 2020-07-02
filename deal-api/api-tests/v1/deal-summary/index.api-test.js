@@ -1,7 +1,8 @@
+const calculateDealSummary = require('../../../src/v1/deal-summary');
 const {
+  roundNumber,
   formattedNumber,
-  calculateDealSummary,
-} = require('../../../src/v1/deal-summary');
+} = require('../../../src/utils/number');
 
 describe('deal-summary', () => {
   describe('with no supplyContractConversionRateToGBP', () => {
@@ -114,7 +115,8 @@ describe('deal-summary', () => {
       });
 
       it('should have correct, formatted dealCurrency calculation', () => {
-        const expected = formattedNumber(totalAllBonds() + totalAllLoans());
+        const calculation = totalAllBonds() + totalAllLoans();
+        const expected = formattedNumber(roundNumber(calculation), 2);
         expect(result.totalValue.dealCurrency).toEqual(expected);
       });
 
@@ -122,29 +124,31 @@ describe('deal-summary', () => {
         const bondInGbp = (totalAllBonds() / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP));
         const loanInGbp = (totalAllLoans() / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP));
         const calculation = (bondInGbp + loanInGbp);
-        const expected = formattedNumber(calculation);
+        const expected = formattedNumber(roundNumber(calculation), 2);
         expect(result.totalValue.dealInGbp).toEqual(expected);
       });
 
       it('should have correct, formatted bondCurrency calculation', () => {
-        const expected = formattedNumber(totalAllBonds());
+        const calculation = totalAllBonds();
+        const expected = formattedNumber(roundNumber(calculation), 2);
         expect(result.totalValue.bondCurrency).toEqual(expected);
       });
 
       it('should have correct, formatted bondInGbp calculation', () => {
         const calculation = (totalAllBonds() / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP));
-        const expected = formattedNumber(calculation);
+        const expected = formattedNumber(roundNumber(calculation), 2);
         expect(result.totalValue.bondInGbp).toEqual(expected);
       });
 
       it('should have correct, formatted loanCurrency calculation', () => {
-        const expected = formattedNumber(totalAllLoans());
+        const calculation = totalAllLoans();
+        const expected = formattedNumber(roundNumber(calculation), 2);
         expect(result.totalValue.loanCurrency).toEqual(expected);
       });
 
       it('should have correct, formatted loanInGbp calculation', () => {
         const calculation = (totalAllLoans() / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP));
-        const expected = formattedNumber(calculation);
+        const expected = formattedNumber(roundNumber(calculation), 2);
         expect(result.totalValue.loanInGbp).toEqual(expected);
       });
     });

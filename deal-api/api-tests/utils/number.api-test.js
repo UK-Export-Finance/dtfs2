@@ -4,6 +4,7 @@ const {
   decimalsCount,
   stripDecimals,
   roundNumber,
+  formattedNumber,
 } = require('../../src/utils/number');
 
 describe('utils - number', () => {
@@ -60,6 +61,15 @@ describe('utils - number', () => {
       expect(roundNumber(1234.01, 1)).toEqual(1234);
       expect(roundNumber(123456.001, 2)).toEqual(123456);
       expect(roundNumber(123456.001)).toEqual(123456);
+    });
+  });
+
+  describe('formattedNumber', () => {
+    it('should return native toLocaleString() result with 2 minimumFractionDigits param', () => {
+      const number = 123456789123.12;
+      const result = formattedNumber(number);
+      const expected = number.toLocaleString('en', { minimumFractionDigits: 2 });
+      expect(result).toEqual(expected);
     });
   });
 });
