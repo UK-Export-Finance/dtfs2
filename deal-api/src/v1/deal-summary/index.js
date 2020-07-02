@@ -7,32 +7,57 @@ const { hasValue } = require('../../utils/string');
 
 const calculateTotalValue = (supplyContractConversionRateToGbp, bonds, loans) => {
   let bondCurrency = 0;
+  let bondsHaveAConversionRateToGbp = false;
   let loanCurrency = 0;
+  let loansHaveAConversionRateToGbp = false;
 
   if (bonds.length > 0) {
     bonds.forEach((bond) => {
-      bondCurrency += (Number(bond.facilityValue) / Number(bond.conversionRate));
+      const { facilityValue, conversionRate, currency } = bond;
+      bondCurrency += (Number(facilityValue) / Number(conversionRate));
+
+      if (currency.id === 'GBP') {
+        bondsHaveAConversionRateToGbp = true;
+      }
     });
   }
 
   if (loans.length > 0) {
     loans.forEach((loan) => {
-      loanCurrency += (Number(loan.facilityValue) / Number(loan.conversionRate));
+      const { facilityValue, conversionRate, currency } = loan;
+      loanCurrency += (Number(facilityValue) / Number(conversionRate));
+
+      if (currency.id === 'GBP') {
+        loansHaveAConversionRateToGbp = true;
+      }
     });
   }
 
   const dealCurrency = bondCurrency + loanCurrency;
-  const bondInGbp = (bondCurrency / supplyContractConversionRateToGbp);
-  const loanInGbp = (loanCurrency / supplyContractConversionRateToGbp);
-  const dealInGbp = (bondInGbp + loanInGbp);
+
+  const bondInGbp = () => {
+    if (bondsHaveAConversionRateToGbp) {
+      return bondCurrency;
+    }
+    return (bondCurrency / supplyContractConversionRateToGbp);
+  };
+
+  const loanInGbp = () => {
+    if (loansHaveAConversionRateToGbp) {
+      return loanCurrency;
+    }
+    return (loanCurrency / supplyContractConversionRateToGbp);
+  };
+
+  const dealInGbp = (bondInGbp() + loanInGbp());
 
   return {
     dealCurrency: formattedNumber(roundNumber(dealCurrency, 2)),
     dealInGbp: formattedNumber(roundNumber(dealInGbp, 2)),
     bondCurrency: formattedNumber(roundNumber(bondCurrency, 2)),
-    bondInGbp: formattedNumber(roundNumber(bondInGbp, 2)),
+    bondInGbp: formattedNumber(roundNumber(bondInGbp(), 2)),
     loanCurrency: formattedNumber(roundNumber(loanCurrency, 2)),
-    loanInGbp: formattedNumber(roundNumber(loanInGbp, 2)),
+    loanInGbp: formattedNumber(roundNumber(loanInGbp(), 2)),
   };
 };
 
@@ -58,7 +83,6 @@ const calculateDealSummary = (deal) => {
         completedBonds,
         completedLoans,
       ),
-      // totalUkefExposure: calculateTotalUkefExposure,
     };
   }
   return {};
