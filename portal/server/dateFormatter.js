@@ -2,7 +2,7 @@ const moment = require('moment');
 
 const FULL_TIMESTAMP = 'YYYY MM DD HH:mm:ss:SSS ZZ';
 const DATE_ONLY = 'DD/MM/YYYY';
-const DATE_TIME = 'DD/MM/YYYY HH:mm';
+const DATE_TIME = 'DD/MM/YYYY HH:mm z';
 
 const toDateOnly = (fullTimestamp) => {
   const timestamp = moment(fullTimestamp, FULL_TIMESTAMP);
