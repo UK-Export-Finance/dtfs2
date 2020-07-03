@@ -8,6 +8,7 @@ const {
   calculateGuaranteeFee,
   calculateUkefExposure,
 } = require('../../../src/v1/section-calculations');
+const { findOneCurrency } = require('../../../src/v1/controllers/currencies.controller');
 
 describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({
@@ -15,9 +16,10 @@ describe('/v1/deals/:id/bond', () => {
       bankSupplyContractName: 'mock name',
       bankSupplyContractID: 'mock id',
     },
-    supplyContractCurrency: {
-      id: 'GBP',
-      text: 'GBP - UK Sterling',
+    submissionDetails: {
+      supplyContractCurrency: {
+        id: 'GBP',
+      },
     },
   });
 
@@ -505,10 +507,16 @@ describe('/v1/deals/:id/bond', () => {
       const updatedBond = updatedDeal.deal.bondTransactions.items.find((b) =>
         b._id === bondId); // eslint-disable-line no-underscore-dangle
 
+      const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+
       expect(updatedBond).toEqual({
         _id: bondId, // eslint-disable-line no-underscore-dangle
         ...bondBody,
-        currency: deal.body.supplyContractCurrency,
+        // currency: deal.body.supplyContractCurrency,
+        currency: {
+          text: expectedCurrency.text,
+          id: expectedCurrency.id,
+        },
         guaranteeFeePayableByBank: expectedGuaranteeFee,
         ukefExposure: expectedUkefExposure,
         status: 'Completed',
@@ -516,7 +524,7 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     describe('when a bond has req.body.currencySameAsSupplyContractCurrency changed from false to true', () => {
-      it('should remove `currency is NOT the same` values from the bond', async () => {
+      it('should remove `currency is NOT the same` values from the bond and add the deal\'s supplyContractCurrency', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -562,6 +570,12 @@ describe('/v1/deals/:id/bond', () => {
         expect(updatedBond['conversionRateDate-day']).toEqual(undefined);
         expect(updatedBond['conversionRateDate-month']).toEqual(undefined);
         expect(updatedBond['conversionRateDate-year']).toEqual(undefined);
+
+        const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+        expect(updatedBond.currency).toEqual({
+          text: expectedCurrency.text,
+          id: expectedCurrency.id,
+        });
       });
     });
 

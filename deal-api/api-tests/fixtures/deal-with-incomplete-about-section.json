@@ -69,9 +69,5 @@
         "items" : []
     },
     "summary" : {},
-    "comments" : [],
-    "supplyContractCurrency" : {
-        "id" : "GBP",
-        "text" : "GBP - UK Sterling"
-    }
+    "comments" : []
 }
