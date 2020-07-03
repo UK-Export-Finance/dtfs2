@@ -353,11 +353,16 @@ describe('/v1/deals/:id/bond', () => {
         const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
           b._id === bondId); // eslint-disable-line no-underscore-dangle
 
+        const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+
         const expectedUpdatedBond = {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...allBondFields,
           ...coverEndDate(),
-          currency: deal.body.supplyContractCurrency,
+          currency: {
+            text: expectedCurrency.text,
+            id: expectedCurrency.id,
+          },
           guaranteeFeePayableByBank: expectedGuaranteeFee,
           ukefExposure: expectedUkefExposure,
           status: 'Completed',
@@ -407,10 +412,15 @@ describe('/v1/deals/:id/bond', () => {
         const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
           b._id === bondId); // eslint-disable-line no-underscore-dangle
 
+        const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+
         const expectedBond = {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsIssued,
-          currency: deal.body.supplyContractCurrency,
+          currency: {
+            text: expectedCurrency.text,
+            id: expectedCurrency.id,
+          },
           guaranteeFeePayableByBank: expectedGuaranteeFee,
           ukefExposure: expectedUkefExposure,
           status: 'Completed',
@@ -462,10 +472,15 @@ describe('/v1/deals/:id/bond', () => {
         const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
           b._id === bondId); // eslint-disable-line no-underscore-dangle
 
+        const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+
         const expectedBond = {
           _id: bondId, // eslint-disable-line no-underscore-dangle
           ...updatedBondAsUnissued,
-          currency: deal.body.supplyContractCurrency,
+          currency: {
+            text: expectedCurrency.text,
+            id: expectedCurrency.id,
+          },
           guaranteeFeePayableByBank: expectedGuaranteeFee,
           ukefExposure: expectedUkefExposure,
           status: 'Completed',
@@ -512,7 +527,6 @@ describe('/v1/deals/:id/bond', () => {
       expect(updatedBond).toEqual({
         _id: bondId, // eslint-disable-line no-underscore-dangle
         ...bondBody,
-        // currency: deal.body.supplyContractCurrency,
         currency: {
           text: expectedCurrency.text,
           id: expectedCurrency.id,

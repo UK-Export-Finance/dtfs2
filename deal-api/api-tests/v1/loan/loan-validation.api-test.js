@@ -12,6 +12,11 @@ describe('/v1/deals/:id/loan', () => {
       bankSupplyContractName: 'mock name',
       bankSupplyContractID: 'mock id',
     },
+    submissionDetails: {
+      supplyContractCurrency: {
+        id: 'GBP',
+      },
+    },
   });
 
   let aBarclaysMaker;

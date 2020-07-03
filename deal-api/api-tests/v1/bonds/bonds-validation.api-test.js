@@ -12,6 +12,11 @@ describe('/v1/deals/:id/bond', () => {
       bankSupplyContractName: 'mock name',
       bankSupplyContractID: 'mock id',
     },
+    submissionDetails: {
+      supplyContractCurrency: {
+        id: 'GBP',
+      },
+    },
   });
 
   const mockCurrencies = [

@@ -11,6 +11,11 @@ const MOCK_DEAL = {
     bankSupplyContractID: 'someDealId',
     bankSupplyContractName: 'someDealName',
   },
+  submissionDetails: {
+    supplyContractCurrency: {
+      id: 'GBP',
+    },
+  },
 };
 
 context('Add a Bond to a Deal', () => {
@@ -272,7 +277,7 @@ context('Add a Bond to a Deal', () => {
         });
 
         row.facilityValue().invoke('text').then((text) => {
-          const expectedValue = `${deal.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.facilityValue}`;
+          const expectedValue = `${deal.submissionDetails.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.facilityValue}`;
           expect(text.trim()).equal(expectedValue);
         });
 
