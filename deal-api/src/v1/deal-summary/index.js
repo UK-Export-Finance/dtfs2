@@ -52,7 +52,7 @@ const calculateTotalValue = (supplyContractConversionRateToGbp, bonds, loans) =>
   };
 
   const dealInGbp = () => {
-    let result;
+    let result = 0;
 
     if (hasBonds) {
       result = bondInGbp();

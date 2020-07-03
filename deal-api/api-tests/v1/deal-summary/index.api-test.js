@@ -6,22 +6,26 @@ const {
 
 describe('deal-summary', () => {
   const calculateTotalAllBonds = (bondTransactions) => {
-    const firstBond = bondTransactions.items[0];
-    const lastBond = bondTransactions.items[1];
-
     let total = 0;
-    total = Number(firstBond.facilityValue) / Number(firstBond.conversionRate);
-    total += Number(lastBond.facilityValue) / Number(lastBond.conversionRate);
+    bondTransactions.items.forEach((bond) => {
+      if (bond.conversionRate) {
+        total += Number(bond.facilityValue) / Number(bond.conversionRate);
+      } else {
+        total += Number(bond.facilityValue);
+      }
+    });
     return total;
   };
 
   const calculateTotalAllLoans = (loanTransactions) => {
-    const firstLoan = loanTransactions.items[0];
-    const lastLoan = loanTransactions.items[1];
-
     let total = 0;
-    total = Number(firstLoan.facilityValue) / Number(firstLoan.conversionRate);
-    total += Number(lastLoan.facilityValue) / Number(lastLoan.conversionRate);
+    loanTransactions.items.forEach((loan) => {
+      if (loan.conversionRate) {
+        total += Number(loan.facilityValue) / Number(loan.conversionRate);
+      } else {
+        total += Number(loan.facilityValue);
+      }
+    });
     return total;
   };
 
@@ -46,6 +50,7 @@ describe('deal-summary', () => {
       expect(calculateDealSummary(mockDeal)).toEqual({});
     });
   });
+  // TODO: update tests for new submissionDetails conditions
 
   describe('with no completed bonds or loans', () => {
     it('should return empty object', () => {
@@ -67,11 +72,14 @@ describe('deal-summary', () => {
     });
   });
 
-  describe('when a deal has supplyContractConversionRateToGBP and completed bonds or loans', () => {
+  describe('when a deal has relevant Supply Contract fields and completed bonds or loans', () => {
     let result;
 
     const mockDeal = {
       submissionDetails: {
+        supplyContractCurrency: {
+          id: 'AUD',
+        },
         supplyContractConversionRateToGBP: '50',
       },
       bondTransactions: {
@@ -165,19 +173,18 @@ describe('deal-summary', () => {
             {
               status: 'Completed',
               facilityValue: '123456.45',
-              conversionRate: '80',
               currency: { id: 'GBP', text: 'UK Sterling' },
             },
             {
               status: 'Completed',
               facilityValue: '1000.24',
-              conversionRate: '40',
               currency: { id: 'EUR', text: 'Euros' },
+              conversionRate: '40',
             },
           ],
         };
 
-        describe('when any completed bond has a GBP currency', () => {
+        describe('when any completed bond has a GBP currency (and therefore no conversionRate)', () => {
           let calculation;
           let expected;
 
@@ -186,20 +193,20 @@ describe('deal-summary', () => {
             mockDeal.loanTransactions = { items: [] };
             result = calculateDealSummary(mockDeal);
 
-            calculation = calculateTotalAllBonds(mockDeal.bondTransactions);
+            calculation = (calculateTotalAllBonds(mockDeal.bondTransactions) / mockDeal.submissionDetails.supplyContractConversionRateToGBP);
             expected = formattedNumber(roundNumber(calculation), 2);
           });
 
-          it('should have formatted bondInGbp calculation without using supplyContractConversionRateToGbp', () => {
+          it('should have formatted bondInGbp calculation without using bond conversionRate', () => {
             expect(result.totalValue.bondInGbp).toEqual(expected);
           });
 
-          it('should have formatted dealInGbp calculation without using supplyContractConversionRateToGbp', () => {
+          it('should have formatted dealInGbp calculation without using bond conversionRate', () => {
             expect(result.totalValue.dealInGbp).toEqual(expected);
           });
         });
 
-        describe('when any completed loan has a GBP currency', () => {
+        describe('when any completed loan has a GBP currency (and therefore no conversionRate)', () => {
           let calculation;
           let expected;
 
@@ -208,26 +215,27 @@ describe('deal-summary', () => {
             mockDeal.bondTransactions = { items: [] };
 
             result = calculateDealSummary(mockDeal);
-            calculation = calculateTotalAllLoans(mockDeal.loanTransactions);
+            calculation = (calculateTotalAllLoans(mockDeal.loanTransactions) / mockDeal.submissionDetails.supplyContractConversionRateToGBP);
             expected = formattedNumber(roundNumber(calculation), 2);
           });
 
-          it('should have formatted loanInGbp calculation without using supplyContractConversionRateToGbp', () => {
+          it('should have formatted loanInGbp calculation without using loan conversionRate', () => {
             expect(result.totalValue.loanInGbp).toEqual(expected);
           });
 
-          it('should have formatted dealInGbp calculation without using supplyContractConversionRateToGbp', () => {
+          it('should have formatted dealInGbp calculation without using loan conversionRate', () => {
             expect(result.totalValue.dealInGbp).toEqual(expected);
           });
         });
 
         describe('when both completed loans and bonds have a GBP currency', () => {
-          it('should have formatted dealInGbp calculation without using supplyContractConversionRateToGbp', () => {
+          it('should have formatted dealInGbp calculation without using loans/bonds conversionRates', () => {
             mockDeal.loanTransactions = mockTransactions;
             mockDeal.bondTransactions = mockTransactions;
 
             result = calculateDealSummary(mockDeal);
-            const calculation = (calculateTotalAllLoans(mockDeal.loanTransactions) + calculateTotalAllBonds(mockDeal.bondTransactions));
+            const totalBondsAndLoans = (calculateTotalAllBonds(mockDeal.bondTransactions) + calculateTotalAllLoans(mockDeal.loanTransactions));
+            const calculation = (totalBondsAndLoans / mockDeal.submissionDetails.supplyContractConversionRateToGBP);
             const expected = formattedNumber(roundNumber(calculation), 2);
 
             expect(result.totalValue.dealInGbp).toEqual(expected);
