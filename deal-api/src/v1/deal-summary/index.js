@@ -6,15 +6,15 @@ const {
 const { hasValue } = require('../../utils/string');
 
 const calculateTotalValue = (supplyContractConversionRateToGbp, bonds, loans) => {
-  let bondCurrency = 0;
+  let bondInDealCurrency = 0;
   let bondsHaveAConversionRateToGbp = false;
-  let loanCurrency = 0;
+  let loanInDealCurrency = 0;
   let loansHaveAConversionRateToGbp = false;
 
   if (bonds.length > 0) {
     bonds.forEach((bond) => {
       const { facilityValue, conversionRate, currency } = bond;
-      bondCurrency += (Number(facilityValue) / Number(conversionRate));
+      bondInDealCurrency += (Number(facilityValue) / Number(conversionRate));
 
       if (currency.id === 'GBP') {
         bondsHaveAConversionRateToGbp = true;
@@ -25,7 +25,7 @@ const calculateTotalValue = (supplyContractConversionRateToGbp, bonds, loans) =>
   if (loans.length > 0) {
     loans.forEach((loan) => {
       const { facilityValue, conversionRate, currency } = loan;
-      loanCurrency += (Number(facilityValue) / Number(conversionRate));
+      loanInDealCurrency += (Number(facilityValue) / Number(conversionRate));
 
       if (currency.id === 'GBP') {
         loansHaveAConversionRateToGbp = true;
@@ -33,30 +33,30 @@ const calculateTotalValue = (supplyContractConversionRateToGbp, bonds, loans) =>
     });
   }
 
-  const dealCurrency = bondCurrency + loanCurrency;
+  const dealInDealCurrency = bondInDealCurrency + loanInDealCurrency;
 
   const bondInGbp = () => {
     if (bondsHaveAConversionRateToGbp) {
-      return bondCurrency;
+      return bondInDealCurrency;
     }
-    return (bondCurrency / supplyContractConversionRateToGbp);
+    return (bondInDealCurrency / supplyContractConversionRateToGbp);
   };
 
   const loanInGbp = () => {
     if (loansHaveAConversionRateToGbp) {
-      return loanCurrency;
+      return loanInDealCurrency;
     }
-    return (loanCurrency / supplyContractConversionRateToGbp);
+    return (loanInDealCurrency / supplyContractConversionRateToGbp);
   };
 
   const dealInGbp = (bondInGbp() + loanInGbp());
 
   return {
-    dealCurrency: formattedNumber(roundNumber(dealCurrency, 2)),
+    dealInDealCurrency: formattedNumber(roundNumber(dealInDealCurrency, 2)),
     dealInGbp: formattedNumber(roundNumber(dealInGbp, 2)),
-    bondCurrency: formattedNumber(roundNumber(bondCurrency, 2)),
+    bondInDealCurrency: formattedNumber(roundNumber(bondInDealCurrency, 2)),
     bondInGbp: formattedNumber(roundNumber(bondInGbp(), 2)),
-    loanCurrency: formattedNumber(roundNumber(loanCurrency, 2)),
+    loanInDealCurrency: formattedNumber(roundNumber(loanInDealCurrency, 2)),
     loanInGbp: formattedNumber(roundNumber(loanInGbp(), 2)),
   };
 };

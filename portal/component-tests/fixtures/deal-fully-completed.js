@@ -212,11 +212,11 @@ const deal = {
   },
   summary: {
     totalValue: {
-      dealCurrency: '10,000',
+      dealInDealCurrency: '10,000',
       dealInGbp: '12,000',
-      bondCurrency: '8,000',
+      bondInDealCurrency: '8,000',
       bondInGbp: '16,000',
-      loanCurrency: '4,000',
+      loanInDealCurrency: '4,000',
       loanInGbp: '8,000',
     },
   },

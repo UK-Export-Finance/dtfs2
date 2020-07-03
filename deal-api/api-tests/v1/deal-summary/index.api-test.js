@@ -121,10 +121,10 @@ describe('deal-summary', () => {
         expect(Object.keys(result.totalValue).length > 0).toEqual(true);
       });
 
-      it('should have correct, formatted dealCurrency calculation', () => {
+      it('should have correct, formatted dealInDealCurrency calculation', () => {
         const calculation = totalAllBonds + totalAllLoans;
         const expected = formattedNumber(roundNumber(calculation), 2);
-        expect(result.totalValue.dealCurrency).toEqual(expected);
+        expect(result.totalValue.dealInDealCurrency).toEqual(expected);
       });
 
       it('should have correct, formatted dealInGbp calculation', () => {
@@ -135,10 +135,10 @@ describe('deal-summary', () => {
         expect(result.totalValue.dealInGbp).toEqual(expected);
       });
 
-      it('should have correct, formatted bondCurrency calculation', () => {
+      it('should have correct, formatted bondInDealCurrency calculation', () => {
         const calculation = totalAllBonds;
         const expected = formattedNumber(roundNumber(calculation), 2);
-        expect(result.totalValue.bondCurrency).toEqual(expected);
+        expect(result.totalValue.bondInDealCurrency).toEqual(expected);
       });
 
       it('should have correct, formatted bondInGbp calculation', () => {
@@ -147,10 +147,10 @@ describe('deal-summary', () => {
         expect(result.totalValue.bondInGbp).toEqual(expected);
       });
 
-      it('should have correct, formatted loanCurrency calculation', () => {
+      it('should have correct, formatted loanInDealCurrency calculation', () => {
         const calculation = totalAllLoans;
         const expected = formattedNumber(roundNumber(calculation), 2);
-        expect(result.totalValue.loanCurrency).toEqual(expected);
+        expect(result.totalValue.loanInDealCurrency).toEqual(expected);
       });
 
       it('should have correct, formatted loanInGbp calculation', () => {
