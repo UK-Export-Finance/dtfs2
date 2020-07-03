@@ -3,7 +3,8 @@
     "bankSupplyContractID": "abc/1/def",
     "bankSupplyContractName": "Tibettan submarine acquisition scheme",
     "submissionType": "Automatic Inclusion Notice",
-    "status": "Ready for Checker's approval"
+    "status": "Ready for Checker's approval",
+    "previousStatus": "Draft"
   },
   "submissionDetails" : {
     "indemnifier-address-country" : "GBR",
@@ -81,23 +82,24 @@
     "bondTransactions": {
       "items": [
       {
-          "bondIssuer": "issuer",
-          "bondType": "bond type",
-          "bondStage": "unissued",
-          "ukefGuaranteeInMonths": "24",
-          "uniqueIdentificationNumber": "1234",
-          "bondBeneficiary": "test",
-          "facilityValue": "123",
-          "currencySameAsSupplyContractCurrency": "true",
-          "riskMarginFee": "1",
-          "coveredPercentage": "2",
-          "feeType": "test",
-          "feeFrequency": "test",
-          "dayCountBasis": "test",
-          "currency": {
-            "text": "GBP - UK Sterling",
-            "id": "GBP"
-          }
+        "bondIssuer": "Issuer",
+        "bondType": "Advance payment guarantee",
+        "bondStage": "Unissued",
+        "ukefGuaranteeInMonths": "10",
+        "bondBeneficiary": "",
+        "guaranteeFeePayableByBank": "9.0000",
+        "facilityValue": "12345.00",
+        "currencySameAsSupplyContractCurrency": "true",
+        "riskMarginFee": "10",
+        "coveredPercentage": "20",
+        "minimumRiskMarginFee": "30",
+        "ukefExposure": "2,469.00",
+        "feeType": "At maturity",
+        "dayCountBasis": "365",
+        "currency": {
+          "text": "GBP - UK Sterling",
+          "id": "GBP"
+        }
       }
     ]
   },
@@ -105,14 +107,17 @@
     "items": [
       {
         "facilityStage": "Unconditional",
-        "bankReferenceNumber": "123",
-        "facilityValue": "123",
-        "disbursementAmount": "12",
+        "bankReferenceNumber": "8888888",
+        "guaranteeFeePayableByBank": "18.0000",
+        "facilityValue": "44444.00",
         "currencySameAsSupplyContractCurrency": "true",
-        "interestMarginFee": "10",
-        "coveredPercentage": "9",
-        "premiumType": "In advance",
+        "disbursementAmount": "100.00",
+        "interestMarginFee": "20",
+        "coveredPercentage": "21",
+        "minimumQuarterlyFee": "22",
+        "ukefExposure": "9,333.24",
         "premiumFrequency": "Annually",
+        "premiumType": "In advance",
         "dayCountBasis": "365",
         "currency": {
           "text": "GBP - UK Sterling",
