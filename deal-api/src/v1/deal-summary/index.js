@@ -16,7 +16,7 @@ const calculateTotalValue = (supplyContractConversionRateToGbp, bonds, loans) =>
       const { facilityValue, conversionRate, currency } = bond;
       bondInDealCurrency += (Number(facilityValue) / Number(conversionRate));
 
-      if (currency.id === 'GBP') {
+      if (currency && currency.id === 'GBP') {
         bondsHaveAConversionRateToGbp = true;
       }
     });
@@ -27,7 +27,7 @@ const calculateTotalValue = (supplyContractConversionRateToGbp, bonds, loans) =>
       const { facilityValue, conversionRate, currency } = loan;
       loanInDealCurrency += (Number(facilityValue) / Number(conversionRate));
 
-      if (currency.id === 'GBP') {
+      if (currency && currency.id === 'GBP') {
         loansHaveAConversionRateToGbp = true;
       }
     });
