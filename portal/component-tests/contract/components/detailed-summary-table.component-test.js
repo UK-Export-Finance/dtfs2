@@ -13,7 +13,7 @@ describe(component, () => {
 
   describe('totalValue row', () => {
     it('should render dealCurrency', () => {
-      wrapper.expectText('[data-cy="deal-currency"]').toRead(deal.summary.totalValue.dealCurrency);
+      wrapper.expectText('[data-cy="deal-in-deal-currency"]').toRead(deal.summary.totalValue.dealInDealCurrency);
     });
 
     it('should render dealInGbp', () => {
@@ -21,7 +21,7 @@ describe(component, () => {
     });
 
     it('should render bondCurrency', () => {
-      wrapper.expectText('[data-cy="bond-currency"]').toRead(deal.summary.totalValue.bondCurrency);
+      wrapper.expectText('[data-cy="bond-in-deal-currency"]').toRead(deal.summary.totalValue.bondInDealCurrency);
     });
 
     it('should render bondInGbp', () => {
@@ -29,7 +29,7 @@ describe(component, () => {
     });
 
     it('should render loanCurrency', () => {
-      wrapper.expectText('[data-cy="loan-currency"]').toRead(deal.summary.totalValue.loanCurrency);
+      wrapper.expectText('[data-cy="loan-in-deal-currency"]').toRead(deal.summary.totalValue.loanInDealCurrency);
     });
 
     it('should render loanInGbp', () => {
