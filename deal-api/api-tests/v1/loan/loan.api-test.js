@@ -8,6 +8,7 @@ const {
   calculateGuaranteeFee,
   calculateUkefExposure,
 } = require('../../../src/v1/section-calculations');
+const { findOneCurrency } = require('../../../src/v1/controllers/currencies.controller');
 
 describe('/v1/deals/:id/loan', () => {
   const newDeal = aDeal({
@@ -15,9 +16,10 @@ describe('/v1/deals/:id/loan', () => {
       bankSupplyContractName: 'mock name',
       bankSupplyContractID: 'mock id',
     },
-    supplyContractCurrency: {
-      id: 'GBP',
-      text: 'GBP - UK Sterling',
+    submissionDetails: {
+      supplyContractCurrency: {
+        id: 'GBP',
+      },
     },
   });
 
@@ -334,7 +336,11 @@ describe('/v1/deals/:id/loan', () => {
       const { status, body } = await updateLoan(dealId, loanId, loan);
 
       expect(status).toEqual(200);
-      expect(body.currency).toEqual(newDeal.supplyContractCurrency);
+      const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+      expect(body.currency).toEqual({
+        text: expectedCurrency.text,
+        id: expectedCurrency.id,
+      });
     });
 
     describe('when req.body.currencySameAsSupplyContractCurrency is changed from false to true', () => {
@@ -371,7 +377,12 @@ describe('/v1/deals/:id/loan', () => {
         expect(body['conversionRateDate-day']).toEqual(undefined);
         expect(body['conversionRateDate-month']).toEqual(undefined);
         expect(body['conversionRateDate-year']).toEqual(undefined);
-        expect(body.currency).toEqual(newDeal.supplyContractCurrency);
+
+        const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+        expect(body.currency).toEqual({
+          text: expectedCurrency.text,
+          id: expectedCurrency.id,
+        });
       });
     });
 

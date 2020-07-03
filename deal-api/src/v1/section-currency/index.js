@@ -12,7 +12,7 @@ const currencyObject = async (currencyCode) => {
 
 module.exports = async (dealSection, deal) => {
   const modifiedSection = dealSection;
-  const supplyContractCurrencyCode = deal.supplyContractCurrency.id;
+  const supplyContractCurrencyCode = deal.submissionDetails.supplyContractCurrency.id;
 
   const {
     currencySameAsSupplyContractCurrency,

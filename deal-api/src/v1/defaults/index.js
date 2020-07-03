@@ -54,11 +54,6 @@ const DEFAULTS = {
     },
     summary: {},
     comments: [],
-    // TODO: remove supplyContractCurrency once we have 'About Supply Contract' submitting this value
-    supplyContractCurrency: {
-      id: 'GBP',
-      text: 'GBP - UK Sterling',
-    },
   },
 };
 
