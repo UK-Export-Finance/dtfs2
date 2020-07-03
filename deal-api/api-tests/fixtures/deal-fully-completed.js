@@ -259,6 +259,16 @@ const deal = {
     'supplyContractConversionDate-month': `${moment().subtract(1, 'day').format('MM')}`,
     'supplyContractConversionDate-year': `${moment().subtract(1, 'day').format('YYYY')}`,
   },
+  summary: {
+    totalValue: {
+      dealInDealCurrency: '10,000',
+      dealInGbp: '12,000',
+      bondInDealCurrency: '8,000',
+      bondInGbp: '16,000',
+      loanInDealCurrency: '4,000',
+      loanInGbp: '8,000',
+    },
+  },
   dealFiles: {
     /*
     exporterQuestionnaire: [
