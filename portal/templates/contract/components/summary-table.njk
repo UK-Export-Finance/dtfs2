@@ -1,24 +1,41 @@
-{% macro render() %}
+{% macro render(deal) %}
 
   <table class="govuk-table">
     <caption class="govuk-table__caption govuk-!-font-size-24">Supply Contract summary</caption>
     <tbody class="govuk-table__body">
+
       <tr class="govuk-table__row">
         <th scope="row" class="govuk-table__header">Deal currency</th>
-        <td class="govuk-table__cell">{{ deal.summary.dealCurrency }}</td>
+
+        <td class="govuk-table__cell" data-cy="deal-currency">
+          {{ deal.submissionDetails.supplyContractCurrency.id }}
+        </td>
       </tr>
+
       <tr class="govuk-table__row">
         <th scope="row" class="govuk-table__header">Number of bonds</th>
-        <td class="govuk-table__cell">{{ deal.summary.totals.bonds }}</td>
+
+        <td class="govuk-table__cell" data-cy="number-of-bonds">
+          {{ deal.bondTransactions.items.length }}
+        </td>
       </tr>
+
       <tr class="govuk-table__row">
         <th scope="row" class="govuk-table__header">Number of loans</th>
-        <td class="govuk-table__cell">{{ deal.summary.totals.loans }}</td>
+
+        <td class="govuk-table__cell" data-cy="number-of-loans">
+          {{ deal.loanTransactions.items.length }}
+        </td>
       </tr>
+
       <tr class="govuk-table__row">
         <th scope="row" class="govuk-table__header">Number of transactions</th>
-        <td class="govuk-table__cell">{{ deal.summary.totals.transactions }}</td>
+
+        <td class="govuk-table__cell" data-cy="number-of-transactions">
+          {{ deal.bondTransactions.items.length + deal.loanTransactions.items.length }}
+        </td>
       </tr>
+
     </tbody>
   </table>
 
