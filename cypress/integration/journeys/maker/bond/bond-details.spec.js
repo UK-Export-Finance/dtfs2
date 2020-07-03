@@ -11,6 +11,11 @@ const MOCK_DEAL = {
     bankSupplyContractID: 'someDealId',
     bankSupplyContractName: 'someDealName',
   },
+  submissionDetails: {
+    supplyContractCurrency: {
+      id: 'GBP',
+    },
+  },
 };
 
 context('Bond Details', () => {

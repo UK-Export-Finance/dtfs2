@@ -12,7 +12,11 @@ const currencyObject = async (currencyCode) => {
 
 module.exports = async (dealSection, deal) => {
   const modifiedSection = dealSection;
-  const supplyContractCurrencyCode = deal.submissionDetails.supplyContractCurrency.id;
+  let supplyContractCurrencyCodeId;
+
+  if (deal.submissionDetails.supplyContractCurrency) {
+    supplyContractCurrencyCodeId = deal.submissionDetails.supplyContractCurrency.id;
+  }
 
   const {
     currencySameAsSupplyContractCurrency,
@@ -27,7 +31,9 @@ module.exports = async (dealSection, deal) => {
     delete modifiedSection['conversionRateDate-month'];
     delete modifiedSection['conversionRateDate-year'];
 
-    modifiedSection.currency = await currencyObject(supplyContractCurrencyCode);
+    if (supplyContractCurrencyCodeId) {
+      modifiedSection.currency = await currencyObject(supplyContractCurrencyCodeId);
+    }
   } else if (currencyCode) {
     // TODO: make this clearer
     // currencyCode can be a single string (from form),
