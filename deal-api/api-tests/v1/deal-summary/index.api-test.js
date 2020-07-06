@@ -5,30 +5,6 @@ const {
 } = require('../../../src/utils/number');
 
 describe('deal-summary', () => {
-  const calculateTotalAllBonds = (bondTransactions) => {
-    let total = 0;
-    bondTransactions.items.forEach((bond) => {
-      if (bond.conversionRate) {
-        total += Number(bond.facilityValue) / Number(bond.conversionRate);
-      } else {
-        total += Number(bond.facilityValue);
-      }
-    });
-    return total;
-  };
-
-  const calculateTotalAllLoans = (loanTransactions) => {
-    let total = 0;
-    loanTransactions.items.forEach((loan) => {
-      if (loan.conversionRate) {
-        total += Number(loan.facilityValue) / Number(loan.conversionRate);
-      } else {
-        total += Number(loan.facilityValue);
-      }
-    });
-    return total;
-  };
-
   describe('with no supplyContractConversionRateToGBP', () => {
     it('should return empty object', () => {
       const mockDeal = {
@@ -50,6 +26,7 @@ describe('deal-summary', () => {
       expect(calculateDealSummary(mockDeal)).toEqual({});
     });
   });
+
   // TODO: update tests for new submissionDetails conditions
 
   describe('with no completed bonds or loans', () => {
@@ -75,6 +52,9 @@ describe('deal-summary', () => {
   describe('when a deal has relevant Supply Contract fields and completed bonds or loans', () => {
     let result;
 
+    const calculateUkefExposure = (facilityValue, coveredPercentage) =>
+      String(Number(facilityValue) * (Number(coveredPercentage) / 100));
+
     const mockDeal = {
       submissionDetails: {
         supplyContractCurrency: {
@@ -89,12 +69,20 @@ describe('deal-summary', () => {
             facilityValue: '123456.45',
             conversionRate: '80',
             currency: { id: 'EUR', text: 'Euros' },
+            coveredPercentage: '40',
+            get ukefExposure() {
+              return calculateUkefExposure(this.facilityValue, this.coveredPercentage);
+            },
           },
           {
             status: 'Completed',
             facilityValue: '1000.24',
             conversionRate: '40',
             currency: { id: 'EUR', text: 'Euros' },
+            coveredPercentage: '30',
+            get ukefExposure() {
+              return calculateUkefExposure(this.facilityValue, this.coveredPercentage);
+            },
           },
         ],
       },
@@ -105,25 +93,57 @@ describe('deal-summary', () => {
             facilityValue: '5000.10',
             conversionRate: '90',
             currency: { id: 'EUR', text: 'Euros' },
+            coveredPercentage: '70',
+            get ukefExposure() {
+              return calculateUkefExposure(this.facilityValue, this.coveredPercentage);
+            },
           },
           {
             status: 'Completed',
             facilityValue: '10500.67',
             conversionRate: '40',
             currency: { id: 'EUR', text: 'Euros' },
+            coveredPercentage: '10',
+            get ukefExposure() {
+              return calculateUkefExposure(this.facilityValue, this.coveredPercentage);
+            },
           },
         ],
       },
     };
-
-    const totalAllBonds = calculateTotalAllBonds(mockDeal.bondTransactions);
-    const totalAllLoans = calculateTotalAllLoans(mockDeal.loanTransactions);
 
     beforeEach(() => {
       result = calculateDealSummary(mockDeal);
     });
 
     describe('totalValue object', () => {
+      const calculateTotalAllBonds = (bondTransactions) => {
+        let total = 0;
+        bondTransactions.items.forEach((bond) => {
+          if (bond.conversionRate) {
+            total += Number(bond.facilityValue) / Number(bond.conversionRate);
+          } else {
+            total += Number(bond.facilityValue);
+          }
+        });
+        return total;
+      };
+
+      const calculateTotalAllLoans = (loanTransactions) => {
+        let total = 0;
+        loanTransactions.items.forEach((loan) => {
+          if (loan.conversionRate) {
+            total += Number(loan.facilityValue) / Number(loan.conversionRate);
+          } else {
+            total += Number(loan.facilityValue);
+          }
+        });
+        return total;
+      };
+
+      const totalAllBonds = calculateTotalAllBonds(mockDeal.bondTransactions);
+      const totalAllLoans = calculateTotalAllLoans(mockDeal.loanTransactions);
+
       it('should be returned', () => {
         expect(result.totalValue).toBeDefined();
         expect(Object.keys(result.totalValue).length > 0).toEqual(true);
@@ -189,11 +209,15 @@ describe('deal-summary', () => {
           let expected;
 
           beforeEach(() => {
-            mockDeal.bondTransactions = mockTransactions;
-            mockDeal.loanTransactions = { items: [] };
-            result = calculateDealSummary(mockDeal);
+            const mockBondTransactions = mockTransactions;
 
-            calculation = (calculateTotalAllBonds(mockDeal.bondTransactions) / mockDeal.submissionDetails.supplyContractConversionRateToGBP);
+            result = calculateDealSummary({
+              ...mockDeal,
+              bondTransactions: mockBondTransactions,
+              loanTransactions: { items: [] },
+            });
+
+            calculation = (calculateTotalAllBonds(mockBondTransactions) / mockDeal.submissionDetails.supplyContractConversionRateToGBP);
             expected = formattedNumber(roundNumber(calculation), 2);
           });
 
@@ -211,11 +235,14 @@ describe('deal-summary', () => {
           let expected;
 
           beforeEach(() => {
-            mockDeal.loanTransactions = mockTransactions;
-            mockDeal.bondTransactions = { items: [] };
+            const mockLoanTransactions = mockTransactions;
 
-            result = calculateDealSummary(mockDeal);
-            calculation = (calculateTotalAllLoans(mockDeal.loanTransactions) / mockDeal.submissionDetails.supplyContractConversionRateToGBP);
+            result = calculateDealSummary({
+              ...mockDeal,
+              bondTransactions: { items: [] },
+              loanTransactions: mockLoanTransactions,
+            });
+            calculation = (calculateTotalAllLoans(mockLoanTransactions) / mockDeal.submissionDetails.supplyContractConversionRateToGBP);
             expected = formattedNumber(roundNumber(calculation), 2);
           });
 
@@ -230,17 +257,87 @@ describe('deal-summary', () => {
 
         describe('when both completed loans and bonds have a GBP currency', () => {
           it('should have formatted dealInGbp calculation without using loans/bonds conversionRates', () => {
-            mockDeal.loanTransactions = mockTransactions;
-            mockDeal.bondTransactions = mockTransactions;
+            const mockBondTransactions = mockTransactions;
+            const mockLoanTransactions = mockTransactions;
 
-            result = calculateDealSummary(mockDeal);
-            const totalBondsAndLoans = (calculateTotalAllBonds(mockDeal.bondTransactions) + calculateTotalAllLoans(mockDeal.loanTransactions));
+            result = calculateDealSummary({
+              ...mockDeal,
+              bondTransactions: mockBondTransactions,
+              loanTransactions: mockLoanTransactions,
+            });
+
+            const totalBondsAndLoans = (calculateTotalAllBonds(mockBondTransactions) + calculateTotalAllLoans(mockLoanTransactions));
             const calculation = (totalBondsAndLoans / mockDeal.submissionDetails.supplyContractConversionRateToGBP);
             const expected = formattedNumber(roundNumber(calculation), 2);
 
             expect(result.totalValue.dealInGbp).toEqual(expected);
           });
         });
+      });
+    });
+
+    describe('totalUkefExposure object', () => {
+      const calculateTotalAllBonds = (bondTransactions) => {
+        let total = 0;
+        bondTransactions.items.forEach((bond) => {
+          if (bond.conversionRate) {
+            total += Number(bond.ukefExposure) / Number(bond.conversionRate);
+          } else {
+            total += Number(bond.ukefExposure);
+          }
+        });
+        return total;
+      };
+
+      const calculateTotalAllLoans = (loanTransactions) => {
+        let total = 0;
+        loanTransactions.items.forEach((loan) => {
+          if (loan.conversionRate) {
+            total += Number(loan.ukefExposure) / Number(loan.conversionRate);
+          } else {
+            total += Number(loan.ukefExposure);
+          }
+        });
+        return total;
+      };
+
+      const totalAllBonds = calculateTotalAllBonds(mockDeal.bondTransactions);
+      const totalAllLoans = calculateTotalAllLoans(mockDeal.loanTransactions);
+
+      it('should be returned', () => {
+        expect(result.totalUkefExposure).toBeDefined();
+        expect(Object.keys(result.totalUkefExposure).length > 0).toEqual(true);
+      });
+
+      it('should have correct, formatted dealInDealCurrency calculation', () => {
+        const calculation = totalAllBonds + totalAllLoans;
+        const expected = formattedNumber(roundNumber(calculation), 2);
+        expect(result.totalUkefExposure.dealInDealCurrency).toEqual(expected);
+      });
+
+      it('should have correct, formatted bondInDealCurrency calculation', () => {
+        result = calculateDealSummary(mockDeal);
+        const calculation = totalAllBonds;
+        const expected = formattedNumber(roundNumber(calculation), 2);
+        expect(result.totalUkefExposure.bondInDealCurrency).toEqual(expected);
+      });
+
+      it('should have correct, formatted bondInGbp calculation', () => {
+        const calculation = (totalAllBonds / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP));
+        const expected = formattedNumber(roundNumber(calculation), 2);
+        expect(result.totalUkefExposure.bondInGbp).toEqual(expected);
+      });
+
+      it('should have correct, formatted loanInDealCurrency calculation', () => {
+        const calculation = totalAllLoans;
+        const expected = formattedNumber(roundNumber(calculation), 2);
+        expect(result.totalUkefExposure.loanInDealCurrency).toEqual(expected);
+      });
+
+      it('should have correct, formatted loanInGbp calculation', () => {
+        const calculation = (totalAllLoans / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP));
+        const expected = formattedNumber(roundNumber(calculation), 2);
+        expect(result.totalUkefExposure.loanInGbp).toEqual(expected);
       });
     });
   });
