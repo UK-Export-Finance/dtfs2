@@ -1,4 +1,6 @@
-{% macro nav(selected, id) %}
+{% macro render(params) %}
+  {% set id = params.deal._id %}
+  {% set selected = params.selected %}
 
   <ul class="govuk-tabs__list">
     <li

@@ -1,6 +1,4 @@
 {% extends "index.njk" %}
-{% import '_macros/contract-tabs.njk' as contractTabs %}
-{% import '_macros/contract-details.njk' as contractDetails %}
 {% import '_macros/status-tag.njk' as statusTag %}
 
 {% import './components/abandon-deal-button.njk' as abandonButton %}
@@ -11,6 +9,8 @@
 {% import './components/bond-transactions-table.njk' as bondTransactionsTable %}
 {% import './components/can-proceed-text.njk' as canProceedText %}
 {% import './components/clone-deal-link.njk' as cloneLink %}
+{% import './components/contract-details.njk' as contractDetails %}
+{% import './components/contract-tabs.njk' as contractTabs %}
 {% import './components/edit-deal-name-link.njk' as editDealNameLink %}
 {% import './components/eligibility-criteria-link.njk' as eligibilityCriteriaLink %}
 {% import './components/loan-transactions-table.njk' as loanTransactionsTable %}
@@ -27,7 +27,7 @@
 
 {% block content %}
 
-  {% set componentData = {user: user, deal: deal, editable: editable, dealFormsCompleted: dealFormsCompleted} %}
+  {% set componentData = {user: user, deal: deal, editable: editable, dealFormsCompleted: dealFormsCompleted, selected: 'view'} %}
 
   <div class="contract-container">
 
@@ -41,7 +41,7 @@
     <div class="govuk-tabs" data-module="govuk-tabs">
       <h2 class="govuk-tabs__title">Contents</h2>
 
-      {{ contractTabs.nav(selected = 'view', id = deal._id ) }}
+      {{ contractTabs.render(componentData) }}
 
       <section class="govuk-tabs__panel" id="view">
 

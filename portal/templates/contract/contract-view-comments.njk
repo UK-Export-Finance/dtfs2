@@ -1,12 +1,12 @@
 {% extends "index.njk" %}
-{% import '_macros/contract-details.njk' as contractDetails %}
-{% import '_macros/contract-tabs.njk' as contractTabs %}
+{% import './components/contract-details.njk' as contractDetails %}
+{% import './components/contract-tabs.njk' as contractTabs %}
 
 {% block pageTitle %}Comments - {{ details.bankSupplyContractName }}{% endblock %}
 
 {% block content %}
 
-  {% set componentData = {user: user, deal: deal} %}
+  {% set componentData = {user: user, deal: deal, selected: 'comments'} %}
   {% set comments = deal.comments %}
 
   <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ details.bankSupplyContractName }}</span></h1>
@@ -16,7 +16,7 @@
       Contents
     </h2>
 
-    {{ contractTabs.nav(selected = 'comments', id = deal._id) }}
+    {{ contractTabs.render(componentData) }}
 
     <section class="govuk-tabs__panel" id="comments">
       {{ contractDetails.table(deal.details) }}
