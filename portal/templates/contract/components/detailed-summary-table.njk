@@ -14,7 +14,7 @@
     </thead>
 
     <tbody class="govuk-table__body">
-      <tr class="govuk-table__row">
+      <tr class="govuk-table__row" data-cy="total-value">
         <th scope="row" class="govuk-table__cell govuk-!-font-size-14">
           Total value
         </td>
@@ -44,34 +44,35 @@
         </td>
       </tr>
 
-      <tr class="govuk-table__row">
+      <tr class="govuk-table__row" data-cy="total-ukef-exposure">
         <th scope="row" class="govuk-table__cell govuk-!-font-size-14">
           Total UKEF exposure
         </td>
 
-        <td class="govuk-table__cell govuk-!-font-size-14 detailed-summary-table__cell">
+        <td class="govuk-table__cell govuk-!-font-size-14 detailed-summary-table__cell" data-cy="deal-in-deal-currency">
           {{ summary.totalUkefExposure.dealCurrency }}
         </td>
 
-        <td class="govuk-table__cell govuk-!-font-size-14 detailed-summary-table__cell">
+        <td class="govuk-table__cell govuk-!-font-size-14 detailed-summary-table__cell" data-cy="deal-in-gbp">
           {{ summary.totalUkefExposure.dealInGbp }}
         </td>
 
-        <td class="govuk-table__cell govuk-!-font-size-14 detailed-summary-table__cell">
+        <td class="govuk-table__cell govuk-!-font-size-14 detailed-summary-table__cell" data-cy="bond-in-deal-currency">
           {{ summary.totalUkefExposure.bondCurrency }}
         </td>
 
-        <td class="govuk-table__cell govuk-!-font-size-14 detailed-summary-table__cell">
+        <td class="govuk-table__cell govuk-!-font-size-14 detailed-summary-table__cell" data-cy="bond-in-gbp">
           {{ summary.totalUkefExposure.bondInGbp }}
         </td>
 
-        <td class="govuk-table__cell govuk-!-font-size-14 detailed-summary-table__cell">
+        <td class="govuk-table__cell govuk-!-font-size-14 detailed-summary-table__cell" data-cy="loan-in-deal-currency">
           {{ summary.totalUkefExposure.loanCurrency }}
         </td>
 
-        <td class="govuk-table__cell govuk-!-font-size-14 detailed-summary-table__cell">
+        <td class="govuk-table__cell govuk-!-font-size-14 detailed-summary-table__cell" data-cy="loan-in-gbp">
           {{ summary.totalUkefExposure.loanInGbp }}
         </td>
+
       </tr>
 
     </tbody>
