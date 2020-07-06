@@ -81,6 +81,7 @@ describe('/v1/deals/:id/clone', () => {
         expect(body.details.owningBank).toEqual(originalDeal.details.owningBank);
         expect(body.details.status).toEqual('Draft');
 
+        expect(body.comments).toEqual([]);
       });
 
       // TODO: test other things in deal object.

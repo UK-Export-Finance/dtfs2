@@ -72,6 +72,7 @@ exports.clone = async (req, res) => {
     const modifiedDeal = {
       ...existingDeal,
       _id: newDealId,
+      comments: [],
       details: {
         bankSupplyContractID,
         bankSupplyContractName,
