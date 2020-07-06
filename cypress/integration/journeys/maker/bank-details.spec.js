@@ -1,4 +1,4 @@
-const { bankDetails } = require('../../pages');
+const { bankDetails, contract, contractPreview } = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
 
@@ -26,7 +26,7 @@ context('Create deal', () => {
     });
   });
 
-  it('When the a user fills in the bank detais they progress to the deal page', () => {
+  it('When the a user fills in the bank detais they progress to the deal page and the data they entered is visible', () => {
     cy.passRedLine({ username: 'MAKER', password: 'MAKER' });
 
     // confirm that we're on '/before-you-start/bank-deal'
@@ -39,5 +39,13 @@ context('Create deal', () => {
 
     // confirm that we're on the newly created deal '/contract/XYZ'
     cy.url().should('include', '/contract/');
+
+
+    // confirm that the data we've entered appears on the preview page
+    contract.previewTab().click();
+    contractPreview.header().invoke('text').then((text) => {
+      expect(text.trim()).equal(`Supply Contract name: TESTING`);
+    });
+
   });
 });
