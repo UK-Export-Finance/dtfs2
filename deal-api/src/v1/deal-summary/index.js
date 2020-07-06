@@ -18,7 +18,7 @@ const calculateTotalValue = (supplyContractConversionRateToGbp, bonds, loans) =>
       if (hasValue(conversionRate)) {
         bondInDealCurrency += (Number(facilityValue) / Number(conversionRate));
       } else {
-        bondInDealCurrency = Number(facilityValue);
+        bondInDealCurrency += Number(facilityValue);
       }
     });
   }
@@ -30,7 +30,7 @@ const calculateTotalValue = (supplyContractConversionRateToGbp, bonds, loans) =>
       if (hasValue(conversionRate)) {
         loanInDealCurrency += (Number(facilityValue) / Number(conversionRate));
       } else {
-        loanInDealCurrency = Number(facilityValue);
+        loanInDealCurrency += Number(facilityValue);
       }
     });
   }
