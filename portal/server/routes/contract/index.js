@@ -55,7 +55,7 @@ router.get('/contract/:_id/submission-details', provide([DEAL, MANDATORY_CRITERI
   const { deal, mandatoryCriteria } = req.apiData;
 
   return res.render('contract/contract-submission-details.njk', {
-    contract: deal,
+    deal,
     mandatoryCriteria,
     user: req.session.user,
   });
