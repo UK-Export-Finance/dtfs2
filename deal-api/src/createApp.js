@@ -9,6 +9,7 @@ const { makeExecutableSchema } = require('graphql-tools');
 
 const { resolvers, typeDefs, graphQlRouter } = require('./graphql');
 const { validateUserMiddleware } = require('./graphql/middleware');
+const initScheduler = require('./scheduler');
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ const configurePassport = require('./v1/users/passport');
 const { authRouter, openRouter } = require('./v1/routes');
 
 configurePassport(passport);
+initScheduler();
 
 const app = express();
 app.use(passport.initialize());
