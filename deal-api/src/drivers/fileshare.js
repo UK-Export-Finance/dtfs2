@@ -184,10 +184,27 @@ const copyFile = async ({ from, to }) => {
   return uploadedFile;
 };
 
+const listDirectoryFiles = async ({ fileshare, folder }) => {
+  const exportDirectory = await getExportDirectory(fileshare);
+  const directoryClient = await exportDirectory.getDirectoryClient(folder);
+
+  const directoryList = [];
+  const iter = await directoryClient.listFilesAndDirectories();
+  let entity = await iter.next();
+
+  while (!entity.done) {
+    directoryList.push(entity.value);
+    entity = await iter.next(); // eslint-disable-line no-await-in-loop
+  }
+
+  return directoryList;
+};
+
 module.exports = {
   uploadFile,
   deleteFile,
   deleteMultipleFiles,
   readFile,
   copyFile,
+  listDirectoryFiles,
 };
