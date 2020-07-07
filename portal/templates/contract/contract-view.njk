@@ -9,7 +9,7 @@
 {% import './components/bond-transactions-table.njk' as bondTransactionsTable %}
 {% import './components/can-proceed-text.njk' as canProceedText %}
 {% import './components/clone-deal-link.njk' as cloneLink %}
-{% import './components/contract-details.njk' as contractDetails %}
+{% import './components/contract-overview-table.njk' as contractOverviewTable %}
 {% import './components/contract-tabs.njk' as contractTabs %}
 {% import './components/edit-deal-name-link.njk' as editDealNameLink %}
 {% import './components/eligibility-criteria-link.njk' as eligibilityCriteriaLink %}
@@ -58,7 +58,7 @@
         <hr class="govuk-section-break" />
 
         <div class="govuk-grid-row govuk-!-padding-2 govuk-!-margin-bottom-8 box">
-          {{ contractDetails.render(componentData) }}
+          {{ contractOverviewTable.render(componentData) }}
         </div>
 
         <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">

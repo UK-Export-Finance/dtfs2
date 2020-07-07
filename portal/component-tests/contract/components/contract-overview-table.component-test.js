@@ -2,7 +2,7 @@ const moment = require('moment');
 require('moment-timezone');// monkey-patch to provide moment().tz()
 
 const componentRenderer = require('../../componentRenderer');
-const component = 'contract/components/contract-details.njk';
+const component = 'contract/components/contract-overview-table.njk';
 const render = componentRenderer(component);
 describe(component, () => {
   let wrapper;

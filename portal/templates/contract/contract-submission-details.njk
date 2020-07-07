@@ -5,7 +5,7 @@
 {% import 'contract/about/components/submission-details.njk' as submissionDetails %}
 {% import 'bond/_macros/bond-submission-details.njk' as bondSubmissionDetails %}
 
-{% import './components/contract-details.njk' as contractDetails %}
+{% import './components/contract-overview-table.njk' as contractOverviewTable %}
 {% import './components/contract-tabs.njk' as contractTabs %}
 
 {% block pageTitle %}Preview - {{ deal.details.bankSupplyContractName }}{% endblock %}
@@ -23,7 +23,7 @@
     {{ contractTabs.render(componentData) }}
 
     <section class="govuk-tabs__panel" id="submission-details">
-      {{ contractDetails.render(componentData) }}
+      {{ contractOverviewTable.render(componentData) }}
 
       <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8">
 
