@@ -10,8 +10,6 @@ const sectionCurrency = require('../section-currency');
 const { loanStatus } = require('../section-status/loan');
 const { sanitizeCurrency } = require('../../utils/number');
 
-// const { loanStatus } = require('../section-status/loan');
-
 const putLoanInDealObject = (deal, loan, otherLoans) => ({
   ...deal,
   loanTransactions: {
