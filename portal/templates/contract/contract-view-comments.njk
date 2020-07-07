@@ -1,5 +1,5 @@
 {% extends "index.njk" %}
-{% import './components/contract-details.njk' as contractDetails %}
+{% import './components/contract-overview-table.njk' as contractOverviewTable %}
 {% import './components/contract-tabs.njk' as contractTabs %}
 
 {% block pageTitle %}Comments - {{ details.bankSupplyContractName }}{% endblock %}
@@ -19,7 +19,7 @@
     {{ contractTabs.render(componentData) }}
 
     <section class="govuk-tabs__panel" id="comments">
-      {{ contractDetails.render(componentData) }}
+      {{ contractOverviewTable.render(componentData) }}
     </section>
 
   </div>
