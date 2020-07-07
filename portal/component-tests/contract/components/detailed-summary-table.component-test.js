@@ -20,20 +20,20 @@ describe(component, () => {
       wrapper.expectText('[data-cy="total-value"] [data-cy="deal-in-gbp"]').toRead(deal.summary.totalValue.dealInGbp);
     });
 
-    it('should render bondCurrency', () => {
-      wrapper.expectText('[data-cy="total-value"] [data-cy="bond-in-deal-currency"]').toRead(deal.summary.totalValue.bondInDealCurrency);
+    it('should render bondsInDealCurrency', () => {
+      wrapper.expectText('[data-cy="total-value"] [data-cy="bonds-in-deal-currency"]').toRead(deal.summary.totalValue.bondsInDealCurrency);
     });
 
-    it('should render bondInGbp', () => {
-      wrapper.expectText('[data-cy="total-value"] [data-cy="bond-in-gbp"]').toRead(deal.summary.totalValue.bondInGbp);
+    it('should render bondsInGbp', () => {
+      wrapper.expectText('[data-cy="total-value"] [data-cy="bonds-in-gbp"]').toRead(deal.summary.totalValue.bondsInGbp);
     });
 
-    it('should render loanCurrency', () => {
-      wrapper.expectText('[data-cy="total-value"] [data-cy="loan-in-deal-currency"]').toRead(deal.summary.totalValue.loanInDealCurrency);
+    it('should render loansInDealCurrency', () => {
+      wrapper.expectText('[data-cy="total-value"] [data-cy="loans-in-deal-currency"]').toRead(deal.summary.totalValue.loansInDealCurrency);
     });
 
-    it('should render loanInGbp', () => {
-      wrapper.expectText('[data-cy="total-value"] [data-cy="loan-in-gbp"]').toRead(deal.summary.totalValue.loanInGbp);
+    it('should render loansInGbp', () => {
+      wrapper.expectText('[data-cy="total-value"] [data-cy="loans-in-gbp"]').toRead(deal.summary.totalValue.loansInGbp);
     });
   });
 
@@ -46,20 +46,20 @@ describe(component, () => {
       wrapper.expectText('[data-cy="total-ukef-exposure"] [data-cy="deal-in-gbp"]').toRead(deal.summary.totalUkefExposure.dealInGbp);
     });
 
-    it('should render bondCurrency', () => {
-      wrapper.expectText('[data-cy="total-ukef-exposure"] [data-cy="bond-in-deal-currency"]').toRead(deal.summary.totalUkefExposure.bondInDealCurrency);
+    it('should render bondsInDealCurrency', () => {
+      wrapper.expectText('[data-cy="total-ukef-exposure"] [data-cy="bonds-in-deal-currency"]').toRead(deal.summary.totalUkefExposure.bondsInDealCurrency);
     });
 
-    it('should render bondInGbp', () => {
-      wrapper.expectText('[data-cy="total-ukef-exposure"] [data-cy="bond-in-gbp"]').toRead(deal.summary.totalUkefExposure.bondInGbp);
+    it('should render bondsInGbp', () => {
+      wrapper.expectText('[data-cy="total-ukef-exposure"] [data-cy="bonds-in-gbp"]').toRead(deal.summary.totalUkefExposure.bondsInGbp);
     });
 
-    it('should render loanCurrency', () => {
-      wrapper.expectText('[data-cy="total-ukef-exposure"] [data-cy="loan-in-deal-currency"]').toRead(deal.summary.totalUkefExposure.loanInDealCurrency);
+    it('should render loansInDealCurrency', () => {
+      wrapper.expectText('[data-cy="total-ukef-exposure"] [data-cy="loans-in-deal-currency"]').toRead(deal.summary.totalUkefExposure.loansInDealCurrency);
     });
 
-    it('should render loanInGbp', () => {
-      wrapper.expectText('[data-cy="total-ukef-exposure"] [data-cy="loan-in-gbp"]').toRead(deal.summary.totalUkefExposure.loanInGbp);
+    it('should render loansInGbp', () => {
+      wrapper.expectText('[data-cy="total-ukef-exposure"] [data-cy="loans-in-gbp"]').toRead(deal.summary.totalUkefExposure.loansInGbp);
     });
   });
 });
