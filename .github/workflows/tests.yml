@@ -20,7 +20,19 @@ jobs:
       with:
         node-version: '12'
     - name: Run tests
+      # NB this relies on Docker Compose being available on the build agent (it seems it is)
       run: |
+        export COMPANIES_HOUSE_API_KEY=${{ secrets.COMPANIES_HOUSE_API_KEY }}
+        export AZURE_WORKFLOW_STORAGE_ACCOUNT=${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}
+        export AZURE_WORKFLOW_STORAGE_ACCESS_KEY=${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
+        export AZURE_WORKFLOW_FILESHARE_NAME=${{ secrets.AZURE_WORKFLOW_FILESHARE_NAME }}
+        export AZURE_WORKFLOW_EXPORT_FOLDER=${{ secrets.AZURE_WORKFLOW_EXPORT_FOLDER }}
+        export AZURE_WORKFLOW_IMPORT_FOLDER=${{ secrets.AZURE_WORKFLOW_IMPORT_FOLDER }}
+        
+        export AZURE_PORTAL_STORAGE_ACCOUNT=${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
+        export AZURE_PORTAL_STORAGE_ACCESS_KEY=${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
+        export AZURE_PORTAL_FILESHARE_NAME=${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
+        export AZURE_PORTAL_EXPORT_FOLDER=${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
         npm run pipeline
     # - name: Run tests
     #   run: |
