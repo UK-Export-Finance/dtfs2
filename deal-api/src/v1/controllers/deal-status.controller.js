@@ -21,13 +21,20 @@ exports.findOne = (req, res) => {
 };
 
 const updateStatus = async (collection, _id, from, to) => {
+  const allowedpreviousWorkflowStatus = ['draft', 'approved_conditions', 'approved', 'submission_acknowledged', 'confirmation_acknowledged'];
+
+
   const statusUpdate = {
     details: {
-      previousStatus: from,
       status: to,
+      previousStatus: from,
       dateOfLastAction: moment().format('YYYY MM DD HH:mm:ss:SSS ZZ'),
     },
   };
+
+  if (from && allowedpreviousWorkflowStatus.includes(from.toLowerCase())) {
+    statusUpdate.details.previousWorkflowStatus = from;
+  }
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id },
@@ -158,13 +165,13 @@ exports.update = (req, res) => {
       const dealAfterAllUpdates = await createSubmissionDate(collection, req.params.id);
 
       // TODO - Reinstate typeA XML creation once Loans and Summary have been added
-      const { previousStatus } = deal.details;
+      const { previousWorkflowStatus } = deal.details;
 
-      const typeA = await createTypeA(dealAfterAllUpdates, previousStatus);
+      const typeA = await createTypeA(dealAfterAllUpdates, previousWorkflowStatus);
 
       if (typeA.errorCount) {
         // Revert status
-        await updateStatus(collection, req.params.id, previousStatus, fromStatus);
+        await updateStatus(collection, req.params.id, toStatus, fromStatus);
         return res.status(200).send(typeA);
       }
     }
