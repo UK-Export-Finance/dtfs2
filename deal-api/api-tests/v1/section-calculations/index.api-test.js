@@ -2,14 +2,17 @@ const {
   calculateGuaranteeFee,
   calculateUkefExposure,
 } = require('../../../src/v1/section-calculations');
-const { roundNumber } = require('../../../src/utils/number');
+const {
+  roundNumber,
+  formattedNumber,
+} = require('../../../src/utils/number');
 
 describe('section-calculations', () => {
   describe('calculateGuaranteeFee', () => {
     it('should return a formatted riskMarginFee multiplied by .9', () => {
       const riskMarginFee = 100;
       const multiplication = riskMarginFee * 0.9;
-      const expected = multiplication.toLocaleString('en', { minimumFractionDigits: 4 });
+      const expected = formattedNumber(multiplication, 4);
       expect(calculateGuaranteeFee(riskMarginFee)).toEqual(expected);
     });
 
@@ -29,7 +32,7 @@ describe('section-calculations', () => {
       const facilityValueWithoutCommas = facilityValue.replace(/,/g, '');
       const calculation = facilityValueWithoutCommas * (coveredPercentage / 100);
 
-      const expected = calculation.toLocaleString('en', { minimumFractionDigits: 2 });
+      const expected = formattedNumber(calculation, 2);
       expect(result).toEqual(expected);
     });
 
@@ -42,7 +45,7 @@ describe('section-calculations', () => {
         const calculation = facilityValue * (coveredPercentage / 100);
 
         const roundedUp = roundNumber(calculation, 2);
-        const expected = roundedUp.toLocaleString('en', { minimumFractionDigits: 2 });
+        const expected = formattedNumber(roundedUp, 2);
         expect(result).toEqual(expected);
       });
     });
