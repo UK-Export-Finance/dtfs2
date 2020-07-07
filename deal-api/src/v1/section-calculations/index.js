@@ -3,12 +3,13 @@ const {
   isNumeric,
   decimalsCount,
   roundNumber,
+  formattedNumber,
 } = require('../../utils/number');
 
 exports.calculateGuaranteeFee = (riskMarginFee) => {
   if (hasValue(riskMarginFee)) {
     const calculation = riskMarginFee * 0.9;
-    const formattedRiskMarginFee = calculation.toLocaleString('en', { minimumFractionDigits: 4 });
+    const formattedRiskMarginFee = formattedNumber(calculation, 4);
     return formattedRiskMarginFee;
   }
   return riskMarginFee;
@@ -34,7 +35,7 @@ exports.calculateUkefExposure = (value, coveredPercentage) => {
       ukefExposure = calculation;
     }
 
-    const formattedUkefExposure = ukefExposure.toLocaleString('en', { minimumFractionDigits: 2 });
+    const formattedUkefExposure = formattedNumber(ukefExposure, 2);
     return formattedUkefExposure;
   }
   return '';

@@ -41,7 +41,7 @@ const sanitizeCurrency = (originalValue = '') => {
   };
 };
 
-const formattedNumber = (numb) => numb.toLocaleString('en', { minimumFractionDigits: 2 });
+const formattedNumber = (numb, minimumFractionDigits = 2) => numb.toLocaleString('en', { minimumFractionDigits });
 
 module.exports = {
   isNumeric,
