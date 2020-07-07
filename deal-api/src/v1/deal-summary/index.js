@@ -6,7 +6,6 @@ const {
 } = require('../../utils/number');
 const { hasValue } = require('../../utils/string');
 
-
 const formatNumber = (numb) => formattedNumber(roundNumber(numb, 2));
 
 const calculateBondsInGbp = (bondsInDealCurrency, supplyContractConversionRateToGbp) => {
@@ -60,7 +59,6 @@ const calculateFacilitiesTotalInDealCurrency = (facilities) => {
         ukefExposure,
       } = facility;
 
-      // TODO: ukefExposure should be sanitising when added to DB.
       const sanitizedUkefExposure = sanitizeCurrency(ukefExposure).sanitizedValue;
 
       if (hasValue(conversionRate)) {
