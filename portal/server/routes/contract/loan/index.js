@@ -38,6 +38,35 @@ const handleBankReferenceNumberField = (loanBody) => {
   return modifiedLoan;
 };
 
+const handlePremiumFrequencyField = (loanBody) => {
+  const modifiedLoan = loanBody;
+
+  const {
+    premiumType,
+    premiumFrequency: existingPremiumFrequency,
+    inAdvancePremiumFrequency,
+    inArrearPremiumFrequency,
+  } = modifiedLoan;
+
+  const premiumFrequencyValue = () => {
+    if (premiumType === 'In advance') {
+      return inAdvancePremiumFrequency;
+    }
+
+    if (premiumType === 'In arrear') {
+      return inArrearPremiumFrequency;
+    }
+
+    return existingPremiumFrequency;
+  };
+
+  modifiedLoan.premiumFrequency = premiumFrequencyValue();
+
+  delete modifiedLoan.inAdvancePremiumFrequency;
+  delete modifiedLoan.inArrearPremiumFrequency;
+
+  return modifiedLoan;
+};
 
 router.get('/contract/:_id/loan/create', async (req, res) => {
   const { _id: dealId, userToken } = requestParams(req);
@@ -142,33 +171,7 @@ router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN]), asyn
 router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  const {
-    premiumType,
-    premiumFrequency: existingPremiumFrequency,
-    inAdvancePremiumFrequency,
-    inArrearPremiumFrequency,
-  } = req.body;
-
-  // make sure we get the correct premiumFrequency
-  const premiumFrequencyValue = () => {
-    if (premiumType === 'In advance') {
-      return inAdvancePremiumFrequency;
-    }
-
-    if (premiumType === 'In arrear') {
-      return inArrearPremiumFrequency;
-    }
-
-    return existingPremiumFrequency;
-  };
-
-  const modifiedBody = {
-    ...req.body,
-    premiumFrequency: premiumFrequencyValue(),
-  };
-
-  delete modifiedBody.inAdvancePremiumFrequency;
-  delete modifiedBody.inArrearPremiumFrequency;
+  const modifiedBody = handlePremiumFrequencyField(req.body);
 
   await postToApi(
     api.updateDealLoan(
@@ -232,32 +235,8 @@ router.get('/contract/:_id/loan/:loanId/preview', provide([LOAN]), async (req, r
 router.post('/contract/:_id/loan/:loanId/save-go-back', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  const modifiedBody = handleBankReferenceNumberField(req.body);
-
-  const {
-    premiumType,
-    premiumFrequency: existingPremiumFrequency,
-    inAdvancePremiumFrequency,
-    inArrearPremiumFrequency,
-  } = modifiedBody;
-
-  // make sure we get the correct premiumFrequency
-  const premiumFrequencyValue = () => {
-    if (premiumType === 'In advance') {
-      return inAdvancePremiumFrequency;
-    }
-
-    if (premiumType === 'In arrear') {
-      return inArrearPremiumFrequency;
-    }
-
-    return existingPremiumFrequency;
-  };
-
-  modifiedBody.premiumFrequency = premiumFrequencyValue();
-
-  delete modifiedBody.inAdvancePremiumFrequency;
-  delete modifiedBody.inArrearPremiumFrequency;
+  let modifiedBody = handleBankReferenceNumberField(req.body);
+  modifiedBody = handlePremiumFrequencyField(req.body);
 
   await postToApi(
     api.updateDealLoan(

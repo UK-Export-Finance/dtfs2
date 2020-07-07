@@ -19,6 +19,36 @@ import completedBondForms from './completedForms';
 
 const router = express.Router();
 
+const handleFeeFrequency = (bondBody) => {
+  const modifiedBond = bondBody;
+
+  const {
+    feeType,
+    feeFrequency: existingFeeFrequency,
+    inAdvanceFeeFrequency,
+    inArrearFeeFrequency,
+  } = modifiedBond;
+
+  const feeFrequencyValue = () => {
+    if (feeType === 'In advance') {
+      return inAdvanceFeeFrequency;
+    }
+
+    if (feeType === 'In arrear') {
+      return inArrearFeeFrequency;
+    }
+
+    return existingFeeFrequency;
+  };
+
+  modifiedBond.feeFrequency = feeFrequencyValue();
+
+  delete modifiedBond.inAdvanceFeeFrequency;
+  delete modifiedBond.inArrearFeeFrequency;
+
+  return modifiedBond;
+};
+
 router.get('/contract/:_id/bond/create', async (req, res) => {
   const { _id: dealId, userToken } = requestParams(req);
 
@@ -142,38 +172,13 @@ router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
 router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
-  const {
-    feeType,
-    feeFrequency: existingFeeFrequency,
-    inAdvanceFeeFrequency,
-    inArrearFeeFrequency,
-  } = req.body;
-
-  // make sure we get the correct feeFrequency
-  const feeFrequencyValue = () => {
-    if (feeType === 'In arrear') {
-      return inArrearFeeFrequency;
-    }
-    if (feeType === 'In advance') {
-      return inAdvanceFeeFrequency;
-    }
-
-    return existingFeeFrequency;
-  };
-
-  const postBody = {
-    ...req.body,
-    feeFrequency: feeFrequencyValue(),
-  };
-
-  delete postBody.inAdvanceFeeFrequency;
-  delete postBody.inArrearFeeFrequency;
+  const modifiedBody = handleFeeFrequency(req.body);
 
   await postToApi(
     api.updateBond(
       dealId,
       bondId,
-      postBody,
+      modifiedBody,
       userToken,
     ),
     errorHref,
@@ -237,39 +242,13 @@ router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
 router.post('/contract/:_id/bond/:bondId/save-go-back', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
-  const {
-    feeType,
-    feeFrequency: existingFeeFrequency,
-    inAdvanceFeeFrequency,
-    inArrearFeeFrequency,
-  } = req.body;
-
-  // make sure we get the correct feeFrequency
-  const feeFrequencyValue = () => {
-    if (feeType === 'In advance') {
-      return inAdvanceFeeFrequency;
-    }
-
-    if (feeType === 'In arrear') {
-      return inArrearFeeFrequency;
-    }
-
-    return existingFeeFrequency;
-  };
-
-  const postBody = {
-    ...req.body,
-    feeFrequency: feeFrequencyValue(),
-  };
-
-  delete postBody.inAdvanceFeeFrequency;
-  delete postBody.inArrearFeeFrequency;
+  const modifiedBody = handleFeeFrequency(req.body);
 
   await postToApi(
     api.updateBond(
       dealId,
       bondId,
-      postBody,
+      modifiedBody,
       userToken,
     ),
     errorHref,
