@@ -6,159 +6,147 @@ const {
 } = require('../../utils/number');
 const { hasValue } = require('../../utils/string');
 
-const calculateTotalValues = (supplyContractConversionRateToGbp, bonds, loans) => {
-  const hasBonds = bonds.length > 0;
-  const hasLoans = loans.length > 0;
+const calculateBondInGbp = (bondInDealCurrency, supplyContractConversionRateToGbp) => {
+  if (Number(supplyContractConversionRateToGbp) > 0) {
+    return (bondInDealCurrency / supplyContractConversionRateToGbp);
+  }
+  return bondInDealCurrency;
+};
 
-  // TODO: bondS<<
-  // TODO: loanS<<
-  let bondInDealCurrency = 0;
-  let loanInDealCurrency = 0;
+const calculateLoanInGbp = (loanInDealCurrency, supplyContractConversionRateToGbp) => {
+  if (Number(supplyContractConversionRateToGbp) > 0) {
+    return (loanInDealCurrency / supplyContractConversionRateToGbp);
+  }
+  return loanInDealCurrency;
+};
+
+// TODO: not sure about these params being passed around
+const calculateDealInGbp = (
+  hasBonds,
+  hasLoans,
+  bondInDealCurrency,
+  loanInDealCurrency,
+  supplyContractConversionRateToGbp,
+) => {
+  let result = 0;
 
   if (hasBonds) {
-    bonds.forEach((bond) => {
-      const { facilityValue, conversionRate } = bond;
-
-      if (hasValue(conversionRate)) {
-        bondInDealCurrency += (Number(facilityValue) / Number(conversionRate));
-      } else {
-        bondInDealCurrency += Number(facilityValue);
-      }
-    });
+    result = calculateBondInGbp(bondInDealCurrency, supplyContractConversionRateToGbp);
   }
 
   if (hasLoans) {
-    loans.forEach((loan) => {
-      const { facilityValue, conversionRate } = loan;
-
-      if (hasValue(conversionRate)) {
-        loanInDealCurrency += (Number(facilityValue) / Number(conversionRate));
-      } else {
-        loanInDealCurrency += Number(facilityValue);
-      }
-    });
+    result += calculateLoanInGbp(loanInDealCurrency, supplyContractConversionRateToGbp);
   }
 
-  const dealInDealCurrency = bondInDealCurrency + loanInDealCurrency;
-
-  const bondInGbp = () => {
-    if (Number(supplyContractConversionRateToGbp) > 0) {
-      return (bondInDealCurrency / supplyContractConversionRateToGbp);
-    }
-    return bondInDealCurrency;
-  };
-
-  const loanInGbp = () => {
-    if (Number(supplyContractConversionRateToGbp) > 0) {
-      return (loanInDealCurrency / supplyContractConversionRateToGbp);
-    }
-    return loanInDealCurrency;
-  };
-
-  const dealInGbp = () => {
-    let result = 0;
-
-    if (hasBonds) {
-      result = bondInGbp();
-    }
-
-    if (hasLoans) {
-      result += loanInGbp();
-    }
-
-    return result;
-  };
-
-  return {
-    dealInDealCurrency: formattedNumber(roundNumber(dealInDealCurrency, 2)),
-    dealInGbp: formattedNumber(roundNumber(dealInGbp(), 2)),
-    bondInDealCurrency: formattedNumber(roundNumber(bondInDealCurrency, 2)),
-    bondInGbp: formattedNumber(roundNumber(bondInGbp(), 2)),
-    loanInDealCurrency: formattedNumber(roundNumber(loanInDealCurrency, 2)),
-    loanInGbp: formattedNumber(roundNumber(loanInGbp(), 2)),
-  };
+  return result;
 };
 
+const calculateFacilitiesTotalInDealCurrency = (facilities) => {
+  const totalUkefExposure = {
+    inDealCurrency: 0,
+  };
+  const totalValue = {
+    inDealCurrency: 0,
+  };
 
-const calculateTotalUkefExposure = (supplyContractConversionRateToGbp, bonds, loans) => {
-  const hasBonds = bonds.length > 0;
-  const hasLoans = loans.length > 0;
-
-  // TODO: bondS<<
-  // TODO: loanS<<
-  let bondInDealCurrency = 0;
-  let loanInDealCurrency = 0;
-
-  if (hasBonds) {
-    bonds.forEach((bond) => {
-      const { ukefExposure, conversionRate } = bond;
+  if (facilities.length > 0) {
+    facilities.forEach((facility) => {
+      const {
+        facilityValue,
+        conversionRate,
+        ukefExposure,
+      } = facility;
 
       // TODO: ukefExposure should be sanitising when added to DB.
       const sanitizedUkefExposure = sanitizeCurrency(ukefExposure).sanitizedValue;
 
       if (hasValue(conversionRate)) {
-        bondInDealCurrency += (Number(sanitizedUkefExposure) / Number(conversionRate));
+        totalValue.inDealCurrency += (Number(facilityValue) / Number(conversionRate));
+        totalUkefExposure.inDealCurrency += (Number(sanitizedUkefExposure) / Number(conversionRate));
       } else {
-        bondInDealCurrency += Number(sanitizedUkefExposure);
+        totalValue.inDealCurrency += Number(facilityValue);
+        totalUkefExposure.inDealCurrency += Number(sanitizedUkefExposure);
       }
     });
   }
-
-  if (hasLoans) {
-    loans.forEach((loan) => {
-      const { ukefExposure, conversionRate } = loan;
-
-      // TODO: ukefExposure should be sanitising when added to DB.
-      const sanitizedUkefExposure = sanitizeCurrency(ukefExposure).sanitizedValue;
-
-      if (hasValue(conversionRate)) {
-        loanInDealCurrency += (Number(sanitizedUkefExposure) / Number(conversionRate));
-      } else {
-        loanInDealCurrency += Number(sanitizedUkefExposure);
-      }
-    });
-  }
-
-  const dealInDealCurrency = bondInDealCurrency + loanInDealCurrency;
-
-  const bondInGbp = () => {
-    if (Number(supplyContractConversionRateToGbp) > 0) {
-      return (bondInDealCurrency / supplyContractConversionRateToGbp);
-    }
-    return bondInDealCurrency;
-  };
-
-  const loanInGbp = () => {
-    if (Number(supplyContractConversionRateToGbp) > 0) {
-      return (loanInDealCurrency / supplyContractConversionRateToGbp);
-    }
-    return loanInDealCurrency;
-  };
-
-  const dealInGbp = () => {
-    let result = 0;
-
-    if (hasBonds) {
-      result = bondInGbp();
-    }
-
-    if (hasLoans) {
-      result += loanInGbp();
-    }
-
-    return result;
-  };
 
   return {
-    dealInDealCurrency: formattedNumber(roundNumber(dealInDealCurrency, 2)),
-    dealInGbp: formattedNumber(roundNumber(dealInGbp(), 2)),
-    bondInDealCurrency: formattedNumber(roundNumber(bondInDealCurrency, 2)),
-    bondInGbp: formattedNumber(roundNumber(bondInGbp(), 2)),
-    loanInDealCurrency: formattedNumber(roundNumber(loanInDealCurrency, 2)),
-    loanInGbp: formattedNumber(roundNumber(loanInGbp(), 2)),
+    totalValue,
+    totalUkefExposure,
   };
 };
 
+const calculateTotalValues = (
+  bondsInDealCurrency,
+  loansInDealCurrency,
+  supplyContractConversionRateToGbp,
+  bonds,
+  loans,
+) => {
+  const hasBonds = bonds.length > 0;
+  const hasLoans = loans.length > 0;
+
+  // TODO: bondS<<
+  // TODO: loanS<<
+
+  const dealInDealCurrency = bondsInDealCurrency + loansInDealCurrency;
+
+  const dealInGbp = calculateDealInGbp(
+    hasBonds,
+    hasLoans,
+    bondsInDealCurrency,
+    loansInDealCurrency,
+    supplyContractConversionRateToGbp,
+  );
+
+  const bondInGbp = calculateBondInGbp(bondsInDealCurrency, supplyContractConversionRateToGbp);
+  const loanInGbp = calculateLoanInGbp(loansInDealCurrency, supplyContractConversionRateToGbp);
+
+  return {
+    dealInDealCurrency: formattedNumber(roundNumber(dealInDealCurrency, 2)),
+    dealInGbp: formattedNumber(roundNumber(dealInGbp, 2)),
+    bondInDealCurrency: formattedNumber(roundNumber(bondsInDealCurrency, 2)),
+    bondInGbp: formattedNumber(roundNumber(bondInGbp, 2)),
+    loanInDealCurrency: formattedNumber(roundNumber(loansInDealCurrency, 2)),
+    loanInGbp: formattedNumber(roundNumber(loanInGbp, 2)),
+  };
+};
+
+const calculateTotalUkefExposure = (
+  bondsInDealCurrency,
+  loansInDealCurrency,
+  supplyContractConversionRateToGbp,
+  bonds,
+  loans,
+) => {
+  const hasBonds = bonds.length > 0;
+  const hasLoans = loans.length > 0;
+
+  // TODO: bondS<<
+  // TODO: loanS<<
+
+  const dealInDealCurrency = bondsInDealCurrency + loansInDealCurrency;
+
+  const dealInGbp = calculateDealInGbp(
+    hasBonds,
+    hasLoans,
+    bondsInDealCurrency,
+    loansInDealCurrency,
+    supplyContractConversionRateToGbp,
+  );
+
+  const bondInGbp = calculateBondInGbp(bondsInDealCurrency, supplyContractConversionRateToGbp);
+  const loanInGbp = calculateLoanInGbp(loansInDealCurrency, supplyContractConversionRateToGbp);
+
+  return {
+    dealInDealCurrency: formattedNumber(roundNumber(dealInDealCurrency, 2)),
+    dealInGbp: formattedNumber(roundNumber(dealInGbp, 2)),
+    bondInDealCurrency: formattedNumber(roundNumber(bondsInDealCurrency, 2)),
+    bondInGbp: formattedNumber(roundNumber(bondInGbp, 2)),
+    loanInDealCurrency: formattedNumber(roundNumber(loansInDealCurrency, 2)),
+    loanInGbp: formattedNumber(roundNumber(loanInGbp, 2)),
+  };
+};
 
 const calculateDealSummary = (deal) => {
   const {
@@ -186,13 +174,27 @@ const calculateDealSummary = (deal) => {
   const canCalculate = (hasRelevantSupplyContractValues && (hasCompletedBonds || hasCompletedLoans));
 
   if (canCalculate) {
+    const {
+      totalValue: bondsTotalValue,
+      totalUkefExposure: bondsTotalUkefExposure,
+    } = calculateFacilitiesTotalInDealCurrency(bonds);
+
+    const {
+      totalValue: loansTotalValue,
+      totalUkefExposure: loansTotalUkefExposure,
+    } = calculateFacilitiesTotalInDealCurrency(loans);
+
     return {
       totalValue: calculateTotalValues(
+        bondsTotalValue.inDealCurrency,
+        loansTotalValue.inDealCurrency,
         Number(supplyContractConversionRateToGBP),
         completedBonds,
         completedLoans,
       ),
       totalUkefExposure: calculateTotalUkefExposure(
+        bondsTotalUkefExposure.inDealCurrency,
+        loansTotalUkefExposure.inDealCurrency,
         Number(supplyContractConversionRateToGBP),
         completedBonds,
         completedLoans,
