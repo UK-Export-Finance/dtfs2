@@ -5,8 +5,8 @@ WORKDIR /app
 
 # create keypairs for signing/verifying jwt tokens
 # -----
-RUN apt-get update && \
-    apt-get install openssl
+#RUN apt-get update && \
+#    apt-get install openssl
 
 RUN mkdir ./.ssl
 RUN openssl genrsa -out ./.ssl/private.pem 2048
@@ -28,6 +28,6 @@ ADD ./__mocks__ ./__mocks__
 ADD ./api-test.jest.config.js ./api-test.jest.config.js
 ADD ./bin ./bin
 
-RUN chown 1000 ./.ssl/private.pem ./.ssl/public.pem
+RUN chown -R 1000 ./.ssl/private.pem ./.ssl/public.pem
 USER 1000
 CMD node src/index.js
