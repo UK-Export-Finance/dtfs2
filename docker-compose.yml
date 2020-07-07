@@ -1,5 +1,23 @@
 version: "3"
 services:
+  case-management:
+    container_name: case-management
+    build: ./case-management
+    image: dtfs2/case-management
+    restart: always
+    depends_on:
+      - deal-api
+    ports:
+      - "4999:4999"
+    volumes:
+      - ./case-management/scripts:/app/scripts:ro
+      - ./case-management/styles:/app/styles:ro
+      - ./case-management/templates:/app/templates:ro
+      - ./case-management/server:/app/server:ro
+      - ./case-management/.env.full-local-docker-environment:/app/.env:ro
+    environment:
+      - COMPANIES_HOUSE_API_KEY=${COMPANIES_HOUSE_API_KEY}
+    command: node dist/server.js
   portal:
     build: ./portal
     image: dtfs/portal
