@@ -9,7 +9,7 @@ const { hasValue } = require('../../utils/string');
 const formatNumber = (numb) => formattedNumber(roundNumber(numb, 2));
 
 const calculateFacilitiesInGbp = (facilityInDealCurrency, supplyContractConversionRateToGbp) => {
-  if (Number(supplyContractConversionRateToGbp) > 0) {
+  if (supplyContractConversionRateToGbp && Number(supplyContractConversionRateToGbp) > 0) {
     return (facilityInDealCurrency / supplyContractConversionRateToGbp);
   }
   return facilityInDealCurrency;
