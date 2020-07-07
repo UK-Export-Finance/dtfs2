@@ -6,36 +6,39 @@ const {
 } = require('../../utils/number');
 const { hasValue } = require('../../utils/string');
 
-const calculateBondInGbp = (bondInDealCurrency, supplyContractConversionRateToGbp) => {
+
+const formatNumber = (numb) => formattedNumber(roundNumber(numb, 2));
+
+const calculateBondsInGbp = (bondsInDealCurrency, supplyContractConversionRateToGbp) => {
   if (Number(supplyContractConversionRateToGbp) > 0) {
-    return (bondInDealCurrency / supplyContractConversionRateToGbp);
+    return (bondsInDealCurrency / supplyContractConversionRateToGbp);
   }
-  return bondInDealCurrency;
+  return bondsInDealCurrency;
 };
 
-const calculateLoanInGbp = (loanInDealCurrency, supplyContractConversionRateToGbp) => {
+const calculateLoansInGbp = (loansInDealCurrency, supplyContractConversionRateToGbp) => {
   if (Number(supplyContractConversionRateToGbp) > 0) {
-    return (loanInDealCurrency / supplyContractConversionRateToGbp);
+    return (loansInDealCurrency / supplyContractConversionRateToGbp);
   }
-  return loanInDealCurrency;
+  return loansInDealCurrency;
 };
 
 // TODO: not sure about these params being passed around
 const calculateDealInGbp = (
   hasBonds,
   hasLoans,
-  bondInDealCurrency,
-  loanInDealCurrency,
+  bondsInDealCurrency,
+  loansInDealCurrency,
   supplyContractConversionRateToGbp,
 ) => {
   let result = 0;
 
   if (hasBonds) {
-    result = calculateBondInGbp(bondInDealCurrency, supplyContractConversionRateToGbp);
+    result = calculateBondsInGbp(bondsInDealCurrency, supplyContractConversionRateToGbp);
   }
 
   if (hasLoans) {
-    result += calculateLoanInGbp(loanInDealCurrency, supplyContractConversionRateToGbp);
+    result += calculateLoansInGbp(loansInDealCurrency, supplyContractConversionRateToGbp);
   }
 
   return result;
@@ -86,9 +89,6 @@ const calculateTotalValues = (
   const hasBonds = bonds.length > 0;
   const hasLoans = loans.length > 0;
 
-  // TODO: bondS<<
-  // TODO: loanS<<
-
   const dealInDealCurrency = bondsInDealCurrency + loansInDealCurrency;
 
   const dealInGbp = calculateDealInGbp(
@@ -99,16 +99,16 @@ const calculateTotalValues = (
     supplyContractConversionRateToGbp,
   );
 
-  const bondInGbp = calculateBondInGbp(bondsInDealCurrency, supplyContractConversionRateToGbp);
-  const loanInGbp = calculateLoanInGbp(loansInDealCurrency, supplyContractConversionRateToGbp);
+  const bondsInGbp = calculateBondsInGbp(bondsInDealCurrency, supplyContractConversionRateToGbp);
+  const loansInGbp = calculateLoansInGbp(loansInDealCurrency, supplyContractConversionRateToGbp);
 
   return {
-    dealInDealCurrency: formattedNumber(roundNumber(dealInDealCurrency, 2)),
-    dealInGbp: formattedNumber(roundNumber(dealInGbp, 2)),
-    bondInDealCurrency: formattedNumber(roundNumber(bondsInDealCurrency, 2)),
-    bondInGbp: formattedNumber(roundNumber(bondInGbp, 2)),
-    loanInDealCurrency: formattedNumber(roundNumber(loansInDealCurrency, 2)),
-    loanInGbp: formattedNumber(roundNumber(loanInGbp, 2)),
+    dealInDealCurrency: formatNumber(dealInDealCurrency),
+    dealInGbp: formatNumber(dealInGbp),
+    bondsInDealCurrency: formatNumber(bondsInDealCurrency),
+    bondsInGbp: formatNumber(bondsInGbp),
+    loansInDealCurrency: formatNumber(loansInDealCurrency),
+    loansInGbp: formatNumber(loansInGbp),
   };
 };
 
@@ -122,9 +122,6 @@ const calculateTotalUkefExposure = (
   const hasBonds = bonds.length > 0;
   const hasLoans = loans.length > 0;
 
-  // TODO: bondS<<
-  // TODO: loanS<<
-
   const dealInDealCurrency = bondsInDealCurrency + loansInDealCurrency;
 
   const dealInGbp = calculateDealInGbp(
@@ -135,16 +132,16 @@ const calculateTotalUkefExposure = (
     supplyContractConversionRateToGbp,
   );
 
-  const bondInGbp = calculateBondInGbp(bondsInDealCurrency, supplyContractConversionRateToGbp);
-  const loanInGbp = calculateLoanInGbp(loansInDealCurrency, supplyContractConversionRateToGbp);
+  const bondsInGbp = calculateBondsInGbp(bondsInDealCurrency, supplyContractConversionRateToGbp);
+  const loansInGbp = calculateLoansInGbp(loansInDealCurrency, supplyContractConversionRateToGbp);
 
   return {
-    dealInDealCurrency: formattedNumber(roundNumber(dealInDealCurrency, 2)),
-    dealInGbp: formattedNumber(roundNumber(dealInGbp, 2)),
-    bondInDealCurrency: formattedNumber(roundNumber(bondsInDealCurrency, 2)),
-    bondInGbp: formattedNumber(roundNumber(bondInGbp, 2)),
-    loanInDealCurrency: formattedNumber(roundNumber(loansInDealCurrency, 2)),
-    loanInGbp: formattedNumber(roundNumber(loanInGbp, 2)),
+    dealInDealCurrency: formatNumber(dealInDealCurrency),
+    dealInGbp: formatNumber(dealInGbp),
+    bondsInDealCurrency: formatNumber(bondsInDealCurrency),
+    bondsInGbp: formatNumber(bondsInGbp),
+    loansInDealCurrency: formatNumber(loansInDealCurrency),
+    loansInGbp: formatNumber(loansInGbp),
   };
 };
 
