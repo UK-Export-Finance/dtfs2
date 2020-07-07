@@ -138,6 +138,7 @@ const generateTypeA = async (deal, fromStatus) => {
   if (deal.bondTransactions && deal.bondTransactions.items) {
     for (let i = 0; i < deal.bondTransactions.items.length; i += 1) {
       const bond = deal.bondTransactions.items[i];
+
       const bss = builder.createBSS()
       //    .UKEF_BSS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
         .BSS_portal_facility_id(bond._id) // eslint-disable-line no-underscore-dangle
@@ -156,7 +157,7 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_fee_perc(bond.guaranteeFeePayableByBank)
         .BSS_guarantee_perc(bond.coveredPercentage)
         .BSS_max_liability(convertCurrencyFormat(bond.ukefExposure))
-        .BSS_min_quarterly_fee(bond.minimumRiskMarginFee)
+        .BSS_min_quarterly_fee(Number(bond.minimumRiskMarginFee))
         .BSS_premium_type(k2Map.FACILITIES.FEE_TYPE[bond.feeType])
         .BSS_cover_start_date(dateHelpers.formatDate(bond['requestedCoverStartDate-day'], bond['requestedCoverStartDate-month'], bond['requestedCoverStartDate-year']))
         .BSS_issue_date('') // TODO - drupal field: issue_date
@@ -195,7 +196,7 @@ const generateTypeA = async (deal, fromStatus) => {
           .EWCS_fee_perc(loan.guaranteeFeePayableByBank)
           .EWCS_guarantee_perc(loan.coveredPercentage)
           .EWCS_max_liability(convertCurrencyFormat(loan.ukefExposure))
-          .EWCS_min_quarterly_fee(loan.minimumQuarterlyFee)
+          .EWCS_min_quarterly_fee(Number(loan.minimumQuarterlyFee))
           .EWCS_premium_type(k2Map.FACILITIES.FEE_TYPE[loan.premiumType])
           .EWCS_cover_start_date(dateHelpers.formatDate(loan['requestedCoverStartDate-day'], loan['requestedCoverStartDate-month'], loan['requestedCoverStartDate-year']))
           .EWCS_issue_date('') // TODO - drupal field: issue_date
@@ -248,7 +249,10 @@ const generateTypeA = async (deal, fromStatus) => {
 
   const isValidXml = parsedXml.validate(parsedXsd);
 
+
   if (!isValidXml) {
+    console.log(JSON.stringify(parsedXml.validationErrors));
+
     const errorList = parsedXml.validationErrors.map((ve) => ({ text: ve.message }));
 
     return {
