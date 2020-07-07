@@ -4,6 +4,7 @@ const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
+const incompleteDeal = require('../../fixtures/deal-with-incomplete-about-section.json');
 
 const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
@@ -177,7 +178,7 @@ describe('/v1/deals/:id/status', () => {
       expect(body.deal.details.dateOfLastAction).not.toEqual(completedDeal.details.dateOfLastAction);
     });
 
-    it('updates details.previousStatus', async () => {
+    it('updates details.previousWorkflowStatus only when relevant workflow status changed', async () => {
       const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const statusUpdate = {
@@ -189,7 +190,7 @@ describe('/v1/deals/:id/status', () => {
 
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
-      expect(body.deal.details.previousStatus).toEqual("Ready for Checker's approval");
+      expect(body.deal.details.previousWorkflowStatus).toEqual('Draft');
     });
 
     it('adds the comment to the existing comments', async () => {
@@ -484,7 +485,7 @@ describe('/v1/deals/:id/status', () => {
         updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
       });
 
-      xit('adds a submissionDate to the deal', async () => {
+      it('adds a submissionDate to the deal', async () => {
         expect(updatedDeal.status).toEqual(200);
         expect(updatedDeal.body).toEqual({});
 
@@ -533,6 +534,34 @@ describe('/v1/deals/:id/status', () => {
         const { status, body } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
         expect(body).toEqual({});
+      });
+    });
+
+    describe('when the status changes to `Submitted` on invalid deal', () => {
+      let createdDeal;
+      let updatedDeal;
+
+      beforeEach(async () => {
+        const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
+
+        submittedDeal.details.previousWorkflowStatus = 'invalid status';
+
+        const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+
+        createdDeal = postResult.body;
+
+        const statusUpdate = {
+          status: 'Submitted',
+          confirmSubmit: true,
+        };
+
+        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      });
+
+      it('return validation errors', async () => {
+        expect(updatedDeal.status).toEqual(200);
+        expect(updatedDeal.body.errorCount).toBeGreaterThan(0);
+        expect(updatedDeal.body.errorCount).toEqual(updatedDeal.body.errorList.length);
       });
     });
   });
