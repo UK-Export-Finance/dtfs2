@@ -223,6 +223,14 @@ const deal = {
       loanInDealCurrency: '4,000',
       loanInGbp: '8,000',
     },
+    totalUkefExposure: {
+      dealInDealCurrency: '5,000',
+      dealInGbp: '6,000',
+      bondInDealCurrency: '4,000',
+      bondInGbp: '8,000',
+      loanInDealCurrency: '2,000',
+      loanInGbp: '4,000',
+    },
   },
   dealFiles: {
     exporterQuestionnaire: [
