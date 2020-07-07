@@ -27,7 +27,28 @@ describe('deal-summary', () => {
     });
   });
 
-  // TODO: update tests for new submissionDetails conditions
+  describe('with no supplyContractCurrency.id', () => {
+    it('should return empty object', () => {
+      const mockDeal = {
+        submissionDetails: {
+          supplyContractConversionRateToGBP: '50',
+          supplyContractCurrency: { id: '' }
+        },
+        bondTransactions: {
+          items: [
+            { status: 'Completed' },
+          ],
+        },
+        loanTransactions: {
+          items: [
+            { status: 'Completed' },
+            { status: 'Completed' },
+          ],
+        },
+      };
+      expect(calculateDealSummary(mockDeal)).toEqual({});
+    });
+  });
 
   describe('with no completed bonds or loans', () => {
     it('should return empty object', () => {
@@ -185,6 +206,29 @@ describe('deal-summary', () => {
         const calculation = (totalAllLoans / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP));
         const expected = formattedNumber(roundNumber(calculation), 2);
         expect(result.totalValue.loansInGbp).toEqual(expected);
+      });
+
+      describe('when supplyContractConversionRateToGbp does not exist', () => {
+        beforeEach(() => {
+          result = calculateDealSummary({
+            ...mockDeal,
+            submissionDetails: {
+              supplyContractCurrency: {
+                id: 'GBP',
+              },
+            },
+          });
+        });
+
+        it('should have formatted bondsInGbp calculation without using supplyContractConversionRateToGbp', () => {
+          const expected = formattedNumber(roundNumber(totalAllBonds), 2);
+          expect(result.totalValue.bondsInGbp).toEqual(expected);
+        });
+
+        it('should have formatted loansInGbp calculation without using supplyContractConversionRateToGbp', () => {
+          const expected = formattedNumber(roundNumber(totalAllLoans), 2);
+          expect(result.totalValue.loansInGbp).toEqual(expected);
+        });
       });
 
       describe('completed bonds/loans GBP currency conditions', () => {
