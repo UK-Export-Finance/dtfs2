@@ -251,8 +251,6 @@ const generateTypeA = async (deal, fromStatus) => {
 
 
   if (!isValidXml) {
-    console.log(JSON.stringify(parsedXml.validationErrors));
-
     const errorList = parsedXml.validationErrors.map((ve) => ({ text: ve.message }));
 
     return {
