@@ -38,8 +38,8 @@ echo "{\"stage\": \"pipeline:wait-for-mongo\", \"duration\": \"$((end-start))\",
 
 start=`date +%s`
 
-docker exec deal-api /bin/sh env
-docker exec deal-api curl deal-api-data:27017
+docker exec deal-api env
+docker exec deal-api curl -v deal-api-data:27017
 docker exec deal-api /bin/sh ./bin/api-test.sh
 apiTestResults=$?
 
