@@ -25,12 +25,18 @@ const newDeal = aDeal({
   }],
 });
 
+const mockCountries = [
+  { id: 826, name: 'United Kingdom', code: 'GBR' },
+  { id: 124, name: 'Canada', code: 'CAN' },
+];
+
 describe('/v1/deals/:id/submission-details', () => {
   let noRoles;
   let anHSBCMaker;
   let aBarclaysMaker;
   let aBarclaysChecker;
   let aSuperuser;
+  let anEditor;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
@@ -39,10 +45,12 @@ describe('/v1/deals/:id/submission-details', () => {
     aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
+    anEditor = testUsers().withRole('editor').one();
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['deals', 'countries']);
+    await as(anEditor).postEach(mockCountries).to('/v1/countries');
   });
 
   describe('GET /v1/deals/:id/submission-details', () => {
@@ -157,6 +165,45 @@ describe('/v1/deals/:id/submission-details', () => {
 
       expect(status).toEqual(200);
       expect(body.data).toEqual(expectedResponse);
+    });
+
+    describe('when a country field changes', () => {
+      it('returns the updated submission-details with country objects', async () => {
+        const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+        const createdDeal = postResult.body;
+        const submissionDetails = {
+          destinationOfGoodsAndServices: 'GBR',
+          'buyer-address-country': 'GBR',
+          'indemnifier-correspondence-address-country': 'GBR',
+          'indemnifier-address-country': 'GBR',
+          'supplier-address-country': 'GBR',
+          'supplier-correspondence-address-country': 'GBR',
+        };
+
+        const { status } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+        expect(status).toEqual(200);
+
+        const body = {
+          destinationOfGoodsAndServices: 'CAN',
+          'buyer-address-country': 'CAN',
+          'indemnifier-correspondence-address-country': 'CAN',
+          'indemnifier-address-country': 'CAN',
+          'supplier-address-country': 'CAN',
+          'supplier-correspondence-address-country': 'CAN',
+        };
+
+        const updatedSubmissionDetails = await as(anHSBCMaker).put(body).to(`/v1/deals/${createdDeal._id}/submission-details`);
+        expect(updatedSubmissionDetails.status).toEqual(200);
+
+        const expectedCountryObj = { name: 'Canada', code: 'CAN' };
+
+        expect(updatedSubmissionDetails.body.data.destinationOfGoodsAndServices).toEqual(expectedCountryObj);
+        expect(updatedSubmissionDetails.body.data['buyer-address-country']).toEqual(expectedCountryObj);
+        expect(updatedSubmissionDetails.body.data['indemnifier-correspondence-address-country']).toEqual(expectedCountryObj);
+        expect(updatedSubmissionDetails.body.data['indemnifier-address-country']).toEqual(expectedCountryObj);
+        expect(updatedSubmissionDetails.body.data['supplier-address-country']).toEqual(expectedCountryObj);
+        expect(updatedSubmissionDetails.body.data['supplier-correspondence-address-country']).toEqual(expectedCountryObj);
+      });
     });
 
     it('updates the deal', async () => {

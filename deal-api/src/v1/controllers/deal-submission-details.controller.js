@@ -5,6 +5,7 @@ const db = require('../../drivers/db-client');
 const validateSubmissionDetails = require('../validation/submission-details');
 const { sanitizeCurrency } = require('../../utils/number');
 const now = require('../../now');
+const { findOneCountry } = require('./countries.controller');
 
 exports.findOne = (req, res) => {
   findOneDeal(req.params.id, (deal) => {
@@ -41,6 +42,17 @@ const updateSubmissionDetails = async (collection, _id, submissionDetails) => {
   return value;
 };
 
+
+const countryObject = async (countryCode) => {
+  const countryObj = await findOneCountry(countryCode);
+  const { name, code } = countryObj;
+
+  return {
+    name,
+    code,
+  };
+};
+
 exports.update = (req, res) => {
   const { user } = req;
   const submissionDetails = req.body;
@@ -69,6 +81,43 @@ exports.update = (req, res) => {
     const { sanitizedValue } = sanitizeCurrency(submissionDetails.supplyContractValue);
     if (sanitizedValue) {
       submissionDetails.supplyContractValue = sanitizedValue;
+    }
+
+    const checkCountryCode = async (existingDeal, submitted, fieldName) => {
+      const existingCountryCode = existingDeal[fieldName] && existingDeal[fieldName].code;
+      const submittedCountryCode = submitted[fieldName];
+
+      const getCountryObject = (!existingCountryCode || existingCountryCode.code !== submittedCountryCode);
+
+      if (getCountryObject) {
+        const countryObj = await countryObject(submittedCountryCode);
+        return countryObj;
+      }
+      return existingCountryCode;
+    };
+
+    if (submissionDetails.destinationOfGoodsAndServices) {
+      submissionDetails.destinationOfGoodsAndServices = await checkCountryCode(deal, submissionDetails, 'destinationOfGoodsAndServices');
+    }
+
+    if (submissionDetails['buyer-address-country']) {
+      submissionDetails['buyer-address-country'] = await checkCountryCode(deal, submissionDetails, 'buyer-address-country');
+    }
+
+    if (submissionDetails['indemnifier-correspondence-address-country']) {
+      submissionDetails['indemnifier-correspondence-address-country'] = await checkCountryCode(deal, submissionDetails, 'indemnifier-correspondence-address-country');
+    }
+
+    if (submissionDetails['indemnifier-address-country']) {
+      submissionDetails['indemnifier-address-country'] = await checkCountryCode(deal, submissionDetails, 'indemnifier-address-country');
+    }
+
+    if (submissionDetails['supplier-address-country']) {
+      submissionDetails['supplier-address-country'] = await checkCountryCode(deal, submissionDetails, 'supplier-address-country');
+    }
+
+    if (submissionDetails['supplier-correspondence-address-country']) {
+      submissionDetails['supplier-correspondence-address-country'] = await checkCountryCode(deal, submissionDetails, 'supplier-correspondence-address-country');
     }
 
     const collection = await db.getCollection('deals');
