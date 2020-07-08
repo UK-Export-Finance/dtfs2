@@ -4,6 +4,7 @@
 {% import '_macros/eligibility-documentation-preview.njk' as supportingDocumentation %}
 {% import 'contract/about/components/submission-details.njk' as submissionDetails %}
 {% import 'bond/_macros/bond-submission-details.njk' as bondSubmissionDetails %}
+{% import 'loan/_macros/loan-submission-details.njk' as loanSubmissionDetails %}
 
 {% import './components/contract-overview-table.njk' as contractOverviewTable %}
 {% import './components/contract-tabs.njk' as contractTabs %}
@@ -45,12 +46,23 @@
 
       {{ supportingDocumentation.answers(deal.submissionDetails.supportingDocumentation)}}
 
-      <h3 class="govuk-heading-l">
-        Bond
-        <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="#">edit</a>
-      </h3>
+      {% for bond in deal.bondTransactions.items %}
+        <h3 class="govuk-heading-l">
+          Bond
+          <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="#">edit</a>
+        </h3>
 
-      {{ bondSubmissionDetails.render(bondDetails = deal.submissionDetails.bond)}}
+        {{ bondSubmissionDetails.render(bondDetails = bond)}}
+      {% endfor %}
+
+      {% for loan in deal.loanTransactions.items %}
+        <h3 class="govuk-heading-l">
+          Loan
+          <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="#">edit</a>
+        </h3>
+
+        {{ loanSubmissionDetails.render(loanDetails = loan)}}
+      {% endfor %}
 
       <p class="govuk-body"><a href="/contract/{{ _id }}" class="govuk-link">Back to Supply Contract page</a></p>
 
