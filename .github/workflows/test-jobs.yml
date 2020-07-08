@@ -28,6 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    # Pull the latest images to run with so we don't need to build them
     - uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.ACR_DEV_REGISTRY }}
@@ -61,6 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    # Pull the latest images to run with so we don't need to build them
     - uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.ACR_DEV_REGISTRY }}
@@ -87,5 +89,7 @@ jobs:
         pwd
     - name: Run e2e tests
       run: |
+        pwd
         cd $GITHUB_WORKSPACE
-        npm install && npx cypress run --spec "cypress/integration/**/*.spec.js" --config video=false
+        npm install
+        npx cypress run --spec "cypress/integration/**/*.spec.js" --config video=false
