@@ -3,7 +3,7 @@ services:
   portal:
     container_name: portal
     build: ./portal
-    image: dtfs2/portal
+    image: dtfs/portal
     restart: always
     depends_on:
       - deal-api
