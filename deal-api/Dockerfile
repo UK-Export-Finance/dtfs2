@@ -29,5 +29,5 @@ ADD ./api-test.jest.config.js ./api-test.jest.config.js
 ADD ./bin ./bin
 
 RUN chown 1000 ./.ssl/private.pem ./.ssl/public.pem
-USER 1000
+#USER 1000
 CMD node src/index.js
