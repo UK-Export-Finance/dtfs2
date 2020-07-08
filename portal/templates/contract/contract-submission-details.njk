@@ -49,7 +49,7 @@
       {% for bond in deal.bondTransactions.items %}
         <h3 class="govuk-heading-l">
           Bond
-          <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="#">edit</a>
+          <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id }}/bond/{{ bond._id }}/details">edit</a>
         </h3>
 
         {{ bondSubmissionDetails.render(bondDetails = bond)}}
@@ -58,7 +58,7 @@
       {% for loan in deal.loanTransactions.items %}
         <h3 class="govuk-heading-l">
           Loan
-          <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="#">edit</a>
+          <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id }}/loan/{{ loan._id }}/guarantee-details">edit</a>
         </h3>
 
         {{ loanSubmissionDetails.render(loanDetails = loan)}}
