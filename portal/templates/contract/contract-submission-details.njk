@@ -30,14 +30,14 @@
 
       <h2 class="govuk-heading-l">
         General deal information
-        <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="#">edit</a>
+        <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id}}/about/supplier">edit</a>
       </h2>
 
-      {{ submissionDetails.general(contract = contract) }}
+      {{ submissionDetails.general(deal.submissionDetails) }}
 
       <h3 class="govuk-heading-l">
         Confirm eligibility
-        <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="#">edit</a>
+        <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id}}/eligibility/criteria">edit</a>
       </h3>
 
       {{ mandatoryCriteriaBox.success(mandatoryCriteria)}}
