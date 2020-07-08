@@ -35,7 +35,7 @@ sleep 10
 end=`date +%s`
 echo "{\"stage\": \"pipeline:wait-for-mongo\", \"duration\": \"$((end-start))\", \"result\": \"pass\"}" >> "$LOG"
 
-cd "$HERE/utils/mock-data-loader" && node ./re-insert-mocks.js
+cd "$HERE/utils/mock-data-loader" && npm install && node ./re-insert-mocks.js
 
 start=`date +%s`
 
