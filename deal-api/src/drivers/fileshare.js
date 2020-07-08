@@ -38,16 +38,20 @@ const getShareClient = async (fileshare) => {
   return shareClient;
 };
 
-const getExportDirectory = async (fileshare) => {
+const getDirectory = async (fileshare, folderPaths = '') => {
   const shareClient = await getShareClient(fileshare);
-  const { EXPORT_FOLDER } = getConfig(fileshare);
 
-  const exportFolderClient = shareClient.getDirectoryClient(EXPORT_FOLDER);
+  const directoryClient = shareClient.getDirectoryClient(folderPaths);
 
-  await exportFolderClient.create().catch(({ details }) => {
+  await directoryClient.create().catch(async ({ details }) => {
     if (!details) return false;
     if (details.errorCode === 'ResourceAlreadyExists') return false;
-    console.error('Fileshare create resource error', details);
+    if (details.errorCode === 'ParentNotFound') {
+      const parentFolder = folderPaths.replace(/(\/[^/]*)\/?$/, ''); // remove last folder from string
+      await getDirectory(fileshare, parentFolder);
+      return false;
+    }
+
     return {
       errorCount: 1,
       error: {
@@ -56,15 +60,17 @@ const getExportDirectory = async (fileshare) => {
       },
     };
   });
-  return exportFolderClient;
+  return directoryClient;
 };
 
 const uploadFile = async ({
-  fileshare, folder, subfolder = '', filename, buffer,
+  fileshare, folder, filename, buffer, allowOverwrite,
 }) => {
-  const exportDirectory = await getExportDirectory(fileshare);
+  // const exportDirectory = await getExportDirectory(fileshare);
 
-  const directoryClient = await exportDirectory.getDirectoryClient(folder);
+  // const directoryClient = await exportDirectory.getDirectoryClient(folder);
+
+  const directoryClient = await getDirectory(fileshare, folder);
 
   await directoryClient.create().catch(({ details }) => {
     if (!details) return false;
@@ -79,30 +85,14 @@ const uploadFile = async ({
     };
   });
 
-  let subDirectoryClient;
-
-  if (subfolder) {
-    subDirectoryClient = await directoryClient.getDirectoryClient(subfolder);
-    await subDirectoryClient.create().catch(({ details }) => {
-      if (!details) return false;
-      if (details.errorCode === 'ResourceAlreadyExists') return false;
-      console.error('Fileshare create resource error', details);
-      return {
-        error: {
-          errorCount: 1,
-          errorCode: details.errorCode,
-          message: details.message,
-        },
-      };
-    });
-  }
-
-  const dirClient = subDirectoryClient || directoryClient;
-
-  const fileClient = await dirClient.getFileClient(`${filename}`);
+  const fileClient = await directoryClient.getFileClient(`${filename}`);
   const existingFileProps = await fileClient.getProperties().catch(() => {});
 
-  if (!existingFileProps) {
+  if (existingFileProps && allowOverwrite) {
+    await fileClient.delete();
+  }
+
+  if (!existingFileProps || allowOverwrite) {
     await fileClient.uploadData(buffer);
     return {
       folder,
@@ -121,13 +111,11 @@ const uploadFile = async ({
 
 
 const readFile = async ({
-  fileshare, folder, subfolder = '', filename,
+  fileshare, folder = '', filename,
 }) => {
-  const exportDirectory = await getExportDirectory(fileshare);
-  const directoryClient = await exportDirectory.getDirectoryClient(folder);
-  const subDirectoryClient = await directoryClient.getDirectoryClient(subfolder);
+  const directory = await getDirectory(fileshare, folder);
 
-  const fileClient = await subDirectoryClient.getFileClient(`${filename}`);
+  const fileClient = await directory.getFileClient(`${filename}`);
 
   try {
     const bufferedFile = await fileClient.downloadToBuffer();
@@ -142,26 +130,28 @@ const readFile = async ({
   }
 };
 
-const deleteFile = async (filePath) => {
-  const shareClient = await getShareClient();
+const deleteFile = async (fileshare, filePath) => {
+  const shareClient = await getShareClient(fileshare);
 
-  shareClient.deleteFile(filePath).catch(({ details }) => {
-    if (!details) return;
-    if (details.errorCode === 'ResourceNotFound') return;
-    console.error('Fileshare delete file not found', details);
-  });
+  shareClient.deleteFile(filePath).catch(() => {});
 };
 
-const deleteMultipleFiles = async (fileList) => {
+const deleteMultipleFiles = async (fileshare, fileList) => {
   if (!fileList) return false;
+
   if (Array.isArray(fileList)) {
     return fileList.map(async (filePath) => {
-      await deleteFile(filePath);
+      await deleteFile(fileshare, filePath);
     });
   }
 
-  const delFile = await deleteFile(fileList);
-  return delFile;
+  return deleteFile(fileshare, fileList);
+};
+
+const deleteDirectory = async (fileshare, folder) => {
+  const shareClient = await getShareClient(fileshare);
+  const deleteDir = await shareClient.deleteDirectory(folder);
+  return deleteDir;
 };
 
 const copyFile = async ({ from, to }) => {
@@ -170,12 +160,15 @@ const copyFile = async ({ from, to }) => {
     folder: from.folder,
     filename: from.filename,
   };
+
   const bufferedFile = await readFile(fromFile);
+  if (bufferedFile.error) {
+    return bufferedFile;
+  }
 
   const toFile = {
     fileshare: to.fileshare,
     folder: to.folder,
-    subfolder: to.subfolder,
     filename: to.filename,
     buffer: bufferedFile,
   };
@@ -184,12 +177,28 @@ const copyFile = async ({ from, to }) => {
   return uploadedFile;
 };
 
+const moveFile = async ({ from, to }) => {
+  const filePath = `${from.folder}/${from.filename}`;
+
+  const copied = await copyFile({ from, to });
+
+  if (copied.error) {
+    return Promise.reject(new Error(`${filePath}: ${JSON.stringify(copied.error)}`));
+  }
+  await deleteFile(from.fileshare, filePath);
+  return copied;
+};
+
 const listDirectoryFiles = async ({ fileshare, folder }) => {
-  const exportDirectory = await getExportDirectory(fileshare);
-  const directoryClient = await exportDirectory.getDirectoryClient(folder);
+  const directoryClient = await getDirectory(fileshare, folder);
 
   const directoryList = [];
   const iter = await directoryClient.listFilesAndDirectories();
+
+  if (!iter) {
+    return false;
+  }
+
   let entity = await iter.next();
 
   while (!entity.done) {
@@ -201,10 +210,14 @@ const listDirectoryFiles = async ({ fileshare, folder }) => {
 };
 
 module.exports = {
+  getConfig,
+  getDirectory,
   uploadFile,
   deleteFile,
   deleteMultipleFiles,
+  deleteDirectory,
   readFile,
   copyFile,
+  moveFile,
   listDirectoryFiles,
 };

@@ -269,7 +269,6 @@ const createTypeA = async (deal, fromStatus) => {
     typeAxmlStr, filename, errorCount, errorList,
   } = await generateTypeA(deal, fromStatus);
 
-
   // TODO - Decide what to do with invalid typeA xml
   if (errorCount) {
     return {
@@ -278,10 +277,15 @@ const createTypeA = async (deal, fromStatus) => {
     };
   }
 
+  const workflowConfig = fileshare.getConfig('workflow');
+  const portalConfig = fileshare.getConfig('portal');
+
+  const workflowFolder = `${workflowConfig.EXPORT_FOLDER}/${deal._id}`; // eslint-disable-line no-underscore-dangle
+  const portalFolder = `${portalConfig.EXPORT_FOLDER}/${deal._id}`; // eslint-disable-line no-underscore-dangle
+
   const upload = {
     fileshare: 'workflow',
-    createMissingFolder: false,
-    folder: deal._id, // eslint-disable-line no-underscore-dangle
+    folder: workflowFolder,
     filename: `${filename}.xml`,
     buffer: Buffer.from(typeAxmlStr, 'utf-8'),
   };
@@ -297,8 +301,8 @@ const createTypeA = async (deal, fromStatus) => {
       fileList.forEach((file) => {
         dealUploadPromises.push(
           fileshare.copyFile({
-            from: { fileshare: 'portal', folder: deal._id, filename: file.filename }, // eslint-disable-line no-underscore-dangle
-            to: { fileshare: 'workflow', folder: deal._id, filename: file.filename }, // eslint-disable-line no-underscore-dangle
+            from: { fileshare: 'portal', folder: portalFolder, filename: file.filename }, // eslint-disable-line no-underscore-dangle
+            to: { fileshare: 'workflow', folder: workflowFolder, filename: file.filename }, // eslint-disable-line no-underscore-dangle
           }),
         );
       });

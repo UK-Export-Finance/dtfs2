@@ -289,7 +289,7 @@ const deal = {
     },
   },
   dealFiles: {
-    /*
+
     exporterQuestionnaire: [
       {
         type: 'general_correspondence',
@@ -313,7 +313,7 @@ const deal = {
       },
     ],
     security: 'security test',
-    */
+
   },
 };
 
