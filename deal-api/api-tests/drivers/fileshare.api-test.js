@@ -1,78 +1,344 @@
 jest.unmock('@azure/storage-file-share');
 
 const fileshare = require('../../src/drivers/fileshare');
-const { AZURE_PORTAL_FILESHARE_CONFIG } = require('../../src/config/fileshare.config');
-
-const { EXPORT_FOLDER } = AZURE_PORTAL_FILESHARE_CONFIG;
 
 const someXML = '<?xml version="1.0" encoding="UTF-8"?><Deal/>';
+const someXML2 = '<?xml version="1.0" encoding="UTF-8"?>XML2<Deal/>';
 
-const folder = 'api_tests';
-const subfolder = 'fileshare';
+
+const folder = 'api_tests/fileshare';
+const fileshareName = 'portal';
 
 describe('fileshare', () => {
-  it('can upload a string and get it back', async () => {
-    await fileshare.uploadFile({
-      fileshare: 'portal',
-      folder,
-      subfolder,
-      filename: 'out.xml',
-      buffer: Buffer.from(someXML, 'utf-8'),
-    }).catch((err) => {
-      console.log(err);
+  describe('uploads', () => {
+    const filename = 'test-file.xml';
+
+    beforeEach(async () => {
+      await fileshare.deleteMultipleFiles(fileshare, `${folder}/${filename}`);
     });
 
-    const fileDownload = await fileshare.readFile({
-      fileshare: 'portal',
-      folder,
-      subfolder,
-      filename: 'out.xml',
+    it('can upload a string and get it back', async () => {
+      await fileshare.uploadFile({
+        fileshare: fileshareName,
+        folder,
+        filename,
+        buffer: Buffer.from(someXML, 'utf-8'),
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      const fileDownload = await fileshare.readFile({
+        fileshare: fileshareName,
+        folder,
+        filename,
+      });
+
+      expect(fileDownload.toString('utf-8')).toEqual(someXML);
+
+      // cleanup
+      await fileshare.deleteMultipleFiles(fileshare, `${folder}/${filename}`);
+      const readFile = await fileshare.readFile({
+        fileshare: fileshareName,
+        folder,
+        filename,
+      });
+      expect(readFile.error).toBeDefined();
+      expect(readFile.error.errorCode).toEqual(404);
     });
-
-    expect(fileDownload.toString('utf-8')).toEqual(someXML);
-
-    // cleanup
-    await fileshare.deleteMultipleFiles([`${EXPORT_FOLDER}/${folder}/${subfolder}/out.xml`]);
   });
 
-  it('uploads and deletes multiple files', async () => {
+  describe('multiple uploads', () => {
     const fileList = ['file1.xml', 'file2.xml', 'file3.xml'];
+    const deleteFileList = fileList.map((filename) => `${folder}/${filename}`);
 
-    const fileshareWritePromises = [];
-    const fileshareReadPromises = [];
-
-    fileList.forEach((filename) => {
-      fileshareWritePromises.push(
-        fileshare.uploadFile({
-          fileshare: 'portal',
-          folder,
-          subfolder,
-          filename,
-          buffer: Buffer.from(someXML, 'utf-8'),
-        }),
-      );
+    beforeEach(async () => {
+      await fileshare.deleteMultipleFiles(fileshare, deleteFileList);
     });
 
-    await Promise.all(fileshareWritePromises);
+    it('uploads and deletes multiple files', async () => {
+      const fileshareWritePromises = [];
+      const fileshareReadPromises = [];
 
-    const deleteFileList = fileList.map((filename) => `${EXPORT_FOLDER}/${folder}/${subfolder}/${filename}`);
-    await fileshare.deleteMultipleFiles(deleteFileList);
+      fileList.forEach((filename) => {
+        fileshareWritePromises.push(
+          fileshare.uploadFile({
+            fileshare: fileshareName,
+            folder,
+            filename,
+            buffer: Buffer.from(someXML, 'utf-8'),
+          }),
+        );
+      });
 
-    fileList.forEach((filename) => {
-      fileshareReadPromises.push(
-        fileshare.readFile({
-          fileshare: 'portal',
-          folder,
-          subfolder,
-          filename,
-        }),
-      );
+      await Promise.all(fileshareWritePromises);
+
+
+      await fileshare.deleteMultipleFiles(fileshareName, deleteFileList);
+
+      fileList.forEach((filename) => {
+        fileshareReadPromises.push(
+          fileshare.readFile({
+            fileshare: fileshareName,
+            folder,
+            filename,
+          }),
+        );
+      });
+
+      const readFiles = await Promise.all(fileshareReadPromises);
+
+      readFiles.forEach((rf) => {
+        expect(rf.error).toBeDefined();
+        expect(rf.error.errorCode).toEqual(404);
+      });
+    });
+  });
+
+
+  describe('Upload existing files', () => {
+    const filename = 'duplicate.xml';
+
+    afterEach(async () => {
+      await fileshare.deleteMultipleFiles(fileshare, [`${folder}/${filename}`]);
     });
 
-    const readFiles = await Promise.all(fileshareReadPromises);
-    readFiles.forEach((rf) => {
-      expect(rf.error).toBeDefined();
-      expect(rf.error.errorCode).toEqual(404);
+    it('returns error if trying to upload a file that already exists', async () => {
+      await fileshare.uploadFile({
+        fileshare: fileshareName,
+        folder,
+        filename,
+        buffer: Buffer.from(someXML, 'utf-8'),
+      });
+
+      const duplicateFile = await fileshare.uploadFile({
+        fileshare: fileshareName,
+        folder,
+        filename,
+        buffer: Buffer.from(someXML, 'utf-8'),
+      });
+
+      expect(duplicateFile.error.message).toEqual('could not be uploaded. Each file must have unique filename');
+    });
+
+
+    it('allows overwrite of file that already exists if flag set', async () => {
+      await fileshare.uploadFile({
+        fileshare: fileshareName,
+        folder,
+        filename,
+        buffer: Buffer.from(someXML, 'utf-8'),
+      });
+
+      const duplicateFile = await fileshare.uploadFile({
+        fileshare: fileshareName,
+        folder,
+        filename,
+        buffer: Buffer.from(someXML2, 'utf-8'),
+        allowOverwrite: true,
+      });
+
+      const fileDownload = await fileshare.readFile({
+        fileshare: fileshareName,
+        folder,
+        filename,
+      });
+
+      expect(duplicateFile.fullPath).toEqual(`${folder}/${filename}`);
+      expect(fileDownload.toString('utf-8')).toEqual(someXML2);
+    });
+  });
+
+  describe('parent folders', () => {
+    const randomFolderName = Date.now();
+
+    const nonExistentFolder = `${folder}/${randomFolderName}`;
+    const nonExistentSubFolder = `${nonExistentFolder}/${randomFolderName + 1}`;
+
+    afterEach(async () => {
+      try {
+        await fileshare.deleteMultipleFiles(fileshare, [`${nonExistentSubFolder}/out.xml`]).then(async () => {
+          await fileshare.deleteDirectory(fileshare, nonExistentSubFolder).then(() => {
+            fileshare.deleteDirectory(fileshare, nonExistentFolder);
+          });
+        });
+      } catch (e) { return false; }
+    });
+
+    it('creates parent folders if they don\'t exist', async () => {
+      await fileshare.uploadFile({
+        fileshare: fileshareName,
+        folder: nonExistentSubFolder,
+        filename: 'out.xml',
+        buffer: Buffer.from(someXML, 'utf-8'),
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      const fileDownload = await fileshare.readFile({
+        fileshare: fileshareName,
+        folder: nonExistentSubFolder,
+        filename: 'out.xml',
+      });
+
+      expect(fileDownload.toString('utf-8')).toEqual(someXML);
+    });
+  });
+
+  describe('copy files', () => {
+    const filename = 'original-file.xml';
+    const copiedFilename = 'copied-file.xml';
+
+    afterEach(async () => {
+      await fileshare.deleteMultipleFiles(fileshare, [`${folder}/${filename}`, `${folder}/${copiedFilename}`]);
+    });
+
+    it('copies file from one location to another', async () => {
+      const fromFile = {
+        fileshare: fileshareName,
+        folder,
+        filename,
+        buffer: Buffer.from(someXML, 'utf-8'),
+      };
+
+      const toFile = {
+        fileshare: fileshareName,
+        folder,
+        filename: copiedFilename,
+        buffer: Buffer.from(someXML, 'utf-8'),
+      };
+
+      await fileshare.uploadFile(fromFile).catch((err) => {
+        console.log(err);
+      });
+
+      const copy = await fileshare.copyFile({
+        from: fromFile,
+        to: toFile,
+      });
+
+      expect(copy.fullPath).toEqual(`${folder}/copied-file.xml`);
+
+      const fromDownload = await fileshare.readFile(fromFile);
+      const toDownload = await fileshare.readFile(toFile);
+
+      expect(fromDownload.toString('utf-8')).toEqual(someXML);
+      expect(toDownload.toString('utf-8')).toEqual(someXML);
+    });
+
+    it('returns error if trying to copy file that doesn\'t exist', async () => {
+      const fromFile = {
+        fileshare: fileshareName,
+        folder,
+        filename,
+        buffer: Buffer.from(someXML, 'utf-8'),
+      };
+
+      const toFile = {
+        fileshare: fileshareName,
+        folder,
+        filename: copiedFilename,
+        buffer: Buffer.from(someXML, 'utf-8'),
+      };
+
+
+      const copy = await fileshare.copyFile({
+        from: fromFile,
+        to: toFile,
+      });
+
+      expect(copy.error.errorCode).toEqual(404);
+    });
+
+    it('moves file from one location to another', async () => {
+      const fromFile = {
+        fileshare: fileshareName,
+        folder,
+        filename,
+        buffer: Buffer.from(someXML, 'utf-8'),
+      };
+
+      const toFile = {
+        fileshare: fileshareName,
+        folder,
+        filename: copiedFilename,
+        buffer: Buffer.from(someXML, 'utf-8'),
+      };
+
+      await fileshare.uploadFile(fromFile).catch((err) => {
+        console.log(err);
+      });
+
+      const copy = await fileshare.moveFile({
+        from: fromFile,
+        to: toFile,
+      });
+
+      expect(copy.fullPath).toEqual(`${folder}/copied-file.xml`);
+
+      const fromDownload = await fileshare.readFile(fromFile);
+      const toDownload = await fileshare.readFile(toFile);
+
+      expect(fromDownload.error).toBeDefined();
+      expect(fromDownload.error.errorCode).toEqual(404);
+      expect(toDownload.toString('utf-8')).toEqual(someXML);
+    });
+
+    it('returns error if trying to move non-existent file', async () => {
+      const fromFile = {
+        fileshare: fileshareName,
+        folder,
+        filename,
+        buffer: Buffer.from(someXML, 'utf-8'),
+      };
+
+      const toFile = {
+        fileshare: fileshareName,
+        folder,
+        filename: copiedFilename,
+        buffer: Buffer.from(someXML, 'utf-8'),
+      };
+
+      try {
+        await fileshare.moveFile({
+          from: fromFile,
+          to: toFile,
+        });
+      } catch (err) {
+        expect(err.message).toContain('"errorCode":404');
+      }
+    });
+  });
+
+  describe('list directory', () => {
+    const fileList = ['file1.xml', 'file2.xml', 'file3.xml'];
+    const listFolder = `${folder}/list-files`;
+
+    const deleteFileList = fileList.map((filename) => `${listFolder}/${filename}`);
+
+    beforeEach(async () => {
+      await fileshare.deleteMultipleFiles(fileshareName, deleteFileList);
+    });
+
+
+    it('list files in a directory', async () => {
+      const fileshareWritePromises = [];
+
+      fileList.forEach((filename) => {
+        fileshareWritePromises.push(
+          fileshare.uploadFile({
+            fileshare: fileshareName,
+            folder: listFolder,
+            filename,
+            buffer: Buffer.from(someXML, 'utf-8'),
+          }),
+        );
+      });
+
+      await Promise.all(fileshareWritePromises);
+
+      const listDir = await fileshare.listDirectoryFiles({ fileshare: fileshareName, folder: listFolder });
+      const listFileMap = listDir.map((file) => file.name);
+      expect(listFileMap).toMatchObject(fileList);
     });
   });
 });

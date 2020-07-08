@@ -1,7 +1,7 @@
-const { findOneCountry } = require('../../countries.controller');
+const countryController = require('../../countries.controller');
 
 const convertCountryCodeToId = async (code) => {
-  const country = await findOneCountry(code);
+  const country = await countryController.findOneCountry(code);
   return country ? country.id : code;
 };
 

@@ -1,30 +1,39 @@
 
-const { listDirectoryFiles, readFile } = require('../../drivers/fileshare');
+const moment = require('moment');
+
+const {
+  listDirectoryFiles, readFile, moveFile, getConfig,
+} = require('../../drivers/fileshare');
 const { processTypeB } = require('../../v1/controllers/integration/type-b.controller');
 
 const fetchWorkflowTypeB = {
   init: () => ({
     schedule: '* * * * *',
-    message: 'Fetch workflow type B every 15 mins',
-    task: async () => {
-      const fileshare = 'workflow';
-      const folder = 'type-b';
+    message: 'Fetch workflow type B every 1 min',
+    task: async (fileshare = 'workflow', overwriteFolder) => {
+      const { IMPORT_FOLDER } = getConfig(fileshare);
 
       const workflowImportFolder = {
         fileshare,
-        folder,
+        folder: overwriteFolder || IMPORT_FOLDER,
       };
 
-      const files = await listDirectoryFiles(workflowImportFolder);
+      const folderContents = await listDirectoryFiles(workflowImportFolder);
+      const files = folderContents.filter((f) => f.kind === 'file');
+
+      if (!files.length) {
+        return false;
+      }
 
       const filePromises = [];
       const filenames = [];
 
-      files.filter((f) => f.kind === 'file').forEach((file) => {
+      files.forEach((file) => {
         const documentLocation = {
           fileshare,
-          folder,
+          folder: IMPORT_FOLDER,
           filename: file.name,
+          importFolder: true,
         };
 
         const bufferedFile = readFile(documentLocation);
@@ -44,7 +53,36 @@ const fetchWorkflowTypeB = {
         processTypeB(xmlFile);
       });
 
-      console.log('running a task every minute x');
+      const moveFilePromises = [];
+
+      const archiveFolder = `${IMPORT_FOLDER}/archived_v2/${moment().format('YYYY-MM-DD')}`;
+
+      filenames.forEach(({ filename }) => {
+        const from = {
+          fileshare,
+          folder: IMPORT_FOLDER,
+          filename,
+        };
+
+        const to = {
+          fileshare,
+          folder: archiveFolder,
+          filename,
+        };
+
+        moveFilePromises.push(moveFile({ to, from }));
+      });
+
+      const moveFiles = await Promise.allSettled(moveFilePromises);
+      const errorFiles = moveFiles.filter((mf) => mf.status === 'rejected');
+
+      console.log(`${files.length} type-b xml files processed`);
+      if (errorFiles.length) {
+        console.warn(`Error moving ${errorFiles.length} files`);
+        errorFiles.forEach(({ reason }) => console.warn(reason.message));
+      }
+
+      return files;
     },
   }),
 };

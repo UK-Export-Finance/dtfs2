@@ -28,19 +28,7 @@ const ACTION_NAME = {
   '010': 'ATPConfirm',
   '016': 'AmendDeal',
 };
-/*
-const STATUS = {
-  draft: 'Draft',
-  readyForApproval: 'Ready for Checker\'s approval',
-  inputRequired: 'Further Maker\'s input required',
-  abandoned: 'Abandoned Deal',
-  submitted: 'Submitted',
-  submissionAcknowledged: 'Acknowledged by UKEF',
-  approved: 'Accepted by UKEF (without conditions)',
-  approvedWithConditions: 'Accepted by UKEF (with conditions)',
-  refused: 'Rejected by UKEF',
-};
-*/
+
 const STATUS = {
   DRAFT: 'Draft',
   READY_FOR_APPROVAL: 'Ready for Checker\'s approval',
@@ -53,7 +41,6 @@ const STATUS = {
   REFUSED: 'Rejected by UKEF',
   CONFIRMED_BY_BANK: 'Confirmed by bank',
   CONFIRMATION_ACKNOWLEDGED: 'Confirmation acknowledged',
-
 };
 
 module.exports = {

@@ -1,10 +1,12 @@
 const stream = require('stream');
-const { deleteMultipleFiles, uploadFile, readFile } = require('../../drivers/fileshare');
+const fileshare = require('../../drivers/fileshare');
 const { formatFilenameForSharepoint } = require('../../utils');
 const { userHasAccessTo } = require('../users/checks');
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { getEligibilityStatus } = require('../validation/eligibility-criteria');
 const { getDocumentationErrors } = require('../validation/eligibility-documentation');
+
+const { EXPORT_FOLDER } = fileshare.getConfig('portal');
 
 const getFileType = (fieldname) => {
   switch (fieldname) {
@@ -45,7 +47,7 @@ exports.update = async (req, res) => {
       return;
     }
 
-    const deletePromises = deleteMultipleFiles(req.body.deleteFile);
+    const deletePromises = fileshare.deleteMultipleFiles(req.body.deleteFile);
 
     const uploadPromises = req.files.map(async (file) => {
       const {
@@ -53,9 +55,9 @@ exports.update = async (req, res) => {
       } = file;
 
       if (size <= MAX_FILE_SIZE) {
-        const fileInfo = await uploadFile({
+        const fileInfo = await fileshare.uploadFile({
           fileshare: 'portal',
-          folder: req.params.id,
+          folder: `${EXPORT_FOLDER}/${req.params.id}`,
           filename: formatFilenameForSharepoint(originalname),
           buffer,
         });
@@ -188,11 +190,12 @@ exports.downloadFile = async (req, res) => {
     }
 
     const documentLocation = {
-      folder: id,
+      fileshare: 'portal',
+      folder: `${EXPORT_FOLDER}/${id}`,
       filename,
     };
 
-    const bufferedFile = await readFile(documentLocation);
+    const bufferedFile = await fileshare.readFile(documentLocation);
 
     const readStream = new stream.PassThrough();
     readStream.end(bufferedFile);

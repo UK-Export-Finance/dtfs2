@@ -1,31 +1,36 @@
 
 const xml2js = require('xml2js');
-const { updateDeal } = require('../deal.controller');
+const dealController = require('../deal.controller');
 const { k2Map } = require('./helpers');
 
 const processTypeB = async ({ fileContents }) => {
-  console.log({ fileContents });
-  const { Deal: deal } = await xml2js.parseStringPromise(fileContents /* , options */);
-  const { portal_deal_id: dealId } = deal.$;
+  const { Deal: deal, error } = await xml2js.parseStringPromise(fileContents /* , options */)
+    .catch((err) => ({ error: err.message }));
 
-  const xmlAttributes = deal.$;
+  if (error) {
+    return {
+      error,
+    };
+  }
+
+  const { portal_deal_id: dealId } = deal.$;
 
   const updatedDealInfo = {
     details: {
       status: k2Map.findPortalValue('DEAL', 'STATUS', deal.Deal_status[0]),
+      ukefDealId: deal.UKEF_deal_id[0],
     },
   };
 
   const updateRequest = {
     params: {
-      id: '1000294', // dealId,
+      id: dealId,
     },
     body: updatedDealInfo,
   };
 
-  const updatedDeal = await updateDeal(updateRequest);
-
-  console.log({ deal: JSON.stringify(deal, null, 4) });
+  const updatedDeal = await dealController.updateDeal(updateRequest);
+  return updatedDeal;
 };
 
 module.exports = {

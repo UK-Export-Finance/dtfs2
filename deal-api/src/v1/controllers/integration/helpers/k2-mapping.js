@@ -78,8 +78,13 @@ const FACILITIES = {
   },
 };
 
+const K2MapData = {
+  FACILITIES,
+  DEAL,
+};
+
 const findPortalValue = (constantTypeStr, constantFieldStr, k2Value) => {
-  const constantType = K2MAP[constantTypeStr];
+  const constantType = K2MapData[constantTypeStr];
   if (!constantType) {
     return k2Value;
   }
@@ -89,7 +94,7 @@ const findPortalValue = (constantTypeStr, constantFieldStr, k2Value) => {
     return k2Value;
   }
 
-  const mappedValue = Object.entries(constantField).find(([_, portalValue]) => portalValue === k2Value.toString());
+  const mappedValue = Object.entries(constantField).find((portalValue) => portalValue[1] === k2Value.toString());
   if (mappedValue) {
     return mappedValue[0];
   }
@@ -98,8 +103,7 @@ const findPortalValue = (constantTypeStr, constantFieldStr, k2Value) => {
 };
 
 const K2MAP = {
-  FACILITIES,
-  DEAL,
+  ...K2MapData,
   findPortalValue,
 };
 
