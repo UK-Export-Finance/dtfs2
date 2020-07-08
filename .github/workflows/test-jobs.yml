@@ -6,6 +6,7 @@ on:
     
 env:
   TAG: latest
+
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
 
   AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}
@@ -20,19 +21,6 @@ env:
   AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
 
 jobs:
-
-  directories:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: |
-          pwd
-          cd $GITHUB_WORKSPACE
-          echo $GITHUB_WORKSPACE
-          pwd
-          cd ${{ env.GITHUB_WORKSPACE }}
-          echo ${{ env.GITHUB_WORKSPACE }}
-          pwd
 
   api-tests:
     #needs: [portal, deal-api]
@@ -99,5 +87,5 @@ jobs:
         pwd
     - name: Run e2e tests
       run: |
-        cd ${{ env.GITHUB_WORKSPACE }}
+        cd $GITHUB_WORKSPACE
         npm install && npx cypress run --spec "cypress/integration/**/*.spec.js" --config video=false
