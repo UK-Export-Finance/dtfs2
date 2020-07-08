@@ -11,30 +11,35 @@ services:
       - "5001:5001"
     volumes:
       - ../deal-api/src:/app/src:ro
-      - ../deal-api/.env.full-local-docker-environment:/app/.env:ro
     environment:
       - DEBUG=express:*
-      - AZURE_WORKFLOW_FILESHARE_NAME=${AZURE_WORKFLOW_FILESHARE_NAME}
-      - AZURE_WORKFLOW_STORAGE_ACCOUNT=${AZURE_WORKFLOW_STORAGE_ACCOUNT}
-      - AZURE_WORKFLOW_STORAGE_ACCESS_KEY=${AZURE_WORKFLOW_STORAGE_ACCESS_KEY}
-      - AZURE_WORKFLOW_EXPORT_FOLDER=${AZURE_WORKFLOW_EXPORT_FOLDER}
-      - AZURE_WORKFLOW_IMPORT_FOLDER=${AZURE_WORKFLOW_IMPORT_FOLDER}
-      - AZURE_PORTAL_FILESHARE_NAME=${AZURE_PORTAL_FILESHARE_NAME}
-      - AZURE_PORTAL_STORAGE_ACCOUNT=${AZURE_PORTAL_STORAGE_ACCOUNT}
-      - AZURE_PORTAL_STORAGE_ACCESS_KEY=${AZURE_PORTAL_STORAGE_ACCESS_KEY}
-      - AZURE_PORTAL_EXPORT_FOLDER=${AZURE_PORTAL_EXPORT_FOLDER}
+      - PORT=5001
+      - CORS_ORIGIN=http://localhost:5000
+      - JWT_SIGNING_CERT=./.ssl/private.pem
+      - JWT_VALIDATING_CERT=./.ssl/public.pem
+      - MONGO_INITDB_DATABASE=deal-api-data
+      - MONGODB_URI=mongodb://root:r00t@deal-api-data:27017/?authMechanism=DEFAULT
+      - AZURE_WORKFLOW_FILESHARE_NAME
+      - AZURE_WORKFLOW_STORAGE_ACCOUNT
+      - AZURE_WORKFLOW_STORAGE_ACCESS_KEY
+      - AZURE_WORKFLOW_EXPORT_FOLDER
+      - AZURE_WORKFLOW_IMPORT_FOLDER
+      - AZURE_PORTAL_FILESHARE_NAME
+      - AZURE_PORTAL_STORAGE_ACCOUNT
+      - AZURE_PORTAL_STORAGE_ACCESS_KEY
+      - AZURE_PORTAL_EXPORT_FOLDER
     entrypoint: npx nodemon src/index.js
 
   deal-api-data:
     container_name: deal-api-data_portal
     image: mongo
     restart: always
-    env_file:
-      - ../deal-api/.env.full-local-docker-environment
+    environment:
+      - MONGO_INITDB_DATABASE=deal-api-data
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=r00t
     volumes:
       - ../deal-api-data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - ./deal-api-data-volume:/data/db
     ports:
       - "27017-27019:27017-27019"
-networks:
-  default:
