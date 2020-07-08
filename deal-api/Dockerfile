@@ -5,8 +5,8 @@ WORKDIR /app
 
 # create keypairs for signing/verifying jwt tokens
 # -----
-#RUN apt-get update && \
-#    apt-get install openssl
+RUN apt-get update && \
+    apt-get install openssl
 
 RUN mkdir ./.ssl
 RUN openssl genrsa -out ./.ssl/private.pem 2048

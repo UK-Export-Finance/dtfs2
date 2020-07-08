@@ -39,10 +39,6 @@ cd "$HERE/utils/mock-data-loader" && npm install && node ./re-insert-mocks.js
 
 start=`date +%s`
 
-docker exec deal-api env
-docker exec deal-api curl -v deal-api-data:27017
-docker exec deal-api curl -v localhost:5001
-docker logs deal-api
 docker exec deal-api /bin/sh ./bin/api-test.sh
 apiTestResults=$?
 
