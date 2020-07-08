@@ -21,11 +21,25 @@ env:
 
 jobs:
 
+  directories:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          pwd
+          cd $GITHUB_WORKSPACE
+          echo $GITHUB_WORKSPACE
+          pwd
+          cd ${{ env.GITHUB_WORKSPACE }}
+          echo ${{ env.GITHUB_WORKSPACE }}
+          pwd
+
   api-tests:
     #needs: [portal, deal-api]
     name: "Run API tests in Compose"
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
     - uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.ACR_DEV_REGISTRY }}
@@ -58,6 +72,7 @@ jobs:
     name: "Run end-to-end tests in Compose"
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
     - uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.ACR_DEV_REGISTRY }}
@@ -84,7 +99,5 @@ jobs:
         pwd
     - name: Run e2e tests
       run: |
-        pwd
         cd ${{ env.GITHUB_WORKSPACE }}
-        pwd
         npm install && npx cypress run --spec "cypress/integration/**/*.spec.js" --config video=false
