@@ -16,6 +16,7 @@
     "dotenv": "^8.2.0",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "moment": "^2.27.0"
   }
 }
