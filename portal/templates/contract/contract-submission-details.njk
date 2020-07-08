@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
 {% import '_macros/mandatory-criteria-box.njk' as mandatoryCriteriaBox %}
 {% import '_macros/eligibility-criteria-answers.njk' as eligibilityCriteria %}
-{% import '_macros/eligibility-documentation-preview.njk' as supportingDocumentation %}
+{% import '_macros/eligibility-documentation-preview.njk' as eligibilityDocumentation %}
 {% import 'contract/about/components/submission-details.njk' as submissionDetails %}
 {% import 'bond/_macros/bond-submission-details.njk' as bondSubmissionDetails %}
 {% import 'loan/_macros/loan-submission-details.njk' as loanSubmissionDetails %}
@@ -42,9 +42,9 @@
 
       {{ mandatoryCriteriaBox.success(mandatoryCriteria)}}
 
-      {{ eligibilityCriteria.answers(deal.submissionDetails.eligibilityCriteria)}}
+      {{ eligibilityCriteria.answers(deal.eligibility.criteria)}}
 
-      {{ supportingDocumentation.answers(deal.submissionDetails.supportingDocumentation)}}
+      {{ eligibilityDocumentation.answers(deal.dealFiles, deal._id)}}
 
       {% for bond in deal.bondTransactions.items %}
         <h3 class="govuk-heading-l">
