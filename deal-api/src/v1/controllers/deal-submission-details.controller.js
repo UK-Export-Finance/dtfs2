@@ -53,9 +53,52 @@ const countryObject = async (countryCode) => {
   };
 };
 
+const checkCountryCode = async (existingDeal, submitted, fieldName) => {
+  const existingCountryCode = existingDeal[fieldName] && existingDeal[fieldName].code;
+  const submittedCountryCode = submitted[fieldName];
+
+  const shouldUpdateCountry = (!existingCountryCode || existingCountryCode.code !== submittedCountryCode);
+
+  if (shouldUpdateCountry) {
+    const countryObj = await countryObject(submittedCountryCode);
+    return countryObj;
+  }
+  return existingCountryCode;
+};
+
+const checkAllCountryCodes = async (deal, fields) => {
+  const modifiedFields = fields;
+
+  if (modifiedFields.destinationOfGoodsAndServices) {
+    modifiedFields.destinationOfGoodsAndServices = await checkCountryCode(deal, fields, 'destinationOfGoodsAndServices');
+  }
+
+  if (modifiedFields['buyer-address-country']) {
+    modifiedFields['buyer-address-country'] = await checkCountryCode(deal, fields, 'buyer-address-country');
+  }
+
+  if (modifiedFields['indemnifier-correspondence-address-country']) {
+    modifiedFields['indemnifier-correspondence-address-country'] = await checkCountryCode(deal, fields, 'indemnifier-correspondence-address-country');
+  }
+
+  if (modifiedFields['indemnifier-address-country']) {
+    modifiedFields['indemnifier-address-country'] = await checkCountryCode(deal, fields, 'indemnifier-address-country');
+  }
+
+  if (modifiedFields['supplier-address-country']) {
+    modifiedFields['supplier-address-country'] = await checkCountryCode(deal, fields, 'supplier-address-country');
+  }
+
+  if (modifiedFields['supplier-correspondence-address-country']) {
+    modifiedFields['supplier-correspondence-address-country'] = await checkCountryCode(deal, fields, 'supplier-correspondence-address-country');
+  }
+
+  return modifiedFields;
+};
+
 exports.update = (req, res) => {
   const { user } = req;
-  const submissionDetails = req.body;
+  let submissionDetails = req.body;
 
   findOneDeal(req.params.id, async (deal) => {
     if (!deal) return res.status(404).send();
@@ -83,42 +126,7 @@ exports.update = (req, res) => {
       submissionDetails.supplyContractValue = sanitizedValue;
     }
 
-    const checkCountryCode = async (existingDeal, submitted, fieldName) => {
-      const existingCountryCode = existingDeal[fieldName] && existingDeal[fieldName].code;
-      const submittedCountryCode = submitted[fieldName];
-
-      const getCountryObject = (!existingCountryCode || existingCountryCode.code !== submittedCountryCode);
-
-      if (getCountryObject) {
-        const countryObj = await countryObject(submittedCountryCode);
-        return countryObj;
-      }
-      return existingCountryCode;
-    };
-
-    if (submissionDetails.destinationOfGoodsAndServices) {
-      submissionDetails.destinationOfGoodsAndServices = await checkCountryCode(deal, submissionDetails, 'destinationOfGoodsAndServices');
-    }
-
-    if (submissionDetails['buyer-address-country']) {
-      submissionDetails['buyer-address-country'] = await checkCountryCode(deal, submissionDetails, 'buyer-address-country');
-    }
-
-    if (submissionDetails['indemnifier-correspondence-address-country']) {
-      submissionDetails['indemnifier-correspondence-address-country'] = await checkCountryCode(deal, submissionDetails, 'indemnifier-correspondence-address-country');
-    }
-
-    if (submissionDetails['indemnifier-address-country']) {
-      submissionDetails['indemnifier-address-country'] = await checkCountryCode(deal, submissionDetails, 'indemnifier-address-country');
-    }
-
-    if (submissionDetails['supplier-address-country']) {
-      submissionDetails['supplier-address-country'] = await checkCountryCode(deal, submissionDetails, 'supplier-address-country');
-    }
-
-    if (submissionDetails['supplier-correspondence-address-country']) {
-      submissionDetails['supplier-correspondence-address-country'] = await checkCountryCode(deal, submissionDetails, 'supplier-correspondence-address-country');
-    }
+    submissionDetails = await checkAllCountryCodes(deal, submissionDetails);
 
     const collection = await db.getCollection('deals');
     const dealAfterAllUpdates = await updateSubmissionDetails(collection, req.params.id, submissionDetails);
