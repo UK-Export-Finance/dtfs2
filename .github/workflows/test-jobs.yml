@@ -93,3 +93,8 @@ jobs:
         cd $GITHUB_WORKSPACE
         npm install
         npx cypress run --spec "cypress/integration/**/*.spec.js" --config video=false
+    - name: Save Cypress screenshots
+        uses: actions/upload-artifact@master
+        with:
+        name: screenshots
+        path: './cypress/screenshots'
