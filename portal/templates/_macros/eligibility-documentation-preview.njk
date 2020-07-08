@@ -13,8 +13,6 @@
     {{ eligibilityDocumentationPreviewFiles.list('Financial forecasts for the next 3 years', 'financialForecasts',  dealFiles.financialForecasts, dealId)  }}
     {{ eligibilityDocumentationPreviewFiles.list('Brief commentary on the financial information', 'financialInformationCommentary', dealFiles.financialInformationCommentary, dealId)  }}
     {{ eligibilityDocumentationPreviewFiles.list('Corporate structure diagram', 'corporateStructure', dealFiles.corporateStructure, dealId)  }}
-    
-    
 
     {% for documentation in supportingDocumentation %}
 
@@ -31,6 +29,13 @@
       </li>
 
     {% endfor %}
+
+    <li class="govuk-body-s">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third govuk-!-font-weight-bold govuk-!-margin-bottom-1">Security</div>
+        <div class="govuk-grid-column-two-thirds">{{ dealFiles.security }}</div>
+      </div>
+    </li>
   </ol>
       
 {% endmacro %}
