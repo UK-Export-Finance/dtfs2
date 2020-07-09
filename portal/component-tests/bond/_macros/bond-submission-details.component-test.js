@@ -64,6 +64,7 @@ describe(component, () => {
       });
       wrapper.expectText(selector).toRead('Yes');
     });
+
     it('should render `No` when value is false', () => {
       wrapper = render({
         ...bond,

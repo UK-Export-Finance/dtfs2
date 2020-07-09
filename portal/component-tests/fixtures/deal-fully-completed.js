@@ -94,19 +94,41 @@ const deal = {
       },
     ],
   },
-  "loanTransactions": {
-    "items": [
+  loanTransactions: {
+    items: [
       {
-        _id: '321321',
-        "facilityStage": "Unconditional",
-        "bankReferenceNumber": "123",
-        "facilityValue": "123",
-        "disbursementAmount": "12",
-        "currencySameAsSupplyContractCurrency": "true",
-        "interestMarginFee": "10",
-        "coveredPercentage": "9",
-      }
-    ]
+        _id: '123456',
+        facilityStage: 'Unconditional',
+        'requestedCoverStartDate-day': '20',
+        'requestedCoverStartDate-month': '07',
+        'requestedCoverStartDate-year': '2020',
+        'coverEndDate-day': '21',
+        'coverEndDate-month': '03',
+        'coverEndDate-year': '2021',
+        ukefGuaranteeInMonths: '12',
+        bankReferenceNumber: '12345678',
+        guaranteeFeePayableByBank: '10.8000',
+        facilityValue: '12345678.00',
+        currencySameAsSupplyContractCurrency: 'false',
+        currency: {
+          text: 'AUD - Australian Dollars',
+          id: 'AUD',
+        },
+        conversionRate: '80',
+        'conversionRateDate-day': '11',
+        'conversionRateDate-month': '06',
+        'conversionRateDate-year': '2020',
+        disbursementAmount: '100.00',
+        interestMarginFee: '12',
+        coveredPercentage: '30',
+        minimumQuarterlyFee: '200',
+        ukefExposure: '3,703,703.40',
+        premiumFrequency: 'Semi-annually',
+        premiumType: 'In advance',
+        dayCountBasis: '365',
+        status: 'Completed',
+      },
+    ],
   },
   eligibility: {
     criteria: [

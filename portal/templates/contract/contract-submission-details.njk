@@ -61,7 +61,7 @@
           <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id }}/loan/{{ loan._id }}/guarantee-details">edit</a>
         </h3>
 
-        {{ loanSubmissionDetails.render(loanDetails = loan)}}
+        {{ loanSubmissionDetails.render(loan)}}
       {% endfor %}
 
       <p class="govuk-body"><a href="/contract/{{ deal._id }}" class="govuk-link">Back to Supply Contract page</a></p>

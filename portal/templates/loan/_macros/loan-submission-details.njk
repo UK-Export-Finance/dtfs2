@@ -1,60 +1,60 @@
-{% macro render(loanDetails) %}
+{% macro render(loan) %}
 
   <h2 class="govuk-heading-m">Loan guarantee details</h2>
 
   <dl class="govuk-summary-list govuk-summary-list--no-border">
 
-    {% if loanDetails.bankReferenceNumber %}
+    {% if loan.bankReferenceNumber %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Bank reference number
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="bank-reference-number">
-          {{ loanDetails.bankReferenceNumber }}
+          {{ loan.bankReferenceNumber }}
         </dd>
       </div>
     {% endif %}
 
-    {% if loanDetails.facilityStage %}
+    {% if loan.facilityStage %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Facility stage
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="facility-stage">
-          {{ loanDetails.facilityStage }}
+          {{ loan.facilityStage }}
         </dd>
       </div>
     {% endif %}
 
-    {% if loanDetails.ukefGuaranteeInMonths %}
+    {% if loan.ukefGuaranteeInMonths %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Length of time that the UKEF's guarantee will be in place for (in months, rounded up)
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="ukef-guarantee-length-in-months">
-          {{ loanDetails.ukefGuaranteeInMonths }}
+          {{ loan.ukefGuaranteeInMonths }}
         </dd>
       </div>
     {% endif %}
 
-    {% if loanDetails['requestedCoverStartDate-day'] and loanDetails['requestedCoverStartDate-month'] and loanDetails['requestedCoverStartDate-year'] %}
+    {% if loan['requestedCoverStartDate-day'] and loan['requestedCoverStartDate-month'] and loan['requestedCoverStartDate-year'] %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Requested Cover Start Date
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="requested-cover-start-date">
-          {{ loanDetails['requestedCoverStartDate-day'] }}/{{ loanDetails['requestedCoverStartDate-month'] }}/{{ loanDetails['requestedCoverStartDate-year'] }}
+          {{ loan['requestedCoverStartDate-day'] }}/{{ loan['requestedCoverStartDate-month'] }}/{{ loan['requestedCoverStartDate-year'] }}
         </dd>
       </div>
     {% endif %}
 
-    {% if loanDetails['coverEndDate-day'] and loanDetails['coverEndDate-month'] and loanDetails['coverEndDate-year'] %}
+    {% if loan['coverEndDate-day'] and loan['coverEndDate-month'] and loan['coverEndDate-year'] %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
-          Requested Cover Start Date
+          Cover End Date
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="cover-end-date">
-          {{ loanDetails['coverEndDate-day'] }}/{{ loanDetails['coverEndDate-month'] }}/{{ loanDetails['coverEndDate-year'] }}
+          {{ loan['coverEndDate-day'] }}/{{ loan['coverEndDate-month'] }}/{{ loan['coverEndDate-year'] }}
         </dd>
       </div>
     {% endif %}
@@ -65,127 +65,127 @@
 
   <dl class="govuk-summary-list govuk-summary-list--no-border">
 
-    {% if loanDetails.facilityValue %}
+    {% if loan.facilityValue %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Loan facility value
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="facility-value" data-mask="currency">
-          {{ loanDetails.facilityValue }}
+          {{ loan.facilityValue }}
         </dd>
       </div>
     {% endif %}
 
-    {% if loanDetails.currencySameAsSupplyContractCurrency %}
+    {% if loan.currencySameAsSupplyContractCurrency %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Is the currency of this loan the same as your Supply Contract currency?
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="currency-same-as-supply-contract-currency">
-          {% if loanDetails.currencySameAsSupplyContractCurrency === "true" %}
+          {% if loan.currencySameAsSupplyContractCurrency === "true" %}
             Yes
-          {% elif loanDetails.currencySameAsSupplyContractCurrency === "false" %}
+          {% elif loan.currencySameAsSupplyContractCurrency === "false" %}
             No
           {% endif %}
         </dd>
       </div>
     {% endif %}
 
-    {% if loanDetails.currency %}
+    {% if loan.currency %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Currency
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="currency">
-          {{ loanDetails.currency.text }}
+          {{ loan.currency.text }}
         </dd>
       </div>
     {% endif %}
 
-    {% if loanDetails.conversionRate %}
+    {% if loan.conversionRate %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Conversion rate to the supply contract currency
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="conversion-rate">
-          {{ loanDetails.conversionRate }}
+          {{ loan.conversionRate }}
         </dd>
       </div>
     {% endif %}
     
-    {% if loanDetails['conversionRateDate-day'] and loanDetails['conversionRateDate-month'] and loanDetails['conversionRateDate-year'] %}
+    {% if loan['conversionRateDate-day'] and loan['conversionRateDate-month'] and loan['conversionRateDate-year'] %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Conversion rate date
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="conversion-rate-date">
-          {{ loanDetails['conversionRateDate-day'] }}/{{ loanDetails['conversionRateDate-month'] }}/{{ loanDetails['conversionRateDate-year'] }}
+          {{ loan['conversionRateDate-day'] }}/{{ loan['conversionRateDate-month'] }}/{{ loan['conversionRateDate-year'] }}
         </dd>
       </div>
     {% endif %}
 
-    {% if loanDetails.disbursementAmount %}
+    {% if loan.disbursementAmount %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Disbursement amount
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="disbursement-amount">
-          {{ loanDetails.disbursementAmount }}
+          {{ loan.disbursementAmount }}
         </dd>
       </div>
     {% endif %}
 
-    {% if loanDetails.interestMarginFee %}
+    {% if loan.interestMarginFee %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Interest Margin %
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="interest-margin-fee">
-          {{ loanDetails.interestMarginFee }}%
+          {{ loan.interestMarginFee }}%
         </dd>
       </div>
     {% endif %}
 
-    {% if loanDetails.coveredPercentage %}
+    {% if loan.coveredPercentage %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Covered Percentage
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="covered-percentage">
-          {{ loanDetails.coveredPercentage }}%
+          {{ loan.coveredPercentage }}%
         </dd>
       </div>
     {% endif %}
 
-    {% if loanDetails.minimumQuarterlyFee %}
+    {% if loan.minimumQuarterlyFee %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Minimum quarterly fee 
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="minimum-quarterly-fee">
-          {{ loanDetails.minimumQuarterlyFee  }}
+          {{ loan.minimumQuarterlyFee  }}
         </dd>
       </div>
     {% endif %}
 
-    {% if loanDetails.guaranteeFeePayableByBank %}
+    {% if loan.guaranteeFeePayableByBank %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Guarantee fee payable by bank
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="guarantee-fee-payable-by-bank">
-          {{ loanDetails.guaranteeFeePayableByBank }}
+          {{ loan.guaranteeFeePayableByBank }}
         </dd>
       </div>
     {% endif %}
 
-    {% if loanDetails.ukefExposure %}
+    {% if loan.ukefExposure %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           UKEF Exposure
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="ukef-exposure">
-          {{ loanDetails.ukefExposure }}
+          {{ loan.ukefExposure }}
         </dd>
       </div>
     {% endif %}
@@ -196,35 +196,35 @@
 
   <dl class="govuk-summary-list govuk-summary-list--no-border">
 
-    {% if loanDetails.premiumType %}
+    {% if loan.premiumType %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Premium type
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="premium-type">
-          {{ loanDetails.premiumType }}
+          {{ loan.premiumType }}
         </dd>
       </div>
     {% endif %}
 
-    {% if loanDetails.premiumType %}
+    {% if loan.premiumType %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Premium frequency
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="premium-frequency">
-          {{ loanDetails.premiumFrequency }}
+          {{ loan.premiumFrequency }}
         </dd>
       </div>
     {% endif %}
 
-    {% if loanDetails.dayCountBasis %}
+    {% if loan.dayCountBasis %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Day count basis 
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="day-count-basis">
-          {{ loanDetails.dayCountBasis  }}
+          {{ loan.dayCountBasis  }}
         </dd>
       </div>
     {% endif %}
