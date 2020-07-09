@@ -1,12 +1,10 @@
 const crypto = require('crypto');
 const dotenv = require('dotenv');
-const fs = require('fs');
 const jsonwebtoken = require('jsonwebtoken');
 
 dotenv.config();
 
-const pathToKey = process.env.JWT_SIGNING_CERT;
-const PRIV_KEY = fs.readFileSync(pathToKey, 'utf8');
+const PRIV_KEY = new Buffer.from(process.env.JWT_SIGNING_KEY, 'base64').toString('ascii');
 
 /**
  *
