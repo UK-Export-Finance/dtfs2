@@ -1,4 +1,4 @@
-{% macro answers(criteria) %}
+{% macro render(criteria) %}
 
   <h4 class="govuk-heading-m">Eligibility criteria</h4>
 
@@ -7,8 +7,8 @@
 
       <div class="eligibility-criteria-row">
         <h7 class="govuk-heading-s govuk-!-margin-bottom-1">
-          Eligibility criterion {{ criterion.id }}
-          <span class="govuk-body-s govuk-!-font-weight-regular govuk-!-margin-left-4">
+          <span data-cy="criterion-{{ criterion.id }}-heading">Eligibility criterion {{ criterion.id }}</span>
+          <span class="govuk-body-s govuk-!-font-weight-regular govuk-!-margin-left-4" data-cy="criterion-{{ criterion.id }}-answer">
             {% if criterion.answer != undefined %}
               {{ criterion.answer | string | capitalize }}
             {% endif %}
@@ -16,7 +16,7 @@
         </h7>
       </div>
 
-      <p class="govuk-body-s govuk-hint">{{ criterion.description }}</p>
+      <p class="govuk-body-s govuk-hint" data-cy="criterion-{{ criterion.id }}-description">{{ criterion.description }}</p>
 
     {% endfor %}
   </dl>
