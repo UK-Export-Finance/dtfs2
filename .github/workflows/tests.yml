@@ -54,7 +54,7 @@ jobs:
         node ./re-insert-mocks.js
     - name: Run API tests
       run: |
-        docker-compose exec deal-api /bin/sh ./bin/api-test.sh
+        docker-compose exec -T deal-api /bin/sh ./bin/api-test.sh
 
   end-to-end-tests:
     #needs: [portal, deal-api]
