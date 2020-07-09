@@ -6,7 +6,7 @@ const {
   calculateGuaranteeFee,
   calculateUkefExposure,
 } = require('../section-calculations');
-const sectionCurrency = require('../section-currency');
+const { handleTransactionCurrencyFields } = require('../section-currency');
 const { loanStatus } = require('../section-status/loan');
 const { sanitizeCurrency } = require('../../utils/number');
 
@@ -147,7 +147,7 @@ exports.updateLoan = async (req, res) => {
 
       modifiedLoan = loanFacilityStageFields(modifiedLoan);
 
-      modifiedLoan = await sectionCurrency(
+      modifiedLoan = await handleTransactionCurrencyFields(
         modifiedLoan,
         deal,
       );
