@@ -47,21 +47,25 @@
       {{ eligibilityDocumentation.render(deal.dealFiles, deal._id)}}
 
       {% for bond in deal.bondTransactions.items %}
-        <h3 class="govuk-heading-l">
-          Bond
-          <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id }}/bond/{{ bond._id }}/details">edit</a>
-        </h3>
+        <div data-cy="bond-{{ bond._id }}">
+          <h3 class="govuk-heading-l">
+            <span data-cy="bond-heading">Bond</span>
+            <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id }}/bond/{{ bond._id }}/details" data-cy="edit-bond-link">edit</a>
+          </h3>
 
-        {{ bondSubmissionDetails.render(bond)}}
+          {{ bondSubmissionDetails.render(bond)}}
+        </div>
       {% endfor %}
 
       {% for loan in deal.loanTransactions.items %}
-        <h3 class="govuk-heading-l">
-          Loan
-          <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id }}/loan/{{ loan._id }}/guarantee-details">edit</a>
-        </h3>
+        <div data-cy="loan-{{ loan._id }}">
+          <h3 class="govuk-heading-l">
+            <span data-cy="loan-heading">Loan</span>
+            <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id }}/loan/{{ loan._id }}/guarantee-details" data-cy="edit-loan-link">edit</a>
+          </h3>
 
-        {{ loanSubmissionDetails.render(loan)}}
+          {{ loanSubmissionDetails.render(loan)}}
+        </div>
       {% endfor %}
 
       <p class="govuk-body"><a href="/contract/{{ deal._id }}" class="govuk-link">Back to Supply Contract page</a></p>
