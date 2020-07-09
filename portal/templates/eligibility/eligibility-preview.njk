@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
 {% import '_macros/confirm-eligibility-nav.njk' as confirmEligibility %}
 {% import '_macros/mandatory-criteria-box.njk' as mandatoryCriteriaBox %}
-{% import '_macros/eligibility-criteria-answers.njk' as eligibilityCriteria %}
+{% import '_macros/eligibility-criteria-answers.njk' as eligibilityCriteriaAnswers %}
 {% import '_macros/eligibility-documentation-preview.njk' as eligibilityDocumentation %}
 
 {% block pageTitle %}Eligibility Criteria Preview - {{ deal.details.bankSupplyContractName }}{% endblock %}
@@ -20,9 +20,9 @@
 
   {{ mandatoryCriteriaBox.success(mandatoryCriteria)}}
 
-  {{ eligibilityCriteria.answers(deal.eligibility.criteria)}}
+  {{ eligibilityCriteriaAnswers.render(deal.eligibility.criteria)}}
 
-  {{ eligibilityDocumentation.answers(deal.dealFiles, deal._id)}}
+  {{ eligibilityDocumentation.render(deal.dealFiles, deal._id)}}
 
   <hr class="govuk-section-break govuk-!-margin-bottom-8">
 
