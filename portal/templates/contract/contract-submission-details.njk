@@ -52,7 +52,7 @@
           <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id }}/bond/{{ bond._id }}/details">edit</a>
         </h3>
 
-        {{ bondSubmissionDetails.render(bondDetails = bond)}}
+        {{ bondSubmissionDetails.render(bond)}}
       {% endfor %}
 
       {% for loan in deal.loanTransactions.items %}

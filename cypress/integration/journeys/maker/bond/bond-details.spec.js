@@ -102,7 +102,7 @@ context('Bond Details', () => {
       });
     });
 
-    it('form submit should progess to `Bond Financial Details` page and render additional submitted form field values in `Bond Preview` page', () => {
+    it('form submit should progess to `Bond Financial Details` page', () => {
       cy.loginGoToDealPage(user, deal);
 
       pages.contract.addBondButton().click();
@@ -114,15 +114,6 @@ context('Bond Details', () => {
       cy.url().should('include', '/contract');
       cy.url().should('include', '/bond/');
       cy.url().should('include', '/financial-details');
-
-      // progress to preview page
-      partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
-      pages.bondFeeDetails.submit().click();
-      cy.url().should('include', '/preview');
-
-      pages.bondPreview.ukefGuaranteeInMonths().invoke('text').then((text) => {
-        expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.ukefGuaranteeInMonths);
-      });
     });
 
     it('form submit should populate Deal page with `unissued` specific text/values and link to `Bond Details` page', () => {

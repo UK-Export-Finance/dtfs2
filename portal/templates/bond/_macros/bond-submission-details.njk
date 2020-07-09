@@ -1,93 +1,93 @@
-{% macro render(bondDetails) %}
+{% macro render(bond) %}
 
   <h2 class="govuk-heading-m">Bond details</h2>
 
   <dl class="govuk-summary-list govuk-summary-list--no-border">
 
-    {% if bondDetails.bondIssuer %}
+    {% if bond.bondIssuer %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Bond issuer
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="bond-issuer">
-          {{ bondDetails.bondIssuer }}
+          {{ bond.bondIssuer }}
         </dd>
       </div>
     {% endif %}
 
-    {% if bondDetails.bondType %}
+    {% if bond.bondType %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Bond type
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="bond-type">
-          {{ bondDetails.bondType }}
+          {{ bond.bondType }}
         </dd>
       </div>
     {% endif %}
 
-    {% if bondDetails.bondStage %}
+    {% if bond.bondStage %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Bond stage
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="bond-stage">
-          {{ bondDetails.bondStage }}
+          {{ bond.bondStage }}
         </dd>
       </div>
     {% endif %}
 
-    {% if bondDetails['requestedCoverStartDate-day'] and bondDetails['requestedCoverStartDate-month'] and bondDetails['requestedCoverStartDate-year'] %}
+    {% if bond['requestedCoverStartDate-day'] and bond['requestedCoverStartDate-month'] and bond['requestedCoverStartDate-year'] %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Requested Cover Start Date
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s"  data-cy="requested-cover-start-date">
-          {{ bondDetails['requestedCoverStartDate-day'] }}/{{ bondDetails['requestedCoverStartDate-month'] }}/{{ bondDetails['requestedCoverStartDate-year'] }}
+          {{ bond['requestedCoverStartDate-day'] }}/{{ bond['requestedCoverStartDate-month'] }}/{{ bond['requestedCoverStartDate-year'] }}
         </dd>
       </div>
     {% endif %}
 
-    {% if bondDetails['coverEndDate-day'] and bondDetails['coverEndDate-month'] and bondDetails['coverEndDate-year'] %}
+    {% if bond['coverEndDate-day'] and bond['coverEndDate-month'] and bond['coverEndDate-year'] %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Cover End Date
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="cover-end-date">
-          {{ bondDetails['coverEndDate-day'] }}/{{ bondDetails['coverEndDate-month'] }}/{{ bondDetails['coverEndDate-year'] }}
+          {{ bond['coverEndDate-day'] }}/{{ bond['coverEndDate-month'] }}/{{ bond['coverEndDate-year'] }}
         </dd>
       </div>
     {% endif %}
 
-    {% if bondDetails.uniqueIdentificationNumber %}
+    {% if bond.uniqueIdentificationNumber %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Bond's unique identification number
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="unique-identification-number">
-          {{ bondDetails.uniqueIdentificationNumber }}
+          {{ bond.uniqueIdentificationNumber }}
         </dd>
       </div>
     {% endif %}
 
-    {% if bondDetails.ukefGuaranteeInMonths %}
+    {% if bond.ukefGuaranteeInMonths %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Length of time that the UKEF's guarantee will be in place for (in months, rounded up)
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="ukef-guarantee-in-months">
-          {{ bondDetails.ukefGuaranteeInMonths }}
+          {{ bond.ukefGuaranteeInMonths }}
         </dd>
       </div>
     {% endif %}
 
-    {% if bondDetails.bondBeneficiary %}
+    {% if bond.bondBeneficiary %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Bond beneficiary
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="bond-beneficiary">
-          {{ bondDetails.bondBeneficiary }}
+          {{ bond.bondBeneficiary }}
         </dd>
       </div>
     {% endif %}
@@ -98,119 +98,119 @@
 
   <dl class="govuk-summary-list govuk-summary-list--no-border">
 
-    {% if bondDetails.facilityValue %}
+    {% if bond.facilityValue %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Bond value
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="facility-value" data-mask="currency">
-          {{ bondDetails.facilityValue }}
+          {{ bond.facilityValue }}
         </dd>
       </div>
     {% endif %}
 
-    {% if bondDetails.currencySameAsSupplyContractCurrency %}
+    {% if bond.currencySameAsSupplyContractCurrency %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Is the currency for this Bond the same as your Supply Contract currency?
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="currency-same-as-supply-contract-currency">
-          {% if bondDetails.currencySameAsSupplyContractCurrency === "true" %}
+          {% if bond.currencySameAsSupplyContractCurrency === "true" %}
             Yes
-          {% elif bondDetails.currencySameAsSupplyContractCurrency === "false" %}
+          {% elif bond.currencySameAsSupplyContractCurrency === "false" %}
             No
           {% endif %}
         </dd>
       </div>
     {% endif %}
 
-    {% if bondDetails.currency.text %}
+    {% if bond.currency.text %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Currency
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="currency">
-          {{ bondDetails.currency.text }}
+          {{ bond.currency.text }}
         </dd>
       </div>
     {% endif %}
 
-    {% if bondDetails.conversionRate %}
+    {% if bond.conversionRate %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Conversion rate to the Supply Contract currency
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="conversion-rate">
-          {{ bondDetails.conversionRate }}
+          {{ bond.conversionRate }}
         </dd>
       </div>
     {% endif %}
 
 
-    {% if bondDetails['conversionRateDate-day'] and bondDetails['conversionRateDate-month'] and bondDetails['conversionRateDate-year'] %}
+    {% if bond['conversionRateDate-day'] and bond['conversionRateDate-month'] and bond['conversionRateDate-year'] %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Conversion rate date 
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="conversion-rate-date">
-          {{ bondDetails['conversionRateDate-day'] }}/{{ bondDetails['conversionRateDate-month'] }}/{{ bondDetails['conversionRateDate-year'] }}
+          {{ bond['conversionRateDate-day'] }}/{{ bond['conversionRateDate-month'] }}/{{ bond['conversionRateDate-year'] }}
         </dd>
       </div>
     {% endif %}
 
 
-    {% if bondDetails.riskMarginFee %}
+    {% if bond.riskMarginFee %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Risk Margin Fee %
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="risk-margin-fee">
-          {{ bondDetails.riskMarginFee }}%
+          {{ bond.riskMarginFee }}%
         </dd>
       </div>
     {% endif %}
 
-    {% if bondDetails.coveredPercentage %}
+    {% if bond.coveredPercentage %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Covered Percentage
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="covered-percentage">
-          {{ bondDetails.coveredPercentage }}%
+          {{ bond.coveredPercentage }}%
         </dd>
       </div>
     {% endif %}
 
-    {% if bondDetails.minimumRiskMarginFee %}
+    {% if bond.minimumRiskMarginFee %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Minimum risk margin fee
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="minimum-risk-margin-fee">
-          {{ bondDetails.minimumRiskMarginFee }}
+          {{ bond.minimumRiskMarginFee }}
         </dd>
       </div>
     {% endif %}
 
 
-    {% if bondDetails.guaranteeFeePayableByBank %}
+    {% if bond.guaranteeFeePayableByBank %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Guarantee fee payable by bank
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="guarantee-fee-payable-by-bank">
-          {{ bondDetails.guaranteeFeePayableByBank }}
+          {{ bond.guaranteeFeePayableByBank }}
         </dd>
       </div>
     {% endif %}
 
-    {% if bondDetails.ukefExposure %}
+    {% if bond.ukefExposure %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           UKEF exposure
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="ukef-exposure">
-          {{ bondDetails.ukefExposure }}
+          {{ bond.ukefExposure }}
         </dd>
       </div>
     {% endif %}
@@ -222,35 +222,35 @@
 
   <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-8">
 
-    {% if bondDetails.feeType %}
+    {% if bond.feeType %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Fee type
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="fee-type">
-          {{ bondDetails.feeType }}
+          {{ bond.feeType }}
         </dd>
       </div>
     {% endif %}
 
-    {% if bondDetails.feeFrequency %}
+    {% if bond.feeFrequency %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Fee frequency
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="fee-frequency">
-          {{ bondDetails.feeFrequency }}
+          {{ bond.feeFrequency }}
         </dd>
       </div>
     {% endif %}
 
-    {% if bondDetails.dayCountBasis %}
+    {% if bond.dayCountBasis %}
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-body-s">
           Day count basis
         </dt>
         <dd class="govuk-summary-list__value govuk-body-s" data-cy="day-count-basis">
-          {{ bondDetails.dayCountBasis }}
+          {{ bond.dayCountBasis }}
         </dd>
       </div>
     {% endif %}
