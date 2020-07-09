@@ -1,8 +1,7 @@
 version: "3"
 services:
 
-  deal-api-data-test:
-    container_name: deal-api-data-test
+  deal-api-data:
     image: mongo
     restart: always
     environment:

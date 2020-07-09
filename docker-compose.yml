@@ -1,7 +1,6 @@
 version: "3"
 services:
   portal:
-    container_name: portal
     build: ./portal
     image: dtfs/portal
     restart: always
@@ -21,7 +20,6 @@ services:
     command: node dist/server.js
 
   deal-api:
-    container_name: deal-api
     build: ./deal-api
     image: dtfs/deal-api
     restart: always
@@ -51,7 +49,6 @@ services:
     entrypoint: npx nodemon src/index.js
 
   deal-api-data:
-    container_name: deal-api-data
     image: mongo
     restart: always
     environment:
