@@ -28,7 +28,7 @@
 
   {% include "_partials/print-button.njk" %}
 
-  {{ submissionDetails.render(loanDetails = loan)}}
+  {{ submissionDetails.render(loan)}}
 
   <p class="govuk-body"><a class="govuk-link" href="/contract/{{ dealId }}" data-cy="save-go-back-button">Save and go back to deal</a></p>
 
