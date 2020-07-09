@@ -7,7 +7,7 @@ const {
   calculateGuaranteeFee,
   calculateUkefExposure,
 } = require('../section-calculations');
-const sectionCurrency = require('../section-currency');
+const { handleTransactionCurrencyFields } = require('../section-currency');
 const { sanitizeCurrency } = require('../../utils/number');
 
 const putBondInDealObject = (deal, bond, otherBonds) => ({
@@ -146,7 +146,7 @@ exports.updateBond = async (req, res) => {
 
       modifiedBond = bondStageFields(modifiedBond);
 
-      modifiedBond = await sectionCurrency(
+      modifiedBond = await handleTransactionCurrencyFields(
         modifiedBond,
         deal,
       );

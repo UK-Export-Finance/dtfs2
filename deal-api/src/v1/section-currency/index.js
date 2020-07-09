@@ -1,6 +1,6 @@
 const { findOneCurrency } = require('../controllers/currencies.controller');
 
-const currencyObject = async (currencyCode) => {
+const getCurrencyObject = async (currencyCode) => {
   const currencyObj = await findOneCurrency(currencyCode);
   const { text, id } = currencyObj;
 
@@ -10,7 +10,7 @@ const currencyObject = async (currencyCode) => {
   };
 };
 
-module.exports = async (dealSection, deal) => {
+const handleTransactionCurrencyFields = async (dealSection, deal) => {
   const modifiedSection = dealSection;
   let supplyContractCurrencyCodeId;
 
@@ -32,15 +32,21 @@ module.exports = async (dealSection, deal) => {
     delete modifiedSection['conversionRateDate-year'];
 
     if (supplyContractCurrencyCodeId) {
-      modifiedSection.currency = await currencyObject(supplyContractCurrencyCodeId);
+      modifiedSection.currency = await getCurrencyObject(supplyContractCurrencyCodeId);
     }
   } else if (currencyCode) {
     // TODO: make this clearer
     // currencyCode can be a single string (from form),
     // or an object with ID, if has been previously submitted.
     const actualCurrencyCode = currencyCode.id ? currencyCode.id : currencyCode;
-    modifiedSection.currency = await currencyObject(actualCurrencyCode);
+    modifiedSection.currency = await getCurrencyObject(actualCurrencyCode);
   }
 
   return modifiedSection;
+};
+
+
+module.exports = {
+  getCurrencyObject,
+  handleTransactionCurrencyFields,
 };

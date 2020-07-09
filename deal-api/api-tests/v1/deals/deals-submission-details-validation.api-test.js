@@ -27,16 +27,30 @@ const newDeal = aDeal({
   }],
 });
 
+const mockCountries = [
+  { id: 826, name: 'United Kingdom', code: 'GBR' },
+  { id: 124, name: 'Canada', code: 'CAN' },
+];
+
+const mockCurrencies = [
+  { currencyId: 12, text: 'GBP - UK Sterling', id: 'GBP' },
+  { currencyId: 5, text: 'CAD - Canadian Dollars', id: 'CAD' },
+];
+
 describe('PUT /v1/deals/:id/submission-details validation rules', () => {
   let anHSBCMaker;
+  let anEditor;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    anEditor = testUsers().withRole('editor').one();
   });
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
+    await as(anEditor).postEach(mockCountries).to('/v1/countries');
+    await as(anEditor).postEach(mockCurrencies).to('/v1/currencies');
   });
 
   describe('For all cases', () => {
@@ -415,7 +429,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     beforeAll(async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
-      const submissionDetails = { 'supplier-address-country': 'USA' };
+      const submissionDetails = { 'supplier-address-country': 'CAN' };
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
 
@@ -461,7 +475,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     beforeAll(async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
-      const submissionDetails = { 'buyer-address-country': 'USA' };
+      const submissionDetails = { 'buyer-address-country': 'CAN' };
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
 
@@ -542,7 +556,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         const createdDeal = postResult.body;
         const submissionDetails = {
           'supplier-correspondence-address-is-different': 'true',
-          'supplier-correspondence-address-country': 'USA',
+          'supplier-correspondence-address-country': 'CAN',
         };
 
         const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
@@ -638,7 +652,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         const createdDeal = postResult.body;
         const submissionDetails = {
           legallyDistinct: 'true',
-          'indemnifier-address-country': 'USA',
+          'indemnifier-address-country': 'CAN',
         };
 
         const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
@@ -725,7 +739,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         const submissionDetails = {
           legallyDistinct: 'true',
           indemnifierCorrespondenceAddressDifferent: 'true',
-          'indemnifier-correspondence-address-country': 'USA',
+          'indemnifier-correspondence-address-country': 'CAN',
         };
 
         const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);

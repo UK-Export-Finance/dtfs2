@@ -30,6 +30,11 @@ const mockCountries = [
   { id: 124, name: 'Canada', code: 'CAN' },
 ];
 
+const mockCurrencies = [
+  { currencyId: 12, text: 'GBP - UK Sterling', id: 'GBP' },
+  { currencyId: 5, text: 'CAD - Canadian Dollars', id: 'CAD' },
+];
+
 describe('/v1/deals/:id/submission-details', () => {
   let noRoles;
   let anHSBCMaker;
@@ -49,8 +54,10 @@ describe('/v1/deals/:id/submission-details', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals', 'countries']);
+    await wipeDB.wipe(['deals', 'countries', 'currencies']);
+    // await wipeDB.wipe(['deals']);
     await as(anEditor).postEach(mockCountries).to('/v1/countries');
+    await as(anEditor).postEach(mockCurrencies).to('/v1/currencies');
   });
 
   describe('GET /v1/deals/:id/submission-details', () => {
@@ -203,6 +210,34 @@ describe('/v1/deals/:id/submission-details', () => {
         expect(updatedSubmissionDetails.body.data['indemnifier-address-country']).toEqual(expectedCountryObj);
         expect(updatedSubmissionDetails.body.data['supplier-address-country']).toEqual(expectedCountryObj);
         expect(updatedSubmissionDetails.body.data['supplier-correspondence-address-country']).toEqual(expectedCountryObj);
+      });
+    });
+
+    describe('when supplyContractCurrency changes', () => {
+      it('returns the updated submission-details with supplyContractCurrency as a currency object', async () => {
+        const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+        const createdDeal = postResult.body;
+        const submissionDetails = {
+          supplyContractCurrency: { id: 'GBP' },
+        };
+
+        const { body, status } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+        expect(status).toEqual(200);
+        expect(body.data.supplyContractCurrency).toEqual({
+          id: 'GBP',
+          text: 'GBP - UK Sterling',
+        });
+
+        const updateBody = {
+          supplyContractCurrency: { id: 'CAD' },
+        };
+
+        const updatedSubmissionDetails = await as(anHSBCMaker).put(updateBody).to(`/v1/deals/${createdDeal._id}/submission-details`);
+        expect(updatedSubmissionDetails.status).toEqual(200);
+
+        const expectedCurrencyObj = { id: 'CAD', text: 'CAD - Canadian Dollars' };
+
+        expect(updatedSubmissionDetails.body.data.supplyContractCurrency).toEqual(expectedCurrencyObj);
       });
     });
 

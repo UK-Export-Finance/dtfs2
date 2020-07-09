@@ -6,6 +6,7 @@ const validateSubmissionDetails = require('../validation/submission-details');
 const { sanitizeCurrency } = require('../../utils/number');
 const now = require('../../now');
 const { findOneCountry } = require('./countries.controller');
+const { getCurrencyObject } = require('../section-currency');
 
 exports.findOne = (req, res) => {
   findOneDeal(req.params.id, (deal) => {
@@ -45,6 +46,7 @@ const updateSubmissionDetails = async (collection, _id, submissionDetails) => {
 
 const countryObject = async (countryCode) => {
   const countryObj = await findOneCountry(countryCode);
+
   const { name, code } = countryObj;
 
   return {
@@ -96,6 +98,20 @@ const checkAllCountryCodes = async (deal, fields) => {
   return modifiedFields;
 };
 
+const checkCurrency = async (existingCurrencyObj, submitted) => {
+  const hasExistingCurrencyId = existingCurrencyObj && existingCurrencyObj.id;
+  const hasSubmittedId = submitted && submitted.id;
+  const shouldUpdateCurrency = (hasSubmittedId && (!hasExistingCurrencyId || existingCurrencyObj.id !== submitted.id));
+  if (shouldUpdateCurrency) {
+    const currencyObj = await getCurrencyObject(submitted.id);
+    return currencyObj;
+  }
+  if (hasExistingCurrencyId) {
+    return existingCurrencyObj;
+  }
+  return {};
+};
+
 exports.update = (req, res) => {
   const { user } = req;
   let submissionDetails = req.body;
@@ -127,6 +143,13 @@ exports.update = (req, res) => {
     }
 
     submissionDetails = await checkAllCountryCodes(deal, submissionDetails);
+
+    if (submissionDetails.supplyContractCurrency) {
+      submissionDetails.supplyContractCurrency = await checkCurrency(
+        deal.supplyContractCurrency,
+        submissionDetails.supplyContractCurrency,
+      );
+    }
 
     const collection = await db.getCollection('deals');
     const dealAfterAllUpdates = await updateSubmissionDetails(collection, req.params.id, submissionDetails);
