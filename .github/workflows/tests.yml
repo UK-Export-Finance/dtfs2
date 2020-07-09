@@ -54,7 +54,7 @@ jobs:
         node ./re-insert-mocks.js
     - name: Run API tests
       run: |
-        docker-compose exec -T deal-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --detectOpenHandles # --forceExit
+        docker-compose exec -T deal-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --detectOpenHandles --forceExit
 
   end-to-end-tests:
     #needs: [portal, deal-api]
