@@ -1,14 +1,12 @@
 const dotenv = require('dotenv');
 const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
-const fs = require('fs');
 
 const { findByUsername } = require('./controller');
 
 dotenv.config();
 
-const pathToKey = process.env.JWT_VALIDATING_CERT;
-const PUB_KEY = fs.readFileSync(pathToKey, 'utf8');
+const PUB_KEY = new Buffer.from(process.env.JWT_VALIDATING_KEY, 'base64').toString('ascii');
 
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

@@ -32,8 +32,8 @@ services:
     environment:
       - PORT=5001
       - CORS_ORIGIN=http://localhost:5000
-      - JWT_SIGNING_CERT=./.ssl/private.pem
-      - JWT_VALIDATING_CERT=./.ssl/public.pem
+      - JWT_SIGNING_KEY
+      - JWT_VALIDATING_KEY
       - MONGO_INITDB_DATABASE=deal-api-data
       - MONGODB_URI=mongodb://root:r00t@deal-api-data:27017/?authMechanism=DEFAULT
       - AZURE_WORKFLOW_STORAGE_ACCOUNT
