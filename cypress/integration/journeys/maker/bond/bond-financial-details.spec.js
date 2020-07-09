@@ -211,39 +211,6 @@ context('Bond Financial Details', () => {
       });
     });
 
-    it('should render additional submitted form field values in `Bond Preview` page', () => {
-      goToBondFinancialDetailsPage(deal);
-
-      pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
-
-      fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
-
-      pages.bondFinancialDetails.submit().click();
-
-      cy.url().should('include', '/fee-details');
-      pages.bondFeeDetails.submit().click();
-      cy.url().should('include', '/preview');
-
-      pages.bondPreview.currency().invoke('text').then((text) => {
-        expect(text.trim()).equal(BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.text);
-      });
-
-      pages.bondPreview.conversionRate().invoke('text').then((text) => {
-        expect(text.trim()).equal(BOND_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
-      });
-
-      pages.bondPreview.conversionRateDate().invoke('text').then((text) => {
-        const {
-          conversionRateDateDay,
-          conversionRateDateMonth,
-          conversionRateDateYear,
-        } = BOND_FORM_VALUES.FINANCIAL_DETAILS;
-
-        const expected = `${conversionRateDateDay}/${conversionRateDateMonth}/${conversionRateDateYear}`;
-        expect(text.trim()).equal(expected);
-      });
-    });
-
     it('should populate the bond\'s `value` in Deal page with the submitted bond currency', () => {
       goToBondFinancialDetailsPage(deal);
 
