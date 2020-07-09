@@ -1,7 +1,6 @@
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const BOND_FORM_VALUES = require('./bond-form-values');
-const fillBondForm = require('./fill-bond-forms');
 const relative = require('../../../relativeURL');
 
 const user = { username: 'MAKER', password: 'MAKER' };
@@ -156,7 +155,7 @@ context('Add a Bond to a Deal', () => {
 
       cy.url().should('include', '/preview');
 
-      // check that at least one value is dispalyed
+      // check that at least one value is displayed
       // no need to check all as this is covered in UI component tests.
       pages.bondPreview.bondIssuer().invoke('text').then((text) => {
         expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.bondIssuer);
