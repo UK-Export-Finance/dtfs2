@@ -2,7 +2,7 @@ name: Tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [ keygen ]
     
 env:
   TAG: latest
@@ -44,6 +44,10 @@ jobs:
         docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal:${{ env.TAG }} dtfs/portal
     - name: Start Docker Compose
       run: |
+        cd secrets
+        ./generate_jwt_keypair.sh
+        source ./set_jwt_keypair.sh
+        cd $GITHUB_WORKSPACE
         docker-compose up -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
@@ -78,6 +82,10 @@ jobs:
         docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal:${{ env.TAG }} dtfs/portal
     - name: Start Docker Compose
       run: |
+        cd secrets
+        ./generate_jwt_keypair.sh
+        source ./set_jwt_keypair.sh
+        cd $GITHUB_WORKSPACE
         docker-compose up -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
