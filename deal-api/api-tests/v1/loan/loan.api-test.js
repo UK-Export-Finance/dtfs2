@@ -23,6 +23,11 @@ describe('/v1/deals/:id/loan', () => {
     },
   });
 
+  const mockCurrencies = [
+    { id: 'GBP', text: 'GBP - UK Sterling' },
+    { id: 'EUR', text: 'EUR - Euros' },
+  ];
+
   const nowDate = moment();
   const requestedCoverStartDate = () => {
     const date = nowDate;
@@ -48,6 +53,7 @@ describe('/v1/deals/:id/loan', () => {
   let aBarclaysMaker;
   let anHSBCMaker;
   let aSuperuser;
+  let anEditor;
 
   const addLoanToDeal = async () => {
     const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
@@ -67,14 +73,18 @@ describe('/v1/deals/:id/loan', () => {
   };
 
   beforeAll(async () => {
-    await wipeDB.wipe(['deals']);
-
     const testUsers = await testUserCache.initialise(app);
 
     noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
+    anEditor = testUsers().withRole('editor').one();
+  });
+
+  beforeEach(async () => {
+    await wipeDB.wipe(['currencies', 'deals']);
+    await as(anEditor).postEach(mockCurrencies).to('/v1/currencies');
   });
 
   describe('GET /v1/deals/:id/loan/:id', () => {
@@ -410,10 +420,6 @@ describe('/v1/deals/:id/loan', () => {
   });
 
   describe('PUT /v1/deals/:id/loan/create', () => {
-    beforeEach(async () => {
-      await wipeDB.wipe(['deals']);
-    });
-
     it('401s requests that do not present a valid Authorization token', async () => {
       const { status } = await as().put().to('/v1/deals/123456789012/loan/create');
 
