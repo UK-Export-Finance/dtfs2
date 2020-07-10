@@ -4,5 +4,18 @@
 {% for stylesheetUrl in extensionConfig.stylesheets %}
   <link href="{{ stylesheetUrl }}" rel="stylesheet" type="text/css" />
 {% endfor %}
-<link rel="stylesheet" href="assets/application.css">
+
+<style>
+  .case-summary {
+      background-color:#1D70B8; 
+      color: white; 
+      padding:10px; 
+      font-family: Helvetica;
+      font-size: 16;
+  }
+  .case-summary td:nth-child(2n+1) {  
+    font-weight: bold;
+  }
+
+</style>
 
