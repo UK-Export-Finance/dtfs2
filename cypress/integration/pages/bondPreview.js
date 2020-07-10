@@ -1,6 +1,6 @@
 const page = {
   saveGoBackButton: () => cy.get('[data-cy="save-go-back-button"]'),
-  bondIssuer: () => cy.get('[data-cy="bond-issuer"]'),
+  submissionDetails: () => cy.get('[data-cy="bond-submission-details"]'),
 };
 
 module.exports = page;

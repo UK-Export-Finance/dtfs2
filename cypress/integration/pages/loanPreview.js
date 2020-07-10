@@ -1,5 +1,5 @@
 const page = {
-  facilityStage: () => cy.get('[data-cy="facility-stage"]'),
+  submissionDetails: () => cy.get('[data-cy="bond-submission-details"]'),
   saveGoBackButton: () => cy.get('[data-cy="save-go-back-button"]'),
 };
 

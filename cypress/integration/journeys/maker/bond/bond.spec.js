@@ -155,11 +155,7 @@ context('Add a Bond to a Deal', () => {
 
       cy.url().should('include', '/preview');
 
-      // check that at least one value is displayed
-      // no need to check all as this is covered in UI component tests.
-      pages.bondPreview.bondIssuer().invoke('text').then((text) => {
-        expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.bondIssuer);
-      });
+      pages.bondPreview.submissionDetails().should('be.visible');
     });
 
     it('should display a checked checkbox for all progress nav items and only text for `Preview`', () => {
