@@ -68,7 +68,8 @@ module.exports = {
     "hasBeenPreviewed" : true,
     "supplyContractConversionRateToGBP" : "1.123456",
     "supplyContractCurrency" : {
-        "id" : "USD"
+        "id" : "USD",
+        "text": "USD - US Dollars"
     },
     "supplyContractValue" : "10,000",
     "supplyContractConversionDate-day" : `${now.format('DD')}`,
