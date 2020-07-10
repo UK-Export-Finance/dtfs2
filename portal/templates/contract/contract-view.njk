@@ -17,7 +17,7 @@
 {% import './components/please-complete-all-forms-text.njk' as pleaseCompleteAllFormsText %}
 {% import './components/summary-table.njk' as summaryTable %}
 {% import './components/forms-incomplete-text.njk' as formsIncompleteText %}
-{% import './components/detailed-summary-table.njk' as detailedSummaryTable %}
+{% import './components/totals-table.njk' as totalsTable %}
 {% import './components/proceed-to-review-button.njk' as proceedToReviewButton %}
 {% import './components/proceed-to-submit-button.njk' as proceedToSubmitButton %}
 {% import './components/return-to-maker-button.njk' as returnToMakerButton %}
@@ -166,7 +166,7 @@
           </div>
 
           <div class="govuk-grid-column-full">
-            {{ detailedSummaryTable.render(deal.summary)}}
+            {{ totalsTable.render(deal.summary)}}
           </div>
 
         </div>
