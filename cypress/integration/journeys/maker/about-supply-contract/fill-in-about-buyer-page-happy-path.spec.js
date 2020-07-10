@@ -54,7 +54,7 @@ context('about-supply-contract', () => {
       expect(text.trim()).equal('Huggy Bear');
     });
     contractAboutPreview.buyerAddress().country().invoke('text').then((text) => {
-      expect(text.trim()).equal('USA');
+      expect(text.trim()).equal('United States');
     });
     contractAboutPreview.buyerAddress().line1().invoke('text').then((text) => {
       expect(text.trim()).equal('Corner of East and Main');
@@ -69,7 +69,7 @@ context('about-supply-contract', () => {
       expect(text.trim()).equal('no-idea');
     });
     contractAboutPreview.destinationOfGoodsAndServices().invoke('text').then((text) => {
-      expect(text.trim()).equal('USA');
+      expect(text.trim()).equal('United States');
     });
 
     contractAboutPreview.nav().aboutBuyerComplete().should('exist');

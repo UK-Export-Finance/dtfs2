@@ -26,7 +26,7 @@
 
   {% include "_partials/print-button.njk" %}
 
-  {{ aboutSubmissionDetails.general(deal.submissionDetails) }}
+  {{ aboutSubmissionDetails.render(deal.submissionDetails) }}
 
   <p class="govuk-body"><a class="govuk-link" href="/contract/{{ deal._id }}">Save and go back to deal</a></p>
 

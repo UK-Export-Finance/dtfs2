@@ -57,7 +57,7 @@ context('about-supply-contract', () => {
       expect(text.trim()).equal('10,000.00');
     });
     contractAboutPreview.supplyContractCurrency().invoke('text').then((text) => {
-      expect(text.trim()).equal('USD');
+      expect(text.trim()).equal('USD - US Dollars');
     });
     contractAboutPreview.supplyContractConversionRateToGBP().invoke('text').then((text) => {
       expect(text.trim()).equal('1.123456');
