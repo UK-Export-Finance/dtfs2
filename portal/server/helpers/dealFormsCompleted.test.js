@@ -1,4 +1,4 @@
-import dealFormsCompleted from './dealFormsCompleted';
+import dealFormsCompleted, { dealHasIncompleteTransactions } from './dealFormsCompleted';
 
 const completeFacilities = {
   items: [
@@ -25,6 +25,53 @@ const completeSubmissionDetails = { status: 'Completed' };
 
 const incompleteEligibility = { status: 'not completed' };
 const completeEligibility = { status: 'Completed' };
+
+
+describe('dealHasIncompleteTransactions', () => {
+  it('should return true if a deal has any bonds who\'s bond.status is NOT `Completed`', () => {
+    const deal = {
+      bondTransactions: incompleteBonds,
+      loanTransactions: { items: [] },
+      submissionDetails: completeSubmissionDetails,
+      eligibility: completeEligibility,
+    };
+
+    expect(dealHasIncompleteTransactions(deal)).toEqual(true);
+  });
+
+  it('should return true if a deal has any loan who\'s loan.status is NOT `Completed`', () => {
+    const deal = {
+      bondTransactions: { items: [] },
+      loanTransactions: incompleteLoans,
+      submissionDetails: completeSubmissionDetails,
+      eligibility: completeEligibility,
+    };
+
+    expect(dealHasIncompleteTransactions(deal)).toEqual(true);
+  });
+
+  it('should return false when all bonds have `Completed` status ', () => {
+    const deal = {
+      bondTransactions: completeBonds,
+      loanTransactions: { items: [] },
+      submissionDetails: completeSubmissionDetails,
+      eligibility: completeEligibility,
+    };
+
+    expect(dealHasIncompleteTransactions(deal)).toEqual(false);
+  });
+
+  it('should return false when all loans have `Completed` status ', () => {
+    const deal = {
+      bondTransactions: { items: [] },
+      loanTransactions: completeLoans,
+      submissionDetails: completeSubmissionDetails,
+      eligibility: completeEligibility,
+    };
+
+    expect(dealHasIncompleteTransactions(deal)).toEqual(false);
+  });
+});
 
 describe('dealFormsCompleted', () => {
   it('should return false when a deal\'s eligibility.status is NOT `Completed`', () => {
