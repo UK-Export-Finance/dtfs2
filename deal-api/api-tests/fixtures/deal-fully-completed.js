@@ -253,6 +253,7 @@ const deal = {
     supplyContractConversionRateToGBP: '1.123456',
     supplyContractCurrency: {
       id: 'USD',
+      text: 'USD - US Dollars',
     },
     supplyContractValue: '10,000',
     'supplyContractConversionDate-day': `${moment().subtract(1, 'day').format('DD')}`,

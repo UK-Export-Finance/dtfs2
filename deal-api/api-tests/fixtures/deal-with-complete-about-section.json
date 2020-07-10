@@ -111,7 +111,8 @@
         "supplyContractConversionDate-year" : "",
         "supplyContractConversionRateToGBP" : "",
         "supplyContractCurrency" : {
-            "id" : "GBP"
+            "id" : "GBP",
+            "text": "GBP - UK Sterling"
         },
         "supplyContractValue" : "10,000"
     },
