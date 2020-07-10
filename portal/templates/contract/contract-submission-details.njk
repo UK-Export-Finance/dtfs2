@@ -1,13 +1,13 @@
 {% extends "index.njk" %}
+
+{% import './components/contract-tabs.njk' as contractTabs %}
+{% import './components/contract-overview-table.njk' as contractOverviewTable %}
+{% import 'contract/about/components/submission-details.njk' as submissionDetails %}
 {% import '_macros/mandatory-criteria-box.njk' as mandatoryCriteriaBox %}
 {% import '_macros/eligibility-criteria-answers.njk' as eligibilityCriteriaAnswers %}
 {% import '_macros/eligibility-documentation-preview.njk' as eligibilityDocumentation %}
-{% import 'contract/about/components/submission-details.njk' as submissionDetails %}
 {% import 'bond/_macros/bond-submission-details.njk' as bondSubmissionDetails %}
 {% import 'loan/_macros/loan-submission-details.njk' as loanSubmissionDetails %}
-
-{% import './components/contract-overview-table.njk' as contractOverviewTable %}
-{% import './components/contract-tabs.njk' as contractTabs %}
 
 {% block pageTitle %}Preview - {{ deal.details.bankSupplyContractName }}{% endblock %}
 
@@ -29,18 +29,18 @@
       <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8">
 
       <h2 class="govuk-heading-l">
-        General deal information
-        <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id}}/about/supplier">edit</a>
+        <span data-cy="general-deal-info-heading">General deal information</span>
+        <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id}}/about/supplier" data-cy="edit-about-link">edit</a>
       </h2>
 
-      {{ submissionDetails.general(deal.submissionDetails) }}
+      {{ submissionDetails.render(deal.submissionDetails) }}
 
       <h3 class="govuk-heading-l">
-        Confirm eligibility
-        <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id}}/eligibility/criteria">edit</a>
+        <span data-cy="confirm-eligibility-heading">Confirm eligibility</span>
+        <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id}}/eligibility/criteria" data-cy="edit-eligibility-link">edit</a>
       </h3>
 
-      {{ mandatoryCriteriaBox.success(mandatoryCriteria)}}
+      {{ mandatoryCriteriaBox.render(mandatoryCriteria)}}
 
       {{ eligibilityCriteriaAnswers.render(deal.eligibility.criteria)}}
 
@@ -68,7 +68,7 @@
         </div>
       {% endfor %}
 
-      <p class="govuk-body"><a href="/contract/{{ deal._id }}" class="govuk-link">Back to Supply Contract page</a></p>
+      <p class="govuk-body"><a href="/contract/{{ deal._id }}" class="govuk-link" data-cy="go-back-link">Back to Supply Contract page</a></p>
 
     </section>
 
