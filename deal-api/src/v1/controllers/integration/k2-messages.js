@@ -54,14 +54,14 @@ const generateTypeA = async (deal, fromStatus) => {
     .Exporter_address_Line3(deal.submissionDetails['supplier-address-line-3'])
     .Exporter_address_Town(deal.submissionDetails['supplier-address-town'])
     .Exporter_address_PostalCode((deal.submissionDetails['supplier-address-postcode']))
-    .Exporter_address_Country(await convertCountryCodeToId(deal.submissionDetails['supplier-address-country']))
+    .Exporter_address_Country(await convertCountryCodeToId(deal.submissionDetails['supplier-address-country'].code))
 
     .Exporter_correspondence_address_Line1(deal.submissionDetails['supplier-correspondence-address-line-1'])
     .Exporter_correspondence_address_Line2(deal.submissionDetails['supplier-correspondence-address-line-2'])
     .Exporter_correspondence_address_Line3(deal.submissionDetails['supplier-correspondence-address-line-3'])
     .Exporter_correspondence_address_Town(deal.submissionDetails['supplier-correspondence-address-town'])
     .Exporter_correspondence_address_PostalCode(deal.submissionDetails['supplier-correspondence-address-postcode'])
-    .Exporter_correspondence_address_Country(await convertCountryCodeToId((deal.submissionDetails['supplier-correspondence-address-country'])))
+    .Exporter_correspondence_address_Country(await convertCountryCodeToId((deal.submissionDetails['supplier-correspondence-address-country'].code)))
 
     .Industry_sector_code(deal.submissionDetails['industy-sector'] && deal.submissionDetails['industy-sector'].code)
     .Industry_sector_name(deal.submissionDetails['industy-sector'] && deal.submissionDetails['industy-sector'].name)
@@ -78,7 +78,7 @@ const generateTypeA = async (deal, fromStatus) => {
     .Indemnifier_address_Line2(deal.submissionDetails['indemnifier-address-line-2'])
     .Indemnifier_address_Line3(deal.submissionDetails['indemnifier-address-line-3'])
     .Indemnifier_address_Town(deal.submissionDetails['indemnifier-address-town'])
-    .Indemnifier_address_PostalCode(deal.submissionDetails['indemnifier-address-country'])
+    .Indemnifier_address_PostalCode(deal.submissionDetails['indemnifier-address-country'].code)
     .Indemnifier_address_Country(await convertCountryCodeToId(deal.submissionDetails['indemnifier-companies-house-registration-number']))
 
     .Indemnifier_correspondence_address_Line1(deal.submissionDetails['indemnifier-correspondence-address-line-1'])
@@ -86,11 +86,11 @@ const generateTypeA = async (deal, fromStatus) => {
     .Indemnifier_correspondence_address_Line3(deal.submissionDetails['indemnifier-correspondence-address-line-3'])
     .Indemnifier_correspondence_address_Town(deal.submissionDetails['indemnifier-correspondence-address-town'])
     .Indemnifier_correspondence_address_PostalCode(deal.submissionDetails['indemnifier-correspondence-address-postcode'])
-    .Indemnifier_correspondence_address_Country(await convertCountryCodeToId(deal.submissionDetails['indemnifier-correspondence-address-country']))
+    .Indemnifier_correspondence_address_Country(await convertCountryCodeToId(deal.submissionDetails['indemnifier-correspondence-address-country'].code))
 
     .Buyer_name(deal.submissionDetails['buyer-name'])
-    .Buyer_country_code(await convertCountryCodeToId(deal.submissionDetails['buyer-address-country']))
-    .Destination_country_code(await convertCountryCodeToId(deal.submissionDetails.destinationOfGoodsAndServices))
+    .Buyer_country_code(await convertCountryCodeToId(deal.submissionDetails['buyer-address-country'].code))
+    .Destination_country_code(await convertCountryCodeToId(deal.submissionDetails.destinationOfGoodsAndServices.code))
     .Deal_currency_code(
       deal.submissionDetails.supplyContractCurrency
       && await convertCurrencyCodeToId(deal.submissionDetails.supplyContractCurrency.id),
