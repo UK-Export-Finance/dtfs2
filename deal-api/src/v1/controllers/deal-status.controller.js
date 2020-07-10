@@ -4,6 +4,8 @@ const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const db = require('../../drivers/db-client');
 
+const now = require('../../now');
+
 const { createTypeA } = require('./integration/k2-messages');
 
 const validateStateChange = require('../validation/deal-status');
@@ -50,7 +52,7 @@ const updateStatus = async (collection, _id, from, to) => {
 const updateComments = async (collection, _id, commentToAdd, user) => {
   const commentToInsert = {
     user,
-    timestamp: moment().utc().valueOf(),
+    timestamp: now(),
     text: commentToAdd,
   };
 
@@ -88,11 +90,10 @@ const updateFacilityDates = async (collection, deal) => {
         || (facility.facilityStage === 'Unconditional' && !hasRequestedCoverStartDate);
 
       if (shouldUpdateRequestedCoverStartDate) {
-        const now = moment();
-
-        facility['requestedCoverStartDate-day'] = moment(now).format('DD');
-        facility['requestedCoverStartDate-month'] = moment(now).format('MM');
-        facility['requestedCoverStartDate-year'] = moment(now).format('YYYY');
+        const currentTime = moment();
+        facility['requestedCoverStartDate-day'] = currentTime.format('DD');
+        facility['requestedCoverStartDate-month'] = currentTime.format('MM');
+        facility['requestedCoverStartDate-year'] = currentTime.format('YYYY');
       }
     });
     return arr;
@@ -116,7 +117,7 @@ const updateFacilityDates = async (collection, deal) => {
 const createSubmissionDate = async (collection, _id) => {
   const submissionDate = {
     details: {
-      submissionDate: moment().format('YYY MM DD HH:mm:ss:SSS'),
+      submissionDate: now(),
     },
   };
 

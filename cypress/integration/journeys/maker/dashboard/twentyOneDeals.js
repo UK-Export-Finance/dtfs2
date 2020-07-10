@@ -11,7 +11,7 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',
-      submissionDate: moment().format('YYYY MM DD'),
+      submissionDate: moment().utc().valueOf(),
     },
     submissionDetails: {
       status: 'Incomplete',
@@ -26,7 +26,7 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',
-      submissionDate: moment().format('YYYY MM DD'),
+      submissionDate: moment().utc().valueOf(),
     },
     submissionDetails: {
       status: 'Not Started',
@@ -37,7 +37,7 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',
-      submissionDate: moment().format('YYYY MM DD'),
+      submissionDate: moment().utc().valueOf(),
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -49,7 +49,7 @@ module.exports = [
       submissionType: 'Manual Inclusion Notice',
       status: "Ready for Checker's approval",
       previousStatus: 'Draft',
-      submissionDate: moment().format('YYYY MM DD'),
+      submissionDate: moment().utc().valueOf(),
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -69,7 +69,7 @@ module.exports = [
       submissionType: 'Manual Inclusion Application',
       status: "Further Maker's input required",
       previousStatus: "Ready for Checker's approval",
-      submissionDate: moment().format('YYYY MM DD'),
+      submissionDate: moment().utc().valueOf(),
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -88,7 +88,7 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Abandoned Deal',
       previousStatus: 'Draft',
-      submissionDate: moment().format('YYYY MM DD'),
+      submissionDate: moment().utc().valueOf(),
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',

@@ -35,6 +35,7 @@ type DealDetails {
   checker: String
   dateOfLastAction: String
   submissionDate: String
+  created: String
   owningBank: OwningBank
 }
 
@@ -69,7 +70,7 @@ type Query {
 
 type DealStatusErrorItem {
   comments: ErrorListItem,
-  confirmSubmit: ErrorListItem  
+  confirmSubmit: ErrorListItem
 }
 
 type DealStatusUpdateResult {

@@ -2,14 +2,11 @@ const axios = require('axios');
 const FormData = require('form-data');
 const apollo = require('./graphql/apollo');
 
-const { translateDatesToExpectedFormat, translateAllDatesToExpectedFormat } = require('./dateFormatter');
-
 const { dealsQuery } = require('./graphql/queries');
 
 require('dotenv').config();
 
 const urlRoot = process.env.DEAL_API_URL;
-
 
 const login = async (username, password) => {
   try {
@@ -41,12 +38,7 @@ const contracts = async (start, pagesize, filters, token) => {
 
   const response = await apollo('GET', dealsQuery, params, token);
 
-  const fixed = {
-    ...response.data.deals,
-    deals: await translateAllDatesToExpectedFormat(response.data.deals.deals),
-  };
-
-  return fixed;
+  return response.data.deals;
 };
 
 const createDeal = async (deal, token) => {
@@ -60,7 +52,7 @@ const createDeal = async (deal, token) => {
     data: deal,
   });
 
-  return translateDatesToExpectedFormat(response.data);
+  return response.data;
 };
 
 const updateDeal = async (deal, token) => {
@@ -74,10 +66,7 @@ const updateDeal = async (deal, token) => {
     data: deal,
   });
 
-  return {
-    status: response.status,
-    data: await translateDatesToExpectedFormat(response.data),
-  };
+  return response;
 };
 
 const updateDealName = async (id, newName, token) => {
@@ -432,12 +421,9 @@ const getDeal = async (id, token) => {
     },
   });
 
-  const dealWithUnformattedDates = response.data.deal;
-  const deal = await translateDatesToExpectedFormat(dealWithUnformattedDates);
-
   return {
     status: response.status,
-    deal,
+    deal: response.data.deal,
     validationErrors: response.data.validationErrors,
   };
 };

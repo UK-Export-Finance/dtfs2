@@ -1,9 +1,14 @@
+const moment = require('moment');
+require('moment-timezone');// monkey-patch to provide moment().tz()
+
 const componentRenderer = require('../../componentRenderer');
 const component = 'contract/components/contract-details.njk';
 const render = componentRenderer(component);
-
 describe(component, () => {
   let wrapper;
+
+  const now = moment();
+
   const deal = {
     details: {
       bankSupplyContractID: 'bankSupplyContractID',
@@ -14,14 +19,15 @@ describe(component, () => {
         username: 'maker',
       },
       checker: 'should be checker.username?',
-      submissionDate: 'submissionDate',
-      dateOfLastAction: 'dateOfLastAction',
+      submissionDate: now.valueOf(),
+      dateOfLastAction: now.valueOf(),
       submissionType:'submissionType',
     }
   };
 
   beforeAll( () => {
-    wrapper = render({deal});
+    const user = {timezone:'Europe/London'};
+    wrapper = render({deal, user});
   })
 
   it("displays deal.details.bankSupplyContractID", () =>{
@@ -57,12 +63,16 @@ describe(component, () => {
 
   it("displays deal.details.submissionDate", () =>{
     return wrapper.expectText('[data-cy="submissionDate"]')
-                  .toRead(deal.details.submissionDate);
+                  .toRead(moment(deal.details.submissionDate)
+                                    .tz('Europe/London')
+                                    .format('DD/MM/YYYY'));
   });
 
   it("displays deal.details.dateOfLastAction", () =>{
     return wrapper.expectText('[data-cy="dateOfLastAction"]')
-                  .toRead(deal.details.dateOfLastAction);
+                  .toRead(moment(deal.details.dateOfLastAction)
+                                    .tz('Europe/London')
+                                    .format('DD/MM/YYYY HH:mm'));
   });
 
   it("displays deal.details.submissionType", () =>{

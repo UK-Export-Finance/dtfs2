@@ -20,6 +20,7 @@ const expectAddedFields = (obj) => {
     ... obj,
     details: {
       ... obj.details,
+      created: expect.any(String),
       dateOfLastAction: expect.any(String),
       maker: expect.any(Object),
       owningBank: expect.any(Object),

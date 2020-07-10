@@ -5,7 +5,6 @@
 {% block pageTitle %}User admin{% endblock %}
 
 {% block content %}
-
   <h1 class="govuk-heading-l">User admin</h1>
 
   <p class="govuk-body">
@@ -150,8 +149,8 @@
           <!-- cycler only used for mocks to demo enable/disable links. Remove for real data-->
           {% set cls = cycler("odd", "even") %}
 
-          {% for user in users %}
-            <tr class="govuk-table__row" data-cy="user-{{user.username}}">
+          {% for displayUser in users %}
+            <tr class="govuk-table__row" data-cy="user-{{displayUser.username}}">
               {# <td class="govuk-table__cell govuk-!-font-size-14">
                 <div class="govuk-form-group user-admin-form-group--checkboxes">
                   <fieldset class="govuk-fieldset">
@@ -167,11 +166,11 @@
               </td> #}
 
               <td class="govuk-table__cell govuk-!-font-size-14">
-                <a href="/admin/users/edit/{{ user.username | urlencode }}" class="govuk-link" data-cy="username-{{user.username}}">{{ user.username }}</a>
+                <a href="/admin/users/edit/{{ displayUser.username | urlencode }}" class="govuk-link" data-cy="username-{{displayUser.username}}">{{ displayUser.username }}</a>
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bank">
-                {{ user.bank.name }}
+                {{ displayUser.bank.name }}
               </td>
 
               {# <td class="govuk-table__cell govuk-!-font-size-14">
@@ -184,7 +183,7 @@
 
               <td class="govuk-table__cell govuk-!-font-size-14">
                 <ul class="govuk-!-margin-0 govuk-!-margin-left-4 govuk-!-padding-left-0">
-                  {% for role in user.roles %}
+                  {% for role in displayUser.roles %}
                     <li>{{ role }}</li>
                   {% endfor %}
                 </ul>
@@ -194,8 +193,8 @@
               2 years 7 months
               </td> #}
 
-              <td class="govuk-table__cell govuk-!-font-size-14" data-cy="lastLogin-{{user.username}}">
-                {{ user.lastLogin}}
+              <td class="govuk-table__cell govuk-!-font-size-14" data-cy="lastLogin-{{displayUser.username}}">
+                {{ displayUser.lastLogin | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) }}
               </td>
 
               {# <td class="govuk-table__cell govuk-!-font-size-14">

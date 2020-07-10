@@ -1,11 +1,8 @@
-const nunjucks = require('nunjucks');
-const cheerio = require('cheerio');
 const assertions = require('./assertions');
+const cheerio = require('cheerio');
+const configureNunjucks = require('../server/nunjucks-configuration').default;
 
-nunjucks.configure([
-  'node_modules/govuk-frontend',
-  'templates',
-]);
+const nunjucks = configureNunjucks({});
 
 const pageRenderer = (pageLocation) => {
   return (params) => {

@@ -11,7 +11,7 @@ const deal = {
     dateOfLastAction: '02/02/2020 12:12',
     previousStatus: 'Draft',
     maker: {username: 'some.user@client.com'},
-    submissionDate: '01/01/2020',
+    submissionDate: 1594296776916.0,
   },
   comments: [{
     username: 'bananaman',
