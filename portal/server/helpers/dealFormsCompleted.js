@@ -31,10 +31,12 @@ const submissionDetailsComplete = (deal) => deal.submissionDetails && deal.submi
 
 const eligibilityComplete = (deal) => deal.eligibility && deal.eligibility.status === 'Completed';
 
+export const dealHasIncompleteTransactions = (deal) => (hasIncompleteBonds(deal) || hasIncompleteLoans(deal));
+
 const dealFormsCompleted = (deal) =>
   eligibilityComplete(deal)
     && submissionDetailsComplete(deal)
     && hasAtLeastOneLoanOrBond(deal)
-    && !(hasIncompleteBonds(deal) || hasIncompleteLoans(deal));
+    && !dealHasIncompleteTransactions(deal);
 
 export default dealFormsCompleted;

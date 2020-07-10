@@ -3,12 +3,12 @@
   <div data-cy="forms-incomplete-text">
     {% if params.deal.details.status %}
       {% if params.user.roles.includes('maker') %}
-          {% if ["Draft", "Further Maker's input required"].includes(params.deal.details.status) and not params.dealFormsCompleted %}
+          {% if ["Draft", "Further Maker's input required"].includes(params.deal.details.status) and params.dealHasIncompleteTransactions %}
 
             <div class="govuk-error-summary govuk-!-padding-0 forms-incomplete-summary" data-module="govuk-error-summary">
               <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list forms-incomplete-summary__list">
-                  <li data-cy="forms-incomplete">Warning: Some of your Transaction forms are incomplete. Only the completed facilities will be processed in the financial summary data below.</li>
+                  <li data-cy="forms-incomplete">Warning: Only the completed facilities will be processed in the financial summary data below.</li>
                 </ul>
               </div>
             </div>

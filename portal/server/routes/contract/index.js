@@ -10,6 +10,7 @@ import {
   errorHref,
   postToApi,
   dealFormsCompleted,
+  dealHasIncompleteTransactions,
   generateErrorSummary,
 } from '../../helpers';
 
@@ -38,6 +39,7 @@ router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
     deal,
     user,
     dealFormsCompleted: dealFormsCompleted(deal),
+    dealHasIncompleteTransactions: dealHasIncompleteTransactions(deal),
     editable: isDealEditable(deal, user),
   });
 });

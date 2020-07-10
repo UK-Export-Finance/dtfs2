@@ -1,4 +1,4 @@
-import dealFormsCompleted from './dealFormsCompleted';
+import dealFormsCompleted, { dealHasIncompleteTransactions } from './dealFormsCompleted';
 import getApiData from './getApiData';
 import requestParams from './requestParams';
 import getFlashSuccessMessage from './getFlashSuccessMessage';
@@ -14,6 +14,7 @@ import pageSpecificValidationErrors from './pageSpecificValidationErrors';
 
 export {
   dealFormsCompleted,
+  dealHasIncompleteTransactions,
   getApiData,
   requestParams,
   getFlashSuccessMessage,

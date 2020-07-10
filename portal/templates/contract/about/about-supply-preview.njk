@@ -1,5 +1,5 @@
 {% extends "index.njk" %}
-{% import './components/submission-details.njk' as submissionDetails %}
+{% import './components/aout-submission-details.njk' as aboutSubmissionDetails %}
 {% import './components/about-supply-contract-nav.njk' as aboutSupplyContract %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
@@ -26,7 +26,7 @@
 
   {% include "_partials/print-button.njk" %}
 
-  {{ submissionDetails.general(deal.submissionDetails) }}
+  {{ aboutSubmissionDetails.general(deal.submissionDetails) }}
 
   <p class="govuk-body"><a class="govuk-link" href="/contract/{{ deal._id }}">Save and go back to deal</a></p>
 
