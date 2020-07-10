@@ -28,6 +28,7 @@
 {% from "govuk/components/tag/macro.njk"              import govukTag %}
 {% from "govuk/components/textarea/macro.njk"         import govukTextarea %}
 {% from "govuk/components/warning-text/macro.njk"     import govukWarningText %}
+{% from "moj/components/header/macro.njk"             import mojHeader %}
 
 {% block head %}
   {% include "includes/head.html" %}
@@ -38,14 +39,32 @@
 {% endblock %}
 
 {% block header %}
-  {% include "includes/cookie-banner.html" %}
+  {# {% include "includes/cookie-banner.html" %} #}
   {# Set serviceName in config.js. #}
-  {{ govukHeader({
-    homepageUrl: "/",
-    serviceName: serviceName,
-    serviceUrl: "/",
-    containerClasses: "govuk-width-container"
-  }) }}
+
+
+  {{ mojHeader({
+      organisationLabel: {
+      text: 'UK Export\n Finance',
+      href: '#'
+    },
+    serviceLabel: {
+      text: 'Trade Finance Manager',
+      href: '#'
+    },
+    navigation: {
+      label: 'Account navigation',
+      items: [{
+        text: 'Diana Prince',
+        href: '#',
+        active: true
+        }, {
+          text: 'Sign out',
+          href: '#'
+      }]
+    }
+
+  }) }} 
 {% endblock %}
 
 {% set mainClasses = mainClasses | default("govuk-main-wrapper--auto-spacing") %}
