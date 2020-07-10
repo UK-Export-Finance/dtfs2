@@ -191,14 +191,20 @@ const deal = {
     agentTown: 'City',
   },
   "submissionDetails": {
-    "indemnifier-address-country": "GBR",
+    "indemnifier-address-country": {
+      "code": "GBR",
+      "name": "United Kingdom"
+    },
     "indemnifier-address-line-3": "",
     "indemnifier-address-line-1": "27a",
     "indemnifier-address-line-2": "Maxwell Road",
     "indemnifier-address-postcode": "HA6 2XY",
     "indemnifier-address-town": "Northwood",
     "indemnifier-companies-house-registration-number": "08547313",
-    "indemnifier-correspondence-address-country": "GBR",
+    "indemnifier-correspondence-address-country": {
+      "code": "GBR",
+      "name": "United Kingdom"
+    },
     "indemnifier-correspondence-address-line-3": "Essex",
     "indemnifier-correspondence-address-line-1": "27 Petersfield",
     "indemnifier-correspondence-address-line-2": "",
@@ -210,14 +216,20 @@ const deal = {
     "industry-class": "56210",
     "legallyDistinct": "true",
     "sme-type": "Small",
-    "supplier-address-country": "GBR",
+    "supplier-address-country": {
+      "code": "GBR",
+      "name": "United Kingdom"
+    },
     "supplier-address-line-3": "London",
     "supplier-address-line-1": "1 Horseguards Road",
     "supplier-address-line-2": "",
     "supplier-address-postcode": "SW1A 2HQ",
     "supplier-address-town": "Westminster",
     "supplier-companies-house-registration-number": "",
-    "supplier-correspondence-address-country": "GBR",
+    "supplier-correspondence-address-country": {
+      "code": "GBR",
+      "name": "United Kingdom"
+    },
     "supplier-correspondence-address-line-3": "Edinburgh",
     "supplier-correspondence-address-line-1": "2 Horseguards Road",
     "supplier-correspondence-address-line-2": "",
@@ -227,14 +239,20 @@ const deal = {
     "supplier-type": "Exporter",
     "supplier-correspondence-address-is-different": "true",
     "supply-contract-description": "Description.",
-    "buyer-address-country": "USA",
+    "buyer-address-country": {
+      "code": "GBR",
+      "name": "United Kingdom"
+    },
     "buyer-address-line-1": "Corner of East and Main",
     "buyer-address-line-2": "",
     "buyer-address-line-3": "The Bronx",
     "buyer-address-postcode": "no-idea",
     "buyer-address-town": "New York",
     "buyer-name": "Huggy Bear",
-    "destinationOfGoodsAndServices": "USA",
+    "destinationOfGoodsAndServices": {
+      "name": "United States",
+      "code": "USA",
+    },
     "hasBeenPreviewed": true,
     "supplyContractConversionRateToGBP": "1.123456",
     "supplyContractCurrency": {
