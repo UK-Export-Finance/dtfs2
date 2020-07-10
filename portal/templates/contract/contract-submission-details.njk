@@ -2,7 +2,7 @@
 
 {% import './components/contract-tabs.njk' as contractTabs %}
 {% import './components/contract-overview-table.njk' as contractOverviewTable %}
-{% import 'contract/about/components/submission-details.njk' as submissionDetails %}
+{% import 'contract/about/components/about-submission-details.njk' as aboutSubmissionDetails %}
 {% import '_macros/mandatory-criteria-box.njk' as mandatoryCriteriaBox %}
 {% import '_macros/eligibility-criteria-answers.njk' as eligibilityCriteriaAnswers %}
 {% import '_macros/eligibility-documentation-preview.njk' as eligibilityDocumentation %}
@@ -34,7 +34,7 @@
       </h2>
 
       {% if deal.submissionDetails %}
-        {{ submissionDetails.render(deal.submissionDetails) }}
+        {{ aboutSubmissionDetails.render(deal.submissionDetails) }}
       {% endif %}
 
       <h3 class="govuk-heading-l">
