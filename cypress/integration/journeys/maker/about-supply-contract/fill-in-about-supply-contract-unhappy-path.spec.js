@@ -125,7 +125,7 @@ context('about-supply-contract', () => {
       expect(text.trim()).equal('UKFS');
     });
     contractAboutPreview.supplierAddress().country().invoke('text').then((text) => {
-      expect(text.trim()).equal('GBR');
+      expect(text.trim()).equal('United Kingdom');
     });
     contractAboutPreview.supplierAddress().line1().invoke('text').then((text) => {
       expect(text.trim()).equal('1 Horseguards Road');
@@ -201,7 +201,7 @@ context('about-supply-contract', () => {
       expect(text.trim()).equal('Yes');
     });
     contractAboutPreview.indemnifierCorrespondenceAddress().country().invoke('text').then((text) => {
-      expect(text.trim()).equal('GBR');
+      expect(text.trim()).equal('United Kingdom');
     });
     contractAboutPreview.indemnifierCorrespondenceAddress().line1().invoke('text').then((text) => {
       expect(text.trim()).equal('27 Petersfield');

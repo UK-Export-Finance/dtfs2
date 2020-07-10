@@ -54,7 +54,7 @@ context('about-supply-contract', () => {
       expect(text.trim()).equal('10,000.00');
     });
     contractAboutPreview.supplyContractCurrency().invoke('text').then((text) => {
-      expect(text.trim()).equal('GBP');
+      expect(text.trim()).equal('GBP - UK Sterling');
     });
 
     contractAboutPreview.nav().aboutFinancialComplete().should('exist');
