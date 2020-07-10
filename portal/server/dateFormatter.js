@@ -15,11 +15,6 @@ const toDateTime = (fullTimestamp) => {
 };
 
 const translateDatesToExpectedFormat = async (deal) => {
-  const translatedComments = deal.comments ? deal.comments.map((commentEntry) => ({
-    ...commentEntry,
-    timestamp: toDateTime(commentEntry.timestamp),
-  })) : [];
-
   const translated = {
     ...deal,
     details: {
@@ -27,7 +22,6 @@ const translateDatesToExpectedFormat = async (deal) => {
       submissionDate: toDateOnly(deal.details.submissionDate),
       dateOfLastAction: toDateTime(deal.details.dateOfLastAction),
     },
-    comments: translatedComments,
   };
 
   return translated;

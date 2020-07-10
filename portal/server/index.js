@@ -3,9 +3,10 @@ import morgan from 'morgan';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import flash from 'connect-flash';
-import nunjucks from 'nunjucks';
 import path from 'path';
 import routes from './routes';
+
+import configureNunjucks from './nunjucks-configuration';
 
 const app = express();
 
@@ -20,17 +21,7 @@ app.use(session({
 app.use(cookieParser()); // could optionally use a secret here
 app.use(flash());
 
-const appViews = [
-  'node_modules/govuk-frontend',
-  'templates',
-];
-
-nunjucks.configure(appViews, {
-  autoescape: true,
-  express: app,
-  noCache: true,
-  watch: true,
-});
+configureNunjucks(app);
 
 app.use(express.urlencoded());
 

@@ -4,6 +4,7 @@ const USERS = [
     password: 'NOBODY',
     firstname: 'Seraffimo',
     surname: 'Spang',
+    timezone: 'Europe/London',
     roles: [],
   },
   {
@@ -11,6 +12,7 @@ const USERS = [
     password: 'ADMIN',
     firstname: 'Julius',
     surname: 'No',
+    timezone: 'Europe/London',
     roles: ['maker', 'editor', 'admin'],
     bank: {
       // _id: '', //TODO [dw] better linking of mock data
@@ -22,6 +24,7 @@ const USERS = [
     password: 'MAKER',
     firstname: 'Hugo',
     surname: 'Drax',
+    timezone: 'Europe/London',
     roles: ['maker'],
     bank: {
       // _id: '', //TODO [dw] better linking of mock data
@@ -34,6 +37,7 @@ const USERS = [
     password: 'BARCLAYS-MAKER-1',
     firstname: 'Hector',
     surname: 'Gonzales',
+    timezone: 'Europe/London',
     roles: ['maker'],
     bank: {
       // _id: '', //TODO [dw] better linking of mock data
@@ -46,6 +50,7 @@ const USERS = [
     password: 'BARCLAYS-MAKER-2',
     firstname: 'Milton',
     surname: 'Krest',
+    timezone: 'Europe/London',
     roles: ['maker'],
     bank: {
       // _id: '', //TODO [dw] better linking of mock data
@@ -58,6 +63,7 @@ const USERS = [
     password: 'CHECKER',
     firstname: 'Emilio',
     surname: 'Largo',
+    timezone: 'Europe/London',
     roles: ['checker'],
     bank: {
       // _id: '', //TODO [dw] better linking of mock data
@@ -70,6 +76,7 @@ const USERS = [
     password: 'MAKENCHECK',
     firstname: 'Ernst',
     surname: 'Blofeld',
+    timezone: 'Europe/London',
     roles: ['maker', 'checker'],
     bank: {
       // _id: '', //TODO [dw] better linking of mock data
@@ -82,6 +89,7 @@ const USERS = [
     password: 'READER',
     firstname: 'Francisco',
     surname: 'Scaramanga',
+    timezone: 'Europe/London',
     roles: ['reader'],
     bank: {
       // _id: '', //TODO [dw] better linking of mock data
@@ -94,6 +102,7 @@ const USERS = [
     password: 'MAKER-2',
     firstname: 'Dexter',
     surname: 'Smith',
+    timezone: 'Europe/London',
     roles: ['maker'],
     bank: {
       // _id: '', //TODO [dw] better linking of mock data
@@ -106,6 +115,7 @@ const USERS = [
     password: 'MAKER-3',
     firstname: 'Tamil',
     surname: 'Rahani',
+    timezone: 'Europe/London',
     roles: ['maker'],
     bank: {
       // _id: '', //TODO [dw] better linking of mock data
@@ -118,6 +128,7 @@ const USERS = [
     password: 'CHECKER-2',
     firstname: 'Nikolaevich',
     surname: 'Chernov',
+    timezone: 'Europe/London',
     roles: ['checker'],
     bank: {
       // _id: '', //TODO [dw] better linking of mock data
@@ -130,6 +141,7 @@ const USERS = [
     password: 'MAKENCHECK-2',
     firstname: 'Vladimir',
     surname: 'Scorpius',
+    timezone: 'Europe/London',
     roles: ['maker', 'checker'],
     bank: {
       // _id: '', //TODO [dw] better linking of mock data
@@ -142,6 +154,7 @@ const USERS = [
     password: 'READER-2',
     firstname: 'Wolfgang',
     surname: 'Weisen',
+    timezone: 'Europe/London',
     roles: ['reader'],
     bank: {
       // _id: '', //TODO [dw] better linking of mock data
@@ -154,6 +167,7 @@ const USERS = [
     password: 'UKEF_OPERATIONS',
     firstname: 'Elliot',
     surname: 'Carver',
+    timezone: 'Europe/London',
     roles: ['ukef_operations'],
     bank: {
       // _id: '', //TODO [dw] better linking of mock data

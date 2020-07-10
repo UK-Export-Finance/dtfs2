@@ -33,6 +33,7 @@ describe('a user', () => {
           _id: expect.any(String),
           firstname: aMaker.firstname,
           surname: aMaker.surname,
+          timezone: 'Europe/London',
         },
       ],
     });
@@ -82,6 +83,7 @@ describe('a user', () => {
     const expectedUserData = {
       ...aMaker,
       _id: expect.any(String),
+      timezone: 'Europe/London',
     };
     delete expectedUserData.password;
 

@@ -28,7 +28,7 @@ const updateStatus = async (collection, _id, from, to) => {
     details: {
       status: to,
       previousStatus: from,
-      dateOfLastAction: moment().format('YYYY MM DD HH:mm:ss:SSS ZZ'),
+      dateOfLastAction: now(),
     },
   };
 
@@ -50,7 +50,7 @@ const updateStatus = async (collection, _id, from, to) => {
 const updateComments = async (collection, _id, commentToAdd, user) => {
   const commentToInsert = {
     user,
-    timestamp: moment().format('YYYY MM DD HH:mm:ss:SSS ZZ'),
+    timestamp: moment().utc().valueOf(),
     text: commentToAdd,
   };
 

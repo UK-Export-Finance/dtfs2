@@ -121,20 +121,6 @@ module.exports = {
       }
     }
   },
-  comments: [
-    {
-      firstName: 'Durga',
-      lastName: 'Rao',
-      created: '12/02/2020 - 13:00',
-      body: 'Test comment'
-    },
-    {
-      firstName: 'Joe',
-      lastName: 'Bloggs',
-      created: '13/02/2020 - 10:00',
-      body: '<a href="https://staging.ukexportfinance.gov.uk">https://staging.ukexportfinance.gov.uk</a>'
-    }
-  ],
   submissionDetails: {
     "supplier-type": 'Exporter',
     supplierCompaniesHouseRegistrationNumber: '1234',

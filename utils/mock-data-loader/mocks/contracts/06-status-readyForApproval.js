@@ -135,18 +135,4 @@ module.exports = {
       }
     ]
   },
-  comments: [
-    {
-      firstName: 'aaa',
-      lastName: 'bbb',
-      created: '12/02/2020 - 13:00',
-      body: 'ccc'
-    },
-    {
-      firstName: 'ddd',
-      lastName: 'eee',
-      created: '13/02/2020 - 10:00',
-      body: '<a href="https://staging.ukexportfinance.gov.uk">https://staging.ukexportfinance.gov.uk</a>'
-    }
-  ],
 }

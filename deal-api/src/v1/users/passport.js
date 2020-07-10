@@ -23,6 +23,7 @@ const sanitize = (user) => ({
   lastLogin: user.lastLogin,
   firstname: user.firstname,
   surname: user.surname,
+  timezone: user.timezone,
   _id: user._id, // eslint-disable-line no-underscore-dangle
 });
 

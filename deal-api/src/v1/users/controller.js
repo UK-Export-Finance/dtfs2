@@ -21,8 +21,13 @@ exports.findByUsername = async (username, callback) => {
 };
 
 exports.create = async (user, callback) => {
+  const insert = {
+    ...user,
+    timezone: user.timezone || 'Europe/London',
+  };
+
   const collection = await db.getCollection('users');
-  const createUserResult = await collection.insertOne(user);
+  const createUserResult = await collection.insertOne(insert);
 
   callback(null, createUserResult.ops[0]);
 };
