@@ -80,6 +80,13 @@ module.exports = (wrapper, html, params) => {
           expect(wrapper(selector).text().trim()).toMatch(regex);
         },
       }
-    }
+    },
+    expectElement: (selector) => {
+      return {
+        toExist: () => {
+          expect(wrapper(selector).html()).toBeDefined();
+        },
+      }
+    },
   };
 }

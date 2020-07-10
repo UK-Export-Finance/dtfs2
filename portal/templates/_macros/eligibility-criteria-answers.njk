@@ -1,24 +1,26 @@
 {% macro render(criteria) %}
 
-  <h4 class="govuk-heading-m">Eligibility criteria</h4>
+  <div data-cy="eligibility-criteria-answers">
+    <h4 class="govuk-heading-m">Eligibility criteria</h4>
 
-  <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-4">
-    {% for criterion in criteria %}
+    <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-4">
+      {% for criterion in criteria %}
 
-      <div class="eligibility-criteria-row">
-        <h7 class="govuk-heading-s govuk-!-margin-bottom-1">
-          <span data-cy="criterion-{{ criterion.id }}-heading">Eligibility criterion {{ criterion.id }}</span>
-          <span class="govuk-body-s govuk-!-font-weight-regular govuk-!-margin-left-4" data-cy="criterion-{{ criterion.id }}-answer">
-            {% if criterion.answer != undefined %}
-              {{ criterion.answer | string | capitalize }}
-            {% endif %}
-          </span>
-        </h7>
-      </div>
+        <div class="eligibility-criteria-row">
+          <h7 class="govuk-heading-s govuk-!-margin-bottom-1">
+            <span data-cy="criterion-{{ criterion.id }}-heading">Eligibility criterion {{ criterion.id }}</span>
+            <span class="govuk-body-s govuk-!-font-weight-regular govuk-!-margin-left-4" data-cy="criterion-{{ criterion.id }}-answer">
+              {% if criterion.answer != undefined %}
+                {{ criterion.answer | string | capitalize }}
+              {% endif %}
+            </span>
+          </h7>
+        </div>
 
-      <p class="govuk-body-s govuk-hint" data-cy="criterion-{{ criterion.id }}-description">{{ criterion.description }}</p>
+        <p class="govuk-body-s govuk-hint" data-cy="criterion-{{ criterion.id }}-description">{{ criterion.description }}</p>
 
-    {% endfor %}
-  </dl>
+      {% endfor %}
+    </dl>
+  </div>
       
 {% endmacro %}

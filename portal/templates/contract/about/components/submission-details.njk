@@ -348,12 +348,16 @@
   </dl>
 {% endmacro %}
 
-{% macro general(submissionDetails) %}
+{% macro render(submissionDetails) %}
 
-  {{ supplierAndCounterIndemnifier(submissionDetails)}}
+  <div data-cy="contract-about-submission-details">
 
-  {{ buyer(submissionDetails)}}
+    {{ supplierAndCounterIndemnifier(submissionDetails)}}
 
-  {{ financial(submissionDetails) }}
+    {{ buyer(submissionDetails)}}
+
+    {{ financial(submissionDetails) }}
+
+  </div>
 
 {% endmacro %}
