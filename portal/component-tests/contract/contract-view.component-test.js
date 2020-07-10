@@ -48,28 +48,10 @@ describe(page, () => {
                                           .toRead(deal.details.bankSupplyContractName));
     });
 
-    it('displays bankSupplyContractID', () => {
-      return wrappers.forEach(wrapper => wrapper.expectText('[data-cy="bankSupplyContractID"]')
-                                          .toRead(deal.details.bankSupplyContractID));
+    it('should render contract overview table', () => {
+      return wrappers.forEach((wrapper) =>
+        wrapper.expectElement('[data-cy="contract-overview-table"]').toExist());
     });
-
-    it('displays the maker', () => {
-      return wrappers.forEach(wrapper => wrapper.expectText('[data-cy="maker"]')
-                                          .toRead(deal.details.maker.username));
-    });
-
-    it('displays the submissionDate', () => {
-      const regexDate = /[\d][\d]\/[\d][\d]\/[\d][\d][\d][\d]/
-      return wrappers.forEach(wrapper => wrapper.expectText('[data-cy="submissionDate"]')
-                                          .toMatch(regexDate));
-    });
-
-    it('displays the dateOfLastAction', () => {
-      const regexDateTime = /[\d][\d]\/[\d][\d]\/[\d][\d][\d][\d] [\d][\d]:[\d][\d]/
-      return wrappers.forEach(wrapper => wrapper.expectText('[data-cy="dateOfLastAction"]')
-                                        .toMatch(regexDateTime));
-    });
-
   });
 
   describe('when viewed with editable=true', () => {

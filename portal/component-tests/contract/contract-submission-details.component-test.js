@@ -9,7 +9,13 @@ describe(page, () => {
   let wrapper;
 
   beforeEach(() => {
-    wrapper = render({ deal });
+    wrapper = render({
+      deal,
+      user: {
+        timezone: 'Europe/London',
+        roles: ['maker'],
+      },
+    });
   });
 
   it('should render page heading with bankSupplyContractName', () => {
