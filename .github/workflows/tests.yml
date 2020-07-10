@@ -2,7 +2,7 @@ name: Tests
 
 on:
   push:
-    branches: [ keygen ]
+    branches: [ master ]
     
 env:
   TAG: latest
