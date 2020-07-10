@@ -52,6 +52,22 @@ describe(page, () => {
       return wrappers.forEach((wrapper) =>
         wrapper.expectElement('[data-cy="contract-overview-table"]').toExist());
     });
+
+    it('should render Summary Table component', () => {
+      return wrappers.forEach((wrapper) =>
+        wrapper.expectElement('[data-cy="summary-table"]').toExist());
+    });
+
+    it('should render Forms Incomplete text component', () => {
+      return wrappers.forEach((wrapper) =>
+        wrapper.expectElement('[data-cy="forms-incomplete-text"]').toExist());
+    });
+
+    it('should render Totals Table component', () => {
+      return wrappers.forEach((wrapper) =>
+        wrapper.expectElement('[data-cy="totals-table"]').toExist());
+    });
+
   });
 
   describe('when viewed with editable=true', () => {
@@ -159,7 +175,5 @@ describe(page, () => {
 
       return wrappers.forEach(wrapper => wrapper.expectLink(`[data-cy="loan-bank-reference-number-${loanId}"]`).notToExist());
     });
-
   });
-
 });
