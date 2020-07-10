@@ -21,7 +21,12 @@ app.use(session({
 app.use(cookieParser()); // could optionally use a secret here
 app.use(flash());
 
-configureNunjucks(app);
+configureNunjucks({
+  autoescape: true,
+  express: app,
+  noCache: true,
+  watch: true,
+});
 
 app.use(express.urlencoded());
 

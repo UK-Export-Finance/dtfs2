@@ -1,11 +1,10 @@
 const assert = require('assert');
-const moment = require('moment');
 const $ = require('mongo-dot-notation');
 
 const DEFAULTS = require('../defaults');
 const db = require('../../drivers/db-client');
 const { getDealErrors } = require('../validation/deal');
-
+const now = require('../../now');
 const { isSuperUser, userHasAccessTo } = require('../users/checks');
 const { generateDealId } = require('../../utils/generateIds');
 const validate = require('../validation/completeDealValidation');
@@ -84,10 +83,8 @@ exports.findOneDeal = findOneDeal;
 const createDeal = async (req, res) => {
   const collection = await db.getCollection('deals');
 
-  const timestamp = moment().format('YYYY MM DD HH:mm:ss:SSS ZZ');
-
   const dealId = await generateDealId();
-
+  const time = now();
   const newDeal = {
     _id: dealId,
     ...DEFAULTS.DEALS,
@@ -95,7 +92,8 @@ const createDeal = async (req, res) => {
     details: {
       ...DEFAULTS.DEALS.details,
       ...req.body.details,
-      dateOfLastAction: timestamp,
+      created: time,
+      dateOfLastAction: time,
       maker: req.user,
       owningBank: req.user.bank,
     },

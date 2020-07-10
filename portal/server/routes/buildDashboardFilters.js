@@ -1,3 +1,4 @@
+import moment from 'moment';
 import CONSTANTS from '../constants';
 
 const getUserFilters = (params, user = {}) => {
@@ -69,10 +70,15 @@ const buildDashboardFilters = (params, user) => {
   if (params['createdFrom-year']) {
     isUsingAdvancedFilter = true;
 
-    const createdFrom = [params['createdFrom-year'].padStart(4, '20'), params['createdFrom-month'].padStart(2, '0'), params['createdFrom-day'].padStart(2, '0')].join(' ');
+    const year = params['createdFrom-year'].padStart(4, '20');
+    const month = params['createdFrom-month'].padStart(2, '0');
+    const day = params['createdFrom-day'].padStart(2, '0');
+
+    const createdFrom = moment(`${year} ${month} ${day}`, 'YYYY MM DD').valueOf();
+
     filters.push({
-      field: 'details.submissionDate',
-      value: createdFrom,
+      field: 'details.created',
+      value: `${createdFrom}`,
       operator: 'gte',
     });
   }
@@ -80,10 +86,14 @@ const buildDashboardFilters = (params, user) => {
   if (params['createdTo-year']) {
     isUsingAdvancedFilter = true;
 
-    const createdTo = [params['createdTo-year'].padStart(4, '20'), params['createdTo-month'].padStart(2, '0'), params['createdTo-day'].padStart(2, '0') + 1].join(' ');
+    const year = params['createdTo-year'].padStart(4, '20');
+    const month = params['createdTo-month'].padStart(2, '0');
+    const day = params['createdTo-day'].padStart(2, '0');
+
+    const createdTo = moment(`${year} ${month} ${day}`, 'YYYY MM DD').add(1, 'day').valueOf();
 
     filters.push({
-      field: 'details.submissionDate',
+      field: 'details.created',
       value: `${createdTo}`,
       operator: 'lt',
     });
@@ -105,6 +115,7 @@ const buildDashboardFilters = (params, user) => {
     });
   }
 
+  console.log(`${JSON.stringify(filters)}`);
   return {
     isUsingAdvancedFilter,
     filters,

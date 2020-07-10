@@ -1,15 +1,15 @@
 const $ = require('mongo-dot-notation');
-const moment = require('moment');
 const { findOneDeal } = require('./deal.controller');
 const { userOwns } = require('../users/checks');
 const db = require('../../drivers/db-client');
 const validateNameChange = require('../validation/deal-name');
+const now = require('../../now');
 
 const updateName = async (collection, deal, to) => {
   const update = {
     details: {
       bankSupplyContractName: to,
-      dateOfLastAction: moment().format('YYYY MM DD HH:mm:ss:SSS ZZ'),
+      dateOfLastAction: now(),
     },
   };
 

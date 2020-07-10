@@ -36,7 +36,7 @@ describe(page, () => {
 
     beforeAll( ()=>{
       for(const role of roles) {
-        const user = { roles:[role] };
+        const user = { roles:[role], timezone:'Europe/London' };
         for(const deal of oneDealInEachStatus()) {
           wrappers.push( render({user, deal}) )
         }
@@ -77,7 +77,7 @@ describe(page, () => {
 
     beforeAll( ()=>{
       for(const role of roles) {
-        const user = { roles:[role] };
+        const user = { roles:[role], timezone:'Europe/London' };
         for(const deal of oneDealInEachStatus()) {
           wrappers.push( render({user, deal, editable:true}) )
         }
@@ -138,7 +138,7 @@ describe(page, () => {
 
     beforeAll( ()=>{
       for(const role of roles) {
-        const user = { roles:[role] };
+        const user = { roles:[role], timezone:'Europe/London' };
         for(const deal of oneDealInEachStatus()) {
           wrappers.push( render({user, deal, editable:false}) )
         }

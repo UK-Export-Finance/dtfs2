@@ -207,7 +207,7 @@ describe('/v1/deals/:id/status', () => {
 
       expect(body.deal.comments[0]).toEqual({
         text: 'Flee!',
-        timestamp: expect.any(Number),
+        timestamp: expect.any(String),
         user: {
           _id: expect.any(String),
           bank: anHSBCMaker.bank,
@@ -492,8 +492,10 @@ describe('/v1/deals/:id/status', () => {
 
         const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
+        // TODO - since we are running inside the same VM as the service during these tests..
+        //  we -can- mock the system clock and do accurate assertions here..
+        // feels more unit-test-like but something to think about
         expect(body.deal.details.submissionDate).toBeDefined();
-        expect(moment(body.deal.details.submissionDate, 'YYYY MM DD HH:mm:ss:SSS ZZ').isValid()).toEqual(true);
       });
 
       it('creates type_a xml if deal successfully submitted', async () => {

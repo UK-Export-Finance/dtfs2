@@ -1,10 +1,10 @@
 const $ = require('mongo-dot-notation');
-const moment = require('moment');
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const db = require('../../drivers/db-client');
 const validateSubmissionDetails = require('../validation/submission-details');
 const { sanitizeCurrency } = require('../../utils/number');
+const now = require('../../now');
 
 exports.findOne = (req, res) => {
   findOneDeal(req.params.id, (deal) => {
@@ -26,7 +26,7 @@ const updateSubmissionDetails = async (collection, _id, submissionDetails) => {
   const update = {
     submissionDetails,
     details: {
-      dateOfLastAction: moment().format('YYYY MM DD HH:mm:ss:SSS ZZ'),
+      dateOfLastAction: now(),
     },
   };
 
