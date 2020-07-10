@@ -33,18 +33,26 @@
         <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id}}/about/supplier" data-cy="edit-about-link">edit</a>
       </h2>
 
-      {{ submissionDetails.render(deal.submissionDetails) }}
+      {% if deal.submissionDetails %}
+        {{ submissionDetails.render(deal.submissionDetails) }}
+      {% endif %}
 
       <h3 class="govuk-heading-l">
         <span data-cy="confirm-eligibility-heading">Confirm eligibility</span>
         <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id}}/eligibility/criteria" data-cy="edit-eligibility-link">edit</a>
       </h3>
 
-      {{ mandatoryCriteriaBox.render(mandatoryCriteria)}}
+      {% if mandatoryCriteria %}
+        {{ mandatoryCriteriaBox.render(mandatoryCriteria)}}
+      {% endif %}
 
-      {{ eligibilityCriteriaAnswers.render(deal.eligibility.criteria)}}
+      {% if deal.eligibility.criteria %}
+        {{ eligibilityCriteriaAnswers.render(deal.eligibility.criteria)}}
+      {% endif %}
 
-      {{ eligibilityDocumentation.render(deal.dealFiles, deal._id)}}
+      {% if deal.dealFiles %}
+        {{ eligibilityDocumentation.render(deal.dealFiles, deal._id)}}
+      {% endif %}
 
       {% for bond in deal.bondTransactions.items %}
         <div data-cy="bond-{{ bond._id }}">
