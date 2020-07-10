@@ -43,11 +43,7 @@ context('Add a Loan to a Deal', () => {
 
     cy.url().should('include', '/preview');
 
-    // check that at least one value is displayed
-    // no need to check all as this is covered in UI component tests.
-    pages.loanPreview.facilityStage().invoke('text').then((text) => {
-      expect(text.trim()).equal('Unconditional');
-    });
+    pages.loanPreview.submissionDetails().should('be.visible');
   });
 
   it('should populate Deal page with the submitted loan, with `Completed` status and link to `Loan Gurantee Details` page', () => {
