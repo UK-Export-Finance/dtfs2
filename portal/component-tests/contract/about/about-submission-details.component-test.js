@@ -1,3 +1,4 @@
+/*
 const pageRenderer = require('../../pageRenderer');
 const deal = require('../../fixtures/deal-fully-completed');
 
@@ -16,3 +17,4 @@ describe(page, () => {
     
   });
 });
+*/
