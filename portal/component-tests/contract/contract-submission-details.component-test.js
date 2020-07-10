@@ -5,9 +5,6 @@ const page = 'contract/contract-submission-details.njk';
 
 const render = pageRenderer(page);
 
-// TODO: alternative for checking for 'at least one value'
-// wrap the render in conditional for the data. if the component is then rendered it's ok.
-
 describe(page, () => {
   let wrapper;
 
@@ -34,12 +31,8 @@ describe(page, () => {
     });
   });
 
-
-  it('should render contract overview table with a least one table cell value', () => {
+  it('should render contract overview table', () => {
     wrapper.expectElement('[data-cy="contract-overview-table"]').toExist();
-
-    // no need to assert all table cells - these are covered in other component tests
-    wrapper.expectText('[data-cy="bankSupplyContractID"]').toRead(deal.details.bankSupplyContractID);
   });
 
   describe('General deal information / About Supply Contract', () => {
@@ -50,11 +43,8 @@ describe(page, () => {
       wrapper.expectLink('[data-cy="edit-about-link"]').toLinkTo(expectedLink, 'edit');
     });
 
-    it('should render submission details component with at at least one submitted value', () => {
+    it('should render submission details component', () => {
       wrapper.expectElement('[data-cy="contract-about-submission-details"]').toExist();
-
-      // no need to assert all values - these are covered in other component tests
-      wrapper.expectText('[data-cy="supplier-type"]').toRead(deal.submissionDetails['supplier-type']);
     });
   });
 
@@ -80,7 +70,7 @@ describe(page, () => {
   });
 
   describe('Bonds', () => {
-    it('should render a heading, edit link and at least one submitted value for each bond', () => {
+    it('should render a heading, edit link and Bond Submission Details component', () => {
       for (const bond of deal.bondTransactions.items) { // eslint-disable-line no-restricted-syntax
         const bondSelector = `[data-cy="bond-${bond._id}"]`;
 
@@ -90,14 +80,13 @@ describe(page, () => {
         const expectedLink = `/contract/${deal._id}/bond/${bond._id}/details`;
         wrapper.expectLink(editBondLinkSelector).toLinkTo(expectedLink, 'edit');
 
-        // no need to assert all submitted values - these are covered in other component tests
-        wrapper.expectText(`${bondSelector} [data-cy="bond-issuer"]`).toRead(bond.bondIssuer);
+        wrapper.expectElement(`${bondSelector} [data-cy="bond-submission-details"]`).toExist();
       }
     });
   });
 
   describe('Loans', () => {
-    it('should render a heading, edit link and at least one submitted value for each loan', () => {
+    it('should render a heading, edit link and Loan Submission Details component', () => {
       for (const loan of deal.loanTransactions.items) { // eslint-disable-line no-restricted-syntax
         const loanSelector = `[data-cy="loan-${loan._id}"]`;
 
@@ -107,8 +96,7 @@ describe(page, () => {
         const expectedLink = `/contract/${deal._id}/loan/${loan._id}/guarantee-details`;
         wrapper.expectLink(editLoanLinkSelector).toLinkTo(expectedLink, 'edit');
 
-        // no need to assert all submitted values - these are covered in other component tests
-        wrapper.expectText(`${loanSelector} [data-cy="bank-reference-number"]`).toRead(loan.bankReferenceNumber);
+        wrapper.expectElement(`${loanSelector} [data-cy="loan-submission-details"]`).toExist();
       }
     });
   });
@@ -116,6 +104,4 @@ describe(page, () => {
   it('should render a go back link', () => {
     wrapper.expectLink('[data-cy="go-back-link"]').toLinkTo(`/contract/${deal._id}`, 'Back to Supply Contract page');
   });
-
-  // TODO: add go back button test to loan/bond submission tests
 });
