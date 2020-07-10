@@ -11,3 +11,4 @@ cypress/screenshots
 Library/
 
 secrets/**
+jwt_key
