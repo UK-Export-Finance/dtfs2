@@ -45,14 +45,13 @@ context('View a deal', () => {
       expect(text.trim()).equal('MAKER');
     });
 
+    const regexDateTime = /[\d][\d]\/[\d][\d]\/[\d][\d][\d][\d] [\d][\d]:[\d][\d]/;
     row.updated().invoke('text').then((text) => {
       // TODO - check formatting once formatting known
-      expect(text.trim()).to.not.equal('');
+      expect(text.trim()).to.match(regexDateTime);
     });
 
     // submissionDate: '12/02/2020',
-    // dateOfLastAction: '12/02/2020 - 13:45',
-
     // TODO - other fields as we start to populate them...
 
 
