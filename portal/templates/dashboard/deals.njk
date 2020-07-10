@@ -75,7 +75,7 @@
               </td>
 
               <td data-cy="updated" class="govuk-table__cell govuk-!-font-size-14">
-                {{ contract.details.dateOfLastAction }}
+                {{ contract.details.dateOfLastAction | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) }}
               </td>
 
             </tr>
