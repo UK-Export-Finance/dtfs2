@@ -21,21 +21,15 @@ module.exports.list = (req, res, next) => {
 };
 
 module.exports.create = (req, res, next) => {
-  const {
-    username, password, roles, bank, firstname, surname,
-  } = req.body;
+  const { password } = req.body;
   const saltHash = utils.genPassword(password);
 
   const { salt, hash } = saltHash;
 
   const newUser = {
-    username,
-    firstname,
-    surname,
-    hash,
+    ...req.body,
     salt,
-    roles,
-    bank,
+    hash,
   };
 
   create(newUser, (err, user) => {
