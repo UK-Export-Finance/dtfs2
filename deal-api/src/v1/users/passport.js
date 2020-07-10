@@ -6,7 +6,7 @@ const { findByUsername } = require('./controller');
 
 dotenv.config();
 
-const PUB_KEY = new Buffer.from(process.env.JWT_VALIDATING_KEY, 'base64').toString('ascii');
+const PUB_KEY = Buffer.from(process.env.JWT_VALIDATING_KEY, 'base64').toString('ascii');
 
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
