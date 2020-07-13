@@ -48,7 +48,6 @@ jobs:
             --deployment-container-image-name ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }}
           az webapp config connection-string set --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
-            --plan ${{ env.ENVIRONMENT }} \
             --connection-string-type custom
             --settings COMPANIES_HOUSE_API_KEY=${{ secrets.COMPANIES_HOUSE_API_KEY }}
 
