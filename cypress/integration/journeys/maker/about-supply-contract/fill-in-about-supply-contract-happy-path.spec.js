@@ -96,7 +96,7 @@ context('about-supply-contract', () => {
       expect(text.trim()).equal('Incomplete');
     });
 
-    // prove that the preview page renders the Submission Details component
+    // check that the preview page renders the Submission Details component
     contractAboutPreview.visit(deal);
     contractAboutPreview.submissionDetails().should('be.visible');
 

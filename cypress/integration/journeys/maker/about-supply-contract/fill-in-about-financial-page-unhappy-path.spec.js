@@ -51,7 +51,7 @@ context('about-supply-contract', () => {
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
 
-    // prove that the preview page renders the Submission Details component
+    // check that the preview page renders the Submission Details component
     contractAboutPreview.visit(deal);
     contractAboutPreview.submissionDetails().should('be.visible');
   });
