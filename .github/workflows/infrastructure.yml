@@ -2,7 +2,7 @@ name: Pipeline
 
 on:
   push:
-    branches: [ master ]
+    branches: [ infrastructure ]
   schedule:
     # A weekly run to roll up any base image patches,
     # in office hours, avoiding bank holiday Mondays:
