@@ -107,7 +107,7 @@ jobs:
         docker-compose exec -T deal-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --detectOpenHandles # --forceExit
 
   end-to-end-tests:
-    needs: [portal, portal-api]
+    needs: [portal-ui, portal-api]
     name: "Run end-to-end tests in Compose"
     runs-on: ubuntu-latest
     steps:
