@@ -85,6 +85,6 @@ jobs:
           az webapp config connection-string set \
             --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
-            --connection-string-type custom
+            --connection-string-type custom \
             --settings \
               COMPANIES_HOUSE_API_KEY=${{ secrets.COMPANIES_HOUSE_API_KEY }}
