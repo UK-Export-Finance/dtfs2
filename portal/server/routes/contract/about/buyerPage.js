@@ -34,9 +34,13 @@ router.get('/contract/:_id/about/buyer', provide([DEAL, COUNTRIES]), async (req,
     };
   }
 
+  const buyerAddressCountryCode = deal.submissionDetails['buyer-address-country'] && deal.submissionDetails['buyer-address-country'].code;
+  const destinationOfGoodsAndServicesCountryCode = deal.submissionDetails.destinationOfGoodsAndServices
+                                                   && deal.submissionDetails.destinationOfGoodsAndServices.code;
+
   const mappedCountries = {
-    'buyer-address-country': mapCountries(countries, deal.submissionDetails['buyer-address-country']),
-    destinationOfGoodsAndServices: mapCountries(countries, deal.submissionDetails.destinationOfGoodsAndServices),
+    'buyer-address-country': mapCountries(countries, buyerAddressCountryCode),
+    destinationOfGoodsAndServices: mapCountries(countries, destinationOfGoodsAndServicesCountryCode),
   };
 
   return res.render('contract/about/about-supply-buyer.njk', {
