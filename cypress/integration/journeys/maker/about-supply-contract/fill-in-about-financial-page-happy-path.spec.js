@@ -48,14 +48,9 @@ context('about-supply-contract', () => {
 
     contractAboutFinancial.saveAndGoBack().click();
 
-    // check the data is now on the preview page..
+    // prove that the preview page renders the Submission Details component
     contractAboutPreview.visit(deal);
-    contractAboutPreview.supplyContractValue().invoke('text').then((text) => {
-      expect(text.trim()).equal('10,000.00');
-    });
-    contractAboutPreview.supplyContractCurrency().invoke('text').then((text) => {
-      expect(text.trim()).equal('GBP - UK Sterling');
-    });
+    contractAboutPreview.submissionDetails().should('be.visible');
 
     contractAboutPreview.nav().aboutFinancialComplete().should('exist');
 

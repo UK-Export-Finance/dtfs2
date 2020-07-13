@@ -46,31 +46,9 @@ context('about-supply-contract', () => {
     // save
     contractAboutBuyer.saveAndGoBack().click();
 
-    // check the data on the preview page
+    // prove that the preview page renders the Submission Details component
     contractAboutPreview.visit(deal);
-
-    // confirm the data is still there...
-    contractAboutPreview.buyerName().invoke('text').then((text) => {
-      expect(text.trim()).equal('Huggy Bear');
-    });
-    contractAboutPreview.buyerAddress().country().invoke('text').then((text) => {
-      expect(text.trim()).equal('United States');
-    });
-    contractAboutPreview.buyerAddress().line1().invoke('text').then((text) => {
-      expect(text.trim()).equal('Corner of East and Main');
-    });
-    contractAboutPreview.buyerAddress().line3().invoke('text').then((text) => {
-      expect(text.trim()).equal('The Bronx');
-    });
-    contractAboutPreview.buyerAddress().town().invoke('text').then((text) => {
-      expect(text.trim()).equal('New York');
-    });
-    contractAboutPreview.buyerAddress().postcode().invoke('text').then((text) => {
-      expect(text.trim()).equal('no-idea');
-    });
-    contractAboutPreview.destinationOfGoodsAndServices().invoke('text').then((text) => {
-      expect(text.trim()).equal('United States');
-    });
+    contractAboutPreview.submissionDetails().should('be.visible');
 
     contractAboutPreview.nav().aboutBuyerComplete().should('exist');
   });

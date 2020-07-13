@@ -51,19 +51,8 @@ context('about-supply-contract', () => {
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
 
-    // check the data is now on the preview page..
+    // prove that the preview page renders the Submission Details component
     contractAboutPreview.visit(deal);
-    contractAboutPreview.supplyContractValue().invoke('text').then((text) => {
-      expect(text.trim()).equal('10,000.00');
-    });
-    contractAboutPreview.supplyContractCurrency().invoke('text').then((text) => {
-      expect(text.trim()).equal('USD - US Dollars');
-    });
-    contractAboutPreview.supplyContractConversionRateToGBP().invoke('text').then((text) => {
-      expect(text.trim()).equal('1.123456');
-    });
-    contractAboutPreview.supplyContractConversionDate().invoke('text').then((text) => {
-      expect(text.trim()).equal(`${moment(today).format('DD/MM/YYYY')}`);
-    });
+    contractAboutPreview.submissionDetails().should('be.visible');
   });
 });
