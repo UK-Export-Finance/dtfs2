@@ -27,8 +27,8 @@ env:
 
 jobs:
 
-  portal:
-    name: Build and push Portal
+  portal-ui:
+    name: Build and push Portal UI
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -43,8 +43,8 @@ jobs:
         tags: ${{ env.TAG }}
         add_git_labels: true
         
-  deal-api:
-    name: Build and push Deal API
+  portal-api:
+    name: Build and push Portal API
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -58,6 +58,18 @@ jobs:
         path: deal-api
         tags: ${{ env.TAG }}
         add_git_labels: true
+
+  portal-data:
+    needs: deal-api
+    name: Refresh database
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Re-insert mocks
+        run:
+          cd utils/mock-data-loader 
+          mv .env.azure .env
+          node re-insert-mocks.js
   
   api-tests:
     needs: deal-api
