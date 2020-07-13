@@ -3,27 +3,11 @@ name: Infrastructure
 on:
   push:
     branches: [ infrastructure ]
-  schedule:
-    # A weekly run to roll up any base image patches,
-    # in office hours, avoiding bank holiday Mondays:
-    # "At 12:00 on Tuesday." - https://crontab.guru/
-    - cron: '0 12 * * 2'
     
 env:
   TAG: latest
 
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
-
-  AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}
-  AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
-  AZURE_WORKFLOW_FILESHARE_NAME: ${{ secrets.AZURE_WORKFLOW_FILESHARE_NAME }}
-  AZURE_WORKFLOW_EXPORT_FOLDER: ${{ secrets.AZURE_WORKFLOW_EXPORT_FOLDER }}
-  AZURE_WORKFLOW_IMPORT_FOLDER: ${{ secrets.AZURE_WORKFLOW_IMPORT_FOLDER }}
-
-  AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
-  AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
-  AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
-  AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
 
 jobs:
 
@@ -49,22 +33,22 @@ jobs:
             --deployment-container-image-name ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }}
           
           az webapp config connection-string set \
-            --name tfs-portal-api-${{ env.ENVIRONMENT }} \
-            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
-            --connection-string-type custom \
-            --settings \
-              AZURE_PORTAL_EXPORT_FOLDER=${{ secrets.DEV_AZURE_PORTAL_EXPORT_FOLDER }} \
-              AZURE_PORTAL_FILESHARE_NAME=${{ secrets.DEV_AZURE_PORTAL_FILESHARE_NAME }} \
-              AZURE_PORTAL_STORAGE_ACCESS_KEY=${{ secrets.DEV_AZURE_PORTAL_STORAGE_ACCESS_KEY }} \
-              AZURE_PORTAL_STORAGE_ACCOUNT=${{ secrets.DEV_AZURE_PORTAL_STORAGE_ACCOUNT }} \
-              AZURE_WORKFLOW_EXPORT_FOLDER=${{ secrets.DEV_AZURE_WORKFLOW_EXPORT_FOLDER }} \
-              AZURE_WORKFLOW_FILESHARE_NAME=${{ secrets.DEV_AZURE_WORKFLOW_FILESHARE_NAME }} \
-              AZURE_WORKFLOW_IMPORT_FOLDER=${{ secrets.DEV_AZURE_WORKFLOW_IMPORT_FOLDER }} \
-              AZURE_WORKFLOW_STORAGE_ACCESS_KEY=${{ secrets.DEV_AZURE_WORKFLOW_STORAGE_ACCESS_KEY }} \
-              JWT_SIGNING_KEY=${{ secrets.DEV_JWT_SIGNING_KEY }} \
-              JWT_VALIDATING_KEY=${{ secrets.DEV_JWT_VALIDATING_KEY }} \
-              MONGO_INITDB_DATABASE=${{ secrets.DEV_MONGO_INITDB_DATABASE }} \
-              MONGODB_URI=${{ secrets.DEV_MONGODB_URI }}
+          --name tfs-portal-api-${{ env.ENVIRONMENT }} \
+          --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+          --connection-string-type custom \
+          --settings \
+            AZURE_PORTAL_EXPORT_FOLDER=${{ secrets.DEV_AZURE_PORTAL_EXPORT_FOLDER }} \
+            AZURE_PORTAL_FILESHARE_NAME=${{ secrets.DEV_AZURE_PORTAL_FILESHARE_NAME }} \
+            AZURE_PORTAL_STORAGE_ACCESS_KEY=${{ secrets.DEV_AZURE_PORTAL_STORAGE_ACCESS_KEY }} \
+            AZURE_PORTAL_STORAGE_ACCOUNT=${{ secrets.DEV_AZURE_PORTAL_STORAGE_ACCOUNT }} \
+            AZURE_WORKFLOW_EXPORT_FOLDER=${{ secrets.DEV_AZURE_WORKFLOW_EXPORT_FOLDER }} \
+            AZURE_WORKFLOW_FILESHARE_NAME=${{ secrets.DEV_AZURE_WORKFLOW_FILESHARE_NAME }} \
+            AZURE_WORKFLOW_IMPORT_FOLDER=${{ secrets.DEV_AZURE_WORKFLOW_IMPORT_FOLDER }} \
+            AZURE_WORKFLOW_STORAGE_ACCESS_KEY=${{ secrets.DEV_AZURE_WORKFLOW_STORAGE_ACCESS_KEY }} \
+            JWT_SIGNING_KEY=${{ secrets.DEV_JWT_SIGNING_KEY }} \
+            JWT_VALIDATING_KEY=${{ secrets.DEV_JWT_VALIDATING_KEY }} \
+            MONGO_INITDB_DATABASE=${{ secrets.DEV_MONGO_INITDB_DATABASE }} \
+            MONGODB_URI=${{ secrets.DEV_MONGODB_URI }}
 
     - name: Portal UI
       uses: Azure/cli@v1.0.0
@@ -89,4 +73,3 @@ jobs:
             --settings \
               COMPANIES_HOUSE_API_KEY=${{ secrets.COMPANIES_HOUSE_API_KEY }}
 
-              
