@@ -60,7 +60,7 @@ jobs:
         add_git_labels: true
 
   portal-data:
-    needs: deal-api
+    needs: portal-api
     name: Refresh database
     runs-on: ubuntu-latest
     steps:
@@ -72,7 +72,7 @@ jobs:
           node re-insert-mocks.js
   
   api-tests:
-    needs: deal-api
+    needs: portal-api
     name: "Run API tests in Compose"
     runs-on: ubuntu-latest
     steps:
@@ -83,7 +83,7 @@ jobs:
         login-server: ${{ secrets.ACR_DEV_REGISTRY }}
         username: ${{ secrets.ACR_DEV_USERNAME }}
         password: ${{ secrets.ACR_DEV_PASSWORD }}
-    - name: Pull deal-api
+    - name: Pull portal-api
       run: |
         docker pull ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }}
         docker tag ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }} dtfs/deal-api
@@ -107,7 +107,7 @@ jobs:
         docker-compose exec -T deal-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --detectOpenHandles # --forceExit
 
   end-to-end-tests:
-    needs: [portal, deal-api]
+    needs: [portal, portal-api]
     name: "Run end-to-end tests in Compose"
     runs-on: ubuntu-latest
     steps:
@@ -118,7 +118,7 @@ jobs:
         login-server: ${{ secrets.ACR_DEV_REGISTRY }}
         username: ${{ secrets.ACR_DEV_USERNAME }}
         password: ${{ secrets.ACR_DEV_PASSWORD }}
-    - name: Pull deal-api
+    - name: Pull portal-api
       run: |
         docker pull ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }}
         docker tag ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }} dtfs/deal-api
@@ -171,7 +171,7 @@ jobs:
         docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal:${{ env.TAG }} ${{ secrets.ACR_TEST_REGISTRY }}/portal:${{ env.TAG }}
         docker push ${{ secrets.ACR_TEST_REGISTRY }}/portal:${{ env.TAG }}
 
-  promote-deal-api:
+  promote-portal-api:
     needs: [api-tests, end-to-end-tests]
     name: Promote Deal API from Dev to Test
     runs-on: ubuntu-latest
