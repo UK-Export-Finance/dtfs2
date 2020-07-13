@@ -10,6 +10,7 @@ import {
   errorHref,
   postToApi,
   dealFormsCompleted,
+  submissionDetailsComplete,
   dealHasIncompleteTransactions,
   generateErrorSummary,
 } from '../../helpers';
@@ -35,11 +36,27 @@ const isDealEditable = (deal, user) => {
 router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
   const { deal } = req.apiData;
   const { user } = req.session;
+
+  const canCalculateSupplyContractValues = (submissionDetails) => {
+    const { supplyContractCurrency, supplyContractConversionRateToGBP } = submissionDetails;
+    const hasRelevantSupplyContractValues = ((supplyContractCurrency && supplyContractCurrency.id && supplyContractCurrency.id === 'GBP')
+                                            || (supplyContractCurrency.id && supplyContractConversionRateToGBP));
+
+    if (hasRelevantSupplyContractValues) {
+      return true;
+    }
+    return false;
+  };
+
+  // flag to display a message if the deal summary (returned by API) will not account for everything
+  const canFullyCalculateDealSummary = (canCalculateSupplyContractValues(deal.submissionDetails)
+                                       && !dealHasIncompleteTransactions(deal));
+
   return res.render('contract/contract-view.njk', {
     deal,
     user,
     dealFormsCompleted: dealFormsCompleted(deal),
-    dealHasIncompleteTransactions: dealHasIncompleteTransactions(deal),
+    canFullyCalculateDealSummary,
     editable: isDealEditable(deal, user),
   });
 });
