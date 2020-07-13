@@ -26,7 +26,7 @@ module.exports = (submissionDetails, errorList) => {
       };
     }
 
-    if (submissionDetails['indemnifier-address-country'] === 'GBR') {
+    if (submissionDetails['indemnifier-address-country'] && submissionDetails['indemnifier-address-country'].code === 'GBR') {
       if (!hasValue(submissionDetails['indemnifier-address-postcode'])) {
         newErrorList['indemnifier-address-postcode'] = {
           order: orderNumber(newErrorList),
