@@ -10,7 +10,6 @@ import {
   errorHref,
   postToApi,
   dealFormsCompleted,
-  submissionDetailsComplete,
   dealHasIncompleteTransactions,
   generateErrorSummary,
 } from '../../helpers';
