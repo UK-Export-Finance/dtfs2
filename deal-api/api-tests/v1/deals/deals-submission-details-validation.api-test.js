@@ -34,7 +34,7 @@ const mockCountries = [
 
 const mockCurrencies = [
   { currencyId: 12, text: 'GBP - UK Sterling', id: 'GBP' },
-  { currencyId: 5, text: 'CAD - Canadian Dollars', id: 'CAD' },
+  { currencyId: 37, text: 'USD - US Dollars', id: 'USD' },
 ];
 
 describe('PUT /v1/deals/:id/submission-details validation rules', () => {
@@ -182,7 +182,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     beforeAll(async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
-      const submissionDetails = { supplyContractCurrency: 'USD' };
+      const submissionDetails = {
+        supplyContractCurrency: { id: 'USD' },
+      };
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
 
@@ -213,7 +215,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const submissionDetails = {
-        supplyContractCurrency: 'USD',
+        supplyContractCurrency: { id: 'USD' },
         supplyContractConversionRateToGBP: 'not a number',
       };
 
@@ -239,7 +241,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const submissionDetails = {
-        supplyContractCurrency: 'USD',
+        supplyContractCurrency: { id: 'USD' },
         supplyContractConversionRateToGBP: '321.1234567',
       };
 
@@ -265,7 +267,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const submissionDetails = {
-        supplyContractCurrency: 'USD',
+        supplyContractCurrency: { id: 'USD' },
         supplyContractConversionRateToGBP: '1',
       };
 
@@ -290,7 +292,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
 
       const dateInTheFuture = moment().add(1, 'days');
       const submissionDetails = {
-        supplyContractCurrency: 'USD',
+        supplyContractCurrency: { id: 'USD' },
         'supplyContractConversionDate-day': moment(dateInTheFuture).format('DD'),
         'supplyContractConversionDate-month': moment(dateInTheFuture).format('MM'),
         'supplyContractConversionDate-year': moment(dateInTheFuture).format('YYYY'),
@@ -320,7 +322,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
 
       const dateInThePast = moment().subtract(31, 'days');
       const submissionDetails = {
-        supplyContractCurrency: 'USD',
+        supplyContractCurrency: { id: 'USD' },
         'supplyContractConversionDate-day': moment(dateInThePast).format('DD'),
         'supplyContractConversionDate-month': moment(dateInThePast).format('MM'),
         'supplyContractConversionDate-year': moment(dateInThePast).format('YYYY'),
@@ -346,7 +348,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const submissionDetails = {
-        supplyContractCurrency: 'USD',
+        supplyContractCurrency: { id: 'USD' },
         'supplyContractConversionDate-month': '12',
         'supplyContractConversionDate-year': '2019',
       };
@@ -365,7 +367,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const submissionDetails = {
-        supplyContractCurrency: 'USD',
+        supplyContractCurrency: { id: 'USD' },
         'supplyContractConversionDate-day': '25',
         'supplyContractConversionDate-year': '2019',
       };
@@ -384,7 +386,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const submissionDetails = {
-        supplyContractCurrency: 'USD',
+        supplyContractCurrency: { id: 'USD' },
         'supplyContractConversionDate-month': '12',
         'supplyContractConversionDate-day': '25',
       };
