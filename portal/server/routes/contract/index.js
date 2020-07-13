@@ -38,8 +38,10 @@ router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
 
   const canCalculateSupplyContractValues = (submissionDetails) => {
     const { supplyContractCurrency, supplyContractConversionRateToGBP } = submissionDetails;
-    const hasRelevantSupplyContractValues = ((supplyContractCurrency && supplyContractCurrency.id && supplyContractCurrency.id === 'GBP')
-                                            || (supplyContractCurrency.id && supplyContractConversionRateToGBP));
+
+    const hasRelevantSupplyContractValues = (supplyContractCurrency && supplyContractCurrency.id)
+                                            && ((supplyContractCurrency.id === 'GBP')
+                                            || (supplyContractConversionRateToGBP));
 
     if (hasRelevantSupplyContractValues) {
       return true;
