@@ -96,58 +96,10 @@ context('about-supply-contract', () => {
       expect(text.trim()).equal('Incomplete');
     });
 
-
-    // prove everything persisted by finding it on the preview page..
+    // prove that the preview page renders the Submission Details component
     contractAboutPreview.visit(deal);
-
-    contractAboutPreview.supplierType().invoke('text').then((text) => {
-      expect(text.trim()).equal('Exporter');
-    });
-    contractAboutPreview.supplierCompaniesHouseRegistrationNumber().invoke('text').then((text) => {
-      expect(text.trim()).equal('08547313');
-    });
-    // // the search should populate the supplier address fields
-    // contractAboutPreview.supplierAddressCountry().should('?', '?'); //TODO can never be empty, so what to validate?
-    contractAboutPreview.supplierName().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
-    });
-    contractAboutPreview.supplierAddress().line1().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
-    });
-    contractAboutPreview.supplierAddress().line2().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
-    });
-    contractAboutPreview.supplierAddress().town().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
-    });
-    contractAboutPreview.supplierAddress().postcode().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
-    });
-
-    contractAboutPreview.supplierAddress().country().invoke('text').then((text) => {
-      expect(text.trim()).not.equal('');// TODO if we had 'proper' test company we might assert real data
-    });
-
-    contractAboutPreview.supplierCorrespondenceAddressDifferent().invoke('text').then((text) => {
-      expect(text.trim()).equal('No');
-    });
-    contractAboutPreview.industrySector().invoke('text').then((text) => {
-      expect(text.trim()).equal('1009');
-    });
-    contractAboutPreview.industryClass().invoke('text').then((text) => {
-      expect(text.trim()).equal('62012');
-    });
-    contractAboutPreview.smeType().invoke('text').then((text) => {
-      expect(text.trim()).equal('Micro');
-    });
-    contractAboutPreview.supplyContractDescription().invoke('text').then((text) => {
-      expect(text.trim()).equal('Typing in tests takes time.');
-    });
-    contractAboutPreview.legallyDistinct().invoke('text').then((text) => {
-      expect(text.trim()).equal('No');
-    });
+    contractAboutPreview.submissionDetails().should('be.visible');
 
     contractAboutPreview.nav().aboutSupplierComplete().should('exist');
-
   });
 });

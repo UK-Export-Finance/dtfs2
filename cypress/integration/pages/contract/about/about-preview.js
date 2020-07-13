@@ -35,6 +35,7 @@ const page = {
 
   expectError: (text) => cy.get('.govuk-error-summary__list').contains(text),
   errors: () => cy.get('.govuk-error-summary__list'),
+  submissionDetails: () => cy.get('[data-cy="contract-about-submission-details"]'),
 };
 
 module.exports = page;
