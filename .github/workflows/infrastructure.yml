@@ -32,12 +32,28 @@ jobs:
     runs-on: ubuntu-latest
     env:
       environment: dev
+      resource_group: ${{ secrets.RESOURCE_GROUP_DEV }}
+      registry: ${{ secrets.ACR_DEV_REGISTRY }}
+      tag: latest
     steps:
     - uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_DIGITAL_DEV }}
+
     - name: Portal UI
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az account show
+          az webapp create --name tfs-portal-ui-${environment} \
+              --resource-group $resource_group \
+              --plan ${environment} \
+              --deployment-container-image-name ${registry}/deal-api:${tag}
+
+    - name: Portal API
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp create --name tfs-portal-api-${environment} \
+              --resource-group $resource_group \
+              --plan ${environment} \
+              --deployment-container-image-name ${registry}/deal-api:${tag}
