@@ -120,8 +120,6 @@ exports.update = (req, res) => {
     if (!deal) return res.status(404).send();
     if (!userHasAccessTo(user, deal)) return res.status(401).send();
 
-    const validationErrors = validateSubmissionDetails({ ...deal.submissionDetails, ...req.body });
-
     // TODO - we calculate status on the fly now, so should we ever persist this field?
     // if (validationErrors.count === 0) {
     //   submissionDetails.status = 'Completed';
@@ -153,6 +151,8 @@ exports.update = (req, res) => {
 
     const collection = await db.getCollection('deals');
     const dealAfterAllUpdates = await updateSubmissionDetails(collection, req.params.id, submissionDetails);
+
+    const validationErrors = validateSubmissionDetails({ ...dealAfterAllUpdates.submissionDetails, ...req.body });
 
     const response = {
       validationErrors,

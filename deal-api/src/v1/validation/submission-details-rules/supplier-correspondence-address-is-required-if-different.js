@@ -19,7 +19,7 @@ module.exports = (submissionDetails, errorList) => {
       };
     }
 
-    if (submissionDetails['supplier-correspondence-address-country'] === 'GBR') {
+    if (submissionDetails['supplier-correspondence-address-country'] && submissionDetails['supplier-correspondence-address-country'].code === 'GBR') {
       if (!hasValue(submissionDetails['supplier-correspondence-address-postcode'])) {
         newErrorList['supplier-correspondence-address-postcode'] = {
           order: orderNumber(newErrorList),

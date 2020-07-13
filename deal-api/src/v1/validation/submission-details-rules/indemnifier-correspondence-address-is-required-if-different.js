@@ -21,8 +21,8 @@ module.exports = (submissionDetails, errorList) => {
           text: 'Indemnifier correspondence address line 1 is required',
         };
       }
-
-      if (submissionDetails['indemnifier-correspondence-address-country'] === 'GBR') {
+ 
+      if (submissionDetails['indemnifier-correspondence-address-country'] && submissionDetails['indemnifier-correspondence-address-country'].code === 'GBR') {
         if (!hasValue(submissionDetails['indemnifier-correspondence-address-postcode'])) {
           newErrorList['indemnifier-correspondence-address-postcode'] = {
             order: orderNumber(newErrorList),
