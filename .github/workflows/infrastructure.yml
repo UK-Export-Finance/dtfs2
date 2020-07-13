@@ -1,4 +1,4 @@
-name: Pipeline
+name: Infrastructure
 
 on:
   push:
@@ -31,10 +31,8 @@ jobs:
     name: Dev environment
     runs-on: ubuntu-latest
     env:
-      environment: dev
-      resource_group: ${{ secrets.RESOURCE_GROUP_DEV }}
-      registry: ${{ secrets.ACR_DEV_REGISTRY }}
-      tag: latest
+      ENVIRONMENT: dev
+      TAG: latest
     steps:
     - uses: azure/login@v1
       with:
@@ -44,16 +42,16 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp create --name tfs-portal-ui-${environment} \
-              --resource-group $resource_group \
-              --plan ${environment} \
-              --deployment-container-image-name ${registry}/deal-api:${tag}
+          az webapp create --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
+              --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+              --plan ${{ env.ENVIRONMENT }} \
+              --deployment-container-image-name ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }}
 
     - name: Portal API
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp create --name tfs-portal-api-${environment} \
-              --resource-group $resource_group \
-              --plan ${environment} \
-              --deployment-container-image-name ${registry}/deal-api:${tag}
+          az webapp create --name tfs-portal-api-${{ env.ENVIRONMENT }} \
+              --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+              --plan ${{ env.ENVIRONMENT }} \
+              --deployment-container-image-name ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }}
