@@ -69,6 +69,7 @@ jobs:
         run: |
           cd utils/mock-data-loader 
           mv .env.azure .env
+          npm install
           node re-insert-mocks.js
   
   api-tests:
