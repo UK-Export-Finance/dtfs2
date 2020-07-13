@@ -20,6 +20,7 @@ const router = express.Router();
 
 router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COUNTRIES]), async (req, res) => {
   const { deal, industrySectors, countries } = req.apiData;
+
   const { _id, userToken } = requestParams(req);
 
   let formattedValidationErrors = {};
@@ -37,11 +38,17 @@ router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COU
 
   const mappedIndustrySectors = mapIndustrySectors(industrySectors, deal.submissionDetails['industry-sector']);
   const mappedIndustryClasses = mapIndustryClasses(industrySectors, deal.submissionDetails['industry-sector'], deal.submissionDetails['industry-class']);
+
+  const supplierAddressCountryCode = deal.submissionDetails['supplier-address-country'] && deal.submissionDetails['supplier-address-country'].code;
+  const supplierCorrespondenceAddressCountryCode = deal.submissionDetails['supplier-correspondence-address-country'] && deal.submissionDetails['supplier-correspondence-address-country'].code;
+  const indemnifierAddressCountryCode = deal.submissionDetails['indemnifier-address-country'] && deal.submissionDetails['indemnifier-address-country'].code;
+  const indemnifierCorrespondenceAddressCountryCode = deal.submissionDetails['indemnifier-correspondence-address-country'] && deal.submissionDetails['indemnifier-correspondence-address-country'].code;
+
   const mappedCountries = {
-    'supplier-address-country': mapCountries(countries, deal.submissionDetails['supplier-address-country']),
-    'supplier-correspondence-address-country': mapCountries(countries, deal.submissionDetails['supplier-correspondence-address-country']),
-    'indemnifier-address-country': mapCountries(countries, deal.submissionDetails['indemnifier-address-country']),
-    'indemnifier-correspondence-address-country': mapCountries(countries, deal.submissionDetails['indemnifier-correspondence-address-country']),
+    'supplier-address-country': mapCountries(countries, supplierAddressCountryCode),
+    'supplier-correspondence-address-country': mapCountries(countries, supplierCorrespondenceAddressCountryCode),
+    'indemnifier-address-country': mapCountries(countries, indemnifierAddressCountryCode),
+    'indemnifier-correspondence-address-country': mapCountries(countries, indemnifierCorrespondenceAddressCountryCode),
   };
 
   return res.render('contract/about/about-supplier.njk', {
