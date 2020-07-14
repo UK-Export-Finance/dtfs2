@@ -73,3 +73,65 @@ jobs:
             --settings \
               COMPANIES_HOUSE_API_KEY=${{ secrets.COMPANIES_HOUSE_API_KEY }}
 
+  demo:
+    name: Demo environment
+    runs-on: ubuntu-latest
+    env:
+      ENVIRONMENT: demo
+      TAG: latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_DIGITAL_DEV }}
+
+    - name: Portal API
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp create \
+            --name tfs-portal-api-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --plan ${{ env.ENVIRONMENT }} \
+            --deployment-container-image-name ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.ENVIRONMENT }}
+          
+          az webapp config connection-string set \
+          --name tfs-portal-api-${{ env.ENVIRONMENT }} \
+          --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+          --connection-string-type custom \
+          --settings \
+            AZURE_PORTAL_EXPORT_FOLDER=a${{ secrets.DEV_AZURE_PORTAL_EXPORT_FOLDER }} \
+            AZURE_PORTAL_FILESHARE_NAME=a${{ secrets.DEV_AZURE_PORTAL_FILESHARE_NAME }} \
+            AZURE_PORTAL_STORAGE_ACCESS_KEY=a${{ secrets.DEV_AZURE_PORTAL_STORAGE_ACCESS_KEY }} \
+            AZURE_PORTAL_STORAGE_ACCOUNT=a${{ secrets.DEV_AZURE_PORTAL_STORAGE_ACCOUNT }} \
+            AZURE_WORKFLOW_EXPORT_FOLDER=a${{ secrets.DEV_AZURE_WORKFLOW_EXPORT_FOLDER }} \
+            AZURE_WORKFLOW_FILESHARE_NAME=a${{ secrets.DEV_AZURE_WORKFLOW_FILESHARE_NAME }} \
+            AZURE_WORKFLOW_IMPORT_FOLDER=a${{ secrets.DEV_AZURE_WORKFLOW_IMPORT_FOLDER }} \
+            AZURE_WORKFLOW_STORAGE_ACCESS_KEY=a${{ secrets.DEV_AZURE_WORKFLOW_STORAGE_ACCESS_KEY }} \
+            JWT_SIGNING_KEY=a${{ secrets.DEV_JWT_SIGNING_KEY }} \
+            JWT_VALIDATING_KEY=a${{ secrets.DEV_JWT_VALIDATING_KEY }} \
+            MONGO_INITDB_DATABASE=a${{ secrets.DEV_MONGO_INITDB_DATABASE }} \
+            MONGODB_URI=a${{ secrets.DEV_MONGODB_URI }}
+
+    - name: Portal UI
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp create \
+            --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --plan ${{ env.ENVIRONMENT }} \
+            --deployment-container-image-name ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.ENVIRONMENT }}
+
+          az webapp config appsettings set \
+            --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --settings \
+              COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
+          
+          az webapp config connection-string set \
+            --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --connection-string-type custom \
+            --settings \
+              COMPANIES_HOUSE_API_KEY=${{ secrets.COMPANIES_HOUSE_API_KEY }}
+
