@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block beforeContent %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full moj-primary-navigation">
+  <div class="govuk-grid-row tfm tfm-width">
+    <div class="govuk-grid-column-full moj-primary-navigation tfm">
       <div class="moj-primary-navigation__container">
         <div class="moj-primary-navigation__nav">
           <nav class="moj-primary-navigation" aria-label="Primary navigation">
@@ -23,7 +23,7 @@
       </div>
     </div>
   </div>
-  <div class="govuk-grid-row">
+  <div class="govuk-grid-row tfm tfm-width">
     <div class="govuk-grid-column-full case-summary">
       <table>
         <tr>
@@ -74,6 +74,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="tfm">
   {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 
   {{ mojSubNavigation({
@@ -105,5 +106,5 @@
 
   {% block sub_content %}
   {% endblock %}
-  
+ </div> 
       {% endblock %}
