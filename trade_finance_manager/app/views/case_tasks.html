@@ -1,7 +1,8 @@
 {% extends "case_view.html" %}
 {% block sub_content %}
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-two-thirds tfm">
+          <h1>Tasks</h1>
       {%- from "moj/components/task-list/macro.njk" import mojTaskList -%}
       {{ mojTaskList({
         sections: [
@@ -81,8 +82,8 @@
       ]
       }) }}
     </div>
-    <div class="govuk-grid-column-one-third">
-      <h2>Activity</h2>
+    <div class="govuk-grid-column-one-third tfm">
+      <h1>Activity</h1>
       <div class="moj-timeline">
         <div class="moj-timeline__item">
 
