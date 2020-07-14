@@ -498,6 +498,20 @@ const downloadMga = async (filename, token) => {
   return response.data;
 };
 
+const createFeedback = async (formData, token) => {
+  const response = await axios({
+    method: 'post',
+    url: `${urlRoot}/v1/feedback`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: formData,
+  });
+  return response.data;
+};
+
+
 export default {
   banks,
   cloneDeal,
@@ -506,6 +520,7 @@ export default {
   createBond,
   createDeal,
   createDealLoan,
+  createFeedback,
   login,
   transactions,
   updateBond,
