@@ -8,6 +8,7 @@ import reportingRoutes from './reporting';
 import adminRoutes from './admin';
 import userRoutes from './user';
 import mgaRoutes from './mga';
+import feedbackRoutes from './feedback';
 
 const router = express.Router();
 
@@ -20,5 +21,6 @@ router.use('/', reportingRoutes);
 router.use('/', adminRoutes);
 router.use('/', userRoutes);
 router.use('/', mgaRoutes);
+router.use('/', feedbackRoutes);
 
 export default router;

@@ -12,6 +12,7 @@ const dealClone = require('./controllers/deal-clone.controller');
 const banks = require('./controllers/banks.controller');
 const currencies = require('./controllers/currencies.controller');
 const countries = require('./controllers/countries.controller');
+const feedback = require('./controllers/feedback.controller');
 const industrySectors = require('./controllers/industrySectors.controller');
 const mandatoryCriteria = require('./controllers/mandatoryCriteria.controller');
 const transactions = require('./controllers/transactions.controller');
@@ -199,6 +200,19 @@ authRouter.route('/countries/:code')
   .delete(
     validate({ role: ['editor'] }),
     countries.delete,
+  );
+
+authRouter.route('/feedback')
+  .get(
+    feedback.findOne,
+  )
+  .post(
+    // validate({ role: ['editor'] }),
+    feedback.create,
+  )
+  .delete(
+    // validate({ role: ['editor'] }),
+    feedback.delete,
   );
 
 authRouter.route('/industry-sectors')
