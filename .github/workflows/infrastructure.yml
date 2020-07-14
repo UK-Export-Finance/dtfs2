@@ -94,9 +94,9 @@ jobs:
           --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
           --connection-string-type custom \
           --settings \
-            AZURE_PORTAL_EXPORT_FOLDER=${{ secrets.DEV_AZURE_PORTAL_EXPORT_FOLDER }}
-
-            # AZURE_PORTAL_FILESHARE_NAME=a${{ secrets.DEV_AZURE_PORTAL_FILESHARE_NAME }} \
+            AZURE_PORTAL_EXPORT_FOLDER=${{ secrets.DEV_AZURE_PORTAL_EXPORT_FOLDER }} \
+            AZURE_PORTAL_FILESHARE_NAME=a${{ secrets.DEV_AZURE_PORTAL_FILESHARE_NAME }}
+            
             # AZURE_PORTAL_STORAGE_ACCESS_KEY=a${{ secrets.DEV_AZURE_PORTAL_STORAGE_ACCESS_KEY }} \
             # AZURE_PORTAL_STORAGE_ACCOUNT=a${{ secrets.DEV_AZURE_PORTAL_STORAGE_ACCOUNT }} \
             # AZURE_WORKFLOW_EXPORT_FOLDER=a${{ secrets.DEV_AZURE_WORKFLOW_EXPORT_FOLDER }} \
