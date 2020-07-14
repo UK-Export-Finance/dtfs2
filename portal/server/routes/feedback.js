@@ -4,7 +4,7 @@ import { requestParams } from '../helpers';
 
 const router = express.Router();
 
-router.get('/feedback', (req, res) => res.render('feedback.njk', { user: req.session.user }));
+router.get('/feedback', (req, res) => res.render('feedback/feedback-form.njk'));
 
 router.post('/feedback', async (req, res) => {
   const { userToken } = requestParams(req);
@@ -18,5 +18,8 @@ router.post('/feedback', async (req, res) => {
 
   return res.redirect('/feedback');
 });
+
+// TODO: only get to this page if submitted the form.
+router.get('/feedback/thank-you', (req, res) => res.render('feedback/feedback-thankyou.njk'));
 
 export default router;
