@@ -15,6 +15,7 @@ const {
   dateHelpers,
   getApplicationGroup,
   getActionCodeAndName,
+  calculateExposurePeriod,
 } = require('./helpers');
 
 const generateTypeA = async (deal, fromStatus) => {
@@ -162,7 +163,7 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_cover_start_date(dateHelpers.formatDate(bond['requestedCoverStartDate-day'], bond['requestedCoverStartDate-month'], bond['requestedCoverStartDate-year']))
         .BSS_issue_date('') // TODO - drupal field: issue_date
         .BSS_cover_end_date(dateHelpers.formatDate(bond['coverEndDate-day'], bond['coverEndDate-month'], bond['coverEndDate-year']))
-        .BSS_cover_period('0') // TODO Calculate cover period from start & end dates
+        .BSS_cover_period(calculateExposurePeriod(bond))
         .BSS_day_basis(k2Map.FACILITIES.DAY_COUNT_BASIS[bond.dayCountBasis]);
 
       // Conditional fields
@@ -201,7 +202,7 @@ const generateTypeA = async (deal, fromStatus) => {
           .EWCS_cover_start_date(dateHelpers.formatDate(loan['requestedCoverStartDate-day'], loan['requestedCoverStartDate-month'], loan['requestedCoverStartDate-year']))
           .EWCS_issue_date('') // TODO - drupal field: issue_date
           .EWCS_cover_end_date(dateHelpers.formatDate(loan['coverEndDate-day'], loan['coverEndDate-month'], loan['coverEndDate-year']))
-          .EWCS_cover_period('0') // TODO Calculate cover period from start & end dates
+          .EWCS_cover_period(calculateExposurePeriod(loan)) // TODO Calculate cover period from start & end dates
           .EWCS_day_basis(k2Map.FACILITIES.DAY_COUNT_BASIS[loan.dayCountBasis]);
 
         // Conditional fields
