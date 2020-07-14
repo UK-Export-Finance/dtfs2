@@ -59,4 +59,12 @@ context('Login', () => {
 
     cy.url().should('eq', relative('/dashboard/0'));
   });
+
+  it('When a logged-in user clicks the service name link they go to the /start-now page', () => {
+    cy.login({ username: 'MAKER', password: 'MAKER' });
+
+    header.serviceName().click();
+
+    cy.url().should('eq', relative('/start-now'));
+  });
 });
