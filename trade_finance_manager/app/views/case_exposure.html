@@ -1,7 +1,7 @@
 {% extends "case_view.html" %}
 {% block sub_content %}
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
+<div class="govuk-grid-row tfm tfm-width">
+    <div class="govuk-grid-column-one-quarter">
     <h1>Exposure</h1>
       <table>
         <tr>
@@ -39,8 +39,8 @@
         </tr>
       </table>
     </div>
-    <div class="govuk-grid-column-one-third">
-      <div id = "container" style = "width: 400px; height: 400px; margin: 0 auto; align:left;">
+    <div class="govuk-grid-column-one-quarter">
+      <div id = "container" style = "width: 200px; height: 200px; margin: 0 auto; align:left;">
       </div>
             <script type = "text/javascript" src = "https://www.gstatic.com/charts/loader.js">
       </script>
@@ -82,49 +82,44 @@
       </script>
     </div>
 
-<div class="govuk-grid-row">
-   <div class="govuk-grid-column-full">
+<div class="govuk-grid-row case-exposure tfm tfm-width">
+   <div class="govuk-grid-column-full tfm">
       <h2>New facility requests</h2>
       <table>
         <tr>
           <th>Facility ID</th>
-          <th>Type</th>
+          <th style="width:50px;">Type</th>
           <th>Status</th>
           <th>Expected Issue date</th>
           <th>Tenor</th>
           <th>Expected expiry date</th>
-          <th>Value(GBP)</th>
-          <th>Value(Currency)</th>
-          <th>Exposure</th>
+          <th style="width:150px">Value(GBP)</th>
+          <th style="width:170px">Value(Currency)</th>
+          <th style="width:200px">Exposure</th>
           <th>Expected loss</th>
         </tr>
         <tr>
-          <td colspan="10" style="background-color:#F3F2F1">
+          <td colspan="10" style="background-color:#F3F2F1;font-weight:bold;">
             <a href="#">0020010552</a> Provision of education services and material to Kingdom of Wakanda Colleges of Excellence
           </td>
         </tr>
         <tr>
           <td><a href="#">0020010552</a></td>
-          <td>BSS</td>
+          <td style="width:50px;">BSS</td>
           <td>Underwriting</td>
           <td>11 Dec 2019</td>
           <td>9 mths</td>
           <td>31 Aug 2020</td>
-          <td>GBP 3,468,195.18</td>
-          <td>(SAR 17,346,525.00)</td>
-          <td>GBP 2,774,566.14 (80%)</td>
+          <td style="width:150px">GBP 3,468,195.18</td>
+          <td style="width:170px">(SAR 17,346,525.00)</td>
+          <td style="width:200px">GBP 2,774,566.14 (80%)</td>
           <td>2.45%</td>       
         </tr>
         <tr style="font-weight: bold">
-          <td>Totals</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td>GBP 3,468,195.18</td>
-          <td>(SAR 17,346,525.00)</td>
-          <td>GBP 2,774,566.14 (80%)</td>
+          <td colspan="6">Totals</td>
+          <td style="width:150px">GBP 3,468,195.18</td>
+          <td style="width:170px">(SAR 17,346,525.00)</td>
+          <td style="width:200px">GBP 2,774,566.14 (80%)</td>
           <td></td>   
         </tr>
       </table>
