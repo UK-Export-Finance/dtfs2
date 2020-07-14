@@ -1,4 +1,4 @@
-name: Pipeline
+name: Demo environment deployment
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 jobs:
 
   portal-ui:
-    name: Deploy Portal UI
+    name: Tag Portal UI
     runs-on: ubuntu-latest
     steps:
     - uses: azure/docker-login@v1
@@ -20,9 +20,8 @@ jobs:
         docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal:latest ${{ secrets.ACR_DEV_REGISTRY }}/portal:demo
         docker push ${{ secrets.ACR_DEV_REGISTRY }}/portal:demo
 
-  promote-portal-api:
-    needs: [api-tests, end-to-end-tests]
-    name: Promote Deal API from Dev to Test
+  portal-api:
+    name: Tag Portal API
     runs-on: ubuntu-latest
     steps:
     - uses: azure/docker-login@v1
