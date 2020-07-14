@@ -3,11 +3,6 @@ name: Infrastructure
 on:
   push:
     branches: [ infrastructure ]
-    
-env:
-  TAG: latest
-
-  COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
 
 jobs:
 
@@ -134,4 +129,3 @@ jobs:
             --connection-string-type custom \
             --settings \
               COMPANIES_HOUSE_API_KEY=${{ secrets.COMPANIES_HOUSE_API_KEY }}
-
