@@ -1,0 +1,36 @@
+name: Pipeline
+
+on:
+  push:
+    branches: [ demo ]
+
+jobs:
+
+  portal-ui:
+    name: Deploy Portal UI
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_DEV_REGISTRY }}
+        username: ${{ secrets.ACR_DEV_USERNAME }}
+        password: ${{ secrets.ACR_DEV_PASSWORD }}
+    - run: |
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal:latest
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal:latest ${{ secrets.ACR_DEV_REGISTRY }}/portal:demo
+        docker push ${{ secrets.ACR_DEV_REGISTRY }}/portal:demo
+
+  promote-portal-api:
+    needs: [api-tests, end-to-end-tests]
+    name: Promote Deal API from Dev to Test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_DEV_REGISTRY }}
+        username: ${{ secrets.ACR_DEV_USERNAME }}
+        password: ${{ secrets.ACR_DEV_PASSWORD }}
+    - run: |
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:latest
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:latest ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:demo
+        docker push ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:demo
