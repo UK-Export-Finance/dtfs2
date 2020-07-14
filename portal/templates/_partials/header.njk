@@ -39,34 +39,31 @@
 
           <ul id="navigation" class="govuk-header__navigation" aria-label="Top Level Navigation">
 
-            <div class="govuk-header__navigation--end">
 
-              {% if user %}
-                <li class="govuk-header__navigation-item govuk-header__navigation-item">
-                  {{ user.username }}
-                </li>
+            {% if user %}
+              <li class="govuk-header__navigation-item govuk-header__navigation-item">
+                {{ user.username }}
+              </li>
 
-                <li class="govuk-header__navigation-item govuk-header__navigation-item">
-                  <a class="govuk-header__link" href="/user/{{ user.username | urlencode }}">
-                    Profile
-                  </a>
-                </li>
+              <li class="govuk-header__navigation-item govuk-header__navigation-item">
+                <a class="govuk-header__link" href="/user/{{ user.username | urlencode }}">
+                  Profile
+                </a>
+              </li>
 
-                <li class="govuk-header__navigation-item">
-                  <a class="govuk-header__link" href="#">
-                    Log out
-                  </a>
-                </li>
+              <li class="govuk-header__navigation-item">
+                <a class="govuk-header__link" href="#">
+                  Log out
+                </a>
+              </li>
 
-              {% else %}
-                <li class="govuk-header__navigation-item">
-                  <a class="govuk-header__link" href="/">
-                    Log in
-                  </a>
-                </li>
-              {% endif %}
-
-            </div>
+            {% else %}
+              <li class="govuk-header__navigation-item">
+                <a class="govuk-header__link" href="/">
+                  Log in
+                </a>
+              </li>
+            {% endif %}
 
           </ul>
 
