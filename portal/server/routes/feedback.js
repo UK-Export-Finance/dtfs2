@@ -13,7 +13,7 @@ router.post('/feedback', async (req, res) => {
 
   if (response) {
     // thank you page?
-    return res.redirect('/feedback');
+    return res.redirect('/feedback/thank-you');
   }
 
   return res.redirect('/feedback');
