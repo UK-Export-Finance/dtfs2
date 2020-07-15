@@ -41,6 +41,7 @@ const STATUS = {
   REFUSED: 'Rejected by UKEF',
   CONFIRMED_BY_BANK: 'Confirmed by bank',
   CONFIRMATION_ACKNOWLEDGED: 'Confirmation acknowledged',
+  IN_PROGRESS_BY_UKEF: 'In progress by UKEF',
 };
 
 module.exports = {

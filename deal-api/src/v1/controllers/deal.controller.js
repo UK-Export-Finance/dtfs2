@@ -154,6 +154,7 @@ const updateDeal = async (req) => {
   );
 
   const { value } = findAndUpdateResponse;
+
   return value;
 };
 exports.updateDeal = updateDeal;

@@ -1,10 +1,11 @@
 
 const xml2js = require('xml2js');
 const dealController = require('../deal.controller');
-const { k2Map } = require('./helpers');
+
+const { generateStatus } = require('./type-b-helpers');
 
 const processTypeB = async ({ fileContents }) => {
-  const { Deal: deal, error } = await xml2js.parseStringPromise(fileContents /* , options */)
+  const { Deal: workflowDeal, error } = await xml2js.parseStringPromise(fileContents /* , options */)
     .catch((err) => ({ error: err.message }));
 
   if (error) {
@@ -13,12 +14,18 @@ const processTypeB = async ({ fileContents }) => {
     };
   }
 
-  const { portal_deal_id: dealId } = deal.$;
+
+  const { portal_deal_id: dealId, Action_Code: actionCode } = workflowDeal.$;
+
+  const deal = await dealController.findOneDeal(dealId);
+  if (!deal) {
+    return false;
+  }
 
   const updatedDealInfo = {
     details: {
-      status: k2Map.findPortalValue('DEAL', 'STATUS', deal.Deal_status[0]),
-      ukefDealId: deal.UKEF_deal_id[0],
+      status: generateStatus(deal, workflowDeal),
+      ukefDealId: workflowDeal.UKEF_deal_id[0],
     },
   };
 

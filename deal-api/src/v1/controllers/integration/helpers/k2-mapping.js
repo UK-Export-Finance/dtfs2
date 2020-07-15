@@ -32,6 +32,7 @@ const DEAL = {
     [CONSTANTS.DEAL.STATUS.REFUSED]: 'refused',
     [CONSTANTS.DEAL.STATUS.CONFIRMED_BY_BANK]: 'confirmed_by_bank',
     [CONSTANTS.DEAL.STATUS.CONFIRMATION_ACKNOWLEDGED]: 'confirmation_acknowledged',
+    [CONSTANTS.DEAL.STATUS.IN_PROGRESS_BY_UKEF]: 'in_progress_by_ukef',
   },
 
 };

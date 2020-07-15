@@ -1,8 +1,8 @@
-const typeBxml = `
+const typeBxmlTemplate = `
 <?xml version="1.0"?>
-<Deal portal_deal_id="37749" bank_deal_id="uat test 10 Multi Facilities" Message_Type="B" Action_Code="017">
+<Deal portal_deal_id="{{dealId}}" bank_deal_id="uat test 10 Multi Facilities" Message_Type="B" Action_Code="{{actionCode}}">
   <UKEF_deal_id>40000016</UKEF_deal_id>
-  <Deal_status>confirmation_acknowledged</Deal_status>
+  <Deal_status>{{status}}</Deal_status>
   <Deal_comments/>
   <BSSFacilities>
     <BSS_portal_facility_id>39817</BSS_portal_facility_id>
@@ -13,4 +13,4 @@ const typeBxml = `
 </Deal>
 `;
 
-module.exports = typeBxml;
+module.exports = typeBxmlTemplate;
