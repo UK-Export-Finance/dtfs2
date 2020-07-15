@@ -46,6 +46,7 @@ services:
       - AZURE_PORTAL_FILESHARE_NAME
       - AZURE_PORTAL_EXPORT_FOLDER
       - DTFS_PORTAL_SCHEDULER
+      - GOV_NOTIFY_API_KEY
 
     entrypoint: npx nodemon src/index.js
 
