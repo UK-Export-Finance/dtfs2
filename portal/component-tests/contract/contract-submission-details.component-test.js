@@ -15,6 +15,7 @@ describe(page, () => {
         timezone: 'Europe/London',
         roles: ['maker'],
       },
+      editable: true,
     });
   });
 
@@ -42,11 +43,13 @@ describe(page, () => {
   });
 
   describe('General deal information / About Supply Contract', () => {
-    it('should render a heading with edit link', () => {
+    it('should render a heading', () => {
       wrapper.expectText('[data-cy="general-deal-info-heading"]').toRead('General deal information');
+    });
 
-      const expectedLink = `/contract/${deal._id}/about/supplier`;
-      wrapper.expectLink('[data-cy="edit-about-link"]').toLinkTo(expectedLink, 'edit');
+    it('should render edit link component', () => {
+      const selector = `[data-cy="edit-about-link-/contract/${deal._id}/about/supplier"]`;
+      wrapper.expectElement(selector).toExist();
     });
 
     it('should render submission details component', () => {
@@ -55,11 +58,13 @@ describe(page, () => {
   });
 
   describe('Eligibility', () => {
-    it('should render a heading with edit link', () => {
+    it('should render a heading', () => {
       wrapper.expectText('[data-cy="confirm-eligibility-heading"]').toRead('Confirm eligibility');
+    });
 
-      const expectedLink = `/contract/${deal._id}/eligibility/criteria`;
-      wrapper.expectLink('[data-cy="edit-eligibility-link"]').toLinkTo(expectedLink, 'edit');
+    it('should render edit link component', () => {
+      const selector = `[data-cy="edit-eligibility-link-/contract/${deal._id}/eligibility/criteria"]`;
+      wrapper.expectElement(selector).toExist();
     });
 
     it('should render Mandatory criteria component', () => {
@@ -76,15 +81,14 @@ describe(page, () => {
   });
 
   describe('Bonds', () => {
-    it('should render a heading, edit link and Bond Submission Details component', () => {
+    it('should render a heading, edit link component and Bond Submission Details component', () => {
       for (const bond of deal.bondTransactions.items) { // eslint-disable-line no-restricted-syntax
         const bondSelector = `[data-cy="bond-${bond._id}"]`;
 
         wrapper.expectText(`${bondSelector} [data-cy="bond-heading"]`).toRead('Bond');
 
-        const editBondLinkSelector = `${bondSelector} [data-cy="edit-bond-link"]`;
-        const expectedLink = `/contract/${deal._id}/bond/${bond._id}/details`;
-        wrapper.expectLink(editBondLinkSelector).toLinkTo(expectedLink, 'edit');
+        const editLinkComponent = `[data-cy="edit-bond-${bond._id}-link-/contract/${deal._id}/bond/${bond._id}/bond/details"]`;
+        wrapper.expectElement(editLinkComponent).toExist();
 
         wrapper.expectElement(`${bondSelector} [data-cy="bond-submission-details"]`).toExist();
       }
@@ -98,9 +102,8 @@ describe(page, () => {
 
         wrapper.expectText(`${loanSelector} [data-cy="loan-heading"]`).toRead('Loan');
 
-        const editLoanLinkSelector = `${loanSelector} [data-cy="edit-loan-link"]`;
-        const expectedLink = `/contract/${deal._id}/loan/${loan._id}/guarantee-details`;
-        wrapper.expectLink(editLoanLinkSelector).toLinkTo(expectedLink, 'edit');
+        const editLinkComponent = `[data-cy="edit-loan-${loan._id}-link-/contract/${deal._id}/loan/${loan._id}/loan/guarantee-details"]`;
+        wrapper.expectElement(editLinkComponent).toExist();
 
         wrapper.expectElement(`${loanSelector} [data-cy="loan-submission-details"]`).toExist();
       }
