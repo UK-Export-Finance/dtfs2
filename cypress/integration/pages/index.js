@@ -32,6 +32,7 @@ module.exports = {
   defaults: require('./defaults'),
   users: require('./admin/users/users'),
   createUser: require('./admin/users/createUser'),
+  editUser: require('./admin/users/editUser'),
   mga: require('./mga'),
   footer: require('./footer'),
 };
