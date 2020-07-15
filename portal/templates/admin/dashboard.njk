@@ -166,7 +166,7 @@
               </td> #}
 
               <td class="govuk-table__cell govuk-!-font-size-14">
-                <a href="/admin/users/edit/{{ displayUser.username | urlencode }}" class="govuk-link" data-cy="username-{{displayUser.username}}">{{ displayUser.username }}</a>
+                <a href="/admin/users/edit/{{ displayUser._id | urlencode }}" class="govuk-link" data-cy="username-{{displayUser.username}}">{{ displayUser.username }}</a>
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bank">
@@ -181,7 +181,7 @@
                 {% endif %}
               </td> #}
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
+              <td data-cy="roles-{{displayUser.username}}" class="govuk-table__cell govuk-!-font-size-14">
                 <ul class="govuk-!-margin-0 govuk-!-margin-left-4 govuk-!-padding-left-0">
                   {% for role in displayUser.roles %}
                     <li>{{ role }}</li>

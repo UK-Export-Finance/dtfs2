@@ -7,7 +7,7 @@
 
 {% block pageTitle %}
   {% if _id %}
-    Edit user {{ user.username }}
+    Edit user {{ displayedUser.username }}
   {% else %}
     User create
   {% endif %}
@@ -17,7 +17,7 @@
 
   <h1 class="govuk-heading-l">
     {% if _id %}
-      Edit user {{ user.username }}
+      Edit user {{ displayedUser.username }}
     {% else %}
       User create
     {% endif %}
@@ -30,7 +30,6 @@
   {% endif %}
 
    <form method="POST" autocomplete="off">
-
     {{ govukCheckboxes({
       idPrefix: "roles",
       name: "roles",
@@ -45,26 +44,31 @@
         {
           value: "maker/checker",
           text: "Maker/Checker",
+          checked: displayedUser.roles.includes("maker/checker"),
           attributes: {"data-cy": "role-maker/checker"}
         },
         {
           value: "checker",
           text: "Checker",
+          checked: displayedUser.roles.includes("checker"),
           attributes: {"data-cy": "role-checker"}
         },
         {
           value: "maker",
           text: "Maker",
+          checked: displayedUser.roles.includes("maker"),
           attributes: {"data-cy": "role-maker"}
         },
         {
           value: "ukef_operations",
           text: "UKEF Operations",
+          checked: displayedUser.roles.includes("ukef_operations"),
           attributes: {"data-cy": "role-ukef_operations"}
         },
         {
           value: "EFM",
           text: "EFM",
+          checked: displayedUser.roles.includes("EFM"),
           attributes: {"data-cy": "role-efm"}
         }
       ]
@@ -72,9 +76,9 @@
 
 
     {% if _id %}
-      <p class="govuk-body">Email<br/>{{ user.username }}</p>
+      <p class="govuk-body">Email<br/>{{ displayedUser.username }}</p>
 
-      <p class="govuk-body">Display name<br/>{{ user.username }}</p>
+      <p class="govuk-body">Display name<br/>{{ displayedUser.username }}</p>
 
     {% else %}
 
@@ -160,7 +164,8 @@
         },
         classes: "govuk-!-width-one-third",
         id: "firstname",
-        name: "firstname"
+        name: "firstname",
+        value: displayedUser.firstname
       }) }}
 
       {{ govukInput({
@@ -170,11 +175,12 @@
         },
         classes: "govuk-!-width-one-third",
         id: "surname",
-        name: "surname"
+        name: "surname",
+        value: displayedUser.surname
       }) }}
 
     {% if _id %}
-      <p class="govuk-body">Bank<br/>{{ user.bank.name }}</p>
+      <p class="govuk-body">Bank<br/>{{ displayedUser.bank.name }}</p>
     {% else %}
       <div class="govuk-form-group">
         <label class="govuk-label" for="bank">
@@ -195,8 +201,8 @@
     {% if _id %}
 
       {{ govukButton({
-        text: "Save",
-        href: "/admin/users/"
+        attributes: {"data-cy": "Save"},
+        text: "Save"
       }) }}
 
     {% else %}

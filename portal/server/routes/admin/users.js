@@ -41,19 +41,23 @@ router.get('/users/create', async (req, res) => {
     {
       banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
       user: req.session.user,
+      displayedUser: { roles: [] },
     });
+});
+
+// fix up data from create user page..
+//-----
+// roles are fed in from checkboxes, so we either get a string or an array..
+// -so if we don't get an array, put it into an array..
+const fixRolesIntoArray = (userObject) => ({
+  ...userObject,
+  roles: Array.isArray(userObject.roles) ? userObject.roles : [userObject.roles],
 });
 
 router.post('/users/create', async (req, res) => {
   const { userToken } = requestParams(req);
-  const userToCreate = { ...req.body };
-  // fix up data from create user page..
-  //-----
-  // roles are fed in from checkboxes, so we either get a string or an array..
-  // -if string, push it into an array...
-  if (!Array.isArray(userToCreate.roles)) {
-    userToCreate.roles = [userToCreate.roles];
-  }
+
+  const userToCreate = fixRolesIntoArray({ ...req.body });
 
   // inflate the bank object
   const banks = await getApiData(
@@ -84,13 +88,14 @@ router.post('/users/create', async (req, res) => {
 
 router.get('/users/edit/:_id', async (req, res) => {
   const { _id, userToken } = requestParams(req);
+  const { user } = req.session;
 
   const banks = await getApiData(
     api.banks(userToken),
     res,
   );
 
-  const user = await getApiData(
+  const userToEdit = await getApiData(
     api.user(_id, userToken),
     res,
   );
@@ -99,8 +104,37 @@ router.get('/users/edit/:_id', async (req, res) => {
     {
       _id,
       banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
+      displayedUser: userToEdit,
       user,
     });
+});
+
+router.post('/users/edit/:_id', async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+  const update = fixRolesIntoArray({ ...req.body });
+
+  console.log(`update:: ${JSON.stringify(update)}`);
+
+  await api.updateUser(_id, update, userToken);
+
+  return res.redirect('/admin/users');
+  // const banks = await getApiData(
+  //   api.banks(userToken),
+  //   res,
+  // );
+  //
+  // const userToEdit = await getApiData(
+  //   api.user(_id, userToken),
+  //   res,
+  // );
+
+  // return res.render('admin/user-edit.njk',
+  //   {
+  //     _id,
+  //     banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
+  //     displayedUser: userToEdit,
+  //     user,
+  //   });
 });
 
 router.get('/users/disable/:_id', async (req, res) => {
