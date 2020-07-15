@@ -1,19 +1,15 @@
+const { ObjectID } = require('mongodb');
 const assert = require('assert');
+
 const db = require('../../drivers/db-client');
 
-const findOneFeedback = async (_id, callback) => {
+const findOneFeedback = async (id, callback) => {
   const collection = await db.getCollection('feedback');
 
-  let cb;
-
-  if (typeof callback === 'function') {
-    cb = (err, result) => {
-      assert.equal(err, null);
-      callback(result);
-    };
-  }
-
-  return collection.findOne({ _id }, cb);
+  collection.findOne({ _id: new ObjectID(id) }, (err, result) => {
+    assert.equal(err, null);
+    callback(result);
+  });
 };
 
 exports.create = async (req, res) => {
@@ -25,11 +21,24 @@ exports.create = async (req, res) => {
 };
 
 exports.findOne = (req, res) => (
-  findOneFeedback(req.params.id, (feedback) => res.status(200).send(feedback))
+  findOneFeedback(req.params.id, (feedback) => {
+    if (!feedback) {
+      res.status(404).send();
+    } else {
+      return res.status(200).send(feedback);
+    }
+    return res.status(404).send();
+  })
 );
 
 exports.delete = async (req, res) => {
-  const collection = await db.getCollection('feedback');
-  const status = await collection.deleteOne({ code: req.params.code });
-  res.status(200).send(status);
+  findOneFeedback(req.params.id, async (feedback) => {
+    if (!feedback) {
+      return res.status(404).send();
+    } else {
+      const collection = await db.getCollection('feedback');
+      const status = await collection.deleteOne({ _id: new ObjectID(req.params.id) });
+      return res.status(200).send(status);
+    }
+  });
 };

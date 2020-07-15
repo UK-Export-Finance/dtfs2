@@ -203,12 +203,14 @@ authRouter.route('/countries/:code')
   );
 
 authRouter.route('/feedback')
-  .get(
-    feedback.findOne,
-  )
   .post(
     // validate({ role: ['editor'] }),
     feedback.create,
+  );
+
+authRouter.route('/feedback/:id')
+  .get(
+    feedback.findOne,
   )
   .delete(
     // validate({ role: ['editor'] }),
