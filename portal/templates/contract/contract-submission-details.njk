@@ -2,6 +2,7 @@
 
 {% import './components/contract-tabs.njk' as contractTabs %}
 {% import './components/contract-overview-table.njk' as contractOverviewTable %}
+{% import './components/edit-link.njk' as editLink %}
 {% import 'contract/about/components/about-submission-details.njk' as aboutSubmissionDetails %}
 {% import '_macros/mandatory-criteria-box.njk' as mandatoryCriteriaBox %}
 {% import '_macros/eligibility-criteria-answers.njk' as eligibilityCriteriaAnswers %}
@@ -12,7 +13,7 @@
 {% block pageTitle %}Preview - {{ deal.details.bankSupplyContractName }}{% endblock %}
 
 {% block content %}
-  {% set componentData = {user: user, deal: deal, editable: editable, dealFormsCompleted: dealFormsCompleted, selected: 'submission-details'} %}
+  {% set componentData = {user: user, deal: deal, editable: editable, selected: 'submission-details'} %}
 
   <h1 data-cy="heading" class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ deal.details.bankSupplyContractName }}</span></h1>
 
@@ -30,7 +31,12 @@
 
       <h2 class="govuk-heading-l">
         <span data-cy="general-deal-info-heading">General deal information</span>
-        <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id}}/about/supplier" data-cy="edit-about-link">edit</a>
+
+        {{ editLink.render(
+          editable = editable,
+          href = '/contract/' + deal._id + '/about/supplier',
+          dataCy = 'edit-about-link'
+        )}}
       </h2>
 
       {% if deal.submissionDetails %}
@@ -39,7 +45,11 @@
 
       <h3 class="govuk-heading-l">
         <span data-cy="confirm-eligibility-heading">Confirm eligibility</span>
-        <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id}}/eligibility/criteria" data-cy="edit-eligibility-link">edit</a>
+        {{ editLink.render(
+          editable = editable,
+          href = '/contract/' + deal._id + '/eligibility/criteria',
+          dataCy = 'edit-eligibility-link'
+        )}}
       </h3>
 
       {% if mandatoryCriteria %}
@@ -58,7 +68,11 @@
         <div data-cy="bond-{{ bond._id }}">
           <h3 class="govuk-heading-l">
             <span data-cy="bond-heading">Bond</span>
-            <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id }}/bond/{{ bond._id }}/details" data-cy="edit-bond-link">edit</a>
+            {{ editLink.render(
+              editable = editable,
+              href = '/contract/' + deal._id + '/bond/' + bond._id + '/details',
+              dataCy = 'edit-bond-' + bond._id + '-link'
+            )}}
           </h3>
 
           {{ bondSubmissionDetails.render(bond)}}
@@ -69,7 +83,11 @@
         <div data-cy="loan-{{ loan._id }}">
           <h3 class="govuk-heading-l">
             <span data-cy="loan-heading">Loan</span>
-            <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="/contract/{{ deal._id }}/loan/{{ loan._id }}/guarantee-details" data-cy="edit-loan-link">edit</a>
+            {{ editLink.render(
+              editable = editable,
+              href = '/contract/' + deal._id + '/loan/' + loan._id + '/guarantee-details',
+              dataCy = 'edit-loan-' + loan._id + '-link'
+            )}}
           </h3>
 
           {{ loanSubmissionDetails.render(loan)}}
