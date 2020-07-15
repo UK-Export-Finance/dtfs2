@@ -291,6 +291,14 @@ const createTypeA = async (deal, fromStatus) => {
     buffer: Buffer.from(typeAxmlStr, 'utf-8'),
   };
 
+  const lockFile = {
+    fileshare: 'workflow',
+    folder: workflowFolder,
+    filename: 'portal.lock',
+    buffer: Buffer.from('', 'utf-8'),
+  };
+
+  await fileshare.uploadFile(lockFile);
   const dealUpload = fileshare.uploadFile(upload);
 
   // Upload corresponding supporting docs
@@ -311,6 +319,8 @@ const createTypeA = async (deal, fromStatus) => {
   }
 
   await Promise.all(dealUploadPromises);
+
+  await fileshare.deleteFile('workflow', `${lockFile.folder}/${lockFile.filename}`);
 
   return dealUpload;
 };
