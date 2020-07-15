@@ -72,7 +72,7 @@ describe(page, () => {
 
 
   it('should render Email address text input', () => {
-    wrapper.expectElement('[data-cy="email"]').toExist();
+    wrapper.expectElement('[data-cy="emailAddress"]').toExist();
   });
 
   it('should render submit button', () => {
