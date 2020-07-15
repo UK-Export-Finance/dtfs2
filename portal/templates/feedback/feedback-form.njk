@@ -7,7 +7,7 @@
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">Feedback</h1>
+  <h1 class="govuk-heading-l" data-cy="heading">Feedback</h1>
 
   <form method="POST" autocomplete="off">
 
@@ -17,7 +17,10 @@
       },
       id: "role",
       name: "role",
-      classes: "govuk-input--width-20"
+      classes: "govuk-input--width-20",
+      attributes: {
+        'data-cy': 'what-is-your-role'
+      }
     }) }}
 
     {{ govukInput({
@@ -26,7 +29,10 @@
       },
       id: "organisation",
       name: "organisation",
-      classes: "govuk-input--width-20"
+      classes: "govuk-input--width-20",
+      attributes: {
+        'data-cy': 'which-organisation'
+      }
     }) }}
 
     {{ govukRadios({
@@ -40,19 +46,31 @@
       items: [
         {
           value: "Submission of an automatic inclusion notice",
-          text: "Submission of an automatic inclusion notice"
+          text: "Submission of an automatic inclusion notice",
+          attributes: {
+            'data-cy': 'reason-for-visiting-automatic-inclusion-notice'
+          }
         },
         {
           value: "Submission of a manual inclusion application",
-          text: "Submission of a manual inclusion application"
+          text: "Submission of a manual inclusion application",
+          attributes: {
+            'data-cy': 'reason-for-visiting-manual-inclusion-application'
+          }
         },
         {
           value: "Submission of a manual inclusion notice",
-          text: "Submission of a manual inclusion notice"
+          text: "Submission of a manual inclusion notice",
+          attributes: {
+            'data-cy': 'reason-for-visiting-manual-inclusion-notice'
+          }
         },
         {
           value: "Other",
-          text: "Other"
+          text: "Other",
+          attributes: {
+            'data-cy': 'reason-for-visiting-other'
+          }
         }
       ],
       classes: "govuk-!-margin-bottom-6"
@@ -83,37 +101,37 @@
             </td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="easeOfUse" name="easeOfUse" type="radio" value="Very good" aria-label="Very good">
+                <input class="govuk-radios__input" id="easeOfUse" name="easeOfUse" type="radio" value="Very good" aria-label="Very good" data-cy="ease-of-use-very-good">
                 <label for="easeOfUse" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="easeOfUse-2" name="easeOfUse" type="radio" value="Good" aria-label="Good">
+                <input class="govuk-radios__input" id="easeOfUse-2" name="easeOfUse" type="radio" value="Good" aria-label="Good" data-cy="ease-of-use-good">
                 <label for="easeOfUse-2" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="easeOfUse-3" name="easeOfUse" type="radio" value="Neither good nor poor" aria-label="Neither good nor poor">
+                <input class="govuk-radios__input" id="easeOfUse-3" name="easeOfUse" type="radio" value="Neither good nor poor" aria-label="Neither good nor poor" data-cy="ease-of-use-neither-good-nor-poor">
                 <label for="easeOfUse-3" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="easeOfUse-4" name="easeOfUse" type="radio" value="Poor" aria-label="Poor">
+                <input class="govuk-radios__input" id="easeOfUse-4" name="easeOfUse" type="radio" value="Poor" aria-label="Poor" data-cy="ease-of-use-poor">
                 <label for="easeOfUse-4" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="easeOfUse-5" name="easeOfUse" type="radio" value="Very poor" aria-label="Very poor">
+                <input class="govuk-radios__input" id="easeOfUse-5" name="easeOfUse" type="radio" value="Very poor" aria-label="Very poor" data-cy="ease-of-use-very-poor">
                 <label for="easeOfUse-5" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="easeOfUse-6" name="easeOfUse" type="radio" value="I don't know" aria-label="I don't know">
+                <input class="govuk-radios__input" id="easeOfUse-6" name="easeOfUse" type="radio" value="I don't know" aria-label="I don't know" data-cy="ease-of-use-dont-know">
                 <label for="easeOfUse-6" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
@@ -123,37 +141,37 @@
             <td class="govuk-table__cell">b. Information required is clearly explained</td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="clearlyExplained" name="clearlyExplained" type="radio" value="Very good" aria-label="Very good">
+                <input class="govuk-radios__input" id="clearlyExplained" name="clearlyExplained" type="radio" value="Very good" aria-label="Very good" data-cy="clearly-explained-very-good">
                 <label for="clearlyExplained" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="clearlyExplained-2" name="clearlyExplained" type="radio" value="Good" aria-label="Good">
+                <input class="govuk-radios__input" id="clearlyExplained-2" name="clearlyExplained" type="radio" value="Good" aria-label="Good" data-cy="clearly-explained-good">
                 <label for="clearlyExplained-2" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="clearlyExplained-3" name="clearlyExplained" type="radio" value="Neither good nor poor" aria-label="Neither good nor poor">
+                <input class="govuk-radios__input" id="clearlyExplained-3" name="clearlyExplained" type="radio" value="Neither good nor poor" aria-label="Neither good nor poor" data-cy="clearly-explained-neither-good-nor-poor">
                 <label for="clearlyExplained-3" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="clearlyExplained-4" name="clearlyExplained" type="radio" value="Poor" aria-label="Poor">
+                <input class="govuk-radios__input" id="clearlyExplained-4" name="clearlyExplained" type="radio" value="Poor" aria-label="Poor" data-cy="clearly-explained-poor">
                 <label for="clearlyExplained-4" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="clearlyExplained-5" name="clearlyExplained" type="radio" value="Very poor" aria-label="Very poor">
+                <input class="govuk-radios__input" id="clearlyExplained-5" name="clearlyExplained" type="radio" value="Very poor" aria-label="Very poor" data-cy="clearly-explained-very-poor">
                 <label for="clearlyExplained-5" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="clearlyExplained-6" name="clearlyExplained" type="radio" value="I don't know" aria-label="I don't know">
+                <input class="govuk-radios__input" id="clearlyExplained-6" name="clearlyExplained" type="radio" value="I don't know" aria-label="I don't know" data-cy="clearly-explained-dont-know">
                 <label for="clearlyExplained-6" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
@@ -163,37 +181,37 @@
             <td class="govuk-table__cell">c. Information required is easy to understand</td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="easyToUnderstand" name="easyToUnderstand" type="radio" value="Very good" aria-label="Very good">
+                <input class="govuk-radios__input" id="easyToUnderstand" name="easyToUnderstand" type="radio" value="Very good" aria-label="Very good" data-cy="easy-to-understand-very-good">
                 <label for="easyToUnderstand" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="easyToUnderstand-2" name="easyToUnderstand" type="radio" value="Good" aria-label="Good">
+                <input class="govuk-radios__input" id="easyToUnderstand-2" name="easyToUnderstand" type="radio" value="Good" aria-label="Good" data-cy="easy-to-understand-good">
                 <label for="easyToUnderstand-2" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="easyToUnderstand-3" name="easyToUnderstand" type="radio" value="Neither good nor poor" aria-label="Neither good nor poor">
+                <input class="govuk-radios__input" id="easyToUnderstand-3" name="easyToUnderstand" type="radio" value="Neither good nor poor" aria-label="Neither good nor poor" data-cy="easy-to-understand-neither-good-nor-poor">
                 <label for="easyToUnderstand-3" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="easyToUnderstand-4" name="easyToUnderstand" type="radio" value="Poor" aria-label="Poor">
+                <input class="govuk-radios__input" id="easyToUnderstand-4" name="easyToUnderstand" type="radio" value="Poor" aria-label="Poor" data-cy="easy-to-understand-poor">
                 <label for="easyToUnderstand-4" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="easyToUnderstand-5" name="easyToUnderstand" type="radio" value="Very poor" aria-label="Very poor">
+                <input class="govuk-radios__input" id="easyToUnderstand-5" name="easyToUnderstand" type="radio" value="Very poor" aria-label="Very poor" data-cy="easy-to-understand-very-poor">
                 <label for="easyToUnderstand-5" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
             <td class="govuk-table__cell">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="easyToUnderstand-6" name="easyToUnderstand" type="radio" value="I don't know" aria-label="I don't know">
+                <input class="govuk-radios__input" id="easyToUnderstand-6" name="easyToUnderstand" type="radio" value="I don't know" aria-label="I don't know" data-cy="easy-to-understand-dont-know">
                 <label for="easyToUnderstand-6" class="govuk-label govuk-radios__label govuk-!-padding-0"></label>
               </div>
             </td>
@@ -214,27 +232,45 @@
       items: [
         {
           value: "Very satisfied",
-          text: "Very satisfied"
+          text: "Very satisfied",
+          attributes: {
+            'data-cy': 'were-you-satisfied-very-satisfied'
+          }
         },
         {
           value: "Satisfied",
-          text: "Satisfied"
+          text: "Satisfied",
+          attributes: {
+            'data-cy': 'were-you-satisfied-satisfied'
+          }
         },
         {
           value: "Neither satisfied not dissatisfied",
-          text: "Neither satisfied not dissatisfied"
+          text: "Neither satisfied not dissatisfied",
+          attributes: {
+            'data-cy': 'were-you-satisfied-neither-satisfied-not-dissatisfied'
+          }
         },
         {
           value: "Dissatisfied",
-          text: "Dissatisfied"
+          text: "Dissatisfied",
+          attributes: {
+            'data-cy': 'were-you-satisfied-dissatisfied'
+          }
         },
         {
           value: "Very dissatisfied",
-          text: "Very dissatisfied"
+          text: "Very dissatisfied",
+          attributes: {
+            'data-cy': 'were-you-satisfied-very-dissatisfied'
+          }
         },
         {
           value: "I don't know",
-          text: "I don't know"
+          text: "I don't know",
+          attributes: {
+            'data-cy': 'were-you-satisfied-dont-know'
+          }
         }
       ],
       classes: "govuk-!-margin-bottom-6"
@@ -246,7 +282,10 @@
       label: {
         text: "How can we improve this service? (optional)"
       },
-      classes: "govuk-input--width-20"
+      classes: "govuk-input--width-20",
+      attributes: {
+        'data-cy': 'how-can-we-improve'
+      }
     }) }}
 
     {{ govukInput({
@@ -258,10 +297,13 @@
       },
       id: "email",
       name: "email",
-      classes: "govuk-input--width-20"
+      classes: "govuk-input--width-20",
+      attributes: {
+        'data-cy': 'email'
+      }
     }) }}
 
-    <button class="govuk-button" data-module="govuk-button">Submit</button>
+    <button class="govuk-button" data-module="govuk-button" data-cy="submit-button">Submit</button>
 
   </form>
 
