@@ -262,7 +262,6 @@
           <p data-cy="buyer-address-line-3">{{ submissionDetails["buyer-address-line-3"]}}</p>
           <p data-cy="buyer-address-town">{{ submissionDetails["buyer-address-town"]}}</p>
           <p data-cy="buyer-address-postcode">{{ submissionDetails["buyer-address-postcode"]}}</p>
-          <p data-cy="buyer-address-country">{{ submissionDetails["buyer-address-country"].name}}</p>
         </dd>
       </div>
     {% endif %}
@@ -272,7 +271,7 @@
         <dt class="govuk-summary-list__key govuk-body-s">
           Country of buyer
         </dt>
-        <dd data-cy="countryOfBuyer" class="govuk-summary-list__value govuk-body-s">
+        <dd data-cy="buyer-address-country" class="govuk-summary-list__value govuk-body-s">
           {{ submissionDetails['buyer-address-country'].name }}
         </dd>
       </div>
