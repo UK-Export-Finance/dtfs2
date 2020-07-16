@@ -61,7 +61,7 @@ jobs:
 
   portal-data:
     needs: portal-api
-    name: Refresh database
+    name: Refresh Dev database
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -106,6 +106,12 @@ jobs:
     - name: Run API tests
       run: |
         docker-compose exec -T deal-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --detectOpenHandles # --forceExit
+    - uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#dtfs2-dev'
+      if: failure()
 
   end-to-end-tests:
     needs: [portal-ui, portal-api]
@@ -151,6 +157,12 @@ jobs:
       with:
         name: screenshots
         path: './cypress/screenshots'
+    - uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#dtfs2-dev'
+      if: failure()
 
   promote-portal:
     needs: [api-tests, end-to-end-tests]
