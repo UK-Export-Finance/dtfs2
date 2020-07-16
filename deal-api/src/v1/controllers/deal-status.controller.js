@@ -1,6 +1,8 @@
 const $ = require('mongo-dot-notation');
 const moment = require('moment');
 const { findOneDeal } = require('./deal.controller');
+const { addComment } = require('./deal-comments.controller');
+
 const { userHasAccessTo } = require('../users/checks');
 const db = require('../../drivers/db-client');
 
@@ -41,31 +43,6 @@ const updateStatus = async (collection, _id, from, to) => {
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id },
     $.flatten(statusUpdate),
-    { returnOriginal: false },
-  );
-
-  const { value } = findAndUpdateResponse;
-
-  return value;
-};
-
-const updateComments = async (collection, _id, commentToAdd, user) => {
-  const commentToInsert = {
-    user,
-    timestamp: now(),
-    text: commentToAdd,
-  };
-
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id },
-    {
-      $push: {
-        comments: {
-          $each: [commentToInsert],
-          $position: 0,
-        },
-      },
-    },
     { returnOriginal: false },
   );
 
@@ -161,7 +138,7 @@ exports.update = (req, res) => {
       await updateFacilityDates(collection, updatedDeal);
     }
 
-    const dealAfterCommentsUpdate = await updateComments(collection, req.params.id, req.body.comments, user);
+    const dealAfterCommentsUpdate = await addComment(req.params.id, req.body.comments, user);
 
     if (toStatus === 'Submitted') {
       const dealAfterAllUpdates = await createSubmissionDate(collection, req.params.id, user);

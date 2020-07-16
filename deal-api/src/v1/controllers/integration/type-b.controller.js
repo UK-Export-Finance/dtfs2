@@ -2,7 +2,8 @@
 const xml2js = require('xml2js');
 const dealController = require('../deal.controller');
 
-const { generateStatus } = require('./type-b-helpers');
+
+const { generateStatus, updateComments } = require('./type-b-helpers');
 
 const processTypeB = async ({ fileContents }) => {
   const { Deal: workflowDeal, error } = await xml2js.parseStringPromise(fileContents /* , options */)
@@ -22,8 +23,6 @@ const processTypeB = async ({ fileContents }) => {
     return false;
   }
 
-  //  const comments = generateComments();
-
   const updatedDealInfo = {
     details: {
       status: generateStatus(deal, workflowDeal),
@@ -38,7 +37,9 @@ const processTypeB = async ({ fileContents }) => {
     body: updatedDealInfo,
   };
 
+  await updateComments(dealId, workflowDeal);
   const updatedDeal = await dealController.updateDeal(updateRequest);
+
   return updatedDeal;
 };
 
