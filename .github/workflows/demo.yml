@@ -16,9 +16,9 @@ jobs:
         username: ${{ secrets.ACR_DEV_USERNAME }}
         password: ${{ secrets.ACR_DEV_PASSWORD }}
     - run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal:latest
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal:latest ${{ secrets.ACR_DEV_REGISTRY }}/portal:demo
-        docker push ${{ secrets.ACR_DEV_REGISTRY }}/portal:demo
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:latest
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:latest ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:demo
+        docker push ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:demo
 
   portal-api:
     name: Tag Portal API
@@ -30,6 +30,6 @@ jobs:
         username: ${{ secrets.ACR_DEV_USERNAME }}
         password: ${{ secrets.ACR_DEV_PASSWORD }}
     - run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:latest
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:latest ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:demo
-        docker push ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:demo
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:latest
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:latest ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:demo
+        docker push ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:demo
