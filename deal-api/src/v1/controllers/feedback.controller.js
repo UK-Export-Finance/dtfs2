@@ -2,6 +2,7 @@ const { ObjectID } = require('mongodb');
 const assert = require('assert');
 const { NotifyClient } = require('notifications-node-client');
 const validateFeedback = require('../validation/feedback');
+const now = require('../../now');
 
 const notifyClient = new NotifyClient(process.env.GOV_NOTIFY_API_KEY);
 
@@ -49,8 +50,13 @@ exports.create = async (req, res) => {
     });
   }
 
+  const modifiedFeedback = {
+    ...req.body,
+    created: now()
+  };
+
   const collection = await db.getCollection('feedback');
-  const response = await collection.insertOne(req.body);
+  const response = await collection.insertOne(modifiedFeedback);
 
   const createdFeedback = response.ops[0];
 
@@ -63,7 +69,8 @@ exports.create = async (req, res) => {
     satisfied,
     howCanWeImprove,
     emailAddress,
-  } = req.body;
+    created,
+  } = modifiedFeedback;
 
   const emailVariables = {
     date_of_submission: 'mock date',
@@ -75,6 +82,7 @@ exports.create = async (req, res) => {
     satisfied,
     howCanWeImprove,
     emailAddress,
+    created,
   };
 
   const EMAIL_TEMPLATE_ID = '4214bdb8-b3f5-4081-a664-3bfcfe648b8d';
