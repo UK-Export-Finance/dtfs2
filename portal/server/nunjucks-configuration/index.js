@@ -1,5 +1,6 @@
 import nunjucks from 'nunjucks';
 import filterLocaliseTimestamp from './filter-localiseTimestamp';
+import dashIfEmpty from './filter-dashIfEmpty';
 
 const configureNunjucks = (opts) => {
   const appViews = [
@@ -10,7 +11,7 @@ const configureNunjucks = (opts) => {
   const nunjucksEnvironment = nunjucks.configure(appViews, opts);
 
   nunjucksEnvironment.addFilter('localiseTimestamp', filterLocaliseTimestamp);
-
+  nunjucksEnvironment.addFilter('dashIfEmpty', dashIfEmpty);
   return nunjucks;
 };
 
