@@ -5,79 +5,142 @@ const componentRenderer = require('../../componentRenderer');
 const component = 'contract/components/contract-overview-table.njk';
 const render = componentRenderer(component);
 describe(component, () => {
-  let wrapper;
+  describe('renders all the details of a deal', () => {
+    let wrapper;
 
-  const now = moment();
+    const now = moment();
 
-  const deal = {
-    details: {
-      bankSupplyContractID: 'bankSupplyContractID',
-      ukefDealId: 'ukefDealId',
-      status: 'status',
-      previousStatus: 'previousStatus',
-      maker: {
-        username: 'maker',
-      },
-      checker: 'should be checker.username?',
-      submissionDate: now.valueOf(),
-      dateOfLastAction: now.valueOf(),
-      submissionType:'submissionType',
-    }
-  };
+    const deal = {
+      details: {
+        bankSupplyContractID: 'bankSupplyContractID',
+        ukefDealId: 'ukefDealId',
+        status: 'status',
+        previousStatus: 'previousStatus',
+        maker: {
+          username: 'maker',
+        },
+        checker: {
+          username: 'checker',
+        },
+        submissionDate: now.valueOf(),
+        dateOfLastAction: now.valueOf(),
+      }
+    };
 
-  beforeAll( () => {
-    const user = {timezone:'Europe/London'};
-    wrapper = render({deal, user});
-  })
+    beforeAll( () => {
+      const user = {timezone:'Europe/London'};
+      wrapper = render({deal, user});
+    })
 
-  it("displays deal.details.bankSupplyContractID", () =>{
-    return wrapper.expectText('[data-cy="bankSupplyContractID"]')
-                  .toRead(deal.details.bankSupplyContractID);
+    it("displays deal.details.bankSupplyContractID", () =>{
+      return wrapper.expectText('[data-cy="bankSupplyContractID"]')
+                    .toRead(deal.details.bankSupplyContractID);
+    });
+
+    it("displays deal.details.ukefDealId", () =>{
+      return wrapper.expectText('[data-cy="ukefDealId"]')
+                    .toRead(deal.details.ukefDealId);
+    });
+
+    it("displays deal.details.status", () =>{
+      return wrapper.expectText('[data-cy="status"]')
+                    .toRead(deal.details.status);
+    });
+
+    it("displays deal.details.previousStatus", () =>{
+      return wrapper.expectText('[data-cy="previousStatus"]')
+                    .toRead(deal.details.previousStatus);
+    });
+
+    it("displays deal.details.maker.username", () =>{
+      return wrapper.expectText('[data-cy="maker"]')
+                    .toRead(deal.details.maker.username);
+    });
+
+    it("displays deal.details.checker", () =>{
+      return wrapper.expectText('[data-cy="checker"]')
+                    .toRead(deal.details.checker.username);
+    });
+
+    it("displays deal.details.submissionDate", () =>{
+      return wrapper.expectText('[data-cy="submissionDate"]')
+                    .toRead(moment(deal.details.submissionDate)
+                                      .tz('Europe/London')
+                                      .format('DD/MM/YYYY'));
+    });
+
+    it("displays deal.details.dateOfLastAction", () =>{
+      return wrapper.expectText('[data-cy="dateOfLastAction"]')
+                    .toRead(moment(deal.details.dateOfLastAction)
+                                      .tz('Europe/London')
+                                      .format('DD/MM/YYYY HH:mm'));
+    });
+
   });
 
-  it("displays deal.details.ukefDealId", () =>{
-    return wrapper.expectText('[data-cy="ukefDealId"]')
-                  .toRead(deal.details.ukefDealId);
-  });
+  describe('renders - for any blank fields', () => {
+    let wrapper;
 
-  it("displays deal.details.status", () =>{
-    return wrapper.expectText('[data-cy="status"]')
-                  .toRead(deal.details.status);
-  });
+    const now = moment();
 
-  it("displays deal.details.previousStatus", () =>{
-    return wrapper.expectText('[data-cy="previousStatus"]')
-                  .toRead(deal.details.previousStatus);
-  });
+    const deal = {
+      details: {
+        bankSupplyContractID: '',
+        ukefDealId: ' ',
+        status: '   ',
+        previousStatus: '',
+        maker: {},
+        checker: {},
+        submissionDate: '',
+        dateOfLastAction: '',
+      }
+    };
 
-  it("displays deal.details.maker.username", () =>{
-    return wrapper.expectText('[data-cy="maker"]')
-                  .toRead(deal.details.maker.username);
-  });
+    beforeAll( () => {
+      const user = {timezone:'Europe/London'};
+      wrapper = render({deal, user});
+    })
 
-  //TODO feels like this isn't wired in, or would be same shape as maker^?
-  it("displays deal.details.checker", () =>{
-    return wrapper.expectText('[data-cy="checker"]')
-                  .toRead(deal.details.checker);
-  });
+    it("displays deal.details.bankSupplyContractID", () =>{
+      return wrapper.expectText('[data-cy="bankSupplyContractID"]')
+                    .toRead("-");
+    });
 
-  it("displays deal.details.submissionDate", () =>{
-    return wrapper.expectText('[data-cy="submissionDate"]')
-                  .toRead(moment(deal.details.submissionDate)
-                                    .tz('Europe/London')
-                                    .format('DD/MM/YYYY'));
-  });
+    it("displays deal.details.ukefDealId", () =>{
+      return wrapper.expectText('[data-cy="ukefDealId"]')
+                    .toRead("-");
+    });
 
-  it("displays deal.details.dateOfLastAction", () =>{
-    return wrapper.expectText('[data-cy="dateOfLastAction"]')
-                  .toRead(moment(deal.details.dateOfLastAction)
-                                    .tz('Europe/London')
-                                    .format('DD/MM/YYYY HH:mm'));
-  });
+    it("displays deal.details.status", () =>{
+      return wrapper.expectText('[data-cy="status"]')
+                    .toRead("-");
+    });
 
-  it("displays deal.details.submissionType", () =>{
-    return wrapper.expectText('[data-cy="submissionType"]')
-                  .toRead(deal.details.submissionType);
+    it("displays deal.details.previousStatus", () =>{
+      return wrapper.expectText('[data-cy="previousStatus"]')
+                    .toRead("-");
+    });
+
+    it("displays deal.details.maker.username", () =>{
+      return wrapper.expectText('[data-cy="maker"]')
+                    .toRead("-");
+    });
+
+    it("displays deal.details.checker", () =>{
+      return wrapper.expectText('[data-cy="checker"]')
+                    .toRead("-");
+    });
+
+    it("displays deal.details.submissionDate", () =>{
+      return wrapper.expectText('[data-cy="submissionDate"]')
+                    .toRead("-");
+    });
+
+    it("displays deal.details.dateOfLastAction", () =>{
+      return wrapper.expectText('[data-cy="dateOfLastAction"]')
+                    .toRead("-");
+    });
+
   });
 
 });

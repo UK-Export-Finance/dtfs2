@@ -114,10 +114,11 @@ const updateFacilityDates = async (collection, deal) => {
   return value;
 };
 
-const createSubmissionDate = async (collection, _id) => {
+const createSubmissionDate = async (collection, _id, user) => {
   const submissionDate = {
     details: {
       submissionDate: now(),
+      checker: user,
     },
   };
 
@@ -163,7 +164,7 @@ exports.update = (req, res) => {
     const dealAfterCommentsUpdate = await updateComments(collection, req.params.id, req.body.comments, user);
 
     if (toStatus === 'Submitted') {
-      const dealAfterAllUpdates = await createSubmissionDate(collection, req.params.id);
+      const dealAfterAllUpdates = await createSubmissionDate(collection, req.params.id, user);
 
       // TODO - Reinstate typeA XML creation once Loans and Summary have been added
       const { previousWorkflowStatus } = deal.details;

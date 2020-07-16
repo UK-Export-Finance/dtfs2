@@ -12,46 +12,41 @@
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Checker</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submission date</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Date of Last Action</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submission type</th>
       </tr>
     </thead>
 
     <tbody class="govuk-table__body">
       <tr class="govuk-table__row">
         <td data-cy="bankSupplyContractID" class="govuk-table__cell govuk-!-font-size-14">
-          {{ details.bankSupplyContractID }}
+          {{ details.bankSupplyContractID | dashIfEmpty }}
         </td>
 
         <td data-cy="ukefDealId" class="govuk-table__cell govuk-!-font-size-14">
-          {{ details.ukefDealId }}
+          {{ details.ukefDealId | dashIfEmpty}}
         </td>
 
         <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
-          {{ details.status }}
+          {{ details.status | dashIfEmpty }}
         </td>
 
         <td data-cy="previousStatus" class="govuk-table__cell govuk-!-font-size-14">
-          {{ details.previousStatus }}
+          {{ details.previousStatus | dashIfEmpty }}
         </td>
 
         <td data-cy="maker" class="govuk-table__cell govuk-!-font-size-14">
-          {{ details.maker.username }}
+          {{ details.maker.username | dashIfEmpty }}
         </td>
 
         <td data-cy="checker" class="govuk-table__cell govuk-!-font-size-14">
-          {{ details.checker }}
+          {{ details.checker.username | dashIfEmpty }}
         </td>
 
         <td data-cy="submissionDate" class="govuk-table__cell govuk-!-font-size-14">
-          {{ details.submissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) }}
+          {{ details.submissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) | dashIfEmpty }}
         </td>
 
         <td data-cy="dateOfLastAction" class="govuk-table__cell govuk-!-font-size-14">
-          {{ details.dateOfLastAction | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) }}
-        </td>
-
-        <td data-cy="submissionType" class="govuk-table__cell govuk-!-font-size-14">
-          {{ details.submissionType }}
+          {{ details.dateOfLastAction | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
         </td>
 
       </tr>
