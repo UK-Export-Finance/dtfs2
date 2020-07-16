@@ -45,6 +45,7 @@ services:
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
       - AZURE_PORTAL_FILESHARE_NAME
       - AZURE_PORTAL_EXPORT_FOLDER
+      - DTFS_PORTAL_SCHEDULER
 
     entrypoint: npx nodemon src/index.js
 
