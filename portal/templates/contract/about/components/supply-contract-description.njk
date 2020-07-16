@@ -1,13 +1,17 @@
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 
 {% macro render(opts) %}
   {% set deal = opts.deal %}
   {% set validationErrors = opts.validationErrors %}
 
-  {{ govukTextarea({
+  {{ govukCharacterCount({
     label: { text: "Description of supply contract" },
-    hint: { text: "You can enter up to 300 characters" },
-    attributes : { "data-cy" : "supply-contract-description" },
+    maxlength: 300,
+    attributes : {
+      "data-cy" : "supply-contract-description",
+      "maxLength" : "300"
+    },
     name: "supply-contract-description",
     id: "supply-contract-description",
     value: deal.submissionDetails["supply-contract-description"],
