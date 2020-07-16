@@ -1,6 +1,5 @@
 # dtfs2
 
-
 [![Build Status](https://dev.azure.com/sysdevukef/DTFS/_apis/build/status/notbinary.dtfs2?branchName=master)](https://dev.azure.com/sysdevukef/DTFS/_build/latest?definitionId=45&branchName=master)
 
 ### Setup
