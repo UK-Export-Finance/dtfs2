@@ -47,6 +47,7 @@ services:
       - AZURE_PORTAL_EXPORT_FOLDER
       - DTFS_PORTAL_SCHEDULER
       - GOV_NOTIFY_API_KEY
+      - GOV_NOTIFY_EMAIL_RECIPIENT
 
     entrypoint: npx nodemon src/index.js
 

@@ -72,7 +72,7 @@ exports.create = async (req, res) => {
 
   const EMAIL_TEMPLATE_ID = '4214bdb8-b3f5-4081-a664-3bfcfe648b8d';
   // const EMAIL_RECIPIENT = 'no.reply@ukexportfinance.gov.uk';
-  const EMAIL_RECIPIENT = 'tony.barnes@notbinary.co.uk';
+  const EMAIL_RECIPIENT = process.env.GOV_NOTIFY_EMAIL_RECIPIENT;
 
   await sendFeedbackEmail(
     EMAIL_TEMPLATE_ID,
