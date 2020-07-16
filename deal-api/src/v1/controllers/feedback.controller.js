@@ -21,6 +21,15 @@ const sendFeedbackEmail = async (templateId, sendToEmailAddress, emailVariables)
     });
 };
 
+const findFeedbacks = async (callback) => {
+  const collection = await db.getCollection('feedback');
+
+  collection.find({}).toArray((err, result) => {
+    assert.equal(err, null);
+    callback(result);
+  });
+};
+
 const findOneFeedback = async (id, callback) => {
   const collection = await db.getCollection('feedback');
 
@@ -93,6 +102,9 @@ exports.findOne = (req, res) => (
     return res.status(404).send();
   })
 );
+
+exports.findAll = (req, res) => (
+  findFeedbacks((feedbacks) => res.status(200).send(feedbacks)));
 
 exports.delete = async (req, res) => {
   findOneFeedback(req.params.id, async (feedback) => {
