@@ -5,7 +5,7 @@ if [ -f "secrets/companies_house_api_key.txt" ]; then
 fi
 
 if [ -f "secrets/set_azure_api_keys.sh" ]; then
-    source ./secrets/set_azure_api_keys.sh
+    source secrets/set_azure_api_keys.sh
     echo "API keys set"
 else
     if [ -z "$AZURE_WORKFLOW_STORAGE_ACCOUNT" ]; then
