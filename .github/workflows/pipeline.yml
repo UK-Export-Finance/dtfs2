@@ -188,6 +188,8 @@ jobs:
         docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal:${{ env.TAG }}
         docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal:${{ env.TAG }} ${{ secrets.ACR_TEST_REGISTRY }}/portal:${{ env.TAG }}
         docker push ${{ secrets.ACR_TEST_REGISTRY }}/portal:${{ env.TAG }}
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal:${{ env.TAG }} ${{ secrets.ACR_TEST_REGISTRY }}/portal-ui:${{ env.TAG }}
+        docker push ${{ secrets.ACR_TEST_REGISTRY }}/portal-ui:${{ env.TAG }}
 
   promote-portal-api:
     needs: [api-tests, end-to-end-tests]
