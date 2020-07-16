@@ -148,11 +148,13 @@ jobs:
         node ./re-insert-mocks.js
         pwd
     - name: Run e2e tests
+      env:
+        CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}
       run: |
         pwd
         cd $GITHUB_WORKSPACE
         npm install
-        npx cypress run --spec "cypress/integration/**/*.spec.js" --config video=false
+        npx cypress run --spec "cypress/integration/**/*.spec.js" --record --config video=false
     - name: Save Cypress screenshots
       if: ${{ failure() }}
       uses: actions/upload-artifact@master
