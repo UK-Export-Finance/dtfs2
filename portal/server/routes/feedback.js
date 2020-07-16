@@ -14,23 +14,24 @@ router.get('/feedback', (req, res) => res.render('feedback/feedback-form.njk'));
 router.post('/feedback', async (req, res) => {
   const { userToken } = requestParams(req);
 
-  const response = await api.createFeedback(req.body, userToken);
+  try {
+    const response = await api.createFeedback(req.body, userToken);
+    if (response) {
+      return res.render('feedback/feedback-thankyou.njk');
+    }
+  } catch (catchErr) {
+    const { data } = catchErr.response;
 
-  const validationErrors = generateErrorSummary(
-    response.validationErrors,
-    errorHref,
-  );
+    const validationErrors = generateErrorSummary(
+      data.validationErrors,
+      errorHref,
+    );
 
-  // TODO
-  // if NO validation errors, redirect to thank you
-
-  return res.render('feedback/feedback-form.njk', {
-    feedback: response.feedback,
-    validationErrors,
-  });
+    return res.render('feedback/feedback-form.njk', {
+      feedback: data.feedback,
+      validationErrors,
+    });
+  }
 });
-
-// TODO: only get to this page if submitted the form.
-router.get('/feedback/thank-you', (req, res) => res.render('feedback/feedback-thankyou.njk'));
 
 export default router;

@@ -30,6 +30,12 @@
       classes: "govuk-input--width-20",
       attributes: {
         'data-cy': 'what-is-your-role'
+      },
+      errorMessage: validationErrors.errorList.role.text and {
+        text: validationErrors.errorList.role.text,
+        attributes: {
+          'data-cy': 'role-error-message'
+        }
       }
     }) }}
 
@@ -42,6 +48,12 @@
       classes: "govuk-input--width-20",
       attributes: {
         'data-cy': 'which-organisation'
+      },
+      errorMessage: validationErrors.errorList.organisation.text and {
+        text: validationErrors.errorList.organisation.text,
+        attributes: {
+          'data-cy': 'organisation-error-message'
+        }
       }
     }) }}
 
@@ -83,6 +95,12 @@
           }
         }
       ],
+      errorMessage: validationErrors.errorList.reasonForVisiting.text and {
+        text: validationErrors.errorList.reasonForVisiting.text,
+        attributes: {
+          'data-cy': 'reason-for-visiting-error-message'
+        }
+      },
       classes: "govuk-!-margin-bottom-6"
     }) }}
 
@@ -283,6 +301,12 @@
           }
         }
       ],
+      errorMessage: validationErrors.errorList.satisfied.text and {
+        text: validationErrors.errorList.satisfied.text,
+        attributes: {
+          'data-cy': 'satisfied-error-message'
+        }
+      },
       classes: "govuk-!-margin-bottom-6"
     }) }}
 
@@ -310,6 +334,12 @@
       classes: "govuk-input--width-20",
       attributes: {
         'data-cy': 'emailAddress'
+      },
+      errorMessage: validationErrors.errorList.emailAddress.text and {
+        text: validationErrors.errorList.emailAddress.text,
+        attributes: {
+          'data-cy': 'email-address-error-message'
+        }
       }
     }) }}
 
