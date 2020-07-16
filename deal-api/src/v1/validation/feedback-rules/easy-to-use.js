@@ -4,9 +4,9 @@ const { orderNumber } = require('../../../utils/error-list-order-number');
 module.exports = (feedback, errorList) => {
   const newErrorList = { ...errorList };
 
-  if (!hasValue(feedback.easyToUnderstand)) {
-    newErrorList.easyToUnderstand = {
-      text: 'Enter Information required is easy to understand',
+  if (!hasValue(feedback.easyToUse)) {
+    newErrorList.easyToUse = {
+      text: 'Select a rating for how easy the service is to use',
       order: orderNumber(newErrorList),
     };
   }

@@ -6,7 +6,7 @@ module.exports = (feedback, errorList) => {
 
   if (!hasValue(feedback.role)) {
     newErrorList.role = {
-      text: 'Enter What is your role?',
+      text: 'Enter your role',
       order: orderNumber(newErrorList),
     };
   }

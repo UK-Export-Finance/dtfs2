@@ -8,12 +8,12 @@ const { dateValidationText } = require('../../../src/v1/validation/fields/date')
 describe('/v1/deals/:id/bond', () => {
   const allFeedbackFields = {
     role: 'computers',
-    organisation: 'DTFS2',
-    reasonForVisiting: 'submission',
-    easeOfUse: 'Very good',
+    organisation: 'Test ltd',
+    reasonForVisiting: 'testing',
+    easyToUse: 'Very good',
     clearlyExplained: 'Good',
-    easyToUnderstand: 'Neither good nor poor',
     satisfied: 'Very satisfied',
+    howCanWeImprove: 'Devs are doing a great job already',
     emailAddress: 'test@testing.com',
   };
 
@@ -38,7 +38,7 @@ describe('/v1/deals/:id/bond', () => {
       const { status, body } = await postFeedback();
 
       expect(status).toEqual(400); 
-      expect(body.validationErrors.count).toEqual(7);
+      expect(body.validationErrors.count).toEqual(6);
       expect(body.validationErrors).toBeDefined();
     });
 
@@ -53,7 +53,7 @@ describe('/v1/deals/:id/bond', () => {
           const { body } = await postFeedback(feedback);
 
           expect(body.validationErrors.errorList.role).toBeDefined();
-          expect(body.validationErrors.errorList.role.text).toEqual('Enter What is your role?');
+          expect(body.validationErrors.errorList.role.text).toEqual('Enter your role');
         });
       });
     });
@@ -69,7 +69,7 @@ describe('/v1/deals/:id/bond', () => {
           const { body } = await postFeedback(feedback);
 
           expect(body.validationErrors.errorList.organisation).toBeDefined();
-          expect(body.validationErrors.errorList.organisation.text).toEqual('Enter Which organisation do you work for?');
+          expect(body.validationErrors.errorList.organisation.text).toEqual('Enter which organisation you work for');
         });
       });
     });
@@ -85,23 +85,23 @@ describe('/v1/deals/:id/bond', () => {
           const { body } = await postFeedback(feedback);
 
           expect(body.validationErrors.errorList.reasonForVisiting).toBeDefined();
-          expect(body.validationErrors.errorList.reasonForVisiting.text).toEqual('Enter What was your reason for visiting the Beta service today?');
+          expect(body.validationErrors.errorList.reasonForVisiting.text).toEqual('Select your reason for visiting the service today');
         });
       });
     });
 
-    describe('easeOfUse', () => {
+    describe('easyToUse', () => {
       describe('when missing', () => {
         it('should return validationError', async () => {
           const feedback = {
             ...allFeedbackFields,
-            easeOfUse: '',
+            easyToUse: '',
           };
 
           const { body } = await postFeedback(feedback);
 
-          expect(body.validationErrors.errorList.easeOfUse).toBeDefined();
-          expect(body.validationErrors.errorList.easeOfUse.text).toEqual('Enter the Ease of use');
+          expect(body.validationErrors.errorList.easyToUse).toBeDefined();
+          expect(body.validationErrors.errorList.easyToUse.text).toEqual('Select a rating for how easy the service is to use');
         });
       });
     });
@@ -117,23 +117,7 @@ describe('/v1/deals/:id/bond', () => {
           const { body } = await postFeedback(feedback);
 
           expect(body.validationErrors.errorList.clearlyExplained).toBeDefined();
-          expect(body.validationErrors.errorList.clearlyExplained.text).toEqual('Enter Information required is clearly explained');
-        });
-      });
-    });
-
-    describe('easyToUnderstand', () => {
-      describe('when missing', () => {
-        it('should return validationError', async () => {
-          const feedback = {
-            ...allFeedbackFields,
-            easyToUnderstand: '',
-          };
-
-          const { body } = await postFeedback(feedback);
-
-          expect(body.validationErrors.errorList.easyToUnderstand).toBeDefined();
-          expect(body.validationErrors.errorList.easyToUnderstand.text).toEqual('Enter Information required is easy to understand');
+          expect(body.validationErrors.errorList.clearlyExplained.text).toEqual('Select a rating for how clearly it\'s explained what information you need to provided');
         });
       });
     });
@@ -149,7 +133,7 @@ describe('/v1/deals/:id/bond', () => {
           const { body } = await postFeedback(feedback);
 
           expect(body.validationErrors.errorList.satisfied).toBeDefined();
-          expect(body.validationErrors.errorList.satisfied.text).toEqual('Enter Overall, were you satisfied with the Beta service?');
+          expect(body.validationErrors.errorList.satisfied.text).toEqual('Select a rating for how satisfied you are with the service');
         });
       });
     });

@@ -6,7 +6,7 @@ module.exports = (feedback, errorList) => {
 
   if (!hasValue(feedback.reasonForVisiting)) {
     newErrorList.reasonForVisiting = {
-      text: 'Enter What was your reason for visiting the Beta service today?',
+      text: 'Select your reason for visiting the service today',
       order: orderNumber(newErrorList),
     };
   }
