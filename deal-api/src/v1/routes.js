@@ -203,6 +203,10 @@ authRouter.route('/countries/:code')
   );
 
 authRouter.route('/feedback')
+  .get(
+    // validate({ role: ['data-admin'] }),
+    feedback.findAll,
+  )
   .post(
     // validate({ role: ['editor'] }),
     feedback.create,

@@ -34,10 +34,12 @@ describe('/v1/feedback', () => {
   };
 
   describe('POST /v1/feedback', () => {
-    // TODO:
-    // it('does not create a feedback when there are validation errors', () => {
-      
-    // });
+    it('does not create a feedback when there are validation errors', async () => {
+      await as(aBarclaysMaker).post({}).to('/v1/feedback');
+      const { status, body } = await as(aBarclaysMaker).get(`/v1/feedback`);
+      expect(status).toEqual(200);
+      expect(body).toEqual([]);
+    });
 
     describe('when all required fields provided', () => {
       it('returns a new feedback', async () => {
@@ -50,6 +52,24 @@ describe('/v1/feedback', () => {
         delete bodyWithoutId._id; // eslint-disable-line no-underscore-dangle
         expect(bodyWithoutId).toEqual(feedbackBody);
       });
+    });
+  });
+
+  describe('GET /v1/feedback', () => {
+    it('returns all feedback', async () => {
+      const feedback1 = await postFeedback();
+      const feedback2 = await postFeedback();
+      const feedback3 = await postFeedback();
+
+      const { status, body } = await as(aBarclaysMaker).get(`/v1/feedback`);
+
+      expect(status).toEqual(200);
+
+      expect(body).toEqual([
+        { ...feedback1.body },
+        { ...feedback2.body },
+        { ...feedback3.body },
+      ]);
     });
   });
 
