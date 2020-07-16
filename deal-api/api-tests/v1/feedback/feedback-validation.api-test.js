@@ -117,7 +117,7 @@ describe('/v1/deals/:id/bond', () => {
           const { body } = await postFeedback(feedback);
 
           expect(body.validationErrors.errorList.clearlyExplained).toBeDefined();
-          expect(body.validationErrors.errorList.clearlyExplained.text).toEqual('Select a rating for how clearly it\'s explained what information you need to provided');
+          expect(body.validationErrors.errorList.clearlyExplained.text).toEqual('Select a rating for how clearly explained the information you need to provide is');
         });
       });
     });

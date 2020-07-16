@@ -41,15 +41,17 @@ describe('/v1/feedback', () => {
     });
 
     describe('when all required fields provided', () => {
-      it('returns a new feedback', async () => {
+      it('returns a new feedback with added `created` field', async () => {
         const { status, body } = await postFeedback();
 
         expect(status).toEqual(200);
         expect(body._id).toBeDefined(); // eslint-disable-line no-underscore-dangle
 
-        const bodyWithoutId = body;
-        delete bodyWithoutId._id; // eslint-disable-line no-underscore-dangle
-        expect(bodyWithoutId).toEqual(feedbackBody);
+        expect(body).toEqual({
+          ...feedbackBody,
+          _id: expect.any(String), // eslint-disable-line no-underscore-dangle
+          created: expect.any(String),
+        });
       });
     });
   });
@@ -86,9 +88,11 @@ describe('/v1/feedback', () => {
 
       expect(status).toEqual(200);
 
-      const bodyWithoutId = body;
-      delete bodyWithoutId._id; // eslint-disable-line no-underscore-dangle
-      expect(bodyWithoutId).toEqual(feedbackBody);
+      expect(body).toEqual({
+        ...feedbackBody,
+        _id: expect.any(String), // eslint-disable-line no-underscore-dangle
+        created: expect.any(String),
+      });
     });
   });
 
