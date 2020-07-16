@@ -71,26 +71,6 @@ jobs:
           mv .env.azure .env
           npm install
           node re-insert-mocks.js
-            
-  # NB this now runs as part of the e2e tests.
-  # accessibility-check:
-  #   needs: portal-ui
-  #   name: Lighthouse accessibility check
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@master
-  #     - name: Test login screen (temporary)
-  #       uses: justinribeiro/lighthouse-action@master
-  #       with:
-  #         secret: ${{ secrets.GITHUB_TOKEN }}
-  #         url: https://dtfs-portal-dev.azurewebsites.net
-  #         wptConnectionSpeed: threegfast
-  #         #lighthouseScoringBudget: .github/lighthouse/scores.js
-  #     - name: Save report
-  #       uses: actions/upload-artifact@master
-  #       with:
-  #         name: lighthouse-artifacts
-  #         path: './results'
   
   api-tests:
     needs: portal-api
