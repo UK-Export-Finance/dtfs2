@@ -28,6 +28,7 @@ services:
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
       - AZURE_PORTAL_EXPORT_FOLDER
       - GOV_NOTIFY_API_KEY
+      - GOV_NOTIFY_EMAIL_RECIPIENT
     entrypoint: npx nodemon src/index.js
 
   deal-api-data:
