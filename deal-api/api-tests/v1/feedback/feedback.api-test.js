@@ -8,12 +8,11 @@ describe('/v1/feedback', () => {
   let aBarclaysMaker;
 
   const feedbackBody = {
-    role: 'test role',
+    role: 'computers',
     organisation: 'Test ltd',
     reasonForVisiting: 'testing',
-    easeOfUse: 'Very good',
+    easyToUse: 'Very good',
     clearlyExplained: 'Good',
-    easyToUnderstand: 'Neither good nor poor',
     satisfied: 'Very satisfied',
     howCanWeImprove: 'Devs are doing a great job already',
     emailAddress: 'test@testing.com',

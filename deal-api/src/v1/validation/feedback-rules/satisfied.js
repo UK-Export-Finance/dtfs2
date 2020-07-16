@@ -6,7 +6,7 @@ module.exports = (feedback, errorList) => {
 
   if (!hasValue(feedback.satisfied)) {
     newErrorList.satisfied = {
-      text: 'Enter Overall, were you satisfied with the Beta service?',
+      text: 'Select a rating for how satisfied you are with the service',
       order: orderNumber(newErrorList),
     };
   }

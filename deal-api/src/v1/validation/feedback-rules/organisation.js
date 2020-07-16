@@ -6,7 +6,7 @@ module.exports = (feedback, errorList) => {
 
   if (!hasValue(feedback.organisation)) {
     newErrorList.organisation = {
-      text: 'Enter Which organisation do you work for?',
+      text: 'Enter which organisation you work for',
       order: orderNumber(newErrorList),
     };
   }

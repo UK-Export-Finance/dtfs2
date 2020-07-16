@@ -6,7 +6,7 @@ module.exports = (feedback, errorList) => {
 
   if (!hasValue(feedback.clearlyExplained)) {
     newErrorList.clearlyExplained = {
-      text: 'Enter Information required is clearly explained',
+      text: 'Select a rating for how clearly it\'s explained what information you need to provided',
       order: orderNumber(newErrorList),
     };
   }
