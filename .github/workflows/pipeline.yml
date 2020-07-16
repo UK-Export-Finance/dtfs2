@@ -149,7 +149,7 @@ jobs:
         pwd
     - name: Run e2e tests
       env:
-        CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       run: |
         pwd
         cd $GITHUB_WORKSPACE
