@@ -67,4 +67,16 @@ context('Login', () => {
 
     cy.url().should('eq', relative('/start-now'));
   });
+
+  it("Should pass Lighthouse audit", function () {
+    cy.lighthouse({
+      performance: 85,
+      accessibility: 100,
+      "best-practices": 85,
+      seo: 85,
+      pwa: 100,
+    });
+    cy.pa11y();
+  });
+  
 });
