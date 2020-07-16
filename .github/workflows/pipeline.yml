@@ -88,14 +88,13 @@ jobs:
       run: |
         docker pull ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }}
         docker tag ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }} dtfs/deal-api
-    - name: Pull portal
+    - name: Pull portal-ui
       run: |
         docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal:${{ env.TAG }}
         docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal:${{ env.TAG }} dtfs/portal
     - name: Start Docker Compose
       run: |
-        source secrets/set_jwt_keypair.sh
-        docker-compose up -d
+        source secrets/set_jwt_keypair.sh && docker-compose up -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
     - name: Load mock data
@@ -209,3 +208,5 @@ jobs:
         docker pull ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }}
         docker tag ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }} ${{ secrets.ACR_TEST_REGISTRY }}/deal-api:${{ env.TAG }}
         docker push ${{ secrets.ACR_TEST_REGISTRY }}/deal-api:${{ env.TAG }}
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }} ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:${{ env.TAG }}
+        docker push ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:${{ env.TAG }}
