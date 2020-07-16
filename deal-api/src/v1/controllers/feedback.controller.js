@@ -1,6 +1,7 @@
 const { ObjectID } = require('mongodb');
 const assert = require('assert');
 const { NotifyClient } = require('notifications-node-client');
+const validateFeedback = require('../validation/feedback');
 
 const notifyClient = new NotifyClient(process.env.GOV_NOTIFY_API_KEY);
 
@@ -20,7 +21,6 @@ const sendFeedbackEmail = async (templateId, sendToEmailAddress, emailVariables)
     });
 };
 
-
 const findOneFeedback = async (id, callback) => {
   const collection = await db.getCollection('feedback');
 
@@ -31,6 +31,15 @@ const findOneFeedback = async (id, callback) => {
 };
 
 exports.create = async (req, res) => {
+  const validationErrors = validateFeedback(req.body);
+
+  if (validationErrors.count !== 0) {
+    return res.status(400).send({
+      feedback: req.body,
+      validationErrors,
+    });
+  }
+
   const collection = await db.getCollection('feedback');
   const response = await collection.insertOne(req.body);
 

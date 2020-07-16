@@ -16,7 +16,7 @@ describe('/v1/feedback', () => {
     easyToUnderstand: 'Neither good nor poor',
     satisfied: 'Very satisfied',
     howCanWeImprove: 'Devs are doing a great job already',
-    email: 'test@testing.com',
+    emailAddress: 'test@testing.com',
   };
 
   beforeAll(async () => {
@@ -34,15 +34,22 @@ describe('/v1/feedback', () => {
   };
 
   describe('POST /v1/feedback', () => {
-    it('returns a new feedback with the provided data', async () => {
-      const { status, body } = await postFeedback();
+    // TODO:
+    // it('does not create a feedback when there are validation errors', () => {
+      
+    // });
 
-      expect(status).toEqual(200);
-      expect(body._id).toBeDefined(); // eslint-disable-line no-underscore-dangle
+    describe('when all required fields provided', () => {
+      it('returns a new feedback', async () => {
+        const { status, body } = await postFeedback();
 
-      const bodyWithoutId = body;
-      delete bodyWithoutId._id; // eslint-disable-line no-underscore-dangle
-      expect(bodyWithoutId).toEqual(feedbackBody);
+        expect(status).toEqual(200);
+        expect(body._id).toBeDefined(); // eslint-disable-line no-underscore-dangle
+
+        const bodyWithoutId = body;
+        delete bodyWithoutId._id; // eslint-disable-line no-underscore-dangle
+        expect(bodyWithoutId).toEqual(feedbackBody);
+      });
     });
   });
 

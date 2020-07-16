@@ -1,8 +1,13 @@
 import express from 'express';
 import api from '../api';
-import { requestParams } from '../helpers';
+import {
+  requestParams,
+  generateErrorSummary,
+} from '../helpers';
 
 const router = express.Router();
+
+const errorHref = (id) => `#${id}`;
 
 router.get('/feedback', (req, res) => res.render('feedback/feedback-form.njk'));
 
@@ -11,12 +16,18 @@ router.post('/feedback', async (req, res) => {
 
   const response = await api.createFeedback(req.body, userToken);
 
-  if (response) {
-    // thank you page?
-    return res.redirect('/feedback/thank-you');
-  }
+  const validationErrors = generateErrorSummary(
+    response.validationErrors,
+    errorHref,
+  );
 
-  return res.redirect('/feedback');
+  // TODO
+  // if NO validation errors, redirect to thank you
+
+  return res.render('feedback/feedback-form.njk', {
+    feedback: response.feedback,
+    validationErrors,
+  });
 });
 
 // TODO: only get to this page if submitted the form.
