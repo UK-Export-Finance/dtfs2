@@ -2,5 +2,6 @@
   "baseUrl": "http://localhost:5000",
   "apiProtocol": "http://",
   "apiHost": "localhost",
-  "apiPort": "5001"
+  "apiPort": "5001",
+  "projectId": "f1ud6y"
 }
