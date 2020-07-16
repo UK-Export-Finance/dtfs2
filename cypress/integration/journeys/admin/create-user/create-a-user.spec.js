@@ -63,4 +63,36 @@ context('Admin user creates a new user', () => {
     });
 
   });
+
+  it("Manage users screen should pass Lighthouse audit", function () {
+    // login and go to manage users
+    cy.login(admin);
+    startNow.header().manageUsers().click();
+    
+    cy.lighthouse({
+      performance: 85,
+      accessibility: 100,
+      "best-practices": 85,
+      seo: 85,
+      pwa: 100,
+    });
+    cy.pa11y();
+  });
+
+  it("Add user screen should pass Lighthouse audit", function () {
+    // login and go to add/edit user
+    cy.login(admin);
+    startNow.header().manageUsers().click();
+    users.addUser().click();
+    
+    cy.lighthouse({
+      performance: 85,
+      accessibility: 100,
+      "best-practices": 85,
+      seo: 85,
+      pwa: 100,
+    });
+    cy.pa11y();
+  });
+
 });

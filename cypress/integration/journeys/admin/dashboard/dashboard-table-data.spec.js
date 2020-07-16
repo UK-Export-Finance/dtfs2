@@ -38,4 +38,20 @@ context('Admin dashboard', () => {
     expect(dashboard.tableHeaders.bank().should('exist'));
     expect(row.bank().should('exist'));
   });
+
+  it("Dashboard screen should pass Lighthouse audit", function () {
+    // login and go to dashboard
+    cy.login(admin);
+    dashboard.visit();
+    
+    cy.lighthouse({
+      performance: 85,
+      accessibility: 100,
+      "best-practices": 85,
+      seo: 85,
+      pwa: 100,
+    });
+    cy.pa11y();
+  });
+
 });
