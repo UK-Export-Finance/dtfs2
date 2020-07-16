@@ -15,12 +15,14 @@ const processTypeB = async ({ fileContents }) => {
   }
 
 
-  const { portal_deal_id: dealId, Action_Code: actionCode } = workflowDeal.$;
+  const { portal_deal_id: dealId } = workflowDeal.$;
 
   const deal = await dealController.findOneDeal(dealId);
   if (!deal) {
     return false;
   }
+
+  //  const comments = generateComments();
 
   const updatedDealInfo = {
     details: {
