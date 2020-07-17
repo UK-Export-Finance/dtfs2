@@ -78,7 +78,6 @@ exports.clone = async (req, res) => {
         bankSupplyContractName,
         dateOfLastAction: existingDeal.details.dateOfLastAction,
         submissionType: existingDeal.details.submissionType,
-        checker: existingDeal.details.checker,
         maker: existingDeal.details.maker,
         owningBank: existingDeal.details.owningBank,
       },
