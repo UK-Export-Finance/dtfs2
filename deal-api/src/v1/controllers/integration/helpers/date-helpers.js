@@ -1,9 +1,8 @@
+const moment = require('moment');
+
 const formatDate = (day, month, year) => {
-  const dateStr = `${day}-${month}-${year}`;
-  if (/(\d{2}-\d{2}-\d{4})?/.test(dateStr) && Date.parse(`${year}-${month}-${day}`)) {
-    return dateStr;
-  }
-  return '';
+  const dt = moment([year, month, day]);
+  return dt.isValid() ? dt.format('DD-MM-YYYY') : '';
 };
 
 module.exports = {
