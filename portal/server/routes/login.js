@@ -31,6 +31,12 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.get('/logout', (req, res) => {
+  req.session.destroy(() => {
+    res.redirect('/');
+  });
+});
+
 router.get('/reset-password', (req, res) => res.render('reset-password.njk'));
 
 router.post('/reset-password', (req, res) => res.redirect('/?passwordreset=1'));
