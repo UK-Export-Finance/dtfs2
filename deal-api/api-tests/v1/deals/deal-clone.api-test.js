@@ -76,7 +76,6 @@ describe('/v1/deals/:id/clone', () => {
         expect(body.details.bankSupplyContractName).toEqual(clonePostBody.bankSupplyContractName);
         expect(body.details.dateOfLastAction).toBeDefined();
         expect(body.details.submissionType).toEqual(originalDeal.details.submissionType);
-        expect(body.details.checker).toEqual(originalDeal.details.checker);
         expect(body.details.maker).toEqual(originalDeal.details.maker);
         expect(body.details.owningBank).toEqual(originalDeal.details.owningBank);
         expect(body.details.status).toEqual('Draft');
