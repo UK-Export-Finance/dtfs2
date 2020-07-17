@@ -88,5 +88,22 @@ module.exports = (wrapper, html, params) => {
         },
       }
     },
+    expectInput: (selector) => {
+      return {
+        toHaveValue: (value) => {
+          expect(wrapper(selector).attr('value')).toEqual(value);
+        },
+        toBeChecked: () => {
+          expect(wrapper(selector).is(':checked')).toEqual(true);
+        },
+      }
+    },
+    expectTextArea: (selector) => {
+      return {
+        toHaveValue: (value) => {
+          expect(wrapper(selector).val()).toEqual(value);
+        },
+      }
+    },
   };
 }
