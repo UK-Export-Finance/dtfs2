@@ -1,5 +1,5 @@
-const componentRenderer = require('../../componentRenderer');
-const component = 'contract/components/abandon-deal-button.njk';
+const componentRenderer = require('../../../componentRenderer');
+const component = 'contract/components/contract-actions/abandon-deal-button.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {

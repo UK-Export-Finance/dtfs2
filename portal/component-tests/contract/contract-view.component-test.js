@@ -2,8 +2,8 @@ const pageRenderer = require('../pageRenderer');
 const page = 'contract/contract-view.njk';
 const render = pageRenderer(page);
 const deal = require('../fixtures/deal-fully-completed');
-// const {STATUS} = require('../../server/constants');
 import STATUS from '../../server/constants';
+
 const aDealInStatus = (status) => {
   return {
     ...deal,
