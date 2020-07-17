@@ -8,8 +8,8 @@ const { processTypeB } = require('../../v1/controllers/integration/type-b.contro
 
 const fetchWorkflowTypeB = {
   init: () => ({
-    schedule: '* * * * *',
-    message: 'Fetch workflow type B every 1 min',
+    schedule: '00,15,30,45 * * * *',
+    message: 'Fetch workflow type B every 15 min',
     task: async (fileshare = 'workflow', overwriteFolder) => {
       const { IMPORT_FOLDER } = getConfig(fileshare);
 
@@ -19,6 +19,10 @@ const fetchWorkflowTypeB = {
       };
 
       const folderContents = await listDirectoryFiles(workflowImportFolder);
+      if (!folderContents) {
+        return false;
+      }
+
       const files = folderContents.filter((f) => f.kind === 'file');
 
       if (!files.length) {
