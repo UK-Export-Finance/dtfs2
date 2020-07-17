@@ -137,7 +137,34 @@ describe('/v1/deals/:id/bond', () => {
         });
       });
     });
-    
-    // TODO: email
+
+    describe('emailAddress', () => {
+      describe('when invalid', () => {
+        it('should return validationError', async () => {
+          const postInvalidEmail = async (emailAddress) => {
+            const feedback = {
+              ...allFeedbackFields,
+              emailAddress: emailAddress,
+            };
+            const { body } = await postFeedback(feedback);
+            return body.validationErrors;
+          };
+
+          const expectedText = 'Enter an email address in the correct format, like name@example.com';
+
+          let validationErrors = await postInvalidEmail('hello');
+          expect(validationErrors.errorList.emailAddress.text).toEqual(expectedText);
+
+          validationErrors = await postInvalidEmail('hello@')
+          expect(validationErrors.errorList.emailAddress.text).toEqual(expectedText);
+
+          validationErrors = await postInvalidEmail('hello@test')
+          expect(validationErrors.errorList.emailAddress.text).toEqual(expectedText);
+
+          validationErrors = await postInvalidEmail('hello@test.')
+          expect(validationErrors.errorList.emailAddress.text).toEqual(expectedText);
+        });
+      });
+    });
   });
 });
