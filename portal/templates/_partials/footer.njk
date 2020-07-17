@@ -17,11 +17,13 @@
               Cookies
             </a>
           </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/feedback">
-              Feedback
-            </a>
-          </li>
+          {% if user and user.roles and (user.roles.includes('maker') or user.roles.includes('checker')) %}
+            <li class="govuk-footer__inline-list-item">
+              <a class="govuk-footer__link" href="/feedback" data-cy="feedback-link">
+                Feedback
+              </a>
+            </li>
+          {% endif %}
         </ul>
 
         <svg
