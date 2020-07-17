@@ -1,26 +1,12 @@
 const { ObjectID } = require('mongodb');
 const assert = require('assert');
-const { NotifyClient } = require('notifications-node-client');
-const validateFeedback = require('../validation/feedback');
-const now = require('../../now');
-
-const notifyClient = new NotifyClient(process.env.GOV_NOTIFY_API_KEY);
+const moment = require('moment');
+require('moment-timezone');// monkey-patch to provide moment().tz()
 
 const db = require('../../drivers/db-client');
-
-const sendFeedbackEmail = async (templateId, sendToEmailAddress, emailVariables) => {
-  const personalisation = emailVariables;
-
-  await notifyClient
-    .sendEmail(templateId, sendToEmailAddress, {
-      personalisation,
-      reference: null,
-    })
-    .then((response) => response)
-    .catch((err) => {
-      console.log(err);
-    });
-};
+const validateFeedback = require('../validation/feedback');
+const now = require('../../now');
+const sendEmail = require('../email');
 
 const findFeedbacks = async (callback) => {
   const collection = await db.getCollection('feedback');
@@ -52,13 +38,19 @@ exports.create = async (req, res) => {
 
   const modifiedFeedback = {
     ...req.body,
-    created: now()
+    created: now(),
   };
 
   const collection = await db.getCollection('feedback');
   const response = await collection.insertOne(modifiedFeedback);
 
   const createdFeedback = response.ops[0];
+
+  // get formatted date from created timestamp, to display in email
+  const targetTimezone = req.user.timezone;
+  const utc = moment(parseInt(modifiedFeedback.created, 10));
+  const localisedTimestamp = utc.tz(targetTimezone);
+  const formattedCreated = localisedTimestamp.format('DD/MM/YYYY HH:mm');
 
   const {
     role,
@@ -69,11 +61,9 @@ exports.create = async (req, res) => {
     satisfied,
     howCanWeImprove,
     emailAddress,
-    created,
   } = modifiedFeedback;
 
   const emailVariables = {
-    date_of_submission: 'mock date',
     role,
     organisation,
     reasonForVisiting,
@@ -82,14 +72,13 @@ exports.create = async (req, res) => {
     satisfied,
     howCanWeImprove,
     emailAddress,
-    created,
+    created: formattedCreated,
   };
 
   const EMAIL_TEMPLATE_ID = '4214bdb8-b3f5-4081-a664-3bfcfe648b8d';
-  // const EMAIL_RECIPIENT = 'no.reply@ukexportfinance.gov.uk';
   const EMAIL_RECIPIENT = process.env.GOV_NOTIFY_EMAIL_RECIPIENT;
 
-  await sendFeedbackEmail(
+  await sendEmail(
     EMAIL_TEMPLATE_ID,
     EMAIL_RECIPIENT,
     emailVariables,
