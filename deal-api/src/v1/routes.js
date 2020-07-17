@@ -204,20 +204,21 @@ authRouter.route('/countries/:code')
 
 authRouter.route('/feedback')
   .get(
-    // validate({ role: ['data-admin'] }),
+    validate({ role: ['data-admin'] }),
     feedback.findAll,
   )
   .post(
-    // validate({ role: ['editor'] }),
+    validate({ role: ['maker', 'checker'] }),
     feedback.create,
   );
 
 authRouter.route('/feedback/:id')
   .get(
+    validate({ role: ['data-admin'] }),
     feedback.findOne,
   )
   .delete(
-    // validate({ role: ['editor'] }),
+    validate({ role: ['data-admin'] }),
     feedback.delete,
   );
 
