@@ -1,27 +1,21 @@
 {% extends "index.njk" %}
 {% import '_macros/status-tag.njk' as statusTag %}
 
-{% import './components/abandon-deal-button.njk' as abandonButton %}
 {% import './components/abandon-deal-link.njk' as abandonLink %}
 {% import './components/about-supply-contract-link.njk' as aboutSupplyContractLink %}
 {% import './components/add-a-bond-button.njk' as addABondButton %}
 {% import './components/add-a-loan-button.njk' as addALoanButton %}
 {% import './components/bond-transactions-table.njk' as bondTransactionsTable %}
-{% import './components/can-proceed-text.njk' as canProceedText %}
 {% import './components/clone-deal-link.njk' as cloneLink %}
+{% import './components/contract-actions.njk' as contractActions %}
 {% import './components/contract-overview-table.njk' as contractOverviewTable %}
 {% import './components/contract-tabs.njk' as contractTabs %}
 {% import './components/edit-deal-name-link.njk' as editDealNameLink %}
 {% import './components/eligibility-criteria-link.njk' as eligibilityCriteriaLink %}
 {% import './components/loan-transactions-table.njk' as loanTransactionsTable %}
-{% import './components/please-complete-all-forms-text.njk' as pleaseCompleteAllFormsText %}
 {% import './components/summary-table.njk' as summaryTable %}
 {% import './components/forms-incomplete-text.njk' as formsIncompleteText %}
 {% import './components/totals-table.njk' as totalsTable %}
-{% import './components/proceed-to-review-button.njk' as proceedToReviewButton %}
-{% import './components/proceed-to-submit-button.njk' as proceedToSubmitButton %}
-{% import './components/return-to-maker-button.njk' as returnToMakerButton %}
-{% import './components/review-eligibility-checklist-link.njk' as reviewLink %}
 
 {% block pageTitle %}{{ deal.details.bankSupplyContractName }}{% endblock %}
 
@@ -171,13 +165,7 @@
 
         </div>
 
-        {{ pleaseCompleteAllFormsText.render(componentData)}}
-        {{ canProceedText.render(componentData)}}
-        {{ reviewLink.render(componentData)}}
-        {{ proceedToReviewButton.render(componentData)}}
-        {{ proceedToSubmitButton.render(componentData)}}
-        {{ abandonButton.render(componentData)}}
-        {{ returnToMakerButton.render(componentData)}}
+        {{ contractActions.render(componentData)}}
 
       </section>
 
