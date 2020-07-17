@@ -43,7 +43,9 @@ jobs:
             MONGO_INITDB_DATABASE="${{ secrets.DEV_MONGO_INITDB_DATABASE }}" \
             MONGODB_URI="${{ secrets.DEV_MONGODB_URI }}" \
             JWT_SIGNING_KEY="${{ secrets.DEV_JWT_SIGNING_KEY }}" \
-            JWT_VALIDATING_KEY="${{ secrets.DEV_JWT_VALIDATING_KEY }}"
+            JWT_VALIDATING_KEY="${{ secrets.DEV_JWT_VALIDATING_KEY }}" \
+            GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
+            GOV_NOTIFY_EMAIL_RECIPIENT="${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
 
     - name: Portal UI
       uses: Azure/cli@v1.0.0
@@ -105,7 +107,9 @@ jobs:
             MONGO_INITDB_DATABASE="${{ secrets.DEV_MONGO_INITDB_DATABASE }}" \
             MONGODB_URI="${{ secrets.DEV_MONGODB_URI }}" \
             JWT_SIGNING_KEY="${{ secrets.DEV_JWT_SIGNING_KEY }}" \
-            JWT_VALIDATING_KEY="${{ secrets.DEV_JWT_VALIDATING_KEY }}"
+            JWT_VALIDATING_KEY="${{ secrets.DEV_JWT_VALIDATING_KEY }}" \
+            GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
+            GOV_NOTIFY_EMAIL_RECIPIENT="${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
 
     - name: Portal UI
       uses: Azure/cli@v1.0.0
