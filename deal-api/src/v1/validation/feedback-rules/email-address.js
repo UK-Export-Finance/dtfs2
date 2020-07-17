@@ -1,10 +1,9 @@
 const { hasValue } = require('../../../utils/string');
-const { isNumeric } = require('../../../utils/number');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 
 const isValidEmail = (email) => {
   const regex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-  return regex.test(email)
+  return regex.test(email);
 };
 
 module.exports = (feedback, errorList) => {
@@ -16,7 +15,6 @@ module.exports = (feedback, errorList) => {
       order: orderNumber(newErrorList),
     };
   }
- 
+
   return newErrorList;
 };
-

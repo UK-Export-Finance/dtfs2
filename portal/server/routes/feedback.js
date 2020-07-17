@@ -32,6 +32,10 @@ router.post('/feedback', async (req, res) => {
       validationErrors,
     });
   }
+
+  return res.render('feedback/feedback-form.njk', {
+    feedack: req.body,
+  });
 });
 
 export default router;
