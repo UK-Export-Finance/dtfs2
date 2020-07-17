@@ -1,5 +1,5 @@
-const componentRenderer = require('../../componentRenderer');
-const component = 'contract/components/review-eligibility-checklist-link.njk';
+const componentRenderer = require('../../../componentRenderer');
+const component = 'contract/components/contract-actions/review-eligibility-checklist-link.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
