@@ -209,5 +209,5 @@ jobs:
         password: ${{ secrets.ACR_TEST_PASSWORD }}
     - run: |
         docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:${{ env.TAG }}
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }} ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:${{ env.TAG }}
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:${{ env.TAG }} ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:${{ env.TAG }}
         docker push ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:${{ env.TAG }}
