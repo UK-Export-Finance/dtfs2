@@ -32,6 +32,11 @@ jobs:
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
             --enable-cd true
 
+          az webapp log config \
+            --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --docker-container-logging on
+
           az webapp config appsettings set \
             --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
@@ -60,6 +65,11 @@ jobs:
             --name tfs-portal-api-${{ env.ENVIRONMENT }} \
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
             --enable-cd true
+
+          az webapp log config \
+            --name tfs-portal-api-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --docker-container-logging on
           
           az webapp config connection-string set \
           --name tfs-portal-api-${{ env.ENVIRONMENT }} \
@@ -107,6 +117,11 @@ jobs:
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
             --enable-cd true
 
+          az webapp log config \
+            --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --docker-container-logging on
+
           az webapp config appsettings set \
             --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
@@ -135,6 +150,11 @@ jobs:
             --name tfs-portal-api-${{ env.ENVIRONMENT }} \
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
             --enable-cd true
+
+          az webapp log config \
+            --name tfs-portal-api-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --docker-container-logging on
           
           az webapp config connection-string set \
           --name tfs-portal-api-${{ env.ENVIRONMENT }} \
@@ -182,6 +202,11 @@ jobs:
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
             --enable-cd true
 
+          az webapp log config \
+            --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --docker-container-logging on
+
           az webapp config appsettings set \
             --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
@@ -210,6 +235,11 @@ jobs:
             --name tfs-portal-api-${{ env.ENVIRONMENT }} \
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
             --enable-cd true
+
+          az webapp log config \
+            --name tfs-portal-api-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --docker-container-logging on
           
           az webapp config connection-string set \
           --name tfs-portal-api-${{ env.ENVIRONMENT }} \
