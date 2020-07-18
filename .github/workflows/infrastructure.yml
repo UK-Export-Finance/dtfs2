@@ -72,7 +72,7 @@ jobs:
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
             --settings \
               COMPANIES_HOUSE_API_URL="https://api.companieshouse.gov.uk" \
-      -       DEAL_API_URL="tfs-portal-api-${{ env.ENVIRONMENT }}.azurewebsites.net"
+              DEAL_API_URL="tfs-portal-api-${{ env.ENVIRONMENT }}.azurewebsites.net"
           
           az webapp config connection-string set \
             --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
@@ -154,4 +154,4 @@ jobs:
             --connection-string-type custom \
             --settings \
               COMPANIES_HOUSE_API_URL="https://api.companieshouse.gov.uk" \
-      -       DEAL_API_URL="tfs-portal-api-${{ env.ENVIRONMENT }}.azurewebsites.net"
+              DEAL_API_URL="tfs-portal-api-${{ env.ENVIRONMENT }}.azurewebsites.net"
