@@ -99,7 +99,7 @@ jobs:
           az webapp create \
             --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
-            --plan ${{ env.ENVIRONMENT }} \
+            --plan dev \
             --deployment-container-image-name ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:${{ env.TAG }}
 
           az webapp deployment container config \
@@ -128,7 +128,7 @@ jobs:
           az webapp create \
             --name tfs-portal-api-${{ env.ENVIRONMENT }} \
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
-            --plan ${{ env.ENVIRONMENT }} \
+            --plan dev \
             --deployment-container-image-name ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:${{ env.TAG }}
 
           az webapp deployment container config \
