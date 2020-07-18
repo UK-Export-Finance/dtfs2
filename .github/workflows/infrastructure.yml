@@ -25,7 +25,12 @@ jobs:
             --name tfs-portal-api-${{ env.ENVIRONMENT }} \
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
             --plan ${{ env.ENVIRONMENT }} \
-            --deployment-container-image-name ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }}
+            --deployment-container-image-name ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:${{ env.TAG }}
+            
+          az webapp deployment container config \
+            --name tfs-portal-api-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --enable-cd true
           
           az webapp config connection-string set \
           --name tfs-portal-api-${{ env.ENVIRONMENT }} \
@@ -55,7 +60,12 @@ jobs:
             --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
             --plan dev \
-            --deployment-container-image-name ${{ secrets.ACR_DEV_REGISTRY }}/deal-api:${{ env.TAG }}
+            --deployment-container-image-name ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:${{ env.TAG }}
+
+          az webapp deployment container config \
+            --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --enable-cd true
 
           az webapp config appsettings set \
             --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
@@ -90,6 +100,11 @@ jobs:
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
             --plan dev \
             --deployment-container-image-name ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:${{ env.ENVIRONMENT }}
+
+          az webapp deployment container config \
+            --name tfs-portal-api-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --enable-cd true
           
           az webapp config connection-string set \
           --name tfs-portal-api-${{ env.ENVIRONMENT }} \
@@ -120,6 +135,11 @@ jobs:
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
             --plan dev \
             --deployment-container-image-name ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:${{ env.ENVIRONMENT }}
+
+          az webapp deployment container config \
+            --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --enable-cd true
 
           az webapp config appsettings set \
             --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
