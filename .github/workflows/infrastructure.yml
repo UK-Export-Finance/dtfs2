@@ -24,7 +24,82 @@ jobs:
           az webapp create \
             --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
             --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
-            --plan dev \
+            --plan ${{ env.ENVIRONMENT }} \
+            --deployment-container-image-name ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:${{ env.TAG }}
+
+          az webapp deployment container config \
+            --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --enable-cd true
+
+          az webapp config appsettings set \
+            --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --settings \
+              COMPANIES_HOUSE_API_URL="https://api.companieshouse.gov.uk" \
+              DEAL_API_URL="tfs-portal-api-${{ env.ENVIRONMENT }}.azurewebsites.net"
+          
+          az webapp config connection-string set \
+            --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --connection-string-type custom \
+            --settings \
+              COMPANIES_HOUSE_API_KEY=${{ secrets.COMPANIES_HOUSE_API_KEY }}
+
+    - name: Portal API
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp create \
+            --name tfs-portal-api-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --plan ${{ env.ENVIRONMENT }} \
+            --deployment-container-image-name ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:${{ env.TAG }}
+
+          az webapp deployment container config \
+            --name tfs-portal-api-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --enable-cd true
+          
+          az webapp config connection-string set \
+          --name tfs-portal-api-${{ env.ENVIRONMENT }} \
+          --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+          --connection-string-type custom \
+          --settings \
+            AZURE_PORTAL_EXPORT_FOLDER="${{ secrets.DEV_AZURE_PORTAL_EXPORT_FOLDER }}" \
+            AZURE_PORTAL_FILESHARE_NAME="${{ secrets.DEV_AZURE_PORTAL_FILESHARE_NAME }}" \
+            AZURE_PORTAL_STORAGE_ACCESS_KEY="${{ secrets.DEV_AZURE_PORTAL_STORAGE_ACCESS_KEY }}" \
+            AZURE_PORTAL_STORAGE_ACCOUNT="${{ secrets.DEV_AZURE_PORTAL_STORAGE_ACCOUNT }}" \
+            AZURE_WORKFLOW_EXPORT_FOLDER="${{ secrets.DEV_AZURE_WORKFLOW_EXPORT_FOLDER }}" \
+            AZURE_WORKFLOW_FILESHARE_NAME="${{ secrets.DEV_AZURE_WORKFLOW_FILESHARE_NAME }}" \
+            AZURE_WORKFLOW_IMPORT_FOLDER="${{ secrets.DEV_AZURE_WORKFLOW_IMPORT_FOLDER }}" \
+            AZURE_WORKFLOW_STORAGE_ACCESS_KEY="${{ secrets.DEV_AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}" \
+            MONGO_INITDB_DATABASE="${{ secrets.DEV_MONGO_INITDB_DATABASE }}" \
+            MONGODB_URI="${{ secrets.DEV_MONGODB_URI }}" \
+            JWT_SIGNING_KEY="${{ secrets.DEV_JWT_SIGNING_KEY }}" \
+            JWT_VALIDATING_KEY="${{ secrets.DEV_JWT_VALIDATING_KEY }}" \
+            GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
+            GOV_NOTIFY_EMAIL_RECIPIENT="${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
+
+  test:
+    name: Test environment
+    runs-on: ubuntu-latest
+    env:
+      ENVIRONMENT: test
+      TAG: latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_DIGITAL_DEV }}
+
+    - name: Portal UI
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp create \
+            --name tfs-portal-ui-${{ env.ENVIRONMENT }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP_DEV }} \
+            --plan ${{ env.ENVIRONMENT }} \
             --deployment-container-image-name ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:${{ env.TAG }}
 
           az webapp deployment container config \
