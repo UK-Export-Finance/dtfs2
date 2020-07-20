@@ -22,8 +22,6 @@ FROM node:lts AS test
 WORKDIR /app
 COPY --from=image /app /app
 
-#RUN mkdir -p ./reports/coverage/api-test
-#RUN chown -R 1000 ./reports
 ADD ./api-tests ./api-tests
 ADD ./__mocks__ ./__mocks__
 ADD ./api-test.jest.config.js ./api-test.jest.config.js
