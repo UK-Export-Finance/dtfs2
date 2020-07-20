@@ -3,6 +3,8 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% import './_macros/reason-for-visiting-other.njk' as reasonForVisitingOther %}
 
 {% block pageTitle %}Feedback{% endblock %}
 
@@ -98,6 +100,9 @@
           checked: feedback.reasonForVisiting === "Other",
           attributes: {
             'data-cy': 'reason-for-visiting-other'
+          },
+          conditional: {
+            html: reasonForVisitingOther.render(feedback.reasonForVisitingOther, validationErrors.errorList.reasonForVisitingOther)
           }
         }
       ],
