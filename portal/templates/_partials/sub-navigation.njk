@@ -1,0 +1,19 @@
+{% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
+
+{{ mojSubNavigation({
+label: 'Sub navigation',
+items: [{
+text: 'Audit supply contracts',
+href: '#',
+active: true
+}, {
+text: 'Transactions report',
+href: '#'
+}, {
+text: 'MIA/MIN cover start date change',
+href: '#'
+}, {
+text: 'Countdown indicator',
+href: '#'
+}]
+}) }}
