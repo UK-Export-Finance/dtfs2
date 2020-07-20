@@ -41,9 +41,10 @@
     {% endif %}
 
     {% include "_partials/header.njk" %}
-    {# include "_partials/sub-navigation.njk" #}
 
     <div class="govuk-width-container">
+    
+    {% include "_partials/sub-navigation.njk" %}
 
       <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
         {% block content %}{% endblock %}
