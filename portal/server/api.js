@@ -2,7 +2,7 @@ const axios = require('axios');
 const FormData = require('form-data');
 const apollo = require('./graphql/apollo');
 
-const { dealsQuery } = require('./graphql/queries');
+const { dealsQuery, transactionsQuery } = require('./graphql/queries');
 
 require('dotenv').config();
 
@@ -333,20 +333,15 @@ const getIndustrySectors = async (token) => {
   };
 };
 
-const transactions = async (token) => {
-  const response = await axios({
-    method: 'get',
-    url: `${urlRoot}/v1/transactions`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return {
-    count: response.data.count,
-    transactions: response.data.transactions,
+const transactions = async (start, pagesize, filters, token) => {
+  const params = {
+    start,
+    pagesize,
+    filters,
   };
+  const response = await apollo('GET', transactionsQuery, params, token);
+
+  return response.data.transactions;
 };
 
 const validateToken = async (token) => {
