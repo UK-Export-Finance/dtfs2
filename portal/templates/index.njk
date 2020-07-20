@@ -44,7 +44,9 @@
 
     <div class="govuk-width-container">
     
+    {% if mainNav and mainNav == "Reports" %}
     {% include "_partials/sub-navigation.njk" %}
+    {% endif %}
 
       <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
         {% block content %}{% endblock %}
