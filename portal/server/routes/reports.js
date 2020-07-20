@@ -8,6 +8,16 @@ import {
 const router = express.Router();
 const PAGESIZE = 20;
 
+// Default redirect until we put in a nav.
+router.get('/reports', async (req, res) => res.redirect('/reports/index'));
+router.get('/reports/index', async (req, res) => {
+  const test = 1;
+  return res.render('reports/reports.njk', {
+    test,
+    user: req.session.user,
+  });
+});
+
 router.get('/reports/audit-supply-contracts', async (req, res) => res.redirect('/reports/audit-supply-contracts/0'));
 
 router.get('/reports/audit-supply-contracts/:page', async (req, res) => {
