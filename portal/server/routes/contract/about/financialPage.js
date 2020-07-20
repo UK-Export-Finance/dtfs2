@@ -47,7 +47,7 @@ router.get('/contract/:_id/about/financial', provide([CURRENCIES]), async (req, 
     };
   }
 
-  res.render('contract/about/about-supply-financial.njk', {
+  return res.render('contract/about/about-supply-financial.njk', {
     deal,
     validationErrors: formattedValidationErrors,
     currencies: mapCurrencies(currencies, deal.submissionDetails.supplyContractCurrency),
