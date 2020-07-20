@@ -31,6 +31,7 @@
   "homepage": "https://github.com/notbinary/dtfs2#readme",
   "dependencies": {
     "@babel/runtime": "7.10.1",
+    "@ministryofjustice/frontend": "0.0.19-alpha",
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-client": "^2.6.8",
     "apollo-link-http": "^1.5.17",
