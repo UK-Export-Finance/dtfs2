@@ -8,9 +8,9 @@ import {
 const router = express.Router();
 const PAGESIZE = 20;
 
-router.get('/reporting/audit-supply-contracts', async (req, res) => res.redirect('/reporting/audit-supply-contracts/0'));
+router.get('/reports/audit-supply-contracts', async (req, res) => res.redirect('/reports/audit-supply-contracts/0'));
 
-router.get('/reporting/audit-supply-contracts/:page', async (req, res) => {
+router.get('/reports/audit-supply-contracts/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
   const filters = {}; // TODO wire up filters; probably do same as dashboard +use session
@@ -25,16 +25,16 @@ router.get('/reporting/audit-supply-contracts/:page', async (req, res) => {
     totalItems: dealData.count,
   };
 
-  return res.render('reporting/audit-supply-contracts.njk', {
+  return res.render('reports/audit-supply-contracts.njk', {
     pages,
     contracts: dealData.deals,
     user: req.session.user,
   });
 });
 
-router.get('/reporting/transactions-report', async (req, res) => res.redirect('/reporting/transactions-report/0'));
+router.get('/reports/transactions-report', async (req, res) => res.redirect('/reports/transactions-report/0'));
 
-router.get('/reporting/transactions-report/:page', async (req, res) => {
+router.get('/reports/transactions-report/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
   const { transactions, count } = await getApiData(api.transactions(userToken), res);
@@ -47,7 +47,7 @@ router.get('/reporting/transactions-report/:page', async (req, res) => {
     totalItems: count,
   };
 
-  return res.render('reporting/transactions-report.njk', {
+  return res.render('reports/transactions-report.njk', {
     pages,
     transactions,
     banks,
@@ -55,9 +55,9 @@ router.get('/reporting/transactions-report/:page', async (req, res) => {
   });
 });
 
-router.get('/reporting/all-transactions-report', async (req, res) => res.redirect('/reporting/all-transactions-report/0'));
+router.get('/reports/all-transactions-report', async (req, res) => res.redirect('/reports/all-transactions-report/0'));
 
-router.get('/reporting/all-transactions-report/:page', async (req, res) => {
+router.get('/reports/all-transactions-report/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
   const { transactions, count } = await getApiData(api.transactions(userToken), res);
@@ -70,7 +70,7 @@ router.get('/reporting/all-transactions-report/:page', async (req, res) => {
     totalItems: count,
   };
 
-  return res.render('reporting/all-transactions-report.njk', {
+  return res.render('reports/all-transactions-report.njk', {
     pages,
     transactions,
     banks,
@@ -78,9 +78,9 @@ router.get('/reporting/all-transactions-report/:page', async (req, res) => {
   });
 });
 
-router.get('/reporting/mia_min-cover-start-date-changes', async (req, res) => res.redirect('/reporting/mia_min-cover-start-date-changes/0'));
+router.get('/reports/mia_min-cover-start-date-changes', async (req, res) => res.redirect('/reports/mia_min-cover-start-date-changes/0'));
 
-router.get('/reporting/mia_min-cover-start-date-changes/:page', async (req, res) => {
+router.get('/reports/mia_min-cover-start-date-changes/:page', async (req, res) => {
   // [dw] while mocking this report out, I don't think we really understand the data-model involved
   //  so I'm, just mocking this out the old way rather than trying to work out how to re-plumb the API.
 
@@ -109,14 +109,14 @@ router.get('/reporting/mia_min-cover-start-date-changes/:page', async (req, res)
     totalItems: count,
   };
 
-  return res.render('reporting/mia_min-cover-start-date-changes.njk', {
+  return res.render('reports/mia_min-cover-start-date-changes.njk', {
     pages,
     crs,
     user: req.session.user,
   });
 });
 
-router.get('/reporting/countdown-indicator', async (req, res) => {
+router.get('/reports/countdown-indicator', async (req, res) => {
   // [dw] while mocking this report out, I don't think we really understand the data-model involved
   //  so I'm, just mocking this out the old way rather than trying to work out how to re-plumb the API.
 
@@ -159,15 +159,15 @@ router.get('/reporting/countdown-indicator', async (req, res) => {
     manualInclusionsWithoutConditions,
   };
 
-  return res.render('reporting/countdown-indicator.njk', {
+  return res.render('reports/countdown-indicator.njk', {
     reportData,
     user: req.session.user,
   });
 });
 
-router.get('/reporting/abandoned-supply-contracts', async (req, res) => res.redirect('/reporting/abandoned-supply-contracts/0'));
+router.get('/reports/abandoned-supply-contracts', async (req, res) => res.redirect('/reports/abandoned-supply-contracts/0'));
 
-router.get('/reporting/abandoned-supply-contracts/:page', async (req, res) => {
+router.get('/reports/abandoned-supply-contracts/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
   // only mocking; not trying to plumb data model
@@ -204,7 +204,7 @@ router.get('/reporting/abandoned-supply-contracts/:page', async (req, res) => {
     res,
   );
 
-  return res.render('reporting/abandoned-supply-contracts.njk', {
+  return res.render('reports/abandoned-supply-contracts.njk', {
     pages,
     contracts,
     banks,
@@ -212,9 +212,9 @@ router.get('/reporting/abandoned-supply-contracts/:page', async (req, res) => {
   });
 });
 
-router.get('/reporting/red-line-answers', async (req, res) => res.redirect('/reporting/red-line-answers/0'));
+router.get('/reports/red-line-answers', async (req, res) => res.redirect('/reports/red-line-answers/0'));
 
-router.get('/reporting/red-line-answers/:page', async (req, res) => {
+router.get('/reports/red-line-answers/:page', async (req, res) => {
   // only mocking; not trying to plumb data model
   //  should really be sending filter/order-by queries to deal-api
   const deal1 = {
@@ -277,16 +277,16 @@ router.get('/reporting/red-line-answers/:page', async (req, res) => {
     totalItems: count,
   };
 
-  return res.render('reporting/red-line-answers.njk', {
+  return res.render('reports/red-line-answers.njk', {
     pages,
     mandatoryCriteria,
     user: req.session.user,
   });
 });
 
-router.get('/reporting/audit-log-all-changes', async (req, res) => res.redirect('/reporting/audit-log-all-changes/0'));
+router.get('/reports/audit-log-all-changes', async (req, res) => res.redirect('/reports/audit-log-all-changes/0'));
 
-router.get('/reporting/audit-log-all-changes/:page', async (req, res) => {
+router.get('/reports/audit-log-all-changes/:page', async (req, res) => {
   // only mocking; not trying to plumb data model
   //  should really be sending filter/order-by queries to deal-api
   const changes = [{
@@ -333,16 +333,16 @@ router.get('/reporting/audit-log-all-changes/:page', async (req, res) => {
     totalItems: count,
   };
 
-  return res.render('reporting/audit-log-all-changes.njk', {
+  return res.render('reports/audit-log-all-changes.njk', {
     pages,
     changes,
     user: req.session.user,
   });
 });
 
-router.get('/reporting/audit-log-user-changes', async (req, res) => res.redirect('/reporting/audit-log-user-changes/0'));
+router.get('/reports/audit-log-user-changes', async (req, res) => res.redirect('/reports/audit-log-user-changes/0'));
 
-router.get('/reporting/audit-log-user-changes/:page', async (req, res) => {
+router.get('/reports/audit-log-user-changes/:page', async (req, res) => {
   // only mocking; not trying to plumb data model
   //  should really be sending filter/order-by queries to deal-api
   const changes = [{
@@ -375,16 +375,16 @@ router.get('/reporting/audit-log-user-changes/:page', async (req, res) => {
     totalItems: count,
   };
 
-  return res.render('reporting/audit-log-user-changes.njk', {
+  return res.render('reports/audit-log-user-changes.njk', {
     pages,
     changes,
     user: req.session.user,
   });
 });
 
-router.get('/reporting/audit-log-webform-changes', async (req, res) => res.redirect('/reporting/audit-log-webform-changes/0'));
+router.get('/reports/audit-log-webform-changes', async (req, res) => res.redirect('/reports/audit-log-webform-changes/0'));
 
-router.get('/reporting/audit-log-webform-changes/:page', async (req, res) => {
+router.get('/reports/audit-log-webform-changes/:page', async (req, res) => {
   // only mocking; not trying to plumb data model
   //  should really be sending filter/order-by queries to deal-api
   const changes = [{
@@ -417,7 +417,7 @@ router.get('/reporting/audit-log-webform-changes/:page', async (req, res) => {
     totalItems: count,
   };
 
-  return res.render('reporting/audit-log-webform-changes.njk', {
+  return res.render('reports/audit-log-webform-changes.njk', {
     pages,
     changes,
     user: req.session.user,
