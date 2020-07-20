@@ -7,7 +7,7 @@ import {
 
 const router = express.Router();
 const PAGESIZE = 20;
-const primaryNav = 'Reports';
+const primaryNav = 'reports';
 
 // Default redirect until we put in a nav.
 router.get('/reports', async (req, res) => {
