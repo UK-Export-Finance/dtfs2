@@ -18,6 +18,14 @@ import completedLoanForms from './completedForms';
 
 const router = express.Router();
 
+const userCanAccessLoan = (user) => {
+  if (!user.roles.includes('maker')) {
+    return false;
+  }
+
+  return true;
+};
+
 const handleBankReferenceNumberField = (loanBody) => {
   const modifiedLoan = loanBody;
   const {
@@ -82,6 +90,12 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN]), asy
     validationErrors,
   } = req.apiData.loan;
 
+  const { user } = req.session;
+
+  if (!userCanAccessLoan(user)) {
+    return res.redirect('/');
+  }
+
   const completedForms = completedLoanForms(validationErrors);
 
   return res.render('loan/loan-guarantee-details.njk', {
@@ -120,6 +134,12 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, CURRE
   } = req.apiData.loan;
   const { currencies } = req.apiData;
 
+  const { user } = req.session;
+
+  if (!userCanAccessLoan(user)) {
+    return res.redirect('/');
+  }
+
   const completedForms = completedLoanForms(validationErrors);
 
   return res.render('loan/loan-financial-details.njk', {
@@ -131,7 +151,6 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, CURRE
     user: req.session.user,
   });
 });
-
 
 router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
@@ -156,6 +175,12 @@ router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN]), asyn
     loan,
     validationErrors,
   } = req.apiData.loan;
+
+  const { user } = req.session;
+
+  if (!userCanAccessLoan(user)) {
+    return res.redirect('/');
+  }
 
   const completedForms = completedLoanForms(validationErrors);
 
@@ -195,6 +220,11 @@ router.get('/contract/:_id/loan/:loanId/preview', provide([LOAN]), async (req, r
     validationErrors,
   } = req.apiData.loan;
 
+  const { user } = req.session;
+
+  if (!userCanAccessLoan(user)) {
+    return res.redirect('/');
+  }
 
   // POST to api to flag that we have viewed preview page.
   // this is required specifically for other Loan forms/pages, to match the existing UX/UI.

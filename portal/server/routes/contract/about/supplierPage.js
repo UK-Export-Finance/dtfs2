@@ -18,10 +18,23 @@ import updateSubmissionDetails from './updateSubmissionDetails';
 
 const router = express.Router();
 
+const userCanAccessAbout = (user) => {
+  if (!user.roles.includes('maker')) {
+    return false;
+  }
+
+  return true;
+};
+
 router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COUNTRIES]), async (req, res) => {
   const { deal, industrySectors, countries } = req.apiData;
 
   const { _id, userToken } = requestParams(req);
+
+  const { user } = req.session;
+  if (!userCanAccessAbout(user)) {
+    return res.redirect('/');
+  }
 
   let formattedValidationErrors = {};
   if (deal.submissionDetails.hasBeenPreviewed) {

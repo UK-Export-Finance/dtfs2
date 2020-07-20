@@ -16,6 +16,14 @@ import beforeYouStartValidation from '../validation/before-you-start';
 
 const router = express.Router();
 
+const userCanCreateADeal = (user) => {
+  if (!user.roles.includes('maker')) {
+    return false;
+  }
+
+  return true;
+};
+
 router.get('/start-now', async (req, res) => {
   const { userToken } = requestParams(req);
 
@@ -32,8 +40,9 @@ router.get('/start-now', async (req, res) => {
 router.get('/before-you-start', provide([MANDATORY_CRITERIA]), async (req, res) => {
   const { mandatoryCriteria } = req.apiData;
   const { userToken } = requestParams(req);
+  const { user } = req.session;
 
-  if (!await api.validateToken(userToken)) {
+  if (!await api.validateToken(userToken) || !userCanCreateADeal(user)) {
     res.redirect('/');
   } else {
     res.render('before-you-start/before-you-start.njk', {
@@ -67,8 +76,9 @@ router.post('/before-you-start', provide([MANDATORY_CRITERIA]), async (req, res)
 
 router.get('/before-you-start/bank-deal', async (req, res) => {
   const { userToken } = requestParams(req);
+  const { user } = req.session;
 
-  if (!await api.validateToken(userToken)) {
+  if (!await api.validateToken(userToken) || !userCanCreateADeal(user)) {
     res.redirect('/');
   } else {
     res.render('before-you-start/before-you-start-bank-deal.njk', {

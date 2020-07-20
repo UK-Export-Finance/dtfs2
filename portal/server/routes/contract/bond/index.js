@@ -19,6 +19,14 @@ import completedBondForms from './completedForms';
 
 const router = express.Router();
 
+const userCanAccessBond = (user) => {
+  if (!user.roles.includes('maker')) {
+    return false;
+  }
+
+  return true;
+};
+
 const handleFeeFrequency = (bondBody) => {
   const modifiedBond = bondBody;
 
@@ -59,6 +67,11 @@ router.get('/contract/:_id/bond/create', async (req, res) => {
 
 router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
+  const { user } = req.session;
+
+  if (!await api.validateToken(userToken) || !userCanAccessBond(user)) {
+    return res.redirect('/');
+  }
 
   const apiResponse = await getApiData(
     api.contractBond(_id, bondId, userToken),
@@ -101,6 +114,11 @@ router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
 
 router.get('/contract/:_id/bond/:bondId/financial-details', provide([CURRENCIES]), async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
+  const { user } = req.session;
+
+  if (!await api.validateToken(userToken) || !userCanAccessBond(user)) {
+    return res.redirect('/');
+  }
 
   const { currencies } = req.apiData;
 
@@ -146,6 +164,11 @@ router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) =>
 
 router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
+  const { user } = req.session;
+
+  if (!await api.validateToken(userToken) || !userCanAccessBond(user)) {
+    return res.redirect('/');
+  }
 
   const apiResponse = await getApiData(
     api.contractBond(_id, bondId, userToken),
@@ -190,6 +213,11 @@ router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
 
 router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
+  const { user } = req.session;
+
+  if (!await api.validateToken(userToken) || !userCanAccessBond(user)) {
+    return res.redirect('/');
+  }
 
   const apiResponse = await getApiData(
     api.contractBond(_id, bondId, userToken),

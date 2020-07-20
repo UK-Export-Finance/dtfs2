@@ -19,8 +19,21 @@ const router = express.Router();
 
 const eligibilityErrorHref = (id) => `#criterion-group-${id}`;
 
+const userCanAccessEligibility = (user) => {
+  if (!user.roles.includes('maker')) {
+    return false;
+  }
+
+  return true;
+};
+
 router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), async (req, res) => {
   const { deal, countries } = req.apiData;
+
+  const { user } = req.session;
+  if (!userCanAccessEligibility(user)) {
+    return res.redirect('/');
+  }
 
   const validationErrors = generateErrorSummary(deal.eligibility.validationErrors, eligibilityErrorHref);
 
@@ -66,6 +79,11 @@ router.post('/contract/:_id/eligibility/criteria/save-go-back', async (req, res)
 
 router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]), async (req, res) => {
   const { deal } = req.apiData;
+
+  const { user } = req.session;
+  if (!userCanAccessEligibility(user)) {
+    return res.redirect('/');
+  }
 
   const { eligibility, dealFiles = {} } = deal;
 
@@ -157,6 +175,11 @@ router.get('/contract/:_id/eligibility-documentation/:fieldname/:filename', asyn
 
 router.get('/contract/:_id/eligibility/preview', provide([DEAL, MANDATORY_CRITERIA]), async (req, res) => {
   const { deal, mandatoryCriteria } = req.apiData;
+
+  const { user } = req.session;
+  if (!userCanAccessEligibility(user)) {
+    return res.redirect('/');
+  }
 
   return res.render('eligibility/eligibility-preview.njk', {
     deal,
