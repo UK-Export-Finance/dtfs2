@@ -8,7 +8,9 @@ import {
 const router = express.Router();
 
 router.get('/:_id', async (req, res) => {
-  const { _id, userToken } = requestParams(req);
+  const { userToken } = requestParams(req);
+
+  const { _id } = req.session.user;
 
   const user = await getApiData(
     api.user(_id, userToken),
