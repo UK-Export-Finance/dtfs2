@@ -7,14 +7,14 @@ import {
 
 const router = express.Router();
 const PAGESIZE = 20;
-const mainNav = 'Reports';
+const primaryNav = 'Reports';
 
 // Default redirect until we put in a nav.
 router.get('/reports', async (req, res) => {
   const test = 1;
   return res.render('reports/reports.njk', {
     test,
-    mainNav,
+    primaryNav,
     user: req.session.user,
   });
 });
@@ -39,7 +39,7 @@ router.get('/reports/audit-supply-contracts/:page', async (req, res) => {
   return res.render('reports/audit-supply-contracts.njk', {
     pages,
     contracts: dealData.deals,
-    mainNav,
+    primaryNav,
     subNav: 'audit-supply-contracts',
     user: req.session.user,
   });
@@ -64,7 +64,7 @@ router.get('/reports/transactions-report/:page', async (req, res) => {
     pages,
     transactions,
     banks,
-    mainNav,
+    primaryNav,
     subNav: 'transactions-report',
     user: req.session.user,
   });
@@ -89,7 +89,7 @@ router.get('/reports/all-transactions-report/:page', async (req, res) => {
     pages,
     transactions,
     banks,
-    mainNav,
+    primaryNav,
     subNav: 'all-transactions-report',
     user: req.session.user,
   });
@@ -129,7 +129,7 @@ router.get('/reports/mia_min-cover-start-date-changes/:page', async (req, res) =
   return res.render('reports/mia_min-cover-start-date-changes.njk', {
     pages,
     crs,
-    mainNav,
+    primaryNav,
     subNav: 'mia_min-cover-start-date-changes',
     user: req.session.user,
   });
@@ -180,7 +180,7 @@ router.get('/reports/countdown-indicator', async (req, res) => {
 
   return res.render('reports/countdown-indicator.njk', {
     reportData,
-    mainNav,
+    primaryNav,
     subNav: 'countdown-indicator',
     user: req.session.user,
   });
@@ -229,7 +229,7 @@ router.get('/reports/abandoned-supply-contracts/:page', async (req, res) => {
     pages,
     contracts,
     banks,
-    mainNav,
+    primaryNav,
     subNav: 'abandoned-supply-contracts',
     user: req.session.user,
   });
@@ -303,7 +303,7 @@ router.get('/reports/red-line-answers/:page', async (req, res) => {
   return res.render('reports/red-line-answers.njk', {
     pages,
     mandatoryCriteria,
-    mainNav,
+    primaryNav,
     subNav: 'red-line-answers',
     user: req.session.user,
   });
@@ -361,7 +361,7 @@ router.get('/reports/audit-log-all-changes/:page', async (req, res) => {
   return res.render('reports/audit-log-all-changes.njk', {
     pages,
     changes,
-    mainNav,
+    primaryNav,
     subNav: 'audit-log-all-changes',
     user: req.session.user,
   });
@@ -405,7 +405,7 @@ router.get('/reports/audit-log-user-changes/:page', async (req, res) => {
   return res.render('reports/audit-log-user-changes.njk', {
     pages,
     changes,
-    mainNav,
+    primaryNav,
     subNav: 'audit-log-user-changes',
     user: req.session.user,
   });
@@ -449,7 +449,7 @@ router.get('/reports/audit-log-webform-changes/:page', async (req, res) => {
   return res.render('reports/audit-log-webform-changes.njk', {
     pages,
     changes,
-    mainNav,
+    primaryNav,
     subNav: 'audit-log-webform-changes',
     user: req.session.user,
   });
