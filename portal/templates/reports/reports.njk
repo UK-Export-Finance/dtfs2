@@ -1,0 +1,27 @@
+{% import '_macros/success-message.njk' as success %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}Reporting{% endblock %}
+
+{% block content %}
+
+{% if successMessage %}
+  {{ success.message(
+    message = successMessage
+  )}}
+{% endif %}
+
+  <h1 class="govuk-heading-l">Reports</h1>
+
+  <p class="govuk-body">The following reports are available:</p>
+
+
+  <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-6">
+    <li>Audit supply contracts</li>
+    <li>Transactions report</li>
+    <li>MIA/MIN cover start date change</li>
+    <li>Countdown indicator</li>
+  </ul>
+
+{% endblock %}
