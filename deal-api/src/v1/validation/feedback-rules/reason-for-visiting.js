@@ -11,5 +11,14 @@ module.exports = (feedback, errorList) => {
     };
   }
 
+  if (hasValue(feedback.reasonForVisiting)
+      && feedback.reasonForVisiting === 'Other'
+      && !hasValue(feedback.reasonForVisitingOther)) {
+      newErrorList.reasonForVisitingOther = {
+        text: 'Enter your reason for visiting the service today',
+        order: orderNumber(newErrorList),
+      };
+  }
+
   return newErrorList;
 };

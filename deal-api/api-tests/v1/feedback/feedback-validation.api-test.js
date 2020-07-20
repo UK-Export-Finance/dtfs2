@@ -88,6 +88,21 @@ describe('/v1/deals/:id/bond', () => {
           expect(body.validationErrors.errorList.reasonForVisiting.text).toEqual('Select your reason for visiting the service today');
         });
       });
+
+      describe('when value is `Other` and reasonForVisitingOther is missing', () => {
+        it('should return validationError', async () => {
+          const feedback = {
+            ...allFeedbackFields,
+            reasonForVisiting: 'Other',
+            reasonForVisitingOther: '',
+          };
+
+          const { body } = await postFeedback(feedback);
+
+          expect(body.validationErrors.errorList.reasonForVisitingOther).toBeDefined();
+          expect(body.validationErrors.errorList.reasonForVisitingOther.text).toEqual('Enter your reason for visiting the service today');
+        });
+      });
     });
 
     describe('easyToUse', () => {
