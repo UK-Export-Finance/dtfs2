@@ -11,6 +11,7 @@ import {
 
 const router = express.Router();
 const PAGESIZE = 20;
+const primaryNav = 'dashboard';
 
 router.get('/dashboard', async (req, res) => {
   const { userToken } = requestParams(req);
@@ -61,6 +62,7 @@ router.get('/dashboard/transactions/:page', async (req, res) => {
       isUsingAdvancedFilter,
       ...req.session.transactionFilters,
     },
+    primaryNav,
     user: req.session.user,
   });
 });
@@ -106,6 +108,7 @@ router.get('/dashboard/:page', async (req, res) => {
       isUsingAdvancedFilter,
       ...req.session.dashboardFilters,
     },
+    primaryNav,
     user: req.session.user,
   });
 });
@@ -145,6 +148,7 @@ router.post('/dashboard/:page', async (req, res) => {
       isUsingAdvancedFilter,
       ...dashboardFilters,
     },
+    primaryNav,
     user: req.session.user,
   });
 });
