@@ -1,0 +1,40 @@
+{%- from "moj/components/header/macro.njk" import mojHeader -%}
+
+{% if user %}
+{# set profileLink = urlencode(user._id) #}
+  {{ mojHeader({
+  organisationLabel: {
+  text: 'UK Export Finance',
+  href: '/start-now'
+  },
+  serviceLabel: {
+  text: 'Get a guarantee for export finance',
+  href: '/start-now'
+  },
+  navigation: {
+  label: 'Account navigation',
+  items: [{
+      text: user.username,
+      href: '/user/' + user._id',
+      active: true
+    }, {
+      text: 'Profile',
+      href: '/user/' + user._id'
+    }, {
+      text: 'Sign out',
+      href: '/logout'
+    }]
+  }
+  }) }} 
+{% else %}
+  {{ mojHeader({
+  organisationLabel: {
+  text: 'UK Export Finance',
+  href: '/'
+  },
+  serviceLabel: {
+  text: 'Get a guarantee for export finance',
+  href: '/'
+  }
+  }) }} 
+{% endif %}
