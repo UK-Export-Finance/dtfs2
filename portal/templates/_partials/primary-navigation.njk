@@ -1,0 +1,40 @@
+{%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
+
+{% if user and user.roles.includes('admin')%}
+{{ mojPrimaryNavigation({
+  label: 'Primary navigation',
+  items: [
+  {
+    text: 'Dashboard',
+    href: '/dashboard',
+    active: primaryNav == 'dashboard'
+  },
+  {
+    text: 'Reports',
+    href: '/reports',
+    active: primaryNav == 'reports'
+  },
+  {
+    text: 'Users',
+    href: '/admin/users',
+    active: primaryNav == 'users'
+  }
+  ]
+  }) }} 
+{% elif user %}
+  {{ mojPrimaryNavigation({
+  label: 'Primary navigation',
+  items: [
+  {
+    text: 'Dashboard',
+    href: '/dashboard',
+    active: primaryNav == 'dashboard'
+  },
+  {
+    text: 'Reports',
+    href: '/reports',
+    active: primaryNav == 'reports'
+  }
+  ]
+  }) }} 
+{% endif %}
