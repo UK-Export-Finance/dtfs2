@@ -5,6 +5,7 @@ import dashIfEmpty from './filter-dashIfEmpty';
 const configureNunjucks = (opts) => {
   const appViews = [
     'node_modules/govuk-frontend',
+    'node_modules/@ministryofjustice/frontend',
     'templates',
   ];
 
