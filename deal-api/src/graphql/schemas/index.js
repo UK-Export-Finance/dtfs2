@@ -50,7 +50,6 @@ type DealsQuery {
   deals: [Deal]
 }
 
-
 input DashboardFilters {
   field: String
   value: String
@@ -63,9 +62,39 @@ input DealsInput {
   filters: [DashboardFilters]
 }
 
+type Transaction {
+  bankFacilityId: String
+  ukefFacilityId: String
+  transactionType: String
+  facilityValue: String
+  transactionStage: String
+  issuedDate: String
+  maker: String
+  checker: String
+}
+
+type TransactionQuery {
+  count: Int,
+  transactions: [Transaction]
+}
+
+input TransactionFilters {
+  field: String
+  value: String
+  operator: String
+}
+
+input TransactionInput {
+  start: Int,
+  pagesize: Int,
+  filters: [TransactionFilters]
+}
+
+
 type Query {
   currencies: [Currency]
   deals(params: DealsInput): DealsQuery
+  transactions(params: TransactionInput): TransactionQuery
 }
 
 type DealStatusErrorItem {

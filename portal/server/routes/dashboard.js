@@ -1,6 +1,7 @@
 import express from 'express';
 import api from '../api';
 import buildDashboardFilters from './buildDashboardFilters';
+import buildTransactionFilters from './buildTransactionFilters';
 
 import {
   getApiData,
@@ -24,25 +25,46 @@ router.get('/dashboard', async (req, res) => {
 
 router.get('/dashboard/transactions', async (req, res) => {
   const { userToken } = requestParams(req);
+  req.session.transactionFilters = null;
 
   if (!await api.validateToken(userToken)) {
-    res.redirect('/');
+    return res.redirect('/');
   }
+  return res.redirect('/dashboard/transactions/0');
+});
 
-  const { transactions } = await getApiData(
-    api.transactions(userToken),
+router.get('/dashboard/transactions/:page', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  const { isUsingAdvancedFilter, filters } = buildTransactionFilters(req.session.transactionFilters, req.session.user);
+
+  const transactionData = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
 
+  const pages = {
+    totalPages: Math.ceil(transactionData.count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: transactionData.count,
+  };
+
   return res.render('dashboard/transactions.njk', {
-    transactions,
+    pages,
+    transactions: transactionData.transactions,
     banks: await getApiData(
       api.banks(userToken),
       res,
     ),
+    successMessage: getFlashSuccessMessage(req),
+    filter: {
+      isUsingAdvancedFilter,
+      ...req.session.transactionFilters,
+    },
     user: req.session.user,
   });
 });
+
 
 router.get('/dashboard/:page', async (req, res) => {
   const { userToken } = requestParams(req);
