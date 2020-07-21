@@ -3,7 +3,7 @@
 {% macro render(params) %}
   {% if params.deal.details.status %}
 
-    {% if params.user.roles.includes('checker') %}
+    {% if params.user.roles.includes('checker') and params.userCanSubmit %}
 
         {% if ["Ready for Checker's approval"].includes(params.deal.details.status) %}
 
