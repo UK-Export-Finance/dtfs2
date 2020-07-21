@@ -38,6 +38,7 @@ const DEFAULTS = {
   DEALS: {
     details: {
       status: 'Draft',
+      editedBy: [],
     },
     eligibility: {
       status: 'Incomplete',
