@@ -13,7 +13,7 @@ env:
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   image_tag: latest
   # App service settings
-  DEAL_API_URL: "tfs-${{ env.ENVIRONMENT }}-portal-api.azurewebsites.net"
+  DEAL_API_URL: "tfs-${{ env.environment }}-portal-api.azurewebsites.net"
   COMPANIES_HOUSE_API_URL: ="https://api.companieshouse.gov.uk"
   # App service secrets
   COMPANIES_HOUSE_API_KEY: "${{ secrets.COMPANIES_HOUSE_API_KEY }}"
