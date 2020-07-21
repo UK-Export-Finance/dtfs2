@@ -1,40 +1,36 @@
-{%- from "moj/components/header/macro.njk" import mojHeader -%}
+{% from "govuk/components/header/macro.njk" import govukHeader %}
 
 {% if user %}
-{# set profileLink = urlencode(user._id) #}
-  {{ mojHeader({
-  organisationLabel: {
-  text: 'UK Export Finance',
-  href: '/start-now'
-  },
-  serviceLabel: {
-  text: 'Get a guarantee for export finance',
-  href: '/start-now'
-  },
-  navigation: {
-  label: 'Account navigation',
-  items: [{
-      text: user.username,
-      href: '/user/' + user._id',
-      active: true
-    }, {
-      text: 'Profile',
-      href: '/user/' + user._id'
-    }, {
-      text: 'Sign out',
-      href: '/logout'
-    }]
-  }
-  }) }} 
+
+  {# set profileLink = urlencode(user._id) #}
+
+  {{ govukHeader({
+    homepageUrl: "/start-now",
+    serviceName: "Get a guarantee for export finance",
+    serviceUrl: "/start-now",
+    navigation: [
+      {
+        href: '/user/' + user._id',
+        text: user.username,
+        active: true
+      },
+      {
+        href: '/user/' + user._id',
+        text: 'Profile'
+      },
+      {
+        href: '/logout',
+        text: 'Sign out'
+      }
+    ]
+  }) }}
+
 {% else %}
-  {{ mojHeader({
-  organisationLabel: {
-  text: 'UK Export Finance',
-  href: '/'
-  },
-  serviceLabel: {
-  text: 'Get a guarantee for export finance',
-  href: '/'
-  }
-  }) }} 
+
+  {{ govukHeader({
+    homepageUrl: "/start-now",
+    serviceName: "Get a guarantee for export finance",
+    serviceUrl: "/start-now"
+  }) }}
+
 {% endif %}
