@@ -1,37 +1,46 @@
-# dtfs2
-
 ![Pipeline](https://github.com/notbinary/dtfs2/workflows/Pipeline/badge.svg)
 
-### Setup
+# UKEF Trade Finance Service
+
+This repository contains the code for the UK Export Finance Trade Finance Service.
+
+## Setup
 
 Prerequisites
 
  * Version 13 or later of `node` with a corresponding `npm`
  * Docker and Docker Compose
 
-Secrets
+### Tech stack
 
-Along with `secrets/set_jwt_keypair.sh` you'll need the following scripts to set environment variables when running the build. The list of variables can be seen in the environment build workdlows under [`.github/workflows`](.github/workflows):
+The main technologies here are:
+
+ * node/npm
+ * webpack
+ * Govuk and MoJ Ddesign systems
+ * mongodb
+ * docker and docker-compose
+ * cypress
+
+### Secrets
+
+Along with `secrets/set_jwt_keypair.sh` you'll need the following scripts to set environment variables when running the build:
 
  * `set_azure_api_keys.sh`
  * `set_companies_house_api_key.sh`
  * `set_gov_notify_api_key.sh`
 
-Steps
+The list of variables can be seen in the environment build workdlows under [`.github/workflows`](.github/workflows)
 
- * clone this repo
- * if you have a Companies House API key, it can be stored in a one-line text file called `companies_house_api_key.txt` (named in `.gitignore`). This will be picked up and used by `bin/pipeline.sh`. E.g.: `echo "abc123456XYZ" > companies_house_api_key.txt`
- * API keys for Azure filestore requires file './secrets/set_azure_api_keys.sh' ( ./secrets folder is added to .gitignore), whcih set the relevant .env variables. add 'source [YOUR_PROJECT_PATH]/secrets/set_azure_api_keys.sh' to .bashrc to automatically set env variables. set_azure_api_keys.sh has been pinned to dtfs2-dev channel on UKEF-DTFS slack
- * run `npm install` in the root directory of the repo
- * run `docker-compose up --build` to start up an environment
- * navigate to `utils/mock-data-loader`
- * run `npm install`
- * run `node re-insert-mocks.js`
- * navigate back to the root directory of the repo
- * run `docker-compose down`
- * run `npm run pipeline` to run a full build and test that confirms you've got a working environment.
+### Steps
 
-NB this code has been developed on Mac OS and runs in Linux containers. You may need to adjust some instructions if you need to run it on Windows.
+ * Clone this repo
+ * Add the environment variable scripts noted above to the `secrets` folder
+ * Run `npm run pipeline` in the root directory of the repo to run a full build and test
+ * After running the pipeline, you can use `docker-compose up` to start up your local environment
+ * To refresh the data in the database, navigate to `utils/mock-data-loader`, run `npm install`and then `node re-insert-mocks.js`
+
+NB this code has been developed on Mac OS and runs in Linux containers. You may need to adjust some steps if you need to run it on Windows.
 
 ### Testing
 
@@ -47,17 +56,19 @@ Launch everything with:
 docker-compose up --build
 ```
 
+NB `--build` is optional - it will rebuild the contaners.
+
 From another terminal, stop everything cleanly with:
 ```
 docker-compose down
 ```
 
-Portal can then be seen on:
+Portal can then be seen at:
 ```
 http://localhost:5000
 ```
 
-mock API services are exposed on:
+The API is at:
 ```
 http://localhost:5001/
 ```
@@ -66,8 +77,8 @@ http://localhost:5001/
 http://localhost:5001/v1/deals
 ```
 
-a mongoDB instance will have been started:
-* to connect a client from your local machine, connect to localhost:27017 as root/r00t
+a mongoDB container will have been started:
+* to connect a client from your local machine, connect to `localhost:27017` as `root/r00t`
 
 
 ### Git workflow
@@ -79,3 +90,8 @@ npm install
 
 When a commit is pushed to master, heroku branches are updated and pushed.
 
+Github actions will run a build and push of container images to Azure, which will be picked up and deployed automatically by the Dev environment. If testing is successful, images will be promoted to the test environment.
+
+Pushing to the `infrastructure` branch will trigger a refresh of the infrastructure in each environment. This updates the App Services and sets environment variables and secrets.
+
+Pushing to the `demo` branch will trigger tagging of the current development container images with `demo` tag, which will in turn trigger a redeployment of the demo environment. This ensures the demo environment isn't affected by CI/CD and is only refreshed on demand.
