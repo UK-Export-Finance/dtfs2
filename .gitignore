@@ -8,6 +8,8 @@ deal-api-data-volume
 cypress/videos
 cypress/screenshots
 
+trade_finance_manager/salesforce.json
+
 Library/
 
 secrets/**

@@ -41,6 +41,8 @@
     "marked": "^0.8.2",
     "notifications-node-client": "^4.7.2",
     "nunjucks": "^3.2.1",
+    "passport": "^0.4.1",
+    "passport-salesforce-oauth2": "0.0.1",
     "portscanner": "^2.1.1",
     "python": "0.0.4",
     "require-dir": "^1.0.0",
