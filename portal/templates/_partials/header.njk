@@ -2,35 +2,41 @@
 
 {% if user %}
 
-  {# set profileLink = urlencode(user._id) #}
+{# set profileLink = urlencode(user._id) #}
 
-  {{ govukHeader({
-    homepageUrl: "/start-now",
-    serviceName: "Get a guarantee for export finance",
-    serviceUrl: "/start-now",
-    navigation: [
-      {
-        href: '/user/' + user._id',
-        text: user.username,
-        active: true
-      },
-      {
-        href: '/user/' + user._id',
-        text: 'Profile'
-      },
-      {
-        href: '/logout',
-        text: 'Sign out'
-      }
-    ]
-  }) }}
+{{ govukHeader({
+  homepageUrl: "/start-now",
+  serviceName: "Get a guarantee for export finance",
+  serviceUrl: "/start-now",
+  navigation: [
+    {
+      href: "/user/" + user._id,
+      text: user.username,
+      active: true
+    },
+    {
+      href: "/user/" + user._id,
+      text: "Profile"
+    },
+    {
+      href: "/logout",
+      text: "Sign out"
+    }
+  ],
+  attributes: {
+    "data-cy": "header" 
+  }
+}) }}
 
 {% else %}
 
-  {{ govukHeader({
-    homepageUrl: "/start-now",
-    serviceName: "Get a guarantee for export finance",
-    serviceUrl: "/start-now"
-  }) }}
+{{ govukHeader({
+  homepageUrl: "/start-now",
+  serviceName: "Get a guarantee for export finance",
+  serviceUrl: "/start-now",
+  attributes: {
+    "data-cy": "header" 
+  }
+}) }}
 
 {% endif %}
