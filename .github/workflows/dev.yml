@@ -49,6 +49,13 @@ jobs:
           name=tfs-${environment}-portal-ui
           container_image=${registry}/portal-ui:${image_tag}
           options="--name ${name} --resource-group ${resource_group}"
+          echo "name: $name"
+          echo "container_image: $container_image"
+          echo "options: $options"
+
+          echo "az webapp create $options \
+            --plan $app_service_plan \
+            --deployment-container-image-name $container_image"
 
           az webapp create $options \
             --plan $app_service_plan \
