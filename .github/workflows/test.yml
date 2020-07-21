@@ -8,7 +8,7 @@ env:
   # Environment
   environment: test
   resource_group: ${{ secrets.RESOURCE_GROUP_DEV }}
-  app_service_plan: dew # temp until we get a secret for the test RG
+  app_service_plan: dev # temp until we get a secret for the test RG
   registry: ${{ secrets.ACR_TEST_REGISTRY }}
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }} # temp until we get a secret for the test RG
   image_tag: latest
