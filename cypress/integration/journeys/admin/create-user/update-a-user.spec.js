@@ -26,7 +26,7 @@ context('Admin user updates an existing user', () => {
   it('Create a user, then edit the user and change their role(s)', () => {
     // login and go to dashboard
     cy.login(admin);
-    startNow.header().manageUsers().click();
+    startNow.header().users().click();
 
     // add user
     users.addUser().click();
