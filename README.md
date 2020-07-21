@@ -9,6 +9,14 @@ Prerequisites
  * Version 13 or later of `node` with a corresponding `npm`
  * Docker and Docker Compose
 
+Secrets
+
+Along with `secrets/set_jwt_keypair.sh` you'll need the following scripts to set environment variables when running the build. The list of variables can be seen in the environment build workdlows under [`.github/workflows`](.github/workflows):
+
+ * `set_azure_api_keys.sh`
+ * `set_companies_house_api_key.sh`
+ * `set_gov_notify_api_key.sh`
+
 Steps
 
  * clone this repo
