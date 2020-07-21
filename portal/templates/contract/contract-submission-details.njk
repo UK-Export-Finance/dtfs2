@@ -65,7 +65,7 @@
       {% endif %}
 
       {% for bond in deal.bondTransactions.items %}
-        <div data-cy="bond-{{ bond._id }}">
+        <div id="bond-{{ bond._id }}" data-cy="bond-{{ bond._id }}">
           <h3 class="govuk-heading-l">
             <span data-cy="bond-heading">Bond</span>
             {{ editLink.render(
@@ -80,7 +80,7 @@
       {% endfor %}
 
       {% for loan in deal.loanTransactions.items %}
-        <div data-cy="loan-{{ loan._id }}">
+        <div id="loan-{{ loan._id }}" data-cy="loan-{{ loan._id }}">
           <h3 class="govuk-heading-l">
             <span data-cy="loan-heading">Loan</span>
             {{ editLink.render(

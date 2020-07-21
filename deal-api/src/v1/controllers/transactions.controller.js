@@ -17,6 +17,9 @@ const transactionsQuery = (user, filter) => {
 };
 
 const mapBondsToFacilities = (deal, bonds) => bonds.map((bond) => ({
+  deal_id: deal._id, // eslint-disable-line no-underscore-dangle
+  deal_status: deal.details.status,
+  transaction_id: bond._id, // eslint-disable-line no-underscore-dangle
   bankFacilityId: bond.uniqueIdentificationNumber,
   ukefFacilityId: '//TODO',
   transactionType: 'bond',
@@ -28,6 +31,9 @@ const mapBondsToFacilities = (deal, bonds) => bonds.map((bond) => ({
 }));
 
 const mapLoansToFacilities = (deal, loans) => loans.map((loan) => ({
+  deal_id: deal._id, // eslint-disable-line no-underscore-dangle
+  deal_status: deal.details.status,
+  transaction_id: loan._id, // eslint-disable-line no-underscore-dangle
   bankFacilityId: loan.bankReferenceNumber,
   ukefFacilityId: '//TODO',
   transactionType: 'loan',
