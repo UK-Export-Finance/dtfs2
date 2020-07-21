@@ -1,115 +1,115 @@
-# name: Demo environment infrastructure
+name: Demo environment infrastructure
 
-# on:
-#   push:
-#     branches: [ infrastructure ]
+on:
+  push:
+    branches: [ infrastructure ]
 
-# env:
-#   # Environment
-#   environment: demo
-#   resource_group: ${{ secrets.RESOURCE_GROUP_DEV }}
-#   app_service_plan: dev
-#   registry: ${{ secrets.ACR_DEV_REGISTRY }}
-#   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-#   image_tag: demo
-#   # App service settings
-#   DEAL_API_URL: "tfs-${{ env.environment }}-portal-api.azurewebsites.net"
-#   COMPANIES_HOUSE_API_URL: ="https://api.companieshouse.gov.uk"
-#   # App service secrets
-#   COMPANIES_HOUSE_API_KEY: "${{ secrets.COMPANIES_HOUSE_API_KEY }}"
-#   AZURE_PORTAL_EXPORT_FOLDER: "${{ secrets.DEV_AZURE_PORTAL_EXPORT_FOLDER }}"
-#   AZURE_PORTAL_FILESHARE_NAME: "${{ secrets.DEV_AZURE_PORTAL_FILESHARE_NAME }}"
-#   AZURE_PORTAL_STORAGE_ACCESS_KEY: "${{ secrets.DEV_AZURE_PORTAL_STORAGE_ACCESS_KEY }}"
-#   AZURE_PORTAL_STORAGE_ACCOUNT: "${{ secrets.DEV_AZURE_PORTAL_STORAGE_ACCOUNT }}"
-#   AZURE_WORKFLOW_EXPORT_FOLDER: "${{ secrets.DEV_AZURE_WORKFLOW_EXPORT_FOLDER }}"
-#   AZURE_WORKFLOW_FILESHARE_NAME: "${{ secrets.DEV_AZURE_WORKFLOW_FILESHARE_NAME }}"
-#   AZURE_WORKFLOW_IMPORT_FOLDER: "${{ secrets.DEV_AZURE_WORKFLOW_IMPORT_FOLDER }}"
-#   AZURE_WORKFLOW_STORAGE_ACCESS_KEY: "${{ secrets.DEV_AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}"
-#   MONGO_INITDB_DATABASE: "${{ secrets.DEV_MONGO_INITDB_DATABASE }}"
-#   MONGODB_URI: "${{ secrets.DEV_MONGODB_URI }}"
-#   JWT_SIGNING_KEY: "${{ secrets.DEV_JWT_SIGNING_KEY }}"
-#   JWT_VALIDATING_KEY: "${{ secrets.DEV_JWT_VALIDATING_KEY }}"
-#   GOV_NOTIFY_API_KEY: ="${{ secrets.GOV_NOTIFY_API_KEY }}"
-#   GOV_NOTIFY_EMAIL_RECIPIENT: "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
+env:
+  # Environment
+  environment: demo
+  resource_group: ${{ secrets.RESOURCE_GROUP_DEV }}
+  app_service_plan: dev
+  registry: ${{ secrets.ACR_DEV_REGISTRY }}
+  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+  image_tag: demo
+  # App service settings
+  DEAL_API_URL: "tfs-demo-portal-api.azurewebsites.net"
+  COMPANIES_HOUSE_API_URL: ="https://api.companieshouse.gov.uk"
+  # App service secrets
+  COMPANIES_HOUSE_API_KEY: "${{ secrets.COMPANIES_HOUSE_API_KEY }}"
+  AZURE_PORTAL_EXPORT_FOLDER: "${{ secrets.DEV_AZURE_PORTAL_EXPORT_FOLDER }}"
+  AZURE_PORTAL_FILESHARE_NAME: "${{ secrets.DEV_AZURE_PORTAL_FILESHARE_NAME }}"
+  AZURE_PORTAL_STORAGE_ACCESS_KEY: "${{ secrets.DEV_AZURE_PORTAL_STORAGE_ACCESS_KEY }}"
+  AZURE_PORTAL_STORAGE_ACCOUNT: "${{ secrets.DEV_AZURE_PORTAL_STORAGE_ACCOUNT }}"
+  AZURE_WORKFLOW_EXPORT_FOLDER: "${{ secrets.DEV_AZURE_WORKFLOW_EXPORT_FOLDER }}"
+  AZURE_WORKFLOW_FILESHARE_NAME: "${{ secrets.DEV_AZURE_WORKFLOW_FILESHARE_NAME }}"
+  AZURE_WORKFLOW_IMPORT_FOLDER: "${{ secrets.DEV_AZURE_WORKFLOW_IMPORT_FOLDER }}"
+  AZURE_WORKFLOW_STORAGE_ACCESS_KEY: "${{ secrets.DEV_AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}"
+  MONGO_INITDB_DATABASE: "${{ secrets.DEV_MONGO_INITDB_DATABASE }}"
+  MONGODB_URI: "${{ secrets.DEV_MONGODB_URI }}"
+  JWT_SIGNING_KEY: "${{ secrets.DEV_JWT_SIGNING_KEY }}"
+  JWT_VALIDATING_KEY: "${{ secrets.DEV_JWT_VALIDATING_KEY }}"
+  GOV_NOTIFY_API_KEY: ="${{ secrets.GOV_NOTIFY_API_KEY }}"
+  GOV_NOTIFY_EMAIL_RECIPIENT: "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
 
-# jobs:
+jobs:
 
-#   portal-ui:
-#     name: Portal UI
-#     runs-on: ubuntu-latest
-#     env:
-#       name: tfs-${{ env.environment }}-portal-ui
-#       container_image: "${{ env.registry }}/portal-ui:${{ env.image_tag }}"
-#       options: "--name ${{ env.name }} --resource-group ${{ env.resource_group }}"
-#     steps:
-#     - uses: azure/login@v1
-#       with:
-#         creds: ${{ env.credentials }}
+  portal-ui:
+    name: Portal UI
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
 
-#     - name: Portal UI
-#       uses: Azure/cli@v1.0.0
-#       with:
-#         inlineScript: |
-#           az webapp create $options \
-#             --plan $app_service_plan \
-#             --deployment-container-image-name $container_image
+    - name: Portal UI
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          name=tfs-${{ env.environment }}-portal-ui
+          container_image=${{ env.registry }}/portal-ui:${{ env.image_tag }}
+          options="--name ${name} --resource-group ${{ env.resource_group }}"
 
-#           az webapp deployment container config $options \
-#             --enable-cd true
+          az webapp create $options \
+            --plan ${{ env.app_service_plan }} \
+            --deployment-container-image-name $container_image
 
-#           az webapp log config $options \
-#             --docker-container-logging filesystem
+          az webapp deployment container config $options \
+            --enable-cd true
 
-#           az webapp config appsettings set $options \
-#             --settings \
-#               DEAL_API_URL="$DEAL_API_URL" \
-#               COMPANIES_HOUSE_API_URL="$COMPANIES_HOUSE_API_URL"
+          az webapp log config $options \
+            --docker-container-logging filesystem
+
+          az webapp config appsettings set $options \
+            --settings \
+              DEAL_API_URL="${{ env.DEAL_API_URL }}" \
+              COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}"
           
-#           az webapp config connection-string set $options \
-#             --connection-string-type custom \
-#             --settings \
-#               COMPANIES_HOUSE_API_KEY="$COMPANIES_HOUSE_API_KEY"
+          az webapp config connection-string set $options \
+            --connection-string-type custom \
+            --settings \
+              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
 
-#   portal-api:
-#     name: Portal API
-#     runs-on: ubuntu-latest
-#     env:
-#       name: tfs-${{ env.environment }}-portal-api
-#       container_image: "${{ env.registry }}/portal-api:${{ env.image_tag }}"
-#       options: "--name ${{ env.name }} --resource-group ${{ env.resource_group }}"
-#     steps:
-#     - uses: azure/login@v1
-#       with:
-#         creds: ${{ env.credentials }}
+  portal-api:
+    name: Portal API
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
 
-#     - name: Portal API
-#       uses: Azure/cli@v1.0.0
-#       with:
-#         inlineScript: |
-#           az webapp create $options \
-#             --plan $app_service_plan \
-#             --deployment-container-image-name container_image
-
-#           az webapp deployment container config $options \
-#             --enable-cd true
-
-#           az webapp log config $options \
-#             --docker-container-logging filesystem
+    - name: Portal API
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          name=tfs-${{ env.environment }}-portal-api
+          container_image=${{ env.registry }}/portal-api:${{ env.image_tag }}
+          options="--name ${name} --resource-group ${{ env.resource_group }}"
           
-#           az webapp config connection-string set $options \
-#             --connection-string-type custom \
-#             --settings \
-#               AZURE_PORTAL_EXPORT_FOLDER="$AZURE_PORTAL_EXPORT_FOLDER" \
-#               AZURE_PORTAL_FILESHARE_NAME="$AZURE_PORTAL_FILESHARE_NAME" \
-#               AZURE_PORTAL_STORAGE_ACCESS_KEY="$AZURE_PORTAL_STORAGE_ACCESS_KEY" \
-#               AZURE_PORTAL_STORAGE_ACCOUNT="$AZURE_PORTAL_STORAGE_ACCOUNT" \
-#               AZURE_WORKFLOW_EXPORT_FOLDER="$AZURE_WORKFLOW_EXPORT_FOLDER" \
-#               AZURE_WORKFLOW_FILESHARE_NAME="$AZURE_WORKFLOW_FILESHARE_NAME" \
-#               AZURE_WORKFLOW_IMPORT_FOLDER="$AZURE_WORKFLOW_IMPORT_FOLDER" \
-#               AZURE_WORKFLOW_STORAGE_ACCESS_KEY="$AZURE_WORKFLOW_STORAGE_ACCESS_KEY" \
-#               MONGO_INITDB_DATABASE="$MONGO_INITDB_DATABASE" \
-#               MONGODB_URI="$MONGODB_URI" \
-#               JWT_SIGNING_KEY="$JWT_SIGNING_KEY" \
-#               JWT_VALIDATING_KEY="$JWT_VALIDATING_KEY" \
-#               GOV_NOTIFY_API_KEY="$GOV_NOTIFY_API_KEY" \
-#               GOV_NOTIFY_EMAIL_RECIPIENT="$GOV_NOTIFY_EMAIL_RECIPIENT"
+          az webapp create $options \
+            --plan ${{ env.app_service_plan }} \
+            --deployment-container-image-name container_image
+
+          az webapp deployment container config $options \
+            --enable-cd true
+
+          az webapp log config $options \
+            --docker-container-logging filesystem
+          
+          az webapp config connection-string set $options \
+            --connection-string-type custom \
+            --settings \
+              AZURE_PORTAL_EXPORT_FOLDER="${{ env.AZURE_PORTAL_EXPORT_FOLDER }}" \
+              AZURE_PORTAL_FILESHARE_NAME="${{ env.AZURE_PORTAL_FILESHARE_NAME }}" \
+              AZURE_PORTAL_STORAGE_ACCESS_KEY="${{ env.AZURE_PORTAL_STORAGE_ACCESS_KEY }}" \
+              AZURE_PORTAL_STORAGE_ACCOUNT="${{ env.AZURE_PORTAL_STORAGE_ACCOUNT }}" \
+              AZURE_WORKFLOW_EXPORT_FOLDER="${{ env.AZURE_WORKFLOW_EXPORT_FOLDER }}" \
+              AZURE_WORKFLOW_FILESHARE_NAME="${{ env.AZURE_WORKFLOW_FILESHARE_NAME }}" \
+              AZURE_WORKFLOW_IMPORT_FOLDER="${{ env.AZURE_WORKFLOW_IMPORT_FOLDER }}" \
+              AZURE_WORKFLOW_STORAGE_ACCESS_KEY="${{ env.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}" \
+              MONGO_INITDB_DATABASE="${{ env.MONGO_INITDB_DATABASE }}" \
+              MONGODB_URI="${{ env.MONGODB_URI }}" \
+              JWT_SIGNING_KEY="${{ env.JWT_SIGNING_KEY }}" \
+              JWT_VALIDATING_KEY="${{ env.JWT_VALIDATING_KEY }}" \
+              GOV_NOTIFY_API_KEY="${{ env.GOV_NOTIFY_API_KEY }}" \
+              GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}"
