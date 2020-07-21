@@ -1,12 +1,17 @@
 {% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
 
 {% if user and user.roles.includes('admin')%}
-  {{ mojSubNavigation({
+
+{{ mojSubNavigation({
   label: 'Sub navigation',
   items: [{
   text: 'Audit supply contracts',
   href: '/reports/audit-supply-contracts',
   active: subNav == 'audit-supply-contracts'
+  }, {
+  text: 'Audit transactions',
+  href: '/reports/audit-transactions',
+  active: subNav == 'audit-transactions'
   }, {
   text: 'Transactions report',
   href: '/reports/transactions-report',
@@ -19,10 +24,16 @@
   text: 'Countdown indicator',
   href: '/reports/countdown-indicator',
   active: subNav == 'countdown-indicator'
+  }, {
+  text: 'Reconciliation report',
+  href: '/reports/reconciliation-report',
+  active: subNav == 'reconciliation-report'
   }]
-  }) }}
+}) }}
+
 {% elif user %}
-  {{ mojSubNavigation({
+
+{{ mojSubNavigation({
   label: 'Sub navigation',
   items: [{
   text: 'Audit supply contracts',
@@ -41,5 +52,6 @@
   href: '/reports/countdown-indicator',
   active: subNav == 'countdown-indicator'
   }]
-  }) }}
+}) }}
+
 {% endif %}
