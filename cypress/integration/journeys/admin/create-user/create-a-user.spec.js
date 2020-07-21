@@ -27,7 +27,7 @@ context('Admin user creates a new user', () => {
     // login and go to dashboard
     cy.login(admin);
 
-    startNow.header().manageUsers().click();
+    startNow.header().users().click();
     users.user(userToCreate).should('not', 'exist');
 
     users.addUser().click();
@@ -56,7 +56,7 @@ context('Admin user creates a new user', () => {
     // prove the lastLogin timestamp
     cy.login(admin);
     cy.url().should('eq', relative('/start-now'));
-    startNow.header().manageUsers().click();
+    startNow.header().users().click();
 
     users.row(userToCreate).lastLogin().invoke('text').then((text) => {
       expect(text.trim()).to.not.equal('');
@@ -67,7 +67,7 @@ context('Admin user creates a new user', () => {
   it("Manage users screen should pass Lighthouse audit", function () {
     // login and go to manage users
     cy.login(admin);
-    startNow.header().manageUsers().click();
+    startNow.header().users().click();
     
     cy.lighthouse({
       performance: 85,
@@ -82,7 +82,7 @@ context('Admin user creates a new user', () => {
   it("Add user screen should pass Lighthouse audit", function () {
     // login and go to add/edit user
     cy.login(admin);
-    startNow.header().manageUsers().click();
+    startNow.header().users().click();
     users.addUser().click();
     
     cy.lighthouse({
