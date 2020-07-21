@@ -161,6 +161,7 @@ module.exports.initialise = async (app) => {
 
       loadedUsers.push({
         ...testUser,
+        _id: body.user._id,
         token,
       });
     }
