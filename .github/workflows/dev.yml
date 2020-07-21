@@ -1,4 +1,4 @@
-name: Demo environment infrastructure
+name: Dev environment infrastructure
 
 on:
   push:
@@ -6,12 +6,12 @@ on:
 
 env:
   # Environment
-  environment: demo
+  environment: dev
   resource_group: ${{ secrets.RESOURCE_GROUP_DEV }}
   app_service_plan: dev
   registry: ${{ secrets.ACR_DEV_REGISTRY }}
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-  image_tag: demo
+  image_tag: latest
   # App service settings
   DEAL_API_URL: "tfs-${{ env.ENVIRONMENT }}-portal-api.azurewebsites.net"
   COMPANIES_HOUSE_API_URL: ="https://api.companieshouse.gov.uk"
