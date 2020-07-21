@@ -156,7 +156,7 @@ const updateDeal = async (req) => {
     username,
     roles,
     bank,
-    _id,
+    userId: _id,
   };
 
   deal.details.editedBy.push(editedBy);

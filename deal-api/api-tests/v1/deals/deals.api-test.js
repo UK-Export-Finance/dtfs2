@@ -6,7 +6,7 @@ const testUserCache = require('../../api-test-users');
 const dealWithAboutComplete = require('../../fixtures/deal-with-complete-about-section.json');
 const dealWithAboutIncomplete = require('../../fixtures/deal-with-incomplete-about-section.json');
 const { as } = require('../../api')(app);
-const { expectAddedFields } = require('./expectAddedFields');
+const { expectAddedFields, expectAddedFieldsWithEditedByObject } = require('./expectAddedFields');
 const calculateDealSummary = require('../../../src/v1/deal-summary');
 
 const newDeal = aDeal({
@@ -250,7 +250,8 @@ describe('/v1/deals', () => {
       const { status, body } = await as(anHSBCMaker).put(updatedDeal).to(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectAddedFields(updatedDeal));
+
+      expect(body).toEqual(expectAddedFieldsWithEditedByObject(updatedDeal, anHSBCMaker));
     });
 
     it('handles partial updates', async () => {
@@ -292,8 +293,13 @@ describe('/v1/deals', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.deal).toEqual(expectAddedFields(updatedDeal));
+      expect(body.deal).toEqual(expectAddedFieldsWithEditedByObject(updatedDeal, anHSBCMaker));
     });
+
+    // TODO
+    // it('adds updates `editedBy` array', () => {
+      
+    // });
   });
 
   describe('DELETE /v1/deals/:id', () => {

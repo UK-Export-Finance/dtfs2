@@ -11,7 +11,7 @@ const userCanSubmitDeal = (deal, user) => {
   }
 
   const makerCheckerEditedTheDeal = deal.details.editedBy.find((edited) =>
-    edited._id === user._id); // eslint-disable-line no-underscore-dangle
+    edited.userId === user._id); // eslint-disable-line no-underscore-dangle
 
   if (makerCheckerEditedTheDeal) {
     return false;
