@@ -32,6 +32,8 @@ env:
   GOV_NOTIFY_API_KEY: ="${{ secrets.GOV_NOTIFY_API_KEY }}"
   GOV_NOTIFY_EMAIL_RECIPIENT: "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
 
+# Below this line sholud be the same for all environments
+  
 jobs:
 
   portal-ui:

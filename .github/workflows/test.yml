@@ -8,9 +8,9 @@ env:
   # Environment
   environment: test
   resource_group: ${{ secrets.RESOURCE_GROUP_DEV }}
-  app_service_plan: test
+  app_service_plan: dew # temp until we get a secret for the test RG
   registry: ${{ secrets.ACR_TEST_REGISTRY }}
-  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+  credentials: ${{ secrets.AZURE_DIGITAL_DEV }} # temp until we get a secret for the test RG
   image_tag: latest
   # App service settings
   DEAL_API_URL: "tfs-test-portal-api.azurewebsites.net"
@@ -31,6 +31,8 @@ env:
   JWT_VALIDATING_KEY: "${{ secrets.DEV_JWT_VALIDATING_KEY }}"
   GOV_NOTIFY_API_KEY: ="${{ secrets.GOV_NOTIFY_API_KEY }}"
   GOV_NOTIFY_EMAIL_RECIPIENT: "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
+
+# Below this line sholud be the same for all environments
 
 jobs:
 
