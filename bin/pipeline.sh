@@ -1,4 +1,7 @@
-HERE=$(pwd)
+#!/usr/bin/env bash
+
+HERE=$(PWD)
+
 if [ -f "secrets/companies_house_api_key.txt" ]; then
     export COMPANIES_HOUSE_API_KEY=$(cat secrets/companies_house_api_key.txt)
     echo "Set the Companies House API key."
@@ -6,11 +9,38 @@ fi
 
 if [ -f "secrets/set_azure_api_keys.sh" ]; then
     source secrets/set_azure_api_keys.sh
-    echo "API keys set"
+fi
+if [ -z "$AZURE_WORKFLOW_STORAGE_ACCOUNT" ]; then
+    echo "WARNING: AZURE API KEYS NOT SET"
 else
-    if [ -z "$AZURE_WORKFLOW_STORAGE_ACCOUNT" ]; then
-        echo "WARNING: AZURE API KEYS NOT SET"
-    fi
+    echo "Azure keys set"
+fi
+
+if [ -f "secrets/set_companies_house_api_key.sh" ]; then
+    source secrets/set_companies_house_api_key.sh
+fi
+if [ -z "$COMPANIES_HOUSE_API_KEY" ]; then
+    echo "WARNING: COMPANIES HOUSE API KEY NOT SET"
+else
+    echo "CH API key set"
+fi
+
+if [ -f "secrets/set_gov_notify_api_key.sh" ]; then
+    source secrets/set_gov_notify_api_key.sh
+fi
+if [ -z "$GOV_NOTIFY_API_KEY" ]; then
+    echo "WARNING: GOV NOTIFY API KEY NOT SET"
+else
+    echo "CH API key set"
+fi
+
+if [ -f "secrets/set_jwt_keypair.sh" ]; then
+    source secrets/set_jwt_keypair.sh
+fi
+if [ -z "$JWT_SIGNING_KEY" ]; then
+    echo "WARNING: JWT KEY PAIR VALUES NOT SET"
+else
+    echo "JWT keypair values set"
 fi
 
 LOG="$HERE/pipeline.log"
