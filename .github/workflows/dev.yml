@@ -46,19 +46,36 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          name=tfs-${environment}-portal-ui
-          container_image=${registry}/portal-ui:${image_tag}
-          options="--name ${name} --resource-group ${resource_group}"
+          name=tfs-${{ env.environment }}-portal-ui
+          container_image=${{ env.registry }}/portal-ui:${{ env.image_tag }}
+          options="--name ${name} --resource-group ${{ env.resource_group }}"
           echo "name: $name"
           echo "container_image: $container_image"
           echo "options: $options"
 
           echo "az webapp create $options \
-            --plan $app_service_plan \
+            --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name $container_image"
 
+          echo "az webapp deployment container config $options \
+            --enable-cd true"
+
+          echo "az webapp log config $options \
+            --docker-container-logging filesystem"
+
+          echo "az webapp config appsettings set $options \
+            --settings \
+              DEAL_API_URL=${{ env.DEAL_API_URL }} \
+              COMPANIES_HOUSE_API_URL=${{ COMPANIES_HOUSE_API_URL }}"
+          
+          echo "az webapp config connection-string set $options \
+            --connection-string-type custom \
+            --settings \
+              COMPANIES_HOUSE_API_KEY=${{ env.COMPANIES_HOUSE_API_KEY }}"
+
+
           az webapp create $options \
-            --plan $app_service_plan \
+            --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name $container_image
 
           az webapp deployment container config $options \
@@ -69,13 +86,13 @@ jobs:
 
           az webapp config appsettings set $options \
             --settings \
-              DEAL_API_URL="$DEAL_API_URL" \
-              COMPANIES_HOUSE_API_URL="$COMPANIES_HOUSE_API_URL"
+              DEAL_API_URL="${{ env.DEAL_API_URL }}" \
+              COMPANIES_HOUSE_API_URL="${{ COMPANIES_HOUSE_API_URL }}"
           
           az webapp config connection-string set $options \
             --connection-string-type custom \
             --settings \
-              COMPANIES_HOUSE_API_KEY="$COMPANIES_HOUSE_API_KEY"
+              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
 
   portal-api:
     name: Portal API
