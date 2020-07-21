@@ -5,6 +5,9 @@ query Transactions($start: Int, $pagesize: Int, $filters:[TransactionFilters]){
   transactions(params: {start: $start, pagesize: $pagesize, filters: $filters}) {
     count
     transactions{
+      deal_id,
+      deal_status,
+      transaction_id,
       bankFacilityId
       ukefFacilityId
       transactionType
