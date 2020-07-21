@@ -37,10 +37,6 @@ jobs:
   portal-ui:
     name: Portal UI
     runs-on: ubuntu-latest
-    env:
-      name: tfs-${{ env.environment }}-portal-ui
-      container_image: "${{ env.registry }}/portal-ui:${{ env.image_tag }}"
-      options: "--name ${{ env.name }} --resource-group ${{ env.resource_group }}"
     steps:
     - uses: azure/login@v1
       with:
@@ -50,6 +46,10 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
+          name=tfs-${environment}-portal-ui
+          container_image=${registry}/portal-ui:${image_tag}
+          options="--name ${name} --resource-group ${resource_group}"
+
           az webapp create $options \
             --plan $app_service_plan \
             --deployment-container-image-name $container_image
@@ -73,10 +73,6 @@ jobs:
   portal-api:
     name: Portal API
     runs-on: ubuntu-latest
-    env:
-      name: tfs-${{ env.environment }}-portal-api
-      container_image: "${{ env.registry }}/portal-api:${{ env.image_tag }}"
-      options: "--name ${{ env.name }} --resource-group ${{ env.resource_group }}"
     steps:
     - uses: azure/login@v1
       with:
@@ -86,6 +82,10 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
+          name=tfs-${environment}-portal-api
+          container_image=${registry}/portal-api:${image_tag}
+          options="--name ${name} --resource-group ${resource_group}"
+          
           az webapp create $options \
             --plan $app_service_plan \
             --deployment-container-image-name container_image
