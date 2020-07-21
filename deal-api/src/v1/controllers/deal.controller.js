@@ -84,6 +84,7 @@ const createDeal = async (req, res) => {
   const collection = await db.getCollection('deals');
 
   const dealId = await generateDealId();
+
   const time = now();
   const newDeal = {
     _id: dealId,
@@ -147,9 +148,22 @@ exports.findOne = (req, res) => {
 const updateDeal = async (req) => {
   const collection = await db.getCollection('deals');
 
+  const deal = req.body;
+
+  const { username, roles, bank, _id } = req.user;
+  const editedBy = {
+    date: now(),
+    username,
+    roles,
+    bank,
+    _id,
+  };
+
+  deal.details.editedBy.push(editedBy);
+
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: req.params.id },
-    $.flatten(withoutId(req.body)),
+    $.flatten(withoutId(deal)),
     { returnOriginal: false },
   );
 
