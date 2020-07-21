@@ -9,10 +9,11 @@ describe('/v1/feedback', () => {
   let aBarclaysMaker;
   let aBarclaysChecker;
 
-  const feedbackBody = {
+  const feedbackFormBody = {
     role: 'computers',
     organisation: 'Test ltd',
-    reasonForVisiting: 'testing',
+    reasonForVisiting: 'Other',
+    reasonForVisitingOther: 'My other reason',
     easyToUse: 'Very good',
     clearlyExplained: 'Good',
     satisfied: 'Very satisfied',
@@ -32,7 +33,7 @@ describe('/v1/feedback', () => {
   });
 
   const postFeedback = async () => {
-    const response = await as(aBarclaysMaker).post(feedbackBody).to('/v1/feedback');
+    const response = await as(aBarclaysMaker).post(feedbackFormBody).to('/v1/feedback');
     return response;
   };
 
@@ -48,13 +49,13 @@ describe('/v1/feedback', () => {
     });
 
     it('accepts requests from a user with role=maker', async () => {
-      const { status } = await as(aBarclaysMaker).post(feedbackBody).to('/v1/feedback');
+      const { status } = await as(aBarclaysMaker).post(feedbackFormBody).to('/v1/feedback');
 
       expect(status).toEqual(200);
     });
 
     it('accepts requests from a user with role=checker', async () => {
-      const { status } = await as(aBarclaysChecker).post(feedbackBody).to('/v1/feedback');
+      const { status } = await as(aBarclaysChecker).post(feedbackFormBody).to('/v1/feedback');
       expect(status).toEqual(200);
     });
 
@@ -66,15 +67,16 @@ describe('/v1/feedback', () => {
     });
 
     describe('when all required fields provided', () => {
-      it('returns a new feedback with added `created` field', async () => {
+      it('returns a new feedback with added `created` and `submittedBy` field', async () => {
         const { status, body } = await postFeedback();
 
         expect(status).toEqual(200);
         expect(body._id).toBeDefined(); // eslint-disable-line no-underscore-dangle
 
         expect(body).toEqual({
-          ...feedbackBody,
+          ...feedbackFormBody,
           _id: expect.any(String), // eslint-disable-line no-underscore-dangle
+          submittedBy: aBarclaysMaker.username,
           created: expect.any(String),
         });
       });
@@ -147,9 +149,10 @@ describe('/v1/feedback', () => {
       expect(status).toEqual(200);
 
       expect(body).toEqual({
-        ...feedbackBody,
+        ...feedbackFormBody,
         _id: expect.any(String), // eslint-disable-line no-underscore-dangle
         created: expect.any(String),
+        submittedBy: aBarclaysMaker.username,
       });
     });
   });

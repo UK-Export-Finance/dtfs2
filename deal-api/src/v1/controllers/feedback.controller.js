@@ -38,6 +38,7 @@ exports.create = async (req, res) => {
 
   const modifiedFeedback = {
     ...req.body,
+    submittedBy: req.user.username,
     created: now(),
   };
 
@@ -61,6 +62,7 @@ exports.create = async (req, res) => {
     clearlyExplained,
     satisfied,
     howCanWeImprove,
+    submittedBy,
     emailAddress,
   } = modifiedFeedback;
 
@@ -73,6 +75,7 @@ exports.create = async (req, res) => {
     clearlyExplained,
     satisfied,
     howCanWeImprove,
+    submittedBy,
     emailAddress,
     created: formattedCreated,
   };
