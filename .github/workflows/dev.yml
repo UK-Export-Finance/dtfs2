@@ -49,30 +49,6 @@ jobs:
           name=tfs-${{ env.environment }}-portal-ui
           container_image=${{ env.registry }}/portal-ui:${{ env.image_tag }}
           options="--name ${name} --resource-group ${{ env.resource_group }}"
-          echo "name: $name"
-          echo "container_image: $container_image"
-          echo "options: $options"
-
-          echo "az webapp create $options \
-            --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name $container_image"
-
-          echo "az webapp deployment container config $options \
-            --enable-cd true"
-
-          echo "az webapp log config $options \
-            --docker-container-logging filesystem"
-
-          echo "az webapp config appsettings set $options \
-            --settings \
-              DEAL_API_URL=${{ env.DEAL_API_URL }} \
-              COMPANIES_HOUSE_API_URL=${{ env.COMPANIES_HOUSE_API_URL }}"
-          
-          echo "az webapp config connection-string set $options \
-            --connection-string-type custom \
-            --settings \
-              COMPANIES_HOUSE_API_KEY=${{ env.COMPANIES_HOUSE_API_KEY }}"
-
 
           az webapp create $options \
             --plan ${{ env.app_service_plan }} \
@@ -106,12 +82,12 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          name=tfs-${environment}-portal-api
-          container_image=${registry}/portal-api:${image_tag}
-          options="--name ${name} --resource-group ${resource_group}"
+          name=tfs-${{ env.environment }}-portal-api
+          container_image=${{ env.registry }}/portal-api:${{ env.image_tag }}
+          options="--name ${name} --resource-group ${{ env.resource_group }}"
           
           az webapp create $options \
-            --plan $app_service_plan \
+            --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name container_image
 
           az webapp deployment container config $options \
@@ -123,17 +99,17 @@ jobs:
           az webapp config connection-string set $options \
             --connection-string-type custom \
             --settings \
-              AZURE_PORTAL_EXPORT_FOLDER="$AZURE_PORTAL_EXPORT_FOLDER" \
-              AZURE_PORTAL_FILESHARE_NAME="$AZURE_PORTAL_FILESHARE_NAME" \
-              AZURE_PORTAL_STORAGE_ACCESS_KEY="$AZURE_PORTAL_STORAGE_ACCESS_KEY" \
-              AZURE_PORTAL_STORAGE_ACCOUNT="$AZURE_PORTAL_STORAGE_ACCOUNT" \
-              AZURE_WORKFLOW_EXPORT_FOLDER="$AZURE_WORKFLOW_EXPORT_FOLDER" \
-              AZURE_WORKFLOW_FILESHARE_NAME="$AZURE_WORKFLOW_FILESHARE_NAME" \
-              AZURE_WORKFLOW_IMPORT_FOLDER="$AZURE_WORKFLOW_IMPORT_FOLDER" \
-              AZURE_WORKFLOW_STORAGE_ACCESS_KEY="$AZURE_WORKFLOW_STORAGE_ACCESS_KEY" \
-              MONGO_INITDB_DATABASE="$MONGO_INITDB_DATABASE" \
-              MONGODB_URI="$MONGODB_URI" \
-              JWT_SIGNING_KEY="$JWT_SIGNING_KEY" \
-              JWT_VALIDATING_KEY="$JWT_VALIDATING_KEY" \
-              GOV_NOTIFY_API_KEY="$GOV_NOTIFY_API_KEY" \
-              GOV_NOTIFY_EMAIL_RECIPIENT="$GOV_NOTIFY_EMAIL_RECIPIENT"
+              AZURE_PORTAL_EXPORT_FOLDER="${{ env.AZURE_PORTAL_EXPORT_FOLDER }}" \
+              AZURE_PORTAL_FILESHARE_NAME="${{ env.AZURE_PORTAL_FILESHARE_NAME }}" \
+              AZURE_PORTAL_STORAGE_ACCESS_KEY="${{ env.AZURE_PORTAL_STORAGE_ACCESS_KEY }}" \
+              AZURE_PORTAL_STORAGE_ACCOUNT="${{ env.AZURE_PORTAL_STORAGE_ACCOUNT }}" \
+              AZURE_WORKFLOW_EXPORT_FOLDER="${{ env.AZURE_WORKFLOW_EXPORT_FOLDER }}" \
+              AZURE_WORKFLOW_FILESHARE_NAME="${{ env.AZURE_WORKFLOW_FILESHARE_NAME }}" \
+              AZURE_WORKFLOW_IMPORT_FOLDER="${{ env.AZURE_WORKFLOW_IMPORT_FOLDER }}" \
+              AZURE_WORKFLOW_STORAGE_ACCESS_KEY="${{ env.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}" \
+              MONGO_INITDB_DATABASE="${{ env.MONGO_INITDB_DATABASE }}" \
+              MONGODB_URI="${{ env.MONGODB_URI }}" \
+              JWT_SIGNING_KEY="${{ env.JWT_SIGNING_KEY }}" \
+              JWT_VALIDATING_KEY="${{ env.JWT_VALIDATING_KEY }}" \
+              GOV_NOTIFY_API_KEY="${{ env.GOV_NOTIFY_API_KEY }}" \
+              GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}"
