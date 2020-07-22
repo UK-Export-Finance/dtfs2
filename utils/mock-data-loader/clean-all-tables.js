@@ -49,14 +49,6 @@ const cleanMandatoryCriteria = async (token) => {
   }
 };
 
-const cleanTransactions = async (token) => {
-  console.log('cleaning transactions');
-
-  for (transaction of await api.listTransactions(token)) {
-    await api.deleteTransaction(transaction, token);
-  }
-};
-
 const cleanUsers = async () => {
   console.log('cleaning users');
 
@@ -79,7 +71,6 @@ const cleanAllTables = async () => {
   await cleanDeals(token);
   await cleanIndustrySectors(token);
   await cleanMandatoryCriteria(token);
-  await cleanTransactions(token);
   await cleanUsers();
 };
 
