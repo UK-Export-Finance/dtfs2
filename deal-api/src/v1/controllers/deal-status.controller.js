@@ -117,7 +117,10 @@ const userCanSubmitDeal = (deal, user) => {
     return true;
   }
 
-  const makerCheckerCreatedTheDeal = (String(deal.details.maker._id) === String(user._id)); // eslint-disable-line no-underscore-dangle
+  const makerId = String(deal.details.maker._id); // eslint-disable-line no-underscore-dangle
+  const userId = String(user._id); // eslint-disable-line no-underscore-dangle
+  const makerCheckerCreatedTheDeal = (makerId === userId);
+
   if (makerCheckerCreatedTheDeal) {
     return false;
   }
