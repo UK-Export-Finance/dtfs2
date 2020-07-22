@@ -98,21 +98,6 @@ const createMandatoryCriteria = async (mandatoryCriteria, token) => {
   return response.data;
 };
 
-const createTransaction = async (transaction, token) => {
-  const response = await axios({
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${urlRoot}/v1/transactions`,
-    data: transaction,
-  }).catch((err) => { console.log(`err: ${err}`); });
-
-  return response.data;
-};
-
 const createUser = async (user) => {
   const response = await axios({
     method: 'post',
@@ -211,20 +196,6 @@ const deleteMandatoryCriteria = async (mandatoryCriteria, token) => {
   return response.data;
 };
 
-const deleteTransaction = async (transaction, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${urlRoot}/v1/transactions/${transaction.bankFacilityId}`,
-  }).catch((err) => { console.log(`err: ${err}`); });
-
-  return response.data;
-};
-
 const deleteUser = async (user) => {
   const response = await axios({
     method: 'delete',
@@ -314,20 +285,6 @@ const listMandatoryCriteria = async (token) => {
   return response.data.mandatoryCriteria;
 };
 
-const listTransactions = async (token) => {
-  const response = await axios({
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token || '',
-      Accepts: 'application/json',
-    },
-    url: `${urlRoot}/v1/transactions`,
-  }).catch((err) => { console.log(`err: ${err}`); });
-
-  return response.data.transactions;
-};
-
 const listUsers = async () => {
   const response = await axios({
     method: 'get',
@@ -363,7 +320,6 @@ module.exports = {
   createDeal,
   createIndustrySector,
   createMandatoryCriteria,
-  createTransaction,
   createUser,
   deleteBank,
   deleteCurrency,
@@ -371,7 +327,6 @@ module.exports = {
   deleteDeal,
   deleteIndustrySector,
   deleteMandatoryCriteria,
-  deleteTransaction,
   deleteUser,
   listBanks,
   listCurrencies,
@@ -379,7 +334,6 @@ module.exports = {
   listDeals,
   listIndustrySectors,
   listMandatoryCriteria,
-  listTransactions,
   listUsers,
   resetIdCounters,
 };

@@ -7,7 +7,6 @@ const MANDATORY_CRITERIA = require('./mandatoryCriteria');
 const ELIGIBILITY_CRITERIA = require('./eligibilityCriteria');
 const SUPPORTING_DOCUMENTATION = require('./supportingDocumentation');
 const CONTRACTS = require('./contracts');
-const TRANSACTIONS = require('./transactions');
 
 const MOCKS = {
   USERS,
@@ -17,7 +16,6 @@ const MOCKS = {
   INDUSTRY_SECTORS,
   MANDATORY_CRITERIA,
   CONTRACTS,
-  TRANSACTIONS,
 };
 
 module.exports = MOCKS;

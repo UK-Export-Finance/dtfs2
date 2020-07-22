@@ -56,11 +56,6 @@ const insertMocks = async () => {
     await api.createMandatoryCriteria(mandatoryCriteria, token);
   }
 
-  console.log('inserting transactions');
-  for (transaction of MOCKS.TRANSACTIONS) {
-    await api.createTransaction(transaction, token);
-  }
-
   console.log('inserting users');
   for (user of MOCKS.USERS) {
     await api.createUser(user);
