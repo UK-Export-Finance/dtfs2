@@ -1,9 +1,20 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% macro render(params) %}
-  {% if params.deal.details.status %}
+  {% if params.deal.details.status and params.userCanSubmit %}
 
-    {% if params.user.roles.includes('checker') %}
+    {% if params.user.roles.includes('checker') and params.user.roles.includes('maker') %}
+      {{ govukButton({
+        "disabled": false,
+        "text": "Proceed to submit",
+        "attributes" : {
+          "data-cy" : "ProceedToSubmit"
+        },
+        "href": "/contract/" + params.deal._id + "/confirm-submission"
+      }) }}
+    {% endif %}
+
+    {% if params.user.roles.includes('checker') and not params.user.roles.includes('maker') %}
 
         {% if ["Ready for Checker's approval"].includes(params.deal.details.status) %}
 
@@ -16,7 +27,7 @@
             "href": "/contract/" + params.deal._id + "/confirm-submission"
           }) }}
 
-        {% elseif  ["Draft", "Further Maker's input required", "Abandoned Deal", "Acknowledged by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)"].includes(params.deal.details.status) %}
+        {% elseif  ["Draft", "Abandoned Deal", "Acknowledged by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)"].includes(params.deal.details.status) %}
 
           {{ govukButton({
             "disabled": true,
@@ -28,6 +39,7 @@
           }) }}
 
         {% endif %}
+
     {% endif %}
 
   {% endif %}

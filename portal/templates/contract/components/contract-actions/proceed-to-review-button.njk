@@ -5,40 +5,41 @@
 
     {% if params.user.roles.includes('maker') %}
 
-        {% if ["Draft", "Further Maker's input required"].includes(params.deal.details.status) and params.dealFormsCompleted %}
+      {% if ["Draft", "Further Maker's input required"].includes(params.deal.details.status) and params.dealFormsCompleted %}
 
-          {{ govukButton({
-            "disabled": false,
-            "text": "Proceed to review",
-            "attributes" : {
-              "data-cy" : "ProceedToReview"
-            },
-            "href": "/contract/" + params.deal._id + "/ready-for-review"
-          }) }}
+        {{ govukButton({
+          "disabled": false,
+          "text": "Proceed to review",
+          "attributes" : {
+            "data-cy" : "ProceedToReview"
+          },
+          "href": "/contract/" + params.deal._id + "/ready-for-review"
+        }) }}
 
-        {% elseif  ["Draft", "Further Maker's input required"].includes(params.deal.details.status) and not params.dealFormsCompleted %}
+      {% elseif  ["Draft", "Further Maker's input required"].includes(params.deal.details.status) and not params.dealFormsCompleted %}
 
-          {{ govukButton({
-            "disabled": true,
-            "text": "Proceed to review",
-            "attributes" : {
-              "data-cy" : "ProceedToReview"
-            },
-            "href": ""
-          }) }}
+        {{ govukButton({
+          "disabled": true,
+          "text": "Proceed to review",
+          "attributes" : {
+            "data-cy" : "ProceedToReview"
+          },
+          "href": ""
+        }) }}
 
-        {% elseif  ["Abandoned Deal", "Acknowledged by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)", "Ready for Checker's approval"].includes(params.deal.details.status) and not params.dealFormsCompleted %}
+      {% elseif  ["Abandoned Deal", "Acknowledged by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)", "Ready for Checker's approval"].includes(params.deal.details.status) and not params.dealFormsCompleted %}
 
-          {{ govukButton({
-            "disabled": true,
-            "text": "Proceed to review",
-            "attributes" : {
-              "data-cy" : "ProceedToReview"
-            },
-            "href": ""
-          }) }}
+        {{ govukButton({
+          "disabled": true,
+          "text": "Proceed to review",
+          "attributes" : {
+            "data-cy" : "ProceedToReview"
+          },
+          "href": ""
+        }) }}
 
-        {% endif %}
+      {% endif %}
+
     {% endif %}
 
   {% endif %}

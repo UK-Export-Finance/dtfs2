@@ -45,19 +45,35 @@ router.get('/users/create', async (req, res) => {
     });
 });
 
-// fix up data from create user page..
-//-----
+
 // roles are fed in from checkboxes, so we either get a string or an array..
 // -so if we don't get an array, put it into an array..
-const fixRolesIntoArray = (userObject) => ({
-  ...userObject,
-  roles: Array.isArray(userObject.roles) ? userObject.roles : [userObject.roles],
-});
+// if 'maker/checker' value is submitted, remove this and add 'maker' and 'checker' to the array.
+const handleRoles = (roles) => {
+  let result = [];
+  if (Array.isArray(roles)) {
+    result = [...roles];
+  } else {
+    result = [roles];
+  }
+
+  if (result.includes('maker/checker')) {
+    const makerCheckerIndex = result.findIndex((i) => i === 'maker/checker');
+    result.splice(makerCheckerIndex, 1);
+    result.push('maker');
+    result.push('checker');
+  }
+
+  return result;
+};
 
 router.post('/users/create', async (req, res) => {
   const { userToken } = requestParams(req);
 
-  const userToCreate = fixRolesIntoArray({ ...req.body });
+  const userToCreate = {
+    ...req.body,
+    roles: handleRoles(req.body.roles),
+  };
 
   // inflate the bank object
   const banks = await getApiData(
@@ -111,7 +127,11 @@ router.get('/users/edit/:_id', async (req, res) => {
 
 router.post('/users/edit/:_id', async (req, res) => {
   const { _id, userToken } = requestParams(req);
-  const update = fixRolesIntoArray({ ...req.body });
+
+  const update = {
+    ...req.body,
+    roles: handleRoles(req.body.roles),
+  };
 
   console.log(`update:: ${JSON.stringify(update)}`);
 

@@ -117,6 +117,7 @@ exports.update = async (req, res) => {
     });
 
     const updatedDealData = {
+      ...deal,
       eligibility: {
         status,
       },

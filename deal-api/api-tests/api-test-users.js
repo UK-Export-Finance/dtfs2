@@ -96,6 +96,14 @@ const testUsers = [
     surname: 'Eight',
     roles: ['data-admin'],
   },
+  {
+    username: 'Barclays-maker-checker-1',
+    password: 'P@ssword1234',
+    firstname: 'Mister',
+    surname: 'Nine',
+    roles: ['maker', 'checker'],
+    bank: banks.Barclays,
+  },
 ];
 
 let notYetInitialised = true;
@@ -111,6 +119,11 @@ const finder = () => {
     one: () => users[0],
     withRole: (role) => {
       users = users.filter((user) => user.roles.includes(role));
+      // console.log(`withRole ${role} => ${JSON.stringify(users)}`)
+      return fluidBuilder;
+    },
+    withMultipleRoles: (role1, role2) => {
+      users = users.filter((user) => user.roles.includes(role1) && user.roles.includes(role2));
       // console.log(`withRole ${role} => ${JSON.stringify(users)}`)
       return fluidBuilder;
     },
@@ -161,6 +174,7 @@ module.exports.initialise = async (app) => {
 
       loadedUsers.push({
         ...testUser,
+        _id: body.user._id,
         token,
       });
     }
