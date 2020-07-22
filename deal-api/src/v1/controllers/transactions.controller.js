@@ -1,49 +1,14 @@
 const assert = require('assert');
-const { isSuperUser } = require('../users/checks');
-const bondFixer = require('./transactions/bondFixer');
-const loanFixer = require('./transactions/loanFixer');
+const transactionFixer = require('./transactions/transactionFixer');
 
 const db = require('../../drivers/db-client');
 
-const filtersWeDoManually = [
-  'transaction.transactionStage',
-  'transaction.transactionType',
-];
-
-
-const transactionsQuery = (user, filter, listOfFiltersToIgnore) => {
-  // copy the filters into our own object so we can mess with it
-  let query = {};
-  if (filter && filter !== {}) {
-    query = { ...filter };
-  }
-
-  // if the user is not a superuser,
-  // -> we must only ever show them data related to their bank
-  if (!isSuperUser(user)) {
-    query['details.owningBank.id'] = { $eq: user.bank.id };
-  }
-
-  // using Array.filter as a cheap and cheesy iterator
-  //  we look at each of the filters we're supposed to be ignoring in mongo
-  //  and if we find them we delete them from this query object
-  listOfFiltersToIgnore.filter((filterThatIsNotForMongo) => {
-    if (query[filterThatIsNotForMongo]) {
-      delete query[filterThatIsNotForMongo];
-    }
-    return false;// because lint requires me to return something because i'm using .filter..
-  });
-
-  return query;
-};
-
 exports.findPaginatedTransactions = async (requestingUser, start = 0, pagesize = 20, filter) => {
   // try to hide all the horrible logic for filtering in here:
-  const bondFix = bondFixer(filter);
-  const loanFix = loanFixer(filter);
+  const transactionFix = transactionFixer(requestingUser, filter);
 
   // work out the mongo query to get all the deals that might contain transactions we care about
-  const query = transactionsQuery(requestingUser, filter, filtersWeDoManually);
+  const query = transactionFix.transactionsQuery();
 
   // get the deals that might contain transactions we care about
   //   ordered by deal.details.dateOfLastAction
@@ -54,20 +19,9 @@ exports.findPaginatedTransactions = async (requestingUser, start = 0, pagesize =
   // use Array.reduce to loop over our list of deals,
   //  accumulating an array of "loans and bonds" suitable to return via the API
   const allTransactions = dealsWithTransactions.reduce((transactionsAccumulatedSoFar, deal) => {
-    // if we're explicitly filtering out bonds:
-    //  - default to an empty list of bonds, avoid having to think about edge cases
-    // if we're not explicitly filtering bonds out
-    //  - use our bondFix toolkit to get the list of bonds it's legit to display
-    const bonds = bondFix.shouldReturnBonds() ? bondFix.filteredBondsFor(deal) : [];
-    // same for loans
-    const loans = loanFix.shouldReturnLoans() ? loanFix.filteredLoansFor(deal) : [];
-
-    // return our new accumulator, which should be:
-    //   all the bonds+loans we've picked up so far
-    //    plus the bonds from this deal that passed filtering
-    //    plus the loans from this deal that passed filtering
-    const updatedAccumulator = transactionsAccumulatedSoFar.concat(bonds).concat(loans);
-    return updatedAccumulator;
+    // use our transactionFix toolkit to get the list of bonds+loans that fit the provided filters
+    const transactionsForThisDeal = transactionFix.filteredTransactions(deal);
+    return transactionsAccumulatedSoFar.concat(transactionsForThisDeal);
   }, []);
 
   // "allTransactions" now holds a list of all the transactions that it would be ok to display
