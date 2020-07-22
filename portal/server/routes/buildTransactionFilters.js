@@ -1,7 +1,8 @@
-import moment from 'moment';
+// import moment from 'moment';
 import CONSTANTS from '../constants';
 
-const buildDashboardFilters = (params, user) => {
+// const buildDashboardFilters = (params, user) => {
+const buildDashboardFilters = (params) => {
   const filters = [];
   const isUsingAdvancedFilter = false;
 
