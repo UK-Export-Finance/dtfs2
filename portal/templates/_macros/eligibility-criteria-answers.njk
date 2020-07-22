@@ -1,10 +1,10 @@
-{% macro render(criteria) %}
+{% macro render(eligibility) %}
 
   <div data-cy="eligibility-criteria-answers">
     <h4 class="govuk-heading-m">Eligibility criteria</h4>
 
     <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-4">
-      {% for criterion in criteria %}
+      {% for criterion in eligibility.criteria %}
 
         <div class="eligibility-criteria-row">
           <h7 class="govuk-heading-s govuk-!-margin-bottom-1">
@@ -18,6 +18,43 @@
         </div>
 
         <p class="govuk-body-s govuk-hint" data-cy="criterion-{{ criterion.id }}-description">{{ criterion.description }}</p>
+
+        {% if criterion.id === 11 %}
+
+          {% set hasAgentAddressLine = eligibility.agentAddress1 | length or eligibility.agentAddress2 | length or eligibility.agentAddress3 | length %}
+          {% set renderAgentAddress = hasAgentAddressLine or eligibility.agentAddressTown | length or eligibilityagentAddressPostcode | length %}
+   
+          <div class="eligibility-criteria-row">
+
+            {% if eligibility.agentName %}
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-body-s">
+                  Agent's corporate name
+                </dt>
+                <dd class="govuk-summary-list__value govuk-body-s">
+                  {{ eligibility.agentName }}
+                </dd>
+              </div>
+            {% endif %}
+
+            {% if renderAgentAddress %}
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-body-s">
+                  Agent's corporate address
+                </dt>
+                <dd class="govuk-summary-list__value govuk-body-s">
+                  <p>{{ eligibility.agentAddress1 }}</p>
+                  <p>{{ eligibility.agentAddress2 }}</p>
+                  <p>{{ eligibility.agentAddress3 }}</p>
+                  <p>{{ eligibility.agentTown }}</p>
+                  <p>{{ eligibility.agentPostcode }}</p>
+                  <p>{{ eligibility.agentCountry }}</p>
+                </dd>
+              </div>
+              {% endif %}
+          </div>
+
+        {% endif %}
 
       {% endfor %}
     </dl>
