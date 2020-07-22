@@ -23,6 +23,29 @@ const getPortalCountryForCompaniesHouseCountry = (companiesHouseCountry) => {
 
 const router = express.Router();
 
+const getIndustrySectorFromIndustryClass = (industrySectors, sicCodes) => {
+  let result = {};
+
+  industrySectors.forEach((sector) => sector.classes.find((industryClass) => {
+    if (industryClass.code === sicCodes[0]) {
+      result = {
+        industrySector: {
+          code: sector.code,
+          name: sector.name,
+        },
+        industryClass: {
+          code: industryClass.code,
+          name: industryClass.name,
+        },
+      };
+      return result;
+    }
+    return null;
+  }));
+
+  return result;
+};
+
 router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', provide([INDUSTRY_SECTORS, COUNTRIES]), async (req, res) => {
   const { prefix } = req.params;
   const { deal, industrySectors, countries } = req.apiData;
@@ -57,12 +80,14 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
   }
 
   // munge data back into form data
-  deal.submissionDetails[`${prefix}-name`] = company.title;
-  deal.submissionDetails[`${prefix}-address-line-1`] = company.address.premises;
-  deal.submissionDetails[`${prefix}-address-line-2`] = company.address.address_line_1;
-  deal.submissionDetails[`${prefix}-address-town`] = company.address.locality;
-  deal.submissionDetails[`${prefix}-address-postcode`] = company.address.postal_code;
-  deal.submissionDetails[`${prefix}-address-country`] = getPortalCountryForCompaniesHouseCountry(company.address.country);
+  deal.submissionDetails[`${prefix}-name`] = company.company_name;
+  deal.submissionDetails[`${prefix}-address-line-1`] = company.registered_office_address.address_line_1;
+  deal.submissionDetails[`${prefix}-address-line-2`] = company.registered_office_address.address_line_2;
+  deal.submissionDetails[`${prefix}-address-town`] = company.registered_office_address.locality;
+  deal.submissionDetails[`${prefix}-address-postcode`] = company.registered_office_address.postal_code;
+  deal.submissionDetails[`${prefix}-address-country`] = getPortalCountryForCompaniesHouseCountry(company.registered_office_address.country);
+
+  console.log('-----------getIndustrySectorFromIndustryClass: \n', getIndustrySectorFromIndustryClass(industrySectors, company.sic_codes));
 
   // re-render
   const mappedIndustrySectors = mapIndustrySectors(industrySectors, deal.submissionDetails['industry-sector']);

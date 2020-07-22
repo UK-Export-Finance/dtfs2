@@ -8,13 +8,12 @@ const searchByRegistrationNumber = async (registrationNumber) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${urlRoot}/search/companies?q=${registrationNumber}`,
+      url: `${urlRoot}/company/${registrationNumber}`,
       auth: {
         username: apiKey,
       },
     });
-
-    return response.data.items[0];
+    return response.data;
   } catch (err) {
     console.log(err);
     return null;
