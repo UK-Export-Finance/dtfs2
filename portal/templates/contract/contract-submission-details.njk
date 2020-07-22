@@ -1,5 +1,4 @@
 {% extends "index.njk" %}
-
 {% import './components/contract-tabs.njk' as contractTabs %}
 {% import './components/contract-overview-table.njk' as contractOverviewTable %}
 {% import './components/edit-link.njk' as editLink %}
@@ -17,7 +16,7 @@
 
   <h1 data-cy="heading" class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ deal.details.bankSupplyContractName }}</span></h1>
 
-  <div class="govuk-tabs" data-module="govuk-tabs">
+  <div class="govuk-tabs">
     <h2 class="govuk-tabs__title">
       Contents
     </h2>
@@ -57,7 +56,7 @@
       {% endif %}
 
       {% if deal.eligibility.criteria %}
-        {{ eligibilityCriteriaAnswers.render(deal.eligibility)}}
+        {{ eligibilityCriteriaAnswers.render(deal.eligibility.criteria)}}
       {% endif %}
 
       {% if deal.dealFiles %}
