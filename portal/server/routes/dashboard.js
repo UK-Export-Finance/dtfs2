@@ -67,6 +67,45 @@ router.get('/dashboard/transactions/:page', async (req, res) => {
   });
 });
 
+router.post('/dashboard/transactions/:page', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  }
+
+  const transactionFilters = req.body;
+
+  req.session.transactionFilters = transactionFilters;
+
+  const { isUsingAdvancedFilter, filters } = buildTransactionFilters(transactionFilters, req.session.user);
+
+  const transactionData = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+    res,
+  );
+
+  const pages = {
+    totalPages: Math.ceil(transactionData.count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: transactionData.count,
+  };
+
+  return res.render('dashboard/transactions.njk', {
+    pages,
+    transactions: transactionData.transactions,
+    banks: await getApiData(
+      api.banks(userToken),
+      res,
+    ),
+    successMessage: getFlashSuccessMessage(req),
+    filter: {
+      isUsingAdvancedFilter,
+      ...req.session.transactionFilters,
+    },
+    user: req.session.user,
+  });
+});
 
 router.get('/dashboard/:page', async (req, res) => {
   const { userToken } = requestParams(req);
