@@ -58,10 +58,10 @@ describe('userCanSubmitDeal', () => {
           },
         },
         editedBy: [
-          { _id: '1' },
-          { _id: '1234' },
-          { _id: '3' },
-          { _id: '4' },
+          { userId: '1' },
+          { userId: '1234' },
+          { userId: '3' },
+          { userId: '4' },
         ],
       };
 
@@ -84,10 +84,10 @@ describe('userCanSubmitDeal', () => {
           },
         },
         editedBy: [
-          { _id: '1' },
-          { _id: '2' },
-          { _id: '3' },
-          { _id: '4' },
+          { userId: '1' },
+          { userId: '2' },
+          { userId: '3' },
+          { userId: '4' },
         ],
       };
 
