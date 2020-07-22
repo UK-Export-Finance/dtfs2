@@ -1,4 +1,6 @@
 {% extends "index.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
 {% import '_macros/success-message.njk' as success %}
 {% import '_macros/dashboard-tabs.njk' as dashboardTabs %}
 {% import '_macros/pagination.njk' as pagination %}
@@ -22,6 +24,11 @@
     {{ dashboardTabs.nav(selected = 'deals', id = id ) }}
 
     <section class="govuk-tabs__panel">
+
+      {{ govukButton({
+        text: "Create new Submission",
+        href: "/before-you-start"
+      }) }}
 
     {{ dashboardFilters.render(filter, user, banks) }}
 
