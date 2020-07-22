@@ -1,7 +1,5 @@
-const $ = require('mongo-dot-notation');
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
-const db = require('../../drivers/db-client');
 const validateSubmissionDetails = require('../validation/submission-details');
 const { sanitizeCurrency } = require('../../utils/number');
 const now = require('../../now');
@@ -147,7 +145,6 @@ exports.update = (req, res) => {
       );
     }
 
-    const collection = await db.getCollection('deals');
     const dealAfterAllUpdates = await updateSubmissionDetails(req, submissionDetails);
 
     const validationErrors = validateSubmissionDetails({ ...dealAfterAllUpdates.submissionDetails, ...req.body });

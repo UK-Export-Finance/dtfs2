@@ -61,7 +61,7 @@ describe('userCanSubmitDeal', () => {
             { _id: '1234' },
             { _id: '3' },
             { _id: '4' },
-          ]
+          ],
         },
       };
 
@@ -87,7 +87,7 @@ describe('userCanSubmitDeal', () => {
             { _id: '2' },
             { _id: '3' },
             { _id: '4' },
-          ]
+          ],
         },
       };
 
