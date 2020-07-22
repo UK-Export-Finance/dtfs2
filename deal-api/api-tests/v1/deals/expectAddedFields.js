@@ -25,48 +25,28 @@ const expectAddedFields = (obj) => {
       maker: expect.any(Object),
       owningBank: expect.any(Object),
       status: 'Draft',
-      editedBy: [],
     },
+    editedBy: [],
   });
 
   return expectation;
 }
 
-const expectAddedFieldsWithEditedByObject = (obj, userObj) => {
+const expectedEditedByObject = (user) => ({
+  date: expect.any(String),
+  username: user.username,
+  roles: user.roles,
+  bank: user.bank,
+  userId: user._id,
+});
+
+const expectAddedFieldsWithEditedBy = (obj, user, numberOfUpdates = 1) => {
+  let expectedEditedByArray = new Array(numberOfUpdates);
+  expectedEditedByArray.fill(expectedEditedByObject(user));
+
   const expectation = expectMongoId({
-    eligibility: {
-      status: 'Incomplete',
-      criteria: expect.any(Array),
-    },
-    submissionDetails: {
-      status: 'Not Started',
-    },
-    bondTransactions: {
-      items: [],
-    },
-    loanTransactions: {
-      items: [],
-    },
-    summary: {},
-    comments: [],
-    ...obj,
-    details: {
-      ...obj.details,
-      created: expect.any(String),
-      dateOfLastAction: expect.any(String),
-      maker: expect.any(Object),
-      owningBank: expect.any(Object),
-      status: 'Draft',
-      editedBy: [
-        {
-          date: expect.any(String),
-          username: userObj.username,
-          roles: userObj.roles,
-          bank: userObj.bank,
-          userId: userObj._id,
-        }
-      ],
-    },
+    ...expectAddedFields(obj),
+    editedBy: expectedEditedByArray,
   });
 
   return expectation;
@@ -77,5 +57,5 @@ const expectAllAddedFields = (list) => list.map(expectAddedFields);
 module.exports = {
   expectAddedFields,
   expectAllAddedFields,
-  expectAddedFieldsWithEditedByObject,
+  expectAddedFieldsWithEditedBy,
 };

@@ -75,7 +75,7 @@ exports.create = async (req, res) => {
       user: req.user,
     };
 
-    const updateDealResponse = await updateDeal(newReq, res);
+    const updateDealResponse = await updateDeal(newReq);
 
     return res.status(200).send({
       ...updateDealResponse,
@@ -176,7 +176,7 @@ exports.updateLoan = async (req, res) => {
         user: req.user,
       };
 
-      const dealAfterAllUpdates = await updateDeal(newReq, res);
+      const dealAfterAllUpdates = await updateDeal(newReq);
 
       const loanInDealAfterAllUpdates = dealAfterAllUpdates.loanTransactions.items.find((l) =>
         String(l._id) === loanId); // eslint-disable-line no-underscore-dangle
