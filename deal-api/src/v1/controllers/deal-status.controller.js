@@ -110,6 +110,31 @@ const createSubmissionDate = async (collection, _id, user) => {
   return value;
 };
 
+const userCanSubmitDeal = (deal, user) => {
+  const isMakerCheckerUser = (user.roles.includes('maker') && user.roles.includes('checker'));
+
+  if (!isMakerCheckerUser) {
+    return true;
+  }
+
+  const makerId = String(deal.details.maker._id); // eslint-disable-line no-underscore-dangle
+  const userId = String(user._id); // eslint-disable-line no-underscore-dangle
+  const makerCheckerCreatedTheDeal = (makerId === userId);
+
+  if (makerCheckerCreatedTheDeal) {
+    return false;
+  }
+
+  const makerCheckerEditedTheDeal = deal.editedBy.find((edited) =>
+    String(edited.userId) === String(user._id)); // eslint-disable-line no-underscore-dangle
+
+  if (makerCheckerEditedTheDeal) {
+    return false;
+  }
+
+  return true;
+};
+
 exports.update = (req, res) => {
   const { user } = req;
 
@@ -119,6 +144,10 @@ exports.update = (req, res) => {
 
     const fromStatus = deal.details.status;
     const toStatus = req.body.status;
+
+    if (!userCanSubmitDeal(deal, req.user)) {
+      return res.status(401).send();
+    }
 
     const validationErrors = validateStateChange(deal, req.body, user);
 

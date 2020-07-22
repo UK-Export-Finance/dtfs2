@@ -13,10 +13,10 @@ import {
   dealHasIncompleteTransactions,
   generateErrorSummary,
 } from '../../helpers';
-
 import {
   provide, DEAL, MANDATORY_CRITERIA,
 } from '../api-data-provider';
+import userCanSubmitDeal from './userCanSubmitDeal';
 
 const router = express.Router();
 
@@ -59,6 +59,7 @@ router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
     dealFormsCompleted: dealFormsCompleted(deal),
     canFullyCalculateDealSummary,
     editable: isDealEditable(deal, user),
+    userCanSubmit: userCanSubmitDeal(deal, user),
   });
 });
 

@@ -54,6 +54,7 @@ const DEFAULTS = {
     },
     summary: {},
     comments: [],
+    editedBy: [],
   },
 };
 

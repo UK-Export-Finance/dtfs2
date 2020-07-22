@@ -21,6 +21,7 @@ describe('/v1/deals/:id/status', () => {
   let anotherBarclaysMaker;
   let anHSBCMaker;
   let aBarclaysChecker;
+  let aBarclaysMakerChecker;
   let aSuperuser;
 
   beforeAll(async () => {
@@ -31,6 +32,9 @@ describe('/v1/deals/:id/status', () => {
     anotherBarclaysMaker = barclaysMakers[1];
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
     aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
+
+    const barclaysMakerChecker = testUsers().withMultipleRoles('maker', 'checker').withBankName('Barclays Bank').one();
+    aBarclaysMakerChecker = barclaysMakerChecker;
     aSuperuser = testUsers().superuser().one();
   });
 
@@ -304,6 +308,49 @@ describe('/v1/deals/:id/status', () => {
         },
       });
     });
+
+    it('rejects "Submitted" updates if user is a maker AND checker that has created the deal.', async () => {
+      const dealCreatedBymakerChecker = {
+        ...completedDeal,
+        details: {
+          ...completedDeal.details,
+          maker: aBarclaysMakerChecker
+        }
+      };
+
+      const postResult = await as(aBarclaysMakerChecker).post(dealCreatedBymakerChecker).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        status: 'Submitted',
+      };
+
+      const { status, body } = await as(aBarclaysMakerChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+
+      expect(status).toEqual(401);
+    });
+
+    it('rejects "Submitted" updates if user is a maker AND checker that has edited the deal.', async () => {
+      const dealEditedByMakerChecker = {
+        ...completedDeal,
+        editedBy: [
+          {
+            ...aBarclaysMakerChecker,
+            userId: aBarclaysMakerChecker._id,
+          },
+        ]
+      };
+
+      const postResult = await as(aBarclaysMaker).post(dealEditedByMakerChecker).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        status: 'Submitted',
+      };
+
+      const { status, body } = await as(aBarclaysMakerChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+
+      expect(status).toEqual(401);
+    });
+    
 
     describe('when the status changes from `Draft` to `Ready for Checker\'s approval`', () => {
       const coverEndDate = () => ({

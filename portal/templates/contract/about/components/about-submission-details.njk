@@ -27,7 +27,7 @@
     {% endif %}
 
     {% set hasSupplierAddressLine = submissionDetails["supplier-address-line-1"] | length or submissionDetails["supplier-address-line-2"] | length or submissionDetails["supplier-address-line-3"] | length %}
-    {% set renderSupplierAddress = hasIndemnifierCorrespondenceAddressLine or submissionDetails["supplier-address-town"] | length or submissionDetails["supplier-address-postcode"] | length %}
+    {% set renderSupplierAddress = hasSupplierAddressLine or submissionDetails["supplier-address-town"] | length or submissionDetails["supplier-address-postcode"] | length %}
 
     {% if renderSupplierAddress %}
       <div class="govuk-summary-list__row">

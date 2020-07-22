@@ -84,6 +84,7 @@ const createDeal = async (req, res) => {
   const collection = await db.getCollection('deals');
 
   const dealId = await generateDealId();
+
   const time = now();
   const newDeal = {
     _id: dealId,
@@ -144,12 +145,62 @@ exports.findOne = (req, res) => {
   });
 };
 
+const handleEditedBy = async (req) => {
+  let editedBy = [];
+
+  // sometimes we don't have a user making changes.
+  // eg we can get new data from type-b XML/workflow.
+  if (req.user) {
+    const {
+      username,
+      roles,
+      bank,
+      _id,
+    } = req.user;
+
+    const newEditedBy = {
+      date: now(),
+      username,
+      roles,
+      bank,
+      userId: _id,
+    };
+
+    // if partial update
+    // need to make sure that we have all existing entires in `editedBy`.
+    // ideally we could refactor, perhaps, so that no partial updates are allowed.
+    // but for now...
+    if (!req.body.editedBy) {
+      await findOneDeal(req.params.id, (deal) => {
+        editedBy = [
+          ...deal.editedBy,
+          newEditedBy,
+        ];
+      });
+    } else {
+      editedBy = [
+        ...req.body.editedBy,
+        newEditedBy,
+      ];
+    }
+  }
+
+  return editedBy;
+};
+
 const updateDeal = async (req) => {
   const collection = await db.getCollection('deals');
 
+  const editedBy = await handleEditedBy(req);
+
+  const update = {
+    ...req.body,
+    editedBy,
+  };
+
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: req.params.id },
-    $.flatten(withoutId(req.body)),
+    $.flatten(withoutId(update)),
     { returnOriginal: false },
   );
 

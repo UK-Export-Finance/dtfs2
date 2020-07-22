@@ -3,7 +3,7 @@
 {% macro render(params) %}
   {% if params.deal.details.status %}
 
-    {% if params.user.roles.includes('maker') %}
+    {% if params.user.roles.includes('maker') and not params.user.roles.includes('checker') %}
 
       {% if ["Draft", "Further Maker's input required"].includes(params.deal.details.status) %}
 
