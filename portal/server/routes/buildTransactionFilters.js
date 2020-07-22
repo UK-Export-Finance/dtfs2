@@ -13,13 +13,23 @@ const buildDashboardFilters = (params, user) => {
   }
 
   if (CONSTANTS.TRANSACTION_STAGE[params.filterByTransactionStage]
-    && CONSTANTS.TRANSACTION_STAGE[params.filterByTransactionStage] != 'Any') {
-      filters.push(
-        {
-          field: 'transaction.transactionStage',
-          value: params.filterByTransactionStage,
-        },
-      );
+    && CONSTANTS.TRANSACTION_STAGE[params.filterByTransactionStage] !== 'Any') {
+    filters.push(
+      {
+        field: 'transaction.transactionStage',
+        value: params.filterByTransactionStage,
+      },
+    );
+  }
+
+  if (CONSTANTS.TRANSACTION_TYPE[params.filterByTransactionType]
+    && CONSTANTS.TRANSACTION_TYPE[params.filterByTransactionType] !== 'Any') {
+    filters.push(
+      {
+        field: 'transaction.transactionType',
+        value: params.filterByTransactionType,
+      },
+    );
   }
 
   //

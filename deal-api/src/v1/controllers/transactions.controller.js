@@ -1,190 +1,87 @@
 const assert = require('assert');
 const { isSuperUser } = require('../users/checks');
+const bondFixer = require('./transactions/bondFixer');
+const loanFixer = require('./transactions/loanFixer');
 
 const db = require('../../drivers/db-client');
 
-const filtersWeDoManually = ["transaction.transactionStage"];
-
-const loanFilterMappings = {
-  "transaction.transactionStage": {
-    "transactionStage": {
-      "unissued_conditional": "Conditional",
-      "issued_unconditional": "Unconditional",
-    }
-  }
-};
-
-const bondFilterMappings = {
-  "transaction.transactionStage": {
-    "transactionStage": {
-      "unissued_conditional": "Unissued",
-      "issued_unconditional": "Issued",
-    }
-  }
-}
-
-const listOfGraphQlFiltersToTreatSpeciallyForBonds = () => Object.keys(bondFilterMappings);
-
-const bondMapField = (fieldToMap) => {
-  console.log(`bondMapField (${fieldToMap})`)
-  if (!bondFilterMappings[fieldToMap]) {
-    console.log(`bondMapField not found in ${JSON.stringify(bondFilterMappings)}`)
-    return;
-  }
-
-  const mapsTo = Object.keys(bondFilterMappings[fieldToMap])[0];
-  console.log(`bondMapField mapsTo ${mapsTo}`)
-  return mapsTo;
-}
-
-const bondMapFilterValue = (graphQlField, bondField, valueInFilter) => {
-  const mapping = bondFilterMappings[graphQlField][bondField];
-  console.log(`mapping :: ${JSON.stringify(mapping)}`);
-  return mapping[valueInFilter];
-}
-
-const bondFilters = Object.keys(bondFilterMappings);
-
-const listOfGraphQlFiltersToTreatSpeciallyForLoans = () => Object.keys(loanFilterMappings);
-
-const loanMapField = (fieldToMap) => {
-  console.log(`loanMapField (${fieldToMap})`)
-  if (!loanFilterMappings[fieldToMap]) {
-    console.log(`loanMapField not found in ${JSON.stringify(loanFilterMappings)}`)
-    return;
-  }
-
-  const mapsTo = Object.keys(loanFilterMappings[fieldToMap])[0];
-  console.log(`loanMapField mapsTo ${mapsTo}`)
-  return mapsTo;
-}
-
-const loanMapFilterValue = (graphQlField, loanField, valueInFilter) => {
-  const mapping = loanFilterMappings[graphQlField][loanField];
-  console.log(`mapping :: ${JSON.stringify(mapping)}`);
-  return mapping[valueInFilter];
-}
-
-const loanFilters = Object.keys(loanFilterMappings);
+const filtersWeDoManually = [
+  'transaction.transactionStage',
+  'transaction.transactionType'
+];
 
 
-const transactionsQuery = (user, filter) => {
+const transactionsQuery = (user, filter, listOfFiltersToIgnore) => {
+  // copy the filters into our own object so we can mess with it
   let query = {};
   if (filter && filter !== {}) {
     query = { ...filter };
   }
 
+  // if the user is not a superuser,
+  // -> we must only ever show them data related to their bank
   if (!isSuperUser(user)) {
     query['details.owningBank.id'] = { $eq: user.bank.id };
   }
 
-  filtersWeDoManually.filter( (manualFilter) => {
-    if (query[manualFilter]) {
-      delete query[manualFilter];
+  // using Array.filter as a cheap and cheesy iterator
+  //  we look at each of the filters we're supposed to be ignoring in mongo
+  //  and if we find them we delete them from this query object
+  listOfFiltersToIgnore.filter((filterThatIsNotForMongo) => {
+    if (query[filterThatIsNotForMongo]) {
+      delete query[filterThatIsNotForMongo];
     }
+    return false;// because lint requires me to return something because i'm using .filter..
   });
 
   return query;
 };
 
-const mapBondsToFacilities = (deal, bonds, filters) => bonds.map((bond) => ({
-  deal_id: deal._id, // eslint-disable-line no-underscore-dangle
-  deal_status: deal.details.status,
-  transaction_id: bond._id, // eslint-disable-line no-underscore-dangle
-  bankFacilityId: bond.uniqueIdentificationNumber,
-  ukefFacilityId: '//TODO',
-  transactionType: 'bond',
-  facilityValue: bond.facilityValue,
-  transactionStage: bond.bondStage,
-  issuedDate: '//TODO',
-  maker: deal.details.maker ? `${deal.details.maker.firstname} ${deal.details.maker.surname}` : '',
-  checker: deal.details.checker ? `${deal.details.checker.firstname} ${deal.details.checker.surname}` : '',
-})).filter( (bondFacility) => {
-  console.log("BOND FILTER")
-  console.log(`bondFacility :: ${bondFacility.transaction_id}`)
-  console.log(`filters :: ${JSON.stringify(filters)}`);
-
-  return listOfGraphQlFiltersToTreatSpeciallyForBonds().reduce((acc, manualFilter) => {
-    console.log(`acc:${acc} :: manualFilter:${manualFilter}`);
-
-    const facilityFilter = bondMapField(manualFilter);
-    const valueInFilter = filters[manualFilter];
-    const valueInFilterMappedForBonds = bondMapFilterValue(manualFilter, facilityFilter, valueInFilter);
-    const valueInFacility = bondFacility[facilityFilter];
-
-    const filterOut = (valueInFilterMappedForBonds && valueInFilterMappedForBonds !== valueInFacility);
-    console.log(`facilityFilter:${facilityFilter}`);
-    console.log(`valueInFilter:${valueInFilter}`);
-    console.log(`valueInFacility:${valueInFacility}  \n\n ${JSON.stringify(bondFacility)}`);
-
-    console.log(`-> filterOut:${filterOut}`);
-    return acc || !filterOut;
-  }, false);
-}, false);
-
-const mapLoansToFacilities = (deal, loans, filters) => loans.map((loan) => ({
-  deal_id: deal._id, // eslint-disable-line no-underscore-dangle
-  deal_status: deal.details.status,
-  transaction_id: loan._id, // eslint-disable-line no-underscore-dangle
-  bankFacilityId: loan.bankReferenceNumber,
-  ukefFacilityId: '//TODO',
-  transactionType: 'loan',
-  facilityValue: loan.facilityValue,
-  transactionStage: loan.facilityStage,
-  issuedDate: '//TODO',
-  maker: deal.details.maker ? `${deal.details.maker.firstname} ${deal.details.maker.surname}` : '',
-  checker: deal.details.checker ? `${deal.details.checker.firstname} ${deal.details.checker.surname}` : '',
-})).filter( (loanFacility) => {
-  console.log("LOAN FILTER")
-  console.log(`loanFacility :: ${loanFacility.transaction_id}`)
-  console.log(`filters :: ${JSON.stringify(filters)}`);
-
-  return listOfGraphQlFiltersToTreatSpeciallyForLoans().reduce((acc, manualFilter) => {
-    console.log(`acc:${acc} :: manualFilter:${manualFilter}`);
-
-    const facilityFilter = loanMapField(manualFilter);
-    const valueInFilter = filters[manualFilter];
-    const valueInFilterMappedForLoans = loanMapFilterValue(manualFilter, facilityFilter, valueInFilter);
-    const valueInFacility = loanFacility[facilityFilter];
-
-    const filterOut = (valueInFilterMappedForLoans && valueInFilterMappedForLoans !== valueInFacility);
-    console.log(`facilityFilter:${facilityFilter}`);
-    console.log(`valueInFilter:${valueInFilter}`);
-    console.log(`valueInFacility:${valueInFacility}  \n\n ${JSON.stringify(loanFacility)}`);
-
-    console.log(`-> filterOut:${filterOut}`);
-    return acc || !filterOut;
-  }, false);
-}, false);
-
-
 exports.findPaginatedTransactions = async (requestingUser, start = 0, pagesize = 20, filter) => {
-  const collection = await db.getCollection('deals');
-  const query = transactionsQuery(requestingUser, filter);
+  // try to hide all the horrible logic for filtering in here:
+  const bondFix = bondFixer(filter);
+  const loanFix = loanFixer(filter);
 
+  // work out the mongo query to get all the deals that might contain transactions we care about
+  const query = transactionsQuery(requestingUser, filter, filtersWeDoManually);
+
+  // get the deals that might contain transactions we care about
+  //   ordered by deal.details.dateOfLastAction
+  const collection = await db.getCollection('deals');
   const dealResults = collection.find(query);
   const dealsWithTransactions = await dealResults.sort({ 'details.dateOfLastAction': -1 }).toArray();
 
-  const reducer = (acc, deal) => {
+  // use Array.reduce to loop over our list of deals,
+  //  accumulating an array of "loans and bonds" suitable to return via the API
+  const allTransactions = dealsWithTransactions.reduce((transactionsAccumulatedSoFar, deal) => {
+    // if we're explicitly filtering out bonds:
+    //  - default to an empty list of bonds, avoid having to think about edge cases
+    // if we're not explicitly filtering bonds out
+    //  - use our bondFix toolkit to get the list of bonds it's legit to display
+    const bonds = bondFix.shouldReturnBonds() ? bondFix.filteredBondsFor(deal) : [];
+    // same for loans
+    const loans = loanFix.shouldReturnLoans() ? loanFix.filteredLoansFor(deal) : [];
 
-    const bonds = deal.bondTransactions && deal.bondTransactions.items
-      ? mapBondsToFacilities(deal, deal.bondTransactions.items, filter)
-      : [];
-    const loans = deal.loanTransactions && deal.loanTransactions.items
-      ? mapLoansToFacilities(deal, deal.loanTransactions.items, filter)
-      : [];
+    // return our new accumulator, which should be:
+    //   all the bonds+loans we've picked up so far
+    //    plus the bonds from this deal that passed filtering
+    //    plus the loans from this deal that passed filtering
+    const updatedAccumulator = transactionsAccumulatedSoFar.concat(bonds).concat(loans);
+    return updatedAccumulator;
+  }, []);
 
-    return acc
-      .concat(bonds)
-      .concat(loans);
-  };
+  // "allTransactions" now holds a list of all the transactions that it would be ok to display
+  //  given current user+filtering
 
-  const allTransactions = dealsWithTransactions.reduce(reducer, []);
+  // so now chop that list up based on the pagination instructions..
+  // 1) chop off everything before the current page
   const transactionsWithoutPreviousPages = allTransactions.slice(start);
+  // 2) chop us down to our max pagesize
   const page = transactionsWithoutPreviousPages.length > pagesize
     ? transactionsWithoutPreviousPages.slice(0, pagesize)
     : transactionsWithoutPreviousPages;
 
+  // and finally... return the page of data
   return {
     count: allTransactions.length,
     transactions: page,
