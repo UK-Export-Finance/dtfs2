@@ -10,7 +10,7 @@ const userCanSubmitDeal = (deal, user) => {
     return false;
   }
 
-  const makerCheckerEditedTheDeal = deal.details.editedBy.find((edited) =>
+  const makerCheckerEditedTheDeal = deal.editedBy.find((edited) =>
     edited.userId === user._id); // eslint-disable-line no-underscore-dangle
 
   if (makerCheckerEditedTheDeal) {
