@@ -148,40 +148,44 @@ exports.findOne = (req, res) => {
 const updateDeal = async (req) => {
   const collection = await db.getCollection('deals');
 
-  const { username, roles, bank, _id } = req.user;
-
-  const newEditedBy = {
-    date: now(),
-    username,
-    roles,
-    bank,
-    userId: _id,
-  };
-
+  // sometimes we don't have a Portal user making changes.
+  // eg we can get new data from type-b XML/workflow.
   let editedBy = [];
+  if (req.user) {
+    const { username, roles, bank, _id } = req.user;
 
-  // if is a partial update,
-  // need to make sure that we have all existing `editedBy`.
-  // ideally we could refactor, perhaps, so that no partial updates are allowed.
-  // therefore wouldn't need this.
-  if (!req.body.editedBy) {
-    await findOneDeal(req.params.id, (deal) => {
+    const newEditedBy = {
+      date: now(),
+      username,
+      roles,
+      bank,
+      userId: _id,
+    };
+
+    // if is a partial update,
+    // need to make sure that we have all existing `editedBy`.
+    // ideally we could refactor, perhaps, so that no partial updates are allowed.
+    // therefore wouldn't need this.
+    if (!req.body.editedBy) {
+      await findOneDeal(req.params.id, (deal) => {
+        editedBy = [
+          ...deal.editedBy,
+          newEditedBy,
+        ];
+      });
+    } else {
       editedBy = [
-        ...deal.editedBy,
-        newEditedBy,
+        ...req.body.editedBy,
+        newEditedBy
       ];
-    });
-  } else {
-    editedBy = [
-      ...req.body.editedBy,
-      newEditedBy
-    ];
+    }
   }
 
-  const update = {
-    ...req.body,
-    editedBy,
-  };
+  const update = req.body;
+
+  if (editedBy.length > 0) {
+    update.editedBy = editedBy;
+  }
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: req.params.id },
