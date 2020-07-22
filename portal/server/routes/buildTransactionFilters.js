@@ -1,54 +1,27 @@
-// import moment from 'moment';
-// import CONSTANTS from '../constants';
+import moment from 'moment';
+import CONSTANTS from '../constants';
 
-// const getUserFilters = (params, user = {}) => {
-//   const { filterBySubmissionUser } = params;
-//
-//   if (filterBySubmissionUser === 'createdByMe') {
-//     return {
-//       field: 'details.maker.username',
-//       value: user.username,
-//     };
-//   }
-//
-//   if (filterBySubmissionUser === 'createdByColleagues') {
-//     return {
-//       field: 'details.maker.username',
-//       value: user.username,
-//       operator: 'ne',
-//     };
-//     //    updated['details.maker.username'] = { $ne: user.username };
-//   }
-//
-//   return false;
-// };
-
-const buildDashboardFilters = () => {
-// const buildDashboardFilters = (params, user) => {
+const buildDashboardFilters = (params, user) => {
   const filters = [];
   const isUsingAdvancedFilter = false;
 
-  // if (!params) {
-  //   return {
-  //     isUsingAdvancedFilter,
-  //     filters,
-  //   };
-  // }
-  //
-  // const userFilter = getUserFilters(params, user);
-  // if (userFilter) {
-  //   filters.push(userFilter);
-  // }
-  //
-  // //  if (params.filterBySubmissionUser) filters = applyUserFilters(params, user, filters);
-  // if (CONSTANTS.SUBMISSION_TYPE[params.filterBySubmissionType]) {
-  //   filters.push(
-  //     {
-  //       field: 'details.submissionType',
-  //       value: CONSTANTS.SUBMISSION_TYPE[params.filterBySubmissionType],
-  //     },
-  //   );
-  // }
+  if (!params) {
+    return {
+      isUsingAdvancedFilter,
+      filters,
+    };
+  }
+
+  if (CONSTANTS.TRANSACTION_STAGE[params.filterByTransactionStage]
+    && CONSTANTS.TRANSACTION_STAGE[params.filterByTransactionStage] != 'Any') {
+      filters.push(
+        {
+          field: 'transaction.transactionStage',
+          value: params.filterByTransactionStage,
+        },
+      );
+  }
+
   //
   // if (CONSTANTS.STATUS[params.filterByStatus]) {
   //   isUsingAdvancedFilter = true;
@@ -116,7 +89,7 @@ const buildDashboardFilters = () => {
   //   });
   // }
   //
-  // console.log(`${JSON.stringify(filters)}`);
+  console.log(`${JSON.stringify(filters)}`);
   return {
     isUsingAdvancedFilter,
     filters,

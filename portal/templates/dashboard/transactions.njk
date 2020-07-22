@@ -16,7 +16,7 @@
 
     <section class="govuk-tabs__panel" id="transactions">
 
-      <form autocomplete="off">
+      <form method="POST" autocomplete="off" action="/dashboard/transactions/0">
 
         <div class="govuk-grid-row">
 
@@ -28,8 +28,8 @@
 
               <select class="govuk-select govuk-!-width-full" id="filterByTransactionStage" name="filterByTransactionStage">
                 <option value="all" selected>Any</option>
-                <option value="conditional">Unissued/Conditional</option>
-                <option value="unconditional">Issued/Unconditional</option>
+                <option value="unissued_conditional">Unissued/Conditional</option>
+                <option value="issued_unconditional">Issued/Unconditional</option>
               </select>
             </div>
           </div>
