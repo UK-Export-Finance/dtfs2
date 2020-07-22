@@ -1,25 +1,27 @@
 {% extends "index.njk" %}
 {% import '_macros/pagination.njk' as pagination %}
 
-{% import './_macros/audit-supply-contracts-filters.njk' as filterControls %}
+{# % import './_macros/audit-supply-contracts-filters.njk' as filterControls % #}
 
 {% block pageTitle %}Audit report{% endblock %}
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">Audit Report</h1>
+  <h1 class="govuk-heading-l">Audit - Transactions Report</h1>
 
-  {{ filterControls.render(filter, user) }}
+  {# { filterControls.render(filter, user) } #}
 
   <table class="govuk-table govuk-!-margin-bottom-0">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Supply Contract ID</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank supply contract ID</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created by</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submitted by</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Supply contract status</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Changed</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submission date</th>
       </tr>
     </thead>
 
@@ -43,12 +45,20 @@
             {{ contract.details.status }}
           </td>
 
+          <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
+            {{ contract.details.owningBank.name }}
+          </td>
+
           <td data-cy="created" class="govuk-table__cell govuk-!-font-size-14">
-            {{ contract.details.dateOfCreation }}
+            {{ contract.details.created | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) }}
           </td>
 
           <td data-cy="changed" class="govuk-table__cell govuk-!-font-size-14">
-            {{ contract.details.dateOfLastAction }}
+            {{ contract.details.dateOfLastAction | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) }}
+          </td>
+
+          <td data-cy="changed" class="govuk-table__cell govuk-!-font-size-14">
+            {# { contract.details.dateOfLastAction } #} todo
           </td>
 
         </tr>
@@ -58,7 +68,7 @@
 
   </table>
 
-  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/reports/audit-supply-contracts') }}
+  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/reports/audit-transactions') }}
 
 
 {% endblock %}
