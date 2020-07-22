@@ -1,6 +1,11 @@
 {% extends 'layout.html' %}
 {% block content %}
-    <form action="/salesforce_update" method="post">
-        <input type="submit" value="Submit">
+    <form action="/salesforce/new_task" method="post">
+        <input type="submit" class="button" value="New Task">
+       
+    </form>
+
+    <form style="padding:20px 0" action="/salesforce/get_contact/contacts/0031x00000wLNmAAAW" method="get">
+        <input type="submit" value="Get contact">
     </form>
 {% endblock %}

@@ -5,7 +5,7 @@ const router = express.Router()
 
 
 // Add your routes here - above the module.exports line
-router.get('/salesforce/new_task/:subject', function(req, res){
+router.get('/salesforce/new_task', function(req, res){
 
 
     let SF = JSON.parse(fs.readFileSync('salesforce.json'));
@@ -35,6 +35,41 @@ router.get('/salesforce/new_task/:subject', function(req, res){
         request(options, function (error, response) {
             if (error) throw new Error(error);
             res.send(response.body);
+        });
+    });
+
+})
+
+// Add your routes here - above the module.exports line
+router.get('/salesforce/get_contact/contacts/:id', function(req, res){
+
+
+    let SF = JSON.parse(fs.readFileSync('salesforce.json'));
+
+    var access_token = ''
+    var options = {
+        url: `${SF.LoginURL}?username=${SF.Username}&password=${SF.Password}${SF.token}&client_id=${SF.ClientID}&client_secret=${SF.ClientSecret}&grant_type=password`,
+        headers: {},
+        method: 'POST',
+    };
+
+    console.log(req.params);
+    request(options, function (error, response) { 
+        if (error) throw new Error(error);
+        
+        id = req.params['id']; 
+        console.log(id);
+        access_token = JSON.parse(response.body)['access_token'];
+        var options = {
+          'method': 'GET',
+          'url': `https://ef-alpha--dtfsalpha.my.salesforce.com/services/data/v20.0/sobjects/Contact/${id}`,
+          'headers': {
+            'Authorization': `Bearer ${access_token}`
+          }
+        };
+        request(options, function (error, response) {
+          if (error) throw new Error(error);
+          res.send(response.body);
         });
     });
 
