@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 
-HERE=$(PWD)
+# Be a bit lenient here, but make sure we get a value set
+HERE=${PWD}
+if [ -z "$HERE"]; then
+    HERE=${pwd}
+fi
+if [ -z "$HERE"]; then
+    echo "Current directory not set. Halting."
+    exit 1
+fi
 
 if [ -f "secrets/companies_house_api_key.txt" ]; then
     export COMPANIES_HOUSE_API_KEY=$(cat secrets/companies_house_api_key.txt)
