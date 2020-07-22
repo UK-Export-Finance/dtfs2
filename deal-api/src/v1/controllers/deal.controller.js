@@ -145,12 +145,11 @@ exports.findOne = (req, res) => {
   });
 };
 
-const updateDeal = async (req) => {
-  const collection = await db.getCollection('deals');
-
-  // sometimes we don't have a Portal user making changes.
-  // eg we can get new data from type-b XML/workflow.
+const handleEditedBy = async (req) => {
   let editedBy = [];
+
+  // sometimes we don't have a user making changes.
+  // eg we can get new data from type-b XML/workflow.
   if (req.user) {
     const { username, roles, bank, _id } = req.user;
 
@@ -162,10 +161,10 @@ const updateDeal = async (req) => {
       userId: _id,
     };
 
-    // if is a partial update,
-    // need to make sure that we have all existing `editedBy`.
+    // if partial update
+    // need to make sure that we have all existing entires in `editedBy`.
     // ideally we could refactor, perhaps, so that no partial updates are allowed.
-    // therefore wouldn't need this.
+    // but for now...
     if (!req.body.editedBy) {
       await findOneDeal(req.params.id, (deal) => {
         editedBy = [
@@ -181,11 +180,18 @@ const updateDeal = async (req) => {
     }
   }
 
-  const update = req.body;
+  return editedBy;
+};
 
-  if (editedBy.length > 0) {
-    update.editedBy = editedBy;
-  }
+const updateDeal = async (req) => {
+  const collection = await db.getCollection('deals');
+
+  const editedBy = await handleEditedBy(req);
+
+  const update = {
+    ...req.body,
+    editedBy,
+  };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: req.params.id },
