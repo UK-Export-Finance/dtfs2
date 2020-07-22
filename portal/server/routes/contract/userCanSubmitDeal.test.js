@@ -56,13 +56,13 @@ describe('userCanSubmitDeal', () => {
           maker: {
             _id: '12345678',
           },
-          editedBy: [
-            { _id: '1' },
-            { _id: '1234' },
-            { _id: '3' },
-            { _id: '4' },
-          ],
         },
+        editedBy: [
+          { _id: '1' },
+          { _id: '1234' },
+          { _id: '3' },
+          { _id: '4' },
+        ],
       };
 
       const user = {
@@ -82,13 +82,13 @@ describe('userCanSubmitDeal', () => {
           maker: {
             _id: '12345678',
           },
-          editedBy: [
-            { _id: '1' },
-            { _id: '2' },
-            { _id: '3' },
-            { _id: '4' },
-          ],
         },
+        editedBy: [
+          { _id: '1' },
+          { _id: '2' },
+          { _id: '3' },
+          { _id: '4' },
+        ],
       };
 
       const user = {
