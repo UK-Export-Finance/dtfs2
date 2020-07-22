@@ -151,7 +151,12 @@ const handleEditedBy = async (req) => {
   // sometimes we don't have a user making changes.
   // eg we can get new data from type-b XML/workflow.
   if (req.user) {
-    const { username, roles, bank, _id } = req.user;
+    const {
+      username,
+      roles,
+      bank,
+      _id,
+    } = req.user;
 
     const newEditedBy = {
       date: now(),
@@ -175,7 +180,7 @@ const handleEditedBy = async (req) => {
     } else {
       editedBy = [
         ...req.body.editedBy,
-        newEditedBy
+        newEditedBy,
       ];
     }
   }
@@ -206,7 +211,6 @@ const updateDeal = async (req) => {
 exports.updateDeal = updateDeal;
 
 exports.update = async (req, res) => {
-
   await findOneDeal(req.params.id, async (deal) => {
     if (!deal) res.status(404).send();
 
