@@ -75,7 +75,7 @@ exports.create = async (req, res) => {
       user: req.user,
     };
 
-    const updateDealResponse = await updateDeal(newReq, res);
+    const updateDealResponse = await updateDeal(newReq);
 
     return res.status(200).send({
       ...updateDealResponse,
@@ -171,7 +171,7 @@ exports.updateBond = async (req, res) => {
         user: req.user,
       };
 
-      const dealAfterAllUpdates = await updateDeal(newReq, res);
+      const dealAfterAllUpdates = await updateDeal(newReq);
 
       const bondInDealAfterAllUpdates = dealAfterAllUpdates.bondTransactions.items.find((b) =>
         String(b._id) === bondId); // eslint-disable-line no-underscore-dangle

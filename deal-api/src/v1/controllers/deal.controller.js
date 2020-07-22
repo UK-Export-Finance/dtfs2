@@ -148,10 +148,9 @@ exports.findOne = (req, res) => {
 const updateDeal = async (req) => {
   const collection = await db.getCollection('deals');
 
-  const deal = req.body;
-
   const { username, roles, bank, _id } = req.user;
-  const editedBy = {
+
+  const newEditedBy = {
     date: now(),
     username,
     roles,
@@ -159,11 +158,34 @@ const updateDeal = async (req) => {
     userId: _id,
   };
 
-  deal.details.editedBy.push(editedBy);
+  let editedBy = [];
+
+  // if is a partial update,
+  // need to make sure that we have all existing `editedBy`.
+  // ideally we could refactor, perhaps, so that no partial updates are allowed.
+  // therefore wouldn't need this.
+  if (!req.body.editedBy) {
+    await findOneDeal(req.params.id, (deal) => {
+      editedBy = [
+        ...deal.editedBy,
+        newEditedBy,
+      ];
+    });
+  } else {
+    editedBy = [
+      ...req.body.editedBy,
+      newEditedBy
+    ];
+  }
+
+  const update = {
+    ...req.body,
+    editedBy,
+  };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: req.params.id },
-    $.flatten(withoutId(deal)),
+    $.flatten(withoutId(update)),
     { returnOriginal: false },
   );
 
@@ -174,6 +196,7 @@ const updateDeal = async (req) => {
 exports.updateDeal = updateDeal;
 
 exports.update = async (req, res) => {
+
   await findOneDeal(req.params.id, async (deal) => {
     if (!deal) res.status(404).send();
 

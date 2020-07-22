@@ -6,7 +6,7 @@ const testUserCache = require('../../api-test-users');
 const dealWithAboutComplete = require('../../fixtures/deal-with-complete-about-section.json');
 const dealWithAboutIncomplete = require('../../fixtures/deal-with-incomplete-about-section.json');
 const { as } = require('../../api')(app);
-const { expectAddedFields, expectAddedFieldsWithEditedByObject } = require('./expectAddedFields');
+const { expectAddedFields, expectAddedFieldsWithEditedBy } = require('./expectAddedFields');
 const calculateDealSummary = require('../../../src/v1/deal-summary');
 
 const newDeal = aDeal({
@@ -23,6 +23,7 @@ const newDeal = aDeal({
     timestamp: '1982/12/25 00:00:00:001',
     text: 'Also Merry Christmas from the 80s',
   }],
+  editedBy: [],
 });
 
 describe('/v1/deals', () => {
@@ -251,7 +252,7 @@ describe('/v1/deals', () => {
 
       expect(status).toEqual(200);
 
-      expect(body).toEqual(expectAddedFieldsWithEditedByObject(updatedDeal, anHSBCMaker));
+      expect(body).toEqual(expectAddedFieldsWithEditedBy(updatedDeal, anHSBCMaker));
     });
 
     it('handles partial updates', async () => {
@@ -275,7 +276,7 @@ describe('/v1/deals', () => {
       const { status, body } = await as(anHSBCMaker).put(partialUpdate).to(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectAddedFields(expectedDataIncludingUpdate));
+      expect(body).toEqual(expectAddedFieldsWithEditedBy(expectedDataIncludingUpdate, anHSBCMaker));
     });
 
     it('updates the deal', async () => {
@@ -293,13 +294,40 @@ describe('/v1/deals', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.deal).toEqual(expectAddedFieldsWithEditedByObject(updatedDeal, anHSBCMaker));
+      expect(body.deal).toEqual(expectAddedFieldsWithEditedBy(updatedDeal, anHSBCMaker));
     });
 
-    // TODO
-    // it('adds updates `editedBy` array', () => {
-      
-    // });
+    it('adds updates and retains `editedBy` array with req.user data', async () => {
+      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const firstUpdate = {
+        ...createdDeal,
+        details: {
+          ...createdDeal.details,
+          bankSupplyContractName: 'change this field',
+        },
+      };
+
+      await as(anHSBCMaker).put(firstUpdate).to(`/v1/deals/${createdDeal._id}`);
+
+      const dealAfterFirstUpdate = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+
+      const secondUpdate = {
+        ...dealAfterFirstUpdate.body.deal,
+        details: {
+          ...dealAfterFirstUpdate.body.deal.details,
+          bankSupplyContractName: 'change this field again',
+        },
+      };
+
+      await as(anHSBCMaker).put(secondUpdate).to(`/v1/deals/${createdDeal._id}`);
+
+      const dealAfterSecondUpdate = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+      expect(dealAfterSecondUpdate.status).toEqual(200);
+      expect(dealAfterSecondUpdate.body.deal.editedBy.length).toEqual(2);
+      expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, anHSBCMaker, 1).editedBy[0]);
+      expect(dealAfterSecondUpdate.body.deal.editedBy[1]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, anHSBCMaker, 2).editedBy[1]);
+    });
   });
 
   describe('DELETE /v1/deals/:id', () => {
