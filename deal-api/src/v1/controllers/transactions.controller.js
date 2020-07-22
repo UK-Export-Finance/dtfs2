@@ -7,7 +7,7 @@ const db = require('../../drivers/db-client');
 
 const filtersWeDoManually = [
   'transaction.transactionStage',
-  'transaction.transactionType'
+  'transaction.transactionType',
 ];
 
 
