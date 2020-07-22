@@ -1,5 +1,5 @@
 const $ = require('mongo-dot-notation');
-const { findOneDeal } = require('./deal.controller');
+const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const db = require('../../drivers/db-client');
 const validateSubmissionDetails = require('../validation/submission-details');
@@ -24,7 +24,7 @@ exports.findOne = (req, res) => {
   });
 };
 
-const updateSubmissionDetails = async (collection, _id, submissionDetails) => {
+const updateSubmissionDetails = async (req, submissionDetails) => {
   const update = {
     submissionDetails,
     details: {
@@ -32,17 +32,15 @@ const updateSubmissionDetails = async (collection, _id, submissionDetails) => {
     },
   };
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id },
-    $.flatten(update),
-    { returnOriginal: false },
-  );
+  const newReq = {
+    params: req.params,
+    body: update,
+    user: req.user,
+  };
 
-  const { value } = findAndUpdateResponse;
-
-  return value;
+  const updateDealResponse = await updateDeal(newReq);
+  return updateDealResponse;
 };
-
 
 const countryObject = async (countryCode) => {
   const countryObj = await findOneCountry(countryCode);
@@ -150,7 +148,7 @@ exports.update = (req, res) => {
     }
 
     const collection = await db.getCollection('deals');
-    const dealAfterAllUpdates = await updateSubmissionDetails(collection, req.params.id, submissionDetails);
+    const dealAfterAllUpdates = await updateSubmissionDetails(req, submissionDetails);
 
     const validationErrors = validateSubmissionDetails({ ...dealAfterAllUpdates.submissionDetails, ...req.body });
 
