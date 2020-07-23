@@ -90,23 +90,11 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
 
   const { industrySector, industryClass } = getIndustryFromSicCode(industrySectors, company.sic_codes);
 
-  // re-render
-  const mappedIndustrySectors = mapIndustrySectors(industrySectors, industrySector.code);
-  const mappedIndustryClasses = mapIndustryClasses(industrySectors, industrySector.code, industryClass.code);
-  const mappedCountries = {
-    'supplier-address-country': mapCountries(countries, deal.submissionDetails['supplier-address-country']),
-    'supplier-correspondence-address-country': mapCountries(countries, deal.submissionDetails['supplier-correspondence-address-country']),
-    'indemnifier-address-country': mapCountries(countries, deal.submissionDetails['indemnifier-address-country']),
-    'indemnifier-correspondence-address-country': mapCountries(countries, deal.submissionDetails['indemnifier-correspondence-address-country']),
-  };
+  deal.submissionDetails['industry-sector'] = industrySector.code;
+  deal.submissionDetails['industry-class'] = industryClass.code;
 
-  return res.render('contract/about/about-supplier.njk', {
-    deal,
-    mappedCountries,
-    industrySectors,
-    mappedIndustrySectors,
-    mappedIndustryClasses,
-  });
+  req.session.aboutSupplierFormData = deal;
+  return res.redirect(`/contract/${deal._id}/about/supplier`);
 });
 
 export default router;
