@@ -25,6 +25,11 @@ router.get('/reports/audit-supply-contracts/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
   const filters = {}; // TODO wire up filters; probably do same as dashboard +use session
+  const banks = await getApiData(
+    api.banks(userToken),
+    res,
+  );
+
   const dealData = await getApiData(
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
@@ -38,6 +43,7 @@ router.get('/reports/audit-supply-contracts/:page', async (req, res) => {
 
   return res.render('reports/audit-supply-contracts.njk', {
     pages,
+    banks,
     contracts: dealData.deals,
     primaryNav,
     subNav: 'audit-supply-contracts',
