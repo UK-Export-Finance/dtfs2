@@ -1,5 +1,6 @@
 const GRAPHQL_FILTER_BY_TRANSACTION_TYPE = 'transaction.transactionType';
 const BANKFACILITYID = 'transaction.bankFacilityId';
+const UKEFFACILITYID = 'transaction.ukefFacilityId';
 // the rules
 // this means that our filter is going to:
 // 1) consider transaction.transactionStage as 'special' and not to be handled by mongo
@@ -136,6 +137,12 @@ const constructor = (graphQLFilters) => {
               && bondThatMightNotMatchAFilter.uniqueIdentificationNumber !== graphQLFilters[BANKFACILITYID]) {
         return false;
       }
+
+      if (graphQLFilters[UKEFFACILITYID]
+              && bondThatMightNotMatchAFilter.ukefFacilityID !== graphQLFilters[UKEFFACILITYID]) {
+        return false;
+      }
+
       return true;
     }).map((bond) => ({
       // - once we've filtered out things we shouldn't be thinking about
@@ -145,7 +152,7 @@ const constructor = (graphQLFilters) => {
       deal_status: deal.details.status,
       transaction_id: bond._id, // eslint-disable-line no-underscore-dangle
       bankFacilityId: bond.uniqueIdentificationNumber,
-      ukefFacilityId: '//TODO',
+      ukefFacilityId: bond.ukefFacilityID,
       transactionType: 'bond',
       facilityValue: bond.facilityValue,
       transactionStage: bond.bondStage,

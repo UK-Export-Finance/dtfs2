@@ -3,14 +3,11 @@ const transactionFixer = require('./transactions/transactionFixer');
 const db = require('../../drivers/db-client');
 
 exports.findPaginatedTransactions = async (requestingUser, start = 0, pagesize = 20, filter) => {
-  console.log(`>>> findPaginatedTransactions, filter=${JSON.stringify(filter)}`);
-
   // try to hide all the horrible logic for filtering in here:
   const transactionFix = transactionFixer(requestingUser, filter);
 
   // work out the mongo query to get all the deals that might contain transactions we care about
   const query = transactionFix.transactionsQuery();
-  console.log(`query :: \n\n${JSON.stringify(query, null, 2)}\n\n`);
   // get the deals that might contain transactions we care about
   //   ordered by deal.details.dateOfLastAction
   const collection = await db.getCollection('deals');
