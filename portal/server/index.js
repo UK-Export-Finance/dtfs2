@@ -4,10 +4,10 @@ import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import flash from 'connect-flash';
 import path from 'path';
+import crypto from 'crypto';
 import routes from './routes';
 
 import configureNunjucks from './nunjucks-configuration';
-import crypto from 'crypto';
 
 const app = express();
 
