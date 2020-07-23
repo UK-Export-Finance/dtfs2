@@ -195,6 +195,10 @@ const updateDeal = async (req) => {
 
   const update = {
     ...req.body,
+    details: {
+      ...req.body.details,
+      dateOfLastAction: now(),
+    },
     editedBy,
   };
 
