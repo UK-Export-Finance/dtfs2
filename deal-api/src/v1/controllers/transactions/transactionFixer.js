@@ -3,7 +3,7 @@ const bondFixer = require('./bondFixer');
 const loanFixer = require('./loanFixer');
 
 const BANKFACILITYID = 'transaction.bankFacilityId';
-const UKEFFACILITYID = 'transaction.ukefFacilityId'
+const UKEFFACILITYID = 'transaction.ukefFacilityId';
 const filtersWeDoManually = [
   'transaction.transactionStage',
   'transaction.transactionType',
@@ -30,20 +30,20 @@ const constructor = (user, graphQLFilters) => {
 
     // if we're querying directly by an id; re-do the query into something that works in our actual schema
     //   possibly learning enough about mongo to do this better now..
-    let mongoFiltering = {};
+    const mongoFiltering = {};
 
     if (query[BANKFACILITYID]) {
       const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { uniqueIdentificationNumber: query[BANKFACILITYID] } } };
       const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { bankReferenceNumber: query[BANKFACILITYID] } } };
 
-      mongoFiltering[BANKFACILITYID]= {$or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum]};
+      mongoFiltering[BANKFACILITYID] = { $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] };
     }
 
     if (query[UKEFFACILITYID]) {
       const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { ukefFacilityID: query[UKEFFACILITYID] } } };
       const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { ukefFacilityID: query[UKEFFACILITYID] } } };
 
-      mongoFiltering[UKEFFACILITYID]= {$or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum]};
+      mongoFiltering[UKEFFACILITYID] = { $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] };
     }
 
     if (mongoFiltering[UKEFFACILITYID] && mongoFiltering[BANKFACILITYID]) {
