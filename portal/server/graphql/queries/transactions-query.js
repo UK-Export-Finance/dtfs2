@@ -7,6 +7,7 @@ query Transactions($start: Int, $pagesize: Int, $filters:[TransactionFilters]){
     transactions{
       deal_id,
       deal_status,
+      deal_created,
       transaction_id,
       bankFacilityId
       ukefFacilityId

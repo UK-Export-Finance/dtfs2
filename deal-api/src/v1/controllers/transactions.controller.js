@@ -13,8 +13,6 @@ exports.findPaginatedTransactions = async (requestingUser, start = 0, pagesize =
   const collection = await db.getCollection('deals');
   const dealResults = collection.find(query);
   const dealsWithTransactions = await dealResults.sort({ 'details.dateOfLastAction': -1 }).toArray();
-  // console.log(`bonds :: ${JSON.stringify(dealsWithTransactions.map((deal) => deal.bondTransactions, null, 2))}`);
-  // console.log(`loans :: ${JSON.stringify(dealsWithTransactions.map((deal) => deal.loanTransactions, null, 2))}`);
 
   // use Array.reduce to loop over our list of deals,
   //  accumulating an array of "loans and bonds" suitable to return via the API

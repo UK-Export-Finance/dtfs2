@@ -3,9 +3,18 @@
 {% import '_macros/date-range.njk' as dateRange %}
 {% import '_macros/pagination.njk' as pagination %}
 
+{% import './_macros/transaction-advanced-filters.njk' as advancedFilters %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
 {% block pageTitle %}Transactions{% endblock %}
 
 {% block content %}
+
+  {% if successMessage %}
+    {{ success.message(
+      message = successMessage
+    )}}
+  {% endif %}
 
   <h1 class="govuk-heading-l">Transactions</h1>
 
@@ -27,9 +36,9 @@
               </label>
 
               <select class="govuk-select govuk-!-width-full" id="filterByTransactionStage" name="filterByTransactionStage">
-                <option value="all" selected>Any</option>
-                <option value="unissued_conditional">Unissued/Conditional</option>
-                <option value="issued_unconditional">Issued/Unconditional</option>
+                <option value="all" {% if filter.filterByTransactionStage==='all' %}selected{%endif%}>Any</option>
+                <option value="unissued_conditional" {% if filter.filterByTransactionStage==='unissued_conditional' %}selected{%endif%}>Unissued/Conditional</option>
+                <option value="issued_unconditional" {% if filter.filterByTransactionStage==='issued_unconditional' %}selected{%endif%}>Issued/Unconditional</option>
               </select>
             </div>
           </div>
@@ -41,69 +50,20 @@
               </label>
 
               <select class="govuk-select govuk-!-width-full" id="filterByTransactionType" name="filterByTransactionType">
-                <option value="all" selected>Any</option>
-                <option value="bond">Bond</option>
-                <option value="loan">Loan</option>
+                <option value="all" {% if filter.filterByTransactionType==='all' %}selected{%endif%}>Any</option>
+                <option value="bond" {% if filter.filterByTransactionType==='bond' %}selected{%endif%}>Bond</option>
+                <option value="loan" {% if filter.filterByTransactionType==='loan' %}selected{%endif%}>Loan</option>
               </select>
             </div>
           </div>
 
         </div>
 
-        <details class="govuk-details" data-module="govuk-details">
-          <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">
-              Show filters
-            </span>
-          </summary>
-
-
-          <div class="govuk-grid-row">
-
-            <div class="govuk-grid-column-one-third">
-              <div class="govuk-form-group">
-                <label class="govuk-label" for="bankFacilityID">
-                  Bank Facility ID
-                </label>
-                <input class="govuk-input" id="bankFacilityID" name="bankFacilityID" type="text">
-              </div>
-            </div>
-
-            <div class="govuk-grid-column-one-third">
-              <div class="govuk-form-group">
-                <label class="govuk-label" for="uKefFacilityID">
-                  UKEF Facility ID
-                </label>
-                <input class="govuk-input" id="uKefFacilityID" name="uKefFacilityID" type="text">
-              </div>
-            </div>
-
-          </div>
-
-          <div class="govuk-grid-row govuk-!-margin-bottom-4">
-            {{ dateRange.inputs(fromLegend = 'Creation date', toLegend = 'And' ) }}
-          </div>
-
-          <div class="govuk-grid-row">
-
-            <div class="govuk-grid-column-one-third">
-              <div class="govuk-form-group govuk-!-margin-bottom-0">
-                <label class="govuk-label" for="bank">
-                  Bank
-                </label>
-
-                <select class="govuk-select govuk-!-width-full" id="bank" name="bank">
-                  <option value="all" selected>Any</option>
-                  {% for bank in banks %}
-                    <option value="{{ bank.id }}">{{ bank.name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-
-          </div>
-
-        </details>
+        {{ govukDetails({
+          summaryText: "Show filters",
+          html: advancedFilters.render(filter, user, banks),
+          open: filter.isUsingAdvancedFilter
+        }) }}
 
         <button class="govuk-button govuk-button--secondary" data-module="govuk-button">
           Apply filters

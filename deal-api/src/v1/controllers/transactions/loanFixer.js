@@ -9,7 +9,7 @@ const UKEFFACILITYID = 'transaction.ukefFacilityId';
 // 3) understand that when asked to filter on 'unissued_conditional' that means 'Conditional' in the case of loans
 const loanFilterMappings = {
   'transaction.transactionStage': {
-    loanStage: {
+    facilityStage: {
       unissued_conditional: 'Conditional',
       issued_unconditional: 'Unconditional',
     },
