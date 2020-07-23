@@ -1,7 +1,7 @@
 import express from 'express';
 import companiesHouseAPI from '../../../companies-house-api';
 import {
-  provide, INDUSTRY_SECTORS, COUNTRIES,
+  provide, INDUSTRY_SECTORS,
 } from '../../api-data-provider';
 
 // https://developer.companieshouse.gov.uk/api/docs/company/company_number/registered-office-address/registeredOfficeAddress-resource.html
