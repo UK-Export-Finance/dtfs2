@@ -1,6 +1,6 @@
 {% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
 
-{% if user and user.roles.includes('admin')%}
+{% if user and user.roles.includes('admin') %}
 
 {{ mojSubNavigation({
   label: 'Sub navigation',
