@@ -18,8 +18,12 @@
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created by</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submitted by</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th>
+        {% if user and user.roles.includes("admin")%}
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank</th>
+        {% endif %}
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Changed</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submission date</th>
       </tr>
     </thead>
 
@@ -42,6 +46,12 @@
           <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
             {{ contract.details.status }}
           </td>
+
+          {% if user and user.roles.includes("admin")%}
+          <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
+            {{ contract.details.owningBank.name }}
+          </td>
+          {% endif %}
 
           <td data-cy="created" class="govuk-table__cell govuk-!-font-size-14">
             {{ contract.details.dateOfCreation }}
