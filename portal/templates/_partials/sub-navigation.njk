@@ -8,6 +8,31 @@
   text: 'Audit supply contracts',
   href: '/reports/audit-supply-contracts',
   active: subNav == 'audit-supply-contracts'
+  }]
+}) }}
+
+{% elif user %}
+
+{{ mojSubNavigation({
+  label: 'Sub navigation',
+  items: [{
+  text: 'Audit supply contracts',
+  href: '/reports/audit-supply-contracts',
+  active: subNav == 'audit-supply-contracts'
+  }]
+}) }}
+
+{% endif %}
+
+
+{# Full menu - as we add more reports
+
+{{ mojSubNavigation({
+  label: 'Sub navigation',
+  items: [{
+  text: 'Audit supply contracts',
+  href: '/reports/audit-supply-contracts',
+  active: subNav == 'audit-supply-contracts'
   }, {
   text: 'Audit transactions',
   href: '/reports/audit-transactions',
@@ -54,4 +79,4 @@
   }]
 }) }}
 
-{% endif %}
+#}
