@@ -29,7 +29,7 @@ module.exports = {
     items: [
       {
         id: '1',
-        bankReferenceNumber: 'Not entered',
+        uniqueIdentificationNumber: 'unique5',
         ukefFacilityID: '12345678',
         value: 'GBP 123,456.00',
         stage: 'Unconditional',
@@ -44,7 +44,7 @@ module.exports = {
       },
       {
         id: '2',
-        bankReferenceNumber: 'test',
+        uniqueIdentificationNumber: 'unique6',
         ukefFacilityID: '12345678',
         value: 'GBP 123,456.00',
         stage: 'Unconditional',
@@ -63,7 +63,7 @@ module.exports = {
     items: [
       {
         id: '1',
-        bankReferenceNumber: 'Not entered',
+        bankReferenceNumber: 'unique7',
         ukefFacilityID: '12345678',
         status: 'Incomplete',
         value: 'GBP 123,456.00',
@@ -79,7 +79,7 @@ module.exports = {
       },
       {
         id: '2',
-        bankReferenceNumber: 'test',
+        bankReferenceNumber: 'unique8',
         ukefFacilityID: '12345678',
         status: 'Incomplete',
         value: 'GBP 123,456.00',

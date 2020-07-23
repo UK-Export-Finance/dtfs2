@@ -29,7 +29,7 @@ module.exports = {
     items: [
       {
         id: '1',
-        bankReferenceNumber: 'Not entered',
+        uniqueIdentificationNumber: 'Not entered',
         ukefFacilityID: '12345678',
         value: 'GBP 123,456.00',
         stage: 'Unconditional',
@@ -44,7 +44,7 @@ module.exports = {
       },
       {
         id: '2',
-        bankReferenceNumber: 'test',
+        uniqueIdentificationNumber: 'test',
         ukefFacilityID: '12345678',
         value: 'GBP 123,456.00',
         stage: 'Unconditional',

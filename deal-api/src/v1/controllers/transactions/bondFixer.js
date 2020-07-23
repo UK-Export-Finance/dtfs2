@@ -1,5 +1,5 @@
 const GRAPHQL_FILTER_BY_TRANSACTION_TYPE = 'transaction.transactionType';
-
+const BANKFACILITYID = 'transaction.bankFacilityId';
 // the rules
 // this means that our filter is going to:
 // 1) consider transaction.transactionStage as 'special' and not to be handled by mongo
@@ -128,7 +128,16 @@ const constructor = (graphQLFilters) => {
         // if we -have- already procced something that wants to filter this bond out
         //  ->nothing to do here.
         return stillShowingBond && !shouldFilterThisBondOutBasedOnThisFilter();
-      }, true)).map((bond) => ({
+    }, true)).filter((bondThatMightNotMatchAFilter) => {
+      // ugly. because our mongo query gave us 'deals that contain a bond with bankrefnum=xx'
+      //  we still have other transactions from that deal to filter out..
+
+      if (graphQLFilters[BANKFACILITYID]
+              && bondThatMightNotMatchAFilter.uniqueIdentificationNumber !== graphQLFilters[BANKFACILITYID]) {
+        return false;
+      }
+      return true;
+    }).map((bond) => ({
       // - once we've filtered out things we shouldn't be thinking about
       //  -> map whatever's still left into the generic schema that graphQL is expecting..
 
@@ -141,8 +150,8 @@ const constructor = (graphQLFilters) => {
       facilityValue: bond.facilityValue,
       transactionStage: bond.bondStage,
       issuedDate: '//TODO',
-      maker: deal.details.maker ? `${deal.details.maker.firstname} ${deal.details.maker.surname}` : '',
-      checker: deal.details.checker ? `${deal.details.checker.firstname} ${deal.details.checker.surname}` : '',
+      maker: deal.details.maker ? `${deal.details.maker.firstname || ''} ${deal.details.maker.surname || ''}` : '',
+      checker: deal.details.checker ? `${deal.details.checker.firstname || ''} ${deal.details.checker.surname || ''}` : '',
     }));
   };
 
