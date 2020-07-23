@@ -21,4 +21,14 @@ Environment workflows ensure we've got the right infrastructure set up and corre
 
 ### Secrets
 
-To add a new secret, set it in Github Secrets (under repository settings), then add it to each of the environment workflows. 
+To add a new secret, set it in Github Secrets (under repository settings), then add it to each of the environment workflows.
+
+### Naming conventions
+
+In general, naming conventions are: tfs-`environment`-`component` (in order of magnitude, so "service, environment, component"). That means a list of things will sort alphabetically into blocks of items that work together (e.g. all items that are part of a given environment).
+
+A couple of places this works are:
+ * Github secrets: you can scroll through the list and find out what secrets are set for a given environment
+ * Azure App Services: you can see the environments as blocks in the list and find the services deployed a given environment
+
+Other approaches are available, but this seems a reasonable one for now.
