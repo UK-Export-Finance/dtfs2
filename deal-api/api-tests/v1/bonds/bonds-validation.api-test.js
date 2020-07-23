@@ -441,6 +441,44 @@ describe('/v1/deals/:id/bond', () => {
             expect(validationErrors.errorList.uniqueIdentificationNumber.text).toEqual('Enter the Bond\'s unique identification number');
           });
         });
+
+        describe('when more than 30 characters', () => {
+          it('should return validationError', async () => {
+            const bond = {
+              ...allBondFields,
+              bondStage: 'Issued',
+              uniqueIdentificationNumber: 'a'.repeat(31),
+            };
+
+            const { validationErrors } = await updateBondInDeal(dealId, bond);
+            expect(validationErrors.errorList.uniqueIdentificationNumber).toBeDefined();
+            expect(validationErrors.errorList.uniqueIdentificationNumber.text).toEqual('Bond\'s unique identification number must be 30 characters or fewer');
+          });
+        });
+
+        describe('with an invalid character (not A-Z, 0-9, `-`, `_` or a space)', () => {
+          it('should return validationError', async () => {
+            let bond = {
+              ...allBondFields,
+              bondStage: 'Issued',
+              uniqueIdentificationNumber: 'invalid-format!@£$%^&*()+=',
+            };
+
+            const expectedText = 'Bond\'s unique identification number must only include letters a to z, numbers 0 to 9, hyphens, underscores and spaces';
+
+            const firstPost = await updateBondInDeal(dealId, bond);
+            expect(firstPost.body.validationErrors.errorList.uniqueIdentificationNumber.text).toEqual(expectedText);
+
+            bond = {
+              ...allBondFields,
+              bondStage: 'Issued',
+              uniqueIdentificationNumber: 'invalid-format{}:"|<>?,./;\'\[]',
+            };
+
+            const secondPost = await updateBondInDeal(dealId, bond);
+            expect(secondPost.body.validationErrors.errorList.uniqueIdentificationNumber.text).toEqual(expectedText);
+          });
+        });
       });
     });
 
