@@ -1,5 +1,6 @@
 const GRAPHQL_FILTER_BY_TRANSACTION_TYPE = 'transaction.transactionType';
 const BANKFACILITYID = 'transaction.bankFacilityId';
+const UKEFFACILITYID = 'transaction.ukefFacilityId'
 
 // the rules
 // this means that our filter is going to:
@@ -136,6 +137,10 @@ const constructor = (graphQLFilters) => {
               && loanThatMightNotMatchAFilter.bankReferenceNumber !== graphQLFilters[BANKFACILITYID]) {
         return false;
       }
+      if (graphQLFilters[UKEFFACILITYID]
+              && loanThatMightNotMatchAFilter.ukefFacilityID !== graphQLFilters[UKEFFACILITYID]) {
+        return false;
+      }
       return true;
     }).map((loan) => ({
       // - once we've filtered out things we shouldn't be thinking about
@@ -144,7 +149,7 @@ const constructor = (graphQLFilters) => {
       deal_status: deal.details.status,
       transaction_id: loan._id, // eslint-disable-line no-underscore-dangle
       bankFacilityId: loan.bankReferenceNumber,
-      ukefFacilityId: '//TODO',
+      ukefFacilityId: loan.ukefFacilityID,
       transactionType: 'loan',
       facilityValue: loan.facilityValue,
       transactionStage: loan.facilityStage,

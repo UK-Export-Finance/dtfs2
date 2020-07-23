@@ -30,7 +30,7 @@ module.exports = {
       {
         id: '1',
         uniqueIdentificationNumber: 'unique1',
-        ukefFacilityID: '12345678',
+        ukefFacilityID: 'a12345678',
         value: 'GBP 123,456.00',
         stage: 'Unconditional',
         startDate: '12/02/2020',
@@ -45,7 +45,7 @@ module.exports = {
       {
         id: '2',
         uniqueIdentificationNumber: 'unique2',
-        ukefFacilityID: '12345678',
+        ukefFacilityID: 'b12345678',
         value: 'GBP 123,456.00',
         stage: 'Unconditional',
         startDate: '12/02/2020',
@@ -64,7 +64,7 @@ module.exports = {
       {
         id: '1',
         bankReferenceNumber: 'unique3',
-        ukefFacilityID: '12345678',
+        ukefFacilityID: 'c12345678',
         status: 'Incomplete',
         value: 'GBP 123,456.00',
         stage: 'Unconditional',
@@ -80,7 +80,7 @@ module.exports = {
       {
         id: '2',
         bankReferenceNumber: 'unique4',
-        ukefFacilityID: '12345678',
+        ukefFacilityID: 'd12345678',
         status: 'Incomplete',
         value: 'GBP 123,456.00',
         stage: '',
