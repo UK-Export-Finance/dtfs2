@@ -63,8 +63,10 @@ jobs:
           az webapp log config $options \
             --docker-container-logging filesystem
 
+          # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
           az webapp config appsettings set $options \
             --settings \
+              PORT=5000 \
               WEBSITES_PORT=5000 \
               DEAL_API_URL="${{ env.DEAL_API_URL }}" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}"
@@ -101,9 +103,11 @@ jobs:
           az webapp log config $options \
             --docker-container-logging filesystem
           
+          # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
           az webapp config connection-string set $options \
             --connection-string-type custom \
             --settings \
+              PORT=5000 \
               WEBSITES_PORT=5000 \
               AZURE_PORTAL_EXPORT_FOLDER="${{ env.AZURE_PORTAL_EXPORT_FOLDER }}" \
               AZURE_PORTAL_FILESHARE_NAME="${{ env.AZURE_PORTAL_FILESHARE_NAME }}" \
