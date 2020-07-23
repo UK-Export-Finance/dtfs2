@@ -136,7 +136,7 @@
                   {% set linkText = "Not entered" %}
                 {% endif %}
 
-                {% if user.roles.includes('maker') and [STATUS.draft, STATUS.inputRequired].includes(transaction.deal_status) %}
+                {% if user.roles.includes('maker') and ["Draft", "Further Maker\'s input required"].includes(transaction.deal_status) %}
                   {# link through to the bond or loan details page, since current user can edit it.. #}
                   {% if "bond" === transaction.transactionType %}
                     <a href="/contract/{{transaction.deal_id}}/bond/{{transaction.transaction_id}}/details" class="govuk-link">{{ linkText }}</a>
