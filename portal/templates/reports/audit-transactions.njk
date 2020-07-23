@@ -47,7 +47,7 @@
             {{ contract.details.status }}
           </td>
           {% if user and user.roles.includes("admin")%}
-          <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
+          <td data-cy="owningBank" class="govuk-table__cell govuk-!-font-size-14">
             {{ contract.details.owningBank.name }}
           </td>
           {% endif %}
