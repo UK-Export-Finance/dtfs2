@@ -7,13 +7,17 @@ import path from 'path';
 import routes from './routes';
 
 import configureNunjucks from './nunjucks-configuration';
+import crypto from 'crypto';
 
 const app = express();
 
 const PORT = process.env.PORT || 5000;
 
+// Fail-safe fallback to a 256-bit random value:
+const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(256 / 8).toString('hex');
+
 app.use(session({
-  secret: 'test test test',
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
 }));
