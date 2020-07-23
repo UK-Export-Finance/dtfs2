@@ -16,6 +16,7 @@ env:
   DEAL_API_URL: "tfs-demo-portal-api.azurewebsites.net"
   COMPANIES_HOUSE_API_URL: ="https://api.companieshouse.gov.uk"
   # App service secrets
+  SESSION_SECRET: "${{ secrets.DEMO_SESSION_SECRET }}"
   COMPANIES_HOUSE_API_KEY: "${{ secrets.COMPANIES_HOUSE_API_KEY }}"
   AZURE_PORTAL_EXPORT_FOLDER: "${{ secrets.DEV_AZURE_PORTAL_EXPORT_FOLDER }}"
   AZURE_PORTAL_FILESHARE_NAME: "${{ secrets.DEV_AZURE_PORTAL_FILESHARE_NAME }}"
@@ -33,7 +34,7 @@ env:
   GOV_NOTIFY_EMAIL_RECIPIENT: "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
 
 # Below this line sholud be the same for all environments
-  
+
 jobs:
 
   portal-ui:
@@ -70,6 +71,7 @@ jobs:
           az webapp config connection-string set $options \
             --connection-string-type custom \
             --settings \
+              SESSION_SECRET="${{ env.SESSION_SECRET }}" \
               COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
 
   portal-api:
