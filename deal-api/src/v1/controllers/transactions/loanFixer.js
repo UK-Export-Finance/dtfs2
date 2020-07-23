@@ -1,6 +1,6 @@
 const GRAPHQL_FILTER_BY_TRANSACTION_TYPE = 'transaction.transactionType';
 const BANKFACILITYID = 'transaction.bankFacilityId';
-const UKEFFACILITYID = 'transaction.ukefFacilityId'
+const UKEFFACILITYID = 'transaction.ukefFacilityId';
 
 // the rules
 // this means that our filter is going to:

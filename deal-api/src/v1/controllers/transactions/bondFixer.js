@@ -1,6 +1,6 @@
 const GRAPHQL_FILTER_BY_TRANSACTION_TYPE = 'transaction.transactionType';
 const BANKFACILITYID = 'transaction.bankFacilityId';
-const UKEFFACILITYID = 'transaction.ukefFacilityId'
+const UKEFFACILITYID = 'transaction.ukefFacilityId';
 // the rules
 // this means that our filter is going to:
 // 1) consider transaction.transactionStage as 'special' and not to be handled by mongo
