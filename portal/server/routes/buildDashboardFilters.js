@@ -115,7 +115,6 @@ const buildDashboardFilters = (params, user) => {
     });
   }
 
-  console.log(`${JSON.stringify(filters)}`);
   return {
     isUsingAdvancedFilter,
     filters,

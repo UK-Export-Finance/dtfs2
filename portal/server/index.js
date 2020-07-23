@@ -4,6 +4,7 @@ import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import flash from 'connect-flash';
 import path from 'path';
+import crypto from 'crypto';
 import routes from './routes';
 
 import configureNunjucks from './nunjucks-configuration';
@@ -12,8 +13,11 @@ const app = express();
 
 const PORT = process.env.PORT || 5000;
 
+// Fail-safe fallback to a 256-bit random value:
+const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(256 / 8).toString('hex');
+
 app.use(session({
-  secret: 'test test test',
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
 }));

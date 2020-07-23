@@ -1,10 +1,10 @@
-// import moment from 'moment';
+import moment from 'moment';
 import CONSTANTS from '../constants';
 
 // const buildDashboardFilters = (params, user) => {
 const buildDashboardFilters = (params) => {
   const filters = [];
-  const isUsingAdvancedFilter = false;
+  let isUsingAdvancedFilter = false;
 
   if (!params) {
     return {
@@ -34,6 +34,7 @@ const buildDashboardFilters = (params) => {
   }
 
   if (params.bankFacilityID) {
+    isUsingAdvancedFilter = true;
     filters.push(
       {
         field: 'transaction.bankFacilityId',
@@ -44,6 +45,7 @@ const buildDashboardFilters = (params) => {
 
 
   if (params.uKefFacilityID) {
+    isUsingAdvancedFilter = true;
     filters.push(
       {
         field: 'transaction.ukefFacilityId',
@@ -52,65 +54,38 @@ const buildDashboardFilters = (params) => {
     );
   }
 
-  //
-  // if (CONSTANTS.STATUS[params.filterByStatus]) {
-  //   isUsingAdvancedFilter = true;
-  //   filters.push(
-  //     {
-  //       field: 'details.status',
-  //       value: CONSTANTS.STATUS[params.filterByStatus],
-  //     },
-  //   );
-  // }
-  //
-  // if (params.filterBySupplyContractID) {
-  //   isUsingAdvancedFilter = true;
-  //   filters.push({
-  //     field: 'details.bankSupplyContractID',
-  //     value: params.filterBySupplyContractID,
-  //   });
-  // }
-  //
-  // if (params['createdFrom-year']) {
-  //   isUsingAdvancedFilter = true;
-  //
-  //   const year = params['createdFrom-year'].padStart(4, '20');
-  //   const month = params['createdFrom-month'].padStart(2, '0');
-  //   const day = params['createdFrom-day'].padStart(2, '0');
-  //
-  //   const createdFrom = moment(`${year} ${month} ${day}`, 'YYYY MM DD').valueOf();
-  //
-  //   filters.push({
-  //     field: 'details.created',
-  //     value: `${createdFrom}`,
-  //     operator: 'gte',
-  //   });
-  // }
-  //
-  // if (params['createdTo-year']) {
-  //   isUsingAdvancedFilter = true;
-  //
-  //   const year = params['createdTo-year'].padStart(4, '20');
-  //   const month = params['createdTo-month'].padStart(2, '0');
-  //   const day = params['createdTo-day'].padStart(2, '0');
-  //
-  //   const createdTo = moment(`${year} ${month} ${day}`, 'YYYY MM DD').add(1, 'day').valueOf();
-  //
-  //   filters.push({
-  //     field: 'details.created',
-  //     value: `${createdTo}`,
-  //     operator: 'lt',
-  //   });
-  // }
-  //
-  // if (params.filterBySupplierName) {
-  //   isUsingAdvancedFilter = true;
-  //   filters.push({
-  //     field: 'submissionDetails.supplier-name',
-  //     value: params.filterBySupplierName,
-  //   });
-  // }
-  //
+  if (params['createdFrom-year']) {
+    isUsingAdvancedFilter = true;
+
+    const year = params['createdFrom-year'].padStart(4, '20');
+    const month = params['createdFrom-month'].padStart(2, '0');
+    const day = params['createdFrom-day'].padStart(2, '0');
+
+    const createdFrom = moment(`${year} ${month} ${day}`, 'YYYY MM DD').valueOf();
+
+    filters.push({
+      field: 'transaction.deal_created',
+      value: `${createdFrom}`,
+      operator: 'gte',
+    });
+  }
+
+  if (params['createdTo-year']) {
+    isUsingAdvancedFilter = true;
+
+    const year = params['createdTo-year'].padStart(4, '20');
+    const month = params['createdTo-month'].padStart(2, '0');
+    const day = params['createdTo-day'].padStart(2, '0');
+
+    const createdTo = moment(`${year} ${month} ${day}`, 'YYYY MM DD').add(1, 'day').valueOf();
+
+    filters.push({
+      field: 'transaction.deal_created',
+      value: `${createdTo}`,
+      operator: 'lt',
+    });
+  }
+
   // if (params.filterByBank) {
   //   isUsingAdvancedFilter = true;
   //   filters.push({
@@ -119,7 +94,7 @@ const buildDashboardFilters = (params) => {
   //   });
   // }
   //
-  console.log(`${JSON.stringify(filters)}`);
+
   return {
     isUsingAdvancedFilter,
     filters,
