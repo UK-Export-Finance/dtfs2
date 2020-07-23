@@ -48,17 +48,21 @@
           </td>
 
           {% if user and user.roles.includes("admin")%}
-          <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
+          <td data-cy="owningBank" class="govuk-table__cell govuk-!-font-size-14">
             {{ contract.details.owningBank.name }}
           </td>
           {% endif %}
 
           <td data-cy="created" class="govuk-table__cell govuk-!-font-size-14">
-            {{ contract.details.dateOfCreation }}
+           {{ contract.details.created | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) }}
           </td>
 
           <td data-cy="changed" class="govuk-table__cell govuk-!-font-size-14">
-            {{ contract.details.dateOfLastAction }}
+            {{ contract.details.dateOfLastAction | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) }}
+          </td>
+
+          <td data-cy="submissionDate" class="govuk-table__cell govuk-!-font-size-14">
+            {{ details.submissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) | dashIfEmpty }}
           </td>
 
         </tr>

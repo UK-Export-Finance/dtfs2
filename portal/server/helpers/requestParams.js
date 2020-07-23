@@ -5,7 +5,7 @@ const requestParams = (req) => {
     loanId,
   } = req.params;
   const { userToken } = req.session;
-console.log(req.params)
+
   return {
     _id,
     bondId,

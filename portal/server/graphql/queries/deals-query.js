@@ -18,6 +18,8 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
         }
         checker
         dateOfLastAction
+        submissionDate
+        created
         owningBank{
           name
         }
