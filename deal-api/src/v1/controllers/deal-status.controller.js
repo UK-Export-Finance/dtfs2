@@ -145,8 +145,11 @@ exports.update = (req, res) => {
     const fromStatus = deal.details.status;
     const toStatus = req.body.status;
 
-    if (!userCanSubmitDeal(deal, req.user)) {
-      return res.status(401).send();
+    if (toStatus !== 'Ready for Checker\'s approval'
+        && toStatus !== 'Abandoned Deal') {
+      if (!userCanSubmitDeal(deal, req.user)) {
+        return res.status(401).send();
+      }
     }
 
     const validationErrors = validateStateChange(deal, req.body, user);
