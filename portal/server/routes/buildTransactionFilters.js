@@ -42,6 +42,16 @@ const buildDashboardFilters = (params) => {
     );
   }
 
+
+  if (params.uKefFacilityID) {
+    filters.push(
+      {
+        field: 'transaction.ukefFacilityId',
+        value: params.uKefFacilityID,
+      },
+    );
+  }
+
   //
   // if (CONSTANTS.STATUS[params.filterByStatus]) {
   //   isUsingAdvancedFilter = true;
