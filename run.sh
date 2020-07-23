@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 
+set -exuo pipefail
+
 home=${PWD}
 
 for f in $(ls secrets/set_*); do 
     echo " - $f"
     source $f
 done
+
+npm run lint:fix
 
 cd portal
 docker build --tag dtfs/portal .

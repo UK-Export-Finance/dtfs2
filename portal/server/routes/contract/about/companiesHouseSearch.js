@@ -68,7 +68,8 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
   deal.submissionDetails['industry-class'] = industryClass.code;
 
   req.session.aboutSupplierFormData = deal;
-  return res.redirect(`/contract/${deal._id}/about/supplier`); // eslint-disable-line no-underscore-dangle
+  const redirectUrl = `/contract/${deal._id}/about/supplier#${prefix}-companies-house-registration-number`; // eslint-disable-line no-underscore-dangle
+  return res.redirect(redirectUrl);
 });
 
 export default router;

@@ -3,10 +3,12 @@ const bondFixer = require('./bondFixer');
 const loanFixer = require('./loanFixer');
 
 const BANKFACILITYID = 'transaction.bankFacilityId';
+const UKEFFACILITYID = 'transaction.ukefFacilityId';
 const filtersWeDoManually = [
   'transaction.transactionStage',
   'transaction.transactionType',
   BANKFACILITYID,
+  UKEFFACILITYID,
 ];
 
 const constructor = (user, graphQLFilters) => {
@@ -26,15 +28,32 @@ const constructor = (user, graphQLFilters) => {
       query['details.owningBank.id'] = { $eq: user.bank.id };
     }
 
-    // if we're querying directly by bank facility id; re-do this as something that can work
-    //  as part of the mongo query, otherwise we will loop over everything looking for one id..
+    // if we're querying directly by an id; re-do the query into something that works in our actual schema
     //   possibly learning enough about mongo to do this better now..
+    const mongoFiltering = {};
+
     if (query[BANKFACILITYID]) {
       const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { uniqueIdentificationNumber: query[BANKFACILITYID] } } };
       const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { bankReferenceNumber: query[BANKFACILITYID] } } };
-      query.$or = [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum];
+
+      mongoFiltering[BANKFACILITYID] = { $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] };
     }
 
+    if (query[UKEFFACILITYID]) {
+      const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { ukefFacilityID: query[UKEFFACILITYID] } } };
+      const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { ukefFacilityID: query[UKEFFACILITYID] } } };
+
+      mongoFiltering[UKEFFACILITYID] = { $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] };
+    }
+
+    if (mongoFiltering[UKEFFACILITYID] && mongoFiltering[BANKFACILITYID]) {
+      query.$and = [mongoFiltering[UKEFFACILITYID], mongoFiltering[BANKFACILITYID]];
+    } else if (mongoFiltering[UKEFFACILITYID]) {
+      query.$or = mongoFiltering[UKEFFACILITYID].$or;
+    } else if (mongoFiltering[BANKFACILITYID]) {
+      query.$or = mongoFiltering[BANKFACILITYID].$or;
+    }
+    // -- end of tinkering with the mongoDB query directly.
 
     // using Array.filter as a cheap and cheesy iterator
     //  we look at each of the filters we're supposed to be ignoring in mongo
