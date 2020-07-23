@@ -33,6 +33,15 @@ const buildDashboardFilters = (params) => {
     );
   }
 
+  if (params.bankFacilityID) {
+    filters.push(
+      {
+        field: 'transaction.bankFacilityId',
+        value: params.bankFacilityID,
+      },
+    );
+  }
+
   //
   // if (CONSTANTS.STATUS[params.filterByStatus]) {
   //   isUsingAdvancedFilter = true;
