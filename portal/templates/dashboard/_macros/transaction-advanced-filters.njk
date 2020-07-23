@@ -1,0 +1,51 @@
+{% import '_macros/date-range.njk' as dateRange %}
+
+{% macro render(filter, user, banks) %}
+
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="bankFacilityID">
+          Bank Facility ID
+        </label>
+        <input class="govuk-input" id="bankFacilityID" name="bankFacilityID" type="text" value="{{filter.bankFacilityID}}">
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="uKefFacilityID">
+          UKEF Facility ID
+        </label>
+        <input class="govuk-input" id="uKefFacilityID" name="uKefFacilityID" type="text" value="{{filter.uKefFacilityID}}">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-4">
+    {{ dateRange.inputs(fromLegend = 'Creation date', toLegend = 'And', values = filter ) }}
+  </div>
+
+  <div class="govuk-grid-row">
+
+    {# <div class="govuk-grid-column-one-third">
+      <div class="govuk-form-group govuk-!-margin-bottom-0">
+        <label class="govuk-label" for="bank">
+          Bank
+        </label>
+
+        <select class="govuk-select govuk-!-width-full" id="bank" name="bank">
+          <option value="all" selected>Any</option>
+          {% for bank in banks %}
+            <option value="{{ bank.id }}">{{ bank.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div> #}
+
+  </div>
+
+
+{% endmacro %}
