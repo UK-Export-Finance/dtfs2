@@ -126,3 +126,15 @@ jobs:
               JWT_VALIDATING_KEY="${{ env.JWT_VALIDATING_KEY }}" \
               GOV_NOTIFY_API_KEY="${{ env.GOV_NOTIFY_API_KEY }}" \
               GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}"
+          
+          # Will it work if we separate out these two values?
+          
+          az webapp config connection-string set $options \
+            --connection-string-type custom \
+            --settings \
+              JWT_SIGNING_KEY="${{ env.JWT_SIGNING_KEY }}"
+      
+          az webapp config connection-string set $options \
+            --connection-string-type custom \
+            --settings \
+              JWT_VALIDATING_KEY="${{ env.JWT_VALIDATING_KEY }}"
