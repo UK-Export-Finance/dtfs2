@@ -6,18 +6,6 @@ on:
 
 jobs:
 
-  demo-portal-data:
-    name: Refresh Demo database
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Re-insert mocks
-        run: |
-          cd utils/mock-data-loader 
-          echo "DEAL_API_URL=https://tfs-demo-portal-api.azurewebsites.net" > .env
-          npm install
-          node re-insert-mocks.js
-
   demo-portal-ui:
     name: Promote Portal UI from Dev to Demo
     runs-on: ubuntu-latest
@@ -45,3 +33,16 @@ jobs:
         docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api
         docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:demo
         docker push ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:demo
+
+  demo-portal-data:
+    needs: demo-portal-api
+    name: Refresh Demo database
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Re-insert mocks
+        run: |
+          cd utils/mock-data-loader 
+          echo "DEAL_API_URL=https://tfs-demo-portal-api.azurewebsites.net" > .env
+          npm install
+          node re-insert-mocks.js
