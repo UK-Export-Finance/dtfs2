@@ -71,8 +71,9 @@ jobs:
       - name: Re-insert mocks
         run: |
           cd utils/mock-data-loader 
-          mv .env.azure .env
+          cat .env.azure > .env
           npm install
+          echo Refreshing $(cat .env)
           node re-insert-mocks.js
   
   api-tests:
@@ -159,7 +160,7 @@ jobs:
         npx cypress run --spec "cypress/integration/**/*.spec.js" --config video=false # --record
     - name: Save Cypress screenshots
       if: ${{ failure() }}
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@main
       with:
         name: screenshots
         path: './cypress/screenshots'

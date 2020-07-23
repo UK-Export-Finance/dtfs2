@@ -4,11 +4,14 @@ const loanFixer = require('./loanFixer');
 
 const BANKFACILITYID = 'transaction.bankFacilityId';
 const UKEFFACILITYID = 'transaction.ukefFacilityId';
+const DEAL_CREATED = 'transaction.deal_created';
+
 const filtersWeDoManually = [
   'transaction.transactionStage',
   'transaction.transactionType',
   BANKFACILITYID,
   UKEFFACILITYID,
+  DEAL_CREATED,
 ];
 
 const constructor = (user, graphQLFilters) => {
@@ -30,28 +33,40 @@ const constructor = (user, graphQLFilters) => {
 
     // if we're querying directly by an id; re-do the query into something that works in our actual schema
     //   possibly learning enough about mongo to do this better now..
-    const mongoFiltering = {};
+    const mongoFiltering = [];
 
     if (query[BANKFACILITYID]) {
       const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { uniqueIdentificationNumber: query[BANKFACILITYID] } } };
       const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { bankReferenceNumber: query[BANKFACILITYID] } } };
 
-      mongoFiltering[BANKFACILITYID] = { $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] };
+      mongoFiltering.push({ $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] });
     }
 
     if (query[UKEFFACILITYID]) {
       const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { ukefFacilityID: query[UKEFFACILITYID] } } };
       const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { ukefFacilityID: query[UKEFFACILITYID] } } };
 
-      mongoFiltering[UKEFFACILITYID] = { $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] };
+      mongoFiltering.push({ $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] });
     }
 
-    if (mongoFiltering[UKEFFACILITYID] && mongoFiltering[BANKFACILITYID]) {
-      query.$and = [mongoFiltering[UKEFFACILITYID], mongoFiltering[BANKFACILITYID]];
-    } else if (mongoFiltering[UKEFFACILITYID]) {
-      query.$or = mongoFiltering[UKEFFACILITYID].$or;
-    } else if (mongoFiltering[BANKFACILITYID]) {
-      query.$or = mongoFiltering[BANKFACILITYID].$or;
+    if (query[DEAL_CREATED]) {
+      const dealWithinSpecifiedRange = { 'details.created': query[DEAL_CREATED] };
+
+      mongoFiltering.push(dealWithinSpecifiedRange);
+    }
+
+    if (mongoFiltering.length === 1) {
+      // if we only picked up one filtering criteria - just bang it into the query
+      query = {
+        ...query,
+        ...mongoFiltering[0],
+      };
+    } else if (mongoFiltering.length > 1) {
+      // if we picked up multiple criteria, add them all with an $and
+      query = {
+        ...query,
+        $and: mongoFiltering,
+      };
     }
     // -- end of tinkering with the mongoDB query directly.
 

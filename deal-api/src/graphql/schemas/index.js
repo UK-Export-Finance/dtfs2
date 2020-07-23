@@ -65,6 +65,7 @@ input DealsInput {
 type Transaction {
   deal_id: String
   deal_status: String
+  deal_created: String
   transaction_id: String
   bankFacilityId: String
   ukefFacilityId: String
