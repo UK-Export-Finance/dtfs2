@@ -14,7 +14,7 @@ jobs:
       - name: Re-insert mocks
         run: |
           cd utils/mock-data-loader 
-          echo "DEAL_API_URL=https://dtfs-demo-deal-api.azurewebsites.net" > .env
+          echo "DEAL_API_URL=https://tfs-demo-portal-api.azurewebsites.net" > .env
           npm install
           node re-insert-mocks.js
 
@@ -28,8 +28,8 @@ jobs:
         username: ${{ secrets.ACR_DEV_USERNAME }}
         password: ${{ secrets.ACR_DEV_PASSWORD }}
     - run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:latest
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:latest ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:demo
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:demo
         docker push ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:demo
 
   demo-portal-api:
@@ -42,6 +42,6 @@ jobs:
         username: ${{ secrets.ACR_DEV_USERNAME }}
         password: ${{ secrets.ACR_DEV_PASSWORD }}
     - run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:latest
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:latest ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:demo
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:demo
         docker push ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:demo
