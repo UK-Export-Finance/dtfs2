@@ -167,7 +167,7 @@ const handleEditedBy = async (req) => {
     };
 
     // if partial update
-    // need to make sure that we have all existing entires in `editedBy`.
+    // need to make sure that we have all existing entries in `editedBy`.
     // ideally we could refactor, perhaps, so that no partial updates are allowed.
     // but for now...
     if (!req.body.editedBy) {
