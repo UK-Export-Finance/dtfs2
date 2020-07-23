@@ -114,8 +114,15 @@ router.get('/dashboard/:page', async (req, res) => {
     res.redirect('/');
   }
 
-  // when checker views the dashboard it defaults to status=readyForApproval
-  if (req.session.dashboardFilters === null && req.session.user.roles.includes('checker')) {
+  // when a user with checker role views the dashboard, default to status=readyForApproval
+  // when a user with maker AND checker role views the dashboard, do not default to status=readyForApproval
+  const { roles } = req.session.user;
+
+  const userisMaker = roles.includes('maker');
+  const userisChecker = roles.includes('checker');
+  const userIsMakerAndChecker = (userisMaker && userisChecker);
+
+  if (req.session.dashboardFilters === null && (userisChecker && !userIsMakerAndChecker)) {
     req.session.dashboardFilters = {
       filterByStatus: 'readyForApproval',
       isUsingAdvancedFilter: true,
