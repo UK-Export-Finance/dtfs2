@@ -131,19 +131,24 @@
             <tr class="govuk-table__row">
 
               <td class="govuk-table__cell govuk-!-font-size-14">
+                {% set linkText = transaction.bankFacilityId %}
+                {% if linkText|length == 0 %}
+                  {% set linkText = "Not entered" %}
+                {% endif %}
+
                 {% if user.roles.includes('maker') and [STATUS.draft, STATUS.inputRequired].includes(transaction.deal_status) %}
                   {# link through to the bond or loan details page, since current user can edit it.. #}
                   {% if "bond" === transaction.transactionType %}
-                    <a href="/contract/{{transaction.deal_id}}/bond/{{transaction.transaction_id}}/details" class="govuk-link">{{ transaction.bankFacilityId }}</a>
+                    <a href="/contract/{{transaction.deal_id}}/bond/{{transaction.transaction_id}}/details" class="govuk-link">{{ linkText }}</a>
                   {% else %}
-                    <a href="/contract/{{transaction.deal_id}}/loan/{{transaction.transaction_id}}/details" class="govuk-link">{{ transaction.bankFacilityId }}</a>
+                    <a href="/contract/{{transaction.deal_id}}/loan/{{transaction.transaction_id}}/details" class="govuk-link">{{ linkText }}</a>
                   {% endif %}
                 {% else %}
                   {# link through to the relevant bond or loan in the deal-preview tab, since the current user cant edit #}
                   {% if "bond" === transaction.transactionType %}
-                    <a href="/contract/{{transaction.deal_id}}/submission-details#bond-{{transaction.transaction_id}}" class="govuk-link">{{ transaction.bankFacilityId }}</a>
+                    <a href="/contract/{{transaction.deal_id}}/submission-details#bond-{{transaction.transaction_id}}" class="govuk-link">{{ linkText }}</a>
                   {% else %}
-                    <a href="/contract/{{transaction.deal_id}}/submission-details#loan-{{transaction.transaction_id}}" class="govuk-link">{{ transaction.bankFacilityId }}</a>
+                    <a href="/contract/{{transaction.deal_id}}/submission-details#loan-{{transaction.transaction_id}}" class="govuk-link">{{ linkText }}</a>
                   {% endif %}
                 {% endif %}
               </td>
