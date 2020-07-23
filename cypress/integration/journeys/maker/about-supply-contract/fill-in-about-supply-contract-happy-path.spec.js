@@ -73,10 +73,11 @@ context('about-supply-contract', () => {
     // contractAboutSupplier.supplierAddressCountry().should('?', '?'); //TODO country; mapping company house "england"-> portal "United Kingdom"
     contractAboutSupplier.supplierName().should('not.have.value', ''); // TODO if we had 'proper' test company we might assert real data
     contractAboutSupplier.supplierAddress().line1().should('not.have.value', ''); // TODO
-    contractAboutSupplier.supplierAddress().line2().should('not.have.value', ''); // TODO
     contractAboutSupplier.supplierAddress().town().should('not.have.value', ''); // TODO
     contractAboutSupplier.supplierAddress().postcode().should('not.have.value', ''); // TODO
     contractAboutSupplier.supplierAddress().country().should('not.have.value', ''); // TODO
+    // TODO: industry sector is populated from companise house data / should not be 'Please select'
+    // TODO: industry class is populated from companise house data / should not be 'Please select'
 
     //---
     // fill in the simplest version of the form so we can submit it and save it..

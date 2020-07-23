@@ -86,7 +86,6 @@ context('about-supply-contract', () => {
     //
     contractAboutSupplier.indemnifierName().should('not.have.value', ''); // TODO if we had 'proper' test company we might assert real data
     contractAboutSupplier.indemnifierAddress().line1().should('not.have.value', ''); // TODO
-    contractAboutSupplier.indemnifierAddress().line2().should('not.have.value', ''); // TODO
     contractAboutSupplier.indemnifierAddress().town().should('not.have.value', ''); // TODO
     contractAboutSupplier.indemnifierAddress().postcode().should('not.have.value', ''); // TODO
     contractAboutSupplier.indemnifierAddress().country().should('not.have.value', ''); // TODO
