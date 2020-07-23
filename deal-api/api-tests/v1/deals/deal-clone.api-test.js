@@ -19,6 +19,12 @@ const newDeal = aDeal({
     timestamp: '1982/12/25 00:00:00:001',
     text: 'Also Merry Christmas from the 80s',
   }],
+  editedBy: [
+    { userId: '1' },
+    { userId: '2' },
+    { userId: '3' },
+    { userId: '4' },
+  ],
 });
 
 describe('/v1/deals/:id/clone', () => {
@@ -28,6 +34,7 @@ describe('/v1/deals/:id/clone', () => {
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
+    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
   });
 
@@ -62,25 +69,32 @@ describe('/v1/deals/:id/clone', () => {
         originalDeal = body;
       });
 
-      it('clones a deal with only specific properties in `details` object, marking status `Draft`', async () => {
+      it('clones a deal with only specific properties in `details`, wipes `comments` & `editedBy`, changes `maker` to the user making the request, marks status `Draft`', async () => {
         const clonePostBody = {
           bankSupplyContractID: 'new-bank-deal-id',
           bankSupplyContractName: 'new-bank-deal-name',
           cloneTransactions: 'true',
         };
 
-        const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
         expect(body._id).toEqual(body._id);
         expect(body.details.bankSupplyContractID).toEqual(clonePostBody.bankSupplyContractID);
         expect(body.details.bankSupplyContractName).toEqual(clonePostBody.bankSupplyContractName);
         expect(body.details.dateOfLastAction).toBeDefined();
         expect(body.details.submissionType).toEqual(originalDeal.details.submissionType);
-        expect(body.details.maker).toEqual(originalDeal.details.maker);
-        expect(body.details.owningBank).toEqual(originalDeal.details.owningBank);
-        expect(body.details.status).toEqual('Draft');
 
+        expect(body.details.maker.username).toEqual(aBarclaysMaker.username);
+        expect(body.details.maker.roles).toEqual(aBarclaysMaker.roles);
+        expect(body.details.maker.bank).toEqual(aBarclaysMaker.bank);
+        expect(body.details.maker.firstname).toEqual(aBarclaysMaker.firstname);
+        expect(body.details.maker.surname).toEqual(aBarclaysMaker.surname);
+        expect(body.details.maker._id).toEqual(aBarclaysMaker._id);
+
+        expect(body.details.owningBank).toEqual(aBarclaysMaker.bank);
+        expect(body.details.status).toEqual('Draft');
         expect(body.comments).toEqual([]);
+        expect(body.editedBy).toEqual([]);
       });
 
       // TODO: test other things in deal object.
