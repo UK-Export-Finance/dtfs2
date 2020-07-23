@@ -4,7 +4,7 @@ require('dotenv').config();
 const urlRoot = process.env.COMPANIES_HOUSE_API_URL;
 const apiKey = process.env.COMPANIES_HOUSE_API_KEY;
 
-const searchByRegistrationNumber = async (registrationNumber) => {
+const getByRegistrationNumber = async (registrationNumber) => {
   try {
     const response = await axios({
       method: 'get',
@@ -21,5 +21,5 @@ const searchByRegistrationNumber = async (registrationNumber) => {
 };
 
 export default {
-  searchByRegistrationNumber,
+  getByRegistrationNumber,
 };
