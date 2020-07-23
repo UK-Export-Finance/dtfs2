@@ -1,4 +1,4 @@
-const { getDealErrors } = require('./deal');
+const getDealErrors = require('./deal');
 
 exports.getCloneDealErrors = (deal, cloneTransactions) => {
   let errorList = {};
