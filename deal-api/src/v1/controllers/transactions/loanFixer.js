@@ -129,7 +129,7 @@ const constructor = (graphQLFilters) => {
         // if we -have- already procced something that wants to filter this bond out
         //  ->nothing to do here.
         return stillShowingLoan && !shouldFilterThisLoanOutBasedOnThisFilter();
-    }, true)).filter((loanThatMightNotMatchAFilter) => {
+      }, true)).filter((loanThatMightNotMatchAFilter) => {
       // ugly. because our mongo query gave us 'deals that contain a bond with bankrefnum=xx'
       //  we still have other transactions from that deal to filter out..
       if (graphQLFilters[BANKFACILITYID]
