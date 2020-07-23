@@ -23,11 +23,12 @@ const getPortalCountryForCompaniesHouseCountry = (companiesHouseCountry) => {
 
 const router = express.Router();
 
-const getIndustrySectorFromIndustryClass = (industrySectors, sicCodes) => {
+const getIndustryFromSicCode = (industrySectors, sicCodes) => {
   let result = {};
+  const sicCode = sicCodes[0];
 
   industrySectors.forEach((sector) => sector.classes.find((industryClass) => {
-    if (industryClass.code === sicCodes[0]) {
+    if (industryClass.code === sicCode) {
       result = {
         industrySector: {
           code: sector.code,
@@ -87,11 +88,11 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
   deal.submissionDetails[`${prefix}-address-postcode`] = company.registered_office_address.postal_code;
   deal.submissionDetails[`${prefix}-address-country`] = getPortalCountryForCompaniesHouseCountry(company.registered_office_address.country);
 
-  console.log('-----------getIndustrySectorFromIndustryClass: \n', getIndustrySectorFromIndustryClass(industrySectors, company.sic_codes));
+  const { industrySector, industryClass } = getIndustryFromSicCode(industrySectors, company.sic_codes);
 
   // re-render
-  const mappedIndustrySectors = mapIndustrySectors(industrySectors, deal.submissionDetails['industry-sector']);
-  const mappedIndustryClasses = mapIndustryClasses(industrySectors, deal.submissionDetails['industry-sector'], deal.submissionDetails['industry-class']);
+  const mappedIndustrySectors = mapIndustrySectors(industrySectors, industrySector.code);
+  const mappedIndustryClasses = mapIndustryClasses(industrySectors, industrySector.code, industryClass.code);
   const mappedCountries = {
     'supplier-address-country': mapCountries(countries, deal.submissionDetails['supplier-address-country']),
     'supplier-correspondence-address-country': mapCountries(countries, deal.submissionDetails['supplier-correspondence-address-country']),
