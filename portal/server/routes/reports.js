@@ -34,7 +34,7 @@ router.get('/reports/audit-supply-contracts/:page', async (req, res) => {
   const reportFilters = req.session.transactionFilters;
 
   const filters = buildReportFilters(reportFilters, req.session.user);
-  //console.log(`filters: ${util.inspect(filters)}`);
+  // console.log(`filters: ${util.inspect(filters)}`);
   const dealData = await getApiData(
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
@@ -72,7 +72,7 @@ router.post('/reports/audit-supply-contracts/:page', async (req, res) => {
   }
 
   req.session.reportFilters = reportFilters;
-  //console.log(`reportFilters: ${util.inspect(reportFilters)}`);
+  // console.log(`reportFilters: ${util.inspect(reportFilters)}`);
 
   const banks = await getApiData(
     api.banks(userToken),
@@ -80,7 +80,7 @@ router.post('/reports/audit-supply-contracts/:page', async (req, res) => {
   );
 
   const filters = buildReportFilters(reportFilters, req.session.user);
-  //console.log(`filters: ${util.inspect(filters)}`);
+  // console.log(`filters: ${util.inspect(filters)}`);
   const dealData = await getApiData(
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
