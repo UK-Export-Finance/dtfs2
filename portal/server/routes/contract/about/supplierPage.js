@@ -27,11 +27,13 @@ const userCanAccessAbout = (user) => {
 };
 
 router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COUNTRIES]), async (req, res) => {
-  const { deal, industrySectors, countries } = req.apiData;
+  const { industrySectors, countries } = req.apiData;
+  let { deal } = req.apiData;
 
   const { _id, userToken } = requestParams(req);
 
-  const { user } = req.session;
+  const { user, aboutSupplierFormData } = req.session;
+
   if (!userCanAccessAbout(user)) {
     return res.redirect('/');
   }
@@ -47,6 +49,16 @@ router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COU
     deal.supplyContract = {
       completedStatus: calculateStatusOfEachPage(Object.keys(formattedValidationErrors.errorList)),
     };
+  }
+
+  // handle data that was submitted on the page (via companies house POST), but not submitted to API
+  // as we redirect to this route.
+  if (aboutSupplierFormData) {
+    deal = {
+      ...deal,
+      ...aboutSupplierFormData,
+    };
+    req.session.aboutSupplierFormData = null;
   }
 
   const mappedIndustrySectors = mapIndustrySectors(industrySectors, deal.submissionDetails['industry-sector']);
