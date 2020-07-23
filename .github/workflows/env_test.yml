@@ -92,7 +92,7 @@ jobs:
           
           az webapp create $options \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name container_image
+            --deployment-container-image-name $container_image
 
           az webapp deployment container config $options \
             --enable-cd true
