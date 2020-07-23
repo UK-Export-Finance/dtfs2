@@ -1,9 +1,32 @@
 {% import '_macros/date-range.njk' as dateRange %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
-{% macro render(filter, user) %}
+{% macro render(filter, user, banks) %}
 
 <form method="POST" autocomplete="off">
+
+  {% if user and user.roles.includes('admin') %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="filterByBank">
+          Bank
+        </label>
+
+        <select data-cy="filterByBank" class="govuk-select" id="filterByBank" name="filterByBank">
+          <option value="all" {% if filter.filterByBank==='all' %}selected{%endif%}>Any</option>
+          {% for bank in banks %}
+          <option value="{{ bank.id }}" {% if filter.filterByBank===bank.id %}selected{%endif%}>{{ bank.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+    </div>
+  </div>
+
+  {% endif %}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-third">
