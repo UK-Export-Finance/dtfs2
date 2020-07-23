@@ -30,7 +30,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-
 app.use('/v1', openRouter);
 app.use('/v1', authRouter);
 app.use(graphQlRouter);
@@ -54,5 +53,13 @@ const errorHandler = (err) => {
 };
 
 app.use(errorHandler);
+
+// Return 200 on get to / to confirm to Azure that
+// the container has started successfully:
+const rootRouter = express.Router();
+rootRouter.get('/', async (req, res) => {
+  res.status(200).send();
+});
+app.use('/', rootRouter);
 
 module.exports = app;
