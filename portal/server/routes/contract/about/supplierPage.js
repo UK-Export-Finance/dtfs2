@@ -32,7 +32,7 @@ router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COU
 
   const { _id, userToken } = requestParams(req);
 
-  const { user, aboutSupplierFormData } = req.session;
+  const { user } = req.session;
 
   if (!userCanAccessAbout(user)) {
     return res.redirect('/');
@@ -51,12 +51,12 @@ router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COU
     };
   }
 
-  // handle data that was submitted on the page (via companies house POST), but not submitted to API
-  // as we redirect to this route.
-  if (aboutSupplierFormData) {
+  // if data was submitted via companies house POST, it's not posted to API and we redirect to this route.
+  // if we have this data in the session, combine with existing deal data to be rendered in the page.
+  if (req.session.aboutSupplierFormData) {
     deal = {
       ...deal,
-      ...aboutSupplierFormData,
+      ...req.session.aboutSupplierFormData,
     };
     req.session.aboutSupplierFormData = null;
   }
