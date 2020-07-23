@@ -19,5 +19,7 @@ cd $home
 #docker build --tag deal-api .
 #cd $home
 
-docker rm -f $(docker ps -aq)
+if [ ! -z "$(docker ps -aq)"; then
+    docker rm -f $(docker ps -aq)
+fi
 docker-compose up
