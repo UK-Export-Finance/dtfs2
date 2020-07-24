@@ -10,7 +10,7 @@ console.log(`Before config: ${util.inspect(process.env)}`);
 dotenv.config();
 console.log(`After config: ${util.inspect(process.env)}`);
 
-const PUB_KEY = Buffer.from(getEnv('JWT_VALIDATING_KEY'), 'base64').toString('ascii');
+const PUB_KEY = Buffer.from(process.env.JWT_VALIDATING_KEY, 'base64').toString('ascii');
 
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
