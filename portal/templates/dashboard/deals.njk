@@ -25,10 +25,12 @@
 
     <section class="govuk-tabs__panel">
 
-      {{ govukButton({
-        text: "Create new Submission",
-        href: "/before-you-start"
-      }) }}
+      {% if user.roles.includes('maker') %}
+        {{ govukButton({
+          text: "Create new Submission",
+          href: "/before-you-start"
+        }) }}
+      {% endif %}
 
     {{ dashboardFilters.render(filter, user, banks) }}
 
