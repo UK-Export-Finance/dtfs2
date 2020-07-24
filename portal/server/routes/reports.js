@@ -136,7 +136,10 @@ router.get('/reports/transactions-report', async (req, res) => res.redirect('/re
 router.get('/reports/transactions-report/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
-  const { transactions, count } = await getApiData(api.transactions(userToken), res);
+  const { transactions, count } = await getApiData(
+        api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+        res,
+      );
 
   const banks = await getApiData(api.banks(userToken), res);
 
@@ -162,7 +165,10 @@ router.get('/reports/transactions-report/:page', async (req, res) => {
 // router.get('/reports/all-transactions-report/:page', async (req, res) => {
 //   const { userToken } = requestParams(req);
 
-//   const { transactions, count } = await getApiData(api.transactions(userToken), res);
+// const { transactions, count } = await getApiData(
+//   api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+//   res,
+// );
 
 //   const banks = await getApiData(api.banks(userToken), res);
 
@@ -189,7 +195,10 @@ router.get('/reports/mia_min-cover-start-date-changes/:page', async (req, res) =
   //  so I'm, just mocking this out the old way rather than trying to work out how to re-plumb the API.
 
   // const { userToken } = requestParams(req);
-  // const { transactions, count } = await getApiData(api.transactions(userToken), res);
+  // const { transactions, count } = await getApiData(
+  //   api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+  //   res,
+  // );
   // const banks = await getApiData(api.banks(userToken), res);
   const crs = [
     {
@@ -228,7 +237,10 @@ router.get('/reports/reconciliation-report/:page', async (req, res) => {
   // [dc] this is a copy of the mia_min-cover-start-date-changes mock for now.
 
   // const { userToken } = requestParams(req);
-  // const { transactions, count } = await getApiData(api.transactions(userToken), res);
+  // const { transactions, count } = await getApiData(
+  //   api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+  //   res,
+  // );
   // const banks = await getApiData(api.banks(userToken), res);
   const crs = [
     {
