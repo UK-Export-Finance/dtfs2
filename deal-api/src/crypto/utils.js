@@ -1,10 +1,11 @@
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 const jsonwebtoken = require('jsonwebtoken');
+const { getEnv } = require('../utils');
 
 dotenv.config();
 
-const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY, 'base64').toString('ascii');
+const PRIV_KEY = Buffer.from(getEnv('JWT_SIGNING_KEY'), 'base64').toString('ascii');
 
 /**
  *
