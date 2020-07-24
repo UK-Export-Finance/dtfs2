@@ -1,6 +1,6 @@
 import express from 'express';
 import api from '../../../api';
-import { provide, CURRENCIES } from '../../api-data-provider';
+import { provide, BOND, CURRENCIES } from '../../api-data-provider';
 import {
   getApiData,
   requestParams,
@@ -16,6 +16,7 @@ import {
   bondPreviewValidationErrors,
 } from './pageSpecificValidationErrors';
 import completedBondForms from './completedForms';
+import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 
 const router = express.Router();
 
@@ -46,7 +47,11 @@ const handleFeeFrequency = (bondBody) => {
       return inArrearFeeFrequency;
     }
 
-    return existingFeeFrequency;
+    if (existingFeeFrequency) {
+      return existingFeeFrequency;
+    }
+
+    return '';
   };
 
   modifiedBond.feeFrequency = feeFrequencyValue();
@@ -267,20 +272,23 @@ router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
   });
 });
 
-router.post('/contract/:_id/bond/:bondId/save-go-back', async (req, res) => {
+router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
+  const { bond } = req.apiData.bond;
 
   const modifiedBody = handleFeeFrequency(req.body);
 
-  await postToApi(
-    api.updateBond(
-      dealId,
-      bondId,
-      modifiedBody,
-      userToken,
-    ),
-    errorHref,
-  );
+  if (!formDataMatchesOriginalData(modifiedBody, bond)) {
+    await postToApi(
+      api.updateBond(
+        dealId,
+        bondId,
+        modifiedBody,
+        userToken,
+      ),
+      errorHref,
+    );
+  }
 
   const redirectUrl = `/contract/${req.params._id}`; // eslint-disable-line no-underscore-dangle
   return res.redirect(redirectUrl);
