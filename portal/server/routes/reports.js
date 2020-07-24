@@ -1,5 +1,5 @@
 import express from 'express';
-// import util from 'util';
+import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
 import {
@@ -111,20 +111,21 @@ router.get('/reports/audit-transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
   const filters = {}; // TODO wire up filters; probably do same as dashboard +use session
-  const dealData = await getApiData(
-    api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+  const transactionData = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
+  console.log(`transactionData: ${util.inspect(transactionData)}`);
 
   const pages = {
-    totalPages: Math.ceil(dealData.count / PAGESIZE),
+    totalPages: Math.ceil(transactionData.count / PAGESIZE),
     currentPage: parseInt(req.params.page, 10),
-    totalItems: dealData.count,
+    totalItems: transactionData.count,
   };
 
   return res.render('reports/audit-transactions.njk', {
     pages,
-    contracts: dealData.deals,
+    transactions: transactionData.transactions,
     primaryNav,
     subNav: 'audit-transactions',
     user: req.session.user,
