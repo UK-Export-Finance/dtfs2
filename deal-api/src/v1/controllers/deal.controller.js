@@ -102,7 +102,7 @@ const createDeal = async (req, res) => {
 
   const validationErrors = getDealErrors(newDeal);
 
-  if (validationErrors) {
+  if (validationErrors.count !== 0) {
     return res.status(400).send({
       ...newDeal,
       validationErrors,
