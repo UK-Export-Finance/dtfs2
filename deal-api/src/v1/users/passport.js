@@ -1,7 +1,6 @@
 const dotenv = require('dotenv');
 const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
-const util = require('util');
 
 const { findByUsername } = require('./controller');
 
