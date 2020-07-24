@@ -1,7 +1,6 @@
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 const jsonwebtoken = require('jsonwebtoken');
-const { getEnv } = require('../utils');
 
 dotenv.config();
 
