@@ -133,14 +133,14 @@ const constructor = (graphQLFilters) => {
       // ugly. because our mongo query gave us 'deals that contain a bond with bankrefnum=xx'
       //  we still have other transactions from that deal to filter out..
 
-      if (graphQLFilters[BANKFACILITYID]
-              && bondThatMightNotMatchAFilter.uniqueIdentificationNumber !== graphQLFilters[BANKFACILITYID]) {
-        return false;
+      if (graphQLFilters[BANKFACILITYID]) {
+        const regex = new RegExp(`^${graphQLFilters[BANKFACILITYID]}`);
+        return bondThatMightNotMatchAFilter.uniqueIdentificationNumber.match(regex);
       }
 
-      if (graphQLFilters[UKEFFACILITYID]
-              && bondThatMightNotMatchAFilter.ukefFacilityID !== graphQLFilters[UKEFFACILITYID]) {
-        return false;
+      if (graphQLFilters[UKEFFACILITYID]) {
+        const regex = new RegExp(`^${graphQLFilters[UKEFFACILITYID]}`);
+        return bondThatMightNotMatchAFilter.ukefFacilityID.match(regex);
       }
 
       return true;
