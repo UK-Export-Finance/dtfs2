@@ -1,10 +1,11 @@
 const { orderNumber } = require('../../../utils/error-list-order-number');
+const idField = require('../fields/id-field');
 const { hasValue } = require('../../../utils/string');
 
 const MAX_CHARACTERS = 30;
 
 module.exports = (deal, errorList) => {
-  const newErrorList = { ...errorList };
+  let newErrorList = { ...errorList };
   const { bankSupplyContractID } = deal.details;
 
   if (!hasValue(bankSupplyContractID)) {
@@ -15,13 +16,12 @@ module.exports = (deal, errorList) => {
   }
 
   if (hasValue(bankSupplyContractID)) {
-    // TODO: reuse match regex
-    if (bankSupplyContractID.match(/[^A-Za-z0-9_\- ]/)) {
-      newErrorList.bankSupplyContractID = {
-        order: orderNumber(newErrorList),
-        text: 'Bank deal ID must only include letters a to z, numbers 0 to 9, hyphens, underscores and spaces',
-      };
-    }
+    newErrorList = idField(
+      bankSupplyContractID,
+      'bankSupplyContractID',
+      'Bank deal ID',
+      newErrorList,
+    );
 
     if (bankSupplyContractID.length > MAX_CHARACTERS) {
       newErrorList.bankSupplyContractID = {

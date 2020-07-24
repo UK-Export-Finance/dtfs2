@@ -1,8 +1,9 @@
 const { hasValue } = require('../../../../utils/string');
+const idField = require('../../fields/id-field');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
 
 module.exports = (bond, errorList) => {
-  const newErrorList = { ...errorList };
+  let newErrorList = { ...errorList };
 
   const MAX_CHARACTERS = 30;
 
@@ -14,18 +15,17 @@ module.exports = (bond, errorList) => {
   }
 
   if (hasValue(bond.uniqueIdentificationNumber)) {
-    // TODO: reuse match regex
-    if (bond.uniqueIdentificationNumber.match(/[^A-Za-z0-9_\- ]/)) {
-      newErrorList.uniqueIdentificationNumber = {
-        order: orderNumber(newErrorList),
-        text: 'Bond\'s unique identification number must only include letters a to z, numbers 0 to 9, hyphens, underscores and spaces',
-      };
-    }
+    newErrorList = idField(
+      bond.uniqueIdentificationNumber,
+      'uniqueIdentificationNumber',
+      'Bond\'s unique identification number',
+      newErrorList,
+    );
 
     if (bond.uniqueIdentificationNumber.length > MAX_CHARACTERS) {
       newErrorList.uniqueIdentificationNumber = {
         order: orderNumber(newErrorList),
-        text: `Bond\'s unique identification number must be ${MAX_CHARACTERS} characters or fewer`,
+        text: `Bond's unique identification number must be ${MAX_CHARACTERS} characters or fewer`,
       };
     }
   }
