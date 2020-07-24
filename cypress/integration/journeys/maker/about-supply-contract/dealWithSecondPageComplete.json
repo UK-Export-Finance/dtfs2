@@ -1,7 +1,7 @@
 {
     "details" : {
         "status" : "Draft",
-        "bankSupplyContractID" : "abc/1/def",
+        "bankSupplyContractID" : "abc-1-def",
         "bankSupplyContractName" : "Tibettan submarine acquisition scheme",
         "submissionType" : "Automatic Inclusion Notice",
         "submissionDate" : "2020 05 27 13:39:28:171 +0100",

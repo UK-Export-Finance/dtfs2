@@ -7,7 +7,7 @@ const moment = require('moment');
 module.exports = [
   {
     details: {
-      bankSupplyContractID: 'abc/1/def',
+      bankSupplyContractID: 'abc-1-def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',

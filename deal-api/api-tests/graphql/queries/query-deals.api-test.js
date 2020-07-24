@@ -184,11 +184,11 @@ describe('/graphql query deals', () => {
 
     it('returns a list of deals ordered by "updated", filtered by <user>.bank.id', async () => {
       const deals = [
-        aDeal({ details: { bankSupplyContractName: 'bank1/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2-1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
 
       await as(aBarclaysMaker).post(deals[4]).to('/v1/deals');
@@ -210,11 +210,11 @@ describe('/graphql query deals', () => {
 
     it('returns a list of deals ordered by "updated" if <user>.bank.id == *', async () => {
       const deals = [
-        aDeal({ details: { bankSupplyContractName: 'bank1/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2-1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
 
       const submitOrder = [4, 1, 2, 0, 3];
@@ -239,14 +239,14 @@ describe('/graphql query deals', () => {
   describe('/graphql list deals pagination', () => {
     it('returns a list of deals, ordered by "updated", paginated by start/pagesize, filtered by <user>.bank.id', async () => {
       const deals = [
-        aDeal({ details: { bankSupplyContractName: 'bank1/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/3', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/4', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/5', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-4', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2-1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
 
       await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
@@ -274,14 +274,14 @@ describe('/graphql query deals', () => {
 
     it('returns a list of deals, ordered by "updated", paginated by start/pagesize, if <user>.bank.id == *', async () => {
       const deals = [
-        aDeal({ details: { bankSupplyContractName: 'bank1/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/3', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/4', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/5', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-4', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2-1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
 
       await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
@@ -311,14 +311,14 @@ describe('/graphql query deals', () => {
   describe('/graphql list deals filters', () => {
     it('returns a list of deals, ordered by "updated", filtered by equal filters', async () => {
       const deals = [
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1/1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1/2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1/3', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Submitted', bankSupplyContractName: 'bank1/4', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1/5', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Submitted', bankSupplyContractName: 'bank1-4', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
 
       await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
@@ -347,14 +347,14 @@ describe('/graphql query deals', () => {
 
     it('returns a list of deals, ordered by "updated", paginated and filtered by equal filters', async () => {
       const deals = [
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1/1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1/2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1/3', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Submitted', bankSupplyContractName: 'bank1/4', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1/5', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Submitted', bankSupplyContractName: 'bank1-4', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
 
       await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
@@ -380,14 +380,14 @@ describe('/graphql query deals', () => {
 
     it('returns a list of deals, ordered by "updated", filtered by not equal filter', async () => {
       const deals = [
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1/1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1/2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1/3', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Submitted', bankSupplyContractName: 'bank1/4', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1/5', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Submitted', bankSupplyContractName: 'bank1-4', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Draft', bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { status: 'Acknowledged by UKEF', bankSupplyContractName: 'bank2-1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
 
       await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
@@ -416,14 +416,14 @@ describe('/graphql query deals', () => {
 
     it('returns a list of deals, ordered by "updated", paginated by start/pagesize, if <user>.bank.id == *', async () => {
       const deals = [
-        aDeal({ details: { bankSupplyContractName: 'bank1/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/1', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/2', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/3', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/4', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank1/5', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/0', bankSupplyContractID: 'mockSupplyContractId' } }),
-        aDeal({ details: { bankSupplyContractName: 'bank2/1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-1', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-2', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-3', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-4', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank1-5', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2-0', bankSupplyContractID: 'mockSupplyContractId' } }),
+        aDeal({ details: { bankSupplyContractName: 'bank2-1', bankSupplyContractID: 'mockSupplyContractId' } }),
       ];
 
       await as(anHSBCMaker).post(deals[0]).to('/v1/deals');
