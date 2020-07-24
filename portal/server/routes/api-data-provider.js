@@ -7,6 +7,7 @@ const MANDATORY_CRITERIA = 'mandatoryCriteria';
 const DEAL = 'deal';
 const DEAL_VALIDATION = 'dealValidation';
 const LOAN = 'loan';
+const BOND = 'bond';
 
 const get = async (dataType, req) => {
   const token = req.session.userToken;
@@ -74,6 +75,20 @@ const get = async (dataType, req) => {
     );
     req.apiData[LOAN] = loan;
     return;
+  } if (BOND === dataType) {
+    const {
+      _id, // eslint-disable-line no-underscore-dangle
+      bondId,
+    } = req.params;
+
+    const bond = await api.contractBond(_id, bondId, token).catch(
+      (err) => {
+        console.log(`api-data-provider: querying for bond => ${err}`);
+        return { bond: {} };
+      },
+    );
+    req.apiData[BOND] = bond;
+    return;
   }
   console.log(`api-data-provider has been asked to provide ${dataType} but doesn't know how...`);
 };
@@ -100,5 +115,6 @@ export {
   DEAL,
   DEAL_VALIDATION,
   LOAN,
+  BOND,
   provide,
 };
