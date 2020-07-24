@@ -16,6 +16,8 @@ import {
 import calculateStatusOfEachPage from './navStatusCalculations';
 import updateSubmissionDetails from './updateSubmissionDetails';
 
+import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
+
 const router = express.Router();
 
 const userCanAccessAbout = (user) => {
@@ -97,11 +99,32 @@ router.post('/contract/:_id/about/supplier', async (req, res) => {
   return res.redirect(redirectUrl);
 });
 
-router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL]), async (req, res) => {
+router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL, COUNTRIES]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
+  const { countries } = req.apiData;
+  const deal = req.apiData[DEAL];
   const submissionDetails = req.body;
 
-  await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
+  // i'm sure there is already a function to do this, maybe in api though.
+  const getCountryObjectByCode = (countriesArray, countryCode) =>
+    countriesArray.find((country) => country.code === countryCode);
+
+  // probably a better name for this.
+  const mappedSubmissionDetailsForMatchCheck = {
+    ...submissionDetails,
+    'supplier-address-country': getCountryObjectByCode(countries, submissionDetails.supplierAddressCountryCode),
+    'supplier-correspondence-address-country': getCountryObjectByCode(countries, submissionDetails.supplierCorrespondenceAddressCountryCode),
+    'indemnifier-address-country': getCountryObjectByCode(countries, submissionDetails.indemnifierAddressCountryCode),
+    'indemnifier-correspondence-address-country': getCountryObjectByCode(countries, submissionDetails.indemnifierCorrespondenceAddressCountryCode),
+  };
+
+  // TODO: need the check to check for nested object values.
+  if (!formDataMatchesOriginalData(mappedSubmissionDetailsForMatchCheck, deal.submissionDetails)) {
+    console.log('***** submission details CHANGED, posting to api');
+    await updateSubmissionDetails(deal, submissionDetails, userToken);
+  } else {
+    console.log('***** submission details not changed.');
+  }
 
   const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
