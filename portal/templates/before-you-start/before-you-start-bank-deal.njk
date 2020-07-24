@@ -29,44 +29,40 @@
 
   <p class="govuk-body">You’ll also be asked to confirm whether the bonds or loan transactions meet the eligibility criteria for UKEF’s automatic inclusion model. Transactions that don’t meet these requirements can still be submitted through this service, but they will proceed as a Manual Inclusion Application. If accepted, these transactions will require submission as a Manual Inclusion Notice.</p>
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
+  <form method="POST" autocomplete="off">
 
-      <form method="POST" autocomplete="off">
+    {{ govukInput({
+      label: {
+        text: "Bank deal ID"
+      },
+      id: "bankSupplyContractID",
+      name: "bankSupplyContractID",
+      value: bankSupplyContractID,
+      classes: "govuk-!-width-one-third",
+      attributes: {
+        "data-cy": "bankSupplyContractID"
+      },
+      errorMessage: validationErrors.errorList.bankSupplyContractID
+    }) }}
 
-        {{ govukInput({
-          label: {
-            text: "Bank deal ID"
-          },
-          id: "bankSupplyContractID",
-          name: "bankSupplyContractID",
-          value: bankSupplyContractID,
-          attributes: {
-            "data-cy": "bankSupplyContractID"
-          },
-          errorMessage: validationErrors.errorList.bankSupplyContractID
-        }) }}
+    {{ govukInput({
+      label: {
+        text: "Bank deal Name"
+      },
+      id: "bankSupplyContractName",
+      name: "bankSupplyContractName",
+      value: bankSupplyContractName,
+      classes: "govuk-!-width-one-third",
+      attributes: {
+        "data-cy": "bankSupplyContractName"
+      },
+      errorMessage: validationErrors.errorList.bankSupplyContractName
+    }) }}
 
-        {{ govukInput({
-          label: {
-            text: "Bank deal Name"
-          },
-          id: "bankSupplyContractName",
-          name: "bankSupplyContractName",
-          value: bankSupplyContractName,
-          attributes: {
-            "data-cy": "bankSupplyContractName"
-          },
-          errorMessage: validationErrors.errorList.bankSupplyContractName
-        }) }}
+    <button class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Create</button>
 
-        <button class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Create</button>
+    <a data-cy="Cancel" href="/start-now" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
 
-        <a data-cy="Cancel" href="/start-now" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
-
-      </form>
-
-    </div>
-  </div>
+  </form>
 
 {% endblock %}
