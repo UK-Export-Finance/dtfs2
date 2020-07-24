@@ -36,15 +36,14 @@ const constructor = (user, graphQLFilters) => {
     const mongoFiltering = [];
 
     if (query[BANKFACILITYID]) {
-      const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { uniqueIdentificationNumber: query[BANKFACILITYID] } } };
-      const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { bankReferenceNumber: query[BANKFACILITYID] } } };
-
+      const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { uniqueIdentificationNumber: new RegExp(`^${query[BANKFACILITYID]}`) } } };
+      const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { bankReferenceNumber: new RegExp(`^${query[BANKFACILITYID]}`) } } };
       mongoFiltering.push({ $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] });
     }
 
     if (query[UKEFFACILITYID]) {
-      const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { ukefFacilityID: query[UKEFFACILITYID] } } };
-      const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { ukefFacilityID: query[UKEFFACILITYID] } } };
+      const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { ukefFacilityID: new RegExp(`^${query[UKEFFACILITYID]}`) } } };
+      const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { ukefFacilityID: new RegExp(`^${query[UKEFFACILITYID]}`) } } };
 
       mongoFiltering.push({ $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] });
     }
