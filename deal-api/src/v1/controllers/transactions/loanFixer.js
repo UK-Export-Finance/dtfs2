@@ -135,7 +135,8 @@ const constructor = (graphQLFilters) => {
       //  we still have other transactions from that deal to filter out..
       if (graphQLFilters[BANKFACILITYID]) {
         const regex = new RegExp(`^${graphQLFilters[BANKFACILITYID]}`);
-        if (!loanThatMightNotMatchAFilter.bankReferenceNumber || !loanThatMightNotMatchAFilter.bankReferenceNumber.match(regex)) {
+        if (!loanThatMightNotMatchAFilter.bankReferenceNumber
+            || !loanThatMightNotMatchAFilter.bankReferenceNumber.match(regex)) {
           return false;
         }
       }
