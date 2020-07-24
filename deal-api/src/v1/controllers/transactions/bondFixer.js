@@ -130,19 +130,31 @@ const constructor = (graphQLFilters) => {
         //  ->nothing to do here.
         return stillShowingBond && !shouldFilterThisBondOutBasedOnThisFilter();
       }, true)).filter((bondThatMightNotMatchAFilter) => {
+
+  console.log(`bond; doing last bit of filtering for transactions`)
+
       // ugly. because our mongo query gave us 'deals that contain a bond with bankrefnum=xx'
       //  we still have other transactions from that deal to filter out..
 
       if (graphQLFilters[BANKFACILITYID]) {
+        console.log(`bond; BANKFACILITYID`)
+        console.log(`bond; ${bondThatMightNotMatchAFilter.uniqueIdentificationNumber} vs ${graphQLFilters[BANKFACILITYID]}`)
         const regex = new RegExp(`^${graphQLFilters[BANKFACILITYID]}`);
-        return bondThatMightNotMatchAFilter.uniqueIdentificationNumber.match(regex);
+        if (!bondThatMightNotMatchAFilter.uniqueIdentificationNumber || !bondThatMightNotMatchAFilter.uniqueIdentificationNumber.match(regex)) {
+          return false;
+        }
       }
 
       if (graphQLFilters[UKEFFACILITYID]) {
+        console.log(`bond; UKEFFACILITYID`)
+        console.log(`bond; ${bondThatMightNotMatchAFilter.ukefFacilityID} vs ${graphQLFilters[UKEFFACILITYID]}`)
         const regex = new RegExp(`^${graphQLFilters[UKEFFACILITYID]}`);
-        return bondThatMightNotMatchAFilter.ukefFacilityID.match(regex);
+        if (!bondThatMightNotMatchAFilter.ukefFacilityID || !bondThatMightNotMatchAFilter.ukefFacilityID.match(regex)) {
+          return false;
+        }
       }
 
+      console.log(`bond; ->true`)
       return true;
     }).map((bond) => ({
       // - once we've filtered out things we shouldn't be thinking about
