@@ -1,217 +1,155 @@
 {% extends "case_view.html" %}
 {% block sub_content %}
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      {%- from "moj/components/task-list/macro.njk" import mojTaskList -%}
-      {{ mojTaskList({
-        sections: [
-        {
-          heading: {
-            text: 'Set up case'
-          },
-          items: [{
-            text: 'Add new or link existing parties in the case',
-            href: '#',
-            complete: true
-          }, {
-            text: 'create or link an opportunity in Salesforce',
-            href: '#',
-            complete: true
-          }, {
-            text: 'Add a DR04 report',
-            href: '#',
-            complete: false
-          }]
-      },
+  <div class="govuk-grid-row">
+  {%- from "moj/components/side-navigation/macro.njk" import mojSideNavigation -%}
+
+  <div class="govuk-grid-column-one-quarter tfm">
+
+  {{ mojSideNavigation({
+    label: 'Side navigation',
+    sections: [
       {
         heading: {
-          text: 'Supporting documents'
+          text: 'Section 1'
         },
         items: [{
-          text: 'Check the exporter questionnaire',
-          href: '#',
-          complete: false
+          text: 'About the export',
+          href: '#1.1',
+          active: true
         }, {
-          text: 'Income',
-          href: '#'
-        }, {
-          text: 'Regular payments',
-          href: '#'
-        }, {
-          text: 'Property',
-          href: '#'
-        }, {
-          text: 'Savings and investments',
-          href: '#'
-        }, {
-          text: 'Items of value',
-          href: '#'
-        }, {
-          text: 'Restrictions',
-          href: '#'
+          text: 'Bank relationship',
+          href: '#1.2'
         }]
       },
       {
         heading: {
-          text: 'Merrits assessment'
+          text: 'Business risk'
         },
         items: [{
-          text: 'Incident details',
-          href: '#',
-          complete: true
+          text: 'Company background',
+          href: '#2.1'
         }, {
-          text: 'Respondent details',
-          href: '#',
-          complete: true
-        }, {
-          text: 'Case details',
-          href: '#',
-          complete: true
+          text: 'Business risk factors',
+          href: '#2.2'
         }]
       },
       {
         heading: {
-          text: 'Apply'
+          text: 'Financial risk'
         },
         items: [{
-          text: 'Submit application',
-          href: '#'
+          text: 'Company backgrounds',
+          href: '#3.1'
+        }, {
+          text: 'Financial year based on',
+          href: '#3.2'
+        }, {
+          text: 'EBITDA',
+          href: '#3.3'
+        }, {
+          text: 'Cash balance',
+          href: '#3.4'
+        }, {
+          text: 'Debt',
+          href: '#3.5'
+        }, {
+          text: 'Forecast',
+          href: '#3.6'
+        }, {
+          text: 'Short-term liquidity',
+          href: '#3.7'
+        }]
+      },
+      {
+        heading: {
+          text: 'Conclusions'
+        },
+        items: [{
+          text: 'Supporting factors and recommendations',
+          href: '#4.1'
+        }, {
+          text: 'Key risks',
+          href: '#4.2'
         }]
       }
-      ]
-      }) }}
+    ]
+  }) }}
+
+  </div>
+
+
+    <div class="govuk-grid-column-three-quarters">
+    {%- from "moj/components/task-list/macro.njk" import mojTaskList -%}
+
+{{ mojTaskList({
+sections: [
+      {
+        heading: {
+          text: 'About the export and relationship with the bank'
+        },
+        items: [{
+          text: 'Enter information about the export',
+          href: '#1.1',
+          active: true
+        }, {
+          text: 'Enter the exporter`s relationship with the bank',
+          href: '#1.2'
+        }]
+      },
+      {
+        heading: {
+          text: 'Business risk'
+        },
+        items: [{
+          text: 'Enter company background',
+          href: '#2.1'
+        }, {
+          text: 'Enter business risk factors',
+          href: '#2.2'
+        }]
+      },
+      {
+        heading: {
+          text: 'Financial risk'
+        },
+        items: [{
+          text: 'Add company accounts',
+          href: '#3.1'
+        }, {
+          text: 'Enter financial this credit analysis is based on',
+          href: '#3.2'
+        }, {
+          text: 'Enter information about the EBITDA levels',
+          href: '#3.3'
+        }, {
+          text: 'Enter information abouth the cash balance',
+          href: '#3.4'
+        }, {
+          text: 'Enter debts',
+          href: '#3.5'
+        }, {
+          text: 'Enter information about the forecast',
+          href: '#3.6'
+        }, {
+          text: 'Enter information abouth short-term liquidity',
+          href: '#3.7'
+        }]
+      },
+      {
+        heading: {
+          text: 'Conclusions'
+        },
+        items: [{
+          text: 'Enter supporting factors and recommendations',
+          href: '#4.1'
+        }, {
+          text: 'Enter key risks',
+          href: '#4.2'
+        }]
+      }
+    ]
+}) }} 
     </div>
-    <div class="govuk-grid-column-one-third">
-      <div class="moj-timeline">
-        <div class="moj-timeline__item">
-
-          <div class="moj-timeline__header">
-            <h2 class="moj-timeline__title">Application requires confirmation</h2>
-
-            <p class="moj-timeline__byline">by Joe Bloggs</p>
-
-          </div>
-
-          <p class="moj-timeline__date">
-            <time datetime="2019-06-14T14:01:00.000Z">14 June 2019 at 2:01pm</time>
-          </p>
-
-          <div class="moj-timeline__description">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras non felis risus. Curabitur nec ante vitae felis ullamcorper tincidunt.</p>
-          </div>
-
-        </div>
-
-        <div class="moj-timeline__item">
-
-          <div class="moj-timeline__header">
-            <h2 class="moj-timeline__title">Application review in progress</h2>
-
-            <p class="moj-timeline__byline">by Caseworker 1</p>
-
-          </div>
-
-          <p class="moj-timeline__date">
-            <time datetime="2019-06-07T12:32:00.000Z">7 June 2019 at 12:32pm</time>
-          </p>
-
-          <div class="moj-timeline__description">Your application is being reviewed by one of our case workers.</div>
-
-        </div>
-
-        <div class="moj-timeline__item">
-
-          <div class="moj-timeline__header">
-            <h2 class="moj-timeline__title">Application received</h2>
-
-            <p class="moj-timeline__byline">by Caseworker 1</p>
-
-          </div>
-
-          <p class="moj-timeline__date">
-            <time datetime="2019-06-06T09:12:00.000Z">6 June 2019 at 9:12am</time>
-          </p>
-
-          <div class="moj-timeline__description">Your application has been received – reference MOJ-1234-5678</div>
-
-        </div>
-
-        <div class="moj-timeline__item">
-
-          <div class="moj-timeline__header">
-            <h2 class="moj-timeline__title">Application submitted</h2>
-
-            <p class="moj-timeline__byline">by Joe Bloggs</p>
-
-          </div>
-
-          <p class="moj-timeline__date">
-            <time datetime="2019-05-28T10:45:00.000Z">28 May 2019 at 10:45am</time>
-          </p>
-
-          <div class="moj-timeline__description">
-            <details class="govuk-details govuk-!-margin-bottom-0">
-              <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">Application details</span>
-              </summary>
-                    <div class="govuk-details__text">
-            Ut quam nunc, vulputate ac metus pharetra, posuere maximus velit. <a href="https://www.google.com">Etiam nec interdum velit.</a> Suspendisse molestie lectus in eros ornare
-            </div>
-            </details>
-          </div>
-
-        </div>
-
-        <div class="moj-timeline__item">
-
-          <div class="moj-timeline__header">
-            <h2 class="moj-timeline__title">Documents uploaded</h2>
-
-            <p class="moj-timeline__byline">by Joe Bloggs</p>
-
-          </div>
-
-          <p class="moj-timeline__date">
-            <time datetime="2019-05-28T10:15:00.000Z">28 May 2019 at 10:15am</time>
-          </p>
-
-          <div class="moj-timeline__description">
-            <ul class="moj-timeline__documents">
-              <li class="moj-timeline__document-item">
-                <a class="moj-timeline__document-link" href="#">Document 1</a>
-              </li>
-              <li class="moj-timeline__document-item">
-                <a class="moj-timeline__document-link" href="#">Document 1</a>
-              </li>
-            </ul>
-          </div>
-
-        </div>
-
-        <div class="moj-timeline__item">
-
-          <div class="moj-timeline__header">
-            <h2 class="moj-timeline__title">Application started</h2>
-
-            <p class="moj-timeline__byline">by Joe Bloggs</p>
-
-          </div>
-
-          <p class="moj-timeline__date">
-            <time datetime="2019-05-21T13:15:00.000Z">21 May 2019 at 1:15pm</time>
-          </p>
-
-          <div class="moj-timeline__description">
-            <ul class="govuk-list govuk-list--bullet">
-              <li>
-                <a class="govuk-link" href="#">Item 1</li>
-                <li>
-                  <a class="govuk-link" href="#">Item 2</li>
-                </ul>
-              </div>
-
-            </div>
-          </div>
-        </div>
+  </div>
 
 {% endblock %}
