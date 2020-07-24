@@ -101,7 +101,7 @@
                   {% if "bond" === transaction.transactionType %}
                     <a href="/contract/{{transaction.deal_id}}/bond/{{transaction.transaction_id}}/details" class="govuk-link">{{ linkText }}</a>
                   {% else %}
-                    <a href="/contract/{{transaction.deal_id}}/loan/{{transaction.transaction_id}}/details" class="govuk-link">{{ linkText }}</a>
+                    <a href="/contract/{{transaction.deal_id}}/loan/{{transaction.transaction_id}}/guarantee-details" class="govuk-link">{{ linkText }}</a>
                   {% endif %}
                 {% else %}
                   {# link through to the relevant bond or loan in the deal-preview tab, since the current user cant edit #}
