@@ -15,7 +15,7 @@ module.exports = (bond, errorList) => {
 
   if (hasValue(bond.uniqueIdentificationNumber)) {
     // TODO: reuse match regex
-    if (uniqueIdentificationNumber.match(/[^A-Za-z0-9_\- ]/)) {
+    if (bond.uniqueIdentificationNumber.match(/[^A-Za-z0-9_\- ]/)) {
       newErrorList.uniqueIdentificationNumber = {
         order: orderNumber(newErrorList),
         text: 'Bond\'s unique identification number must only include letters a to z, numbers 0 to 9, hyphens, underscores and spaces',

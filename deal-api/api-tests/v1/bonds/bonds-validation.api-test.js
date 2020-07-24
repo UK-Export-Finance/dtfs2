@@ -466,8 +466,8 @@ describe('/v1/deals/:id/bond', () => {
 
             const expectedText = 'Bond\'s unique identification number must only include letters a to z, numbers 0 to 9, hyphens, underscores and spaces';
 
-            const firstPost = await updateBondInDeal(dealId, bond);
-            expect(firstPost.body.validationErrors.errorList.uniqueIdentificationNumber.text).toEqual(expectedText);
+            const { validationErrors: firstValidationErrors } = await updateBondInDeal(dealId, bond);
+            expect(firstValidationErrors.errorList.uniqueIdentificationNumber.text).toEqual(expectedText);
 
             bond = {
               ...allBondFields,
@@ -475,8 +475,8 @@ describe('/v1/deals/:id/bond', () => {
               uniqueIdentificationNumber: 'invalid-format{}:"|<>?,./;\'\[]',
             };
 
-            const secondPost = await updateBondInDeal(dealId, bond);
-            expect(secondPost.body.validationErrors.errorList.uniqueIdentificationNumber.text).toEqual(expectedText);
+            const { validationErrors: secondValidationErrors } = await updateBondInDeal(dealId, bond);
+            expect(secondValidationErrors.errorList.uniqueIdentificationNumber.text).toEqual(expectedText);
           });
         });
       });
