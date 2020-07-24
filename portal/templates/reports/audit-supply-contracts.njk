@@ -62,7 +62,7 @@
           </td>
 
           <td data-cy="submissionDate" class="govuk-table__cell govuk-!-font-size-14">
-            {{ details.submissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) | dashIfEmpty }}
+            {{ contract.details.submissionDate | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
           </td>
 
         </tr>
