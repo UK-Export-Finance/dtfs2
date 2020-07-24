@@ -2,12 +2,12 @@ const dotenv = require('dotenv');
 const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
 
+const util = require('util');
 const { findByUsername } = require('./controller');
 
-const util = require('util')
-console.log("Before config: " + util.inspect(process.env));
+console.log(`Before config: ${util.inspect(process.env)}`);
 dotenv.config();
-console.log("After config: " + util.inspect(process.env));
+console.log(`After config: ${util.inspect(process.env)}`);
 
 const PUB_KEY = Buffer.from(process.env.JWT_VALIDATING_KEY, 'base64').toString('ascii');
 
