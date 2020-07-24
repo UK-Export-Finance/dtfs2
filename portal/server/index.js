@@ -11,7 +11,11 @@ import configureNunjucks from './nunjucks-configuration';
 
 // Fix Azure environment variables
 Object.keys(process.env).forEach((key) => {
-  process.env[key.substr('CUSTOMCONNSTR_'.length)] = process.env[key];
+  if (key.startsWith('CUSTOMCONNSTR_')) {
+      fixed_key = key.substr('CUSTOMCONNSTR_'.length)
+      process.env[fixed_key] = process.env[key];
+      console.log(`Fixed ${key} to ${fixed_key}`)
+  }
 });
 
 const app = express();
