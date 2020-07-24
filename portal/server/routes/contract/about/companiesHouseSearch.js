@@ -19,16 +19,20 @@ const router = express.Router();
 
 const getIndustryFromSicCode = (industrySectors, sicCodes) => {
   let result = {};
+  if (!sicCodes) {
+    return null;
+  }
+
   const sicCode = sicCodes[0];
 
   industrySectors.forEach((sector) => sector.classes.find((industryClass) => {
     if (industryClass.code === sicCode) {
       result = {
-        industrySector: {
+        sector: {
           code: sector.code,
           name: sector.name,
         },
-        industryClass: {
+        class: {
           code: industryClass.code,
           name: industryClass.name,
         },
@@ -63,9 +67,17 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
   deal.submissionDetails[`${prefix}-address-postcode`] = company.registered_office_address.postal_code;
   deal.submissionDetails[`${prefix}-address-country`] = getPortalCountryForCompaniesHouseCountry(company.registered_office_address.country);
 
-  const { industrySector, industryClass } = getIndustryFromSicCode(industrySectors, company.sic_codes);
-  deal.submissionDetails['industry-sector'] = industrySector.code;
-  deal.submissionDetails['industry-class'] = industryClass.code;
+  const industryFromSicCode = getIndustryFromSicCode(industrySectors, company.sic_codes);
+
+  if (industryFromSicCode) {
+    if (industryFromSicCode.sector) {
+      deal.submissionDetails['industry-sector'] = industryFromSicCode.sector.code;
+    }
+
+    if (industryFromSicCode.class) {
+      deal.submissionDetails['industry-class'] = industryFromSicCode.class.code;
+    }
+  }
 
   req.session.aboutSupplierFormData = deal;
   const redirectUrl = `/contract/${deal._id}/about/supplier#${prefix}-companies-house-registration-number`; // eslint-disable-line no-underscore-dangle

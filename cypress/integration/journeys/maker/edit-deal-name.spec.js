@@ -8,7 +8,7 @@ context('Edit deal name', () => {
 
   const dummyDeal = {
     details: {
-      bankSupplyContractID: 'abc/1/def',
+      bankSupplyContractID: 'abc-1-def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
     },
   };

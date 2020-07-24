@@ -3,7 +3,7 @@ const $ = require('mongo-dot-notation');
 
 const DEFAULTS = require('../defaults');
 const db = require('../../drivers/db-client');
-const { getDealErrors } = require('../validation/deal');
+const getDealErrors = require('../validation/deal');
 const now = require('../../now');
 const { isSuperUser, userHasAccessTo } = require('../users/checks');
 const { generateDealId } = require('../../utils/generateIds');
@@ -102,7 +102,7 @@ const createDeal = async (req, res) => {
 
   const validationErrors = getDealErrors(newDeal);
 
-  if (validationErrors) {
+  if (validationErrors.count !== 0) {
     return res.status(400).send({
       ...newDeal,
       validationErrors,

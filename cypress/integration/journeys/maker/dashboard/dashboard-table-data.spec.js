@@ -7,7 +7,7 @@ context('View a deal', () => {
   let deal;
   const dummyDeal = {
     details: {
-      bankSupplyContractID: 'abc/1/def',
+      bankSupplyContractID: 'abc-1-def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
     },
   };
@@ -38,7 +38,7 @@ context('View a deal', () => {
     expect(row.bank().should('not.exist'));
 
     row.bankSupplyContractID().invoke('text').then((text) => {
-      expect(text.trim()).equal('abc/1/def');
+      expect(text.trim()).equal('abc-1-def');
     });
 
     row.maker().invoke('text').then((text) => {
@@ -55,7 +55,7 @@ context('View a deal', () => {
     // TODO - other fields as we start to populate them...
 
 
-    row.bankSupplyContractID().contains('abc/1/def').click();
+    row.bankSupplyContractID().contains('abc-1-def').click();
 
     cy.url().should('eq', relative(`/contract/${deal._id}`));
 
