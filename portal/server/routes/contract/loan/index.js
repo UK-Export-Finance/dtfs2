@@ -1,4 +1,5 @@
 import express from 'express';
+import isEqual from 'lodash.isequal';
 import api from '../../../api';
 import { provide, LOAN, CURRENCIES } from '../../api-data-provider';
 import {
@@ -262,20 +263,42 @@ router.get('/contract/:_id/loan/:loanId/preview', provide([LOAN]), async (req, r
   });
 });
 
-router.post('/contract/:_id/loan/:loanId/save-go-back', async (req, res) => {
+router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
+  const { loan } = req.apiData.loan;
 
   let modifiedBody = handleBankReferenceNumberField(req.body);
   modifiedBody = handlePremiumFrequencyField(req.body);
 
-  await postToApi(
-    api.updateDealLoan(
-      dealId,
-      loanId,
-      modifiedBody,
-      userToken,
-    ),
-  );
+  const postedDataWithoutEmptyValues = (data) => {
+    const stripped = {};
+
+    const objectArray = Object.entries(data);
+
+    objectArray.forEach(([key, value]) => {
+      if (value && value.length) {
+        stripped[key] = value;
+      }
+    });
+
+    return stripped;
+  };
+
+  const existingLoanWithPostedData = {
+    ...loan,
+    ...postedDataWithoutEmptyValues(modifiedBody),
+  };
+
+  if (!isEqual(loan, existingLoanWithPostedData)) {
+    await postToApi(
+      api.updateDealLoan(
+        dealId,
+        loanId,
+        modifiedBody,
+        userToken,
+      ),
+    );
+  }
 
   const redirectUrl = `/contract/${req.params._id}`; // eslint-disable-line no-underscore-dangle
   return res.redirect(redirectUrl);
