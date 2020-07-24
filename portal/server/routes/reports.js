@@ -111,6 +111,7 @@ router.get('/reports/audit-transactions', async (req, res) => res.redirect('/rep
 router.get('/reports/audit-transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
+<<<<<<< HEAD
   const banks = await getApiData(
     api.banks(userToken),
     res,
@@ -120,16 +121,16 @@ router.get('/reports/audit-transactions/:page', async (req, res) => {
 
   const filters = buildReportFilters(reportFilters, req.session.user);
   // console.log(`filters: ${util.inspect(filters)}`);
-  const transactionData = await getApiData(
+  const { transactions, count } = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
   // console.log(`transactionData: ${util.inspect(transactionData)}`);
 
   const pages = {
-    totalPages: Math.ceil(transactionData.count / PAGESIZE),
+    totalPages: Math.ceil(count / PAGESIZE),
     currentPage: parseInt(req.params.page, 10),
-    totalItems: transactionData.count,
+    totalItems: count,
   };
 
   return res.render('reports/audit-transactions.njk', {
@@ -198,6 +199,7 @@ router.get('/reports/transactions-report', async (req, res) => res.redirect('/re
 
 router.get('/reports/transactions-report/:page', async (req, res) => {
   const { userToken } = requestParams(req);
+  const filters = {};// TODO wire up filters; probably do same as dashboard +use session
 
   const reportFilters = req.session.transactionFilters;
 
