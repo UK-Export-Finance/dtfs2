@@ -111,20 +111,20 @@ router.get('/reports/audit-transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
   const filters = {}; // TODO wire up filters; probably do same as dashboard +use session
-  const dealData = await getApiData(
-    api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+  const { transactions, count } = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-
+  console.log(transactions);
   const pages = {
-    totalPages: Math.ceil(dealData.count / PAGESIZE),
+    totalPages: Math.ceil(count / PAGESIZE),
     currentPage: parseInt(req.params.page, 10),
-    totalItems: dealData.count,
+    totalItems: count,
   };
 
   return res.render('reports/audit-transactions.njk', {
     pages,
-    contracts: dealData.deals,
+    transactions,
     primaryNav,
     subNav: 'audit-transactions',
     user: req.session.user,
@@ -135,8 +135,12 @@ router.get('/reports/transactions-report', async (req, res) => res.redirect('/re
 
 router.get('/reports/transactions-report/:page', async (req, res) => {
   const { userToken } = requestParams(req);
+  const filters = {};// TODO wire up filters; probably do same as dashboard +use session
 
-  const { transactions, count } = await getApiData(api.transactions(userToken), res);
+  const { transactions, count } = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+    res,
+  );
 
   const banks = await getApiData(api.banks(userToken), res);
 

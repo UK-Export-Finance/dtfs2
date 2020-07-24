@@ -15,52 +15,45 @@
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank supply contract ID</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created by</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submitted by</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Supply contract status</th>
-        {% if user and user.roles.includes("admin")%}
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank</th>
-        {% endif %}
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Transaction type</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bond ID</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Changed</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submission date</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Issued date</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Issued by</th>
       </tr>
     </thead>
 
     <tbody class="govuk-table__body">
 
-      {% for contract in contracts %}
-        <tr data-cy="deal_{{contract._id}}" class="govuk-table__row">
+      {% for transaction in transactions %}
+        <tr data-cy="deal_{{transaction.transaction_id}}" class="govuk-table__row">
           <td data-cy="bankSupplyContractID" class="govuk-table__cell govuk-!-font-size-14">
-            <a href="/contract/{{ contract._id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ contract.details.bankSupplyContractID }}</a>
+            <a href="/transaction/{{ transaction.transaction_id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ transaction.details.bankSupplyContractID }}</a>
           </td>
 
-          <td data-cy="createdBy" class="govuk-table__cell govuk-!-font-size-14">
-            {{ contract.details.maker.username }}
+          <td data-cy="transactionType" class="govuk-table__cell govuk-!-font-size-14">
+             {{ transaction.transactionType | dashIfEmpty}}
           </td>
 
-          <td data-cy="submittedBy" class="govuk-table__cell govuk-!-font-size-14">
-            {{ contract.details.checker }}
+          <td data-cy="bankFacilityId" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.bankFacilityId | dashIfEmpty  }}
           </td>
-
-          <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
-            {{ contract.details.status }}
-          </td>
-          {% if user and user.roles.includes("admin")%}
-          <td data-cy="owningBank" class="govuk-table__cell govuk-!-font-size-14">
-            {{ contract.details.owningBank.name }}
-          </td>
-          {% endif %}
+          
           <td data-cy="created" class="govuk-table__cell govuk-!-font-size-14">
-            {{ contract.details.created | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) }}
+            {{ transaction.deal_created | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty  }}
           </td>
 
           <td data-cy="changed" class="govuk-table__cell govuk-!-font-size-14">
-            {{ contract.details.dateOfLastAction | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) }}
+            {{ transaction.details.dateOfLastAction | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty  }}
           </td>
 
-          <td data-cy="changed" class="govuk-table__cell govuk-!-font-size-14">
-            {# { contract.details.dateOfLastAction } #} xxxxx
+          <td data-cy="issued" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.issuedDate | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
+          </td>
+
+          <td data-cy="issuedBy" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.details.checker | dashIfEmpty }}
           </td>
 
         </tr>

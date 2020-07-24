@@ -340,7 +340,7 @@ const transactions = async (start, pagesize, filters, token) => {
     filters,
   };
   const response = await apollo('GET', transactionsQuery, params, token);
-
+  console.log(response.data);
   return response.data.transactions;
 };
 
