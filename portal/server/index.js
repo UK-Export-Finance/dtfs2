@@ -9,6 +9,11 @@ import routes from './routes';
 
 import configureNunjucks from './nunjucks-configuration';
 
+// Fix Azure environment variables
+Object.keys(process.env).forEach((key) => {
+  process.env[key.substr('CUSTOMCONNSTR_'.length)] = process.env[key];
+});
+
 const app = express();
 
 const PORT = process.env.PORT || 5000;
