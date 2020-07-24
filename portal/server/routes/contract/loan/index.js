@@ -1,5 +1,4 @@
 import express from 'express';
-import isEqual from 'lodash.isequal';
 import api from '../../../api';
 import { provide, LOAN, CURRENCIES } from '../../api-data-provider';
 import {
@@ -16,6 +15,7 @@ import {
   loanPreviewValidationErrors,
 } from './pageSpecificValidationErrors';
 import completedLoanForms from './completedForms';
+import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 
 const router = express.Router();
 
@@ -66,7 +66,11 @@ const handlePremiumFrequencyField = (loanBody) => {
       return inArrearPremiumFrequency;
     }
 
-    return existingPremiumFrequency;
+    if (existingPremiumFrequency) {
+      return existingPremiumFrequency;
+    }
+
+    return '';
   };
 
   modifiedLoan.premiumFrequency = premiumFrequencyValue();
@@ -270,26 +274,7 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
   let modifiedBody = handleBankReferenceNumberField(req.body);
   modifiedBody = handlePremiumFrequencyField(req.body);
 
-  const postedDataWithoutEmptyValues = (data) => {
-    const stripped = {};
-
-    const objectArray = Object.entries(data);
-
-    objectArray.forEach(([key, value]) => {
-      if (value && value.length) {
-        stripped[key] = value;
-      }
-    });
-
-    return stripped;
-  };
-
-  const existingLoanWithPostedData = {
-    ...loan,
-    ...postedDataWithoutEmptyValues(modifiedBody),
-  };
-
-  if (!isEqual(loan, existingLoanWithPostedData)) {
+  if (!formDataMatchesOriginalData(modifiedBody, loan)) {
     await postToApi(
       api.updateDealLoan(
         dealId,
