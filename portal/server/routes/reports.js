@@ -136,10 +136,14 @@ router.get('/reports/transactions-report', async (req, res) => res.redirect('/re
 router.get('/reports/transactions-report/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
+  const reportFilters = req.session.transactionFilters;
+
+  const filters = buildReportFilters(reportFilters, req.session.user);
+
   const { transactions, count } = await getApiData(
-        api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
-        res,
-      );
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+    res,
+  );
 
   const banks = await getApiData(api.banks(userToken), res);
 
