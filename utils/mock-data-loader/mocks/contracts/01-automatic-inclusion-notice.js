@@ -5,7 +5,7 @@ module.exports = {
   bankSupplyContractName: 'UKEF plc',
   details: {
     bank: 'UKEF test bank',
-    bankSupplyContractID: 'MIA/Msstar/BSS/DGR',
+    bankSupplyContractID: 'MIA-Msstar-BSS-DGR',
     bankSupplyContractName: 'MIA deal',
     ukefDealId: '20010739',
     status: 'Acknowledged by UKEF',
