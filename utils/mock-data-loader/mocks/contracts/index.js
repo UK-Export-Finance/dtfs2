@@ -13,4 +13,7 @@ module.exports = [
   require('./11-status-approved'),
   require('./12-status-approvedWithConditions'),
   require('./13-status-refused'),
+  require('./14-from-heroku'),
+  require('./15-from-heroku'),
+  require('./16-from-heroku'),
 ];

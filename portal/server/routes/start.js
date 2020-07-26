@@ -87,13 +87,14 @@ router.get('/before-you-start/bank-deal', async (req, res) => {
   }
 });
 
-router.post('/before-you-start/bank-deal', async (req, res) => {
+router.post('/before-you-start/bank-deal', provide([MANDATORY_CRITERIA]), async (req, res) => {
   const { userToken } = requestParams(req);
 
   const newDeal = {
     details: {
       ...req.body,
     },
+    mandatoryCriteria: req.apiData[MANDATORY_CRITERIA],
   };
 
   const apiResponse = await postToApi(
