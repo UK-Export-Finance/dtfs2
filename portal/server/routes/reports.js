@@ -131,12 +131,23 @@ router.get('/reports/audit-transactions/:page', async (req, res) => {
   });
 });
 
+router.get('/reports/:id/transactions/:page', async (req, res) => {
+  console.log('transactions');
+
+  return res.render('reports/audit-supply-transactions.njk', {
+    // pages,
+    // transactions,
+    // banks,
+    primaryNav,
+    subNav: 'transactions-report',
+    user: req.session.user,
+  });
+});
+
 router.get('/reports/transactions-report', async (req, res) => res.redirect('/reports/transactions-report/0'));
 
 router.get('/reports/transactions-report/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-  const filters = {};// TODO wire up filters; probably do same as dashboard +use session
-
   const reportFilters = req.session.transactionFilters;
 
   const filters = buildReportFilters(reportFilters, req.session.user);
