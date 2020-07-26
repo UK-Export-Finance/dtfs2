@@ -112,10 +112,7 @@ router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL]), async
   };
 
   if (!formDataMatchesOriginalData(submissionDetails, mappedSubmissionDetailsForMatchCheck)) {
-    console.log('***** submission details - supplier CHANGED, posting to api');
     await updateSubmissionDetails(deal, submissionDetails, userToken);
-  } else {
-    console.log('***** submission details - supplier not changed.');
   }
 
   const redirectUrl = `/contract/${_id}`;

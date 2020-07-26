@@ -72,13 +72,10 @@ router.post('/contract/:_id/eligibility/criteria/save-go-back', provide([DEAL]),
   const { body } = req;
 
   if (!submittedEligibilityMatchesOriginalData(req.body, deal.eligibility)) {
-    console.log('------- eligibility changed, calling api');
     await getApiData(
       api.updateEligibilityCriteria(_id, body, userToken),
       res,
     );
-  } else {
-    console.log('------- eligibility NOT changed.');
   }
 
   const redirectUrl = `/contract/${_id}`;

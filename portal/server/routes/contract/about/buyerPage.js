@@ -87,10 +87,7 @@ router.post('/contract/:_id/about/buyer/save-go-back', provide([DEAL]), async (r
   };
 
   if (!formDataMatchesOriginalData(submissionDetails, mappedSubmissionDetailsForMatchCheck)) {
-    console.log('***** submission details - buyer CHANGED, posting to api');
     await updateSubmissionDetails(deal, submissionDetails, userToken);
-  } else {
-    console.log('***** submission details - buyer not changed.');
   }
 
   const redirectUrl = `/contract/${_id}`;
