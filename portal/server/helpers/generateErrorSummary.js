@@ -17,13 +17,13 @@ const generateErrorSummary = (
               "text": "Eligibility criterion 13 is required",
               "order": "13"
           },
-          "agent-address-line-1": {
+          "agentAddressLine1": {
               "text": "Agent's corporate address is required",
               "order": "11-3"
           },
-          "agent-country": {},
-          "agent-name": {},
-          "agent-postcode": {
+          "agentAddressCountry": {},
+          "agentName": {},
+          "agentAddressPostcode": {
               "text": "Agent's corporate postcode is required",
               "order": "11-4"
           }

@@ -199,10 +199,10 @@ const deal = {
     agentAddress1: 'ADDR 1',
     agentAddress2: 'Addr 2',
     agentAddress3: 'Addr 3',
-    agentCountry: 'GBR',
+    agentAddressCountry: 'GBR',
     agentName: 'AGENT NAME',
-    agentPostcode: 'CF64 5SH',
-    agentTown: 'City',
+    agentAddressPostcode: 'CF64 5SH',
+    agentAddressTown: 'City',
   },
   submissionDetails: {
     'indemnifier-address-country': {
