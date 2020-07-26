@@ -11,6 +11,7 @@ import {
 import {
   provide, DEAL, COUNTRIES,
 } from '../../api-data-provider';
+import submittedEligibilityMatchesOriginalData from './submittedEligibilityMatchesOriginalData';
 import submittedDocumentationMatchesOriginalData from './submittedDocumentationMatchesOriginalData';
 
 const upload = multer();
@@ -70,7 +71,7 @@ router.post('/contract/:_id/eligibility/criteria/save-go-back', provide([DEAL]),
 
   const { body } = req;
 
-  if (!submittedDocumentationMatchesOriginalData(req.body, deal.eligibility)) {
+  if (!submittedEligibilityMatchesOriginalData(req.body, deal.eligibility)) {
     console.log('------- eligibility changed, calling api');
     await getApiData(
       api.updateEligibilityCriteria(_id, body, userToken),
@@ -138,7 +139,7 @@ router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', 
   const { _id, userToken } = requestParams(req);
   const { body, files } = req;
 
-  if (!supportingDocumentationMatchesOriginalData(req.body, req.files, deal.dealFiles)) {
+  if (!submittedDocumentationMatchesOriginalData(req.body, req.files, deal.dealFiles)) {
     const updatedDeal = await getApiData(
       api.updateEligibilityDocumentation(_id, body, files, userToken),
       res,
