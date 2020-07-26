@@ -9,51 +9,89 @@
 
   <h1 class="govuk-heading-l">Audit - Transactions Report</h1>
 
+
+
+      
+         {% for name, item in transaction %}
+      <li>{{ name }}: {{ item }}</li>
+   {% endfor %}
+
   {# { filterControls.render(filter, user) } #}
 
   <table class="govuk-table govuk-!-margin-bottom-0">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank supply contract ID</th>
+        {% if user and user.roles.includes("admin")%}
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank</th>
+        {% endif %}
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank Supply contract ID</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Deal status</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Transaction ID</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Transaction type</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bond ID</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Changed</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Supplier name</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Facility value</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Facility stage</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created date</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created by</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Issued date</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Issued by</th>
       </tr>
     </thead>
 
     <tbody class="govuk-table__body">
-
+      
+      </td> </tr>
       {% for transaction in transactions %}
-        <tr data-cy="deal_{{transaction.transaction_id}}" class="govuk-table__row">
+        <tr data-cy="deal_{{transaction._id}}" class="govuk-table__row">
+
+          {% if user and user.roles.includes("admin")%}
+          <td data-cy="owningBank" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.details.owningBank.name }} todo
+          </td>
+          {% endif %}
+
           <td data-cy="bankSupplyContractID" class="govuk-table__cell govuk-!-font-size-14">
-            <a href="/transaction/{{ transaction.transaction_id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ transaction.details.bankSupplyContractID }}</a>
+            <a href="/contract/{{ transaction.deal_id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ transaction.deal_id }} - todo</a>
+          </td>
+
+          <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.deal_status }}
+          </td>
+
+          <td data-cy="bankFacilityID" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.bankFacilityId }}
           </td>
 
           <td data-cy="transactionType" class="govuk-table__cell govuk-!-font-size-14">
-             {{ transaction.transactionType | dashIfEmpty}}
+            {{ transaction.transactionType }}
           </td>
 
-          <td data-cy="bankFacilityId" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.bankFacilityId | dashIfEmpty  }}
-          </td>
-          
-          <td data-cy="created" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.deal_created | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty  }}
+          <td data-cy="supplierName" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.supplierName }} todo
           </td>
 
-          <td data-cy="changed" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.details.dateOfLastAction | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty  }}
+          <td data-cy="facilityValue" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.facilityValue }}
           </td>
 
-          <td data-cy="issued" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.issuedDate | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
+          <td data-cy="facilityStage" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.transactionStage }}
           </td>
 
-          <td data-cy="issuedBy" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.details.checker | dashIfEmpty }}
+          <td data-cy="createdDate" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.deal_created }}
+          </td>
+
+          <td data-cy="createdBy" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.maker }} 
+          </td>
+
+          <td data-cy="submittedDate" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.submittedDate }} todo
+          </td>
+
+          <td data-cy="submittedBy" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.checker }}
           </td>
 
         </tr>
