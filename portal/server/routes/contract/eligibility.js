@@ -10,7 +10,7 @@ import {
 } from '../../helpers';
 
 import {
-  provide, DEAL, COUNTRIES, MANDATORY_CRITERIA,
+  provide, DEAL, COUNTRIES,
 } from '../api-data-provider';
 
 const upload = multer();
@@ -173,8 +173,8 @@ router.get('/contract/:_id/eligibility-documentation/:fieldname/:filename', asyn
 });
 
 
-router.get('/contract/:_id/eligibility/preview', provide([DEAL, MANDATORY_CRITERIA]), async (req, res) => {
-  const { deal, mandatoryCriteria } = req.apiData;
+router.get('/contract/:_id/eligibility/preview', provide([DEAL]), async (req, res) => {
+  const { deal } = req.apiData;
 
   const { user } = req.session;
   if (!userCanAccessEligibility(user)) {
@@ -183,7 +183,6 @@ router.get('/contract/:_id/eligibility/preview', provide([DEAL, MANDATORY_CRITER
 
   return res.render('eligibility/eligibility-preview.njk', {
     deal,
-    mandatoryCriteria,
     user: req.session.user,
   });
 });
