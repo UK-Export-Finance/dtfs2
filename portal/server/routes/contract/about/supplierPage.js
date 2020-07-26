@@ -15,7 +15,6 @@ import {
 
 import calculateStatusOfEachPage from './navStatusCalculations';
 import updateSubmissionDetails from './updateSubmissionDetails';
-
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 
 const router = express.Router();
