@@ -279,10 +279,11 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (
   const modifiedBody = handleFeeFrequency(req.body);
 
   const mappedBondForMatchCheck = bond;
-
-  if (bond.currency.id) {
+  if (bond.currency && bond.currency.id) {
     mappedBondForMatchCheck.currency = bond.currency.id;
   }
+  delete mappedBondForMatchCheck._id; // eslint-disable-line no-underscore-dangle
+  delete mappedBondForMatchCheck.status;
 
   if (!formDataMatchesOriginalData(modifiedBody, mappedBondForMatchCheck)) {
     console.log('***** bond CHANGED, posting to api');
