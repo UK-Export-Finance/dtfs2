@@ -13,6 +13,7 @@ import {
 
 import calculateStatusOfEachPage from './navStatusCalculations';
 import updateSubmissionDetails from './updateSubmissionDetails';
+import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 
 const router = express.Router();
 
@@ -75,10 +76,22 @@ router.post('/contract/:_id/about/buyer', async (req, res) => {
 });
 
 router.post('/contract/:_id/about/buyer/save-go-back', provide([DEAL]), async (req, res) => {
+  const deal = req.apiData[DEAL];
   const { _id, userToken } = requestParams(req);
   const submissionDetails = req.body;
 
-  await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
+  const mappedSubmissionDetailsForMatchCheck = {
+    ...deal.submissionDetails,
+    'buyer-address-country': deal.submissionDetails['buyer-address-country'].code,
+    destinationOfGoodsAndServices: deal.submissionDetails.destinationOfGoodsAndServices.code,
+  };
+
+  if (!formDataMatchesOriginalData(submissionDetails, mappedSubmissionDetailsForMatchCheck)) {
+    console.log('***** submission details - buyer CHANGED, posting to api');
+    await updateSubmissionDetails(deal, submissionDetails, userToken);
+  } else {
+    console.log('***** submission details - buyer not changed.');
+  }
 
   const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
