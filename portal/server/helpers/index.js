@@ -11,6 +11,7 @@ import mapCountries from './mapCountries';
 import mapIndustryClasses from './mapIndustryClasses';
 import mapIndustrySectors from './mapIndustrySectors';
 import pageSpecificValidationErrors from './pageSpecificValidationErrors';
+import sanitizeCurrency from './sanitizeCurrency';
 
 export {
   dealFormsCompleted,
@@ -27,4 +28,5 @@ export {
   mapIndustryClasses,
   mapIndustrySectors,
   pageSpecificValidationErrors,
+  sanitizeCurrency,
 };

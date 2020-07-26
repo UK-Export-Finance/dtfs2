@@ -5,6 +5,7 @@ import {
   mapCurrencies,
   errorHref,
   generateErrorSummary,
+  sanitizeCurrency,
 } from '../../../helpers';
 
 import {
@@ -13,6 +14,8 @@ import {
 
 import calculateStatusOfEachPage from './navStatusCalculations';
 import updateSubmissionDetails from './updateSubmissionDetails';
+
+import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 
 const router = express.Router();
 
@@ -67,9 +70,25 @@ router.post('/contract/:_id/about/financial', provide([DEAL]), async (req, res) 
 
 router.post('/contract/:_id/about/financial/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
+  const deal = req.apiData[DEAL];
   const submissionDetails = req.body;
 
-  await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
+  const mappedFormDataForMatchCheck = {
+    ...submissionDetails,
+    supplyContractValue: sanitizeCurrency(submissionDetails.supplyContractValue).sanitizedValue,
+  };
+
+  const mappedSubmissionDetailsForMatchCheck = {
+    ...deal.submissionDetails,
+    supplyContractCurrency: deal.submissionDetails.supplyContractCurrency.id,
+  };
+
+  if (!formDataMatchesOriginalData(mappedFormDataForMatchCheck, mappedSubmissionDetailsForMatchCheck)) {
+    console.log('***** submission details - financies CHANGED, posting to api');
+    await updateSubmissionDetails(deal, submissionDetails, userToken);
+  } else {
+    console.log('***** submission details - financies not changed.');
+  }
 
   const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
