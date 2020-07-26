@@ -1,8 +1,55 @@
 import formDataMatchesOriginalData, {
+  stripEmptyValuesFromObject,
+  getFieldsWithEmptyValues,
   getFieldsFromOriginalData,
 } from './formDataMatchesOriginalData';
 
 describe('formDataMatchesOriginalData', () => {
+  describe('stripEmptyValuesFromObject', () => {
+    it('should return object with no empty values', () => {
+      const mockFields = {
+        fieldA: 'test',
+        fieldB: 'testing',
+        fieldC: 'some value',
+        fieldX: 'test',
+      };
+
+      const obj = {
+        ...mockFields,
+        fieldD: '',
+        fieldE: '',
+      };
+
+      const originalData = mockFields;
+
+      const result = stripEmptyValuesFromObject(obj, originalData);
+      expect(result).toEqual({
+        fieldA: 'test',
+        fieldB: 'testing',
+        fieldC: 'some value',
+        fieldX: 'test',
+      });
+    });
+  });
+
+  describe('getFieldsWithEmptyValues', () => {
+    it('should return object with only fields that have empty values', () => {
+      const obj = {
+        fieldA: 'test',
+        fieldB: 'testing',
+        fieldC: 'some value',
+        fieldD: '',
+        fieldE: '',
+      };
+
+      const result = getFieldsWithEmptyValues(obj);
+      expect(result).toEqual({
+        fieldD: '',
+        fieldE: '',
+      });
+    });
+  });
+
   describe('getFieldsFromOriginalData', () => {
     it('should return only properties that are in the provided object', () => {
       const obj = {

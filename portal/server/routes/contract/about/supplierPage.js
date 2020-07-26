@@ -99,31 +99,24 @@ router.post('/contract/:_id/about/supplier', async (req, res) => {
   return res.redirect(redirectUrl);
 });
 
-router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL, COUNTRIES]), async (req, res) => {
+router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
-  const { countries } = req.apiData;
   const deal = req.apiData[DEAL];
   const submissionDetails = req.body;
 
-  // i'm sure there is already a function to do this, maybe in api though.
-  const getCountryObjectByCode = (countriesArray, countryCode) =>
-    countriesArray.find((country) => country.code === countryCode);
-
-  // probably a better name for this.
   const mappedSubmissionDetailsForMatchCheck = {
-    ...submissionDetails,
-    'supplier-address-country': getCountryObjectByCode(countries, submissionDetails.supplierAddressCountryCode),
-    'supplier-correspondence-address-country': getCountryObjectByCode(countries, submissionDetails.supplierCorrespondenceAddressCountryCode),
-    'indemnifier-address-country': getCountryObjectByCode(countries, submissionDetails.indemnifierAddressCountryCode),
-    'indemnifier-correspondence-address-country': getCountryObjectByCode(countries, submissionDetails.indemnifierCorrespondenceAddressCountryCode),
+    ...deal.submissionDetails,
+    'supplier-address-country': deal.submissionDetails['supplier-address-country'].code,
+    'supplier-correspondence-address-country': deal.submissionDetails['supplier-correspondence-address-country'].code,
+    'indemnifier-address-country': deal.submissionDetails['indemnifier-address-country'].code,
+    'indemnifier-correspondence-address-country': deal.submissionDetails['indemnifier-correspondence-address-country'].code,
   };
 
-  // TODO: need the check to check for nested object values.
-  if (!formDataMatchesOriginalData(mappedSubmissionDetailsForMatchCheck, deal.submissionDetails)) {
-    console.log('***** submission details CHANGED, posting to api');
+  if (!formDataMatchesOriginalData(submissionDetails, mappedSubmissionDetailsForMatchCheck)) {
+    console.log('***** submission details - supplier CHANGED, posting to api');
     await updateSubmissionDetails(deal, submissionDetails, userToken);
   } else {
-    console.log('***** submission details not changed.');
+    console.log('***** submission details - supplier not changed.');
   }
 
   const redirectUrl = `/contract/${_id}`;
