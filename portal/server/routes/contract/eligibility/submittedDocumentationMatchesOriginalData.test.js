@@ -32,5 +32,4 @@ describe('submittedDocumentationMatchesOriginalData', () => {
       expect(result).toEqual(false);
     });
   });
- 
 });
