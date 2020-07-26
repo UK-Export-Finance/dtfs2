@@ -134,10 +134,41 @@ router.get('/reports/audit-transactions/:page', async (req, res) => {
 
 router.get('/reports/:id/transactions/:page', async (req, res) => {
   console.log('transactions');
-
+  console.log(req.params.id);
+  const transactions = [
+    {
+      transaction_id: req.params.id.concat('-', '2'),
+      transactionType: 'loan',
+      bankFacilityId: '12345',
+      deal_created: '1595768308',
+      details: {
+        bankSupplyContractID: req.params.id,
+        dateOfLastAction: '1595768308',
+        checker: 'ALT CHECKER',
+      },
+      issuedDate: '1595787789',
+    },
+    {
+      transaction_id: req.params.id.concat('-', '2'),
+      transactionType: 'bond',
+      bankFacilityId: '65789',
+      deal_created: '1595707789',
+      details: {
+        bankSupplyContractID: req.params.id,
+        dateOfLastAction: '1595737789',
+        checker: 'ALT CHECKER',
+      },
+      issuedDate: '1595787789',
+    },
+  ];
+  const pages = {
+    totalPages: 1,
+    currentPage: 0,
+    totalItems: 1,
+  };
   return res.render('reports/audit-supply-transactions.njk', {
-    // pages,
-    // transactions,
+    pages,
+    transactions,
     // banks,
     primaryNav,
     subNav: 'transactions-report',
