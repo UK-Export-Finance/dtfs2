@@ -1,18 +1,17 @@
 import express from 'express';
 import multer from 'multer';
 import stream from 'stream';
-// import isEqual from 'lodash.isequal';
-import api from '../../api';
+import api from '../../../api';
 import {
   getApiData,
   requestParams,
   generateErrorSummary,
   formatCountriesForGDSComponent,
-} from '../../helpers';
+} from '../../../helpers';
 import {
-  provide, DEAL, COUNTRIES,
-} from '../api-data-provider';
-import formDataMatchesOriginalData from './formDataMatchesOriginalData';
+  provide, DEAL, COUNTRIES, MANDATORY_CRITERIA,
+} from '../../api-data-provider';
+import submittedDocumentationMatchesOriginalData from './submittedDocumentationMatchesOriginalData';
 
 const upload = multer();
 
@@ -65,50 +64,13 @@ router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
   return res.redirect(`/contract/${_id}/eligibility/supporting-documentation`);
 });
 
-const eligibilityMatchesOriginalData = (formData, originalData) => {
-  const originalCriteriaAnswersAsStrings = () => {
-    const result = {};
-
-    originalData.criteria.forEach((c) => {
-      if (typeof c.answer === 'boolean' && String(c.answer).length) {
-        result[`criterion-${c.id}`] = String(c.answer);
-      }
-    });
-    return result;
-  };
-
-  const flattenOriginalData = () => {
-    const flattened = {
-      ...originalData,
-      ...originalCriteriaAnswersAsStrings(),
-    };
-
-    // remove criteria array as the answers are now in strings.
-    delete flattened.criteria;
-
-    // remove status and validationErrors since these are not submitted values.
-    // TODO: ideally these should not be saved in the API and instead returned dynamically
-    delete flattened.status;
-    delete flattened.validationErrors;
-
-    return flattened;
-  };
-
-  const flattenedOriginalData = flattenOriginalData();
-
-  if (formDataMatchesOriginalData(formData, flattenedOriginalData)) {
-    return true;
-  }
-  return false;
-};
-
 router.post('/contract/:_id/eligibility/criteria/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { deal } = req.apiData;
 
   const { body } = req;
 
-  if (!eligibilityMatchesOriginalData(req.body, deal.eligibility)) {
+  if (!submittedDocumentationMatchesOriginalData(req.body, deal.eligibility)) {
     console.log('------- eligibility changed, calling api');
     await getApiData(
       api.updateEligibilityCriteria(_id, body, userToken),
@@ -170,17 +132,6 @@ router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(),
     bankSupplyContractName: updatedDeal.details.bankSupplyContractName,
   });
 });
-
-const supportingDocumentationMatchesOriginalData = (formData, formFiles, originalData) => {
-  // security is the only field that is *not* a file.
-  const originalSecurityField = originalData.security;
-  const filesSubmitted = formFiles.length > 0;
-
-  if ((originalSecurityField !== formData.security) || filesSubmitted) {
-    return false;
-  }
-  return true;
-};
 
 router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', provide([DEAL]), upload.any(), async (req, res) => {
   const { deal } = req.apiData;
