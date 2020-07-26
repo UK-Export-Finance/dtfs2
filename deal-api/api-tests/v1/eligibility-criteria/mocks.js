@@ -47,9 +47,9 @@ const updatedECCriteria11WithExtraInfo = {
 const criteria11ExtraInfo = {
   agentName: 'Agent Name',
   agentAddressCountry: 'GBR',
-  agentAddress1: 'Address 1',
-  agentAddress2: 'Address 2',
-  agentAddress3: 'Address 3',
+  agentAddressLine1: 'Address 1',
+  agentAddressLine2: 'Address 2',
+  agentAddressLine3: 'Address 3',
   agentAddressTown: 'Town',
   agentAddressPostcode: 'AA1 2BB',
 };
@@ -57,9 +57,9 @@ const criteria11ExtraInfo = {
 const criteria11ExtraInfoEmpty = {
   agentName: '',
   agentAddressCountry: '',
-  agentAddress1: '',
-  agentAddress2: '',
-  agentAddress3: '',
+  agentAddressLine1: '',
+  agentAddressLine2: '',
+  agentAddressLine3: '',
   agentAddressTown: '',
   agentAddressPostcode: '',
 };

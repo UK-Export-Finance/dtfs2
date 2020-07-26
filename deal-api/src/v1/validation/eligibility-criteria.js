@@ -46,7 +46,7 @@ exports.getCriteria11Errors = ((criteria11Additional, criteria11IsFalse) => {
     };
   }
 
-  if (!criteria11Additional.agentAddress1) {
+  if (!criteria11Additional.agentAddressLine1) {
     errorList.agentAddressLine1 = {
       order: '11-3',
       text: 'Agent\'s corporate address is required',

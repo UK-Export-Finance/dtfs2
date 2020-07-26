@@ -49,9 +49,9 @@ exports.update = async (req, res) => {
       const criteria11Additional = {
         agentName: criteria11IsFalse && req.body.agentName ? req.body.agentName.substring(0, 150) : '',
         agentAddressCountry: criteria11IsFalse ? req.body.agentAddressCountry : '',
-        agentAddress1: criteria11IsFalse ? req.body.agentAddressLine1 : '',
-        agentAddress2: criteria11IsFalse ? req.body.agentAddressLine2 : '',
-        agentAddress3: criteria11IsFalse ? req.body.agentAddressLine3 : '',
+        agentAddressLine1: criteria11IsFalse ? req.body.agentAddressLine1 : '',
+        agentAddressLine2: criteria11IsFalse ? req.body.agentAddressLine2 : '',
+        agentAddressLine3: criteria11IsFalse ? req.body.agentAddressLine3 : '',
         agentAddressTown: criteria11IsFalse ? req.body.agentAddressTown : '',
         agentAddressPostcode: criteria11IsFalse ? req.body.agentAddressPostcode : '',
       };
