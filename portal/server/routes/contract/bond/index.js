@@ -278,7 +278,14 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (
 
   const modifiedBody = handleFeeFrequency(req.body);
 
-  if (!formDataMatchesOriginalData(modifiedBody, bond)) {
+  const mappedBondForMatchCheck = bond;
+
+  if (bond.currency.id) {
+    mappedBondForMatchCheck.currency = bond.currency.id;
+  }
+
+  if (!formDataMatchesOriginalData(modifiedBody, mappedBondForMatchCheck)) {
+    console.log('***** bond CHANGED, posting to api');
     await postToApi(
       api.updateBond(
         dealId,
@@ -288,6 +295,8 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (
       ),
       errorHref,
     );
+  } else {
+    console.log('***** bond not changed.');
   }
 
   const redirectUrl = `/contract/${req.params._id}`; // eslint-disable-line no-underscore-dangle
