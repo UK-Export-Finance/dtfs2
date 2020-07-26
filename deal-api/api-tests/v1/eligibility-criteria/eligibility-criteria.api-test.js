@@ -140,7 +140,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
         }
       });
 
-      expect(errorIdList).toEqual(['13', '15', '16', '17', '18', 'agentAddressLine1', 'agentName', 'agentAddressPostcode']);
+      expect(errorIdList).toEqual(['13', '15', '16', '17', '18', 'agentAddressLine1', 'agentAddressPostcode', 'agentName']);
     });
 
     it('generated postcode validation error if criteria11 is false and country = GBR but postcode not entered', async () => {
@@ -159,7 +159,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
         }
       });
 
-      expect(errorIdList).toEqual(['13', '15', '16', '17', '18', 'agentAddressLine1', 'agentAddressCountry', 'agentName']);
+      expect(errorIdList).toEqual(['13', '15', '16', '17', '18', 'agentAddressCountry', 'agentAddressLine1', 'agentName']);
     });
 
     it('updates criteria 11 extra info in criteria11 is false', async () => {
