@@ -98,7 +98,7 @@
           
           {% set hasAgentNameValidationError = validationErrors.errorList['agentName'] %}
 
-          <div class="govuk-form-group{% if hasAgentNameValidationError %} govuk-form-group--error{% endif %}">
+          <div id="criterion-group-agentName" class="govuk-form-group{% if hasAgentNameValidationError %} govuk-form-group--error{% endif %}">
 
             <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
               <div class="govuk-form-group">
@@ -128,6 +128,7 @@
           }) %}
           
             {{ govukSelect({
+                id: "criterion-group-agentAddressCountry",
                 name: "agentAddressCountry",
                 label: {
                   text: "Country"
@@ -140,6 +141,7 @@
               }) }}
                 
             {{ govukInput({
+              id: "criterion-group-agentAddressLine1",
               label: {
                 html: 'Address line 1 <span class="govuk-visually-hidden">line 1 of 4</span>'
               },
@@ -154,6 +156,7 @@
             }) }}
 
             {{ govukInput({
+              id: "criterion-group-agentAddressLine2",
               label: {
                 html: 'Address line 2 (optional) <span class="govuk-visually-hidden">line 2 of 4</span>'
               },
@@ -166,6 +169,7 @@
             }) }}
 
             {{ govukInput({
+              id: "criterion-group-agentAddressLine3",
               label: {
                 html: 'Address line 3 (optional) <span class="govuk-visually-hidden">line 3 of 4</span>'
               },
@@ -178,6 +182,7 @@
             }) }}
 
             {{ govukInput({
+              id: "criterion-group-agentAddressTown",
               label: {
                 html: 'City/Town<span class="govuk-visually-hidden">line 4 of 4</span>'
               },
@@ -188,6 +193,7 @@
             }) }}
 
             {{ govukInput({
+              id: "criterion-group-agentAddresspostcode",
               label: {
                 text: "Postcode"
               },
