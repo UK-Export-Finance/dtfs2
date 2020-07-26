@@ -135,12 +135,17 @@ const constructor = (graphQLFilters) => {
       //  we still have other transactions from that deal to filter out..
       if (graphQLFilters[BANKFACILITYID]) {
         const regex = new RegExp(`^${graphQLFilters[BANKFACILITYID]}`);
-        return loanThatMightNotMatchAFilter.bankReferenceNumber.match(regex);
+        if (!loanThatMightNotMatchAFilter.bankReferenceNumber
+            || !loanThatMightNotMatchAFilter.bankReferenceNumber.match(regex)) {
+          return false;
+        }
       }
 
       if (graphQLFilters[UKEFFACILITYID]) {
         const regex = new RegExp(`^${graphQLFilters[UKEFFACILITYID]}`);
-        return loanThatMightNotMatchAFilter.ukefFacilityID.match(regex);
+        if (!loanThatMightNotMatchAFilter.ukefFacilityID || !loanThatMightNotMatchAFilter.ukefFacilityID.match(regex)) {
+          return false;
+        }
       }
 
       return true;

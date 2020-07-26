@@ -174,6 +174,18 @@ const USERS = [
       id: '*',
     },
   },
+  {
+    username: 'EDITOR',
+    password: 'EDITOR',
+    firstname: 'Domingo',
+    surname: 'Espada',
+    timezone: 'Europe/London',
+    roles: ['editor'],
+    bank: {
+      // _id: '', //TODO [dw] better linking of mock data
+      id: '*',
+    },
+  },
 
 
 ];

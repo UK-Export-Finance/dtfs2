@@ -72,13 +72,12 @@ router.get('/contract/:_id/comments', provide([DEAL]), async (req, res) => {
   });
 });
 
-router.get('/contract/:_id/submission-details', provide([DEAL, MANDATORY_CRITERIA]), async (req, res) => {
-  const { deal, mandatoryCriteria } = req.apiData;
+router.get('/contract/:_id/submission-details', provide([DEAL]), async (req, res) => {
+  const { deal } = req.apiData;
   const { user } = req.session;
 
   return res.render('contract/contract-submission-details.njk', {
     deal,
-    mandatoryCriteria,
     user: req.session.user,
     editable: isDealEditable(deal, user),
   });
