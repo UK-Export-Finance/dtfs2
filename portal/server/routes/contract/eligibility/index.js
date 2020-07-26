@@ -9,7 +9,7 @@ import {
   formatCountriesForGDSComponent,
 } from '../../../helpers';
 import {
-  provide, DEAL, COUNTRIES, MANDATORY_CRITERIA,
+  provide, DEAL, COUNTRIES,
 } from '../../api-data-provider';
 import submittedDocumentationMatchesOriginalData from './submittedDocumentationMatchesOriginalData';
 
