@@ -282,7 +282,6 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
   delete mappedLoanForMatchCheck.status;
 
   if (!formDataMatchesOriginalData(modifiedBody, mappedLoanForMatchCheck)) {
-    console.log('***** loan CHANGED, posting to api');
     await postToApi(
       api.updateDealLoan(
         dealId,
@@ -291,8 +290,6 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
         userToken,
       ),
     );
-  } else {
-    console.log('***** loan not changed.');
   }
 
   const redirectUrl = `/contract/${req.params._id}`; // eslint-disable-line no-underscore-dangle

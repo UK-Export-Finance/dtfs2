@@ -46,9 +46,6 @@ const formDataMatchesOriginalData = (formData, originalData) => {
   const originalDataEmptyValues = getFieldsWithEmptyValues(strippedOriginalData);
   const cleanFormData = stripEmptyValuesFromObject(formData, originalDataEmptyValues);
 
-  console.log('----------- strippedOriginalData \n', strippedOriginalData);
-  console.log('----------- cleanFormData \n', cleanFormData);
-
   if (isEqual(strippedOriginalData, cleanFormData)) {
     return true;
   }
