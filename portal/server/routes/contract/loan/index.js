@@ -274,7 +274,15 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
   let modifiedBody = handleBankReferenceNumberField(req.body);
   modifiedBody = handlePremiumFrequencyField(req.body);
 
-  if (!formDataMatchesOriginalData(modifiedBody, loan)) {
+  const mappedLoanForMatchCheck = loan;
+  if (loan.currency && loan.currency.id) {
+    mappedLoanForMatchCheck.currency = loan.currency.id;
+  }
+  delete mappedLoanForMatchCheck._id; // eslint-disable-line no-underscore-dangle
+  delete mappedLoanForMatchCheck.status;
+
+  if (!formDataMatchesOriginalData(modifiedBody, mappedLoanForMatchCheck)) {
+    console.log('***** loan CHANGED, posting to api');
     await postToApi(
       api.updateDealLoan(
         dealId,
@@ -283,6 +291,8 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
         userToken,
       ),
     );
+  } else {
+    console.log('***** loan not changed.');
   }
 
   const redirectUrl = `/contract/${req.params._id}`; // eslint-disable-line no-underscore-dangle
