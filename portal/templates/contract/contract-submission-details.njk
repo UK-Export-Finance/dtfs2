@@ -51,8 +51,8 @@
         )}}
       </h3>
 
-      {% if mandatoryCriteria %}
-        {{ mandatoryCriteriaBox.render(mandatoryCriteria)}}
+      {% if deal.mandatoryCriteria %}
+        {{ mandatoryCriteriaBox.render(deal.mandatoryCriteria)}}
       {% endif %}
 
       {% if deal.eligibility.criteria %}
