@@ -24,6 +24,7 @@
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Changed</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submission date</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Transactions</th>
       </tr>
     </thead>
 
@@ -63,6 +64,12 @@
 
           <td data-cy="submissionDate" class="govuk-table__cell govuk-!-font-size-14">
             {{ contract.details.submissionDate | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
+          </td>
+
+          <td data-cy="transactions" class="govuk-table__cell govuk-!-font-size-14">
+            <a href="/reports/{{ contract._id }}/transactions/" class="govuk-link" data-cy="bankSupplyContractIDLink">
+              link 
+            </a>
           </td>
 
         </tr>
