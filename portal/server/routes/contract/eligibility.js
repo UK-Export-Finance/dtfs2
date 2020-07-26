@@ -1,6 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import stream from 'stream';
+import isEqual from 'lodash.isequal';
 import api from '../../api';
 import {
   getApiData,
@@ -8,10 +9,10 @@ import {
   generateErrorSummary,
   formatCountriesForGDSComponent,
 } from '../../helpers';
-
 import {
   provide, DEAL, COUNTRIES,
 } from '../api-data-provider';
+// import formDataMatchesOriginalData from './formDataMatchesOriginalData';
 
 const upload = multer();
 
@@ -64,9 +65,57 @@ router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
   return res.redirect(`/contract/${_id}/eligibility/supporting-documentation`);
 });
 
-router.post('/contract/:_id/eligibility/criteria/save-go-back', async (req, res) => {
+
+const eligibilityMatchesOriginalData = (formData, originalData) => {
+  const originalCriteriaAnswersAsStrings = () => {
+    const result = {};
+
+    originalData.criteria.forEach((c) => {
+      if (typeof c.answer === 'boolean' && String(c.answer).length) {
+        result[`criterion-${c.id}`] = String(c.answer);
+      }
+    });
+    return result;
+  };
+
+  const flattenOriginalData = () => {
+    const flattened = {
+      ...originalData,
+      ...originalCriteriaAnswersAsStrings(),
+    };
+
+    // remove criteria array as the answers are now in strings.
+    delete flattened.criteria;
+
+    // remove status and validationErrors since these are not submitted values.
+    // TODO: ideally these should not be saved in the API and instead returned dynamically
+    delete flattened.status;
+    delete flattened.validationErrors;
+
+    return flattened;
+  };
+
+  const flattenedOriginalData = flattenOriginalData();
+
+  console.log('formData \n', formData);
+  console.log('flattenedOriginalData \n', flattenedOriginalData);
+
+  // if (isEqual(x, y)) {
+  //   return true;
+  // }
+  // return false;
+};
+
+router.post('/contract/:_id/eligibility/criteria/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
+  const { deal } = req.apiData;
+
   const { body } = req;
+
+  // TODO: need a different function / conditions / mapping to check the different criteria answers and structure.
+  // or flatten the structure.
+
+  eligibilityMatchesOriginalData(req.body, deal.eligibility);
 
   await getApiData(
     api.updateEligibilityCriteria(_id, body, userToken),
