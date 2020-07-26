@@ -96,9 +96,9 @@
       {% if criterion.id == "11" %}
         <div id="criterion-group-additional-{{criterion.id}}" {% if criterion.answer != false  %}hidden{% endif %} aria-hidden="{% if criterion.answer != false %}true{% else %}false{% endif %}" data-cy="criteria-11-extra-info">
           
-          {% set hasAgentNameValidationError = validationErrors.errorList['agentName'] %}
+          {% set hasAgentNameValidationError = validationErrors.errorList.agentName %}
 
-          <div id="criterion-group-agentName" class="govuk-form-group{% if hasAgentNameValidationError %} govuk-form-group--error{% endif %}">
+          <div class="govuk-form-group{% if hasAgentNameValidationError %} govuk-form-group--error{% endif %}">
 
             <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
               <div class="govuk-form-group">
@@ -108,7 +108,7 @@
                 <span id="agentName-hint" class="govuk-hint">
                   This should be the legal name of the entity.
                 </span>
-                <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="agentName" name="agentName" value="{{eligibility.agentName}}" maxLength="150" aria-describedby="agentName-info agentName-hint" data-cy="agents-name-input" /> 
+                <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="criterion-group-agentName" name="agentName" value="{{eligibility.agentName}}" maxLength="150" aria-describedby="agentName-info agentName-hint" data-cy="agents-name-input" /> 
               </div>
 
               <span id="agentName-info" class="govuk-hint govuk-character-count__message" aria-live="polite" data-cy="agentName-count">

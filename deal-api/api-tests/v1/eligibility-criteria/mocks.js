@@ -35,7 +35,7 @@ const updatedECCriteria11NoExtraInfo = {
 
 const updatedECCriteria11WithExtraInfo = {
   ...updatedECCriteria11NoExtraInfo,
-  'agentName': 'Agent Name',
+  agentName: 'Agent Name',
   agentAddressCountry: 'GBR',
   agentAddressLine1: 'Address 1',
   agentAddressLine2: 'Address 2',
