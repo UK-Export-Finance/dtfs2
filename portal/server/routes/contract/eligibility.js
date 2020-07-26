@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import stream from 'stream';
-import isEqual from 'lodash.isequal';
+// import isEqual from 'lodash.isequal';
 import api from '../../api';
 import {
   getApiData,
@@ -12,7 +12,7 @@ import {
 import {
   provide, DEAL, COUNTRIES,
 } from '../api-data-provider';
-// import formDataMatchesOriginalData from './formDataMatchesOriginalData';
+import formDataMatchesOriginalData from './formDataMatchesOriginalData';
 
 const upload = multer();
 
@@ -65,7 +65,6 @@ router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
   return res.redirect(`/contract/${_id}/eligibility/supporting-documentation`);
 });
 
-
 const eligibilityMatchesOriginalData = (formData, originalData) => {
   const originalCriteriaAnswersAsStrings = () => {
     const result = {};
@@ -97,13 +96,10 @@ const eligibilityMatchesOriginalData = (formData, originalData) => {
 
   const flattenedOriginalData = flattenOriginalData();
 
-  console.log('formData \n', formData);
-  console.log('flattenedOriginalData \n', flattenedOriginalData);
-
-  // if (isEqual(x, y)) {
-  //   return true;
-  // }
-  // return false;
+  if (formDataMatchesOriginalData(formData, flattenedOriginalData)) {
+    return true;
+  }
+  return false;
 };
 
 router.post('/contract/:_id/eligibility/criteria/save-go-back', provide([DEAL]), async (req, res) => {
@@ -112,15 +108,15 @@ router.post('/contract/:_id/eligibility/criteria/save-go-back', provide([DEAL]),
 
   const { body } = req;
 
-  // TODO: need a different function / conditions / mapping to check the different criteria answers and structure.
-  // or flatten the structure.
-
-  eligibilityMatchesOriginalData(req.body, deal.eligibility);
-
-  await getApiData(
-    api.updateEligibilityCriteria(_id, body, userToken),
-    res,
-  );
+  if (!eligibilityMatchesOriginalData(req.body, deal.eligibility)) {
+    console.log('------- eligibility changed, calling api');
+    await getApiData(
+      api.updateEligibilityCriteria(_id, body, userToken),
+      res,
+    );
+  } else {
+    console.log('------- eligibility NOT changed.');
+  }
 
   const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
@@ -175,27 +171,41 @@ router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(),
   });
 });
 
-router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', upload.any(), async (req, res) => {
+const supportingDocumentationMatchesOriginalData = (formData, formFiles, originalData) => {
+  // security is the only field that is *not* a file.
+  const originalSecurityField = originalData.security;
+  const filesSubmitted = formFiles.length > 0;
+
+  if ((originalSecurityField !== formData.security) || filesSubmitted) {
+    return false;
+  }
+  return true;
+};
+
+router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', provide([DEAL]), upload.any(), async (req, res) => {
+  const { deal } = req.apiData;
   const { _id, userToken } = requestParams(req);
   const { body, files } = req;
 
-  const deal = await getApiData(
-    api.updateEligibilityDocumentation(_id, body, files, userToken),
-    res,
-  );
+  if (!supportingDocumentationMatchesOriginalData(req.body, req.files, deal.dealFiles)) {
+    const updatedDeal = await getApiData(
+      api.updateEligibilityDocumentation(_id, body, files, userToken),
+      res,
+    );
 
-  const { eligibility, dealFiles } = deal;
+    const { eligibility, dealFiles } = updatedDeal;
 
-  if (dealFiles && dealFiles.validationErrors && dealFiles.validationErrors.uploadErrorCount) {
-    const validationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
+    if (dealFiles && dealFiles.validationErrors && dealFiles.validationErrors.uploadErrorCount) {
+      const validationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
 
-    return res.render('eligibility/eligibility-supporting-documentation.njk', {
-      _id,
-      eligibility,
-      dealFiles,
-      validationErrors,
-      bankSupplyContractName: deal.details.bankSupplyContractName,
-    });
+      return res.render('eligibility/eligibility-supporting-documentation.njk', {
+        _id,
+        eligibility,
+        dealFiles,
+        validationErrors,
+        bankSupplyContractName: deal.details.bankSupplyContractName,
+      });
+    }
   }
 
   const redirectUrl = `/contract/${_id}`;
