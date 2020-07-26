@@ -1,6 +1,6 @@
 import isEqual from 'lodash.isequal';
 
-const stripEmptyValuesFromObject = (obj, originalData) => {
+export const stripEmptyValuesFromObject = (obj, originalData) => {
   const stripped = {};
 
   const objectArray = Object.entries(obj);
