@@ -76,10 +76,10 @@ module.exports = {
         "agentAddress1" : "",
         "agentAddress2" : "",
         "agentAddress3" : "",
-        "agentCountry" : "",
+        "agentAddressCountry" : "",
         "agentName" : "",
-        "agentPostcode" : "",
-        "agentTown" : "",
+        "agentAddressPostcode" : "",
+        "agentAddressTown" : "",
         "validationErrors" : {
             "count" : 0,
             "errorList" : {
@@ -91,11 +91,11 @@ module.exports = {
                 "16" : {},
                 "17" : {},
                 "18" : {},
-                "agent-address-line-1" : {},
-                "agent-country" : {},
-                "agent-name" : {},
-                "agent-postcode" : {},
-                "agent-town" : {}
+                "agentAddressLine1" : {},
+                "agentAddressCountry" : {},
+                "agentName" : {},
+                "agentAddressPostcode" : {},
+                "agentAddressTown" : {}
             }
         }
     },

@@ -35,33 +35,33 @@ const updatedECCriteria11NoExtraInfo = {
 
 const updatedECCriteria11WithExtraInfo = {
   ...updatedECCriteria11NoExtraInfo,
-  'agent-name': 'Agent Name',
-  'agent-country': 'GBR',
-  'agent-address-line-1': 'Address 1',
-  'agent-address-line-2': 'Address 2',
-  'agent-address-line-3': 'Address 3',
-  'agent-address-town': 'Town',
-  'agent-postcode': 'AA1 2BB',
+  'agentName': 'Agent Name',
+  agentAddressCountry: 'GBR',
+  agentAddressLine1: 'Address 1',
+  agentAddressLine2: 'Address 2',
+  agentAddressLine3: 'Address 3',
+  agentAddressTown: 'Town',
+  agentAddressPostcode: 'AA1 2BB',
 };
 
 const criteria11ExtraInfo = {
   agentName: 'Agent Name',
-  agentCountry: 'GBR',
+  agentAddressCountry: 'GBR',
   agentAddress1: 'Address 1',
   agentAddress2: 'Address 2',
   agentAddress3: 'Address 3',
-  agentTown: 'Town',
-  agentPostcode: 'AA1 2BB',
+  agentAddressTown: 'Town',
+  agentAddressPostcode: 'AA1 2BB',
 };
 
 const criteria11ExtraInfoEmpty = {
   agentName: '',
-  agentCountry: '',
+  agentAddressCountry: '',
   agentAddress1: '',
   agentAddress2: '',
   agentAddress3: '',
-  agentTown: '',
-  agentPostcode: '',
+  agentAddressTown: '',
+  agentAddressPostcode: '',
 };
 
 module.exports = {

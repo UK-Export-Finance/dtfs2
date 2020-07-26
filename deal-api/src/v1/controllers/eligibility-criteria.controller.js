@@ -47,13 +47,13 @@ exports.update = async (req, res) => {
       const criteria11IsFalse = (typeof criteria11.answer !== 'undefined' && criteria11.answer === false);
 
       const criteria11Additional = {
-        agentName: criteria11IsFalse && req.body['agent-name'] ? req.body['agent-name'].substring(0, 150) : '',
-        agentCountry: criteria11IsFalse ? req.body['agent-country'] : '',
-        agentAddress1: criteria11IsFalse ? req.body['agent-address-line-1'] : '',
-        agentAddress2: criteria11IsFalse ? req.body['agent-address-line-2'] : '',
-        agentAddress3: criteria11IsFalse ? req.body['agent-address-line-3'] : '',
-        agentTown: criteria11IsFalse ? req.body['agent-address-town'] : '',
-        agentPostcode: criteria11IsFalse ? req.body['agent-postcode'] : '',
+        agentName: criteria11IsFalse && req.body.agentName ? req.body.agentName.substring(0, 150) : '',
+        agentAddressCountry: criteria11IsFalse ? req.body.agentAddressCountry : '',
+        agentAddress1: criteria11IsFalse ? req.body.agentAddressLine1 : '',
+        agentAddress2: criteria11IsFalse ? req.body.agentAddressLine2 : '',
+        agentAddress3: criteria11IsFalse ? req.body.agentAddressLine3 : '',
+        agentAddressTown: criteria11IsFalse ? req.body.agentAddressTown : '',
+        agentAddressPostcode: criteria11IsFalse ? req.body.agentAddressPostcode : '',
       };
 
       const criteria11ValidationErrors = getCriteria11Errors(criteria11Additional, criteria11IsFalse);

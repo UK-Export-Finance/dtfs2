@@ -17,11 +17,11 @@ exports.getEligibilityErrors = (criteria) => {
 
 exports.getCriteria11Errors = ((criteria11Additional, criteria11IsFalse) => {
   const errorList = {
-    'agent-name': {},
-    'agent-country': {},
-    'agent-address-line-1': {},
-    'agent-postcode': {},
-    'agent-town': {},
+    agentName: {},
+    agentAddressCountry: {},
+    agentAddressLine1: {},
+    agentAddressPostcode: {},
+    agentAddressTown: {},
   };
 
   if (!criteria11IsFalse) {
@@ -33,35 +33,35 @@ exports.getCriteria11Errors = ((criteria11Additional, criteria11IsFalse) => {
 
 
   if (!criteria11Additional.agentName) {
-    errorList['agent-name'] = {
+    errorList.agentName = {
       order: '11-1',
       text: 'Agent\'s corporate name is required.',
     };
   }
 
-  if (!criteria11Additional.agentCountry) {
-    errorList['agent-country'] = {
+  if (!criteria11Additional.agentAddressCountry) {
+    errorList.agentAddressCountry = {
       order: '11-2',
       text: 'Agent\'s country is required.',
     };
   }
 
   if (!criteria11Additional.agentAddress1) {
-    errorList['agent-address-line-1'] = {
+    errorList.agentAddressLine1 = {
       order: '11-3',
       text: 'Agent\'s corporate address is required',
     };
   }
 
-  if (criteria11Additional.agentCountry && criteria11Additional.agentCountry !== 'GBR' && !criteria11Additional.agentTown) {
-    errorList['agent-town'] = {
+  if (criteria11Additional.agentAddressCountry && criteria11Additional.agentAddressCountry !== 'GBR' && !criteria11Additional.agentAddressTown) {
+    errorList.agentAddressTown = {
       order: '11-4',
       text: 'Agent\'s city/town is required',
     };
   }
 
-  if (criteria11Additional.agentCountry === 'GBR' && !criteria11Additional.agentPostcode) {
-    errorList['agent-postcode'] = {
+  if (criteria11Additional.agentAddressCountry === 'GBR' && !criteria11Additional.agentAddressPostcode) {
+    errorList.agentAddressPostcode = {
       order: '11-5',
       text: 'Agent\'s corporate postcode is required',
     };

@@ -125,7 +125,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
 
       const updatedECPostcode = {
         ...updatedECCriteria11NoExtraInfo,
-        'agent-country': 'GBR',
+        agentAddressCountry: 'GBR',
       };
 
       const { status, body } = await as(aBarclaysMaker).put(updatedECPostcode).to(`/v1/deals/${newId}/eligibility-criteria`);
@@ -140,7 +140,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
         }
       });
 
-      expect(errorIdList).toEqual(['13', '15', '16', '17', '18', 'agent-address-line-1', 'agent-name', 'agent-postcode']);
+      expect(errorIdList).toEqual(['13', '15', '16', '17', '18', 'agentAddressLine1', 'agentName', 'agentAddressPostcode']);
     });
 
     it('generated postcode validation error if criteria11 is false and country = GBR but postcode not entered', async () => {
@@ -159,7 +159,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
         }
       });
 
-      expect(errorIdList).toEqual(['13', '15', '16', '17', '18', 'agent-address-line-1', 'agent-country', 'agent-name']);
+      expect(errorIdList).toEqual(['13', '15', '16', '17', '18', 'agentAddressLine1', 'agentAddressCountry', 'agentName']);
     });
 
     it('updates criteria 11 extra info in criteria11 is false', async () => {
@@ -179,13 +179,13 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
 
       const updatedECCriteria11WithExtraInfoLongAgent = {
         ...updatedECCriteria11WithExtraInfo,
-        'agent-name': 'a'.repeat(characterCount + 1),
+        agentName: 'a'.repeat(characterCount + 1),
       };
 
       const { status, body } = await as(aBarclaysMaker).put(updatedECCriteria11WithExtraInfoLongAgent).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
-      expect(body.eligibility.agentName).toEqual(updatedECCriteria11WithExtraInfoLongAgent['agent-name'].substring(0, characterCount));
+      expect(body.eligibility.agentName).toEqual(updatedECCriteria11WithExtraInfoLongAgent.agentName.substring(0, characterCount));
     });
 
     it('does not generate town mandatory error if criteria11 is false and country = GBR and town not entered', async () => {
@@ -194,14 +194,14 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
 
       const updatedECCriteria11WithExtraInfoNotGBR = {
         ...updatedECCriteria11WithExtraInfo,
-        'agent-address-town': '',
-        'agent-country': 'GBR',
+        agentAddressTown: '',
+        agentAddressCountry: 'GBR',
       };
 
       const { status, body } = await as(aBarclaysMaker).put(updatedECCriteria11WithExtraInfoNotGBR).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
-      expect(body.eligibility.validationErrors.errorList['agent-town'].text).toBeUndefined();
+      expect(body.eligibility.validationErrors.errorList.agentAddressTown.text).toBeUndefined();
     });
 
     it('generates town mandatory error if criteria11 is false and country != GBR and town not entered', async () => {
@@ -210,14 +210,14 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
 
       const updatedECCriteria11WithExtraInfoNotGBR = {
         ...updatedECCriteria11WithExtraInfo,
-        'agent-address-town': '',
-        'agent-country': 'AUS',
+        agentAddressTown: '',
+        agentAddressCountry: 'AUS',
       };
 
       const { status, body } = await as(aBarclaysMaker).put(updatedECCriteria11WithExtraInfoNotGBR).to(`/v1/deals/${newId}/eligibility-criteria`);
 
       expect(status).toEqual(200);
-      expect(body.eligibility.validationErrors.errorList['agent-town'].text).toEqual("Agent's city/town is required");
+      expect(body.eligibility.validationErrors.errorList.agentAddressTown.text).toEqual("Agent's city/town is required");
     });
 
     it('removes criteria 11 extra info when criteria11 is changed from false to true', async () => {
