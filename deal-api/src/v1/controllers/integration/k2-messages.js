@@ -102,9 +102,9 @@ const generateTypeA = async (deal, fromStatus) => {
 
     .Ec_agents_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 11))
     .Ec_agents_name(deal.eligibility.agentName)
-    .Ec_agents_address_line_1(deal.eligibility.agentAddress1)
-    .Ec_agents_address_line_2(deal.eligibility.agentAddress2)
-    .Ec_agents_address_line_3(deal.eligibility.agentAddress3)
+    .Ec_agents_address_line_1(deal.eligibility.agentAddressLine1)
+    .Ec_agents_address_line_2(deal.eligibility.agentAddressLine2)
+    .Ec_agents_address_line_3(deal.eligibility.agentAddressLine3)
     .Ec_agents_address_town(deal.eligibility.agentAddressTown)
     .Ec_agents_address_postal_code(deal.eligibility.agentAddressPostcode)
     .Ec_agents_address_country(await convertCountryCodeToId(deal.eligibility.agentAddressCountry))

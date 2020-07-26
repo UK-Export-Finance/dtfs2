@@ -73,9 +73,9 @@ module.exports = {
                 "answer" : true
             }
         ],
-        "agentAddress1" : "",
-        "agentAddress2" : "",
-        "agentAddress3" : "",
+        "agentAddressLine1" : "",
+        "agentAddressLine2" : "",
+        "agentAddressLine3" : "",
         "agentAddressCountry" : "",
         "agentName" : "",
         "agentAddressPostcode" : "",

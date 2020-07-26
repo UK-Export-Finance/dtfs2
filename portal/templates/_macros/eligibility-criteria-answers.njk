@@ -21,7 +21,7 @@
 
         {% if criterion.id === 11 %}
 
-          {% set hasAgentAddressLine = eligibility.agentAddress1 | length or eligibility.agentAddress2 | length or eligibility.agentAddress3 | length %}
+          {% set hasAgentAddressLine = eligibility.agentAddressLine1 | length or eligibility.agentAddressLine2 | length or eligibility.agentAddressLine3 | length %}
           {% set renderAgentAddress = hasAgentAddressLine or eligibility.agentAddressTown | length or eligibilityagentAddressPostcode | length %}
    
           <div class="eligibility-criteria-row">
@@ -43,9 +43,9 @@
                   Agent's corporate address
                 </dt>
                 <dd class="govuk-summary-list__value govuk-body-s">
-                  <p>{{ eligibility.agentAddress1 }}</p>
-                  <p>{{ eligibility.agentAddress2 }}</p>
-                  <p>{{ eligibility.agentAddress3 }}</p>
+                  <p>{{ eligibility.agentAddressLine1 }}</p>
+                  <p>{{ eligibility.agentAddressLine2 }}</p>
+                  <p>{{ eligibility.agentAddressLine3 }}</p>
                   <p>{{ eligibility.agentAddressTown }}</p>
                   <p>{{ eligibility.agentAddressPostcode }}</p>
                   <p>{{ eligibility.agentAddressCountry }}</p>
