@@ -23,7 +23,7 @@ const getUserFilters = (params, user = {}) => {
   return false;
 };
 
-const buildDashboardFilters = (params, user) => {
+const buildReportFilters = (params, user) => {
   const filters = [];
 
   if (!params) {
@@ -54,6 +54,15 @@ const buildDashboardFilters = (params, user) => {
     );
   }
 
+  if (CONSTANTS.FACILITY_STATUS[params.facilityStatus]) {
+    filters.push(
+      {
+        field: 'details.facilityStatus',
+        value: CONSTANTS.FACILITY_STATUS[params.facilityStatus],
+      },
+    );
+  }
+
   if (params.bankSupplyContractID) {
     filters.push({
       field: 'details.bankSupplyContractID',
@@ -65,6 +74,13 @@ const buildDashboardFilters = (params, user) => {
     filters.push({
       field: 'details.ukefDealId',
       value: params.ukefSupplyContractID,
+    });
+  }
+
+  if (params.supplierName) {
+    filters.push({
+      field: 'details.supplierName',
+      value: params.supplierName,
     });
   }
 
@@ -115,4 +131,4 @@ const buildDashboardFilters = (params, user) => {
   return filters;
 };
 
-export default buildDashboardFilters;
+export default buildReportFilters;
