@@ -137,7 +137,6 @@ router.get('/reports/audit-transactions/:page', async (req, res) => {
 router.get('/reports/audit-supply-contracts/:id/transactions', async (req, res) => res.redirect('/reports/audit-supply-contracts/:id/transactions/0'));
 
 router.get('/reports/audit-supply-contracts/:id/transactions/:page', async (req, res) => {
-
   const { userToken } = requestParams(req);
   // get deal info
   const idFilter = {
