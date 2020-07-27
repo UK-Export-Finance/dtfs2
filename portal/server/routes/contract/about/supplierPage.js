@@ -103,12 +103,19 @@ router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL]), async
   const deal = req.apiData[DEAL];
   const submissionDetails = req.body;
 
+  const {
+    'supplier-address-country': supplierAddressCountry,
+    'supplier-correspondence-address-country': supplierCorrespondenceAddressCountry,
+    'indemnifier-address-country': indemnifierAddressCountry,
+    'indemnifier-correspondence-address-country': indemnifierCorrespondenceAddressCountry,
+  } = deal.submissionDetails;
+
   const mappedSubmissionDetailsForMatchCheck = {
     ...deal.submissionDetails,
-    'supplier-address-country': deal.submissionDetails['supplier-address-country'].code,
-    'supplier-correspondence-address-country': deal.submissionDetails['supplier-correspondence-address-country'].code,
-    'indemnifier-address-country': deal.submissionDetails['indemnifier-address-country'].code,
-    'indemnifier-correspondence-address-country': deal.submissionDetails['indemnifier-correspondence-address-country'].code,
+    'supplier-address-country': (supplierAddressCountry && supplierAddressCountry.code) ? supplierAddressCountry.code : '',
+    'supplier-correspondence-address-country': (supplierCorrespondenceAddressCountry && supplierCorrespondenceAddressCountry.code) ? supplierCorrespondenceAddressCountry.code : '',
+    'indemnifier-address-country': (indemnifierAddressCountry && indemnifierAddressCountry.code) ? indemnifierAddressCountry.code : '',
+    'indemnifier-correspondence-address-country': (indemnifierCorrespondenceAddressCountry && indemnifierCorrespondenceAddressCountry.code) ? indemnifierCorrespondenceAddressCountry.code : '',
   };
 
   if (!formDataMatchesOriginalData(submissionDetails, mappedSubmissionDetailsForMatchCheck)) {

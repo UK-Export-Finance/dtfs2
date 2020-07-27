@@ -78,9 +78,11 @@ router.post('/contract/:_id/about/financial/save-go-back', provide([DEAL]), asyn
     supplyContractValue: sanitizeCurrency(submissionDetails.supplyContractValue).sanitizedValue,
   };
 
+  const { supplyContractCurrency } = deal.submissionDetails;
+
   const mappedSubmissionDetailsForMatchCheck = {
     ...deal.submissionDetails,
-    supplyContractCurrency: deal.submissionDetails.supplyContractCurrency.id,
+    supplyContractCurrency: (supplyContractCurrency && supplyContractCurrency.id) ? supplyContractCurrency.id : '',
   };
 
   if (!formDataMatchesOriginalData(mappedFormDataForMatchCheck, mappedSubmissionDetailsForMatchCheck)) {
