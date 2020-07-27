@@ -142,28 +142,37 @@ const sendStatusUpdateEmails = async (deal, fromStatus, user) => {
     submissionType,
     bankSupplyContractID,
     status: currentStatus,
+    maker,
   } = deal.details;
 
   const {
     'supplier-name': supplerName,
   } = deal.submissionDetails;
 
-  const updatedByName = `${user.firstname} ${user.surname}`;
+  const {
+    firstname,
+    surname,
+    username,
+  } = user;
+
+  const updatedByName = `${firstname} ${surname}`;
+  const updatedByEmail = username;
 
   const EMAIL_TEMPLATE_ID = '718beb52-474e-4f34-a8d7-ab0e48cdffce';
   // const EMAIL_RECIPIENT = 'TODO';
   const EMAIL_RECIPIENT = 'tony.barnes@notbinary.co.uk';
 
   const emailVariables = {
-    firstName: 'TODO',
-    surname: 'TODO',
+    firstName: maker.firstname,
+    surname: maker.surname,
     submissionType,
     supplerName,
     bankSupplyContractID,
     currentStatus,
     previousStatus: fromStatus,
     updatedByName,
-  }
+    updatedByEmail,
+  };
 
   await sendEmail(
     EMAIL_TEMPLATE_ID,
