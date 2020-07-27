@@ -39,9 +39,9 @@ router.get('/reports/audit-supply-contracts/:page', async (req, res) => {
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-  console.log(`transactionData: ${util.inspect(dealData)}`);
+  // console.log(`transactionData: ${util.inspect(dealData)}`);
   console.log(`transactionData: ${util.inspect(dealData.deals[0])}`);
-  console.log(`transactionData: ${util.inspect(dealData.deals[0].details)}`);
+
   const pages = {
     totalPages: Math.ceil(dealData.count / PAGESIZE),
     currentPage: parseInt(req.params.page, 10),
@@ -134,52 +134,46 @@ router.get('/reports/audit-transactions/:page', async (req, res) => {
   });
 });
 
-router.get('/reports/:id/transactions/:page', async (req, res) => {
-  console.log('transactions');
-  console.log(req.params.id);
-  const { userToken } = requestParams(req);
-  const filters = {}; // TODO wire up filters; probably do same as dashboard +use session
+router.get('/reports/audit-supply-contracts/:id/transactions', async (req, res) => res.redirect('/reports/audit-supply-contracts/:id/transactions/0'));
 
-  // const transactions = [
-  //   {
-  //     transaction_id: req.params.id.concat('-', '2'),
-  //     transactionType: 'loan',
-  //     bankFacilityId: '12345',
-  //     deal_created: '1595768308',
-  //     details: {
-  //       bankSupplyContractID: req.params.id,
-  //       dateOfLastAction: '1595768308',
-  //       checker: 'ALT CHECKER',
-  //     },
-  //     issuedDate: '1595787789',
-  //   },
-  //   {
-  //     transaction_id: req.params.id.concat('-', '2'),
-  //     transactionType: 'bond',
-  //     bankFacilityId: '65789',
-  //     deal_created: '1595707789',
-  //     details: {
-  //       bankSupplyContractID: req.params.id,
-  //       dateOfLastAction: '1595737789',
-  //       checker: 'ALT CHECKER',
-  //     },
-  //     issuedDate: '1595787789',
-  //   },
-  // ];
+router.get('/reports/audit-supply-contracts/:id/transactions/:page', async (req, res) => {
+
+  const { userToken } = requestParams(req);
+  // get deal info
+  const idFilter = {
+    field: '_id',
+    value: req.params.id,
+  };
+  // const dealFilters = buildReportFilters(idFilter, req.session.user);
+  const { deals } = await getApiData(
+    api.contracts(req.params.page * PAGESIZE, PAGESIZE, idFilter, userToken),
+    res,
+  );
+  console.log(`deals: ${util.inspect(deals)}`);
+  // extract the bankSupplyContractID
+  const { bankSupplyContractID } = deals[0].details;
+  const transactionfilters = {
+    bankSupplyContractID,
+  };
+
+  const filters = buildReportFilters(transactionfilters, req.session.user);
+
   const { transactions, count } = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-  console.log(`transactios: ${util.inspect(transactions)}`);
+  console.log(`transactions: ${util.inspect(transactions)}`);
 
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
     currentPage: parseInt(req.params.page, 10),
     totalItems: count,
   };
+
   return res.render('reports/audit-supply-transactions.njk', {
     pages,
     transactions,
+    bankSupplyContractID,
     primaryNav,
     subNav: 'transactions-report',
     user: req.session.user,
