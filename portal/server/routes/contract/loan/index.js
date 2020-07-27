@@ -15,6 +15,7 @@ import {
   loanPreviewValidationErrors,
 } from './pageSpecificValidationErrors';
 import completedLoanForms from './completedForms';
+import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 
 const router = express.Router();
 
@@ -65,7 +66,11 @@ const handlePremiumFrequencyField = (loanBody) => {
       return inArrearPremiumFrequency;
     }
 
-    return existingPremiumFrequency;
+    if (existingPremiumFrequency) {
+      return existingPremiumFrequency;
+    }
+
+    return '';
   };
 
   modifiedLoan.premiumFrequency = premiumFrequencyValue();
@@ -262,20 +267,33 @@ router.get('/contract/:_id/loan/:loanId/preview', provide([LOAN]), async (req, r
   });
 });
 
-router.post('/contract/:_id/loan/:loanId/save-go-back', async (req, res) => {
+router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
+  const { loan } = req.apiData.loan;
 
   let modifiedBody = handleBankReferenceNumberField(req.body);
   modifiedBody = handlePremiumFrequencyField(req.body);
 
-  await postToApi(
-    api.updateDealLoan(
-      dealId,
-      loanId,
-      modifiedBody,
-      userToken,
-    ),
-  );
+  // UI form submit only has the currency code. API has a currency object.
+  // to check if something has changed, only use the currency code.
+  const mappedOriginalData = loan;
+
+  if (loan.currency && loan.currency.id) {
+    mappedOriginalData.currency = loan.currency.id;
+  }
+  delete mappedOriginalData._id; // eslint-disable-line no-underscore-dangle
+  delete mappedOriginalData.status;
+
+  if (!formDataMatchesOriginalData(modifiedBody, mappedOriginalData)) {
+    await postToApi(
+      api.updateDealLoan(
+        dealId,
+        loanId,
+        modifiedBody,
+        userToken,
+      ),
+    );
+  }
 
   const redirectUrl = `/contract/${req.params._id}`; // eslint-disable-line no-underscore-dangle
   return res.redirect(redirectUrl);

@@ -1,17 +1,18 @@
 import express from 'express';
 import multer from 'multer';
 import stream from 'stream';
-import api from '../../api';
+import api from '../../../api';
 import {
   getApiData,
   requestParams,
   generateErrorSummary,
   formatCountriesForGDSComponent,
-} from '../../helpers';
-
+} from '../../../helpers';
 import {
   provide, DEAL, COUNTRIES,
-} from '../api-data-provider';
+} from '../../api-data-provider';
+import submittedEligibilityMatchesOriginalData from './submittedEligibilityMatchesOriginalData';
+import submittedDocumentationMatchesOriginalData from './submittedDocumentationMatchesOriginalData';
 
 const upload = multer();
 
@@ -42,8 +43,8 @@ router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), as
       _id: deal._id, // eslint-disable-line no-underscore-dangle
       countries: formatCountriesForGDSComponent(
         countries,
-        deal.eligibility.agentCountry,
-        !deal.eligibility.agentCountry,
+        deal.eligibility.agentAddressCountry,
+        !deal.eligibility.agentAddressCountry,
       ),
       eligibility: deal.eligibility,
       validationErrors,
@@ -64,14 +65,18 @@ router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
   return res.redirect(`/contract/${_id}/eligibility/supporting-documentation`);
 });
 
-router.post('/contract/:_id/eligibility/criteria/save-go-back', async (req, res) => {
+router.post('/contract/:_id/eligibility/criteria/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
+  const { deal } = req.apiData;
+
   const { body } = req;
 
-  await getApiData(
-    api.updateEligibilityCriteria(_id, body, userToken),
-    res,
-  );
+  if (!submittedEligibilityMatchesOriginalData(req.body, deal.eligibility)) {
+    await getApiData(
+      api.updateEligibilityCriteria(_id, body, userToken),
+      res,
+    );
+  }
 
   const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);
@@ -126,27 +131,30 @@ router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(),
   });
 });
 
-router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', upload.any(), async (req, res) => {
+router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', provide([DEAL]), upload.any(), async (req, res) => {
+  const { deal } = req.apiData;
   const { _id, userToken } = requestParams(req);
   const { body, files } = req;
 
-  const deal = await getApiData(
-    api.updateEligibilityDocumentation(_id, body, files, userToken),
-    res,
-  );
+  if (!submittedDocumentationMatchesOriginalData(req.body, req.files, deal.dealFiles)) {
+    const updatedDeal = await getApiData(
+      api.updateEligibilityDocumentation(_id, body, files, userToken),
+      res,
+    );
 
-  const { eligibility, dealFiles } = deal;
+    const { eligibility, dealFiles } = updatedDeal;
 
-  if (dealFiles && dealFiles.validationErrors && dealFiles.validationErrors.uploadErrorCount) {
-    const validationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
+    if (dealFiles && dealFiles.validationErrors && dealFiles.validationErrors.uploadErrorCount) {
+      const validationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
 
-    return res.render('eligibility/eligibility-supporting-documentation.njk', {
-      _id,
-      eligibility,
-      dealFiles,
-      validationErrors,
-      bankSupplyContractName: deal.details.bankSupplyContractName,
-    });
+      return res.render('eligibility/eligibility-supporting-documentation.njk', {
+        _id,
+        eligibility,
+        dealFiles,
+        validationErrors,
+        bankSupplyContractName: deal.details.bankSupplyContractName,
+      });
+    }
   }
 
   const redirectUrl = `/contract/${_id}`;

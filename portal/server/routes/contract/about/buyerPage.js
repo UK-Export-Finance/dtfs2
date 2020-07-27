@@ -13,6 +13,7 @@ import {
 
 import calculateStatusOfEachPage from './navStatusCalculations';
 import updateSubmissionDetails from './updateSubmissionDetails';
+import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 
 const router = express.Router();
 
@@ -75,10 +76,27 @@ router.post('/contract/:_id/about/buyer', async (req, res) => {
 });
 
 router.post('/contract/:_id/about/buyer/save-go-back', provide([DEAL]), async (req, res) => {
+  const deal = req.apiData[DEAL];
   const { _id, userToken } = requestParams(req);
-  const submissionDetails = req.body;
 
-  await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
+  const {
+    'buyer-address-country': buyerAddressCountry,
+    destinationOfGoodsAndServices,
+  } = deal.submissionDetails;
+
+  // UI form submit only has the country code. API has a country object.
+  // to check if something has changed, only use the country code.
+  const destinationOfGoodsAndServicesCode = (destinationOfGoodsAndServices && destinationOfGoodsAndServices.code) ? destinationOfGoodsAndServices.code : '';
+
+  const mappedOriginalData = {
+    ...deal.submissionDetails,
+    'buyer-address-country': (buyerAddressCountry && buyerAddressCountry.code) ? buyerAddressCountry.code : '',
+    destinationOfGoodsAndServices: destinationOfGoodsAndServicesCode,
+  };
+
+  if (!formDataMatchesOriginalData(req.body, mappedOriginalData)) {
+    await updateSubmissionDetails(deal, req.body, userToken);
+  }
 
   const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);

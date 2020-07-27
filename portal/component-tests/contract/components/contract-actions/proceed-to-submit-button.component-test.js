@@ -56,7 +56,7 @@ describe(component, () => {
   });
 
   describe('when viewed by a user with checker AND maker roles, with userCanSubmit param set to true', () => {
-    it('should be enabled regardless of deal status', () => {
+    it('should be enabled', () => {
       const user = { roles: ['maker', 'checker'] };
       const deals = [
         { _id: 1, details: { status: 'Submitted' } },
@@ -68,6 +68,19 @@ describe(component, () => {
         const wrapper = render({ user, deal, userCanSubmit });
         wrapper.expectPrimaryButton('[data-cy="ProceedToSubmit"]')
           .toLinkTo(`/contract/${deal._id}/confirm-submission`, 'Proceed to submit');
+      }
+    });
+
+    it('should NOT render when deal status is `Draft`', () => {
+      const user = { roles: ['maker', 'checker'] };
+      const deals = [
+        { _id: 1, details: { status: 'Draft' } },
+      ];
+      const userCanSubmit = true;
+
+      for (const deal of deals) {
+        const wrapper = render({ user, deal, userCanSubmit });
+        wrapper.expectElement('[data-cy="ProceedToSubmit"]').notToExist();
       }
     });
   });

@@ -86,6 +86,9 @@ module.exports = (wrapper, html, params) => {
         toExist: () => {
           expect(wrapper(selector).html()).toBeDefined();
         },
+        notToExist: () => {
+          expect(wrapper(selector).html()).toBeNull();
+        },
       }
     },
     expectInput: (selector) => {

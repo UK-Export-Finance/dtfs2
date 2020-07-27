@@ -15,6 +15,7 @@ import {
 
 import calculateStatusOfEachPage from './navStatusCalculations';
 import updateSubmissionDetails from './updateSubmissionDetails';
+import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 
 const router = express.Router();
 
@@ -99,9 +100,28 @@ router.post('/contract/:_id/about/supplier', async (req, res) => {
 
 router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
-  const submissionDetails = req.body;
+  const deal = req.apiData[DEAL];
 
-  await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
+  const {
+    'supplier-address-country': supplierAddressCountry,
+    'supplier-correspondence-address-country': supplierCorrespondenceAddressCountry,
+    'indemnifier-address-country': indemnifierAddressCountry,
+    'indemnifier-correspondence-address-country': indemnifierCorrespondenceAddressCountry,
+  } = deal.submissionDetails;
+
+  // UI form submit only has the country code. API has a country object.
+  // to check if something has changed, only use the country code.
+  const mappedOriginalData = {
+    ...deal.submissionDetails,
+    'supplier-address-country': (supplierAddressCountry && supplierAddressCountry.code) ? supplierAddressCountry.code : '',
+    'supplier-correspondence-address-country': (supplierCorrespondenceAddressCountry && supplierCorrespondenceAddressCountry.code) ? supplierCorrespondenceAddressCountry.code : '',
+    'indemnifier-address-country': (indemnifierAddressCountry && indemnifierAddressCountry.code) ? indemnifierAddressCountry.code : '',
+    'indemnifier-correspondence-address-country': (indemnifierCorrespondenceAddressCountry && indemnifierCorrespondenceAddressCountry.code) ? indemnifierCorrespondenceAddressCountry.code : '',
+  };
+
+  if (!formDataMatchesOriginalData(req.body, mappedOriginalData)) {
+    await updateSubmissionDetails(deal, req.body, userToken);
+  }
 
   const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);

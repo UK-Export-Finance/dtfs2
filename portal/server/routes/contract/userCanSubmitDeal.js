@@ -1,4 +1,8 @@
 const userCanSubmitDeal = (deal, user) => {
+  if (deal.details.status === 'Submitted') {
+    return false;
+  }
+
   const isMakerCheckerUser = (user.roles.includes('maker') && user.roles.includes('checker'));
 
   if (!isMakerCheckerUser) {

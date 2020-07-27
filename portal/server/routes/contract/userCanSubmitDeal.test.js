@@ -1,6 +1,19 @@
 import userCanSubmitDeal from './userCanSubmitDeal';
 
 describe('userCanSubmitDeal', () => {
+  describe('when deal has `Submitted` status', () => {
+    it('should return false', () => {
+      const deal = {
+        details: {
+          status: 'Submitted',
+        },
+      };
+
+      const result = userCanSubmitDeal(deal);
+      expect(result).toEqual(false);
+    });
+  });
+
   describe('when user is a maker', () => {
     it('should return true', () => {
       const deal = {
