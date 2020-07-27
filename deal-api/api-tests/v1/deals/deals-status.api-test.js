@@ -225,6 +225,26 @@ describe('/v1/deals/:id/status', () => {
       });
     });
 
+    it('adds the user to `editedBy` array', async () => {
+      const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        comments: 'Flee!',
+        status: 'Abandoned Deal',
+      };
+
+      await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+
+      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+      expect(body.deal.editedBy[body.deal.editedBy.length - 1]).toEqual({
+        date: expect.any(String),
+        username: anHSBCMaker.username,
+        roles: anHSBCMaker.roles,
+        bank: anHSBCMaker.bank,
+        userId: anHSBCMaker._id,
+      });
+    });
+
     it('rejects "Abandoned Deal" updates if no comment provided.', async () => {
       const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
       const createdDeal = postResult.body;
