@@ -5,6 +5,7 @@ import {
   mapCurrencies,
   errorHref,
   generateErrorSummary,
+  sanitizeCurrency,
 } from '../../../helpers';
 
 import {
@@ -13,6 +14,8 @@ import {
 
 import calculateStatusOfEachPage from './navStatusCalculations';
 import updateSubmissionDetails from './updateSubmissionDetails';
+
+import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 
 const router = express.Router();
 
@@ -67,9 +70,26 @@ router.post('/contract/:_id/about/financial', provide([DEAL]), async (req, res) 
 
 router.post('/contract/:_id/about/financial/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
+  const deal = req.apiData[DEAL];
   const submissionDetails = req.body;
 
-  await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
+  const mappedFormDataForMatchCheck = {
+    ...submissionDetails,
+    supplyContractValue: sanitizeCurrency(submissionDetails.supplyContractValue).sanitizedValue,
+  };
+
+  const { supplyContractCurrency } = deal.submissionDetails;
+
+  // UI form submit only has the currency code. API has a currency object.
+  // to check if something has changed, only use the currency code.
+  const mappedOriginalData = {
+    ...deal.submissionDetails,
+    supplyContractCurrency: (supplyContractCurrency && supplyContractCurrency.id) ? supplyContractCurrency.id : '',
+  };
+
+  if (!formDataMatchesOriginalData(mappedFormDataForMatchCheck, mappedOriginalData)) {
+    await updateSubmissionDetails(deal, submissionDetails, userToken);
+  }
 
   const redirectUrl = `/contract/${_id}`;
   return res.redirect(redirectUrl);

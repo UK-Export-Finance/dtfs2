@@ -1,6 +1,6 @@
 const $ = require('mongo-dot-notation');
 const moment = require('moment');
-const { findOneDeal } = require('./deal.controller');
+const { findOneDeal, updateDeal } = require('./deal.controller');
 const { addComment } = require('./deal-comments.controller');
 
 const { userHasAccessTo } = require('../users/checks');
@@ -172,6 +172,15 @@ exports.update = (req, res) => {
 
     const dealAfterCommentsUpdate = await addComment(req.params.id, req.body.comments, user);
 
+    const newReq = {
+      params: req.params,
+      body: dealAfterCommentsUpdate,
+      user: req.user,
+    };
+
+    // TODO: add unit test to assert 'editedby is added
+    const dealAfterEditedByUpdate = await updateDeal(newReq);
+
     if (toStatus === 'Submitted') {
       const dealAfterAllUpdates = await createSubmissionDate(collection, req.params.id, user);
 
@@ -187,7 +196,7 @@ exports.update = (req, res) => {
       }
     }
 
-    const dealAfterAllUpdates = dealAfterCommentsUpdate;
+    const dealAfterAllUpdates = dealAfterEditedByUpdate;
 
     return res.status(200).send(dealAfterAllUpdates.details.status);
   });

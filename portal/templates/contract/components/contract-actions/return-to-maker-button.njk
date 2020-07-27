@@ -3,7 +3,7 @@
 {% macro render(params) %}
   {% if params.deal.details.status and params.userCanSubmit %}
 
-    {% if params.user.roles.includes('checker') and params.user.roles.includes('maker') %}
+    {% if not ["Draft"].includes(params.deal.details.status) and params.user.roles.includes('checker') and params.user.roles.includes('maker') %}
       {{ govukButton({
         "disabled": false,
         "text": "Return to Maker",

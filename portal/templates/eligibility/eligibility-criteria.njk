@@ -96,21 +96,22 @@
       {% if criterion.id == "11" %}
         <div id="criterion-group-additional-{{criterion.id}}" {% if criterion.answer != false  %}hidden{% endif %} aria-hidden="{% if criterion.answer != false %}true{% else %}false{% endif %}" data-cy="criteria-11-extra-info">
           
-          {% set hasAgentNameValidationError = validationErrors.errorList['agent-name'] %}
+          {% set hasAgentNameValidationError = validationErrors.errorList.agentName %}
+
           <div id="criterion-group-agent-name" class="govuk-form-group{% if hasAgentNameValidationError %} govuk-form-group--error{% endif %}">
 
             <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
               <div class="govuk-form-group">
-                <label class="govuk-label" for="agent-name">
+                <label class="govuk-label" for="agentName">
                   Agent's corporate name
                 </label>
-                <span id="agent-name-hint" class="govuk-hint">
+                <span id="agentName-hint" class="govuk-hint">
                   This should be the legal name of the entity.
                 </span>
-                <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="agent-name" name="agent-name" value="{{eligibility.agentName}}" maxLength="150" aria-describedby="agentName-info agentName-hint" data-cy="agents-name-input" /> 
+                <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="agentName" name="agentName" value="{{eligibility.agentName}}" maxLength="150" aria-describedby="agentName-info agentName-hint" data-cy="agents-name-input" /> 
               </div>
 
-              <span id="agent-name-info" class="govuk-hint govuk-character-count__message" aria-live="polite" data-cy="agents-name-count">
+              <span id="agentName-info" class="govuk-hint govuk-character-count__message" aria-live="polite" data-cy="agents-name-count">
                 You can enter up to 150 characters
               </span>
 
@@ -127,82 +128,82 @@
           }) %}
           
             {{ govukSelect({
-                id: "criterion-group-agent-country",
-                name: "agent-country",
+                id: "criterion-group-agentAddressCountry",
+                name: "agentAddressCountry",
                 label: {
                   text: "Country"
                 },
                 items: countries,
-                errorMessage: validationErrors.errorList['agent-country'],
+                errorMessage: validationErrors.errorList.agentAddressCountry,
                 attributes: {
                   "data-cy":"agent-country"
                 }
               }) }}
                 
             {{ govukInput({
+              id: "criterion-group-agentAddressLine1",
               label: {
                 html: 'Address line 1 <span class="govuk-visually-hidden">line 1 of 4</span>'
               },
               classes: "govuk-!-width-one-half",
-              id: "criterion-group-agent-address-line-1",
-              name: "agent-address-line-1",
-              value: eligibility.agentAddress1,
+              name: "agentAddressLine1",
+              value: eligibility.agentAddressLine1,
               attributes: {
                 "maxlength": "50"
               },
-              errorMessage: validationErrors.errorList['agent-address-line-1']
-              
+              errorMessage: validationErrors.errorList.agentAddressLine1
+            
             }) }}
 
             {{ govukInput({
+              id: "criterion-group-agentAddressLine2",
               label: {
                 html: 'Address line 2 (optional) <span class="govuk-visually-hidden">line 2 of 4</span>'
               },
               classes: "govuk-!-width-one-half",
-              id: "criterion-group-agent-address-line-2",
-              name: "agent-address-line-2",
-              value: eligibility.agentAddress2,
+              name: "agentAddressLine2",
+              value: eligibility.agentAddressLine2,
               attributes: {
                 "maxlength": "50"
               }
             }) }}
 
             {{ govukInput({
+              id: "criterion-group-agentAddressLine3",
               label: {
                 html: 'Address line 3 (optional) <span class="govuk-visually-hidden">line 3 of 4</span>'
               },
               classes: "govuk-!-width-one-half",
-              id: "criterion-group-agent-address-line-3",
-              name: "agent-address-line-3",
-              value: eligibility.agentAddress3,
+              name: "agentAddressLine3",
+              value: eligibility.agentAddressLine3,
               attributes: {
                 "maxlength": "50"
               }
             }) }}
 
             {{ govukInput({
+              id: "criterion-group-agentAddressTown",
               label: {
                 html: 'City/Town<span class="govuk-visually-hidden">line 4 of 4</span>'
               },
               classes: "govuk-!-width-one-half",
-              id: "criterion-group-agent-address-town",
-              name: "agent-address-town",
-              value: eligibility.agentTown,
-              errorMessage: validationErrors.errorList['agent-town']
+              name: "agentAddressTown",
+              value: eligibility.agentAddressTown,
+              errorMessage: validationErrors.errorList.agentAddressTown
             }) }}
 
             {{ govukInput({
+              id: "criterion-group-agentAddresspostcode",
               label: {
                 text: "Postcode"
               },
               classes: "govuk-input--width-10",
-              id: "criterion-group-agent-postcode",
-              name: "agent-postcode",
-              value: eligibility.agentPostcode,
+              name: "agentAddressPostcode",
+              value: eligibility.agentAddressPostcode,
               attributes: {
                 "maxlength": "12"
               },
-              errorMessage: validationErrors.errorList['agent-postcode']
+              errorMessage: validationErrors.errorList.agentAddressPostcode
             }) }}
 
           {% endcall %}
