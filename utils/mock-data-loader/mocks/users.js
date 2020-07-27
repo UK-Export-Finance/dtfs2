@@ -33,7 +33,7 @@ const USERS = [
     },
   },
   {
-    username: 'Maker1@ukexportfinance.gov.uk',
+    username: 'maker1@ukexportfinance.gov.uk',
     password: 'MAKER',
     firstname: 'Hugo',
     surname: 'Drax',
@@ -43,6 +43,10 @@ const USERS = [
       // _id: '', //TODO [dw] better linking of mock data
       id: '956',
       name: 'Barclays Bank',
+      emails: [
+        'maker1@ukexportfinance.gov.uk',
+        'maker2@ukexportfinance.gov.uk',
+      ],
     },
   },
   {
@@ -85,7 +89,7 @@ const USERS = [
     },
   },
   {
-    username: 'Checker1@ukexportfinance.gov.uk',
+    username: 'checker1@ukexportfinance.gov.uk',
     password: 'CHECKER',
     firstname: 'Emilio',
     surname: 'Largo',
@@ -96,6 +100,10 @@ const USERS = [
       id: '956',
       name: 'Barclays Bank',
     },
+    emails: [
+      'checker1@ukexportfinance.gov.uk',
+      'checker2@ukexportfinance.gov.uk',
+    ],
   },
   {
     username: 'MAKENCHECK',
