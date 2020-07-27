@@ -33,6 +33,19 @@ const USERS = [
     },
   },
   {
+    username: 'Maker1@ukexportfinance.gov.uk',
+    password: 'MAKER',
+    firstname: 'Hugo',
+    surname: 'Drax',
+    timezone: 'Europe/London',
+    roles: ['maker'],
+    bank: {
+      // _id: '', //TODO [dw] better linking of mock data
+      id: '956',
+      name: 'Barclays Bank',
+    },
+  },
+  {
     username: 'BARCLAYS-MAKER-1',
     password: 'BARCLAYS-MAKER-1',
     firstname: 'Hector',
@@ -72,7 +85,33 @@ const USERS = [
     },
   },
   {
+    username: 'Checker1@ukexportfinance.gov.uk',
+    password: 'CHECKER',
+    firstname: 'Emilio',
+    surname: 'Largo',
+    timezone: 'Europe/London',
+    roles: ['checker'],
+    bank: {
+      // _id: '', //TODO [dw] better linking of mock data
+      id: '956',
+      name: 'Barclays Bank',
+    },
+  },
+  {
     username: 'MAKENCHECK',
+    password: 'MAKENCHECK',
+    firstname: 'Ernst',
+    surname: 'Blofeld',
+    timezone: 'Europe/London',
+    roles: ['maker', 'checker'],
+    bank: {
+      // _id: '', //TODO [dw] better linking of mock data
+      id: '956',
+      name: 'Barclays Bank',
+    },
+  },
+  {
+    username: 'Maker2@ukexportfinance.gov.uk',
     password: 'MAKENCHECK',
     firstname: 'Ernst',
     surname: 'Blofeld',
