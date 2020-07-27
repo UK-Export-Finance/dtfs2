@@ -159,8 +159,6 @@ const sendStatusUpdateEmails = async (deal, fromStatus, user) => {
   const updatedByEmail = username;
 
   const EMAIL_TEMPLATE_ID = '718beb52-474e-4f34-a8d7-ab0e48cdffce';
-  // const EMAIL_RECIPIENT = 'TODO';
-  const EMAIL_RECIPIENT = 'tony.barnes@notbinary.co.uk';
 
   const emailVariables = {
     firstName: maker.firstname,
@@ -174,11 +172,13 @@ const sendStatusUpdateEmails = async (deal, fromStatus, user) => {
     updatedByEmail,
   };
 
-  await sendEmail(
-    EMAIL_TEMPLATE_ID,
-    EMAIL_RECIPIENT,
-    emailVariables,
-  );
+  deal.details.owningBank.emails.forEach(async (email) => {
+    await sendEmail(
+      EMAIL_TEMPLATE_ID,
+      email,
+      emailVariables,
+    );
+  });
 };
 
 exports.update = (req, res) => {
