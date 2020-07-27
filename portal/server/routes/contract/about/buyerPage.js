@@ -80,10 +80,17 @@ router.post('/contract/:_id/about/buyer/save-go-back', provide([DEAL]), async (r
   const { _id, userToken } = requestParams(req);
   const submissionDetails = req.body;
 
+  const {
+    'buyer-address-country': buyerAddressCountry,
+    destinationOfGoodsAndServices,
+  } = deal.submissionDetails;
+
+  const destinationOfGoodsAndServicesCode = (destinationOfGoodsAndServices && destinationOfGoodsAndServices.code) ? destinationOfGoodsAndServices.code : '';
+
   const mappedSubmissionDetailsForMatchCheck = {
     ...deal.submissionDetails,
-    'buyer-address-country': deal.submissionDetails['buyer-address-country'].code,
-    destinationOfGoodsAndServices: deal.submissionDetails.destinationOfGoodsAndServices.code,
+    'buyer-address-country': (buyerAddressCountry && buyerAddressCountry.code) ? buyerAddressCountry.code : '',
+    destinationOfGoodsAndServices: destinationOfGoodsAndServicesCode,
   };
 
   if (!formDataMatchesOriginalData(submissionDetails, mappedSubmissionDetailsForMatchCheck)) {
