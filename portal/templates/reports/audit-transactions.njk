@@ -46,12 +46,12 @@
 
           {% if user and user.roles.includes("admin")%}
           <td data-cy="owningBank" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.details.owningBank.name }} todo
+            {{ transaction.details.owningBank.name }} //TODO
           </td>
           {% endif %}
 
           <td data-cy="bankSupplyContractID" class="govuk-table__cell govuk-!-font-size-14">
-            <a href="/contract/{{ transaction.deal_id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ transaction.deal_id }} - todo</a>
+            <a href="/contract/{{ transaction.deal_id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ transaction.deal_id }}</a> //TODO
           </td>
 
           <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
@@ -67,7 +67,7 @@
           </td>
 
           <td data-cy="supplierName" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.supplierName }} todo
+            {{ transaction.supplierName }} //TODO
           </td>
 
           <td data-cy="facilityValue" class="govuk-table__cell govuk-!-font-size-14">
@@ -87,7 +87,7 @@
           </td>
 
           <td data-cy="submittedDate" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.submittedDate }} todo
+            {{ transaction.submittedDate }} //TODO
           </td>
 
           <td data-cy="submittedBy" class="govuk-table__cell govuk-!-font-size-14">
