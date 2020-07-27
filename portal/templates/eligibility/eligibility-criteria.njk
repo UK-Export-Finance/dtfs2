@@ -98,7 +98,7 @@
           
           {% set hasAgentNameValidationError = validationErrors.errorList.agentName %}
 
-          <div class="govuk-form-group{% if hasAgentNameValidationError %} govuk-form-group--error{% endif %}">
+          <div id="criterion-group-agent-name" class="govuk-form-group{% if hasAgentNameValidationError %} govuk-form-group--error{% endif %}">
 
             <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
               <div class="govuk-form-group">
@@ -108,10 +108,10 @@
                 <span id="agentName-hint" class="govuk-hint">
                   This should be the legal name of the entity.
                 </span>
-                <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="criterion-group-agentName" name="agentName" value="{{eligibility.agentName}}" maxLength="150" aria-describedby="agentName-info agentName-hint" data-cy="agents-name-input" /> 
+                <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="agentName" name="agentName" value="{{eligibility.agentName}}" maxLength="150" aria-describedby="agentName-info agentName-hint" data-cy="agents-name-input" /> 
               </div>
 
-              <span id="agentName-info" class="govuk-hint govuk-character-count__message" aria-live="polite" data-cy="agentName-count">
+              <span id="agentName-info" class="govuk-hint govuk-character-count__message" aria-live="polite" data-cy="agents-name-count">
                 You can enter up to 150 characters
               </span>
 
