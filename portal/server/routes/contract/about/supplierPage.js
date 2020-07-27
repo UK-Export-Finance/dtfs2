@@ -101,7 +101,6 @@ router.post('/contract/:_id/about/supplier', async (req, res) => {
 router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const deal = req.apiData[DEAL];
-  const submissionDetails = req.body;
 
   const {
     'supplier-address-country': supplierAddressCountry,
@@ -110,7 +109,9 @@ router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL]), async
     'indemnifier-correspondence-address-country': indemnifierCorrespondenceAddressCountry,
   } = deal.submissionDetails;
 
-  const mappedSubmissionDetailsForMatchCheck = {
+  // UI form submit only has the country code. API has a country object.
+  // to check if something has changed, only use the country code.
+  const mappedOriginalData = {
     ...deal.submissionDetails,
     'supplier-address-country': (supplierAddressCountry && supplierAddressCountry.code) ? supplierAddressCountry.code : '',
     'supplier-correspondence-address-country': (supplierCorrespondenceAddressCountry && supplierCorrespondenceAddressCountry.code) ? supplierCorrespondenceAddressCountry.code : '',
@@ -118,8 +119,8 @@ router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL]), async
     'indemnifier-correspondence-address-country': (indemnifierCorrespondenceAddressCountry && indemnifierCorrespondenceAddressCountry.code) ? indemnifierCorrespondenceAddressCountry.code : '',
   };
 
-  if (!formDataMatchesOriginalData(submissionDetails, mappedSubmissionDetailsForMatchCheck)) {
-    await updateSubmissionDetails(deal, submissionDetails, userToken);
+  if (!formDataMatchesOriginalData(req.body, mappedOriginalData)) {
+    await updateSubmissionDetails(deal, req.body, userToken);
   }
 
   const redirectUrl = `/contract/${_id}`;

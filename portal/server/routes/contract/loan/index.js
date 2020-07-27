@@ -274,14 +274,17 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
   let modifiedBody = handleBankReferenceNumberField(req.body);
   modifiedBody = handlePremiumFrequencyField(req.body);
 
-  const mappedLoanForMatchCheck = loan;
-  if (loan.currency && loan.currency.id) {
-    mappedLoanForMatchCheck.currency = loan.currency.id;
-  }
-  delete mappedLoanForMatchCheck._id; // eslint-disable-line no-underscore-dangle
-  delete mappedLoanForMatchCheck.status;
+  // UI form submit only has the currency code. API has a currency object.
+  // to check if something has changed, only use the currency code.
+  const mappedOriginalData = loan;
 
-  if (!formDataMatchesOriginalData(modifiedBody, mappedLoanForMatchCheck)) {
+  if (loan.currency && loan.currency.id) {
+    mappedOriginalData.currency = loan.currency.id;
+  }
+  delete mappedOriginalData._id; // eslint-disable-line no-underscore-dangle
+  delete mappedOriginalData.status;
+
+  if (!formDataMatchesOriginalData(modifiedBody, mappedOriginalData)) {
     await postToApi(
       api.updateDealLoan(
         dealId,

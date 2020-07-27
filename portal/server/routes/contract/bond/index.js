@@ -278,14 +278,17 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (
 
   const modifiedBody = handleFeeFrequency(req.body);
 
-  const mappedBondForMatchCheck = bond;
-  if (bond.currency && bond.currency.id) {
-    mappedBondForMatchCheck.currency = bond.currency.id;
-  }
-  delete mappedBondForMatchCheck._id; // eslint-disable-line no-underscore-dangle
-  delete mappedBondForMatchCheck.status;
+  // UI form submit only has the currency code. API has a currency object.
+  // to check if something has changed, only use the currency code.
+  const mappedOriginalData = bond;
 
-  if (!formDataMatchesOriginalData(modifiedBody, mappedBondForMatchCheck)) {
+  if (bond.currency && bond.currency.id) {
+    mappedOriginalData.currency = bond.currency.id;
+  }
+  delete mappedOriginalData._id; // eslint-disable-line no-underscore-dangle
+  delete mappedOriginalData.status;
+
+  if (!formDataMatchesOriginalData(modifiedBody, mappedOriginalData)) {
     await postToApi(
       api.updateBond(
         dealId,
