@@ -1,9 +1,9 @@
-const path = require('path')
-const globEntries = require('webpack-glob-entries')
-const HtmlWebPackPlugin = require('html-webpack-plugin')
-const TerserPlugin = require('terser-webpack-plugin')
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
-const CopyPlugin = require('copy-webpack-plugin')
+const path = require('path');
+const globEntries = require('webpack-glob-entries');
+const HtmlWebPackPlugin = require('html-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 // Webpack doesn't support glob paths. For the nunjucks-html-loader,
 // we need each path to be specified for it to work (even subdirectories)
@@ -32,7 +32,7 @@ module.exports = {
     minimizer: [
       new TerserPlugin(),
       new OptimizeCSSAssetsPlugin({})
-    ]
+    ],
   },
   module: {
     rules: [
@@ -40,7 +40,7 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
+          loader: 'babel-loader',
         }
       },
       {
@@ -49,22 +49,21 @@ module.exports = {
           loader: 'nunjucks-html-loader',
           options: {
             // base directory in which webpack is going to find any .njk files
-            searchPaths: [...returnEntries('./templates/**/')]
-          }
-        }]
+            searchPaths: [...returnEntries('./templates/**/')],
+          },
+        }],
       },
       {
-        test: /\.s[ac]ss$/i,
+        test: /\.(s*)css$/,
         use: [
-          // creates `style` nodes from JS strings
-          'style-loader',
-          // translates CSS into CommonJS
-          'css-loader',
-          // compiles Sass to CSS
-          'sass-loader'
-        ]
+          {
+            loader: 'file-loader',
+            options: { outputPath: '/', name: 'styles.css' },
+          },
+          'sass-loader',
+        ],
       },
-    ]
+    ],
   },
   plugins: [
     new HtmlWebPackPlugin({
@@ -75,7 +74,7 @@ module.exports = {
     }),
     new CopyPlugin([
       { from: './node_modules/govuk-frontend/govuk/assets', to: './assets' },
-      { from: './static/*', flatten: true }
-    ])
-  ]
-}
+      { from: './static/*', flatten: true },
+    ]),
+  ],
+};
