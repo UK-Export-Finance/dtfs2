@@ -35,7 +35,7 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: "babel-loader",
+        loader: 'babel-loader',
       },
       {
         test: /\.html$|njk|nunjucks/,
@@ -43,22 +43,21 @@ module.exports = {
           loader: 'nunjucks-html-loader',
           options: {
             // base directory in which webpack is going to find any .njk files
-            searchPaths: [...returnEntries('./templates/**/')]
-          }
-        }]
+            searchPaths: [...returnEntries('./templates/**/')],
+          },
+        }],
       },
       {
-        test: /\.s[ac]ss$/i,
+        test: /\.(s*)css$/,
         use: [
-          // creates `style` nodes from JS strings
-          'style-loader',
-          // translates CSS into CommonJS
-          'css-loader',
-          // compiles Sass to CSS
+          {
+            loader: 'file-loader',
+            options: { outputPath: '/', name: 'styles.css' },
+          },
           'sass-loader',
-        ]
-      }
-    ]
+        ],
+      },
+    ],
   },
   plugins: [
     new HtmlWebPackPlugin({
@@ -68,7 +67,7 @@ module.exports = {
       template: 'nunjucks-html-loader!./templates/index.njk',
     }),
     new CopyPlugin([
-      { from: './node_modules/govuk-frontend/govuk/assets', to: './assets' }
-    ])
-  ]
-}
+      { from: './node_modules/govuk-frontend/govuk/assets', to: './assets' },
+    ]),
+  ],
+};
