@@ -80,12 +80,14 @@ router.post('/contract/:_id/about/financial/save-go-back', provide([DEAL]), asyn
 
   const { supplyContractCurrency } = deal.submissionDetails;
 
-  const mappedSubmissionDetailsForMatchCheck = {
+  // UI form submit only has the currency code. API has a currency object.
+  // to check if something has changed, only use the currency code.
+  const mappedOriginalData = {
     ...deal.submissionDetails,
     supplyContractCurrency: (supplyContractCurrency && supplyContractCurrency.id) ? supplyContractCurrency.id : '',
   };
 
-  if (!formDataMatchesOriginalData(mappedFormDataForMatchCheck, mappedSubmissionDetailsForMatchCheck)) {
+  if (!formDataMatchesOriginalData(mappedFormDataForMatchCheck, mappedOriginalData)) {
     await updateSubmissionDetails(deal, submissionDetails, userToken);
   }
 
