@@ -79,19 +79,21 @@ module.exports.login = (req, res, next) => {
   findByUsername(username, (err, user) => {
     if (err) {
       next(err);
-    } else if (user === null) {
+    } if (user === null) {
       res.status(401).json({ success: false, msg: 'could not find user' });
     } else {
       const isValid = utils.validPassword(password, user.hash, user.salt);
 
       if (isValid) {
-        const tokenObject = utils.issueJWT(user);
+        if (user['user-status'] === 'blocked') {
+          res.status(401).json({ success: false, msg: 'account is blocked' });
+        } else {
+          const tokenObject = utils.issueJWT(user);
 
-        updateLastLogin(user, () => {
-          res.status(200).json({
+          updateLastLogin(user, () => res.status(200).json({
             success: true, token: tokenObject.token, user: sanitizeUser(user), expiresIn: tokenObject.expires,
-          });
-        });
+          }));
+        }
       } else {
         res.status(401).json({ success: false, msg: 'you entered the wrong password' });
       }

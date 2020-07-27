@@ -221,6 +221,7 @@ describe('/v1/deals/:id/status', () => {
           firstname: anHSBCMaker.firstname,
           surname: anHSBCMaker.surname,
           timezone: 'Europe/London',
+          'user-status': 'active',
         },
       });
     });
@@ -370,7 +371,7 @@ describe('/v1/deals/:id/status', () => {
 
       expect(status).toEqual(401);
     });
-    
+
 
     describe('when the status changes from `Draft` to `Ready for Checker\'s approval`', () => {
       const coverEndDate = () => ({

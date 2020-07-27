@@ -9,6 +9,9 @@ const page = {
   surname: ()=> cy.get(`[data-cy="surname"]`),
   bank: () => cy.get(`[data-cy="bank"]`),
 
+  Deactivate: () => cy.get(`[data-cy="user-status-blocked"]`),
+  Activate: () => cy.get(`[data-cy="user-status-active"]`),
+
   save: () => cy.get(`[data-cy="Save"]`),
 
 };

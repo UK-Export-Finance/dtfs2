@@ -34,6 +34,7 @@ describe('a user', () => {
           firstname: aMaker.firstname,
           surname: aMaker.surname,
           timezone: 'Europe/London',
+          'user-status': 'active',
         },
       ],
     });
@@ -84,6 +85,7 @@ describe('a user', () => {
       ...aMaker,
       _id: expect.any(String),
       timezone: 'Europe/London',
+      'user-status': 'active',
     };
     delete expectedUserData.password;
 
