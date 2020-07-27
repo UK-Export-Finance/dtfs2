@@ -3,7 +3,14 @@
       "bankSupplyContractID": "abc-1-def",
       "bankSupplyContractName": "Tibettan submarine acquisition scheme",
       "submissionType": "Automatic Inclusion Notice",
-      "status": "Draft"
+      "status": "Draft",
+      "owningBank": {
+        "id": "956",
+        "name": "Barclays Bank",
+        "emails": [
+          "maker1@ukexportfinance.gov.uk"
+        ]
+      }
   },
     "submissionDetails": {
       "status": "Incomplete",

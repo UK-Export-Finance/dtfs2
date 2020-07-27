@@ -12,6 +12,13 @@ module.exports = [
       submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',
       submissionDate: moment().utc().valueOf(),
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       status: 'Incomplete',
@@ -27,6 +34,13 @@ module.exports = [
       submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',
       submissionDate: moment().utc().valueOf(),
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       status: 'Not Started',
@@ -38,6 +52,13 @@ module.exports = [
       submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',
       submissionDate: moment().utc().valueOf(),
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -50,6 +71,13 @@ module.exports = [
       status: "Ready for Checker's approval",
       previousStatus: 'Draft',
       submissionDate: moment().utc().valueOf(),
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -70,6 +98,13 @@ module.exports = [
       status: "Further Maker's input required",
       previousStatus: "Ready for Checker's approval",
       submissionDate: moment().utc().valueOf(),
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -89,6 +124,13 @@ module.exports = [
       status: 'Abandoned Deal',
       previousStatus: 'Draft',
       submissionDate: moment().utc().valueOf(),
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -99,6 +141,13 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Submitted',
       previousStatus: "Ready for Checker's approval",
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -117,6 +166,13 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Submitted',
       previousStatus: "Ready for Checker's approval",
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -135,6 +191,13 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: "Ready for Checker's approval",
       previousStatus: 'Draft',
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -153,6 +216,13 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Acknowledged by UKEF',
       previousStatus: 'Submitted',
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -162,6 +232,13 @@ module.exports = [
       bankSupplyContractID: 'abc-1-def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Draft',
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -171,6 +248,13 @@ module.exports = [
       bankSupplyContractID: 'abc-1-def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Draft',
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -180,6 +264,13 @@ module.exports = [
       bankSupplyContractID: 'abc-1-def',
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Draft',
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -190,6 +281,13 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Acknowledged by UKEF',
       previousStatus: 'Submitted',
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -200,6 +298,13 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Accepted by UKEF (without conditions)',
       previousStatus: 'Submitted',
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -210,6 +315,13 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Rejected by UKEF',
       previousStatus: 'Submitted',
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -220,6 +332,13 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Rejected by UKEF',
       previousStatus: 'Submitted',
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -230,6 +349,13 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: "Further Maker's input required",
       previousStatus: "Ready for Checker's approval",
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -240,6 +366,13 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Accepted by UKEF (without conditions)',
       previousStatus: 'Submitted',
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -250,6 +383,13 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Accepted by UKEF (with conditions)',
       previousStatus: 'Submitted',
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
@@ -260,6 +400,13 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       status: 'Abandoned Deal',
       previousStatus: 'Draft',
+      owningBank: {
+        id: '956',
+        name: 'Barclays Bank',
+        emails: [
+          'maker1@ukexportfinance.gov.uk',
+        ],
+      },
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
