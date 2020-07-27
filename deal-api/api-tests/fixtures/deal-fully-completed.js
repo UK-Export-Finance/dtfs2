@@ -16,8 +16,12 @@ const deal = {
     maker: {
       username: 'CHECKER DURGA',
     },
-    bank: {
-      name: 'Barclays',
+    owningBank: {
+      id: '956',
+      name: 'Barclays Bank',
+      emails: [
+        'maker1@ukexportfinance.gov.uk',
+      ],
     },
   },
   comments: [{
