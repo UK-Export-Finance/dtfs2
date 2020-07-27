@@ -39,7 +39,9 @@ router.get('/reports/audit-supply-contracts/:page', async (req, res) => {
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-
+  console.log(`transactionData: ${util.inspect(dealData)}`);
+  console.log(`transactionData: ${util.inspect(dealData.deals[0])}`);
+  console.log(`transactionData: ${util.inspect(dealData.deals[0].details)}`);
   const pages = {
     totalPages: Math.ceil(dealData.count / PAGESIZE),
     currentPage: parseInt(req.params.page, 10),
