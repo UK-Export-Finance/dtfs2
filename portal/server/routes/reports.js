@@ -2,6 +2,7 @@ import express from 'express';
 import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
+import CONSTANTS from '../constants';
 import {
   getApiData,
   requestParams,
@@ -110,12 +111,20 @@ router.get('/reports/audit-transactions', async (req, res) => res.redirect('/rep
 router.get('/reports/audit-transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
-  const filters = {}; // TODO wire up filters; probably do same as dashboard +use session
+  const banks = await getApiData(
+    api.banks(userToken),
+    res,
+  );
+
+  const reportFilters = req.session.transactionFilters;
+
+  const filters = buildReportFilters(reportFilters, req.session.user);
+  // console.log(`filters: ${util.inspect(filters)}`);
   const transactionData = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-  console.log(`transactionData: ${util.inspect(transactionData)}`);
+  // console.log(`transactionData: ${util.inspect(transactionData)}`);
 
   const pages = {
     totalPages: Math.ceil(transactionData.count / PAGESIZE),
@@ -126,6 +135,59 @@ router.get('/reports/audit-transactions/:page', async (req, res) => {
   return res.render('reports/audit-transactions.njk', {
     pages,
     transactions: transactionData.transactions,
+    banks,
+    filter: {
+      ...reportFilters,
+    },
+    facilityStatuses: CONSTANTS.FACILITY_STATUS,
+    primaryNav,
+    subNav: 'audit-transactions',
+    user: req.session.user,
+  });
+});
+
+router.post('/reports/audit-transactions/:page', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  }
+
+  const reportFilters = req.body;
+  if (reportFilters.bank === 'any') {
+    reportFilters.bank = '';
+  }
+
+  req.session.reportFilters = reportFilters;
+  console.log(`reportFilters: ${util.inspect(reportFilters)}`);
+
+  const banks = await getApiData(
+    api.banks(userToken),
+    res,
+  );
+
+  const filters = buildReportFilters(reportFilters, req.session.user);
+  console.log(`filters: ${util.inspect(filters)}`);
+  const transactionData = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+    res,
+  );
+  // console.log(`transactionData: ${util.inspect(transactionData)}`);
+
+  const pages = {
+    totalPages: Math.ceil(transactionData.count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: transactionData.count,
+  };
+
+  return res.render('reports/audit-transactions.njk', {
+    pages,
+    transactions: transactionData.transactions,
+    banks,
+    filter: {
+      ...reportFilters,
+    },
+    facilityStatuses: CONSTANTS.FACILITY_STATUS,
     primaryNav,
     subNav: 'audit-transactions',
     user: req.session.user,

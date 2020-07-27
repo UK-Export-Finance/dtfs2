@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
 {% import '_macros/pagination.njk' as pagination %}
 
-{# % import './_macros/audit-supply-contracts-filters.njk' as filterControls % #}
+{% import './_macros/audit-transactions-filters.njk' as filterControls %}
 
 {% block pageTitle %}Audit report{% endblock %}
 
@@ -9,14 +9,7 @@
 
   <h1 class="govuk-heading-l">Audit - Transactions Report</h1>
 
-
-
-      
-         {% for name, item in transaction %}
-      <li>{{ name }}: {{ item }}</li>
-   {% endfor %}
-
-  {# { filterControls.render(filter, user) } #}
+  {{ filterControls.render(filter, user, banks, facilityStatuses) }}
 
   <table class="govuk-table govuk-!-margin-bottom-0">
     <thead class="govuk-table__head">
