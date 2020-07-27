@@ -11,7 +11,14 @@ module.exports = {
     status: 'Accepted by UKEF (with conditions)',
     previousStatus: 'Submitted',
     checker: 'CHECKER DURGA',
-    submissionType: 'Manual Inclusion Application'
+    submissionType: 'Manual Inclusion Application',
+    owningBank: {
+      id: '956',
+      name: 'Barclays Bank',
+      emails: [
+        'maker1@ukexportfinance.gov.uk',
+      ],
+    },
   },
   aboutSupplyContract: {
     status: 'Completed'
