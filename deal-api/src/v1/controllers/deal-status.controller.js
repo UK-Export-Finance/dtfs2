@@ -10,6 +10,8 @@ const now = require('../../now');
 
 const { createTypeA } = require('./integration/k2-messages');
 
+const sendEmail = require('../email');
+
 const validateStateChange = require('../validation/deal-status');
 
 exports.findOne = (req, res) => {
@@ -135,6 +137,41 @@ const userCanSubmitDeal = (deal, user) => {
   return true;
 };
 
+const sendStatusUpdateEmails = async (deal, fromStatus, user) => {
+  const {
+    submissionType,
+    bankSupplyContractID,
+    status: currentStatus,
+  } = deal.details;
+
+  const {
+    'supplier-name': supplerName,
+  } = deal.submissionDetails;
+
+  const updatedByName = `${user.firstname} ${user.surname}`;
+
+  const EMAIL_TEMPLATE_ID = '718beb52-474e-4f34-a8d7-ab0e48cdffce';
+  // const EMAIL_RECIPIENT = 'TODO';
+  const EMAIL_RECIPIENT = 'tony.barnes@notbinary.co.uk';
+
+  const emailVariables = {
+    firstName: 'TODO',
+    surname: 'TODO',
+    submissionType,
+    supplerName,
+    bankSupplyContractID,
+    currentStatus,
+    previousStatus: fromStatus,
+    updatedByName,
+  }
+
+  await sendEmail(
+    EMAIL_TEMPLATE_ID,
+    EMAIL_RECIPIENT,
+    emailVariables,
+  );
+};
+
 exports.update = (req, res) => {
   const { user } = req;
 
@@ -178,7 +215,6 @@ exports.update = (req, res) => {
       user: req.user,
     };
 
-    // TODO: add unit test to assert 'editedby is added
     const dealAfterEditedByUpdate = await updateDeal(newReq);
 
     if (toStatus === 'Submitted') {
@@ -197,6 +233,8 @@ exports.update = (req, res) => {
     }
 
     const dealAfterAllUpdates = dealAfterEditedByUpdate;
+
+    await sendStatusUpdateEmails(dealAfterAllUpdates, fromStatus, req.user);
 
     return res.status(200).send(dealAfterAllUpdates.details.status);
   });
