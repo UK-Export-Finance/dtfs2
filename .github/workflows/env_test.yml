@@ -7,10 +7,10 @@ on:
 env:
   # Environment
   environment: test
-  resource_group: ${{ secrets.RESOURCE_GROUP_DEV }}
-  app_service_plan: dev # temp until we get a secret for the test RG
+  resource_group: ${{ secrets.RESOURCE_GROUP_TEST }}
+  app_service_plan: test
   registry: ${{ secrets.ACR_TEST_REGISTRY }}
-  credentials: ${{ secrets.AZURE_DIGITAL_DEV }} # temp until we get a secret for the test RG
+  credentials: ${{ secrets.AZURE_DIGITAL_TEST }}
   image_tag: latest
   # App service settings
   DEAL_API_URL: "tfs-test-portal-api.azurewebsites.net"
