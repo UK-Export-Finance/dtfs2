@@ -6,7 +6,7 @@ module.exports = (loan) => {
 
   if (totalErrors === 0) {
     return {
-      count: totalErrors
+      count: totalErrors,
     };
   }
 

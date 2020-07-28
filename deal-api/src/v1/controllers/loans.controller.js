@@ -1,3 +1,4 @@
+const moment = require('moment');
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const loanValidationErrors = require('../validation/loan');
@@ -209,6 +210,29 @@ exports.updateLoan = async (req, res) => {
   });
 };
 
+const requestedCoverStartDateDayValue = (deal, loan) => {
+  const {
+    'requestedCoverStartDate-day': requestedCoverStartDateDay,
+    'requestedCoverStartDate-month': requestedCoverStartDateMonth,
+    'requestedCoverStartDate-year': requestedCoverStartDateYear,
+  } = loan;
+
+  const hasRequestedCoverStartDate = (requestedCoverStartDateDay
+                                      && requestedCoverStartDateMonth
+                                      && requestedCoverStartDateYear);
+
+  if (!hasRequestedCoverStartDate) {
+    return deal.details.submissionDate;
+  }
+
+  const formattedRequestedCoverStartDate = moment()
+                                          .year(requestedCoverStartDateDay)
+                                          .month(requestedCoverStartDateMonth)
+                                          .day(requestedCoverStartDateYear);
+
+  return formattedRequestedCoverStartDate;
+};
+
 exports.updateLoanIssueFacility = async (req, res) => {
   const {
     loanId,
@@ -236,6 +260,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
       const validationErrors = loanIssueFacilityValidationErrors(modifiedLoan);
 
       if (validationErrors.count === 0) {
+        modifiedLoan.requestedCoverStartDate = requestedCoverStartDateDayValue(deal, modifiedLoan);
         modifiedLoan.facilityIssued = true;
       }
 
