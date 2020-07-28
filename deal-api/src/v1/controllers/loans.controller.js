@@ -152,8 +152,8 @@ exports.updateLoan = async (req, res) => {
         res.status(401).send();
       }
 
-      const loan = deal.loanTransactions.items.find((loan) =>
-        String(loan._id) === loanId); // eslint-disable-line no-underscore-dangle
+      const loan = deal.loanTransactions.items.find((l) =>
+        String(l._id) === loanId); // eslint-disable-line no-underscore-dangle
 
       if (!loan) {
         return res.status(404).send();
@@ -218,14 +218,14 @@ exports.updateLoanIssueFacility = async (req, res) => {
         res.status(401).send();
       }
 
-      const loan = deal.loanTransactions.items.find((loan) =>
-        String(loan._id) === loanId); // eslint-disable-line no-underscore-dangle
+      const loan = deal.loanTransactions.items.find((l) =>
+        String(l._id) === loanId); // eslint-disable-line no-underscore-dangle
 
       if (!loan) {
         return res.status(404).send();
       }
 
-      let modifiedLoan = {
+      const modifiedLoan = {
         _id: loanId,
         ...loan,
         ...req.body,
@@ -245,7 +245,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
       //   });
       // }
 
-      return res.status(200).send(loanInDealAfterAllUpdates);
+      return res.status(200).send(updatedLoan);
     }
     return res.status(404).send();
   });

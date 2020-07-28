@@ -159,9 +159,6 @@ exports.updateBond = async (req, res) => {
         return res.status(404).send();
       }
 
-      const allOtherBonds = deal.bondTransactions.items.filter((bond) =>
-        String(bond._id) !== bondId); // eslint-disable-line no-underscore-dangle
-
       let modifiedBond = {
         _id: bondId,
         ...existingBond,
