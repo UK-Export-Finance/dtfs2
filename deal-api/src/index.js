@@ -1,4 +1,3 @@
-const app = require('./createApp');
 
 // Fix Azure environment variables
 Object.keys(process.env).forEach((key) => {
@@ -8,6 +7,8 @@ Object.keys(process.env).forEach((key) => {
     console.log(`Fixed ${key} to ${fixedKey}`);
   }
 });
+
+const app = require('./createApp');
 
 const PORT = process.env.PORT || 5000;
 

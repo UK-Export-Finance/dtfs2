@@ -17,7 +17,14 @@ module.exports = {
     "bankSupplyContractName": "Tibettan submarine acquisition scheme",
     "submissionType": "Automatic Inclusion Notice",
     "previousStatus": "Draft",
-    "status": "Ready for Checker's approval"
+    "status": "Ready for Checker's approval",
+    owningBank: {
+      id: '956',
+      name: 'Barclays Bank',
+      emails: [
+        'maker1@ukexportfinance.gov.uk',
+      ],
+    },
   },
   "submissionDetails" : {
     "indemnifier-address-country" : "GBR",

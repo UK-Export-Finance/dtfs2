@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
 {% import '_macros/pagination.njk' as pagination %}
 
-{# % import './_macros/audit-supply-contracts-filters.njk' as filterControls % #}
+{% import './_macros/audit-transactions-filters.njk' as filterControls %}
 
 {% block pageTitle %}Audit report{% endblock %}
 
@@ -9,14 +9,7 @@
 
   <h1 class="govuk-heading-l">Audit - Transactions Report</h1>
 
-
-
-      
-         {% for name, item in transaction %}
-      <li>{{ name }}: {{ item }}</li>
-   {% endfor %}
-
-  {# { filterControls.render(filter, user) } #}
+  {{ filterControls.render(filter, user, banks, facilityStatuses) }}
 
   <table class="govuk-table govuk-!-margin-bottom-0">
     <thead class="govuk-table__head">
@@ -46,12 +39,12 @@
 
           {% if user and user.roles.includes("admin")%}
           <td data-cy="owningBank" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.details.owningBank.name }} todo
+            {{ transaction.details.owningBank.name }} //TODO
           </td>
           {% endif %}
 
           <td data-cy="bankSupplyContractID" class="govuk-table__cell govuk-!-font-size-14">
-            <a href="/contract/{{ transaction.deal_id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ transaction.deal_id }} - todo</a>
+            <a href="/contract/{{ transaction.deal_id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ transaction.deal_id }}</a> //TODO
           </td>
 
           <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
@@ -67,7 +60,7 @@
           </td>
 
           <td data-cy="supplierName" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.supplierName }} todo
+            {{ transaction.supplierName }} //TODO
           </td>
 
           <td data-cy="facilityValue" class="govuk-table__cell govuk-!-font-size-14">
@@ -87,7 +80,7 @@
           </td>
 
           <td data-cy="submittedDate" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.submittedDate }} todo
+            {{ transaction.submittedDate }} //TODO
           </td>
 
           <td data-cy="submittedBy" class="govuk-table__cell govuk-!-font-size-14">

@@ -23,7 +23,10 @@ module.exports = {
         },
         "owningBank" : {
             "id" : "956",
-            "name" : "Barclays Bank"
+            "name" : "Barclays Bank",
+            "emails": [
+                "maker1@ukexportfinance.gov.uk",
+            ]
         },
         "submissionType" : "Automatic Inclusion Notice",
         "previousStatus" : "Ready for Checker's approval",
