@@ -1,7 +1,8 @@
 const utils = require('../../crypto/utils');
-
+const login = require('./login.controller');
+const { userNotFound, userIsBlocked, incorrectPassword } = require('../../constants/login-results');
 const {
-  create, update, remove, list, findOne, findByUsername, updateLastLogin,
+  create, update, remove, list, findOne,
 } = require('./controller');
 
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
@@ -31,6 +32,8 @@ module.exports.create = (req, res, next) => {
     salt,
     hash,
   };
+
+  delete newUser.password;
 
   create(newUser, (err, user) => {
     if (err) {
@@ -73,30 +76,30 @@ module.exports.remove = (req, res, next) => {
   });
 };
 
-module.exports.login = (req, res, next) => {
+module.exports.login = async (req, res, next) => {
   const { username, password } = req.body;
 
-  findByUsername(username, (err, user) => {
-    if (err) {
-      next(err);
-    } if (user === null) {
-      res.status(401).json({ success: false, msg: 'could not find user' });
-    } else {
-      const isValid = utils.validPassword(password, user.hash, user.salt);
+  const loginResult = await login(username, password);
 
-      if (isValid) {
-        if (user['user-status'] === 'blocked') {
-          res.status(401).json({ success: false, msg: 'account is blocked' });
-        } else {
-          const tokenObject = utils.issueJWT(user);
-
-          updateLastLogin(user, () => res.status(200).json({
-            success: true, token: tokenObject.token, user: sanitizeUser(user), expiresIn: tokenObject.expires,
-          }));
-        }
-      } else {
-        res.status(401).json({ success: false, msg: 'you entered the wrong password' });
-      }
+  if (loginResult.err) {
+    // pick out the specific cases we understand and could treat differently
+    if (userNotFound === loginResult.err) {
+      return res.status(401).json({ success: false, msg: 'could not find user' });
     }
+    if (userIsBlocked === loginResult.err) {
+      return res.status(401).json({ success: false, msg: 'account is blocked' });
+    }
+    if (incorrectPassword === loginResult.err) {
+      return res.status(401).json({ success: false, msg: 'you entered the wrong password' });
+    }
+
+    // otherwise this is a technical failure during the lookup
+    console.log(`login attempt failed unexpectedly: ${loginResult.err}`);
+    return next(loginResult.err);
+  }
+  const { tokenObject, user } = loginResult;
+
+  return res.status(200).json({
+    success: true, token: tokenObject.token, user: sanitizeUser(user), expiresIn: tokenObject.expires,
   });
 };
