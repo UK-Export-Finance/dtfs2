@@ -4,6 +4,7 @@ const db = require('../../drivers/db-client');
 const sendEmail = require('../email');
 const businessRules = require('../../config/businessRules');
 const { BLOCKED, ACTIVE } = require('../../constants/user').STATUS;
+const { sanitizeUser } = require('./sanitizeUserData');
 
 const sendBlockedEmail = async (emailAddress) => {
   const EMAIL_TEMPLATE_ID = '82506983-cb85-4f33-b962-922b850be7ac';
@@ -24,6 +25,27 @@ const sendUnblockedEmail = async (emailAddress) => {
     {},
   );
 };
+
+const sendNewAccountEmail = async (user) => {
+  const EMAIL_TEMPLATE_ID = '354031c8-8ca5-4ac7-9356-00613faf793c';
+  const emailAddress = user.username;
+
+  const variables = {
+    username: user.username,
+    firstname: user.firstname,
+    surname: user.surname,
+    bank: (user.bank && user.bank.name) ? user.bank.name : '',
+    roles: user.roles.join(','),
+    status: user['user-status'],
+  };
+
+  await sendEmail(
+    EMAIL_TEMPLATE_ID,
+    emailAddress,
+    variables,
+  );
+};
+
 
 exports.list = async (callback) => {
   const collection = await db.getCollection('users');
@@ -46,14 +68,29 @@ exports.findByUsername = async (username, callback) => {
 exports.create = async (user, callback) => {
   const insert = {
     'user-status': ACTIVE,
-    ...user,
     timezone: user.timezone || 'Europe/London',
+    ...user,
   };
+
+  // tidy fields that shouldn't be here. this might not be the best place.
+  delete insert.password;
+  delete insert.email;
+  //---
 
   const collection = await db.getCollection('users');
   const createUserResult = await collection.insertOne(insert);
 
-  callback(null, createUserResult.ops[0]);
+  const createdUser = sanitizeUser(createUserResult.ops[0]);
+
+  // nasty hack, but... right now we have a load of test users with
+  // non-email-address usernames and no time to fix that neatly.. so..
+  if (createdUser.username && createdUser.username.includes('@')) {
+    await sendNewAccountEmail(createdUser);
+  } else {
+    console.log(`not trying to send new account email to "${createdUser.username}"`);
+  }
+
+  callback(null, createdUser);
 };
 
 exports.update = async (_id, user, callback) => {
