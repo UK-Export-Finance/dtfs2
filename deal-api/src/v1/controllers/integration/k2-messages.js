@@ -140,6 +140,10 @@ const generateTypeA = async (deal, fromStatus) => {
     for (let i = 0; i < deal.bondTransactions.items.length; i += 1) {
       const bond = deal.bondTransactions.items[i];
 
+      const bondCurrencyId = bond.currencySameAsSupplyContractCurrency === 'true'
+        ? deal.submissionDetails.supplyContractCurrency.id
+        : bond.currency && bond.currency.id;
+
       const bss = builder.createBSS()
       //    .UKEF_BSS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
         .BSS_portal_facility_id(bond._id) // eslint-disable-line no-underscore-dangle
@@ -150,7 +154,7 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_beneficiary(bond.bondBeneficiary)
         .BSS_value(convertCurrencyFormat(bond.facilityValue))
         .BSS_currency_code(
-          await convertCurrencyCodeToId(bond.currency && bond.currency.id), // eslint-disable-line no-await-in-loop
+          await convertCurrencyCodeToId(bondCurrencyId), // eslint-disable-line no-await-in-loop
         )
         .BSS_conversion_rate_deal(bond.conversionRate)
         .BSS_conversion_date_deal(dateHelpers.formatDate(bond['conversionRateDate-day'], bond['conversionRateDate-month'], bond['conversionRateDate-year']))
@@ -178,6 +182,11 @@ const generateTypeA = async (deal, fromStatus) => {
     if (deal.loanTransactions && deal.loanTransactions.items) {
       for (let i = 0; i < deal.loanTransactions.items.length; i += 1) {
         const loan = deal.loanTransactions.items[i];
+
+        const loanCurrencyId = loan.currencySameAsSupplyContractCurrency === 'true'
+          ? deal.submissionDetails.supplyContractCurrency.id
+          : loan.currency && loan.currency.id;
+
         const ewcs = builder.createEWCS()
         //    .UKEF_EWCS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
           .EWCS_portal_facility_id(loan._id) // eslint-disable-line no-underscore-dangle
@@ -188,7 +197,7 @@ const generateTypeA = async (deal, fromStatus) => {
           .EWCS_stage(k2Map.FACILITIES.FACILITIES_STAGE[loan.facilityStage])
           .EWCS_value(convertCurrencyFormat(loan.facilityValue))
           .EWCS_currency_code(
-            await convertCurrencyCodeToId(loan.currency && loan.currency.id), // eslint-disable-line no-await-in-loop
+            await convertCurrencyCodeToId(loanCurrencyId), // eslint-disable-line no-await-in-loop
           )
           .EWCS_conversion_rate_deal(loan.conversionRate)
           .EWCS_conversion_date_deal(dateHelpers.formatDate(loan['conversionRateDate-day'], loan['conversionRateDate-month'], loan['conversionRateDate-year']))
