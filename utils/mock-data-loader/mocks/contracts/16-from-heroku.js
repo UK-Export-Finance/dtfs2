@@ -179,6 +179,7 @@ module.exports = {
     "bondTransactions" : {
         "items" : [
             {
+                "_id": "1",
                 "bondIssuer" : "",
                 "bondType" : "Performance bond",
                 "bondStage" : "Issued",
@@ -207,6 +208,7 @@ module.exports = {
                 }
             },
             {
+                "_id": "2",
                 "bondIssuer" : "",
                 "bondType" : "Bid bond",
                 "bondStage" : "Unissued",
@@ -233,6 +235,7 @@ module.exports = {
     "loanTransactions" : {
         "items" : [
             {
+                "_id": "1",
                 "facilityStage" : "Unconditional",
                 "requestedCoverStartDate-day" : "24",
                 "requestedCoverStartDate-month" : "07",
@@ -253,6 +256,7 @@ module.exports = {
                 "dayCountBasis" : "365"
             },
             {
+                "_id": "2",
                 "facilityStage" : "Conditional",
                 "ukefGuaranteeInMonths" : "60",
                 "bankReferenceNumber" : "",
