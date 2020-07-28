@@ -35,7 +35,7 @@ module.exports = {
   bondTransactions: {
     items: [
       {
-        id: '1',
+        _id: '1',
         uniqueIdentificationNumber: 'Not entered',
         value: 'GBP 123,456.00',
         bondStage: 'Unissued',
@@ -49,7 +49,7 @@ module.exports = {
         }
       },
       {
-        id: '2',
+        _id: '2',
         uniqueIdentificationNumber: 'test',
         value: 'GBP 123,456.00',
         bondStage: 'Unissued',
@@ -67,7 +67,7 @@ module.exports = {
   loanTransactions: {
     items: [
       {
-        id: '1',
+        _id: '1',
         bankReferenceNumber: 'Not entered',
         status: 'Incomplete',
         value: 'GBP 123,456.00',
@@ -82,7 +82,7 @@ module.exports = {
         }
       },
       {
-        id: '2',
+        _id: '2',
         bankReferenceNumber: 'test',
         status: 'Incomplete',
         value: 'GBP 123,456.00',

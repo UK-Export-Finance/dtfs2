@@ -35,7 +35,7 @@ module.exports = {
   bondTransactions: {
     items: [
       {
-        id: '1',
+        _id: '1',
         uniqueIdentificationNumber: 'unique5',
         ukefFacilityID: 'e12345678',
         value: 'GBP 123,456.00',
@@ -50,7 +50,7 @@ module.exports = {
         }
       },
       {
-        id: '2',
+        _id: '2',
         uniqueIdentificationNumber: 'unique6',
         ukefFacilityID: 'f12345678',
         value: 'GBP 123,456.00',
@@ -69,7 +69,7 @@ module.exports = {
   loanTransactions: {
     items: [
       {
-        id: '1',
+        _id: '1',
         bankReferenceNumber: 'unique7',
         ukefFacilityID: 'g12345678',
         status: 'Incomplete',
@@ -85,7 +85,7 @@ module.exports = {
         }
       },
       {
-        id: '2',
+        _id: '2',
         bankReferenceNumber: 'unique8',
         ukefFacilityID: 'h12345678',
         status: 'Incomplete',
