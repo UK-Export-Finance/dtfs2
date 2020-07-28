@@ -2,6 +2,7 @@ const { ObjectID } = require('mongodb');
 const now = require('../../now');
 const db = require('../../drivers/db-client');
 const sendEmail = require('../email');
+const businessRules = require('../../config/businessRules');
 
 const sendBlockedEmail = async (emailAddress) => {
   const EMAIL_TEMPLATE_ID = '82506983-cb85-4f33-b962-922b850be7ac';
@@ -63,6 +64,7 @@ exports.updateLastLogin = async (user, callback) => {
   const collection = await db.getCollection('users');
   const update = {
     lastLogin: now(),
+    loginFailureCount: 0,
   };
   await collection.updateOne(
     { _id: { $eq: new ObjectID(user._id) } }, // eslint-disable-line no-underscore-dangle
@@ -71,6 +73,28 @@ exports.updateLastLogin = async (user, callback) => {
   );
 
   callback();
+};
+
+exports.incrementFailedLoginCount = async (user) => {
+  const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
+  const thresholdReached = (failureCount >= businessRules.loginFailureCount_Limit);
+
+  const collection = await db.getCollection('users');
+  const update = {
+    loginFailureCount: failureCount,
+    lastLoginFailure: now(),
+    'user-status': thresholdReached ? 'blocked' : user['user-status'],
+  };
+
+  await collection.updateOne(
+    { _id: { $eq: new ObjectID(user._id) } }, // eslint-disable-line no-underscore-dangle
+    { $set: update },
+    {},
+  );
+
+  if (thresholdReached) {
+    await sendBlockedEmail(user.username);
+  }
 };
 
 exports.remove = async (_id, callback) => {
