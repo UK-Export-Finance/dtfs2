@@ -130,10 +130,10 @@ exports.updateLoan = async (req, res) => {
         res.status(401).send();
       }
 
-      const existingLoan = deal.loanTransactions.items.find((loan) =>
+      const loan = deal.loanTransactions.items.find((loan) =>
         String(loan._id) === loanId); // eslint-disable-line no-underscore-dangle
 
-      if (!existingLoan) {
+      if (!loan) {
         return res.status(404).send();
       }
 
@@ -142,7 +142,7 @@ exports.updateLoan = async (req, res) => {
 
       let modifiedLoan = {
         _id: loanId,
-        ...existingLoan,
+        ...loan,
         ...req.body,
       };
 
@@ -196,5 +196,54 @@ exports.updateLoan = async (req, res) => {
       return res.status(200).send(loanInDealAfterAllUpdates);
     }
     return res.status(404).send();
+  });
+};
+
+
+
+exports.updateLoanIssueFacility = async (req, res) => {
+  const {
+    loanId,
+  } = req.params;
+
+  await findOneDeal(req.params.id, async (deal) => {
+    if (deal) {
+      if (!userHasAccessTo(req.user, deal)) {
+        res.status(401).send();
+      }
+
+      const loan = deal.loanTransactions.items.find((loan) =>
+        String(loan._id) === loanId); // eslint-disable-line no-underscore-dangle
+
+      if (!loan) {
+        return res.status(404).send();
+      }
+
+      const allOtherLoans = deal.loanTransactions.items.filter((loan) =>
+        String(loan._id) !== loanId); // eslint-disable-line no-underscore-dangle
+
+      let modifiedLoan = {
+        _id: loanId,
+        ...loan,
+        ...req.body,
+      };
+
+      const modifiedDeal = putLoanInDealObject(deal, modifiedLoan, allOtherLoans);
+
+      const newReq = {
+        params: req.params,
+        body: modifiedDeal,
+        user: req.user,
+      };
+
+      const dealAfterAllUpdates = await updateDeal(newReq);
+
+      const loanInDealAfterAllUpdates = dealAfterAllUpdates.loanTransactions.items.find((l) =>
+        String(l._id) === loanId); // eslint-disable-line no-underscore-dangle
+
+      return res.status(200).send(loanInDealAfterAllUpdates);
+    }
+    return res.status(404).send();
+
   });
 };

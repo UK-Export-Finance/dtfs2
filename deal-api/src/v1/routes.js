@@ -80,6 +80,12 @@ authRouter.route('/deals/:id/loan/:loanId')
     loans.updateLoan,
   );
 
+authRouter.route('/deals/:id/loan/:loanId/issue-facility')
+  .put(
+    validate({ role: ['maker'] }),
+    loans.updateLoanIssueFacility,
+  );
+
 authRouter.route('/deals/:id/bond/create')
   .put(
     validate({ role: ['maker'] }),

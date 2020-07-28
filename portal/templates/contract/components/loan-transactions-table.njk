@@ -63,7 +63,7 @@
 
               <td class="govuk-table__cell govuk-!-font-size-14">
 
-                {% set canIssueFacility = userIsMaker and dealStatus === '“Acknowledged by UKEF”' and loan.facilityStage === 'Conditional'%}
+                {% set canIssueFacility = userIsMaker and dealStatus === 'Acknowledged by UKEF' and loan.facilityStage === 'Conditional'%}
 
                 {% if canIssueFacility %}
                   <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/issue-facility" class="govuk-link" data-cy="issue-facility-loan-{{ loan._id }}">Issue facility</a>
@@ -72,6 +72,8 @@
                 {% if params.editable and not canIssueFacility %}
                   <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/delete" class="govuk-link" data-cy="delete-loan-{{ loan._id }}">Delete</a>
                 {% endif %}
+
+                {# TODO: 'Facility issued' #}
               </td>
             </tr>
 
