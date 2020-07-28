@@ -10,8 +10,6 @@ on:
     - cron: '0 12 * * 2'
     
 env:
-  TAG: latest
-
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
 
   AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}
@@ -43,7 +41,7 @@ jobs:
         password: ${{ secrets.ACR_DEV_PASSWORD }}
         repository: portal-ui
         path: portal
-        tags: ${{ env.TAG }}
+        tags: latest
         add_git_labels: true
         
   portal-api:
@@ -59,7 +57,7 @@ jobs:
         password: ${{ secrets.ACR_DEV_PASSWORD }}
         repository: portal-api
         path: deal-api
-        tags: ${{ env.TAG }}
+        tags: latest
         add_git_labels: true
 
   portal-data:
@@ -90,12 +88,12 @@ jobs:
         password: ${{ secrets.ACR_DEV_PASSWORD }}
     - name: Pull portal-api
       run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:${{ env.TAG }}
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:${{ env.TAG }} dtfs/deal-api
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api dtfs/deal-api
     - name: Pull portal-ui
       run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:${{ env.TAG }}
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:${{ env.TAG }} dtfs/portal
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui dtfs/portal
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh && docker-compose up -d
@@ -132,12 +130,12 @@ jobs:
         password: ${{ secrets.ACR_DEV_PASSWORD }}
     - name: Pull portal-api
       run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:${{ env.TAG }}
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:${{ env.TAG }} dtfs/deal-api
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api dtfs/deal-api
     - name: Pull portal
       run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:${{ env.TAG }}
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:${{ env.TAG }} dtfs/portal
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui dtfs/portal
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
@@ -189,9 +187,9 @@ jobs:
         username: ${{ secrets.ACR_TEST_USERNAME }}
         password: ${{ secrets.ACR_TEST_PASSWORD }}
     - run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:${{ env.TAG }}
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:${{ env.TAG }} ${{ secrets.ACR_TEST_REGISTRY }}/portal-ui:${{ env.TAG }}
-        docker push ${{ secrets.ACR_TEST_REGISTRY }}/portal-ui:${{ env.TAG }}
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui ${{ secrets.ACR_TEST_REGISTRY }}/portal-ui:test
+        docker push ${{ secrets.ACR_TEST_REGISTRY }}/portal-ui:test
 
   promote-portal-api-test:
     needs: [api-tests, end-to-end-tests]
@@ -209,9 +207,9 @@ jobs:
         username: ${{ secrets.ACR_TEST_USERNAME }}
         password: ${{ secrets.ACR_TEST_PASSWORD }}
     - run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:${{ env.TAG }}
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:${{ env.TAG }} ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:${{ env.TAG }}
-        docker push ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:${{ env.TAG }}
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:test
+        docker push ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:test
 
   promote-portal-ui-prod:
     needs: [promote-portal-ui-test]
@@ -229,9 +227,9 @@ jobs:
         username: ${{ secrets.ACR_PROD_USERNAME }}
         password: ${{ secrets.ACR_PROD_PASSWORD }}
     - run: |
-        docker pull ${{ secrets.ACR_TEST_REGISTRY }}/portal-ui:${{ env.TAG }}
-        docker tag ${{ secrets.ACR_TEST_REGISTRY }}/portal-ui:${{ env.TAG }} ${{ secrets.ACR_PROD_REGISTRY }}/portal-ui:${{ env.TAG }}
-        docker push ${{ secrets.ACR_PROD_REGISTRY }}/portal-ui:${{ env.TAG }}
+        docker pull ${{ secrets.ACR_TEST_REGISTRY }}/portal-ui:test
+        docker tag ${{ secrets.ACR_TEST_REGISTRY }}/portal-ui:test ${{ secrets.ACR_PROD_REGISTRY }}/portal-ui:prod
+        docker push ${{ secrets.ACR_PROD_REGISTRY }}/portal-ui:prod
 
   promote-portal-api-prod:
     needs: [promote-portal-api-test]
@@ -249,6 +247,6 @@ jobs:
         username: ${{ secrets.ACR_PROD_USERNAME }}
         password: ${{ secrets.ACR_PROD_PASSWORD }}
     - run: |
-        docker pull ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:${{ env.TAG }}
-        docker tag ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:${{ env.TAG }} ${{ secrets.ACR_PROD_REGISTRY }}/portal-api:${{ env.TAG }}
-        docker push ${{ secrets.ACR_PROD_REGISTRY }}/portal-api:${{ env.TAG }}
+        docker pull ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:test
+        docker tag ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:test ${{ secrets.ACR_PROD_REGISTRY }}/portal-api:prod
+        docker push ${{ secrets.ACR_PROD_REGISTRY }}/portal-api:prod
