@@ -218,16 +218,23 @@ exports.update = (req, res) => {
 
     const dealAfterCommentsUpdate = await addComment(req.params.id, req.body.comments, user);
 
-    const newReq = {
-      params: req.params,
-      body: dealAfterCommentsUpdate,
-      user: req.user,
-    };
+    let dealAfterAllUpdates = dealAfterCommentsUpdate;
 
-    const dealAfterEditedByUpdate = await updateDeal(newReq);
+    // only trigger updateDeal (which updates the deal's `editedBy` array),
+    // if a checker is NOT changing the status to `Maker input required`
+    if (toStatus !== 'Further Maker\'s input required') {
+      const newReq = {
+        params: req.params,
+        body: dealAfterCommentsUpdate,
+        user: req.user,
+      };
+
+      const dealAfterEditedByUpdate = await updateDeal(newReq);
+      dealAfterAllUpdates = dealAfterEditedByUpdate;
+    }
 
     if (toStatus === 'Submitted') {
-      const dealAfterAllUpdates = await createSubmissionDate(collection, req.params.id, user);
+      dealAfterAllUpdates = await createSubmissionDate(collection, req.params.id, user);
 
       // TODO - Reinstate typeA XML creation once Loans and Summary have been added
       const { previousWorkflowStatus } = deal.details;
@@ -240,8 +247,6 @@ exports.update = (req, res) => {
         return res.status(200).send(typeA);
       }
     }
-
-    const dealAfterAllUpdates = dealAfterEditedByUpdate;
 
     await sendStatusUpdateEmails(dealAfterAllUpdates, fromStatus, req.user);
 
