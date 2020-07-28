@@ -1,0 +1,372 @@
+{
+    "details" : {
+        "status" : "Ready for Checker's approval",
+        "bankSupplyContractID" : "DTFS2-1246-001",
+        "bankSupplyContractName" : "DTFS2-1246-001",
+        "created" : "1595934077196",
+        "dateOfLastAction" : "1595934974958",
+        "maker" : {
+            "username" : "TESTBANKMAKER",
+            "roles" : [
+                "maker"
+            ],
+            "bank" : {
+                "_id" : "5f1f0c7cda581f000598934e",
+                "id" : "9",
+                "name" : "UKEF test bank (Delegated)",
+                "mga" : [
+                    "mga_ukef_1.docx",
+                    "mga_ukef_2.docx"
+                ]
+            },
+            "lastLogin" : "1595934027216",
+            "firstname" : "Test Bank",
+            "surname" : "Maker",
+            "timezone" : "Europe/London",
+            "user-status" : "active"
+        },
+        "owningBank" : {
+            "id" : "9",
+            "name" : "UKEF test bank (Delegated)",
+            "mga" : [
+                "mga_ukef_1.docx",
+                "mga_ukef_2.docx"
+            ]
+        },
+        "submissionType" : "Automatic Inclusion Notice",
+        "previousStatus" : "Submitted",
+        "previousWorkflowStatus" : "Draft",
+        "checker" : {
+            "bank" : {
+                "id" : "9",
+                "mga" : [
+                    "mga_ukef_1.docx",
+                    "mga_ukef_2.docx"
+                ],
+                "name" : "UKEF test bank (Delegated)"
+            },
+            "firstname" : "Test Bank",
+            "lastLogin" : "1595934963244",
+            "roles" : [
+                "checker"
+            ],
+            "surname" : "Checker",
+            "timezone" : "Europe/London",
+            "user-status" : "active",
+            "username" : "TESTBANKCHECKER"
+        },
+        "submissionDate" : "1595934974891"
+    },
+    "eligibility" : {
+        "status" : "Completed",
+        "criteria" : [
+            {
+                "id" : 11,
+                "description" : "The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.",
+                "answer" : true
+            },
+            {
+                "id" : 12,
+                "description" : "The cover period for each Transaction does not exceed 5 years, or such other period approved by UKEF (that has not lapsed or been withdrawn) in relation to bonds and/or loans for this Obligor.",
+                "answer" : true
+            },
+            {
+                "id" : 13,
+                "description" : "The total UKEF exposure, across all short-term schemes (including bond support and export working capital transactions), for this Obligor (including this Transaction) does not exceed £2 million, or such other limit approved by UKEF (that has not lapsed or been withdrawn).",
+                "answer" : true
+            },
+            {
+                "id" : 14,
+                "description" : "For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 3 months prior to the submission of this Inclusion Notice. For a loan Transaction, the loan has not yet been advanced.",
+                "answer" : true
+            },
+            {
+                "id" : 15,
+                "description" : "The Requested Cover Start Date is no more than three months from the date of submission.",
+                "answer" : true
+            },
+            {
+                "id" : 16,
+                "description" : "The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco or gambling, and the Bank is not aware that any of the information contained within it is inaccurate.",
+                "answer" : true
+            },
+            {
+                "id" : 17,
+                "description" : "The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate to any Relevant Person.",
+                "answer" : true
+            },
+            {
+                "id" : 18,
+                "description" : "The fees and/or interest apply to the whole Cover Period, and have been set in accordance with the Bank’s normal pricing policies and, if any, minimum or overall pricing requirements set by UKEF.",
+                "answer" : true
+            }
+        ],
+        "agentAddressCountry" : "",
+        "agentAddressLine1" : "",
+        "agentAddressLine2" : "",
+        "agentAddressLine3" : "",
+        "agentAddressPostcode" : "",
+        "agentAddressTown" : "",
+        "agentName" : "",
+        "validationErrors" : {
+            "count" : 0,
+            "errorList" : {
+                "11" : {},
+                "12" : {},
+                "13" : {},
+                "14" : {},
+                "15" : {},
+                "16" : {},
+                "17" : {},
+                "18" : {},
+                "agentAddressCountry" : {},
+                "agentAddressLine1" : {},
+                "agentAddressPostcode" : {},
+                "agentAddressTown" : {},
+                "agentName" : {}
+            }
+        }
+    },
+    "submissionDetails" : {
+        "status" : "Incomplete",
+        "indemnifier-address-country" : {
+            "code" : "GBR",
+            "name" : "United Kingdom"
+        },
+        "indemnifier-address-line-1" : "",
+        "indemnifier-address-line-2" : "",
+        "indemnifier-address-line-3" : "",
+        "indemnifier-address-postcode" : "",
+        "indemnifier-address-town" : "",
+        "indemnifier-companies-house-registration-number" : "",
+        "indemnifier-correspondence-address-country" : {
+            "code" : "GBR",
+            "name" : "United Kingdom"
+        },
+        "indemnifier-correspondence-address-line-1" : "",
+        "indemnifier-correspondence-address-line-2" : "",
+        "indemnifier-correspondence-address-line-3" : "",
+        "indemnifier-correspondence-address-postcode" : "",
+        "indemnifier-correspondence-address-town" : "",
+        "indemnifier-name" : "",
+        "industry-class" : "68320",
+        "industry-sector" : "1011",
+        "legallyDistinct" : "false",
+        "sme-type" : "Small",
+        "supplier-address-country" : {
+            "code" : "GBR",
+            "name" : "United Kingdom"
+        },
+        "supplier-address-line-1" : "DTFS2-1246-001",
+        "supplier-address-line-2" : "",
+        "supplier-address-line-3" : "",
+        "supplier-address-postcode" : "DTFS2-1246-0",
+        "supplier-address-town" : "",
+        "supplier-companies-house-registration-number" : "",
+        "supplier-correspondence-address-country" : {
+            "code" : "GBR",
+            "name" : "United Kingdom"
+        },
+        "supplier-correspondence-address-is-different" : "false",
+        "supplier-correspondence-address-line-1" : "",
+        "supplier-correspondence-address-line-2" : "",
+        "supplier-correspondence-address-line-3" : "",
+        "supplier-correspondence-address-postcode" : "",
+        "supplier-correspondence-address-town" : "",
+        "supplier-name" : "DTFS2-1246-001",
+        "supplier-type" : "Exporter",
+        "supply-contract-description" : "DTFS2-1246-001",
+        "buyer-address-country" : {
+            "code" : "GBR",
+            "name" : "United Kingdom"
+        },
+        "buyer-address-line-1" : "TESTBANKMAKER",
+        "buyer-address-line-2" : "",
+        "buyer-address-line-3" : "",
+        "buyer-address-postcode" : "TESTBANKMAKE",
+        "buyer-address-town" : "",
+        "buyer-name" : "TESTBANKMAKER",
+        "destinationOfGoodsAndServices" : {
+            "code" : "GBR",
+            "name" : "United Kingdom"
+        },
+        "supplyContractConversionDate-day" : "",
+        "supplyContractConversionDate-month" : "",
+        "supplyContractConversionDate-year" : "",
+        "supplyContractConversionRateToGBP" : "",
+        "supplyContractCurrency" : {
+            "id" : "GBP",
+            "text" : "GBP - UK Sterling"
+        },
+        "supplyContractValue" : "50000000.00",
+        "hasBeenPreviewed" : true
+    },
+    "bondTransactions" : {
+        "items" : [
+            {
+                "bondIssuer" : "",
+                "bondType" : "Bid bond",
+                "bondStage" : "Unissued",
+                "ukefGuaranteeInMonths" : "60",
+                "bondBeneficiary" : "",
+                "guaranteeFeePayableByBank" : "2.7000",
+                "facilityValue" : "100000.00",
+                "currencySameAsSupplyContractCurrency" : "true",
+                "riskMarginFee" : "3",
+                "coveredPercentage" : "80",
+                "minimumRiskMarginFee" : "",
+                "ukefExposure" : "80,000.00",
+                "feeType" : "At maturity",
+                "dayCountBasis" : "365"
+            },
+            {
+                "bondIssuer" : "",
+                "bondType" : "Progress payment bond",
+                "bondStage" : "Issued",
+                "requestedCoverStartDate-day" : "28",
+                "requestedCoverStartDate-month" : "07",
+                "requestedCoverStartDate-year" : "2020",
+                "coverEndDate-day" : "28",
+                "coverEndDate-month" : "02",
+                "coverEndDate-year" : "2025",
+                "uniqueIdentificationNumber" : "IssuedBond",
+                "bondBeneficiary" : "",
+                "guaranteeFeePayableByBank" : "2.7000",
+                "facilityValue" : "200000.00",
+                "currencySameAsSupplyContractCurrency" : "true",
+                "riskMarginFee" : "3",
+                "coveredPercentage" : "80",
+                "minimumRiskMarginFee" : "",
+                "ukefExposure" : "160,000.00",
+                "feeType" : "At maturity",
+                "dayCountBasis" : "365"
+            }
+        ]
+    },
+    "loanTransactions" : {
+        "items" : [
+            {
+                "facilityStage" : "Conditional",
+                "ukefGuaranteeInMonths" : "60",
+                "bankReferenceNumber" : "",
+                "guaranteeFeePayableByBank" : "2.7000",
+                "facilityValue" : "300000.00",
+                "currencySameAsSupplyContractCurrency" : "true",
+                "interestMarginFee" : "3",
+                "coveredPercentage" : "80",
+                "minimumQuarterlyFee" : "",
+                "ukefExposure" : "240,000.00",
+                "premiumType" : "At maturity",
+                "dayCountBasis" : "365"
+            },
+            {
+                "facilityStage" : "Unconditional",
+                "requestedCoverStartDate-day" : "28",
+                "requestedCoverStartDate-month" : "07",
+                "requestedCoverStartDate-year" : "2020",
+                "coverEndDate-day" : "02",
+                "coverEndDate-month" : "10",
+                "coverEndDate-year" : "2025",
+                "bankReferenceNumber" : "Unconditional Loan",
+                "guaranteeFeePayableByBank" : "2.7000",
+                "facilityValue" : "400000.00",
+                "currencySameAsSupplyContractCurrency" : "true",
+                "disbursementAmount" : "1000.00",
+                "interestMarginFee" : "3",
+                "coveredPercentage" : "80",
+                "minimumQuarterlyFee" : "",
+                "ukefExposure" : "320,000.00",
+                "premiumType" : "At maturity",
+                "dayCountBasis" : "365",
+                "currency" : {
+                    "text" : "GBP - UK Sterling",
+                    "id" : "GBP"
+                }
+            }
+        ]
+    },
+    "summary" : {},
+    "comments" : [],
+    "editedBy" : [],
+    "mandatoryCriteria" : [
+        {
+            "id" : "1",
+            "title" : "Supply contract/Transaction",
+            "items" : [
+                {
+                    "id" : 1,
+                    "copy" : "The Supplier has provided the Bank with a duly completed Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate."
+                },
+                {
+                    "id" : 2,
+                    "copy" : "The Bank has complied with its policies and procedures in relation to the Transaction."
+                },
+                {
+                    "id" : 3,
+                    "copy" : "Where the Supplier is a UK Supplier, the Supplier has provided the Bank with a duly completed UK Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate. (Conditional for UK Supplier)"
+                }
+            ]
+        },
+        {
+            "id" : "2",
+            "title" : "Financial",
+            "items" : [
+                {
+                    "id" : 4,
+                    "copy" : "The Bank Customer (to include both the Supplier and any Parent Obligor) is an <a class=\"govuk-link\" href=\"#\">Eligible Person.</a>"
+                }
+            ]
+        },
+        {
+            "id" : "3",
+            "title" : "Credit",
+            "items" : [
+                {
+                    "id" : 5,
+                    "copy" : "The Bank Customer (to include both the Supplier and any UK Parent Obligor) has a one- year probability of default of less than 14.1%."
+                }
+            ]
+        },
+        {
+            "id" : "4",
+            "title" : "Bank Facility Letter",
+            "items" : [
+                {
+                    "id" : 6,
+                    "copy" : "The Bank Facility Letter is governed by the laws of England and Wales, Scotland or Northern Ireland."
+                }
+            ]
+        },
+        {
+            "id" : "5",
+            "title" : "Legal",
+            "items" : [
+                {
+                    "id" : 7,
+                    "copy" : "The Bank is the sole and beneficial owner of, and has legal title to, the Transaction."
+                },
+                {
+                    "id" : 8,
+                    "copy" : "The Bank has not made a Disposal (other than a Permitted Disposal) or a Risk Transfer (other than a Permitted Risk Transfer) in relation to the Transaction."
+                },
+                {
+                    "id" : 9,
+                    "copy" : "The Bank’s right, title and interest in relation to the Transaction is clear of any Security and Quasi-Security (other than Permitted Security) and is freely assignable without the need to obtain consent of any Obligor or any other person."
+                },
+                {
+                    "id" : 10,
+                    "copy" : "The Bank is not restricted or prevented by any agreement with an Obligor from providing information and records relating to the Transaction."
+                }
+            ]
+        }
+    ],
+    "dealFiles" : {
+        "validationErrors" : {
+            "count" : 0,
+            "errorList" : {
+                "exporterQuestionnaire" : {}
+            }
+        },
+        "security" : ""
+    }
+}

@@ -16,4 +16,5 @@ module.exports = [
   require('./14-from-heroku'),
   require('./15-from-heroku'),
   require('./16-from-heroku'),
+  require('./17-DTFS2-1759'),
 ];
