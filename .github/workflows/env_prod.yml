@@ -11,7 +11,7 @@ env:
   app_service_plan: prod
   registry: ${{ secrets.ACR_PROD_REGISTRY }}
   credentials: ${{ secrets.AZURE_DIGITAL_PROD }}
-  image_tag: latest
+  image_tag: prod
   # App service settings
   DEAL_API_URL: "tfs-prod-portal-api.azurewebsites.net"
   COMPANIES_HOUSE_API_URL: ="https://api.companieshouse.gov.uk"
