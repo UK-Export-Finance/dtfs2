@@ -26,11 +26,11 @@ const rules = [
   dayCountBasis,
 ];
 
-module.exports = (submissionDetails) => {
+module.exports = (loan) => {
   let errorList = {};
 
   for (let i = 0; i < rules.length; i += 1) {
-    errorList = rules[i](submissionDetails, errorList);
+    errorList = rules[i](loan, errorList);
   }
 
   return errorList;
