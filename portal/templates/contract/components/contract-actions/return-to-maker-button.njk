@@ -15,7 +15,7 @@
       }) }}
     {% endif %}
 
-    {% if params.user.roles.includes('checker') and not params.user.roles.includes('maker') %}
+    {% if params.user.roles.includes('checker') and not params.user.roles.includes('maker') and not ["Further Maker's input required"].includes(params.deal.details.status) %}
 
         {% if ["Ready for Checker's approval"].includes(params.deal.details.status) %}
 
