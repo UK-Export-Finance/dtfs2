@@ -155,13 +155,19 @@ const constructor = (graphQLFilters) => {
 
       deal_id: deal._id, // eslint-disable-line no-underscore-dangle
       deal_status: deal.details.status,
+      deal_supplierName: deal.submissionDetails['supplier-name'],
+      deal_bankSupplyContractID: deal.details.bankSupplyContractID,
+      deal_ukefDealId: deal.details.ukefDealId,
+      deal_owningBank: deal.details.owningBank.name,
+      deal_created: deal.details.created,
+      deal_submissionDate: deal.details.submissionDate,
       transaction_id: bond._id, // eslint-disable-line no-underscore-dangle
       bankFacilityId: bond.uniqueIdentificationNumber,
       ukefFacilityId: bond.ukefFacilityID,
       transactionType: 'bond',
       facilityValue: bond.facilityValue,
       transactionStage: bond.bondStage,
-      issuedDate: '//TODO',
+      issuedDate: '', //TODO
       startDate: bond.startDate,
       lastEdited: bond.lastEdited,
       endDate: bond.endDate,

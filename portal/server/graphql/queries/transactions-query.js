@@ -7,7 +7,12 @@ query Transactions($start: Int, $pagesize: Int, $filters:[TransactionFilters]){
     transactions{
       deal_id,
       deal_status,
+      deal_supplierName,
+      deal_bankSupplyContractID,
+      deal_ukefDealId,
+      deal_owningBank,
       deal_created,
+      deal_submissionDate,
       transaction_id,
       bankFacilityId
       ukefFacilityId
