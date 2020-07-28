@@ -11,15 +11,38 @@ const { handleTransactionCurrencyFields } = require('../section-currency');
 const { sanitizeCurrency } = require('../../utils/number');
 const now = require('../../now');
 
-const putBondInDealObject = (deal, bond, otherBonds) => ({
-  ...deal,
-  bondTransactions: {
-    items: [
-      ...otherBonds,
-      bond,
-    ],
-  },
-});
+const putBondInDealObject = (deal, bond) => {
+  const allOtherBonds = deal.bondTransactions.items.filter((b) =>
+    String(b._id) !== bond._id); // eslint-disable-line no-underscore-dangle
+
+  return {
+    ...deal,
+    bondTransactions: {
+      items: [
+        ...allOtherBonds,
+        bond,
+      ],
+    },
+  };
+};
+
+const updateBondInDeal = async (params, user, deal, bond) => {
+  const modifiedDeal = putBondInDealObject(deal, bond);
+
+  const newReq = {
+    params,
+    body: modifiedDeal,
+    user,
+  };
+
+  const updatedDeal = await updateDeal(newReq);
+
+  const bondInDeal = updatedDeal.bondTransactions.items.find((b) =>
+    String(b._id) === bond._id); // eslint-disable-line no-underscore-dangle
+
+  return bondInDeal;
+};
+
 
 exports.getBond = async (req, res) => {
   const {
@@ -68,7 +91,7 @@ exports.create = async (req, res) => {
       _id: facilityId,
     };
 
-    const modifiedDeal = putBondInDealObject(deal, newBondObj, deal.bondTransactions.items);
+    const modifiedDeal = putBondInDealObject(deal, newBondObj);
 
     const newReq = {
       params: req.params,
@@ -166,29 +189,18 @@ exports.updateBond = async (req, res) => {
 
       modifiedBond.lastEdited = now();
 
-      const modifiedDeal = putBondInDealObject(deal, modifiedBond, allOtherBonds);
+      const updatedBond = await updateBondInDeal(req.params, req.user, deal, modifiedBond);
 
-      const newReq = {
-        params: req.params,
-        body: modifiedDeal,
-        user: req.user,
-      };
-
-      const dealAfterAllUpdates = await updateDeal(newReq);
-
-      const bondInDealAfterAllUpdates = dealAfterAllUpdates.bondTransactions.items.find((b) =>
-        String(b._id) === bondId); // eslint-disable-line no-underscore-dangle
-
-      const validationErrors = bondValidationErrors(bondInDealAfterAllUpdates);
+      const validationErrors = bondValidationErrors(updatedBond);
 
       if (validationErrors.count !== 0) {
         return res.status(400).send({
           validationErrors,
-          bond: bondInDealAfterAllUpdates,
+          bond: updatedBond,
         });
       }
 
-      return res.status(200).send(bondInDealAfterAllUpdates);
+      return res.status(200).send(updatedBond);
     }
     return res.status(404).send();
   });
