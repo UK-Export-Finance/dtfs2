@@ -15,6 +15,9 @@ query Transactions($start: Int, $pagesize: Int, $filters:[TransactionFilters]){
       facilityValue
       transactionStage
       issuedDate
+      startDate
+      lastEdited
+      endDate
       maker
       checker
     }
