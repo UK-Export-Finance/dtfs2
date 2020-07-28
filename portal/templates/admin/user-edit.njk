@@ -126,26 +126,35 @@
     {% endif %}
 
 
-  {# <div class="govuk-label">
+  <div class="govuk-label">
   Status
   </div>
+
   {{ govukRadios({
     classes: "govuk-radios--inline",
-    idPrefix: "changed-name",
-    name: "changed-name",
+    idPrefix: "user-status",
+    name: "user-status",
     items: [
       {
         value: "blocked",
-        text: "Blocked"
+        text: "Blocked",
+        attributes: {
+          "data-cy": "user-status-blocked"
+        },
+        checked: displayedUser['user-status'] === 'blocked'
       },
       {
         value: "active",
-        text: "Active"
+        text: "Active",
+        attributes: {
+          "data-cy": "user-status-active"
+        },
+        checked: displayedUser['user-status'] !== 'blocked'
       }
     ]
   }) }}
 
-  {{ govukCheckboxes({
+  {# {{ govukCheckboxes({
       idPrefix: "notify",
       name: "notify",
       classes: "govuk-checkboxes--small",

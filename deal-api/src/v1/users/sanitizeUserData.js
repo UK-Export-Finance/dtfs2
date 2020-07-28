@@ -7,6 +7,7 @@ const sanitizeUser = (user) => ({
   bank: user.bank,
   timezone: user.timezone,
   lastLogin: user.lastLogin,
+  'user-status': user['user-status'],
   _id: user._id, // eslint-disable-line no-underscore-dangle
 });
 

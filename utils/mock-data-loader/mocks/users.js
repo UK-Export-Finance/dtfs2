@@ -30,6 +30,27 @@ const USERS = [
       // _id: '', //TODO [dw] better linking of mock data
       id: '956',
       name: 'Barclays Bank',
+      emails: [
+        'maker1@ukexportfinance.gov.uk',
+        'maker2@ukexportfinance.gov.uk',
+      ],
+    },
+  },
+  {
+    username: 'maker1@ukexportfinance.gov.uk',
+    password: 'MAKER',
+    firstname: 'Hugo',
+    surname: 'Drax',
+    timezone: 'Europe/London',
+    roles: ['maker'],
+    bank: {
+      // _id: '', //TODO [dw] better linking of mock data
+      id: '956',
+      name: 'Barclays Bank',
+      emails: [
+        'maker1@ukexportfinance.gov.uk',
+        'maker2@ukexportfinance.gov.uk',
+      ],
     },
   },
   {
@@ -72,7 +93,37 @@ const USERS = [
     },
   },
   {
+    username: 'checker1@ukexportfinance.gov.uk',
+    password: 'CHECKER',
+    firstname: 'Emilio',
+    surname: 'Largo',
+    timezone: 'Europe/London',
+    roles: ['checker'],
+    bank: {
+      // _id: '', //TODO [dw] better linking of mock data
+      id: '956',
+      name: 'Barclays Bank',
+    },
+    emails: [
+      'checker1@ukexportfinance.gov.uk',
+      'checker2@ukexportfinance.gov.uk',
+    ],
+  },
+  {
     username: 'MAKENCHECK',
+    password: 'MAKENCHECK',
+    firstname: 'Ernst',
+    surname: 'Blofeld',
+    timezone: 'Europe/London',
+    roles: ['maker', 'checker'],
+    bank: {
+      // _id: '', //TODO [dw] better linking of mock data
+      id: '956',
+      name: 'Barclays Bank',
+    },
+  },
+  {
+    username: 'Maker2@ukexportfinance.gov.uk',
     password: 'MAKENCHECK',
     firstname: 'Ernst',
     surname: 'Blofeld',

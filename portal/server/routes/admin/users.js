@@ -133,8 +133,6 @@ router.post('/users/edit/:_id', async (req, res) => {
     roles: handleRoles(req.body.roles),
   };
 
-  console.log(`update:: ${JSON.stringify(update)}`);
-
   await api.updateUser(_id, update, userToken);
 
   return res.redirect('/admin/users');

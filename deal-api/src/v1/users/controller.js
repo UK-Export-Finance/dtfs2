@@ -1,6 +1,17 @@
 const { ObjectID } = require('mongodb');
 const now = require('../../now');
 const db = require('../../drivers/db-client');
+const sendEmail = require('../email');
+
+const sendBlockedEmail = async (emailAddress) => {
+  const EMAIL_TEMPLATE_ID = '82506983-cb85-4f33-b962-922b850be7ac';
+
+  await sendEmail(
+    EMAIL_TEMPLATE_ID,
+    emailAddress,
+    {},
+  );
+};
 
 exports.list = async (callback) => {
   const collection = await db.getCollection('users');
@@ -22,6 +33,7 @@ exports.findByUsername = async (username, callback) => {
 
 exports.create = async (user, callback) => {
   const insert = {
+    'user-status': 'active',
     ...user,
     timezone: user.timezone || 'Europe/London',
   };
@@ -34,9 +46,17 @@ exports.create = async (user, callback) => {
 
 exports.update = async (_id, user, callback) => {
   const collection = await db.getCollection('users');
-  await collection.updateOne({ _id: { $eq: new ObjectID(_id) } }, { $set: user }, {});
 
-  callback(null, user);
+  collection.findOne({ _id: new ObjectID(_id) }, async (err, existingUser) => {
+    if (existingUser['user-status'] !== 'blocked' && user['user-status'] === 'blocked') {
+      // the user is being blocked..
+      await sendBlockedEmail(existingUser.username);
+    }
+
+    await collection.updateOne({ _id: { $eq: new ObjectID(_id) } }, { $set: user }, {});
+
+    callback(null, user);
+  });
 };
 
 exports.updateLastLogin = async (user, callback) => {
