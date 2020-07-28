@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% import '_macros/date-field.njk' as dateField %}
-{# {% import '_macros/issue-facility.njk' as issueFacility %} #}
+{% import './_macros/bank-reference-number-field.njk' as bankReferenceNumberField %}
 
 {% block pageTitle %}Loan Issue Facility{% endblock %}
 
@@ -64,6 +64,17 @@
           }
         }
       }) }}
+
+
+      {% if not loan.bankReferenceNumber %}
+        {{bankReferenceNumberField.render(
+          id = 'bankReferenceNumber',
+          label = 'Bank reference number',
+          value = loan.bankReferenceNumber,
+          error = validationErrors.errorList.bankReferenceNumber
+        )}}
+      {% endif %}
+
 
       <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Next page</button>
 
