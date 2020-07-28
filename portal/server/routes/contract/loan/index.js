@@ -44,6 +44,18 @@ const userCanAccessLoanPreview = (user) => {
   return true;
 };
 
+const userCanIssueFacility = (user, deal, loan) => {
+  const isMaker = user.roles.includes('maker');
+
+  if (isMaker
+      && deal.details.status === 'Acknowledged by UKEF'
+      && loan.facilityStage === 'Conditional') {
+    return true;
+  }
+
+  return false;
+};
+
 
 const handleBankReferenceNumberField = (loanBody) => {
   const modifiedLoan = loanBody;
@@ -317,9 +329,13 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/loan/:loanId/issue-facility', provide([LOAN]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/issue-facility', provide([LOAN, DEAL]), async (req, res) => {
   const { _id: dealId } = requestParams(req);
   const { loan } = req.apiData.loan;
+
+  if (!userCanIssueFacility(loan, req.apiData.deal)) {
+    return res.redirect('/');
+  }
 
   return res.render('loan/loan-issue-facility.njk', {
     dealId,
