@@ -332,14 +332,15 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
 router.get('/contract/:_id/loan/:loanId/issue-facility', provide([LOAN, DEAL]), async (req, res) => {
   const { _id: dealId } = requestParams(req);
   const { loan } = req.apiData.loan;
+  const { user } = req.session;
 
-  if (!userCanIssueFacility(loan, req.apiData.deal)) {
+  if (!userCanIssueFacility(user, req.apiData.deal, loan)) {
     return res.redirect('/');
   }
 
   return res.render('loan/loan-issue-facility.njk', {
     dealId,
-    user: req.session.user,
+    user,
     loan,
   });
 });
@@ -347,7 +348,7 @@ router.get('/contract/:_id/loan/:loanId/issue-facility', provide([LOAN, DEAL]), 
 router.post('/contract/:_id/loan/:loanId/issue-facility', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  const { validationErrors } = await postToApi(
+  const { validationErrors, loan } = await postToApi(
     api.updateLoanIssueFacility(
       dealId,
       loanId,
@@ -360,6 +361,7 @@ router.post('/contract/:_id/loan/:loanId/issue-facility', async (req, res) => {
   if (validationErrors) {
     return res.render('loan/loan-issue-facility.njk', {
       validationErrors,
+      loan,
     });
   }
 

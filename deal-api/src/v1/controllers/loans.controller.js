@@ -1,6 +1,7 @@
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const loanValidationErrors = require('../validation/loan');
+const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
 const { generateFacilityId } = require('../../utils/generateIds');
 const {
   calculateGuaranteeFee,
@@ -232,19 +233,20 @@ exports.updateLoanIssueFacility = async (req, res) => {
         ...req.body,
       };
 
-      // const validationErrors = loanValidationErrors(modifiedLoan);
+      const validationErrors = loanIssueFacilityValidationErrors(modifiedLoan);
 
-      // TODO only add this if no validation errors
-      modifiedLoan.facilityIssued = true;
+      if (validationErrors.count === 0) {
+        modifiedLoan.facilityIssued = true;
+      }
 
       const updatedLoan = await updateLoanInDeal(req.params, req.user, deal, modifiedLoan);
 
-      // if (validationErrors.count !== 0) {
-      //   return res.status(400).send({
-      //     validationErrors,
-      //     loan: updatedLoan,
-      //   });
-      // }
+      if (validationErrors.count !== 0) {
+        return res.status(400).send({
+          validationErrors,
+          loan: updatedLoan,
+        });
+      }
 
       return res.status(200).send(updatedLoan);
     }
