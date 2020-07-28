@@ -11,15 +11,37 @@ const { loanStatus } = require('../section-status/loan');
 const { sanitizeCurrency } = require('../../utils/number');
 const now = require('../../now');
 
-const putLoanInDealObject = (deal, loan, otherLoans) => ({
-  ...deal,
-  loanTransactions: {
-    items: [
-      ...otherLoans,
-      loan,
-    ],
-  },
-});
+const putLoanInDealObject = (deal, loan) => {
+  const allOtherLoans = deal.loanTransactions.items.filter((l) =>
+    String(l._id) !== loan._id); // eslint-disable-line no-underscore-dangle
+
+  return {
+    ...deal,
+    loanTransactions: {
+      items: [
+        ...allOtherLoans,
+        loan,
+      ],
+    },
+  };
+};
+
+const updateLoanInDeal = async (params, user, deal, loan) => {
+  const modifiedDeal = putLoanInDealObject(deal, loan);
+
+  const newReq = {
+    params,
+    body: modifiedDeal,
+    user,
+  };
+
+  const updatedDeal = await updateDeal(newReq);
+
+  const loanInDeal = updatedDeal.loanTransactions.items.find((l) =>
+    String(l._id) === loan._id); // eslint-disable-line no-underscore-dangle
+
+  return loanInDeal;
+};
 
 exports.getLoan = async (req, res) => {
   const {
@@ -68,7 +90,7 @@ exports.create = async (req, res) => {
       _id: facilityId,
     };
 
-    const modifiedDeal = putLoanInDealObject(deal, newLoanObj, deal.loanTransactions.items);
+    const modifiedDeal = putLoanInDealObject(deal, newLoanObj);
 
     const newReq = {
       params: req.params,
@@ -137,9 +159,6 @@ exports.updateLoan = async (req, res) => {
         return res.status(404).send();
       }
 
-      const allOtherLoans = deal.loanTransactions.items.filter((loan) =>
-        String(loan._id) !== loanId); // eslint-disable-line no-underscore-dangle
-
       let modifiedLoan = {
         _id: loanId,
         ...loan,
@@ -171,35 +190,22 @@ exports.updateLoan = async (req, res) => {
 
       modifiedLoan.lastEdited = now();
 
-      const modifiedDeal = putLoanInDealObject(deal, modifiedLoan, allOtherLoans);
+      const updatedLoan = await updateLoanInDeal(req.params, req.user, deal, modifiedLoan);
 
-      const newReq = {
-        params: req.params,
-        body: modifiedDeal,
-        user: req.user,
-      };
-
-      const dealAfterAllUpdates = await updateDeal(newReq);
-
-      const loanInDealAfterAllUpdates = dealAfterAllUpdates.loanTransactions.items.find((l) =>
-        String(l._id) === loanId); // eslint-disable-line no-underscore-dangle
-
-      const validationErrors = loanValidationErrors(loanInDealAfterAllUpdates);
+      const validationErrors = loanValidationErrors(updatedLoan);
 
       if (validationErrors.count !== 0) {
         return res.status(400).send({
           validationErrors,
-          loan: loanInDealAfterAllUpdates,
+          loan: updatedLoan,
         });
       }
 
-      return res.status(200).send(loanInDealAfterAllUpdates);
+      return res.status(200).send(updatedLoan);
     }
     return res.status(404).send();
   });
 };
-
-
 
 exports.updateLoanIssueFacility = async (req, res) => {
   const {
@@ -219,34 +225,28 @@ exports.updateLoanIssueFacility = async (req, res) => {
         return res.status(404).send();
       }
 
-      const allOtherLoans = deal.loanTransactions.items.filter((loan) =>
-        String(loan._id) !== loanId); // eslint-disable-line no-underscore-dangle
-
       let modifiedLoan = {
         _id: loanId,
         ...loan,
         ...req.body,
       };
 
+      // const validationErrors = loanValidationErrors(modifiedLoan);
+
       // TODO only add this if no validation errors
       modifiedLoan.facilityIssued = true;
 
-      const modifiedDeal = putLoanInDealObject(deal, modifiedLoan, allOtherLoans);
+      const updatedLoan = await updateLoanInDeal(req.params, req.user, deal, modifiedLoan);
 
-      const newReq = {
-        params: req.params,
-        body: modifiedDeal,
-        user: req.user,
-      };
-
-      const dealAfterAllUpdates = await updateDeal(newReq);
-
-      const loanInDealAfterAllUpdates = dealAfterAllUpdates.loanTransactions.items.find((l) =>
-        String(l._id) === loanId); // eslint-disable-line no-underscore-dangle
+      // if (validationErrors.count !== 0) {
+      //   return res.status(400).send({
+      //     validationErrors,
+      //     loan: updatedLoan,
+      //   });
+      // }
 
       return res.status(200).send(loanInDealAfterAllUpdates);
     }
     return res.status(404).send();
-
   });
 };
