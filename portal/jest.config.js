@@ -4,9 +4,9 @@ module.exports = {
     'server/helpers/**/*.{js,}',
     'scripts/**/*.{js,}',
   ],
-  coverageDirectory: 'reports/coverage/unit',
+  coverageDirectory: 'generated_reports/coverage/unit',
   testMatch: ['**/*.test.js', '**/*.component-test.js'],
   moduleNameMapper: {
-    '^.+\\.(css|less|scss)$': 'babel-jest'
-  }
+    '^.+\\.(css|less|scss)$': 'babel-jest',
+  },
 };
