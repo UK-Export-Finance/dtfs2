@@ -27,6 +27,18 @@
         </div>
       {% endif %}
 
+      {# TODO: component test. Need to think component test data for different statuses/data. #}
+      {% if loan['issuedDate-day'] and loan['issuedDate-month'] and loan['issuedDate-year'] %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Issued Date
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="issued-date">
+            {{ loan['issuedDate-day'] }}/{{ loan['issuedDate-month'] }}/{{ loan['issuedDate-year'] }}
+          </dd>
+        </div>
+      {% endif %}
+
       {% if loan.ukefGuaranteeInMonths %}
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key govuk-body-s">
