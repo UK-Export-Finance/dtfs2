@@ -9,6 +9,7 @@ const {
 } = require('../section-calculations');
 const { handleTransactionCurrencyFields } = require('../section-currency');
 const { sanitizeCurrency } = require('../../utils/number');
+const now = require('../../now');
 
 const putBondInDealObject = (deal, bond, otherBonds) => ({
   ...deal,
@@ -162,6 +163,8 @@ exports.updateBond = async (req, res) => {
         modifiedBond.ukefExposure = calculateUkefExposure(sanitizedFacilityValue.sanitizedValue, coveredPercentage);
         modifiedBond.facilityValue = sanitizedFacilityValue.sanitizedValue;
       }
+
+      modifiedBond.lastEdited = now();
 
       const modifiedDeal = putBondInDealObject(deal, modifiedBond, allOtherBonds);
 

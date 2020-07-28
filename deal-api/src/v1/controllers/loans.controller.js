@@ -9,6 +9,7 @@ const {
 const { handleTransactionCurrencyFields } = require('../section-currency');
 const { loanStatus } = require('../section-status/loan');
 const { sanitizeCurrency } = require('../../utils/number');
+const now = require('../../now');
 
 const putLoanInDealObject = (deal, loan, otherLoans) => ({
   ...deal,
@@ -167,6 +168,8 @@ exports.updateLoan = async (req, res) => {
       if (sanitizedFacilityDisbursement.sanitizedValue) {
         modifiedLoan.disbursementAmount = sanitizedFacilityDisbursement.sanitizedValue;
       }
+
+      modifiedLoan.lastEdited = now();
 
       const modifiedDeal = putLoanInDealObject(deal, modifiedLoan, allOtherLoans);
 
