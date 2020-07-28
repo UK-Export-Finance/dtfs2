@@ -26,8 +26,10 @@
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Facility stage</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created date</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created by</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Changed</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submitted date</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submitted by</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Issued date</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Issued by</th>
       </tr>
     </thead>
 
@@ -44,7 +46,7 @@
           {% endif %}
 
           <td data-cy="bankSupplyContractID" class="govuk-table__cell govuk-!-font-size-14">
-            <a href="/contract/{{ transaction.deal_id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ transaction.deal_id }}</a> //TODO
+            <a href="/transaction/{{ transaction.transaction_id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ transaction.details.bankSupplyContractID }}</a>
           </td>
 
           <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
@@ -52,11 +54,11 @@
           </td>
 
           <td data-cy="bankFacilityID" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.bankFacilityId }}
+            {{ transaction.bankFacilityId | dashIfEmpty }}
           </td>
 
           <td data-cy="transactionType" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.transactionType }}
+            {{ transaction.transactionType | dashIfEmpty }}
           </td>
 
           <td data-cy="supplierName" class="govuk-table__cell govuk-!-font-size-14">
@@ -72,11 +74,15 @@
           </td>
 
           <td data-cy="createdDate" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.deal_created }}
+            {{ transaction.deal_created | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
           </td>
 
           <td data-cy="createdBy" class="govuk-table__cell govuk-!-font-size-14">
             {{ transaction.maker }} 
+          </td>
+
+          <td data-cy="changed" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.details.dateOfLastAction | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty  }}
           </td>
 
           <td data-cy="submittedDate" class="govuk-table__cell govuk-!-font-size-14">
@@ -84,7 +90,11 @@
           </td>
 
           <td data-cy="submittedBy" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.checker }}
+            {{ transaction.details.checker | dashIfEmpty }}
+          </td>
+
+          <td data-cy="issued" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.issuedDate | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
           </td>
 
         </tr>

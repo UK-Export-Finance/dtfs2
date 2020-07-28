@@ -122,21 +122,21 @@ router.get('/reports/audit-transactions/:page', async (req, res) => {
 
   const filters = buildReportFilters(reportFilters, req.session.user);
   // console.log(`filters: ${util.inspect(filters)}`);
-  const transactionData = await getApiData(
+  const { transactions, count } = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
   // console.log(`transactionData: ${util.inspect(transactionData)}`);
 
   const pages = {
-    totalPages: Math.ceil(transactionData.count / PAGESIZE),
+    totalPages: Math.ceil(count / PAGESIZE),
     currentPage: parseInt(req.params.page, 10),
-    totalItems: transactionData.count,
+    totalItems: count,
   };
 
   return res.render('reports/audit-transactions.njk', {
     pages,
-    transactions: transactionData.transactions,
+    transactions,
     banks,
     filter: {
       ...reportFilters,
