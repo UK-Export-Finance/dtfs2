@@ -111,7 +111,6 @@ router.get('/reports/audit-transactions', async (req, res) => res.redirect('/rep
 router.get('/reports/audit-transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
-<<<<<<< HEAD
   const banks = await getApiData(
     api.banks(userToken),
     res,
@@ -135,7 +134,7 @@ router.get('/reports/audit-transactions/:page', async (req, res) => {
 
   return res.render('reports/audit-transactions.njk', {
     pages,
-    transactions: transactionData.transactions,
+    transactions,
     banks,
     filter: {
       ...reportFilters,
@@ -199,7 +198,6 @@ router.get('/reports/transactions-report', async (req, res) => res.redirect('/re
 
 router.get('/reports/transactions-report/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-  const filters = {};// TODO wire up filters; probably do same as dashboard +use session
 
   const reportFilters = req.session.transactionFilters;
 
