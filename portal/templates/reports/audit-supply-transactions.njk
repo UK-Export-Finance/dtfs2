@@ -33,7 +33,7 @@
           </td>
 
           <td data-cy="transactionType" class="govuk-table__cell govuk-!-font-size-14">
-             {{ transaction.transactionType | dashIfEmpty }}
+             {{ transaction.transactionType | capitalize | dashIfEmpty }}
           </td>
 
           <td data-cy="bankFacilityId" class="govuk-table__cell govuk-!-font-size-14">
@@ -44,8 +44,8 @@
             {{ transaction.startDate | dashIfEmpty }}
           </td>
 
-          <td data-cy="changed" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.details.dateOfLastAction | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
+          <td data-cy="lastEdited" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.lastEdited | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
           </td>
 
           <td data-cy="issued" class="govuk-table__cell govuk-!-font-size-14">
