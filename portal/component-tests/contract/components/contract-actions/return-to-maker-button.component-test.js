@@ -70,10 +70,23 @@ describe(component, () => {
       }
     });
 
-    it('should NOT be enabled when deal status is `Draft`', () => {
+    it('should NOT render when deal status is `Draft`', () => {
       const user = { roles: ['maker', 'checker'] };
       const deals = [
         { _id: 1, details: { status: 'Draft' } },
+      ];
+      const userCanSubmit = true;
+
+      for (const deal of deals) {
+        const wrapper = render({ user, deal, userCanSubmit });
+        wrapper.expectElement('[data-cy="ReturnToMaker"]').notToExist();
+      }
+    });
+
+    it('should NOT render when deal status is `Further Maker\'s input required`', () => {
+      const user = { roles: ['maker', 'checker'] };
+      const deals = [
+        { _id: 1, details: { status: 'Further Maker\'s input required' } },
       ];
       const userCanSubmit = true;
 
