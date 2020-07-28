@@ -154,13 +154,19 @@ const constructor = (graphQLFilters) => {
       //  -> map whatever's still left into the generic schema that graphQL is expecting..
       deal_id: deal._id, // eslint-disable-line no-underscore-dangle
       deal_status: deal.details.status,
+      deal_supplierName: deal.submissionDetails['supplier-name'],
+      deal_bankSupplyContractID: deal.details.bankSupplyContractID,
+      deal_ukefDealId: deal.details.ukefDealId,
+      deal_owningBank: deal.details.owningBank.name,
+      deal_created: deal.details.created,
+      deal_submissionDate: deal.details.submissionDate,
       transaction_id: loan._id, // eslint-disable-line no-underscore-dangle
       bankFacilityId: loan.bankReferenceNumber,
       ukefFacilityId: loan.ukefFacilityID,
       transactionType: 'loan',
       facilityValue: loan.facilityValue,
       transactionStage: loan.facilityStage,
-      issuedDate: '//TODO',
+      issuedDate: '', //TODO
       startDate: loan.startDate,
       lastEdited: loan.lastEdited,
       endDate: loan.endDate,
