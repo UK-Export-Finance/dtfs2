@@ -228,6 +228,9 @@ exports.updateLoanIssueFacility = async (req, res) => {
         ...req.body,
       };
 
+      // TODO only add this if no validation errors
+      modifiedLoan.facilityIssued = true;
+
       const modifiedDeal = putLoanInDealObject(deal, modifiedLoan, allOtherLoans);
 
       const newReq = {
