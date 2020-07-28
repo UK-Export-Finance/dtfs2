@@ -166,7 +166,7 @@ const constructor = (graphQLFilters) => {
       transactionType: 'loan',
       facilityValue: loan.facilityValue,
       transactionStage: loan.facilityStage,
-      issuedDate: '', //TODO
+      issuedDate: '', // TODO
       startDate: loan.startDate,
       lastEdited: loan.lastEdited,
       endDate: loan.endDate,

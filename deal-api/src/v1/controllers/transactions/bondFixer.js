@@ -167,7 +167,7 @@ const constructor = (graphQLFilters) => {
       transactionType: 'bond',
       facilityValue: bond.facilityValue,
       transactionStage: bond.bondStage,
-      issuedDate: '', //TODO
+      issuedDate: '', // TODO
       startDate: bond.startDate,
       lastEdited: bond.lastEdited,
       endDate: bond.endDate,
