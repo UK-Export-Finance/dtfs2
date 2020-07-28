@@ -366,6 +366,7 @@ describe('/v1/deals/:id/bond', () => {
           guaranteeFeePayableByBank: expectedGuaranteeFee,
           ukefExposure: expectedUkefExposure,
           status: 'Completed',
+          lastEdited: expect.any(String),
         };
         expect(updatedBond).toEqual(expectedUpdatedBond);
       });
@@ -424,6 +425,7 @@ describe('/v1/deals/:id/bond', () => {
           guaranteeFeePayableByBank: expectedGuaranteeFee,
           ukefExposure: expectedUkefExposure,
           status: 'Completed',
+          lastEdited: expect.any(String),
         };
         delete expectedBond.ukefGuaranteeInMonths;
 
@@ -484,6 +486,7 @@ describe('/v1/deals/:id/bond', () => {
           guaranteeFeePayableByBank: expectedGuaranteeFee,
           ukefExposure: expectedUkefExposure,
           status: 'Completed',
+          lastEdited: expect.any(String),
         };
         delete expectedBond['requestedCoverStartDate-day'];
         delete expectedBond['requestedCoverStartDate-month'];
@@ -534,6 +537,7 @@ describe('/v1/deals/:id/bond', () => {
         guaranteeFeePayableByBank: expectedGuaranteeFee,
         ukefExposure: expectedUkefExposure,
         status: 'Completed',
+        lastEdited: expect.any(String),
       });
     });
 
