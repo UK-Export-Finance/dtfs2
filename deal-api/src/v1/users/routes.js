@@ -33,13 +33,11 @@ module.exports.create = (req, res, next) => {
     hash,
   };
 
-  delete newUser.password;
-
   create(newUser, (err, user) => {
     if (err) {
       next(err);
     } else {
-      res.json({ success: true, user: sanitizeUser(user) });
+      res.json({ success: true, user });
     }
   });
 };
