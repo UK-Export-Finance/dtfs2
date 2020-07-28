@@ -1,6 +1,11 @@
 import express from 'express';
 import api from '../../../api';
-import { provide, LOAN, CURRENCIES } from '../../api-data-provider';
+import {
+  provide,
+  LOAN,
+  DEAL,
+  CURRENCIES,
+} from '../../api-data-provider';
 import {
   requestParams,
   postToApi,
@@ -19,13 +24,26 @@ import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 
 const router = express.Router();
 
-const userCanAccessLoan = (user) => {
+const userCanEditLoan = (user, deal) => {
+  if (!user.roles.includes('maker')) {
+    return false;
+  }
+
+  if (deal.details.status === 'Acknowledged by UKEF') {
+    return false;
+  }
+
+  return true;
+};
+
+const userCanAccessLoanPreview = (user) => {
   if (!user.roles.includes('maker')) {
     return false;
   }
 
   return true;
 };
+
 
 const handleBankReferenceNumberField = (loanBody) => {
   const modifiedLoan = loanBody;
@@ -88,7 +106,7 @@ router.get('/contract/:_id/loan/create', async (req, res) => {
   return res.redirect(`/contract/${_id}/loan/${loanId}/guarantee-details`); // eslint-disable-line no-underscore-dangle
 });
 
-router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]), async (req, res) => {
   const {
     dealId,
     loan,
@@ -97,7 +115,7 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN]), asy
 
   const { user } = req.session;
 
-  if (!userCanAccessLoan(user)) {
+  if (!userCanEditLoan(user, req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -131,7 +149,7 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) =>
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, CURRENCIES]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL, CURRENCIES]), async (req, res) => {
   const {
     dealId,
     loan,
@@ -141,7 +159,7 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, CURRE
 
   const { user } = req.session;
 
-  if (!userCanAccessLoan(user)) {
+  if (!userCanEditLoan(user, req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -174,7 +192,7 @@ router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) =>
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL]), async (req, res) => {
   const {
     dealId,
     loan,
@@ -183,7 +201,7 @@ router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN]), asyn
 
   const { user } = req.session;
 
-  if (!userCanAccessLoan(user)) {
+  if (!userCanEditLoan(user, req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -227,7 +245,7 @@ router.get('/contract/:_id/loan/:loanId/preview', provide([LOAN]), async (req, r
 
   const { user } = req.session;
 
-  if (!userCanAccessLoan(user)) {
+  if (!userCanAccessLoanPreview(user)) {
     return res.redirect('/');
   }
 
