@@ -13,5 +13,5 @@ Library/
 
 secrets/**
 jwt_key
-deal-api/reports
-portal/reports
+deal-api/generated_reports
+portal/generated_reports
