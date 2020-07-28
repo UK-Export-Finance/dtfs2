@@ -1,6 +1,8 @@
 {% import '_macros/status-tag.njk' as statusTag %}
 {% import './bond-link.njk' as bondLink %}
 
+{# TODO: component tests #}
+
 {% macro render(params) %}
   {% if params.deal.bondTransactions.items %}
     <div class="govuk-grid-column-full">

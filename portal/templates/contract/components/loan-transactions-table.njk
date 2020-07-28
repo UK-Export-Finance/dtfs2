@@ -1,11 +1,15 @@
 {% import '_macros/status-tag.njk' as statusTag %}
 {% import './loan-link.njk' as loanLink %}
 
+{# TODO: component tests #}
+
 {% macro render(params) %}
   {% if params.deal.loanTransactions.items %}
     <div class="govuk-grid-column-full">
       {% set loans = params.deal.loanTransactions.items %}
       {% set dealId = params.deal._id %}
+      {% set dealStatus = params.deal.details.status %}
+      {% set userIsMaker = params.user.roles.includes('maker')%}
 
       <table class="govuk-table contract-table govuk-!-margin-bottom-0">
         <thead class="govuk-table__head">
@@ -58,7 +62,16 @@
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14">
-                {{ loan.action }}
+
+                {% set canIssueFacility = userIsMaker and dealStatus === '“Acknowledged by UKEF”' and loan.facilityStage === 'Conditional'%}
+
+                {% if canIssueFacility %}
+                  <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/issue-facility" class="govuk-link" data-cy="issue-facility-loan-{{ loan._id }}">Issue facility</a>
+                {% endif %}
+
+                {% if params.editable and not canIssueFacility %}
+                  <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/delete" class="govuk-link" data-cy="delete-loan-{{ loan._id }}">Delete</a>
+                {% endif %}
               </td>
             </tr>
 
