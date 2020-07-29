@@ -19,11 +19,11 @@ const rules = [
   bankReferenceNumber,
 ];
 
-module.exports = (loanIssueFacility) => {
+module.exports = (loanIssueFacility, dealSubmissionDate, issuedDate) => {
   let errorList = {};
 
   for (let i = 0; i < rules.length; i += 1) {
-    errorList = rules[i](loanIssueFacility, errorList);
+    errorList = rules[i](loanIssueFacility, errorList, dealSubmissionDate, issuedDate);
   }
 
   return errorList;

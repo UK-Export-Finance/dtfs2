@@ -1,39 +1,19 @@
+const moment = require('moment');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 const {
   dateHasAllValues,
   dateValidationText,
 } = require('./date');
 
-module.exports = (submittedValues, errorList) => {
+module.exports = (submittedValues, errorList, dealSubmissionDate, issuedDate) => {
   const newErrorList = errorList;
 
-  const {
-    'issuedDate-day': issuedDateDay,
-    'issuedDate-month': issuedDateMonth,
-    'issuedDate-year': issuedDateYear,
-  } = submittedValues;
-
-  // if (dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear)) {
-  //   const formattedDate = `${issuedDateYear}-${issuedDateMonth}-${issuedDateDay}`;
-  //   const nowDate = moment().format('YYYY-MM-DD');
-
-    // if (moment(formattedDate).isBefore(nowDate)) {
-    //   newErrorList.issuedDate = {
-    //     text: 'Cover End Date must be today or in the future',
-    //     order: orderNumber(newErrorList),
-    //   };
-    // }
-  // }
-  if (!dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear)) {
+  if (moment(issuedDate).isBefore(dealSubmissionDate)) {
+    const formattedDealSubmissionDate = moment(dealSubmissionDate).format('Do MMMM YYYY');
     newErrorList.issuedDate = {
-      text: dateValidationText(
-        'Issued Date',
-        issuedDateDay,
-        issuedDateMonth,
-        issuedDateYear,
-      ),
+      text: `Issued Date must be after ${formattedDealSubmissionDate}`,
       order: orderNumber(newErrorList),
-    };
+    };  
   }
 
   return newErrorList;

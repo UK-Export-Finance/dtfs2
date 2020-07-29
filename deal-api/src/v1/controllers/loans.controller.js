@@ -12,6 +12,7 @@ const { handleTransactionCurrencyFields } = require('../section-currency');
 const { loanStatus } = require('../section-status/loan');
 const { sanitizeCurrency } = require('../../utils/number');
 const now = require('../../now');
+const issuedDate = require('../validation/fields/issued-date');
 
 const putLoanInDealObject = (deal, loan) => {
   const allOtherLoans = deal.loanTransactions.items.filter((l) =>
@@ -233,6 +234,30 @@ const requestedCoverStartDateDayValue = (deal, loan) => {
   return formattedRequestedCoverStartDate;
 };
 
+const formattedTimestamp = (timestamp, userTimezone) => {
+  const targetTimezone = userTimezone;
+  const utc = moment(parseInt(timestamp, 10));
+  const localisedTimestamp = utc.tz(targetTimezone);
+  const formatted = localisedTimestamp.format();
+  return formatted;
+};
+
+const issuedDateValue = (submittedData) => {
+  const {
+    'issuedDate-day': issuedDateDay,
+    'issuedDate-month': issuedDateMonth,
+    'issuedDate-year': issuedDateYear,
+  } = submittedData;
+
+  const momentIssuedDate = moment().set({
+    date: Number(issuedDateDay),
+    month: Number(issuedDateMonth) - 1, // months are zero indexed
+    year: Number(issuedDateYear),
+  });
+
+  return moment(momentIssuedDate).utc().valueOf().toString();
+};
+
 exports.updateLoanIssueFacility = async (req, res) => {
   const {
     loanId,
@@ -257,7 +282,13 @@ exports.updateLoanIssueFacility = async (req, res) => {
         ...req.body,
       };
 
-      const validationErrors = loanIssueFacilityValidationErrors(modifiedLoan);
+      modifiedLoan.issuedDate = issuedDateValue(req.body);
+
+      const validationErrors = loanIssueFacilityValidationErrors(
+        modifiedLoan,
+        formattedTimestamp(deal.details.submissionDate, req.user.timezone),
+        formattedTimestamp(modifiedLoan.issuedDate, req.user.timezone),
+      );
 
       if (validationErrors.count === 0) {
         modifiedLoan.requestedCoverStartDate = requestedCoverStartDateDayValue(deal, modifiedLoan);
