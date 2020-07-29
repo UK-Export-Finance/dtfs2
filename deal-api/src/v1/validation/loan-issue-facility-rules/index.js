@@ -1,8 +1,9 @@
-const issuedDate = require('../fields/issued-date');
-const requestedCoverStartDate = require('../fields/requested-cover-start-date');
-const coverEndDate = require('../fields/cover-end-date');
-const disbursementAmount = require('../loan-rules/facility-stage-unconditional/disbursement-amount');
-const bankReferenceNumber = require('../loan-rules/bank-reference-number');
+const issuedDateRules = require('../fields/issued-date');
+// const requestedCoverStartDate = require('../fields/requested-cover-start-date');
+const requestedCoverStartDateRules = require('./requested-cover-start-date');
+const coverEndDateRules = require('../fields/cover-end-date');
+const disbursementAmountRules = require('../loan-rules/facility-stage-unconditional/disbursement-amount');
+const bankReferenceNumberRules = require('../loan-rules/bank-reference-number');
 
 // TODO move bankReferenceNumber to fields directory
 // TODO move disbursementAmount to fields directory
@@ -11,20 +12,14 @@ const bankReferenceNumber = require('../loan-rules/bank-reference-number');
 // ^ isn't in this case, disbursementAmount for a conditional loan?
 // so why is it in unconditional rules directory?
 
-const rules = [
-  issuedDate,
-  requestedCoverStartDate,
-  coverEndDate,
-  disbursementAmount,
-  bankReferenceNumber,
-];
-
-module.exports = (loanIssueFacility, dealSubmissionDate, issuedDate) => {
+module.exports = (submittedValues, dealSubmissionDate, issuedDate, requestedCoverStartDate) => {
   let errorList = {};
 
-  for (let i = 0; i < rules.length; i += 1) {
-    errorList = rules[i](loanIssueFacility, errorList, dealSubmissionDate, issuedDate);
-  }
+  errorList = issuedDateRules(submittedValues, errorList, dealSubmissionDate, issuedDate);
+  errorList = requestedCoverStartDateRules(submittedValues, errorList, dealSubmissionDate, requestedCoverStartDate);
+  errorList = coverEndDateRules(submittedValues, errorList);
+  errorList = disbursementAmountRules(submittedValues, errorList);
+  errorList = bankReferenceNumberRules(submittedValues, errorList);
 
   return errorList;
 };
