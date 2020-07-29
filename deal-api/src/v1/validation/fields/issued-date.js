@@ -8,12 +8,30 @@ const {
 module.exports = (submittedValues, errorList, dealSubmissionDate, issuedDate) => {
   const newErrorList = errorList;
 
-  if (moment(issuedDate).isBefore(dealSubmissionDate)) {
-    const formattedDealSubmissionDate = moment(dealSubmissionDate).format('Do MMMM YYYY');
+  const {
+    'issuedDate-day': issuedDateDay,
+    'issuedDate-month': issuedDateMonth,
+    'issuedDate-year': issuedDateYear,
+  } = submittedValues;
+
+  if (dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear)) {
+    if (moment(issuedDate).isBefore(dealSubmissionDate)) {
+      const formattedDealSubmissionDate = moment(dealSubmissionDate).format('Do MMMM YYYY');
+      newErrorList.issuedDate = {
+        text: `Issued Date must be after ${formattedDealSubmissionDate}`,
+        order: orderNumber(newErrorList),
+      };
+    }
+  } else if (!dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear)) {
     newErrorList.issuedDate = {
-      text: `Issued Date must be after ${formattedDealSubmissionDate}`,
+      text: dateValidationText(
+        'Issued Date',
+        issuedDateDay,
+        issuedDateMonth,
+        issuedDateYear,
+      ),
       order: orderNumber(newErrorList),
-    };  
+    };
   }
 
   return newErrorList;

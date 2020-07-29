@@ -242,12 +242,12 @@ const formattedTimestamp = (timestamp, userTimezone) => {
   return formatted;
 };
 
-const issuedDateValue = (submittedData) => {
+const issuedDateValue = (submittedValues) => {
   const {
     'issuedDate-day': issuedDateDay,
     'issuedDate-month': issuedDateMonth,
     'issuedDate-year': issuedDateYear,
-  } = submittedData;
+  } = submittedValues;
 
   const momentIssuedDate = moment().set({
     date: Number(issuedDateDay),
