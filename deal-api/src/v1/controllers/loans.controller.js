@@ -2,7 +2,6 @@ const moment = require('moment');
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const loanValidationErrors = require('../validation/loan');
-const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
 const { generateFacilityId } = require('../../utils/generateIds');
 const {
   calculateGuaranteeFee,
@@ -161,30 +160,31 @@ const premiumTypeFields = (loan) => {
 const updateRequestedCoverStartDate = (loan) => {
   // if we have all requestedCoverStartDate fields (day, month and year)
   // delete these and use UTC timestamp in a single requestedCoverStartDate property.
+  const modifiedLoan = loan;
 
   const {
     'requestedCoverStartDate-day': requestedCoverStartDateDay,
     'requestedCoverStartDate-month': requestedCoverStartDateMonth,
     'requestedCoverStartDate-year': requestedCoverStartDateYear,
-  } = loan;
+  } = modifiedLoan;
 
   const hasRequestedCoverStartDate = (hasValue(requestedCoverStartDateDay)
     && hasValue(requestedCoverStartDateMonth)
     && hasValue(requestedCoverStartDateYear));
 
   if (hasRequestedCoverStartDate) {
-    delete loan['requestedCoverStartDate-day'];
-    delete loan['requestedCoverStartDate-month'];
-    delete loan['requestedCoverStartDate-year'];
+    delete modifiedLoan['requestedCoverStartDate-day'];
+    delete modifiedLoan['requestedCoverStartDate-month'];
+    delete modifiedLoan['requestedCoverStartDate-year'];
 
     const momentDate = moment().set({
       date: Number(requestedCoverStartDateDay),
       month: Number(requestedCoverStartDateMonth) - 1, // months are zero indexed
       year: Number(requestedCoverStartDateYear),
     });
-    loan.requestedCoverStartDate = moment(momentDate).utc().valueOf().toString();
+    modifiedLoan.requestedCoverStartDate = moment(momentDate).utc().valueOf().toString();
   }
-  return loan;
+  return modifiedLoan;
 };
 
 exports.updateLoan = async (req, res) => {
