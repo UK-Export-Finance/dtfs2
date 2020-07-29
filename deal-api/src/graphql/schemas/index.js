@@ -77,10 +77,9 @@ type Transaction {
   transactionType: String
   facilityValue: String
   transactionStage: String
-  issuedDate: String
-  startDate: String
+  createdDate: String
   lastEdited: String
-  endDate: String
+  issuedDate: String
   maker: String
   checker: String
 }

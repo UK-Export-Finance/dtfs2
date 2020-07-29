@@ -167,9 +167,9 @@ const constructor = (graphQLFilters) => {
       transactionType: 'bond',
       facilityValue: bond.facilityValue,
       transactionStage: bond.bondStage,
-      issuedDate: '', // TODO
-      startDate: bond.startDate,
+      createdDate: bond.createdDate,
       lastEdited: bond.lastEdited,
+      issuedDate: bond['issuedDate-day'] ? `${bond['issuedDate-day']}/${bond['issuedDate-month']}/${bond['issuedDate-year']}` : '',
       endDate: bond.endDate,
       maker: deal.details.maker ? `${deal.details.maker.firstname || ''} ${deal.details.maker.surname || ''}` : '',
       checker: deal.details.checker ? `${deal.details.checker.firstname || ''} ${deal.details.checker.surname || ''}` : '',
