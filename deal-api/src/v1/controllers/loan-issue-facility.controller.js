@@ -52,6 +52,9 @@ exports.updateLoanIssueFacility = async (req, res) => {
 
       if (validationErrors.count === 0) {
         modifiedLoan.facilityIssued = true;
+        delete modifiedLoan['requestedCoverStartDate-day'];
+        delete modifiedLoan['requestedCoverStartDate-month'];
+        delete modifiedLoan['requestedCoverStartDate-year'];
       }
 
       const updatedLoan = await updateLoanInDeal(req.params, req.user, deal, modifiedLoan);

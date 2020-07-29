@@ -215,14 +215,19 @@ exports.updateLoan = async (req, res) => {
         formattedRequestedCoverStartDate = formattedTimestamp(modifiedLoan.requestedCoverStartDate, req.user.timezone);
       }
 
-      modifiedLoan.lastEdited = now();
-      const updatedLoan = await updateLoanInDeal(req.params, req.user, deal, modifiedLoan);
-
-
       const validationErrors = loanValidationErrors(
         updatedLoan,
         formattedRequestedCoverStartDate,
       );
+
+      if (validationErrors.count === 0) {
+        delete modifiedLoan['requestedCoverStartDate-day'];
+        delete modifiedLoan['requestedCoverStartDate-month'];
+        delete modifiedLoan['requestedCoverStartDate-year'];
+      }
+
+      modifiedLoan.lastEdited = now();
+      const updatedLoan = await updateLoanInDeal(req.params, req.user, deal, modifiedLoan);
 
       if (validationErrors.count !== 0) {
         return res.status(400).send({
