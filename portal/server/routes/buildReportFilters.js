@@ -57,7 +57,7 @@ const buildReportFilters = (params, user) => {
   if (CONSTANTS.FACILITY_STAGE[params.facilityStage]) {
     filters.push(
       {
-        field: 'details.facilityStage',
+        field: 'facility.facilityStage',
         value: CONSTANTS.FACILITY_STAGE[params.facilityStage],
       },
     );
