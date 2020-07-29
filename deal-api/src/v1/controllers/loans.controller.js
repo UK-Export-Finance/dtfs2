@@ -216,7 +216,7 @@ exports.updateLoan = async (req, res) => {
       }
 
       const validationErrors = loanValidationErrors(
-        updatedLoan,
+        modifiedLoan,
         formattedRequestedCoverStartDate,
       );
 
