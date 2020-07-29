@@ -1,8 +1,8 @@
 const applyRules = require('./loan-rules');
 const conditionalErrorList = require('./loan-rules/conditional-error-list');
 
-module.exports = (loan) => {
-  const errorList = applyRules(loan);
+module.exports = (loan, requestedCoverStartDateTimestamp) => {
+  const errorList = applyRules(loan, requestedCoverStartDateTimestamp);
   const totalErrors = Object.keys(errorList).length;
 
   if (totalErrors === 0) {
