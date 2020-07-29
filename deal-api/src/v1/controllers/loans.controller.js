@@ -181,6 +181,7 @@ const premiumTypeFields = (loan) => {
   return modifiedLoan;
 };
 
+// TODO: extract to common facility directory
 const getRequestedCoverStartDateValues = (loan) => {
   const {
     'requestedCoverStartDate-day': requestedCoverStartDateDay,
@@ -195,6 +196,7 @@ const getRequestedCoverStartDateValues = (loan) => {
   };
 };
 
+// TODO: extract to common facility directory
 const hasAllRequestedCoverStartDateValues = (loan) => {
   const {
     requestedCoverStartDateDay,
