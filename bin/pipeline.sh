@@ -2,10 +2,10 @@
 
 # Be a bit lenient here, but make sure we get a value set
 HERE=${PWD}
-if [ -z "$HERE"]; then
+if [ -z "$HERE" ]; then
     HERE=${pwd}
 fi
-if [ -z "$HERE"]; then
+if [ -z "$HERE" ]; then
     echo "Current directory not set. Halting."
     exit 1
 fi
