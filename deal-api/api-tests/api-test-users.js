@@ -5,8 +5,8 @@ const banks = {
     id: '956',
     name: 'Barclays Bank',
     emails: [
-      'maker1@ukexportfinance.gov.uk',
-      'maker2@ukexportfinance.gov.uk',
+      'maker4@ukexportfinance.gov.uk',
+      'checker4@ukexportfinance.gov.uk',
     ],
   },
   HSBC: {

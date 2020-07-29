@@ -4,6 +4,10 @@
   "roles": ["maker"],
   "bank": {
       "id": "956",
-      "name": "Barclays Bank"
+      "name": "Barclays Bank",
+      "emails": [
+        "maker4@ukexportfinance.gov.uk",
+        "checker4@ukexportfinance.gov.uk"
+      ]
   }
 }

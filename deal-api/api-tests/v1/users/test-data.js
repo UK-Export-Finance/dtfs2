@@ -13,7 +13,11 @@ module.exports = [
     roles: ['maker'],
     bank: {
       id: '956',
-      name: 'Barclays Bank'
+      name: 'Barclays Bank',
+      emails: [
+        'maker4@ukexportfinance.gov.uk',
+        'checker4@ukexportfinance.gov.uk',
+      ],
     },
   }, {
     username: 'CHECKER',
@@ -23,7 +27,11 @@ module.exports = [
     roles: ['checker'],
     bank: {
       id: '956',
-      name: 'Barclays Bank'
+      name: 'Barclays Bank',
+      emails: [
+        'maker4@ukexportfinance.gov.uk',
+        'checker4@ukexportfinance.gov.uk',
+      ],
     },
   }, {
     username: 'MAKENCHECK',
@@ -33,7 +41,11 @@ module.exports = [
     roles: ['maker', 'checker'],
     bank: {
       id: '956',
-      name: 'Barclays Bank'
+      name: 'Barclays Bank',
+      emails: [
+        'maker4@ukexportfinance.gov.uk',
+        'checker4@ukexportfinance.gov.uk',
+      ],
     },
   }, {
     username: 'READER',
@@ -43,7 +55,11 @@ module.exports = [
     roles: ['reader'],
     bank: {
       id: '956',
-      name: 'Barclays Bank'
+      name: 'Barclays Bank',
+      emails: [
+        'maker4@ukexportfinance.gov.uk',
+        'checker4@ukexportfinance.gov.uk',
+      ],
     },
   }, {
     username: 'MAKER-2',

@@ -4,8 +4,8 @@ const BANKS = [
     name: 'Barclays Bank',
     mga: ['mga_barclays_1.docx', 'mga_barclays_2.docx'],
     emails: [
-      'maker1@ukexportfinance.gov.uk',
-      'maker2@ukexportfinance.gov.uk',
+      'maker4@ukexportfinance.gov.uk',
+      'checker4@ukexportfinance.gov.uk',
     ],
   },
   {
