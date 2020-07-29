@@ -54,11 +54,11 @@ const buildReportFilters = (params, user) => {
     );
   }
 
-  if (CONSTANTS.FACILITY_STATUS[params.facilityStatus]) {
+  if (CONSTANTS.FACILITY_STAGE[params.facilityStage]) {
     filters.push(
       {
-        field: 'details.facilityStatus',
-        value: CONSTANTS.FACILITY_STATUS[params.facilityStatus],
+        field: 'details.facilityStage',
+        value: CONSTANTS.FACILITY_STAGE[params.facilityStage],
       },
     );
   }
