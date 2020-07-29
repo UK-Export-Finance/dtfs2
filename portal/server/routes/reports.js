@@ -222,7 +222,7 @@ router.get('/reports/audit-supply-contracts/:id/transactions/:page', async (req,
     res,
   );
   console.log(`transactions: ${util.inspect(transactions)}`);
- 
+
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
     currentPage: parseInt(req.params.page, 10),
