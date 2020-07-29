@@ -1,10 +1,8 @@
 const moment = require('moment');
-const { findOneDeal, updateDeal } = require('./deal.controller');
+const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { updateLoanInDeal } = require('./loans.controller');
 const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
-const { sanitizeCurrency } = require('../../utils/number');
-const now = require('../../now');
 
 const formattedTimestamp = (timestamp, userTimezone) => {
   const targetTimezone = userTimezone;
