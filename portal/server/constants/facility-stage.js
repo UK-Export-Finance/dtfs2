@@ -1,6 +1,6 @@
 const FACILITY_STATUS = {
-  issued: 'Issued',
   unissued: 'Unissued',
+  issued: 'Issued',
   conditional: 'Conditional',
   unconditional: 'Unconditional',
 };
