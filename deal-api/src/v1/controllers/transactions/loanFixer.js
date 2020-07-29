@@ -166,7 +166,7 @@ const constructor = (graphQLFilters) => {
       transactionType: 'loan',
       facilityValue: loan.facilityValue,
       transactionStage: loan.facilityStage,
-      issuedDate: loan['issuedDate-day'] ? `${loan['issuedDate-day']}/${loan['issuedDate-month']}/${loan['issuedDate-year']}` : '',
+      issuedDate: loan.issuedDate,
       createdDate: loan.createdDate,
       lastEdited: loan.lastEdited,
       endDate: loan.endDate,
