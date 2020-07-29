@@ -211,29 +211,6 @@ exports.updateLoan = async (req, res) => {
   });
 };
 
-const requestedCoverStartDateDayValue = (deal, loan) => {
-  const {
-    'requestedCoverStartDate-day': requestedCoverStartDateDay,
-    'requestedCoverStartDate-month': requestedCoverStartDateMonth,
-    'requestedCoverStartDate-year': requestedCoverStartDateYear,
-  } = loan;
-
-  const hasRequestedCoverStartDate = (requestedCoverStartDateDay
-                                      && requestedCoverStartDateMonth
-                                      && requestedCoverStartDateYear);
-
-  if (!hasRequestedCoverStartDate) {
-    return deal.details.submissionDate;
-  }
-
-  const formattedRequestedCoverStartDate = moment()
-                                          .year(requestedCoverStartDateDay)
-                                          .month(requestedCoverStartDateMonth)
-                                          .day(requestedCoverStartDateYear);
-
-  return formattedRequestedCoverStartDate;
-};
-
 const formattedTimestamp = (timestamp, userTimezone) => {
   const targetTimezone = userTimezone;
   const utc = moment(parseInt(timestamp, 10));
@@ -242,20 +219,36 @@ const formattedTimestamp = (timestamp, userTimezone) => {
   return formatted;
 };
 
-const issuedDateValue = (submittedValues) => {
-  const {
-    'issuedDate-day': issuedDateDay,
-    'issuedDate-month': issuedDateMonth,
-    'issuedDate-year': issuedDateYear,
-  } = submittedValues;
+const createTimestamp = (submittedValues, fieldName) => {
+  const day = submittedValues[`${fieldName}-day`];
+  const month = submittedValues[`${fieldName}-month`];
+  const year = submittedValues[`${fieldName}-year`];
 
-  const momentIssuedDate = moment().set({
-    date: Number(issuedDateDay),
-    month: Number(issuedDateMonth) - 1, // months are zero indexed
-    year: Number(issuedDateYear),
+  const momentDate = moment().set({
+    date: Number(day),
+    month: Number(month) - 1, // months are zero indexed
+    year: Number(year),
   });
 
-  return moment(momentIssuedDate).utc().valueOf().toString();
+  return moment(momentDate).utc().valueOf().toString();
+};
+
+const requestedCoverStartDateValue = (deal, loan) => {
+  const {
+    'requestedCoverStartDate-day': requestedCoverStartDateDay,
+    'requestedCoverStartDate-month': requestedCoverStartDateMonth,
+    'requestedCoverStartDate-year': requestedCoverStartDateYear,
+  } = loan;
+
+  const hasRequestedCoverStartDate = (requestedCoverStartDateDay
+    && requestedCoverStartDateMonth
+    && requestedCoverStartDateYear);
+
+  if (!hasRequestedCoverStartDate) {
+    return deal.details.submissionDate;
+  }
+
+  return createTimestamp(loan, 'requestedCoverStartDate');
 };
 
 exports.updateLoanIssueFacility = async (req, res) => {
@@ -282,16 +275,20 @@ exports.updateLoanIssueFacility = async (req, res) => {
         ...req.body,
       };
 
-      modifiedLoan.issuedDate = issuedDateValue(req.body);
+      modifiedLoan.issuedDate = createTimestamp(req.body, 'issuedDate');
+
+      // TODO: this will probably cause issues with loan pages / other checks
+      // as they expect seperate values, not a timestamp
+      modifiedLoan.requestedCoverStartDate = requestedCoverStartDateValue(deal, modifiedLoan);
 
       const validationErrors = loanIssueFacilityValidationErrors(
         modifiedLoan,
         formattedTimestamp(deal.details.submissionDate, req.user.timezone),
         formattedTimestamp(modifiedLoan.issuedDate, req.user.timezone),
+        formattedTimestamp(modifiedLoan.requestedCoverStartDate, req.user.timezone),
       );
 
       if (validationErrors.count === 0) {
-        modifiedLoan.requestedCoverStartDate = requestedCoverStartDateDayValue(deal, modifiedLoan);
         modifiedLoan.facilityIssued = true;
       }
 
