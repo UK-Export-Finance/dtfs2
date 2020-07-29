@@ -2,8 +2,8 @@
 
 {% macro render(id, label, value, error, conditionalError) %}  
 
-  {% set errorText = (error and value and error.text) %}
-  {% set conditionalErrorText = conditionalError and not value and conditionalError.text %}
+  {% set errorText = (error and error.text) %}
+  {% set conditionalErrorText = conditionalError and conditionalError.text %}
 
   <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="30">
     {{ govukInput({

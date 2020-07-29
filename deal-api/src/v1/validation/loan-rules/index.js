@@ -1,4 +1,3 @@
-const bankReferenceNumber = require('./bank-reference-number');
 const facilityStage = require('./facility-stage');
 const facilityStageConditional = require('./facility-stage-conditional');
 const facilityStageUnconditional = require('./facility-stage-unconditional');
@@ -12,7 +11,6 @@ const premiumType = require('./premium-type');
 const dayCountBasis = require('../fields/day-count-basis');
 
 const rules = [
-  bankReferenceNumber,
   facilityStage,
   facilityStageConditional,
   facilityStageUnconditional,
