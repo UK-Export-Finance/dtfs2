@@ -246,12 +246,26 @@ describe('/v1/deals/:id/status', () => {
       });
     });
 
-    it('does NOT add the user to `editedBy` array if the status changes to "Further Maker\'s input required"', async () => {
+    it('does NOT add the user to `editedBy` array if a checker changes status to "Further Maker\'s input required"', async () => {
       const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const statusUpdate = {
         comments: 'Flee!',
         status: 'Further Maker\'s input required',
+      };
+
+      await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+
+      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+      expect(body.deal.editedBy.length).toEqual(0);
+    });
+
+    it('does NOT add the user to `editedBy` array if a checker changes status to "Submitted"', async () => {
+      const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        comments: 'Yay!',
+        status: 'Submitted',
       };
 
       await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
