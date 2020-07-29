@@ -26,22 +26,29 @@ const createTimestamp = (submittedValues, fieldName) => {
   return moment(momentDate).utc().valueOf().toString();
 };
 
-const requestedCoverStartDateValue = (deal, loan) => {
+const updateRequestedCoverStartDate = (deal, loan) => {
+  const modifiedLoan = loan;
+
   const {
     'requestedCoverStartDate-day': requestedCoverStartDateDay,
     'requestedCoverStartDate-month': requestedCoverStartDateMonth,
     'requestedCoverStartDate-year': requestedCoverStartDateYear,
-  } = loan;
+  } = modifiedLoan;
 
   const hasRequestedCoverStartDate = (requestedCoverStartDateDay
     && requestedCoverStartDateMonth
     && requestedCoverStartDateYear);
 
-  if (!hasRequestedCoverStartDate) {
-    return deal.details.submissionDate;
+  if (hasRequestedCoverStartDate) {
+    modifiedLoan.requestedCoverStartDate = createTimestamp(modifiedLoan, 'requestedCoverStartDate');
+    delete modifiedLoan['requestedCoverStartDate-day'];
+    delete modifiedLoan['requestedCoverStartDate-month'];
+    delete modifiedLoan['requestedCoverStartDate-year'];
+  } else {
+    modifiedLoan.requestedCoverStartDate = deal.details.submissionDate;
   }
 
-  return createTimestamp(loan, 'requestedCoverStartDate');
+  return modifiedLoan;
 };
 
 exports.updateLoanIssueFacility = async (req, res) => {
@@ -62,7 +69,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
         return res.status(404).send();
       }
 
-      const modifiedLoan = {
+      let modifiedLoan = {
         _id: loanId,
         ...loan,
         ...req.body,
@@ -70,10 +77,8 @@ exports.updateLoanIssueFacility = async (req, res) => {
 
       modifiedLoan.issuedDate = createTimestamp(req.body, 'issuedDate');
 
-      // TODO: this will probably cause issues with loan pages / other checks
-      // as they expect seperate values, not a timestamp
-      // TODO should probably delete day/month/year values.
-      modifiedLoan.requestedCoverStartDate = requestedCoverStartDateValue(deal, modifiedLoan);
+      // modifiedLoan.requestedCoverStartDate = requestedCoverStartDateValue(deal, modifiedLoan);
+      modifiedLoan = updateRequestedCoverStartDate(deal, modifiedLoan);
 
       const validationErrors = loanIssueFacilityValidationErrors(
         modifiedLoan,

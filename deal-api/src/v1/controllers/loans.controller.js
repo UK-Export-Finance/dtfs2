@@ -173,16 +173,16 @@ const updateRequestedCoverStartDate = (loan) => {
     && hasValue(requestedCoverStartDateYear));
 
   if (hasRequestedCoverStartDate) {
-    delete modifiedLoan['requestedCoverStartDate-day'];
-    delete modifiedLoan['requestedCoverStartDate-month'];
-    delete modifiedLoan['requestedCoverStartDate-year'];
-
     const momentDate = moment().set({
       date: Number(requestedCoverStartDateDay),
       month: Number(requestedCoverStartDateMonth) - 1, // months are zero indexed
       year: Number(requestedCoverStartDateYear),
     });
     modifiedLoan.requestedCoverStartDate = moment(momentDate).utc().valueOf().toString();
+
+    delete modifiedLoan['requestedCoverStartDate-day'];
+    delete modifiedLoan['requestedCoverStartDate-month'];
+    delete modifiedLoan['requestedCoverStartDate-year'];
   }
   return modifiedLoan;
 };
