@@ -3,6 +3,7 @@ const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { updateLoanInDeal } = require('./loans.controller');
 const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
+const { hasValue } = require('../../utils/string');
 
 // TODO: extract to common/generic directory
 const formattedTimestamp = (timestamp, userTimezone) => {
@@ -29,28 +30,63 @@ const createTimestamp = (submittedValues, fieldName) => {
 };
 
 // TODO: extract to common facility directory
-const updateRequestedCoverStartDate = (deal, loan) => {
-  const modifiedLoan = loan;
-
+const getRequestedCoverStartDateValues = (loan) => {
   const {
     'requestedCoverStartDate-day': requestedCoverStartDateDay,
     'requestedCoverStartDate-month': requestedCoverStartDateMonth,
     'requestedCoverStartDate-year': requestedCoverStartDateYear,
-  } = modifiedLoan;
+  } = loan;
 
-  const hasRequestedCoverStartDate = (requestedCoverStartDateDay
-    && requestedCoverStartDateMonth
-    && requestedCoverStartDateYear);
+  return {
+    requestedCoverStartDateDay,
+    requestedCoverStartDateMonth,
+    requestedCoverStartDateYear,
+  };
+};
+
+// TODO: extract to common facility directory
+const hasAllRequestedCoverStartDateValues = (loan) => {
+  const {
+    requestedCoverStartDateDay,
+    requestedCoverStartDateMonth,
+    requestedCoverStartDateYear,
+  } = getRequestedCoverStartDateValues(loan);
+
+  const hasRequestedCoverStartDate = (hasValue(requestedCoverStartDateDay)
+                                      && hasValue(requestedCoverStartDateMonth)
+                                      && hasValue(requestedCoverStartDateYear));
 
   if (hasRequestedCoverStartDate) {
-    modifiedLoan.requestedCoverStartDate = createTimestamp(modifiedLoan, 'requestedCoverStartDate');
+    return true;
+  }
+
+  return false;
+};
+
+// TODO: extract to common facility directory
+const updateRequestedCoverStartDate = (loan) => {
+  // if we have all requestedCoverStartDate fields (day, month and year)
+  // delete these and use UTC timestamp in a single requestedCoverStartDate property.
+  const modifiedLoan = loan;
+
+  if (hasAllRequestedCoverStartDateValues(loan)) {
+    const {
+      requestedCoverStartDateDay,
+      requestedCoverStartDateMonth,
+      requestedCoverStartDateYear,
+    } = getRequestedCoverStartDateValues(loan);
+
+    const momentDate = moment().set({
+      date: Number(requestedCoverStartDateDay),
+      month: Number(requestedCoverStartDateMonth) - 1, // months are zero indexed
+      year: Number(requestedCoverStartDateYear),
+    });
+    modifiedLoan.requestedCoverStartDate = moment(momentDate).utc().valueOf().toString();
+
     delete modifiedLoan['requestedCoverStartDate-day'];
     delete modifiedLoan['requestedCoverStartDate-month'];
     delete modifiedLoan['requestedCoverStartDate-year'];
-  } else {
-    modifiedLoan.requestedCoverStartDate = deal.details.submissionDate;
   }
-
   return modifiedLoan;
 };
 
@@ -80,14 +116,19 @@ exports.updateLoanIssueFacility = async (req, res) => {
 
       modifiedLoan.issuedDate = createTimestamp(req.body, 'issuedDate');
 
-      modifiedLoan = updateRequestedCoverStartDate(deal, modifiedLoan);
+      let formattedRequestedCoverStartDate;
+      if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {
+        modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
+        // formatted moment date for date comparison validation
+        formattedRequestedCoverStartDate = formattedTimestamp(modifiedLoan.requestedCoverStartDate, req.user.timezone);
+      }
 
       const validationErrors = loanIssueFacilityValidationErrors(
         modifiedLoan,
         // formatted moment dates for date comparison validation
         formattedTimestamp(deal.details.submissionDate, req.user.timezone),
         formattedTimestamp(modifiedLoan.issuedDate, req.user.timezone),
-        formattedTimestamp(modifiedLoan.requestedCoverStartDate, req.user.timezone),
+        formattedRequestedCoverStartDate,
       );
 
       if (validationErrors.count === 0) {
