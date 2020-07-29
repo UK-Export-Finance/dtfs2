@@ -221,8 +221,10 @@ exports.update = (req, res) => {
     let dealAfterAllUpdates = dealAfterCommentsUpdate;
 
     // only trigger updateDeal (which updates the deal's `editedBy` array),
-    // if a checker is NOT changing the status to `Maker input required`
-    if (toStatus !== 'Further Maker\'s input required') {
+    // if a checker is NOT changing the status to either:
+    // `Maker input required` or 'Submitted'
+    if (toStatus !== 'Further Maker\'s input required'
+        && toStatus !== 'Submitted') {
       const newReq = {
         params: req.params,
         body: dealAfterCommentsUpdate,
