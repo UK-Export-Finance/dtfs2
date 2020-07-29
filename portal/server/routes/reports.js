@@ -1,5 +1,5 @@
 import express from 'express';
-import util from 'util';
+// import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
 import CONSTANTS from '../constants';
@@ -160,7 +160,7 @@ router.post('/reports/audit-transactions/:page', async (req, res) => {
   }
 
   req.session.reportFilters = reportFilters;
-  console.log(`reportFilters: ${util.inspect(reportFilters)}`);
+  // console.log(`reportFilters: ${util.inspect(reportFilters)}`);
 
   const banks = await getApiData(
     api.banks(userToken),
@@ -168,7 +168,7 @@ router.post('/reports/audit-transactions/:page', async (req, res) => {
   );
 
   const filters = buildReportFilters(reportFilters, req.session.user);
-  console.log(`filters: ${util.inspect(filters)}`);
+  // console.log(`filters: ${util.inspect(filters)}`);
   const transactionData = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
