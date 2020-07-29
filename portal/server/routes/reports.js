@@ -35,13 +35,12 @@ router.get('/reports/audit-supply-contracts/:page', async (req, res) => {
   const reportFilters = req.session.transactionFilters;
 
   const filters = buildReportFilters(reportFilters, req.session.user);
-  // console.log(`filters: ${util.inspect(filters)}`);
+
   const dealData = await getApiData(
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-  // console.log(`transactionData: ${util.inspect(dealData)}`);
-  console.log(`transactionData: ${util.inspect(dealData.deals[0])}`);
+
 
   const pages = {
     totalPages: Math.ceil(dealData.count / PAGESIZE),
@@ -174,7 +173,6 @@ router.post('/reports/audit-transactions/:page', async (req, res) => {
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-  // console.log(`transactionData: ${util.inspect(transactionData)}`);
 
   const pages = {
     totalPages: Math.ceil(transactionData.count / PAGESIZE),
@@ -224,7 +222,7 @@ router.get('/reports/audit-supply-contracts/:id/transactions/:page', async (req,
     res,
   );
   console.log(`transactions: ${util.inspect(transactions)}`);
-
+ 
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
     currentPage: parseInt(req.params.page, 10),
@@ -235,6 +233,29 @@ router.get('/reports/audit-supply-contracts/:id/transactions/:page', async (req,
     pages,
     transactions,
     bankSupplyContractID,
+    primaryNav,
+    subNav: 'transactions-report',
+    user: req.session.user,
+  });
+});
+
+router.get('/reports/:id/transactions/:page', async (req, res) => {
+  const { userToken } = requestParams(req);
+  const filters = {}; // TODO wire up filters; probably do same as dashboard +use session
+
+  const { transactions, count } = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+    res,
+  );
+
+  const pages = {
+    totalPages: Math.ceil(count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: count,
+  };
+  return res.render('reports/audit-supply-transactions.njk', {
+    pages,
+    transactions,
     primaryNav,
     subNav: 'transactions-report',
     user: req.session.user,

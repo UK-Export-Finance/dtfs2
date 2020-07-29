@@ -166,8 +166,8 @@ const constructor = (graphQLFilters) => {
       transactionType: 'loan',
       facilityValue: loan.facilityValue,
       transactionStage: loan.facilityStage,
-      issuedDate: '', // TODO
-      startDate: loan.startDate,
+      issuedDate: loan['issuedDate-day'] ? `${loan['issuedDate-day']}/${loan['issuedDate-month']}/${loan['issuedDate-year']}` : '',
+      createdDate: loan.createdDate,
       lastEdited: loan.lastEdited,
       endDate: loan.endDate,
       maker: deal.details.maker ? `${deal.details.maker.firstname || ''} ${deal.details.maker.surname || ''}` : '',
