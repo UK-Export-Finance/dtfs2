@@ -8,34 +8,14 @@ const {
   calculateUkefExposure,
 } = require('../section-calculations');
 const { handleTransactionCurrencyFields } = require('../section-currency');
+const {
+  formattedTimestamp,
+  hasAllRequestedCoverStartDateValues,
+  updateRequestedCoverStartDate,
+} = require('../section-dates/requested-cover-start-date');
 const { loanStatus } = require('../section-status/loan');
 const { sanitizeCurrency } = require('../../utils/number');
-const { hasValue } = require('../../utils/string');
 const now = require('../../now');
-
-// TODO: extract to common/generic directory
-const formattedTimestamp = (timestamp, userTimezone) => {
-  const targetTimezone = userTimezone;
-  const utc = moment(parseInt(timestamp, 10));
-  const localisedTimestamp = utc.tz(targetTimezone);
-  const formatted = localisedTimestamp.format();
-  return formatted;
-};
-
-// TODO: extract to common/generic directory
-const createTimestamp = (submittedValues, fieldName) => {
-  const day = submittedValues[`${fieldName}-day`];
-  const month = submittedValues[`${fieldName}-month`];
-  const year = submittedValues[`${fieldName}-year`];
-
-  const momentDate = moment().set({
-    date: Number(day),
-    month: Number(month) - 1, // months are zero indexed
-    year: Number(year),
-  });
-
-  return moment(momentDate).utc().valueOf().toString();
-};
 
 const putLoanInDealObject = (deal, loan) => {
   const allOtherLoans = deal.loanTransactions.items.filter((l) =>
@@ -90,7 +70,7 @@ exports.getLoan = async (req, res) => {
 
         // if we have requestedCoverStartDate timestamp
         // return consumption-friendly day/month/year.
-        if (hasValue(loan.requestedCoverStartDate)) {
+        if (loan.requestedCoverStartDate) {
           const targetTimezone = req.user.timezone;
           const utc = moment(parseInt(loan.requestedCoverStartDate, 10));
           const localisedTimestamp = utc.tz(targetTimezone);
@@ -178,67 +158,6 @@ const premiumTypeFields = (loan) => {
     delete modifiedLoan.premiumFrequency;
   }
 
-  return modifiedLoan;
-};
-
-// TODO: extract to common facility directory
-const getRequestedCoverStartDateValues = (loan) => {
-  const {
-    'requestedCoverStartDate-day': requestedCoverStartDateDay,
-    'requestedCoverStartDate-month': requestedCoverStartDateMonth,
-    'requestedCoverStartDate-year': requestedCoverStartDateYear,
-  } = loan;
-
-  return {
-    requestedCoverStartDateDay,
-    requestedCoverStartDateMonth,
-    requestedCoverStartDateYear,
-  };
-};
-
-// TODO: extract to common facility directory
-const hasAllRequestedCoverStartDateValues = (loan) => {
-  const {
-    requestedCoverStartDateDay,
-    requestedCoverStartDateMonth,
-    requestedCoverStartDateYear,
-  } = getRequestedCoverStartDateValues(loan);
-
-  const hasRequestedCoverStartDate = (hasValue(requestedCoverStartDateDay)
-                                     && hasValue(requestedCoverStartDateMonth)
-                                     && hasValue(requestedCoverStartDateYear));
-
-  if (hasRequestedCoverStartDate) {
-    return true;
-  }
-
-  return false;
-};
-
-// TODO: extract to common facility directory
-const updateRequestedCoverStartDate = (loan) => {
-  // if we have all requestedCoverStartDate fields (day, month and year)
-  // delete these and use UTC timestamp in a single requestedCoverStartDate property.
-  const modifiedLoan = loan;
-
-  if (hasAllRequestedCoverStartDateValues(loan)) {
-    const {
-      requestedCoverStartDateDay,
-      requestedCoverStartDateMonth,
-      requestedCoverStartDateYear,
-    } = getRequestedCoverStartDateValues(loan);
-
-    const momentDate = moment().set({
-      date: Number(requestedCoverStartDateDay),
-      month: Number(requestedCoverStartDateMonth) - 1, // months are zero indexed
-      year: Number(requestedCoverStartDateYear),
-    });
-    modifiedLoan.requestedCoverStartDate = moment(momentDate).utc().valueOf().toString();
-
-    delete modifiedLoan['requestedCoverStartDate-day'];
-    delete modifiedLoan['requestedCoverStartDate-month'];
-    delete modifiedLoan['requestedCoverStartDate-year'];
-  }
   return modifiedLoan;
 };
 

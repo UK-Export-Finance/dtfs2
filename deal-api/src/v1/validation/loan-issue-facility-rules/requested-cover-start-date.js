@@ -1,7 +1,6 @@
 const moment = require('moment');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 const {
-  dateHasAllValues,
   dateHasSomeValues,
   dateValidationText,
 } = require('../fields/date');
@@ -16,7 +15,6 @@ module.exports = (submittedValues, errorList, dealSubmissionDate, requestedCover
     'requestedCoverStartDate-year': requestedCoverStartDateYear,
   } = submittedValues;
 
-  // if (dateHasAllValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear)) {
   if (requestedCoverStartDateTimestamp) {
     const formattedDealSubmissionDate = moment(dealSubmissionDate).format('Do MMMM YYYY');
 

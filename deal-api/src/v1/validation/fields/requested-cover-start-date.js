@@ -1,7 +1,6 @@
 const moment = require('moment');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 const {
-  dateHasAllValues,
   dateHasSomeValues,
   dateIsInTimeframe,
   dateValidationText,
@@ -37,7 +36,7 @@ module.exports = (submittedValues, errorList, requestedCoverStartDateTimestamp) 
         order: orderNumber(newErrorList),
       };
     }
-    
+
     if (moment(requestedCoverStartDateTimestamp).isBefore(nowDate)) {
       newErrorList.requestedCoverStartDate = {
         text: 'Requested Cover Start Date must be today or in the future',
