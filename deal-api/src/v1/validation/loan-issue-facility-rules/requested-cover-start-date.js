@@ -6,6 +6,7 @@ const {
   dateValidationText,
 } = require('../fields/date');
 
+// TODO update to handle timestamp validation like in other requested-cover-start date rule.
 module.exports = (submittedValues, errorList, dealSubmissionDate, requestedCoverStartDate) => {
   const newErrorList = errorList;
 

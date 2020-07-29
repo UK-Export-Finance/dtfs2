@@ -13,6 +13,30 @@ const { sanitizeCurrency } = require('../../utils/number');
 const { hasValue } = require('../../utils/string');
 const now = require('../../now');
 
+// TODO: extract to common/generic directory
+const formattedTimestamp = (timestamp, userTimezone) => {
+  const targetTimezone = userTimezone;
+  const utc = moment(parseInt(timestamp, 10));
+  const localisedTimestamp = utc.tz(targetTimezone);
+  const formatted = localisedTimestamp.format();
+  return formatted;
+};
+
+// TODO: extract to common/generic directory
+const createTimestamp = (submittedValues, fieldName) => {
+  const day = submittedValues[`${fieldName}-day`];
+  const month = submittedValues[`${fieldName}-month`];
+  const year = submittedValues[`${fieldName}-year`];
+
+  const momentDate = moment().set({
+    date: Number(day),
+    month: Number(month) - 1, // months are zero indexed
+    year: Number(year),
+  });
+
+  return moment(momentDate).utc().valueOf().toString();
+};
+
 const putLoanInDealObject = (deal, loan) => {
   const allOtherLoans = deal.loanTransactions.items.filter((l) =>
     String(l._id) !== loan._id); // eslint-disable-line no-underscore-dangle
@@ -157,22 +181,51 @@ const premiumTypeFields = (loan) => {
   return modifiedLoan;
 };
 
+const getRequestedCoverStartDateValues = (loan) => {
+  const {
+    'requestedCoverStartDate-day': requestedCoverStartDateDay,
+    'requestedCoverStartDate-month': requestedCoverStartDateMonth,
+    'requestedCoverStartDate-year': requestedCoverStartDateYear,
+  } = loan;
+
+  return {
+    requestedCoverStartDateDay,
+    requestedCoverStartDateMonth,
+    requestedCoverStartDateYear,
+  };
+};
+
+const hasAllRequestedCoverStartDateValues = (loan) => {
+  const {
+    requestedCoverStartDateDay,
+    requestedCoverStartDateMonth,
+    requestedCoverStartDateYear,
+  } = getRequestedCoverStartDateValues(loan);
+
+  const hasRequestedCoverStartDate = (hasValue(requestedCoverStartDateDay)
+                                     && hasValue(requestedCoverStartDateMonth)
+                                     && hasValue(requestedCoverStartDateYear));
+
+  if (hasRequestedCoverStartDate) {
+    return true;
+  }
+
+  return false;
+};
+
+// TODO: extract to common facility directory
 const updateRequestedCoverStartDate = (loan) => {
   // if we have all requestedCoverStartDate fields (day, month and year)
   // delete these and use UTC timestamp in a single requestedCoverStartDate property.
   const modifiedLoan = loan;
 
-  const {
-    'requestedCoverStartDate-day': requestedCoverStartDateDay,
-    'requestedCoverStartDate-month': requestedCoverStartDateMonth,
-    'requestedCoverStartDate-year': requestedCoverStartDateYear,
-  } = modifiedLoan;
+  if (hasAllRequestedCoverStartDateValues(loan)) {
+    const {
+      requestedCoverStartDateDay,
+      requestedCoverStartDateMonth,
+      requestedCoverStartDateYear,
+    } = getRequestedCoverStartDateValues(loan);
 
-  const hasRequestedCoverStartDate = (hasValue(requestedCoverStartDateDay)
-    && hasValue(requestedCoverStartDateMonth)
-    && hasValue(requestedCoverStartDateYear));
-
-  if (hasRequestedCoverStartDate) {
     const momentDate = moment().set({
       date: Number(requestedCoverStartDateDay),
       month: Number(requestedCoverStartDateMonth) - 1, // months are zero indexed
@@ -234,14 +287,21 @@ exports.updateLoan = async (req, res) => {
         modifiedLoan.disbursementAmount = sanitizedFacilityDisbursement.sanitizedValue;
       }
 
-      // TODO: coverEndDate to be a timestamp and have same treatment as requestedCoverStartDate
-      modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
+      let formattedRequestedCoverStartDate;
+      if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {
+        modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
+        // formatted moment date for date comparison validation
+        formattedRequestedCoverStartDate = formattedTimestamp(modifiedLoan.requestedCoverStartDate, req.user.timezone);
+      }
 
       modifiedLoan.lastEdited = now();
-
       const updatedLoan = await updateLoanInDeal(req.params, req.user, deal, modifiedLoan);
 
-      const validationErrors = loanValidationErrors(updatedLoan);
+
+      const validationErrors = loanValidationErrors(
+        updatedLoan,
+        formattedRequestedCoverStartDate,
+      );
 
       if (validationErrors.count !== 0) {
         return res.status(400).send({

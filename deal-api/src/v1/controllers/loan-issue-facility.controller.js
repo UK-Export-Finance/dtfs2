@@ -4,6 +4,7 @@ const { userHasAccessTo } = require('../users/checks');
 const { updateLoanInDeal } = require('./loans.controller');
 const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
 
+// TODO: extract to common/generic directory
 const formattedTimestamp = (timestamp, userTimezone) => {
   const targetTimezone = userTimezone;
   const utc = moment(parseInt(timestamp, 10));
@@ -12,6 +13,7 @@ const formattedTimestamp = (timestamp, userTimezone) => {
   return formatted;
 };
 
+// TODO: extract to common/generic directory
 const createTimestamp = (submittedValues, fieldName) => {
   const day = submittedValues[`${fieldName}-day`];
   const month = submittedValues[`${fieldName}-month`];
@@ -26,6 +28,7 @@ const createTimestamp = (submittedValues, fieldName) => {
   return moment(momentDate).utc().valueOf().toString();
 };
 
+// TODO: extract to common facility directory
 const updateRequestedCoverStartDate = (deal, loan) => {
   const modifiedLoan = loan;
 
@@ -77,11 +80,11 @@ exports.updateLoanIssueFacility = async (req, res) => {
 
       modifiedLoan.issuedDate = createTimestamp(req.body, 'issuedDate');
 
-      // modifiedLoan.requestedCoverStartDate = requestedCoverStartDateValue(deal, modifiedLoan);
       modifiedLoan = updateRequestedCoverStartDate(deal, modifiedLoan);
 
       const validationErrors = loanIssueFacilityValidationErrors(
         modifiedLoan,
+        // formatted moment dates for date comparison validation
         formattedTimestamp(deal.details.submissionDate, req.user.timezone),
         formattedTimestamp(modifiedLoan.issuedDate, req.user.timezone),
         formattedTimestamp(modifiedLoan.requestedCoverStartDate, req.user.timezone),
