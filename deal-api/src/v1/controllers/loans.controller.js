@@ -11,6 +11,7 @@ const {
 const { handleTransactionCurrencyFields } = require('../section-currency');
 const { loanStatus } = require('../section-status/loan');
 const { sanitizeCurrency } = require('../../utils/number');
+const { hasValue } = require('../../utils/string');
 const now = require('../../now');
 
 const putLoanInDealObject = (deal, loan) => {
@@ -28,7 +29,7 @@ const putLoanInDealObject = (deal, loan) => {
   };
 };
 
-exports.updateLoanInDeal = async (params, user, deal, loan) => {
+const updateLoanInDeal = async (params, user, deal, loan) => {
   const modifiedDeal = putLoanInDealObject(deal, loan);
 
   const newReq = {
@@ -44,6 +45,7 @@ exports.updateLoanInDeal = async (params, user, deal, loan) => {
 
   return loanInDeal;
 };
+exports.updateLoanInDeal = updateLoanInDeal;
 
 exports.getLoan = async (req, res) => {
   const {
@@ -62,6 +64,18 @@ exports.getLoan = async (req, res) => {
 
       if (loan) {
         const validationErrors = loanValidationErrors(loan);
+
+        // if we have requestedCoverStartDate timestamp
+        // return consumption-friendly day/month/year.
+        if (hasValue(loan.requestedCoverStartDate)) {
+          const targetTimezone = req.user.timezone;
+          const utc = moment(parseInt(loan.requestedCoverStartDate, 10));
+          const localisedTimestamp = utc.tz(targetTimezone);
+
+          loan['requestedCoverStartDate-day'] = localisedTimestamp.format('DD');
+          loan['requestedCoverStartDate-month'] = localisedTimestamp.format('MM');
+          loan['requestedCoverStartDate-year'] = localisedTimestamp.format('YYYY');
+        }
 
         return res.json({
           dealId,
@@ -116,7 +130,7 @@ const loanFacilityStageFields = (loan) => {
 
   if (facilityStage === 'Conditional') {
     // remove any 'Unconditional' specific fields
-
+    delete modifiedLoan.requestedCoverStartDate;
     delete modifiedLoan['requestedCoverStartDate-day'];
     delete modifiedLoan['requestedCoverStartDate-month'];
     delete modifiedLoan['requestedCoverStartDate-year'];
@@ -142,6 +156,35 @@ const premiumTypeFields = (loan) => {
   }
 
   return modifiedLoan;
+};
+
+const updateRequestedCoverStartDate = (loan) => {
+  // if we have all requestedCoverStartDate fields (day, month and year)
+  // delete these and use UTC timestamp in a single requestedCoverStartDate property.
+
+  const {
+    'requestedCoverStartDate-day': requestedCoverStartDateDay,
+    'requestedCoverStartDate-month': requestedCoverStartDateMonth,
+    'requestedCoverStartDate-year': requestedCoverStartDateYear,
+  } = loan;
+
+  const hasRequestedCoverStartDate = (hasValue(requestedCoverStartDateDay)
+    && hasValue(requestedCoverStartDateMonth)
+    && hasValue(requestedCoverStartDateYear));
+
+  if (hasRequestedCoverStartDate) {
+    delete loan['requestedCoverStartDate-day'];
+    delete loan['requestedCoverStartDate-month'];
+    delete loan['requestedCoverStartDate-year'];
+
+    const momentDate = moment().set({
+      date: Number(requestedCoverStartDateDay),
+      month: Number(requestedCoverStartDateMonth) - 1, // months are zero indexed
+      year: Number(requestedCoverStartDateYear),
+    });
+    loan.requestedCoverStartDate = moment(momentDate).utc().valueOf().toString();
+  }
+  return loan;
 };
 
 exports.updateLoan = async (req, res) => {
@@ -190,6 +233,9 @@ exports.updateLoan = async (req, res) => {
       if (sanitizedFacilityDisbursement.sanitizedValue) {
         modifiedLoan.disbursementAmount = sanitizedFacilityDisbursement.sanitizedValue;
       }
+
+      // TODO: coverEndDate to be a timestamp and have same treatment as requestedCoverStartDate
+      modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
 
       modifiedLoan.lastEdited = now();
 

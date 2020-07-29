@@ -74,6 +74,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
 
       // TODO: this will probably cause issues with loan pages / other checks
       // as they expect seperate values, not a timestamp
+      // TODO should probably delete day/month/year values.
       modifiedLoan.requestedCoverStartDate = requestedCoverStartDateValue(deal, modifiedLoan);
 
       const validationErrors = loanIssueFacilityValidationErrors(

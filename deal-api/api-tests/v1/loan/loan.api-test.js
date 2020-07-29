@@ -150,12 +150,15 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     describe('when a loan has all required fields', () => {
-      it('retuns a loan with dealId and `Completed` status', async () => {
+      it('retuns a loan with dealId, `Completed` status and requestedCoverStartDate values', async () => {
         const { dealId, loanId } = await addLoanToDeal();
 
         const loan = {
-          facilityStage: 'Conditional',
-          ukefGuaranteeInMonths: '12',
+          facilityStage: 'Unconditional',
+          bankReferenceNumber: '1234',
+          ...requestedCoverStartDate(),
+          ...coverEndDate(),
+          disbursementAmount: '5',
           facilityValue: '100',
           currencySameAsSupplyContractCurrency: 'true',
           interestMarginFee: '10',
@@ -172,6 +175,10 @@ describe('/v1/deals/:id/loan', () => {
         expect(body.validationErrors.count).toEqual(0);
         expect(body.loan.status).toEqual('Completed');
         expect(body.dealId).toEqual(dealId);
+        expect(body.loan.requestedCoverStartDate).toEqual(expect.any(String));
+        expect(body.loan['requestedCoverStartDate-day']).toEqual(requestedCoverStartDate()['requestedCoverStartDate-day']);
+        expect(body.loan['requestedCoverStartDate-month']).toEqual(requestedCoverStartDate()['requestedCoverStartDate-month']);
+        expect(body.loan['requestedCoverStartDate-year']).toEqual(requestedCoverStartDate()['requestedCoverStartDate-year']);
       });
     });
   });
@@ -257,6 +264,23 @@ describe('/v1/deals/:id/loan', () => {
       expect(body.loan.ukefExposure).toEqual(expectedUkefExposure);
     });
 
+    describe('when req.body contains requestedCoverStartDate-day, month and year', () => {
+      it('should remove the day, month and year fields and generate a timestamp', async () => {
+        const { dealId, loanId } = await addLoanToDeal();
+
+        const loan = {
+          ...requestedCoverStartDate(),
+        };
+
+        const { body } = await updateLoan(dealId, loanId, loan);
+
+        expect(body.loan.requestedCoverStartDate).toEqual(expect.any(String));
+        expect(body.loan['requestedCoverStartDate-day']).toEqual(undefined);
+        expect(body.loan['requestedCoverStartDate-month']).toEqual(undefined);
+        expect(body.loan['requestedCoverStartDate-year']).toEqual(undefined);
+      });
+    });
+
     describe('when req.body.facilityStage is `Unconditional`', () => {
       it('should remove `Conditional` related values from the loan', async () => {
         const { dealId, loanId } = await addLoanToDeal();
@@ -319,6 +343,7 @@ describe('/v1/deals/:id/loan', () => {
         const { status, body } = await updateLoan(dealId, loanId, updateToConditionalLoan);
 
         expect(status).toEqual(200);
+        expect(body.requestedCoverStartDate).toEqual(undefined);
         expect(body['requestedCoverStartDate-day']).toEqual(undefined);
         expect(body['requestedCoverStartDate-month']).toEqual(undefined);
         expect(body['requestedCoverStartDate-year']).toEqual(undefined);
