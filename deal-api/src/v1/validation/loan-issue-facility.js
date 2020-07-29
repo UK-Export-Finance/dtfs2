@@ -1,7 +1,7 @@
 const applyRules = require('./loan-issue-facility-rules');
 
-module.exports = (loan) => {
-  const errorList = applyRules(loan);
+module.exports = (loan, dealSubmissionDate, issuedDate) => {
+  const errorList = applyRules(loan, dealSubmissionDate, issuedDate);
   const totalErrors = Object.keys(errorList).length;
 
   if (totalErrors === 0) {
