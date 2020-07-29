@@ -14,7 +14,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
             "lastLogin" : "1595576594831",
             "firstname" : "Hugo",
@@ -25,7 +29,8 @@ module.exports = {
             "id" : "956",
             "name" : "Barclays Bank",
             "emails": [
-                "maker1@ukexportfinance.gov.uk",
+                "maker4@ukexportfinance.gov.uk",
+                "checker4@ukexportfinance.gov.uk"
             ]
         },
         "submissionType" : "Automatic Inclusion Notice",
@@ -286,7 +291,11 @@ module.exports = {
                 ],
                 "bank" : {
                     "id" : "956",
-                    "name" : "Barclays Bank"
+                    "name" : "Barclays Bank",
+                    "emails": [
+                        "maker4@ukexportfinance.gov.uk",
+                        "checker4@ukexportfinance.gov.uk"
+                    ]
                 },
                 "lastLogin" : "1595583267490",
                 "firstname" : "Emilio",
@@ -304,7 +313,11 @@ module.exports = {
                 ],
                 "bank" : {
                     "id" : "956",
-                    "name" : "Barclays Bank"
+                    "name" : "Barclays Bank",
+                    "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
                 },
                 "lastLogin" : "1595582951502",
                 "firstname" : "Hugo",
@@ -322,7 +335,11 @@ module.exports = {
                 ],
                 "bank" : {
                     "id" : "956",
-                    "name" : "Barclays Bank"
+                    "name" : "Barclays Bank",
+                    "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
                 },
                 "lastLogin" : "1595582658576",
                 "firstname" : "Emilio",
@@ -340,7 +357,11 @@ module.exports = {
                 ],
                 "bank" : {
                     "id" : "956",
-                    "name" : "Barclays Bank"
+                    "name" : "Barclays Bank",
+                    "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
                 },
                 "lastLogin" : "1595581914389",
                 "firstname" : "Hugo",
@@ -360,7 +381,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -371,7 +396,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -382,7 +411,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -393,7 +426,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -404,7 +441,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -415,7 +456,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -426,7 +471,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -437,7 +486,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -448,7 +501,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -459,7 +516,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -470,7 +531,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -481,7 +546,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -492,7 +561,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -503,7 +576,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -514,7 +591,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -525,7 +606,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -536,7 +621,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -547,7 +636,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -558,7 +651,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -569,7 +666,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -580,7 +681,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -591,7 +696,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -602,7 +711,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -613,7 +726,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -624,7 +741,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -635,7 +756,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -646,7 +771,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -657,7 +786,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -668,7 +801,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -679,7 +816,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -690,7 +831,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -701,7 +846,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -712,7 +861,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -723,7 +876,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -734,7 +891,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -745,7 +906,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         },
         {
@@ -756,7 +921,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
         }
     ],

@@ -12,7 +12,11 @@ module.exports = {
   "details": {
     "bank": {
       "id" : "956",
-      "name" : "Barclays Bank"
+      "name" : "Barclays Bank",
+      "emails": [
+        "maker4@ukexportfinance.gov.uk",
+        "checker4@ukexportfinance.gov.uk"
+      ]
     },
     "bankSupplyContractID": "DTFS2-1092-bad-cover-dates",
     "bankSupplyContractName": "Tibettan submarine acquisition scheme",
@@ -22,9 +26,10 @@ module.exports = {
     owningBank: {
       id: '956',
       name: 'Barclays Bank',
-      emails: [
-        'maker1@ukexportfinance.gov.uk',
-      ],
+      "emails": [
+        "maker4@ukexportfinance.gov.uk",
+        "checker4@ukexportfinance.gov.uk"
+      ]
     },
   },
   "submissionDetails" : {
