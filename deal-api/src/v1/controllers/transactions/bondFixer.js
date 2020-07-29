@@ -169,7 +169,7 @@ const constructor = (graphQLFilters) => {
       transactionStage: bond.bondStage,
       createdDate: bond.createdDate,
       lastEdited: bond.lastEdited,
-      issuedDate: bond['issuedDate-day'] ? `${bond['issuedDate-day']}/${bond['issuedDate-month']}/${bond['issuedDate-year']}` : '',
+      issuedDate: bond.issuedDate,
       endDate: bond.endDate,
       maker: deal.details.maker ? `${deal.details.maker.firstname || ''} ${deal.details.maker.surname || ''}` : '',
       checker: deal.details.checker ? `${deal.details.checker.firstname || ''} ${deal.details.checker.surname || ''}` : '',
