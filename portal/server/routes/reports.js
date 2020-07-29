@@ -208,9 +208,9 @@ router.get('/reports/audit-supply-contracts/:id/transactions/:page', async (req,
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, idFilter, userToken),
     res,
   );
-  console.log(`deals: ${util.inspect(deals)}`);
   // extract the bankSupplyContractID
   const { bankSupplyContractID } = deals[0].details;
+
   const transactionfilters = {
     bankSupplyContractID,
   };
@@ -221,7 +221,6 @@ router.get('/reports/audit-supply-contracts/:id/transactions/:page', async (req,
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-  console.log(`transactions: ${util.inspect(transactions)}`);
 
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
