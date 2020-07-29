@@ -10,6 +10,7 @@ const {
 module.exports = (submittedValues, errorList) => {
   const newErrorList = errorList;
 
+  console.log('REQ COVER START DATE - submittedValues \n', submittedValues);
   const {
     'requestedCoverStartDate-day': requestedCoverStartDateDay,
     'requestedCoverStartDate-month': requestedCoverStartDateMonth,
