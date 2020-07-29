@@ -14,7 +14,11 @@ module.exports = {
             ],
             "bank" : {
                 "id" : "956",
-                "name" : "Barclays Bank"
+                "name" : "Barclays Bank",
+                "emails": [
+                    "maker4@ukexportfinance.gov.uk",
+                    "checker4@ukexportfinance.gov.uk"
+                ]
             },
             "lastLogin" : "1595425761442",
             "firstname" : "Hugo",
@@ -25,7 +29,8 @@ module.exports = {
             "id" : "956",
             "name" : "Barclays Bank",
             "emails": [
-                "maker1@ukexportfinance.gov.uk",
+                "maker4@ukexportfinance.gov.uk",
+                "checker4@ukexportfinance.gov.uk"
             ]
         }
     },

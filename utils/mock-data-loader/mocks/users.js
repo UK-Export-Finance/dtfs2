@@ -31,8 +31,8 @@ const USERS = [
       id: '956',
       name: 'Barclays Bank',
       emails: [
-        'maker1@ukexportfinance.gov.uk',
-        'maker2@ukexportfinance.gov.uk',
+        'maker4@ukexportfinance.gov.uk',
+        'checker4@ukexportfinance.gov.uk',
       ],
     },
   },
@@ -48,8 +48,8 @@ const USERS = [
       id: '956',
       name: 'Barclays Bank',
       emails: [
-        'maker1@ukexportfinance.gov.uk',
-        'maker2@ukexportfinance.gov.uk',
+        'maker4@ukexportfinance.gov.uk',
+        'checker4@ukexportfinance.gov.uk',
       ],
     },
   },
@@ -64,6 +64,10 @@ const USERS = [
       // _id: '', //TODO [dw] better linking of mock data
       id: '956',
       name: 'Barclays Bank',
+      emails: [
+        'maker4@ukexportfinance.gov.uk',
+        'checker4@ukexportfinance.gov.uk',
+      ],
     },
   },
   {
@@ -77,6 +81,10 @@ const USERS = [
       // _id: '', //TODO [dw] better linking of mock data
       id: '956',
       name: 'Barclays Bank',
+      emails: [
+        'maker4@ukexportfinance.gov.uk',
+        'checker4@ukexportfinance.gov.uk',
+      ],
     },
   },
   {
@@ -103,6 +111,10 @@ const USERS = [
       // _id: '', //TODO [dw] better linking of mock data
       id: '956',
       name: 'Barclays Bank',
+      emails: [
+        'maker4@ukexportfinance.gov.uk',
+        'checker4@ukexportfinance.gov.uk',
+      ],
     },
     emails: [
       'checker1@ukexportfinance.gov.uk',
@@ -120,6 +132,10 @@ const USERS = [
       // _id: '', //TODO [dw] better linking of mock data
       id: '956',
       name: 'Barclays Bank',
+      emails: [
+        'maker4@ukexportfinance.gov.uk',
+        'checker4@ukexportfinance.gov.uk',
+      ],
     },
   },
   {
@@ -133,6 +149,10 @@ const USERS = [
       // _id: '', //TODO [dw] better linking of mock data
       id: '956',
       name: 'Barclays Bank',
+      emails: [
+        'maker4@ukexportfinance.gov.uk',
+        'checker4@ukexportfinance.gov.uk',
+      ],
     },
   },
   {
@@ -146,6 +166,10 @@ const USERS = [
       // _id: '', //TODO [dw] better linking of mock data
       id: '956',
       name: 'Barclays Bank',
+      emails: [
+        'maker4@ukexportfinance.gov.uk',
+        'checker4@ukexportfinance.gov.uk',
+      ],
     },
   },
   {
