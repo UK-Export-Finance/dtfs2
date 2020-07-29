@@ -3,7 +3,6 @@ const { orderNumber } = require('../../../utils/error-list-order-number');
 const {
   dateHasAllValues,
   dateHasSomeValues,
-  dateIsInTimeframe,
   dateValidationText,
 } = require('../fields/date');
 

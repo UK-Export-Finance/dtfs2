@@ -12,7 +12,6 @@ const { handleTransactionCurrencyFields } = require('../section-currency');
 const { loanStatus } = require('../section-status/loan');
 const { sanitizeCurrency } = require('../../utils/number');
 const now = require('../../now');
-const issuedDate = require('../validation/fields/issued-date');
 
 const putLoanInDealObject = (deal, loan) => {
   const allOtherLoans = deal.loanTransactions.items.filter((l) =>
