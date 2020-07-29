@@ -1,7 +1,7 @@
 {% import '_macros/date-range.njk' as dateRange %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
-{% macro render(filter, user, banks, facilityStatuses) %}
+{% macro render(filter, user, banks, facilityStages) %}
 
 <form method="POST" autocomplete="off">
 
@@ -33,14 +33,14 @@
     <div class="govuk-grid-column-one-third">
 
       <div class="govuk-form-group">
-        <label class="govuk-label" for="facilityStatus">
-          Facility status
+        <label class="govuk-label" for="facilityStages">
+          Facility stage
         </label>
 
-        <select data-cy="facilityStatus" class="govuk-select" id="facilityStatus" name="facilityStatus">
-          <option value="all" {% if filter.facilityStatus==='all' %}selected{%endif%}>Any</option>
-          {% for value, text in facilityStatuses %}
-          <option value="{{ value }}" {% if filter.facilityStatus===value %}selected{%endif%}>{{ text }}</option>
+        <select data-cy="facilityStage" class="govuk-select" id="facilityStage" name="facilityStage">
+          <option value="all" {% if filter.facilityStage==='all' %}selected{%endif%}>Any</option>
+          {% for value, text in facilityStages %}
+          <option value="{{ value }}" {% if filter.facilityStage===value %}selected{%endif%}>{{ text }}</option>
           {% endfor %}
         </select>
       </div>

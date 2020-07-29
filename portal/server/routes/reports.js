@@ -140,7 +140,7 @@ router.get('/reports/audit-transactions/:page', async (req, res) => {
     filter: {
       ...reportFilters,
     },
-    facilityStatuses: CONSTANTS.FACILITY_STATUS,
+    facilityStages: CONSTANTS.FACILITY_STAGE,
     primaryNav,
     subNav: 'audit-transactions',
     user: req.session.user,
@@ -187,7 +187,7 @@ router.post('/reports/audit-transactions/:page', async (req, res) => {
     filter: {
       ...reportFilters,
     },
-    facilityStatuses: CONSTANTS.FACILITY_STATUS,
+    facilityStages: CONSTANTS.FACILITY_STAGE,
     primaryNav,
     subNav: 'audit-transactions',
     user: req.session.user,
