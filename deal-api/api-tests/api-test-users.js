@@ -32,6 +32,10 @@ const banks = {
   UKEF: {
     id: '9',
     name: 'UKEF test bank (Delegated)',
+    emails: [
+      'maker1@ukexportfinance.gov.uk',
+      'checker1@ukexportfinance.gov.uk',
+    ],
   },
   any: {
     id: '*',
