@@ -17,6 +17,7 @@ import {
   provide, DEAL, MANDATORY_CRITERIA,
 } from '../api-data-provider';
 import userCanSubmitDeal from './userCanSubmitDeal';
+import dealHasIssuedFacilities from './dealHasIssuedFacilities';
 
 const router = express.Router();
 
@@ -60,6 +61,7 @@ router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
     canFullyCalculateDealSummary,
     editable: isDealEditable(deal, user),
     userCanSubmit: userCanSubmitDeal(deal, user),
+    dealHasIssuedFacilities: dealHasIssuedFacilities(deal),
   });
 });
 

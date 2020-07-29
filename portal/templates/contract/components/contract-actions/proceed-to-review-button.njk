@@ -40,6 +40,17 @@
 
       {% endif %}
 
+      {% if ["Acknowledged by UKEF"].includes(params.deal.details.status) and params.dealHasIssuedFacilities %}
+        {{ govukButton({
+          "disabled": false,
+          "text": "Proceed to review",
+          "attributes" : {
+            "data-cy" : "ProceedToReview"
+          },
+          "href": "/contract/" + params.deal._id + "/ready-for-review"
+        }) }}
+      {% endif %}
+
     {% endif %}
 
   {% endif %}
