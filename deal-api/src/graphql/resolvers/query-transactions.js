@@ -1,4 +1,4 @@
-const { findPaginatedTransactions, findTransactions } = require('../../v1/controllers/transactions.controller');
+const { findTransactions } = require('../../v1/controllers/transactions.controller');
 
 const { dbHelpers } = require('./helpers');
 
@@ -10,9 +10,7 @@ const queryTransactions = async (_, { params = {} }, ctx) => {
     [f.field]: f.operator ? dbHelpers.createDbQuery(f.operator, f.value) : f.value,
   }), {});
 
-  const deals = pagesize
-    ? await findPaginatedTransactions(ctx.user, start, pagesize, dbFilters)
-    : await findTransactions(ctx.user, dbFilters);
+  const deals = await findTransactions(ctx.user, start, pagesize, dbFilters);
 
   return deals;
 };

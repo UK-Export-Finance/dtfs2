@@ -2,7 +2,9 @@ const transactionFixer = require('./transactions/transactionFixer');
 
 const db = require('../../drivers/db-client');
 
-exports.findPaginatedTransactions = async (requestingUser, start = 0, pagesize = 20, filter) => {
+// To return all transactions, use start=0, pagesize<=0
+exports.findTransactions = async (requestingUser, start = 0, pagesize = 20, filter) => {
+  
   // try to hide all the horrible logic for filtering in here:
   const transactionFix = transactionFixer(requestingUser, filter);
 
@@ -29,7 +31,7 @@ exports.findPaginatedTransactions = async (requestingUser, start = 0, pagesize =
   // 1) chop off everything before the current page
   const transactionsWithoutPreviousPages = allTransactions.slice(start);
   // 2) chop us down to our max pagesize
-  const page = transactionsWithoutPreviousPages.length > pagesize
+  const page = transactionsWithoutPreviousPages.length > pagesize && pagesize > 0
     ? transactionsWithoutPreviousPages.slice(0, pagesize)
     : transactionsWithoutPreviousPages;
 
@@ -39,24 +41,3 @@ exports.findPaginatedTransactions = async (requestingUser, start = 0, pagesize =
     transactions: page,
   };
 };
-
-// exports.findTransactions = async (user, dbFilters) =>
-exports.findTransactions = async () =>
-  // const collection = await db.getCollection('deals');
-  //
-  // const query = transactionsQuery(requestingUser, filter);
-  //
-  // const transactionResults = collection.find(query);
-  //
-  // const count = await transactionResults.count();
-  // const transactions = await transactionResults
-  //   .sort({ 'details.dateOfLastAction': -1 })
-  //   .skip(start)
-  //   .limit(pagesize)
-  //   .toArray();
-  //
-  // return {
-  //   count,
-  //   transactions,
-  // };
-  ({ count: 0, transactions: [] });
