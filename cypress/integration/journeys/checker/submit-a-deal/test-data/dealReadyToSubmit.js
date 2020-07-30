@@ -13,9 +13,7 @@ module.exports = () => {
   deal.submissionDetails['supplyContractConversionDate-month'] = `${now.format('MM')}`;
   deal.submissionDetails['supplyContractConversionDate-year'] = `${now.format('YYYY')}`;
 
-  deal.loanTransactions.items[0]['requestedCoverStartDate-day'] = now.format('DD');
-  deal.loanTransactions.items[0]['requestedCoverStartDate-month'] = now.format('MM');
-  deal.loanTransactions.items[0]['requestedCoverStartDate-year'] = now.format('YYYY');
+  deal.loanTransactions.items[0].requestedCoverStartDate = moment().utc().valueOf();
 
   const aMonthInTheFuture = moment().add(1, 'month');
   deal.loanTransactions.items[0]['coverEndDate-day'] = aMonthInTheFuture.format('DD');
