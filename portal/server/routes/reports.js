@@ -106,64 +106,68 @@ router.post('/reports/audit-supply-contracts/:page', async (req, res) => {
 });
 
 function downloadTransactions(transactions, res) {
-
-  var columns = [{
+  const columns = [{
     prop: 'deal_owningBank',
-    label: 'Bank'
+    label: 'Bank',
   }, {
     prop: 'deal_bankSupplyContractID',
-    label: 'Bank Supply contract ID'
+    label: 'Bank Supply contract ID',
   }, {
     prop: 'deal_status',
-    label: 'Deal status'
+    label: 'Deal status',
   }, {
     prop: 'bankFacilityId',
-    label: 'Transaction ID'
+    label: 'Transaction ID',
   }, {
     prop: 'transactionType',
-    label: 'Transaction type'
+    label: 'Transaction type',
   }, {
     prop: 'deal_supplierName',
-    label: 'Supplier name'
+    label: 'Supplier name',
   }, {
     prop: 'facilityValue',
-    label: 'Facility value'
+    label: 'Facility value',
   }, {
     prop: 'transactionStage',
-    label: 'Facility stage'
+    label: 'Facility stage',
   }, {
     prop: 'deal_created',
-    label: 'Created date'
+    label: 'Created date',
   }, {
     prop: 'maker',
-    label: 'Created by'
+    label: 'Created by',
   }, {
     prop: 'issuedDate',
-    label: 'Issued date'
+    label: 'Issued date',
   }, {
     prop: 'submittedBy',
-    label: 'Issued by'
-  }]
+    label: 'Issued by',
+  }];
 
   // Replace nulls and missing keys with empty strings
-  transactions.forEach(function (transaction) {
+  const rows = [];
+  transactions.forEach((transaction) => {
+    const row = {};
+    Object.assign(row, transaction);
 
     // null
-    for (let key in transaction) {
-      if (transaction[key] === null) {
-        transaction[key] = '';
-      }
-    }
-
-    // Missing
-    columns.forEach(function(column) {
-      if (!(column.prop in transaction)) {
-        transaction[column.prop] = '';
+    Object.keys(row).forEach((key) => {
+      if (row[key] === null) {
+        row[key] = '';
       }
     });
+
+    // Missing
+    columns.forEach((column) => {
+      if (!(column.prop in row)) {
+        row[column.prop] = '';
+      }
+    });
+
+    return rows.push(row);
   });
 
-  return res.csv('transactions', transactions, columns);
+  return res.csv('transactions', rows, columns);
 }
 
 router.get('/reports/audit-transactions', async (req, res) => res.redirect('/reports/audit-transactions/0'));
@@ -181,41 +185,37 @@ router.get('/reports/audit-transactions/:page', async (req, res) => {
   const filters = buildReportFilters(reportFilters, req.session.user);
 
   if (req.params.page === 'download') {
-
     // Get all transactions
-    const { transactions, count } = await getApiData(
+    const { transactions } = await getApiData(
       api.transactions(0, 0, filters, userToken),
       res,
     );
-    downloadTransactions(transactions, res);
-
-  } else {
-
-    // Get the current page
-    const { transactions, count } = await getApiData(
-      api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
-      res,
-    );
-
-    const pages = {
-      totalPages: Math.ceil(count / PAGESIZE),
-      currentPage: parseInt(req.params.page, 10),
-      totalItems: count,
-    };
-
-    return res.render('reports/audit-transactions.njk', {
-      pages,
-      transactions,
-      banks,
-      filter: {
-        ...reportFilters,
-      },
-      facilityStages: CONSTANTS.FACILITY_STAGE,
-      primaryNav,
-      subNav: 'audit-transactions',
-      user: req.session.user,
-    });
+    return downloadTransactions(transactions, res);
   }
+  // Get the current page
+  const { transactions, count } = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+    res,
+  );
+
+  const pages = {
+    totalPages: Math.ceil(count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: count,
+  };
+
+  return res.render('reports/audit-transactions.njk', {
+    pages,
+    transactions,
+    banks,
+    filter: {
+      ...reportFilters,
+    },
+    facilityStages: CONSTANTS.FACILITY_STAGE,
+    primaryNav,
+    subNav: 'audit-transactions',
+    user: req.session.user,
+  });
 });
 
 router.post('/reports/audit-transactions/:page', async (req, res) => {
