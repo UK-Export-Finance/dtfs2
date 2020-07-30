@@ -1,7 +1,6 @@
 const submissionDetailsRules = require('./submission-details-rules');
 const bondRules = require('./bond');
 const loanRules = require('./loan');
-const { formattedTimestamp } = require('../section-dates/requested-cover-start-date');
 
 module.exports = (deal) => {
   // ideally we want this to recursively call into everything inside the deal..

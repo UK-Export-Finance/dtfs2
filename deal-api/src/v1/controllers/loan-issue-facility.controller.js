@@ -2,7 +2,6 @@ const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { updateLoanInDeal } = require('./loans.controller');
 const {
-  formattedTimestamp,
   createTimestampFromSubmittedValues,
   hasAllRequestedCoverStartDateValues,
   updateRequestedCoverStartDate,
@@ -35,12 +34,10 @@ exports.updateLoanIssueFacility = async (req, res) => {
 
       modifiedLoan.issuedDate = createTimestampFromSubmittedValues(req.body, 'issuedDate');
 
-      let formattedRequestedCoverStartDate;
       if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {
         modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
       }
 
-      // TODO move formattedTimestamp into the the rules
       const validationErrors = loanIssueFacilityValidationErrors(
         modifiedLoan,
         deal.details.submissionDate,

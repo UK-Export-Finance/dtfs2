@@ -1,7 +1,6 @@
 const moment = require('moment');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
 const {
-  dateHasAllValues,
   dateHasSomeValues,
   dateIsInTimeframe,
   dateValidationText,
