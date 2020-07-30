@@ -1,6 +1,6 @@
 const { hasValue } = require('../../../../utils/string');
 const bankReferenceNumber = require('./bank-reference-number');
-const requestedCoverStartDateRules = require('../../fields/requested-cover-start-date');
+const requestedCoverStartDateRules = require('./requested-cover-start-date');
 const coverEndDate = require('../../fields/cover-end-date');
 const coverDates = require('../../fields/cover-dates');
 const disbursementAmount = require('../disbursement-amount');

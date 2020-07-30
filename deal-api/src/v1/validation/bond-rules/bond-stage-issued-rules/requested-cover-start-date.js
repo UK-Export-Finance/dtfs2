@@ -1,12 +1,13 @@
 const moment = require('moment');
-const { orderNumber } = require('../../../utils/error-list-order-number');
+const { orderNumber } = require('../../../../utils/error-list-order-number');
 const {
+  dateHasAllValues,
   dateHasSomeValues,
   dateIsInTimeframe,
   dateValidationText,
-} = require('./date');
+} = require('../../fields/date');
 
-module.exports = (submittedValues, errorList, requestedCoverStartDateTimestamp) => {
+module.exports = (submittedValues, errorList) => {
   const newErrorList = errorList;
 
   const {
@@ -15,19 +16,16 @@ module.exports = (submittedValues, errorList, requestedCoverStartDateTimestamp) 
     'requestedCoverStartDate-year': requestedCoverStartDateYear,
   } = submittedValues;
 
-  if (requestedCoverStartDateTimestamp) {
+  if (dateHasAllValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear)) {
     const MAX_MONTHS_FROM_NOW = 3;
     const nowDate = moment().startOf('day');
+    const formattedDate = `${requestedCoverStartDateYear}-${requestedCoverStartDateMonth}-${requestedCoverStartDateDay}`;
 
-
-    const day = moment(requestedCoverStartDateTimestamp).format('DD');
-    const month = moment(requestedCoverStartDateTimestamp).format('MM');
-    const year = moment(requestedCoverStartDateTimestamp).format('YYYY');
 
     if (!dateIsInTimeframe(
-      day,
-      month,
-      year,
+      requestedCoverStartDateDay,
+      requestedCoverStartDateMonth,
+      requestedCoverStartDateYear,
       nowDate,
       moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months'),
     )) {
@@ -37,7 +35,7 @@ module.exports = (submittedValues, errorList, requestedCoverStartDateTimestamp) 
       };
     }
 
-    if (moment(requestedCoverStartDateTimestamp).isBefore(nowDate)) {
+    if (moment(formattedDate).isBefore(nowDate)) {
       newErrorList.requestedCoverStartDate = {
         text: 'Requested Cover Start Date must be today or in the future',
         order: orderNumber(newErrorList),
