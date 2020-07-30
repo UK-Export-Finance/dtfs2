@@ -2,10 +2,10 @@
 const moment = require('moment');
 const { formattedTimestamp } = require('../../../section-dates/requested-cover-start-date');
 
-const calculateExposurePeriod = (facility, facilityType, userTimezone) => {
+const calculateExposurePeriod = (facility, facilityType) => {
   let coverStartDate;
   if (facility.requestedCoverStartDate) {
-    coverStartDate = moment(formattedTimestamp(facility.requestedCoverStartDate, userTimezone));
+    coverStartDate = moment(formattedTimestamp(facility.requestedCoverStartDate));
   } else {
     coverStartDate = moment([
       facility['requestedCoverStartDate-year'],

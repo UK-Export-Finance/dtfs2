@@ -5,11 +5,10 @@ const formatDate = (day, month, year) => {
   return dt.isValid() ? dt.format('DD-MM-YYYY') : '';
 };
 
-const formatTimestamp = (timestamp, userTimezone) => {
-  const targetTimezone = userTimezone;
+const formatTimestamp = (timestamp) => {
   const utc = moment(parseInt(timestamp, 10));
-  const localisedTimestamp = utc.tz(targetTimezone);
-  const formatted = moment(localisedTimestamp).format('DD-MM-YYYY');
+  const dt = moment(utc);
+  return moment(dt).isValid() ? dt.format('DD-MM-YYYY') : '';
 };
 
 module.exports = {

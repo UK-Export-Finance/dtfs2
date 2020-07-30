@@ -6,10 +6,12 @@ const {
   dateIsInTimeframe,
   dateValidationText,
 } = require('../../fields/date');
+const { formattedTimestamp } = require('../../../section-dates/requested-cover-start-date');
 
-module.exports = (submittedValues, errorList, requestedCoverStartDateTimestamp) => {
-  // console.log('---- R.COVER START DATE VALIDATION - requestedCoverStartDateTimestamp', requestedCoverStartDateTimestamp);
+module.exports = (submittedValues, errorList) => {
   const newErrorList = errorList;
+
+  const requestedCoverStartDateTimestamp = formattedTimestamp(submittedValues.requestedCoverStartDate);
 
   const {
     'requestedCoverStartDate-day': requestedCoverStartDateDay,
