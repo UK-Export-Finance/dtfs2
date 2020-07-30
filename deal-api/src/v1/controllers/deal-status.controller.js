@@ -62,17 +62,28 @@ const updateFacilityDates = async (collection, deal) => {
   const updateFacilities = (arr) => {
     arr.forEach((f) => {
       const facility = f;
-      const hasRequestedCoverStartDate = (facility['requestedCoverStartDate-day'] && facility['requestedCoverStartDate-month'] && facility['requestedCoverStartDate-year']);
+
+      // TODO: this can be simplified once Bond has refactored requestedCoverStartDate (so its a timestamp)
+      const hasRequestedCoverStartDate = (facility.requestedCoverStartDate || (facility['requestedCoverStartDate-day'] && facility['requestedCoverStartDate-month'] && facility['requestedCoverStartDate-year']));
 
       // TODO: rename bondStage to `facilityStage` (?)
       const shouldUpdateRequestedCoverStartDate = (facility.bondStage === 'Issued' && !hasRequestedCoverStartDate)
         || (facility.facilityStage === 'Unconditional' && !hasRequestedCoverStartDate);
-
+      
       if (shouldUpdateRequestedCoverStartDate) {
         const currentTime = moment();
-        facility['requestedCoverStartDate-day'] = currentTime.format('DD');
-        facility['requestedCoverStartDate-month'] = currentTime.format('MM');
-        facility['requestedCoverStartDate-year'] = currentTime.format('YYYY');
+        // hacky solution for bond/loan differences
+        // until Bond has refactored requestedCoverStartDate (so its a timestamp)
+        if (facility.bondStage) {
+          facility['requestedCoverStartDate-day'] = currentTime.format('DD');
+          facility['requestedCoverStartDate-month'] = currentTime.format('MM');
+          facility['requestedCoverStartDate-year'] = currentTime.format('YYYY');
+        }
+
+        // it's a loan
+        if (facility.facilityStage) {
+          facility.requestedCoverStartDate = now();
+        }
       }
     });
     return arr;

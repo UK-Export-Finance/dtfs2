@@ -128,9 +128,7 @@ const deal = {
       {
         _id: '1000005',
         facilityStage: 'Unconditional',
-        'requestedCoverStartDate-day': `${moment().format('DD')}`,
-        'requestedCoverStartDate-month': `${moment().format('MM')}`,
-        'requestedCoverStartDate-year': `${moment().format('YYYY')}`,
+        'requestedCoverStartDate': moment().utc().valueOf(),
         'coverEndDate-day': `${now.add(1, 'month').format('DD')}`,
         'coverEndDate-month': `${now.add(1, 'month').format('MM')}`,
         'coverEndDate-year': `${now.add(1, 'month').format('YYYY')}`,

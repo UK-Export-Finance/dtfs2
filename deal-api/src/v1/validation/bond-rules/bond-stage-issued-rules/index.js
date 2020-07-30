@@ -1,5 +1,5 @@
 const { hasValue } = require('../../../../utils/string');
-const requestedCoverStartDate = require('../../fields/requested-cover-start-date');
+const requestedCoverStartDate = require('./requested-cover-start-date');
 const coverEndDate = require('../../fields/cover-end-date');
 const coverDates = require('../../fields/cover-dates');
 const uniqueIdentificationNumber = require('./unique-identification-number');

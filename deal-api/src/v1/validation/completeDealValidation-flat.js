@@ -1,8 +1,9 @@
 const submissionDetailsRules = require('./submission-details-rules');
 const bondRules = require('./bond');
 const loanRules = require('./loan');
+const { formattedTimestamp } = require('../section-dates/requested-cover-start-date');
 
-module.exports = (deal) => {
+module.exports = (deal, userTimezone) => {
   // ideally we want this to recursively call into everything inside the deal..
   // at time of writing this is being used solely for the 'real-time' validation of cover start dates
   // - so this probably wants revisiting and causes us to shuffle our validation methods around a bit
@@ -27,9 +28,14 @@ module.exports = (deal) => {
   });
 
   deal.loanTransactions.items.filter((loan) => {
+    let formattedRequestedCoverStartDate
+    if (loan.requestedCoverStartDate) {
+      formattedRequestedCoverStartDate = formattedTimestamp(loan.requestedCoverStartDate, userTimezone);
+    }
+    
     validationErrors = {
       ...validationErrors,
-      ...loanRules(loan).errorList,
+      ...loanRules(loan, formattedRequestedCoverStartDate).errorList,
     };
     return true;
   });

@@ -552,13 +552,13 @@ describe('/v1/deals/:id/status', () => {
           expect(body.deal.loanTransactions.items[1]).toEqual({
             ...newDealWithLoans.loanTransactions.items[1],
             status: 'Completed',
-            ...expectedRequestedCoverStartDate(),
+            requestedCoverStartDate: expect.any(String),
           });
 
           expect(body.deal.loanTransactions.items[2]).toEqual({
             ...newDealWithLoans.loanTransactions.items[2],
             status: 'Completed',
-            ...expectedRequestedCoverStartDate(),
+            requestedCoverStartDate: expect.any(String),
           });
         });
       });
