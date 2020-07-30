@@ -1,7 +1,6 @@
 const moment = require('moment');
 const { hasValue } = require('../../utils/string');
 
-// TODO: extract to common/generic directory
 exports.formattedTimestamp = (timestamp, userTimezone) => {
   const targetTimezone = userTimezone;
   const utc = moment(parseInt(timestamp, 10));
@@ -10,7 +9,6 @@ exports.formattedTimestamp = (timestamp, userTimezone) => {
   return formatted;
 };
 
-// TODO: extract to common/generic directory
 exports.createTimestampFromSubmittedValues = (submittedValues, fieldName) => {
   const day = submittedValues[`${fieldName}-day`];
   const month = submittedValues[`${fieldName}-month`];

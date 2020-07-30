@@ -18,7 +18,7 @@ const {
   calculateExposurePeriod,
 } = require('./helpers');
 
-const generateTypeA = async (deal, fromStatus) => {
+const generateTypeA = async (deal, fromStatus, userTimezone) => {
   const { actionCode, actionName } = getActionCodeAndName(deal, fromStatus);
 
   const bondCount = deal.bondTransactions && deal.bondTransactions.items
@@ -208,10 +208,10 @@ const generateTypeA = async (deal, fromStatus) => {
           .EWCS_max_liability(convertCurrencyFormat(loan.ukefExposure))
           .EWCS_min_quarterly_fee(Number(loan.minimumQuarterlyFee))
           .EWCS_premium_type(k2Map.FACILITIES.FEE_TYPE[loan.premiumType])
-          .EWCS_cover_start_date(dateHelpers.formatDate(loan['requestedCoverStartDate-day'], loan['requestedCoverStartDate-month'], loan['requestedCoverStartDate-year']))
+          .EWCS_cover_start_date(dateHelpers.formatTimestamp(loan.requestedCoverStartDate, userTimezone))
           .EWCS_issue_date('') // TODO - drupal field: issue_date
           .EWCS_cover_end_date(dateHelpers.formatDate(loan['coverEndDate-day'], loan['coverEndDate-month'], loan['coverEndDate-year']))
-          .EWCS_cover_period(calculateExposurePeriod(loan)) // TODO Calculate cover period from start & end dates
+          .EWCS_cover_period(calculateExposurePeriod(loan, '', userTimezone)) // TODO Calculate cover period from start & end dates
           .EWCS_day_basis(k2Map.FACILITIES.DAY_COUNT_BASIS[loan.dayCountBasis]);
 
         // Conditional fields
@@ -274,10 +274,10 @@ const generateTypeA = async (deal, fromStatus) => {
   return { typeAxmlStr, filename };
 };
 
-const createTypeA = async (deal, fromStatus) => {
+const createTypeA = async (deal, fromStatus, userTimezone) => {
   const {
     typeAxmlStr, filename, errorCount, errorList,
-  } = await generateTypeA(deal, fromStatus);
+  } = await generateTypeA(deal, fromStatus, userTimezone);
 
   // TODO - Decide what to do with invalid typeA xml
   if (errorCount) {
