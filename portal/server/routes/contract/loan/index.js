@@ -48,8 +48,8 @@ const userCanIssueFacility = (user, deal, loan) => {
   const isMaker = user.roles.includes('maker');
 
   if (isMaker
-      && deal.details.status === 'Acknowledged by UKEF'
-      && loan.facilityStage === 'Conditional') {
+    && (deal.details.status === 'Acknowledged by UKEF' || deal.details.status === 'Ready for Checker\'s approval')
+    && loan.facilityStage === 'Conditional') {
     return true;
   }
 
