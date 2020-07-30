@@ -8,6 +8,20 @@ import {
   requestParams,
 } from '../helpers';
 
+const moment = require('moment');
+require('moment-timezone');// monkey-patch to provide moment().tz()
+
+function filterLocaliseTimestamp(utcTimestamp, targetTimezone) {
+  const format = 'DD/MM/YYYY HH:mm';
+  if (!utcTimestamp) {
+    return '';
+  }
+
+  const utc = moment(parseInt(utcTimestamp, 10));
+  const localisedTimestamp = utc.tz(targetTimezone);
+  return localisedTimestamp.format(format);
+}
+
 const router = express.Router();
 const PAGESIZE = 20;
 const primaryNav = 'reports';
@@ -21,6 +35,71 @@ router.get('/reports', async (req, res) => {
     user: req.session.user,
   });
 });
+
+function downloadSupplyContracts(supplyContracts, timezone, res) {
+  const columns = [{
+    prop: 'bankSupplyContractID',
+    label: 'Supply Contract ID',
+  }, {
+    prop: 'maker_username',
+    label: 'Created by',
+  }, {
+    prop: 'checker',
+    label: 'Submitted by',
+  }, {
+    prop: 'status',
+    label: 'Status',
+  }, {
+    prop: 'owningBank_name',
+    label: 'Bank',
+  }, {
+    prop: 'created',
+    label: 'Created',
+  }, {
+    prop: 'dateOfLastAction',
+    label: 'Changed',
+  }, {
+    prop: 'submissionDate',
+    label: 'Submission date',
+  }];
+
+  // Replace nulls and missing keys with empty strings
+  const rows = [];
+  supplyContracts.forEach((supplyContract) => {
+    // De-nest the fields we want from under details/maker/owningBank
+    const row = {};
+    Object.assign(row, supplyContract.details);
+    if (supplyContract.details.maker) {
+      row.maker_username = supplyContract.details.maker.username;
+    }
+    if (supplyContract.details.owningBank) {
+      row.owningBank_name = supplyContract.details.owningBank.name;
+    }
+
+    // null
+    Object.keys(row).forEach((key) => {
+      if (row[key] === null) {
+        row[key] = '';
+      }
+    });
+
+    // Missing
+    columns.forEach((column) => {
+      if (!(column.prop in row)) {
+        row[column.prop] = '';
+      }
+    });
+
+    // Format dates
+    row.created = filterLocaliseTimestamp(row.created, timezone);
+    row.dateOfLastAction = filterLocaliseTimestamp(row.dateOfLastAction, timezone);
+    row.submissionDate = filterLocaliseTimestamp(row.submissionDate, timezone);
+
+    return rows.push(row);
+  });
+
+  return res.csv('supply_contracts', rows, columns);
+}
 
 router.get('/reports/audit-supply-contracts', async (req, res) => res.redirect('/reports/audit-supply-contracts/0'));
 
@@ -36,6 +115,16 @@ router.get('/reports/audit-supply-contracts/:page', async (req, res) => {
 
   const filters = buildReportFilters(reportFilters, req.session.user);
 
+  if (req.params.page === 'download') {
+    // Get all contracts for csv download
+    const dealData = await getApiData(
+      api.contracts(0, 0, filters, userToken),
+      res,
+    );
+    return downloadSupplyContracts(dealData.deals, req.session.user.timezone, res);
+  }
+
+  // Get the current page
   const dealData = await getApiData(
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
@@ -105,7 +194,7 @@ router.post('/reports/audit-supply-contracts/:page', async (req, res) => {
   });
 });
 
-function downloadTransactions(transactions, res) {
+function downloadTransactions(transactions, timezone, res) {
   const columns = [{
     prop: 'deal_owningBank',
     label: 'Bank',
@@ -164,6 +253,10 @@ function downloadTransactions(transactions, res) {
       }
     });
 
+    // Format dates
+    row.deal_created = filterLocaliseTimestamp(row.deal_created, timezone);
+    row.issuedDate = filterLocaliseTimestamp(row.issuedDate, timezone);
+
     return rows.push(row);
   });
 
@@ -185,13 +278,14 @@ router.get('/reports/audit-transactions/:page', async (req, res) => {
   const filters = buildReportFilters(reportFilters, req.session.user);
 
   if (req.params.page === 'download') {
-    // Get all transactions
+    // Get all transactions for csv download
     const { transactions } = await getApiData(
       api.transactions(0, 0, filters, userToken),
       res,
     );
-    return downloadTransactions(transactions, res);
+    return downloadTransactions(transactions, req.session.user.timezone, res);
   }
+
   // Get the current page
   const { transactions, count } = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
