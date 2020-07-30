@@ -3,11 +3,22 @@
 
 {% import './_macros/audit-transactions-filters.njk' as filterControls %}
 
-{% block pageTitle %}Audit report{% endblock %}
+{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+
+{% block pageTitle %}Audit - Transactions report{% endblock %}
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">Audit - Transactions Report</h1>
+  {{ mojPageHeaderActions({
+  heading: {
+  html: '<h1 class="govuk-heading-l">Audit - Transactions Report</h1>'
+  },
+  items: [{
+  text: 'Download csv',
+  classes: 'govuk-button--secondary',
+  href: '/reports/audit-transactions/download'
+  }]
+  }) }} 
 
   {{ filterControls.render(filter, user, banks, facilityStages) }}
 
