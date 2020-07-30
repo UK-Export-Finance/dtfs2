@@ -4,7 +4,6 @@ const db = require('../../drivers/db-client');
 
 // To return all transactions, use start=0, pagesize<=0
 exports.findTransactions = async (requestingUser, start = 0, pagesize = 20, filter) => {
-  
   // try to hide all the horrible logic for filtering in here:
   const transactionFix = transactionFixer(requestingUser, filter);
 
