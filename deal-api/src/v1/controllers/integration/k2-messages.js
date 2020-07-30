@@ -211,7 +211,7 @@ const generateTypeA = async (deal, fromStatus) => {
           .EWCS_cover_start_date(dateHelpers.formatTimestamp(loan.requestedCoverStartDate))
           .EWCS_issue_date('') // TODO - drupal field: issue_date
           .EWCS_cover_end_date(dateHelpers.formatDate(loan['coverEndDate-day'], loan['coverEndDate-month'], loan['coverEndDate-year']))
-          .EWCS_cover_period(calculateExposurePeriod(loan, '')) // TODO Calculate cover period from start & end dates
+          .EWCS_cover_period(calculateExposurePeriod(loan)) // TODO Calculate cover period from start & end dates
           .EWCS_day_basis(k2Map.FACILITIES.DAY_COUNT_BASIS[loan.dayCountBasis]);
 
         // Conditional fields

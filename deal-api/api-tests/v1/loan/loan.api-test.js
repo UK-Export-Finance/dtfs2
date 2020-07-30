@@ -176,9 +176,6 @@ describe('/v1/deals/:id/loan', () => {
         expect(body.loan.status).toEqual('Completed');
         expect(body.dealId).toEqual(dealId);
         expect(body.loan.requestedCoverStartDate).toEqual(expect.any(String));
-        expect(body.loan['requestedCoverStartDate-day']).toEqual(requestedCoverStartDate()['requestedCoverStartDate-day']);
-        expect(body.loan['requestedCoverStartDate-month']).toEqual(requestedCoverStartDate()['requestedCoverStartDate-month']);
-        expect(body.loan['requestedCoverStartDate-year']).toEqual(requestedCoverStartDate()['requestedCoverStartDate-year']);
       });
     });
   });
