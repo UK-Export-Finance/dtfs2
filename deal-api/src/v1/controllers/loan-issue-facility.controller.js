@@ -43,9 +43,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
       // TODO move formattedTimestamp into the the rules
       const validationErrors = loanIssueFacilityValidationErrors(
         modifiedLoan,
-        // formatted moment dates for date comparison validation
-        formattedTimestamp(deal.details.submissionDate),
-        formattedTimestamp(modifiedLoan.issuedDate),
+        deal.details.submissionDate,
       );
 
       if (!validationErrors.errorList || !validationErrors.errorList.requestedCoverStartDate) {
