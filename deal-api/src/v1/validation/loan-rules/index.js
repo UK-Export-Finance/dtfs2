@@ -24,11 +24,11 @@ const rules = [
   dayCountBasis,
 ];
 
-module.exports = (loan, requestedCoverStartDateTimestamp) => {
+module.exports = (loan) => {
   let errorList = {};
 
   for (let i = 0; i < rules.length; i += 1) {
-    errorList = rules[i](loan, errorList, requestedCoverStartDateTimestamp);
+    errorList = rules[i](loan, errorList);
   }
 
   return errorList;

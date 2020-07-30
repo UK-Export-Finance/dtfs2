@@ -1,12 +1,10 @@
 const moment = require('moment');
 const { hasValue } = require('../../utils/string');
 
-exports.formattedTimestamp = (timestamp, userTimezone) => {
-  const targetTimezone = userTimezone;
+exports.formattedTimestamp = (timestamp) => {
   const utc = moment(parseInt(timestamp, 10));
-  const localisedTimestamp = utc.tz(targetTimezone);
-  const formatted = localisedTimestamp.format();
-  return formatted;
+  const dt = moment(utc);
+  return moment(dt).isValid() ? dt.format() : '';
 };
 
 exports.createTimestampFromSubmittedValues = (submittedValues, fieldName) => {

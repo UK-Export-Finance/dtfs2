@@ -39,15 +39,15 @@ exports.updateLoanIssueFacility = async (req, res) => {
       if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {
         modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
         // formatted moment date for date comparison validation
-        formattedRequestedCoverStartDate = formattedTimestamp(modifiedLoan.requestedCoverStartDate, req.user.timezone);
+        // formattedRequestedCoverStartDate = formattedTimestamp(modifiedLoan.requestedCoverStartDate);
       }
 
       const validationErrors = loanIssueFacilityValidationErrors(
         modifiedLoan,
         // formatted moment dates for date comparison validation
-        formattedTimestamp(deal.details.submissionDate, req.user.timezone),
-        formattedTimestamp(modifiedLoan.issuedDate, req.user.timezone),
-        formattedRequestedCoverStartDate,
+        formattedTimestamp(deal.details.submissionDate),
+        formattedTimestamp(modifiedLoan.issuedDate),
+        // formattedRequestedCoverStartDate,
       );
 
       if (validationErrors.count === 0) {

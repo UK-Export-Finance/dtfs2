@@ -252,7 +252,7 @@ exports.update = (req, res) => {
       // TODO - Reinstate typeA XML creation once Loans and Summary have been added
       const { previousWorkflowStatus } = deal.details;
 
-      const typeA = await createTypeA(dealAfterAllUpdates, previousWorkflowStatus, req.user.timezone);
+      const typeA = await createTypeA(dealAfterAllUpdates, previousWorkflowStatus);
 
       if (typeA.errorCount) {
         // Revert status

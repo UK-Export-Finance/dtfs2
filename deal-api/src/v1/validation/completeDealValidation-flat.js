@@ -30,7 +30,7 @@ module.exports = (deal, userTimezone) => {
   deal.loanTransactions.items.filter((loan) => {
     let formattedRequestedCoverStartDate
     if (loan.requestedCoverStartDate) {
-      formattedRequestedCoverStartDate = formattedTimestamp(loan.requestedCoverStartDate, userTimezone);
+      formattedRequestedCoverStartDate = formattedTimestamp(loan.requestedCoverStartDate);
     }
     
     validationErrors = {

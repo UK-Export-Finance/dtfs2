@@ -212,12 +212,12 @@ exports.updateLoan = async (req, res) => {
       if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {
         modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
         // formatted moment date for date comparison validation
-        formattedRequestedCoverStartDate = formattedTimestamp(modifiedLoan.requestedCoverStartDate, req.user.timezone);
+        // formattedRequestedCoverStartDate = formattedTimestamp(modifiedLoan.requestedCoverStartDate);
       }
 
       const validationErrors = loanValidationErrors(
         modifiedLoan,
-        formattedRequestedCoverStartDate,
+        // formattedRequestedCoverStartDate,
       );
 
       if (validationErrors.count === 0) {
