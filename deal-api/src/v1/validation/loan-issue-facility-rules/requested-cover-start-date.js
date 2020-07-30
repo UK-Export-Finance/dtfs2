@@ -7,9 +7,10 @@ const {
 const { formattedTimestamp } = require('../../section-dates/requested-cover-start-date');
 
 // TODO update to handle timestamp validation like in other requested-cover-start date rule.
-module.exports = (submittedValues, errorList, dealSubmissionDate) => {
+module.exports = (submittedValues, errorList, dealSubmissionDateTimestamp) => {
   const newErrorList = errorList;
 
+  const dealSubmissionDate = formattedTimestamp(dealSubmissionDateTimestamp);
   const requestedCoverStartDateTimestamp = formattedTimestamp(submittedValues.requestedCoverStartDate);
 
   const {

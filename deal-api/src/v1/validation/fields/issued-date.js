@@ -4,9 +4,13 @@ const {
   dateHasAllValues,
   dateValidationText,
 } = require('./date');
+const { formattedTimestamp } = require ('../../section-dates/requested-cover-start-date');
 
-module.exports = (submittedValues, errorList, dealSubmissionDate, issuedDate) => {
+module.exports = (submittedValues, errorList, dealSubmissionDateTimestamp) => {
   const newErrorList = errorList;
+
+  const dealSubmissionDate = formattedTimestamp(dealSubmissionDateTimestamp);
+  const issuedDate = formattedTimestamp(submittedValues.issuedDate);
 
   const {
     'issuedDate-day': issuedDateDay,
