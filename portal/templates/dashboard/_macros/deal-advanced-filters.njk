@@ -18,6 +18,7 @@
           <option value="abandoned" {% if filter.filterByStatus==='abandoned' %}selected{%endif%}>Abandoned Deal</option>
           <option value="submitted" {% if filter.filterByStatus==='submitted' %}selected{%endif%}>Submitted</option>
           <option value="submissionAcknowledged" {% if filter.filterByStatus==='submissionAcknowledged' %}selected{%endif%}>Acknowledged by UKEF</option>
+          <option value="inProgress" {% if filter.filterByStatus==='inProgress' %}selected{%endif%}>In Progress by UKEF</option>
           <option value="approved" {% if filter.filterByStatus==='approved' %}selected{%endif%}>Accepted by UKEF (without conditions)</option>
           <option value="approvedWithConditions" {% if filter.filterByStatus==='approvedWithConditions' %}selected{%endif%}>Accepted by UKEF (with conditions)</option>
           <option value="refused" {% if filter.filterByStatus==='refused' %}selected{%endif%}>Rejected by UKEF</option></select>

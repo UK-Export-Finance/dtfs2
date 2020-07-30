@@ -48,6 +48,7 @@ services:
       - DTFS_PORTAL_SCHEDULER
       - GOV_NOTIFY_API_KEY
       - GOV_NOTIFY_EMAIL_RECIPIENT
+      - DTFS_PORTAL_SCHEDULER=true
 
     entrypoint: npx nodemon src/index.js
 
@@ -63,4 +64,3 @@ services:
       - ./deal-api-data-volume:/data/db
     ports:
       - "27017-27019:27017-27019"
-
