@@ -8,8 +8,8 @@ const { processTypeB } = require('../../v1/controllers/integration/type-b.contro
 
 const fetchWorkflowTypeB = {
   init: () => ({
-    schedule: '00,15,30,45 * * * *',
-    message: 'Fetch workflow type B every 15 min',
+    schedule: '*/1 * * * * *',
+    message: 'Fetch workflow type B every 1 second',
     task: async (fileshare = 'workflow', overwriteFolder) => {
       const { IMPORT_FOLDER } = getConfig(fileshare);
 
@@ -80,9 +80,7 @@ const fetchWorkflowTypeB = {
       const moveFiles = await Promise.allSettled(moveFilePromises);
       const errorFiles = moveFiles.filter((mf) => mf.status === 'rejected');
 
-      console.log(`${files.length} type-b xml files processed`);
       if (errorFiles.length) {
-        console.warn(`Error moving ${errorFiles.length} files`);
         errorFiles.forEach(({ reason }) => console.warn(reason.message));
       }
 
