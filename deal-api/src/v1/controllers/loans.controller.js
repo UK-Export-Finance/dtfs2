@@ -9,7 +9,6 @@ const {
 } = require('../section-calculations');
 const { handleTransactionCurrencyFields } = require('../section-currency');
 const {
-  formattedTimestamp,
   hasAllRequestedCoverStartDateValues,
   updateRequestedCoverStartDate,
 } = require('../section-dates/requested-cover-start-date');
@@ -208,7 +207,6 @@ exports.updateLoan = async (req, res) => {
         modifiedLoan.disbursementAmount = sanitizedFacilityDisbursement.sanitizedValue;
       }
 
-      let formattedRequestedCoverStartDate;
       if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {
         modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
       }

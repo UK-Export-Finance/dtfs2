@@ -11,7 +11,7 @@ const calculateExposurePeriod = (facility, facilityType) => {
       facility['requestedCoverStartDate-year'],
       facility['requestedCoverStartDate-month'] - 1,
       facility['requestedCoverStartDate-day'],
-    ]); 
+    ]);
   }
 
   const coverEndDate = moment([

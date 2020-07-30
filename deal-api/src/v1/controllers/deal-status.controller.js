@@ -69,7 +69,7 @@ const updateFacilityDates = async (collection, deal) => {
       // TODO: rename bondStage to `facilityStage` (?)
       const shouldUpdateRequestedCoverStartDate = (facility.bondStage === 'Issued' && !hasRequestedCoverStartDate)
         || (facility.facilityStage === 'Unconditional' && !hasRequestedCoverStartDate);
-      
+
       if (shouldUpdateRequestedCoverStartDate) {
         const currentTime = moment();
         // hacky solution for bond/loan differences
