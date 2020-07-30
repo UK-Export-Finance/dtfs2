@@ -2,7 +2,7 @@ const issuedDateRules = require('../fields/issued-date');
 const requestedCoverStartDateRules = require('./requested-cover-start-date');
 const coverEndDateRules = require('../fields/cover-end-date');
 const disbursementAmountRules = require('../loan-rules/disbursement-amount');
-const bankReferenceNumberRules = require('../loan-rules/bank-reference-number');
+const bankReferenceNumberRules = require('./bank-reference-number');
 const coverDatesRules = require('../fields/cover-dates');
 
 module.exports = (submittedValues, dealSubmissionDate) => {

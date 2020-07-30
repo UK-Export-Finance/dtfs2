@@ -30,7 +30,14 @@ const validationText = (str, fieldTitle) => {
 module.exports = (loan, errorList) => {
   const newErrorList = { ...errorList };
 
-  if (!isValid(loan.bankReferenceNumber)) {
+  if (!hasValue(loan.bankReferenceNumber)) {
+    newErrorList.bankReferenceNumber = {
+      text: 'Enter the Bank reference number',
+      order: orderNumber(newErrorList),
+    };
+  }
+
+  if (hasValue(loan.bankReferenceNumber) && !isValid(loan.bankReferenceNumber)) {
     newErrorList.bankReferenceNumber = {
       text: validationText(
         loan.bankReferenceNumber,

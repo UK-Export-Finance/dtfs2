@@ -69,21 +69,6 @@ describe('/v1/deals/:id/loan', () => {
       expect(body.validationErrors.errorList.coveredPercentage).toBeDefined();
     });
 
-    describe('bankReferenceNumber', () => {
-      describe('when has more than 30 characters', () => {
-        it('should return validationError', async () => {
-          const loan = {
-            bankReferenceNumber: 'a'.repeat(31),
-          };
-
-          const { validationErrors } = await updateLoanInDeal(dealId, loan);
-
-          expect(validationErrors.errorList.bankReferenceNumber.order).toBeDefined();
-          expect(validationErrors.errorList.bankReferenceNumber.text).toEqual('Bank reference number must be 30 characters or fewer');
-        });
-      });
-    });
-
     describe('facilityStage', () => {
       describe('when missing', () => {
         it('should return validationError', async () => {
