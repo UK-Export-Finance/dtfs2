@@ -198,27 +198,14 @@ router.get('/reports/audit-supply-contracts/:id/transactions', async (req, res) 
 
 router.get('/reports/audit-supply-contracts/:id/transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-  // get deal info
+
   const idFilter = {
     field: '_id',
     value: req.params.id,
   };
-  // const dealFilters = buildReportFilters(idFilter, req.session.user);
-  const { deals } = await getApiData(
-    api.contracts(req.params.page * PAGESIZE, PAGESIZE, idFilter, userToken),
-    res,
-  );
-  // extract the bankSupplyContractID
-  const { bankSupplyContractID } = deals[0].details;
-
-  const transactionfilters = {
-    bankSupplyContractID,
-  };
-
-  const filters = buildReportFilters(transactionfilters, req.session.user);
 
   const { transactions, count } = await getApiData(
-    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, idFilter, userToken),
     res,
   );
 
@@ -231,7 +218,6 @@ router.get('/reports/audit-supply-contracts/:id/transactions/:page', async (req,
   return res.render('reports/audit-supply-transactions.njk', {
     pages,
     transactions,
-    bankSupplyContractID,
     primaryNav,
     subNav: 'transactions-report',
     user: req.session.user,

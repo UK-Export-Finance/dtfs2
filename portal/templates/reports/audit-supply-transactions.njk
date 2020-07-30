@@ -7,14 +7,22 @@
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">Audit - Transactions Report</h1>
+{% set firstItem = transactions | first %}
+{% set bankSupplyContractID = firstItem.deal_bankSupplyContractID %}
+{% set contractID = firstItem.deal_id %}
+
+  <h1 class="govuk-heading-l">Audit - Transactions Report:</h1>
+  <h2 class="govuk-heading-m">
+     <a href="/contract/{{ contractID }}" class="govuk-link" data-cy="bankSupplyContractIDLink">
+     {{ bankSupplyContractID }}
+     </a>
+  </h2>
 
   {# { filterControls.render(filter, user) } #}
 
   <table class="govuk-table govuk-!-margin-bottom-0">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Supply contract ID</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Transaction type</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bond ID</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created</th>
@@ -27,10 +35,7 @@
     <tbody class="govuk-table__body">
 
       {% for transaction in transactions %}
-        <tr data-cy="deal_{{transaction.transaction_id}}" class="govuk-table__row">
-          <td data-cy="bankSupplyContractID" class="govuk-table__cell govuk-!-font-size-14">
-            <a href="/contract/{{ transaction._id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ bankSupplyContractID }}</a>
-          </td>
+        <tr data-cy="transaction_{{transaction.transaction_id}}" class="govuk-table__row">
 
           <td data-cy="transactionType" class="govuk-table__cell govuk-!-font-size-14">
              {{ transaction.transactionType | capitalize | dashIfEmpty }}
@@ -53,7 +58,7 @@
           </td>
 
           <td data-cy="issuedBy" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.details.checker | dashIfEmpty }}
+            {{ transaction.details.maker | dashIfEmpty }}
           </td>
 
         </tr>
@@ -63,7 +68,7 @@
 
   </table>
 
-  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/reports/audit-transactions') }}
+  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/reports/audit-supply-contracts/'+ contractID +'/transactions') }}
 
 
 {% endblock %}
