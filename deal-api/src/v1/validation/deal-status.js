@@ -47,7 +47,7 @@ module.exports = (deal, requestedUpdate, user) => {
         };
       }
 
-      const validationOfExistingDeal = validate(deal, user.timezone);
+      const validationOfExistingDeal = validate(deal);
 
       if (validationOfExistingDeal) {
         errorList = {

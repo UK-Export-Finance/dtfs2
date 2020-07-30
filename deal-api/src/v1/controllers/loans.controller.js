@@ -211,14 +211,9 @@ exports.updateLoan = async (req, res) => {
       let formattedRequestedCoverStartDate;
       if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {
         modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
-        // formatted moment date for date comparison validation
-        // formattedRequestedCoverStartDate = formattedTimestamp(modifiedLoan.requestedCoverStartDate);
       }
 
-      const validationErrors = loanValidationErrors(
-        modifiedLoan,
-        // formattedRequestedCoverStartDate,
-      );
+      const validationErrors = loanValidationErrors(modifiedLoan);
 
       if (!validationErrors.errorList || !validationErrors.errorList.requestedCoverStartDate) {
         delete modifiedLoan['requestedCoverStartDate-day'];
