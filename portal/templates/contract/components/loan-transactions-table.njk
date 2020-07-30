@@ -50,8 +50,8 @@
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-requested-cover-start-date">
-                {% if loan['requestedCoverStartDate-day'] and loan['requestedCoverStartDate-month'] and loan['requestedCoverStartDate-year'] %}
-                  {{ loan['requestedCoverStartDate-day'] }}/{{ loan['requestedCoverStartDate-month'] }}/{{ loan['requestedCoverStartDate-year'] }}
+                {% if loan.requestedCoverStartDate %}
+                  {{ loan.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', params.user.timezone) }}
                 {% endif %}
               </td>
 
