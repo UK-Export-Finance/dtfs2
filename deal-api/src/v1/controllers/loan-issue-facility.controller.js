@@ -50,11 +50,14 @@ exports.updateLoanIssueFacility = async (req, res) => {
         // formattedRequestedCoverStartDate,
       );
 
-      if (validationErrors.count === 0) {
-        modifiedLoan.facilityIssued = true;
+      if (!validationErrors.errorList || !validationErrors.errorList.requestedCoverStartDate) {
         delete modifiedLoan['requestedCoverStartDate-day'];
         delete modifiedLoan['requestedCoverStartDate-month'];
         delete modifiedLoan['requestedCoverStartDate-year'];
+      }
+
+      if (validationErrors.count === 0) {
+        modifiedLoan.facilityIssued = true;
       }
 
       const updatedLoan = await updateLoanInDeal(req.params, req.user, deal, modifiedLoan);

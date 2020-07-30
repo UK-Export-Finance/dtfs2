@@ -220,7 +220,7 @@ exports.updateLoan = async (req, res) => {
         // formattedRequestedCoverStartDate,
       );
 
-      if (validationErrors.count === 0) {
+      if (!validationErrors.errorList || !validationErrors.errorList.requestedCoverStartDate) {
         delete modifiedLoan['requestedCoverStartDate-day'];
         delete modifiedLoan['requestedCoverStartDate-month'];
         delete modifiedLoan['requestedCoverStartDate-year'];
