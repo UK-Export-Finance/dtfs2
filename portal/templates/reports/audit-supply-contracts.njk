@@ -3,11 +3,22 @@
 
 {% import './_macros/audit-supply-contracts-filters.njk' as filterControls %}
 
+{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+
 {% block pageTitle %}Audit report{% endblock %}
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">Audit Report</h1>
+  {{ mojPageHeaderActions({
+  heading: {
+  html: '<h1 class="govuk-heading-l">Audit Report</h1>'
+  },
+  items: [{
+  text: 'Download csv',
+  classes: 'govuk-button--secondary',
+  href: '/reports/audit-supply-contracts/download'
+  }]
+  }) }}
 
   {{ filterControls.render(filter, user, banks) }}
 
