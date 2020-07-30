@@ -5,8 +5,8 @@ import cookieParser from 'cookie-parser';
 import flash from 'connect-flash';
 import path from 'path';
 import crypto from 'crypto';
-import routes from './routes';
 import json2csv from 'express-json2csv';
+import routes from './routes';
 
 import configureNunjucks from './nunjucks-configuration';
 
