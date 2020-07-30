@@ -6,10 +6,10 @@
     "axios": "0.19.2",
     "express": "^4.17.1",
     "graphql-tools": "^5.0.0",
-    "moment": "^2.26.0"
+    "moment": "^2.27.0"
   },
   "devDependencies": {
-    "cypress": "4.5.0",
+    "cypress": "^4.11.0",
     "cypress-audit": "^0.2.2",
     "cypress-file-upload": "^4.0.7",
     "cypress-xpath": "1.4.0",
