@@ -6,6 +6,7 @@ import flash from 'connect-flash';
 import path from 'path';
 import crypto from 'crypto';
 import routes from './routes';
+import json2csv from 'express-json2csv';
 
 import configureNunjucks from './nunjucks-configuration';
 
@@ -33,6 +34,7 @@ app.use(session({
 
 app.use(cookieParser()); // could optionally use a secret here
 app.use(flash());
+app.use(json2csv);
 
 configureNunjucks({
   autoescape: true,
