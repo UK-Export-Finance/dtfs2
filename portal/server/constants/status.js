@@ -5,6 +5,7 @@ const STATUS = {
   abandoned: 'Abandoned Deal',
   submitted: 'Submitted',
   submissionAcknowledged: 'Acknowledged by UKEF',
+  inProgress: 'In progress by UKEF',
   approved: 'Accepted by UKEF (without conditions)',
   approvedWithConditions: 'Accepted by UKEF (with conditions)',
   refused: 'Rejected by UKEF',

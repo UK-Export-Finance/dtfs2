@@ -15,7 +15,6 @@ const processTypeB = async ({ fileContents }) => {
     };
   }
 
-
   const { portal_deal_id: dealId } = workflowDeal.$;
 
   const deal = await dealController.findOneDeal(dealId);
@@ -36,6 +35,9 @@ const processTypeB = async ({ fileContents }) => {
     },
     body: updatedDealInfo,
   };
+
+  console.log(`updateRequest : \n${JSON.stringify(updateRequest, null, 2)}`);
+
 
   await updateComments(dealId, workflowDeal);
   const updatedDeal = await dealController.updateDeal(updateRequest);
