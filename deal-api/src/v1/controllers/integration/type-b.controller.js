@@ -6,8 +6,6 @@ const dealController = require('../deal.controller');
 const { generateStatus, updateComments } = require('./type-b-helpers');
 
 const processTypeB = async ({ fileContents }) => {
-  console.log('type-b.controller :: processTypeB');
-  console.log(fileContents);
   const { Deal: workflowDeal, error } = await xml2js.parseStringPromise(fileContents /* , options */)
     .catch((err) => ({ error: err.message }));
 
@@ -17,17 +15,12 @@ const processTypeB = async ({ fileContents }) => {
     };
   }
 
-
   const { portal_deal_id: dealId } = workflowDeal.$;
-
-  console.log(`lookup deal on id = ${dealId}`);
 
   const deal = await dealController.findOneDeal(dealId);
   if (!deal) {
     return false;
   }
-
-  console.log(`found deal : \n${JSON.stringify(deal, null, 2)}`);
 
   const updatedDealInfo = {
     details: {
