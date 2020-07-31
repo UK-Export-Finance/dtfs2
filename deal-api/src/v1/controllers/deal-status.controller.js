@@ -104,6 +104,38 @@ const updateFacilityDates = async (collection, deal) => {
   return value;
 };
 
+const updateIssuedLoanFacilities = async (collection, deal) => {
+  const updatedDeal = deal;
+
+  const update = (loans) => {
+    const arr = loans;
+
+    arr.forEach((loan) => {
+      let l = loan;
+      const shouldUpdateIssuedFacility = (l.facilityStage === 'Conditional' && l.issueFacilityDetailsProvided);
+
+      if (shouldUpdateIssuedFacility) {
+        l.issueFacilityDetailsSubmitted = true;
+      }
+
+      return l;
+    });
+    return arr;
+  };
+
+  updatedDeal.loanTransactions.items = update(updatedDeal.loanTransactions.items);
+
+  const findAndUpdateResponse = await collection.findOneAndUpdate(
+    { _id: deal._id }, // eslint-disable-line no-underscore-dangle
+    $.flatten(updatedDeal),
+    { returnOriginal: false },
+  );
+
+  const { value } = findAndUpdateResponse;
+
+  return value;
+};
+
 const createSubmissionDate = async (collection, _id, user) => {
   const submissionDate = {
     details: {
@@ -247,6 +279,7 @@ exports.update = (req, res) => {
     }
 
     if (toStatus === 'Submitted') {
+      await updateIssuedLoanFacilities(collection, dealAfterAllUpdates);
       dealAfterAllUpdates = await createSubmissionDate(collection, req.params.id, user);
 
       // TODO - Reinstate typeA XML creation once Loans and Summary have been added

@@ -124,6 +124,13 @@ const deal = {
           text: 'GBP - UK Sterling',
           id: 'GBP',
         },
+        issuedDate: moment().utc().valueOf(),
+        'coverEndDate-day': `${moment().add(1, 'month').format('DD')}`,
+        'coverEndDate-month': `${moment().add(1, 'month').format('MM')}`,
+        'coverEndDate-year': `${moment().add(1, 'month').format('YYYY')}`,
+        disbursementAmount: '10',
+        bankReferenceNumber: '12345678',
+        issueFacilityDetailsProvided: true,
       },
       {
         _id: '1000005',
