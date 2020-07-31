@@ -285,6 +285,19 @@ const updateBond = async (dealId, bondId, formData, token) => {
   return response.data;
 };
 
+const updateBondIssueFacility = async (dealId, bondId, formData, token) => {
+  const response = await axios({
+    method: 'put',
+    url: `${urlRoot}/v1/deals/${dealId}/bond/${bondId}/issue-facility`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: formData,
+  });
+  return response.data;
+};
+
 const banks = async (token) => {
   const response = await axios({
     method: 'get',
@@ -531,6 +544,7 @@ export default {
   login,
   transactions,
   updateBond,
+  updateBondIssueFacility,
   updateDeal,
   updateDealLoan,
   updateLoanIssueFacility,
