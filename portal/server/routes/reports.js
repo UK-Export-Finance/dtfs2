@@ -1,5 +1,5 @@
 import express from 'express';
-// import util from 'util';
+import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
 import CONSTANTS from '../constants';
@@ -558,7 +558,44 @@ router.get('/reports/reconciliation-report/:page', async (req, res) => {
 router.get('/reports/countdown-indicator', async (req, res) => {
   // [dw] while mocking this report out, I don't think we really understand the data-model involved
   //  so I'm, just mocking this out the old way rather than trying to work out how to re-plumb the API.
+  const { userToken } = requestParams(req);
 
+  const filters = [
+  /*  {
+     field: '_id',
+    value: '1000012',
+  }, {
+    field: 'bankReferenceNumber', // ?
+    value: 'unique3',
+  } */];
+
+  // const filters = buildReportFilters(stageFilters, req.session.user);
+
+  // get all transactions (for user?)
+  const { transactions, count } = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+    res,
+  );
+  console.log(`transactions: ${util.inspect(transactions)}`);
+  console.log(count);
+  // mock up by filtering here on conditioanl or unissued
+  const incompleteFacilities = transactions.filter((transaction) => (transaction.transactionStage === 'Unissued' || transaction.transactionStage === 'Conditional'));
+  // .filter((deal) => (deal.details && deal.details.status === 'Draft'));
+
+  console.log(`incompleteFacilities: ${util.inspect(incompleteFacilities)}`);
+  // incompleteFacilities.forEach((transaction) => console.log(transaction.deal_id, transaction.transactionType, transaction.transactionStage));
+  // console.log(`results: ${incompleteFacilities.length}`);
+
+  //loop through the incompletes and calculate the time remaining
+  const NINETY_DAYS = 7776000000;
+  const getExpiryDate = (val) => {
+    const expiry = parseInt(val.createdDate, 10) + NINETY_DAYS;
+    const id = val.bankSupplyContractID;
+    return { id, expiry };
+  }
+  let newArray = incompleteFacilities.map(getExpiryDate);
+  console.log(`-------------`);
+  console.log(`newArray: ${util.inspect(newArray)}`);
   const issueOrMakeFirstAdvance = {
     caption: 'You have 3 months to issue or make first advance under a transaction.',
     firstCellIsHeader: true,
