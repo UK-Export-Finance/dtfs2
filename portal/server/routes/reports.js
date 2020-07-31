@@ -632,6 +632,33 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   });
   console.log(`trafficLights: ${util.inspect(trafficLights)}`);
 
+  // const filters = buildReportFilters(stageFilters, req.session.user);
+
+  // get all transactions (for user?)
+  const { transactions, count } = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+    res,
+  );
+  console.log(`transactions: ${util.inspect(transactions)}`);
+  console.log(count);
+  // mock up by filtering here on conditioanl or unissued
+  const incompleteFacilities = transactions.filter((transaction) => (transaction.transactionStage === 'Unissued' || transaction.transactionStage === 'Conditional'));
+  // .filter((deal) => (deal.details && deal.details.status === 'Draft'));
+
+  console.log(`incompleteFacilities: ${util.inspect(incompleteFacilities)}`);
+  // incompleteFacilities.forEach((transaction) => console.log(transaction.deal_id, transaction.transactionType, transaction.transactionStage));
+  // console.log(`results: ${incompleteFacilities.length}`);
+
+  //loop through the incompletes and calculate the time remaining
+  const NINETY_DAYS = 7776000000;
+  const getExpiryDate = (val) => {
+    const expiry = parseInt(val.createdDate, 10) + NINETY_DAYS;
+    const id = val.bankSupplyContractID;
+    return { id, expiry };
+  }
+  let newArray = incompleteFacilities.map(getExpiryDate);
+  console.log(`-------------`);
+  console.log(`newArray: ${util.inspect(newArray)}`);
   const issueOrMakeFirstAdvance = {
     caption: 'You have 3 months to issue or make first advance under a transaction.',
     firstCellIsHeader: true,
