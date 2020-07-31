@@ -65,7 +65,7 @@
 
                 {% if dealStatus === "Acknowledged by UKEF" or dealStatus === "Ready for Checker's approval" %}
 
-                  {% set canIssueFacility = userIsMaker and loan.facilityStage === 'Conditional' and not loan.facilityIssued %}
+                  {% set canIssueFacility = userIsMaker and loan.facilityStage === 'Conditional' and not loan.issueFacilityDetailsProvided %}
 
                   {% if canIssueFacility %}
                     <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/issue-facility" class="govuk-link" data-cy="issue-facility-loan-{{ loan._id }}">Issue facility</a>
@@ -76,7 +76,7 @@
                   {% endif %}
 
                   {# TODO: this should be "if already submitted with deal" #}
-                  {% if loan.facilityIssued %}
+                  {% if loan.issueFacilityDetailsProvided %}
                     <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/preview" class="govuk-link" data-cy="issue-facility-loan-{{ loan._id }}">Facility issued</a>
                   {% endif %}
 
