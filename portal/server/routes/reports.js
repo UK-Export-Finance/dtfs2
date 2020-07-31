@@ -650,7 +650,7 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   // console.log(`results: ${incompleteFacilities.length}`);
 
   //loop through the incompletes and calculate the time remaining
-  const NINETY_DAYS = 7776000000;
+  const NINETY_DAYS = 7776000; // seconds
   const getExpiryDate = (val) => {
     const expiry = parseInt(val.createdDate, 10) + NINETY_DAYS;
     const id = val.bankSupplyContractID;
