@@ -8,6 +8,7 @@ const incompleteDeal = require('../../fixtures/deal-with-incomplete-about-sectio
 
 const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
+const smeTypeIsRequired = require('../../../src/v1/validation/submission-details-rules/sme-type-is-required');
 
 // Mock currency & country API calls as no currency/country data is in db during pipeline test as previous test had removed them
 jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
@@ -580,6 +581,17 @@ describe('/v1/deals/:id/status', () => {
         };
 
         updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      });
+
+      it('adds `issueFacilityDetailsSubmitted` property to loans that have `Conditional` facilityStage and `issue facility details` provided flag', async () => {
+        expect(updatedDeal.status).toEqual(200);
+        expect(updatedDeal.body).toEqual({});
+
+        const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+        const issuedLoanThatShouldBeUpdated = body.deal.loanTransactions.items.find((l) => l.issueFacilityDetailsProvided === true);
+
+        expect(issuedLoanThatShouldBeUpdated.issueFacilityDetailsSubmitted).toEqual(true);
       });
 
       it('adds a submissionDate to the deal', async () => {
