@@ -86,15 +86,6 @@ const buildDashboardFilters = (params) => {
     });
   }
 
-  // if (params.filterByBank) {
-  //   isUsingAdvancedFilter = true;
-  //   filters.push({
-  //     field: 'details.owningBank.id',
-  //     value: params.filterByBank,
-  //   });
-  // }
-  //
-
   return {
     isUsingAdvancedFilter,
     filters,
