@@ -111,7 +111,7 @@ const updateIssuedLoanFacilities = async (collection, deal) => {
     const arr = loans;
 
     arr.forEach((loan) => {
-      let l = loan;
+      const l = loan;
       const shouldUpdateIssuedFacility = (l.facilityStage === 'Conditional' && l.issueFacilityDetailsProvided);
 
       if (shouldUpdateIssuedFacility) {
