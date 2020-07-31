@@ -34,6 +34,7 @@ const CLONE_LOAN_FIELDS = [
   'conversionRateDate-month',
   'conversionRateDate-year',
   'disbursementAmount',
+  'requestedCoverStartDate',
   'requestedCoverStartDate-day',
   'requestedCoverStartDate-month',
   'requestedCoverStartDate-year',
