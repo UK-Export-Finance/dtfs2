@@ -50,7 +50,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
       }
 
       if (validationErrors.count === 0) {
-        modifiedLoan.facilityIssued = true;
+        modifiedLoan.issueFacilityDetailsProvided = true;
       }
 
       const updatedLoan = await updateLoanInDeal(req.params, req.user, deal, modifiedLoan);
