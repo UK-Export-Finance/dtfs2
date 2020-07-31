@@ -65,7 +65,7 @@
 
                 {% if dealStatus === "Acknowledged by UKEF" or dealStatus === "Ready for Checker's approval" %}
 
-                  {% set canIssueFacility = userIsMaker and loan.facilityStage === 'Conditional' and not loan.issueFacilityDetailsProvided %}
+                  {% set canIssueFacility = userIsMaker and loan.facilityStage === 'Conditional' and not loan.issueFacilityDetailsSubmitted %}
 
                   {% if canIssueFacility %}
                     <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/issue-facility" class="govuk-link" data-cy="issue-facility-loan-{{ loan._id }}">Issue facility</a>
