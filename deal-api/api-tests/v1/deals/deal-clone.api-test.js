@@ -189,6 +189,7 @@ describe('/v1/deals/:id/clone', () => {
             },
             {
               _id: lastOriginalLoan._id,
+              requestedCoverStartDate: lastOriginalLoan.requestedCoverStartDate,
               'requestedCoverStartDate-day': lastOriginalLoan['requestedCoverStartDate-day'],
               'requestedCoverStartDate-month': lastOriginalLoan['requestedCoverStartDate-month'],
               'requestedCoverStartDate-year': lastOriginalLoan['requestedCoverStartDate-year'],
