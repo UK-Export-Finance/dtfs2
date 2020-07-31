@@ -58,7 +58,7 @@ exports.hasAllRequestedCoverStartDateValues = hasAllRequestedCoverStartDateValue
 
 exports.updateRequestedCoverStartDate = (loan) => {
   // if we have all requestedCoverStartDate fields (day, month and year)
-  // delete these and use UTC timestamp in a single requestedCoverStartDate property.
+  // generate UTC timestamp in a single requestedCoverStartDate property.
   const modifiedLoan = loan;
 
   if (hasAllRequestedCoverStartDateValues(loan)) {
