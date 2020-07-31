@@ -22,17 +22,33 @@ describe(component, () => {
       }
     });
 
-    it('should be enabled for deals in status=Acknowledged by UKEF with dealHasIssuedFacilities flag set to true', () => {
+    it('should be enabled for deals in status=Acknowledged by UKEF with dealHasIssuedFacilitiesToSubmit flag set to true', () => {
       const user = { roles: ['maker'] };
       const deals = [
         { _id: 1, details: { status: 'Acknowledged by UKEF' } },
       ];
 
       const dealFormsCompleted = true;
-      const dealHasIssuedFacilities = true;
+      const dealHasIssuedFacilitiesToSubmit = true;
 
       for (const deal of deals) {
-        const wrapper = render({ user, deal, dealFormsCompleted, dealHasIssuedFacilities });
+        const wrapper = render({ user, deal, dealFormsCompleted, dealHasIssuedFacilitiesToSubmit });
+        wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]')
+          .toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
+      }
+    });
+
+    it('should be enabled for deals in status=Ready for Checker\'s approval with dealHasIssuedFacilitiesToSubmit flag set to true', () => {
+      const user = { roles: ['maker'] };
+      const deals = [
+        { _id: 1, details: { status: 'Ready for Checker\'s approval' } },
+      ];
+
+      const dealFormsCompleted = true;
+      const dealHasIssuedFacilitiesToSubmit = true;
+
+      for (const deal of deals) {
+        const wrapper = render({ user, deal, dealFormsCompleted, dealHasIssuedFacilitiesToSubmit });
         wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]')
           .toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
       }
