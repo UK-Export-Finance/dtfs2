@@ -587,23 +587,50 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   // console.log(`results: ${incompleteFacilities.length}`);
 
   //loop through the incompletes and calculate the time remaining
-  const NINETY_DAYS = 7776000; // seconds
+  const ONE_DAY = 86400000; // milliseconds
+  const NINETY_DAYS = 7776000000; // milliseconds
   const getExpiryDate = (val) => {
+    console.log(val.createdDate);
     const expiry = parseInt(val.createdDate, 10) + NINETY_DAYS;
-    const id = val.bankSupplyContractID;
-    return { id, expiry };
-  }
-  let newArray = incompleteFacilities.map(getExpiryDate);
-  console.log(`-------------`);
+    const id = val.deal_id;
+    const remainingDays = Math.floor( (expiry - Date.now()) / ONE_DAY );
+    return { id, expiry, remainingDays };
+  };
+
+  const newArray = incompleteFacilities.map(getExpiryDate);
   console.log(`newArray: ${util.inspect(newArray)}`);
+
+  const trafficLights = {
+    black: 0,
+    red: 0,
+    orange: 0,
+    green: 0,
+  }
+
+  newArray.forEach((item) => {
+    console.log(item.id, item.remainingDays);
+    if (item.remainingDays < 0) {
+      trafficLights.black += 1;
+    } else if (item.remainingDays < 16) {
+      trafficLights.red += 1;
+    } else if (item.remainingDays < 46) {
+      trafficLights.orange += 1;
+    } else if (item.remainingDays < 90) {
+      trafficLights.green += 1;
+    } else {
+      trafficLights.black += 1;
+    }
+  });
+  console.log(`trafficLights: ${util.inspect(trafficLights)}`);
+
   const issueOrMakeFirstAdvance = {
     caption: 'You have 3 months to issue or make first advance under a transaction.',
     firstCellIsHeader: true,
     head: [{ text: 'Days remaining' }, { text: 'Facilities' }],
     rows: [
-      [{ text: '0 to 15' }, { html: '<strong class="govuk-tag govuk-tag--red">10</strong> &nbsp; <a href="TODO" >view</a>' }],
-      [{ text: '16 to 45' }, { html: '<strong class="govuk-tag govuk-tag--orange">8</strong> &nbsp; <a href="TODO" >view</a>' }],
-      [{ text: '46 to 90' }, { html: '<strong class="govuk-tag govuk-tag--green">5</strong> &nbsp; <a href="TODO" >view</a>' }],
+      [{ text: '0 to 15' }, { html: `<strong class="govuk-tag govuk-tag--red">${trafficLights.red}</strong> &nbsp; <a href="TODO" >view</a>` }],
+      [{ text: '16 to 45' }, { html: `<strong class="govuk-tag govuk-tag--orange">${trafficLights.orange}</strong> &nbsp; <a href="TODO" >view</a>` }],
+      [{ text: '46 to 90' }, { html: `<strong class="govuk-tag govuk-tag--green">${trafficLights.green}</strong> &nbsp; <a href="TODO" >view</a>` }],
     ],
   };
 
