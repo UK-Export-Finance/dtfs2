@@ -7,6 +7,25 @@ const {
   updateRequestedCoverStartDate,
 } = require('../section-dates/requested-cover-start-date');
 const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
+const { hasValue } = require('../../utils/string');
+
+const hasAllIssuedDateValues = (loan) => {
+  const {
+    'issuedDate-day': issuedDateDay,
+    'issuedDate-month': issuedDateMonth,
+    'issuedDate-year': issuedDateYear,
+  } = loan;
+
+  const hasIssuedDate = (hasValue(issuedDateDay)
+                        && hasValue(issuedDateMonth)
+                        && hasValue(issuedDateYear));
+
+  if (hasIssuedDate) {
+    return true;
+  }
+
+  return false;
+};
 
 exports.updateLoanIssueFacility = async (req, res) => {
   const {
@@ -32,10 +51,10 @@ exports.updateLoanIssueFacility = async (req, res) => {
         ...req.body,
       };
 
-      modifiedLoan.issuedDate = createTimestampFromSubmittedValues(req.body, 'issuedDate');
-
       if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {
         modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
+      } else {
+        delete modifiedLoan.requestedCoverStartDate;
       }
 
       const validationErrors = loanIssueFacilityValidationErrors(
@@ -43,10 +62,10 @@ exports.updateLoanIssueFacility = async (req, res) => {
         deal.details.submissionDate,
       );
 
-      if (!validationErrors.errorList || !validationErrors.errorList.requestedCoverStartDate) {
-        delete modifiedLoan['requestedCoverStartDate-day'];
-        delete modifiedLoan['requestedCoverStartDate-month'];
-        delete modifiedLoan['requestedCoverStartDate-year'];
+      if (hasAllIssuedDateValues(modifiedLoan)) {
+        modifiedLoan.issuedDate = createTimestampFromSubmittedValues(req.body, 'issuedDate');
+      } else {
+        delete modifiedLoan.issuedDate;
       }
 
       if (validationErrors.count === 0) {
