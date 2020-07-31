@@ -1,13 +1,98 @@
 {% extends "index.njk" %}
-{% import '_macros/issue-facility.njk' as issueFacility %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% import '_macros/date-field.njk' as dateField %}
+{% import './_macros/bank-reference-number-field.njk' as bankReferenceNumberField %}
 
 {% block pageTitle %}Bond Issue Facility{% endblock %}
 
 {% block content %}
 
-  {{ issueFacility.render(
-    dealId = dealId,
-    isBond = true
-  )}}
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
+  <h1 class="govuk-heading-l">Bond Issue Facility</h1>
+
+  <form method="POST" autocomplete="off" novalidate>
+
+    {{ dateField.render(
+      legend = 'Issued Date',
+      id = 'issuedDate',
+      hint = 'For example, 31 05 2017',
+      dayValue = bond['issuedDate-day'] or bond.issuedDate and bond.issuedDate | localiseTimestamp('DD', user.timezone),
+      monthValue = bond['issuedDate-month'] or bond.issuedDate and bond.issuedDate | localiseTimestamp('MM', user.timezone),
+      yearValue = bond['issuedDate-year'] or bond.issuedDate and bond.issuedDate | localiseTimestamp('YYYY', user.timezone),
+      error = validationErrors.errorList.issuedDate
+    )}}
+
+    {{ dateField.render(
+      legend = 'Requested Cover Start Date (optional)',
+      id = 'requestedCoverStartDate',
+      hint = 'For example, 31 05 2017',
+      dayValue = bond['requestedCoverStartDate-day'] or bond.requestedCoverStartDate and bond.requestedCoverStartDate | localiseTimestamp('DD', user.timezone),
+      monthValue = bond['requestedCoverStartDate-month'] or bond.requestedCoverStartDate and bond.requestedCoverStartDate | localiseTimestamp('MM', user.timezone),
+      yearValue = bond['requestedCoverStartDate-year'] or bond.requestedCoverStartDate and bond.requestedCoverStartDate | localiseTimestamp('YYYY', user.timezone),
+      error = validationErrors.errorList.requestedCoverStartDate
+    )}}
+
+    {{ dateField.render(
+      legend = 'Cover End Date',
+      id = 'coverEndDate',
+      hint = 'For example, 31 05 2017',
+      dayValue = bond['coverEndDate-day'],
+      monthValue = bond['coverEndDate-month'],
+      yearValue = bond['coverEndDate-year'],
+      error = validationErrors.errorList.coverEndDate
+    )}}
+
+    {{ govukInput({
+        label: {
+          text: "Disbursement amount"
+        },
+        id: "disbursementAmount",
+        name: "disbursementAmount",
+        value: bond.disbursementAmount,
+        pattern: '[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)',
+        attributes: {
+          size: "60",
+          maxlength: "255",
+          placeholder: "0.00",
+          'data-cy': 'disbursement-amount',
+          "data-mask": "currency"
+        },
+        classes: "govuk-input--width-10",
+        errorMessage: validationErrors.errorList.disbursementAmount and {
+          text: validationErrors.errorList.disbursementAmount.text,
+          attributes: {
+            'data-cy': 'disbursement-amount-error-message'
+          }
+        }
+      }) }}
+
+      {% if not bond.uniqueIdentificationNumber %}
+        {{ govukInput({
+          label: {
+            text: "Bond's unique ID"
+          },
+          classes: "govuk-!-width-one-third",
+          id: "uniqueIdentificationNumber",
+          name: "uniqueIdentificationNumber",
+          value = bond.uniqueIdentificationNumber,
+          error = validationErrors.errorList.uniqueIdentificationNumber
+        }) }}
+
+      {% endif %}
+
+      <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Save</button>
+
+      <a href="/contract/{{ dealId }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+
+  </form>
 
 {% endblock %}
