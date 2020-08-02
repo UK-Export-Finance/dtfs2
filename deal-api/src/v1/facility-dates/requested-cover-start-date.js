@@ -52,7 +52,9 @@ exports.updateRequestedCoverStartDate = (facility) => {
       month: Number(requestedCoverStartDateMonth) - 1, // months are zero indexed
       year: Number(requestedCoverStartDateYear),
     });
+
     modifiedFacility.requestedCoverStartDate = moment(momentDate).utc().valueOf().toString();
+
     delete modifiedFacility['requestedCoverStartDate-day'];
     delete modifiedFacility['requestedCoverStartDate-month'];
     delete modifiedFacility['requestedCoverStartDate-year'];
