@@ -27,7 +27,7 @@ exports.updateBondIssueFacility = async (req, res) => {
         return res.status(404).send();
       }
 
-      const modifiedBond = {
+      let modifiedBond = {
         _id: bondId,
         ...bond,
         ...req.body,
@@ -39,16 +39,16 @@ exports.updateBondIssueFacility = async (req, res) => {
         delete modifiedBond.requestedCoverStartDate;
       }
 
-      const validationErrors = bondIssueFacilityValidationErrors(
-        modifiedBond,
-        deal.details.submissionDate,
-      );
-
       if (hasAllIssuedDateValues(modifiedBond)) {
         modifiedBond.issuedDate = createTimestampFromSubmittedValues(req.body, 'issuedDate');
       } else {
         delete modifiedBond.issuedDate;
       }
+
+      const validationErrors = bondIssueFacilityValidationErrors(
+        modifiedBond,
+        deal.details.submissionDate,
+      );
 
       if (validationErrors.count === 0) {
         modifiedBond.issueFacilityDetailsProvided = true;

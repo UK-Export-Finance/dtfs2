@@ -213,10 +213,10 @@ exports.updateLoan = async (req, res) => {
         delete modifiedLoan.requestedCoverStartDate;
       }
 
-      const validationErrors = loanValidationErrors(modifiedLoan);
-
       modifiedLoan.lastEdited = now();
       const updatedLoan = await updateLoanInDeal(req.params, req.user, deal, modifiedLoan);
+
+      const validationErrors = loanValidationErrors(updatedLoan);
 
       if (validationErrors.count !== 0) {
         return res.status(400).send({
