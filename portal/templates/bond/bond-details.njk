@@ -224,9 +224,9 @@
             legend = 'Requested Cover Start Date (optional)',
             id = 'requestedCoverStartDate',
             hint = '<p>For example, 27 11 2019</p><p>This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date</p>',
-            dayValue = bond['requestedCoverStartDate-day'],
-            monthValue = bond['requestedCoverStartDate-month'],
-            yearValue = bond['requestedCoverStartDate-year'],
+            dayValue = bond['requestedCoverStartDate-day'] or bond.requestedCoverStartDate and bond.requestedCoverStartDate | localiseTimestamp('DD', user.timezone),
+              monthValue = bond['requestedCoverStartDate-month'] or bond.requestedCoverStartDate and bond.requestedCoverStartDate | localiseTimestamp('MM', user.timezone),
+              yearValue = bond['requestedCoverStartDate-year'] or bond.requestedCoverStartDate and bond.requestedCoverStartDate | localiseTimestamp('YYYY', user.timezone),
             error = validationErrors.errorList.requestedCoverStartDate
           )}}
 

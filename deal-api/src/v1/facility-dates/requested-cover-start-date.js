@@ -1,12 +1,12 @@
 const moment = require('moment');
 const { hasValue } = require('../../utils/string');
 
-const getRequestedCoverStartDateValues = (loan) => {
+const getRequestedCoverStartDateValues = (facility) => {
   const {
     'requestedCoverStartDate-day': requestedCoverStartDateDay,
     'requestedCoverStartDate-month': requestedCoverStartDateMonth,
     'requestedCoverStartDate-year': requestedCoverStartDateYear,
-  } = loan;
+  } = facility;
 
   return {
     requestedCoverStartDateDay,
@@ -15,12 +15,12 @@ const getRequestedCoverStartDateValues = (loan) => {
   };
 };
 
-const hasAllRequestedCoverStartDateValues = (loan) => {
+const hasAllRequestedCoverStartDateValues = (facility) => {
   const {
     requestedCoverStartDateDay,
     requestedCoverStartDateMonth,
     requestedCoverStartDateYear,
-  } = getRequestedCoverStartDateValues(loan);
+  } = getRequestedCoverStartDateValues(facility);
 
   const hasRequestedCoverStartDate = (hasValue(requestedCoverStartDateDay)
     && hasValue(requestedCoverStartDateMonth)
@@ -35,24 +35,24 @@ const hasAllRequestedCoverStartDateValues = (loan) => {
 
 exports.hasAllRequestedCoverStartDateValues = hasAllRequestedCoverStartDateValues;
 
-exports.updateRequestedCoverStartDate = (loan) => {
+exports.updateRequestedCoverStartDate = (facility) => {
   // if we have all requestedCoverStartDate fields (day, month and year)
   // generate UTC timestamp in a single requestedCoverStartDate property.
-  const modifiedLoan = loan;
+  const modifiedFacility = facility;
 
-  if (hasAllRequestedCoverStartDateValues(loan)) {
+  if (hasAllRequestedCoverStartDateValues(facility)) {
     const {
       requestedCoverStartDateDay,
       requestedCoverStartDateMonth,
       requestedCoverStartDateYear,
-    } = getRequestedCoverStartDateValues(loan);
+    } = getRequestedCoverStartDateValues(facility);
 
     const momentDate = moment().set({
       date: Number(requestedCoverStartDateDay),
       month: Number(requestedCoverStartDateMonth) - 1, // months are zero indexed
       year: Number(requestedCoverStartDateYear),
     });
-    modifiedLoan.requestedCoverStartDate = moment(momentDate).utc().valueOf().toString();
+    modifiedFacility.requestedCoverStartDate = moment(momentDate).utc().valueOf().toString();
   }
-  return modifiedLoan;
+  return modifiedFacility;
 };
