@@ -1,30 +1,8 @@
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { updateBondInDeal } = require('./bonds.controller');
-const {
-  createTimestampFromSubmittedValues,
-//   hasAllRequestedCoverStartDateValues,
-//   updateRequestedCoverStartDate,
-} = require('../section-dates/requested-cover-start-date');
-const { hasValue } = require('../../utils/string');
-
-const hasAllIssuedDateValues = (bond) => {
-  const {
-    'issuedDate-day': issuedDateDay,
-    'issuedDate-month': issuedDateMonth,
-    'issuedDate-year': issuedDateYear,
-  } = bond;
-
-  const hasIssuedDate = (hasValue(issuedDateDay)
-    && hasValue(issuedDateMonth)
-    && hasValue(issuedDateYear));
-
-  if (hasIssuedDate) {
-    return true;
-  }
-
-  return false;
-};
+const { hasAllIssuedDateValues } = require('../facility-dates/issued-date');
+const { createTimestampFromSubmittedValues } = require('../facility-dates/timestamp');
 
 exports.updateBondIssueFacility = async (req, res) => {
   const {
