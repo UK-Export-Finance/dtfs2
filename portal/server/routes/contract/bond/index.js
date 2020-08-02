@@ -1,6 +1,11 @@
 import express from 'express';
 import api from '../../../api';
-import { provide, BOND, DEAL, CURRENCIES } from '../../api-data-provider';
+import {
+  provide,
+  BOND,
+  DEAL,
+  CURRENCIES,
+} from '../../api-data-provider';
 import {
   getApiData,
   requestParams,
@@ -362,7 +367,7 @@ router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
   );
 
   if (validationErrors) {
-    return res.render('loan/loan-issue-facility.njk', { 
+    return res.render('loan/loan-issue-facility.njk', {
       user,
       validationErrors,
       loan,
