@@ -491,7 +491,7 @@ describe('/v1/deals/:id/bond', () => {
           createdDate: expect.any(String),
           lastEdited: expect.any(String),
         };
-        delete expectedBond['requestedCoverStartDate'];
+        delete expectedBond.requestedCoverStartDate;
         delete expectedBond['requestedCoverStartDate-day'];
         delete expectedBond['requestedCoverStartDate-month'];
         delete expectedBond['requestedCoverStartDate-year'];

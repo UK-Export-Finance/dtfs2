@@ -124,7 +124,7 @@ const bondStageFields = (bond) => {
 
   if (bondStage === 'Unissued') {
     // remove any `Issued Bond Stage` specific fields/values
-    delete modifiedBond['requestedCoverStartDate'];
+    delete modifiedBond.requestedCoverStartDate;
     delete modifiedBond['requestedCoverStartDate-day'];
     delete modifiedBond['requestedCoverStartDate-month'];
     delete modifiedBond['requestedCoverStartDate-year'];

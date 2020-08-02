@@ -1,5 +1,4 @@
 const $ = require('mongo-dot-notation');
-const moment = require('moment');
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { addComment } = require('./deal-comments.controller');
 
