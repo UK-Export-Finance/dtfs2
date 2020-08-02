@@ -42,7 +42,7 @@ const updateBondInDeal = async (params, user, deal, bond) => {
 
   return bondInDeal;
 };
-
+exports.updateBondInDeal = updateBondInDeal;
 
 exports.getBond = async (req, res) => {
   const {
@@ -132,14 +132,14 @@ const bondStageFields = (bond) => {
   return modifiedBond;
 };
 
-const feeTypeFields = (loan) => {
-  const modifiedLoan = loan;
-  const { feeType } = modifiedLoan;
+const feeTypeFields = (bond) => {
+  const modifiedBond = bond;
+  const { feeType } = modifiedBond;
   if (feeType === 'At maturity') {
-    delete modifiedLoan.feeFrequency;
+    delete modifiedBond.feeFrequency;
   }
 
-  return modifiedLoan;
+  return modifiedBond;
 };
 
 exports.updateBond = async (req, res) => {
