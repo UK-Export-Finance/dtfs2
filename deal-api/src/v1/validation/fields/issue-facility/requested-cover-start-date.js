@@ -1,12 +1,11 @@
 const moment = require('moment');
-const { orderNumber } = require('../../../utils/error-list-order-number');
+const { orderNumber } = require('../../../../utils/error-list-order-number');
 const {
   dateHasSomeValues,
   dateValidationText,
-} = require('../fields/date');
-const { formattedTimestamp } = require('../../facility-dates/timestamp');
+} = require('../date');
+const { formattedTimestamp } = require('../../../facility-dates/timestamp');
 
-// TODO update to handle timestamp validation like in other requested-cover-start date rule.
 module.exports = (submittedValues, errorList, dealSubmissionDateTimestamp) => {
   const newErrorList = errorList;
 

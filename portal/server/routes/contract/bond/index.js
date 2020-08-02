@@ -356,7 +356,7 @@ router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
   const { user } = req.session;
 
-  const { validationErrors, loan } = await postToApi(
+  const { validationErrors, bond } = await postToApi(
     api.updateBondIssueFacility(
       dealId,
       bondId,
@@ -367,10 +367,10 @@ router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
   );
 
   if (validationErrors) {
-    return res.render('loan/loan-issue-facility.njk', {
+    return res.render('bond/bond-issue-facility.njk', {
       user,
       validationErrors,
-      loan,
+      bond,
     });
   }
 

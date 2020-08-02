@@ -1,7 +1,7 @@
-const applyRules = require('./loan-issue-facility-rules');
+const applyRules = require('./bond-issue-facility-rules');
 
-module.exports = (loan, dealSubmissionDate) => {
-  const errorList = applyRules(loan, dealSubmissionDate);
+module.exports = (bond, dealSubmissionDate) => {
+  const errorList = applyRules(bond, dealSubmissionDate);
   const totalErrors = Object.keys(errorList).length;
 
   if (totalErrors === 0) {

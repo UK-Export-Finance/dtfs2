@@ -2,7 +2,12 @@ const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { updateBondInDeal } = require('./bonds.controller');
 const { hasAllIssuedDateValues } = require('../facility-dates/issued-date');
+const {
+  hasAllRequestedCoverStartDateValues,
+  updateRequestedCoverStartDate,
+} = require('../facility-dates/requested-cover-start-date');
 const { createTimestampFromSubmittedValues } = require('../facility-dates/timestamp');
+const bondIssueFacilityValidationErrors = require('../validation/bond-issue-facility');
 
 exports.updateBondIssueFacility = async (req, res) => {
   const {
@@ -28,19 +33,16 @@ exports.updateBondIssueFacility = async (req, res) => {
         ...req.body,
       };
 
-      // if (hasAllRequestedCoverStartDateValues(modifiedBond)) {
-      //   modifiedBond = updateRequestedCoverStartDate(modifiedBond);
-      // } else {
-      //   delete modifiedBond.requestedCoverStartDate;
-      // }
+      if (hasAllRequestedCoverStartDateValues(modifiedBond)) {
+        modifiedBond = updateRequestedCoverStartDate(modifiedBond);
+      } else {
+        delete modifiedBond.requestedCoverStartDate;
+      }
 
-      // const validationErrors = bondIssueFacilityValidationErrors(
-      //   modifiedBond,
-      //   deal.details.submissionDate,
-      // );
-      const validationErrors = {
-        count: 1,
-      };
+      const validationErrors = bondIssueFacilityValidationErrors(
+        modifiedBond,
+        deal.details.submissionDate,
+      );
 
       if (hasAllIssuedDateValues(modifiedBond)) {
         modifiedBond.issuedDate = createTimestampFromSubmittedValues(req.body, 'issuedDate');
@@ -48,15 +50,15 @@ exports.updateBondIssueFacility = async (req, res) => {
         delete modifiedBond.issuedDate;
       }
 
-      // if (validationErrors.count === 0) {
-      //   modifiedBond.issueFacilityDetailsProvided = true;
-      // }
+      if (validationErrors.count === 0) {
+        modifiedBond.issueFacilityDetailsProvided = true;
+      }
 
       const updatedBond = await updateBondInDeal(req.params, req.user, deal, modifiedBond);
 
       if (validationErrors.count !== 0) {
         return res.status(400).send({
-          // validationErrors,
+          validationErrors,
           bond: updatedBond,
         });
       }
