@@ -49,6 +49,7 @@ const userCanIssueFacility = (user, deal, loan) => {
 
   if (isMaker
     && (deal.details.status === 'Acknowledged by UKEF' || deal.details.status === 'Ready for Checker\'s approval')
+    && deal.submissionType === 'Automatic Inclusion Notice'
     && loan.facilityStage === 'Conditional'
     && !loan.issueFacilityDetailsSubmitted) {
     return true;
