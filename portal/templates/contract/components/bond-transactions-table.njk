@@ -63,10 +63,6 @@
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14">
-                  {# {% if params.editable %}
-                    <a href="/contract/{{ dealId }}/bond/{{ bond._id }}/delete" class="govuk-link" data-cy="delete-bond-{{ bond._id}}">Delete</a>
-                  {% endif %}
-                  <a href="/contract/{{ dealId }}/bond/{{ bond._id }}/issue-facility" class="govuk-link" data-cy="issue-facility-bond-{{ bond._id}}">Issue facility</a> #}
 
                   {% set canIssueFacility = userIsMaker and dealSubmissionType === 'Automatic Inclusion Notice' and bond.bondStage === 'Unissued' and not bond.issueFacilityDetailsProvided and not bond.issueFacilityDetailsSubmitted %}
 
