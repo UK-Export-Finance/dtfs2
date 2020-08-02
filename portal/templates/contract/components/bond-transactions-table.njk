@@ -51,9 +51,9 @@
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-requested-cover-start-date">
-                  {% if bond['requestedCoverStartDate-day'] and bond['requestedCoverStartDate-month'] and bond['requestedCoverStartDate-year'] %}
-                    {{ bond['requestedCoverStartDate-day'] }}/{{ bond['requestedCoverStartDate-month'] }}/{{ bond['requestedCoverStartDate-year'] }}
-                  {% endif %}
+                  {% if bond.requestedCoverStartDate %}
+                  {{ bond.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', params.user.timezone) }}
+                {% endif %}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-cover-end-date">

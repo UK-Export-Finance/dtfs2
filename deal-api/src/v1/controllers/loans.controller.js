@@ -67,18 +67,6 @@ exports.getLoan = async (req, res) => {
       if (loan) {
         const validationErrors = loanValidationErrors(loan);
 
-        // if we have requestedCoverStartDate timestamp
-        // return consumption-friendly day/month/year.
-        if (loan.requestedCoverStartDate) {
-          const targetTimezone = req.user.timezone;
-          const utc = moment(parseInt(loan.requestedCoverStartDate, 10));
-          const localisedTimestamp = utc.tz(targetTimezone);
-
-          loan['requestedCoverStartDate-day'] = localisedTimestamp.format('DD');
-          loan['requestedCoverStartDate-month'] = localisedTimestamp.format('MM');
-          loan['requestedCoverStartDate-year'] = localisedTimestamp.format('YYYY');
-        }
-
         return res.json({
           dealId,
           loan: {
