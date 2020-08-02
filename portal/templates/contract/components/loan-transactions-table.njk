@@ -9,6 +9,7 @@
       {% set loans = params.deal.loanTransactions.items %}
       {% set dealId = params.deal._id %}
       {% set dealStatus = params.deal.details.status %}
+      {% set dealSubmissionType = params.deal.details.submissionType %}
       {% set userIsMaker = params.user.roles.includes('maker')%}
 
       <table class="govuk-table contract-table contract-transactions-table govuk-!-margin-bottom-0">
@@ -63,7 +64,7 @@
 
               <td class="govuk-table__cell govuk-!-font-size-14">
 
-                {% set canIssueFacility = userIsMaker and loan.facilityStage === 'Conditional' and deal.submissionType === 'Automatic Inclusion Notice' and not loan.issueFacilityDetailsProvided and not loan.issueFacilityDetailsSubmitted %}
+                {% set canIssueFacility = userIsMaker and dealSubmissionType === 'Automatic Inclusion Notice' and loan.facilityStage === 'Conditional' and not loan.issueFacilityDetailsProvided and not loan.issueFacilityDetailsSubmitted %}
 
                 {% if dealStatus === "Acknowledged by UKEF" or dealStatus === "Ready for Checker's approval" %}
 
@@ -80,12 +81,12 @@
                     {% endif %}
                   {% endif %}
 
-                {% endif %}
-
-                {% if params.editable and not canIssueFacility %}
+                  {% else %}
+                  {% if params.editable %}
                     <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/delete" class="govuk-link" data-cy="delete-loan-{{ loan._id }}">Delete</a>
-                {% endif %}
+                  {% endif %}
 
+                {% endif %}
               </td>
             </tr>
 
