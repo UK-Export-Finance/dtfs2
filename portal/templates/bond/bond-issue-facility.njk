@@ -50,47 +50,29 @@
       error = validationErrors.errorList.coverEndDate
     )}}
 
-    {{ govukInput({
+
+    {# todo, if not provided before... or has errors ... or has value and issue facility not submitted
+       or something like that....
+    #}
+    {# {% if not bond.uniqueIdentificationNumber %} #}
+      {{ govukInput({
         label: {
-          text: "Disbursement amount"
+          text: "Bond's unique ID"
         },
-        id: "disbursementAmount",
-        name: "disbursementAmount",
-        value: bond.disbursementAmount,
-        pattern: '[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)',
-        attributes: {
-          size: "60",
-          maxlength: "255",
-          placeholder: "0.00",
-          'data-cy': 'disbursement-amount',
-          "data-mask": "currency"
-        },
-        classes: "govuk-input--width-10",
-        errorMessage: validationErrors.errorList.disbursementAmount and {
-          text: validationErrors.errorList.disbursementAmount.text,
-          attributes: {
-            'data-cy': 'disbursement-amount-error-message'
-          }
+        classes: "govuk-!-width-one-third",
+        id: "uniqueIdentificationNumber",
+        name: "uniqueIdentificationNumber",
+        value: bond.uniqueIdentificationNumber,
+        errorMessage: validationErrors.errorList.uniqueIdentificationNumber and {
+          text: validationErrors.errorList.uniqueIdentificationNumber.text
         }
       }) }}
 
-      {% if not bond.uniqueIdentificationNumber %}
-        {{ govukInput({
-          label: {
-            text: "Bond's unique ID"
-          },
-          classes: "govuk-!-width-one-third",
-          id: "uniqueIdentificationNumber",
-          name: "uniqueIdentificationNumber",
-          value: bond.uniqueIdentificationNumber,
-          error: validationErrors.errorList.uniqueIdentificationNumber
-        }) }}
+    {# {% endif %} #}
 
-      {% endif %}
+    <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Save</button>
 
-      <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Save</button>
-
-      <a href="/contract/{{ dealId }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+    <a href="/contract/{{ dealId }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
 
   </form>
 
