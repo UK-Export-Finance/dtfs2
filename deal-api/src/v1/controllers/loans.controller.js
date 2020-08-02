@@ -11,7 +11,7 @@ const { handleTransactionCurrencyFields } = require('../section-currency');
 const {
   hasAllRequestedCoverStartDateValues,
   updateRequestedCoverStartDate,
-} = require('../section-dates/requested-cover-start-date');
+} = require('../facility-dates/requested-cover-start-date');
 const { loanStatus } = require('../section-status/loan');
 const { sanitizeCurrency } = require('../../utils/number');
 const now = require('../../now');

@@ -4,7 +4,7 @@ const {
   dateHasSomeValues,
   dateValidationText,
 } = require('../fields/date');
-const { formattedTimestamp } = require('../../section-dates/requested-cover-start-date');
+const { formattedTimestamp } = require('../../facility-dates/timestamp');
 
 // TODO update to handle timestamp validation like in other requested-cover-start date rule.
 module.exports = (submittedValues, errorList, dealSubmissionDateTimestamp) => {
