@@ -114,16 +114,15 @@ describe('/v1/deals/:id/clone', () => {
         const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
         const firstOriginalBond = originalDeal.bondTransactions.items[0];
-        const lastOriginalBond = originalDeal.bondTransactions.items[1];
+        const secondOriginalBond = originalDeal.bondTransactions.items[1];
+        const lastOriginalBond = originalDeal.bondTransactions.items[2];
 
         const expectedBondTransactions = {
           items: [
             {
               _id: firstOriginalBond._id,
               bondStage: firstOriginalBond.bondStage,
-              'requestedCoverStartDate-day': firstOriginalBond['requestedCoverStartDate-day'],
-              'requestedCoverStartDate-month': firstOriginalBond['requestedCoverStartDate-month'],
-              'requestedCoverStartDate-year': firstOriginalBond['requestedCoverStartDate-year'],
+              requestedCoverStartDate: firstOriginalBond.requestedCoverStartDate,
               'coverEndDate-day': firstOriginalBond['coverEndDate-day'],
               'coverEndDate-month': firstOriginalBond['coverEndDate-month'],
               'coverEndDate-year': firstOriginalBond['coverEndDate-year'],
@@ -138,17 +137,24 @@ describe('/v1/deals/:id/clone', () => {
               ukefGuaranteeInMonths: firstOriginalBond.ukefGuaranteeInMonths,
             },
             {
+              _id: secondOriginalBond._id,
+              bondStage: secondOriginalBond.bondStage,
+              requestedCoverStartDate: secondOriginalBond.requestedCoverStartDate,
+              'coverEndDate-day': secondOriginalBond['coverEndDate-day'],
+              'coverEndDate-month': secondOriginalBond['coverEndDate-month'],
+              'coverEndDate-year': secondOriginalBond['coverEndDate-year'],
+              facilityValue: secondOriginalBond.facilityValue,
+              currencySameAsSupplyContractCurrency: secondOriginalBond.currencySameAsSupplyContractCurrency,
+              currency: secondOriginalBond.currency,
+              uniqueIdentificationNumber: secondOriginalBond.uniqueIdentificationNumber,
+              ukefGuaranteeInMonths: secondOriginalBond.ukefGuaranteeInMonths,
+            },
+            {
               _id: lastOriginalBond._id,
               bondStage: lastOriginalBond.bondStage,
-              'requestedCoverStartDate-day': lastOriginalBond['requestedCoverStartDate-day'],
-              'requestedCoverStartDate-month': lastOriginalBond['requestedCoverStartDate-month'],
-              'requestedCoverStartDate-year': lastOriginalBond['requestedCoverStartDate-year'],
-              'coverEndDate-day': lastOriginalBond['coverEndDate-day'],
-              'coverEndDate-month': lastOriginalBond['coverEndDate-month'],
-              'coverEndDate-year': lastOriginalBond['coverEndDate-year'],
+              requestedCoverStartDate: lastOriginalBond.requestedCoverStartDate,
               facilityValue: lastOriginalBond.facilityValue,
               currencySameAsSupplyContractCurrency: lastOriginalBond.currencySameAsSupplyContractCurrency,
-              currency: lastOriginalBond.currency,
               uniqueIdentificationNumber: lastOriginalBond.uniqueIdentificationNumber,
               ukefGuaranteeInMonths: lastOriginalBond.ukefGuaranteeInMonths,
             },
@@ -180,9 +186,6 @@ describe('/v1/deals/:id/clone', () => {
               currency: firstOriginalLoan.currency,
               ukefGuaranteeInMonths: firstOriginalLoan.ukefGuaranteeInMonths,
               requestedCoverStartDate: firstOriginalLoan.requestedCoverStartDate,
-              'requestedCoverStartDate-day': firstOriginalLoan['requestedCoverStartDate-day'],
-              'requestedCoverStartDate-month': firstOriginalLoan['requestedCoverStartDate-month'],
-              'requestedCoverStartDate-year': firstOriginalLoan['requestedCoverStartDate-year'],
               'coverEndDate-day': firstOriginalLoan['coverEndDate-day'],
               'coverEndDate-month': firstOriginalLoan['coverEndDate-month'],
               'coverEndDate-year': firstOriginalLoan['coverEndDate-year'],
@@ -190,9 +193,6 @@ describe('/v1/deals/:id/clone', () => {
             {
               _id: lastOriginalLoan._id,
               requestedCoverStartDate: lastOriginalLoan.requestedCoverStartDate,
-              'requestedCoverStartDate-day': lastOriginalLoan['requestedCoverStartDate-day'],
-              'requestedCoverStartDate-month': lastOriginalLoan['requestedCoverStartDate-month'],
-              'requestedCoverStartDate-year': lastOriginalLoan['requestedCoverStartDate-year'],
               'coverEndDate-day': lastOriginalLoan['coverEndDate-day'],
               'coverEndDate-month': lastOriginalLoan['coverEndDate-month'],
               'coverEndDate-year': lastOriginalLoan['coverEndDate-year'],
