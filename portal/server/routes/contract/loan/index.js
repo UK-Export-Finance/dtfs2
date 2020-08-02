@@ -24,12 +24,13 @@ import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 
 const router = express.Router();
 
-const userCanEditLoan = (user, deal) => {
+const userCanAccessLoan = (user, deal) => {
   if (!user.roles.includes('maker')) {
     return false;
   }
 
-  if (deal.details.status === 'Acknowledged by UKEF') {
+  if (deal.details.status === 'Acknowledged by UKEF'
+      || deal.details.status === 'Ready for Checker\'s approval') {
     return false;
   }
 
@@ -49,7 +50,7 @@ const userCanIssueFacility = (user, deal, loan) => {
 
   if (isMaker
     && (deal.details.status === 'Acknowledged by UKEF' || deal.details.status === 'Ready for Checker\'s approval')
-    && deal.submissionType === 'Automatic Inclusion Notice'
+    && deal.details.submissionType === 'Automatic Inclusion Notice'
     && loan.facilityStage === 'Conditional'
     && !loan.issueFacilityDetailsSubmitted) {
     return true;
@@ -129,7 +130,7 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]
 
   const { user } = req.session;
 
-  if (!userCanEditLoan(user, req.apiData.deal)) {
+  if (!userCanAccessLoan(user, req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -173,7 +174,7 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL,
 
   const { user } = req.session;
 
-  if (!userCanEditLoan(user, req.apiData.deal)) {
+  if (!userCanAccessLoan(user, req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -215,7 +216,7 @@ router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL])
 
   const { user } = req.session;
 
-  if (!userCanEditLoan(user, req.apiData.deal)) {
+  if (!userCanAccessLoan(user, req.apiData.deal)) {
     return res.redirect('/');
   }
 
