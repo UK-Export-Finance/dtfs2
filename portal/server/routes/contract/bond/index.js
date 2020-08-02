@@ -312,7 +312,7 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/bond/:_bondId/issue-facility', provide([BOND]), async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/issue-facility', provide([BOND]), async (req, res) => {
   const { _id: dealId } = requestParams(req);
   const { bond } = req.apiData.bond;
   const { user } = req.session;
@@ -333,17 +333,17 @@ router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
   const { user } = req.session;
 
   const { validationErrors, loan } = await postToApi(
-    // api.updateBondIssueFacility(
-    //   dealId,
-    //   bondId,
-    //   req.body,
-    //   userToken,
-    // ),
-    // errorHref,
+    api.updateBondIssueFacility(
+      dealId,
+      bondId,
+      req.body,
+      userToken,
+    ),
+    errorHref,
   );
 
   if (validationErrors) {
-    return res.render('loan/loan-issue-facility.njk', {
+    return res.render('loan/loan-issue-facility.njk', { 
       user,
       validationErrors,
       loan,

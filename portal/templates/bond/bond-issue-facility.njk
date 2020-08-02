@@ -2,7 +2,6 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% import '_macros/date-field.njk' as dateField %}
-{% import './_macros/bank-reference-number-field.njk' as bankReferenceNumberField %}
 
 {% block pageTitle %}Bond Issue Facility{% endblock %}
 
@@ -83,8 +82,8 @@
           classes: "govuk-!-width-one-third",
           id: "uniqueIdentificationNumber",
           name: "uniqueIdentificationNumber",
-          value = bond.uniqueIdentificationNumber,
-          error = validationErrors.errorList.uniqueIdentificationNumber
+          value: bond.uniqueIdentificationNumber,
+          error: validationErrors.errorList.uniqueIdentificationNumber
         }) }}
 
       {% endif %}
