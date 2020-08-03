@@ -8,6 +8,7 @@ const {
 } = require('../facility-dates/requested-cover-start-date');
 const { createTimestampFromSubmittedValues } = require('../facility-dates/timestamp');
 const bondIssueFacilityValidationErrors = require('../validation/bond-issue-facility');
+const { hasValue } = require('../../utils/string');
 
 exports.updateBondIssueFacility = async (req, res) => {
   const {
@@ -32,6 +33,11 @@ exports.updateBondIssueFacility = async (req, res) => {
         ...bond,
         ...req.body,
       };
+
+      const bondHasUniqueIdentificationNumber = hasValue(bond.uniqueIdentificationNumber);
+      if (!bondHasUniqueIdentificationNumber) {
+        modifiedBond.uniqueIdentificationNumberRequiredForIssuance = true;
+      }
 
       if (hasAllRequestedCoverStartDateValues(modifiedBond)) {
         modifiedBond = updateRequestedCoverStartDate(modifiedBond);
