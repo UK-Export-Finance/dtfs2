@@ -17,6 +17,7 @@
   {% endif %}
 
   <h1 class="govuk-heading-l">Bond Issue Facility</h1>
+  <p>deal submissionDate: {{ deal.details.submissionDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}</p>
 
   <form method="POST" autocomplete="off" novalidate>
 
@@ -50,25 +51,18 @@
       error = validationErrors.errorList.coverEndDate
     )}}
 
-
-    {# todo, if not provided before... or has errors ... or has value and issue facility not submitted
-       or something like that....
-    #}
-    {# {% if not bond.uniqueIdentificationNumber %} #}
-      {{ govukInput({
-        label: {
-          text: "Bond's unique ID"
-        },
-        classes: "govuk-!-width-one-third",
-        id: "uniqueIdentificationNumber",
-        name: "uniqueIdentificationNumber",
-        value: bond.uniqueIdentificationNumber,
-        errorMessage: validationErrors.errorList.uniqueIdentificationNumber and {
-          text: validationErrors.errorList.uniqueIdentificationNumber.text
-        }
-      }) }}
-
-    {# {% endif %} #}
+    {{ govukInput({
+      label: {
+        text: "Bond's unique ID"
+      },
+      classes: "govuk-!-width-one-third",
+      id: "uniqueIdentificationNumber",
+      name: "uniqueIdentificationNumber",
+      value: bond.uniqueIdentificationNumber,
+      errorMessage: validationErrors.errorList.uniqueIdentificationNumber and {
+        text: validationErrors.errorList.uniqueIdentificationNumber.text
+      }
+    }) }}
 
     <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Save</button>
 
