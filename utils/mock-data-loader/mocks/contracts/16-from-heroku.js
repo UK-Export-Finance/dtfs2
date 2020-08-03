@@ -210,7 +210,8 @@ module.exports = {
                 "currency" : {
                     "text" : "GBP - UK Sterling",
                     "id" : "GBP"
-                }
+                },
+                createdDate: '1591014296214',
             },
             {
                 "_id": "2",
@@ -233,7 +234,8 @@ module.exports = {
                 "currency" : {
                     "text" : "GBP - UK Sterling",
                     "id" : "GBP"
-                }
+                },
+                createdDate: '1591014296214',
             }
         ]
     },
@@ -258,7 +260,8 @@ module.exports = {
                 "minimumQuarterlyFee" : "",
                 "ukefExposure" : "80,000.00",
                 "premiumType" : "At maturity",
-                "dayCountBasis" : "365"
+                "dayCountBasis" : "365",
+                createdDate: '1591014296214',
             },
             {
                 "_id": "2",
@@ -277,7 +280,8 @@ module.exports = {
                 "currency" : {
                     "text" : "GBP - UK Sterling",
                     "id" : "GBP"
-                }
+                },
+                createdDate: '1591014296214',
             }
         ]
     },
