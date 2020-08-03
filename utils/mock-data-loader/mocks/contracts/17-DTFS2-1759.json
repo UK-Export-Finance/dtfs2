@@ -1,6 +1,6 @@
 {
     "details" : {
-        "status" : "Ready for Checker's approval",
+        "status" : "Draft",
         "bankSupplyContractID" : "DTFS2-1246-001",
         "bankSupplyContractName" : "DTFS2-1246-001",
         "created" : "1595934077196",
@@ -216,6 +216,7 @@
     "bondTransactions" : {
         "items" : [
             {
+                "_id": "1",
                 "bondIssuer" : "",
                 "bondType" : "Bid bond",
                 "bondStage" : "Unissued",
@@ -233,11 +234,12 @@
                 "createdDate": "1589022974958"
             },
             {
+                "_id": "2",
                 "bondIssuer" : "",
                 "bondType" : "Progress payment bond",
                 "bondStage" : "Issued",
                 "requestedCoverStartDate-day" : "28",
-                "requestedCoverStartDate-month" : "07",
+                "requestedCoverStartDate-month" : "08",
                 "requestedCoverStartDate-year" : "2020",
                 "coverEndDate-day" : "28",
                 "coverEndDate-month" : "02",
@@ -260,6 +262,7 @@
     "loanTransactions" : {
         "items" : [
             {
+                "_id": "3",
                 "facilityStage" : "Conditional",
                 "ukefGuaranteeInMonths" : "60",
                 "bankReferenceNumber" : "",
@@ -275,9 +278,10 @@
                 "createdDate": "1589022974958"
             },
             {
+                "_id": "4",
                 "facilityStage" : "Unconditional",
                 "requestedCoverStartDate-day" : "28",
-                "requestedCoverStartDate-month" : "07",
+                "requestedCoverStartDate-month" : "08",
                 "requestedCoverStartDate-year" : "2020",
                 "coverEndDate-day" : "02",
                 "coverEndDate-month" : "10",

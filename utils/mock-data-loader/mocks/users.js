@@ -272,6 +272,17 @@ const USERS = [
       id: '*',
     },
   },
+  {
+    username: 'INTERFACE',
+    password: 'INTERFACE',
+    firstname: 'Interface',
+    surname: 'typeB',
+    timezone: 'Europe/London',
+    roles: ['interface'],
+    bank: {
+      id: '*',
+    },
+  },
 
 
 ];

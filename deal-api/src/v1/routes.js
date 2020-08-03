@@ -46,7 +46,7 @@ authRouter.route('/deals/:id/status')
     dealStatus.findOne,
   )
   .put(
-    validate({ role: ['maker', 'checker'] }),
+    validate({ role: ['maker', 'checker', 'interface'] }),
     dealStatus.update,
   );
 
