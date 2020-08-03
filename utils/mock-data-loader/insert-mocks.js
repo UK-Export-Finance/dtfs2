@@ -7,6 +7,8 @@ const insertMocks = async () => {
   const token = await tokenFor({
     username: 're-insert-mocks',
     password: 'temporary',
+    firstname: 'Data',
+    surname: 'MocLoader',
     roles: ['maker', 'editor', 'data-admin'],
     bank: MOCKS.BANKS.find((bank) => bank.id === '956'),
   });
