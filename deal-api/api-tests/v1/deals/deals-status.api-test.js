@@ -577,32 +577,68 @@ describe('/v1/deals/:id/status', () => {
         updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
       });
 
-      it('adds `issueFacilityDetailsSubmitted` property to loans that have `Conditional` facilityStage and `issue facility details` provided flag', async () => {
-        expect(updatedDeal.status).toEqual(200);
-        expect(updatedDeal.body).toEqual({});
+      describe('any loans that have `Conditional` facilityStage and `issue facility details provided` flag', () => {
+        it('should add `issueFacilityDetailsSubmitted` property', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toEqual({});
 
-        const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-        const issuedLoanThatShouldBeUpdated = body.deal.loanTransactions.items.find((l) =>
-          l.facilityStage = 'Conditional'
-          && l.issueFacilityDetailsProvided === true
-        );
+          const issuedLoanThatShouldBeUpdated = body.deal.loanTransactions.items.find((l) =>
+            l.facilityStage = 'Conditional'
+            && l.issueFacilityDetailsProvided === true
+          );
 
-        expect(issuedLoanThatShouldBeUpdated.issueFacilityDetailsSubmitted).toEqual(true);
+          expect(issuedLoanThatShouldBeUpdated.issueFacilityDetailsSubmitted).toEqual(true);
+        });
+
+        it('defaults requestedCoverStartDate to the issuedDate if no requestedCoverStartDate', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toEqual({});
+
+          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+          const issuedLoanThatShouldBeUpdated = createdDeal.loanTransactions.items.find((l) =>
+            l.facilityStage = 'Conditional'
+            && l.issueFacilityDetailsProvided === true
+            && !l.requestedCoverStartDate
+          );
+
+          const loanInUpdatedDeal = body.deal.loanTransactions.items.find((l) => l._id === issuedLoanThatShouldBeUpdated._id);
+          expect(loanInUpdatedDeal.requestedCoverStartDate).toEqual(issuedLoanThatShouldBeUpdated.issuedDate);
+        });
       });
 
-      it('adds `issueFacilityDetailsSubmitted` property to bonds that have `Unissued` bondStage and `issue facility details` provided flag', async () => {
-        expect(updatedDeal.status).toEqual(200);
-        expect(updatedDeal.body).toEqual({});
+      describe('any bonds that have `Unissued` bondStage and `issue facility details provided` flag', () => {
+        it('should add `issueFacilityDetailsSubmitted` property', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toEqual({});
 
-        const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-        const unissuedBondThatShouldBeUpdated = body.deal.bondTransactions.items.find((b) =>
-          b.bondStage === 'Unissued'
-          && b.issueFacilityDetailsProvided === true
-        );
+          const unissuedBondThatShouldBeUpdated = body.deal.bondTransactions.items.find((b) =>
+            b.bondStage === 'Unissued'
+            && b.issueFacilityDetailsProvided === true
+          );
 
-        expect(unissuedBondThatShouldBeUpdated.issueFacilityDetailsSubmitted).toEqual(true);
+          expect(unissuedBondThatShouldBeUpdated.issueFacilityDetailsSubmitted).toEqual(true);
+        });
+
+        it('defaults requestedCoverStartDate to the issuedDate if no requestedCoverStartDate', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toEqual({});
+
+          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+          const unissuedBondThatShouldBeUpdated = createdDeal.bondTransactions.items.find((b) =>
+            b.bondStage === 'Unissued'
+            && b.issueFacilityDetailsProvided === true
+            && !b.requestedCoverStartDate
+          );
+
+          const bondInUpdatedDeal = body.deal.bondTransactions.items.find((l) => l._id === unissuedBondThatShouldBeUpdated._id);
+          expect(bondInUpdatedDeal.requestedCoverStartDate).toEqual(unissuedBondThatShouldBeUpdated.issuedDate);
+        });
       });
 
       it('adds a submissionDate to the deal', async () => {

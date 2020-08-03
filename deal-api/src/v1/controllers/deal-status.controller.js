@@ -94,18 +94,21 @@ const updateIssuedFacilities = async (collection, deal) => {
   const update = (facilities) => {
     const arr = facilities;
 
-    arr.forEach((facility) => {
-      const f = facility;
+    arr.forEach((f) => {
+      const facility = f;
 
-      const shouldUpdateIssuedLoanFacility = (f.facilityStage === 'Conditional' && f.issueFacilityDetailsProvided);
-      const shouldUpdateIssuedBondFacility = (f.bondStage === 'Unissued' && f.issueFacilityDetailsProvided);
+      const shouldUpdateIssuedLoanFacility = (facility.facilityStage === 'Conditional' && facility.issueFacilityDetailsProvided);
+      const shouldUpdateIssuedBondFacility = (facility.bondStage === 'Unissued' && facility.issueFacilityDetailsProvided);
       const shouldUpdateIssuedFacility = (shouldUpdateIssuedLoanFacility || shouldUpdateIssuedBondFacility);
 
       if (shouldUpdateIssuedFacility) {
-        f.issueFacilityDetailsSubmitted = true;
+        facility.issueFacilityDetailsSubmitted = true;
+        if (!facility.requestedCoverStartDate) {
+          facility.requestedCoverStartDate = facility.issuedDate;
+        }
       }
 
-      return f;
+      return facility;
     });
     return arr;
   };
