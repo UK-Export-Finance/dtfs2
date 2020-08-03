@@ -99,7 +99,8 @@ module.exports = {
                 "ukefExposure" : "8,764,197,451,986.72",
                 "feeFrequency" : "Monthly",
                 "feeType" : "In advance",
-                "dayCountBasis" : "360"
+                "dayCountBasis" : "360",
+                "createdDate": "1589454000000",
             },
             {
                 "bondIssuer" : "",
@@ -115,7 +116,8 @@ module.exports = {
                 "minimumRiskMarginFee" : "",
                 "ukefExposure" : "80,000.00",
                 "feeType" : "At maturity",
-                "dayCountBasis" : "365"
+                "dayCountBasis" : "365",
+                "createdDate": "1589454000000",
             },
             {
                 "bondIssuer" : "",
@@ -145,7 +147,8 @@ module.exports = {
                 "minimumRiskMarginFee" : "100.99",
                 "ukefExposure" : "280,000.00",
                 "feeType" : "At maturity",
-                "dayCountBasis" : "365"
+                "dayCountBasis" : "365",
+                "createdDate": "1589454000000",
             },
             {
                 "bondIssuer" : "Bond Issuer (optional) - Issued Bond.8237482734872843723847823748728347823748273487243873287498273498273489723847289374897248972384784379823748723 END",
@@ -176,7 +179,8 @@ module.exports = {
                 "ukefExposure" : "79,012,345,687,901.20",
                 "feeFrequency" : "Annually",
                 "feeType" : "In arrear",
-                "dayCountBasis" : "365"
+                "dayCountBasis" : "365",
+                "createdDate": "1589454000000",
             }
         ]
     },

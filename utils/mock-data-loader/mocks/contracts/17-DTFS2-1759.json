@@ -229,7 +229,8 @@
                 "minimumRiskMarginFee" : "",
                 "ukefExposure" : "80,000.00",
                 "feeType" : "At maturity",
-                "dayCountBasis" : "365"
+                "dayCountBasis" : "365",
+                "createdDate": "1589022974958"
             },
             {
                 "bondIssuer" : "",
@@ -251,7 +252,8 @@
                 "minimumRiskMarginFee" : "",
                 "ukefExposure" : "160,000.00",
                 "feeType" : "At maturity",
-                "dayCountBasis" : "365"
+                "dayCountBasis" : "365",
+                "createdDate": "1589022974958"
             }
         ]
     },
@@ -269,7 +271,8 @@
                 "minimumQuarterlyFee" : "",
                 "ukefExposure" : "240,000.00",
                 "premiumType" : "At maturity",
-                "dayCountBasis" : "365"
+                "dayCountBasis" : "365",
+                "createdDate": "1589022974958"
             },
             {
                 "facilityStage" : "Unconditional",
@@ -293,7 +296,8 @@
                 "currency" : {
                     "text" : "GBP - UK Sterling",
                     "id" : "GBP"
-                }
+                },
+                "createdDate": "1589022974958"
             }
         ]
     },
