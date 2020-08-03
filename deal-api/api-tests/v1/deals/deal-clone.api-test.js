@@ -115,53 +115,40 @@ describe('/v1/deals/:id/clone', () => {
 
         const firstOriginalBond = originalDeal.bondTransactions.items[0];
         const secondOriginalBond = originalDeal.bondTransactions.items[1];
-        const lastOriginalBond = originalDeal.bondTransactions.items[2];
 
-        const expectedBondTransactions = {
-          items: [
-            {
-              _id: firstOriginalBond._id,
-              bondStage: firstOriginalBond.bondStage,
-              requestedCoverStartDate: firstOriginalBond.requestedCoverStartDate,
-              'coverEndDate-day': firstOriginalBond['coverEndDate-day'],
-              'coverEndDate-month': firstOriginalBond['coverEndDate-month'],
-              'coverEndDate-year': firstOriginalBond['coverEndDate-year'],
-              facilityValue: firstOriginalBond.facilityValue,
-              currencySameAsSupplyContractCurrency: firstOriginalBond.currencySameAsSupplyContractCurrency,
-              currency: firstOriginalBond.currency,
-              conversionRate: firstOriginalBond.conversionRate,
-              'conversionRateDate-day': firstOriginalBond['conversionRateDate-day'],
-              'conversionRateDate-month': firstOriginalBond['conversionRateDate-month'],
-              'conversionRateDate-year': firstOriginalBond['conversionRateDate-year'],
-              uniqueIdentificationNumber: firstOriginalBond.uniqueIdentificationNumber,
-              ukefGuaranteeInMonths: firstOriginalBond.ukefGuaranteeInMonths,
-            },
-            {
-              _id: secondOriginalBond._id,
-              bondStage: secondOriginalBond.bondStage,
-              requestedCoverStartDate: secondOriginalBond.requestedCoverStartDate,
-              'coverEndDate-day': secondOriginalBond['coverEndDate-day'],
-              'coverEndDate-month': secondOriginalBond['coverEndDate-month'],
-              'coverEndDate-year': secondOriginalBond['coverEndDate-year'],
-              facilityValue: secondOriginalBond.facilityValue,
-              currencySameAsSupplyContractCurrency: secondOriginalBond.currencySameAsSupplyContractCurrency,
-              currency: secondOriginalBond.currency,
-              uniqueIdentificationNumber: secondOriginalBond.uniqueIdentificationNumber,
-              ukefGuaranteeInMonths: secondOriginalBond.ukefGuaranteeInMonths,
-            },
-            {
-              _id: lastOriginalBond._id,
-              bondStage: lastOriginalBond.bondStage,
-              requestedCoverStartDate: lastOriginalBond.requestedCoverStartDate,
-              facilityValue: lastOriginalBond.facilityValue,
-              currencySameAsSupplyContractCurrency: lastOriginalBond.currencySameAsSupplyContractCurrency,
-              uniqueIdentificationNumber: lastOriginalBond.uniqueIdentificationNumber,
-              ukefGuaranteeInMonths: lastOriginalBond.ukefGuaranteeInMonths,
-            },
-          ],
+        const expectedFirstBondTransaction = {
+          _id: firstOriginalBond._id,
+          bondStage: firstOriginalBond.bondStage,
+          requestedCoverStartDate: firstOriginalBond.requestedCoverStartDate,
+          'coverEndDate-day': firstOriginalBond['coverEndDate-day'],
+          'coverEndDate-month': firstOriginalBond['coverEndDate-month'],
+          'coverEndDate-year': firstOriginalBond['coverEndDate-year'],
+          facilityValue: firstOriginalBond.facilityValue,
+          currencySameAsSupplyContractCurrency: firstOriginalBond.currencySameAsSupplyContractCurrency,
+          currency: firstOriginalBond.currency,
+          conversionRate: firstOriginalBond.conversionRate,
+          'conversionRateDate-day': firstOriginalBond['conversionRateDate-day'],
+          'conversionRateDate-month': firstOriginalBond['conversionRateDate-month'],
+          'conversionRateDate-year': firstOriginalBond['conversionRateDate-year'],
+          uniqueIdentificationNumber: firstOriginalBond.uniqueIdentificationNumber,
+          ukefGuaranteeInMonths: firstOriginalBond.ukefGuaranteeInMonths,
+        };
+        const expectedSecondBondTransaction = {
+            _id: secondOriginalBond._id,
+            bondStage: secondOriginalBond.bondStage,
+            requestedCoverStartDate: secondOriginalBond.requestedCoverStartDate,
+            'coverEndDate-day': secondOriginalBond['coverEndDate-day'],
+            'coverEndDate-month': secondOriginalBond['coverEndDate-month'],
+            'coverEndDate-year': secondOriginalBond['coverEndDate-year'],
+            facilityValue: secondOriginalBond.facilityValue,
+            currencySameAsSupplyContractCurrency: secondOriginalBond.currencySameAsSupplyContractCurrency,
+            currency: secondOriginalBond.currency,
+            uniqueIdentificationNumber: secondOriginalBond.uniqueIdentificationNumber,
+            ukefGuaranteeInMonths: secondOriginalBond.ukefGuaranteeInMonths,
         };
 
-        expect(body.bondTransactions).toEqual(expectedBondTransactions);
+        expect(body.bondTransactions.items[0]).toEqual(expectedFirstBondTransaction);
+        expect(body.bondTransactions.items[1]).toEqual(expectedSecondBondTransaction);
       });
 
       it('clones a deal with only specific loanTransactions fields', async () => {
@@ -174,42 +161,40 @@ describe('/v1/deals/:id/clone', () => {
         const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
         const firstOriginalLoan = originalDeal.loanTransactions.items[0];
-        const lastOriginalLoan = originalDeal.loanTransactions.items[1];
+        const thirdOriginalLoan = originalDeal.loanTransactions.items[2];
 
-        const expectedLoanTransactions = {
-          items: [
-            {
-              _id: firstOriginalLoan._id,
-              bankReferenceNumber: firstOriginalLoan.bankReferenceNumber,
-              facilityValue: firstOriginalLoan.facilityValue,
-              currencySameAsSupplyContractCurrency: firstOriginalLoan.currencySameAsSupplyContractCurrency,
-              currency: firstOriginalLoan.currency,
-              ukefGuaranteeInMonths: firstOriginalLoan.ukefGuaranteeInMonths,
-              requestedCoverStartDate: firstOriginalLoan.requestedCoverStartDate,
-              'coverEndDate-day': firstOriginalLoan['coverEndDate-day'],
-              'coverEndDate-month': firstOriginalLoan['coverEndDate-month'],
-              'coverEndDate-year': firstOriginalLoan['coverEndDate-year'],
-            },
-            {
-              _id: lastOriginalLoan._id,
-              requestedCoverStartDate: lastOriginalLoan.requestedCoverStartDate,
-              'coverEndDate-day': lastOriginalLoan['coverEndDate-day'],
-              'coverEndDate-month': lastOriginalLoan['coverEndDate-month'],
-              'coverEndDate-year': lastOriginalLoan['coverEndDate-year'],
-              bankReferenceNumber: lastOriginalLoan.bankReferenceNumber,
-              facilityValue: lastOriginalLoan.facilityValue,
-              currencySameAsSupplyContractCurrency: lastOriginalLoan.currencySameAsSupplyContractCurrency,
-              currency: lastOriginalLoan.currency,
-              conversionRate: lastOriginalLoan.conversionRate,
-              'conversionRateDate-day': lastOriginalLoan['conversionRateDate-day'],
-              'conversionRateDate-month': lastOriginalLoan['conversionRateDate-month'],
-              'conversionRateDate-year': lastOriginalLoan['conversionRateDate-year'],
-              disbursementAmount: lastOriginalLoan.disbursementAmount,
-            },
-          ],
+        const expectedFirstLoanTransaction = {
+          _id: firstOriginalLoan._id,
+          bankReferenceNumber: firstOriginalLoan.bankReferenceNumber,
+          facilityValue: firstOriginalLoan.facilityValue,
+          currencySameAsSupplyContractCurrency: firstOriginalLoan.currencySameAsSupplyContractCurrency,
+          currency: firstOriginalLoan.currency,
+          ukefGuaranteeInMonths: firstOriginalLoan.ukefGuaranteeInMonths,
+          requestedCoverStartDate: firstOriginalLoan.requestedCoverStartDate,
+          'coverEndDate-day': firstOriginalLoan['coverEndDate-day'],
+          'coverEndDate-month': firstOriginalLoan['coverEndDate-month'],
+          'coverEndDate-year': firstOriginalLoan['coverEndDate-year'],
         };
 
-        expect(body.loanTransactions).toEqual(expectedLoanTransactions);
+        const expectedThirdLoanTransaction = {
+          _id: thirdOriginalLoan._id,
+          requestedCoverStartDate: thirdOriginalLoan.requestedCoverStartDate,
+          'coverEndDate-day': thirdOriginalLoan['coverEndDate-day'],
+          'coverEndDate-month': thirdOriginalLoan['coverEndDate-month'],
+          'coverEndDate-year': thirdOriginalLoan['coverEndDate-year'],
+          bankReferenceNumber: thirdOriginalLoan.bankReferenceNumber,
+          facilityValue: thirdOriginalLoan.facilityValue,
+          currencySameAsSupplyContractCurrency: thirdOriginalLoan.currencySameAsSupplyContractCurrency,
+          currency: thirdOriginalLoan.currency,
+          conversionRate: thirdOriginalLoan.conversionRate,
+          'conversionRateDate-day': thirdOriginalLoan['conversionRateDate-day'],
+          'conversionRateDate-month': thirdOriginalLoan['conversionRateDate-month'],
+          'conversionRateDate-year': thirdOriginalLoan['conversionRateDate-year'],
+          disbursementAmount: thirdOriginalLoan.disbursementAmount,
+        };
+
+        expect(body.loanTransactions.items[0]).toEqual(expectedFirstLoanTransaction);
+        expect(body.loanTransactions.items[2]).toEqual(expectedThirdLoanTransaction);
       });
 
       it('returns empty bondTransactions and loanTransactions when empty in original deal', async () => {
