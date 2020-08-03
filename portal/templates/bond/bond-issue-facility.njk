@@ -50,18 +50,22 @@
       error = validationErrors.errorList.coverEndDate
     )}}
 
-    {{ govukInput({
-      label: {
-        text: "Bond's unique ID"
-      },
-      classes: "govuk-!-width-one-third",
-      id: "uniqueIdentificationNumber",
-      name: "uniqueIdentificationNumber",
-      value: bond.uniqueIdentificationNumber,
-      errorMessage: validationErrors.errorList.uniqueIdentificationNumber and {
-        text: validationErrors.errorList.uniqueIdentificationNumber.text
-      }
-    }) }}
+    {% set uniqueIdentificationNumberRequiredForIssuance = bond.uniqueIdentificationNumberRequiredForIssuance or not bond.uniqueIdentificationNumber %}
+
+    {% if uniqueIdentificationNumberRequiredForIssuance %}
+      {{ govukInput({
+        label: {
+          text: "Bond's unique ID"
+        },
+        classes: "govuk-!-width-one-third",
+        id: "uniqueIdentificationNumber",
+        name: "uniqueIdentificationNumber",
+        value: bond.uniqueIdentificationNumber,
+        errorMessage: validationErrors.errorList.uniqueIdentificationNumber and {
+          text: validationErrors.errorList.uniqueIdentificationNumber.text
+        }
+      }) }}
+    {% endif %}
 
     <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Save</button>
 

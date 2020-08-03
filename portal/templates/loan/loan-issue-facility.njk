@@ -75,12 +75,16 @@
         }
       }) }}
 
-      {{bankReferenceNumberField.render(
-        id = 'bankReferenceNumber',
-        label = 'Bank reference number',
-        value = loan.bankReferenceNumber,
-        error = validationErrors.errorList.bankReferenceNumber
-      )}}
+      {% set bankReferenceNumberRequiredForIssuance = loan.bankReferenceNumberRequiredForIssuance or not loan.bankReferenceNumber %}
+
+      {% if bankReferenceNumberRequiredForIssuance %}
+        {{bankReferenceNumberField.render(
+          id = 'bankReferenceNumber',
+          label = 'Bank reference number',
+          value = loan.bankReferenceNumber,
+          error = validationErrors.errorList.bankReferenceNumber
+        )}}
+      {% endif %}
 
       <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Save</button>
 

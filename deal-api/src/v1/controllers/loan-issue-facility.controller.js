@@ -8,6 +8,7 @@ const {
 const { hasAllIssuedDateValues } = require('../facility-dates/issued-date');
 const { createTimestampFromSubmittedValues } = require('../facility-dates/timestamp');
 const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
+const { hasValue } = require('../../utils/string');
 
 exports.updateLoanIssueFacility = async (req, res) => {
   const {
@@ -32,6 +33,11 @@ exports.updateLoanIssueFacility = async (req, res) => {
         ...loan,
         ...req.body,
       };
+
+      const loanHasBankReferenceNumber = hasValue(loan.bankReferenceNumber);
+      if (!loanHasBankReferenceNumber) {
+        modifiedLoan.bankReferenceNumberRequiredForIssuance = true;
+      }
 
       if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {
         modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
