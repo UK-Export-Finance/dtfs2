@@ -1,4 +1,4 @@
-{% macro render(bond) %}
+{% macro render(bond, user) %}
 
   <div data-cy="bond-submission-details">
     <h2 class="govuk-heading-m">Bond details</h2>
@@ -38,13 +38,25 @@
         </div>
       {% endif %}
 
-      {% if bond['requestedCoverStartDate-day'] and bond['requestedCoverStartDate-month'] and bond['requestedCoverStartDate-year'] %}
+      {# TODO: component test. Need to think component test data for different statuses/data. #}
+      {% if bond.issuedDate %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Issued Date
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="issued-date">
+            {{ bond.issuedDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
+          </dd>
+        </div>
+      {% endif %}
+
+      {% if bond.requestedCoverStartDate %}
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key govuk-body-s">
             Requested Cover Start Date
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s"  data-cy="requested-cover-start-date">
-            {{ bond['requestedCoverStartDate-day'] }}/{{ bond['requestedCoverStartDate-month'] }}/{{ bond['requestedCoverStartDate-year'] }}
+            {{ loan.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
           </dd>
         </div>
       {% endif %}
