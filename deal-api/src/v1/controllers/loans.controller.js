@@ -196,7 +196,9 @@ exports.updateLoan = async (req, res) => {
 
       if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {
         modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
-      } else {
+      }
+
+      if (!modifiedLoan.requestedCoverStartDate && !hasAllRequestedCoverStartDateValues(modifiedLoan)) {
         delete modifiedLoan.requestedCoverStartDate;
       }
 
