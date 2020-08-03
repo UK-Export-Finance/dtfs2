@@ -192,9 +192,7 @@ exports.updateBond = async (req, res) => {
 
       if (hasAllRequestedCoverStartDateValues(modifiedBond)) {
         modifiedBond = updateRequestedCoverStartDate(modifiedBond);
-      }
-
-      if (!modifiedBond.requestedCoverStartDate && !hasAllRequestedCoverStartDateValues(modifiedBond)) {
+      } else {
         delete modifiedBond.requestedCoverStartDate;
       }
 

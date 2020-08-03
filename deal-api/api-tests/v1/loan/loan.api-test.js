@@ -437,7 +437,7 @@ describe('/v1/deals/:id/loan', () => {
       });
     });
 
-    it('should generate requestedCoverStartDate timestamp and remove day/month/year fields', async () => {
+    it('should generate requestedCoverStartDate timestamp', async () => {
       const { dealId, loanId } = await addLoanToDeal();
 
       const loan = {
@@ -459,9 +459,10 @@ describe('/v1/deals/:id/loan', () => {
 
       expect(status).toEqual(200);
       expect(body.loan.requestedCoverStartDate).toEqual(expect.any(String));
-      expect(body.loan['requestedCoverStartDate-day']).toEqual(undefined);
-      expect(body.loan['requestedCoverStartDate-month']).toEqual(undefined);
-      expect(body.loan['requestedCoverStartDate-year']).toEqual(undefined);
+      expect(body.loan['requestedCoverStartDate-day']).toEqual(loan['requestedCoverStartDate-day']);
+      expect(body.loan['requestedCoverStartDate-month']).toEqual(loan['requestedCoverStartDate-month']);
+      expect(body.loan['requestedCoverStartDate-year']).toEqual(loan['requestedCoverStartDate-year']);
+
     });
   });
 
