@@ -1,7 +1,10 @@
 
 const xml2js = require('xml2js');
 const dealController = require('../deal.controller');
-const { generateStatus, updateComments } = require('./type-b-helpers');
+
+
+const { generateStatus } = require('./type-b-helpers');
+const { updateStatus } = require('./internal-api');
 
 const processTypeB = async ({ fileContents }) => {
   const { Deal: workflowDeal, error } = await xml2js.parseStringPromise(fileContents /* , options */)
@@ -20,54 +23,45 @@ const processTypeB = async ({ fileContents }) => {
     return false;
   }
 
-  const bondTransactionItems = deal.bondTransactions.items.map((bond) => {
-    const workflowBondDetails = workflowDeal.BSSFacilities.find(
-      (b) => b.BSS_portal_facility_id[0] === bond._id, // eslint-disable-line no-underscore-dangle
-    );
+  // // const updatedDealInfo = {
+  // //   details: {
+  // //     status: generateStatus(deal, workflowDeal),
+  // //     ukefDealId: workflowDeal.UKEF_deal_id[0],
+  // //   },
+  // // };
+  // //
+  // const updateRequest = {
+  //   params: {
+  //     id: dealId,
+  //   },
+  //   body: updatedDealInfo,
+  // };
+  // console.log(`updateRequest : \n${JSON.stringify(updateRequest, null, 2)}`);
+  //
+  // await updateComments(dealId, workflowDeal);
 
-    return {
-      ...bond,
-      ukefFacilityID: workflowBondDetails.BSS_ukef_facility_id,
-    };
-  });
+  const { Deal_comments: dealComments = [] } = workflowDeal;
+  const { Action_Code: actionCode } = workflowDeal.$;
 
-  const loanTransactionItems = deal.loanTransactions.items.map((loan) => {
-    const workflowLoanDetails = workflowDeal.EWCSFacilities.find(
-      (b) => b.EWCS_portal_facility_id[0] === loan._id, // eslint-disable-line no-underscore-dangle
-    );
+  const user = {username:'INTERFACE', password:'INTERFACE'};
 
-    return {
-      ...loan,
-      ukefFacilityID: workflowLoanDetails.EWCS_ukef_facility_id,
-    };
-  });
+  if (dealComments.length) {
+      if (actionCode === '007') {
+        //TODO
+        // await dealCommentsController.addSpecialConditions(dealId, dealComments[0], user);
+      } else {
+        // await dealCommentsController.addComment(dealId, dealComments[0], user);
+        const updateData = {
+          comments: dealComments[0],
+          status: generateStatus(deal, workflowDeal),
+          ukefDealId: workflowDeal.UKEF_deal_id[0],
+        };
 
-  const updatedDealInfo = {
-    details: {
-      status: generateStatus(deal, workflowDeal),
-      ukefDealId: workflowDeal.UKEF_deal_id[0],
-    },
-    bondTransactions: {
-      items: bondTransactionItems,
-    },
-    loanTransactions: {
-      items: loanTransactionItems,
-    },
+        await updateStatus(user, dealId, updateData);
+      }
+    }
   };
 
-  const updateRequest = {
-    params: {
-      id: dealId,
-    },
-    body: updatedDealInfo,
-  };
-
-
-  await updateComments(dealId, workflowDeal);
-  const updatedDeal = await dealController.updateDeal(updateRequest);
-
-  return updatedDeal;
-};
 
 module.exports = {
   processTypeB,

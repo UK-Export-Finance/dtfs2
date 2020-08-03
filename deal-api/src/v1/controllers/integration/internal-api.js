@@ -1,67 +1,31 @@
-const request = require('supertest');
+const axios = require('axios');
 
-module.exports = (app) => ({
-  as: (user) => {
-    const token = (user && user.token) ? user.token : '';
+const login = (user) => {
+  return new Promise( (resolve, reject) => {
+    axios.post(`http://localhost:5001/v1/login`, user)
+      .then( (response) => {
+        resolve(response.data.token);
+      })
+      .catch( (err) => { reject(err); })
+  });
+};
 
-    return {
-      post: (data) => ({
-        to: async (url) => request(app)
-          .post(url)
-          .set({ Authorization: token || '' })
-          .send(data),
-      }),
+const updateStatus = async (user, id, updateStatus) => {
+  const token = await login(user);
 
-      postEach: (list) => ({
-        to: async (url) => {
-          const results = [];
+  const {status, data} = axios({
+    method: 'PUT',
+    headers: {
+      'content-type': 'application/json',
+      'Authorization': token || ''
+    },
+    data: updateStatus,
+    url: `http://localhost:5001/v1/deals/${id}/status`,
+  });
 
-          for (const data of list) {
-            const result = await request(app)
-              .post(url)
-              .set({ Authorization: token || '' })
-              .send(data);
+  console.log(JSON.stringify(data));
+};
 
-            results.push(result);
-          }
-
-          return results;
-        },
-      }),
-
-      put: (data) => ({
-        to: async (url) => request(app)
-          .put(url)
-          .set({ Authorization: token || '' })
-          .send(data),
-      }),
-
-      putMultipartForm: (data, files = []) => ({
-        to: async (url) => {
-          const apiRequest = request(app)
-            .put(url)
-            .set({ Authorization: token || '' });
-
-          if (files.length) {
-            files.forEach((file) => apiRequest.attach(file.fieldname, file.filepath));
-          }
-
-          Object.entries(data).forEach(([fieldname, value]) => {
-            apiRequest.field(fieldname, value);
-          });
-
-          return apiRequest;
-        },
-      }),
-
-      get: async (url) => request(app)
-        .get(url)
-        .set({ Authorization: token || '' }),
-
-      remove: async (url) => request(app)
-        .delete(url)
-        .set({ Authorization: token || '' })
-        .send(),
-    };
-  },
-});
+module.exports = {
+  updateStatus
+};
