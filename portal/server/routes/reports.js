@@ -700,31 +700,37 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   // .filter((deal) => (deal.details && deal.details.status === 'Draft'));
 
   console.log(`incompleteFacilities: ${util.inspect(incompleteFacilities)}`);
-  // incompleteFacilities.forEach((transaction) => console.log(transaction.deal_id, transaction.transactionType, transaction.transactionStage));
+  // incompleteFacilities.forEach((transaction) =>
+  // console.log(transaction.deal_id, transaction.transactionType, transaction.transactionStage));
   // console.log(`results: ${incompleteFacilities.length}`);
 
-  //loop through the incompletes and calculate the time remaining
+  // loop through the incompletes and calculate the time remaining
   const ONE_DAY = 86400000; // milliseconds
   const NINETY_DAYS = 7776000000; // milliseconds
   const getExpiryDate = (val) => {
     console.log(val.createdDate);
     const expiry = parseInt(val.createdDate, 10) + NINETY_DAYS;
     const id = val.deal_id;
-    const remainingDays = Math.floor( (expiry - Date.now()) / ONE_DAY );
-    return { id, expiry, remainingDays };
+    const remainingDays = Math.floor((expiry - Date.now()) / ONE_DAY);
+    return {
+      ...val,
+      id,
+      expiry,
+      remainingDays,
+    };
   };
 
-  const newArray = incompleteFacilities.map(getExpiryDate);
-  console.log(`newArray: ${util.inspect(newArray)}`);
+  const expiryDateOnFacilities = incompleteFacilities.map(getExpiryDate);
+  console.log(`newArray: ${util.inspect(expiryDateOnFacilities)}`);
 
   const trafficLights = {
     black: 0,
     red: 0,
     orange: 0,
     green: 0,
-  }
+  };
 
-  newArray.forEach((item) => {
+  expiryDateOnFacilities.forEach((item) => {
     console.log(item.id, item.remainingDays);
     if (item.remainingDays < 0) {
       trafficLights.black += 1;
@@ -778,11 +784,11 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     manualInclusionsWithConditions,
     manualInclusionsWithoutConditions,
   };
-
+  console.log('render');
   return res.render('reports/countdown-indicator.njk', {
     reportData,
     primaryNav,
-    facilities: facilitiesWithExpiryDate,
+    facilities: expiryDateOnFacilities,
     subNav: 'countdown-indicator',
     user: req.session.user,
   });
