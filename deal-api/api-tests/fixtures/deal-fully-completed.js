@@ -122,7 +122,7 @@ const deal = {
         ukefExposure: '1,234.56',
       },
       {
-        _id: '1000103',
+        _id: '1000104',
         bondIssuer: 'issuer',
         bondType: 'Retention bond',
         bondStage: 'Unissued',
@@ -178,7 +178,7 @@ const deal = {
         issueFacilityDetailsProvided: true,
       },
       {
-        _id: '1000004',
+        _id: '1000005',
         facilityStage: 'Conditional',
         ukefGuaranteeInMonths: '12',
         bankReferenceNumber: '123456',
@@ -205,7 +205,7 @@ const deal = {
         issueFacilityDetailsProvided: true,
       },
       {
-        _id: '1000005',
+        _id: '1000006',
         facilityStage: 'Unconditional',
         requestedCoverStartDate: moment().utc().valueOf(),
         'coverEndDate-day': `${now.add(1, 'month').format('DD')}`,
