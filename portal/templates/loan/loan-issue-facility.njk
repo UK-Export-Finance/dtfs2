@@ -75,14 +75,12 @@
         }
       }) }}
 
-      {% if not loan.bankReferenceNumber %}
-        {{bankReferenceNumberField.render(
-          id = 'bankReferenceNumber',
-          label = 'Bank reference number',
-          value = loan.bankReferenceNumber,
-          error = validationErrors.errorList.bankReferenceNumber
-        )}}
-      {% endif %}
+      {{bankReferenceNumberField.render(
+        id = 'bankReferenceNumber',
+        label = 'Bank reference number',
+        value = loan.bankReferenceNumber,
+        error = validationErrors.errorList.bankReferenceNumber
+      )}}
 
       <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Save</button>
 
