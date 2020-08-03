@@ -27,7 +27,6 @@ module.exports = (submittedValues, errorList) => {
   const hasValidCoverStartAndEndDates = (hasValidRequestedCoverStartDate && hasValidCoverEndDate);
 
   if (hasValidCoverStartAndEndDates) {
-
     const requestedCoverStartDateDay = moment(requestedCoverStartDateTimestamp).format('DD');
     const requestedCoverStartDateMonth = moment(requestedCoverStartDateTimestamp).format('MM');
     const requestedCoverStartDateYear = moment(requestedCoverStartDateTimestamp).format('YYYY');
