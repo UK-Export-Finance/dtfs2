@@ -54,10 +54,6 @@ exports.updateRequestedCoverStartDate = (facility) => {
     });
 
     modifiedFacility.requestedCoverStartDate = moment(momentDate).utc().valueOf().toString();
-
-    delete modifiedFacility['requestedCoverStartDate-day'];
-    delete modifiedFacility['requestedCoverStartDate-month'];
-    delete modifiedFacility['requestedCoverStartDate-year'];
   }
   return modifiedFacility;
 };

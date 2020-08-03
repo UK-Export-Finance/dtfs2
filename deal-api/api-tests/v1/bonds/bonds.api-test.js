@@ -631,7 +631,7 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
-    it('should generate requestedCoverStartDate timestamp and remove day/month/year fields', async () => {
+    it('should generate requestedCoverStartDate timestamp', async () => {
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -650,9 +650,9 @@ describe('/v1/deals/:id/bond', () => {
 
       expect(status).toEqual(200);
       expect(body.requestedCoverStartDate).toEqual(expect.any(String));
-      expect(body['requestedCoverStartDate-day']).toEqual(undefined);
-      expect(body['requestedCoverStartDate-month']).toEqual(undefined);
-      expect(body['requestedCoverStartDate-year']).toEqual(undefined);
+      expect(body['requestedCoverStartDate-day']).toEqual(bond['requestedCoverStartDate-day']);
+      expect(body['requestedCoverStartDate-month']).toEqual(bond['requestedCoverStartDate-month']);
+      expect(body['requestedCoverStartDate-year']).toEqual(bond['requestedCoverStartDate-year']);
     });
   });
 });
