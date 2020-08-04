@@ -54,21 +54,6 @@ const processTypeB = async ({ fileContents }) => {
     return false;
   }
 
-  const { Deal_comments: dealComments = [] } = workflowDeal;
-  const { Action_Code: actionCode } = workflowDeal.$;
-
-  if (actionCode === '007' && dealComments.length) {
-    return dealCommentsController.addSpecialConditions(dealId, dealComments[0], interfaceUser);
-  }
-
-  const updateData = {
-    comments: dealComments.length ? dealComments[0] : '',
-    status: generateStatus(deal, workflowDeal),
-    ukefDealId: workflowDeal.UKEF_deal_id[0],
-  };
-
-  const result = await updateStatusViaController(dealId, interfaceUser, updateData);
-  return result;
   const bondTransactionItems = deal.bondTransactions.items.map((bond) => {
     const workflowBondDetails = workflowDeal.BSSFacilities.find(
       (b) => b.BSS_portal_facility_id[0] === bond._id, // eslint-disable-line no-underscore-dangle
@@ -93,7 +78,6 @@ const processTypeB = async ({ fileContents }) => {
 
   const updatedDealInfo = {
     details: {
-      status: generateStatus(deal, workflowDeal),
       ukefDealId: workflowDeal.UKEF_deal_id[0],
     },
     bondTransactions: {
@@ -108,14 +92,27 @@ const processTypeB = async ({ fileContents }) => {
     params: {
       id: dealId,
     },
+    user: interfaceUser,
     body: updatedDealInfo,
   };
 
+  await dealController.updateDeal(updateRequest);
 
-  await updateComments(dealId, workflowDeal);
-  const updatedDeal = await dealController.updateDeal(updateRequest);
+  const { Deal_comments: dealComments = [] } = workflowDeal;
+  const { Action_Code: actionCode } = workflowDeal.$;
 
-  return updatedDeal;
+  if (actionCode === '007' && dealComments.length) {
+    await dealCommentsController.addSpecialConditions(dealId, dealComments[0], interfaceUser);
+  } else {
+    await dealCommentsController.addComment(dealId, dealComments[0], interfaceUser);
+  }
+
+  const updateData = {
+    status: generateStatus(deal, workflowDeal),
+  };
+
+  const result = await updateStatusViaController(dealId, interfaceUser, updateData);
+  return result;
 };
 
 module.exports = {
