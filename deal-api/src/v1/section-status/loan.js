@@ -1,8 +1,12 @@
 const loanValidationErrors = require('../validation/loan');
 
-const loanStatus = (loanErrors) => {
-  if (loanErrors.count === 0) {
-    return 'Completed';
+const loanStatus = (loan, loanErrors) => {
+  if (!loanErrors || loanErrors.count === 0) {
+    if (loan.issueFacilityDetailsProvided) {
+      // this will either be 'Ready for checker' or 'Submitted'
+      return loan.status;
+    }
+    return 'Completed'
   }
   return 'Incomplete';
 };

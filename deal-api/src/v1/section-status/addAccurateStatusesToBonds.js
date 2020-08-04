@@ -1,8 +1,12 @@
 // TODO: be DRY, this is very similar to section-status.
 
-const bondStatus = (bondErrors) => {
+const loanStatus = (bond, bondErrors) => {
   if (!bondErrors || bondErrors.count === 0) {
-    return 'Completed';
+    if (bond.issueFacilityDetailsProvided) {
+      // this will either be 'Ready for checker' or 'Submitted'
+      return bond.status;
+    }
+    return 'Completed'
   }
   return 'Incomplete';
 };

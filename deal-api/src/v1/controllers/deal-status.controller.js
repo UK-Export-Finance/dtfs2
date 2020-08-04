@@ -13,6 +13,7 @@ const createSubmissionDate = require('./deal-status/create-submission-date');
 const sendStatusUpdateEmails = require('./deal-status/send-status-update-emails');
 
 const updateFacilityDates = require('./deal-status/update-facility-dates');
+const updateIssuedFacilitiesStatuses = require('./deal-status/update-issued-facilities-statuses');
 const updateIssuedFacilities = require('./deal-status/update-issued-facilities');
 
 exports.findOne = (req, res) => {
@@ -83,7 +84,14 @@ exports.update = (req, res) => {
       dealAfterAllUpdates = dealAfterEditedByUpdate;
     }
 
+    if (toStatus === 'Ready for Checker\'s approval') {
+      // updateIssuedFacilities / updateIssuedFacilitiesStatuses
+      // check issued facilities statuses
+      dealAfterAllUpdates = await updateIssuedFacilitiesStatuses(collection, dealAfterAllUpdates);
+    }
+
     if (toStatus === 'Submitted') {
+      // TODO - presumably need to update facility statuses here.
       await updateIssuedFacilities(collection, dealAfterAllUpdates);
       dealAfterAllUpdates = await createSubmissionDate(collection, req.params.id, user);
 
