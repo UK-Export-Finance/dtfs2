@@ -2,7 +2,7 @@ const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const bondValidationErrors = require('../validation/bond');
 const { generateFacilityId } = require('../../utils/generateIds');
-const { bondStatus } = require('../section-status/bond');
+const { bondStatus } = require('../section-status/bonds');
 const {
   calculateGuaranteeFee,
   calculateUkefExposure,
@@ -70,7 +70,7 @@ exports.getBond = async (req, res) => {
           dealId,
           bond: {
             ...bond,
-            status: bondStatus(validationErrors),
+            status: bondStatus(bond, validationErrors),
           },
           validationErrors,
         });

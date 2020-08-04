@@ -13,7 +13,7 @@ const bondStatus = (bond, bondErrors) => {
   return 'Incomplete';
 };
 
-const multipleBondStatus = (bondTransactions) => {
+const addAccurateStatusesToBonds = (bondTransactions) => {
   if (bondTransactions.items.length) {
     bondTransactions.items.forEach((b) => {
       const bond = b;
@@ -26,5 +26,5 @@ const multipleBondStatus = (bondTransactions) => {
 
 module.exports = {
   bondStatus,
-  multipleBondStatus,
+  addAccurateStatusesToBonds,
 };
