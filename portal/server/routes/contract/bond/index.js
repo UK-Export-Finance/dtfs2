@@ -22,7 +22,7 @@ import {
 } from './pageSpecificValidationErrors';
 import completedBondForms from './completedForms';
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
-import userCanIssueFacility from './userCanIssueFacility';
+import canIssueFacility from '../canIssueFacility';
 
 const router = express.Router();
 
@@ -327,7 +327,7 @@ router.get('/contract/:_id/bond/:bondId/issue-facility', provide([BOND, DEAL]), 
   const { bond } = req.apiData.bond;
   const { user } = req.session;
 
-  if (!userCanIssueFacility(user, req.apiData.deal, bond)) {
+  if (!canIssueFacility(user, req.apiData.deal, bond)) {
     return res.redirect('/');
   }
 
