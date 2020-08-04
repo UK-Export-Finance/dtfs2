@@ -1,10 +1,12 @@
 // TODO: be DRY, this is very similar to section-status.
 
-// TODO: do we need to do anything here for new issued/facility statuses?
-
-const loanStatus = (loanErrors) => {
+const loanStatus = (loan, loanErrors) => {
   if (!loanErrors || loanErrors.count === 0) {
-    return 'Completed';
+    if (loan.issueFacilityDetailsProvided) {
+      // this will either be 'Ready for checker' or 'Submitted'
+      return loan.status;
+    }
+    return 'Completed'
   }
   return 'Incomplete';
 };
@@ -14,7 +16,7 @@ module.exports = (loanTransactions, validationErrors) => {
     loanTransactions.items.forEach((b) => {
       const loan = b;
       const errorsForThisLoan = validationErrors[loan._id].errorList; // eslint-disable-line no-underscore-dangle
-      loan.status = loanStatus(errorsForThisLoan);
+      loan.status = loanStatus(loan, errorsForThisLoan);
     });
   }
 
