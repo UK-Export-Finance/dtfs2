@@ -6,7 +6,7 @@ const loanStatus = (loan, loanErrors) => {
       // this will either be 'Ready for checker' or 'Submitted'
       return loan.status;
     }
-    return 'Completed'
+    return 'Completed';
   }
   return 'Incomplete';
 };

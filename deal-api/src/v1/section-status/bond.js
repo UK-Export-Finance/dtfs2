@@ -8,7 +8,7 @@ const bondStatus = (bond, bondErrors) => {
       // this will either be 'Ready for checker' or 'Submitted'
       return bond.status;
     }
-    return 'Completed'
+    return 'Completed';
   }
   return 'Incomplete';
 };
