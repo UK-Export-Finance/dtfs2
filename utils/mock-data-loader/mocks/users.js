@@ -116,10 +116,6 @@ const USERS = [
         'checker4@ukexportfinance.gov.uk',
       ],
     },
-    emails: [
-      'checker1@ukexportfinance.gov.uk',
-      'checker2@ukexportfinance.gov.uk',
-    ],
   },
   {
     username: 'MAKENCHECK',
@@ -183,6 +179,9 @@ const USERS = [
       // _id: '', //TODO [dw] better linking of mock data
       id: '961',
       name: 'HSBC',
+      emails: [
+        'checker4@ukexportfinance.gov.uk',
+      ],
     },
   },
   {
@@ -196,6 +195,9 @@ const USERS = [
       // _id: '', //TODO [dw] better linking of mock data
       id: '961',
       name: 'HSBC',
+      emails: [
+        'checker4@ukexportfinance.gov.uk',
+      ],
     },
   },
   {
@@ -209,6 +211,9 @@ const USERS = [
       // _id: '', //TODO [dw] better linking of mock data
       id: '961',
       name: 'HSBC',
+      emails: [
+        'checker4@ukexportfinance.gov.uk',
+      ],
     },
   },
   {
@@ -222,6 +227,9 @@ const USERS = [
       // _id: '', //TODO [dw] better linking of mock data
       id: '961',
       name: 'HSBC',
+      emails: [
+        'checker4@ukexportfinance.gov.uk',
+      ],
     },
   },
   {
@@ -235,6 +243,9 @@ const USERS = [
       // _id: '', //TODO [dw] better linking of mock data
       id: '961',
       name: 'HSBC',
+      emails: [
+        'checker4@ukexportfinance.gov.uk',
+      ],
     },
   },
   {
