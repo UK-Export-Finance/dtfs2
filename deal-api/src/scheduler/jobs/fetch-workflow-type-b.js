@@ -59,7 +59,7 @@ const fetchWorkflowTypeB = {
 
       const moveFilePromises = [];
 
-      const archiveFolder = `${IMPORT_FOLDER}/archived_v2/${moment().format('YYYY-MM-DD')}`;
+      const archiveFolder = `${IMPORT_FOLDER}/archived/${moment().format('YYYY-MM-DD')}`;
 
       filenames.forEach(({ filename }) => {
         const from = {
