@@ -21,6 +21,9 @@ exports.updateLoanIssueFacility = async (req, res) => {
         res.status(401).send();
       }
 
+      // TODO: if can issue facility
+      // otherwise return 403
+
       const loan = deal.loanTransactions.items.find((l) =>
         String(l._id) === loanId); // eslint-disable-line no-underscore-dangle
 
