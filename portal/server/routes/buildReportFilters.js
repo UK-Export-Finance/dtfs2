@@ -25,7 +25,7 @@ const getUserFilters = (params, user = {}) => {
 
 const buildReportFilters = (params, user) => {
   const filters = [];
-console.log(params);
+
   if (!params) {
     return filters;
   }
