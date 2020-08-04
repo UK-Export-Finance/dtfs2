@@ -86,8 +86,6 @@ exports.create = async (user, callback) => {
   // non-email-address usernames and no time to fix that neatly.. so..
   if (createdUser.username && createdUser.username.includes('@')) {
     await sendNewAccountEmail(createdUser);
-  } else {
-    console.log(`not trying to send new account email to "${createdUser.username}"`);
   }
 
   callback(null, createdUser);
