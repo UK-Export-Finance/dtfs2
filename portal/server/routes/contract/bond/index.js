@@ -22,6 +22,7 @@ import {
 } from './pageSpecificValidationErrors';
 import completedBondForms from './completedForms';
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
+import userCanIssueFacility from './userCanIssueFacility';
 
 const router = express.Router();
 
@@ -43,20 +44,6 @@ const userCanAccessBondPreview = (user) => {
   }
 
   return true;
-};
-
-const userCanIssueFacility = (user, deal, bond) => {
-  const isMaker = user.roles.includes('maker');
-
-  if (isMaker
-    && (deal.details.status === 'Acknowledged by UKEF' || deal.details.status === 'Ready for Checker\'s approval')
-    && deal.details.submissionType === 'Automatic Inclusion Notice'
-    && bond.bondStage === 'Unissued'
-    && !bond.issueFacilityDetailsSubmitted) {
-    return true;
-  }
-
-  return false;
 };
 
 const handleFeeFrequency = (bondBody) => {
