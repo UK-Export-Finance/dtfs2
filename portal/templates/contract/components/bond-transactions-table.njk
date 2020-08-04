@@ -64,7 +64,7 @@
 
                 <td class="govuk-table__cell govuk-!-font-size-14">
 
-                  {% set canIssueFacility = userIsMaker and dealSubmissionType === 'Automatic Inclusion Notice' and bond.bondStage === 'Unissued' and not bond.issueFacilityDetailsProvided and not bond.issueFacilityDetailsSubmitted %}
+                  {% set canIssueFacility = userIsMaker and (dealSubmissionType === 'Automatic Inclusion Notice' or dealSubmissionType === 'Manual Inclusion Notice') and bond.bondStage === 'Unissued' and not bond.issueFacilityDetailsProvided and not bond.issueFacilityDetailsSubmitted %}
 
                   {% if dealStatus === "Acknowledged by UKEF" or dealStatus === "Ready for Checker's approval" %}
 
