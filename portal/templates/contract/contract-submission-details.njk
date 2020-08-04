@@ -74,7 +74,7 @@
             )}}
           </h3>
 
-          {{ bondSubmissionDetails.render(bond)}}
+          {{ bondSubmissionDetails.render(bond, user)}}
         </div>
       {% endfor %}
 
@@ -89,7 +89,7 @@
             )}}
           </h3>
 
-          {{ loanSubmissionDetails.render(loan)}}
+          {{ loanSubmissionDetails.render(loan, user)}}
         </div>
       {% endfor %}
 
