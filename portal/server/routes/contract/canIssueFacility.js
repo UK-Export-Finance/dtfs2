@@ -1,5 +1,5 @@
-const userCanIssueFacility = (user, deal, facility) => {
-  const isMaker = user.roles.includes('maker');
+const canIssueFacility = (userRoles, deal, facility) => {
+  const isMaker = userRoles.includes('maker');
 
   const {
     status,
@@ -25,4 +25,4 @@ const userCanIssueFacility = (user, deal, facility) => {
   return false;
 };
 
-export default userCanIssueFacility;
+export default canIssueFacility;

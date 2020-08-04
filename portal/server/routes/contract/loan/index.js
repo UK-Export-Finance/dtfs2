@@ -322,7 +322,7 @@ router.get('/contract/:_id/loan/:loanId/issue-facility', provide([LOAN, DEAL]), 
   const { loan } = req.apiData.loan;
   const { user } = req.session;
 
-  if (!canIssueFacility(user, req.apiData.deal, loan)) {
+  if (!canIssueFacility(user.roles, req.apiData.deal, loan)) {
     return res.redirect('/');
   }
 
