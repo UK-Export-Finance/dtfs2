@@ -21,6 +21,7 @@ import {
 } from './pageSpecificValidationErrors';
 import completedLoanForms from './completedForms';
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
+import userCanIssueFacility from './userCanIssueFacility';
 
 const router = express.Router();
 
@@ -43,21 +44,6 @@ const userCanAccessLoanPreview = (user) => {
 
   return true;
 };
-
-const userCanIssueFacility = (user, deal, loan) => {
-  const isMaker = user.roles.includes('maker');
-
-  if (isMaker
-    && (deal.details.status === 'Acknowledged by UKEF' || deal.details.status === 'Ready for Checker\'s approval')
-    && deal.details.submissionType === 'Automatic Inclusion Notice'
-    && loan.facilityStage === 'Conditional'
-    && !loan.issueFacilityDetailsSubmitted) {
-    return true;
-  }
-
-  return false;
-};
-
 
 const handleBankReferenceNumberField = (loanBody) => {
   const modifiedLoan = loanBody;
