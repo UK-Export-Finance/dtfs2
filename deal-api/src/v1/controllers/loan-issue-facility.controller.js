@@ -29,7 +29,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
         return res.status(404).send();
       }
 
-      if (!canIssueFacility(userRoles, deal, loan)) {
+      if (!canIssueFacility(req.user.roles, deal, loan)) {
         return res.status(403).send();
       }
 

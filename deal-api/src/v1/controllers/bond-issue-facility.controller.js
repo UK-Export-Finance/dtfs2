@@ -29,7 +29,7 @@ exports.updateBondIssueFacility = async (req, res) => {
         return res.status(404).send();
       }
 
-      if (!canIssueFacility(userRoles, deal, loan)) {
+      if (!canIssueFacility(req.user.roles, deal, bond)) {
         return res.status(403).send();
       }
 
