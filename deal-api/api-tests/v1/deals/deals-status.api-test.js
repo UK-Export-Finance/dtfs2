@@ -14,7 +14,7 @@ const smeTypeIsRequired = require('../../../src/v1/validation/submission-details
 jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
 jest.mock('../../../src/v1/controllers/integration/helpers/convert-currency-code-to-id', () => () => 12);
 
-jest.unmock('@azure/storage-file-share');
+// jest.unmock('@azure/storage-file-share');
 
 describe('/v1/deals/:id/status', () => {
   let noRoles;
@@ -364,8 +364,8 @@ describe('/v1/deals/:id/status', () => {
         ...completedDeal,
         details: {
           ...completedDeal.details,
-          maker: aBarclaysMakerChecker
-        }
+          maker: aBarclaysMakerChecker,
+        },
       };
 
       const postResult = await as(aBarclaysMakerChecker).post(dealCreatedBymakerChecker).to('/v1/deals');
@@ -387,7 +387,7 @@ describe('/v1/deals/:id/status', () => {
             ...aBarclaysMakerChecker,
             userId: aBarclaysMakerChecker._id,
           },
-        ]
+        ],
       };
 
       const postResult = await as(aBarclaysMaker).post(dealEditedByMakerChecker).to('/v1/deals');
@@ -586,8 +586,7 @@ describe('/v1/deals/:id/status', () => {
 
           const issuedLoanThatShouldBeUpdated = body.deal.loanTransactions.items.find((l) =>
             l.facilityStage = 'Conditional'
-            && l.issueFacilityDetailsProvided === true
-          );
+            && l.issueFacilityDetailsProvided === true);
 
           expect(issuedLoanThatShouldBeUpdated.issueFacilityDetailsSubmitted).toEqual(true);
         });
@@ -601,8 +600,7 @@ describe('/v1/deals/:id/status', () => {
           const issuedLoanThatShouldBeUpdated = createdDeal.loanTransactions.items.find((l) =>
             l.facilityStage = 'Conditional'
             && l.issueFacilityDetailsProvided === true
-            && !l.requestedCoverStartDate
-          );
+            && !l.requestedCoverStartDate);
 
           const loanInUpdatedDeal = body.deal.loanTransactions.items.find((l) => l._id === issuedLoanThatShouldBeUpdated._id);
           expect(loanInUpdatedDeal.requestedCoverStartDate).toEqual(issuedLoanThatShouldBeUpdated.issuedDate);
@@ -618,8 +616,7 @@ describe('/v1/deals/:id/status', () => {
 
           const unissuedBondThatShouldBeUpdated = body.deal.bondTransactions.items.find((b) =>
             b.bondStage === 'Unissued'
-            && b.issueFacilityDetailsProvided === true
-          );
+            && b.issueFacilityDetailsProvided === true);
 
           expect(unissuedBondThatShouldBeUpdated.issueFacilityDetailsSubmitted).toEqual(true);
         });
@@ -633,8 +630,7 @@ describe('/v1/deals/:id/status', () => {
           const unissuedBondThatShouldBeUpdated = createdDeal.bondTransactions.items.find((b) =>
             b.bondStage === 'Unissued'
             && b.issueFacilityDetailsProvided === true
-            && !b.requestedCoverStartDate
-          );
+            && !b.requestedCoverStartDate);
 
           const bondInUpdatedDeal = body.deal.bondTransactions.items.find((l) => l._id === unissuedBondThatShouldBeUpdated._id);
           expect(bondInUpdatedDeal.requestedCoverStartDate).toEqual(unissuedBondThatShouldBeUpdated.issuedDate);

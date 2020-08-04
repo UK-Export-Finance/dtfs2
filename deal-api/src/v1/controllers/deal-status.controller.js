@@ -285,19 +285,6 @@ exports.update = (req, res) => {
       }
     }
 
-    if (toStatus === 'Acknowledged by UKEF') {
-      // TODO specifically reject anyone other than role=interface?
-      const { ukefDealId } = req.body;
-
-      dealAfterAllUpdates = await updateDeal({
-        params: req.params,
-        body: {
-          details: { ukefDealId },
-        },
-        user: req.user,
-      });
-    }
-
     await sendStatusUpdateEmails(dealAfterAllUpdates, fromStatus, req.user);
 
     return res.status(200).send(dealAfterAllUpdates);
