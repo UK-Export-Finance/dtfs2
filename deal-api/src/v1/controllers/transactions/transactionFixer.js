@@ -35,7 +35,7 @@ const constructor = (user, filters) => {
       }
 
       if (DEAL_ID === filterField) {
-        const deal = { '_id': filter[filterField] };
+        const deal = { _id: filter[filterField] };
 
         return listSoFar.concat([deal]);
       }
