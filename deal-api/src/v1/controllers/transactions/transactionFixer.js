@@ -5,6 +5,7 @@ const loanFixer = require('./loanFixer');
 const BANKFACILITYID = 'transaction.bankFacilityId';
 const UKEFFACILITYID = 'transaction.ukefFacilityId';
 const DEAL_CREATED = 'transaction.deal_created';
+const DEAL_ID = '_id';
 
 const constructor = (user, filters) => {
   const bondFix = bondFixer(filters);
@@ -31,6 +32,12 @@ const constructor = (user, filters) => {
         const dealWithinSpecifiedRange = { 'details.created': filter[filterField] };
 
         return listSoFar.concat([dealWithinSpecifiedRange]);
+      }
+
+      if (DEAL_ID === filterField) {
+        const deal = { '_id': filter[filterField] };
+
+        return listSoFar.concat([deal]);
       }
 
       return listSoFar;
