@@ -9,6 +9,7 @@ const {
 const { createTimestampFromSubmittedValues } = require('../facility-dates/timestamp');
 const bondIssueFacilityValidationErrors = require('../validation/bond-issue-facility');
 const { hasValue } = require('../../utils/string');
+const canIssueFacility = require('../facility-issuance');
 
 exports.updateBondIssueFacility = async (req, res) => {
   const {
@@ -18,7 +19,7 @@ exports.updateBondIssueFacility = async (req, res) => {
   await findOneDeal(req.params.id, async (deal) => {
     if (deal) {
       if (!userHasAccessTo(req.user, deal)) {
-        res.status(401).send();
+        return res.status(401).send();
       }
 
       const bond = deal.bondTransactions.items.find((b) =>
@@ -26,6 +27,10 @@ exports.updateBondIssueFacility = async (req, res) => {
 
       if (!bond) {
         return res.status(404).send();
+      }
+
+      if (!canIssueFacility(userRoles, deal, loan)) {
+        return res.status(403).send();
       }
 
       let modifiedBond = {
