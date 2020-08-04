@@ -25,7 +25,7 @@ const getUserFilters = (params, user = {}) => {
 
 const buildReportFilters = (params, user) => {
   const filters = [];
-
+console.log(params);
   if (!params) {
     return filters;
   }
@@ -128,6 +128,12 @@ const buildReportFilters = (params, user) => {
         value: params.filterByBank,
       });
     }
+  }
+  if (params._id) { // eslint-disable-line no-underscore-dangle
+    filters.push({
+      field: '_id',
+      value: params._id, // eslint-disable-line no-underscore-dangle
+    });
   }
 
   return filters;
