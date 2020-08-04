@@ -1,4 +1,4 @@
-exports.canIssueFacility = (userRoles, deal, facility) => {
+const canIssueFacility = (userRoles, deal, facility) => {
   const isMaker = userRoles.includes('maker');
 
   const {
@@ -24,3 +24,5 @@ exports.canIssueFacility = (userRoles, deal, facility) => {
 
   return false;
 };
+
+module.exports = canIssueFacility;
