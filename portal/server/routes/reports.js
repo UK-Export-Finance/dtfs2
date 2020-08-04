@@ -1,5 +1,5 @@
 import express from 'express';
-// import util from 'util';
+import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
 import CONSTANTS from '../constants';
@@ -389,8 +389,14 @@ router.get('/reports/audit-supply-contracts/:id/transactions/:page', async (req,
 
 router.get('/reports/:id/transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-  const filters = {}; // TODO wire up filters; probably do same as dashboard +use session
 
+  const idFilter = {
+    field: '_id',
+    value: req.params.id,
+  };
+
+  const filters = buildReportFilters(idFilter, req.session.user);
+  console.log(`filters: ${util.inspect(filters)}`);
   const { transactions, count } = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
