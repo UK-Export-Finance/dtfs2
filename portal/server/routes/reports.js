@@ -1,5 +1,5 @@
 import express from 'express';
-import util from 'util';
+// import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
 import CONSTANTS from '../constants';
@@ -371,8 +371,6 @@ router.get('/reports/audit-supply-contracts/:id/transactions/:page', async (req,
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-  console.log(`transactions: ${util.inspect(transactions)}`);
-  console.log(`filters: ${util.inspect(filters)}`);
 
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
