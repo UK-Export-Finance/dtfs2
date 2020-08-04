@@ -38,22 +38,6 @@ describe(component, () => {
       }
     });
 
-    it('should be enabled for deals in status=Ready for Checker\'s approval with dealHasIssuedFacilitiesToSubmit flag set to true', () => {
-      const user = { roles: ['maker'] };
-      const deals = [
-        { _id: 1, details: { status: 'Ready for Checker\'s approval' } },
-      ];
-
-      const dealFormsCompleted = true;
-      const dealHasIssuedFacilitiesToSubmit = true;
-
-      for (const deal of deals) {
-        const wrapper = render({ user, deal, dealFormsCompleted, dealHasIssuedFacilitiesToSubmit });
-        wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]')
-          .toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
-      }
-    });
-
     it("should not render at all for deals in status=Submitted and status=Rejected by UKEF", () =>{
       const user = {roles: ['maker']};
       const deals = [
@@ -68,11 +52,12 @@ describe(component, () => {
       }
     });
 
-    it("should be disabled for deals in status=Draft and status=Further Maker's input required and when dealFormsCompleted flag is false", () =>{
+    it("should be disabled for deals in status=Draft status=Ready for Checker's approval and status=Further Maker's input required and when dealFormsCompleted flag is false", () =>{
       const user = {roles: ['maker']};
       const deals = [
         { _id: 1, details: { status: "Draft" } },
         { _id: 1, details: { status: "Further Maker's input required" } },
+        { _id: 1, details: { status: "Ready for Checker's approval" } },
       ];
 
       const dealFormsCompleted = false;
