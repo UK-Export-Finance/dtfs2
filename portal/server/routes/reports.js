@@ -363,14 +363,16 @@ router.get('/reports/audit-supply-contracts/:id/transactions/:page', async (req,
   const { userToken } = requestParams(req);
 
   const idFilter = {
-    field: '_id',
-    value: req.params.id,
+    _id: req.params.id,
   };
 
+  const filters = buildReportFilters(idFilter, req.session.user);
   const { transactions, count } = await getApiData(
-    api.transactions(req.params.page * PAGESIZE, PAGESIZE, idFilter, userToken),
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
+  console.log(`transactions: ${util.inspect(transactions)}`);
+  console.log(`filters: ${util.inspect(filters)}`);
 
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
@@ -389,14 +391,8 @@ router.get('/reports/audit-supply-contracts/:id/transactions/:page', async (req,
 
 router.get('/reports/:id/transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
+  const filters = {}; // TODO wire up filters; probably do same as dashboard +use session
 
-  const idFilter = {
-    field: '_id',
-    value: req.params.id,
-  };
-
-  const filters = buildReportFilters(idFilter, req.session.user);
-  console.log(`filters: ${util.inspect(filters)}`);
   const { transactions, count } = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
