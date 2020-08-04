@@ -1,6 +1,6 @@
-import userCanIssueFacility from './userCanIssueFacility';
+import canIssueFacility from './canIssueFacility';
 
-describe('userCanIssueFacility', () => {
+describe('canIssueFacility', () => {
   const mockUser = { roles: ['maker'] };
 
   const mockLoanThatCanBeIssued = {
@@ -17,7 +17,7 @@ describe('userCanIssueFacility', () => {
         },
       };
 
-      expect(userCanIssueFacility(mockUser, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
+      expect(canIssueFacility(mockUser, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
     });
   });
 
@@ -30,7 +30,24 @@ describe('userCanIssueFacility', () => {
         },
       };
 
-      expect(userCanIssueFacility(mockUser, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
+      expect(canIssueFacility(mockUser, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
+    });
+  });
+
+  describe('when user is a maker, deal has status `Ready for Checker\'s approval`, MIN submissionType and an Unissued bond that has NOT been submitted', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        details: {
+          status: 'Ready for Checker\'s approval',
+          submissionType: 'Manual Inclusion Notice',
+        },
+      };
+      const mockBondThatCanBeIssued = {
+        issueFacilityDetailsSubmitted: false,
+        bondStage: 'Unissued',
+      };
+
+      expect(canIssueFacility(mockUser, mockDeal, mockBondThatCanBeIssued)).toEqual(true);
     });
   });
 
@@ -44,7 +61,7 @@ describe('userCanIssueFacility', () => {
         },
       };
 
-      expect(userCanIssueFacility(checkerUser, mockDeal, mockLoanThatCanBeIssued)).toEqual(false);
+      expect(canIssueFacility(checkerUser, mockDeal, mockLoanThatCanBeIssued)).toEqual(false);
     });
   });
 
@@ -57,7 +74,7 @@ describe('userCanIssueFacility', () => {
         },
       };
 
-      expect(userCanIssueFacility(mockUser, mockDeal, mockLoanThatCanBeIssued)).toEqual(false);
+      expect(canIssueFacility(mockUser, mockDeal, mockLoanThatCanBeIssued)).toEqual(false);
     });
   });
 
@@ -70,11 +87,11 @@ describe('userCanIssueFacility', () => {
         },
       };
 
-      expect(userCanIssueFacility(mockUser, mockDeal, mockLoanThatCanBeIssued)).toEqual(false);
+      expect(canIssueFacility(mockUser, mockDeal, mockLoanThatCanBeIssued)).toEqual(false);
     });
   });
 
-  describe('when loan.facilityStage is NOT `Conditional`', () => {
+  describe('when facility.facilityStage is `Unconditional`', () => {
     it('should return false', () => {
       const mockDeal = {
         details: {
@@ -88,11 +105,29 @@ describe('userCanIssueFacility', () => {
         issueFacilityDetailsSubmitted: false,
       };
 
-      expect(userCanIssueFacility(mockUser, mockDeal, mockLoan)).toEqual(false);
+      expect(canIssueFacility(mockUser, mockDeal, mockLoan)).toEqual(false);
     });
   });
 
-  describe('when loan.issueFacilityDetailsSubmitted is true', () => {
+  describe('when facility.facilityStage is `Issued`', () => {
+    it('should return false', () => {
+      const mockDeal = {
+        details: {
+          status: 'Acknowledged by UKEF',
+          submissionType: 'Manual Inclusion Notice',
+        },
+      };
+
+      const mockBond = {
+        facilityStage: 'Issued',
+        issueFacilityDetailsSubmitted: false,
+      };
+
+      expect(canIssueFacility(mockUser, mockDeal, mockBond)).toEqual(false);
+    });
+  });
+
+  describe('when facility.issueFacilityDetailsSubmitted is true', () => {
     it('should return false', () => {
       const mockDeal = {
         details: {
@@ -106,7 +141,7 @@ describe('userCanIssueFacility', () => {
         issueFacilityDetailsSubmitted: true,
       };
 
-      expect(userCanIssueFacility(mockUser, mockDeal, mockLoan)).toEqual(false);
+      expect(canIssueFacility(mockUser, mockDeal, mockLoan)).toEqual(false);
     });
   });
 });

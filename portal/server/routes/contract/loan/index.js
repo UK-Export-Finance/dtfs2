@@ -21,7 +21,7 @@ import {
 } from './pageSpecificValidationErrors';
 import completedLoanForms from './completedForms';
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
-import userCanIssueFacility from './userCanIssueFacility';
+import canIssueFacility from '../canIssueFacility';
 
 const router = express.Router();
 
@@ -322,7 +322,7 @@ router.get('/contract/:_id/loan/:loanId/issue-facility', provide([LOAN, DEAL]), 
   const { loan } = req.apiData.loan;
   const { user } = req.session;
 
-  if (!userCanIssueFacility(user, req.apiData.deal, loan)) {
+  if (!canIssueFacility(user, req.apiData.deal, loan)) {
     return res.redirect('/');
   }
 
