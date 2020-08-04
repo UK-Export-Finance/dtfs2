@@ -11,7 +11,7 @@ const loanStatus = (loan, loanErrors) => {
   return 'Incomplete';
 };
 
-const multipleLoanStatus = (loanTransactions) => {
+const addAccurateStatusesToLoans = (loanTransactions) => {
   if (loanTransactions.items.length) {
     loanTransactions.items.forEach((l) => {
       const loan = l;
@@ -24,5 +24,5 @@ const multipleLoanStatus = (loanTransactions) => {
 
 module.exports = {
   loanStatus,
-  multipleLoanStatus,
+  addAccurateStatusesToLoans,
 };
