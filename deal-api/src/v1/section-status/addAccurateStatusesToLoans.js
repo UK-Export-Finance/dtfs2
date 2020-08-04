@@ -1,5 +1,7 @@
 // TODO: be DRY, this is very similar to section-status.
 
+// TODO: do we need to do anything here for new issued/facility statuses?
+
 const loanStatus = (loanErrors) => {
   if (!loanErrors || loanErrors.count === 0) {
     return 'Completed';
