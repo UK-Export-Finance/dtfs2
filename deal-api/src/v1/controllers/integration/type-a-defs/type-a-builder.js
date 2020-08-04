@@ -15,6 +15,10 @@ module.exports = () => {
   };
 
   const builder = {
+    source: (value = '') => {
+      deal['@'].source = value;
+      return builder;
+    },
     action_code: (value = '') => {
       deal['@'].action_code = value;
       return builder;

@@ -53,6 +53,16 @@
       </xs:attribute>
       <xs:attribute name="portal_deal_id" use="required" type="xs:integer"/>
       <xs:attribute name="revision_id" use="required" type="xs:integer"/>
+      <xs:attribute name="source" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <!-- V1 is for Drupal Portal -->
+            <xs:enumeration value="V1" />
+            <!-- V2 is for Node.js Portal -->
+            <xs:enumeration value="V2" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
   <xs:element name="General_information">
@@ -619,7 +629,7 @@
   <xs:element name="EWCS_disbursement_amount">
     <xs:simpleType>
       <xs:restriction base="xs:string">
-        <xs:pattern value="(\d{0,8}(\.\d{0,4}|\.?))?"/>
+        <xs:pattern value="(\d{0,14}(\.\d{0,4}|\.?))?"/>
       </xs:restriction>
     </xs:simpleType>
   </xs:element>
