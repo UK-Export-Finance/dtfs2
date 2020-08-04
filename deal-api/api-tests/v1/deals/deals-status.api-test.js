@@ -145,10 +145,10 @@ describe('/v1/deals/:id/status', () => {
         status: 'Abandoned Deal',
       };
 
-      const { status, text } = await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      const { status, body } = await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
       expect(status).toEqual(200);
-      expect(text).toEqual('Abandoned Deal');
+      expect(body.details.status).toEqual('Abandoned Deal');
     });
 
     it('updates the deal', async () => {
@@ -580,7 +580,7 @@ describe('/v1/deals/:id/status', () => {
       describe('any loans that have `Conditional` facilityStage and `issue facility details provided` flag', () => {
         it('should add `issueFacilityDetailsSubmitted` property', async () => {
           expect(updatedDeal.status).toEqual(200);
-          expect(updatedDeal.body).toEqual({});
+          expect(updatedDeal.body).toBeDefined();
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
@@ -594,7 +594,7 @@ describe('/v1/deals/:id/status', () => {
 
         it('defaults requestedCoverStartDate to the issuedDate if no requestedCoverStartDate', async () => {
           expect(updatedDeal.status).toEqual(200);
-          expect(updatedDeal.body).toEqual({});
+          expect(updatedDeal.body).toBeDefined();
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
@@ -612,7 +612,7 @@ describe('/v1/deals/:id/status', () => {
       describe('any bonds that have `Unissued` bondStage and `issue facility details provided` flag', () => {
         it('should add `issueFacilityDetailsSubmitted` property', async () => {
           expect(updatedDeal.status).toEqual(200);
-          expect(updatedDeal.body).toEqual({});
+          expect(updatedDeal.body).toBeDefined();
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
@@ -626,7 +626,7 @@ describe('/v1/deals/:id/status', () => {
 
         it('defaults requestedCoverStartDate to the issuedDate if no requestedCoverStartDate', async () => {
           expect(updatedDeal.status).toEqual(200);
-          expect(updatedDeal.body).toEqual({});
+          expect(updatedDeal.body).toBeDefined();
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
@@ -643,7 +643,7 @@ describe('/v1/deals/:id/status', () => {
 
       it('adds a submissionDate to the deal', async () => {
         expect(updatedDeal.status).toEqual(200);
-        expect(updatedDeal.body).toEqual({});
+        expect(updatedDeal.body).toBeDefined();
 
         const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
@@ -691,7 +691,7 @@ describe('/v1/deals/:id/status', () => {
 
         const { status, body } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
-        expect(body).toEqual({});
+        expect(body).toBeDefined();
       });
     });
 
