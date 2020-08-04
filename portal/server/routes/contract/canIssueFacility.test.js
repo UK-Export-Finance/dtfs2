@@ -1,7 +1,7 @@
 import canIssueFacility from './canIssueFacility';
 
 describe('canIssueFacility', () => {
-  const mockUser = { roles: ['maker'] };
+  const mockUserRoles = ['maker'];
 
   const mockLoanThatCanBeIssued = {
     facilityStage: 'Conditional',
@@ -17,7 +17,7 @@ describe('canIssueFacility', () => {
         },
       };
 
-      expect(canIssueFacility(mockUser, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
     });
   });
 
@@ -30,7 +30,7 @@ describe('canIssueFacility', () => {
         },
       };
 
-      expect(canIssueFacility(mockUser, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
     });
   });
 
@@ -47,13 +47,13 @@ describe('canIssueFacility', () => {
         bondStage: 'Unissued',
       };
 
-      expect(canIssueFacility(mockUser, mockDeal, mockBondThatCanBeIssued)).toEqual(true);
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockBondThatCanBeIssued)).toEqual(true);
     });
   });
 
   describe('when user is NOT a maker', () => {
     it('should return false', () => {
-      const checkerUser = { roles: ['checker'] };
+      const checkerUserRole = ['checker'];
       const mockDeal = {
         details: {
           status: 'Ready for Checker\'s approval',
@@ -61,7 +61,7 @@ describe('canIssueFacility', () => {
         },
       };
 
-      expect(canIssueFacility(checkerUser, mockDeal, mockLoanThatCanBeIssued)).toEqual(false);
+      expect(canIssueFacility(checkerUserRole, mockDeal, mockLoanThatCanBeIssued)).toEqual(false);
     });
   });
 
@@ -74,7 +74,7 @@ describe('canIssueFacility', () => {
         },
       };
 
-      expect(canIssueFacility(mockUser, mockDeal, mockLoanThatCanBeIssued)).toEqual(false);
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(false);
     });
   });
 
@@ -87,7 +87,7 @@ describe('canIssueFacility', () => {
         },
       };
 
-      expect(canIssueFacility(mockUser, mockDeal, mockLoanThatCanBeIssued)).toEqual(false);
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(false);
     });
   });
 
@@ -105,7 +105,7 @@ describe('canIssueFacility', () => {
         issueFacilityDetailsSubmitted: false,
       };
 
-      expect(canIssueFacility(mockUser, mockDeal, mockLoan)).toEqual(false);
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(false);
     });
   });
 
@@ -123,7 +123,7 @@ describe('canIssueFacility', () => {
         issueFacilityDetailsSubmitted: false,
       };
 
-      expect(canIssueFacility(mockUser, mockDeal, mockBond)).toEqual(false);
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockBond)).toEqual(false);
     });
   });
 
@@ -141,7 +141,7 @@ describe('canIssueFacility', () => {
         issueFacilityDetailsSubmitted: true,
       };
 
-      expect(canIssueFacility(mockUser, mockDeal, mockLoan)).toEqual(false);
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(false);
     });
   });
 });
