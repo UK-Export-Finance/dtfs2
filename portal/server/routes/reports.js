@@ -560,39 +560,37 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   //  so I'm, just mocking this out the old way rather than trying to work out how to re-plumb the API.
   const { userToken } = requestParams(req);
 
-  const filters = [
-  /*  {
-     field: '_id',
-    value: '1000012',
-  }, {
-    field: 'bankReferenceNumber', // ?
-    value: 'unique3',
-  } */];
+  // need to query mongo and filter on multiple fields:
+  // - STATUS:submissionAcknowledged + TRANSACTION_STAGE:unissued_conditional
+  // same as facilityStage = 'Unissued'||'Conditional'?
+  // - SUBMISSION_TYPE:manualInclusionApplication + STATUS:approved + MIN not issued
+  // - SUBMISSION_TYPE:manualInclusionApplication + STATUS:approvedWithConditions + MIN not submitted
+  const stageFilters = { // TODO use CONSTANTS lowercase string
+    // facilityStage: 'unissued',
+    // facilityStage: 'conditional',
+    filterByStatus: 'submissionAcknowledged',
+  };
 
-  // const filters = buildReportFilters(stageFilters, req.session.user);
+  const filters = buildReportFilters(stageFilters, req.session.user);
+  // console.log(`filters: ${util.inspect(filters)}`);
 
-  // get all transactions (for user?)
+  // get all transactions
   const { transactions, count } = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-  console.log(`transactions: ${util.inspect(transactions)}`);
+  // console.log(`transactions: ${util.inspect(transactions)}`);
   console.log(count);
-  // mock up by filtering here on conditioanl or unissued
-  const incompleteFacilities = transactions.filter((transaction) => (transaction.transactionStage === 'Unissued' || transaction.transactionStage === 'Conditional'));
-  // .filter((deal) => (deal.details && deal.details.status === 'Draft'));
 
-  console.log(`incompleteFacilities: ${util.inspect(incompleteFacilities)}`);
-  // incompleteFacilities.forEach((transaction) =>
-  // console.log(transaction.deal_id, transaction.transactionType, transaction.transactionStage));
-  // console.log(`results: ${incompleteFacilities.length}`);
+  // mock up by filtering here on conditional or unissued
+  const incompleteFacilities = transactions.filter((transaction) => (transaction.transactionStage === 'Unissued' || transaction.transactionStage === 'Conditional'));
+
 
   // loop through the incompletes and calculate the time remaining
   const ONE_DAY = 86400000; // milliseconds
-  const NINETY_DAYS = 7776000000; // milliseconds
-  const getExpiryDate = (val) => {
-    console.log(val.createdDate);
-    const expiry = parseInt(val.createdDate, 10) + NINETY_DAYS;
+  // const NINETY_DAYS = 7776000000; // milliseconds
+  const getExpiryDate = (val, days) => {
+    const expiry = parseInt(val.createdDate, 10) + (days * ONE_DAY);
     const id = val.deal_id;
     const remainingDays = Math.floor((expiry - Date.now()) / ONE_DAY);
     return {
@@ -603,8 +601,13 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     };
   };
 
-  const expiryDateOnFacilities = incompleteFacilities.map(getExpiryDate);
-  console.log(`newArray: ${util.inspect(expiryDateOnFacilities)}`);
+  const facilitiesWithExpiryDate = incompleteFacilities.map(
+    // use anon function to pass in number of days to calculate expiry
+    // eslint-disable-next-line func-names
+    (x) => { return getExpiryDate(x, 90); }
+  );
+
+  console.log(`newArray: ${util.inspect(facilitiesWithExpiryDate)}`);
 
   const trafficLights = {
     black: 0,
@@ -613,8 +616,8 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     green: 0,
   };
 
-  expiryDateOnFacilities.forEach((item) => {
-    console.log(item.id, item.remainingDays);
+  facilitiesWithExpiryDate.forEach((item) => {
+    // console.log(item.id, item.remainingDays);
     if (item.remainingDays < 0) {
       trafficLights.black += 1;
     } else if (item.remainingDays < 16) {
@@ -667,11 +670,11 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     manualInclusionsWithConditions,
     manualInclusionsWithoutConditions,
   };
-  console.log('render');
+
   return res.render('reports/countdown-indicator.njk', {
     reportData,
     primaryNav,
-    facilities: expiryDateOnFacilities,
+    facilities: facilitiesWithExpiryDate,
     subNav: 'countdown-indicator',
     user: req.session.user,
   });
