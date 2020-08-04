@@ -18,7 +18,11 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
           firstname
           surname
         }
-        checker
+        checker {
+          username
+          firstname
+          surname
+        }
         dateOfLastAction
         submissionDate
         created
