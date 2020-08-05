@@ -6,6 +6,8 @@ const loanStatus = (loan, loanErrors) => {
       // this will either be 'Ready for checker' or 'Submitted'
       return loan.status;
     }
+
+    // otherwise the facility has not been issued and there no validationErrors
     return 'Completed';
   }
   return 'Incomplete';
