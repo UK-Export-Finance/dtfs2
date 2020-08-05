@@ -13,7 +13,10 @@ const updateSubmittedIssuedFacilities = async (collection, deal) => {
       // only update facility if not already submitted & status completed
       const shouldUpdateIssuedLoanFacility = (facility.facilityStage === 'Conditional' && facility.issueFacilityDetailsProvided);
       const shouldUpdateIssuedBondFacility = (facility.bondStage === 'Unissued' && facility.issueFacilityDetailsProvided);
-      const shouldUpdateIssuedFacility = (shouldUpdateIssuedLoanFacility || shouldUpdateIssuedBondFacility);
+      const shouldUpdateIssuedFacility = ((shouldUpdateIssuedLoanFacility
+                                          || shouldUpdateIssuedBondFacility)
+                                          && !facility.issueFacilityDetailsSubmitted
+                                          && facility.status !== 'Completed');
 
       if (shouldUpdateIssuedFacility) {
         facility.issueFacilityDetailsSubmitted = true;
