@@ -2,6 +2,7 @@ import express from 'express';
 import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
+import getRAGStatus from './getRAGstatus';
 import CONSTANTS from '../constants';
 import {
   getApiData,
@@ -579,12 +580,11 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-  // console.log(`transactions: ${util.inspect(transactions)}`);
+  console.log(`transactions: ${util.inspect(transactions)}`);
   console.log(count);
 
   // mock up by filtering here on conditional or unissued
   const incompleteFacilities = transactions.filter((transaction) => (transaction.transactionStage === 'Unissued' || transaction.transactionStage === 'Conditional'));
-
 
   // loop through the incompletes and calculate the time remaining
   const ONE_DAY = 86400000; // milliseconds
@@ -604,10 +604,10 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   const facilitiesWithExpiryDate = incompleteFacilities.map(
     // use anon function to pass in number of days to calculate expiry
     // eslint-disable-next-line func-names
-    (x) => { return getExpiryDate(x, 90); }
+    (facility) => getExpiryDate(facility, 90),
   );
 
-  console.log(`newArray: ${util.inspect(facilitiesWithExpiryDate)}`);
+  console.log(`facilitiesWithExpiryDate: ${util.inspect(facilitiesWithExpiryDate)}`);
 
   const trafficLights = {
     black: 0,
@@ -630,7 +630,10 @@ router.get('/reports/countdown-indicator', async (req, res) => {
       trafficLights.black += 1;
     }
   });
+  
+  // const trafficLights = getRAGStatus(incompleteFacilities);
   console.log(`trafficLights: ${util.inspect(trafficLights)}`);
+  console.log(`transactions ${transactions.length}`);
 
 
   const issueOrMakeFirstAdvance = {
