@@ -2,6 +2,7 @@ const { findOneDeal, create: createDeal } = require('./deal.controller');
 const DEFAULTS = require('../defaults');
 const { generateDealId } = require('../../utils/generateIds');
 const { getCloneDealErrors } = require('../validation/clone-deal');
+const now = require('../../now');
 
 const CLONE_BOND_FIELDS = [
   '_id',
@@ -47,6 +48,8 @@ const stripTransaction = (transaction, allowedFields) => {
       stripped[key] = transaction[key];
     }
   });
+  // timestamp the newly cloned transactions and treat like a new draft.
+  stripped.createdDate = now();
 
   return stripped;
 };
