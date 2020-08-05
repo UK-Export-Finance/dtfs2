@@ -76,11 +76,11 @@
               </td>
 
               <td data-cy="maker" class="govuk-table__cell govuk-!-font-size-14">
-                {{ contract.details.maker.username }}
+                {{ contract.details.maker | displayName }}
               </td>
 
               <td data-cy="checker" class="govuk-table__cell govuk-!-font-size-14">
-                {{ contract.details.checker }}
+                {{ contract.details.checker | displayName}}
               </td>
 
               <td data-cy="updated" class="govuk-table__cell govuk-!-font-size-14">
