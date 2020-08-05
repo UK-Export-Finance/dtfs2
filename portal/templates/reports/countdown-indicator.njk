@@ -48,7 +48,7 @@
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Deal Id</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">ukefFacilityId</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">transaction stage</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Expiry</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Remaining</th>
@@ -66,8 +66,8 @@
              {{ facility.deal_id | dashIfEmpty }}
           </td>
 
-          <td data-cy="ukefFacilityId" class="govuk-table__cell govuk-!-font-size-14">
-            {{ facility.ukefFacilityId | dashIfEmpty }}
+          <td data-cy="transactionStage" class="govuk-table__cell govuk-!-font-size-14">
+            {{ facility.transactionStage | dashIfEmpty }}
           </td>
           
           <td data-cy="created" class="govuk-table__cell govuk-!-font-size-14">
