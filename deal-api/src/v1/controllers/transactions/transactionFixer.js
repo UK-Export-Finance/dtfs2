@@ -6,6 +6,8 @@ const BANKFACILITYID = 'transaction.bankFacilityId';
 const UKEFFACILITYID = 'transaction.ukefFacilityId';
 const DEAL_CREATED = 'transaction.deal_created';
 const DEAL_ID = '_id';
+const DEAL_STATUS = 'details.status';
+const TRANSACTION_STATUS = 'transaction.transactionStage';
 
 const constructor = (user, filters) => {
   const bondFix = bondFixer(filters);
@@ -14,7 +16,8 @@ const constructor = (user, filters) => {
   const transactionsQuery = () => {
     const listOfMongoQueryElements = filters.reduce((listSoFar, filter) => {
       const filterField = Object.keys(filter)[0];// only expecting one entry/block
-
+      console.log(filterField);
+      console.log(filter[filterField]);
       if (BANKFACILITYID === filterField) {
         const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { uniqueIdentificationNumber: new RegExp(`^${filter[filterField]}`) } } };
         const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { bankReferenceNumber: new RegExp(`^${filter[filterField]}`) } } };
@@ -39,6 +42,19 @@ const constructor = (user, filters) => {
 
         return listSoFar.concat([deal]);
       }
+      if (DEAL_STATUS === filterField) {
+        const dealwithStatus = { 'details.status': filter[filterField] };
+        
+        return listSoFar.concat([dealwithStatus]);
+      }
+      /* 
+      if (TRANSACTION_STATUS === filterField) {
+        const bondMatchesOnStatus = { 'bondTransactions.items': { $elemMatch: { facilityStage: 'Unconditional' } } };
+        const loanMatchesOnStatus = { 'loanTransactions.items': { $elemMatch: { facilityStage: 'Unissued' } } };
+        
+        return listSoFar.concat([{ $or: [bondMatchesOnStatus, loanMatchesOnStatus] }]);
+      }
+      */
 
       return listSoFar;
     }, []);
