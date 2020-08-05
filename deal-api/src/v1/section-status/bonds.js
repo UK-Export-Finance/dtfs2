@@ -1,5 +1,3 @@
-// TODO: be DRY, this is very similar to addAccurateStatusesToBonds
-
 const bondValidationErrors = require('../validation/bond');
 
 const bondStatus = (bond, bondErrors) => {
@@ -8,6 +6,8 @@ const bondStatus = (bond, bondErrors) => {
       // this will either be 'Ready for checker' or 'Submitted'
       return bond.status;
     }
+
+    // otherwise the facility has not been issued and there no validationErrors
     return 'Completed';
   }
   return 'Incomplete';
