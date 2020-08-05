@@ -162,9 +162,9 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_fee_perc(bond.guaranteeFeePayableByBank)
         .BSS_guarantee_perc(bond.coveredPercentage)
         .BSS_max_liability(convertCurrencyFormat(bond.ukefExposure))
-        .BSS_min_quarterly_fee(Number(bond.minimumRiskMarginFee))
+        .BSS_min_quarterly_fee(Number(bond.minimumRiskMarginFee) ? Number(bond.minimumRiskMarginFee) : 0)
         .BSS_premium_type(k2Map.FACILITIES.FEE_TYPE[bond.feeType])
-        .BSS_cover_start_date(dateHelpers.formatDate(bond['requestedCoverStartDate-day'], bond['requestedCoverStartDate-month'], bond['requestedCoverStartDate-year']))
+        .BSS_cover_start_date(dateHelpers.formatTimestamp(bond.requestedCoverStartDate))
         .BSS_issue_date('') // TODO - drupal field: issue_date
         .BSS_cover_end_date(dateHelpers.formatDate(bond['coverEndDate-day'], bond['coverEndDate-month'], bond['coverEndDate-year']))
         .BSS_cover_period(calculateExposurePeriod(bond))

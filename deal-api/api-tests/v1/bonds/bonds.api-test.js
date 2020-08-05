@@ -86,7 +86,6 @@ describe('/v1/deals/:id/bond', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['currencies', 'deals']);
-
     await as(anEditor).postEach(mockCurrencies).to('/v1/currencies');
   });
 
@@ -155,17 +154,17 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     describe('when a bond has all required fields', () => {
-      it('returns a bond with dealId and `Completed` status', async () => {
+      it('returns a bond with dealId and `Completed` status and requestedCoverStartDate', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
         const bond = {
           ...allBondFields,
+          ...requestedCoverStartDate(),
           ...coverEndDate(),
         };
 
         const createBondResponse = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/create`);
-
 
         const { body: createBondBody } = createBondResponse;
         const { bondId } = createBondBody;
@@ -182,6 +181,7 @@ describe('/v1/deals/:id/bond', () => {
         expect(getBondResponse.body.dealId).toEqual(dealId);
         expect(getBondResponse.body.validationErrors.count).toEqual(0);
         expect(getBondResponse.body.bond.status).toEqual('Completed');
+        expect(getBondResponse.body.bond.requestedCoverStartDate).toEqual(expect.any(String));
       });
     });
   });
@@ -491,6 +491,7 @@ describe('/v1/deals/:id/bond', () => {
           createdDate: expect.any(String),
           lastEdited: expect.any(String),
         };
+        delete expectedBond.requestedCoverStartDate;
         delete expectedBond['requestedCoverStartDate-day'];
         delete expectedBond['requestedCoverStartDate-month'];
         delete expectedBond['requestedCoverStartDate-year'];
@@ -602,7 +603,7 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     describe('when req.body.feeType is changed to \'At maturity\'', () => {
-      it('should remove feeFrequency from the loan', async () => {
+      it('should remove feeFrequency', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -628,6 +629,30 @@ describe('/v1/deals/:id/bond', () => {
 
         expect(body.feeFrequency).toEqual(undefined);
       });
+    });
+
+    it('should generate requestedCoverStartDate timestamp', async () => {
+      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+      const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+      const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+      const { body: createBondBody } = createBondResponse;
+      const { bondId } = createBondBody;
+    
+      const bond = {
+        ...allBondFields,
+        ...requestedCoverStartDate(),
+        ...coverEndDate(),
+      };
+
+      const { status, body} = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+      expect(status).toEqual(200);
+      expect(body.requestedCoverStartDate).toEqual(expect.any(String));
+      expect(body['requestedCoverStartDate-day']).toEqual(bond['requestedCoverStartDate-day']);
+      expect(body['requestedCoverStartDate-month']).toEqual(bond['requestedCoverStartDate-month']);
+      expect(body['requestedCoverStartDate-year']).toEqual(bond['requestedCoverStartDate-year']);
     });
   });
 });

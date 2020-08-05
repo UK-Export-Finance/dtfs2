@@ -19,6 +19,7 @@ const eligibilityCriteria = require('./controllers/eligibility-criteria.controll
 const loans = require('./controllers/loans.controller');
 const loanIssueFacility = require('./controllers/loan-issue-facility.controller');
 const bonds = require('./controllers/bonds.controller');
+const bondIssueFacility = require('./controllers/bond-issue-facility.controller');
 const eligibilityDocumentation = require('./controllers/eligibility-documentation.controller');
 const idCounters = require('./controllers/id-counters.controller');
 const mga = require('./controllers/mga.controller');
@@ -45,7 +46,7 @@ authRouter.route('/deals/:id/status')
     dealStatus.findOne,
   )
   .put(
-    validate({ role: ['maker', 'checker'] }),
+    validate({ role: ['maker', 'checker', 'interface'] }),
     dealStatus.update,
   );
 
@@ -101,6 +102,12 @@ authRouter.route('/deals/:id/bond/:bondId')
   .put(
     validate({ role: ['maker'] }),
     bonds.updateBond,
+  );
+
+authRouter.route('/deals/:id/bond/:bondId/issue-facility')
+  .put(
+    validate({ role: ['maker'] }),
+    bondIssueFacility.updateBondIssueFacility,
   );
 
 authRouter.route('/deals/:id')

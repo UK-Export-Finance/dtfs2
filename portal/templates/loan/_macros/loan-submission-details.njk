@@ -1,4 +1,4 @@
-{% macro render(loan) %}
+{% macro render(loan, user) %}
 
   <div data-cy="loan-submission-details">
     <h2 class="govuk-heading-m">Loan guarantee details</h2>
@@ -28,13 +28,13 @@
       {% endif %}
 
       {# TODO: component test. Need to think component test data for different statuses/data. #}
-      {% if loan['issuedDate-day'] and loan['issuedDate-month'] and loan['issuedDate-year'] %}
+      {% if loan.issuedDate %}
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key govuk-body-s">
             Issued Date
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s" data-cy="issued-date">
-            {{ loan['issuedDate-day'] }}/{{ loan['issuedDate-month'] }}/{{ loan['issuedDate-year'] }}
+            {{ loan.issuedDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
           </dd>
         </div>
       {% endif %}
@@ -50,13 +50,13 @@
         </div>
       {% endif %}
 
-      {% if loan['requestedCoverStartDate-day'] and loan['requestedCoverStartDate-month'] and loan['requestedCoverStartDate-year'] %}
+      {% if loan.requestedCoverStartDate %}
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key govuk-body-s">
             Requested Cover Start Date
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s" data-cy="requested-cover-start-date">
-            {{ loan['requestedCoverStartDate-day'] }}/{{ loan['requestedCoverStartDate-month'] }}/{{ loan['requestedCoverStartDate-year'] }}
+            {{ loan.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
           </dd>
         </div>
       {% endif %}

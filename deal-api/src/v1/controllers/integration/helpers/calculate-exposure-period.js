@@ -1,6 +1,6 @@
 /* calculating exposure period based on UKEF SQL function */
 const moment = require('moment');
-const { formattedTimestamp } = require('../../../section-dates/requested-cover-start-date');
+const { formattedTimestamp } = require('../../../facility-dates/timestamp');
 
 const calculateExposurePeriod = (facility, facilityType) => {
   let coverStartDate;

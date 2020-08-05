@@ -2,11 +2,14 @@ const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { updateLoanInDeal } = require('./loans.controller');
 const {
-  createTimestampFromSubmittedValues,
   hasAllRequestedCoverStartDateValues,
   updateRequestedCoverStartDate,
-} = require('../section-dates/requested-cover-start-date');
+} = require('../facility-dates/requested-cover-start-date');
+const { hasAllIssuedDateValues } = require('../facility-dates/issued-date');
+const { createTimestampFromSubmittedValues } = require('../facility-dates/timestamp');
 const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
+const { hasValue } = require('../../utils/string');
+const canIssueFacility = require('../facility-issuance');
 
 exports.updateLoanIssueFacility = async (req, res) => {
   const {
@@ -16,7 +19,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
   await findOneDeal(req.params.id, async (deal) => {
     if (deal) {
       if (!userHasAccessTo(req.user, deal)) {
-        res.status(401).send();
+        return res.status(401).send();
       }
 
       const loan = deal.loanTransactions.items.find((l) =>
@@ -26,16 +29,25 @@ exports.updateLoanIssueFacility = async (req, res) => {
         return res.status(404).send();
       }
 
+      if (!canIssueFacility(req.user.roles, deal, loan)) {
+        return res.status(403).send();
+      }
+
       let modifiedLoan = {
         _id: loanId,
         ...loan,
         ...req.body,
       };
 
-      modifiedLoan.issuedDate = createTimestampFromSubmittedValues(req.body, 'issuedDate');
+      const loanHasBankReferenceNumber = hasValue(loan.bankReferenceNumber);
+      if (!loanHasBankReferenceNumber) {
+        modifiedLoan.bankReferenceNumberRequiredForIssuance = true;
+      }
 
       if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {
         modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
+      } else {
+        delete modifiedLoan.requestedCoverStartDate;
       }
 
       const validationErrors = loanIssueFacilityValidationErrors(
@@ -43,14 +55,14 @@ exports.updateLoanIssueFacility = async (req, res) => {
         deal.details.submissionDate,
       );
 
-      if (!validationErrors.errorList || !validationErrors.errorList.requestedCoverStartDate) {
-        delete modifiedLoan['requestedCoverStartDate-day'];
-        delete modifiedLoan['requestedCoverStartDate-month'];
-        delete modifiedLoan['requestedCoverStartDate-year'];
+      if (hasAllIssuedDateValues(modifiedLoan)) {
+        modifiedLoan.issuedDate = createTimestampFromSubmittedValues(req.body, 'issuedDate');
+      } else {
+        delete modifiedLoan.issuedDate;
       }
 
       if (validationErrors.count === 0) {
-        modifiedLoan.facilityIssued = true;
+        modifiedLoan.issueFacilityDetailsProvided = true;
       }
 
       const updatedLoan = await updateLoanInDeal(req.params, req.user, deal, modifiedLoan);

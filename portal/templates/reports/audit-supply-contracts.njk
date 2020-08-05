@@ -25,10 +25,10 @@
   <table class="govuk-table govuk-!-margin-bottom-0">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Supply Contract ID</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank Supply Contract ID</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created by</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submitted by</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Supply Contract Status</th>
         {% if user and user.roles.includes("admin")%}
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank</th>
         {% endif %}
@@ -48,7 +48,7 @@
           </td>
 
           <td data-cy="createdBy" class="govuk-table__cell govuk-!-font-size-14">
-            {{ contract.details.maker.username }}
+            {{ contract.details.maker.firstname + " " + contract.details.maker.surname }}
           </td>
 
           <td data-cy="submittedBy" class="govuk-table__cell govuk-!-font-size-14">

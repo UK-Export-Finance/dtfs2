@@ -9,6 +9,7 @@ exports.findTransactions = async (requestingUser, start = 0, pagesize = 20, filt
 
   // work out the mongo query to get all the deals that might contain transactions we care about
   const query = transactionFix.transactionsQuery();
+
   // get the deals that might contain transactions we care about
   //   ordered by deal.details.dateOfLastAction
   const collection = await db.getCollection('deals');
