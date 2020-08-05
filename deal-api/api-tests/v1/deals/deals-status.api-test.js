@@ -559,6 +559,62 @@ describe('/v1/deals/:id/status', () => {
       });
     });
 
+    describe('when the status changes to `Ready for Checker\'s approval` (from any state)', () => {
+      let createdDeal;
+      let updatedDeal;
+
+      beforeEach(async () => {
+        const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
+
+        const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+
+        createdDeal = postResult.body;
+        const statusUpdate = {
+          status: 'Ready for Checker\'s approval',
+          confirmSubmit: true,
+        };
+
+        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      });
+
+      describe('any issued (bondStage=`Unissued`, `issueFacilityDetailsProvided` that have not yet been submitted', () => {
+        it('should add `Ready for Checker\'s approval` status to the bond', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toBeDefined();
+
+          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+          const issuedBondsThatShouldBeUpdated = body.deal.bondTransactions.items.filter((l) =>
+            l.bondStage = 'Unissued'
+            && l.issueFacilityDetailsProvided === true
+          );
+
+          issuedBondsThatShouldBeUpdated.forEach((bond) => {
+            expect(bond.status).toEqual('Ready for Checker\'s approval');
+          });
+        });
+      });
+
+      describe('any issued loans (facilityStage=`Conditional`, `issueFacilityDetailsProvided`) that have not yet been submitted', () => {
+        it('should add `Ready for Checker\'s approval` status to the loan', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toBeDefined();
+
+          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+          const issuedLoansThatShouldBeUpdated = body.deal.loanTransactions.items.filter((l) =>
+            l.facilityStage = 'Conditional'
+            && l.issueFacilityDetailsProvided === true
+          );
+
+          issuedLoansThatShouldBeUpdated.forEach((loan) => {
+            expect(loan.status).toEqual('Ready for Checker\'s approval');
+          });
+        });
+      });
+
+    });
+
     describe('when the status changes to `Submitted`', () => {
       let createdDeal;
       let updatedDeal;
@@ -577,7 +633,7 @@ describe('/v1/deals/:id/status', () => {
         updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
       });
 
-      describe('any loans that have `Conditional` facilityStage and `issue facility details provided` flag', () => {
+      describe('any issued loans (facilityStage=`Conditional`, `issueFacilityDetailsProvided`) that have not yet been submitted', () => {
         it('should add `issueFacilityDetailsSubmitted` property', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
@@ -607,7 +663,7 @@ describe('/v1/deals/:id/status', () => {
         });
       });
 
-      describe('any bonds that have `Unissued` bondStage and `issue facility details provided` flag', () => {
+      describe('any issued bonds (bondStage=`Unissued`, `issueFacilityDetailsProvided`) that have not yet been submitted', () => {
         it('should add `issueFacilityDetailsSubmitted` property', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();

@@ -85,8 +85,6 @@ exports.update = (req, res) => {
     }
 
     if (toStatus === 'Ready for Checker\'s approval') {
-      // updateIssuedFacilities / updateIssuedFacilitiesStatuses
-      // check issued facilities statuses
       dealAfterAllUpdates = await updateIssuedFacilitiesStatuses(collection, dealAfterAllUpdates);
     }
 
