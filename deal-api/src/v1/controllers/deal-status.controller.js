@@ -14,7 +14,7 @@ const sendStatusUpdateEmails = require('./deal-status/send-status-update-emails'
 
 const updateFacilityDates = require('./deal-status/update-facility-dates');
 const updateIssuedFacilitiesStatuses = require('./deal-status/update-issued-facilities-statuses');
-const updateIssuedFacilities = require('./deal-status/update-issued-facilities');
+const updateSubmittedIssuedFacilities = require('./deal-status/update-submitted-issued-facilities');
 
 exports.findOne = (req, res) => {
   findOneDeal(req.params.id, (deal) => {
@@ -91,8 +91,7 @@ exports.update = (req, res) => {
     }
 
     if (toStatus === 'Submitted') {
-      // TODO - presumably need to update facility statuses here.
-      await updateIssuedFacilities(collection, dealAfterAllUpdates);
+      await updateSubmittedIssuedFacilities(collection, dealAfterAllUpdates);
       dealAfterAllUpdates = await createSubmissionDate(collection, req.params.id, user);
 
       // TODO - Reinstate typeA XML creation once Loans and Summary have been added

@@ -18,7 +18,7 @@ const addAccurateStatusesToBonds = (bondTransactions) => {
     bondTransactions.items.forEach((b) => {
       const bond = b;
       const validationErrors = bondValidationErrors(bond);
-      bond.status = bondStatus(validationErrors);
+      bond.status = bondStatus(bond, validationErrors);
     });
   }
   return bondTransactions;

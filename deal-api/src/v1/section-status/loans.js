@@ -16,7 +16,7 @@ const addAccurateStatusesToLoans = (loanTransactions) => {
     loanTransactions.items.forEach((l) => {
       const loan = l;
       const validationErrors = loanValidationErrors(loan);
-      loan.status = loanStatus(validationErrors);
+      loan.status = loanStatus(loan, validationErrors);
     });
   }
   return loanTransactions;
