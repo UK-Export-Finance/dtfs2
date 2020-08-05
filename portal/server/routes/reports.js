@@ -568,12 +568,12 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   // - SUBMISSION_TYPE:manualInclusionApplication + STATUS:approvedWithConditions + MIN not submitted
   const stageFilters = { // TODO use CONSTANTS lowercase string
     // facilityStage: 'unissued',
-    // facilityStage: 'conditional',
+    facilityStage: 'conditional',
     filterByStatus: 'submissionAcknowledged',
   };
 
   const filters = buildReportFilters(stageFilters, req.session.user);
-  // console.log(`filters: ${util.inspect(filters)}`);
+  console.log(`filters: ${util.inspect(filters)}`);
 
   // get all transactions
   const { transactions, count } = await getApiData(
@@ -630,7 +630,7 @@ router.get('/reports/countdown-indicator', async (req, res) => {
       trafficLights.black += 1;
     }
   });
-  
+
   // const trafficLights = getRAGStatus(incompleteFacilities);
   console.log(`trafficLights: ${util.inspect(trafficLights)}`);
   console.log(`transactions ${transactions.length}`);
