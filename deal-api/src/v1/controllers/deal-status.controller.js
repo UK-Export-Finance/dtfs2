@@ -250,9 +250,11 @@ exports.update = (req, res) => {
       await updateFacilityDates(collection, updatedDeal);
     }
 
-    const dealAfterCommentsUpdate = await addComment(req.params.id, req.body.comments, user);
+    let dealAfterAllUpdates = updatedDeal;
 
-    let dealAfterAllUpdates = dealAfterCommentsUpdate;
+    if (req.body.comments) {
+      dealAfterAllUpdates = await addComment(req.params.id, req.body.comments, user);
+    }
 
     // only trigger updateDeal (which updates the deal's `editedBy` array),
     // if a checker is NOT changing the status to either:
@@ -261,7 +263,7 @@ exports.update = (req, res) => {
         && toStatus !== 'Submitted') {
       const newReq = {
         params: req.params,
-        body: dealAfterCommentsUpdate,
+        body: dealAfterAllUpdates,
         user: req.user,
       };
 
