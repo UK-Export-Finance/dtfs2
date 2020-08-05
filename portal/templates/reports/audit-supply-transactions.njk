@@ -58,7 +58,11 @@
           </td>
 
           <td data-cy="issuedBy" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.maker | dashIfEmpty }}
+            {%  if transaction.issuedDate %}
+            {{ transaction.checker }}
+            {% else %}
+            -
+            {% endif %}
           </td>
 
         </tr>
