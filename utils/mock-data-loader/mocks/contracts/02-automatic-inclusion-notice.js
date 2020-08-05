@@ -10,7 +10,11 @@ module.exports = {
     ukefDealId: '20010740',
     status: 'Acknowledged by UKEF',
     previousStatus: 'Submitted',
-    checker: 'CHECKER DURGA',
+    checker: {
+      username: 'CHECKER',
+      firstname: 'Emilio',
+      surname: 'Largo',
+    },
     submissionType: 'Automatic Inclusion Notice',
     owningBank: {
       id: '956',

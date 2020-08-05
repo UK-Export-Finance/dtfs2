@@ -492,7 +492,11 @@ router.get('/reports/mia_min-cover-start-date-changes/:page', async (req, res) =
       newRequestedCoverStartDate: '18/08/2018',
       dateTimeOfChange: '08/08/2018 - 09:37',
       maker: 'DurgaRao',
-      checker: 'CHECKER DURGA',
+      checker: {
+        username: 'CHECKER',
+        firstname: 'Emilio',
+        surname: 'Largo',
+      },
     },
   ];
 
@@ -534,7 +538,11 @@ router.get('/reports/reconciliation-report/:page', async (req, res) => {
       newRequestedCoverStartDate: '18/08/2018',
       dateTimeOfChange: '08/08/2018 - 09:37',
       maker: 'DurgaRao',
-      checker: 'CHECKER DURGA',
+      checker: {
+        username: 'CHECKER',
+        firstname: 'Emilio',
+        surname: 'Largo',
+      },
     },
   ];
 
