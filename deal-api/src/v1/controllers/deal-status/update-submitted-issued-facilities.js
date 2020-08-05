@@ -9,6 +9,8 @@ const updateSubmittedIssuedFacilities = async (collection, deal) => {
     arr.forEach((f) => {
       const facility = f;
 
+      // TODO: we should probably be checking
+      // only update facility if not already submitted & status completed
       const shouldUpdateIssuedLoanFacility = (facility.facilityStage === 'Conditional' && facility.issueFacilityDetailsProvided);
       const shouldUpdateIssuedBondFacility = (facility.bondStage === 'Unissued' && facility.issueFacilityDetailsProvided);
       const shouldUpdateIssuedFacility = (shouldUpdateIssuedLoanFacility || shouldUpdateIssuedBondFacility);
