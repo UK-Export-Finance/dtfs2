@@ -21,10 +21,11 @@ import {
 } from './pageSpecificValidationErrors';
 import completedLoanForms from './completedForms';
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
+import canIssueFacility from '../canIssueFacility';
 
 const router = express.Router();
 
-const userCanEditLoan = (user, deal) => {
+const userCanAccessLoan = (user, deal) => {
   if (!user.roles.includes('maker')) {
     return false;
   }
@@ -43,19 +44,6 @@ const userCanAccessLoanPreview = (user) => {
 
   return true;
 };
-
-const userCanIssueFacility = (user, deal, loan) => {
-  const isMaker = user.roles.includes('maker');
-
-  if (isMaker
-      && deal.details.status === 'Acknowledged by UKEF'
-      && loan.facilityStage === 'Conditional') {
-    return true;
-  }
-
-  return false;
-};
-
 
 const handleBankReferenceNumberField = (loanBody) => {
   const modifiedLoan = loanBody;
@@ -127,7 +115,7 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]
 
   const { user } = req.session;
 
-  if (!userCanEditLoan(user, req.apiData.deal)) {
+  if (!userCanAccessLoan(user, req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -171,7 +159,7 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL,
 
   const { user } = req.session;
 
-  if (!userCanEditLoan(user, req.apiData.deal)) {
+  if (!userCanAccessLoan(user, req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -213,7 +201,7 @@ router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL])
 
   const { user } = req.session;
 
-  if (!userCanEditLoan(user, req.apiData.deal)) {
+  if (!userCanAccessLoan(user, req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -334,7 +322,7 @@ router.get('/contract/:_id/loan/:loanId/issue-facility', provide([LOAN, DEAL]), 
   const { loan } = req.apiData.loan;
   const { user } = req.session;
 
-  if (!userCanIssueFacility(user, req.apiData.deal, loan)) {
+  if (!canIssueFacility(user.roles, req.apiData.deal, loan)) {
     return res.redirect('/');
   }
 

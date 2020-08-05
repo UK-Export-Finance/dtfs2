@@ -1,4 +1,3 @@
-const moment = require('moment');
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const loanValidationErrors = require('../validation/loan');
@@ -11,7 +10,7 @@ const { handleTransactionCurrencyFields } = require('../section-currency');
 const {
   hasAllRequestedCoverStartDateValues,
   updateRequestedCoverStartDate,
-} = require('../section-dates/requested-cover-start-date');
+} = require('../facility-dates/requested-cover-start-date');
 const { loanStatus } = require('../section-status/loan');
 const { sanitizeCurrency } = require('../../utils/number');
 const now = require('../../now');
@@ -66,18 +65,6 @@ exports.getLoan = async (req, res) => {
 
       if (loan) {
         const validationErrors = loanValidationErrors(loan);
-
-        // if we have requestedCoverStartDate timestamp
-        // return consumption-friendly day/month/year.
-        if (loan.requestedCoverStartDate) {
-          const targetTimezone = req.user.timezone;
-          const utc = moment(parseInt(loan.requestedCoverStartDate, 10));
-          const localisedTimestamp = utc.tz(targetTimezone);
-
-          loan['requestedCoverStartDate-day'] = localisedTimestamp.format('DD');
-          loan['requestedCoverStartDate-month'] = localisedTimestamp.format('MM');
-          loan['requestedCoverStartDate-year'] = localisedTimestamp.format('YYYY');
-        }
 
         return res.json({
           dealId,
@@ -209,18 +196,14 @@ exports.updateLoan = async (req, res) => {
 
       if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {
         modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
-      }
-
-      const validationErrors = loanValidationErrors(modifiedLoan);
-
-      if (!validationErrors.errorList || !validationErrors.errorList.requestedCoverStartDate) {
-        delete modifiedLoan['requestedCoverStartDate-day'];
-        delete modifiedLoan['requestedCoverStartDate-month'];
-        delete modifiedLoan['requestedCoverStartDate-year'];
+      } else {
+        delete modifiedLoan.requestedCoverStartDate;
       }
 
       modifiedLoan.lastEdited = now();
       const updatedLoan = await updateLoanInDeal(req.params, req.user, deal, modifiedLoan);
+
+      const validationErrors = loanValidationErrors(updatedLoan);
 
       if (validationErrors.count !== 0) {
         return res.status(400).send({

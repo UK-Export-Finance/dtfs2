@@ -1,3 +1,4 @@
+const moment = require('moment');
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const BOND_FORM_VALUES = require('./bond-form-values');
@@ -214,8 +215,13 @@ context('Add a Bond to a Deal', () => {
         });
 
         row.requestedCoverStartDate().invoke('text').then((text) => {
-          const expectedDate = `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`;
-          expect(text.trim()).equal(expectedDate);
+          const momentDate = moment().set({
+            date: Number(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay),
+            month: Number(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth) - 1, // months are zero indexed
+            year: Number(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear),
+          });
+
+          expect(text.trim()).equal(momentDate.format('DD/MM/YYYY'));
         });
 
         row.coverEndDate().invoke('text').then((text) => {

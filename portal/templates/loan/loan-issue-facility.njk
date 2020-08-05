@@ -25,9 +25,9 @@
       legend = 'Issued Date',
       id = 'issuedDate',
       hint = 'For example, 31 05 2017',
-      dayValue = loan['issuedDate-day'],
-      monthValue = loan['issuedDate-month'],
-      yearValue = loan['issuedDate-year'],
+      dayValue = loan['issuedDate-day'] or loan.issuedDate and loan.issuedDate | localiseTimestamp('DD', user.timezone),
+      monthValue = loan['issuedDate-month'] or loan.issuedDate and loan.issuedDate | localiseTimestamp('MM', user.timezone),
+      yearValue = loan['issuedDate-year'] or loan.issuedDate and loan.issuedDate | localiseTimestamp('YYYY', user.timezone),
       error = validationErrors.errorList.issuedDate
     )}}
 
@@ -35,9 +35,9 @@
       legend = 'Requested Cover Start Date (optional)',
       id = 'requestedCoverStartDate',
       hint = 'For example, 31 05 2017',
-      dayValue = loan['requestedCoverStartDate-day'],
-      monthValue = loan['requestedCoverStartDate-month'],
-      yearValue = loan['requestedCoverStartDate-year'],
+      dayValue = loan['requestedCoverStartDate-day'] or loan.requestedCoverStartDate and loan.requestedCoverStartDate | localiseTimestamp('DD', user.timezone),
+      monthValue = loan['requestedCoverStartDate-month'] or loan.requestedCoverStartDate and loan.requestedCoverStartDate | localiseTimestamp('MM', user.timezone),
+      yearValue = loan['requestedCoverStartDate-year'] or loan.requestedCoverStartDate and loan.requestedCoverStartDate | localiseTimestamp('YYYY', user.timezone),
       error = validationErrors.errorList.requestedCoverStartDate
     )}}
 
@@ -75,7 +75,9 @@
         }
       }) }}
 
-      {% if not loan.bankReferenceNumber %}
+      {% set bankReferenceNumberRequiredForIssuance = loan.bankReferenceNumberRequiredForIssuance or not loan.bankReferenceNumber %}
+
+      {% if bankReferenceNumberRequiredForIssuance %}
         {{bankReferenceNumberField.render(
           id = 'bankReferenceNumber',
           label = 'Bank reference number',

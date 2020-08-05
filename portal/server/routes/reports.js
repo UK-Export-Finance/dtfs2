@@ -363,12 +363,12 @@ router.get('/reports/audit-supply-contracts/:id/transactions/:page', async (req,
   const { userToken } = requestParams(req);
 
   const idFilter = {
-    field: '_id',
-    value: req.params.id,
+    _id: req.params.id,
   };
 
+  const filters = buildReportFilters(idFilter, req.session.user);
   const { transactions, count } = await getApiData(
-    api.transactions(req.params.page * PAGESIZE, PAGESIZE, idFilter, userToken),
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
 

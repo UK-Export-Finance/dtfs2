@@ -5,81 +5,58 @@ const loanFixer = require('./loanFixer');
 const BANKFACILITYID = 'transaction.bankFacilityId';
 const UKEFFACILITYID = 'transaction.ukefFacilityId';
 const DEAL_CREATED = 'transaction.deal_created';
+const DEAL_ID = '_id';
 
-const filtersWeDoManually = [
-  'transaction.transactionStage',
-  'transaction.transactionType',
-  BANKFACILITYID,
-  UKEFFACILITYID,
-  DEAL_CREATED,
-];
-
-const constructor = (user, graphQLFilters) => {
-  const bondFix = bondFixer(graphQLFilters);
-  const loanFix = loanFixer(graphQLFilters);
+const constructor = (user, filters) => {
+  const bondFix = bondFixer(filters);
+  const loanFix = loanFixer(filters);
 
   const transactionsQuery = () => {
-    // copy the filters into our own object so we can mess with it
-    let query = {};
-    if (graphQLFilters && graphQLFilters !== {}) {
-      query = { ...graphQLFilters };
-    }
+    const listOfMongoQueryElements = filters.reduce((listSoFar, filter) => {
+      const filterField = Object.keys(filter)[0];// only expecting one entry/block
 
-    // if the user is not a superuser,
-    // -> we must only ever show them data related to their bank
-    if (!isSuperUser(user)) {
-      query['details.owningBank.id'] = { $eq: user.bank.id };
-    }
-
-    // if we're querying directly by an id; re-do the query into something that works in our actual schema
-    //   possibly learning enough about mongo to do this better now..
-    const mongoFiltering = [];
-
-    if (query[BANKFACILITYID]) {
-      const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { uniqueIdentificationNumber: new RegExp(`^${query[BANKFACILITYID]}`) } } };
-      const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { bankReferenceNumber: new RegExp(`^${query[BANKFACILITYID]}`) } } };
-      mongoFiltering.push({ $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] });
-    }
-
-    if (query[UKEFFACILITYID]) {
-      const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { ukefFacilityID: new RegExp(`^${query[UKEFFACILITYID]}`) } } };
-      const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { ukefFacilityID: new RegExp(`^${query[UKEFFACILITYID]}`) } } };
-
-      mongoFiltering.push({ $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] });
-    }
-
-    if (query[DEAL_CREATED]) {
-      const dealWithinSpecifiedRange = { 'details.created': query[DEAL_CREATED] };
-
-      mongoFiltering.push(dealWithinSpecifiedRange);
-    }
-
-    if (mongoFiltering.length === 1) {
-      // if we only picked up one filtering criteria - just bang it into the query
-      query = {
-        ...query,
-        ...mongoFiltering[0],
-      };
-    } else if (mongoFiltering.length > 1) {
-      // if we picked up multiple criteria, add them all with an $and
-      query = {
-        ...query,
-        $and: mongoFiltering,
-      };
-    }
-    // -- end of tinkering with the mongoDB query directly.
-
-    // using Array.filter as a cheap and cheesy iterator
-    //  we look at each of the filters we're supposed to be ignoring in mongo
-    //  and if we find them we delete them from this query object
-    filtersWeDoManually.filter((filterThatIsNotForMongo) => {
-      if (query[filterThatIsNotForMongo]) {
-        delete query[filterThatIsNotForMongo];
+      if (BANKFACILITYID === filterField) {
+        const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { uniqueIdentificationNumber: new RegExp(`^${filter[filterField]}`) } } };
+        const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { bankReferenceNumber: new RegExp(`^${filter[filterField]}`) } } };
+        return listSoFar.concat([{ $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] }]);
       }
-      return false;// because lint requires me to return something because i'm using .filter..
-    });
 
-    return query;
+      if (UKEFFACILITYID === filterField) {
+        const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { ukefFacilityID: new RegExp(`^${filter[filterField]}`) } } };
+        const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { ukefFacilityID: new RegExp(`^${filter[filterField]}`) } } };
+
+        return listSoFar.concat([{ $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] }]);
+      }
+
+      if (DEAL_CREATED === filterField) {
+        const dealWithinSpecifiedRange = { 'details.created': filter[filterField] };
+
+        return listSoFar.concat([dealWithinSpecifiedRange]);
+      }
+
+      if (DEAL_ID === filterField) {
+        const deal = { _id: filter[filterField] };
+
+        return listSoFar.concat([deal]);
+      }
+
+      return listSoFar;
+    }, []);
+
+
+    if (!isSuperUser(user)) {
+      listOfMongoQueryElements.push({ 'details.owningBank.id': { $eq: user.bank.id } });
+    }
+
+    if (listOfMongoQueryElements.length === 1) {
+      return listOfMongoQueryElements[0];
+    } if (listOfMongoQueryElements.length > 1) {
+      return {
+        $and: listOfMongoQueryElements,
+      };
+    }
+
+    return {};
   };
 
   const filteredTransactions = (deal) => {

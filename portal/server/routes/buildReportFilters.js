@@ -129,6 +129,12 @@ const buildReportFilters = (params, user) => {
       });
     }
   }
+  if (params._id) { // eslint-disable-line no-underscore-dangle
+    filters.push({
+      field: '_id',
+      value: params._id, // eslint-disable-line no-underscore-dangle
+    });
+  }
 
   return filters;
 };

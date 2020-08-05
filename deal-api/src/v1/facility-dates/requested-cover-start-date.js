@@ -1,32 +1,12 @@
 const moment = require('moment');
 const { hasValue } = require('../../utils/string');
 
-exports.formattedTimestamp = (timestamp) => {
-  const utc = moment(parseInt(timestamp, 10));
-  const dt = moment(utc);
-  return moment(dt).isValid() ? dt.format() : '';
-};
-
-exports.createTimestampFromSubmittedValues = (submittedValues, fieldName) => {
-  const day = submittedValues[`${fieldName}-day`];
-  const month = submittedValues[`${fieldName}-month`];
-  const year = submittedValues[`${fieldName}-year`];
-
-  const momentDate = moment().set({
-    date: Number(day),
-    month: Number(month) - 1, // months are zero indexed
-    year: Number(year),
-  });
-
-  return moment(momentDate).utc().valueOf().toString();
-};
-
-const getRequestedCoverStartDateValues = (loan) => {
+const getRequestedCoverStartDateValues = (facility) => {
   const {
     'requestedCoverStartDate-day': requestedCoverStartDateDay,
     'requestedCoverStartDate-month': requestedCoverStartDateMonth,
     'requestedCoverStartDate-year': requestedCoverStartDateYear,
-  } = loan;
+  } = facility;
 
   return {
     requestedCoverStartDateDay,
@@ -35,12 +15,12 @@ const getRequestedCoverStartDateValues = (loan) => {
   };
 };
 
-const hasAllRequestedCoverStartDateValues = (loan) => {
+const hasAllRequestedCoverStartDateValues = (facility) => {
   const {
     requestedCoverStartDateDay,
     requestedCoverStartDateMonth,
     requestedCoverStartDateYear,
-  } = getRequestedCoverStartDateValues(loan);
+  } = getRequestedCoverStartDateValues(facility);
 
   const hasRequestedCoverStartDate = (hasValue(requestedCoverStartDateDay)
     && hasValue(requestedCoverStartDateMonth)
@@ -55,25 +35,25 @@ const hasAllRequestedCoverStartDateValues = (loan) => {
 
 exports.hasAllRequestedCoverStartDateValues = hasAllRequestedCoverStartDateValues;
 
-
-exports.updateRequestedCoverStartDate = (loan) => {
+exports.updateRequestedCoverStartDate = (facility) => {
   // if we have all requestedCoverStartDate fields (day, month and year)
-  // delete these and use UTC timestamp in a single requestedCoverStartDate property.
-  const modifiedLoan = loan;
+  // generate UTC timestamp in a single requestedCoverStartDate property.
+  const modifiedFacility = facility;
 
-  if (hasAllRequestedCoverStartDateValues(loan)) {
+  if (hasAllRequestedCoverStartDateValues(facility)) {
     const {
       requestedCoverStartDateDay,
       requestedCoverStartDateMonth,
       requestedCoverStartDateYear,
-    } = getRequestedCoverStartDateValues(loan);
+    } = getRequestedCoverStartDateValues(facility);
 
     const momentDate = moment().set({
       date: Number(requestedCoverStartDateDay),
       month: Number(requestedCoverStartDateMonth) - 1, // months are zero indexed
       year: Number(requestedCoverStartDateYear),
     });
-    modifiedLoan.requestedCoverStartDate = moment(momentDate).utc().valueOf().toString();
+
+    modifiedFacility.requestedCoverStartDate = moment(momentDate).utc().valueOf().toString();
   }
-  return modifiedLoan;
+  return modifiedFacility;
 };

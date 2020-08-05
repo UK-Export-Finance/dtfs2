@@ -8,6 +8,7 @@ const incompleteDeal = require('../../fixtures/deal-with-incomplete-about-sectio
 
 const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
+const smeTypeIsRequired = require('../../../src/v1/validation/submission-details-rules/sme-type-is-required');
 
 // Mock currency & country API calls as no currency/country data is in db during pipeline test as previous test had removed them
 jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
@@ -144,10 +145,10 @@ describe('/v1/deals/:id/status', () => {
         status: 'Abandoned Deal',
       };
 
-      const { status, text } = await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      const { status, body } = await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
       expect(status).toEqual(200);
-      expect(text).toEqual('Abandoned Deal');
+      expect(body.details.status).toEqual('Abandoned Deal');
     });
 
     it('updates the deal', async () => {
@@ -408,12 +409,6 @@ describe('/v1/deals/:id/status', () => {
         'coverEndDate-year': moment().add(1, 'month').format('YYYY'),
       });
 
-      const expectedRequestedCoverStartDate = () => ({
-        'requestedCoverStartDate-day': moment().format('DD'),
-        'requestedCoverStartDate-month': moment().format('MM'),
-        'requestedCoverStartDate-year': moment().format('YYYY'),
-      });
-
       const statusUpdate = {
         comments: 'Ready to go!',
         status: 'Ready for Checker\'s approval',
@@ -489,13 +484,13 @@ describe('/v1/deals/:id/status', () => {
           expect(body.deal.bondTransactions.items[1]).toEqual({
             ...newDealWithBonds.bondTransactions.items[1],
             status: 'Completed',
-            ...expectedRequestedCoverStartDate(),
+            requestedCoverStartDate: expect.any(String),
           });
 
           expect(body.deal.bondTransactions.items[2]).toEqual({
             ...newDealWithBonds.bondTransactions.items[2],
             status: 'Completed',
-            ...expectedRequestedCoverStartDate(),
+            requestedCoverStartDate: expect.any(String),
           });
         });
       });
@@ -582,9 +577,73 @@ describe('/v1/deals/:id/status', () => {
         updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
       });
 
+      describe('any loans that have `Conditional` facilityStage and `issue facility details provided` flag', () => {
+        it('should add `issueFacilityDetailsSubmitted` property', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toBeDefined();
+
+          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+          const issuedLoanThatShouldBeUpdated = body.deal.loanTransactions.items.find((l) =>
+            l.facilityStage = 'Conditional'
+            && l.issueFacilityDetailsProvided === true
+          );
+
+          expect(issuedLoanThatShouldBeUpdated.issueFacilityDetailsSubmitted).toEqual(true);
+        });
+
+        it('defaults requestedCoverStartDate to the issuedDate if no requestedCoverStartDate', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toBeDefined();
+
+          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+          const issuedLoanThatShouldBeUpdated = createdDeal.loanTransactions.items.find((l) =>
+            l.facilityStage = 'Conditional'
+            && l.issueFacilityDetailsProvided === true
+            && !l.requestedCoverStartDate
+          );
+
+          const loanInUpdatedDeal = body.deal.loanTransactions.items.find((l) => l._id === issuedLoanThatShouldBeUpdated._id);
+          expect(loanInUpdatedDeal.requestedCoverStartDate).toEqual(issuedLoanThatShouldBeUpdated.issuedDate);
+        });
+      });
+
+      describe('any bonds that have `Unissued` bondStage and `issue facility details provided` flag', () => {
+        it('should add `issueFacilityDetailsSubmitted` property', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toBeDefined();
+
+          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+          const unissuedBondThatShouldBeUpdated = body.deal.bondTransactions.items.find((b) =>
+            b.bondStage === 'Unissued'
+            && b.issueFacilityDetailsProvided === true
+          );
+
+          expect(unissuedBondThatShouldBeUpdated.issueFacilityDetailsSubmitted).toEqual(true);
+        });
+
+        it('defaults requestedCoverStartDate to the issuedDate if no requestedCoverStartDate', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toBeDefined();
+
+          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+          const unissuedBondThatShouldBeUpdated = createdDeal.bondTransactions.items.find((b) =>
+            b.bondStage === 'Unissued'
+            && b.issueFacilityDetailsProvided === true
+            && !b.requestedCoverStartDate
+          );
+
+          const bondInUpdatedDeal = body.deal.bondTransactions.items.find((l) => l._id === unissuedBondThatShouldBeUpdated._id);
+          expect(bondInUpdatedDeal.requestedCoverStartDate).toEqual(unissuedBondThatShouldBeUpdated.issuedDate);
+        });
+      });
+
       it('adds a submissionDate to the deal', async () => {
         expect(updatedDeal.status).toEqual(200);
-        expect(updatedDeal.body).toEqual({});
+        expect(updatedDeal.body).toBeDefined();
 
         const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
@@ -632,7 +691,7 @@ describe('/v1/deals/:id/status', () => {
 
         const { status, body } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
-        expect(body).toEqual({});
+        expect(body).toBeDefined();
       });
     });
 

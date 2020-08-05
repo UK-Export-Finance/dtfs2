@@ -15,6 +15,8 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
         submissionType
         maker {
           username
+          firstname
+          surname
         }
         checker
         dateOfLastAction

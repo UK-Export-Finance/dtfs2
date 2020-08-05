@@ -41,6 +41,7 @@ module.exports = {
         ukefFacilityID: 'a12345678',
         value: 'GBP 123,456.00',
         startDate: '12/02/2020',
+        createdDate: '1596189840084',
         endDate: '14/03/2027',
         action: '?',
         bondStage: 'Issued',
@@ -57,6 +58,7 @@ module.exports = {
         value: 'GBP 123,456.00',
         bondStage: 'Issued',
         startDate: '12/02/2020',
+        createdDate: '1596189840084',
         endDate: '14/03/2027',
         action: '?',
         completedStatus: {
@@ -77,6 +79,7 @@ module.exports = {
         value: 'GBP 123,456.00',
         facilityStage: 'Unconditional',
         startDate: '12/02/2020',
+        createdDate: '1596189840084',
         endDate: '14/03/2027',
         action: '?',
         completedStatus: {
@@ -93,6 +96,7 @@ module.exports = {
         value: 'GBP 123,456.00',
         facilityStage: 'Unconditional',
         startDate: '',
+        createdDate: '1596189840084',
         endDate: '',
         action: '?',
         completedStatus: {

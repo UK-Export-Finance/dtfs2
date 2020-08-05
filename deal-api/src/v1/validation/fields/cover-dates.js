@@ -3,34 +3,34 @@ const { orderNumber } = require('../../../utils/error-list-order-number');
 const {
   dateHasAllValues,
 } = require('./date');
+const { formattedTimestamp } = require('../../facility-dates/timestamp');
 
-module.exports = (loan, errorList) => {
+module.exports = (submittedValues, errorList) => {
   const newErrorList = errorList;
 
+  const requestedCoverStartDateTimestamp = formattedTimestamp(submittedValues.requestedCoverStartDate);
+
   const {
-    'requestedCoverStartDate-day': requestedCoverStartDateDay,
-    'requestedCoverStartDate-month': requestedCoverStartDateMonth,
-    'requestedCoverStartDate-year': requestedCoverStartDateYear,
     'coverEndDate-day': coverEndDateDay,
     'coverEndDate-month': coverEndDateMonth,
     'coverEndDate-year': coverEndDateYear,
-  } = loan;
+  } = submittedValues;
 
-  const hasValidRequestedCoverStartDate = dateHasAllValues(
-    requestedCoverStartDateDay,
-    requestedCoverStartDateMonth,
-    requestedCoverStartDateYear,
-  ) && !newErrorList.requestedCoverStartDate;
+  const hasValidRequestedCoverStartDate = (requestedCoverStartDateTimestamp && !newErrorList.requestedCoverStartDate);
 
   const hasValidCoverEndDate = dateHasAllValues(
     coverEndDateDay,
     coverEndDateMonth,
     coverEndDateYear,
-  ) && !newErrorList.requestedCoverStartDate;
+  ) && !newErrorList.coverEndDate;
 
   const hasValidCoverStartAndEndDates = (hasValidRequestedCoverStartDate && hasValidCoverEndDate);
 
   if (hasValidCoverStartAndEndDates) {
+    const requestedCoverStartDateDay = moment(requestedCoverStartDateTimestamp).format('DD');
+    const requestedCoverStartDateMonth = moment(requestedCoverStartDateTimestamp).format('MM');
+    const requestedCoverStartDateYear = moment(requestedCoverStartDateTimestamp).format('YYYY');
+
     const requestedCoverStartDate = `${requestedCoverStartDateYear}-${requestedCoverStartDateMonth}-${requestedCoverStartDateDay}`;
     const coverEndDate = `${coverEndDateYear}-${coverEndDateMonth}-${coverEndDateDay}`;
 

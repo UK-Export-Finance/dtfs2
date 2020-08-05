@@ -8,6 +8,10 @@ const {
   calculateUkefExposure,
 } = require('../section-calculations');
 const { handleTransactionCurrencyFields } = require('../section-currency');
+const {
+  hasAllRequestedCoverStartDateValues,
+  updateRequestedCoverStartDate,
+} = require('../facility-dates/requested-cover-start-date');
 const { sanitizeCurrency } = require('../../utils/number');
 const now = require('../../now');
 
@@ -42,7 +46,7 @@ const updateBondInDeal = async (params, user, deal, bond) => {
 
   return bondInDeal;
 };
-
+exports.updateBondInDeal = updateBondInDeal;
 
 exports.getBond = async (req, res) => {
   const {
@@ -120,6 +124,7 @@ const bondStageFields = (bond) => {
 
   if (bondStage === 'Unissued') {
     // remove any `Issued Bond Stage` specific fields/values
+    delete modifiedBond.requestedCoverStartDate;
     delete modifiedBond['requestedCoverStartDate-day'];
     delete modifiedBond['requestedCoverStartDate-month'];
     delete modifiedBond['requestedCoverStartDate-year'];
@@ -132,14 +137,14 @@ const bondStageFields = (bond) => {
   return modifiedBond;
 };
 
-const feeTypeFields = (loan) => {
-  const modifiedLoan = loan;
-  const { feeType } = modifiedLoan;
+const feeTypeFields = (bond) => {
+  const modifiedBond = bond;
+  const { feeType } = modifiedBond;
   if (feeType === 'At maturity') {
-    delete modifiedLoan.feeFrequency;
+    delete modifiedBond.feeFrequency;
   }
 
-  return modifiedLoan;
+  return modifiedBond;
 };
 
 exports.updateBond = async (req, res) => {
@@ -183,6 +188,12 @@ exports.updateBond = async (req, res) => {
       if (sanitizedFacilityValue.sanitizedValue) {
         modifiedBond.ukefExposure = calculateUkefExposure(sanitizedFacilityValue.sanitizedValue, coveredPercentage);
         modifiedBond.facilityValue = sanitizedFacilityValue.sanitizedValue;
+      }
+
+      if (hasAllRequestedCoverStartDateValues(modifiedBond)) {
+        modifiedBond = updateRequestedCoverStartDate(modifiedBond);
+      } else {
+        delete modifiedBond.requestedCoverStartDate;
       }
 
       modifiedBond.lastEdited = now();

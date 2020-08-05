@@ -5,7 +5,7 @@ const {
   dateIsInTimeframe,
   dateValidationText,
 } = require('../../fields/date');
-const { formattedTimestamp } = require('../../../section-dates/requested-cover-start-date');
+const { formattedTimestamp } = require('../../../facility-dates/timestamp');
 
 module.exports = (submittedValues, errorList) => {
   const newErrorList = errorList;

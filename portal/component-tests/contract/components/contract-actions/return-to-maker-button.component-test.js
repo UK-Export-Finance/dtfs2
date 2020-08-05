@@ -95,6 +95,19 @@ describe(component, () => {
         wrapper.expectElement('[data-cy="ReturnToMaker"]').notToExist();
       }
     });
+
+    it('should NOT render when deal status is `Acknowledged by UKEF`', () => {
+      const user = { roles: ['maker', 'checker'] };
+      const deals = [
+        { _id: 1, details: { status: 'Further Maker\'s input required' } },
+      ];
+      const userCanSubmit = true;
+
+      for (const deal of deals) {
+        const wrapper = render({ user, deal, userCanSubmit });
+        wrapper.expectElement('[data-cy="ReturnToMaker"]').notToExist();
+      }
+    });
   });
 
   describe('when viewed by a checker with userCanSubmit param set to false', () => {

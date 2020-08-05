@@ -107,7 +107,7 @@ describe('Workflow type B XML processing', () => {
     const updatedDeal = await processTypeB({ fileContents: typeBxml });
 
     expect(updatedDeal.comments[0].text).toEqual(dealComments);
-    expect(updatedDeal.comments[0].user.username).toEqual('UKEF workflow');
+    expect(updatedDeal.comments[0].user.username).toEqual('INTERFACE');
   });
 
   it('should update special conditions workflow response has comment and action code = 007', async () => {
@@ -123,6 +123,6 @@ describe('Workflow type B XML processing', () => {
 
     expect(updatedDeal.comments.length).toEqual(0);
     expect(updatedDeal.specialConditions[0].text).toEqual(dealComments);
-    expect(updatedDeal.specialConditions[0].user.username).toEqual('UKEF workflow');
+    expect(updatedDeal.specialConditions[0].user.username).toEqual('INTERFACE');
   });
 });

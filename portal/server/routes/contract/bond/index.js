@@ -1,6 +1,11 @@
 import express from 'express';
 import api from '../../../api';
-import { provide, BOND, CURRENCIES } from '../../api-data-provider';
+import {
+  provide,
+  BOND,
+  DEAL,
+  CURRENCIES,
+} from '../../api-data-provider';
 import {
   getApiData,
   requestParams,
@@ -17,10 +22,23 @@ import {
 } from './pageSpecificValidationErrors';
 import completedBondForms from './completedForms';
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
+import canIssueFacility from '../canIssueFacility';
 
 const router = express.Router();
 
-const userCanAccessBond = (user) => {
+const userCanAccessBond = (user, deal) => {
+  if (!user.roles.includes('maker')) {
+    return false;
+  }
+
+  if (deal.details.status === 'Acknowledged by UKEF') {
+    return false;
+  }
+
+  return true;
+};
+
+const userCanAccessBondPreview = (user) => {
   if (!user.roles.includes('maker')) {
     return false;
   }
@@ -70,11 +88,11 @@ router.get('/contract/:_id/bond/create', async (req, res) => {
   return res.redirect(`/contract/${_id}/bond/${bondId}/details`); // eslint-disable-line no-underscore-dangle
 });
 
-router.get('/contract/:_id/bond/:bondId/details', async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/details', provide([DEAL]), async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
   const { user } = req.session;
 
-  if (!await api.validateToken(userToken) || !userCanAccessBond(user)) {
+  if (!await api.validateToken(userToken) || !userCanAccessBond(user, req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -117,11 +135,11 @@ router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/bond/:bondId/financial-details', provide([CURRENCIES]), async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/financial-details', provide([CURRENCIES, DEAL]), async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
   const { user } = req.session;
 
-  if (!await api.validateToken(userToken) || !userCanAccessBond(user)) {
+  if (!await api.validateToken(userToken) || !userCanAccessBond(user, req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -167,11 +185,11 @@ router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) =>
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/fee-details', provide([DEAL]), async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
   const { user } = req.session;
 
-  if (!await api.validateToken(userToken) || !userCanAccessBond(user)) {
+  if (!await api.validateToken(userToken) || !userCanAccessBond(user, req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -220,7 +238,7 @@ router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
   const { user } = req.session;
 
-  if (!await api.validateToken(userToken) || !userCanAccessBond(user)) {
+  if (!await api.validateToken(userToken) || !userCanAccessBondPreview(user)) {
     return res.redirect('/');
   }
 
@@ -304,13 +322,45 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/bond/:_bondId/issue-facility', async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/issue-facility', provide([BOND, DEAL]), async (req, res) => {
   const { _id: dealId } = requestParams(req);
+  const { bond } = req.apiData.bond;
+  const { user } = req.session;
+
+  if (!canIssueFacility(user.roles, req.apiData.deal, bond)) {
+    return res.redirect('/');
+  }
 
   return res.render('bond/bond-issue-facility.njk', {
     dealId,
-    user: req.session.user,
+    user,
+    bond,
   });
+});
+
+router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
+  const { _id: dealId, bondId, userToken } = requestParams(req);
+  const { user } = req.session;
+
+  const { validationErrors, bond } = await postToApi(
+    api.updateBondIssueFacility(
+      dealId,
+      bondId,
+      req.body,
+      userToken,
+    ),
+    errorHref,
+  );
+
+  if (validationErrors) {
+    return res.render('bond/bond-issue-facility.njk', {
+      user,
+      validationErrors,
+      bond,
+    });
+  }
+
+  return res.redirect(`/contract/${dealId}`);
 });
 
 router.get('/contract/:_id/bond/:_bondId/confirm-requested-cover-start-date', async (req, res) => {

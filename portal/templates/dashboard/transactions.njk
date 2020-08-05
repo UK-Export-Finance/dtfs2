@@ -130,7 +130,9 @@
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14">
-                {{ transaction.issuedDate }}
+                {% if transaction.issuedDate %}
+                  {{ transaction.issuedDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
+                {% endif %}
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14">

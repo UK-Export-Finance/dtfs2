@@ -1,5 +1,4 @@
 const $ = require('mongo-dot-notation');
-const moment = require('moment');
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { addComment } = require('./deal-comments.controller');
 
@@ -63,27 +62,12 @@ const updateFacilityDates = async (collection, deal) => {
     arr.forEach((f) => {
       const facility = f;
 
-      // TODO: this can be simplified once Bond has refactored requestedCoverStartDate (so its a timestamp)
-      const hasRequestedCoverStartDate = (facility.requestedCoverStartDate || (facility['requestedCoverStartDate-day'] && facility['requestedCoverStartDate-month'] && facility['requestedCoverStartDate-year']));
-
-      // TODO: rename bondStage to `facilityStage` (?)
-      const shouldUpdateRequestedCoverStartDate = (facility.bondStage === 'Issued' && !hasRequestedCoverStartDate)
-        || (facility.facilityStage === 'Unconditional' && !hasRequestedCoverStartDate);
+      // TODO: rename bondStage to `facilityStage`
+      const shouldUpdateRequestedCoverStartDate = (facility.bondStage === 'Issued' && !facility.requestedCoverStartDate)
+        || (facility.facilityStage === 'Unconditional' && !facility.requestedCoverStartDate);
 
       if (shouldUpdateRequestedCoverStartDate) {
-        const currentTime = moment();
-        // hacky solution for bond/loan differences
-        // until Bond has refactored requestedCoverStartDate (so its a timestamp)
-        if (facility.bondStage) {
-          facility['requestedCoverStartDate-day'] = currentTime.format('DD');
-          facility['requestedCoverStartDate-month'] = currentTime.format('MM');
-          facility['requestedCoverStartDate-year'] = currentTime.format('YYYY');
-        }
-
-        // it's a loan
-        if (facility.facilityStage) {
-          facility.requestedCoverStartDate = now();
-        }
+        facility.requestedCoverStartDate = now();
       }
     });
     return arr;
@@ -92,6 +76,45 @@ const updateFacilityDates = async (collection, deal) => {
   const updatedDeal = deal;
   updatedDeal.bondTransactions.items = updateFacilities(facilities.bonds);
   updatedDeal.loanTransactions.items = updateFacilities(facilities.loans);
+
+  const findAndUpdateResponse = await collection.findOneAndUpdate(
+    { _id: deal._id }, // eslint-disable-line no-underscore-dangle
+    $.flatten(updatedDeal),
+    { returnOriginal: false },
+  );
+
+  const { value } = findAndUpdateResponse;
+
+  return value;
+};
+
+const updateIssuedFacilities = async (collection, deal) => {
+  const updatedDeal = deal;
+
+  const update = (facilities) => {
+    const arr = facilities;
+
+    arr.forEach((f) => {
+      const facility = f;
+
+      const shouldUpdateIssuedLoanFacility = (facility.facilityStage === 'Conditional' && facility.issueFacilityDetailsProvided);
+      const shouldUpdateIssuedBondFacility = (facility.bondStage === 'Unissued' && facility.issueFacilityDetailsProvided);
+      const shouldUpdateIssuedFacility = (shouldUpdateIssuedLoanFacility || shouldUpdateIssuedBondFacility);
+
+      if (shouldUpdateIssuedFacility) {
+        facility.issueFacilityDetailsSubmitted = true;
+        if (!facility.requestedCoverStartDate) {
+          facility.requestedCoverStartDate = facility.issuedDate;
+        }
+      }
+
+      return facility;
+    });
+    return arr;
+  };
+
+  updatedDeal.loanTransactions.items = update(updatedDeal.loanTransactions.items);
+  updatedDeal.bondTransactions.items = update(updatedDeal.bondTransactions.items);
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: deal._id }, // eslint-disable-line no-underscore-dangle
@@ -247,6 +270,7 @@ exports.update = (req, res) => {
     }
 
     if (toStatus === 'Submitted') {
+      await updateIssuedFacilities(collection, dealAfterAllUpdates);
       dealAfterAllUpdates = await createSubmissionDate(collection, req.params.id, user);
 
       // TODO - Reinstate typeA XML creation once Loans and Summary have been added
@@ -261,8 +285,21 @@ exports.update = (req, res) => {
       }
     }
 
+    if (toStatus === 'Acknowledged by UKEF') {
+      // TODO specifically reject anyone other than role=interface?
+      const { ukefDealId } = req.body;
+
+      dealAfterAllUpdates = await updateDeal({
+        params: req.params,
+        body: {
+          details: { ukefDealId },
+        },
+        user: req.user,
+      });
+    }
+
     await sendStatusUpdateEmails(dealAfterAllUpdates, fromStatus, req.user);
 
-    return res.status(200).send(dealAfterAllUpdates.details.status);
+    return res.status(200).send(dealAfterAllUpdates);
   });
 };
