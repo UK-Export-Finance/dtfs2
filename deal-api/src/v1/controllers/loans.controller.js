@@ -11,7 +11,7 @@ const {
   hasAllRequestedCoverStartDateValues,
   updateRequestedCoverStartDate,
 } = require('../facility-dates/requested-cover-start-date');
-const { loanStatus } = require('../section-status/loan');
+const { loanStatus } = require('../section-status/loans');
 const { sanitizeCurrency } = require('../../utils/number');
 const now = require('../../now');
 
@@ -70,7 +70,7 @@ exports.getLoan = async (req, res) => {
           dealId,
           loan: {
             ...loan,
-            status: loanStatus(validationErrors),
+            status: loanStatus(loan, validationErrors),
           },
           validationErrors,
         });

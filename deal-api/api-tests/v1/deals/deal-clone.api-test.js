@@ -132,6 +132,7 @@ describe('/v1/deals/:id/clone', () => {
           'conversionRateDate-year': firstOriginalBond['conversionRateDate-year'],
           uniqueIdentificationNumber: firstOriginalBond.uniqueIdentificationNumber,
           ukefGuaranteeInMonths: firstOriginalBond.ukefGuaranteeInMonths,
+          createdDate: expect.any(String),
         };
         const expectedSecondBondTransaction = {
             _id: secondOriginalBond._id,
@@ -145,6 +146,7 @@ describe('/v1/deals/:id/clone', () => {
             currency: secondOriginalBond.currency,
             uniqueIdentificationNumber: secondOriginalBond.uniqueIdentificationNumber,
             ukefGuaranteeInMonths: secondOriginalBond.ukefGuaranteeInMonths,
+            createdDate: expect.any(String),
         };
 
         expect(body.bondTransactions.items[0]).toEqual(expectedFirstBondTransaction);
@@ -161,7 +163,7 @@ describe('/v1/deals/:id/clone', () => {
         const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
         const firstOriginalLoan = originalDeal.loanTransactions.items[0];
-        const thirdOriginalLoan = originalDeal.loanTransactions.items[2];
+        const secondOriginalLoan = originalDeal.loanTransactions.items[1];
 
         const expectedFirstLoanTransaction = {
           _id: firstOriginalLoan._id,
@@ -174,27 +176,30 @@ describe('/v1/deals/:id/clone', () => {
           'coverEndDate-day': firstOriginalLoan['coverEndDate-day'],
           'coverEndDate-month': firstOriginalLoan['coverEndDate-month'],
           'coverEndDate-year': firstOriginalLoan['coverEndDate-year'],
+          createdDate: expect.any(String),
         };
 
-        const expectedThirdLoanTransaction = {
-          _id: thirdOriginalLoan._id,
-          requestedCoverStartDate: thirdOriginalLoan.requestedCoverStartDate,
-          'coverEndDate-day': thirdOriginalLoan['coverEndDate-day'],
-          'coverEndDate-month': thirdOriginalLoan['coverEndDate-month'],
-          'coverEndDate-year': thirdOriginalLoan['coverEndDate-year'],
-          bankReferenceNumber: thirdOriginalLoan.bankReferenceNumber,
-          facilityValue: thirdOriginalLoan.facilityValue,
-          currencySameAsSupplyContractCurrency: thirdOriginalLoan.currencySameAsSupplyContractCurrency,
-          currency: thirdOriginalLoan.currency,
-          conversionRate: thirdOriginalLoan.conversionRate,
-          'conversionRateDate-day': thirdOriginalLoan['conversionRateDate-day'],
-          'conversionRateDate-month': thirdOriginalLoan['conversionRateDate-month'],
-          'conversionRateDate-year': thirdOriginalLoan['conversionRateDate-year'],
-          disbursementAmount: thirdOriginalLoan.disbursementAmount,
+        const expectedSecondLoanTransaction = {
+          _id: secondOriginalLoan._id,
+          requestedCoverStartDate: secondOriginalLoan.requestedCoverStartDate,
+          'coverEndDate-day': secondOriginalLoan['coverEndDate-day'],
+          'coverEndDate-month': secondOriginalLoan['coverEndDate-month'],
+          'coverEndDate-year': secondOriginalLoan['coverEndDate-year'],
+          bankReferenceNumber: secondOriginalLoan.bankReferenceNumber,
+          facilityValue: secondOriginalLoan.facilityValue,
+          currencySameAsSupplyContractCurrency: secondOriginalLoan.currencySameAsSupplyContractCurrency,
+          currency: secondOriginalLoan.currency,
+          conversionRate: secondOriginalLoan.conversionRate,
+          'conversionRateDate-day': secondOriginalLoan['conversionRateDate-day'],
+          'conversionRateDate-month': secondOriginalLoan['conversionRateDate-month'],
+          'conversionRateDate-year': secondOriginalLoan['conversionRateDate-year'],
+          disbursementAmount: secondOriginalLoan.disbursementAmount,
+          ukefGuaranteeInMonths: secondOriginalLoan.ukefGuaranteeInMonths,
+          createdDate: expect.any(String),
         };
 
         expect(body.loanTransactions.items[0]).toEqual(expectedFirstLoanTransaction);
-        expect(body.loanTransactions.items[2]).toEqual(expectedThirdLoanTransaction);
+        expect(body.loanTransactions.items[1]).toEqual(expectedSecondLoanTransaction);
       });
 
       it('returns empty bondTransactions and loanTransactions when empty in original deal', async () => {

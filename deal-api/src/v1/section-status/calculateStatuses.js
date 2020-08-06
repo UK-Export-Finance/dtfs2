@@ -1,5 +1,5 @@
-const addAccurateStatusesToBonds = require('./addAccurateStatusesToBonds');
-const addAccurateStatusesToLoans = require('./addAccurateStatusesToLoans');
+const { addAccurateStatusesToBonds } = require('./bonds');
+const { addAccurateStatusesToLoans } = require('./loans');
 const aboutSupplyContractStatus = require('./aboutSupplyContractStatus');
 
 module.exports = (deal, validationErrors) => ({

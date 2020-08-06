@@ -54,17 +54,61 @@ const processTypeB = async ({ fileContents }) => {
     return false;
   }
 
+  const bondTransactionItems = deal.bondTransactions.items.map((bond) => {
+    const workflowBondDetails = workflowDeal.BSSFacilities.find(
+      (b) => b.BSS_portal_facility_id[0] === bond._id, // eslint-disable-line no-underscore-dangle
+    );
+
+    return {
+      ...bond,
+      ukefFacilityID: workflowBondDetails && workflowBondDetails.BSS_ukef_facility_id,
+    };
+  });
+
+  const loanTransactionItems = deal.loanTransactions.items.map((loan) => {
+    const workflowLoanDetails = workflowDeal.EWCSFacilities.find(
+      (b) => b.EWCS_portal_facility_id[0] === loan._id, // eslint-disable-line no-underscore-dangle
+    );
+
+    return {
+      ...loan,
+      ukefFacilityID: workflowLoanDetails && workflowLoanDetails.EWCS_ukef_facility_id,
+    };
+  });
+
+  const updatedDealInfo = {
+    details: {
+      ukefDealId: workflowDeal.UKEF_deal_id[0],
+    },
+    bondTransactions: {
+      items: bondTransactionItems,
+    },
+    loanTransactions: {
+      items: loanTransactionItems,
+    },
+  };
+
+  const updateRequest = {
+    params: {
+      id: dealId,
+    },
+    user: interfaceUser,
+    body: updatedDealInfo,
+  };
+
+  await dealController.updateDeal(updateRequest);
+
   const { Deal_comments: dealComments = [] } = workflowDeal;
   const { Action_Code: actionCode } = workflowDeal.$;
 
   if (actionCode === '007' && dealComments.length) {
-    return dealCommentsController.addSpecialConditions(dealId, dealComments[0], interfaceUser);
+    await dealCommentsController.addSpecialConditions(dealId, dealComments[0], interfaceUser);
+  } else {
+    await dealCommentsController.addComment(dealId, dealComments[0], interfaceUser);
   }
 
   const updateData = {
-    comments: dealComments.length ? dealComments[0] : '',
     status: generateStatus(deal, workflowDeal),
-    ukefDealId: workflowDeal.UKEF_deal_id[0],
   };
 
   const result = await updateStatusViaController(dealId, interfaceUser, updateData);

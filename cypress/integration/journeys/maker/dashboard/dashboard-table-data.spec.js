@@ -42,7 +42,7 @@ context('View a deal', () => {
     });
 
     row.maker().invoke('text').then((text) => {
-      expect(text.trim()).equal('MAKER');
+      expect(text.trim()).equal('Hugo Drax'); // MAKER firstname surname
     });
 
     const regexDateTime = /[\d][\d]\/[\d][\d]\/[\d][\d][\d][\d] [\d][\d]:[\d][\d]/;
