@@ -3,7 +3,7 @@
 {% macro render(params) %}
   {% if not ["Submitted", "Rejected by UKEF"].includes(params.deal.details.status) and params.user.roles.includes('maker') %}
 
-    {% if ["Draft", "Further Maker's input required"].includes(params.deal.details.status) and params.dealFormsCompleted %}
+    {% if ["Draft", "Further Maker's input required","Accepted by UKEF (without conditions)"].includes(params.deal.details.status) and params.dealFormsCompleted %}
 
       {{ govukButton({
         "disabled": false,
