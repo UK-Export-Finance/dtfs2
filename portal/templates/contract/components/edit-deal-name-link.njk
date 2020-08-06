@@ -7,7 +7,12 @@
       {% if params.user._id === params.deal.details.maker._id %}
 
         {% if ["Draft", "Further Maker's input required"].includes(params.deal.details.status) %}
-          <a data-cy="EditDealName" class="govuk-link govuk-!-font-size-14" href="/contract/{{ params.deal._id }}/edit-name">Edit</a>
+          <a
+            data-cy="EditDealName"
+            class="govuk-link govuk-!-font-size-14"
+            href="/contract/{{ params.deal._id }}/edit-name"
+            aria-label="Edit Deal name"
+          >Edit</a>
         {% endif %}
 
       {% endif %}

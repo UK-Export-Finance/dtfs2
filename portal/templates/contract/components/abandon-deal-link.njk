@@ -5,7 +5,12 @@
 
     {% if params.user.roles.includes('maker') %}
       {% if ["Draft", "Further Maker's input required"].includes(params.deal.details.status) %}
-        <a data-cy="AbandonLink" href="/contract/{{ params.deal._id }}/delete" class="govuk-link govuk-!-font-size-14 govuk-!-margin-left-2">Abandon</a>
+        <a
+          data-cy="AbandonLink"
+          href="/contract/{{ params.deal._id }}/delete"
+          class="govuk-link govuk-!-font-size-14 govuk-!-margin-left-2"
+          aria-label="Abandon Deal"
+        >Abandon</a>
       {% endif %}
 
     {% endif %}
