@@ -132,6 +132,7 @@ describe('/v1/deals/:id/clone', () => {
           'conversionRateDate-year': firstOriginalBond['conversionRateDate-year'],
           uniqueIdentificationNumber: firstOriginalBond.uniqueIdentificationNumber,
           ukefGuaranteeInMonths: firstOriginalBond.ukefGuaranteeInMonths,
+          createdDate: expect.any(String),
         };
         const expectedSecondBondTransaction = {
             _id: secondOriginalBond._id,
@@ -145,6 +146,7 @@ describe('/v1/deals/:id/clone', () => {
             currency: secondOriginalBond.currency,
             uniqueIdentificationNumber: secondOriginalBond.uniqueIdentificationNumber,
             ukefGuaranteeInMonths: secondOriginalBond.ukefGuaranteeInMonths,
+            createdDate: expect.any(String),
         };
 
         expect(body.bondTransactions.items[0]).toEqual(expectedFirstBondTransaction);
@@ -174,6 +176,7 @@ describe('/v1/deals/:id/clone', () => {
           'coverEndDate-day': firstOriginalLoan['coverEndDate-day'],
           'coverEndDate-month': firstOriginalLoan['coverEndDate-month'],
           'coverEndDate-year': firstOriginalLoan['coverEndDate-year'],
+          createdDate: expect.any(String),
         };
 
         const expectedSecondLoanTransaction = {
@@ -192,6 +195,7 @@ describe('/v1/deals/:id/clone', () => {
           'conversionRateDate-year': secondOriginalLoan['conversionRateDate-year'],
           disbursementAmount: secondOriginalLoan.disbursementAmount,
           ukefGuaranteeInMonths: secondOriginalLoan.ukefGuaranteeInMonths,
+          createdDate: expect.any(String),
         };
 
         expect(body.loanTransactions.items[0]).toEqual(expectedFirstLoanTransaction);
