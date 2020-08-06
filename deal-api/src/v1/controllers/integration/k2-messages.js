@@ -42,7 +42,7 @@ const generateTypeA = async (deal, fromStatus) => {
 
     .Application_route(deal.eligibility)
     .Application_owner(deal.details.maker.username)
-    .Application_owner_email('//TODO')
+    .Application_owner_email('maker1@ukexportfinance.gov.uk') // temp email until user emails have been added
     .Application_bank(deal.details.maker.bank.name)
     .Application_bank_co_hse_reg_number('//TODO')
 
