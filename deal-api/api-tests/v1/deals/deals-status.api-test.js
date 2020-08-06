@@ -579,7 +579,7 @@ describe('/v1/deals/:id/status', () => {
       });
 
       describe('any issued (bondStage=`Unissued`, `issueFacilityDetailsProvided` that have not yet been submitted', () => {
-        it('should add `Ready for Checker\'s approval` status to the bond', async () => {
+        it('should add `Ready for check` status to the bond', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
 
@@ -588,16 +588,17 @@ describe('/v1/deals/:id/status', () => {
           const issuedBondsThatShouldBeUpdated = body.deal.bondTransactions.items.filter((l) =>
             l.bondStage = 'Unissued'
             && l.issueFacilityDetailsProvided === true
+            && !l.issueFacilityDetailsSubmitted
           );
 
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
-            expect(bond.status).toEqual('Ready for Checker\'s approval');
+            expect(bond.status).toEqual('Ready for check');
           });
         });
       });
 
       describe('any issued loans (facilityStage=`Conditional`, `issueFacilityDetailsProvided`) that have not yet been submitted', () => {
-        it('should add `Ready for Checker\'s approval` status to the loan', async () => {
+        it('should add `Ready for check` status to the loan', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
 
@@ -606,10 +607,11 @@ describe('/v1/deals/:id/status', () => {
           const issuedLoansThatShouldBeUpdated = body.deal.loanTransactions.items.filter((l) =>
             l.facilityStage = 'Conditional'
             && l.issueFacilityDetailsProvided === true
+            && !l.issueFacilityDetailsSubmitted
           );
 
           issuedLoansThatShouldBeUpdated.forEach((loan) => {
-            expect(loan.status).toEqual('Ready for Checker\'s approval');
+            expect(loan.status).toEqual('Ready for check');
           });
         });
       });
