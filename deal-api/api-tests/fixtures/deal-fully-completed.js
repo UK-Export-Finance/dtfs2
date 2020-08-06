@@ -121,7 +121,7 @@ const deal = {
         guaranteeFeePayableByBank: '12.345',
         ukefExposure: '1,234.56',
         issueFacilityDetailsProvided: true,
-        status: 'Ready for Checker\'s approval',
+        status: 'Ready for check',
       },
       {
         _id: '1000104',
