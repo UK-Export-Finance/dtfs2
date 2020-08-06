@@ -21,6 +21,11 @@ type Maker {
   surname: String
 }
 
+type Checker {
+  username: String
+  firstname: String
+  surname: String
+}
 
 type ErrorListItem {
   order: String
@@ -34,7 +39,7 @@ type DealDetails {
   ukefDealId: String
   submissionType: String
   maker: Maker
-  checker: String
+  checker: Checker
   dateOfLastAction: String
   submissionDate: String
   created: String

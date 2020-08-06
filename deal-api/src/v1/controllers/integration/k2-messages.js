@@ -30,6 +30,7 @@ const generateTypeA = async (deal, fromStatus) => {
     : 0;
 
   const builder = typeABuilder()
+    .source('V2')
     .action_code(actionCode)
     .action_name(actionName)
     .application_group(getApplicationGroup(deal))

@@ -34,11 +34,11 @@
         </td>
 
         <td data-cy="maker" class="govuk-table__cell govuk-!-font-size-14">
-          {{ details.maker.firstname }} {{ details.maker.surname }}
+          {{ details.maker | displayName }}
         </td>
 
         <td data-cy="checker" class="govuk-table__cell govuk-!-font-size-14">
-          {{ details.checker.firstname }} {{ details.checker.surname }}
+          {{ details.checker | displayName }}
         </td>
 
         <td data-cy="submissionDate" class="govuk-table__cell govuk-!-font-size-14">

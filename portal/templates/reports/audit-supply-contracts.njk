@@ -48,11 +48,11 @@
           </td>
 
           <td data-cy="createdBy" class="govuk-table__cell govuk-!-font-size-14">
-            {{ contract.details.maker.firstname + " " + contract.details.maker.surname }}
+            {{ contract.details.maker | displayName }}
           </td>
 
           <td data-cy="submittedBy" class="govuk-table__cell govuk-!-font-size-14">
-            {{ contract.details.checker | dashIfEmpty }}
+            {{ contract.details.checker | displayName }}
           </td>
 
           <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">

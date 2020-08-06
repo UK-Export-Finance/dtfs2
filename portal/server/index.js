@@ -6,18 +6,10 @@ import flash from 'connect-flash';
 import path from 'path';
 import crypto from 'crypto';
 import json2csv from 'express-json2csv';
+import './azure-env';
 import routes from './routes';
 
 import configureNunjucks from './nunjucks-configuration';
-
-// Fix Azure environment variables
-Object.keys(process.env).forEach((key) => {
-  if (key.startsWith('CUSTOMCONNSTR_')) {
-    const fixedKey = key.substr('CUSTOMCONNSTR_'.length);
-    process.env[fixedKey] = process.env[key];
-    console.log(`Fixed ${key} to ${fixedKey}`);
-  }
-});
 
 const app = express();
 

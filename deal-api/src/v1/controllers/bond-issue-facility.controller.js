@@ -63,6 +63,8 @@ exports.updateBondIssueFacility = async (req, res) => {
 
       if (validationErrors.count === 0) {
         modifiedBond.issueFacilityDetailsProvided = true;
+      } else {
+        modifiedBond.issueFacilityDetailsProvided = false;
       }
 
       const updatedBond = await updateBondInDeal(req.params, req.user, deal, modifiedBond);

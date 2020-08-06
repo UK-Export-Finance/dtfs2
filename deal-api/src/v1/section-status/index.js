@@ -1,11 +1,11 @@
-const { multipleBondStatus } = require('./bond');
-const { multipleLoanStatus } = require('./loan');
+const { addAccurateStatusesToBonds } = require('./bonds');
+const { addAccurateStatusesToLoans } = require('./loans');
 const { aboutSupplyContractStatus } = require('./about');
 
 exports.dealSectionStatuses = (deal) => ({
   ...deal,
-  bondTransactions: multipleBondStatus(deal.bondTransactions),
-  loanTransactions: multipleLoanStatus(deal.loanTransactions),
+  bondTransactions: addAccurateStatusesToBonds(deal.bondTransactions),
+  loanTransactions: addAccurateStatusesToLoans(deal.loanTransactions),
   submissionDetails: {
     ...deal.submissionDetails,
     status: aboutSupplyContractStatus(deal.submissionDetails),

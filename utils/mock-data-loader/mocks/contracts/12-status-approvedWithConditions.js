@@ -10,7 +10,11 @@ module.exports = {
     ukefDealId: '20010739',
     status: 'Accepted by UKEF (with conditions)',
     previousStatus: 'Submitted',
-    checker: 'CHECKER DURGA',
+    checker: {
+      username: 'CHECKER',
+      firstname: 'Emilio',
+      surname: 'Largo',
+    },
     submissionType: 'Manual Inclusion Application',
     owningBank: {
       id: '956',
