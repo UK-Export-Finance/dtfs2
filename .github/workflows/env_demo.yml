@@ -13,7 +13,7 @@ env:
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   image_tag: demo
   # App service settings
-  DEAL_API_URL: "tfs-demo-portal-api.azurewebsites.net"
+  DEAL_API_URL: "https://tfs-demo-portal-api.azurewebsites.net"
   COMPANIES_HOUSE_API_URL: ="https://api.companieshouse.gov.uk"
   # App service secrets
   SESSION_SECRET: "${{ secrets.DEMO_SESSION_SECRET }}"
