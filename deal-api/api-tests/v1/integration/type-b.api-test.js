@@ -125,4 +125,7 @@ describe('Workflow type B XML processing', () => {
     expect(updatedDeal.specialConditions[0].text).toEqual(dealComments);
     expect(updatedDeal.specialConditions[0].user.username).toEqual('INTERFACE');
   });
+
+  // TODO test bonds
+  // TODO test loans
 });
