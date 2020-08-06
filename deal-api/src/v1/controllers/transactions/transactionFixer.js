@@ -7,7 +7,6 @@ const UKEFFACILITYID = 'transaction.ukefFacilityId';
 const DEAL_CREATED = 'transaction.deal_created';
 const DEAL_ID = '_id';
 const DEAL_STATUS = 'details.status';
-// const TRANSACTION_STATUS = 'transaction.transactionStage';
 
 const constructor = (user, filters) => {
   const bondFix = bondFixer(filters);
@@ -47,15 +46,6 @@ const constructor = (user, filters) => {
 
         return listSoFar.concat([dealwithStatus]);
       }
-      /*
-      // filter transactions
-      if (TRANSACTION_STATUS === filterField) {
-        const bondMatchesOnStatus = { 'bondTransactions.items': { $elemMatch: { facilityStage: 'Unconditional' } } };
-        const loanMatchesOnStatus = { 'loanTransactions.items': { $elemMatch: { facilityStage: 'Unissued' } } };
-
-        return listSoFar.concat([{ $or: [bondMatchesOnStatus, loanMatchesOnStatus] }]);
-      }
-      */
 
       return listSoFar;
     }, []);

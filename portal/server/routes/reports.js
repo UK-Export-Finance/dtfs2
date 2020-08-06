@@ -2,7 +2,7 @@ import express from 'express';
 import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
-// import getRAGStatus from './getRAGstatus';
+import getRAGStatus from './getRAGstatus';
 import CONSTANTS from '../constants';
 import {
   getApiData,
@@ -592,8 +592,9 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   console.log(count);
 
   // mock up by filtering here on conditional or unissued
+  // TODO REPLACE WITH FILTER QUERY
   const incompleteFacilities = transactions.filter((transaction) => (transaction.transactionStage === 'Unissued' || transaction.transactionStage === 'Conditional'));
-
+  /*
   // loop through the incompletes and calculate the time remaining
   const ONE_DAY = 86400000; // milliseconds
   // const NINETY_DAYS = 7776000000; // milliseconds
@@ -601,6 +602,7 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     const expiry = parseInt(val.createdDate, 10) + (days * ONE_DAY);
     const id = val.deal_id;
     const remainingDays = Math.floor((expiry - Date.now()) / ONE_DAY);
+    console.log(val.createdDate, expiry, remainingDays);
     return {
       ...val,
       id,
@@ -617,7 +619,7 @@ router.get('/reports/countdown-indicator', async (req, res) => {
 
   console.log(`facilitiesWithExpiryDate: ${util.inspect(facilitiesWithExpiryDate)}`);
 
-  const trafficLights = {
+  const status90Days = {
     black: 0,
     red: 0,
     orange: 0,
@@ -627,20 +629,22 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   facilitiesWithExpiryDate.forEach((item) => {
     // console.log(item.id, item.remainingDays);
     if (item.remainingDays < 0) {
-      trafficLights.black += 1;
+      status90Days.black += 1;
     } else if (item.remainingDays < 16) {
-      trafficLights.red += 1;
+      status90Days.red += 1;
     } else if (item.remainingDays < 46) {
-      trafficLights.orange += 1;
+      status90Days.orange += 1;
     } else if (item.remainingDays < 90) {
-      trafficLights.green += 1;
+      status90Days.green += 1;
     } else {
-      trafficLights.black += 1;
+      status90Days.black += 1;
     }
   });
-
-  // const trafficLights = getRAGStatus(incompleteFacilities);
-  console.log(`trafficLights: ${util.inspect(trafficLights)}`);
+  */
+  const status90Days = getRAGStatus(incompleteFacilities, 90);
+  // const status20Days = getRAGStatus(incompleteFacilities, 20);
+  // const status10Days = getRAGStatus(incompleteFacilities, 10);
+  console.log(`status90Days: ${util.inspect(status90Days)}`);
   console.log(`transactions ${transactions.length}`);
 
 
@@ -649,9 +653,9 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     firstCellIsHeader: true,
     head: [{ text: 'Days remaining' }, { text: 'Facilities' }],
     rows: [
-      [{ text: '0 to 15' }, { html: `<strong class="govuk-tag govuk-tag--red">${trafficLights.red}</strong> &nbsp; <a href="TODO" >view</a>` }],
-      [{ text: '16 to 45' }, { html: `<strong class="govuk-tag govuk-tag--orange">${trafficLights.orange}</strong> &nbsp; <a href="TODO" >view</a>` }],
-      [{ text: '46 to 90' }, { html: `<strong class="govuk-tag govuk-tag--green">${trafficLights.green}</strong> &nbsp; <a href="TODO" >view</a>` }],
+      [{ text: '0 to 15' }, { html: `<strong class="govuk-tag govuk-tag--red">${status90Days.red}</strong> &nbsp; <a href="TODO" >view</a>` }],
+      [{ text: '16 to 45' }, { html: `<strong class="govuk-tag govuk-tag--orange">${status90Days.orange}</strong> &nbsp; <a href="TODO" >view</a>` }],
+      [{ text: '46 to 90' }, { html: `<strong class="govuk-tag govuk-tag--green">${status90Days.green}</strong> &nbsp; <a href="TODO" >view</a>` }],
     ],
   };
 
@@ -686,7 +690,7 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   return res.render('reports/countdown-indicator.njk', {
     reportData,
     primaryNav,
-    facilities: facilitiesWithExpiryDate,
+    // facilities: facilitiesWithExpiryDate, // traced for testing purposes
     subNav: 'countdown-indicator',
     user: req.session.user,
   });
