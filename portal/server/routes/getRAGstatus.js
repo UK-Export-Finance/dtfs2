@@ -1,13 +1,12 @@
-// import moment from 'moment';
-// import CONSTANTS from '../constants';
-
 const ONE_DAY = 86400000; // milliseconds
 
+// get expiry date based on count from creation date
+// TODO change for MIA
 const getExpiryDate = (val, days) => {
   const expiry = parseInt(val.createdDate, 10) + (days * ONE_DAY);
   const id = val.deal_id;
   const remainingDays = Math.floor((expiry - Date.now()) / ONE_DAY);
-  console.log(id, days, val.createdDate, expiry, remainingDays);
+
   return {
     ...val,
     id,
@@ -29,10 +28,8 @@ const getRAGstatus = (facilities, days) => {
     dayBands20: { red: 7, orange: 14, green: 20 },
     dayBands10: { red: 6, orange: 8, green: 10 },
   };
-  console.log(`set bands ${days}`);
   const bands = `dayBands${days}`;
   const dayLimits = limits[bands];
-  console.log(dayLimits);
 
   if (!facilities) {
     return trafficLights;
@@ -43,11 +40,12 @@ const getRAGstatus = (facilities, days) => {
     // eslint-disable-next-line func-names
     (facility) => getExpiryDate(facility, days),
   );
-  console.log('bucket up the days');
+
   facilitiesWithExpiryDate.forEach((item) => {
-    console.log(item.id, item.remainingDays);
     if (item.remainingDays < 0) {
+      // flag as overdue AND count in lowest bucket
       trafficLights.black += 1;
+      trafficLights.red += 1;
     } else if (item.remainingDays < dayLimits.red) {
       trafficLights.red += 1;
     } else if (item.remainingDays < dayLimits.orange) {
