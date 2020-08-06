@@ -7,6 +7,7 @@ const UKEFFACILITYID = 'transaction.ukefFacilityId';
 const DEAL_CREATED = 'transaction.deal_created';
 const DEAL_ID = '_id';
 const DEAL_STATUS = 'details.status';
+const DEAL_SUBMISSION_TYPE = 'details.submissionType';
 
 const constructor = (user, filters) => {
   const bondFix = bondFixer(filters);
@@ -15,8 +16,7 @@ const constructor = (user, filters) => {
   const transactionsQuery = () => {
     const listOfMongoQueryElements = filters.reduce((listSoFar, filter) => {
       const filterField = Object.keys(filter)[0];// only expecting one entry/block
-      console.log(filterField);
-      console.log(filter[filterField]);
+
       if (BANKFACILITYID === filterField) {
         const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { uniqueIdentificationNumber: new RegExp(`^${filter[filterField]}`) } } };
         const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { bankReferenceNumber: new RegExp(`^${filter[filterField]}`) } } };
@@ -45,6 +45,12 @@ const constructor = (user, filters) => {
         const dealwithStatus = { 'details.status': filter[filterField] };
 
         return listSoFar.concat([dealwithStatus]);
+      }
+      if (DEAL_SUBMISSION_TYPE === filterField) {
+        console.log('filter by subs types');
+        const deal = { 'details.submissionType': filter[filterField] };
+
+        return listSoFar.concat([deal]);
       }
 
       return listSoFar;
