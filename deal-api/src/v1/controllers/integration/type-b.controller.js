@@ -55,24 +55,39 @@ const processTypeB = async ({ fileContents }) => {
   }
 
   const bondTransactionItems = deal.bondTransactions.items.map((bond) => {
-    const workflowBondDetails = workflowDeal.BSSFacilities.find(
+    const workflowBond = workflowDeal.BSSFacilities.find(
       (b) => b.BSS_portal_facility_id[0] === bond._id, // eslint-disable-line no-underscore-dangle
     );
+    if (!workflowBond) {
+      return bond;
+    }
+
+    const hasWorflowStatus = workflowBond.BSS_status && workflowBond.BSS_status.length;
 
     return {
       ...bond,
-      ukefFacilityID: workflowBondDetails && workflowBondDetails.BSS_ukef_facility_id,
+      ukefFacilityID: workflowBond.BSS_ukef_facility_id,
+      // TODO: probably need better mapping here, TBD from future tickets...
+      status: hasWorflowStatus && workflowBond.BSS_status[0] === 'Issued acknowledged' ? 'Acknowledged by UKEF' : workflowBond.BSS_status[0],
     };
   });
 
   const loanTransactionItems = deal.loanTransactions.items.map((loan) => {
-    const workflowLoanDetails = workflowDeal.EWCSFacilities.find(
+    const workflowLoan = workflowDeal.EWCSFacilities.find(
       (b) => b.EWCS_portal_facility_id[0] === loan._id, // eslint-disable-line no-underscore-dangle
     );
 
+    if (!workflowLoan) {
+      return loan;
+    }
+
+    const hasWorflowStatus = workflowLoan.EWCS_status && workflowLoan.EWCS_status.length;
+
     return {
       ...loan,
-      ukefFacilityID: workflowLoanDetails && workflowLoanDetails.EWCS_ukef_facility_id,
+      ukefFacilityID: workflowLoan.EWCS_ukef_facility_id,
+      // TODO: probably need better mapping here, TBD from future tickets...
+      status: hasWorflowStatus && workflowLoan.EWCS_status[0] === 'Issued acknowledged' ? 'Acknowledged by UKEF' : workflowLoan.EWCS_status[0],
     };
   });
 
