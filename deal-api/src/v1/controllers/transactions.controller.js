@@ -15,7 +15,6 @@ exports.findTransactions = async (requestingUser, start = 0, pagesize = 20, filt
   const collection = await db.getCollection('deals');
   const dealResults = collection.find(query);
   const dealsWithTransactions = await dealResults.sort({ 'details.dateOfLastAction': -1 }).toArray();
-
   // use Array.reduce to loop over our list of deals,
   //  accumulating an array of "loans and bonds" suitable to return via the API
   const allTransactions = dealsWithTransactions.reduce((transactionsAccumulatedSoFar, deal) => {
@@ -23,6 +22,7 @@ exports.findTransactions = async (requestingUser, start = 0, pagesize = 20, filt
     const transactionsForThisDeal = transactionFix.filteredTransactions(deal);
     return transactionsAccumulatedSoFar.concat(transactionsForThisDeal);
   }, []);
+  console.log(`allTransactions :: \n${JSON.stringify(allTransactions)}`);
 
   // "allTransactions" now holds a list of all the transactions that it would be ok to display
   //  given current user+filtering

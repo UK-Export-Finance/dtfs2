@@ -579,21 +579,31 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     facilityStage: 'conditional',
     filterByStatus: 'submissionAcknowledged',
   };
+  const submissionFilters = { // TODO use CONSTANTS lowercase string
+    filterBySubmissionType: 'manualInclusionApplication',
+  };
 
   const filters = buildReportFilters(stageFilters, req.session.user);
-  console.log(`filters: ${util.inspect(filters)}`);
+  const MIAfilters = buildReportFilters(submissionFilters, req.session.user);
+  console.log(`MIAfilters: ${util.inspect(MIAfilters)}`);
 
   // get all transactions
-  const { transactions, count } = await getApiData(
+  const { transactions } = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-  console.log(`transactions: ${util.inspect(transactions)}`);
-  console.log(count);
+  const applications = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, MIAfilters, userToken),
+    res,
+  );
+
 
   // mock up by filtering here on conditional or unissued
   // TODO REPLACE WITH FILTER QUERY
-  const incompleteFacilities = transactions.filter((transaction) => (transaction.transactionStage === 'Unissued' || transaction.transactionStage === 'Conditional'));
+  const incompleteFacilities = transactions;
+  const miaWithConditions = applications.transactions.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (with conditions)'));
+  const miaWithOutConditions = applications.transactions.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (without conditions)'));
+  console.log(`WITHOUT: ${util.inspect(miaWithOutConditions)}`);
   /*
   // loop through the incompletes and calculate the time remaining
   const ONE_DAY = 86400000; // milliseconds
@@ -642,10 +652,11 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   });
   */
   const status90Days = getRAGStatus(incompleteFacilities, 90);
-  // const status20Days = getRAGStatus(incompleteFacilities, 20);
-  // const status10Days = getRAGStatus(incompleteFacilities, 10);
+  const status20Days = getRAGStatus(miaWithConditions, 20);
+  const status10Days = getRAGStatus(miaWithOutConditions, 10);
   console.log(`status90Days: ${util.inspect(status90Days)}`);
-  console.log(`transactions ${transactions.length}`);
+  console.log(`status20Days: ${util.inspect(status20Days)}`);
+  console.log(`status20Days: ${util.inspect(status10Days)}`);
 
 
   const issueOrMakeFirstAdvance = {
@@ -664,22 +675,30 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     firstCellIsHeader: true,
     head: [{ text: 'Days remaining' }, { text: 'Supply Contracts' }, { text: '' }],
     rows: [
-      [{ text: '0 to 6' }, { html: '<strong class="govuk-tag govuk-tag--red">1</strong> &nbsp; <a href="TODO" >view</a>' }],
-      [{ text: '7 to 13' }, { html: '<strong class="govuk-tag govuk-tag--orange">0</strong> &nbsp; <a href="TODO" >view</a>' }],
-      [{ text: '14 to 20' }, { html: '<strong class="govuk-tag govuk-tag--green">0</strong> &nbsp; <a href="TODO" >view</a>' }],
+      [{ text: '0 to 6' }, { html: `<strong class="govuk-tag govuk-tag--red">${status20Days.red}</strong> &nbsp; <a href="TODO" >view</a>` }],
+      [{ text: '7 to 13' }, { html: `<strong class="govuk-tag govuk-tag--orange">${status20Days.orange}</strong> &nbsp; <a href="TODO" >view</a>` }],
+      [{ text: '14 to 20' }, { html: `<strong class="govuk-tag govuk-tag--green">${status20Days.green}</strong> &nbsp; <a href="TODO" >view</a>` }],
     ],
   };
+  if (status20Days.black > 0) {
+    const row = [{ text: 'OVERDUE' }, { html: `<strong class="govuk-tag govuk-tag--red">${status20Days.black}</strong> &nbsp; <a href="TODO" >view</a>` }];
+    manualInclusionsWithConditions.rows.unshift(row);
+  }
 
   const manualInclusionsWithoutConditions = {
     caption: 'Manual Inclusion Applications accepted by UKEF (without conditions)',
     firstCellIsHeader: true,
     head: [{ text: 'Days remaining' }, { text: 'Supply Contracts' }, { text: '' }],
     rows: [
-      [{ text: '0 to 6' }, { html: '<strong class="govuk-tag govuk-tag--red">1</strong> &nbsp; <a href="TODO" >view</a>' }],
-      [{ text: '7 to 13' }, { html: '<strong class="govuk-tag govuk-tag--orange">0</strong> &nbsp; <a href="TODO" >view</a>' }],
-      [{ text: '14 to 20' }, { html: '<strong class="govuk-tag govuk-tag--green">0</strong> &nbsp; <a href="TODO" >view</a>' }],
+      [{ text: '0 to 5' }, { html: `<strong class="govuk-tag govuk-tag--red">${status10Days.red}</strong> &nbsp; <a href="TODO" >view</a>` }],
+      [{ text: '6 to 7' }, { html: `<strong class="govuk-tag govuk-tag--orange">${status10Days.orange}</strong> &nbsp; <a href="TODO" >view</a>` }],
+      [{ text: '8 to 10' }, { html: `<strong class="govuk-tag govuk-tag--green">${status10Days.green}</strong> &nbsp; <a href="TODO" >view</a>` }],
     ],
   };
+  if (status10Days.black > 0) {
+    const row = [{ text: 'OVERDUE' }, { html: `<strong class="govuk-tag govuk-tag--red">${status10Days.black}</strong> &nbsp; <a href="TODO" >view</a>` }];
+    manualInclusionsWithoutConditions.rows.unshift(row);
+  }
 
   const reportData = {
     issueOrMakeFirstAdvance,
