@@ -48,4 +48,22 @@ describe('dealHasIssuedFacilitiesToSubmit', () => {
       expect(dealHasIssuedFacilitiesToSubmit(mockDeal)).toEqual(false);
     });
   });
+
+  describe('when bonds or loans have `Ready for Checker\'s approval` or Submitted status', () => {
+    it('should return false', () => {
+      const mockDeal = {
+        bondTransactions: {
+          items: [
+            { status: 'Ready for Checker\'s approval' },
+          ],
+        },
+        loanTransactions: {
+          items: [
+            { status: 'Submitted' },
+          ],
+        },
+      };
+      expect(dealHasIssuedFacilitiesToSubmit(mockDeal)).toEqual(false);
+    });
+  });
 });
