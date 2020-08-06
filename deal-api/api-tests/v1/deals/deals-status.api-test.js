@@ -640,14 +640,14 @@ describe('/v1/deals/:id/status', () => {
         if ((facility.bondStage === 'Unissued' || facility.facilityStage === 'Conditional')
           && facility.issueFacilityDetailsProvided
           && !facility.issueFacilityDetailsSubmitted
-          && facility.status !== 'Completed') {
+          && facility.status !== 'Submitted') {
           return facility;
         }
         return null;
       }
 
       describe('any issued loans (facilityStage=`Conditional`, `issueFacilityDetailsProvided`) that have not yet been submitted', () => {
-        it('should add `issueFacilityDetailsSubmitted` property', async () => {
+        it('should add `Submitted` status and `issueFacilityDetailsSubmitted` property', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
 
@@ -663,6 +663,7 @@ describe('/v1/deals/:id/status', () => {
           issuedLoansThatShouldBeUpdated.forEach((loan) => {
             const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
             expect(updatedLoan.issueFacilityDetailsSubmitted).toEqual(true);
+            expect(updatedLoan.status).toEqual('Submitted');
           });
         });
 
@@ -688,7 +689,7 @@ describe('/v1/deals/:id/status', () => {
       });
 
       describe('any issued bonds (bondStage=`Unissued`, `issueFacilityDetailsProvided`) that have not yet been submitted', () => {
-        it('should add `issueFacilityDetailsSubmitted` property', async () => {
+        it('should add `Submitted` status and `issueFacilityDetailsSubmitted` property', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
 
@@ -704,6 +705,7 @@ describe('/v1/deals/:id/status', () => {
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
             const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
             expect(updatedBond.issueFacilityDetailsSubmitted).toEqual(true);
+            expect(updatedBond.status).toEqual('Submitted');
           });
         });
 

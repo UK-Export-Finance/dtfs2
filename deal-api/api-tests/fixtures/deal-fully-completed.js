@@ -146,7 +146,7 @@ const deal = {
         'coverEndDate-year': `${moment().add(1, 'month').format('YYYY')}`,
         uniqueIdentificationNumber: '1234567890',
         issueFacilityDetailsProvided: true,
-        status: 'Ready for Checker\'s approval',
+        status: 'Ready for check',
       },
       {
         _id: '1000105',
@@ -172,7 +172,7 @@ const deal = {
         uniqueIdentificationNumber: '1234567890',
         issueFacilityDetailsProvided: true,
         issueFacilityDetailsSubmitted: true,
-        status: 'Ready for Checker\'s approval',
+        status: 'Ready for check',
       }
     ],
   },
@@ -220,7 +220,7 @@ const deal = {
         premiumFrequency: 'Monthly',
         premiumType: 'In advance',
         dayCountBasis: '365',
-        status: 'Ready for Checker\'s approval',
+        status: 'Ready for check',
         currency: {
           text: 'GBP - UK Sterling',
           id: 'GBP',
@@ -252,7 +252,7 @@ const deal = {
         premiumFrequency: 'Monthly',
         premiumType: 'In advance',
         dayCountBasis: '365',
-        status: 'Ready for Checker\'s approval',
+        status: 'Ready for check',
         currency: {
           text: 'GBP - UK Sterling',
           id: 'GBP',
