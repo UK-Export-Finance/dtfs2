@@ -6,6 +6,7 @@ const getActionCodeAndName = (deal, fromStatus) => {
   const key = `${fromStatus}::${atpString}`;
 
   let actionCode = '';
+  console.log({ key });
 
   switch (key.toLowerCase()) {
     case 'draft::non-atp':

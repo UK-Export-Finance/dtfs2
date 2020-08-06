@@ -4,7 +4,7 @@
   {% if status %}
     {{govukTag({
       text: status,
-      classes: (status === "Incomplete" or status === "Ready for Checker's approval") and "govuk-tag--grey"
+      classes: (status === "Incomplete" or status === "Ready for check") and "govuk-tag--grey"
     })}}
   {% endif %}
 {% endmacro %}

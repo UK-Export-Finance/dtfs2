@@ -79,6 +79,7 @@ const processTypeB = async ({ fileContents }) => {
   const updatedDealInfo = {
     details: {
       ukefDealId: workflowDeal.UKEF_deal_id[0],
+      previousWorkflowStatus: workflowDeal.Deal_status[0],
     },
     bondTransactions: {
       items: bondTransactionItems,
