@@ -12,7 +12,7 @@ const dealHasIssuedFacilitiesToSubmit = (deal) => {
     (bond.issueFacilityDetailsProvided === true
     && !bond.issueFacilityDetailsSubmitted
     && bond.status !== 'Ready for Checker\'s approval'
-    && bond.status !== 'Submitted');
+    && bond.status !== 'Submitted'));
 
   const hasIssuedFacilities = (unsubmittedBondsWithIssuedFacilities.length > 0
                               || unsubmittedLoansWithIssuedFacilities.length > 0);
