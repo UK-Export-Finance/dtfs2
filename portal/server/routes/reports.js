@@ -570,6 +570,8 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   const { userToken } = requestParams(req);
 
   // need to query mongo and filter on multiple fields:
+  // I've filtered the deals on the main record (status or subs type)\
+  // then filtered the array locally
   // - STATUS:submissionAcknowledged + TRANSACTION_STAGE:unissued_conditional
   // same as facilityStage = 'Unissued'||'Conditional'?
   // - SUBMISSION_TYPE:manualInclusionApplication + STATUS:approved + MIN not issued
@@ -579,7 +581,7 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     facilityStage: 'conditional',
     filterByStatus: 'submissionAcknowledged',
   };
-  const submissionFilters = { // TODO use CONSTANTS lowercase string
+  const submissionFilters = {
     filterBySubmissionType: 'manualInclusionApplication',
   };
 
@@ -592,72 +594,21 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
+
   const applications = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, MIAfilters, userToken),
     res,
   );
 
-
   // mock up by filtering here on conditional or unissued
-  // TODO REPLACE WITH FILTER QUERY
   const incompleteFacilities = transactions;
   const miaWithConditions = applications.transactions.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (with conditions)'));
   const miaWithOutConditions = applications.transactions.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (without conditions)'));
   console.log(`WITHOUT: ${util.inspect(miaWithOutConditions)}`);
-  /*
-  // loop through the incompletes and calculate the time remaining
-  const ONE_DAY = 86400000; // milliseconds
-  // const NINETY_DAYS = 7776000000; // milliseconds
-  const getExpiryDate = (val, days) => {
-    const expiry = parseInt(val.createdDate, 10) + (days * ONE_DAY);
-    const id = val.deal_id;
-    const remainingDays = Math.floor((expiry - Date.now()) / ONE_DAY);
-    console.log(val.createdDate, expiry, remainingDays);
-    return {
-      ...val,
-      id,
-      expiry,
-      remainingDays,
-    };
-  };
 
-  const facilitiesWithExpiryDate = incompleteFacilities.map(
-    // use anon function to pass in number of days to calculate expiry
-    // eslint-disable-next-line func-names
-    (facility) => getExpiryDate(facility, 90),
-  );
-
-  console.log(`facilitiesWithExpiryDate: ${util.inspect(facilitiesWithExpiryDate)}`);
-
-  const status90Days = {
-    black: 0,
-    red: 0,
-    orange: 0,
-    green: 0,
-  };
-
-  facilitiesWithExpiryDate.forEach((item) => {
-    // console.log(item.id, item.remainingDays);
-    if (item.remainingDays < 0) {
-      status90Days.black += 1;
-    } else if (item.remainingDays < 16) {
-      status90Days.red += 1;
-    } else if (item.remainingDays < 46) {
-      status90Days.orange += 1;
-    } else if (item.remainingDays < 90) {
-      status90Days.green += 1;
-    } else {
-      status90Days.black += 1;
-    }
-  });
-  */
   const status90Days = getRAGStatus(incompleteFacilities, 90);
   const status20Days = getRAGStatus(miaWithConditions, 20);
   const status10Days = getRAGStatus(miaWithOutConditions, 10);
-  console.log(`status90Days: ${util.inspect(status90Days)}`);
-  console.log(`status20Days: ${util.inspect(status20Days)}`);
-  console.log(`status20Days: ${util.inspect(status10Days)}`);
-
 
   const issueOrMakeFirstAdvance = {
     caption: 'You have 3 months to issue or make first advance under a transaction.',
@@ -709,7 +660,6 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   return res.render('reports/countdown-indicator.njk', {
     reportData,
     primaryNav,
-    // facilities: facilitiesWithExpiryDate, // traced for testing purposes
     subNav: 'countdown-indicator',
     user: req.session.user,
   });
