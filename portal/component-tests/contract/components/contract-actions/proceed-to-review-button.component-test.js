@@ -52,18 +52,24 @@ describe(component, () => {
       }
     });
 
-    it("should be disabled for deals in status=Draft status=Ready for Checker's approval and status=Further Maker's input required and when dealFormsCompleted flag is false", () =>{
+    it("should be disabled when dealFormsCompleted and dealHasIssuedFacilitiesToSubmit flags are false", () =>{
       const user = {roles: ['maker']};
       const deals = [
         { _id: 1, details: { status: "Draft" } },
-        { _id: 1, details: { status: "Further Maker's input required" } },
-        { _id: 1, details: { status: "Ready for Checker's approval" } },
+        { _id: 2, details: { status: "Further Maker's input required" } },
+        { _id: 3, details: { status: "Ready for Checker's approval" } },
+        { _id: 4, details: { status: "Ready for Checker's approval" } },
+        { _id: 5, details: { status: "Abandoned Deal" } },
+        { _id: 6, details: { status: "Acknowledged by UKEF" } },
+        { _id: 7, details: { status: "Accepted by UKEF (without conditions)" } },
+        { _id: 9, details: { status: "Accepted by UKEF (with conditions)" } }
       ];
 
       const dealFormsCompleted = false;
+      const dealHasIssuedFacilitiesToSubmit = false;
 
       for (const deal of deals) {
-        const wrapper = render({ user, deal, dealFormsCompleted});
+        const wrapper = render({ user, deal, dealFormsCompleted, dealHasIssuedFacilitiesToSubmit});
         wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]')
           .toBeDisabled();
       }
