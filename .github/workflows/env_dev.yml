@@ -11,7 +11,7 @@ env:
   app_service_plan: dev
   registry: ${{ secrets.ACR_DEV_REGISTRY }}
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-  image_tag: latest
+  image_tag: dev
   # App service settings
   DEAL_API_URL: "https://tfs-dev-portal-api.azurewebsites.net"
   COMPANIES_HOUSE_API_URL: ="https://api.companieshouse.gov.uk"
