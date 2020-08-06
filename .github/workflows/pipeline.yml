@@ -69,7 +69,7 @@ jobs:
       - name: Re-insert mocks
         run: |
           cd utils/mock-data-loader 
-          cat .env.azure > .env
+          cat .env.azure_dev > .env
           npm install
           echo Refreshing $(cat .env)
           node re-insert-mocks.js
