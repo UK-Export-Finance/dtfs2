@@ -49,12 +49,12 @@ describe('dealHasIssuedFacilitiesToSubmit', () => {
     });
   });
 
-  describe('when bonds or loans have `Ready for Checker\'s approval` or Submitted status', () => {
+  describe('when bonds or loans have `Ready for Check` or Submitted status', () => {
     it('should return false', () => {
       const mockDeal = {
         bondTransactions: {
           items: [
-            { status: 'Ready for Checker\'s approval' },
+            { status: 'Ready for Check' },
           ],
         },
         loanTransactions: {

@@ -5,13 +5,13 @@ const dealHasIssuedFacilitiesToSubmit = (deal) => {
   const unsubmittedLoansWithIssuedFacilities = loans.filter((loan) =>
     (loan.issueFacilityDetailsProvided === true
     && !loan.issueFacilityDetailsSubmitted
-    && loan.status !== 'Ready for Checker\'s approval'
+    && loan.status !== 'Ready for check'
     && loan.status !== 'Submitted'));
 
   const unsubmittedBondsWithIssuedFacilities = bonds.filter((bond) =>
     (bond.issueFacilityDetailsProvided === true
     && !bond.issueFacilityDetailsSubmitted
-    && bond.status !== 'Ready for Checker\'s approval'
+    && bond.status !== 'Ready for check'
     && bond.status !== 'Submitted'));
 
   const hasIssuedFacilities = (unsubmittedBondsWithIssuedFacilities.length > 0
