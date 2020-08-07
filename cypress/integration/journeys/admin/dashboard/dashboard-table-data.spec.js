@@ -1,8 +1,9 @@
 const { dashboard } = require('../../../pages');
 const relative = require('../../../relativeURL');
 
-const user = { username: 'MAKER', password: 'MAKER' };
-const admin = { username: 'ADMIN', password: 'ADMIN' };
+const mockUsers = require('../../../../fixtures/mockUsers');
+const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 context('Admin dashboard', () => {
   let deal;
@@ -21,14 +22,14 @@ context('Admin dashboard', () => {
     });
 
     // clear down our test users old deals, and insert a new one - updating our deal object
-    cy.deleteDeals(user);
-    cy.insertOneDeal(dummyDeal, user)
+    cy.deleteDeals(MAKER_LOGIN);
+    cy.insertOneDeal(dummyDeal, MAKER_LOGIN)
       .then((insertedDeal) => deal = insertedDeal);
   });
 
   it('Bank column should appear for admin user', () => {
     // login and go to dashboard
-    cy.login(admin);
+    cy.login(ADMIN_LOGIN);
     dashboard.visit();
 
     // get the row that corresponds to our deal
@@ -41,9 +42,9 @@ context('Admin dashboard', () => {
 
   it("Dashboard screen should pass Lighthouse audit", function () {
     // login and go to dashboard
-    cy.login(admin);
+    cy.login(ADMIN_LOGIN);
     dashboard.visit();
-    
+
     cy.lighthouse({
       performance: 85,
       accessibility: 100,

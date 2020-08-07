@@ -16,28 +16,95 @@ describe('a user', () => {
     await wipeDB.wipe(['users']);
   });
 
-  it('a newly added user is returned when we list all users', async () => {
-    await as().post(aMaker).to('/v1/users');
+  describe('creating a user:', () => {
+    it('rejects if the provided password contains zero numeric characters', async () => {
+      const myMaker = {
+        ...aMaker,
+        password: 'sdgkjbsdgkjbsdgkjdskj',
+      };
 
-    const { status, body } = await as().get('/v1/users');
+      const { status, body } = await as().post(myMaker).to('/v1/users');
 
-    expect(status).toEqual(200);
-    expect(body).toEqual({
-      success: true,
-      count: 1,
-      users: [
-        {
-          username: aMaker.username,
-          roles: aMaker.roles,
-          bank: aMaker.bank,
-          _id: expect.any(String),
-          firstname: aMaker.firstname,
-          surname: aMaker.surname,
-          timezone: 'Europe/London',
-          'user-status': 'active',
-        },
-      ],
+      expect(status).toEqual(400);
+      expect(body.success).toEqual(false);
+      expect(body.errors).toContainEqual({password: 'Your password must contain at least one numeric character.'});
     });
+
+    it('rejects if the provided password contains zero upper-case characters', async () => {
+      const myMaker = {
+        ...aMaker,
+        password: 'sdgkjbsdgkjbsdgkjdskj',
+      };
+
+      const { status, body } = await as().post(myMaker).to('/v1/users');
+
+      expect(status).toEqual(400);
+      expect(body.success).toEqual(false);
+      expect(body.errors).toContainEqual({password:'Your password must contain at least one upper-case character.'})
+    });
+
+    it('rejects if the provided password contains zero lower-case characters', async () => {
+      const myMaker = {
+        ...aMaker,
+        password: 'SDGASDFGHSDKGNL',
+      };
+
+      const { status, body } = await as().post(myMaker).to('/v1/users');
+
+      expect(status).toEqual(400);
+      expect(body.success).toEqual(false);
+      expect(body.errors).toContainEqual({password:'Your password must contain at least one lower-case character.'})
+    });
+
+    it('rejects if the provided password contains zero special characters', async () => {
+      const myMaker = {
+        ...aMaker,
+        password: 'SDGASDFGHSDKGNL',
+      };
+
+      const { status, body } = await as().post(myMaker).to('/v1/users');
+
+      expect(status).toEqual(400);
+      expect(body.success).toEqual(false);
+      expect(body.errors).toContainEqual({password:'Your password must contain at least one special character.'})
+    });
+
+    it('rejects if the provided password contains fewer than 8 characters', async () => {
+      const myMaker = {
+        ...aMaker,
+        password: '1234567',
+      };
+
+      const { status, body } = await as().post(myMaker).to('/v1/users');
+
+      expect(status).toEqual(400);
+      expect(body.success).toEqual(false);
+      expect(body.errors).toContainEqual({password:'Your password must contain at least 8 characters.'})
+    });
+
+    it('creates the user if all provided data is valid', async () => {
+      await as().post(aMaker).to('/v1/users');
+      const { status, body } = await as().get('/v1/users');
+
+      expect(status).toEqual(200);
+      expect(body).toEqual({
+        success: true,
+        count: 1,
+        users: [
+          {
+            username: aMaker.username,
+            roles: aMaker.roles,
+            bank: aMaker.bank,
+            _id: expect.any(String),
+            firstname: aMaker.firstname,
+            surname: aMaker.surname,
+            timezone: 'Europe/London',
+            'user-status': 'active',
+          },
+        ],
+      });
+    });
+
   });
 
   it('a user can be updated', async () => {

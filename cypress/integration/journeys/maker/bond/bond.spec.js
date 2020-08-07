@@ -4,7 +4,8 @@ const partials = require('../../../partials');
 const BOND_FORM_VALUES = require('./bond-form-values');
 const relative = require('../../../relativeURL');
 
-const user = { username: 'MAKER', password: 'MAKER' };
+const mockUsers = require('../../../../fixtures/mockUsers');
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 const MOCK_DEAL = {
   details: {
@@ -27,15 +28,15 @@ context('Add a Bond to a Deal', () => {
       console.log(err.stack);
       return false;
     });
-    cy.deleteDeals(user);
-    cy.insertOneDeal(MOCK_DEAL, user)
+    cy.deleteDeals(MAKER_LOGIN);
+    cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
       .then((insertedDeal) => deal = insertedDeal);
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Bond to the deal', () => {
     cy.createADeal({
-      username: user.username,
-      password: user.password,
+      username: MAKER_LOGIN.username,
+      password: MAKER_LOGIN.password,
       bankDealId: MOCK_DEAL.details.bankSupplyContractID,
       bankDealName: MOCK_DEAL.details.bankSupplyContractName,
     });
@@ -52,8 +53,8 @@ context('Add a Bond to a Deal', () => {
   describe('when a user submits all Bond forms without completing any fields', () => {
     it('should display all validation errors for required fields in `Bond Preview` page', () => {
       cy.createADeal({
-        username: user.username,
-        password: user.password,
+        username: MAKER_LOGIN.username,
+        password: MAKER_LOGIN.password,
         bankDealId: MOCK_DEAL.details.bankSupplyContractID,
         bankDealName: MOCK_DEAL.details.bankSupplyContractName,
       });
@@ -79,7 +80,7 @@ context('Add a Bond to a Deal', () => {
 
   describe('when a user submits a Bond form without completing any fields', () => {
     it('bond should display `Incomplete` status in Deal page', () => {
-      cy.loginGoToDealPage(user, deal);
+      cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
       pages.contract.addBondButton().click();
 
@@ -101,8 +102,8 @@ context('Add a Bond to a Deal', () => {
     describe('after viewing the `Bond Preview` page', () => {
       it('should display validation errors in `Bond Details`, `Bond Financial Details` and `Bond Fee Details` pages', () => {
         cy.createADeal({
-          username: user.username,
-          password: user.password,
+          username: MAKER_LOGIN.username,
+          password: MAKER_LOGIN.password,
           bankDealId: MOCK_DEAL.details.bankSupplyContractID,
           bankDealName: MOCK_DEAL.details.bankSupplyContractName,
         });
@@ -127,7 +128,7 @@ context('Add a Bond to a Deal', () => {
     });
 
     it('should display a progress nav link to `Preview`', () => {
-      cy.loginGoToDealPage(user, deal);
+      cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
       pages.contract.addBondButton().click();
       pages.bondDetails.submit().click();
@@ -146,8 +147,8 @@ context('Add a Bond to a Deal', () => {
   describe('When a user submits all required Bond form fields (`issued` bond stage, currency same as Supply Contract Currency)', () => {
     it('should progress to `Bond Preview` page and render submission details', () => {
       cy.createADeal({
-        username: user.username,
-        password: user.password,
+        username: MAKER_LOGIN.username,
+        password: MAKER_LOGIN.password,
         bankDealId: MOCK_DEAL.details.bankSupplyContractID,
         bankDealName: MOCK_DEAL.details.bankSupplyContractName,
       });
@@ -160,7 +161,7 @@ context('Add a Bond to a Deal', () => {
     });
 
     it('should display a checked checkbox for all progress nav items and only text for `Preview`', () => {
-      cy.loginGoToDealPage(user, deal);
+      cy.loginGoToDealPage(MAKER_LOGIN, deal);
       cy.addBondToDeal();
       cy.url().should('include', '/preview');
 
@@ -181,7 +182,7 @@ context('Add a Bond to a Deal', () => {
     });
 
     it('should populate Deal page with the submitted bond, display `Completed` status and link to `Bond Details` page', () => {
-      cy.loginGoToDealPage(user, deal);
+      cy.loginGoToDealPage(MAKER_LOGIN, deal);
       cy.addBondToDeal();
       cy.url().should('include', '/preview');
 
@@ -240,7 +241,7 @@ context('Add a Bond to a Deal', () => {
 
   describe('When a user clicks `save and go back` button in `Bond Preview` page', () => {
     it('should return to Deal page', () => {
-      cy.loginGoToDealPage(user, deal);
+      cy.loginGoToDealPage(MAKER_LOGIN, deal);
       cy.addBondToDeal();
       cy.url().should('include', '/preview');
 

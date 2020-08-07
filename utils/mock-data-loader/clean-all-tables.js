@@ -60,7 +60,7 @@ const cleanUsers = async () => {
 const cleanAllTables = async () => {
   const token = await tokenFor({
     username: 'admin',
-    password: 'admin',
+    password: 'AbC!2345',
     roles: ['maker', 'editor'],
     bank: { id: '*' },
   });

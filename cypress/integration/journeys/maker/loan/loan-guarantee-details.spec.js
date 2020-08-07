@@ -4,7 +4,8 @@ const fillLoanForm = require('./fill-loan-forms');
 const assertLoanFormValues = require('./assert-loan-form-values');
 const LOAN_FORM_VALUES = require('./loan-form-values');
 
-const user = { username: 'MAKER', password: 'MAKER' };
+const mockUsers = require('../../../../fixtures/mockUsers');
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 const MOCK_DEAL = {
   details: {
@@ -19,7 +20,7 @@ const MOCK_DEAL = {
 };
 
 const goToPage = (deal) => {
-  cy.loginGoToDealPage(user, deal);
+  cy.loginGoToDealPage(MAKER_LOGIN, deal);
   pages.contract.addLoanButton().click();
 };
 
@@ -44,8 +45,8 @@ context('Loan Guarantee Details', () => {
       console.log(err.stack);
       return false;
     });
-    cy.deleteDeals(user);
-    cy.insertOneDeal(MOCK_DEAL, user)
+    cy.deleteDeals(MAKER_LOGIN);
+    cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
       .then((insertedDeal) => deal = insertedDeal);
   });
 
@@ -77,7 +78,7 @@ context('Loan Guarantee Details', () => {
     });
   });
 
-  describe('when user selects different Facility stage options (`Conditional` or `Unconditional`)', () => {
+  describe('when a maker selects different Facility stage options (`Conditional` or `Unconditional`)', () => {
     it('should render additional form fields and validation errors without leaving the page', () => {
       goToPage(deal);
 
@@ -98,7 +99,7 @@ context('Loan Guarantee Details', () => {
     });
   });
 
-  describe('when user submits Facility stage as `Conditional`', () => {
+  describe('when a maker submits Facility stage as `Conditional`', () => {
     it('should render additional form fields and validation errors when returning to the page ', () => {
       goToPage(deal);
 
@@ -117,7 +118,7 @@ context('Loan Guarantee Details', () => {
     });
   });
 
-  describe('when user submits Facility stage as `Unconditional`', () => {
+  describe('when a maker submits Facility stage as `Unconditional`', () => {
     it('should render additional form fields and validation errors when returning to the page and render a `Not entered` link in the Deal page when (optional) Bank Reference Number is not provided', () => {
       goToPage(deal);
 
@@ -179,7 +180,7 @@ context('Loan Guarantee Details', () => {
     assertLoanFormValues.guaranteeDetails.facilityStageUnconditional();
   });
 
-  describe('When a user clicks `save and go back` button', () => {
+  describe('When a MAKER_LOGIN clicks `save and go back` button', () => {
     it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Loan Guarantee Details` page', () => {
       goToPage(deal);
 

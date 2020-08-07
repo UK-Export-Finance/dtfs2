@@ -12,7 +12,10 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
     })
     .then((response) => response)
     .catch((err) => {
-      console.log(err);
+      console.log(`Failed to send email to address: ${sendToEmailAddress}`);
+      // console.log(err); long, ugly and only so informative..
+      console.log(err.stack);
+      return false;
     });
 };
 

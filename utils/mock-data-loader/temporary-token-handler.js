@@ -11,6 +11,9 @@ module.exports = async (user) => {
       'Content-Type': 'application/json',
     },
     data: user,
+  }).catch(err => {
+    console.log(`failed to create temp user`);
+    console.log(`${JSON.stringify(err)}`);
   });
 
   const { data } = await axios({

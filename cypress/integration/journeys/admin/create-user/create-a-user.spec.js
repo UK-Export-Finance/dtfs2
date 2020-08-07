@@ -1,12 +1,13 @@
 const { startNow, users, createUser} = require('../../../pages');
 const relative = require('../../../relativeURL');
 
-const admin = { username: 'ADMIN', password: 'ADMIN' };
+const mockUsers = require('../../../../fixtures/mockUsers');
+const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
 
 context('Admin user creates a new user', () => {
   const userToCreate = {
     username: 'an.address@some.com',
-    password: 'w00t',
+    password: 'Aleg1tP@ssword',
     firstname: 'bob',
     surname: 'builder',
     bank: 'HSBC',
@@ -20,12 +21,12 @@ context('Admin user creates a new user', () => {
       return false;
     });
 
-    cy.removeUserIfPresent(userToCreate, admin);
+    cy.removeUserIfPresent(userToCreate, ADMIN_LOGIN);
   });
 
   it('Admin user adds a new user and confirms the new user works', () => {
     // login and go to dashboard
-    cy.login(admin);
+    cy.login(ADMIN_LOGIN);
 
     startNow.header().users().click();
     users.user(userToCreate).should('not', 'exist');
@@ -54,7 +55,7 @@ context('Admin user creates a new user', () => {
     cy.url().should('eq', relative('/start-now'));
 
     // prove the lastLogin timestamp
-    cy.login(admin);
+    cy.login(ADMIN_LOGIN);
     cy.url().should('eq', relative('/start-now'));
     startNow.header().users().click();
 
@@ -66,9 +67,9 @@ context('Admin user creates a new user', () => {
 
   it("Manage users screen should pass Lighthouse audit", function () {
     // login and go to manage users
-    cy.login(admin);
+    cy.login(ADMIN_LOGIN);
     startNow.header().users().click();
-    
+
     cy.lighthouse({
       performance: 85,
       accessibility: 100,
@@ -81,10 +82,10 @@ context('Admin user creates a new user', () => {
 
   it("Add user screen should pass Lighthouse audit", function () {
     // login and go to add/edit user
-    cy.login(admin);
+    cy.login(ADMIN_LOGIN);
     startNow.header().users().click();
     users.addUser().click();
-    
+
     cy.lighthouse({
       performance: 85,
       accessibility: 100,

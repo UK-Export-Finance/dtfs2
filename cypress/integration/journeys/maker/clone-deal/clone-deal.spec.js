@@ -2,10 +2,11 @@ const pages = require('../../../pages');
 const partials = require('../../../partials');
 const fullyCompletedDeal = require('./dealFullyCompleted');
 
-const user = { username: 'MAKER', password: 'MAKER' };
+const mockUsers = require('../../../../fixtures/mockUsers');
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 const goToCloneDealPage = (deal) => {
-  cy.loginGoToDealPage(user, deal);
+  cy.loginGoToDealPage(MAKER_LOGIN, deal);
   pages.contract.cloneDealLink().click();
   cy.url().should('include', '/clone/before-you-start');
 
@@ -27,8 +28,8 @@ context('Clone a deal', () => {
       return false;
     });
 
-    cy.deleteDeals(user);
-    cy.insertOneDeal(fullyCompletedDeal, user)
+    cy.deleteDeals(MAKER_LOGIN);
+    cy.insertOneDeal(fullyCompletedDeal, MAKER_LOGIN)
       .then((insertedDeal) => deal = insertedDeal);
   });
 

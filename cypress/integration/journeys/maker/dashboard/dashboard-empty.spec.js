@@ -1,7 +1,8 @@
 const { dashboard, defaults } = require('../../../pages');
 const relative = require('../../../relativeURL');
 
-const maker1 = { username: 'MAKER', password: 'MAKER' };
+const mockUsers = require('../../../../fixtures/mockUsers');
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 context('Dashboard Deals', () => {
   beforeEach(() => {
@@ -11,11 +12,11 @@ context('Dashboard Deals', () => {
       return false;
     });
 
-    cy.deleteDeals(maker1);
+    cy.deleteDeals(MAKER_LOGIN);
   });
 
   it('Can display an empty dashboard', () => {
-    cy.login({ ...maker1 });
+    cy.login(MAKER_LOGIN);
     dashboard.visit();
     cy.title().should('eq', `Deals${defaults.pageTitleAppend}`);
   });

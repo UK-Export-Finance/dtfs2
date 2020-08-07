@@ -9,7 +9,8 @@ const {
   calculateExpectedUkefExposure,
 } = require('../../../../support/portal/sectionCalculations');
 
-const user = { username: 'MAKER', password: 'MAKER' };
+const mockUsers = require('../../../../fixtures/mockUsers');
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 const MOCK_DEAL = {
   details: {
@@ -24,7 +25,7 @@ const MOCK_DEAL = {
 };
 
 const goToBondFinancialDetailsPage = (deal) => {
-  cy.loginGoToDealPage(user, deal);
+  cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
   pages.contract.addBondButton().click();
   partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
@@ -42,14 +43,14 @@ context('Bond Financial Details', () => {
       console.log(err.stack);
       return false;
     });
-    cy.deleteDeals(user);
-    cy.insertOneDeal(MOCK_DEAL, user)
+    cy.deleteDeals(MAKER_LOGIN);
+    cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
       .then((insertedDeal) => deal = insertedDeal);
   });
 
   describe('after submitting one form field and navigating back to `Bond Financial Details` page', () => {
     it('should render validation errors for all required fields', () => {
-      cy.loginGoToDealPage(user, deal);
+      cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
       pages.contract.addBondButton().click();
       partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
@@ -75,7 +76,7 @@ context('Bond Financial Details', () => {
 
   describe('when changing the `risk margin fee` field', () => {
     it('should dynamically update the `Guarantee Fee Payable By Bank` value on blur', () => {
-      cy.loginGoToDealPage(user, deal);
+      cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
       pages.contract.addBondButton().click();
       partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
@@ -94,7 +95,7 @@ context('Bond Financial Details', () => {
 
   describe('when changing the `bond value` or `covered percentage` field', () => {
     it('should dynamically update the `UKEF exposure` value on blur', () => {
-      cy.loginGoToDealPage(user, deal);
+      cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
       pages.contract.addBondButton().click();
       partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
@@ -118,7 +119,7 @@ context('Bond Financial Details', () => {
   });
 
   it('form submit of all required fields should render a checked checkbox only for `Bond Financial Details` in progress nav', () => {
-    cy.loginGoToDealPage(user, deal);
+    cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
     pages.contract.addBondButton().click();
     partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
@@ -136,7 +137,7 @@ context('Bond Financial Details', () => {
 
   describe('When a user submits the `Bond Financial Details` form', () => {
     it('should progress to `Bond Fee Details` page and prepopulate form fields when returning back to `Bond Financial Details` page', () => {
-      cy.loginGoToDealPage(user, deal);
+      cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
       pages.contract.addBondButton().click();
       partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
@@ -327,7 +328,7 @@ context('Bond Financial Details', () => {
 
   describe('When a user clicks `save and go back` button', () => {
     it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Bond Financial Details` page', () => {
-      cy.loginGoToDealPage(user, deal);
+      cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
       pages.contract.addBondButton().click();
       partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();

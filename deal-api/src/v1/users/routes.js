@@ -6,6 +6,7 @@ const {
 } = require('./controller');
 
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
+const { applyCreateRules } = require('./validation');
 
 module.exports.list = (req, res, next) => {
   list((err, users) => {
@@ -22,6 +23,13 @@ module.exports.list = (req, res, next) => {
 };
 
 module.exports.create = (req, res, next) => {
+  const errors = applyCreateRules(req.body);
+  if (errors.length) {
+    return res.status(400).json({
+      success: false,
+      errors,
+    });
+  }
   const { password } = req.body;
   const saltHash = utils.genPassword(password);
 
@@ -33,12 +41,11 @@ module.exports.create = (req, res, next) => {
     hash,
   };
 
-  create(newUser, (err, user) => {
+  return create(newUser, (err, user) => {
     if (err) {
-      next(err);
-    } else {
-      res.json({ success: true, user });
+      return next(err);
     }
+    return res.json({ success: true, user });
   });
 };
 

@@ -2,6 +2,9 @@ const pages = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
 
+const mockUsers = require('../../../fixtures/mockUsers');
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
 context('Red Line eligibility checking', () => {
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -13,7 +16,7 @@ context('Red Line eligibility checking', () => {
 
   describe('When the `Mandatory criteria` form is submitted without confirming an answer', () => {
     it('should display validation error', () => {
-      cy.createNewSubmission({ username: 'MAKER', password: 'MAKER' });
+      cy.createNewSubmission(MAKER_LOGIN);
 
       pages.beforeYouStart.submit().click();
 
@@ -25,7 +28,7 @@ context('Red Line eligibility checking', () => {
   });
 
   it('A deal that fails red-line checks is rejected and links back to home page', () => {
-    cy.createNewSubmission({ username: 'MAKER', password: 'MAKER' });
+    cy.createNewSubmission(MAKER_LOGIN);
 
     pages.beforeYouStart.false().click();
     pages.beforeYouStart.submit().click();
@@ -37,7 +40,7 @@ context('Red Line eligibility checking', () => {
   });
 
   it('the Unable To Proceed page links back to the home page', () => {
-    cy.createNewSubmission({ username: 'MAKER', password: 'MAKER' });
+    cy.createNewSubmission(MAKER_LOGIN);
 
     pages.beforeYouStart.false().click();
     pages.beforeYouStart.submit().click();
@@ -47,7 +50,7 @@ context('Red Line eligibility checking', () => {
   });
 
   it('A deal that passes red-line checks can progress to enter supply detaile', () => {
-    cy.createNewSubmission({ username: 'MAKER', password: 'MAKER' });
+    cy.createNewSubmission(MAKER_LOGIN);
 
     pages.beforeYouStart.true().click();
     pages.beforeYouStart.submit().click();

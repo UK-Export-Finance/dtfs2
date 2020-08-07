@@ -1,7 +1,8 @@
 const { contract, editDealName, defaults } = require('../../pages');
 const relative = require('../../relativeURL');
 
-const user = { username: 'MAKER', password: 'MAKER' };
+const mockUsers = require('../../../fixtures/mockUsers');
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 context('Edit deal name', () => {
   let deal;
@@ -22,13 +23,13 @@ context('Edit deal name', () => {
   });
 
   before(() => {
-    cy.deleteDeals(user);
-    cy.insertOneDeal(dummyDeal, user)
+    cy.deleteDeals(MAKER_LOGIN);
+    cy.insertOneDeal(dummyDeal, MAKER_LOGIN)
       .then((insertedDeal) => deal = insertedDeal);
   });
 
   it('rejects an empty field', () => {
-    cy.login(user);
+    cy.login(MAKER_LOGIN);
     contract.visit(deal);
     contract.editDealName().click();
 
@@ -43,7 +44,7 @@ context('Edit deal name', () => {
   });
 
   it('updates deal.details.bankSupplyContractName', () => {
-    cy.login(user);
+    cy.login(MAKER_LOGIN);
     contract.visit(deal);
     contract.editDealName().click();
 

@@ -6,7 +6,7 @@ const tokenFor = require('./temporary-token-handler');
 const insertMocks = async () => {
   const token = await tokenFor({
     username: 're-insert-mocks',
-    password: 'temporary',
+    password: 'AbC!2345',
     firstname: 'Mock',
     surname: 'DataLoader',
     roles: ['maker', 'editor', 'data-admin'],
@@ -15,7 +15,7 @@ const insertMocks = async () => {
 
   const token2 = await tokenFor({
     username: 're-insert-mocks-2',
-    password: 'temporary',
+    password: 'AbC!2345',
     roles: ['maker', 'editor'],
     bank: MOCKS.BANKS.find((bank) => bank.id === '964'),
   });

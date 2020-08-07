@@ -1,6 +1,7 @@
 const { dashboard } = require('../../../pages');
 
-const maker1 = { username: 'MAKER', password: 'MAKER' };
+const mockUsers = require('../../../../fixtures/mockUsers');
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('./twentyOneDeals');
@@ -17,15 +18,15 @@ context('The deals dashboard', () => {
   });
 
   before(() => {
-    cy.deleteDeals(maker1);
-    cy.insertManyDeals(twentyOneDeals, { ...maker1 })
+    cy.deleteDeals(MAKER_LOGIN);
+    cy.insertManyDeals(twentyOneDeals, MAKER_LOGIN)
       .then((insertedDeals) => deals = insertedDeals);
   });
 
   it('can be filtered by supply contract id', () => {
     const testId = twentyOneDeals[1].details.bankSupplyContractID;
 
-    cy.login({ ...maker1 });
+    cy.login(MAKER_LOGIN);
     dashboard.visit();
 
     dashboard.showFilters().click();

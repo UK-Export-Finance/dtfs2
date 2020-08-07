@@ -1,6 +1,8 @@
 const { contract, eligibilityCriteria, eligibilityDocumentation } = require('../../pages');
 const { errorSummary } = require('../../partials');
 
+const mockUsers = require('../../../fixtures/mockUsers');
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 context('Eligibility Documentation', () => {
   beforeEach(() => {
@@ -11,8 +13,7 @@ context('Eligibility Documentation', () => {
     });
 
     cy.createADeal({
-      username: 'MAKER',
-      password: 'MAKER',
+      ...MAKER_LOGIN,
       bankDealId: 'someDealId',
       bankDealName: 'someDealName',
     });

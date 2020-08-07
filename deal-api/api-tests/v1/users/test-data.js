@@ -1,13 +1,13 @@
 module.exports = [
   {
     username: 'NOBODY',
-    password: 'NOBODY',
+    password: '1!aB5678',
     firstname: 'Miss',
     surname: 'One',
     roles: [],
   }, {
     username: 'MAKER',
-    password: 'MAKER',
+    password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Two',
     roles: ['maker'],
@@ -21,7 +21,7 @@ module.exports = [
     },
   }, {
     username: 'CHECKER',
-    password: 'CHECKER',
+    password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Three',
     roles: ['checker'],
@@ -35,7 +35,7 @@ module.exports = [
     },
   }, {
     username: 'MAKENCHECK',
-    password: 'MAKENCHECK',
+    password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Four',
     roles: ['maker', 'checker'],
@@ -49,7 +49,7 @@ module.exports = [
     },
   }, {
     username: 'READER',
-    password: 'READER',
+    password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Five',
     roles: ['reader'],
@@ -63,7 +63,7 @@ module.exports = [
     },
   }, {
     username: 'MAKER-2',
-    password: 'MAKER-2',
+    password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Six',
     roles: ['maker'],
@@ -73,7 +73,7 @@ module.exports = [
     },
   }, {
     username: 'CHECKER-2',
-    password: 'CHECKER-2',
+    password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Seven',
     roles: ['checker'],
@@ -83,7 +83,7 @@ module.exports = [
     },
   }, {
     username: 'MAKENCHECK-2',
-    password: 'MAKENCHECK-2',
+    password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Eight',
     roles: ['maker', 'checker'],
@@ -93,7 +93,7 @@ module.exports = [
     },
   }, {
     username: 'READER-2',
-    password: 'READER-2',
+    password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Nine',
     roles: ['reader'],

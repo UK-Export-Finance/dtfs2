@@ -1,34 +1,36 @@
 const {dashboard} = require('../../../pages');
 const relative = require('../../../relativeURL');
 
-const maker1 = {username: 'MAKER', password: 'MAKER'};
-const maker2 = {username:'MAKER-2', password: 'MAKER-2'};
-const maker3 = {username:'MAKER-3', password: 'MAKER-3'};
+const mockUsers = require('../../../../fixtures/mockUsers');
+const BARCLAYS_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'Barclays Bank') );
+const hsbc_makers = mockUsers.filter( user=> (user.roles.includes('maker') && user.bank.name === 'HSBC') );
+const HSBC_MAKER_1 = hsbc_makers[0];
+const HSBC_MAKER_2 = hsbc_makers[1];
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('./twentyOneDeals');
 
 context('Dashboard Deals filter by ownership', () => {
-  let allDealsFromBank1,
-      dealsFromBank2User1,
-      dealsFromBank2User2,
-      allDealsFromBank2;
+  let allBarclaysDeals,
+      dealsFromBarclaysUser1,
+      dealsFromBarclaysUser2,
+      allDealsFromBarclays;
 
   before( () => {
-    cy.deleteDeals(maker1);
-    cy.deleteDeals(maker2);
-    cy.deleteDeals(maker3);
+    cy.deleteDeals(BARCLAYS_LOGIN);
+    cy.deleteDeals(HSBC_MAKER_1);
+    cy.deleteDeals(HSBC_MAKER_2);
 
-    cy.insertManyDeals(twentyOneDeals.slice(0,5), { ...maker1 })
-      .then( insertedDeals => allDealsFromBank1=insertedDeals );
+    cy.insertManyDeals(twentyOneDeals.slice(0,5), BARCLAYS_LOGIN)
+      .then( insertedDeals => allBarclaysDeals=insertedDeals );
 
-    cy.insertManyDeals(twentyOneDeals.slice(5,10), { ...maker2 })
-      .then( insertedDeals => dealsFromBank2User1=insertedDeals);
+    cy.insertManyDeals(twentyOneDeals.slice(5,10), HSBC_MAKER_1)
+      .then( insertedDeals => dealsFromBarclaysUser1=insertedDeals);
 
-    cy.insertManyDeals(twentyOneDeals.slice(10,15), { ...maker3 })
+    cy.insertManyDeals(twentyOneDeals.slice(10,15), HSBC_MAKER_2)
       .then( (insertedDeals) => {
-        dealsFromBank2User2=insertedDeals
-        allDealsFromBank2 = dealsFromBank2User1.concat(dealsFromBank2User2);
+        dealsFromBarclaysUser2=insertedDeals
+        allDealsFromBarclays = dealsFromBarclaysUser1.concat(dealsFromBarclaysUser2);
       });
 
   });
@@ -42,21 +44,21 @@ context('Dashboard Deals filter by ownership', () => {
   });
 
   it('Show me: All - shows all deals from the users bank', () => {
-    // confirm that maker1 sees maker1's deals
-    cy.login({...maker1});
+    // confirm that BARCLAYS_LOGIN sees BARCLAYS_LOGIN's deals
+    cy.login(BARCLAYS_LOGIN);
     dashboard.visit();
-    dashboard.confirmDealsPresent( allDealsFromBank1 );
+    dashboard.confirmDealsPresent( allBarclaysDeals );
     dashboard.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(5 items)');
     });
 
-    // confirm that maker2 sees maker2's deals AND maker3's deals
-    cy.login({...maker2});
+    // confirm that HSBC_MAKER_1 sees HSBC_MAKER_1's deals AND HSBC_MAKER_2's deals
+    cy.login(HSBC_MAKER_1);
     dashboard.visit();
 
     dashboard.filterBySubmissionUser().should('have.value', 'all')
 
-    dashboard.confirmDealsPresent( allDealsFromBank2 );
+    dashboard.confirmDealsPresent( allDealsFromBarclays );
     dashboard.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(10 items)');
     });
@@ -64,14 +66,14 @@ context('Dashboard Deals filter by ownership', () => {
   });
 
   it('Show me: created by colleagues - shows all deals created by other users from the users bank', () => {
-    // confirm that maker2 sees maker3's deals
-    cy.login({...maker2});
+    // confirm that HSBC_MAKER_1 sees HSBC_MAKER_2's deals
+    cy.login(HSBC_MAKER_1);
     dashboard.visit();
 
     dashboard.filterBySubmissionUser().select('createdByColleagues');
     dashboard.applyFilters().click();
 
-    dashboard.confirmDealsPresent( dealsFromBank2User2 );
+    dashboard.confirmDealsPresent( dealsFromBarclaysUser2 );
     dashboard.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(5 items)');
     });
@@ -80,14 +82,14 @@ context('Dashboard Deals filter by ownership', () => {
   });
 
   it('Show me: created by me - shows all deals created by the user', () => {
-    // confirm that maker2 sees maker2's deals
-    cy.login({...maker2});
+    // confirm that HSBC_MAKER_1 sees HSBC_MAKER_1's deals
+    cy.login(HSBC_MAKER_1);
     dashboard.visit();
 
     dashboard.filterBySubmissionUser().select('createdByMe');
     dashboard.applyFilters().click();
 
-    dashboard.confirmDealsPresent( dealsFromBank2User1 );
+    dashboard.confirmDealsPresent( dealsFromBarclaysUser1 );
     dashboard.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(5 items)');
     });

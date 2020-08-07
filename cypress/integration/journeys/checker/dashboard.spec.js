@@ -1,7 +1,8 @@
 const {dashboard} = require('../../pages');
 const relative = require('../../relativeURL');
 
-const checker = {username: 'CHECKER', password: 'CHECKER'};
+const mockUsers = require('../../../fixtures/mockUsers');
+const CHECKER_LOGIN = mockUsers.find( user=> (user.roles.includes('checker')) );
 
 context('Dashboard Deals viewed by a user with role=checker', () => {
 
@@ -14,7 +15,7 @@ context('Dashboard Deals viewed by a user with role=checker', () => {
   });
 
   it('Dashboard defaults to showing status=readyForApproval', () => {
-    cy.login({...checker});
+    cy.login(CHECKER_LOGIN);
     dashboard.visit();
 
     dashboard.filterByStatus().should('be.visible');
