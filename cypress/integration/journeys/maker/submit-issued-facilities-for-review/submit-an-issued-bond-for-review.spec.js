@@ -87,6 +87,11 @@ context('A maker can issue and submit an issued bond facility with a deal in `Ac
       expect(text.trim()).to.equal('Ready for Checker\'s approval');
     });
 
+    pages.contract.previousStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Acknowledged by UKEF');
+    });
+
+
     // expect the bond status to be updated
     bondRow.bondStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Ready for check');

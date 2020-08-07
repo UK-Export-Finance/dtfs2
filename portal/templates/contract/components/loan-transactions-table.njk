@@ -83,7 +83,7 @@
 
                   {% else %}
                   {% if params.editable %}
-                    <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/delete" class="govuk-link" data-cy="loan-delete" aria-label="Delete loan">Delete</a>
+                    <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/delete" class="govuk-link" data-cy="loan-delete-{{ loan._id }}" aria-label="Delete loan">Delete</a>
                   {% endif %}
 
                 {% endif %}
