@@ -20,11 +20,6 @@ const insertMocks = async () => {
     bank: MOCKS.BANKS.find((bank) => bank.id === '964'),
   });
 
-  console.log('resetting id counters');
-  await api.resetIdCounters(token).catch((error) => {
-    console.log({ error });
-  });
-
   console.log('inserting deals');
   for (contract of MOCKS.CONTRACTS) {
     await api.createDeal(contract, token);
