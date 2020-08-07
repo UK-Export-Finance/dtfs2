@@ -2,8 +2,9 @@ const moment = require('moment');
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const dealAcknowledgedByUKEF = require('./dealAcknowledgedByUKEF');
+const mockUsers = require('../../../../fixtures/mockUsers');
 
-const maker1 = { username: 'MAKER', password: 'MAKER' };
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 context('A maker can issue and submit an issued bond facility with a deal in `Acknowledged by UKEF` status', () => {
   let deal;
@@ -18,7 +19,7 @@ context('A maker can issue and submit an issued bond facility with a deal in `Ac
   });
 
   before(() => {
-    cy.insertOneDeal(dealAcknowledgedByUKEF, { ...maker1 })
+    cy.insertOneDeal(dealAcknowledgedByUKEF, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
@@ -47,7 +48,7 @@ context('A maker can issue and submit an issued bond facility with a deal in `Ac
   };
 
   it('Completing the Issue bond Facility form allows maker to re-submit the deal for review. Deal/bond should be updated after submiting for review', () => {
-    cy.login({ ...maker1 });
+    cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('not.exist');
 
