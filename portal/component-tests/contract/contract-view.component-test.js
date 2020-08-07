@@ -72,7 +72,6 @@ describe(page, () => {
 
   describe('when viewed with editable=true', () => {
     const wrappers = [];
-
     beforeAll( ()=>{
       for(const role of roles) {
         const user = { roles:[role], timezone:'Europe/London' };
@@ -95,14 +94,6 @@ describe(page, () => {
     it('allows the user to add a bond', () => {
       return wrappers.forEach(wrapper => wrapper.expectLink('[data-cy="link-add-bond"]')
                                           .toLinkTo(`/contract/${deal._id}/bond/create`, 'Add a Bond'));
-    });
-
-    it('allows the user to delete a bond', () => {
-      const dealId = deal._id;
-      const bondId = deal.bondTransactions.items[0]._id;
-
-      return wrappers.forEach(wrapper => wrapper.expectLink(`[data-cy="delete-bond-${bondId}"]`)
-                                          .toLinkTo(`/contract/${dealId}/bond/${bondId}/delete`, 'Delete'));
     });
 
     it('provides a link to the bond', () => {
@@ -174,6 +165,41 @@ describe(page, () => {
       const loanId = deal.loanTransactions.items[0]._id;
 
       return wrappers.forEach(wrapper => wrapper.expectLink(`[data-cy="loan-bank-reference-number-${loanId}"]`).notToExist());
+    });
+  });
+
+  // these should be in their own component test since it's in a different component
+  describe('when viewed with editable=true and any status except Acknowledged by UKEF and Ready for Checker\'s approval', () => {
+    const wrappers = [];
+
+    const dealsWithStatusThatAllowBondDeletion = () => {
+      return [ 
+        aDealInStatus(STATUS.draft),
+        aDealInStatus(STATUS.inputRequired),
+        aDealInStatus(STATUS.abandoned),
+        aDealInStatus(STATUS.submitted),
+        aDealInStatus(STATUS.approved),
+        aDealInStatus(STATUS.approvedWithConditions),
+        aDealInStatus(STATUS.refused),
+      ];
+    };
+
+    beforeAll( ()=>{
+      for(const role of roles) {
+        const user = { roles:[role], timezone:'Europe/London' };
+        for (const deal of dealsWithStatusThatAllowBondDeletion()) {
+          wrappers.push( render({user, deal, editable:true}) )
+        }
+      }
+    });
+
+    it('allows the user to delete a bond', () => {
+
+      const dealId = deal._id;
+      const bondId = deal.bondTransactions.items[0]._id;
+
+      return wrappers.forEach(wrapper => wrapper.expectLink(`[data-cy="bond-delete-${bondId}"]`)
+        .toLinkTo(`/contract/${dealId}/bond/${bondId}/delete`, 'Delete'));
     });
   });
 });
