@@ -35,7 +35,7 @@ const sendStatusUpdateEmails = async (deal, fromStatus, user) => {
     updatedByEmail,
   };
 
-  if ( deal.details
+  if (deal.details
     && deal.details.owningBank
     && deal.details.owningBank.emails
     && deal.details.owningBank.emails.length
