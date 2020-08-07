@@ -38,11 +38,12 @@ const page = {
       const row = cy.get(`[data-cy="bond-${bondId}"]`);
       return {
         uniqueNumber: () => row.get(`[data-cy="unique-number-${bondId}"]`),
-        bondStatus: () => row.get('[data-cy="bond-status"]'),
+        bondStatus: () => row.get(`[data-cy="bond-status-${bondId}"]`),
         facilityValue: () => row.get('[data-cy="bond-facility-value"]'),
         bondStage: () => row.get('[data-cy="bond-stage"]'),
         requestedCoverStartDate: () => row.get('[data-cy="bond-requested-cover-start-date"]'),
         coverEndDate: () => row.get('[data-cy="bond-cover-end-date"]'),
+        issueFacilityLink: () => row.get(`[data-cy="bond-issue-facility-${bondId}"]`),
         deleteLink: () => row.get(`[data-cy="delete-bond-${bondId}"]`),
       };
     },
@@ -52,11 +53,12 @@ const page = {
       const row = cy.get(`[data-cy="loan-${loanId}"]`);
       return {
         bankReferenceNumber: () => row.get(`[data-cy="loan-bank-reference-number-${loanId}"]`),
-        loanStatus: () => row.get('[data-cy="loan-status"]'),
+        loanStatus: () => row.get(`[data-cy="loan-status-${loanId}"]`),
         facilityValue: () => row.get('[data-cy="loan-facility-value"]'),
         facilityStage: () => row.get('[data-cy="loan-facility-stage"]'),
         requestedCoverStartDate: () => row.get('[data-cy="loan-requested-cover-start-date"]'),
         coverEndDate: () => row.get('[data-cy="loan-cover-end-date"]'),
+        issueFacilityLink: () => row.get(`[data-cy="loan-issue-facility-${loanId}"]`),
       };
     },
   },
