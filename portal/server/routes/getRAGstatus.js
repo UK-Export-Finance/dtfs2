@@ -6,7 +6,7 @@ const getExpiryDate = (val, days) => {
   const expiry = parseInt(val.createdDate, 10) + (days * ONE_DAY);
   const id = val.deal_id;
   const remainingDays = Math.floor((expiry - Date.now()) / ONE_DAY);
-
+  console.log(val.createdDate, expiry, remainingDays);
   return {
     ...val,
     id,
@@ -56,7 +56,7 @@ const getRAGstatus = (facilities, days) => {
       trafficLights.black += 1;
     }
   });
-  // console.log(trafficLights);
+  console.log(trafficLights);
   return trafficLights;
 };
 
