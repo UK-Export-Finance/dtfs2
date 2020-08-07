@@ -2,8 +2,6 @@
 
 {% macro render(params) %}
   {% if params.editable %}
-  <form action="/contract/{{ params.deal._id }}/loan/create" method="PUT">
-    <button href="/contract/{{ params.deal._id }}/loan/create" class="govuk-body-s button-as-link" data-cy="button-add-loan">Add a Loan</button>
-  </form>
+    <a href="/contract/{{ params.deal._id }}/loan/create" class="govuk-link govuk-body-s" data-cy="link-add-loan">Add a Loan</a>
   {% endif %}
 {% endmacro %}

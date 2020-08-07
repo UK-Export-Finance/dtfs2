@@ -4,7 +4,12 @@
   {% if params.deal.details.status %}
 
     {% if params.user.roles.includes('maker') %}
-      <a href="/contract/{{ params.deal._id }}/clone/before-you-start" class="govuk-link govuk-!-font-size-14" data-cy="clone-deal-link">Clone</a>
+      <a
+        href="/contract/{{ params.deal._id }}/clone/before-you-start"
+        class="govuk-link govuk-!-font-size-14"
+        data-cy="clone-deal-link"
+        aria-label="Clone Deal"
+      >Clone</a>
     {% endif %}
 
   {% endif %}
