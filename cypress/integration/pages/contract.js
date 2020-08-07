@@ -19,8 +19,8 @@ const page = {
   dateOfLastAction: () => cy.get('[data-cy="dateOfLastAction"]'),
   submissionType: () => cy.get('[data-cy="submissionType"]'),
   cloneDealLink: () => cy.get('[data-cy="clone-deal-link"]'),
-  addBondButton: () => cy.get('[data-cy="button-add-bond"]'),
-  addLoanButton: () => cy.get('[data-cy="button-add-loan"]'),
+  addBondButton: () => cy.get('[data-cy="link-add-bond"]'),
+  addLoanButton: () => cy.get('[data-cy="link-add-loan"]'),
 
   pleaseCompleteAllForms: () => cy.get('[data-cy="pleaseCompleteAllForms"]'),
   canProceed: () => cy.get('[data-cy="canProceed"]'),

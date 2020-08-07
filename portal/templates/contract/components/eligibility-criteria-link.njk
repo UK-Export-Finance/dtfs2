@@ -2,6 +2,11 @@
 
 {% macro render(params) %}
   {% if params.editable %}
-    <a data-cy="ViewDetails" href="/contract/{{ params.deal._id }}/eligibility/criteria" class="govuk-link">View details</a>
+    <a
+      data-cy="ViewDetails"
+      href="/contract/{{ params.deal._id }}/eligibility/criteria"
+      class="govuk-link"
+      aria-label="View Eligibility Criteria"
+    >View details</a>
   {% endif %}
 {% endmacro %}

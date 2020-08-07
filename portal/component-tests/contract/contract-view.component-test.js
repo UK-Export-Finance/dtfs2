@@ -93,7 +93,7 @@ describe(page, () => {
     });
 
     it('allows the user to add a bond', () => {
-      return wrappers.forEach(wrapper => wrapper.expectButtonDisguisedAsALink('[data-cy="button-add-bond"]')
+      return wrappers.forEach(wrapper => wrapper.expectLink('[data-cy="link-add-bond"]')
                                           .toLinkTo(`/contract/${deal._id}/bond/create`, 'Add a Bond'));
     });
 
@@ -116,7 +116,7 @@ describe(page, () => {
     });
 
     it('allows the user to add a loan', () => {
-      return wrappers.forEach(wrapper => wrapper.expectButtonDisguisedAsALink('[data-cy="button-add-loan"]')
+      return wrappers.forEach(wrapper => wrapper.expectLink('[data-cy="link-add-loan"]')
                         .toLinkTo(`/contract/${deal._id}/loan/create`, 'Add a Loan'));
     });
 
@@ -152,7 +152,7 @@ describe(page, () => {
     });
 
     it('hides the link to add a bond', () => {
-      return wrappers.forEach(wrapper => wrapper.expectButtonDisguisedAsALink('[data-cy="button-add-bond"]').notToExist());
+      return wrappers.forEach(wrapper => wrapper.expectLink('[data-cy="link-add-bond"]').notToExist());
     });
 
     it('hides the link to delete a bond', () => {
@@ -166,7 +166,7 @@ describe(page, () => {
     });
 
     it('hides the link to add a loan', () => {
-      return wrappers.forEach(wrapper => wrapper.expectButtonDisguisedAsALink('[data-cy="button-add-loan"]').notToExist());
+      return wrappers.forEach(wrapper => wrapper.expectLink('[data-cy="link-add-loan"]').notToExist());
     });
 
     it('hides the link to the loan', () => {

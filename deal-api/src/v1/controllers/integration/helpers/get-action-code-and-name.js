@@ -1,12 +1,11 @@
 const CONSTANTS = require('../../../../constants');
 
-const getActionCodeAndName = (deal, fromStatus) => {
+const getActionCodeAndName = (deal, fromStatus = 'Draft') => {
   const atpString = deal.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN ? 'atp' : 'non-atp';
 
   const key = `${fromStatus}::${atpString}`;
 
   let actionCode = '';
-  console.log({ key });
 
   switch (key.toLowerCase()) {
     case 'draft::non-atp':

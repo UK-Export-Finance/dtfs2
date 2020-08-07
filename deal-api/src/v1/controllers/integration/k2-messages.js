@@ -42,7 +42,7 @@ const generateTypeA = async (deal, fromStatus) => {
 
     .Application_route(deal.eligibility)
     .Application_owner(deal.details.maker.username)
-    .Application_owner_email('//TODO')
+    .Application_owner_email('maker1@ukexportfinance.gov.uk') // temp email until user emails have been added
     .Application_bank(deal.details.maker.bank.name)
     .Application_bank_co_hse_reg_number('//TODO')
 
@@ -116,26 +116,10 @@ const generateTypeA = async (deal, fromStatus) => {
     .Ec_industry_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 16))
     .Ec_internal_approval_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 17))
     .Ec_banks_normal_pricing_policies_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 18))
-    .Ec_requested_cover_start_date_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 15))
+    .Ec_requested_cover_start_date_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 15));
 
-    .Deal_no_facilities(bondCount + loanCount)
-    .Deal_total_value_deal_cur(await convertCurrencyCodeToId('GBP')) // TODO
-    .Deal_total_exposure_gbp('0') // TODO
-    .Deal_total_premium_gbp('0') // TODO
-    .Deal_total_exposure_deal_cur(await convertCurrencyCodeToId('GBP')) // TODO
-    .Deal_total_premium_deal_cur(await convertCurrencyCodeToId('GBP')) // TODO
-
-    .BSS_no_facilities(bondCount)
-    .BSS_total_exposure_gbp(await convertCurrencyCodeToId('GBP')) // TODO
-    .BSS_total_premium_gbp('0') // TODO
-    .BSS_total_exposure_deal_cur(await convertCurrencyCodeToId('GBP')) // TODO
-    .BSS_total_premium_deal_cur(await convertCurrencyCodeToId('GBP')) // TODO
-
-    .EWCS_no_facilities(loanCount)
-    .EWCS_total_exposure_gbp('0') // TODO
-    .EWCS_total_premium_gbp('0') // TODO
-    .EWCS_total_exposure_deal_cur('0') // TODO
-    .EWCS_total_premium_deal_cur('0'); // TODO
+  let totalBondExposure = 0;
+  let totalBondPremium = 0;
 
   if (deal.bondTransactions && deal.bondTransactions.items) {
     for (let i = 0; i < deal.bondTransactions.items.length; i += 1) {
@@ -177,9 +161,18 @@ const generateTypeA = async (deal, fromStatus) => {
       }
 
       builder.addBSS(bss);
+
+      const conversionRate = bond.currencySameAsSupplyContractCurrency === 'true' ? 1 : bond.conversionRate;
+
+      const bondExposure = convertCurrencyFormat(bond.ukefExposure) / conversionRate;
+      totalBondExposure += bondExposure;
+      totalBondPremium += bondExposure * bond.coveredPercentage;
     }
 
     // TODO - Add Loans
+    let totalLoanExposure = 0;
+    let totalLoanPremium = 0;
+
     if (deal.loanTransactions && deal.loanTransactions.items) {
       for (let i = 0; i < deal.loanTransactions.items.length; i += 1) {
         const loan = deal.loanTransactions.items[i];
@@ -221,9 +214,35 @@ const generateTypeA = async (deal, fromStatus) => {
         }
 
         builder.addEWCS(ewcs);
+
+        const conversionRate = loan.currencySameAsSupplyContractCurrency === 'true' ? 1 : loan.conversionRate;
+        const loanExposure = convertCurrencyFormat(loan.ukefExposure) / conversionRate;
+        totalLoanExposure += loanExposure;
+        totalLoanPremium += loanExposure * loan.coveredPercentage;
       }
     }
 
+    // Summary data
+    const gbpConversionRate = deal.submissionDetails.supplyContractCurrency.id === 'GBP' ? 1 : deal.submissionDetails.supplyContractConversionRateToGBP;
+
+    builder.Deal_no_facilities(bondCount + loanCount)
+      .Deal_total_value_deal_cur(await convertCurrencyCodeToId(deal.submissionDetails.supplyContractCurrency.id))
+      .Deal_total_exposure_gbp((totalBondExposure + totalLoanExposure) / gbpConversionRate)
+      .Deal_total_premium_gbp((totalBondPremium + totalLoanPremium) / gbpConversionRate)
+      .Deal_total_exposure_deal_cur(totalBondExposure + totalLoanExposure)
+      .Deal_total_premium_deal_cur(totalBondPremium + totalLoanPremium)
+
+      .BSS_no_facilities(bondCount)
+      .BSS_total_exposure_gbp(totalBondExposure / gbpConversionRate)
+      .BSS_total_premium_gbp(totalBondPremium / gbpConversionRate)
+      .BSS_total_exposure_deal_cur(totalBondExposure)
+      .BSS_total_premium_deal_cur(totalBondPremium)
+
+      .EWCS_no_facilities(loanCount)
+      .EWCS_total_exposure_gbp(totalLoanExposure / gbpConversionRate)
+      .EWCS_total_premium_gbp(totalLoanPremium / gbpConversionRate)
+      .EWCS_total_exposure_deal_cur(totalLoanExposure)
+      .EWCS_total_premium_deal_cur(totalLoanPremium);
 
     // Add Deal Files
     if (deal.dealFiles) {
