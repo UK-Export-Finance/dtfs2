@@ -89,6 +89,7 @@ type Transaction {
   issuedDate: String
   maker: String
   checker: String
+  issueFacilityDetailsSubmitted: String
 }
 
 type TransactionQuery {

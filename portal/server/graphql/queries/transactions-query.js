@@ -24,6 +24,7 @@ query Transactions($start: Int, $pagesize: Int, $filters:[TransactionFilters]){
       issuedDate
       maker
       checker
+      issueFacilityDetailsSubmitted
     }
   }
 }`;
