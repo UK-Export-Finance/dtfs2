@@ -1,12 +1,13 @@
 const { startNow, users, createUser, editUser} = require('../../../pages');
 const relative = require('../../../relativeURL');
 
-const admin = { username: 'ADMIN', password: 'ADMIN' };
+const mockUsers = require('../../../../fixtures/mockUsers');
+const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
 
 context('Admin user updates an existing user', () => {
   const userToUpdate = {
     username: 'another.address@some.com',
-    password: 'w00tw00t',
+    password: 'Aleg1tP@ssword',
     firstname: 'bobert',
     surname: 'the builder',
     bank: 'Barclays Bank',
@@ -20,12 +21,12 @@ context('Admin user updates an existing user', () => {
       return false;
     });
 
-    cy.removeUserIfPresent(userToUpdate, admin);
+    cy.removeUserIfPresent(userToUpdate, ADMIN_LOGIN);
   });
 
   it('Create a user, then edit the user and change their role(s)', () => {
     // login and go to dashboard
-    cy.login(admin);
+    cy.login(ADMIN_LOGIN);
     startNow.header().users().click();
 
     // add user

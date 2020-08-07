@@ -5,7 +5,8 @@ const LOAN_FORM_VALUES = require('./loan-form-values');
 const relative = require('../../../relativeURL');
 const fillLoanForm = require('./fill-loan-forms');
 
-const user = { username: 'MAKER', password: 'MAKER' };
+const mockUsers = require('../../../../fixtures/mockUsers');
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 const MOCK_DEAL = {
   details: {
@@ -28,15 +29,15 @@ context('Add a Loan to a Deal', () => {
       console.log(err.stack);
       return false;
     });
-    cy.deleteDeals(user);
-    cy.insertOneDeal(MOCK_DEAL, user)
+    cy.deleteDeals(MAKER_LOGIN);
+    cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
       .then((insertedDeal) => deal = insertedDeal);
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Loan to the deal', () => {
     cy.createADeal({
-      username: user.username,
-      password: user.password,
+      username: MAKER_LOGIN.username,
+      password: MAKER_LOGIN.password,
       bankDealId: MOCK_DEAL.details.bankSupplyContractID,
       bankDealName: MOCK_DEAL.details.bankSupplyContractName,
     });
@@ -48,7 +49,7 @@ context('Add a Loan to a Deal', () => {
   });
 
   it('should populate Deal page with the submitted loan, with `Completed` status and link to `Loan Gurantee Details` page', () => {
-    cy.loginGoToDealPage(user, deal);
+    cy.loginGoToDealPage(MAKER_LOGIN, deal);
     pages.contract.addLoanButton().click();
     fillLoanForm.unconditionalWithCurrencySameAsSupplyContractCurrency();
     fillLoanForm.datesRepayments.inAdvanceAnnually();
@@ -101,7 +102,7 @@ context('Add a Loan to a Deal', () => {
 
   describe('when a user submits Loan forms without completing required fields', () => {
     it('loan should display all validation errors in `Loan Preview` page and `Incomplete` status in Deal page', () => {
-      cy.loginGoToDealPage(user, deal);
+      cy.loginGoToDealPage(MAKER_LOGIN, deal);
       pages.contract.addLoanButton().click();
 
       pages.loanGuaranteeDetails.submit().click();

@@ -1,6 +1,7 @@
 const { dashboard } = require('../../../pages');
 
-const maker1 = { username: 'MAKER', password: 'MAKER' };
+const mockUsers = require('../../../../fixtures/mockUsers');
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('./twentyOneDeals');
@@ -17,9 +18,9 @@ context('The deals dashboard', () => {
   });
 
   before(() => {
-    cy.deleteDeals(maker1);
+    cy.deleteDeals(MAKER_LOGIN);
     // No need to add all test data
-    cy.insertManyDeals(twentyOneDeals.slice(0, 6), { ...maker1 })
+    cy.insertManyDeals(twentyOneDeals.slice(0, 6), MAKER_LOGIN)
       .then((insertedDeals) => deals = insertedDeals);
   });
 
@@ -32,7 +33,7 @@ context('The deals dashboard', () => {
       year: `${nowDate.getFullYear()}`,
     };
 
-    cy.login({ ...maker1 });
+    cy.login(MAKER_LOGIN);
     dashboard.visit();
 
     dashboard.showFilters().click();
@@ -72,7 +73,7 @@ context('The deals dashboard', () => {
       year: `${nowDate.getFullYear()}`,
     };
 
-    cy.login({ ...maker1 });
+    cy.login(MAKER_LOGIN);
     dashboard.visit();
 
     dashboard.showFilters().click();

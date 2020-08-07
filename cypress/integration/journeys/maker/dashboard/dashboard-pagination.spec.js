@@ -1,7 +1,8 @@
 const {dashboard} = require('../../../pages');
 const relative = require('../../../relativeURL');
 
-const user = {username: 'MAKER', password: 'MAKER'};
+const mockUsers = require('../../../../fixtures/mockUsers');
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('./twentyOneDeals');
@@ -15,15 +16,15 @@ context('Dashboard Deals pagination controls', () => {
       return false;
     });
 
-    cy.deleteDeals(user);
-    cy.insertManyDeals(twentyOneDeals, { ...user })
+    cy.deleteDeals(MAKER_LOGIN);
+    cy.insertManyDeals(twentyOneDeals, MAKER_LOGIN)
       .then( insertedDeals => deals=insertedDeals );
   });
 
   it('Dashboard Deals displays 20 results, the total number of items, and working First/Previous/Next/Last links.', () => {
 
     // login and go to the dashboard
-    cy.login({...user});
+    cy.login(MAKER_LOGIN);
     dashboard.visit();
 
     // deals will be shown in update order, so expect them upsidedown..

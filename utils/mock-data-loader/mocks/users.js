@@ -1,7 +1,7 @@
 const USERS = [
   {
     username: 'NOBODY',
-    password: 'NOBODY',
+    password: 'AbC!2345',
     firstname: 'Seraffimo',
     surname: 'Spang',
     timezone: 'Europe/London',
@@ -9,7 +9,7 @@ const USERS = [
   },
   {
     username: 'ADMIN',
-    password: 'ADMIN',
+    password: 'AbC!2345',
     firstname: 'Julius',
     surname: 'No',
     timezone: 'Europe/London',
@@ -21,7 +21,7 @@ const USERS = [
   },
   {
     username: 'MAKER',
-    password: 'MAKER',
+    password: 'AbC!2345',
     firstname: 'Hugo',
     surname: 'Drax',
     timezone: 'Europe/London',
@@ -38,7 +38,7 @@ const USERS = [
   },
   {
     username: 'maker1@ukexportfinance.gov.uk',
-    password: 'MAKER',
+    password: 'AbC!2345',
     firstname: 'Hugo',
     surname: 'Drax',
     timezone: 'Europe/London',
@@ -55,7 +55,7 @@ const USERS = [
   },
   {
     username: 'BARCLAYS-MAKER-1',
-    password: 'BARCLAYS-MAKER-1',
+    password: 'AbC!2345',
     firstname: 'Hector',
     surname: 'Gonzales',
     timezone: 'Europe/London',
@@ -72,7 +72,7 @@ const USERS = [
   },
   {
     username: 'BARCLAYS-MAKER-2',
-    password: 'BARCLAYS-MAKER-2',
+    password: 'AbC!2345',
     firstname: 'Milton',
     surname: 'Krest',
     timezone: 'Europe/London',
@@ -89,7 +89,7 @@ const USERS = [
   },
   {
     username: 'CHECKER',
-    password: 'CHECKER',
+    password: 'AbC!2345',
     firstname: 'Emilio',
     surname: 'Largo',
     timezone: 'Europe/London',
@@ -102,7 +102,7 @@ const USERS = [
   },
   {
     username: 'checker1@ukexportfinance.gov.uk',
-    password: 'CHECKER',
+    password: 'AbC!2345',
     firstname: 'Emilio',
     surname: 'Largo',
     timezone: 'Europe/London',
@@ -119,7 +119,7 @@ const USERS = [
   },
   {
     username: 'MAKENCHECK',
-    password: 'MAKENCHECK',
+    password: 'AbC!2345',
     firstname: 'Ernst',
     surname: 'Blofeld',
     timezone: 'Europe/London',
@@ -136,7 +136,7 @@ const USERS = [
   },
   {
     username: 'Maker2@ukexportfinance.gov.uk',
-    password: 'MAKENCHECK',
+    password: 'AbC!2345',
     firstname: 'Ernst',
     surname: 'Blofeld',
     timezone: 'Europe/London',
@@ -153,7 +153,7 @@ const USERS = [
   },
   {
     username: 'READER',
-    password: 'READER',
+    password: 'AbC!2345',
     firstname: 'Francisco',
     surname: 'Scaramanga',
     timezone: 'Europe/London',
@@ -170,7 +170,7 @@ const USERS = [
   },
   {
     username: 'MAKER-2',
-    password: 'MAKER-2',
+    password: 'AbC!2345',
     firstname: 'Dexter',
     surname: 'Smith',
     timezone: 'Europe/London',
@@ -186,7 +186,7 @@ const USERS = [
   },
   {
     username: 'MAKER-3',
-    password: 'MAKER-3',
+    password: 'AbC!2345',
     firstname: 'Tamil',
     surname: 'Rahani',
     timezone: 'Europe/London',
@@ -202,7 +202,7 @@ const USERS = [
   },
   {
     username: 'CHECKER-2',
-    password: 'CHECKER-2',
+    password: 'AbC!2345',
     firstname: 'Nikolaevich',
     surname: 'Chernov',
     timezone: 'Europe/London',
@@ -218,7 +218,7 @@ const USERS = [
   },
   {
     username: 'MAKENCHECK-2',
-    password: 'MAKENCHECK-2',
+    password: 'AbC!2345',
     firstname: 'Vladimir',
     surname: 'Scorpius',
     timezone: 'Europe/London',
@@ -234,7 +234,7 @@ const USERS = [
   },
   {
     username: 'READER-2',
-    password: 'READER-2',
+    password: 'AbC!2345',
     firstname: 'Wolfgang',
     surname: 'Weisen',
     timezone: 'Europe/London',
@@ -250,7 +250,7 @@ const USERS = [
   },
   {
     username: 'UKEF_OPERATIONS',
-    password: 'UKEF_OPERATIONS',
+    password: 'AbC!2345',
     firstname: 'Elliot',
     surname: 'Carver',
     timezone: 'Europe/London',
@@ -262,7 +262,7 @@ const USERS = [
   },
   {
     username: 'EDITOR',
-    password: 'EDITOR',
+    password: 'AbC!2345',
     firstname: 'Domingo',
     surname: 'Espada',
     timezone: 'Europe/London',

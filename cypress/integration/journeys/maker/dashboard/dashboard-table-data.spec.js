@@ -1,7 +1,9 @@
 const { dashboard } = require('../../../pages');
 const relative = require('../../../relativeURL');
 
-const user = { username: 'MAKER', password: 'MAKER' };
+const mockUsers = require('../../../../fixtures/mockUsers');
+// slight oddity- this test seems to need a straight 'maker'; so filtering slightly more than in other tests..
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.roles.length === 1) );
 
 context('View a deal', () => {
   let deal;
@@ -20,14 +22,14 @@ context('View a deal', () => {
     });
 
     // clear down our test users old deals, and insert a new one - updating our deal object
-    cy.deleteDeals(user);
-    cy.insertOneDeal(dummyDeal, user)
+    cy.deleteDeals(MAKER_LOGIN);
+    cy.insertOneDeal(dummyDeal, MAKER_LOGIN)
       .then((insertedDeal) => deal = insertedDeal);
   });
 
   it('A created deal appears on the dashboard', () => {
     // login and go to dashboard
-    cy.login(user);
+    cy.login(MAKER_LOGIN);
     dashboard.visit();
 
     // get the row that corresponds to our deal

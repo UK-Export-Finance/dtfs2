@@ -2,8 +2,9 @@ const { contract, contractConfirmSubmission } = require('../../../pages');
 const { successMessage } = require('../../../partials');
 const relative = require('../../../relativeURL');
 
-const maker1 = { username: 'MAKER', password: 'MAKER' };
-const checker = { username: 'CHECKER', password: 'CHECKER' };
+const mockUsers = require('../../../../fixtures/mockUsers');
+const CHECKER_LOGIN = mockUsers.find( user=> (user.roles.includes('checker') && user.bank.name === 'Barclays Bank') );
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'Barclays Bank') );
 
 // test data we want to set up + work with..
 const dealWithInvalidCoverStartDate = require('./test-data/dealWithInvalidLoanCoverStartDate');
@@ -22,7 +23,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
   });
 
   before( () => {
-    cy.insertManyDeals([dealReadyToSubmit(), dealWithInvalidCoverStartDate()], {...maker1})
+    cy.insertManyDeals([dealReadyToSubmit(), dealWithInvalidCoverStartDate()], MAKER_LOGIN)
       .then(insertedDeals => {
         goodDeal=insertedDeals[0];
         badDeal=insertedDeals[1];
@@ -31,7 +32,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
   it('The cancel button returns the user to the view-contract page.', () => {
     // log in, visit a deal, select abandon
-    cy.login({...checker});
+    cy.login(CHECKER_LOGIN);
     contract.visit(goodDeal);
     contract.proceedToSubmit().click();
 
@@ -44,7 +45,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
   it('The Accept and Submit button generates an error if the checkbox has not been ticked.', () => {
     // log in, visit a deal, select abandon
-    cy.login({...checker});
+    cy.login(CHECKER_LOGIN);
     contract.visit(goodDeal);
     contract.proceedToSubmit().click();
 
@@ -64,7 +65,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
   it('If the deal contains a loan with a cover start date that is now in the past, an error should be generated.', () => {
     // log in, visit a deal, select abandon
-    cy.login({...checker});
+    cy.login(CHECKER_LOGIN);
     contract.visit(badDeal);
     contract.proceedToSubmit().click();
 
@@ -85,7 +86,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
   it('If the terms are accepted, the Accept and Submit button submits the deal and takes the user to /dashboard.', () => {
     // log in, visit a deal, select abandon
-    cy.login({...checker});
+    cy.login(CHECKER_LOGIN);
     contract.visit(goodDeal);
     contract.proceedToSubmit().click();
 

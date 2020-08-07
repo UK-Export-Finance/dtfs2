@@ -2,12 +2,12 @@ const {contract, contractReturnToMaker, contractComments} = require('../../pages
 const {errorSummary, successMessage} = require('../../partials');
 const relative = require('../../relativeURL');
 
-const maker1 = {username: 'MAKER', password: 'MAKER'};
-const checker = {username: 'CHECKER', password: 'CHECKER', firstname: 'Emilio', surname: 'Largo'};
+const mockUsers = require('../../../fixtures/mockUsers');
+const CHECKER_LOGIN = mockUsers.find( user=> (user.roles.includes('checker') && user.bank.name === 'Barclays Bank') );
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'Barclays Bank') );
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('../maker/dashboard/twentyOneDeals');
-
 
 context('A checker selects to return a deal to maker from the view-contract page', () => {
   let deal;
@@ -25,14 +25,14 @@ context('A checker selects to return a deal to maker from the view-contract page
       return twentyOneDeals.filter( deal=>status === deal.details.status)[0];
     };
 
-    cy.deleteDeals(maker1);
-    cy.insertOneDeal(aDealInStatus("Ready for Checker's approval"), { ...maker1 })
+    cy.deleteDeals(MAKER_LOGIN);
+    cy.insertOneDeal(aDealInStatus("Ready for Checker's approval"), MAKER_LOGIN)
       .then( insertedDeal => deal=insertedDeal);
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {
     // log in, visit a deal, select abandon
-    cy.login({...checker});
+    cy.login(CHECKER_LOGIN);
     contract.visit(deal);
     contract.returnToMaker().click();
 
@@ -46,7 +46,7 @@ context('A checker selects to return a deal to maker from the view-contract page
 
   it('The Return to Maker button generates an error if no comment has been entered.', () => {
     // log in, visit a deal, select abandon
-    cy.login({...checker});
+    cy.login(CHECKER_LOGIN);
     contract.visit(deal);
     contract.returnToMaker().click();
 
@@ -62,7 +62,7 @@ context('A checker selects to return a deal to maker from the view-contract page
 
 console.log(`=====>>>>> ${JSON.stringify(deal,null,2)}`);
     // log in, visit a deal, select abandon
-    cy.login({...checker});
+    cy.login(CHECKER_LOGIN);
     contract.visit(deal);
 
 //-----
@@ -98,7 +98,7 @@ console.log(`=====>>>>> ${JSON.stringify(deal,null,2)}`);
       expect(text.trim()).to.equal('to you');
     });
     contractComments.row(0).commentorName().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(`${checker.firstname} ${checker.surname}`);
+      expect(text.trim()).to.equal(`${CHECKER_LOGIN.firstname} ${CHECKER_LOGIN.surname}`);
     });
 
   });

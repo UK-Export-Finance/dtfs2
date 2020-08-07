@@ -3,7 +3,8 @@ const partials = require('../../../partials');
 const fillBondForm = require('./fill-bond-forms');
 const assertBondFormValues = require('./assert-bond-form-values');
 
-const user = { username: 'MAKER', password: 'MAKER' };
+const mockUsers = require('../../../../fixtures/mockUsers');
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 const MOCK_DEAL = {
   details: {
@@ -18,7 +19,7 @@ const MOCK_DEAL = {
 };
 
 const goToBondFeeDetailsPage = (deal) => {
-  cy.loginGoToDealPage(user, deal);
+  cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
   pages.contract.addBondButton().click();
   partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
@@ -34,8 +35,8 @@ context('Bond Fee Details', () => {
       console.log(err.stack);
       return false;
     });
-    cy.deleteDeals(user);
-    cy.insertOneDeal(MOCK_DEAL, user)
+    cy.deleteDeals(MAKER_LOGIN);
+    cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
       .then((insertedDeal) => deal = insertedDeal);
   });
 
@@ -79,7 +80,7 @@ context('Bond Fee Details', () => {
   });
 
   it('form submit of all required fields should display a checked `Bond Fee Details` checkbox in progress nav', () => {
-    cy.loginGoToDealPage(user, deal);
+    cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
     pages.contract.addBondButton().click();
     partials.bondProgressNav.progressNavLinkBondFeeDetails().click();

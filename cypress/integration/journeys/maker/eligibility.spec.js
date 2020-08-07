@@ -4,6 +4,9 @@ const {
   eligibilityDocumentation,
 } = require('../../pages');
 
+const mockUsers = require('../../../fixtures/mockUsers');
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
 context('Eligibility', () => {
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -13,8 +16,7 @@ context('Eligibility', () => {
     });
 
     cy.createADeal({
-      username: 'MAKER',
-      password: 'MAKER',
+      ...MAKER_LOGIN,
       bankDealId: 'someDealId',
       bankDealName: 'someDealName',
     });

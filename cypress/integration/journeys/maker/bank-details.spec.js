@@ -2,6 +2,9 @@ const { bankDetails, contract, contractPreview } = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
 
+const mockUsers = require('../../../fixtures/mockUsers');
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
 context('Create deal', () => {
   const TOTAL_FORM_FIELDS = 2;
   beforeEach(() => {
@@ -14,7 +17,7 @@ context('Create deal', () => {
 
   describe('When an empty form is submitted', () => {
     it('should display validation errors', () => {
-      cy.passRedLine({ username: 'MAKER', password: 'MAKER' });
+      cy.passRedLine(MAKER_LOGIN);
       bankDetails.bankDealId().clear();
       bankDetails.bankDealName().clear();
 
@@ -27,7 +30,7 @@ context('Create deal', () => {
   });
 
   it('When the a user fills in the bank detais they progress to the deal page and the data they entered is visible', () => {
-    cy.passRedLine({ username: 'MAKER', password: 'MAKER' });
+    cy.passRedLine(MAKER_LOGIN);
 
     // confirm that we're on '/before-you-start/bank-deal'
     cy.url().should('eq', relative('/before-you-start/bank-deal'));

@@ -1,8 +1,10 @@
 const {dashboard} = require('../../../pages');
 const relative = require('../../../relativeURL');
 
-const maker2 = {username:'MAKER-2', password: 'MAKER-2'};
-const maker3 = {username:'MAKER-3', password: 'MAKER-3'};
+const mockUsers = require('../../../../fixtures/mockUsers');
+const maker_logins = mockUsers.filter( user=> (user.roles.includes('maker') && user.bank.name === 'HSBC') );
+const MAKER_LOGIN_1 = maker_logins[0];
+const MAKER_LOGIN_2 = maker_logins[1];
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('./twentyOneDeals');
@@ -19,7 +21,7 @@ const renameDeals = (deals) => {
   });
 }
 context('Dashboard Deals pagination controls', () => {
-  let maker2deals, maker3deals;
+  let maker1deals, maker2deals;
 
   beforeEach( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -28,19 +30,19 @@ context('Dashboard Deals pagination controls', () => {
       return false;
     });
 
-    cy.deleteDeals(maker2);
-    cy.deleteDeals(maker3);
+    cy.deleteDeals(MAKER_LOGIN_1);
+    cy.deleteDeals(MAKER_LOGIN_2);
 
-    cy.insertManyDeals(twentyOneDeals, { ...maker2 })
+    cy.insertManyDeals(twentyOneDeals, MAKER_LOGIN_1)
+      .then( insertedDeals => maker1deals=insertedDeals );
+
+    cy.insertManyDeals(renameDeals(twentyOneDeals), MAKER_LOGIN_2)
       .then( insertedDeals => maker2deals=insertedDeals );
-
-    cy.insertManyDeals(renameDeals(twentyOneDeals), { ...maker3 })
-      .then( insertedDeals => maker3deals=insertedDeals );
   });
 
   it('Pagination and filtering work together', () => {
-    // confirm that maker2 sees maker2's deals
-    cy.login({...maker2});
+    // confirm that maker1 sees maker1's deals
+    cy.login(MAKER_LOGIN_1);
     dashboard.visit();
 
     // filter
@@ -50,7 +52,7 @@ context('Dashboard Deals pagination controls', () => {
     //confirm we're still getting our filter applied when we paginate
     // ordered by last update; so page 2 just shows our first deal..
     dashboard.next().click();
-    dashboard.confirmDealsPresent([maker2deals[0]]);
+    dashboard.confirmDealsPresent([maker1deals[0]]);
     dashboard.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(21 items)');
     });

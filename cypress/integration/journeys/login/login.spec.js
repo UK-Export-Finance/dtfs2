@@ -7,6 +7,10 @@ const {
 } = require('../../pages');
 const relative = require('../../relativeURL');
 
+const mockUsers = require('../../../fixtures/mockUsers');
+const BAD_LOGIN = {username: 'doesntExist', password: 'whatever'};
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
 context('Login', () => {
   beforeEach(() => {
     // [ dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -33,19 +37,19 @@ context('Login', () => {
   it('A failed login leaves the user on the landing page', () => {
     cy.title().should('eq', 'Log in - UK Export Finance');
 
-    cy.login({ username: 'shaker', password: 'MAKER' });
+    cy.login(BAD_LOGIN);
 
     cy.url().should('eq', relative('/'));
   });
 
   it('A successful login takes the user to the /start-now page', () => {
-    cy.login({ username: 'MAKER', password: 'MAKER' });
+    cy.login(MAKER_LOGIN);
 
     cy.url().should('eq', relative('/start-now'));
   });
 
   it('When a logged-in user clicks the home link they go to the /start-now page', () => {
-    cy.login({ username: 'MAKER', password: 'MAKER' });
+    cy.login(MAKER_LOGIN);
 
     header.home().click();
 
@@ -53,7 +57,7 @@ context('Login', () => {
   });
 
   it('When a logged-in user clicks the dashboard link they go to the /dashboard page', () => {
-    cy.login({ username: 'MAKER', password: 'MAKER' });
+    cy.login(MAKER_LOGIN);
 
     header.dashboard().click();
 
@@ -61,7 +65,7 @@ context('Login', () => {
   });
 
   it('When a logged-in user clicks the service name link they go to the /start-now page', () => {
-    cy.login({ username: 'MAKER', password: 'MAKER' });
+    cy.login(MAKER_LOGIN);
 
     header.serviceName().click();
 
@@ -78,5 +82,5 @@ context('Login', () => {
     });
     cy.pa11y();
   });
-  
+
 });

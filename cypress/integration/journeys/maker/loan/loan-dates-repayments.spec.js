@@ -2,7 +2,8 @@ const pages = require('../../../pages');
 const partials = require('../../../partials');
 const fillLoanForm = require('./fill-loan-forms');
 
-const user = { username: 'MAKER', password: 'MAKER' };
+const mockUsers = require('../../../../fixtures/mockUsers');
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 const MOCK_DEAL = {
   details: {
@@ -17,7 +18,7 @@ const MOCK_DEAL = {
 };
 
 const goToPage = (deal) => {
-  cy.loginGoToDealPage(user, deal);
+  cy.loginGoToDealPage(MAKER_LOGIN, deal);
   pages.contract.addLoanButton().click();
   partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
 
@@ -41,8 +42,8 @@ context('Loan Dates and Repayments', () => {
       console.log(err.stack);
       return false;
     });
-    cy.deleteDeals(user);
-    cy.insertOneDeal(MOCK_DEAL, user)
+    cy.deleteDeals(MAKER_LOGIN);
+    cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
       .then((insertedDeal) => deal = insertedDeal);
   });
 

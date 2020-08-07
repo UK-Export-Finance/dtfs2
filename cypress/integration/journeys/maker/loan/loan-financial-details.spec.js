@@ -7,7 +7,8 @@ const {
   calculateExpectedUkefExposure,
 } = require('../../../../support/portal/sectionCalculations');
 
-const user = { username: 'MAKER', password: 'MAKER' };
+const mockUsers = require('../../../../fixtures/mockUsers');
+const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 const MOCK_DEAL = {
   details: {
@@ -22,7 +23,7 @@ const MOCK_DEAL = {
 };
 
 const goToPageWithUnconditionalFacilityStage = (deal) => {
-  cy.loginGoToDealPage(user, deal);
+  cy.loginGoToDealPage(MAKER_LOGIN, deal);
   pages.contract.addLoanButton().click();
 
   pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
@@ -33,7 +34,7 @@ const goToPageWithUnconditionalFacilityStage = (deal) => {
 };
 
 const goToPage = (deal) => {
-  cy.loginGoToDealPage(user, deal);
+  cy.loginGoToDealPage(MAKER_LOGIN, deal);
   pages.contract.addLoanButton().click();
   partials.loanProgressNav.progressNavLinkLoanFinancialDetails().click();
 
@@ -50,8 +51,8 @@ context('Loan Financial Details', () => {
       console.log(err.stack);
       return false;
     });
-    cy.deleteDeals(user);
-    cy.insertOneDeal(MOCK_DEAL, user)
+    cy.deleteDeals(MAKER_LOGIN);
+    cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
       .then((insertedDeal) => deal = insertedDeal);
   });
 
