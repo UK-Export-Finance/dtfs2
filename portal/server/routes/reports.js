@@ -587,14 +587,14 @@ router.get('/reports/countdown-indicator', async (req, res) => {
 
   const filters = buildReportFilters(stageFilters, req.session.user);
   const MIAfilters = buildReportFilters(submissionFilters, req.session.user);
-  console.log(`MIAfilters: ${util.inspect(MIAfilters)}`);
+  // console.log(`MIAfilters: ${util.inspect(MIAfilters)}`);
 
   // get all transactions
   const { transactions } = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-  console.log(`transactions: ${util.inspect(transactions)}`);
+  // console.log(`transactions: ${util.inspect(transactions)}`);
   const applications = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, MIAfilters, userToken),
     res,
@@ -604,7 +604,7 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   const incompleteFacilities = transactions;
   const miaWithConditions = applications.transactions.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (with conditions)'));
   const miaWithOutConditions = applications.transactions.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (without conditions)'));
-  console.log(`WITHOUT: ${util.inspect(miaWithOutConditions)}`);
+  // console.log(`WITHOUT: ${util.inspect(miaWithOutConditions)}`);
 
   const status90Days = getRAGStatus(incompleteFacilities, 90);
   const status20Days = getRAGStatus(miaWithConditions, 28);
