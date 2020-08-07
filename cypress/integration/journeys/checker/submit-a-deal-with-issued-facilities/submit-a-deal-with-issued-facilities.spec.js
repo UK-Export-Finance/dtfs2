@@ -1,11 +1,14 @@
 const pages = require('../../../pages');
+const relative = require('../../../relativeURL');
 const dealWIthIssuedFacilitiesReadyForReview = require('./dealWIthIssuedFacilitiesReadyForReview');
+const mockUsers = require('../../../../fixtures/mockUsers');
 
-const maker1 = { username: 'MAKER', password: 'MAKER' };
-const checker = { username: 'CHECKER', password: 'CHECKER' };
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
+const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'Barclays Bank'));
 
 context('A checker submit a deal with issued loan/bond facilities', () => {
   let deal;
+  let dealId;
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -13,21 +16,37 @@ context('A checker submit a deal with issued loan/bond facilities', () => {
       console.log(err.stack);
       return false;
     });
-  });
-
-  before(() => {
-    cy.insertOneDeal(dealWIthIssuedFacilitiesReadyForReview, { ...maker1 })
+    cy.insertOneDeal(dealWIthIssuedFacilitiesReadyForReview, MAKER_LOGIN)
       .then((insertedDeal) => {
         deal = insertedDeal;
-        // dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        dealId = deal._id; // eslint-disable-line no-underscore-dangle
       });
   });
 
-  it('Checker can access (but not edit) Issued facilities and after re-submitting the deal, the Deal/facilities should be updated', () => {
-    cy.login({ ...checker });
+  it('Checker can view (but not edit) Issued facilities and after re-submitting the deal, the Deal/facilities should be updated', () => {
+    cy.login(CHECKER_LOGIN);
     pages.contract.visit(deal);
-    pages.contract.proceedToSubmit().click();
 
+    // assert that the Checker can navigate to and view bond details on the Deal submissions page
+    const bondId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const bondRow = pages.contract.bondTransactionsTable.row(bondId);
+    bondRow.issueFacilityLink().click();
+    cy.url().should('eq', relative(`/contract/${dealId}/submission-details#bond-${bondId}`));
+
+    // go back to deal page
+    pages.contractSubmissionDetails.goBackLink().click();
+
+    // assert that the Checker can navigate to and view loan details on the Deal submissions page
+    const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const loanRow = pages.contract.loansTransactionsTable.row(loanId);
+    loanRow.issueFacilityLink().click();
+    cy.url().should('eq', relative(`/contract/${dealId}/submission-details#loan-${loanId}`));
+
+    // go back to deal page
+    pages.contractSubmissionDetails.goBackLink().click();
+
+    // submit the deal
+    pages.contract.proceedToSubmit().click();
     pages.contractConfirmSubmission.confirmSubmit().check();
     pages.contractConfirmSubmission.acceptAndSubmit().click();
 
@@ -43,9 +62,9 @@ context('A checker submit a deal with issued loan/bond facilities', () => {
       expect(text.trim()).to.equal('Ready for Checker\'s approval');
     });
 
-    /*
-    const bondId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
-    const bondRow = pages.contract.bondTransactionsTable.row(bondId);
+    //
+    // issued bonds
+    //
 
     // expect the bond status to be updated
     bondRow.bondStatus().invoke('text').then((text) => {
@@ -57,11 +76,10 @@ context('A checker submit a deal with issued loan/bond facilities', () => {
 
     // expect bond delete link to not exist
     bondRow.deleteLink().should('not.exist');
-*/
 
-    /*
-    const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
-    const loanRow = pages.contract.loansTransactionsTable.row(loanId);
+    //
+    // issued loans
+    //
 
     // expect the loan status to be updated
     loanRow.loanStatus().invoke('text').then((text) => {
@@ -73,7 +91,6 @@ context('A checker submit a deal with issued loan/bond facilities', () => {
 
     // expect loan delete link to not exist
     loanRow.deleteLink().should('not.exist');
-    */
 
     pages.contract.proceedToSubmit().should('not.exist');
     pages.contract.returnToMaker().should('not.exist');

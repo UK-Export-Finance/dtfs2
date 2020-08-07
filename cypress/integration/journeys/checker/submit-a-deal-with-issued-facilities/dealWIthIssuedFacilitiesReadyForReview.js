@@ -1,23 +1,20 @@
 const moment = require('moment');
 
 const deal = {
-    "details" : {
-      "status" : "Ready for Checker's approval",
-      "bankSupplyContractID" : "MY-DEAL",
-      "bankSupplyContractName" : "MY-DEAL",
-      "created": moment().utc().valueOf(),
-      "dateOfLastAction" : "1596805840467",
-      "previousWorkflowStatus": "Acknowledged by UKEF",
-      "submissionType" : "Automatic Inclusion Notice",
-      submissionDate: moment().utc().valueOf(),
-    "owningBank" : {
-      "id" : "956",
-        "name" : "Barclays Bank",
-          "emails" : [
-            "tony.barnes@notbinary.co.uk"
-          ]
+  "details" : {
+    "status" : "Ready for Checker's approval",
+    "bankSupplyContractID" : "mock id",
+    "bankSupplyContractName" : "mock name",
+    "created": moment().utc().valueOf(),
+    "dateOfLastAction" : "1596805840467",
+    "previousWorkflowStatus": "confirmation_acknowledged",
+    "submissionType" : "Automatic Inclusion Notice",
+    submissionDate: moment().utc().valueOf(),
+    "previousStatus": "Acknowledged by UKEF",
+    owningBank: {
+      id: '956',
+      name: 'Barclays Bank',
     },
-    "previousStatus" : "Acknowledged by UKEF"
   },
   "eligibility" : {
     "status" : "Completed",
@@ -198,35 +195,35 @@ const deal = {
   },
   "loanTransactions" : {
     "items" : [
-      // {
-      //   "_id" : "1000210",
-      //   "facilityStage" : "Conditional",
-      //   "ukefGuaranteeInMonths" : "12",
-      //   "guaranteeFeePayableByBank" : "10.8000",
-      //   "facilityValue" : "123123.00",
-      //   "currencySameAsSupplyContractCurrency" : "true",
-      //   "interestMarginFee" : "12",
-      //   "coveredPercentage" : "20",
-      //   "minimumQuarterlyFee" : "20",
-      //   "ukefExposure" : "24,624.60",
-      //   "premiumFrequency" : "Monthly",
-      //   "premiumType" : "In arrear",
-      //   "dayCountBasis" : "360",
-      //   "status" : "Completed",
-      //   "viewedPreviewPage" : true,
-      //   "currency" : {
-      //       "text" : "GBP - UK Sterling",
-      //       "id" : "GBP"
-      //   },
-      //   issuedDate: moment().add(1, 'day').utc().valueOf(),
-      //   "coverEndDate-day": moment().add(1, 'month').format('DD'),
-      //   "coverEndDate-month": moment().add(1, 'month').format('MM'),
-      //   "coverEndDate-year": moment().add(1, 'month').format('YYYY'),
-      //   "bankReferenceNumberRequiredForIssuance" : true,
-      //   "issueFacilityDetailsProvided" : true,
-      //   "disbursementAmount": "1,234.00",
-      //   "bankReferenceNumber": "5678",
-      // },
+      {
+        "_id" : "1000210",
+        "facilityStage" : "Conditional",
+        "ukefGuaranteeInMonths" : "12",
+        "guaranteeFeePayableByBank" : "10.8000",
+        "facilityValue" : "123123.00",
+        "currencySameAsSupplyContractCurrency" : "true",
+        "interestMarginFee" : "12",
+        "coveredPercentage" : "20",
+        "minimumQuarterlyFee" : "20",
+        "ukefExposure" : "24,624.60",
+        "premiumFrequency" : "Monthly",
+        "premiumType" : "In arrear",
+        "dayCountBasis" : "360",
+        "viewedPreviewPage" : true,
+        "currency" : {
+            "text" : "GBP - UK Sterling",
+            "id" : "GBP"
+        },
+        issuedDate: moment().add(1, 'day').utc().valueOf(),
+        "coverEndDate-day": moment().add(1, 'month').format('DD'),
+        "coverEndDate-month": moment().add(1, 'month').format('MM'),
+        "coverEndDate-year": moment().add(1, 'month').format('YYYY'),
+        "bankReferenceNumberRequiredForIssuance" : true,
+        "issueFacilityDetailsProvided" : true,
+        "disbursementAmount": "1,234.00",
+        "bankReferenceNumber": "5678",
+        "status": "Ready for check",
+      },
     ]
   },
   "summary" : { },
