@@ -15,6 +15,7 @@ module.exports = {
   contractReadyForReview: require('./contract/contract-readyForReview'),
   contractReturnToMaker: require('./contract/contract-returnToMaker'),
   contractConfirmSubmission: require('./contract/contract-confirmSubmission'),
+  contractSubmissionDetails: require('./contractSubmissionDetails'),
   editDealName: require('./contract/contract-edit-name'),
   dashboard: require('./dashboard'),
   cloneDeal: require('./cloneDeal'),
