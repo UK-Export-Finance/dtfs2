@@ -35,13 +35,19 @@ const sendStatusUpdateEmails = async (deal, fromStatus, user) => {
     updatedByEmail,
   };
 
-  deal.details.owningBank.emails.forEach(async (email) => {
-    await sendEmail(
-      EMAIL_TEMPLATE_ID,
-      email,
-      emailVariables,
-    );
-  });
+  if ( deal.details
+    && deal.details.owningBank
+    && deal.details.owningBank.emails
+    && deal.details.owningBank.emails.length
+  ) {
+    deal.details.owningBank.emails.forEach(async (email) => {
+      await sendEmail(
+        EMAIL_TEMPLATE_ID,
+        email,
+        emailVariables,
+      );
+    });
+  }
 };
 
 module.exports = sendStatusUpdateEmails;
