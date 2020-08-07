@@ -9,7 +9,7 @@ const sendStatusUpdateEmails = async (deal, fromStatus, user) => {
   } = deal.details;
 
   const {
-    'supplier-name': supplerName,
+    'supplier-name': supplierName,
   } = deal.submissionDetails;
 
   const {
@@ -27,7 +27,7 @@ const sendStatusUpdateEmails = async (deal, fromStatus, user) => {
     firstName: maker.firstname,
     surname: maker.surname,
     submissionType,
-    supplerName,
+    supplierName,
     bankSupplyContractID,
     currentStatus,
     previousStatus: fromStatus,
