@@ -56,7 +56,7 @@ const getRAGstatus = (facilities, days) => {
       trafficLights.black += 1;
     }
   });
-  console.log(trafficLights);
+  // console.log(trafficLights);
   return trafficLights;
 };
 
