@@ -594,7 +594,7 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-
+  console.log(`transactions: ${util.inspect(transactions)}`);
   const applications = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, MIAfilters, userToken),
     res,
@@ -607,8 +607,8 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   console.log(`WITHOUT: ${util.inspect(miaWithOutConditions)}`);
 
   const status90Days = getRAGStatus(incompleteFacilities, 90);
-  const status20Days = getRAGStatus(miaWithConditions, 20);
-  const status10Days = getRAGStatus(miaWithOutConditions, 10);
+  const status20Days = getRAGStatus(miaWithConditions, 28);
+  const status10Days = getRAGStatus(miaWithOutConditions, 14);
 
   const issueOrMakeFirstAdvance = {
     caption: 'You have 3 months to issue or make first advance under a transaction.',

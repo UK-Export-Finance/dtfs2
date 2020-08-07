@@ -25,8 +25,8 @@ const getRAGstatus = (facilities, days) => {
 
   const limits = {
     dayBands90: { red: 16, orange: 46, green: 90 },
-    dayBands20: { red: 7, orange: 14, green: 20 },
-    dayBands10: { red: 6, orange: 8, green: 10 },
+    dayBands28: { red: 9, orange: 18, green: 28 }, // set to include weekends for working days
+    dayBands14: { red: 8, orange: 10, green: 14 },
   };
   const bands = `dayBands${days}`;
   const dayLimits = limits[bands];
@@ -56,6 +56,7 @@ const getRAGstatus = (facilities, days) => {
       trafficLights.black += 1;
     }
   });
+  console.log(trafficLights);
   return trafficLights;
 };
 
