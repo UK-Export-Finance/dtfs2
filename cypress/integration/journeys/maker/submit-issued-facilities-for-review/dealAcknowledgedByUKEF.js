@@ -5,7 +5,7 @@ const deal = {
     "status": "Acknowledged by UKEF",
     "bankSupplyContractID": "mock id",
     "bankSupplyContractName": "mock name",
-    "created": "1595861783855",
+    "created": moment().utc().valueOf(),
     "dateOfLastAction": "1596054999878",
     "previousWorkflowStatus": "Draft",
     "submissionType": "Automatic Inclusion Notice",
