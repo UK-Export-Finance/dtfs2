@@ -97,7 +97,7 @@ const generateTypeA = async (deal, fromStatus) => {
       deal.submissionDetails.supplyContractCurrency
       && await convertCurrencyCodeToId(deal.submissionDetails.supplyContractCurrency.id),
     )
-    .Conversion_rate(deal.submissionDetails.supplyContractConversionRateToGBP)
+    .Conversion_rate(deal.submissionDetails.supplyContractCurrency.id === 'GBP' ? 1 : deal.submissionDetails.supplyContractConversionRateToGBP)
     .Conversion_date(dateHelpers.formatDate(deal.submissionDetails['supplyContractConversionDate-day'], deal.submissionDetails['supplyContractConversionDate-month'], deal.submissionDetails['supplyContractConversionDate-year']))
     .Contract_value(convertCurrencyFormat(deal.submissionDetails.supplyContractValue))
 
