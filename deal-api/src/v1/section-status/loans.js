@@ -1,16 +1,20 @@
 const loanValidationErrors = require('../validation/loan');
+const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
 
-const loanStatus = (loan, loanErrors) => {
-  if (!loanErrors || loanErrors.count === 0) {
+const loanStatus = (loan, loanErrors, loanIssueFacilityErrors) => {
+  const hasLoanErrors = (loanErrors && loanErrors.count !== 0);
+  const hasLoanIssueFacilityErrors = (loanIssueFacilityErrors && loanIssueFacilityErrors.count !== 0);
+
+  if (!hasLoanErrors && !hasLoanIssueFacilityErrors) {
     // this will be 'Ready for checker', 'Submitted', or 'Acknowledged by UKEF'
+
     // this comes from either:
     // the deal status changing - when submitting a deal with an issued loan, we add a status to the loan.
-    // otherwise the status originally came from workflow/xml.
+    // otherwise the status comes from workflow/xml.
     if (loan.status) {
       return loan.status;
     }
 
-    // with no status - the deal has not been submitted/issued, and there are no validationErrors in the loan.
     return 'Completed';
   }
 
@@ -18,12 +22,34 @@ const loanStatus = (loan, loanErrors) => {
   return 'Incomplete';
 };
 
-const addAccurateStatusesToLoans = (loanTransactions) => {
+const loanHasIncompleteIssueFacilityDetails = (dealStatus, dealSubmissionType, loan) => {
+  const allowedDealStatus = (dealStatus === 'Acknowledged by UKEF' || dealStatus === 'Ready for Checker\'s approval');
+  const allowedDealSubmissionType = (dealSubmissionType === 'Automatic Inclusion Notice' || dealSubmissionType === 'Manual Inclusion Notice');
+  const allowedFacilityStage = loan.facilityStage === 'Conditional';
+
+  if (allowedDealStatus
+    && allowedDealSubmissionType
+    && allowedFacilityStage
+    && loan.issueFacilityDetailsStarted
+    && !loan.issueFacilityDetailsSubmitted) {
+    return true;
+  }
+
+  return false;
+};
+
+const addAccurateStatusesToLoans = (dealStatus, dealSubmissionType, loanTransactions) => {
   if (loanTransactions.items.length) {
     loanTransactions.items.forEach((l) => {
       const loan = l;
       const validationErrors = loanValidationErrors(loan);
-      loan.status = loanStatus(loan, validationErrors);
+      let issueFacilityValidationErrors;
+
+      if (loanHasIncompleteIssueFacilityDetails(dealStatus, dealSubmissionType, loan)) {
+        issueFacilityValidationErrors = loanIssueFacilityValidationErrors(loan); 
+      }
+
+      loan.status = loanStatus(loan, validationErrors, issueFacilityValidationErrors);
     });
   }
   return loanTransactions;

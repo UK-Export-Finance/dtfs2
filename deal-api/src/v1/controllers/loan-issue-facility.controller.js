@@ -37,7 +37,14 @@ exports.updateLoanIssueFacility = async (req, res) => {
         _id: loanId,
         ...loan,
         ...req.body,
+        issueFacilityDetailsStarted: true,
       };
+
+      if (!modifiedLoan.issueFacilityDetailsStarted
+          && !modifiedLoan.issueFacilityDetailsSubmitted) {
+        // add a flag for status handling...
+        modifiedLoan.issueFacilityDetailsStarted = true;
+      }
 
       const loanHasBankReferenceNumber = hasValue(loan.bankReferenceNumber);
       if (!loanHasBankReferenceNumber) {
