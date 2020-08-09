@@ -39,6 +39,12 @@ exports.updateBondIssueFacility = async (req, res) => {
         ...req.body,
       };
 
+      if (!modifiedBond.issueFacilityDetailsStarted
+        && !modifiedBond.issueFacilityDetailsSubmitted) {
+        // add a flag for status handling...
+        modifiedBond.issueFacilityDetailsStarted = true;
+      }
+
       const bondHasUniqueIdentificationNumber = hasValue(bond.uniqueIdentificationNumber);
       if (!bondHasUniqueIdentificationNumber) {
         modifiedBond.uniqueIdentificationNumberRequiredForIssuance = true;
