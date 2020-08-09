@@ -2,7 +2,7 @@ import express from 'express';
 // import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
-import getRAGStatus from './getRAGstatus';
+import { getRAGstatus } from './getRAGstatus';
 import CONSTANTS from '../constants';
 import {
   getApiData,
@@ -607,9 +607,9 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   const miaWithOutConditions = applications.transactions.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (without conditions)'));
   // console.log(`WITHOUT: ${util.inspect(miaWithOutConditions)}`);
 
-  const status90Days = getRAGStatus(incompleteFacilities, 90);
-  const status20Days = getRAGStatus(miaWithConditions, 28);
-  const status10Days = getRAGStatus(miaWithOutConditions, 14);
+  const status90Days = getRAGstatus(incompleteFacilities, 90);
+  const status20Days = getRAGstatus(miaWithConditions, 28);
+  const status10Days = getRAGstatus(miaWithOutConditions, 14);
 
   const issueOrMakeFirstAdvance = {
     caption: 'You have 3 months to issue or make first advance under a transaction.',
