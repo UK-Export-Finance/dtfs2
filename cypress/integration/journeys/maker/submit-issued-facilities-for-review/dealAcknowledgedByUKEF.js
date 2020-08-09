@@ -82,7 +82,6 @@ const deal = {
     }
   },
   "submissionDetails": {
-    "status": "Incomplete",
     "indemnifier-address-country": {
       "code": "GBR",
       "name": "United Kingdom"
@@ -243,7 +242,6 @@ const deal = {
         "premiumFrequency": "Monthly",
         "premiumType": "In arrear",
         "dayCountBasis": "360",
-        "status": "Completed",
         "viewedPreviewPage": true,
         "currency": {
           "text": "GBP - UK Sterling",

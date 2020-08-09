@@ -73,7 +73,10 @@
                     <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/issue-facility" class="govuk-link" data-cy="loan-issue-facility-{{ loan._id }}">Issue facility</a>
                   {% endif %}
 
-                  {% if loan.issueFacilityDetailsProvided %}
+
+                  {% set showFacilityIssuedLink = (loan.status === 'Draft' or loan.issueFacilityDetailsProvided) %}
+
+                  {% if showFacilityIssuedLink %}
                     
                     {% if userIsChecker %}
                       <a href="/contract/{{ dealId }}/submission-details#loan-{{ loan._id }}" class="govuk-link" data-cy="loan-issue-facility-{{ loan._id }}">Facility issued</a>
