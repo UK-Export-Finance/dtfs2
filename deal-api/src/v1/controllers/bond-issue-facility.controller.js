@@ -41,8 +41,11 @@ exports.updateBondIssueFacility = async (req, res) => {
 
       if (!modifiedBond.issueFacilityDetailsStarted
         && !modifiedBond.issueFacilityDetailsSubmitted) {
-        // add a flag for status handling...
+        // add a flag for UI/design/status/business handling...
         modifiedBond.issueFacilityDetailsStarted = true;
+
+        // remove status added by type B XML. (we dynamically generate statuses)
+        delete modifiedBond.status;
       }
 
       const bondHasUniqueIdentificationNumber = hasValue(bond.uniqueIdentificationNumber);

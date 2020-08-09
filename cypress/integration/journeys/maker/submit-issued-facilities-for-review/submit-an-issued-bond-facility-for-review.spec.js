@@ -50,7 +50,7 @@ context('A maker can issue and submit an issued bond facility with a deal in `Ac
   it('Completing the Issue bond Facility form allows maker to re-submit the deal for review. Deal/bond should be updated after submiting for review', () => {
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
-    pages.contract.proceedToReview().should('not.exist');
+    pages.contract.proceedToReview().should('be.disabled');
 
     const bondId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
@@ -58,6 +58,7 @@ context('A maker can issue and submit an issued bond facility with a deal in `Ac
     bondRow.issueFacilityLink().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Issue facility');
     });
+
     bondRow.issueFacilityLink().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));

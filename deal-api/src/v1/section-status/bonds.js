@@ -5,16 +5,15 @@ const bondStatus = (bond, bondErrors, bondIssueFacilityErrors) => {
   const hasBondErrors = (bondErrors && bondErrors.count !== 0);
   const hasBondIssueFacilityErrors = (bondIssueFacilityErrors && bondIssueFacilityErrors.count !== 0);
 
+  // this will be 'Ready for check', 'Submitted', or 'Acknowledged by UKEF'
+  // this comes from either:
+  // - the deal status changing - when submitting a deal with an issued loan, we add a status to the loan.
+  // - workflow/xml.
+  if (bond.status) {
+    return bond.status;
+  }
+
   if (!hasBondErrors && !hasBondIssueFacilityErrors) {
-    // this will be 'Ready for checker', 'Submitted', or 'Acknowledged by UKEF'
-
-    // this comes from either:
-    // the deal status changing - when submitting a deal with an issued bond, we add a status to the bond.
-    // otherwise the status comes from workflow/xml.
-    if (bond.status) {
-      return bond.status;
-    }
-
     return 'Completed';
   }
 
@@ -30,7 +29,6 @@ const bondHasIncompleteIssueFacilityDetails = (dealStatus, dealSubmissionType, l
   if (allowedDealStatus
     && allowedDealSubmissionType
     && allowedFacilityStage
-    && loan.issueFacilityDetailsStarted
     && !loan.issueFacilityDetailsSubmitted) {
     return true;
   }

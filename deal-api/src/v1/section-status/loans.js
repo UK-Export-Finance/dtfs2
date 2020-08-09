@@ -5,16 +5,16 @@ const loanStatus = (loan, loanErrors, loanIssueFacilityErrors) => {
   const hasLoanErrors = (loanErrors && loanErrors.count !== 0);
   const hasLoanIssueFacilityErrors = (loanIssueFacilityErrors && loanIssueFacilityErrors.count !== 0);
 
+  // this will be 'Ready for check', 'Submitted', or 'Acknowledged by UKEF'
+  // this comes from either:
+  // - the deal status changing - when submitting a deal with an issued loan, we add a status to the loan.
+  // - workflow/xml.
+  if (loan.status) {
+    return loan.status;
+  }
+
+  // otherwise, status is dynamically checked
   if (!hasLoanErrors && !hasLoanIssueFacilityErrors) {
-    // this will be 'Ready for checker', 'Submitted', or 'Acknowledged by UKEF'
-
-    // this comes from either:
-    // the deal status changing - when submitting a deal with an issued loan, we add a status to the loan.
-    // otherwise the status comes from workflow/xml.
-    if (loan.status) {
-      return loan.status;
-    }
-
     return 'Completed';
   }
 
@@ -30,7 +30,6 @@ const loanHasIncompleteIssueFacilityDetails = (dealStatus, dealSubmissionType, l
   if (allowedDealStatus
     && allowedDealSubmissionType
     && allowedFacilityStage
-    && loan.issueFacilityDetailsStarted
     && !loan.issueFacilityDetailsSubmitted) {
     return true;
   }

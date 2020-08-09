@@ -1,6 +1,6 @@
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
-const dealAcknowledgedByUKEF = require('./dealAcknowledgedByUKEF');
+const dealAcknowledgedByUKEFWithAcknowledgedFacilityStatuses = require('./dealAcknowledgedByUKEFWithAcknowledgedFacilityStatuses');
 const mockUsers = require('../../../../fixtures/mockUsers');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
@@ -18,23 +18,23 @@ context('A maker is informed of a loan\'s status before submitting an issued loa
   });
 
   before(() => {
-    cy.insertOneDeal(dealAcknowledgedByUKEF, { ...MAKER_LOGIN })
+    cy.insertOneDeal(dealAcknowledgedByUKEFWithAcknowledgedFacilityStatuses, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
       });
   });
 
-  it('Starting to fill in the Issue Loan Facility form should change the Loan status from `Completed` to `Incomplete`', () => {
+  it('Starting to fill in the Issue Loan Facility form should change the Loan status from `Acknowledged by UKEF` to `Incomplete` and the Issue Facility link to `Facility issued`', () => {
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
-    pages.contract.proceedToReview().should('not.exist');
+    pages.contract.proceedToReview().should('be.disabled');
 
     const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
     loanRow.loanStatus().invoke('text').then((text) => {
-      expect(text.trim()).equal('Completed');
+      expect(text.trim()).equal('Acknowledged by UKEF');
     });
 
     loanRow.issueFacilityLink().invoke('text').then((text) => {
@@ -51,14 +51,14 @@ context('A maker is informed of a loan\'s status before submitting an issued loa
     pages.loanIssueFacility.cancelButton().click();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
-    // assert loan status change
+    // assert loan status has changed
     loanRow.loanStatus().invoke('text').then((text) => {
       expect(text.trim()).equal('Incomplete');
     });
 
-    // assert `Issue facility link` text has not changed
+    // assert `Issue facility link` text has changed
     loanRow.issueFacilityLink().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Issue facility');
+      expect(text.trim()).to.equal('Facility issued');
     });
   });
 });

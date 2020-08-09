@@ -37,13 +37,15 @@ exports.updateLoanIssueFacility = async (req, res) => {
         _id: loanId,
         ...loan,
         ...req.body,
-        issueFacilityDetailsStarted: true,
       };
 
       if (!modifiedLoan.issueFacilityDetailsStarted
           && !modifiedLoan.issueFacilityDetailsSubmitted) {
-        // add a flag for status handling...
+        // add a flag for UI/design/status/business handling...
         modifiedLoan.issueFacilityDetailsStarted = true;
+
+        // remove status added by type B XML. (we dynamically generate statuses)
+        delete modifiedLoan.status;
       }
 
       const loanHasBankReferenceNumber = hasValue(loan.bankReferenceNumber);
