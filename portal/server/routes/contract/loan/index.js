@@ -352,6 +352,7 @@ router.post('/contract/:_id/loan/:loanId/issue-facility', async (req, res) => {
       user,
       validationErrors,
       loan,
+      dealId,
     });
   }
 

@@ -56,9 +56,6 @@ context('A maker can issue and submit an issued loan facility with a deal in `Ac
     const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-    loanRow.issueFacilityLink().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Issue facility');
-    });
     loanRow.issueFacilityLink().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));
