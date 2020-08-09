@@ -46,7 +46,7 @@ const addAccurateStatusesToLoans = (dealStatus, dealSubmissionType, loanTransact
       let issueFacilityValidationErrors;
 
       if (loanHasIncompleteIssueFacilityDetails(dealStatus, dealSubmissionType, loan)) {
-        issueFacilityValidationErrors = loanIssueFacilityValidationErrors(loan); 
+        issueFacilityValidationErrors = loanIssueFacilityValidationErrors(loan);
       }
 
       loan.status = loanStatus(loan, validationErrors, issueFacilityValidationErrors);
