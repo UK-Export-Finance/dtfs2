@@ -1,5 +1,5 @@
 import express from 'express';
-import util from 'util';
+// import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
 import getRAGStatus from './getRAGstatus';
@@ -594,12 +594,12 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-  console.log(`transactions: ${util.inspect(transactions)}`);
+  // console.log(`transactions: ${util.inspect(transactions)}`);
   const applications = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, MIAfilters, userToken),
     res,
   );
-  
+
 
   // mock up by filtering here on conditional or unissued
   const incompleteFacilities = transactions;
@@ -671,7 +671,7 @@ router.get('/reports/unissued-transactions',
 
 router.get('/reports/unissued-transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-  console.log(`req: ${util.inspect(req.session)}`);
+  // console.log(`req: ${util.inspect(req.session)}`);
   // only mocking; not trying to plumb data model
   //  should really be sending filter/order-by queries to deal-api
   const transactions = req.session.incompleteFacilities;
