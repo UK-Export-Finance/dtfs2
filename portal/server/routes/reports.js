@@ -660,6 +660,9 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   req.session.incompleteFacilities = incompleteFacilities;
   return res.render('reports/countdown-indicator.njk', {
     reportData,
+    status10Days,
+    status20Days,
+    status90Days,
     primaryNav,
     subNav: 'countdown-indicator',
     user: req.session.user,
