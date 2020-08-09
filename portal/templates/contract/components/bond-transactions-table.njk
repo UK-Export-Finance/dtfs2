@@ -65,36 +65,38 @@
 
                 <td class="govuk-table__cell govuk-!-font-size-14">
 
-                  {% set canIssueFacility = userIsMaker and (dealSubmissionType === 'Automatic Inclusion Notice' or dealSubmissionType === 'Manual Inclusion Notice') and bond.bondStage === 'Unissued' and not bond.issueFacilityDetailsProvided and not bond.issueFacilityDetailsSubmitted %}
+                  {% set canIssueFacility = userIsMaker and (dealSubmissionType === 'Automatic Inclusion Notice' or dealSubmissionType === 'Manual Inclusion Notice') and bond.bondStage === 'Unissued' and not bond.issueFacilityDetailsSubmitted %}
 
                   {% if dealStatus === "Acknowledged by UKEF" or dealStatus === "Ready for Checker's approval" %}
 
-                    {% if canIssueFacility %}
-                      <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/issue-facility" class="govuk-link" data-cy="bond-issue-facility-{{ bond._id }}">Issue facility</a>
-                    {% endif %}
+                    {% set showFacilityIssuedLink = (canIssueFacility or bond.issueFacilityDetailsProvided) %}
 
-                    {% if bond.issueFacilityDetailsProvided %}
+                    {% if showFacilityIssuedLink %}
                       
                       {% if userIsChecker %}
                         <a href="/contract/{{ dealId }}/submission-details#bond-{{ bond._id }}" class="govuk-link" data-cy="bond-issue-facility-{{ bond._id }}">Facility issued</a>
-                      {% else %}
+
+                        {% else %}
 
                         {% if bond.issueFacilityDetailsSubmitted %}
                           <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/preview" class="govuk-link" data-cy="bond-issue-facility-{{ bond._id }}">Facility issued</a>
-                        {% else %}
-                          <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/issue-facility" class="govuk-link" data-cy="bond-issue-facility-{{ bond._id }}">Facility issued</a>
+                          {% else %}
+                          <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/issue-facility" class="govuk-link" data-cy="bond-issue-facility-{{ bond._id }}">
+                            {% if bond.issueFacilityDetailsStarted %}
+                              Facility issued
+                            {% else %}
+                              Issue facility
+                            {% endif %}
+                          </a>
                         {% endif %}
 
                       {% endif %}
 
                     {% endif %}
 
-                  {% else %}
-                  {% if params.editable %}
-                    <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/delete" class="govuk-link" data-cy="bond-delete-{{ bond._id }}" aria-label="Delete bond">Delete</a>
+                    {% elseif params.editable %} 
+                      <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/delete" class="govuk-link" data-cy="bond-delete-{{ bond._id }}" aria-label="Delete bond">Delete</a>
                   {% endif %}
-
-                {% endif %}
                 
                 </td>
               </tr>

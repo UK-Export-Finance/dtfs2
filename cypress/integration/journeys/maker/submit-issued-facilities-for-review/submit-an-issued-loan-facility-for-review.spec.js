@@ -51,10 +51,14 @@ context('A maker can issue and submit an issued loan facility with a deal in `Ac
   it('Completing the Issue Loan Facility form allows maker to re-submit the deal for review. Deal/Loan should be updated after submiting for review', () => {
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
-    pages.contract.proceedToReview().should('not.exist');
+    pages.contract.proceedToReview().should('be.disabled');
 
     const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
+
+    loanRow.issueFacilityLink().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Issue facility');
+    });
 
     loanRow.issueFacilityLink().click();
 

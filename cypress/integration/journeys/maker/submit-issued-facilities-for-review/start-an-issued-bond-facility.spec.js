@@ -1,7 +1,7 @@
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
-const dealAcknowledgedByUKEF = require('./dealAcknowledgedByUKEF');
 const mockUsers = require('../../../../fixtures/mockUsers');
+const dealAcknowledgedByUKEFWithAcknowledgedFacilityStatuses = require('./dealAcknowledgedByUKEFWithAcknowledgedFacilityStatuses');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
@@ -18,23 +18,23 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
   });
 
   before(() => {
-    cy.insertOneDeal(dealAcknowledgedByUKEF, { ...MAKER_LOGIN })
+    cy.insertOneDeal(dealAcknowledgedByUKEFWithAcknowledgedFacilityStatuses, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
       });
   });
 
-  it('Starting to fill in the Issue Bond Facility form should change the Bond status from `Completed` to `Incomplete`', () => {
+  it('Starting to fill in the Issue Bond Facility form should change the Bond status from `Acknowledged by UKEF` to `Incomplete` and the Issue Facility link to `Facility issued`', () => {
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
-    pages.contract.proceedToReview().should('not.exist');
+    pages.contract.proceedToReview().should('be.disabled');
 
     const bondId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
     bondRow.bondStatus().invoke('text').then((text) => {
-      expect(text.trim()).equal('Completed');
+      expect(text.trim()).equal('Acknowledged by UKEF');
     });
 
     bondRow.issueFacilityLink().invoke('text').then((text) => {
@@ -51,14 +51,14 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
     pages.bondIssueFacility.cancelButton().click();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
-    // assert bond status change
+    // assert bond status has changed
     bondRow.bondStatus().invoke('text').then((text) => {
       expect(text.trim()).equal('Incomplete');
     });
 
-    // assert `Issue facility link` text has not changed
+    // assert `Issue facility link` text has changed
     bondRow.issueFacilityLink().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Issue facility');
+      expect(text.trim()).to.equal('Facility issued');
     });
   });
 });

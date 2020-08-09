@@ -2,7 +2,7 @@
 
 {% macro render(status) %}
 
-  {% set greyColourStatus = (status === "Incomplete" or status === "Ready for check" or status === "Acknowledged by UKEF" or status === "Draft") %}
+  {% set greyColourStatus = (status === "Not started" or status === "Incomplete" or status === "Ready for check" or status === "Acknowledged by UKEF" or status === "Draft") %}
 
   {% if status %}
     {{govukTag({
