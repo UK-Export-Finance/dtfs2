@@ -22,8 +22,8 @@ const loanStatus = (loan, loanErrors, loanIssueFacilityErrors) => {
   return 'Incomplete';
 };
 
-const loanHasIncompleteIssueFacilityDetails = (dealStatus, dealSubmissionType, loan) => {
-  const allowedDealStatus = (dealStatus === 'Acknowledged by UKEF' || dealStatus === 'Ready for Checker\'s approval');
+const loanHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, dealSubmissionType, loan) => {
+  const allowedDealStatus = ((dealStatus === 'Acknowledged by UKEF' || dealStatus === 'Ready for Checker\'s approval') && previousDealStatus !== 'Draft');
   const allowedDealSubmissionType = (dealSubmissionType === 'Automatic Inclusion Notice' || dealSubmissionType === 'Manual Inclusion Notice');
   const allowedFacilityStage = loan.facilityStage === 'Conditional';
 
@@ -37,14 +37,14 @@ const loanHasIncompleteIssueFacilityDetails = (dealStatus, dealSubmissionType, l
   return false;
 };
 
-const addAccurateStatusesToLoans = (dealStatus, dealSubmissionType, loanTransactions) => {
+const addAccurateStatusesToLoans = (dealStatus, previousDealStatus, dealSubmissionType, loanTransactions) => {
   if (loanTransactions.items.length) {
     loanTransactions.items.forEach((l) => {
       const loan = l;
       const validationErrors = loanValidationErrors(loan);
       let issueFacilityValidationErrors;
 
-      if (loanHasIncompleteIssueFacilityDetails(dealStatus, dealSubmissionType, loan)) {
+      if (loanHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, dealSubmissionType, loan)) {
         issueFacilityValidationErrors = loanIssueFacilityValidationErrors(loan);
       }
 
