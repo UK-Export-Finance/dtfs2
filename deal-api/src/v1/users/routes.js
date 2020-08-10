@@ -22,12 +22,30 @@ module.exports.list = (req, res, next) => {
   });
 };
 
+const combineErrors = (listOfErrors) => listOfErrors.reduce((obj, error) => {
+  const response = { ...obj };
+  const field = Object.keys(error)[0];
+  const value = error[field];
+
+  if (field === 'password') {
+    // we have all the details but no sensible way to convey a list..
+    // quickest hack to get through review: one error message to rule them all..
+    response[field] = { text: 'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character.' };
+  } else {
+    response[field] = value;
+  }
+  return response;
+}, {});
+
 module.exports.create = (req, res, next) => {
   const errors = applyCreateRules(req.body);
   if (errors.length) {
     return res.status(400).json({
       success: false,
-      errors,
+      errors: {
+        count: errors.length,
+        errorList: combineErrors(errors),
+      },
     });
   }
   const { password } = req.body;

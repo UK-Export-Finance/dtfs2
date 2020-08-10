@@ -10,6 +10,8 @@ const aMaker = users.find(user=>user.username==='MAKER');
 const aChecker = users.find(user=>user.username==='CHECKER');
 const aMakerChecker = users.find(user=>user.username==='MAKENCHECK');
 
+const PASSWORD_ERROR = {text:'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character.'};
+
 describe('a user', () => {
 
   beforeEach(async () => {
@@ -27,7 +29,7 @@ describe('a user', () => {
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
-      expect(body.errors).toContainEqual({password: 'Your password must contain at least one numeric character.'});
+      expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR);
     });
 
     it('rejects if the provided password contains zero upper-case characters', async () => {
@@ -40,7 +42,7 @@ describe('a user', () => {
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
-      expect(body.errors).toContainEqual({password:'Your password must contain at least one upper-case character.'})
+      expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR);
     });
 
     it('rejects if the provided password contains zero lower-case characters', async () => {
@@ -53,7 +55,7 @@ describe('a user', () => {
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
-      expect(body.errors).toContainEqual({password:'Your password must contain at least one lower-case character.'})
+      expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR);
     });
 
     it('rejects if the provided password contains zero special characters', async () => {
@@ -66,7 +68,7 @@ describe('a user', () => {
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
-      expect(body.errors).toContainEqual({password:'Your password must contain at least one special character.'})
+      expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR);
     });
 
     it('rejects if the provided password contains fewer than 8 characters', async () => {
@@ -79,7 +81,7 @@ describe('a user', () => {
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
-      expect(body.errors).toContainEqual({password:'Your password must contain at least 8 characters.'})
+      expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR);
     });
 
     it('creates the user if all provided data is valid', async () => {
