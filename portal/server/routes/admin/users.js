@@ -3,6 +3,8 @@ import api from '../../api';
 import {
   getApiData,
   requestParams,
+  errorHref,
+  generateErrorSummary,
 } from '../../helpers';
 
 const router = express.Router();
@@ -89,17 +91,23 @@ router.post('/users/create', async (req, res) => {
 
   //------
 
-  await api.createUser(userToCreate, userToken);
+  const { status, data } = await api.createUser(userToCreate, userToken);
 
-  return res.redirect('/admin/users/');
-  //
-  //
-  //
-  // return res.render('admin/user-edit.njk',
-  //   {
-  //     banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
-  //     user: req.session.user,
-  //   });
+  if (status === 200) {
+    return res.redirect('/admin/users/');
+  }
+  const formattedValidationErrors = generateErrorSummary(
+    data.errors,
+    errorHref,
+  );
+
+  return res.render('admin/user-edit.njk',
+    {
+      banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
+      user: req.session.user,
+      displayedUser: userToCreate,
+      validationErrors: formattedValidationErrors,
+    });
 });
 
 router.get('/users/edit/:_id', async (req, res) => {

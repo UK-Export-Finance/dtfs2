@@ -92,7 +92,8 @@
         },
         classes: "govuk-!-width-one-third",
         id: "email",
-        name: "email"
+        name: "email",
+        value: displayedUser.username
       }) }}
 
        {# {% include "../_partials/password-create.njk" %} #}
@@ -107,7 +108,8 @@
              },
              id: "password",
              name: "password",
-             type: "password"
+             type: "password",
+             errorMessage: validationErrors.errorList.password
            }) }}
 
            {{ govukInput({
