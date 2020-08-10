@@ -51,12 +51,12 @@
             {{ transaction.transactionStage }}
           </td>
 
-          <td data-cy="maker" class="govuk-table__cell govuk-!-font-size-14">
-          {{ transaction.maker }}
+          <td data-cy="deal_submissionDate" class="govuk-table__cell govuk-!-font-size-14">
+          {{ transaction.deal_submissionDate | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
           </td>
 
-          <td data-cy="deal_submissionDate" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.deal_submissionDate  }}
+          <td data-cy="remainingDays" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.remainingDays }}
           </td>
 
         </tr>
