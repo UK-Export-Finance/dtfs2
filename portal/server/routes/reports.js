@@ -1,8 +1,8 @@
 import express from 'express';
-// import util from 'util';
+import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
-import { getRAGstatus } from './expiryStatusUtils';
+import { getRAGstatus, getExpiryDates } from './expiryStatusUtils';
 import CONSTANTS from '../constants';
 import {
   getApiData,
@@ -657,12 +657,38 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     manualInclusionsWithConditions,
     manualInclusionsWithoutConditions,
   };
+  // TODO: move to own route
   req.session.incompleteFacilities = incompleteFacilities;
+
   return res.render('reports/countdown-indicator.njk', {
     reportData,
     status10Days,
     status20Days,
     status90Days,
+    primaryNav,
+    subNav: 'countdown-indicator',
+    user: req.session.user,
+  });
+});
+
+router.get('/reports/mia-to-be-submitted/with-conditions', async (req, res) => {
+  const { userToken } = requestParams(req);
+  const submissionFilters = {
+    filterBySubmissionType: 'manualInclusionApplication',
+  };
+
+  const MIAfilters = buildReportFilters(submissionFilters, req.session.user);
+  const applications = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, MIAfilters, userToken),
+    res,
+  );
+  const miaWithConditions = applications.transactions.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (with conditions)'));
+
+  const transactions = getExpiryDates(miaWithConditions, 28);
+  console.log(`transactions: ${util.inspect(transactions)}`);
+
+  return res.render('reports/MIA-to-be-submitted-report.njk', {
+    transactions,
     primaryNav,
     subNav: 'countdown-indicator',
     user: req.session.user,
