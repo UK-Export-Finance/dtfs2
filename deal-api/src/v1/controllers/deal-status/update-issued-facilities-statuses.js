@@ -1,6 +1,6 @@
 const $ = require('mongo-dot-notation');
 
-const updateIssuedFacilitiesStatuses = async (collection, deal) => {
+const updateIssuedFacilitiesStatuses = async (collection, deal, newStatus, updateAllIssuedFacilities) => {
   const updatedDeal = deal;
 
   const update = (facilities) => {
@@ -9,12 +9,22 @@ const updateIssuedFacilitiesStatuses = async (collection, deal) => {
     arr.forEach((f) => {
       const facility = f;
 
-      const shouldUpdateLoan = (facility.facilityStage === 'Conditional' && facility.issueFacilityDetailsProvided);
-      const shouldUpdateBond = (facility.bondStage === 'Unissued' && facility.issueFacilityDetailsProvided);
-      const shouldUpdateStatus = ((shouldUpdateLoan || shouldUpdateBond) && !facility.issueFacilityDetailsSubmitted);
+      const shouldUpdateLoan = facility.facilityStage === 'Conditional';
+      const shouldUpdateBond = facility.bondStage === 'Unissued';
 
-      if (shouldUpdateStatus) {
-        facility.status = 'Ready for check';
+      let shouldUpdate;
+      if (updateAllIssuedFacilities) {
+        // update all issued facilities regardless of if they've been submitted or have completed all required fields.
+        shouldUpdate = (shouldUpdateLoan || shouldUpdateBond);
+      } else {
+        // only update issued facilities if they have all details provided and have NOT been submitted
+        shouldUpdate = ((shouldUpdateLoan || shouldUpdateBond)
+                        && facility.issueFacilityDetailsProvided
+                        && !facility.issueFacilityDetailsSubmitted);
+      }
+
+      if (shouldUpdate) {
+        facility.status = newStatus;
       }
 
       return facility;
