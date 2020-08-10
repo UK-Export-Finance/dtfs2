@@ -17,7 +17,7 @@ const addExpiryDate = (val, days) => {
 
 const getRAGstatus = (facilities, days) => {
   const trafficLights = {
-    black: 0,
+    negative: 0,
     red: 0,
     orange: 0,
     green: 0,
@@ -44,7 +44,7 @@ const getRAGstatus = (facilities, days) => {
   facilitiesWithExpiryDate.forEach((item) => {
     if (item.remainingDays < 0) {
       // flag as overdue AND count in lowest bucket
-      trafficLights.black += 1;
+      trafficLights.negative += 1;
       trafficLights.red += 1;
     } else if (item.remainingDays < dayLimits.red) {
       trafficLights.red += 1;
@@ -53,7 +53,7 @@ const getRAGstatus = (facilities, days) => {
     } else if (item.remainingDays < dayLimits.green) {
       trafficLights.green += 1;
     } else {
-      trafficLights.black += 1;
+      trafficLights.negative += 1;
     }
   });
   // console.log(trafficLights);
