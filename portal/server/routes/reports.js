@@ -746,12 +746,22 @@ router.get('/reports/unissued-transactions',
 
 router.get('/reports/unissued-transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-  // console.log(`req: ${util.inspect(req.session)}`);
+  
   // only mocking; not trying to plumb data model
   //  should really be sending filter/order-by queries to deal-api
-  const transactions = req.session.incompleteFacilities;
+  const stageFilters = { // TODO use CONSTANTS lowercase string
+    // facilityStage: 'conditional',
+    filterByStatus: 'submissionAcknowledged',
+  };
+  const filters = buildReportFilters(stageFilters, req.session.user);
 
-  const count = transactions.length; // in case people want to add more examples..
+  let { transactions } = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+    res,
+  );
+  transactions = getExpiryDates(transactions, 90);
+  console.log(`transactions: ${util.inspect(transactions)}`);
+  const count = transactions.length;
 
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
@@ -759,15 +769,10 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
     totalItems: count,
   };
 
-  const banks = await getApiData(
-    api.banks(userToken),
-    res,
-  );
-
   return res.render('reports/unissued-transactions-report.njk', {
     pages,
     transactions,
-    banks,
+    // banks,
     primaryNav,
     subNav: 'unissued-transactions-report',
     user: req.session.user,
