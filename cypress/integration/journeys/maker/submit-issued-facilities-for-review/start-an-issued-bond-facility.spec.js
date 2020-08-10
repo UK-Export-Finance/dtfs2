@@ -1,7 +1,7 @@
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const mockUsers = require('../../../../fixtures/mockUsers');
-const dealAcknowledgedByUKEFWithAcknowledgedFacilityStatuses = require('./dealAcknowledgedByUKEFWithAcknowledgedFacilityStatuses');
+const dealAcknowledgedByUKEFWithNotStartedFacilityStatuses = require('./dealAcknowledgedByUKEFWithNotStartedFacilityStatuses');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
@@ -18,7 +18,7 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
   });
 
   before(() => {
-    cy.insertOneDeal(dealAcknowledgedByUKEFWithAcknowledgedFacilityStatuses, { ...MAKER_LOGIN })
+    cy.insertOneDeal(dealAcknowledgedByUKEFWithNotStartedFacilityStatuses, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
@@ -34,7 +34,7 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
     bondRow.bondStatus().invoke('text').then((text) => {
-      expect(text.trim()).equal('Acknowledged by UKEF');
+      expect(text.trim()).equal('Not started');
     });
 
     bondRow.issueFacilityLink().invoke('text').then((text) => {
