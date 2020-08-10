@@ -93,7 +93,7 @@ exports.update = (req, res) => {
 
     if (toStatus === 'Further Maker\'s input required') {
       const updateAllIssuedFacilities = true;
-      dealAfterAllUpdates = await updateIssuedFacilitiesStatuses(collection, dealAfterAllUpdates, 'Maker’s input required', updateAllIssuedFacilities);
+      dealAfterAllUpdates = await updateIssuedFacilitiesStatuses(collection, dealAfterAllUpdates, 'Maker\'s input required', updateAllIssuedFacilities);
     }
 
     if (toStatus === 'Submitted') {
