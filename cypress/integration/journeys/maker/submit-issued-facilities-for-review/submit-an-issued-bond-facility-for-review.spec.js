@@ -1,7 +1,7 @@
 const moment = require('moment');
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
-const dealAcknowledgedByUKEF = require('./dealAcknowledgedByUKEF');
+const dealAcknowledgedByUKEFWithNotStartedFacilityStatuses = require('./dealAcknowledgedByUKEFWithNotStartedFacilityStatuses');
 const mockUsers = require('../../../../fixtures/mockUsers');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
@@ -19,7 +19,7 @@ context('A maker can issue and submit an issued bond facility with a deal in `Ac
   });
 
   before(() => {
-    cy.insertOneDeal(dealAcknowledgedByUKEF, { ...MAKER_LOGIN })
+    cy.insertOneDeal(dealAcknowledgedByUKEFWithNotStartedFacilityStatuses, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle

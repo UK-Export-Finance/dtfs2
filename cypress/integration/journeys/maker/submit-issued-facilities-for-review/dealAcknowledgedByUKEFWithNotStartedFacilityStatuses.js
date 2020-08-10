@@ -176,7 +176,7 @@ const deal = {
           "text": "GBP - UK Sterling",
           "id": "GBP"
         },
-        "status": "Acknowledged by UKEF",
+        "status": "Not started",
       },
       {
         "_id": "1000209",
@@ -198,7 +198,7 @@ const deal = {
           "text": "GBP - UK Sterling",
           "id": "GBP"
         },
-        "status": "Acknowledged by UKEF",
+        "status": "Not started",
       }
     ]
   },
@@ -228,7 +228,7 @@ const deal = {
         "coverEndDate-month": "",
         "coverEndDate-year": "",
         "disbursementAmount": "",
-        "status": "Acknowledged by UKEF",
+        "status": "Not started",
       },
       {
         "_id": "1000210",
@@ -254,7 +254,7 @@ const deal = {
         "coverEndDate-month": "",
         "coverEndDate-year": "",
         "disbursementAmount": "",
-        "status": "Acknowledged by UKEF",
+        "status": "Not started",
       }
     ]
   },
