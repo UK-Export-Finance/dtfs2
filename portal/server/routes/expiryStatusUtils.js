@@ -32,7 +32,6 @@ const getExpiryDates = (facilities, days, isDeal) => {
 };
 
 const getRAGstatus = (facilities, days, isDeal) => {
-  console.log(`--------------------------`);
   const trafficLights = {
     negative: 0,
     red: 0,
