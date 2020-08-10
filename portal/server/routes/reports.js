@@ -612,9 +612,8 @@ router.get('/reports/countdown-indicator', async (req, res) => {
 
   // mock up by filtering here on conditional or unissued
   const incompleteFacilities = transactions;
-  const miaWithConditions = applications.deals.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (with conditions)'));
-  const miaWithOutConditions = applications.deals.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (without conditions)'));
-  console.log(`WITHOUT: ${util.inspect(miaWithOutConditions)}`);
+  const miaWithConditions = applications.deals.filter((deal) => (deal.status === 'Accepted by UKEF (with conditions)'));
+  const miaWithOutConditions = applications.deals.filter((deal) => (deal.status === 'Accepted by UKEF (without conditions)'));
 
   const status90Days = getRAGstatus(incompleteFacilities, 90, false);
   const status20Days = getRAGstatus(miaWithConditions, 28, true);
@@ -691,10 +690,15 @@ router.get('/reports/mia-to-be-submitted/with-conditions', async (req, res) => {
     api.contracts(0, 0, MIAfilters, userToken),
     res,
   );
-  const miaWithConditions = applications.transactions.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (with conditions)'));
 
-  const transactions = getExpiryDates(miaWithConditions, 28);
-  const count = transactions.length;
+  let miaWithConditions = [];
+  let deals = [];
+  let count = 0;
+  if (applications.deal) {
+    miaWithConditions = applications.deals.filter((deal) => (deal.status === 'Accepted by UKEF (with conditions)'));
+    deals = getExpiryDates(miaWithConditions, 28, true);
+    count = applications.count;
+  }
 
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
@@ -703,7 +707,8 @@ router.get('/reports/mia-to-be-submitted/with-conditions', async (req, res) => {
   };
   return res.render('reports/MIA-to-be-submitted-report.njk', {
     pages,
-    transactions,
+    conditions: '(with conditions)',
+    deals,
     primaryNav,
     subNav: 'countdown-indicator',
     user: req.session.user,
@@ -721,10 +726,15 @@ router.get('/reports/mia-to-be-submitted/without-conditions', async (req, res) =
     api.contracts(0, 0, MIAfilters, userToken),
     res,
   );
-  const miaWithConditions = applications.transactions.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (without conditions)'));
 
-  const transactions = getExpiryDates(miaWithConditions, 14);
-  const count = transactions.length;
+  let miaWithoutConditions = [];
+  let deals = [];
+  let count = 0;
+  if (applications.deals) {
+    miaWithoutConditions = applications.deals.filter((deal) => (deal.status === 'Accepted by UKEF (without conditions)'));
+    deals = getExpiryDates(miaWithoutConditions, 14, true);
+    count = applications.count;
+  }
 
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
@@ -733,7 +743,8 @@ router.get('/reports/mia-to-be-submitted/without-conditions', async (req, res) =
   };
   return res.render('reports/MIA-to-be-submitted-report.njk', {
     pages,
-    transactions,
+    conditions: '(without conditions)',
+    deals,
     primaryNav,
     subNav: 'countdown-indicator',
     user: req.session.user,
