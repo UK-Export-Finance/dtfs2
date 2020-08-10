@@ -2,7 +2,11 @@
 const xml2js = require('xml2js');
 const dealController = require('../deal.controller');
 const dealCommentsController = require('../deal-comments.controller');
-const { generateStatus } = require('./type-b-helpers');
+const {
+  generateStatus,
+  updateBonds,
+  updateLoans,
+} = require('./type-b-helpers');
 const statusUpdateController = require('../deal-status.controller');
 
 const updateStatus = statusUpdateController.update;
@@ -38,6 +42,16 @@ const updateStatusViaController = (dealId, user, body) => new Promise((resolve, 
   return updateStatus(fakeRequestThisHurtsMySoul, fakeResponseThisHurtsMore);
 });
 
+const shouldCheckIssuedFacilities = (dealStatus, dealSubmissionType) => {
+  const allowedDealStatus = dealStatus === 'Acknowledged by UKEF';
+  const allowedDealSubmissionType = (dealSubmissionType === 'Automatic Inclusion Notice' || dealSubmissionType === 'Manual Inclusion Notice');
+  if (allowedDealStatus && allowedDealSubmissionType) {
+    return true;
+  }
+
+  return false;
+};
+
 const processTypeB = async ({ fileContents }) => {
   const { Deal: workflowDeal, error } = await xml2js.parseStringPromise(fileContents /* , options */)
     .catch((err) => ({ error: err.message }));
@@ -54,42 +68,9 @@ const processTypeB = async ({ fileContents }) => {
     return false;
   }
 
-  const bondTransactionItems = deal.bondTransactions.items.map((bond) => {
-    const workflowBond = workflowDeal.BSSFacilities.find(
-      (b) => b.BSS_portal_facility_id[0] === bond._id, // eslint-disable-line no-underscore-dangle
-    );
-    if (!workflowBond) {
-      return bond;
-    }
-
-    const hasWorflowStatus = workflowBond.BSS_status && workflowBond.BSS_status.length;
-
-    return {
-      ...bond,
-      ukefFacilityID: workflowBond.BSS_ukef_facility_id,
-      // TODO: probably need better mapping here, TBD from future tickets...
-      status: hasWorflowStatus && workflowBond.BSS_status[0] === 'Issued acknowledged' ? 'Acknowledged by UKEF' : workflowBond.BSS_status[0],
-    };
-  });
-
-  const loanTransactionItems = deal.loanTransactions.items.map((loan) => {
-    const workflowLoan = workflowDeal.EWCSFacilities.find(
-      (b) => b.EWCS_portal_facility_id[0] === loan._id, // eslint-disable-line no-underscore-dangle
-    );
-
-    if (!workflowLoan) {
-      return loan;
-    }
-
-    const hasWorflowStatus = workflowLoan.EWCS_status && workflowLoan.EWCS_status.length;
-
-    return {
-      ...loan,
-      ukefFacilityID: workflowLoan.EWCS_ukef_facility_id,
-      // TODO: probably need better mapping here, TBD from future tickets...
-      status: hasWorflowStatus && workflowLoan.EWCS_status[0] === 'Issued acknowledged' ? 'Acknowledged by UKEF' : workflowLoan.EWCS_status[0],
-    };
-  });
+  const dealStatus = generateStatus(deal, workflowDeal);
+  const dealSubmissionType = deal.details.submissionType;
+  const checkIssueFacilities = shouldCheckIssuedFacilities(dealStatus, dealSubmissionType);
 
   const updatedDealInfo = {
     details: {
@@ -97,10 +78,10 @@ const processTypeB = async ({ fileContents }) => {
       previousWorkflowStatus: workflowDeal.Deal_status[0],
     },
     bondTransactions: {
-      items: bondTransactionItems,
+      items: updateBonds(deal.bondTransactions.items, workflowDeal, checkIssueFacilities),
     },
     loanTransactions: {
-      items: loanTransactionItems,
+      items: updateLoans(deal.loanTransactions.items, workflowDeal, checkIssueFacilities),
     },
   };
 
@@ -124,7 +105,7 @@ const processTypeB = async ({ fileContents }) => {
   }
 
   const updateData = {
-    status: generateStatus(deal, workflowDeal),
+    status: dealStatus,
   };
 
   const result = await updateStatusViaController(dealId, interfaceUser, updateData);

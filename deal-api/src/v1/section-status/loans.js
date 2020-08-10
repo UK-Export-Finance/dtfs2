@@ -5,7 +5,7 @@ const loanStatus = (loan, loanErrors, loanIssueFacilityErrors) => {
   const hasLoanErrors = (loanErrors && loanErrors.count !== 0);
   const hasLoanIssueFacilityErrors = (loanIssueFacilityErrors && loanIssueFacilityErrors.count !== 0);
 
-  // this will be 'Ready for check', 'Submitted', or 'Acknowledged by UKEF'
+  // this will be 'Not started', 'Ready for check', 'Submitted', or 'Acknowledged by UKEF'
   // this comes from either:
   // - the deal status changing - when submitting a deal with an issued loan, we add a status to the loan.
   // - workflow/xml.
