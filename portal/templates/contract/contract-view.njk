@@ -97,6 +97,14 @@
 
               </h2>
             </div>
+
+            {% if deal.details.submissionDate %}
+              <span class="govuk-heading-m govuk-grid-column-one-quarter govuk-!-font-weight-regular govuk-!-font-size-16"  data-cy="eligibility-submission-type">
+                <span class="govuk-!-font-weight-bold">Submission date: </span> <br />
+                {{ deal.details.submissionDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
+              </span>
+            {% endif %}
+            
             <div class="govuk-grid-column-one-quarter box__header-link">
               {{ eligibilityCriteriaLink.render(componentData) }}
             </div>
