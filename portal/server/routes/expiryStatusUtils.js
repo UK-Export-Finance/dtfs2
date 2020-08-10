@@ -21,11 +21,11 @@ const addExpiryDate = (val, days, isDeal) => {
   };
 };
 
-const getExpiryDates = (facilities, days) => {
+const getExpiryDates = (facilities, days, isDeal) => {
   const facilitiesWithExpiryDate = facilities.map(
     // use anon function to pass in number of days to calculate expiry
     // eslint-disable-next-line func-names
-    (facility) => addExpiryDate(facility, days),
+    (facility) => addExpiryDate(facility, days, isDeal),
   );
   facilitiesWithExpiryDate.sort((a, b) => parseFloat(a.remainingDays) - parseFloat(b.remainingDays));
   return facilitiesWithExpiryDate;

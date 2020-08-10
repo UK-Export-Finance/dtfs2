@@ -1,11 +1,11 @@
 {% extends "index.njk" %}
 {% import '_macros/pagination.njk' as pagination %}
 
-{% block pageTitle %}Unissued Transactions Report{% endblock %}
+{% block pageTitle %}MIA Supply Contracts {{ conditions }}{% endblock %}
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">Unissued Transactions Report</h1>
+  <h1 class="govuk-heading-l">MIA Supply Contracts {{ conditions }}</h1>
 
 
   <table class="govuk-table govuk-!-margin-bottom-0">
@@ -23,38 +23,38 @@
     </thead>
 
     <tbody class="govuk-table__body">
-      {% for transaction in transactions %}
-        <tr data-cy="transaction_{{transaction.deal_id }}" class="govuk-table__row">
+      {% for deal in deals %}
+        <tr data-cy="deal_{{deal._id }}" class="govuk-table__row">
           <td data-cy="bankSupplyContractID" class="govuk-table__cell govuk-!-font-size-14">
-            <a href="/contract/{{ transaction.deal_id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ transaction.deal_bankSupplyContractID }}</a>
+            <a href="/contract/{{ deal._id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ deal.details.bankSupplyContractID }}</a>
           </td>
 
-          <td data-cy="deal_ukefDealId" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.deal_ukefDealId }}
+          <td data-cy="ukefDealId" class="govuk-table__cell govuk-!-font-size-14">
+            {{ deal.details.ukefDealId }}
           </td>
 
           <td data-cy="maker" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.maker }}
+            {{ deal.details.maker | displayName }}
           </td>
 
           <td data-cy="checker" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.checker }}
+            {{ deal.details.checker | displayName }}
           </td>
 
           <td data-cy="MIA_created" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.deal_created | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
+            {{ deal.details.created | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
           </td>
 
           <td data-cy="MIA_submitted" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.deal_submissionDate | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
+            {{ deal.details.submissionDate | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
           </td>
 
           <td data-cy="MIA_approved" class="govuk-table__cell govuk-!-font-size-14">
-          {{ transaction.approvedDate  | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty  }}
+          {{ deal.details.approvedDate  | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty  }}
           </td>
 
           <td data-cy="remainingDays" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.remainingDays  }}
+            {{ deal.remainingDays  }}
           </td>
 
         </tr>
