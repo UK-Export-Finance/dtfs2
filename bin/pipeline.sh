@@ -12,7 +12,7 @@ fi
 LOG="$HERE/pipeline.log"
 
 # Set and check environment variables and secrets
-for s in $(ls secrets/set_*); do 
+for s in $(ls secrets/set_*); do
     echo " - $s"
     source $s
 done
@@ -54,7 +54,7 @@ sleep 10
 end=`date +%s`
 echo "{\"stage\": \"pipeline:wait-for-mongo\", \"duration\": \"$((end-start))\", \"result\": \"pass\"}" >> "$LOG"
 
-cd "$HERE/utils/mock-data-loader" && npm install && node ./re-insert-mocks.js
+cd "$HERE/utils/mock-data-loader" && npm install && node ./reset-id-counters.js
 
 start=`date +%s`
 
