@@ -587,29 +587,38 @@ router.get('/reports/countdown-indicator', async (req, res) => {
 
   const filters = buildReportFilters(stageFilters, req.session.user);
   const MIAfilters = buildReportFilters(submissionFilters, req.session.user);
-  // console.log(`MIAfilters: ${util.inspect(MIAfilters)}`);
+  console.log(`MIAfilters: ${util.inspect(MIAfilters)}`);
 
   // get all transactions
+  // TODO none pagination?
   const { transactions } = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
+  console.log(req.params.page);
   // console.log(`transactions: ${util.inspect(transactions)}`);
-  const applications = await getApiData(
+  /*
+   const applications = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, MIAfilters, userToken),
     res,
   );
+  */
 
+  const applications = await getApiData(
+    api.contracts(0, 0, MIAfilters, userToken),
+    res,
+  );
+  console.log(`applications: ${util.inspect(applications)}`);
 
   // mock up by filtering here on conditional or unissued
   const incompleteFacilities = transactions;
-  const miaWithConditions = applications.transactions.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (with conditions)'));
-  const miaWithOutConditions = applications.transactions.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (without conditions)'));
-  // console.log(`WITHOUT: ${util.inspect(miaWithOutConditions)}`);
+  const miaWithConditions = applications.deals.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (with conditions)'));
+  const miaWithOutConditions = applications.deals.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (without conditions)'));
+  console.log(`WITHOUT: ${util.inspect(miaWithOutConditions)}`);
 
-  const status90Days = getRAGstatus(incompleteFacilities, 90);
-  const status20Days = getRAGstatus(miaWithConditions, 28);
-  const status10Days = getRAGstatus(miaWithOutConditions, 14);
+  const status90Days = getRAGstatus(incompleteFacilities, 90, false);
+  const status20Days = getRAGstatus(miaWithConditions, 28, true);
+  const status10Days = getRAGstatus(miaWithOutConditions, 14, true);
 
   const issueOrMakeFirstAdvance = {
     caption: 'You have 3 months to issue or make first advance under a transaction.',
@@ -679,7 +688,7 @@ router.get('/reports/mia-to-be-submitted/with-conditions', async (req, res) => {
 
   const MIAfilters = buildReportFilters(submissionFilters, req.session.user);
   const applications = await getApiData(
-    api.transactions(req.params.page * PAGESIZE, PAGESIZE, MIAfilters, userToken),
+    api.contracts(0, 0, MIAfilters, userToken),
     res,
   );
   const miaWithConditions = applications.transactions.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (with conditions)'));
@@ -709,7 +718,7 @@ router.get('/reports/mia-to-be-submitted/without-conditions', async (req, res) =
 
   const MIAfilters = buildReportFilters(submissionFilters, req.session.user);
   const applications = await getApiData(
-    api.transactions(req.params.page * PAGESIZE, PAGESIZE, MIAfilters, userToken),
+    api.contracts(0, 0, MIAfilters, userToken),
     res,
   );
   const miaWithConditions = applications.transactions.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (without conditions)'));
