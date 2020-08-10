@@ -22,29 +22,29 @@ const bondStatus = (bond, bondErrors, bondIssueFacilityErrors) => {
   return 'Incomplete';
 };
 
-const bondHasIncompleteIssueFacilityDetails = (dealStatus, dealSubmissionType, loan) => {
-  const allowedDealStatus = (dealStatus === 'Acknowledged by UKEF' || dealStatus === 'Ready for Checker\'s approval');
+const bondHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, dealSubmissionType, bond) => {
+  const allowedDealStatus = ((dealStatus === 'Acknowledged by UKEF' || dealStatus === 'Ready for Checker\'s approval') && previousDealStatus !== 'Draft');
   const allowedDealSubmissionType = (dealSubmissionType === 'Automatic Inclusion Notice' || dealSubmissionType === 'Manual Inclusion Notice');
-  const allowedFacilityStage = loan.bondStage === 'Unissued';
+  const allowedFacilityStage = bond.bondStage === 'Unissued';
 
   if (allowedDealStatus
     && allowedDealSubmissionType
     && allowedFacilityStage
-    && !loan.issueFacilityDetailsSubmitted) {
+    && !bond.issueFacilityDetailsSubmitted) {
     return true;
   }
 
   return false;
 };
 
-const addAccurateStatusesToBonds = (dealStatus, dealSubmissionType, bondTransactions) => {
+const addAccurateStatusesToBonds = (dealStatus, previousDealStatus, dealSubmissionType, bondTransactions) => {
   if (bondTransactions.items.length) {
     bondTransactions.items.forEach((b) => {
       const bond = b;
       const validationErrors = bondValidationErrors(bond);
       let issueFacilityValidationErrors;
 
-      if (bondHasIncompleteIssueFacilityDetails(dealStatus, dealSubmissionType, bond)) {
+      if (bondHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, dealSubmissionType, bond)) {
         issueFacilityValidationErrors = bondIssueFacilityValidationErrors(bond);
       }
 
