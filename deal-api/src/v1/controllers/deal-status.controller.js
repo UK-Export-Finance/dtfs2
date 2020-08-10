@@ -90,7 +90,7 @@ exports.update = (req, res) => {
     if (toStatus === 'Ready for Checker\'s approval') {
       dealAfterAllUpdates = await updateIssuedFacilitiesStatuses(collection, dealAfterAllUpdates, 'Ready for check');
     }
-    
+
     if (toStatus === 'Further Maker\'s input required') {
       const updateAllIssuedFacilities = true;
       dealAfterAllUpdates = await updateIssuedFacilitiesStatuses(collection, dealAfterAllUpdates, 'Maker’s input required', updateAllIssuedFacilities);
