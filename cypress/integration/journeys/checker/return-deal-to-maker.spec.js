@@ -10,7 +10,7 @@ const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user
 const twentyOneDeals = require('../maker/dashboard/twentyOneDeals');
 
 context('A checker selects to return a deal to maker from the view-contract page', () => {
-  let deal;
+  let deal; 
 
   beforeEach( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -59,16 +59,12 @@ context('A checker selects to return a deal to maker from the view-contract page
   });
 
   it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard.', () => {
-
-console.log(`=====>>>>> ${JSON.stringify(deal,null,2)}`);
     // log in, visit a deal, select abandon
     cy.login(CHECKER_LOGIN);
     contract.visit(deal);
 
-//-----
     contract.commentsTab().click();
     contract.visit(deal);
-//-----
 
     contract.returnToMaker().click();
 
