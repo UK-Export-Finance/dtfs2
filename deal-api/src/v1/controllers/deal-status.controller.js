@@ -40,6 +40,7 @@ exports.update = (req, res) => {
     const fromStatus = deal.details.status;
     const toStatus = req.body.status;
 
+
     if (toStatus !== 'Ready for Checker\'s approval'
         && toStatus !== 'Abandoned Deal') {
       if (!userCanSubmitDeal(deal, req.user)) {
@@ -87,7 +88,12 @@ exports.update = (req, res) => {
     }
 
     if (toStatus === 'Ready for Checker\'s approval') {
-      dealAfterAllUpdates = await updateIssuedFacilitiesStatuses(collection, dealAfterAllUpdates);
+      dealAfterAllUpdates = await updateIssuedFacilitiesStatuses(collection, dealAfterAllUpdates, 'Ready for check');
+    }
+    
+    if (toStatus === 'Further Maker\'s input required') {
+      const updateAllIssuedFacilities = true;
+      dealAfterAllUpdates = await updateIssuedFacilitiesStatuses(collection, dealAfterAllUpdates, 'Maker’s input required', updateAllIssuedFacilities);
     }
 
     if (toStatus === 'Submitted') {
