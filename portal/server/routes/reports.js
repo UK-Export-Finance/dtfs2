@@ -1,5 +1,5 @@
 import express from 'express';
-import util from 'util';
+// import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
 import { getRAGstatus, getExpiryDates } from './expiryStatusUtils';
@@ -744,7 +744,6 @@ router.get('/reports/unissued-transactions',
 
 router.get('/reports/unissued-transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-  
   // only mocking; not trying to plumb data model
   //  should really be sending filter/order-by queries to deal-api
   const stageFilters = { // TODO use CONSTANTS lowercase string
