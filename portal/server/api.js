@@ -425,9 +425,9 @@ const createUser = async (userToCreate, token) => {
       'Content-Type': 'application/json',
     },
     data: userToCreate,
-  });
+  }).catch((err) => err.response);
 
-  return response.data;
+  return response;
 };
 
 const updateUser = async (id, update, token) => {
