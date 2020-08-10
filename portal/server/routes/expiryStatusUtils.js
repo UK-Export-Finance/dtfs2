@@ -3,11 +3,16 @@ const ONE_DAY = 86400000; // milliseconds
 
 // get expiry date based on count from creation date
 // TODO change for MIA
-const addExpiryDate = (val, days) => {
-  const expiry = parseInt(val.createdDate, 10) + (days * ONE_DAY);
-  const id = val.deal_id;
+const addExpiryDate = (val, days, isDeal) => {
+  let created = val.createdDate;
+  let id = val.deal_id;
+  if (isDeal) {
+    created = val.details.created;
+    id = val._id; // eslint-disable-line no-underscore-dangle
+  }
+  const expiry = parseInt(created, 10) + (days * ONE_DAY);
   const remainingDays = Math.floor((expiry - Date.now()) / ONE_DAY);
-  // console.log(val.createdDate, expiry, remainingDays);
+  console.log(id, created, expiry, remainingDays);
   return {
     ...val,
     id,
@@ -26,7 +31,8 @@ const getExpiryDates = (facilities, days) => {
   return facilitiesWithExpiryDate;
 };
 
-const getRAGstatus = (facilities, days) => {
+const getRAGstatus = (facilities, days, isDeal) => {
+  console.log(`--------------------------`);
   const trafficLights = {
     negative: 0,
     red: 0,
@@ -49,7 +55,7 @@ const getRAGstatus = (facilities, days) => {
   const facilitiesWithExpiryDate = facilities.map(
     // use anon function to pass in number of days to calculate expiry
     // eslint-disable-next-line func-names
-    (facility) => addExpiryDate(facility, days),
+    (facility) => addExpiryDate(facility, days, isDeal),
   );
 
   facilitiesWithExpiryDate.forEach((item) => {
@@ -67,7 +73,7 @@ const getRAGstatus = (facilities, days) => {
       trafficLights.negative += 1;
     }
   });
-  // console.log(trafficLights);
+  console.log(trafficLights);
   return trafficLights;
 };
 
