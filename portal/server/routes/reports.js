@@ -2,7 +2,7 @@ import express from 'express';
 // import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
-import { getRAGstatus } from './getRAGstatus';
+import { getRAGstatus } from './expiryStatusUtils';
 import CONSTANTS from '../constants';
 import {
   getApiData,
@@ -632,8 +632,8 @@ router.get('/reports/countdown-indicator', async (req, res) => {
       [{ text: '14 to 20' }, { html: `<strong class="govuk-tag govuk-tag--green">${status20Days.green}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/with-conditions" >view</a>` }],
     ],
   };
-  if (status20Days.black > 0) {
-    const row = [{ text: 'OVERDUE' }, { html: `<strong class="govuk-tag govuk-tag--red">${status20Days.black}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/with-conditions" >view</a>` }];
+  if (status20Days.negative > 0) {
+    const row = [{ text: 'OVERDUE' }, { html: `<strong class="govuk-tag govuk-tag--red">${status20Days.negative}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/with-conditions" >view</a>` }];
     manualInclusionsWithConditions.rows.unshift(row);
   }
 
@@ -647,8 +647,8 @@ router.get('/reports/countdown-indicator', async (req, res) => {
       [{ text: '8 to 10' }, { html: `<strong class="govuk-tag govuk-tag--green">${status10Days.green}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/without-conditions" >view</a>` }],
     ],
   };
-  if (status10Days.black > 0) {
-    const row = [{ text: 'OVERDUE' }, { html: `<strong class="govuk-tag govuk-tag--red">${status10Days.black}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/without-conditions" >view</a>` }];
+  if (status10Days.negatives > 0) {
+    const row = [{ text: 'OVERDUE' }, { html: `<strong class="govuk-tag govuk-tag--red">${status10Days.negative}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/without-conditions" >view</a>` }];
     manualInclusionsWithoutConditions.rows.unshift(row);
   }
 
