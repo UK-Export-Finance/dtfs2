@@ -685,15 +685,52 @@ router.get('/reports/mia-to-be-submitted/with-conditions', async (req, res) => {
   const miaWithConditions = applications.transactions.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (with conditions)'));
 
   const transactions = getExpiryDates(miaWithConditions, 28);
-  console.log(`transactions: ${util.inspect(transactions)}`);
+  const count = transactions.length;
 
+  const pages = {
+    totalPages: Math.ceil(count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: count,
+  };
   return res.render('reports/MIA-to-be-submitted-report.njk', {
+    pages,
     transactions,
     primaryNav,
     subNav: 'countdown-indicator',
     user: req.session.user,
   });
 });
+
+router.get('/reports/mia-to-be-submitted/without-conditions', async (req, res) => {
+  const { userToken } = requestParams(req);
+  const submissionFilters = {
+    filterBySubmissionType: 'manualInclusionApplication',
+  };
+
+  const MIAfilters = buildReportFilters(submissionFilters, req.session.user);
+  const applications = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, MIAfilters, userToken),
+    res,
+  );
+  const miaWithConditions = applications.transactions.filter((transaction) => (transaction.deal_status === 'Accepted by UKEF (without conditions)'));
+
+  const transactions = getExpiryDates(miaWithConditions, 14);
+  const count = transactions.length;
+
+  const pages = {
+    totalPages: Math.ceil(count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: count,
+  };
+  return res.render('reports/MIA-to-be-submitted-report.njk', {
+    pages,
+    transactions,
+    primaryNav,
+    subNav: 'countdown-indicator',
+    user: req.session.user,
+  });
+});
+
 
 router.get('/reports/unissued-transactions',
   async (req, res) => res.redirect('/reports/unissued-transactions/0'));
