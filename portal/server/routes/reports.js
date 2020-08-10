@@ -587,28 +587,17 @@ router.get('/reports/countdown-indicator', async (req, res) => {
 
   const filters = buildReportFilters(stageFilters, req.session.user);
   const MIAfilters = buildReportFilters(submissionFilters, req.session.user);
-  console.log(`MIAfilters: ${util.inspect(MIAfilters)}`);
 
   // get all transactions
-  // TODO none pagination?
   const { transactions } = await getApiData(
-    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+    api.transactions(0, PAGESIZE, filters, userToken),
     res,
   );
-  console.log(req.params.page);
-  // console.log(`transactions: ${util.inspect(transactions)}`);
-  /*
-   const applications = await getApiData(
-    api.transactions(req.params.page * PAGESIZE, PAGESIZE, MIAfilters, userToken),
-    res,
-  );
-  */
 
   const applications = await getApiData(
     api.contracts(0, 0, MIAfilters, userToken),
     res,
   );
-  console.log(`applications: ${util.inspect(applications)}`);
 
   // mock up by filtering here on conditional or unissued
   const incompleteFacilities = transactions;
@@ -665,8 +654,6 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     manualInclusionsWithConditions,
     manualInclusionsWithoutConditions,
   };
-  // TODO: move to own route
-  req.session.incompleteFacilities = incompleteFacilities;
 
   return res.render('reports/countdown-indicator.njk', {
     reportData,
@@ -771,7 +758,7 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
     res,
   );
   transactions = getExpiryDates(transactions, 90);
-  console.log(`transactions: ${util.inspect(transactions)}`);
+  // console.log(`transactions: ${util.inspect(transactions)}`);
   const count = transactions.length;
 
   const pages = {
