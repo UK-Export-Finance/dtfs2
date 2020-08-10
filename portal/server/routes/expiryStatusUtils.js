@@ -1,5 +1,6 @@
 const ONE_DAY = 86400000; // milliseconds
 
+
 // get expiry date based on count from creation date
 // TODO change for MIA
 const addExpiryDate = (val, days) => {
@@ -13,6 +14,16 @@ const addExpiryDate = (val, days) => {
     expiry,
     remainingDays,
   };
+};
+
+const getExpiryDates = (facilities, days) => {
+  const facilitiesWithExpiryDate = facilities.map(
+    // use anon function to pass in number of days to calculate expiry
+    // eslint-disable-next-line func-names
+    (facility) => addExpiryDate(facility, days),
+  );
+  facilitiesWithExpiryDate.sort((a, b) => parseFloat(a.remainingDays) - parseFloat(b.remainingDays));
+  return facilitiesWithExpiryDate;
 };
 
 const getRAGstatus = (facilities, days) => {
@@ -62,5 +73,5 @@ const getRAGstatus = (facilities, days) => {
 
 export {
   getRAGstatus,
-  addExpiryDate,
+  getExpiryDates,
 };
