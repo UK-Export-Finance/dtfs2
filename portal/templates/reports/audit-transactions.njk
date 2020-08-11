@@ -46,7 +46,7 @@
       
       </td> </tr>
       {% for transaction in transactions %}
-        <tr data-cy="deal_{{transaction._id}}" class="govuk-table__row">
+        <tr data-cy="deal_{{transaction.deal_id}}" class="govuk-table__row">
 
           {% if user and user.roles.includes("admin")%}
           <td data-cy="owningBank" class="govuk-table__cell govuk-!-font-size-14">
@@ -55,7 +55,7 @@
           {% endif %}
 
           <td data-cy="bankSupplyContractID" class="govuk-table__cell govuk-!-font-size-14">
-            <a href="/transaction/{{ transaction.transaction_id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ transaction.deal_bankSupplyContractID }}</a>
+            <a href="/contract/{{ transaction.deal_id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ transaction.deal_bankSupplyContractID }}</a>
           </td>
 
           <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
@@ -63,19 +63,19 @@
           </td>
 
           <td data-cy="bankFacilityID" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.bankFacilityId | dashIfEmpty }}
+            {{ transaction.bankFacilityId | truncate(30)| dashIfEmpty }}
           </td>
 
           <td data-cy="transactionType" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.transactionType | dashIfEmpty }}
+            {{ transaction.transactionType | capitalize | dashIfEmpty }}
           </td>
 
           <td data-cy="supplierName" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.deal_supplierName }}
+            {{ transaction.deal_supplierName| truncate(20)}}
           </td>
 
           <td data-cy="facilityValue" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.facilityValue }}
+            {{ transaction.facilityValue | dashIfEmpty }}
           </td>
 
           <td data-cy="facilityStage" class="govuk-table__cell govuk-!-font-size-14">
@@ -95,7 +95,11 @@
           </td>
 
           <td data-cy="submittedBy" class="govuk-table__cell govuk-!-font-size-14">
+            {%  if transaction.issuedDate and transaction.issueFacilityDetailsSubmitted %}
             {{ transaction.issuedBy | dashIfEmpty }}
+            {% else %}
+            -
+            {% endif %}
           </td>
 
         </tr>
