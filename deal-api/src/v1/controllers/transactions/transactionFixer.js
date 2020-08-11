@@ -4,6 +4,7 @@ const loanFixer = require('./loanFixer');
 
 const BANKFACILITYID = 'transaction.bankFacilityId';
 const UKEFFACILITYID = 'transaction.ukefFacilityId';
+const TRANSACTION_STAGE = 'transaction.transactionStage';
 const DEAL_CREATED = 'transaction.deal_created';
 const DEAL_ID = '_id';
 const DEAL_STATUS = 'details.status';
@@ -16,7 +17,7 @@ const constructor = (user, filters) => {
   const transactionsQuery = () => {
     const listOfMongoQueryElements = filters.reduce((listSoFar, filter) => {
       const filterField = Object.keys(filter)[0];// only expecting one entry/block
-
+      console.log(filterField, filter[filterField]);
       if (BANKFACILITYID === filterField) {
         const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { uniqueIdentificationNumber: new RegExp(`^${filter[filterField]}`) } } };
         const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { bankReferenceNumber: new RegExp(`^${filter[filterField]}`) } } };
@@ -28,6 +29,19 @@ const constructor = (user, filters) => {
         const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { ukefFacilityID: new RegExp(`^${filter[filterField]}`) } } };
 
         return listSoFar.concat([{ $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] }]);
+      }
+      if (TRANSACTION_STAGE === filterField) {
+        let bondMatchesOnFacilityStage = {};
+        let loanMatchesOnFacilityStage = {};
+        if (filter[filterField] === 'issued_unconditional') {
+          bondMatchesOnFacilityStage = { 'bondTransactions.items': { $elemMatch: { bondStage: 'Issued' } } };
+          loanMatchesOnFacilityStage = { 'loanTransactions.items': { $elemMatch: { facilityStage: 'Unconditional' } } };
+        }
+        if (filter[filterField] === 'unissued_conditional') {
+          bondMatchesOnFacilityStage = { 'bondTransactions.items': { $elemMatch: { bondStage: 'Unissued' } } };
+          loanMatchesOnFacilityStage = { 'loanTransactions.items': { $elemMatch: { facilityStage: 'Conditional' } } };
+        }
+        return listSoFar.concat([{ $or: [bondMatchesOnFacilityStage, loanMatchesOnFacilityStage] }]);
       }
 
       if (DEAL_CREATED === filterField) {
@@ -47,7 +61,6 @@ const constructor = (user, filters) => {
         return listSoFar.concat([dealwithStatus]);
       }
       if (DEAL_SUBMISSION_TYPE === filterField) {
-        console.log('filter by subs types');
         const deal = { 'details.submissionType': filter[filterField] };
 
         return listSoFar.concat([deal]);
@@ -80,7 +93,7 @@ const constructor = (user, filters) => {
     const bonds = bondFix.shouldReturnBonds() ? bondFix.filteredBondsFor(deal) : [];
     // same for loans
     const loans = loanFix.shouldReturnLoans() ? loanFix.filteredLoansFor(deal) : [];
-
+    console.log(bonds);
     return bonds.concat(loans);
   };
 
