@@ -104,7 +104,7 @@ context('Admin user creates a new user', () => {
 
   });
 
-  xit("Manage users screen should pass Lighthouse audit", function () {
+  it("Manage users screen should pass Lighthouse audit", function () {
     // login and go to manage users
     cy.login(ADMIN_LOGIN);
     startNow.header().users().click();
@@ -119,7 +119,7 @@ context('Admin user creates a new user', () => {
     cy.pa11y();
   });
 
-  xit("Add user screen should pass Lighthouse audit", function () {
+  it("Add user screen should pass Lighthouse audit", function () {
     // login and go to add/edit user
     cy.login(ADMIN_LOGIN);
     startNow.header().users().click();
