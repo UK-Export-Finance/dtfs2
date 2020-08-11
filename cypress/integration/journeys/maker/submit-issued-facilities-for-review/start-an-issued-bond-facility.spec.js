@@ -25,7 +25,7 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
       });
   });
 
-  it('Starting to fill in the Issue Bond Facility form should change the Bond status from `Acknowledged by UKEF` to `Incomplete` and the Issue Facility link to `Facility issued`', () => {
+  it('Starting to fill in the Issue Bond Facility form should change the Bond status from `Not started` to `Incomplete` and the Issue Facility link to `Facility issued`', () => {
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('be.disabled');

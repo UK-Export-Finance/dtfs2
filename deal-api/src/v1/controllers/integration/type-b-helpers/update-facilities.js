@@ -6,7 +6,7 @@ const updateBondStatus = (bond, workflowBond) => {
 
   if (shouldUpdateStatus) {
     if (workflowBond.BSS_status[0] === 'Issued acknowledged') {
-      return 'Acknowledged by UKEF';
+      return 'Acknowledged';
     }
 
     if (workflowBond.BSS_status[0] === '""') {
@@ -25,7 +25,7 @@ const updateLoanStatus = (loan, workflowLoan) => {
 
   if (shouldUpdateStatus) {
     if (workflowLoan.EWCS_status[0] === 'Issued acknowledged') {
-      return 'Acknowledged by UKEF';
+      return 'Acknowledged';
     }
 
     if (workflowLoan.EWCS_status[0] === '""') {
