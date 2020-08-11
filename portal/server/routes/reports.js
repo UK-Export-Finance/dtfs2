@@ -696,7 +696,7 @@ router.get('/reports/mia-to-be-submitted/with-conditions', async (req, res) => {
   if (applications.deal) {
     miaWithConditions = applications.deals.filter((deal) => (deal.status === 'Accepted by UKEF (with conditions)'));
     deals = getExpiryDates(miaWithConditions, 28, true);
-    count = applications.count;
+    count = deals.length;
   }
 
   const pages = {
@@ -706,7 +706,7 @@ router.get('/reports/mia-to-be-submitted/with-conditions', async (req, res) => {
   };
   return res.render('reports/MIA-to-be-submitted-report.njk', {
     pages,
-    conditions: '(with conditions)',
+    conditions: 'with',
     deals,
     primaryNav,
     subNav: 'countdown-indicator',
@@ -732,7 +732,7 @@ router.get('/reports/mia-to-be-submitted/without-conditions', async (req, res) =
   if (applications.deals) {
     miaWithoutConditions = applications.deals.filter((deal) => (deal.status === 'Accepted by UKEF (without conditions)'));
     deals = getExpiryDates(miaWithoutConditions, 14, true);
-    count = applications.count;
+    count = deals.length;
   }
 
   const pages = {
@@ -742,7 +742,7 @@ router.get('/reports/mia-to-be-submitted/without-conditions', async (req, res) =
   };
   return res.render('reports/MIA-to-be-submitted-report.njk', {
     pages,
-    conditions: '(without conditions)',
+    conditions: 'without',
     deals,
     primaryNav,
     subNav: 'countdown-indicator',

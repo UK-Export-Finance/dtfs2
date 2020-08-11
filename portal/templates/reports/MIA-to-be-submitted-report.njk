@@ -1,11 +1,11 @@
 {% extends "index.njk" %}
 {% import '_macros/pagination.njk' as pagination %}
 
-{% block pageTitle %}MIA Supply Contracts {{ conditions }}{% endblock %}
+{% block pageTitle %}MIA Supply Contracts ({{ conditions }} conditions){% endblock %}
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">MIA Supply Contracts {{ conditions }}</h1>
+  <h1 class="govuk-heading-l">MIA Supply Contracts ({{ conditions }} conditions</h1>
 
 
   <table class="govuk-table govuk-!-margin-bottom-0">
@@ -64,6 +64,6 @@
 
   </table>
 
-  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/reports/transactions-report') }}
+  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/reports/mia-to-be-submitted/' + conditions + '-conditions') }}
 
 {% endblock %}
