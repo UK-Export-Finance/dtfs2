@@ -1,0 +1,45 @@
+{% macro render(params) %}
+
+  {% set userIsMaker = params.user.roles.includes('maker')%}
+  {% set userIsChecker = params.user.roles.includes('checker')%}
+
+  {% set dealId = params.deal._id %}
+  {% set dealStatus = params.deal.details.status %}
+  {% set dealSubmissionType = params.deal.details.submissionType %}
+  {% set facility = params.facility %}
+  {% set facilityName = params.facilityName %}
+
+  {% set canIssueFacility = userIsMaker and (dealSubmissionType === 'Automatic Inclusion Notice' or dealSubmissionType === 'Manual Inclusion Notice') and (facility.facilityStage === 'Conditional' or facility.bondStage === 'Unissued') and not facility.issueFacilityDetailsSubmitted %}
+
+  {% if dealStatus === "Acknowledged by UKEF" or dealStatus === "Ready for Checker's approval" %}
+
+    {% set showFacilityIssuedLink = (canIssueFacility or facility.issueFacilityDetailsProvided) %}
+
+    {% if showFacilityIssuedLink %}
+      
+      {% if userIsChecker %}
+        <a href="/contract/{{ dealId }}/submission-details#{{ facilityName }}-{{ facility._id }}" class="govuk-link" data-cy="{{ facilityName }}-issue-facility-{{ facility._id }}">Facility issued</a>
+
+        {% else %}
+
+        {% if facility.issueFacilityDetailsSubmitted %}
+          <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/preview" class="govuk-link" data-cy="{{ facilityName }}-issue-facility-{{ facility._id }}">Facility issued</a>
+          {% else %}
+          <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/issue-facility" class="govuk-link" data-cy="{{ facilityName }}-issue-facility-{{ facility._id }}">
+            {% if facility.issueFacilityDetailsStarted %}
+              Facility issued
+            {% else %}
+              Issue facility
+            {% endif %}
+          </a>
+        {% endif %}
+
+      {% endif %}
+
+    {% endif %}
+
+    {% elseif params.editable %} 
+      <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/delete" class="govuk-link" data-cy="{{ facilityName }}-delete-{{ facility._id }}" aria-label="Delete facility">Delete</a>
+  {% endif %}
+
+{% endmacro %}
