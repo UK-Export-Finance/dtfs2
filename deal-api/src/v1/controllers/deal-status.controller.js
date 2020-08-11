@@ -16,6 +16,7 @@ const createApprovalDate = require('./deal-status/create-approval-date');
 const updateFacilityDates = require('./deal-status/update-facility-dates');
 const updateIssuedFacilitiesStatuses = require('./deal-status/update-issued-facilities-statuses');
 const updateSubmittedIssuedFacilities = require('./deal-status/update-submitted-issued-facilities');
+const CONSTANTS = require('../../constants');
 
 exports.findOne = (req, res) => {
   findOneDeal(req.params.id, (deal) => {
@@ -105,8 +106,8 @@ exports.update = (req, res) => {
       }
     }
     // check for approvals back from UKEF and date stamp it for countdown indicator
-    if (toStatus === 'Accepted by UKEF (without conditions)'
-      || toStatus === 'Accepted by UKEF (with conditions)') {
+    if (toStatus === CONSTANTS.DEAL.STATUS.APPROVED
+      || toStatus === CONSTANTS.DEAL.STATUS.APPROVED_WITH_CONDITIONS) {
       dealAfterAllUpdates = await createApprovalDate(collection, req.params.id, user);
     }
 

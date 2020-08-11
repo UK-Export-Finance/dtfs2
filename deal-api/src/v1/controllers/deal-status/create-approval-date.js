@@ -5,7 +5,6 @@ const createApprovalDate = async (collection, _id, user) => {
   const approvalDate = {
     details: {
       approvalDate: now(),
-      checker: user,
     },
   };
 
