@@ -15,6 +15,7 @@ const findMandatoryCriteria = async (callback) => {
     callback(result);
   });
 };
+exports.findMandatoryCriteria = findMandatoryCriteria;
 
 const findOneMandatoryCriteria = async (id, callback) => {
   const collection = await db.getCollection('mandatoryCriteria');
