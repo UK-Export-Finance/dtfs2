@@ -1,9 +1,9 @@
 const { contract, contractDelete, defaults } = require('../../pages');
-const { errorSummary, successMessage } = require('../../partials');
+const { successMessage } = require('../../partials');
 const relative = require('../../relativeURL');
-
 const mockUsers = require('../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('./dashboard/twentyOneDeals');
