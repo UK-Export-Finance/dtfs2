@@ -10,9 +10,7 @@ const { whitespaceCollapse } = require('../helpers');
 const validationErrors = [];
 
 module.exports = () => {
-  const deal = {
-    ...typeADeal,
-  };
+  const deal = JSON.parse(JSON.stringify(typeADeal));
 
   const builder = {
     source: (value = '') => {
