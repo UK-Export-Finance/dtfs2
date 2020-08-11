@@ -41,8 +41,8 @@ const generateTypeA = async (deal, fromStatus) => {
     .Bank_deal_id(deal.details.bankSupplyContractID)
 
     .Application_route(deal.eligibility)
-    .Application_owner(deal.details.maker.username)
-    .Application_owner_email('maker1@ukexportfinance.gov.uk') // temp email until user emails have been added
+    .Application_owner(`${deal.details.maker.firstname} ${deal.details.maker.username}`)
+    .Application_owner_email(deal.details.maker.bank.emails[0]) // banks email until user emails have been added
     .Application_bank(deal.details.maker.bank.name)
     .Application_bank_co_hse_reg_number('//TODO')
 
@@ -184,10 +184,7 @@ const generateTypeA = async (deal, fromStatus) => {
         const ewcs = builder.createEWCS()
         //    .UKEF_EWCS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
           .EWCS_portal_facility_id(loan._id) // eslint-disable-line no-underscore-dangle
-          .EWCS_bank_id(
-            loan['facilityStageUnconditional-bankReferenceNumber']
-            || loan['facilityStageUnconditional-bankReferenceNumber'],
-          )
+          .EWCS_bank_id(loan.bankReferenceNumber)
           .EWCS_stage(k2Map.FACILITIES.FACILITIES_STAGE[loan.facilityStage])
           .EWCS_value(convertCurrencyFormat(loan.facilityValue))
           .EWCS_currency_code(
