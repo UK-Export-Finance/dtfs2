@@ -4,7 +4,7 @@ const relative = require('../../../relativeURL');
 const dealAcknowledgedByUKEFWithNotStartedFacilityStatuses = require('./dealAcknowledgedByUKEFWithNotStartedFacilityStatuses');
 const mockUsers = require('../../../../fixtures/mockUsers');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 
 context('A maker can issue and submit an issued bond facility with a deal in `Acknowledged by UKEF` status', () => {
   let deal;

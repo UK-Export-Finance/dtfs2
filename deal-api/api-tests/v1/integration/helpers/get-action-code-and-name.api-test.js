@@ -1,14 +1,14 @@
 const getActionCodeAndName = require('../../../../src/v1/controllers/integration/helpers/get-action-code-and-name');
 
 describe('creates action code dependant on submission type and status', () => {
-  it('creates correct action codes for AIN', () => {
+  it('creates correct action codes for MIA', () => {
     /*
     AIN: 'Automatic Inclusion Notice',
     MIA: 'Manual Inclusion Application',
     */
     const dealFragment = {
       details: {
-        submissionType: 'Automatic Inclusion Notice',
+        submissionType: 'Manual Inclusion Application',
       },
     };
 
@@ -38,10 +38,10 @@ describe('creates action code dependant on submission type and status', () => {
     });
   });
 
-  it('creates correct action codes for MIA', () => {
+  it('creates correct action codes for AIN', () => {
     const dealFragment = {
       details: {
-        submissionType: 'Manual Inclusion Application',
+        submissionType: 'Automatic Inclusion Notice',
       },
     };
 
