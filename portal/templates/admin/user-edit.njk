@@ -15,6 +15,12 @@
 
 {% block content %}
 
+<script type="text/javascript">
+  function onChangeRadioButton(element, shouldShow) {
+    window.dtfs.changeScreenVisibilityOfElement(element, shouldShow);
+  }
+</script>
+
   <h1 class="govuk-heading-l">
     {% if _id %}
       Edit user {{ displayedUser.username }}
@@ -96,35 +102,76 @@
         value: displayedUser.username
       }) }}
 
-       {# {% include "../_partials/password-create.njk" %} #}
-       <div class="govuk-form-group">
-           {{ govukInput({
-             attributes: {"data-cy": "password"},
-             label: {
-               text: "New password"
-             },
-             formGroup: {
-               classes: "govuk-!-width-one-third govuk-!-margin-bottom-1"
-             },
-             id: "password",
-             name: "password",
-             type: "password",
-             errorMessage: validationErrors.errorList.password
-           }) }}
 
-           {{ govukInput({
-             attributes: {"data-cy": "confirm-password"},
-             label: {
-               text: "Confirm password"
-             },
-             formGroup: {
-               classes: "govuk-!-width-one-third govuk-!-margin-bottom-1"
-             },
-             id: "passwordConfirm",
-             name: "passwordConfirm",
-             type: "password"
-           }) }}
-       </div>
+      {{
+        govukRadios({
+          fieldset: {
+            legend: { text: "Auto-create a valid password?" }
+          },
+          idPrefix: "autoCreatePassword-",
+          name: "autoCreatePassword",
+          classes: "govuk-radios--inline",
+          items: [
+            {
+              value: "true",
+              text: "Yes",
+              attributes: {
+                "data-cy": "autoCreatePassword-true",
+                "onClick": "onChangeRadioButton('manuallyCreatePassword', false)"
+              },
+              checked: displayedUser.autoCreatePassword !== 'true'
+            },
+            {
+              value: "false",
+              text: "No",
+              attributes: {
+                "data-cy": "autoCreatePassword-false",
+                "onClick": "onChangeRadioButton('manuallyCreatePassword', true)"
+              },
+              checked: displayedUser.autoCreatePassword === 'false'
+            }
+          ]
+        })
+      }}
+
+      {% if displayedUser.autoCreatePassword === 'true' %}
+        {% set renderByDefault='false' %}
+      {% else %}
+        {% set renderByDefault='true' %}
+      {% endif %}
+      <div id="manuallyCreatePassword" class="{% if renderByDefault === 'false' %}govuk-visually-hidden{% endif %}">
+        {# {% include "../_partials/password-create.njk" %} #}
+        <div class="govuk-form-group">
+            {{ govukInput({
+              attributes: {"data-cy": "password"},
+              label: {
+                text: "New password"
+              },
+              formGroup: {
+                classes: "govuk-!-width-one-third govuk-!-margin-bottom-1"
+              },
+              id: "password",
+              name: "password",
+              type: "password",
+              errorMessage: validationErrors.errorList.password
+            }) }}
+
+            {{ govukInput({
+              attributes: {"data-cy": "confirm-password"},
+              label: {
+                text: "Confirm password"
+              },
+              formGroup: {
+                classes: "govuk-!-width-one-third govuk-!-margin-bottom-1"
+              },
+              id: "passwordConfirm",
+              name: "passwordConfirm",
+              type: "password"
+            }) }}
+        </div>
+
+      </div>
+
     {% endif %}
 
 

@@ -35,6 +35,7 @@ context('Admin user updates an existing user', () => {
       createUser.role(role).click();
     }
     createUser.username().type(userToUpdate.username);
+    createUser.manualPassword().click();
     createUser.password().type(userToUpdate.password);
     createUser.confirmPassword().type(userToUpdate.password);
     createUser.firstname().type(userToUpdate.firstname);

@@ -35,6 +35,7 @@ context('Admin user creates a new user; the new user updates their password.', (
       createUser.role(role).click();
     }
     createUser.username().type(userToCreate.username);
+    createUser.manualPassword().click();
     createUser.password().type(userToCreate.password);
     createUser.confirmPassword().type(userToCreate.password);
     createUser.firstname().type(userToCreate.firstname);
