@@ -17,7 +17,12 @@ const abandonedDealEmails = async (baseEmailVariables, emailAddresses) => {
     ...baseEmailVariables,
   }
 
-  await sendEmailsToOwningBanks(EMAIL_TEMPLATE_ID, baseEmailVariables, emailAddresses);
+  if (!emailVariables.supplierName) {
+    // business requirement to display something to the user.
+    emailVariables.supplierName = 'null';
+  }
+
+  await sendEmailsToOwningBanks(EMAIL_TEMPLATE_ID, emailVariables, emailAddresses);
 };
 
 const statusUpdateEmails = async (baseEmailVariables, deal, emailAddresses) => {
