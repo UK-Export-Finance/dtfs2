@@ -15,7 +15,7 @@ const abandonedDealEmails = async (baseEmailVariables, emailAddresses) => {
 
   const emailVariables = {
     ...baseEmailVariables,
-  }
+  };
 
   if (!emailVariables.supplierName) {
     // business requirement to display something to the user.
