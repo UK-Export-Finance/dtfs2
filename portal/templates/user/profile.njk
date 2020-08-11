@@ -7,11 +7,11 @@
   <h1 class="govuk-heading-l">Logged in as<br/>{{ user.username }}</h1>
 
   <p class="govuk-body">
-    <a class="govuk-link" href="/user/{{ _id }}/change-password">Change password</a>
+    <a data-cy="changePassword" class="govuk-link" href="/user/{{ _id }}/change-password">Change password</a>
   </p>
 
   <h2 class="govuk-heading-m">Account information</h2>
-  
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-quarter">
       <p class="govuk-body">First name:</p>
@@ -35,7 +35,7 @@
       <p class="govuk-body">Email:</p>
     </div>
     <div class="govuk-grid-column-one-quarter">
-       <p class="govuk-body">{{ user.email }}</p>
+       <p class="govuk-body">{{ user.username }}</p>
     </div>
   </div>
 
@@ -69,5 +69,5 @@
        <p class="govuk-body">{{ user.lastLogin | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) }}</p>
     </div>
   </div>
-  
+
 {% endblock %}

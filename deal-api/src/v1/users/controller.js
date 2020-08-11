@@ -5,6 +5,7 @@ const sendEmail = require('../email');
 const businessRules = require('../../config/businessRules');
 const { BLOCKED, ACTIVE } = require('../../constants/user').STATUS;
 const { sanitizeUser } = require('./sanitizeUserData');
+const utils = require('../../crypto/utils');
 
 const sendBlockedEmail = async (emailAddress) => {
   const EMAIL_TEMPLATE_ID = '82506983-cb85-4f33-b962-922b850be7ac';
@@ -91,26 +92,37 @@ exports.create = async (user, callback) => {
   callback(null, createdUser);
 };
 
-exports.update = async (_id, user, callback) => {
+exports.update = async (_id, update, callback) => {
+  const userUpdate = { ...update };
   const collection = await db.getCollection('users');
 
   collection.findOne({ _id: new ObjectID(_id) }, async (err, existingUser) => {
     // --- this section could (/should?) have been done as a separate endpoints for the actions
     //  of blocking+unblocking.. we've done that elsewhere... but seemed overkill here
-    if (existingUser['user-status'] !== BLOCKED && user['user-status'] === BLOCKED) {
+    if (existingUser['user-status'] !== BLOCKED && userUpdate['user-status'] === BLOCKED) {
       // the user is being blocked..
       await sendBlockedEmail(existingUser.username);
     }
 
-    if (existingUser['user-status'] === BLOCKED && user['user-status'] === ACTIVE) {
+    if (existingUser['user-status'] === BLOCKED && userUpdate['user-status'] === ACTIVE) {
       // the user is being re-activated..
       await sendUnblockedEmail(existingUser.username);
     }
     //---
 
-    await collection.updateOne({ _id: { $eq: new ObjectID(_id) } }, { $set: user }, {});
+    if (userUpdate.password) {
+      const { password } = userUpdate;
+      delete userUpdate.password;
+      delete userUpdate.passwordConfirm;
 
-    callback(null, user);
+      const { salt, hash } = utils.genPassword(password);
+      userUpdate.salt = salt;
+      userUpdate.hash = hash;
+    }
+
+    await collection.updateOne({ _id: { $eq: new ObjectID(_id) } }, { $set: userUpdate }, {});
+
+    callback(null, userUpdate);
   });
 };
 

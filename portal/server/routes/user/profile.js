@@ -3,6 +3,8 @@ import api from '../../api';
 import {
   getApiData,
   requestParams,
+  errorHref,
+  generateErrorSummary,
 } from '../../helpers';
 
 const router = express.Router();
@@ -31,6 +33,29 @@ router.get('/:_id/change-password', async (req, res) => {
     {
       _id,
       user: req.session.user,
+    });
+});
+
+
+router.post('/:_id/change-password', async (req, res) => {
+  const { _id } = requestParams(req);
+
+  const { status, data } = await api.updateUser(_id, req.body, req.session.userToken);
+
+  if (status === 200) {
+    return res.redirect(`/user/${_id}`);
+  }
+
+  const formattedValidationErrors = generateErrorSummary(
+    data.errors,
+    errorHref,
+  );
+
+  return res.render('user/change-password.njk',
+    {
+      _id,
+      user: req.session.user,
+      validationErrors: formattedValidationErrors,
     });
 });
 
