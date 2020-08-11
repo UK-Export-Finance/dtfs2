@@ -47,6 +47,7 @@ context('Admin user creates a new user', () => {
       createUser.role(role).click();
     }
     createUser.username().type(validUser.username);
+    createUser.manualPassword().click();
     createUser.password().type(validUser.password);
     createUser.confirmPassword().type(validUser.password);
     createUser.firstname().type(validUser.firstname);
@@ -88,6 +89,7 @@ context('Admin user creates a new user', () => {
       createUser.role(role).click();
     }
     createUser.username().type(userWithInvalidPassword.username);
+    createUser.manualPassword().click();
     createUser.password().type(userWithInvalidPassword.password);
     createUser.confirmPassword().type(userWithInvalidPassword.password);
     createUser.firstname().type(userWithInvalidPassword.firstname);

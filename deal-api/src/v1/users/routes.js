@@ -8,6 +8,19 @@ const {
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
 
+const goodChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-=_+[]{};\\:"|,./<>?';
+const charAtRandom = () => goodChars[Math.floor(Math.random() * goodChars.length)];
+
+const generatePassword = () => {
+  let newPassword = '';
+
+  while (!newPassword || applyCreateRules({ password: newPassword }).length > 0) {
+    newPassword = `${newPassword}${charAtRandom()}`;
+  }
+
+  return newPassword;
+};
+
 module.exports.list = (req, res, next) => {
   list((err, users) => {
     if (err) {
@@ -38,7 +51,14 @@ const combineErrors = (listOfErrors) => listOfErrors.reduce((obj, error) => {
 }, {});
 
 module.exports.create = (req, res, next) => {
-  const errors = applyCreateRules(req.body);
+  const userToCreate = req.body;
+
+  if (userToCreate.autoCreatePassword === 'true') {
+    userToCreate.password = generatePassword();
+    userToCreate.passwordConfirm = userToCreate.password;
+  }
+
+  const errors = applyCreateRules(userToCreate);
   if (errors.length) {
     return res.status(400).json({
       success: false,
@@ -48,13 +68,13 @@ module.exports.create = (req, res, next) => {
       },
     });
   }
-  const { password } = req.body;
+  const { password } = userToCreate;
   const saltHash = utils.genPassword(password);
 
   const { salt, hash } = saltHash;
 
   const newUser = {
-    ...req.body,
+    ...userToCreate,
     salt,
     hash,
   };

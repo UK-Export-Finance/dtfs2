@@ -27,7 +27,7 @@ const sendUnblockedEmail = async (emailAddress) => {
   );
 };
 
-const sendNewAccountEmail = async (user) => {
+const sendNewAccountEmail = async (user, password) => {
   const EMAIL_TEMPLATE_ID = '354031c8-8ca5-4ac7-9356-00613faf793c';
   const emailAddress = user.username;
 
@@ -38,6 +38,7 @@ const sendNewAccountEmail = async (user) => {
     bank: (user.bank && user.bank.name) ? user.bank.name : '',
     roles: user.roles.join(','),
     status: user['user-status'],
+    password,
   };
 
   await sendEmail(
@@ -73,6 +74,7 @@ exports.create = async (user, callback) => {
     ...user,
   };
 
+  const { password } = insert;
   // tidy fields that shouldn't be here. this might not be the best place.
   delete insert.password;
   delete insert.email;
@@ -86,7 +88,7 @@ exports.create = async (user, callback) => {
   // nasty hack, but... right now we have a load of test users with
   // non-email-address usernames and no time to fix that neatly.. so..
   if (createdUser.username && createdUser.username.includes('@')) {
-    await sendNewAccountEmail(createdUser);
+    await sendNewAccountEmail(createdUser, password);
   }
 
   callback(null, createdUser);
