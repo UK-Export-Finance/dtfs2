@@ -625,7 +625,7 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     head: [{ text: 'Days remaining' }, { text: 'Supply Contracts' }, { text: '' }],
     rows: [
       [{ text: '0 to 6' }, { html: `<strong class="govuk-tag govuk-tag--red">${status20Days.red}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/with-conditions" >view</a>` }],
-      [{ text: '7 to 13' }, { html: `<strong class="govuk-tag govuk-tag--orange">${status20Days.orange}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/with-conditionss" >view</a>` }],
+      [{ text: '7 to 13' }, { html: `<strong class="govuk-tag govuk-tag--orange">${status20Days.orange}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/with-conditions" >view</a>` }],
       [{ text: '14 to 20' }, { html: `<strong class="govuk-tag govuk-tag--green">${status20Days.green}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/with-conditions" >view</a>` }],
     ],
   };
@@ -646,7 +646,7 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     head: [{ text: 'Days remaining' }, { text: 'Supply Contracts' }, { text: '' }],
     rows: [
       [{ text: '0 to 5' }, { html: `<strong class="govuk-tag govuk-tag--red">${status10Days.red}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/without-conditions" >view</a>` }],
-      [{ text: '6 to 7' }, { html: `<strong class="govuk-tag govuk-tag--orange">${status10Days.orange}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/without-conditionss" >view</a>` }],
+      [{ text: '6 to 7' }, { html: `<strong class="govuk-tag govuk-tag--orange">${status10Days.orange}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/without-conditions" >view</a>` }],
       [{ text: '8 to 10' }, { html: `<strong class="govuk-tag govuk-tag--green">${status10Days.green}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/without-conditions" >view</a>` }],
     ],
   };
@@ -756,10 +756,9 @@ router.get('/reports/unissued-transactions',
 
 router.get('/reports/unissued-transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-  // only mocking; not trying to plumb data model
-  //  should really be sending filter/order-by queries to deal-api
+
   const stageFilters = { // TODO use CONSTANTS lowercase string
-    // facilityStage: 'conditional',
+    facilityStage: 'conditional',
     filterByStatus: 'submissionAcknowledged',
   };
   const filters = buildReportFilters(stageFilters, req.session.user);
@@ -768,8 +767,8 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-  transactions = getExpiryDates(transactions, 90);
-  // console.log(`transactions: ${util.inspect(transactions)}`);
+  transactions = getExpiryDates(transactions, 90, false);
+
   const count = transactions.length;
 
   const pages = {
@@ -781,7 +780,6 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
   return res.render('reports/unissued-transactions-report.njk', {
     pages,
     transactions,
-    // banks,
     primaryNav,
     subNav: 'unissued-transactions-report',
     user: req.session.user,
