@@ -55,11 +55,9 @@ const stripTransaction = (transaction, allowedFields) => {
   return stripped;
 };
 
-const getCurrentMandatoryCriteria = () => {
-  return new Promise( (resolve, reject) => {
-    findMandatoryCriteria( resolve );
-  });
-};
+const getCurrentMandatoryCriteria = () => new Promise((resolve) => {
+  findMandatoryCriteria(resolve);
+});
 
 exports.clone = async (req, res) => {
   await findOneDeal(req.params.id, async (existingDeal) => {
