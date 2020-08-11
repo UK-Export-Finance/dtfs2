@@ -57,7 +57,7 @@ context('Admin user creates a new user; the new user updates their password.', (
     // expect failure
     cy.url().should('match', /change-password/);
     changePassword.passwordError().invoke('text').then((text) => {
-      expect(text.trim()).to.contain('Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character.');
+      expect(text.trim()).to.contain('Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.');
     });
 
     // try to change to a legit password
@@ -71,6 +71,19 @@ context('Admin user creates a new user; the new user updates their password.', (
       password: 'P4ssPl£ase'
     });
     cy.url().should('eq', relative('/start-now'));
+
+    // prove that we cant re-use an old password
+    startNow.header().profile().click();
+    userProfile.changePassword().click();
+    changePassword.password().type(userToCreate.password);
+    changePassword.confirmPassword().type(userToCreate.password);
+    changePassword.submit().click();
+
+    // expect failure
+    cy.url().should('match', /change-password/);
+    changePassword.passwordError().invoke('text').then((text) => {
+      expect(text.trim()).to.contain('Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.');
+    });
 
   });
 });

@@ -1,5 +1,5 @@
-module.exports = (user) => {
-  if (user && user.password && user.password.length < 8) {
+module.exports = (user, change) => {
+  if (change && change.password && change.password.length < 8) {
     return [{
       password: {
         order: '1',

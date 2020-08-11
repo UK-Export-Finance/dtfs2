@@ -30,7 +30,7 @@ const combineErrors = (listOfErrors) => listOfErrors.reduce((obj, error) => {
   if (field === 'password') {
     // we have all the details but no sensible way to convey a list..
     // quickest hack to get through review: one error message to rule them all..
-    response[field] = { text: 'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character.' };
+    response[field] = { text: 'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.' };
   } else {
     response[field] = value;
   }
@@ -80,25 +80,33 @@ module.exports.findById = (req, res, next) => {
 };
 
 module.exports.updateById = (req, res, next) => {
-  const errors = applyUpdateRules(req.body);
+  findOne(req.params._id, (err, user) => { // eslint-disable-line no-underscore-dangle
+    if (err) {
+      next(err);
+    } else if (user) {
+      const errors = applyUpdateRules(user, req.body);
 
-  if (errors.length) {
-    res.status(400).json({
-      success: false,
-      errors: {
-        count: errors.length,
-        errorList: combineErrors(errors),
-      },
-    });
-  } else {
-    update(req.params._id, req.body, (err, user) => { // eslint-disable-line no-underscore-dangle
-      if (err) {
-        next(err);
+      if (errors.length) {
+        res.status(400).json({
+          success: false,
+          errors: {
+            count: errors.length,
+            errorList: combineErrors(errors),
+          },
+        });
       } else {
-        res.status(200).json(sanitizeUser(user));
+        update(req.params._id, req.body, (updateErr, updatedUser) => { // eslint-disable-line no-underscore-dangle
+          if (updateErr) {
+            next(updateErr);
+          } else {
+            res.status(200).json(sanitizeUser(updatedUser));
+          }
+        });
       }
-    });
-  }
+    } else {
+      res.status(200).json({}); // TODO - this should 404- rethink tests?
+    }
+  });
 };
 
 module.exports.remove = (req, res, next) => {

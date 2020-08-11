@@ -10,7 +10,7 @@ const aMaker = users.find(user=>user.username==='MAKER');
 const aChecker = users.find(user=>user.username==='CHECKER');
 const aMakerChecker = users.find(user=>user.username==='MAKENCHECK');
 
-const PASSWORD_ERROR = {text:'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character.'};
+const PASSWORD_ERROR = {text:'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.'};
 
 describe('a user', () => {
 

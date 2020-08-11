@@ -99,7 +99,7 @@ context('Admin user creates a new user', () => {
     cy.url().should('eq', relative('/admin/users/create'));
 
     createUser.passwordError().invoke('text').then((text) => {
-      expect(text.trim()).to.contain('Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character.');
+      expect(text.trim()).to.contain('Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.');
     });
 
   });
