@@ -2,6 +2,7 @@ const { isSuperUser } = require('../../users/checks');
 const bondFixer = require('./bondFixer');
 const loanFixer = require('./loanFixer');
 
+const BANKSUPPLYCONTRACTID = 'details.bankSupplyContractID';
 const BANKFACILITYID = 'transaction.bankFacilityId';
 const UKEFFACILITYID = 'transaction.ukefFacilityId';
 const TRANSACTION_STAGE = 'transaction.transactionStage';
@@ -9,6 +10,8 @@ const DEAL_CREATED = 'transaction.deal_created';
 const DEAL_ID = '_id';
 const DEAL_STATUS = 'details.status';
 const DEAL_SUBMISSION_TYPE = 'details.submissionType';
+const SUBMISSION_SUPPLIER_NAME = 'submissionDetails.supplier-name';
+
 
 const constructor = (user, filters) => {
   const bondFix = bondFixer(filters);
@@ -30,6 +33,7 @@ const constructor = (user, filters) => {
 
         return listSoFar.concat([{ $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] }]);
       }
+
       if (TRANSACTION_STAGE === filterField) {
         let bondMatchesOnFacilityStage = {};
         let loanMatchesOnFacilityStage = {};
@@ -59,6 +63,16 @@ const constructor = (user, filters) => {
         const dealwithStatus = { 'details.status': filter[filterField] };
 
         return listSoFar.concat([dealwithStatus]);
+      }
+      if (BANKSUPPLYCONTRACTID === filterField) {
+        const dealwithSupplyID = { 'details.bankSupplyContractID': filter[filterField] };
+
+        return listSoFar.concat([dealwithSupplyID]);
+      }
+      if (SUBMISSION_SUPPLIER_NAME === filterField) {
+        const dealwithSupplyID = { 'submissionDetails.supplier-name': filter[filterField] };
+
+        return listSoFar.concat([dealwithSupplyID]);
       }
       if (DEAL_SUBMISSION_TYPE === filterField) {
         const deal = { 'details.submissionType': filter[filterField] };
@@ -93,7 +107,7 @@ const constructor = (user, filters) => {
     const bonds = bondFix.shouldReturnBonds() ? bondFix.filteredBondsFor(deal) : [];
     // same for loans
     const loans = loanFix.shouldReturnLoans() ? loanFix.filteredLoansFor(deal) : [];
-    console.log(bonds);
+
     return bonds.concat(loans);
   };
 
