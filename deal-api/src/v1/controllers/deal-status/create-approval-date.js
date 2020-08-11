@@ -1,7 +1,7 @@
 const $ = require('mongo-dot-notation');
 const now = require('../../../now');
 
-const createApprovalDate = async (collection, _id, user) => {
+const createApprovalDate = async (collection, _id) => {
   const approvalDate = {
     details: {
       approvalDate: now(),

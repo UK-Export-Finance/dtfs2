@@ -108,7 +108,7 @@ exports.update = (req, res) => {
     // check for approvals back from UKEF and date stamp it for countdown indicator
     if (toStatus === CONSTANTS.DEAL.STATUS.APPROVED
       || toStatus === CONSTANTS.DEAL.STATUS.APPROVED_WITH_CONDITIONS) {
-      dealAfterAllUpdates = await createApprovalDate(collection, req.params.id, user);
+      dealAfterAllUpdates = await createApprovalDate(collection, req.params.id);
     }
 
     await sendStatusUpdateEmails(dealAfterAllUpdates, fromStatus, req.user);
