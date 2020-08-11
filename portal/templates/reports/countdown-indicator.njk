@@ -57,6 +57,9 @@
     <div class="govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-padding-right-2">
       <div class="box govuk-!-padding-left-4 govuk-!-padding-right-4 govuk-!-padding-top-4">
         {{ chartPanel.render(reportData.manualInclusionsWithConditions) }}
+        {% if status20Days.message %}
+        <p class="govuk-body">{{status20Days.message}}</p>
+        {% else %}
         <div id = "pie2" style = "width: 200px; height: 240px; margin: 0 auto; align:left;">
         </div>
 
@@ -91,6 +94,7 @@
           }
           google.charts.setOnLoadCallback(drawChart);
         </script>
+        {% endif %}
         <br/>
         <p class="govuk-body">You have 20 business days to approve.</p>
       </div>
@@ -99,6 +103,10 @@
     <div class="govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-padding-right-2">
       <div class="box govuk-!-padding-left-4 govuk-!-padding-right-4 govuk-!-padding-top-4">
         {{ chartPanel.render(reportData.manualInclusionsWithoutConditions) }}
+        {% if status10Days.message %}
+        <p class="govuk-body">{{status10Days.message}}</p>
+        {% else %}
+
          <div id = "pie3" style = "width: 200px; height: 240px; margin: 0 auto; align:left;">
         </div>
 
@@ -133,6 +141,7 @@
           }
           google.charts.setOnLoadCallback(drawChart);
         </script>
+        {% endif %}
         <br/>
         <p class="govuk-body">You have 10 business days to approve.</p>
       </div>
