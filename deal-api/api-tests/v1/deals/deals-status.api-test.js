@@ -648,7 +648,7 @@ describe('/v1/deals/:id/status', () => {
           );
 
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
-            expect(bond.status).toEqual('Maker’s input required');
+            expect(bond.status).toEqual('Maker\'s input required');
           });
         });
       });
@@ -665,7 +665,7 @@ describe('/v1/deals/:id/status', () => {
           );
 
           issuedLoansThatShouldBeUpdated.forEach((loan) => {
-            expect(loan.status).toEqual('Maker’s input required');
+            expect(loan.status).toEqual('Maker\'s input required');
           });
         });
       });
