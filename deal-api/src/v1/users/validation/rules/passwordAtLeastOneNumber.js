@@ -1,7 +1,7 @@
 const regexAtLeastOneNumber = /[\d]+/;
 
-module.exports = (user) => {
-  if (user && user.password && !user.password.match(regexAtLeastOneNumber)) {
+module.exports = (user, change) => {
+  if (change && change.password && !change.password.match(regexAtLeastOneNumber)) {
     return [{
       password: {
         order: '3',

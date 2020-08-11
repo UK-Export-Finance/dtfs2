@@ -1,7 +1,7 @@
 const regexAtLeastOneSpecialCharacter = /[^a-zA-Z0-9]+/;
 
-module.exports = (user) => {
-  if (user && user.password && !user.password.match(regexAtLeastOneSpecialCharacter)) {
+module.exports = (user, change) => {
+  if (change && change.password && !change.password.match(regexAtLeastOneSpecialCharacter)) {
     return [{
       password: {
         order: '4',

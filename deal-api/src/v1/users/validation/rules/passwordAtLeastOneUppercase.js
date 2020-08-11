@@ -1,7 +1,7 @@
 const regexAtLeastOneUppercase = /[A-Z]+/;
 
-module.exports = (user) => {
-  if (user && user.password && !user.password.match(regexAtLeastOneUppercase)) {
+module.exports = (user, change) => {
+  if (change && change.password && !change.password.match(regexAtLeastOneUppercase)) {
     return [{
       password: {
         order: '5',
