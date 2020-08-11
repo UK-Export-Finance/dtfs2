@@ -63,7 +63,7 @@
           </td>
 
           <td data-cy="bankFacilityID" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.bankFacilityId | truncate(30)| dashIfEmpty }}
+            {{ transaction.bankFacilityId | dashIfEmpty }}
           </td>
 
           <td data-cy="transactionType" class="govuk-table__cell govuk-!-font-size-14">
@@ -71,7 +71,7 @@
           </td>
 
           <td data-cy="supplierName" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.deal_supplierName| truncate(20)}}
+            {{ transaction.deal_supplierName }}
           </td>
 
           <td data-cy="facilityValue" class="govuk-table__cell govuk-!-font-size-14">
