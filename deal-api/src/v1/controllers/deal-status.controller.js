@@ -11,6 +11,7 @@ const userCanSubmitDeal = require('./deal-status/user-can-submit-deal');
 const updateStatus = require('./deal-status/update-status');
 const createSubmissionDate = require('./deal-status/create-submission-date');
 const sendStatusUpdateEmails = require('./deal-status/send-status-update-emails');
+const createApprovalDate = require('./deal-status/create-approval-date');
 
 const updateFacilityDates = require('./deal-status/update-facility-dates');
 const updateIssuedFacilitiesStatuses = require('./deal-status/update-issued-facilities-statuses');
@@ -102,6 +103,11 @@ exports.update = (req, res) => {
         await updateStatus(collection, req.params.id, toStatus, fromStatus);
         return res.status(200).send(typeA);
       }
+    }
+    // check for approvals back from UKEF and date stamp it for countdown indicator
+    if (toStatus === 'Accepted by UKEF (without conditions)'
+      || toStatus === 'Accepted by UKEF (with conditions)') {
+      dealAfterAllUpdates = await createApprovalDate(collection, req.params.id, user);
     }
 
     await sendStatusUpdateEmails(dealAfterAllUpdates, fromStatus, req.user);
