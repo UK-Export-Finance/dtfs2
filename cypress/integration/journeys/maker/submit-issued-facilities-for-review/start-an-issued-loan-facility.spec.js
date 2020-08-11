@@ -25,7 +25,7 @@ context('A maker is informed of a loan\'s status before submitting an issued loa
       });
   });
 
-  it('Starting to fill in the Issue Loan Facility form should change the Loan status from `Acknowledged by UKEF` to `Incomplete` and the Issue Facility link to `Facility issued`', () => {
+  it('Starting to fill in the Issue Loan Facility form should change the Loan status from `Not started` to `Incomplete` and the Issue Facility link to `Facility issued`', () => {
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('be.disabled');
