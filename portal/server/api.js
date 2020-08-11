@@ -441,9 +441,9 @@ const updateUser = async (id, update, token) => {
       'Content-Type': 'application/json',
     },
     data: update,
-  });
+  }).catch((err) => err.response);
 
-  return response.data;
+  return response;
 };
 
 // TODO middleware uses getDeal; once everything uses middleware get rid of the 'contract' method..

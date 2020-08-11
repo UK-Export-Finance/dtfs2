@@ -45,13 +45,13 @@
               </li>
 
               <li class="govuk-header__navigation-item govuk-header__navigation-item">
-                <a class="govuk-header__link" href="/user/{{ user._id | urlencode }}">
+                <a data-cy="profile" class="govuk-header__link" href="/user/{{ user._id | urlencode }}">
                   Profile
                 </a>
               </li>
 
               <li class="govuk-header__navigation-item">
-                <a class="govuk-header__link" href="/logout">
+                <a data-cy="logOut" class="govuk-header__link" href="/logout">
                   Log out
                 </a>
               </li>
@@ -70,4 +70,3 @@
       </div>
   </div>
 </header>
-

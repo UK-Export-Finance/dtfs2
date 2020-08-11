@@ -6,7 +6,7 @@ const {
 } = require('./controller');
 
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
-const { applyCreateRules } = require('./validation');
+const { applyCreateRules, applyUpdateRules } = require('./validation');
 
 module.exports.list = (req, res, next) => {
   list((err, users) => {
@@ -80,13 +80,25 @@ module.exports.findById = (req, res, next) => {
 };
 
 module.exports.updateById = (req, res, next) => {
-  update(req.params._id, req.body, (err, user) => { // eslint-disable-line no-underscore-dangle
-    if (err) {
-      next(err);
-    } else {
-      res.status(200).json(sanitizeUser(user));
-    }
-  });
+  const errors = applyUpdateRules(req.body);
+
+  if (errors.length) {
+    res.status(400).json({
+      success: false,
+      errors: {
+        count: errors.length,
+        errorList: combineErrors(errors),
+      },
+    });
+  } else {
+    update(req.params._id, req.body, (err, user) => { // eslint-disable-line no-underscore-dangle
+      if (err) {
+        next(err);
+      } else {
+        res.status(200).json(sanitizeUser(user));
+      }
+    });
+  }
 };
 
 module.exports.remove = (req, res, next) => {
