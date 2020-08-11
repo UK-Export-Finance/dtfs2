@@ -633,6 +633,12 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     const row = [{ text: 'OVERDUE' }, { html: `<strong class="govuk-tag govuk-tag--red">${status20Days.negative}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/with-conditions" >view</a>` }];
     manualInclusionsWithConditions.rows.unshift(row);
   }
+  if (status20Days.negative === 0
+    && status20Days.red === 0
+    && status20Days.orange === 0
+    && status20Days.green === 0) {
+    status20Days.message = 'No data found.';
+  }
 
   const manualInclusionsWithoutConditions = {
     caption: 'Manual Inclusion Applications accepted by UKEF (without conditions)',
@@ -647,6 +653,12 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   if (status10Days.negatives > 0) {
     const row = [{ text: 'OVERDUE' }, { html: `<strong class="govuk-tag govuk-tag--red">${status10Days.negative}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/without-conditions" >view</a>` }];
     manualInclusionsWithoutConditions.rows.unshift(row);
+  }
+  if (status10Days.negative === 0
+    && status10Days.red === 0
+    && status10Days.orange === 0
+    && status10Days.green === 0) {
+    status10Days.message = 'No data found.';
   }
 
   const reportData = {
