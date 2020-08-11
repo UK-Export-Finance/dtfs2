@@ -34,6 +34,8 @@ module.exports = {
   loanIssueFacility: require('./loanIssueFacility'),
   defaults: require('./defaults'),
   users: require('./admin/users/users'),
+  userProfile: require('./user/profile'),
+  changePassword: require('./user/changePassword'),
   createUser: require('./admin/users/createUser'),
   editUser: require('./admin/users/editUser'),
   mga: require('./mga'),
