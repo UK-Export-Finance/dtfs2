@@ -30,9 +30,9 @@
     <tbody class="govuk-table__body">
 
       {% for transaction in transactions %}
-        <tr data-cy="transaction_{{transaction._id}}" class="govuk-table__row">
+        <tr data-cy="transaction_{{transaction.deal_id}}" class="govuk-table__row">
           <td data-cy="bankSupplyContractID" class="govuk-table__cell govuk-!-font-size-14">
-            <a href="/contract/{{ transaction.deal._id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ transaction.deal.details.bankSupplyContractID }}</a>
+            <a href="/contract/{{ transaction.deal_id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ transaction.deal.details.bankSupplyContractID }}</a>
           </td>
 
           <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
