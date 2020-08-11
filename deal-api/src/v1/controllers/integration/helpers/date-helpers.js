@@ -1,7 +1,7 @@
 const moment = require('moment');
 
 const formatDate = (day, month, year) => {
-  const dt = moment([year, month, day]);
+  const dt = moment([year, month - 1, day]);
   return dt.isValid() ? dt.format('DD-MM-YYYY') : '';
 };
 
