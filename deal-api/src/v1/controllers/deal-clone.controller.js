@@ -1,5 +1,6 @@
-const { findOneDeal, create: createDeal } = require('./deal.controller');
 const DEFAULTS = require('../defaults');
+const { findMandatoryCriteria } = require('./mandatoryCriteria.controller');
+const { findOneDeal, create: createDeal } = require('./deal.controller');
 const { generateDealId } = require('../../utils/generateIds');
 const { getCloneDealErrors } = require('../validation/clone-deal');
 const now = require('../../now');
@@ -54,6 +55,12 @@ const stripTransaction = (transaction, allowedFields) => {
   return stripped;
 };
 
+const getCurrentMandatoryCriteria = () => {
+  return new Promise( (resolve, reject) => {
+    findMandatoryCriteria( resolve );
+  });
+};
+
 exports.clone = async (req, res) => {
   await findOneDeal(req.params.id, async (existingDeal) => {
     if (!existingDeal) {
@@ -81,6 +88,7 @@ exports.clone = async (req, res) => {
         owningBank: existingDeal.details.owningBank,
       },
       editedBy: [],
+      mandatoryCriteria: await getCurrentMandatoryCriteria(),
     };
 
     if (cloneTransactions === 'false') {
