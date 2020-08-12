@@ -29,7 +29,10 @@ const loanHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, d
                             || dealStatus === 'Ready for Checker\'s approval')
                             && previousDealStatus !== 'Draft');
 
-  const allowedDealSubmissionType = (dealSubmissionType === 'Automatic Inclusion Notice' || dealSubmissionType === 'Manual Inclusion Notice');
+  const allowedDealSubmissionType = (dealSubmissionType === 'Automatic Inclusion Notice'
+                                    || dealSubmissionType === 'Manual Inclusion Notice'
+                                    || dealSubmissionType === 'Manual Inclusion Application');
+
   const allowedFacilityStage = loan.facilityStage === 'Conditional';
 
   if (allowedDealStatus
