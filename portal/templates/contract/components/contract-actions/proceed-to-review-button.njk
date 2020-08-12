@@ -36,7 +36,7 @@
         "href": ""
       }) }}
 
-    {% elseif ["Acknowledged by UKEF", "Ready for Checker's approval"].includes(params.deal.details.status) and params.dealHasIssuedFacilitiesToSubmit %}
+    {% elseif ["Acknowledged by UKEF", "Accepted by UKEF (with conditions)", "Accepted by UKEF (without conditions)", "Ready for Checker's approval"].includes(params.deal.details.status) and params.dealHasIssuedFacilitiesToSubmit %}
       {{ govukButton({
         "disabled": false,
         "text": "Proceed to review",
