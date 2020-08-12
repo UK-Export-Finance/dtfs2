@@ -11,7 +11,7 @@
 
   {% set couldIssueFacility = userIsMaker and (dealSubmissionType === 'Automatic Inclusion Notice' or dealSubmissionType === 'Manual Inclusion Notice') and (facility.facilityStage === 'Conditional' or facility.bondStage === 'Unissued') and not facility.issueFacilityDetailsSubmitted %}
 
-  {% set dealStatusAllowsIssueFacility =  dealStatus === "Acknowledged by UKEF" or dealStatus === "Accepted by UKEF (with conditions)" or dealStatus === "Accepted by UKEF (without conditions)" or dealStatus === "Ready for Checker's approval"%}
+  {% set dealStatusAllowsIssueFacility =  dealStatus === "Acknowledged by UKEF" or dealStatus === "Accepted by UKEF (with conditions)" or dealStatus === "Accepted by UKEF (without conditions)" or dealStatus === "Ready for Checker's approval" or dealStatus === "Further Maker's input required" %}
 
   {% if dealStatusAllowsIssueFacility %}
 

@@ -60,11 +60,41 @@ describe('canIssueFacility', () => {
     });
   });
 
+  describe('when user is a maker, deal has status `Further Maker\'s input required`, MIN submissionType and a Conditional loan that has NOT been submitted', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        details: {
+          status: 'Further Maker\'s input required',
+          submissionType: 'Manual Inclusion Notice',
+        },
+      };
+
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
+    });
+  });
+
   describe('when user is a maker, deal has status `Ready for Checker\'s approval`, MIN submissionType and an Unissued bond that has NOT been submitted', () => {
     it('should return true', () => {
       const mockDeal = {
         details: {
           status: 'Ready for Checker\'s approval',
+          submissionType: 'Manual Inclusion Notice',
+        },
+      };
+      const mockBondThatCanBeIssued = {
+        issueFacilityDetailsSubmitted: false,
+        bondStage: 'Unissued',
+      };
+
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockBondThatCanBeIssued)).toEqual(true);
+    });
+  });
+
+  describe('when user is a maker, deal has status `Further Maker\'s input required`, MIN submissionType and an Unissued bond that has NOT been submitted', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        details: {
+          status: 'Further Maker\'s input required',
           submissionType: 'Manual Inclusion Notice',
         },
       };
