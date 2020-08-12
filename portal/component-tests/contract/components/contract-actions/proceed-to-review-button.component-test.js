@@ -38,6 +38,24 @@ describe(component, () => {
       }
     });
 
+    it('should be enabled for deals in status=`Acknowledged by UKEF`,`Accepted by UKEF (with conditions)`, `Accepted by UKEF (without conditions)`, `Ready for Checker\'s approval`, `Further Maker\'s input required` when dealHasIssuedFacilitiesToSubmit flag set to true and dealFormsCompleted flag set to false', () => {
+      const user = { roles: ['maker'] };
+      const deals = [
+        { _id: 1, details: { status: 'Acknowledged by UKEF' } },
+        { _id: 2, details: { status: 'Accepted by UKEF (with conditions)' } },
+        { _id: 3, details: { status: 'Accepted by UKEF (without conditions)' } },
+        { _id: 4, details: { status: 'Ready for Checker\'s approval' } },
+      ];
+
+      const dealHasIssuedFacilitiesToSubmit = true;
+
+      for (const deal of deals) {
+        const wrapper = render({ user, deal, dealHasIssuedFacilitiesToSubmit });
+        wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]')
+          .toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
+      }
+    });
+
     it("should not render at all for deals in status=Submitted and status=Rejected by UKEF", () =>{
       const user = {roles: ['maker']};
       const deals = [

@@ -81,7 +81,7 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     // submit deal for review
     pages.contract.proceedToReview().click();
 
-    pages.contractReadyForReview.comments().type('Issued a bond');
+    pages.contractReadyForReview.comments().type('Issued facilities');
     pages.contractReadyForReview.readyForCheckersApproval().click();
 
     // expect to land on the /dashboard page
@@ -108,7 +108,7 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
       expect(text.trim()).to.equal('Facility issued');
     });
 
-    // expect the bond status to be updated
+    // expect the loan status to be updated
     loanRow.loanStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Ready for check');
     });

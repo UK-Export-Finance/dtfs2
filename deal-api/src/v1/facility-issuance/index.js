@@ -11,7 +11,8 @@ const canIssueFacility = (userRoles, deal, facility) => {
   const allowedDealStatus = (status === CONSTANTS.DEAL.STATUS.SUBMISSION_ACKNOWLEDGED
                             || status === CONSTANTS.DEAL.STATUS.APPROVED
                             || status === CONSTANTS.DEAL.STATUS.APPROVED_WITH_CONDITIONS
-                            || status === CONSTANTS.DEAL.STATUS.READY_FOR_APPROVAL);
+                            || status === CONSTANTS.DEAL.STATUS.READY_FOR_APPROVAL
+                            || status === CONSTANTS.DEAL.STATUS.INPUT_REQUIRED);
 
   const allowedDealSubmissionType = (submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
                                      || submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN);

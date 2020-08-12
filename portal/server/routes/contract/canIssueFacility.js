@@ -9,7 +9,8 @@ const canIssueFacility = (userRoles, deal, facility) => {
   const allowedDealStatus = (status === 'Acknowledged by UKEF'
                             || status === 'Accepted by UKEF (with conditions)'
                             || status === 'Accepted by UKEF (without conditions)'
-                            || status === 'Ready for Checker\'s approval');
+                            || status === 'Ready for Checker\'s approval'
+                            || status === 'Further Maker\'s input required');
 
   const allowedDealSubmissionType = (submissionType === 'Automatic Inclusion Notice' || submissionType === 'Manual Inclusion Notice');
 
