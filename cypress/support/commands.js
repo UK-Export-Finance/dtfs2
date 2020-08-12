@@ -35,6 +35,8 @@ Cypress.Commands.add("deleteDeals", require('./deal-api/deleteDeals'));
 Cypress.Commands.add("downloadFile", downloadFile);
 Cypress.Commands.add("removeUserIfPresent", require('./deal-api/removeUserIfPresent'));
 
+Cypress.Commands.add("sendTypeB", require('./test-hooks-api/sendTypeB'));
+
 // commands that abstract common tasks you might perform while clicking round the portal..
 Cypress.Commands.add("addBondToDeal", require('./portal/addBondToDeal'));
 Cypress.Commands.add("addLoanToDeal", require('./portal/addLoanToDeal'));
