@@ -1,9 +1,11 @@
 // TODO - perhaps each of these sections should have their own rules for this that we call on here?
 
+const completedFacilityStatus = ['Completed', 'Acknowledged by UKEF'];
+
 const hasIncompleteBonds = (deal) => {
   const allBonds = deal.bondTransactions && deal.bondTransactions.items;
   const totalBonds = allBonds.length;
-  const completed = allBonds.filter((b) => b.status === 'Completed');
+  const completed = allBonds.filter((b) => completedFacilityStatus.includes(b.status));
 
   if (totalBonds === completed.length) {
     return false;
@@ -15,7 +17,7 @@ const hasIncompleteBonds = (deal) => {
 const hasIncompleteLoans = (deal) => {
   const allLoans = deal.loanTransactions && deal.loanTransactions.items;
   const totalLoans = allLoans.length;
-  const completed = allLoans.filter((l) => l.status === 'Completed');
+  const completed = allLoans.filter((l) => completedFacilityStatus.includes(l.status));
 
   if (totalLoans === completed.length) {
     return false;
