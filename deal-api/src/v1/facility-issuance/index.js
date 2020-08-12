@@ -1,3 +1,5 @@
+const CONSTANTS = require('../../constants');
+
 const canIssueFacility = (userRoles, deal, facility) => {
   const isMaker = userRoles.includes('maker');
 
@@ -6,16 +8,17 @@ const canIssueFacility = (userRoles, deal, facility) => {
     submissionType,
   } = deal.details;
 
-  const allowedDealStatus = (status === 'Acknowledged by UKEF'
-                            || status === 'Accepted by UKEF (with conditions)'
-                            || status === 'Accepted by UKEF (without conditions)'
-                            || status === 'Ready for Checker\'s approval');
+  const allowedDealStatus = (status === CONSTANTS.DEAL.STATUS.SUBMISSION_ACKNOWLEDGED
+                            || status === CONSTANTS.DEAL.STATUS.APPROVED
+                            || status === CONSTANTS.DEAL.STATUS.APPROVED_WITH_CONDITIONS
+                            || status === CONSTANTS.DEAL.STATUS.READY_FOR_APPROVAL);
 
-  const allowedDealSubmissionType = (submissionType === 'Automatic Inclusion Notice' || submissionType === 'Manual Inclusion Notice');
+  const allowedDealSubmissionType = (submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
+                                     || submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN);
 
-  const allowedLoanFacilityStage = facility.facilityStage === 'Conditional';
+  const allowedLoanFacilityStage = facility.facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE.CONDITIONAL;
   // TODO: rename bondStage to facilityStage
-  const allowedBondFacilityStage = facility.bondStage === 'Unissued';
+  const allowedBondFacilityStage = facility.bondStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED;
   const allowedFacilityStage = (allowedLoanFacilityStage || allowedBondFacilityStage);
 
   if (isMaker
