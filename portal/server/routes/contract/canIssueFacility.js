@@ -6,7 +6,11 @@ const canIssueFacility = (userRoles, deal, facility) => {
     submissionType,
   } = deal.details;
 
-  const allowedDealStatus = (status === 'Acknowledged by UKEF' || status === 'Ready for Checker\'s approval');
+  const allowedDealStatus = (status === 'Acknowledged by UKEF'
+                            || status === 'Accepted by UKEF (with conditions)'
+                            || status === 'Accepted by UKEF (without conditions)'
+                            || status === 'Ready for Checker\'s approval');
+
   const allowedDealSubmissionType = (submissionType === 'Automatic Inclusion Notice' || submissionType === 'Manual Inclusion Notice');
 
   const allowedLoanFacilityStage = facility.facilityStage === 'Conditional';

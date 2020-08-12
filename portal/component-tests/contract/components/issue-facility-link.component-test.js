@@ -4,7 +4,7 @@ const component = 'contract/components/issue-facility-link.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  describe('when deal status is `Acknowledged by UKEF` or `Ready for Checker\'s approval and dealSubmissionType is AIN or MIN', () => {
+  describe('when deal status and submission type allows the issue facility', () => {
     const facilityName = 'loan';
     const deals = [
       {
@@ -18,6 +18,20 @@ describe(component, () => {
         _id: 2,
         details: {
           status: 'Ready for Checker\'s approval',
+          submissionType: 'Manual Inclusion Notice',
+        },
+      },
+      {
+        _id: 3,
+        details: {
+          status: 'Accepted by UKEF (with conditions)',
+          submissionType: 'Automatic Inclusion Notice',
+        },
+      },
+      {
+        _id: 4,
+        details: {
+          status: 'Accepted by UKEF (without conditions)',
           submissionType: 'Manual Inclusion Notice',
         },
       },

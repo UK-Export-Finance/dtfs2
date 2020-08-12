@@ -273,10 +273,13 @@ describe('/v1/deals', () => {
         },
       };
 
-      const { status, body } = await as(anHSBCMaker).put(partialUpdate).to(`/v1/deals/${createdDeal._id}`);
+      const { status: putStatus } = await as(anHSBCMaker).put(partialUpdate).to(`/v1/deals/${createdDeal._id}`);
+      expect(putStatus).toEqual(200);
+
+      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectAddedFieldsWithEditedBy(expectedDataIncludingUpdate, anHSBCMaker));
+      expect(body.deal).toEqual(expectAddedFieldsWithEditedBy(expectedDataIncludingUpdate, anHSBCMaker));
     });
 
     it('updates the deal', async () => {
