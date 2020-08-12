@@ -42,6 +42,13 @@ describe(component, () => {
           submissionType: 'Manual Inclusion Notice',
         },
       },
+      {
+        _id: 6,
+        details: {
+          status: 'Further Maker\'s input required',
+          submissionType: 'Manual Inclusion Application',
+        },
+      },
     ];
 
     describe('when viewed by checker and facility.issueFacilityDetailsProvided', () => {
