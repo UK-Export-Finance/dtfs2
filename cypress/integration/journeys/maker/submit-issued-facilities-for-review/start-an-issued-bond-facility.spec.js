@@ -1,7 +1,7 @@
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const mockUsers = require('../../../../fixtures/mockUsers');
-const dealAcknowledgedByUKEFWithNotStartedFacilityStatuses = require('./dealAcknowledgedByUKEFWithNotStartedFacilityStatuses');
+const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
@@ -18,7 +18,7 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
   });
 
   before(() => {
-    cy.insertOneDeal(dealAcknowledgedByUKEFWithNotStartedFacilityStatuses, { ...MAKER_LOGIN })
+    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
