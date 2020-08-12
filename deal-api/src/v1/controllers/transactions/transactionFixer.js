@@ -9,6 +9,7 @@ const TRANSACTION_STAGE = 'transaction.transactionStage';
 const DEAL_CREATED = 'transaction.deal_created';
 const DEAL_ID = '_id';
 const DEAL_STATUS = 'details.status';
+const DEAL_BANK = 'details.owningBank.id';
 const DEAL_SUBMISSION_TYPE = 'details.submissionType';
 const SUBMISSION_SUPPLIER_NAME = 'submissionDetails.supplier-name';
 
@@ -20,7 +21,7 @@ const constructor = (user, filters) => {
   const transactionsQuery = () => {
     const listOfMongoQueryElements = filters.reduce((listSoFar, filter) => {
       const filterField = Object.keys(filter)[0];// only expecting one entry/block
-      console.log(filterField, filter[filterField]);
+      // console.log(filterField, filter[filterField]);
       if (BANKFACILITYID === filterField) {
         const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { uniqueIdentificationNumber: new RegExp(`^${filter[filterField]}`) } } };
         const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { bankReferenceNumber: new RegExp(`^${filter[filterField]}`) } } };
@@ -61,6 +62,11 @@ const constructor = (user, filters) => {
       }
       if (DEAL_STATUS === filterField) {
         const dealwithStatus = { 'details.status': filter[filterField] };
+
+        return listSoFar.concat([dealwithStatus]);
+      }
+      if (DEAL_BANK === filterField) {
+        const dealwithStatus = { 'details.owningBank.id': filter[filterField] };
 
         return listSoFar.concat([dealwithStatus]);
       }
