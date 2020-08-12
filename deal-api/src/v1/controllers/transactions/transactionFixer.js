@@ -73,19 +73,16 @@ const constructor = (user, filters) => {
         return listSoFar.concat([dealwithStatus]);
       }
       if (UKEF_DEAL_ID === filterField) {
-        const dealwithStatus = { 'details.ukefDealId': filter[filterField] };
+        const dealwithStatus = { 'details.ukefDealId': { $regex: filter[filterField], $options: 'i' } };
 
         return listSoFar.concat([dealwithStatus]);
       }
       if (BANKSUPPLYCONTRACTID === filterField) {
-        // const dealwithSupplyID = { 'details.bankSupplyContractID': { $ilike: `%${filter[filterField]}%` } };
-        // const dealwithSupplyID = { 'details.bankSupplyContractID': new RegExp(`^${filter[filterField]}/i`) };
-        // const dealwithSupplyID = { 'details.bankSupplyContractID': filter[filterField] };
         const dealwithSupplyID = { 'details.bankSupplyContractID': { $regex: filter[filterField], $options: 'i' } };
         return listSoFar.concat([dealwithSupplyID]);
       }
       if (SUBMISSION_SUPPLIER_NAME === filterField) {
-        const dealwithSupplyID = { 'submissionDetails.supplier-name': filter[filterField] };
+        const dealwithSupplyID = { 'submissionDetails.supplier-name': { $regex: filter[filterField], $options: 'i' } };
 
         return listSoFar.concat([dealwithSupplyID]);
       }
