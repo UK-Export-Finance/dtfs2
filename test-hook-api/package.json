@@ -1,0 +1,40 @@
+{
+  "name": "dtfs2",
+  "version": "1.0.0",
+  "description": "DTFS2 deal API",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "start:dev": "npx nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notbinary/dtfs2.git"
+  },
+  "keywords": [
+    "export",
+    "finance"
+  ],
+  "author": "Dan Watkinson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/notbinary/dtfs2/issues"
+  },
+  "homepage": "https://github.com/notbinary/dtfs2#readme",
+  "dependencies": {
+    "@azure/storage-file-share": "12.1.1",
+    "body-parser": "1.19.0",
+    "cors": "2.8.5",
+    "dotenv": "8.2.0",
+    "express": "4.17.1",
+    "moment": "^2.27.0",
+    "uuid": "^8.3.0"
+  },
+  "devDependencies": {
+    "eslint": "6.1.0",
+    "eslint-config-airbnb-base": "14.0.0",
+    "eslint-plugin-import": "2.20.1",
+    "jest": "26.1.0",
+    "nodemon": "^2.0.4"
+  }
+}
