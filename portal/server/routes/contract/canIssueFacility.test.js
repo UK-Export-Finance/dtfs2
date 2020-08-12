@@ -21,6 +21,32 @@ describe('canIssueFacility', () => {
     });
   });
 
+  describe('when user is a maker, deal has status `Accepted by UKEF (with conditions)`, AIN submissionType and a Conditional loan that has NOT been submitted', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        details: {
+          status: 'Accepted by UKEF (with conditions)',
+          submissionType: 'Automatic Inclusion Notice',
+        },
+      };
+
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
+    });
+  });
+
+  describe('when user is a maker, deal has status `Accepted by UKEF (without conditions)`, AIN submissionType and a Conditional loan that has NOT been submitted', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        details: {
+          status: 'Accepted by UKEF (without conditions)',
+          submissionType: 'Automatic Inclusion Notice',
+        },
+      };
+
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
+    });
+  });
+
   describe('when user is a maker, deal has status `Ready for Checker\'s approval`, MIN submissionType and a Conditional loan that has NOT been submitted', () => {
     it('should return true', () => {
       const mockDeal = {
@@ -65,7 +91,7 @@ describe('canIssueFacility', () => {
     });
   });
 
-  describe('when deal status is NOT `Acknowledged by UKEF` or `Ready for Checker\'s approval`', () => {
+  describe('when deal status is invalid', () => {
     it('should return false', () => {
       const mockDeal = {
         details: {

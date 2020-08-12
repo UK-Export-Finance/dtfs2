@@ -23,7 +23,12 @@ const loanStatus = (loan, loanErrors, loanIssueFacilityErrors) => {
 };
 
 const loanHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, dealSubmissionType, loan) => {
-  const allowedDealStatus = ((dealStatus === 'Acknowledged by UKEF' || dealStatus === 'Ready for Checker\'s approval') && previousDealStatus !== 'Draft');
+  const allowedDealStatus = ((dealStatus === 'Acknowledged by UKEF'
+                            || dealStatus === 'Accepted by UKEF (with conditions)'
+                            || dealStatus === 'Accepted by UKEF (without conditions)'
+                            || dealStatus === 'Ready for Checker\'s approval')
+                            && previousDealStatus !== 'Draft');
+
   const allowedDealSubmissionType = (dealSubmissionType === 'Automatic Inclusion Notice' || dealSubmissionType === 'Manual Inclusion Notice');
   const allowedFacilityStage = loan.facilityStage === 'Conditional';
 
