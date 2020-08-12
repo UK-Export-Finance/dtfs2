@@ -188,7 +188,7 @@ const generateTypeA = async (deal, fromStatus) => {
             loan['facilityStageUnconditional-bankReferenceNumber']
             || loan['facilityStageUnconditional-bankReferenceNumber'],
           )
-          .EWCS_stage(k2Map.FACILITIES.FACILITY_STAGE[loan.facilityStage])
+          .EWCS_stage(k2Map.FACILITIES.FACILITIES_STAGE[loan.facilityStage])
           .EWCS_value(convertCurrencyFormat(loan.facilityValue))
           .EWCS_currency_code(
             await convertCurrencyCodeToId(loanCurrencyId), // eslint-disable-line no-await-in-loop
