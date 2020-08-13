@@ -1,5 +1,5 @@
 import express from 'express';
-// import util from 'util';
+import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
 import { getRAGstatus, getExpiryDates } from './expiryStatusUtils';
@@ -756,6 +756,11 @@ router.get('/reports/unissued-transactions',
 
 router.get('/reports/unissued-transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
+  let queryString = `${req.params.page}?sort=desc`;
+  let sortOrder = {
+    queryString,
+    order: 'ascending',
+  }
 
   const stageFilters = { // TODO use CONSTANTS lowercase string
     facilityStage: 'conditional',
@@ -768,6 +773,12 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
     res,
   );
   transactions = getExpiryDates(transactions, 90, false);
+  // default order from getExpiryDates is asc 
+  if (req.query && req.query.sort && req.query.sort === 'desc') {
+    transactions.sort((a, b) => parseFloat(b.remainingDays) - parseFloat(a.remainingDays));
+    sortOrder.queryString = req.param.page;
+    sortOrder.order = 'descending'
+  }
 
   const count = transactions.length;
 
@@ -781,6 +792,7 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
     pages,
     transactions,
     primaryNav,
+    sortOrder,
     subNav: 'unissued-transactions-report',
     user: req.session.user,
   });
