@@ -19,10 +19,6 @@ const updateSubmittedIssuedFacilities = async (collection, deal) => {
       if (shouldUpdateIssuedFacility) {
         facility.issueFacilityDetailsSubmitted = true;
         facility.status = 'Submitted';
-
-        if (!facility.requestedCoverStartDate) {
-          facility.requestedCoverStartDate = facility.issuedDate;
-        }
       }
 
       return facility;

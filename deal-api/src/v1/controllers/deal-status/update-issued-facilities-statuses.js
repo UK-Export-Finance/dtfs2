@@ -1,6 +1,12 @@
 const $ = require('mongo-dot-notation');
 
-const updateIssuedFacilitiesStatuses = async (collection, deal, newStatus, updateAllIssuedFacilities) => {
+const updateIssuedFacilitiesStatuses = async (
+  collection,
+  deal,
+  newStatus,
+  updateAllIssuedFacilities,
+  updateIssuedFacilitiesCoverStartDates,
+) => {
   const updatedDeal = deal;
 
   const update = (facilities) => {
@@ -25,6 +31,12 @@ const updateIssuedFacilitiesStatuses = async (collection, deal, newStatus, updat
 
       if (shouldUpdate) {
         facility.status = newStatus;
+
+        if (updateIssuedFacilitiesCoverStartDates) {
+          if (!facility.requestedCoverStartDate) {
+            facility.requestedCoverStartDate = facility.issuedDate;
+          }
+        }
       }
 
       return facility;
