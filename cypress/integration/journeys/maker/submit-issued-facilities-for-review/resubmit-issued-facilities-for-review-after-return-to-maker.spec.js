@@ -1,9 +1,8 @@
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
-const dealWIthIssuedFacilitiesReturnedToMaker = require('./dealWIthIssuedFacilitiesReturnedToMaker');
+const dealWithIssuedFacilitiesReturnedToMaker = require('./dealWithIssuedFacilitiesReturnedToMaker');
 const mockUsers = require('../../../../fixtures/mockUsers');
 const fillAndSubmitIssueBondFacilityForm = require('./fillAndSubmitIssueBondFacilityForm');
-const fillAndSubmitIssueLoanFacilityForm = require('./fillAndSubmitIssueLoanFacilityForm');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 
@@ -20,14 +19,14 @@ context('A maker can resubmit issued bond & loan facilities with a deal in `Furt
   });
 
   before(() => {
-    cy.insertOneDeal(dealWIthIssuedFacilitiesReturnedToMaker, { ...MAKER_LOGIN })
+    cy.insertOneDeal(dealWithIssuedFacilitiesReturnedToMaker, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
       });
   });
 
-  it('Updating   an Issue bond & Issue loan Facility form allows maker to re-submit the deal for review. Only the updated Deal/facilities should be updated after submitting for review', () => {
+  it('Updating an Issue bond & Issue loan Facility form allows maker to re-submit the deal for review. Only the updated Deal/facilities should be updated after submitting for review', () => {
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('not.be.disabled');
