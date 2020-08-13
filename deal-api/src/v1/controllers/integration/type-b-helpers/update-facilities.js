@@ -2,16 +2,17 @@ const updateBondStatus = (bond, workflowBond) => {
   const isIssuedFacility = bond.bondStage === 'Unissued';
   const hasWorflowStatus = workflowBond.BSS_status && workflowBond.BSS_status.length > 0;
 
-  const shouldUpdateStatus = (isIssuedFacility && hasWorflowStatus);
+  if (isIssuedFacility) {
+    if (hasWorflowStatus) {
+      if (workflowBond.BSS_status[0] === 'Issued acknowledged') {
+        return 'Acknowledged';
+      }
 
-  if (shouldUpdateStatus) {
-    if (workflowBond.BSS_status[0] === 'Issued acknowledged') {
-      return 'Acknowledged';
+      if (workflowBond.BSS_status[0] === '""') {
+        return 'Not started';
+      }
     }
-
-    if (workflowBond.BSS_status[0] === '""') {
-      return 'Not started';
-    }
+    return 'Not started';
   }
 
   return null;
@@ -21,16 +22,17 @@ const updateLoanStatus = (loan, workflowLoan) => {
   const isIssuedFacility = loan.facilityStage === 'Conditional';
   const hasWorflowStatus = workflowLoan.EWCS_status && workflowLoan.EWCS_status.length > 0;
 
-  const shouldUpdateStatus = (isIssuedFacility && hasWorflowStatus);
+  if (isIssuedFacility) {
+    if (hasWorflowStatus) {
+      if (workflowLoan.EWCS_status[0] === 'Issued acknowledged') {
+        return 'Acknowledged';
+      }
 
-  if (shouldUpdateStatus) {
-    if (workflowLoan.EWCS_status[0] === 'Issued acknowledged') {
-      return 'Acknowledged';
+      if (workflowLoan.EWCS_status[0] === '""') {
+        return 'Not started';
+      }
     }
-
-    if (workflowLoan.EWCS_status[0] === '""') {
-      return 'Not started';
-    }
+    return 'Not started';
   }
 
   return null;
