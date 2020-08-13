@@ -74,6 +74,7 @@ module.exports = {
     }),
     new CopyPlugin([
       { from: './node_modules/govuk-frontend/govuk/assets', to: './assets' },
+      { from: './static/images', to: './assets/images' },
       { from: './static/*', flatten: true },
     ]),
   ],
