@@ -20,12 +20,13 @@
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created by</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14" aria-sort="{{sortOrder.order}}">
         <a href="./{{sortOrder.queryString}}" class="govuk-link" data-cy="sortOrder">
-          Facility submission date ({{sortOrder.order}})
-          {# <span class="tablesort tablesort--desc">
-          <span class="visually-hidden">
+          Facility submission date
+          <img src="/assets/images/{{sortOrder.image}}.svg" alt="re-order table in {{sortOrder.order}} order"/>
+          <span class="tablesort tablesort--desc">
+          <span class="govuk-visually-hidden">
             Sort descending
-              </span>
-        </span> #}
+          </span>
+        </span>
         </a>
           </th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Calendar days to issue</th>
