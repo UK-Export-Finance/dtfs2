@@ -1,6 +1,6 @@
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
-const dealWIthIssuedFacilitiesReadyForReview = require('./dealWIthIssuedFacilitiesReadyForReview');
+const dealWithIssuedFacilitiesReadyForReview = require('./dealWithIssuedFacilitiesReadyForReview');
 const mockUsers = require('../../../../fixtures/mockUsers');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
@@ -16,7 +16,7 @@ context('A checker submit a deal with issued loan/bond facilities', () => {
       console.log(err.stack);
       return false;
     });
-    cy.insertOneDeal(dealWIthIssuedFacilitiesReadyForReview, MAKER_LOGIN)
+    cy.insertOneDeal(dealWithIssuedFacilitiesReadyForReview, MAKER_LOGIN)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
