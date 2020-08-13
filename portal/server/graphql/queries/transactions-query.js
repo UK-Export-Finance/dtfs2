@@ -18,6 +18,10 @@ query Transactions($start: Int, $pagesize: Int, $filters:[TransactionFilters]){
       ukefFacilityId
       transactionType
       facilityValue
+      currency{
+        text
+        id
+      }
       transactionStage
       createdDate
       lastEdited

@@ -122,7 +122,7 @@
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14">
-                {{ transaction.facilityValue }}
+                {{ transaction.currency.id }} {{ transaction.facilityValue | formatAsCurrency }}
               </td>
 
               <td class="govuk-table__cell govuk-!-font-size-14">

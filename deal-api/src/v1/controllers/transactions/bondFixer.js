@@ -91,6 +91,7 @@ const constructor = (listOfFilters) => {
       ukefFacilityId: bond.ukefFacilityID,
       transactionType: 'bond',
       facilityValue: bond.facilityValue,
+      currency: bond.currency,
       transactionStage: bond.bondStage,
       createdDate: bond.createdDate,
       lastEdited: bond.lastEdited,

@@ -90,6 +90,7 @@ const constructor = (listOfFilters) => {
       ukefFacilityId: loan.ukefFacilityID,
       transactionType: 'loan',
       facilityValue: loan.facilityValue,
+      currency: loan.currency,
       transactionStage: loan.facilityStage,
       issuedDate: loan.issuedDate,
       createdDate: loan.createdDate,

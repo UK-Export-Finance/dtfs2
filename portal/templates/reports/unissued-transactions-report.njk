@@ -44,7 +44,7 @@
           </td>
 
           <td data-cy="facilityValue" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.facilityValue | dashIfEmpty }}
+            {{ transaction.currency.id }} {{ transaction.facilityValue | formatAsCurrency }}
           </td>
 
           <td data-cy="transactionStage" class="govuk-table__cell govuk-!-font-size-14">

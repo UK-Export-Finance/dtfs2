@@ -90,6 +90,7 @@ type Transaction {
   maker: String
   checker: String
   issueFacilityDetailsSubmitted: String
+  currency: Currency
 }
 
 type TransactionQuery {
