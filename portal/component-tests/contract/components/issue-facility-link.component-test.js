@@ -4,52 +4,54 @@ const component = 'contract/components/issue-facility-link.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
+  const mockDeals = [
+    {
+      _id: 1,
+      details: {
+        status: 'Acknowledged by UKEF',
+        submissionType: 'Automatic Inclusion Notice',
+      },
+    },
+    {
+      _id: 2,
+      details: {
+        status: 'Ready for Checker\'s approval',
+        submissionType: 'Manual Inclusion Notice',
+      },
+    },
+    {
+      _id: 3,
+      details: {
+        status: 'Accepted by UKEF (with conditions)',
+        submissionType: 'Automatic Inclusion Notice',
+      },
+    },
+    {
+      _id: 4,
+      details: {
+        status: 'Accepted by UKEF (without conditions)',
+        submissionType: 'Manual Inclusion Notice',
+      },
+    },
+    {
+      _id: 5,
+      details: {
+        status: 'Further Maker\'s input required',
+        submissionType: 'Manual Inclusion Notice',
+      },
+    },
+    {
+      _id: 6,
+      details: {
+        status: 'Further Maker\'s input required',
+        submissionType: 'Manual Inclusion Application',
+      },
+    },
+  ];
+
   describe('when deal status and submission type allows the issue facility', () => {
     const facilityName = 'loan';
-    const deals = [
-      {
-        _id: 1,
-        details: {
-          status: 'Acknowledged by UKEF',
-          submissionType: 'Automatic Inclusion Notice',
-        },
-      },
-      {
-        _id: 2,
-        details: {
-          status: 'Ready for Checker\'s approval',
-          submissionType: 'Manual Inclusion Notice',
-        },
-      },
-      {
-        _id: 3,
-        details: {
-          status: 'Accepted by UKEF (with conditions)',
-          submissionType: 'Automatic Inclusion Notice',
-        },
-      },
-      {
-        _id: 4,
-        details: {
-          status: 'Accepted by UKEF (without conditions)',
-          submissionType: 'Manual Inclusion Notice',
-        },
-      },
-      {
-        _id: 5,
-        details: {
-          status: 'Further Maker\'s input required',
-          submissionType: 'Manual Inclusion Notice',
-        },
-      },
-      {
-        _id: 6,
-        details: {
-          status: 'Further Maker\'s input required',
-          submissionType: 'Manual Inclusion Application',
-        },
-      },
-    ];
+    const deals = mockDeals;
 
     describe('when viewed by checker and facility.issueFacilityDetailsProvided', () => {
       it('should render a link to the facility on submision-details page', () => {
@@ -163,6 +165,27 @@ describe(component, () => {
             .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/delete`, 'Delete');
         }
       });
+    });
+  });
+
+  describe('when deal previousStatus is `Draft`', () => {
+    it('should not render at all', () => {
+      const facilityName = 'loan';
+      const dealsWithPreviousStatus = mockDeals;
+      dealsWithPreviousStatus.map((deal) => {
+        const d = deal;
+        d.details.previousStatus = 'Draft';
+        return d;
+      });
+
+      const facility = { _id: '1234' };
+
+      const user = { roles: ['maker'] };
+      for (const deal of dealsWithPreviousStatus) {
+        const wrapper = render({ user, deal, facility, facilityName });
+        wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`)
+          .notToExist();
+      }
     });
   });
 });
