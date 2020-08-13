@@ -5,7 +5,7 @@ const testHookApi = () => {
 
 module.exports = (typeB) => {
   return cy.request({
-    url: `${testHookApi()}/test-hooks/typeB`,
+    url: `${testHookApi()}/fileshare/typeB`,
     method: 'POST',
     body: typeB,
     headers: {
