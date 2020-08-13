@@ -4,7 +4,7 @@ const formatAsCurrency = (str) => {
   let amount = 0;
   if (!isEmpty) {
     amount = parseInt(str, 10);
-    amount = amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
+    amount = amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
   }
   return isEmpty ? '-' : amount;
 };
