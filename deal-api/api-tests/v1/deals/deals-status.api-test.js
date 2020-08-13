@@ -17,6 +17,16 @@ jest.mock('../../../src/v1/controllers/integration/helpers/convert-currency-code
 
 // jest.unmock('@azure/storage-file-share');
 
+const isUnsubmittedIssuedFacility = (facility) => {
+  if ((facility.bondStage === 'Unissued' || facility.facilityStage === 'Conditional')
+    && facility.issueFacilityDetailsProvided
+    && !facility.issueFacilityDetailsSubmitted
+    && facility.status !== 'Submitted') {
+    return facility;
+  }
+  return null;
+};
+
 describe('/v1/deals/:id/status', () => {
   let noRoles;
   let aBarclaysMaker;
