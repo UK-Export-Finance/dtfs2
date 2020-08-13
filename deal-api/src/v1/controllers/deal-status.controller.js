@@ -110,6 +110,24 @@ exports.update = (req, res) => {
         await updateStatus(collection, req.params.id, toStatus, fromStatus);
         return res.status(200).send(typeA);
       }
+
+      if (
+        ['approved', 'approved_conditions'].includes(dealAfterAllUpdates.details.previousWorkflowStatus)
+        && dealAfterAllUpdates.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+      ) {
+        // Must be confirming acceptance of MIA so change to MIN
+        const minUpdateReq = {
+          params: req.params,
+          body: {
+            details: {
+              submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
+            },
+          },
+          user: req.user,
+        };
+
+        await updateDeal(minUpdateReq);
+      }
     }
     // check for approvals back from UKEF and date stamp it for countdown indicator
     if (toStatus === CONSTANTS.DEAL.STATUS.APPROVED
