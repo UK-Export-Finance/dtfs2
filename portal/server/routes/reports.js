@@ -774,7 +774,7 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
     res,
   );
   transactions = getExpiryDates(transactions, 90, false);
-  // default order from getExpiryDates is asc 
+  // default order from getExpiryDates is asc
   if (req.query && req.query.sort && req.query.sort === 'desc') {
     transactions.sort((a, b) => parseFloat(b.remainingDays) - parseFloat(a.remainingDays));
     sortOrder.queryString = req.param.page;
