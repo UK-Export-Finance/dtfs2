@@ -1,6 +1,6 @@
 const $ = require('mongo-dot-notation');
 
-const updateIssuedFacilitiesStatuses = async (
+const updateIssuedFacilities = async (
   collection,
   deal,
   newStatus,
@@ -63,4 +63,4 @@ const updateIssuedFacilitiesStatuses = async (
   return value;
 };
 
-module.exports = updateIssuedFacilitiesStatuses;
+module.exports = updateIssuedFacilities;

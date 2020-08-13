@@ -14,7 +14,7 @@ const sendStatusUpdateEmails = require('./deal-status/send-status-update-emails'
 const createApprovalDate = require('./deal-status/create-approval-date');
 
 const updateFacilityDates = require('./deal-status/update-facility-dates');
-const updateIssuedFacilitiesStatuses = require('./deal-status/update-issued-facilities-statuses');
+const updateIssuedFacilities = require('./deal-status/update-issued-facilities');
 const updateSubmittedIssuedFacilities = require('./deal-status/update-submitted-issued-facilities');
 const CONSTANTS = require('../../constants');
 
@@ -91,13 +91,13 @@ exports.update = (req, res) => {
       const updateAllIssuedFacilities = false;
       const updateIssuedFacilitiesCoverStartDates = true;
       // TODO rename to updateIssuedFacilities
-      dealAfterAllUpdates = await updateIssuedFacilitiesStatuses(collection, dealAfterAllUpdates, 'Ready for check', updateAllIssuedFacilities, updateIssuedFacilitiesCoverStartDates);
+      dealAfterAllUpdates = await updateIssuedFacilities(collection, dealAfterAllUpdates, 'Ready for check', updateAllIssuedFacilities, updateIssuedFacilitiesCoverStartDates);
     }
 
     if (toStatus === 'Further Maker\'s input required') {
       const updateAllIssuedFacilities = true;
       // TODO rename to updateIssuedFacilities
-      dealAfterAllUpdates = await updateIssuedFacilitiesStatuses(collection, dealAfterAllUpdates, 'Maker\'s input required', updateAllIssuedFacilities);
+      dealAfterAllUpdates = await updateIssuedFacilities(collection, dealAfterAllUpdates, 'Maker\'s input required', updateAllIssuedFacilities);
     }
 
     if (toStatus === 'Submitted') {
