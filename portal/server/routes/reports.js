@@ -1,5 +1,5 @@
 import express from 'express';
-import util from 'util';
+// import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
 import { getRAGstatus, getExpiryDates } from './expiryStatusUtils';
@@ -756,11 +756,12 @@ router.get('/reports/unissued-transactions',
 
 router.get('/reports/unissued-transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-  let queryString = `${req.params.page}?sort=desc`;
-  let sortOrder = {
-    queryString,
+
+  const sortOrder = {
+    queryString: `${req.params.page}?sort=desc`,
     order: 'ascending',
-  }
+    image: 'twistie-up',
+  };
 
   const stageFilters = { // TODO use CONSTANTS lowercase string
     facilityStage: 'conditional',
@@ -777,7 +778,8 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
   if (req.query && req.query.sort && req.query.sort === 'desc') {
     transactions.sort((a, b) => parseFloat(b.remainingDays) - parseFloat(a.remainingDays));
     sortOrder.queryString = req.param.page;
-    sortOrder.order = 'descending'
+    sortOrder.order = 'descending';
+    sortOrder.image = 'twistie-down';
   }
 
   const count = transactions.length;
