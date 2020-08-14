@@ -49,3 +49,17 @@ jobs:
           portal_api=tfs-${{ env.environment }}-portal-ui
           az webapp restart --name ${portal_ui} --resource-group ${resource_group}
           az webapp restart --name ${portal_api} --resource-group ${resource_group}
+
+  refresh-data:
+    needs: deploy
+    name: Refresh environment data
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Re-insert mocks
+        run: |
+          cd utils/mock-data-loader 
+          echo "DEAL_API_URL=https://tfs-${{ env.environment }}-portal-api.azurewebsites.net" > .env
+          cat .env
+          npm install
+          node re-insert-mocks.js
