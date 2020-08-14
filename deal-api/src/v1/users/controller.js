@@ -77,7 +77,6 @@ exports.create = async (user, callback) => {
   const { password } = insert;
   // tidy fields that shouldn't be here. this might not be the best place.
   delete insert.password;
-  delete insert.email;
   //---
 
   const collection = await db.getCollection('users');
