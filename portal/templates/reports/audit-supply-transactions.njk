@@ -58,7 +58,7 @@
           </td>
 
           <td data-cy="issuedBy" class="govuk-table__cell govuk-!-font-size-14">
-            {%  if transaction.issuedDate and transaction.issueFacilityDetailsSubmitted %}
+            {%  if transaction.issuedDate %}
             {{ transaction.checker }}
             {% else %}
             -
