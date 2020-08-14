@@ -2,16 +2,17 @@ name: Dev environment infrastructure
 
 on:
   push:
-    branches: [ infrastructure ]
+    branches: [ master ]
 
 env:
   # Environment
   environment: dev
+  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   resource_group: ${{ secrets.RESOURCE_GROUP_DEV }}
   app_service_plan: dev
-  registry: ${{ secrets.ACR_DEV_REGISTRY }}
-  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+  # Container settings
   image_tag: dev
+  registry: ${{ secrets.ACR_DEV_REGISTRY }}
   # App service settings
   DEAL_API_URL: "https://tfs-dev-portal-api.azurewebsites.net"
   COMPANIES_HOUSE_API_URL: ="https://api.companieshouse.gov.uk"
