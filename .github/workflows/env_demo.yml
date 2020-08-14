@@ -7,12 +7,12 @@ on:
 env:
   # Environment
   environment: demo
+  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   resource_group: ${{ secrets.RESOURCE_GROUP_DEV }}
   app_service_plan: dev
-  registry: ${{ secrets.ACR_DEV_REGISTRY }}
-  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   # Container settings
   image_tag: demo
+  registry: ${{ secrets.ACR_DEV_REGISTRY }}
   container_registry: ${{ secrets.ACR_DEV_REGISTRY }}
   container_registry_username: ${{ secrets.ACR_DEV_USERNAME }}
   container_registry_password: ${{ secrets.ACR_DEV_PASSWORD }}
@@ -100,7 +100,8 @@ jobs:
           options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
           
           az webapp create $options \
-            --plan ${{ env.app_service_plan }}
+            --plan ${{ env.app_service_plan }} \
+            --deployment-container-image-name ${{ env.registry }}/portal-ui:${{ env.image_tag }}
           
     - name: Always-on
       uses: Azure/cli@v1.0.0
