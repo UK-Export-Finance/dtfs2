@@ -88,8 +88,6 @@ jobs:
   portal-api:
     name: Portal API
     runs-on: ubuntu-latest
-    env:
-      options: "--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
     steps:
     - uses: azure/login@v1
       with:
@@ -99,7 +97,6 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          echo Options: ${{ env.options }}
           options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
           
           az webapp create $options \
@@ -110,7 +107,6 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          echo Options: ${{ env.options }}
           options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
         
           az webapp config set $options \
@@ -120,7 +116,6 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          echo Options: ${{ env.options }}
           options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
                 
           az webapp config container set $options \
@@ -133,7 +128,6 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          echo Options: ${{ env.options }}
           options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
                   
           az webapp deployment container config $options \
@@ -143,7 +137,6 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          echo Options: ${{ env.options }}
           options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"  
 
           az webapp log config $options \
