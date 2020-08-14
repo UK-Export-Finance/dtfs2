@@ -47,7 +47,7 @@ jobs:
     - uses: azure/login@v1
       with:
         creds: ${{ env.credentials }}
-    - name: Restart Portal UI
+    - name: Restart Portal services
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
