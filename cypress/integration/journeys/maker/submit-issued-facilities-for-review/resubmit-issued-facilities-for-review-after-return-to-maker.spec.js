@@ -2,7 +2,7 @@ const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const dealWithIssuedFacilitiesReturnedToMaker = require('./dealWithIssuedFacilitiesReturnedToMaker');
 const mockUsers = require('../../../../fixtures/mockUsers');
-const fillAndSubmitIssueBondFacilityForm = require('./fillAndSubmitIssueBondFacilityForm');
+const { fillAndSubmitIssueBondFacilityForm } = require('./fillAndSubmitIssueBondFacilityForm');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 
@@ -41,6 +41,10 @@ context('A maker can resubmit issued bond & loan facilities with a deal in `Furt
     const bondId = bondWithIssueFacilityDetailsProvided._id; // eslint-disable-line no-underscore-dangle
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
+    bondRow.bondStage().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Issued');
+    });
+
     bondRow.issueFacilityLink().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Facility issued');
     });
@@ -56,12 +60,15 @@ context('A maker can resubmit issued bond & loan facilities with a deal in `Furt
       expect(text.trim()).to.equal('Facility issued');
     });
 
-
     const loanWithIssueFacilityDetailsProvided = deal.loanTransactions.items.find((l) =>
       l.issueFacilityDetailsProvided === true);
 
     const loanId = loanWithIssueFacilityDetailsProvided._id; // eslint-disable-line no-underscore-dangle
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
+
+    loanRow.facilityStage().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Unconditional');
+    });
 
     loanRow.issueFacilityLink().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Facility issued');
@@ -107,6 +114,11 @@ context('A maker can resubmit issued bond & loan facilities with a deal in `Furt
       expect(text.trim()).to.equal('Ready for check');
     });
 
+    // expect the bond facility stage to be the same
+    bondRow.bondStage().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Issued');
+    });
+
     // expect bond issue facility link text to be changed
     bondRow.issueFacilityLink().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Facility issued');
@@ -115,6 +127,11 @@ context('A maker can resubmit issued bond & loan facilities with a deal in `Furt
     // expect the loan status to be updated
     loanRow.loanStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Ready for check');
+    });
+
+    // expect the loan facility stage to be the same
+    loanRow.facilityStage().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Unconditional');
     });
 
     // expect loan issue facility link text to be changed

@@ -1,8 +1,8 @@
-const moment = require('moment');
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
 const mockUsers = require('../../../../fixtures/mockUsers');
+const fillAndSubmitIssueBondFacilityForm = require('./fillAndSubmitIssueBondFacilityForm');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 
@@ -26,27 +26,6 @@ context('A maker can issue and submit an issued bond facility with a deal in `Ac
       });
   });
 
-  const fillAndSubmitIssueBondFacilityForm = () => {
-    const issuedDate = moment().add(1, 'day');
-    pages.bondIssueFacility.issuedDateDayInput().type(issuedDate.format('DD'));
-    pages.bondIssueFacility.issuedDateMonthInput().type(issuedDate.format('MM'));
-    pages.bondIssueFacility.issuedDateYearInput().type(issuedDate.format('YYYY'));
-
-    const requestedCoverStartDate = moment().add(2, 'day');
-    pages.bondIssueFacility.requestedCoverStartDateDayInput().type(requestedCoverStartDate.format('DD'));
-    pages.bondIssueFacility.requestedCoverStartDateMonthInput().type(requestedCoverStartDate.format('MM'));
-    pages.bondIssueFacility.requestedCoverStartDateYearInput().type(requestedCoverStartDate.format('YYYY'));
-
-    const coverEndDate = moment().add(1, 'month');
-    pages.bondIssueFacility.coverEndDateDayInput().type(coverEndDate.format('DD'));
-    pages.bondIssueFacility.coverEndDateMonthInput().type(coverEndDate.format('MM'));
-    pages.bondIssueFacility.coverEndDateYearInput().type(coverEndDate.format('YYYY'));
-
-    pages.bondIssueFacility.uniqueIdentificationNumber().type('1234');
-
-    pages.bondIssueFacility.submit().click();
-  };
-
   it('Completing the Issue bond Facility form allows maker to re-submit the deal for review. Deal/bond should be updated after submitting for review', () => {
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
@@ -54,6 +33,10 @@ context('A maker can issue and submit an issued bond facility with a deal in `Ac
 
     const bondId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
+
+    bondRow.bondStage().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Unissued');
+    });
 
     bondRow.issueFacilityLink().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Issue facility');
@@ -96,6 +79,11 @@ context('A maker can issue and submit an issued bond facility with a deal in `Ac
     // expect the bond status to be updated
     bondRow.bondStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Ready for check');
+    });
+
+    // expect the bond facility stage to be updated
+    bondRow.bondStage().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Issued');
     });
 
     // expect bond issue facility link text to be changed

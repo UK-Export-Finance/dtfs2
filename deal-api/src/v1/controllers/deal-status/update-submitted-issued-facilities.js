@@ -1,4 +1,5 @@
 const $ = require('mongo-dot-notation');
+const CONSTANTS = require('../../../constants');
 
 const updateSubmittedIssuedFacilities = async (collection, deal) => {
   const updatedDeal = deal;
@@ -9,10 +10,21 @@ const updateSubmittedIssuedFacilities = async (collection, deal) => {
     arr.forEach((f) => {
       const facility = f;
 
-      const shouldUpdateIssuedLoanFacility = (facility.facilityStage === 'Conditional' && facility.issueFacilityDetailsProvided);
-      const shouldUpdateIssuedBondFacility = (facility.bondStage === 'Unissued' && facility.issueFacilityDetailsProvided);
-      const shouldUpdateIssuedFacility = ((shouldUpdateIssuedLoanFacility
-                                          || shouldUpdateIssuedBondFacility)
+      const {
+        facilityStage,
+        previousFacilityStage,
+        bondStage,
+      } = facility;
+
+      const shouldUpdateIssuedLoan = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
+                                     && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL);
+
+      const shouldUpdateIssuedBond = (bondStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
+                                     && previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED);
+
+      const shouldUpdateIssuedFacility = ((shouldUpdateIssuedLoan
+                                          || shouldUpdateIssuedBond)
+                                          && facility.issueFacilityDetailsProvided
                                           && !facility.issueFacilityDetailsSubmitted
                                           && facility.status !== 'Submitted');
 

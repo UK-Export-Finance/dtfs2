@@ -166,7 +166,8 @@ const deal = {
         "_id": "1000209",
         "bondIssuer": "",
         "bondType": "Bid bond",
-        "bondStage": "Unissued",
+        "bondStage": "Issued",
+        "previousFacilityStage": "Unissued",
         "ukefGuaranteeInMonths": "12",
         "bondBeneficiary": "",
         "guaranteeFeePayableByBank": "18.0000",
@@ -197,7 +198,8 @@ const deal = {
     "items": [
       {
         "_id": "1000210",
-        "facilityStage": "Conditional",
+        "facilityStage": "Unconditional",
+        "previousFacilityStage": "Conditional",
         "ukefGuaranteeInMonths": "12",
         "guaranteeFeePayableByBank": "10.8000",
         "facilityValue": "123123.00",

@@ -18,7 +18,7 @@ export const fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate = 
   pages.bondIssueFacility.submit().click();
 };
 
-const fillAndSubmitIssueBondFacilityForm = () => {
+export const fillAndSubmitIssueBondFacilityForm = () => {
   pages.bondIssueFacility.issuedDateDayInput().type(ISSUED_BOND_DATE_VALUE.format('DD'));
   pages.bondIssueFacility.issuedDateMonthInput().type(ISSUED_BOND_DATE_VALUE.format('MM'));
   pages.bondIssueFacility.issuedDateYearInput().type(ISSUED_BOND_DATE_VALUE.format('YYYY'));
@@ -37,5 +37,3 @@ const fillAndSubmitIssueBondFacilityForm = () => {
 
   pages.bondIssueFacility.submit().click();
 };
-
-export default fillAndSubmitIssueBondFacilityForm;
