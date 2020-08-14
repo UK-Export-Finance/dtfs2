@@ -1,4 +1,5 @@
 const $ = require('mongo-dot-notation');
+const CONSTANTS = require('../../../constants');
 
 const updateIssuedFacilities = async (
   collection,
@@ -14,28 +15,41 @@ const updateIssuedFacilities = async (
 
     arr.forEach((f) => {
       const facility = f;
+      const {
+        facilityStage,
+        previousFacilityStage,
+        bondStage,
+      } = facility;
 
-      const shouldUpdateLoan = facility.facilityStage === 'Conditional';
-      const shouldUpdateBond = facility.bondStage === 'Unissued';
+      const shouldUpdateLoan = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
+                               || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
+                                    && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL));
 
-      let shouldUpdate;
-      if (updateAllIssuedFacilities) {
-        // update all issued facilities regardless of if they've been submitted or have completed all required fields.
-        shouldUpdate = (shouldUpdateLoan || shouldUpdateBond);
-      } else {
-        // only update issued facilities if they have all details provided and have NOT been submitted
-        shouldUpdate = ((shouldUpdateLoan || shouldUpdateBond)
-                        && facility.issueFacilityDetailsProvided
-                        && !facility.issueFacilityDetailsSubmitted);
-      }
+      const shouldUpdateBond = (facility.bondStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
+                                || (facility.bondStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
+                                && previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED));
 
-      if (shouldUpdate) {
-        facility.status = newStatus;
+      if (shouldUpdateLoan || shouldUpdateBond) {
+        if (updateAllIssuedFacilities) {
+          // update all issued facilities regardless of if they've been submitted or have completed all required fields.
+          facility.status = newStatus;
+        } else if (facility.issueFacilityDetailsProvided && !facility.issueFacilityDetailsSubmitted) {
+          facility.status = newStatus;
 
-        if (updateIssuedFacilitiesCoverStartDates) {
-          if (!facility.requestedCoverStartDate) {
-            facility.requestedCoverStartDate = facility.issuedDate;
+          // TODO: rework this when we rename bondStage to facilityStage
+          if (facilityStage) {
+            facility.previousFacilityStage = facility.facilityStage;
+            facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL;
+          } else if (bondStage) {
+            facility.previousFacilityStage = facility.bondStage;
+            facility.bondStage = CONSTANTS.FACILITIES.BOND_STAGE.ISSUED;
           }
+        }
+
+        if (updateIssuedFacilitiesCoverStartDates
+            && !facility.requestedCoverStartDate
+            && facility.issuedDate) {
+          facility.requestedCoverStartDate = facility.issuedDate;
         }
       }
 

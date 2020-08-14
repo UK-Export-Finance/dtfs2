@@ -2,7 +2,7 @@ const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
 const mockUsers = require('../../../../fixtures/mockUsers');
-const fillAndSubmitIssueLoanFacilityForm = require('./fillAndSubmitIssueLoanFacilityForm');
+const { fillAndSubmitIssueLoanFacilityForm } = require('./fillAndSubmitIssueLoanFacilityForm');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 
@@ -33,6 +33,10 @@ context('A maker can issue and submit an issued loan facility with a deal in `Ac
 
     const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
+
+    loanRow.facilityStage().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Conditional');
+    });
 
     loanRow.issueFacilityLink().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Issue facility');
@@ -75,6 +79,10 @@ context('A maker can issue and submit an issued loan facility with a deal in `Ac
     // expect the loan status to be updated
     loanRow.loanStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Ready for check');
+    });
+
+    loanRow.facilityStage().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Unconditional');
     });
 
     // expect loan issue facility link text to be changed

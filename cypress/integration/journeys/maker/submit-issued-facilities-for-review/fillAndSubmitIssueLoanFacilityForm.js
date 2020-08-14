@@ -19,7 +19,7 @@ export const fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate = 
   pages.loanIssueFacility.submit().click();
 };
 
-const fillAndSubmitIssueLoanFacilityForm = () => {
+export const fillAndSubmitIssueLoanFacilityForm = () => {
   pages.loanIssueFacility.issuedDateDayInput().type(ISSUED_LOAN_DATE_VALUE.format('DD'));
   pages.loanIssueFacility.issuedDateMonthInput().type(ISSUED_LOAN_DATE_VALUE.format('MM'));
   pages.loanIssueFacility.issuedDateYearInput().type(ISSUED_LOAN_DATE_VALUE.format('YYYY'));
@@ -39,5 +39,3 @@ const fillAndSubmitIssueLoanFacilityForm = () => {
 
   pages.loanIssueFacility.submit().click();
 };
-
-export default fillAndSubmitIssueLoanFacilityForm;
