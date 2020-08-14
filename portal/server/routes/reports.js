@@ -688,6 +688,15 @@ router.get('/reports/countdown-indicator', async (req, res) => {
 const getConditionsData = async (req, res, filterByDealStatus) => {
   console.log(filterByDealStatus);
   const { userToken } = requestParams(req);
+  let maxDays = 10;
+  let workingDays = 14;
+  if (filterByDealStatus === 'Accepted by UKEF (with conditions)') {
+    workingDays = 28;
+    maxDays = 20;
+  }
+  const fromDays = req.query.fromDays || 0;
+  const toDays = req.query.toDays || maxDays;
+
   const submissionFilters = {
     filterBySubmissionType: 'manualInclusionApplication',
   };
@@ -699,11 +708,22 @@ const getConditionsData = async (req, res, filterByDealStatus) => {
   );
 
   let miaWithConditions = [];
+  let tempDeals = [];
   let deals = [];
   let count = 0;
   if (applications.deal) {
     miaWithConditions = applications.deals.filter((deal) => (deal.status === filterByDealStatus));
-    deals = getExpiryDates(miaWithConditions, 28, true);
+    tempDeals = getExpiryDates(miaWithConditions, workingDays, true);
+    // once we have the deals and expriy dates, filter the display
+    if (fromDays > 0) {
+      deals = tempDeals.filter(
+        (deal) => deal.remainingDays >= fromDays && deal.remainingDays <= toDays,
+      );
+    } else {
+      deals = tempDeals.filter(
+        (deal) => deal.remainingDays <= toDays,
+      );
+    }
     count = deals.length;
   }
 
@@ -715,7 +735,7 @@ const getConditionsData = async (req, res, filterByDealStatus) => {
   return { deals, pages };
 };
 
-router.get('/reports/mia-to-be-submitted/with-conditions', async (req, res) => {
+router.get('/reports/mia-to-be-submitted/with-conditions:page', async (req, res) => {
   const {
     pages,
     deals,
@@ -731,7 +751,7 @@ router.get('/reports/mia-to-be-submitted/with-conditions', async (req, res) => {
   });
 });
 
-router.get('/reports/mia-to-be-submitted/without-conditions', async (req, res) => {
+router.get('/reports/mia-to-be-submitted/without-conditions:page', async (req, res) => {
   const {
     pages,
     deals,
@@ -773,14 +793,13 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
     res,
   );
   rawData.transactions = getExpiryDates(rawData.transactions, 90, false);
-  console.log(`transactions: ${util.inspect(rawData.transactions)}`);
+
   let transactions = [];
-  if (req.query.fromDays > 0) {
+  if (fromDays > 0) {
     transactions = rawData.transactions.filter(
       (transaction) => transaction.remainingDays >= fromDays && transaction.remainingDays <= toDays,
     );
   } else {
-    console.log('everything less than ...');
     transactions = rawData.transactions.filter(
       (transaction) => transaction.remainingDays <= toDays,
     );
