@@ -686,7 +686,6 @@ router.get('/reports/countdown-indicator', async (req, res) => {
 });
 
 const getConditionsData = async (req, res, filterByDealStatus) => {
-  console.log(filterByDealStatus);
   const { userToken } = requestParams(req);
   let maxDays = 10;
   let workingDays = 14;
