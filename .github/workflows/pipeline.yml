@@ -106,7 +106,8 @@ jobs:
       if: failure()
 
   end-to-end-tests:
-    needs: [portal-ui, portal-api]
+    # Temporarily serialising e2e and API tests to avoid clashing in the file-storage:
+    needs: [portal-ui, portal-api, api-tests]
     name: "Run end-to-end tests in Compose"
     runs-on: ubuntu-latest
     steps:
