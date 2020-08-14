@@ -170,9 +170,11 @@ jobs:
         username: ${{ secrets.ACR_DEV_USERNAME }}
         password: ${{ secrets.ACR_DEV_PASSWORD }}
     - run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:dev
-        docker push ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:dev
+        from=latest
+        to=dev
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:$from
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:$from ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:$to
+        docker push ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:$to
 
   promote-portal-api-dev:
     needs: [api-tests, end-to-end-tests]
@@ -185,9 +187,11 @@ jobs:
         username: ${{ secrets.ACR_DEV_USERNAME }}
         password: ${{ secrets.ACR_DEV_PASSWORD }}
     - run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:dev
-        docker push ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:dev
+        from=latest
+        to=dev
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:$from
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:$from ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:$to
+        docker push ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:$to
 
   portal-data:
     needs: promote-portal-api-dev
@@ -202,83 +206,3 @@ jobs:
           npm install
           echo Refreshing database using $(cat .env)
           node re-insert-mocks.js
-
-  promote-portal-ui-test:
-    needs: [api-tests, end-to-end-tests]
-    name: Promote Portal UI from Dev to Test
-    runs-on: ubuntu-latest
-    steps:
-    - uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.ACR_DEV_REGISTRY }}
-        username: ${{ secrets.ACR_DEV_USERNAME }}
-        password: ${{ secrets.ACR_DEV_PASSWORD }}
-    - uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.ACR_TEST_REGISTRY }}
-        username: ${{ secrets.ACR_TEST_USERNAME }}
-        password: ${{ secrets.ACR_TEST_PASSWORD }}
-    - run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui ${{ secrets.ACR_TEST_REGISTRY }}/portal-ui:test
-        docker push ${{ secrets.ACR_TEST_REGISTRY }}/portal-ui:test
-
-  promote-portal-api-test:
-    needs: [api-tests, end-to-end-tests]
-    name: Promote Portal API from Dev to Test
-    runs-on: ubuntu-latest
-    steps:
-    - uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.ACR_DEV_REGISTRY }}
-        username: ${{ secrets.ACR_DEV_USERNAME }}
-        password: ${{ secrets.ACR_DEV_PASSWORD }}
-    - uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.ACR_TEST_REGISTRY }}
-        username: ${{ secrets.ACR_TEST_USERNAME }}
-        password: ${{ secrets.ACR_TEST_PASSWORD }}
-    - run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:test
-        docker push ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:test
-
-  promote-portal-ui-prod:
-    needs: [promote-portal-ui-test]
-    name: Promote Portal UI from Test to Prod
-    runs-on: ubuntu-latest
-    steps:
-    - uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.ACR_TEST_REGISTRY }}
-        username: ${{ secrets.ACR_TEST_USERNAME }}
-        password: ${{ secrets.ACR_TEST_PASSWORD }}
-    - uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.ACR_PROD_REGISTRY }}
-        username: ${{ secrets.ACR_PROD_USERNAME }}
-        password: ${{ secrets.ACR_PROD_PASSWORD }}
-    - run: |
-        docker pull ${{ secrets.ACR_TEST_REGISTRY }}/portal-ui:test
-        docker tag ${{ secrets.ACR_TEST_REGISTRY }}/portal-ui:test ${{ secrets.ACR_PROD_REGISTRY }}/portal-ui:prod
-        docker push ${{ secrets.ACR_PROD_REGISTRY }}/portal-ui:prod
-
-  promote-portal-api-prod:
-    needs: [promote-portal-api-test]
-    name: Promote Portal API from Test to Prod
-    runs-on: ubuntu-latest
-    steps:
-    - uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.ACR_TEST_REGISTRY }}
-        username: ${{ secrets.ACR_TEST_USERNAME }}
-        password: ${{ secrets.ACR_TEST_PASSWORD }}
-    - uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.ACR_PROD_REGISTRY }}
-        username: ${{ secrets.ACR_PROD_USERNAME }}
-        password: ${{ secrets.ACR_PROD_PASSWORD }}
-    - run: |
-        docker pull ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:test
-        docker tag ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:test ${{ secrets.ACR_PROD_REGISTRY }}/portal-api:prod
-        docker push ${{ secrets.ACR_PROD_REGISTRY }}/portal-api:prod
