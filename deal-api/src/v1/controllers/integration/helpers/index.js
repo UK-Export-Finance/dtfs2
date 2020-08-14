@@ -9,6 +9,7 @@ const whitespaceCollapse = require('./whitespace-collapse');
 const getApplicationGroup = require('./get-application-group');
 const getActionCodeAndName = require('./get-action-code-and-name');
 const calculateExposurePeriod = require('./calculate-exposure-period');
+const calculateIssuedDate = require('./calculate-issued-date');
 
 module.exports = {
   eligibilityCriteriaHelper,
@@ -22,4 +23,5 @@ module.exports = {
   getApplicationGroup,
   getActionCodeAndName,
   calculateExposurePeriod,
+  calculateIssuedDate,
 };

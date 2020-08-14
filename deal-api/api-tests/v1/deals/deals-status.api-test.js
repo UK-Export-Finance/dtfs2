@@ -220,6 +220,7 @@ describe('/v1/deals/:id/status', () => {
           roles: anHSBCMaker.roles,
           lastLogin: expect.any(String),
           username: anHSBCMaker.username,
+          email: anHSBCMaker.email,
           firstname: anHSBCMaker.firstname,
           surname: anHSBCMaker.surname,
           timezone: 'Europe/London',
@@ -588,8 +589,7 @@ describe('/v1/deals/:id/status', () => {
           const issuedBondsThatShouldBeUpdated = body.deal.bondTransactions.items.filter((b) =>
             b.bondStage === 'Unissued'
             && b.issueFacilityDetailsProvided === true
-            && !b.issueFacilityDetailsSubmitted
-          );
+            && !b.issueFacilityDetailsSubmitted);
 
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
             expect(bond.status).toEqual('Ready for check');
@@ -607,15 +607,13 @@ describe('/v1/deals/:id/status', () => {
           const issuedLoansThatShouldBeUpdated = body.deal.loanTransactions.items.filter((l) =>
             l.facilityStage === 'Conditional'
             && l.issueFacilityDetailsProvided === true
-            && !l.issueFacilityDetailsSubmitted
-          );
+            && !l.issueFacilityDetailsSubmitted);
 
           issuedLoansThatShouldBeUpdated.forEach((loan) => {
             expect(loan.status).toEqual('Ready for check');
           });
         });
       });
-
     });
 
     describe('when the status changes to `Further Maker\'s input required`', () => {
@@ -644,8 +642,7 @@ describe('/v1/deals/:id/status', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedBondsThatShouldBeUpdated = body.deal.bondTransactions.items.filter((b) =>
-            b.bondStage === 'Unissued'
-          );
+            b.bondStage === 'Unissued');
 
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
             expect(bond.status).toEqual('Maker\'s input required');
@@ -661,8 +658,7 @@ describe('/v1/deals/:id/status', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedLoansThatShouldBeUpdated = body.deal.loanTransactions.items.filter((l) =>
-            l.facilityStage === 'Conditional'
-          );
+            l.facilityStage === 'Conditional');
 
           issuedLoansThatShouldBeUpdated.forEach((loan) => {
             expect(loan.status).toEqual('Maker\'s input required');
@@ -697,7 +693,7 @@ describe('/v1/deals/:id/status', () => {
           return facility;
         }
         return null;
-      }
+      };
 
       describe('any issued loans (facilityStage=`Conditional`, `issueFacilityDetailsProvided`) that have not yet been submitted', () => {
         it('should add `Submitted` status and `issueFacilityDetailsSubmitted` property', async () => {
@@ -707,8 +703,7 @@ describe('/v1/deals/:id/status', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedLoansThatShouldBeUpdated = createdDeal.loanTransactions.items.filter((l) =>
-            isUnsubmittedIssuedFacility(l)
-          );
+            isUnsubmittedIssuedFacility(l));
 
           // make sure we have some loans to test against
           expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
@@ -728,8 +723,7 @@ describe('/v1/deals/:id/status', () => {
 
           const issuedLoansThatShouldBeUpdated = createdDeal.loanTransactions.items.filter((l) =>
             isUnsubmittedIssuedFacility(l)
-            && !l.requestedCoverStartDate
-          );
+            && !l.requestedCoverStartDate);
 
           // make sure we have some loans to test against
           expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
@@ -749,8 +743,7 @@ describe('/v1/deals/:id/status', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedBondsThatShouldBeUpdated = createdDeal.bondTransactions.items.filter((b) =>
-            isUnsubmittedIssuedFacility(b)
-          );
+            isUnsubmittedIssuedFacility(b));
 
           // make sure we have some bonds to test against
           expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
@@ -770,8 +763,7 @@ describe('/v1/deals/:id/status', () => {
 
           const issuedBondsThatShouldBeUpdated = createdDeal.bondTransactions.items.filter((b) =>
             isUnsubmittedIssuedFacility(b)
-            && !b.requestedCoverStartDate
-          );
+            && !b.requestedCoverStartDate);
 
           // make sure we have some bonds to test against
           expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
