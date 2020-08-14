@@ -26,7 +26,11 @@ const dealsQuery = (user, filter) => {
   if (!isSuperUser(user)) {
     query['details.owningBank.id'] = { $eq: user.bank.id };
   }
-
+  // check for the bankSupplyContractID and swap for regex to make it case-insensitve
+  if (query && query['details.bankSupplyContractID']) {
+    const bankSupplyContractID = query['details.bankSupplyContractID'];
+    query['details.bankSupplyContractID'] = { $regex: bankSupplyContractID };
+  }
   return query;
 };
 
