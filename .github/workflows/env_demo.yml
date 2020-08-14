@@ -100,8 +100,7 @@ jobs:
           options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
           
           az webapp create $options \
-            --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name $container_image
+            --plan ${{ env.app_service_plan }}
           
     - name: Always-on
       uses: Azure/cli@v1.0.0
@@ -142,12 +141,24 @@ jobs:
           az webapp log config $options \
             --docker-container-logging filesystem
 
+    - name: Environment variables
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
+                        
           # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
           az webapp config appsettings set $options \
             --settings \
               PORT=5000 \
               WEBSITES_PORT=5000
-          
+
+    - name: Secrets
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
+                          
           az webapp config connection-string set $options \
             --connection-string-type custom \
             --settings \
