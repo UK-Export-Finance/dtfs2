@@ -11,7 +11,11 @@ env:
   app_service_plan: dev
   registry: ${{ secrets.ACR_DEV_REGISTRY }}
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+  # Container settings
   image_tag: demo
+  container_registry: ${{ secrets.ACR_DEV_REGISTRY }}
+  container_registry_username: ${{ secrets.ACR_DEV_USERNAME }}
+  container_registry_password: ${{ secrets.ACR_DEV_PASSWORD }}
   # App service settings
   DEAL_API_URL: "https://tfs-demo-portal-api.azurewebsites.net"
   COMPANIES_HOUSE_API_URL: ="https://api.companieshouse.gov.uk"
@@ -84,28 +88,63 @@ jobs:
   portal-api:
     name: Portal API
     runs-on: ubuntu-latest
+    env:
+      options: "--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
     steps:
     - uses: azure/login@v1
       with:
         creds: ${{ env.credentials }}
 
-    - name: Portal API
+    - name: Create
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          name=tfs-${{ env.environment }}-portal-api
-          container_image=${{ env.registry }}/portal-api:${{ env.image_tag }}
-          options="--name ${name} --resource-group ${{ env.resource_group }}"
+          echo Options: ${{ env.options }}
+          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
           
           az webapp create $options \
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name $container_image
           
+    - name: Always-on
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          echo Options: ${{ env.options }}
+          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
+        
           az webapp config set $options \
             --always-on true
 
+    - name: Container
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          echo Options: ${{ env.options }}
+          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
+                
+          az webapp config container set $options \
+            --docker-custom-image-name portal-api:${{ env.image_tag }} 
+            --docker-registry-server-url ${{ env.container_registry }}
+            --docker-registry-server-user ${{ env.container_registry_username }}
+            --docker-registry-server-password ${{ env.container_registry_password }} 
+
+    - name: Continuous deployment
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          echo Options: ${{ env.options }}
+          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
+                  
           az webapp deployment container config $options \
             --enable-cd true
+
+    - name: Enable container logging
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          echo Options: ${{ env.options }}
+          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"  
 
           az webapp log config $options \
             --docker-container-logging filesystem
