@@ -1,5 +1,5 @@
 import express from 'express';
-// import util from 'util';
+import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
 import { getRAGstatus, getExpiryDates } from './expiryStatusUtils';
@@ -613,9 +613,9 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     firstCellIsHeader: true,
     head: [{ text: 'Days remaining' }, { text: 'Facilities' }],
     rows: [
-      [{ text: '0 to 15' }, { html: `<strong class="govuk-tag govuk-tag--red">${status90Days.red}</strong> &nbsp; <a href="/reports/unissued-transactions" >view</a>` }],
-      [{ text: '16 to 45' }, { html: `<strong class="govuk-tag govuk-tag--orange">${status90Days.orange}</strong> &nbsp; <a href="/reports/unissued-transactions" >view</a>` }],
-      [{ text: '46 to 90' }, { html: `<strong class="govuk-tag govuk-tag--green">${status90Days.green}</strong> &nbsp; <a href="/reports/unissued-transactions" >view</a>` }],
+      [{ text: '0 to 15' }, { html: `<strong class="govuk-tag govuk-tag--red">${status90Days.red}</strong> &nbsp; <a href="/reports/unissued-transactions/0?fromDays=0&toDays=15" >view</a>` }],
+      [{ text: '16 to 45' }, { html: `<strong class="govuk-tag govuk-tag--orange">${status90Days.orange}</strong> &nbsp; <a href="/reports/unissued-transactions/0?fromDays=16&toDays=45" >view</a>` }],
+      [{ text: '46 to 90' }, { html: `<strong class="govuk-tag govuk-tag--green">${status90Days.green}</strong> &nbsp; <a href="/reports/unissued-transactions/0?fromDays=46&toDays=90" >view</a>` }],
     ],
   };
 
@@ -624,15 +624,18 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     firstCellIsHeader: true,
     head: [{ text: 'Days remaining' }, { text: 'Supply Contracts' }, { text: '' }],
     rows: [
-      [{ text: '0 to 6' }, { html: `<strong class="govuk-tag govuk-tag--red">${status20Days.red}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/with-conditions" >view</a>` }],
-      [{ text: '7 to 13' }, { html: `<strong class="govuk-tag govuk-tag--orange">${status20Days.orange}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/with-conditions" >view</a>` }],
-      [{ text: '14 to 20' }, { html: `<strong class="govuk-tag govuk-tag--green">${status20Days.green}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/with-conditions" >view</a>` }],
+      [{ text: '0 to 6' }, { html: `<strong class="govuk-tag govuk-tag--red">${status20Days.red}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/with-conditions/0?fromDays=0&toDays=6" >view</a>` }],
+      [{ text: '7 to 13' }, { html: `<strong class="govuk-tag govuk-tag--orange">${status20Days.orange}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/with-conditions/0?fromDays=7&toDays=13" >view</a>` }],
+      [{ text: '14 to 20' }, { html: `<strong class="govuk-tag govuk-tag--green">${status20Days.green}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/with-conditions/0?fromDays=14&toDays=20" >view</a>` }],
     ],
   };
+  /*
   if (status20Days.negative > 0) {
-    const row = [{ text: 'OVERDUE' }, { html: `<strong class="govuk-tag govuk-tag--red">${status20Days.negative}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/with-conditions" >view</a>` }];
+    const row = [{ text: 'OVERDUE' },
+    { html: `<strong class="govuk-tag govuk-tag--red">${status20Days.negative}</strong>
+    &nbsp; <a href="/reports/mia-to-be-submitted/with-conditions" >view</a>` }];
     manualInclusionsWithConditions.rows.unshift(row);
-  }
+  } */
   if (status20Days.negative === 0
     && status20Days.red === 0
     && status20Days.orange === 0
@@ -645,15 +648,19 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     firstCellIsHeader: true,
     head: [{ text: 'Days remaining' }, { text: 'Supply Contracts' }, { text: '' }],
     rows: [
-      [{ text: '0 to 5' }, { html: `<strong class="govuk-tag govuk-tag--red">${status10Days.red}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/without-conditions" >view</a>` }],
-      [{ text: '6 to 7' }, { html: `<strong class="govuk-tag govuk-tag--orange">${status10Days.orange}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/without-conditions" >view</a>` }],
-      [{ text: '8 to 10' }, { html: `<strong class="govuk-tag govuk-tag--green">${status10Days.green}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/without-conditions" >view</a>` }],
+      [{ text: '0 to 5' }, { html: `<strong class="govuk-tag govuk-tag--red">${status10Days.red}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/without-conditions/0?fromDays=0&toDays=5" >view</a>` }],
+      [{ text: '6 to 7' }, { html: `<strong class="govuk-tag govuk-tag--orange">${status10Days.orange}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/without-conditions/0?fromDays=6&toDays=7" >view</a>` }],
+      [{ text: '8 to 10' }, { html: `<strong class="govuk-tag govuk-tag--green">${status10Days.green}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/without-conditions/0?fromDays=8&toDays=10" >view</a>` }],
     ],
   };
+  /*
   if (status10Days.negatives > 0) {
-    const row = [{ text: 'OVERDUE' }, { html: `<strong class="govuk-tag govuk-tag--red">${status10Days.negative}</strong> &nbsp; <a href="/reports/mia-to-be-submitted/without-conditions" >view</a>` }];
+    const row = [{ text: 'OVERDUE' },
+    { html: `<strong class="govuk-tag govuk-tag--red">${status10Days.negative}</strong>
+    &nbsp; <a href="/reports/mia-to-be-submitted/without-conditions" >view</a>` }];
     manualInclusionsWithoutConditions.rows.unshift(row);
   }
+  */
   if (status10Days.negative === 0
     && status10Days.red === 0
     && status10Days.orange === 0
@@ -678,7 +685,8 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   });
 });
 
-router.get('/reports/mia-to-be-submitted/with-conditions', async (req, res) => {
+const getConditionsData = async (req, res, filterByDealStatus) => {
+  console.log(filterByDealStatus);
   const { userToken } = requestParams(req);
   const submissionFilters = {
     filterBySubmissionType: 'manualInclusionApplication',
@@ -694,7 +702,7 @@ router.get('/reports/mia-to-be-submitted/with-conditions', async (req, res) => {
   let deals = [];
   let count = 0;
   if (applications.deal) {
-    miaWithConditions = applications.deals.filter((deal) => (deal.status === 'Accepted by UKEF (with conditions)'));
+    miaWithConditions = applications.deals.filter((deal) => (deal.status === filterByDealStatus));
     deals = getExpiryDates(miaWithConditions, 28, true);
     count = deals.length;
   }
@@ -704,6 +712,15 @@ router.get('/reports/mia-to-be-submitted/with-conditions', async (req, res) => {
     currentPage: parseInt(req.params.page, 10),
     totalItems: count,
   };
+  return { deals, pages };
+};
+
+router.get('/reports/mia-to-be-submitted/with-conditions', async (req, res) => {
+  const {
+    pages,
+    deals,
+  } = getConditionsData(req, res, 'Accepted by UKEF (with conditions)');
+
   return res.render('reports/MIA-to-be-submitted-report.njk', {
     pages,
     conditions: 'with',
@@ -715,31 +732,11 @@ router.get('/reports/mia-to-be-submitted/with-conditions', async (req, res) => {
 });
 
 router.get('/reports/mia-to-be-submitted/without-conditions', async (req, res) => {
-  const { userToken } = requestParams(req);
-  const submissionFilters = {
-    filterBySubmissionType: 'manualInclusionApplication',
-  };
+  const {
+    pages,
+    deals,
+  } = getConditionsData(req, res, 'Accepted by UKEF (without conditions)');
 
-  const MIAfilters = buildReportFilters(submissionFilters, req.session.user);
-  const applications = await getApiData(
-    api.contracts(0, 0, MIAfilters, userToken),
-    res,
-  );
-
-  let miaWithoutConditions = [];
-  let deals = [];
-  let count = 0;
-  if (applications.deals) {
-    miaWithoutConditions = applications.deals.filter((deal) => (deal.status === 'Accepted by UKEF (without conditions)'));
-    deals = getExpiryDates(miaWithoutConditions, 14, true);
-    count = deals.length;
-  }
-
-  const pages = {
-    totalPages: Math.ceil(count / PAGESIZE),
-    currentPage: parseInt(req.params.page, 10),
-    totalItems: count,
-  };
   return res.render('reports/MIA-to-be-submitted-report.njk', {
     pages,
     conditions: 'without',
@@ -756,9 +753,11 @@ router.get('/reports/unissued-transactions',
 
 router.get('/reports/unissued-transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
+  const fromDays = req.query.fromDays || 0;
+  const toDays = req.query.toDays || 90;
 
   const sortOrder = {
-    queryString: `${req.params.page}?sort=desc`,
+    queryString: `${req.params.page}?fromDays=${fromDays}&toDays=${toDays}&sort=desc`,
     order: 'ascending',
     image: 'twistie-up',
   };
@@ -769,15 +768,28 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
   };
   const filters = buildReportFilters(stageFilters, req.session.user);
 
-  let { transactions } = await getApiData(
+  const rawData = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-  transactions = getExpiryDates(transactions, 90, false);
+  rawData.transactions = getExpiryDates(rawData.transactions, 90, false);
+  console.log(`transactions: ${util.inspect(rawData.transactions)}`);
+  let transactions = [];
+  if (req.query.fromDays > 0) {
+    transactions = rawData.transactions.filter(
+      (transaction) => transaction.remainingDays >= fromDays && transaction.remainingDays <= toDays,
+    );
+  } else {
+    console.log('everything less than ...');
+    transactions = rawData.transactions.filter(
+      (transaction) => transaction.remainingDays <= toDays,
+    );
+  }
+
   // default order from getExpiryDates is asc
   if (req.query && req.query.sort && req.query.sort === 'desc') {
     transactions.sort((a, b) => parseFloat(b.remainingDays) - parseFloat(a.remainingDays));
-    sortOrder.queryString = req.param.page;
+    sortOrder.queryString = `${req.params.page}?fromDays=${fromDays}&toDays=${toDays}`;
     sortOrder.order = 'descending';
     sortOrder.image = 'twistie-down';
   }
