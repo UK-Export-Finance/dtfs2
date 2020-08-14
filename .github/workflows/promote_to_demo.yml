@@ -1,0 +1,65 @@
+name: Pipeline
+
+on:
+  push:
+    branches: [ demo ]
+
+env:
+  environment: demo
+  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+  resource_group: ${{ secrets.RESOURCE_GROUP_DEV }}
+
+jobs:
+
+  promote:
+    name: Promote container images
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_DEV_REGISTRY }}
+        username: ${{ secrets.ACR_DEV_USERNAME }}
+        password: ${{ secrets.ACR_DEV_PASSWORD }}
+    - run: |
+        from=dev
+        to=demo
+
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:$from
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:$from ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:$to
+        docker push ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:$to
+
+        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:$from
+        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:$from ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:$to
+        docker push ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:$to
+
+  deploy:
+    # The App Service seems to need to be restarted to trigger a redeploy
+    name: Deploy container images
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+    - name: Restart Portal UI
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          resource_group=${{ env.resource_group }}
+          portal_ui=tfs-${{ env.environment }}-portal-ui
+          portal_api=tfs-${{ env.environment }}-portal-ui
+          az webapp restart --name ${portal_ui} --resource-group ${resource_group}
+          az webapp restart --name ${portal_api} --resource-group ${resource_group}
+
+  refresh-data:
+    needs: deploy
+    name: Refresh environment data
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Re-insert mocks
+        run: |
+          cd utils/mock-data-loader 
+          echo "DEAL_API_URL=https://tfs-${{ env.environment }}-portal-api.azurewebsites.net" > .env
+          cat .env
+          npm install
+          node re-insert-mocks.js
