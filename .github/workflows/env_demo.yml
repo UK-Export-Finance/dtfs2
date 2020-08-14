@@ -110,19 +110,7 @@ jobs:
           options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
         
           az webapp config set $options \
-            --always-on true
-
-    - name: Container
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
-                
-          az webapp config container set $options \
-            --docker-custom-image-name portal-api:${{ env.image_tag }} 
-            --docker-registry-server-url ${{ env.container_registry }}
-            --docker-registry-server-user ${{ env.container_registry_username }}
-            --docker-registry-server-password ${{ env.container_registry_password }} 
+            --always-on true 
 
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
