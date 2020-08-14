@@ -13,9 +13,6 @@ env:
   # Container settings
   image_tag: demo
   registry: ${{ secrets.ACR_DEV_REGISTRY }}
-  container_registry: ${{ secrets.ACR_DEV_REGISTRY }}
-  container_registry_username: ${{ secrets.ACR_DEV_USERNAME }}
-  container_registry_password: ${{ secrets.ACR_DEV_PASSWORD }}
   # App service settings
   DEAL_API_URL: "https://tfs-demo-portal-api.azurewebsites.net"
   COMPANIES_HOUSE_API_URL: ="https://api.companieshouse.gov.uk"
