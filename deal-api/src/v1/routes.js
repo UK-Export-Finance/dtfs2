@@ -9,18 +9,18 @@ const dealName = require('./controllers/deal-name.controller');
 const dealStatus = require('./controllers/deal-status.controller');
 const dealSubmissionDetails = require('./controllers/deal-submission-details.controller');
 const dealClone = require('./controllers/deal-clone.controller');
+const dealEligibilityCriteria = require('./controllers/deal-eligibility-criteria.controller');
+const dealEligibilityDocumentation = require('./controllers/deal-eligibility-documentation.controller');
 const banks = require('./controllers/banks.controller');
 const currencies = require('./controllers/currencies.controller');
 const countries = require('./controllers/countries.controller');
 const feedback = require('./controllers/feedback.controller');
 const industrySectors = require('./controllers/industrySectors.controller');
 const mandatoryCriteria = require('./controllers/mandatoryCriteria.controller');
-const eligibilityCriteria = require('./controllers/eligibility-criteria.controller');
 const loans = require('./controllers/loans.controller');
 const loanIssueFacility = require('./controllers/loan-issue-facility.controller');
 const bonds = require('./controllers/bonds.controller');
 const bondIssueFacility = require('./controllers/bond-issue-facility.controller');
-const eligibilityDocumentation = require('./controllers/eligibility-documentation.controller');
 const idCounters = require('./controllers/id-counters.controller');
 const mga = require('./controllers/mga.controller');
 
@@ -141,20 +141,20 @@ authRouter.route('/deals/:id/clone')
 authRouter.route('/deals/:id/eligibility-criteria')
   .put(
     validate({ role: ['maker'] }),
-    eligibilityCriteria.update,
+    dealEligibilityCriteria.update,
   );
 
 authRouter.route('/deals/:id/eligibility-documentation')
   .put(
     validate({ role: ['maker'] }),
     upload.any(),
-    eligibilityDocumentation.update,
+    dealEligibilityDocumentation.update,
   );
 
 authRouter.route('/deals/:id/eligibility-documentation/:fieldname/:filename')
   .get(
     validate({ role: ['maker', 'checker'] }),
-    eligibilityDocumentation.downloadFile,
+    dealEligibilityDocumentation.downloadFile,
   );
 
 authRouter.route('/banks')
