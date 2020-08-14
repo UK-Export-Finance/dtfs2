@@ -735,7 +735,7 @@ const getConditionsData = async (req, res, filterByDealStatus) => {
   return { deals, pages };
 };
 
-router.get('/reports/mia-to-be-submitted/with-conditions:page', async (req, res) => {
+router.get('/reports/mia-to-be-submitted/with-conditions/:page', async (req, res) => {
   const {
     pages,
     deals,
@@ -751,7 +751,7 @@ router.get('/reports/mia-to-be-submitted/with-conditions:page', async (req, res)
   });
 });
 
-router.get('/reports/mia-to-be-submitted/without-conditions:page', async (req, res) => {
+router.get('/reports/mia-to-be-submitted/without-conditions/:page', async (req, res) => {
   const {
     pages,
     deals,
