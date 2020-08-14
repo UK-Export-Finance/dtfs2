@@ -3,5 +3,8 @@
   "apiProtocol": "http://",
   "apiHost": "localhost",
   "apiPort": "5001",
+  "testHookApiProtocol": "http://",
+  "testHookApiHost": "localhost",
+  "testHookApiPort": "5069",
   "projectId": "f1ud6y"
 }
