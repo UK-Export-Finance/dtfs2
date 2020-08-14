@@ -1,4 +1,4 @@
-name: Pipeline
+name: Deploy demo
 
 on:
   push:
@@ -15,7 +15,8 @@ jobs:
     name: Promote container images
     runs-on: ubuntu-latest
     steps:
-    - uses: azure/docker-login@v1
+    - name: Tag images
+      uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.ACR_DEV_REGISTRY }}
         username: ${{ secrets.ACR_DEV_USERNAME }}
@@ -35,6 +36,7 @@ jobs:
   deploy:
     # The App Service seems to need to be restarted to trigger a redeploy
     name: Deploy container images
+    needs: promote
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
