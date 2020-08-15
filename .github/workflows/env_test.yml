@@ -7,9 +7,9 @@ on:
 env:
   # Environment
   environment: test
-  resource_group: ${{ secrets.RESOURCE_GROUP_TEST }}
+  resource_group: ${{ secrets.TEST_RESOURCE_GROUP }}
   app_service_plan: test
-  registry: ${{ secrets.ACR_TEST_REGISTRY }}
+  registry: ${{ secrets.TEST_ACR_REGISTRY }}
   credentials: ${{ secrets.AZURE_DIGITAL_TEST }}
   image_tag: test
   # App service settings
@@ -31,7 +31,7 @@ env:
   MONGODB_URI: "${{ secrets.TEST_MONGODB_URI }}"
   JWT_SIGNING_KEY: "${{ secrets.DEV_JWT_SIGNING_KEY }}"
   JWT_VALIDATING_KEY: "${{ secrets.DEV_JWT_VALIDATING_KEY }}"
-  GOV_NOTIFY_API_KEY: ="${{ secrets.GOV_NOTIFY_API_KEY }}"
+  GOV_NOTIFY_API_KEY: ="${{ secrets.TEST_GOV_NOTIFY_API_KEY }}"
   GOV_NOTIFY_EMAIL_RECIPIENT: "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
 
 # Below this line sholud be the same for all environments
