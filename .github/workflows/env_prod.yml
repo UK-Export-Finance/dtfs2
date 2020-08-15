@@ -7,9 +7,9 @@ on:
 env:
   # Environment
   environment: prod
-  resource_group: ${{ secrets.RESOURCE_GROUP_PROD }}
+  resource_group: ${{ secrets.PROD_RESOURCE_GROUP }}
   app_service_plan: prod
-  registry: ${{ secrets.ACR_PROD_REGISTRY }}
+  registry: ${{ secrets.PROD_ACR_REGISTRY }}
   credentials: ${{ secrets.AZURE_DIGITAL_PROD }}
   image_tag: prod
   # App service settings
@@ -31,7 +31,7 @@ env:
   MONGODB_URI: "${{ secrets.DEV_MONGODB_URI }}"
   JWT_SIGNING_KEY: "${{ secrets.DEV_JWT_SIGNING_KEY }}"
   JWT_VALIDATING_KEY: "${{ secrets.DEV_JWT_VALIDATING_KEY }}"
-  GOV_NOTIFY_API_KEY: ="${{ secrets.GOV_NOTIFY_API_KEY }}"
+  GOV_NOTIFY_API_KEY: ="${{ secrets.PROD_GOV_NOTIFY_API_KEY }}"
   GOV_NOTIFY_EMAIL_RECIPIENT: "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
 
 # Below this line sholud be the same for all environments

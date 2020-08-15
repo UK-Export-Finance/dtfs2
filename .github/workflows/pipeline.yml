@@ -11,21 +11,7 @@ on:
 
 env:
   # These values are used when running tests in Docker Compose
-
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
-
-  AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.PIPELINE_AZURE_WORKFLOW_STORAGE_ACCOUNT }}
-  AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.PIPELINE_AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
-  AZURE_WORKFLOW_FILESHARE_NAME: ${{ secrets.PIPELINE_AZURE_WORKFLOW_FILESHARE_NAME }}
-  AZURE_WORKFLOW_EXPORT_FOLDER: ${{ secrets.PIPELINE_AZURE_WORKFLOW_EXPORT_FOLDER }}
-  AZURE_WORKFLOW_IMPORT_FOLDER: ${{ secrets.PIPELINE_AZURE_WORKFLOW_IMPORT_FOLDER }}
-
-  AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.PIPELINE_AZURE_PORTAL_STORAGE_ACCOUNT }}
-  AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.PIPELINE_AZURE_PORTAL_STORAGE_ACCESS_KEY }}
-  AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.PIPELINE_AZURE_PORTAL_FILESHARE_NAME }}
-  AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.PIPELINE_AZURE_PORTAL_EXPORT_FOLDER }}
-
-  GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
   GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
 
 jobs:
@@ -38,9 +24,9 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v1
       with:
-        registry: ${{ secrets.ACR_DEV_REGISTRY }}
-        username: ${{ secrets.ACR_DEV_USERNAME }}
-        password: ${{ secrets.ACR_DEV_PASSWORD }}
+        registry: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
         repository: portal-ui
         path: portal
         tags: latest
@@ -54,9 +40,9 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v1
       with:
-        registry: ${{ secrets.ACR_DEV_REGISTRY }}
-        username: ${{ secrets.ACR_DEV_USERNAME }}
-        password: ${{ secrets.ACR_DEV_PASSWORD }}
+        registry: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
         repository: portal-api
         path: deal-api
         tags: latest
@@ -66,22 +52,35 @@ jobs:
     needs: portal-api
     name: "Run API tests in Compose"
     runs-on: ubuntu-latest
+    env:
+      AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.APITEST_AZURE_WORKFLOW_STORAGE_ACCOUNT }}
+      AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.APITEST_AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
+      AZURE_WORKFLOW_FILESHARE_NAME: ${{ secrets.APITEST_AZURE_WORKFLOW_FILESHARE_NAME }}
+      AZURE_WORKFLOW_EXPORT_FOLDER: ${{ secrets.APITEST_AZURE_WORKFLOW_EXPORT_FOLDER }}
+      AZURE_WORKFLOW_IMPORT_FOLDER: ${{ secrets.APITEST_AZURE_WORKFLOW_IMPORT_FOLDER }}
+    
+      AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.APITEST_AZURE_PORTAL_STORAGE_ACCOUNT }}
+      AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.APITEST_AZURE_PORTAL_STORAGE_ACCESS_KEY }}
+      AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.APITEST_AZURE_PORTAL_FILESHARE_NAME }}
+      AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.APITEST_AZURE_PORTAL_EXPORT_FOLDER }}
+    
+      GOV_NOTIFY_API_KEY: ${{ secrets.APITEST_GOV_NOTIFY_API_KEY }}
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
     - uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.ACR_DEV_REGISTRY }}
-        username: ${{ secrets.ACR_DEV_USERNAME }}
-        password: ${{ secrets.ACR_DEV_PASSWORD }}
+        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
     - name: Pull portal-api
       run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api dtfs/deal-api
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-api
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-api dtfs/deal-api
     - name: Pull portal-ui
       run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui dtfs/portal
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui dtfs/portal
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh && docker-compose up -d
@@ -110,22 +109,35 @@ jobs:
     needs: [portal-ui, portal-api, api-tests]
     name: "Run end-to-end tests in Compose"
     runs-on: ubuntu-latest
+    env:
+      AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.E2ETEST_AZURE_WORKFLOW_STORAGE_ACCOUNT }}
+      AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.E2ETEST_AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
+      AZURE_WORKFLOW_FILESHARE_NAME: ${{ secrets.E2ETEST_AZURE_WORKFLOW_FILESHARE_NAME }}
+      AZURE_WORKFLOW_EXPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_WORKFLOW_EXPORT_FOLDER }}
+      AZURE_WORKFLOW_IMPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_WORKFLOW_IMPORT_FOLDER }}
+    
+      AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.E2ETEST_AZURE_PORTAL_STORAGE_ACCOUNT }}
+      AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.E2ETEST_AZURE_PORTAL_STORAGE_ACCESS_KEY }}
+      AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.E2ETEST_AZURE_PORTAL_FILESHARE_NAME }}
+      AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_PORTAL_EXPORT_FOLDER }}
+    
+      GOV_NOTIFY_API_KEY: ${{ secrets.E2ETEST_GOV_NOTIFY_API_KEY }}
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
     - uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.ACR_DEV_REGISTRY }}
-        username: ${{ secrets.ACR_DEV_USERNAME }}
-        password: ${{ secrets.ACR_DEV_PASSWORD }}
+        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
     - name: Pull portal-api
       run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api dtfs/deal-api
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-api
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-api dtfs/deal-api
     - name: Pull portal
       run: |
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui dtfs/portal
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui dtfs/portal
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
@@ -169,15 +181,15 @@ jobs:
     steps:
     - uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.ACR_DEV_REGISTRY }}
-        username: ${{ secrets.ACR_DEV_USERNAME }}
-        password: ${{ secrets.ACR_DEV_PASSWORD }}
+        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
     - run: |
         from=latest
         to=dev
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:$from
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:$from ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:$to
-        docker push ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:$to
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$from
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$from ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$to
+        docker push ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$to
 
   promote-portal-api-dev:
     needs: [api-tests, end-to-end-tests]
@@ -186,15 +198,15 @@ jobs:
     steps:
     - uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.ACR_DEV_REGISTRY }}
-        username: ${{ secrets.ACR_DEV_USERNAME }}
-        password: ${{ secrets.ACR_DEV_PASSWORD }}
+        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
     - run: |
         from=latest
         to=dev
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:$from
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:$from ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:$to
-        docker push ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:$to
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$from
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$from ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$to
+        docker push ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$to
 
   portal-data:
     needs: promote-portal-api-dev
