@@ -21,7 +21,7 @@
 
     {% if showFacilityIssuedLink %}
       
-      {% if userIsChecker %}
+      {% if userIsChecker and not userIsMaker %}
         <a href="/contract/{{ dealId }}/submission-details#{{ facilityName }}-{{ facility._id }}" class="govuk-link" data-cy="{{ facilityName }}-issue-facility-{{ facility._id }}">Facility issued</a>
 
         {% else %}
