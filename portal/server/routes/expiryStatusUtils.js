@@ -82,6 +82,7 @@ const getRAGstatus = (facilities, days, isDeal) => {
   // console.log(trafficLights);
   return trafficLights;
 };
+
 const getMIAData = async (req, res, filterByDealStatus) => {
   const { userToken } = requestParams(req);
   let maxDays = 10;
