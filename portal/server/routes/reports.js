@@ -2,7 +2,7 @@ import express from 'express';
 // import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
-import { getRAGstatus, getExpiryDates } from './expiryStatusUtils';
+import { getRAGstatus, getExpiryDates, getConditionsData } from './expiryStatusUtils';
 import CONSTANTS from '../constants';
 import {
   getApiData,
@@ -684,55 +684,6 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     user: req.session.user,
   });
 });
-
-const getConditionsData = async (req, res, filterByDealStatus) => {
-  const { userToken } = requestParams(req);
-  let maxDays = 10;
-  let workingDays = 14;
-  if (filterByDealStatus === 'Accepted by UKEF (with conditions)') {
-    workingDays = 28;
-    maxDays = 20;
-  }
-  const fromDays = req.query.fromDays || 0;
-  const toDays = req.query.toDays || maxDays;
-
-  const submissionFilters = {
-    filterBySubmissionType: 'manualInclusionApplication',
-  };
-
-  const MIAfilters = buildReportFilters(submissionFilters, req.session.user);
-  const applications = await getApiData(
-    api.contracts(0, 0, MIAfilters, userToken),
-    res,
-  );
-
-  let miaWithConditions = [];
-  let tempDeals = [];
-  let deals = [];
-  let count = 0;
-  if (applications.deal) {
-    miaWithConditions = applications.deals.filter((deal) => (deal.status === filterByDealStatus));
-    tempDeals = getExpiryDates(miaWithConditions, workingDays, true);
-    // once we have the deals and expriy dates, filter the display
-    if (fromDays > 0) {
-      deals = tempDeals.filter(
-        (deal) => deal.remainingDays >= fromDays && deal.remainingDays <= toDays,
-      );
-    } else {
-      deals = tempDeals.filter(
-        (deal) => deal.remainingDays <= toDays,
-      );
-    }
-    count = deals.length;
-  }
-
-  const pages = {
-    totalPages: Math.ceil(count / PAGESIZE),
-    currentPage: parseInt(req.params.page, 10),
-    totalItems: count,
-  };
-  return { deals, pages };
-};
 
 router.get('/reports/mia-to-be-submitted/with-conditions/:page', async (req, res) => {
   const {
