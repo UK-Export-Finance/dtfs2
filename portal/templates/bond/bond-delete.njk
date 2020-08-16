@@ -4,13 +4,13 @@
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">Are you sure you want to delete {{ bond.bankReferenceNumber }} #{{bond.ukefFacilityID}}?</h1>
+  <h1 class="govuk-heading-l">Are you sure you want to delete {{ bond._id }} #{{bond.ukefFacilityID}}?</h1>
 
   <p class="govuk-body">This action cannot be undone.</p>
 
-  <form autocomplete="off">
+  <form method="POST" autocomplete="off" novalidate>
 
-    <button class="govuk-button govuk-button--warning govuk-!-margin-right-1" data-module="govuk-button">
+    <button type="submit" class="govuk-button govuk-button--warning govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">
       Delete
     </button>
 

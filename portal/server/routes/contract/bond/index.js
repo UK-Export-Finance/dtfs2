@@ -377,20 +377,32 @@ router.get('/contract/:_id/bond/:_bondId/confirm-requested-cover-start-date', as
   });
 });
 
-router.get('/contract/:_id/bond/:bondId/delete', async (req, res) => {
-  const { _id, bondId, userToken } = requestParams(req);
+router.get('/contract/:_id/bond/:bondId/delete', provide([BOND]), async (req, res) => {
+  const { dealId } = requestParams(req);
+  const { bond } = req.apiData.bond;
 
   return res.render('bond/bond-delete.njk', {
-    contract: await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ),
-    ...await getApiData(
-      api.contractBond(_id, bondId, userToken),
-      res,
-    ),
+    dealId,
+    bond,
     user: req.session.user,
   });
+});
+
+router.post('/contract/:_id/bond/:bondId/delete', async (req, res) => {
+  const { _id: dealId, bondId, userToken } = requestParams(req);
+
+  await postToApi(
+    api.deleteDealBond(
+      dealId,
+      bondId,
+      userToken,
+    ),
+    errorHref,
+  );
+
+  // TODO: assuming we just redirect to deal
+  // maybe a success message?
+  return res.redirect(`/contract/${dealId}`);
 });
 
 

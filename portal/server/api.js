@@ -248,7 +248,7 @@ const updateLoanIssueFacility = async (dealId, loanId, formData, token) => {
   return response.data;
 };
 
-const deleteDealLoan = async (dealId, loanId, formData, token) => {
+const deleteDealLoan = async (dealId, loanId, token) => {
   const response = await axios({
     method: 'delete',
     url: `${urlRoot}/v1/deals/${dealId}/loan/${loanId}`,
@@ -256,7 +256,6 @@ const deleteDealLoan = async (dealId, loanId, formData, token) => {
       Authorization: token,
       'Content-Type': 'application/json',
     },
-    data: formData,
   });
   return response.data;
 };
@@ -307,6 +306,18 @@ const updateBondIssueFacility = async (dealId, bondId, formData, token) => {
       'Content-Type': 'application/json',
     },
     data: formData,
+  });
+  return response.data;
+};
+
+const deleteDealBond = async (dealId, bondId, token) => {
+  const response = await axios({
+    method: 'delete',
+    url: `${urlRoot}/v1/deals/${dealId}/bond/${bondId}`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
   });
   return response.data;
 };
@@ -558,6 +569,7 @@ export default {
   transactions,
   updateBond,
   updateBondIssueFacility,
+  deleteDealBond,
   updateDeal,
   updateDealLoan,
   updateLoanIssueFacility,
