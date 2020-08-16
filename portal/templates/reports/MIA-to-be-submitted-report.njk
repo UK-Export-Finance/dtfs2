@@ -18,7 +18,16 @@
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">MIA created</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">MIA submitted</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">MIA approval by UKEF</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Business days to submit</th>
+        <th scope="col" class="govuk-table__header govuk-!-font-size-14"aria-sort="{{sortOrder.order}}">
+        <a href="{{sortOrder.queryString}}" class="govuk-link" data-cy="sortOrder">
+         Business days to submit
+          <img src="/assets/images/{{sortOrder.image}}.svg" alt="Re-order table in {{sortOrder.order}} order"/>
+          <span class="tablesort tablesort--desc">
+          <span class="govuk-visually-hidden">
+            Sort {{sortOrder.order}}
+          </span>
+        </span>
+        </a></th>
       </tr>
     </thead>
 

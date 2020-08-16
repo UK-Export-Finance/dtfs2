@@ -2,7 +2,7 @@ import express from 'express';
 // import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
-import { getRAGstatus, getExpiryDates, getConditionsData } from './expiryStatusUtils';
+import { getRAGstatus, getExpiryDates, getMIAData } from './expiryStatusUtils';
 import CONSTANTS from '../constants';
 import {
   getApiData,
@@ -686,15 +686,33 @@ router.get('/reports/countdown-indicator', async (req, res) => {
 });
 
 router.get('/reports/mia-to-be-submitted/with-conditions/:page', async (req, res) => {
+  const fromDays = req.query.fromDays || 0;
+  const toDays = req.query.toDays || 20;
   const {
     pages,
     deals,
-  } = getConditionsData(req, res, 'Accepted by UKEF (with conditions)');
+  } = getMIAData(req, res, 'Accepted by UKEF (with conditions)');
 
+  const sortOrder = {
+    queryString: `${req.params.page}?fromDays=${fromDays}&toDays=${toDays}&sort=desc`,
+    order: 'ascending',
+    image: 'twistie-up',
+  };
+
+  // default order from getExpiryDates is asc
+  if (req.query && req.query.sort && req.query.sort === 'desc') {
+    if (deals) {
+      deals.sort((a, b) => parseFloat(b.remainingDays) - parseFloat(a.remainingDays));
+    }
+    sortOrder.queryString = `${req.params.page}?fromDays=${fromDays}&toDays=${toDays}`;
+    sortOrder.order = 'descending';
+    sortOrder.image = 'twistie-down';
+  }
   return res.render('reports/MIA-to-be-submitted-report.njk', {
     pages,
     conditions: 'with',
     deals,
+    sortOrder,
     primaryNav,
     subNav: 'countdown-indicator',
     user: req.session.user,
@@ -702,15 +720,34 @@ router.get('/reports/mia-to-be-submitted/with-conditions/:page', async (req, res
 });
 
 router.get('/reports/mia-to-be-submitted/without-conditions/:page', async (req, res) => {
+  const fromDays = req.query.fromDays || 0;
+  const toDays = req.query.toDays || 10;
   const {
     pages,
     deals,
-  } = getConditionsData(req, res, 'Accepted by UKEF (without conditions)');
+  } = getMIAData(req, res, 'Accepted by UKEF (without conditions)');
+
+  const sortOrder = {
+    queryString: `${req.params.page}?fromDays=${fromDays}&toDays=${toDays}&sort=desc`,
+    order: 'ascending',
+    image: 'twistie-up',
+  };
+
+  // default order from getExpiryDates is asc
+  if (req.query && req.query.sort && req.query.sort === 'desc') {
+    if (deals) {
+      deals.sort((a, b) => parseFloat(b.remainingDays) - parseFloat(a.remainingDays));
+    }
+    sortOrder.queryString = `${req.params.page}?fromDays=${fromDays}&toDays=${toDays}`;
+    sortOrder.order = 'descending';
+    sortOrder.image = 'twistie-down';
+  }
 
   return res.render('reports/MIA-to-be-submitted-report.njk', {
     pages,
     conditions: 'without',
     deals,
+    sortOrder,
     primaryNav,
     subNav: 'countdown-indicator',
     user: req.session.user,
@@ -756,7 +793,7 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
   }
 
   // default order from getExpiryDates is asc
-  if (req.query && req.query.sort && req.query.sort === 'desc') {
+  if (transactions.length > 0 && req.query && req.query.sort && req.query.sort === 'desc') {
     transactions.sort((a, b) => parseFloat(b.remainingDays) - parseFloat(a.remainingDays));
     sortOrder.queryString = `${req.params.page}?fromDays=${fromDays}&toDays=${toDays}`;
     sortOrder.order = 'descending';
