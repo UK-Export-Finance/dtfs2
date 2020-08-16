@@ -1,5 +1,12 @@
-const ONE_DAY = 86400000; // milliseconds
+import api from '../api';
+import buildReportFilters from './buildReportFilters';
+import {
+  getApiData,
+  requestParams,
+} from '../helpers';
 
+const ONE_DAY = 86400000; // milliseconds
+const PAGESIZE = 20;
 
 // get expiry date based on count from creation date
 // TODO change for MIA
@@ -75,8 +82,57 @@ const getRAGstatus = (facilities, days, isDeal) => {
   // console.log(trafficLights);
   return trafficLights;
 };
+const getMIAData = async (req, res, filterByDealStatus) => {
+  const { userToken } = requestParams(req);
+  let maxDays = 10;
+  let workingDays = 14;
+  if (filterByDealStatus === 'Accepted by UKEF (with conditions)') {
+    workingDays = 28;
+    maxDays = 20;
+  }
+  const fromDays = req.query.fromDays || 0;
+  const toDays = req.query.toDays || maxDays;
+
+  const submissionFilters = {
+    filterBySubmissionType: 'manualInclusionApplication',
+  };
+
+  const MIAfilters = buildReportFilters(submissionFilters, req.session.user);
+  const applications = await getApiData(
+    api.contracts(0, 0, MIAfilters, userToken),
+    res,
+  );
+
+  let miaWithConditions = [];
+  let tempDeals = [];
+  let deals = [];
+  let count = 0;
+  if (applications.deal) {
+    miaWithConditions = applications.deals.filter((deal) => (deal.status === filterByDealStatus));
+    tempDeals = getExpiryDates(miaWithConditions, workingDays, true);
+    // once we have the deals and expriy dates, filter the display
+    if (fromDays > 0) {
+      deals = tempDeals.filter(
+        (deal) => deal.remainingDays >= fromDays && deal.remainingDays <= toDays,
+      );
+    } else {
+      deals = tempDeals.filter(
+        (deal) => deal.remainingDays <= toDays,
+      );
+    }
+    count = deals.length;
+  }
+
+  const pages = {
+    totalPages: Math.ceil(count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: count,
+  };
+  return { deals, pages };
+};
 
 export {
   getRAGstatus,
   getExpiryDates,
+  getMIAData,
 };
