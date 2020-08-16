@@ -19,10 +19,11 @@ module.exports = (submittedValues, errorList, dealSubmissionDateTimestamp) => {
   } = submittedValues;
 
   if (dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear)) {
-    if (moment(issuedDate).isBefore(dealSubmissionDate)) {
+    if (!moment(issuedDate).isSameOrAfter(dealSubmissionDate, 'day')) {
       const formattedDealSubmissionDate = moment(dealSubmissionDate).format('Do MMMM YYYY');
+
       newErrorList.issuedDate = {
-        text: `Issued Date must be after ${formattedDealSubmissionDate}`,
+        text: `Issued Date must be on or after ${formattedDealSubmissionDate}`,
         order: orderNumber(newErrorList),
       };
     }
