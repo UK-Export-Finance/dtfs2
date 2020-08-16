@@ -231,8 +231,8 @@ exports.deleteBond = async (req, res) => {
         res.status(401).send();
       }
 
-      const bond = deal.bondTransactions.items.find((bond) =>
-        String(bond._id) === bondId); // eslint-disable-line no-underscore-dangle
+      const bond = deal.bondTransactions.items.find((b) =>
+        String(b._id) === bondId); // eslint-disable-line no-underscore-dangle
 
       if (!bond) {
         return res.status(404).send();
