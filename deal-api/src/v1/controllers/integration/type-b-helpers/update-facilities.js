@@ -1,5 +1,5 @@
 const CONSTANTS = require('../../../../constants');
-  
+
 const updateBondStatus = (bond, workflowBond) => {
   const {
     bondStage,
