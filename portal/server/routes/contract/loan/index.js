@@ -392,7 +392,6 @@ router.post('/contract/:_id/loan/:loanId/delete', async (req, res) => {
     api.deleteDealLoan(
       dealId,
       loanId,
-      req.body,
       userToken,
     ),
     errorHref,

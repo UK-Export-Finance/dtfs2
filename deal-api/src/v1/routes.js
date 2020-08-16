@@ -106,6 +106,10 @@ authRouter.route('/deals/:id/bond/:bondId')
   .put(
     validate({ role: ['maker'] }),
     bonds.updateBond,
+  )
+  .delete(
+    validate({ role: ['maker'] }),
+    bonds.deleteBond,
   );
 
 authRouter.route('/deals/:id/bond/:bondId/issue-facility')
