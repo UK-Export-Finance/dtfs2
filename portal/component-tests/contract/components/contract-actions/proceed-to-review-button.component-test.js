@@ -56,6 +56,20 @@ describe(component, () => {
       }
     });
 
+    it('should be enabled for deals in status=`Accepted by UKEF (with conditions)`, `Accepted by UKEF (without conditions)`, regardless of incomplete/completed facilities and dealForms', () => {
+      const user = { roles: ['maker'] };
+      const deals = [
+        { _id: 1, details: { status: 'Accepted by UKEF (with conditions)' } },
+        { _id: 2, details: { status: 'Accepted by UKEF (without conditions)' } },
+      ];
+
+      for (const deal of deals) {
+        const wrapper = render({ user, deal });
+        wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]')
+          .toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
+      }
+    });
+
     it("should not render at all for deals in status=Submitted and status=Rejected by UKEF", () =>{
       const user = {roles: ['maker']};
       const deals = [
@@ -77,8 +91,6 @@ describe(component, () => {
         { _id: 2, details: { status: "Further Maker's input required" } },
         { _id: 3, details: { status: "Abandoned Deal" } },
         { _id: 4, details: { status: "Acknowledged by UKEF" } },
-        { _id: 5, details: { status: "Accepted by UKEF (without conditions)" } },
-        { _id: 6, details: { status: "Accepted by UKEF (with conditions)" } }
       ];
 
       const dealFormsCompleted = false;
@@ -94,10 +106,10 @@ describe(component, () => {
     it("should be disabled for deals in all other states", () =>{
       const user = {roles: ['maker']};
       const deals = [
-        {_id: 1, details:{status:"Abandoned Deal"}},
-        {_id: 2, details:{status:"Acknowledged by UKEF"}},
-        {_id: 3, details:{status:"Accepted by UKEF (without conditions)"}},
-        {_id: 4, details:{status:"Accepted by UKEF (with conditions)"}},
+        { _id: 1, details: { status: 'Draft' } },
+        { _id: 2, details: { status: 'Further Maker\'s input required' } },
+        { _id: 3, details: { status: 'Abandoned Deal' } },
+        { _id: 4, details: { status: 'Acknowledged by UKEF' } },
       ];
 
       for (const deal of deals) {

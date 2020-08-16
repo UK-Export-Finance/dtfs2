@@ -26,7 +26,7 @@
         "href": ""
       }) }}
 
-    {% elseif  ["Draft", "Further Maker's input required", "Abandoned Deal", "Acknowledged by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)"].includes(params.deal.details.status) and not params.dealFormsCompleted and not params.dealHasIssuedFacilitiesToSubmit %}
+    {% elseif  ["Draft", "Further Maker's input required", "Abandoned Deal", "Acknowledged by UKEF"].includes(params.deal.details.status) and not params.dealFormsCompleted and not params.dealHasIssuedFacilitiesToSubmit %}
 
       {{ govukButton({
         "disabled": true,
@@ -37,7 +37,17 @@
         "href": ""
       }) }}
 
-    {% elseif ["Acknowledged by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)", "Ready for Checker's approval", "Further Maker's input required"].includes(params.deal.details.status) and params.dealHasIssuedFacilitiesToSubmit %}
+    {% elseif ["Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)"].includes(params.deal.details.status) %}
+      {{ govukButton({
+        "disabled": false,
+        "text": "Proceed to review",
+        "attributes" : {
+          "data-cy" : "ProceedToReview"
+        },
+        "href": "/contract/" + params.deal._id + "/ready-for-review"
+      }) }}
+
+    {% elseif ["Acknowledged by UKEF", "Ready for Checker's approval", "Further Maker's input required"].includes(params.deal.details.status) and params.dealHasIssuedFacilitiesToSubmit %}
       {{ govukButton({
         "disabled": false,
         "text": "Proceed to review",
