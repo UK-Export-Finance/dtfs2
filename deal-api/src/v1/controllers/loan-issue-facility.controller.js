@@ -59,16 +59,16 @@ exports.updateLoanIssueFacility = async (req, res) => {
         delete modifiedLoan.requestedCoverStartDate;
       }
 
-      const validationErrors = loanIssueFacilityValidationErrors(
-        modifiedLoan,
-        deal.details.submissionDate,
-      );
-
       if (hasAllIssuedDateValues(modifiedLoan)) {
         modifiedLoan.issuedDate = createTimestampFromSubmittedValues(req.body, 'issuedDate');
       } else {
         delete modifiedLoan.issuedDate;
       }
+
+      const validationErrors = loanIssueFacilityValidationErrors(
+        modifiedLoan,
+        deal.details.submissionDate,
+      );
 
       if (validationErrors.count === 0) {
         modifiedLoan.issueFacilityDetailsProvided = true;

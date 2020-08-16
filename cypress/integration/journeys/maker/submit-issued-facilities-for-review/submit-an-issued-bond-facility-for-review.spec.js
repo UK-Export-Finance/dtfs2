@@ -2,7 +2,7 @@ const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
 const mockUsers = require('../../../../fixtures/mockUsers');
-const fillAndSubmitIssueBondFacilityForm = require('./fillAndSubmitIssueBondFacilityForm');
+const { fillAndSubmitIssueBondFacilityForm } = require('./fillAndSubmitIssueBondFacilityForm');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 
