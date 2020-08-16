@@ -42,7 +42,10 @@ const updateStatusViaController = (dealId, user, body) => new Promise((resolve, 
 });
 
 const shouldCheckIssuedFacilities = (dealStatus, dealSubmissionType) => {
-  const allowedDealStatus = dealStatus === 'Acknowledged by UKEF';
+  const allowedDealStatus = (dealStatus === 'Acknowledged by UKEF'
+                            || dealStatus === 'Accepted by UKEF (with conditions)'
+                            || dealStatus === 'Accepted by UKEF (without conditions)');
+
   const allowedDealSubmissionType = (dealSubmissionType === 'Automatic Inclusion Notice'
                                     || dealSubmissionType === 'Manual Inclusion Notice'
                                     || dealSubmissionType === 'Manual Inclusion Application');
