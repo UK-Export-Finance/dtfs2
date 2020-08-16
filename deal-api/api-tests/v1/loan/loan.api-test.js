@@ -552,4 +552,77 @@ describe('/v1/deals/:id/loan', () => {
       expect(body.deal.loanTransactions.items.length).toEqual(2);
     });
   });
+
+  describe('DELETE /v1/deals/:id/loan/:id', () => {
+    let dealId;
+    let loanId;
+
+    beforeEach(async () => {
+      const addLoanResponse = await addLoanToDeal();
+      dealId = addLoanResponse.dealId;
+      loanId = addLoanResponse.loanId;
+    });
+
+    it('401s requests that do not present a valid Authorization token', async () => {
+      const { status } = await as().remove(`/v1/deals/${dealId}/loan/12345678`);
+
+      expect(status).toEqual(401);
+    });
+
+    it('401s requests that do not come from a user with role=maker', async () => {
+      const { status } = await as(noRoles).remove(`/v1/deals/${dealId}/loan/12345678`);
+
+      expect(status).toEqual(401);
+    });
+
+    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+      const { status } = await as(anHSBCMaker).remove(`/v1/deals/${dealId}/loan/12345678`);
+
+      expect(status).toEqual(401);
+    });
+
+    it('404s requests for unknown deal', async () => {
+      const { status } = await as(aBarclaysMaker).remove('/v1/deals/12345678/loan/12345678');
+
+      expect(status).toEqual(404);
+    });
+
+    it('404s requests for unknown loan', async () => {
+      const { status } = await as(aBarclaysMaker).remove(`/v1/deals/${dealId}/loan/12345678`);
+
+      expect(status).toEqual(404);
+    });
+
+    it('accepts requests if <user>.bank.id == *', async () => {
+      const { status } = await as(aBarclaysMaker).remove(`/v1/deals/${dealId}/loan/${loanId}`);
+      expect(status).toEqual(200);
+    });
+
+    it('removes a loan from a deal', async () => {
+      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+      await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+      await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+      await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+
+      const { body } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+
+      const createdDeal = body.deal;
+      expect(createdDeal.loanTransactions.items.length).toEqual(3);
+
+      const loanIdToDelete = createdDeal.loanTransactions.items[1]._id; // eslint-disable-line no-underscore-dangle
+
+      const { status } = await as(aBarclaysMaker).remove(`/v1/deals/${dealId}/loan/${loanIdToDelete}`);
+      expect(status).toEqual(200);
+
+      const { body: updatedDealBody } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+
+      const updatedLoans = updatedDealBody.deal.loanTransactions.items;
+      expect(updatedLoans.length).toEqual(2);
+
+      const deletedLoan = updatedLoans.filter((loan) => loan._id === loanIdToDelete);
+      expect(deletedLoan.length).toEqual(0);
+    });
+  });
 });

@@ -15,9 +15,14 @@ const { loanStatus } = require('../section-status/loans');
 const { sanitizeCurrency } = require('../../utils/number');
 const now = require('../../now');
 
+const getLoansExceptForOne = (loans, id) =>
+  loans.filter((loan) => String(loan._id) !== id); // eslint-disable-line no-underscore-dangle
+
 const putLoanInDealObject = (deal, loan) => {
-  const allOtherLoans = deal.loanTransactions.items.filter((l) =>
-    String(l._id) !== loan._id); // eslint-disable-line no-underscore-dangle
+  const allOtherLoans = getLoansExceptForOne(
+    deal.loanTransactions.items,
+    loan._id, // eslint-disable-line no-underscore-dangle
+  );
 
   return {
     ...deal,
@@ -213,6 +218,50 @@ exports.updateLoan = async (req, res) => {
       }
 
       return res.status(200).send(updatedLoan);
+    }
+    return res.status(404).send();
+  });
+};
+
+
+exports.deleteLoan = async (req, res) => {
+  const {
+    loanId,
+  } = req.params;
+
+  await findOneDeal(req.params.id, async (deal) => {
+    if (deal) {
+      if (!userHasAccessTo(req.user, deal)) {
+        res.status(401).send();
+      }
+
+      const loan = deal.loanTransactions.items.find((l) =>
+        String(l._id) === loanId); // eslint-disable-line no-underscore-dangle
+
+      if (!loan) {
+        return res.status(404).send();
+      }
+
+      const allOtherLoans = getLoansExceptForOne(
+        deal.loanTransactions.items,
+        loan._id, // eslint-disable-line no-underscore-dangle
+      );
+
+      const modifiedDeal = {
+        ...deal,
+        loanTransactions: {
+          items: allOtherLoans,
+        },
+      };
+
+      const newReq = {
+        params: req.params,
+        body: modifiedDeal,
+        user: req.user,
+      };
+
+      const updateDealResponse = await updateDeal(newReq);
+      return res.status(200).send(updateDealResponse);
     }
     return res.status(404).send();
   });

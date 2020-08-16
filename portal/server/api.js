@@ -248,6 +248,19 @@ const updateLoanIssueFacility = async (dealId, loanId, formData, token) => {
   return response.data;
 };
 
+const deleteDealLoan = async (dealId, loanId, formData, token) => {
+  const response = await axios({
+    method: 'delete',
+    url: `${urlRoot}/v1/deals/${dealId}/loan/${loanId}`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: formData,
+  });
+  return response.data;
+};
+
 const createBond = async (dealId, token) => {
   const response = await axios({
     method: 'put',
@@ -548,6 +561,7 @@ export default {
   updateDeal,
   updateDealLoan,
   updateLoanIssueFacility,
+  deleteDealLoan,
   updateDealName,
   updateDealStatus,
   updateEligibilityCriteria,
