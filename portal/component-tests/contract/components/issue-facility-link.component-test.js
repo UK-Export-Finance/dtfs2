@@ -70,6 +70,23 @@ describe(component, () => {
       });
     });
 
+    describe('when viewed by `maker and checker` role and facility.issueFacilityDetailsProvided', () => {
+      it('should render link to issue facility page', () => {
+        const user = { roles: ['checker', 'maker'] };
+        const facility = {
+          _id: '1234',
+          facilityStage: 'Conditional',
+          issueFacilityDetailsProvided: true,
+        };
+
+        for (const deal of deals) {
+          const wrapper = render({ user, deal, facility, facilityName });
+          wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`)
+            .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/issue-facility`, 'Issue facility');
+        }
+      });
+    });
+
     describe('when viewed by maker', () => {
       const user = { roles: ['maker'] };
 
