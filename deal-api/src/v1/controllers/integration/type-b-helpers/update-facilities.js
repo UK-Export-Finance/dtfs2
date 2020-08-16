@@ -1,38 +1,50 @@
+const CONSTANTS = require('../../../../constants');
+  
 const updateBondStatus = (bond, workflowBond) => {
-  const isIssuedFacility = bond.bondStage === 'Unissued';
+  const {
+    bondStage,
+    previousFacilityStage,
+  } = bond;
+
+  const isIssuedFacility = (bondStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
+                           || (bondStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
+                           && previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED));
+
   const hasWorflowStatus = workflowBond.BSS_status && workflowBond.BSS_status.length > 0;
 
-  if (isIssuedFacility) {
-    if (hasWorflowStatus) {
-      if (workflowBond.BSS_status[0] === 'Issued acknowledged') {
-        return 'Acknowledged';
-      }
-
-      if (workflowBond.BSS_status[0] === '""') {
-        return 'Not started';
-      }
+  if (isIssuedFacility && hasWorflowStatus) {
+    if (workflowBond.BSS_status[0] === 'Issued acknowledged') {
+      return 'Acknowledged';
     }
-    return 'Not started';
+
+    if (workflowBond.BSS_status[0] === '""') {
+      return 'Not started';
+    }
   }
 
   return null;
 };
 
 const updateLoanStatus = (loan, workflowLoan) => {
-  const isIssuedFacility = loan.facilityStage === 'Conditional';
+  const {
+    facilityStage,
+    previousFacilityStage,
+  } = loan;
+
+  const isIssuedFacility = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
+                           || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
+                            && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL));
+
   const hasWorflowStatus = workflowLoan.EWCS_status && workflowLoan.EWCS_status.length > 0;
 
-  if (isIssuedFacility) {
-    if (hasWorflowStatus) {
-      if (workflowLoan.EWCS_status[0] === 'Issued acknowledged') {
-        return 'Acknowledged';
-      }
-
-      if (workflowLoan.EWCS_status[0] === '""') {
-        return 'Not started';
-      }
+  if (isIssuedFacility && hasWorflowStatus) {
+    if (workflowLoan.EWCS_status[0] === 'Issued acknowledged') {
+      return 'Acknowledged';
     }
-    return 'Not started';
+
+    if (workflowLoan.EWCS_status[0] === '""') {
+      return 'Not started';
+    }
   }
 
   return null;
