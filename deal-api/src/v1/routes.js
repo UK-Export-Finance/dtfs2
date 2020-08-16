@@ -80,6 +80,10 @@ authRouter.route('/deals/:id/loan/:loanId')
   .put(
     validate({ role: ['maker'] }),
     loans.updateLoan,
+  )
+  .delete(
+    validate({ role: ['maker'] }),
+    loans.deleteLoan,
   );
 
 authRouter.route('/deals/:id/loan/:loanId/issue-facility')

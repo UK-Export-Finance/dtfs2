@@ -385,4 +385,22 @@ router.get('/contract/:_id/loan/:loanId/delete', provide([LOAN]), async (req, re
   });
 });
 
+router.post('/contract/:_id/loan/:loanId/delete', async (req, res) => {
+  const { _id: dealId, loanId, userToken } = requestParams(req);
+
+  await postToApi(
+    api.deleteDealLoan(
+      dealId,
+      loanId,
+      req.body,
+      userToken,
+    ),
+    errorHref,
+  );
+
+  // TODO: assuming we just redirect to deal
+  // maybe a success message?
+  return res.redirect(`/contract/${dealId}`);
+});
+
 export default router;
