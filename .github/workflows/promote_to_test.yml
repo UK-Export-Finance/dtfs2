@@ -7,7 +7,7 @@ on:
 env:
   environment: test
   credentials: ${{ secrets.AZURE_DIGITAL_TEST }}
-  resource_group: ${{ secrets.RESOURCE_GROUP_TEST }}
+  resource_group: ${{ secrets.TEST_RESOURCE_GROUP }}
 
 jobs:
 
@@ -18,25 +18,25 @@ jobs:
     - name: Tag images
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.ACR_DEV_REGISTRY }}
-        username: ${{ secrets.ACR_DEV_USERNAME }}
-        password: ${{ secrets.ACR_DEV_PASSWORD }}
+        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
     - uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.ACR_TEST_REGISTRY }}
-        username: ${{ secrets.ACR_TEST_USERNAME }}
-        password: ${{ secrets.ACR_TEST_PASSWORD }}
+        login-server: ${{ secrets.TEST_ACR_REGISTRY }}
+        username: ${{ secrets.TEST_ACR_USERNAME }}
+        password: ${{ secrets.TEST_ACR_PASSWORD }}
     - run: |
         from=dev
         to=test
 
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:$from
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-ui:$from ${{ secrets.ACR_TEST_REGISTRY }}/portal-ui:$to
-        docker push ${{ secrets.ACR_TEST_REGISTRY }}/portal-ui:$to
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$from
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$from ${{ secrets.TEST_ACR_REGISTRY }}/portal-ui:$to
+        docker push ${{ secrets.TEST_ACR_REGISTRY }}/portal-ui:$to
 
-        docker pull ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:$from
-        docker tag ${{ secrets.ACR_DEV_REGISTRY }}/portal-api:$from ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:$to
-        docker push ${{ secrets.ACR_TEST_REGISTRY }}/portal-api:$to
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$from
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$from ${{ secrets.TEST_ACR_REGISTRY }}/portal-api:$to
+        docker push ${{ secrets.TEST_ACR_REGISTRY }}/portal-api:$to
 
   deploy:
     # The App Service seems to need to be restarted to trigger a redeploy
@@ -51,8 +51,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          resource_group=${{ env.resource_group }}
           portal_ui=tfs-${{ env.environment }}-portal-ui
           portal_api=tfs-${{ env.environment }}-portal-ui
-          az webapp restart --name ${portal_ui} --resource-group ${resource_group}
-          az webapp restart --name ${portal_api} --resource-group ${resource_group}
+          az webapp restart --name ${portal_ui} --resource-group ${{ env.resource_group }}
+          az webapp restart --name ${portal_api} --resource-group ${{ env.resource_group }}
