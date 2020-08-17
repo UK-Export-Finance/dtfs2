@@ -2,7 +2,7 @@ name: Test environment infrastructure
 
 on:
   push:
-    branches: [ infrastructure ]
+    branches: [ test ]
 
 env:
   # Environment
