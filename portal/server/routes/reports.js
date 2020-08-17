@@ -1,5 +1,5 @@
 import express from 'express';
-// import util from 'util';
+import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
 import { getRAGstatus, getExpiryDates, getMIAData } from './expiryStatusUtils';
@@ -523,12 +523,68 @@ router.get('/reports/reconciliation-report', async (req, res) => res.redirect('/
 router.get('/reports/reconciliation-report/:page', async (req, res) => {
   // [dc] this is a copy of the mia_min-cover-start-date-changes mock for now.
 
-  // const { userToken } = requestParams(req);
-  // const { transactions, count } = await getApiData(
-  //   api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
-  //   res,
-  // );
+  const { userToken } = requestParams(req);
+  const filters = {};// buildReportFilters(reportFilters, req.session.user);
+  const { deals, count } = await getApiData(
+    api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+    res,
+  );
+  console.log(`deals: ${util.inspect(deals)}`);
   // const banks = await getApiData(api.banks(userToken), res);
+  const crs = [
+    {
+      bankSupplyContractID: 'Memsstar/BSS/APG',
+      bankFacilityId: 'Loan 3',
+      transactionType: 'Loan',
+      'supplier-name': 'TEST DO NOT TOUCH',
+      oldRequestedCoverStartDate: '08/08/2018',
+      newRequestedCoverStartDate: '18/08/2018',
+      dateTimeOfChange: '08/08/2018 - 09:37',
+      maker: 'DurgaRao',
+      checker: {
+        username: 'CHECKER',
+        firstname: 'Emilio',
+        surname: 'Largo',
+      },
+    },
+  ];
+
+  const pages = {
+    totalPages: Math.ceil(count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: count,
+  };
+
+  return res.render('reports/reconciliation-report.njk', {
+    pages,
+    deals,
+    primaryNav,
+    subNav: 'reconciliation-report',
+    user: req.session.user,
+  });
+});
+
+router.post('/reports/reconciliation-report/:page', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  }
+
+  const reportFilters = req.body;
+  console.log(`reportFilters: ${util.inspect(reportFilters)}`);
+  if (reportFilters.bank === 'any') {
+    reportFilters.bank = '';
+  }
+
+  //req.session.supplyContractsFilters = reportFilters;
+
+  const banks = await getApiData(
+    api.banks(userToken),
+    res,
+  );
+
+  const filters = buildReportFilters(reportFilters, req.session.user);
   const crs = [
     {
       bankSupplyContractID: 'Memsstar/BSS/APG',
