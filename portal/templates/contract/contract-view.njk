@@ -1,6 +1,6 @@
 {% extends "index.njk" %}
+{% import '_macros/success-message.njk' as success %}
 {% import '_macros/status-tag.njk' as statusTag %}
-
 {% import './components/abandon-deal-link.njk' as abandonLink %}
 {% import './components/about-supply-contract-link.njk' as aboutSupplyContractLink %}
 {% import './components/add-a-bond-button.njk' as addABondButton %}
@@ -23,7 +23,11 @@
 
   {% set componentData = {user: user, deal: deal, editable: editable, dealFormsCompleted: dealFormsCompleted, canFullyCalculateDealSummary: canFullyCalculateDealSummary, selected: 'view', userCanSubmit: userCanSubmit, dealHasIssuedFacilitiesToSubmit: dealHasIssuedFacilitiesToSubmit} %}
 
-  <div class="contract-container">
+  {% if successMessage %}
+    {{ success.message(
+      message = successMessage
+    )}}
+  {% endif %}
 
     <h1 class="govuk-heading-l">
       Supply Contract name:
@@ -177,8 +181,6 @@
 
       </section>
 
-    </div>
-
   </div>
-</div>
+
 {% endblock %}

@@ -5,7 +5,8 @@ const BOND_FORM_VALUES = require('./bond-form-values');
 const relative = require('../../../relativeURL');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 const MOCK_DEAL = {
   details: {

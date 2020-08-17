@@ -15,9 +15,14 @@ const {
 const { sanitizeCurrency } = require('../../utils/number');
 const now = require('../../now');
 
+const getBondsExceptForOne = (bonds, id) =>
+  bonds.filter((bond) => String(bond._id) !== id); // eslint-disable-line no-underscore-dangle
+
 const putBondInDealObject = (deal, bond) => {
-  const allOtherBonds = deal.bondTransactions.items.filter((b) =>
-    String(b._id) !== bond._id); // eslint-disable-line no-underscore-dangle
+  const allOtherBonds = getBondsExceptForOne(
+    deal.bondTransactions.items,
+    bond._id, // eslint-disable-line no-underscore-dangle
+  );
 
   return {
     ...deal,
@@ -210,6 +215,49 @@ exports.updateBond = async (req, res) => {
       }
 
       return res.status(200).send(updatedBond);
+    }
+    return res.status(404).send();
+  });
+};
+
+exports.deleteBond = async (req, res) => {
+  const {
+    bondId,
+  } = req.params;
+
+  await findOneDeal(req.params.id, async (deal) => {
+    if (deal) {
+      if (!userHasAccessTo(req.user, deal)) {
+        res.status(401).send();
+      }
+
+      const bond = deal.bondTransactions.items.find((b) =>
+        String(b._id) === bondId); // eslint-disable-line no-underscore-dangle
+
+      if (!bond) {
+        return res.status(404).send();
+      }
+
+      const allOtherBonds = getBondsExceptForOne(
+        deal.bondTransactions.items,
+        bond._id, // eslint-disable-line no-underscore-dangle
+      );
+
+      const modifiedDeal = {
+        ...deal,
+        bondTransactions: {
+          items: allOtherBonds,
+        },
+      };
+
+      const newReq = {
+        params: req.params,
+        body: modifiedDeal,
+        user: req.user,
+      };
+
+      const updateDealResponse = await updateDeal(newReq);
+      return res.status(200).send(updateDealResponse);
     }
     return res.status(404).send();
   });
