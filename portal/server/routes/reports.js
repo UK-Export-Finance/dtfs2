@@ -523,7 +523,16 @@ router.get('/reports/reconciliation-report', async (req, res) => res.redirect('/
 router.get('/reports/reconciliation-report/:page', async (req, res) => {
   const { userToken } = requestParams(req);
   const reportFilters = req.body;
-  const filters = {};// buildReportFilters(reportFilters, req.session.user);
+  const filters = buildReportFilters(reportFilters, req.session.user);
+
+
+  filters.push(
+    {
+      field: 'details.status',
+      value: 'Submitted',
+    },
+  );
+
   const { deals, count } = await getApiData(
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
