@@ -363,13 +363,45 @@ router.post('/contract/:_id/loan/:loanId/issue-facility', async (req, res) => {
   return res.redirect(`/contract/${dealId}`);
 });
 
-router.get('/contract/:_id/loan/:_loanId/confirm-requested-cover-start-date', async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', provide([LOAN]), async (req, res) => {
   const { _id: dealId } = requestParams(req);
+  const { loan } = req.apiData.loan;
 
   return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
     dealId,
     user: req.session.user,
+    facility: loan,
   });
+});
+
+router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', async (req, res) => {
+  const { _id: dealId, loanId, userToken } = requestParams(req);
+
+  if (req.body.needToChangeRequestedCoverStartDate === 'true') {
+    const { loan, validationErrors } = await postToApi(
+      api.updateDealLoan(
+        dealId,
+        loanId,
+        req.body,
+        userToken,
+      ),
+      errorHref,
+    );
+
+    if (validationErrors && validationErrors.errorList.requestedCoverStartDate) {
+      return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
+        dealId,
+        user: req.session.user,
+        facility: loan,
+        validationErrors,
+        needToChangeRequestedCoverStartDate: req.body.needToChangeRequestedCoverStartDate,
+      });
+    }
+  }
+
+
+  const redirectUrl = `/contract/${dealId}`;
+  return res.redirect(redirectUrl);
 });
 
 router.get('/contract/:_id/loan/:loanId/delete', provide([DEAL, LOAN]), async (req, res) => {
