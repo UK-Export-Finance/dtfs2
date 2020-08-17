@@ -45,7 +45,13 @@ const loanHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, d
   return false;
 };
 
-const addAccurateStatusesToLoans = (dealStatus, previousDealStatus, dealSubmissionType, dealSubmissionDate, loanTransactions) => {
+const addAccurateStatusesToLoans = (
+  dealStatus,
+  previousDealStatus,
+  dealSubmissionType,
+  dealSubmissionDate,
+  loanTransactions,
+) => {
   if (loanTransactions.items.length) {
     loanTransactions.items.forEach((l) => {
       const loan = l;
