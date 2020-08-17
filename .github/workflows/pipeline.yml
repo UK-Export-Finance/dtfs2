@@ -10,8 +10,10 @@ on:
     - cron: '0 12 * * 2'
 
 env:
+  environment: dev
   # Credentials for accessing Azure
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+  resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
   # These values are used when running tests in Docker Compose
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
   GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
