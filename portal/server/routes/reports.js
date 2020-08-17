@@ -521,33 +521,16 @@ router.get('/reports/mia_min-cover-start-date-changes/:page', async (req, res) =
 router.get('/reports/reconciliation-report', async (req, res) => res.redirect('/reports/reconciliation-report/0'));
 
 router.get('/reports/reconciliation-report/:page', async (req, res) => {
-  // [dc] this is a copy of the mia_min-cover-start-date-changes mock for now.
-
   const { userToken } = requestParams(req);
+  const reportFilters = req.body;
   const filters = {};// buildReportFilters(reportFilters, req.session.user);
   const { deals, count } = await getApiData(
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
   console.log(`deals: ${util.inspect(deals)}`);
-  // const banks = await getApiData(api.banks(userToken), res);
-  const crs = [
-    {
-      bankSupplyContractID: 'Memsstar/BSS/APG',
-      bankFacilityId: 'Loan 3',
-      transactionType: 'Loan',
-      'supplier-name': 'TEST DO NOT TOUCH',
-      oldRequestedCoverStartDate: '08/08/2018',
-      newRequestedCoverStartDate: '18/08/2018',
-      dateTimeOfChange: '08/08/2018 - 09:37',
-      maker: 'DurgaRao',
-      checker: {
-        username: 'CHECKER',
-        firstname: 'Emilio',
-        surname: 'Largo',
-      },
-    },
-  ];
+  // get banks for filter list
+  const banks = await getApiData(api.banks(userToken), res);
 
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
@@ -557,7 +540,11 @@ router.get('/reports/reconciliation-report/:page', async (req, res) => {
 
   return res.render('reports/reconciliation-report.njk', {
     pages,
+    banks,
     deals,
+    filter: {
+      ...reportFilters,
+    },
     primaryNav,
     subNav: 'reconciliation-report',
     user: req.session.user,
@@ -566,7 +553,7 @@ router.get('/reports/reconciliation-report/:page', async (req, res) => {
 
 router.post('/reports/reconciliation-report/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-
+  console.log('post');
   if (!await api.validateToken(userToken)) {
     res.redirect('/');
   }
@@ -576,8 +563,7 @@ router.post('/reports/reconciliation-report/:page', async (req, res) => {
   if (reportFilters.bank === 'any') {
     reportFilters.bank = '';
   }
-
-  //req.session.supplyContractsFilters = reportFilters;
+  req.session.supplyContractsFilters = reportFilters;
 
   const banks = await getApiData(
     api.banks(userToken),
@@ -585,25 +571,11 @@ router.post('/reports/reconciliation-report/:page', async (req, res) => {
   );
 
   const filters = buildReportFilters(reportFilters, req.session.user);
-  const crs = [
-    {
-      bankSupplyContractID: 'Memsstar/BSS/APG',
-      bankFacilityId: 'Loan 3',
-      transactionType: 'Loan',
-      'supplier-name': 'TEST DO NOT TOUCH',
-      oldRequestedCoverStartDate: '08/08/2018',
-      newRequestedCoverStartDate: '18/08/2018',
-      dateTimeOfChange: '08/08/2018 - 09:37',
-      maker: 'DurgaRao',
-      checker: {
-        username: 'CHECKER',
-        firstname: 'Emilio',
-        surname: 'Largo',
-      },
-    },
-  ];
-
-  const count = crs.length; // in case people want to add more examples..
+  const { deals, count } = await getApiData(
+    api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+    res,
+  );
+  console.log(`deals: ${util.inspect(deals)}`);
 
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
@@ -613,7 +585,11 @@ router.post('/reports/reconciliation-report/:page', async (req, res) => {
 
   return res.render('reports/reconciliation-report.njk', {
     pages,
-    crs,
+    banks,
+    deals,
+    filter: {
+      ...reportFilters,
+    },
     primaryNav,
     subNav: 'reconciliation-report',
     user: req.session.user,

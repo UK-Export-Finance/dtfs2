@@ -1,6 +1,6 @@
 {% extends "index.njk" %}
 {% import '_macros/pagination.njk' as pagination %}
-{% import './_macros/audit-transactions-filters.njk' as filterControls %}
+{% import './_macros/reconciliation-filters.njk' as filterControls %}
 
 {% block pageTitle %}Reconciliation Report{% endblock %}
 
@@ -8,7 +8,7 @@
 
   <h1 class="govuk-heading-l">Reconciliation Report</h1>
 
-  {{ filterControls.render(filter, user) }}
+  {{ filterControls.render(filter, user, banks) }}
 
   <table class="govuk-table govuk-!-margin-bottom-0">
     <thead class="govuk-table__head">
