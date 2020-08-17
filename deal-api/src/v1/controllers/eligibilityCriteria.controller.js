@@ -7,19 +7,21 @@ const sortEligibilityCriteria = (arr, callback) => {
   return callback(sortedArray);
 };
 
-const findEligibilityCriteria = async (callback) => {
-  const collection = await db.getCollection('eligibilityCriteria');
-
-  collection.find({}).toArray((err, result) => {
-    assert.equal(err, null);
-    callback(result);
-  });
-};
+const findEligibilityCriteria = (callback) => new Promise((resolve) => {
+  db.getCollection('eligibilityCriteria')
+    .then((collection) => {
+      collection.find({}).toArray((err, result) => {
+        assert.equal(err, null);
+        resolve(result);
+        if (callback) callback(result);
+      });
+    });
+});
 exports.findEligibilityCriteria = findEligibilityCriteria;
 
 const findOneEligibilityCriteria = async (id, callback) => {
   const collection = await db.getCollection('eligibilityCriteria');
-  collection.findOne({ id }, (err, result) => {
+  collection.findOne({ id: parseInt(id, 10) }, (err, result) => {
     assert.equal(err, null);
     callback(result);
   });
@@ -49,12 +51,12 @@ exports.findOne = (req, res) => (
 
 exports.update = async (req, res) => {
   const collection = await db.getCollection('eligibilityCriteria');
-  const status = await collection.updateOne({ id: { $eq: req.params.id } }, { $set: req.body }, {});
+  const status = await collection.updateOne({ id: { $eq: parseInt(req.params.id, 10) } }, { $set: req.body }, {});
   res.status(200).send(status);
 };
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection('eligibilityCriteria');
-  const status = await collection.deleteOne({ id: req.params.id });
+  const status = await collection.deleteOne({ id: parseInt(req.params.id, 10) });
   res.status(200).send(status);
 };

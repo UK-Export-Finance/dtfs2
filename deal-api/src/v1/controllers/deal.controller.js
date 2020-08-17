@@ -10,6 +10,7 @@ const { generateDealId } = require('../../utils/generateIds');
 const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
 const calculateDealSummary = require('../deal-summary');
+const { findEligibilityCriteria } = require('./eligibilityCriteria.controller');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -84,10 +85,33 @@ const findOneDeal = async (_id, callback) => {
 };
 exports.findOneDeal = findOneDeal;
 
+const fillInEligibilityCriteria = (criterias, answers) => criterias.map((criteria) => {
+  const matchingAnswer = answers.find((answer) => answer.id === criteria.id);
+  if (!matchingAnswer) {
+    return criteria;
+  }
+  return {
+    ...criteria,
+    ...matchingAnswer,
+  };
+});
+
 const createDeal = async (req, res) => {
   const collection = await db.getCollection('deals');
-
+  const eligibilityCriteria = await findEligibilityCriteria();
   const dealId = await generateDealId();
+
+  const beingGivenEligibility = (req.body.eligibility && req.body.eligibility.criteria);
+
+  // if we're being asked to create a deal and being given an eligibility block
+  //  use details out of the eligibility block over the details we get from the API
+  const eligibilityCriteriaWithAnswers = beingGivenEligibility
+    ? fillInEligibilityCriteria(eligibilityCriteria, req.body.eligibility.criteria)
+    : eligibilityCriteria;
+
+  const eligibilityStatus = req.body.eligibility && req.body.eligibility.status
+    ? req.body.eligibility.status
+    : DEFAULTS.DEALS.eligibility.status;
 
   const time = now();
   const newDeal = {
@@ -101,6 +125,10 @@ const createDeal = async (req, res) => {
       dateOfLastAction: time,
       maker: req.user,
       owningBank: req.user.bank,
+    },
+    eligibility: {
+      status: eligibilityStatus,
+      criteria: eligibilityCriteriaWithAnswers,
     },
   };
 

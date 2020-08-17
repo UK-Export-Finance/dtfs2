@@ -3,6 +3,7 @@ const aDeal = require('../deals/deal-builder');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
+const eligibilityCriteriaCache = require('../../api-test-eligibilityCriteria');
 
 const { as } = require('../../api')(app);
 const {
@@ -15,12 +16,16 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
   let noRoles;
   let aBarclaysMaker;
   let anHSBCMaker;
+  let anEditor;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    anEditor = testUsers().withRole('editor').one();
+
+    await eligibilityCriteriaCache.initialise(app, anEditor);
   });
 
   beforeEach(async () => {
