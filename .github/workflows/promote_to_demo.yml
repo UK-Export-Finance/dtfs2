@@ -15,13 +15,13 @@ jobs:
     name: Promote container images
     runs-on: ubuntu-latest
     steps:
-    - name: Tag images
-      uses: azure/docker-login@v1
+    - uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.DEV_ACR_REGISTRY }}
         username: ${{ secrets.DEV_ACR_USERNAME }}
         password: ${{ secrets.DEV_ACR_PASSWORD }}
-    - run: |
+    - name: Tag images
+      run: |
         from=dev
         to=demo
 
