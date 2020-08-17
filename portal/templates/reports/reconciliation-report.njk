@@ -56,8 +56,8 @@
             {{ deal.details.submissionType }}
           </td>
 
-          <td data-cy="previousStatus" class="govuk-table__cell govuk-!-font-size-14">
-            {{ deal.details.previousStatus }}
+          <td data-cy="previousWorkflowStatus" class="govuk-table__cell govuk-!-font-size-14">
+            {{ deal.details.previousWorkflowStatus | dashIfEmpty }}
           </td>
 
           <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
