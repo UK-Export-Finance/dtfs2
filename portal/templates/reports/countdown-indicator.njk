@@ -156,58 +156,5 @@
   and ignore bank holidays. The Bank should rely on its own records to determine
   accurate time periods calculcated in accordance with the Master Guarantee Agreement.
   </p>
-{# 
-  <hr/>
-
-  <h3 class="govuk-heading-m">Trace of facilities with Unissued or Conditional transactionStage</h3>
-
-  <table class="govuk-table govuk-!-margin-bottom-0">
-    <thead class="govuk-table__head">
-      <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Deal Id</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">transaction stage</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Expiry</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Remaining</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th>
-      </tr>
-    </thead>
-
-    <tbody class="govuk-table__body">
-
-      {% for facility in facilities %}
-        <tr data-cy="transaction_{{transaction.transaction_id}}" class="govuk-table__row">
-
-
-          <td data-cy="transactionType" class="govuk-table__cell govuk-!-font-size-14">
-             {{ facility.deal_id | dashIfEmpty }}
-          </td>
-
-          <td data-cy="transactionStage" class="govuk-table__cell govuk-!-font-size-14">
-            {{ facility.transactionStage | dashIfEmpty }}
-          </td>
-          
-          <td data-cy="created" class="govuk-table__cell govuk-!-font-size-14">
-            {{ facility.createdDate | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
-          </td>
-
-          <td data-cy="expiry" class="govuk-table__cell govuk-!-font-size-14">
-            {{ facility.expiry | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
-          </td>
-
-          <td data-cy="issued" class="govuk-table__cell govuk-!-font-size-14">
-            {{ facility.remainingDays  }}
-          </td>
-
-          <td data-cy="issuedBy" class="govuk-table__cell govuk-!-font-size-14">
-            {{ facility.deal_status  }}
-          </td>
-
-        </tr>
-      {% endfor %}
-
-    </tbody>
-
-  </table> #}
 
 {% endblock %}
