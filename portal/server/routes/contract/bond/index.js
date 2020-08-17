@@ -399,8 +399,10 @@ router.post('/contract/:_id/bond/:bondId/delete', async (req, res) => {
     errorHref,
   );
 
-  // TODO: assuming we just redirect to deal
-  // maybe a success message?
+  req.flash('successMessage', {
+    text: `Bond #${bondId} has been deleted`,
+  });
+
   return res.redirect(`/contract/${dealId}`);
 });
 

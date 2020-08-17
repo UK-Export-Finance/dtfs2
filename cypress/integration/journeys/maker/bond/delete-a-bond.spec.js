@@ -1,4 +1,5 @@
 const pages = require('../../../pages');
+const partials = require('../../../partials');
 const relative = require('../../../relativeURL');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
@@ -42,7 +43,7 @@ context('Delete a Bond', () => {
       });
   });
 
-  it('Deleting a bond via the Deal page should remove the bond and redirect back to the Deal page', () => {
+  it('Deleting a bond via the Deal page should remove the bond and redirect back to the Deal page with a success message', () => {
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
 
@@ -57,6 +58,10 @@ context('Delete a Bond', () => {
     pages.bondDelete.submit().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}`));
+
+    partials.successMessage.successMessageListItem().invoke('text').then((text) => {
+      expect(text.trim()).to.equal(`Bond #${bondToDeleteId} has been deleted`);
+    });
 
     pages.contract.bondTransactionsTableRows().should('have.length', 2);
     pages.contract.bondTransactionsTable.row(bondToDeleteId).row.should('not.exist');
