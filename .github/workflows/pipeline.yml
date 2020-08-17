@@ -188,7 +188,8 @@ jobs:
         login-server: ${{ secrets.DEV_ACR_REGISTRY }}
         username: ${{ secrets.DEV_ACR_USERNAME }}
         password: ${{ secrets.DEV_ACR_PASSWORD }}
-    - run: |
+    - name: Tag images
+      run: |
         from=latest
         to=dev
         docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$from
