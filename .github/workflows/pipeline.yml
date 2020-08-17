@@ -176,6 +176,7 @@ jobs:
       if: failure()
 
   promote:
+    needs: [portal-ui, portal-api]
     #needs: [api-tests, end-to-end-tests] - temp promotion to unblock QA
     name: Promote Portal to Dev
     runs-on: ubuntu-latest
