@@ -96,4 +96,3 @@ Pushing to the `infrastructure` branch will trigger a refresh of the infrastruct
 
 Pushing to the `demo` branch will trigger tagging of the current development container images with `demo` tag, which will in turn trigger a redeployment of the demo environment. This ensures the demo environment isn't affected by CI/CD and is only refreshed on demand.
 
-
