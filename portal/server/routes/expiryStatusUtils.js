@@ -1,3 +1,4 @@
+import moment from 'moment';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
 import {
@@ -17,9 +18,12 @@ const addExpiryDate = (val, days, isDeal) => {
     created = val.details.approvalDate;
     id = val._id; // eslint-disable-line no-underscore-dangle
   }
-  const expiry = parseInt(created, 10) + (days * ONE_DAY);
+  // create moment from ms; find the end of the day;
+  const midnightDate = moment(created, 'x').endOf('date').valueOf();
+  // then add the expiry duration (90, 28, 14 days etc)
+  const expiry = midnightDate + (days * ONE_DAY);
   const remainingDays = Math.floor((expiry - Date.now()) / ONE_DAY);
-  // console.log(id, created, expiry, remainingDays);
+  // console.log(id, created, midnightDate, expiry, remainingDays);
   return {
     ...val,
     id,
