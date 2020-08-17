@@ -33,10 +33,12 @@ const page = {
   proceedToSubmit: () => cy.get('[data-cy="ProceedToSubmit"]'),
   returnToMaker: () => cy.get('[data-cy="ReturnToMaker"]'),
   eligibilitySubmissionType: () => cy.get('[data-cy="eligibility-submission-type"]'),
+  bondTransactionsTableRows: () => cy.get('[data-cy="bond-transactions-table"] tbody tr'),
   bondTransactionsTable: {
     row: (bondId) => {
       const row = cy.get(`[data-cy="bond-${bondId}"]`);
       return {
+        row,
         uniqueNumber: () => row.get(`[data-cy="unique-number-${bondId}"]`),
         bondStatus: () => row.get(`[data-cy="bond-status-${bondId}"]`),
         facilityValue: () => row.get('[data-cy="bond-facility-value"]'),
@@ -48,10 +50,12 @@ const page = {
       };
     },
   },
+  loansTransactionsTableRows: () => cy.get('[data-cy="loan-transactions-table"] tbody tr'),
   loansTransactionsTable: {
     row: (loanId) => {
       const row = cy.get(`[data-cy="loan-${loanId}"]`);
       return {
+        row,
         bankReferenceNumber: () => row.get(`[data-cy="loan-bank-reference-number-${loanId}"]`),
         loanStatus: () => row.get(`[data-cy="loan-status-${loanId}"]`),
         facilityValue: () => row.get('[data-cy="loan-facility-value"]'),
