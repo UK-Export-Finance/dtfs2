@@ -372,17 +372,35 @@ router.get('/contract/:_id/loan/:_loanId/confirm-requested-cover-start-date', as
   });
 });
 
-router.get('/contract/:_id/loan/:loanId/delete', provide([LOAN]), async (req, res) => {
-  const { dealId } = requestParams(req);
+router.get('/contract/:_id/loan/:loanId/delete', provide([DEAL, LOAN]), async (req, res) => {
   const {
     loan,
   } = req.apiData.loan;
 
   return res.render('loan/loan-delete.njk', {
-    dealId,
+    deal: req.apiData.deal,
     loan,
     user: req.session.user,
   });
+});
+
+router.post('/contract/:_id/loan/:loanId/delete', async (req, res) => {
+  const { _id: dealId, loanId, userToken } = requestParams(req);
+
+  await postToApi(
+    api.deleteDealLoan(
+      dealId,
+      loanId,
+      userToken,
+    ),
+    errorHref,
+  );
+
+  req.flash('successMessage', {
+    text: `Loan #${loanId} has been deleted`,
+  });
+
+  return res.redirect(`/contract/${dealId}`);
 });
 
 export default router;

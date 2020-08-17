@@ -12,6 +12,7 @@ import {
   dealFormsCompleted,
   dealHasIncompleteTransactions,
   generateErrorSummary,
+  getFlashSuccessMessage,
 } from '../../helpers';
 import {
   provide, DEAL, MANDATORY_CRITERIA,
@@ -55,6 +56,7 @@ router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
                                        && !dealHasIncompleteTransactions(deal));
 
   return res.render('contract/contract-view.njk', {
+    successMessage: getFlashSuccessMessage(req),
     deal,
     user,
     dealFormsCompleted: dealFormsCompleted(deal),

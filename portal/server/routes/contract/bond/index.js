@@ -377,20 +377,33 @@ router.get('/contract/:_id/bond/:_bondId/confirm-requested-cover-start-date', as
   });
 });
 
-router.get('/contract/:_id/bond/:bondId/delete', async (req, res) => {
-  const { _id, bondId, userToken } = requestParams(req);
+router.get('/contract/:_id/bond/:bondId/delete', provide([DEAL, BOND]), async (req, res) => {
+  const { bond } = req.apiData.bond;
 
   return res.render('bond/bond-delete.njk', {
-    contract: await getApiData(
-      api.contract(_id, userToken),
-      res,
-    ),
-    ...await getApiData(
-      api.contractBond(_id, bondId, userToken),
-      res,
-    ),
+    deal: req.apiData.deal,
+    bond,
     user: req.session.user,
   });
+});
+
+router.post('/contract/:_id/bond/:bondId/delete', async (req, res) => {
+  const { _id: dealId, bondId, userToken } = requestParams(req);
+
+  await postToApi(
+    api.deleteDealBond(
+      dealId,
+      bondId,
+      userToken,
+    ),
+    errorHref,
+  );
+
+  req.flash('successMessage', {
+    text: `Bond #${bondId} has been deleted`,
+  });
+
+  return res.redirect(`/contract/${dealId}`);
 });
 
 
