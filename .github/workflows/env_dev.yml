@@ -8,7 +8,7 @@ env:
   # Environment
   environment: dev
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-  resource_group: ${{ secrets.RESOURCE_GROUP_DEV }}
+  resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
   app_service_plan: dev
   # Container settings
   image_tag: dev
