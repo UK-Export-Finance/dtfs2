@@ -1,0 +1,29 @@
+{% import '_macros/date-field.njk' as dateField %}
+
+{% macro inputs(fromLegend, toLegend, values) %}
+
+  <div class="govuk-grid-column-one-third">
+    <div class="govuk-form-group govuk-!-margin-bottom-0">
+      {{ dateField.render(
+        legend = fromLegend,
+        id = 'submittedFrom',
+        dayValue = values['submittedFrom-day'],
+        monthValue = values['submittedFrom-month'],
+        yearValue = values['submittedFrom-year']
+      )}}
+    </div>
+  </div>
+
+  <div class="govuk-grid-column-one-third">
+    <div class="govuk-form-group govuk-!-margin-bottom-0">
+      {{ dateField.render(
+        legend = toLegend,
+        id = 'submittedTo',
+        dayValue = values['submittedTo-day'],
+        monthValue = values['submittedTo-month'],
+        yearValue = values['submittedTo-year']
+      )}}
+    </div>
+  </div>
+
+{% endmacro %}

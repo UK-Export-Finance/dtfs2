@@ -1,4 +1,4 @@
-{% import '_macros/date-range.njk' as dateRange %}
+{% import '_macros/date-range-submissions.njk' as dateRange %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% macro render(filter, user, banks, facilityStages) %}
@@ -52,12 +52,12 @@
   <div class="govuk-grid-row govuk-!-margin-bottom-4">
     {{ dateRange.inputs(fromLegend = 'Select submitted date between', toLegend = 'And',
         values = {
-          'createdFrom-day': filter['submittedFrom-day'],
-          'createdFrom-month': filter['submittedFrom-month'],
-          'createdFrom-year': filter['submittedFrom-year'],
-          'createdFrom-day': filter['submittedTo-day'],
-          'createdFrom-month': filter['submittedTo-month'],
-          'createdFrom-year': filter['submittedTo-year']
+          'submittedFrom-day': filter['submittedFrom-day'],
+          'submittedFrom-month': filter['submittedFrom-month'],
+          'submittedFrom-year': filter['submittedFrom-year'],
+          'submittedTo-day': filter['submittedTo-day'],
+          'submittedTo-month': filter['submittedTo-month'],
+          'submittedTo-year': filter['submittedTo-year']
         }
      ) }}
   </div>

@@ -114,6 +114,33 @@ const buildReportFilters = (params, user) => {
     });
   }
 
+  if (params['submittedFrom-year'] && params['submittedFrom-month'] && params['submittedFrom-day']) {
+    const year = params['submittedFrom-year'].padStart(4, '20');
+    const month = params['submittedFrom-month'].padStart(2, '0');
+    const day = params['submittedFrom-day'].padStart(2, '0');
+
+    const submittedFrom = moment(`${year} ${month} ${day}`, 'YYYY MM DD').valueOf();
+
+    filters.push({
+      field: 'details.submissionDate',
+      value: `${submittedFrom}`,
+      operator: 'gte',
+    });
+  }
+  if (params['submittedTo-year'] && params['submittedTo-month'] && params['submittedTo-day']) {
+    const year = params['submittedTo-year'].padStart(4, '20');
+    const month = params['submittedTo-month'].padStart(2, '0');
+    const day = params['submittedTo-day'].padStart(2, '0');
+
+    const submittedTo = moment(`${year} ${month} ${day}`, 'YYYY MM DD').add(1, 'day').valueOf();
+
+    filters.push({
+      field: 'details.submissionDate',
+      value: `${submittedTo}`,
+      operator: 'lt',
+    });
+  }
+
   if (params.filterBySupplierName) {
     filters.push({
       field: 'submissionDetails.supplier-name',
