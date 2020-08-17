@@ -377,12 +377,11 @@ router.get('/contract/:_id/bond/:_bondId/confirm-requested-cover-start-date', as
   });
 });
 
-router.get('/contract/:_id/bond/:bondId/delete', provide([BOND]), async (req, res) => {
-  const { dealId } = requestParams(req);
+router.get('/contract/:_id/bond/:bondId/delete', provide([DEAL, BOND]), async (req, res) => {
   const { bond } = req.apiData.bond;
 
   return res.render('bond/bond-delete.njk', {
-    dealId,
+    deal: req.apiData.deal,
     bond,
     user: req.session.user,
   });

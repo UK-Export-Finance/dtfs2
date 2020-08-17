@@ -372,14 +372,13 @@ router.get('/contract/:_id/loan/:_loanId/confirm-requested-cover-start-date', as
   });
 });
 
-router.get('/contract/:_id/loan/:loanId/delete', provide([LOAN]), async (req, res) => {
-  const { dealId } = requestParams(req);
+router.get('/contract/:_id/loan/:loanId/delete', provide([DEAL, LOAN]), async (req, res) => {
   const {
     loan,
   } = req.apiData.loan;
 
   return res.render('loan/loan-delete.njk', {
-    dealId,
+    deal: req.apiData.deal,
     loan,
     user: req.session.user,
   });
