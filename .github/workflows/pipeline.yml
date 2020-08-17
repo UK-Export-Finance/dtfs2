@@ -173,9 +173,9 @@ jobs:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       if: failure()
 
-  promote-portal-ui-dev:
+  promote:
     #needs: [api-tests, end-to-end-tests] - temp promotion to unblock QA
-    name: Deploy Portal UI to Dev
+    name: Promote Portal to Dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/docker-login@v1
@@ -189,27 +189,31 @@ jobs:
         docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$from
         docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$from ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$to
         docker push ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$to
-
-  promote-portal-api-dev:
-    #needs: [api-tests, end-to-end-tests] - temp promotion to unblock QA
-    name: Deploy Portal API to Dev
-    runs-on: ubuntu-latest
-    steps:
-    - uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
-        username: ${{ secrets.DEV_ACR_USERNAME }}
-        password: ${{ secrets.DEV_ACR_PASSWORD }}
-    - run: |
-        from=latest
-        to=dev
         docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$from
         docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$from ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$to
         docker push ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$to
 
-  portal-data:
-    needs: promote-portal-api-dev
-    name: Refresh Dev database
+  deploy:
+    # The App Service seems to need to be restarted to trigger a redeploy
+    name: Deploy container images
+    needs: promote
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+    - name: Restart Portal UI
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          portal_ui=tfs-${{ env.environment }}-portal-ui
+          portal_api=tfs-${{ env.environment }}-portal-ui
+          az webapp restart --name ${portal_ui} --resource-group ${{ env.resource_group }}
+          az webapp restart --name ${portal_api} --resource-group ${{ env.resource_group }}
+
+  refresh-data:
+    needs: deploy
+    name: Refresh Dev data
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
