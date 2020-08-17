@@ -74,6 +74,18 @@ describe('/v1/deals/:id/bond', () => {
   let aSuperuser;
   let anEditor;
 
+  const addBondToDeal = async () => {
+    const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+    const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+    const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+    const { bondId } = createBondResponse.body;
+    return {
+      dealId,
+      bondId,
+    };
+  };
+
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
 
@@ -653,6 +665,79 @@ describe('/v1/deals/:id/bond', () => {
       expect(body['requestedCoverStartDate-day']).toEqual(bond['requestedCoverStartDate-day']);
       expect(body['requestedCoverStartDate-month']).toEqual(bond['requestedCoverStartDate-month']);
       expect(body['requestedCoverStartDate-year']).toEqual(bond['requestedCoverStartDate-year']);
+    });
+  });
+
+  describe('DELETE /v1/deals/:id/bond/:id', () => {
+    let dealId;
+    let bondId;
+
+    beforeEach(async () => {
+      const addBondResponse = await addBondToDeal();
+      dealId = addBondResponse.dealId;
+      bondId = addBondResponse.bondId;
+    });
+
+    it('401s requests that do not present a valid Authorization token', async () => {
+      const { status } = await as().remove(`/v1/deals/${dealId}/bond/12345678`);
+
+      expect(status).toEqual(401);
+    });
+
+    it('401s requests that do not come from a user with role=maker', async () => {
+      const { status } = await as(noRoles).remove(`/v1/deals/${dealId}/bond/12345678`);
+
+      expect(status).toEqual(401);
+    });
+
+    it('401s requests if <user>.bank != <resource>/details.owningBank', async () => {
+      const { status } = await as(anHSBCMaker).remove(`/v1/deals/${dealId}/bond/12345678`);
+
+      expect(status).toEqual(401);
+    });
+
+    it('404s requests for unknown deal', async () => {
+      const { status } = await as(aBarclaysMaker).remove('/v1/deals/12345678/bond/12345678');
+
+      expect(status).toEqual(404);
+    });
+
+    it('404s requests for unknown bond', async () => {
+      const { status } = await as(aBarclaysMaker).remove(`/v1/deals/${dealId}/bond/12345678`);
+
+      expect(status).toEqual(404);
+    });
+
+    it('accepts requests if <user>.bank.id == *', async () => {
+      const { status } = await as(aBarclaysMaker).remove(`/v1/deals/${dealId}/bond/${bondId}`);
+      expect(status).toEqual(200);
+    });
+
+    it('removes a bond from a deal', async () => {
+      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+      await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+      const { body } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+
+      const createdDeal = body.deal;
+      expect(createdDeal.bondTransactions.items.length).toEqual(3);
+
+      const bondIdToDelete = createdDeal.bondTransactions.items[1]._id; // eslint-disable-line no-underscore-dangle
+
+      const { status } = await as(aBarclaysMaker).remove(`/v1/deals/${dealId}/bond/${bondIdToDelete}`);
+      expect(status).toEqual(200);
+
+      const { body: updatedDealBody } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+
+      const updatedBonds = updatedDealBody.deal.bondTransactions.items;
+      expect(updatedBonds.length).toEqual(2);
+
+      const deletedBond = updatedBonds.filter((bond) => bond._id === bondIdToDelete);
+      expect(deletedBond.length).toEqual(0);
     });
   });
 });
