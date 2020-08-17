@@ -53,6 +53,11 @@ const insertMocks = async () => {
     await api.createMandatoryCriteria(mandatoryCriteria, token);
   }
 
+  console.log('inserting eligibility-criteria');
+  for (eligibilityCriteria of MOCKS.ELIGIBILITY_CRITERIA) {
+    await api.createEligibilityCriteria(eligibilityCriteria, token);
+  }
+
   console.log('inserting users');
   for (user of MOCKS.USERS) {
     await api.createUser(user);

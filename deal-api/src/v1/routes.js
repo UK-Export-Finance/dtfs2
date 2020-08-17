@@ -17,6 +17,7 @@ const countries = require('./controllers/countries.controller');
 const feedback = require('./controllers/feedback.controller');
 const industrySectors = require('./controllers/industrySectors.controller');
 const mandatoryCriteria = require('./controllers/mandatoryCriteria.controller');
+const eligibilityCriteria = require('./controllers/eligibilityCriteria.controller');
 const loans = require('./controllers/loans.controller');
 const loanIssueFacility = require('./controllers/loan-issue-facility.controller');
 const bonds = require('./controllers/bonds.controller');
@@ -285,6 +286,28 @@ authRouter.route('/mandatory-criteria/:id')
   .delete(
     validate({ role: ['editor'] }),
     mandatoryCriteria.delete,
+  );
+
+authRouter.route('/eligibility-criteria')
+  .get(
+    eligibilityCriteria.findAll,
+  )
+  .post(
+    validate({ role: ['editor'] }),
+    eligibilityCriteria.create,
+  );
+
+authRouter.route('/eligibility-criteria/:id')
+  .get(
+    eligibilityCriteria.findOne,
+  )
+  .put(
+    validate({ role: ['editor'] }),
+    eligibilityCriteria.update,
+  )
+  .delete(
+    validate({ role: ['editor'] }),
+    eligibilityCriteria.delete,
   );
 
 authRouter.route('/mga')

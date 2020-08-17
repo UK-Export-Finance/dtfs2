@@ -98,6 +98,22 @@ const createMandatoryCriteria = async (mandatoryCriteria, token) => {
   return response.data;
 };
 
+const createEligibilityCriteria = async (eligibilityCriteria, token) => {
+  const response = await axios({
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/eligibility-criteria`,
+    data: eligibilityCriteria,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response.data;
+};
+
+
 const createUser = async (user) => {
   const response = await axios({
     method: 'post',
@@ -196,6 +212,20 @@ const deleteMandatoryCriteria = async (mandatoryCriteria, token) => {
   return response.data;
 };
 
+const deleteEligibilityCriteria = async (eligibilityCriteria, token) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/eligibility-criteria/${eligibilityCriteria.id}`,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response.data;
+};
+
 const deleteUser = async (user) => {
   const response = await axios({
     method: 'delete',
@@ -285,6 +315,20 @@ const listMandatoryCriteria = async (token) => {
   return response.data.mandatoryCriteria;
 };
 
+const listEligibilityCriteria = async (token) => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/eligibility-criteria`,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response.data.eligibilityCriteria;
+};
+
 const listUsers = async () => {
   const response = await axios({
     method: 'get',
@@ -320,6 +364,7 @@ module.exports = {
   createDeal,
   createIndustrySector,
   createMandatoryCriteria,
+  createEligibilityCriteria,
   createUser,
   deleteBank,
   deleteCurrency,
@@ -327,6 +372,7 @@ module.exports = {
   deleteDeal,
   deleteIndustrySector,
   deleteMandatoryCriteria,
+  deleteEligibilityCriteria,
   deleteUser,
   listBanks,
   listCurrencies,
@@ -334,6 +380,7 @@ module.exports = {
   listDeals,
   listIndustrySectors,
   listMandatoryCriteria,
+  listEligibilityCriteria,
   listUsers,
   resetIdCounters,
 };
