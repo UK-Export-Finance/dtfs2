@@ -7,7 +7,7 @@ on:
 env:
   environment: demo
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-  resource_group: ${{ secrets.RESOURCE_GROUP_DEV }}
+  resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
 
 jobs:
 
