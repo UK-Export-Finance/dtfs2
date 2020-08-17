@@ -44,7 +44,7 @@ const bondHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, d
   return false;
 };
 
-const addAccurateStatusesToBonds = (dealStatus, previousDealStatus, dealSubmissionType, bondTransactions) => {
+const addAccurateStatusesToBonds = (dealStatus, previousDealStatus, dealSubmissionType, dealSubmissionDate, bondTransactions) => {
   if (bondTransactions.items.length) {
     bondTransactions.items.forEach((b) => {
       const bond = b;
@@ -52,7 +52,7 @@ const addAccurateStatusesToBonds = (dealStatus, previousDealStatus, dealSubmissi
       let issueFacilityValidationErrors;
 
       if (bondHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, dealSubmissionType, bond)) {
-        issueFacilityValidationErrors = bondIssueFacilityValidationErrors(bond);
+        issueFacilityValidationErrors = bondIssueFacilityValidationErrors(bond, dealSubmissionDate);
       }
 
       bond.status = bondStatus(bond, validationErrors, issueFacilityValidationErrors);
