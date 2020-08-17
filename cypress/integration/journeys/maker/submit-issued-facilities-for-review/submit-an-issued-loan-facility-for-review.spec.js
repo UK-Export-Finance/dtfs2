@@ -38,6 +38,10 @@ context('A maker can issue and submit an issued loan facility with a deal in `Ac
       expect(text.trim()).to.equal('Conditional');
     });
 
+    loanRow.loanStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Not started');
+    });
+
     loanRow.issueFacilityLink().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Issue facility');
     });
@@ -53,6 +57,11 @@ context('A maker can issue and submit an issued loan facility with a deal in `Ac
     // expect issue facility link text to be changed
     loanRow.issueFacilityLink().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Facility issued');
+    });
+
+    // expect loan status to be updated (dynamically)
+    loanRow.loanStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Completed');
     });
 
     // submit deal for review

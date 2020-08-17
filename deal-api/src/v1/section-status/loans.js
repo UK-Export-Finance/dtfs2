@@ -45,7 +45,7 @@ const loanHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, d
   return false;
 };
 
-const addAccurateStatusesToLoans = (dealStatus, previousDealStatus, dealSubmissionType, loanTransactions) => {
+const addAccurateStatusesToLoans = (dealStatus, previousDealStatus, dealSubmissionType, dealSubmissionDate, loanTransactions) => {
   if (loanTransactions.items.length) {
     loanTransactions.items.forEach((l) => {
       const loan = l;
@@ -53,7 +53,7 @@ const addAccurateStatusesToLoans = (dealStatus, previousDealStatus, dealSubmissi
       let issueFacilityValidationErrors;
 
       if (loanHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, dealSubmissionType, loan)) {
-        issueFacilityValidationErrors = loanIssueFacilityValidationErrors(loan);
+        issueFacilityValidationErrors = loanIssueFacilityValidationErrors(loan, dealSubmissionDate);
       }
 
       loan.status = loanStatus(loan, validationErrors, issueFacilityValidationErrors);
