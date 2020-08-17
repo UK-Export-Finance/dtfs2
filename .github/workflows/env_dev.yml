@@ -12,7 +12,7 @@ env:
   app_service_plan: dev
   # Container settings
   image_tag: dev
-  registry: ${{ secrets.ACR_DEV_REGISTRY }}
+  registry: ${{ secrets.DEV_ACR_REGISTRY }}
   # App service settings
   DEAL_API_URL: "https://tfs-dev-portal-api.azurewebsites.net"
   COMPANIES_HOUSE_API_URL: ="https://api.companieshouse.gov.uk"
@@ -32,7 +32,7 @@ env:
   MONGODB_URI: "${{ secrets.DEV_MONGODB_URI }}"
   JWT_SIGNING_KEY: "${{ secrets.DEV_JWT_SIGNING_KEY }}"
   JWT_VALIDATING_KEY: "${{ secrets.DEV_JWT_VALIDATING_KEY }}"
-  GOV_NOTIFY_API_KEY: ="${{ secrets.GOV_NOTIFY_API_KEY }}"
+  GOV_NOTIFY_API_KEY: ="${{ secrets.DEV_GOV_NOTIFY_API_KEY }}"
   GOV_NOTIFY_EMAIL_RECIPIENT: "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
 
 # Below this line sholud be the same for all environments
