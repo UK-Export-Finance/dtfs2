@@ -553,13 +553,12 @@ router.get('/reports/reconciliation-report/:page', async (req, res) => {
 
 router.post('/reports/reconciliation-report/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-  console.log('post');
+
   if (!await api.validateToken(userToken)) {
     res.redirect('/');
   }
 
   const reportFilters = req.body;
-  console.log(`reportFilters: ${util.inspect(reportFilters)}`);
   if (reportFilters.bank === 'any') {
     reportFilters.bank = '';
   }
@@ -571,11 +570,11 @@ router.post('/reports/reconciliation-report/:page', async (req, res) => {
   );
 
   const filters = buildReportFilters(reportFilters, req.session.user);
+
   const { deals, count } = await getApiData(
     api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
   );
-  console.log(`deals: ${util.inspect(deals)}`);
 
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
