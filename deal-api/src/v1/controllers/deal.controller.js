@@ -23,7 +23,6 @@ const dealsQuery = (user, filter) => {
   if (filter && filter !== {}) {
     query = { ...filter };
   }
-  console.log(`filter :: \n${JSON.stringify(filter)}`);
   if (!isSuperUser(user)) {
     query['details.owningBank.id'] = { $eq: user.bank.id };
   }
@@ -40,7 +39,6 @@ const dealsQuery = (user, filter) => {
     query.$or = [bondMatchesOnFacilityStage, loanMatchesOnFacilityStage];
     delete query['transaction.status'];
   }
-  console.log(`query :: \n${JSON.stringify(query)}`);
   return query;
 };
 
@@ -74,7 +72,7 @@ const findPaginatedDeals = async (requestingUser, start = 0, pagesize = 20, filt
     .skip(start)
     .limit(pagesize)
     .toArray();
-    console.log(`deals :: \n${JSON.stringify(deals)}`);
+
   return {
     count,
     deals,
