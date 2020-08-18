@@ -23,15 +23,24 @@ const dealsQuery = (user, filter) => {
   if (filter && filter !== {}) {
     query = { ...filter };
   }
-
+  console.log(`filter :: \n${JSON.stringify(filter)}`);
   if (!isSuperUser(user)) {
     query['details.owningBank.id'] = { $eq: user.bank.id };
   }
   // check for the bankSupplyContractID and swap for regex to make it case-insensitve
-  if (query && query['details.bankSupplyContractID']) {
+  if (query['details.bankSupplyContractID']) {
     const bankSupplyContractID = query['details.bankSupplyContractID'];
     query['details.bankSupplyContractID'] = { $regex: bankSupplyContractID, $options: 'i' };
   }
+  // add transactions stage OR filter
+  if (query['transaction.status']) {
+    const bondMatchesOnFacilityStage = { 'bondTransactions.items': { $elemMatch: { status: query['transaction.status'] } } };
+    const loanMatchesOnFacilityStage = { 'loanTransactions.items': { $elemMatch: { status: query['transaction.status'] } } };
+
+    query.$or = [bondMatchesOnFacilityStage, loanMatchesOnFacilityStage];
+    delete query['transaction.status'];
+  }
+  console.log(`query :: \n${JSON.stringify(query)}`);
   return query;
 };
 
@@ -65,7 +74,7 @@ const findPaginatedDeals = async (requestingUser, start = 0, pagesize = 20, filt
     .skip(start)
     .limit(pagesize)
     .toArray();
-
+    console.log(`deals :: \n${JSON.stringify(deals)}`);
   return {
     count,
     deals,

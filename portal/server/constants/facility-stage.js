@@ -3,6 +3,8 @@ const FACILITY_STATUS = {
   issued: 'Issued',
   conditional: 'Conditional',
   unconditional: 'Unconditional',
+  incomplete: 'Incomplete',
+  submitted: 'Submitted',
 };
 
 export default FACILITY_STATUS;
