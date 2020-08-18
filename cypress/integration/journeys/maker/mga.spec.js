@@ -5,7 +5,7 @@ const {
 
 const mockUsers = require('../../../fixtures/mockUsers');
 // slight oddity- this test seems to need a straight 'maker'; so filtering slightly more than in other tests..
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.roles.length === 1) );
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.roles.length === 1));
 
 context('MGA', () => {
   beforeEach(() => {
@@ -22,7 +22,7 @@ context('MGA', () => {
       footer.mgaPageLink().click();
       cy.url().should('include', '/mga');
 
-      mga.mgaLink().should('have.length', 2);
+      mga.mgaLink().should('have.length', 1);
     });
   });
 });

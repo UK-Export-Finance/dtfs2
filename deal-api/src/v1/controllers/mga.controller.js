@@ -2,6 +2,9 @@
 const stream = require('stream');
 const { readFile } = require('../../drivers/fileshare');
 const { findOneBank } = require('./banks.controller');
+const fileshare = require('../../drivers/fileshare');
+
+const { EXPORT_FOLDER } = fileshare.getConfig('portal');
 
 exports.findAllByUserOrganisation = async (req, res) => {
   const { bank } = req.user;
@@ -21,10 +24,11 @@ exports.downloadMga = async (req, res) => {
   const { bank } = req.user;
 
   const documentLocation = {
-    folder: 'mga',
-    subfolder: bank.id,
+    fileshare: 'portal',
+    folder: `${EXPORT_FOLDER}/mga/${bank.id}`,
     filename,
   };
+
 
   const bufferedFile = await readFile(documentLocation);
 
