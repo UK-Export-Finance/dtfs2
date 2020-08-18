@@ -10,9 +10,9 @@ const statusUpdateController = require('../deal-status.controller');
 
 const updateStatus = statusUpdateController.update;
 const interfaceUser = {
-  username: 'INTERFACE',
-  firstname: 'K2',
-  surname: 'INTERFACE',
+  username: 'DigitalService.TradeFinance@ukexportfinance.gov.uk',
+  firstname: 'UKEF',
+  surname: '',
   roles: ['interface'],
   bank: { id: '*' },
 };
