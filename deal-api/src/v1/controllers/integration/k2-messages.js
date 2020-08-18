@@ -153,8 +153,8 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_max_liability(convertCurrencyFormat(bond.ukefExposure))
         .BSS_min_quarterly_fee(Number(bond.minimumRiskMarginFee) ? Number(bond.minimumRiskMarginFee) : 0)
         .BSS_premium_type(k2Map.FACILITIES.FEE_TYPE[bond.feeType])
-        .BSS_cover_start_date(dateHelpers.formatTimestamp(bond.requestedCoverStartDate))
-        .BSS_issue_date(guaranteeCommencementDate)
+        .BSS_cover_start_date(guaranteeCommencementDate)
+        .BSS_issue_date(dateHelpers.formatTimestamp(bond.requestedCoverStartDate))
         .BSS_cover_end_date(coverExpiryDate)
         .BSS_cover_period(calculateExposurePeriod(bond))
         .BSS_day_basis(k2Map.FACILITIES.DAY_COUNT_BASIS[bond.dayCountBasis]);
@@ -205,15 +205,15 @@ const generateTypeA = async (deal, fromStatus) => {
           .EWCS_max_liability(convertCurrencyFormat(loan.ukefExposure))
           .EWCS_min_quarterly_fee(Number(loan.minimumQuarterlyFee))
           .EWCS_premium_type(k2Map.FACILITIES.FEE_TYPE[loan.premiumType])
-          .EWCS_cover_start_date(dateHelpers.formatTimestamp(loan.requestedCoverStartDate))
-          .EWCS_issue_date(guaranteeCommencementDate)
+          .EWCS_cover_start_date(guaranteeCommencementDate)
+          .EWCS_issue_date(dateHelpers.formatTimestamp(loan.requestedCoverStartDate))
           .EWCS_cover_end_date(coverExpiryDate)
           .EWCS_cover_period(calculateExposurePeriod(loan))
           .EWCS_day_basis(k2Map.FACILITIES.DAY_COUNT_BASIS[loan.dayCountBasis]);
 
         // Conditional fields
-        if (!businessRules.transactions.isPremiumTypeAtMaturity(loan.feeType)) {
-          ewcs.EWCS_premium_freq(k2Map.FACILITIES.FEE_FREQUENCY[loan.feeFrequency]);
+        if (!businessRules.transactions.isPremiumTypeAtMaturity(loan.premiumType)) {
+          ewcs.EWCS_premium_freq(k2Map.FACILITIES.FEE_FREQUENCY[loan.premiumFrequency]);
         }
 
         builder.addEWCS(ewcs);
@@ -229,7 +229,7 @@ const generateTypeA = async (deal, fromStatus) => {
     const gbpConversionRate = deal.submissionDetails.supplyContractCurrency.id === 'GBP' ? 1 : deal.submissionDetails.supplyContractConversionRateToGBP;
 
     builder.Deal_no_facilities(bondCount + loanCount)
-      .Deal_total_value_deal_cur(await convertCurrencyCodeToId(deal.submissionDetails.supplyContractCurrency.id))
+      .Deal_total_value_deal_cur(convertCurrencyFormat(deal.submissionDetails.supplyContractValue) / gbpConversionRate)
       .Deal_total_exposure_gbp((totalBondExposure + totalLoanExposure) / gbpConversionRate)
       .Deal_total_premium_gbp((totalBondPremium + totalLoanPremium) / gbpConversionRate)
       .Deal_total_exposure_deal_cur(totalBondExposure + totalLoanExposure)
