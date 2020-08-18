@@ -55,12 +55,10 @@ const buildReportFilters = (params, user) => {
   }
 
   if (CONSTANTS.FACILITY_STAGE[params.facilityStage]) {
-    const stage = CONSTANTS.FACILITY_STAGE[params.facilityStage];
-    const filterValue = (stage === CONSTANTS.FACILITY_STAGE.unissued || stage === CONSTANTS.FACILITY_STAGE.conditional ? 'unissued_conditional' : 'issued_unconditional');
     filters.push(
       {
         field: 'transaction.transactionStage',
-        value: filterValue,
+        value: params.facilityStage,
       },
     );
   }
