@@ -43,6 +43,7 @@ type DealDetails {
   dateOfLastAction: String
   submissionDate: String
   created: String
+  workflowStatus: String
   owningBank: OwningBank
 }
 
