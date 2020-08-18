@@ -95,21 +95,6 @@ describe('Workflow type B XML processing', () => {
     expect(updatedDeal.details.status).toEqual('Confirmation acknowledged');
   });
 
-  it('should update comments return by workflow', async () => {
-    const workflowStatus = 'confirmation_acknowledged';
-    const dealComments = 'a workflow comment';
-
-    const typeBxml = insertValuesInXml({
-      dealId, status: workflowStatus, actionCode: '010', dealComments,
-    }, typeBxmlTemplate);
-
-
-    const updatedDeal = await processTypeB({ fileContents: typeBxml });
-
-    expect(updatedDeal.comments[0].text).toEqual(dealComments);
-    expect(updatedDeal.comments[0].user.username).toEqual('DigitalService.TradeFinance@ukexportfinance.gov.uk');
-  });
-
   it('should update special conditions workflow response has comment and action code = 007', async () => {
     const workflowStatus = 'confirmation_acknowledged';
     const dealComments = 'a workflow comment';
