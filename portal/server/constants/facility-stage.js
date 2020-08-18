@@ -1,8 +1,10 @@
 const FACILITY_STATUS = {
-  unissued: 'Unissued',
+  unissued_conditional: 'Unissued/Conditional',
+  issued_unconditional: 'Issued/Unconditional',
+/*   unissued: 'Unissued',
   issued: 'Issued',
   conditional: 'Conditional',
-  unconditional: 'Unconditional',
+  unconditional: 'Unconditional', */
 };
 
 export default FACILITY_STATUS;
