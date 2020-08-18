@@ -368,13 +368,53 @@ router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
   return res.redirect(`/contract/${dealId}`);
 });
 
-router.get('/contract/:_id/bond/:_bondId/confirm-requested-cover-start-date', async (req, res) => {
-  const { _id: dealId } = requestParams(req);
+router.get('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', async (req, res) => {
+  const { _id: dealId, bondId, userToken } = requestParams(req);
+
+  const apiResponse = await getApiData(
+    api.contractBond(dealId, bondId, userToken),
+    res,
+  );
+
+  const {
+    bond,
+  } = apiResponse;
+
 
   return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
     dealId,
     user: req.session.user,
+    facility: bond,
   });
+});
+
+router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', async (req, res) => {
+  const { _id: dealId, bondId, userToken } = requestParams(req);
+
+  if (req.body.needToChangeRequestedCoverStartDate === 'true') {
+    const { bond, validationErrors } = await postToApi(
+      api.updateBond(
+        dealId,
+        bondId,
+        req.body,
+        userToken,
+      ),
+      errorHref,
+    );
+
+    if (validationErrors && validationErrors.errorList.requestedCoverStartDate) {
+      return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
+        dealId,
+        user: req.session.user,
+        facility: bond,
+        validationErrors,
+        needToChangeRequestedCoverStartDate: req.body.needToChangeRequestedCoverStartDate,
+      });
+    }
+  }
+
+  const redirectUrl = `/contract/${dealId}`;
+  return res.redirect(redirectUrl);
 });
 
 router.get('/contract/:_id/bond/:bondId/delete', provide([DEAL, BOND]), async (req, res) => {

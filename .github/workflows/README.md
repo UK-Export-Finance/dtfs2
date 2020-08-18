@@ -32,3 +32,4 @@ A couple of places this works are:
  * Azure App Services: you can see the environments as blocks in the list and find the services deployed a given environment
 
 Other approaches are available, but this seems a reasonable one for now.
+

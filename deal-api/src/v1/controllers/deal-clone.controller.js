@@ -3,6 +3,8 @@ const { findMandatoryCriteria } = require('./mandatoryCriteria.controller');
 const { findOneDeal, create: createDeal } = require('./deal.controller');
 const { generateDealId } = require('../../utils/generateIds');
 const { getCloneDealErrors } = require('../validation/clone-deal');
+const { findEligibilityCriteria } = require('./eligibilityCriteria.controller');
+
 const now = require('../../now');
 
 const CLONE_BOND_FIELDS = [
@@ -61,6 +63,8 @@ const getCurrentMandatoryCriteria = () => new Promise((resolve) => {
 
 exports.clone = async (req, res) => {
   await findOneDeal(req.params.id, async (existingDeal) => {
+    const eligibilityCriteria = await findEligibilityCriteria();
+
     if (!existingDeal) {
       return res.status(404).send();
     }
@@ -87,6 +91,10 @@ exports.clone = async (req, res) => {
       },
       editedBy: [],
       mandatoryCriteria: await getCurrentMandatoryCriteria(),
+      eligibility: {
+        status: 'Incomplete',
+        criteria: eligibilityCriteria,
+      },
     };
 
     if (cloneTransactions === 'false') {
