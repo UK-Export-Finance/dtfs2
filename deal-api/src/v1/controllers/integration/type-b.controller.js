@@ -10,9 +10,9 @@ const statusUpdateController = require('../deal-status.controller');
 
 const updateStatus = statusUpdateController.update;
 const interfaceUser = {
-  username: 'INTERFACE',
-  firstname: 'K2',
-  surname: 'INTERFACE',
+  username: 'DigitalService.TradeFinance@ukexportfinance.gov.uk',
+  firstname: 'UKEF',
+  surname: '',
   roles: ['interface'],
   bank: { id: '*' },
 };
@@ -105,8 +105,6 @@ const processTypeB = async ({ fileContents }) => {
 
   if (actionCode === '007' && dealComments.length) {
     await dealCommentsController.addSpecialConditions(dealId, dealComments[0], interfaceUser);
-  } else {
-    await dealCommentsController.addComment(dealId, dealComments[0], interfaceUser);
   }
 
   const updateData = {
