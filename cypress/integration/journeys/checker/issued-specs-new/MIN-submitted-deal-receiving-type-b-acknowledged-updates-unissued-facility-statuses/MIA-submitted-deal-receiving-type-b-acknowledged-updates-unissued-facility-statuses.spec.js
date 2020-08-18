@@ -1,11 +1,20 @@
 const pages = require('../../../../pages');
-const dealWithNotStartedFacilityStatuses = require('./AIN-deal-with-unissued-facilities');
+const MIADealWithUnissuedFacilities = require('./MIA-deal-with-unissued-facilities');
 const mockUsers = require('../../../../../fixtures/mockUsers');
 
 const CHECKER_LOGIN = mockUsers.find(user => (user.roles.includes('checker') && user.bank.name === 'Barclays Bank'));
 const MAKER_LOGIN = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 
-context('Checker submits an AIN deal with `Unissued` bonds and `Unconditional` loans; workflow responds', () => {
+// TODO/confirm
+// is this the expected behaviour?
+// submit MIA deal
+// maker sends MIA deal to checker
+// checker submits MIA deal again
+// submitted deal becomes MIN
+// THEN facility statuses are updated? is this correct?
+// at the moment facility statuses are updated on submit, regardless.
+
+context('Checker submits an MIN deal with `Unissued` bonds and `Unconditional` loans; workflow responds', () => {
   let deal;
   let dealId;
 
@@ -18,8 +27,7 @@ context('Checker submits an AIN deal with `Unissued` bonds and `Unconditional` l
 
   before(() => {
     cy.deleteDeals(MAKER_LOGIN);
-
-    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, { ...MAKER_LOGIN })
+    cy.insertOneDeal(MIADealWithUnissuedFacilities, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
@@ -67,7 +75,7 @@ context('Checker submits an AIN deal with `Unissued` bonds and `Unconditional` l
       },
       deal: {
         UKEF_deal_id: deal._id,
-        Deal_status: 'submission_acknowledged',
+        Deal_status: 'approved',
       },
       bonds: [
         {
@@ -77,7 +85,7 @@ context('Checker submits an AIN deal with `Unissued` bonds and `Unconditional` l
         },
       ],
       loans: [
-        { 
+        {
           EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
           EWCS_ukef_facility_id: '56789',
           EWCS_status: '""',
