@@ -29,6 +29,7 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
         owningBank{
           name
         }
+        workflowStatus
       }
     }
   }
