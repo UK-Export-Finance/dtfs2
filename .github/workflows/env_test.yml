@@ -33,6 +33,7 @@ env:
   JWT_VALIDATING_KEY: "${{ secrets.DEV_JWT_VALIDATING_KEY }}"
   GOV_NOTIFY_API_KEY: ="${{ secrets.TEST_GOV_NOTIFY_API_KEY }}"
   GOV_NOTIFY_EMAIL_RECIPIENT: "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
+  DTFS_PORTAL_SCHEDULER: true  
 
 # Below this line sholud be the same for all environments
 
