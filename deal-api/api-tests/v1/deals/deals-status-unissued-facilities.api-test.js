@@ -221,53 +221,62 @@ describe('/v1/deals/:id/status - unissued facilities', () => {
         if ((facility.bondStage === 'Unissued' || facility.facilityStage === 'Conditional')
           && facility.issueFacilityDetailsProvided
           && !facility.issueFacilityDetailsSubmitted
-          && facility.status !== 'Submitted') {
+          && (!facility.status || facility.status !== 'Submitted')) {
           return facility;
         }
         return null;
       };
 
-      // TODO: Tony B: I don't think these 4 tests are good enough
-      // as we currently update the loans/bonds in this scenario for both possible facility stages.
-
       describe('any issued bonds that have details provided, but not yet been submitted', () => {
-        it('should add `Ready for check` status, change bondStage from `Unissued` to `Issued` and add previousBondStage', async () => {
+        it('should change bondStage from `Unissued` to `Issued` and add previousBondStage', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-          const issuedBondsThatShouldBeUpdated = body.deal.bondTransactions.items.filter((b) =>
+          const issuedBondsThatShouldBeUpdated = createdDeal.bondTransactions.items.filter((b) =>
             b.bondStage === 'Unissued'
-            && b.issueFacilityDetailsProvided === true
+            && b.issueFacilityDetailsProvided
             && !b.issueFacilityDetailsSubmitted);
 
+          // make sure we have some bonds to test against
+          expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
+
+          const bondsInUpdatedDeal = body.deal.bondTransactions.items;
+          expect(bondsInUpdatedDeal.length > 0).toEqual(true);
+
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
-            // TODO status SHOULD NOT BE HERE
-            expect(bond.status).toEqual('Ready for check');
-            expect(bond.bondStage).toEqual('Issued');
-            expect(bond.previousBondStage).toEqual('Unissued');
+            const bondInUpdatedDeal = bondsInUpdatedDeal.find((b) => b._id === bond._id);
+            expect(bondInUpdatedDeal.status).toEqual('Completed');
+            expect(bondInUpdatedDeal.bondStage).toEqual('Issued');
+            expect(bondInUpdatedDeal.previousFacilityStage).toEqual('Unissued');
           });
         });
       });
 
       describe('any issued loans that have details provided, but not yet been submitted', () => {
-        it('should add `Ready for check` status, change facilityStage from `Conditional` to `Unconditional` and add previousFacilityStage', async () => {
+        it('should change facilityStage from `Conditional` to `Unconditional` and add previousFacilityStage', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-          const issuedLoansThatShouldBeUpdated = body.deal.loanTransactions.items.filter((l) =>
+          const issuedLoansThatShouldBeUpdated = createdDeal.loanTransactions.items.filter((l) =>
             l.facilityStage === 'Conditional'
-            && l.issueFacilityDetailsProvided === true
+            && l.issueFacilityDetailsProvided
             && !l.issueFacilityDetailsSubmitted);
 
+          // make sure we have some loans to test against
+          expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
+
+          const loansInUpdatedDeal = body.deal.loanTransactions.items;
+          expect(loansInUpdatedDeal.length > 0).toEqual(true);
+
           issuedLoansThatShouldBeUpdated.forEach((loan) => {
-            // TODO status SHOULD NOT BE HERE
-            expect(loan.status).toEqual('Ready for check');
-            expect(loan.facilityStage).toEqual('Unconditional');
-            expect(loan.previousFacilityStage).toEqual('Conditional');
+            const loanInUpdatedDeal = loansInUpdatedDeal.find((l) => l._id === loan._id);
+            expect(loanInUpdatedDeal.status).toEqual('Completed');
+            expect(loanInUpdatedDeal.facilityStage).toEqual('Unconditional');
+            expect(loanInUpdatedDeal.previousFacilityStage).toEqual('Conditional');
           });
         });
       });
@@ -330,40 +339,6 @@ describe('/v1/deals/:id/status - unissued facilities', () => {
         };
 
         updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
-      });
-
-      // TODO: Tony B: I don't think these 2 tests are good enough
-      // as we currently update the loans/bonds in this scenario for both possible facility stages.
-      describe('all issued bonds (bondStage=`Unissued`)', () => {
-        it('should add `Maker’s input required` status to the bond', async () => {
-          expect(updatedDeal.status).toEqual(200);
-          expect(updatedDeal.body).toBeDefined();
-
-          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
-
-          const issuedBondsThatShouldBeUpdated = body.deal.bondTransactions.items.filter((b) =>
-            b.bondStage === 'Unissued');
-
-          issuedBondsThatShouldBeUpdated.forEach((bond) => {
-            expect(bond.status).toEqual('Maker\'s input required');
-          });
-        });
-      });
-
-      describe('any issued loans (facilityStage=`Conditional`)', () => {
-        it('should add `Maker’s input required` status to the loan', async () => {
-          expect(updatedDeal.status).toEqual(200);
-          expect(updatedDeal.body).toBeDefined();
-
-          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
-
-          const issuedLoansThatShouldBeUpdated = body.deal.loanTransactions.items.filter((l) =>
-            l.facilityStage === 'Conditional');
-
-          issuedLoansThatShouldBeUpdated.forEach((loan) => {
-            expect(loan.status).toEqual('Maker\'s input required');
-          });
-        });
       });
     });
 
