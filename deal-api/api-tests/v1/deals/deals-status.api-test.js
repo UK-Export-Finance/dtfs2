@@ -591,7 +591,7 @@ describe('/v1/deals/:id/status', () => {
 
       // TODO: Tony B: I don't think these 4 tests are good enough
       // as we currently update the loans/bonds in this scenario for both possible facility stages.
-     
+
       describe('any issued bonds that have details provided, but not yet been submitted', () => {
         it('should add `Ready for check` status, change bondStage from `Unissued` to `Issued` and add previousBondStage', async () => {
           expect(updatedDeal.status).toEqual(200);
@@ -661,8 +661,7 @@ describe('/v1/deals/:id/status', () => {
 
           const issuedLoansThatShouldBeUpdated = createdDeal.loanTransactions.items.filter((l) =>
             isUnsubmittedIssuedFacility(l)
-            && !l.requestedCoverStartDate
-          );
+            && !l.requestedCoverStartDate);
 
           // make sure we have some loans to test against
           expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
@@ -767,8 +766,7 @@ describe('/v1/deals/:id/status', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedBondsThatShouldBeUpdated = createdDeal.bondTransactions.items.filter((b) =>
-            isUnsubmittedIssuedFacilityWithFacilityStageChange(b)
-          );
+            isUnsubmittedIssuedFacilityWithFacilityStageChange(b));
 
           // make sure we have some bonds to test against
           expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);

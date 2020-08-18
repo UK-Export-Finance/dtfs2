@@ -38,6 +38,10 @@ context('A maker can issue and submit an issued bond facility with a deal in `Ac
       expect(text.trim()).to.equal('Unissued');
     });
 
+    bondRow.bondStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Not started');
+    });
+
     bondRow.issueFacilityLink().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Issue facility');
     });
@@ -53,6 +57,11 @@ context('A maker can issue and submit an issued bond facility with a deal in `Ac
     // expect issue facility link text to be changed
     bondRow.issueFacilityLink().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Facility issued');
+    });
+
+    // expect bond status to be updated (dynamically)
+    bondRow.bondStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Completed');
     });
 
     // submit deal for review

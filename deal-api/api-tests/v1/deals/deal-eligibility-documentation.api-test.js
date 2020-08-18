@@ -3,6 +3,7 @@ const aDeal = require('../deals/deal-builder');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
+const eligibilityCriteriaCache = require('../../api-test-eligibilityCriteria');
 
 const { as } = require('../../api')(app);
 const {
@@ -15,12 +16,16 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
   let noRoles;
   let aBarclaysMaker;
   let anHSBCMaker;
+  let anEditor;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    anEditor = testUsers().withRole('editor').one();
+
+    await eligibilityCriteriaCache.initialise(app, anEditor);
   });
 
   beforeEach(async () => {
@@ -137,7 +142,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       expect(status).toEqual(200);
       expect(body.dealFiles[fieldname][0]).toMatchObject({
         filename,
-        fullPath: `private-files/ukef_portal_storage/${newId}/${filename}`,
+        fullPath: `${process.env.AZURE_PORTAL_EXPORT_FOLDER}/${newId}/${filename}`,
         type,
       });
     });
@@ -189,7 +194,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
       const expectedFiles = files.map(({ filename, type }) => ({
         filename,
-        fullPath: `private-files/ukef_portal_storage/${newId}/${filename}`,
+        fullPath: `${process.env.AZURE_PORTAL_EXPORT_FOLDER}/${newId}/${filename}`,
         type,
       }));
 
@@ -221,7 +226,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
       const expectedFiles = files.map(({ filename, fieldname, type }) => ([{
         filename,
-        fullPath: `private-files/ukef_portal_storage/${newId}/${filename}`,
+        fullPath: `${process.env.AZURE_PORTAL_EXPORT_FOLDER}/${newId}/${filename}`,
         type,
       }]));
 

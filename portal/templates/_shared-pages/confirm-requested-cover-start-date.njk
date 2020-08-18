@@ -1,10 +1,20 @@
 {% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import '_macros/date-field.njk' as dateField %}
 
 {% block content %}
 
   <h1 class="govuk-heading-l">Confirm Requested Cover Start Date</h1>
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
 
   <form method="POST" autocomplete="off">
 
@@ -20,11 +30,13 @@
       items: [
         {
           value: "true",
-          text: "Yes"
+          text: "Yes",
+          checked: needToChangeRequestedCoverStartDate === "true"
         },
         {
           value: "false",
-          text: "No, keep current date value (01/02/2019)"
+          text: "No, keep current date value (" + facility['requestedCoverStartDate-day'] +"/" + facility['requestedCoverStartDate-month'] +"/" + facility['requestedCoverStartDate-year'] +")",
+          checked: needToChangeRequestedCoverStartDate === "false"
         }
       ]
     }) }}
@@ -32,7 +44,8 @@
     {{ dateField.render(
       legend = 'New Requested Cover Start Date',
       id = 'requestedCoverStartDate',
-      hint = 'For example, 27 11 2019'
+      hint = 'For example, 27 11 2019',
+      error = validationErrors.errorList.requestedCoverStartDate
     )}}
 
     <button data-cy="Submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
