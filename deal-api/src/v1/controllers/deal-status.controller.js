@@ -97,14 +97,9 @@ exports.update = (req, res) => {
     }
 
     if (toStatus === 'Further Maker\'s input required') {
-      const updateIssuedFacilitiesCoverStartDates = false;
-      const updateIssuedFacilitiesStatuses = true;
       dealAfterAllUpdates = await updateIssuedFacilities(
         collection,
         dealAfterAllUpdates,
-        updateIssuedFacilitiesCoverStartDates,
-        updateIssuedFacilitiesStatuses,
-        'Maker\'s input required',
       );
     }
 

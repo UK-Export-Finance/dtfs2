@@ -4,8 +4,8 @@ const CONSTANTS = require('../../../constants');
 const updateIssuedFacilities = async (
   collection,
   deal,
-  updateIssuedFacilitiesCoverStartDates,
-  updateIssuedFacilitiesStatuses,
+  updateIssuedFacilitiesCoverStartDates = false,
+  updateIssuedFacilitiesStatuses = false,
   newStatus,
 ) => {
   const updatedDeal = deal;
