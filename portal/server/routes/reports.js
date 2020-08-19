@@ -570,10 +570,9 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   const { userToken } = requestParams(req);
 
   // need to query mongo and filter on multiple fields:
-  // I've filtered the deals on the main record (status or subs type)
+  // I've filtered the deals (MIA/MIN) on the main record submission type
   // then filtered the array locally
   // - STATUS:submissionAcknowledged + TRANSACTION_STAGE:unissued_conditional
-  // same as facilityStage = 'Unissued'||'Conditional'?
   // - SUBMISSION_TYPE:manualInclusionApplication + STATUS:approved + MIN not issued
   // - SUBMISSION_TYPE:manualInclusionApplication + STATUS:approvedWithConditions + MIN not submitted
   const stageFilters = { // TODO use CONSTANTS lowercase string
@@ -768,8 +767,8 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
     image: 'twistie-up',
   };
 
-  const stageFilters = { // TODO use CONSTANTS lowercase string
-    facilityStage: 'conditional',
+  const stageFilters = {
+    facilityStage: 'unissued_conditional',
     filterByStatus: 'submissionAcknowledged',
   };
   const filters = buildReportFilters(stageFilters, req.session.user);
