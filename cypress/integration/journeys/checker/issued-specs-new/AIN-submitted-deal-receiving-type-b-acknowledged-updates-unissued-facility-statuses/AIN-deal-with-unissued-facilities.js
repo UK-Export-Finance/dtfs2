@@ -228,7 +228,7 @@ const deal = {
         "ukefExposure": "370.20",
         "premiumType": "At maturity",
         "dayCountBasis": "365",
-        "requestedCoverStartDate": "1597773942894"
+        "requestedCoverStartDate": moment().utc().valueOf(),
       }
     ]
   },
