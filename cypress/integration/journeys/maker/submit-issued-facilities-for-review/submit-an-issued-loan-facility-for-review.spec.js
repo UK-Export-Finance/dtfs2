@@ -86,9 +86,9 @@ context('A maker can issue and submit an issued loan facility with a deal in `Ac
     });
 
     // expect the loan status to be updated
-    // loanRow.loanStatus().invoke('text').then((text) => {
-    //   expect(text.trim()).to.equal('Ready for check');
-    // });
+    loanRow.loanStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Ready for check');
+    });
 
     loanRow.facilityStage().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Unconditional');

@@ -88,7 +88,6 @@ context('A checker selects to return a deal (with some issued facilities) to mak
       expect(text.trim()).to.equal('Completed');
     });
 
-
     // assert loan statuses
     conditionalLoanRow.loanStatus().invoke('text').then((text) => {
       expect(text.trim()).equal('Maker\'s input required');
