@@ -1,8 +1,8 @@
 import express from 'express';
-import util from 'util';
+// import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
-import { getRAGstatus, getExpiryDates, getMIAData } from './expiryStatusUtils';
+import { getRAGstatus, getExpiryDates } from './expiryStatusUtils';
 import CONSTANTS from '../constants';
 import {
   getApiData,
@@ -597,16 +597,10 @@ router.get('/reports/countdown-indicator', async (req, res) => {
     res,
   );
 
-  console.log(`applications.deal: ${util.inspect(applications.deals)}`);
-  console.log('----------');
   // mock up by filtering here on conditional or unissued
   const incompleteFacilities = transactions;
   const miaWithConditions = applications.deals.filter((deal) => (deal.details.status === 'Accepted by UKEF (with conditions)'));
   const miaWithOutConditions = applications.deals.filter((deal) => (deal.details.status === 'Accepted by UKEF (without conditions)'));
-
-  console.log(`miaWithConditions: ${util.inspect(miaWithConditions)}`);
-  console.log(`miaWithOutConditions: ${util.inspect(miaWithOutConditions)}`);
-
 
   const status90Days = getRAGstatus(incompleteFacilities, 90, false);
   const status20Days = getRAGstatus(miaWithConditions, 28, true);
