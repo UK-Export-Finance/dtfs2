@@ -58,7 +58,8 @@ const addAccurateStatusesToLoans = (
       const validationErrors = loanValidationErrors(loan);
       let issueFacilityValidationErrors;
 
-      if (loanHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, dealSubmissionType, loan)) {
+      if (loan.issueFacilityDetailsStarted
+          && loanHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, dealSubmissionType, loan)) {
         issueFacilityValidationErrors = loanIssueFacilityValidationErrors(loan, dealSubmissionDate);
       }
 
