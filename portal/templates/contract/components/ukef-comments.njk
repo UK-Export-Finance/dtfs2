@@ -1,0 +1,15 @@
+{% macro render(ukefComments, specialConditions) %}
+
+  {% if ukefComments and ukefComments.length %}
+  <p class="govuk-body">
+    <span class="govuk-!-font-size-19 govuk-!-font-weight-bold"  data-cy="ukef-comments-title">UKEF Comments:</span> <span  data-cy="ukef-comments-text">{{ ukefComments[ukefComments.length - 1].text}}</span>
+  </p>
+  {% endif %}
+
+ {% if specialConditions and specialConditions.length %}
+  <p class="govuk-body">
+    <span class="govuk-!-font-size-19 govuk-!-font-weight-bold" data-cy="special-conditions-title">Special Conditions:</span> <span  data-cy="special-conditions-text">{{ specialConditions[specialConditions.length - 1].text}}</span>
+  </p>
+  {% endif %}
+  
+{% endmacro %}

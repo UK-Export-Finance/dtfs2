@@ -1,6 +1,7 @@
 {% extends "index.njk" %}
 {% import './components/contract-overview-table.njk' as contractOverviewTable %}
 {% import './components/contract-tabs.njk' as contractTabs %}
+{% import './components/ukef-comments.njk' as ukefComments %}
 
 {% block pageTitle %}Comments - {{ details.bankSupplyContractName }}{% endblock %}
 
@@ -9,7 +10,7 @@
   {% set componentData = {user: user, deal: deal, selected: 'comments'} %}
   {% set comments = deal.comments %}
 
-  <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ details.bankSupplyContractName }}</span></h1>
+  <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ deal.details.bankSupplyContractName }}</span></h1>
 
   <div class="govuk-tabs" data-module="govuk-tabs">
     <h2 class="govuk-tabs__title">
@@ -24,6 +25,8 @@
 
   </div>
 
+ {{ ukefComments.render(deal.ukefComments, deal.specialConditions) }}
+ 
   <h2 class="govuk-heading-s">Maker/Checker comments:</h2>
 
   {% if comments.length %}
