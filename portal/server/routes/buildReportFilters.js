@@ -55,14 +55,17 @@ const buildReportFilters = (params, user) => {
   }
 
   if (CONSTANTS.FACILITY_STAGE[params.facilityStage]) {
+    /*
     const stage = CONSTANTS.FACILITY_STAGE[params.facilityStage];
-    let filterValue = (stage === CONSTANTS.FACILITY_STAGE.unissued || stage === CONSTANTS.FACILITY_STAGE.conditional ? 'unissued_conditional' : 'issued_unconditional');
+    let filterValue = (stage === CONSTANTS.FACILITY_STAGE.unissued ||
+      stage === CONSTANTS.FACILITY_STAGE.conditional ? 'unissued_conditional' : 'issued_unconditional');
     if (stage === CONSTANTS.FACILITY_STAGE.incomplete) filterValue = stage;
     if (stage === CONSTANTS.FACILITY_STAGE.submitted) filterValue = stage;
+     */
     filters.push(
       {
         field: 'transaction.transactionStage',
-        value: filterValue,
+        value: params.facilityStage,
       },
     );
   }

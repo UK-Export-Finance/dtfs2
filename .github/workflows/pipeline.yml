@@ -188,7 +188,8 @@ jobs:
         login-server: ${{ secrets.DEV_ACR_REGISTRY }}
         username: ${{ secrets.DEV_ACR_USERNAME }}
         password: ${{ secrets.DEV_ACR_PASSWORD }}
-    - run: |
+    - name: Tag images
+      run: |
         from=latest
         to=dev
         docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$from
@@ -199,6 +200,7 @@ jobs:
         docker push ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$to
 
   deploy:
+    needs: promote
     # The App Service seems to need to be restarted to trigger a redeploy
     name: Deploy container images
     needs: promote
