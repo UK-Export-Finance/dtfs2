@@ -1,5 +1,6 @@
 const bondValidationErrors = require('../validation/bond');
 const bondIssueFacilityValidationErrors = require('../validation/bond-issue-facility');
+const CONSTANTS = require('../../constants');
 
 const bondStatus = (bond, bondErrors, bondIssueFacilityErrors) => {
   const hasBondErrors = (bondErrors && bondErrors.count !== 0);
@@ -29,9 +30,9 @@ const bondHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, d
                             || dealStatus === 'Ready for Checker\'s approval')
                             && previousDealStatus !== 'Draft');
 
-  const allowedDealSubmissionType = (dealSubmissionType === 'Automatic Inclusion Notice'
-                                    || dealSubmissionType === 'Manual Inclusion Notice'
-                                    || dealSubmissionType === 'Manual Inclusion Application');
+  const allowedDealSubmissionType = (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
+                                    || dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN);
+
   const allowedFacilityStage = bond.bondStage === 'Unissued';
 
   if (allowedDealStatus

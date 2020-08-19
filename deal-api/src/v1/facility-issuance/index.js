@@ -15,8 +15,7 @@ const canIssueFacility = (userRoles, deal, facility) => {
                             || status === CONSTANTS.DEAL.STATUS.INPUT_REQUIRED);
 
   const allowedDealSubmissionType = (submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
-                                     || submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
-                                     || submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA);
+                                     || submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN);
 
   const allowedLoanFacilityStage = facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL;
   // TODO: rename bondStage to facilityStage
