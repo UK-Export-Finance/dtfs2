@@ -199,12 +199,13 @@ describe('/v1/deals/:id/status - unissued facilities', () => {
       });
     });
 
-    describe('when the deal status changes to `Ready for Checker\'s approval` (from any state)', () => {
+    describe('when the deal status changes to `Ready for Checker\'s approval` (from `Draft`)', () => {
       let createdDeal;
       let updatedDeal;
 
       beforeEach(async () => {
         const submittedDeal = JSON.parse(JSON.stringify(completedDealUnissuedAndUnissuedFacilities));
+        submittedDeal.details.status = 'Draft';
 
         const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
 

@@ -93,6 +93,7 @@ exports.update = (req, res) => {
 
       dealAfterAllUpdates = await updateIssuedFacilities(
         collection,
+        fromStatus,
         dealAfterAllUpdates,
         updateIssuedFacilitiesCoverStartDates,
         newIssuedFacilityStatus,
@@ -105,6 +106,7 @@ exports.update = (req, res) => {
 
       dealAfterAllUpdates = await updateIssuedFacilities(
         collection,
+        fromStatus,
         dealAfterAllUpdates,
         updateIssuedFacilitiesCoverStartDates,
         newIssuedFacilityStatus,

@@ -3,13 +3,12 @@ const CONSTANTS = require('../../../constants');
 
 const updateIssuedFacilities = async (
   collection,
+  fromStatus,
   deal,
   updateIssuedFacilitiesCoverStartDates = false,
   newStatus,
 ) => {
   const updatedDeal = deal;
-
-  const fromStatus = deal.details.status;
 
   const dealStatusAllowsIssuedFacilitiesStatusChanges = (fromStatus && fromStatus !== 'Draft');
 
@@ -34,7 +33,7 @@ const updateIssuedFacilities = async (
 
       const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
                                   && dealStatusAllowsIssuedFacilitiesStatusChanges
-                                  && newStatus.length);
+                                  && (newStatus && newStatus.length > 0));
 
       if (shouldUpdateLoan || shouldUpdateBond) {
         if (facility.issueFacilityDetailsProvided && !facility.issueFacilityDetailsSubmitted) {
