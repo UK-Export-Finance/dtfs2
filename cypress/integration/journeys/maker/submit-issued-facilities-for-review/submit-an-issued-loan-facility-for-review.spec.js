@@ -103,7 +103,7 @@ context('A maker can issue and submit an issued loan facility with a deal in `Ac
     // and the deal is now has `Ready for Checker\'s approval` status
     // Proceed to Review button should not exist,
     // Abandon button should be disabled.
-    // pages.contract.proceedToReview().should('not.exist');
-    // pages.contract.abandonButton().should('be.disabled');
+    pages.contract.proceedToReview().should('not.exist');
+    pages.contract.abandonButton().should('be.disabled');
   });
 });

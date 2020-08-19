@@ -173,7 +173,7 @@ context('A maker can resubmit issued bond & loan facilities with a deal in `Furt
     // and the deal is now has `Ready for Checker\'s approval` status
     // Proceed to Review button should not exist,
     // Abandon button should be disabled.
-    // pages.contract.proceedToReview().should('not.exist');
+    pages.contract.proceedToReview().should('not.exist');
     pages.contract.abandonButton().should('be.disabled');
   });
 });

@@ -99,9 +99,9 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     });
 
     // expect the bond status to be updated
-    // bondRow.bondStatus().invoke('text').then((text) => {
-    //   expect(text.trim()).to.equal('Ready for check');
-    // });
+    bondRow.bondStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Ready for check');
+    });
 
     // expect bond issue facility link text to be changed
     bondRow.issueFacilityLink().invoke('text').then((text) => {
@@ -109,9 +109,9 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     });
 
     // expect the loan status to be updated
-    // loanRow.loanStatus().invoke('text').then((text) => {
-    //   expect(text.trim()).to.equal('Ready for check');
-    // });
+    loanRow.loanStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Ready for check');
+    });
 
     // expect loan issue facility link text to be changed
     loanRow.issueFacilityLink().invoke('text').then((text) => {
@@ -122,7 +122,7 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     // and the deal is now has `Ready for Checker\'s approval` status
     // Proceed to Review button should not exist,
     // Abandon button should be disabled.
-    // pages.contract.proceedToReview().should('not.exist');
+    pages.contract.proceedToReview().should('not.exist');
     pages.contract.abandonButton().should('be.disabled');
   });
 });

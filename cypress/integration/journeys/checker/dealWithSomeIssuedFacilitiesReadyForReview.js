@@ -189,6 +189,7 @@ const deal = {
         "coverEndDate-year": moment().add(1, 'month').format('YYYY'),
         "uniqueIdentificationNumber": "1234",
         "uniqueIdentificationNumberRequiredForIssuance": true,
+        "issueFacilityDetailsStarted": true,
         "issueFacilityDetailsProvided": true,
         "status": "Ready for check"
       },
@@ -246,6 +247,7 @@ const deal = {
         "coverEndDate-month": moment().add(1, 'month').format('MM'),
         "coverEndDate-year": moment().add(1, 'month').format('YYYY'),
         "bankReferenceNumberRequiredForIssuance": true,
+        "issueFacilityDetailsStarted": true,
         "issueFacilityDetailsProvided": true,
         "disbursementAmount": "1,234.00",
         "bankReferenceNumber": "5678",
