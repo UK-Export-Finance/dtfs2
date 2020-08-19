@@ -2,7 +2,7 @@
 const moment = require('moment');
 
 const {
-  listDirectoryFiles, readFile, moveFile, getConfig,
+  listDirectoryFiles, readFile, moveFile, getConfig, uploadFile, deleteFile,
 } = require('../../drivers/fileshare');
 const { processTypeB } = require('../../v1/controllers/integration/type-b.controller');
 
@@ -25,14 +25,25 @@ const fetchWorkflowTypeB = {
 
       const files = folderContents.filter((f) => f.kind === 'file');
 
-      if (!files.length) {
+      const workflowLockfileExists = files.find((f) => f.name === 'workflow.lock');
+
+      if (!files.length || workflowLockfileExists) {
         return false;
       }
 
       const filePromises = [];
       const filenames = [];
 
-      files.forEach((file) => {
+      const lockFile = {
+        fileshare: 'workflow',
+        folder: IMPORT_FOLDER,
+        filename: 'portal.lock',
+        buffer: Buffer.from('', 'utf-8'),
+      };
+
+      await uploadFile(lockFile);
+
+      files.filter((f) => f.name.toLowerCase().endsWith('xml')).forEach((file) => {
         const documentLocation = {
           fileshare,
           folder: IMPORT_FOLDER,
@@ -79,6 +90,8 @@ const fetchWorkflowTypeB = {
 
       const moveFiles = await Promise.allSettled(moveFilePromises);
       const errorFiles = moveFiles.filter((mf) => mf.status === 'rejected');
+
+      await deleteFile('workflow', `${lockFile.folder}/${lockFile.filename}`);
 
       if (errorFiles.length) {
         errorFiles.forEach(({ reason }) => console.warn(reason.message));

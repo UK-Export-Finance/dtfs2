@@ -70,16 +70,16 @@ describe('calculate exposure period', () => {
     expect(notEndOfMonthDayLessThan).toEqual(12);
 
     const notEndOfMonthDaySame = calculateExposurePeriod(notEndMonthFacilityDaySame, 'BSS');
-    expect(notEndOfMonthDaySame).toEqual(13);
+    expect(notEndOfMonthDaySame).toEqual(14);
 
     const notEndOfMonthDayGreaterThan = calculateExposurePeriod(notEndMonthFacilityDayGreaterThan, 'BSS');
-    expect(notEndOfMonthDayGreaterThan).toEqual(13);
+    expect(notEndOfMonthDayGreaterThan).toEqual(14);
 
     const commenceEndOfMonth = calculateExposurePeriod(commenceEndOfMonthFacility, 'BSS');
     expect(commenceEndOfMonth).toEqual(12);
 
     const expireEndOfMonth = calculateExposurePeriod(expireEndOfMonthFacility, 'BSS');
-    expect(expireEndOfMonth).toEqual(13);
+    expect(expireEndOfMonth).toEqual(14);
 
     const commenceAndExpireEndOfMonth = calculateExposurePeriod(commenceAndExpireEndOfMonthFacility, 'BSS');
     expect(commenceAndExpireEndOfMonth).toEqual(13);
@@ -90,16 +90,16 @@ describe('calculate exposure period', () => {
     expect(notEndOfMonthDayLessThan).toEqual(12);
 
     const notEndOfMonthDaySame = calculateExposurePeriod(notEndMonthFacilityDaySame, 'EWCS');
-    expect(notEndOfMonthDaySame).toEqual(12);
+    expect(notEndOfMonthDaySame).toEqual(13);
 
     const notEndOfMonthDayGreaterThan = calculateExposurePeriod(notEndMonthFacilityDayGreaterThan, 'EWCS');
-    expect(notEndOfMonthDayGreaterThan).toEqual(13);
+    expect(notEndOfMonthDayGreaterThan).toEqual(14);
 
     const commenceEndOfMonth = calculateExposurePeriod(commenceEndOfMonthFacility, 'EWCS');
     expect(commenceEndOfMonth).toEqual(12);
 
     const expireEndOfMonth = calculateExposurePeriod(expireEndOfMonthFacility, 'EWCS');
-    expect(expireEndOfMonth).toEqual(13);
+    expect(expireEndOfMonth).toEqual(14);
 
     const commenceAndExpireEndOfMonth = calculateExposurePeriod(commenceAndExpireEndOfMonthFacility, 'EWCS');
     expect(commenceAndExpireEndOfMonth).toEqual(12);

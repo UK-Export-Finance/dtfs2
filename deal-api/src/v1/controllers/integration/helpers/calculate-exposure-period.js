@@ -40,7 +40,9 @@ const calculateExposurePeriod = (facility, facilityType) => {
 
     monthOffset = facilityType === 'BSS' && isGuaranteeExpiryEndOfMonth ? 1 : 0;
   } else if (facilityType === 'EWCS') {
-    monthOffset = moment(coverStartDate).date() === moment(coverEndDate).date() ? -1 : 0;
+    monthOffset = moment(coverStartDate).date() < moment(coverEndDate).date() ? 1 : 0;
+  } else {
+    monthOffset = moment(coverStartDate).date() <= moment(coverEndDate).date() ? 1 : 0;
   }
 
   return durationMonths + monthOffset;

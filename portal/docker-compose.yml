@@ -54,7 +54,7 @@ services:
     ports:
       - "5069:5069"
     volumes:
-      - .,/test-hook-api/src:/app/src:ro
+      - ../test-hook-api/src:/app/src:ro
     environment:
       - PORT=5069
       - CORS_ORIGIN=http://localhost:5000
