@@ -76,6 +76,10 @@ module.exports = () => {
       deal.Application_bank_co_hse_reg_number = value;
       return builder;
     },
+    UKEF_deal_id: (value = '') => {
+      deal.UKEF_deal_id = value;
+      return builder;
+    },
     Customer_type: (value = '') => {
       deal.Deal_information.Exporter_and_indemnifier.Customer_type = value;
       return builder;
