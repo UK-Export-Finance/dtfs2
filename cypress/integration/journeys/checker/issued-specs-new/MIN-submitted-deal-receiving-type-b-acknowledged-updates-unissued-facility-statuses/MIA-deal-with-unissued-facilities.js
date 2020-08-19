@@ -211,32 +211,21 @@ const deal = {
   "loanTransactions": {
     "items": [
       {
-        "_id": "1000123",
-        "coverEndDate-day": "12",
-        "coverEndDate-month": "09",
-        "coverEndDate-year": "2021",
-        "bankReferenceNumber": "1234",
+        "_id": "1000124",
+        "createdDate": moment().utc().valueOf(),
+        "facilityStage": "Conditional",
+        "ukefGuaranteeInMonths": "12",
+        "bankReferenceNumber": "",
+        "guaranteeFeePayableByBank": "18.0000",
+        "lastEdited": moment().utc().valueOf(),
         "facilityValue": "1234.00",
         "currencySameAsSupplyContractCurrency": "true",
-        "disbursementAmount": "12.00",
-        "requestedCoverStartDate": moment().utc().valueOf(),
-        "createdDate": moment().utc().valueOf(),
-        "facilityStage": "Unconditional",
-        "requestedCoverStartDate-day": "18",
-        "requestedCoverStartDate-month": "08",
-        "requestedCoverStartDate-year": "2020",
-        "guaranteeFeePayableByBank": "10.8000",
-        "ukefExposure": "296.16",
-        "lastEdited": moment().utc().valueOf(),
-                "interestMarginFee" : "12",
-        "coveredPercentage": "24",
+        "interestMarginFee": "20",
+        "coveredPercentage": "40",
         "minimumQuarterlyFee": "",
+        "ukefExposure": "493.60",
         "premiumType": "At maturity",
-        "dayCountBasis": "360",
-        "currency": {
-          "text": "GBP - UK Sterling",
-          "id": "GBP"
-        }
+        "dayCountBasis": "365"
       }
     ]
   },
@@ -345,7 +334,7 @@ const deal = {
       "count": 0,
       "errorList": {
         "exporterQuestionnaire": {}
-      }
+    }
     },
     "exporterQuestionnaire": [
       {
