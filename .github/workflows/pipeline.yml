@@ -203,7 +203,6 @@ jobs:
     needs: promote
     # The App Service seems to need to be restarted to trigger a redeploy
     name: Deploy container images
-    needs: promote
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
