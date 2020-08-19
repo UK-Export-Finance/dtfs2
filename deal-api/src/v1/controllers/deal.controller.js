@@ -19,27 +19,33 @@ const withoutId = (obj) => {
 };
 
 const dealsQuery = (user, filter) => {
-  let query = {};
-  if (filter && filter !== {}) {
-    query = { ...filter };
-  }
+  // add the bank clause if we're not a superuser
   if (!isSuperUser(user)) {
-    query['details.owningBank.id'] = { $eq: user.bank.id };
+    filter.push({ 'details.owningBank.id': { $eq: user.bank.id } });
   }
-  // check for the bankSupplyContractID and swap for regex to make it case-insensitve
-  if (query['details.bankSupplyContractID']) {
-    const bankSupplyContractID = query['details.bankSupplyContractID'];
-    query['details.bankSupplyContractID'] = { $regex: bankSupplyContractID, $options: 'i' };
-  }
-  // add transactions stage OR filter
-  if (query['transaction.status']) {
-    const bondMatchesOnFacilityStage = { 'bondTransactions.items': { $elemMatch: { status: query['transaction.status'] } } };
-    const loanMatchesOnFacilityStage = { 'loanTransactions.items': { $elemMatch: { status: query['transaction.status'] } } };
 
-    query.$or = [bondMatchesOnFacilityStage, loanMatchesOnFacilityStage];
-    delete query['transaction.status'];
+  // swap out the 'details.bankSupplyContractID' for an equivalent regex
+  //  [dw] rushing a bit, but my instinct is that if we have to do this,
+  //       we likely should be fixing this in the portal so we send a
+  //       $regex query in the first instance, but i could be wrong.
+  filter.map((clause) => {
+    if (clause['details.bankSupplyContractID']) {
+      const bankSupplyContractID = clause['details.bankSupplyContractID'];
+      return { 'details.bankSupplyContractID': { $regex: bankSupplyContractID, $options: 'i' } };
+    }
+    return clause;
+  });
+
+  let result = {};
+  if (filter.length === 1) {
+    result = filter.pop(); // lint didn't like filter[0]..
+  } else if (filter.length > 1) {
+    result = {
+      $and: filter,
+    };
   }
-  return query;
+
+  return result;
 };
 
 const findDeals = async (requestingUser, filter) => {
@@ -63,7 +69,6 @@ const findPaginatedDeals = async (requestingUser, start = 0, pagesize = 20, filt
   const collection = await db.getCollection('deals');
 
   const query = dealsQuery(requestingUser, filter);
-
   const dealResults = collection.find(query);
 
   const count = await dealResults.count();
