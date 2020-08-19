@@ -120,6 +120,7 @@ const generateTypeA = async (deal, fromStatus) => {
     .Ec_banks_normal_pricing_policies_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 18))
     .Ec_requested_cover_start_date_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 15));
 
+  let totalBondValueContractCurrency = 0;
   let totalBondExposure = 0;
   let totalBondPremium = 0;
 
@@ -154,7 +155,7 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_min_quarterly_fee(Number(bond.minimumRiskMarginFee) ? Number(bond.minimumRiskMarginFee) : 0)
         .BSS_premium_type(k2Map.FACILITIES.FEE_TYPE[bond.feeType])
         .BSS_cover_start_date(guaranteeCommencementDate)
-        .BSS_issue_date(dateHelpers.formatTimestamp(bond.requestedCoverStartDate))
+        .BSS_issue_date(dateHelpers.formatTimestamp(bond.issueDate))
         .BSS_cover_end_date(coverExpiryDate)
         .BSS_cover_period(calculateExposurePeriod(bond))
         .BSS_day_basis(k2Map.FACILITIES.DAY_COUNT_BASIS[bond.dayCountBasis]);
@@ -168,12 +169,13 @@ const generateTypeA = async (deal, fromStatus) => {
 
       const conversionRate = bond.currencySameAsSupplyContractCurrency === 'true' ? 1 : bond.conversionRate;
 
+      totalBondValueContractCurrency += convertCurrencyFormat(bond.facilityValue) / conversionRate;
       const bondExposure = convertCurrencyFormat(bond.ukefExposure) / conversionRate;
       totalBondExposure += bondExposure;
-      totalBondPremium += bondExposure * bond.coveredPercentage;
+      totalBondPremium += bondExposure * (bond.coveredPercentage / 100);
     }
 
-    // TODO - Add Loans
+    let totalLoanValueContractCurrency = 0;
     let totalLoanExposure = 0;
     let totalLoanPremium = 0;
 
@@ -206,7 +208,7 @@ const generateTypeA = async (deal, fromStatus) => {
           .EWCS_min_quarterly_fee(Number(loan.minimumQuarterlyFee))
           .EWCS_premium_type(k2Map.FACILITIES.FEE_TYPE[loan.premiumType])
           .EWCS_cover_start_date(guaranteeCommencementDate)
-          .EWCS_issue_date(dateHelpers.formatTimestamp(loan.requestedCoverStartDate))
+          .EWCS_issue_date(dateHelpers.formatTimestamp(loan.issueDate))
           .EWCS_cover_end_date(coverExpiryDate)
           .EWCS_cover_period(calculateExposurePeriod(loan))
           .EWCS_day_basis(k2Map.FACILITIES.DAY_COUNT_BASIS[loan.dayCountBasis]);
@@ -219,9 +221,11 @@ const generateTypeA = async (deal, fromStatus) => {
         builder.addEWCS(ewcs);
 
         const conversionRate = loan.currencySameAsSupplyContractCurrency === 'true' ? 1 : loan.conversionRate;
+        totalLoanValueContractCurrency += convertCurrencyFormat(loan.facilityValue) / conversionRate;
+
         const loanExposure = convertCurrencyFormat(loan.ukefExposure) / conversionRate;
         totalLoanExposure += loanExposure;
-        totalLoanPremium += loanExposure * loan.coveredPercentage;
+        totalLoanPremium += loanExposure * (loan.coveredPercentage / 100);
       }
     }
 
@@ -229,7 +233,7 @@ const generateTypeA = async (deal, fromStatus) => {
     const gbpConversionRate = deal.submissionDetails.supplyContractCurrency.id === 'GBP' ? 1 : deal.submissionDetails.supplyContractConversionRateToGBP;
 
     builder.Deal_no_facilities(bondCount + loanCount)
-      .Deal_total_value_deal_cur(convertCurrencyFormat(deal.submissionDetails.supplyContractValue) / gbpConversionRate)
+      .Deal_total_value_deal_cur(totalBondValueContractCurrency + totalLoanValueContractCurrency)
       .Deal_total_exposure_gbp((totalBondExposure + totalLoanExposure) / gbpConversionRate)
       .Deal_total_premium_gbp((totalBondPremium + totalLoanPremium) / gbpConversionRate)
       .Deal_total_exposure_deal_cur(totalBondExposure + totalLoanExposure)
