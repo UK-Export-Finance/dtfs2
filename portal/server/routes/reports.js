@@ -577,8 +577,7 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   // - SUBMISSION_TYPE:manualInclusionApplication + STATUS:approved + MIN not issued
   // - SUBMISSION_TYPE:manualInclusionApplication + STATUS:approvedWithConditions + MIN not submitted
   const stageFilters = { // TODO use CONSTANTS lowercase string
-    // facilityStage: 'unissued',
-    facilityStage: 'conditional',
+    facilityStage: 'unissued_conditional',
     filterByStatus: 'submissionAcknowledged',
   };
   const submissionFilters = {
