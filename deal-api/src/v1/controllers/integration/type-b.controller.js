@@ -103,8 +103,12 @@ const processTypeB = async ({ fileContents }) => {
   const { Deal_comments: dealComments = [] } = workflowDeal;
   const { Action_Code: actionCode } = workflowDeal.$;
 
-  if (actionCode === '007' && dealComments.length) {
-    await dealCommentsController.addSpecialConditions(dealId, dealComments[0], interfaceUser);
+  if (dealComments.length) {
+    if (actionCode === '007') {
+      await dealCommentsController.addSpecialConditions(dealId, dealComments[0], interfaceUser);
+    } else {
+      await dealCommentsController.addUkefComment(dealId, dealComments[0], interfaceUser);
+    }
   }
 
   const updateData = {
