@@ -5,10 +5,9 @@ const { dbHelpers } = require('./helpers');
 const queryDeals = async (_, { params = {} }, ctx) => {
   const { start = 0, pagesize, filters = [] } = params;
 
-  const dbFilters = filters.reduce((filterList, f) => ({
-    ...filterList,
-    [f.field]: f.operator ? dbHelpers.createDbQuery(f.operator, f.value) : f.value,
-  }), {});
+  const dbFilters = filters.map((clause) => ({
+    [clause.field]: clause.operator ? dbHelpers.createDbQuery(clause.operator, clause.value) : clause.value,
+  }));
 
   const deals = pagesize
     ? await findPaginatedDeals(ctx.user, start, pagesize, dbFilters)
