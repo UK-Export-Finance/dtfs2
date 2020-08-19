@@ -89,17 +89,31 @@ exports.update = (req, res) => {
 
     if (toStatus === 'Ready for Checker\'s approval') {
       const updateIssuedFacilitiesCoverStartDates = true;
+      const updateIssuedFacilitiesStatuses = (fromStatus && fromStatus !== 'Draft');
+      const newIssuedFacilityStatus = updateIssuedFacilitiesStatuses ? 'Ready for check' : '';
+
       dealAfterAllUpdates = await updateIssuedFacilities(
         collection,
         dealAfterAllUpdates,
         updateIssuedFacilitiesCoverStartDates,
+        updateIssuedFacilitiesStatuses,
+        newIssuedFacilityStatus,
       );
     }
 
     if (toStatus === 'Further Maker\'s input required') {
+      const updateIssuedFacilitiesCoverStartDates = false;
+      const updateIssuedFacilitiesStatuses = (fromStatus && fromStatus !== 'Draft');
+      const newIssuedFacilityStatus = updateIssuedFacilitiesStatuses ? 'Maker\'s input required' : '';
+      const updateAllIssuedFacilitiesStatuses = true;
+
       dealAfterAllUpdates = await updateIssuedFacilities(
         collection,
         dealAfterAllUpdates,
+        updateIssuedFacilitiesCoverStartDates,
+        updateIssuedFacilitiesStatuses,
+        newIssuedFacilityStatus,
+        updateAllIssuedFacilitiesStatuses,
       );
     }
 

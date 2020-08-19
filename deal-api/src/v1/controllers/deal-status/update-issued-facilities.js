@@ -7,6 +7,7 @@ const updateIssuedFacilities = async (
   updateIssuedFacilitiesCoverStartDates = false,
   updateIssuedFacilitiesStatuses = false,
   newStatus,
+  updateAllIssuedFacilitiesStatuses = false,
 ) => {
   const updatedDeal = deal;
 
@@ -31,7 +32,7 @@ const updateIssuedFacilities = async (
 
       if (shouldUpdateLoan || shouldUpdateBond) {
         if (facility.issueFacilityDetailsProvided && !facility.issueFacilityDetailsSubmitted) {
-          if (updateIssuedFacilitiesStatuses) {
+          if (updateIssuedFacilitiesStatuses && newStatus.length) {
             facility.status = newStatus;
           }
 
@@ -43,7 +44,7 @@ const updateIssuedFacilities = async (
             facility.previousFacilityStage = facility.bondStage;
             facility.bondStage = CONSTANTS.FACILITIES.BOND_STAGE.ISSUED;
           }
-        } else if (updateIssuedFacilitiesStatuses) {
+        } else if (updateAllIssuedFacilitiesStatuses && updateIssuedFacilitiesStatuses && newStatus.length) {
           // update all issued facilities regardless of if they've been submitted or have completed all required fields.
           facility.status = newStatus;
         }

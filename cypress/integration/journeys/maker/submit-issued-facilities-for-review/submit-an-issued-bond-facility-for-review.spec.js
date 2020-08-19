@@ -86,9 +86,9 @@ context('A maker can issue and submit an issued bond facility with a deal in `Ac
     });
 
     // expect the bond status to be updated
-    // bondRow.bondStatus().invoke('text').then((text) => {
-    //   expect(text.trim()).to.equal('Ready for check');
-    // });
+    bondRow.bondStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Ready for check');
+    });
 
     // expect the bond facility stage to be updated
     bondRow.bondStage().invoke('text').then((text) => {

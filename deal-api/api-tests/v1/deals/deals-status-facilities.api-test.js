@@ -198,5 +198,120 @@ describe('/v1/deals/:id/status - facilities', () => {
         });
       });
     });
+
+
+    describe('when the status changes from `Further Maker\'s input required` to `Ready for Checker\'s approval`', () => {
+      let createdDeal;
+      let updatedDeal;
+
+      beforeEach(async () => {
+        completedDeal.status = 'Further Maker\'s input required';
+        const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
+
+        const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+
+        createdDeal = postResult.body;
+        const statusUpdate = {
+          status: 'Ready for Checker\'s approval',
+          confirmSubmit: true,
+        };
+
+        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      });
+
+      const isUnsubmittedIssuedFacility = (facility) => {
+        if ((facility.bondStage === 'Unissued' || facility.facilityStage === 'Conditional')
+          && facility.issueFacilityDetailsProvided
+          && !facility.issueFacilityDetailsSubmitted
+          && facility.status !== 'Submitted') {
+          return facility;
+        }
+        return null;
+      };
+
+      // TODO: Tony B: I don't think these 4 tests are good enough
+      // as we currently update the loans/bonds in this scenario for both possible facility stages.
+
+      describe('any issued bonds that have details provided, but not yet been submitted', () => {
+        it('should add `Ready for check` status, change bondStage from `Unissued` to `Issued` and add previousBondStage', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toBeDefined();
+
+          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+          const issuedBondsThatShouldBeUpdated = body.deal.bondTransactions.items.filter((b) =>
+            b.bondStage === 'Unissued'
+            && b.issueFacilityDetailsProvided === true
+            && !b.issueFacilityDetailsSubmitted);
+
+          issuedBondsThatShouldBeUpdated.forEach((bond) => {
+            expect(bond.status).toEqual('Ready for check');
+            expect(bond.bondStage).toEqual('Issued');
+            expect(bond.previousBondStage).toEqual('Unissued');
+          });
+        });
+      });
+
+      describe('any issued loans that have details provided, but not yet been submitted', () => {
+        it('should add `Ready for check` status, change facilityStage from `Conditional` to `Unconditional` and add previousFacilityStage', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toBeDefined();
+
+          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+          const issuedLoansThatShouldBeUpdated = body.deal.loanTransactions.items.filter((l) =>
+            l.facilityStage === 'Conditional'
+            && l.issueFacilityDetailsProvided === true
+            && !l.issueFacilityDetailsSubmitted);
+
+          issuedLoansThatShouldBeUpdated.forEach((loan) => {
+            expect(loan.status).toEqual('Ready for check');
+            expect(loan.facilityStage).toEqual('Unconditional');
+            expect(loan.previousFacilityStage).toEqual('Conditional');
+          });
+        });
+      });
+
+      describe('any issued bonds that have details provided, but not yet been submitted', () => {
+        it('defaults requestedCoverStartDate to the issuedDate if no requestedCoverStartDate', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toBeDefined();
+
+          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+          const issuedBondsThatShouldBeUpdated = createdDeal.bondTransactions.items.filter((b) =>
+            isUnsubmittedIssuedFacility(b) && !b.requestedCoverStartDate);
+
+          // make sure we have some bonds to test against
+          expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
+
+          issuedBondsThatShouldBeUpdated.forEach((bond) => {
+            const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
+            expect(updatedBond.requestedCoverStartDate).toEqual(bond.issuedDate);
+          });
+        });
+      });
+
+      describe('any issued loans that have details provided, but not yet been submitted', () => {
+        it('defaults requestedCoverStartDate to the issuedDate if no requestedCoverStartDate', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toBeDefined();
+
+          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+          const issuedLoansThatShouldBeUpdated = createdDeal.loanTransactions.items.filter((l) =>
+            isUnsubmittedIssuedFacility(l)
+            && !l.requestedCoverStartDate);
+
+          // make sure we have some loans to test against
+          expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
+
+          issuedLoansThatShouldBeUpdated.forEach((loan) => {
+            const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
+            expect(updatedLoan.requestedCoverStartDate).toEqual(loan.issuedDate);
+          });
+        });
+      });
+    });
   });
 });
