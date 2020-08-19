@@ -46,7 +46,8 @@ const generateTypeA = async (deal, fromStatus) => {
     .Application_owner(`${deal.details.maker.firstname} ${deal.details.maker.surname}`)
     .Application_owner_email(deal.details.maker.email)
     .Application_bank(deal.details.maker.bank.name)
-    .Application_bank_co_hse_reg_number('//TODO')
+    .Application_bank_co_hse_reg_number('') // todo?
+    .UKEF_deal_id(deal.details.ukefDealId)
 
     .Customer_type(k2Map.DEAL.SUPPLIER_TYPE[deal.submissionDetails['supplier-type']])
     .Exporter_co_hse_reg_number(deal.submissionDetails['supplier-companies-house-registration-number'])
@@ -67,11 +68,10 @@ const generateTypeA = async (deal, fromStatus) => {
     .Exporter_correspondence_address_PostalCode(deal.submissionDetails['supplier-correspondence-address-postcode'])
     .Exporter_correspondence_address_Country(await convertCountryCodeToId((deal.submissionDetails['supplier-correspondence-address-country'].code)))
 
-    .Industry_sector_code(deal.submissionDetails['industy-sector'] && deal.submissionDetails['industy-sector'].code)
-    .Industry_sector_name(deal.submissionDetails['industy-sector'] && deal.submissionDetails['industy-sector'].name)
-  // TODO confirm Industry_class_code & Industry_class_name correct fields - Drupal sets both to same value
-    .Industry_class_code(deal.submissionDetails['industy-sector'] && deal.submissionDetails['industy-sector'].class && deal.submissionDetails['industy-sector'].class.code)
-    .Industry_class_name(deal.submissionDetails['industy-sector'] && deal.submissionDetails['industy-sector'].class && deal.submissionDetails['industy-sector'].class.name)
+    .Industry_sector_code(deal.submissionDetails['industry-sector'])
+    .Industry_sector_name(deal.submissionDetails['industry-sector'])
+    .Industry_class_code(deal.submissionDetails['industry-class'])
+    .Industry_class_name(deal.submissionDetails['industry-class'])
     .Sme_type(k2Map.DEAL.SME_TYPE[deal.submissionDetails['sme-type'] || 'Not known'])
     .Description_of_export(deal.submissionDetails['supply-contract-description'])
     .Bank_security(deal.dealFiles && deal.dealFiles.security)
@@ -137,6 +137,7 @@ const generateTypeA = async (deal, fromStatus) => {
       const bss = builder.createBSS()
       //    .UKEF_BSS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
         .BSS_portal_facility_id(bond._id) // eslint-disable-line no-underscore-dangle
+        .UKEF_BSS_facility_id(bond.ukefFacilityID && bond.ukefFacilityID[0])
         .BSS_bank_id(bond.uniqueIdentificationNumber)
         .BSS_issuer(bond.bondIssuer)
         .BSS_type(k2Map.FACILITIES.TYPE[bond.bondType])
@@ -192,6 +193,7 @@ const generateTypeA = async (deal, fromStatus) => {
         const ewcs = builder.createEWCS()
         //    .UKEF_EWCS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
           .EWCS_portal_facility_id(loan._id) // eslint-disable-line no-underscore-dangle
+          .UKEF_EWCS_facility_id(loan.ukefFacilityID && loan.ukefFacilityID[0])
           .EWCS_bank_id(loan.bankReferenceNumber)
           .EWCS_stage(k2Map.FACILITIES.FACILITIES_STAGE[loan.facilityStage])
           .EWCS_value(convertCurrencyFormat(loan.facilityValue))
