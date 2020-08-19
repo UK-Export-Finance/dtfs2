@@ -26,7 +26,7 @@ context('Checker submits an AIN deal with `Unissued` bonds and `Unconditional` l
       });
   });
 
-  it('Updates the statuses of `Unissued` bonds and `Unconditional` loans from `Completed` to `Not started`', () => {
+  it('Updates the statuses of `Unissued` bonds and `Conditional` loans from `Completed` to `Not started`', () => {
     cy.login({ ...CHECKER_LOGIN });
     pages.contract.visit(deal);
 
@@ -46,7 +46,7 @@ context('Checker submits an AIN deal with `Unissued` bonds and `Unconditional` l
     });
 
     loanRow.facilityStage().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Unconditional');
+      expect(text.trim()).to.equal('Conditional');
     });
 
     loanRow.loanStatus().invoke('text').then((text) => {

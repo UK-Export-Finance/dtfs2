@@ -89,7 +89,9 @@ exports.update = (req, res) => {
 
     if (toStatus === 'Ready for Checker\'s approval') {
       const updateIssuedFacilitiesCoverStartDates = true;
-      const updateIssuedFacilitiesStatuses = (fromStatus && fromStatus !== 'Draft');
+      const updateIssuedFacilitiesStatuses = (fromStatus && (fromStatus !== 'Draft'
+                                              && fromStatus !== 'Ready for Checker\'s approval'
+                                              && fromStatus !== 'Further Maker\'s input required') );
       const newIssuedFacilityStatus = updateIssuedFacilitiesStatuses ? 'Ready for check' : '';
 
       dealAfterAllUpdates = await updateIssuedFacilities(
@@ -103,9 +105,12 @@ exports.update = (req, res) => {
 
     if (toStatus === 'Further Maker\'s input required') {
       const updateIssuedFacilitiesCoverStartDates = false;
-      const updateIssuedFacilitiesStatuses = (fromStatus && fromStatus !== 'Draft');
+      const updateIssuedFacilitiesStatuses = (fromStatus && (fromStatus !== 'Draft'
+                                              && fromStatus !== 'Ready for Checker\'s approval'
+                                              && fromStatus !== 'Further Maker\'s input required'));
+
       const newIssuedFacilityStatus = updateIssuedFacilitiesStatuses ? 'Maker\'s input required' : '';
-      const updateAllIssuedFacilitiesStatuses = true;
+      // const updateAllIssuedFacilitiesStatuses = true;
 
       dealAfterAllUpdates = await updateIssuedFacilities(
         collection,
@@ -113,7 +118,7 @@ exports.update = (req, res) => {
         updateIssuedFacilitiesCoverStartDates,
         updateIssuedFacilitiesStatuses,
         newIssuedFacilityStatus,
-        updateAllIssuedFacilitiesStatuses,
+        // updateAllIssuedFacilitiesStatuses,
       );
     }
 

@@ -58,7 +58,8 @@ const addAccurateStatusesToBonds = (
       const validationErrors = bondValidationErrors(bond);
       let issueFacilityValidationErrors;
 
-      if (bondHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, dealSubmissionType, bond)) {
+      if (bond.issueFacilityDetailsStarted
+          && bondHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, dealSubmissionType, bond)) {
         issueFacilityValidationErrors = bondIssueFacilityValidationErrors(bond, dealSubmissionDate);
       }
 
