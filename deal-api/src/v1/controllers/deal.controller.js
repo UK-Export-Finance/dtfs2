@@ -28,23 +28,29 @@ const dealsQuery = (user, filter) => {
   //  [dw] rushing a bit, but my instinct is that if we have to do this,
   //       we likely should be fixing this in the portal so we send a
   //       $regex query in the first instance, but i could be wrong.
-  filter.map((clause) => {
+  const amendedFilters = filter.map((clause) => {
     if (clause['details.bankSupplyContractID']) {
       const bankSupplyContractID = clause['details.bankSupplyContractID'];
       return { 'details.bankSupplyContractID': { $regex: bankSupplyContractID, $options: 'i' } };
     }
+    if (clause['transaction.status']) {
+      const bondMatchesOnFacilityStage = { 'bondTransactions.items': { $elemMatch: { status: clause['transaction.status'] } } };
+      const loanMatchesOnFacilityStage = { 'loanTransactions.items': { $elemMatch: { status: clause['transaction.status'] } } };
+      return { $or: [bondMatchesOnFacilityStage, loanMatchesOnFacilityStage] };
+    }
+
     return clause;
   });
 
   let result = {};
-  if (filter.length === 1) {
-    result = filter.pop(); // lint didn't like filter[0]..
-  } else if (filter.length > 1) {
+  if (amendedFilters.length === 1) {
+    result = amendedFilters.pop(); // lint didn't like filter[0]..
+  } else if (amendedFilters.length > 1) {
     result = {
-      $and: filter,
+      $and: amendedFilters,
     };
   }
-
+  console.log(`result :: \n${JSON.stringify(result)}`);
   return result;
 };
 
@@ -69,6 +75,18 @@ const findPaginatedDeals = async (requestingUser, start = 0, pagesize = 20, filt
   const collection = await db.getCollection('deals');
 
   const query = dealsQuery(requestingUser, filter);
+  // const query = {'$and':[{'details.status':'Submitted'},{'details.workflowStatus':'Draft'}]};
+  // const query = {'$or':[{'bondTransactions.items':{'$elemMatch':{'status':'Submitted'}}},{'loanTransactions.items':{'$elemMatch':{'status':'Submitted'}}}]}
+/* 
+  const query = {
+    '$or': [
+      {'$and': [{'details.status':'Submitted'},{'details.workflowStatus': 'Draft'}]},
+      {'$or': [{'bondTransactions.items':{'$elemMatch':{'status':'Submitted'}}},{'loanTransactions.items':{'$elemMatch':{'status':'Submitted'}}}]},
+    ]
+  };
+ */
+
+  console.log(`query :: \n${JSON.stringify(query)}`);
   const dealResults = collection.find(query);
 
   const count = await dealResults.count();
