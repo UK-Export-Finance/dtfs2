@@ -6,17 +6,23 @@ const canIssueFacility = (userRoles, deal, facility) => {
     submissionType,
   } = deal.details;
 
+  const acceptedByUkefDealStatus = (status === 'Accepted by UKEF (with conditions)'
+    || status === 'Accepted by UKEF (without conditions)');
+
+
   const allowedDealStatus = (status === 'Acknowledged by UKEF'
-                            || status === 'Accepted by UKEF (with conditions)'
-                            || status === 'Accepted by UKEF (without conditions)'
+                            || acceptedByUkefDealStatus
                             || status === 'Ready for Checker\'s approval'
                             || status === 'Further Maker\'s input required');
 
   const allowedDealSubmissionType = (submissionType === 'Automatic Inclusion Notice'
                                     || submissionType === 'Manual Inclusion Notice');
 
+  const isMiaDealInAllowedStatus = (submissionType === 'Manual Inclusion Application'
+                                    && (acceptedByUkefDealStatus || status === 'Ready for Checker\'s approval'));
+
   const allowedLoanFacilityStage = facility.facilityStage === 'Conditional';
-  // TODO: rename bondStage to facilityStage
+
   const allowedBondFacilityStage = facility.bondStage === 'Unissued';
 
   const allowedFacilityStage = (allowedLoanFacilityStage
@@ -24,9 +30,12 @@ const canIssueFacility = (userRoles, deal, facility) => {
                                 || (facility.bondStage === 'Issued' && facility.previousFacilityStage === 'Unissued')
                                 || (facility.facilityStage === 'Unconditional' && facility.previousFacilityStage === 'Conditional'));
 
+  const isAllowedDealStatusAndSubmissionType = ((allowedDealStatus
+                                                && allowedDealSubmissionType)
+                                                || isMiaDealInAllowedStatus);
+
   if (isMaker
-    && allowedDealStatus
-    && allowedDealSubmissionType
+    && isAllowedDealStatusAndSubmissionType
     && allowedFacilityStage
     && !facility.issueFacilityDetailsSubmitted) {
     return true;
