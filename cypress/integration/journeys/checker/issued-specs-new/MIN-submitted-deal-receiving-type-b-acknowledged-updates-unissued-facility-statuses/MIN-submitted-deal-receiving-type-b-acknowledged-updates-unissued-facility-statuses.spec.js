@@ -1,5 +1,5 @@
 const pages = require('../../../../pages');
-const MIADealWithUnissuedFacilities = require('./MIA-deal-with-unissued-facilities');
+const MIADealWithUnissuedFacilities = require('../MIA-deal-with-unissued-facilities');
 const mockUsers = require('../../../../../fixtures/mockUsers');
 
 const CHECKER_LOGIN = mockUsers.find(user => (user.roles.includes('checker') && user.bank.name === 'Barclays Bank'));
@@ -102,7 +102,6 @@ context('Checker submits an MIA deal with `Unissued` bonds and `Conditional` loa
           bank_deal_id: deal.details.bankSupplyContractID,
           Message_Type: 'B',
           Action_Code: '016',
-          // Action_Code: '006',
         },
         deal: {
           UKEF_deal_id: deal._id,

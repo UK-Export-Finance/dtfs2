@@ -1,7 +1,7 @@
 const $ = require('mongo-dot-notation');
 const CONSTANTS = require('../../../constants');
 
-const updateIssuedFacilities = async (
+const updateIssuedFacilities = async(
   collection,
   fromStatus,
   deal,

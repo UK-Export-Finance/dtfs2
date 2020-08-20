@@ -15,7 +15,9 @@
 
   {% set dealStatusAllowsToDisplayIssueFacilityLink = dealStatus === "Submitted" %}
 
-  {% set facilityCouldBeIssued = userIsMaker and (dealSubmissionType === 'Automatic Inclusion Notice' or dealSubmissionType === 'Manual Inclusion Notice') and (facility.facilityStage === 'Conditional' or facility.bondStage === 'Unissued') and not facility.issueFacilityDetailsSubmitted %}
+  {% set isMiaDealInApprovedStatus = dealSubmissionType === 'Manual Inclusion Application' and (dealStatus === "Accepted by UKEF (with conditions)" or dealStatus === "Accepted by UKEF (without conditions)") %}
+
+  {% set facilityCouldBeIssued = userIsMaker and (dealSubmissionType === 'Automatic Inclusion Notice' or dealSubmissionType === 'Manual Inclusion Notice' or isMiaDealInApprovedStatus) and (facility.facilityStage === 'Conditional' or facility.bondStage === 'Unissued') and not facility.issueFacilityDetailsSubmitted %}
 
   {% if dealStatusAllowsIssueFacility or dealStatusAllowsToDisplayIssueFacilityLink%}
   

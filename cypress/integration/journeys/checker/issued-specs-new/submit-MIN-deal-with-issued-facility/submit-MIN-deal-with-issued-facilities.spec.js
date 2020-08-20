@@ -28,7 +28,7 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     cy.insertOneDeal(MIADealAcceptedStatusWithUnissuedFacilities, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
-        dealId = deal._id;
+        dealId = deal._id; // eslint-disable-line no-underscore-dangle
       });
   });
 

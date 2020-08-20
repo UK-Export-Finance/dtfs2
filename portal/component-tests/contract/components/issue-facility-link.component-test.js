@@ -47,6 +47,20 @@ describe(component, () => {
         submissionType: 'Manual Inclusion Notice',
       },
     },
+    {
+      _id: 7,
+      details: {
+        status: 'Accepted by UKEF (with conditions)',
+        submissionType: 'Manual Inclusion Application',
+      },
+    },
+    {
+      _id: 8,
+      details: {
+        status: 'Accepted by UKEF (without conditions)',
+        submissionType: 'Manual Inclusion Application',
+      },
+    },
   ];
 
   describe('when deal status and submission type allows the issue facility', () => {
