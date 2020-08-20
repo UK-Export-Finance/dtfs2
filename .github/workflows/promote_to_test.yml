@@ -51,7 +51,5 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          portal_ui=tfs-${{ env.environment }}-portal-ui
-          portal_api=tfs-${{ env.environment }}-portal-api
-          az webapp restart --name ${portal_ui} --resource-group ${{ env.resource_group }}
-          az webapp restart --name ${portal_api} --resource-group ${{ env.resource_group }}
+          az webapp restart --name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}
+          az webapp restart --name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}
