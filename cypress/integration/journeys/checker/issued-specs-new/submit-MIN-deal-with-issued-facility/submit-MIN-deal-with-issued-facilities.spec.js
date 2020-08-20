@@ -108,7 +108,7 @@ context('TODO', () => {
     });
 
     //---------------------------------------------------------------
-    // Checker can only review issue facility details and cannot edit
+    // Checker can only review issue facility details
     //---------------------------------------------------------------
     bondRow.issueFacilityLink().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Facility issued');
@@ -119,18 +119,12 @@ context('TODO', () => {
     });
 
     bondRow.issueFacilityLink().click();
-    cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/preview`));
-
-    // clicking on another link to a Bond form page should take user to login/home (our current 'unauth page')
-    partials.bondProgressNav.progressNavLinkBondDetails().click();
-    cy.url().should('eq', relative('/'));
+    cy.url().should('eq', relative(`/contract/${dealId}/submission-details#bond-${bondId}`));
 
     pages.contract.visit(deal);
     loanRow.issueFacilityLink().click();
-    cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/preview`));
+    cy.url().should('eq', relative(`/contract/${dealId}/submission-details#loan-${loanId}`));
 
-    // clicking on another link to a Loan form page should take user to login/home (our current 'unauth page')
-    partials.loanProgressNav.progressNavLinkLoanGuaranteeDetails().click();
-    cy.url().should('eq', relative('/'));
+    // TODO: assert that if user tries to navigate to a bond or loan form, you go to unauth page.
   });
 });
