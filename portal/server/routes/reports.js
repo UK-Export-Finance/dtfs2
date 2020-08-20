@@ -474,7 +474,6 @@ router.get('/reports/transactions-report/:page', async (req, res) => {
 router.get('/reports/mia_min-cover-start-date-changes', async (req, res) => res.redirect('/reports/mia_min-cover-start-date-changes/0'));
 
 router.get('/reports/mia_min-cover-start-date-changes/:page', async (req, res) => {
-
   const { userToken } = requestParams(req);
   // get deals where transaction facilityStage = unconditional/issued
   const reportFilters = req.body;
@@ -486,51 +485,53 @@ router.get('/reports/mia_min-cover-start-date-changes/:page', async (req, res) =
     {
       field: 'details.status',
       value: 'Ready for Checker\'s approval',
-      //value: 'Acknowledged by UKEF',
     },
   );
-  // previousStatus = Accepted
-  facilityFilters.push(
-    {
-      field: 'details.previousStatus',
-      value: 'Accepted by UKEF (with conditions)',
-    },
-  );
-  console.warn("filter on either accepted")
+
   facilityFilters.push(
     {
       field: 'transaction.transactionStage',
       value: 'issued_unconditional',
     },
   );
-  console.log(`facilityFilters: ${util.inspect(facilityFilters)}`);
+  // TODO set up an OR query for details.previousStatus
+  facilityFilters.push(
+    {
+      field: 'details.previousStatus',
+      value: 'Accepted by UKEF (with conditions)',
+    },
+  );
 
-
-  const facilityDeals = await getApiData(
+  const facilitiesWithConditions = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, facilityFilters, userToken),
     res,
   );
-  console.log(`faciltyDeals: ${util.inspect(facilityDeals)}`);
-  console.log(`faciltyDeals: ${util.inspect(facilityDeals.transactions)}`);
-  /*
-  const filteredDeals = faciltyDeals.deals.filter((deal) => {
-    if (deal.details.status.search('Accepted by UKEF') > -1) {
-      return true;
-    }
-    return false;
-  }); */
 
-  // const count = facilityDeals.transactions.length; // in case people want to add more examples..
+  facilityFilters.pop();
+  facilityFilters.push(
+    {
+      field: 'details.previousStatus',
+      value: 'Accepted by UKEF (without conditions)',
+    },
+  );
 
+  const facilitiesWithOutConditions = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, facilityFilters, userToken),
+    res,
+  );
+
+  const transactions = facilitiesWithConditions.transactions.concat(facilitiesWithOutConditions.transactions);
+
+  // the two queries breaks pagination
   const pages = {
-    totalPages: Math.ceil(facilityDeals.count / PAGESIZE),
-    currentPage: parseInt(req.params.page, 10),
-    totalItems: facilityDeals.count,
+    // totalPages: Math.ceil(facilityDeals.count / PAGESIZE),
+    // currentPage: parseInt(req.params.page, 10),
+    totalItems: transactions.length,
   };
 
   return res.render('reports/mia_min-cover-start-date-changes.njk', {
     pages,
-    transactions: facilityDeals.transactions,
+    transactions,
     primaryNav,
     subNav: 'mia_min-cover-start-date-changes',
     user: req.session.user,
