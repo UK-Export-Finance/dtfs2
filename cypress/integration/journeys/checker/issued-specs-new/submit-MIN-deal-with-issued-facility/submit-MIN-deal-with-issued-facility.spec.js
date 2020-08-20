@@ -93,7 +93,6 @@ context('TODO', () => {
     //---------------------------------------------------------------
     // deal and facility status should be updated to `Submitted`
     //---------------------------------------------------------------
-    cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
 
     pages.contract.status().invoke('text').then((text) => {
@@ -109,9 +108,8 @@ context('TODO', () => {
     });
 
     //---------------------------------------------------------------
-    // 'user' (TBC - presuming Maker) can only review issue facility details and cannot edit
+    // Checker can only review issue facility details and cannot edit
     //---------------------------------------------------------------
-
     bondRow.issueFacilityLink().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Facility issued');
     });
