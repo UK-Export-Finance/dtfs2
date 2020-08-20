@@ -17,9 +17,10 @@ RUN npm run buildProd
 # Runtime container
 
 FROM node:lts-alpine
+
+# Identifies the code in the running container
 ARG GITHUB_SHA
 ENV GITHUB_SHA=$GITHUB_SHA
-RUN echo "GITHUB_SHA: $GITHUB_SHA"
 
 WORKDIR /app
 
@@ -30,4 +31,4 @@ COPY --from=build /build/styles styles/
 COPY --from=build /build/templates templates/
 
 #USER 1000
-CMD env && node dist/server.js
+CMD node dist/server.js
