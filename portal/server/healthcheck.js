@@ -1,11 +1,11 @@
 const express = require('express');
 
 const healthcheck = express.Router();
-const GITGUB_SHA = process.env.GITGUB_SHA || 'undefined';
+const GITHUB_SHA = process.env.GITHUB_SHA || 'undefined';
 
 healthcheck.get('/healthcheck', (req, res) => {
   res.status(200).json({
-    GITGUB_SHA,
+    GITHUB_SHA,
   });
 });
 
