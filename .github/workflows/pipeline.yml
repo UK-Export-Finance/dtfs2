@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: "echo GITHUB_SHA=${{ env.GITHUB_SHA }}"
+    - run: "echo GITHUB_SHA=${{ github.sha }}"
     - name: Build and push
       uses: docker/build-push-action@v1
       with:
@@ -37,7 +37,7 @@ jobs:
         repository: portal-ui
         path: portal
         tags: latest
-        build_args: GITHUB_SHA=${{ env.GITHUB_SHA }}
+        build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
 
   portal-api:
@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: "echo GITHUB_SHA=${{ env.GITHUB_SHA }}"
+    - run: "echo GITHUB_SHA=${{ github.sha }}"
     - name: Build and push
       uses: docker/build-push-action@v1
       with:
@@ -55,7 +55,7 @@ jobs:
         repository: portal-api
         path: deal-api
         tags: latest
-        build_args: GITHUB_SHA=${{ env.GITHUB_SHA }}
+        build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
 
   api-tests:
