@@ -43,8 +43,8 @@ describe(component, () => {
     {
       _id: 6,
       details: {
-        status: 'Submitted',
-        submissionType: 'Manual Inclusion Notice',
+        status: 'Further Maker\'s input required',
+        submissionType: 'Manual Inclusion Application',
       },
     },
     {
@@ -104,23 +104,6 @@ describe(component, () => {
     describe('when viewed by maker', () => {
       const user = { roles: ['maker'] };
 
-      describe('when facility.issueFacilityDetailsSubmitted and issueFacilityDetailsProvided is true', () => {
-        it('should render link to facility preview page', () => {
-          const facility = {
-            _id: '1234',
-            facilityStage: 'Conditional',
-            issueFacilityDetailsSubmitted: true,
-            issueFacilityDetailsProvided: true,
-          };
-
-          for (const deal of deals) {
-            const wrapper = render({ user, deal, facility, facilityName });
-            wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`)
-              .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/preview`, 'Facility issued');
-          }
-        });
-      });
-
       describe('when facility.issueFacilityDetailsSubmitted is false and issueFacilityDetailsProvided, issueFacilityDetailsStarted is true', () => {
         it('should render link to issue facility page', () => {
           const facility = {
@@ -155,8 +138,180 @@ describe(component, () => {
           }
         });
       });
+
+      describe('when facility.issueFacilityDetailsSubmitted and facility.status is `Ready for check`', () => {
+        const facility = {
+          _id: '1234',
+          facilityStage: 'Conditional',
+          issueFacilityDetailsSubmitted: true,
+          issueFacilityDetailsProvided: true,
+          status: 'Ready for check',
+        };
+
+        it('should render link to facility preview page', () => {
+          for (const deal of deals) {
+            const wrapper = render({ user, deal, facility, facilityName });
+            wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`)
+              .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/preview`, 'Issue facility');
+          }
+        });
+
+        describe('when facility.issueFacilityDetailsStarted is true', () => {
+          it('should render link to facility preview page with `Issue facility`', () => {
+            facility.issueFacilityDetailsStarted = true;
+            for (const deal of deals) {
+              const wrapper = render({ user, deal, facility, facilityName });
+              wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`)
+                .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/preview`, 'Facility issued');
+            }
+          });
+        });
+      });
+
+      describe('when facility.issueFacilityDetailsSubmitted and deal.status is `Ready for Checker\'s approval`', () => {
+        const facility = {
+          _id: '1234',
+          facilityStage: 'Conditional',
+          issueFacilityDetailsSubmitted: true,
+          issueFacilityDetailsProvided: true,
+        };
+
+        const deal = {
+          _id: 1,
+          details: {
+            status: 'Ready for Checker\'s approval',
+            submissionType: 'Automatic Inclusion Notice',
+          },
+        };
+
+        it('should render link to facility preview page', () => {
+          const wrapper = render({ user, deal, facility, facilityName });
+          wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`)
+            .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/preview`, 'Issue facility');
+        });
+
+        describe('when facility.issueFacilityDetailsStarted is true', () => {
+          it('should render link to facility preview page with `Issue facility`', () => {
+            facility.issueFacilityDetailsStarted = true;
+
+            const wrapper = render({ user, deal, facility, facilityName });
+            wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`)
+              .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/preview`, 'Facility issued');
+          });
+        });
+      });
     });
   });
+
+  // DTFS2-1868: additional checks that may or may not be covered in the above tests.
+  describe('when the deal status is `Ready for Checker\'s approval`, facility status is `Ready for check` and issuance details started & provided', () => {
+    it('should render a link to facility preview page', () => {
+      const user = { roles: ['maker'] };
+      const facilityName = 'loan';
+      const facility = {
+        _id: '1234',
+        facilityStage: 'Conditional',
+        status: 'Ready for check',
+        issueFacilityDetailsProvided: true,
+        issueFacilityDetailsStarted: true,
+      };
+
+      const deal = {
+        _id: 1,
+        details: {
+          status: 'Ready for Checker\'s approval',
+          submissionType: 'Automatic Inclusion Notice',
+        },
+      };
+
+      const wrapper = render({ user, deal, facility, facilityName });
+      wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`)
+        .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/preview`, 'Facility issued');
+    });
+  });
+
+  describe('when the deal status is `Submitted`, facility status is `Submitted`, issuance details started, provided & submitted ', () => {
+    it('should render a link to facility preview page', () => {
+      const user = { roles: ['maker'] };
+      const facilityName = 'loan';
+      const facility = {
+        _id: '1234',
+        facilityStage: 'Conditional',
+        status: 'Submitted',
+        issueFacilityDetailsProvided: true,
+        issueFacilityDetailsStarted: true,
+        issueFacilityDetailsSubmitted: true,
+      };
+
+      const deal = {
+        _id: 1,
+        details: {
+          status: 'Submitted',
+          submissionType: 'Automatic Inclusion Notice',
+        },
+      };
+
+      const wrapper = render({ user, deal, facility, facilityName });
+      wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`)
+        .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/preview`, 'Facility issued');
+    });
+  });
+
+  describe('when the deal status is `Acknowledged by UKEF`, facility status is `Acknowledged`, issuance details started, provided & submitted ', () => {
+    it('should render a link to facility preview page', () => {
+      const user = { roles: ['maker'] };
+      const facilityName = 'loan';
+      const facility = {
+        _id: '1234',
+        facilityStage: 'Conditional',
+        status: 'Acknowledged',
+        issueFacilityDetailsProvided: true,
+        issueFacilityDetailsStarted: true,
+        issueFacilityDetailsSubmitted: true,
+      };
+
+      const deal = {
+        _id: 1,
+        details: {
+          status: 'Acknowledged by UKEF',
+          submissionType: 'Automatic Inclusion Notice',
+        },
+      };
+
+      const wrapper = render({ user, deal, facility, facilityName });
+      wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`)
+        .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/preview`, 'Facility issued');
+    });
+
+    describe('when the deal status is `Further Maker\'s input required`, facility status is `Maker\'s input required`, issuance details started, provided & submitted ', () => {
+      it('should render a link to facility preview page', () => {
+        const user = { roles: ['maker'] };
+        const facilityName = 'loan';
+        const facility = {
+          _id: '1234',
+          facilityStage: 'Conditional',
+          status: 'Maker\'s input required',
+          issueFacilityDetailsProvided: true,
+          issueFacilityDetailsStarted: true,
+          issueFacilityDetailsSubmitted: true,
+        };
+
+        const deal = {
+          _id: 1,
+          details: {
+            status: 'Further Maker\'s input required',
+            submissionType: 'Automatic Inclusion Notice',
+          },
+        };
+
+        const wrapper = render({ user, deal, facility, facilityName });
+        wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`)
+          .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/issue-facility`, 'Facility issued');
+      });
+    });
+  });
+
+
 
   describe('when deal status is NOT `Acknowledged by UKEF` or `Ready for Checker\'s approval', () => {
     const facilityName = 'loan';
