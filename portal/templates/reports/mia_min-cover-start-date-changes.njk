@@ -27,42 +27,42 @@
 
     <tbody class="govuk-table__body">
 
-      {% for cr in crs %}
+      {% for transaction in transactions %}
         <tr data-cy="cover-change-request_{{transaction._id}}" class="govuk-table__row">
           <td data-cy="bankSupplyContractID" class="govuk-table__cell govuk-!-font-size-14">
-            <a href="/contract/{{ cr.deal_id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ cr.bankSupplyContractID }}</a>
+            <a href="/contract/{{ transaction.deal_id }}" class="govuk-link" data-cy="bankSupplyContractIDLink">{{ transaction.deal_bankSupplyContractID }}</a>
           </td>
 
           <td data-cy="bankFacilityId" class="govuk-table__cell govuk-!-font-size-14">
-            {{ cr.bankFacilityId }}
+            {{ transaction.bankFacilityId }}
           </td>
 
           <td data-cy="transactionType" class="govuk-table__cell govuk-!-font-size-14">
-            {{ cr.transactionType }}
+            {{ transaction.transactionType | capitalize }}
           </td>
 
           <td data-cy="supplier-name" class="govuk-table__cell govuk-!-font-size-14">
-            {{ cr["supplier-name"] }}
+            {{ transaction.deal_supplierName }}
           </td>
 
           <td data-cy="oldRequestedCoverStartDate" class="govuk-table__cell govuk-!-font-size-14">
-            {{ cr.oldRequestedCoverStartDate }}
+            {{ transaction.oldRequestedCoverStartDate }}
           </td>
 
           <td data-cy="newRequestedCoverStartDate" class="govuk-table__cell govuk-!-font-size-14">
-            {{ cr.newRequestedCoverStartDate }}
+            {{ transaction.newRequestedCoverStartDate }}
           </td>
 
           <td data-cy="dateTimeOfChange" class="govuk-table__cell govuk-!-font-size-14">
-            {{ cr.dateTimeOfChange }}
+            {{ transaction.dateTimeOfChange }}
           </td>
 
           <td data-cy="maker" class="govuk-table__cell govuk-!-font-size-14">
-            {{ cr.maker }}
+            {{ transaction.maker | dashIfEmpty }}
           </td>
 
           <td data-cy="checker" class="govuk-table__cell govuk-!-font-size-14">
-            {{ cr.checker }}
+            {{ transaction.checker | dashIfEmpty }}
           </td>
 
         </tr>
