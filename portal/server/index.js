@@ -49,4 +49,5 @@ app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
 
+console.log(`GITHUB_SHA: ${process.env.GITHUB_SHA}`);
 app.listen(PORT, () => console.log(`DTFS2 app listening on port ${PORT}!`)); // eslint-disable-line no-console
