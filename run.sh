@@ -12,11 +12,11 @@ done
 npm run lint:fix
 
 cd portal
-docker build --tag dtfs/portal .
+docker build --tag dtfs/portal --build-arg GITHUB_SHA=development .
 cd $home
 
 #cd deal-api
-#docker build --tag deal-api .
+#docker build --tag deal-api --build-arg GITHUB_SHA=development .
 #cd $home
 
 if [ ! -z "$(docker ps -aq)"; then

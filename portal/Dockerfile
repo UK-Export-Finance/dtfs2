@@ -17,6 +17,8 @@ RUN npm run buildProd
 # Runtime container
 
 FROM node:lts-alpine
+ARG GITHUB_SHA
+ENV GITHUB_SHA=$GITHUB_SHA
 
 WORKDIR /app
 
