@@ -135,13 +135,13 @@ context('Checker submits an MIA deal with `Unissued` bonds and `Conditional` loa
         expect(text.trim()).to.contain('Manual Inclusion Application');
       });
 
-      // facility statuses should not be changed
+      // facility statuses should be changed changed from `Completed` to `Not started`
       bondRow.bondStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Completed');
+        expect(text.trim()).to.equal('Not started');
       });
 
       loanRow.loanStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Completed');
+        expect(text.trim()).to.equal('Not started');
       });
 
       pages.contract.proceedToReview().click();
@@ -160,13 +160,13 @@ context('Checker submits an MIA deal with `Unissued` bonds and `Conditional` loa
         expect(text.trim()).to.contain('Manual Inclusion Application');
       });
 
-      // facility statuses should not be changed
+      // facility statuses should still be `Not started`
       bondRow.bondStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Completed');
+        expect(text.trim()).to.equal('Not started');
       });
 
       loanRow.loanStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Completed');
+        expect(text.trim()).to.equal('Not started');
       });
 
       pages.contract.proceedToSubmit().click();
@@ -207,7 +207,7 @@ context('Checker submits an MIA deal with `Unissued` bonds and `Conditional` loa
       //---------------------------------------------------------------
       // go back into the deal and assert:
       // - submissionType has changed from MIA to MIN
-      // - facility statuses have changed from `Completed` to `Not started`
+      // - facility statuses are still `Not started`
       //---------------------------------------------------------------
       pages.contract.visit(deal);
 
@@ -219,9 +219,6 @@ context('Checker submits an MIA deal with `Unissued` bonds and `Conditional` loa
         expect(text.trim()).to.equal('Not started');
       });
 
-      // TODO: this should only be Not started for CONDITIONAL loans, not Conditional
-      // this should not pass right now - need to update test data
-      // assert that loan status changed from `Completed` to `Not started`
       loanRow.loanStatus().invoke('text').then((text) => {
         expect(text.trim()).to.equal('Not started');
       });
