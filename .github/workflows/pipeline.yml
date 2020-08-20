@@ -130,8 +130,6 @@ jobs:
       AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_PORTAL_EXPORT_FOLDER }}
 
       GOV_NOTIFY_API_KEY: ${{ secrets.E2ETEST_GOV_NOTIFY_API_KEY }}
-      GOV_NOTIFY_API_KEY: ${{ secrets.E2ETEST_GOV_NOTIFY_API_KEY }}
-      GOV_NOTIFY_API_KEY: ${{ secrets.E2ETEST_GOV_NOTIFY_API_KEY }}
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
