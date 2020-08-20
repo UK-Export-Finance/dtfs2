@@ -2,7 +2,7 @@
 const moment = require('moment');
 const { formattedTimestamp } = require('../../../facility-dates/timestamp');
 
-const calculateExposurePeriod = (facility, facilityType) => {
+const calculateExposurePeriod = (facility) => {
   let coverStartDate;
   if (facility.requestedCoverStartDate) {
     coverStartDate = moment(formattedTimestamp(facility.requestedCoverStartDate));
@@ -25,25 +25,10 @@ const calculateExposurePeriod = (facility, facilityType) => {
   }
 
 
-  // Is the commencement/expiry dates the end of month?
-  const isGuaranteeCommencementEndOfMonth = moment(coverStartDate).endOf('month').format('YYYY-MM-DD') === coverStartDate.format('YYYY-MM-DD');
-  const isGuaranteeExpiryEndOfMonth = moment(coverEndDate).endOf('month').format('YYYY-MM-DD') === coverEndDate.format('YYYY-MM-DD');
+  const durationMonths = coverEndDate.diff(coverStartDate, 'months') + 1;
 
-  const durationMonths = coverEndDate.diff(coverStartDate, 'months');
+  const monthOffset = moment(coverStartDate).date() === moment(coverEndDate).date() ? -1 : 0;
 
-  let monthOffset = 0;
-
-  if (isGuaranteeCommencementEndOfMonth) {
-    /*
-      SELECT DATEDIFF(MONTH, @GC_DATE, @GE_DATE)
-    */
-
-    monthOffset = facilityType === 'BSS' && isGuaranteeExpiryEndOfMonth ? 1 : 0;
-  } else if (facilityType === 'EWCS') {
-    monthOffset = moment(coverStartDate).date() < moment(coverEndDate).date() ? 1 : 0;
-  } else {
-    monthOffset = moment(coverStartDate).date() <= moment(coverEndDate).date() ? 1 : 0;
-  }
 
   return durationMonths + monthOffset;
 };

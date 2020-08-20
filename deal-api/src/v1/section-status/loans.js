@@ -1,5 +1,6 @@
 const loanValidationErrors = require('../validation/loan');
 const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
+const CONSTANTS = require('../../constants');
 
 const loanStatus = (loan, loanErrors, loanIssueFacilityErrors) => {
   const hasLoanErrors = (loanErrors && loanErrors.count !== 0);
@@ -29,9 +30,8 @@ const loanHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, d
                             || dealStatus === 'Ready for Checker\'s approval')
                             && previousDealStatus !== 'Draft');
 
-  const allowedDealSubmissionType = (dealSubmissionType === 'Automatic Inclusion Notice'
-                                    || dealSubmissionType === 'Manual Inclusion Notice'
-                                    || dealSubmissionType === 'Manual Inclusion Application');
+  const allowedDealSubmissionType = (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
+                                    || dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN);
 
   const allowedFacilityStage = loan.facilityStage === 'Conditional';
 
@@ -58,7 +58,8 @@ const addAccurateStatusesToLoans = (
       const validationErrors = loanValidationErrors(loan);
       let issueFacilityValidationErrors;
 
-      if (loanHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, dealSubmissionType, loan)) {
+      if (loan.issueFacilityDetailsStarted
+          && loanHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, dealSubmissionType, loan)) {
         issueFacilityValidationErrors = loanIssueFacilityValidationErrors(loan, dealSubmissionDate);
       }
 

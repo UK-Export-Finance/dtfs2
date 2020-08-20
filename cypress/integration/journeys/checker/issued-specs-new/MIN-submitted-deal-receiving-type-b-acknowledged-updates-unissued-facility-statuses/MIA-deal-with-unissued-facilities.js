@@ -3,18 +3,40 @@ const moment = require('moment');
 const deal = {
   "details": {
     "status": "Ready for Checker's approval",
-    "bankSupplyContractID": "mock id",
-    "bankSupplyContractName": "mock name",
-    "created": moment().utc().valueOf(),
-    "dateOfLastAction": "1596805840467",
-    "previousWorkflowStatus": "confirmation_acknowledged",
-    "submissionType": "Automatic Inclusion Notice",
-    submissionDate: moment().utc().valueOf(),
-    "previousStatus": "Acknowledged by UKEF",
-    owningBank: {
-      id: '956',
-      name: 'Barclays Bank',
+    "bankSupplyContractID": "test",
+    "bankSupplyContractName": "testing",
+    "dateOfLastAction": moment().utc().valueOf(),
+        "submissionType" : "Manual Inclusion Application",
+    "maker": {
+      "username": "MAKER",
+      "roles": [
+        "maker"
+      ],
+      "bank": {
+        "id": "956",
+        "name": "Barclays Bank",
+        "emails": [
+          "maker4@ukexportfinance.gov.uk",
+          "checker4@ukexportfinance.gov.uk"
+        ]
+      },
+      "lastLogin": "1597782864959",
+      "firstname": "Hugo",
+      "surname": "Drax",
+      "email": "maker@ukexportfinance.gov.uk",
+      "timezone": "Europe/London",
+      "user-status": "active",
     },
+    "owningBank": {
+      "id": "956",
+      "name": "Barclays Bank",
+      "emails": [
+        "maker4@ukexportfinance.gov.uk",
+        "checker4@ukexportfinance.gov.uk"
+      ]
+    },
+    "created": moment().utc().valueOf(),
+    "previousStatus": "Draft"
   },
   "eligibility": {
     "status": "Completed",
@@ -27,7 +49,7 @@ const deal = {
       {
         "id": 12,
         "description": "The cover period for each Transaction does not exceed 5 years, or such other period approved by UKEF (that has not lapsed or been withdrawn) in relation to bonds and/or loans for this Obligor.",
-        "answer": true
+        "answer": false
       },
       {
         "id": 13,
@@ -60,13 +82,13 @@ const deal = {
         "answer": true
       }
     ],
-    "agentAddress1": "",
-    "agentAddress2": "",
-    "agentAddress3": "",
-    "agentCountry": "",
+    "agentAddressCountry": "",
+    "agentAddressLine1": "",
+    "agentAddressLine2": "",
+    "agentAddressLine3": "",
+    "agentAddressPostcode": "",
+    "agentAddressTown": "",
     "agentName": "",
-    "agentPostcode": "",
-    "agentTown": "",
     "validationErrors": {
       "count": 0,
       "errorList": {
@@ -78,11 +100,11 @@ const deal = {
         "16": {},
         "17": {},
         "18": {},
-        "agent-address-line-1": {},
-        "agent-country": {},
-        "agent-name": {},
-        "agent-postcode": {},
-        "agent-town": {}
+        "agentAddressCountry": {},
+        "agentAddressLine1": {},
+        "agentAddressPostcode": {},
+        "agentAddressTown": {},
+        "agentName": {}
       }
     }
   },
@@ -108,19 +130,19 @@ const deal = {
     "indemnifier-correspondence-address-postcode": "",
     "indemnifier-correspondence-address-town": "",
     "indemnifier-name": "",
-    "industry-class": "84300",
-    "industry-sector": "1014",
+    "industry-class": "56210",
+    "industry-sector": "1008",
     "legallyDistinct": "false",
     "sme-type": "Micro",
     "supplier-address-country": {
       "code": "GBR",
       "name": "United Kingdom"
     },
-    "supplier-address-line-1": "adsf",
-    "supplier-address-line-2": "asdf",
-    "supplier-address-line-3": "asdf",
-    "supplier-address-postcode": "asdf",
-    "supplier-address-town": "asdf",
+    "supplier-address-line-1": "test",
+    "supplier-address-line-2": "test",
+    "supplier-address-line-3": "test",
+    "supplier-address-postcode": "test",
+    "supplier-address-town": "test",
     "supplier-companies-house-registration-number": "",
     "supplier-correspondence-address-country": {
       "code": "GBR",
@@ -132,19 +154,19 @@ const deal = {
     "supplier-correspondence-address-line-3": "",
     "supplier-correspondence-address-postcode": "",
     "supplier-correspondence-address-town": "",
-    "supplier-name": "asdfa",
+    "supplier-name": "test",
     "supplier-type": "Exporter",
-    "supply-contract-description": "asdfafd",
+    "supply-contract-description": "test",
     "buyer-address-country": {
       "code": "GBR",
       "name": "United Kingdom"
     },
-    "buyer-address-line-1": "Ooi",
-    "buyer-address-line-2": "o",
-    "buyer-address-line-3": "oioi",
-    "buyer-address-postcode": "iii",
-    "buyer-address-town": "i",
-    "buyer-name": "asdfasdf",
+    "buyer-address-line-1": "test",
+    "buyer-address-line-2": "test",
+    "buyer-address-line-3": "test",
+    "buyer-address-postcode": "test",
+    "buyer-address-town": "test",
+    "buyer-name": "test",
     "destinationOfGoodsAndServices": {
       "code": "GBR",
       "name": "United Kingdom"
@@ -157,141 +179,167 @@ const deal = {
       "id": "GBP",
       "text": "GBP - UK Sterling"
     },
-    "supplyContractValue": "12312323.00",
-    "hasBeenPreviewed": true
+    "supplyContractValue": "1234.00"
   },
   "bondTransactions": {
     "items": [
       {
-        "_id": "1000209",
+        "_id": "1000122",
+        "bondStage": "Unissued",
+        "ukefGuaranteeInMonths": "12",
+        "facilityValue": "1234.00",
+        "currencySameAsSupplyContractCurrency": "true",
         "createdDate": moment().utc().valueOf(),
         "bondIssuer": "",
         "bondType": "Bid bond",
-        "bondStage": "Unissued",
-        "ukefGuaranteeInMonths": "12",
         "bondBeneficiary": "",
-        "guaranteeFeePayableByBank": "18.0000",
-        "facilityValue": "21313.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "riskMarginFee": "20",
-        "coveredPercentage": "30",
+        "guaranteeFeePayableByBank": "10.8000",
+        "ukefExposure": "296.16",
+        "lastEdited": moment().utc().valueOf(),
+                "riskMarginFee" : "12",
+        "coveredPercentage": "24",
         "minimumRiskMarginFee": "",
-        "ukefExposure": "6,393.90",
         "feeType": "At maturity",
         "dayCountBasis": "365",
         "currency": {
           "text": "GBP - UK Sterling",
           "id": "GBP"
-        },
-        issuedDate: moment().add(1, 'day').utc().valueOf(),
-        "coverEndDate-day": moment().add(1, 'month').format('DD'),
-        "coverEndDate-month": moment().add(1, 'month').format('MM'),
-        "coverEndDate-year": moment().add(1, 'month').format('YYYY'),
-        "uniqueIdentificationNumber": "1234",
-        "uniqueIdentificationNumberRequiredForIssuance": true,
-        "issueFacilityDetailsStarted": true,
-        "issueFacilityDetailsProvided": true,
-        "status": "Ready for check"
-      },
-      {
-        "_id": "1000210",
-        "createdDate": moment().utc().valueOf(),
-        "bondIssuer": "",
-        "bondType": "Bid bond",
-        "bondStage": "Issued",
-        "requestedCoverStartDate-day": "",
-        "requestedCoverStartDate-month": "",
-        "requestedCoverStartDate-year": "",
-        "coverEndDate-day": moment().add(1, 'month').format('DD'),
-        "coverEndDate-month": moment().add(1, 'month').format('MM'),
-        "coverEndDate-year": moment().add(1, 'month').format('YYYY'),
-        "uniqueIdentificationNumber": "1234",
-        "bondBeneficiary": "",
-        "guaranteeFeePayableByBank": "18.0000",
-        "lastEdited": "1597082524602",
-        "facilityValue": "1234.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "riskMarginFee": "20",
-        "coveredPercentage": "30",
-        "minimumRiskMarginFee": "",
-        "ukefExposure": "370.20",
-        "feeType": "At maturity",
-        "dayCountBasis": "365"
+        }
       }
     ]
   },
   "loanTransactions": {
     "items": [
       {
-        "_id": "1000210",
+        "_id": "1000124",
         "createdDate": moment().utc().valueOf(),
         "facilityStage": "Conditional",
         "ukefGuaranteeInMonths": "12",
-        "guaranteeFeePayableByBank": "10.8000",
-        "facilityValue": "123123.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "interestMarginFee": "12",
-        "coveredPercentage": "20",
-        "minimumQuarterlyFee": "20",
-        "ukefExposure": "24,624.60",
-        "premiumFrequency": "Monthly",
-        "premiumType": "In arrear",
-        "dayCountBasis": "360",
-        "viewedPreviewPage": true,
-        "currency": {
-          "text": "GBP - UK Sterling",
-          "id": "GBP"
-        },
-        issuedDate: moment().add(1, 'day').utc().valueOf(),
-        "coverEndDate-day": moment().add(1, 'month').format('DD'),
-        "coverEndDate-month": moment().add(1, 'month').format('MM'),
-        "coverEndDate-year": moment().add(1, 'month').format('YYYY'),
-        "bankReferenceNumberRequiredForIssuance": true,
-        "issueFacilityDetailsStarted": true,
-        "issueFacilityDetailsProvided": true,
-        "disbursementAmount": "1,234.00",
-        "bankReferenceNumber": "5678",
-        "status": "Ready for check",
-      },
-      {
-        "_id": "1000211",
-        "createdDate": moment().utc().valueOf(),
-        "facilityStage": "Unconditional",
-        "requestedCoverStartDate-day": "",
-        "requestedCoverStartDate-month": "",
-        "requestedCoverStartDate-year": "",
-        "coverEndDate-day": moment().add(1, 'month').format('DD'),
-        "coverEndDate-month": moment().add(1, 'month').format('MM'),
-        "coverEndDate-year": moment().add(1, 'month').format('YYYY'),
-        "bankReferenceNumber": "12345678",
-        "guaranteeFeePayableByBank": "45.0000",
-        "lastEdited": "1597082596884",
+        "bankReferenceNumber": "",
+        "guaranteeFeePayableByBank": "18.0000",
+        "lastEdited": moment().utc().valueOf(),
         "facilityValue": "1234.00",
         "currencySameAsSupplyContractCurrency": "true",
-        "disbursementAmount": "200.00",
-        "interestMarginFee": "50",
-        "coveredPercentage": "60",
+        "interestMarginFee": "20",
+        "coveredPercentage": "40",
         "minimumQuarterlyFee": "",
-        "ukefExposure": "740.40",
+        "ukefExposure": "493.60",
         "premiumType": "At maturity",
         "dayCountBasis": "365"
       }
     ]
   },
   "summary": {},
-  "comments": [],
+  "comments": [
+    {
+      "user": {
+        "username": "MAKER",
+        "roles": [
+          "maker"
+        ],
+        "bank": {
+          "id": "956",
+          "name": "Barclays Bank",
+          "emails": [
+            "maker4@ukexportfinance.gov.uk",
+            "checker4@ukexportfinance.gov.uk"
+          ]
+        },
+        "lastLogin": "1597782864959",
+        "firstname": "Hugo",
+        "surname": "Drax",
+        "email": "maker@ukexportfinance.gov.uk",
+        "timezone": "Europe/London",
+        "user-status": "active",
+      },
+      "timestamp": "1597782964434",
+      "text": "test"
+    }
+  ],
   "editedBy": [],
+  "mandatoryCriteria": [
+    {
+      "id": "1",
+      "title": "Supply contract/Transaction",
+      "items": [
+        {
+          "id": 1,
+          "copy": "The Supplier has provided the Bank with a duly completed Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate."
+        },
+        {
+          "id": 2,
+          "copy": "The Bank has complied with its policies and procedures in relation to the Transaction."
+        },
+        {
+          "id": 3,
+          "copy": "Where the Supplier is a UK Supplier, the Supplier has provided the Bank with a duly completed UK Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate. (Conditional for UK Supplier)"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Financial",
+      "items": [
+        {
+          "id": 4,
+          "copy": "The Bank Customer (to include both the Supplier and any Parent Obligor) is an <a class=\"govuk-link\" href=\"#\">Eligible Person.</a>"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Credit",
+      "items": [
+        {
+          "id": 5,
+          "copy": "The Bank Customer (to include both the Supplier and any UK Parent Obligor) has a one- year probability of default of less than 14.1%."
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "title": "Bank Facility Letter",
+      "items": [
+        {
+          "id": 6,
+          "copy": "The Bank Facility Letter is governed by the laws of England and Wales, Scotland or Northern Ireland."
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "Legal",
+      "items": [
+        {
+          "id": 7,
+          "copy": "The Bank is the sole and beneficial owner of, and has legal title to, the Transaction."
+        },
+        {
+          "id": 8,
+          "copy": "The Bank has not made a Disposal (other than a Permitted Disposal) or a Risk Transfer (other than a Permitted Risk Transfer) in relation to the Transaction."
+        },
+        {
+          "id": 9,
+          "copy": "The Bank’s right, title and interest in relation to the Transaction is clear of any Security and Quasi-Security (other than Permitted Security) and is freely assignable without the need to obtain consent of any Obligor or any other person."
+        },
+        {
+          "id": 10,
+          "copy": "The Bank is not restricted or prevented by any agreement with an Obligor from providing information and records relating to the Transaction."
+        }
+      ]
+    }
+  ],
   "dealFiles": {
     "validationErrors": {
       "count": 0,
       "errorList": {
         "exporterQuestionnaire": {}
-      }
+    }
     },
     "exporterQuestionnaire": [
       {
         "type": "general_correspondence",
-        "fullPath": "private-files/ukef_portal_storage/1001000/questionnaire.pdf",
+        "fullPath": "private-files/ukef_portal_storage/1001560/questionnaire.pdf",
         "filename": "questionnaire.pdf",
         "mimetype": "application/pdf"
       }
@@ -300,4 +348,4 @@ const deal = {
   }
 };
 
-export default deal;
+module.exports = deal;

@@ -1,4 +1,5 @@
 import moment from 'moment';
+import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
 import {
@@ -21,8 +22,13 @@ const addExpiryDate = (val, days, isDeal) => {
   // create moment from ms; find the end of the day;
   const midnightDate = moment(created, 'x').endOf('date').valueOf();
   // then add the expiry duration (90, 28, 14 days etc)
-  const expiry = midnightDate + (days * ONE_DAY);
-  const remainingDays = Math.floor((expiry - Date.now()) / ONE_DAY);
+  let expiry = midnightDate + (days * ONE_DAY);
+  let remainingDays = Math.floor((expiry - Date.now()) / ONE_DAY);
+
+  if (!created) { // catch undefined approval dates
+    expiry = 0;
+    remainingDays = 0;
+  }
   // console.log(id, created, midnightDate, expiry, remainingDays);
   return {
     ...val,
@@ -81,6 +87,7 @@ const getRAGstatus = (facilities, days, isDeal) => {
       trafficLights.green += 1;
     } else {
       trafficLights.negative += 1;
+      trafficLights.red += 1;
     }
   });
   // console.log(trafficLights);
@@ -112,22 +119,24 @@ const getMIAData = async (req, res, filterByDealStatus) => {
   let tempDeals = [];
   let deals = [];
   let count = 0;
-  if (applications.deal) {
-    miaWithConditions = applications.deals.filter((deal) => (deal.status === filterByDealStatus));
+  if (applications.deals) {
+    miaWithConditions = applications.deals.filter((deal) => (deal.details.status === filterByDealStatus));
     tempDeals = getExpiryDates(miaWithConditions, workingDays, true);
-    // once we have the deals and expriy dates, filter the display
+    // once we have the deals and expiry dates, filter the display
+    console.log(`tempDeals: ${util.inspect(tempDeals)}`);
     if (fromDays > 0) {
       deals = tempDeals.filter(
         (deal) => deal.remainingDays >= fromDays && deal.remainingDays <= toDays,
       );
     } else {
+      console.log(`less than ${toDays}`);
       deals = tempDeals.filter(
         (deal) => deal.remainingDays <= toDays,
       );
     }
     count = deals.length;
   }
-
+  console.log(`DEALS: ${util.inspect(deals)}`);
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
     currentPage: parseInt(req.params.page, 10),
