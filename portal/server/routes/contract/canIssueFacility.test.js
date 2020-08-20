@@ -108,6 +108,42 @@ describe('canIssueFacility', () => {
       });
     });
 
+    describe('when a deal has status `Accepted by UKEF (with conditions)`, MIA submissionType and a facility that has NOT been submitted', () => {
+      it('should return true', () => {
+        const mockDeal = {
+          details: {
+            status: 'Accepted by UKEF (with conditions)',
+            submissionType: 'Manual Inclusion Application',
+          },
+        };
+
+        const mockBondThatCanBeIssued = {
+          issueFacilityDetailsSubmitted: false,
+          bondStage: 'Unissued',
+        };
+
+        expect(canIssueFacility(mockUserRoles, mockDeal, mockBondThatCanBeIssued)).toEqual(true);
+      });
+    });
+
+    describe('when a deal has status `Accepted by UKEF (without conditions)`, MIA submissionType and a facility that has NOT been submitted', () => {
+      it('should return true', () => {
+        const mockDeal = {
+          details: {
+            status: 'Accepted by UKEF (without conditions)',
+            submissionType: 'Manual Inclusion Application',
+          },
+        };
+
+        const mockBondThatCanBeIssued = {
+          issueFacilityDetailsSubmitted: false,
+          bondStage: 'Unissued',
+        };
+
+        expect(canIssueFacility(mockUserRoles, mockDeal, mockBondThatCanBeIssued)).toEqual(true);
+      });
+    });
+
     describe('when a loan has `Unconditional` facilityStage and `Conditional` previousFacilityStage', () => {
       it('should return true', () => {
         const mockDeal = {

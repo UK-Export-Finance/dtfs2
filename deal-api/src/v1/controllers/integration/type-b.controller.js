@@ -43,14 +43,22 @@ const updateStatusViaController = (dealId, user, body) => new Promise((resolve, 
 });
 
 const shouldCheckIssuedFacilities = (dealStatus, dealSubmissionType) => {
-  const allowedDealStatus = (dealStatus === 'Acknowledged by UKEF'
-                            || dealStatus === 'Accepted by UKEF (with conditions)'
-                            || dealStatus === 'Accepted by UKEF (without conditions)');
+  const acceptedByUkefDealStatus = (dealStatus === 'Accepted by UKEF (with conditions)'
+                                  || dealStatus === 'Accepted by UKEF (without conditions)');
+
+  const allowedDealStatus = (dealStatus === 'Acknowledged by UKEF' || acceptedByUkefDealStatus);
 
   const allowedDealSubmissionType = (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
                                     || dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN);
 
-  if (allowedDealStatus && allowedDealSubmissionType) {
+  const isMiaDealInApprovedStatus = (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+                                    && acceptedByUkefDealStatus);
+
+
+  const shouldCheck = ((allowedDealStatus && allowedDealSubmissionType)
+                      || isMiaDealInApprovedStatus);
+
+  if (shouldCheck) {
     return true;
   }
 
