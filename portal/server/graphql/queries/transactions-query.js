@@ -30,6 +30,8 @@ query Transactions($start: Int, $pagesize: Int, $filters:[TransactionFilters]){
       checker
       issueFacilityDetailsSubmitted
       requestedCoverStartDate
+      previousCoverStartDate
+      dateOfCoverChange
     }
   }
 }`;
