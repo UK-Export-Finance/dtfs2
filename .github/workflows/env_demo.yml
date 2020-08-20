@@ -35,6 +35,9 @@ env:
   GOV_NOTIFY_API_KEY: ="${{ secrets.DEMO_GOV_NOTIFY_API_KEY }}"
   GOV_NOTIFY_EMAIL_RECIPIENT: "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
 
+  DTFS_PORTAL_SCHEDULER: false
+  FETCH_WORKFLOW_TYPE_B_SCHEDULE: "* * * * * *"
+
 # Below this line sholud be the same for all environments
 
 jobs:
@@ -52,17 +55,17 @@ jobs:
       with:
         inlineScript: |
           options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
-          
+
           az webapp create $options \
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name ${{ env.registry }}/portal-ui:${{ env.image_tag }}
-          
+
     - name: Always-on
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
-        
+
           az webapp config set $options \
             --always-on true
 
@@ -71,7 +74,7 @@ jobs:
       with:
         inlineScript: |
           options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
-                  
+
           az webapp deployment container config $options \
             --enable-cd true
 
@@ -79,7 +82,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"  
+          options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
 
           az webapp log config $options \
             --docker-container-logging filesystem
@@ -89,7 +92,7 @@ jobs:
       with:
         inlineScript: |
           options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
-                        
+
           # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
           az webapp config appsettings set $options \
             --settings \
@@ -103,7 +106,7 @@ jobs:
       with:
         inlineScript: |
           options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
-                          
+
           az webapp config connection-string set $options \
             --connection-string-type custom \
             --settings \
@@ -123,26 +126,26 @@ jobs:
       with:
         inlineScript: |
           options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
-          
+
           az webapp create $options \
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name ${{ env.registry }}/portal-api:${{ env.image_tag }}
-          
+
     - name: Always-on
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
-        
+
           az webapp config set $options \
-            --always-on true 
+            --always-on true
 
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
-                  
+
           az webapp deployment container config $options \
             --enable-cd true
 
@@ -150,7 +153,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"  
+          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
 
           az webapp log config $options \
             --docker-container-logging filesystem
@@ -160,7 +163,7 @@ jobs:
       with:
         inlineScript: |
           options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
-                        
+
           # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
           az webapp config appsettings set $options \
             --settings \
@@ -172,7 +175,7 @@ jobs:
       with:
         inlineScript: |
           options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
-                          
+
           az webapp config connection-string set $options \
             --connection-string-type custom \
             --settings \

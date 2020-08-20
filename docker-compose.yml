@@ -49,6 +49,7 @@ services:
       - GOV_NOTIFY_API_KEY
       - GOV_NOTIFY_EMAIL_RECIPIENT
       - DTFS_PORTAL_SCHEDULER=true
+      - FETCH_WORKFLOW_TYPE_B_SCHEDULE=*/1 * * * * *
 
     entrypoint: npx nodemon src/index.js
 
