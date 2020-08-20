@@ -19,6 +19,7 @@ RUN npm run buildProd
 FROM node:lts-alpine
 ARG GITHUB_SHA
 ENV GITHUB_SHA=$GITHUB_SHA
+RUN echo "GITHUB_SHA: $GITHUB_SHA"
 
 WORKDIR /app
 
