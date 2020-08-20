@@ -71,26 +71,32 @@ context('A checker submit a deal with issued loan/bond facilities', () => {
       expect(text.trim()).to.equal('Submitted');
     });
 
-    // expect bond issue facility link to not exist
-    bondRow.issueFacilityLink().should('not.exist');
-
     // expect bond delete link to not exist
     bondRow.deleteLink().should('not.exist');
+
+    // expect bond issue facility link to take user to submission details page
+    bondRow.issueFacilityLink().click();
+    cy.url().should('eq', relative(`/contract/${dealId}/submission-details#bond-${bondId}`));
 
     //
     // issued loans
     //
+
+    pages.contract.visit(deal);
 
     // expect the loan status to be updated
     loanRow.loanStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Submitted');
     });
 
-    // expect loan issue facility link to not exist
-    loanRow.issueFacilityLink().should('not.exist');
-
     // expect loan delete link to not exist
     loanRow.deleteLink().should('not.exist');
+
+    // loanRow.issueFacilityLink().should('not.exist');
+    // expect bond issue facility link to take user to submission details page
+    loanRow.issueFacilityLink().click();
+    cy.url().should('eq', relative(`/contract/${dealId}/submission-details#loan-${loanId}`));
+
 
     pages.contract.proceedToSubmit().should('not.exist');
     pages.contract.returnToMaker().should('not.exist');
