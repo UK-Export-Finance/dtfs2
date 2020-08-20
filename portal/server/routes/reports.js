@@ -1,5 +1,5 @@
 import express from 'express';
-// import util from 'util';
+import util from 'util';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
 import { getRAGstatus, getExpiryDates } from './expiryStatusUtils';
@@ -474,44 +474,63 @@ router.get('/reports/transactions-report/:page', async (req, res) => {
 router.get('/reports/mia_min-cover-start-date-changes', async (req, res) => res.redirect('/reports/mia_min-cover-start-date-changes/0'));
 
 router.get('/reports/mia_min-cover-start-date-changes/:page', async (req, res) => {
-  // [dw] while mocking this report out, I don't think we really understand the data-model involved
-  //  so I'm, just mocking this out the old way rather than trying to work out how to re-plumb the API.
 
-  // const { userToken } = requestParams(req);
-  // const { transactions, count } = await getApiData(
-  //   api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
-  //   res,
-  // );
-  // const banks = await getApiData(api.banks(userToken), res);
-  const crs = [
+  const { userToken } = requestParams(req);
+  // get deals where transaction facilityStage = unconditional/issued
+  const reportFilters = req.body;
+  if (reportFilters.bank === 'any') {
+    reportFilters.bank = '';
+  }
+  const facilityFilters = buildReportFilters(reportFilters, req.session.user);
+  facilityFilters.push(
     {
-      bankSupplyContractID: 'Memsstar/BSS/APG',
-      bankFacilityId: 'Loan 3',
-      transactionType: 'Loan',
-      'supplier-name': 'TEST DO NOT TOUCH',
-      oldRequestedCoverStartDate: '08/08/2018',
-      newRequestedCoverStartDate: '18/08/2018',
-      dateTimeOfChange: '08/08/2018 - 09:37',
-      maker: 'DurgaRao',
-      checker: {
-        username: 'CHECKER',
-        firstname: 'Emilio',
-        surname: 'Largo',
-      },
+      field: 'details.status',
+      value: 'Ready for Checker\'s approval',
+      //value: 'Acknowledged by UKEF',
     },
-  ];
+  );
+  // previousStatus = Accepted
+  facilityFilters.push(
+    {
+      field: 'details.previousStatus',
+      value: 'Accepted by UKEF (with conditions)',
+    },
+  );
+  console.warn("filter on either accepted")
+  facilityFilters.push(
+    {
+      field: 'transaction.transactionStage',
+      value: 'issued_unconditional',
+    },
+  );
+  console.log(`facilityFilters: ${util.inspect(facilityFilters)}`);
 
-  const count = crs.length; // in case people want to add more examples..
+
+  const facilityDeals = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, facilityFilters, userToken),
+    res,
+  );
+  console.log(`faciltyDeals: ${util.inspect(facilityDeals)}`);
+  console.log(`faciltyDeals: ${util.inspect(facilityDeals.transactions)}`);
+  /*
+  const filteredDeals = faciltyDeals.deals.filter((deal) => {
+    if (deal.details.status.search('Accepted by UKEF') > -1) {
+      return true;
+    }
+    return false;
+  }); */
+
+  // const count = facilityDeals.transactions.length; // in case people want to add more examples..
 
   const pages = {
-    totalPages: Math.ceil(count / PAGESIZE),
+    totalPages: Math.ceil(facilityDeals.count / PAGESIZE),
     currentPage: parseInt(req.params.page, 10),
-    totalItems: count,
+    totalItems: facilityDeals.count,
   };
 
   return res.render('reports/mia_min-cover-start-date-changes.njk', {
     pages,
-    crs,
+    transactions: facilityDeals.transactions,
     primaryNav,
     subNav: 'mia_min-cover-start-date-changes',
     user: req.session.user,
