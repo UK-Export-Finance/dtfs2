@@ -7,9 +7,9 @@ const BANKFACILITYID = 'transaction.bankFacilityId';
 const UKEFFACILITYID = 'transaction.ukefFacilityId';
 const TRANSACTION_STAGE = 'transaction.transactionStage';
 const DEAL_CREATED = 'details.created';
-// const DEAL_CREATED = 'transaction.deal_created';
 const DEAL_ID = '_id';
 const DEAL_STATUS = 'details.status';
+const DEAL_PREVIOUS_STATUS = 'details.previousStatus';
 const DEAL_BANK = 'details.owningBank.id';
 const UKEF_DEAL_ID = 'details.ukefDealId';
 const DEAL_SUBMISSION_TYPE = 'details.submissionType';
@@ -64,6 +64,11 @@ const constructor = (user, filters) => {
       }
       if (DEAL_STATUS === filterField) {
         const dealwithStatus = { 'details.status': filter[filterField] };
+
+        return listSoFar.concat([dealwithStatus]);
+      }
+      if (DEAL_PREVIOUS_STATUS === filterField) {
+        const dealwithStatus = { 'details.previousStatus': filter[filterField] };
 
         return listSoFar.concat([dealwithStatus]);
       }
