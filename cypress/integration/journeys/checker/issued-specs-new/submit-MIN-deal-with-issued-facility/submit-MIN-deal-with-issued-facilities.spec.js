@@ -1,5 +1,4 @@
 const pages = require('../../../../pages');
-const partials = require('../../../../partials');
 const relative = require('../../../../relativeURL');
 const MIADealAcceptedStatusWithUnissuedFacilities = require('./MIN-deal-accepted-status-with-unissued-facilities');
 const mockUsers = require('../../../../../fixtures/mockUsers');
@@ -13,7 +12,7 @@ const {
 const CHECKER_LOGIN = mockUsers.find(user => (user.roles.includes('checker') && user.bank.name === 'Barclays Bank'));
 const MAKER_LOGIN = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 
-context('TODO', () => {
+context('A maker issues facilities, submits to checker; checker submits deal to UKEF', () => {
   let deal;
   let dealId;
 
@@ -33,7 +32,7 @@ context('TODO', () => {
       });
   });
 
-  it('stuff happens', () => {
+  it('Facility statuses should be updated, checker can only review the Issue Facility details', () => {
     //---------------------------------------------------------------
     // maker adds Issued Facilities and submits deal for review by checker
     //---------------------------------------------------------------
