@@ -59,11 +59,12 @@ const buildDashboardFilters = (params, user) => {
     );
   }
 
-  if (params.filterBySupplyContractID) {
+  if (params.filterSearch) {
     isUsingAdvancedFilter = true;
+
     filters.push({
-      field: 'details.bankSupplyContractID',
-      value: params.filterBySupplyContractID,
+      field: 'freetextSearch',
+      value: params.filterSearch,
     });
   }
 

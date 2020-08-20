@@ -29,10 +29,17 @@ const dealsQuery = (user, filter) => {
   //       we likely should be fixing this in the portal so we send a
   //       $regex query in the first instance, but i could be wrong.
   const amendedFilters = filter.map((clause) => {
-    if (clause['details.bankSupplyContractID']) {
-      const bankSupplyContractID = clause['details.bankSupplyContractID'];
-      return { 'details.bankSupplyContractID': { $regex: bankSupplyContractID, $options: 'i' } };
+    if (clause.freetextSearch) {
+      const { freetextSearch } = clause;
+      return {
+        $or: [
+          { 'details.bankSupplyContractID': { $regex: freetextSearch, $options: 'i' } },
+          { 'details.ukefDealId': { $regex: freetextSearch, $options: 'i' } },
+          { 'bondTransactions.items.uniqueIdentificationNumber': { $regex: freetextSearch, $options: 'i' } },
+        ],
+      };
     }
+
     if (clause['transaction.status']) {
       const bondMatchesOnFacilityStage = { 'bondTransactions.items': { $elemMatch: { status: clause['transaction.status'] } } };
       const loanMatchesOnFacilityStage = { 'loanTransactions.items': { $elemMatch: { status: clause['transaction.status'] } } };
