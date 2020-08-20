@@ -44,30 +44,6 @@ describe('Workflow type B XML processing', () => {
     expect(typeB.error).toBeDefined();
   });
 
-  /*
-  it('should process the type-b xml', async () => {
-    const status = 'Confirmation acknowledged';
-
-    const typeBxml = insertValuesInXml({ dealId, status }, typeBxmlTemplate);
-    dealController.updateDeal = jest.fn();
-
-    await processTypeB({ fileContents: typeBxml });
-    const updateDealData = {
-      body: {
-        details: {
-          status,
-          ukefDealId: '40000016',
-        },
-      },
-      params: {
-        id: dealId,
-      },
-    };
-
-    expect(dealController.updateDeal).toHaveBeenCalledWith(updateDealData);
-  });
-  */
-
   it('should return false if no deal found', async () => {
     const workflowStatus = 'confirmation_acknowledged';
     const typeBxml = insertValuesInXml({ dealId: '9999999', status: workflowStatus, actionCode: '004' }, typeBxmlTemplate);
@@ -87,12 +63,21 @@ describe('Workflow type B XML processing', () => {
   });
 
   it('should update the status to workflow status if status changes and action code != 004', async () => {
+    const workflowStatus = 'submission_acknowledged';
+    const typeBxml = insertValuesInXml({ dealId, status: workflowStatus, actionCode: '010' }, typeBxmlTemplate);
+
+    const updatedDeal = await processTypeB({ fileContents: typeBxml });
+
+    expect(updatedDeal.details.status).toEqual('Acknowledged by UKEF');
+  });
+
+  it('should update the confirmation_acknowledged status to acknowledged', async () => {
     const workflowStatus = 'confirmation_acknowledged';
     const typeBxml = insertValuesInXml({ dealId, status: workflowStatus, actionCode: '010' }, typeBxmlTemplate);
 
     const updatedDeal = await processTypeB({ fileContents: typeBxml });
 
-    expect(updatedDeal.details.status).toEqual('Confirmation acknowledged');
+    expect(updatedDeal.details.status).toEqual('Acknowledged by UKEF');
   });
 
   it('should update special conditions workflow response has comment and action code = 007', async () => {

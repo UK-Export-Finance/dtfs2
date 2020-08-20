@@ -43,8 +43,8 @@ describe(component, () => {
     {
       _id: 6,
       details: {
-        status: 'Further Maker\'s input required',
-        submissionType: 'Manual Inclusion Application',
+        status: 'Submitted',
+        submissionType: 'Manual Inclusion Notice',
       },
     },
   ];

@@ -41,7 +41,7 @@ const STATUS = {
   APPROVED_WITH_CONDITIONS: 'Accepted by UKEF (with conditions)',
   REFUSED: 'Rejected by UKEF',
   CONFIRMED_BY_BANK: 'Confirmed by bank',
-  CONFIRMATION_ACKNOWLEDGED: 'Confirmation acknowledged',
+  CONFIRMATION_ACKNOWLEDGED: 'Acknowledged by UKEF',
   IN_PROGRESS_BY_UKEF: 'In progress by UKEF',
 };
 

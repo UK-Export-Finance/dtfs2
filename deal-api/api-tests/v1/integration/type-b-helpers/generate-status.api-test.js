@@ -10,7 +10,7 @@ const workflowTypeB = {
   $: {
     Action_Code: '010',
   },
-  Deal_status: ['confirmation_acknowledged'],
+  Deal_status: ['submission_acknowledged'],
 
 };
 
@@ -27,6 +27,6 @@ describe('generates status according to typeB values', () => {
 
   it('returns corresponding portal status if action code != 004', () => {
     const status = generateStatus(portalDealSnippet, workflowTypeB);
-    expect(status).toEqual('Confirmation acknowledged');
+    expect(status).toEqual('Acknowledged by UKEF');
   });
 });

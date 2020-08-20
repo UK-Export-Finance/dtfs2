@@ -3,9 +3,11 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
 const passport = require('passport');
+
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('graphql-tools');
+const healthcheck = require('./healthcheck');
 
 const { resolvers, typeDefs, graphQlRouter } = require('./graphql');
 const { validateUserMiddleware } = require('./graphql/middleware');
@@ -22,6 +24,7 @@ configurePassport(passport);
 initScheduler();
 
 const app = express();
+app.use(healthcheck);
 app.use(passport.initialize());
 app.use(bodyParser.json({ type: 'application/json' }));
 

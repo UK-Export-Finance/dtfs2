@@ -17,6 +17,8 @@ env:
   # These values are used when running tests in Docker Compose
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
   GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
+  DTFS_PORTAL_SCHEDULER: true
+  FETCH_WORKFLOW_TYPE_B_SCHEDULE: "*/1 * * * * *"
 
 jobs:
 
@@ -25,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - run: "echo GITHUB_SHA=${{ github.sha }}"
     - name: Build and push
       uses: docker/build-push-action@v1
       with:
@@ -34,7 +37,7 @@ jobs:
         repository: portal-ui
         path: portal
         tags: latest
-        build_args: GITHUB_SHA=${{ env.GITHUB_SHA }}
+        build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
 
   portal-api:
@@ -42,6 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - run: "echo GITHUB_SHA=${{ github.sha }}"
     - name: Build and push
       uses: docker/build-push-action@v1
       with:
@@ -51,7 +55,7 @@ jobs:
         repository: portal-api
         path: deal-api
         tags: latest
-        build_args: GITHUB_SHA=${{ env.GITHUB_SHA }}
+        build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
 
   api-tests:
@@ -64,13 +68,14 @@ jobs:
       AZURE_WORKFLOW_FILESHARE_NAME: ${{ secrets.APITEST_AZURE_WORKFLOW_FILESHARE_NAME }}
       AZURE_WORKFLOW_EXPORT_FOLDER: ${{ secrets.APITEST_AZURE_WORKFLOW_EXPORT_FOLDER }}
       AZURE_WORKFLOW_IMPORT_FOLDER: ${{ secrets.APITEST_AZURE_WORKFLOW_IMPORT_FOLDER }}
-    
+
       AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.APITEST_AZURE_PORTAL_STORAGE_ACCOUNT }}
       AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.APITEST_AZURE_PORTAL_STORAGE_ACCESS_KEY }}
       AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.APITEST_AZURE_PORTAL_FILESHARE_NAME }}
       AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.APITEST_AZURE_PORTAL_EXPORT_FOLDER }}
-    
+
       GOV_NOTIFY_API_KEY: ${{ secrets.APITEST_GOV_NOTIFY_API_KEY }}
+
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
@@ -120,12 +125,12 @@ jobs:
       AZURE_WORKFLOW_FILESHARE_NAME: ${{ secrets.E2ETEST_AZURE_WORKFLOW_FILESHARE_NAME }}
       AZURE_WORKFLOW_EXPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_WORKFLOW_EXPORT_FOLDER }}
       AZURE_WORKFLOW_IMPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_WORKFLOW_IMPORT_FOLDER }}
-    
+
       AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.E2ETEST_AZURE_PORTAL_STORAGE_ACCOUNT }}
       AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.E2ETEST_AZURE_PORTAL_STORAGE_ACCESS_KEY }}
       AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.E2ETEST_AZURE_PORTAL_FILESHARE_NAME }}
       AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_PORTAL_EXPORT_FOLDER }}
-    
+
       GOV_NOTIFY_API_KEY: ${{ secrets.E2ETEST_GOV_NOTIFY_API_KEY }}
     steps:
     - uses: actions/checkout@v2

@@ -2,8 +2,7 @@ const moment = require('moment');
 const driver = require('../driver');
 
 const interval = 1000;
-const timeout = 20000;
-
+const timeout = 65000;
 
 const isFileThere = async ({fileshare, folder, filename}) => {
   const listing = await driver.listDirectoryFiles({fileshare, folder});
