@@ -27,7 +27,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: "echo GITHUB_SHA=${{ github.sha }}"
+    - name: Commit hash
+      run: "echo GITHUB_SHA=${{ github.sha }}"
     - name: Build and push
       uses: docker/build-push-action@v1
       with:
@@ -45,7 +46,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: "echo GITHUB_SHA=${{ github.sha }}"
+    - name: Commit hash
+      run: "echo GITHUB_SHA=${{ github.sha }}"
     - name: Build and push
       uses: docker/build-push-action@v1
       with:
