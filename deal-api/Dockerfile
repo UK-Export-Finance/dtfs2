@@ -18,9 +18,10 @@ RUN npm run lint
 
 
 FROM node:lts AS test
+
+# Identifies the code in the running container
 ARG GITHUB_SHA
 ENV GITHUB_SHA=$GITHUB_SHA
-RUN echo "GITHUB_SHA: $GITHUB_SHA"
 
 WORKDIR /app
 COPY --from=image /app /app
@@ -31,4 +32,4 @@ ADD ./api-test.jest.config.js ./api-test.jest.config.js
 ADD ./bin ./bin
 
 #USER 1000
-CMD env && node src/index.js
+CMD node src/index.js
