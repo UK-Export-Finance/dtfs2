@@ -92,6 +92,7 @@ type Transaction {
   checker: String
   issueFacilityDetailsSubmitted: String
   currency: Currency
+  requestedCoverStartDate: String
 }
 
 type TransactionQuery {

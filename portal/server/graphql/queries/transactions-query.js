@@ -29,6 +29,7 @@ query Transactions($start: Int, $pagesize: Int, $filters:[TransactionFilters]){
       maker
       checker
       issueFacilityDetailsSubmitted
+      requestedCoverStartDate
     }
   }
 }`;

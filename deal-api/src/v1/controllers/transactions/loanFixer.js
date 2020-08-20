@@ -99,6 +99,7 @@ const constructor = (listOfFilters) => {
       maker: deal.details.maker ? `${deal.details.maker.firstname || ''} ${deal.details.maker.surname || ''}` : '',
       checker: deal.details.checker ? `${deal.details.checker.firstname || ''} ${deal.details.checker.surname || ''}` : '',
       issueFacilityDetailsSubmitted: loan.issueFacilityDetailsSubmitted,
+      requestedCoverStartDate: `${loan['requestedCoverStartDate-day']}/${loan['requestedCoverStartDate-month']}/${loan['requestedCoverStartDate-year']}`,
     }));
   };
 
