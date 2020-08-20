@@ -43,6 +43,7 @@ describe(component, () => {
         {_id: 3, details:{status:"Acknowledged by UKEF"}},
         {_id: 4, details:{status:"Accepted by UKEF (without conditions)"}},
         {_id: 5, details:{status:"Accepted by UKEF (with conditions)"}},
+        {_id: 6, details:{status:"In progress by UKEF"}},        
       ];
       const userCanSubmit = true;
 

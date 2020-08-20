@@ -29,7 +29,7 @@
             "href": "/contract/" + params.deal._id + "/return-to-maker"
           }) }}
 
-        {% elseif  ["Draft", "Abandoned Deal", "Acknowledged by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)"].includes(params.deal.details.status) %}
+        {% elseif  ["Draft", "Abandoned Deal", "Acknowledged by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)", "In progress by UKEF"].includes(params.deal.details.status) %}
 
           {{ govukButton({
             "disabled": true,
