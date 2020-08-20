@@ -100,6 +100,8 @@ const constructor = (listOfFilters) => {
       checker: deal.details.checker ? `${deal.details.checker.firstname || ''} ${deal.details.checker.surname || ''}` : '',
       issueFacilityDetailsSubmitted: loan.issueFacilityDetailsSubmitted,
       requestedCoverStartDate: `${loan['requestedCoverStartDate-day']}/${loan['requestedCoverStartDate-month']}/${loan['requestedCoverStartDate-year']}`,
+      previousCoverStartDate: `TODO${loan['requestedCoverStartDate-day']}/${loan['requestedCoverStartDate-month']}/${loan['requestedCoverStartDate-year']}`,
+      dateOfCoverChange: `TODO${loan.createdDate}`,
     }));
   };
 

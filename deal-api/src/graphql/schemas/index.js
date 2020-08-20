@@ -93,6 +93,8 @@ type Transaction {
   issueFacilityDetailsSubmitted: String
   currency: Currency
   requestedCoverStartDate: String
+  previousCoverStartDate: String
+  dateOfCoverChange: String
 }
 
 type TransactionQuery {
