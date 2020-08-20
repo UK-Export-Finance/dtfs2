@@ -5,7 +5,7 @@ const page = {
   filterBySubmissionUser: () => cy.get('[data-cy="filterBySubmissionUser"]'),
   filterBySubmissionType: () => cy.get('[data-cy="filterBySubmissionType"]'),
   filterByStatus: () => cy.get('[data-cy="filterByStatus"]'),
-  filterBySupplyContractId: () => cy.get('[data-cy="filterBySupplyContractId"]'),
+  filterSearch: () => cy.get('[data-cy="filterSearch"]'),
   filterBySupplierName: () => cy.get('[data-cy="filterBySupplierName"]'),
   filterByStartDate: {
     day: () => cy.get('[data-cy="createdFrom-day"]'),

@@ -1,7 +1,8 @@
 const { dashboard } = require('../../../pages');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('./twentyOneDeals');
@@ -31,7 +32,7 @@ context('The deals dashboard', () => {
 
     dashboard.showFilters().click();
 
-    dashboard.filterBySupplyContractId().type(testId);
+    dashboard.filterSearch().type(testId);
     dashboard.applyFilters().click();
 
     // get the test-data we are expecting to see
@@ -42,7 +43,7 @@ context('The deals dashboard', () => {
     dashboard.confirmDealsPresent(filteredDeals);
 
     // confirm the filter retains its state
-    dashboard.filterBySupplyContractId().should('be.visible');
-    dashboard.filterBySupplyContractId().should('have.value', testId);
+    dashboard.filterSearch().should('be.visible');
+    dashboard.filterSearch().should('have.value', testId);
   });
 });
