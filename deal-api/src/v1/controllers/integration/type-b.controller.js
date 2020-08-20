@@ -7,6 +7,7 @@ const {
   updateLoans,
 } = require('./type-b-helpers');
 const statusUpdateController = require('../deal-status.controller');
+const CONSTANTS = require('../../../constants');
 
 const updateStatus = statusUpdateController.update;
 const interfaceUser = {
@@ -46,9 +47,8 @@ const shouldCheckIssuedFacilities = (dealStatus, dealSubmissionType) => {
                             || dealStatus === 'Accepted by UKEF (with conditions)'
                             || dealStatus === 'Accepted by UKEF (without conditions)');
 
-  const allowedDealSubmissionType = (dealSubmissionType === 'Automatic Inclusion Notice'
-                                    || dealSubmissionType === 'Manual Inclusion Notice'
-                                    || dealSubmissionType === 'Manual Inclusion Application');
+  const allowedDealSubmissionType = (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
+                                    || dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN);
 
   if (allowedDealStatus && allowedDealSubmissionType) {
     return true;

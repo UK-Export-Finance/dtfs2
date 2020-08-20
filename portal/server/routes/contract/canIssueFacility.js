@@ -13,9 +13,7 @@ const canIssueFacility = (userRoles, deal, facility) => {
                             || status === 'Further Maker\'s input required');
 
   const allowedDealSubmissionType = (submissionType === 'Automatic Inclusion Notice'
-                                    || submissionType === 'Manual Inclusion Notice'
-                                    || submissionType === 'Manual Inclusion Application');
-
+                                    || submissionType === 'Manual Inclusion Notice');
 
   const allowedLoanFacilityStage = facility.facilityStage === 'Conditional';
   // TODO: rename bondStage to facilityStage

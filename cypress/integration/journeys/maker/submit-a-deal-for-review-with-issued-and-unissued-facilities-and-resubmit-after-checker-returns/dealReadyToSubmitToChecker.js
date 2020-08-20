@@ -2,7 +2,7 @@ const moment = require('moment');
 
 const deal = {
   "details": {
-    "status": "Ready for Checker's approval",
+    "status": "Draft",
     "bankSupplyContractID": "mock id",
     "bankSupplyContractName": "mock name",
     "created": moment().utc().valueOf(),
@@ -183,15 +183,6 @@ const deal = {
           "text": "GBP - UK Sterling",
           "id": "GBP"
         },
-        issuedDate: moment().add(1, 'day').utc().valueOf(),
-        "coverEndDate-day": moment().add(1, 'month').format('DD'),
-        "coverEndDate-month": moment().add(1, 'month').format('MM'),
-        "coverEndDate-year": moment().add(1, 'month').format('YYYY'),
-        "uniqueIdentificationNumber": "1234",
-        "uniqueIdentificationNumberRequiredForIssuance": true,
-        "issueFacilityDetailsStarted": true,
-        "issueFacilityDetailsProvided": true,
-        "status": "Ready for check"
       },
       {
         "_id": "1000210",
@@ -223,35 +214,21 @@ const deal = {
   "loanTransactions": {
     "items": [
       {
-        "_id": "1000210",
+          "_id": "1000210",
         "createdDate": moment().utc().valueOf(),
         "facilityStage": "Conditional",
         "ukefGuaranteeInMonths": "12",
-        "guaranteeFeePayableByBank": "10.8000",
-        "facilityValue": "123123.00",
+        "bankReferenceNumber": "",
+        "guaranteeFeePayableByBank": "18.0000",
+        "lastEdited": moment().utc().valueOf(),
+        "facilityValue": "1234.00",
         "currencySameAsSupplyContractCurrency": "true",
-        "interestMarginFee": "12",
-        "coveredPercentage": "20",
-        "minimumQuarterlyFee": "20",
-        "ukefExposure": "24,624.60",
-        "premiumFrequency": "Monthly",
-        "premiumType": "In arrear",
-        "dayCountBasis": "360",
-        "viewedPreviewPage": true,
-        "currency": {
-          "text": "GBP - UK Sterling",
-          "id": "GBP"
-        },
-        issuedDate: moment().add(1, 'day').utc().valueOf(),
-        "coverEndDate-day": moment().add(1, 'month').format('DD'),
-        "coverEndDate-month": moment().add(1, 'month').format('MM'),
-        "coverEndDate-year": moment().add(1, 'month').format('YYYY'),
-        "bankReferenceNumberRequiredForIssuance": true,
-        "issueFacilityDetailsStarted": true,
-        "issueFacilityDetailsProvided": true,
-        "disbursementAmount": "1,234.00",
-        "bankReferenceNumber": "5678",
-        "status": "Ready for check",
+        "interestMarginFee": "20",
+        "coveredPercentage": "40",
+        "minimumQuarterlyFee": "",
+        "ukefExposure": "493.60",
+        "premiumType": "At maturity",
+        "dayCountBasis": "365"
       },
       {
         "_id": "1000211",

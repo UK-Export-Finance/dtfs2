@@ -61,19 +61,6 @@ describe('canIssueFacility', () => {
       });
     });
 
-    describe('when a deal has status `Ready for Checker\'s approval`, MIA submissionType and a Conditional loan that has NOT been submitted', () => {
-      it('should return true', () => {
-        const mockDeal = {
-          details: {
-            status: 'Ready for Checker\'s approval',
-            submissionType: 'Manual Inclusion Application',
-          },
-        };
-
-        expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
-      });
-    });
-
     describe('when a deal has status `Further Maker\'s input required`, MIN submissionType and a Conditional loan that has NOT been submitted', () => {
       it('should return true', () => {
         const mockDeal = {

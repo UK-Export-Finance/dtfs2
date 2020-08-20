@@ -3,12 +3,14 @@ const CONSTANTS = require('../../../constants');
 
 const updateIssuedFacilities = async (
   collection,
+  fromStatus,
   deal,
+  updateIssuedFacilitiesCoverStartDates = false,
   newStatus,
-  updateAllIssuedFacilities,
-  updateIssuedFacilitiesCoverStartDates,
 ) => {
   const updatedDeal = deal;
+
+  const dealStatusAllowsIssuedFacilitiesStatusChanges = (fromStatus && fromStatus !== 'Draft');
 
   const update = (facilities) => {
     const arr = facilities;
@@ -22,19 +24,22 @@ const updateIssuedFacilities = async (
       } = facility;
 
       const shouldUpdateLoan = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
-                               || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
-                                    && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL));
+        || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
+          && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL));
 
       const shouldUpdateBond = (facility.bondStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
-                                || (facility.bondStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
-                                && previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED));
+        || (facility.bondStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
+          && previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED));
+
+      const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
+                                  && dealStatusAllowsIssuedFacilitiesStatusChanges
+                                  && (newStatus && newStatus.length > 0));
 
       if (shouldUpdateLoan || shouldUpdateBond) {
-        if (updateAllIssuedFacilities) {
-          // update all issued facilities regardless of if they've been submitted or have completed all required fields.
-          facility.status = newStatus;
-        } else if (facility.issueFacilityDetailsProvided && !facility.issueFacilityDetailsSubmitted) {
-          facility.status = newStatus;
+        if (facility.issueFacilityDetailsProvided && !facility.issueFacilityDetailsSubmitted) {
+          if (shouldUpdateStatus) {
+            facility.status = newStatus;
+          }
 
           // TODO: rework this when we rename bondStage to facilityStage
           if (facilityStage) {
@@ -44,15 +49,17 @@ const updateIssuedFacilities = async (
             facility.previousFacilityStage = facility.bondStage;
             facility.bondStage = CONSTANTS.FACILITIES.BOND_STAGE.ISSUED;
           }
+        } else if (shouldUpdateStatus) {
+          // update all issued facilities regardless of if they've been submitted or have completed all required fields.
+          facility.status = newStatus;
         }
 
         if (updateIssuedFacilitiesCoverStartDates
-            && !facility.requestedCoverStartDate
-            && facility.issuedDate) {
+          && !facility.requestedCoverStartDate
+          && facility.issuedDate) {
           facility.requestedCoverStartDate = facility.issuedDate;
         }
       }
-
       return facility;
     });
     return arr;
