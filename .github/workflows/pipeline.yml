@@ -34,6 +34,7 @@ jobs:
         repository: portal-ui
         path: portal
         tags: latest
+        build_args: GITHUB_SHA=${{ env.GITHUB_SHA }}
         add_git_labels: true
 
   portal-api:
@@ -50,6 +51,7 @@ jobs:
         repository: portal-api
         path: deal-api
         tags: latest
+        build_args: GITHUB_SHA=${{ env.GITHUB_SHA }}
         add_git_labels: true
 
   api-tests:
