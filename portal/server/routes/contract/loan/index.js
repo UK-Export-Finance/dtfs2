@@ -34,7 +34,8 @@ const userCanAccessLoan = (user, deal) => {
 
   if (status === 'Acknowledged by UKEF'
       || status === 'Accepted by UKEF (with conditions)'
-      || status === 'Accepted by UKEF (without conditions)') {
+      || status === 'Accepted by UKEF (without conditions)'
+      || status === 'Submitted') {
     return false;
   }
 

@@ -19,6 +19,7 @@ RUN npm run buildProd
 FROM node:lts-alpine
 ARG GITHUB_SHA
 ENV GITHUB_SHA=$GITHUB_SHA
+RUN echo "GITHUB_SHA: $GITHUB_SHA"
 
 WORKDIR /app
 
@@ -29,4 +30,4 @@ COPY --from=build /build/styles styles/
 COPY --from=build /build/templates templates/
 
 #USER 1000
-CMD node dist/server.js
+CMD env && node dist/server.js

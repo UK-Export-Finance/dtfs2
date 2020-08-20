@@ -33,7 +33,8 @@ env:
   JWT_VALIDATING_KEY: "${{ secrets.DEV_JWT_VALIDATING_KEY }}"
   GOV_NOTIFY_API_KEY: ="${{ secrets.TEST_GOV_NOTIFY_API_KEY }}"
   GOV_NOTIFY_EMAIL_RECIPIENT: "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
-  DTFS_PORTAL_SCHEDULER: true  
+  DTFS_PORTAL_SCHEDULER: true
+  FETCH_WORKFLOW_TYPE_B_SCHEDULE: "* * * * *"
 
 # Below this line sholud be the same for all environments
 
@@ -58,7 +59,7 @@ jobs:
           az webapp create $options \
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name $container_image
-          
+
           az webapp config set $options \
             --always-on true
 
@@ -75,7 +76,7 @@ jobs:
               WEBSITES_PORT=5000 \
               DEAL_API_URL="${{ env.DEAL_API_URL }}" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}"
-          
+
           az webapp config connection-string set $options \
             --connection-string-type custom \
             --settings \
@@ -97,11 +98,11 @@ jobs:
           name=tfs-${{ env.environment }}-portal-api
           container_image=${{ env.registry }}/portal-api:${{ env.image_tag }}
           options="--name ${name} --resource-group ${{ env.resource_group }}"
-          
+
           az webapp create $options \
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name $container_image
-          
+
           az webapp config set $options \
             --always-on true
 
@@ -116,7 +117,7 @@ jobs:
             --settings \
               PORT=5000 \
               WEBSITES_PORT=5000
-          
+
           az webapp config connection-string set $options \
             --connection-string-type custom \
             --settings \

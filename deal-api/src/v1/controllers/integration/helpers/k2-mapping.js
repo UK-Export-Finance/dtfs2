@@ -26,12 +26,11 @@ const DEAL = {
   STATUS: {
     [CONSTANTS.DEAL.STATUS.DRAFT]: 'draft',
     [CONSTANTS.DEAL.STATUS.SUBMITTED]: 'submitted',
-    [CONSTANTS.DEAL.STATUS.SUBMISSION_ACKNOWLEDGED]: 'submission_acknowledged',
+    [CONSTANTS.DEAL.STATUS.SUBMISSION_ACKNOWLEDGED]: ['submission_acknowledged', 'confirmation_acknowledged'],
     [CONSTANTS.DEAL.STATUS.APPROVED]: 'approved',
     [CONSTANTS.DEAL.STATUS.APPROVED_WITH_CONDITIONS]: 'approved_conditions',
     [CONSTANTS.DEAL.STATUS.REFUSED]: 'refused',
     [CONSTANTS.DEAL.STATUS.CONFIRMED_BY_BANK]: 'confirmed_by_bank',
-    [CONSTANTS.DEAL.STATUS.CONFIRMATION_ACKNOWLEDGED]: 'confirmation_acknowledged',
     [CONSTANTS.DEAL.STATUS.IN_PROGRESS_BY_UKEF]: 'in_progress_by_ukef',
   },
 
@@ -95,7 +94,14 @@ const findPortalValue = (constantTypeStr, constantFieldStr, k2Value) => {
     return k2Value;
   }
 
-  const mappedValue = Object.entries(constantField).find((portalValue) => portalValue[1] === k2Value.toString());
+  const mappedValue = Object.entries(constantField).find((portalValue) => {
+    if (Array.isArray(portalValue[1])) {
+      return portalValue[1].includes(k2Value);
+    }
+
+    return portalValue[1] === k2Value.toString();
+  });
+
   if (mappedValue) {
     return mappedValue[0];
   }

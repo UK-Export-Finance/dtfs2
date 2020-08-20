@@ -8,6 +8,7 @@ import crypto from 'crypto';
 import json2csv from 'express-json2csv';
 import './azure-env';
 import routes from './routes';
+import healthcheck from './healthcheck';
 
 import configureNunjucks from './nunjucks-configuration';
 
@@ -40,6 +41,8 @@ app.use(express.urlencoded());
 app.use(morgan('dev', {
   skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
 }));
+
+app.use(healthcheck);
 
 app.use('/', routes);
 

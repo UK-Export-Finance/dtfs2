@@ -1,5 +1,9 @@
-
 const moment = require('moment');
+
+const defaultSchedule = '*/1 * * * * *';
+const schedule = process.env.FETCH_WORKFLOW_TYPE_B_SCHEDULE || defaultSchedule;
+
+console.log(`defining fetch-workflow-type-b schedule: ${schedule}`);
 
 const {
   listDirectoryFiles, readFile, moveFile, getConfig, uploadFile, deleteFile,
@@ -8,8 +12,8 @@ const { processTypeB } = require('../../v1/controllers/integration/type-b.contro
 
 const fetchWorkflowTypeB = {
   init: () => ({
-    schedule: '*/1 * * * * *',
-    message: 'Fetch workflow type B every 1 second',
+    schedule,
+    message: 'Fetch workflow type B as configured by FETCH_WORKFLOW_TYPE_B_SCHEDULE',
     task: async (fileshare = 'workflow', overwriteFolder) => {
       const { IMPORT_FOLDER } = getConfig(fileshare);
 

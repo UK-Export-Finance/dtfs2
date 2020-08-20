@@ -33,7 +33,26 @@ exports.addComment = async (_id, commentToAdd, user) => {
   return value;
 };
 
+exports.addUkefComment = async (_id, commentToAdd, user) => {
+  if (!commentToAdd) {
+    return false;
+  }
+
+  const commentToInsert = {
+    user,
+    timestamp: now(),
+    text: commentToAdd,
+  };
+
+  const value = await insertIntoDb(_id, 'ukefComments', commentToInsert);
+  return value;
+};
+
 exports.addSpecialConditions = async (_id, commentToAdd, user) => {
+  if (!commentToAdd) {
+    return false;
+  }
+
   const commentToInsert = {
     user,
     timestamp: now(),

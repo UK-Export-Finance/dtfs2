@@ -13,9 +13,11 @@
 
   {% set dealStatusAllowsIssueFacility = dealStatus === "Acknowledged by UKEF" or dealStatus === "Accepted by UKEF (with conditions)" or dealStatus === "Accepted by UKEF (without conditions)" or dealStatus === "Ready for Checker's approval" or dealStatus === "Further Maker's input required" and (not dealPreviousStatus or not dealPreviousStatus === "Draft")%}
 
-  {% set facilityCouldBeIssued = userIsMaker and (dealSubmissionType === 'Automatic Inclusion Notice' or dealSubmissionType === 'Manual Inclusion Notice' or dealSubmissionType === 'Manual Inclusion Application') and (facility.facilityStage === 'Conditional' or facility.bondStage === 'Unissued') and not facility.issueFacilityDetailsSubmitted %}
+  {% set dealStatusAllowsToDisplayIssueFacilityLink = dealStatus === "Submitted" %}
 
-  {% if dealStatusAllowsIssueFacility %}
+  {% set facilityCouldBeIssued = userIsMaker and (dealSubmissionType === 'Automatic Inclusion Notice' or dealSubmissionType === 'Manual Inclusion Notice') and (facility.facilityStage === 'Conditional' or facility.bondStage === 'Unissued') and not facility.issueFacilityDetailsSubmitted %}
+
+  {% if dealStatusAllowsIssueFacility or dealStatusAllowsToDisplayIssueFacilityLink%}
   
     {% set showFacilityIssuedLink = (facilityCouldBeIssued or facility.issueFacilityDetailsProvided) %}
 
