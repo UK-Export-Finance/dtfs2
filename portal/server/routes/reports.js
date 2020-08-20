@@ -532,7 +532,21 @@ router.get('/reports/reconciliation-report/:page', async (req, res) => {
     reportFilters.bank = '';
   }
   const filters = buildReportFilters(reportFilters, req.session.user);
-
+  /*
+  // this is the graphQL needed in the deal.controller
+  const query = {
+    '$or': [
+      {'$and': [
+        {'details.status':'Submitted'},
+        {'details.workflowStatus': 'Draft'}
+      ]},
+      {'$or': [
+        {'bondTransactions.items':{'$elemMatch':{'status':'Submitted'}}},
+        {'loanTransactions.items':{'$elemMatch':{'status':'Submitted'}}}
+      ]},
+    ]
+  };
+  */
   // get deals that have been submitted (and so are awaiting response)
   // deal.details.workflowStatus = draft && status = submitted
   filters.push(
@@ -548,23 +562,34 @@ router.get('/reports/reconciliation-report/:page', async (req, res) => {
     },
   );
   // get deals where transaction facilityStage = submitted
-  filters.push(
+  const facilityFilters = buildReportFilters(reportFilters, req.session.user);
+  facilityFilters.push(
     {
       field: 'transaction.status',
       value: 'Submitted',
     },
   );
-  const { deals, count } = await getApiData(
-    api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+  // get the deals
+  const submittedDeals = await getApiData(
+    api.contracts(0, 0, filters, userToken),
     res,
   );
 
+  // get deals with submitted facilities
+  const faciltyDeals = await getApiData(
+    api.contracts(0, 0, facilityFilters, userToken),
+    res,
+  );
+  // add the two lists
+  const deals = submittedDeals.deals.concat(faciltyDeals.deals);
+
+  const count = deals.length;
   // get banks for filter list
   const banks = await getApiData(api.banks(userToken), res);
 
   const pages = {
-    totalPages: Math.ceil(count / PAGESIZE),
-    currentPage: parseInt(req.params.page, 10),
+    // totalPages: Math.ceil(count / PAGESIZE),
+    // currentPage: parseInt(req.params.page, 10),
     totalItems: count,
   };
 
@@ -594,8 +619,6 @@ router.post('/reports/reconciliation-report/:page', async (req, res) => {
   }
   const filters = buildReportFilters(reportFilters, req.session.user);
 
-  // get deals that have been submitted (and so are awaiting response)
-  // deal.details.workflowStatus = draft && status = submitted
   filters.push(
     {
       field: 'details.status',
@@ -608,24 +631,28 @@ router.post('/reports/reconciliation-report/:page', async (req, res) => {
       value: 'Draft',
     },
   );
-  // get deals where transaction facilityStage = submitted?
-  filters.push(
+  const facilityFilters = buildReportFilters(reportFilters, req.session.user);
+  facilityFilters.push(
     {
       field: 'transaction.status',
       value: 'Submitted',
     },
   );
-  const { deals, count } = await getApiData(
-    api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+  const submittedDeals = await getApiData(
+    api.contracts(0, 0, filters, userToken),
     res,
   );
-
-  // get banks for filter list
+  const faciltyDeals = await getApiData(
+    api.contracts(0, 0, facilityFilters, userToken),
+    res,
+  );
+  const deals = submittedDeals.deals.concat(faciltyDeals.deals);
+  const count = deals.length;
   const banks = await getApiData(api.banks(userToken), res);
-
+  // no pagination
   const pages = {
-    totalPages: Math.ceil(count / PAGESIZE),
-    currentPage: parseInt(req.params.page, 10),
+    // totalPages: Math.ceil(count / PAGESIZE),
+    // currentPage: parseInt(req.params.page, 10),
     totalItems: count,
   };
 
