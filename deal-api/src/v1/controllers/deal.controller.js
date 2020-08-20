@@ -50,7 +50,6 @@ const dealsQuery = (user, filter) => {
       $and: amendedFilters,
     };
   }
-  console.log(`result :: \n${JSON.stringify(result)}`);
   return result;
 };
 
@@ -75,18 +74,7 @@ const findPaginatedDeals = async (requestingUser, start = 0, pagesize = 20, filt
   const collection = await db.getCollection('deals');
 
   const query = dealsQuery(requestingUser, filter);
-  // const query = {'$and':[{'details.status':'Submitted'},{'details.workflowStatus':'Draft'}]};
-  // const query = {'$or':[{'bondTransactions.items':{'$elemMatch':{'status':'Submitted'}}},{'loanTransactions.items':{'$elemMatch':{'status':'Submitted'}}}]}
-/* 
-  const query = {
-    '$or': [
-      {'$and': [{'details.status':'Submitted'},{'details.workflowStatus': 'Draft'}]},
-      {'$or': [{'bondTransactions.items':{'$elemMatch':{'status':'Submitted'}}},{'loanTransactions.items':{'$elemMatch':{'status':'Submitted'}}}]},
-    ]
-  };
- */
 
-  console.log(`query :: \n${JSON.stringify(query)}`);
   const dealResults = collection.find(query);
 
   const count = await dealResults.count();
