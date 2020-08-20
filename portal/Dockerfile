@@ -30,4 +30,4 @@ COPY --from=build /build/styles styles/
 COPY --from=build /build/templates templates/
 
 #USER 1000
-CMD node dist/server.js
+CMD env && node dist/server.js
