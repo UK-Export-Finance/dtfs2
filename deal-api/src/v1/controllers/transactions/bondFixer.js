@@ -100,6 +100,7 @@ const constructor = (listOfFilters) => {
       maker: deal.details.maker ? `${deal.details.maker.firstname || ''} ${deal.details.maker.surname || ''}` : '',
       checker: deal.details.checker ? `${deal.details.checker.firstname || ''} ${deal.details.checker.surname || ''}` : '',
       issueFacilityDetailsSubmitted: bond.issueFacilityDetailsSubmitted,
+      requestedCoverStartDate: `${bond['requestedCoverStartDate-day']}/${bond['requestedCoverStartDate-month']}/${bond['requestedCoverStartDate-year']}`,
     }));
   };
 
