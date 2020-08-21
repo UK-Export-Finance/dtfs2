@@ -60,7 +60,7 @@
 
               <td class="govuk-table__cell govuk-!-font-size-14">
 
-                {% set componentData = {user: params.user, deal: params.deal, editable: params.editable, facility: loan, facilityName: 'loan'} %}
+                {% set componentData = {user: params.user, deal: params.deal, editable: params.editable, facility: loan, facilityName: 'loan', confirmedRequestedCoverStartDates: params.confirmedRequestedCoverStartDates} %}
 
                 {{ issueFacilityLink.render(componentData)}}
                 {{ requestedCoverStartDate.render(componentData) }}
