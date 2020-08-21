@@ -43,7 +43,7 @@ describe(component, () => {
         {_id: 3, details:{status:"Acknowledged by UKEF"}},
         {_id: 4, details:{status:"Accepted by UKEF (without conditions)"}},
         {_id: 5, details:{status:"Accepted by UKEF (with conditions)"}},
-        {_id: 6, details:{status:"In progress by UKEF"}},        
+        {_id: 6, details:{status:"In progress by UKEF"}},
       ];
       const userCanSubmit = true;
 
@@ -109,6 +109,20 @@ describe(component, () => {
         wrapper.expectElement('[data-cy="ReturnToMaker"]').notToExist();
       }
     });
+
+    it('should NOT render when deal status is `In progress by UKEF`', () => {
+      const user = { roles: ['maker', 'checker'] };
+      const deals = [
+        { _id: 1, details: { status: 'In progress by UKEF' } },
+      ];
+      const userCanSubmit = true;
+
+      for (const deal of deals) {
+        const wrapper = render({ user, deal, userCanSubmit });
+        wrapper.expectElement('[data-cy="ReturnToMaker"]').notToExist();
+      }
+    });
+
   });
 
   describe('when viewed by a checker with userCanSubmit param set to false', () => {
