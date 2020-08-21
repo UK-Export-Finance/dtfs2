@@ -110,6 +110,20 @@ describe(component, () => {
         wrapper.expectElement('[data-cy="ProceedToSubmit"]').notToExist();
       }
     });
+
+    it('should NOT render when deal status is `In progress by UKEF`', () => {
+      const user = { roles: ['maker', 'checker'] };
+      const deals = [
+        { _id: 1, details: { status: 'In progress by UKEF' } },
+      ];
+      const userCanSubmit = true;
+
+      for (const deal of deals) {
+        const wrapper = render({ user, deal, userCanSubmit });
+        wrapper.expectElement('[data-cy="ProceedToSubmit"]').notToExist();
+      }
+    });
+
   });
 
   describe('when viewed by a checker with userCanSubmit param set to false', () => {
