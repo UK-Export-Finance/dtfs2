@@ -393,23 +393,53 @@ router.get('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', asy
 router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
-  if (req.body.needToChangeRequestedCoverStartDate === 'true') {
-    const { bond, validationErrors } = await postToApi(
-      api.updateBond(
-        dealId,
-        bondId,
-        req.body,
-        userToken,
-      ),
-      errorHref,
-    );
+  let requestedCoverValidationErrors = {};
+  let bondToRender;
 
-    if (validationErrors && validationErrors.errorList.requestedCoverStartDate) {
+  if (req.body.needToChangeRequestedCoverStartDate === 'true') {
+    if (!req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day']) {
+      requestedCoverValidationErrors = {
+        count: 1,
+        errorList: {
+          requestedCoverStartDate: {
+            text: 'Enter the Cover End Date', order: '1',
+          },
+        },
+        summary: [{
+          text: 'Enter the Cover End Date',
+          href: '#requestedCoverStartDate',
+        }],
+      };
+      const { bond } = await getApiData(
+        api.contractBond(dealId, bondId, userToken),
+        res,
+      );
+
+      bondToRender = bond;
+    } else {
+      const { bond, validationErrors } = await postToApi(
+        api.updateBond(
+          dealId,
+          bondId,
+          req.body,
+          userToken,
+        ),
+        errorHref,
+      );
+
+      requestedCoverValidationErrors = {
+        ...validationErrors,
+      };
+      bondToRender = bond;
+    }
+
+    if (requestedCoverValidationErrors && requestedCoverValidationErrors.errorList && requestedCoverValidationErrors.errorList.requestedCoverStartDate) {
       return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
         dealId,
         user: req.session.user,
-        facility: bond,
-        validationErrors,
+        facility: bondToRender,
+        validationErrors: requestedCoverValidationErrors,
+        enteredValues: req.body,
         needToChangeRequestedCoverStartDate: req.body.needToChangeRequestedCoverStartDate,
       });
     }
