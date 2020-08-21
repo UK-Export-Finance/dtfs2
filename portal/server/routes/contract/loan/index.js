@@ -383,6 +383,18 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
 
   let requestedCoverValidationErrors;
 
+  if (req.body.needToChangeRequestedCoverStartDate) {
+    if (!req.session.confirmedRequestedCoverStartDates) {
+      req.session.confirmedRequestedCoverStartDates = {};
+    }
+
+    if (!req.session.confirmedRequestedCoverStartDates[dealId]) {
+      req.session.confirmedRequestedCoverStartDates[dealId] = [loanId];
+    } else if (!req.session.confirmedRequestedCoverStartDates[dealId].includes(loanId)) {
+      req.session.confirmedRequestedCoverStartDates[dealId].push(loanId);
+    }
+  }
+
   if (req.body.needToChangeRequestedCoverStartDate === 'true') {
     if (!req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day']) {
       requestedCoverValidationErrors = {
@@ -398,11 +410,18 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
         }],
       };
     } else {
+      const today = new Date();
+      const newLoanDetails = {
+        ...req.body,
+        previousCoverStartDate: `${loan['requestedCoverStartDate-day']}/${loan['requestedCoverStartDate-month']}/${loan['requestedCoverStartDate-year']}`,
+        dateOfCoverChange: `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`,
+      };
+
       const { validationErrors } = await postToApi(
         api.updateDealLoan(
           dealId,
           loanId,
-          req.body,
+          newLoanDetails,
           userToken,
         ),
         errorHref,
@@ -413,7 +432,11 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
       };
     }
 
-    if (requestedCoverValidationErrors && requestedCoverValidationErrors.errorList && requestedCoverValidationErrors.errorList.requestedCoverStartDate) {
+    if (
+      requestedCoverValidationErrors
+      && requestedCoverValidationErrors.errorList
+      && requestedCoverValidationErrors.errorList.requestedCoverStartDate
+    ) {
       return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
         dealId,
         user: req.session.user,

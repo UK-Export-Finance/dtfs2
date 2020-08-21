@@ -22,7 +22,7 @@
 
 {% block content %}
 
-  {% set componentData = {user: user, deal: deal, editable: editable, dealFormsCompleted: dealFormsCompleted, canFullyCalculateDealSummary: canFullyCalculateDealSummary, selected: 'view', userCanSubmit: userCanSubmit, dealHasIssuedFacilitiesToSubmit: dealHasIssuedFacilitiesToSubmit} %}
+  {% set componentData = {user: user, deal: deal, editable: editable, dealFormsCompleted: dealFormsCompleted, canFullyCalculateDealSummary: canFullyCalculateDealSummary, selected: 'view', userCanSubmit: userCanSubmit, dealHasIssuedFacilitiesToSubmit: dealHasIssuedFacilitiesToSubmit, confirmedRequestedCoverStartDates: confirmedRequestedCoverStartDates, allRequestedCoverStartDatesConfirmed:allRequestedCoverStartDatesConfirmed} %}
 
   {% if successMessage %}
     {{ success.message(

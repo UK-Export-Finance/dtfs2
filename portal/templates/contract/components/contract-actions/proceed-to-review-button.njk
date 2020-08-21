@@ -4,7 +4,7 @@
 
   {% if not ["Submitted", "Rejected by UKEF"].includes(params.deal.details.status) and params.user.roles.includes('maker') %}
 
-    {% if ["Draft", "Further Maker's input required", "Accepted by UKEF (without conditions)"].includes(params.deal.details.status) and params.dealFormsCompleted %}
+    {% if ["Draft", "Further Maker's input required"].includes(params.deal.details.status) and params.dealFormsCompleted %}
 
       {{ govukButton({
         "disabled": false,
@@ -38,14 +38,26 @@
       }) }}
 
     {% elseif ["Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)"].includes(params.deal.details.status) %}
-      {{ govukButton({
-        "disabled": false,
-        "text": "Proceed to review",
-        "attributes" : {
-          "data-cy" : "ProceedToReview"
-        },
-        "href": "/contract/" + params.deal._id + "/ready-for-review"
-      }) }}
+
+      {% if params.allRequestedCoverStartDatesConfirmed %}
+        {{ govukButton({
+          "disabled": false,
+          "text": "Proceed to review",
+          "attributes" : {
+            "data-cy" : "ProceedToReview"
+          },
+          "href": "/contract/" + params.deal._id + "/ready-for-review"
+        }) }}
+      {% else %}
+        {{ govukButton({
+          "disabled": true,
+          "text": "Proceed to review",
+          "attributes" : {
+            "data-cy" : "ProceedToReview"
+          },
+          "href": ""
+        }) }}
+      {% endif %}
 
     {% elseif ["Acknowledged by UKEF", "Ready for Checker's approval", "Further Maker's input required"].includes(params.deal.details.status) and params.dealHasIssuedFacilitiesToSubmit %}
       {{ govukButton({

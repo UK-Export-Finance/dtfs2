@@ -396,7 +396,25 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
   let requestedCoverValidationErrors = {};
   let bondToRender;
 
+  if (req.body.needToChangeRequestedCoverStartDate) {
+    if (!req.session.confirmedRequestedCoverStartDates) {
+      req.session.confirmedRequestedCoverStartDates = {};
+    }
+
+    if (!req.session.confirmedRequestedCoverStartDates[dealId]) {
+      req.session.confirmedRequestedCoverStartDates[dealId] = [bondId];
+    } else if (!req.session.confirmedRequestedCoverStartDates[dealId].includes(bondId)) {
+      req.session.confirmedRequestedCoverStartDates[dealId].push(bondId);
+    }
+  }
+
   if (req.body.needToChangeRequestedCoverStartDate === 'true') {
+    const apiData = await getApiData(
+      api.contractBond(dealId, bondId, userToken),
+      res,
+    );
+    bondToRender = apiData.bond;
+
     if (!req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day']) {
       requestedCoverValidationErrors = {
         count: 1,
@@ -410,18 +428,19 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
           href: '#requestedCoverStartDate',
         }],
       };
-      const { bond } = await getApiData(
-        api.contractBond(dealId, bondId, userToken),
-        res,
-      );
-
-      bondToRender = bond;
     } else {
+      const today = new Date();
+      const newBondDetails = {
+        ...req.body,
+        previousCoverStartDate: `${bondToRender['requestedCoverStartDate-day']}/${bondToRender['requestedCoverStartDate-month']}/${bondToRender['requestedCoverStartDate-year']}`,
+        dateOfCoverChange: `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`,
+      };
+
       const { bond, validationErrors } = await postToApi(
         api.updateBond(
           dealId,
           bondId,
-          req.body,
+          newBondDetails,
           userToken,
         ),
         errorHref,
@@ -433,7 +452,11 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
       bondToRender = bond;
     }
 
-    if (requestedCoverValidationErrors && requestedCoverValidationErrors.errorList && requestedCoverValidationErrors.errorList.requestedCoverStartDate) {
+    if (
+      requestedCoverValidationErrors
+      && requestedCoverValidationErrors.errorList
+      && requestedCoverValidationErrors.errorList.requestedCoverStartDate
+    ) {
       return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
         dealId,
         user: req.session.user,

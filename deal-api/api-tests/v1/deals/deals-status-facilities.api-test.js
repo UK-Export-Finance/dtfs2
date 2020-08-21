@@ -309,12 +309,18 @@ describe('/v1/deals/:id/status - facilities', () => {
             ...newDealWithBonds.bondTransactions.items[1],
             status: 'Completed',
             requestedCoverStartDate: expect.any(String),
+            'requestedCoverStartDate-day': expect.any(Number),
+            'requestedCoverStartDate-month': expect.any(Number),
+            'requestedCoverStartDate-year': expect.any(Number),
           });
 
           expect(body.deal.bondTransactions.items[2]).toEqual({
             ...newDealWithBonds.bondTransactions.items[2],
             status: 'Completed',
             requestedCoverStartDate: expect.any(String),
+            'requestedCoverStartDate-day': expect.any(Number),
+            'requestedCoverStartDate-month': expect.any(Number),
+            'requestedCoverStartDate-year': expect.any(Number),
           });
         });
       });
@@ -372,12 +378,18 @@ describe('/v1/deals/:id/status - facilities', () => {
             ...newDealWithLoans.loanTransactions.items[1],
             status: 'Completed',
             requestedCoverStartDate: expect.any(String),
+            'requestedCoverStartDate-day': expect.any(Number),
+            'requestedCoverStartDate-month': expect.any(Number),
+            'requestedCoverStartDate-year': expect.any(Number),
           });
 
           expect(body.deal.loanTransactions.items[2]).toEqual({
             ...newDealWithLoans.loanTransactions.items[2],
             status: 'Completed',
             requestedCoverStartDate: expect.any(String),
+            'requestedCoverStartDate-day': expect.any(Number),
+            'requestedCoverStartDate-month': expect.any(Number),
+            'requestedCoverStartDate-year': expect.any(Number),
           });
         });
       });

@@ -26,6 +26,8 @@ router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
   const { deal } = req.apiData;
   const { user } = req.session;
 
+  const { _id: dealId } = deal;
+
   const canCalculateSupplyContractValues = (submissionDetails) => {
     const { supplyContractCurrency, supplyContractConversionRateToGBP } = submissionDetails;
 
@@ -43,6 +45,17 @@ router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
   const canFullyCalculateDealSummary = (canCalculateSupplyContractValues(deal.submissionDetails)
                                        && !dealHasIncompleteTransactions(deal));
 
+  const confirmedRequestedCoverStartDates = req.session.confirmedRequestedCoverStartDates || {};
+
+  const issuedBonds = deal.bondTransactions.items.filter((b) => b.bondStage === 'Issued');
+  const unconditionalLoans = deal.loanTransactions.items.filter((l) => l.facilityStage === 'Unconditional');
+  const issuedTotal = issuedBonds.length + unconditionalLoans.length;
+
+  const allRequestedCoverStartDatesConfirmed = issuedTotal === 0
+    || (confirmedRequestedCoverStartDates
+      && confirmedRequestedCoverStartDates[dealId]
+      && confirmedRequestedCoverStartDates[dealId].length === issuedTotal);
+  console.log({ allRequestedCoverStartDatesConfirmed, issuedBonds, unconditionalLoans });
   return res.render('contract/contract-view.njk', {
     successMessage: getFlashSuccessMessage(req),
     deal,
@@ -52,6 +65,8 @@ router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
     editable: isDealEditable(deal, user),
     userCanSubmit: userCanSubmitDeal(deal, user),
     dealHasIssuedFacilitiesToSubmit: dealHasIssuedFacilitiesToSubmit(deal),
+    confirmedRequestedCoverStartDates: confirmedRequestedCoverStartDates[dealId] || [],
+    allRequestedCoverStartDatesConfirmed: deal.details.submissionType === 'Automatic Inclusion Notice' || allRequestedCoverStartDatesConfirmed,
   });
 });
 
