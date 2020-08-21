@@ -50,26 +50,48 @@ jobs:
       with:
         creds: ${{ env.credentials }}
 
-    - name: Portal UI
+    - name: Create
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          name=tfs-${{ env.environment }}-portal-ui
-          container_image=${{ env.registry }}/portal-ui:${{ env.image_tag }}
-          options="--name ${name} --resource-group ${{ env.resource_group }}"
+          options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
 
           az webapp create $options \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name $container_image
+            --deployment-container-image-name ${{ env.registry }}/portal-ui:${{ env.image_tag }}
+
+    - name: Always-on
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
 
           az webapp config set $options \
             --always-on true
 
+    - name: Continuous deployment
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
+
           az webapp deployment container config $options \
             --enable-cd true
 
+    - name: Enable container logging
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
+
           az webapp log config $options \
             --docker-container-logging filesystem
+
+    - name: Environment variables
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
 
           # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
           az webapp config appsettings set $options \
@@ -78,6 +100,12 @@ jobs:
               WEBSITES_PORT=5000 \
               DEAL_API_URL="${{ env.DEAL_API_URL }}" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}"
+
+    - name: Secrets
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
 
           az webapp config connection-string set $options \
             --connection-string-type custom \
@@ -93,32 +121,60 @@ jobs:
       with:
         creds: ${{ env.credentials }}
 
-    - name: Portal API
+    - name: Create
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          name=tfs-${{ env.environment }}-portal-api
-          container_image=${{ env.registry }}/portal-api:${{ env.image_tag }}
-          options="--name ${name} --resource-group ${{ env.resource_group }}"
+          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
 
           az webapp create $options \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name $container_image
+            --deployment-container-image-name ${{ env.registry }}/portal-api:${{ env.image_tag }}
+
+    - name: Always-on
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
 
           az webapp config set $options \
             --always-on true
 
+    - name: Continuous deployment
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
+
           az webapp deployment container config $options \
             --enable-cd true
 
+    - name: Enable container logging
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
+
           az webapp log config $options \
             --docker-container-logging filesystem
+
+    - name: Environment variables
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
 
           # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
           az webapp config appsettings set $options \
             --settings \
               PORT=5000 \
               WEBSITES_PORT=5000
+
+    - name: Secrets
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
 
           az webapp config connection-string set $options \
             --connection-string-type custom \
