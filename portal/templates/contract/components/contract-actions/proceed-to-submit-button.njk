@@ -3,7 +3,7 @@
 {% macro render(params) %}
   {% if params.deal.details.status and params.userCanSubmit %}
 
-    {% if not ["Draft", "Further Maker's input required", "Acknowledged by UKEF", "In progress by UKEF"].includes(params.deal.details.status) and params.user.roles.includes('checker') and params.user.roles.includes('maker') %}
+    {% if not ["Draft", "Further Maker's input required", "Acknowledged by UKEF", "In progress by UKEF", "Accepted by UKEF (without conditions)"].includes(params.deal.details.status) and params.user.roles.includes('checker') and params.user.roles.includes('maker') %}
       {{ govukButton({
         "disabled": false,
         "text": "Proceed to submit",

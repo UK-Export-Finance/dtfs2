@@ -124,6 +124,19 @@ describe(component, () => {
       }
     });
 
+    it('should NOT render when deal status is `Accepted by UKEF (without conditions)`', () => {
+      const user = { roles: ['maker', 'checker'] };
+      const deals = [
+        { _id: 1, details: { status: 'Accepted by UKEF (without conditions)' } },
+      ];
+      const userCanSubmit = true;
+
+      for (const deal of deals) {
+        const wrapper = render({ user, deal, userCanSubmit });
+        wrapper.expectElement('[data-cy="ProceedToSubmit"]').notToExist();
+      }
+    });
+
   });
 
   describe('when viewed by a checker with userCanSubmit param set to false', () => {
