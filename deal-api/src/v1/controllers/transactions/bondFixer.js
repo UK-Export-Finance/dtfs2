@@ -101,8 +101,8 @@ const constructor = (listOfFilters) => {
       checker: deal.details.checker ? `${deal.details.checker.firstname || ''} ${deal.details.checker.surname || ''}` : '',
       issueFacilityDetailsSubmitted: bond.issueFacilityDetailsSubmitted,
       requestedCoverStartDate: `${bond['requestedCoverStartDate-day']}/${bond['requestedCoverStartDate-month']}/${bond['requestedCoverStartDate-year']}`,
-      previousCoverStartDate: `TODO${bond['requestedCoverStartDate-day']}/${bond['requestedCoverStartDate-month']}/${bond['requestedCoverStartDate-year']}`,
-      dateOfCoverChange: `TODO${bond.createdDate}`,
+      previousCoverStartDate: bond.previousCoverStartDate,
+      dateOfCoverChange: bond.dateOfCoverChange,
     }));
   };
 
