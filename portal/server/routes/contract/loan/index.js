@@ -22,6 +22,7 @@ import {
 import completedLoanForms from './completedForms';
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 import canIssueFacility from '../canIssueFacility';
+import isDealEditable from '../isDealEditable';
 
 const router = express.Router();
 
@@ -400,21 +401,24 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', as
     }
   }
 
-
   const redirectUrl = `/contract/${dealId}`;
   return res.redirect(redirectUrl);
 });
 
 router.get('/contract/:_id/loan/:loanId/delete', provide([DEAL, LOAN]), async (req, res) => {
-  const {
-    loan,
-  } = req.apiData.loan;
+  const { user } = req.session;
+  const { loan } = req.apiData.loan;
 
-  return res.render('loan/loan-delete.njk', {
-    deal: req.apiData.deal,
-    loan,
-    user: req.session.user,
-  });
+  if (isDealEditable(req.apiData.deal, user)) {
+    return res.render('loan/loan-delete.njk', {
+      deal: req.apiData.deal,
+      loan,
+      user: req.session.user,
+    });
+  }
+
+  const redirectUrl = `/contract/${req.params._id}`; // eslint-disable-line no-underscore-dangle
+  return res.redirect(redirectUrl);
 });
 
 router.post('/contract/:_id/loan/:loanId/delete', async (req, res) => {

@@ -4,7 +4,6 @@ import aboutRoutes from './about';
 import bondRoutes from './bond';
 import eligibilityRoutes from './eligibility';
 import loanRoutes from './loan';
-import STATUS from '../../constants/status';
 import {
   requestParams,
   errorHref,
@@ -17,22 +16,11 @@ import {
 import {
   provide, DEAL, MANDATORY_CRITERIA,
 } from '../api-data-provider';
+import isDealEditable from './isDealEditable';
 import userCanSubmitDeal from './userCanSubmitDeal';
 import dealHasIssuedFacilitiesToSubmit from './dealHasIssuedFacilitiesToSubmit';
 
 const router = express.Router();
-
-const isDealEditable = (deal, user) => {
-  if (!user.roles.includes('maker')) {
-    return false; // only makers can edit a deal
-  }
-
-  if (![STATUS.draft, STATUS.inputRequired].includes(deal.details.status)) {
-    return false; // can only edit deals in these statuses..
-  }
-
-  return true; // otherwise all good..
-};
 
 router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
   const { deal } = req.apiData;

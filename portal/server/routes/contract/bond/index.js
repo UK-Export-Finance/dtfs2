@@ -23,6 +23,7 @@ import {
 import completedBondForms from './completedForms';
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 import canIssueFacility from '../canIssueFacility';
+import isDealEditable from '../isDealEditable';
 
 const router = express.Router();
 
@@ -419,13 +420,19 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
 });
 
 router.get('/contract/:_id/bond/:bondId/delete', provide([DEAL, BOND]), async (req, res) => {
+  const { user } = req.session;
   const { bond } = req.apiData.bond;
 
-  return res.render('bond/bond-delete.njk', {
-    deal: req.apiData.deal,
-    bond,
-    user: req.session.user,
-  });
+  if (isDealEditable(req.apiData.deal, user)) {
+    return res.render('bond/bond-delete.njk', {
+      deal: req.apiData.deal,
+      bond,
+      user: req.session.user,
+    });
+  }
+
+  const redirectUrl = `/contract/${req.params._id}`; // eslint-disable-line no-underscore-dangle
+  return res.redirect(redirectUrl);
 });
 
 router.post('/contract/:_id/bond/:bondId/delete', async (req, res) => {
