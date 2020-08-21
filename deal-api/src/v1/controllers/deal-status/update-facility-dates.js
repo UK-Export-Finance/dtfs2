@@ -16,7 +16,11 @@ const updateFacilityDates = async (collection, deal) => {
         || (facility.facilityStage === 'Unconditional' && !facility.requestedCoverStartDate);
 
       if (shouldUpdateRequestedCoverStartDate) {
+        const today = new Date();
         facility.requestedCoverStartDate = now();
+        facility['requestedCoverStartDate-day'] = today.getDate();
+        facility['requestedCoverStartDate-month'] = today.getMonth() + 1;
+        facility['requestedCoverStartDate-year'] = today.getFullYear();
       }
     });
     return arr;

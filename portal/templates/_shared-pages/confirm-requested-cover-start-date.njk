@@ -45,7 +45,10 @@
       legend = 'New Requested Cover Start Date',
       id = 'requestedCoverStartDate',
       hint = 'For example, 27 11 2019',
-      error = validationErrors.errorList.requestedCoverStartDate
+      error = validationErrors.errorList.requestedCoverStartDate,
+      dayValue = enteredValues['requestedCoverStartDate-day'],
+      monthValue = enteredValues['requestedCoverStartDate-month'],
+      yearValue = enteredValues['requestedCoverStartDate-year']
     )}}
 
     <button data-cy="Submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">

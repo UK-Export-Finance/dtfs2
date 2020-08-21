@@ -376,26 +376,50 @@ router.get('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pro
   });
 });
 
-router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', async (req, res) => {
+router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', provide([LOAN]), async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  if (req.body.needToChangeRequestedCoverStartDate === 'true') {
-    const { loan, validationErrors } = await postToApi(
-      api.updateDealLoan(
-        dealId,
-        loanId,
-        req.body,
-        userToken,
-      ),
-      errorHref,
-    );
+  const { loan } = req.apiData.loan;
 
-    if (validationErrors && validationErrors.errorList.requestedCoverStartDate) {
+  let requestedCoverValidationErrors;
+
+  if (req.body.needToChangeRequestedCoverStartDate === 'true') {
+    if (!req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day']) {
+      requestedCoverValidationErrors = {
+        count: 1,
+        errorList: {
+          requestedCoverStartDate: {
+            text: 'Enter the Cover End Date', order: '1',
+          },
+        },
+        summary: [{
+          text: 'Enter the Cover End Date',
+          href: '#requestedCoverStartDate',
+        }],
+      };
+    } else {
+      const { validationErrors } = await postToApi(
+        api.updateDealLoan(
+          dealId,
+          loanId,
+          req.body,
+          userToken,
+        ),
+        errorHref,
+      );
+
+      requestedCoverValidationErrors = {
+        ...validationErrors,
+      };
+    }
+
+    if (requestedCoverValidationErrors && requestedCoverValidationErrors.errorList && requestedCoverValidationErrors.errorList.requestedCoverStartDate) {
       return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
         dealId,
         user: req.session.user,
         facility: loan,
-        validationErrors,
+        validationErrors: requestedCoverValidationErrors,
+        enteredValues: req.body,
         needToChangeRequestedCoverStartDate: req.body.needToChangeRequestedCoverStartDate,
       });
     }
