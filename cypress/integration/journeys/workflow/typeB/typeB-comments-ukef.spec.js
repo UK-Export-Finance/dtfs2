@@ -1,7 +1,7 @@
 const {
-  contract, contractConfirmSubmission, contractComments, contractPreview,
+  contract, contractConfirmSubmission, contractComments,
 } = require('../../../pages');
-const { successMessage } = require('../../../partials');
+const { ukefComments } = require('../../../partials');
 const relative = require('../../../relativeURL');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
@@ -69,18 +69,22 @@ context('A checker submits an approval for a deal; workflow responds with a type
     });
 
     contract.visit(goodDeal);
-    contract.commentsTab().click();
+    ukefComments.comments.title().should('not.exist');
+    ukefComments.comments.text().should('not.exist');
+    ukefComments.specialCondition.title().should('not.exist');
+    ukefComments.specialCondition.text().should('not.exist');
 
-    contractComments.ukefComments.title().should('not.exist');
-    contractComments.ukefComments.text().should('not.exist');
-    contractComments.specialCondition.title().should('not.exist');
-    contractComments.specialCondition.text().should('not.exist');
+    contract.commentsTab().click();
+    ukefComments.comments.title().should('not.exist');
+    ukefComments.comments.text().should('not.exist');
+    ukefComments.specialCondition.title().should('not.exist');
+    ukefComments.specialCondition.text().should('not.exist');
 
     contract.previewTab().click();
-    contractPreview.ukefComments.title().should('not.exist');
-    contractPreview.ukefComments.text().should('not.exist');
-    contractPreview.specialCondition.title().should('not.exist');
-    contractPreview.specialCondition.text().should('not.exist');
+    ukefComments.comments.title().should('not.exist');
+    ukefComments.comments.text().should('not.exist');
+    ukefComments.specialCondition.title().should('not.exist');
+    ukefComments.specialCondition.text().should('not.exist');
   });
 
   it('Checker submits a deal; workflow approves with comments.', () => {
@@ -123,20 +127,26 @@ context('A checker submits an approval for a deal; workflow responds with a type
     });
 
     contract.visit(goodDeal);
-
-    contract.commentsTab().click();
-    contractComments.ukefComments.title().invoke('text').then((text) => {
+    ukefComments.comments.title().invoke('text').then((text) => {
       expect(text.trim()).to.equal('UKEF Comments:');
     });
-    contractComments.ukefComments.text().invoke('text').then((text) => {
+    ukefComments.comments.text().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('ukef comments text');
+    });
+
+    contract.commentsTab().click();
+    ukefComments.comments.title().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('UKEF Comments:');
+    });
+    ukefComments.comments.text().invoke('text').then((text) => {
       expect(text.trim()).to.equal('ukef comments text');
     });
 
     contract.previewTab().click();
-    contractPreview.ukefComments.title().invoke('text').then((text) => {
+    ukefComments.comments.title().invoke('text').then((text) => {
       expect(text.trim()).to.equal('UKEF Comments:');
     });
-    contractPreview.ukefComments.text().invoke('text').then((text) => {
+    ukefComments.comments.text().invoke('text').then((text) => {
       expect(text.trim()).to.equal('ukef comments text');
     });
   });
@@ -182,20 +192,26 @@ context('A checker submits an approval for a deal; workflow responds with a type
     });
 
     contract.visit(goodDeal);
-
-    contract.commentsTab().click();
-    contractComments.specialCondition.title().invoke('text').then((text) => {
+    ukefComments.specialCondition.title().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Special Conditions:');
     });
-    contractComments.specialCondition.text().invoke('text').then((text) => {
+    ukefComments.specialCondition.text().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('special condition text');
+    });
+
+    contract.commentsTab().click();
+    ukefComments.specialCondition.title().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Special Conditions:');
+    });
+    ukefComments.specialCondition.text().invoke('text').then((text) => {
       expect(text.trim()).to.equal('special condition text');
     });
 
     contract.previewTab().click();
-    contractPreview.specialCondition.title().invoke('text').then((text) => {
+    ukefComments.specialCondition.title().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Special Conditions:');
     });
-    contractPreview.specialCondition.text().invoke('text').then((text) => {
+    ukefComments.specialCondition.text().invoke('text').then((text) => {
       expect(text.trim()).to.equal('special condition text');
     });
   });
@@ -240,12 +256,26 @@ context('A checker submits an approval for a deal; workflow responds with a type
     });
 
     contract.visit(goodDeal);
-    contract.commentsTab().click();
-
-    contractComments.ukefComments.title().invoke('text').then((text) => {
+    ukefComments.comments.title().invoke('text').then((text) => {
       expect(text.trim()).to.equal('UKEF Comments:');
     });
-    contractComments.ukefComments.text().invoke('text').then((text) => {
+    ukefComments.comments.text().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('ukef comments refuse text');
+    });
+
+    contract.commentsTab().click();
+    ukefComments.comments.title().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('UKEF Comments:');
+    });
+    ukefComments.comments.text().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('ukef comments refuse text');
+    });
+
+    contract.previewTab().click();
+    ukefComments.comments.title().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('UKEF Comments:');
+    });
+    ukefComments.comments.text().invoke('text').then((text) => {
       expect(text.trim()).to.equal('ukef comments refuse text');
     });
   });

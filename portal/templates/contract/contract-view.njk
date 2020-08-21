@@ -16,6 +16,7 @@
 {% import './components/summary-table.njk' as summaryTable %}
 {% import './components/forms-incomplete-text.njk' as formsIncompleteText %}
 {% import './components/totals-table.njk' as totalsTable %}
+{% import './components/ukef-comments.njk' as ukefComments %}
 
 {% block pageTitle %}{{ deal.details.bankSupplyContractName }}{% endblock %}
 
@@ -45,7 +46,7 @@
 
         <div class="govuk-grid-row govuk-!-margin-bottom-2">
           <div class="govuk-grid-column-three-quarters">
-            &nbsp;
+             {{ ukefComments.render(deal.ukefComments, deal.specialConditions) }} &nbsp;
           </div>
           <div class="govuk-grid-column-one-quarter box__header-link">
             {{ cloneLink.render(componentData) }}
