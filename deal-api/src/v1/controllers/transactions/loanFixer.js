@@ -1,7 +1,6 @@
 const GRAPHQL_FILTER_BY_TRANSACTION_TYPE = 'transaction.transactionType';
-const BANKFACILITYID = 'transaction.bankFacilityId';
-const UKEFFACILITYID = 'transaction.ukefFacilityId';
 const TRANSACTION_STAGE = 'transaction.transactionStage';
+const FILTER_SEARCH = 'filterSearch';
 
 const DISPLAY_LOANS = ['loan', 'all'];
 const transactionStageMapping = {
@@ -23,12 +22,9 @@ const constructor = (listOfFilters) => {
       keyFields.filterByTransactionType = filter[GRAPHQL_FILTER_BY_TRANSACTION_TYPE];
     }
 
-    if (BANKFACILITYID === filterField) {
-      keyFields.filterByBankFacilityId = filter[BANKFACILITYID];
-    }
-
-    if (UKEFFACILITYID === filterField) {
-      keyFields.filterByUkefFacilityId = filter[UKEFFACILITYID];
+    if (FILTER_SEARCH === filterField) {
+      keyFields.filterByBankFacilityId = filter[FILTER_SEARCH];
+      keyFields.filterByUkefFacilityId = filter[FILTER_SEARCH];
     }
 
     if (TRANSACTION_STAGE === filterField) {
@@ -62,19 +58,19 @@ const constructor = (listOfFilters) => {
 
       if (keyFields.filterByBankFacilityId) {
         const regex = new RegExp(`^${keyFields.filterByBankFacilityId}`);
-        if (!loan.bankReferenceNumber || !loan.bankReferenceNumber.match(regex)) {
-          return false;
+        if (loan.bankReferenceNumber && loan.bankReferenceNumber.match(regex)) {
+          return true;
         }
       }
 
       if (keyFields.filterByUkefFacilityId) {
         const regex = new RegExp(`^${keyFields.filterByUkefFacilityId}`);
-        if (!loan.ukefFacilityID || !loan.ukefFacilityID.match(regex)) {
-          return false;
+        if (loan.ukefFacilityID && loan.ukefFacilityID.match(regex)) {
+          return true;
         }
       }
 
-      return true;
+      return false;
     }).map((loan) => ({
       // map whatever's still left into the generic schema that graphQL is expecting..
       deal_id: deal._id, // eslint-disable-line no-underscore-dangle

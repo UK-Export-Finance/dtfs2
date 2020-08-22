@@ -1,7 +1,6 @@
 const GRAPHQL_FILTER_BY_TRANSACTION_TYPE = 'transaction.transactionType';
-const BANKFACILITYID = 'transaction.bankFacilityId';
-const UKEFFACILITYID = 'transaction.ukefFacilityId';
 const TRANSACTION_STAGE = 'transaction.transactionStage';
+const FILTER_SEARCH = 'filterSearch';
 
 const DISPLAY_BONDS = ['bond', 'all'];
 const transactionStageMapping = {
@@ -23,12 +22,9 @@ const constructor = (listOfFilters) => {
       keyFields.filterByTransactionType = filter[GRAPHQL_FILTER_BY_TRANSACTION_TYPE];
     }
 
-    if (BANKFACILITYID === filterField) {
-      keyFields.filterByBankFacilityId = filter[BANKFACILITYID];
-    }
-
-    if (UKEFFACILITYID === filterField) {
-      keyFields.filterByUkefFacilityId = filter[UKEFFACILITYID];
+    if (FILTER_SEARCH === filterField) {
+      keyFields.filterByBankFacilityId = filter[FILTER_SEARCH];
+      keyFields.filterByUkefFacilityId = filter[FILTER_SEARCH];
     }
 
     if (TRANSACTION_STAGE === filterField) {
@@ -61,20 +57,20 @@ const constructor = (listOfFilters) => {
       }
 
       if (keyFields.filterByBankFacilityId) {
-        const regex = new RegExp(`^${keyFields.filterByBankFacilityId}`);
-        if (!bond.uniqueIdentificationNumber || !bond.uniqueIdentificationNumber.match(regex)) {
-          return false;
+        const regex = new RegExp(`^${keyFields.filterByBankFacilityId}`, 'i');
+        if (bond.uniqueIdentificationNumber && bond.uniqueIdentificationNumber.match(regex)) {
+          return true;
         }
       }
 
       if (keyFields.filterByUkefFacilityId) {
-        const regex = new RegExp(`^${keyFields.filterByUkefFacilityId}`);
-        if (!bond.ukefFacilityID || !bond.ukefFacilityID.match(regex)) {
-          return false;
+        const regex = new RegExp(`^${keyFields.filterByUkefFacilityId}`, 'i');
+        if (bond.ukefFacilityID && bond.ukefFacilityID.match(regex)) {
+          return true;
         }
       }
 
-      return true;
+      return false;
     }).map((bond) => ({
       // map whatever's still left into the generic schema that graphQL is expecting..
 
