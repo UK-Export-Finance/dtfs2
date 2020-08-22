@@ -20,11 +20,11 @@ describe('calculate exposure period', () => {
   };
 
   const notEndMonthFacilityDaySame = {
-    'requestedCoverStartDate-day': '19',
-    'requestedCoverStartDate-month': '11',
+    'requestedCoverStartDate-day': '01',
+    'requestedCoverStartDate-month': '09',
     'requestedCoverStartDate-year': '2020',
-    'coverEndDate-day': '19',
-    'coverEndDate-month': '11',
+    'coverEndDate-day': '01',
+    'coverEndDate-month': '09',
     'coverEndDate-year': '2022',
   };
 
