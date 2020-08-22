@@ -70,7 +70,7 @@ const constructor = (listOfFilters) => {
         }
       }
 
-      return false;
+      return Object.keys(keyFields).length === 0;
     }).map((loan) => ({
       // map whatever's still left into the generic schema that graphQL is expecting..
       deal_id: deal._id, // eslint-disable-line no-underscore-dangle
