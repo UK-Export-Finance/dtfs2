@@ -5,7 +5,14 @@ const { formattedTimestamp } = require('../../../facility-dates/timestamp');
 const calculateExposurePeriod = (facility) => {
   let coverStartDate;
   if (facility.requestedCoverStartDate) {
-    coverStartDate = moment(formattedTimestamp(facility.requestedCoverStartDate));
+    const startDate = moment(formattedTimestamp(facility.requestedCoverStartDate));
+
+    // Need a date without the h:m:s elements as this effects the diff calculation
+    coverStartDate = moment([
+      startDate.year(),
+      startDate.month(),
+      startDate.date(),
+    ]);
   } else {
     coverStartDate = moment([
       facility['requestedCoverStartDate-year'],
