@@ -3,8 +3,6 @@ const bondFixer = require('./bondFixer');
 const loanFixer = require('./loanFixer');
 
 const BANKSUPPLYCONTRACTID = 'details.bankSupplyContractID';
-const BANKFACILITYID = 'transaction.bankFacilityId';
-const UKEFFACILITYID = 'transaction.ukefFacilityId';
 const TRANSACTION_STAGE = 'transaction.transactionStage';
 const DEAL_CREATED = 'details.created';
 const DEAL_ID = '_id';
@@ -14,7 +12,7 @@ const DEAL_BANK = 'details.owningBank.id';
 const UKEF_DEAL_ID = 'details.ukefDealId';
 const DEAL_SUBMISSION_TYPE = 'details.submissionType';
 const SUBMISSION_SUPPLIER_NAME = 'submissionDetails.supplier-name';
-
+const FILTER_SEARCH = 'filterSearch';
 
 const constructor = (user, filters) => {
   const bondFix = bondFixer(filters);
@@ -24,17 +22,21 @@ const constructor = (user, filters) => {
     const listOfMongoQueryElements = filters.reduce((listSoFar, filter) => {
       const filterField = Object.keys(filter)[0];// only expecting one entry/block
 
-      if (BANKFACILITYID === filterField) {
-        const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { uniqueIdentificationNumber: new RegExp(`^${filter[filterField]}`) } } };
-        const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { bankReferenceNumber: new RegExp(`^${filter[filterField]}`) } } };
-        return listSoFar.concat([{ $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] }]);
-      }
+      if (FILTER_SEARCH === filterField) {
+        const bondMatchesOnUkefFacilityId = { 'bondTransactions.items': { $elemMatch: { ukefFacilityID: new RegExp(`^${filter[FILTER_SEARCH]}`, 'i') } } };
+        const loanMatchesOnUkefFacilityId = { 'loanTransactions.items': { $elemMatch: { ukefFacilityID: new RegExp(`^${filter[FILTER_SEARCH]}`, 'i') } } };
 
-      if (UKEFFACILITYID === filterField) {
-        const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { ukefFacilityID: new RegExp(`^${filter[filterField]}`) } } };
-        const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { ukefFacilityID: new RegExp(`^${filter[filterField]}`) } } };
+        const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { uniqueIdentificationNumber: new RegExp(`^${filter[FILTER_SEARCH]}`, 'i') } } };
+        const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { bankReferenceNumber: new RegExp(`^${filter[FILTER_SEARCH]}`, 'i') } } };
 
-        return listSoFar.concat([{ $or: [bondMatchesOnUniqueIdNum, loanMatchesOnBankRefNum] }]);
+        return listSoFar.concat([{
+          $or: [
+            bondMatchesOnUkefFacilityId,
+            bondMatchesOnUniqueIdNum,
+            loanMatchesOnUkefFacilityId,
+            loanMatchesOnBankRefNum,
+          ],
+        }]);
       }
 
       if (TRANSACTION_STAGE === filterField) {
