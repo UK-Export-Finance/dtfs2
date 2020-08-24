@@ -47,6 +47,7 @@ const page = {
         coverEndDate: () => row.get('[data-cy="bond-cover-end-date"]'),
         issueFacilityLink: () => row.get(`[data-cy="bond-issue-facility-${bondId}"]`),
         deleteLink: () => row.get(`[data-cy="bond-delete-${bondId}"]`),
+        changeOrConfirmCoverStartDateLink: () => row.get(`[data-cy="bond-change-or-confirm-cover-start-date-${bondId}"]`),
       };
     },
   },
@@ -64,6 +65,7 @@ const page = {
         coverEndDate: () => row.get('[data-cy="loan-cover-end-date"]'),
         issueFacilityLink: () => row.get(`[data-cy="loan-issue-facility-${loanId}"]`),
         deleteLink: () => row.get(`[data-cy="loan-delete-${loanId}"]`),
+        changeOrConfirmCoverStartDateLink: () => row.get(`[data-cy="loan-change-or-confirm-cover-start-date-${loanId}"]`),
       };
     },
   },

@@ -34,6 +34,7 @@ module.exports = {
   loanPreview: require('./loanPreview'),
   loanIssueFacility: require('./loanIssueFacility'),
   loanDelete: require('./loanDelete'),
+  facilityConfirmCoverStartDate: require('./facilityConfirmCoverStartDate'),
   defaults: require('./defaults'),
   users: require('./admin/users/users'),
   userProfile: require('./user/profile'),
