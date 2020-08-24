@@ -1,7 +1,6 @@
 const sodium = require('tweetsodium');
-const value = "plain-text-secret";
 const axios = require('axios');
-var fs = require('fs');
+const fs = require('fs');
 const csv = require('csv-parser');
 var util = require('util');
 
@@ -11,6 +10,7 @@ const repo = "dtfs2"
 const pat_path = "./pat.txt"
 const csv_path = "./environment_variables.csv"
 
+const { Octokit } = require("@octokit/rest");
 
 // Processes a csv of the form:
 //
@@ -29,7 +29,6 @@ function getPersonalAccessToken() {
 
     console.log("Getting personal access token...")
 
-
     try {
         if (fs.existsSync(pat_path)) {
             return fs.readFileSync(pat_path, 'utf8').trim();
@@ -41,102 +40,27 @@ function getPersonalAccessToken() {
     }
 }
 
-async function getRepoPublicKey(pat) {
-
-    console.log("Getting repository public key...")
-
-    try {
-        const url = `https://${username}:${pat}@api.github.com/repos/${owner}/${repo}/actions/secrets/public-key`
-        const response = await axios.get(url);
-        publicKey = response.data;
-        console.log(util.inspect(publicKey));
-        return publicKey;
-    } catch (error) {
-        console.log("Error getting repo public key.")
-        console.error(error);
-    }
-}
-
-async function listRepoSecrets(pat) {
-
-    console.log("Listing repository secrets...")
-
-    try {
-        const url = `https://${username}:${pat}@api.github.com/repos/${owner}/${repo}/actions/secrets?per_page=100`
-        const response = await axios.get(url);
-        if (response.data.total_count > 100) {
-            throw "Too many secrets. Update me for pagination.";
-        }
-        secrets = response.data.secrets;
-        var keys = []
-        console.log(`Repo secrets for ${repo}:`)
-        secrets.forEach(function (secret) {
-            console.log(` - ${secret.name}`);
-            keys.push(secret.name)
-        });
-        return keys;
-    } catch (error) {
-        console.log("Error listing repo secrets.")
-        console.error(error);
-    }
-}
-
-async function encrypt(secretValue, key) {
+function encrypt(secretValue, key) {
 
     console.log("Encrypting secret value...")
 
     // Convert the message and key to Uint8Array's (Buffer implements that interface)
     const messageBytes = Buffer.from(secretValue);
-    const keyBytes = Buffer.from(publicKey.key, 'base64');
+    const keyBytes = Buffer.from(key, 'base64');
     
     // Encrypt using LibSodium.
     encryptedBytes = sodium.seal(messageBytes, keyBytes);
     encryptedB64 = Buffer.from(encryptedBytes).toString('base64');
-    console.log(encryptedB64)
+    console.log(`${secretValue} -> ${encryptedB64}`)
     return encryptedB64
 }
 
-async function setSecret(secretName, encryptedValue, key_id, pat) {
-
-    console.log("Setting secret on Github...")
-
-    try {
-        const url = `https://${username}:${pat}@api.github.com/repos/${owner}/${repo}/actions/secrets/${secretName}`
-        const message = {"encrypted_value": encryptedValue, "key_id": key_id};
-        console.log(util.inspect(message));
-        console.log(JSON.stringify(message));
-        const response = await axios.put(url, message);
-        if (response.status == 201) {
-            console.log(`Created: ${secretName}`);
-            return true;
-        } else if (response.status == 204) {
-            console.log(`Updated: ${secretName}`);
-            return true;
-        } else if (response.status == 422) {
-            console.log(`Unprocessable entity: ${secretName}`);
-            console.log(response.data)
-            return false;
-        } else if (response.status == 429) {
-            console.log(` <<< Too many requests: ${secretName}`);
-            return false;
-        } else {
-            console.error(`Unexpected ${response.status} for ${secretName}`);
-            console.log(util.inspect(response.data));
-            return false;
-        }
-    } catch (error) {
-        console.log(`Error setting secret ${secretName}.`)
-        console.error(error);
-    }
-
-}
-
-async function processKey(row, secretsList, publicKey, pat) {
+function processKey(row, secretsList) {
     secrets = {};
     const key = row["Key"];
     console.log(`Processing: ${key}`);
     console.log(`Environments:`)
-    Object.keys(row).forEach(async (key) => {
+    Object.keys(row).forEach((key) => {
 
         // For each environment where a value is specified, set the secret value:
         if (key !== "Key" && row[key]) {
@@ -152,41 +76,122 @@ async function processKey(row, secretsList, publicKey, pat) {
             removeItem(secretsList, secretName);
 
             // Encrypt secret value
-            secretValue = await encrypt(row[key], publicKey.key)
-
-            // Add the secret to the list
-            secrets[secretName] = secretValue
+            secretValue = row[key];
+            secrets[secretName] = secretValue;
         }
     });
     return secrets;
 }
 
 function removeItem(array, item) {
-    console.log(` b: ${array.length}`)
-    console.log(`  -> removing ${item}`)
     const index = array.indexOf(item);
     if (index > -1) {
         array.splice(index, 1);
     }
-    console.log(` a: ${array.length}`)
     return array
+}
+
+async function getRepoPublicKey(octokit) {
+
+    console.log("Getting repository public key...")
+
+    const response = await octokit.actions.getRepoPublicKey({
+        owner: owner,
+        repo: repo,
+    })
+
+    if (response.status === 200) {
+        return response.data;
+    } else {
+        console.log(response);
+        throw("Error getting repo public key")
+    }
+}
+
+async function listRepoSecrets(octokit) {
+
+    console.log("Listing repository secrets...")
+
+    const response = await octokit.actions.listRepoSecrets({
+        owner: owner,
+        repo: repo,
+        per_page: 100,
+    })
+
+    if (response.status === 200) {
+
+        // Check we've got all the secrets
+        total_count = response.data.total_count
+        if (total_count > 100) {
+            throw("Too many secrets, need to paginate.")
+        }
+
+        // Collate secret names
+        secrets = response.data.secrets;
+        console.log(response.data)
+        names = []
+        secrets.forEach(function (secret) {
+            names.push(secret.name);
+          });
+        return names;
+
+    } else {
+        console.log(response);
+        throw("Error listing repo secrets")
+    }
+}
+
+async function setSecret(name, value, publicKey, octokit) {
+
+    console.log("Setting secret on Github...")
+
+    const encrypted_value = encrypt(value, publicKey.key);
+    //console.log({
+    try {
+        // Broken:
+        // const response = await octokit.actions.createOrUpdateRepoSecret(
+        //  - doesn't add the secret name to the end of the path
+        const response = await octokit.request("PUT /repos/:owner/:repo/actions/secrets/:name", {
+            owner,
+            repo,
+            name,
+            encrypted_value,
+            key_id: publicKey.key_id
+        });
+
+        if (response.status === 201 || response.status == 204) {
+            return "";
+        }
+
+        // Looks like that didn't work.
+        console.log(response);
+        throw(`Error setting secret value: ${name}`)
+        
+    } catch (err) {
+        console.log(util.inspect(err))
+        return name;
+    }
 }
 
 async function main() {
 
     // Get the repo public key
     const pat = getPersonalAccessToken();
-    const publicKey = await getRepoPublicKey(pat);
-    const secretsList = await listRepoSecrets(pat);
-    console.log(secretsList)
+    const octokit = new Octokit({auth: pat, userAgent: username});
+    const publicKey = await getRepoPublicKey(octokit);
+    
+    // List the current secrets
+    const secretsList = await listRepoSecrets(octokit);
+    console.log(util.inspect(secretsList))
 
     // Parse the input csv
     var secrets = {}
+    var failed_secrets = []
     fs.createReadStream(csv_path)
         .pipe(csv())
         .on('data', async (row) => {
             console.log(row);
-            const newSecrets = await processKey(row, secretsList, publicKey, pat);
+            const newSecrets = await processKey(row, secretsList, publicKey);
             secrets = {
                 ...secrets,
                 ...newSecrets
@@ -195,13 +200,17 @@ async function main() {
         .on('end', () => {
             console.log('CSV file successfully processed');
             console.log(`Secrets not included in the csv (${secretsList.length}):\n ${secretsList}`);
+            console.log(`Secrets: ${secrets}`)
     
             // Set the secrets, but delay each call so we don't hit the Github abuse detection mechanism
             delay = 2000;
             Object.keys(secrets).forEach((secretName) => {
-                delay += 5000;
+                delay += 2000;
                 setTimeout(async function() {
-                    await setSecret(secretName, secrets[secretName], publicKey.key_id, pat);
+                    result = await setSecret(secretName, secrets[secretName], publicKey, octokit);
+                    if (result) {
+                        failed_secrets.push(secretName)
+                    }
                 }, delay);
             })
         });
