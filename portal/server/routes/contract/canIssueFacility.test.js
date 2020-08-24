@@ -162,6 +162,24 @@ describe('canIssueFacility', () => {
       });
     });
 
+    describe('when a loan has `Unconditional` facilityStage and `Unconditional` previousFacilityStage', () => {
+      it('should return true', () => {
+        const mockDeal = {
+          details: {
+            status: 'Further Maker\'s input required',
+            submissionType: 'Manual Inclusion Notice',
+          },
+        };
+        const mockLoan = {
+          issueFacilityDetailsSubmitted: false,
+          facilityStage: 'Unconditional',
+          previousFacilityStage: 'Unconditional',
+        };
+
+        expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(true);
+      });
+    });
+
     describe('when a bond has `Issued` bondStage and `Unissued` previousFacilityStage', () => {
       it('should return true', () => {
         const mockDeal = {
@@ -174,6 +192,24 @@ describe('canIssueFacility', () => {
           issueFacilityDetailsSubmitted: false,
           bondStage: 'Issued',
           previousFacilityStage: 'Unissued',
+        };
+
+        expect(canIssueFacility(mockUserRoles, mockDeal, mockBond)).toEqual(true);
+      });
+    });
+
+    describe('when a bond has `Issued` bondStage and `Issued` previousFacilityStage', () => {
+      it('should return true', () => {
+        const mockDeal = {
+          details: {
+            status: 'Further Maker\'s input required',
+            submissionType: 'Manual Inclusion Notice',
+          },
+        };
+        const mockBond = {
+          issueFacilityDetailsSubmitted: false,
+          bondStage: 'Issued',
+          previousFacilityStage: 'Issued',
         };
 
         expect(canIssueFacility(mockUserRoles, mockDeal, mockBond)).toEqual(true);

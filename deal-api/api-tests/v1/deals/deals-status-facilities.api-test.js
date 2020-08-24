@@ -72,7 +72,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       };
 
       describe('any issued bonds that have details provided, but not yet been submitted', () => {
-        it('should add `Ready for check` status, change bondStage from `Unissued` to `Issued` and add previousBondStage', async () => {
+        it('should add `Ready for check` status, change bondStage from `Unissued` to `Issued` and add previousFacilityStage', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
 
@@ -86,7 +86,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
             expect(bond.status).toEqual('Ready for check');
             expect(bond.bondStage).toEqual('Issued');
-            expect(bond.previousBondStage).toEqual('Unissued');
+            expect(bond.previousFacilityStage).toEqual('Unissued');
           });
         });
       });

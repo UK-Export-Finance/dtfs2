@@ -31,10 +31,6 @@ const updateLoanStatus = (loan, workflowLoan) => {
     previousFacilityStage,
   } = loan;
 
-  // const isIssuedFacility = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
-  //                          || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
-  //                          && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL));
-
   const isIssuedFacility = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
                           || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
                           && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL));
