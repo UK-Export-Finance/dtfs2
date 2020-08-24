@@ -7,7 +7,7 @@ on:
 env:
   environment: demo
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-  resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
+  resource_group: ${{ secrets.DEMO_RESOURCE_GROUP }}
 
 jobs:
 
@@ -20,18 +20,23 @@ jobs:
         login-server: ${{ secrets.DEV_ACR_REGISTRY }}
         username: ${{ secrets.DEV_ACR_USERNAME }}
         password: ${{ secrets.DEV_ACR_PASSWORD }}
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.DEMO_ACR_REGISTRY }}
+        username: ${{ secrets.DEMO_ACR_USERNAME }}
+        password: ${{ secrets.DEMO_ACR_PASSWORD }}
     - name: Tag images
       run: |
         from=dev
         to=demo
 
         docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$from
-        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$from ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$to
-        docker push ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$to
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$from ${{ secrets.DEMO_ACR_REGISTRY }}/portal-ui:$to
+        docker push ${{ secrets.DEMO_ACR_REGISTRY }}/portal-ui:$to
 
         docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$from
-        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$from ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$to
-        docker push ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$to
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$from ${{ secrets.DEMO_ACR_REGISTRY }}/portal-api:$to
+        docker push ${{ secrets.DEMO_ACR_REGISTRY }}/portal-api:$to
 
   deploy:
     # The App Service seems to need to be restarted to trigger a redeploy
