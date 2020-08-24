@@ -24,18 +24,18 @@ const updateIssuedFacilities = async (
       } = facility;
 
       const loanHasBeenPreviouslyIssued = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
-                                          && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
-                                              || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL);
+        && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
+            || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL);
 
       const shouldUpdateLoan = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
-                               || loanHasBeenPreviouslyIssued
+                               || loanHasBeenPreviouslyIssued;
 
       const bondHasBeenPreviouslyIssued = (facility.bondStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
-                                          && (previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
-                                          || previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED));
+        && (previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
+        || previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED));
 
       const shouldUpdateBond = facility.bondStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
-                               || bondHasBeenPreviouslyIssued
+                               || bondHasBeenPreviouslyIssued;
 
       const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
                                   && dealStatusAllowsIssuedFacilitiesStatusChanges
