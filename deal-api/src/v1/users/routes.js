@@ -164,7 +164,7 @@ module.exports.login = async (req, res, next) => {
   }
   const { tokenObject, user } = loginResult;
 
-  console.log("Login success")
+  console.log('Login success');
   return res.status(200).json({
     success: true, token: tokenObject.token, user: sanitizeUser(user), expiresIn: tokenObject.expires,
   });
