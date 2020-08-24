@@ -55,7 +55,7 @@ router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
     || (confirmedRequestedCoverStartDates
       && confirmedRequestedCoverStartDates[dealId]
       && confirmedRequestedCoverStartDates[dealId].length === issuedTotal);
-  console.log({ allRequestedCoverStartDatesConfirmed, issuedBonds, unconditionalLoans });
+
   return res.render('contract/contract-view.njk', {
     successMessage: getFlashSuccessMessage(req),
     deal,

@@ -10,15 +10,12 @@
 
   {% set facility = params.facility %}
   {% set facilityName = params.facilityName %}
-  {% set hasConfirmedCoverStartDate = params.confirmedRequestedCoverStartDates.includes(facility._id) %}
 
-  {% set dealStatusAllowsRequestedCoverDateChange = dealStatus === "Acknowledged by UKEF" or dealStatus === "Accepted by UKEF (with conditions)" or dealStatus === "Accepted by UKEF (without conditions)" or dealStatus === "Ready for Checker's approval" or dealStatus === "Further Maker's input required" and (not dealPreviousStatus or not dealPreviousStatus === "Draft")%}
+  {% set requestedCoverDateCanEdit = userIsMaker and dealSubmissionType === 'Manual Inclusion Application' and (facility.facilityStage === 'Unconditional' or facility.bondStage === 'Issued') %}
 
-  {% set requestedCoverDateCanEdit = userIsMaker and ( dealSubmissionType === 'Manual Inclusion Notice' or dealSubmissionType === 'Manual Inclusion Application') and (facility.facilityStage === 'Unconditional' or facility.bondStage === 'Issued') %}
-
-  {% if dealStatusAllowsRequestedCoverDateChange and requestedCoverDateCanEdit%}
-      <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/confirm-requested-cover-start-date" class="govuk-link" data-cy="{{ facilityName }}-requested-cover-start-date-{{ facility._id }}">
-       {% if hasConfirmedCoverStartDate %} 
+  {% if requestedCoverDateCanEdit %}
+      <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/confirm-requested-cover-start-date" class="govuk-link" data-cy="{{ facilityName }}-change-or-confirm-cover-start-date-{{ facility._id }}">
+       {% if params.hasConfirmedCoverStartDate %} 
           Start date changed
        {% else %}
           Confirm start date

@@ -31,7 +31,10 @@
         {
           value: "true",
           text: "Yes",
-          checked: needToChangeRequestedCoverStartDate === "true"
+          checked: needToChangeRequestedCoverStartDate === "true",
+          attributes: {
+            'data-cy': 'need-to-change-cover-start-date-yes'
+          }
         },
         {
           value: "false",
@@ -51,7 +54,7 @@
       yearValue = enteredValues['requestedCoverStartDate-year']
     )}}
 
-    <button data-cy="Submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
+    <button data-cy="submit-button" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
       Save
     </button>
 
