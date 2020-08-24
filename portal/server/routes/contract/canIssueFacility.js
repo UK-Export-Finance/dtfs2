@@ -6,9 +6,12 @@ const canIssueFacility = (userRoles, deal, facility) => {
     submissionType,
   } = deal.details;
 
+  const {
+    previousFacilityStage,
+  } = facility;
+
   const acceptedByUkefDealStatus = (status === 'Accepted by UKEF (with conditions)'
     || status === 'Accepted by UKEF (without conditions)');
-
 
   const allowedDealStatus = (status === 'Acknowledged by UKEF'
                             || acceptedByUkefDealStatus
@@ -21,14 +24,13 @@ const canIssueFacility = (userRoles, deal, facility) => {
   const isMiaDealInAllowedStatus = (submissionType === 'Manual Inclusion Application'
                                     && (acceptedByUkefDealStatus || status === 'Ready for Checker\'s approval'));
 
-  const allowedLoanFacilityStage = facility.facilityStage === 'Conditional';
+  const allowedBondFacilityStage = facility.bondStage === 'Unissued'
+                                   || (facility.bondStage === 'Issued' && (previousFacilityStage === 'Unissued' || previousFacilityStage === 'Issued'));
 
-  const allowedBondFacilityStage = facility.bondStage === 'Unissued';
+  const allowedLoanFacilityStage = facility.facilityStage === 'Conditional'
+                                   || (facility.facilityStage === 'Unconditional' && (previousFacilityStage === 'Conditional' || previousFacilityStage === 'Unconditional'));
 
-  const allowedFacilityStage = (allowedLoanFacilityStage
-                                || allowedBondFacilityStage
-                                || (facility.bondStage === 'Issued' && facility.previousFacilityStage === 'Unissued')
-                                || (facility.facilityStage === 'Unconditional' && facility.previousFacilityStage === 'Conditional'));
+  const allowedFacilityStage = (allowedLoanFacilityStage || allowedBondFacilityStage);
 
   const isAllowedDealStatusAndSubmissionType = ((allowedDealStatus
                                                 && allowedDealSubmissionType)

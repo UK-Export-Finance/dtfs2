@@ -23,13 +23,19 @@ const updateIssuedFacilities = async (
         bondStage,
       } = facility;
 
-      const shouldUpdateLoan = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
-        || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
-          && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL));
+      const loanHasBeenPreviouslyIssued = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
+                                          && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
+                                              || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL);
 
-      const shouldUpdateBond = (facility.bondStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
-        || (facility.bondStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
-          && previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED));
+      const shouldUpdateLoan = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
+                               || loanHasBeenPreviouslyIssued
+
+      const bondHasBeenPreviouslyIssued = (facility.bondStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
+                                          && (previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
+                                          || previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED));
+
+      const shouldUpdateBond = facility.bondStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
+                               || bondHasBeenPreviouslyIssued
 
       const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
                                   && dealStatusAllowsIssuedFacilitiesStatusChanges
