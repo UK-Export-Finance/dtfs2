@@ -65,7 +65,8 @@ const constructor = (listOfFilters) => {
 
       if (keyFields.filterByUkefFacilityId) {
         const regex = new RegExp(`^${keyFields.filterByUkefFacilityId}`);
-        if (loan.ukefFacilityID && loan.ukefFacilityID.match(regex)) {
+        const ukefFacilityID = Array.isArray(loan.ukefFacilityID) ? loan.ukefFacilityID[0] : loan.ukefFacilityID;
+        if (ukefFacilityID && ukefFacilityID.match(regex)) {
           return true;
         }
       }
