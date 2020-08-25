@@ -7,7 +7,7 @@ const { formattedTimestamp } = require('../../../../../deal-api/src/v1/facility-
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 
-context('TODO', () => {
+context('Given a deal that has `Accepted` status with Issued, Unissued, Unconditional and Conditional facilities', () => {
   let deal;
   let dealId;
 
@@ -27,10 +27,7 @@ context('TODO', () => {
       });
   });
 
-  it('should TODO', () => {
-    //---------------------------------------------------------------
-    // Given a deal that has Approved status with Issued, Unissued, Unconditional and Conditional facilities
-    //---------------------------------------------------------------
+  it('Maker Can `Confirm or change start date` for Issued & Unconditional facilities and resubmit the deal', () => {
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
 
@@ -61,9 +58,13 @@ context('TODO', () => {
     // `Confirm start date` link should appear for Issued & Unconditional facilities
     //---------------------------------------------------------------
     issuedBondRow.changeOrConfirmCoverStartDateLink().should('be.visible');
+    issuedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Confirm start date');
+
     issuedBondRow.issueFacilityLink().should('not.be.visible');
 
     unconditionalLoanRow.changeOrConfirmCoverStartDateLink().should('be.visible');
+    unconditionalLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Confirm start date');
+
     unconditionalLoanRow.issueFacilityLink().should('not.be.visible');
 
     //---------------------------------------------------------------
@@ -79,7 +80,6 @@ context('TODO', () => {
     // Maker can change Issued facility Cover start date
     //---------------------------------------------------------------
     const dealSubmissionDate = formattedTimestamp(deal.details.submissionDate);
-
 
     issuedBondRow.changeOrConfirmCoverStartDateLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${issuedBondId}/confirm-requested-cover-start-date`));
@@ -109,15 +109,17 @@ context('TODO', () => {
     pages.facilityConfirmCoverStartDate.submit().click();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
-
     //---------------------------------------------------------------
-    // Cover start date changes are rendered in the table
+    // - Cover start date changes are rendered in the table
+    // - `change start date` link/text updated
     //---------------------------------------------------------------
     const expectedIssuedBondDate = moment(NEW_BOND_COVER_START_DATE).format('DD/MM/YYYY');
     issuedBondRow.requestedCoverStartDate().should('contain.text', expectedIssuedBondDate);
+    issuedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date changed');
 
     const expectedUnconditionalLoanDate = moment(NEW_LOAN_COVER_START_DATE).format('DD/MM/YYYY');
     unconditionalLoanRow.requestedCoverStartDate().should('contain.text', expectedUnconditionalLoanDate);
+    unconditionalLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date changed');
 
     //---------------------------------------------------------------
     // Maker can resubmit deal
@@ -126,10 +128,6 @@ context('TODO', () => {
     pages.contract.proceedToReview().click();
     pages.contractReadyForReview.comments().type('Updated cover start dates');
     pages.contractReadyForReview.readyForCheckersApproval().click();
-
-    //---------------------------------------------------------------
-    // TODO `date updated` text should appear (why is this not working atm?)
-    //---------------------------------------------------------------
-    pages.contract.visit(deal);
+    cy.url().should('eq', relative('/dashboard/0'));
   });
 });
