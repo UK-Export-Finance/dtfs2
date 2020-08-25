@@ -131,14 +131,15 @@ jobs:
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name ${{ env.registry }}/portal-api:${{ env.environment }}
 
-    - name: Always-on
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
+    # TODO: not available for the basic app service plan
+    # - name: Always-on
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     inlineScript: |
+    #       options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
 
-          az webapp config set $options \
-            --always-on true
+    #       az webapp config set $options \
+    #         --always-on true
 
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
