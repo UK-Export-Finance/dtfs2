@@ -59,15 +59,6 @@ jobs:
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name ${{ env.registry }}/portal-ui:${{ env.environment }}
 
-    - name: Always-on
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
-
-          az webapp config set $options \
-            --always-on true
-
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
       with:
@@ -85,6 +76,15 @@ jobs:
 
           az webapp log config $options \
             --docker-container-logging filesystem
+
+    - name: Always-on
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
+
+          az webapp config set $options \
+            --always-on true
 
     - name: Environment variables
       uses: Azure/cli@v1.0.0
