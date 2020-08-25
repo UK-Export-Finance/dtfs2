@@ -48,19 +48,6 @@ describe('canIssueFacility', () => {
       });
     });
 
-    describe('when a deal has status `Ready for Checker\'s approval`, MIN submissionType and a Conditional loan that has NOT been submitted', () => {
-      it('should return true', () => {
-        const mockDeal = {
-          details: {
-            status: 'Ready for Checker\'s approval',
-            submissionType: 'Manual Inclusion Notice',
-          },
-        };
-
-        expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
-      });
-    });
-
     describe('when a deal has status `Further Maker\'s input required`, MIN submissionType and a Conditional loan that has NOT been submitted', () => {
       it('should return true', () => {
         const mockDeal = {
@@ -71,23 +58,6 @@ describe('canIssueFacility', () => {
         };
 
         expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
-      });
-    });
-
-    describe('when a deal has status `Ready for Checker\'s approval`, MIN submissionType and an Unissued bond that has NOT been submitted', () => {
-      it('should return true', () => {
-        const mockDeal = {
-          details: {
-            status: 'Ready for Checker\'s approval',
-            submissionType: 'Manual Inclusion Notice',
-          },
-        };
-        const mockBondThatCanBeIssued = {
-          issueFacilityDetailsSubmitted: false,
-          bondStage: 'Unissued',
-        };
-
-        expect(canIssueFacility(mockUserRoles, mockDeal, mockBondThatCanBeIssued)).toEqual(true);
       });
     });
 
@@ -222,7 +192,7 @@ describe('canIssueFacility', () => {
       const checkerUserRole = ['checker'];
       const mockDeal = {
         details: {
-          status: 'Ready for Checker\'s approval',
+          status: 'Further Maker\'s input required',
           submissionType: 'Manual Inclusion Notice',
         },
       };
