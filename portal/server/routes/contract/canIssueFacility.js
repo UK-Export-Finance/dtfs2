@@ -15,14 +15,13 @@ const canIssueFacility = (userRoles, deal, facility) => {
 
   const allowedDealStatus = (status === 'Acknowledged by UKEF'
                             || acceptedByUkefDealStatus
-                            || status === 'Ready for Checker\'s approval'
                             || status === 'Further Maker\'s input required');
 
   const allowedDealSubmissionType = (submissionType === 'Automatic Inclusion Notice'
                                     || submissionType === 'Manual Inclusion Notice');
 
   const isMiaDealInAllowedStatus = (submissionType === 'Manual Inclusion Application'
-                                    && (acceptedByUkefDealStatus || status === 'Ready for Checker\'s approval'));
+                                    && acceptedByUkefDealStatus);
 
   const allowedBondFacilityStage = facility.bondStage === 'Unissued'
                                    || (facility.bondStage === 'Issued' && (previousFacilityStage === 'Unissued' || previousFacilityStage === 'Issued'));
