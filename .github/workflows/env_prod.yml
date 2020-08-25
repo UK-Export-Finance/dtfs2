@@ -35,7 +35,7 @@ env:
   GOV_NOTIFY_EMAIL_RECIPIENT: "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
 
   DTFS_PORTAL_SCHEDULER: false
-  FETCH_WORKFLOW_TYPE_B_SCHEDULE: "* * * * * *"
+  FETCH_WORKFLOW_TYPE_B_SCHEDULE: "* * * * *"
 
 # Below this line sholud be the same for all environments
 
