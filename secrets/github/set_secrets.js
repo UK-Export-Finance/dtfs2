@@ -25,6 +25,13 @@ const { Octokit } = require("@octokit/rest");
 // PROD_KEY1=c
 // KEY2=0
 
+// It's helpful to know that if you get an error that looks like this in Github actions,
+// it tends to mean that a secret value was empty. It's not obvious, so noting it here:
+//
+// The command failed with an unexpected error. Here is the traceback:
+//
+// string index out of range
+
 function getPersonalAccessToken() {
 
     console.log("Getting personal access token...")
