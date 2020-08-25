@@ -15,11 +15,11 @@
         "href": "/contract/" + params.deal._id + "/ready-for-review"
       }) }}
 
-    {% elseif ["Ready for Checker's approval"].includes(params.deal.details.status) and params.dealFormsCompleted %}
+    {% elseif ["Ready for Checker's approval"].includes(params.deal.details.status) and params.dealFormsCompleted and not params.user.roles.includes('checker')%}
 
       {{ govukButton({
         "disabled": true,
-        "text": "Proceed to review",
+        "text": "Proceed to review 1",
         "attributes" : {
           "data-cy" : "ProceedToReview"
         },
@@ -30,7 +30,7 @@
 
       {{ govukButton({
         "disabled": true,
-        "text": "Proceed to review",
+        "text": "Proceed to review 2",
         "attributes" : {
           "data-cy" : "ProceedToReview"
         },
@@ -51,7 +51,7 @@
       {% else %}
         {{ govukButton({
           "disabled": true,
-          "text": "Proceed to review",
+          "text": "Proceed to review 3",
           "attributes" : {
             "data-cy" : "ProceedToReview"
           },
