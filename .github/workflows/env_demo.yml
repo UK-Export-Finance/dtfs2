@@ -10,8 +10,7 @@ env:
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
   app_service_plan: dev
-  # Container settings
-  image_tag: demo
+  # Container registry
   registry: ${{ secrets.DEMO_ACR_REGISTRY }}
   # App service settings
   DEAL_API_URL: "https://tfs-demo-portal-api.azurewebsites.net"
@@ -58,7 +57,7 @@ jobs:
 
           az webapp create $options \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ env.registry }}/portal-ui:${{ env.image_tag }}
+            --deployment-container-image-name ${{ env.registry }}/portal-ui:${{ env.environment }}
 
     - name: Always-on
       uses: Azure/cli@v1.0.0
@@ -129,7 +128,7 @@ jobs:
 
           az webapp create $options \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ env.registry }}/portal-api:${{ env.image_tag }}
+            --deployment-container-image-name ${{ env.registry }}/portal-api:${{ env.environment }}
 
     - name: Always-on
       uses: Azure/cli@v1.0.0
