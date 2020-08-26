@@ -32,7 +32,7 @@ jobs:
       with:
         inlineScript: |
           # Admin needs to be enabled for App Service continuous deployment
-          az acr create --name dtfsdev --sku Standard--admin-enabled
+          az acr create --name dtfsdev --sku Standard --admin-enabled true
 
   test-rg:
     name: Test resource group
@@ -60,7 +60,7 @@ jobs:
       with:
         inlineScript: |
           # Admin needs to be enabled for App Service continuous deployment
-          az acr create --name dtfstest --sku Standard--admin-enabled
+          az acr create --name dtfstest --sku Standard --admin-enabled true
 
   prod-rg:
     name: Prod resource group
@@ -88,5 +88,5 @@ jobs:
       with:
         inlineScript: |
           # Admin needs to be enabled for App Service continuous deployment
-          az acr create --name dtfsprod --sku Standard --admin-enabled
+          az acr create --name dtfsprod --sku Standard --admin-enabled true
 
