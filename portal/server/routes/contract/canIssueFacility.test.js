@@ -8,182 +8,169 @@ describe('canIssueFacility', () => {
     issueFacilityDetailsSubmitted: false,
   };
 
-  describe('when user is a maker', () => {
-    describe('when a deal has status `Acknowledged by UKEF`, AIN submissionType and a Conditional loan that has NOT been submitted', () => {
-      it('should return true', () => {
-        const mockDeal = {
-          details: {
-            status: 'Acknowledged by UKEF',
-            submissionType: 'Automatic Inclusion Notice',
-          },
-        };
+  describe('when a deal status is `Acknowledged by UKEF`, AIN submissionType and a Conditional loan that has NOT been submitted', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        details: {
+          status: 'Acknowledged by UKEF',
+          submissionType: 'Automatic Inclusion Notice',
+        },
+      };
 
-        expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
-      });
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
     });
+  });
 
-    describe('when a deal has status `Accepted by UKEF (with conditions)`, AIN submissionType and a Conditional loan that has NOT been submitted', () => {
-      it('should return true', () => {
-        const mockDeal = {
-          details: {
-            status: 'Accepted by UKEF (with conditions)',
-            submissionType: 'Automatic Inclusion Notice',
-          },
-        };
+  describe('when a deal status is `Acknowledged by UKEF`, MIN submissionType and a Conditional loan that has NOT been submitted', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        details: {
+          status: 'Acknowledged by UKEF',
+          submissionType: 'Manual Inclusion Notice',
+        },
+      };
 
-        expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
-      });
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
     });
+  });
 
-    describe('when a deal has status `Accepted by UKEF (without conditions)`, AIN submissionType and a Conditional loan that has NOT been submitted', () => {
-      it('should return true', () => {
-        const mockDeal = {
-          details: {
-            status: 'Accepted by UKEF (without conditions)',
-            submissionType: 'Automatic Inclusion Notice',
-          },
-        };
+  describe('when a deal status is `Accepted by UKEF (with conditions)`, MIA submissionType and a Conditional loan that has NOT been submitted', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        details: {
+          status: 'Accepted by UKEF (with conditions)',
+          submissionType: 'Manual Inclusion Application',
+        },
+      };
 
-        expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
-      });
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
     });
+  });
 
-    describe('when a deal has status `Further Maker\'s input required`, MIN submissionType and a Conditional loan that has NOT been submitted', () => {
-      it('should return true', () => {
-        const mockDeal = {
-          details: {
-            status: 'Further Maker\'s input required',
-            submissionType: 'Manual Inclusion Notice',
-          },
-        };
+  describe('when a deal status is `Accepted by UKEF (without conditions)`, MIA submissionType and a Conditional loan that has NOT been submitted', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        details: {
+          status: 'Accepted by UKEF (without conditions)',
+          submissionType: 'Manual Inclusion Application',
+        },
+      };
 
-        expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
-      });
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
     });
+  });
 
-    describe('when a deal has status `Further Maker\'s input required`, MIN submissionType and an Unissued bond that has NOT been submitted', () => {
-      it('should return true', () => {
-        const mockDeal = {
-          details: {
-            status: 'Further Maker\'s input required',
-            submissionType: 'Manual Inclusion Notice',
-          },
-        };
-        const mockBondThatCanBeIssued = {
-          issueFacilityDetailsSubmitted: false,
-          bondStage: 'Unissued',
-        };
+  describe('when a deal status is `Acknowledged by UKEF`, AIN submissionType and a Conditional loan that has NOT been submitted with `Not started` status', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        details: {
+          status: 'Acknowledged by UKEF',
+          submissionType: 'Automatic Inclusion Notice',
+        },
+      };
 
-        expect(canIssueFacility(mockUserRoles, mockDeal, mockBondThatCanBeIssued)).toEqual(true);
-      });
+      const mockLoan = {
+        facilityStage: 'Conditional',
+        issueFacilityDetailsSubmitted: false,
+        status: 'Not started',
+      };
+
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(true);
     });
+  });
 
-    describe('when a deal has status `Accepted by UKEF (with conditions)`, MIA submissionType and a facility that has NOT been submitted', () => {
-      it('should return true', () => {
-        const mockDeal = {
-          details: {
-            status: 'Accepted by UKEF (with conditions)',
-            submissionType: 'Manual Inclusion Application',
-          },
-        };
+  describe('when a deal status is `Further Maker\'s input required`, AIN submissionType and a Conditional loan that has NOT been submitted with `Not started` status', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        details: {
+          status: 'Further Maker\'s input required',
+          submissionType: 'Automatic Inclusion Notice',
+        },
+      };
 
-        const mockBondThatCanBeIssued = {
-          issueFacilityDetailsSubmitted: false,
-          bondStage: 'Unissued',
-        };
+      const mockLoan = {
+        facilityStage: 'Conditional',
+        issueFacilityDetailsSubmitted: false,
+        status: 'Not started',
+      };
 
-        expect(canIssueFacility(mockUserRoles, mockDeal, mockBondThatCanBeIssued)).toEqual(true);
-      });
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(true);
     });
+  });
 
-    describe('when a deal has status `Accepted by UKEF (without conditions)`, MIA submissionType and a facility that has NOT been submitted', () => {
-      it('should return true', () => {
-        const mockDeal = {
-          details: {
-            status: 'Accepted by UKEF (without conditions)',
-            submissionType: 'Manual Inclusion Application',
-          },
-        };
+  describe('when deal is AIN with facility.bondStage is `Issued` with `Unissued` previousFacilityStage', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        details: {
+          status: 'Acknowledged by UKEF',
+          submissionType: 'Automatic Inclusion Notice',
+        },
+      };
 
-        const mockBondThatCanBeIssued = {
-          issueFacilityDetailsSubmitted: false,
-          bondStage: 'Unissued',
-        };
+      const mockBond = {
+        bondStage: 'Issued',
+        previousFacilityStage: 'Unissued',
+        issueFacilityDetailsSubmitted: false,
+      };
 
-        expect(canIssueFacility(mockUserRoles, mockDeal, mockBondThatCanBeIssued)).toEqual(true);
-      });
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockBond)).toEqual(true);
     });
+  });
 
-    describe('when a loan has `Unconditional` facilityStage and `Conditional` previousFacilityStage', () => {
-      it('should return true', () => {
-        const mockDeal = {
-          details: {
-            status: 'Further Maker\'s input required',
-            submissionType: 'Manual Inclusion Notice',
-          },
-        };
-        const mockLoan = {
-          issueFacilityDetailsSubmitted: false,
-          facilityStage: 'Unconditional',
-          previousFacilityStage: 'Conditional',
-        };
+  describe('when deal is AIN with facility.bondStage is `Issued` with `Issued` previousFacilityStage', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        details: {
+          status: 'Acknowledged by UKEF',
+          submissionType: 'Automatic Inclusion Notice',
+        },
+      };
 
-        expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(true);
-      });
+      const mockBond = {
+        bondStage: 'Issued',
+        previousFacilityStage: 'Issued',
+        issueFacilityDetailsSubmitted: false,
+      };
+
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockBond)).toEqual(true);
     });
+  });
 
-    describe('when a loan has `Unconditional` facilityStage and `Unconditional` previousFacilityStage', () => {
-      it('should return true', () => {
-        const mockDeal = {
-          details: {
-            status: 'Further Maker\'s input required',
-            submissionType: 'Manual Inclusion Notice',
-          },
-        };
-        const mockLoan = {
-          issueFacilityDetailsSubmitted: false,
-          facilityStage: 'Unconditional',
-          previousFacilityStage: 'Unconditional',
-        };
+  describe('when deal is AIN with facility.facilityStage is `Conditional` with `Unconditional` previousFacilityStage', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        details: {
+          status: 'Acknowledged by UKEF',
+          submissionType: 'Automatic Inclusion Notice',
+        },
+      };
 
-        expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(true);
-      });
+      const mockLoan = {
+        facilityStage: 'Conditional',
+        previousFacilityStage: 'Unconditional',
+        issueFacilityDetailsSubmitted: false,
+      };
+
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(true);
     });
+  });
 
-    describe('when a bond has `Issued` bondStage and `Unissued` previousFacilityStage', () => {
-      it('should return true', () => {
-        const mockDeal = {
-          details: {
-            status: 'Further Maker\'s input required',
-            submissionType: 'Manual Inclusion Notice',
-          },
-        };
-        const mockBond = {
-          issueFacilityDetailsSubmitted: false,
-          bondStage: 'Issued',
-          previousFacilityStage: 'Unissued',
-        };
+  describe('when deal is AIN with facility.facilityStage is `Conditional` with `Conditional` previousFacilityStage', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        details: {
+          status: 'Acknowledged by UKEF',
+          submissionType: 'Automatic Inclusion Notice',
+        },
+      };
 
-        expect(canIssueFacility(mockUserRoles, mockDeal, mockBond)).toEqual(true);
-      });
-    });
+      const mockLoan = {
+        facilityStage: 'Conditional',
+        previousFacilityStage: 'Conditional',
+        issueFacilityDetailsSubmitted: false,
+      };
 
-    describe('when a bond has `Issued` bondStage and `Issued` previousFacilityStage', () => {
-      it('should return true', () => {
-        const mockDeal = {
-          details: {
-            status: 'Further Maker\'s input required',
-            submissionType: 'Manual Inclusion Notice',
-          },
-        };
-        const mockBond = {
-          issueFacilityDetailsSubmitted: false,
-          bondStage: 'Issued',
-          previousFacilityStage: 'Issued',
-        };
-
-        expect(canIssueFacility(mockUserRoles, mockDeal, mockBond)).toEqual(true);
-      });
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(true);
     });
   });
 
