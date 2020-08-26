@@ -12,6 +12,8 @@ env:
   app_service_plan: prod
   # Container registry
   registry: ${{ secrets.PROD_ACR_REGISTRY }}
+  # Cosmos DB
+  free_tier: false
   # App service settings
   DEAL_API_URL: "https://tfs-prod-portal-api.azurewebsites.net"
   COMPANIES_HOUSE_API_URL: ="https://api.companieshouse.gov.uk"
@@ -49,52 +51,48 @@ jobs:
       with:
         creds: ${{ env.credentials }}
 
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
     - name: Create
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
-
-          az webapp create $options \
+          az webapp create --name tfs-${{ env.environment }}-portal-ui \
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name ${{ env.registry }}/portal-ui:${{ env.environment }}
 
-    # TODO: not available for the basic app service plan
-    # - name: Always-on
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     inlineScript: |
-    #       options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
-
-    #       az webapp config set $options \
-    #         --always-on true
+    - name: Always-on
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp config set --name tfs-${{ env.environment }}-portal-ui \
+            --always-on true
 
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
-
-          az webapp deployment container config $options \
+          az webapp deployment container config --name tfs-${{ env.environment }}-portal-ui \
             --enable-cd true
 
     - name: Enable container logging
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
-
-          az webapp log config $options \
+          az webapp log config --name tfs-${{ env.environment }}-portal-ui \
             --docker-container-logging filesystem
 
     - name: Environment variables
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
-
           # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
-          az webapp config appsettings set $options \
+          az webapp config appsettings set --name tfs-${{ env.environment }}-portal-ui \
             --settings \
               PORT=5000 \
               WEBSITES_PORT=5000 \
@@ -105,9 +103,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          options="--name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}"
-
-          az webapp config connection-string set $options \
+          az webapp config connection-string set --name tfs-${{ env.environment }}-portal-ui \
             --connection-string-type custom \
             --settings \
               SESSION_SECRET="${{ env.SESSION_SECRET }}" \
@@ -121,52 +117,48 @@ jobs:
       with:
         creds: ${{ env.credentials }}
 
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
     - name: Create
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
-
-          az webapp create $options \
+          az webapp create --name tfs-${{ env.environment }}-portal-api \
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name ${{ env.registry }}/portal-api:${{ env.environment }}
 
-    # TODO: not available for the basic app service plan
-    # - name: Always-on
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     inlineScript: |
-    #       options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
-
-    #       az webapp config set $options \
-    #         --always-on true
+    - name: Always-on
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp config set --name tfs-${{ env.environment }}-portal-api \
+            --always-on true
 
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
-
-          az webapp deployment container config $options \
+          az webapp deployment container config --name tfs-${{ env.environment }}-portal-api \
             --enable-cd true
 
     - name: Enable container logging
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
-
-          az webapp log config $options \
+          az webapp log config --name tfs-${{ env.environment }}-portal-api \
             --docker-container-logging filesystem
 
     - name: Environment variables
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
-
           # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
-          az webapp config appsettings set $options \
+          az webapp config appsettings set --name tfs-${{ env.environment }}-portal-api \
             --settings \
               PORT=5000 \
               WEBSITES_PORT=5000
@@ -175,9 +167,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          options="--name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}"
-
-          az webapp config connection-string set $options \
+          az webapp config connection-string set --name tfs-${{ env.environment }}-portal-api \
             --connection-string-type custom \
             --settings \
               AZURE_PORTAL_EXPORT_FOLDER="${{ env.AZURE_PORTAL_EXPORT_FOLDER }}" \
@@ -198,7 +188,7 @@ jobs:
 
 
   cosmos-db:
-    name: Cosmos DB for Mongo
+    name: Cosmos DB for Mongodb
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -216,4 +206,4 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az cosmosdb create --name dtfs-mongo-${{ env.environment }} --kind MongoDB
+          az cosmosdb create --name dtfs-mongo-${{ env.environment }} --kind MongoDB --enable-free-tier ${{ env.free_tier }}
