@@ -12,6 +12,8 @@ env:
   app_service_plan: dev
   # Container registry
   registry: ${{ secrets.DEMO_ACR_REGISTRY }}
+  # Cosmos DB
+  free_tier: true
   # App service settings
   DEAL_API_URL: "https://tfs-demo-portal-api.azurewebsites.net"
   COMPANIES_HOUSE_API_URL: ="https://api.companieshouse.gov.uk"
@@ -204,4 +206,4 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az cosmosdb create --name dtfs-mongo-${{ env.environment }} --kind MongoDB
+          az cosmosdb create --name dtfs-mongo-${{ env.environment }} --kind MongoDB --enable-free-tier ${{ env.free_tier }}
