@@ -98,6 +98,62 @@ describe('canIssueFacility', () => {
     });
   });
 
+  describe('when a deal status is `Accepted by UKEF (with conditions)`, AIN submissionType and a Conditional loan that has NOT been submitted', () => {
+    const mockDeal = {
+      details: {
+        status: 'Accepted by UKEF (with conditions)',
+        submissionType: 'Automatic Inclusion Notice',
+      },
+    };
+
+    const mockLoan = {
+      facilityStage: 'Conditional',
+      issueFacilityDetailsSubmitted: false,
+    };
+
+    describe('when the facility has `Maker\'s input required` status', () => {
+      it('should return true', () => {
+        mockLoan.status = 'Maker\'s input required';
+        expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(true);
+      });
+    });
+
+    describe('when the facility has `Not started` status', () => {
+      it('should return true', () => {
+        mockLoan.status = 'Not started';
+        expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(true);
+      });
+    });
+  });
+
+  describe('when a deal status is `Accepted by UKEF (without conditions)`, AIN submissionType and a Conditional loan that has NOT been submitted', () => {
+    const mockDeal = {
+      details: {
+        status: 'Accepted by UKEF (without conditions)',
+        submissionType: 'Automatic Inclusion Notice',
+      },
+    };
+
+    const mockLoan = {
+      facilityStage: 'Conditional',
+      issueFacilityDetailsSubmitted: false,
+    };
+
+    describe('when the facility has `Maker\'s input required` status', () => {
+      it('should return true', () => {
+        mockLoan.status = 'Maker\'s input required';
+        expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(true);
+      });
+    });
+
+    describe('when the facility has `Not started` status', () => {
+      it('should return true', () => {
+        mockLoan.status = 'Not started';
+        expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(true);
+      });
+    });
+  });
+
   describe('when deal is AIN with facility.bondStage is `Issued` with `Unissued` previousFacilityStage', () => {
     it('should return true', () => {
       const mockDeal = {
