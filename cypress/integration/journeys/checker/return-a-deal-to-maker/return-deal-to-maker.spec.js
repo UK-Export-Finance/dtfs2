@@ -1,13 +1,13 @@
-const {contract, contractReturnToMaker, contractComments} = require('../../pages');
-const {errorSummary, successMessage} = require('../../partials');
-const relative = require('../../relativeURL');
+const {contract, contractReturnToMaker, contractComments} = require('../../../pages');
+const {errorSummary, successMessage} = require('../../../partials');
+const relative = require('../../../relativeURL');
 
-const mockUsers = require('../../../fixtures/mockUsers');
+const mockUsers = require('../../../../fixtures/mockUsers');
 const CHECKER_LOGIN = mockUsers.find( user=> (user.roles.includes('checker') && user.bank.name === 'Barclays Bank') );
 const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'Barclays Bank') );
 
 // test data we want to set up + work with..
-const twentyOneDeals = require('../maker/dashboard/twentyOneDeals');
+const twentyOneDeals = require('../../maker/dashboard/twentyOneDeals');
 
 context('A checker selects to return a deal to maker from the view-contract page', () => {
   let deal; 
