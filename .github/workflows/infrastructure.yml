@@ -32,6 +32,7 @@ jobs:
       with:
         inlineScript: |
           az acr create --name dtfsdev --sku Standard
+          az acr config retention update --registry dtfsdev --status Enabled --days 3 --type UntaggedManifests
 
   test-rg:
     name: Test resource group
@@ -59,6 +60,7 @@ jobs:
       with:
         inlineScript: |
           az acr create --name dtfstest --sku Standard
+          az acr config retention update --registry dtfstest --status Enabled --days 3 --type UntaggedManifests
 
   prod-rg:
     name: Prod resource group
@@ -86,3 +88,5 @@ jobs:
       with:
         inlineScript: |
           az acr create --name dtfsprod --sku Standard
+          az acr config retention update --registry dtfsprod --status Enabled --days 3 --type UntaggedManifests
+
