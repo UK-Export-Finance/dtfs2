@@ -33,7 +33,7 @@ env:
   JWT_VALIDATING_KEY: "${{ secrets.DEV_JWT_VALIDATING_KEY }}"
   GOV_NOTIFY_API_KEY: ="${{ secrets.TEST_GOV_NOTIFY_API_KEY }}"
   GOV_NOTIFY_EMAIL_RECIPIENT: "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
-  
+
   DTFS_PORTAL_SCHEDULER: true
   FETCH_WORKFLOW_TYPE_B_SCHEDULE: "* * * * *"
 
@@ -193,3 +193,24 @@ jobs:
               JWT_VALIDATING_KEY="${{ env.JWT_VALIDATING_KEY }}" \
               GOV_NOTIFY_API_KEY="${{ env.GOV_NOTIFY_API_KEY }}" \
               GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}"
+
+  cosmos-db:
+    name: Cosmos DB for Mongodb
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az cosmosdb create --name dtfs-mongo-${{ env.environment }} --kind MongoDB
