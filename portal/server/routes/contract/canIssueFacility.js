@@ -2,20 +2,17 @@ const canIssueFacility = (userRoles, deal, facility) => {
   const isMaker = userRoles.includes('maker');
 
   const {
-    status,
+    status: dealStatus,
     submissionType,
   } = deal.details;
 
   const {
+    status: facilityStatus,
     previousFacilityStage,
   } = facility;
 
-  const acceptedByUkefDealStatus = (status === 'Accepted by UKEF (with conditions)'
-    || status === 'Accepted by UKEF (without conditions)');
-
-  const allowedDealStatus = (status === 'Acknowledged by UKEF'
-                            || acceptedByUkefDealStatus
-                            || status === 'Further Maker\'s input required');
+  const acceptedByUkefDealStatus = (dealStatus === 'Accepted by UKEF (with conditions)'
+    || dealStatus === 'Accepted by UKEF (without conditions)');
 
   const allowedDealSubmissionType = (submissionType === 'Automatic Inclusion Notice'
                                     || submissionType === 'Manual Inclusion Notice');
@@ -31,12 +28,18 @@ const canIssueFacility = (userRoles, deal, facility) => {
 
   const allowedFacilityStage = (allowedLoanFacilityStage || allowedBondFacilityStage);
 
-  const isAllowedDealStatusAndSubmissionType = ((allowedDealStatus
+  const allowedDealAndFacilityStatus = (
+    (dealStatus === 'Acknowledged by UKEF' || facilityStatus === 'Maker\'s input required')
+    || (dealStatus === 'Acknowledged by UKEF' && facilityStatus === 'Not started')
+    || (dealStatus === 'Further Maker\'s input required' && facilityStatus === 'Not started')
+  );
+
+  const isAllowedDealAndFacilityStatus = ((allowedDealAndFacilityStatus
                                                 && allowedDealSubmissionType)
                                                 || isMiaDealInAllowedStatus);
 
   if (isMaker
-    && isAllowedDealStatusAndSubmissionType
+    && isAllowedDealAndFacilityStatus
     && allowedFacilityStage
     && !facility.issueFacilityDetailsSubmitted) {
     return true;
