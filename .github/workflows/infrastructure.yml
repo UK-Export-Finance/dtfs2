@@ -1,0 +1,88 @@
+name: Supporting infrastructure for environments
+
+on:
+  push:
+    branches: [ infrastructure ]
+
+jobs:
+
+  dev-rg:
+    name: Dev resource group
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_DIGITAL_DEV }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ secrets.DEV_RESOURCE_GROUP }}
+
+    - name: App Service plan
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az appservice plan create --name dev --sku p1v2
+
+    - name: Container registry
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az acr create --name dtfsdev --sku Standard
+
+  test-rg:
+    name: Test resource group
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_DIGITAL_TEST }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ secrets.TEST_RESOURCE_GROUP }}
+
+    - name: App Service plan
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az appservice plan create --name test --sku b1
+
+    - name: Container registry
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az acr create --name dtfstest --sku Standard
+
+  prod-rg:
+    name: Prod resource group
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_DIGITAL_PROD }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ secrets.PROD_RESOURCE_GROUP }}
+
+    - name: App Service plan
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az appservice plan create --name prod --sku b1
+
+    - name: Container registry
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az acr create --name dtfsprod --sku Standard
