@@ -11,58 +11,49 @@
 
   {% set facility = params.facility %}
   {% set facilityName = params.facilityName %}
+  {% set facilityStatus = params.facility.status %}
 
   {% set dealStatusAllowsIssueFacility = dealStatus === "Acknowledged by UKEF" or dealStatus === "Accepted by UKEF (with conditions)" or dealStatus === "Accepted by UKEF (without conditions)" or dealStatus === "Further Maker's input required" and dealPreviousStatus !== "Draft"%}
 
-  {% set facilityStatusAllowsIssueFacility = (facility.status === "Maker's input required" or facility.status === "Not started" or facility.status === "Completed") %}
+  {% set facilityStatusAllowsIssueFacility = (facilityStatus === "Maker's input required" or facilityStatus === "Not started" or facilityStatus === "Completed") %}
 
   {% set facilityCouldBeIssued = userIsMaker and (dealSubmissionType === 'Automatic Inclusion Notice' or dealSubmissionType === 'Manual Inclusion Notice' or dealSubmissionType === 'Manual Inclusion Application') and (facility.facilityStage === 'Conditional' or facility.bondStage === 'Unissued') and not facility.issueFacilityDetailsSubmitted %}
 
-  {% set dealOrFacilityAreReadyForCheck = (facility.status === "Ready for check" or dealStatus === "Ready for Checker's approval") %}
+  {% set dealOrFacilityAreReadyForCheck = (facilityStatus === "Ready for check" or dealStatus === "Ready for Checker's approval") %}
 
-  {% set dealAndFacilityAreReadyForCheck = (facility.status === "Ready for check" and dealStatus === "Ready for Checker's approval") %}
-  {% set dealAndFacilityAreSubmitted = (facility.status === "Submitted" and dealStatus === "Submitted") %}
-  {% set dealAndFacilityAreAcknowledged = (facility.status === "Acknowledged" and dealStatus === "Acknowledged by UKEF") %}
+  {% set dealAndFacilityAreReadyForCheck = (facilityStatus === "Ready for check" and dealStatus === "Ready for Checker's approval") %}
+  {% set dealAndFacilityAreSubmitted = (facilityStatus === "Submitted" and dealStatus === "Submitted") %}
+  {% set dealAndFacilityAreAcknowledged = (facilityStatus === "Acknowledged" and dealStatus === "Acknowledged by UKEF") %}
 
-  {% set dealAndFacilityHaveMatchingStatus = (dealAndFacilityAreReadyForCheck or dealAndFacilityAreSubmitted or dealAndFacilityAreAcknowledged) %}
+  {% set onlyPreviewLinkCanBeShown = (dealAndFacilityAreReadyForCheck or dealAndFacilityAreSubmitted or dealAndFacilityAreAcknowledged) %}
 
-  {% set onlyPreviewLinkCanBeShown = dealAndFacilityHaveMatchingStatus %}
+  {% set renderLink = (facilityCouldBeIssued or facility.issueFacilityDetailsProvided) %}
 
-  {% if (dealStatusAllowsIssueFacility and facilityStatusAllowsIssueFacility) or onlyPreviewLinkCanBeShown %}
-  
-    {% set showFacilityIssuedLink = (facilityCouldBeIssued or facility.issueFacilityDetailsProvided) %}
+  {% if renderLink %}
+    {% if userIsChecker and not userIsMaker %}
+      <a href="/contract/{{ dealId }}/submission-details#{{ facilityName }}-{{ facility._id }}" class="govuk-link" data-cy="{{ facilityName }}-issue-facility-{{ facility._id }}">Facility issued</a>
 
-    {% if showFacilityIssuedLink %}
-      
-      {% if userIsChecker and not userIsMaker %}
-        <a href="/contract/{{ dealId }}/submission-details#{{ facilityName }}-{{ facility._id }}" class="govuk-link" data-cy="{{ facilityName }}-issue-facility-{{ facility._id }}">Facility issued</a>
+    {% elseif userIsMaker %}
+      {% set makerCannotStartOrEditIssueFacility = (facility.issueFacilityDetailsSubmitted or dealOrFacilityAreReadyForCheck or onlyPreviewLinkCanBeShown) %}
+
+      {% if makerCannotStartOrEditIssueFacility %}
+
+          <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/preview" class="govuk-link" data-cy="{{ facilityName }}-issue-facility-{{ facility._id }}">
+          {% if facility.issueFacilityDetailsStarted %}
+            Facility issued
+          {% else %}
+            Issue facility
+          {% endif %}
+        </a>
 
         {% else %}
-
-        {% set makerCannotStartOrEditIssueFacility = (facility.issueFacilityDetailsSubmitted or dealOrFacilityAreReadyForCheck or onlyPreviewLinkCanBeShown) %}
-
-        {% if makerCannotStartOrEditIssueFacility %}
-
-          {# TODO: should this be submission details page? #}
-          {# <a href="/contract/{{ dealId }}/submission-details#{{ facilityName }}-{{ facility._id }}" class="govuk-link" data-cy="{{ facilityName }}-issue-facility-{{ facility._id }}">Facility issued</a> #}
-          <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/preview" class="govuk-link" data-cy="{{ facilityName }}-issue-facility-{{ facility._id }}">
-            {% if facility.issueFacilityDetailsStarted %}
-              Facility issued
-            {% else %}
-              Issue facility
-            {% endif %}
-          </a>
-
+        <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/issue-facility" class="govuk-link" data-cy="{{ facilityName }}-issue-facility-{{ facility._id }}">
+          {% if facility.issueFacilityDetailsStarted %}
+            Facility issued
           {% else %}
-          <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/issue-facility" class="govuk-link" data-cy="{{ facilityName }}-issue-facility-{{ facility._id }}">
-            {% if facility.issueFacilityDetailsStarted %}
-              Facility issued
-            {% else %}
-              Issue facility
-            {% endif %}
-          </a>
-
-        {% endif %}
+            Issue facility
+          {% endif %}
+        </a>
 
       {% endif %}
 

@@ -4,7 +4,7 @@ const component = 'contract/components/issue-facility-link.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const mockDeals = [
+  const mockDealsThatAllowMakerToIssueFacility = [
     {
       _id: 1,
       details: {
@@ -15,21 +15,21 @@ describe(component, () => {
     {
       _id: 2,
       details: {
-        status: 'Ready for Checker\'s approval',
-        submissionType: 'Manual Inclusion Notice',
-      },
-    },
-    {
-      _id: 3,
-      details: {
         status: 'Accepted by UKEF (with conditions)',
         submissionType: 'Automatic Inclusion Notice',
       },
     },
     {
-      _id: 4,
+      _id: 3,
       details: {
         status: 'Accepted by UKEF (without conditions)',
+        submissionType: 'Manual Inclusion Notice',
+      },
+    },
+    {
+      _id: 4,
+      details: {
+        status: 'Further Maker\'s input required',
         submissionType: 'Manual Inclusion Notice',
       },
     },
@@ -37,25 +37,18 @@ describe(component, () => {
       _id: 5,
       details: {
         status: 'Further Maker\'s input required',
-        submissionType: 'Manual Inclusion Notice',
-      },
-    },
-    {
-      _id: 6,
-      details: {
-        status: 'Further Maker\'s input required',
         submissionType: 'Manual Inclusion Application',
       },
     },
     {
-      _id: 7,
+      _id: 6,
       details: {
         status: 'Accepted by UKEF (with conditions)',
         submissionType: 'Manual Inclusion Application',
       },
     },
     {
-      _id: 8,
+      _id: 7,
       details: {
         status: 'Accepted by UKEF (without conditions)',
         submissionType: 'Manual Inclusion Application',
@@ -65,7 +58,7 @@ describe(component, () => {
 
   describe('when deal status and submission type allows the issue facility', () => {
     const facilityName = 'loan';
-    const deals = mockDeals;
+    const deals = mockDealsThatAllowMakerToIssueFacility;
 
     describe('when viewed by checker and facility.issueFacilityDetailsProvided', () => {
       it('should render a link to the facility on submision-details page', () => {
@@ -306,14 +299,12 @@ describe(component, () => {
 
         const wrapper = render({ user, deal, facility, facilityName });
         wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`)
-          .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/issue-facility`, 'Facility issued');
+          .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/preview`, 'Facility issued');
       });
     });
   });
 
-
-
-  describe('when deal status is NOT `Acknowledged by UKEF` or `Ready for Checker\'s approval', () => {
+  describe('when deal status is NOT `Acknowledged by UKEF`, `Accepted by UKEF (with/without conditions)`,  `Further Maker\'s input required', () => {
     const facilityName = 'loan';
     const deals = [
       {
@@ -357,7 +348,7 @@ describe(component, () => {
   describe('when deal previousStatus is `Draft`', () => {
     it('should not render at all', () => {
       const facilityName = 'loan';
-      const dealsWithPreviousStatus = mockDeals;
+      const dealsWithPreviousStatus = mockDealsThatAllowMakerToIssueFacility;
       dealsWithPreviousStatus.map((deal) => {
         const d = deal;
         d.details.previousStatus = 'Draft';
