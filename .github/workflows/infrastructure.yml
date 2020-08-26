@@ -31,8 +31,8 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az acr create --name dtfsdev --sku Standard
-          az acr update --name dtfsdev --admin-enabled true
+          # Admin needs to be enabled for App Service continuous deployment
+          az acr create --name dtfsdev --sku Standard--admin-enabled
 
   test-rg:
     name: Test resource group
@@ -59,8 +59,8 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az acr create --name dtfstest --sku Standard
-          az acr update --name dtfstest --admin-enabled true
+          # Admin needs to be enabled for App Service continuous deployment
+          az acr create --name dtfstest --sku Standard--admin-enabled
 
   prod-rg:
     name: Prod resource group
@@ -87,6 +87,6 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az acr create --name dtfsprod --sku Standard
-          az acr update --name dtfsprod --admin-enabled true
+          # Admin needs to be enabled for App Service continuous deployment
+          az acr create --name dtfsprod --sku Standard --admin-enabled
 
