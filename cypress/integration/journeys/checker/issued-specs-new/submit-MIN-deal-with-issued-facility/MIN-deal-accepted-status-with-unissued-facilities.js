@@ -222,7 +222,8 @@ const deal = {
                 "currency" : {
                     "text" : "GBP - UK Sterling",
                     "id" : "GBP"
-                }
+                },
+                "status": "Not started"
             }
         ]
     },
@@ -244,7 +245,8 @@ const deal = {
                 "minimumQuarterlyFee": "",
                 "ukefExposure": "246.80",
                 "premiumType": "At maturity",
-                "dayCountBasis": "365"
+                "dayCountBasis": "365",
+                "status": "Not started"
             }
         ]
     },
