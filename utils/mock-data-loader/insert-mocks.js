@@ -20,12 +20,18 @@ const insertMocks = async () => {
     bank: MOCKS.BANKS.find((bank) => bank.id === '964'),
   });
 
+  console.log('inserting users');
+  for (user of MOCKS.USERS) {
+    await api.createUser(user);
+  }
+
   console.log('inserting deals');
   for (contract of MOCKS.CONTRACTS) {
     await api.createDeal(contract, token);
   }
 
   // Add a deal from a different bank for testing
+  console.log('inserting a deal from a different bank for testing');
   await api.createDeal(MOCKS.CONTRACTS[0], token2);
 
   console.log('inserting banks');
@@ -56,11 +62,6 @@ const insertMocks = async () => {
   console.log('inserting eligibility-criteria');
   for (eligibilityCriteria of MOCKS.ELIGIBILITY_CRITERIA) {
     await api.createEligibilityCriteria(eligibilityCriteria, token);
-  }
-
-  console.log('inserting users');
-  for (user of MOCKS.USERS) {
-    await api.createUser(user);
   }
 };
 
