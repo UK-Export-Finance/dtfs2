@@ -32,6 +32,7 @@ jobs:
       with:
         inlineScript: |
           az acr create --name dtfsdev --sku Standard
+          az acr update --name dtfsdev --admin-enabled true
 
   test-rg:
     name: Test resource group
@@ -59,6 +60,7 @@ jobs:
       with:
         inlineScript: |
           az acr create --name dtfstest --sku Standard
+          az acr update --name dtfstest --admin-enabled true
 
   prod-rg:
     name: Prod resource group
@@ -86,4 +88,5 @@ jobs:
       with:
         inlineScript: |
           az acr create --name dtfsprod --sku Standard
+          az acr update --name dtfsprod --admin-enabled true
 
