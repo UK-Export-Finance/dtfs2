@@ -330,24 +330,43 @@ describe(component, () => {
           .notToExist();
       }
     });
+  });
 
-    describe('with params.editable', () => {
-      it('should render delete link', () => {
-        const user = { roles: ['maker', 'checker'] };
-        const editable = true;
+  describe('when deal status is `Further Maker\'s input required`, `Draft`', () => {
+    it('should render delete link', () => {
+      const deals = [
+        {
+          _id: 1,
+          details: {
+            status: 'Draft',
+            submissionType: 'Automatic Inclusion Notice',
+          },
+        },
+        {
+          _id: 2,
+          details: {
+            status: 'Further Maker\'s input required',
+            submissionType: 'Automatic Inclusion Notice',
+          },
+        },
+      ];
 
-        for (const deal of deals) {
-          const wrapper = render({ user, deal, facility, facilityName, editable });
-          wrapper.expectLink(`[data-cy="${facilityName}-delete-${facility._id}"]`)
-            .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/delete`, 'Delete');
-        }
-      });
+      const user = { roles: ['maker'] };
+      const editable = true;
+      const facility = { _id: '1234' };
+      const facilityName = 'loan';
+
+      for (const deal of deals) {
+        const wrapper = render({ user, deal, facility, facilityName, editable });
+        wrapper.expectLink(`[data-cy="${facilityName}-delete-${facility._id}"]`)
+          .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/delete`, 'Delete');
+      }
     });
   });
 
+
   describe('when deal previousStatus is `Draft`', () => {
     it('should not render at all', () => {
-      const facilityName = 'loan';
       const dealsWithPreviousStatus = mockDealsThatAllowMakerToIssueFacility;
       dealsWithPreviousStatus.map((deal) => {
         const d = deal;
@@ -356,6 +375,7 @@ describe(component, () => {
       });
 
       const facility = { _id: '1234' };
+      const facilityName = 'loan';
 
       const user = { roles: ['maker'] };
       for (const deal of dealsWithPreviousStatus) {
