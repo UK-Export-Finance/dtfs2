@@ -76,11 +76,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(bond.bondStage);
       });
 
-      bondRow.issueFacilityLink().should('be.visible');
-      bondRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`/contract/${dealId}/bond/${bondId}/issue-facility`);
-      });
-      bondRow.deleteLink().should('not.be.visible');
+      bondRow.issueFacilityLink().should('not.be.visible');
+      bondRow.deleteLink().should('be.visible');
     });
 
     issuedBonds.forEach((bond) => {
@@ -96,7 +93,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       });
 
       bondRow.issueFacilityLink().should('not.be.visible');
-      bondRow.deleteLink().should('not.be.visible');
+      bondRow.deleteLink().should('be.visible');
     });
 
     conditionalLoans.forEach((loan) => {
@@ -111,11 +108,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(loan.facilityStage);
       });
 
-      loanRow.issueFacilityLink().should('be.visible');
-      loanRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`/contract/${dealId}/loan/${loanId}/issue-facility`);
-      });
-      loanRow.deleteLink().should('not.be.visible');
+      loanRow.issueFacilityLink().should('not.be.visible');
+      loanRow.deleteLink().should('be.visible');
     });
 
     unconditionalLoans.forEach((loan) => {
@@ -131,7 +125,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       });
 
       loanRow.issueFacilityLink().should('not.be.visible');
-      loanRow.deleteLink().should('not.be.visible');
+      loanRow.deleteLink().should('be.visible');
     });
   };
 
@@ -154,10 +148,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(bond.bondStage);
       });
 
-      bondRow.issueFacilityLink().should('be.visible');
-      bondRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`/contract/${dealId}/bond/${bondId}/preview`);
-      });
+      bondRow.issueFacilityLink().should('not.be.visible');
       bondRow.deleteLink().should('not.be.visible');
     });
 
@@ -189,10 +180,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal(loan.facilityStage);
       });
 
-      loanRow.issueFacilityLink().should('be.visible');
-      loanRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`/contract/${dealId}/loan/${loanId}/preview`);
-      });
+      loanRow.issueFacilityLink().should('not.be.visible');
       loanRow.deleteLink().should('not.be.visible');
     });
 

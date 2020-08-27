@@ -1,6 +1,5 @@
 {# TODO: refactor #}
 {% macro render(params) %}
-
   {% set userIsMaker = params.user.roles.includes('maker')%}
   {% set userIsChecker = params.user.roles.includes('checker')%}
 
@@ -13,12 +12,13 @@
   {% set facilityName = params.facilityName %}
   {% set facilityStatus = params.facility.status %}
 
-  {% set dealStatusAllowsIssueFacility = dealStatus === "Acknowledged by UKEF" or dealStatus === "Accepted by UKEF (with conditions)" or dealStatus === "Accepted by UKEF (without conditions)" or dealStatus === "Further Maker's input required" and dealPreviousStatus !== "Draft"%}
+  {% set dealIsEditable = params.editable %}
+
+  {% set dealStatusAllowsIssueFacility = dealStatus === "Acknowledged by UKEF" or dealStatus === "Accepted by UKEF (with conditions)" or dealStatus === "Accepted by UKEF (without conditions)" or dealStatus === "Further Maker's input required" and dealPreviousStatus !== "Draft" and params.deal.details.submissionDate %}
 
   {% set facilityStatusAllowsIssueFacility = (facilityStatus === "Maker's input required" or facilityStatus === "Not started" or facilityStatus === "Completed") %}
 
   {% set dealSubmissionTypeAllowsIssuance = dealSubmissionType === 'Automatic Inclusion Notice' or dealSubmissionType === 'Manual Inclusion Notice' or dealSubmissionType === 'Manual Inclusion Application' %}
-  {% set facilityCouldBeIssued = userIsMaker and dealSubmissionTypeAllowsIssuance and (facility.facilityStage === 'Conditional' or facility.bondStage === 'Unissued') and not facility.issueFacilityDetailsSubmitted %}
 
   {% set dealOrFacilityAreReadyForCheck = (facilityStatus === "Ready for check" or dealStatus === "Ready for Checker's approval") %}
 
@@ -26,7 +26,9 @@
   {% set dealAndFacilityAreSubmitted = (facilityStatus === "Submitted" and dealStatus === "Submitted") %}
   {% set dealAndFacilityAreAcknowledged = (facilityStatus === "Acknowledged" and dealStatus === "Acknowledged by UKEF") %}
 
-  {% set onlyPreviewLinkCanBeShown = (dealAndFacilityAreReadyForCheck or dealAndFacilityAreSubmitted or dealAndFacilityAreAcknowledged) %}
+  {% set facilityCouldBeIssued = userIsMaker and dealSubmissionTypeAllowsIssuance and (facility.facilityStage === 'Conditional' or facility.bondStage === 'Unissued') and not facility.issueFacilityDetailsSubmitted and not dealOrFacilityAreReadyForCheck %}
+
+  {% set onlyPreviewLinkCanBeShown = (dealAndFacilityAreReadyForCheck or dealAndFacilityAreSubmitted or dealAndFacilityAreAcknowledged or facilityStatus === "Submitted") %}
 
   {% set renderIssuanceLink = facilityCouldBeIssued or facility.issueFacilityDetailsProvided and (makerCannotStartOrEditIssueFacility or dealStatusAllowsIssueFacility) or onlyPreviewLinkCanBeShown %}
 
@@ -57,7 +59,7 @@
               {% endif %}
             </a>
 
-          {% elseif params.editable and dealStatus === "Further Maker's input required" %}
+          {% elseif params.editable and (dealStatus === "Further Maker's input required" or dealStatus === "Draft") %}
               <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/delete" class="govuk-link" data-cy="{{ facilityName }}-delete-{{ facility._id }}" aria-label="Delete facility">Delete</a>
 
         {% endif %}
@@ -66,7 +68,7 @@
 
     {% endif %}
 
-  {% elseif userIsMaker and params.editable and (dealStatus === "Draft" or dealStatus === "Further Maker's input required") %}
+  {% elseif (userIsMaker and params.editable) and (dealStatus === "Draft" or dealStatus === "Further Maker's input required") %}
     <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/delete" class="govuk-link" data-cy="{{ facilityName }}-delete-{{ facility._id }}" aria-label="Delete facility">Delete</a>
 
   {% endif %}
