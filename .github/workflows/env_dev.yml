@@ -184,7 +184,6 @@ jobs:
               GOV_NOTIFY_API_KEY="${{ env.GOV_NOTIFY_API_KEY }}" \
               GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}"
 
-
   cosmos-db:
     name: Mongo
     runs-on: ubuntu-latest
@@ -205,3 +204,47 @@ jobs:
       with:
         inlineScript: |
           az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB
+
+  front-door:
+    # NB Front Door takes a little while to be available
+    # So you won't get a successful request for the first few minutes.
+    name: WAF/DDoS
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        # NB we seem to get a lot of traffic to app service from FD, so reducing probes to 60s from 30s
+        inlineScript: |
+          az network front-door create --name tfs-${{ env.environment }}-fd \
+            --accepted-protocols Https \
+            --forwarding-protocol HttpsOnly \
+            --backend-address tfs-${{ env.environment }}-portal-ui \
+            --probeMethod GET \
+            --protocol Https \
+            --interval 60 \
+            --path "/healthcheck"
+
+    - name: Redirect to https
+      uses: Azure/cli@v1.0.0
+      with:
+        # NB "DefaultFrontendEndpoint" is the name assigned by the command above.
+        # If this changes, use "az network front-door show --name tfs-???-fd | grep FrontendEndpoints"
+        inlineScript: |
+          az network front-door routing-rule create --name RedirectToHttps \
+            --front-door-name tfs-${{ env.environment }}-fd \
+            --frontend-endpoints tfs-${{ env.environment }}-fd.azurefd.net \
+            --route-type Redirect \
+            --accepted-protocols Http \
+            --redirect-protocol HttpsOnly
