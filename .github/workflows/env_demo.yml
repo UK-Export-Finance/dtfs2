@@ -233,7 +233,7 @@ jobs:
           az network front-door create --name tfs-${{ env.environment }}-fd \
             --accepted-protocols Https \
             --forwarding-protocol HttpsOnly \
-            --backend-address tfs-${{ env.environment }}-portal-ui \
+            --backend-address tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
             --probeMethod GET \
             --protocol Https \
             --interval 60 \
