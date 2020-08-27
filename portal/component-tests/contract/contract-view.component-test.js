@@ -146,38 +146,4 @@ describe(page, () => {
       return wrappers.forEach((wrapper) => wrapper.expectLink(`[data-cy="loan-bank-reference-number-${loanId}"]`).notToExist());
     });
   });
-
-  // these should be in their own component test since it's in a different component
-  describe('when viewed with editable=true and any status except Acknowledged by UKEF and Ready for Checker\'s approval', () => {
-    const wrappers = [];
-
-    const dealsWithStatusThatAllowBondDeletion = () => [
-      aDealInStatus(STATUS.draft),
-      aDealInStatus(STATUS.inputRequired),
-      aDealInStatus(STATUS.abandoned),
-      aDealInStatus(STATUS.submitted),
-      aDealInStatus(STATUS.approved),
-      aDealInStatus(STATUS.approvedWithConditions),
-      aDealInStatus(STATUS.refused),
-    ];
-
-    beforeAll(() => {
-      for (const role of roles) {
-        const user = { roles: [role], timezone: 'Europe/London' };
-        for (const deal of dealsWithStatusThatAllowBondDeletion()) {
-          wrappers.push(render({
-            user, deal, editable: true, ...confirmedRequestStartDateParams,
-          }));
-        }
-      }
-    });
-
-    it('allows the user to delete a bond', () => {
-      const dealId = deal._id;
-      const bondId = deal.bondTransactions.items[0]._id;
-
-      return wrappers.forEach((wrapper) => wrapper.expectLink(`[data-cy="bond-delete-${bondId}"]`)
-        .toLinkTo(`/contract/${dealId}/bond/${bondId}/delete`, 'Delete'));
-    });
-  });
 });

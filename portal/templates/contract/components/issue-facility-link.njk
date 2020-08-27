@@ -28,7 +28,6 @@
 
   {% set onlyPreviewLinkCanBeShown = (dealAndFacilityAreReadyForCheck or dealAndFacilityAreSubmitted or dealAndFacilityAreAcknowledged) %}
 
-  {# {% set renderIssuanceLink = facilityCouldBeIssued or facility.issueFacilityDetailsProvided %} #}
   {% set renderIssuanceLink = facilityCouldBeIssued or facility.issueFacilityDetailsProvided and (makerCannotStartOrEditIssueFacility or dealStatusAllowsIssueFacility) or onlyPreviewLinkCanBeShown %}
 
   {% if renderIssuanceLink %}
@@ -58,7 +57,7 @@
               {% endif %}
             </a>
 
-          {% elseif params.editable %}
+          {% elseif params.editable and dealStatus === "Further Maker's input required" %}
               <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/delete" class="govuk-link" data-cy="{{ facilityName }}-delete-{{ facility._id }}" aria-label="Delete facility">Delete</a>
 
         {% endif %}
@@ -67,7 +66,7 @@
 
     {% endif %}
 
-  {% elseif params.editable and dealStatus === "Draft" %}
+  {% elseif userIsMaker and params.editable and (dealStatus === "Draft" or dealStatus === "Further Maker's input required") %}
     <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/delete" class="govuk-link" data-cy="{{ facilityName }}-delete-{{ facility._id }}" aria-label="Delete facility">Delete</a>
 
   {% endif %}
