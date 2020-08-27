@@ -247,7 +247,7 @@ jobs:
         inlineScript: |
           az network front-door routing-rule create --name RedirectToHttps \
             --front-door-name tfs-${{ env.environment }}-fd \
-            --frontend-endpoints tfs-${{ env.environment }}-fd.azurefd.net \
+            --frontend-endpoints DefaultFrontendEndpoint \
             --route-type Redirect \
             --accepted-protocols Http \
             --redirect-protocol HttpsOnly
