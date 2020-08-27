@@ -199,9 +199,6 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
-          # Front door requires an extension to the az cli:
-          az extension add --name front-door
-
     - name: Create
       uses: Azure/cli@v1.0.0
       with:
@@ -225,6 +222,9 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
+          # Front door requires an extension to the az cli:
+          az extension add --name front-door
+
     - name: Create
       uses: Azure/cli@v1.0.0
       with:
@@ -233,7 +233,7 @@ jobs:
           az network front-door create --name tfs-${{ env.environment }}-fd \
             --accepted-protocols Https \
             --forwarding-protocol HttpsOnly \
-            --backend-address tfs-${{ env.environment }}-portal-ui \
+            --backend-address tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
             --probeMethod GET \
             --protocol Https \
             --interval 60 \
@@ -247,7 +247,7 @@ jobs:
         inlineScript: |
           az network front-door routing-rule create --name RedirectToHttps \
             --front-door-name tfs-${{ env.environment }}-fd \
-            --frontend-endpoints tfs-${{ env.environment }}-fd.azurefd.net \
+            --frontend-endpoints DefaultFrontendEndpoint \
             --route-type Redirect \
             --accepted-protocols Http \
             --redirect-protocol HttpsOnly
