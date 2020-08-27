@@ -222,6 +222,9 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
+          # Front door requires an extension to the az cli:
+          az extension add --name front-door
+
     - name: Create
       uses: Azure/cli@v1.0.0
       with:
