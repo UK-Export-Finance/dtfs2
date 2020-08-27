@@ -58,8 +58,12 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
       expect(text.trim()).to.equal('Facility issued');
     });
 
-    pages.contract.proceedToReview().should('not.be.disabled');
+    // maker should still be able to navigate to Issue Facility form
+    bondRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
+      expect(href).to.equal(`/contract/${dealId}/bond/${bondId}/issue-facility`);
+    });
 
+    pages.contract.proceedToReview().should('not.be.disabled');
 
     const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
@@ -73,6 +77,11 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     // expect issue facility link text to be changed
     loanRow.issueFacilityLink().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Facility issued');
+    });
+
+    // maker should still be able to navigate to Issue Facility form
+    loanRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
+      expect(href).to.equal(`/contract/${dealId}/loan/${loanId}/issue-facility`);
     });
 
     pages.contract.proceedToReview().should('not.be.disabled');
@@ -108,6 +117,13 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
       expect(text.trim()).to.equal('Facility issued');
     });
 
+    // maker should now not be able to navigate to Issue Facility form
+    bondRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
+      expect(href).to.equal(`/contract/${dealId}/bond/${bondId}/preview`);
+    });
+
+    bondRow.deleteLink().should('not.exist');
+
     // expect the loan status to be updated
     loanRow.loanStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Ready for check');
@@ -117,6 +133,13 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     loanRow.issueFacilityLink().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Facility issued');
     });
+
+    // maker should not be able to navigate to Issue Facility form
+    loanRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
+      expect(href).to.equal(`/contract/${dealId}/loan/${loanId}/preview`);
+    });
+
+    loanRow.deleteLink().should('not.exist');
 
     // since no other facilities have had their details/forms completed
     // and the deal is now has `Ready for Checker\'s approval` status

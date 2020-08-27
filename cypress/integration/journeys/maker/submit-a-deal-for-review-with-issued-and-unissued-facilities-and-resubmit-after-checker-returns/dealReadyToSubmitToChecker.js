@@ -7,10 +7,7 @@ const deal = {
     "bankSupplyContractName": "mock name",
     "created": moment().utc().valueOf(),
     "dateOfLastAction": "1596805840467",
-    "previousWorkflowStatus": "confirmation_acknowledged",
     "submissionType": "Automatic Inclusion Notice",
-    submissionDate: moment().utc().valueOf(),
-    "previousStatus": "Acknowledged by UKEF",
     owningBank: {
       id: '956',
       name: 'Barclays Bank',

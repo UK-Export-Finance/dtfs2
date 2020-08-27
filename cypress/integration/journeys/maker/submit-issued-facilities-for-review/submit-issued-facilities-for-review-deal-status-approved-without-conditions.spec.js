@@ -47,6 +47,10 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
       expect(text.trim()).to.equal('Issue facility');
     });
 
+    bondRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
+      expect(href).to.equal(`/contract/${dealId}/bond/${bondId}/issue-facility`);
+    });
+
     bondRow.issueFacilityLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
 
@@ -63,6 +67,14 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
 
     const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
+
+    loanRow.issueFacilityLink().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Issue facility');
+    });
+
+    loanRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
+      expect(href).to.equal(`/contract/${dealId}/loan/${loanId}/issue-facility`);
+    });
 
     loanRow.issueFacilityLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));
@@ -108,6 +120,10 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
       expect(text.trim()).to.equal('Facility issued');
     });
 
+    bondRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
+      expect(href).to.equal(`/contract/${dealId}/bond/${bondId}/preview`);
+    });
+
     // expect the loan status to be updated
     loanRow.loanStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Ready for check');
@@ -117,6 +133,11 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     loanRow.issueFacilityLink().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Facility issued');
     });
+
+    loanRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
+      expect(href).to.equal(`/contract/${dealId}/loan/${loanId}/preview`);
+    });
+
 
     // since no other facilities have had their details/forms completed
     // and the deal is now has `Ready for Checker\'s approval` status
