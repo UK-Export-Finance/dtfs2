@@ -67,14 +67,16 @@
 
                   {% set componentData = {user: params.user, deal: params.deal, editable: params.editable, facility: bond, facilityName: 'bond', hasConfirmedCoverStartDate: hasConfirmedCoverStartDate} %}
 
-                  {# {% if dealStatusAllowsRequestedCoverDateChange and bond.issueFacilityDetailsSubmitted %} #}
-                  {# {% if dealStatusAllowsRequestedCoverDateChange and not bond.canIssueOrEditIssueFacility %} #}
-                  {% if dealStatusAllowsRequestedCoverDateChange %}
+                  {% set userIsMaker = params.user.roles.includes('maker')%}
+                  {% set dealSubmissionType = params.deal.details.submissionType %}
+                  {% set requestedCoverDateCanEdit = userIsMaker and dealStatusAllowsRequestedCoverDateChange and dealSubmissionType === 'Manual Inclusion Application' and bond.bondStage === 'Issued' and bond.issueFacilityDetailsSubmitted %}
+
+                  {% if requestedCoverDateCanEdit %}
                     {{ requestedCoverStartDate.render(componentData) }}
 
-                  {% endif %}
-                    {# {{ issueFacilityLink.render(componentData)}} #}
+                    {% else %}
                     {{ issueOrDeleteFacilityLink.render(componentData) }}
+                  {% endif %}
                 </td>
               </tr>
 
