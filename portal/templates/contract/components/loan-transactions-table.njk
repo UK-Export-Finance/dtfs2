@@ -1,6 +1,6 @@
 {% import '_macros/status-tag.njk' as statusTag %}
 {% import './loan-link.njk' as loanLink %}
-{% import './issue-facility-link.njk' as issueFacilityLink %}
+{% import './issue-or-delete-facility-link.njk' as issueOrDeleteFacilityLink %}
 {% import './requested-start-date-link.njk' as requestedCoverStartDate %}
 
 {# TODO: component tests #}
@@ -67,12 +67,14 @@
 
                 {% set componentData = {user: params.user, deal: params.deal, editable: params.editable, facility: loan, facilityName: 'loan', hasConfirmedCoverStartDate: hasConfirmedCoverStartDate} %}
 
-                {% if dealStatusAllowsRequestedCoverDateChange and loan.issueFacilityDetailsSubmitted %}
+                {# {% if dealStatusAllowsRequestedCoverDateChange and loan.issueFacilityDetailsSubmitted %} #}
+                {# {% if dealStatusAllowsRequestedCoverDateChange and not loan.canIssueOrEditIssueFacility %} #}
+                {% if dealStatusAllowsRequestedCoverDateChange %}
                   {{ requestedCoverStartDate.render(componentData) }}
 
-                  {% else %}
-                  {{ issueFacilityLink.render(componentData)}}
                 {% endif %}
+                  {# {{ issueFacilityLink.render(componentData)}} #}
+                  {{ issueOrDeleteFacilityLink.render(componentData) }}
               </td>
             </tr>
 

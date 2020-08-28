@@ -167,7 +167,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     });
 
     bondRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
-      expect(href).to.equal(`/contract/${dealId}/bond/${bondId}/preview`);
+      expect(href).to.equal(`/contract/${dealId}/submission-details#bond-${bondId}`);
     });
 
     loanRow.loanStatus().invoke('text').then((text) => {
@@ -183,7 +183,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     });
 
     loanRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
-      expect(href).to.equal(`/contract/${dealId}/loan/${loanId}/preview`);
+      expect(href).to.equal(`/contract/${dealId}/submission-details#loan-${loanId}`);
     });
 
     //---------------------------------------------------------------
