@@ -1,5 +1,5 @@
 import dealWithCanIssueOrEditIssueFacilityFlags from './dealWithCanIssueOrEditIssueFacilityFlags';
-import canIssueFacility from './canIssueFacility';
+import canIssueOrEditIssueFacility from './canIssueOrEditIssueFacility';
 
 describe('dealWithCanIssueOrEditIssueFacilityFlags', () => {
   const mockUserRoles = ['maker'];
@@ -29,13 +29,13 @@ describe('dealWithCanIssueOrEditIssueFacilityFlags', () => {
 
     const expectedBonds = mockDeal.bondTransactions.items.map((bond) => {
       const b = bond;
-      b.canIssueOrEditIssueFacility = canIssueFacility(mockUserRoles, mockDeal, bond);
+      b.canIssueOrEditIssueFacility = canIssueOrEditIssueFacility(mockUserRoles, mockDeal, bond);
       return b;
     });
 
     const expectedLoans = mockDeal.loanTransactions.items.map((loan) => {
       const l = loan;
-      l.canIssueOrEditIssueFacility = canIssueFacility(mockUserRoles, mockDeal, loan);
+      l.canIssueOrEditIssueFacility = canIssueOrEditIssueFacility(mockUserRoles, mockDeal, loan);
       return l;
     });
 
