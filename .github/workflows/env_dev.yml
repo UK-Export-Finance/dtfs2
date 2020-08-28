@@ -251,3 +251,34 @@ jobs:
             --route-type Redirect \
             --accepted-protocols Http \
             --redirect-protocol HttpsOnly
+
+  file-storage:
+    name: File Storage
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az storage account create --name tfs${{ env.environment }}storage \
+            --sku Standard_ZRS \
+            --https-only true \
+            --encryption-services file
+
+    - name: File share
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az storage share create --account-name tfs${{ env.environment }}storage \
+            --name files
