@@ -67,14 +67,16 @@
 
                 {% set componentData = {user: params.user, deal: params.deal, editable: params.editable, facility: loan, facilityName: 'loan', hasConfirmedCoverStartDate: hasConfirmedCoverStartDate} %}
 
-                {# {% if dealStatusAllowsRequestedCoverDateChange and loan.issueFacilityDetailsSubmitted %} #}
-                {# {% if dealStatusAllowsRequestedCoverDateChange and not loan.canIssueOrEditIssueFacility %} #}
-                {% if dealStatusAllowsRequestedCoverDateChange %}
+                {% set userIsMaker = params.user.roles.includes('maker')%}
+                {% set dealSubmissionType = params.deal.details.submissionType %}
+                {% set requestedCoverDateCanEdit = userIsMaker and dealStatusAllowsRequestedCoverDateChange and dealSubmissionType === 'Manual Inclusion Application' and loan.facilityStage === 'Unconditional' and loan.issueFacilityDetailsSubmitted %}
+
+                {% if requestedCoverDateCanEdit %}
                   {{ requestedCoverStartDate.render(componentData) }}
 
-                {% endif %}
-                  {# {{ issueFacilityLink.render(componentData)}} #}
+                  {% else %}
                   {{ issueOrDeleteFacilityLink.render(componentData) }}
+                {% endif %}
               </td>
             </tr>
 

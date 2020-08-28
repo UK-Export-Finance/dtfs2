@@ -11,16 +11,12 @@
   {% set facility = params.facility %}
   {% set facilityName = params.facilityName %}
 
-  {% set requestedCoverDateCanEdit = userIsMaker and dealSubmissionType === 'Manual Inclusion Application' and (facility.facilityStage === 'Unconditional' or facility.bondStage === 'Issued') %}
-
-  {% if requestedCoverDateCanEdit %}
-      <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/confirm-requested-cover-start-date" class="govuk-link" data-cy="{{ facilityName }}-change-or-confirm-cover-start-date-{{ facility._id }}">
-       {% if params.hasConfirmedCoverStartDate %} 
-          Start date changed
-       {% else %}
-          Confirm start date
-       {% endif %}
-      </a>
-  {% endif %}
+   <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/confirm-requested-cover-start-date" class="govuk-link" data-cy="{{ facilityName }}-change-or-confirm-cover-start-date-{{ facility._id }}">
+      {% if params.hasConfirmedCoverStartDate %} 
+         Start date changed
+      {% else %}
+         Confirm start date
+      {% endif %}
+   </a>
 
 {% endmacro %}
