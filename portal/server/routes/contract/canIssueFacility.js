@@ -36,7 +36,6 @@ const canIssueFacility = (userRoles, deal, facility) => {
   // could be simplified
   const allowedDealAndFacilityStatus = (
     (dealStatus === 'Acknowledged by UKEF' || facilityStatus === 'Maker\'s input required')
-    // || facilityStatus === 'Completed' // this maybe incorrect...
     || (dealStatus === 'Acknowledged by UKEF' && facilityStatus === 'Not started')
     || (acceptedByUkefDealStatus && (facilityStatus === 'Maker\'s input required' || facilityStatus === 'Not started'))
     || (dealStatus === 'Further Maker\'s input required' && facilityStatus === 'Not started')
@@ -46,11 +45,11 @@ const canIssueFacility = (userRoles, deal, facility) => {
                                                 && allowedDealSubmissionType)
                                                 || isMiaDealInAllowedStatus);
 
-  if (isMaker
+  if ((isMaker
     && dealHasBeenSubmitted
     && isAllowedDealAndFacilityStatus
-    && allowedFacilityStage) {
-    // && !facility.issueFacilityDetailsSubmitted) {
+    && allowedFacilityStage)
+    || (facility.issueFacilityDetailsStarted && facilityStatus === 'Completed')) {
     return true;
   }
 

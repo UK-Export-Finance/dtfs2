@@ -24,8 +24,6 @@ const dealWithCanIssueFacilityFlags = (userRoles, deal) => {
     return loan;
   });
 
-  console.log('----------MODIFIED DEAL - bonds \n ', modifiedDeal.bondTransactions.items);
-  console.log('----------MODIFIED DEAL - loans \n ', modifiedDeal.loanTransactions.items);
   return modifiedDeal;
 };
 
