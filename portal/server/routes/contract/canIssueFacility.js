@@ -14,6 +14,13 @@ const canIssueFacility = (userRoles, deal, facility) => {
     previousFacilityStage,
   } = facility;
 
+  if (dealStatus === 'Ready for Checker\'s approval'
+    || facilityStatus === 'Ready for check'
+    || facilityStatus === 'Submitted'
+    || facilityStatus === 'Acknowledged') {
+    return false;
+  }
+
   const acceptedByUkefDealStatus = (dealStatus === 'Accepted by UKEF (with conditions)'
     || dealStatus === 'Accepted by UKEF (without conditions)');
 
@@ -39,17 +46,17 @@ const canIssueFacility = (userRoles, deal, facility) => {
     || (dealStatus === 'Acknowledged by UKEF' && facilityStatus === 'Not started')
     || (acceptedByUkefDealStatus && (facilityStatus === 'Maker\'s input required' || facilityStatus === 'Not started'))
     || (dealStatus === 'Further Maker\'s input required' && facilityStatus === 'Not started')
+    || (dealStatus === 'Further Maker\'s input required' && facilityStatus === 'Completed')
   );
 
   const isAllowedDealAndFacilityStatus = ((allowedDealAndFacilityStatus
                                                 && allowedDealSubmissionType)
                                                 || isMiaDealInAllowedStatus);
 
-  if ((isMaker
+  if (isMaker
     && dealHasBeenSubmitted
     && isAllowedDealAndFacilityStatus
-    && allowedFacilityStage)
-    || (facility.issueFacilityDetailsStarted && facilityStatus === 'Completed')) {
+    && allowedFacilityStage) {
     return true;
   }
 
