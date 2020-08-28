@@ -282,3 +282,11 @@ jobs:
         inlineScript: |
           az storage share create --account-name tfs${{ env.environment }}storage \
             --name files
+
+    - name: File share (workflow)
+      uses: Azure/cli@v1.0.0
+      with:
+        # This fileshare is used if the environment isn't integrated to Workflow
+        inlineScript: |
+          az storage share create --account-name tfs${{ env.environment }}storage \
+            --name workflow
