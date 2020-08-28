@@ -1,4 +1,4 @@
-import canIssueFacility from './canIssueFacility';
+import canIssueOrEditIssueFacility from './canIssueOrEditIssueFacility';
 
 const dealWithCanIssueFacilityFlags = (userRoles, deal) => {
   const modifiedDeal = deal;
@@ -8,7 +8,7 @@ const dealWithCanIssueFacilityFlags = (userRoles, deal) => {
 
   bonds.map((b) => {
     const bond = b;
-    if (canIssueFacility(userRoles, deal, b)) {
+    if (canIssueOrEditIssueFacility(userRoles, deal, b)) {
       bond.canIssueOrEditIssueFacility = true;
     }
 
@@ -17,7 +17,7 @@ const dealWithCanIssueFacilityFlags = (userRoles, deal) => {
 
   loans.map((l) => {
     const loan = l;
-    if (canIssueFacility(userRoles, deal, l)) {
+    if (canIssueOrEditIssueFacility(userRoles, deal, l)) {
       loan.canIssueOrEditIssueFacility = true;
     }
 
