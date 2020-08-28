@@ -121,7 +121,7 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     });
 
     bondRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
-      expect(href).to.equal(`/contract/${dealId}/bond/${bondId}/preview`);
+      expect(href).to.equal(`/contract/${dealId}/submission-details#bond-${bondId}`);
     });
 
     // expect the loan status to be updated
@@ -135,7 +135,7 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     });
 
     loanRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
-      expect(href).to.equal(`/contract/${dealId}/loan/${loanId}/preview`);
+      expect(href).to.equal(`/contract/${dealId}/submission-details#loan-${loanId}`);
     });
 
 

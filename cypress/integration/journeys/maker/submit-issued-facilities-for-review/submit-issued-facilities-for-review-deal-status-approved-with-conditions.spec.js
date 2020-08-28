@@ -119,7 +119,7 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
 
     // maker should now not be able to navigate to Issue Facility form
     bondRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
-      expect(href).to.equal(`/contract/${dealId}/bond/${bondId}/preview`);
+      expect(href).to.equal(`/contract/${dealId}/submission-details#bond-${bondId}`);
     });
 
     bondRow.deleteLink().should('not.exist');
@@ -136,7 +136,7 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
 
     // maker should not be able to navigate to Issue Facility form
     loanRow.issueFacilityLink().invoke('attr', 'href').then((href) => {
-      expect(href).to.equal(`/contract/${dealId}/loan/${loanId}/preview`);
+      expect(href).to.equal(`/contract/${dealId}/submission-details#loan-${loanId}`);
     });
 
     loanRow.deleteLink().should('not.exist');

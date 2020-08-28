@@ -19,6 +19,8 @@ import {
 import isDealEditable from './isDealEditable';
 import userCanSubmitDeal from './userCanSubmitDeal';
 import dealHasIssuedFacilitiesToSubmit from './dealHasIssuedFacilitiesToSubmit';
+import dealWithCanIssueFacilitiesFlag from './dealWithCanIssueFacilitiesFlag';
+
 
 const router = express.Router();
 
@@ -58,7 +60,7 @@ router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
 
   return res.render('contract/contract-view.njk', {
     successMessage: getFlashSuccessMessage(req),
-    deal,
+    deal: dealWithCanIssueFacilitiesFlag(user.roles, deal),
     user,
     dealFormsCompleted: dealFormsCompleted(deal),
     canFullyCalculateDealSummary,
