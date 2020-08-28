@@ -4,11 +4,8 @@
 
   {% set dealId = params.deal._id %}
   {% set dealStatus = params.deal.details.status %}
-  {% set dealSubmissionType = params.deal.details.submissionType %}
-  {% set dealPreviousStatus = params.deal.details.previousStatus %}
   {% set dealSubmissionDate = params.deal.details.submissionDate %}
   {% set dealIsEditable = params.editable %}
-
 
   {% set facility = params.facility %}
   {% set facilityName = params.facilityName %}
@@ -28,7 +25,7 @@
     {% elseif canOnlyViewIssueFacilityDetails and facility.issueFacilityDetailsProvided %}
       <a href="/contract/{{ dealId }}/submission-details#{{ facilityName }}-{{ facility._id }}" class="govuk-link" data-cy="{{ facilityName }}-issue-facility-{{ facility._id }}">Facility issued</a>
 
-    {% elseif (userIsMaker and params.editable) and (dealStatus === "Draft" or dealStatus === "Further Maker's input required") and not dealSubmissionDate %}
+    {% elseif (userIsMaker and dealIsEditable) and (dealStatus === "Draft" or dealStatus === "Further Maker's input required") and not dealSubmissionDate %}
       <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/delete" class="govuk-link" data-cy="{{ facilityName }}-delete-{{ facility._id }}" aria-label="Delete facility">Delete</a>
 
   {% endif %}
