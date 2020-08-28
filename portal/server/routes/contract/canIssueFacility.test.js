@@ -5,7 +5,7 @@ describe('canIssueFacility', () => {
 
   const mockLoanThatCanBeIssued = {
     facilityStage: 'Conditional',
-    issueFacilityDetailsSubmitted: false,
+    // status: 'Not started',
   };
 
   describe('when a deal status is `Acknowledged by UKEF`, AIN submissionType and a Conditional loan that has NOT been submitted', () => {
@@ -14,6 +14,7 @@ describe('canIssueFacility', () => {
         details: {
           status: 'Acknowledged by UKEF',
           submissionType: 'Automatic Inclusion Notice',
+          submissionDate: 12345678910,
         },
       };
 
@@ -27,6 +28,7 @@ describe('canIssueFacility', () => {
         details: {
           status: 'Acknowledged by UKEF',
           submissionType: 'Manual Inclusion Notice',
+          submissionDate: 12345678910,
         },
       };
 
@@ -40,6 +42,7 @@ describe('canIssueFacility', () => {
         details: {
           status: 'Accepted by UKEF (with conditions)',
           submissionType: 'Manual Inclusion Application',
+          submissionDate: 12345678910,
         },
       };
 
@@ -53,6 +56,7 @@ describe('canIssueFacility', () => {
         details: {
           status: 'Accepted by UKEF (without conditions)',
           submissionType: 'Manual Inclusion Application',
+          submissionDate: 12345678910,
         },
       };
 
@@ -66,12 +70,12 @@ describe('canIssueFacility', () => {
         details: {
           status: 'Acknowledged by UKEF',
           submissionType: 'Automatic Inclusion Notice',
+          submissionDate: 12345678910,
         },
       };
 
       const mockLoan = {
         facilityStage: 'Conditional',
-        issueFacilityDetailsSubmitted: false,
         status: 'Not started',
       };
 
@@ -85,12 +89,12 @@ describe('canIssueFacility', () => {
         details: {
           status: 'Further Maker\'s input required',
           submissionType: 'Automatic Inclusion Notice',
+          submissionDate: 12345678910,
         },
       };
 
       const mockLoan = {
         facilityStage: 'Conditional',
-        issueFacilityDetailsSubmitted: false,
         status: 'Not started',
       };
 
@@ -103,12 +107,12 @@ describe('canIssueFacility', () => {
       details: {
         status: 'Accepted by UKEF (with conditions)',
         submissionType: 'Automatic Inclusion Notice',
+        submissionDate: 12345678910,
       },
     };
 
     const mockLoan = {
       facilityStage: 'Conditional',
-      issueFacilityDetailsSubmitted: false,
     };
 
     describe('when the facility has `Maker\'s input required` status', () => {
@@ -131,12 +135,12 @@ describe('canIssueFacility', () => {
       details: {
         status: 'Accepted by UKEF (without conditions)',
         submissionType: 'Automatic Inclusion Notice',
+        submissionDate: 12345678910,
       },
     };
 
     const mockLoan = {
       facilityStage: 'Conditional',
-      issueFacilityDetailsSubmitted: false,
     };
 
     describe('when the facility has `Maker\'s input required` status', () => {
@@ -160,13 +164,13 @@ describe('canIssueFacility', () => {
         details: {
           status: 'Acknowledged by UKEF',
           submissionType: 'Automatic Inclusion Notice',
+          submissionDate: 12345678910,
         },
       };
 
       const mockBond = {
         bondStage: 'Issued',
         previousFacilityStage: 'Unissued',
-        issueFacilityDetailsSubmitted: false,
       };
 
       expect(canIssueFacility(mockUserRoles, mockDeal, mockBond)).toEqual(true);
@@ -179,13 +183,13 @@ describe('canIssueFacility', () => {
         details: {
           status: 'Acknowledged by UKEF',
           submissionType: 'Automatic Inclusion Notice',
+          submissionDate: 12345678910,
         },
       };
 
       const mockBond = {
         bondStage: 'Issued',
         previousFacilityStage: 'Issued',
-        issueFacilityDetailsSubmitted: false,
       };
 
       expect(canIssueFacility(mockUserRoles, mockDeal, mockBond)).toEqual(true);
@@ -198,13 +202,13 @@ describe('canIssueFacility', () => {
         details: {
           status: 'Acknowledged by UKEF',
           submissionType: 'Automatic Inclusion Notice',
+          submissionDate: 12345678910,
         },
       };
 
       const mockLoan = {
         facilityStage: 'Conditional',
         previousFacilityStage: 'Unconditional',
-        issueFacilityDetailsSubmitted: false,
       };
 
       expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(true);
@@ -217,13 +221,13 @@ describe('canIssueFacility', () => {
         details: {
           status: 'Acknowledged by UKEF',
           submissionType: 'Automatic Inclusion Notice',
+          submissionDate: 12345678910,
         },
       };
 
       const mockLoan = {
         facilityStage: 'Conditional',
         previousFacilityStage: 'Conditional',
-        issueFacilityDetailsSubmitted: false,
       };
 
       expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(true);
@@ -237,6 +241,7 @@ describe('canIssueFacility', () => {
         details: {
           status: 'Further Maker\'s input required',
           submissionType: 'Manual Inclusion Notice',
+          submissionDate: 12345678910,
         },
       };
 
@@ -250,6 +255,7 @@ describe('canIssueFacility', () => {
         details: {
           status: 'Some other status',
           submissionType: 'Manual Inclusion Notice',
+          submissionDate: 12345678910,
         },
       };
 
@@ -263,6 +269,7 @@ describe('canIssueFacility', () => {
         details: {
           status: 'Acknowledged by UKEF',
           submissionType: 'Some other submission type',
+          submissionDate: 12345678910,
         },
       };
 
@@ -276,12 +283,12 @@ describe('canIssueFacility', () => {
         details: {
           status: 'Acknowledged by UKEF',
           submissionType: 'Manual Inclusion Notice',
+          submissionDate: 12345678910,
         },
       };
 
       const mockLoan = {
         facilityStage: 'Unconditional',
-        issueFacilityDetailsSubmitted: false,
       };
 
       expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(false);
@@ -299,14 +306,53 @@ describe('canIssueFacility', () => {
 
       const mockBond = {
         facilityStage: 'Issued',
-        issueFacilityDetailsSubmitted: false,
       };
 
       expect(canIssueFacility(mockUserRoles, mockDeal, mockBond)).toEqual(false);
     });
   });
 
-  describe('when facility.issueFacilityDetailsSubmitted is true', () => {
+  describe('when deal status is Ready for Checker\'s approval', () => {
+    it('should return false', () => {
+      const mockDeal = {
+        details: {
+          status: 'Ready for Checker\'s approval',
+          submissionType: 'Automatic Inclusion Notice',
+          submissionDate: 12345678910,
+        },
+      };
+
+      const mockLoan = {
+        facilityStage: 'Unconditional',
+      };
+
+      expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(false);
+    });
+  });
+
+  describe('when facility status does not allow user to issue/edit issue facility', () => {
+    it('should return false', () => {
+      const mockDeal = {
+        details: {
+          status: 'Ready for Checker\'s approval',
+          submissionType: 'Automatic Inclusion Notice',
+          submissionDate: 12345678910,
+        },
+      };
+
+      const mockBonds = [
+        { facilityStage: 'Unconditional', status: 'Ready for check' },
+        { facilityStage: 'Unconditional', status: 'Submitted' },
+        { facilityStage: 'Unconditional', status: 'Acknowledged' },
+      ];
+
+      mockBonds.forEach((bond) => {
+        expect(canIssueFacility(mockUserRoles, mockDeal, bond)).toEqual(false);
+      });
+    });
+  });
+
+  describe('when deal.details.submissionDate does not exist', () => {
     it('should return false', () => {
       const mockDeal = {
         details: {
@@ -317,7 +363,6 @@ describe('canIssueFacility', () => {
 
       const mockLoan = {
         facilityStage: 'Conditional',
-        issueFacilityDetailsSubmitted: true,
       };
 
       expect(canIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(false);
