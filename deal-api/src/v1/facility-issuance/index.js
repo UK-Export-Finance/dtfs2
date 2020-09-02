@@ -36,11 +36,13 @@ const canIssueFacility = (userRoles, deal, facility) => {
 
   const allowedBondFacilityStage = bondStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
     || (bondStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
-        && (previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED || previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED));
+        && (previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
+            || previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED));
 
   const allowedLoanFacilityStage = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
     || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
-        && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL));
+        && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
+            || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL));
 
   const allowedFacilityStage = (allowedLoanFacilityStage || allowedBondFacilityStage);
 
