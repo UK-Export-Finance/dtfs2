@@ -56,7 +56,7 @@
             Requested Cover Start Date
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s"  data-cy="requested-cover-start-date">
-            {{ loan.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
+            {{ bond.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
           </dd>
         </div>
       {% endif %}
