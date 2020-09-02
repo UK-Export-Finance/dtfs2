@@ -185,7 +185,7 @@ jobs:
               GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}"
 
   cosmos-db:
-    name: Mongo
+    name: Mongo DB
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -199,7 +199,7 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
-    - name: Account
+    - name: Cosmos account for mongodb
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
@@ -215,15 +215,15 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name banks
-        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name eligibilityCriteria
-        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name mandatoryCriteria
-        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name currencies
-        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name deals --idx '[{"key": {"keys": ["_id", "details.dateOfLastAction"]}}]'
-        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name users
-        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name industrySectors
-        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name idCounters
-        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name countries
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name banks
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name eligibilityCriteria
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name mandatoryCriteria
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name currencies
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name deals --idx '[{"key": {"keys": ["_id", "details.dateOfLastAction"]}}]'
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name users
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name industrySectors
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name idCounters
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name countries
 
   front-door:
     # NB Front Door takes a little while to be available
