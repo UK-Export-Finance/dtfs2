@@ -215,8 +215,8 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name eligibilityCriteria
-        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name banks
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name eligibilityCriteria
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name banks
 
     - name: Colletions - mandatoryCriteria
       uses: Azure/cli@v1.0.0
