@@ -211,6 +211,20 @@ jobs:
         inlineScript: |
           az cosmosdb mongodb database create --account tfs-${{ env.environment }}-mongo --name test --max-throughput 4000
 
+    - name: Colletions
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name banks
+        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name eligibilityCriteria
+        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name mandatoryCriteria
+        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name currencies
+        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name deals
+        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name users
+        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name industrySectors
+        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name idCounters
+        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name countries
+
   front-door:
     # NB Front Door takes a little while to be available
     # So you won't get a successful request for the first few minutes.
