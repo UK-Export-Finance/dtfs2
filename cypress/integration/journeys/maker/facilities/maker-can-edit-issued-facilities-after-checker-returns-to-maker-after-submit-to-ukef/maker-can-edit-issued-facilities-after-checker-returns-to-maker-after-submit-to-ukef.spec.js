@@ -6,9 +6,6 @@ const mockUsers = require('../../../../../fixtures/mockUsers');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 
-// use a deal with MIA submission type
-// further maker input required status
-
 context('Given an MIA deal that has been submitted to UKEF, maker has issued facilities and a checker has returned the deal to maker', () => {
   let deal;
   let dealId;
