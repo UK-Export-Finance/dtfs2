@@ -211,17 +211,17 @@ jobs:
         inlineScript: |
           az cosmosdb mongodb database create --account tfs-${{ env.environment }}-mongo --name test --max-throughput 4000
 
-    - name: Colletions - banks
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name banks
-
     - name: Colletions - eligibilityCriteria
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
         az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name eligibilityCriteria
+
+    - name: Colletions - banks
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+        az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard _id --name banks
 
     - name: Colletions - mandatoryCriteria
       uses: Azure/cli@v1.0.0
