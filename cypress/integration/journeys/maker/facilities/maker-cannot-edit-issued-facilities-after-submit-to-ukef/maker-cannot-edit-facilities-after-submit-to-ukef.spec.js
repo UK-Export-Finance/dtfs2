@@ -45,6 +45,10 @@ context('Checker submits a deal with all facility types to UKEF', () => {
     deal.bondTransactions.items.forEach((bond) => {
       const bondId = bond._id; // eslint-disable-line no-underscore-dangle
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
+
+      bondRow.uniqueNumberLink().should('not.be.visible');
+      bondRow.uniqueNumber().should('be.visible');
+
       bondRow.deleteLink().should('not.be.visible');
       bondRow.issueFacilityLink().should('not.be.visible');
     });
@@ -52,6 +56,9 @@ context('Checker submits a deal with all facility types to UKEF', () => {
     deal.loanTransactions.items.forEach((loan) => {
       const loanId = loan._id; // eslint-disable-line no-underscore-dangle
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
+
+      loanRow.bankReferenceNumberLink().should('not.be.visible');
+      loanRow.bankReferenceNumber().should('be.visible');
 
       loanRow.deleteLink().should('not.be.visible');
       loanRow.issueFacilityLink().should('not.be.visible');

@@ -40,6 +40,7 @@ const page = {
       return {
         row,
         uniqueNumber: () => row.get(`[data-cy="unique-number-${bondId}"]`),
+        uniqueNumberLink: () => row.get(`[data-cy="unique-number-link-${bondId}"]`),
         bondStatus: () => row.get(`[data-cy="bond-status-${bondId}"]`),
         facilityValue: () => row.get('[data-cy="bond-facility-value"]'),
         bondStage: () => row.get(`[data-cy="bond-stage-${bondId}"]`),
@@ -58,6 +59,7 @@ const page = {
       return {
         row,
         bankReferenceNumber: () => row.get(`[data-cy="loan-bank-reference-number-${loanId}"]`),
+        bankReferenceNumberLink: () => row.get(`[data-cy="loan-bank-reference-number-link-${loanId}"]`),
         loanStatus: () => row.get(`[data-cy="loan-status-${loanId}"]`),
         facilityValue: () => row.get('[data-cy="loan-facility-value"]'),
         facilityStage: () => row.get(`[data-cy="loan-facility-stage-${loanId}"]`),
