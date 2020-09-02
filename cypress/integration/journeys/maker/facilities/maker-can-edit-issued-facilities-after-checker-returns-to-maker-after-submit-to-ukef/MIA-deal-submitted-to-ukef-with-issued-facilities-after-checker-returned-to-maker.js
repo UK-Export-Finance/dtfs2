@@ -216,8 +216,8 @@ const deal = {
         "uniqueIdentificationNumber": "1234",
         "issueFacilityDetailsStarted": true,
         "uniqueIdentificationNumberRequiredForIssuance": true,
-        "requestedCoverStartDate": "1599222774328",
-        "issuedDate": "1599222774328",
+        "requestedCoverStartDate": moment().add(1, 'month').utc().valueOf(),
+        "issuedDate": moment().add(1, 'week').utc().valueOf(),
         "issueFacilityDetailsProvided": true,
         "status": "Maker's input required",
         "previousFacilityStage": "Issued"
@@ -257,11 +257,11 @@ const deal = {
         "disbursementAmount": "1,234.00",
         "issueFacilityDetailsStarted": true,
         "bankReferenceNumberRequiredForIssuance": true,
-        "issuedDate": "1599741137770",
+        "issuedDate": moment().add(1, 'week').utc().valueOf(),
         "issueFacilityDetailsProvided": true,
         "status": "Maker's input required",
         "previousFacilityStage": "Conditional",
-        "requestedCoverStartDate": "1599741137770"
+        "requestedCoverStartDate": moment().add(1, 'month').utc().valueOf(),
       }
     ]
   },
