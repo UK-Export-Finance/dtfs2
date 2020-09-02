@@ -199,11 +199,17 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
-    - name: Create
+    - name: Account
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB
+
+    - name: Database with autoscale
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az cosmosdb mongodb database create --account tfs-${{ env.environment }}-mongo --name test --max-throughput 4000
 
   front-door:
     # NB Front Door takes a little while to be available
