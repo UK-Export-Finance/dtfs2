@@ -11,6 +11,7 @@ module.exports = (submittedValues, errorList, dealSubmissionDateTimestamp) => {
 
   const dealSubmissionDate = formattedTimestamp(dealSubmissionDateTimestamp);
   const requestedCoverStartDateTimestamp = formattedTimestamp(submittedValues.requestedCoverStartDate);
+  const today = moment();
 
   const {
     'requestedCoverStartDate-day': requestedCoverStartDateDay,
@@ -20,6 +21,7 @@ module.exports = (submittedValues, errorList, dealSubmissionDateTimestamp) => {
 
   if (requestedCoverStartDateTimestamp) {
     const formattedDealSubmissionDate = moment(dealSubmissionDate).format('Do MMMM YYYY');
+    const dealSubmissionDatePlus3Months = moment(dealSubmissionDate).add(3, 'month');
 
     if (moment(requestedCoverStartDateTimestamp).isBefore(dealSubmissionDate)) {
       newErrorList.requestedCoverStartDate = {
@@ -27,8 +29,13 @@ module.exports = (submittedValues, errorList, dealSubmissionDateTimestamp) => {
         order: orderNumber(newErrorList),
       };
     }
-
-    const dealSubmissionDatePlus3Months = moment(dealSubmissionDate).add(3, 'month');
+  
+    if (moment(requestedCoverStartDateTimestamp).isBefore(today)) {
+      newErrorList.requestedCoverStartDate = {
+        text: 'Requested Cover Start Date must be aftertodayyyy',
+        order: orderNumber(newErrorList),
+      };
+    }
 
     if (moment(requestedCoverStartDateTimestamp).isAfter(dealSubmissionDatePlus3Months)) {
       newErrorList.requestedCoverStartDate = {
