@@ -64,6 +64,20 @@ describe('canIssueOrEditIssueFacility', () => {
     });
   });
 
+  describe('when a deal status is `Further Maker\'s input required`, MIA submissionType and a Conditional loan that has NOT been submitted', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        details: {
+          status: 'Further Maker\'s input required',
+          submissionType: 'Manual Inclusion Application',
+          submissionDate: 12345678910,
+        },
+      };
+
+      expect(canIssueOrEditIssueFacility(mockUserRoles, mockDeal, mockLoanThatCanBeIssued)).toEqual(true);
+    });
+  });
+
   describe('when a deal status is `Acknowledged by UKEF`, AIN submissionType and a Conditional loan that has NOT been submitted with `Not started` status', () => {
     it('should return true', () => {
       const mockDeal = {

@@ -28,7 +28,7 @@ const canIssueOrEditIssueFacility = (userRoles, deal, facility) => {
                                     || submissionType === 'Manual Inclusion Notice');
 
   const isMiaDealInAllowedStatus = (submissionType === 'Manual Inclusion Application'
-                                    && acceptedByUkefDealStatus);
+                                    && (acceptedByUkefDealStatus || dealStatus === 'Further Maker\'s input required'));
 
   const allowedBondFacilityStage = facility.bondStage === 'Unissued'
                                    || (facility.bondStage === 'Issued' && (previousFacilityStage === 'Unissued' || previousFacilityStage === 'Issued'));
