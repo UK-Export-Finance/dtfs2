@@ -17,11 +17,10 @@ const updateBondStatus = (bond, workflowBond) => {
       return 'Acknowledged';
     }
 
-    if (workflowBond.BSS_status[0] === '""') {
+    if (workflowBond.BSS_status[0] === '""' || workflowBond.BSS_status[0] === 'undefined') {
       return 'Not started';
     }
   }
-
   return null;
 };
 
@@ -42,11 +41,10 @@ const updateLoanStatus = (loan, workflowLoan) => {
       return 'Acknowledged';
     }
 
-    if (workflowLoan.EWCS_status[0] === '""') {
+    if (workflowLoan.EWCS_status[0] === '""' || workflowLoan.EWCS_status[0] === 'undefined') {
       return 'Not started';
     }
   }
-
   return null;
 };
 
