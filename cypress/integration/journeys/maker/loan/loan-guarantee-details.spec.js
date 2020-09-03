@@ -147,10 +147,10 @@ context('Loan Guarantee Details', () => {
 
         const row = pages.contract.loansTransactionsTable.row(loanId);
 
-        row.bankReferenceNumber().invoke('text').then((text) => {
+        row.bankReferenceNumberLink().invoke('text').then((text) => {
           expect(text.trim()).equal('Not entered');
           // assert that clicking the `bank reference number` link progesses to the guarantee details page
-          row.bankReferenceNumber().click();
+          row.bankReferenceNumberLink().click();
           cy.url().should('include', '/contract');
           cy.url().should('include', '/loan/');
           cy.url().should('include', '/guarantee-details');
@@ -196,7 +196,7 @@ context('Loan Guarantee Details', () => {
 
         const row = pages.contract.loansTransactionsTable.row(loanId);
 
-        row.bankReferenceNumber().click();
+        row.bankReferenceNumberLink().click();
         cy.url().should('include', '/loan/');
         cy.url().should('include', '/guarantee-details');
 

@@ -134,7 +134,7 @@ context('Bond Details', () => {
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
-        row.uniqueNumber().invoke('text').then((text) => {
+        row.uniqueNumberLink().invoke('text').then((text) => {
           expect(text.trim()).equal('Not entered');
         });
 
@@ -143,7 +143,7 @@ context('Bond Details', () => {
         });
 
         // assert that clicking the `unique number` link progesses to the bond page
-        row.uniqueNumber().click();
+        row.uniqueNumberLink().click();
         cy.url().should('include', '/contract');
         cy.url().should('include', '/bond/');
         cy.url().should('include', '/details');
@@ -247,7 +247,7 @@ context('Bond Details', () => {
 
           const row = pages.contract.bondTransactionsTable.row(bondId);
 
-          row.uniqueNumber().click();
+          row.uniqueNumberLink().click();
           cy.url().should('include', '/bond/');
           cy.url().should('include', '/details');
 

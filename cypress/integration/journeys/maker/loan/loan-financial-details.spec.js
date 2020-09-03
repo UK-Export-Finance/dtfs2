@@ -197,7 +197,7 @@ context('Loan Financial Details', () => {
 
         const row = pages.contract.loansTransactionsTable.row(loanId);
 
-        row.bankReferenceNumber().click();
+        row.bankReferenceNumberLink().click();
         partials.loanProgressNav.progressNavLinkLoanFinancialDetails().click();
         cy.url().should('include', '/loan/');
         cy.url().should('include', '/financial-details');
