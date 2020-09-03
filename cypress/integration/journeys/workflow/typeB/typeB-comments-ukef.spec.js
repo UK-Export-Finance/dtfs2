@@ -257,7 +257,7 @@ context('A checker submits an approval for a deal; workflow responds with a type
 
     contract.visit(goodDeal);
     ukefComments.comments.title().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('UKEF Comments:');
+      expect(text.trim()).to.equal('Reason for rejection:');
     });
     ukefComments.comments.text().invoke('text').then((text) => {
       expect(text.trim()).to.equal('ukef comments refuse text');
@@ -265,7 +265,7 @@ context('A checker submits an approval for a deal; workflow responds with a type
 
     contract.commentsTab().click();
     ukefComments.comments.title().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('UKEF Comments:');
+      expect(text.trim()).to.equal('Reason for rejection:');
     });
     ukefComments.comments.text().invoke('text').then((text) => {
       expect(text.trim()).to.equal('ukef comments refuse text');
@@ -273,7 +273,7 @@ context('A checker submits an approval for a deal; workflow responds with a type
 
     contract.previewTab().click();
     ukefComments.comments.title().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('UKEF Comments:');
+      expect(text.trim()).to.equal('Reason for rejection:');
     });
     ukefComments.comments.text().invoke('text').then((text) => {
       expect(text.trim()).to.equal('ukef comments refuse text');
