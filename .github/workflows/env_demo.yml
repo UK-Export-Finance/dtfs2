@@ -219,7 +219,7 @@ jobs:
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name eligibilityCriteria
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name mandatoryCriteria
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name currencies
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name deals --idx '[{"key": {"keys": ["_id", "details.dateOfLastAction"]}}]'
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name deals --idx '[{"key": {"keys": ["details.dateOfLastAction"]}}]'
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name users
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name industrySectors
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name idCounters
