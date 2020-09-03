@@ -140,7 +140,7 @@ context('Bond Fee Details', () => {
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
-        row.uniqueNumber().click();
+        row.uniqueNumberLink().click();
         partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
         cy.url().should('include', '/fee-details');
 

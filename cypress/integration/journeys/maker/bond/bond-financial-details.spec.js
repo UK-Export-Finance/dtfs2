@@ -346,7 +346,7 @@ context('Bond Financial Details', () => {
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
-        row.uniqueNumber().click();
+        row.uniqueNumberLink().click();
         partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
         cy.url().should('include', '/financial-details');
 

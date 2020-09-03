@@ -197,7 +197,7 @@ context('Add a Bond to a Deal', () => {
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
-        row.uniqueNumber().invoke('text').then((text) => {
+        row.uniqueNumberLink().invoke('text').then((text) => {
           expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
         });
 
@@ -232,7 +232,7 @@ context('Add a Bond to a Deal', () => {
         });
 
         // assert that clicking the `unique number` link progesses to the Bond Details page
-        row.uniqueNumber().click();
+        row.uniqueNumberLink().click();
         cy.url().should('include', '/contract');
         cy.url().should('include', '/bond/');
         cy.url().should('include', '/details');
