@@ -83,13 +83,6 @@ a mongoDB container will have been started:
 
 ### Git workflow
 
-Setup git hooks with:
-```
-npm install
-```
-
-When a commit is pushed to master, heroku branches are updated and pushed.
-
 Github actions will run a build and push of container images to Azure, which will be picked up and deployed automatically by the Dev environment. If testing is successful, images will be promoted to the test environment.
 
 Pushing to the `infrastructure` branch will trigger a refresh of the infrastructure in each environment. This updates the App Services and sets environment variables and secrets.
