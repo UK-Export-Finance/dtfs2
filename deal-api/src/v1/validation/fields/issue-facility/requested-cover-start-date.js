@@ -32,7 +32,7 @@ module.exports = (submittedValues, errorList, dealSubmissionDateTimestamp) => {
 
     if (moment(requestedCoverStartDateTimestamp).isBefore(today)) {
       newErrorList.requestedCoverStartDate = {
-        text: 'Requested Cover Start Date must be aftertodayyyy',
+        text: 'Requested Cover Start Date must be after today',
         order: orderNumber(newErrorList),
       };
     }
