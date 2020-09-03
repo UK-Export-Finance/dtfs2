@@ -262,6 +262,8 @@ context('A checker submits an approval for a deal; workflow responds with a type
     ukefComments.comments.text().invoke('text').then((text) => {
       expect(text.trim()).to.equal('ukef comments refuse text');
     });
+    ukefComments.specialCondition.title().should('not.exist');
+    ukefComments.specialCondition.text().should('not.exist');
 
     contract.commentsTab().click();
     ukefComments.comments.title().invoke('text').then((text) => {
@@ -271,6 +273,9 @@ context('A checker submits an approval for a deal; workflow responds with a type
       expect(text.trim()).to.equal('ukef comments refuse text');
     });
 
+    ukefComments.specialCondition.title().should('not.exist');
+    ukefComments.specialCondition.text().should('not.exist');
+
     contract.previewTab().click();
     ukefComments.comments.title().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Reason for rejection:');
@@ -278,5 +283,8 @@ context('A checker submits an approval for a deal; workflow responds with a type
     ukefComments.comments.text().invoke('text').then((text) => {
       expect(text.trim()).to.equal('ukef comments refuse text');
     });
+
+    ukefComments.specialCondition.title().should('not.exist');
+    ukefComments.specialCondition.text().should('not.exist');
   });
 });
