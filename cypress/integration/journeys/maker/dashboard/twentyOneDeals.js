@@ -11,7 +11,6 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',
-      submissionDate: moment().utc().valueOf(),
       owningBank: {
         id: '956',
         name: 'Barclays Bank',
@@ -34,7 +33,6 @@ module.exports = [
       bankSupplyContractName: 'Tibettan submarine acquisition scheme',
       submissionType: 'Automatic Inclusion Notice',
       status: 'Draft',
-      submissionDate: moment().utc().valueOf(),
       owningBank: {
         id: '956',
         name: 'Barclays Bank',
