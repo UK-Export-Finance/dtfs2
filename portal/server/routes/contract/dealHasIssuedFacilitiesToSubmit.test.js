@@ -35,6 +35,39 @@ describe('dealHasIssuedFacilitiesToSubmit', () => {
     });
   });
 
+  describe('when a bond has been submitted and has `Maker\'s input required` status', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        bondTransactions: {
+          items: [
+            { status: 'Maker\'s input required', issueFacilityDetailsSubmitted: true },
+          ],
+        },
+        loanTransactions: {
+          items: [],
+        },
+      };
+      expect(dealHasIssuedFacilitiesToSubmit(mockDeal)).toEqual(true);
+    });
+  });
+
+
+  describe('when a loan has been submitted and has `Maker\'s input required` status', () => {
+    it('should return true', () => {
+      const mockDeal = {
+        bondTransactions: {
+          items: [],
+        },
+        loanTransactions: {
+          items: [
+            { status: 'Maker\'s input required', issueFacilityDetailsSubmitted: true },
+          ],
+        },
+      };
+      expect(dealHasIssuedFacilitiesToSubmit(mockDeal)).toEqual(true);
+    });
+  });
+
   describe('when no bond or loan has facility.issueFacilityDetailsProvided', () => {
     it('should return false', () => {
       const mockDeal = {
