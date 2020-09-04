@@ -15,12 +15,14 @@ jobs:
     name: Promote container images
     runs-on: ubuntu-latest
     steps:
-    - uses: azure/docker-login@v1
+    - name: Log in to Dev container registry
+      uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.DEV_ACR_REGISTRY }}
         username: ${{ secrets.DEV_ACR_USERNAME }}
         password: ${{ secrets.DEV_ACR_PASSWORD }}
-    - uses: azure/docker-login@v1
+    - name: Log in to Demo container registry
+      uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.DEMO_ACR_REGISTRY }}
         username: ${{ secrets.DEMO_ACR_USERNAME }}
@@ -90,4 +92,3 @@ jobs:
           cat .env
           npm install
           node re-insert-mocks.js
-          

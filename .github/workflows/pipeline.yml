@@ -192,7 +192,8 @@ jobs:
     name: Promote Portal to Dev
     runs-on: ubuntu-latest
     steps:
-    - uses: azure/docker-login@v1
+    - name: Log in to Dev container registry
+      uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.DEV_ACR_REGISTRY }}
         username: ${{ secrets.DEV_ACR_USERNAME }}
