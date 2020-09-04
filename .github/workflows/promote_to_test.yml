@@ -15,12 +15,14 @@ jobs:
     name: Promote container images
     runs-on: ubuntu-latest
     steps:
-    - uses: azure/docker-login@v1
+    - name: Log in to Dev container registry
+      uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.DEV_ACR_REGISTRY }}
         username: ${{ secrets.DEV_ACR_USERNAME }}
         password: ${{ secrets.DEV_ACR_PASSWORD }}
-    - uses: azure/docker-login@v1
+    - name: Log in to Test container registry
+      uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.TEST_ACR_REGISTRY }}
         username: ${{ secrets.TEST_ACR_USERNAME }}
@@ -37,7 +39,7 @@ jobs:
         docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$from
         docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$from ${{ secrets.TEST_ACR_REGISTRY }}/portal-api:$to
         docker push ${{ secrets.TEST_ACR_REGISTRY }}/portal-api:$to
-        
+
   deploy:
     name: Deploy container images
     needs: promote

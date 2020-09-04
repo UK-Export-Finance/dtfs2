@@ -15,12 +15,14 @@ jobs:
     name: Promote container images
     runs-on: ubuntu-latest
     steps:
-    - uses: azure/docker-login@v1
+    - name: Log in to Test container registry
+      uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.TEST_ACR_REGISTRY }}
         username: ${{ secrets.TEST_ACR_USERNAME }}
         password: ${{ secrets.TEST_ACR_PASSWORD }}
-    - uses: azure/docker-login@v1
+    - name: Log in to Prod container registry
+      uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.PROD_ACR_REGISTRY }}
         username: ${{ secrets.PROD_ACR_USERNAME }}
