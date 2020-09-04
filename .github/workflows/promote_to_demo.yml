@@ -67,7 +67,7 @@ jobs:
         inlineScript: |
           az webapp deployment slot swap   --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --action swap
           az webapp deployment slot swap   --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --action swap
-          
+
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
@@ -90,3 +90,4 @@ jobs:
           cat .env
           npm install
           node re-insert-mocks.js
+          
