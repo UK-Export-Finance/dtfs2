@@ -209,21 +209,44 @@ jobs:
         docker push ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$to
 
   deploy:
-    needs: promote
-    # The App Service seems to need to be restarted to trigger a redeploy
     name: Deploy container images
+    needs: promote
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
       with:
         creds: ${{ env.credentials }}
-    - name: Restart app services
+
+    - name: Defaults
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp restart --name tfs-${{ env.environment }}-portal-ui --resource-group ${{ env.resource_group }}
-          az webapp restart --name tfs-${{ env.environment }}-portal-api --resource-group ${{ env.resource_group }}
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
 
+    - name: Create slot ${{ github.sha }}
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot create --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-ui
+          az webapp deployment slot create --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-api
+
+    - name: Swap slot ${{ github.sha }} into production
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot swap   --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --action swap
+          az webapp deployment slot swap   --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --action swap
+
+    - name: Delete slot ${{ github.sha }}
+      # Clean up the slot regardless of errors
+      if: ${{ always() }}
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }}
+          az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }}
+          
   refresh-data:
     needs: deploy
     name: Refresh Dev data
