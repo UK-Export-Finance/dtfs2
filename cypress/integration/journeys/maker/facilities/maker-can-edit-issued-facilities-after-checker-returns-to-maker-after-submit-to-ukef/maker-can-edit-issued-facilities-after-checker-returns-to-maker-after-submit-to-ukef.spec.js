@@ -35,6 +35,12 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
     });
 
     //---------------------------------------------------------------
+    // 'proceed to review' button should be enabled
+    // purely because facility statuses are 'Maker's input required'
+    //---------------------------------------------------------------
+    pages.contract.proceedToReview().should('not.be.disabled');
+
+    //---------------------------------------------------------------
     // facilities should be in correct shape,
     // maker can edit the issued facility,
     // maker can submit Issued Facility forms
@@ -88,6 +94,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
     // maker can re-submit the deal back to checker
     //---------------------------------------------------------------
 
+    pages.contract.proceedToReview().should('not.be.disabled');
     pages.contract.proceedToReview().click();
     pages.contractReadyForReview.comments().type('Updated issued facilities');
     pages.contractReadyForReview.readyForCheckersApproval().click();
