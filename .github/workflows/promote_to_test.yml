@@ -67,8 +67,8 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp deployment slot swap   --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --action swap
-          az webapp deployment slot swap   --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --action swap
+          az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --action swap
+          az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --action swap
           
     - name: Delete slot
       # Clean up the slot regardless of errors
