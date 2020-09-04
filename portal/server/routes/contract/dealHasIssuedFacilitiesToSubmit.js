@@ -15,6 +15,7 @@ const dealHasIssuedFacilitiesToSubmit = (deal) => {
         && facility.status === 'Maker\'s input required') {
       return facility;
     }
+    return null;
   });
 
   if (facilitiesToSubmit.length > 0) {
