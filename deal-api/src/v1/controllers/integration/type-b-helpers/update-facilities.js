@@ -50,7 +50,7 @@ const updateLoanStatus = (loan, workflowLoan) => {
     }
   }
 
-  if (bondStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL) {
+  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL) {
     return 'Not started';
   }
 
