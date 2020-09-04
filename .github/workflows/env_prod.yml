@@ -10,6 +10,7 @@ env:
   credentials: ${{ secrets.AZURE_DIGITAL_PROD }}
   resource_group: ${{ secrets.PROD_RESOURCE_GROUP }}
   app_service_plan: prod
+  redis_sku: Basic
   # Container registry
   registry: ${{ secrets.PROD_ACR_REGISTRY }}
   # App service settings
@@ -310,3 +311,26 @@ jobs:
         inlineScript: |
           az storage share create --account-name tfs${{ env.environment }}storage \
             --name workflow
+
+  # session-store:
+  #   name: Redis session store
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: azure/login@v1
+  #     with:
+  #       creds: ${{ env.credentials }}
+
+  #   - name: Defaults
+  #     uses: Azure/cli@v1.0.0
+  #     with:
+  #       inlineScript: |
+  #         az configure --defaults location=uksouth
+  #         az configure --defaults group=${{ env.resource_group }}
+
+  #   - name: Create
+  #     uses: Azure/cli@v1.0.0
+  #     with:
+  #       inlineScript: |
+  #         az redis create --name tfs-${{ env.environment }}-redis \
+  #           --sku ${{ env.redis_sku }} \
+  #           --vm-size C0
