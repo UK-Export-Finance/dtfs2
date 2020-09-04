@@ -55,7 +55,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     const conditionalLoanRow = pages.contract.loansTransactionsTable.row(conditionalLoanId);
 
     //---------------------------------------------------------------
-    // `Confirm start date` link should appear for Issued & Unconditional facilities
+    // `Confirm start date` link should appear for Issued Bonds & Unconditional Loans
     //---------------------------------------------------------------
     issuedBondRow.changeOrConfirmCoverStartDateLink().should('be.visible');
     issuedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Confirm start date');
@@ -68,7 +68,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     unconditionalLoanRow.issueFacilityLink().should('not.be.visible');
 
     //---------------------------------------------------------------
-    // TODO `Issue facility` link should appear for Unissued & Conditional facilities
+    // TODO `Issue facility` link should appear for Unissued Bonds & Conditional Loans
     //---------------------------------------------------------------
     unissuedBondRow.issueFacilityLink().should('be.visible');
     unissuedBondRow.changeOrConfirmCoverStartDateLink().should('not.be.visible');
