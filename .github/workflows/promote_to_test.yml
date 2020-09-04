@@ -37,7 +37,7 @@ jobs:
         docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$from
         docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$from ${{ secrets.TEST_ACR_REGISTRY }}/portal-api:$to
         docker push ${{ secrets.TEST_ACR_REGISTRY }}/portal-api:$to
-
+        
   deploy:
     name: Deploy container images
     needs: promote
@@ -46,22 +46,34 @@ jobs:
     - uses: azure/login@v1
       with:
         creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
     - name: Create slot
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-ui
           az webapp deployment slot create --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-api
+
     - name: Deploy slot
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           az webapp deployment slot swap   --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --action swap
           az webapp deployment slot swap   --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --action swap
+          
     - name: Delete slot
+      # Clean up the slot regardless of errors
       if: ${{ always() }}
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }}
           az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }}
+          
