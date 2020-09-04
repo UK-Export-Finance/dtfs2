@@ -6,6 +6,8 @@ on:
 
 jobs:
 
+  # Todo: add auto-scaling, although it's unlikely there'll be enough traffic to need it.
+
   dev-rg:
     name: Dev resource group
     runs-on: ubuntu-latest
