@@ -214,7 +214,8 @@ const deal = {
         "issuedDate": moment().utc().valueOf(),
         "issueFacilityDetailsProvided": true,
         "status": "Submitted",
-        "previousFacilityStage": "Unissued"
+        "previousFacilityStage": "Unissued",
+        "issueFacilityDetailsSubmitted": true
       },
       {
         "_id": "1000062",
@@ -275,7 +276,8 @@ const deal = {
         "issuedDate": moment().utc().valueOf(),
         "issueFacilityDetailsProvided": true,
         "status": "Submitted",
-        "previousFacilityStage": "Conditional"
+        "previousFacilityStage": "Conditional",
+        "issueFacilityDetailsSubmitted": true
       },
       {
         "_id": "1000064",
