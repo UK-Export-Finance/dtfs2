@@ -12,21 +12,16 @@ const updateSubmittedIssuedFacilities = async (collection, deal) => {
 
       const {
         facilityStage,
-        previousFacilityStage,
         bondStage,
       } = facility;
 
-      const shouldUpdateIssuedLoan = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
-                                     && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL);
+      const shouldUpdateLoan = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL;
+      const shouldUpdateBond = bondStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED;
 
-      const shouldUpdateIssuedBond = (bondStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
-                                     && previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED);
-
-      const shouldUpdateIssuedFacility = ((shouldUpdateIssuedLoan
-                                          || shouldUpdateIssuedBond)
+      const shouldUpdateIssuedFacility = ((shouldUpdateLoan
+                                          || shouldUpdateBond)
                                           && facility.issueFacilityDetailsProvided
-                                          && !facility.issueFacilityDetailsSubmitted
-                                          && facility.status !== 'Submitted');
+                                          && facility.status === 'Ready for check');
 
       if (shouldUpdateIssuedFacility) {
         facility.issueFacilityDetailsSubmitted = true;
