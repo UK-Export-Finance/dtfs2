@@ -6,13 +6,13 @@ const {
 } = require('../date');
 const { formattedTimestamp } = require('../../../facility-dates/timestamp');
 const CONSTANTS = require('../../../../constants');
-const { add } = require('cypress/types/lodash');
 
-module.exports = (submittedValues, errorList, dealSubmissionType, dealSubmissionDateTimestamp) => {
+module.exports = (submittedValues, errorList, dealSubmissionType, dealSubmissionDateTimestamp, manualInclusionNoticeSubmissionDateTimestamp) => {
   const newErrorList = errorList;
 
   const dealSubmissionDate = formattedTimestamp(dealSubmissionDateTimestamp);
-  const requestedCoverStartDateTimestamp = formattedTimestamp(submittedValues.requestedCoverStartDate);
+  const requestedCoverStartDate = formattedTimestamp(submittedValues.requestedCoverStartDate);
+  const manualInclusionNoticeSubmissionDate = formattedTimestamp(manualInclusionNoticeSubmissionDateTimestamp);
   const today = moment();
 
   const {
@@ -21,12 +21,17 @@ module.exports = (submittedValues, errorList, dealSubmissionType, dealSubmission
     'requestedCoverStartDate-year': requestedCoverStartDateYear,
   } = submittedValues;
 
-  if (requestedCoverStartDateTimestamp) {
+  if (requestedCoverStartDate) {
     const formattedDealSubmissionDate = moment(dealSubmissionDate).format('Do MMMM YYYY');
-    // const dealSubmissionDatePlus3Months = moment(dealSubmissionDate).add(3, 'month');
-    const todayPlus3Months = moment().add(3, 'month');
+    const formattedManualInclusionNoticeSubmissionDate = moment(manualInclusionNoticeSubmissionDate).format('Do MMMM YYYY');
 
-    if (moment(requestedCoverStartDateTimestamp).isBefore(today)) {
+    const today = moment();
+    const todayFormatted = moment(today).format('Do MMMM YYYY');
+  
+    const todayPlus3Months = moment(today).add(3, 'month');
+    const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY')
+
+    if (moment(requestedCoverStartDate).isBefore(today)) {
       newErrorList.requestedCoverStartDate = {
         text: 'Requested Cover Start Date must be after today',
         order: orderNumber(newErrorList),
@@ -34,45 +39,44 @@ module.exports = (submittedValues, errorList, dealSubmissionType, dealSubmission
     }
 
     if (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN) {
-      if (moment(requestedCoverStartDateTimestamp).isBefore(dealSubmissionDate)) {
+      if (moment(requestedCoverStartDate).isBefore(dealSubmissionDate)) {
         newErrorList.requestedCoverStartDate = {
           text: `Requested Cover Start Date must be after ${formattedDealSubmissionDate}`,
           order: orderNumber(newErrorList),
         };
       }
+
+      if (moment(requestedCoverStartDate).isAfter(todayPlus3Months)) {
+        newErrorList.requestedCoverStartDate = {
+          text: `Requested Cover Start Date must be between ${formattedDealSubmissionDate} and ${todayPlus3MonthsFormatted}`,
+          order: orderNumber(newErrorList),
+        };
+      }
     } else if (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
               || dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
-
-      if (moment(requestedCoverStartDateTimestamp).isAfter(todayPlus3Months)) {
+      if (moment(requestedCoverStartDate).isBefore(today)) {
         newErrorList.requestedCoverStartDate = {
-          text: `Requested Cover Start Date must be between ${formattedDealSubmissionDate} and ${moment(todayPlus3Months).format('Do MMMM YYYY')}`,
+          text: `Requested Cover Start Date must be after ${todayFormatted}`,
+          order: orderNumber(newErrorList),
+        };
+      }
+
+      if (manualInclusionNoticeSubmissionDateTimestamp) {
+        if (moment(requestedCoverStartDate).isBefore(manualInclusionNoticeSubmissionDate)) {
+          newErrorList.requestedCoverStartDate = {
+            text: `Requested Cover Start Date must be after ${formattedManualInclusionNoticeSubmissionDate}`,
+            order: orderNumber(newErrorList),
+          };
+        }
+      }
+
+      if (moment(requestedCoverStartDate).isAfter(todayPlus3Months)) {
+        newErrorList.requestedCoverStartDate = {
+          text: `Requested Cover Start Date must be between ${formattedManualInclusionNoticeSubmissionDate} and ${todayPlus3MonthsFormatted}`,
           order: orderNumber(newErrorList),
         };
       }
     }
-
-    /*
-    if (moment(requestedCoverStartDateTimestamp).isBefore(dealSubmissionDate)) {
-      newErrorList.requestedCoverStartDate = {
-        text: `Requested Cover Start Date must be after ${formattedDealSubmissionDate}`,
-        order: orderNumber(newErrorList),
-      };
-    }
-
-    if (moment(requestedCoverStartDateTimestamp).isBefore(today)) {
-      newErrorList.requestedCoverStartDate = {
-        text: 'Requested Cover Start Date must be after today',
-        order: orderNumber(newErrorList),
-      };
-    }
-
-    if (moment(requestedCoverStartDateTimestamp).isAfter(dealSubmissionDatePlus3Months)) {
-      newErrorList.requestedCoverStartDate = {
-        text: `Requested Cover Start Date must be between ${formattedDealSubmissionDate} and ${moment(dealSubmissionDatePlus3Months).format('Do MMMM YYYY')}`,
-        order: orderNumber(newErrorList),
-      };
-    }
-    */
   } else if (dateHasSomeValues(
     requestedCoverStartDateDay,
     requestedCoverStartDateMonth,
