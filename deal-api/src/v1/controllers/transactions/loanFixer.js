@@ -57,14 +57,14 @@ const constructor = (listOfFilters) => {
       }
 
       if (keyFields.filterByBankFacilityId) {
-        const regex = new RegExp(`^${keyFields.filterByBankFacilityId}`);
+        const regex = new RegExp(`^${keyFields.filterByBankFacilityId}`, 'i');
         if (loan.bankReferenceNumber && loan.bankReferenceNumber.match(regex)) {
           return true;
         }
       }
 
       if (keyFields.filterByUkefFacilityId) {
-        const regex = new RegExp(`^${keyFields.filterByUkefFacilityId}`);
+        const regex = new RegExp(`^${keyFields.filterByUkefFacilityId}`, 'i');
         const ukefFacilityID = Array.isArray(loan.ukefFacilityID) ? loan.ukefFacilityID[0] : loan.ukefFacilityID;
         if (ukefFacilityID && ukefFacilityID.match(regex)) {
           return true;

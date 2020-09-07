@@ -23,11 +23,11 @@ const constructor = (user, filters) => {
       const filterField = Object.keys(filter)[0];// only expecting one entry/block
 
       if (FILTER_SEARCH === filterField) {
-        const bondMatchesOnUkefFacilityId = { 'bondTransactions.items': { $elemMatch: { ukefFacilityID: { $regex: new RegExp(`^${filter[FILTER_SEARCH]}`) } } } };
-        const loanMatchesOnUkefFacilityId = { 'loanTransactions.items': { $elemMatch: { ukefFacilityID: { $regex: new RegExp(`^${filter[FILTER_SEARCH]}`) } } } };
+        const bondMatchesOnUkefFacilityId = { 'bondTransactions.items': { $elemMatch: { ukefFacilityID: { $regex: new RegExp(`^${filter[FILTER_SEARCH]}`, 'i') } } } };
+        const loanMatchesOnUkefFacilityId = { 'loanTransactions.items': { $elemMatch: { ukefFacilityID: { $regex: new RegExp(`^${filter[FILTER_SEARCH]}`, 'i') } } } };
 
-        const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { uniqueIdentificationNumber: { $regex: new RegExp(`^${filter[FILTER_SEARCH]}`) } } } };
-        const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { bankReferenceNumber: { $regex: new RegExp(`^${filter[FILTER_SEARCH]}`) } } } };
+        const bondMatchesOnUniqueIdNum = { 'bondTransactions.items': { $elemMatch: { uniqueIdentificationNumber: { $regex: new RegExp(`^${filter[FILTER_SEARCH]}`, 'i') } } } };
+        const loanMatchesOnBankRefNum = { 'loanTransactions.items': { $elemMatch: { bankReferenceNumber: { $regex: new RegExp(`^${filter[FILTER_SEARCH]}`, 'i') } } } };
 
         return listSoFar.concat([{
           $or: [
