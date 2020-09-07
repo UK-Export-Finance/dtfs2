@@ -55,7 +55,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az appservice plan create --name test --is-linux --sku b1
+          az appservice plan create --name test --is-linux --sku p1v2
 
     - name: Container registry
       uses: Azure/cli@v1.0.0
@@ -83,7 +83,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az appservice plan create --name prod --is-linux --sku b1
+          az appservice plan create --name prod --is-linux --sku p1v2
 
     - name: Container registry
       uses: Azure/cli@v1.0.0
