@@ -1,0 +1,49 @@
+{% import '_macros/date-range.njk' as dateRange %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% macro render(filter, user, banks, facilityStages) %}
+
+<form method="POST" autocomplete="off">
+
+   <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="bankSupplyContractID">
+          Bank Supply contract ID
+        </label>
+        <input class="govuk-input" id="bankSupplyContractID" name="bankSupplyContractID" type="text" value="{{ filter.bankSupplyContractID }}">
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="ukefSupplyContractID">
+          UKEF Supply contract ID
+        </label>
+        <input class="govuk-input" id="ukefSupplyContractID" name="ukefSupplyContractID" type="text" value="{{ filter.ukefSupplyContractID }}">
+      </div>
+    </div>
+    
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="filterByBank">
+          Bank
+        </label>
+        <select data-cy="filterByBank" class="govuk-select" id="filterByBank" name="filterByBank">
+          <option value="" {% if filter.filterByBank==='all' %}selected{%endif%}>Any</option>
+          {% for bank in banks %}
+          <option value="{{ bank.id }}" {% if filter.filterByBank===bank.id %}selected{%endif%}>{{ bank.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
+
+
+  <button data-cy="ApplyFilters" class="govuk-button" data-module="govuk-button">
+    Apply
+  </button>
+
+</form>
+{% endmacro %}
