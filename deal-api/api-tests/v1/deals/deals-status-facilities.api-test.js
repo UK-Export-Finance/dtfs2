@@ -414,20 +414,40 @@ describe('/v1/deals/:id/status - facilities', () => {
       });
 
       const isUnsubmittedIssuedFacilityWithFacilityStageChange = (facility) => {
-        const issuedBond = (facility.bondStage === 'Issued' && facility.previousFacilityStage === 'Unissued');
-        const issuedLoan = (facility.facilityStage === 'Unconditional' && facility.previousFacilityStage === 'Conditional');
+        const issuedBond = facility.bondStage === 'Issued';
+        const unconditionalLoan = facility.facilityStage === 'Unconditional';
 
-        if ((issuedBond || issuedLoan)
+        if ((issuedBond || unconditionalLoan)
           && facility.issueFacilityDetailsProvided
-          && !facility.issueFacilityDetailsSubmitted
-          && facility.status !== 'Submitted') {
+          && facility.status === 'Ready for check') {
           return facility;
         }
         return null;
       };
 
       // TODO: loans
-      describe('any bonds loans that have details provided, but not yet been submitted', () => {
+      describe('any unconditional loans that have details provided, status=`Ready for check`', () => {
+        it('should add `Submitted` status, `issueFacilityDetailsSubmitted` property', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toBeDefined();
+
+          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+          const unconditionalLoansThatShouldBeUpdated = createdDeal.loanTransactions.items.filter((b) =>
+            isUnsubmittedIssuedFacilityWithFacilityStageChange(b));
+
+          // make sure we have some loans to test against
+          expect(unconditionalLoansThatShouldBeUpdated.length > 0).toEqual(true);
+
+          unconditionalLoansThatShouldBeUpdated.forEach((loan) => {
+            const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
+            expect(updatedLoan.issueFacilityDetailsSubmitted).toEqual(true);
+            expect(updatedLoan.status).toEqual('Submitted');
+          });
+        });
+      });
+
+      describe('any issued bonds that have details provided, status=`Ready for check`', () => {
         it('should add `Submitted` status, `issueFacilityDetailsSubmitted` property', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
@@ -447,6 +467,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           });
         });
       });
+
     });
   });
 });
