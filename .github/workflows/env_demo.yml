@@ -204,7 +204,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB
+          az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB --server-version 3.6
 
     - name: Database with autoscale
       uses: Azure/cli@v1.0.0
