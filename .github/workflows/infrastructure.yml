@@ -6,7 +6,7 @@ on:
 
 jobs:
 
-  # Todo: add auto-scaling, although it's unlikely there'll be enough traffic to need it.
+  # Todo: add auto-scaling to App Service plans, although it's unlikely there'll be enough traffic to need it.
 
   dev-rg:
     name: Dev resource group
