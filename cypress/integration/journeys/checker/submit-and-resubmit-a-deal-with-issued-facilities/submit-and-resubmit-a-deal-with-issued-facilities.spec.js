@@ -9,13 +9,16 @@ const {
   fillAndSubmitIssueLoanFacilityForm,
 } = require('../../maker/submit-issued-facilities-for-review/fillAndSubmitIssueLoanFacilityForm');
 
-
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'Barclays Bank'));
 
-context('A checker submits a deal with issued loan/bond facilities', () => {
+context('A maker submits a deal to checker, checker submits to UKEF, maker submits issued loan/bond facilities, checker returns to maker, maker submits to checker', () => {
   let deal;
   let dealId;
+
+  before(() => {
+    cy.deleteDeals(MAKER_LOGIN);
+  });
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -30,7 +33,7 @@ context('A checker submits a deal with issued loan/bond facilities', () => {
       });
   });
 
-  it('Checker can view (but not edit) Issued facilities and after re-submitting the deal, the Deal/facilities should be updated', () => {
+  it('Checker can view (but not edit) Issued facilities, facility statuses should be updated throughout the deal status changes', () => {
     //---------------------------------------------------------------
     // maker submits deal to checker
     //---------------------------------------------------------------
@@ -116,7 +119,7 @@ context('A checker submits a deal with issued loan/bond facilities', () => {
     pages.contractReadyForReview.readyForCheckersApproval().click();
 
     //---------------------------------------------------------------
-    // checker can navigate to and view bond/loan details on the Deal submissions page
+    // checker can navigate to and view bond/loan details on the Deal submission page
     //---------------------------------------------------------------
     cy.login(CHECKER_LOGIN);
     pages.contract.visit(deal);
@@ -189,76 +192,8 @@ context('A checker submits a deal with issued loan/bond facilities', () => {
       expect(text.trim()).to.equal('Submitted');
     });
 
-    bondRow.deleteLink().should('not.exist');
-    bondRow.issueFacilityLink().should('not.exist');
-
     loanRow.loanStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Submitted');
     });
-
-    loanRow.deleteLink().should('not.exist');
-    loanRow.issueFacilityLink().should('not.exist');
-
-    /*
-    //---------------------------------------------------------------
-    // TBC ............... checker logins in and....
-    //---------------------------------------------------------------
-
-    // submit the deal
-    pages.contract.proceedToSubmit().click();
-    pages.contractConfirmSubmission.confirmSubmit().check();
-    pages.contractConfirmSubmission.acceptAndSubmit().click();
-
-    // expect to land on the /dashboard page
-    cy.url().should('include', '/dashboard');
-
-    // expect the deal status to be updated
-    pages.contract.visit(deal);
-    pages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submitted');
-    });
-    pages.contract.previousStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Ready for Checker\'s approval');
-    });
-
-    //
-    // issued bonds
-    //
-
-    // expect the bond status to be updated
-    bondRow.bondStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submitted');
-    });
-
-    // expect bond delete link to not exist
-    bondRow.deleteLink().should('not.exist');
-
-    // expect bond issue facility link to take user to submission details page
-    bondRow.issueFacilityLink().click();
-    cy.url().should('eq', relative(`/contract/${dealId}/submission-details#bond-${bondId}`));
-
-    //
-    // issued loans
-    //
-
-    pages.contract.visit(deal);
-
-    // expect the loan status to be updated
-    loanRow.loanStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submitted');
-    });
-
-    // expect loan delete link to not exist
-    loanRow.deleteLink().should('not.exist');
-
-    // loanRow.issueFacilityLink().should('not.exist');
-    // expect bond issue facility link to take user to submission details page
-    loanRow.issueFacilityLink().click();
-    cy.url().should('eq', relative(`/contract/${dealId}/submission-details#loan-${loanId}`));
-
-
-    pages.contract.proceedToSubmit().should('not.exist');
-    pages.contract.returnToMaker().should('not.exist');
-    */
   });
 });
