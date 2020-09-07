@@ -5,8 +5,10 @@ const {
   dateValidationText,
 } = require('../date');
 const { formattedTimestamp } = require('../../../facility-dates/timestamp');
+const CONSTANTS = require('../../../../constants');
+const { add } = require('cypress/types/lodash');
 
-module.exports = (submittedValues, errorList, dealSubmissionDateTimestamp) => {
+module.exports = (submittedValues, errorList, dealSubmissionType, dealSubmissionDateTimestamp) => {
   const newErrorList = errorList;
 
   const dealSubmissionDate = formattedTimestamp(dealSubmissionDateTimestamp);
@@ -21,8 +23,35 @@ module.exports = (submittedValues, errorList, dealSubmissionDateTimestamp) => {
 
   if (requestedCoverStartDateTimestamp) {
     const formattedDealSubmissionDate = moment(dealSubmissionDate).format('Do MMMM YYYY');
-    const dealSubmissionDatePlus3Months = moment(dealSubmissionDate).add(3, 'month');
+    // const dealSubmissionDatePlus3Months = moment(dealSubmissionDate).add(3, 'month');
+    const todayPlus3Months = moment().add(3, 'month');
 
+    if (moment(requestedCoverStartDateTimestamp).isBefore(today)) {
+      newErrorList.requestedCoverStartDate = {
+        text: 'Requested Cover Start Date must be after today',
+        order: orderNumber(newErrorList),
+      };
+    }
+
+    if (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN) {
+      if (moment(requestedCoverStartDateTimestamp).isBefore(dealSubmissionDate)) {
+        newErrorList.requestedCoverStartDate = {
+          text: `Requested Cover Start Date must be after ${formattedDealSubmissionDate}`,
+          order: orderNumber(newErrorList),
+        };
+      }
+    } else if (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+              || dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
+
+      if (moment(requestedCoverStartDateTimestamp).isAfter(todayPlus3Months)) {
+        newErrorList.requestedCoverStartDate = {
+          text: `Requested Cover Start Date must be between ${formattedDealSubmissionDate} and ${moment(todayPlus3Months).format('Do MMMM YYYY')}`,
+          order: orderNumber(newErrorList),
+        };
+      }
+    }
+
+    /*
     if (moment(requestedCoverStartDateTimestamp).isBefore(dealSubmissionDate)) {
       newErrorList.requestedCoverStartDate = {
         text: `Requested Cover Start Date must be after ${formattedDealSubmissionDate}`,
@@ -43,6 +72,7 @@ module.exports = (submittedValues, errorList, dealSubmissionDateTimestamp) => {
         order: orderNumber(newErrorList),
       };
     }
+    */
   } else if (dateHasSomeValues(
     requestedCoverStartDateDay,
     requestedCoverStartDateMonth,
