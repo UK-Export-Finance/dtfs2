@@ -26,8 +26,6 @@
     </div>
     
     <div class="govuk-grid-column-one-third">
-
-      {% if user and user.roles.includes("admin")%}
       <div class="govuk-form-group">
         <label class="govuk-label" for="filterByBank">
           Bank
@@ -39,8 +37,6 @@
           {% endfor %}
         </select>
       </div>
-      {% endif %}
-      {% endif %}
     </div>
   </div>
 
