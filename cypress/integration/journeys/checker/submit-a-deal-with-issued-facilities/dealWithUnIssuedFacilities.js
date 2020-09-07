@@ -2,15 +2,16 @@ const moment = require('moment');
 
 const deal = {
   "details": {
-    "status": "Ready for Checker's approval",
+    // "status": "Acknowledged by UKEF (with conditions)",
+    "status": "Draft",
     "bankSupplyContractID": "mock id",
     "bankSupplyContractName": "mock name",
     "created": moment().utc().valueOf(),
     "dateOfLastAction": "1596805840467",
     "previousWorkflowStatus": "confirmation_acknowledged",
     "submissionType": "Automatic Inclusion Notice",
-    submissionDate: moment().utc().valueOf(),
-    "previousStatus": "Acknowledged by UKEF",
+    // submissionDate: moment().utc().valueOf(),
+    // "previousStatus": "Submitted",
     owningBank: {
       id: '956',
       name: 'Barclays Bank',
@@ -166,7 +167,7 @@ const deal = {
         "_id": "1000209",
         "bondIssuer": "",
         "bondType": "Bid bond",
-        "bondStage": "Issued",
+        "bondStage": "Unissued",
         "previousFacilityStage": "Unissued",
         "ukefGuaranteeInMonths": "12",
         "bondBeneficiary": "",
@@ -183,14 +184,8 @@ const deal = {
           "text": "GBP - UK Sterling",
           "id": "GBP"
         },
-        issuedDate: moment().add(1, 'day').utc().valueOf(),
-        "coverEndDate-day": moment().add(1, 'month').format('DD'),
-        "coverEndDate-month": moment().add(1, 'month').format('MM'),
-        "coverEndDate-year": moment().add(1, 'month').format('YYYY'),
-        "uniqueIdentificationNumber": "1234",
         "uniqueIdentificationNumberRequiredForIssuance": true,
-        "issueFacilityDetailsProvided": true,
-        "status": "Ready for check"
+        // "status": "Not started"
       }
     ]
   },
@@ -198,7 +193,7 @@ const deal = {
     "items": [
       {
         "_id": "1000210",
-        "facilityStage": "Unconditional",
+        "facilityStage": "Conditional",
         "previousFacilityStage": "Conditional",
         "ukefGuaranteeInMonths": "12",
         "guaranteeFeePayableByBank": "10.8000",
@@ -216,15 +211,7 @@ const deal = {
           "text": "GBP - UK Sterling",
           "id": "GBP"
         },
-        issuedDate: moment().add(1, 'day').utc().valueOf(),
-        "coverEndDate-day": moment().add(1, 'month').format('DD'),
-        "coverEndDate-month": moment().add(1, 'month').format('MM'),
-        "coverEndDate-year": moment().add(1, 'month').format('YYYY'),
-        "bankReferenceNumberRequiredForIssuance": true,
-        "issueFacilityDetailsProvided": true,
-        "disbursementAmount": "1,234.00",
-        "bankReferenceNumber": "5678",
-        "status": "Ready for check",
+        // "status": "Not started"
       },
     ]
   },
