@@ -12,7 +12,6 @@ const updateSubmittedIssuedFacilities = async (collection, deal) => {
 
       const {
         facilityStage,
-        previousFacilityStage,
         bondStage,
       } = facility;
 
