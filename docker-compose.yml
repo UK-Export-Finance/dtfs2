@@ -66,6 +66,9 @@ services:
     ports:
       - "27017-27019:27017-27019"
 
+  redis:
+    image: redis:alpine
+
   test-hook-api:
     build: ./test-hook-api
     image: dtfs/test-hook-api
