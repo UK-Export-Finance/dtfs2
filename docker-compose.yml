@@ -1,5 +1,6 @@
 version: "3"
 services:
+
   portal:
     build: ./portal
     image: dtfs/portal
@@ -17,6 +18,7 @@ services:
       - DEAL_API_URL=http://deal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
+      - REDIS_URL=redis://redis:6379
     command: node dist/server.js
 
   deal-api:
