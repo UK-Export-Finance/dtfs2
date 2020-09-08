@@ -50,8 +50,7 @@ module.exports = (
           order: orderNumber(newErrorList),
         };
       }
-    } else if (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
-              || dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
+    } else if (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
       if (moment(requestedCoverStartDate).isBefore(today)) {
         newErrorList.requestedCoverStartDate = {
           text: `Requested Cover Start Date must be after ${todayFormatted}`,
@@ -59,7 +58,22 @@ module.exports = (
         };
       }
 
-      // TODO - is this valid for both MIA and MIN?
+      if (manualInclusionNoticeSubmissionDateTimestamp) {
+        if (moment(requestedCoverStartDate).isBefore(manualInclusionNoticeSubmissionDate)) {
+          newErrorList.requestedCoverStartDate = {
+            text: `Requested Cover Start Date must be after ${formattedManualInclusionNoticeSubmissionDate}`,
+            order: orderNumber(newErrorList),
+          };
+        }
+      }
+
+      if (moment(requestedCoverStartDate).isAfter(todayPlus3Months)) {
+        newErrorList.requestedCoverStartDate = {
+          text: `Requested Cover Start Date must be between ${formattedManualInclusionNoticeSubmissionDate} and ${todayPlus3MonthsFormatted}`,
+          order: orderNumber(newErrorList),
+        };
+      }
+    } else if (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
       if (manualInclusionNoticeSubmissionDateTimestamp) {
         if (moment(requestedCoverStartDate).isBefore(manualInclusionNoticeSubmissionDate)) {
           newErrorList.requestedCoverStartDate = {
