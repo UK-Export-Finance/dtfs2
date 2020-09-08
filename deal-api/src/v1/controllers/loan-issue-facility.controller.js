@@ -69,6 +69,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
         modifiedLoan,
         deal.details.submissionType,
         deal.details.submissionDate,
+        deal.details.manualInclusionNoticeSubmissionDate,
       );
 
       if (validationErrors.count === 0) {

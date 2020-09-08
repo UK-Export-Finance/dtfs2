@@ -31,13 +31,6 @@ module.exports = (submittedValues, errorList, dealSubmissionType, dealSubmission
     const todayPlus3Months = moment(today).add(3, 'month');
     const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY')
 
-    if (moment(requestedCoverStartDate).isBefore(today)) {
-      newErrorList.requestedCoverStartDate = {
-        text: 'Requested Cover Start Date must be after today',
-        order: orderNumber(newErrorList),
-      };
-    }
-
     if (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN) {
       if (moment(requestedCoverStartDate).isBefore(dealSubmissionDate)) {
         newErrorList.requestedCoverStartDate = {
@@ -61,6 +54,7 @@ module.exports = (submittedValues, errorList, dealSubmissionType, dealSubmission
         };
       }
 
+      // TODO - is this valid for both MIA and MIN?
       if (manualInclusionNoticeSubmissionDateTimestamp) {
         if (moment(requestedCoverStartDate).isBefore(manualInclusionNoticeSubmissionDate)) {
           newErrorList.requestedCoverStartDate = {
