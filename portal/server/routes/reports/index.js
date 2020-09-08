@@ -1131,6 +1131,19 @@ router.get('/reports/mia-to-be-submitted/without-conditions/:page', async (req, 
   const fromDays = req.query.fromDays || 0;
   const toDays = req.query.toDays || maxDays;
 
+<<<<<<< HEAD:portal/server/routes/reports/index.js
+=======
+  const banks = await getApiData(
+    api.banks(userToken),
+    res,
+  );
+
+  const sortOrder = {
+    queryString: `${req.params.page}?fromDays=${fromDays}&toDays=${toDays}&sort=desc`,
+    order: 'ascending',
+    image: 'twistie-up',
+  };
+>>>>>>> filter in unissues-transactions-report:portal/server/routes/reports.js
 
   const submissionFilters = {
     filterBySubmissionType: 'manualInclusionApplication',
@@ -1197,6 +1210,7 @@ router.get('/reports/mia-to-be-submitted/without-conditions/:page', async (req, 
   }
   return res.render('reports/MIA-to-be-submitted-report.njk', {
     pages,
+<<<<<<< HEAD:portal/server/routes/reports/index.js
     conditions: 'with',
     deals,
     filter: {
@@ -1206,6 +1220,13 @@ router.get('/reports/mia-to-be-submitted/without-conditions/:page', async (req, 
     sortOrder,
     primaryNav,
     subNav: 'countdown-indicator',
+=======
+    transactions,
+    primaryNav,
+    banks,
+    sortOrder,
+    subNav: 'unissued-transactions-reportsss',
+>>>>>>> filter in unissues-transactions-report:portal/server/routes/reports.js
     user: req.session.user,
   });
 });
