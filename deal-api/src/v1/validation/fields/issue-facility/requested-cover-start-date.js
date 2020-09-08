@@ -7,13 +7,18 @@ const {
 const { formattedTimestamp } = require('../../../facility-dates/timestamp');
 const CONSTANTS = require('../../../../constants');
 
-module.exports = (submittedValues, errorList, dealSubmissionType, dealSubmissionDateTimestamp, manualInclusionNoticeSubmissionDateTimestamp) => {
+module.exports = (
+  submittedValues,
+  errorList,
+  dealSubmissionType,
+  dealSubmissionDateTimestamp,
+  manualInclusionNoticeSubmissionDateTimestamp,
+) => {
   const newErrorList = errorList;
 
   const dealSubmissionDate = formattedTimestamp(dealSubmissionDateTimestamp);
   const requestedCoverStartDate = formattedTimestamp(submittedValues.requestedCoverStartDate);
   const manualInclusionNoticeSubmissionDate = formattedTimestamp(manualInclusionNoticeSubmissionDateTimestamp);
-  const today = moment();
 
   const {
     'requestedCoverStartDate-day': requestedCoverStartDateDay,
@@ -27,9 +32,9 @@ module.exports = (submittedValues, errorList, dealSubmissionType, dealSubmission
 
     const today = moment();
     const todayFormatted = moment(today).format('Do MMMM YYYY');
-  
+
     const todayPlus3Months = moment(today).add(3, 'month');
-    const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY')
+    const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY');
 
     if (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN) {
       if (moment(requestedCoverStartDate).isBefore(dealSubmissionDate)) {
