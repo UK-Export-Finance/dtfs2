@@ -1,13 +1,13 @@
-const {dashboard} = require('../../../pages');
-const relative = require('../../../relativeURL');
+const {dashboard} = require('../../../../pages');
+const relative = require('../../../../relativeURL');
 
-const mockUsers = require('../../../../fixtures/mockUsers');
+const mockUsers = require('../../../../../fixtures/mockUsers');
 const maker_logins = mockUsers.filter( user=> (user.roles.includes('maker') && user.bank.name === 'HSBC') );
 const MAKER_LOGIN_1 = maker_logins[0];
 const MAKER_LOGIN_2 = maker_logins[1];
 
 // test data we want to set up + work with..
-const twentyOneDeals = require('./twentyOneDeals');
+const twentyOneDeals = require('../../../../../fixtures/deal-dashboard-data');
 const renameDeals = (deals) => {
   return deals.map( (deal)=>{
     return {

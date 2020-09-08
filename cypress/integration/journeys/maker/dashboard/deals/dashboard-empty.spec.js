@@ -1,7 +1,7 @@
-const { dashboard, defaults } = require('../../../pages');
-const relative = require('../../../relativeURL');
+const { dashboard, defaults } = require('../../../../pages');
+const relative = require('../../../../relativeURL');
 
-const mockUsers = require('../../../../fixtures/mockUsers');
+const mockUsers = require('../../../../../fixtures/mockUsers');
 const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 context('Dashboard Deals', () => {

@@ -7,10 +7,10 @@ const CHECKER_LOGIN = mockUsers.find( user=> (user.roles.includes('checker') && 
 const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'Barclays Bank') );
 
 // test data we want to set up + work with..
-const twentyOneDeals = require('../../maker/dashboard/twentyOneDeals');
+const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
 
 context('A checker selects to return a deal to maker from the view-contract page', () => {
-  let deal; 
+  let deal;
 
   beforeEach( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring

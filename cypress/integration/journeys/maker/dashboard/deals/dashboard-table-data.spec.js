@@ -1,7 +1,7 @@
-const { dashboard } = require('../../../pages');
-const relative = require('../../../relativeURL');
+const { dashboard } = require('../../../../pages');
+const relative = require('../../../../relativeURL');
 
-const mockUsers = require('../../../../fixtures/mockUsers');
+const mockUsers = require('../../../../../fixtures/mockUsers');
 // slight oddity- this test seems to need a straight 'maker'; so filtering slightly more than in other tests..
 const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.roles.length === 1) );
 
