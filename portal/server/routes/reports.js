@@ -1087,6 +1087,11 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
   const fromDays = req.query.fromDays || 0;
   const toDays = req.query.toDays || 90;
 
+  const banks = await getApiData(
+    api.banks(userToken),
+    res,
+  );
+
   const sortOrder = {
     queryString: `${req.params.page}?fromDays=${fromDays}&toDays=${toDays}&sort=desc`,
     order: 'ascending',
@@ -1136,8 +1141,9 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
     pages,
     transactions,
     primaryNav,
+    banks,
     sortOrder,
-    subNav: 'unissued-transactions-report',
+    subNav: 'unissued-transactions-reportsss',
     user: req.session.user,
   });
 });
