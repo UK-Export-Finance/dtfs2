@@ -69,6 +69,7 @@ exports.updateBondIssueFacility = async (req, res) => {
         modifiedBond,
         deal.details.submissionType,
         deal.details.submissionDate,
+        deal.details.manualInclusionNoticeSubmissionDate,
       );
 
       if (validationErrors.count === 0) {
