@@ -6,7 +6,7 @@ const mockUsers = require('../../../fixtures/mockUsers');
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 
 // test data we want to set up + work with..
-const twentyOneDeals = require('./dashboard/twentyOneDeals');
+const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
 
 context('A maker selects to abandon a contract from the view-contract page', () => {
   let deal;

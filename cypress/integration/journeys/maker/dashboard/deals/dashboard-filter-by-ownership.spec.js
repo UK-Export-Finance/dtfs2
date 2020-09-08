@@ -1,14 +1,14 @@
-const {dashboard} = require('../../../pages');
-const relative = require('../../../relativeURL');
+const {dashboard} = require('../../../../pages');
+const relative = require('../../../../relativeURL');
 
-const mockUsers = require('../../../../fixtures/mockUsers');
+const mockUsers = require('../../../../../fixtures/mockUsers');
 const BARCLAYS_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'Barclays Bank') );
 const hsbc_makers = mockUsers.filter( user=> (user.roles.includes('maker') && user.bank.name === 'HSBC') );
 const HSBC_MAKER_1 = hsbc_makers[0];
 const HSBC_MAKER_2 = hsbc_makers[1];
 
 // test data we want to set up + work with..
-const twentyOneDeals = require('./twentyOneDeals');
+const twentyOneDeals = require('../../../../../fixtures/deal-dashboard-data');
 
 context('Dashboard Deals filter by ownership', () => {
   let allBarclaysDeals,

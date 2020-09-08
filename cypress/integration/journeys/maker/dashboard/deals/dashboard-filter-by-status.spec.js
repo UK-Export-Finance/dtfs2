@@ -1,11 +1,11 @@
-const { dashboard } = require('../../../pages');
-const relative = require('../../../relativeURL');
+const { dashboard } = require('../../../../pages');
+const relative = require('../../../../relativeURL');
 
-const mockUsers = require('../../../../fixtures/mockUsers');
+const mockUsers = require('../../../../../fixtures/mockUsers');
 const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 // test data we want to set up + work with..
-const twentyOneDeals = require('./twentyOneDeals');
+const twentyOneDeals = require('../../../../../fixtures/deal-dashboard-data');
 
 context('The deals dashboard', () => {
   let deals;

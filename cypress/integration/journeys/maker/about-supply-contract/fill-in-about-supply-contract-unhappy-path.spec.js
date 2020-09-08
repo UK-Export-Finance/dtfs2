@@ -4,7 +4,7 @@ const mockUsers = require('../../../../fixtures/mockUsers');
 const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 // test data we want to set up + work with..
-const twentyOneDeals = require('../dashboard/twentyOneDeals');
+const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
 
 context('about-supply-contract', () => {
   let deal;
