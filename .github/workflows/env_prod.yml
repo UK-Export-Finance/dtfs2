@@ -216,11 +216,11 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name deals --idx '[{"key": {"keys": ["details.dateOfLastAction"]}}, {"key": {"keys": ["_id"]}}]'
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name banks
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name eligibilityCriteria
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name mandatoryCriteria
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name currencies
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name deals --idx '[{"key": {"keys": ["details.dateOfLastAction"]}}]'
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name users
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name industrySectors
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name idCounters
@@ -274,7 +274,7 @@ jobs:
             --redirect-protocol HttpsOnly
 
   file-storage:
-    name: File Storage
+    name: File storage
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -312,25 +312,25 @@ jobs:
           az storage share create --account-name tfs${{ env.environment }}storage \
             --name workflow
 
-  # session-store:
-  #   name: Redis session store
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: azure/login@v1
-  #     with:
-  #       creds: ${{ env.credentials }}
+  session-store:
+    name: Redis session store
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
 
-  #   - name: Defaults
-  #     uses: Azure/cli@v1.0.0
-  #     with:
-  #       inlineScript: |
-  #         az configure --defaults location=uksouth
-  #         az configure --defaults group=${{ env.resource_group }}
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
 
-  #   - name: Create
-  #     uses: Azure/cli@v1.0.0
-  #     with:
-  #       inlineScript: |
-  #         az redis create --name tfs-${{ env.environment }}-redis \
-  #           --sku ${{ env.redis_sku }} \
-  #           --vm-size C0
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az redis create --name tfs-${{ env.environment }}-redis \
+            --sku ${{ env.redis_sku }} \
+            --vm-size C0

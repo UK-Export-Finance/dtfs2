@@ -312,25 +312,25 @@ jobs:
           az storage share create --account-name tfs${{ env.environment }}storage \
             --name workflow
 
-  # session-store:
-  #   name: Redis session store
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: azure/login@v1
-  #     with:
-  #       creds: ${{ env.credentials }}
+  session-store:
+    name: Redis session store
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
 
-  #   - name: Defaults
-  #     uses: Azure/cli@v1.0.0
-  #     with:
-  #       inlineScript: |
-  #         az configure --defaults location=uksouth
-  #         az configure --defaults group=${{ env.resource_group }}
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
 
-  #   - name: Create
-  #     uses: Azure/cli@v1.0.0
-  #     with:
-  #       inlineScript: |
-  #         az redis create --name tfs-${{ env.environment }}-redis \
-  #           --sku ${{ env.redis_sku }} \
-  #           --vm-size C0
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az redis create --name tfs-${{ env.environment }}-redis \
+            --sku ${{ env.redis_sku }} \
+            --vm-size C0
