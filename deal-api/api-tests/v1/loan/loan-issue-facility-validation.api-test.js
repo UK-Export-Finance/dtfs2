@@ -290,24 +290,6 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
           await updateDeal(dealId, updatedDeal);
         });
 
-        describe('when is before today', () => {
-          it('should return validationError', async () => {
-            const yesterday = moment().subtract(1, 'day');
-            const requestedCoverStartDateFields = {
-              'requestedCoverStartDate-day': moment(yesterday).format('DD'),
-              'requestedCoverStartDate-month': moment(yesterday).format('MM'),
-              'requestedCoverStartDate-year': moment(yesterday).format('YYYY'),
-            };
-
-            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
-            expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
-
-            const todayFormatted = moment().format('Do MMMM YYYY');
-            const expectedText = `Requested Cover Start Date must be after ${todayFormatted}`;
-            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
-          });
-        });
-
         describe('when requestedCoverStartDate is before the deal\'s manual inclusion notice submission date', () => {
           it('should return validationError', async () => {
             const threeDaysAgo = moment().subtract(3, 'day');
