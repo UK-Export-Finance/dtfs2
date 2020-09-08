@@ -7,9 +7,9 @@ const { as } = require('../../api')(app);
 const { dateValidationText } = require('../../../src/v1/validation/fields/date');
 const { formattedTimestamp } = require('../../../src/v1/facility-dates/timestamp');
 
-describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
+describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
   // TODO
-  // add all required Conditional loan fields
+  // add all required Conditional bond fields
 
   const newDeal = aDeal({
     details: {
@@ -28,42 +28,42 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
 
   let aBarclaysMaker;
   let dealId;
-  let loanId;
-  
+  let bondId;
+
 
   const updateDeal = async (dealId, body) => {
     const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${dealId}`);
     return result.body;
   };
- 
-  const updateLoan = async (dealId, loanId, body) => {
-    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${dealId}/loan/${loanId}`);
+
+  const updateBond = async (dealId, bondId, body) => {
+    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${dealId}/bond/${bondId}`);
     return result.body;
   };
 
-  const updateLoanIssuance = async (theDealId, loanId, loan) => {
-    const response = await as(aBarclaysMaker).put(loan).to(`/v1/deals/${theDealId}/loan/${loanId}/issue-facility`);
+  const updateBondIssuance = async (theDealId, bondId, bond) => {
+    const response = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${theDealId}/bond/${bondId}/issue-facility`);
     return response.body;
   };
 
-  const createDealAndLoan = async () => {
+  const createDealAndbond = async () => {
     const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
     dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
-    const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
-    const { loanId: _id } = createLoanResponse.body;
+    const createbondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+    const { bondId: _id } = createbondResponse.body;
 
-    loanId = _id;
+    bondId = _id;
 
-    const getCreatedLoan = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/loan/${loanId}`);
+    const getCreatedbond = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/bond/${bondId}`);
 
-    const modifiedLoan = {
-      ...getCreatedLoan.body.loan,
+    const modifiedbond = {
+      ...getCreatedbond.body.bond,
       facilityStage: 'Conditional',
     };
 
-    const updatedLoan = await updateLoan(dealId, loanId, modifiedLoan);
-    return updatedLoan.body;
+    const updatedbond = await updateBond(dealId, bondId, modifiedbond);
+    return updatedbond.body;
   };
 
   beforeAll(async () => {
@@ -75,18 +75,16 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
     await wipeDB.wipe(['deals']);
   });
 
-  describe('PUT /v1/deals/:id/loan/:loanId/issue-facility', () => {
-
+  describe('PUT /v1/deals/:id/bond/:bondId/issue-facility', () => {
     it('returns 400 with validation errors', async () => {
-      await createDealAndLoan();
+      await createDealAndbond();
 
-      const { body, status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/${loanId}/issue-facility`);
+      const { body, status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/${bondId}/issue-facility`);
       expect(status).toEqual(400);
-      expect(body.validationErrors.count).toEqual(4);
+      expect(body.validationErrors.count).toEqual(3);
       expect(body.validationErrors.errorList.issuedDate).toBeDefined();
       expect(body.validationErrors.errorList.coverEndDate).toBeDefined();
-      expect(body.validationErrors.errorList.disbursementAmount).toBeDefined();
-      expect(body.validationErrors.errorList.bankReferenceNumber).toBeDefined();
+      expect(body.validationErrors.errorList.uniqueIdentificationNumber).toBeDefined();
     });
 
     // TODO issuedDate
@@ -96,21 +94,21 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
     // TODO bankReferenceNumber
 
     describe('requestedCoverStartDate', () => {
-      let createdLoan;
+      let createdbond;
 
       const updateRequestedCoverStartDate = async (requestedCoverStartDate) => {
-        const loan = {
-          ...createdLoan,
+        const bond = {
+          ...createdbond,
           ...requestedCoverStartDate,
         };
 
-        const body = await updateLoanIssuance(dealId, loanId, loan);
+        const body = await updateBondIssuance(dealId, bondId, bond);
         return body;
       };
-  
+
       describe('when has some values', () => {
         beforeEach(async () => {
-          await createDealAndLoan();
+          await createDealAndbond();
         });
 
         it('should return validationError', async () => {
@@ -138,7 +136,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
         let updatedDeal;
 
         beforeEach(async () => {
-          await createDealAndLoan();
+          await createDealAndbond();
 
           updatedDeal = {
             ...newDeal,
@@ -196,7 +194,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
         let updatedDeal;
 
         beforeEach(async () => {
-          await createDealAndLoan();
+          await createDealAndbond();
 
           updatedDeal = {
             ...newDeal,
@@ -274,7 +272,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
         let updatedDeal;
 
         beforeEach(async () => {
-          await createDealAndLoan();
+          await createDealAndbond();
 
           updatedDeal = {
             ...newDeal,
