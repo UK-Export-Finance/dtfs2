@@ -1240,7 +1240,7 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
     primaryNav,
     banks,
     sortOrder,
-    subNav: 'unissued-transactions-report',
+    subNav: 'unissued-transactions-reportsss',
     user: req.session.user,
   });
 });
