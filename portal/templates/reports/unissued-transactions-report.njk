@@ -2,11 +2,14 @@
 {% import '_macros/pagination.njk' as pagination %}
 
 {% block pageTitle %}Unissued Transactions Report{% endblock %}
+{% import './_macros/countdown-indicator-filters.njk' as filterControls %}
+
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">Unissued Transactions Report</h1>
+  <h1 class="govuk-heading-l">Unissued Transactions Report{{ banks|length }}</h1>
 
+  {{ filterControls.render(filter, user, banks) }}
 
   <table class="govuk-table govuk-!-margin-bottom-0">
     <thead class="govuk-table__head">
