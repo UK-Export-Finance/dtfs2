@@ -47,6 +47,17 @@ jobs:
     name: Network and security group
     runs-on: ubuntu-latest
     steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+          
     - name: Network and security group
       uses: Azure/cli@v1.0.0
       with:
