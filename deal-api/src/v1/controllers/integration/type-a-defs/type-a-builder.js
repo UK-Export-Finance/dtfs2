@@ -331,23 +331,23 @@ module.exports = () => {
       return builder;
     },
     Deal_total_value_deal_cur: (value = '') => {
-      deal.Deal_summary.Deal_total_value_deal_cur = value;
+      deal.Deal_summary.Deal_total_value_deal_cur = Number(value).toFixed(2);
       return builder;
     },
     Deal_total_exposure_gbp: (value = '') => {
-      deal.Deal_summary.Deal_total_exposure_gbp = value;
+      deal.Deal_summary.Deal_total_exposure_gbp = Number(value).toFixed(2);
       return builder;
     },
     Deal_total_premium_gbp: (value = '') => {
-      deal.Deal_summary.Deal_total_premium_gbp = value;
+      deal.Deal_summary.Deal_total_premium_gbp = Number(value).toFixed(2);
       return builder;
     },
     Deal_total_exposure_deal_cur: (value = '') => {
-      deal.Deal_summary.Deal_total_exposure_deal_cur = value;
+      deal.Deal_summary.Deal_total_exposure_deal_cur = Number(value).toFixed(2);
       return builder;
     },
     Deal_total_premium_deal_cur: (value = '') => {
-      deal.Deal_summary.Deal_total_premium_deal_cur = value;
+      deal.Deal_summary.Deal_total_premium_deal_cur = Number(value).toFixed(2);
       return builder;
     },
     BSS_no_facilities: (value = '') => {
@@ -355,20 +355,20 @@ module.exports = () => {
       return builder;
     },
     BSS_total_exposure_gbp: (value = '') => {
-      deal.Deal_summary.BSS_total_exposure_gbp = value;
+      deal.Deal_summary.BSS_total_exposure_gbp = Number(value).toFixed(2);
       return builder;
     },
 
     BSS_total_premium_gbp: (value = '') => {
-      deal.Deal_summary.BSS_total_premium_gbp = value;
+      deal.Deal_summary.BSS_total_premium_gbp = Number(value).toFixed(2);
       return builder;
     },
     BSS_total_exposure_deal_cur: (value = '') => {
-      deal.Deal_summary.BSS_total_exposure_deal_cur = value;
+      deal.Deal_summary.BSS_total_exposure_deal_cur = Number(value).toFixed(2);
       return builder;
     },
     BSS_total_premium_deal_cur: (value = '') => {
-      deal.Deal_summary.BSS_total_premium_deal_cur = value;
+      deal.Deal_summary.BSS_total_premium_deal_cur = Number(value).toFixed(2);
       return builder;
     },
     EWCS_no_facilities: (value = '') => {
@@ -377,19 +377,19 @@ module.exports = () => {
     },
 
     EWCS_total_exposure_gbp: (value = '') => {
-      deal.Deal_summary.EWCS_total_exposure_gbp = value;
+      deal.Deal_summary.EWCS_total_exposure_gbp = Number(value).toFixed(2);
       return builder;
     },
     EWCS_total_premium_gbp: (value = '') => {
-      deal.Deal_summary.EWCS_total_premium_gbp = value;
+      deal.Deal_summary.EWCS_total_premium_gbp = Number(value).toFixed(2);
       return builder;
     },
     EWCS_total_exposure_deal_cur: (value = '') => {
-      deal.Deal_summary.EWCS_total_exposure_deal_cur = value;
+      deal.Deal_summary.EWCS_total_exposure_deal_cur = Number(value).toFixed(2);
       return builder;
     },
     EWCS_total_premium_deal_cur: (value = '') => {
-      deal.Deal_summary.EWCS_total_premium_deal_cur = value;
+      deal.Deal_summary.EWCS_total_premium_deal_cur = Number(value).toFixed(2);
       return builder;
     },
 
