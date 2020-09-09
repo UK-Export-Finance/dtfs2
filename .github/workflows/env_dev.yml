@@ -73,6 +73,13 @@ jobs:
             --access Allow \
             --source-address-prefixes AzureFrontDoor.Backend \
             --protocol Tcp
+          az network nsg rule create --name front-door-deny \
+            --description "Deny all Internet traffic." \
+            --nsg-name tfs-${{ env.environment }}-portal-nsg \
+            --priority 200 \
+            --access Deny \
+            --source-address-prefixes Internet \
+            --protocol *
 
   portal-ui:
     name: Portal UI
