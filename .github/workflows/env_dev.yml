@@ -43,6 +43,24 @@ env:
 
 jobs:
 
+  networking:
+    name: Network and security group
+    runs-on: ubuntu-latest
+    steps:
+    - name: Network and security group
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network nsg create --name tfs-${{ env.environment }}-portal-nsg
+          az network vnet create --name tfs-${{ env.environment }}-portal-vnet --network-security-group tfs-${{ env.environment }}-portal-nsg
+          az network nsg rule create --name front-door-allow \
+            --description "Allow traffic from Front Door." \
+            --nsg-name tfs-${{ env.environment }}-portal-nsg \
+            --priority 100 \
+            --access Allow \
+            --source-address-prefixes AzureFrontDoor.Backend \
+            --protocol Tcp
+
   portal-ui:
     name: Portal UI
     runs-on: ubuntu-latest
@@ -65,6 +83,14 @@ jobs:
           az webapp create --name tfs-${{ env.environment }}-portal-ui \
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name ${{ env.registry }}/portal-ui:${{ env.environment }}
+
+    - name: Vnet integration
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-ui \
+            --vnet tfs-${{ env.environment }}-portal-vnet \
+            --subnet default
 
     - name: Always-on
       uses: Azure/cli@v1.0.0
@@ -132,6 +158,14 @@ jobs:
           az webapp create --name tfs-${{ env.environment }}-portal-api \
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name ${{ env.registry }}/portal-api:${{ env.environment }}
+
+    - name: Vnet integration
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-ui \
+            --vnet tfs-${{ env.environment }}-portal-vnet \
+            --subnet default
 
     - name: Always-on
       uses: Azure/cli@v1.0.0
