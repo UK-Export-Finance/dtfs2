@@ -31,6 +31,18 @@ const generateTypeA = async (deal, fromStatus) => {
     ? deal.loanTransactions.items.length
     : 0;
 
+  const dealConversionRate = deal.submissionDetails.supplyContractCurrency.id === 'GBP'
+    ? 1
+    : deal.submissionDetails.supplyContractConversionRateToGBP;
+
+  const dealConversionDate = deal.submissionDetails.supplyContractCurrency.id === 'GBP'
+    ? ''
+    : dateHelpers.formatDate(
+      deal.submissionDetails['supplyContractConversionDate-day'],
+      deal.submissionDetails['supplyContractConversionDate-month'],
+      deal.submissionDetails['supplyContractConversionDate-year'],
+    );
+
   const builder = typeABuilder()
     .source('V2')
     .action_code(actionCode)
@@ -99,8 +111,8 @@ const generateTypeA = async (deal, fromStatus) => {
       deal.submissionDetails.supplyContractCurrency
       && await convertCurrencyCodeToId(deal.submissionDetails.supplyContractCurrency.id),
     )
-    .Conversion_rate(deal.submissionDetails.supplyContractCurrency.id === 'GBP' ? 1 : deal.submissionDetails.supplyContractConversionRateToGBP)
-    .Conversion_date(dateHelpers.formatDate(deal.submissionDetails['supplyContractConversionDate-day'], deal.submissionDetails['supplyContractConversionDate-month'], deal.submissionDetails['supplyContractConversionDate-year']))
+    .Conversion_rate(dealConversionRate)
+    .Conversion_date(dealConversionDate)
     .Contract_value(convertCurrencyFormat(deal.submissionDetails.supplyContractValue))
 
     .Ec_agents_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 11))
@@ -134,6 +146,11 @@ const generateTypeA = async (deal, fromStatus) => {
 
       const { guaranteeCommencementDate, coverExpiryDate } = calculateIssuedDate(bond, deal.details.submissionDate);
 
+      const bondConversionRate = bond.conversionRate || dealConversionRate;
+      const bondConversionDate = bond.conversionRate
+        ? dateHelpers.formatDate(bond['conversionRateDate-day'], bond['conversionRateDate-month'], bond['conversionRateDate-year'])
+        : dealConversionDate;
+
       const bss = builder.createBSS()
       //    .UKEF_BSS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
         .BSS_portal_facility_id(bond._id) // eslint-disable-line no-underscore-dangle
@@ -147,8 +164,8 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_currency_code(
           await convertCurrencyCodeToId(bondCurrencyId), // eslint-disable-line no-await-in-loop
         )
-        .BSS_conversion_rate_deal(bond.conversionRate)
-        .BSS_conversion_date_deal(dateHelpers.formatDate(bond['conversionRateDate-day'], bond['conversionRateDate-month'], bond['conversionRateDate-year']))
+        .BSS_conversion_rate_deal(bondConversionRate)
+        .BSS_conversion_date_deal(bondConversionDate)
         .BSS_fee_rate(bond.riskMarginFee)
         .BSS_fee_perc(bond.guaranteeFeePayableByBank)
         .BSS_guarantee_perc(bond.coveredPercentage)
@@ -161,7 +178,7 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_cover_period(calculateExposurePeriod(bond))
         .BSS_day_basis(k2Map.FACILITIES.DAY_COUNT_BASIS[bond.dayCountBasis]);
 
-      // Conditional fields
+
       if (!businessRules.transactions.isPremiumTypeAtMaturity(bond.feeType)) {
         bss.BSS_premium_freq(k2Map.FACILITIES.FEE_FREQUENCY[bond.feeFrequency]);
       }
@@ -190,6 +207,11 @@ const generateTypeA = async (deal, fromStatus) => {
 
         const { guaranteeCommencementDate, coverExpiryDate } = calculateIssuedDate(loan, deal.details.submissionDate);
 
+        const loanConversionRate = loan.conversionRate || dealConversionRate;
+        const loanConversionDate = loan.conversionRate
+          ? dateHelpers.formatDate(loan['conversionRateDate-day'], loan['conversionRateDate-month'], loan['conversionRateDate-year'])
+          : dealConversionDate;
+
         const ewcs = builder.createEWCS()
         //    .UKEF_EWCS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
           .EWCS_portal_facility_id(loan._id) // eslint-disable-line no-underscore-dangle
@@ -200,8 +222,8 @@ const generateTypeA = async (deal, fromStatus) => {
           .EWCS_currency_code(
             await convertCurrencyCodeToId(loanCurrencyId), // eslint-disable-line no-await-in-loop
           )
-          .EWCS_conversion_rate_deal(loan.conversionRate)
-          .EWCS_conversion_date_deal(dateHelpers.formatDate(loan['conversionRateDate-day'], loan['conversionRateDate-month'], loan['conversionRateDate-year']))
+          .EWCS_conversion_rate_deal(loanConversionRate)
+          .EWCS_conversion_date_deal(loanConversionDate)
           .EWCS_disbursement_amount(convertCurrencyFormat(loan.disbursementAmount))
           .EWCS_interest_rate(loan.interestMarginFee)
           .EWCS_fee_perc(loan.guaranteeFeePayableByBank)
