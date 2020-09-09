@@ -31,44 +31,59 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
 
-    const issuedBond = deal.bondTransactions.items.find((b) =>
-      b.bondStage === 'Issued');
+    const issuedSubmittedBond = deal.bondTransactions.items.find((b) =>
+      b.bondStage === 'Issued' && b.status === 'Submitted');
+
+    const issuedCompletedBond = deal.bondTransactions.items.find((b) =>
+      b.bondStage === 'Issued' && b.status !== 'Submitted'); // `Completed` is generated dynamically
 
     const unissuedBond = deal.bondTransactions.items.find((b) =>
       b.bondStage === 'Unissued');
 
-    const unconditionalLoan = deal.loanTransactions.items.find((l) =>
-      l.facilityStage === 'Unconditional');
+    const unconditionalSubmittedLoan = deal.loanTransactions.items.find((l) =>
+      l.facilityStage === 'Unconditional' && l.status === 'Submitted');
+
+    const unconditionalCompletedLoan = deal.loanTransactions.items.find((l) =>
+      l.facilityStage === 'Unconditional' && l.status !== 'Submitted'); // `Completed` is generated dynamically
 
     const conditionalLoan = deal.loanTransactions.items.find((l) =>
       l.facilityStage === 'Conditional');
 
-    const issuedBondId = issuedBond._id; // eslint-disable-line no-underscore-dangle
+    const issuedSubmittedBondId = issuedSubmittedBond._id; // eslint-disable-line no-underscore-dangle
+    const issuedSubmittedBondRow = pages.contract.bondTransactionsTable.row(issuedSubmittedBondId);
+
+    const issuedCompletedBondId = issuedCompletedBond._id; // eslint-disable-line no-underscore-dangle
+    const issuedCompletedBondRow = pages.contract.bondTransactionsTable.row(issuedCompletedBondId);
+
+
     const unissuedBondId = unissuedBond._id; // eslint-disable-line no-underscore-dangle
-    const issuedBondRow = pages.contract.bondTransactionsTable.row(issuedBondId);
     const unissuedBondRow = pages.contract.bondTransactionsTable.row(unissuedBondId);
 
+    const unconditionalSubmittedLoanId = unconditionalSubmittedLoan._id; // eslint-disable-line no-underscore-dangle
+    const unconditionalSubmittedLoanRow = pages.contract.loansTransactionsTable.row(unconditionalSubmittedLoanId);
 
-    const unconditionalLoanId = unconditionalLoan._id; // eslint-disable-line no-underscore-dangle
+    const unconditionalCompletedLoanId = unconditionalCompletedLoan._id; // eslint-disable-line no-underscore-dangle
+    const unconditionalCompletedLoanRow = pages.contract.loansTransactionsTable.row(unconditionalCompletedLoanId);
+
     const conditionalLoanId = conditionalLoan._id; // eslint-disable-line no-underscore-dangle
-    const unconditionalLoanRow = pages.contract.loansTransactionsTable.row(unconditionalLoanId);
     const conditionalLoanRow = pages.contract.loansTransactionsTable.row(conditionalLoanId);
+
 
     //---------------------------------------------------------------
     // `Confirm start date` link should appear for Issued Bonds & Unconditional Loans
     //---------------------------------------------------------------
-    issuedBondRow.changeOrConfirmCoverStartDateLink().should('be.visible');
-    issuedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Confirm start date');
+    issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().should('be.visible');
+    issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Confirm start date');
 
-    issuedBondRow.issueFacilityLink().should('not.be.visible');
+    issuedSubmittedBondRow.issueFacilityLink().should('not.be.visible');
 
-    unconditionalLoanRow.changeOrConfirmCoverStartDateLink().should('be.visible');
-    unconditionalLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Confirm start date');
+    unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('be.visible');
+    unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Confirm start date');
 
-    unconditionalLoanRow.issueFacilityLink().should('not.be.visible');
+    unconditionalSubmittedLoanRow.issueFacilityLink().should('not.be.visible');
 
     //---------------------------------------------------------------
-    // TODO `Issue facility` link should appear for Unissued Bonds & Conditional Loans
+    // `Issue facility` link should appear for Unissued Bonds & Conditional Loans
     //---------------------------------------------------------------
     unissuedBondRow.issueFacilityLink().should('be.visible');
     unissuedBondRow.changeOrConfirmCoverStartDateLink().should('not.be.visible');
@@ -77,12 +92,12 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     conditionalLoanRow.changeOrConfirmCoverStartDateLink().should('not.be.visible');
 
     //---------------------------------------------------------------
-    // Maker can change Issued facility Cover start date
+    // Maker can change Cover start date for an Issued facility with 'Submitted' status
     //---------------------------------------------------------------
     const dealSubmissionDate = formattedTimestamp(deal.details.submissionDate);
 
-    issuedBondRow.changeOrConfirmCoverStartDateLink().click();
-    cy.url().should('eq', relative(`/contract/${dealId}/bond/${issuedBondId}/confirm-requested-cover-start-date`));
+    issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().click();
+    cy.url().should('eq', relative(`/contract/${dealId}/bond/${issuedSubmittedBondId}/confirm-requested-cover-start-date`));
 
     const NEW_BOND_COVER_START_DATE = moment(dealSubmissionDate).add(1, 'week');
 
@@ -95,10 +110,23 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
 
     //---------------------------------------------------------------
-    // Maker can change Unconditional facility Cover start date
+    // Issued facility with 'Completed' status has...
+    // `Change Cover start date` link, goes to the right place
+    // Maker could change date if they wanted to.
+    // NOTE could/should we add this to e2e test?
     //---------------------------------------------------------------
-    unconditionalLoanRow.changeOrConfirmCoverStartDateLink().click();
-    cy.url().should('eq', relative(`/contract/${dealId}/loan/${unconditionalLoanId}/confirm-requested-cover-start-date`));
+    issuedCompletedBondRow.changeOrConfirmCoverStartDateLink().should('be.visible');
+    issuedCompletedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Confirm start date');
+
+    issuedCompletedBondRow.changeOrConfirmCoverStartDateLink().click();
+    cy.url().should('eq', relative(`/contract/${dealId}/bond/${issuedCompletedBondId}/confirm-requested-cover-start-date`));
+    pages.facilityConfirmCoverStartDate.cancelButton().click();
+
+    //---------------------------------------------------------------
+    // Maker can change Cover start date for an Unconditional facility with 'Submitted' status
+    //---------------------------------------------------------------
+    unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().click();
+    cy.url().should('eq', relative(`/contract/${dealId}/loan/${unconditionalSubmittedLoanId}/confirm-requested-cover-start-date`));
 
     const NEW_LOAN_COVER_START_DATE = moment(dealSubmissionDate).add(1, 'month');
 
@@ -110,16 +138,30 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     //---------------------------------------------------------------
+    // Unconditional facility with 'Completed' status has...
+    // `Change Cover start date` link, goes to the right place
+    // Maker could change date if they wanted to.
+    // NOTE could/should we add this to e2e test?
+    //---------------------------------------------------------------
+    unconditionalCompletedLoanRow.changeOrConfirmCoverStartDateLink().should('be.visible');
+    unconditionalCompletedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Confirm start date');
+
+    unconditionalCompletedLoanRow.changeOrConfirmCoverStartDateLink().click();
+    cy.url().should('eq', relative(`/contract/${dealId}/loan/${unconditionalCompletedLoanId}/confirm-requested-cover-start-date`));
+    pages.facilityConfirmCoverStartDate.cancelButton().click();
+
+    //---------------------------------------------------------------
     // - Cover start date changes are rendered in the table
     // - `change start date` link/text updated
     //---------------------------------------------------------------
     const expectedIssuedBondDate = moment(NEW_BOND_COVER_START_DATE).format('DD/MM/YYYY');
-    issuedBondRow.requestedCoverStartDate().should('contain.text', expectedIssuedBondDate);
-    issuedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date changed');
+    issuedSubmittedBondRow.requestedCoverStartDate().should('contain.text', expectedIssuedBondDate);
+    issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date changed');
 
-    const expectedUnconditionalLoanDate = moment(NEW_LOAN_COVER_START_DATE).format('DD/MM/YYYY');
-    unconditionalLoanRow.requestedCoverStartDate().should('contain.text', expectedUnconditionalLoanDate);
-    unconditionalLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date changed');
+    const expectedUnconditionalSubmittedLoanDate = moment(NEW_LOAN_COVER_START_DATE).format('DD/MM/YYYY');
+    unconditionalSubmittedLoanRow.requestedCoverStartDate().should('contain.text', expectedUnconditionalSubmittedLoanDate);
+    unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date changed');
+
 
     //---------------------------------------------------------------
     // Maker can resubmit deal
