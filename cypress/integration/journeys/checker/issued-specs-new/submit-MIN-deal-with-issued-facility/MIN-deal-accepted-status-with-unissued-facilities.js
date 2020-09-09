@@ -54,7 +54,7 @@ const deal = {
             "user-status" : "active",
             "username" : "CHECKER"
         },
-        "submissionDate" : "1597912843189"
+        "submissionDate": moment().utc().valueOf(),
     },
     "eligibility" : {
         "status" : "Completed",

@@ -50,6 +50,7 @@ const addAccurateStatusesToBonds = (
   previousDealStatus,
   dealSubmissionType,
   dealSubmissionDate,
+  manualInclusionNoticeSubmissionDate,
   bondTransactions,
 ) => {
   if (bondTransactions.items.length) {
@@ -60,7 +61,12 @@ const addAccurateStatusesToBonds = (
 
       if (bond.issueFacilityDetailsStarted
           && bondHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, dealSubmissionType, bond)) {
-        issueFacilityValidationErrors = bondIssueFacilityValidationErrors(bond, dealSubmissionDate);
+        issueFacilityValidationErrors = bondIssueFacilityValidationErrors(
+          bond,
+          dealSubmissionType,
+          dealSubmissionDate,
+          manualInclusionNoticeSubmissionDate,
+        );
       }
 
       bond.status = bondStatus(bond, validationErrors, issueFacilityValidationErrors);

@@ -16,6 +16,8 @@ const createApprovalDate = require('./deal-status/create-approval-date');
 const updateFacilityDates = require('./deal-status/update-facility-dates');
 const updateIssuedFacilities = require('./deal-status/update-issued-facilities');
 const updateSubmittedIssuedFacilities = require('./deal-status/update-submitted-issued-facilities');
+const now = require('../../now');
+
 const CONSTANTS = require('../../constants');
 
 exports.findOne = (req, res) => {
@@ -133,11 +135,13 @@ exports.update = (req, res) => {
         && dealAfterAllUpdates.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
       ) {
         // Must be confirming acceptance of MIA so change to MIN
+        // Need to use 'MIN submission date in Issue Facility validation, so add minSubmissionDate
         const minUpdateReq = {
           params: req.params,
           body: {
             details: {
               submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
+              manualInclusionNoticeSubmissionDate: now(),
             },
           },
           user: req.user,
