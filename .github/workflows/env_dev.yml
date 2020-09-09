@@ -71,7 +71,7 @@ jobs:
             --access Allow \
             --source-address-prefixes AzureFrontDoor.Backend \
             --protocol Tcp \
-            --source-port-ranges "*"
+            --destination-port-ranges "*"
           az network nsg rule create --name internet-deny \
             --description "Deny all Internet traffic." \
             --nsg-name tfs-${{ env.environment }}-portal-nsg \
@@ -79,7 +79,7 @@ jobs:
             --access Deny \
             --source-address-prefixes Internet \
             --protocol "*" \
-            --source-port-ranges "*"
+            --destination-port-ranges "*"
 
           # Vnet
           # We have to do a show here or we get an error on create if the vnet exists:
@@ -340,7 +340,7 @@ jobs:
             --accepted-protocols Http \
             --redirect-protocol HttpsOnly
 
-    - name: API
+    - name: API routing
       uses: Azure/cli@v1.0.0
       with:
         # NB "DefaultFrontendEndpoint" is the name assigned by the command above.
