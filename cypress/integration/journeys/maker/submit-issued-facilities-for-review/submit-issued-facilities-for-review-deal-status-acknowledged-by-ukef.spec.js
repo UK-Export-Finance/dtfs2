@@ -263,6 +263,37 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
 
     incompleteIssueFacilityLoanRow.issueFacilityLink().should('not.exist');
 
+
+    //---------------------------------------------------------------
+    // Facilities that have NOT started should not be updated
+    //---------------------------------------------------------------
+    const notStartedIssueFacilityBondId = deal.bondTransactions.items[2]._id; // eslint-disable-line no-underscore-dangle
+    const notStartedIssueFacilityBondRow = pages.contract.bondTransactionsTable.row(notStartedIssueFacilityBondId);
+
+    notStartedIssueFacilityBondRow.bondStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Not started');
+    });
+
+    notStartedIssueFacilityBondRow.bondStage().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Unissued');
+    });
+
+    notStartedIssueFacilityBondRow.issueFacilityLink().should('not.exist');
+
+
+    const notStartedFacilityLoanId = deal.loanTransactions.items[2]._id; // eslint-disable-line no-underscore-dangle
+    const notStartedFacilityLoanRow = pages.contract.loansTransactionsTable.row(notStartedFacilityLoanId);
+
+    notStartedFacilityLoanRow.loanStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Not started');
+    });
+
+    notStartedFacilityLoanRow.facilityStage().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Conditional');
+    });
+
+    notStartedFacilityLoanRow.issueFacilityLink().should('not.exist');
+
     //---------------------------------------------------------------
     // Contract/deal action buttons should not exist or be disabled since:
     // - no other facilities have had their details/forms completed
