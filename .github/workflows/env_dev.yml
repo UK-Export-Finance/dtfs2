@@ -57,13 +57,15 @@ jobs:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
-          
+
     - name: Network and security group
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           az network nsg create --name tfs-${{ env.environment }}-portal-nsg
-          az network vnet create --name tfs-${{ env.environment }}-portal-vnet --network-security-group tfs-${{ env.environment }}-portal-nsg
+          az network vnet create --name tfs-${{ env.environment }}-portal-vnet \
+            --network-security-group tfs-${{ env.environment }}-portal-nsg
+            --subnet-name default
           az network nsg rule create --name front-door-allow \
             --description "Allow traffic from Front Door." \
             --nsg-name tfs-${{ env.environment }}-portal-nsg \
