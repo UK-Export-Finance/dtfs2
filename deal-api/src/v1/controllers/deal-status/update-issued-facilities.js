@@ -38,6 +38,7 @@ const updateIssuedFacilities = async (
                                || bondHasBeenPreviouslyIssued;
 
       const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
+                                  && facility.issueFacilityDetailsProvided
                                   && dealStatusAllowsIssuedFacilitiesStatusChanges
                                   && (newStatus && newStatus.length > 0));
 
