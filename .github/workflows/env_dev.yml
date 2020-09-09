@@ -70,14 +70,16 @@ jobs:
             --priority 100 \
             --access Allow \
             --source-address-prefixes AzureFrontDoor.Backend \
-            --protocol Tcp
+            --protocol Tcp \
+            --source-port-ranges "*"
           az network nsg rule create --name internet-deny \
             --description "Deny all Internet traffic." \
             --nsg-name tfs-${{ env.environment }}-portal-nsg \
             --priority 200 \
             --access Deny \
             --source-address-prefixes Internet \
-            --protocol "*"
+            --protocol "*" \
+            --source-port-ranges "*"
 
           # Vnet
           # We have to do a show here or we get an error on create if the vnet exists:
@@ -331,12 +333,42 @@ jobs:
         # NB "DefaultFrontendEndpoint" is the name assigned by the command above.
         # If this changes, use "az network front-door show --name tfs-???-fd | grep FrontendEndpoints"
         inlineScript: |
-          az network front-door routing-rule create --name RedirectToHttps \
-            --front-door-name tfs-${{ env.environment }}-fd \
+          az network front-door routing-rule create --front-door-name tfs-${{ env.environment }}-fd \
+            --name RedirectToHttps \
             --frontend-endpoints DefaultFrontendEndpoint \
             --route-type Redirect \
             --accepted-protocols Http \
             --redirect-protocol HttpsOnly
+
+    - name: API
+      uses: Azure/cli@v1.0.0
+      with:
+        # NB "DefaultFrontendEndpoint" is the name assigned by the command above.
+        # If this changes, use "az network front-door show --name tfs-???-fd | grep FrontendEndpoints"
+        inlineScript: |
+          az network front-door load-balancing create --front-door-name tfs-${{ env.environment }}-fd \
+            --name api-lb \
+            --sample-size 4 \
+            --successful-samples-required 2
+          az network front-door probe create --front-door-name tfs-${{ env.environment }}-fd \
+            --interval 60 \
+            --name api-probe \
+            --path /healthcheck \
+            --probeMethod GET \
+            --protocol Https
+          az network front-door backend-pool create --front-door-name tfs-${{ env.environment }}-fd \
+            --name portal-api \
+            --address tfs-${{ env.environment }}-portal-api.azurewebsites.net \
+            --load-balancing api-lb \
+            --probe api-probe
+          az network front-door routing-rule create --front-door-name tfs-${{ env.environment }}-fd \
+            --name API \
+            --frontend-endpoints DefaultFrontendEndpoint \
+            --route-type Forward \
+            --accepted-protocols Https \
+            --forwarding-protocol HttpsOnly \
+            --backend-pool portal-api \
+            --patterns "/v1*"
 
   file-storage:
     name: File storage
