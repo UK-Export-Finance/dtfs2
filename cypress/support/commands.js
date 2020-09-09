@@ -30,6 +30,7 @@ const {downloadFile} = require('./deal-api/fileshare');
 
 // commands used to interact directly with deal-api
 Cypress.Commands.add("insertOneDeal", require('./deal-api/insertOneDeal'));
+Cypress.Commands.add("updateDeal", require('./deal-api/updateDeal'));
 Cypress.Commands.add("insertManyDeals", require('./deal-api/insertManyDeals'));
 Cypress.Commands.add("deleteDeals", require('./deal-api/deleteDeals'));
 Cypress.Commands.add("downloadFile", downloadFile);

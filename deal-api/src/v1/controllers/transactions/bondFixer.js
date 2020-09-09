@@ -23,8 +23,7 @@ const constructor = (listOfFilters) => {
     }
 
     if (FILTER_SEARCH === filterField) {
-      keyFields.filterByBankFacilityId = filter[FILTER_SEARCH];
-      keyFields.filterByUkefFacilityId = filter[FILTER_SEARCH];
+      keyFields.search = filter[FILTER_SEARCH];
     }
 
     if (TRANSACTION_STAGE === filterField) {
@@ -56,22 +55,31 @@ const constructor = (listOfFilters) => {
         return false;
       }
 
+      if (keyFields.search) {
+        const regex = new RegExp(`^${keyFields.search}`, 'i');
+        const ukefFacilityID = Array.isArray(bond.ukefFacilityID) ? bond.ukefFacilityID[0] : bond.ukefFacilityID;
+
+        const matchesUKEFId = ukefFacilityID && ukefFacilityID.match(regex);
+        const matchesUniqueId = bond.uniqueIdentificationNumber && bond.uniqueIdentificationNumber.match(regex);
+        if (!matchesUniqueId && !matchesUKEFId) return false;
+      }
+
       if (keyFields.filterByBankFacilityId) {
         const regex = new RegExp(`^${keyFields.filterByBankFacilityId}`, 'i');
-        if (bond.uniqueIdentificationNumber && bond.uniqueIdentificationNumber.match(regex)) {
-          return true;
+        if (bond.uniqueIdentificationNumber && !bond.uniqueIdentificationNumber.match(regex)) {
+          return false;
         }
       }
 
       if (keyFields.filterByUkefFacilityId) {
         const regex = new RegExp(`^${keyFields.filterByUkefFacilityId}`, 'i');
         const ukefFacilityID = Array.isArray(bond.ukefFacilityID) ? bond.ukefFacilityID[0] : bond.ukefFacilityID;
-        if (ukefFacilityID && ukefFacilityID.match(regex)) {
-          return true;
+        if (ukefFacilityID && !ukefFacilityID.match(regex)) {
+          return false;
         }
       }
 
-      return Object.keys(keyFields).length === 0;
+      return true; // the filter should reject things that don't fit; if we reach here we have not rejected this record.
     }).map((bond) => ({
       // map whatever's still left into the generic schema that graphQL is expecting..
 
