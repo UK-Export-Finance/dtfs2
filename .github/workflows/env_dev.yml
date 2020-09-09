@@ -44,7 +44,7 @@ env:
 jobs:
 
   networking:
-    name: Network and security group
+    name: Networking
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -58,11 +58,10 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
-    - name: Networking
+    - name: Network security group
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          # Network security group
           az network nsg create --name tfs-${{ env.environment }}-portal-nsg
           az network nsg rule create --name front-door-allow \
             --description "Allow traffic from Front Door." \
@@ -81,8 +80,11 @@ jobs:
             --protocol "*" \
             --destination-port-ranges "*"
 
-          # Vnet
-          # We have to do a show here or we get an error on create if the vnet exists:
+    - name: Vnet
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          # We have to do a show here or we get an error on create if the vnet already exists:
           az network vnet show --name tfs-${{ env.environment }}-portal-vnet || \
           az network vnet create --name tfs-${{ env.environment }}-portal-vnet
           # Delegation Microsoft.Web/serverFarms allows App Service to use this vnet
@@ -196,7 +198,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-ui \
+          az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-api \
             --vnet tfs-${{ env.environment }}-portal-vnet \
             --subnet portal
 
