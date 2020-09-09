@@ -7,6 +7,7 @@ exports.findTransactions = async (requestingUser, start = 0, pagesize = 20, filt
   // try to hide all the horrible logic for filtering in here:
   const transactionFix = transactionFixer(requestingUser, filter);
 
+  // console.log(`filter :: \n${JSON.stringify(filter)}`);
   // work out the mongo query to get all the deals that might contain transactions we care about
   const query = transactionFix.transactionsQuery();
   // console.log(`query :: \n${JSON.stringify(query)}`);
@@ -15,6 +16,8 @@ exports.findTransactions = async (requestingUser, start = 0, pagesize = 20, filt
   const collection = await db.getCollection('deals');
   const dealResults = collection.find(query);
   const dealsWithTransactions = await dealResults.sort({ 'details.dateOfLastAction': -1 }).toArray();
+  // console.log(`dealsWithTransactions :: \n${JSON.stringify(dealsWithTransactions)}`);
+
   // use Array.reduce to loop over our list of deals,
   //  accumulating an array of "loans and bonds" suitable to return via the API
   const allTransactions = dealsWithTransactions.reduce((transactionsAccumulatedSoFar, deal) => {

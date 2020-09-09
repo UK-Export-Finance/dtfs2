@@ -18,6 +18,7 @@ module.exports = {
   contractSubmissionDetails: require('./contractSubmissionDetails'),
   editDealName: require('./contract/contract-edit-name'),
   dashboard: require('./dashboard'),
+  transactionDashboard: require('./transactionDashboard'),
   cloneDeal: require('./cloneDeal'),
   eligibilityCriteria: require('./eligibilityCriteria'),
   eligibilityDocumentation: require('./eligibilityDocumentation'),

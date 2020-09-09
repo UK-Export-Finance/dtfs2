@@ -23,8 +23,7 @@ const constructor = (listOfFilters) => {
     }
 
     if (FILTER_SEARCH === filterField) {
-      keyFields.filterByBankFacilityId = filter[FILTER_SEARCH];
-      keyFields.filterByUkefFacilityId = filter[FILTER_SEARCH];
+      keyFields.search = filter[FILTER_SEARCH];
     }
 
     if (TRANSACTION_STAGE === filterField) {
@@ -56,22 +55,31 @@ const constructor = (listOfFilters) => {
         return false;
       }
 
+      if (keyFields.search) {
+        const regex = new RegExp(`^${keyFields.search}`, 'i');
+        const ukefFacilityID = Array.isArray(loan.ukefFacilityID) ? loan.ukefFacilityID[0] : loan.ukefFacilityID;
+
+        const matchesUKEFId = ukefFacilityID && ukefFacilityID.match(regex);
+        const matchesBankRefNum = loan.bankReferenceNumber && loan.bankReferenceNumber.match(regex);
+        if (!matchesBankRefNum && !matchesUKEFId) return false;
+      }
+
       if (keyFields.filterByBankFacilityId) {
         const regex = new RegExp(`^${keyFields.filterByBankFacilityId}`, 'i');
-        if (loan.bankReferenceNumber && loan.bankReferenceNumber.match(regex)) {
-          return true;
+        if (loan.bankReferenceNumber && !loan.bankReferenceNumber.match(regex)) {
+          return false;
         }
       }
 
       if (keyFields.filterByUkefFacilityId) {
         const regex = new RegExp(`^${keyFields.filterByUkefFacilityId}`, 'i');
         const ukefFacilityID = Array.isArray(loan.ukefFacilityID) ? loan.ukefFacilityID[0] : loan.ukefFacilityID;
-        if (ukefFacilityID && ukefFacilityID.match(regex)) {
-          return true;
+        if (ukefFacilityID && !ukefFacilityID.match(regex)) {
+          return false;
         }
       }
 
-      return Object.keys(keyFields).length === 0;
+      return true; // all the filters should remove anything that needs removing so if we reach here -> true.
     }).map((loan) => ({
       // map whatever's still left into the generic schema that graphQL is expecting..
       deal_id: deal._id, // eslint-disable-line no-underscore-dangle

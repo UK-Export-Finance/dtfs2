@@ -86,6 +86,19 @@ module.exports.insertDeal = (deal, token) => cy.request({
   return resp.body;
 });
 
+module.exports.updateDeal = (dealId, update, token) => cy.request({
+  url: `${api()}/v1/deals/${dealId}`,
+  method: 'PUT',
+  body: update,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(200);
+  return resp.body;
+});
+
 module.exports.downloadFile = (token, deal) => cy.request({
   url: `${api()}/v1/deals/${deal._id}/integration/type-a`,
   method: 'GET',

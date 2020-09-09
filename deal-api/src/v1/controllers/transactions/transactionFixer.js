@@ -4,7 +4,7 @@ const loanFixer = require('./loanFixer');
 
 const BANKSUPPLYCONTRACTID = 'details.bankSupplyContractID';
 const TRANSACTION_STAGE = 'transaction.transactionStage';
-const DEAL_CREATED = 'details.created';
+const TRANSACTION_DEAL_CREATED = 'transaction.deal_created'; // think this really wants us to track when the loan/bond was created
 const DEAL_ID = '_id';
 const DEAL_STATUS = 'details.status';
 const DEAL_PREVIOUS_STATUS = 'details.previousStatus';
@@ -53,7 +53,7 @@ const constructor = (user, filters) => {
         return listSoFar.concat([{ $or: [bondMatchesOnFacilityStage, loanMatchesOnFacilityStage] }]);
       }
 
-      if (DEAL_CREATED === filterField) {
+      if (TRANSACTION_DEAL_CREATED === filterField) {
         const dealWithinSpecifiedRange = { 'details.created': filter[filterField] };
 
         return listSoFar.concat([dealWithinSpecifiedRange]);
