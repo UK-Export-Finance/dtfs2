@@ -3,7 +3,8 @@ const partials = require('../../../partials');
 const fullyCompletedDeal = require('./dealFullyCompleted');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 const goToCloneDealPage = (deal) => {
   cy.loginGoToDealPage(MAKER_LOGIN, deal);
@@ -100,22 +101,20 @@ context('Clone a deal', () => {
       // });
 
       // confirm bond statuses are 'Incomplete'
-      const firstBondId = deal.bondTransactions.items[0]._id;
-      const lastBondId = deal.bondTransactions.items[1]._id;
-      const firstBondRow = pages.contract.bondTransactionsTable.row(firstBondId);
-      const lastBondRow = pages.contract.bondTransactionsTable.row(lastBondId);
 
-      firstBondRow.bondStatus().contains('Incomplete');
-      lastBondRow.bondStatus().contains('Incomplete');
+      pages.contract.bondTransactionsTableRows().each((bondTableRow) => {
+        const bondId = bondTableRow.attr('data-cy').split('-')[1];
+        const bond = pages.contract.bondTransactionsTable.row(bondId);
+        bond.bondStatus().contains('Incomplete');
+      });
+
 
       // confirm loan statuses are 'Incomplete'
-      const firstLoanId = deal.loanTransactions.items[0]._id;
-      const lastLoanId = deal.loanTransactions.items[1]._id;
-      const firstLoanRow = pages.contract.loansTransactionsTable.row(firstLoanId);
-      const lastLoanRow = pages.contract.loansTransactionsTable.row(lastLoanId);
-
-      firstLoanRow.loanStatus().contains('Incomplete');
-      lastLoanRow.loanStatus().contains('Incomplete');
+      pages.contract.loansTransactionsTableRows().each((loanTableRow) => {
+        const loanId = loanTableRow.attr('data-cy').split('-')[1];
+        const loan = pages.contract.loansTransactionsTable.row(loanId);
+        loan.loanStatus().contains('Incomplete');
+      });
     });
   });
 });

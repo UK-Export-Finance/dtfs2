@@ -1,13 +1,13 @@
 const DEFAULTS = require('../defaults');
 const { findMandatoryCriteria } = require('./mandatoryCriteria.controller');
 const { findOneDeal, create: createDeal } = require('./deal.controller');
-const { generateDealId } = require('../../utils/generateIds');
+const { generateFacilityId } = require('../../utils/generateIds');
 const { getCloneDealErrors } = require('../validation/clone-deal');
+
 
 const now = require('../../now');
 
 const CLONE_BOND_FIELDS = [
-  '_id',
   'bondStage',
   'requestedCoverStartDate',
   'coverEndDate-day',
@@ -25,7 +25,6 @@ const CLONE_BOND_FIELDS = [
 ];
 
 const CLONE_LOAN_FIELDS = [
-  '_id',
   'bankReferenceNumber',
   'facilityValue',
   'currency',
@@ -42,7 +41,7 @@ const CLONE_LOAN_FIELDS = [
   'ukefGuaranteeInMonths',
 ];
 
-const stripTransaction = (transaction, allowedFields) => {
+const stripTransaction = async (transaction, allowedFields) => {
   const stripped = {};
 
   Object.keys(transaction).forEach((key) => {
@@ -51,6 +50,7 @@ const stripTransaction = (transaction, allowedFields) => {
     }
   });
   // timestamp the newly cloned transactions and treat like a new draft.
+  stripped._id = await generateFacilityId(); // eslint-disable-line no-underscore-dangle
   stripped.createdDate = now();
 
   return stripped;
@@ -72,11 +72,10 @@ exports.clone = async (req, res) => {
       cloneTransactions,
     } = req.body;
 
-    const newDealId = await generateDealId();
+    const { _id, ...existingDealWithoutId } = existingDeal;
 
     const modifiedDeal = {
-      ...existingDeal,
-      _id: newDealId,
+      ...existingDealWithoutId,
       comments: [],
       details: {
         bankSupplyContractID,
@@ -98,13 +97,15 @@ exports.clone = async (req, res) => {
       const hasLoans = modifiedDeal.loanTransactions.items.length > 0;
 
       if (hasBonds) {
-        modifiedDeal.bondTransactions.items = modifiedDeal.bondTransactions.items.map((bond) =>
-          stripTransaction(bond, CLONE_BOND_FIELDS));
+        modifiedDeal.bondTransactions.items = await Promise.all(modifiedDeal.bondTransactions.items.map((bond) => (
+          stripTransaction(bond, CLONE_BOND_FIELDS)
+        )));
       }
 
       if (hasLoans) {
-        modifiedDeal.loanTransactions.items = modifiedDeal.loanTransactions.items.map((loan) =>
-          stripTransaction(loan, CLONE_LOAN_FIELDS));
+        modifiedDeal.loanTransactions.items = await Promise.all(modifiedDeal.loanTransactions.items.map((loan) => (
+          stripTransaction(loan, CLONE_LOAN_FIELDS)
+        )));
       }
     }
 

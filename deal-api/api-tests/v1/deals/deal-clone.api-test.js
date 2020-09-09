@@ -117,7 +117,6 @@ describe('/v1/deals/:id/clone', () => {
         const secondOriginalBond = originalDeal.bondTransactions.items[1];
 
         const expectedFirstBondTransaction = {
-          _id: firstOriginalBond._id,
           bondStage: firstOriginalBond.bondStage,
           requestedCoverStartDate: firstOriginalBond.requestedCoverStartDate,
           'coverEndDate-day': firstOriginalBond['coverEndDate-day'],
@@ -135,22 +134,23 @@ describe('/v1/deals/:id/clone', () => {
           createdDate: expect.any(String),
         };
         const expectedSecondBondTransaction = {
-            _id: secondOriginalBond._id,
-            bondStage: secondOriginalBond.bondStage,
-            requestedCoverStartDate: secondOriginalBond.requestedCoverStartDate,
-            'coverEndDate-day': secondOriginalBond['coverEndDate-day'],
-            'coverEndDate-month': secondOriginalBond['coverEndDate-month'],
-            'coverEndDate-year': secondOriginalBond['coverEndDate-year'],
-            facilityValue: secondOriginalBond.facilityValue,
-            currencySameAsSupplyContractCurrency: secondOriginalBond.currencySameAsSupplyContractCurrency,
-            currency: secondOriginalBond.currency,
-            uniqueIdentificationNumber: secondOriginalBond.uniqueIdentificationNumber,
-            ukefGuaranteeInMonths: secondOriginalBond.ukefGuaranteeInMonths,
-            createdDate: expect.any(String),
+          bondStage: secondOriginalBond.bondStage,
+          requestedCoverStartDate: secondOriginalBond.requestedCoverStartDate,
+          'coverEndDate-day': secondOriginalBond['coverEndDate-day'],
+          'coverEndDate-month': secondOriginalBond['coverEndDate-month'],
+          'coverEndDate-year': secondOriginalBond['coverEndDate-year'],
+          facilityValue: secondOriginalBond.facilityValue,
+          currencySameAsSupplyContractCurrency: secondOriginalBond.currencySameAsSupplyContractCurrency,
+          currency: secondOriginalBond.currency,
+          uniqueIdentificationNumber: secondOriginalBond.uniqueIdentificationNumber,
+          ukefGuaranteeInMonths: secondOriginalBond.ukefGuaranteeInMonths,
+          createdDate: expect.any(String),
         };
 
-        expect(body.bondTransactions.items[0]).toEqual(expectedFirstBondTransaction);
-        expect(body.bondTransactions.items[1]).toEqual(expectedSecondBondTransaction);
+        expect(body.bondTransactions.items[0]).toMatchObject(expectedFirstBondTransaction);
+        expect(body.bondTransactions.items[0]._id).not.toEqual(firstOriginalBond._id);
+        expect(body.bondTransactions.items[1]).toMatchObject(expectedSecondBondTransaction);
+        expect(body.bondTransactions.items[1]._id).not.toEqual(secondOriginalBond._id);
       });
 
       it('clones a deal with only specific loanTransactions fields', async () => {
@@ -166,7 +166,6 @@ describe('/v1/deals/:id/clone', () => {
         const secondOriginalLoan = originalDeal.loanTransactions.items[1];
 
         const expectedFirstLoanTransaction = {
-          _id: firstOriginalLoan._id,
           bankReferenceNumber: firstOriginalLoan.bankReferenceNumber,
           facilityValue: firstOriginalLoan.facilityValue,
           currencySameAsSupplyContractCurrency: firstOriginalLoan.currencySameAsSupplyContractCurrency,
@@ -180,7 +179,6 @@ describe('/v1/deals/:id/clone', () => {
         };
 
         const expectedSecondLoanTransaction = {
-          _id: secondOriginalLoan._id,
           requestedCoverStartDate: secondOriginalLoan.requestedCoverStartDate,
           'coverEndDate-day': secondOriginalLoan['coverEndDate-day'],
           'coverEndDate-month': secondOriginalLoan['coverEndDate-month'],
@@ -198,8 +196,10 @@ describe('/v1/deals/:id/clone', () => {
           createdDate: expect.any(String),
         };
 
-        expect(body.loanTransactions.items[0]).toEqual(expectedFirstLoanTransaction);
-        expect(body.loanTransactions.items[1]).toEqual(expectedSecondLoanTransaction);
+        expect(body.loanTransactions.items[0]).toMatchObject(expectedFirstLoanTransaction);
+        expect(body.loanTransactions.items[0]._id).not.toEqual(firstOriginalLoan._id);
+        expect(body.loanTransactions.items[1]).toMatchObject(expectedSecondLoanTransaction);
+        expect(body.loanTransactions.items[1]._id).not.toEqual(secondOriginalLoan._id);
       });
 
       it('returns empty bondTransactions and loanTransactions when empty in original deal', async () => {
