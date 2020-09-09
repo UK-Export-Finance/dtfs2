@@ -368,7 +368,7 @@ jobs:
             --accepted-protocols Https \
             --forwarding-protocol HttpsOnly \
             --backend-pool portal-api \
-            --patterns "/v1*"
+            --patterns "/v1/*"
 
   file-storage:
     name: File storage
