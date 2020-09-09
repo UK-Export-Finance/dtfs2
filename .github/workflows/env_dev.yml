@@ -84,13 +84,15 @@ jobs:
           # Vnet
           # We have to do a show here or we get an error on create if the vnet exists:
           az network vnet show --name tfs-${{ env.environment }}-portal-vnet || \
-          az network vnet create --name tfs-${{ env.environment }}-portal-vnet \
-            --network-security-group tfs-${{ env.environment }}-portal-nsg
-          # Microsoft.Web/serverFarms allows App Service to use this vnet
+          az network vnet create --name tfs-${{ env.environment }}-portal-vnet
+          # Delegation Microsoft.Web/serverFarms allows App Service to use this vnet
           az network vnet subnet create --name portal \
-            --address-prefixes 10.0.0.0/28 \
             --vnet-name tfs-${{ env.environment }}-portal-vnet \
+            --address-prefixes 10.0.0.0/28 \
             --delegations Microsoft.Web/serverFarms
+          az network vnet subnet update --name portal \
+            --vnet-name tfs-${{ env.environment }}-portal-vnet \
+            --network-security-group tfs-${{ env.environment }}-portal-nsg
 
   portal-ui:
     name: Portal UI
