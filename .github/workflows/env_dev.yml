@@ -64,7 +64,7 @@ jobs:
         inlineScript: |
           az network nsg create --name tfs-${{ env.environment }}-portal-nsg
           az network vnet create --name tfs-${{ env.environment }}-portal-vnet \
-            --network-security-group tfs-${{ env.environment }}-portal-nsg
+            --network-security-group tfs-${{ env.environment }}-portal-nsg \
             --subnet-name default
           az network nsg rule create --name front-door-allow \
             --description "Allow traffic from Front Door." \
