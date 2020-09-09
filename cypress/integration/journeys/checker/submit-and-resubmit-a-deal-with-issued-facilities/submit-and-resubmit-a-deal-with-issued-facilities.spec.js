@@ -86,6 +86,7 @@ context('A maker submits a deal to checker, checker submits to UKEF, maker submi
 
     //---------------------------------------------------------------
     // maker adds Issued Facilities and submits deal for review by checker
+    // facility status/links should be updated/hidden
     //---------------------------------------------------------------
     cy.login(MAKER_LOGIN);
     pages.contract.visit(deal);
@@ -111,8 +112,16 @@ context('A maker submits a deal to checker, checker submits to UKEF, maker submi
     bondRow.issueFacilityLink().click();
     fillAndSubmitIssueBondFacilityForm();
 
+    bondRow.bondStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Completed');
+    });
+
     loanRow.issueFacilityLink().click();
     fillAndSubmitIssueLoanFacilityForm();
+
+    loanRow.loanStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Completed');
+    });
 
     pages.contract.proceedToReview().click();
     pages.contractReadyForReview.comments().type('Issued facilities');
