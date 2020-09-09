@@ -1,6 +1,7 @@
 const page = {
   visit: () => cy.visit('/reports/audit-transactions'),
 
+  filterByBank: () => cy.get('[data-cy="filterByBank"]'),
   filterByFacilityStage: () => cy.get('[data-cy="filterByFacilityStage"]'),
   filterBySupplierName: () => cy.get('[data-cy="filterBySupplierName"]'),
   filterByBankSupplyContractId: () => cy.get('[data-cy="filterByBankSupplyContractId"]'),
