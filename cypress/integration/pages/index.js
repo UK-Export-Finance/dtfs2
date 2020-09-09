@@ -44,4 +44,6 @@ module.exports = {
   editUser: require('./admin/users/editUser'),
   mga: require('./mga'),
   footer: require('./footer'),
+
+  reports: require('./reports'),
 };

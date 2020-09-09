@@ -37,7 +37,7 @@
           Facility stage
         </label>
 
-        <select data-cy="facilityStage" class="govuk-select" id="facilityStage" name="facilityStage">
+        <select data-cy="filterByFacilityStage" class="govuk-select" id="facilityStage" name="facilityStage">
           <option value="all" {% if filter.facilityStage==='all' %}selected{%endif%}>Any</option>
           {% for value, text in facilityStages %}
           <option value="{{ value }}" {% if filter.facilityStage===value %}selected{%endif%}>{{ text }}</option>
@@ -52,7 +52,7 @@
 
     <div class="govuk-grid-column-one-third">
       <div class="govuk-form-group">
-        <label class="govuk-label" for="filterBySupplierName">
+        <label data-cy="filterBySupplierName" class="govuk-label" for="filterBySupplierName">
           Supplier name
         </label>
         <input class="govuk-input" id="filterBySupplierName" name="filterBySupplierName" type="text" value="{{ filter.filterBySupplierName }}">
@@ -64,7 +64,7 @@
         <label class="govuk-label" for="bankSupplyContractID">
           Bank Supply contract ID
         </label>
-        <input class="govuk-input" id="bankSupplyContractID" name="bankSupplyContractID" type="text" value="{{ filter.bankSupplyContractID }}">
+        <input data-cy="filterByBankSupplyContractId" class="govuk-input" id="bankSupplyContractID" name="bankSupplyContractID" type="text" value="{{ filter.bankSupplyContractID }}">
       </div>
     </div>
 
@@ -73,7 +73,7 @@
         <label class="govuk-label" for="ukefSupplyContractID">
           UKEF Supply contract ID
         </label>
-        <input class="govuk-input" id="ukefSupplyContractID" name="ukefSupplyContractID" type="text" value="{{ filter.ukefSupplyContractID }}">
+        <input data-cy="filterByUKEFSupplyContractId" class="govuk-input" id="ukefSupplyContractID" name="ukefSupplyContractID" type="text" value="{{ filter.ukefSupplyContractID }}">
       </div>
     </div>
 

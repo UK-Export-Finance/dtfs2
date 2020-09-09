@@ -2,6 +2,7 @@
   "details": {
     "bankSupplyContractID": "aDealWithTenLoans",
     "bankSupplyContractName": "aDealWithTenLoans",
+    "ukefDealId": "ukef:aDealWithTenLoans",
     "submissionType": "Automatic Inclusion Notice",
     "status": "Draft",
     "owningBank": {
@@ -46,7 +47,7 @@
     "supplier-correspondence-address-line-2" : "",
     "supplier-correspondence-address-postcode" : "ED1 23S",
     "supplier-correspondence-address-town" : "Eastminster",
-    "supplier-name" : "UKFS",
+    "supplier-name" : "Tonys Beard Accessories",
     "supplier-type" : "Exporter",
     "supplier-correspondence-address-is-different" : "true",
     "supply-contract-description" : "Description.",
