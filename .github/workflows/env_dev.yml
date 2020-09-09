@@ -58,7 +58,7 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
-    - name: Network and security group
+    - name: Networking
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
