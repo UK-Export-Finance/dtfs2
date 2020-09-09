@@ -18,7 +18,7 @@
   classes: 'govuk-button--secondary',
   href: '/reports/audit-transactions/download'
   }]
-  }) }} 
+  }) }}
 
   {{ filterControls.render(filter, user, banks, facilityStages) }}
 
@@ -42,8 +42,8 @@
       </tr>
     </thead>
 
-    <tbody class="govuk-table__body">
-      
+    <tbody data-cy="results" class="govuk-table__body">
+
       </td> </tr>
       {% for transaction in transactions %}
         <tr data-cy="deal_{{transaction.deal_id}}" class="govuk-table__row">
@@ -87,7 +87,7 @@
           </td>
 
           <td data-cy="createdBy" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.maker }} 
+            {{ transaction.maker }}
           </td>
 
           <td data-cy="issuedDate" class="govuk-table__cell govuk-!-font-size-14">

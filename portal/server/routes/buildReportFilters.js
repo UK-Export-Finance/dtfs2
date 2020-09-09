@@ -99,7 +99,7 @@ const buildReportFilters = (params, user) => {
     const createdFrom = moment(`${year} ${month} ${day}`, 'YYYY MM DD').valueOf();
 
     filters.push({
-      field: 'details.created',
+      field: 'transaction.deal_created',
       value: `${createdFrom}`,
       operator: 'gte',
     });
@@ -113,7 +113,7 @@ const buildReportFilters = (params, user) => {
     const createdTo = moment(`${year} ${month} ${day}`, 'YYYY MM DD').add(1, 'day').valueOf();
 
     filters.push({
-      field: 'details.created',
+      field: 'transaction.deal_created',
       value: `${createdTo}`,
       operator: 'lt',
     });
@@ -127,7 +127,7 @@ const buildReportFilters = (params, user) => {
     const submittedFrom = moment(`${year} ${month} ${day}`, 'YYYY MM DD').valueOf();
 
     filters.push({
-      field: 'details.submissionDate',
+      field: 'transaction.deal_created',
       value: `${submittedFrom}`,
       operator: 'gte',
     });
@@ -140,7 +140,7 @@ const buildReportFilters = (params, user) => {
     const submittedTo = moment(`${year} ${month} ${day}`, 'YYYY MM DD').add(1, 'day').valueOf();
 
     filters.push({
-      field: 'details.submissionDate',
+      field: 'transaction.deal_created',
       value: `${submittedTo}`,
       operator: 'lt',
     });
