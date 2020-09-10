@@ -174,6 +174,18 @@ exports.incrementFailedLoginCount = async (user) => {
   }
 };
 
+exports.disable = async (_id, callback) => {
+  const collection = await db.getCollection('users');
+  // const status = await collection.deleteOne({ _id: new ObjectID(_id) });
+  const userUpdate = {
+    disabled: true,
+  };
+
+  const status = await collection.updateOne({ _id: { $eq: new ObjectID(_id) } }, { $set: userUpdate }, {});
+
+  callback(null, status);
+};
+
 exports.remove = async (_id, callback) => {
   const collection = await db.getCollection('users');
   const status = await collection.deleteOne({ _id: new ObjectID(_id) });

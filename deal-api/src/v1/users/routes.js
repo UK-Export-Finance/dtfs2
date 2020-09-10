@@ -1,8 +1,10 @@
 const utils = require('../../crypto/utils');
 const login = require('./login.controller');
-const { userNotFound, userIsBlocked, incorrectPassword } = require('../../constants/login-results');
 const {
-  create, update, remove, list, findOne,
+  userNotFound, userIsBlocked, incorrectPassword, userIsDisabled,
+} = require('../../constants/login-results');
+const {
+  create, update, remove, list, findOne, disable,
 } = require('./controller');
 
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
@@ -129,6 +131,16 @@ module.exports.updateById = (req, res, next) => {
   });
 };
 
+module.exports.disable = (req, res, next) => {
+  disable(req.params._id, (err, status) => { // eslint-disable-line no-underscore-dangle
+    if (err) {
+      next(err);
+    } else {
+      res.status(200).json(status);
+    }
+  });
+};
+
 module.exports.remove = (req, res, next) => {
   remove(req.params._id, (err, status) => { // eslint-disable-line no-underscore-dangle
     if (err) {
@@ -156,6 +168,9 @@ module.exports.login = async (req, res, next) => {
     }
     if (incorrectPassword === loginResult.err) {
       return res.status(401).json({ success: false, msg: 'you entered the wrong password' });
+    }
+    if (userIsDisabled === loginResult.err) {
+      return res.status(401).json({ success: false, msg: 'user is disabled' });
     }
 
     // otherwise this is a technical failure during the lookup
