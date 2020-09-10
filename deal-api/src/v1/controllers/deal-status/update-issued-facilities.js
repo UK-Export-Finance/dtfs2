@@ -1,5 +1,27 @@
 const $ = require('mongo-dot-notation');
 const CONSTANTS = require('../../../constants');
+const issuedDateValidationRules = require('../../validation/fields/issued-date');
+
+const facilityHasValidIssuedDate = (facility, dealSubmissionDate) => {
+  const emptyErrorList = {};
+
+  if (!facility.issuedDate) {
+    return false;
+  }
+
+  const issuedDateValidationErrors = issuedDateValidationRules(
+    facility,
+    emptyErrorList,
+    dealSubmissionDate,
+  );
+
+  if (!issuedDateValidationErrors.issuedDate) {
+    return true;
+  }
+
+  return false;
+};
+
 
 const updateIssuedFacilities = async (
   collection,
@@ -23,6 +45,7 @@ const updateIssuedFacilities = async (
         bondStage,
       } = facility;
 
+      // TODO: rework this when we rename bondStage to facilityStage
       const loanHasBeenPreviouslyIssued = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
         && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
             || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL);
@@ -48,7 +71,6 @@ const updateIssuedFacilities = async (
             facility.status = newStatus;
           }
 
-          // TODO: rework this when we rename bondStage to facilityStage
           if (facilityStage) {
             facility.previousFacilityStage = facility.facilityStage;
             facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL;
@@ -62,8 +84,9 @@ const updateIssuedFacilities = async (
         }
 
         if (updateIssuedFacilitiesCoverStartDates
+          && !facility.issueFacilityDetailsSubmitted
           && !facility.requestedCoverStartDate
-          && facility.issuedDate) {
+          && facilityHasValidIssuedDate(facility, deal.details.submissionDate)) {
           facility.requestedCoverStartDate = facility.issuedDate;
         }
       }

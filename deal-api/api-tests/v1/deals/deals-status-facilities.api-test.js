@@ -48,6 +48,8 @@ describe('/v1/deals/:id/status - facilities', () => {
 
       beforeEach(async () => {
         completedDeal.status = 'Further Maker\'s input required';
+        completedDeal.details.submissionDate = moment().utc().valueOf();
+
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
         const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
@@ -111,43 +113,98 @@ describe('/v1/deals/:id/status - facilities', () => {
         });
       });
 
-      describe('any issued bonds that have details provided, but not yet been submitted', () => {
-        it('defaults requestedCoverStartDate to the issuedDate if no requestedCoverStartDate', async () => {
-          expect(updatedDeal.status).toEqual(200);
-          expect(updatedDeal.body).toBeDefined();
+      describe('when a deal is AIN', () => {
+        let ainDeal;
 
-          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+        beforeEach(async () => {
+          ainDeal = completedDeal;
+          ainDeal.details.submissionType = 'Automatic Inclusion Notice';
 
-          const issuedBondsThatShouldBeUpdated = createdDeal.bondTransactions.items.filter((b) =>
-            isUnsubmittedIssuedFacility(b) && !b.requestedCoverStartDate);
+          const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(completedDeal))).to('/v1/deals');
+          ainDeal = postResult;
+        });
+        
+        describe('any issued bonds that have details provided, but not yet been submitted', () => {
+          it('defaults requestedCoverStartDate to the issuedDate if no requestedCoverStartDate', async () => {
+            expect(ainDeal.status).toEqual(200);
+            expect(ainDeal.body).toBeDefined();
 
-          // make sure we have some bonds to test against
-          expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
+            const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-          issuedBondsThatShouldBeUpdated.forEach((bond) => {
-            const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
-            expect(updatedBond.requestedCoverStartDate).toEqual(bond.issuedDate);
+            const issuedBondsThatShouldBeUpdated = createdDeal.bondTransactions.items.filter((b) =>
+              isUnsubmittedIssuedFacility(b) && !b.requestedCoverStartDate);
+
+            // make sure we have some bonds to test against
+            expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
+
+            issuedBondsThatShouldBeUpdated.forEach((bond) => {
+              const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
+              expect(updatedBond.requestedCoverStartDate).toEqual(bond.issuedDate);
+            });
+          });
+        });
+
+        describe('any issued loans that have details provided, but not yet been submitted', () => {
+          it('defaults requestedCoverStartDate to the issuedDate if no requestedCoverStartDate', async () => {
+            expect(ainDeal.status).toEqual(200);
+            expect(ainDeal.body).toBeDefined();
+
+            const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+            const issuedLoansThatShouldBeUpdated = createdDeal.loanTransactions.items.filter((l) =>
+              isUnsubmittedIssuedFacility(l)
+              && !l.requestedCoverStartDate);
+
+            // make sure we have some loans to test against
+            expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
+
+            issuedLoansThatShouldBeUpdated.forEach((loan) => {
+              const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
+              expect(updatedLoan.requestedCoverStartDate).toEqual(loan.issuedDate);
+            });
           });
         });
       });
 
-      describe('any issued loans that have details provided, but not yet been submitted', () => {
-        it('defaults requestedCoverStartDate to the issuedDate if no requestedCoverStartDate', async () => {
-          expect(updatedDeal.status).toEqual(200);
-          expect(updatedDeal.body).toBeDefined();
+      describe('when a deal is MIN', () => {
+        describe('any issued bonds that have details provided, but not yet been submitted', () => {
+          it('defaults requestedCoverStartDate to the issuedDate if no requestedCoverStartDate', async () => {
+            expect(updatedDeal.status).toEqual(200);
+            expect(updatedDeal.body).toBeDefined();
 
-          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+            const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-          const issuedLoansThatShouldBeUpdated = createdDeal.loanTransactions.items.filter((l) =>
-            isUnsubmittedIssuedFacility(l)
-            && !l.requestedCoverStartDate);
+            const issuedBondsThatShouldBeUpdated = createdDeal.bondTransactions.items.filter((b) =>
+              isUnsubmittedIssuedFacility(b) && !b.requestedCoverStartDate);
 
-          // make sure we have some loans to test against
-          expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
+            // make sure we have some bonds to test against
+            expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
 
-          issuedLoansThatShouldBeUpdated.forEach((loan) => {
-            const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
-            expect(updatedLoan.requestedCoverStartDate).toEqual(loan.issuedDate);
+            issuedBondsThatShouldBeUpdated.forEach((bond) => {
+              const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
+              expect(updatedBond.requestedCoverStartDate).toEqual(bond.issuedDate);
+            });
+          });
+        });
+
+        describe('any issued loans that have details provided, but not yet been submitted', () => {
+          it('defaults requestedCoverStartDate to the issuedDate if no requestedCoverStartDate', async () => {
+            expect(updatedDeal.status).toEqual(200);
+            expect(updatedDeal.body).toBeDefined();
+
+            const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+            const issuedLoansThatShouldBeUpdated = createdDeal.loanTransactions.items.filter((l) =>
+              isUnsubmittedIssuedFacility(l)
+              && !l.requestedCoverStartDate);
+
+            // make sure we have some loans to test against
+            expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
+
+            issuedLoansThatShouldBeUpdated.forEach((loan) => {
+              const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
+              expect(updatedLoan.requestedCoverStartDate).toEqual(loan.issuedDate);
+            });
           });
         });
       });

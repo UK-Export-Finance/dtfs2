@@ -90,7 +90,10 @@ exports.update = (req, res) => {
     }
 
     if (toStatus === 'Ready for Checker\'s approval') {
-      const updateIssuedFacilitiesCoverStartDates = true;
+      const isAINdeal = dealAfterAllUpdates.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
+      const isMINdeal = dealAfterAllUpdates.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
+      const updateIssuedFacilitiesCoverStartDates = (isAINdeal || isMINdeal);
+
       const newIssuedFacilityStatus = 'Ready for check';
 
       dealAfterAllUpdates = await updateIssuedFacilities(
