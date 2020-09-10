@@ -108,19 +108,21 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     pages.facilityConfirmCoverStartDate.submit().click();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
-
     //---------------------------------------------------------------
-    // Issued facility with 'Completed' status has...
-    // `Change Cover start date` link, goes to the right place
-    // Maker could change date if they wanted to.
-    // NOTE could/should we add this to e2e test?
+    // Maker can change Cover start date for an Issued facility with 'Compeleted' status
     //---------------------------------------------------------------
     issuedCompletedBondRow.changeOrConfirmCoverStartDateLink().should('be.visible');
     issuedCompletedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Confirm start date');
 
     issuedCompletedBondRow.changeOrConfirmCoverStartDateLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${issuedCompletedBondId}/confirm-requested-cover-start-date`));
-    pages.facilityConfirmCoverStartDate.cancelButton().click();
+
+    pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().click();
+    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_BOND_COVER_START_DATE.format('DD'));
+    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_BOND_COVER_START_DATE.format('MM'));
+    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_BOND_COVER_START_DATE.format('YYYY'));
+    pages.facilityConfirmCoverStartDate.submit().click();
+    cy.url().should('eq', relative(`/contract/${dealId}`));
 
     //---------------------------------------------------------------
     // Maker can change Cover start date for an Unconditional facility with 'Submitted' status
@@ -138,33 +140,46 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     //---------------------------------------------------------------
-    // Unconditional facility with 'Completed' status has...
-    // `Change Cover start date` link, goes to the right place
-    // Maker could change date if they wanted to.
-    // NOTE could/should we add this to e2e test?
+    // Maker cannot resubmit deal until all facility cover start dates have been confirmed
+    // at this point, only 1 facility has NOT had the date confirmed
+    //---------------------------------------------------------------
+    pages.contract.proceedToReview().should('be.disabled');
+
+    //---------------------------------------------------------------
+    // Maker can change Cover start date for an Unconditional facility with 'Completed' status
     //---------------------------------------------------------------
     unconditionalCompletedLoanRow.changeOrConfirmCoverStartDateLink().should('be.visible');
     unconditionalCompletedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Confirm start date');
 
     unconditionalCompletedLoanRow.changeOrConfirmCoverStartDateLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${unconditionalCompletedLoanId}/confirm-requested-cover-start-date`));
-    pages.facilityConfirmCoverStartDate.cancelButton().click();
+    pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().click();
+    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_LOAN_COVER_START_DATE.format('DD'));
+    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_LOAN_COVER_START_DATE.format('MM'));
+    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_LOAN_COVER_START_DATE.format('YYYY'));
+    pages.facilityConfirmCoverStartDate.submit().click();
 
     //---------------------------------------------------------------
     // - Cover start date changes are rendered in the table
     // - `change start date` link/text updated
     //---------------------------------------------------------------
-    const expectedIssuedBondDate = moment(NEW_BOND_COVER_START_DATE).format('DD/MM/YYYY');
-    issuedSubmittedBondRow.requestedCoverStartDate().should('contain.text', expectedIssuedBondDate);
+    const expectedBondDate = moment(NEW_BOND_COVER_START_DATE).format('DD/MM/YYYY');
+    issuedSubmittedBondRow.requestedCoverStartDate().should('contain.text', expectedBondDate);
     issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date changed');
 
-    const expectedUnconditionalSubmittedLoanDate = moment(NEW_LOAN_COVER_START_DATE).format('DD/MM/YYYY');
-    unconditionalSubmittedLoanRow.requestedCoverStartDate().should('contain.text', expectedUnconditionalSubmittedLoanDate);
+    issuedCompletedBondRow.requestedCoverStartDate().should('contain.text', expectedBondDate);
+    issuedCompletedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date changed');
+
+
+    const expectedLoanDate = moment(NEW_LOAN_COVER_START_DATE).format('DD/MM/YYYY');
+    unconditionalSubmittedLoanRow.requestedCoverStartDate().should('contain.text', expectedLoanDate);
     unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date changed');
 
+    unconditionalCompletedLoanRow.requestedCoverStartDate().should('contain.text', expectedLoanDate);
+    unconditionalCompletedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date changed');
 
     //---------------------------------------------------------------
-    // Maker can resubmit deal
+    // Maker can resubmit deal now, after all cover start dates have been confirmed
     //---------------------------------------------------------------
     pages.contract.proceedToReview().should('not.be.disabled');
     pages.contract.proceedToReview().click();
