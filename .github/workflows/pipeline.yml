@@ -189,7 +189,7 @@ jobs:
   promote:
     needs: [portal-ui, portal-api]
     #needs: [api-tests, end-to-end-tests] - temp promotion to unblock QA
-    name: Promote Portal to Dev
+    name: Promote container images to Dev
     runs-on: ubuntu-latest
     steps:
     - name: Log in to Dev container registry
@@ -210,7 +210,7 @@ jobs:
         docker push ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$to
 
   deploy:
-    name: Deploy container images
+    name: Deploy container images to Dev
     needs: promote
     runs-on: ubuntu-latest
     steps:
