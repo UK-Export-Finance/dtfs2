@@ -27,7 +27,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
       });
   });
 
-  it('Maker Can `Confirm or change start date` for Issued & Unconditional facilities and resubmit the deal', () => {
+  it('Maker can `Confirm or change start date` for Issued & Unconditional facilities and only resubmit the deal once all Issued & Unconditional facilities have had their start date confirmed', () => {
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
 
@@ -169,7 +169,6 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
     issuedCompletedBondRow.requestedCoverStartDate().should('contain.text', expectedBondDate);
     issuedCompletedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date changed');
-
 
     const expectedLoanDate = moment(NEW_LOAN_COVER_START_DATE).format('DD/MM/YYYY');
     unconditionalSubmittedLoanRow.requestedCoverStartDate().should('contain.text', expectedLoanDate);
