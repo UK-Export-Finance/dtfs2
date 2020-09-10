@@ -5,15 +5,16 @@ const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 
 const users = require('./test-data');
-const aUserWithNoRoles = users.find(user=>user.username==='NOBODY');
-const aMaker = users.find(user=>user.username==='MAKER');
-const aChecker = users.find(user=>user.username==='CHECKER');
-const aMakerChecker = users.find(user=>user.username==='MAKENCHECK');
+const conditionalErrorList = require('../../../src/v1/validation/bond-rules/conditional-error-list');
 
-const PASSWORD_ERROR = {text:'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.'};
+const aUserWithNoRoles = users.find((user) => user.username === 'NOBODY');
+const aMaker = users.find((user) => user.username === 'MAKER');
+const aChecker = users.find((user) => user.username === 'CHECKER');
+const aMakerChecker = users.find((user) => user.username === 'MAKENCHECK');
+
+const PASSWORD_ERROR = { text: 'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.' };
 
 describe('a user', () => {
-
   beforeEach(async () => {
     await wipeDB.wipe(['users']);
   });
@@ -106,7 +107,6 @@ describe('a user', () => {
         ],
       });
     });
-
   });
 
   it('a user can be updated', async () => {
@@ -125,6 +125,7 @@ describe('a user', () => {
     expect(body.roles).toEqual(['checker', 'maker']);
   });
 
+
   it('a user can be deleted', async () => {
     const response = await as().post(aMaker).to('/v1/users');
     const createdUser = response.body.user;
@@ -137,9 +138,34 @@ describe('a user', () => {
     expect(body).toMatchObject({});
   });
 
+  it('a user can be disabled', async () => {
+    const response = await as().post(aMaker).to('/v1/users');
+    const createdUser = response.body.user;
+
+    await as().remove(`/v1/users/${createdUser._id}/disable`);
+
+    const { status, body } = await as().get(`/v1/users/${createdUser._id}`);
+
+    expect(status).toEqual(200);
+    expect(body).toMatchObject({
+      disabled: true,
+    });
+  });
+
   it('an unknown user cannot log in', async () => {
     const { username, password } = aMaker;
     const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+    expect(status).toEqual(401);
+  });
+
+  it('a disabled user cannot log in', async () => {
+    const response = await as().post(aMaker).to('/v1/users');
+    const createdUser = response.body.user;
+    await as().remove(`/v1/users/${createdUser._id}`);
+
+    const { username, password } = aMaker;
+    const { status } = await as().post({ username, password }).to('/v1/login');
 
     expect(status).toEqual(401);
   });
@@ -173,9 +199,9 @@ describe('a user', () => {
 
     const loginResult = await as().post({ username, password }).to('/v1/login');
 
-    const token = loginResult.body.token;
+    const { token } = loginResult.body;
 
-    const {status} = await as({token}).get('/v1/validate');
+    const { status } = await as({ token }).get('/v1/validate');
 
     expect(status).toEqual(200);
   });
@@ -183,7 +209,7 @@ describe('a user', () => {
   it('invalid tokens fail validation', async () => {
     const token = 'some characters i think maybe look like a token';
 
-    const {status} = await as({token}).get('/v1/validate');
+    const { status } = await as({ token }).get('/v1/validate');
 
     expect(status).toEqual(401);
   });
@@ -200,7 +226,7 @@ describe('a user', () => {
     const { body } = await as().post({ username, password }).to('/v1/login');
     const { token } = body;
 
-    const { status } = await as({token}).get('/v1/test/protected', token);
+    const { status } = await as({ token }).get('/v1/test/protected', token);
     expect(status).toEqual(200);
   });
 
@@ -211,7 +237,7 @@ describe('a user', () => {
     const { body } = await as().post({ username, password }).to('/v1/login');
     const { token } = body;
 
-    const { status } = await as({token}).get('/v1/test/protected/maker');
+    const { status } = await as({ token }).get('/v1/test/protected/maker');
     expect(status).toEqual(401);
   });
 
@@ -222,7 +248,7 @@ describe('a user', () => {
     const { body } = await as().post({ username, password }).to('/v1/login');
     const { token } = body;
 
-    const response = await as({token}).get('/v1/test/protected/maker');
+    const response = await as({ token }).get('/v1/test/protected/maker');
     const { status } = response;
 
     expect(status).toEqual(200);
@@ -235,10 +261,10 @@ describe('a user', () => {
     const { body } = await as().post({ username, password }).to('/v1/login');
     const { token } = body;
 
-    const makerResponse = await as({token}).get('/v1/test/protected/maker');
+    const makerResponse = await as({ token }).get('/v1/test/protected/maker');
     expect(makerResponse.status).toEqual(200);
 
-    const checkerResponse = await as({token}).get('/v1/test/protected/checker');
+    const checkerResponse = await as({ token }).get('/v1/test/protected/checker');
     expect(makerResponse.status).toEqual(200);
   });
 });

@@ -345,6 +345,11 @@ openRouter.route('/users/:_id')
     users.remove,
   );
 
+openRouter.route('/users/:_id/disable')
+  .delete(
+    users.disable,
+  );
+
 openRouter.route('/login')
   .post(
     users.login,
