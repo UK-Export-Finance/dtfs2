@@ -6,17 +6,17 @@ const {
 } = require('./date');
 const { formattedTimestamp } = require('../../facility-dates/timestamp');
 
-module.exports = (submittedValues, errorList, dealSubmissionDateTimestamp) => {
+module.exports = (facility, errorList, dealSubmissionDateTimestamp) => {
   const newErrorList = errorList;
 
   const dealSubmissionDate = formattedTimestamp(dealSubmissionDateTimestamp);
-  const issuedDate = formattedTimestamp(submittedValues.issuedDate);
+  const issuedDate = formattedTimestamp(facility.issuedDate);
 
   const {
     'issuedDate-day': issuedDateDay,
     'issuedDate-month': issuedDateMonth,
     'issuedDate-year': issuedDateYear,
-  } = submittedValues;
+  } = facility;
 
   if (dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear)) {
     if (!moment(issuedDate).isSameOrAfter(dealSubmissionDate, 'day')) {
@@ -27,7 +27,7 @@ module.exports = (submittedValues, errorList, dealSubmissionDateTimestamp) => {
         order: orderNumber(newErrorList),
       };
     }
-  } else if (!dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear)) {
+  } else if (!facility.issuedDate && !dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear)) {
     newErrorList.issuedDate = {
       text: dateValidationText(
         'Issued Date',
