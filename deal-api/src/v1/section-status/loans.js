@@ -27,7 +27,8 @@ const loanHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, d
   const allowedDealStatus = ((dealStatus === 'Acknowledged by UKEF'
                             || dealStatus === 'Accepted by UKEF (with conditions)'
                             || dealStatus === 'Accepted by UKEF (without conditions)'
-                            || dealStatus === 'Ready for Checker\'s approval')
+                            || dealStatus === 'Ready for Checker\'s approval'
+                            || dealStatus === 'Submitted')
                             && previousDealStatus !== 'Draft');
 
   const allowedDealSubmissionType = (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN

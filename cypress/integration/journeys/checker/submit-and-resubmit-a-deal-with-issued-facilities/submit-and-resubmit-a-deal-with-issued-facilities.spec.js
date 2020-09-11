@@ -74,6 +74,16 @@ context('A maker submits a deal to checker, checker submits to UKEF, maker submi
           BSS_ukef_facility_id: '12345',
           BSS_status: '""',
         },
+        {
+          BSS_portal_facility_id: deal.bondTransactions.items[1]._id,
+          BSS_ukef_facility_id: '12345',
+          BSS_status: '""',
+        },
+        {
+          BSS_portal_facility_id: deal.bondTransactions.items[2]._id,
+          BSS_ukef_facility_id: '12345',
+          BSS_status: '""',
+        },
       ],
       loans: [
         {
@@ -81,48 +91,115 @@ context('A maker submits a deal to checker, checker submits to UKEF, maker submi
           EWCS_ukef_facility_id: '56789',
           EWCS_status: '""',
         },
+        {
+          EWCS_portal_facility_id: deal.loanTransactions.items[1]._id,
+          EWCS_ukef_facility_id: '56789',
+          EWCS_status: '""',
+        },
+        {
+          EWCS_portal_facility_id: deal.loanTransactions.items[2]._id,
+          EWCS_ukef_facility_id: '56789',
+          EWCS_status: '""',
+        },
       ],
     });
 
     //---------------------------------------------------------------
-    // maker adds Issued Facilities and submits deal for review by checker
-    // facility status/links should be updated/hidden
+    // maker adds Issued Facilities
+    // issued facility status/links should be updated/hidden
     //---------------------------------------------------------------
     cy.login(MAKER_LOGIN);
     pages.contract.visit(deal);
 
-    const bondId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
-    const bondRow = pages.contract.bondTransactionsTable.row(bondId);
+    const bondThatWillBeIssuedObj = deal.bondTransactions.items.find((b) => !b.status);
+    const bondThatWillBeIssuedId = bondThatWillBeIssuedObj._id; // eslint-disable-line no-underscore-dangle
+    const bondThatWillBeIssuedRow = pages.contract.bondTransactionsTable.row(bondThatWillBeIssuedId);
 
-    const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
-    const loanRow = pages.contract.loansTransactionsTable.row(loanId);
+    const loanThatWillBeIssuedObj = deal.loanTransactions.items.find((l) => !l.status);
 
-    bondRow.bondStatus().invoke('text').then((text) => {
+    const loanThatWillBeIssuedId = loanThatWillBeIssuedObj._id; // eslint-disable-line no-underscore-dangle
+    const loanThatWillBeIssuedIdRow = pages.contract.loansTransactionsTable.row(loanThatWillBeIssuedId);
+
+    bondThatWillBeIssuedRow.bondStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Not started');
     });
 
-    bondRow.deleteLink().should('not.exist');
+    bondThatWillBeIssuedRow.deleteLink().should('not.exist');
 
-    loanRow.loanStatus().invoke('text').then((text) => {
+    loanThatWillBeIssuedIdRow.loanStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Not started');
     });
 
-    loanRow.deleteLink().should('not.exist');
+    loanThatWillBeIssuedIdRow.deleteLink().should('not.exist');
 
-    bondRow.issueFacilityLink().click();
+    bondThatWillBeIssuedRow.issueFacilityLink().click();
     fillAndSubmitIssueBondFacilityForm();
 
-    bondRow.bondStatus().invoke('text').then((text) => {
+    bondThatWillBeIssuedRow.bondStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Completed');
     });
 
-    loanRow.issueFacilityLink().click();
+    loanThatWillBeIssuedIdRow.issueFacilityLink().click();
     fillAndSubmitIssueLoanFacilityForm();
 
-    loanRow.loanStatus().invoke('text').then((text) => {
+    loanThatWillBeIssuedIdRow.loanStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Completed');
     });
 
+    //---------------------------------------------------------------
+    // maker starts, but does not complete, a different Bond Issue Facility form
+    //---------------------------------------------------------------
+    const unissuedNotStartedBondObj = deal.bondTransactions.items.find((b) => !b.status && b._id !== bondThatWillBeIssuedId);
+    const unissuedNotStartedBondId = unissuedNotStartedBondObj._id; // eslint-disable-line no-underscore-dangle
+    const unissuedNotStartedBondRow = pages.contract.bondTransactionsTable.row(unissuedNotStartedBondId);
+
+    const unissuedIncompleteBondObj = deal.bondTransactions.items.find((b) =>
+      !b.status
+      && b._id !== bondThatWillBeIssuedId
+      && b._id !== unissuedNotStartedBondId);
+
+    const unissuedIncompleteBondId = unissuedIncompleteBondObj._id; // eslint-disable-line no-underscore-dangle
+    const unissuedIncompleteBondRow = pages.contract.bondTransactionsTable.row(unissuedIncompleteBondId);
+
+    unissuedIncompleteBondRow.issueFacilityLink().click();
+
+    pages.bondIssueFacility.uniqueIdentificationNumber().type('1234');
+    pages.bondIssueFacility.submit().click();
+    pages.bondIssueFacility.cancelButton().click();
+
+    unissuedIncompleteBondRow.bondStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Incomplete');
+    });
+
+    //---------------------------------------------------------------
+    // maker starts, but does not complete, a different Loan Issue Facility form
+    //---------------------------------------------------------------
+
+    const conditionalNotStartedLoanObj = deal.loanTransactions.items.find((b) => !b.status && b._id !== loanThatWillBeIssuedId);
+    const conditionalNotStartedLoanId = conditionalNotStartedLoanObj._id; // eslint-disable-line no-underscore-dangle
+    const conditionalNotStartedLoanRow = pages.contract.loansTransactionsTable.row(conditionalNotStartedLoanId);
+
+    const conditionalIncompleteLoanObj = deal.loanTransactions.items.find((l) =>
+      !l.status
+      && l._id !== loanThatWillBeIssuedId
+      && l._id !== conditionalNotStartedLoanId);
+
+    const conditionalIncompleteLoanId = conditionalIncompleteLoanObj._id; // eslint-disable-line no-underscore-dangle
+    const conditionalIncompleteLoanRow = pages.contract.loansTransactionsTable.row(conditionalIncompleteLoanId);
+
+    conditionalIncompleteLoanRow.issueFacilityLink().click();
+
+    pages.loanIssueFacility.bankReferenceNumber().type('1234');
+    pages.loanIssueFacility.submit().click();
+    pages.loanIssueFacility.cancelButton().click();
+
+    conditionalIncompleteLoanRow.loanStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Incomplete');
+    });
+
+    //---------------------------------------------------------------
+    // maker submits deal for checker review
+    //---------------------------------------------------------------
     pages.contract.proceedToReview().click();
     pages.contractReadyForReview.comments().type('Issued facilities');
     pages.contractReadyForReview.readyForCheckersApproval().click();
@@ -133,21 +210,21 @@ context('A maker submits a deal to checker, checker submits to UKEF, maker submi
     cy.login(CHECKER_LOGIN);
     pages.contract.visit(deal);
 
-    bondRow.bondStatus().invoke('text').then((text) => {
+    bondThatWillBeIssuedRow.bondStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Ready for check');
     });
 
-    loanRow.loanStatus().invoke('text').then((text) => {
+    loanThatWillBeIssuedIdRow.loanStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Ready for check');
     });
 
-    bondRow.issueFacilityLink().click();
-    cy.url().should('eq', relative(`/contract/${dealId}/submission-details#bond-${bondId}`));
+    bondThatWillBeIssuedRow.issueFacilityLink().click();
+    cy.url().should('eq', relative(`/contract/${dealId}/submission-details#bond-${bondThatWillBeIssuedId}`));
 
     pages.contractSubmissionDetails.goBackLink().click();
 
-    loanRow.issueFacilityLink().click();
-    cy.url().should('eq', relative(`/contract/${dealId}/submission-details#loan-${loanId}`));
+    loanThatWillBeIssuedIdRow.issueFacilityLink().click();
+    cy.url().should('eq', relative(`/contract/${dealId}/submission-details#loan-${loanThatWillBeIssuedId}`));
 
     pages.contractSubmissionDetails.goBackLink().click();
 
@@ -164,11 +241,11 @@ context('A maker submits a deal to checker, checker submits to UKEF, maker submi
     cy.login(MAKER_LOGIN);
     pages.contract.visit(deal);
 
-    bondRow.bondStatus().invoke('text').then((text) => {
+    bondThatWillBeIssuedRow.bondStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Maker\'s input required');
     });
 
-    loanRow.loanStatus().invoke('text').then((text) => {
+    loanThatWillBeIssuedIdRow.loanStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Maker\'s input required');
     });
 
@@ -178,15 +255,16 @@ context('A maker submits a deal to checker, checker submits to UKEF, maker submi
 
     //---------------------------------------------------------------
     // checker submits deal to ukef
+    // completed, issued facilities should have status updated to Submitted
     //---------------------------------------------------------------
     cy.login(CHECKER_LOGIN);
     pages.contract.visit(deal);
 
-    bondRow.bondStatus().invoke('text').then((text) => {
+    bondThatWillBeIssuedRow.bondStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Ready for check');
     });
 
-    loanRow.loanStatus().invoke('text').then((text) => {
+    loanThatWillBeIssuedIdRow.loanStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Ready for check');
     });
 
@@ -197,12 +275,43 @@ context('A maker submits a deal to checker, checker submits to UKEF, maker submi
 
     pages.contract.visit(deal);
 
-    bondRow.bondStatus().invoke('text').then((text) => {
+    bondThatWillBeIssuedRow.bondStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Submitted');
     });
 
-    loanRow.loanStatus().invoke('text').then((text) => {
+    loanThatWillBeIssuedIdRow.loanStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Submitted');
     });
+
+    //---------------------------------------------------------------
+    // unissued bonds that have not been started should retain status
+    //---------------------------------------------------------------
+    unissuedNotStartedBondRow.bondStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Not started');
+    });
+
+    //---------------------------------------------------------------
+    // unissued bonds that are incomplete (because Issue Facility form is incomplete/has validation errors)
+    // should retain status
+    //---------------------------------------------------------------
+    unissuedIncompleteBondRow.bondStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Incomplete');
+    });
+
+    //---------------------------------------------------------------
+    // unissued loans that have not been started should retain status
+    //---------------------------------------------------------------
+    conditionalNotStartedLoanRow.loanStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Not started');
+    });
+
+    //---------------------------------------------------------------
+    // unissued loans that are incomplete (because Issue Facility form is incomplete/has validation errors)
+    // should retain status
+    //---------------------------------------------------------------
+    conditionalIncompleteLoanRow.loanStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Incomplete');
+    });
+
   });
 });
