@@ -1452,6 +1452,7 @@ router.post('/reports/unissued-transactions/:page', async (req, res) => {
     user: req.session.user,
   });
 });
+<<<<<<< HEAD
 // router.get('/reports/abandoned-supply-contracts',
 //   async (req, res) => res.redirect('/reports/abandoned-supply-contracts/0'));
 
@@ -1622,6 +1623,8 @@ router.post('/reports/unissued-transactions/:page', async (req, res) => {
     currentPage: parseInt(req.params.page, 10),
     totalItems: count,
   };
+=======
+>>>>>>> Removed canceled report functions
 
   return res.render('reports/unissued-transactions-report.njk', {
     pages,
