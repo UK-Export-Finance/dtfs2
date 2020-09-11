@@ -149,14 +149,14 @@ context('A maker submits a deal to checker, checker submits to UKEF, maker submi
     //---------------------------------------------------------------
     // maker starts, but does not complete, a different Bond Issue Facility form
     //---------------------------------------------------------------
-    const unissuedNotStartedBondObj = deal.bondTransactions.items.find((b) => !b.status && b._id !== bondThatWillBeIssuedId);
+    const unissuedNotStartedBondObj = deal.bondTransactions.items.find((bond) => !bond.status && bond._id !== bondThatWillBeIssuedId); // eslint-disable-line no-underscore-dangle
     const unissuedNotStartedBondId = unissuedNotStartedBondObj._id; // eslint-disable-line no-underscore-dangle
     const unissuedNotStartedBondRow = pages.contract.bondTransactionsTable.row(unissuedNotStartedBondId);
 
-    const unissuedIncompleteBondObj = deal.bondTransactions.items.find((b) =>
-      !b.status
-      && b._id !== bondThatWillBeIssuedId
-      && b._id !== unissuedNotStartedBondId);
+    const unissuedIncompleteBondObj = deal.bondTransactions.items.find((bond) =>
+      !bond.status
+      && bond._id !== bondThatWillBeIssuedId // eslint-disable-line no-underscore-dangle
+      && bond._id !== unissuedNotStartedBondId); // eslint-disable-line no-underscore-dangle
 
     const unissuedIncompleteBondId = unissuedIncompleteBondObj._id; // eslint-disable-line no-underscore-dangle
     const unissuedIncompleteBondRow = pages.contract.bondTransactionsTable.row(unissuedIncompleteBondId);
@@ -175,14 +175,14 @@ context('A maker submits a deal to checker, checker submits to UKEF, maker submi
     // maker starts, but does not complete, a different Loan Issue Facility form
     //---------------------------------------------------------------
 
-    const conditionalNotStartedLoanObj = deal.loanTransactions.items.find((b) => !b.status && b._id !== loanThatWillBeIssuedId);
+    const conditionalNotStartedLoanObj = deal.loanTransactions.items.find((bond) => !bond.status && bond._id !== loanThatWillBeIssuedId); // eslint-disable-line no-underscore-dangle
     const conditionalNotStartedLoanId = conditionalNotStartedLoanObj._id; // eslint-disable-line no-underscore-dangle
     const conditionalNotStartedLoanRow = pages.contract.loansTransactionsTable.row(conditionalNotStartedLoanId);
 
-    const conditionalIncompleteLoanObj = deal.loanTransactions.items.find((l) =>
-      !l.status
-      && l._id !== loanThatWillBeIssuedId
-      && l._id !== conditionalNotStartedLoanId);
+    const conditionalIncompleteLoanObj = deal.loanTransactions.items.find((loan) =>
+      !loan.status
+      && loan._id !== loanThatWillBeIssuedId // eslint-disable-line no-underscore-dangle
+      && loan._id !== conditionalNotStartedLoanId); // eslint-disable-line no-underscore-dangle
 
     const conditionalIncompleteLoanId = conditionalIncompleteLoanObj._id; // eslint-disable-line no-underscore-dangle
     const conditionalIncompleteLoanRow = pages.contract.loansTransactionsTable.row(conditionalIncompleteLoanId);
