@@ -1,13 +1,13 @@
 import express from 'express';
 // mport util from 'util';
-import api from '../api';
-import buildReportFilters from './buildReportFilters';
-import { getRAGstatus, getExpiryDates } from './expiryStatusUtils';
-import CONSTANTS from '../constants';
+import api from '../../api';
+import buildReportFilters from '../buildReportFilters';
+import { getRAGstatus, getExpiryDates } from '../expiryStatusUtils';
+import CONSTANTS from '../../constants';
 import {
   getApiData,
   requestParams,
-} from '../helpers';
+} from '../../helpers';
 
 const moment = require('moment');
 require('moment-timezone');// monkey-patch to provide moment().tz()
@@ -890,6 +890,9 @@ router.get('/reports/mia-to-be-submitted/without-conditions/:page', async (req, 
     pages,
     conditions: 'with',
     deals,
+    filter: {
+      ...submissionFilters,
+    },
     banks,
     sortOrder,
     primaryNav,
@@ -1070,6 +1073,9 @@ router.post('/reports/mia-to-be-submitted/without-conditions/:page', async (req,
     pages,
     conditions: 'without',
     deals,
+    filter: {
+      ...submissionFilters,
+    },
     banks,
     sortOrder,
     primaryNav,
@@ -1139,13 +1145,370 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
 
   return res.render('reports/unissued-transactions-report.njk', {
     pages,
-    transactions,
+    transactions: rawData,
     primaryNav,
     banks,
     sortOrder,
-    subNav: 'unissued-transactions-reportsss',
+    subNav: 'unissued-transactions-report',
     user: req.session.user,
   });
 });
 
+<<<<<<< HEAD:portal/server/routes/reports.js
+=======
+router.post('/reports/unissued-transactions/:page', async (req, res) => {
+  const { userToken } = requestParams(req);
+  const fromDays = req.query.fromDays || 0;
+  const toDays = req.query.toDays || 90;
+
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  }
+
+  const banks = await getApiData(
+    api.banks(userToken),
+    res,
+  );
+
+  const submissionFilters = req.body;
+  if (submissionFilters.bank === 'any') {
+    submissionFilters.bank = '';
+  }
+
+  const sortOrder = {
+    queryString: `${req.params.page}?fromDays=${fromDays}&toDays=${toDays}&sort=desc`,
+    order: 'ascending',
+    image: 'twistie-up',
+  };
+
+
+  const stageFilters = {
+    facilityStage: 'unissued_conditional',
+    filterByStatus: 'submissionAcknowledged',
+  };
+  const filters = buildReportFilters(submissionFilters, stageFilters, req.session.user);
+
+  const rawData = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+    res,
+  );
+  rawData.transactions = getExpiryDates(rawData.transactions, 90, false);
+
+  let transactions = [];
+  if (fromDays > 0) {
+    transactions = rawData.transactions.filter(
+      (transaction) => transaction.remainingDays >= fromDays && transaction.remainingDays <= toDays,
+    );
+  } else {
+    transactions = rawData.transactions.filter(
+      (transaction) => transaction.remainingDays <= toDays,
+    );
+  }
+
+  // default order from getExpiryDates is asc
+  if (transactions.length > 0 && req.query && req.query.sort && req.query.sort === 'desc') {
+    transactions.sort((a, b) => parseFloat(b.remainingDays) - parseFloat(a.remainingDays));
+    sortOrder.queryString = `${req.params.page}?fromDays=${fromDays}&toDays=${toDays}`;
+    sortOrder.order = 'descending';
+    sortOrder.image = 'twistie-down';
+  }
+
+  const count = transactions.length;
+
+  const pages = {
+    totalPages: Math.ceil(count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: count,
+  };
+
+  return res.render('reports/unissued-transactions-report.njk', {
+    pages,
+    transactions,
+    primaryNav,
+    banks,
+    filter: {
+      ...submissionFilters,
+    },
+    sortOrder,
+    subNav: 'unissued-transactions-report',
+    user: req.session.user,
+  });
+});
+// router.get('/reports/abandoned-supply-contracts',
+//   async (req, res) => res.redirect('/reports/abandoned-supply-contracts/0'));
+
+// router.get('/reports/abandoned-supply-contracts/:page', async (req, res) => {
+//   const { userToken } = requestParams(req);
+
+//   // only mocking; not trying to plumb data model
+//   //  should really be sending filter/order-by queries to deal-api
+//   const contracts = [
+//     {
+//       dealId: '1234', // not obvious which id. would say its from k2 but abandoned deals wouldn't have this..
+// so _id??
+//       details: {
+//         bank: {
+//           name: 'HSBC',
+//         },
+//         bankSupplyContractID: 'Memsstar/BSS/APG',
+//         status: 'Abandoned Deal',
+//         submissionType: 'Automatic Inclusion Notice',
+//         maker: {
+//           username: 'a maker',
+//         },
+//         dateOfCreation: '13/12/2018 - 12:23',
+//         abandoned: '14/12/2018 - 12:23',
+//       },
+//     },
+//   ];
+
+//   const count = contracts.length; // in case people want to add more examples..
+
+//   const pages = {
+//     totalPages: Math.ceil(count / PAGESIZE),
+//     currentPage: parseInt(req.params.page, 10),
+//     totalItems: count,
+//   };
+
+//   const banks = await getApiData(
+//     api.banks(userToken),
+//     res,
+//   );
+
+//   return res.render('reports/abandoned-supply-contracts.njk', {
+//     pages,
+//     contracts,
+//     banks,
+//     primaryNav,
+//     subNav: 'abandoned-supply-contracts',
+//     user: req.session.user,
+//   });
+// });
+
+// router.get('/reports/red-line-answers', async (req, res) => res.redirect('/reports/red-line-answers/0'));
+
+// router.get('/reports/red-line-answers/:page', async (req, res) => {
+//   // only mocking; not trying to plumb data model
+//   //  should really be sending filter/order-by queries to deal-api
+//   const deal1 = {
+//     dealId: '1234', // not obvious which id. would say its from k2 but abandoned deals wouldn't have this.. so _id??
+//     details: {
+//       bank: {
+//         name: 'HSBC',
+//       },
+//       bankSupplyContractID: 'Memsstar/BSS/APG',
+//       status: 'Abandoned Deal',
+//       submissionType: 'Automatic Inclusion Notice',
+//       maker: {
+//         username: 'maker1',
+//       },
+//       dateOfCreation: '13/12/2018 - 12:23',
+//       abandoned: '14/12/2018 - 12:23',
+//     },
+//   };
+
+//   const deal2 = {
+//     dealId: '4321', // not obvious which id. would say its from k2 but abandoned deals wouldn't have this.. so _id??
+//     details: {
+//       bank: {
+//         name: 'HSBC',
+//       },
+//       bankSupplyContractID: 'Memsstar/BSS/APG',
+//       status: 'Abandoned Deal',
+//       submissionType: 'Automatic Inclusion Notice',
+//       maker: {
+//         username: 'maker2',
+//       },
+//       dateOfCreation: '13/12/2018 - 12:23',
+//       abandoned: '14/12/2018 - 12:23',
+//     },
+//   };
+
+//   const mandatoryCriteria = [
+//     {
+//       _id: '123456789012',
+//       dateOfCreation: '20/04/2020 - 14:40',
+//       outcome: 'Passed',
+//       question: '1. All of the above mandatory criteria are true for this supply contract.',
+//       answer: true,
+//       deal: deal1,
+//     }, {
+//       _id: '210987654321',
+//       dateOfCreation: '20/04/2020 - 14:45',
+//       outcome: 'Failed',
+//       question: '1. All of the above mandatory criteria are true for this supply contract.',
+//       answer: false,
+//       deal: deal2,
+//     },
+
+//   ];
+//   const count = mandatoryCriteria.length; // in case people want to add more examples..
+
+//   const pages = {
+//     totalPages: Math.ceil(count / PAGESIZE),
+//     currentPage: parseInt(req.params.page, 10),
+//     totalItems: count,
+//   };
+
+//   return res.render('reports/red-line-answers.njk', {
+//     pages,
+//     mandatoryCriteria,
+//     primaryNav,
+//     subNav: 'red-line-answers',
+//     user: req.session.user,
+//   });
+// });
+
+// router.get('/reports/audit-log-all-changes', async (req, res) => res.redirect('/reports/audit-log-all-changes/0'));
+
+// router.get('/reports/audit-log-all-changes/:page', async (req, res) => {
+//   // only mocking; not trying to plumb data model
+//   //  should really be sending filter/order-by queries to deal-api
+//   const changes = [{
+//     no: '69297',
+//     entityId: '18331',
+//     entityType: 'webform_submission',
+//     user: 'maker1@ukexportfinance.gov.uk',
+//     created: '21/04/202 - 14:07',
+//     doneTo: 'Bond',
+//     changes: [
+//       [{ text: 'Is the currency for this Bond the same as your Supply Contract currency?' },
+//         { text: '' },
+//         { text: 'yes' }],
+//     ],
+//   }, {
+//     no: '69296',
+//     entityId: '18331',
+//     entityType: 'webform_submission',
+//     user: 'maker1@ukexportfinance.gov.uk',
+//     created: '21/04/202 - 14:06',
+//     doneTo: 'Bond',
+//     changes: [
+//       [
+//         { text: 'Risk Margin Fee %' },
+//         { text: '' },
+//         { text: '12' },
+//       ], [
+//         { text: 'Covered Percentage' },
+//         { text: '' },
+//         { text: '10' },
+//       ], [
+//         { text: 'Guarnetee fee payable by bank' },
+//         { text: '0.0000' },
+//         { text: '10.8000' },
+//       ],
+//     ],
+//   }];
+
+//   const count = changes.length; // in case people want to add more examples..
+
+//   const pages = {
+//     totalPages: Math.ceil(count / PAGESIZE),
+//     currentPage: parseInt(req.params.page, 10),
+//     totalItems: count,
+//   };
+
+//   return res.render('reports/audit-log-all-changes.njk', {
+//     pages,
+//     changes,
+//     primaryNav,
+//     subNav: 'audit-log-all-changes',
+//     user: req.session.user,
+//   });
+// });
+
+// router.get('/reports/audit-log-user-changes', async (req, res) => res.redirect('/reports/audit-log-user-changes/0'));
+
+// router.get('/reports/audit-log-user-changes/:page', async (req, res) => {
+//   // only mocking; not trying to plumb data model
+//   //  should really be sending filter/order-by queries to deal-api
+//   const changes = [{
+//     no: '69295',
+//     user: 'maker1@ukexportfinance.gov.uk',
+//     created: '21/04/202 - 14:07',
+//     doneTo: 'Some User (user@bank.com)',
+//     changes: [
+//       [{ text: 'Roles' },
+//         { text: '' },
+//         { text: 'ukef_operations' }],
+//     ],
+//   }, {
+//     no: '69296',
+//     user: 'maker1@ukexportfinance.gov.uk',
+//     created: '21/04/202 - 14:06',
+//     doneTo: 'Bond',
+//     changes: [
+//       [{ text: 'Roleds' },
+//         { text: '' },
+//         { text: 'cont' }],
+//     ],
+//   }];
+
+//   const count = changes.length; // in case people want to add more examples..
+
+//   const pages = {
+//     totalPages: Math.ceil(count / PAGESIZE),
+//     currentPage: parseInt(req.params.page, 10),
+//     totalItems: count,
+//   };
+
+//   return res.render('reports/audit-log-user-changes.njk', {
+//     pages,
+//     changes,
+//     primaryNav,
+//     subNav: 'audit-log-user-changes',
+//     user: req.session.user,
+//   });
+// });
+
+// router.get('/reports/audit-log-webform-changes',
+// async (req, res) => res.redirect('/reports/audit-log-webform-changes/0'));
+
+// router.get('/reports/audit-log-webform-changes/:page', async (req, res) => {
+//   // only mocking; not trying to plumb data model
+//   //  should really be sending filter/order-by queries to deal-api
+//   const changes = [{
+//     no: '69295',
+//     user: 'maker1@ukexportfinance.gov.uk',
+//     created: '21/04/202 - 14:07',
+//     doneTo: 'Confirm eligibility',
+//     changes: [
+//       [{ text: 'elements -> general_criteria -> ec_requested_cover_start_date -> #description' },
+//         { text: 'The Requested Cover Start Date is no more than one month from the date of submission.' },
+//         { text: 'The Requested Cover Start Date is no more than three months from the date of submission.' }],
+//     ],
+//   }, {
+//     no: '69296',
+//     user: 'maker1@ukexportfinance.gov.uk',
+//     created: '21/04/202 - 14:06',
+//     doneTo: 'Confirm eligibility',
+//     changes: [
+//       [{ text: 'elements -> general_criteria -> question_3 -> #description' },
+//         { text: 'The total UKEF exposure for this Transaction and any prior live covered Transactions for this
+// Obligor does not exceed &pound;2 million, or such other limit approved by UKEF (that has not lapsed or been
+// withdrawn) in relation to this Obligor.' },
+//         { text: 'The total UKEF exposure, across all short-term schemes (including bond support and export
+// working capital transactions), for this Obligor (including this Transaction) does not exceed £2 million, or
+// such other limit approved by UKEF (that has not lapsed or been withdrawn).' }],
+//     ],
+//   }];
+
+//   const count = changes.length; // in case people want to add more examples..
+
+//   const pages = {
+//     totalPages: Math.ceil(count / PAGESIZE),
+//     currentPage: parseInt(req.params.page, 10),
+//     totalItems: count,
+//   };
+
+//   return res.render('reports/audit-log-webform-changes.njk', {
+//     pages,
+//     changes,
+//     primaryNav,
+//     subNav: 'audit-log-webform-changes',
+//     user: req.session.user,
+//   });
+// });
+
+>>>>>>> Add filters to countdown indicator reports:portal/server/routes/reports/index.js
 export default router;
