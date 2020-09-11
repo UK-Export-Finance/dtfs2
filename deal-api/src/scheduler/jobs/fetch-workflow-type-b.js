@@ -68,13 +68,23 @@ const fetchWorkflowTypeB = {
         fileContents: fileXml[index].toString('utf16le'),
       }));
 
+      const processListPromises = [];
+
       fileContents.forEach((xmlFile) => {
-        processTypeB(xmlFile);
+        const processedTypeB = processTypeB(xmlFile).catch(() => ({
+          filename: xmlFile.filename,
+          success: false,
+        }));
+        processListPromises.push(processedTypeB);
       });
+
+      const processList = await Promise.all(processListPromises);
+      const processErrorFiles = processList.filter((pl) => !pl.success).map(({ filename }) => filename);
 
       const moveFilePromises = [];
 
       const archiveFolder = `${IMPORT_FOLDER}/archived/${moment().format('YYYY-MM-DD')}`;
+      const errorArchiveFolder = `${IMPORT_FOLDER}/archived_process_error/${moment().format('YYYY-MM-DD')}`;
 
       filenames.forEach(({ filename }) => {
         const from = {
@@ -83,9 +93,11 @@ const fetchWorkflowTypeB = {
           filename,
         };
 
+        const isProcessError = processErrorFiles.includes(filename);
+
         const to = {
           fileshare,
-          folder: archiveFolder,
+          folder: isProcessError ? errorArchiveFolder : archiveFolder,
           filename,
         };
 

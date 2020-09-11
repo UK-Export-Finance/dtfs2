@@ -66,7 +66,7 @@ const updateLoanStatus = (loan, workflowLoan) => {
 
 const updateBonds = (dealBonds, workflowDeal, checkIssueFacilities) => {
   const bondTransactionItems = dealBonds.map((bond) => {
-    const workflowBond = workflowDeal.BSSFacilities.find(
+    const workflowBond = workflowDeal.BSSFacilities && workflowDeal.BSSFacilities.find(
       (b) => b.BSS_portal_facility_id[0] === bond._id, // eslint-disable-line no-underscore-dangle
     );
     if (!workflowBond) {
@@ -90,7 +90,7 @@ const updateBonds = (dealBonds, workflowDeal, checkIssueFacilities) => {
 
 const updateLoans = (dealLoans, workflowDeal, checkIssueFacilities) => {
   const loanTransactionItems = dealLoans.map((loan) => {
-    const workflowLoan = workflowDeal.EWCSFacilities.find(
+    const workflowLoan = workflowDeal.EWCSFacilities && workflowDeal.EWCSFacilities.find(
       (b) => b.EWCS_portal_facility_id[0] === loan._id, // eslint-disable-line no-underscore-dangle
     );
 
