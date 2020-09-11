@@ -16,11 +16,11 @@ const loanStatus = (loan, loanErrors, loanIssueFacilityErrors) => {
 
   // otherwise, status is dynamically checked
   if (!hasLoanErrors && !hasLoanIssueFacilityErrors) {
-    return 'Completed';
+    return CONSTANTS.FACILITIES.STATUS.COMPLETED;
   }
 
   // we have no status and the loan has validation errors, therefore Incomplete.
-  return 'Incomplete';
+  return CONSTANTS.FACILITIES.STATUS.INCOMPLETE;
 };
 
 const loanHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, dealSubmissionType, loan) => {

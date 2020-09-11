@@ -63,6 +63,7 @@ const updateIssuedFacilities = async (
       const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
                                   && facility.issueFacilityDetailsProvided
                                   && dealStatusAllowsIssuedFacilitiesStatusChanges
+                                  && facility.status !== CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED
                                   && (newStatus && newStatus.length > 0));
 
       if (shouldUpdateLoan || shouldUpdateBond) {

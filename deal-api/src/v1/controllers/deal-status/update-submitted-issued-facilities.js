@@ -21,7 +21,7 @@ const updateSubmittedIssuedFacilities = async (collection, deal) => {
       const shouldUpdateIssuedFacility = ((shouldUpdateLoan
                                           || shouldUpdateBond)
                                           && facility.issueFacilityDetailsProvided
-                                          && facility.status === 'Ready for check');
+                                          && facility.status === CONSTANTS.FACILITIES.STATUS.READY_FOR_APPROVAL);
 
       if (shouldUpdateIssuedFacility) {
         facility.issueFacilityDetailsSubmitted = true;
