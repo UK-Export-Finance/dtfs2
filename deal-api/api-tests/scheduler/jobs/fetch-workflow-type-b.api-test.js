@@ -2,7 +2,7 @@ jest.unmock('@azure/storage-file-share');
 // jest.mock('../../../src/v1/controllers/integration/type-b.controller');
 const typeBController = require('../../../src/v1/controllers/integration/type-b.controller');
 
-typeBController.processTypeB = jest.fn();
+typeBController.processTypeB = jest.fn(() => Promise.resolve({ success: true }));
 
 const fetchWorkflowTypeB = require('../../../src/scheduler/jobs/fetch-workflow-type-b');
 const fileshare = require('../../../src/drivers/fileshare');
@@ -15,10 +15,15 @@ describe('schedule fetching of type b', () => {
   const mockedLog = jest.fn();
 
   const { schedule, message, task } = fetchWorkflowTypeB.init();
-  const fileshareName = 'portal';
+  const fileshareName = 'workflow';
   const folder = 'api_tests/fetch-workflow-type-b';
   const filename = 'type-b-test.xml';
   const someXML = '<?xml version="1.0" encoding="UTF-8"?><Deal/>';
+
+  beforeAll(async () => {
+    // Remove any test files that might have been left over from previous test
+    await fileshare.deleteFile(fileshareName, `${folder}/${filename}`);
+  });
 
   beforeEach(async () => {
     console.warn = mockedWarn;

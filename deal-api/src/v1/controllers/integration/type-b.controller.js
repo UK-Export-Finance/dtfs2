@@ -65,12 +65,12 @@ const shouldCheckIssuedFacilities = (dealStatus, dealSubmissionType) => {
   return false;
 };
 
-const processTypeB = async ({ fileContents }) => {
+const processTypeB = async ({ filename, fileContents }) => {
   const { Deal: workflowDeal, error } = await xml2js.parseStringPromise(fileContents /* , options */)
     .catch((err) => ({ error: err.message }));
 
   if (error) {
-    return { error };
+    return { filename, error, success: false };
   }
 
   const { portal_deal_id: dealId } = workflowDeal.$;
@@ -78,7 +78,10 @@ const processTypeB = async ({ fileContents }) => {
   const deal = await dealController.findOneDeal(dealId);
 
   if (!deal) {
-    return false;
+    return {
+      filename,
+      success: false,
+    };
   }
 
   const dealStatus = generateStatus(deal, workflowDeal);
@@ -123,8 +126,13 @@ const processTypeB = async ({ fileContents }) => {
     status: dealStatus,
   };
 
-  const result = await updateStatusViaController(dealId, interfaceUser, updateData);
-  return result;
+  const updatedDeal = await updateStatusViaController(dealId, interfaceUser, updateData);
+
+  return {
+    filename,
+    success: Boolean(updatedDeal),
+    updatedDeal,
+  };
 };
 
 module.exports = {

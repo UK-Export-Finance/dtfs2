@@ -44,20 +44,20 @@ describe('Workflow type B XML processing', () => {
     expect(typeB.error).toBeDefined();
   });
 
-  it('should return false if no deal found', async () => {
+  it('should return success=false if no deal found', async () => {
     const workflowStatus = 'confirmation_acknowledged';
     const typeBxml = insertValuesInXml({ dealId: '9999999', status: workflowStatus, actionCode: '004' }, typeBxmlTemplate);
 
-    const updatedDeal = await processTypeB({ fileContents: typeBxml });
+    const updateResult = await processTypeB({ fileContents: typeBxml });
 
-    expect(updatedDeal).toEqual(false);
+    expect(updateResult).toMatchObject({ success: false });
   });
 
   it('should update the status to In Progress if status changes and action code = 004', async () => {
     const workflowStatus = 'confirmation_acknowledged';
     const typeBxml = insertValuesInXml({ dealId, status: workflowStatus, actionCode: '004' }, typeBxmlTemplate);
 
-    const updatedDeal = await processTypeB({ fileContents: typeBxml });
+    const { updatedDeal } = await processTypeB({ fileContents: typeBxml });
 
     expect(updatedDeal.details.status).toEqual('In progress by UKEF');
   });
@@ -66,8 +66,7 @@ describe('Workflow type B XML processing', () => {
     const workflowStatus = 'submission_acknowledged';
     const typeBxml = insertValuesInXml({ dealId, status: workflowStatus, actionCode: '010' }, typeBxmlTemplate);
 
-    const updatedDeal = await processTypeB({ fileContents: typeBxml });
-
+    const { updatedDeal } = await processTypeB({ fileContents: typeBxml });
     expect(updatedDeal.details.status).toEqual('Acknowledged by UKEF');
   });
 
@@ -75,7 +74,7 @@ describe('Workflow type B XML processing', () => {
     const workflowStatus = 'confirmation_acknowledged';
     const typeBxml = insertValuesInXml({ dealId, status: workflowStatus, actionCode: '010' }, typeBxmlTemplate);
 
-    const updatedDeal = await processTypeB({ fileContents: typeBxml });
+    const { updatedDeal } = await processTypeB({ fileContents: typeBxml });
 
     expect(updatedDeal.details.status).toEqual('Acknowledged by UKEF');
   });
@@ -89,7 +88,7 @@ describe('Workflow type B XML processing', () => {
     }, typeBxmlTemplate);
 
 
-    const updatedDeal = await processTypeB({ fileContents: typeBxml });
+    const { updatedDeal } = await processTypeB({ fileContents: typeBxml });
 
     expect(updatedDeal.comments.length).toEqual(0);
     expect(updatedDeal.specialConditions[0].text).toEqual(dealComments);
