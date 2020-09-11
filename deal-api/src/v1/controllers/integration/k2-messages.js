@@ -25,7 +25,8 @@ const {
 const generateTypeA = async (deal, fromStatus) => {
   const { actionCode, actionName } = getActionCodeAndName(deal, fromStatus);
 
-  const dealCurrencyId = deal.submissionDetails.supplyContractCurrency && deal.submissionDetails.supplyContractCurrency.id;
+  const dealCurrencyId = deal.submissionDetails.supplyContractCurrency
+    && deal.submissionDetails.supplyContractCurrency.id;
 
   const bondCount = deal.bondTransactions && deal.bondTransactions.items
     ? deal.bondTransactions.items.length
@@ -78,13 +79,6 @@ const generateTypeA = async (deal, fromStatus) => {
     .Exporter_address_PostalCode((deal.submissionDetails['supplier-address-postcode']))
     .Exporter_address_Country(await convertCountryCodeToId(deal.submissionDetails['supplier-address-country'].code))
 
-    .Exporter_correspondence_address_Line1(deal.submissionDetails['supplier-correspondence-address-line-1'])
-    .Exporter_correspondence_address_Line2(deal.submissionDetails['supplier-correspondence-address-line-2'])
-    .Exporter_correspondence_address_Line3(deal.submissionDetails['supplier-correspondence-address-line-3'])
-    .Exporter_correspondence_address_Town(deal.submissionDetails['supplier-correspondence-address-town'])
-    .Exporter_correspondence_address_PostalCode(deal.submissionDetails['supplier-correspondence-address-postcode'])
-    .Exporter_correspondence_address_Country(await convertCountryCodeToId((deal.submissionDetails['supplier-correspondence-address-country'].code)))
-
     .Industry_sector_code(deal.submissionDetails['industry-sector'])
     .Industry_sector_name(deal.submissionDetails['industry-sector'])
     .Industry_class_code(deal.submissionDetails['industry-class'])
@@ -92,22 +86,6 @@ const generateTypeA = async (deal, fromStatus) => {
     .Sme_type(k2Map.DEAL.SME_TYPE[deal.submissionDetails['sme-type'] || 'Not known'])
     .Description_of_export(deal.submissionDetails['supply-contract-description'])
     .Bank_security(deal.dealFiles && deal.dealFiles.security)
-
-    .Indemnifier_co_hse_reg_number(deal.submissionDetails['indemnifier-companies-house-registration-number'])
-    .Indemnifier_name(deal.submissionDetails['indemnifier-name'])
-    .Indemnifier_address_Line1(deal.submissionDetails['indemnifier-address-line-1'])
-    .Indemnifier_address_Line2(deal.submissionDetails['indemnifier-address-line-2'])
-    .Indemnifier_address_Line3(deal.submissionDetails['indemnifier-address-line-3'])
-    .Indemnifier_address_Town(deal.submissionDetails['indemnifier-address-town'])
-    .Indemnifier_address_PostalCode(deal.submissionDetails['indemnifier-address-country'].code)
-    .Indemnifier_address_Country(await convertCountryCodeToId(deal.submissionDetails['indemnifier-companies-house-registration-number']))
-
-    .Indemnifier_correspondence_address_Line1(deal.submissionDetails['indemnifier-correspondence-address-line-1'])
-    .Indemnifier_correspondence_address_Line2(deal.submissionDetails['indemnifier-correspondence-address-line-2'])
-    .Indemnifier_correspondence_address_Line3(deal.submissionDetails['indemnifier-correspondence-address-line-3'])
-    .Indemnifier_correspondence_address_Town(deal.submissionDetails['indemnifier-correspondence-address-town'])
-    .Indemnifier_correspondence_address_PostalCode(deal.submissionDetails['indemnifier-correspondence-address-postcode'])
-    .Indemnifier_correspondence_address_Country(await convertCountryCodeToId(deal.submissionDetails['indemnifier-correspondence-address-country'].code))
 
     .Buyer_name(deal.submissionDetails['buyer-name'])
     .Buyer_country_code(await convertCountryCodeToId(deal.submissionDetails['buyer-address-country'].code))
@@ -133,6 +111,35 @@ const generateTypeA = async (deal, fromStatus) => {
     .Ec_internal_approval_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 17))
     .Ec_banks_normal_pricing_policies_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 18))
     .Ec_requested_cover_start_date_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 15));
+
+  if (deal.submissionDetails['supplier-correspondence-address-is-different'] === 'true') {
+    builder.Exporter_correspondence_address_Line1(deal.submissionDetails['supplier-correspondence-address-line-1'])
+      .Exporter_correspondence_address_Line2(deal.submissionDetails['supplier-correspondence-address-line-2'])
+      .Exporter_correspondence_address_Line3(deal.submissionDetails['supplier-correspondence-address-line-3'])
+      .Exporter_correspondence_address_Town(deal.submissionDetails['supplier-correspondence-address-town'])
+      .Exporter_correspondence_address_PostalCode(deal.submissionDetails['supplier-correspondence-address-postcode'])
+      .Exporter_correspondence_address_Country(await convertCountryCodeToId((deal.submissionDetails['supplier-correspondence-address-country'].code)));
+  }
+
+  if (deal.submissionDetails.legallyDistinct === 'true') {
+    builder.Indemnifier_co_hse_reg_number(deal.submissionDetails['indemnifier-companies-house-registration-number'])
+      .Indemnifier_name(deal.submissionDetails['indemnifier-name'])
+      .Indemnifier_address_Line1(deal.submissionDetails['indemnifier-address-line-1'])
+      .Indemnifier_address_Line2(deal.submissionDetails['indemnifier-address-line-2'])
+      .Indemnifier_address_Line3(deal.submissionDetails['indemnifier-address-line-3'])
+      .Indemnifier_address_Town(deal.submissionDetails['indemnifier-address-town'])
+      .Indemnifier_address_PostalCode(deal.submissionDetails['indemnifier-address-country'].code)
+      .Indemnifier_address_Country(await convertCountryCodeToId(deal.submissionDetails['indemnifier-companies-house-registration-number']));
+
+    if (deal.submissionDetails.indemnifierCorrespondenceAddressDifferent === 'true') {
+      builder.Indemnifier_correspondence_address_Line1(deal.submissionDetails['indemnifier-correspondence-address-line-1'])
+        .Indemnifier_correspondence_address_Line2(deal.submissionDetails['indemnifier-correspondence-address-line-2'])
+        .Indemnifier_correspondence_address_Line3(deal.submissionDetails['indemnifier-correspondence-address-line-3'])
+        .Indemnifier_correspondence_address_Town(deal.submissionDetails['indemnifier-correspondence-address-town'])
+        .Indemnifier_correspondence_address_PostalCode(deal.submissionDetails['indemnifier-correspondence-address-postcode'])
+        .Indemnifier_correspondence_address_Country(await convertCountryCodeToId(deal.submissionDetails['indemnifier-correspondence-address-country'].code));
+    }
+  }
 
   let totalBondValueContractCurrency = 0;
   let totalBondExposure = 0;
