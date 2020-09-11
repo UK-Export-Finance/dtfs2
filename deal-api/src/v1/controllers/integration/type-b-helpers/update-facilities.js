@@ -12,18 +12,21 @@ const updateBondStatus = (bond, workflowBond) => {
 
   const hasWorflowStatus = workflowBond.BSS_status && workflowBond.BSS_status.length > 0;
 
-  if (isIssuedFacility && hasWorflowStatus) {
-    if (workflowBond.BSS_status[0] === 'Issued acknowledged') {
-      return 'Acknowledged';
+  // if status is `Acknowledged`, status cannot be changed
+  if (bond.status !== CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED) {
+    if (isIssuedFacility && hasWorflowStatus) {
+      if (workflowBond.BSS_status[0] === 'Issued acknowledged') {
+        return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
+      }
+
+      if (workflowBond.BSS_status[0] === '""') {
+        return CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
+      }
     }
 
-    if (workflowBond.BSS_status[0] === '""') {
-      return 'Not started';
+    if (bondStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED) {
+      return CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
     }
-  }
-
-  if (bondStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED) {
-    return 'Not started';
   }
   return null;
 };
@@ -40,18 +43,22 @@ const updateLoanStatus = (loan, workflowLoan) => {
 
   const hasWorflowStatus = workflowLoan.EWCS_status && workflowLoan.EWCS_status.length > 0;
 
-  if (isIssuedFacility && hasWorflowStatus) {
-    if (workflowLoan.EWCS_status[0] === 'Issued acknowledged') {
-      return 'Acknowledged';
+
+  // if status is `Acknowledged`, status cannot be changed
+  if (loan.status !== CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED) {
+    if (isIssuedFacility && hasWorflowStatus) {
+      if (workflowLoan.EWCS_status[0] === 'Issued acknowledged') {
+        return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
+      }
+
+      if (workflowLoan.EWCS_status[0] === '""') {
+        return CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
+      }
     }
 
-    if (workflowLoan.EWCS_status[0] === '""') {
-      return 'Not started';
+    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL) {
+      return CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
     }
-  }
-
-  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL) {
-    return 'Not started';
   }
 
   return null;

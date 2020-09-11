@@ -29,6 +29,9 @@ const FACILITIES_STAGE = {
 const STATUS = {
   COMPLETED: 'Completed',
   INCOMPLETE: 'Incomplete',
+  NOT_STARTED: 'Not started',
+  ACKNOWLEDGED: 'Acknowledged',
+  READY_FOR_APPROVAL: 'Ready for check',
 };
 
 const TYPE = {
