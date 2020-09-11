@@ -17,11 +17,15 @@ const {
   getActionCodeAndName,
   calculateExposurePeriod,
   calculateIssuedDate,
+  calculateFacilityConversionRate,
+  calculateFacilityConversionDate,
 } = require('./helpers');
 
 
 const generateTypeA = async (deal, fromStatus) => {
   const { actionCode, actionName } = getActionCodeAndName(deal, fromStatus);
+
+  const dealCurrencyId = deal.submissionDetails.supplyContractCurrency && deal.submissionDetails.supplyContractCurrency.id;
 
   const bondCount = deal.bondTransactions && deal.bondTransactions.items
     ? deal.bondTransactions.items.length
@@ -31,17 +35,18 @@ const generateTypeA = async (deal, fromStatus) => {
     ? deal.loanTransactions.items.length
     : 0;
 
-  const dealConversionRate = deal.submissionDetails.supplyContractCurrency.id === 'GBP'
+  const dealConversionRate = dealCurrencyId === 'GBP'
     ? 1
     : deal.submissionDetails.supplyContractConversionRateToGBP;
 
-  const dealConversionDate = deal.submissionDetails.supplyContractCurrency.id === 'GBP'
+  const dealConversionDate = dealCurrencyId === 'GBP'
     ? ''
     : dateHelpers.formatDate(
       deal.submissionDetails['supplyContractConversionDate-day'],
       deal.submissionDetails['supplyContractConversionDate-month'],
       deal.submissionDetails['supplyContractConversionDate-year'],
     );
+
 
   const builder = typeABuilder()
     .source('V2')
@@ -107,10 +112,7 @@ const generateTypeA = async (deal, fromStatus) => {
     .Buyer_name(deal.submissionDetails['buyer-name'])
     .Buyer_country_code(await convertCountryCodeToId(deal.submissionDetails['buyer-address-country'].code))
     .Destination_country_code(await convertCountryCodeToId(deal.submissionDetails.destinationOfGoodsAndServices.code))
-    .Deal_currency_code(
-      deal.submissionDetails.supplyContractCurrency
-      && await convertCurrencyCodeToId(deal.submissionDetails.supplyContractCurrency.id),
-    )
+    .Deal_currency_code(await convertCurrencyCodeToId(dealCurrencyId))
     .Conversion_rate(dealConversionRate)
     .Conversion_date(dealConversionDate)
     .Contract_value(convertCurrencyFormat(deal.submissionDetails.supplyContractValue))
@@ -141,15 +143,13 @@ const generateTypeA = async (deal, fromStatus) => {
       const bond = deal.bondTransactions.items[i];
 
       const bondCurrencyId = bond.currencySameAsSupplyContractCurrency === 'true'
-        ? deal.submissionDetails.supplyContractCurrency.id
+        ? dealCurrencyId
         : bond.currency && bond.currency.id;
 
       const { guaranteeCommencementDate, coverExpiryDate } = calculateIssuedDate(bond, deal.details.submissionDate);
 
-      const bondConversionRate = bond.conversionRate || dealConversionRate;
-      const bondConversionDate = bond.conversionRate
-        ? dateHelpers.formatDate(bond['conversionRateDate-day'], bond['conversionRateDate-month'], bond['conversionRateDate-year'])
-        : dealConversionDate;
+      const bondConversionRate = calculateFacilityConversionRate(bond, dealCurrencyId);
+      const bondConversionDate = calculateFacilityConversionDate(bond, dealCurrencyId);
 
       const bss = builder.createBSS()
       //    .UKEF_BSS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
@@ -202,15 +202,13 @@ const generateTypeA = async (deal, fromStatus) => {
         const loan = deal.loanTransactions.items[i];
 
         const loanCurrencyId = loan.currencySameAsSupplyContractCurrency === 'true'
-          ? deal.submissionDetails.supplyContractCurrency.id
+          ? dealCurrencyId
           : loan.currency && loan.currency.id;
 
         const { guaranteeCommencementDate, coverExpiryDate } = calculateIssuedDate(loan, deal.details.submissionDate);
 
-        const loanConversionRate = loan.conversionRate || dealConversionRate;
-        const loanConversionDate = loan.conversionRate
-          ? dateHelpers.formatDate(loan['conversionRateDate-day'], loan['conversionRateDate-month'], loan['conversionRateDate-year'])
-          : dealConversionDate;
+        const loanConversionRate = calculateFacilityConversionRate(loan, dealCurrencyId);
+        const loanConversionDate = calculateFacilityConversionDate(loan, dealCurrencyId);
 
         const ewcs = builder.createEWCS()
         //    .UKEF_EWCS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
@@ -254,7 +252,7 @@ const generateTypeA = async (deal, fromStatus) => {
     }
 
     // Summary data
-    const gbpConversionRate = deal.submissionDetails.supplyContractCurrency.id === 'GBP' ? 1 : deal.submissionDetails.supplyContractConversionRateToGBP;
+    const gbpConversionRate = dealCurrencyId === 'GBP' ? 1 : deal.submissionDetails.supplyContractConversionRateToGBP;
 
     builder.Deal_no_facilities(bondCount + loanCount)
       .Deal_total_value_deal_cur(totalBondValueContractCurrency + totalLoanValueContractCurrency)
