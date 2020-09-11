@@ -1,13 +1,13 @@
 import express from 'express';
 // mport util from 'util';
-import api from '../api';
-import buildReportFilters from './buildReportFilters';
-import { getRAGstatus, getExpiryDates } from './expiryStatusUtils';
-import CONSTANTS from '../constants';
+import api from '../../api';
+import buildReportFilters from '../buildReportFilters';
+import { getRAGstatus, getExpiryDates } from '../expiryStatusUtils';
+import CONSTANTS from '../../constants';
 import {
   getApiData,
   requestParams,
-} from '../helpers';
+} from '../../helpers';
 
 const moment = require('moment');
 require('moment-timezone');// monkey-patch to provide moment().tz()
@@ -969,6 +969,9 @@ router.post('/reports/mia-to-be-submitted/with-conditions/:page', async (req, re
     pages,
     conditions: 'with',
     deals,
+    filter: {
+      ...submissionFilters,
+    },
     banks,
     sortOrder,
     primaryNav,
@@ -1140,6 +1143,9 @@ router.post('/reports/mia-to-be-submitted/without-conditions/:page', async (req,
     pages,
     conditions: 'without',
     deals,
+    filter: {
+      ...submissionFilters,
+    },
     banks,
     sortOrder,
     primaryNav,
@@ -1209,15 +1215,93 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
 
   return res.render('reports/unissued-transactions-report.njk', {
     pages,
-    transactions,
+    transactions: rawData,
     primaryNav,
     banks,
     sortOrder,
-    subNav: 'unissued-transactions-reportsss',
+    subNav: 'unissued-transactions-report',
     user: req.session.user,
   });
 });
 
+router.post('/reports/unissued-transactions/:page', async (req, res) => {
+  const { userToken } = requestParams(req);
+  const fromDays = req.query.fromDays || 0;
+  const toDays = req.query.toDays || 90;
+
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  }
+
+  const banks = await getApiData(
+    api.banks(userToken),
+    res,
+  );
+
+  const submissionFilters = req.body;
+  if (submissionFilters.bank === 'any') {
+    submissionFilters.bank = '';
+  }
+
+  const sortOrder = {
+    queryString: `${req.params.page}?fromDays=${fromDays}&toDays=${toDays}&sort=desc`,
+    order: 'ascending',
+    image: 'twistie-up',
+  };
+
+
+  const stageFilters = {
+    facilityStage: 'unissued_conditional',
+    filterByStatus: 'submissionAcknowledged',
+  };
+  const filters = buildReportFilters(submissionFilters, stageFilters, req.session.user);
+
+  const rawData = await getApiData(
+    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+    res,
+  );
+  rawData.transactions = getExpiryDates(rawData.transactions, 90, false);
+
+  let transactions = [];
+  if (fromDays > 0) {
+    transactions = rawData.transactions.filter(
+      (transaction) => transaction.remainingDays >= fromDays && transaction.remainingDays <= toDays,
+    );
+  } else {
+    transactions = rawData.transactions.filter(
+      (transaction) => transaction.remainingDays <= toDays,
+    );
+  }
+
+  // default order from getExpiryDates is asc
+  if (transactions.length > 0 && req.query && req.query.sort && req.query.sort === 'desc') {
+    transactions.sort((a, b) => parseFloat(b.remainingDays) - parseFloat(a.remainingDays));
+    sortOrder.queryString = `${req.params.page}?fromDays=${fromDays}&toDays=${toDays}`;
+    sortOrder.order = 'descending';
+    sortOrder.image = 'twistie-down';
+  }
+
+  const count = transactions.length;
+
+  const pages = {
+    totalPages: Math.ceil(count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: count,
+  };
+
+  return res.render('reports/unissued-transactions-report.njk', {
+    pages,
+    transactions,
+    primaryNav,
+    banks,
+    filter: {
+      ...submissionFilters,
+    },
+    sortOrder,
+    subNav: 'unissued-transactions-report',
+    user: req.session.user,
+  });
+});
 // router.get('/reports/abandoned-supply-contracts',
 //   async (req, res) => res.redirect('/reports/abandoned-supply-contracts/0'));
 
