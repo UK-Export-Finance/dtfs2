@@ -10,6 +10,8 @@ const getApplicationGroup = require('./get-application-group');
 const getActionCodeAndName = require('./get-action-code-and-name');
 const calculateExposurePeriod = require('./calculate-exposure-period');
 const calculateIssuedDate = require('./calculate-issued-date');
+const calculateFacilityConversionRate = require('./calculate-facility-conversion-rate');
+const calculateFacilityConversionDate = require('./calculate-facility-conversion-date');
 
 module.exports = {
   eligibilityCriteriaHelper,
@@ -24,4 +26,6 @@ module.exports = {
   getActionCodeAndName,
   calculateExposurePeriod,
   calculateIssuedDate,
+  calculateFacilityConversionRate,
+  calculateFacilityConversionDate,
 };
