@@ -15,7 +15,7 @@ describe('schedule fetching of type b', () => {
   const mockedLog = jest.fn();
 
   const { schedule, message, task } = fetchWorkflowTypeB.init();
-  const fileshareName = 'workflow';
+  const fileshareName = 'portal';
   const folder = 'api_tests/fetch-workflow-type-b';
   const filename = 'type-b-test.xml';
   const someXML = '<?xml version="1.0" encoding="UTF-8"?><Deal/>';
