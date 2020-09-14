@@ -53,7 +53,7 @@ const buildDashboardFilters = (params) => {
     const createdFrom = moment(`${year} ${month} ${day}`, 'YYYY MM DD').valueOf();
 
     filters.push({
-      field: 'transaction.deal_created',
+      field: 'details.created',
       value: `${createdFrom}`,
       operator: 'gte',
     });
@@ -69,7 +69,7 @@ const buildDashboardFilters = (params) => {
     const createdTo = moment(`${year} ${month} ${day}`, 'YYYY MM DD').add(1, 'day').valueOf();
 
     filters.push({
-      field: 'transaction.deal_created',
+      field: 'details.created',
       value: `${createdTo}`,
       operator: 'lt',
     });

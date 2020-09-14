@@ -4,7 +4,7 @@ const loanFixer = require('./loanFixer');
 
 const BANKSUPPLYCONTRACTID = 'details.bankSupplyContractID';
 const TRANSACTION_STAGE = 'transaction.transactionStage';
-const TRANSACTION_DEAL_CREATED = 'transaction.deal_created'; // think this really wants us to track when the loan/bond was created
+const TRANSACTION_DEAL_CREATED = 'details.created';
 const DEAL_ID = '_id';
 const DEAL_STATUS = 'details.status';
 const DEAL_PREVIOUS_STATUS = 'details.previousStatus';

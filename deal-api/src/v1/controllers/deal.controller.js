@@ -46,6 +46,24 @@ const dealsQuery = (user, filter) => {
       return { $or: [bondMatchesOnFacilityStage, loanMatchesOnFacilityStage] };
     }
 
+    if (clause['details.bankSupplyContractID']) {
+      const bankSupplyContractID = clause['details.bankSupplyContractID'];
+      return {
+        $or: [
+          { 'details.bankSupplyContractID': { $regex: bankSupplyContractID, $options: 'i' } },
+        ],
+      };
+    }
+
+    if (clause['details.ukefDealId']) {
+      const ukefDealId = clause['details.ukefDealId'];
+      return {
+        $or: [
+          { 'details.ukefDealId': { $regex: ukefDealId, $options: 'i' } },
+        ],
+      };
+    }
+
     return clause;
   });
 
@@ -57,6 +75,7 @@ const dealsQuery = (user, filter) => {
       $and: amendedFilters,
     };
   }
+
   return result;
 };
 

@@ -39,7 +39,7 @@
       </tr>
     </thead>
 
-    <tbody class="govuk-table__body">
+    <tbody data-cy="results" class="govuk-table__body">
 
       {% for contract in contracts %}
         <tr data-cy="deal_{{contract._id}}" class="govuk-table__row">
@@ -84,7 +84,7 @@
           </td>
 
         </tr>
-        
+
       {% endfor %}
 
     </tbody>
