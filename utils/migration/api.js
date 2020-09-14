@@ -30,7 +30,22 @@ const listUsers = async () => {
   return response.data.users;
 };
 
+const listBanks = async (token = '') => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token,
+    },
+    url: `${urlRoot}/v1/banks`,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response.data.banks;
+};
+
 module.exports = {
   createUser,
   listUsers,
+  listBanks,
 };
