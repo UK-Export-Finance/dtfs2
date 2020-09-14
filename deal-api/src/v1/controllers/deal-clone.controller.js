@@ -3,7 +3,7 @@ const { findMandatoryCriteria } = require('./mandatoryCriteria.controller');
 const { findOneDeal, create: createDeal } = require('./deal.controller');
 const { generateFacilityId } = require('../../utils/generateIds');
 const { getCloneDealErrors } = require('../validation/clone-deal');
-
+const CONSTANTS = require('../../constants');
 
 const now = require('../../now');
 
@@ -90,6 +90,10 @@ exports.clone = async (req, res) => {
       ukefComments: [],
       specialConditions: [],
     };
+
+    if (modifiedDeal.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
+      modifiedDeal.details.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
+    }
 
     if (cloneTransactions === 'false') {
       modifiedDeal.bondTransactions = DEFAULTS.DEALS.bondTransactions;
