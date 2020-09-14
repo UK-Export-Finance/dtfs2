@@ -185,5 +185,21 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     pages.contractReadyForReview.comments().type('Updated cover start dates');
     pages.contractReadyForReview.readyForCheckersApproval().click();
     cy.url().should('eq', relative('/dashboard/0'));
+
+    //---------------------------------------------------------------
+    // Maker can no longer change cover start dates
+    // because the deal is in Ready for Check status
+    //---------------------------------------------------------------
+    pages.contract.visit(deal);
+
+    deal.bondTransactions.items.forEach((bond) => {
+      const bondRow = pages.contract.bondTransactionsTable.row(bond._id); // eslint-disable-line no-underscore-dangle
+      bondRow.changeOrConfirmCoverStartDateLink().should('not.be.visible');
+    });
+
+    deal.loanTransactions.items.forEach((loan) => {
+      const loanRow = pages.contract.loansTransactionsTable.row(loan._id); // eslint-disable-line no-underscore-dangle
+      loanRow.changeOrConfirmCoverStartDateLink().should('not.be.visible');
+    });
   });
 });
