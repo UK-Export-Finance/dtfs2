@@ -104,10 +104,10 @@
               </h2>
             </div>
 
-            {% if deal.details.submissionDate %}            
+            {% if deal.details.manualInclusionNoticeSubmissionDate %}            
               <span class="govuk-heading-m govuk-grid-column-one-quarter govuk-!-font-weight-regular govuk-!-font-size-16 govuk-!-padding-right-0 govuk-!-padding-left-0 width-auto"  data-cy="eligibility-submission-type">
                 <span class="govuk-!-font-weight-bold">Submission date: </span> <br />
-                {{ deal.details.submissionDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
+                {{ deal.details.manualInclusionNoticeSubmissionDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
               </span>
             {% endif %}
 
