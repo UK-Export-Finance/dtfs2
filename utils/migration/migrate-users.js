@@ -1,7 +1,7 @@
 const fs = require('fs');
 const moment = require('moment');
 const api = require('./api');
-const { getToken } = require('./temporary-token-handler');
+const { getToken, removeMigrationUser } = require('./temporary-token-handler');
 
 const userJson = process.argv[2];
 
@@ -30,6 +30,22 @@ const apiSummary = (createdUsers) => ({
   successUsers: createdUsers.filter((createdUser) => createdUser.success).map(({ user }) => user.username),
   apiUserErrors: createdUsers.filter((createdUser) => !createdUser.success).map(({ username }) => username),
 });
+
+const teardown = async (logData) => {
+  // remove migration user
+  await removeMigrationUser();
+
+  // log file
+  const logFolder = './logs';
+  const filename = `${logFolder}/user-migrate-log_${moment().unix()}.json`;
+
+  if (!fs.existsSync(logFolder)) {
+    fs.mkdirSync(logFolder);
+  }
+
+  fs.writeFileSync(filename, logData);
+  console.log(`Log file written to ${filename}`);
+};
 
 const migrateUsers = async () => {
   const existingUsers = await api.listUsers();
@@ -132,15 +148,7 @@ const migrateUsers = async () => {
     userNoBanksError,
   });
 
-  const logFolder = './logs';
-  const filename = `${logFolder}/user-migrate-log_${moment().unix()}.json`;
-
-  if (!fs.existsSync(logFolder)) {
-    fs.mkdirSync(logFolder);
-  }
-
-  fs.writeFileSync(filename, logData);
-  console.log(`Log file written to ${filename}`);
+  teardown(logData);
 };
 
 migrateUsers();
