@@ -1,6 +1,7 @@
 const fs = require('fs');
 const moment = require('moment');
 const api = require('./api');
+const { getToken } = require('./temporary-token-handler');
 
 const userJson = process.argv[2];
 
@@ -32,10 +33,21 @@ const apiSummary = (createdUsers) => ({
 
 const migrateUsers = async () => {
   const existingUsers = await api.listUsers();
+  const token = await getToken();
+  const banks = await api.listBanks(token);
+
   const existingUsersList = existingUsers.map(({ username }) => username);
+  const userNoBanksError = [];
 
   const usersV1 = loadUsersFromFile();
   const usersV2 = usersV1.map((userV1) => {
+    const bank = banks.find((b) => b.id === userV1.Bank_id);
+    if (!bank) {
+      userNoBanksError.push(userV1.Mail);
+      consoleLogColor(`unknown bank: ${userV1.Mail}`);
+      return {};
+    }
+
     const userV2 = {
       'user-status': 'active',
       timezone: 'Europe/London',
@@ -46,8 +58,8 @@ const migrateUsers = async () => {
       roles: generateRoles(userV1.Roles),
       bank: {
         id: userV1.Bank_id,
-        name: userV1.Bank,
-        emails: [],
+        name: bank.name,
+        emails: bank.emails,
       },
       disabled: userV1.Disabled === 'Disabled',
       v1_ID: userV1.User_id,
@@ -67,7 +79,7 @@ const migrateUsers = async () => {
   const existingUserErrors = [];
   const createUserPromises = [];
 
-  usersV2.forEach(async (user) => {
+  usersV2.filter(({ username }) => username).forEach(async (user) => {
     if (existingUsersList.includes(user.username)) {
       consoleLogColor(`duplicate user: ${user.username}`);
       existingUserErrors.push(user.username);
@@ -93,8 +105,8 @@ const migrateUsers = async () => {
 
   consoleLogColor(`Created ${successUsers.length}/${usersV1.length} users `, successUsers.length === usersV1.length ? FgGreen : FgRed);
 
-  if (existingUserErrors.length || apiUserErrors.length) {
-    consoleLogColor(`error migrating ${existingUserErrors.length + apiUserErrors.length} users`);
+  if (existingUserErrors.length || apiUserErrors.length || userNoBanksError.length) {
+    consoleLogColor(`error migrating ${existingUserErrors.length + apiUserErrors.length + userNoBanksError.length} users`);
 
     if (existingUserErrors.length) {
       consoleLogColor('\nexisting users');
@@ -105,6 +117,11 @@ const migrateUsers = async () => {
       consoleLogColor('\napi errors');
       consoleLogColor(apiUserErrors.join('\n'));
     }
+
+    if (userNoBanksError.length) {
+      consoleLogColor('\nunknown bank2');
+      consoleLogColor(userNoBanksError.join('\n'));
+    }
   }
 
   const logData = JSON.stringify({
@@ -112,6 +129,7 @@ const migrateUsers = async () => {
     successUsers,
     existingUserErrors,
     apiUserErrors,
+    userNoBanksError,
   });
 
   const logFolder = './logs';
