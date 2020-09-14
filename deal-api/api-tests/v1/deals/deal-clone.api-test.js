@@ -5,27 +5,38 @@ const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
 const { as } = require('../../api')(app);
 
-const newDeal = aDeal({
-  details: {
-    bankSupplyContractName: 'mock name',
-    bankSupplyContractID: 'mock id',
-  },
-  comments: [{
-    username: 'bananaman',
+const dealToClone = completedDeal;
+
+dealToClone.details.submissionType = 'Automatic Inclusion Notice';
+
+dealToClone.editedBy = [
+  { userId: '1' },
+  { userId: '2' },
+  { userId: '3' },
+  { userId: '4' },
+];
+
+dealToClone.ukefComments = [
+  {
     timestamp: '1984/12/25 00:00:00:001',
-    text: 'Merry Christmas from the 80s',
-  }, {
-    username: 'supergran',
+    text: 'Hello from UKEF',
+  },
+  {
     timestamp: '1982/12/25 00:00:00:001',
-    text: 'Also Merry Christmas from the 80s',
-  }],
-  editedBy: [
-    { userId: '1' },
-    { userId: '2' },
-    { userId: '3' },
-    { userId: '4' },
-  ],
-});
+    text: 'Love this deal',
+  },
+];
+
+dealToClone.specialConditions = [
+  {
+    timestamp: '1984/12/25 00:00:00:001',
+    text: 'This is special',
+  },
+  {
+    timestamp: '1982/12/25 00:00:00:001',
+    text: 'Very special',
+  },
+];
 
 describe('/v1/deals/:id/clone', () => {
   let noRoles;
@@ -44,19 +55,19 @@ describe('/v1/deals/:id/clone', () => {
 
   describe('POST /v1/deals/:id/clone', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().post(newDeal).to('/v1/deals/123456789012/clone');
+      const { status } = await as().post(dealToClone).to('/v1/deals/123456789012/clone');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).post(newDeal).to('/v1/deals/123456789012/clone');
+      const { status } = await as(noRoles).post(dealToClone).to('/v1/deals/123456789012/clone');
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown ids', async () => {
-      const { status } = await as(anHSBCMaker).post(newDeal).to('/v1/deals/123456789012/clone');
+      const { status } = await as(anHSBCMaker).post(dealToClone).to('/v1/deals/123456789012/clone');
 
       expect(status).toEqual(404);
     });
@@ -65,11 +76,11 @@ describe('/v1/deals/:id/clone', () => {
       let originalDeal;
 
       beforeEach(async () => {
-        const { body } = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
+        const { body } = await as(anHSBCMaker).post(dealToClone).to('/v1/deals');
         originalDeal = body;
       });
 
-      it('clones a deal with only specific properties in `details`, wipes `comments` & `editedBy`, changes `maker` to the user making the request, marks status `Draft`', async () => {
+      it('clones a deal with only specific properties in `details`, wipes `comments`, `editedBy` `ukefComments`, `specialConditions`, changes `maker` to the user making the request, marks status `Draft`', async () => {
         const clonePostBody = {
           bankSupplyContractID: 'new-bank-deal-id',
           bankSupplyContractName: 'new-bank-deal-name',
@@ -93,15 +104,34 @@ describe('/v1/deals/:id/clone', () => {
 
         expect(body.details.owningBank).toEqual(aBarclaysMaker.bank);
         expect(body.details.status).toEqual('Draft');
-        expect(body.comments).toEqual([]);
         expect(body.editedBy).toEqual([]);
+        expect(body.comments).toEqual([]);
+        expect(body.ukefComments).toEqual([]);
+        expect(body.specialConditions).toEqual([]);
+      });
+
+      describe('when deal submissionType is MIN', () => {
+        it('should change deal submissionType to MIA', async () => {
+          const clonePostBody = {
+            bankSupplyContractID: 'new-bank-deal-id',
+            bankSupplyContractName: 'new-bank-deal-name',
+            cloneTransactions: 'true',
+          };
+         
+          const minDeal = originalDeal;
+          minDeal.details.submissionType = 'Manual Inclusion Notice';
+
+          const { body: minDealBody } = await as(anHSBCMaker).put(minDeal).to(`/v1/deals/${minDeal._id}`);
+
+          const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${minDealBody._id}/clone`);
+          expect(body.details.submissionType).toEqual('Manual Inclusion Application');
+        });
       });
 
       // TODO: test other things in deal object.
       // eligibility
       // submissionDetails
       // summary
-      // comments
       // supplyContractCurrency
 
       it('clones a deal with only specific bondTransactions fields', async () => {
@@ -204,7 +234,7 @@ describe('/v1/deals/:id/clone', () => {
 
       it('returns empty bondTransactions and loanTransactions when empty in original deal', async () => {
         const dealWithEmptyBondsAndLoans = {
-          ...completedDeal,
+          ...dealToClone,
           bondTransactions: { items: [] },
           loanTransactions: { items: [] },
         };
