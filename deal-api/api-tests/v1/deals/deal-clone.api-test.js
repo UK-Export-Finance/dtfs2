@@ -25,6 +25,26 @@ const newDeal = aDeal({
     { userId: '3' },
     { userId: '4' },
   ],
+  ukefComments: [
+    {
+      timestamp: '1984/12/25 00:00:00:001',
+      text: 'Hello from UKEF',
+    },
+    {
+      timestamp: '1982/12/25 00:00:00:001',
+      text: 'Love this deal',
+    },
+  ],
+  specialConditions: [
+    {
+      timestamp: '1984/12/25 00:00:00:001',
+      text: 'This is special',
+    },
+    {
+      timestamp: '1982/12/25 00:00:00:001',
+      text: 'Very special',
+    },
+  ],
 });
 
 describe('/v1/deals/:id/clone', () => {
@@ -69,7 +89,7 @@ describe('/v1/deals/:id/clone', () => {
         originalDeal = body;
       });
 
-      it('clones a deal with only specific properties in `details`, wipes `comments` & `editedBy`, changes `maker` to the user making the request, marks status `Draft`', async () => {
+      it('clones a deal with only specific properties in `details`, wipes `comments`, `editedBy` `ukefComments`, `specialConditions`, changes `maker` to the user making the request, marks status `Draft`', async () => {
         const clonePostBody = {
           bankSupplyContractID: 'new-bank-deal-id',
           bankSupplyContractName: 'new-bank-deal-name',
@@ -93,8 +113,10 @@ describe('/v1/deals/:id/clone', () => {
 
         expect(body.details.owningBank).toEqual(aBarclaysMaker.bank);
         expect(body.details.status).toEqual('Draft');
-        expect(body.comments).toEqual([]);
         expect(body.editedBy).toEqual([]);
+        expect(body.comments).toEqual([]);
+        expect(body.ukefComments).toEqual([]);
+        expect(body.specialConditions).toEqual([]);
       });
 
       // TODO: test other things in deal object.

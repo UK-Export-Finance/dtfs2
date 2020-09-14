@@ -76,7 +76,6 @@ exports.clone = async (req, res) => {
 
     const modifiedDeal = {
       ...existingDealWithoutId,
-      comments: [],
       details: {
         bankSupplyContractID,
         bankSupplyContractName,
@@ -85,8 +84,11 @@ exports.clone = async (req, res) => {
         maker: req.user,
         owningBank: existingDeal.details.owningBank,
       },
-      editedBy: [],
       mandatoryCriteria: await getCurrentMandatoryCriteria(),
+      editedBy: [],
+      comments: [],
+      ukefComments: [],
+      specialConditions: [],
     };
 
     if (cloneTransactions === 'false') {
