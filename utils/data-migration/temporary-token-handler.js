@@ -8,15 +8,16 @@ let migrationUserId;
 const migrationUserFields = {
   username: 'data-migration',
   password: 'AbC!2345',
-  firstname: 'migration',
+  firstname: 'V1 Migration',
   surname: 'DataLoader',
   roles: ['maker', 'editor', 'data-admin'],
   bank: {
-    id: '9',
+    id: '*',
   },
 };
 
 module.exports.removeMigrationUser = async () => {
+  console.log(`remove temp user ${migrationUserFields.username}`);
   await axios({
     method: 'delete',
     headers: {

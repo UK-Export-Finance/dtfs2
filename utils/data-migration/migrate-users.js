@@ -2,11 +2,12 @@ const fs = require('fs');
 const moment = require('moment');
 const api = require('./api');
 const { getToken, removeMigrationUser } = require('./temporary-token-handler');
+const consoleLogColor = require('./helpers/console-log-colour');
 
-const userJson = process.argv[2];
+const filename = process.argv[2];
 
 const loadUsersFromFile = () => {
-  const jsonBuffer = fs.readFileSync(userJson);
+  const jsonBuffer = fs.readFileSync(filename);
   return JSON.parse(jsonBuffer);
 };
 
@@ -18,13 +19,6 @@ const generateRoles = (v1Role) => {
   return [v1Role.toLowerCase()];
 };
 
-const FgGreen = '\x1b[32m';
-const FgRed = '\x1b[31m';
-const FgReset = '\x1b[0m';
-
-const consoleLogColor = (msg, colour = FgRed) => {
-  console.log(colour, msg, FgReset);
-};
 
 const apiSummary = (createdUsers) => ({
   successUsers: createdUsers.filter((createdUser) => createdUser.success).map(({ user }) => user.username),
@@ -37,14 +31,14 @@ const teardown = async (logData) => {
 
   // log file
   const logFolder = './logs';
-  const filename = `${logFolder}/user-migrate-log_${moment().unix()}.json`;
+  const logFilename = `${logFolder}/user-migrate-log_${moment().unix()}.json`;
 
   if (!fs.existsSync(logFolder)) {
     fs.mkdirSync(logFolder);
   }
 
-  fs.writeFileSync(filename, logData);
-  console.log(`Log file written to ${filename}`);
+  fs.writeFileSync(logFilename, logData);
+  console.log(`Log file written to ${logFilename}`);
 };
 
 const migrateUsers = async () => {
@@ -103,7 +97,7 @@ const migrateUsers = async () => {
     }
     const userCreate = api.createUser(user).then((createResult) => {
       if (createResult.success) {
-        consoleLogColor(`created user: ${createResult.user.username}`, FgGreen);
+        consoleLogColor(`created user: ${createResult.user.username}`, 'green');
       } else {
         consoleLogColor(`error creating user: ${createResult.username}`);
       }
@@ -119,7 +113,7 @@ const migrateUsers = async () => {
   console.log('\n--------------');
   console.log('USER MIGRATION SUMMARY\n');
 
-  consoleLogColor(`Created ${successUsers.length}/${usersV1.length} users `, successUsers.length === usersV1.length ? FgGreen : FgRed);
+  consoleLogColor(`Created ${successUsers.length}/${usersV1.length} users `, successUsers.length === usersV1.length ? 'green' : 'red');
 
   if (existingUserErrors.length || apiUserErrors.length || userNoBanksError.length) {
     consoleLogColor(`error migrating ${existingUserErrors.length + apiUserErrors.length + userNoBanksError.length} users`);

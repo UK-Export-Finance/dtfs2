@@ -36,11 +36,6 @@ const dealsQuery = (user, filter) => {
           { 'details.bankSupplyContractID': { $regex: freetextSearch, $options: 'i' } },
           { 'details.ukefDealId': { $regex: freetextSearch, $options: 'i' } },
           { 'bondTransactions.items.uniqueIdentificationNumber': { $regex: freetextSearch, $options: 'i' } },
-          { 'submissionDetails.supplier-name': { $regex: freetextSearch, $options: 'i' } },
-          { 'submissionDetails.supplier-companies-house-registration-number': { $regex: freetextSearch, $options: 'i' } },
-          { 'submissionDetails.indemnifier-name': { $regex: freetextSearch, $options: 'i' } },
-          { 'submissionDetails.indemnifier-companies-house-registration-number': { $regex: freetextSearch, $options: 'i' } },
-          { 'submissionDetails.buyer-name': { $regex: freetextSearch, $options: 'i' } },
         ],
       };
     }
@@ -149,7 +144,6 @@ const fillInEligibilityCriteria = (criterias, answers) => criterias.map((criteri
 const createDeal = async (req, res) => {
   const collection = await db.getCollection('deals');
   const eligibilityCriteria = await findEligibilityCriteria();
-  const dealId = await generateDealId();
 
   const beingGivenEligibility = (req.body.eligibility && req.body.eligibility.criteria);
 
@@ -165,7 +159,6 @@ const createDeal = async (req, res) => {
 
   const time = now();
   const newDeal = {
-    _id: dealId,
     ...DEFAULTS.DEALS,
     ...req.body,
     details: {
@@ -191,7 +184,10 @@ const createDeal = async (req, res) => {
     });
   }
 
-  const response = await collection.insertOne(newDeal);
+  const response = await collection.insertOne({
+    _id: await generateDealId(),
+    ...newDeal,
+  });
 
   const createdDeal = response.ops[0];
   return res.status(200).send(createdDeal);
