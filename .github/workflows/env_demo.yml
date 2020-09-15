@@ -423,9 +423,35 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         # Always remove public access
+        # On activating "Allow access from Azure Portal":
+        # https://github.com/Azure/azure-cli/issues/7495 ->
+        # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall#allow-requests-from-the-azure-portal
+        # ALLOW REQUESTS FROM THE AZURE PORTAL
+        # Region IP address
+        # Germany 51.4.229.218
+        # China 139.217.8.252
+        # US Gov 52.244.48.71
+        # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
         inlineScript: |
           az storage account update --name tfs${{ env.environment }}storage --default-action Deny
-          az storage account network-rule add --account-name tfs${{ env.environment }}storage --vnet-name tfs-${{ env.app_service_plan }}-portal-api --subnet backing-services
+          az storage account network-rule add --account-name tfs${{ env.environment }}storage \
+            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+            --subnet backing-services
+          az storage account network-rule add --account-name tfs${{ env.environment }}storage \
+            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+            --ip-address 104.42.195.92
+          az storage account network-rule add --account-name tfs${{ env.environment }}storage \
+            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+            --ip-address 40.76.54.131
+          az storage account network-rule add --account-name tfs${{ env.environment }}storage \
+            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+            --ip-address 52.176.6.30
+          az storage account network-rule add --account-name tfs${{ env.environment }}storage \
+            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+            --ip-address 52.169.50.45
+          az storage account network-rule add --account-name tfs${{ env.environment }}storage \
+            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+            --ip-address 52.187.184.26
 
   session-store:
     name: Redis (sessions)
