@@ -1,31 +1,20 @@
 import express from 'express';
-// mport util from 'util';
-import api from '../../api';
-import buildReportFilters from '../buildReportFilters';
-import { getRAGstatus, getExpiryDates } from '../expiryStatusUtils';
-import CONSTANTS from '../../constants';
-import {
-  getApiData,
-  requestParams,
-} from '../../helpers';
+import miaToBeSubmittedWithConditions from './mia-to-be-submitted-with-conditions';
+import miaToBeSubmittedWithoutConditions from './mia-to-be-submitted-without-conditions';
+import auditSupplyContracts from './audit-supply-contracts';
+import unissuedTransactions from './unissued-transactions';
+import countdownIndicator from './countdown-indicator';
+import auditTransactions from './audit-transactions';
+import reconciliation from './reconciliation';
+import transactions from './transactions';
+import transactionReport from './transactions-report';
+import miaMinCoverStartDateChanges from './mia_min-cover-start-date-changes';
 
-const moment = require('moment');
-require('moment-timezone');// monkey-patch to provide moment().tz()
 
-function filterLocaliseTimestamp(utcTimestamp, targetTimezone) {
-  const format = 'DD/MM/YYYY HH:mm';
-  if (!utcTimestamp) {
-    return '';
-  }
+const primaryNav = 'reports';
 
-  const utc = moment(parseInt(utcTimestamp, 10));
-  const localisedTimestamp = utc.tz(targetTimezone);
-  return localisedTimestamp.format(format);
-}
 
 const router = express.Router();
-const PAGESIZE = 20;
-const primaryNav = 'reports';
 
 // Default redirect until we put in a nav.
 router.get('/reports', async (req, res) => {
@@ -37,6 +26,7 @@ router.get('/reports', async (req, res) => {
   });
 });
 
+<<<<<<< HEAD
 function downloadSupplyContracts(supplyContracts, timezone, res) {
   const columns = [{
     prop: 'bankSupplyContractID',
@@ -1234,6 +1224,18 @@ router.post('/reports/unissued-transactions/:page', async (req, res) => {
     user: req.session.user,
   });
 });
+=======
+router.use('/', miaToBeSubmittedWithConditions);
+router.use('/', miaToBeSubmittedWithoutConditions);
+router.use('/', auditSupplyContracts);
+router.use('/', auditTransactions);
+router.use('/', unissuedTransactions);
+router.use('/', countdownIndicator);
+router.use('/', reconciliation);
+router.use('/', transactions);
+router.use('/', transactionReport);
+router.use('/', miaMinCoverStartDateChanges);
+>>>>>>> split reports into different files
 
 >>>>>>> Add filters to countdown indicator reports:portal/server/routes/reports/index.js
 export default router;
