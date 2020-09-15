@@ -14,22 +14,10 @@
     "apollo-link-http": "^1.5.17",
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
+
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
     "node-fetch": "^2.6.1",
     "moment": "^2.27.0"
-=======
->>>>>>> countdown indicator report changes
-    "graphql": "^15.3.0",
-    "graphql-tag": "^2.11.0",
-    "moment": "^2.27.0",
-    "node-fetch": "^2.6.0"
-<<<<<<< HEAD
-=======
->>>>>>> countdown indicator report changes
->>>>>>> countdown indicator report changes
   }
 }
