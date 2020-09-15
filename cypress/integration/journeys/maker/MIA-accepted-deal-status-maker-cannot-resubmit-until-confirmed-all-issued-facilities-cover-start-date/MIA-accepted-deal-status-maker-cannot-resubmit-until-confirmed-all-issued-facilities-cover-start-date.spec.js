@@ -6,6 +6,7 @@ const mockUsers = require('../../../../fixtures/mockUsers');
 const { formattedTimestamp } = require('../../../../../deal-api/src/v1/facility-dates/timestamp');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
+const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker')));
 
 context('Given a deal that has `Accepted` status with Issued, Unissued, Unconditional and Conditional facilities', () => {
   let deal;
@@ -200,6 +201,32 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     deal.loanTransactions.items.forEach((loan) => {
       const loanRow = pages.contract.loansTransactionsTable.row(loan._id); // eslint-disable-line no-underscore-dangle
       loanRow.changeOrConfirmCoverStartDateLink().should('not.be.visible');
+    });
+
+    //---------------------------------------------------------------
+    // Checker only sees `Facility issued` link for submitted, issued facilities
+    // all other facilities do not display `start date link` or `issue facility` link
+    //---------------------------------------------------------------
+
+    cy.login({ ...CHECKER_LOGIN });
+    pages.contract.visit(deal);
+
+    deal.bondTransactions.items.forEach((bond) => {
+      const bondRow = pages.contract.bondTransactionsTable.row(bond._id); // eslint-disable-line no-underscore-dangle
+      bondRow.changeOrConfirmCoverStartDateLink().should('not.be.visible');
+
+      issuedSubmittedBondRow.issueFacilityLink().invoke('text').then((text) => {
+        expect(text.trim()).to.equal('Facility issued');
+      });
+    });
+
+    deal.loanTransactions.items.forEach((loan) => {
+      const loanRow = pages.contract.loansTransactionsTable.row(loan._id); // eslint-disable-line no-underscore-dangle
+      loanRow.changeOrConfirmCoverStartDateLink().should('not.be.visible');
+
+      unconditionalSubmittedLoanRow.issueFacilityLink().invoke('text').then((text) => {
+        expect(text.trim()).to.equal('Facility issued');
+      });
     });
   });
 });
