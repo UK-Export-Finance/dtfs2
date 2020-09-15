@@ -11,7 +11,7 @@ env:
   resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
   app_service_plan: dev
   redis_sku: Basic
-  visible_database: false
+  protected_database: true
   # Container registry
   registry: ${{ secrets.DEMO_ACR_REGISTRY }}
   # App service settings
@@ -290,12 +290,16 @@ jobs:
             --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
             --subnet backing-services
 
-    - name: Access restriction (${{ env.visible_database }})
+    - name: Access restriction (${{ env.protected_database }})
       uses: Azure/cli@v1.0.0
       with:
+        # This fails if we want to expose the database,
+        # so we fall back to enabling public network access
         inlineScript: |
           az cosmosdb update --name tfs-${{ env.environment }}-mongo \
-            --enable-virtual-network ${{ env.visible_database }}
+            --enable-virtual-network ${{ env.protected_database }} || \
+          az cosmosdb update --name tfs-${{ env.environment }}-mongo \
+            --enable-public-network true
 
     - name: Database with autoscale
       uses: Azure/cli@v1.0.0
