@@ -92,9 +92,27 @@ exports.update = (req, res) => {
     if (toStatus === 'Ready for Checker\'s approval') {
       const isAINdeal = dealAfterAllUpdates.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
       const isMINdeal = dealAfterAllUpdates.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
+
       const updateIssuedFacilitiesCoverStartDates = (isAINdeal || isMINdeal);
 
       const newIssuedFacilityStatus = 'Ready for check';
+
+      if (
+        ['approved', 'approved_conditions'].includes(dealAfterAllUpdates.details.previousWorkflowStatus)
+        && dealAfterAllUpdates.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+      ) {
+        // Is changing MIA to MIN
+        const minDealMakerUpdate = {
+          params: req.params,
+          body: {
+            details: {
+              makerMIN: req.user,
+            },
+          },
+          user: req.user,
+        };
+        dealAfterAllUpdates = await updateDeal(minDealMakerUpdate);
+      }
 
       dealAfterAllUpdates = await updateIssuedFacilities(
         collection,
@@ -145,12 +163,13 @@ exports.update = (req, res) => {
             details: {
               submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
               manualInclusionNoticeSubmissionDate: now(),
+              checkerMIN: req.user,
             },
           },
           user: req.user,
         };
 
-        await updateDeal(minUpdateReq);
+        dealAfterAllUpdates = await updateDeal(minUpdateReq);
       }
     }
     // check for approvals back from UKEF and date stamp it for countdown indicator
