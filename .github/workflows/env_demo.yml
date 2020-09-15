@@ -281,6 +281,7 @@ jobs:
         # US Gov 52.244.48.71
         # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
         inlineScript: |
+          az cosmosdb show || \
           az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB --server-version 3.6
 
     - name: Access restriction - ${{ env.protected_database }}
@@ -319,7 +320,8 @@ jobs:
         # Creating collections is slow, so we show them before we attempt to create.
         inlineScript: |
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name test --name deals || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --name deals --shard "_id" --idx '[{"key": {"keys": ["details.dateOfLastAction"]}}, {"key": {"keys": ["_id"]}}]'
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --name deals --shard "_id" \
+            --idx '[{"key": {"keys": ["details.dateOfLastAction"]}}, {"key": {"keys": ["_id"]}}]'
           
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name test --name banks || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --name banks --shard "_id"
