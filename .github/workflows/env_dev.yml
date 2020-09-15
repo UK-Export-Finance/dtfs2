@@ -421,8 +421,8 @@ jobs:
           az storage account create --name tfs${{ env.environment }}storage \
             --sku Standard_ZRS \
             --https-only true \
-            --encryption-services file
-          az storage account update --name tfs${{ env.environment }}storage --default-action Allow
+            --encryption-services file \
+            --default-action Allow
 
     - name: File share
       uses: Azure/cli@v1.0.0
