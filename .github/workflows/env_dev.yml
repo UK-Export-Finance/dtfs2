@@ -424,12 +424,13 @@ jobs:
             --encryption-services file \
             --default-action Allow
 
-    - name: File share
+    - name: File share (files)
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           az storage share create --account-name tfs${{ env.environment }}storage \
-            --name files
+            --name files || \
+          echo Skipped.
 
     - name: File share (workflow)
       uses: Azure/cli@v1.0.0
@@ -437,7 +438,8 @@ jobs:
         # This fileshare is used if the environment isn't integrated to Workflow
         inlineScript: |
           az storage share create --account-name tfs${{ env.environment }}storage \
-            --name workflow
+            --name workflow || \
+          echo Skipped.
 
     - name: Access restriction
       if: ${{ always() }}
