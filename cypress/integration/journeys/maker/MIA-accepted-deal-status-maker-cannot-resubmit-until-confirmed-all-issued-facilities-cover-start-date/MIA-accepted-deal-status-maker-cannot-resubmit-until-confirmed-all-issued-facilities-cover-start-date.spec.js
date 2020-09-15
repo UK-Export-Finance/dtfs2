@@ -166,17 +166,17 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     //---------------------------------------------------------------
     const expectedBondDate = moment(NEW_BOND_COVER_START_DATE).format('DD/MM/YYYY');
     issuedSubmittedBondRow.requestedCoverStartDate().should('contain.text', expectedBondDate);
-    issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date changed');
+    issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
     issuedCompletedBondRow.requestedCoverStartDate().should('contain.text', expectedBondDate);
-    issuedCompletedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date changed');
+    issuedCompletedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
     const expectedLoanDate = moment(NEW_LOAN_COVER_START_DATE).format('DD/MM/YYYY');
     unconditionalSubmittedLoanRow.requestedCoverStartDate().should('contain.text', expectedLoanDate);
-    unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date changed');
+    unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
     unconditionalCompletedLoanRow.requestedCoverStartDate().should('contain.text', expectedLoanDate);
-    unconditionalCompletedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date changed');
+    unconditionalCompletedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
     //---------------------------------------------------------------
     // Maker can resubmit deal now, after all cover start dates have been confirmed
