@@ -1,4 +1,5 @@
 import express from 'express';
+import moment from 'moment';
 import api from '../../../api';
 import {
   provide,
@@ -12,6 +13,7 @@ import {
   errorHref,
   mapCurrencies,
   generateErrorSummary,
+  formattedTimestamp,
 } from '../../../helpers';
 import {
   loanGuaranteeDetailsValidationErrors,
@@ -370,10 +372,17 @@ router.get('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pro
   const { _id: dealId } = requestParams(req);
   const { loan } = req.apiData.loan;
 
+
+  const formattedRequestedCoverStartDate = formattedTimestamp(loan.requestedCoverStartDate);
+  const now = formattedTimestamp(moment().utc().valueOf().toString());
+
+  const needToChangeRequestedCoverStartDate = moment(formattedRequestedCoverStartDate).isBefore(now, 'day');
+
   return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
     dealId,
     user: req.session.user,
     facility: loan,
+    needToChangeRequestedCoverStartDate,
   });
 });
 
