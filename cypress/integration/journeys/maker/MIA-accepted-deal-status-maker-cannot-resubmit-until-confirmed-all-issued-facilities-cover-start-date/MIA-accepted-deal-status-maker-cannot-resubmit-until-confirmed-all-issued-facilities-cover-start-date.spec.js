@@ -110,7 +110,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     //---------------------------------------------------------------
-    // Maker can change Cover start date for an Issued facility with 'Compeleted' status
+    // Maker can change Cover start date for an Issued facility with 'Completed' status
     //---------------------------------------------------------------
     issuedCompletedBondRow.changeOrConfirmCoverStartDateLink().should('be.visible');
     issuedCompletedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Confirm start date');
@@ -162,7 +162,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
     //---------------------------------------------------------------
     // - Cover start date changes are rendered in the table
-    // - `change start date` link/text updated
+    // - `confirm start date` link/text should be updated
     //---------------------------------------------------------------
     const expectedBondDate = moment(NEW_BOND_COVER_START_DATE).format('DD/MM/YYYY');
     issuedSubmittedBondRow.requestedCoverStartDate().should('contain.text', expectedBondDate);

@@ -18,31 +18,41 @@
 
   <form method="POST" autocomplete="off">
 
-    {{ govukRadios({
-      idPrefix: "needToChangeRequestedCoverStartDate",
-      name: "needToChangeRequestedCoverStartDate",
-      fieldset: {
-        legend: {
-          text: 'Do you need to change "Requested Cover Start Date"?',
-          classes: "govuk-fieldset__legend"
-        }
-      },
-      items: [
-        {
-          value: "true",
-          text: "Yes",
-          checked: needToChangeRequestedCoverStartDate === "true",
-          attributes: {
-            'data-cy': 'need-to-change-cover-start-date-yes'
+    {% if needToChangeRequestedCoverStartDate %}
+      <input type="hidden" name="needToChangeRequestedCoverStartDate" value="true" />
+
+    {% else %}
+
+      {{ govukRadios({
+        idPrefix: "needToChangeRequestedCoverStartDate",
+        name: "needToChangeRequestedCoverStartDate",
+        fieldset: {
+          legend: {
+            text: 'Do you need to change "Requested Cover Start Date"?',
+            classes: "govuk-fieldset__legend"
           }
         },
-        {
-          value: "false",
-          text: "No, keep current date value (" + facility['requestedCoverStartDate-day'] +"/" + facility['requestedCoverStartDate-month'] +"/" + facility['requestedCoverStartDate-year'] +")",
-          checked: needToChangeRequestedCoverStartDate === "false"
-        }
-      ]
-    }) }}
+        items: [
+          {
+            value: "true",
+            text: "Yes",
+            checked: needToChangeRequestedCoverStartDate === "true",
+            attributes: {
+              'data-cy': 'need-to-change-cover-start-date-yes'
+            }
+          },
+          {
+            value: "false",
+            text: "No, keep current date value (" + facility['requestedCoverStartDate-day'] +"/" + facility['requestedCoverStartDate-month'] +"/" + facility['requestedCoverStartDate-year'] +")",
+            checked: needToChangeRequestedCoverStartDate === "false",
+            attributes: {
+              'data-cy': 'need-to-change-cover-start-date-no'
+            }
+          }
+        ]
+      }) }}
+
+    {% endif %}
 
     {{ dateField.render(
       legend = 'New Requested Cover Start Date',
