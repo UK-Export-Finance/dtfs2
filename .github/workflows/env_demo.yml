@@ -64,16 +64,16 @@ jobs:
     - name: Vnet
       uses: Azure/cli@v1.0.0
       with:
+        # We have to do a show here or we get an error on create if the vnet already exists:
         inlineScript: |
-          # We have to do a show here or we get an error on create if the vnet already exists:
           az network vnet show --name tfs-${{ env.app_service_plan }}-portal-api || \
           az network vnet create --name tfs-${{ env.app_service_plan }}-portal-api
 
-    - name: Backing services subnet
+    - name: Subnet
       uses: Azure/cli@v1.0.0
       with:
+        # Delegation Microsoft.Web/serverFarms allows App Service to call into this vnet
         inlineScript: |
-          # Delegation Microsoft.Web/serverFarms allows App Service to call into this vnet
           az network vnet subnet create \
             --name backing-services \
             --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
@@ -83,6 +83,7 @@ jobs:
     - name: Service endpoints
       uses: Azure/cli@v1.0.0
       with:
+        # Service endpoints allow the selected backing services to be accessed through this subnet
         inlineScript: |
           az network vnet subnet update --name backing-services --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
             --service-endpoints Microsoft.AzureCosmosDB Microsoft.Storage 
@@ -143,8 +144,8 @@ jobs:
     - name: Environment variables
       uses: Azure/cli@v1.0.0
       with:
+        # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
         inlineScript: |
-          # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
           az webapp config appsettings set --name tfs-${{ env.environment }}-portal-ui \
             --settings \
               PORT=5000 \
