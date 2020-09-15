@@ -109,10 +109,7 @@ router.post('/reports/unissued-transactions/:page', async (req, res) => {
     facilityStage: 'unissued_conditional',
     filterByStatus: 'submissionAcknowledged',
   };
-
-  const useFilters = { ...submissionFilters, ...stageFilters };
-
-  const filters = buildReportFilters(useFilters, req.session.user);
+  const filters = buildReportFilters(submissionFilters, stageFilters, req.session.user);
 
   const rawData = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),

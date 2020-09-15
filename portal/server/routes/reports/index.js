@@ -1,5 +1,8 @@
 import express from 'express';
+<<<<<<< HEAD
 <<<<<<< HEAD:portal/server/routes/reports/index.js
+=======
+>>>>>>> split reports into different files
 import miaToBeSubmittedWithConditions from './mia-to-be-submitted-with-conditions';
 import miaToBeSubmittedWithoutConditions from './mia-to-be-submitted-without-conditions';
 import auditSupplyContracts from './audit-supply-contracts';
@@ -10,6 +13,7 @@ import reconciliation from './reconciliation';
 import transactions from './transactions';
 import transactionReport from './transactions-report';
 import miaMinCoverStartDateChanges from './mia_min-cover-start-date-changes';
+<<<<<<< HEAD
 =======
 // mport util from 'util';
 import api from '../../api';
@@ -20,10 +24,11 @@ import {
   getApiData,
   requestParams,
 } from '../../helpers';
+=======
+>>>>>>> split reports into different files
 
-const moment = require('moment');
-require('moment-timezone');// monkey-patch to provide moment().tz()
 
+<<<<<<< HEAD
 function filterLocaliseTimestamp(utcTimestamp, targetTimezone) {
   const format = 'DD/MM/YYYY HH:mm';
   if (!utcTimestamp) {
@@ -33,6 +38,12 @@ function filterLocaliseTimestamp(utcTimestamp, targetTimezone) {
 
 
 const primaryNav = 'reports';
+=======
+const primaryNav = 'reports';
+
+
+const router = express.Router();
+>>>>>>> split reports into different files
 
 
 const router = express.Router();
@@ -47,6 +58,7 @@ router.get('/reports', async (req, res) => {
   });
 });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 function downloadSupplyContracts(supplyContracts, timezone, res) {
   const columns = [{
@@ -1488,6 +1500,18 @@ router.post('/reports/unissued-transactions/:page', async (req, res) => {
 //     currentPage: parseInt(req.params.page, 10),
 //     totalItems: count,
 //   };
+=======
+router.use('/', miaToBeSubmittedWithConditions);
+router.use('/', miaToBeSubmittedWithoutConditions);
+router.use('/', auditSupplyContracts);
+router.use('/', auditTransactions);
+router.use('/', unissuedTransactions);
+router.use('/', countdownIndicator);
+router.use('/', reconciliation);
+router.use('/', transactions);
+router.use('/', transactionReport);
+router.use('/', miaMinCoverStartDateChanges);
+>>>>>>> split reports into different files
 
 //   const banks = await getApiData(
 //     api.banks(userToken),
