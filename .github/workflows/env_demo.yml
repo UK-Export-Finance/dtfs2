@@ -44,7 +44,10 @@ env:
 jobs:
 
   portal-api-vnet:
-    name: Vnet for Portal API
+    # NB Only one vnet can be associated per App Service Plan,
+    # therefore all App Services on a plan must share a single vnet.
+    # So we name the vnet after the app service plan, rather than the environment.
+    name: Portal API vnet
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -63,8 +66,8 @@ jobs:
       with:
         inlineScript: |
           # We have to do a show here or we get an error on create if the vnet already exists:
-          az network vnet show --name tfs-${{ env.environment }}-portal-api || \
-          az network vnet create --name tfs-${{ env.environment }}-portal-api
+          az network vnet show --name tfs-${{ env.app_service_plan }}-portal-api || \
+          az network vnet create --name tfs-${{ env.app_service_plan }}-portal-api
 
     - name: Backing services subnet
       uses: Azure/cli@v1.0.0
@@ -73,7 +76,7 @@ jobs:
           # Delegation Microsoft.Web/serverFarms allows App Service to call into this vnet
           az network vnet subnet create \
             --name backing-services \
-            --vnet-name tfs-${{ env.environment }}-portal-api \
+            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
             --delegations Microsoft.Web/serverFarms \
             --address-prefixes 10.0.0.0/28
 
@@ -81,7 +84,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az network vnet subnet update --name backing-services --vnet-name tfs-${{ env.environment }}-portal-api \
+          az network vnet subnet update --name backing-services --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
             --service-endpoints Microsoft.AzureCosmosDB Microsoft.Storage 
             # We may add: Microsoft.web Microsoft.KeyVault
 
@@ -113,7 +116,7 @@ jobs:
     #   with:
     #     inlineScript: |
     #       az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-ui \
-    #         --vnet tfs-${{ env.environment }}-portal-vnet \
+    #         --vnet tfs-${{ env.app_service_plan }}-portal-vnet \
     #         --subnet portal
 
     - name: Always-on
@@ -188,7 +191,7 @@ jobs:
       with:
         inlineScript: |
           az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-api \
-            --vnet tfs-${{ env.environment }}-portal-api \
+            --vnet tfs-${{ env.app_service_plan }}-portal-api \
             --subnet backing-services
 
     - name: Always-on
@@ -282,7 +285,7 @@ jobs:
       with:
         inlineScript: |
           az cosmosdb network-rule add --name tfs-${{ env.environment }}-mongo \
-            --vnet-name tfs-${{ env.environment }}-portal-api \
+            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
             --subnet backing-services
 
     - name: Database with autoscale
@@ -370,7 +373,7 @@ jobs:
     - name: Create
       uses: Azure/cli@v1.0.0
       with:
-        # We open up public access briefly so that file shares can be created/updated
+        # We open up access briefly so file shares can be created/updated
         inlineScript: |
           az storage account create --name tfs${{ env.environment }}storage \
             --sku Standard_ZRS \
@@ -400,7 +403,7 @@ jobs:
         # Always remove public access
         inlineScript: |
           az storage account update --name tfs${{ env.environment }}storage --default-action Deny
-          az storage account network-rule add --account-name tfs${{ env.environment }}storage --vnet-name tfs-${{ env.environment }}-portal-api --subnet backing-services
+          az storage account network-rule add --account-name tfs${{ env.environment }}storage --vnet-name tfs-${{ env.app_service_plan }}-portal-api --subnet backing-services
 
   session-store:
     name: Redis session store
