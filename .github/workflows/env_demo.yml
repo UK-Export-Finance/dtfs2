@@ -278,7 +278,20 @@ jobs:
         # US Gov 52.244.48.71
         # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
         inlineScript: |
-          az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB --server-version 3.6
+          az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB --server-version 3.6 \
+          --enable-virtual-network true \
+          --ip-range-filter 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
+
+    - name: Access restriction - ${{ env.protected_database }}
+      uses: Azure/cli@v1.0.0
+      with:
+        # This fails if we want to expose the database,
+        # so we fall back to enabling public network access
+        inlineScript: |
+          az cosmosdb update --name tfs-${{ env.environment }}-mongo \
+            --enable-virtual-network ${{ env.protected_database }} || \
+          az cosmosdb update --name tfs-${{ env.environment }}-mongo \
+            --enable-public-network true
 
     - name: Enable vnet access
       uses: Azure/cli@v1.0.0
@@ -286,20 +299,8 @@ jobs:
         inlineScript: |
           az cosmosdb network-rule add --name tfs-${{ env.environment }}-mongo \
             --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
-            --subnet backing-services
-
-    - name: Access restriction (${{ env.protected_database }})
-      uses: Azure/cli@v1.0.0
-      with:
-        # This fails if we want to expose the database,
-        # so we fall back to enabling public network access
-        inlineScript: |
-          az cosmosdb update --name tfs-${{ env.environment }}-mongo \
-            --enable-virtual-network ${{ env.protected_database }} \
-            --ip-range-filter 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26 || \
-          az cosmosdb update --name tfs-${{ env.environment }}-mongo \
-            --enable-public-network true \
-            --enable-virtual-network false
+            --subnet backing-services || \
+          echo "Not restricting to a subnet."
 
     - name: Database with autoscale
       uses: Azure/cli@v1.0.0
