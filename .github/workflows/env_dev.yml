@@ -52,8 +52,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Install mongodb-clients
-      run: sudo apt install mongodb-clients
+    # - name: Install mongodb-clients
+    #   run: sudo apt install mongodb-clients
 
     - name: Add ID counters
       run: |
