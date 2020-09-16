@@ -103,7 +103,6 @@ jobs:
       run: |
         cd utils/mock-data-loader
         npm install
-        node ./reset-id-counters.js
         node ./re-insert-mocks.js
     - name: Run API tests
       run: |
@@ -160,7 +159,6 @@ jobs:
       run: |
         cd utils/mock-data-loader
         npm install
-        node ./reset-id-counters.js
         node ./re-insert-mocks.js
         pwd
     - name: Run e2e tests
