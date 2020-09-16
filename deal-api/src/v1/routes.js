@@ -22,7 +22,6 @@ const loans = require('./controllers/loans.controller');
 const loanIssueFacility = require('./controllers/loan-issue-facility.controller');
 const bonds = require('./controllers/bonds.controller');
 const bondIssueFacility = require('./controllers/bond-issue-facility.controller');
-const idCounters = require('./controllers/id-counters.controller');
 const mga = require('./controllers/mga.controller');
 
 const users = require('./users/routes');
@@ -318,13 +317,6 @@ authRouter.route('/mga')
 authRouter.route('/mga/:filename')
   .get(
     mga.downloadMga,
-  );
-
-
-authRouter.route('/counters/reset')
-  .post(
-    validate({ role: ['data-admin'] }),
-    idCounters.reset,
   );
 
 openRouter.route('/users')

@@ -54,8 +54,6 @@ sleep 10
 end=`date +%s`
 echo "{\"stage\": \"pipeline:wait-for-mongo\", \"duration\": \"$((end-start))\", \"result\": \"pass\"}" >> "$LOG"
 
-cd "$HERE/utils/mock-data-loader" && npm install && node ./reset-id-counters.js
-
 start=`date +%s`
 
 docker-compose exec deal-api /bin/sh ./bin/api-test.sh
@@ -69,7 +67,7 @@ end=`date +%s`
 
 start=`date +%s`
 
-cd "$HERE/utils/mock-data-loader" && node ./re-insert-mocks.js
+cd "$HERE/utils/mock-data-loader" && npm install && node ./re-insert-mocks.js
 loadDataResult=$?
 
 end=`date +%s`
