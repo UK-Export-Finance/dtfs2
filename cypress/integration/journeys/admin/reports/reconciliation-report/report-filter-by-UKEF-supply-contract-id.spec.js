@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const { reports, defaults } = require('../../../../pages');
 const { reconciliationReport } = reports;
 
@@ -7,8 +9,18 @@ const mockUsers = require('../../../../../fixtures/mockUsers');
 const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
 const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && !user.roles.includes('admin')) );
 
-// test data we want to set up + work with..
-const transactionTestData = require('../../../../../fixtures/transaction-dashboard-data');
+const toBigNumber = (date) => {
+  return moment(date, "YYYY-MM-DD").utc().valueOf().toString();
+}
+
+const {
+  aDealWithOneBond,
+  aDealWithOneLoan,
+  aDealWithOneLoanAndOneBond,
+  aDealWithTenBonds,
+  aDealWithTenLoans,
+  aDealWithTenLoansAndTenBonds,
+ } = require('../../../../../fixtures/transaction-dashboard-data');
 
 context('reconciliation report', () => {
   let deals;
@@ -23,8 +35,77 @@ context('reconciliation report', () => {
 
   before(() => {
     cy.deleteDeals(MAKER_LOGIN);
-    cy.insertManyDeals(transactionTestData.all, MAKER_LOGIN)
-      .then((insertedDeals) => deals = insertedDeals);
+    cy.insertOneDeal(aDealWithOneBond, MAKER_LOGIN)
+      .then( (inserted) => {
+        const update = {
+          details: {
+            submissionDate: toBigNumber("2020-01-01"),
+            status: "Submitted"
+          }
+        };
+        cy.updateDeal(inserted._id, update, MAKER_LOGIN);
+      });
+
+    cy.insertOneDeal(aDealWithOneLoan, MAKER_LOGIN)
+      .then( (inserted) => {
+        const update = {
+          details: {
+            submissionDate: toBigNumber("2020-01-03"),
+            status: "Submitted"
+          }
+        };
+
+        cy.updateDeal(inserted._id, update, MAKER_LOGIN);
+      });
+
+    cy.insertOneDeal(aDealWithOneLoanAndOneBond, MAKER_LOGIN)
+      .then( (inserted) => {
+        const update = {
+          details: {
+            submissionDate: toBigNumber("2020-01-05"),
+            status: "Submitted"
+          }
+        };
+
+        cy.updateDeal(inserted._id, update, MAKER_LOGIN);
+      });
+
+    cy.insertOneDeal(aDealWithTenBonds, MAKER_LOGIN)
+      .then( (inserted) => {
+        const update = {
+          details: {
+            submissionDate: toBigNumber("2020-01-07"),
+            status: "Submitted"
+          }
+        };
+
+        cy.updateDeal(inserted._id, update, MAKER_LOGIN);
+      });
+
+    cy.insertOneDeal(aDealWithTenLoans, MAKER_LOGIN)
+      .then( (inserted) => {
+        const update = {
+          details: {
+            submissionDate: toBigNumber("2020-01-09"),
+            status: "Submitted"
+          }
+        };
+
+        cy.updateDeal(inserted._id, update, MAKER_LOGIN);
+      });
+
+    cy.insertOneDeal(aDealWithTenLoansAndTenBonds, MAKER_LOGIN)
+      .then( (inserted) => {
+        const update = {
+          details: {
+            submissionDate: toBigNumber("2020-01-11"),
+            status: "Submitted"
+          }
+        };
+
+        cy.updateDeal(inserted._id, update, MAKER_LOGIN);
+      });
+
   });
 
   it('can be filtered by UKEF supply contract id', () => {

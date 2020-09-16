@@ -82,7 +82,8 @@ const dealsQuery = (user, filter) => {
 const findDeals = async (requestingUser, filter) => {
   const collection = await db.getCollection('deals');
 
-  const dealResults = collection.find(dealsQuery(requestingUser, filter));
+  const query = dealsQuery(requestingUser, filter);
+  const dealResults = collection.find(query);
 
   const count = await dealResults.count();
   const deals = await dealResults

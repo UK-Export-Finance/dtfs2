@@ -34,19 +34,34 @@ context('reconciliation report', () => {
 
     cy.insertOneDeal(aDealWithOneBond, BARCLAYS_LOGIN)
       .then( (inserted) => {
-        cy.updateDeal(inserted._id, {details: {created: toBigNumber("2020-01-01")}}, BARCLAYS_LOGIN)
+        cy.updateDeal(inserted._id, {
+          details: {
+            submissionDate: toBigNumber("2020-01-01"),
+            status: "Submitted"
+          }
+        }, BARCLAYS_LOGIN)
           .then( (updated) => {aDealWithOneBond = updated});
       });
 
     cy.insertOneDeal(aDealWithOneLoan, BARCLAYS_LOGIN)
       .then( (inserted) => {
-        cy.updateDeal(inserted._id, {details: {created: toBigNumber("2020-01-03")}}, BARCLAYS_LOGIN)
+        cy.updateDeal(inserted._id, {
+          details: {
+            submissionDate: toBigNumber("2020-01-03"),
+            status: "Submitted"
+          }
+        }, BARCLAYS_LOGIN)
           .then( (updated) => {aDealWithOneLoan = updated});
       });
 
     cy.insertOneDeal(aDealWithOneLoanAndOneBond, BARCLAYS_LOGIN)
       .then( (inserted) => {
-        cy.updateDeal(inserted._id, {details: {created: toBigNumber("2020-01-05")}}, BARCLAYS_LOGIN)
+        cy.updateDeal(inserted._id, {
+          details: {
+            submissionDate: toBigNumber("2020-01-05"),
+            status: "Submitted"
+          }
+        }, BARCLAYS_LOGIN)
           .then( (updated) => {aDealWithOneLoanAndOneBond = updated});
       });
 
