@@ -8,43 +8,16 @@ env:
   environment: prod
   credentials: ${{ secrets.AZURE_DIGITAL_PROD }}
   resource_group: ${{ secrets.PROD_RESOURCE_GROUP }}
+  env_from: test
+  env_to: prod
 
 jobs:
 
-  promote:
-    name: Promote container images
+  portal-ui:
+    name: Promote Portal UI
     runs-on: ubuntu-latest
     steps:
-    - name: Log in to Test container registry
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.TEST_ACR_REGISTRY }}
-        username: ${{ secrets.TEST_ACR_USERNAME }}
-        password: ${{ secrets.TEST_ACR_PASSWORD }}
-    - name: Log in to Prod container registry
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.PROD_ACR_REGISTRY }}
-        username: ${{ secrets.PROD_ACR_USERNAME }}
-        password: ${{ secrets.PROD_ACR_PASSWORD }}
-    - name: Tag images
-      run: |
-        from=test
-        to=prod
 
-        docker pull ${{ secrets.TEST_ACR_REGISTRY }}/portal-ui:$from
-        docker tag ${{ secrets.TEST_ACR_REGISTRY }}/portal-ui:$from ${{ secrets.PROD_ACR_REGISTRY }}/portal-ui:$to
-        docker push ${{ secrets.PROD_ACR_REGISTRY }}/portal-ui:$to
-
-        docker pull ${{ secrets.TEST_ACR_REGISTRY }}/portal-api:$from
-        docker tag ${{ secrets.TEST_ACR_REGISTRY }}/portal-api:$from ${{ secrets.PROD_ACR_REGISTRY }}/portal-api:$to
-        docker push ${{ secrets.PROD_ACR_REGISTRY }}/portal-api:$to
-
-  deploy:
-    name: Deploy container images
-    needs: promote
-    runs-on: ubuntu-latest
-    steps:
     - uses: azure/login@v1
       with:
         creds: ${{ env.credentials }}
@@ -56,19 +29,37 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
+    - name: Log in to Test container registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.TEST_ACR_REGISTRY }}
+        username: ${{ secrets.TEST_ACR_USERNAME }}
+        password: ${{ secrets.TEST_ACR_PASSWORD }}
+
+    - name: Log in to Prod container registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.PROD_ACR_REGISTRY }}
+        username: ${{ secrets.PROD_ACR_USERNAME }}
+        password: ${{ secrets.PROD_ACR_PASSWORD }}
+
+    - name: Tag images
+      run: |
+        docker pull ${{ secrets.TEST_ACR_REGISTRY }}/portal-ui:${{ env.env_from }}
+        docker tag ${{ secrets.TEST_ACR_REGISTRY }}/portal-ui:${{ env.env_from }} ${{ secrets.PROD_ACR_REGISTRY }}/portal-ui:${{ env.env_to }}
+        docker push ${{ secrets.PROD_ACR_REGISTRY }}/portal-ui:${{ env.env_to }}
+
     - name: Create slot
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-ui
-          az webapp deployment slot create --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-api
 
-    - name: Deploy slot
+    - name: Swap slot into production
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --action swap
-          az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --action swap
           
     - name: Delete slot
       # Clean up the slot regardless of errors
@@ -77,5 +68,60 @@ jobs:
       with:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }}
+        
+  portal-api:
+    name: Promote Portal API
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Log in to Test container registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.TEST_ACR_REGISTRY }}
+        username: ${{ secrets.TEST_ACR_USERNAME }}
+        password: ${{ secrets.TEST_ACR_PASSWORD }}
+
+    - name: Log in to Prod container registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.PROD_ACR_REGISTRY }}
+        username: ${{ secrets.PROD_ACR_USERNAME }}
+        password: ${{ secrets.PROD_ACR_PASSWORD }}
+
+    - name: Tag images
+      run: |
+        docker pull ${{ secrets.TEST_ACR_REGISTRY }}/portal-api:${{ env.env_from }}
+        docker tag ${{ secrets.TEST_ACR_REGISTRY }}/portal-api:${{ env.env_from }} ${{ secrets.PROD_ACR_REGISTRY }}/portal-api:${{ env.env_to }}
+        docker push ${{ secrets.PROD_ACR_REGISTRY }}/portal-api:${{ env.env_to }}
+
+    - name: Create slot
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot create --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-api
+
+    - name: Deploy slot
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --action swap
+          
+    - name: Delete slot
+      # Clean up the slot regardless of errors
+      if: ${{ always() }}
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }}
           
