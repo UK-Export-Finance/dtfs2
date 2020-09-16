@@ -69,7 +69,8 @@ jobs:
           print(err)
         }
         EOF
-        mongo ${{ env.MONGODB_URI }} deal-counter.js
+        cat deal-counter.js
+        mongo ${{ env.MONGODB_URI }} < deal-counter.js
 
     - name: Add Facility ID counter
       run: |
@@ -85,7 +86,8 @@ jobs:
           print(err)
         }
         EOF
-        mongo ${{ env.MONGODB_URI }} facility-counter.js
+        cat facility-counter.js
+        mongo ${{ env.MONGODB_URI }} < facility-counter.js
 
     - uses: azure/login@v1
       with:
