@@ -36,6 +36,11 @@ context('The deals dashboard', () => {
     cy.login(MAKER_LOGIN);
     dashboard.visit();
 
+    // since writing these tests we've added a "dont show me abandoned deals" option
+    //  in a rush as ever, so just going to switch that feature off and carry on with the test..
+    dashboard.filterByShowAbandonedDeals_yes().click();
+    dashboard.applyFilters().click();
+
     dashboard.showFilters().click();
 
     dashboard.filterByStartDate.day().type(date1.day);
@@ -75,6 +80,11 @@ context('The deals dashboard', () => {
 
     cy.login(MAKER_LOGIN);
     dashboard.visit();
+
+    // since writing these tests we've added a "dont show me abandoned deals" option
+    //  in a rush as ever, so just going to switch that feature off and carry on with the test..
+    dashboard.filterByShowAbandonedDeals_yes().click();
+    dashboard.applyFilters().click();
 
     dashboard.showFilters().click();
 

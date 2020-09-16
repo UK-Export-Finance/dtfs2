@@ -39,7 +39,6 @@ const buildDashboardFilters = (params, user) => {
     filters.push(userFilter);
   }
 
-  //  if (params.filterBySubmissionUser) filters = applyUserFilters(params, user, filters);
   if (CONSTANTS.SUBMISSION_TYPE[params.filterBySubmissionType]) {
     filters.push(
       {
@@ -57,6 +56,14 @@ const buildDashboardFilters = (params, user) => {
         value: CONSTANTS.STATUS[params.filterByStatus],
       },
     );
+  }
+
+  if (params.filterByShowAbandonedDeals === false || params.filterByShowAbandonedDeals === 'false') {
+    filters.push({
+      field: 'details.status',
+      value: CONSTANTS.STATUS.abandoned,
+      operator: 'ne',
+    });
   }
 
   if (params.filterSearch) {

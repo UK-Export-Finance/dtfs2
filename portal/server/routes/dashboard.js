@@ -122,11 +122,18 @@ router.get('/dashboard/:page', async (req, res) => {
   const userisChecker = roles.includes('checker');
   const userIsMakerAndChecker = (userisMaker && userisChecker);
 
-  if (req.session.dashboardFilters === null && (userisChecker && !userIsMakerAndChecker)) {
-    req.session.dashboardFilters = {
-      filterByStatus: 'readyForApproval',
-      isUsingAdvancedFilter: true,
-    };
+  if (req.session.dashboardFilters === null) {
+    // set some default behaviours for the filters...
+    req.session.dashboardFilters = {};
+
+    // default filter settings for a checker
+    if (userisChecker && !userIsMakerAndChecker) {
+      req.session.dashboardFilters.filterByStatus = 'readyForApproval';
+      req.session.dashboardFilters.isUsingAdvancedFilter = true;
+    }
+
+    // default to hiding abandoned deals
+    req.session.dashboardFilters.filterByShowAbandonedDeals = false;
   }
 
   const { isUsingAdvancedFilter, filters } = buildDashboardFilters(req.session.dashboardFilters, req.session.user);
@@ -167,7 +174,6 @@ router.post('/dashboard/:page', async (req, res) => {
   }
 
   const dashboardFilters = req.body;
-
   req.session.dashboardFilters = dashboardFilters;
 
   const { isUsingAdvancedFilter, filters } = buildDashboardFilters(dashboardFilters, req.session.user);

@@ -4,6 +4,8 @@ const page = {
   showFilters: () => cy.contains('Show filters'),
   filterBySubmissionUser: () => cy.get('[data-cy="filterBySubmissionUser"]'),
   filterBySubmissionType: () => cy.get('[data-cy="filterBySubmissionType"]'),
+  filterByShowAbandonedDeals_no: () => cy.get('[data-cy="filterByShowAbandonedDeals-false"]'),
+  filterByShowAbandonedDeals_yes: () => cy.get('[data-cy="filterByShowAbandonedDeals-true"]'),
   filterByStatus: () => cy.get('[data-cy="filterByStatus"]'),
   filterSearch: () => cy.get('[data-cy="filterSearch"]'),
   filterBySupplierName: () => cy.get('[data-cy="filterBySupplierName"]'),
