@@ -59,20 +59,14 @@ jobs:
       run: |
         cat <<EOF > mongo.js
         db = db.getSiblingDB('tfs-portal')
-        cursor = db.idCounters.find();
-        if ( cursor.hasNext() ) {
-          printjson( cursor.next() );
-          printjson( cursor.next() );
-        } else {
-          db.idCounters.insertOne({
-            "_id" : "DEAL_COUNTER",
-            "count" : 1000000
-          })
-          db.idCounters.insertOne({
-            "_id" : "FACILITY_COUNTER",
-            "count" : 1000000
-          })
-        }
+        db.idCounters.insertOne({
+          "_id" : "DEAL_COUNTER",
+          "count" : 1000000
+        })
+        db.idCounters.insertOne({
+          "_id" : "FACILITY_COUNTER",
+          "count" : 1000000
+        })
         EOF
         mongo ${{ env.MONGODB_URI }} <  mongo.js
     - uses: azure/login@v1
