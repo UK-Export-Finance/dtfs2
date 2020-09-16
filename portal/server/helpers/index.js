@@ -4,6 +4,7 @@ import requestParams from './requestParams';
 import getFlashSuccessMessage from './getFlashSuccessMessage';
 import generateErrorSummary from './generateErrorSummary';
 import formatCountriesForGDSComponent from './formatCountriesForGDSComponent';
+import formattedTimestamp from './formattedTimestamp';
 import errorHref from './errorHref';
 import postToApi from './postToApi';
 import mapCurrencies from './mapCurrencies';
@@ -21,6 +22,7 @@ export {
   getFlashSuccessMessage,
   generateErrorSummary,
   formatCountriesForGDSComponent,
+  formattedTimestamp,
   errorHref,
   postToApi,
   mapCountries,

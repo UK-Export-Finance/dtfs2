@@ -11,7 +11,7 @@ env:
   resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
   app_service_plan: dev
   redis_sku: Basic
-  visible_database: false
+  protected_database: true
   # Container registry
   registry: ${{ secrets.DEMO_ACR_REGISTRY }}
   # App service settings
@@ -93,6 +93,7 @@ jobs:
   portal-ui:
     name: Portal UI
     runs-on: ubuntu-latest
+    needs: portal-api-vnet
     steps:
     - uses: azure/login@v1
       with:
@@ -168,6 +169,7 @@ jobs:
   portal-api:
     name: Portal API
     runs-on: ubuntu-latest
+    needs: portal-api-vnet
     steps:
     - uses: azure/login@v1
       with:
@@ -251,8 +253,9 @@ jobs:
               GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}"
 
   cosmos-db:
-    name: Mongo DB
+    name: Cosmos DB (Mongo)
     runs-on: ubuntu-latest
+    needs: portal-api-vnet
     steps:
     - uses: azure/login@v1
       with:
@@ -278,17 +281,32 @@ jobs:
         # US Gov 52.244.48.71
         # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
         inlineScript: |
-          az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB --server-version 3.6 \
-          --enable-virtual-network ${{ env.visible_database }} \
-          --ip-range-filter 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
+          az cosmosdb show --name tfs-${{ env.environment }}-mongo || \
+          az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB --server-version 3.6
+
+    - name: Access restriction - ${{ env.protected_database }}
+      uses: Azure/cli@v1.0.0
+      with:
+        # This fails if we want to expose the database,
+        # so we fall back to enabling public network access
+        inlineScript: |
+          az cosmosdb update --name tfs-${{ env.environment }}-mongo \
+            --enable-virtual-network ${{ env.protected_database }} \
+            --ip-range-filter 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26 || \
+          az cosmosdb update --name tfs-${{ env.environment }}-mongo \
+            --enable-virtual-network false \
+            --enable-public-network true
 
     - name: Enable vnet access
       uses: Azure/cli@v1.0.0
       with:
+        # This fails if we want to expose the database,
+        # so we fall back to just an echo statement.
         inlineScript: |
           az cosmosdb network-rule add --name tfs-${{ env.environment }}-mongo \
             --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
-            --subnet backing-services
+            --subnet backing-services || \
+          echo "Not restricting to a subnet."
 
     - name: Database with autoscale
       uses: Azure/cli@v1.0.0
@@ -299,16 +317,35 @@ jobs:
     - name: Collections
       uses: Azure/cli@v1.0.0
       with:
+        # Creating collections is slow, so we show them before we attempt to create.
         inlineScript: |
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name deals --idx '[{"key": {"keys": ["details.dateOfLastAction"]}}, {"key": {"keys": ["_id"]}}]'
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name banks
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name eligibilityCriteria
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name mandatoryCriteria
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name currencies
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name users
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name industrySectors
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name countries
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name idCounters
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name test --name deals || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --name deals --shard "_id" \
+            --idx '[{"key": {"keys": ["details.dateOfLastAction"]}}, {"key": {"keys": ["_id"]}}]'
+          
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name test --name banks || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --name banks --shard "_id"
+          
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name test --name eligibilityCriteria || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --name eligibilityCriteria --shard "_id"
+
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name test --name mandatoryCriteria || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --name mandatoryCriteria --shard "_id"
+
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name test --name currencies || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --name currencies --shard "_id"
+
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name test --name users || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --name users --shard "_id"
+
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name test --name industrySectors || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --name industrySectors --shard "_id"
+
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name test --name countries || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --name countries --shard "_id"
+          
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name test --name idCounters || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --name idCounters --shard "_id"
 
   front-door:
     # NB Front Door takes a little while to be available
@@ -360,6 +397,7 @@ jobs:
   file-storage:
     name: File storage
     runs-on: ubuntu-latest
+    needs: portal-api-vnet
     steps:
     - uses: azure/login@v1
       with:
@@ -380,35 +418,52 @@ jobs:
           az storage account create --name tfs${{ env.environment }}storage \
             --sku Standard_ZRS \
             --https-only true \
-            --encryption-services file
-          az storage account update --name tfs${{ env.environment }}storage --default-action Allow
+            --encryption-services file \
+            --default-action Allow
 
-    - name: File share
+    - name: File share (files)
       uses: Azure/cli@v1.0.0
       with:
+        # Opening up permissions only seems to work reliably on initial creation,
+        # so we skip attempting to create the file share if it fails.
         inlineScript: |
           az storage share create --account-name tfs${{ env.environment }}storage \
-            --name files
+            --name files || \
+          echo Skipped.
 
     - name: File share (workflow)
       uses: Azure/cli@v1.0.0
       with:
-        # This fileshare is used if the environment isn't integrated to Workflow
+        # This fileshare is used if the environment isn't integrated to Workflow.
+        # Opening up permissions only seems to work reliably on initial creation,
+        # so we skip attempting to create the file share if it fails.
         inlineScript: |
           az storage share create --account-name tfs${{ env.environment }}storage \
-            --name workflow
+            --name workflow || \
+          echo Skipped.
 
     - name: Access restriction
       if: ${{ always() }}
       uses: Azure/cli@v1.0.0
       with:
         # Always remove public access
+        # On activating "Allow access from Azure Portal":
+        # https://github.com/Azure/azure-cli/issues/7495 ->
+        # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall#allow-requests-from-the-azure-portal
+        # ALLOW REQUESTS FROM THE AZURE PORTAL
+        # Region IP address
+        # Germany 51.4.229.218
+        # China 139.217.8.252
+        # US Gov 52.244.48.71
+        # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
         inlineScript: |
           az storage account update --name tfs${{ env.environment }}storage --default-action Deny
-          az storage account network-rule add --account-name tfs${{ env.environment }}storage --vnet-name tfs-${{ env.app_service_plan }}-portal-api --subnet backing-services
+          az storage account network-rule add --account-name tfs${{ env.environment }}storage \
+            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+            --subnet backing-services
 
   session-store:
-    name: Redis session store
+    name: Redis (sessions)
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
