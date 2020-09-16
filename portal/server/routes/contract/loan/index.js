@@ -294,7 +294,7 @@ router.get('/contract/:_id/loan/:loanId/preview', provide([LOAN]), async (req, r
 
   return res.render('loan/loan-preview.njk', {
     dealId,
-    loan: loanWithoutStatus,
+    loan,
     validationErrors: formattedValidationErrors,
     completedForms,
     user: req.session.user,
