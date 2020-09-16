@@ -11,6 +11,7 @@ env:
   resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
   app_service_plan: dev
   redis_sku: Basic
+  database_name: tfs-portal
   protected_database: true
   # Container registry
   registry: ${{ secrets.DEMO_ACR_REGISTRY }}
@@ -29,7 +30,6 @@ env:
   AZURE_WORKFLOW_FILESHARE_NAME: "${{ secrets.DEMO_AZURE_WORKFLOW_FILESHARE_NAME }}"
   AZURE_WORKFLOW_EXPORT_FOLDER: "${{ secrets.DEMO_AZURE_WORKFLOW_EXPORT_FOLDER }}"
   AZURE_WORKFLOW_IMPORT_FOLDER: "${{ secrets.DEMO_AZURE_WORKFLOW_IMPORT_FOLDER }}"
-  MONGO_DATABASE: "tfs-portal"
   MONGODB_URI: "${{ secrets.DEMO_MONGODB_URI }}"
   REDIS_URI: "${{ secrets.DEMO_REDIS_URI }}"
   JWT_SIGNING_KEY: "${{ secrets.DEMO_JWT_SIGNING_KEY }}"
@@ -247,7 +247,7 @@ jobs:
               AZURE_WORKFLOW_IMPORT_FOLDER="${{ env.AZURE_WORKFLOW_IMPORT_FOLDER }}" \
               AZURE_WORKFLOW_STORAGE_ACCOUNT="${{ env.AZURE_WORKFLOW_STORAGE_ACCOUNT }}" \
               AZURE_WORKFLOW_STORAGE_ACCESS_KEY="${{ env.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}" \
-              MONGO_INITDB_DATABASE="${{ env.MONGO_DATABASE }}" \
+              MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="${{ env.MONGODB_URI }}" \
               JWT_SIGNING_KEY="${{ env.JWT_SIGNING_KEY }}" \
               JWT_VALIDATING_KEY="${{ env.JWT_VALIDATING_KEY }}" \
@@ -314,40 +314,40 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az cosmosdb mongodb database create --account tfs-${{ env.environment }}-mongo --name ${{ env.MONGO_DATABASE }} --max-throughput 4000
+          az cosmosdb mongodb database create --account tfs-${{ env.environment }}-mongo --name ${{ env.database_name }} --max-throughput 4000
 
     - name: Collections
       uses: Azure/cli@v1.0.0
       with:
         # Creating collections is slow, so we show them before we attempt to create.
         inlineScript: |
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name deals || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name deals --shard "_id" \
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name deals || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name deals --shard "_id" \
             --idx '[{"key": {"keys": ["details.dateOfLastAction"]}}, {"key": {"keys": ["_id"]}}]'
           
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name banks || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name banks --shard "_id"
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name banks || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name banks --shard "_id"
           
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name eligibilityCriteria || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name eligibilityCriteria --shard "_id"
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name eligibilityCriteria || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name eligibilityCriteria --shard "_id"
 
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name mandatoryCriteria || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name mandatoryCriteria --shard "_id"
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name mandatoryCriteria || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name mandatoryCriteria --shard "_id"
 
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name currencies || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name currencies --shard "_id"
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name currencies || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name currencies --shard "_id"
 
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name users || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name users --shard "_id"
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name users || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name users --shard "_id"
 
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name industrySectors || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name industrySectors --shard "_id"
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name industrySectors || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name industrySectors --shard "_id"
 
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name countries || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name countries --shard "_id"
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name countries || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name countries --shard "_id"
           
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name idCounters || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.MONGO_DATABASE }} --name idCounters --shard "_id"
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters --shard "_id"
 
   front-door:
     # NB Front Door takes a little while to be available
