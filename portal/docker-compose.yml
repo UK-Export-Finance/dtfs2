@@ -16,7 +16,7 @@ services:
       - CORS_ORIGIN=http://localhost:5000
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
-      - MONGO_INITDB_DATABASE=deal-api-data
+      - MONGO_INITDB_DATABASE=test
       - MONGODB_URI=mongodb://root:r00t@deal-api-data:27017/?authMechanism=DEFAULT
       - AZURE_WORKFLOW_FILESHARE_NAME
       - AZURE_WORKFLOW_STORAGE_ACCOUNT
@@ -36,7 +36,7 @@ services:
     image: mongo
     restart: always
     environment:
-      - MONGO_INITDB_DATABASE=deal-api-data
+      - MONGO_INITDB_DATABASE=test
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
     volumes:
