@@ -47,6 +47,12 @@ context('Dashboard Deals filter by ownership', () => {
     // confirm that BARCLAYS_LOGIN sees BARCLAYS_LOGIN's deals
     cy.login(BARCLAYS_LOGIN);
     dashboard.visit();
+
+    // since writing these tests we've added a "dont show me abandoned deals" option
+    //  in a rush as ever, so just going to switch that feature off and carry on with the test..
+    dashboard.filterByShowAbandonedDeals_yes().click();
+    dashboard.applyFilters().click();
+
     dashboard.confirmDealsPresent( allBarclaysDeals );
     dashboard.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(5 items)');
@@ -57,6 +63,11 @@ context('Dashboard Deals filter by ownership', () => {
     dashboard.visit();
 
     dashboard.filterBySubmissionUser().should('have.value', 'all')
+
+    // since writing these tests we've added a "dont show me abandoned deals" option
+    //  in a rush as ever, so just going to switch that feature off and carry on with the test..
+    dashboard.filterByShowAbandonedDeals_yes().click();
+    dashboard.applyFilters().click();
 
     dashboard.confirmDealsPresent( allDealsFromBarclays );
     dashboard.totalItems().invoke('text').then((text) => {
@@ -69,6 +80,10 @@ context('Dashboard Deals filter by ownership', () => {
     // confirm that HSBC_MAKER_1 sees HSBC_MAKER_2's deals
     cy.login(HSBC_MAKER_1);
     dashboard.visit();
+
+    // since writing these tests we've added a "dont show me abandoned deals" option
+    //  in a rush as ever, so just going to switch that feature off and carry on with the test..
+    dashboard.filterByShowAbandonedDeals_yes().click();
 
     dashboard.filterBySubmissionUser().select('createdByColleagues');
     dashboard.applyFilters().click();
@@ -85,6 +100,10 @@ context('Dashboard Deals filter by ownership', () => {
     // confirm that HSBC_MAKER_1 sees HSBC_MAKER_1's deals
     cy.login(HSBC_MAKER_1);
     dashboard.visit();
+
+    // since writing these tests we've added a "dont show me abandoned deals" option
+    //  in a rush as ever, so just going to switch that feature off and carry on with the test..
+    dashboard.filterByShowAbandonedDeals_yes().click();
 
     dashboard.filterBySubmissionUser().select('createdByMe');
     dashboard.applyFilters().click();

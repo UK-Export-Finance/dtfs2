@@ -1,5 +1,6 @@
 {% import './deal-advanced-filters.njk' as advancedFilters %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 
 {% macro render(filter, user, banks) %}
 
@@ -35,7 +36,36 @@
         </select>
       </div>
     </div>
-
+    <div class="govuk-grid-column-one-third">
+      {{
+        govukRadios({
+          fieldset: {
+            legend: { text: "Show abandoned Deals" }
+          },
+          idPrefix: "filterByShowAbandonedDeals-",
+          name: "filterByShowAbandonedDeals",
+          classes: "govuk-radios--inline",
+          items: [
+            {
+              value: "true",
+              text: "Yes",
+              attributes: {
+                "data-cy": "filterByShowAbandonedDeals-true"
+              },
+              checked: filter.filterByShowAbandonedDeals === 'true'
+            },
+            {
+              value: "false",
+              text: "No",
+              attributes: {
+                "data-cy": "filterByShowAbandonedDeals-false"
+              },
+              checked: filter.filterByShowAbandonedDeals !== 'true'
+            }
+          ]
+        })
+      }}
+    </div>
   </div>
 
   {{ govukDetails({

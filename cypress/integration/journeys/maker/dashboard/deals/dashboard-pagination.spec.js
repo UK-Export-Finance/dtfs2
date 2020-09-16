@@ -27,6 +27,11 @@ context('Dashboard Deals pagination controls', () => {
     cy.login(MAKER_LOGIN);
     dashboard.visit();
 
+    // since writing these tests we've added a "dont show me abandoned deals" option
+    //  in a rush as ever, so just going to switch that feature off and carry on with the test..
+    dashboard.filterByShowAbandonedDeals_yes().click();
+    dashboard.applyFilters().click();
+
     // deals will be shown in update order, so expect them upsidedown..
     const page1 = deals.slice(1,21).reverse();
     const page2 = [deals[0]];
