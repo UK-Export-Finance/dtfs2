@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const { reports, defaults } = require('../../../../pages');
 const { reconciliationReport } = reports;
 
@@ -8,8 +10,11 @@ const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
 const BARCLAYS_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'Barclays Bank') );
 const HSBC_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'HSBC') );
 
-// test data we want to set up + work with..
-let {
+const toBigNumber = (date) => {
+  return moment(date, "YYYY-MM-DD").utc().valueOf().toString();
+}
+
+const {
   aDealWithOneBond,
   aDealWithOneLoan,
   aDealWithOneLoanAndOneBond,
@@ -34,11 +39,77 @@ context('reconciliation report', () => {
     cy.deleteDeals(BARCLAYS_LOGIN);
     cy.deleteDeals(HSBC_LOGIN);
 
-    cy.insertManyDeals([aDealWithOneBond, aDealWithTenLoans, aDealWithTenLoansAndTenBonds], BARCLAYS_LOGIN)
-      .then((insertedDeals) => barclaysDeals = insertedDeals);
+    cy.insertOneDeal(aDealWithOneBond, BARCLAYS_LOGIN)
+      .then( (inserted) => {
+        const update = {
+          details: {
+            submissionDate: toBigNumber("2020-01-01"),
+            status: "Submitted"
+          }
+        };
+        cy.updateDeal(inserted._id, update, BARCLAYS_LOGIN);
+      });
 
-    cy.insertManyDeals([aDealWithOneLoan, aDealWithOneLoanAndOneBond, aDealWithTenLoans], HSBC_LOGIN)
-      .then((insertedDeals) => hsbcDeals = insertedDeals);
+    cy.insertOneDeal(aDealWithOneLoan, BARCLAYS_LOGIN)
+      .then( (inserted) => {
+        const update = {
+          details: {
+            submissionDate: toBigNumber("2020-01-03"),
+            status: "Submitted"
+          }
+        };
+
+        cy.updateDeal(inserted._id, update, BARCLAYS_LOGIN);
+      });
+
+    cy.insertOneDeal(aDealWithOneLoanAndOneBond, BARCLAYS_LOGIN)
+      .then( (inserted) => {
+        const update = {
+          details: {
+            submissionDate: toBigNumber("2020-01-05"),
+            status: "Submitted"
+          }
+        };
+
+        cy.updateDeal(inserted._id, update, BARCLAYS_LOGIN);
+      });
+
+    cy.insertOneDeal(aDealWithTenBonds, HSBC_LOGIN)
+      .then( (inserted) => {
+        const update = {
+          details: {
+            submissionDate: toBigNumber("2020-01-07"),
+            status: "Submitted"
+          }
+        };
+
+        cy.updateDeal(inserted._id, update, HSBC_LOGIN);
+      });
+
+    cy.insertOneDeal(aDealWithTenLoans, HSBC_LOGIN)
+      .then( (inserted) => {
+        const update = {
+          details: {
+            submissionDate: toBigNumber("2020-01-09"),
+            status: "Submitted"
+          }
+        };
+
+        cy.updateDeal(inserted._id, update, HSBC_LOGIN);
+      });
+
+    cy.insertOneDeal(aDealWithTenLoansAndTenBonds, HSBC_LOGIN)
+      .then( (inserted) => {
+        const update = {
+          details: {
+            submissionDate: toBigNumber("2020-01-11"),
+            status: "Submitted"
+          }
+        };
+
+        cy.updateDeal(inserted._id, update, HSBC_LOGIN);
+      });
+
   });
 
   it('can be filtered by bank', () => {

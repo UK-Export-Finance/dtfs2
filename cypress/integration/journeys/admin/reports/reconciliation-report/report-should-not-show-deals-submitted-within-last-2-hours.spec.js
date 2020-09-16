@@ -9,20 +9,18 @@ const mockUsers = require('../../../../../fixtures/mockUsers');
 const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
 const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && !user.roles.includes('admin')) );
 
-const toBigNumber = (date) => {
-  return moment(date, "YYYY-MM-DD").utc().valueOf().toString();
+const nowMinus = (minutes) => {
+  return moment().subtract(minutes, 'minutes').utc().valueOf().toString();
 }
 
 const {
   aDealWithOneBond,
   aDealWithOneLoan,
   aDealWithOneLoanAndOneBond,
-  aDealWithTenBonds,
-  aDealWithTenLoans,
-  aDealWithTenLoansAndTenBonds,
  } = require('../../../../../fixtures/transaction-dashboard-data');
 
 context('reconciliation report', () => {
+  let deals;
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -38,7 +36,7 @@ context('reconciliation report', () => {
       .then( (inserted) => {
         const update = {
           details: {
-            submissionDate: toBigNumber("2020-01-01"),
+            submissionDate: nowMinus(100),
             status: "Submitted"
           }
         };
@@ -49,7 +47,7 @@ context('reconciliation report', () => {
       .then( (inserted) => {
         const update = {
           details: {
-            submissionDate: toBigNumber("2020-01-03"),
+            submissionDate: nowMinus(118),
             status: "Submitted"
           }
         };
@@ -61,67 +59,22 @@ context('reconciliation report', () => {
       .then( (inserted) => {
         const update = {
           details: {
-            submissionDate: toBigNumber("2020-01-05"),
+            submissionDate: nowMinus(121),
             status: "Submitted"
           }
         };
 
         cy.updateDeal(inserted._id, update, MAKER_LOGIN);
       });
-
-    cy.insertOneDeal(aDealWithTenBonds, MAKER_LOGIN)
-      .then( (inserted) => {
-        const update = {
-          details: {
-            submissionDate: toBigNumber("2020-01-07"),
-            status: "Submitted"
-          }
-        };
-
-        cy.updateDeal(inserted._id, update, MAKER_LOGIN);
-      });
-
-    cy.insertOneDeal(aDealWithTenLoans, MAKER_LOGIN)
-      .then( (inserted) => {
-        const update = {
-          details: {
-            submissionDate: toBigNumber("2020-01-09"),
-            status: "Submitted"
-          }
-        };
-
-        cy.updateDeal(inserted._id, update, MAKER_LOGIN);
-      });
-
-    cy.insertOneDeal(aDealWithTenLoansAndTenBonds, MAKER_LOGIN)
-      .then( (inserted) => {
-        const update = {
-          details: {
-            submissionDate: toBigNumber("2020-01-11"),
-            status: "Submitted"
-          }
-        };
-
-        cy.updateDeal(inserted._id, update, MAKER_LOGIN);
-      });
-
 
   });
 
-  it('can be filtered by bank supply contract id', () => {
+  it('should not show deals submitted within the last 2 hours', () => {
     cy.login(ADMIN_LOGIN);
     reconciliationReport.visit();
 
-    reconciliationReport.filterByBankSupplyContractId().type('{selectall}{backspace}');
-    reconciliationReport.applyFilters().click();
     reconciliationReport.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(6 items)');
-    });
-
-    reconciliationReport.filterByBankSupplyContractId().type('{selectall}{backspace}adealwithone');
-    reconciliationReport.applyFilters().click();
-    reconciliationReport.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(3 items)');
+      expect(text.trim()).equal('(1 items)');
     });
 
   });

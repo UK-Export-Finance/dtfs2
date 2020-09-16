@@ -6,7 +6,7 @@
 <form method="POST" autocomplete="off">
 
   <div class="govuk-grid-row">
-   
+
   {% if user and user.roles.includes('admin') %}
 
     <div class="govuk-grid-column-one-third">
@@ -25,7 +25,7 @@
       </div>
 
     </div>
-  
+
 
   {% endif %}
 
@@ -34,7 +34,7 @@
         <label class="govuk-label" for="bankSupplyContractID">
           Bank Supply contract ID
         </label>
-        <input class="govuk-input" id="bankSupplyContractID" name="bankSupplyContractID" type="text" value="{{ filter.bankSupplyContractID }}">
+        <input data-cy="filterByBankSupplyContractId" class="govuk-input" id="bankSupplyContractID" name="bankSupplyContractID" type="text" value="{{ filter.bankSupplyContractID }}">
       </div>
     </div>
 
@@ -43,7 +43,7 @@
         <label class="govuk-label" for="ukefSupplyContractID">
           UKEF Supply contract ID
         </label>
-        <input class="govuk-input" id="ukefSupplyContractID" name="ukefSupplyContractID" type="text" value="{{ filter.ukefSupplyContractID }}">
+        <input data-cy="filterByUKEFSupplyContractId" class="govuk-input" id="ukefSupplyContractID" name="ukefSupplyContractID" type="text" value="{{ filter.ukefSupplyContractID }}">
       </div>
     </div>
 

@@ -20,6 +20,6 @@ context('reconciliation report', () => {
   it('Can display an empty report', () => {
     cy.login(ADMIN_LOGIN);
     reconciliationReport.visit();
-    cy.title().should('eq', `Audit report${defaults.pageTitleAppend}`);
+    cy.title().should('eq', `Reconciliation Report${defaults.pageTitleAppend}`);
   });
 });
