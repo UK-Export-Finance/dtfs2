@@ -11,6 +11,7 @@ env:
   resource_group: ${{ secrets.PROD_RESOURCE_GROUP }}
   app_service_plan: prod
   redis_sku: Basic
+  protected_database: true
   # Container registry
   registry: ${{ secrets.PROD_ACR_REGISTRY }}
   # App service settings
@@ -28,7 +29,7 @@ env:
   AZURE_WORKFLOW_FILESHARE_NAME: "${{ secrets.PROD_AZURE_WORKFLOW_FILESHARE_NAME }}"
   AZURE_WORKFLOW_EXPORT_FOLDER: "${{ secrets.PROD_AZURE_WORKFLOW_EXPORT_FOLDER }}"
   AZURE_WORKFLOW_IMPORT_FOLDER: "${{ secrets.PROD_AZURE_WORKFLOW_IMPORT_FOLDER }}"
-  MONGO_INITDB_DATABASE: "${{ secrets.MONGO_INITDB_DATABASE }}"
+  MONGO_INITDB_DATABASE: "tfs-portal"
   MONGODB_URI: "${{ secrets.PROD_MONGODB_URI }}"
   REDIS_URI: "${{ secrets.PROD_REDIS_URI }}"
   JWT_SIGNING_KEY: "${{ secrets.PROD_JWT_SIGNING_KEY }}"
@@ -43,8 +44,11 @@ env:
 
 jobs:
 
-  networking:
-    name: Network and security group
+  portal-api-vnet:
+    # NB Only one vnet can be associated per App Service Plan,
+    # therefore all App Services on a plan must share a single vnet.
+    # So we name the vnet after the app service plan, rather than the environment.
+    name: Portal API vnet
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -58,41 +62,38 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
-    - name: Networking
+    - name: Vnet
       uses: Azure/cli@v1.0.0
       with:
+        # We have to do a show here or we get an error on create if the vnet already exists:
         inlineScript: |
-          # Network security group
-          az network nsg create --name tfs-${{ env.environment }}-portal-nsg
-          az network nsg rule create --name front-door-allow \
-            --description "Allow traffic from Front Door." \
-            --nsg-name tfs-${{ env.environment }}-portal-nsg \
-            --priority 100 \
-            --access Allow \
-            --source-address-prefixes AzureFrontDoor.Backend \
-            --protocol Tcp
-          az network nsg rule create --name internet-deny \
-            --description "Deny all Internet traffic." \
-            --nsg-name tfs-${{ env.environment }}-portal-nsg \
-            --priority 200 \
-            --access Deny \
-            --source-address-prefixes Internet \
-            --protocol "*"
+          az network vnet show --name tfs-${{ env.app_service_plan }}-portal-api || \
+          az network vnet create --name tfs-${{ env.app_service_plan }}-portal-api
 
-          # Vnet
-          # We have to do a show here or we get an error on create if the vnet exists:
-          az network vnet show --name tfs-${{ env.environment }}-portal-vnet || \
-          az network vnet create --name tfs-${{ env.environment }}-portal-vnet \
-            --network-security-group tfs-${{ env.environment }}-portal-nsg
-          # Microsoft.Web/serverFarms allows App Service to use this vnet
-          az network vnet subnet create --name portal \
-            --address-prefixes 10.0.0.0/28 \
-            --vnet-name tfs-${{ env.environment }}-portal-vnet \
-            --delegations Microsoft.Web/serverFarms
+    - name: Subnet
+      uses: Azure/cli@v1.0.0
+      with:
+        # Delegation Microsoft.Web/serverFarms allows App Service to call into this vnet
+        inlineScript: |
+          az network vnet subnet create \
+            --name backing-services \
+            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+            --delegations Microsoft.Web/serverFarms \
+            --address-prefixes 10.0.0.0/28
+
+    - name: Service endpoints
+      uses: Azure/cli@v1.0.0
+      with:
+        # Service endpoints allow the selected backing services to be accessed through this subnet
+        inlineScript: |
+          az network vnet subnet update --name backing-services --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+            --service-endpoints Microsoft.AzureCosmosDB Microsoft.Storage 
+            # We may add: Microsoft.web Microsoft.KeyVault
 
   portal-ui:
     name: Portal UI
     runs-on: ubuntu-latest
+    needs: portal-api-vnet
     steps:
     - uses: azure/login@v1
       with:
@@ -113,13 +114,13 @@ jobs:
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name ${{ env.registry }}/portal-ui:${{ env.environment }}
 
-    - name: Vnet integration
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-ui \
-            --vnet tfs-${{ env.environment }}-portal-vnet \
-            --subnet portal
+    # - name: Vnet integration
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     inlineScript: |
+    #       az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-ui \
+    #         --vnet tfs-${{ env.app_service_plan }}-portal-vnet \
+    #         --subnet portal
 
     - name: Always-on
       uses: Azure/cli@v1.0.0
@@ -145,8 +146,8 @@ jobs:
     - name: Environment variables
       uses: Azure/cli@v1.0.0
       with:
+        # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
         inlineScript: |
-          # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
           az webapp config appsettings set --name tfs-${{ env.environment }}-portal-ui \
             --settings \
               PORT=5000 \
@@ -168,6 +169,7 @@ jobs:
   portal-api:
     name: Portal API
     runs-on: ubuntu-latest
+    needs: portal-api-vnet
     steps:
     - uses: azure/login@v1
       with:
@@ -192,9 +194,9 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-ui \
-            --vnet tfs-${{ env.environment }}-portal-vnet \
-            --subnet portal
+          az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-api \
+            --vnet tfs-${{ env.app_service_plan }}-portal-api \
+            --subnet backing-services
 
     - name: Always-on
       uses: Azure/cli@v1.0.0
@@ -251,8 +253,9 @@ jobs:
               GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}"
 
   cosmos-db:
-    name: Mongo DB
+    name: Cosmos DB (Mongo)
     runs-on: ubuntu-latest
+    needs: portal-api-vnet
     steps:
     - uses: azure/login@v1
       with:
@@ -268,28 +271,81 @@ jobs:
     - name: Cosmos account for mongodb
       uses: Azure/cli@v1.0.0
       with:
+        # On activating "Allow access from Azure Portal":
+        # https://github.com/Azure/azure-cli/issues/7495 ->
+        # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall#allow-requests-from-the-azure-portal
+        # ALLOW REQUESTS FROM THE AZURE PORTAL
+        # Region IP address
+        # Germany 51.4.229.218
+        # China 139.217.8.252
+        # US Gov 52.244.48.71
+        # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
         inlineScript: |
+          az cosmosdb show --name tfs-${{ env.environment }}-mongo || \
           az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB --server-version 3.6
+
+    - name: Access restriction - ${{ env.protected_database }}
+      uses: Azure/cli@v1.0.0
+      with:
+        # This fails if we want to expose the database,
+        # so we fall back to enabling public network access
+        inlineScript: |
+          az cosmosdb update --name tfs-${{ env.environment }}-mongo \
+            --enable-virtual-network ${{ env.protected_database }} \
+            --ip-range-filter 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26 || \
+          az cosmosdb update --name tfs-${{ env.environment }}-mongo \
+            --enable-virtual-network false \
+            --enable-public-network true
+
+    - name: Enable vnet access
+      uses: Azure/cli@v1.0.0
+      with:
+        # This fails if we want to expose the database,
+        # so we fall back to just an echo statement.
+        inlineScript: |
+          az cosmosdb network-rule add --name tfs-${{ env.environment }}-mongo \
+            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+            --subnet backing-services || \
+          echo "Not restricting to a subnet."
 
     - name: Database with autoscale
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az cosmosdb mongodb database create --account tfs-${{ env.environment }}-mongo --name test --max-throughput 4000
+          az cosmosdb mongodb database create --account tfs-${{ env.environment }}-mongo --name tfs-portal --max-throughput 4000
 
     - name: Collections
       uses: Azure/cli@v1.0.0
       with:
+        # Creating collections is slow, so we show them before we attempt to create.
         inlineScript: |
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name deals --idx '[{"key": {"keys": ["details.dateOfLastAction"]}}, {"key": {"keys": ["_id"]}}]'
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name banks
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name eligibilityCriteria
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name mandatoryCriteria
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name currencies
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name users
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name industrySectors
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name idCounters
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name test --shard "_id" --name countries
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name deals || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name deals --shard "_id" \
+            --idx '[{"key": {"keys": ["details.dateOfLastAction"]}}, {"key": {"keys": ["_id"]}}]'
+          
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name banks || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name banks --shard "_id"
+          
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name eligibilityCriteria || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name eligibilityCriteria --shard "_id"
+
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name mandatoryCriteria || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name mandatoryCriteria --shard "_id"
+
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name currencies || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name currencies --shard "_id"
+
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name users || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name users --shard "_id"
+
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name industrySectors || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name industrySectors --shard "_id"
+
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name countries || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name countries --shard "_id"
+          
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name idCounters || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name tfs-portal --name idCounters --shard "_id"
 
   front-door:
     # NB Front Door takes a little while to be available
@@ -331,8 +387,8 @@ jobs:
         # NB "DefaultFrontendEndpoint" is the name assigned by the command above.
         # If this changes, use "az network front-door show --name tfs-???-fd | grep FrontendEndpoints"
         inlineScript: |
-          az network front-door routing-rule create --name RedirectToHttps \
-            --front-door-name tfs-${{ env.environment }}-fd \
+          az network front-door routing-rule create --front-door-name tfs-${{ env.environment }}-fd \
+            --name RedirectToHttps \
             --frontend-endpoints DefaultFrontendEndpoint \
             --route-type Redirect \
             --accepted-protocols Http \
@@ -341,6 +397,7 @@ jobs:
   file-storage:
     name: File storage
     runs-on: ubuntu-latest
+    needs: portal-api-vnet
     steps:
     - uses: azure/login@v1
       with:
@@ -356,29 +413,57 @@ jobs:
     - name: Create
       uses: Azure/cli@v1.0.0
       with:
+        # We open up access briefly so file shares can be created/updated
         inlineScript: |
           az storage account create --name tfs${{ env.environment }}storage \
             --sku Standard_ZRS \
             --https-only true \
-            --encryption-services file
+            --encryption-services file \
+            --default-action Allow
 
-    - name: File share
+    - name: File share (files)
       uses: Azure/cli@v1.0.0
       with:
+        # Opening up permissions only seems to work reliably on initial creation,
+        # so we skip attempting to create the file share if it fails.
         inlineScript: |
           az storage share create --account-name tfs${{ env.environment }}storage \
-            --name files
+            --name files || \
+          echo Skipped.
 
     - name: File share (workflow)
       uses: Azure/cli@v1.0.0
       with:
-        # This fileshare is used if the environment isn't integrated to Workflow
+        # This fileshare is used if the environment isn't integrated to Workflow.
+        # Opening up permissions only seems to work reliably on initial creation,
+        # so we skip attempting to create the file share if it fails.
         inlineScript: |
           az storage share create --account-name tfs${{ env.environment }}storage \
-            --name workflow
+            --name workflow || \
+          echo Skipped.
+
+    - name: Access restriction
+      if: ${{ always() }}
+      uses: Azure/cli@v1.0.0
+      with:
+        # Always remove public access
+        # On activating "Allow access from Azure Portal":
+        # https://github.com/Azure/azure-cli/issues/7495 ->
+        # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall#allow-requests-from-the-azure-portal
+        # ALLOW REQUESTS FROM THE AZURE PORTAL
+        # Region IP address
+        # Germany 51.4.229.218
+        # China 139.217.8.252
+        # US Gov 52.244.48.71
+        # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
+        inlineScript: |
+          az storage account update --name tfs${{ env.environment }}storage --default-action Deny
+          az storage account network-rule add --account-name tfs${{ env.environment }}storage \
+            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+            --subnet backing-services
 
   session-store:
-    name: Redis session store
+    name: Redis (sessions)
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
