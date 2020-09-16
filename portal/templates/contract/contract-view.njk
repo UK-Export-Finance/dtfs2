@@ -89,8 +89,7 @@
 
                 {% if deal.eligibility.status %}
                   <span class="govuk-grid-column-one-quarter" data-cy="eligibility-status">
-                    {# {{ statusTag.render(deal.eligibility.status) }} #}
-                    {{ statusTag.render('Completed') }}
+                    {{ statusTag.render(deal.eligibility.status) }}
                   </span>
                 {% endif %}
 
