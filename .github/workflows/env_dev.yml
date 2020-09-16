@@ -59,7 +59,7 @@ jobs:
       run: |
         echo "use ${{ env.database_name }}" >  mongo.js
         echo "db.deals.find()"              >> mongo.js
-        mongo ${{ MONGODB_URI }}            <  mongo.js
+        mongo ${{ env.MONGODB_URI }}        <  mongo.js
     - uses: azure/login@v1
       with:
         creds: ${{ env.credentials }}
