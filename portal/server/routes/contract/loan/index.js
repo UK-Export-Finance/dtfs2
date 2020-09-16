@@ -260,8 +260,15 @@ router.get('/contract/:_id/loan/:loanId/preview', provide([LOAN]), async (req, r
 
   // POST to api to flag that we have viewed preview page.
   // this is required specifically for other Loan forms/pages, to match the existing UX/UI.
+
+  // The status is extracted, otherwise bad things happen.
+  // When we GET a facility/loan, the status is dynamically added (it's not in the DB)
+  // here, in the preview screen, we need to extract the status from the POST
+  // otherwise the status will be added to the DB and not dynamically added.
+  const { status, ...loanWithoutStatus } = loan;
+
   const updatedLoan = {
-    ...loan,
+    ...loanWithoutStatus,
     viewedPreviewPage: true,
   };
 
@@ -287,7 +294,7 @@ router.get('/contract/:_id/loan/:loanId/preview', provide([LOAN]), async (req, r
 
   return res.render('loan/loan-preview.njk', {
     dealId,
-    loan,
+    loan: loanWithoutStatus,
     validationErrors: formattedValidationErrors,
     completedForms,
     user: req.session.user,
