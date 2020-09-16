@@ -264,9 +264,15 @@ router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
 
   // POST to api to flag that we have viewed preview page.
   // this is required specifically for other Bond forms/pages, to match the existing UX/UI.
-  // viewedPreviewPage
+
+  // The status is extracted, otherwise bad things happen.
+  // When we GET a facility/bond, the status is dynamically added (it's not in the DB)
+  // here, in the preview screen, we need to extract the status from the POST
+  // otherwise the status will be added to the DB and not dynamically added.
+  const { status, ...bondWithoutStatus } = bond;
+
   const updatedBond = {
-    ...bond,
+    ...bondWithoutStatus,
     viewedPreviewPage: true,
   };
 
@@ -292,7 +298,7 @@ router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
 
   return res.render('bond/bond-preview.njk', {
     dealId,
-    bond,
+    bond: bondWithoutStatus,
     validationErrors: formattedValidationErrors,
     completedForms,
     user: req.session.user,
