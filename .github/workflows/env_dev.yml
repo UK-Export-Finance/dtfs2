@@ -51,6 +51,15 @@ jobs:
     name: Portal API vnet
     runs-on: ubuntu-latest
     steps:
+
+    - name: Install mongodb-clients
+      run: sudo apt install mongodb-clients
+
+    - name: Add ID counters
+      run: |
+        echo "use ${{ env.database_name }}" >  mongo.js
+        echo "db.deals.find()"              >> mongo.js
+        mongo ${{ MONGODB_URI }}            <  mongo.js
     - uses: azure/login@v1
       with:
         creds: ${{ env.credentials }}
@@ -348,6 +357,11 @@ jobs:
           
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters --shard "_id"
+
+    # - name: Add ID counters
+    #   run: |
+    #     echo > mongo.js
+    #     mongo ${{ MONGODB_URI }} < mongo.js
 
   front-door:
     # NB Front Door takes a little while to be available
