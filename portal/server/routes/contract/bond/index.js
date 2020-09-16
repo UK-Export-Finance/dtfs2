@@ -298,7 +298,7 @@ router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
 
   return res.render('bond/bond-preview.njk', {
     dealId,
-    bond: bondWithoutStatus,
+    bond,
     validationErrors: formattedValidationErrors,
     completedForms,
     user: req.session.user,
