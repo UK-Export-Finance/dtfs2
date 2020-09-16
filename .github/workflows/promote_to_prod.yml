@@ -8,8 +8,18 @@ env:
   environment: prod
   credentials: ${{ secrets.AZURE_DIGITAL_PROD }}
   resource_group: ${{ secrets.PROD_RESOURCE_GROUP }}
-  env_from: test
-  env_to: prod
+
+  # From
+  registry_from: ${{ secrets.TEST_ACR_REGISTRY }}
+  registry_from_username: ${{ secrets.TEST_ACR_USERNAME }}
+  registry_from_password: ${{ secrets.TEST_ACR_PASSWORD }}
+  tag_from: test
+
+  # To
+  registry_to: ${{ secrets.PROD_ACR_REGISTRY }}
+  registry_to_username: ${{ secrets.PROD_ACR_USERNAME }}
+  registry_to_password: ${{ secrets.PROD_ACR_PASSWORD }}
+  tag_to: prod
 
 jobs:
 
@@ -29,25 +39,25 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
-    - name: Log in to Test container registry
+    - name: Log in to source container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.TEST_ACR_REGISTRY }}
-        username: ${{ secrets.TEST_ACR_USERNAME }}
-        password: ${{ secrets.TEST_ACR_PASSWORD }}
+        login-server: ${{ env.registry_from }}
+        username: ${{ env.registry_from_username }}
+        password: ${{ env.registry_from_password }}
 
-    - name: Log in to Prod container registry
+    - name: Log in to destination container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.PROD_ACR_REGISTRY }}
-        username: ${{ secrets.PROD_ACR_USERNAME }}
-        password: ${{ secrets.PROD_ACR_PASSWORD }}
+        login-server: ${{ env.registry_to }}
+        username: ${{ env.registry_to_username }}
+        password: ${{ env.registry_to_password }}
 
-    - name: Tag images
+    - name: Promote container image
       run: |
-        docker pull ${{ secrets.TEST_ACR_REGISTRY }}/portal-ui:${{ env.env_from }}
-        docker tag ${{ secrets.TEST_ACR_REGISTRY }}/portal-ui:${{ env.env_from }} ${{ secrets.PROD_ACR_REGISTRY }}/portal-ui:${{ env.env_to }}
-        docker push ${{ secrets.PROD_ACR_REGISTRY }}/portal-ui:${{ env.env_to }}
+        docker pull ${{ env.registry_from }}/portal-ui:${{ env.tag_from }}
+        docker tag ${{ env.registry_from }}/portal-ui:${{ env.tag_from }} ${{ env.registry_to }}/portal-ui:${{ env.tag_to }}
+        docker push ${{ env.registry_to }}/portal-ui:${{ env.tag_to }}
 
     - name: Create slot
       uses: Azure/cli@v1.0.0
@@ -55,7 +65,7 @@ jobs:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-ui
 
-    - name: Swap slot into production
+    - name: Swap slot
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
@@ -85,25 +95,25 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
-    - name: Log in to Test container registry
+    - name: Log in to source container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.TEST_ACR_REGISTRY }}
-        username: ${{ secrets.TEST_ACR_USERNAME }}
-        password: ${{ secrets.TEST_ACR_PASSWORD }}
+        login-server: ${{ env.registry_from }}
+        username: ${{ env.registry_from_username }}
+        password: ${{ env.registry_from_password }}
 
-    - name: Log in to Prod container registry
+    - name: Log in to destination container registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.PROD_ACR_REGISTRY }}
-        username: ${{ secrets.PROD_ACR_USERNAME }}
-        password: ${{ secrets.PROD_ACR_PASSWORD }}
+        login-server: ${{ env.registry_to }}
+        username: ${{ env.registry_to_username }}
+        password: ${{ env.registry_to_password }}
 
-    - name: Tag images
+    - name: Promote container image
       run: |
-        docker pull ${{ secrets.TEST_ACR_REGISTRY }}/portal-api:${{ env.env_from }}
-        docker tag ${{ secrets.TEST_ACR_REGISTRY }}/portal-api:${{ env.env_from }} ${{ secrets.PROD_ACR_REGISTRY }}/portal-api:${{ env.env_to }}
-        docker push ${{ secrets.PROD_ACR_REGISTRY }}/portal-api:${{ env.env_to }}
+        docker pull ${{ env.registry_from }}/portal-api:${{ env.tag_from }}
+        docker tag ${{ env.registry_from }}/portal-api:${{ env.tag_from }} ${{ env.registry_to }}/portal-api:${{ env.tag_to }}
+        docker push ${{ env.registry_to }}/portal-api:${{ env.tag_to }}
 
     - name: Create slot
       uses: Azure/cli@v1.0.0
@@ -111,7 +121,7 @@ jobs:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-api
 
-    - name: Deploy slot
+    - name: Swap slot
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
