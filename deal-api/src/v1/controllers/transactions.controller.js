@@ -7,10 +7,10 @@ exports.findTransactions = async (requestingUser, start = 0, pagesize = 20, filt
   // try to hide all the horrible logic for filtering in here:
   const transactionFix = transactionFixer(requestingUser, filter);
 
-  console.log(`filter :: \n${JSON.stringify(filter)}`);
+  // console.log(`filter :: \n${JSON.stringify(filter)}`);
   // work out the mongo query to get all the deals that might contain transactions we care about
   const query = transactionFix.transactionsQuery();
-  console.log(`query :: \n${JSON.stringify(query)}`);
+  // console.log(`query :: \n${JSON.stringify(query)}`);
   // get the deals that might contain transactions we care about
   //   ordered by deal.details.dateOfLastAction
   const collection = await db.getCollection('deals');
@@ -25,7 +25,7 @@ exports.findTransactions = async (requestingUser, start = 0, pagesize = 20, filt
     const transactionsForThisDeal = transactionFix.filteredTransactions(deal);
     return transactionsAccumulatedSoFar.concat(transactionsForThisDeal);
   }, []);
-  console.log(`allTransactions :: \n${JSON.stringify(allTransactions)}`);
+  // console.log(`allTransactions :: \n${JSON.stringify(allTransactions)}`);
 
   // "allTransactions" now holds a list of all the transactions that it would be ok to display
   //  given current user+filtering
