@@ -342,10 +342,15 @@ jobs:
         }
         EOF
         cat deal-counter.js
+        echo Attempt 1...
         mongo ${{ env.MONGODB_URI }} deal-counter.js
+        echo Attempt 2...
         mongo ${{ env.MONGODB_URI }} deal-counter.js
+        echo Attempt 3...
         mongo ${{ env.MONGODB_URI }} deal-counter.js
+        echo Attempt 4...
         mongo ${{ env.MONGODB_URI }} deal-counter.js
+        echo end.
 
     - name: Add Facility ID counter
       run: |
@@ -362,10 +367,15 @@ jobs:
         }
         EOF
         cat facility-counter.js
+        echo Attempt 1...
         mongo ${{ env.MONGODB_URI }} facility-counter.js
+        echo Attempt 2...
         mongo ${{ env.MONGODB_URI }} facility-counter.js
+        echo Attempt 3...
         mongo ${{ env.MONGODB_URI }} facility-counter.js
+        echo Attempt 4...
         mongo ${{ env.MONGODB_URI }} facility-counter.js
+        echo end.
 
     - name: Access restriction - ${{ env.protected_database }}
       uses: Azure/cli@v1.0.0
