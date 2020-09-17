@@ -289,6 +289,8 @@ jobs:
     - name: Database with autoscale
       uses: Azure/cli@v1.0.0
       with:
+        # TODO: switch from provisioned throughput to "serverless" capacity at the account level once it's available for Mongo (currently available for sql).
+        # TODO: enable continuous backup once that becomes available - looks like it's in private beta at the moment.
         inlineScript: |
           az cosmosdb mongodb database create --account tfs-${{ env.environment }}-mongo --name ${{ env.database_name }} --max-throughput 4000
 
@@ -340,7 +342,10 @@ jobs:
         }
         EOF
         cat deal-counter.js
-        mongo ${{ env.MONGODB_URI }} < deal-counter.js
+        mongo ${{ env.MONGODB_URI }} deal-counter.js
+        mongo ${{ env.MONGODB_URI }} deal-counter.js
+        mongo ${{ env.MONGODB_URI }} deal-counter.js
+        mongo ${{ env.MONGODB_URI }} deal-counter.js
 
     - name: Add Facility ID counter
       run: |
@@ -357,7 +362,10 @@ jobs:
         }
         EOF
         cat facility-counter.js
-        mongo ${{ env.MONGODB_URI }} < facility-counter.js
+        mongo ${{ env.MONGODB_URI }} facility-counter.js
+        mongo ${{ env.MONGODB_URI }} facility-counter.js
+        mongo ${{ env.MONGODB_URI }} facility-counter.js
+        mongo ${{ env.MONGODB_URI }} facility-counter.js
 
     - name: Access restriction - ${{ env.protected_database }}
       uses: Azure/cli@v1.0.0
@@ -365,9 +373,9 @@ jobs:
         # This fails if we want to expose the database,
         # so we fall back to enabling public network access
         inlineScript: |
-          az cosmosdb update --name tfs-${{ env.environment }}-mongo \
-            --enable-virtual-network ${{ env.protected_database }} \
-            --ip-range-filter 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26 || \
+          # az cosmosdb update --name tfs-${{ env.environment }}-mongo \
+          #   --enable-virtual-network ${{ env.protected_database }} \
+          #   --ip-range-filter 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26 || \
           az cosmosdb update --name tfs-${{ env.environment }}-mongo \
             --enable-virtual-network false \
             --enable-public-network true
@@ -378,9 +386,9 @@ jobs:
         # This fails if we want to expose the database,
         # so we fall back to just an echo statement.
         inlineScript: |
-          az cosmosdb network-rule add --name tfs-${{ env.environment }}-mongo \
-            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
-            --subnet backing-services || \
+          # az cosmosdb network-rule add --name tfs-${{ env.environment }}-mongo \
+          #   --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+          #   --subnet backing-services || \
           echo "Not restricting to a subnet."
 
   front-door:
