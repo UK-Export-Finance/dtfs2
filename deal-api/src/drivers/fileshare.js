@@ -2,11 +2,17 @@ const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/stora
 
 const { AZURE_WORKFLOW_FILESHARE_CONFIG, AZURE_PORTAL_FILESHARE_CONFIG } = require('../config/fileshare.config');
 
+let userDefinedConfig;
+
+const setConfig = (fileshareConfig) => {
+  userDefinedConfig = fileshareConfig;
+};
+
 const getConfig = (fileshare = 'portal') => {
   const config = fileshare === 'workflow'
     ? AZURE_WORKFLOW_FILESHARE_CONFIG
     : AZURE_PORTAL_FILESHARE_CONFIG;
-  return config;
+  return userDefinedConfig || config;
 };
 
 const getCredentials = async (fileshare = 'portal') => {
@@ -22,7 +28,6 @@ const getCredentials = async (fileshare = 'portal') => {
 const getShareClient = async (fileshare) => {
   const credentials = await getCredentials(fileshare);
   const { STORAGE_ACCOUNT, FILESHARE_NAME } = getConfig(fileshare);
-
   const serviceClient = new ShareServiceClient(
     `https://${STORAGE_ACCOUNT}.file.core.windows.net`,
     credentials,
@@ -133,7 +138,7 @@ const readFile = async ({
 const deleteFile = async (fileshare, filePath) => {
   const shareClient = await getShareClient(fileshare);
 
-  shareClient.deleteFile(filePath).catch(() => {});
+  await shareClient.deleteFile(filePath).catch(() => {});
 };
 
 const deleteMultipleFiles = async (fileshare, fileList) => {
@@ -183,7 +188,7 @@ const moveFile = async ({ from, to }) => {
   const copied = await copyFile({ from, to });
 
   if (copied.error) {
-    return Promise.reject(new Error(from.filename));
+    return Promise.reject(new Error(`${filePath}: ${JSON.stringify(copied.error)}`));
   }
   await deleteFile(from.fileshare, filePath);
   return copied;
@@ -210,6 +215,7 @@ const listDirectoryFiles = async ({ fileshare, folder }) => {
 };
 
 module.exports = {
+  setConfig,
   getConfig,
   getDirectory,
   uploadFile,

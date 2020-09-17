@@ -55,6 +55,6 @@ module.exports.getToken = async () => {
   });
 
   const { token } = data;
-  console.log(`Got a token ${token}`);
+  console.log('Got a token');
   return token;
 };
