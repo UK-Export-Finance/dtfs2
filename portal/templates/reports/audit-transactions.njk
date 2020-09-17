@@ -91,15 +91,11 @@
           </td>
 
           <td data-cy="issuedDate" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.issuedDate | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
+            {{ transaction.issuedFacilitySubmittedToUkefTimestamp | localiseTimestamp('DD/MM/YYYY', user.timezone) | dashIfEmpty }}
           </td>
 
-          <td data-cy="submittedBy" class="govuk-table__cell govuk-!-font-size-14">
-            {%  if transaction.issuedDate and transaction.issueFacilityDetailsSubmitted %}
-            {{ transaction.issuedBy | dashIfEmpty }}
-            {% else %}
-            -
-            {% endif %}
+          <td data-cy="issuedBy" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.issuedFacilitySubmittedToUkefBy | dashIfEmpty }}
           </td>
 
         </tr>

@@ -91,20 +91,58 @@
   "bondTransactions": {
     "items": [
       {
-          "bondIssuer": "issuer",
-          "bondType": "bond type",
-          "bondStage": "Issued",
-          "ukefGuaranteeInMonths": "24",
-          "uniqueIdentificationNumber": "aDealWithOneBond-bond1",
-          "ukefFacilityID": "ukef:aDealWithOneBond-bond1",
-          "bondBeneficiary": "test",
-          "facilityValue": "123",
-          "currencySameAsSupplyContractCurrency": "true",
-          "riskMarginFee": "1",
-          "coveredPercentage": "2",
-          "feeType": "test",
-          "feeFrequency": "test",
-          "dayCountBasis": "test"
+          "bondIssuer" : "",
+          "bondType" : "Bid bond",
+          "bondStage" : "Issued",
+          "previousFacilityStage" : "Issued",
+          "ukefGuaranteeInMonths" : "12",
+          "bondBeneficiary" : "",
+          "guaranteeFeePayableByBank" : "18.0000",
+          "facilityValue" : "21313.00",
+          "currencySameAsSupplyContractCurrency" : "true",
+          "riskMarginFee" : "20",
+          "coveredPercentage" : "30",
+          "minimumRiskMarginFee" : "",
+          "ukefExposure" : "6,393.90",
+          "feeType" : "At maturity",
+          "dayCountBasis" : "365",
+          "currency" : {
+              "text" : "GBP - UK Sterling",
+              "id" : "GBP"
+          },
+          "uniqueIdentificationNumberRequiredForIssuance" : true,
+          "ukefFacilityID" : [
+              "12345"
+          ],
+          "issuedDate-day" : "18",
+          "issuedDate-month" : "09",
+          "issuedDate-year" : "2020",
+          "requestedCoverStartDate-day" : "19",
+          "requestedCoverStartDate-month" : "09",
+          "requestedCoverStartDate-year" : "2020",
+          "coverEndDate-day" : "17",
+          "coverEndDate-month" : "10",
+          "coverEndDate-year" : "2020",
+          "uniqueIdentificationNumber" : "1234",
+          "issueFacilityDetailsStarted" : true,
+          "requestedCoverStartDate" : "1600525297627",
+          "issuedDate" : "1600438897628",
+          "issueFacilityDetailsProvided" : true,
+          "status" : "Submitted",
+          "issueFacilityDetailsSubmitted" : true,
+          "issuedFacilitySubmittedToUkefTimestamp" : "1600352531656",
+          "issuedFacilitySubmittedToUkefBy" : {
+              "username" : "CHECKER",
+              "roles" : [
+                  "checker"
+              ],
+              "bank" : {
+                  "id" : "956",
+                  "name" : "Barclays Bank"
+              },
+              "firstname" : "Emilio",
+              "surname" : "Largo",
+          }
       }
     ]
   },

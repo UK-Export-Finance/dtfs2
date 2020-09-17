@@ -137,7 +137,7 @@ exports.update = (req, res) => {
     }
 
     if (toStatus === 'Submitted') {
-      await updateSubmittedIssuedFacilities(collection, dealAfterAllUpdates);
+      await updateSubmittedIssuedFacilities(req.user, collection, dealAfterAllUpdates);
       dealAfterAllUpdates = await createSubmissionDate(collection, req.params.id, user);
 
       // TODO - Reinstate typeA XML creation once Loans and Summary have been added
