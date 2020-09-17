@@ -36,7 +36,8 @@ module.exports = (submissionDetails, errorList) => {
         };
       }
 
-      if (!hasValue(submissionDetails['indemnifier-correspondence-address-country'])) {
+      if (!submissionDetails['indemnifier-correspondence-address-country']
+        || !submissionDetails['indemnifier-correspondence-address-country'].code) {
         newErrorList['indemnifier-correspondence-address-country'] = {
           order: orderNumber(newErrorList),
           text: 'Indemnifier correspondence country is required',

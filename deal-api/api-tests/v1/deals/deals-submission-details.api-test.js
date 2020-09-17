@@ -157,7 +157,7 @@ describe('/v1/deals/:id/submission-details', () => {
       expect(status).toEqual(404);
     });
 
-    it('returns the updated submission-details', async () => {
+    it('returns the updated submission-details with country fields as objects', async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const submissionDetails = {
@@ -165,6 +165,12 @@ describe('/v1/deals/:id/submission-details', () => {
       };
       const expectedResponse = {
         ...submissionDetails,
+        destinationOfGoodsAndServices: {},
+        'buyer-address-country': {},
+        'indemnifier-correspondence-address-country': {},
+        'indemnifier-address-country': {},
+        'supplier-address-country': {},
+        'supplier-correspondence-address-country': {},
         status: 'Incomplete',
       };
 
@@ -249,6 +255,12 @@ describe('/v1/deals/:id/submission-details', () => {
       };
       const expectedResponse = {
         ...submissionDetails,
+        destinationOfGoodsAndServices: {},
+        'buyer-address-country': {},
+        'indemnifier-correspondence-address-country': {},
+        'indemnifier-address-country': {},
+        'supplier-address-country': {},
+        'supplier-correspondence-address-country': {},
         status: 'Incomplete',
       };
 

@@ -60,7 +60,7 @@ context('about-supply-contract', () => {
     // select a different correspondence address so we are forced to fill it in
     contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();
     // check default state
-    contractAboutSupplier.supplierCorrespondenceAddress().country().should('have.value', 'GBR');
+    contractAboutSupplier.supplierCorrespondenceAddress().country().should('have.value', '');
     // fill in form..
     contractAboutSupplier.supplierCorrespondenceAddress().line1().type('2 Horseguards Road');
     contractAboutSupplier.supplierCorrespondenceAddress().line3().type('Eastminster');
@@ -75,7 +75,7 @@ context('about-supply-contract', () => {
     // select a legally-distinct indemnifier
     contractAboutSupplier.legallyDistinct().click();
     // check default state
-    contractAboutSupplier.indemnifierAddress().country().should('have.value', 'GBR');
+    contractAboutSupplier.indemnifierAddress().country().should('have.value', '');
 
     //-----
     // use the companies house search to find the indemnifier
@@ -89,7 +89,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.indemnifierAddress().line1().should('not.have.value', ''); // TODO
     contractAboutSupplier.indemnifierAddress().town().should('not.have.value', ''); // TODO
     contractAboutSupplier.indemnifierAddress().postcode().should('not.have.value', ''); // TODO
-    contractAboutSupplier.indemnifierAddress().country().should('not.have.value', ''); // TODO
+    contractAboutSupplier.indemnifierAddress().country().should('have.value', 'GBR');
 
     //-----
     // continue filling in the form..
@@ -98,7 +98,7 @@ context('about-supply-contract', () => {
     // select a different correspondence address for the indemnifier..
     contractAboutSupplier.indemnifierCorrespondenceAddressDifferent().click();
     // check default state
-    contractAboutSupplier.indemnifierCorrespondenceAddress().country().should('have.value', 'GBR');
+    contractAboutSupplier.indemnifierCorrespondenceAddress().country().should('have.value', '');
     // fill in form
     contractAboutSupplier.indemnifierCorrespondenceAddress().line1().type('27 Petersfield');
     contractAboutSupplier.indemnifierCorrespondenceAddress().line3().type('Broomfield');

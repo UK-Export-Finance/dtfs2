@@ -3,6 +3,7 @@ import filterLocaliseTimestamp from './filter-localiseTimestamp';
 import dashIfEmpty from './filter-dashIfEmpty';
 import displayName from './filter-displayName';
 import formatAsCurrency from './formatAsCurrency';
+import countriesWithEmptyInitialOption from './filter-countriesWithEmptyInitialOption';
 
 const configureNunjucks = (opts) => {
   const appViews = [
@@ -17,6 +18,7 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('dashIfEmpty', dashIfEmpty);
   nunjucksEnvironment.addFilter('displayName', displayName);
   nunjucksEnvironment.addFilter('formatAsCurrency', formatAsCurrency);
+  nunjucksEnvironment.addFilter('countriesWithEmptyInitialOption', countriesWithEmptyInitialOption);
   return nunjucks;
 };
 
