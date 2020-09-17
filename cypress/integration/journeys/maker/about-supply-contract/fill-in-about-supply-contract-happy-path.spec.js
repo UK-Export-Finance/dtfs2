@@ -60,7 +60,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.supplierCorrespondenceAddress().line1().should('be.hidden');
     contractAboutSupplier.indemnifierName().should('be.hidden');
     // default values should be in place
-    contractAboutSupplier.supplierAddress().country().should('have.value', 'GBR');
+    contractAboutSupplier.supplierAddress().country().should('have.value', '');
     contractAboutSupplier.errors().should('not.exist');
 
     //---
@@ -76,7 +76,8 @@ context('about-supply-contract', () => {
     contractAboutSupplier.supplierAddress().line1().should('not.have.value', ''); // TODO
     contractAboutSupplier.supplierAddress().town().should('not.have.value', ''); // TODO
     contractAboutSupplier.supplierAddress().postcode().should('not.have.value', ''); // TODO
-    contractAboutSupplier.supplierAddress().country().should('not.have.value', ''); // TODO
+    contractAboutSupplier.supplierAddress().country().should('have.value', 'GBR');
+
     // TODO: industry sector is populated from companise house data / should not be 'Please select'
     // TODO: industry class is populated from companise house data / should not be 'Please select'
 

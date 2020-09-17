@@ -30,7 +30,7 @@
           attributes: {
             "data-cy": thisField
           },
-          items: countries[thisField],
+          items: countries[thisField] | countriesWithEmptyInitialOption,
           errorMessage: validationErrors.errorList[thisField]
         }) }}
 

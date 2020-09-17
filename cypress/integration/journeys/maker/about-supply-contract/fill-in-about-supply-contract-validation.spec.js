@@ -56,9 +56,6 @@ context('about-supply-contract', () => {
     contractAboutPreview.expectError('Industry Class is required');
     contractAboutPreview.expectError('SME type is required');
 
-    // since we have the default country (UK) postcode should be required
-    contractAboutPreview.expectError('Supplier postcode is required for UK addresses');
-
     // prove the errors are on the about-supplier page
     contractAboutSupplier.visit(deal);
     contractAboutSupplier.expectError('Supplier type is required');
@@ -68,36 +65,31 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('Industry Sector is required');
     contractAboutSupplier.expectError('Industry Class is required');
     contractAboutSupplier.expectError('SME type is required');
+    contractAboutSupplier.expectError('Supplier town is required for non-UK addresses');
 
-    // since we have the default country (UK) postcode should be required
-    contractAboutSupplier.expectError('Supplier postcode is required for UK addresses');
-
-    // switch to non-UK country
-    contractAboutSupplier.supplierAddress().country().select('USA');
+    // switch to UK country
+    contractAboutSupplier.supplierAddress().country().select('GBR');
     // click through
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
-    contractAboutPreview.errors().should('not.contain', 'Supplier postcode is required for UK addresses')
-    contractAboutPreview.errors().should('contain', 'Supplier town is required for non-UK addresses')
 
     contractAboutSupplier.visit(deal);
     // open up the correspondence address to generate more errors..
     contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();
+    contractAboutSupplier.supplierCorrespondenceAddress().country().select('GBR');
     // save + skip ahead to the preview
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
 
     // prove the errors show on the preview page
-    contractAboutPreview.expectError('Supplier correspondence address line 1 is required');
-    // since we are on default country (UK) we require postcode
+    contractAboutPreview.expectError('Supplier postcode is required for UK addresses');
     contractAboutPreview.expectError('Supplier correspondence postcode is required for UK addresses');
 
     // prove the errors show on the about-supplier page
     contractAboutSupplier.visit(deal);
-    contractAboutSupplier.expectError('Supplier correspondence address line 1 is required');
-    // since we are on default country (UK) we require postcode
+    contractAboutSupplier.expectError('Supplier postcode is required for UK addresses');
     contractAboutSupplier.expectError('Supplier correspondence postcode is required for UK addresses');
 
     // switch to non-UK country
@@ -106,8 +98,8 @@ context('about-supply-contract', () => {
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
-    contractAboutPreview.errors().should('not.contain', 'Supplier correspondence postcode is required for UK addresses')
-    contractAboutPreview.errors().should('contain', 'Supplier correspondence town is required for non-UK addresses')
+    contractAboutPreview.errors().should('not.contain', 'Supplier correspondence postcode is required for UK addresses');
+    contractAboutPreview.errors().should('contain', 'Supplier correspondence town is required for non-UK addresses');
 
     contractAboutSupplier.visit(deal);
     // open up the legally-distinct indemnifier section to generate more errors...
@@ -119,14 +111,11 @@ context('about-supply-contract', () => {
 
     contractAboutPreview.expectError('Indemnifier name is required');
     contractAboutPreview.expectError('Indemnifier address line 1 is required');
-    // since we are on default country (UK) we require postcode
-    contractAboutPreview.expectError('Indemnifier postcode is required for UK addresses');
+
 
     // prove the errors show on the about-supplier page
     contractAboutSupplier.visit(deal);
     contractAboutSupplier.expectError('Indemnifier address line 1 is require');
-    // since we are on default country (UK) we require postcode
-    contractAboutSupplier.expectError('Indemnifier postcode is required');
 
     // switch to non-UK country
     contractAboutSupplier.indemnifierAddress().country().select('USA');
@@ -134,8 +123,8 @@ context('about-supply-contract', () => {
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
-    contractAboutPreview.errors().should('not.contain', 'Indemnifier postcode is required for UK addresses')
-    contractAboutPreview.errors().should('contain', 'Indemnifier town is required for non-UK addresses')
+    contractAboutPreview.errors().should('not.contain', 'Indemnifier postcode is required for UK addresses');
+    contractAboutPreview.errors().should('contain', 'Indemnifier town is required for non-UK addresses');
 
     // open up the indemnifier correspondence address section to generate more errors...
     contractAboutSupplier.visit(deal);
@@ -146,14 +135,10 @@ context('about-supply-contract', () => {
     contractAboutFinancial.preview().click();
 
     contractAboutPreview.expectError('Indemnifier correspondence address line 1 is required');
-    // since we are on default country (UK) we require postcode
-    contractAboutPreview.expectError('Indemnifier correspondence postcode is required');
 
     // prove the errors show on the about-supplier page
     contractAboutSupplier.visit(deal);
     contractAboutSupplier.expectError('Indemnifier correspondence address line 1 is required');
-    // since we are on default country (UK) we require postcode
-    contractAboutSupplier.expectError('Indemnifier correspondence postcode is required');
 
     // switch to non-UK country
     contractAboutSupplier.indemnifierCorrespondenceAddress().country().select('USA');
@@ -161,7 +146,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
-    contractAboutPreview.errors().should('not.contain', 'Indemnifier correspondence postcode is required for UK addresses')
-    contractAboutPreview.errors().should('contain', 'Indemnifier correspondence town is required for non-UK addresses')
+    contractAboutPreview.errors().should('not.contain', 'Indemnifier correspondence postcode is required for UK addresses');
+    contractAboutPreview.errors().should('contain', 'Indemnifier correspondence town is required for non-UK addresses');
   });
 });
