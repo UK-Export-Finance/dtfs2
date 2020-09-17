@@ -36,6 +36,11 @@ const dealsQuery = (user, filter) => {
           { 'details.bankSupplyContractID': { $regex: freetextSearch, $options: 'i' } },
           { 'details.ukefDealId': { $regex: freetextSearch, $options: 'i' } },
           { 'bondTransactions.items.uniqueIdentificationNumber': { $regex: freetextSearch, $options: 'i' } },
+          { 'submissionDetails.supplier-name': { $regex: freetextSearch, $options: 'i' } },
+          { 'submissionDetails.supplier-companies-house-registration-number': { $regex: freetextSearch, $options: 'i' } },
+          { 'submissionDetails.indemnifier-name': { $regex: freetextSearch, $options: 'i' } },
+          { 'submissionDetails.indemnifier-companies-house-registration-number': { $regex: freetextSearch, $options: 'i' } },
+          { 'submissionDetails.buyer-name': { $regex: freetextSearch, $options: 'i' } },
         ],
       };
     }
