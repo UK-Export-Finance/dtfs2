@@ -61,34 +61,47 @@ const checkCountryCode = async (existingDeal, submitted, fieldName) => {
     const countryObj = await countryObject(submittedCountryCode);
     return countryObj;
   }
-  return existingCountryCode;
+  return {};
 };
 
 const checkAllCountryCodes = async (deal, fields) => {
   const modifiedFields = fields;
+  const existingSubmissionDetails = deal.submissionDetails;
 
   if (modifiedFields.destinationOfGoodsAndServices) {
     modifiedFields.destinationOfGoodsAndServices = await checkCountryCode(deal, fields, 'destinationOfGoodsAndServices');
+  } else if (!existingSubmissionDetails.destinationOfGoodsAndServices) {
+    modifiedFields.destinationOfGoodsAndServices = {};
   }
 
   if (modifiedFields['buyer-address-country']) {
     modifiedFields['buyer-address-country'] = await checkCountryCode(deal, fields, 'buyer-address-country');
+  } else if (!existingSubmissionDetails['buyer-address-country']) {
+    modifiedFields['buyer-address-country'] = {};
   }
 
   if (modifiedFields['indemnifier-correspondence-address-country']) {
     modifiedFields['indemnifier-correspondence-address-country'] = await checkCountryCode(deal, fields, 'indemnifier-correspondence-address-country');
+  } else if (!existingSubmissionDetails['indemnifier-correspondence-address-country']) {
+    modifiedFields['indemnifier-correspondence-address-country'] = {};
   }
 
   if (modifiedFields['indemnifier-address-country']) {
     modifiedFields['indemnifier-address-country'] = await checkCountryCode(deal, fields, 'indemnifier-address-country');
+  } else if (!existingSubmissionDetails['indemnifier-address-country']) {
+    modifiedFields['indemnifier-address-country'] = {};
   }
 
   if (modifiedFields['supplier-address-country']) {
     modifiedFields['supplier-address-country'] = await checkCountryCode(deal, fields, 'supplier-address-country');
+  } else if (!existingSubmissionDetails['supplier-address-country']) {
+    modifiedFields['supplier-address-country'] = {};
   }
 
   if (modifiedFields['supplier-correspondence-address-country']) {
     modifiedFields['supplier-correspondence-address-country'] = await checkCountryCode(deal, fields, 'supplier-correspondence-address-country');
+  } else if (!existingSubmissionDetails['supplier-correspondence-address-country']) {
+    modifiedFields['supplier-correspondence-address-country'] = {};
   }
 
   return modifiedFields;
