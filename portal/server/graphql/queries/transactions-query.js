@@ -14,24 +14,26 @@ query Transactions($start: Int, $pagesize: Int, $filters:[TransactionFilters]){
       deal_created,
       deal_submissionDate,
       transaction_id,
-      bankFacilityId
-      ukefFacilityId
-      transactionType
-      facilityValue
+      bankFacilityId,
+      ukefFacilityId,
+      transactionType,
+      facilityValue,
       currency{
-        text
-        id
+        text,
+        id,
       }
-      transactionStage
-      createdDate
-      lastEdited
-      issuedDate
-      maker
-      checker
-      issueFacilityDetailsSubmitted
-      requestedCoverStartDate
-      previousCoverStartDate
-      dateOfCoverChange
+      transactionStage,
+      createdDate,
+      lastEdited,
+      issuedDate,
+      maker,
+      checker,
+      issueFacilityDetailsSubmitted,
+      requestedCoverStartDate,
+      previousCoverStartDate,
+      dateOfCoverChange,
+      issuedFacilitySubmittedToUkefTimestamp,
+      issuedFacilitySubmittedToUkefBy,
     }
   }
 }`;

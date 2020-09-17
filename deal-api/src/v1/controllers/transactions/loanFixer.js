@@ -107,6 +107,8 @@ const constructor = (listOfFilters) => {
       requestedCoverStartDate: `${loan['requestedCoverStartDate-day']}/${loan['requestedCoverStartDate-month']}/${loan['requestedCoverStartDate-year']}`,
       previousCoverStartDate: loan.previousCoverStartDate,
       dateOfCoverChange: loan.dateOfCoverChange,
+      issuedFacilitySubmittedToUkefTimestamp: loan.issuedFacilitySubmittedToUkefTimestamp,
+      issuedFacilitySubmittedToUkefBy: loan.issuedFacilitySubmittedToUkefBy ? `${loan.issuedFacilitySubmittedToUkefBy.firstname || ''} ${loan.issuedFacilitySubmittedToUkefBy.surname || ''}` : '',
     }));
   };
 

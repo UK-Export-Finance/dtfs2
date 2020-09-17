@@ -108,6 +108,8 @@ const constructor = (listOfFilters) => {
       requestedCoverStartDate: `${bond['requestedCoverStartDate-day']}/${bond['requestedCoverStartDate-month']}/${bond['requestedCoverStartDate-year']}`,
       previousCoverStartDate: bond.previousCoverStartDate,
       dateOfCoverChange: bond.dateOfCoverChange,
+      issuedFacilitySubmittedToUkefTimestamp: bond.issuedFacilitySubmittedToUkefTimestamp,
+      issuedFacilitySubmittedToUkefBy: bond.issuedFacilitySubmittedToUkefBy ? `${bond.issuedFacilitySubmittedToUkefBy.firstname || ''} ${bond.issuedFacilitySubmittedToUkefBy.surname || ''}` : '',
     }));
   };
 

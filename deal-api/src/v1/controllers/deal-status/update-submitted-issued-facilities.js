@@ -1,7 +1,8 @@
 const $ = require('mongo-dot-notation');
 const CONSTANTS = require('../../../constants');
+const now = require('../../../now');
 
-const updateSubmittedIssuedFacilities = async (collection, deal) => {
+const updateSubmittedIssuedFacilities = async (user, collection, deal) => {
   const updatedDeal = deal;
 
   const update = (facilities) => {
@@ -26,6 +27,8 @@ const updateSubmittedIssuedFacilities = async (collection, deal) => {
       if (shouldUpdateIssuedFacility) {
         facility.issueFacilityDetailsSubmitted = true;
         facility.status = 'Submitted';
+        facility.issuedFacilitySubmittedToUkefTimestamp = now();
+        facility.issuedFacilitySubmittedToUkefBy = user;
       }
 
       return facility;

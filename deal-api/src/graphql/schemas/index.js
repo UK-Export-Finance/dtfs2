@@ -95,6 +95,8 @@ type Transaction {
   requestedCoverStartDate: String
   previousCoverStartDate: String
   dateOfCoverChange: String
+  issuedFacilitySubmittedToUkefTimestamp: String
+  issuedFacilitySubmittedToUkefBy: String
 }
 
 type TransactionQuery {
