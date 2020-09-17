@@ -65,7 +65,10 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
   deal.submissionDetails[`${prefix}-address-line-2`] = company.registered_office_address.address_line_2;
   deal.submissionDetails[`${prefix}-address-town`] = company.registered_office_address.locality;
   deal.submissionDetails[`${prefix}-address-postcode`] = company.registered_office_address.postal_code;
-  deal.submissionDetails[`${prefix}-address-country`] = getPortalCountryForCompaniesHouseCountry(company.registered_office_address.country);
+
+  deal.submissionDetails[`${prefix}-address-country`] = {
+    code: getPortalCountryForCompaniesHouseCountry(company.registered_office_address.country),
+  };
 
   const industryFromSicCode = getIndustryFromSicCode(industrySectors, company.sic_codes);
 
@@ -80,6 +83,7 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
   }
 
   req.session.aboutSupplierFormData = deal;
+
   const redirectUrl = `/contract/${deal._id}/about/supplier#${prefix}-companies-house-registration-number`; // eslint-disable-line no-underscore-dangle
   return res.redirect(redirectUrl);
 });

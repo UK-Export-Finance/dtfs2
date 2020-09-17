@@ -25,7 +25,8 @@ module.exports = (submissionDetails, errorList) => {
     };
   }
 
-  if (!hasValue(submissionDetails['buyer-address-country'])) {
+  if (!submissionDetails['buyer-address-country']
+    || !submissionDetails['buyer-address-country'].code) {
     newErrorList['buyer-address-country'] = {
       order: orderNumber(newErrorList),
       text: 'Buyer country is required',
