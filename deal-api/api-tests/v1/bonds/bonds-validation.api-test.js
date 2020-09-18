@@ -456,7 +456,7 @@ describe('/v1/deals/:id/bond', () => {
           });
         });
 
-        describe('with an invalid character (not A-Z, 0-9, `-`, `_` or a space)', () => {
+        describe('with an invalid character (not A-Z, 0-9, `-`, `_`, `\\`, `/` or a space)', () => {
           it('should return validationError', async () => {
             let bond = {
               ...allBondFields,
@@ -464,7 +464,7 @@ describe('/v1/deals/:id/bond', () => {
               uniqueIdentificationNumber: 'invalid-format!@£$%^&*()+=',
             };
 
-            const expectedText = 'Bond\'s unique identification number must only include letters a to z, numbers 0 to 9, hyphens, underscores and spaces';
+            const expectedText = 'Bond\'s unique identification number must only include letters a to z, numbers 0 to 9, hyphens, underscores, forward slashes, backslashes and spaces';
 
             const { validationErrors: firstValidationErrors } = await updateBondInDeal(dealId, bond);
             expect(firstValidationErrors.errorList.uniqueIdentificationNumber.text).toEqual(expectedText);
@@ -472,11 +472,24 @@ describe('/v1/deals/:id/bond', () => {
             bond = {
               ...allBondFields,
               bondStage: 'Issued',
-              uniqueIdentificationNumber: 'invalid-format{}:"|<>?,./;\'\[]',
+              uniqueIdentificationNumber: 'invalid-format{}:"|<>?,.;\'[]',
             };
 
             const { validationErrors: secondValidationErrors } = await updateBondInDeal(dealId, bond);
             expect(secondValidationErrors.errorList.uniqueIdentificationNumber.text).toEqual(expectedText);
+          });
+        });
+
+        describe('with an valid character (A-Z, 0-9, `-`, `_`, `\\`, `/` or a space)', () => {
+          it('should not return validationError', async () => {
+            const bond = {
+              ...allBondFields,
+              bondStage: 'Issued',
+              uniqueIdentificationNumber: 'valid-format/0_ 9\\a',
+            };
+
+            const { validationErrors: firstValidationErrors } = await updateBondInDeal(dealId, bond);
+            expect(firstValidationErrors.errorList.uniqueIdentificationNumber).toBeUndefined();
           });
         });
       });
