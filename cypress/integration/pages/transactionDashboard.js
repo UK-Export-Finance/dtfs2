@@ -22,6 +22,15 @@ const page = {
   bankId: () => cy.get('[data-cy="bankSupplyContractID"]'),
 
   results: () => cy.get('[data-cy="results"]'),
+  bankFacilityIDResults: () => cy.get('[data-cy="bankFacilityID"]'),
+  ukefFacilityIDResults: () => cy.get('[data-cy="ukefFacilityID"]'),
+  facilityTypeResults: () => cy.get('[data-cy="facilityType"]'),
+  facilityValueResults: () => cy.get('[data-cy="facilityValue"]'),
+  facilityStageResults: () => cy.get('[data-cy="facilityStage"]'),
+  facilityIssuedDateResults: () => cy.get('[data-cy="facilityIssuedDate"]'),
+  makerResults: () => cy.get('[data-cy="maker"]'),
+  checkerResults: () => cy.get('[data-cy="checker"]'),
+
   first: () => cy.get('[data-cy="First"]'),
   previous: () => cy.get('[data-cy="Previous"]'),
   next: () => cy.get('[data-cy="Next"]'),

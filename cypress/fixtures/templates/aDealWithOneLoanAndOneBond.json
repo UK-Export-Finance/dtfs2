@@ -104,7 +104,13 @@
           "coveredPercentage": "2",
           "feeType": "test",
           "feeFrequency": "test",
-          "dayCountBasis": "test"
+          "dayCountBasis": "test",
+          "currency" : {
+              "text" : "GBP - UK Sterling",
+              "id" : "GBP"
+          },
+          "issuedFacilitySubmittedToUkefTimestamp" : "1600352531656",
+
       }
     ]
   },
@@ -114,14 +120,19 @@
         "facilityStage": "Conditional",
         "bankReferenceNumber": "aDealWithOneLoanAndOneBond-loan1",
         "ukefFacilityID": "ukef:aDealWithOneLoanAndOneBond-loan1",
-        "facilityValue": "123",
+        "facilityValue": "456",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
         "currencySameAsSupplyContractCurrency": "true",
         "interestMarginFee": "5",
         "coveredPercentage": "40",
         "premiumType": "At maturity",
-        "dayCountBasis": "365"
+        "dayCountBasis": "365",
+        "currency" : {
+            "text" : "GBP - UK Sterling",
+            "id" : "GBP"
+        },
+
       }
     ]
   }

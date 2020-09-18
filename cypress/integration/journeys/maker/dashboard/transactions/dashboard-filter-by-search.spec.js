@@ -40,22 +40,22 @@ context('The Transactions dashboard', () => {
     transactionDashboard.showFilters().click(); // re-open the advanced search so we can use it..
     transactionDashboard.search().type('{selectall}{backspace}ukef:aDeAlWiThOnELoanandOneBond');
     transactionDashboard.applyFilters().click();
-    transactionDashboard.ukefId().should( (ukefId) => { expect(ukefId).to.contain("ukef:aDealWithOneLoanAndOneBond-bond1")});
+    transactionDashboard.ukefFacilityIDResults().should( (ukefId) => { expect(ukefId).to.contain("ukef:aDealWithOneLoanAndOneBond-bond1")});
 
     // prove starts-with case-insensitive search on UniqueIdNum vs bond
     transactionDashboard.search().type('{selectall}{backspace}aDeAlWiThOnELoanandOneBond');
     transactionDashboard.applyFilters().click();
-    transactionDashboard.bankId().should( (bankId) => { expect(bankId).to.contain("aDealWithOneLoanAndOneBond-bond1")});
+    transactionDashboard.bankFacilityIDResults().should( (bankId) => { expect(bankId).to.contain("aDealWithOneLoanAndOneBond-bond1")});
 
     // prove starts-with case-insensitive search on ukefFacilityId vs loan
     transactionDashboard.search().type('{selectall}{backspace}ukef:adealwithoneLOANAndOneBOND');
     transactionDashboard.applyFilters().click();
-    transactionDashboard.ukefId().should( (ukefId) => { expect(ukefId).to.contain("ukef:aDealWithOneLoanAndOneBond-loan1")});
+    transactionDashboard.ukefFacilityIDResults().should( (ukefId) => { expect(ukefId).to.contain("ukef:aDealWithOneLoanAndOneBond-loan1")});
 
     // prove starts-with case-insensitive search on BankRefNum vs loan
     transactionDashboard.search().type('{selectall}{backspace}aDEALWithTENLoans-');
     transactionDashboard.applyFilters().click();
-    transactionDashboard.bankId().should( (bankId) => { expect(bankId).to.contain("aDealWithTenLoans-loan6")});
+    transactionDashboard.bankFacilityIDResults().should( (bankId) => { expect(bankId).to.contain("aDealWithTenLoans-loan6")});
 
   });
 });

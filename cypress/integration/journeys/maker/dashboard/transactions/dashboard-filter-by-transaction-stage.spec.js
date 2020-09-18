@@ -47,10 +47,10 @@ context('The Transactions dashboard', () => {
     transactionDashboard.applyFilters().click();
 
     // we should see at least one loan and at least one bond in the correct state, and none in an incorrect state..
-    transactionDashboard.stage().should( (stage) => { expect(stage).not.to.contain("Issued")});
-    transactionDashboard.stage().should( (stage) => { expect(stage).not.to.contain("Unconditional")});
-    transactionDashboard.stage().should( (stage) => { expect(stage).to.contain("Unissued")});
-    transactionDashboard.stage().should( (stage) => { expect(stage).to.contain("Conditional")});
+    transactionDashboard.facilityStageResults().should( (stage) => { expect(stage).not.to.contain("Issued")});
+    transactionDashboard.facilityStageResults().should( (stage) => { expect(stage).not.to.contain("Unconditional")});
+    transactionDashboard.facilityStageResults().should( (stage) => { expect(stage).to.contain("Unissued")});
+    transactionDashboard.facilityStageResults().should( (stage) => { expect(stage).to.contain("Conditional")});
 
     // confirm the filter retains its state
     transactionDashboard.filterByTransactionStage().should('be.visible');
@@ -62,10 +62,10 @@ context('The Transactions dashboard', () => {
     transactionDashboard.applyFilters().click();
 
     // we should see at least one loan and at least one bond in the correct state, and none in an incorrect state..
-    transactionDashboard.stage().should( (stage) => { expect(stage).not.to.contain("Unissued")});
-    transactionDashboard.stage().should( (stage) => { expect(stage).not.to.contain("Conditional")});
-    transactionDashboard.stage().should( (stage) => { expect(stage).to.contain("Issued")});
-    transactionDashboard.stage().should( (stage) => { expect(stage).to.contain("Unconditional")});
+    transactionDashboard.facilityStageResults().should( (stage) => { expect(stage).not.to.contain("Unissued")});
+    transactionDashboard.facilityStageResults().should( (stage) => { expect(stage).not.to.contain("Conditional")});
+    transactionDashboard.facilityStageResults().should( (stage) => { expect(stage).to.contain("Issued")});
+    transactionDashboard.facilityStageResults().should( (stage) => { expect(stage).to.contain("Unconditional")});
 
     // confirm the filter retains its state
     transactionDashboard.filterByTransactionStage().should('be.visible');
