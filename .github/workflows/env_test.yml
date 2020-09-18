@@ -377,29 +377,29 @@ jobs:
         mongo ${{ env.MONGODB_URI }} facility-counter.js
         echo end.
 
-    - name: Access restriction - ${{ env.protected_database }}
-      uses: Azure/cli@v1.0.0
-      with:
-        # This fails if we want to expose the database,
-        # so we fall back to enabling public network access
-        inlineScript: |
-          # az cosmosdb update --name tfs-${{ env.environment }}-mongo \
-          #   --enable-virtual-network ${{ env.protected_database }} \
-          #   --ip-range-filter 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26 || \
-          az cosmosdb update --name tfs-${{ env.environment }}-mongo \
-            --enable-virtual-network false \
-            --enable-public-network true
+    # - name: Access restriction - ${{ env.protected_database }}
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # This fails if we want to expose the database,
+    #     # so we fall back to enabling public network access
+    #     inlineScript: |
+    #       # az cosmosdb update --name tfs-${{ env.environment }}-mongo \
+    #       #   --enable-virtual-network ${{ env.protected_database }} \
+    #       #   --ip-range-filter 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26 || \
+    #       az cosmosdb update --name tfs-${{ env.environment }}-mongo \
+    #         --enable-virtual-network false \
+    #         --enable-public-network true
 
-    - name: Enable vnet access
-      uses: Azure/cli@v1.0.0
-      with:
-        # This fails if we want to expose the database,
-        # so we fall back to just an echo statement.
-        inlineScript: |
-          # az cosmosdb network-rule add --name tfs-${{ env.environment }}-mongo \
-          #   --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
-          #   --subnet backing-services || \
-          echo "Not restricting to a subnet."
+    # - name: Enable vnet access
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # This fails if we want to expose the database,
+    #     # so we fall back to just an echo statement.
+    #     inlineScript: |
+    #       # az cosmosdb network-rule add --name tfs-${{ env.environment }}-mongo \
+    #       #   --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+    #       #   --subnet backing-services || \
+    #       echo "Not restricting to a subnet."
 
   front-door:
     # NB Front Door takes a little while to be available
@@ -526,25 +526,25 @@ jobs:
             --name workflow || \
           echo Skipped.
 
-    - name: Access restriction
-      if: ${{ always() }}
-      uses: Azure/cli@v1.0.0
-      with:
-        # Always remove public access
-        # On activating "Allow access from Azure Portal":
-        # https://github.com/Azure/azure-cli/issues/7495 ->
-        # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall#allow-requests-from-the-azure-portal
-        # ALLOW REQUESTS FROM THE AZURE PORTAL
-        # Region IP address
-        # Germany 51.4.229.218
-        # China 139.217.8.252
-        # US Gov 52.244.48.71
-        # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
-        inlineScript: |
-          az storage account update --name tfs${{ env.environment }}storage --default-action Deny
-          az storage account network-rule add --account-name tfs${{ env.environment }}storage \
-            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
-            --subnet backing-services
+    # - name: Access restriction
+    #   if: ${{ always() }}
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # Always remove public access
+    #     # On activating "Allow access from Azure Portal":
+    #     # https://github.com/Azure/azure-cli/issues/7495 ->
+    #     # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall#allow-requests-from-the-azure-portal
+    #     # ALLOW REQUESTS FROM THE AZURE PORTAL
+    #     # Region IP address
+    #     # Germany 51.4.229.218
+    #     # China 139.217.8.252
+    #     # US Gov 52.244.48.71
+    #     # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
+    #     inlineScript: |
+    #       az storage account update --name tfs${{ env.environment }}storage --default-action Deny
+    #       az storage account network-rule add --account-name tfs${{ env.environment }}storage \
+    #         --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+    #         --subnet backing-services
 
   session-store:
     name: Redis (sessions)
