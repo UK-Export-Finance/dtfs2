@@ -47,8 +47,8 @@ context('The Transactions dashboard', () => {
     transactionDashboard.applyFilters().click();
 
     // we should see at least one bond and no loans
-    transactionDashboard.type().should( (transactionType) => { expect(transactionType).to.contain("bond")});
-    transactionDashboard.type().should( (transactionType) => { expect(transactionType).not.to.contain("loan")});
+    transactionDashboard.facilityTypeResults().should( (transactionType) => { expect(transactionType).to.contain("bond")});
+    transactionDashboard.facilityTypeResults().should( (transactionType) => { expect(transactionType).not.to.contain("loan")});
 
     // confirm the filter retains its state
     transactionDashboard.filterByTransactionType().should('be.visible');
@@ -60,8 +60,8 @@ context('The Transactions dashboard', () => {
     transactionDashboard.applyFilters().click();
 
     // we should see at least one loan and no bonds
-    transactionDashboard.type().should( (transactionType) => { expect(transactionType).to.contain("loan")});
-    transactionDashboard.type().should( (transactionType) => { expect(transactionType).not.to.contain("bond")});
+    transactionDashboard.facilityTypeResults().should( (transactionType) => { expect(transactionType).to.contain("loan")});
+    transactionDashboard.facilityTypeResults().should( (transactionType) => { expect(transactionType).not.to.contain("bond")});
 
     // confirm the filter retains its state
     transactionDashboard.filterByTransactionType().should('be.visible');

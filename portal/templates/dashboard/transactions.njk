@@ -99,47 +99,45 @@
                 {% if user.roles.includes('maker') and ["Draft", "Further Maker\'s input required"].includes(transaction.deal_status) %}
                   {# link through to the bond or loan details page, since current user can edit it.. #}
                   {% if "bond" === transaction.transactionType %}
-                    <a data-cy="bankSupplyContractID" href="/contract/{{transaction.deal_id}}/bond/{{transaction.transaction_id}}/details" class="govuk-link">{{ linkText }}</a>
+                    <a data-cy="bankFacilityID" href="/contract/{{transaction.deal_id}}/bond/{{transaction.transaction_id}}/details" class="govuk-link">{{ linkText }}</a>
                   {% else %}
-                    <a data-cy="bankSupplyContractID" href="/contract/{{transaction.deal_id}}/loan/{{transaction.transaction_id}}/guarantee-details" class="govuk-link">{{ linkText }}</a>
+                    <a data-cy="bankFacilityID" href="/contract/{{transaction.deal_id}}/loan/{{transaction.transaction_id}}/guarantee-details" class="govuk-link">{{ linkText }}</a>
                   {% endif %}
                 {% else %}
                   {# link through to the relevant bond or loan in the deal-preview tab, since the current user cant edit #}
                   {% if "bond" === transaction.transactionType %}
-                    <a data-cy="bankSupplyContractID" href="/contract/{{transaction.deal_id}}/submission-details#bond-{{transaction.transaction_id}}" class="govuk-link">{{ linkText }}</a>
+                    <a data-cy="bankFacilityID" href="/contract/{{transaction.deal_id}}/submission-details#bond-{{transaction.transaction_id}}" class="govuk-link">{{ linkText }}</a>
                   {% else %}
-                    <a data-cy="bankSupplyContractID" href="/contract/{{transaction.deal_id}}/submission-details#loan-{{transaction.transaction_id}}" class="govuk-link">{{ linkText }}</a>
+                    <a data-cy="bankFacilityID" href="/contract/{{transaction.deal_id}}/submission-details#loan-{{transaction.transaction_id}}" class="govuk-link">{{ linkText }}</a>
                   {% endif %}
                 {% endif %}
               </td>
 
-              <td data-cy="ukefId" class="govuk-table__cell govuk-!-font-size-14">
+              <td data-cy="ukefFacilityID" class="govuk-table__cell govuk-!-font-size-14">
                 {{ transaction.ukefFacilityId }}
               </td>
 
-              <td data-cy="type" class="govuk-table__cell govuk-!-font-size-14">
+              <td data-cy="facilityType" class="govuk-table__cell govuk-!-font-size-14">
                 {{ transaction.transactionType }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
+              <td data-cy="facilityValue" class="govuk-table__cell govuk-!-font-size-14">
                 {{ transaction.currency.id }} {{ transaction.facilityValue | formatAsCurrency }}
               </td>
 
-              <td data-cy="stage" class="govuk-table__cell govuk-!-font-size-14">
+              <td data-cy="facilityStage" class="govuk-table__cell govuk-!-font-size-14">
                 {{ transaction.transactionStage }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
-                {% if transaction.issuedDate %}
-                  {{ transaction.issuedDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
-                {% endif %}
+              <td data-cy="facilityIssuedDate" class="govuk-table__cell govuk-!-font-size-14">
+                {{ transaction.issuedFacilitySubmittedToUkefTimestamp | localiseTimestamp('DD/MM/YYYY', user.timezone) | dashIfEmpty }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
+              <td data-cy="maker" class="govuk-table__cell govuk-!-font-size-14">
                 {{ transaction.maker }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
+              <td data-cy="checker" class="govuk-table__cell govuk-!-font-size-14">
                 {{ transaction.checker }}
               </td>
             </tr>
