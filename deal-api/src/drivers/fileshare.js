@@ -183,7 +183,7 @@ const moveFile = async ({ from, to }) => {
   const copied = await copyFile({ from, to });
 
   if (copied.error) {
-    return Promise.reject(new Error(`${filePath}: ${JSON.stringify(copied.error)}`));
+    return Promise.reject(new Error(from.filename));
   }
   await deleteFile(from.fileshare, filePath);
   return copied;
