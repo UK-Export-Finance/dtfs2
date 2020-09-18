@@ -304,7 +304,7 @@ describe('fileshare', () => {
           to: toFile,
         });
       } catch (err) {
-        expect(err.message).toContain('"errorCode":404');
+        expect(err.message).toContain(filename);
       }
     });
   });
