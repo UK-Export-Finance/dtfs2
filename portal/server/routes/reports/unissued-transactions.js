@@ -105,12 +105,14 @@ router.post('/reports/unissued-transactions/:page', async (req, res) => {
     image: 'twistie-up',
   };
 
-
   const stageFilters = {
     facilityStage: 'unissued_conditional',
     filterByStatus: 'submissionAcknowledged',
   };
-  const filters = buildReportFilters(submissionFilters, stageFilters, req.session.user);
+
+  const useFilters = { ...submissionFilters, ...stageFilters };
+
+  const filters = buildReportFilters(useFilters, req.session.user);
 
   const rawData = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
@@ -151,7 +153,7 @@ router.post('/reports/unissued-transactions/:page', async (req, res) => {
     primaryNav,
     banks,
     filter: {
-      ...submissionFilters,
+      ...useFilters,
     },
     sortOrder,
     subNav: 'unissued-transactions-report',
