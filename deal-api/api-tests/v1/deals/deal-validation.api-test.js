@@ -60,7 +60,7 @@ describe('/v1/deals', () => {
         it('should return validationError', async () => {
           let deal = {
             details: {
-              bankSupplyContractID: 'invalid-format!@£$%^&*()+=',
+              bankSupplyContractID: 'invalid-format!@£$%^&*+=',
               bankSupplyContractName: 'test name',
             },
           };
@@ -72,7 +72,7 @@ describe('/v1/deals', () => {
 
           deal = {
             details: {
-              bankSupplyContractID: 'invalid-format{}:"|<>?,.;\'[]',
+              bankSupplyContractID: 'invalid-format{}:"|<>?,;[]',
               bankSupplyContractName: 'test name',
             },
           };
@@ -85,7 +85,7 @@ describe('/v1/deals', () => {
         it('should not return validationError', async () => {
           const deal = {
             details: {
-              bankSupplyContractID: 'valid-format/0_ 9\\a',
+              bankSupplyContractID: 'valid-format/0_ 9\\a.&\'()',
               bankSupplyContractName: 'test name',
             },
           };
@@ -132,7 +132,7 @@ describe('/v1/deals', () => {
           let deal = {
             details: {
               bankSupplyContractID: 'test id',
-              bankSupplyContractName: 'invalid-format!@£$%^&*()+=',
+              bankSupplyContractName: 'invalid-format!@£$%^&*+=',
             },
           };
 
@@ -144,7 +144,7 @@ describe('/v1/deals', () => {
           deal = {
             details: {
               bankSupplyContractID: 'test id',
-              bankSupplyContractName: 'invalid-format{}:"|<>?,.;\'[]',
+              bankSupplyContractName: 'invalid-format{}:"|<>?,;[]',
             },
           };
           const secondPost = await as(aBarclaysMaker).post(deal).to('/v1/deals');
@@ -157,7 +157,7 @@ describe('/v1/deals', () => {
           const deal = {
             details: {
               bankSupplyContractID: 'test id',
-              bankSupplyContractName: 'valid-format/0_ 9\\a',
+              bankSupplyContractName: 'valid-format/0_ 9\\a.&\'()',
             },
           };
 
