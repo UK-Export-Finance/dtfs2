@@ -1,5 +1,5 @@
 const moment = require('moment');
-const aDeal = require('../deals/deal-builder');
+const aDeal = require('./deal-builder');
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -32,7 +32,7 @@ describe('/v1/deals', () => {
             details: {
               bankSupplyContractID: '',
               bankSupplyContractName: 'test name',
-            }
+            },
           };
 
           const { body } = await as(aBarclaysMaker).post(deal).to('/v1/deals');
@@ -47,7 +47,7 @@ describe('/v1/deals', () => {
             details: {
               bankSupplyContractID: 'a'.repeat(31),
               bankSupplyContractName: 'test name',
-            }
+            },
           };
 
           const { body } = await as(aBarclaysMaker).post(deal).to('/v1/deals');
@@ -56,28 +56,42 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('with an invalid character (not A-Z, 0-9, `-`, `_` or a space)', () => {
+      describe('with an invalid character (not A-Z, 0-9, `-`, `_`, `\\`, `/` or a space)', () => {
         it('should return validationError', async () => {
           let deal = {
             details: {
               bankSupplyContractID: 'invalid-format!@£$%^&*()+=',
               bankSupplyContractName: 'test name',
-            }
+            },
           };
 
-          const expectedText = 'Bank deal ID must only include letters a to z, numbers 0 to 9, hyphens, underscores and spaces';
+          const expectedText = 'Bank deal ID must only include letters a to z, numbers 0 to 9, hyphens, underscores, forward slashes, backslashes and spaces';
 
           const firstPost = await as(aBarclaysMaker).post(deal).to('/v1/deals');
           expect(firstPost.body.validationErrors.errorList.bankSupplyContractID.text).toEqual(expectedText);
 
           deal = {
             details: {
-              bankSupplyContractID: 'invalid-format{}:"|<>?,./;\'\[]',
+              bankSupplyContractID: 'invalid-format{}:"|<>?,.;\'[]',
               bankSupplyContractName: 'test name',
-            }
+            },
           };
           const secondPost = await as(aBarclaysMaker).post(deal).to('/v1/deals');
           expect(secondPost.body.validationErrors.errorList.bankSupplyContractID.text).toEqual(expectedText);
+        });
+      });
+
+      describe('with an valid character (A-Z, 0-9, `-`, `_`, `\\`, `/` or a space)', () => {
+        it('should not return validationError', async () => {
+          const deal = {
+            details: {
+              bankSupplyContractID: 'valid-format/0_ 9\\a',
+              bankSupplyContractName: 'test name',
+            },
+          };
+
+          const firstPost = await as(aBarclaysMaker).post(deal).to('/v1/deals');
+          expect(firstPost.body.validationErrors).toBeUndefined();
         });
       });
     });
@@ -88,8 +102,8 @@ describe('/v1/deals', () => {
           const deal = {
             details: {
               bankSupplyContractID: 'test id',
-              bankSupplyContractName: '' 
-            }
+              bankSupplyContractName: '',
+            },
           };
 
           const { body } = await as(aBarclaysMaker).post(deal).to('/v1/deals');
@@ -104,7 +118,7 @@ describe('/v1/deals', () => {
             details: {
               bankSupplyContractID: 'test id',
               bankSupplyContractName: 'a'.repeat(101),
-            }
+            },
           };
 
           const { body } = await as(aBarclaysMaker).post(deal).to('/v1/deals');
@@ -119,10 +133,10 @@ describe('/v1/deals', () => {
             details: {
               bankSupplyContractID: 'test id',
               bankSupplyContractName: 'invalid-format!@£$%^&*()+=',
-            }
+            },
           };
 
-          const expectedText = 'Bank deal name must only include letters a to z, numbers 0 to 9, hyphens, underscores and spaces';
+          const expectedText = 'Bank deal name must only include letters a to z, numbers 0 to 9, hyphens, underscores, forward slashes, backslashes and spaces';
 
           const firstPost = await as(aBarclaysMaker).post(deal).to('/v1/deals');
           expect(firstPost.body.validationErrors.errorList.bankSupplyContractName.text).toEqual(expectedText);
@@ -130,11 +144,25 @@ describe('/v1/deals', () => {
           deal = {
             details: {
               bankSupplyContractID: 'test id',
-              bankSupplyContractName: 'invalid-format{}:"|<>?,./;\'\[]',
-            }
+              bankSupplyContractName: 'invalid-format{}:"|<>?,.;\'[]',
+            },
           };
           const secondPost = await as(aBarclaysMaker).post(deal).to('/v1/deals');
           expect(secondPost.body.validationErrors.errorList.bankSupplyContractName.text).toEqual(expectedText);
+        });
+      });
+
+      describe('with an valid character (A-Z, 0-9, `-`, `_`, `\\`, `/` or a space)', () => {
+        it('should not return validationError', async () => {
+          const deal = {
+            details: {
+              bankSupplyContractID: 'test id',
+              bankSupplyContractName: 'valid-format/0_ 9\\a',
+            },
+          };
+
+          const firstPost = await as(aBarclaysMaker).post(deal).to('/v1/deals');
+          expect(firstPost.body.validationErrors).toBeUndefined();
         });
       });
     });
