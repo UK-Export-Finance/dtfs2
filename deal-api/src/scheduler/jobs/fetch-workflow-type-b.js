@@ -22,22 +22,6 @@ const fetchWorkflowTypeB = {
         folder: overwriteFolder || IMPORT_FOLDER,
       };
 
-      const folderContents = await listDirectoryFiles(workflowImportFolder);
-      if (!folderContents) {
-        return false;
-      }
-
-      const files = folderContents.filter((f) => f.kind === 'file');
-
-      const workflowLockfileExists = files.find((f) => f.name === 'workflow.lock');
-
-      if (!files.length || workflowLockfileExists) {
-        return false;
-      }
-
-      const filePromises = [];
-      const filenames = [];
-
       const lockFile = {
         fileshare: 'workflow',
         folder: IMPORT_FOLDER,
@@ -45,8 +29,24 @@ const fetchWorkflowTypeB = {
         buffer: Buffer.from('', 'utf-8'),
       };
 
-      await uploadFile(lockFile);
+      const folderContents = await listDirectoryFiles(workflowImportFolder);
+      if (!folderContents) {
+        return false;
+      }
 
+      const files = folderContents.filter((f) => f.kind === 'file');
+
+      const lockfileExists = files.some((f) => ['workflow.lock', lockFile.filename].includes(f.name));
+
+      if (!files.length || lockfileExists) {
+        return false;
+      }
+
+      const filePromises = [];
+      const filenames = [];
+
+
+      await uploadFile(lockFile);
       files.filter((f) => f.name.toLowerCase().endsWith('xml')).forEach((file) => {
         const documentLocation = {
           fileshare,
@@ -68,17 +68,17 @@ const fetchWorkflowTypeB = {
         fileContents: fileXml[index].toString('utf16le'),
       }));
 
-      const processListPromises = [];
+      const processList = [];
 
-      fileContents.forEach((xmlFile) => {
-        const processedTypeB = processTypeB(xmlFile).catch(() => ({
-          filename: xmlFile.filename,
+      for (let i = 0; i < fileContents.length; i++) {
+        const processedTypeB = await processTypeB(fileContents[i]).catch(() => ({
+          filename: fileContents[[i]].filename,
           success: false,
-        }));
-        processListPromises.push(processedTypeB);
-      });
+        })).then((processedTypeB) => {
+          processList.push(processedTypeB);
+        });
+      }
 
-      const processList = await Promise.all(processListPromises);
       const processErrorFiles = processList.filter((pl) => !pl.success).map(({ filename }) => filename);
 
       const moveFilePromises = [];
