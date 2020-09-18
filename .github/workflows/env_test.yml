@@ -51,6 +51,7 @@ jobs:
     name: Portal API vnet
     runs-on: ubuntu-latest
     steps:
+
     - uses: azure/login@v1
       with:
         creds: ${{ env.credentials }}
@@ -283,36 +284,13 @@ jobs:
         # US Gov 52.244.48.71
         # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
         inlineScript: |
-          az cosmosdb show --name tfs-${{ env.environment }}-mongo || \
           az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB --server-version 3.6
-
-    - name: Access restriction - ${{ env.protected_database }}
-      uses: Azure/cli@v1.0.0
-      with:
-        # This fails if we want to expose the database,
-        # so we fall back to enabling public network access
-        inlineScript: |
-          az cosmosdb update --name tfs-${{ env.environment }}-mongo \
-            --enable-virtual-network ${{ env.protected_database }} \
-            --ip-range-filter 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26 || \
-          az cosmosdb update --name tfs-${{ env.environment }}-mongo \
-            --enable-virtual-network false \
-            --enable-public-network true
-
-    - name: Enable vnet access
-      uses: Azure/cli@v1.0.0
-      with:
-        # This fails if we want to expose the database,
-        # so we fall back to just an echo statement.
-        inlineScript: |
-          az cosmosdb network-rule add --name tfs-${{ env.environment }}-mongo \
-            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
-            --subnet backing-services || \
-          echo "Not restricting to a subnet."
 
     - name: Database with autoscale
       uses: Azure/cli@v1.0.0
       with:
+        # TODO: switch from provisioned throughput to "serverless" capacity at the account level once it's available for Mongo (currently available for sql).
+        # TODO: enable continuous backup once that becomes available - looks like it's in private beta at the moment.
         inlineScript: |
           az cosmosdb mongodb database create --account tfs-${{ env.environment }}-mongo --name ${{ env.database_name }} --max-throughput 4000
 
@@ -348,6 +326,80 @@ jobs:
           
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters --shard "_id"
+
+    - name: Add Deal ID counter
+      run: |
+        cat <<EOF > deal-counter.js
+        db = db.getSiblingDB('tfs-portal')
+        try {
+          db.idCounters.insertOne({
+            "_id" : "DEAL_COUNTER",
+            "count" : 1000000
+          })
+        } catch (err) {
+          print("Deal counter exists.")
+          print(err)
+        }
+        EOF
+        cat deal-counter.js
+        echo Attempt 1...
+        mongo ${{ env.MONGODB_URI }} deal-counter.js
+        echo Attempt 2...
+        mongo ${{ env.MONGODB_URI }} deal-counter.js
+        echo Attempt 3...
+        mongo ${{ env.MONGODB_URI }} deal-counter.js
+        echo Attempt 4...
+        mongo ${{ env.MONGODB_URI }} deal-counter.js
+        echo end.
+
+    - name: Add Facility ID counter
+      run: |
+        cat <<EOF > facility-counter.js
+        db = db.getSiblingDB('tfs-portal')
+        try {
+          db.idCounters.insertOne({
+            "_id" : "FACILITY_COUNTER",
+            "count" : 1000000
+          })
+        } catch (err) {
+          print("Facility counter exists.")
+          print(err)
+        }
+        EOF
+        cat facility-counter.js
+        echo Attempt 1...
+        mongo ${{ env.MONGODB_URI }} facility-counter.js
+        echo Attempt 2...
+        mongo ${{ env.MONGODB_URI }} facility-counter.js
+        echo Attempt 3...
+        mongo ${{ env.MONGODB_URI }} facility-counter.js
+        echo Attempt 4...
+        mongo ${{ env.MONGODB_URI }} facility-counter.js
+        echo end.
+
+    # - name: Access restriction - ${{ env.protected_database }}
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # This fails if we want to expose the database,
+    #     # so we fall back to enabling public network access
+    #     inlineScript: |
+    #       # az cosmosdb update --name tfs-${{ env.environment }}-mongo \
+    #       #   --enable-virtual-network ${{ env.protected_database }} \
+    #       #   --ip-range-filter 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26 || \
+    #       az cosmosdb update --name tfs-${{ env.environment }}-mongo \
+    #         --enable-virtual-network false \
+    #         --enable-public-network true
+
+    # - name: Enable vnet access
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # This fails if we want to expose the database,
+    #     # so we fall back to just an echo statement.
+    #     inlineScript: |
+    #       # az cosmosdb network-rule add --name tfs-${{ env.environment }}-mongo \
+    #       #   --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+    #       #   --subnet backing-services || \
+    #       echo "Not restricting to a subnet."
 
   front-door:
     # NB Front Door takes a little while to be available
@@ -395,6 +447,36 @@ jobs:
             --route-type Redirect \
             --accepted-protocols Http \
             --redirect-protocol HttpsOnly
+
+    - name: API routing
+      uses: Azure/cli@v1.0.0
+      with:
+        # NB "DefaultFrontendEndpoint" is the name assigned by the command above.
+        # If this changes, use "az network front-door show --name tfs-???-fd | grep FrontendEndpoints"
+        inlineScript: |
+          az network front-door load-balancing create --front-door-name tfs-${{ env.environment }}-fd \
+            --name api-lb \
+            --sample-size 4 \
+            --successful-samples-required 2
+          az network front-door probe create --front-door-name tfs-${{ env.environment }}-fd \
+            --interval 60 \
+            --name api-probe \
+            --path /healthcheck \
+            --probeMethod GET \
+            --protocol Https
+          az network front-door backend-pool create --front-door-name tfs-${{ env.environment }}-fd \
+            --name portal-api \
+            --address tfs-${{ env.environment }}-portal-api.azurewebsites.net \
+            --load-balancing api-lb \
+            --probe api-probe
+          az network front-door routing-rule create --front-door-name tfs-${{ env.environment }}-fd \
+            --name API \
+            --frontend-endpoints DefaultFrontendEndpoint \
+            --route-type Forward \
+            --accepted-protocols Https \
+            --forwarding-protocol HttpsOnly \
+            --backend-pool portal-api \
+            --patterns "/v1/*"
 
   file-storage:
     name: File storage
@@ -444,25 +526,25 @@ jobs:
             --name workflow || \
           echo Skipped.
 
-    - name: Access restriction
-      if: ${{ always() }}
-      uses: Azure/cli@v1.0.0
-      with:
-        # Always remove public access
-        # On activating "Allow access from Azure Portal":
-        # https://github.com/Azure/azure-cli/issues/7495 ->
-        # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall#allow-requests-from-the-azure-portal
-        # ALLOW REQUESTS FROM THE AZURE PORTAL
-        # Region IP address
-        # Germany 51.4.229.218
-        # China 139.217.8.252
-        # US Gov 52.244.48.71
-        # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
-        inlineScript: |
-          az storage account update --name tfs${{ env.environment }}storage --default-action Deny
-          az storage account network-rule add --account-name tfs${{ env.environment }}storage \
-            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
-            --subnet backing-services
+    # - name: Access restriction
+    #   if: ${{ always() }}
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # Always remove public access
+    #     # On activating "Allow access from Azure Portal":
+    #     # https://github.com/Azure/azure-cli/issues/7495 ->
+    #     # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall#allow-requests-from-the-azure-portal
+    #     # ALLOW REQUESTS FROM THE AZURE PORTAL
+    #     # Region IP address
+    #     # Germany 51.4.229.218
+    #     # China 139.217.8.252
+    #     # US Gov 52.244.48.71
+    #     # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
+    #     inlineScript: |
+    #       az storage account update --name tfs${{ env.environment }}storage --default-action Deny
+    #       az storage account network-rule add --account-name tfs${{ env.environment }}storage \
+    #         --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+    #         --subnet backing-services
 
   session-store:
     name: Redis (sessions)
