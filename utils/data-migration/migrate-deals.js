@@ -1,7 +1,7 @@
 const xml2js = require('xml2js');
 const fileshare = require('./helpers/fileshare');
 require('dotenv').config();
-const { mapDetails } = require('./maps');
+const { mapDetails, mapEligibility } = require('./maps');
 const { initBanks } = require('./helpers/banks');
 const { initUsers } = require('./helpers/users');
 const consoleLogColor = require('./helpers/console-log-colour');
@@ -37,9 +37,10 @@ const teardown = async () => {
 };
 
 const mapV2 = async (portalDealId, v1Deal) => {
-  const details = mapDetails(portalDealId, v1Deal);
+  const [details, detailsError] = mapDetails(portalDealId, v1Deal);
+  const [eligibility, eligibilityError] = mapEligibility(portalDealId, v1Deal);
 
-  if (!details) {
+  if (detailsError || eligibilityError) {
     return false;
   }
 
@@ -49,6 +50,7 @@ const mapV2 = async (portalDealId, v1Deal) => {
     },
     bankSupplyContractName: v1Deal.General_information.Deal_name,
     details,
+    eligibility,
   };
 
   return mappedV2;

@@ -78,7 +78,10 @@ const mapDetails = (portalDealId, v1Deal) => {
     details.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
   }
 
-  return hasError ? false : details;
+  return [
+    details,
+    hasError,
+  ];
 };
 /*
 
