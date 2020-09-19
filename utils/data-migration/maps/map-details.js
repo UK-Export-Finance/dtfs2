@@ -1,8 +1,8 @@
 const { k2Map } = require('../../../deal-api/src/v1/controllers/integration/helpers');
-const { getBankByName } = require('./banks');
-const { getUserByEmail } = require('./users');
-const { convertV1Date } = require('./date-helpers');
-const log = require('./log');
+const { getBankByName } = require('../helpers/banks');
+const { getUserByEmail } = require('../helpers/users');
+const { convertV1Date } = require('../helpers/date-helpers');
+const log = require('../helpers/log');
 const CONSTANTS = require('../../../deal-api/src/constants');
 
 const mapDetails = (portalDealId, v1Deal) => {

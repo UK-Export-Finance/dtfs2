@@ -198,6 +198,40 @@ exports.create = async (req, res) => {
   return result;
 };
 
+const importDeal = async (req, res) => {
+  if (!isSuperUser(req.user)) {
+    res.status(401).send();
+  }
+
+  const collection = await db.getCollection('deals');
+
+  const newDeal = {
+    ...req.body,
+  };
+
+  const validationErrors = getDealErrors(newDeal);
+
+  if (validationErrors.count !== 0) {
+    return res.status(400).send({
+      ...newDeal,
+      validationErrors,
+    });
+  }
+
+  const response = await collection.insertOne({
+    _id: await generateDealId(),
+    ...newDeal,
+  });
+
+  const createdDeal = response.ops[0];
+  return res.status(200).send(createdDeal);
+};
+
+exports.import = async (req, res) => {
+  const result = await importDeal(req, res);
+  return result;
+};
+
 exports.findOne = (req, res) => {
   findOneDeal(req.params.id, (deal) => {
     if (!deal) {
