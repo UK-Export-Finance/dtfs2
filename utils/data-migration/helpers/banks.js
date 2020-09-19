@@ -9,7 +9,6 @@ const initBanks = async (token) => {
 
 const getBankByName = (bankName) => {
   const bank = banks.find((b) => b.name.toLowerCase() === bankName.toLowerCase());
-  console.log({ bankName, bank });
   if (!bank) return {};
   return {
     id: bank.id,

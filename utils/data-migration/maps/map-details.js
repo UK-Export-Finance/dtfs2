@@ -20,6 +20,7 @@ const mapDetails = (portalDealId, v1Deal) => {
     ukefDealId: v1Deal.UKEF_deal_id,
     status: k2Map.findPortalValue('DEAL', 'STATUS', v1Deal.Deal_information.Extra_fields.Deal_status),
     previousStatus: k2Map.findPortalValue('DEAL', 'STATUS', v1Deal.Deal_information.Extra_fields.Deal_previous_status),
+    previousWorkflowStatus: v1Deal.Deal_information.Extra_fields.Deal_previous_status,
     owningBank: getBankByName(v1Deal.Application_bank),
     dateOfLastAction: convertV1Date(v1Deal.Deal_information.Extra_fields.Deal_updated),
   };
