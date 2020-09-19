@@ -1,7 +1,7 @@
 const xml2js = require('xml2js');
 const fileshare = require('./helpers/fileshare');
 require('dotenv').config();
-const { mapDetails } = require('./helpers/map');
+const { mapDetails } = require('./maps');
 const { initBanks } = require('./helpers/banks');
 const { initUsers } = require('./helpers/users');
 const consoleLogColor = require('./helpers/console-log-colour');
@@ -9,8 +9,6 @@ const consoleLogColor = require('./helpers/console-log-colour');
 const log = require('./helpers/log');
 const { getToken, removeMigrationUser } = require('./temporary-token-handler');
 const api = require('./api');
-const { deleteDirectory } = require('./helpers/fileshare');
-
 
 let token;
 let logFile;
@@ -95,7 +93,7 @@ const migrateDeals = async () => {
       processXml(dealId).then((workflowDeal) => {
         mapV2(dealId, workflowDeal).then((v2Deal) => {
           if (v2Deal) {
-            api.createDeal(v2Deal, token).then(async ({ success, deal }) => {
+            api.importDeal(v2Deal, token).then(async ({ success, deal }) => {
               if (success) {
                 //                consoleLogColor(`created deal: ${dealId}`, 'green');
                 log.addSuccess(dealId, deal._id);

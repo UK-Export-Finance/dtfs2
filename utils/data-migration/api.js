@@ -17,7 +17,7 @@ const createUser = async (user) => {
   return response.data;
 };
 
-const createDeal = async (deal, token) => {
+const importDeal = async (deal, token) => {
   const response = await axios({
     method: 'post',
     headers: {
@@ -25,7 +25,7 @@ const createDeal = async (deal, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/deals`,
+    url: `${urlRoot}/v1/deals/import`,
     data: deal,
   }).catch(({ response: data }) => ({ error: true, data: data.data }));
 
@@ -65,7 +65,7 @@ const listBanks = async (token = '') => {
 
 module.exports = {
   createUser,
-  createDeal,
+  importDeal,
   listUsers,
   listBanks,
 };
