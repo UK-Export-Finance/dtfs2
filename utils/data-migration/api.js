@@ -63,9 +63,39 @@ const listBanks = async (token = '') => {
   return response.data.banks;
 };
 
+const listCountries = async (token) => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/countries`,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response.data.countries;
+};
+
+const listCurrencies = async (token) => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/currencies`,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response.data.currencies;
+};
+
 module.exports = {
   createUser,
   importDeal,
   listUsers,
   listBanks,
+  listCountries,
+  listCurrencies,
 };

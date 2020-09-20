@@ -1,4 +1,6 @@
-const { k2Map } = require('../../../deal-api/src/v1/controllers/integration/helpers');
+
+const findPortalValue = require('./findPortalValue');
+
 const { getBankByName } = require('../helpers/banks');
 const { getUserByEmail } = require('../helpers/users');
 const { convertV1Date } = require('../helpers/date-helpers');
@@ -18,8 +20,8 @@ const mapDetails = (portalDealId, v1Deal) => {
     bankSupplyContractID: v1Deal.General_information.Bank_deal_id,
     bankSupplyContractName: v1Deal.General_information.Deal_name,
     ukefDealId: v1Deal.UKEF_deal_id,
-    status: k2Map.findPortalValue('DEAL', 'STATUS', v1Deal.Deal_information.Extra_fields.Deal_status),
-    previousStatus: k2Map.findPortalValue('DEAL', 'STATUS', v1Deal.Deal_information.Extra_fields.Deal_previous_status),
+    status: findPortalValue(v1Deal.Deal_information.Extra_fields.Deal_status, 'Deal_status', 'DEAL', 'STATUS', logError),
+    previousStatus: findPortalValue(v1Deal.Deal_information.Extra_fields.Deal_previous_status, 'Deal_previous_status', 'DEAL', 'STATUS', logError),
     previousWorkflowStatus: v1Deal.Deal_information.Extra_fields.Deal_previous_status,
     owningBank: getBankByName(v1Deal.Application_bank),
     dateOfLastAction: convertV1Date(v1Deal.Deal_information.Extra_fields.Deal_updated),
