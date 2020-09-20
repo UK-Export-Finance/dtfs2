@@ -1,14 +1,20 @@
 const xml2js = require('xml2js');
 const fileshare = require('./helpers/fileshare');
 require('dotenv').config();
-const { mapDetails, mapEligibility } = require('./maps');
+const {
+  mapDetails, mapEligibility, mapSubmissionDetails, mapDealFiles,
+} = require('./maps');
 const { initBanks } = require('./helpers/banks');
 const { initUsers } = require('./helpers/users');
+const { initCountries } = require('./helpers/countries');
+const { initCurrencies } = require('./helpers/currencies');
+
 const consoleLogColor = require('./helpers/console-log-colour');
 
 const log = require('./helpers/log');
 const { getToken, removeMigrationUser } = require('./temporary-token-handler');
 const api = require('./api');
+
 
 let token;
 let logFile;
@@ -25,6 +31,8 @@ const init = async () => {
   token = await getToken();
   await initBanks(token);
   await initUsers(token);
+  await initCountries(token);
+  await initCurrencies(token);
   fileshare.setConfig(AZURE_WORKFLOW_FILESHARE_CONFIG);
   logFile = log.init('migrate-deals');
 };
@@ -39,8 +47,10 @@ const teardown = async () => {
 const mapV2 = async (portalDealId, v1Deal) => {
   const [details, detailsError] = mapDetails(portalDealId, v1Deal);
   const [eligibility, eligibilityError] = mapEligibility(portalDealId, v1Deal);
+  const [submissionDetails, submissionDetailsError] = mapSubmissionDetails(portalDealId, v1Deal);
+  const [dealFiles, dealFilesError] = mapDealFiles(portalDealId, v1Deal);
 
-  if (detailsError || eligibilityError) {
+  if (detailsError || eligibilityError || submissionDetailsError || dealFilesError) {
     return false;
   }
 
@@ -51,6 +61,10 @@ const mapV2 = async (portalDealId, v1Deal) => {
     bankSupplyContractName: v1Deal.General_information.Deal_name,
     details,
     eligibility,
+    submissionDetails,
+    dealFiles,
+    bondTransactions: { items: [] },
+    loanTransactions: { items: [] },
   };
 
   return mappedV2;
