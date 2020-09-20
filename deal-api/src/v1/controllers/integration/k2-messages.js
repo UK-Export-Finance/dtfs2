@@ -128,8 +128,8 @@ const generateTypeA = async (deal, fromStatus) => {
       .Indemnifier_address_Line2(deal.submissionDetails['indemnifier-address-line-2'])
       .Indemnifier_address_Line3(deal.submissionDetails['indemnifier-address-line-3'])
       .Indemnifier_address_Town(deal.submissionDetails['indemnifier-address-town'])
-      .Indemnifier_address_PostalCode(deal.submissionDetails['indemnifier-address-country'].code)
-      .Indemnifier_address_Country(await convertCountryCodeToId(deal.submissionDetails['indemnifier-companies-house-registration-number']));
+      .Indemnifier_address_PostalCode(deal.submissionDetails['indemnifier-address-postcode'])
+      .Indemnifier_address_Country(await convertCountryCodeToId(deal.submissionDetails['indemnifier-address-country'].code));
 
     if (deal.submissionDetails.indemnifierCorrespondenceAddressDifferent === 'true') {
       builder.Indemnifier_correspondence_address_Line1(deal.submissionDetails['indemnifier-correspondence-address-line-1'])
