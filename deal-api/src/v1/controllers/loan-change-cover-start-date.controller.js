@@ -1,4 +1,4 @@
-const { findOneDeal, updateDeal } = require('./deal.controller');
+const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { updateLoanInDeal } = require('./loans.controller');
 const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
@@ -8,7 +8,7 @@ const {
 } = require('../facility-dates/requested-cover-start-date');
 const CONSTANTS = require('../../constants');
 
-exports.updateLoanCoverStartDate =  async(req, res) => {
+exports.updateLoanCoverStartDate = async (req, res) => {
   const {
     loanId,
   } = req.params;
@@ -38,7 +38,7 @@ exports.updateLoanCoverStartDate =  async(req, res) => {
         ...existingLoan,
         ...req.body,
       };
-      
+
       if (hasAllRequestedCoverStartDateValues(loan)) {
         loan = updateRequestedCoverStartDate(loan);
       }
