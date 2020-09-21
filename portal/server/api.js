@@ -248,6 +248,19 @@ const updateLoanIssueFacility = async (dealId, loanId, formData, token) => {
   return response.data;
 };
 
+const updateLoanCoverStartDate = async (dealId, loanId, formData, token) => {
+  const response = await axios({
+    method: 'put',
+    url: `${urlRoot}/v1/deals/${dealId}/loan/${loanId}/change-cover-start-date`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: formData,
+  });
+  return response.data;
+};
+
 const deleteDealLoan = async (dealId, loanId, token) => {
   const response = await axios({
     method: 'delete',
@@ -587,6 +600,7 @@ export default {
   updateDeal,
   updateDealLoan,
   updateLoanIssueFacility,
+  updateLoanCoverStartDate,
   deleteDealLoan,
   updateDealName,
   updateDealStatus,
