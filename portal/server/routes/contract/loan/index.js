@@ -404,12 +404,6 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
     if (!req.session.confirmedRequestedCoverStartDates) {
       req.session.confirmedRequestedCoverStartDates = {};
     }
-
-    if (!req.session.confirmedRequestedCoverStartDates[dealId]) {
-      req.session.confirmedRequestedCoverStartDates[dealId] = [loanId];
-    } else if (!req.session.confirmedRequestedCoverStartDates[dealId].includes(loanId)) {
-      req.session.confirmedRequestedCoverStartDates[dealId].push(loanId);
-    }
   }
 
   if (req.body.needToChangeRequestedCoverStartDate === 'true') {
@@ -435,7 +429,7 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
       };
 
       const { validationErrors } = await postToApi(
-        api.updateDealLoan(
+        api.updateLoanCoverStartDate(
           dealId,
           loanId,
           newLoanDetails,
@@ -447,6 +441,16 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
       requestedCoverValidationErrors = {
         ...validationErrors,
       };
+    }
+
+    if (!requestedCoverValidationErrors.errorList
+      || (requestedCoverValidationErrors.errorList
+        && !requestedCoverValidationErrors.errorList.requestedCoverStartDate)) {
+      if (!req.session.confirmedRequestedCoverStartDates[dealId]) {
+        req.session.confirmedRequestedCoverStartDates[dealId] = [loanId];
+      } else if (!req.session.confirmedRequestedCoverStartDates[dealId].includes(loanId)) {
+        req.session.confirmedRequestedCoverStartDates[dealId].push(loanId);
+      }
     }
 
     if (
