@@ -92,6 +92,45 @@ router.post('/contract/:_id/about/supplier', async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const submissionDetails = req.body;
 
+  if (submissionDetails['supplier-correspondence-address-is-different'] === 'false') {
+    // clear supplier correspondence address fields:
+    submissionDetails["supplier-correspondence-address-country"] = "";
+    submissionDetails["supplier-correspondence-address-line-1"] = "";
+    submissionDetails["supplier-correspondence-address-line-2"] = "";
+    submissionDetails["supplier-correspondence-address-line-3"] = "";
+    submissionDetails["supplier-correspondence-address-town"] = "";
+    submissionDetails["supplier-correspondence-address-postcode"] = "";
+  }
+
+  if (submissionDetails['legallyDistinct'] === 'false') {
+    // clear indemnifier fields:
+    submissionDetails["indemnifier-companies-house-registration-number"] = "";
+    submissionDetails["indemnifier-name"] = "";
+    submissionDetails["indemnifier-address-country"] = "";
+    submissionDetails["indemnifier-address-line-1"] = "";
+    submissionDetails["indemnifier-address-line-2"] = "";
+    submissionDetails["indemnifier-address-line-3"] = "";
+    submissionDetails["indemnifier-address-town"] = "";
+    submissionDetails["indemnifier-address-postcode"] = "";
+    submissionDetails["indemnifierCorrespondenceAddressDifferent"] = "";
+    submissionDetails["indemnifier-correspondence-address-country"] = "";
+    submissionDetails["indemnifier-correspondence-address-line-1"] = "";
+    submissionDetails["indemnifier-correspondence-address-line-2"] = "";
+    submissionDetails["indemnifier-correspondence-address-line-3"] = "";
+    submissionDetails["indemnifier-correspondence-address-town"] = "";
+    submissionDetails["indemnifier-correspondence-address-postcode"] = "";
+  }
+
+  if (submissionDetails['indemnifierCorrespondenceAddressDifferent'] === 'false') {
+    // clear indemnifier correspondence address fields:
+    submissionDetails["indemnifier-correspondence-address-country"] = "";
+    submissionDetails["indemnifier-correspondence-address-line-1"] = "";
+    submissionDetails["indemnifier-correspondence-address-line-2"] = "";
+    submissionDetails["indemnifier-correspondence-address-line-3"] = "";
+    submissionDetails["indemnifier-correspondence-address-town"] = "";
+    submissionDetails["indemnifier-correspondence-address-postcode"] = "";
+  }
+
   await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
 
   const redirectUrl = `/contract/${_id}/about/buyer`;
@@ -119,8 +158,49 @@ router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL]), async
     'indemnifier-correspondence-address-country': (indemnifierCorrespondenceAddressCountry && indemnifierCorrespondenceAddressCountry.code) ? indemnifierCorrespondenceAddressCountry.code : '',
   };
 
-  if (!formDataMatchesOriginalData(req.body, mappedOriginalData)) {
-    await updateSubmissionDetails(deal, req.body, userToken);
+  const submissionDetails = req.body;
+
+  if (submissionDetails['supplier-correspondence-address-is-different'] === 'false') {
+    // clear supplier correspondence address fields:
+    submissionDetails["supplier-correspondence-address-country"] = "";
+    submissionDetails["supplier-correspondence-address-line-1"] = "";
+    submissionDetails["supplier-correspondence-address-line-2"] = "";
+    submissionDetails["supplier-correspondence-address-line-3"] = "";
+    submissionDetails["supplier-correspondence-address-town"] = "";
+    submissionDetails["supplier-correspondence-address-postcode"] = "";
+  }
+
+  if (submissionDetails['legallyDistinct'] === 'false') {
+    // clear indemnifier fields:
+    submissionDetails["indemnifier-companies-house-registration-number"] = "";
+    submissionDetails["indemnifier-name"] = "";
+    submissionDetails["indemnifier-address-country"] = "";
+    submissionDetails["indemnifier-address-line-1"] = "";
+    submissionDetails["indemnifier-address-line-2"] = "";
+    submissionDetails["indemnifier-address-line-3"] = "";
+    submissionDetails["indemnifier-address-town"] = "";
+    submissionDetails["indemnifier-address-postcode"] = "";
+    submissionDetails["indemnifierCorrespondenceAddressDifferent"] = "";
+    submissionDetails["indemnifier-correspondence-address-country"] = "";
+    submissionDetails["indemnifier-correspondence-address-line-1"] = "";
+    submissionDetails["indemnifier-correspondence-address-line-2"] = "";
+    submissionDetails["indemnifier-correspondence-address-line-3"] = "";
+    submissionDetails["indemnifier-correspondence-address-town"] = "";
+    submissionDetails["indemnifier-correspondence-address-postcode"] = "";
+  }
+
+  if (submissionDetails['indemnifierCorrespondenceAddressDifferent'] === 'false') {
+    // clear indemnifier correspondence address fields:
+    submissionDetails["indemnifier-correspondence-address-country"] = "";
+    submissionDetails["indemnifier-correspondence-address-line-1"] = "";
+    submissionDetails["indemnifier-correspondence-address-line-2"] = "";
+    submissionDetails["indemnifier-correspondence-address-line-3"] = "";
+    submissionDetails["indemnifier-correspondence-address-town"] = "";
+    submissionDetails["indemnifier-correspondence-address-postcode"] = "";
+  }
+
+  if (!formDataMatchesOriginalData(submissionDetails, mappedOriginalData)) {
+    await updateSubmissionDetails(deal, submissionDetails, userToken);
   }
 
   const redirectUrl = `/contract/${_id}`;
