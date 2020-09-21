@@ -22,6 +22,7 @@ const loans = require('./controllers/loans.controller');
 const loanIssueFacility = require('./controllers/loan-issue-facility.controller');
 const bonds = require('./controllers/bonds.controller');
 const bondIssueFacility = require('./controllers/bond-issue-facility.controller');
+const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-date.controller');
 const mga = require('./controllers/mga.controller');
 
 const users = require('./users/routes');
@@ -116,6 +117,12 @@ authRouter.route('/deals/:id/bond/:bondId/issue-facility')
   .put(
     validate({ role: ['maker'] }),
     bondIssueFacility.updateBondIssueFacility,
+  );
+
+authRouter.route('/deals/:id/bond/:bondId/change-cover-start-date')
+  .put(
+    validate({ role: ['maker'] }),
+    bondChangeCoverStartDate.updateBondCoverStartDate,
   );
 
 authRouter.route('/deals/:id')
