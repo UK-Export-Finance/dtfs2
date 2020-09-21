@@ -10,6 +10,7 @@ const indemnifierDataIsRequired = require('./indemnifier-data-is-required-if-leg
 const indemnifierCorrespondenceAddressIsRequired = require('./indemnifier-correspondence-address-is-required-if-different');
 const buyerNameIsRequired = require('./buyer-name-is-required');
 const buyerAddressIsRequired = require('./buyer-address-is-required');
+const buyerDestinationOfGoodsAndServicesIsRequired = require('./buyer-destination-of-goods-and-services-is-required');
 const supplyContractValueIsRequired = require('./supply-contract-value-is-required');
 const supplyContractCurrencyIsRequired = require('./supply-contract-currency-is-required');
 const supplyContractConversionRateIsRequired = require('./supply-contract-conversion-rate-is-required-for-non-GBP');
@@ -28,6 +29,7 @@ const rules = [
   indemnifierCorrespondenceAddressIsRequired,
   buyerNameIsRequired,
   buyerAddressIsRequired,
+  buyerDestinationOfGoodsAndServicesIsRequired,
   supplyContractValueIsRequired,
   supplyContractCurrencyIsRequired,
   supplyContractConversionRateIsRequired,

@@ -35,12 +35,14 @@ context('about-buyer', () => {
     // prove validation of all non-conditional pieces
     contractAboutPreview.expectError('Buyer name is required');
     contractAboutPreview.expectError('Buyer address line 1 is required');
+    contractAboutPreview.expectError('Destination of Goods and Services is required');
 
     // prove the errors are on the about-buyer page
     contractAboutBuyer.visit(deal);
     contractAboutBuyer.expectError('Buyer name is required');
     contractAboutBuyer.expectError('Buyer address line 1 is required');
     contractAboutBuyer.expectError('Buyer town is required for non-UK addresses');
+    contractAboutBuyer.expectError('Destination of Goods and Services is required');
 
     // switch to UK country
     contractAboutBuyer.buyerAddress().country().select('GBR');
