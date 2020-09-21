@@ -461,7 +461,7 @@ describe('/v1/deals/:id/bond', () => {
             let bond = {
               ...allBondFields,
               bondStage: 'Issued',
-              uniqueIdentificationNumber: 'invalid-format!@£$%^&*()+=',
+              uniqueIdentificationNumber: 'invalid-format!@£$%^&*+=',
             };
 
             const expectedText = 'Bond\'s unique identification number must only include letters a to z, numbers 0 to 9, hyphens, underscores, forward slashes, backslashes and spaces';
@@ -472,7 +472,7 @@ describe('/v1/deals/:id/bond', () => {
             bond = {
               ...allBondFields,
               bondStage: 'Issued',
-              uniqueIdentificationNumber: 'invalid-format{}:"|<>?,.;\'[]',
+              uniqueIdentificationNumber: 'invalid-format{}:"|<>?,;[]',
             };
 
             const { validationErrors: secondValidationErrors } = await updateBondInDeal(dealId, bond);
@@ -485,7 +485,7 @@ describe('/v1/deals/:id/bond', () => {
             const bond = {
               ...allBondFields,
               bondStage: 'Issued',
-              uniqueIdentificationNumber: 'valid-format/0_ 9\\a',
+              uniqueIdentificationNumber: 'valid-format/0_ 9\\a.&\'()',
             };
 
             const { validationErrors: firstValidationErrors } = await updateBondInDeal(dealId, bond);
