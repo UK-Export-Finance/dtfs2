@@ -310,6 +310,19 @@ const updateBondIssueFacility = async (dealId, bondId, formData, token) => {
   return response.data;
 };
 
+const updateBondCoverStartDate = async (dealId, bondId, formData, token) => {
+  const response = await axios({
+    method: 'put',
+    url: `${urlRoot}/v1/deals/${dealId}/bond/${bondId}/change-cover-start-date`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: formData,
+  });
+  return response.data;
+};
+
 const deleteDealBond = async (dealId, bondId, token) => {
   const response = await axios({
     method: 'delete',
@@ -569,6 +582,7 @@ export default {
   transactions,
   updateBond,
   updateBondIssueFacility,
+  updateBondCoverStartDate,
   deleteDealBond,
   updateDeal,
   updateDealLoan,
