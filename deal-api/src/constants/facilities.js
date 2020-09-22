@@ -32,6 +32,7 @@ const STATUS = {
   NOT_STARTED: 'Not started',
   ACKNOWLEDGED: 'Acknowledged',
   READY_FOR_APPROVAL: 'Ready for check',
+  SUBMITTED: 'Submitted',
 };
 
 const TYPE = {
