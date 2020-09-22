@@ -2,7 +2,7 @@ const fs = require('fs');
 const moment = require('moment');
 
 const logData = {
-  success: {},
+  success: [],
   errors: {},
 };
 
@@ -29,8 +29,8 @@ const addError = (v1Id, msg) => {
   saveToFile();
 };
 
-const addSuccess = (v1Id, msg) => {
-  logData.success[v1Id] = msg;
+const addSuccess = (v1Id) => {
+  logData.success.push(v1Id);
   saveToFile();
 };
 

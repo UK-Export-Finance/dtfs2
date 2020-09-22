@@ -219,11 +219,14 @@ const importDeal = async (req, res) => {
   }
 
   const response = await collection.insertOne({
-    _id: await generateDealId(),
+    _id: newDeal._id || await generateDealId(), // eslint-disable-line no-underscore-dangle
     ...newDeal,
+  }).catch((err) => {
+    const status = err.code === 11000 ? 406 : 500;
+    return res.status(status).send(err);
   });
 
-  const createdDeal = response.ops[0];
+  const createdDeal = response.ops && response.ops[0];
   return res.status(200).send(createdDeal);
 };
 
