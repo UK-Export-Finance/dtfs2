@@ -87,6 +87,7 @@ jobs:
         # Subnet for hosting private endpoints for microservices and backing services
         # because apparently you can't both delegate and have private endpoints.
         inlineScript: |
+          az network vnet subnet show --name private-endpoints --vnet-name tfs-${{ env.app_service_plan }}-vnet || \
           az network vnet subnet create \
             --name private-endpoints \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
