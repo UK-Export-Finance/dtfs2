@@ -15,9 +15,9 @@ const page = {
   previousStatus: () => cy.get('[data-cy="previousStatus"]'),
   maker: () => cy.get('[data-cy="maker"]'),
   checker: () => cy.get('[data-cy="checker"]'),
+  submissionDateTableHeader: () => cy.get('[data-cy="submissionDateHeader"]'),
   submissionDate: () => cy.get('[data-cy="submissionDate"]'),
   dateOfLastAction: () => cy.get('[data-cy="dateOfLastAction"]'),
-  submissionType: () => cy.get('[data-cy="submissionType"]'),
   cloneDealLink: () => cy.get('[data-cy="clone-deal-link"]'),
   addBondButton: () => cy.get('[data-cy="link-add-bond"]'),
   addLoanButton: () => cy.get('[data-cy="link-add-loan"]'),
@@ -33,6 +33,7 @@ const page = {
   proceedToSubmit: () => cy.get('[data-cy="ProceedToSubmit"]'),
   returnToMaker: () => cy.get('[data-cy="ReturnToMaker"]'),
   eligibilitySubmissionType: () => cy.get('[data-cy="eligibility-submission-type"]'),
+  eligibilityManualInclusionNoticeSubmissionDate: () => cy.get('[data-cy="manual-inclusion-notice-submission-date"]'),
   bondTransactionsTableRows: () => cy.get('[data-cy="bond-transactions-table"] tbody tr'),
   bondTransactionsTable: {
     row: (bondId) => {

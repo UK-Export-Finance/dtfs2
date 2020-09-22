@@ -475,6 +475,39 @@ describe('/v1/deals/:id/status', () => {
       });
     });
 
+    describe('when the MIA deal status changes to `Submitted`', () => {
+      let createdDeal;
+      let updatedDeal;
+
+      beforeEach(async () => {
+        const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
+        submittedDeal.details.submissionType = 'Manual Inclusion Application';
+
+        const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+
+        createdDeal = postResult.body;
+        const statusUpdate = {
+          status: 'Submitted',
+          confirmSubmit: true,
+        };
+
+        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      });
+
+      it('adds an MIA submissionDate to the deal', async () => {
+        expect(updatedDeal.status).toEqual(200);
+        expect(updatedDeal.body).toBeDefined();
+
+        const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+        // TODO - since we are running inside the same VM as the service during these tests..
+        //  we -can- mock the system clock and do accurate assertions here..
+        // feels more unit-test-like but something to think about
+        expect(body.deal.details.submissionDate).toBeDefined();
+        expect(body.deal.details.manualInclusionApplicationSubmissionDate).toBeDefined();
+      });
+    });
+
     describe('when the status changes to `Submitted` on invalid deal', () => {
       let createdDeal;
       let updatedDeal;
@@ -529,7 +562,7 @@ describe('/v1/deals/:id/status', () => {
       });
 
       describe('when the status changes to `Submitted` on approved MIA', () => {
-        it('should add the checkers details as MIN checker', async () => {
+        it('should add MIN submissionDate and checkers details as MIN checker', async () => {
           const dealCreatedByMaker = {
             ...completedDeal,
             details: {
@@ -550,6 +583,7 @@ describe('/v1/deals/:id/status', () => {
           const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
           expect(updatedDeal.body.details.checkerMIN.username).toEqual(aBarclaysChecker.username);
+          expect(updatedDeal.body.details.manualInclusionNoticeSubmissionDate).toBeDefined();
         });
       });
     });
