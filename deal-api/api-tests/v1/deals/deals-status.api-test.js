@@ -475,6 +475,28 @@ describe('/v1/deals/:id/status', () => {
       });
     });
 
+    describe('when the status changes to `Submitted` on invalid deal', () => {
+      it('return validation errors', async () => {
+        const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
+
+        submittedDeal.details.previousWorkflowStatus = 'invalid status';
+
+        const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+
+        const createdDeal = postResult.body;
+
+        const statusUpdate = {
+          status: 'Submitted',
+          confirmSubmit: true,
+        };
+
+        const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+        expect(updatedDeal.status).toEqual(200);
+        expect(updatedDeal.body.errorCount).toBeGreaterThan(0);
+        expect(updatedDeal.body.errorCount).toEqual(updatedDeal.body.errorList.length);
+      });
+    });
+
     describe('when the MIA deal status changes to `Submitted`', () => {
       let createdDeal;
       let updatedDeal;
@@ -505,28 +527,6 @@ describe('/v1/deals/:id/status', () => {
         // feels more unit-test-like but something to think about
         expect(body.deal.details.submissionDate).toBeDefined();
         expect(body.deal.details.manualInclusionApplicationSubmissionDate).toBeDefined();
-      });
-    });
-
-    describe('when the status changes to `Submitted` on invalid deal', () => {
-      it('return validation errors', async () => {
-        const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
-
-        submittedDeal.details.previousWorkflowStatus = 'invalid status';
-
-        const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
-
-        const createdDeal = postResult.body;
-
-        const statusUpdate = {
-          status: 'Submitted',
-          confirmSubmit: true,
-        };
-
-        const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
-        expect(updatedDeal.status).toEqual(200);
-        expect(updatedDeal.body.errorCount).toBeGreaterThan(0);
-        expect(updatedDeal.body.errorCount).toEqual(updatedDeal.body.errorList.length);
       });
     });
 
