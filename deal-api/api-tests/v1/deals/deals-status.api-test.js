@@ -403,25 +403,23 @@ describe('/v1/deals/:id/status', () => {
       expect(status).toEqual(401);
     });
 
-    describe('when the status changes to `Submitted`', () => {
-      let createdDeal;
-      let updatedDeal;
+  });
 
-      beforeEach(async () => {
+  describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
+    describe('when the status changes to `Submitted`', () => {
+      it('adds a submissionDate to the deal', async () => {
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
         const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
 
-        createdDeal = postResult.body;
+        const createdDeal = postResult.body;
         const statusUpdate = {
           status: 'Submitted',
           confirmSubmit: true,
         };
 
-        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
-      });
+        const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
-      it('adds a submissionDate to the deal', async () => {
         expect(updatedDeal.status).toEqual(200);
         expect(updatedDeal.body).toBeDefined();
 
@@ -498,25 +496,20 @@ describe('/v1/deals/:id/status', () => {
     });
 
     describe('when the MIA deal status changes to `Submitted`', () => {
-      let createdDeal;
-      let updatedDeal;
-
-      beforeEach(async () => {
+      it('adds an MIA submissionDate to the deal', async () => {
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
         submittedDeal.details.submissionType = 'Manual Inclusion Application';
 
         const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
 
-        createdDeal = postResult.body;
+        const createdDeal = postResult.body;
         const statusUpdate = {
           status: 'Submitted',
           confirmSubmit: true,
         };
 
-        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
-      });
+        const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
-      it('adds an MIA submissionDate to the deal', async () => {
         expect(updatedDeal.status).toEqual(200);
         expect(updatedDeal.body).toBeDefined();
 
