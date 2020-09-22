@@ -3,7 +3,7 @@ const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const { formattedTimestamp } = require('../../../../../deal-api/src/v1/facility-dates/timestamp');
 
-const MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast = require('./MIA-deal-with-accepted-status-issued-facilities-cover-start-date-in-past');
+const MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast = require('./fixtures/MIA-deal-with-accepted-status-issued-facilities-cover-start-date-in-past');
 const mockUsers = require('../../../../fixtures/mockUsers');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
