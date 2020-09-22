@@ -153,6 +153,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
+          az network private-dns link vnet show --name ${{ env.environment }}-dns --zone-name ${{ env.environment }}.tfs || \
           az network private-dns link vnet create --name ${{ env.environment }}-dns --registration-enabled true --virtual-network tfs-${{ env.app_service_plan }}-vnet --zone-name ${{ env.environment }}.tfs
 
   public-ip:
