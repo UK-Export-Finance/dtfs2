@@ -171,9 +171,8 @@ jobs:
 
   portal-ui:
     name: Portal UI
+    needs: vnet
     runs-on: ubuntu-latest
-    # Delaying to avoid clashing with container image promotion
-    needs: [portal-api-vnet, cosmos-db]
     steps:
     - uses: azure/login@v1
       with:
@@ -265,9 +264,8 @@ jobs:
 
   portal-api:
     name: Portal API
+    needs: vnet
     runs-on: ubuntu-latest
-    # Delaying to avoid clashing with container image promotion
-    needs: [portal-api-vnet, cosmos-db]
     steps:
     - uses: azure/login@v1
       with:
@@ -369,8 +367,8 @@ jobs:
 
   cosmos-db:
     name: Cosmos DB (Mongo)
+    needs: vnet
     runs-on: ubuntu-latest
-    needs: portal-api-vnet
     steps:
     - uses: azure/login@v1
       with:
@@ -507,6 +505,7 @@ jobs:
 
   file-storage:
     name: File storage
+    needs: vnet
     runs-on: ubuntu-latest
     needs: portal-api-vnet
     steps:
@@ -571,6 +570,7 @@ jobs:
              
   session-store:
     name: Redis (sessions)
+    # needs: vnet
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
