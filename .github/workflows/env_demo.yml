@@ -128,8 +128,10 @@ jobs:
     - name: Zone
       uses: Azure/cli@v1.0.0
       with:
+        # We have to do a show here or we get an error on create if the zone already exists:
         inlineScript: |
-          az network private-dns zone create -n ${{ env.environment }}.tfs
+          az network private-dns zone show --name ${{ env.environment }}.tfs || \
+          az network private-dns zone create --name ${{ env.environment }}.tfs
 
     - name: A records
       uses: Azure/cli@v1.0.0
