@@ -509,27 +509,21 @@ describe('/v1/deals/:id/status', () => {
     });
 
     describe('when the status changes to `Submitted` on invalid deal', () => {
-      let createdDeal;
-      let updatedDeal;
-
-      beforeEach(async () => {
+      it('return validation errors', async () => {
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
         submittedDeal.details.previousWorkflowStatus = 'invalid status';
 
         const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
 
-        createdDeal = postResult.body;
+        const createdDeal = postResult.body;
 
         const statusUpdate = {
           status: 'Submitted',
           confirmSubmit: true,
         };
 
-        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
-      });
-
-      it('return validation errors', async () => {
+        const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
         expect(updatedDeal.status).toEqual(200);
         expect(updatedDeal.body.errorCount).toBeGreaterThan(0);
         expect(updatedDeal.body.errorCount).toEqual(updatedDeal.body.errorList.length);
