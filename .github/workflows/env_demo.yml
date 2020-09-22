@@ -230,6 +230,16 @@ jobs:
             --group-id sites \
             --connection-name tfs-${{ env.environment }}-portal-ui
 
+    - name: Private DNS
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-endpoint dns-zone-group create \
+            --endpoint-name tfs-${{ env.environment }}-mongo \
+            --name tfs-${{ env.environment }}-mongo-zone-group \
+            --private-dns-zone "${{ env.environment }}.tfs" \
+            --zone-name mongo
+
     - name: Always-on
       uses: Azure/cli@v1.0.0
       with:
@@ -322,6 +332,16 @@ jobs:
             --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Web/sites/tfs-demo-portal-api" \
             --group-id sites \
             --connection-name tfs-${{ env.environment }}-portal-api
+
+    - name: Private DNS
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-endpoint dns-zone-group create \
+            --endpoint-name tfs-${{ env.environment }}-mongo \
+            --name tfs-${{ env.environment }}-mongo-zone-group \
+            --private-dns-zone "${{ env.environment }}.tfs" \
+            --zone-name mongo
 
     - name: Always-on
       uses: Azure/cli@v1.0.0
@@ -515,6 +535,16 @@ jobs:
             --group-id MongoDB \
             --connection-name tfs-${{ env.environment }}-mongo
 
+    - name: Private DNS
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-endpoint dns-zone-group create \
+            --endpoint-name tfs-${{ env.environment }}-mongo \
+            --name tfs-${{ env.environment }}-mongo-zone-group \
+            --private-dns-zone "${{ env.environment }}.tfs" \
+            --zone-name mongo
+
   file-storage:
     name: File storage
     needs: vnet
@@ -578,6 +608,16 @@ jobs:
             --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Storage/storageAccounts/tfs${{ env.environment }}storage" \
             --group-id file \
             --connection-name tfs-${{ env.environment }}-storage
+
+    - name: Private DNS
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-endpoint dns-zone-group create \
+            --endpoint-name tfs-${{ env.environment }}-storage \
+            --name tfs-${{ env.environment }}-storage-zone-group \
+            --private-dns-zone "${{ env.environment }}.tfs" \
+            --zone-name storage
              
   session-store:
     name: Redis session store
@@ -620,6 +660,33 @@ jobs:
     #         --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Cache/Redis/tfs-${{ env.environment }}-redis" \
     #         --group-id redisCache \
     #         --connection-name tfs-${{ env.environment }}-redis
+    #
+    # - name: Redis private DNS
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     inlineScript: |
+    #       az network private-endpoint dns-zone-group create \
+    #         --endpoint-name tfs-${{ env.environment }}-redis \
+    #         --name tfs-${{ env.environment }}-redis-zone-group \
+    #         --private-dns-zone "${{ env.environment }}.tfs" \
+    #         --zone-name redis
+
+  application-gateway:
+    # NB Front Door takes a little while to be available
+    # So you won't get a successful request for the first few minutes.
+    name: Application Gateway
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
 
   front-door:
     # NB Front Door takes a little while to be available
