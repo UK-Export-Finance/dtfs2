@@ -83,7 +83,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
 
     //---------------------------------------------------------------
-    // original dates should be displayed
+    // facility tables should display original dates
     // the date submitted in 'Confirm start date' form should not be displayed
     //---------------------------------------------------------------
     const originalBondCoverStartDate = formattedTimestamp(issuedSubmittedBond.requestedCoverStartDate);
