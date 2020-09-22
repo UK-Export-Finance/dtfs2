@@ -507,7 +507,6 @@ jobs:
     name: File storage
     needs: vnet
     runs-on: ubuntu-latest
-    needs: portal-api-vnet
     steps:
     - uses: azure/login@v1
       with:
