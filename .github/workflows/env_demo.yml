@@ -173,8 +173,11 @@ jobs:
     - name: IP address
       uses: Azure/cli@v1.0.0
       with:
+        # Application Gateway requires Static IP allocation and Standard SKU at the time of writing.
         inlineScript: |
-          az network public-ip create --name tfs-${{ env.app_service_plan }}-ip
+          az network public-ip create --name tfs-${{ env.app_service_plan }}-ip \
+            --allocation-method Static
+            --sku Standard
 
   portal-ui:
     name: Portal UI
