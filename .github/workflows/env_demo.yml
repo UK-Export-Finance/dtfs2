@@ -137,10 +137,15 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
+          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name portal-ui || \
           az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name portal-ui
+          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name portal-api || \
           az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name portal-api
+          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name mongo || \
           az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name mongo
+          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name storage || \
           az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name storage
+          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name redis || \
           az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name redis
 
     - name: Link to vnet
