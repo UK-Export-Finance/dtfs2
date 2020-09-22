@@ -2,32 +2,43 @@ const moment = require('moment');
 require('moment-timezone');// monkey-patch to provide moment().tz()
 
 const componentRenderer = require('../../componentRenderer');
+
 const component = 'contract/components/contract-overview-table.njk';
 const render = componentRenderer(component);
 describe(component, () => {
+
+  const now = moment();
+
+  const deal = {
+    details: {
+      bankSupplyContractID: 'bankSupplyContractID',
+      ukefDealId: 'ukefDealId',
+      status: 'status',
+      previousStatus: 'previousStatus',
+      maker: {
+        firstname: 'Robert',
+        surname: 'Bruce',
+      },
+      checker: {
+        firstname: 'Rabbie',
+        surname: 'Burns',
+      },
+      submissionDate: now.valueOf(),
+      dateOfLastAction: now.valueOf(),
+    },
+  };
+
+  const dealWithManualInclusionApplicationSubmissionDate = {
+    ...deal,
+    details: {
+      ...deal.details,
+      submissionType: 'Manual Inclusion Notice',
+      manualInclusionApplicationSubmissionDate: now.valueOf(),
+    },
+  };
+
   describe('renders all the details of a deal', () => {
     let wrapper;
-
-    const now = moment();
-
-    const deal = {
-      details: {
-        bankSupplyContractID: 'bankSupplyContractID',
-        ukefDealId: 'ukefDealId',
-        status: 'status',
-        previousStatus: 'previousStatus',
-        maker: {
-          firstname: 'Robert',
-          surname: 'Bruce',
-        },
-        checker: {
-          firstname: 'Rabbie',
-          surname: 'Burns',
-        },
-        submissionDate: now.valueOf(),
-        dateOfLastAction: now.valueOf(),
-      }
-    };
 
     beforeAll( () => {
       const user = {timezone:'Europe/London'};
@@ -78,6 +89,27 @@ describe(component, () => {
                                       .format('DD/MM/YYYY HH:mm'));
     });
 
+  });
+
+  describe('when deal has manualInclusionApplicationSubmissionDate', () => {
+    let wrapper;
+    const user = { timezone: 'Europe/London' };
+
+    beforeAll(() => {
+      wrapper = render({ deal: dealWithManualInclusionApplicationSubmissionDate, user });
+    });
+
+    it('displays MIA submission date table header', () => {
+      return wrapper.expectText('[data-cy="submissionDateHeader"]')
+        .toRead('MIA Submission date');
+    });
+
+    it('displays deal.details.manualInclusionApplicationSubmissionDate', () => {
+      return wrapper.expectText('[data-cy="submissionDate"]')
+        .toRead(moment(deal.details.dealWithManualInclusionApplicationSubmissionDate)
+          .tz('Europe/London')
+          .format('DD/MM/YYYY'));
+    });
   });
 
   describe('renders - for any blank fields', () => {

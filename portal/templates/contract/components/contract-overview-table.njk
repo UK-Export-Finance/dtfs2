@@ -12,7 +12,13 @@
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Previous status</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Maker</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Checker</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Submission date</th>
+
+        {% if details.submissionType === 'Manual Inclusion Notice' and details.manualInclusionApplicationSubmissionDate %}
+          <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="submissionDateHeader">MIA Submission date</th>
+          {% else %}
+          <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="submissionDateHeader">Submission date</th>
+        {% endif %}
+
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Date of Last Action</th>
       </tr>
     </thead>
@@ -44,7 +50,12 @@
         </td>
 
         <td data-cy="submissionDate" class="govuk-table__cell govuk-!-font-size-14">
+
+        {% if details.submissionType === 'Manual Inclusion Notice' and details.manualInclusionApplicationSubmissionDate %}
+          {{ details.manualInclusionApplicationSubmissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) | dashIfEmpty }}
+          {% else %}
           {{ details.submissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) | dashIfEmpty }}
+        {% endif %}
         </td>
 
         <td data-cy="dateOfLastAction" class="govuk-table__cell govuk-!-font-size-14">

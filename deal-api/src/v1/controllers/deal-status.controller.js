@@ -10,6 +10,7 @@ const validateStateChange = require('../validation/deal-status');
 const userCanSubmitDeal = require('./deal-status/user-can-submit-deal');
 const updateStatus = require('./deal-status/update-status');
 const createSubmissionDate = require('./deal-status/create-submission-date');
+const createMiaSubmissionDate = require('./deal-status/create-mia-submission-date');
 const sendStatusUpdateEmails = require('./deal-status/send-status-update-emails');
 const createApprovalDate = require('./deal-status/create-approval-date');
 
@@ -140,6 +141,11 @@ exports.update = (req, res) => {
       await updateSubmittedIssuedFacilities(req.user, collection, dealAfterAllUpdates);
       dealAfterAllUpdates = await createSubmissionDate(collection, req.params.id, user);
 
+      if (dealAfterAllUpdates.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+        && !dealAfterAllUpdates.details.manualInclusionApplicationSubmissionDate) {
+        dealAfterAllUpdates = await createMiaSubmissionDate(collection, req.params.id, user);
+      }
+
       // TODO - Reinstate typeA XML creation once Loans and Summary have been added
       const { previousWorkflowStatus } = deal.details;
 
@@ -156,7 +162,7 @@ exports.update = (req, res) => {
         && dealAfterAllUpdates.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
       ) {
         // Must be confirming acceptance of MIA so change to MIN
-        // Need to use 'MIN submission date in Issue Facility validation, so add minSubmissionDate
+        // Need to use 'MIN submission date' in Issue Facility validation, so add minSubmissionDate
         const minUpdateReq = {
           params: req.params,
           body: {
