@@ -180,7 +180,7 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_min_quarterly_fee(Number(bond.minimumRiskMarginFee) ? Number(bond.minimumRiskMarginFee) : 0)
         .BSS_premium_type(k2Map.FACILITIES.FEE_TYPE[bond.feeType])
         .BSS_cover_start_date(guaranteeCommencementDate)
-        .BSS_issue_date(dateHelpers.formatTimestamp(bond.issueDate))
+        .BSS_issue_date(dateHelpers.formatTimestamp(bond.issuedDate))
         .BSS_cover_end_date(coverExpiryDate)
         .BSS_cover_period(calculateExposurePeriod(bond))
         .BSS_day_basis(k2Map.FACILITIES.DAY_COUNT_BASIS[bond.dayCountBasis]);
@@ -237,7 +237,7 @@ const generateTypeA = async (deal, fromStatus) => {
           .EWCS_min_quarterly_fee(Number(loan.minimumQuarterlyFee))
           .EWCS_premium_type(k2Map.FACILITIES.FEE_TYPE[loan.premiumType])
           .EWCS_cover_start_date(guaranteeCommencementDate)
-          .EWCS_issue_date(dateHelpers.formatTimestamp(loan.issueDate))
+          .EWCS_issue_date(dateHelpers.formatTimestamp(loan.issuedDate))
           .EWCS_cover_end_date(coverExpiryDate)
           .EWCS_cover_period(calculateExposurePeriod(loan))
           .EWCS_day_basis(k2Map.FACILITIES.DAY_COUNT_BASIS[loan.dayCountBasis]);
