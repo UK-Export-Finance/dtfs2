@@ -2,7 +2,7 @@ const xml2js = require('xml2js');
 const fileshare = require('./helpers/fileshare');
 require('dotenv').config();
 const {
-  mapDetails, mapEligibility, mapSubmissionDetails, mapDealFiles,
+  mapDetails, mapEligibility, mapSubmissionDetails, mapDealFiles, mapBondTransactions,
 } = require('./maps');
 const { initBanks } = require('./helpers/banks');
 const { initUsers } = require('./helpers/users');
@@ -49,8 +49,9 @@ const mapV2 = async (portalDealId, v1Deal) => {
   const [eligibility, eligibilityError] = mapEligibility(portalDealId, v1Deal);
   const [submissionDetails, submissionDetailsError] = mapSubmissionDetails(portalDealId, v1Deal);
   const [dealFiles, dealFilesError] = mapDealFiles(portalDealId, v1Deal);
+  const [bondTransactions, bondTransactionsError] = mapBondTransactions(portalDealId, v1Deal);
 
-  if (detailsError || eligibilityError || submissionDetailsError || dealFilesError) {
+  if (detailsError || eligibilityError || submissionDetailsError || dealFilesError || bondTransactionsError) {
     return false;
   }
 
@@ -58,12 +59,13 @@ const mapV2 = async (portalDealId, v1Deal) => {
     dataMigrationInfo: {
       v1_ID: portalDealId,
     },
+    _id: portalDealId,
     bankSupplyContractName: v1Deal.General_information.Deal_name,
     details,
     eligibility,
     submissionDetails,
     dealFiles,
-    bondTransactions: { items: [] },
+    bondTransactions,
     loanTransactions: { items: [] },
   };
 
@@ -112,9 +114,11 @@ const migrateDeals = async () => {
             api.importDeal(v2Deal, token).then(async ({ success, deal }) => {
               if (success) {
                 //                consoleLogColor(`created deal: ${dealId}`, 'green');
-                log.addSuccess(dealId, deal._id);
+                log.addSuccess(dealId);
               } else if (deal.validationErrors) {
                 log.addError(dealId, deal.validationErrors.errorList);
+              } else if (deal.errmsg) {
+                log.addError(dealId, deal.errmsg);
               } else {
                 log.addError(dealId, 'unknown API deal create error');
               }
