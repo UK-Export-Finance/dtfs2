@@ -158,55 +158,53 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
     });
   });
 
-  describe('on approved MIA', () => {
-    describe('when the status changes to `Ready for Checker\'s approval` on approved MIA', () => {
-      it('should add the makers details as MIN maker', async () => {
-        const dealCreatedByMaker = {
-          ...completedDeal,
-          details: {
-            ...completedDeal.details,
-            submissionType: 'Manual Inclusion Application',
-            previousWorkflowStatus: 'approved',
-          },
-        };
+  describe('when the status changes to `Ready for Checker\'s approval` on approved MIA', () => {
+    it('should add the makers details as MIN maker', async () => {
+      const dealCreatedByMaker = {
+        ...completedDeal,
+        details: {
+          ...completedDeal.details,
+          submissionType: 'Manual Inclusion Application',
+          previousWorkflowStatus: 'approved',
+        },
+      };
 
-        const postResult = await as(aBarclaysMaker).post(dealCreatedByMaker).to('/v1/deals');
-        const createdDeal = postResult.body;
-        const statusUpdate = {
-          status: 'Ready for Checker\'s approval',
-          comments: 'Yay!',
-        };
+      const postResult = await as(aBarclaysMaker).post(dealCreatedByMaker).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        status: 'Ready for Checker\'s approval',
+        comments: 'Yay!',
+      };
 
-        const updatedDeal = await as(aBarclaysMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      const updatedDeal = await as(aBarclaysMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
-        expect(updatedDeal.body.details.makerMIN.username).toEqual(aBarclaysMaker.username);
-      });
+      expect(updatedDeal.body.details.makerMIN.username).toEqual(aBarclaysMaker.username);
     });
+  });
 
-    describe('when the status changes to `Submitted` on approved MIA', () => {
-      it('should add MIN submissionDate and checkers details as MIN checker', async () => {
-        const dealCreatedByMaker = {
-          ...completedDeal,
-          details: {
-            ...completedDeal.details,
-            maker: aBarclaysMakerChecker,
-            submissionType: 'Manual Inclusion Application',
-            previousWorkflowStatus: 'approved',
-          },
-        };
+  describe('when the status changes to `Submitted` on approved MIA', () => {
+    it('should add MIN submissionDate and checkers details as MIN checker', async () => {
+      const dealCreatedByMaker = {
+        ...completedDeal,
+        details: {
+          ...completedDeal.details,
+          maker: aBarclaysMakerChecker,
+          submissionType: 'Manual Inclusion Application',
+          previousWorkflowStatus: 'approved',
+        },
+      };
 
-        const postResult = await as(aBarclaysMaker).post(dealCreatedByMaker).to('/v1/deals');
-        const createdDeal = postResult.body;
-        const statusUpdate = {
-          status: 'Submitted',
-          confirmSubmit: true,
-        };
+      const postResult = await as(aBarclaysMaker).post(dealCreatedByMaker).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        status: 'Submitted',
+        confirmSubmit: true,
+      };
 
-        const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
-        expect(updatedDeal.body.details.checkerMIN.username).toEqual(aBarclaysChecker.username);
-        expect(updatedDeal.body.details.manualInclusionNoticeSubmissionDate).toBeDefined();
-      });
+      expect(updatedDeal.body.details.checkerMIN.username).toEqual(aBarclaysChecker.username);
+      expect(updatedDeal.body.details.manualInclusionNoticeSubmissionDate).toBeDefined();
     });
   });
 });
