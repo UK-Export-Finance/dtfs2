@@ -176,7 +176,7 @@ jobs:
         # Application Gateway requires Static IP allocation and Standard SKU at the time of writing.
         inlineScript: |
           az network public-ip create --name tfs-${{ env.app_service_plan }}-ip \
-            --allocation-method Static
+            --allocation-method Static \
             --sku Standard
 
   portal-ui:
@@ -578,7 +578,7 @@ jobs:
             --connection-name tfs-${{ env.environment }}-storage
              
   session-store:
-    name: Redis (sessions)
+    name: Redis session store
     # needs: vnet
     runs-on: ubuntu-latest
     steps:
