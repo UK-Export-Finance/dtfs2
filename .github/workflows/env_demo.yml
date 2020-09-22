@@ -221,7 +221,7 @@ jobs:
             --name tfs-${{ env.environment }}-portal-ui \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --subnet private-endpoints \
-            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${resource_group}/providers/Microsoft.Web/sites/tfs-demo-portal-ui" \
+            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Web/sites/tfs-demo-portal-ui" \
             --group-id sites \
             --connection-name tfs-${{ env.environment }}-portal-ui
 
@@ -314,7 +314,7 @@ jobs:
             --name tfs-${{ env.environment }}-portal-api \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --subnet private-endpoints \
-            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${resource_group}/providers/Microsoft.Web/sites/tfs-demo-portal-api" \
+            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Web/sites/tfs-demo-portal-api" \
             --group-id sites \
             --connection-name tfs-${{ env.environment }}-portal-api
 
@@ -506,7 +506,7 @@ jobs:
             --name tfs-${{ env.environment }}-mongo \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --subnet private-endpoints \
-            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${resource_group}/providers/Microsoft.DocumentDB/databaseAccounts/tfs-${{ env.environment }}-mongo \
+            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.DocumentDB/databaseAccounts/tfs-${{ env.environment }}-mongo \
             --group-id MongoDB \
             --connection-name tfs-${{ env.environment }}-mongo
 
@@ -570,7 +570,7 @@ jobs:
             --name tfs-${{ env.environment }}-storage \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --subnet private-endpoints \
-            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${resource_group}/providers/Microsoft.Storage/storageAccounts/tfs${{ env.environment }}storage \
+            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Storage/storageAccounts/tfs${{ env.environment }}storage \
             --group-id file \
             --connection-name tfs-${{ env.environment }}-storage
              
@@ -612,7 +612,7 @@ jobs:
     #         --name tfs-${{ env.environment }}-redis \
     #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
     #         --subnet private-endpoints \
-    #         --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${resource_group}/providers/Microsoft.Cache/Redis/tfs-${{ env.environment }}-redis \
+    #         --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Cache/Redis/tfs-${{ env.environment }}-redis \
     #         --group-id redisCache \
     #         --connection-name tfs-${{ env.environment }}-redis
 
