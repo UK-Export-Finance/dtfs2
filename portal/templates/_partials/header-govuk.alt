@@ -5,9 +5,9 @@
   {# set profileLink = urlencode(user._id) #}
 
   {{ govukHeader({
-    homepageUrl: "/start-now",
+    homepageUrl: "/dashboard",
     serviceName: "Get a guarantee for export finance",
-    serviceUrl: "/start-now",
+    serviceUrl: "/dashboard",
     navigation: [
       {
         href: '/user/' + user._id',
@@ -28,9 +28,9 @@
 {% else %}
 
   {{ govukHeader({
-    homepageUrl: "/start-now",
+    homepageUrl: "/dashboard",
     serviceName: "Get a guarantee for export finance",
-    serviceUrl: "/start-now"
+    serviceUrl: "/dashboard"
   }) }}
 
 {% endif %}

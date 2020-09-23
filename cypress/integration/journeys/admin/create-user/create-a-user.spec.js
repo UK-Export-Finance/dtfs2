@@ -1,4 +1,4 @@
-const { startNow, users, createUser} = require('../../../pages');
+const { header, users, createUser} = require('../../../pages');
 const relative = require('../../../relativeURL');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
@@ -38,7 +38,7 @@ context('Admin user creates a new user', () => {
     // login and go to dashboard
     cy.login(ADMIN_LOGIN);
 
-    startNow.header().users().click();
+    header.users().click();
     users.user(validUser).should('not', 'exist');
 
     users.addUser().click();
@@ -63,12 +63,12 @@ context('Admin user creates a new user', () => {
 
     // login as the new user
     cy.login(validUser);
-    cy.url().should('eq', relative('/start-now'));
+    cy.url().should('eq', relative('/dashboard/0'));
 
     // prove the lastLogin timestamp
     cy.login(ADMIN_LOGIN);
-    cy.url().should('eq', relative('/start-now'));
-    startNow.header().users().click();
+    cy.url().should('eq', relative('/dashboard/0'));
+    header.users().click();
 
     users.row(validUser).lastLogin().invoke('text').then((text) => {
       expect(text.trim()).to.not.equal('');
@@ -80,7 +80,7 @@ context('Admin user creates a new user', () => {
     // login and go to dashboard
     cy.login(ADMIN_LOGIN);
 
-    startNow.header().users().click();
+    header.users().click();
     users.user(userWithInvalidPassword).should('not', 'exist');
 
     users.addUser().click();
@@ -109,7 +109,7 @@ context('Admin user creates a new user', () => {
   it("Manage users screen should pass Lighthouse audit", function () {
     // login and go to manage users
     cy.login(ADMIN_LOGIN);
-    startNow.header().users().click();
+    header.users().click();
 
     cy.lighthouse({
       performance: 85,
@@ -124,7 +124,7 @@ context('Admin user creates a new user', () => {
   it("Add user screen should pass Lighthouse audit", function () {
     // login and go to add/edit user
     cy.login(ADMIN_LOGIN);
-    startNow.header().users().click();
+    header.users().click();
     users.addUser().click();
 
     cy.lighthouse({

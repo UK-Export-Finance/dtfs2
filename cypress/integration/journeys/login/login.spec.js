@@ -1,6 +1,5 @@
 const {
   header,
-  startNow,
   beforeYouStart,
   bankDetails,
   dashboard,
@@ -21,9 +20,6 @@ context('Login', () => {
   });
 
   it('When a user that is not logged in navigates to a protected route, they progress to the login page', () => {
-    startNow.visit();
-    cy.url().should('eq', relative('/'));
-
     beforeYouStart.visit();
     cy.url().should('eq', relative('/'));
 
@@ -45,7 +41,7 @@ context('Login', () => {
   it('A successful login takes the user to the /start-now page', () => {
     cy.login(MAKER_LOGIN);
 
-    cy.url().should('eq', relative('/start-now'));
+    cy.url().should('eq', relative('/dashboard/0'));
   });
 
   it('When a logged-in user clicks the home link they go to the /start-now page', () => {
@@ -53,7 +49,7 @@ context('Login', () => {
 
     header.home().click();
 
-    cy.url().should('eq', relative('/start-now'));
+    cy.url().should('eq', relative('/dashboard/0'));
   });
 
   it('When a logged-in user clicks the dashboard link they go to the /dashboard page', () => {
@@ -64,12 +60,12 @@ context('Login', () => {
     cy.url().should('eq', relative('/dashboard/0'));
   });
 
-  it('When a logged-in user clicks the service name link they go to the /start-now page', () => {
+  it('When a logged-in user clicks the service name link they go to the /dashboard page', () => {
     cy.login(MAKER_LOGIN);
 
     header.serviceName().click();
 
-    cy.url().should('eq', relative('/start-now'));
+    cy.url().should('eq', relative('/dashboard/0'));
   });
 
   it("Should pass Lighthouse audit", function () {

@@ -36,7 +36,7 @@ context('Red Line eligibility checking', () => {
     cy.url().should('eq', relative('/unable-to-proceed'));
 
     pages.unableToProceed.goToHomepage().click();
-    cy.url().should('eq', relative('/start-now'));
+    cy.url().should('eq', relative('/dashboard/0'));
   });
 
   it('the Unable To Proceed page links back to the home page', () => {
@@ -46,7 +46,7 @@ context('Red Line eligibility checking', () => {
     pages.beforeYouStart.submit().click();
 
     pages.unableToProceed.goToHomepage().click();
-    cy.url().should('eq', relative('/start-now'));
+    cy.url().should('eq', relative('/dashboard/0'));
   });
 
   it('A deal that passes red-line checks can progress to enter supply detaile', () => {

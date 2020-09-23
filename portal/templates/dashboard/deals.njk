@@ -28,6 +28,7 @@
       {% if user.roles.includes('maker') %}
         {{ govukButton({
           text: "Create new Submission",
+          attributes: {"data-cy":"CreateNewSubmission"},
           href: "/before-you-start"
         }) }}
       {% endif %}

@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
   if (success) {
     req.session.userToken = token;
     req.session.user = user;
-    res.redirect('/start-now');
+    res.redirect('/dashboard/0');
   } else {
     res.status(401).render('login.njk');
   }

@@ -5,11 +5,11 @@
   {{ mojHeader({
   organisationLabel: {
   text: 'UK Export Finance',
-  href: '/start-now'
+  href: '/dashboard'
   },
   serviceLabel: {
   text: 'Get a guarantee for export finance',
-  href: '/start-now'
+  href: '/dashboard'
   },
   navigation: {
   label: 'Account navigation',
@@ -25,7 +25,7 @@
       href: '/logout'
     }]
   }
-  }) }} 
+  }) }}
 {% else %}
   {{ mojHeader({
   organisationLabel: {
@@ -36,5 +36,5 @@
   text: 'Get a guarantee for export finance',
   href: '/'
   }
-  }) }} 
+  }) }}
 {% endif %}
