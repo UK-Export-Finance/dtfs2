@@ -33,6 +33,8 @@ const DEAL = {
     [CONSTANTS.DEAL.STATUS.CONFIRMED_BY_BANK]: 'confirmed_by_bank',
     [CONSTANTS.DEAL.STATUS.IN_PROGRESS_BY_UKEF]: 'in_progress_by_ukef',
     [CONSTANTS.DEAL.STATUS.ABANDONED]: 'abandoned_deal',
+    [CONSTANTS.DEAL.STATUS.READY_FOR_APPROVAL]: 'ready_for_approval',
+    [CONSTANTS.DEAL.STATUS.INPUT_REQUIRED]: 'further_input_required',
   },
 
 };
