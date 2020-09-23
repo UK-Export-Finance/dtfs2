@@ -796,6 +796,7 @@ jobs:
         inlineScript: |
           gateway_ip_id=$(az network application-gateway show --name tfs-${{ env.environment }}-gw --query "frontendIpConfigurations[0].publicIpAddress.id" -o tsv)
           gateway_ip=$(az resource show --ids "$gateway_ip_id" --query "properties.ipAddress" -o tsv)
+
           az network front-door create --name tfs-${{ env.environment }}-fd \
             --accepted-protocols Https \
             --forwarding-protocol HttpOnly \
@@ -807,12 +808,11 @@ jobs:
     - name: Redirect to https
       uses: Azure/cli@v1.0.0
       with:
-        # NB "DefaultFrontendEndpoint" is the name assigned by the command above.
-        # If this changes, use "az network front-door show --name tfs-???-fd | grep FrontendEndpoints"
         inlineScript: |
+          frontend_endpoint_name=$(az network front-door show --name tfs-${{ env.environment }}-fd --query "frontendEndpoints[0].name" -o tsv)
           az network front-door routing-rule create --front-door-name tfs-${{ env.environment }}-fd \
             --name RedirectToHttps \
-            --frontend-endpoints DefaultFrontendEndpoint \
+            --frontend-endpoints $frontend_endpoint_name \
             --route-type Redirect \
             --accepted-protocols Http \
             --redirect-protocol HttpsOnly
@@ -820,9 +820,8 @@ jobs:
     # - name: API routing
     #   uses: Azure/cli@v1.0.0
     #   with:
-    #     # NB "DefaultFrontendEndpoint" is the name assigned by the command above.
-    #     # If this changes, use "az network front-door show --name tfs-???-fd | grep FrontendEndpoints"
     #     inlineScript: |
+    #       frontend_endpoint_name=$(az network front-door show --name tfs-${{ env.environment }}-fd --query "frontendEndpoints[0].name" -o tsv)
     #       az network front-door load-balancing create --front-door-name tfs-${{ env.environment }}-fd \
     #         --name api-lb \
     #         --sample-size 4 \
@@ -840,7 +839,7 @@ jobs:
     #         --probe api-probe
     #       az network front-door routing-rule create --front-door-name tfs-${{ env.environment }}-fd \
     #         --name API \
-    #         --frontend-endpoints DefaultFrontendEndpoint \
+    #         --frontend-endpoints $frontend_endpoint_name \
     #         --route-type Forward \
     #         --accepted-protocols Https \
     #         --forwarding-protocol HttpsOnly \
