@@ -1,6 +1,8 @@
 const page = {
   visit: () => cy.visit('/dashboard'),
 
+  createNewSubmission: () => cy.get('[data-cy="CreateNewSubmission"]'),
+  
   showFilters: () => cy.contains('Show filters'),
   filterBySubmissionUser: () => cy.get('[data-cy="filterBySubmissionUser"]'),
   filterBySubmissionType: () => cy.get('[data-cy="filterBySubmissionType"]'),

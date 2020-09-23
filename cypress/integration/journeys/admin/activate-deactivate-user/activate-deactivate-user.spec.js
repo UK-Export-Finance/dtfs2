@@ -1,4 +1,4 @@
-const { startNow, users, createUser, editUser} = require('../../../pages');
+const { header, users, createUser, editUser} = require('../../../pages');
 const relative = require('../../../relativeURL');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
@@ -27,7 +27,7 @@ context('Admin user updates an existing user', () => {
   it('Create a user, then edit the user and change their role(s)', () => {
     // login and go to dashboard
     cy.login(ADMIN_LOGIN);
-    startNow.header().users().click();
+    header.users().click();
 
     // add user
     users.addUser().click();
@@ -56,14 +56,14 @@ context('Admin user updates an existing user', () => {
 
     // go back to admin user and re-activate
     cy.login(ADMIN_LOGIN);
-    startNow.header().users().click();
+    header.users().click();
     users.row(userToUpdate).username().click();
     editUser.Activate().click();
     editUser.save().click();
 
     // prove we can log in again
     cy.login(userToUpdate);
-    cy.url().should('eq', relative('/start-now'));
+    cy.url().should('eq', relative('/dashboard/0'));
 
   });
 });

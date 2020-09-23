@@ -1,6 +1,6 @@
 module.exports = {
+  header: require('./header'),
   landingPage: require('./landingPage'),
-  startNow: require('./startNow'),
   beforeYouStart: require('./beforeYouStart'),
   unableToProceed: require('./unableToProceed'),
   bankDetails: require('./bankDetails'),

@@ -1,4 +1,4 @@
-const { startNow, users, createUser, userProfile, changePassword } = require('../../pages');
+const { header, users, createUser, userProfile, changePassword } = require('../../pages');
 const relative = require('../../relativeURL');
 
 const mockUsers = require('../../../fixtures/mockUsers');
@@ -27,7 +27,7 @@ context('Admin user creates a new user; the new user updates their password.', (
   it('Create a user, then edit the user and change their password, triggering validation en route', () => {
     // login and go to dashboard
     cy.login(ADMIN_LOGIN);
-    startNow.header().users().click();
+    header.users().click();
 
     // add user
     users.addUser().click();
@@ -49,7 +49,7 @@ context('Admin user creates a new user; the new user updates their password.', (
 
     // log in as our user + try to change the password to an invalid password..
     cy.login(userToCreate);
-    startNow.header().profile().click();
+    header.profile().click();
     userProfile.changePassword().click();
     changePassword.password().type('fail');
     changePassword.confirmPassword().type('fail');
@@ -71,10 +71,10 @@ context('Admin user creates a new user; the new user updates their password.', (
       ...userToCreate,
       password: 'P4ssPl£ase'
     });
-    cy.url().should('eq', relative('/start-now'));
+    cy.url().should('eq', relative('/dashboard/0'));
 
     // prove that we cant re-use an old password
-    startNow.header().profile().click();
+    header.profile().click();
     userProfile.changePassword().click();
     changePassword.password().type(userToCreate.password);
     changePassword.confirmPassword().type(userToCreate.password);

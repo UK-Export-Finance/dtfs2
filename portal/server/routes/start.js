@@ -24,19 +24,6 @@ const userCanCreateADeal = (user) => {
   return true;
 };
 
-router.get('/start-now', async (req, res) => {
-  const { userToken } = requestParams(req);
-
-  if (!await api.validateToken(userToken)) {
-    res.redirect('/');
-  } else {
-    res.render('start-now.njk', {
-      user: req.session.user,
-      successMessage: getFlashSuccessMessage(req),
-    });
-  }
-});
-
 router.get('/before-you-start', provide([MANDATORY_CRITERIA]), async (req, res) => {
   const { mandatoryCriteria } = req.apiData;
   const { userToken } = requestParams(req);
