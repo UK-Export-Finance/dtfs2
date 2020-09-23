@@ -189,7 +189,6 @@ jobs:
           az webapp create --name tfs-${{ env.environment }}-portal-ui \
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name ${{ env.registry }}/portal-ui:${{ env.environment }}
-          fi
 
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
@@ -244,6 +243,7 @@ jobs:
               --ipv4-address $interface_ip
           else
             echo "IP for tfs-${{ env.environment }}-portal-ui.privatelink.azurewebsites.net is $ipv4_address"
+          fi
 
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
