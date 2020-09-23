@@ -83,7 +83,7 @@ jobs:
           az network vnet subnet create \
             --name ${{ env.environment }}-gateway \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes 10.1.0.0/28
+            --address-prefixes 10.0.1.0/28
           az network nsg create  --name tfs-${{ env.environment }}-gw-nsg
           az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 200 --direction Inbound --protocol Tcp --access Allow \
@@ -109,7 +109,7 @@ jobs:
           az network vnet subnet create \
             --name ${{ env.environment }}-private-endpoints \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes 10.1.1.0/28
+            --address-prefixes 10.0.2.0/28
           az network vnet subnet update \
             --name ${{ env.environment }}-private-endpoints \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
@@ -126,7 +126,7 @@ jobs:
             --name ${{ env.app_service_plan }}-app-service-egress \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --delegations Microsoft.Web/serverFarms \
-            --address-prefixes 10.1.2.0/28
+            --address-prefixes 10.0.3.0/28
 
   dns:
     name: Private DNS
@@ -732,6 +732,7 @@ jobs:
     # NB Front Door takes a little while to be available
     # So you won't get a successful request for the first few minutes.
     name: WAF/DDoS
+    needs: application-gateway
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -775,32 +776,32 @@ jobs:
             --accepted-protocols Http \
             --redirect-protocol HttpsOnly
 
-    - name: API routing
-      uses: Azure/cli@v1.0.0
-      with:
-        # NB "DefaultFrontendEndpoint" is the name assigned by the command above.
-        # If this changes, use "az network front-door show --name tfs-???-fd | grep FrontendEndpoints"
-        inlineScript: |
-          az network front-door load-balancing create --front-door-name tfs-${{ env.environment }}-fd \
-            --name api-lb \
-            --sample-size 4 \
-            --successful-samples-required 2
-          az network front-door probe create --front-door-name tfs-${{ env.environment }}-fd \
-            --interval 60 \
-            --name api-probe \
-            --path /healthcheck \
-            --probeMethod GET \
-            --protocol Https
-          az network front-door backend-pool create --front-door-name tfs-${{ env.environment }}-fd \
-            --name portal-api \
-            --address tfs-${{ env.environment }}-portal-api.azurewebsites.net \
-            --load-balancing api-lb \
-            --probe api-probe
-          az network front-door routing-rule create --front-door-name tfs-${{ env.environment }}-fd \
-            --name API \
-            --frontend-endpoints DefaultFrontendEndpoint \
-            --route-type Forward \
-            --accepted-protocols Https \
-            --forwarding-protocol HttpsOnly \
-            --backend-pool portal-api \
-            --patterns "/v1/*"
+    # - name: API routing
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # NB "DefaultFrontendEndpoint" is the name assigned by the command above.
+    #     # If this changes, use "az network front-door show --name tfs-???-fd | grep FrontendEndpoints"
+    #     inlineScript: |
+    #       az network front-door load-balancing create --front-door-name tfs-${{ env.environment }}-fd \
+    #         --name api-lb \
+    #         --sample-size 4 \
+    #         --successful-samples-required 2
+    #       az network front-door probe create --front-door-name tfs-${{ env.environment }}-fd \
+    #         --interval 60 \
+    #         --name api-probe \
+    #         --path /healthcheck \
+    #         --probeMethod GET \
+    #         --protocol Https
+    #       az network front-door backend-pool create --front-door-name tfs-${{ env.environment }}-fd \
+    #         --name portal-api \
+    #         --address tfs-${{ env.environment }}-portal-api.azurewebsites.net \
+    #         --load-balancing api-lb \
+    #         --probe api-probe
+    #       az network front-door routing-rule create --front-door-name tfs-${{ env.environment }}-fd \
+    #         --name API \
+    #         --frontend-endpoints DefaultFrontendEndpoint \
+    #         --route-type Forward \
+    #         --accepted-protocols Https \
+    #         --forwarding-protocol HttpsOnly \
+    #         --backend-pool portal-api \
+    #         --patterns "/v1/*"
