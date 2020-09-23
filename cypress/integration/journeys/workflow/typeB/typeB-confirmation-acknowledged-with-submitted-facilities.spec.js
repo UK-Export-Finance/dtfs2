@@ -9,7 +9,7 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && us
 // test data we want to set up + work with..
 const dealReadyToSubmitWithAlreadySubmittedIssuedFacilities = require('./test-data/MIA-deal-ready-to-submit-with-already-submitted-issued-facilities');
 
-context('A checker confirms a deal; workflow responds with a confirmation_acknowledged status', () => {
+context('A checker submits a deal; workflow responds with a confirmation_acknowledged status and empty facility statuses', () => {
   let deal;
 
   beforeEach(() => {
