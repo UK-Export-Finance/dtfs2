@@ -40,7 +40,7 @@ const updateLoanStatus = (loan, workflowLoan, workflowActionCode) => {
     facilityStage,
     previousFacilityStage,
   } = loan;
-  
+
   const isIssuedFacility = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
                           || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
                           && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL));
