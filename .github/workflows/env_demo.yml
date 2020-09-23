@@ -332,6 +332,36 @@ jobs:
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name ${{ env.registry }}/portal-api:${{ env.environment }}
 
+    - name: DNS A-records
+      uses: Azure/cli@v1.0.0
+      with:
+        # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
+        # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
+        inlineScript: |
+          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv) || ""
+
+          if [ -z "$ipv4_address" ]
+          then
+            interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-portal-api --query 'networkInterfaces[0].id' -o tsv)
+            interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+
+            az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net" || \
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-portal-api \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+            
+            az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-api.scm --zone-name "privatelink.azurewebsites.net" || \
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-api.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-portal-api.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          else
+            echo "IP for tfs-${{ env.environment }}-portal-api.privatelink.azurewebsites.net is $address"
+          fi
+
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
       with:
