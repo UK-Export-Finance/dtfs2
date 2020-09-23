@@ -74,7 +74,8 @@ jobs:
     - name: Gateway subnet with Network Security Group
       uses: Azure/cli@v1.0.0
       with:
-        # Subnet for hosting an Application Gateway for inbound traffic
+        # Subnet for hosting an Application Gateway for inbound traffic from Front Door
+        # Based on: https://stackoverflow.com/questions/62773144/azure-front-door-in-the-front-of-application-gateway
         inlineScript: |
           az network vnet subnet create \
             --name gateway \
@@ -82,15 +83,21 @@ jobs:
             --address-prefixes 10.0.0.0/28
           az network nsg create  --name tfs-${{ env.app_service_plan }}-gw-nsg
           az network nsg rule create --name front-door-ingress --nsg-name tfs-${{ env.app_service_plan }}-gw-nsg \
-            --priority 100 \
-            --source-address-prefixes "AzureFrontDoor.Backend" \
-            --source-port-ranges "*" \
-            --destination-address-prefixes VirtualNetwork \
-            --destination-port-ranges "*" \
-            --direction Inbound \
-            --access Allow \
-            --protocol Tcp \
-            --description "Allow Front Door to Application Gateway."
+            --priority 200 --direction Inbound --protocol Tcp --access Allow \
+            --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+          az network nsg rule create --name gateway-manager-ingress --nsg-name tfs-${{ env.app_service_plan }}-gw-nsg \
+            --priority 300 --direction Inbound --protocol Tcp --access Allow \
+            --source-address-prefixes "GatewayManager" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "65200-65535"
+          # az network nsg rule create --name vnet-ingress --nsg-name tfs-${{ env.app_service_plan }}-gw-nsg \
+          #   --priority 400 --direction Inbound --protocol Tcp --access Allow \
+          #   --source-address-prefixes "VirtualNetwork" --source-port-ranges "*" \
+          #   --destination-address-prefixes "*" --destination-port-ranges "*"
+          # az network nsg rule create --name load-balancer-ingress --nsg-name tfs-${{ env.app_service_plan }}-gw-nsg \
+          #   --priority 500 --direction Inbound --protocol Tcp --access Allow \
+          #   --source-address-prefixes "AzureLoadBalancer" --source-port-ranges "*" \
+          #   --destination-address-prefixes "*" --destination-port-ranges "*"
           az network vnet subnet update --name gateway --vnet-name tfs-${{ env.app_service_plan }}-vnet --network-security-group tfs-${{ env.app_service_plan }}-gw-nsg
 
     - name: Private links subnet
