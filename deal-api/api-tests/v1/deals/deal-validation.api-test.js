@@ -60,7 +60,7 @@ describe('/v1/deals', () => {
         it('should return validationError', async () => {
           let deal = {
             details: {
-              bankSupplyContractID: 'invalid-format!@£$%^&*+=',
+              bankSupplyContractID: 'invalid-format!@^*=',
               bankSupplyContractName: 'test name',
             },
           };
@@ -85,7 +85,7 @@ describe('/v1/deals', () => {
         it('should not return validationError', async () => {
           const deal = {
             details: {
-              bankSupplyContractID: 'valid-format/0_ 9\\a.&\'()',
+              bankSupplyContractID: 'valid-/0_ 9\\a.&\'()+£’%$,#:',
               bankSupplyContractName: 'test name',
             },
           };
@@ -132,7 +132,7 @@ describe('/v1/deals', () => {
           let deal = {
             details: {
               bankSupplyContractID: 'test id',
-              bankSupplyContractName: 'invalid-format!@£$%^&*+=',
+              bankSupplyContractName: 'invalid-format!@$%^&*+=',
             },
           };
 
