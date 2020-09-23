@@ -47,25 +47,28 @@ const loanHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, d
 };
 
 const addAccurateStatusesToLoans = (
-  dealStatus,
-  previousDealStatus,
-  dealSubmissionType,
-  dealSubmissionDate,
-  manualInclusionNoticeSubmissionDate,
-  loanTransactions,
+  deal,
 ) => {
-  if (loanTransactions.items.length) {
-    loanTransactions.items.forEach((l) => {
+  const { 
+    status: dealStatus,
+    previousStatus: previousDealStatus,
+    submissionType,
+    submissionDate,
+    manualInclusionNoticeSubmissionDate,
+  } = deal.details;
+
+  if (deal.loanTransactions.items.length) {
+    deal.loanTransactions.items.forEach((l) => {
       const loan = l;
-      const validationErrors = loanValidationErrors(loan);
+      const validationErrors = loanValidationErrors(loan, deal);
       let issueFacilityValidationErrors;
 
       if (loan.issueFacilityDetailsStarted
-          && loanHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, dealSubmissionType, loan)) {
+          && loanHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, submissionType, loan)) {
         issueFacilityValidationErrors = loanIssueFacilityValidationErrors(
           loan,
-          dealSubmissionType,
-          dealSubmissionDate,
+          submissionType,
+          submissionDate,
           manualInclusionNoticeSubmissionDate,
         );
       }
@@ -73,7 +76,7 @@ const addAccurateStatusesToLoans = (
       loan.status = loanStatus(loan, validationErrors, issueFacilityValidationErrors);
     });
   }
-  return loanTransactions;
+  return deal.loanTransactions;
 };
 
 module.exports = {
