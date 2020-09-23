@@ -4,7 +4,7 @@ const coverEndDate = require('../../fields/cover-end-date');
 const coverDates = require('../../fields/cover-dates');
 const uniqueIdentificationNumber = require('./unique-identification-number');
 
-module.exports = (bond, errorList) => {
+module.exports = (bond, errorList, deal) => {
   let newErrorList = { ...errorList };
   const {
     bondStage,
@@ -13,7 +13,7 @@ module.exports = (bond, errorList) => {
   const isIssued = (hasValue(bondStage) && bondStage === 'Issued');
 
   if (isIssued) {
-    newErrorList = requestedCoverStartDate(bond, newErrorList);
+    newErrorList = requestedCoverStartDate(bond, deal, newErrorList);
     newErrorList = coverEndDate(bond, newErrorList);
     newErrorList = coverDates(bond, newErrorList);
     newErrorList = uniqueIdentificationNumber(bond, newErrorList);

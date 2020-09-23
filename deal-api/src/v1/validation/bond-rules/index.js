@@ -26,11 +26,11 @@ const rules = [
   dayCountBasis,
 ];
 
-module.exports = (bond) => {
+module.exports = (bond, deal) => {
   let errorList = {};
 
   for (let i = 0; i < rules.length; i += 1) {
-    errorList = rules[i](bond, errorList);
+    errorList = rules[i](bond, errorList, deal);
   }
 
   return errorList;
