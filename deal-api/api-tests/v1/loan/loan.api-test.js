@@ -21,6 +21,11 @@ describe('/v1/deals/:id/loan', () => {
         id: 'GBP',
       },
     },
+    eligibility: {
+      criteria: [
+        { id: 15, answer: true }
+      ],
+    },
   });
 
   const mockCurrencies = [
