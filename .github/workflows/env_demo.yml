@@ -109,52 +109,52 @@ jobs:
             --delegations Microsoft.Web/serverFarms \
             --address-prefixes 10.0.2.0/28
 
-  # dns:
-  #   name: Private DNS
-  #   needs: vnet
-  #   runs-on: ubuntu-latest
-  #   steps:
+  dns:
+    name: Private DNS
+    needs: vnet
+    runs-on: ubuntu-latest
+    steps:
 
-  #   - uses: azure/login@v1
-  #     with:
-  #       creds: ${{ env.credentials }}
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
 
-  #   - name: Defaults
-  #     uses: Azure/cli@v1.0.0
-  #     with:
-  #       inlineScript: |
-  #         az configure --defaults location=uksouth
-  #         az configure --defaults group=${{ env.resource_group }}
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
 
-  #   - name: Zone
-  #     uses: Azure/cli@v1.0.0
-  #     with:
-  #       # We have to do a show here or we get an error on create if the zone already exists:
-  #       inlineScript: |
-  #         az network private-dns zone show --name ${{ env.environment }}.tfs || \
-  #         az network private-dns zone create --name ${{ env.environment }}.tfs
+    - name: Zone
+      uses: Azure/cli@v1.0.0
+      with:
+        # We have to do a show here or we get an error on create if the zone already exists:
+        inlineScript: |
+          az network private-dns zone show --name ${{ env.environment }}.tfs || \
+          az network private-dns zone create --name ${{ env.environment }}.tfs
 
-  #   - name: A records
-  #     uses: Azure/cli@v1.0.0
-  #     with:
-  #       inlineScript: |
-  #         az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name portal-ui || \
-  #         az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name portal-ui
-  #         az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name portal-api || \
-  #         az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name portal-api
-  #         az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name mongo || \
-  #         az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name mongo
-  #         az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name storage || \
-  #         az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name storage
-  #         az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name redis || \
-  #         az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name redis
+    - name: A records
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name portal-ui || \
+          az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name portal-ui
+          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name portal-api || \
+          az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name portal-api
+          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name mongo || \
+          az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name mongo
+          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name storage || \
+          az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name storage
+          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name redis || \
+          az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name redis
 
-  #   - name: Link to vnet
-  #     uses: Azure/cli@v1.0.0
-  #     with:
-  #       inlineScript: |
-  #         az network private-dns link vnet show --name ${{ env.environment }}-dns --zone-name ${{ env.environment }}.tfs || \
-  #         az network private-dns link vnet create --name ${{ env.environment }}-dns --registration-enabled true --virtual-network tfs-${{ env.app_service_plan }}-vnet --zone-name ${{ env.environment }}.tfs
+    - name: Link to vnet
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-dns link vnet show --name ${{ env.environment }}-dns --zone-name ${{ env.environment }}.tfs || \
+          az network private-dns link vnet create --name ${{ env.environment }}-dns --registration-enabled true --virtual-network tfs-${{ env.app_service_plan }}-vnet --zone-name ${{ env.environment }}.tfs
 
   public-ip:
     name: Public IP
@@ -230,15 +230,15 @@ jobs:
             --group-id sites \
             --connection-name tfs-${{ env.environment }}-portal-ui
 
-    # - name: Private DNS
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     inlineScript: |
-    #       az network private-endpoint dns-zone-group create \
-    #         --endpoint-name tfs-${{ env.environment }}-mongo \
-    #         --name tfs-${{ env.environment }}-mongo-zone-group \
-    #         --private-dns-zone "${{ env.environment }}.tfs" \
-    #         --zone-name mongo
+    - name: Private DNS
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-endpoint dns-zone-group create \
+            --endpoint-name tfs-${{ env.environment }}-mongo \
+            --name tfs-${{ env.environment }}-mongo-zone-group \
+            --private-dns-zone "${{ env.environment }}.tfs" \
+            --zone-name mongo
 
     - name: Always-on
       uses: Azure/cli@v1.0.0
@@ -333,15 +333,15 @@ jobs:
             --group-id sites \
             --connection-name tfs-${{ env.environment }}-portal-api
 
-    # - name: Private DNS
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     inlineScript: |
-    #       az network private-endpoint dns-zone-group create \
-    #         --endpoint-name tfs-${{ env.environment }}-mongo \
-    #         --name tfs-${{ env.environment }}-mongo-zone-group \
-    #         --private-dns-zone "${{ env.environment }}.tfs" \
-    #         --zone-name mongo
+    - name: Private DNS
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-endpoint dns-zone-group create \
+            --endpoint-name tfs-${{ env.environment }}-mongo \
+            --name tfs-${{ env.environment }}-mongo-zone-group \
+            --private-dns-zone "${{ env.environment }}.tfs" \
+            --zone-name mongo
 
     - name: Always-on
       uses: Azure/cli@v1.0.0
@@ -427,6 +427,32 @@ jobs:
         # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
         inlineScript: |
           az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB --server-version 3.6
+
+    - name: Private link
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource"
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          subscription_id=$(az account show --query 'id' -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-mongo \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet private-endpoints \
+            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.DocumentDB/databaseAccounts/tfs-${{ env.environment }}-mongo" \
+            --group-id MongoDB \
+            --connection-name tfs-${{ env.environment }}-mongo
+
+    - name: Private DNS
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-endpoint dns-zone-group create \
+            --endpoint-name tfs-${{ env.environment }}-mongo \
+            --name tfs-${{ env.environment }}-mongo-zone-group \
+            --private-dns-zone "${{ env.environment }}.tfs" \
+            --zone-name mongo
 
     - name: Database with autoscale
       uses: Azure/cli@v1.0.0
@@ -519,32 +545,6 @@ jobs:
     #     mongo ${{ env.MONGODB_URI }} facility-counter.js
     #     echo end.
 
-    - name: Private link
-      uses: Azure/cli@v1.0.0
-      with:
-        # Restrict inbound traffic to not be open to the Internet
-        # NB: group-id isn't well documented. It means "Target sub-resource"
-        #     The purpose of connection-name is unknown.
-        inlineScript: |
-          subscription_id=$(az account show --query 'id' -o tsv)
-          az network private-endpoint create \
-            --name tfs-${{ env.environment }}-mongo \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet private-endpoints \
-            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.DocumentDB/databaseAccounts/tfs-${{ env.environment }}-mongo" \
-            --group-id MongoDB \
-            --connection-name tfs-${{ env.environment }}-mongo
-
-    # - name: Private DNS
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     inlineScript: |
-    #       az network private-endpoint dns-zone-group create \
-    #         --endpoint-name tfs-${{ env.environment }}-mongo \
-    #         --name tfs-${{ env.environment }}-mongo-zone-group \
-    #         --private-dns-zone "${{ env.environment }}.tfs" \
-    #         --zone-name mongo
-
   file-storage:
     name: File storage
     needs: vnet
@@ -609,15 +609,15 @@ jobs:
             --group-id file \
             --connection-name tfs-${{ env.environment }}-storage
 
-    # - name: Private DNS
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     inlineScript: |
-    #       az network private-endpoint dns-zone-group create \
-    #         --endpoint-name tfs-${{ env.environment }}-storage \
-    #         --name tfs-${{ env.environment }}-storage-zone-group \
-    #         --private-dns-zone "${{ env.environment }}.tfs" \
-    #         --zone-name storage
+    - name: Private DNS
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-endpoint dns-zone-group create \
+            --endpoint-name tfs-${{ env.environment }}-storage \
+            --name tfs-${{ env.environment }}-storage-zone-group \
+            --private-dns-zone "${{ env.environment }}.tfs" \
+            --zone-name storage
              
   session-store:
     name: Redis session store
