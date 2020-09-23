@@ -1,6 +1,7 @@
 
 const { getCurrencyById } = require('../helpers/currencies');
 const { convertV1Date } = require('../helpers/date-helpers');
+const { getUserByEmail } = require('../helpers/users');
 
 const findPortalValue = require('./findPortalValue');
 const log = require('../helpers/log');
@@ -14,6 +15,15 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
   };
 
   const mapSingleBond = (bond) => {
+    const v1ExtraInfo = {
+      originalRequestedCoverStartDate: convertV1Date(bond.Extra_fields.Original_requested_cover_start_date),
+      dateThenIssued: convertV1Date(bond.Extra_fields.Date_then_issued),
+    };
+
+    if (bond.Extra_fields.User_who_issued && bond.Extra_fields.User_who_issued.username) {
+      v1ExtraInfo.userWhoIssued = getUserByEmail(bond.Extra_fields.User_who_issued.username);
+    }
+
     const v2bond = {
       _id: bond.BSS_Guarantee_details.BSS_portal_facility_id,
       ukefFacilityID: [bond.UKEF_BSS_facility_id],
@@ -34,7 +44,7 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
       feeFrequency: findPortalValue(bond.BSS_Dates_repayments.BSS_premium_freq, 'BSS_premium_freq', 'FACILITIES', 'FEE_FREQUENCY', logError),
       ukefGuaranteeInMonths: bond.BSS_Dates_repayments.BSS_cover_period,
       dayCountBasis: findPortalValue(bond.BSS_Dates_repayments.BSS_day_basis, 'BSS_day_basis', 'FACILITIES', 'DAY_COUNT_BASIS', logError),
-
+      v1ExtraInfo,
     };
 
     if (bond.BSS_Financial_details.BSS_conversion_date_deal) {
