@@ -81,37 +81,37 @@ jobs:
         # See also: https://stackoverflow.com/questions/52674810/azure-app-gateway-v2-cannot-be-configured-with-nsg/52697957
         inlineScript: |
           az network vnet subnet create \
-            --name gateway \
+            --name ${{ env.environment }}-gateway \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --address-prefixes 10.0.0.0/28
-          az network nsg create  --name tfs-${{ env.app_service_plan }}-gw-nsg
-          az network nsg rule create --name front-door --nsg-name tfs-${{ env.app_service_plan }}-gw-nsg \
+          az network nsg create  --name tfs-${{ env.environment }}-gw-nsg
+          az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 200 --direction Inbound --protocol Tcp --access Allow \
             --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
-          az network nsg rule create --name gateway-manager --nsg-name tfs-${{ env.app_service_plan }}-gw-nsg \
+          az network nsg rule create --name gateway-manager --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 300 --direction Inbound --protocol Tcp --access Allow \
             --source-address-prefixes "GatewayManager" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "65200-65535"
-          az network nsg rule create --name deny-internet --nsg-name tfs-${{ env.app_service_plan }}-gw-nsg \
+          az network nsg rule create --name deny-internet --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 1000 --direction Inbound --protocol "*" --access Deny \
             --source-address-prefixes "Internet" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
-          az network vnet subnet update --name gateway --vnet-name tfs-${{ env.app_service_plan }}-vnet --network-security-group tfs-${{ env.app_service_plan }}-gw-nsg
+          az network vnet subnet update --name ${{ env.environment }}-gateway --vnet-name tfs-${{ env.app_service_plan }}-vnet --network-security-group tfs-${{ env.environment }}-gw-nsg
 
     - name: Private links subnet
       uses: Azure/cli@v1.0.0
       with:
-        # Subnet for hosting private endpoints for microservices and backing services
-        # because apparently you can't both delegate and have private endpoints.
+        # Subnet for hosting private endpoints for microservices and backing services.
+        # Apparently you can't both delegate and have private endpoints in the same subnet.
         inlineScript: |
-          az network vnet subnet show --name private-endpoints --vnet-name tfs-${{ env.app_service_plan }}-vnet || \
+          az network vnet subnet show --name ${{ env.environment }}-private-endpoints --vnet-name tfs-${{ env.app_service_plan }}-vnet || \
           az network vnet subnet create \
-            --name private-endpoints \
+            --name ${{ env.environment }}-private-endpoints \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --address-prefixes 10.0.1.0/28
           az network vnet subnet update \
-            --name private-endpoints \
+            --name ${{ env.environment }}-private-endpoints \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --disable-private-endpoint-network-policies true
 
@@ -119,10 +119,11 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         # Subnet for delegation to App Service for outbound traffic from microservices
-        # Delegation Microsoft.Web/serverFarms allows one App Service plan to be associated
+        # Delegation Microsoft.Web/serverFarms allows only one App Service plan to be associated,
+        # So this subnet is named after the app service plan, rather than after the environment.
         inlineScript: |
           az network vnet subnet create \
-            --name app-service-delegation \
+            --name ${{ env.app_service_plan }}-app-service-egress \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --delegations Microsoft.Web/serverFarms \
             --address-prefixes 10.0.2.0/28
@@ -219,7 +220,7 @@ jobs:
           az network private-endpoint create \
             --name tfs-${{ env.environment }}-portal-ui \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet private-endpoints \
+            --subnet ${{ env.environment }}-private-endpoints \
             --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Web/sites/tfs-demo-portal-ui" \
             --group-id sites \
             --connection-name tfs-${{ env.environment }}-portal-ui
@@ -254,7 +255,7 @@ jobs:
         inlineScript: |
           az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-ui \
             --vnet tfs-${{ env.app_service_plan }}-vnet \
-            --subnet app-service-delegation
+            --subnet ${{ env.app_service_plan }}-app-service-egress
 
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
@@ -331,7 +332,7 @@ jobs:
         inlineScript: |
           az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-api \
             --vnet tfs-${{ env.app_service_plan }}-vnet \
-            --subnet app-service-delegation
+            --subnet ${{ env.app_service_plan }}-app-service-egress
 
     - name: Private link
       uses: Azure/cli@v1.0.0
@@ -344,7 +345,7 @@ jobs:
           az network private-endpoint create \
             --name tfs-${{ env.environment }}-portal-api \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet private-endpoints \
+            --subnet ${{ env.environment }}-private-endpoints \
             --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Web/sites/tfs-demo-portal-api" \
             --group-id sites \
             --connection-name tfs-${{ env.environment }}-portal-api
@@ -354,23 +355,31 @@ jobs:
       with:
         # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
         # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
+        # NB the -z tests below are checking 
         inlineScript: |
-          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-portal-api --query 'networkInterfaces[0].id' -o tsv)
-          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+          address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv) || ""
 
-          az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net" || \
-          az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net"
-          az network private-dns record-set a add-record \
-            --record-set-name tfs-${{ env.environment }}-portal-api \
-            --zone-name "privatelink.azurewebsites.net" \
-            --ipv4-address $interface_ip
-          
-          az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-api.scm --zone-name "privatelink.azurewebsites.net" || \
-          az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-api.scm --zone-name "privatelink.azurewebsites.net"
-          az network private-dns record-set a add-record \
-            --record-set-name tfs-${{ env.environment }}-portal-api.scm \
-            --zone-name "privatelink.azurewebsites.net" \
-            --ipv4-address $interface_ip
+          if [ -z "$address" ]
+          then
+            interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-portal-api --query 'networkInterfaces[0].id' -o tsv)
+            interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+
+            az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net" || \
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-portal-api \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+            
+            az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-api.scm --zone-name "privatelink.azurewebsites.net" || \
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-api.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-portal-api.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          else
+            echo "IP for tfs-${{ env.environment }}-portal-api.privatelink.azurewebsites.net is $address"
+          fi
 
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
@@ -468,7 +477,7 @@ jobs:
           az network private-endpoint create \
             --name tfs-${{ env.environment }}-mongo \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet private-endpoints \
+            --subnet ${{ env.environment }}-private-endpoints \
             --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.DocumentDB/databaseAccounts/tfs-${{ env.environment }}-mongo" \
             --group-id MongoDB \
             --connection-name tfs-${{ env.environment }}-mongo
@@ -633,7 +642,7 @@ jobs:
           az network private-endpoint create \
             --name tfs-${{ env.environment }}-storage \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet private-endpoints \
+            --subnet ${{ env.environment }}-private-endpoints \
             --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Storage/storageAccounts/tfs${{ env.environment }}storage" \
             --group-id file \
             --connection-name tfs-${{ env.environment }}-storage
@@ -685,7 +694,7 @@ jobs:
     #       az network private-endpoint create \
     #         --name tfs-${{ env.environment }}-redis \
     #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-    #         --subnet private-endpoints \
+    #         --subnet ${{ env.environment }}-private-endpoints \
     #         --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Cache/Redis/tfs-${{ env.environment }}-redis" \
     #         --group-id redisCache \
     #         --connection-name tfs-${{ env.environment }}-redis
@@ -717,7 +726,7 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
-    # tfs-${{ env.app_service_plan }}-gw
+    # tfs-${{ env.environment }}-gw
 
   front-door:
     # NB Front Door takes a little while to be available
@@ -746,7 +755,7 @@ jobs:
         inlineScript: |
           az network front-door create --name tfs-${{ env.environment }}-fd \
             --accepted-protocols Https \
-            --forwarding-protocol HttpsOnly \
+            --forwarding-protocol HttpOnly \
             --backend-address tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
             --probeMethod GET \
             --protocol Https \
