@@ -50,8 +50,16 @@ const mapV2 = async (portalDealId, v1Deal) => {
   const [submissionDetails, submissionDetailsError] = mapSubmissionDetails(portalDealId, v1Deal);
   const [dealFiles, dealFilesError] = mapDealFiles(portalDealId, v1Deal);
   const [bondTransactions, bondTransactionsError] = mapBondTransactions(portalDealId, v1Deal);
+  const [loanTransactions, loanTransactionsError] = mapBondTransactions(portalDealId, v1Deal);
 
-  if (detailsError || eligibilityError || submissionDetailsError || dealFilesError || bondTransactionsError) {
+  if (
+    detailsError
+    || eligibilityError
+    || submissionDetailsError
+    || dealFilesError
+    || bondTransactionsError
+    || loanTransactionsError
+  ) {
     return false;
   }
 
@@ -66,7 +74,7 @@ const mapV2 = async (portalDealId, v1Deal) => {
     submissionDetails,
     dealFiles,
     bondTransactions,
-    loanTransactions: { items: [] },
+    loanTransactions,
   };
 
   return mappedV2;
