@@ -71,7 +71,7 @@ jobs:
           az network vnet show --name tfs-${{ env.app_service_plan }}-vnet || \
           az network vnet create --name tfs-${{ env.app_service_plan }}-vnet
 
-    - name: Gateway subnet
+    - name: Gateway subnet with Network Security Group
       uses: Azure/cli@v1.0.0
       with:
         # Subnet for hosting an Application Gateway for inbound traffic
@@ -91,6 +91,7 @@ jobs:
             --access Allow \
             --protocol Tcp \
             --description "Allow Front Door to Application Gateway."
+          az network vnet subnet update --name vnet --vnet-name tfs-${{ env.app_service_plan }}-vnet --network-security-group tfs-${{ env.app_service_plan }}-gw-nsg
 
     - name: Private links subnet
       uses: Azure/cli@v1.0.0
