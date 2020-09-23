@@ -81,7 +81,7 @@ jobs:
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --address-prefixes 10.0.0.0/28
           az network nsg create  --name tfs-${{ env.app_service_plan }}-gw-nsg
-          az network nsg rule create --name front-door-ingress --nsg-name tfs-${{ env.app_service_plan }}-gw-nsgs \
+          az network nsg rule create --name front-door-ingress --nsg-name tfs-${{ env.app_service_plan }}-gw-nsg \
             --priority 100 \
             --source-address-prefixes "AzureFrontDoor.Backend" \
             --source-port-ranges "*" \
