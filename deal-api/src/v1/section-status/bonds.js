@@ -47,25 +47,28 @@ const bondHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, d
 };
 
 const addAccurateStatusesToBonds = (
-  dealStatus,
-  previousDealStatus,
-  dealSubmissionType,
-  dealSubmissionDate,
-  manualInclusionNoticeSubmissionDate,
-  bondTransactions,
+  deal,
 ) => {
-  if (bondTransactions.items.length) {
-    bondTransactions.items.forEach((b) => {
+  const {
+    status: dealStatus,
+    previousStatus: previousDealStatus,
+    submissionType,
+    submissionDate,
+    manualInclusionNoticeSubmissionDate,
+  } = deal.details;
+
+  if (deal.bondTransactions.items.length) {
+    deal.bondTransactions.items.forEach((b) => {
       const bond = b;
-      const validationErrors = bondValidationErrors(bond);
+      const validationErrors = bondValidationErrors(bond, deal);
       let issueFacilityValidationErrors;
 
       if (bond.issueFacilityDetailsStarted
-          && bondHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, dealSubmissionType, bond)) {
+          && bondHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, submissionType, bond)) {
         issueFacilityValidationErrors = bondIssueFacilityValidationErrors(
           bond,
-          dealSubmissionType,
-          dealSubmissionDate,
+          submissionType,
+          submissionDate,
           manualInclusionNoticeSubmissionDate,
         );
       }
@@ -73,7 +76,7 @@ const addAccurateStatusesToBonds = (
       bond.status = bondStatus(bond, validationErrors, issueFacilityValidationErrors);
     });
   }
-  return bondTransactions;
+  return deal.bondTransactions;
 };
 
 module.exports = {

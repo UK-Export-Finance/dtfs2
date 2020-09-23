@@ -44,11 +44,11 @@ env:
 
 jobs:
 
-  portal-api-vnet:
+  vnet:
     # NB Only one vnet can be associated per App Service Plan,
     # therefore all App Services on a plan must share a single vnet.
     # So we name the vnet after the app service plan, rather than the environment.
-    name: Portal API vnet
+    name: Vnet
     runs-on: ubuntu-latest
     steps:
 
@@ -68,34 +68,123 @@ jobs:
       with:
         # We have to do a show here or we get an error on create if the vnet already exists:
         inlineScript: |
-          az network vnet show --name tfs-${{ env.app_service_plan }}-portal-api || \
-          az network vnet create --name tfs-${{ env.app_service_plan }}-portal-api
+          az network vnet show --name tfs-${{ env.app_service_plan }}-vnet || \
+          az network vnet create --name tfs-${{ env.app_service_plan }}-vnet
 
-    - name: Subnet
+    - name: Gateway subnet
       uses: Azure/cli@v1.0.0
       with:
-        # Delegation Microsoft.Web/serverFarms allows App Service to call into this vnet
+        # Subnet for hosting an Application Gateway for inbound traffic
         inlineScript: |
           az network vnet subnet create \
-            --name backing-services \
-            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
-            --delegations Microsoft.Web/serverFarms \
+            --name gateway \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --address-prefixes 10.0.0.0/28
 
-    - name: Service endpoints
+    - name: Private links subnet
       uses: Azure/cli@v1.0.0
       with:
-        # Service endpoints allow the selected backing services to be accessed through this subnet
+        # Subnet for hosting private endpoints for microservices and backing services
+        # because apparently you can't both delegate and have private endpoints.
         inlineScript: |
-          az network vnet subnet update --name backing-services --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
-            --service-endpoints Microsoft.AzureCosmosDB Microsoft.Storage 
-            # We may add: Microsoft.web Microsoft.KeyVault
+          az network vnet subnet show --name private-endpoints --vnet-name tfs-${{ env.app_service_plan }}-vnet || \
+          az network vnet subnet create \
+            --name private-endpoints \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --address-prefixes 10.0.1.0/28
+          az network vnet subnet update \
+            --name private-endpoints \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --disable-private-endpoint-network-policies true
+
+    - name: Delegation subnet
+      uses: Azure/cli@v1.0.0
+      with:
+        # Subnet for delegation to App Service for outbound traffic from microservices
+        # Delegation Microsoft.Web/serverFarms allows one App Service plan to be associated
+        inlineScript: |
+          az network vnet subnet create \
+            --name app-service-delegation \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --delegations Microsoft.Web/serverFarms \
+            --address-prefixes 10.0.2.0/28
+
+  dns:
+    name: Private DNS
+    needs: vnet
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Zone
+      uses: Azure/cli@v1.0.0
+      with:
+        # We have to do a show here or we get an error on create if the zone already exists:
+        inlineScript: |
+          az network private-dns zone show --name ${{ env.environment }}.tfs || \
+          az network private-dns zone create --name ${{ env.environment }}.tfs
+
+    - name: A records
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name portal-ui || \
+          az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name portal-ui
+          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name portal-api || \
+          az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name portal-api
+          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name mongo || \
+          az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name mongo
+          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name storage || \
+          az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name storage
+          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name redis || \
+          az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name redis
+
+    - name: Link to vnet
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-dns link vnet show --name ${{ env.environment }}-dns --zone-name ${{ env.environment }}.tfs || \
+          az network private-dns link vnet create --name ${{ env.environment }}-dns --registration-enabled true --virtual-network tfs-${{ env.app_service_plan }}-vnet --zone-name ${{ env.environment }}.tfs
+
+  public-ip:
+    name: Public IP
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: IP address
+      uses: Azure/cli@v1.0.0
+      with:
+        # Application Gateway requires Static IP allocation and Standard SKU at the time of writing.
+        inlineScript: |
+          az network public-ip create --name tfs-${{ env.environment }}-ip \
+            --allocation-method Static \
+            --sku Standard
 
   portal-ui:
     name: Portal UI
+    needs: vnet
     runs-on: ubuntu-latest
-    # Delaying to avoid clashing with container image promotion
-    needs: [portal-api-vnet, cosmos-db]
     steps:
     - uses: azure/login@v1
       with:
@@ -116,13 +205,40 @@ jobs:
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name ${{ env.registry }}/portal-ui:${{ env.environment }}
 
-    # - name: Vnet integration
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     inlineScript: |
-    #       az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-ui \
-    #         --vnet tfs-${{ env.app_service_plan }}-portal-vnet \
-    #         --subnet portal
+    - name: Vnet integration
+      uses: Azure/cli@v1.0.0
+      with:
+        # Enable outbound traffic to the private-endpoints subnet so we can access Portal API and Redis
+        inlineScript: |
+          az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-ui \
+            --vnet tfs-${{ env.app_service_plan }}-vnet \
+            --subnet app-service-delegation
+
+    - name: Private link
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource"
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          subscription_id=$(az account show --query 'id' -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-portal-ui \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet private-endpoints \
+            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Web/sites/tfs-demo-portal-ui" \
+            --group-id sites \
+            --connection-name tfs-${{ env.environment }}-portal-ui
+
+    - name: Private DNS
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-endpoint dns-zone-group create \
+            --endpoint-name tfs-${{ env.environment }}-mongo \
+            --name tfs-${{ env.environment }}-mongo-zone-group \
+            --private-dns-zone "${{ env.environment }}.tfs" \
+            --zone-name mongo
 
     - name: Always-on
       uses: Azure/cli@v1.0.0
@@ -170,9 +286,8 @@ jobs:
 
   portal-api:
     name: Portal API
+    needs: vnet
     runs-on: ubuntu-latest
-    # Delaying to avoid clashing with container image promotion
-    needs: [portal-api-vnet, cosmos-db]
     steps:
     - uses: azure/login@v1
       with:
@@ -196,10 +311,37 @@ jobs:
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
       with:
+        # Enable outbound traffic from Portal API to the services subnet so we can access Cosmos and Storage
         inlineScript: |
           az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-api \
-            --vnet tfs-${{ env.app_service_plan }}-portal-api \
-            --subnet backing-services
+            --vnet tfs-${{ env.app_service_plan }}-vnet \
+            --subnet app-service-delegation
+
+    - name: Private link
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource".
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          subscription_id=$(az account show --query 'id' -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-portal-api \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet private-endpoints \
+            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Web/sites/tfs-demo-portal-api" \
+            --group-id sites \
+            --connection-name tfs-${{ env.environment }}-portal-api
+
+    - name: Private DNS
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-endpoint dns-zone-group create \
+            --endpoint-name tfs-${{ env.environment }}-mongo \
+            --name tfs-${{ env.environment }}-mongo-zone-group \
+            --private-dns-zone "${{ env.environment }}.tfs" \
+            --zone-name mongo
 
     - name: Always-on
       uses: Azure/cli@v1.0.0
@@ -257,8 +399,8 @@ jobs:
 
   cosmos-db:
     name: Cosmos DB (Mongo)
+    needs: vnet
     runs-on: ubuntu-latest
-    needs: portal-api-vnet
     steps:
     - uses: azure/login@v1
       with:
@@ -285,6 +427,32 @@ jobs:
         # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
         inlineScript: |
           az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB --server-version 3.6
+
+    - name: Private link
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource"
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          subscription_id=$(az account show --query 'id' -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-mongo \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet private-endpoints \
+            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.DocumentDB/databaseAccounts/tfs-${{ env.environment }}-mongo" \
+            --group-id MongoDB \
+            --connection-name tfs-${{ env.environment }}-mongo
+
+    - name: Private DNS
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-endpoint dns-zone-group create \
+            --endpoint-name tfs-${{ env.environment }}-mongo \
+            --name tfs-${{ env.environment }}-mongo-zone-group \
+            --private-dns-zone "${{ env.environment }}.tfs" \
+            --zone-name mongo
 
     - name: Database with autoscale
       uses: Azure/cli@v1.0.0
@@ -327,79 +495,198 @@ jobs:
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters --shard "_id"
 
-    - name: Add Deal ID counter
-      run: |
-        cat <<EOF > deal-counter.js
-        db = db.getSiblingDB('tfs-portal')
-        try {
-          db.idCounters.insertOne({
-            "_id" : "DEAL_COUNTER",
-            "count" : 1000000
-          })
-        } catch (err) {
-          print("Deal counter exists.")
-          print(err)
-        }
-        EOF
-        cat deal-counter.js
-        echo Attempt 1...
-        mongo ${{ env.MONGODB_URI }} deal-counter.js
-        echo Attempt 2...
-        mongo ${{ env.MONGODB_URI }} deal-counter.js
-        echo Attempt 3...
-        mongo ${{ env.MONGODB_URI }} deal-counter.js
-        echo Attempt 4...
-        mongo ${{ env.MONGODB_URI }} deal-counter.js
-        echo end.
+    # - name: Add Deal ID counter
+    #   run: |
+    #     cat <<EOF > deal-counter.js
+    #     db = db.getSiblingDB('tfs-portal')
+    #     try {
+    #       db.idCounters.insertOne({
+    #         "_id" : "DEAL_COUNTER",
+    #         "count" : 1000000
+    #       })
+    #     } catch (err) {
+    #       print("Deal counter exists.")
+    #       print(err)
+    #     }
+    #     EOF
+    #     cat deal-counter.js
+    #     echo Attempt 1...
+    #     mongo ${{ env.MONGODB_URI }} deal-counter.js
+    #     echo Attempt 2...
+    #     mongo ${{ env.MONGODB_URI }} deal-counter.js
+    #     echo Attempt 3...
+    #     mongo ${{ env.MONGODB_URI }} deal-counter.js
+    #     echo Attempt 4...
+    #     mongo ${{ env.MONGODB_URI }} deal-counter.js
+    #     echo end.
 
-    - name: Add Facility ID counter
-      run: |
-        cat <<EOF > facility-counter.js
-        db = db.getSiblingDB('tfs-portal')
-        try {
-          db.idCounters.insertOne({
-            "_id" : "FACILITY_COUNTER",
-            "count" : 1000000
-          })
-        } catch (err) {
-          print("Facility counter exists.")
-          print(err)
-        }
-        EOF
-        cat facility-counter.js
-        echo Attempt 1...
-        mongo ${{ env.MONGODB_URI }} facility-counter.js
-        echo Attempt 2...
-        mongo ${{ env.MONGODB_URI }} facility-counter.js
-        echo Attempt 3...
-        mongo ${{ env.MONGODB_URI }} facility-counter.js
-        echo Attempt 4...
-        mongo ${{ env.MONGODB_URI }} facility-counter.js
-        echo end.
+    # - name: Add Facility ID counter
+    #   run: |
+    #     cat <<EOF > facility-counter.js
+    #     db = db.getSiblingDB('tfs-portal')
+    #     try {
+    #       db.idCounters.insertOne({
+    #         "_id" : "FACILITY_COUNTER",
+    #         "count" : 1000000
+    #       })
+    #     } catch (err) {
+    #       print("Facility counter exists.")
+    #       print(err)
+    #     }
+    #     EOF
+    #     cat facility-counter.js
+    #     echo Attempt 1...
+    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
+    #     echo Attempt 2...
+    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
+    #     echo Attempt 3...
+    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
+    #     echo Attempt 4...
+    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
+    #     echo end.
 
-    - name: Access restriction - ${{ env.protected_database }}
+  file-storage:
+    name: File storage
+    needs: vnet
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
       uses: Azure/cli@v1.0.0
       with:
-        # This fails if we want to expose the database,
-        # so we fall back to enabling public network access
         inlineScript: |
-          # az cosmosdb update --name tfs-${{ env.environment }}-mongo \
-          #   --enable-virtual-network ${{ env.protected_database }} \
-          #   --ip-range-filter 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26 || \
-          az cosmosdb update --name tfs-${{ env.environment }}-mongo \
-            --enable-virtual-network false \
-            --enable-public-network true
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
 
-    - name: Enable vnet access
+    - name: Create
       uses: Azure/cli@v1.0.0
       with:
-        # This fails if we want to expose the database,
-        # so we fall back to just an echo statement.
+        # We open up access briefly so file shares can be created/updated
         inlineScript: |
-          # az cosmosdb network-rule add --name tfs-${{ env.environment }}-mongo \
-          #   --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
-          #   --subnet backing-services || \
-          echo "Not restricting to a subnet."
+          az storage account create --name tfs${{ env.environment }}storage \
+            --sku Standard_ZRS \
+            --https-only true \
+            --encryption-services file \
+            --default-action Allow
+
+    - name: File share (files)
+      uses: Azure/cli@v1.0.0
+      with:
+        # Opening up permissions only seems to work reliably on initial creation,
+        # so we skip attempting to create the file share if it fails.
+        inlineScript: |
+          az storage share create --account-name tfs${{ env.environment }}storage \
+            --name files || \
+          echo Skipped.
+
+    - name: File share (workflow)
+      uses: Azure/cli@v1.0.0
+      with:
+        # This fileshare is used if the environment isn't integrated to Workflow.
+        # Opening up permissions only seems to work reliably on initial creation,
+        # so we skip attempting to create the file share if it fails.
+        inlineScript: |
+          az storage share create --account-name tfs${{ env.environment }}storage \
+            --name workflow || \
+          echo Skipped.
+
+    - name: Private link
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource"
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          subscription_id=$(az account show --query 'id' -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-storage \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet private-endpoints \
+            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Storage/storageAccounts/tfs${{ env.environment }}storage" \
+            --group-id file \
+            --connection-name tfs-${{ env.environment }}-storage
+
+    - name: Private DNS
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-endpoint dns-zone-group create \
+            --endpoint-name tfs-${{ env.environment }}-storage \
+            --name tfs-${{ env.environment }}-storage-zone-group \
+            --private-dns-zone "${{ env.environment }}.tfs" \
+            --zone-name storage
+             
+  session-store:
+    name: Redis session store
+    # needs: vnet
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az redis create --name tfs-${{ env.environment }}-redis \
+            --sku ${{ env.redis_sku }} \
+            --vm-size C0
+    
+    # Apparently private link for Redis is in preview, but it's not available in the UKEF Azure portal:
+    # https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-private-link
+    # - name: Private link
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # Restrict inbound traffic to not be open to the Internet
+    #     # NB: group-id isn't well documented. It means "Target sub-resource"
+    #     #     The purpose of connection-name is unknown.
+    #     inlineScript: |
+    #       subscription_id=$(az account show --query 'id' -o tsv)
+    #       az network private-endpoint create \
+    #         --name tfs-${{ env.environment }}-redis \
+    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+    #         --subnet private-endpoints \
+    #         --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Cache/Redis/tfs-${{ env.environment }}-redis" \
+    #         --group-id redisCache \
+    #         --connection-name tfs-${{ env.environment }}-redis
+    #
+    # - name: Redis private DNS
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     inlineScript: |
+    #       az network private-endpoint dns-zone-group create \
+    #         --endpoint-name tfs-${{ env.environment }}-redis \
+    #         --name tfs-${{ env.environment }}-redis-zone-group \
+    #         --private-dns-zone "${{ env.environment }}.tfs" \
+    #         --zone-name redis
+
+  application-gateway:
+    # NB Front Door takes a little while to be available
+    # So you won't get a successful request for the first few minutes.
+    name: Application Gateway
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
 
   front-door:
     # NB Front Door takes a little while to be available
@@ -477,94 +764,3 @@ jobs:
             --forwarding-protocol HttpsOnly \
             --backend-pool portal-api \
             --patterns "/v1/*"
-
-  file-storage:
-    name: File storage
-    runs-on: ubuntu-latest
-    needs: portal-api-vnet
-    steps:
-    - uses: azure/login@v1
-      with:
-        creds: ${{ env.credentials }}
-
-    - name: Defaults
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
-
-    - name: Create
-      uses: Azure/cli@v1.0.0
-      with:
-        # We open up access briefly so file shares can be created/updated
-        inlineScript: |
-          az storage account create --name tfs${{ env.environment }}storage \
-            --sku Standard_ZRS \
-            --https-only true \
-            --encryption-services file \
-            --default-action Allow
-
-    - name: File share (files)
-      uses: Azure/cli@v1.0.0
-      with:
-        # Opening up permissions only seems to work reliably on initial creation,
-        # so we skip attempting to create the file share if it fails.
-        inlineScript: |
-          az storage share create --account-name tfs${{ env.environment }}storage \
-            --name files || \
-          echo Skipped.
-
-    - name: File share (workflow)
-      uses: Azure/cli@v1.0.0
-      with:
-        # This fileshare is used if the environment isn't integrated to Workflow.
-        # Opening up permissions only seems to work reliably on initial creation,
-        # so we skip attempting to create the file share if it fails.
-        inlineScript: |
-          az storage share create --account-name tfs${{ env.environment }}storage \
-            --name workflow || \
-          echo Skipped.
-
-    - name: Access restriction
-      if: ${{ always() }}
-      uses: Azure/cli@v1.0.0
-      with:
-        # Always remove public access
-        # On activating "Allow access from Azure Portal":
-        # https://github.com/Azure/azure-cli/issues/7495 ->
-        # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall#allow-requests-from-the-azure-portal
-        # ALLOW REQUESTS FROM THE AZURE PORTAL
-        # Region IP address
-        # Germany 51.4.229.218
-        # China 139.217.8.252
-        # US Gov 52.244.48.71
-        # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
-        inlineScript: |
-          az storage account update --name tfs${{ env.environment }}storage --default-action Deny
-          az storage account network-rule add --account-name tfs${{ env.environment }}storage \
-            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
-            --subnet backing-services
-
-  session-store:
-    name: Redis (sessions)
-    runs-on: ubuntu-latest
-    steps:
-    - uses: azure/login@v1
-      with:
-        creds: ${{ env.credentials }}
-
-    - name: Defaults
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
-
-    - name: Create
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az redis create --name tfs-${{ env.environment }}-redis \
-            --sku ${{ env.redis_sku }} \
-            --vm-size C0

@@ -26,7 +26,7 @@ const updateSubmittedIssuedFacilities = async (user, collection, deal) => {
 
       if (shouldUpdateIssuedFacility) {
         facility.issueFacilityDetailsSubmitted = true;
-        facility.status = 'Submitted';
+        facility.status = CONSTANTS.FACILITIES.STATUS.SUBMITTED;
         facility.issuedFacilitySubmittedToUkefTimestamp = now();
         facility.issuedFacilitySubmittedToUkefBy = user;
       }
