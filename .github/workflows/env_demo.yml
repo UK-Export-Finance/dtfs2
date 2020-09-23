@@ -746,11 +746,21 @@ jobs:
             --max-capacity 10 --min-capacity 1 \
             --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
             --sku Standard_v2
+
+    - name: Healthcheck probe
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
           az network application-gateway probe create --name healthcheck \
             --gateway-name tfs-${{ env.environment }}-gw \
             --protocol Http \
             --path "/healthcheck" \
             --host-name-from-http-settings true
+
+    - name: Back-end http settings
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
           httpsettings_name=$(az network application-gateway show --name tfs-${{ env.environment }}-gw --query "backendHttpSettingsCollection[0].name" -o tsv)
           az network application-gateway http-settings update --name $httpsettings_name \
             --gateway-name tfs-${{ env.environment }}-gw \
