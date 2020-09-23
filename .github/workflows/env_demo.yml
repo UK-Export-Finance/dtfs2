@@ -80,6 +80,17 @@ jobs:
             --name gateway \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --address-prefixes 10.0.0.0/28
+          az network nsg create  --name tfs-${{ env.app_service_plan }}-gw-nsg
+          az network nsg rule create --name front-door-ingress --nsg-name tfs-${{ env.app_service_plan }}-gw-nsgs \
+            --priority 100 \
+            --source-address-prefixes "AzureFrontDoor.Backend" \
+            --source-port-ranges "*" \
+            --destination-address-prefixes VirtualNetwork \
+            --destination-port-ranges "*" \
+            --direction Inbound \
+            --access Allow \
+            --protocol Tcp \
+            --description "Allow Front Door to Application Gateway."
 
     - name: Private links subnet
       uses: Azure/cli@v1.0.0
@@ -698,6 +709,8 @@ jobs:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
+
+    # tfs-${{ env.app_service_plan }}-gw
 
   front-door:
     # NB Front Door takes a little while to be available
