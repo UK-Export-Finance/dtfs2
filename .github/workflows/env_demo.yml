@@ -138,8 +138,8 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az network private-dns link vnet show   --name app-service-dns --zone-name "privatelink.azurewebsites.net" || \
-          az network private-dns link vnet create --name app-service-dns --zone-name "privatelink.azurewebsites.net" --virtual-network tfs-${{ env.app_service_plan }}-vnet
+          az network private-dns link vnet show   --name app-service-dns --zone-name "privatelink.azurewebsites.net" --registration-enabled false || \
+          az network private-dns link vnet create --name app-service-dns --zone-name "privatelink.azurewebsites.net" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
 
   public-ip:
     name: Public IP
