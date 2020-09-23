@@ -720,6 +720,7 @@ jobs:
     # NB Front Door takes a little while to be available
     # So you won't get a successful request for the first few minutes.
     name: Application Gateway
+    needs: [vnet, public-ip]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -745,6 +746,16 @@ jobs:
             --max-capacity 10 --min-capacity 1 \
             --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
             --sku Standard_v2
+          az network application-gateway probe create --name healthcheck \
+            --gateway-name tfs-${{ env.environment }}-gw \
+            --protocol Http \
+            --path "/healthcheck" \
+            --host-name-from-http-settings true
+          httpsettings_name=$(az network application-gateway show --name tfs-${{ env.environment }}-gw --query "backendHttpSettingsCollection[0].name" -o tsv)
+          az network application-gateway http-settings update --name $httpsettings_name \
+            --gateway-name tfs-${{ env.environment }}-gw \
+            --host-name-from-backend-pool true \
+            --probe healthcheck --enable-probe true
 
     # tfs-${{ env.environment }}-gw
 
