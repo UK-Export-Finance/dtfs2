@@ -17,9 +17,15 @@ describe('/v1/deals/:id/loan', () => {
         id: 'GBP',
       },
     },
+    eligibility: {
+      criteria: [
+        { id: 15, answer: true }
+      ],
+    },
   });
 
   let aBarclaysMaker;
+  let deal;
   let dealId;
   let loanId;
 
@@ -36,12 +42,15 @@ describe('/v1/deals/:id/loan', () => {
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
 
-    const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
-    dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+    const dealResponse = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+    deal = dealResponse.body;
+    dealId = deal._id; // eslint-disable-line no-underscore-dangle
 
     const loanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
     const { loanId: _id } = loanResponse.body;
     loanId = _id;
+
+    deal.loanTransactions = loanResponse.body.loanTransactions;
   });
 
   describe('GET /v1/deals/:id/loan/:id', () => {
@@ -250,6 +259,31 @@ describe('/v1/deals/:id/loan', () => {
             const expectedText = `Requested Cover Start Date must be between ${moment().format('Do MMMM YYYY')} and ${moment(nowDate).add(3, 'months').format('Do MMMM YYYY')}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
+        });
+
+        it('should not return validationError when eligibility criteria 15 answer is `false` and date is greater than 3 months', async () => {
+          const dealWithEligibilityCriteria15False = {
+            ...deal,
+            eligibility: {
+              criteria: [
+                { id: 15,  answer: false }
+              ],
+            },
+          };
+
+          const { body } = await as(aBarclaysMaker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
+
+          const nowDate = moment();
+          const requestedCoverStartDate = moment(nowDate).add(3, 'months').add(1, 'day');
+
+          const requestedCoverStartDateFields = {
+            'requestedCoverStartDate-day': moment(requestedCoverStartDate).format('DD'),
+            'requestedCoverStartDate-month': moment(requestedCoverStartDate).format('MM'),
+            'requestedCoverStartDate-year': moment(requestedCoverStartDate).format('YYYY'),
+          };
+
+          const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+          expect(validationErrors.errorList.requestedCoverStartDate).toBeUndefined();
         });
       });
 

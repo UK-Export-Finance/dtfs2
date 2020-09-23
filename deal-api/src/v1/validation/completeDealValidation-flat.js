@@ -21,7 +21,7 @@ module.exports = (deal) => {
   deal.bondTransactions.items.filter((bond) => {
     validationErrors = {
       ...validationErrors,
-      ...bondRules(bond).errorList,
+      ...bondRules(bond, deal).errorList,
     };
     return true;
   });
@@ -29,7 +29,7 @@ module.exports = (deal) => {
   deal.loanTransactions.items.filter((loan) => {
     validationErrors = {
       ...validationErrors,
-      ...loanRules(loan).errorList,
+      ...loanRules(loan, deal).errorList,
     };
     return true;
   });

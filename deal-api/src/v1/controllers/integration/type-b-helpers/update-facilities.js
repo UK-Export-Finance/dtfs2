@@ -1,6 +1,6 @@
 const CONSTANTS = require('../../../../constants');
 
-const updateBondStatus = (bond, workflowBond) => {
+const updateBondStatus = (bond, workflowBond, workflowActionCode) => {
   const {
     bondStage,
     previousFacilityStage,
@@ -19,6 +19,10 @@ const updateBondStatus = (bond, workflowBond) => {
         return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
       }
 
+      if (workflowActionCode === '011' && bond.status === CONSTANTS.FACILITIES.STATUS.SUBMITTED) {
+        return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
+      }
+
       if (workflowBond.BSS_status[0] === '""') {
         return CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
       }
@@ -31,7 +35,7 @@ const updateBondStatus = (bond, workflowBond) => {
   return null;
 };
 
-const updateLoanStatus = (loan, workflowLoan) => {
+const updateLoanStatus = (loan, workflowLoan, workflowActionCode) => {
   const {
     facilityStage,
     previousFacilityStage,
@@ -43,11 +47,14 @@ const updateLoanStatus = (loan, workflowLoan) => {
 
   const hasWorflowStatus = workflowLoan.EWCS_status && workflowLoan.EWCS_status.length > 0;
 
-
   // if status is `Acknowledged`, status cannot be changed
   if (loan.status !== CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED) {
     if (isIssuedFacility && hasWorflowStatus) {
       if (workflowLoan.EWCS_status[0] === 'Issued acknowledged') {
+        return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
+      }
+
+      if (workflowActionCode === '011' && loan.status === CONSTANTS.FACILITIES.STATUS.SUBMITTED) {
         return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
       }
 
@@ -81,7 +88,8 @@ const updateBonds = (dealBonds, workflowDeal, checkIssueFacilities) => {
     };
 
     if (checkIssueFacilities) {
-      updatedBond.status = updateBondStatus(bond, workflowBond);
+      const workflowActionCode = workflowDeal.$.Action_Code;
+      updatedBond.status = updateBondStatus(bond, workflowBond, workflowActionCode);
     }
 
     return updatedBond;
@@ -108,7 +116,8 @@ const updateLoans = (dealLoans, workflowDeal, checkIssueFacilities) => {
     };
 
     if (checkIssueFacilities) {
-      updatedLoan.status = updateLoanStatus(loan, workflowLoan);
+      const workflowActionCode = workflowDeal.$.Action_Code;
+      updatedLoan.status = updateLoanStatus(loan, workflowLoan, workflowActionCode);
     }
 
     return updatedLoan;

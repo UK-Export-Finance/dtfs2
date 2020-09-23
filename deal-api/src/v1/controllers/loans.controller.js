@@ -69,7 +69,7 @@ exports.getLoan = async (req, res) => {
         String(b._id) === loanId); // eslint-disable-line no-underscore-dangle
 
       if (loan) {
-        const validationErrors = loanValidationErrors(loan);
+        const validationErrors = loanValidationErrors(loan, deal);
 
         return res.json({
           dealId,
@@ -208,7 +208,7 @@ exports.updateLoan = async (req, res) => {
       modifiedLoan.lastEdited = now();
       const updatedLoan = await updateLoanInDeal(req.params, req.user, deal, modifiedLoan);
 
-      const validationErrors = loanValidationErrors(updatedLoan);
+      const validationErrors = loanValidationErrors(updatedLoan, deal);
 
       if (validationErrors.count !== 0) {
         return res.status(400).send({

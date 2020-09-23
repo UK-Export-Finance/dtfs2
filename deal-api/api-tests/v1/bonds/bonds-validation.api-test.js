@@ -5,6 +5,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const { dateValidationText } = require('../../../src/v1/validation/fields/date');
+const deal = require('../../../src/v1/validation/deal');
 
 describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({
@@ -16,6 +17,11 @@ describe('/v1/deals/:id/bond', () => {
       supplyContractCurrency: {
         id: 'GBP',
       },
+    },
+    eligibility: {
+      criteria: [
+        { id: 15, answer: true }
+      ],
     },
   });
 
@@ -42,6 +48,7 @@ describe('/v1/deals/:id/bond', () => {
 
   let aBarclaysMaker;
   let anEditor;
+  let deal;
   let dealId;
   let bondId;
 
@@ -61,12 +68,15 @@ describe('/v1/deals/:id/bond', () => {
 
     await as(anEditor).postEach(mockCurrencies).to('/v1/currencies');
 
-    const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
-    dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+    const dealResponse = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+    deal = dealResponse.body;
+    dealId = deal._id; // eslint-disable-line no-underscore-dangle
 
     const bondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
     const { bondId: _id } = bondResponse.body;
     bondId = _id;
+
+    deal.bondTransactions = bondResponse.body.bondTransactions;
   });
 
   describe('GET /v1/deals/:id/bond/:id', () => {
@@ -317,6 +327,34 @@ describe('/v1/deals/:id/bond', () => {
           });
         });
 
+        describe('when eligibility criteria 15 answer is `false`', () => {
+          it('should not return validationError when date is greater than 3 months', async () => {
+            const dealWithEligibilityCriteria15False = {
+              ...deal,
+              eligibility: {
+                criteria: [
+                  { id: 15,  answer: false }
+                ],
+              },
+            };
+
+            await as(aBarclaysMaker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
+
+            const nowDate = moment();
+            const requestedCoverStartDate = moment(nowDate).add(3, 'months').add(1, 'day');
+
+            const requestedCoverStartDateFields = {
+              'requestedCoverStartDate-day': moment(requestedCoverStartDate).format('DD'),
+              'requestedCoverStartDate-month': moment(requestedCoverStartDate).format('MM'),
+              'requestedCoverStartDate-year': moment(requestedCoverStartDate).format('YYYY'),
+            };
+
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+
+            expect(validationErrors.errorList.requestedCoverStartDate).toBeUndefined();
+          });
+        });
+
         describe('when has some values', () => {
           it('should return validationError', async () => {
             const nowDate = moment();
@@ -453,43 +491,6 @@ describe('/v1/deals/:id/bond', () => {
             const { validationErrors } = await updateBondInDeal(dealId, bond);
             expect(validationErrors.errorList.uniqueIdentificationNumber).toBeDefined();
             expect(validationErrors.errorList.uniqueIdentificationNumber.text).toEqual('Bond\'s unique identification number must be 30 characters or fewer');
-          });
-        });
-
-        describe('with an invalid character (not A-Z, 0-9, `-`, `_`, `\\`, `/` or a space)', () => {
-          it('should return validationError', async () => {
-            let bond = {
-              ...allBondFields,
-              bondStage: 'Issued',
-              uniqueIdentificationNumber: 'invalid-format!@£$%^&*+=',
-            };
-
-            const expectedText = 'Bond\'s unique identification number must only include letters a to z, numbers 0 to 9, hyphens, underscores, forward slashes, backslashes and spaces';
-
-            const { validationErrors: firstValidationErrors } = await updateBondInDeal(dealId, bond);
-            expect(firstValidationErrors.errorList.uniqueIdentificationNumber.text).toEqual(expectedText);
-
-            bond = {
-              ...allBondFields,
-              bondStage: 'Issued',
-              uniqueIdentificationNumber: 'invalid-format{}:"|<>?,;[]',
-            };
-
-            const { validationErrors: secondValidationErrors } = await updateBondInDeal(dealId, bond);
-            expect(secondValidationErrors.errorList.uniqueIdentificationNumber.text).toEqual(expectedText);
-          });
-        });
-
-        describe('with an valid character (A-Z, 0-9, `-`, `_`, `\\`, `/` or a space)', () => {
-          it('should not return validationError', async () => {
-            const bond = {
-              ...allBondFields,
-              bondStage: 'Issued',
-              uniqueIdentificationNumber: 'valid-format/0_ 9\\a.&\'()',
-            };
-
-            const { validationErrors: firstValidationErrors } = await updateBondInDeal(dealId, bond);
-            expect(firstValidationErrors.errorList.uniqueIdentificationNumber).toBeUndefined();
           });
         });
       });
