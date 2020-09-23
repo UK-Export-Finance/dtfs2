@@ -49,7 +49,7 @@ const loanHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, d
 const addAccurateStatusesToLoans = (
   deal,
 ) => {
-  const { 
+  const {
     status: dealStatus,
     previousStatus: previousDealStatus,
     submissionType,
