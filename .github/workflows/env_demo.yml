@@ -252,7 +252,7 @@ jobs:
               --zone-name "privatelink.azurewebsites.net" \
               --ipv4-address $interface_ip
           else
-            echo "IP for tfs-${{ env.environment }}-portal-ui.privatelink.azurewebsites.net is $address"
+            echo "IP for tfs-${{ env.environment }}-portal-ui.privatelink.azurewebsites.net is $ipv4_address"
           fi
 
     - name: Vnet integration
@@ -359,7 +359,7 @@ jobs:
               --zone-name "privatelink.azurewebsites.net" \
               --ipv4-address $interface_ip
           else
-            echo "IP for tfs-${{ env.environment }}-portal-api.privatelink.azurewebsites.net is $address"
+            echo "IP for tfs-${{ env.environment }}-portal-api.privatelink.azurewebsites.net is $ipv4_address"
           fi
 
     - name: Vnet integration
