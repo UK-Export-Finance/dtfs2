@@ -83,7 +83,7 @@ jobs:
           az network vnet subnet create \
             --name ${{ env.environment }}-gateway \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes 10.0.0.0/28
+            --address-prefixes 10.1.0.0/28
           az network nsg create  --name tfs-${{ env.environment }}-gw-nsg
           az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 200 --direction Inbound --protocol Tcp --access Allow \
@@ -109,7 +109,7 @@ jobs:
           az network vnet subnet create \
             --name ${{ env.environment }}-private-endpoints \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes 10.0.1.0/28
+            --address-prefixes 10.1.1.0/28
           az network vnet subnet update \
             --name ${{ env.environment }}-private-endpoints \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
@@ -126,7 +126,7 @@ jobs:
             --name ${{ env.app_service_plan }}-app-service-egress \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --delegations Microsoft.Web/serverFarms \
-            --address-prefixes 10.0.2.0/28
+            --address-prefixes 10.1.2.0/28
 
   dns:
     name: Private DNS
