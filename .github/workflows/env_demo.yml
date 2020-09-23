@@ -91,7 +91,7 @@ jobs:
             --access Allow \
             --protocol Tcp \
             --description "Allow Front Door to Application Gateway."
-          az network vnet subnet update --name vnet --vnet-name tfs-${{ env.app_service_plan }}-vnet --network-security-group tfs-${{ env.app_service_plan }}-gw-nsg
+          az network vnet subnet update --name gateway --vnet-name tfs-${{ env.app_service_plan }}-vnet --network-security-group tfs-${{ env.app_service_plan }}-gw-nsg
 
     - name: Private links subnet
       uses: Azure/cli@v1.0.0
