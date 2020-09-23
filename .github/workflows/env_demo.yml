@@ -71,33 +71,14 @@ jobs:
           az network vnet show --name tfs-${{ env.app_service_plan }}-vnet || \
           az network vnet create --name tfs-${{ env.app_service_plan }}-vnet
 
-    - name: Gateway subnet with Network Security Group
+    - name: Application Gateway subnet
       uses: Azure/cli@v1.0.0
       with:
-        # Subnet for hosting an Application Gateway restricted to inbound traffic from Front Door
-        # The "GatewayManager" rule is explained in the Application Gateway FAQ: 
-        #   https://docs.microsoft.com/en-us/azure/application-gateway/application-gateway-faq#how-do-i-use-application-gateway-v2-with-only-private-frontend-ip-address
-        # NB: Health probe inbound traffic ("AzureLoadBalancer") and vnet traffic ("VirtualNetwork") rules are created in the subnet automatically.
-        # See also: https://stackoverflow.com/questions/52674810/azure-app-gateway-v2-cannot-be-configured-with-nsg/52697957
         inlineScript: |
           az network vnet subnet create \
             --name ${{ env.environment }}-gateway \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --address-prefixes 10.0.1.0/28
-          az network nsg create  --name tfs-${{ env.environment }}-gw-nsg
-          az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 200 --direction Inbound --protocol Tcp --access Allow \
-            --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-          az network nsg rule create --name gateway-manager --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 300 --direction Inbound --protocol Tcp --access Allow \
-            --source-address-prefixes "GatewayManager" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "65200-65535"
-          az network nsg rule create --name deny-internet --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 1000 --direction Inbound --protocol "*" --access Deny \
-            --source-address-prefixes "Internet" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-          az network vnet subnet update --name ${{ env.environment }}-gateway --vnet-name tfs-${{ env.app_service_plan }}-vnet --network-security-group tfs-${{ env.environment }}-gw-nsg
 
     - name: Private links subnet
       uses: Azure/cli@v1.0.0
@@ -717,6 +698,30 @@ jobs:
             --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
             --sku Standard_v2
 
+    - name: Only allow Front Door traffic
+      uses: Azure/cli@v1.0.0
+      with:
+        # Subnet for hosting an Application Gateway restricted to inbound traffic from Front Door
+        # The "GatewayManager" rule is explained in the Application Gateway FAQ: 
+        #   https://docs.microsoft.com/en-us/azure/application-gateway/application-gateway-faq#how-do-i-use-application-gateway-v2-with-only-private-frontend-ip-address
+        # NB: Health probe inbound traffic ("AzureLoadBalancer") and vnet traffic ("VirtualNetwork") rules are created in the subnet automatically.
+        # See also: https://stackoverflow.com/questions/52674810/azure-app-gateway-v2-cannot-be-configured-with-nsg/52697957
+        inlineScript: |
+          az network nsg create  --name tfs-${{ env.environment }}-gw-nsg
+          az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 200 --direction Inbound --protocol Tcp --access Allow \
+            --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+          az network nsg rule create --name gateway-manager --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 300 --direction Inbound --protocol Tcp --access Allow \
+            --source-address-prefixes "GatewayManager" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "65200-65535"
+          az network nsg rule create --name deny-internet --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 1000 --direction Inbound --protocol "*" --access Deny \
+            --source-address-prefixes "Internet" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+          az network vnet subnet update --name ${{ env.environment }}-gateway --vnet-name tfs-${{ env.app_service_plan }}-vnet --network-security-group tfs-${{ env.environment }}-gw-nsg
+
     - name: Healthcheck probe
       uses: Azure/cli@v1.0.0
       with:
@@ -736,8 +741,6 @@ jobs:
             --gateway-name tfs-${{ env.environment }}-gw \
             --host-name-from-backend-pool true \
             --probe healthcheck --enable-probe true
-
-    # tfs-${{ env.environment }}-gw
 
   front-door:
     # NB Front Door takes a little while to be available
