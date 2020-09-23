@@ -455,43 +455,6 @@ describe('/v1/deals/:id/bond', () => {
             expect(validationErrors.errorList.uniqueIdentificationNumber.text).toEqual('Bond\'s unique identification number must be 30 characters or fewer');
           });
         });
-
-        describe('with an invalid character (not A-Z, 0-9, `-`, `_`, `\\`, `/` or a space)', () => {
-          it('should return validationError', async () => {
-            let bond = {
-              ...allBondFields,
-              bondStage: 'Issued',
-              uniqueIdentificationNumber: 'invalid-format!@£$%^&*+=',
-            };
-
-            const expectedText = 'Bond\'s unique identification number must only include letters a to z, numbers 0 to 9, hyphens, underscores, forward slashes, backslashes and spaces';
-
-            const { validationErrors: firstValidationErrors } = await updateBondInDeal(dealId, bond);
-            expect(firstValidationErrors.errorList.uniqueIdentificationNumber.text).toEqual(expectedText);
-
-            bond = {
-              ...allBondFields,
-              bondStage: 'Issued',
-              uniqueIdentificationNumber: 'invalid-format{}:"|<>?,;[]',
-            };
-
-            const { validationErrors: secondValidationErrors } = await updateBondInDeal(dealId, bond);
-            expect(secondValidationErrors.errorList.uniqueIdentificationNumber.text).toEqual(expectedText);
-          });
-        });
-
-        describe('with an valid character (A-Z, 0-9, `-`, `_`, `\\`, `/` or a space)', () => {
-          it('should not return validationError', async () => {
-            const bond = {
-              ...allBondFields,
-              bondStage: 'Issued',
-              uniqueIdentificationNumber: 'valid-format/0_ 9\\a.&\'()',
-            };
-
-            const { validationErrors: firstValidationErrors } = await updateBondInDeal(dealId, bond);
-            expect(firstValidationErrors.errorList.uniqueIdentificationNumber).toBeUndefined();
-          });
-        });
       });
     });
 
