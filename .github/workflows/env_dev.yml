@@ -68,8 +68,8 @@ jobs:
       with:
         # We have to do a show here or we get an error on create if the vnet already exists:
         inlineScript: |
-          az network vnet show --name tfs-${{ env.app_service_plan }}-portal-api || \
-          az network vnet create --name tfs-${{ env.app_service_plan }}-portal-api
+          az network vnet show --name tfs-${{ env.app_service_plan }}-vnet || \
+          az network vnet create --name tfs-${{ env.app_service_plan }}-vnet
 
     - name: Subnet
       uses: Azure/cli@v1.0.0
@@ -78,7 +78,7 @@ jobs:
         inlineScript: |
           az network vnet subnet create \
             --name backing-services \
-            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --delegations Microsoft.Web/serverFarms \
             --address-prefixes 10.0.0.0/28
 
@@ -87,7 +87,7 @@ jobs:
       with:
         # Service endpoints allow the selected backing services to be accessed through this subnet
         inlineScript: |
-          az network vnet subnet update --name backing-services --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+          az network vnet subnet update --name backing-services --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --service-endpoints Microsoft.AzureCosmosDB Microsoft.Storage 
             # We may add: Microsoft.web Microsoft.KeyVault
 
@@ -198,7 +198,7 @@ jobs:
       with:
         inlineScript: |
           az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-api \
-            --vnet tfs-${{ env.app_service_plan }}-portal-api \
+            --vnet tfs-${{ env.app_service_plan }}-vnet \
             --subnet backing-services
 
     - name: Always-on
@@ -397,7 +397,7 @@ jobs:
         # so we fall back to just an echo statement.
         inlineScript: |
           # az cosmosdb network-rule add --name tfs-${{ env.environment }}-mongo \
-          #   --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+          #   --vnet-name tfs-${{ env.app_service_plan }}-vnet \
           #   --subnet backing-services || \
           echo "Not restricting to a subnet."
 
@@ -543,7 +543,7 @@ jobs:
         inlineScript: |
           az storage account update --name tfs${{ env.environment }}storage --default-action Deny
           az storage account network-rule add --account-name tfs${{ env.environment }}storage \
-            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --subnet backing-services
 
   session-store:
