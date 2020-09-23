@@ -131,30 +131,15 @@ jobs:
       with:
         # We have to do a show here or we get an error on create if the zone already exists:
         inlineScript: |
-          az network private-dns zone show --name ${{ env.environment }}.tfs || \
-          az network private-dns zone create --name ${{ env.environment }}.tfs
+          az network private-dns zone show   --name "privatelink.azurewebsites.net" || \
+          az network private-dns zone create --name "privatelink.azurewebsites.net"
 
-    - name: A records
+    - name: Link DNS to vnet
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name portal-ui || \
-          az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name portal-ui
-          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name portal-api || \
-          az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name portal-api
-          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name mongo || \
-          az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name mongo
-          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name storage || \
-          az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name storage
-          az network private-dns record-set a show --zone-name ${{ env.environment }}.tfs --name redis || \
-          az network private-dns record-set a create --zone-name ${{ env.environment }}.tfs --name redis
-
-    - name: Link to vnet
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network private-dns link vnet show --name ${{ env.environment }}-dns --zone-name ${{ env.environment }}.tfs || \
-          az network private-dns link vnet create --name ${{ env.environment }}-dns --registration-enabled true --virtual-network tfs-${{ env.app_service_plan }}-vnet --zone-name ${{ env.environment }}.tfs
+          az network private-dns link vnet show   --name app-service-dns --zone-name "privatelink.azurewebsites.net" || \
+          az network private-dns link vnet create --name app-service-dns --zone-name "privatelink.azurewebsites.net" --virtual-network tfs-${{ env.app_service_plan }}-vnet
 
   public-ip:
     name: Public IP
@@ -205,15 +190,6 @@ jobs:
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name ${{ env.registry }}/portal-ui:${{ env.environment }}
 
-    - name: Vnet integration
-      uses: Azure/cli@v1.0.0
-      with:
-        # Enable outbound traffic to the private-endpoints subnet so we can access Portal API and Redis
-        inlineScript: |
-          az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-ui \
-            --vnet tfs-${{ env.app_service_plan }}-vnet \
-            --subnet app-service-delegation
-
     - name: Private link
       uses: Azure/cli@v1.0.0
       with:
@@ -230,22 +206,37 @@ jobs:
             --group-id sites \
             --connection-name tfs-${{ env.environment }}-portal-ui
 
-    - name: Private DNS
+    - name: DNS A-records
       uses: Azure/cli@v1.0.0
       with:
+        # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
+        # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
         inlineScript: |
-          az network private-endpoint dns-zone-group create \
-            --endpoint-name tfs-${{ env.environment }}-mongo \
-            --name tfs-${{ env.environment }}-mongo-zone-group \
-            --private-dns-zone "${{ env.environment }}.tfs" \
-            --zone-name mongo
+          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-portal-ui --query 'networkInterfaces[0].id' -o tsv)
+          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
 
-    - name: Always-on
+          az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net" || \
+          az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net"
+          az network private-dns record-set a add-record \
+            --record-set-name tfs-${{ env.environment }}-portal-ui \
+            --zone-name "privatelink.azurewebsites.net" \
+            --ipv4-address $interface_ip
+          
+          az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net" || \
+          az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net"
+          az network private-dns record-set a add-record \
+            --record-set-name tfs-${{ env.environment }}-portal-ui.scm \
+            --zone-name "privatelink.azurewebsites.net" \
+            --ipv4-address $interface_ip
+
+    - name: Vnet integration
       uses: Azure/cli@v1.0.0
       with:
+        # Enable outbound traffic to the private-endpoints subnet so we can access Portal API and Redis
         inlineScript: |
-          az webapp config set --name tfs-${{ env.environment }}-portal-ui \
-            --always-on true
+          az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-ui \
+            --vnet tfs-${{ env.app_service_plan }}-vnet \
+            --subnet app-service-delegation
 
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
@@ -260,6 +251,13 @@ jobs:
         inlineScript: |
           az webapp log config --name tfs-${{ env.environment }}-portal-ui \
             --docker-container-logging filesystem
+
+    - name: Always-on
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp config set --name tfs-${{ env.environment }}-portal-ui \
+            --always-on true
 
     - name: Environment variables
       uses: Azure/cli@v1.0.0
@@ -333,22 +331,28 @@ jobs:
             --group-id sites \
             --connection-name tfs-${{ env.environment }}-portal-api
 
-    - name: Private DNS
+    - name: DNS A-records
       uses: Azure/cli@v1.0.0
       with:
+        # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
+        # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
         inlineScript: |
-          az network private-endpoint dns-zone-group create \
-            --endpoint-name tfs-${{ env.environment }}-mongo \
-            --name tfs-${{ env.environment }}-mongo-zone-group \
-            --private-dns-zone "${{ env.environment }}.tfs" \
-            --zone-name mongo
+          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-portal-api --query 'networkInterfaces[0].id' -o tsv)
+          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
 
-    - name: Always-on
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az webapp config set --name tfs-${{ env.environment }}-portal-api \
-            --always-on true
+          az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net" || \
+          az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net"
+          az network private-dns record-set a add-record \
+            --record-set-name tfs-${{ env.environment }}-portal-api \
+            --zone-name "privatelink.azurewebsites.net" \
+            --ipv4-address $interface_ip
+          
+          az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-api.scm --zone-name "privatelink.azurewebsites.net" || \
+          az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-api.scm --zone-name "privatelink.azurewebsites.net"
+          az network private-dns record-set a add-record \
+            --record-set-name tfs-${{ env.environment }}-portal-api.scm \
+            --zone-name "privatelink.azurewebsites.net" \
+            --ipv4-address $interface_ip
 
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
@@ -363,6 +367,13 @@ jobs:
         inlineScript: |
           az webapp log config --name tfs-${{ env.environment }}-portal-api \
             --docker-container-logging filesystem
+
+    - name: Always-on
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp config set --name tfs-${{ env.environment }}-portal-api \
+            --always-on true
 
     - name: Environment variables
       uses: Azure/cli@v1.0.0
