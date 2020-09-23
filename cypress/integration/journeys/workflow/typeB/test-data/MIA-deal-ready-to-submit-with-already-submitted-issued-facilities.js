@@ -178,7 +178,7 @@ const deal = {
   "bondTransactions": {
     "items": [
       {
-        "_id": " 12345678",
+        "_id": "12345678",
         "createdDate": moment().utc().valueOf(),
         "bondIssuer": "",
         "bondType": "Advance payment guarantee",
@@ -199,12 +199,53 @@ const deal = {
           "text": "GBP - UK Sterling",
           "id": "GBP"
         },
+        "issueFacilityDetailsStarted": true,
+        "issuedDate-day": "25",
+        "issuedDate-month": "08",
+        "issuedDate-year": "2020",
+        "coverEndDate-day": "24",
+        "coverEndDate-month": "09",
+        "coverEndDate-year": "2020",
+        "requestedCoverStartDate": moment().utc().valueOf(),
+        "issuedDate": moment().utc().valueOf(),
+        "issueFacilityDetailsProvided": true,
         "status": "Submitted"
       }
     ]
   },
   "loanTransactions": {
-    "items": []
+    "items": [
+      {
+        "_id": "23456789",
+        "createdDate": moment().utc().valueOf(),
+        "facilityStage": "Conditional",
+        "ukefGuaranteeInMonths": "12",
+        "bankReferenceNumber": "5678",
+        "guaranteeFeePayableByBank": "27.0000",
+        "lastEdited": moment().utc().valueOf(),
+        "facilityValue": "1234.00",
+        "currencySameAsSupplyContractCurrency": "true",
+        "interestMarginFee": "30",
+        "coveredPercentage": "20",
+        "minimumQuarterlyFee": "",
+        "ukefExposure": "246.80",
+        "premiumType": "At maturity",
+        "dayCountBasis": "365",
+        "issuedDate-day": "25",
+        "issuedDate-month": "08",
+        "issuedDate-year": "2020",
+        "coverEndDate-day": "24",
+        "coverEndDate-month": "09",
+        "coverEndDate-year": "2020",
+        "disbursementAmount": "1,234.00",
+        "issueFacilityDetailsStarted": true,
+        "bankReferenceNumberRequiredForIssuance": true,
+        "requestedCoverStartDate": moment().utc().valueOf(),
+        "issuedDate": moment().utc().valueOf(),
+        "issueFacilityDetailsProvided": true,
+        "status": "Submitted",
+      }
+    ]
   },
   "summary": {},
   "comments": [
