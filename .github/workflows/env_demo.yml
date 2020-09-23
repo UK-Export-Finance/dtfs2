@@ -733,6 +733,19 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network application-gateway create --name tfs-${{ env.environment }}-gw \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-gateway \
+            --public-ip-address tfs-${{ env.environment }}-ip \
+            --frontend-port 80 \
+            --max-capacity 10 --min-capacity 1 \
+            --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
+            --sku Standard_v2
+
     # tfs-${{ env.environment }}-gw
 
   front-door:
@@ -760,7 +773,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          gateway_ip_id=$(az network application-gateway show --name demo --query "frontendIpConfigurations[0].publicIpAddress.id" -o tsv)
+          gateway_ip_id=$(az network application-gateway show --name tfs-${{ env.environment }}-gw --query "frontendIpConfigurations[0].publicIpAddress.id" -o tsv)
           gateway_ip=$(az resource show --ids "$gateway_ip_id" --query "properties.ipAddress" -o tsv)
           az network front-door create --name tfs-${{ env.environment }}-fd \
             --accepted-protocols Https \
