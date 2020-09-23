@@ -18,6 +18,11 @@ describe('/v1/deals/:id/bond', () => {
         id: 'GBP',
       },
     },
+    eligibility: {
+      criteria: [
+        { id: 15, answer: true }
+      ],
+    },
   });
 
   const mockCurrencies = [
