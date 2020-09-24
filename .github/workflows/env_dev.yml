@@ -14,7 +14,7 @@ env:
   database_name: tfs-portal
   application_gateway_cidr: 10.0.4.0/28
   private_endpoints_cidr: 10.0.5.0/28
-  app_service_plan_cidr: 10.0.6.0/28
+  app_service_plan_cidr: 10.0.3.0/28
   # Container registry
   registry: ${{ secrets.DEV_ACR_REGISTRY }}
   # App service settings
