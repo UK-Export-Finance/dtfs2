@@ -44,58 +44,58 @@ env:
 
 jobs:
 
-  portal-api-vnet:
-    # NB Only one vnet can be associated per App Service Plan,
-    # therefore all App Services on a plan must share a single vnet.
-    # So we name the vnet after the app service plan, rather than the environment.
-    name: Portal API vnet
-    runs-on: ubuntu-latest
-    steps:
+  # portal-api-vnet:
+  #   # NB Only one vnet can be associated per App Service Plan,
+  #   # therefore all App Services on a plan must share a single vnet.
+  #   # So we name the vnet after the app service plan, rather than the environment.
+  #   name: Portal API vnet
+  #   runs-on: ubuntu-latest
+  #   steps:
 
-    - uses: azure/login@v1
-      with:
-        creds: ${{ env.credentials }}
+  #   - uses: azure/login@v1
+  #     with:
+  #       creds: ${{ env.credentials }}
 
-    - name: Defaults
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+  #   - name: Defaults
+  #     uses: Azure/cli@v1.0.0
+  #     with:
+  #       inlineScript: |
+  #         az configure --defaults location=uksouth
+  #         az configure --defaults group=${{ env.resource_group }}
 
-    - name: Vnet
-      uses: Azure/cli@v1.0.0
-      with:
-        # We have to do a show here or we get an error on create if the vnet already exists:
-        inlineScript: |
-          az network vnet show --name tfs-${{ env.app_service_plan }}-portal-api || \
-          az network vnet create --name tfs-${{ env.app_service_plan }}-portal-api
+  #   - name: Vnet
+  #     uses: Azure/cli@v1.0.0
+  #     with:
+  #       # We have to do a show here or we get an error on create if the vnet already exists:
+  #       inlineScript: |
+  #         az network vnet show --name tfs-${{ env.app_service_plan }}-portal-api || \
+  #         az network vnet create --name tfs-${{ env.app_service_plan }}-portal-api
 
-    - name: Subnet
-      uses: Azure/cli@v1.0.0
-      with:
-        # Delegation Microsoft.Web/serverFarms allows App Service to call into this vnet
-        inlineScript: |
-          az network vnet subnet create \
-            --name backing-services \
-            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
-            --delegations Microsoft.Web/serverFarms \
-            --address-prefixes 10.0.0.0/28
+  #   - name: Subnet
+  #     uses: Azure/cli@v1.0.0
+  #     with:
+  #       # Delegation Microsoft.Web/serverFarms allows App Service to call into this vnet
+  #       inlineScript: |
+  #         az network vnet subnet create \
+  #           --name backing-services \
+  #           --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+  #           --delegations Microsoft.Web/serverFarms \
+  #           --address-prefixes 10.0.0.0/28
 
-    - name: Service endpoints
-      uses: Azure/cli@v1.0.0
-      with:
-        # Service endpoints allow the selected backing services to be accessed through this subnet
-        inlineScript: |
-          az network vnet subnet update --name backing-services --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
-            --service-endpoints Microsoft.AzureCosmosDB Microsoft.Storage 
-            # We may add: Microsoft.web Microsoft.KeyVault
+    # - name: Service endpoints
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # Service endpoints allow the selected backing services to be accessed through this subnet
+    #     inlineScript: |
+    #       az network vnet subnet update --name backing-services --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+    #         --service-endpoints Microsoft.AzureCosmosDB Microsoft.Storage 
+    #         # We may add: Microsoft.web Microsoft.KeyVault
 
   portal-ui:
     name: Portal UI
     runs-on: ubuntu-latest
     # Delaying to avoid clashing with container image promotion
-    needs: [portal-api-vnet, cosmos-db]
+    # needs: [portal-api-vnet, cosmos-db]
     steps:
     - uses: azure/login@v1
       with:
@@ -172,7 +172,7 @@ jobs:
     name: Portal API
     runs-on: ubuntu-latest
     # Delaying to avoid clashing with container image promotion
-    needs: [portal-api-vnet, cosmos-db]
+    # needs: [portal-api-vnet, cosmos-db]
     steps:
     - uses: azure/login@v1
       with:
@@ -193,13 +193,13 @@ jobs:
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name ${{ env.registry }}/portal-api:${{ env.environment }}
 
-    - name: Vnet integration
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-api \
-            --vnet tfs-${{ env.app_service_plan }}-portal-api \
-            --subnet backing-services
+    # - name: Vnet integration
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     inlineScript: |
+    #       az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-api \
+    #         --vnet tfs-${{ env.app_service_plan }}-portal-api \
+    #         --subnet backing-services
 
     - name: Always-on
       uses: Azure/cli@v1.0.0
@@ -258,7 +258,7 @@ jobs:
   cosmos-db:
     name: Cosmos DB (Mongo)
     runs-on: ubuntu-latest
-    needs: portal-api-vnet
+    # needs: portal-api-vnet
     steps:
     - uses: azure/login@v1
       with:
@@ -327,79 +327,79 @@ jobs:
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters --shard "_id"
 
-    - name: Add Deal ID counter
-      run: |
-        cat <<EOF > deal-counter.js
-        db = db.getSiblingDB('tfs-portal')
-        try {
-          db.idCounters.insertOne({
-            "_id" : "DEAL_COUNTER",
-            "count" : 1000000
-          })
-        } catch (err) {
-          print("Deal counter exists.")
-          print(err)
-        }
-        EOF
-        cat deal-counter.js
-        echo Attempt 1...
-        mongo ${{ env.MONGODB_URI }} deal-counter.js
-        echo Attempt 2...
-        mongo ${{ env.MONGODB_URI }} deal-counter.js
-        echo Attempt 3...
-        mongo ${{ env.MONGODB_URI }} deal-counter.js
-        echo Attempt 4...
-        mongo ${{ env.MONGODB_URI }} deal-counter.js
-        echo end.
+    # - name: Add Deal ID counter
+    #   run: |
+    #     cat <<EOF > deal-counter.js
+    #     db = db.getSiblingDB('tfs-portal')
+    #     try {
+    #       db.idCounters.insertOne({
+    #         "_id" : "DEAL_COUNTER",
+    #         "count" : 1000000
+    #       })
+    #     } catch (err) {
+    #       print("Deal counter exists.")
+    #       print(err)
+    #     }
+    #     EOF
+    #     cat deal-counter.js
+    #     echo Attempt 1...
+    #     mongo ${{ env.MONGODB_URI }} deal-counter.js
+    #     echo Attempt 2...
+    #     mongo ${{ env.MONGODB_URI }} deal-counter.js
+    #     echo Attempt 3...
+    #     mongo ${{ env.MONGODB_URI }} deal-counter.js
+    #     echo Attempt 4...
+    #     mongo ${{ env.MONGODB_URI }} deal-counter.js
+    #     echo end.
 
-    - name: Add Facility ID counter
-      run: |
-        cat <<EOF > facility-counter.js
-        db = db.getSiblingDB('tfs-portal')
-        try {
-          db.idCounters.insertOne({
-            "_id" : "FACILITY_COUNTER",
-            "count" : 1000000
-          })
-        } catch (err) {
-          print("Facility counter exists.")
-          print(err)
-        }
-        EOF
-        cat facility-counter.js
-        echo Attempt 1...
-        mongo ${{ env.MONGODB_URI }} facility-counter.js
-        echo Attempt 2...
-        mongo ${{ env.MONGODB_URI }} facility-counter.js
-        echo Attempt 3...
-        mongo ${{ env.MONGODB_URI }} facility-counter.js
-        echo Attempt 4...
-        mongo ${{ env.MONGODB_URI }} facility-counter.js
-        echo end.
+    # - name: Add Facility ID counter
+    #   run: |
+    #     cat <<EOF > facility-counter.js
+    #     db = db.getSiblingDB('tfs-portal')
+    #     try {
+    #       db.idCounters.insertOne({
+    #         "_id" : "FACILITY_COUNTER",
+    #         "count" : 1000000
+    #       })
+    #     } catch (err) {
+    #       print("Facility counter exists.")
+    #       print(err)
+    #     }
+    #     EOF
+    #     cat facility-counter.js
+    #     echo Attempt 1...
+    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
+    #     echo Attempt 2...
+    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
+    #     echo Attempt 3...
+    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
+    #     echo Attempt 4...
+    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
+    #     echo end.
 
-    - name: Access restriction - ${{ env.protected_database }}
-      uses: Azure/cli@v1.0.0
-      with:
-        # This fails if we want to expose the database,
-        # so we fall back to enabling public network access
-        inlineScript: |
-          # az cosmosdb update --name tfs-${{ env.environment }}-mongo \
-          #   --enable-virtual-network ${{ env.protected_database }} \
-          #   --ip-range-filter 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26 || \
-          az cosmosdb update --name tfs-${{ env.environment }}-mongo \
-            --enable-virtual-network false \
-            --enable-public-network true
+    # - name: Access restriction - ${{ env.protected_database }}
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # This fails if we want to expose the database,
+    #     # so we fall back to enabling public network access
+    #     inlineScript: |
+    #       # az cosmosdb update --name tfs-${{ env.environment }}-mongo \
+    #       #   --enable-virtual-network ${{ env.protected_database }} \
+    #       #   --ip-range-filter 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26 || \
+    #       az cosmosdb update --name tfs-${{ env.environment }}-mongo \
+    #         --enable-virtual-network false \
+    #         --enable-public-network true
 
-    - name: Enable vnet access
-      uses: Azure/cli@v1.0.0
-      with:
-        # This fails if we want to expose the database,
-        # so we fall back to just an echo statement.
-        inlineScript: |
-          # az cosmosdb network-rule add --name tfs-${{ env.environment }}-mongo \
-          #   --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
-          #   --subnet backing-services || \
-          echo "Not restricting to a subnet."
+    # - name: Enable vnet access
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # This fails if we want to expose the database,
+    #     # so we fall back to just an echo statement.
+    #     inlineScript: |
+    #       # az cosmosdb network-rule add --name tfs-${{ env.environment }}-mongo \
+    #       #   --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+    #       #   --subnet backing-services || \
+    #       echo "Not restricting to a subnet."
 
   front-door:
     # NB Front Door takes a little while to be available
@@ -481,7 +481,7 @@ jobs:
   file-storage:
     name: File storage
     runs-on: ubuntu-latest
-    needs: portal-api-vnet
+    # needs: portal-api-vnet
     steps:
     - uses: azure/login@v1
       with:
@@ -526,25 +526,25 @@ jobs:
             --name workflow || \
           echo Skipped.
 
-    - name: Access restriction
-      if: ${{ always() }}
-      uses: Azure/cli@v1.0.0
-      with:
-        # Always remove public access
-        # On activating "Allow access from Azure Portal":
-        # https://github.com/Azure/azure-cli/issues/7495 ->
-        # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall#allow-requests-from-the-azure-portal
-        # ALLOW REQUESTS FROM THE AZURE PORTAL
-        # Region IP address
-        # Germany 51.4.229.218
-        # China 139.217.8.252
-        # US Gov 52.244.48.71
-        # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
-        inlineScript: |
-          az storage account update --name tfs${{ env.environment }}storage --default-action Deny
-          az storage account network-rule add --account-name tfs${{ env.environment }}storage \
-            --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
-            --subnet backing-services
+    # - name: Access restriction
+    #   if: ${{ always() }}
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # Always remove public access
+    #     # On activating "Allow access from Azure Portal":
+    #     # https://github.com/Azure/azure-cli/issues/7495 ->
+    #     # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall#allow-requests-from-the-azure-portal
+    #     # ALLOW REQUESTS FROM THE AZURE PORTAL
+    #     # Region IP address
+    #     # Germany 51.4.229.218
+    #     # China 139.217.8.252
+    #     # US Gov 52.244.48.71
+    #     # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
+    #     inlineScript: |
+    #       az storage account update --name tfs${{ env.environment }}storage --default-action Deny
+    #       az storage account network-rule add --account-name tfs${{ env.environment }}storage \
+    #         --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
+    #         --subnet backing-services
 
   session-store:
     name: Redis (sessions)
