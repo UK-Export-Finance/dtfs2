@@ -217,6 +217,7 @@ jobs:
 
     - name: DNS A-records
       uses: Azure/cli@v1.0.0
+      shell: bash
       with:
         # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
         # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
@@ -340,6 +341,7 @@ jobs:
 
     - name: DNS A-records
       uses: Azure/cli@v1.0.0
+      shell: bash
       with:
         # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
         # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
@@ -366,7 +368,7 @@ jobs:
               --zone-name "privatelink.azurewebsites.net" \
               --ipv4-address $interface_ip
           else
-            echo "IP for tfs-${{ env.environment }}-portal-api.privatelink.azurewebsites.net is $address"
+            echo "IP for tfs-${{ env.environment }}-portal-api.privatelink.azurewebsites.net is $ipv4_address"
           fi
 
     - name: Continuous deployment
