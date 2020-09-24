@@ -43,6 +43,14 @@ context('Create deal', () => {
     // confirm that we're on the newly created deal '/contract/XYZ'
     cy.url().should('include', '/contract/');
 
+    //confirm deal is in the correct starting state..
+    contract.aboutSupplierDetailsStatus().should(
+      (status) => expect(status).to.contain('Not Started')
+    );
+
+    contract.eligibilityStatus().should(
+      (status) => expect(status).to.contain('Not Started')
+    );
 
     // confirm that the data we've entered appears on the preview page
     contract.previewTab().click();
