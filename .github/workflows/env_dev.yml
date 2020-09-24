@@ -2,7 +2,7 @@ name: Dev environment infrastructure
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ master ]
 
 env:
   # Environment
