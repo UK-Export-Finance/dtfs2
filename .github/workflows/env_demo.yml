@@ -63,31 +63,6 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
-    - name: Shelling
-      uses: Azure/cli@v1.0.0
-      with:
-        # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
-        # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
-        inlineScript: |
-          echo "Shell: $SHELL"
-          # bash
-          # echo "Shell: $SHELL"
-          empty=""
-          full="good stuff"
-          if test -z "$empty"
-          then
-            echo "Empty is empty"
-          else 
-            echo "Empty is full"
-          fi
-          if [ -z "$full" ]
-          then
-            echo "Full is empty"
-          else 
-            echo "Full is full"
-          fi
-          echo "The end."
-
     - name: Vnet
       uses: Azure/cli@v1.0.0
       with:
@@ -246,10 +221,7 @@ jobs:
         # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
         # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
         inlineScript: |
-          echo "Shell: $SHELL"
-          bash
-          echo "Shell: $SHELL"
-          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv) || ""
+          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
 
           if [ -z "$ipv4_address" ]
           then
@@ -350,7 +322,7 @@ jobs:
             --vnet tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.app_service_plan }}-app-service-egress
 
-    - name: Private link
+    - name: Private endpoint
       uses: Azure/cli@v1.0.0
       with:
         # Restrict inbound traffic to not be open to the Internet
@@ -373,9 +345,8 @@ jobs:
         # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
         # NB the -z tests below are checking 
         inlineScript: |
-          echo "Shell: $SHELL"
-          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv) || ""
-
+          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+          
           if [ -z "$ipv4_address" ]
           then
             interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-portal-api --query 'networkInterfaces[0].id' -o tsv)
