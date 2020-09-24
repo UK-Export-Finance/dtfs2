@@ -205,12 +205,12 @@ jobs:
         # NB: group-id isn't well documented. It means "Target sub-resource"
         #     The purpose of connection-name is unknown.
         inlineScript: |
-          subscription_id=$(az account show --query 'id' -o tsv)
+          portal_ui_id=$(az webapp show --name tfs-${{ env.environment }}-portal-ui --query "id" -o tsv)
           az network private-endpoint create \
             --name tfs-${{ env.environment }}-portal-ui \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Web/sites/tfs-demo-portal-ui" \
+            --private-connection-resource-id "$portal_ui_id" \
             --group-id sites \
             --connection-name tfs-${{ env.environment }}-portal-ui
 
@@ -328,12 +328,12 @@ jobs:
         # NB: group-id isn't well documented. It means "Target sub-resource".
         #     The purpose of connection-name is unknown.
         inlineScript: |
-          subscription_id=$(az account show --query 'id' -o tsv)
+          portal_api_id=$(az webapp show --name tfs-${{ env.environment }}-portal-api --query "id" -o tsv)
           az network private-endpoint create \
             --name tfs-${{ env.environment }}-portal-api \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Web/sites/tfs-demo-portal-api" \
+            --private-connection-resource-id "$portal_api_id" \
             --group-id sites \
             --connection-name tfs-${{ env.environment }}-portal-api
 
@@ -460,12 +460,12 @@ jobs:
         # NB: group-id isn't well documented. It means "Target sub-resource"
         #     The purpose of connection-name is unknown.
         inlineScript: |
-          subscription_id=$(az account show --query 'id' -o tsv)
+          mongo_id=$(az cosmosdb show --name tfs-${{ env.environment }}-mongo --query "id" -o tsv)
           az network private-endpoint create \
             --name tfs-${{ env.environment }}-mongo \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.DocumentDB/databaseAccounts/tfs-${{ env.environment }}-mongo" \
+            --private-connection-resource-id "$mongo_id" \
             --group-id MongoDB \
             --connection-name tfs-${{ env.environment }}-mongo
 
@@ -605,12 +605,12 @@ jobs:
         # NB: group-id isn't well documented. It means "Target sub-resource"
         #     The purpose of connection-name is unknown.
         inlineScript: |
-          subscription_id=$(az account show --query 'id' -o tsv)
+          file_storage_id=$(az storage account show --name tfs${{ env.environment }}storage --query "id" -o tsv)
           az network private-endpoint create \
             --name tfs-${{ env.environment }}-storage \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Storage/storageAccounts/tfs${{ env.environment }}storage" \
+            --private-connection-resource-id "$file_storage_id" \
             --group-id file \
             --connection-name tfs-${{ env.environment }}-storage
              
@@ -647,12 +647,12 @@ jobs:
     #     # NB: group-id isn't well documented. It means "Target sub-resource"
     #     #     The purpose of connection-name is unknown.
     #     inlineScript: |
-    #       subscription_id=$(az account show --query 'id' -o tsv)
+    #       redis_id=$(az redis show --name tfs-demo-redis --query "id" -o tsv)
     #       az network private-endpoint create \
     #         --name tfs-${{ env.environment }}-redis \
     #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
     #         --subnet ${{ env.environment }}-private-endpoints \
-    #         --private-connection-resource-id "/subscriptions/${subscription_id}/resourceGroups/${{ env.resource_group }}/providers/Microsoft.Cache/Redis/tfs-${{ env.environment }}-redis" \
+    #         --private-connection-resource-id "$redis_id" \
     #         --group-id redisCache \
     #         --connection-name tfs-${{ env.environment }}-redis
 
