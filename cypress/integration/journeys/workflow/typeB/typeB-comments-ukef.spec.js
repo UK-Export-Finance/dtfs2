@@ -105,7 +105,7 @@ context('A checker submits an approval for a deal; workflow responds with a type
       },
       deal: {
         UKEF_deal_id: '123456',
-        Deal_status: 'approved',
+        Deal_status: 'approved_conditions',
         Deal_comments: 'ukef comments text',
       },
       bonds: [
@@ -149,6 +149,65 @@ context('A checker submits an approval for a deal; workflow responds with a type
     ukefComments.comments.text().invoke('text').then((text) => {
       expect(text.trim()).to.equal('ukef comments text');
     });
+  });
+
+  it('Checker submits a deal; workflow approves without comments.', () => {
+    // log in, visit a deal, select abandon
+    cy.login(CHECKER_LOGIN);
+    contract.visit(goodDeal);
+    contract.proceedToSubmit().click();
+
+    contractConfirmSubmission.confirmSubmit().check();
+    contractConfirmSubmission.acceptAndSubmit().click();
+
+    cy.sendTypeB({
+      header: {
+        portal_deal_id: goodDeal._id,
+        bank_deal_id: goodDeal.details.bankSupplyContractID,
+        Message_Type: 'B',
+        Action_Code: '006',
+      },
+      deal: {
+        UKEF_deal_id: '123456',
+        Deal_status: 'approved',
+        Deal_comments: 'ukef comments text',
+      },
+      bonds: [
+        {
+          BSS_portal_facility_id: goodDeal.bondTransactions.items[0]._id,
+          BSS_ukef_facility_id: '54321',
+          BSS_status: 'Issued acknowledged',
+          BSS_comments: 'blahblah blah blahblah',
+        },
+      ],
+      loans: [
+        {
+          EWCS_portal_facility_id: goodDeal.loanTransactions.items[0]._id,
+          EWCS_ukef_facility_id: '65432',
+          EWCS_status: 'Issued acknowledged',
+          EWCS_comments: 'blahblah blah blahblah',
+        },
+      ],
+    });
+
+    contract.visit(goodDeal);
+    contract.visit(goodDeal);
+    ukefComments.comments.title().should('not.exist');
+    ukefComments.comments.text().should('not.exist');
+    ukefComments.specialCondition.title().should('not.exist');
+    ukefComments.specialCondition.text().should('not.exist');
+
+    contract.commentsTab().click();
+    ukefComments.comments.title().should('not.exist');
+    ukefComments.comments.text().should('not.exist');
+    ukefComments.specialCondition.title().should('not.exist');
+    ukefComments.specialCondition.text().should('not.exist');
+
+    contract.previewTab().click();
+    ukefComments.comments.title().should('not.exist');
+    ukefComments.comments.text().should('not.exist');
+    ukefComments.specialCondition.title().should('not.exist');
+    ukefComments.specialCondition.text().should('not.exist');
   });
 
   it('Checker submits a deal; workflow approves with special conditions.', () => {
