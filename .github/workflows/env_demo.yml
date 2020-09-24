@@ -217,11 +217,11 @@ jobs:
 
     - name: DNS A-records
       uses: Azure/cli@v1.0.0
-      shell: bash
       with:
         # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
         # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
         inlineScript: |
+          echo "Shell: $SHELL"
           ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv) || ""
 
           if [ -z "$ipv4_address" ]
@@ -341,12 +341,12 @@ jobs:
 
     - name: DNS A-records
       uses: Azure/cli@v1.0.0
-      shell: bash
       with:
         # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
         # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
         # NB the -z tests below are checking 
         inlineScript: |
+          echo "Shell: $SHELL"
           ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv) || ""
 
           if [ -z "$ipv4_address" ]
