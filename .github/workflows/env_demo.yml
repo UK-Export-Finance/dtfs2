@@ -717,7 +717,7 @@ jobs:
             --source-address-prefixes "GatewayManager" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "65200-65535"
           az network nsg rule create --name gateway-manager --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 400 --direction Inbound --protocol Tcp --access Allow \
+            --priority 400 --direction Inbound --protocol * --access Allow \
             --source-address-prefixes "VirtualNetwork" --source-port-ranges "*" \
             --destination-address-prefixes "VirtualNetwork" --destination-port-ranges "*"
           az network nsg rule create --name deny-internet --nsg-name tfs-${{ env.environment }}-gw-nsg \
