@@ -406,6 +406,14 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
     }
   }
 
+  const addFacilityToSessionConfirmedStartDates = () => {
+    if (!req.session.confirmedRequestedCoverStartDates[dealId]) {
+      req.session.confirmedRequestedCoverStartDates[dealId] = [loanId];
+    } else if (!req.session.confirmedRequestedCoverStartDates[dealId].includes(loanId)) {
+      req.session.confirmedRequestedCoverStartDates[dealId].push(loanId);
+    }
+  };
+
   if (req.body.needToChangeRequestedCoverStartDate === 'true') {
     if (!req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day']) {
       requestedCoverValidationErrors = {
@@ -446,11 +454,7 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
     if (!requestedCoverValidationErrors.errorList
       || (requestedCoverValidationErrors.errorList
         && !requestedCoverValidationErrors.errorList.requestedCoverStartDate)) {
-      if (!req.session.confirmedRequestedCoverStartDates[dealId]) {
-        req.session.confirmedRequestedCoverStartDates[dealId] = [loanId];
-      } else if (!req.session.confirmedRequestedCoverStartDates[dealId].includes(loanId)) {
-        req.session.confirmedRequestedCoverStartDates[dealId].push(loanId);
-      }
+      addFacilityToSessionConfirmedStartDates();
     }
 
     if (
@@ -467,6 +471,8 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
         needToChangeRequestedCoverStartDate: req.body.needToChangeRequestedCoverStartDate,
       });
     }
+  } else if (req.body.needToChangeRequestedCoverStartDate === 'false') {
+    addFacilityToSessionConfirmedStartDates();
   }
 
   const redirectUrl = `/contract/${dealId}`;
