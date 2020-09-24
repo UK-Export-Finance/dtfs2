@@ -8,8 +8,9 @@
       </p>
     {% endif %}
 
-    {% else %}
-      {% if ukefComments and ukefComments.length %}
+    {% elif dealStatus !== "Accepted by UKEF (without conditions)" %}
+      
+      {% if dealStatus !== "Accepted by UKEF (with conditions)" and ukefComments and ukefComments.length %}
         <p class="govuk-body govuk-!-margin-bottom-2">
           <span class="govuk-!-font-size-19 govuk-!-font-weight-bold"  data-cy="ukef-comments-title">UKEF Comments:</span> <span  data-cy="ukef-comments-text">{{ ukefComments[ukefComments.length - 1].text}}</span>
         </p>
