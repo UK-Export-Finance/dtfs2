@@ -12,6 +12,9 @@ env:
   app_service_plan: dev
   redis_sku: Basic
   database_name: tfs-portal
+  application_gateway_cidr: 10.0.1.0/28
+  private_endpoints_cidr: 10.0.2.0/28
+  app_service_plan_cidr: 10.0.3.0/28
   # Container registry
   registry: ${{ secrets.DEMO_ACR_REGISTRY }}
   # App service settings
@@ -77,7 +80,7 @@ jobs:
           az network vnet subnet create \
             --name ${{ env.environment }}-gateway \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes 10.0.1.0/28
+            --address-prefixes ${{ env.application_gateway_cidr }}
 
     - name: Private links subnet
       uses: Azure/cli@v1.0.0
@@ -89,13 +92,13 @@ jobs:
           az network vnet subnet create \
             --name ${{ env.environment }}-private-endpoints \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes 10.0.2.0/28
+            --address-prefixes ${{ env.private_endpoints_cidr }}
           az network vnet subnet update \
             --name ${{ env.environment }}-private-endpoints \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --disable-private-endpoint-network-policies true
 
-    - name: Delegation subnet
+    - name: App Service Plan subnet
       uses: Azure/cli@v1.0.0
       with:
         # Subnet for delegation to App Service for outbound traffic from microservices
@@ -106,7 +109,7 @@ jobs:
             --name ${{ env.app_service_plan }}-app-service-plan-egress \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --delegations Microsoft.Web/serverFarms \
-            --address-prefixes 10.0.3.0/28
+            --address-prefixes ${{ env.app_service_plan_cidr }}
 
   private-dns:
     name: Private DNS
