@@ -708,16 +708,16 @@ jobs:
         # See also: https://stackoverflow.com/questions/52674810/azure-app-gateway-v2-cannot-be-configured-with-nsg/52697957
         inlineScript: |
           az network nsg create  --name tfs-${{ env.environment }}-gw-nsg
+          az network nsg rule create --name gateway-manager --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 100 --direction Inbound --protocol Tcp --access Allow \
+            --source-address-prefixes "GatewayManager" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "65200-65535"
           az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 200 --direction Inbound --protocol Tcp --access Allow \
             --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
           az network nsg rule create --name gateway-manager --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 300 --direction Inbound --protocol Tcp --access Allow \
-            --source-address-prefixes "GatewayManager" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "65200-65535"
-          az network nsg rule create --name gateway-manager --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 400 --direction Inbound --protocol * --access Allow \
+            --priority 300 --direction Inbound --protocol * --access Allow \
             --source-address-prefixes "VirtualNetwork" --source-port-ranges "*" \
             --destination-address-prefixes "VirtualNetwork" --destination-port-ranges "*"
           az network nsg rule create --name deny-internet --nsg-name tfs-${{ env.environment }}-gw-nsg \
