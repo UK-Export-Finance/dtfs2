@@ -416,6 +416,14 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
     }
   }
 
+  const addFacilityToSessionConfirmedStartDates = () => {
+    if (!req.session.confirmedRequestedCoverStartDates[dealId]) {
+      req.session.confirmedRequestedCoverStartDates[dealId] = [bondId];
+    } else if (!req.session.confirmedRequestedCoverStartDates[dealId].includes(bondId)) {
+      req.session.confirmedRequestedCoverStartDates[dealId].push(bondId);
+    }
+  };
+
   if (req.body.needToChangeRequestedCoverStartDate === 'true') {
     const apiData = await getApiData(
       api.contractBond(dealId, bondId, userToken),
@@ -463,11 +471,7 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
     if (!requestedCoverValidationErrors.errorList
       || (requestedCoverValidationErrors.errorList
           && !requestedCoverValidationErrors.errorList.requestedCoverStartDate)) {
-      if (!req.session.confirmedRequestedCoverStartDates[dealId]) {
-        req.session.confirmedRequestedCoverStartDates[dealId] = [bondId];
-      } else if (!req.session.confirmedRequestedCoverStartDates[dealId].includes(bondId)) {
-        req.session.confirmedRequestedCoverStartDates[dealId].push(bondId);
-      }
+      addFacilityToSessionConfirmedStartDates();
     }
 
     if (
@@ -484,6 +488,8 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
         needToChangeRequestedCoverStartDate: req.body.needToChangeRequestedCoverStartDate,
       });
     }
+  } else if (req.body.needToChangeRequestedCoverStartDate === 'false') {
+    addFacilityToSessionConfirmedStartDates();
   }
 
   const redirectUrl = `/contract/${dealId}`;
