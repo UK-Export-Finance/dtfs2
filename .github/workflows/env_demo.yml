@@ -104,7 +104,7 @@ jobs:
         # So this subnet is named after the app service plan, rather than after the environment.
         inlineScript: |
           az network vnet subnet create \
-            --name ${{ env.app_service_plan }}-app-service-egress \
+            --name ${{ env.app_service_plan }}-app-service-plan-egress \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --delegations Microsoft.Web/serverFarms \
             --address-prefixes 10.0.3.0/28
@@ -197,7 +197,7 @@ jobs:
         inlineScript: |
           az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-ui \
             --vnet tfs-${{ env.app_service_plan }}-vnet \
-            --subnet ${{ env.app_service_plan }}-app-service-egress
+            --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
     - name: Private link
       uses: Azure/cli@v1.0.0
@@ -320,7 +320,7 @@ jobs:
         inlineScript: |
           az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-api \
             --vnet tfs-${{ env.app_service_plan }}-vnet \
-            --subnet ${{ env.app_service_plan }}-app-service-egress
+            --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
     - name: Private endpoint
       uses: Azure/cli@v1.0.0
@@ -580,34 +580,24 @@ jobs:
     - name: Create
       uses: Azure/cli@v1.0.0
       with:
-        # We open up access briefly so file shares can be created/updated
         inlineScript: |
           az storage account create --name tfs${{ env.environment }}storage \
             --sku Standard_ZRS \
             --https-only true \
-            --encryption-services file \
-            --default-action Allow
+            --encryption-services file
 
     - name: File share (files)
       uses: Azure/cli@v1.0.0
       with:
-        # Opening up permissions only seems to work reliably on initial creation,
-        # so we skip attempting to create the file share if it fails.
         inlineScript: |
-          az storage share create --account-name tfs${{ env.environment }}storage \
-            --name files || \
-          echo Skipped.
+          az storage share create --account-name tfs${{ env.environment }}storage --name files
 
     - name: File share (workflow)
       uses: Azure/cli@v1.0.0
       with:
         # This fileshare is used if the environment isn't integrated to Workflow.
-        # Opening up permissions only seems to work reliably on initial creation,
-        # so we skip attempting to create the file share if it fails.
         inlineScript: |
-          az storage share create --account-name tfs${{ env.environment }}storage \
-            --name workflow || \
-          echo Skipped.
+          az storage share create --account-name tfs${{ env.environment }}storage --name workflow
 
     - name: Private link
       uses: Azure/cli@v1.0.0
@@ -627,7 +617,7 @@ jobs:
              
   session-store:
     name: Redis session store
-    # needs: vnet
+    needs: vnet
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -668,8 +658,6 @@ jobs:
     #         --connection-name tfs-${{ env.environment }}-redis
 
   application-gateway:
-    # NB Front Door takes a little while to be available
-    # So you won't get a successful request for the first few minutes.
     name: Application Gateway
     needs: [vnet, public-ip]
     runs-on: ubuntu-latest
@@ -685,7 +673,7 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
-    - name: Create
+    - name: Create in gateway subnet
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
@@ -698,7 +686,7 @@ jobs:
             --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
             --sku Standard_v2
 
-    - name: Network security group
+    - name: Network Security Group
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
@@ -724,24 +712,6 @@ jobs:
             --priority 200 --direction Inbound --protocol "*" --access Allow \
             --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
-
-    # - name: Allow vnet traffic
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     inlineScript: |
-    #       az network nsg rule create --name vnets --nsg-name tfs-${{ env.environment }}-gw-nsg \
-    #         --priority 300 --direction Inbound --protocol * --access Allow \
-    #         --source-address-prefixes "VirtualNetwork" --source-port-ranges "*" \
-    #         --destination-address-prefixes "*" --destination-port-ranges "*"
-
-    # - name: Only allow Front Door traffic
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     inlineScript: |
-    #       az network nsg rule create --name deny-internet --nsg-name tfs-${{ env.environment }}-gw-nsg \
-    #         --priority 1000 --direction Inbound --protocol "*" --access Deny \
-    #         --source-address-prefixes "Internet" --source-port-ranges "*" \
-    #         --destination-address-prefixes "*" --destination-port-ranges "*"
 
     - name: Associate NSG to gateway subnet
       uses: Azure/cli@v1.0.0
