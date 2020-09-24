@@ -12,7 +12,6 @@ env:
   app_service_plan: dev
   redis_sku: Basic
   database_name: tfs-portal
-  protected_database: true
   # Container registry
   registry: ${{ secrets.DEMO_ACR_REGISTRY }}
   # App service settings

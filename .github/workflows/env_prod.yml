@@ -12,7 +12,6 @@ env:
   app_service_plan: prod
   redis_sku: Basic
   database_name: tfs-portal
-  protected_database: true
   # Container registry
   registry: ${{ secrets.PROD_ACR_REGISTRY }}
   # App service settings
@@ -376,30 +375,6 @@ jobs:
     #     echo Attempt 4...
     #     mongo ${{ env.MONGODB_URI }} facility-counter.js
     #     echo end.
-
-    # - name: Access restriction - ${{ env.protected_database }}
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     # This fails if we want to expose the database,
-    #     # so we fall back to enabling public network access
-    #     inlineScript: |
-    #       # az cosmosdb update --name tfs-${{ env.environment }}-mongo \
-    #       #   --enable-virtual-network ${{ env.protected_database }} \
-    #       #   --ip-range-filter 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26 || \
-    #       az cosmosdb update --name tfs-${{ env.environment }}-mongo \
-    #         --enable-virtual-network false \
-    #         --enable-public-network true
-
-    # - name: Enable vnet access
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     # This fails if we want to expose the database,
-    #     # so we fall back to just an echo statement.
-    #     inlineScript: |
-    #       # az cosmosdb network-rule add --name tfs-${{ env.environment }}-mongo \
-    #       #   --vnet-name tfs-${{ env.app_service_plan }}-portal-api \
-    #       #   --subnet backing-services || \
-    #       echo "Not restricting to a subnet."
 
   front-door:
     # NB Front Door takes a little while to be available
