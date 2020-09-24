@@ -12,6 +12,9 @@ env:
   app_service_plan: test
   redis_sku: Basic
   database_name: test
+  application_gateway_cidr: 10.0.1.0/28
+  private_endpoints_cidr: 10.0.2.0/28
+  app_service_plan_cidr: 10.0.3.0/28
   # Container registry
   registry: ${{ secrets.TEST_ACR_REGISTRY }}
   # App service settings
