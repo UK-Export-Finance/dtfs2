@@ -708,6 +708,8 @@ jobs:
         # See also: https://stackoverflow.com/questions/52674810/azure-app-gateway-v2-cannot-be-configured-with-nsg/52697957
         inlineScript: |
           az network nsg create  --name tfs-${{ env.environment }}-gw-nsg
+          gateway_ip_id=$(az network application-gateway show --name tfs-${{ env.environment }}-gw --query "frontendIpConfigurations[0].publicIpAddress.id" -o tsv)
+          gateway_ip=$(az resource show --ids "$gateway_ip_id" --query "properties.ipAddress" -o tsv)
           az network nsg rule create --name gateway-manager --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 100 --direction Inbound --protocol Tcp --access Allow \
             --source-address-prefixes "GatewayManager" --source-port-ranges "*" \
@@ -720,6 +722,10 @@ jobs:
             --priority 300 --direction Inbound --protocol * --access Allow \
             --source-address-prefixes "VirtualNetwork" --source-port-ranges "*" \
             --destination-address-prefixes "VirtualNetwork" --destination-port-ranges "*"
+          az network nsg rule create --name allow-nsg-management --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 999 --direction Inbound --protocol "tcp" --access Allow \
+            --source-address-prefixes "Internet" --source-port-ranges "*" \
+            --destination-address-prefixes "$gateway_ip" --destination-port-ranges "65200-65535"
           az network nsg rule create --name deny-internet --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 1000 --direction Inbound --protocol "*" --access Deny \
             --source-address-prefixes "Internet" --source-port-ranges "*" \
