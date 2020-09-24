@@ -12,7 +12,7 @@ describe('/v1/countries', () => {
   let anEditor;
 
   const nzl = aCountry({ code: 'NZL', name: 'New Zealand' });
-  const hkg = aCountry({ code: 'HKG', name: 'Hong Kong' });
+  const hkg = aCountry({ code: 'HKG', name: 'Hong Kong', disabled: 'true' });
   const dub = aCountry({ code: 'DUB', name: 'Dubai' });
   const gbr = aCountry({ code: 'GBR', name: 'United Kingdom' });
 
@@ -40,12 +40,12 @@ describe('/v1/countries', () => {
       expect(status).toEqual(200);
     });
 
-    it('returns a list of countries, alphebetized but with GBR/United Kingdom at the top', async () => {
+    it('returns a list of countries that are not marked as disabled, alphebetized but with GBR/United Kingdom at the top', async () => {
       await as(anEditor).postEach([nzl, hkg,dub,gbr]).to('/v1/countries');
 
       const { status, body } = await as(noRoles).get('/v1/countries');
 
-      const expectedOrder = [gbr, dub, hkg, nzl];
+      const expectedOrder = [gbr, dub, nzl];
 
       expect(status).toEqual(200);
       expect(body.countries).toEqual(expectMongoIds(expectedOrder));
@@ -159,7 +159,7 @@ describe('/v1/countries', () => {
     it('deletes the country', async () => {
       await as(anEditor).post(newCountry).to('/v1/countries');
       await as(anEditor).remove('/v1/countries/NZL');
-      
+
       const { status, body } = await as(anEditor).get('/v1/countries/NZL');
 
       expect(status).toEqual(200);
