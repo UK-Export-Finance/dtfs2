@@ -74,7 +74,7 @@ jobs:
           echo "Shell: $SHELL"
           empty=""
           full="good stuff"
-          if [ -z "empty" ]
+          if test -z "empty"
           then
             echo "Empty is empty"
           else 
