@@ -725,28 +725,18 @@ jobs:
             --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
 
-    # - name: Only allow Front Door traffic
+    # - name: Allow vnet traffic
     #   uses: Azure/cli@v1.0.0
     #   with:
-    #     # Subnet for hosting an Application Gateway restricted to inbound traffic from Front Door
-    #     # The "GatewayManager" rule is explained in the Application Gateway FAQ: 
-    #     #   https://docs.microsoft.com/en-us/azure/application-gateway/application-gateway-faq#how-do-i-use-application-gateway-v2-with-only-private-frontend-ip-address
-    #     # NB: Health probe inbound traffic ("AzureLoadBalancer") and vnet traffic ("VirtualNetwork") rules are created in the subnet automatically.
-    #     # See also: https://stackoverflow.com/questions/52674810/azure-app-gateway-v2-cannot-be-configured-with-nsg/52697957
     #     inlineScript: |
-    #       az network nsg rule create --name gateway-manager --nsg-name tfs-${{ env.environment }}-gw-nsg \
+    #       az network nsg rule create --name vnets --nsg-name tfs-${{ env.environment }}-gw-nsg \
     #         --priority 300 --direction Inbound --protocol * --access Allow \
     #         --source-address-prefixes "VirtualNetwork" --source-port-ranges "*" \
-    #         --destination-address-prefixes "VirtualNetwork" --destination-port-ranges "*"
+    #         --destination-address-prefixes "*" --destination-port-ranges "*"
 
     # - name: Only allow Front Door traffic
     #   uses: Azure/cli@v1.0.0
     #   with:
-    #     # Subnet for hosting an Application Gateway restricted to inbound traffic from Front Door
-    #     # The "GatewayManager" rule is explained in the Application Gateway FAQ: 
-    #     #   https://docs.microsoft.com/en-us/azure/application-gateway/application-gateway-faq#how-do-i-use-application-gateway-v2-with-only-private-frontend-ip-address
-    #     # NB: Health probe inbound traffic ("AzureLoadBalancer") and vnet traffic ("VirtualNetwork") rules are created in the subnet automatically.
-    #     # See also: https://stackoverflow.com/questions/52674810/azure-app-gateway-v2-cannot-be-configured-with-nsg/52697957
     #     inlineScript: |
     #       az network nsg rule create --name deny-internet --nsg-name tfs-${{ env.environment }}-gw-nsg \
     #         --priority 1000 --direction Inbound --protocol "*" --access Deny \
