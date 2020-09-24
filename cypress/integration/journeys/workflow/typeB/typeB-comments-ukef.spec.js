@@ -87,7 +87,7 @@ context('A checker submits an approval for a deal; workflow responds with a type
     ukefComments.specialCondition.text().should('not.exist');
   });
 
-  it('Checker submits a deal; workflow approves with comments.', () => {
+  it('Checker submits a deal; workflow approves without comments.', () => {
     // log in, visit a deal, select abandon
     cy.login(CHECKER_LOGIN);
     contract.visit(goodDeal);
@@ -127,28 +127,23 @@ context('A checker submits an approval for a deal; workflow responds with a type
     });
 
     contract.visit(goodDeal);
-    ukefComments.comments.title().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('UKEF Comments:');
-    });
-    ukefComments.comments.text().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('ukef comments text');
-    });
+    contract.visit(goodDeal);
+    ukefComments.comments.title().should('not.exist');
+    ukefComments.comments.text().should('not.exist');
+    ukefComments.specialCondition.title().should('not.exist');
+    ukefComments.specialCondition.text().should('not.exist');
 
     contract.commentsTab().click();
-    ukefComments.comments.title().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('UKEF Comments:');
-    });
-    ukefComments.comments.text().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('ukef comments text');
-    });
+    ukefComments.comments.title().should('not.exist');
+    ukefComments.comments.text().should('not.exist');
+    ukefComments.specialCondition.title().should('not.exist');
+    ukefComments.specialCondition.text().should('not.exist');
 
     contract.previewTab().click();
-    ukefComments.comments.title().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('UKEF Comments:');
-    });
-    ukefComments.comments.text().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('ukef comments text');
-    });
+    ukefComments.comments.title().should('not.exist');
+    ukefComments.comments.text().should('not.exist');
+    ukefComments.specialCondition.title().should('not.exist');
+    ukefComments.specialCondition.text().should('not.exist');
   });
 
   it('Checker submits a deal; workflow approves without comments.', () => {
