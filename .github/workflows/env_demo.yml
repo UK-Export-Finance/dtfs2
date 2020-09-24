@@ -70,8 +70,8 @@ jobs:
         # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
         inlineScript: |
           echo "Shell: $SHELL"
-          bash
-          echo "Shell: $SHELL"
+          # bash
+          # echo "Shell: $SHELL"
           empty=""
           full="good stuff"
           if test -z "$empty"
