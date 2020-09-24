@@ -4,7 +4,7 @@ const DEFAULTS = {
       status: 'Draft',
     },
     eligibility: {
-      status: 'Incomplete',
+      status: 'Not Started',
     },
     submissionDetails: {
       status: 'Not Started',
