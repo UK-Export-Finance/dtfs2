@@ -19,7 +19,7 @@ const updateBondStatus = (bond, workflowBond, workflowActionCode) => {
         return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
       }
 
-      if (workflowActionCode === '011' && bond.status === CONSTANTS.FACILITIES.STATUS.SUBMITTED) {
+      if ((workflowActionCode === '011' || workflowActionCode === '017') && bond.status === CONSTANTS.FACILITIES.STATUS.SUBMITTED) {
         return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
       }
 
@@ -54,7 +54,7 @@ const updateLoanStatus = (loan, workflowLoan, workflowActionCode) => {
         return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
       }
 
-      if (workflowActionCode === '011' && loan.status === CONSTANTS.FACILITIES.STATUS.SUBMITTED) {
+      if ((workflowActionCode === '011' || workflowActionCode === '017') && loan.status === CONSTANTS.FACILITIES.STATUS.SUBMITTED) {
         return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
       }
 

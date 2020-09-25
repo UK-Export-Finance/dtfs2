@@ -42,7 +42,7 @@ context('A checker submits a deal; workflow responds with a confirmation_acknowl
         portal_deal_id: deal._id,
         bank_deal_id: deal.details.bankSupplyContractID,
         Message_Type: 'B',
-        Action_Code: '011',
+        Action_Code: '017',
       },
       deal: {
         UKEF_deal_id: '123456',
@@ -85,6 +85,5 @@ context('A checker submits a deal; workflow responds with a confirmation_acknowl
     loanRow.loanStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Acknowledged');
     });
-
   });
 });
