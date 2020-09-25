@@ -52,11 +52,11 @@ const updateIssuedFacilities = async (
       const shouldUpdateLoan = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
                                || loanHasBeenPreviouslyIssued;
 
-      const bondHasBeenPreviouslyIssued = (facility.facilityStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
-        && (previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
-        || previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED));
+      const bondHasBeenPreviouslyIssued = (facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.ISSUED
+        && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNISSUED
+        || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.ISSUED));
 
-      const shouldUpdateBond = facility.facilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
+      const shouldUpdateBond = facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNISSUED
                                || bondHasBeenPreviouslyIssued;
 
       const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
@@ -76,7 +76,7 @@ const updateIssuedFacilities = async (
             facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL;
           } else if (facilityStage) {
             facility.previousFacilityStage = facility.facilityStage;
-            facility.facilityStage = CONSTANTS.FACILITIES.BOND_STAGE.ISSUED;
+            facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.ISSUED;
           }
         } else if (shouldUpdateStatus) {
           // update all issued facilities regardless of if they've been submitted or have completed all required fields.

@@ -6,9 +6,9 @@ const updateBondStatus = (bond, workflowBond, workflowActionCode) => {
     previousFacilityStage,
   } = bond;
 
-  const isIssuedFacility = (facilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
-                           || (facilityStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
-                           && previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED));
+  const isIssuedFacility = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNISSUED
+                           || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.ISSUED
+                           && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNISSUED));
 
   const hasWorflowStatus = workflowBond.BSS_status && workflowBond.BSS_status.length > 0;
 
@@ -28,7 +28,7 @@ const updateBondStatus = (bond, workflowBond, workflowActionCode) => {
       }
     }
 
-    if (facilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED) {
+    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNISSUED) {
       return CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
     }
   }
