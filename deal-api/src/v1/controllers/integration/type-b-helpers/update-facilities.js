@@ -6,9 +6,9 @@ const updateBondStatus = (bond, workflowBond, workflowActionCode) => {
     previousFacilityStage,
   } = bond;
 
-  const isIssuedFacility = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNISSUED
-                           || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.ISSUED
-                           && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNISSUED));
+  const isIssuedFacility = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
+                           || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
+                           && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED));
 
   const hasWorflowStatus = workflowBond.BSS_status && workflowBond.BSS_status.length > 0;
 
@@ -28,7 +28,7 @@ const updateBondStatus = (bond, workflowBond, workflowActionCode) => {
       }
     }
 
-    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNISSUED) {
+    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED) {
       return CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
     }
   }
@@ -41,9 +41,9 @@ const updateLoanStatus = (loan, workflowLoan, workflowActionCode) => {
     previousFacilityStage,
   } = loan;
 
-  const isIssuedFacility = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
-                          || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
-                          && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL));
+  const isIssuedFacility = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
+                          || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
+                          && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL));
 
   const hasWorflowStatus = workflowLoan.EWCS_status && workflowLoan.EWCS_status.length > 0;
 
@@ -63,7 +63,7 @@ const updateLoanStatus = (loan, workflowLoan, workflowActionCode) => {
       }
     }
 
-    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL) {
+    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL) {
       return CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
     }
   }

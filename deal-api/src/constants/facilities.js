@@ -18,12 +18,14 @@ const DAY_COUNT_BASIS = {
 
 const FACILITIES_STAGE = {
   // loans
-  CONDITIONAL: 'Conditional',
-  UNCONDITIONAL: 'Unconditional',
-
-  // bonds
-  UNISSUED: 'Unissued',
-  ISSUED: 'Issued',
+  LOAN: {
+    CONDITIONAL: 'Conditional',
+    UNCONDITIONAL: 'Unconditional', 
+  },
+  BOND: {
+    UNISSUED: 'Unissued',
+    ISSUED: 'Issued', 
+  }
 };
 
 const STATUS = {
