@@ -56,9 +56,9 @@ context('A maker is informed of a loan\'s status before submitting an issued loa
       expect(text.trim()).equal('Incomplete');
     });
 
-    // assert `Issue facility link` text has changed
+    // assert `Issue facility link` text has not changed
     loanRow.issueFacilityLink().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Facility issued');
+      expect(text.trim()).to.equal('Issue facility');
     });
   });
 });
