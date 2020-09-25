@@ -4,7 +4,7 @@ const fillBondForm = require('../../integration/journeys/maker/bond/fill-bond-fo
 module.exports = () => {
   pages.contract.addBondButton().click();
 
-  fillBondForm.details.bondStageIssued();
+  fillBondForm.details.facilityStageIssued();
   pages.bondDetails.submit().click();
 
   fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();

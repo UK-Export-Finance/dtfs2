@@ -34,7 +34,7 @@ const bondHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, d
   const allowedDealSubmissionType = (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
                                     || dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN);
 
-  const allowedFacilityStage = bond.bondStage === 'Unissued';
+  const allowedFacilityStage = bond.facilityStage === 'Unissued';
 
   if (allowedDealStatus
     && allowedDealSubmissionType

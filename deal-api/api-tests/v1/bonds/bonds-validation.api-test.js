@@ -33,7 +33,7 @@ describe('/v1/deals/:id/bond', () => {
   const allBondFields = {
     bondIssuer: 'issuer',
     bondType: 'bond type',
-    bondStage: 'unissued',
+    facilityStage: 'unissued',
     ukefGuaranteeInMonths: '24',
     uniqueIdentificationNumber: '1234',
     bondBeneficiary: 'test',
@@ -188,29 +188,29 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
-    describe('bondStage', () => {
+    describe('facilityStage', () => {
       describe('when missing', () => {
         it('should return validationError', async () => {
           const bond = {
             ...allBondFields,
-            bondStage: '',
+            facilityStage: '',
           };
 
           const body = await updateBondInDeal(dealId, bond);
 
-          expect(body.validationErrors.errorList.bondStage).toBeDefined();
-          expect(body.validationErrors.errorList.bondStage.text).toEqual('Enter the Bond stage');
+          expect(body.validationErrors.errorList.facilityStage).toBeDefined();
+          expect(body.validationErrors.errorList.facilityStage.text).toEqual('Enter the Bond stage');
         });
       });
     });
 
-    describe('when bondStage is `Unissued`', () => {
+    describe('when facilityStage is `Unissued`', () => {
       describe('ukefGuaranteeInMonths', () => {
         describe('when missing', () => {
           it('should return validationError', async () => {
             const bond = {
               ...allBondFields,
-              bondStage: 'Unissued',
+              facilityStage: 'Unissued',
               ukefGuaranteeInMonths: '',
             };
 
@@ -224,7 +224,7 @@ describe('/v1/deals/:id/bond', () => {
           it('should return validationError', async () => {
             const bond = {
               ...allBondFields,
-              bondStage: 'Unissued',
+              facilityStage: 'Unissued',
               ukefGuaranteeInMonths: 'test',
             };
 
@@ -238,7 +238,7 @@ describe('/v1/deals/:id/bond', () => {
           it('should return validationError', async () => {
             const bond = {
               ...allBondFields,
-              bondStage: 'Unissued',
+              facilityStage: 'Unissued',
               ukefGuaranteeInMonths: '6.3',
             };
 
@@ -252,7 +252,7 @@ describe('/v1/deals/:id/bond', () => {
           it('should return validationError', async () => {
             const bond = {
               ...allBondFields,
-              bondStage: 'Unissued',
+              facilityStage: 'Unissued',
               ukefGuaranteeInMonths: '-1',
             };
 
@@ -266,7 +266,7 @@ describe('/v1/deals/:id/bond', () => {
           it('should return validationError', async () => {
             const bond = {
               ...allBondFields,
-              bondStage: 'Unissued',
+              facilityStage: 'Unissued',
               ukefGuaranteeInMonths: '1000',
             };
 
@@ -278,12 +278,12 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
-    describe('when bondStage is `Issued`', () => {
+    describe('when facilityStage is `Issued`', () => {
       describe('requestedCoverStartDate', () => {
         const updateRequestedCoverStartDate = async (requestedCoverStartDate) => {
           const bond = {
             ...allBondFields,
-            bondStage: 'Issued',
+            facilityStage: 'Issued',
             ...requestedCoverStartDate,
           };
 
@@ -382,7 +382,7 @@ describe('/v1/deals/:id/bond', () => {
         const updateCoverEndDate = async (coverEndDate) => {
           const bond = {
             ...allBondFields,
-            bondStage: 'Issued',
+            facilityStage: 'Issued',
             ...coverEndDate,
           };
 
@@ -449,7 +449,7 @@ describe('/v1/deals/:id/bond', () => {
 
             const bond = {
               ...allBondFields,
-              bondStage: 'Issued',
+              facilityStage: 'Issued',
               'requestedCoverStartDate-day': moment(requestedCoverStartDate).format('DD'),
               'requestedCoverStartDate-month': moment(requestedCoverStartDate).format('MM'),
               'requestedCoverStartDate-year': moment(requestedCoverStartDate).format('YYYY'),
@@ -470,7 +470,7 @@ describe('/v1/deals/:id/bond', () => {
           it('should return validationError', async () => {
             const bond = {
               ...allBondFields,
-              bondStage: 'Issued',
+              facilityStage: 'Issued',
               uniqueIdentificationNumber: '',
             };
 
@@ -484,7 +484,7 @@ describe('/v1/deals/:id/bond', () => {
           it('should return validationError', async () => {
             const bond = {
               ...allBondFields,
-              bondStage: 'Issued',
+              facilityStage: 'Issued',
               uniqueIdentificationNumber: 'a'.repeat(31),
             };
 

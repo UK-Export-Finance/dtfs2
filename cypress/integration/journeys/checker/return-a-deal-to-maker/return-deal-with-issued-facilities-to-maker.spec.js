@@ -34,7 +34,7 @@ context('A checker selects to return a deal (with some issued facilities) to mak
     pages.contract.visit(deal);
 
     // expect Unissued Bonds (that need to 'Issue Facility') to have correct status
-    const unissuedBond = deal.bondTransactions.items.find((b) => b.bondStage === 'Unissued'); // eslint-disable-line no-underscore-dangle
+    const unissuedBond = deal.bondTransactions.items.find((b) => b.facilityStage === 'Unissued'); // eslint-disable-line no-underscore-dangle
     const unissuedBondId = unissuedBond._id; // eslint-disable-line no-underscore-dangle
     const unissuedBondRow = pages.contract.bondTransactionsTable.row(unissuedBondId);
 
@@ -43,7 +43,7 @@ context('A checker selects to return a deal (with some issued facilities) to mak
     });
 
     // expect Issued Bonds (that do not need to 'Issue Facility') to have correct status
-    const issuedBond = deal.bondTransactions.items.find((b) => b.bondStage === 'Issued'); // eslint-disable-line no-underscore-dangle
+    const issuedBond = deal.bondTransactions.items.find((b) => b.facilityStage === 'Issued'); // eslint-disable-line no-underscore-dangle
     const issuedBondId = issuedBond._id; // eslint-disable-line no-underscore-dangle
     const issuedBondRow = pages.contract.bondTransactionsTable.row(issuedBondId);
 

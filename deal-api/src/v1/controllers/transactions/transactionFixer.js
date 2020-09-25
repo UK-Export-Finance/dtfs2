@@ -43,11 +43,11 @@ const constructor = (user, filters) => {
         let bondMatchesOnFacilityStage = {};
         let loanMatchesOnFacilityStage = {};
         if (filter[filterField] === 'issued_unconditional') {
-          bondMatchesOnFacilityStage = { 'bondTransactions.items': { $elemMatch: { bondStage: 'Issued' } } };
+          bondMatchesOnFacilityStage = { 'bondTransactions.items': { $elemMatch: { facilityStage: 'Issued' } } };
           loanMatchesOnFacilityStage = { 'loanTransactions.items': { $elemMatch: { facilityStage: 'Unconditional' } } };
         }
         if (filter[filterField] === 'unissued_conditional') {
-          bondMatchesOnFacilityStage = { 'bondTransactions.items': { $elemMatch: { bondStage: 'Unissued' } } };
+          bondMatchesOnFacilityStage = { 'bondTransactions.items': { $elemMatch: { facilityStage: 'Unissued' } } };
           loanMatchesOnFacilityStage = { 'loanTransactions.items': { $elemMatch: { facilityStage: 'Conditional' } } };
         }
         return listSoFar.concat([{ $or: [bondMatchesOnFacilityStage, loanMatchesOnFacilityStage] }]);

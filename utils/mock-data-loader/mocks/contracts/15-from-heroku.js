@@ -79,7 +79,7 @@ module.exports = {
             {
                 "bondIssuer" : "Unissued - Bond issuer field - 1234/5678 'test'. 1283981623861982369816329861238612386189236816238126386182361826381263861298361289368912639812638 END",
                 "bondType" : "Advance payment guarantee",
-                "bondStage" : "Unissued",
+                "facilityStage" : "Unissued",
                 "ukefGuaranteeInMonths" : "60",
                 "bondBeneficiary" : "Bond beneficiary (optional) - 123/456. 83946283649826394862938469824682364986298346289364982634986293846982364982634982639486298346923864982648926 END",
                 "guaranteeFeePayableByBank" : "1.1070",
@@ -105,7 +105,7 @@ module.exports = {
             {
                 "bondIssuer" : "",
                 "bondType" : "Bid bond",
-                "bondStage" : "Unissued",
+                "facilityStage" : "Unissued",
                 "ukefGuaranteeInMonths" : "50",
                 "bondBeneficiary" : "",
                 "guaranteeFeePayableByBank" : "2.7000",
@@ -122,7 +122,7 @@ module.exports = {
             {
                 "bondIssuer" : "",
                 "bondType" : "Retention bond",
-                "bondStage" : "Issued",
+                "facilityStage" : "Issued",
                 "requestedCoverStartDate-day" : "",
                 "requestedCoverStartDate-month" : "",
                 "requestedCoverStartDate-year" : "",
@@ -153,7 +153,7 @@ module.exports = {
             {
                 "bondIssuer" : "Bond Issuer (optional) - Issued Bond.8237482734872843723847823748728347823748273487243873287498273498273489723847289374897248972384784379823748723 END",
                 "bondType" : "Warranty letter",
-                "bondStage" : "Issued",
+                "facilityStage" : "Issued",
                 "requestedCoverStartDate-day" : "11",
                 "requestedCoverStartDate-month" : "08",
                 "requestedCoverStartDate-year" : "2020",

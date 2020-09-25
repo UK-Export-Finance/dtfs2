@@ -42,10 +42,9 @@ const updateIssuedFacilities = async (
       const {
         facilityStage,
         previousFacilityStage,
-        bondStage,
       } = facility;
 
-      // TODO: rework this when we rename bondStage to facilityStage
+      // TODO: rework this when we rename facilityStage to facilityStage
       const loanHasBeenPreviouslyIssued = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
         && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
             || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL);
@@ -53,11 +52,11 @@ const updateIssuedFacilities = async (
       const shouldUpdateLoan = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
                                || loanHasBeenPreviouslyIssued;
 
-      const bondHasBeenPreviouslyIssued = (facility.bondStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
+      const bondHasBeenPreviouslyIssued = (facility.facilityStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
         && (previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
         || previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED));
 
-      const shouldUpdateBond = facility.bondStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
+      const shouldUpdateBond = facility.facilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
                                || bondHasBeenPreviouslyIssued;
 
       const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
@@ -75,9 +74,9 @@ const updateIssuedFacilities = async (
           if (facilityStage) {
             facility.previousFacilityStage = facility.facilityStage;
             facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL;
-          } else if (bondStage) {
-            facility.previousFacilityStage = facility.bondStage;
-            facility.bondStage = CONSTANTS.FACILITIES.BOND_STAGE.ISSUED;
+          } else if (facilityStage) {
+            facility.previousFacilityStage = facility.facilityStage;
+            facility.facilityStage = CONSTANTS.FACILITIES.BOND_STAGE.ISSUED;
           }
         } else if (shouldUpdateStatus) {
           // update all issued facilities regardless of if they've been submitted or have completed all required fields.

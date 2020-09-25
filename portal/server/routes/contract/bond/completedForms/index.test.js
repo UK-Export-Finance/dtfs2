@@ -7,7 +7,7 @@ describe('completedBondForms', () => {
     const mockValidationErrors = {
       errorList: {
         bondType: { text: 'Field is required' },
-        bondStage: { text: 'Field is required' },
+        facilityStage: { text: 'Field is required' },
       },
     };
 

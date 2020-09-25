@@ -4,15 +4,15 @@ const page = {
   bondTypeInput: () => cy.get('[data-cy="bond-type"]'),
   bondTypeInputErrorMessage: () => cy.get('[data-cy="bond-type-error-message"]'),
 
-  bondStageUnissuedInput: () => cy.get('[data-cy="bond-stage-unissued"]'),
-  bondStageIssuedInput: () => cy.get('[data-cy="bond-stage-issued"]'),
-  bondStageInputErrorMessage: () => cy.get('[data-cy="bond-stage-error-message"]'),
+  facilityStageUnissuedInput: () => cy.get('[data-cy="facility-stage-unissued"]'),
+  facilityStageIssuedInput: () => cy.get('[data-cy="facility-stage-issued"]'),
+  facilityStageInputErrorMessage: () => cy.get('[data-cy="facility-stage-error-message"]'),
 
-  // 'unissued' bond stage specifics
+  // 'unissued' facility stage specifics
   ukefGuaranteeInMonthsInput: () => cy.get('[data-cy="ukef-guarantee-in-months"]'),
   ukefGuaranteeInMonthsInputErrorMessage: () => cy.get('[data-cy="ukef-guarantee-in-months-error-message"]'),
 
-  // 'issued' bond stage specifics
+  // 'issued' facility stage specifics
   requestedCoverStartDateDayInput: () => cy.get('[data-cy="requestedCoverStartDate-day"]'),
   requestedCoverStartDateMonthInput: () => cy.get('[data-cy="requestedCoverStartDate-month"]'),
   requestedCoverStartDateYearInput: () => cy.get('[data-cy="requestedCoverStartDate-year"]'),

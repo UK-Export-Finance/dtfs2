@@ -52,7 +52,7 @@ context('Bond Details', () => {
       partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
 
       pages.bondDetails.bondTypeInputErrorMessage().should('be.visible');
-      pages.bondDetails.bondStageInputErrorMessage().should('be.visible');
+      pages.bondDetails.facilityStageInputErrorMessage().should('be.visible');
     });
   });
 
@@ -61,7 +61,7 @@ context('Bond Details', () => {
 
     pages.contract.addBondButton().click();
 
-    fillBondForm.details.bondStageIssued();
+    fillBondForm.details.facilityStageIssued();
 
     pages.bondDetails.submit().click();
 
@@ -72,12 +72,12 @@ context('Bond Details', () => {
     partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('not.be.visible');
   });
 
-  describe('When a user selects `unissued` bond stage', () => {
+  describe('When a user selects `unissued` facility stage', () => {
     it('should render additional form fields and display `unissued` specific validation errors without submit', () => {
       cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
       pages.contract.addBondButton().click();
-      pages.bondDetails.bondStageUnissuedInput().click();
+      pages.bondDetails.facilityStageUnissuedInput().click();
 
       pages.bondDetails.ukefGuaranteeInMonthsInput().should('be.visible');
       pages.bondDetails.ukefGuaranteeInMonthsInputErrorMessage().should('be.visible');
@@ -89,7 +89,7 @@ context('Bond Details', () => {
 
         pages.contract.addBondButton().click();
         pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
-        pages.bondDetails.bondStageUnissuedInput().click();
+        pages.bondDetails.facilityStageUnissuedInput().click();
 
         pages.bondDetails.submit().click();
         cy.url().should('include', '/financial-details');
@@ -108,7 +108,7 @@ context('Bond Details', () => {
 
       pages.contract.addBondButton().click();
 
-      fillBondForm.details.bondStageUnissued();
+      fillBondForm.details.facilityStageUnissued();
 
       pages.bondDetails.submit().click();
 
@@ -127,7 +127,7 @@ context('Bond Details', () => {
       partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
 
-        fillBondForm.details.bondStageUnissued();
+        fillBondForm.details.facilityStageUnissued();
         pages.bondDetails.submit().click();
 
         pages.bondFinancialDetails.saveGoBackButton().click();
@@ -138,7 +138,7 @@ context('Bond Details', () => {
           expect(text.trim()).equal('Not entered');
         });
 
-        row.bondStage().invoke('text').then((text) => {
+        row.facilityStage().invoke('text').then((text) => {
           expect(text.trim()).equal('Unissued');
         });
 
@@ -155,7 +155,7 @@ context('Bond Details', () => {
 
       pages.contract.addBondButton().click();
 
-      pages.bondDetails.bondStageUnissuedInput().click();
+      pages.bondDetails.facilityStageUnissuedInput().click();
       pages.bondDetails.bondIssuerInput().type(BOND_FORM_VALUES.DETAILS.bondIssuer);
       pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
       pages.bondDetails.ukefGuaranteeInMonthsInput().type(BOND_FORM_VALUES.DETAILS.ukefGuaranteeInMonths);
@@ -170,13 +170,13 @@ context('Bond Details', () => {
     });
   });
 
-  describe('When a user selects `issued` bond stage', () => {
+  describe('When a user selects `issued` facility stage', () => {
     it('should render additional form fields and display `issued` specific validation errors without submit', () => {
       cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
       pages.contract.addBondButton().click();
 
-      pages.bondDetails.bondStageIssuedInput().click();
+      pages.bondDetails.facilityStageIssuedInput().click();
 
       pages.bondDetails.requestedCoverStartDateDayInput().should('be.visible');
       pages.bondDetails.requestedCoverStartDateMonthInput().should('be.visible');
@@ -196,7 +196,7 @@ context('Bond Details', () => {
 
         pages.contract.addBondButton().click();
         pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
-        pages.bondDetails.bondStageIssuedInput().click();
+        pages.bondDetails.facilityStageIssuedInput().click();
 
         pages.bondDetails.submit().click();
         cy.url().should('include', '/financial-details');
@@ -216,7 +216,7 @@ context('Bond Details', () => {
 
       pages.contract.addBondButton().click();
 
-      fillBondForm.details.bondStageIssued();
+      fillBondForm.details.facilityStageIssued();
       pages.bondDetails.submit().click();
 
       cy.url().should('include', '/contract');
@@ -235,7 +235,7 @@ context('Bond Details', () => {
 
         pages.contract.addBondButton().click();
 
-        fillBondForm.details.bondStageIssued();
+        fillBondForm.details.facilityStageIssued();
 
         partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
           const bondId = bondIdHiddenInput[0].value;

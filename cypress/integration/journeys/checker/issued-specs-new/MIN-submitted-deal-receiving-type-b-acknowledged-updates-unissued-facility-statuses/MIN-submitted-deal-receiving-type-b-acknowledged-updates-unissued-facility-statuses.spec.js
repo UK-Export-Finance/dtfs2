@@ -42,7 +42,7 @@ context('Checker submits an MIA deal with `Unissued` bonds and `Conditional` loa
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
 
-      bondRow.bondStage().invoke('text').then((text) => {
+      bondRow.facilityStage().invoke('text').then((text) => {
         expect(text.trim()).to.equal('Unissued');
       });
 

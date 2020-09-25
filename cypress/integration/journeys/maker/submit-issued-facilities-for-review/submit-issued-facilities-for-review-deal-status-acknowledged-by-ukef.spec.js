@@ -39,13 +39,13 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     const firstLoanRow = pages.contract.loansTransactionsTable.row(firstLoanId);
 
     //---------------------------------------------------------------
-    // check initial Bond stage, status and issue facility link
+    // check initial facility stage, status and issue facility link
     //---------------------------------------------------------------
     deal.bondTransactions.items.forEach((bond) => {
       const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-      bondRow.bondStage().invoke('text').then((text) => {
+      bondRow.facilityStage().invoke('text').then((text) => {
         expect(text.trim()).to.equal('Unissued');
       });
 
@@ -214,7 +214,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
       expect(text.trim()).to.equal('Ready for check');
     });
 
-    firstBondRow.bondStage().invoke('text').then((text) => {
+    firstBondRow.facilityStage().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Issued');
     });
 
@@ -250,7 +250,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
       expect(text.trim()).to.equal('Incomplete');
     });
 
-    incompleteIssueFacilityBondRow.bondStage().invoke('text').then((text) => {
+    incompleteIssueFacilityBondRow.facilityStage().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Unissued');
     });
 
@@ -278,7 +278,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
       expect(text.trim()).to.equal('Not started');
     });
 
-    notStartedIssueFacilityBondRow.bondStage().invoke('text').then((text) => {
+    notStartedIssueFacilityBondRow.facilityStage().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Unissued');
     });
 

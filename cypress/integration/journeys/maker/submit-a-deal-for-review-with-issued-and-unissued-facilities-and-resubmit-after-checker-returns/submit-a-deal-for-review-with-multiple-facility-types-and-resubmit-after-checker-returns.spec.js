@@ -33,8 +33,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal('Completed');
       });
 
-      bondRow.bondStage().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(bond.bondStage);
+      bondRow.facilityStage().invoke('text').then((text) => {
+        expect(text.trim()).to.equal(bond.facilityStage);
       });
       bondRow.deleteLink().should('be.visible');
       bondRow.issueFacilityLink().should('not.be.visible');
@@ -58,8 +58,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
   };
 
   const assertFacilityTableValuesWithDealStatusInFurtherMakerInputRequired = () => {
-    const unissuedBonds = deal.bondTransactions.items.filter((b) => b.bondStage === 'Unissued');
-    const issuedBonds = deal.bondTransactions.items.filter((b) => b.bondStage === 'Issued');
+    const unissuedBonds = deal.bondTransactions.items.filter((b) => b.facilityStage === 'Unissued');
+    const issuedBonds = deal.bondTransactions.items.filter((b) => b.facilityStage === 'Issued');
 
     const conditionalLoans = deal.loanTransactions.items.filter((l) => l.facilityStage === 'Conditional');
     const unconditionalLoans = deal.loanTransactions.items.filter((l) => l.facilityStage === 'Unconditional');
@@ -72,8 +72,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal('Completed');
       });
 
-      bondRow.bondStage().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(bond.bondStage);
+      bondRow.facilityStage().invoke('text').then((text) => {
+        expect(text.trim()).to.equal(bond.facilityStage);
       });
 
       bondRow.issueFacilityLink().should('not.be.visible');
@@ -88,8 +88,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal('Completed');
       });
 
-      bondRow.bondStage().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(bond.bondStage);
+      bondRow.facilityStage().invoke('text').then((text) => {
+        expect(text.trim()).to.equal(bond.facilityStage);
       });
 
       bondRow.issueFacilityLink().should('not.be.visible');
@@ -130,8 +130,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
   };
 
   const assertFacilityTableValuesWithDealStatusInReadyForChecker = () => {
-    const unissuedBonds = deal.bondTransactions.items.filter((b) => b.bondStage === 'Unissued');
-    const issuedBonds = deal.bondTransactions.items.filter((b) => b.bondStage === 'Issued');
+    const unissuedBonds = deal.bondTransactions.items.filter((b) => b.facilityStage === 'Unissued');
+    const issuedBonds = deal.bondTransactions.items.filter((b) => b.facilityStage === 'Issued');
 
     const conditionalLoans = deal.loanTransactions.items.filter((l) => l.facilityStage === 'Conditional');
     const unconditionalLoans = deal.loanTransactions.items.filter((l) => l.facilityStage === 'Unconditional');
@@ -144,8 +144,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal('Completed');
       });
 
-      bondRow.bondStage().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(bond.bondStage);
+      bondRow.facilityStage().invoke('text').then((text) => {
+        expect(text.trim()).to.equal(bond.facilityStage);
       });
 
       bondRow.issueFacilityLink().should('not.be.visible');
@@ -160,8 +160,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
         expect(text.trim()).to.equal('Completed');
       });
 
-      bondRow.bondStage().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(bond.bondStage);
+      bondRow.facilityStage().invoke('text').then((text) => {
+        expect(text.trim()).to.equal(bond.facilityStage);
       });
 
       bondRow.issueFacilityLink().should('not.be.visible');

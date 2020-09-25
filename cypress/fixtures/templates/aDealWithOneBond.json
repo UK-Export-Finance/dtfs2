@@ -93,7 +93,7 @@
       {
           "bondIssuer" : "",
           "bondType" : "Bid bond",
-          "bondStage" : "Issued",
+          "facilityStage" : "Issued",
           "previousFacilityStage" : "Issued",
           "ukefGuaranteeInMonths" : "12",
           "bondBeneficiary" : "",

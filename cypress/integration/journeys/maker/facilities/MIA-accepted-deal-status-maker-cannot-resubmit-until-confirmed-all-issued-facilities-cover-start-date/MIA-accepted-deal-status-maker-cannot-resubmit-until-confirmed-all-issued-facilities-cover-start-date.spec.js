@@ -33,13 +33,13 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     pages.contract.visit(deal);
 
     const issuedSubmittedBond = deal.bondTransactions.items.find((b) =>
-      b.bondStage === 'Issued' && b.status === 'Submitted');
+      b.facilityStage === 'Issued' && b.status === 'Submitted');
 
     const issuedCompletedBond = deal.bondTransactions.items.find((b) =>
-      b.bondStage === 'Issued' && b.status !== 'Submitted'); // `Completed` is generated dynamically
+      b.facilityStage === 'Issued' && b.status !== 'Submitted'); // `Completed` is generated dynamically
 
     const unissuedBond = deal.bondTransactions.items.find((b) =>
-      b.bondStage === 'Unissued');
+      b.facilityStage === 'Unissued');
 
     const unconditionalSubmittedLoan = deal.loanTransactions.items.find((l) =>
       l.facilityStage === 'Unconditional' && l.status === 'Submitted');
@@ -54,7 +54,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     const issuedSubmittedBondRow = pages.contract.bondTransactionsTable.row(issuedSubmittedBondId);
 
     const secondIssuedSubmittedBond = deal.bondTransactions.items.find((b) =>
-      b.bondStage === 'Issued' && b.status === 'Submitted' && b._id !== issuedSubmittedBondId); // eslint-disable-line no-underscore-dangle
+      b.facilityStage === 'Issued' && b.status === 'Submitted' && b._id !== issuedSubmittedBondId); // eslint-disable-line no-underscore-dangle
 
     const secondIssuedSubmittedBondId = secondIssuedSubmittedBond._id; // eslint-disable-line no-underscore-dangle
     const secondIssuedSubmittedBondRow = pages.contract.bondTransactionsTable.row(secondIssuedSubmittedBondId);

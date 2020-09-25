@@ -8,7 +8,7 @@ const CONSTANTS = require('../../constants');
 const now = require('../../now');
 
 const CLONE_BOND_FIELDS = [
-  'bondStage',
+  'facilityStage',
   'requestedCoverStartDate',
   'coverEndDate-day',
   'coverEndDate-month',

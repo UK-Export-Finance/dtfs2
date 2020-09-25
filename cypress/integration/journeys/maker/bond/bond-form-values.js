@@ -12,7 +12,7 @@ const DETAILS = {
     text: 'Maintenance bond',
   },
 
-  // 'issued' bond stage specifics
+  // 'issued' facility stage specifics
   requestedCoverStartDateDay: moment(requestedCoverStartDate).format('DD'),
   requestedCoverStartDateMonth: moment(requestedCoverStartDate).format('MM'),
   requestedCoverStartDateYear: moment(requestedCoverStartDate).format('YYYY'),
@@ -22,7 +22,7 @@ const DETAILS = {
   uniqueIdentificationNumber: '123456',
   bondBeneficiary: 'mock beneficiary',
 
-  // 'unissued' bond stage specifics
+  // 'unissued' facility stage specifics
   ukefGuaranteeInMonths: '12',
 };
 

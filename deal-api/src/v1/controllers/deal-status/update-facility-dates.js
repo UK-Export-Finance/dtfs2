@@ -11,8 +11,8 @@ const updateFacilityDates = async (collection, deal) => {
     arr.forEach((f) => {
       const facility = f;
 
-      // TODO: rename bondStage to `facilityStage`
-      const shouldUpdateRequestedCoverStartDate = (facility.bondStage === 'Issued' && !facility.requestedCoverStartDate)
+      // TODO: rename facilityStage to `facilityStage`
+      const shouldUpdateRequestedCoverStartDate = (facility.facilityStage === 'Issued' && !facility.requestedCoverStartDate)
         || (facility.facilityStage === 'Unconditional' && !facility.requestedCoverStartDate);
 
       if (shouldUpdateRequestedCoverStartDate) {

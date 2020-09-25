@@ -2,12 +2,12 @@ const CONSTANTS = require('../../../../constants');
 
 const updateBondStatus = (bond, workflowBond, workflowActionCode) => {
   const {
-    bondStage,
+    facilityStage,
     previousFacilityStage,
   } = bond;
 
-  const isIssuedFacility = (bondStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
-                           || (bondStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
+  const isIssuedFacility = (facilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
+                           || (facilityStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
                            && previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED));
 
   const hasWorflowStatus = workflowBond.BSS_status && workflowBond.BSS_status.length > 0;
@@ -28,7 +28,7 @@ const updateBondStatus = (bond, workflowBond, workflowActionCode) => {
       }
     }
 
-    if (bondStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED) {
+    if (facilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED) {
       return CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
     }
   }
