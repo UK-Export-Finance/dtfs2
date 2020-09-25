@@ -20,12 +20,12 @@ describe(component, () => {
     wrapper.expectText('[data-cy="bond-type"]').toRead(bond.bondType);
   });
 
-  it('should render bondStage', () => {
-    wrapper.expectText('[data-cy="bond-stage"]').toRead(bond.bondStage);
+  it('should render facilityStage', () => {
+    wrapper.expectText('[data-cy="facility-stage"]').toRead(bond.facilityStage);
   });
 
-  it('should render bondStage', () => {
-    wrapper.expectText('[data-cy="bond-stage"]').toRead(bond.bondStage);
+  it('should render facilityStage', () => {
+    wrapper.expectText('[data-cy="facility-stage"]').toRead(bond.facilityStage);
   });
 
   // TODO: test formatted date properly

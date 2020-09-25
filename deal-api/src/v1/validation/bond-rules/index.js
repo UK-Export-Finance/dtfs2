@@ -1,7 +1,7 @@
 const bondType = require('./bond-type');
-const bondStage = require('./bond-stage');
-const bondStageUnissued = require('./bond-stage-unissued');
-const bondStageIssued = require('./bond-stage-issued-rules');
+const facilityStage = require('./facility-stage');
+const facilityStageUnissued = require('./facility-stage-unissued');
+const facilityStageIssued = require('./facility-stage-issued-rules');
 const facilityValue = require('./facility-value');
 const currencySameAsSupplyContractCurrency = require('../fields/currency-same-as-supply-contract');
 const currencyNotTheSameAsSupplyContractCurrency = require('../fields/currency-not-the-same-as-supply-contract-rules');
@@ -13,9 +13,9 @@ const dayCountBasis = require('../fields/day-count-basis');
 
 const rules = [
   bondType,
-  bondStage,
-  bondStageUnissued,
-  bondStageIssued,
+  facilityStage,
+  facilityStageUnissued,
+  facilityStageIssued,
   facilityValue,
   currencySameAsSupplyContractCurrency,
   currencyNotTheSameAsSupplyContractCurrency,

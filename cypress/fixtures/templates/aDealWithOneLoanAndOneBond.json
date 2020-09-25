@@ -93,7 +93,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Issued",
+          "facilityStage": "Issued",
           "ukefFacilityID": "ukef:aDealWithOneLoanAndOneBond-bond1",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithOneLoanAndOneBond-bond1",

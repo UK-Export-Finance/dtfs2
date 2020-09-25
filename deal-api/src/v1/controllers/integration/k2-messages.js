@@ -165,7 +165,7 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_bank_id(bond.uniqueIdentificationNumber)
         .BSS_issuer(bond.bondIssuer)
         .BSS_type(k2Map.FACILITIES.TYPE[bond.bondType])
-        .BSS_stage(k2Map.FACILITIES.BOND_STAGE[bond.bondStage])
+        .BSS_stage(k2Map.FACILITIES.BOND_STAGE[bond.facilityStage])
         .BSS_beneficiary(bond.bondBeneficiary)
         .BSS_value(convertCurrencyFormat(bond.facilityValue))
         .BSS_currency_code(

@@ -11,19 +11,19 @@
 
 {% block content %}
 
-  {% set showUnissuedFormFieldsByDefault = bond.bondStage === "Unissued" %}
-  {% set showIssuedFormFieldsByDefault = bond.bondStage === "Issued" %}
+  {% set showUnissuedFormFieldsByDefault = bond.facilityStage === "Unissued" %}
+  {% set showIssuedFormFieldsByDefault = bond.facilityStage === "Issued" %}
 
   <script type="text/javascript">
-    function toggleFormFields(bondStage) {
+    function toggleFormFields(facilityStage) {
       var unissuedFormFields = document.getElementById('unissued-form-fields');
       var issuedFormFields = document.getElementById('issued-form-fields');
 
-      if (bondStage === 'unissued') {
+      if (facilityStage === 'unissued') {
         unissuedFormFields.className = '';
         issuedFormFields.className = 'govuk-visually-hidden';
       }
-      if (bondStage === 'issued') {
+      if (facilityStage === 'issued') {
         issuedFormFields.className = '';
         unissuedFormFields.className = 'govuk-visually-hidden';
       }
@@ -150,8 +150,8 @@
 
         {{ govukRadios({
           classes: "govuk-radios--inline",
-          idPrefix: "bondStage",
-          name: "bondStage",
+          idPrefix: "facilityStage",
+          name: "facilityStage",
           fieldset: {
             legend: {
               text: "Bond stage"
@@ -161,26 +161,26 @@
             {
               value: "Unissued",
               text: "Unissued",
-              checked: bond.bondStage === "Unissued",
+              checked: bond.facilityStage === "Unissued",
               attributes: {
-                'data-cy': "bond-stage-unissued",
+                'data-cy': "facility-stage-unissued",
                 onClick: "toggleFormFields('unissued')"
               }
             },
             {
               value: "Issued",
               text: "Issued",
-              checked: bond.bondStage === "Issued",
+              checked: bond.facilityStage === "Issued",
               attributes: {
-                'data-cy': "bond-stage-issued",
+                'data-cy': "facility-stage-issued",
                 onClick: "toggleFormFields('issued')"
               }
             }
           ],
-          errorMessage: validationErrors.errorList.bondStage and {
-            text: validationErrors.errorList.bondStage.text,
+          errorMessage: validationErrors.errorList.facilityStage and {
+            text: validationErrors.errorList.facilityStage.text,
             attributes: {
-              'data-cy': 'bond-stage-error-message'
+              'data-cy': 'facility-stage-error-message'
             }
           }
         }) }}
@@ -203,8 +203,8 @@
             attributes: {
               'data-cy': 'ukef-guarantee-in-months'
             },
-            errorMessage: (validationErrors.errorList.ukefGuaranteeInMonths.text or (not bond.ukefGuaranteeInMonths and validationErrors.conditionalErrorList.bondStage.Unissued.ukefGuaranteeInMonths.text)) and {
-              text: validationErrors.errorList.ukefGuaranteeInMonths.text or (not bond.ukefGuaranteeInMonths and validationErrors.conditionalErrorList.bondStage.Unissued.ukefGuaranteeInMonths.text),
+            errorMessage: (validationErrors.errorList.ukefGuaranteeInMonths.text or (not bond.ukefGuaranteeInMonths and validationErrors.conditionalErrorList.facilityStage.Unissued.ukefGuaranteeInMonths.text)) and {
+              text: validationErrors.errorList.ukefGuaranteeInMonths.text or (not bond.ukefGuaranteeInMonths and validationErrors.conditionalErrorList.facilityStage.Unissued.ukefGuaranteeInMonths.text),
               attributes: {
                 'data-cy': 'ukef-guarantee-in-months-error-message'
               }
@@ -238,7 +238,7 @@
             monthValue = bond['coverEndDate-month'],
             yearValue = bond['coverEndDate-year'],
             error = validationErrors.errorList.coverEndDate,
-            conditionalError = validationErrors.conditionalErrorList.bondStage.Issued.coverEndDate
+            conditionalError = validationErrors.conditionalErrorList.facilityStage.Issued.coverEndDate
           )}}
 
           {{ govukInput({
@@ -252,8 +252,8 @@
             attributes: {
               'data-cy': 'unique-identification-number'
             },
-            errorMessage: (validationErrors.errorList.uniqueIdentificationNumber.text or (not bond.uniqueIdentificationNumber and validationErrors.conditionalErrorList.bondStage.Issued.uniqueIdentificationNumber.text)) and {
-              text: validationErrors.errorList.uniqueIdentificationNumber.text or (not bond.uniqueIdentificationNumber and validationErrors.conditionalErrorList.bondStage.Issued.uniqueIdentificationNumber.text),
+            errorMessage: (validationErrors.errorList.uniqueIdentificationNumber.text or (not bond.uniqueIdentificationNumber and validationErrors.conditionalErrorList.facilityStage.Issued.uniqueIdentificationNumber.text)) and {
+              text: validationErrors.errorList.uniqueIdentificationNumber.text or (not bond.uniqueIdentificationNumber and validationErrors.conditionalErrorList.facilityStage.Issued.uniqueIdentificationNumber.text),
               attributes: {
                 'data-cy': 'unique-identification-number-error-message'
               }

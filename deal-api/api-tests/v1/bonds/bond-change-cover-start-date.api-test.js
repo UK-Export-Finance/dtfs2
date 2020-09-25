@@ -35,7 +35,7 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
   const mockCoverStartDate = moment().subtract(1, 'month');
 
   const mockBond = {
-    bondStage: 'Issued',
+    facilityStage: 'Issued',
     'requestedCoverStartDate-day': moment(mockCoverStartDate).format('DD'),
     'requestedCoverStartDate-month': moment(mockCoverStartDate).format('MM'),
     'requestedCoverStartDate-year': moment(mockCoverStartDate).format('YYYY'),
@@ -135,10 +135,10 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
       expect(status).toEqual(200);
     });
 
-    describe('when bond.bondStage is not `Issued`', () => {
+    describe('when bond.facilityStage is not `Issued`', () => {
       it('should return 400', async () => {
         const unissuedBondBody = {
-          bondStage: 'Unissued',
+          facilityStage: 'Unissued',
         };
         const body = await updateBond(dealId, bondId, unissuedBondBody);
 

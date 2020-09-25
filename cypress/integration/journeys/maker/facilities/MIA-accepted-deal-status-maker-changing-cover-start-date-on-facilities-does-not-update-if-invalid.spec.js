@@ -34,7 +34,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     pages.contract.visit(deal);
 
     const issuedSubmittedBond = deal.bondTransactions.items.find((b) =>
-      b.bondStage === 'Issued' && b.status === 'Submitted');
+      b.facilityStage === 'Issued' && b.status === 'Submitted');
 
     const issuedSubmittedBondId = issuedSubmittedBond._id; // eslint-disable-line no-underscore-dangle
     const issuedSubmittedBondRow = pages.contract.bondTransactionsTable.row(issuedSubmittedBondId);

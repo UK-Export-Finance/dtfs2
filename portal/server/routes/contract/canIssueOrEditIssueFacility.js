@@ -30,8 +30,8 @@ const canIssueOrEditIssueFacility = (userRoles, deal, facility) => {
   const isMiaDealInAllowedStatus = (submissionType === 'Manual Inclusion Application'
                                     && (acceptedByUkefDealStatus || dealStatus === 'Further Maker\'s input required'));
 
-  const allowedBondFacilityStage = facility.bondStage === 'Unissued'
-                                   || (facility.bondStage === 'Issued' && (previousFacilityStage === 'Unissued' || previousFacilityStage === 'Issued'));
+  const allowedBondFacilityStage = facility.facilityStage === 'Unissued'
+                                   || (facility.facilityStage === 'Issued' && (previousFacilityStage === 'Unissued' || previousFacilityStage === 'Issued'));
 
   const allowedLoanFacilityStage = facility.facilityStage === 'Conditional'
                                    || (facility.facilityStage === 'Unconditional' && (previousFacilityStage === 'Conditional' || previousFacilityStage === 'Unconditional'));

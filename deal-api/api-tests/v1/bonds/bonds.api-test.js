@@ -36,7 +36,7 @@ describe('/v1/deals/:id/bond', () => {
   const allBondFields = {
     bondIssuer: 'issuer',
     bondType: 'bond type',
-    bondStage: 'unissued',
+    facilityStage: 'unissued',
     ukefGuaranteeInMonths: '24',
     uniqueIdentificationNumber: '1234',
     bondBeneficiary: 'test',
@@ -390,14 +390,14 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
-    describe('when a bond has req.body.bondStage as `Issued`', () => {
+    describe('when a bond has req.body.facilityStage as `Issued`', () => {
       it('should remove `unissued` related values from the bond', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
         const bondAsUnissued = {
           ...allBondFields,
-          bondStage: 'Unissued',
+          facilityStage: 'Unissued',
           ukefGuaranteeInMonths: '12',
         };
 
@@ -411,7 +411,7 @@ describe('/v1/deals/:id/bond', () => {
 
         const updatedBondAsIssued = {
           ...bondAsUnissued,
-          bondStage: 'Issued',
+          facilityStage: 'Issued',
           bondIssuer: 'test',
           ...coverEndDate(),
           uniqueIdentificationNumber: '1234',
@@ -452,7 +452,7 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
-    describe('when a bond has req.body.bondStage as `Unissued`', () => {
+    describe('when a bond has req.body.facilityStage as `Unissued`', () => {
       it('should remove `issued` related values from the bond', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
@@ -461,7 +461,7 @@ describe('/v1/deals/:id/bond', () => {
           ...allBondFields,
           ...requestedCoverStartDate(),
           ...coverEndDate(),
-          bondStage: 'Issued',
+          facilityStage: 'Issued',
         };
 
         const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
@@ -474,7 +474,7 @@ describe('/v1/deals/:id/bond', () => {
 
         const updatedBondAsUnissued = {
           ...allBondFields,
-          bondStage: 'Unissued',
+          facilityStage: 'Unissued',
           bondIssuer: 'test',
           ukefGuaranteeInMonths: '12',
         };

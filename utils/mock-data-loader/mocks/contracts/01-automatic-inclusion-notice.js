@@ -48,7 +48,7 @@ module.exports = {
         createdDate: '1596189840084',
         endDate: '14/03/2027',
         action: '?',
-        bondStage: 'Issued',
+        facilityStage: 'Issued',
         completedStatus: {
           bondDetails: false,
           bondFinancialDetails: false,
@@ -60,7 +60,7 @@ module.exports = {
         uniqueIdentificationNumber: 'unique2',
         ukefFacilityID: 'b12345678',
         value: 'GBP 123,456.00',
-        bondStage: 'Issued',
+        facilityStage: 'Issued',
         startDate: '12/02/2020',
         createdDate: '1596189840084',
         endDate: '14/03/2027',

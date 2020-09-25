@@ -145,7 +145,7 @@ context('Add a Bond to a Deal', () => {
     });
   });
 
-  describe('When a user submits all required Bond form fields (`issued` bond stage, currency same as Supply Contract Currency)', () => {
+  describe('When a user submits all required Bond form fields (`issued` facility stage, currency same as Supply Contract Currency)', () => {
     it('should progress to `Bond Preview` page and render submission details', () => {
       cy.createADeal({
         username: MAKER_LOGIN.username,
@@ -212,7 +212,7 @@ context('Add a Bond to a Deal', () => {
           expect(text.trim()).equal(expectedValue);
         });
 
-        row.bondStage().invoke('text').then((text) => {
+        row.facilityStage().invoke('text').then((text) => {
           expect(text.trim()).equal('Issued');
         });
 
