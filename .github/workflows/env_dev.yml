@@ -108,7 +108,7 @@ jobs:
             --name ${{ env.app_service_plan }}-app-service-plan-egress \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --delegations Microsoft.Web/serverFarms \
-            --address-prefixes 10.0.10.0/28
+            --address-prefixes 10.0.200.0/28
 
     - name: Virtual machine subnet
       uses: Azure/cli@v1.0.0
@@ -118,7 +118,7 @@ jobs:
           az network vnet subnet create \
             --name ${{ env.resource_group }}-vm \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes 10.0.20.0/28
+            --address-prefixes 10.0.210.0/28
 
   private-dns:
     name: Private DNS
