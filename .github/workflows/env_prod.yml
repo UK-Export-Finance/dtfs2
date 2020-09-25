@@ -12,9 +12,8 @@ env:
   app_service_plan: prod
   redis_sku: Basic
   database_name: tfs-portal
-  application_gateway_cidr: 10.0.1.0/28
-  private_endpoints_cidr: 10.0.2.0/28
-  app_service_plan_cidr: 10.0.6.0/28
+  application_gateway_cidr: 10.0.0.0/28
+  private_endpoints_cidr: 10.0.1.0/28
   # Container registry
   registry: ${{ secrets.PROD_ACR_REGISTRY }}
   # App service settings
