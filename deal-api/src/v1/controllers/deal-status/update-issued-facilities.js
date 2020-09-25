@@ -45,18 +45,18 @@ const updateIssuedFacilities = async (
       } = facility;
 
       // TODO: rework this when we rename facilityStage to facilityStage
-      const loanHasBeenPreviouslyIssued = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
-        && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
-            || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL);
+      const loanHasBeenPreviouslyIssued = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
+        && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
+            || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL);
 
-      const shouldUpdateLoan = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
+      const shouldUpdateLoan = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
                                || loanHasBeenPreviouslyIssued;
 
-      const bondHasBeenPreviouslyIssued = (facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.ISSUED
-        && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNISSUED
-        || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.ISSUED));
+      const bondHasBeenPreviouslyIssued = (facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
+        && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
+        || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED));
 
-      const shouldUpdateBond = facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNISSUED
+      const shouldUpdateBond = facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
                                || bondHasBeenPreviouslyIssued;
 
       const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
@@ -71,12 +71,12 @@ const updateIssuedFacilities = async (
             facility.status = newStatus;
           }
 
-          if (facilityStage) {
+          if (shouldUpdateLoan) {
             facility.previousFacilityStage = facility.facilityStage;
-            facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL;
-          } else if (facilityStage) {
+            facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
+          } else if (shouldUpdateBond) {
             facility.previousFacilityStage = facility.facilityStage;
-            facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.ISSUED;
+            facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
           }
         } else if (shouldUpdateStatus) {
           // update all issued facilities regardless of if they've been submitted or have completed all required fields.
