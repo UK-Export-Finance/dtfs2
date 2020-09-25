@@ -10,10 +10,10 @@ env:
   resource_group: ${{ secrets.PROD_RESOURCE_GROUP }}
 
   # From
-  registry_from: ${{ secrets.TEST_ACR_REGISTRY }}
-  registry_from_username: ${{ secrets.TEST_ACR_USERNAME }}
-  registry_from_password: ${{ secrets.TEST_ACR_PASSWORD }}
-  tag_from: test
+  registry_from: ${{ secrets.STAGING_ACR_REGISTRY }}
+  registry_from_username: ${{ secrets.STAGING_ACR_USERNAME }}
+  registry_from_password: ${{ secrets.STAGING_ACR_PASSWORD }}
+  tag_from: STAGING
 
   # To
   registry_to: ${{ secrets.PROD_ACR_REGISTRY }}
