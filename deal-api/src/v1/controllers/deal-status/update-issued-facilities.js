@@ -22,6 +22,70 @@ const facilityHasValidIssuedDate = (facility, dealSubmissionDate) => {
   return false;
 };
 
+const isLoanFacility = (facilityStage) => {
+  // TODO: workaround until we have a `facilityType` on every facility
+
+  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
+    || facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL) {
+    return true;
+  }
+
+  return false;
+};
+
+const isBondFacility = (facilityStage) => {
+  // TODO: workaround until we have a `facilityType` on every facility
+
+  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
+    || facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED) {
+    return true;
+  }
+
+  return false;
+};
+
+const loanHasBeenPreviouslyIssued = (facilityStage, previousFacilityStage) => {
+  // TODO: maybe don't need the previousFacilityStage check?
+
+  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
+      && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
+        || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL)) {
+    return true;
+  }
+  return false;
+};
+
+const bondHasBeenPreviouslyIssued = (facilityStage, previousFacilityStage) => {
+  // TODO: maybe don't need the previousFacilityStage check?
+
+  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
+    && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
+      || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED)) {
+    return true;
+  }
+
+  return false;
+};
+
+const shouldUpdateFacility = (facility) => {
+  const { facilityStage, previousFacilityStage } = facility;
+
+  if (isLoanFacility(facilityStage)) {
+    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
+      || loanHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)) {
+      return true;
+    }
+  }
+
+  if (isBondFacility(facilityStage)) {
+    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
+      || bondHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)) {
+      return true;
+    }
+  }
+
+  return false;
+};
 
 const updateIssuedFacilities = async (
   collection,
@@ -31,7 +95,6 @@ const updateIssuedFacilities = async (
   newStatus,
 ) => {
   const updatedDeal = deal;
-
   const dealStatusAllowsIssuedFacilitiesStatusChanges = (fromStatus && fromStatus !== 'Draft');
 
   const update = (facilities) => {
@@ -39,25 +102,7 @@ const updateIssuedFacilities = async (
 
     arr.forEach((f) => {
       const facility = f;
-      const {
-        facilityStage,
-        previousFacilityStage,
-      } = facility;
-
-      // TODO: rework this when we rename facilityStage to facilityStage
-      const loanHasBeenPreviouslyIssued = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
-        && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
-            || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL);
-
-      const shouldUpdateLoan = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
-                               || loanHasBeenPreviouslyIssued;
-
-      const bondHasBeenPreviouslyIssued = (facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
-        && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
-        || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED));
-
-      const shouldUpdateBond = facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
-                               || bondHasBeenPreviouslyIssued;
+      const { facilityStage } = facility;
 
       const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
                                   && facility.issueFacilityDetailsProvided
@@ -65,17 +110,17 @@ const updateIssuedFacilities = async (
                                   && facility.status !== CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED
                                   && (newStatus && newStatus.length > 0));
 
-      if (shouldUpdateLoan || shouldUpdateBond) {
+      if (shouldUpdateFacility(facility)) {
         if (facility.issueFacilityDetailsProvided && !facility.issueFacilityDetailsSubmitted) {
           if (shouldUpdateStatus) {
             facility.status = newStatus;
           }
 
-          if (shouldUpdateLoan) {
-            facility.previousFacilityStage = facility.facilityStage;
+          facility.previousFacilityStage = facilityStage;
+
+          if (isLoanFacility(facilityStage)) {
             facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
-          } else if (shouldUpdateBond) {
-            facility.previousFacilityStage = facility.facilityStage;
+          } else if (isBondFacility(facilityStage)) {
             facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
           }
         } else if (shouldUpdateStatus) {
