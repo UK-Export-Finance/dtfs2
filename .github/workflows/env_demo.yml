@@ -12,9 +12,8 @@ env:
   app_service_plan: dev
   redis_sku: Basic
   database_name: tfs-portal
-  application_gateway_cidr: 10.0.1.0/28
-  private_endpoints_cidr: 10.0.2.0/28
-  app_service_plan_cidr: 10.0.6.0/28
+  application_gateway_cidr: 10.0.10.0/28
+  private_endpoints_cidr: 10.0.11.0/28
   # Container registry
   registry: ${{ secrets.DEMO_ACR_REGISTRY }}
   # App service settings
@@ -98,7 +97,7 @@ jobs:
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --disable-private-endpoint-network-policies true
 
-    - name: App Service Plan subnet
+    - name: App Service Plan egress subnet
       uses: Azure/cli@v1.0.0
       with:
         # Subnet for delegation to App Service for outbound traffic from microservices
@@ -109,7 +108,17 @@ jobs:
             --name ${{ env.app_service_plan }}-app-service-plan-egress \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --delegations Microsoft.Web/serverFarms \
-            --address-prefixes ${{ env.app_service_plan_cidr }}
+            --address-prefixes 10.0.10.0/28
+
+    - name: Virtual machine subnet
+      uses: Azure/cli@v1.0.0
+      with:
+        # Subnet for a temporary maintenance virtual machine.
+        inlineScript: |
+          az network vnet subnet create \
+            --name ${{ env.resource_group }}-vm \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet
+            --address-prefixes 10.0.20.0/28
 
   private-dns:
     name: Private DNS
