@@ -1,13 +1,13 @@
-name: Deploy prod
+name: Deploy staging
 
 on:
   push:
     branches: [ staging ]
 
 env:
-  environment: prod
-  credentials: ${{ secrets.AZURE_DIGITAL_PROD }}
-  resource_group: ${{ secrets.PROD_RESOURCE_GROUP }}
+  environment: staging
+  credentials: ${{ secrets.AZURE_DIGITAL_STAGING }}
+  resource_group: ${{ secrets.STAGING_RESOURCE_GROUP }}
 
   # From
   registry_from: ${{ secrets.TEST_ACR_REGISTRY }}
