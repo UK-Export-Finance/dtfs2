@@ -14,7 +14,7 @@ const updateSubmittedIssuedFacilities = async (user, collection, deal) => {
       const { facilityStage } = facility;
 
       const shouldUpdateLoan = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL;
-      const shouldUpdateBond = facilityStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED;
+      const shouldUpdateBond = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.ISSUED;
 
       const shouldUpdateIssuedFacility = ((shouldUpdateLoan
                                           || shouldUpdateBond)

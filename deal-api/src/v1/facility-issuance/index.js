@@ -33,10 +33,10 @@ const canIssueFacility = (userRoles, deal, facility) => {
   const isMiaDealInApprovedStatus = (submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
                                     && (acceptedByUkefDealStatus || status === CONSTANTS.DEAL.STATUS.INPUT_REQUIRED));
 
-  const allowedBondFacilityStage = facilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
-    || (facilityStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
-        && (previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
-            || previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED));
+  const allowedBondFacilityStage = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNISSUED
+    || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.ISSUED
+        && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNISSUED
+            || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.ISSUED));
 
   const allowedLoanFacilityStage = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
     || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL

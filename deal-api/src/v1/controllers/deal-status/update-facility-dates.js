@@ -11,9 +11,10 @@ const updateFacilityDates = async (collection, deal) => {
     arr.forEach((f) => {
       const facility = f;
 
-      // TODO: rename facilityStage to `facilityStage`
-      const shouldUpdateRequestedCoverStartDate = (facility.facilityStage === 'Issued' && !facility.requestedCoverStartDate)
-        || (facility.facilityStage === 'Unconditional' && !facility.requestedCoverStartDate);
+      const { facilityStage } = facility;
+
+      const shouldUpdateRequestedCoverStartDate = ((facilityStage === 'Issued' || facilityStage === 'Unconditional')
+                                                  && !facility.requestedCoverStartDate);
 
       if (shouldUpdateRequestedCoverStartDate) {
         const today = new Date();
