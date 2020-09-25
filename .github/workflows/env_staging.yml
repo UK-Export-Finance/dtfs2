@@ -7,9 +7,9 @@ on:
 env:
   # Environment
   environment: staging
-  credentials: ${{ secrets.AZURE_DIGITAL_PROD }}
+  credentials: ${{ secrets.AZURE_DIGITAL_TEST }}
   resource_group: ${{ secrets.STAGING_RESOURCE_GROUP }}
-  app_service_plan: prod
+  app_service_plan: test
   redis_sku: Basic
   database_name: tfs-portal
   application_gateway_cidr: 10.0.10.0/28
