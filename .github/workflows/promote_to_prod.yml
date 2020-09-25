@@ -13,7 +13,7 @@ env:
   registry_from: ${{ secrets.STAGING_ACR_REGISTRY }}
   registry_from_username: ${{ secrets.STAGING_ACR_USERNAME }}
   registry_from_password: ${{ secrets.STAGING_ACR_PASSWORD }}
-  tag_from: STAGING
+  tag_from: staging
 
   # To
   registry_to: ${{ secrets.PROD_ACR_REGISTRY }}
