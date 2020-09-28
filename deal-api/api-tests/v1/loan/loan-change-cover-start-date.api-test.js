@@ -171,7 +171,7 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
         expect(body.loan['requestedCoverStartDate-year']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-year']);
       });
 
-      it('should not update the loan', async () => {
+      it('should NOT update the loan', async () => {
         const invalidRequestedCoverStartDate = invalidCoverStartDate();
 
         const updateCoverStartDateBody = {

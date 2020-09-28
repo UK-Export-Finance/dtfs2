@@ -171,7 +171,7 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
         expect(body.bond['requestedCoverStartDate-year']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-year']);
       });
 
-      it('should not update the bond', async () => {
+      it('should NOT update the bond', async () => {
         const invalidRequestedCoverStartDate = invalidCoverStartDate();
 
         const updateCoverStartDateBody = {
