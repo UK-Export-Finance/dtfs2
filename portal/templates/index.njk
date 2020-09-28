@@ -38,6 +38,8 @@
 
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
+    {% include "_partials/skip-link.njk" %}
+
     {% if user and user.roles and user.roles.includes('ukef_operations') %}
       {% include "_partials/admin-header.njk" %}
     {% endif %}
