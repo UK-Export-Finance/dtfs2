@@ -184,7 +184,9 @@ exports.update = (req, res) => {
       dealAfterAllUpdates = await createApprovalDate(collection, req.params.id);
     }
 
-    await sendStatusUpdateEmails(dealAfterAllUpdates, fromStatus, req.user);
+    if (toStatus !== fromStatus) {
+      await sendStatusUpdateEmails(dealAfterAllUpdates, fromStatus, req.user);
+    }
 
     return res.status(200).send(dealAfterAllUpdates);
   });
