@@ -67,9 +67,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
 
       const validationErrors = loanIssueFacilityValidationErrors(
         modifiedLoan,
-        deal.details.submissionType,
-        deal.details.submissionDate,
-        deal.details.manualInclusionNoticeSubmissionDate,
+        deal,
       );
 
       if (validationErrors.count === 0) {

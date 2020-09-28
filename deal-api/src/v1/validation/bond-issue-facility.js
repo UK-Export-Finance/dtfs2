@@ -2,15 +2,11 @@ const applyRules = require('./bond-issue-facility-rules');
 
 module.exports = (
   bond,
-  dealSubmissionType,
-  dealSubmissionDate,
-  manualInclusionNoticeSubmissionDate,
+  deal,
 ) => {
   const errorList = applyRules(
     bond,
-    dealSubmissionType,
-    dealSubmissionDate,
-    manualInclusionNoticeSubmissionDate,
+    deal,
   );
 
   const totalErrors = Object.keys(errorList).length;

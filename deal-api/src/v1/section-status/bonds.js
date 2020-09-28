@@ -53,8 +53,6 @@ const addAccurateStatusesToBonds = (
     status: dealStatus,
     previousStatus: previousDealStatus,
     submissionType,
-    submissionDate,
-    manualInclusionNoticeSubmissionDate,
   } = deal.details;
 
   if (deal.bondTransactions.items.length) {
@@ -67,9 +65,7 @@ const addAccurateStatusesToBonds = (
           && bondHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, submissionType, bond)) {
         issueFacilityValidationErrors = bondIssueFacilityValidationErrors(
           bond,
-          submissionType,
-          submissionDate,
-          manualInclusionNoticeSubmissionDate,
+          deal,
         );
       }
 

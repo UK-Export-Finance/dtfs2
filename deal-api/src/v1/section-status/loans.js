@@ -53,8 +53,6 @@ const addAccurateStatusesToLoans = (
     status: dealStatus,
     previousStatus: previousDealStatus,
     submissionType,
-    submissionDate,
-    manualInclusionNoticeSubmissionDate,
   } = deal.details;
 
   if (deal.loanTransactions.items.length) {
@@ -67,9 +65,7 @@ const addAccurateStatusesToLoans = (
           && loanHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, submissionType, loan)) {
         issueFacilityValidationErrors = loanIssueFacilityValidationErrors(
           loan,
-          submissionType,
-          submissionDate,
-          manualInclusionNoticeSubmissionDate,
+          deal,
         );
       }
 

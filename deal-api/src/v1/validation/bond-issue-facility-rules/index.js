@@ -6,19 +6,15 @@ const uniqueIdentificationNumberRules = require('../bond-rules/facility-stage-is
 
 module.exports = (
   submittedValues,
-  dealSubmissionType,
-  dealSubmissionDate,
-  manualInclusionNoticeSubmissionDate,
+  deal,
 ) => {
   let errorList = {};
 
-  errorList = issuedDateRules(submittedValues, errorList, dealSubmissionDate);
+  errorList = issuedDateRules(submittedValues, errorList, deal);
   errorList = requestedCoverStartDateRules(
     submittedValues,
     errorList,
-    dealSubmissionType,
-    dealSubmissionDate,
-    manualInclusionNoticeSubmissionDate,
+    deal,
   );
   errorList = coverEndDateRules(submittedValues, errorList);
   errorList = coverDatesRules(submittedValues, errorList);

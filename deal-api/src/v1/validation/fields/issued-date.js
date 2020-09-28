@@ -6,17 +6,21 @@ const {
 } = require('./date');
 const { formattedTimestamp } = require('../../facility-dates/timestamp');
 
-module.exports = (facility, errorList, dealSubmissionDateTimestamp) => {
+module.exports = (facility, errorList, deal) => {
   const newErrorList = errorList;
-
-  const dealSubmissionDate = formattedTimestamp(dealSubmissionDateTimestamp);
-  const issuedDate = formattedTimestamp(facility.issuedDate);
 
   const {
     'issuedDate-day': issuedDateDay,
     'issuedDate-month': issuedDateMonth,
     'issuedDate-year': issuedDateYear,
   } = facility;
+
+  const {
+    submissionDate: dealSubmissionDateTimestamp,
+  } = deal.details;
+
+  const dealSubmissionDate = formattedTimestamp(dealSubmissionDateTimestamp);
+  const issuedDate = formattedTimestamp(facility.issuedDate);
 
   if (dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear)) {
     if (!moment(issuedDate).isSameOrAfter(dealSubmissionDate, 'day')) {
