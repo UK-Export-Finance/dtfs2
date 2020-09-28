@@ -3,6 +3,9 @@ name: Deploy demo
 on:
   push:
     branches: [ demo ]
+    paths: 
+    - 'deal-api/**'
+    - 'portal/**'
 
 env:
   environment: demo
