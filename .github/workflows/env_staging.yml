@@ -761,7 +761,7 @@ jobs:
         inlineScript: |
           az network application-gateway probe create --name healthcheck \
             --gateway-name tfs-${{ env.environment }}-gw \
-            --protocol Http \
+            --protocol Https \
             --path "/healthcheck" \
             --host-name-from-http-settings true
 
@@ -773,7 +773,8 @@ jobs:
           az network application-gateway http-settings update --name $httpsettings_name \
             --gateway-name tfs-${{ env.environment }}-gw \
             --host-name-from-backend-pool true \
-            --probe healthcheck --enable-probe true
+            --probe healthcheck --enable-probe true \
+            --protocol Https --port 443
 
   front-door:
     # NB Front Door takes a little while to be available
