@@ -43,9 +43,9 @@ jobs:
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
 
-  end-to-end-tests:
-    needs: [portal-ui, portal-api]
+  test:
     name: "Run end-to-end tests in Compose"
+    needs: build
     runs-on: ubuntu-latest
     env:
       AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.E2ETEST_AZURE_WORKFLOW_STORAGE_ACCOUNT }}
@@ -112,9 +112,8 @@ jobs:
       if: failure()
 
   promote:
-    needs: end-to-end-tests
-    #needs: [api-tests, end-to-end-tests] - temp promotion to unblock QA
     name: Promote container images to Dev
+    needs: test
     runs-on: ubuntu-latest
     steps:
     - name: Log in to Dev container registry

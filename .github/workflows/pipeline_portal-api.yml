@@ -44,9 +44,9 @@ jobs:
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
 
-  api-tests:
-    needs: portal-api
+  test:
     name: "Run API tests in Compose"
+    needs: build
     runs-on: ubuntu-latest
     env:
       AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.APITEST_AZURE_WORKFLOW_STORAGE_ACCOUNT }}
@@ -101,9 +101,8 @@ jobs:
       if: failure()
 
   promote:
-    needs: api-tests
-    #needs: [api-tests, end-to-end-tests] - temp promotion to unblock QA
     name: Promote container images to Dev
+    needs: test
     runs-on: ubuntu-latest
     steps:
     - name: Log in to Dev container registry
