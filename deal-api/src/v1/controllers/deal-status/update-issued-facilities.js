@@ -12,8 +12,7 @@ const facilityHasValidIssuedDate = (facility, deal) => {
   const issuedDateValidationErrors = issuedDateValidationRules(
     facility,
     emptyErrorList,
-    deal
-    // dealSubmissionDate,
+    deal,
   );
 
   if (!issuedDateValidationErrors.issuedDate) {
