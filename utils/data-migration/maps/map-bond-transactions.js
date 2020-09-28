@@ -30,7 +30,7 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
       uniqueIdentificationNumber: bond.BSS_Guarantee_details.BSS_bank_id,
       bondIssuer: bond.BSS_Guarantee_details.BSS_issuer,
       bondType: findPortalValue(bond.BSS_Guarantee_details.BSS_type, 'BSS_type', 'FACILITIES', 'TYPE', logError),
-      bondStage: findPortalValue(bond.BSS_Guarantee_details.BSS_stage, 'BSS_stage', 'FACILITIES', 'BOND_STAGE', logError),
+      bondStage: findPortalValue(bond.BSS_Guarantee_details.BSS_stage, 'BSS_stage', 'FACILITIES', 'STAGE_BOND', logError),
       bondBeneficiary: bond.BSS_Guarantee_details.BSS_beneficiary,
       facilityValue: bond.BSS_Financial_details.BSS_value,
       currency: getCurrencyById(bond.BSS_Financial_details.BSS_currency_code),
