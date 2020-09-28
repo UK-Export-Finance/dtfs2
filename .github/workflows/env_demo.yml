@@ -3,6 +3,8 @@ name: Demo environment infrastructure
 on:
   push:
     branches: [ demo ]
+    paths: 
+    - '.github/workflows/*.yml'
 
 env:
   # Environment
@@ -716,7 +718,7 @@ jobs:
             --source-address-prefixes "GatewayManager" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "65200-65535"
 
-    - name: Allow Front Door traffic
+    - name: ${{ env.front_door_access }} Front Door traffic
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |

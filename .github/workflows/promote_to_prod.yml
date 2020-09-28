@@ -3,6 +3,9 @@ name: Deploy prod
 on:
   push:
     branches: [ prod ]
+    paths: 
+    - 'deal-api/**'
+    - 'portal/**'
 
 env:
   environment: prod
