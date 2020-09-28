@@ -2,7 +2,7 @@ const $ = require('mongo-dot-notation');
 const CONSTANTS = require('../../../constants');
 const issuedDateValidationRules = require('../../validation/fields/issued-date');
 
-const facilityHasValidIssuedDate = (facility, dealSubmissionDate) => {
+const facilityHasValidIssuedDate = (facility, deal) => {
   const emptyErrorList = {};
 
   if (!facility.issuedDate) {
@@ -12,7 +12,8 @@ const facilityHasValidIssuedDate = (facility, dealSubmissionDate) => {
   const issuedDateValidationErrors = issuedDateValidationRules(
     facility,
     emptyErrorList,
-    dealSubmissionDate,
+    deal
+    // dealSubmissionDate,
   );
 
   if (!issuedDateValidationErrors.issuedDate) {
@@ -131,7 +132,7 @@ const updateIssuedFacilities = async (
         if (updateIssuedFacilitiesCoverStartDates
           && !facility.issueFacilityDetailsSubmitted
           && !facility.requestedCoverStartDate
-          && facilityHasValidIssuedDate(facility, deal.details.submissionDate)) {
+          && facilityHasValidIssuedDate(facility, deal)) {
           facility.requestedCoverStartDate = facility.issuedDate;
         }
       }
