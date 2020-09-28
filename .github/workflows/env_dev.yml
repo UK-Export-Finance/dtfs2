@@ -3,6 +3,8 @@ name: Dev environment infrastructure
 on:
   push:
     branches: [ master ]
+    paths: 
+    - '.github/workflows/*.yml'
 
 env:
   # Environment
