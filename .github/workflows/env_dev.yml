@@ -6,6 +6,7 @@ on:
 
 env:
   # Environment
+  front_door_access: Allow
   environment: dev
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
@@ -720,7 +721,7 @@ jobs:
       with:
         inlineScript: |
           az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 200 --direction Inbound --protocol "*" --access Allow \
+            --priority 200 --direction Inbound --protocol "*" --access ${{ env.front_door_access }} \
             --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
 
