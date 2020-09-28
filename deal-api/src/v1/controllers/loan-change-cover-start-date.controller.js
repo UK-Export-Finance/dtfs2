@@ -45,9 +45,7 @@ exports.updateLoanCoverStartDate = async (req, res) => {
 
       const validationErrors = loanIssueFacilityValidationErrors(
         loan,
-        deal.details.submissionType,
-        deal.details.submissionDate,
-        deal.details.manualInclusionNoticeSubmissionDate,
+        deal,
       );
 
       if (validationErrors.errorList.requestedCoverStartDate) {

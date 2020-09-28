@@ -27,9 +27,9 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
   });
 
   let aBarclaysMaker;
+  let deal;
   let dealId;
   let loanId;
-  
 
   const updateDeal = async (dealId, body) => {
     const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${dealId}`);
@@ -47,8 +47,9 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
   };
 
   const createDealAndLoan = async () => {
-    const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
-    dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+    const dealResponse = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+    deal = dealResponse.body;
+    dealId = deal._id; // eslint-disable-line no-underscore-dangle
 
     const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
     const { loanId: _id } = createLoanResponse.body;
@@ -63,6 +64,14 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
     };
 
     const updatedLoan = await updateLoan(dealId, loanId, modifiedLoan);
+
+    deal.loanTransactions = {
+      items: [
+        ...deal.loanTransactions.items,
+        updatedLoan.loan,
+      ],
+    };
+
     return updatedLoan.body;
   };
 
@@ -268,6 +277,32 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });
+
+        describe('when eligibility criteria 15 answer is `false`', () => {
+          it('should NOT return validationError when date is greater than 3 months', async () => {
+            const dealWithEligibilityCriteria15False = {
+              ...updatedDeal,
+              eligibility: {
+                criteria: [
+                  { id: 15, answer: false }
+                ],
+              },
+            };
+
+            const todayPlus3Months = moment().add(3, 'month');
+            const todayPlus3Months1Day = moment().add(3, 'month').add(1, 'day');
+            const requestedCoverStartDateFields = {
+              'requestedCoverStartDate-day': moment(todayPlus3Months1Day).format('DD'),
+              'requestedCoverStartDate-month': moment(todayPlus3Months1Day).format('MM'),
+              'requestedCoverStartDate-year': moment(todayPlus3Months1Day).format('YYYY'),
+            };
+
+            await as(aBarclaysMaker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
+
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+            expect(validationErrors.errorList.requestedCoverStartDate).toBeUndefined();
+          });
+        });
       });
 
       describe('when deal is MIN with approved status', () => {
@@ -326,6 +361,32 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
 
             const expectedText = `Requested Cover Start Date must be between ${formattedManualInclusionNoticeSubmissionDate} and ${todayPlus3MonthsFormatted}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
+          });
+        });
+
+        describe('when eligibility criteria 15 answer is `false`', () => {
+          it('should NOT return validationError when date is greater than 3 months', async () => {
+            const dealWithEligibilityCriteria15False = {
+              ...updatedDeal,
+              eligibility: {
+                criteria: [
+                  { id: 15, answer: false }
+                ],
+              },
+            };
+
+            const todayPlus3Months = moment().add(3, 'month');
+            const todayPlus3Months1Day = moment().add(3, 'month').add(1, 'day');
+            const requestedCoverStartDateFields = {
+              'requestedCoverStartDate-day': moment(todayPlus3Months1Day).format('DD'),
+              'requestedCoverStartDate-month': moment(todayPlus3Months1Day).format('MM'),
+              'requestedCoverStartDate-year': moment(todayPlus3Months1Day).format('YYYY'),
+            };
+
+            await as(aBarclaysMaker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
+
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+            expect(validationErrors.errorList.requestedCoverStartDate).toBeUndefined();
           });
         });
       });

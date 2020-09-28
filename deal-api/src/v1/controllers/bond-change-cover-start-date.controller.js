@@ -45,9 +45,7 @@ exports.updateBondCoverStartDate = async (req, res) => {
 
       const validationErrors = bondIssueFacilityValidationErrors(
         bond,
-        deal.details.submissionType,
-        deal.details.submissionDate,
-        deal.details.manualInclusionNoticeSubmissionDate,
+        deal,
       );
 
       if (validationErrors.errorList.requestedCoverStartDate) {
