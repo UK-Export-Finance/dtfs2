@@ -9,6 +9,8 @@ on:
 env:
   credentials: ${{ secrets.AZURE_DIGITAL_PROD }}
   resource_group: ${{ secrets.PROD_RESOURCE_GROUP }}
+  domain_name: "get-guarantee-for-export-finance.service.gov.uk"
+  front_door_name: tfs-prod-fd
 
 jobs:
 
@@ -35,25 +37,25 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az network dns zone create --name get-guarantee-for-export-finance.service.gov.uk
+          az network dns zone create --name ${{ domain_name }}
 
     - name: Front Door verification record
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az network dns record-set cname create --zone get-guarantee-for-export-finance.service.gov.uk --name afdverify.tfs-prod-fd.azurefd.net
-          az network dns record-set cname set-record --zone get-guarantee-for-export-finance.service.gov.uk --record-set-name afdverify.tfs-prod-fd.azurefd.net --cname tfs-prod-fb.azurefd.net
+          az network dns record-set cname create --zone ${{ domain_name }} --name afdverify.${{ tfs-prod-fd }}.azurefd.net
+          az network dns record-set cname set-record --zone ${{ domain_name }} --record-set-name afdverify.${{ tfs-prod-fd }}.azurefd.net --cname ${{ tfs-prod-fd }}.azurefd.net
 
-    - name: Front Door verification record
+    - name: Add domain name to Prod Front Door
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           az network front-door frontend-endpoint create \
-            --front-door-name tfs-prod-fd \
+            --front-door-name ${{ tfs-prod-fd }} \
             --name "service.gov.uk" \
-            --host-name get-guarantee-for-export-finance.service.gov.uk
+            --host-name ${{ domain_name }}
           az network front-door frontend-endpoint enable-https \
-            --front-door-name tfs-prod-fd \
+            --front-door-name ${{ tfs-prod-fd }} \
             --name "service.gov.uk"
           
 
@@ -61,4 +63,4 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az network front-door check-custom-domain --host-name get-guarantee-for-export-finance.service.gov.uk --name tfs-prod-fd -g Digital-prod
+          az network front-door check-custom-domain --host-name ${{ domain_name }} --name ${{ tfs-prod-fd }}
