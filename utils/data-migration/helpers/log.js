@@ -18,7 +18,16 @@ const init = (prefix) => {
 };
 
 const saveToFile = () => {
-  fs.writeFileSync(filename, JSON.stringify(logData, null, 4));
+  const orderErrorKeys = Object.keys(logData.errors).sort();
+  const orderedErrors = {};
+  orderErrorKeys.forEach((key) => {
+    orderedErrors[key] = logData.errors[key];
+  });
+  const orderedData = {
+    success: logData.success.sort(),
+    errors: orderedErrors,
+  };
+  fs.writeFileSync(filename, JSON.stringify(orderedData, null, 4));
 };
 
 const addError = (v1Id, msg) => {
