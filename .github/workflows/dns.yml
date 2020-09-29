@@ -1,4 +1,4 @@
-name: Production environment infrastructure
+name: Production DNS
 
 on:
   push:
@@ -31,14 +31,18 @@ jobs:
     - name: Zone
       uses: Azure/cli@v1.0.0
       with:
-        # We have to do a show here or we get an error on create if the vnet already exists:
         inlineScript: |
           az network dns zone create --name get-guarantee-for-export-finance.service.gov.uk
 
     - name: Front Door verification record
       uses: Azure/cli@v1.0.0
       with:
-        # We have to do a show here or we get an error on create if the vnet already exists:
         inlineScript: |
           az network dns record-set cname create --zone get-guarantee-for-export-finance.service.gov.uk --name afdverify.tfs-prod-fd.azurefd.net
-          az network dns record-set cname set-record --zone get-guarantee-for-export-finance.service.gov.uk --name afdverify.tfs-prod-fd.azurefd.net --cname tfs-prod-fb.azurefd.net
+          az network dns record-set cname set-record --zone get-guarantee-for-export-finance.service.gov.uk --record-set-name afdverify.tfs-prod-fd.azurefd.net --cname tfs-prod-fb.azurefd.net
+
+    - name: Check domain name mapping
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network front-door check-custom-domain --host-name get-guarantee-for-export-finance.service.gov.uk --name tfs-prod-fd -g Digital-prod
