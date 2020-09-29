@@ -37,25 +37,25 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az network dns zone create --name ${{ domain_name }}
+          az network dns zone create --name ${{ env.domain_name }}
 
     - name: Front Door verification record
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az network dns record-set cname create --zone ${{ domain_name }} --name afdverify.${{ tfs-prod-fd }}.azurefd.net
-          az network dns record-set cname set-record --zone ${{ domain_name }} --record-set-name afdverify.${{ tfs-prod-fd }}.azurefd.net --cname ${{ tfs-prod-fd }}.azurefd.net
+          az network dns record-set cname create --zone ${{ env.domain_name }} --name afdverify.${{ env.front_door_name }}.azurefd.net
+          az network dns record-set cname set-record --zone ${{ env.domain_name }} --record-set-name afdverify.${{ env.front_door_name }}.azurefd.net --cname ${{ env.front_door_name }}.azurefd.net
 
     - name: Add domain name to Prod Front Door
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           az network front-door frontend-endpoint create \
-            --front-door-name ${{ tfs-prod-fd }} \
+            --front-door-name ${{ env.front_door_name }} \
             --name "service.gov.uk" \
-            --host-name ${{ domain_name }}
+            --host-name ${{ env.domain_name }}
           az network front-door frontend-endpoint enable-https \
-            --front-door-name ${{ tfs-prod-fd }} \
+            --front-door-name ${{ env.front_door_name }} \
             --name "service.gov.uk"
           
 
@@ -63,4 +63,4 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az network front-door check-custom-domain --host-name ${{ domain_name }} --name ${{ tfs-prod-fd }}
+          az network front-door check-custom-domain --host-name ${{ env.domain_name }} --name ${{ env.front_door_name }}
