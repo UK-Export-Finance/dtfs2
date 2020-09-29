@@ -2,8 +2,9 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const wipeDB = require('../../wipeDB');
 
-const { as  } = require('../../api')(app);
+const { as } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
+const bankController = require('../../../src/v1/controllers/banks.controller');
 
 const aBank = require('./bank-builder');
 
@@ -17,7 +18,7 @@ describe('/v1/banks', () => {
   let anEditor;
   let aNonEditor;
 
-  beforeAll( async() => {
+  beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     anEditor = testUsers().withRole('editor').one();
     aNonEditor = testUsers().withoutRole('editor').one();
@@ -156,6 +157,16 @@ describe('/v1/banks', () => {
 
       expect(status).toEqual(200);
       expect(body).toEqual({});
+    });
+  });
+
+  describe('Bank.Controller', () => {
+    it('findOneBank returns a bank when no callback given', async () => {
+      await as(anEditor).post(newBank).to('/v1/banks');
+
+      const bank = await bankController.findOneBank(newBank.id);
+
+      expect(bank).toMatchObject(newBank);
     });
   });
 });

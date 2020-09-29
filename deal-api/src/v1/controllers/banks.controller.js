@@ -14,7 +14,11 @@ const findBanks = async (callback) => {
 const findOneBank = async (id, callback) => {
   const collection = await db.getCollection('banks');
 
-  collection.findOne({ id }, (err, result) => {
+  if (!callback) {
+    return collection.findOne({ id });
+  }
+
+  return collection.findOne({ id }, (err, result) => {
     assert.equal(err, null);
     callback(result);
   });
