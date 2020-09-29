@@ -6,7 +6,7 @@ export const changeScreenVisibilityOfElement = (elementId, showBoolean) => {
   if (showBoolean) {
     element.className = '';
   } else {
-    element.className = 'govuk-visually-hidden';
+    element.className = 'display-none';
   }
 };
 
