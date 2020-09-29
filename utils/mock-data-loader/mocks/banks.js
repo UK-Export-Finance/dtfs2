@@ -7,6 +7,7 @@ const BANKS = [
       'maker4@ukexportfinance.gov.uk',
       'checker4@ukexportfinance.gov.uk',
     ],
+    companiesHouseNo: '01026167',
   },
   {
     id: '961',
@@ -15,6 +16,7 @@ const BANKS = [
     emails: [
       'checker4@ukexportfinance.gov.uk',
     ],
+    companiesHouseNo: '00014259',
   },
   {
     id: '964',
@@ -23,6 +25,7 @@ const BANKS = [
     emails: [
       'checker4@ukexportfinance.gov.uk',
     ],
+    companiesHouseNo: '00002065',
   },
   {
     id: '1004',
@@ -31,6 +34,7 @@ const BANKS = [
     emails: [
       'checker4@ukexportfinance.gov.uk',
     ],
+    companiesHouseNo: 'SC090312',
   },
   {
     id: '953',
@@ -39,6 +43,7 @@ const BANKS = [
     emails: [
       'checker4@ukexportfinance.gov.uk',
     ],
+    companiesHouseNo: '02294747',
   },
   {
     id: '9',
@@ -48,6 +53,7 @@ const BANKS = [
       'maker1@ukexportfinance.gov.uk',
       'checker1@ukexportfinance.gov.uk',
     ],
+    companiesHouseNo: 'UKEF0001',
   },
 ];
 

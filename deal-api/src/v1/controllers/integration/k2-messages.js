@@ -4,6 +4,7 @@ const path = require('path');
 
 const typeABuilder = require('./type-a-defs/type-a-builder');
 const fileshare = require('../../../drivers/fileshare');
+const banksController = require('../banks.controller');
 
 const {
   eligibilityCriteriaHelper,
@@ -48,6 +49,7 @@ const generateTypeA = async (deal, fromStatus) => {
       deal.submissionDetails['supplyContractConversionDate-year'],
     );
 
+  const bank = await banksController.findOneBank(deal.details.maker.bank.id);
 
   const builder = typeABuilder()
     .source('V2')
@@ -63,8 +65,8 @@ const generateTypeA = async (deal, fromStatus) => {
     .Application_route(deal.eligibility)
     .Application_owner(`${deal.details.maker.firstname} ${deal.details.maker.surname}`)
     .Application_owner_email(deal.details.maker.email)
-    .Application_bank(deal.details.maker.bank.name)
-    .Application_bank_co_hse_reg_number('') // todo?
+    .Application_bank(bank && bank.name)
+    .Application_bank_co_hse_reg_number(bank && bank.companiesHouseNo)
     .UKEF_deal_id(deal.details.ukefDealId)
 
     .Customer_type(k2Map.DEAL.SUPPLIER_TYPE[deal.submissionDetails['supplier-type']])
