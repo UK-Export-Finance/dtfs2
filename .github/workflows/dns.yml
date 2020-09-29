@@ -73,3 +73,4 @@ jobs:
       with:
         inlineScript: |
           az network front-door check-custom-domain --host-name ${{ env.domain_name }} --name ${{ env.front_door_name }}
+          
