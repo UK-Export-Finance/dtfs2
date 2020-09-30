@@ -1,0 +1,46 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% import '_macros/date-field.njk' as dateField %}
+
+{% macro render(bond, validationErrors, user) %}
+
+  {{ dateField.render(
+    legend = 'Requested Cover Start Date (optional)',
+    id = 'requestedCoverStartDate',
+    hint = '<p>For example, 27 11 2019</p><p>This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date</p>',
+    dayValue = bond['requestedCoverStartDate-day'] or bond.requestedCoverStartDate and bond.requestedCoverStartDate | localiseTimestamp('DD', user.timezone),
+      monthValue = bond['requestedCoverStartDate-month'] or bond.requestedCoverStartDate and bond.requestedCoverStartDate | localiseTimestamp('MM', user.timezone),
+      yearValue = bond['requestedCoverStartDate-year'] or bond.requestedCoverStartDate and bond.requestedCoverStartDate | localiseTimestamp('YYYY', user.timezone),
+    error = validationErrors.errorList.requestedCoverStartDate
+  )}}
+
+  {{ dateField.render(
+    legend = 'Cover End Date',
+    id = 'coverEndDate',
+    hint = 'For example, 27 11 2025',
+    dayValue = bond['coverEndDate-day'],
+    monthValue = bond['coverEndDate-month'],
+    yearValue = bond['coverEndDate-year'],
+    error = validationErrors.errorList.coverEndDate,
+    conditionalError = validationErrors.conditionalErrorList.facilityStage.Issued.coverEndDate
+  )}}
+
+  {{ govukInput({
+    label: {
+      text: "Bond's unique identification number"
+    },
+    classes: "govuk-!-width-one-half",
+    id: "uniqueIdentificationNumber",
+    name: "uniqueIdentificationNumber",
+    value: bond.uniqueIdentificationNumber,
+    attributes: {
+      'data-cy': 'unique-identification-number'
+    },
+    errorMessage: (validationErrors.errorList.uniqueIdentificationNumber.text or (not bond.uniqueIdentificationNumber and validationErrors.conditionalErrorList.facilityStage.Issued.uniqueIdentificationNumber.text)) and {
+      text: validationErrors.errorList.uniqueIdentificationNumber.text or (not bond.uniqueIdentificationNumber and validationErrors.conditionalErrorList.facilityStage.Issued.uniqueIdentificationNumber.text),
+      attributes: {
+        'data-cy': 'unique-identification-number-error-message'
+      }
+    }
+  }) }}
+
+{% endmacro %}
