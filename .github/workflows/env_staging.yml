@@ -145,10 +145,11 @@ jobs:
       with:
         # We have to do a show here or we get an error on create if the zone already exists:
         inlineScript: |
-        az network private-dns zone show   --name "privatelink.azurewebsites.net" || \
-        az network private-dns zone create --name "privatelink.azurewebsites.net"
-        az network private-dns zone show   --name "privatelink.mongo.cosmos.azure.com" || \
-        az network private-dns zone create --name "privatelink.mongo.cosmos.azure.com"
+          az network private-dns zone show   --name "privatelink.azurewebsites.net" || \
+          az network private-dns zone create --name "privatelink.azurewebsites.net"
+          
+          az network private-dns zone show   --name "privatelink.mongo.cosmos.azure.com" || \
+          az network private-dns zone create --name "privatelink.mongo.cosmos.azure.com"
 
     - name: Link DNS zones to vnet
       uses: Azure/cli@v1.0.0
@@ -156,6 +157,7 @@ jobs:
         inlineScript: |
           az network private-dns link vnet show   --name app-service-dns --zone-name "privatelink.azurewebsites.net" || \
           az network private-dns link vnet create --name app-service-dns --zone-name "privatelink.azurewebsites.net" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
+
           az network private-dns link vnet show   --name mongo-dns --zone-name "privatelink.mongo.cosmos.azure.com" || \
           az network private-dns link vnet create --name mongo-dns --zone-name "privatelink.mongo.cosmos.azure.com" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
 
