@@ -20,7 +20,7 @@ const conditionalErrorList = {
 */
 
 module.exports = {
-  bondStage: {
+  facilityStage: {
     Unissued: {
       ukefGuaranteeInMonths: {
         text: 'Enter the Length of time that the UKEF\'s guarantee will be in place for',

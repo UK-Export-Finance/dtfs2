@@ -11,13 +11,10 @@ const updateSubmittedIssuedFacilities = async (user, collection, deal) => {
     arr.forEach((f) => {
       const facility = f;
 
-      const {
-        facilityStage,
-        bondStage,
-      } = facility;
+      const { facilityStage } = facility;
 
-      const shouldUpdateLoan = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL;
-      const shouldUpdateBond = bondStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED;
+      const shouldUpdateLoan = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
+      const shouldUpdateBond = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
 
       const shouldUpdateIssuedFacility = ((shouldUpdateLoan
                                           || shouldUpdateBond)

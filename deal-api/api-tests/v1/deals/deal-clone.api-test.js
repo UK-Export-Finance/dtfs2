@@ -147,7 +147,7 @@ describe('/v1/deals/:id/clone', () => {
         const secondOriginalBond = originalDeal.bondTransactions.items[1];
 
         const expectedFirstBondTransaction = {
-          bondStage: firstOriginalBond.bondStage,
+          facilityStage: firstOriginalBond.facilityStage,
           requestedCoverStartDate: firstOriginalBond.requestedCoverStartDate,
           'coverEndDate-day': firstOriginalBond['coverEndDate-day'],
           'coverEndDate-month': firstOriginalBond['coverEndDate-month'],
@@ -164,7 +164,7 @@ describe('/v1/deals/:id/clone', () => {
           createdDate: expect.any(String),
         };
         const expectedSecondBondTransaction = {
-          bondStage: secondOriginalBond.bondStage,
+          facilityStage: secondOriginalBond.facilityStage,
           requestedCoverStartDate: secondOriginalBond.requestedCoverStartDate,
           'coverEndDate-day': secondOriginalBond['coverEndDate-day'],
           'coverEndDate-month': secondOriginalBond['coverEndDate-month'],

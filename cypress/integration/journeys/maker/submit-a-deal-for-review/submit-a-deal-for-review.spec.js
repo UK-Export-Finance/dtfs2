@@ -181,7 +181,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     });
   });
 
-  describe('when a deal has Completed Eligibility and a Bond with `issued` bondStage and no Requested Cover Start Date', () => {
+  describe('when a deal has Completed Eligibility and a Bond with `issued` facilityStage and no Requested Cover Start Date', () => {
     it('should use todays date for the Bond in Deal page', () => {
       const deal = deals.dealWithNoBondCoverStartDate;
 

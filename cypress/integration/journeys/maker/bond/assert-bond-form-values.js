@@ -3,7 +3,7 @@ const BOND_FORM_VALUES = require('./bond-form-values');
 
 const details = {
   unissued: () => {
-    pages.bondDetails.bondStageUnissuedInput().should('be.checked');
+    pages.bondDetails.facilityStageUnissuedInput().should('be.checked');
     pages.bondDetails.bondIssuerInput().should('have.value', BOND_FORM_VALUES.DETAILS.bondIssuer);
     pages.bondDetails.bondTypeInput().should('have.value', BOND_FORM_VALUES.DETAILS.bondType.value);
     pages.bondDetails.ukefGuaranteeInMonthsInput().should('have.value', BOND_FORM_VALUES.DETAILS.ukefGuaranteeInMonths);
@@ -12,7 +12,7 @@ const details = {
   issued: () => {
     pages.bondDetails.bondIssuerInput().should('have.value', BOND_FORM_VALUES.DETAILS.bondIssuer);
     pages.bondDetails.bondTypeInput().should('have.value', BOND_FORM_VALUES.DETAILS.bondType.value);
-    pages.bondDetails.bondStageIssuedInput().should('be.checked');
+    pages.bondDetails.facilityStageIssuedInput().should('be.checked');
     pages.bondDetails.requestedCoverStartDateDayInput().should('have.value', BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
     pages.bondDetails.requestedCoverStartDateMonthInput().should('have.value', BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth);
     pages.bondDetails.requestedCoverStartDateYearInput().should('have.value', BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear);

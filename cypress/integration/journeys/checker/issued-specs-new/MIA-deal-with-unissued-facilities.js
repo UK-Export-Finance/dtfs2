@@ -185,7 +185,7 @@ const deal = {
     "items": [
       {
         "_id": "1000122",
-        "bondStage": "Unissued",
+        "facilityStage": "Unissued",
         "ukefGuaranteeInMonths": "12",
         "facilityValue": "1234.00",
         "currencySameAsSupplyContractCurrency": "true",

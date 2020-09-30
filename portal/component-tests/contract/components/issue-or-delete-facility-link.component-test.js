@@ -21,9 +21,10 @@ describe(component, () => {
           .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/issue-facility`, 'Issue facility');
       });
 
-      describe('with facility.issueFacilityDetailsStarted', () => {
+      describe('with facility.issueFacilityDetailsStarted and facility.issueFacilityDetailsProvided', () => {
         it('should render a link to issue facility page with `Facility issued` text', () => {
           facility.issueFacilityDetailsStarted = true;
+          facility.issueFacilityDetailsProvided = true;
           const wrapper = render({ user, deal, facility, facilityName });
           wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`)
             .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/issue-facility`, 'Facility issued');

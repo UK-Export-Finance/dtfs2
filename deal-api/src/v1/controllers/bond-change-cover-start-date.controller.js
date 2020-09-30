@@ -29,7 +29,7 @@ exports.updateBondCoverStartDate = async (req, res) => {
       // TODO (?)
       // only allow the checks/modifications below
       // if all other fields in bond are valid
-      if (existingBond.bondStage !== CONSTANTS.FACILITIES.BOND_STAGE.ISSUED) {
+      if (existingBond.facilityStage !== CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED) {
         return res.status(400).send();
       }
 
@@ -45,9 +45,7 @@ exports.updateBondCoverStartDate = async (req, res) => {
 
       const validationErrors = bondIssueFacilityValidationErrors(
         bond,
-        deal.details.submissionType,
-        deal.details.submissionDate,
-        deal.details.manualInclusionNoticeSubmissionDate,
+        deal,
       );
 
       if (validationErrors.errorList.requestedCoverStartDate) {

@@ -3,9 +3,9 @@ const ukefGuaranteeInMonths = require('../fields/ukef-guarantee-in-months');
 
 module.exports = (bond, errorList) => {
   let newErrorList = { ...errorList };
-  const { bondStage } = bond;
+  const { facilityStage } = bond;
 
-  const isUnissued = (hasValue(bondStage) && bondStage === 'Unissued');
+  const isUnissued = (hasValue(facilityStage) && facilityStage === 'Unissued');
 
   if (isUnissued) {
     newErrorList = ukefGuaranteeInMonths(bond, newErrorList);

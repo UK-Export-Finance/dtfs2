@@ -188,7 +188,7 @@ const deal = {
         "createdDate": moment().utc().valueOf(),
         "bondIssuer": "",
         "bondType": "Progress payment bond",
-        "bondStage": "Unissued",
+        "facilityStage": "Unissued",
         "ukefGuaranteeInMonths": "12",
         "bondBeneficiary": "",
         "guaranteeFeePayableByBank": "10.8000",

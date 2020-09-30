@@ -3,6 +3,8 @@ name: Supporting infrastructure for environments
 on:
   push:
     branches: [ infrastructure ]
+    paths: 
+    - '.github/workflows/infrastructure.yml'
 
 jobs:
 

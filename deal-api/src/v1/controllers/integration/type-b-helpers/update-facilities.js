@@ -2,13 +2,13 @@ const CONSTANTS = require('../../../../constants');
 
 const updateBondStatus = (bond, workflowBond, workflowActionCode) => {
   const {
-    bondStage,
+    facilityStage,
     previousFacilityStage,
   } = bond;
 
-  const isIssuedFacility = (bondStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
-                           || (bondStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
-                           && previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED));
+  const isIssuedFacility = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
+                           || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
+                           && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED));
 
   const hasWorflowStatus = workflowBond.BSS_status && workflowBond.BSS_status.length > 0;
 
@@ -19,7 +19,7 @@ const updateBondStatus = (bond, workflowBond, workflowActionCode) => {
         return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
       }
 
-      if (workflowActionCode === '011' && bond.status === CONSTANTS.FACILITIES.STATUS.SUBMITTED) {
+      if ((workflowActionCode === '011' || workflowActionCode === '017') && bond.status === CONSTANTS.FACILITIES.STATUS.SUBMITTED) {
         return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
       }
 
@@ -28,7 +28,7 @@ const updateBondStatus = (bond, workflowBond, workflowActionCode) => {
       }
     }
 
-    if (bondStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED) {
+    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED) {
       return CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
     }
   }
@@ -41,9 +41,9 @@ const updateLoanStatus = (loan, workflowLoan, workflowActionCode) => {
     previousFacilityStage,
   } = loan;
 
-  const isIssuedFacility = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
-                          || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
-                          && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL));
+  const isIssuedFacility = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
+                          || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
+                          && previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL));
 
   const hasWorflowStatus = workflowLoan.EWCS_status && workflowLoan.EWCS_status.length > 0;
 
@@ -54,7 +54,7 @@ const updateLoanStatus = (loan, workflowLoan, workflowActionCode) => {
         return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
       }
 
-      if (workflowActionCode === '011' && loan.status === CONSTANTS.FACILITIES.STATUS.SUBMITTED) {
+      if ((workflowActionCode === '011' || workflowActionCode === '017') && loan.status === CONSTANTS.FACILITIES.STATUS.SUBMITTED) {
         return CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED;
       }
 
@@ -63,7 +63,7 @@ const updateLoanStatus = (loan, workflowLoan, workflowActionCode) => {
       }
     }
 
-    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL) {
+    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL) {
       return CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
     }
   }

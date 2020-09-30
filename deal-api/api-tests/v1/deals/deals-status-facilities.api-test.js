@@ -64,7 +64,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       });
 
       const isUnsubmittedIssuedFacility = (facility) => {
-        if ((facility.bondStage === 'Unissued' || facility.facilityStage === 'Conditional')
+        if ((facility.facilityStage === 'Unissued' || facility.facilityStage === 'Conditional')
           && facility.issueFacilityDetailsProvided
           && !facility.issueFacilityDetailsSubmitted
           && facility.status !== 'Submitted') {
@@ -74,20 +74,20 @@ describe('/v1/deals/:id/status - facilities', () => {
       };
 
       describe('any issued bonds that have details provided, but not yet been submitted', () => {
-        it('should add `Ready for check` status, change bondStage from `Unissued` to `Issued` and add previousFacilityStage', async () => {
+        it('should add `Ready for check` status, change facilityStage from `Unissued` to `Issued` and add previousFacilityStage', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedBondsThatShouldBeUpdated = body.deal.bondTransactions.items.filter((b) =>
-            b.bondStage === 'Unissued'
+            b.facilityStage === 'Unissued'
             && b.issueFacilityDetailsProvided === true
             && !b.issueFacilityDetailsSubmitted);
 
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
             expect(bond.status).toEqual('Ready for check');
-            expect(bond.bondStage).toEqual('Issued');
+            expect(bond.facilityStage).toEqual('Issued');
             expect(bond.previousFacilityStage).toEqual('Unissued');
           });
         });
@@ -230,7 +230,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       });
 
       const isIssuedFacilityWithFacilityStageChange = (facility) => {
-        const issuedBond = (facility.bondStage === 'Issued' && facility.previousFacilityStage === 'Unissued');
+        const issuedBond = (facility.facilityStage === 'Issued' && facility.previousFacilityStage === 'Unissued');
         const issuedLoan = (facility.facilityStage === 'Unconditional' && facility.previousFacilityStage === 'Conditional');
 
         if ((issuedBond || issuedLoan)
@@ -241,7 +241,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         return null;
       };
 
-      describe('all issued bonds (bondStage=`Issued`, previousFacilityStage=`Unissued`)', () => {
+      describe('all issued bonds (facilityStage=`Issued`, previousFacilityStage=`Unissued`)', () => {
         it('should add `Maker’s input required` status to the bond', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
@@ -305,7 +305,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       };
 
 
-      describe('when a deal contains bonds with an `Issued` bondStage that do NOT have a requestedCoverStartDate', () => {
+      describe('when a deal contains bonds with an `Issued` facilityStage that do NOT have a requestedCoverStartDate', () => {
         it('should add todays date to such bonds', async () => {
           const baseBond = {
             bondIssuer: 'issuer',
@@ -322,7 +322,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           };
 
           const issuedBondFields = () => ({
-            bondStage: 'Issued',
+            facilityStage: 'Issued',
             uniqueIdentificationNumber: '1234',
             ...coverEndDate(),
           });
@@ -333,7 +333,7 @@ describe('/v1/deals/:id/status - facilities', () => {
               items: [
                 {
                   ...baseBond,
-                  bondStage: 'Unissued',
+                  facilityStage: 'Unissued',
                   ukefGuaranteeInMonths: '24',
                 },
                 {
@@ -471,7 +471,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       });
 
       const isUnsubmittedIssuedFacilityWithFacilityStageChange = (facility) => {
-        const issuedBond = facility.bondStage === 'Issued';
+        const issuedBond = facility.facilityStage === 'Issued';
         const unconditionalLoan = facility.facilityStage === 'Unconditional';
 
         if ((issuedBond || unconditionalLoan)

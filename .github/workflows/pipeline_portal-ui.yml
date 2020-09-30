@@ -1,8 +1,10 @@
-name: Pipeline
+name: Portal UI
 
 on:
   push:
     branches: [ master ]
+    paths: 
+    - 'portal/**'
   schedule:
     # A weekly run to roll up any base image patches,
     # in office hours, avoiding bank holiday Mondays:
@@ -22,7 +24,7 @@ env:
 
 jobs:
 
-  portal-ui:
+  build:
     name: Build and push Portal UI
     runs-on: ubuntu-latest
     steps:
@@ -41,84 +43,9 @@ jobs:
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
 
-  portal-api:
-    name: Build and push Portal API
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Commit hash
-      run: "echo GITHUB_SHA=${{ github.sha }}"
-    - name: Build and push
-      uses: docker/build-push-action@v1
-      with:
-        registry: ${{ secrets.DEV_ACR_REGISTRY }}
-        username: ${{ secrets.DEV_ACR_USERNAME }}
-        password: ${{ secrets.DEV_ACR_PASSWORD }}
-        repository: portal-api
-        path: deal-api
-        tags: latest
-        build_args: GITHUB_SHA=${{ github.sha }}
-        add_git_labels: true
-
-  api-tests:
-    needs: portal-api
-    name: "Run API tests in Compose"
-    runs-on: ubuntu-latest
-    env:
-      AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.APITEST_AZURE_WORKFLOW_STORAGE_ACCOUNT }}
-      AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.APITEST_AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
-      AZURE_WORKFLOW_FILESHARE_NAME: ${{ secrets.APITEST_AZURE_WORKFLOW_FILESHARE_NAME }}
-      AZURE_WORKFLOW_EXPORT_FOLDER: ${{ secrets.APITEST_AZURE_WORKFLOW_EXPORT_FOLDER }}
-      AZURE_WORKFLOW_IMPORT_FOLDER: ${{ secrets.APITEST_AZURE_WORKFLOW_IMPORT_FOLDER }}
-
-      AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.APITEST_AZURE_PORTAL_STORAGE_ACCOUNT }}
-      AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.APITEST_AZURE_PORTAL_STORAGE_ACCESS_KEY }}
-      AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.APITEST_AZURE_PORTAL_FILESHARE_NAME }}
-      AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.APITEST_AZURE_PORTAL_EXPORT_FOLDER }}
-
-      GOV_NOTIFY_API_KEY: ${{ secrets.APITEST_GOV_NOTIFY_API_KEY }}
-
-    steps:
-    - uses: actions/checkout@v2
-    # Pull the latest images to run with so we don't need to build them
-    - uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
-        username: ${{ secrets.DEV_ACR_USERNAME }}
-        password: ${{ secrets.DEV_ACR_PASSWORD }}
-    - name: Pull portal-api
-      run: |
-        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-api
-        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-api dtfs/deal-api
-    - name: Pull portal-ui
-      run: |
-        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui
-        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui dtfs/portal
-    - name: Start Docker Compose
-      run: |
-        source secrets/set_jwt_keypair.sh && docker-compose up -d
-        echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
-        sleep 10
-    - name: Load mock data
-      run: |
-        cd utils/mock-data-loader
-        npm install
-        node ./re-insert-mocks.js
-    - name: Run API tests
-      run: |
-        docker-compose exec -T deal-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --detectOpenHandles # --forceExit
-    - uses: act10ns/slack@v1
-      with:
-        status: ${{ job.status }}
-        steps: ${{ toJson(steps) }}
-        channel: '#dtfs2-dev'
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      if: failure()
-
-  end-to-end-tests:
-    needs: [portal-ui, portal-api]
+  test:
     name: "Run end-to-end tests in Compose"
+    needs: build
     runs-on: ubuntu-latest
     env:
       AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.E2ETEST_AZURE_WORKFLOW_STORAGE_ACCOUNT }}
@@ -185,9 +112,8 @@ jobs:
       if: failure()
 
   promote:
-    needs: [portal-ui, portal-api]
-    #needs: [api-tests, end-to-end-tests] - temp promotion to unblock QA
     name: Promote container images to Dev
+    needs: test
     runs-on: ubuntu-latest
     steps:
     - name: Log in to Dev container registry
@@ -203,9 +129,6 @@ jobs:
         docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$from
         docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$from ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$to
         docker push ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$to
-        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$from
-        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$from ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$to
-        docker push ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$to
 
   deploy:
     name: Deploy container images to Dev
@@ -228,14 +151,12 @@ jobs:
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-ui
-          az webapp deployment slot create --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-api
 
     - name: Swap slot ${{ github.sha }} into production
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           az webapp deployment slot swap   --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --action swap
-          az webapp deployment slot swap   --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --action swap
 
     - name: Delete slot ${{ github.sha }}
       # Clean up the slot regardless of errors
@@ -244,18 +165,3 @@ jobs:
       with:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }}
-          az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }}
-          
-  refresh-data:
-    needs: deploy
-    name: Refresh Dev data
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Re-insert mocks
-        run: |
-          cd utils/mock-data-loader
-          cat .env.azure_dev > .env
-          npm install
-          echo Refreshing database using $(cat .env)
-          node re-insert-mocks.js

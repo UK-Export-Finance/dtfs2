@@ -55,7 +55,7 @@ const constructor = (listOfFilters) => {
     const bonds = deal.bondTransactions && deal.bondTransactions.items ? deal.bondTransactions.items : [];
 
     return bonds.filter((bond) => {
-      if (keyFields.filterByTransactionStage && bond.bondStage !== keyFields.filterByTransactionStage) {
+      if (keyFields.filterByTransactionStage && bond.facilityStage !== keyFields.filterByTransactionStage) {
         return false;
       }
 
@@ -107,7 +107,7 @@ const constructor = (listOfFilters) => {
       transactionType: 'bond',
       facilityValue: bond.facilityValue,
       currency: bond.currency,
-      transactionStage: bond.bondStage,
+      transactionStage: bond.facilityStage,
       createdDate: bond.createdDate,
       lastEdited: bond.lastEdited,
       issuedDate: bond.issuedDate,

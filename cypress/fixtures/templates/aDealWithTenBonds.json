@@ -93,7 +93,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Unissued",
+          "facilityStage": "Unissued",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenBonds-bond1",
           "bondBeneficiary": "test",
@@ -108,7 +108,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Unissued",
+          "facilityStage": "Unissued",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenBonds-bond2",
           "bondBeneficiary": "test",
@@ -123,7 +123,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Unissued",
+          "facilityStage": "Unissued",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenBonds-bond3",
           "bondBeneficiary": "test",
@@ -138,7 +138,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Unissued",
+          "facilityStage": "Unissued",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenBonds-bond4",
           "bondBeneficiary": "test",
@@ -153,7 +153,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Unissued",
+          "facilityStage": "Unissued",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenBonds-bond5",
           "bondBeneficiary": "test",
@@ -168,7 +168,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Unissued",
+          "facilityStage": "Unissued",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenBonds-bond6",
           "bondBeneficiary": "test",
@@ -183,7 +183,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Unissued",
+          "facilityStage": "Unissued",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenBonds-bond7",
           "bondBeneficiary": "test",
@@ -198,7 +198,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Unissued",
+          "facilityStage": "Unissued",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenBonds-bond8",
           "bondBeneficiary": "test",
@@ -213,7 +213,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Unissued",
+          "facilityStage": "Unissued",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenBonds-bond9",
           "bondBeneficiary": "test",
@@ -228,7 +228,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Unissued",
+          "facilityStage": "Unissued",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenBonds-bond10",
           "bondBeneficiary": "test",

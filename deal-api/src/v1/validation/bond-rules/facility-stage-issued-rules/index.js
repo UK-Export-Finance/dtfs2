@@ -7,10 +7,10 @@ const uniqueIdentificationNumber = require('./unique-identification-number');
 module.exports = (bond, errorList, deal) => {
   let newErrorList = { ...errorList };
   const {
-    bondStage,
+    facilityStage,
   } = bond;
 
-  const isIssued = (hasValue(bondStage) && bondStage === 'Issued');
+  const isIssued = (hasValue(facilityStage) && facilityStage === 'Issued');
 
   if (isIssued) {
     newErrorList = requestedCoverStartDate(bond, deal, newErrorList);

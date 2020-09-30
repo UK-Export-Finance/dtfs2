@@ -118,17 +118,17 @@ exports.create = async (req, res) => {
   });
 };
 
-const bondStageFields = (bond) => {
+const facilityStageFields = (bond) => {
   const modifiedBond = bond;
-  const { bondStage } = modifiedBond;
+  const { facilityStage } = modifiedBond;
 
-  if (bondStage === 'Issued') {
-    // remove any `Unissued Bond Stage` specific fields/values
+  if (facilityStage === 'Issued') {
+    // remove any `Unissued Facility Stage` specific fields/values
     delete modifiedBond.ukefGuaranteeInMonths;
   }
 
-  if (bondStage === 'Unissued') {
-    // remove any `Issued Bond Stage` specific fields/values
+  if (facilityStage === 'Unissued') {
+    // remove any `Issued Facility Stage` specific fields/values
     delete modifiedBond.requestedCoverStartDate;
     delete modifiedBond['requestedCoverStartDate-day'];
     delete modifiedBond['requestedCoverStartDate-month'];
@@ -176,7 +176,7 @@ exports.updateBond = async (req, res) => {
         ...req.body,
       };
 
-      modifiedBond = bondStageFields(modifiedBond);
+      modifiedBond = facilityStageFields(modifiedBond);
 
       modifiedBond = await handleTransactionCurrencyFields(
         modifiedBond,
