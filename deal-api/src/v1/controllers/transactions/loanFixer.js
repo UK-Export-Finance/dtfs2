@@ -1,7 +1,7 @@
 const GRAPHQL_FILTER_BY_TRANSACTION_TYPE = 'transaction.transactionType';
+const TRANSACTION_PREV_COVER_START_DATE = 'transaction.previousCoverStartDate';
 const TRANSACTION_STAGE = 'transaction.transactionStage';
 const FILTER_SEARCH = 'filterSearch';
-
 const DISPLAY_LOANS = ['loan', 'all'];
 const transactionStageMapping = {
   unissued_conditional: 'Conditional',
@@ -28,6 +28,10 @@ const constructor = (listOfFilters) => {
 
     if (TRANSACTION_STAGE === filterField) {
       keyFields.filterByTransactionStage = fixTransactionStage(filter[TRANSACTION_STAGE]);
+    }
+
+    if (TRANSACTION_PREV_COVER_START_DATE === filterField) {
+      keyFields.onlyShowNotNullPrevCoverStartDate = true;
     }
 
     return true; // lint made me
@@ -79,6 +83,12 @@ const constructor = (listOfFilters) => {
         }
       }
 
+      if (keyFields.onlyShowNotNullPrevCoverStartDate) {
+        if (!loan.previousCoverStartDate) {
+          return false;
+        }
+      }
+
       return true; // all the filters should remove anything that needs removing so if we reach here -> true.
     }).map((loan) => ({
       // map whatever's still left into the generic schema that graphQL is expecting..
@@ -104,7 +114,7 @@ const constructor = (listOfFilters) => {
       maker: deal.details.maker ? `${deal.details.maker.firstname || ''} ${deal.details.maker.surname || ''}` : '',
       checker: deal.details.checker ? `${deal.details.checker.firstname || ''} ${deal.details.checker.surname || ''}` : '',
       issueFacilityDetailsSubmitted: loan.issueFacilityDetailsSubmitted,
-      requestedCoverStartDate: `${loan['requestedCoverStartDate-day']}/${loan['requestedCoverStartDate-month']}/${loan['requestedCoverStartDate-year']}`,
+      requestedCoverStartDate: loan.requestedCoverStartDate,
       previousCoverStartDate: loan.previousCoverStartDate,
       dateOfCoverChange: loan.dateOfCoverChange,
       issuedFacilitySubmittedToUkefTimestamp: loan.issuedFacilitySubmittedToUkefTimestamp,

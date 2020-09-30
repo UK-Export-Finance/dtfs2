@@ -109,7 +109,13 @@
               "text" : "GBP - UK Sterling",
               "id" : "GBP"
           },
-          "issuedFacilitySubmittedToUkefTimestamp" : "1600352531656",
+          "requestedCoverStartDate-day" : "21",
+          "requestedCoverStartDate-month" : "09",
+          "requestedCoverStartDate-year" : "2020",
+          "requestedCoverStartDate" : "1600642800000",
+          "previousCoverStartDate" : "1600525297627",
+          "dateOfCoverChange" : "1600642800000",
+          "issuedFacilitySubmittedToUkefTimestamp" : "1600352531656"
 
       }
     ]

@@ -8,6 +8,7 @@ const TRANSACTION_DEAL_CREATED = 'details.created';
 const DEAL_ID = '_id';
 const DEAL_STATUS = 'details.status';
 const DEAL_PREVIOUS_STATUS = 'details.previousStatus';
+const TRANSACTION_PREVIOUS_COVER_START_DATE = 'transaction.previousCoverStartDate';
 const DEAL_BANK = 'details.owningBank.id';
 const UKEF_DEAL_ID = 'details.ukefDealId';
 const DEAL_SUBMISSION_TYPE = 'details.submissionType';
@@ -97,6 +98,15 @@ const constructor = (user, filters) => {
         const deal = { 'details.submissionType': filter[filterField] };
 
         return listSoFar.concat([deal]);
+      }
+      if (TRANSACTION_PREVIOUS_COVER_START_DATE === filterField) {
+        // bad. this should really respect what we're passing in but i don't have time to unpick how we're dealing with
+        // the operations and values; the only reason we ever use this filter is to filter out nulls and
+        // there's going to be more hacking needed in the bond/loan fixers so..
+        //  i just don't see a quick way of doing this well.
+        const bondMatchesOnPreviousCoverStartDate = { 'bondTransactions.items': { $elemMatch: { previousCoverStartDate: { $ne: null } } } };
+        const loanMatchesOnPreviousCoverStartDate = { 'loanTransactions.items': { $elemMatch: { previousCoverStartDate: { $ne: null } } } };
+        return listSoFar.concat([{ $or: [bondMatchesOnPreviousCoverStartDate, loanMatchesOnPreviousCoverStartDate] }]);
       }
 
       return listSoFar;
