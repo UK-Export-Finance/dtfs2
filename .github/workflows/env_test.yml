@@ -740,11 +740,11 @@ jobs:
             --source-address-prefixes "51.104.202.42" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
           az network nsg rule create --name vm-ips-test --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 997 --direction Inbound --protocol "*" --access Allow \
+            --priority 998 --direction Inbound --protocol "*" --access Allow \
             --source-address-prefixes "51.11.144.7" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
           az network nsg rule create --name vm-ips-prod --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 997 --direction Inbound --protocol "*" --access Allow \
+            --priority 999 --direction Inbound --protocol "*" --access Allow \
             --source-address-prefixes "51.145.36.44" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
 
