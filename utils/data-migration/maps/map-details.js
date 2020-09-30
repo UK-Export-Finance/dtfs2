@@ -25,6 +25,7 @@ const mapDetails = (portalDealId, v1Deal) => {
     previousWorkflowStatus: v1Deal.Deal_information.Extra_fields.Deal_previous_status,
     owningBank: getBankByName(v1Deal.Application_bank),
     dateOfLastAction: convertV1Date(v1Deal.Deal_information.Extra_fields.Deal_updated),
+    created: convertV1Date(v1Deal.Deal_information.Extra_fields.Deal_created),
   };
 
 

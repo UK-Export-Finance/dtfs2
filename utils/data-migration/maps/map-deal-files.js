@@ -17,7 +17,7 @@ const mapDealFiles = async (portalDealId, v1Deal) => {
   const logError = (error) => {
     // Allow deals to be migrated if deal file is missing for now.
     // hasError = true;
-    log.addError(portalDealId, error);
+    log.addWarning(portalDealId, error);
   };
 
   const copyDealFile = async (dealFiles) => {

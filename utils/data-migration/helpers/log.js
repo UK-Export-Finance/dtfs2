@@ -4,6 +4,7 @@ const moment = require('moment');
 const logData = {
   success: [],
   errors: {},
+  warnings: {},
 };
 
 const logFolder = './logs';
@@ -19,14 +20,25 @@ const init = (prefix) => {
 
 const saveToFile = () => {
   const orderErrorKeys = Object.keys(logData.errors).sort();
+  const orderWarningsKeys = Object.keys(logData.warnings).sort();
+
   const orderedErrors = {};
+  const orderedWarnings = {};
+
   orderErrorKeys.forEach((key) => {
     orderedErrors[key] = logData.errors[key];
   });
+
+  orderWarningsKeys.forEach((key) => {
+    orderedWarnings[key] = logData.warnings[key];
+  });
+
   const orderedData = {
-    success: logData.success.sort(),
     errors: orderedErrors,
+    warnings: orderedWarnings,
+    success: logData.success.sort(),
   };
+
   fs.writeFileSync(filename, JSON.stringify(orderedData, null, 4));
 };
 
@@ -35,6 +47,14 @@ const addError = (v1Id, msg) => {
     logData.errors[v1Id] = [];
   }
   logData.errors[v1Id].push(msg);
+  saveToFile();
+};
+
+const addWarning = (v1Id, msg) => {
+  if (!logData.warnings[v1Id]) {
+    logData.warnings[v1Id] = [];
+  }
+  logData.warnings[v1Id].push(msg);
   saveToFile();
 };
 
@@ -51,6 +71,7 @@ module.exports = {
   init,
   addError,
   addSuccess,
+  addWarning,
   get,
   saveToFile,
   getSuccessCount,
