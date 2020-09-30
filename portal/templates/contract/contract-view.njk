@@ -140,7 +140,9 @@
               {{ addABondButton.render(componentData) }}
             </div>
 
-            {{ bondTransactionsTable.render(componentData) }}
+            {% if deal.bondTransactions.items.length %}
+              {{ bondTransactionsTable.render(componentData) }}
+            {% endif %}
 
           </div>
         </div>
@@ -164,7 +166,9 @@
               {{ addALoanButton.render(componentData) }}
             </div>
 
-            {{ loanTransactionsTable.render(componentData) }}
+            {% if deal.loanTransactions.items.length %}
+              {{ loanTransactionsTable.render(componentData) }}
+            {% endif %}
 
           </div>
         </div>

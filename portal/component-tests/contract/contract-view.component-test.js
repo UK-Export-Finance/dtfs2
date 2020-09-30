@@ -94,6 +94,9 @@ describe(page, () => {
         .toLinkTo(`/contract/${dealId}/bond/${bondId}/details`, deal.bondTransactions.items[0].uniqueIdentificationNumber));
     });
 
+    it('renders bond transactions table', () =>
+      wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="bond-transactions-table"]').toExist()));
+
     it('allows the user to add a loan', () => wrappers.forEach((wrapper) => wrapper.expectLink('[data-cy="link-add-loan"]')
       .toLinkTo(`/contract/${deal._id}/loan/create`, 'Add a Loan')));
 
@@ -104,6 +107,10 @@ describe(page, () => {
       return wrappers.forEach((wrapper) => wrapper.expectLink(`[data-cy="loan-bank-reference-number-link-${loanId}"]`)
         .toLinkTo(`/contract/${dealId}/loan/${loanId}/guarantee-details`, deal.loanTransactions.items[0].bankReferenceNumber));
     });
+
+    it('renders loan transactions table', () =>
+      wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="loan-transactions-table"]').toExist()));
+
   });
 
 
@@ -146,4 +153,55 @@ describe(page, () => {
       return wrappers.forEach((wrapper) => wrapper.expectLink(`[data-cy="loan-bank-reference-number-link-${loanId}"]`).notToExist());
     });
   });
+
+  describe('when viewed with no bonds', () => {
+    const wrappers = [];
+    const dealWithNoBonds = {
+      ...deal,
+      bondTransactions: {
+        items: [],
+      },
+    };
+
+    beforeAll(() => {
+      for (const role of roles) {
+        const user = { roles: [role], timezone: 'Europe/London' };
+        for (const deal of oneDealInEachStatus()) {
+          wrappers.push(render({
+            user,
+            dealWithNoBonds,
+          }));
+        }
+      }
+    });
+
+    it('should NOT render bond transactions table', () =>
+      wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="bond-transactions-table"]').notToExist()));
+  });
+
+  describe('when viewed with no loans', () => {
+    const wrappers = [];
+    const dealWithNoLoans = {
+      ...deal,
+      loanTransactions: {
+        items: [],
+      },
+    };
+
+    beforeAll(() => {
+      for (const role of roles) {
+        const user = { roles: [role], timezone: 'Europe/London' };
+        for (const deal of oneDealInEachStatus()) {
+          wrappers.push(render({
+            user,
+            dealWithNoLoans,
+          }));
+        }
+      }
+    });
+
+    it('should NOT render loan transactions table', () =>
+      wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="loan-transactions-table"]').notToExist()));
+  });
+
 });
