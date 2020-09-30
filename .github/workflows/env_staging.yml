@@ -524,7 +524,6 @@ jobs:
             echo "IP for tfs-${{ env.environment }}-mongo.privatelink.mongo.cosmos.azure.com is $ipv4_address"
           fi
 
-
     - name: Database with autoscale
       uses: Azure/cli@v1.0.0
       with:
