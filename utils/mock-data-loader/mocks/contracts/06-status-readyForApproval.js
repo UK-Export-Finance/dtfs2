@@ -114,7 +114,7 @@ module.exports = {
         "_id": 4,
         "bondIssuer": "issuer",
         "bondType": "bond type",
-        "bondStage": "Unissued",
+        "facilityStage": "Unissued",
         "ukefGuaranteeInMonths": "24",
         "uniqueIdentificationNumber": "1234",
         "bondBeneficiary": "test",

@@ -34,7 +34,7 @@ const bondHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, d
   const allowedDealSubmissionType = (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
                                     || dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN);
 
-  const allowedFacilityStage = bond.bondStage === 'Unissued';
+  const allowedFacilityStage = bond.facilityStage === 'Unissued';
 
   if (allowedDealStatus
     && allowedDealSubmissionType
@@ -53,8 +53,6 @@ const addAccurateStatusesToBonds = (
     status: dealStatus,
     previousStatus: previousDealStatus,
     submissionType,
-    submissionDate,
-    manualInclusionNoticeSubmissionDate,
   } = deal.details;
 
   if (deal.bondTransactions.items.length) {
@@ -67,9 +65,7 @@ const addAccurateStatusesToBonds = (
           && bondHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, submissionType, bond)) {
         issueFacilityValidationErrors = bondIssueFacilityValidationErrors(
           bond,
-          submissionType,
-          submissionDate,
-          manualInclusionNoticeSubmissionDate,
+          deal,
         );
       }
 

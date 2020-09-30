@@ -2,15 +2,11 @@ const applyRules = require('./loan-issue-facility-rules');
 
 module.exports = (
   loan,
-  dealSubmissionType,
-  dealSubmissionDate,
-  manualInclusionNoticeSubmissionDate,
+  deal,
 ) => {
   const errorList = applyRules(
     loan,
-    dealSubmissionType,
-    dealSubmissionDate,
-    manualInclusionNoticeSubmissionDate,
+    deal,
   );
 
   const totalErrors = Object.keys(errorList).length;

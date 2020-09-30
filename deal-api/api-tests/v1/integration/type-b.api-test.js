@@ -4,7 +4,6 @@ const { as } = require('../../api')(app);
 const aDeal = require('../deals/deal-builder');
 
 const { processTypeB } = require('../../../src/v1/controllers/integration/type-b.controller');
-const dealController = require('../../../src/v1/controllers/deal.controller');
 
 const typeBxmlTemplate = require('./fixtures/type-b-template');
 

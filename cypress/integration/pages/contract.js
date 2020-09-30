@@ -44,7 +44,7 @@ const page = {
         uniqueNumberLink: () => row.get(`[data-cy="unique-number-link-${bondId}"]`),
         bondStatus: () => row.get(`[data-cy="bond-status-${bondId}"]`),
         facilityValue: () => row.get('[data-cy="bond-facility-value"]'),
-        bondStage: () => row.get(`[data-cy="bond-stage-${bondId}"]`),
+        facilityStage: () => row.get(`[data-cy="facility-stage-${bondId}"]`),
         requestedCoverStartDate: () => row.get('[data-cy="bond-requested-cover-start-date"]'),
         coverEndDate: () => row.get('[data-cy="bond-cover-end-date"]'),
         issueFacilityLink: () => row.get(`[data-cy="bond-issue-facility-${bondId}"]`),

@@ -1,0 +1,1 @@
+exports.logError = jest.fn();

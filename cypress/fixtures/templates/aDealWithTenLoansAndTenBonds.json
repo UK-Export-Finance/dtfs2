@@ -93,7 +93,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Issued",
+          "facilityStage": "Issued",
           "ukefFacilityID": "ukef:aDealWithTenLoansAndTenBonds-bond1",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenLoansAndTenBonds-bond1",
@@ -109,7 +109,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Issued",
+          "facilityStage": "Issued",
           "ukefFacilityID": "ukef:aDealWithTenLoansAndTenBonds-bond2",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenLoansAndTenBonds-bond2",
@@ -125,7 +125,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Issued",
+          "facilityStage": "Issued",
           "ukefFacilityID": "ukef:aDealWithTenLoansAndTenBonds-bond3",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenLoansAndTenBonds-bond3",
@@ -141,7 +141,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Issued",
+          "facilityStage": "Issued",
           "ukefFacilityID": "ukef:aDealWithTenLoansAndTenBonds-bond4",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenLoansAndTenBonds-bond4",
@@ -157,7 +157,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Issued",
+          "facilityStage": "Issued",
           "ukefFacilityID": "ukef:aDealWithTenLoansAndTenBonds-bond5",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenLoansAndTenBonds-bond5",
@@ -173,7 +173,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Unissued",
+          "facilityStage": "Unissued",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenLoansAndTenBonds-bond6",
           "bondBeneficiary": "test",
@@ -188,7 +188,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Unissued",
+          "facilityStage": "Unissued",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenLoansAndTenBonds-bond7",
           "bondBeneficiary": "test",
@@ -203,7 +203,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Unissued",
+          "facilityStage": "Unissued",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenLoansAndTenBonds-bond8",
           "bondBeneficiary": "test",
@@ -218,7 +218,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Unissued",
+          "facilityStage": "Unissued",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenLoansAndTenBonds-bond9",
           "bondBeneficiary": "test",
@@ -233,7 +233,7 @@
       {
           "bondIssuer": "issuer",
           "bondType": "bond type",
-          "bondStage": "Unissued",
+          "facilityStage": "Unissued",
           "ukefGuaranteeInMonths": "24",
           "uniqueIdentificationNumber": "aDealWithTenLoansAndTenBonds-bond10",
           "bondBeneficiary": "test",

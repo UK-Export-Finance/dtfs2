@@ -139,7 +139,7 @@ describe('page specific validation errors', () => {
       const mockValidationErrors = {
         errorList: {},
         conditionalErrorList: {
-          bondStage: {
+          facilityStage: {
             Unissued: {
               ukefGuaranteeInMonths: {
                 text: 'Length of time that the UKEF\'s guarantee will be in place for is required',
@@ -190,7 +190,7 @@ describe('page specific validation errors', () => {
       it('should only return validationErrors.conditionalErrorList', () => {
         const mockValidationErrors = {
           conditionalErrorList: {
-            bondStage: {
+            facilityStage: {
               Unissued: {
                 ukefGuaranteeInMonths: {
                   text: 'Length of time that the UKEF\'s guarantee will be in place for is required',

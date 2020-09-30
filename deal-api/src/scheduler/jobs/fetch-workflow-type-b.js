@@ -2,6 +2,7 @@ const moment = require('moment');
 
 const defaultSchedule = '*/1 * * * * *';
 const schedule = process.env.FETCH_WORKFLOW_TYPE_B_SCHEDULE || defaultSchedule;
+const logController = require('../../v1/controllers/log-controller');
 
 console.log(`defining fetch-workflow-type-b schedule: ${schedule}`);
 
@@ -124,6 +125,13 @@ const task = async (fileshare = 'workflow', overwriteFolder) => {
         folder: errorFilesystemFolder,
         filename: reason.message,
       };
+
+      await logController.logError({
+        error: 'Unable to move file',
+        from,
+        to,
+      });
+
       await moveFile({ to, from }).catch(() => {});
     });
   }

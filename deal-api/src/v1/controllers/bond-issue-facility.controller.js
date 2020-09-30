@@ -53,6 +53,7 @@ exports.updateBondIssueFacility = async (req, res) => {
         modifiedBond.uniqueIdentificationNumberRequiredForIssuance = true;
       }
 
+
       if (hasAllRequestedCoverStartDateValues(modifiedBond)) {
         modifiedBond = updateRequestedCoverStartDate(modifiedBond);
       } else {
@@ -67,9 +68,7 @@ exports.updateBondIssueFacility = async (req, res) => {
 
       const validationErrors = bondIssueFacilityValidationErrors(
         modifiedBond,
-        deal.details.submissionType,
-        deal.details.submissionDate,
-        deal.details.manualInclusionNoticeSubmissionDate,
+        deal,
       );
 
       if (validationErrors.count === 0) {

@@ -14,7 +14,7 @@ const createMiaSubmissionDate = require('./deal-status/create-mia-submission-dat
 const sendStatusUpdateEmails = require('./deal-status/send-status-update-emails');
 const createApprovalDate = require('./deal-status/create-approval-date');
 
-const updateFacilityDates = require('./deal-status/update-facility-dates');
+const updateFacilityCoverStartDates = require('./deal-status/update-facility-cover-start-dates');
 const updateIssuedFacilities = require('./deal-status/update-issued-facilities');
 const updateSubmittedIssuedFacilities = require('./deal-status/update-submitted-issued-facilities');
 const now = require('../../now');
@@ -66,7 +66,7 @@ exports.update = (req, res) => {
 
     const shouldCheckFacilityDates = (fromStatus === 'Draft' && updatedDealStatus === 'Ready for Checker\'s approval');
     if (shouldCheckFacilityDates) {
-      await updateFacilityDates(collection, updatedDeal);
+      await updateFacilityCoverStartDates(collection, updatedDeal);
     }
 
     let dealAfterAllUpdates = updatedDeal;
@@ -184,7 +184,9 @@ exports.update = (req, res) => {
       dealAfterAllUpdates = await createApprovalDate(collection, req.params.id);
     }
 
-    await sendStatusUpdateEmails(dealAfterAllUpdates, fromStatus, req.user);
+    if (toStatus !== fromStatus) {
+      await sendStatusUpdateEmails(dealAfterAllUpdates, fromStatus, req.user);
+    }
 
     return res.status(200).send(dealAfterAllUpdates);
   });

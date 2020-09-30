@@ -172,7 +172,7 @@ describe('canIssueOrEditIssueFacility', () => {
     });
   });
 
-  describe('when deal is AIN with facility.bondStage is `Issued` with `Unissued` previousFacilityStage', () => {
+  describe('when deal is AIN with facility.facilityStage is `Issued` with `Unissued` previousFacilityStage', () => {
     it('should return true', () => {
       const mockDeal = {
         details: {
@@ -183,7 +183,7 @@ describe('canIssueOrEditIssueFacility', () => {
       };
 
       const mockBond = {
-        bondStage: 'Issued',
+        facilityStage: 'Issued',
         previousFacilityStage: 'Unissued',
       };
 
@@ -191,7 +191,7 @@ describe('canIssueOrEditIssueFacility', () => {
     });
   });
 
-  describe('when deal is AIN with facility.bondStage is `Issued` with `Issued` previousFacilityStage', () => {
+  describe('when deal is AIN with facility.facilityStage is `Issued` with `Issued` previousFacilityStage', () => {
     it('should return true', () => {
       const mockDeal = {
         details: {
@@ -202,7 +202,7 @@ describe('canIssueOrEditIssueFacility', () => {
       };
 
       const mockBond = {
-        bondStage: 'Issued',
+        facilityStage: 'Issued',
         previousFacilityStage: 'Issued',
       };
 

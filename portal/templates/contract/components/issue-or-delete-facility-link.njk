@@ -15,7 +15,7 @@
   {% if facility.canIssueOrEditIssueFacility %}
     <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/issue-facility" class="govuk-link" data-cy="{{ facilityName }}-issue-facility-{{ facility._id }}">
 
-    {% if facility.issueFacilityDetailsStarted %}
+    {% if facility.issueFacilityDetailsStarted and facility.issueFacilityDetailsProvided %}
       Facility issued
       {% else %}
       Issue facility

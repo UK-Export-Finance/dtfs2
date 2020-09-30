@@ -104,7 +104,7 @@
       {
         "bondIssuer": "Issuer",
         "bondType": "Advance payment guarantee",
-        "bondStage": "Unissued",
+        "facilityStage": "Unissued",
         "ukefGuaranteeInMonths": "10",
         "bondBeneficiary": "",
         "guaranteeFeePayableByBank": "9.0000",

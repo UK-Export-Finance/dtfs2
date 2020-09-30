@@ -2,13 +2,13 @@ const FIELDS = {
   DETAILS: {
     REQUIRED_FIELDS: [
       'bondType',
-      'bondStage',
+      'facilityStage',
     ],
     CONDITIONALLY_REQUIRED_FIELDS: [
-      // required if bondStage is 'Unissued'
+      // required if facilityStage is 'Unissued'
       'ukefGuaranteeInMonths',
 
-      // required if bondStage is 'Issued'
+      // required if facilityStage is 'Issued'
       'coverEndDate',
       'uniqueIdentificationNumber',
 

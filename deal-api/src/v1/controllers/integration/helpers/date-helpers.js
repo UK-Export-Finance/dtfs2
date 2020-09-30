@@ -1,7 +1,9 @@
 const moment = require('moment');
 
 const formatDate = (day, month, year) => {
-  const dt = moment([year, month - 1, day]);
+  const fourDigitYear = !year || year.length === 4 ? year : 20 + year.slice(-2).padStart(2, '0');
+
+  const dt = moment([fourDigitYear, month - 1, day]);
   return dt.isValid() ? dt.format('DD-MM-YYYY') : '';
 };
 

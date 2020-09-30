@@ -1,7 +1,8 @@
 const $ = require('mongo-dot-notation');
 const now = require('../../../now');
+const CONSTANTS = require('../../../constants');
 
-const updateFacilityDates = async (collection, deal) => {
+const updateFacilityCoverStartDates = async (collection, deal) => {
   const facilities = {
     bonds: deal.bondTransactions.items,
     loans: deal.loanTransactions.items,
@@ -11,11 +12,13 @@ const updateFacilityDates = async (collection, deal) => {
     arr.forEach((f) => {
       const facility = f;
 
-      // TODO: rename bondStage to `facilityStage`
-      const shouldUpdateRequestedCoverStartDate = (facility.bondStage === 'Issued' && !facility.requestedCoverStartDate)
-        || (facility.facilityStage === 'Unconditional' && !facility.requestedCoverStartDate);
+      const { facilityStage } = facility;
 
-      if (shouldUpdateRequestedCoverStartDate) {
+      const shouldUpdate = ((facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
+                           || facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL)
+                           && !facility.requestedCoverStartDate);
+
+      if (shouldUpdate) {
         const today = new Date();
         facility.requestedCoverStartDate = now();
         facility['requestedCoverStartDate-day'] = today.getDate();
@@ -41,4 +44,4 @@ const updateFacilityDates = async (collection, deal) => {
   return value;
 };
 
-module.exports = updateFacilityDates;
+module.exports = updateFacilityCoverStartDates;

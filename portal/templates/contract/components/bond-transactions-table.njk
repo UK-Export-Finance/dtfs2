@@ -46,7 +46,7 @@
                   {{ bond.currency.id}} {{ bond.facilityValue }}
                 </td>
 
-                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-stage-{{ bond._id}}">{{ bond.bondStage }}</td>
+                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="facility-stage-{{ bond._id}}">{{ bond.facilityStage }}</td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-requested-cover-start-date">
                   {% if bond.requestedCoverStartDate %}
@@ -72,7 +72,7 @@
 
                   {% set dealSubmissionType = params.deal.details.submissionType %}
 
-                  {% set requestedCoverDateCanEdit = userIsMaker and not userIsChecker and bond.status !== "Maker's input required" and dealStatusAllowsRequestedCoverDateChange and dealSubmissionType === 'Manual Inclusion Application' and bond.bondStage === 'Issued' %}
+                  {% set requestedCoverDateCanEdit = userIsMaker and not userIsChecker and bond.status !== "Maker's input required" and dealStatusAllowsRequestedCoverDateChange and dealSubmissionType === 'Manual Inclusion Application' and bond.facilityStage === 'Issued' %}
 
                   {% if requestedCoverDateCanEdit %}
                     {{ requestedCoverStartDate.render(componentData) }}

@@ -2,7 +2,7 @@ const $ = require('mongo-dot-notation');
 const CONSTANTS = require('../../../constants');
 const issuedDateValidationRules = require('../../validation/fields/issued-date');
 
-const facilityHasValidIssuedDate = (facility, dealSubmissionDate) => {
+const facilityHasValidIssuedDate = (facility, deal) => {
   const emptyErrorList = {};
 
   if (!facility.issuedDate) {
@@ -12,7 +12,7 @@ const facilityHasValidIssuedDate = (facility, dealSubmissionDate) => {
   const issuedDateValidationErrors = issuedDateValidationRules(
     facility,
     emptyErrorList,
-    dealSubmissionDate,
+    deal,
   );
 
   if (!issuedDateValidationErrors.issuedDate) {
@@ -22,6 +22,70 @@ const facilityHasValidIssuedDate = (facility, dealSubmissionDate) => {
   return false;
 };
 
+const isLoanFacility = (facilityStage) => {
+  // TODO: workaround until we have a `facilityType` on every facility
+
+  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
+    || facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL) {
+    return true;
+  }
+
+  return false;
+};
+
+const isBondFacility = (facilityStage) => {
+  // TODO: workaround until we have a `facilityType` on every facility
+
+  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
+    || facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED) {
+    return true;
+  }
+
+  return false;
+};
+
+const loanHasBeenPreviouslyIssued = (facilityStage, previousFacilityStage) => {
+  // TODO: maybe don't need the previousFacilityStage check?
+
+  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
+      && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
+        || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL)) {
+    return true;
+  }
+  return false;
+};
+
+const bondHasBeenPreviouslyIssued = (facilityStage, previousFacilityStage) => {
+  // TODO: maybe don't need the previousFacilityStage check?
+
+  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
+    && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
+      || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED)) {
+    return true;
+  }
+
+  return false;
+};
+
+const shouldUpdateFacility = (facility) => {
+  const { facilityStage, previousFacilityStage } = facility;
+
+  if (isLoanFacility(facilityStage)) {
+    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
+      || loanHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)) {
+      return true;
+    }
+  }
+
+  if (isBondFacility(facilityStage)) {
+    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
+      || bondHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)) {
+      return true;
+    }
+  }
+
+  return false;
+};
 
 const updateIssuedFacilities = async (
   collection,
@@ -31,7 +95,6 @@ const updateIssuedFacilities = async (
   newStatus,
 ) => {
   const updatedDeal = deal;
-
   const dealStatusAllowsIssuedFacilitiesStatusChanges = (fromStatus && fromStatus !== 'Draft');
 
   const update = (facilities) => {
@@ -39,26 +102,7 @@ const updateIssuedFacilities = async (
 
     arr.forEach((f) => {
       const facility = f;
-      const {
-        facilityStage,
-        previousFacilityStage,
-        bondStage,
-      } = facility;
-
-      // TODO: rework this when we rename bondStage to facilityStage
-      const loanHasBeenPreviouslyIssued = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
-        && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
-            || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL);
-
-      const shouldUpdateLoan = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
-                               || loanHasBeenPreviouslyIssued;
-
-      const bondHasBeenPreviouslyIssued = (facility.bondStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
-        && (previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
-        || previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED));
-
-      const shouldUpdateBond = facility.bondStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
-                               || bondHasBeenPreviouslyIssued;
+      const { facilityStage } = facility;
 
       const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
                                   && facility.issueFacilityDetailsProvided
@@ -66,18 +110,18 @@ const updateIssuedFacilities = async (
                                   && facility.status !== CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED
                                   && (newStatus && newStatus.length > 0));
 
-      if (shouldUpdateLoan || shouldUpdateBond) {
+      if (shouldUpdateFacility(facility)) {
         if (facility.issueFacilityDetailsProvided && !facility.issueFacilityDetailsSubmitted) {
           if (shouldUpdateStatus) {
             facility.status = newStatus;
           }
 
-          if (facilityStage) {
-            facility.previousFacilityStage = facility.facilityStage;
-            facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL;
-          } else if (bondStage) {
-            facility.previousFacilityStage = facility.bondStage;
-            facility.bondStage = CONSTANTS.FACILITIES.BOND_STAGE.ISSUED;
+          facility.previousFacilityStage = facilityStage;
+
+          if (isLoanFacility(facilityStage)) {
+            facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
+          } else if (isBondFacility(facilityStage)) {
+            facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
           }
         } else if (shouldUpdateStatus) {
           // update all issued facilities regardless of if they've been submitted or have completed all required fields.
@@ -87,7 +131,7 @@ const updateIssuedFacilities = async (
         if (updateIssuedFacilitiesCoverStartDates
           && !facility.issueFacilityDetailsSubmitted
           && !facility.requestedCoverStartDate
-          && facilityHasValidIssuedDate(facility, deal.details.submissionDate)) {
+          && facilityHasValidIssuedDate(facility, deal)) {
           facility.requestedCoverStartDate = facility.issuedDate;
         }
       }

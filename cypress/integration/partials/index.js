@@ -4,4 +4,5 @@ module.exports = {
   bondProgressNav: require('./bondProgressNav'),
   loanProgressNav: require('./loanProgressNav'),
   ukefComments: require('./ukef-comments'),
+  skipLink: require('./skip-link'),
 };

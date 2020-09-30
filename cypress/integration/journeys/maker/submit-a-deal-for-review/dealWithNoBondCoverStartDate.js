@@ -8,6 +8,6 @@ const dealWithNoCoverStartDate = {...dealReadyToSubmitForReview };
 dealWithNoCoverStartDate.bondTransactions.items[0]['coverEndDate-day'] = moment(date).format('DD');
 dealWithNoCoverStartDate.bondTransactions.items[0]['coverEndDate-month'] = moment(date).format('MM');
 dealWithNoCoverStartDate.bondTransactions.items[0]['coverEndDate-year'] = moment(date).format('YYYY');
-dealWithNoCoverStartDate.bondTransactions.items[0].bondStage = 'Issued';
+dealWithNoCoverStartDate.bondTransactions.items[0].facilityStage = 'Issued';
 
 module.exports = dealWithNoCoverStartDate;

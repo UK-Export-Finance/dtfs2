@@ -15,7 +15,6 @@ const canIssueFacility = (userRoles, deal, facility) => {
 
   const {
     facilityStage,
-    bondStage,
     previousFacilityStage,
   } = facility;
 
@@ -34,15 +33,15 @@ const canIssueFacility = (userRoles, deal, facility) => {
   const isMiaDealInApprovedStatus = (submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
                                     && (acceptedByUkefDealStatus || status === CONSTANTS.DEAL.STATUS.INPUT_REQUIRED));
 
-  const allowedBondFacilityStage = bondStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
-    || (bondStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED
-        && (previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.UNISSUED
-            || previousFacilityStage === CONSTANTS.FACILITIES.BOND_STAGE.ISSUED));
+  const allowedBondFacilityStage = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
+    || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
+        && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
+            || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED));
 
-  const allowedLoanFacilityStage = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
-    || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL
-        && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.CONDITIONAL
-            || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL));
+  const allowedLoanFacilityStage = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
+    || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
+        && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
+            || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL));
 
   const allowedFacilityStage = (allowedLoanFacilityStage || allowedBondFacilityStage);
 

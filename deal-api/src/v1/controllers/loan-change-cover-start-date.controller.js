@@ -29,7 +29,7 @@ exports.updateLoanCoverStartDate = async (req, res) => {
       // TODO (?)
       // only allow the checks/modifications below
       // if all other fields in loan are valid
-      if (existingLoan.facilityStage !== CONSTANTS.FACILITIES.FACILITIES_STAGE.UNCONDITIONAL) {
+      if (existingLoan.facilityStage !== CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL) {
         return res.status(400).send();
       }
 
@@ -45,9 +45,7 @@ exports.updateLoanCoverStartDate = async (req, res) => {
 
       const validationErrors = loanIssueFacilityValidationErrors(
         loan,
-        deal.details.submissionType,
-        deal.details.submissionDate,
-        deal.details.manualInclusionNoticeSubmissionDate,
+        deal,
       );
 
       if (validationErrors.errorList.requestedCoverStartDate) {
