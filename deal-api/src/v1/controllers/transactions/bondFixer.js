@@ -1,4 +1,5 @@
 const GRAPHQL_FILTER_BY_TRANSACTION_TYPE = 'transaction.transactionType';
+const TRANSACTION_PREV_COVER_START_DATE = 'transaction.previousCoverStartDate';
 const TRANSACTION_STAGE = 'transaction.transactionStage';
 const FILTER_SEARCH = 'filterSearch';
 
@@ -30,6 +31,9 @@ const constructor = (listOfFilters) => {
       keyFields.filterByTransactionStage = fixTransactionStage(filter[TRANSACTION_STAGE]);
     }
 
+    if (TRANSACTION_PREV_COVER_START_DATE === filterField) {
+      keyFields.onlyShowNotNullPrevCoverStartDate = true;
+    }
     return true; // lint made me
   });
 
@@ -79,6 +83,12 @@ const constructor = (listOfFilters) => {
         }
       }
 
+      if (keyFields.onlyShowNotNullPrevCoverStartDate) {
+        if (!bond.previousCoverStartDate) {
+          return false;
+        }
+      }
+
       return true; // the filter should reject things that don't fit; if we reach here we have not rejected this record.
     }).map((bond) => ({
       // map whatever's still left into the generic schema that graphQL is expecting..
@@ -105,7 +115,7 @@ const constructor = (listOfFilters) => {
       maker: deal.details.maker ? `${deal.details.maker.firstname || ''} ${deal.details.maker.surname || ''}` : '',
       checker: deal.details.checker ? `${deal.details.checker.firstname || ''} ${deal.details.checker.surname || ''}` : '',
       issueFacilityDetailsSubmitted: bond.issueFacilityDetailsSubmitted,
-      requestedCoverStartDate: `${bond['requestedCoverStartDate-day']}/${bond['requestedCoverStartDate-month']}/${bond['requestedCoverStartDate-year']}`,
+      requestedCoverStartDate: bond.requestedCoverStartDate,
       previousCoverStartDate: bond.previousCoverStartDate,
       dateOfCoverChange: bond.dateOfCoverChange,
       issuedFacilitySubmittedToUkefTimestamp: bond.issuedFacilitySubmittedToUkefTimestamp,

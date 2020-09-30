@@ -46,15 +46,15 @@
           </td>
 
           <td data-cy="previousCoverStartDate" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.previousCoverStartDate }}
+            {{ transaction.previousCoverStartDate | localiseTimestamp('DD/MM/YYYY', user.timezone) | dashIfEmpty }}
           </td>
 
           <td data-cy="newRequestedCoverStartDate" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.requestedCoverStartDate }}
+            {{ transaction.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', user.timezone) | dashIfEmpty }}
           </td>
 
           <td data-cy="dateOfCoverChange" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.dateOfCoverChange }}
+            {{ transaction.dateOfCoverChange | localiseTimestamp('DD/MM/YYYY HH:mm', user.timezone) | dashIfEmpty }}
           </td>
 
           <td data-cy="maker" class="govuk-table__cell govuk-!-font-size-14">

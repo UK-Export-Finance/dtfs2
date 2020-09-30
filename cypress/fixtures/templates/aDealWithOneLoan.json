@@ -103,7 +103,13 @@
         "interestMarginFee": "5",
         "coveredPercentage": "40",
         "premiumType": "At maturity",
-        "dayCountBasis": "365"
+        "dayCountBasis": "365",
+        "requestedCoverStartDate-day" : "21",
+        "requestedCoverStartDate-month" : "09",
+        "requestedCoverStartDate-year" : "2020",
+        "requestedCoverStartDate" : "1600642800000",
+        "previousCoverStartDate" : "1600525297627",
+        "dateOfCoverChange" : "1600642800000"
       }
     ]
   }
