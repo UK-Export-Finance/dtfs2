@@ -54,7 +54,7 @@ const deal = {
       "user-status": "active",
       "username": "CHECKER"
     },
-    "submissionDate": "1599048725422",
+    "submissionDate": moment().utc().valueOf(),
     "previousWorkflowStatus": "approved",
     "ukefDealId": "1001349",
     "approvalDate": "1599048727451"
