@@ -49,11 +49,12 @@ jobs:
     - name: Alias record for service.gov.uk domain
       uses: Azure/cli@v1.0.0
       with:
+        # Based on:
+        #  - https://stackoverflow.com/questions/58316973/how-to-create-dns-a-record-usin-azure-cli-or-terraform
+        #  - https://github.com/Azure/azure-cli/issues/14200
         inlineScript: |
           front_door_id=$(az network front-door show --name ${{ env.front_door_name }} --query id -o tsv)
           az network dns record-set a create --name "@" --zone-name ${{ env.domain_name }} --target-resource $front_door_id
-          # az network dns record-set cname create --zone ${{ env.domain_name }} --name ${{ env.domain_name }}
-          # az network dns record-set cname set-record --zone ${{ env.domain_name }} --record-set-name ${{ env.domain_name }} --cname ${{ env.front_door_name }}.azurefd.net
 
     - name: Add domain name to Prod Front Door
       uses: Azure/cli@v1.0.0
@@ -73,4 +74,3 @@ jobs:
       with:
         inlineScript: |
           az network front-door check-custom-domain --host-name ${{ env.domain_name }} --name ${{ env.front_door_name }}
-          
