@@ -36,6 +36,11 @@ const dealsQuery = (user, filter) => {
           { 'details.bankSupplyContractID': { $regex: freetextSearch, $options: 'i' } },
           { 'details.ukefDealId': { $regex: freetextSearch, $options: 'i' } },
           { 'bondTransactions.items.uniqueIdentificationNumber': { $regex: freetextSearch, $options: 'i' } },
+          { 'submissionDetails.supplier-name': { $regex: freetextSearch, $options: 'i' } },
+          { 'submissionDetails.supplier-companies-house-registration-number': { $regex: freetextSearch, $options: 'i' } },
+          { 'submissionDetails.indemnifier-name': { $regex: freetextSearch, $options: 'i' } },
+          { 'submissionDetails.indemnifier-companies-house-registration-number': { $regex: freetextSearch, $options: 'i' } },
+          { 'submissionDetails.buyer-name': { $regex: freetextSearch, $options: 'i' } },
         ],
       };
     }
@@ -144,6 +149,7 @@ const fillInEligibilityCriteria = (criterias, answers) => criterias.map((criteri
 const createDeal = async (req, res) => {
   const collection = await db.getCollection('deals');
   const eligibilityCriteria = await findEligibilityCriteria();
+  const dealId = await generateDealId();
 
   const beingGivenEligibility = (req.body.eligibility && req.body.eligibility.criteria);
 
@@ -159,6 +165,7 @@ const createDeal = async (req, res) => {
 
   const time = now();
   const newDeal = {
+    _id: dealId,
     ...DEFAULTS.DEALS,
     ...req.body,
     details: {
@@ -184,10 +191,7 @@ const createDeal = async (req, res) => {
     });
   }
 
-  const response = await collection.insertOne({
-    _id: await generateDealId(),
-    ...newDeal,
-  });
+  const response = await collection.insertOne(newDeal);
 
   const createdDeal = response.ops[0];
   return res.status(200).send(createdDeal);
@@ -195,43 +199,6 @@ const createDeal = async (req, res) => {
 
 exports.create = async (req, res) => {
   const result = await createDeal(req, res);
-  return result;
-};
-
-const importDeal = async (req, res) => {
-  if (!isSuperUser(req.user)) {
-    res.status(401).send();
-  }
-
-  const collection = await db.getCollection('deals');
-
-  const newDeal = {
-    ...req.body,
-  };
-
-  const validationErrors = getDealErrors(newDeal);
-
-  if (validationErrors.count !== 0) {
-    return res.status(400).send({
-      ...newDeal,
-      validationErrors,
-    });
-  }
-
-  const response = await collection.insertOne({
-    _id: newDeal._id || await generateDealId(), // eslint-disable-line no-underscore-dangle
-    ...newDeal,
-  }).catch((err) => {
-    const status = err.code === 11000 ? 406 : 500;
-    return res.status(status).send(err);
-  });
-
-  const createdDeal = response.ops && response.ops[0];
-  return res.status(200).send(createdDeal);
-};
-
-exports.import = async (req, res) => {
-  const result = await importDeal(req, res);
   return result;
 };
 
@@ -359,4 +326,41 @@ exports.delete = async (req, res) => {
       }
     }
   });
+};
+
+const importDeal = async (req, res) => {
+  if (!isSuperUser(req.user)) {
+    res.status(401).send();
+  }
+
+  const collection = await db.getCollection('deals');
+
+  const newDeal = {
+    ...req.body,
+  };
+
+  const validationErrors = getDealErrors(newDeal);
+
+  if (validationErrors.count !== 0) {
+    return res.status(400).send({
+      ...newDeal,
+      validationErrors,
+    });
+  }
+
+  const response = await collection.insertOne({
+    _id: newDeal._id || await generateDealId(), // eslint-disable-line no-underscore-dangle
+    ...newDeal,
+  }).catch((err) => {
+    const status = err.code === 11000 ? 406 : 500;
+    return res.status(status).send(err);
+  });
+
+  const createdDeal = response.ops && response.ops[0];
+  return res.status(200).send(createdDeal);
+};
+
+exports.import = async (req, res) => {
+  const result = await importDeal(req, res);
+  return result;
 };
