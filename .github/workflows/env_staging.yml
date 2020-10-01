@@ -483,22 +483,6 @@ jobs:
         inlineScript: |
           az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB --server-version 3.6
 
-    - name: Private link
-      uses: Azure/cli@v1.0.0
-      with:
-        # Restrict inbound traffic to not be open to the Internet
-        # NB: group-id isn't well documented. It means "Target sub-resource"
-        #     The purpose of connection-name is unknown.
-        inlineScript: |
-          mongo_id=$(az cosmosdb show --name tfs-${{ env.environment }}-mongo --query "id" -o tsv)
-          az network private-endpoint create \
-            --name tfs-${{ env.environment }}-mongo \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "$mongo_id" \
-            --group-id MongoDB \
-            --connection-name tfs-${{ env.environment }}-mongo
-
     - name: DNS A-records
       uses: Azure/cli@v1.0.0
       with:
@@ -594,62 +578,21 @@ jobs:
         mongoimport "${{ env.MONGODB_URI }}" --db=${{ env.database_name }} --collection=idCounters --jsonArray --ssl --sslAllowInvalidCertificates --file=id-counters.json
         echo end.
 
-    - name: Add Deal ID counter 2
-      run: |
-        cat <<EOF > id-counters.js
-         db = db.getSiblingDB('tfs-portal')
-         try {
-           db.idCounters.insertMany([
-            {
-              "_id" : "DEAL_COUNTER",
-              "count" : 1000000
-            },
-            {
-             "_id" : "FACILITY_COUNTER",
-             "count" : 1000000
-            }
-           ])
-         } catch (err) {
-           print("Counter exists.")
-           print(err)
-         }
-        EOF
-        cat id-counters.js
-        echo Attempt 1...
-        mongo "${{ env.MONGODB_URI }}" --tls --tlsAllowInvalidCertificates id-counters.js
-        echo Attempt 2...
-        mongo "${{ env.MONGODB_URI }}" --tls --tlsAllowInvalidCertificates id-counters.js
-        echo Attempt 3...
-        mongo "${{ env.MONGODB_URI }}" --tls --tlsAllowInvalidCertificates id-counters.js
-        echo Attempt 4...
-        mongo "${{ env.MONGODB_URI }}" --tls --tlsAllowInvalidCertificates id-counters.js
-
-        echo end.
-
-    # - name: Add Facility ID counter
-    #   run: |
-    #     cat <<EOF > facility-counter.js
-    #     db = db.getSiblingDB('tfs-portal')
-    #     try {
-    #       db.idCounters.insertOne({
-    #         "_id" : "FACILITY_COUNTER",
-    #         "count" : 1000000
-    #       })
-    #     } catch (err) {
-    #       print("Facility counter exists.")
-    #       print(err)
-    #     }
-    #     EOF
-    #     cat facility-counter.js
-    #     echo Attempt 1...
-    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
-    #     echo Attempt 2...
-    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
-    #     echo Attempt 3...
-    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
-    #     echo Attempt 4...
-    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
-    #     echo end.
+    - name: Private link
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource"
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          mongo_id=$(az cosmosdb show --name tfs-${{ env.environment }}-mongo --query "id" -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-mongo \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-private-endpoints \
+            --private-connection-resource-id "$mongo_id" \
+            --group-id MongoDB \
+            --connection-name tfs-${{ env.environment }}-mongo
 
   file-storage:
     name: File storage
