@@ -36,7 +36,7 @@ router.get('/contract/:_id/about/buyer', provide([DEAL, COUNTRIES]), async (req,
   const { deal, countries } = req.apiData;
 
   let formattedValidationErrors = {};
-  if (deal.submissionDetails.hasBeenPreviewed) {
+  if (deal.submissionDetails.viewedPreviewPage) {
     const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
     formattedValidationErrors = generateErrorSummary(
       validationErrors,

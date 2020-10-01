@@ -253,7 +253,7 @@ const deal = {
       "name": "United States",
       "code": "USA",
     },
-    "hasBeenPreviewed": true,
+    "viewedPreviewPage": true,
     "supplyContractConversionRateToGBP": "1.123456",
     "supplyContractCurrency": {
       "id": "USD"

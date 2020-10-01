@@ -76,7 +76,7 @@ module.exports = {
     "buyer-address-town" : "New York",
     "buyer-name" : "Huggy Bear",
     "destinationOfGoodsAndServices" : "USA",
-    "hasBeenPreviewed" : true,
+    "viewedPreviewPage" : true,
     "supplyContractConversionRateToGBP" : "1.123456",
     "supplyContractCurrency" : {
         "id" : "USD",
