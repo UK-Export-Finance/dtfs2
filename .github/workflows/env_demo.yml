@@ -125,7 +125,7 @@ jobs:
 
   private-dns:
     name: Private DNS
-    needs: vnet
+    needs: [vnet, cosmos-db]
     runs-on: ubuntu-latest
     steps:
 
@@ -545,7 +545,16 @@ jobs:
         echo Attempt 4...
         mongo ${{ env.MONGODB_URI }} deal-counter.js
         echo end.
-      
+
+  cosmos-db-private:
+    name: Cosmos DB (Mongo) Private
+    needs: [cosmos-db, private-dns]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+          
     - name: Private link
       uses: Azure/cli@v1.0.0
       with:
