@@ -537,13 +537,13 @@ jobs:
         EOF
         cat deal-counter.js
         echo Attempt 1...
-        mongo ${{ env.MONGODB_URI }} deal-counter.js
+        mongo "${{ env.MONGODB_URI }}" deal-counter.js
         echo Attempt 2...
-        mongo ${{ env.MONGODB_URI }} deal-counter.js
+        mongo "${{ env.MONGODB_URI }}" deal-counter.js
         echo Attempt 3...
-        mongo ${{ env.MONGODB_URI }} deal-counter.js
+        mongo "${{ env.MONGODB_URI }}" deal-counter.js
         echo Attempt 4...
-        mongo ${{ env.MONGODB_URI }} deal-counter.js
+        mongo "${{ env.MONGODB_URI }}" deal-counter.js
         echo end.
 
   cosmos-db-private:
