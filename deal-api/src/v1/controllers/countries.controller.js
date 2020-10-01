@@ -25,7 +25,7 @@ const sortCountries = (arr, callback) => {
 const findCountries = async (callback) => {
   const collection = await db.getCollection('countries');
 
-  collection.find({ disabled: { $ne: 'true' } }).toArray((err, result) => {
+  collection.find({}).toArray((err, result) => {
     assert.equal(err, null);
     callback(result);
   });
