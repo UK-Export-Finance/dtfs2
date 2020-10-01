@@ -6,3 +6,6 @@ export const supplierValidationErrors = (validationErrors, submittedValues) =>
 
 export const buyerValidationErrors = (validationErrors, submittedValues) =>
   pageSpecificValidationErrors(validationErrors, FIELDS.BUYER, submittedValues);
+
+export const financialPageValidationErrors = (validationErrors, submittedValues) =>
+  pageSpecificValidationErrors(validationErrors, FIELDS.FINANCIAL, submittedValues);

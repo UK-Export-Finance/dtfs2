@@ -48,8 +48,10 @@ const FIELDS = {
     REQUIRED_FIELDS: [
       'supplyContractValue',
       'supplyContractCurrency',
+    ],
+    CONDITIONALLY_REQUIRED_FIELDS: [
       'supplyContractConversionRateToGBP',
-      'supplyContractValue',
+      'supplyContractConversionDate',
     ],
     OPTIONAL_FIELDS: [],
   },
