@@ -538,7 +538,7 @@ jobs:
         cat id-counters.json
         echo Attempt 1...
         echo "MONGO_URI: ${{ env.MONGODB_URI }}"
-        mongoimport "${{ env.MONGODB_URI }}" --db=${{ env.database_name }} --collection=idCounters --jsonArray --ssl --sslAllowInvalidCertificates --file=id-counters.json
+        mongoimport "${{ env.MONGODB_URI }}" --db=${{ env.database_name }} --collection=idCounters --jsonArray --file=id-counters.json
         echo end.
       
     - name: Private link
