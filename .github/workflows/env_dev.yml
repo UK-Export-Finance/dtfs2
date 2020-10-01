@@ -150,6 +150,9 @@ jobs:
           
           az network private-dns zone show   --name "privatelink.mongo.cosmos.azure.com" || \
           az network private-dns zone create --name "privatelink.mongo.cosmos.azure.com"
+          
+          az network private-dns zone show   --name "privatelink.file.core.windows.net" || \
+          az network private-dns zone create --name "privatelink.file.core.windows.net"
 
     - name: Link DNS zones to vnet
       uses: Azure/cli@v1.0.0
