@@ -480,56 +480,6 @@ jobs:
         inlineScript: |
           az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB --server-version 3.6
 
-    - name: Private link
-      uses: Azure/cli@v1.0.0
-      with:
-        # Restrict inbound traffic to not be open to the Internet
-        # NB: group-id isn't well documented. It means "Target sub-resource"
-        #     The purpose of connection-name is unknown.
-        inlineScript: |
-          mongo_id=$(az cosmosdb show --name tfs-${{ env.environment }}-mongo --query "id" -o tsv)
-          az network private-endpoint create \
-            --name tfs-${{ env.environment }}-mongo \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "$mongo_id" \
-            --group-id MongoDB \
-            --connection-name tfs-${{ env.environment }}-mongo
-
-    - name: DNS A-records
-      uses: Azure/cli@v1.0.0
-      with:
-        # We have to add explicit A records so that Mongo names resolve correctly to the private endpoint address
-        # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-private-endpoints#integrate-the-private-endpoint-with-a-private-dns-zone-1
-        # NB the zone name needs to be "privatelink.mongo.cosmos.azure.com" rather than "privatelink.documents.azure.com" as per the link above.
-        # NB ipConfigurations[0] appears to be the "primary". There's also a property called "requiredMemberName" that *seems* to be the value needed for record-set-name but I can't find any documentation on it, so sticking with [0] and [1] for now:
-        inlineScript: |
-          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com" --query "aRecords[0].ipv4Address" -o tsv || echo "")
-
-          if [ -z "$ipv4_address" ]
-          then
-            mongo_interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-mongo --query 'networkInterfaces[0].id' -o tsv)
-
-            mongo_interface_ip=$(az resource show --ids $mongo_interface_id --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
-            az network private-dns record-set a show   --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com" || \
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com"
-            az network private-dns record-set a add-record \
-              --record-set-name tfs-${{ env.environment }}-mongo \
-              --zone-name "privatelink.mongo.cosmos.azure.com" \
-              --ipv4-address $mongo_interface_ip
-
-            mongo_uksouth_interface_ip=$(az resource show --ids $mongo_interface_id --query "properties.ipConfigurations[1].properties.privateIPAddress" -o tsv)
-            az network private-dns record-set a show   --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com" || \
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com"
-            az network private-dns record-set a add-record \
-              --record-set-name tfs-${{ env.environment }}-mongo-uksouth \
-              --zone-name "privatelink.mongo.cosmos.azure.com" \
-              --ipv4-address $mongo_uksouth_interface_ip
-
-          else
-            echo "IP for tfs-${{ env.environment }}-mongo.privatelink.mongo.cosmos.azure.com is $ipv4_address"
-          fi
-
     - name: Database with autoscale
       uses: Azure/cli@v1.0.0
       with:
@@ -570,7 +520,76 @@ jobs:
           
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters --shard "_id"
-
+    
+    - name: Add Deal ID counter 1
+      run: |
+        cat <<EOF > id-counters.json
+          [
+            {
+              "_id" : "DEAL_COUNTER",
+              "count" : 1000000
+            },
+            {
+              "_id" : "FACILITY_COUNTER",
+              "count" : 1000000
+            }
+          ]
+        EOF
+        cat id-counters.json
+        echo Attempt 1...
+        echo "MONGO_URI: ${{ env.MONGODB_URI }}"
+        mongoimport "${{ env.MONGODB_URI }}" --db=${{ env.database_name }} --collection=idCounters --jsonArray --ssl --sslAllowInvalidCertificates --file=id-counters.json
+        echo end.
+      
+    - name: Private link
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource"
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          mongo_id=$(az cosmosdb show --name tfs-${{ env.environment }}-mongo --query "id" -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-mongo \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-private-endpoints \
+            --private-connection-resource-id "$mongo_id" \
+            --group-id MongoDB \
+            --connection-name tfs-${{ env.environment }}-mongo
+    
+            - name: DNS A-records
+            uses: Azure/cli@v1.0.0
+            with:
+              # We have to add explicit A records so that Mongo names resolve correctly to the private endpoint address
+              # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-private-endpoints#integrate-the-private-endpoint-with-a-private-dns-zone-1
+              # NB the zone name needs to be "privatelink.mongo.cosmos.azure.com" rather than "privatelink.documents.azure.com" as per the link above.
+              # NB ipConfigurations[0] appears to be the "primary". There's also a property called "requiredMemberName" that *seems* to be the value needed for record-set-name but I can't find any documentation on it, so sticking with [0] and [1] for now:
+              inlineScript: |
+                ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+      
+                if [ -z "$ipv4_address" ]
+                then
+                  mongo_interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-mongo --query 'networkInterfaces[0].id' -o tsv)
+      
+                  mongo_interface_ip=$(az resource show --ids $mongo_interface_id --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+                  az network private-dns record-set a show   --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com" || \
+                  az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com"
+                  az network private-dns record-set a add-record \
+                    --record-set-name tfs-${{ env.environment }}-mongo \
+                    --zone-name "privatelink.mongo.cosmos.azure.com" \
+                    --ipv4-address $mongo_interface_ip
+      
+                  mongo_uksouth_interface_ip=$(az resource show --ids $mongo_interface_id --query "properties.ipConfigurations[1].properties.privateIPAddress" -o tsv)
+                  az network private-dns record-set a show   --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com" || \
+                  az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com"
+                  az network private-dns record-set a add-record \
+                    --record-set-name tfs-${{ env.environment }}-mongo-uksouth \
+                    --zone-name "privatelink.mongo.cosmos.azure.com" \
+                    --ipv4-address $mongo_uksouth_interface_ip
+      
+                else
+                  echo "IP for tfs-${{ env.environment }}-mongo.privatelink.mongo.cosmos.azure.com is $ipv4_address"
+                fi
     # - name: Add Deal ID counter
     #   run: |
     #     cat <<EOF > deal-counter.js
