@@ -162,6 +162,9 @@ jobs:
           az network private-dns link vnet show   --name mongo-dns --zone-name "privatelink.mongo.cosmos.azure.com" || \
           az network private-dns link vnet create --name mongo-dns --zone-name "privatelink.mongo.cosmos.azure.com" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
 
+          az network private-dns link vnet show   --name mongo-dns --zone-name "privatelink.file.core.windows.net" || \
+          az network private-dns link vnet create --name mongo-dns --zone-name "privatelink.file.core.windows.net" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
+
   public-ip:
     name: Public IP
     runs-on: ubuntu-latest
@@ -671,6 +674,30 @@ jobs:
             --private-connection-resource-id "$file_storage_id" \
             --group-id file \
             --connection-name tfs-${{ env.environment }}-storage
+             
+    - name: DNS A-records
+      uses: Azure/cli@v1.0.0
+      with:
+        # We have to add explicit A records so that Stogare Accounts resolve correctly to the private endpoint address
+        # https://docs.microsoft.com/en-us/azure/storage/files/storage-files-networking-endpoints?tabs=azure-cli
+        inlineScript: |
+          ipv4_address=$(az network private-dns record-set a show --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+
+          if [ -z "$ipv4_address" ]
+          then
+            storage_interface_id=$(az network private-endpoint show --name tfs${{ env.environment }}storage --query 'networkInterfaces[0].id' -o tsv)
+            storage_interface_ip=$(az resource show --ids $storage_interface_id --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+
+            az network private-dns record-set a show   --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net" || \
+            az network private-dns record-set a create --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs${{ env.environment }}storage \
+              --zone-name "privatelink.file.core.windows.net" \
+              --ipv4-address $storage_interface_ip
+
+          else
+            echo "IP for tfs${{ env.environment }}storage.privatelink.file.core.windows.net is $ipv4_address"
+          fi
              
   session-store:
     name: Redis session store
