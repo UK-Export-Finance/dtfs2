@@ -521,29 +521,24 @@ jobs:
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters --shard "_id"
     
-    - name: Add Deal ID counter
+    - name: Add Deal ID counter 1
       run: |
-        cat <<EOF > deal-counter.js
-        db = db.getSiblingDB('tfs-portal')
-        try {
-          db.idCounters.insertOne({
-            "_id" : "DEAL_COUNTER",
-            "count" : 1000000
-          })
-        } catch (err) {
-          print("Deal counter exists.")
-          print(err)
-        }
+        cat <<EOF > id-counters.json
+          [
+            {
+              "_id" : "DEAL_COUNTER",
+              "count" : 1000000
+            },
+            {
+              "_id" : "FACILITY_COUNTER",
+              "count" : 1000000
+            }
+          ]
         EOF
-        cat deal-counter.js
+        cat id-counters.json
         echo Attempt 1...
-        mongo ${{ env.MONGODB_URI }} deal-counter.js
-        echo Attempt 2...
-        mongo ${{ env.MONGODB_URI }} deal-counter.js
-        echo Attempt 3...
-        mongo ${{ env.MONGODB_URI }} deal-counter.js
-        echo Attempt 4...
-        mongo ${{ env.MONGODB_URI }} deal-counter.js
+        echo "MONGO_URI: ${{ env.MONGODB_URI }}"
+        mongoimport "${{ env.MONGODB_URI }}" --db=${{ env.database_name }} --collection=idCounters --jsonArray --ssl --sslAllowInvalidCertificates --file=id-counters.json
         echo end.
 
   cosmos-db-private:
