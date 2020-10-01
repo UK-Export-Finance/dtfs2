@@ -29,7 +29,9 @@ export const shouldReturnRequiredValidation = (fields, fieldValues) => {
   const totalFieldValues = Object.keys(fieldValues).filter((fieldName) =>
     allFields.includes(fieldName) && fieldValues[fieldName].length > 0);
 
-  if (totalFieldValues.length > 0 || fieldValues.viewedPreviewPage) {
+  if (totalFieldValues.length > 0
+    || fieldValues.viewedPreviewPage
+    || fieldValues.hasBeenPreviewed) {
     return true;
   }
 

@@ -15,6 +15,8 @@ import {
 
 import calculateStatusOfEachPage from './navStatusCalculations';
 import updateSubmissionDetails from './updateSubmissionDetails';
+import { supplierValidationErrors } from './pageSpecificValidationErrors';
+
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 
 const router = express.Router();
@@ -42,13 +44,16 @@ router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COU
   let formattedValidationErrors = {};
   if (deal.submissionDetails.hasBeenPreviewed) {
     const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
+
     formattedValidationErrors = generateErrorSummary(
-      validationErrors,
+      supplierValidationErrors(validationErrors, deal.submissionDetails),
       errorHref,
     );
 
+    const errorSummary = generateErrorSummary(validationErrors, errorHref);
+
     deal.supplyContract = {
-      completedStatus: calculateStatusOfEachPage(Object.keys(formattedValidationErrors.errorList)),
+      completedStatus: calculateStatusOfEachPage(Object.keys(errorSummary.errorList)),
     };
   }
 
