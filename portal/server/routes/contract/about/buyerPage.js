@@ -13,6 +13,7 @@ import {
 
 import calculateStatusOfEachPage from './navStatusCalculations';
 import updateSubmissionDetails from './updateSubmissionDetails';
+import { buyerValidationErrors } from './pageSpecificValidationErrors';
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 
 const router = express.Router();
@@ -35,18 +36,15 @@ router.get('/contract/:_id/about/buyer', provide([DEAL, COUNTRIES]), async (req,
 
   const { deal, countries } = req.apiData;
 
-  let formattedValidationErrors = {};
-  if (deal.submissionDetails.viewedPreviewPage) {
-    const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
-    formattedValidationErrors = generateErrorSummary(
-      validationErrors,
-      errorHref,
-    );
+  const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
+  const errorSummary = generateErrorSummary(
+    validationErrors,
+    errorHref,
+  );
 
-    deal.supplyContract = {
-      completedStatus: calculateStatusOfEachPage(Object.keys(formattedValidationErrors.errorList)),
-    };
-  }
+  deal.supplyContract = {
+    completedStatus: calculateStatusOfEachPage(Object.keys(errorSummary.errorList)),
+  };
 
   const buyerAddressCountryCode = deal.submissionDetails['buyer-address-country'] && deal.submissionDetails['buyer-address-country'].code;
   const destinationOfGoodsAndServicesCountryCode = deal.submissionDetails.destinationOfGoodsAndServices
@@ -59,7 +57,7 @@ router.get('/contract/:_id/about/buyer', provide([DEAL, COUNTRIES]), async (req,
 
   return res.render('contract/about/about-supply-buyer.njk', {
     deal,
-    validationErrors: formattedValidationErrors,
+    validationErrors: buyerValidationErrors(validationErrors, deal.submissionDetails),
     mappedCountries,
     user: req.session.user,
   });

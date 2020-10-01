@@ -41,21 +41,13 @@ router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COU
     return res.redirect('/');
   }
 
-  let formattedValidationErrors = {};
-  if (deal.submissionDetails.viewedPreviewPage) {
-    const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
+  const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
 
-    formattedValidationErrors = generateErrorSummary(
-      supplierValidationErrors(validationErrors, deal.submissionDetails),
-      errorHref,
-    );
+  const errorSummary = generateErrorSummary(validationErrors, errorHref);
 
-    const errorSummary = generateErrorSummary(validationErrors, errorHref);
-
-    deal.supplyContract = {
-      completedStatus: calculateStatusOfEachPage(Object.keys(errorSummary.errorList)),
-    };
-  }
+  deal.supplyContract = {
+    completedStatus: calculateStatusOfEachPage(Object.keys(errorSummary.errorList)),
+  };
 
   // if data was submitted via companies house POST, it's not posted to API and we redirect to this route.
   // if we have this data in the session, combine with existing deal data to be rendered in the page.
@@ -84,7 +76,7 @@ router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COU
 
   return res.render('contract/about/about-supplier.njk', {
     deal,
-    validationErrors: formattedValidationErrors,
+    validationErrors: supplierValidationErrors(validationErrors, deal.submissionDetails),
     mappedCountries,
     industrySectors,
     mappedIndustrySectors,
