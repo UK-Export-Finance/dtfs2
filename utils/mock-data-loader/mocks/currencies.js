@@ -43,6 +43,7 @@ const CURRENCIES = [
     currencyId: 9,
     text: 'DZD - Algerian Dinar',
     id: 'DZD',
+    disabled: true,
   },
   {
     currencyId: 10,
@@ -78,6 +79,7 @@ const CURRENCIES = [
     currencyId: 16,
     text: 'IQD - Iraqi Dinar',
     id: 'IQD',
+    disabled: true,
   },
   {
     currencyId: 17,
@@ -103,11 +105,13 @@ const CURRENCIES = [
     currencyId: 21,
     text: 'LSL - Lesotho Maluti',
     id: 'LSL',
+    disabled: true,
   },
   {
     currencyId: 22,
     text: 'MWK - Malawi Kwacha',
     id: 'MWK',
+    disabled: true,
   },
   {
     currencyId: 23,
@@ -193,6 +197,7 @@ const CURRENCIES = [
     currencyId: 39,
     text: 'XAU - Gold',
     id: 'XAU',
+    disabled: true,
   },
   {
     currencyId: 40,
@@ -208,6 +213,7 @@ const CURRENCIES = [
     currencyId: 42,
     text: 'CNY - Chinese Yuan Renminbi',
     id: 'CNY',
+    disabled: true,
   },
   {
     currencyId: 43,
@@ -228,6 +234,7 @@ const CURRENCIES = [
     currencyId: 47,
     text: 'MOP - Pataca',
     id: 'MOP',
+    disabled: true,
   },
   {
     currencyId: 48,

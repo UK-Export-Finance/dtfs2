@@ -361,7 +361,7 @@ const banks = async (token) => {
   return response.data.banks;
 };
 
-const getCurrencies = async (token) => {
+const getCurrencies = async (token, includeDisabled) => {
   const response = await axios({
     method: 'get',
     url: `${urlRoot}/v1/currencies`,
@@ -371,13 +371,15 @@ const getCurrencies = async (token) => {
     },
   });
 
+  const filteredCurrencies = response.data.currencies.filter( currency => includeDisabled || !currency.disabled )
+
   return {
     status: response.status,
-    currencies: response.data.currencies,
+    currencies: filteredCurrencies,
   };
 };
 
-const getCountries = async (token) => {
+const getCountries = async (token, includeDisabled) => {
   const response = await axios({
     method: 'get',
     url: `${urlRoot}/v1/countries`,
@@ -387,9 +389,11 @@ const getCountries = async (token) => {
     },
   });
 
+  const filteredCountries = response.data.countries.filter( country => includeDisabled || !country.disabled )
+
   return {
     status: response.status,
-    countries: response.data.countries,
+    countries: filteredCountries,
   };
 };
 

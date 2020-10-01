@@ -40,12 +40,12 @@ describe('/v1/countries', () => {
       expect(status).toEqual(200);
     });
 
-    it('returns a list of countries that are not marked as disabled, alphebetized but with GBR/United Kingdom at the top', async () => {
-      await as(anEditor).postEach([nzl, hkg,dub,gbr]).to('/v1/countries');
+    it('returns a list of countries, alphebetized but with GBR/United Kingdom at the top', async () => {
+      await as(anEditor).postEach([nzl, hkg, dub, gbr]).to('/v1/countries');
 
       const { status, body } = await as(noRoles).get('/v1/countries');
 
-      const expectedOrder = [gbr, dub, nzl];
+      const expectedOrder = [gbr, dub, hkg, nzl];
 
       expect(status).toEqual(200);
       expect(body.countries).toEqual(expectMongoIds(expectedOrder));
