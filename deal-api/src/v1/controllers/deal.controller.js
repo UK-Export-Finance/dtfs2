@@ -327,3 +327,40 @@ exports.delete = async (req, res) => {
     }
   });
 };
+
+const importDeal = async (req, res) => {
+  if (!isSuperUser(req.user)) {
+    res.status(401).send();
+  }
+
+  const collection = await db.getCollection('deals');
+
+  const newDeal = {
+    ...req.body,
+  };
+
+  const validationErrors = getDealErrors(newDeal);
+
+  if (validationErrors.count !== 0) {
+    return res.status(400).send({
+      ...newDeal,
+      validationErrors,
+    });
+  }
+
+  const response = await collection.insertOne({
+    _id: newDeal._id || await generateDealId(), // eslint-disable-line no-underscore-dangle
+    ...newDeal,
+  }).catch((err) => {
+    const status = err.code === 11000 ? 406 : 500;
+    return res.status(status).send(err);
+  });
+
+  const createdDeal = response.ops && response.ops[0];
+  return res.status(200).send(createdDeal);
+};
+
+exports.import = async (req, res) => {
+  const result = await importDeal(req, res);
+  return result;
+};
