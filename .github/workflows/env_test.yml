@@ -772,15 +772,6 @@ jobs:
               --address-pool appGatewayBackendPool
           fi
 
-    - name: HTTPS listener (for data migration)
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network application-gateway http-listener create --gateway-name tfs-${{ env.environment }}-gw \
-            --name HttpsListener \
-            --frontend-port 443 \
-            --ssl-cert
-
     - name: Network Security Group
       uses: Azure/cli@v1.0.0
       with:
