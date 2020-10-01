@@ -38,7 +38,7 @@ router.get('/contract/:_id/about/financial', provide([CURRENCIES]), async (req, 
   const { deal, currencies } = req.apiData;
 
   let formattedValidationErrors = {};
-  if (deal.submissionDetails.hasBeenPreviewed) {
+  if (deal.submissionDetails.viewedPreviewPage) {
     const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
     formattedValidationErrors = generateErrorSummary(
       validationErrors,

@@ -32,7 +32,7 @@ router.get('/contract/:_id/about/preview', async (req, res) => {
 
   // TODO dirty hack; this is how we apply the business rule
   //  "don't display error messages unless the user has viewed the preview page"
-  await api.updateSubmissionDetails(deal, { hasBeenPreviewed: true }, userToken);
+  await api.updateSubmissionDetails(deal, { viewedPreviewPage: true }, userToken);
 
   const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
   const formattedValidationErrors = generateErrorSummary(

@@ -42,7 +42,7 @@ router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COU
   }
 
   let formattedValidationErrors = {};
-  if (deal.submissionDetails.hasBeenPreviewed) {
+  if (deal.submissionDetails.viewedPreviewPage) {
     const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
 
     formattedValidationErrors = generateErrorSummary(
