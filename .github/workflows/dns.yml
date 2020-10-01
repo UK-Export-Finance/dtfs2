@@ -1,0 +1,76 @@
+name: Production DNS
+
+on:
+  push:
+    branches: [ infrastructure ]
+    paths: 
+    - '.github/workflows/dns.yml'
+
+env:
+  credentials: ${{ secrets.AZURE_DIGITAL_PROD }}
+  resource_group: ${{ secrets.PROD_RESOURCE_GROUP }}
+  domain_name: "get-guarantee-export-finance.service.gov.uk"
+  front_door_name: tfs-prod-fd
+
+jobs:
+
+  zone:
+    name: Create service.gov.uk zone
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+          # Front door requires an extension to the az cli:
+          az extension add --name front-door
+
+    - name: Zone
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network dns zone create --name ${{ env.domain_name }}
+
+    - name: Front Door verification record
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network dns record-set cname create --zone ${{ env.domain_name }} --name afdverify.${{ env.domain_name }}
+          az network dns record-set cname set-record --zone ${{ env.domain_name }} --record-set-name afdverify.${{ env.domain_name }} --cname ${{ env.front_door_name }}.azurefd.net
+
+    - name: Alias record for service.gov.uk domain
+      uses: Azure/cli@v1.0.0
+      with:
+        # Based on:
+        #  - https://stackoverflow.com/questions/58316973/how-to-create-dns-a-record-usin-azure-cli-or-terraform
+        #  - https://github.com/Azure/azure-cli/issues/14200
+        inlineScript: |
+          front_door_id=$(az network front-door show --name ${{ env.front_door_name }} --query id -o tsv)
+          az network dns record-set a create --name "@" --zone-name ${{ env.domain_name }} --target-resource $front_door_id
+
+    - name: Add domain name to Prod Front Door
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network front-door frontend-endpoint create \
+            --front-door-name ${{ env.front_door_name }} \
+            --name "GOVUK" \
+            --host-name ${{ env.domain_name }}
+          az network front-door frontend-endpoint enable-https \
+            --front-door-name ${{ env.front_door_name }} \
+            --name "service.gov.uk"
+          
+
+    - name: Check domain name mapping
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network front-door check-custom-domain --host-name ${{ env.domain_name }} --name ${{ env.front_door_name }}

@@ -167,7 +167,7 @@ const generateTypeA = async (deal, fromStatus) => {
         .BSS_bank_id(bond.uniqueIdentificationNumber)
         .BSS_issuer(bond.bondIssuer)
         .BSS_type(k2Map.FACILITIES.TYPE[bond.bondType])
-        .BSS_stage(k2Map.FACILITIES.FACILITIES_STAGE[bond.facilityStage])
+        .BSS_stage(k2Map.FACILITIES.STAGE_BOND[bond.facilityStage])
         .BSS_beneficiary(bond.bondBeneficiary)
         .BSS_value(convertCurrencyFormat(bond.facilityValue))
         .BSS_currency_code(
@@ -224,7 +224,7 @@ const generateTypeA = async (deal, fromStatus) => {
           .EWCS_portal_facility_id(loan._id) // eslint-disable-line no-underscore-dangle
           .UKEF_EWCS_facility_id(loan.ukefFacilityID && loan.ukefFacilityID[0])
           .EWCS_bank_id(loan.bankReferenceNumber)
-          .EWCS_stage(k2Map.FACILITIES.FACILITIES_STAGE[loan.facilityStage])
+          .EWCS_stage(k2Map.FACILITIES.STAGE_LOAN[loan.facilityStage])
           .EWCS_value(convertCurrencyFormat(loan.facilityValue))
           .EWCS_currency_code(
             await convertCurrencyCodeToId(loanCurrencyId), // eslint-disable-line no-await-in-loop

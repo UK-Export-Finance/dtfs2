@@ -42,6 +42,12 @@ authRouter.route('/deals')
     deals.create,
   );
 
+authRouter.route('/deals/import')
+  .post(
+    validate({ role: ['data-admin'] }),
+    deals.import,
+  );
+
 authRouter.route('/deals/:id/status')
   .get(
     validate({ role: ['maker', 'checker'] }),
