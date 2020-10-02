@@ -371,7 +371,7 @@ const getCurrencies = async (token, includeDisabled) => {
     },
   });
 
-  const filteredCurrencies = response.data.currencies.filter( currency => includeDisabled || !currency.disabled )
+  const filteredCurrencies = response.data.currencies.filter((currency) => includeDisabled || !currency.disabled);
 
   return {
     status: response.status,
@@ -389,7 +389,7 @@ const getCountries = async (token, includeDisabled) => {
     },
   });
 
-  const filteredCountries = response.data.countries.filter( country => includeDisabled || !country.disabled )
+  const filteredCountries = response.data.countries.filter((country) => includeDisabled || !country.disabled);
 
   return {
     status: response.status,
