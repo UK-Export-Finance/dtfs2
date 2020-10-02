@@ -33,7 +33,6 @@ const FIELDS = {
   BUYER: {
     REQUIRED_FIELDS: [
       'buyer-name',
-      'buyer-name',
       'buyer-address-country',
       'buyer-address-line-1',
       'destinationOfGoodsAndServices',
