@@ -14,6 +14,7 @@ const FIELDS = {
       'supply-contract-description',
     ],
     CONDITIONALLY_REQUIRED_FIELDS: [
+      'supplier-address-postcode',
       'supplier-correspondence-address-country',
       'supplier-correspondence-address-line-1',
       'supplier-correspondence-address-postcode',
