@@ -125,7 +125,7 @@ jobs:
 
   private-dns:
     name: Private DNS
-    needs: [vnet, cosmos-db]
+    needs: [vnet, cosmos-db-init]
     runs-on: ubuntu-latest
     steps:
 
@@ -449,8 +449,8 @@ jobs:
               GOV_NOTIFY_API_KEY="${{ env.GOV_NOTIFY_API_KEY }}" \
               GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}"
 
-  cosmos-db:
-    name: Cosmos DB (Mongo)
+  cosmos-db-create:
+    name: Cosmos DB (Mongo) Create
     needs: vnet
     runs-on: ubuntu-latest
     steps:
@@ -464,6 +464,12 @@ jobs:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
+
+    - name: Remove previous private-endpoint
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-endpoint delete --name tfs-${{ env.environment }}-mongo
 
     - name: Cosmos account for mongodb
       uses: Azure/cli@v1.0.0
@@ -487,6 +493,22 @@ jobs:
         # TODO: enable continuous backup once that becomes available - looks like it's in private beta at the moment.
         inlineScript: |
           az cosmosdb mongodb database create --account tfs-${{ env.environment }}-mongo --name ${{ env.database_name }} --max-throughput 4000
+
+  cosmos-db-init:
+    name: Cosmos DB (Mongo) Initialise Collections
+    needs: cosmos-db-create
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
 
     - name: Collections
       uses: Azure/cli@v1.0.0
@@ -521,15 +543,21 @@ jobs:
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters --shard "_id"
     
-    - name: Add Deal ID counter
+    - name: Populate Collections
       run: |
         cat <<EOF > deal-counter.js
         db = db.getSiblingDB('tfs-portal')
         try {
-          db.idCounters.insertOne({
-            "_id" : "DEAL_COUNTER",
-            "count" : 1000000
-          })
+          db.idCounters.insertMany([
+            {
+              "_id" : "DEAL_COUNTER",
+              "count" : 1000000
+            },
+            {
+              "_id" : "FACILITY_COUNTER",
+              "count" : 1000000
+            }
+          ])
         } catch (err) {
           print("Deal counter exists.")
           print(err)
@@ -537,23 +565,25 @@ jobs:
         EOF
         cat deal-counter.js
         echo Attempt 1...
-        mongo ${{ env.MONGODB_URI }} --tls tlsAllowInvalidCertificates deal-counter.js
-        echo Attempt 2...
-        mongo ${{ env.MONGODB_URI }} --tls tlsAllowInvalidCertificates deal-counter.js
-        echo Attempt 3...
-        mongo ${{ env.MONGODB_URI }} --tls tlsAllowInvalidCertificates deal-counter.js
-        echo Attempt 4...
-        mongo ${{ env.MONGODB_URI }} --tls tlsAllowInvalidCertificates deal-counter.js
+        dig tfs-demo-mongo.mongo.cosmos.azure.com
+        mongo "${{ env.MONGODB_URI }}" deal-counter.js
         echo end.
-
+          
   cosmos-db-private:
-    name: Cosmos DB (Mongo) Private
-    needs: [cosmos-db, private-dns]
+    name: Cosmos DB (Mongo) Make Private
+    needs: [cosmos-db-init, private-dns]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
       with:
         creds: ${{ env.credentials }}
+      
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}         
           
     - name: Private link
       uses: Azure/cli@v1.0.0

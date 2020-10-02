@@ -577,7 +577,7 @@ jobs:
         echo "MONGO_URI: ${{ env.MONGODB_URI }}"
         mongoimport "${{ env.MONGODB_URI }}" --db=${{ env.database_name }} --collection=idCounters --jsonArray --ssl --sslAllowInvalidCertificates --file=id-counters.json
         echo end.
-
+    
     - name: Private link
       uses: Azure/cli@v1.0.0
       with:
