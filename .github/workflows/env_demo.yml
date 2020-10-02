@@ -167,8 +167,8 @@ jobs:
           az network private-dns link vnet show   --name mongo-dns --zone-name "privatelink.mongo.cosmos.azure.com" || \
           az network private-dns link vnet create --name mongo-dns --zone-name "privatelink.mongo.cosmos.azure.com" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
 
-          az network private-dns link vnet show   --name mongo-dns --zone-name "privatelink.file.core.windows.net" || \
-          az network private-dns link vnet create --name mongo-dns --zone-name "privatelink.file.core.windows.net" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
+          az network private-dns link vnet show   --name storage-dns --zone-name "privatelink.file.core.windows.net" || \
+          az network private-dns link vnet create --name storage-dns --zone-name "privatelink.file.core.windows.net" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
 
   public-ip:
     name: Public IP
@@ -775,15 +775,21 @@ jobs:
 
           if [ -z "$ipv4_address" ]
           then
+            echo "Setting up private DNS for tfs${{ env.environment }}storage.privatelink.file.core.windows.net"
             storage_interface_id=$(az network private-endpoint show --name tfs${{ env.environment }}storage --query 'networkInterfaces[0].id' -o tsv)
+            echo "Storage interface id: $storage_interface_id"
             storage_interface_ip=$(az resource show --ids $storage_interface_id --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+            echo "Storage interface IP: $storage_interface_ip"
 
+            echo "Creating record"
             az network private-dns record-set a show   --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net" || \
             az network private-dns record-set a create --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net"
+            echo "Setting record value"
             az network private-dns record-set a add-record \
               --record-set-name tfs${{ env.environment }}storage \
               --zone-name "privatelink.file.core.windows.net" \
               --ipv4-address $storage_interface_ip
+            echo "Done."
 
           else
             echo "IP for tfs${{ env.environment }}storage.privatelink.file.core.windows.net is $ipv4_address"
@@ -868,7 +874,7 @@ jobs:
           if [ ! -z "$cert" ]
           then
             # Create the certificate file from the secret value:
-            echo $cert | base64 --decode > test.pfx
+            echo $cert | base64 -d > test.pfx
 
             az network application-gateway ssl-cert create \
               --gateway-name tfs-${{ env.environment }}-gw \
