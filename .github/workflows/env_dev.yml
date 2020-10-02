@@ -811,7 +811,7 @@ jobs:
                 --gateway-name tfs-${{ env.environment }}-gw \
                 --name ${{ env.environment }}-migration \
                 --http-listener ${{ env.environment }}-https \
-                --http-settings appGatewayBackendHttpSetting \
+                --http-settings appGatewayBackendHttpSettings \
                 --address-pool appGatewayBackendPool
           fi
 
