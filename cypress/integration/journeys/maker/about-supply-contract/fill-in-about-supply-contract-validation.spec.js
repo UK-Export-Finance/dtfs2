@@ -1,6 +1,7 @@
 const {
   contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
 } = require('../../../pages');
+const partials = require('../../../partials');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
 const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
@@ -46,6 +47,8 @@ context('about-supply-contract', () => {
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
+
+    partials.errorSummary.errorSummaryLinks().should('have.length', 18);
 
     // prove validation of all non-conditional pieces
     contractAboutPreview.expectError('Supplier type is required');
