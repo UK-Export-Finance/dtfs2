@@ -757,7 +757,7 @@ jobs:
           if [ ! -z "$cert" ]
           then
             # Create the certificate file from the secret value:
-            echo $cert | base64 --decode > test.pfx
+            echo $cert | base64 -d > test.pfx
 
             az network application-gateway ssl-cert create \
               --gateway-name tfs-${{ env.environment }}-gw \
