@@ -592,7 +592,7 @@ jobs:
           print(err)
         }
         EOF
-        echo Initialising idCounters & adding root user
+        echo "Initialising idCounters and adding root user"
         mongo "${{ env.MONGODB_URI }}" deal-counter.js
         echo end.
           
