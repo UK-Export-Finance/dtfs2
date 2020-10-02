@@ -454,7 +454,7 @@ jobs:
 
   cosmos-db:
     name: Cosmos DB (Mongo)
-    needs: vnet
+    needs: [vnet, private-dns]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -596,7 +596,7 @@ jobs:
 
   file-storage:
     name: File storage
-    needs: vnet
+    needs: [vnet, private-dns]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -680,7 +680,7 @@ jobs:
              
   session-store:
     name: Redis session store
-    needs: vnet
+    needs: [vnet, private-dns]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
