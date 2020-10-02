@@ -759,17 +759,20 @@ jobs:
             # Create the certificate file from the secret value:
             echo $cert | base64 -d > test.pfx
 
+            echo "Creating SSL cert..."
             az network application-gateway ssl-cert create \
               --gateway-name tfs-${{ env.environment }}-gw \
               --name ${{ env.environment }}-cert
               --cert-password ${{ env.MIGRATION_SSL_CERTIFICATE_PASSWORD }} \
               --cert-file cert.pfx
 
+            echo "Creating HTTP listener..."
             az network application-gateway http-listener create --gateway-name tfs-${{ env.environment }}-gw \
               --name ${{ env.environment }}-https \
               --frontend-port 443 \
               --ssl-cert ${{ env.environment }}-cert
 
+            echo "Creating rule..."
             az network application-gateway rule create \
               --gateway-name tfs-${{ env.environment }}-gw \
               --name ${{ env.environment }}-migration
