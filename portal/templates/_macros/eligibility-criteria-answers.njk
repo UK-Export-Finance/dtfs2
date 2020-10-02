@@ -6,53 +6,54 @@
     <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-4">
       {% for criterion in eligibility.criteria %}
 
-        <div class="eligibility-criteria-row">
-          <h7 class="govuk-heading-s govuk-!-margin-bottom-1">
+        <div class="eligibility-criteria-row govuk-!-margin-bottom-2">
+          <dt class="govuk-!-margin-bottom-1 criterion-heading">
             <span data-cy="criterion-{{ criterion.id }}-heading">Eligibility criterion {{ criterion.id }}</span>
-            <span class="govuk-body-s govuk-!-font-weight-regular govuk-!-margin-left-4" data-cy="criterion-{{ criterion.id }}-answer">
-              {% if criterion.answer != undefined %}
-                {{ criterion.answer | string | capitalize }}
-              {% endif %}
-            </span>
-          </h7>
-        </div>
+            {% if criterion.answer != undefined %}
+              <span class="govuk-body govuk-!-margin-left-4" data-cy="criterion-{{ criterion.id }}-answer">{{ criterion.answer | string | capitalize }}</span>
+            {% endif %}
+          </dt>
 
-        <p class="govuk-body-s govuk-hint" data-cy="criterion-{{ criterion.id }}-description">{{ criterion.description }}</p>
+          <dd class="govuk-hint govuk-!-margin-left-0" data-cy="criterion-{{ criterion.id }}-description">{{ criterion.description }}</dd>
+        </div>
 
         {% if criterion.id === 11 %}
 
           {% set hasAgentAddressLine = eligibility.agentAddressLine1 | length or eligibility.agentAddressLine2 | length or eligibility.agentAddressLine3 | length %}
           {% set renderAgentAddress = hasAgentAddressLine or eligibility.agentAddressTown | length or eligibilityagentAddressPostcode | length %}
    
-          <div class="eligibility-criteria-row">
+          {% if eligibility.agentName or renderAgentAddress %}
+            <div class="eligibility-criteria-row govuk-!-margin-bottom-2">
 
-            {% if eligibility.agentName %}
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key govuk-body-s">
-                  Agent's corporate name
-                </dt>
-                <dd class="govuk-summary-list__value govuk-body-s">
-                  {{ eligibility.agentName }}
-                </dd>
-              </div>
-            {% endif %}
-
-            {% if renderAgentAddress %}
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key govuk-body-s">
-                  Agent's corporate address
-                </dt>
-                <dd class="govuk-summary-list__value govuk-body-s">
-                  <p>{{ eligibility.agentAddressLine1 }}</p>
-                  <p>{{ eligibility.agentAddressLine2 }}</p>
-                  <p>{{ eligibility.agentAddressLine3 }}</p>
-                  <p>{{ eligibility.agentAddressTown }}</p>
-                  <p>{{ eligibility.agentAddressPostcode }}</p>
-                  <p>{{ eligibility.agentAddressCountry }}</p>
-                </dd>
-              </div>
+              {% if eligibility.agentName %}
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key govuk-body-s">
+                    Agent's corporate name
+                  </dt>
+                  <dd class="govuk-summary-list__value govuk-body-s">
+                    {{ eligibility.agentName }}
+                  </dd>
+                </div>
               {% endif %}
-          </div>
+
+              {% if renderAgentAddress %}
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key govuk-body-s">
+                    Agent's corporate address
+                  </dt>
+                  <dd class="govuk-summary-list__value govuk-body-s">
+                    <p>{{ eligibility.agentAddressLine1 }}</p>
+                    <p>{{ eligibility.agentAddressLine2 }}</p>
+                    <p>{{ eligibility.agentAddressLine3 }}</p>
+                    <p>{{ eligibility.agentAddressTown }}</p>
+                    <p>{{ eligibility.agentAddressPostcode }}</p>
+                    <p>{{ eligibility.agentAddressCountry }}</p>
+                  </dd>
+                </div>
+                {% endif %}
+            </div>
+
+          {% endif %}
 
         {% endif %}
 
