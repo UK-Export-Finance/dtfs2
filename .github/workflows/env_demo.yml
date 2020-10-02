@@ -35,6 +35,9 @@ env:
   AZURE_WORKFLOW_EXPORT_FOLDER: "${{ secrets.DEMO_AZURE_WORKFLOW_EXPORT_FOLDER }}"
   AZURE_WORKFLOW_IMPORT_FOLDER: "${{ secrets.DEMO_AZURE_WORKFLOW_IMPORT_FOLDER }}"
   MONGODB_URI: "${{ secrets.DEMO_MONGODB_URI }}"
+  MONGODB_ROOT_USERNAME: "${{ secrets.DEMO_MONGODB_ROOT_USERNAME }}"
+  MONGODB_ROOT_SALT: "${{ secrets.DEMO_MONGODB_ROOT_SALT }}"
+  MONGODB_ROOT_HASH: "${{ secrets.DEMO_MONGODB_ROOT_HASH}}"
   REDIS_URI: "${{ secrets.DEMO_REDIS_URI }}"
   JWT_SIGNING_KEY: "${{ secrets.DEMO_JWT_SIGNING_KEY }}"
   JWT_VALIDATING_KEY: "${{ secrets.DEMO_JWT_VALIDATING_KEY }}"
@@ -562,10 +565,34 @@ jobs:
           print("Deal counter exists.")
           print(err)
         }
+        try {
+          db.users.insertOne(
+            {
+              "_id" : ObjectId('000000000000000000000001'),
+              "user-status": "active",
+              "timezone": "Europe/London",
+              "username": "${{ env.MONGODB_ROOT_USERNAME }}",
+              "firstname": "ROOT",
+              "surname": "USER",
+              "email": "",
+              "roles": [
+                "maker",
+                "editor",
+                "admin"
+              ],
+              "bank": {
+                "id": "*"
+              },
+              salt: "${{ env.MONGODB_ROOT_SALT }}",
+              hash: "${{ env.MONGODB_ROOT_HASH }}"
+            },    
+          )
+        } catch (err) {
+          print("Deal counter exists.")
+          print(err)
+        }
         EOF
-        cat deal-counter.js
-        echo Attempt 1...
-        dig tfs-demo-mongo.mongo.cosmos.azure.com
+        echo Initialising idCounters & adding root user
         mongo "${{ env.MONGODB_URI }}" deal-counter.js
         echo end.
           
