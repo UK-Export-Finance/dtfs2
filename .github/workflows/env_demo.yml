@@ -535,14 +535,9 @@ jobs:
           print(err)
         }
         EOF
+        ls -al
         cat deal-counter.js
         echo Attempt 1...
-        mongo "${{ env.MONGODB_URI }}" deal-counter.js
-        echo Attempt 2...
-        mongo "${{ env.MONGODB_URI }}" deal-counter.js
-        echo Attempt 3...
-        mongo "${{ env.MONGODB_URI }}" deal-counter.js
-        echo Attempt 4...
         mongo "${{ env.MONGODB_URI }}" deal-counter.js
         echo end.
 
@@ -561,7 +556,7 @@ jobs:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}         
-          
+
     - name: Private link
       uses: Azure/cli@v1.0.0
       with:
