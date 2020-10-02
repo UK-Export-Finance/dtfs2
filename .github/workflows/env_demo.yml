@@ -465,6 +465,12 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
+    - name: Remove previous private-endpoint
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-endpoint delete --name tfs-${{ env.environment }}-mongo
+
     - name: Cosmos account for mongodb
       uses: Azure/cli@v1.0.0
       with:
