@@ -789,7 +789,8 @@ jobs:
           if [ ! -z "$cert" ]
           then
             # Create the certificate file from the secret value:
-            echo $cert | base64 -d > test.pfx
+            echo $cert | base64 -d > cert.pfx
+            ls -lah cert.pfx
 
             echo "Creating SSL cert..."
             az network application-gateway ssl-cert create \
