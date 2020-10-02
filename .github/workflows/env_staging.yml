@@ -767,13 +767,13 @@ jobs:
               --cert-file cert.pfx
 
             echo "Creating frontend port"
-            az network application-gateway frontend-port create
-              --gateway-name tfs-${{ env.environment }}-gw 
-              --name tfs-${{ env.environment }}-port-https
+            az network application-gateway frontend-port create \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name tfs-${{ env.environment }}-port-https \
               --port 443
 
             echo "Creating HTTP listener..."
-            az network application-gateway http-listener create 
+            az network application-gateway http-listener create \
               --gateway-name tfs-${{ env.environment }}-gw \
               --name ${{ env.environment }}-https \
               --frontend-port tfs-${{ env.environment }}-port-https \
@@ -782,7 +782,7 @@ jobs:
             echo "Creating rule..."
             az network application-gateway rule create \
               --gateway-name tfs-${{ env.environment }}-gw \
-              --name ${{ env.environment }}-migration
+              --name ${{ env.environment }}-migration \
               --http-listener ${{ env.environment }}-https \
               --http-settings appGatewayBackendHttpSetting \
               --address-pool appGatewayBackendPool
