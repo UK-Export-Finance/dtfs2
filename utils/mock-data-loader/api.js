@@ -357,6 +357,36 @@ const resetIdCounters = async (token) => {
     .catch((err) => { console.log(`ERROR resetting id counters: ${err}`); });
 };
 
+const updateCurrency = async (currency, token) => {
+  const response = await axios({
+    method: 'put',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/currencies/${currency.id}`,
+    data: currency,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response.data;
+};
+
+const updateCountry = async (country, token) => {
+  const response = await axios({
+    method: 'put',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/countries/${country.code}`,
+    data: country,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response.data;
+};
+
 module.exports = {
   createBank,
   createCurrency,
@@ -383,4 +413,6 @@ module.exports = {
   listEligibilityCriteria,
   listUsers,
   resetIdCounters,
+  updateCountry,
+  updateCurrency,
 };
