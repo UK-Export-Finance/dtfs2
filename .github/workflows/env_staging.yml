@@ -116,15 +116,16 @@ jobs:
             --delegations Microsoft.Web/serverFarms \
             --address-prefixes 10.0.200.0/28
 
-    - name: Virtual machine subnet
-      uses: Azure/cli@v1.0.0
-      with:
-        # Subnet for a temporary maintenance virtual machine.
-        inlineScript: |
-          az network vnet subnet create \
-            --name ${{ env.resource_group }}-vm \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes 10.0.210.0/28
+    # We'll aim to move this out of this section and consolidate into a single VM job:
+    # - name: Virtual machine subnet
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # Subnet for a temporary maintenance virtual machine.
+    #     inlineScript: |
+    #       az network vnet subnet create \
+    #         --name ${{ env.resource_group }}-vm \
+    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+    #         --address-prefixes 10.0.210.0/28
 
   private-dns:
     name: Private DNS
@@ -757,7 +758,7 @@ jobs:
     #       if [ ! -z "$cert" ]
     #       then
     #         # Create the certificate file from the secret value:
-    #         echo $cert | base64 -d > test.pfx
+    #         echo $cert | base64 -d > cert.pfx
 
     #         echo "Creating SSL cert..."
     #         az network application-gateway ssl-cert create \
@@ -795,7 +796,7 @@ jobs:
             echo "Creating SSL cert..."
             az network application-gateway ssl-cert create \
               --gateway-name tfs-${{ env.environment }}-gw \
-              --name ${{ env.environment }}-cert
+              --name ${{ env.environment }}-cert \
               --cert-password ${{ env.MIGRATION_SSL_CERTIFICATE_PASSWORD }} \
               --cert-file cert.pfx
           fi
