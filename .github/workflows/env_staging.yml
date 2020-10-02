@@ -641,12 +641,12 @@ jobs:
         inlineScript: |
           file_storage_id=$(az storage account show --name tfs${{ env.environment }}storage --query "id" -o tsv)
           az network private-endpoint create \
-            --name tfs-${{ env.environment }}-storage \
+            --name tfs${{ env.environment }}storage \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.environment }}-private-endpoints \
             --private-connection-resource-id "$file_storage_id" \
             --group-id file \
-            --connection-name tfs-${{ env.environment }}-storage
+            --connection-name tfs${{ env.environment }}storage
              
     - name: DNS A-records
       uses: Azure/cli@v1.0.0
