@@ -167,8 +167,8 @@ jobs:
           az network private-dns link vnet show   --name mongo-dns --zone-name "privatelink.mongo.cosmos.azure.com" || \
           az network private-dns link vnet create --name mongo-dns --zone-name "privatelink.mongo.cosmos.azure.com" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
 
-          az network private-dns link vnet show   --name mongo-dns --zone-name "privatelink.file.core.windows.net" || \
-          az network private-dns link vnet create --name mongo-dns --zone-name "privatelink.file.core.windows.net" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
+          az network private-dns link vnet show   --name storage-dns --zone-name "privatelink.file.core.windows.net" || \
+          az network private-dns link vnet create --name storage-dns --zone-name "privatelink.file.core.windows.net" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
 
   public-ip:
     name: Public IP
