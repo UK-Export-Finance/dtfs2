@@ -759,19 +759,22 @@ jobs:
           then
             # Create the certificate file from the secret value:
             echo $cert | base64 -d > cert.pfx
-            ls -lah cert.pfx
 
-            echo "Creating SSL cert..."
             az network application-gateway ssl-cert create \
               --gateway-name tfs-${{ env.environment }}-gw \
               --name ${{ env.environment }}-cert \
               --cert-password ${{ env.MIGRATION_SSL_CERTIFICATE_PASSWORD }} \
               --cert-file cert.pfx
 
+            az network application-gateway frontend-port create
+              --gateway-name tfs-${{ env.environment }}-gw 
+              --name tfs-${{ env.environment }}-port-https
+              --port 443
+
             echo "Creating HTTP listener..."
             az network application-gateway http-listener create --gateway-name tfs-${{ env.environment }}-gw \
               --name ${{ env.environment }}-https \
-              --frontend-port 443 \
+              --frontend-port tfs-${{ env.environment }}-port-https \
               --ssl-cert ${{ env.environment }}-cert
 
             echo "Creating rule..."
@@ -782,55 +785,6 @@ jobs:
               --http-settings appGatewayBackendHttpSetting \
               --address-pool appGatewayBackendPool
           fi
-
-    # - name: SSL Cert for data migration
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     inlineScript: |
-    #       cert="${{ env.MIGRATION_SSL_CERTIFICATE }}"
-    #       if [ ! -z "$cert" ]
-    #       then
-    #         # Create the certificate file from the secret value:
-    #         echo $cert | base64 -d > cert.pfx
-    #         ls -lah cert.pfx
-
-    #         echo "Creating SSL cert..."
-    #         az network application-gateway ssl-cert create \
-    #           --gateway-name tfs-${{ env.environment }}-gw \
-    #           --name ${{ env.environment }}-cert \
-    #           --cert-password ${{ env.MIGRATION_SSL_CERTIFICATE_PASSWORD }} \
-    #           --cert-file cert.pfx
-    #       fi
-
-    # - name: HTTP listener for data migration
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     inlineScript: |
-    #       cert="${{ env.MIGRATION_SSL_CERTIFICATE }}"
-    #       if [ ! -z "$cert" ]
-    #       then
-    #         echo "Creating HTTP listener..."
-    #         az network application-gateway http-listener create --gateway-name tfs-${{ env.environment }}-gw \
-    #           --name ${{ env.environment }}-https \
-    #           --frontend-port 443 \
-    #           --ssl-cert ${{ env.environment }}-cert
-    #       fi
-
-    # - name: Gateway rule for data migration
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     inlineScript: |
-    #       cert="${{ env.MIGRATION_SSL_CERTIFICATE }}"
-    #       if [ ! -z "$cert" ]
-    #       then
-    #         echo "Creating rule..."
-    #         az network application-gateway rule create \
-    #           --gateway-name tfs-${{ env.environment }}-gw \
-    #           --name ${{ env.environment }}-migration
-    #           --http-listener ${{ env.environment }}-https \
-    #           --http-settings appGatewayBackendHttpSetting \
-    #           --address-pool appGatewayBackendPool
-    #       fi
 
     - name: Network Security Group
       uses: Azure/cli@v1.0.0
