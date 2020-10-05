@@ -1,4 +1,3 @@
-import * as govukFrontend from 'govuk-frontend';
 import * as showHideElement from './show-hide-element';
 import * as maskedInputs from './masked-inputs';
 import * as changeIndustryClasses from './change-industry-classes';
@@ -9,12 +8,6 @@ jest.mock('govuk-frontend');
 
 
 describe('main.js', () => {
-  it('should call initAll() from govuk-frontend', () => {
-    const spy = jest.spyOn(govukFrontend, 'initAll');
-    main();
-    expect(spy).toHaveBeenCalled();
-  });
-
   it('should call showHideElement()', () => {
     showHideElement.default = jest.fn();
     main();
