@@ -1,5 +1,4 @@
 import * as showHideElement from './show-hide-element';
-import * as maskedInputs from './masked-inputs';
 import * as changeIndustryClasses from './change-industry-classes';
 import * as number from './number';
 import main from './main';
