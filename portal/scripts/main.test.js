@@ -14,12 +14,6 @@ describe('main.js', () => {
     expect(showHideElement.default).toHaveBeenCalled();
   });
 
-  it('should call maskedInputs()', () => {
-    maskedInputs.default = jest.fn();
-    main();
-    expect(maskedInputs.default).toHaveBeenCalled();
-  });
-
   it('should call changeIndustryClasses()', () => {
     changeIndustryClasses.default = jest.fn();
     main();
