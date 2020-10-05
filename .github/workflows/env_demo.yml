@@ -572,7 +572,7 @@ jobs:
               "_id" : ObjectId('000000000000000000000001'),
               "user-status": "active",
               "timezone": "Europe/London",
-              "username": "${{ env.MONGODB_ROOT_USERNAME }}",
+              "username": "${{ env.MONGODB_ROOT_USER }}",
               "firstname": "ROOT",
               "surname": "USER",
               "email": "",
