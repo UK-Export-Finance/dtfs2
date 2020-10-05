@@ -59,7 +59,7 @@ module.exports = (
         };
       }
     } else if (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
-      if (moment(requestedCoverStartDate).isBefore(today)) {
+      if (moment(requestedCoverStartDate).isBefore(today, 'day')) {
         newErrorList.requestedCoverStartDate = {
           text: `Requested Cover Start Date must be after ${todayFormatted}`,
           order: orderNumber(newErrorList),
