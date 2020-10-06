@@ -550,7 +550,7 @@ jobs:
     - name: Populate Collections
       run: |
         cat <<EOF > deal-counter.js
-        db = db.getSiblingDB('tfs-portal')
+        db = db.getSiblingDB('${{ env.database_name }}')
         try {
           db.idCounters.insertMany([
             {
