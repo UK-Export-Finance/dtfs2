@@ -3,6 +3,7 @@ const moment = require('moment');
 const {
   contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
 } = require('../../../pages');
+const partials = require('../../../partials');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
 const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
@@ -39,6 +40,7 @@ context('about-buyer', () => {
 
     // prove the errors are on the about-financial page
     contractAboutFinancial.visit(deal);
+    partials.errorSummary.errorSummaryLinks().should('have.length', 2);
     contractAboutFinancial.expectError('Supply Contract value is required');
     contractAboutFinancial.expectError('Supply Contract currency is required');
 

@@ -116,15 +116,16 @@ jobs:
             --delegations Microsoft.Web/serverFarms \
             --address-prefixes 10.0.200.0/28
 
-    - name: Virtual machine subnet
-      uses: Azure/cli@v1.0.0
-      with:
-        # Subnet for a temporary maintenance virtual machine.
-        inlineScript: |
-          az network vnet subnet create \
-            --name ${{ env.resource_group }}-vm \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes 10.0.210.0/28
+    # We'll aim to move this out of this section and consolidate into a single VM job:
+    # - name: Virtual machine subnet
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # Subnet for a temporary maintenance virtual machine.
+    #     inlineScript: |
+    #       az network vnet subnet create \
+    #         --name ${{ env.resource_group }}-vm \
+    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+    #         --address-prefixes 10.0.210.0/28
 
   private-dns:
     name: Private DNS
@@ -167,8 +168,8 @@ jobs:
           az network private-dns link vnet show   --name mongo-dns --zone-name "privatelink.mongo.cosmos.azure.com" || \
           az network private-dns link vnet create --name mongo-dns --zone-name "privatelink.mongo.cosmos.azure.com" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
 
-          az network private-dns link vnet show   --name mongo-dns --zone-name "privatelink.file.core.windows.net" || \
-          az network private-dns link vnet create --name mongo-dns --zone-name "privatelink.file.core.windows.net" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
+          az network private-dns link vnet show   --name storage-dns --zone-name "privatelink.file.core.windows.net" || \
+          az network private-dns link vnet create --name storage-dns --zone-name "privatelink.file.core.windows.net" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
 
   public-ip:
     name: Public IP
@@ -454,7 +455,7 @@ jobs:
 
   cosmos-db:
     name: Cosmos DB (Mongo)
-    needs: vnet
+    needs: [vnet, private-dns]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -596,7 +597,7 @@ jobs:
 
   file-storage:
     name: File storage
-    needs: vnet
+    needs: [vnet, private-dns]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -641,12 +642,12 @@ jobs:
         inlineScript: |
           file_storage_id=$(az storage account show --name tfs${{ env.environment }}storage --query "id" -o tsv)
           az network private-endpoint create \
-            --name tfs-${{ env.environment }}-storage \
+            --name tfs${{ env.environment }}storage \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.environment }}-private-endpoints \
             --private-connection-resource-id "$file_storage_id" \
             --group-id file \
-            --connection-name tfs-${{ env.environment }}-storage
+            --connection-name tfs${{ env.environment }}storage
              
     - name: DNS A-records
       uses: Azure/cli@v1.0.0
@@ -658,15 +659,21 @@ jobs:
 
           if [ -z "$ipv4_address" ]
           then
+            echo "Setting up private DNS for tfs${{ env.environment }}storage.privatelink.file.core.windows.net"
             storage_interface_id=$(az network private-endpoint show --name tfs${{ env.environment }}storage --query 'networkInterfaces[0].id' -o tsv)
+            echo "Storage interface id: $storage_interface_id"
             storage_interface_ip=$(az resource show --ids $storage_interface_id --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+            echo "Storage interface IP: $storage_interface_ip"
 
+            echo "Creating record"
             az network private-dns record-set a show   --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net" || \
             az network private-dns record-set a create --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net"
+            echo "Setting record value"
             az network private-dns record-set a add-record \
               --record-set-name tfs${{ env.environment }}storage \
               --zone-name "privatelink.file.core.windows.net" \
               --ipv4-address $storage_interface_ip
+            echo "Done."
 
           else
             echo "IP for tfs${{ env.environment }}storage.privatelink.file.core.windows.net is $ipv4_address"
@@ -674,7 +681,7 @@ jobs:
              
   session-store:
     name: Redis session store
-    needs: vnet
+    needs: [vnet, private-dns]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -751,24 +758,33 @@ jobs:
           if [ ! -z "$cert" ]
           then
             # Create the certificate file from the secret value:
-            echo $cert | base64 --decode > test.pfx
+            echo $cert | base64 -d > cert.pfx
 
             az network application-gateway ssl-cert create \
               --gateway-name tfs-${{ env.environment }}-gw \
-              --name ${{ env.environment }}-cert
+              --name ${{ env.environment }}-cert \
               --cert-password ${{ env.MIGRATION_SSL_CERTIFICATE_PASSWORD }} \
               --cert-file cert.pfx
 
-            az network application-gateway http-listener create --gateway-name tfs-${{ env.environment }}-gw \
+            echo "Creating frontend port"
+            az network application-gateway frontend-port create \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name tfs-${{ env.environment }}-port-https \
+              --port 443
+
+            echo "Creating HTTP listener..."
+            az network application-gateway http-listener create \
+              --gateway-name tfs-${{ env.environment }}-gw \
               --name ${{ env.environment }}-https \
-              --frontend-port 443 \
+              --frontend-port tfs-${{ env.environment }}-port-https \
               --ssl-cert ${{ env.environment }}-cert
 
+            echo "Creating rule..."
             az network application-gateway rule create \
               --gateway-name tfs-${{ env.environment }}-gw \
-              --name ${{ env.environment }}-migration
+              --name ${{ env.environment }}-migration \
               --http-listener ${{ env.environment }}-https \
-              --http-settings appGatewayBackendHttpSetting \
+              --http-settings appGatewayBackendHttpSettings \
               --address-pool appGatewayBackendPool
           fi
 

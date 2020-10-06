@@ -211,7 +211,7 @@
             "text" : "GBP - UK Sterling"
         },
         "supplyContractValue" : "50000000.00",
-        "hasBeenPreviewed" : true
+        "viewedPreviewPage" : true
     },
     "bondTransactions" : {
         "items" : [

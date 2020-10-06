@@ -129,7 +129,7 @@
             "code": "USA",
             "name": "United States"
         },
-        "hasBeenPreviewed" : true
+        "viewedPreviewPage" : true
     },
     "bondTransactions" : {
         "items" : []

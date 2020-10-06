@@ -130,7 +130,7 @@
             "name": "United States",
             "code": "USA"
         },
-        "hasBeenPreviewed" : true,
+        "viewedPreviewPage" : true,
         "supplyContractConversionDate" : "undefined/undefined/undefined",
         "supplyContractConversionDate-day" : "",
         "supplyContractConversionDate-month" : "",

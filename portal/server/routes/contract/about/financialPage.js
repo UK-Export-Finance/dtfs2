@@ -14,6 +14,7 @@ import {
 
 import calculateStatusOfEachPage from './navStatusCalculations';
 import updateSubmissionDetails from './updateSubmissionDetails';
+import { financialPageValidationErrors } from './pageSpecificValidationErrors';
 
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 
@@ -37,22 +38,19 @@ router.get('/contract/:_id/about/financial', provide([CURRENCIES]), async (req, 
 
   const { deal, currencies } = req.apiData;
 
-  let formattedValidationErrors = {};
-  if (deal.submissionDetails.hasBeenPreviewed) {
-    const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
-    formattedValidationErrors = generateErrorSummary(
-      validationErrors,
-      errorHref,
-    );
+  const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
+  const errorSummary = generateErrorSummary(
+    validationErrors,
+    errorHref,
+  );
 
-    deal.supplyContract = {
-      completedStatus: calculateStatusOfEachPage(Object.keys(formattedValidationErrors.errorList)),
-    };
-  }
+  deal.supplyContract = {
+    completedStatus: calculateStatusOfEachPage(Object.keys(errorSummary.errorList)),
+  };
 
   return res.render('contract/about/about-supply-financial.njk', {
     deal,
-    validationErrors: formattedValidationErrors,
+    validationErrors: financialPageValidationErrors(validationErrors, deal.submissionDetails),
     currencies: mapCurrencies(currencies, deal.submissionDetails.supplyContractCurrency),
     user: req.session.user,
   });

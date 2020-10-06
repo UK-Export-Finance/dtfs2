@@ -155,7 +155,7 @@ const deal = {
       "text": "GBP - UK Sterling"
     },
     "supplyContractValue": "12312323.00",
-    "hasBeenPreviewed": true
+    "viewedPreviewPage": true
   },
   "bondTransactions": {
     "items": [

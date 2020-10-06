@@ -179,7 +179,7 @@ module.exports = {
             "text" : "GBP - UK Sterling"
         },
         "supplyContractValue" : "70000000.00",
-        "hasBeenPreviewed" : true
+        "viewedPreviewPage" : true
     },
     "bondTransactions" : {
         "items" : [

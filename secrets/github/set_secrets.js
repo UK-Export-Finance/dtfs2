@@ -5,7 +5,7 @@ const csv = require('csv-parser');
 var util = require('util');
 
 const username = "davidcarboni";
-const owner = "notbinary";
+const owner = "foundry4";
 const repo = "dtfs2"
 const pat_path = "./pat.txt"
 const csv_path = "./environment_variables.csv"
