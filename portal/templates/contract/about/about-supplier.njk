@@ -1,4 +1,5 @@
 {% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% import './components/about-supply-contract-nav.njk' as aboutSupplyContract %}
 {% import './components/supplier-type-dropdown.njk' as supplierTypeDropdown %}
 {% import './components/supplier-name-and-address-lookup.njk' as supplierNameAndAddressLookup %}
@@ -14,6 +15,15 @@
 {% block pageTitle %}Supplier information - {{ deal.details.bankSupplyContractName }}{% endblock %}
 
 {% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
 
   {{ aboutSupplyContract.nav(
     completedStatus = deal.supplyContract.completedStatus,

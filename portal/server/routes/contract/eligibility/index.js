@@ -92,7 +92,9 @@ router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]
 
   const { eligibility, dealFiles = {} } = deal;
 
-  const validationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
+  const documentationErrorHref = (id) => `#${id}`;
+
+  const validationErrors = generateErrorSummary(dealFiles.validationErrors, documentationErrorHref);
 
   return res.render('eligibility/eligibility-supporting-documentation.njk',
     {

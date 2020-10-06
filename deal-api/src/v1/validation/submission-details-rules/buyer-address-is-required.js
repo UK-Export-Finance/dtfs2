@@ -4,6 +4,14 @@ const { hasValue } = require('../../../utils/string');
 module.exports = (submissionDetails, errorList) => {
   const newErrorList = { ...errorList };
 
+  if (!submissionDetails['buyer-address-country']
+    || !submissionDetails['buyer-address-country'].code) {
+    newErrorList['buyer-address-country'] = {
+      order: orderNumber(newErrorList),
+      text: 'Buyer country is required',
+    };
+  }
+
   if (!hasValue(submissionDetails['buyer-address-line-1'])) {
     newErrorList['buyer-address-line-1'] = {
       order: orderNumber(newErrorList),
@@ -22,14 +30,6 @@ module.exports = (submissionDetails, errorList) => {
     newErrorList['buyer-address-town'] = {
       order: orderNumber(newErrorList),
       text: 'Buyer town is required for non-UK addresses',
-    };
-  }
-
-  if (!submissionDetails['buyer-address-country']
-    || !submissionDetails['buyer-address-country'].code) {
-    newErrorList['buyer-address-country'] = {
-      order: orderNumber(newErrorList),
-      text: 'Buyer country is required',
     };
   }
 

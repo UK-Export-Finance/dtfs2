@@ -8,6 +8,8 @@ import {
 
 import { DEAL } from '../../api-data-provider';
 
+import { aboutSupplyContractPreviewValidationErrors } from './pageSpecificValidationErrors';
+
 import calculateStatusOfEachPage from './navStatusCalculations';
 
 const router = express.Router();
@@ -32,16 +34,26 @@ router.get('/contract/:_id/about/preview', async (req, res) => {
 
   // TODO dirty hack; this is how we apply the business rule
   //  "don't display error messages unless the user has viewed the preview page"
-  await api.updateSubmissionDetails(deal, { hasBeenPreviewed: true }, userToken);
+  await api.updateSubmissionDetails(deal, { viewedPreviewPage: true }, userToken);
 
   const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
-  const formattedValidationErrors = generateErrorSummary(
+
+  const errorSummary = generateErrorSummary(
     validationErrors,
     errorHref,
   );
+
   deal.supplyContract = {
-    completedStatus: calculateStatusOfEachPage(Object.keys(formattedValidationErrors.errorList)),
+    completedStatus: calculateStatusOfEachPage(Object.keys(errorSummary.errorList)),
   };
+
+  let formattedValidationErrors;
+  if (validationErrors.count !== 0) {
+    formattedValidationErrors = generateErrorSummary(
+      aboutSupplyContractPreviewValidationErrors(validationErrors, _id),
+      errorHref,
+    );
+  }
 
   return res.render('contract/about/about-supply-preview.njk', {
     deal,
