@@ -513,9 +513,6 @@ jobs:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
-          # Get the MongoDB URL
-          connectionString=$(az cosmosdb list-connection-strings --name tfs-${{ env.environment }}-mongo --resource-group ${{ env.resource_group }} \
-          --query connectionStrings[0].connectionString --output tsv)
 
     - name: Collections
       uses: Azure/cli@v1.0.0
@@ -549,7 +546,7 @@ jobs:
           
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters --shard "_id"
-
+          
     - name: Populate Collections
       run: |
         cat <<EOF > deal-counter.js
@@ -597,8 +594,7 @@ jobs:
         }
         EOF
         echo "Initialising idCounters and adding root user"
-        echo "Connection string: ${{ connectionString }} "
-        mongo "${{ connectionString }}" deal-counter.js
+        mongo "${{ env.MONGODB_URI }}" deal-counter.js
         echo end.
        
   cosmos-db-private:
