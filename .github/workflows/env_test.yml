@@ -849,6 +849,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
+
           # VMs
           az network nsg rule create --name vm-ips-dev --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 997 --direction Inbound --protocol "*" --access Allow \
@@ -903,7 +904,7 @@ jobs:
             --path "/healthcheck" \
             --host-name-from-http-settings true
 
-    - name: Back-end http settings
+    - name: Update back-end http settings
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
