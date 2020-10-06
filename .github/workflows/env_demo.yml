@@ -228,7 +228,7 @@ jobs:
           az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-ui \
             --vnet tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.app_service_plan }}-app-service-plan-egress
- 
+
     # - name: Private link
     #   uses: Azure/cli@v1.0.0
     #   with:
@@ -613,21 +613,21 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}         
           
-    - name: Private link
-      uses: Azure/cli@v1.0.0
-      with:
-        # Restrict inbound traffic to not be open to the Internet
-        # NB: group-id isn't well documented. It means "Target sub-resource"
-        #     The purpose of connection-name is unknown.
-        inlineScript: |
-          mongo_id=$(az cosmosdb show --name tfs-${{ env.environment }}-mongo --query "id" -o tsv)
-          az network private-endpoint create \
-            --name tfs-${{ env.environment }}-mongo \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "$mongo_id" \
-            --group-id MongoDB \
-            --connection-name tfs-${{ env.environment }}-mongo
+    # - name: Private link
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # Restrict inbound traffic to not be open to the Internet
+    #     # NB: group-id isn't well documented. It means "Target sub-resource"
+    #     #     The purpose of connection-name is unknown.
+    #     inlineScript: |
+    #       mongo_id=$(az cosmosdb show --name tfs-${{ env.environment }}-mongo --query "id" -o tsv)
+    #       az network private-endpoint create \
+    #         --name tfs-${{ env.environment }}-mongo \
+    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+    #         --subnet ${{ env.environment }}-private-endpoints \
+    #         --private-connection-resource-id "$mongo_id" \
+    #         --group-id MongoDB \
+    #         --connection-name tfs-${{ env.environment }}-mongo
     
     - name: DNS A-records
       uses: Azure/cli@v1.0.0
