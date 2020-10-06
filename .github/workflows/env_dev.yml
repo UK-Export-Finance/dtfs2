@@ -793,26 +793,26 @@ jobs:
               --cert-password ${{ env.MIGRATION_SSL_CERTIFICATE_PASSWORD }} \
               --cert-file cert.pfx
 
-              echo "Creating frontend port"
-              az network application-gateway frontend-port create \
-                --gateway-name tfs-${{ env.environment }}-gw \
-                --name tfs-${{ env.environment }}-port-https \
-                --port 443
-  
-              echo "Creating HTTP listener..."
-              az network application-gateway http-listener create \
-                --gateway-name tfs-${{ env.environment }}-gw \
-                --name ${{ env.environment }}-https \
-                --frontend-port tfs-${{ env.environment }}-port-https \
-                --ssl-cert ${{ env.environment }}-cert
-  
-              echo "Creating rule..."
-              az network application-gateway rule create \
-                --gateway-name tfs-${{ env.environment }}-gw \
-                --name ${{ env.environment }}-migration \
-                --http-listener ${{ env.environment }}-https \
-                --http-settings appGatewayBackendHttpSettings \
-                --address-pool appGatewayBackendPool
+            echo "Creating frontend port"
+            az network application-gateway frontend-port create \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name tfs-${{ env.environment }}-port-https \
+              --port 443
+
+            echo "Creating HTTP listener..."
+            az network application-gateway http-listener create \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name ${{ env.environment }}-https \
+              --frontend-port tfs-${{ env.environment }}-port-https \
+              --ssl-cert ${{ env.environment }}-cert
+
+            echo "Creating rule..."
+            az network application-gateway rule create \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name ${{ env.environment }}-migration \
+              --http-listener ${{ env.environment }}-https \
+              --http-settings appGatewayBackendHttpSettings \
+              --address-pool appGatewayBackendPool
           fi
 
     - name: Network Security Group
@@ -846,6 +846,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
+
           # VMs
           az network nsg rule create --name vm-ips-dev --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 997 --direction Inbound --protocol "*" --access Allow \
@@ -900,7 +901,7 @@ jobs:
             --path "/healthcheck" \
             --host-name-from-http-settings true
 
-    - name: Back-end http settings
+    - name: Update back-end http settings
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
