@@ -7,6 +7,7 @@ const completedDeal = require('../../fixtures/deal-fully-completed-issued-and-un
 
 const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
+const { updateDeal } = require('../../../src/v1/controllers/deal.controller');
 
 // Mock currency & country API calls as no currency/country data is in db during pipeline test as previous test had removed them
 jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
@@ -22,6 +23,16 @@ describe('/v1/deals/:id/status - facilities', () => {
   let aBarclaysChecker;
   let aBarclaysMakerChecker;
   let aSuperuser;
+
+  const isUnsubmittedIssuedFacility = (facility) => {
+    if ((facility.facilityStage === 'Unissued' || facility.facilityStage === 'Conditional')
+      && facility.issueFacilityDetailsProvided
+      && !facility.issueFacilityDetailsSubmitted
+      && facility.status !== 'Submitted') {
+      return facility;
+    }
+    return null;
+  };
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
@@ -63,15 +74,15 @@ describe('/v1/deals/:id/status - facilities', () => {
         updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
       });
 
-      const isUnsubmittedIssuedFacility = (facility) => {
-        if ((facility.facilityStage === 'Unissued' || facility.facilityStage === 'Conditional')
-          && facility.issueFacilityDetailsProvided
-          && !facility.issueFacilityDetailsSubmitted
-          && facility.status !== 'Submitted') {
-          return facility;
-        }
-        return null;
-      };
+      // const isUnsubmittedIssuedFacility = (facility) => {
+      //   if ((facility.facilityStage === 'Unissued' || facility.facilityStage === 'Conditional')
+      //     && facility.issueFacilityDetailsProvided
+      //     && !facility.issueFacilityDetailsSubmitted
+      //     && facility.status !== 'Submitted') {
+      //     return facility;
+      //   }
+      //   return null;
+      // };
 
       describe('any issued bonds that have details provided, but not yet been submitted', () => {
         it('should add `Ready for check` status, change facilityStage from `Unissued` to `Issued` and add previousFacilityStage', async () => {
