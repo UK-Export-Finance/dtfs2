@@ -3,7 +3,7 @@ name: Portal API
 on:
   push:
     branches: [ master ]
-    paths: 
+    paths:
     - 'deal-api/**'
     - 'portal/**'
   schedule:
@@ -154,4 +154,5 @@ jobs:
       with:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }}
-          
+
+  
