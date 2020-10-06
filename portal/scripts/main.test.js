@@ -1,5 +1,4 @@
 import * as showHideElement from './show-hide-element';
-import * as maskedInputs from './masked-inputs';
 import * as changeIndustryClasses from './change-industry-classes';
 import * as number from './number';
 import main from './main';
@@ -12,12 +11,6 @@ describe('main.js', () => {
     showHideElement.default = jest.fn();
     main();
     expect(showHideElement.default).toHaveBeenCalled();
-  });
-
-  it('should call maskedInputs()', () => {
-    maskedInputs.default = jest.fn();
-    main();
-    expect(maskedInputs.default).toHaveBeenCalled();
   });
 
   it('should call changeIndustryClasses()', () => {
