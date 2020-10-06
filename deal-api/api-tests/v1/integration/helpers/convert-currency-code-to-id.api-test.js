@@ -1,5 +1,5 @@
 const convertCurrencyCodeToId = require('../../../../src/v1/controllers/integration/helpers/convert-currency-code-to-id');
-const currencyController = require('../../../../src/v1/controllers/currencies.controller');
+const currencyController = require('../../../../src/v1/controllers/currencies/currencies.controller');
 
 currencyController.findOneCurrency = jest.fn((code) => {
   if (code === 'GBP') {

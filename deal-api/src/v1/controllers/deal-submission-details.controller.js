@@ -3,7 +3,7 @@ const { userHasAccessTo } = require('../users/checks');
 const validateSubmissionDetails = require('../validation/submission-details');
 const { sanitizeCurrency } = require('../../utils/number');
 const now = require('../../now');
-const { findOneCountry } = require('./countries.controller');
+const { findOneCountry } = require('./countries/countries.controller');
 const { getCurrencyObject } = require('../section-currency');
 
 exports.findOne = (req, res) => {

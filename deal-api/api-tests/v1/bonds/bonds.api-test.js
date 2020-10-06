@@ -8,7 +8,7 @@ const {
   calculateGuaranteeFee,
   calculateUkefExposure,
 } = require('../../../src/v1/section-calculations');
-const { findOneCurrency } = require('../../../src/v1/controllers/currencies.controller');
+const { findOneCurrency } = require('../../../src/v1/controllers/currencies/currencies.controller');
 
 describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({
@@ -656,7 +656,7 @@ describe('/v1/deals/:id/bond', () => {
 
       const { body: createBondBody } = createBondResponse;
       const { bondId } = createBondBody;
-    
+
       const bond = {
         ...allBondFields,
         ...requestedCoverStartDate(),
