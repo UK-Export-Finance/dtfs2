@@ -1,5 +1,5 @@
 const convertCountryCodeToId = require('../../../../src/v1/controllers/integration/helpers/convert-country-code-to-id');
-const countryController = require('../../../../src/v1/controllers/countries.controller');
+const countryController = require('../../../../src/v1/controllers/countries/countries.controller');
 
 countryController.findOneCountry = jest.fn((code) => {
   if (code === 'GBR') {
