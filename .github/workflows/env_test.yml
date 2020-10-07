@@ -376,22 +376,21 @@ jobs:
             --vnet tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
-    # Temporarily disabled to allow traffic from portal-ui
-    # - name: Private endpoint
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     # Restrict inbound traffic to not be open to the Internet
-    #     # NB: group-id isn't well documented. It means "Target sub-resource".
-    #     #     The purpose of connection-name is unknown.
-    #     inlineScript: |
-    #       portal_api_id=$(az webapp show --name tfs-${{ env.environment }}-portal-api --query "id" -o tsv)
-    #       az network private-endpoint create \
-    #         --name tfs-${{ env.environment }}-portal-api \
-    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-    #         --subnet ${{ env.environment }}-private-endpoints \
-    #         --private-connection-resource-id "$portal_api_id" \
-    #         --group-id sites \
-    #         --connection-name tfs-${{ env.environment }}-portal-api
+    - name: Private endpoint
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource".
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          portal_api_id=$(az webapp show --name tfs-${{ env.environment }}-portal-api --query "id" -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-portal-api \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-private-endpoints \
+            --private-connection-resource-id "$portal_api_id" \
+            --group-id sites \
+            --connection-name tfs-${{ env.environment }}-portal-api
 
     - name: DNS A-records
       uses: Azure/cli@v1.0.0
