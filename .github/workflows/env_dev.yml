@@ -154,6 +154,9 @@ jobs:
           
           az network private-dns zone show   --name "privatelink.file.core.windows.net" || \
           az network private-dns zone create --name "privatelink.file.core.windows.net"
+          
+          az network private-dns zone show   --name "privatelink.redis.cache.windows.net" || \
+          az network private-dns zone create --name "privatelink.redis.cache.windows.net"
 
     - name: Link DNS zones to vnet
       uses: Azure/cli@v1.0.0
@@ -167,6 +170,9 @@ jobs:
 
           az network private-dns link vnet show   --name storage-dns --zone-name "privatelink.file.core.windows.net" || \
           az network private-dns link vnet create --name storage-dns --zone-name "privatelink.file.core.windows.net" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
+
+          az network private-dns link vnet show   --name storage-dns --zone-name "privatelink.redis.cache.windows.net" || \
+          az network private-dns link vnet create --name storage-dns --zone-name "privatelink.redis.cache.windows.net" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
 
   public-ip:
     name: Public IP
@@ -706,7 +712,7 @@ jobs:
             echo "IP for tfs${{ env.environment }}storage.privatelink.file.core.windows.net is $ipv4_address"
           fi
              
-  session-store:
+  redis:
     name: Redis session store
     needs: [vnet, private-dns]
     runs-on: ubuntu-latest
@@ -732,21 +738,51 @@ jobs:
     
     # Apparently private link for Redis is in preview, but it's not available in the UKEF Azure portal:
     # https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-private-link
-    # - name: Private link
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     # Restrict inbound traffic to not be open to the Internet
-    #     # NB: group-id isn't well documented. It means "Target sub-resource"
-    #     #     The purpose of connection-name is unknown.
-    #     inlineScript: |
-    #       redis_id=$(az redis show --name tfs-demo-redis --query "id" -o tsv)
-    #       az network private-endpoint create \
-    #         --name tfs-${{ env.environment }}-redis \
-    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-    #         --subnet ${{ env.environment }}-private-endpoints \
-    #         --private-connection-resource-id "$redis_id" \
-    #         --group-id redisCache \
-    #         --connection-name tfs-${{ env.environment }}-redis
+    # This may have changed as of 6 Oct 2020
+    - name: Private link
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource"
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          redis_id=$(az redis show --name tfs-${{ env.environment }}-redis --query "id" -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-redis \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-private-endpoints \
+            --private-connection-resource-id "$redis_id" \
+            --group-id redisCache \
+            --connection-name tfs-${{ env.environment }}-redis
+             
+    - name: DNS A-records
+      uses: Azure/cli@v1.0.0
+      with:
+        # We have to add explicit A records so that redis resolves correctly to the private endpoint address
+        inlineScript: |
+          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+
+          if [ -z "$ipv4_address" ]
+          then
+            echo "Setting up private DNS for tfs-${{ env.environment }}-redis.privatelink.redis.cache.windows.net"
+            redis_interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-redis --query 'networkInterfaces[0].id' -o tsv)
+            echo "Redis interface id: $redis_interface_id"
+            redis_interface_ip=$(az resource show --ids $redis_interface_id --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+            echo "Redis interface IP: $redis_interface_ip"
+
+            echo "Creating record"
+            az network private-dns record-set a show   --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net" || \
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net"
+            echo "Setting record value"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-redis \
+              --zone-name "privatelink.redis.cache.windows.net" \
+              --ipv4-address $redis_interface_ip
+            echo "Done."
+
+          else
+            echo "IP for tfs-${{ env.environment }}-redis.privatelink.redis.cache.windows.net is $ipv4_address"
+          fi
 
   application-gateway:
     name: Application Gateway
@@ -793,26 +829,26 @@ jobs:
               --cert-password ${{ env.MIGRATION_SSL_CERTIFICATE_PASSWORD }} \
               --cert-file cert.pfx
 
-              echo "Creating frontend port"
-              az network application-gateway frontend-port create \
-                --gateway-name tfs-${{ env.environment }}-gw \
-                --name tfs-${{ env.environment }}-port-https \
-                --port 443
-  
-              echo "Creating HTTP listener..."
-              az network application-gateway http-listener create \
-                --gateway-name tfs-${{ env.environment }}-gw \
-                --name ${{ env.environment }}-https \
-                --frontend-port tfs-${{ env.environment }}-port-https \
-                --ssl-cert ${{ env.environment }}-cert
-  
-              echo "Creating rule..."
-              az network application-gateway rule create \
-                --gateway-name tfs-${{ env.environment }}-gw \
-                --name ${{ env.environment }}-migration \
-                --http-listener ${{ env.environment }}-https \
-                --http-settings appGatewayBackendHttpSettings \
-                --address-pool appGatewayBackendPool
+            echo "Creating frontend port"
+            az network application-gateway frontend-port create \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name tfs-${{ env.environment }}-port-https \
+              --port 443
+
+            echo "Creating HTTP listener..."
+            az network application-gateway http-listener create \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name ${{ env.environment }}-https \
+              --frontend-port tfs-${{ env.environment }}-port-https \
+              --ssl-cert ${{ env.environment }}-cert
+
+            echo "Creating rule..."
+            az network application-gateway rule create \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name ${{ env.environment }}-migration \
+              --http-listener ${{ env.environment }}-https \
+              --http-settings appGatewayBackendHttpSettings \
+              --address-pool appGatewayBackendPool
           fi
 
     - name: Network Security Group
@@ -846,6 +882,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
+
           # VMs
           az network nsg rule create --name vm-ips-dev --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 997 --direction Inbound --protocol "*" --access Allow \
@@ -900,7 +937,7 @@ jobs:
             --path "/healthcheck" \
             --host-name-from-http-settings true
 
-    - name: Back-end http settings
+    - name: Update back-end http settings
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |

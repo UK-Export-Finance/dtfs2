@@ -12,42 +12,25 @@ env:
   credentials: ${{ secrets.AZURE_DIGITAL_TEST }}
   resource_group: ${{ secrets.TEST_RESOURCE_GROUP }}
 
+  # From
+  registry_from: ${{ secrets.DEV_ACR_REGISTRY }}
+  registry_from_username: ${{ secrets.DEV_ACR_USERNAME }}
+  registry_from_password: ${{ secrets.DEV_ACR_PASSWORD }}
+  tag_from: dev
+
+  # To
+  registry_to: ${{ secrets.TEST_ACR_REGISTRY }}
+  registry_to_username: ${{ secrets.TEST_ACR_USERNAME }}
+  registry_to_password: ${{ secrets.TEST_ACR_PASSWORD }}
+  tag_to: test
+
 jobs:
 
-  promote:
-    name: Promote container images
+  portal-ui:
+    name: Promote Portal UI
     runs-on: ubuntu-latest
     steps:
-    - name: Log in to Dev container registry
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
-        username: ${{ secrets.DEV_ACR_USERNAME }}
-        password: ${{ secrets.DEV_ACR_PASSWORD }}
-    - name: Log in to Test container registry
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.TEST_ACR_REGISTRY }}
-        username: ${{ secrets.TEST_ACR_USERNAME }}
-        password: ${{ secrets.TEST_ACR_PASSWORD }}
-    - name: Tag images
-      run: |
-        from=dev
-        to=test
 
-        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$from
-        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui:$from ${{ secrets.TEST_ACR_REGISTRY }}/portal-ui:$to
-        docker push ${{ secrets.TEST_ACR_REGISTRY }}/portal-ui:$to
-
-        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$from
-        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-api:$from ${{ secrets.TEST_ACR_REGISTRY }}/portal-api:$to
-        docker push ${{ secrets.TEST_ACR_REGISTRY }}/portal-api:$to
-
-  deploy:
-    name: Deploy container images
-    needs: promote
-    runs-on: ubuntu-latest
-    steps:
     - uses: azure/login@v1
       with:
         creds: ${{ env.credentials }}
@@ -59,19 +42,37 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
+    - name: Log in to source container registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.registry_from }}
+        username: ${{ env.registry_from_username }}
+        password: ${{ env.registry_from_password }}
+
+    - name: Log in to destination container registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.registry_to }}
+        username: ${{ env.registry_to_username }}
+        password: ${{ env.registry_to_password }}
+
+    - name: Promote container image
+      run: |
+        docker pull ${{ env.registry_from }}/portal-ui:${{ env.tag_from }}
+        docker tag ${{ env.registry_from }}/portal-ui:${{ env.tag_from }} ${{ env.registry_to }}/portal-ui:${{ env.tag_to }}
+        docker push ${{ env.registry_to }}/portal-ui:${{ env.tag_to }}
+
     - name: Create slot
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-ui
-          az webapp deployment slot create --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-api
 
-    - name: Deploy slot
+    - name: Swap slot
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --action swap
-          az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --action swap
           
     - name: Delete slot
       # Clean up the slot regardless of errors
@@ -80,5 +81,60 @@ jobs:
       with:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }}
+        
+  portal-api:
+    name: Promote Portal API
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Log in to source container registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.registry_from }}
+        username: ${{ env.registry_from_username }}
+        password: ${{ env.registry_from_password }}
+
+    - name: Log in to destination container registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.registry_to }}
+        username: ${{ env.registry_to_username }}
+        password: ${{ env.registry_to_password }}
+
+    - name: Promote container image
+      run: |
+        docker pull ${{ env.registry_from }}/portal-api:${{ env.tag_from }}
+        docker tag ${{ env.registry_from }}/portal-api:${{ env.tag_from }} ${{ env.registry_to }}/portal-api:${{ env.tag_to }}
+        docker push ${{ env.registry_to }}/portal-api:${{ env.tag_to }}
+
+    - name: Create slot
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot create --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-api
+
+    - name: Swap slot
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --action swap
+          
+    - name: Delete slot
+      # Clean up the slot regardless of errors
+      if: ${{ always() }}
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }}
           
