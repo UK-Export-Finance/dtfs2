@@ -233,71 +233,70 @@ jobs:
             --vnet tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
-    # Temporarily disabled for testing
-    # - name: Private link
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     # Restrict inbound traffic to not be open to the Internet
-    #     # NB: group-id isn't well documented. It means "Target sub-resource"
-    #     #     The purpose of connection-name is unknown.
-    #     inlineScript: |
-    #       portal_ui_id=$(az webapp show --name tfs-${{ env.environment }}-portal-ui --query "id" -o tsv)
-    #       az network private-endpoint create \
-    #         --name tfs-${{ env.environment }}-portal-ui \
-    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-    #         --subnet ${{ env.environment }}-private-endpoints \
-    #         --private-connection-resource-id "$portal_ui_id" \
-    #         --group-id sites \
-    #         --connection-name tfs-${{ env.environment }}-portal-ui
+    - name: Private endpoint
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource"
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          portal_ui_id=$(az webapp show --name tfs-${{ env.environment }}-portal-ui --query "id" -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-portal-ui \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-private-endpoints \
+            --private-connection-resource-id "$portal_ui_id" \
+            --group-id sites \
+            --connection-name tfs-${{ env.environment }}-portal-ui
 
     - name: DNS A-records
-    uses: Azure/cli@v1.0.0
-    with:
-      # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
-      # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
-      inlineScript: |
-        ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+      uses: Azure/cli@v1.0.0
+      with:
+        # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
+        # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
+        inlineScript: |
+          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
 
-        interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-portal-ui --query 'networkInterfaces[0].id' -o tsv)
-        interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
-        
-        # Create
-        if [ -z "$ipv4_address" ]
-        then
-          echo Setting private link IP address...
-
-          az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net"
-          az network private-dns record-set a add-record \
-            --record-set-name tfs-${{ env.environment }}-portal-ui \
-            --zone-name "privatelink.azurewebsites.net" \
-            --ipv4-address $interface_ip
+          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-portal-ui --query 'networkInterfaces[0].id' -o tsv)
+          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
           
-          az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net"
-          az network private-dns record-set a add-record \
-            --record-set-name tfs-${{ env.environment }}-portal-ui.scm \
-            --zone-name "privatelink.azurewebsites.net" \
-            --ipv4-address $interface_ip
-        fi
+          # Create
+          if [ -z "$ipv4_address" ]
+          then
+            echo Setting private link IP address...
 
-        # Update
-        if [ "$ipv4_address" != "$interface_ip" ]
-        then
-          echo Updating private link IP address...
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-portal-ui \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+            
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-portal-ui.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          fi
 
-          az network private-dns record-set a delete --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net" --yes
-          az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net"
-          az network private-dns record-set a add-record \
-            --record-set-name tfs-${{ env.environment }}-portal-ui \
-            --zone-name "privatelink.azurewebsites.net" \
-            --ipv4-address $interface_ip
+          # Update
+          if [ "$ipv4_address" != "$interface_ip" ]
+          then
+            echo Updating private link IP address...
 
-          az network private-dns record-set a delete --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net" --yes
-          az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net"
-          az network private-dns record-set a add-record \
-            --record-set-name tfs-${{ env.environment }}-portal-ui.scm \
-            --zone-name "privatelink.azurewebsites.net" \
-            --ipv4-address $interface_ip
-        fi
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-portal-ui \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-portal-ui.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          fi
 
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
