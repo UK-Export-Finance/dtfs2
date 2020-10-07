@@ -1092,4 +1092,3 @@ jobs:
     #         --forwarding-protocol HttpsOnly \
     #         --backend-pool portal-api \
     #         --patterns "/v1/*"
-

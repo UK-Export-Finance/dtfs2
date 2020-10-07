@@ -1067,31 +1067,31 @@ jobs:
             --accepted-protocols Http \
             --redirect-protocol HttpsOnly
 
-    - name: API healthcheck
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          frontend_endpoint_name=$(az network front-door show --name tfs-${{ env.environment }}-fd --query "frontendEndpoints[0].name" -o tsv)
-          az network front-door load-balancing create --front-door-name tfs-${{ env.environment }}-fd \
-            --name api-lb \
-            --sample-size 4 \
-            --successful-samples-required 2
-          az network front-door probe create --front-door-name tfs-${{ env.environment }}-fd \
-            --interval 60 \
-            --name api-probe \
-            --path /healthcheck \
-            --probeMethod GET \
-            --protocol Https
-          az network front-door backend-pool create --front-door-name tfs-${{ env.environment }}-fd \
-            --name portal-api \
-            --address tfs-${{ env.environment }}-portal-api.azurewebsites.net \
-            --load-balancing api-lb \
-            --probe api-probe
-          az network front-door routing-rule create --front-door-name tfs-${{ env.environment }}-fd \
-            --name API \
-            --frontend-endpoints $frontend_endpoint_name \
-            --route-type Forward \
-            --accepted-protocols Https \
-            --forwarding-protocol HttpsOnly \
-            --backend-pool portal-api \
-            --patterns "/v1/healthcheck"
+    # - name: API healthcheck
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     inlineScript: |
+    #       frontend_endpoint_name=$(az network front-door show --name tfs-${{ env.environment }}-fd --query "frontendEndpoints[0].name" -o tsv)
+    #       az network front-door load-balancing create --front-door-name tfs-${{ env.environment }}-fd \
+    #         --name api-lb \
+    #         --sample-size 4 \
+    #         --successful-samples-required 2
+    #       az network front-door probe create --front-door-name tfs-${{ env.environment }}-fd \
+    #         --interval 60 \
+    #         --name api-probe \
+    #         --path /healthcheck \
+    #         --probeMethod GET \
+    #         --protocol Https
+    #       az network front-door backend-pool create --front-door-name tfs-${{ env.environment }}-fd \
+    #         --name portal-api \
+    #         --address tfs-${{ env.environment }}-portal-api.azurewebsites.net \
+    #         --load-balancing api-lb \
+    #         --probe api-probe
+    #       az network front-door routing-rule create --front-door-name tfs-${{ env.environment }}-fd \
+    #         --name API \
+    #         --frontend-endpoints $frontend_endpoint_name \
+    #         --route-type Forward \
+    #         --accepted-protocols Https \
+    #         --forwarding-protocol HttpsOnly \
+    #         --backend-pool portal-api \
+    #         --patterns "/v1/healthcheck"
