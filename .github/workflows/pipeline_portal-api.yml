@@ -5,7 +5,6 @@ on:
     branches: [ master ]
     paths:
     - 'deal-api/**'
-    - 'portal/**'
   schedule:
     # A weekly run to roll up any base image patches,
     # in office hours, avoiding bank holiday Mondays:
