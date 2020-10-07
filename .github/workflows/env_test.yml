@@ -715,7 +715,7 @@ jobs:
             echo "IP for tfs${{ env.environment }}storage.privatelink.file.core.windows.net is $ipv4_address"
           fi
              
-  session-store:
+  redis:
     name: Redis session store
     needs: [vnet, private-dns]
     runs-on: ubuntu-latest
