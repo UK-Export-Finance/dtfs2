@@ -1,4 +1,4 @@
-const currencyController = require('../../currencies/currencies.controller');
+const currencyController = require('../../currencies.controller');
 
 const convertCurrencyCodeToId = async (code) => {
   const currency = await currencyController.findOneCurrency(code);

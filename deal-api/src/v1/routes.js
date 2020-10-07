@@ -12,8 +12,8 @@ const dealClone = require('./controllers/deal-clone.controller');
 const dealEligibilityCriteria = require('./controllers/deal-eligibility-criteria.controller');
 const dealEligibilityDocumentation = require('./controllers/deal-eligibility-documentation.controller');
 const banks = require('./controllers/banks.controller');
-const currencies = require('./controllers/currencies/currencies.controller');
-const countries = require('./controllers/countries/countries.controller');
+const currencies = require('./controllers/currencies.controller');
+const countries = require('./controllers/countries.controller');
 const feedback = require('./controllers/feedback.controller');
 const industrySectors = require('./controllers/industrySectors.controller');
 const mandatoryCriteria = require('./controllers/mandatoryCriteria.controller');
@@ -202,21 +202,45 @@ authRouter.route('/banks/:id')
 authRouter.route('/currencies')
   .get(
     currencies.findAll,
+  )
+  .post(
+    validate({ role: ['editor'] }),
+    currencies.create,
   );
 
 authRouter.route('/currencies/:id')
   .get(
     currencies.findOne,
+  )
+  .put(
+    validate({ role: ['editor'] }),
+    currencies.update,
+  )
+  .delete(
+    validate({ role: ['editor'] }),
+    currencies.delete,
   );
 
 authRouter.route('/countries')
   .get(
     countries.findAll,
+  )
+  .post(
+    validate({ role: ['editor'] }),
+    countries.create,
   );
 
 authRouter.route('/countries/:code')
   .get(
     countries.findOne,
+  )
+  .put(
+    validate({ role: ['editor'] }),
+    countries.update,
+  )
+  .delete(
+    validate({ role: ['editor'] }),
+    countries.delete,
   );
 
 authRouter.route('/feedback')
