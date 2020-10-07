@@ -125,7 +125,7 @@ jobs:
     #         --address-prefixes 10.0.210.0/28
 
   private-dns:
-    name: Private DNS
+    name: Private DNS zones
     needs: vnet
     runs-on: ubuntu-latest
     steps:
@@ -232,7 +232,7 @@ jobs:
             --vnet tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
-    - name: Private link
+    - name: Private endpoint
       uses: Azure/cli@v1.0.0
       with:
         # Restrict inbound traffic to not be open to the Internet
@@ -262,14 +262,14 @@ jobs:
           # Create
           if [ -z "$ipv4_address" ]
           then
-            #az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net" || \
+            echo Setting private link IP address...
+
             az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-portal-ui \
               --zone-name "privatelink.azurewebsites.net" \
               --ipv4-address $interface_ip
             
-            #az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net" || \
             az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-portal-ui.scm \
@@ -280,6 +280,8 @@ jobs:
           # Update
           if [ "$ipv4_address" != "$interface_ip" ]
           then
+            echo Updating private link IP address...
+
             az network private-dns record-set a delete --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net" --yes
             az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net"
             az network private-dns record-set a add-record \
@@ -403,14 +405,14 @@ jobs:
           # Create
           if [ -z "$ipv4_address" ]
           then
-            #az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net" || \
+            echo Setting private link IP address...
+
             az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-portal-api \
               --zone-name "privatelink.azurewebsites.net" \
               --ipv4-address $interface_ip
             
-            #az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-api.scm --zone-name "privatelink.azurewebsites.net" || \
             az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-api.scm --zone-name "privatelink.azurewebsites.net"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-portal-api.scm \
@@ -421,6 +423,8 @@ jobs:
           # Update
           if [ "$ipv4_address" != "$interface_ip" ]
           then
+            echo Update private link IP address...
+
             az network private-dns record-set a delete --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net" --yes
             az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net"
             az network private-dns record-set a add-record \
@@ -554,14 +558,14 @@ jobs:
           # Create
           if [ -z "$ipv4_address" ]
           then
-            #az network private-dns record-set a show   --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com" || \
+            echo Setting private link IP address...
+
             az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-mongo \
               --zone-name "privatelink.mongo.cosmos.azure.com" \
               --ipv4-address $interface_ip
             
-            #az network private-dns record-set a show   --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com" || \
             az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-mongo-uksouth \
@@ -572,6 +576,8 @@ jobs:
           # Update
           if [ "$ipv4_address" != "$interface_ip" ]
           then
+            echo Updating private link IP address...
+
             az network private-dns record-set a delete --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com" --yes
             az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com"
             az network private-dns record-set a add-record \
@@ -746,7 +752,8 @@ jobs:
           # Create
           if [ -z "$ipv4_address" ]
           then
-            #az network private-dns record-set a show   --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net" || \
+            echo Setting private link IP address...
+
             az network private-dns record-set a create --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net"
             az network private-dns record-set a add-record \
               --record-set-name tfs${{ env.environment }}storage \
@@ -757,6 +764,8 @@ jobs:
           # Update
           if [ "$ipv4_address" != "$interface_ip" ]
           then
+            echo Updating private link IP address...
+
             az network private-dns record-set a delete --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net" --yes
             az network private-dns record-set a create --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net"
             az network private-dns record-set a add-record \
@@ -821,7 +830,8 @@ jobs:
           # Create
           if [ -z "$ipv4_address" ]
           then
-            #az network private-dns record-set a show   --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net" || \
+            echo Setting private link IP address...
+
             az network private-dns record-set a create --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-redis \
@@ -832,6 +842,8 @@ jobs:
           # Update
           if [ "$ipv4_address" != "$interface_ip" ]
           then
+            echo Updating private link IP address...
+
             az network private-dns record-set a delete --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net" --yes
             az network private-dns record-set a create --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net"
             az network private-dns record-set a add-record \
