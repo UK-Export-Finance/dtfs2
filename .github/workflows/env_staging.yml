@@ -128,7 +128,7 @@ jobs:
     #         --address-prefixes 10.0.210.0/28
 
   private-dns:
-    name: Private DNS
+    name: Private DNS zones
     needs: vnet
     runs-on: ubuntu-latest
     steps:
@@ -235,7 +235,7 @@ jobs:
             --vnet tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
-    - name: Private link
+    - name: Private endpoint
       uses: Azure/cli@v1.0.0
       with:
         # Restrict inbound traffic to not be open to the Internet
@@ -259,26 +259,45 @@ jobs:
         inlineScript: |
           ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
 
+          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-portal-ui --query 'networkInterfaces[0].id' -o tsv)
+          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+          
+          # Create
           if [ -z "$ipv4_address" ]
           then
-            interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-portal-ui --query 'networkInterfaces[0].id' -o tsv)
-            interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+            echo Setting private link IP address...
 
-            az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net" || \
             az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-portal-ui \
               --zone-name "privatelink.azurewebsites.net" \
               --ipv4-address $interface_ip
             
-            az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net" || \
             az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-portal-ui.scm \
               --zone-name "privatelink.azurewebsites.net" \
               --ipv4-address $interface_ip
-          else
-            echo "IP for tfs-${{ env.environment }}-portal-ui.privatelink.azurewebsites.net is $ipv4_address"
+          fi
+
+          # Update
+          if [ "$ipv4_address" != "$interface_ip" ]
+          then
+            echo Updating private link IP address...
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-portal-ui \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-portal-ui.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
           fi
 
     - name: Continuous deployment
@@ -382,27 +401,46 @@ jobs:
         # NB the -z tests below are checking 
         inlineScript: |
           ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+
+          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-portal-api --query 'networkInterfaces[0].id' -o tsv)
+          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
           
+          # Create
           if [ -z "$ipv4_address" ]
           then
-            interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-portal-api --query 'networkInterfaces[0].id' -o tsv)
-            interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+            echo Setting private link IP address...
 
-            az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net" || \
             az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-portal-api \
               --zone-name "privatelink.azurewebsites.net" \
               --ipv4-address $interface_ip
             
-            az network private-dns record-set a show   --name tfs-${{ env.environment }}-portal-api.scm --zone-name "privatelink.azurewebsites.net" || \
             az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-api.scm --zone-name "privatelink.azurewebsites.net"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-portal-api.scm \
               --zone-name "privatelink.azurewebsites.net" \
               --ipv4-address $interface_ip
-          else
-            echo "IP for tfs-${{ env.environment }}-portal-api.privatelink.azurewebsites.net is $ipv4_address"
+          fi
+
+          # Update
+          if [ "$ipv4_address" != "$interface_ip" ]
+          then
+            echo Update private link IP address...
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-api --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-portal-api \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-portal-api.scm --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-api.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-portal-api.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
           fi
 
     - name: Continuous deployment
@@ -490,6 +528,22 @@ jobs:
         inlineScript: |
           az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB --server-version 3.6
 
+    - name: Private link
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource"
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          mongo_id=$(az cosmosdb show --name tfs-${{ env.environment }}-mongo --query "id" -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-mongo \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-private-endpoints \
+            --private-connection-resource-id "$mongo_id" \
+            --group-id MongoDB \
+            --connection-name tfs-${{ env.environment }}-mongo
+
     - name: DNS A-records
       uses: Azure/cli@v1.0.0
       with:
@@ -500,28 +554,46 @@ jobs:
         inlineScript: |
           ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com" --query "aRecords[0].ipv4Address" -o tsv || echo "")
 
+          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-mongo --query 'networkInterfaces[0].id' -o tsv)
+          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+          interface_uksouth_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[1].properties.privateIPAddress" -o tsv)
+          
+          # Create
           if [ -z "$ipv4_address" ]
           then
-            mongo_interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-mongo --query 'networkInterfaces[0].id' -o tsv)
+            echo Setting private link IP address...
 
-            mongo_interface_ip=$(az resource show --ids $mongo_interface_id --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
-            az network private-dns record-set a show   --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com" || \
             az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-mongo \
               --zone-name "privatelink.mongo.cosmos.azure.com" \
-              --ipv4-address $mongo_interface_ip
-
-            mongo_uksouth_interface_ip=$(az resource show --ids $mongo_interface_id --query "properties.ipConfigurations[1].properties.privateIPAddress" -o tsv)
-            az network private-dns record-set a show   --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com" || \
+              --ipv4-address $interface_ip
+            
             az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-mongo-uksouth \
               --zone-name "privatelink.mongo.cosmos.azure.com" \
-              --ipv4-address $mongo_uksouth_interface_ip
+              --ipv4-address $interface_uksouth_ip
+          fi
 
-          else
-            echo "IP for tfs-${{ env.environment }}-mongo.privatelink.mongo.cosmos.azure.com is $ipv4_address"
+          # Update
+          if [ "$ipv4_address" != "$interface_ip" ]
+          then
+            echo Updating private link IP address...
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-mongo \
+              --zone-name "privatelink.mongo.cosmos.azure.com" \
+              --ipv4-address $interface_ip
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-mongo-uksouth \
+              --zone-name "privatelink.mongo.cosmos.azure.com" \
+              --ipv4-address $interface_uksouth_ip
           fi
 
     - name: Database with autoscale
@@ -565,41 +637,55 @@ jobs:
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters --shard "_id"
 
-    - name: Add Deal ID counter 1
-      run: |
-        cat <<EOF > id-counters.json
-          [
-            {
-              "_id" : "DEAL_COUNTER",
-              "count" : 1000000
-            },
-            {
-              "_id" : "FACILITY_COUNTER",
-              "count" : 1000000
-            }
-          ]
-        EOF
-        cat id-counters.json
-        echo Attempt 1...
-        echo "MONGO_URI: ${{ env.MONGODB_URI }}"
-        mongoimport "${{ env.MONGODB_URI }}" --db=${{ env.database_name }} --collection=idCounters --jsonArray --ssl --sslAllowInvalidCertificates --file=id-counters.json
-        echo end.
-    
-    - name: Private link
-      uses: Azure/cli@v1.0.0
-      with:
-        # Restrict inbound traffic to not be open to the Internet
-        # NB: group-id isn't well documented. It means "Target sub-resource"
-        #     The purpose of connection-name is unknown.
-        inlineScript: |
-          mongo_id=$(az cosmosdb show --name tfs-${{ env.environment }}-mongo --query "id" -o tsv)
-          az network private-endpoint create \
-            --name tfs-${{ env.environment }}-mongo \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "$mongo_id" \
-            --group-id MongoDB \
-            --connection-name tfs-${{ env.environment }}-mongo
+    # - name: Add Deal ID counter
+    #   run: |
+    #     cat <<EOF > deal-counter.js
+    #     db = db.getSiblingDB('tfs-portal')
+    #     try {
+    #       db.idCounters.insertOne({
+    #         "_id" : "DEAL_COUNTER",
+    #         "count" : 1000000
+    #       })
+    #     } catch (err) {
+    #       print("Deal counter exists.")
+    #       print(err)
+    #     }
+    #     EOF
+    #     cat deal-counter.js
+    #     echo Attempt 1...
+    #     mongo ${{ env.MONGODB_URI }} deal-counter.js
+    #     echo Attempt 2...
+    #     mongo ${{ env.MONGODB_URI }} deal-counter.js
+    #     echo Attempt 3...
+    #     mongo ${{ env.MONGODB_URI }} deal-counter.js
+    #     echo Attempt 4...
+    #     mongo ${{ env.MONGODB_URI }} deal-counter.js
+    #     echo end.
+
+    # - name: Add Facility ID counter
+    #   run: |
+    #     cat <<EOF > facility-counter.js
+    #     db = db.getSiblingDB('tfs-portal')
+    #     try {
+    #       db.idCounters.insertOne({
+    #         "_id" : "FACILITY_COUNTER",
+    #         "count" : 1000000
+    #       })
+    #     } catch (err) {
+    #       print("Facility counter exists.")
+    #       print(err)
+    #     }
+    #     EOF
+    #     cat facility-counter.js
+    #     echo Attempt 1...
+    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
+    #     echo Attempt 2...
+    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
+    #     echo Attempt 3...
+    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
+    #     echo Attempt 4...
+    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
+    #     echo end.
 
   file-storage:
     name: File storage
@@ -663,26 +749,32 @@ jobs:
         inlineScript: |
           ipv4_address=$(az network private-dns record-set a show --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
 
+          interface_id=$(az network private-endpoint show --name tfs${{ env.environment }}storage --query 'networkInterfaces[0].id' -o tsv)
+          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+          
+          # Create
           if [ -z "$ipv4_address" ]
           then
-            echo "Setting up private DNS for tfs${{ env.environment }}storage.privatelink.file.core.windows.net"
-            storage_interface_id=$(az network private-endpoint show --name tfs${{ env.environment }}storage --query 'networkInterfaces[0].id' -o tsv)
-            echo "Storage interface id: $storage_interface_id"
-            storage_interface_ip=$(az resource show --ids $storage_interface_id --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
-            echo "Storage interface IP: $storage_interface_ip"
+            echo Setting private link IP address...
 
-            echo "Creating record"
-            az network private-dns record-set a show   --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net" || \
             az network private-dns record-set a create --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net"
-            echo "Setting record value"
             az network private-dns record-set a add-record \
               --record-set-name tfs${{ env.environment }}storage \
               --zone-name "privatelink.file.core.windows.net" \
-              --ipv4-address $storage_interface_ip
-            echo "Done."
+              --ipv4-address $interface_ip
+          fi
 
-          else
-            echo "IP for tfs${{ env.environment }}storage.privatelink.file.core.windows.net is $ipv4_address"
+          # Update
+          if [ "$ipv4_address" != "$interface_ip" ]
+          then
+            echo Updating private link IP address...
+
+            az network private-dns record-set a delete --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net" --yes
+            az network private-dns record-set a create --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs${{ env.environment }}storage \
+              --zone-name "privatelink.file.core.windows.net" \
+              --ipv4-address $interface_ip
           fi
              
   redis:
@@ -735,26 +827,32 @@ jobs:
         inlineScript: |
           ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
 
+          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-redis --query 'networkInterfaces[0].id' -o tsv)
+          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+          
+          # Create
           if [ -z "$ipv4_address" ]
           then
-            echo "Setting up private DNS for tfs-${{ env.environment }}-redis.privatelink.redis.cache.windows.net"
-            redis_interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-redis --query 'networkInterfaces[0].id' -o tsv)
-            echo "Redis interface id: $redis_interface_id"
-            redis_interface_ip=$(az resource show --ids $redis_interface_id --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
-            echo "Redis interface IP: $redis_interface_ip"
+            echo Setting private link IP address...
 
-            echo "Creating record"
-            az network private-dns record-set a show   --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net" || \
             az network private-dns record-set a create --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net"
-            echo "Setting record value"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-redis \
               --zone-name "privatelink.redis.cache.windows.net" \
-              --ipv4-address $redis_interface_ip
-            echo "Done."
+              --ipv4-address $interface_ip
+          fi
 
-          else
-            echo "IP for tfs-${{ env.environment }}-redis.privatelink.redis.cache.windows.net is $ipv4_address"
+          # Update
+          if [ "$ipv4_address" != "$interface_ip" ]
+          then
+            echo Updating private link IP address...
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-redis \
+              --zone-name "privatelink.redis.cache.windows.net" \
+              --ipv4-address $interface_ip
           fi
 
   application-gateway:
