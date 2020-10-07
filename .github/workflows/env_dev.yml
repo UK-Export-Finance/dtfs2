@@ -553,7 +553,7 @@ jobs:
 
           interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-mongo --query 'networkInterfaces[0].id' -o tsv)
           interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
-          interface_uksouth_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+          interface_uksouth_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[1].properties.privateIPAddress" -o tsv)
           
           # Create
           if [ -z "$ipv4_address" ]
