@@ -66,7 +66,7 @@ context('Loan Financial Details', () => {
       cy.url().should('include', '/loan/');
       cy.url().should('include', '/dates-repayments');
       pages.loanDatesRepayments.submit().click();
-      cy.url().should('include', '/preview');
+      cy.url().should('include', '/check-your-answers');
       partials.loanProgressNav.progressNavLinkLoanFinancialDetails().click();
 
       partials.errorSummary.errorSummaryLinks().should('have.length', 5);

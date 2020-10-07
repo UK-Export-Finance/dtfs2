@@ -43,7 +43,7 @@ context('Add a Loan to a Deal', () => {
     });
     cy.addLoanToDeal();
 
-    cy.url().should('include', '/preview');
+    cy.url().should('include', '/check-your-answers');
 
     pages.loanPreview.submissionDetails().should('be.visible');
   });
@@ -108,7 +108,7 @@ context('Add a Loan to a Deal', () => {
       pages.loanGuaranteeDetails.submit().click();
       pages.loanFinancialDetails.submit().click();
       pages.loanDatesRepayments.submit().click();
-      cy.url().should('include', '/preview');
+      cy.url().should('include', '/check-your-answers');
 
       partials.errorSummary.errorSummaryLinks().should('have.length', 7);
 

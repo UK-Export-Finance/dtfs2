@@ -240,11 +240,11 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => 
     errorHref,
   );
 
-  const redirectUrl = `/contract/${dealId}/loan/${loanId}/preview`;
+  const redirectUrl = `/contract/${dealId}/loan/${loanId}/check-your-answers`;
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/loan/:loanId/preview', provide([LOAN]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), async (req, res) => {
   const { loanId, userToken } = requestParams(req);
   const {
     dealId,
