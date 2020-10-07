@@ -8,7 +8,7 @@ const {
   calculateGuaranteeFee,
   calculateUkefExposure,
 } = require('../../../src/v1/section-calculations');
-const { findOneCurrency } = require('../../../src/v1/controllers/currencies/currencies.controller');
+const { findOneCurrency } = require('../../../src/v1/controllers/currencies.controller');
 
 describe('/v1/deals/:id/loan', () => {
   const newDeal = aDeal({
