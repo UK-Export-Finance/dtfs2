@@ -54,7 +54,7 @@ context('Loan Dates and Repayments', () => {
       pages.loanDatesRepayments.submit().click();
 
       cy.url().should('include', '/loan/');
-      cy.url().should('include', '/preview');
+      cy.url().should('include', '/check-your-answers');
 
       partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
       cy.url().should('include', '/dates-repayments');
@@ -71,7 +71,7 @@ context('Loan Dates and Repayments', () => {
       pages.loanDatesRepayments.premiumTypeAtMaturityInput().click();
       pages.loanDatesRepayments.premiumFrequencyAnnuallyInput().should('not.be.visible');
       pages.loanDatesRepayments.submit().click();
-      cy.url().should('include', '/preview');
+      cy.url().should('include', '/check-your-answers');
 
       partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
       cy.url().should('include', '/dates-repayments');
@@ -93,7 +93,7 @@ context('Loan Dates and Repayments', () => {
       pages.loanDatesRepayments.premiumTypeInAdvanceInput().click();
 
       pages.loanDatesRepayments.submit().click();
-      cy.url().should('include', '/preview');
+      cy.url().should('include', '/check-your-answers');
 
       partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
       partials.errorSummary.errorSummaryLinks().should('have.length', 2);
@@ -129,7 +129,7 @@ context('Loan Dates and Repayments', () => {
       goToPage(deal);
       fillLoanForm.datesRepayments.inAdvanceAnnually();
       pages.loanDatesRepayments.submit().click();
-      cy.url().should('include', '/preview');
+      cy.url().should('include', '/check-your-answers');
 
       partials.loanProgressNav.progressNavLinkLoanDatesRepaymentsCompletedCheckbox().should('be.visible');
       partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();

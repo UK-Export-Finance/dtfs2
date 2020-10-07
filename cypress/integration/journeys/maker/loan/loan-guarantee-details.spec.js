@@ -67,7 +67,7 @@ context('Loan Guarantee Details', () => {
 
       cy.url().should('include', '/dates-repayments');
       pages.loanDatesRepayments.submit().click();
-      cy.url().should('include', '/preview');
+      cy.url().should('include', '/check-your-answers');
 
       partials.loanProgressNav.progressNavLinkLoanGuaranteeDetails().click();
 

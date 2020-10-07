@@ -7,7 +7,7 @@ const partial = {
   aboutBuyerLink: () => cy.get('[data-cy="progress-nav-item-link-about/buyer"]'),
   aboutFinancialComplete: () => cy.get('[data-cy="progress-nav-item-about/financial--completed-checkbox"]'),
   aboutFinancialLink: () => cy.get('[data-cy="progress-nav-item-link-about/financial"]'),
-  previewLink: () => cy.get('[data-cy="progress-nav-item-link-about/preview"]'),
+  previewLink: () => cy.get('[data-cy="progress-nav-item-link-about/check-your-answers"]'),
   expectError: (text) => cy.get('.govuk-error-message').contains(text),
 };
 

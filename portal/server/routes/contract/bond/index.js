@@ -239,11 +239,11 @@ router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
     errorHref,
   );
 
-  const redirectUrl = `/contract/${dealId}/bond/${bondId}/preview`;
+  const redirectUrl = `/contract/${dealId}/bond/${bondId}/check-your-answers`;
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/bond/:bondId/preview', async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/check-your-answers', async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
   const { user } = req.session;
 

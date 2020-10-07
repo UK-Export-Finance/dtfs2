@@ -47,7 +47,7 @@ context('Bond Fee Details', () => {
 
       pages.bondFeeDetails.submit().click();
 
-      cy.url().should('include', '/preview');
+      cy.url().should('include', '/check-your-answers');
       partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
 
       const TOTAL_REQUIRED_FORM_FIELDS = 2;
@@ -67,7 +67,7 @@ context('Bond Fee Details', () => {
 
       pages.bondFeeDetails.submit().click();
 
-      cy.url().should('include', '/preview');
+      cy.url().should('include', '/check-your-answers');
       partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
 
       const TOTAL_REQUIRED_FORM_FIELDS = 2;
@@ -104,7 +104,7 @@ context('Bond Fee Details', () => {
 
     cy.url().should('include', '/contract');
     cy.url().should('include', '/bond/');
-    cy.url().should('include', '/preview');
+    cy.url().should('include', '/check-your-answers');
 
     partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
     cy.url().should('include', '/fee-details');
