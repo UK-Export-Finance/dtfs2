@@ -95,7 +95,11 @@ const updateIssuedFacilities = async (
   newStatus,
 ) => {
   const updatedDeal = deal;
-  const dealStatusAllowsIssuedFacilitiesStatusChanges = (fromStatus && fromStatus !== 'Draft');
+
+
+  const fromStatusIsApprovedStatus = (fromStatus === CONSTANTS.DEAL.STATUS.APPROVED
+                                      || fromStatus === CONSTANTS.DEAL.STATUS.APPROVED_WITH_CONDITIONS);
+  const isMINdeal = deal.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
 
   const update = (facilities) => {
     const arr = facilities;
@@ -106,7 +110,7 @@ const updateIssuedFacilities = async (
 
       const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
                                   && facility.issueFacilityDetailsProvided
-                                  && dealStatusAllowsIssuedFacilitiesStatusChanges
+                                  && fromStatus !== CONSTANTS.DEAL.STATUS.DRAFT
                                   && facility.status !== CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED
                                   && (newStatus && newStatus.length > 0));
 
@@ -130,9 +134,12 @@ const updateIssuedFacilities = async (
 
         if (updateIssuedFacilitiesCoverStartDates
           && !facility.issueFacilityDetailsSubmitted
-          && !facility.requestedCoverStartDate
-          && facilityHasValidIssuedDate(facility, deal)) {
-          facility.requestedCoverStartDate = facility.issuedDate;
+          && !facility.requestedCoverStartDate) {
+          if (fromStatusIsApprovedStatus && isMINdeal) {
+            facility.requestedCoverStartDate = deal.details.manualInclusionNoticeSubmissionDate;
+          } else if (facilityHasValidIssuedDate(facility, deal)) {
+            facility.requestedCoverStartDate = facility.issuedDate;
+          }
         }
       }
       return facility;
