@@ -74,16 +74,6 @@ describe('/v1/deals/:id/status - facilities', () => {
         updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
       });
 
-      // const isUnsubmittedIssuedFacility = (facility) => {
-      //   if ((facility.facilityStage === 'Unissued' || facility.facilityStage === 'Conditional')
-      //     && facility.issueFacilityDetailsProvided
-      //     && !facility.issueFacilityDetailsSubmitted
-      //     && facility.status !== 'Submitted') {
-      //     return facility;
-      //   }
-      //   return null;
-      // };
-
       describe('any issued bonds that have details provided, but not yet been submitted', () => {
         it('should add `Ready for check` status, change facilityStage from `Unissued` to `Issued` and add previousFacilityStage', async () => {
           expect(updatedDeal.status).toEqual(200);
