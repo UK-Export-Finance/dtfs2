@@ -331,7 +331,8 @@ jobs:
               WEBSITES_PORT=5000 \
               DEAL_API_URL="${{ env.DEAL_API_URL }}" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
-              WEBSITE_DNS_SERVER="168.63.129.16"
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1
 
     - name: Secrets
       uses: Azure/cli@v1.0.0
@@ -475,7 +476,8 @@ jobs:
             --settings \
               PORT=5000 \
               WEBSITES_PORT=5000 \
-              WEBSITE_DNS_SERVER="168.63.129.16"
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1
 
     - name: Secrets
       uses: Azure/cli@v1.0.0
