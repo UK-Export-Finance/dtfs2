@@ -1,6 +1,6 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
-const { NotifyClient } = require('notifications-node-client')
+const { NotifyClient } = require('notifications-node-client');
 const util = require('util');
 
 const router = express.Router();
@@ -33,11 +33,11 @@ async function pingStorage() {
 }
 
 async function pingNotify() {
-  const notifyClient = new NotifyClient(process.env.GOV_NOTIFY_API_KEY)
-  return await notifyClient
+  const notifyClient = new NotifyClient(process.env.GOV_NOTIFY_API_KEY);
+  return notifyClient
     .getAllTemplates('email')
-    .then((response) => { return response.statusCode })
-    .catch((err) => { return util.inspect(error); })
+    .then((response) => response.statusCode)
+    .catch((error) => util.inspect(error));
 }
 
 router.get('/healthcheck', (req, res) => {
