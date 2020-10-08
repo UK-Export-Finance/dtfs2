@@ -9,8 +9,6 @@ const options = {
   appname: process.env.MONGODB_OPTIONS_APPNAME,
 };
 
-console.log({ env: process.env });
-
 module.exports = {
   dbName,
   url: connectionString,
