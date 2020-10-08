@@ -1,7 +1,7 @@
 const dealsQuery = require('./deals-query');
 const transactionsQuery = require('./transactions-query');
 
-module.exports = {
+export default {
   dealsQuery,
   transactionsQuery,
 };

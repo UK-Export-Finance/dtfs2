@@ -42,12 +42,3 @@ export const changeIndustryClasses = (event, sectors, selectedValue) => {
     selectElement.selectedIndex = '0';
   }
 };
-
-const attachToWindow = () => {
-  window.dtfs = {
-    ...window.dtfs,
-    changeIndustryClasses,
-  };
-};
-
-export default attachToWindow;

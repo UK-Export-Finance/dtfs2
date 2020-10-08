@@ -16,4 +16,5 @@ mutation DealStatus($dealId: String, $status: String, $comments: String){
   }
 }`;
 
-module.exports = gql(dealStatusUpdate);
+
+export default gql(dealStatusUpdate);

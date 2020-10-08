@@ -1,6 +1,8 @@
+import apollo from './graphql/apollo';
+
 const axios = require('axios');
 const FormData = require('form-data');
-const apollo = require('./graphql/apollo');
+// const apollo = require('./graphql/apollo');
 
 const { dealsQuery, transactionsQuery } = require('./graphql/queries');
 

@@ -42,11 +42,11 @@ describe('number', () => {
   });
 
   describe('attachToWindow', () => {
-    it('should attach all functions to window.dtfs', () => {
+    it('should attach all functions to DTFS.main', () => {
       attachToWindow();
-      expect(global.window.dtfs.isNumeric).toEqual(isNumeric);
-      expect(global.window.dtfs.decimalsCount).toEqual(decimalsCount);
-      expect(global.window.dtfs.roundNumber).toEqual(roundNumber);
+      expect(global.DTFS.main.isNumeric).toEqual(isNumeric);
+      expect(global.DTFS.main.decimalsCount).toEqual(decimalsCount);
+      expect(global.DTFS.main.roundNumber).toEqual(roundNumber);
     });
   });
 });

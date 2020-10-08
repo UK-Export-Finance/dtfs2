@@ -75,9 +75,9 @@ describe('changeIndustryClasses', () => {
   });
 
   describe('attachToWindow', () => {
-    it('should attach changeIndustryClasses function to window.dtfs', () => {
+    it('should attach changeIndustryClasses function to DTFS.main', () => {
       attachToWindow();
-      expect(global.window.dtfs.changeIndustryClasses).toEqual(changeIndustryClasses);
+      expect(global.DTFS.main.changeIndustryClasses).toEqual(changeIndustryClasses);
     });
   });
 });

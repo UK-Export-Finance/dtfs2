@@ -3,11 +3,23 @@
     [
       "@babel/preset-env",
       {
-        "targets": {
-          "esmodules": true
-        }
+        // "targets": {
+        //   "esmodules": true,
+        // }
+        "modules": false,
+        "useBuiltIns": "usage", // alternative mode: "entry"
+        "corejs": 3, // default would be 2
+        "targets": "> 0.25%, not dead"
       }
     ]
-  ]
+  ],
+  // "plugins": [
+  //   [
+  //     "@babel/plugin-transform-runtime",
+  //     {
+  //       "regenerator": true
+  //     }
+  //   ]
+  // ]
 }
 
