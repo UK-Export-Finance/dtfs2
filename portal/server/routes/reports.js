@@ -1,5 +1,5 @@
 import express from 'express';
-// mport util from 'util';
+import moment from 'moment';
 import api from '../api';
 import buildReportFilters from './buildReportFilters';
 import { getRAGstatus, getExpiryDates } from './expiryStatusUtils';
@@ -9,7 +9,6 @@ import {
   requestParams,
 } from '../helpers';
 
-const moment = require('moment');
 require('moment-timezone');// monkey-patch to provide moment().tz()
 
 function filterLocaliseTimestamp(utcTimestamp, targetTimezone) {
