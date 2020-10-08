@@ -38,4 +38,4 @@ query Transactions($start: Int, $pagesize: Int, $filters:[TransactionFilters]){
   }
 }`;
 
-module.exports = gql(transactionsQuery);
+export default gql(transactionsQuery);

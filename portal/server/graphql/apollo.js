@@ -73,4 +73,5 @@ const apollo = async (method, query, variables, token) => {
   }
 };
 
-module.exports = apollo;
+// module.exports = apollo;
+export default apollo;

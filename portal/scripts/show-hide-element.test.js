@@ -63,14 +63,14 @@ describe('changeIndustryClasses', () => {
   });
 
   describe('attachToWindow', () => {
-    it('should attach showHideElement function to window.dtfs', () => {
+    it('should attach showHideElement function to DTFS.main', () => {
       attachToWindow();
-      expect(global.window.dtfs.showHideElement).toEqual(showHideElement);
+      expect(global.DTFS.main.showHideElement).toEqual(showHideElement);
     });
 
-    it('should attach changeScreenVisibilityOfElement function to window.dtfs', () => {
+    it('should attach changeScreenVisibilityOfElement function to DTFS.main', () => {
       attachToWindow();
-      expect(global.window.dtfs.changeScreenVisibilityOfElement).toEqual(changeScreenVisibilityOfElement);
+      expect(global.DTFS.main.changeScreenVisibilityOfElement).toEqual(changeScreenVisibilityOfElement);
     });
   });
 });

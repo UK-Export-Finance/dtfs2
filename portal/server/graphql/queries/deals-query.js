@@ -35,4 +35,4 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
   }
 }`;
 
-module.exports = gql(dealsQuery);
+export default gql(dealsQuery);

@@ -1,5 +1,7 @@
 const dealStatusUpdate = require('./dealStatusMutation');
 
-module.exports = {
-  dealStatusUpdate,
-};
+// module.exports = {
+//   dealStatusUpdate,
+// };
+
+export default { dealStatusUpdate };

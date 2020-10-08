@@ -1,7 +1,7 @@
 const path = require('path');
 const globEntries = require('webpack-glob-entries');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
-// const TerserPlugin = require('terser-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
@@ -20,12 +20,33 @@ module.exports = {
   entry: {
     main: './scripts/main.js',
     govukFrontend: './scripts/govuk-frontend.js',
-    maskedInputs: './scripts/masked-inputs.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/',
-    filename: '[name].js'
+    filename: '[name].js',
+    library: ['DTFS', '[name]'],
+    libraryTarget: 'var',
+  },
+  target: 'web',
+  // devtool: 'source-map',
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin(),
+      new OptimizeCSSAssetsPlugin({})
+    ],
+  },
+
+  // WORKING
+  /*
+  entry: './scripts/main.js',
+  output: {
+    path: path.join(__dirname, 'dist'),
+    publicPath: '/',
+    filename: '[name].js',
+    library: 'EntryPoint',
+    libraryTarget: 'var',
   },
   target: 'web',
   devtool: 'source-map',
@@ -36,6 +57,7 @@ module.exports = {
       new OptimizeCSSAssetsPlugin({})
     ],
   },
+  */
   module: {
     rules: [
       {
