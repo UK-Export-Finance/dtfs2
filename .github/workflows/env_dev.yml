@@ -321,6 +321,8 @@ jobs:
     - name: Environment variables
       uses: Azure/cli@v1.0.0
       with:
+        # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
+        # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
         # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
         inlineScript: |
           az webapp config appsettings set --name tfs-${{ env.environment }}-portal-ui \
@@ -328,7 +330,9 @@ jobs:
               PORT=5000 \
               WEBSITES_PORT=5000 \
               DEAL_API_URL="${{ env.DEAL_API_URL }}" \
-              COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}"
+              COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1
 
     - name: Secrets
       uses: Azure/cli@v1.0.0
@@ -464,12 +468,16 @@ jobs:
     - name: Environment variables
       uses: Azure/cli@v1.0.0
       with:
+        # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
+        # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
+        # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
         inlineScript: |
-          # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
           az webapp config appsettings set --name tfs-${{ env.environment }}-portal-api \
             --settings \
               PORT=5000 \
-              WEBSITES_PORT=5000
+              WEBSITES_PORT=5000 \
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1
 
     - name: Secrets
       uses: Azure/cli@v1.0.0
