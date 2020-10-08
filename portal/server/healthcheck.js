@@ -1,8 +1,4 @@
-import companiesHouseAPI from './companies-house-api';
-
-const express = require('express');
-const axios = require('axios');
-require('dotenv').config();
+import express from 'express';
 
 const healthcheck = express.Router();
 const GITHUB_SHA = process.env.GITHUB_SHA || 'undefined';
