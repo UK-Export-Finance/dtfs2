@@ -11,8 +11,7 @@ const PAGESIZE = 20;
 const primaryNav = 'reports';
 const router = express.Router();
 
-router.get('/reports/unissued-transactions',
-  async (req, res) => res.redirect('/reports/unissued-transactions/0'));
+router.get('/reports/unissued-transactions', async (req, res) => res.redirect('/reports/unissued-transactions/0'));
 
 router.get('/reports/unissued-transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
@@ -35,6 +34,25 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
     filterByStatus: 'submissionAcknowledged',
   };
   const filters = buildReportFilters(stageFilters, req.session.user);
+
+  const allData = await getApiData(
+    api.transactions(0, 0, filters, userToken),
+    res,
+  );
+  allData.transactions = getExpiryDates(allData.transactions, 90, false);
+
+  let allTransactions = [];
+  if (fromDays > 0) {
+    allTransactions = allData.transactions.filter(
+      (transaction) => transaction.remainingDays >= fromDays && transaction.remainingDays <= toDays,
+    );
+  } else {
+    allTransactions = allData.transactions.filter(
+      (transaction) => transaction.remainingDays <= toDays,
+    );
+  }
+
+  const count = allTransactions.length;
 
   const rawData = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
@@ -61,8 +79,6 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
     sortOrder.image = 'twistie-down';
   }
 
-  const count = transactions.length;
-
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
     currentPage: parseInt(req.params.page, 10),
@@ -71,9 +87,13 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
 
   return res.render('reports/unissued-transactions-report.njk', {
     pages,
+    count,
     transactions,
     primaryNav,
     banks,
+    filter: {
+      ...filters,
+    },
     sortOrder,
     subNav: 'unissued-transactions-report',
     user: req.session.user,
@@ -111,6 +131,25 @@ router.post('/reports/unissued-transactions/:page', async (req, res) => {
   };
   const filters = buildReportFilters(submissionFilters, stageFilters, req.session.user);
 
+  const allData = await getApiData(
+    api.transactions(0, 0, filters, userToken),
+    res,
+  );
+  allData.transactions = getExpiryDates(allData.transactions, 90, false);
+
+  let allTransactions = [];
+  if (fromDays > 0) {
+    allTransactions = allData.transactions.filter(
+      (transaction) => transaction.remainingDays >= fromDays && transaction.remainingDays <= toDays,
+    );
+  } else {
+    allTransactions = allData.transactions.filter(
+      (transaction) => transaction.remainingDays <= toDays,
+    );
+  }
+
+  const count = allTransactions.length;
+
   const rawData = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
     res,
@@ -136,8 +175,6 @@ router.post('/reports/unissued-transactions/:page', async (req, res) => {
     sortOrder.image = 'twistie-down';
   }
 
-  const count = transactions.length;
-
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
     currentPage: parseInt(req.params.page, 10),
@@ -151,6 +188,10 @@ router.post('/reports/unissued-transactions/:page', async (req, res) => {
     banks,
     filter: {
       ...useFilters,
+<<<<<<< HEAD
+=======
+      ...submissionFilters,
+>>>>>>> countdown_indicator bugfix
     },
     sortOrder,
     subNav: 'unissued-transactions-report',

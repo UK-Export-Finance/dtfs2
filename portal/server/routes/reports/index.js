@@ -60,6 +60,7 @@ router.get('/reports', async (req, res) => {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 function downloadSupplyContracts(supplyContracts, timezone, res) {
   const columns = [{
     prop: 'bankSupplyContractID',
@@ -1870,6 +1871,9 @@ router.use('/', miaMinCoverStartDateChanges);
   });
 });
 =======
+=======
+
+>>>>>>> countdown_indicator bugfix
 router.use('/', miaToBeSubmittedWithConditions);
 router.use('/', miaToBeSubmittedWithoutConditions);
 router.use('/', auditSupplyContracts);
@@ -1880,7 +1884,7 @@ router.use('/', reconciliation);
 router.use('/', transactions);
 router.use('/', transactionReport);
 router.use('/', miaMinCoverStartDateChanges);
->>>>>>> split reports into different files
+
 
 >>>>>>> Add filters to countdown indicator reports:portal/server/routes/reports/index.js
 export default router;
