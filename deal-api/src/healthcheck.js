@@ -9,21 +9,21 @@ const STORAGE_ACCOUNT = process.env.AZURE_PORTAL_STORAGE_ACCOUNT;
 // const STORAGE_ACCESS_KEY = process.env.AZURE_PORTAL_STORAGE_ACCESS_KEY;
 
 async function pingMongo() {
-  if (!MONGO_URI) {
-    return 'MONGO_URI is empty.';
+  if (!MONGODB_URI) {
+    return 'MONGODB_URI is empty.';
   }
 
-  let client
+  let client;
   try {
-    client = await MongoClient.connect( MONGODB_URI );
-    console.log('Querying mongo')
+    client = await MongoClient.connect(MONGODB_URI);
+    console.log('Querying mongo');
     return await client.db(MONGO_INITDB_DATABASE).listCollections().toArray();
   } catch (error) {
-    console.log('Errrrrr')
+    console.log('Errrrrr');
     return util.inspect(error);
   } finally {
     if (client) {
-      console.log('Closing client')
+      console.log('Closing client');
       client.close();
     }
   }
@@ -34,7 +34,6 @@ async function pingRedis() {
 }
 
 async function pingStorage() {
-  // console.log(STORAGE_ACCESS_KEY);
   return STORAGE_ACCOUNT;
 }
 
