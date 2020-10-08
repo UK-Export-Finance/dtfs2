@@ -4,8 +4,7 @@ const util = require('util');
 
 const router = express.Router();
 const GITHUB_SHA = process.env.GITHUB_SHA || 'undefined';
-const { MONGO_URI, REDIS_URI, MONGO_INITDB_DATABASE } = process.env;
-const MONGODB_URI='mongodb://root:no@deal-api-data:27017/?authMechanism=DEFAULT';
+const { MONGODB_URI, REDIS_URI, MONGO_INITDB_DATABASE } = process.env;
 const STORAGE_ACCOUNT = process.env.AZURE_PORTAL_STORAGE_ACCOUNT;
 // const STORAGE_ACCESS_KEY = process.env.AZURE_PORTAL_STORAGE_ACCESS_KEY;
 
