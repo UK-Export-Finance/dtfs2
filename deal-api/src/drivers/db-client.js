@@ -8,7 +8,6 @@ let connection = null;
 
 
 const dbConnect = async () => {
-  console.log({ options });
   client = await MongoClient.connect(
     url,
     {
