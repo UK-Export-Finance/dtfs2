@@ -365,12 +365,6 @@ jobs:
             --plan ${{ env.app_service_plan }} \
             --deployment-container-image-name ${{ env.registry }}/portal-api:${{ env.environment }}
 
-    - name: Create SSH for test - REMOVE THIS AFTER TEST
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az webapp create-remote-connection -n tfs-${{ env.environment }}-portal-api -p 21382
-
     - name: Vnet integration
       uses: Azure/cli@v1.0.0
       with:
