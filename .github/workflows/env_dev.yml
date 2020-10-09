@@ -364,8 +364,12 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az network private-endpoint delete --name tfs-${{ env.environment }}-mongo
-
+          mongo_private_end_point=az network private-endpoint show --resource-group=Digital-Dev --name tfs-${{ env.environment }}-mongo --query name
+          if [ "$mongo_private_end_point" ]
+          then
+            az network private-endpoint delete --name $mongo_private_end_point
+          fi
+      
     - name: Cosmos account for mongodb
       uses: Azure/cli@v1.0.0
       with:
