@@ -364,7 +364,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          mongo_private_end_point=$((az network private-endpoint show --resource-group=Digital-Dev --name tfs-${{ env.environment }}-mongo --query name -o tsv) 2>/dev/null)
+          mongo_private_end_point=$(az network private-endpoint show --resource-group=Digital-Dev --name tfs-${{ env.environment }}-mongo --query name -o tsv 2>/dev/null)
           if [ "$mongo_private_end_point" ]
           then
             az network private-endpoint delete --name "$mongo_private_end_point"
