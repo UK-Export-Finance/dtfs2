@@ -364,7 +364,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          mongo_private_end_point=az network private-endpoint show --resource-group=Digital-Dev --name tfs-${{ env.environment }}-mongo --query name
+          mongo_private_end_point=$(az network private-endpoint show --resource-group=Digital-Dev --name tfs-${{ env.environment }}-mongo --query name)
           if [ "$mongo_private_end_point" ]
           then
             az network private-endpoint delete --name $mongo_private_end_point
@@ -444,7 +444,7 @@ jobs:
           
     - name: Populate Collections
       run: |
-        mongo_connection_string=az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" | sed -e "s/&replicaSet=globaldb//g";
+        mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" | sed -e "s/&replicaSet=globaldb//g")
 
         cat <<EOF > deal-counter.js
         db = db.getSiblingDB('${{ env.database_name }}')
