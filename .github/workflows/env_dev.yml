@@ -490,6 +490,7 @@ jobs:
         }
         EOF
         echo "Initialising idCounters and adding root user"
+        echo "Mongo connection string: $mongo_connection_string"
         mongo "$mongo_connection_string" deal-counter.js
         echo end.
         
@@ -699,6 +700,8 @@ jobs:
         inlineScript: |
           mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
 
+          echo "Mongo connection string: $mongo_connection_string"
+          
           az webapp config connection-string set --name tfs-${{ env.environment }}-portal-api \
             --connection-string-type custom \
             --settings \
