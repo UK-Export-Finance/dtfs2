@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 
-const { dbName, url, options } = require('../config/database.config');
+const { dbName, url } = require('../config/database.config');
 
 let client;
 
@@ -13,7 +13,6 @@ const dbConnect = async () => {
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      ...options,
     },
   );
   connection = client.db(dbName);
