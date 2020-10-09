@@ -21,8 +21,13 @@ const apiHealthCheck = async () => {
 };
 
 const companiesHouseHealthCheck = async () => {
-  const chCheck = await companiesHouseAPI.getByRegistrationNumber('00014259');
-  return chCheck ? 'ok' : 'not ok';
+  const coNoToCheck = '00014259';
+  const chCheck = await companiesHouseAPI.getByRegistrationNumber(coNoToCheck, true);
+  if (chCheck && chCheck.company_number === coNoToCheck) {
+    return 'ok';
+  }
+
+  return chCheck;
 };
 
 healthcheck.get('/healthcheck', async (req, res) => {
