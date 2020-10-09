@@ -22,7 +22,7 @@ env:
   registry: ${{ secrets.TEST_ACR_REGISTRY }}
   # App service settings
   DEAL_API_URL: "https://tfs-test-portal-api.azurewebsites.net"
-  COMPANIES_HOUSE_API_URL: ="https://api.companieshouse.gov.uk"
+  COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
   # App service secrets
   SESSION_SECRET: "${{ secrets.TEST_SESSION_SECRET }}"
   COMPANIES_HOUSE_API_KEY: "${{ secrets.COMPANIES_HOUSE_API_KEY }}"
