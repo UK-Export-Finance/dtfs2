@@ -4,20 +4,18 @@
       "@babel/preset-env",
       {
         "targets": {
-          // "esmodules": false,
-          // "esmodules": true,
           "browsers": [
-            // "> 0.25%, not dead"
               "last 2 versions",
               "ie >= 11"
           ]
         },
 
-        // "useBuiltIns": "usage", // alternative mode: "entry"
         "useBuiltIns": "entry",
-        "corejs": 2, // default would be 2
-        // "targets": "> 0.25%, not dead"
+        "corejs": 2
       }
     ]
   ],
+  "plugins": [
+    "@babel/plugin-transform-runtime"
+  ]
 }
