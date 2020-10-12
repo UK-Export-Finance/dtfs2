@@ -22,12 +22,10 @@ var maskedInputs = function () {
     var maskname = mask.maskname;
     var maskOptions = mask.maskOptions;
 
-      var element = "[data-mask='" + maskname + "']";
-      console.log('element is... ', element);
+    var element = "[data-mask='" + maskname + "']";
 
     var inputs = document.querySelectorAll(element);
 
-    // inputs.forEach(function (element) {
     Array.prototype.forEach.call(inputs, function(element) {
       if (element.innerText) {
         var maskPipe = IMask.createPipe(maskOptions);
