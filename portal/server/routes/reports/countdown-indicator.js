@@ -8,7 +8,7 @@ import {
   requestParams,
 } from '../../helpers';
 
-// const PAGESIZE = 20;
+const PAGESIZE = 20;
 const primaryNav = 'reports';
 const router = express.Router();
 
@@ -36,7 +36,7 @@ router.get('/reports/countdown-indicator', async (req, res) => {
 
   // get all transactions
   const { transactions } = await getApiData(
-    api.transactions(0, 0, filters, userToken),
+    api.transactions(0, PAGESIZE, filters, userToken),
     res,
   );
 
