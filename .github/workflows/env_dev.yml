@@ -493,7 +493,7 @@ jobs:
         echo "Mongo connection string: $mongo_connection_string"
         mongo "$mongo_connection_string" deal-counter.js
         echo end.
-        
+      
   cosmos-db-private:
     name: Cosmos DB (Mongo) Make Private
     needs: [cosmos-db-init, private-dns]
