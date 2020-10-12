@@ -19,14 +19,16 @@ function returnEntries(globPath) {
 module.exports = {
   mode: 'development',
   entry: {
-    main: [
-      './scripts/main.js'
-    ]
+    main: './scripts/main.js',
+    govukFrontend: './scripts/govuk-frontend.js',
+    maskedInputs: './scripts/masked-inputs.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/assets',
-    filename: '[name].js'
+    filename: '[name].js',
+    library: ['DTFS', '[name]'],
+    libraryTarget: 'var',
   },
   target: 'web',
   devtool: 'source-map',
@@ -69,6 +71,7 @@ module.exports = {
     new CopyPlugin([
       { from: './node_modules/govuk-frontend/govuk/assets', to: './assets' },
       { from: './static/images', to: './assets/images' },
+      { from: './static/*', flatten: true },
     ]),
   ],
 };
