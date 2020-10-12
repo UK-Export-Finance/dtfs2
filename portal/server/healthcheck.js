@@ -1,4 +1,6 @@
 import express from 'express';
+import axios from 'axios';
+import companiesHouseAPI from './companies-house-api';
 
 const healthcheck = express.Router();
 const GITHUB_SHA = process.env.GITHUB_SHA || 'undefined';
