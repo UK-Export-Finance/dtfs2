@@ -1,6 +1,6 @@
 import express from 'express';
 import axios from 'axios';
-import companiesHouseAPI from './companies-house-api';
+// import companiesHouseAPI from './companies-house-api';
 
 const healthcheck = express.Router();
 const GITHUB_SHA = process.env.GITHUB_SHA || 'undefined';
@@ -18,6 +18,7 @@ const apiHealthCheck = async () => {
   }
 };
 
+/*
 const companiesHouseHealthCheck = async () => {
   const coNoToCheck = '00014259';
   const chCheck = await companiesHouseAPI.getByRegistrationNumber(coNoToCheck, true);
@@ -27,6 +28,7 @@ const companiesHouseHealthCheck = async () => {
 
   return chCheck;
 };
+*/
 
 healthcheck.get('/healthcheck', async (req, res) => {
   res.status(200).json({
