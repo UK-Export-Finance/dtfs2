@@ -1,6 +1,4 @@
-import {
-  maskedInputs,
-} from './masked-inputs';
+import maskedInputs from './masked-inputs';
 
 describe('maskedInputs', () => {
   describe('setInputMask', () => {

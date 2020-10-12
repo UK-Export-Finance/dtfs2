@@ -1,5 +1,7 @@
 import IMask from 'imask';
 
+/* eslint-disable */
+
 var masks = [
   {
     maskname: 'currency',
@@ -16,13 +18,9 @@ var masks = [
 // get all HTML inputs with `numeric currency` class
 // apply a filter to each input, to filter out non-numeric characters
 var maskedInputs = function () {
-  // masks.forEach(({ maskname, maskOptions }) => {
     masks.forEach(function(mask) {
     var maskname = mask.maskname;
     var maskOptions = mask.maskOptions;
-
-    // var element = 'data-mask=' + '"' + maskname + '"';
-    // var element = '[data-mask=' + '"' + maskname + '"' + ']';
 
       var element = "[data-mask='" + maskname + "']";
       console.log('element is... ', element);
@@ -44,3 +42,7 @@ var maskedInputs = function () {
 };
 
 maskedInputs();
+
+export default maskedInputs;
+
+/* eslint-enable */

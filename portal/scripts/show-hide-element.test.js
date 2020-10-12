@@ -1,4 +1,4 @@
-import attachToWindow, {
+import {
   getElement,
   showHideElement,
   changeScreenVisibilityOfElement,
