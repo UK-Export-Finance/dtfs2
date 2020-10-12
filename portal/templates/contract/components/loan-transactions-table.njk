@@ -15,14 +15,14 @@
       <table class="govuk-table contract-table contract-transactions-table govuk-!-margin-bottom-0" data-cy="loan-transactions-table">
         <thead class="govuk-table__head">
           <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank reference number</th>
-            <th scope="col" class="govuk-table__header govuk-!-font-size-14">UKEF facility ID</th>
-            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th>
-            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Value</th>
-            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Stage</th>
-            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Start date</th>
-            <th scope="col" class="govuk-table__header govuk-!-font-size-14">End date</th>
-            <th scope="col" class="govuk-table__header govuk-!-font-size-14">Action</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-bank-reference-number">Bank reference number</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-ukef-facility-id">UKEF facility ID</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-status">Status</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-value">Value</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-stage">Stage</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-start-date">Start date</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-end-date">End date</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-action">Action</th>
           </tr>
         </thead>
 
@@ -34,7 +34,7 @@
                 {{ loanLink.render(params, loan) }}
               </td>
 
-              <td class="govuk-table__cell govuk-!-font-size-14">
+              <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-ukef-facility-id-{{ loan._id }}">
                 {{ loan.ukefFacilityID }}
               </td>
 
@@ -65,7 +65,7 @@
                 {% set dealStatusAllowsRequestedCoverDateChange = dealStatus === "Acknowledged by UKEF" or dealStatus === "Accepted by UKEF (with conditions)" or dealStatus === "Accepted by UKEF (without conditions)" or dealStatus === "Further Maker's input required" and dealPreviousStatus !== "Draft" %}
                 {% set hasConfirmedCoverStartDate = params.confirmedRequestedCoverStartDates.includes(loan._id) %}
 
-                {% set componentData = {user: params.user, deal: params.deal, editable: params.editable, facility: loan, facilityName: 'loan', hasConfirmedCoverStartDate: hasConfirmedCoverStartDate} %}
+                {% set componentData = {user: params.user, deal: params.deal, editable: params.editable, facility: loan, facilityName: 'loan', hasConfirmedCoverStartDate: hasConfirmedCoverStartDate, facilityTableIndex: loop.index} %}
 
                 {% set userIsMaker = params.user.roles.includes('maker')%}
                 {% set userIsChecker = params.user.roles.includes('checker')%}
