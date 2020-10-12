@@ -1,4 +1,4 @@
-{% macro navItem(title, id, step, completed, status, href, childId, childHref, contractId, current) %}
+{% macro navItem(title, id, step, completed, status, href, childId, childHref, contractId, current, ariaLabel) %}
 
   <div
     {% if completed and current === id %}
@@ -37,6 +37,7 @@
                 class="govuk-link"
                 href="/contract/{{ contractId }}/{{ href }}/{{ childId }}/{{ childHref }}"
                 data-cy="progress-nav-item-link-{{ href }}-{{ childHref }}"
+                aria-label="{{ ariaLabel }}"
               >
                 {{ title }}
               </a>
@@ -45,6 +46,7 @@
               class="govuk-link"
               href="/contract/{{ contractId }}/{{ href }}"
               data-cy="progress-nav-item-link-{{ href }}"
+              aria-label="{{ ariaLabel }}"
             >
               {{ title }}
             </a>
@@ -64,7 +66,9 @@
           {% endif %}
         </span>
         {% if (id === 'preview' and status === 'Completed') or current === id %}
-          {{ title }}
+          <span aria-label="{{ ariaLabel }}">
+            {{ title }}
+          </span>
         {% else %}
 
             {% if childId and childHref %}
@@ -72,6 +76,7 @@
               class="govuk-link"
               href="/contract/{{ contractId }}/{{ href }}/{{ childId }}/{{ childHref }}"
               data-cy="progress-nav-item-link-{{ href }}-{{ childHref }}"
+              aria-label="{{ ariaLabel }}"
             >
               {{ title }}
             </a>
@@ -80,6 +85,7 @@
               class="govuk-link"
               href="/contract/{{ contractId }}/{{ href }}"
               data-cy="progress-nav-item-link-{{ href }}"
+              aria-label="{{ ariaLabel }}"
             >
               {{ title }}
             </a>
