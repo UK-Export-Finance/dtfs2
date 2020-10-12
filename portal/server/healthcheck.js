@@ -32,7 +32,7 @@ healthcheck.get('/healthcheck', async (req, res) => {
   res.status(200).json({
     ui: {
       commit_hash: GITHUB_SHA,
-      companies_house: await companiesHouseHealthCheck(),
+      //      companies_house: await companiesHouseHealthCheck(),
     },
     api: await apiHealthCheck(),
   });
