@@ -1,29 +1,13 @@
 {% extends "index.njk" %}
 {% import '_macros/pagination.njk' as pagination %}
-{% import './_macros/countdown-indicator-filters.njk' as filterControls %}
 
 {% block pageTitle %}Unissued Transactions Report{% endblock %}
+{% import './_macros/countdown-indicator-filters.njk' as filterControls %}
+
 
 {% block content %}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-  <h1 class="govuk-heading-l">Unissued Transactions Report{{ banks|length }}</h1>
-
   <h1 class="govuk-heading-l">Unissued Transactions Report</h1>
-  
-  <h1 class="govuk-heading-l">Unissued Transactions Report{{ banks|length }}</h1>
-=======
-  <h1 class="govuk-heading-l">Unissued Transactions Report</h1>
->>>>>>> bug fix: removed unnecessary element
-=======
-  <h1 class="govuk-heading-l">Unissued Transactions Report{{ banks|length }}</h1>
->>>>>>> filter in unissues-transactions-report
-=======
-  <h1 class="govuk-heading-l">Unissued Transactions Report</h1>
->>>>>>> countdown_indicator bugfix
 
   {{ filterControls.render(filter, user, banks) }}
 
@@ -41,20 +25,20 @@
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Facility stage</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Created by</th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14" aria-sort="{{sortOrder.order}}">
-          <a href="{{sortOrder.queryString}}" class="govuk-link" data-cy="sortOrder">
-            Facility submission date
-            <img src="/assets/images/{{sortOrder.image}}.svg" alt="Re-order table in {{sortOrder.order}} order"/>
-            <span class="tablesort tablesort--desc">
-              <span class="govuk-visually-hidden">
-                Sort
-                {{sortOrder.order}}
-              </span>
-            </span>
-          </a>
-        </th>
+        <a href="{{sortOrder.queryString}}" class="govuk-link" data-cy="sortOrder">
+          Facility submission date
+          <img src="/assets/images/{{sortOrder.image}}.svg" alt="Re-order table in {{sortOrder.order}} order"/>
+          <span class="tablesort tablesort--desc">
+          <span class="govuk-visually-hidden">
+            Sort {{sortOrder.order}}
+          </span>
+        </span>
+        </a>
+          </th>
         <th scope="col" class="govuk-table__header govuk-!-font-size-14">Calendar days to issue</th>
       </tr>
     </thead>
+
 
     <tbody class="govuk-table__body">
 
@@ -62,9 +46,9 @@
         <tr data-cy="transaction_{{transaction._id}}" class="govuk-table__row">
 
           {% if user and user.roles.includes("admin")%}
-            <td data-cy="owningBank" class="govuk-table__cell govuk-!-font-size-14">
-              {{ transaction.deal_owningBank }}
-            </td>
+          <td data-cy="owningBank" class="govuk-table__cell govuk-!-font-size-14">
+            {{ transaction.deal_owningBank }}
+          </td>
           {% endif %}
 
           <td data-cy="bankSupplyContractID" class="govuk-table__cell govuk-!-font-size-14">
@@ -84,8 +68,7 @@
           </td>
 
           <td data-cy="facilityValue" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.currency.id }}
-            {{ transaction.facilityValue | formatAsCurrency }}
+            {{ transaction.currency.id }} {{ transaction.facilityValue | formatAsCurrency }}
           </td>
 
           <td data-cy="transactionStage" class="govuk-table__cell govuk-!-font-size-14">
@@ -98,10 +81,10 @@
 
           <td data-cy="createdDate" class="govuk-table__cell govuk-!-font-size-14">
             {{ transaction.createdDate | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
-            {{ transaction.createdDate | length }}          
           </td>
+
           <td data-cy="remainingDays" class="govuk-table__cell govuk-!-font-size-14">
-            {{ transaction.remainingDays }} ({{ transaction.expiry  | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }})
+            {{ transaction.remainingDays }}
           </td>
 
         </tr>
@@ -110,9 +93,7 @@
     </tbody>
 
   </table>
-  {{ transactions | length }}
-  {{ transactions | dump }}
 
-  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/reports/unissued-transactions') }}
+  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/reports/transactions-report') }}
 
 {% endblock %}

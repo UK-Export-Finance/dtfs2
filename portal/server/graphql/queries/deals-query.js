@@ -25,6 +25,7 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
         }
         dateOfLastAction
         submissionDate
+        approvalDate
         created
         owningBank{
           name
