@@ -61,16 +61,4 @@ describe('changeIndustryClasses', () => {
       });
     });
   });
-
-  describe('attachToWindow', () => {
-    it('should attach showHideElement function to DTFS.main', () => {
-      attachToWindow();
-      expect(global.DTFS.main.showHideElement).toEqual(showHideElement);
-    });
-
-    it('should attach changeScreenVisibilityOfElement function to DTFS.main', () => {
-      attachToWindow();
-      expect(global.DTFS.main.changeScreenVisibilityOfElement).toEqual(changeScreenVisibilityOfElement);
-    });
-  });
 });

@@ -1,4 +1,4 @@
-module.exports = (wrapper, html, params) => {
+const assertions = (wrapper, html, params) => {
   return {
     expectLink: (selector) => {
       return {
@@ -98,3 +98,5 @@ module.exports = (wrapper, html, params) => {
     },
   };
 }
+
+export default assertions;

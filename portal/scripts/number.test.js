@@ -40,13 +40,4 @@ describe('number', () => {
       expect(roundNumber(123456.001)).toEqual(123456);
     });
   });
-
-  describe('attachToWindow', () => {
-    it('should attach all functions to DTFS.main', () => {
-      attachToWindow();
-      expect(global.DTFS.main.isNumeric).toEqual(isNumeric);
-      expect(global.DTFS.main.decimalsCount).toEqual(decimalsCount);
-      expect(global.DTFS.main.roundNumber).toEqual(roundNumber);
-    });
-  });
 });

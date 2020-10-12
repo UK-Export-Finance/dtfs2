@@ -1,3 +1,4 @@
+import 'core-js';
 import {
   changeScreenVisibilityOfElement as changeScreenVisibilityOfElementFunc,
   showHideElement as showHideElementFunc,
@@ -11,7 +12,6 @@ import {
   roundNumber as roundNumberFunc,
 } from './number';
 import '../styles/styles.scss';
-import { maskedInputs as maskedInputsFunc } from './masked-inputs';
 
 export const showHideElement = showHideElementFunc;
 export const changeScreenVisibilityOfElement = changeScreenVisibilityOfElementFunc;
@@ -21,21 +21,3 @@ export const decimalsCount = decimalsCountFunc;
 export const roundNumber = roundNumberFunc;
 
 export const changeIndustryClasses = changeIndustryClassesFunc;
-
-export const maskedInputs = maskedInputsFunc;
-
-// export changeIndustryClasses;
-
-// export default attachToWindow;
-// export const run = () => {
-//   console.log('run from library');
-// };
-
-// export run;
-
-// module.exports = {
-//   run: () => {
-//     console.log('run from library');
-//   },
-//   changeIndustryClassesFunc: theChangeIndustryClassesFunc,
-// };

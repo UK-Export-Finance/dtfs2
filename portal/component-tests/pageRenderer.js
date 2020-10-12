@@ -1,6 +1,7 @@
-const assertions = require('./assertions');
-const cheerio = require('cheerio');
-const configureNunjucks = require('../server/nunjucks-configuration').default;
+import cheerio from 'cheerio';
+
+import assertions from './assertions';
+import configureNunjucks from '../server/nunjucks-configuration';
 
 const nunjucks = configureNunjucks({});
 
