@@ -20,6 +20,7 @@ module.exports = {
   entry: {
     main: './scripts/main.js',
     govukFrontend: './scripts/govuk-frontend.js',
+    maskedInputs: './scripts/masked-inputs.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),
@@ -29,7 +30,6 @@ module.exports = {
     libraryTarget: 'var',
   },
   target: 'web',
-  // devtool: 'source-map',
   optimization: {
     minimize: true,
     minimizer: [
@@ -37,27 +37,6 @@ module.exports = {
       new OptimizeCSSAssetsPlugin({})
     ],
   },
-
-  // WORKING
-  /*
-  entry: './scripts/main.js',
-  output: {
-    path: path.join(__dirname, 'dist'),
-    publicPath: '/',
-    filename: '[name].js',
-    library: 'EntryPoint',
-    libraryTarget: 'var',
-  },
-  target: 'web',
-  devtool: 'source-map',
-  optimization: {
-    minimize: true,
-    minimizer: [
-      // new TerserPlugin(),
-      new OptimizeCSSAssetsPlugin({})
-    ],
-  },
-  */
   module: {
     rules: [
       {
@@ -65,7 +44,8 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-        }
+          options: {},
+        },
       },
       {
         test: /\.html$|njk|nunjucks/,

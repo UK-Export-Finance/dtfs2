@@ -3,23 +3,21 @@
     [
       "@babel/preset-env",
       {
-        // "targets": {
-        //   "esmodules": true,
-        // }
-        "modules": false,
-        "useBuiltIns": "usage", // alternative mode: "entry"
-        "corejs": 3, // default would be 2
-        "targets": "> 0.25%, not dead"
+        "targets": {
+          // "esmodules": false,
+          // "esmodules": true,
+          "browsers": [
+            // "> 0.25%, not dead"
+              "last 2 versions",
+              "ie >= 11"
+          ]
+        },
+
+        // "useBuiltIns": "usage", // alternative mode: "entry"
+        "useBuiltIns": "entry",
+        "corejs": 2, // default would be 2
+        // "targets": "> 0.25%, not dead"
       }
     ]
   ],
-  // "plugins": [
-  //   [
-  //     "@babel/plugin-transform-runtime",
-  //     {
-  //       "regenerator": true
-  //     }
-  //   ]
-  // ]
 }
-
