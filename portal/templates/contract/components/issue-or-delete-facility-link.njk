@@ -9,6 +9,7 @@
 
   {% set facility = params.facility %}
   {% set facilityName = params.facilityName %}
+  {% set facilityTableIndex = params.facilityTableIndex %}
 
   {% set canOnlyViewIssueFacilityDetails = facility.status === "Submitted" or facility.status === "Ready for check" or facility.status === "Acknowledged" or dealStatus === "Ready for Checker's approval" %}
 
@@ -26,9 +27,8 @@
       <a href="/contract/{{ dealId }}/submission-details#{{ facilityName }}-{{ facility._id }}" class="govuk-link" data-cy="{{ facilityName }}-issue-facility-{{ facility._id }}">Facility issued</a>
 
     {% elseif (userIsMaker and dealIsEditable) and (dealStatus === "Draft" or dealStatus === "Further Maker's input required") and not dealSubmissionDate %}
-      <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/delete" class="govuk-link" data-cy="{{ facilityName }}-delete-{{ facility._id }}" aria-label="Delete facility">Delete</a>
+      <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/delete" class="govuk-link" data-cy="{{ facilityName }}-delete-{{ facility._id }}" aria-label="Delete {{ facilityName }} {{ facilityTableIndex }}">Delete</a>
 
   {% endif %}
-
 
 {% endmacro %}

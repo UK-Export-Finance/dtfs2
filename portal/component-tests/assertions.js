@@ -96,6 +96,13 @@ const assertions = (wrapper, html, params) => {
         },
       }
     },
+    expectAriaLabel: (selector) => {
+      return {
+        toEqual: (text) => {
+          expect(wrapper(selector).attr('aria-label')).toEqual(text);
+        },
+      };
+    },
   };
 }
 

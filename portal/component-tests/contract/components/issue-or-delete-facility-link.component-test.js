@@ -72,6 +72,7 @@ describe(component, () => {
         const user = { roles: ['maker'] };
         const facility = { _id: '5678' };
         const facilityName = 'loan';
+        const facilityTableIndex = 1;
 
         const deals = [
           { _id: '1', details: { status: 'Draft' } },
@@ -79,9 +80,13 @@ describe(component, () => {
         ];
 
         deals.forEach((deal) => {
-          const wrapper = render({ user, deal, facility, facilityName, editable: true });
+          const wrapper = render({ user, deal, facility, facilityName, facilityTableIndex, editable: true });
           wrapper.expectLink(`[data-cy="${facilityName}-delete-${facility._id}"]`)
             .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/delete`, 'Delete');
+
+          wrapper.expectAriaLabel(`[data-cy="${facilityName}-delete-${facility._id}"]`)
+            .toEqual(`Delete ${facilityName} ${facilityTableIndex}`);
+
         });
       });
     });
