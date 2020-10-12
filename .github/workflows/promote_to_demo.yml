@@ -16,7 +16,7 @@ env:
   registry_from: ${{ secrets.DEV_ACR_REGISTRY }}
   registry_from_username: ${{ secrets.DEV_ACR_USERNAME }}
   registry_from_password: ${{ secrets.DEV_ACR_PASSWORD }}
-  tag_from: master
+  tag_from: dev
 
   # To
   registry_to: ${{ secrets.DEMO_ACR_REGISTRY }}
