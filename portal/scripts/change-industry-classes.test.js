@@ -1,4 +1,4 @@
-import attachToWindow, {
+import {
   industryClassElement,
   appendSelectOption,
   getIndustryClassesFromSectorCode,

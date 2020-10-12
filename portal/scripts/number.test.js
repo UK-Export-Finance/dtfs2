@@ -1,4 +1,4 @@
-import attachToWindow, {
+import {
   isNumeric,
   decimalsCount,
   roundNumber,
