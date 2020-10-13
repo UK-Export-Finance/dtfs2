@@ -1,6 +1,6 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 
-{% macro render(id, legend, hint, dayValue, monthValue, yearValue, error, conditionalError) %}
+{% macro render(id, legend, hint, dayValue, monthValue, yearValue, error) %}
 
   {% set inputClass = "govuk-input--width-2" %}
   {% set inputErrorClass = "govuk-input--width-2 govuk-input--error" %}
@@ -8,11 +8,9 @@
   {% set dateHasAllValues = (dayValue and monthValue and yearValue) %}
   {% set dateDoesNotHaveAllValues = (not dayValue) or (not monthValue) or (not yearValue) %}
 
-  {% set dateError = error or (dateDoesNotHaveAllValues and conditionalError) %}
-
-  {% set dayError = (dateError or (error and not dayValue)) %}
-  {% set monthError = (dateError or (error and not monthValue)) %}
-  {% set yearError = (dateError or (error and not yearValue)) %}
+  {% set dayError = (error and not dayValue) %}
+  {% set monthError = (error and not monthValue) %}
+  {% set yearError = (error and not yearValue) %}
 
   {{ govukDateInput({
     id: id,
@@ -25,8 +23,8 @@
     hint: {
       html: hint
     },
-    errorMessage: dateError and {
-      text: dateError.text,
+    errorMessage: error and {
+      text: error.text,
       attributes: {
         'data-cy': id + "-error-message"
       }

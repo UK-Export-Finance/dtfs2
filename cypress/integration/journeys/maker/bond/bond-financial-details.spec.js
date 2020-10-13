@@ -158,20 +158,15 @@ context('Bond Financial Details', () => {
   });
 
   describe('when a user selects that the currency is NOT the same as the Supply Contract currency', () => {
-    it('should render additional form fields and validation errors without leaving the page', () => {
+    it('should render additional form fields', () => {
       goToBondFinancialDetailsPage(deal);
       pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
 
       pages.bondFinancialDetails.currencyInput().should('be.visible');
-      pages.bondFinancialDetails.currencyInputErrorMessage().should('be.visible');
-
       pages.bondFinancialDetails.conversionRateInput().should('be.visible');
-      pages.bondFinancialDetails.conversionRateInputErrorMessage().should('be.visible');
-
       pages.bondFinancialDetails.conversionRateDateDayInput().should('be.visible');
       pages.bondFinancialDetails.conversionRateDateMonthInput().should('be.visible');
       pages.bondFinancialDetails.conversionRateDateYearInput().should('be.visible');
-      pages.bondFinancialDetails.conversionRateDateInputErrorMessage().should('be.visible');
     });
 
     it('form submit should progress to `Bond Fee Details` page and prepopulate submitted form fields when returning back to `Bond Financial Details` page', () => {

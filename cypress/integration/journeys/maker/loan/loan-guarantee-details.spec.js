@@ -79,23 +79,19 @@ context('Loan Guarantee Details', () => {
   });
 
   describe('when a maker selects different Facility stage options (`Conditional` or `Unconditional`)', () => {
-    it('should render additional form fields and validation errors without leaving the page', () => {
+    it('should render additional form fields', () => {
       goToPage(deal);
 
       // Facility stage = Conditional
       pages.loanGuaranteeDetails.facilityStageConditionalInput().click();
       pages.loanGuaranteeDetails.conditionalBankReferenceNumberInput().should('be.visible');
       pages.loanGuaranteeDetails.ukefGuaranteeInMonthsInput().should('be.visible');
-      pages.loanGuaranteeDetails.ukefGuaranteeInMonthsErrorMessage().should('be.visible');
 
       // Facility stage = Unconditional
       pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
 
       pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().should('be.visible');
-      pages.loanGuaranteeDetails.unconditionalBankReferenceNumberErrorMessage().should('be.visible');
       assertVisibleCoverEndDateInputs();
-
-      pages.loanGuaranteeDetails.coverEndDateErrorMessage().should('be.visible');
     });
   });
 
@@ -180,7 +176,7 @@ context('Loan Guarantee Details', () => {
     assertLoanFormValues.guaranteeDetails.facilityStageUnconditional();
   });
 
-  describe('When a MAKER_LOGIN clicks `save and go back` button', () => {
+  describe('When a maker clicks `save and go back` button', () => {
     it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Loan Guarantee Details` page', () => {
       goToPage(deal);
 
