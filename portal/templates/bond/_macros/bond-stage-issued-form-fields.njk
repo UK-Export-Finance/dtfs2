@@ -20,8 +20,7 @@
     dayValue = bond['coverEndDate-day'],
     monthValue = bond['coverEndDate-month'],
     yearValue = bond['coverEndDate-year'],
-    error = validationErrors.errorList.coverEndDate,
-    conditionalError = validationErrors.conditionalErrorList.facilityStage.Issued.coverEndDate
+    error = validationErrors.errorList.coverEndDate
   )}}
 
   {{ govukInput({
@@ -35,8 +34,8 @@
     attributes: {
       'data-cy': 'unique-identification-number'
     },
-    errorMessage: (validationErrors.errorList.uniqueIdentificationNumber.text or (not bond.uniqueIdentificationNumber and validationErrors.conditionalErrorList.facilityStage.Issued.uniqueIdentificationNumber.text)) and {
-      text: validationErrors.errorList.uniqueIdentificationNumber.text or (not bond.uniqueIdentificationNumber and validationErrors.conditionalErrorList.facilityStage.Issued.uniqueIdentificationNumber.text),
+    errorMessage: validationErrors.errorList.uniqueIdentificationNumber.text and {
+      text: validationErrors.errorList.uniqueIdentificationNumber.text,
       attributes: {
         'data-cy': 'unique-identification-number-error-message'
       }

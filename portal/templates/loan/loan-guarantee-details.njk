@@ -1,11 +1,9 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import './_macros/loan-nav.njk' as loanNav %}
-{% import './_macros/bank-reference-number-field.njk' as bankReferenceNumberField %}
-{% import '_macros/date-field.njk' as dateField %}
+{% import './_macros/facility-stage-conditional-form-fields.njk' as facilityStageConditionalFormFields %}
+{% import './_macros/facility-stage-unconditional-form-fields.njk' as facilityStageUnconditionalFormFields %}
 
 {% block pageTitle %}Loan Guarantee Details{% endblock %}
 
@@ -13,21 +11,6 @@
 
   {% set showConditionalFormFieldsByDefault = loan.facilityStage === "Conditional" %}
   {% set showUnconditionalFormFieldsByDefault = loan.facilityStage === "Unconditional" %}
-
-  <script type="text/javascript">
-    function toggleFormFields(facilityStage) {
-      var conditionalFormFields = document.getElementById('conditional-form-fields');
-      var unconditionalFormFields = document.getElementById('unconditional-form-fields');
-      if (facilityStage === 'conditional') {
-        conditionalFormFields.className = '';
-        unconditionalFormFields.className = 'govuk-visually-hidden';
-      }
-      if (facilityStage === 'unconditional') {
-        unconditionalFormFields.className = '';
-        conditionalFormFields.className = 'govuk-visually-hidden';
-      }
-    }
-  </script>
 
   {% if validationErrors.count %}
     {{
@@ -51,8 +34,7 @@
 
     <div class="govuk-grid-row">
 
-      <div class="govuk-grid-column-three-quarters">
- 
+      <div class="govuk-grid-column-full">
 
         {{ govukRadios({
           classes: "govuk-radios--inline",
@@ -72,8 +54,10 @@
               text: "Conditional",
               checked: loan.facilityStage === "Conditional",
               attributes: {
-                'data-cy': "facility-stage-conditional",
-                onClick: "toggleFormFields('conditional')"
+                'data-cy': "facility-stage-conditional"
+              },
+              conditional: {
+                html: facilityStageConditionalFormFields.render(loan, validationErrors)
               }
             },
             {
@@ -81,8 +65,10 @@
               text: "Unconditional",
               checked: loan.facilityStage === "Unconditional",
               attributes: {
-                'data-cy': "facility-stage-unconditional",
-                onClick: "toggleFormFields('unconditional')"
+                'data-cy': "facility-stage-unconditional"
+              },
+              conditional: {
+                html: facilityStageUnconditionalFormFields.render(loan, validationErrors)
               }
             }
           ],
@@ -93,84 +79,6 @@
             }
           }
         }) }}
-
-        <div
-          id="conditional-form-fields"
-          {% if showConditionalFormFieldsByDefault === false %}
-          class="govuk-visually-hidden"
-          {% endif %}
-        >
-
-          {{bankReferenceNumberField.render(
-            id = 'facilityStageConditional-bankReferenceNumber',
-            label = 'Bank reference number (optional)',
-            value = loan.bankReferenceNumber,
-            error = validationErrors.errorList.bankReferenceNumber
-          )}}
-        
-          {{ govukInput({
-            inputmode: 'numeric',
-            label: {
-              text: "Length of time that the UKEF's guarantee will be in place for (in months, rounded up)"
-            },
-            classes: "govuk-input--width-5",
-            id: "ukefGuaranteeInMonths",
-            name: "ukefGuaranteeInMonths",
-            value: loan.ukefGuaranteeInMonths,
-            attributes: {
-              'data-cy': 'ukef-guarantee-in-months'
-            },
-            errorMessage: (validationErrors.errorList.ukefGuaranteeInMonths.text or (not loan.ukefGuaranteeInMonths and validationErrors.conditionalErrorList.facilityStage.Conditional.ukefGuaranteeInMonths.text)) and {
-              text: validationErrors.errorList.ukefGuaranteeInMonths.text or (not loan.ukefGuaranteeInMonths and validationErrors.conditionalErrorList.facilityStage.Conditional.ukefGuaranteeInMonths.text),
-              attributes: {
-                'data-cy': 'ukef-guarantee-in-months-error-message'
-              }
-            }
-          }) }}
-
-        </div>
-
-        <div
-          id="unconditional-form-fields"
-          {% if showUnconditionalFormFieldsByDefault === false %}
-          class="govuk-visually-hidden"
-          {% endif %}
-        >
-
-          {{bankReferenceNumberField.render(
-            id = 'facilityStageUnconditional-bankReferenceNumber',
-            label = 'Bank reference number',
-            value = loan.bankReferenceNumber,
-            error = validationErrors.errorList.bankReferenceNumber,
-            conditionalError = validationErrors.conditionalErrorList.facilityStage.Unconditional.bankReferenceNumber
-          )}}
-
-          <div class="govuk-form-group">
-            {{ dateField.render(
-              legend = 'Requested Cover Start Date (optional)',
-              id = 'requestedCoverStartDate',
-              hint = 'For example, 31 05 2017',
-              dayValue = loan['requestedCoverStartDate-day'] or loan.requestedCoverStartDate and loan.requestedCoverStartDate | localiseTimestamp('DD', user.timezone),
-              monthValue = loan['requestedCoverStartDate-month'] or loan.requestedCoverStartDate and loan.requestedCoverStartDate | localiseTimestamp('MM', user.timezone),
-              yearValue = loan['requestedCoverStartDate-year'] or loan.requestedCoverStartDate and loan.requestedCoverStartDate | localiseTimestamp('YYYY', user.timezone),
-              error = validationErrors.errorList.requestedCoverStartDate
-            )}}
-          </div>
-
-          <div class="govuk-form-group">
-            {{ dateField.render(
-              legend = 'Cover End Date',
-              id = 'coverEndDate',
-              hint = 'For example, 31 05 2017',
-              dayValue = loan['coverEndDate-day'],
-              monthValue = loan['coverEndDate-month'],
-              yearValue = loan['coverEndDate-year'],
-              error = validationErrors.errorList.coverEndDate,
-              conditionalError = validationErrors.conditionalErrorList.facilityStage.Unconditional.coverEndDate
-            )}}
-          </div>
-
-        </div>
 
         <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Next page</button>
 
