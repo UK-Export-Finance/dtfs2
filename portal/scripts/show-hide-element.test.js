@@ -31,12 +31,12 @@ describe('changeIndustryClasses', () => {
     });
 
     describe('when the given boolean is false', () => {
-      it('should change the element\'s className to be `govuk-visually-hidden`', () => {
+      it('should change the element\'s className to be `display-none`', () => {
         changeScreenVisibilityOfElement(elementId, true);
         changeScreenVisibilityOfElement(elementId, false);
 
         const elementClassName = getElement(elementId).className;
-        expect(elementClassName).toEqual('govuk-visually-hidden');
+        expect(elementClassName).toEqual('display-none');
       });
     });
   });
