@@ -7,7 +7,7 @@ const partial = {
   progressNavLinkBondFeeDetails: () => cy.get('[data-cy="progress-nav-item-link-bond-fee-details"]'),
   progressNavBondFeeDetailsCompletedCheckbox: () => cy.get('[data-cy="progress-nav-item-bond-fee-details-completed-checkbox"]'),
   progressNavBondTextPreview: () => cy.get('[data-cy="progress-nav-item-bond-preview"]'),
-  progressNavLinkBondPreview: () => cy.get('[data-cy="progress-nav-item-link-bond-preview"]'),
+  progressNavLinkBondPreview: () => cy.get('[data-cy="progress-nav-item-link-bond-check-your-answers"]'),
 };
 
 module.exports = partial;
