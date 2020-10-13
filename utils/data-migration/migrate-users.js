@@ -78,7 +78,7 @@ const migrateUsers = async () => {
 
     const lastLogin = moment(userV1.Last_login, 'DD/MM/YYYY - hh:mm').utc().valueOf().toString();
 
-    if (lastLogin !== '0') {
+    if (userV1.Last_login !== '01/01/1970 - 01:00') {
       userV2.lastLogin = lastLogin;
     }
 
