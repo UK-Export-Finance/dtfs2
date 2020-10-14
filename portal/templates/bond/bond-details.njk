@@ -2,7 +2,7 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% import './_macros/bond-nav.njk' as bondNav %}
+{% import 'contract/components/forms-task-list.njk' as formsTaskList %}
 {% import './_macros/bond-stage-issued-form-fields.njk' as bondStageIssuedFormFields %}
 {% import './_macros/bond-stage-unissued-form-fields.njk' as bondStageUnissuedFormFields %}
 
@@ -22,15 +22,13 @@
     }}
   {% endif %}
 
-  {{ bondNav.render(
-    completedForms = completedForms,
-    current = 'bondDetails',
-    contractId = dealId,
-    childId = bond._id,
-    bondStatus = bond.status
-  )}}
-
-  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+  {{ formsTaskList.render({
+    title: 'Bond',
+    dealId: dealId,
+    completedForms: completedForms,
+    facilityName: 'bond',
+    facilityId: bond._id
+  })}}
 
   <form method="POST" autocomplete="off" novalidate>
 
