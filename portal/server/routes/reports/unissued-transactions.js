@@ -54,21 +54,21 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
 
   const count = allTransactions.length;
 
-  const rawData = await getApiData(
-    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
-    res,
-  );
-  rawData.transactions = getExpiryDates(rawData.transactions, 90, false);
+  // const rawData = await getApiData(
+  //   api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
+  //   res,
+  // );
+  allData.transactions = getExpiryDates(allData.transactions, 90, false);
 
   let transactions = [];
   if (fromDays > 0) {
-    transactions = rawData.transactions.filter(
+    transactions = allData.transactions.filter(
       (transaction) => transaction.remainingDays >= fromDays && transaction.remainingDays <= toDays,
-    );
+    ).slice(req.params.page * PAGESIZE, req.params.page * PAGESIZE + PAGESIZE);
   } else {
-    transactions = rawData.transactions.filter(
+    transactions = allData.transactions.filter(
       (transaction) => transaction.remainingDays <= toDays,
-    );
+    ).slice(req.params.page * PAGESIZE, req.params.page * PAGESIZE + PAGESIZE);
   }
 
   // default order from getExpiryDates is asc
@@ -88,6 +88,7 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
   return res.render('reports/unissued-transactions-report.njk', {
     pages,
     count,
+    allTransactions,
     transactions,
     primaryNav,
     banks,
@@ -97,6 +98,8 @@ router.get('/reports/unissued-transactions/:page', async (req, res) => {
     sortOrder,
     subNav: 'unissued-transactions-report',
     user: req.session.user,
+    request: req,
+    queryString: `?fromDays=${fromDays}&toDays=${toDays}`,
   });
 });
 
@@ -184,7 +187,9 @@ router.post('/reports/unissued-transactions/:page', async (req, res) => {
 
   return res.render('reports/unissued-transactions-report.njk', {
     pages,
+    allTransactions,
     transactions,
+    rawData_transactions: rawData.transactions,
     primaryNav,
     banks,
     filter: {
@@ -193,6 +198,8 @@ router.post('/reports/unissued-transactions/:page', async (req, res) => {
     sortOrder,
     subNav: 'unissued-transactions-report',
     user: req.session.user,
+    request: req,
+    queryString: `?fromDays=${fromDays}&toDays=${toDays}`,
   });
 });
 

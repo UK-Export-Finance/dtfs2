@@ -34,7 +34,6 @@ router.get('/reports/mia-to-be-submitted/with-conditions/:page', async (req, res
     res,
   );
 
-
   const MIAfilters = buildReportFilters(submissionFilters, req.session.user);
   const applications = await getApiData(
     api.contracts(0, 0, MIAfilters, userToken),
@@ -118,7 +117,6 @@ router.post('/reports/mia-to-be-submitted/with-conditions/:page', async (req, re
     api.banks(userToken),
     res,
   );
-  // const banks = [{ id: 1, name: 'HSBC' }, { id: 2, name: 'NatWest' }];
 
   const MIAfilters = buildReportFilters(submissionFilters, req.session.user);
   const applications = await getApiData(

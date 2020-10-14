@@ -92,7 +92,6 @@
     </tbody>
 
   </table>
-
-  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/reports/transactions-report') }}
+  {{ pagination.pagination(totalPages = pages.totalPages, currentPage = pages.currentPage, totalItems = pages.totalItems, paginationRoot = '/reports/unissued-transactions', queryString = queryString) }}
 
 {% endblock %}
