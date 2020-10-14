@@ -101,6 +101,10 @@ jobs:
             --name ${{ env.environment }}-private-endpoints \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --disable-private-endpoint-network-policies true
+          az network vnet subnet update \
+            --name ${{ env.environment }}-private-endpoints
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \ 
+            --service-endpoints "Microsoft.Storage"
 
     - name: App Service Plan egress subnet
       uses: Azure/cli@v1.0.0
@@ -976,6 +980,15 @@ jobs:
             --destination-address-prefixes "*" --destination-port-ranges "65200-65535"
 
     - name: ${{ env.front_door_access }} Front Door traffic
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 200 --direction Inbound --protocol "*" --access ${{ env.front_door_access }} \
+            --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+
+    - name: Allow Azure fileshare
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
