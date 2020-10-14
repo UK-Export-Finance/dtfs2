@@ -101,10 +101,6 @@ jobs:
             --name ${{ env.environment }}-private-endpoints \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --disable-private-endpoint-network-policies true
-          az network vnet subnet update \
-            --name ${{ env.environment }}-private-endpoints \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \ 
-            --service-endpoints "Microsoft.Storage"
 
     - name: App Service Plan egress subnet
       uses: Azure/cli@v1.0.0
