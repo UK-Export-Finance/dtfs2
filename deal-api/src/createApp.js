@@ -8,6 +8,7 @@ const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('graphql-tools');
 const healthcheck = require('./healthcheck');
+const uploadTest = require('./upload-test');
 
 const { resolvers, typeDefs, graphQlRouter } = require('./graphql');
 const { validateUserMiddleware } = require('./graphql/middleware');
@@ -25,6 +26,7 @@ initScheduler();
 
 const app = express();
 app.use(healthcheck);
+app.use(uploadTest);
 app.use(passport.initialize());
 app.use(bodyParser.json({ type: 'application/json' }));
 
