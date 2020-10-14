@@ -9,6 +9,7 @@ import json2csv from 'express-json2csv';
 import './azure-env';
 import routes from './routes';
 import healthcheck from './healthcheck';
+import uploadTest from './upload-test';
 
 import configureNunjucks from './nunjucks-configuration';
 
@@ -43,6 +44,7 @@ app.use(morgan('dev', {
 }));
 
 app.use(healthcheck);
+app.use(uploadTest);
 
 app.use('/', routes);
 
