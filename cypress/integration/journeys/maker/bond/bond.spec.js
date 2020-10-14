@@ -48,7 +48,7 @@ context('Add a Bond to a Deal', () => {
 
     cy.url().should('include', '/contract');
     cy.url().should('include', '/bond/');
-    cy.url().should('include', '/preview');
+    cy.url().should('include', '/check-your-answers');
   });
 
   describe('when a user submits all Bond forms without completing any fields', () => {
@@ -66,7 +66,7 @@ context('Add a Bond to a Deal', () => {
 
       cy.url().should('include', '/contract');
       cy.url().should('include', '/bond/');
-      cy.url().should('include', '/preview');
+      cy.url().should('include', '/check-your-answers');
       cy.title().should('eq', `Bond Preview${pages.defaults.pageTitleAppend}`);
       const TOTAL_REQUIRED_FORM_FIELDS = 8;
       partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
@@ -115,7 +115,7 @@ context('Add a Bond to a Deal', () => {
 
         cy.url().should('include', '/contract');
         cy.url().should('include', '/bond/');
-        cy.url().should('include', '/preview');
+        cy.url().should('include', '/check-your-answers');
 
         partials.bondProgressNav.progressNavLinkBondDetails().click();
         partials.errorSummary.errorSummaryLinks().should('have.length', 2);
@@ -141,7 +141,7 @@ context('Add a Bond to a Deal', () => {
       partials.bondProgressNav.progressNavLinkBondPreview().click();
 
       cy.url().should('include', '/bond/');
-      cy.url().should('include', '/preview');
+      cy.url().should('include', '/check-your-answers');
     });
   });
 
@@ -156,7 +156,7 @@ context('Add a Bond to a Deal', () => {
 
       cy.addBondToDeal();
 
-      cy.url().should('include', '/preview');
+      cy.url().should('include', '/check-your-answers');
 
       pages.bondPreview.submissionDetails().should('be.visible');
     });
@@ -164,7 +164,7 @@ context('Add a Bond to a Deal', () => {
     it('should display a checked checkbox for all progress nav items and only text for `Preview`', () => {
       cy.loginGoToDealPage(MAKER_LOGIN, deal);
       cy.addBondToDeal();
-      cy.url().should('include', '/preview');
+      cy.url().should('include', '/check-your-answers');
 
       partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('be.visible');
       partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('be.checked');
@@ -178,14 +178,14 @@ context('Add a Bond to a Deal', () => {
       partials.bondProgressNav.progressNavLinkBondPreview().should('not.be.visible');
       partials.bondProgressNav.progressNavBondTextPreview().should('be.visible');
       partials.bondProgressNav.progressNavBondTextPreview().invoke('text').then((text) => {
-        expect(text.trim()).equal('Preview');
+        expect(text.trim()).equal('Check your answers');
       });
     });
 
     it('should populate Deal page with the submitted bond, display `Completed` status and link to `Bond Details` page', () => {
       cy.loginGoToDealPage(MAKER_LOGIN, deal);
       cy.addBondToDeal();
-      cy.url().should('include', '/preview');
+      cy.url().should('include', '/check-your-answers');
 
       // get bondId, go back to Deal page
       // assert that some inputted Bond data is displayed in the table
@@ -244,11 +244,11 @@ context('Add a Bond to a Deal', () => {
     it('should return to Deal page', () => {
       cy.loginGoToDealPage(MAKER_LOGIN, deal);
       cy.addBondToDeal();
-      cy.url().should('include', '/preview');
+      cy.url().should('include', '/check-your-answers');
 
       pages.bondPreview.saveGoBackButton().click();
 
-      cy.url().should('not.include', '/preview');
+      cy.url().should('not.include', '/check-your-answers');
       cy.url().should('include', '/contract');
       cy.url().should('not.include', '/bond');
     });

@@ -5,7 +5,6 @@ const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 
 const users = require('./test-data');
-const conditionalErrorList = require('../../../src/v1/validation/bond-rules/conditional-error-list');
 
 const aUserWithNoRoles = users.find((user) => user.username === 'NOBODY');
 const aMaker = users.find((user) => user.username === 'MAKER');

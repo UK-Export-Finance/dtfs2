@@ -21,7 +21,7 @@ describe(component, () => {
     });
 
     it("provides a link to the preview tab", () =>{
-      wrapper.expectLink('[data-cy="preview-tab"]').toLinkTo(`/contract/${deal._id}/submission-details`,'Preview Deal Details');
+      wrapper.expectLink('[data-cy="check-deal-details-tab"]').toLinkTo(`/contract/${deal._id}/submission-details`,'Check deal details');
     });
 
   });
@@ -42,7 +42,7 @@ describe(component, () => {
     });
 
     it("provides a link to the preview tab", () =>{
-      wrapper.expectLink('[data-cy="preview-tab"]').toLinkTo(`/contract/${deal._id}/submission-details`,'Preview Deal Details');
+      wrapper.expectLink('[data-cy="check-deal-details-tab"]').toLinkTo(`/contract/${deal._id}/submission-details`,'Check deal details');
     });
 
   });
@@ -63,7 +63,7 @@ describe(component, () => {
     });
 
     it("disables the link to the preview tab", () =>{
-      wrapper.expectLink('[data-cy="preview-tab"]').toLinkTo(`#`,'Preview Deal Details');
+      wrapper.expectLink('[data-cy="check-deal-details-tab"]').toLinkTo(`#`,'Check deal details');
     });
 
   });

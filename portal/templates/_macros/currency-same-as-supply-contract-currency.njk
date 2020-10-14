@@ -61,11 +61,11 @@
         'data-cy': 'currency'
       },
       items: currencies,
-      errorMessage: (validationErrors.errorList.currency or (not facility['currency'] and validationErrors.conditionalErrorList.currencySameAsSupplyContractCurrency['false'].currency)) and {
+      errorMessage: validationErrors.errorList.currency and {
         attributes: {
           "data-cy": "currency-error-message"
         },
-        text: validationErrors.errorList.currency.text or validationErrors.conditionalErrorList.currencySameAsSupplyContractCurrency['false'].currency.text
+        text: validationErrors.errorList.currency.text
       }
     }) }}
 
@@ -86,8 +86,8 @@
         'data-cy': 'conversion-rate',
         maxlength: '13'
       },
-      errorMessage: (validationErrors.errorList.conversionRate or (not facility['conversionRate'] and validationErrors.conditionalErrorList.currencySameAsSupplyContractCurrency['false'].conversionRate)) and {
-        text: validationErrors.errorList.conversionRate.text or validationErrors.conditionalErrorList.currencySameAsSupplyContractCurrency['false'].conversionRate.text,
+      errorMessage: validationErrors.errorList.conversionRate and {
+        text: validationErrors.errorList.conversionRate.text,
         attributes: {
           'data-cy': 'conversion-rate-error-message'
         }
@@ -101,8 +101,7 @@
       dayValue = facility['conversionRateDate-day'],
       monthValue = facility['conversionRateDate-month'],
       yearValue = facility['conversionRateDate-year'],
-      error = validationErrors.errorList.conversionRateDate,
-      conditionalError = validationErrors.conditionalErrorList.currencySameAsSupplyContractCurrency['false'].conversionRateDate
+      error = validationErrors.errorList.conversionRateDate
     )}}
 
   </div>

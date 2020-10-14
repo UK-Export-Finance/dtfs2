@@ -1,4 +1,4 @@
-import attachToWindow, {
+import {
   industryClassElement,
   appendSelectOption,
   getIndustryClassesFromSectorCode,
@@ -71,13 +71,6 @@ describe('changeIndustryClasses', () => {
       // plus one for the empty first select option
       const expectedOptionsLength = getIndustryClassesFromSectorCode(mockSectors, mockEvent.target.value).length + 1;
       expect(selectOptions.length).toEqual(expectedOptionsLength);
-    });
-  });
-
-  describe('attachToWindow', () => {
-    it('should attach changeIndustryClasses function to window.dtfs', () => {
-      attachToWindow();
-      expect(global.window.dtfs.changeIndustryClasses).toEqual(changeIndustryClasses);
     });
   });
 });

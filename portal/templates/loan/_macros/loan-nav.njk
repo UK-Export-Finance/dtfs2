@@ -51,13 +51,14 @@
     <div class="govuk-grid-column-one-half">
 
       {{ progressNav.navItem(
-          title = 'Preview',
+          title = 'Check your answers',
           id = 'preview',
           href = 'loan',
           childId = childId,
-          childHref = 'preview',
+          childHref = 'check-your-answers',
           contractId = contractId,
-          current = current
+          current = current,
+          ariaLabel = 'Check your answers on this loan'
       )}}
 
     </div>

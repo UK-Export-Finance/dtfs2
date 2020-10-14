@@ -1,4 +1,5 @@
-const moment = require('moment');
+import moment from 'moment';
+
 require('moment-timezone');// monkey-patch to provide moment().tz()
 
 const filterLocaliseTimestamp = (utcTimestamp, format, targetTimezone) => {

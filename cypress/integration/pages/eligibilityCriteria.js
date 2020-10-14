@@ -19,7 +19,7 @@ const page = {
   eligibiityProgressNav: {
     eligibilityCriteria: () => cy.get('[data-cy="progress-nav-item-link-eligibility/criteria"]'),
     supportingDocumentation: () => cy.get('[data-cy="progress-nav-item-link-eligibility/supporting-documentation"]'),
-    preview: () => cy.get('[data-cy="progress-nav-item-link-eligibility/preview"]'),
+    preview: () => cy.get('[data-cy="progress-nav-item-link-eligibility/check-your-answers"]'),
   },
 };
 

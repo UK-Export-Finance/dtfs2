@@ -33,8 +33,8 @@ describe(page, () => {
       wrapper.expectLink('[data-cy="comments-tab"]').toLinkTo(`/contract/${deal._id}/comments`, 'Comments');
     });
 
-    it('should render (active) `Preview Deal Details` link', () => {
-      wrapper.expectLink('[data-cy="preview-tab"]').toLinkTo('#', 'Preview Deal Details');
+    it('should render (active) `Check deal details` link', () => {
+      wrapper.expectLink('[data-cy="check-deal-details-tab"]').toLinkTo('#', 'Check deal details');
     });
   });
 

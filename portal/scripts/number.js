@@ -26,15 +26,3 @@ export const roundNumber = (value, digits) => {
   modifiedValue /= 10 ** d;
   return modifiedValue;
 };
-
-const attachToWindow = () => {
-  window.dtfs = {
-    ...window.dtfs,
-    isNumeric,
-    decimalsCount,
-    roundNumber,
-  };
-};
-
-
-export default attachToWindow;

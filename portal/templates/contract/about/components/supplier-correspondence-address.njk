@@ -40,7 +40,7 @@
     {% if renderByDefault !=='true' %}
       {% set renderByDefault='false'%}
     {% endif %}
-    <div id="additional-form-fields-supplier-correspondence" class="{% if renderByDefault === 'false'%}govuk-visually-hidden{% endif %}">
+    <div id="additional-form-fields-supplier-correspondence" class="{% if renderByDefault === 'false'%}display-none{% endif %}">
       {{ address.fields(
         deal = deal,
         validationErrors = validationErrors,

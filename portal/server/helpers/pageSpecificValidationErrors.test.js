@@ -134,32 +134,6 @@ describe('page specific validation errors', () => {
       expect(result.summary).toEqual(expectedSummary);
       expect(result.count).toEqual(Object.keys(expectedErrorList).length);
     });
-
-    it('should return conditionalErrorList from validationErrors object', () => {
-      const mockValidationErrors = {
-        errorList: {},
-        conditionalErrorList: {
-          facilityStage: {
-            Unissued: {
-              ukefGuaranteeInMonths: {
-                text: 'Length of time that the UKEF\'s guarantee will be in place for is required',
-              },
-            },
-            Issued: {
-              coverEndDate: {
-                text: 'Cover End Date is required',
-              },
-              uniqueIdentificationNumber: {
-                text: 'Bond\'s unique identification number is required',
-              },
-            },
-          },
-        },
-      };
-
-      const result = mapRequiredValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
-      expect(result.conditionalErrorList).toEqual(mockValidationErrors.conditionalErrorList);
-    });
   });
 
   describe('pageSpecificValidationErrors', () => {
@@ -184,26 +158,6 @@ describe('page specific validation errors', () => {
       const result = pageSpecificValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS, mockBond);
       const expected = mapRequiredValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
       expect(result).toEqual(expected);
-    });
-
-    describe('when there is no errorList in validationErrors', () => {
-      it('should only return validationErrors.conditionalErrorList', () => {
-        const mockValidationErrors = {
-          conditionalErrorList: {
-            facilityStage: {
-              Unissued: {
-                ukefGuaranteeInMonths: {
-                  text: 'Length of time that the UKEF\'s guarantee will be in place for is required',
-                },
-              },
-            },
-          },
-        };
-        const result = pageSpecificValidationErrors(mockValidationErrors);
-        expect(result).toEqual({
-          conditionalErrorList: mockValidationErrors.conditionalErrorList,
-        });
-      });
     });
   });
 });

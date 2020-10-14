@@ -1,4 +1,4 @@
-import attachToWindow, {
+import {
   getElement,
   showHideElement,
   changeScreenVisibilityOfElement,
@@ -31,12 +31,12 @@ describe('changeIndustryClasses', () => {
     });
 
     describe('when the given boolean is false', () => {
-      it('should change the element\'s className to be `govuk-visually-hidden`', () => {
+      it('should change the element\'s className to be `display-none`', () => {
         changeScreenVisibilityOfElement(elementId, true);
         changeScreenVisibilityOfElement(elementId, false);
 
         const elementClassName = getElement(elementId).className;
-        expect(elementClassName).toEqual('govuk-visually-hidden');
+        expect(elementClassName).toEqual('display-none');
       });
     });
   });
@@ -59,18 +59,6 @@ describe('changeIndustryClasses', () => {
         const elementHidden = getElement(elementId).getAttribute('hidden');
         expect(elementHidden).toEqual('true');
       });
-    });
-  });
-
-  describe('attachToWindow', () => {
-    it('should attach showHideElement function to window.dtfs', () => {
-      attachToWindow();
-      expect(global.window.dtfs.showHideElement).toEqual(showHideElement);
-    });
-
-    it('should attach changeScreenVisibilityOfElement function to window.dtfs', () => {
-      attachToWindow();
-      expect(global.window.dtfs.changeScreenVisibilityOfElement).toEqual(changeScreenVisibilityOfElement);
     });
   });
 });

@@ -66,7 +66,7 @@ context('Loan Financial Details', () => {
       cy.url().should('include', '/loan/');
       cy.url().should('include', '/dates-repayments');
       pages.loanDatesRepayments.submit().click();
-      cy.url().should('include', '/preview');
+      cy.url().should('include', '/check-your-answers');
       partials.loanProgressNav.progressNavLinkLoanFinancialDetails().click();
 
       partials.errorSummary.errorSummaryLinks().should('have.length', 5);
@@ -93,20 +93,17 @@ context('Loan Financial Details', () => {
   });
 
   describe('when user selects the currency is NOT the same as Supply Contract currency', () => {
-    it('should render additional form fields and validation errors without leaving the page', () => {
+    it('should render additional form fields', () => {
       goToPage(deal);
       pages.loanFinancialDetails.currencySameAsSupplyContractCurrencyInputNo().click();
 
       pages.loanFinancialDetails.currencyInput().should('be.visible');
-      pages.loanFinancialDetails.currencyInputErrorMessage().should('be.visible');
 
       pages.loanFinancialDetails.conversionRateInput().should('be.visible');
-      pages.loanFinancialDetails.conversionRateInputErrorMessage().should('be.visible');
 
       pages.loanFinancialDetails.conversionRateDateDayInput().should('be.visible');
       pages.loanFinancialDetails.conversionRateDateMonthInput().should('be.visible');
       pages.loanFinancialDetails.conversionRateDateYearInput().should('be.visible');
-      pages.loanFinancialDetails.conversionRateDateInputErrorMessage().should('be.visible');
     });
 
     it('should render additional form fields and validation errors when returning to the page', () => {

@@ -47,7 +47,6 @@ export const mapRequiredValidationErrors = (validationErrors, fields) => {
       mappedErrors,
       errorHref,
     ),
-    conditionalErrorList: mappedErrors.conditionalErrorList,
   };
 };
 
@@ -58,9 +57,7 @@ export const pageSpecificValidationErrors = (validationErrors, fields, submitted
     }
   }
 
-  return {
-    conditionalErrorList: validationErrors.conditionalErrorList,
-  };
+  return {};
 };
 
 export default pageSpecificValidationErrors;

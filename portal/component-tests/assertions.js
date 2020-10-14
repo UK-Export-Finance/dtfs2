@@ -1,4 +1,4 @@
-module.exports = (wrapper, html, params) => {
+const assertions = (wrapper, html, params) => {
   return {
     expectLink: (selector) => {
       return {
@@ -96,5 +96,14 @@ module.exports = (wrapper, html, params) => {
         },
       }
     },
+    expectAriaLabel: (selector) => {
+      return {
+        toEqual: (text) => {
+          expect(wrapper(selector).attr('aria-label')).toEqual(text);
+        },
+      };
+    },
   };
 }
+
+export default assertions;

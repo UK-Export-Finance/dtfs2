@@ -46,6 +46,6 @@ context('Eligibility Documentation', () => {
     eligibilityCriteria.nextPageButton().click();
     eligibilityDocumentation.saveButton().click();
 
-    cy.url().should('include', '/eligibility/preview');
+    cy.url().should('include', '/eligibility/check-your-answers');
   });
 });
