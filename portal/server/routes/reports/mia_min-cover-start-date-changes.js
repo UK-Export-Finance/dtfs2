@@ -21,52 +21,22 @@ router.get('/reports/mia_min-cover-start-date-changes/:page', async (req, res) =
     reportFilters.bank = '';
   }
   const facilityFilters = buildReportFilters(reportFilters, req.session.user);
-  facilityFilters.push(
-    {
-      field: 'details.status',
-      value: 'Ready for Checker\'s approval',
-    },
-  );
 
-  facilityFilters.push(
-    {
-      field: 'transaction.transactionStage',
-      value: 'issued_unconditional',
-    },
-  );
-  // TODO set up an OR query for details.previousStatus
-  facilityFilters.push(
-    {
-      field: 'details.previousStatus',
-      value: 'Accepted by UKEF (with conditions)',
-    },
-  );
+  facilityFilters.push({
+    field: 'transaction.previousCoverStartDate',
+    value: null,
+    operator: 'ne',
+  });
 
-  const facilitiesWithConditions = await getApiData(
+  const { transactions, count } = await getApiData(
     api.transactions(req.params.page * PAGESIZE, PAGESIZE, facilityFilters, userToken),
     res,
   );
 
-  facilityFilters.pop();
-  facilityFilters.push(
-    {
-      field: 'details.previousStatus',
-      value: 'Accepted by UKEF (without conditions)',
-    },
-  );
-
-  const facilitiesWithOutConditions = await getApiData(
-    api.transactions(req.params.page * PAGESIZE, PAGESIZE, facilityFilters, userToken),
-    res,
-  );
-
-  const transactions = facilitiesWithConditions.transactions.concat(facilitiesWithOutConditions.transactions);
-
-  // the two queries breaks pagination
   const pages = {
-    // totalPages: Math.ceil(facilityDeals.count / PAGESIZE),
-    // currentPage: parseInt(req.params.page, 10),
-    totalItems: transactions.length,
+    totalPages: Math.ceil(count / PAGESIZE),
+    currentPage: parseInt(req.params.page, 10),
+    totalItems: count,
   };
 
   return res.render('reports/mia_min-cover-start-date-changes.njk', {
