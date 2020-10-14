@@ -21,7 +21,7 @@ env:
   registry: ${{ secrets.PROD_ACR_REGISTRY }}
   # App service settings
   DEAL_API_URL: "https://tfs-prod-portal-api.azurewebsites.net"
-  COMPANIES_HOUSE_API_URL: ="https://api.companieshouse.gov.uk"
+  COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
   # App service secrets
   SESSION_SECRET: "${{ secrets.PROD_SESSION_SECRET }}"
   COMPANIES_HOUSE_API_KEY: "${{ secrets.COMPANIES_HOUSE_API_KEY }}"
@@ -34,11 +34,13 @@ env:
   AZURE_WORKFLOW_FILESHARE_NAME: "${{ secrets.PROD_AZURE_WORKFLOW_FILESHARE_NAME }}"
   AZURE_WORKFLOW_EXPORT_FOLDER: "${{ secrets.PROD_AZURE_WORKFLOW_EXPORT_FOLDER }}"
   AZURE_WORKFLOW_IMPORT_FOLDER: "${{ secrets.PROD_AZURE_WORKFLOW_IMPORT_FOLDER }}"
-  MONGODB_URI: "${{ secrets.PROD_MONGODB_URI }}"
+  MONGODB_ROOT_USER: "${{ secrets.PROD_MONGODB_ROOT_USER }}"
+  MONGODB_ROOT_SALT: "${{ secrets.PROD_MONGODB_ROOT_SALT }}"
+  MONGODB_ROOT_HASH: "${{ secrets.PROD_MONGODB_ROOT_HASH}}"
   REDIS_URI: "${{ secrets.PROD_REDIS_URI }}"
   JWT_SIGNING_KEY: "${{ secrets.PROD_JWT_SIGNING_KEY }}"
   JWT_VALIDATING_KEY: "${{ secrets.PROD_JWT_VALIDATING_KEY }}"
-  GOV_NOTIFY_API_KEY: ="${{ secrets.PROD_GOV_NOTIFY_API_KEY }}"
+  GOV_NOTIFY_API_KEY: "${{ secrets.PROD_GOV_NOTIFY_API_KEY }}"
   GOV_NOTIFY_EMAIL_RECIPIENT: "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
 
   MIGRATION_SSL_CERTIFICATE: "${{ secrets.PROD_MIGRATION_SSL_CERTIFICATE }}"
@@ -348,9 +350,221 @@ jobs:
               REDIS_URI="${{ env.REDIS_URI }}" \
               COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
 
+  cosmos-db-create:
+    name: Cosmos DB (Mongo) Create
+    needs: vnet
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Remove previous private-endpoint
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network private-endpoint delete --name "tfs-${{ env.environment }}-mongo"
+      
+    - name: Cosmos account for mongodb
+      uses: Azure/cli@v1.0.0
+      with:
+        # On activating "Allow access from Azure Portal":
+        # https://github.com/Azure/azure-cli/issues/7495 ->
+        # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall#allow-requests-from-the-azure-portal
+        # ALLOW REQUESTS FROM THE AZURE PORTAL
+        # Region IP address
+        # Germany 51.4.229.218
+        # China 139.217.8.252
+        # US Gov 52.244.48.71
+        # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
+        inlineScript: |
+          az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB --server-version 3.6
+
+    - name: Database with autoscale
+      uses: Azure/cli@v1.0.0
+      with:
+        # TODO: switch from provisioned throughput to "serverless" capacity at the account level once it's available for Mongo (currently available for sql).
+        # TODO: enable continuous backup once that becomes available - looks like it's in private beta at the moment.
+        inlineScript: |
+          az cosmosdb mongodb database create --account tfs-${{ env.environment }}-mongo --name ${{ env.database_name }} --max-throughput 4000
+
+  cosmos-db-init:
+    name: Cosmos DB (Mongo) Initialise Collections
+    needs: cosmos-db-create
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Collections
+      uses: Azure/cli@v1.0.0
+      with:
+        # Creating collections is slow, so we show them before we attempt to create.
+        inlineScript: |
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name deals || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name deals --shard "_id" \
+            --idx '[{"key": {"keys": ["details.dateOfLastAction"]}}, {"key": {"keys": ["_id"]}}]'
+          
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name banks || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name banks --shard "_id"
+          
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name eligibilityCriteria || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name eligibilityCriteria --shard "_id"
+
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name mandatoryCriteria || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name mandatoryCriteria --shard "_id"
+
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name currencies || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name currencies --shard "_id"
+
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name users || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name users --shard "_id"
+
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name industrySectors || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name industrySectors --shard "_id"
+
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name countries || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name countries --shard "_id"
+          
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters --shard "_id"
+          
+    - name: Populate Collections
+      run: |
+        mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
+
+        cat <<EOF > deal-counter.js
+        db = db.getSiblingDB('${{ env.database_name }}')
+        try {
+          db.idCounters.insertMany([
+            {
+              "_id" : "DEAL_COUNTER",
+              "count" : 1000000
+            },
+            {
+              "_id" : "FACILITY_COUNTER",
+              "count" : 1000000
+            }
+          ])
+        } catch (err) {
+          print("Deal counter exists.")
+          print(err)
+        }
+        try {
+          db.users.insertOne(
+            {
+              "_id" : ObjectId('000000000000000000000001'),
+              "user-status": "active",
+              "timezone": "Europe/London",
+              "username": "${{ env.MONGODB_ROOT_USER }}",
+              "firstname": "ROOT",
+              "surname": "USER",
+              "email": "",
+              "roles": [
+                "maker",
+                "editor",
+                "admin"
+              ],
+              "bank": {
+                "id": "*"
+              },
+              salt: "${{ env.MONGODB_ROOT_SALT }}",
+              hash: "${{ env.MONGODB_ROOT_HASH }}"
+            },    
+          )
+        } catch (err) {
+          print("Deal counter exists.")
+          print(err)
+        }
+        EOF
+        echo "Initialising idCounters and adding root user"
+        mongo "$mongo_connection_string" deal-counter.js
+        echo end.
+        
+  cosmos-db-private:
+    name: Cosmos DB (Mongo) Make Private
+    needs: [cosmos-db-init, private-dns]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+      
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}         
+          
+    - name: Private link
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource"
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          mongo_id=$(az cosmosdb show --name tfs-${{ env.environment }}-mongo --query "id" -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-mongo \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-private-endpoints \
+            --private-connection-resource-id "$mongo_id" \
+            --group-id MongoDB \
+            --connection-name tfs-${{ env.environment }}-mongo
+    
+    - name: DNS A-records
+      uses: Azure/cli@v1.0.0
+      with:
+        # We have to add explicit A records so that Mongo names resolve correctly to the private endpoint address
+        # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-private-endpoints#integrate-the-private-endpoint-with-a-private-dns-zone-1
+        # NB the zone name needs to be "privatelink.mongo.cosmos.azure.com" rather than "privatelink.documents.azure.com" as per the link above.
+        # NB ipConfigurations[0] appears to be the "primary". There's also a property called "requiredMemberName" that *seems* to be the value needed for record-set-name but I can't find any documentation on it, so sticking with [0] and [1] for now:
+        inlineScript: |
+          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+
+          if [ -z "$ipv4_address" ]
+          then
+            mongo_interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-mongo --query 'networkInterfaces[0].id' -o tsv)
+
+            mongo_interface_ip=$(az resource show --ids $mongo_interface_id --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+            az network private-dns record-set a show   --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com" || \
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-mongo \
+              --zone-name "privatelink.mongo.cosmos.azure.com" \
+              --ipv4-address $mongo_interface_ip
+
+            mongo_uksouth_interface_ip=$(az resource show --ids $mongo_interface_id --query "properties.ipConfigurations[1].properties.privateIPAddress" -o tsv)
+            az network private-dns record-set a show   --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com" || \
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-mongo-uksouth \
+              --zone-name "privatelink.mongo.cosmos.azure.com" \
+              --ipv4-address $mongo_uksouth_interface_ip
+
+          else
+            echo "IP for tfs-${{ env.environment }}-mongo.privatelink.mongo.cosmos.azure.com is $ipv4_address"
+          fi
+              
   portal-api:
     name: Portal API
-    needs: [vnet, private-dns]
+    needs: [vnet, private-dns, cosmos-db-create]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -486,6 +700,8 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
+          mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
+
           az webapp config connection-string set --name tfs-${{ env.environment }}-portal-api \
             --connection-string-type custom \
             --settings \
@@ -499,202 +715,13 @@ jobs:
               AZURE_WORKFLOW_STORAGE_ACCOUNT="${{ env.AZURE_WORKFLOW_STORAGE_ACCOUNT }}" \
               AZURE_WORKFLOW_STORAGE_ACCESS_KEY="${{ env.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}" \
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
-              MONGODB_URI="${{ env.MONGODB_URI }}" \
+              MONGODB_URI="$mongo_connection_string" \
               JWT_SIGNING_KEY="${{ env.JWT_SIGNING_KEY }}" \
               JWT_VALIDATING_KEY="${{ env.JWT_VALIDATING_KEY }}" \
               GOV_NOTIFY_API_KEY="${{ env.GOV_NOTIFY_API_KEY }}" \
               GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}"
 
-  cosmos-db:
-    name: Cosmos DB (Mongo)
-    needs: [vnet, private-dns]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: azure/login@v1
-      with:
-        creds: ${{ env.credentials }}
-
-    - name: Defaults
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
-
-    - name: Cosmos account for mongodb
-      uses: Azure/cli@v1.0.0
-      with:
-        # On activating "Allow access from Azure Portal":
-        # https://github.com/Azure/azure-cli/issues/7495 ->
-        # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall#allow-requests-from-the-azure-portal
-        # ALLOW REQUESTS FROM THE AZURE PORTAL
-        # Region IP address
-        # Germany 51.4.229.218
-        # China 139.217.8.252
-        # US Gov 52.244.48.71
-        # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
-        inlineScript: |
-          az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB --server-version 3.6
-
-    - name: Private link
-      uses: Azure/cli@v1.0.0
-      with:
-        # Restrict inbound traffic to not be open to the Internet
-        # NB: group-id isn't well documented. It means "Target sub-resource"
-        #     The purpose of connection-name is unknown.
-        inlineScript: |
-          mongo_id=$(az cosmosdb show --name tfs-${{ env.environment }}-mongo --query "id" -o tsv)
-          az network private-endpoint create \
-            --name tfs-${{ env.environment }}-mongo \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "$mongo_id" \
-            --group-id MongoDB \
-            --connection-name tfs-${{ env.environment }}-mongo
-
-    - name: DNS A-records
-      uses: Azure/cli@v1.0.0
-      with:
-        # We have to add explicit A records so that Mongo names resolve correctly to the private endpoint address
-        # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-private-endpoints#integrate-the-private-endpoint-with-a-private-dns-zone-1
-        # NB the zone name needs to be "privatelink.mongo.cosmos.azure.com" rather than "privatelink.documents.azure.com" as per the link above.
-        # NB ipConfigurations[0] appears to be the "primary". There's also a property called "requiredMemberName" that *seems* to be the value needed for record-set-name but I can't find any documentation on it, so sticking with [0] and [1] for now:
-        inlineScript: |
-          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com" --query "aRecords[0].ipv4Address" -o tsv || echo "")
-
-          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-mongo --query 'networkInterfaces[0].id' -o tsv)
-          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
-          interface_uksouth_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[1].properties.privateIPAddress" -o tsv)
-          
-          # Create
-          if [ -z "$ipv4_address" ]
-          then
-            echo Setting private link IP address...
-
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com"
-            az network private-dns record-set a add-record \
-              --record-set-name tfs-${{ env.environment }}-mongo \
-              --zone-name "privatelink.mongo.cosmos.azure.com" \
-              --ipv4-address $interface_ip
-            
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com"
-            az network private-dns record-set a add-record \
-              --record-set-name tfs-${{ env.environment }}-mongo-uksouth \
-              --zone-name "privatelink.mongo.cosmos.azure.com" \
-              --ipv4-address $interface_uksouth_ip
-          fi
-
-          # Update
-          if [ "$ipv4_address" != "$interface_ip" ]
-          then
-            echo Updating private link IP address...
-
-            az network private-dns record-set a delete --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com" --yes
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com"
-            az network private-dns record-set a add-record \
-              --record-set-name tfs-${{ env.environment }}-mongo \
-              --zone-name "privatelink.mongo.cosmos.azure.com" \
-              --ipv4-address $interface_ip
-
-            az network private-dns record-set a delete --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com" --yes
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com"
-            az network private-dns record-set a add-record \
-              --record-set-name tfs-${{ env.environment }}-mongo-uksouth \
-              --zone-name "privatelink.mongo.cosmos.azure.com" \
-              --ipv4-address $interface_uksouth_ip
-          fi
-
-    - name: Database with autoscale
-      uses: Azure/cli@v1.0.0
-      with:
-        # TODO: switch from provisioned throughput to "serverless" capacity at the account level once it's available for Mongo (currently available for sql).
-        # TODO: enable continuous backup once that becomes available - looks like it's in private beta at the moment.
-        inlineScript: |
-          az cosmosdb mongodb database create --account tfs-${{ env.environment }}-mongo --name ${{ env.database_name }} --max-throughput 4000
-
-    - name: Collections
-      uses: Azure/cli@v1.0.0
-      with:
-        # Creating collections is slow, so we show them before we attempt to create.
-        inlineScript: |
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name deals || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name deals --shard "_id" \
-            --idx '[{"key": {"keys": ["details.dateOfLastAction"]}}, {"key": {"keys": ["_id"]}}]'
-          
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name banks || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name banks --shard "_id"
-          
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name eligibilityCriteria || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name eligibilityCriteria --shard "_id"
-
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name mandatoryCriteria || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name mandatoryCriteria --shard "_id"
-
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name currencies || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name currencies --shard "_id"
-
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name users || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name users --shard "_id"
-
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name industrySectors || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name industrySectors --shard "_id"
-
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name countries || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name countries --shard "_id"
-          
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters --shard "_id"
-
-    # - name: Add Deal ID counter
-    #   run: |
-    #     cat <<EOF > deal-counter.js
-    #     db = db.getSiblingDB('tfs-portal')
-    #     try {
-    #       db.idCounters.insertOne({
-    #         "_id" : "DEAL_COUNTER",
-    #         "count" : 1000000
-    #       })
-    #     } catch (err) {
-    #       print("Deal counter exists.")
-    #       print(err)
-    #     }
-    #     EOF
-    #     cat deal-counter.js
-    #     echo Attempt 1...
-    #     mongo ${{ env.MONGODB_URI }} deal-counter.js
-    #     echo Attempt 2...
-    #     mongo ${{ env.MONGODB_URI }} deal-counter.js
-    #     echo Attempt 3...
-    #     mongo ${{ env.MONGODB_URI }} deal-counter.js
-    #     echo Attempt 4...
-    #     mongo ${{ env.MONGODB_URI }} deal-counter.js
-    #     echo end.
-
-    # - name: Add Facility ID counter
-    #   run: |
-    #     cat <<EOF > facility-counter.js
-    #     db = db.getSiblingDB('tfs-portal')
-    #     try {
-    #       db.idCounters.insertOne({
-    #         "_id" : "FACILITY_COUNTER",
-    #         "count" : 1000000
-    #       })
-    #     } catch (err) {
-    #       print("Facility counter exists.")
-    #       print(err)
-    #     }
-    #     EOF
-    #     cat facility-counter.js
-    #     echo Attempt 1...
-    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
-    #     echo Attempt 2...
-    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
-    #     echo Attempt 3...
-    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
-    #     echo Attempt 4...
-    #     mongo ${{ env.MONGODB_URI }} facility-counter.js
-    #     echo end.
-
+                
   file-storage:
     name: File storage
     needs: [vnet, private-dns]
@@ -1074,32 +1101,3 @@ jobs:
             --route-type Redirect \
             --accepted-protocols Http \
             --redirect-protocol HttpsOnly
-
-    # - name: API healthcheck
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     inlineScript: |
-    #       frontend_endpoint_name=$(az network front-door show --name tfs-${{ env.environment }}-fd --query "frontendEndpoints[0].name" -o tsv)
-    #       az network front-door load-balancing create --front-door-name tfs-${{ env.environment }}-fd \
-    #         --name api-lb \
-    #         --sample-size 4 \
-    #         --successful-samples-required 2
-    #       az network front-door probe create --front-door-name tfs-${{ env.environment }}-fd \
-    #         --interval 60 \
-    #         --name api-probe \
-    #         --path /healthcheck \
-    #         --probeMethod GET \
-    #         --protocol Https
-    #       az network front-door backend-pool create --front-door-name tfs-${{ env.environment }}-fd \
-    #         --name portal-api \
-    #         --address tfs-${{ env.environment }}-portal-api.azurewebsites.net \
-    #         --load-balancing api-lb \
-    #         --probe api-probe
-    #       az network front-door routing-rule create --front-door-name tfs-${{ env.environment }}-fd \
-    #         --name API \
-    #         --frontend-endpoints $frontend_endpoint_name \
-    #         --route-type Forward \
-    #         --accepted-protocols Https \
-    #         --forwarding-protocol HttpsOnly \
-    #         --backend-pool portal-api \
-    #         --patterns "/v1/healthcheck"

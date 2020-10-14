@@ -1,4 +1,4 @@
-const gql = require('graphql-tag');
+import gql from 'graphql-tag';
 
 const transactionsQuery = `
 query Transactions($start: Int, $pagesize: Int, $filters:[TransactionFilters]){
@@ -38,4 +38,4 @@ query Transactions($start: Int, $pagesize: Int, $filters:[TransactionFilters]){
   }
 }`;
 
-module.exports = gql(transactionsQuery);
+export default gql(transactionsQuery);

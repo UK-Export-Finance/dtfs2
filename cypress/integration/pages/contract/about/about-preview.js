@@ -2,7 +2,7 @@ const address = require('./address');
 const nav = require('./nav');
 
 const page = {
-  visit: (deal) => cy.visit(`/contract/${deal._id}/about/preview`),
+  visit: (deal) => cy.visit(`/contract/${deal._id}/about/check-your-answers`),
   nav: () => nav,
 
   supplierType: () => cy.get('[data-cy="supplier-type"]'),

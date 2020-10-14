@@ -35,11 +35,11 @@
     const industrySectors = {{ industrySectors | dump | safe }};
 
     function onChangeIndustrySector(event) {
-      window.dtfs.changeIndustryClasses(event, industrySectors);
+      DTFS.main.changeIndustryClasses(event, industrySectors);
     };
 
     function onChangeRadioButton(element, shouldShow) {
-      window.dtfs.changeScreenVisibilityOfElement(element, shouldShow);
+      DTFS.main.changeScreenVisibilityOfElement(element, shouldShow);
     }
   </script>
 

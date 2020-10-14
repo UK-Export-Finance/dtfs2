@@ -11,7 +11,7 @@ module.exports = {
   contractAboutPreview: require('./contract/about/about-preview'),
   contractComments: require('./contract/contract-comments-tab'),
   contractDelete: require('./contract/contract-delete'),
-  contractPreview: require('./contract/contract-preview-tab'),
+  contractCheckDealDetails: require('./contract/contract-check-deal-details'),
   contractReadyForReview: require('./contract/contract-readyForReview'),
   contractReturnToMaker: require('./contract/contract-returnToMaker'),
   contractConfirmSubmission: require('./contract/contract-confirmSubmission'),

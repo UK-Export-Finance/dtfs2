@@ -7,7 +7,10 @@
   {% if status %}
     {{govukTag({
       text: status,
-      classes: greyColourStatus and "govuk-tag--grey"
+      classes: greyColourStatus and "govuk-tag--grey",
+      attributes: {
+        'data-cy': 'status-tag'
+      }
     })}}
   {% endif %}
 {% endmacro %}

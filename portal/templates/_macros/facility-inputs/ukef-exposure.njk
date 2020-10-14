@@ -40,11 +40,11 @@
 
       var calculation = facilityValue * (coveredPercentageInput.value / 100);
 
-      if (window.dtfs.isNumeric(calculation)) {
+      if (DTFS.main.isNumeric(calculation)) {
         var result;
-        var totalDecimals = window.dtfs.decimalsCount(calculation);
+        var totalDecimals = DTFS.main.decimalsCount(calculation);
         if (totalDecimals > 2)  {
-          result = window.dtfs.roundNumber(calculation, 2);
+          result = DTFS.main.roundNumber(calculation, 2);
         } else {
           result = calculation;
         }

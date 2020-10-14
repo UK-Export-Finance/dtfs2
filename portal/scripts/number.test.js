@@ -1,4 +1,4 @@
-import attachToWindow, {
+import {
   isNumeric,
   decimalsCount,
   roundNumber,
@@ -38,15 +38,6 @@ describe('number', () => {
       expect(roundNumber(1234.01, 1)).toEqual(1234);
       expect(roundNumber(123456.001, 2)).toEqual(123456);
       expect(roundNumber(123456.001)).toEqual(123456);
-    });
-  });
-
-  describe('attachToWindow', () => {
-    it('should attach all functions to window.dtfs', () => {
-      attachToWindow();
-      expect(global.window.dtfs.isNumeric).toEqual(isNumeric);
-      expect(global.window.dtfs.decimalsCount).toEqual(decimalsCount);
-      expect(global.window.dtfs.roundNumber).toEqual(roundNumber);
     });
   });
 });

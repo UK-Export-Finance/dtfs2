@@ -1,0 +1,37 @@
+{% import './bank-reference-number-field.njk' as bankReferenceNumberField %}
+{% import '_macros/date-field.njk' as dateField %}
+
+{% macro render(loan, validationErrors) %}
+
+  {{bankReferenceNumberField.render(
+    id = 'facilityStageUnconditional-bankReferenceNumber',
+    label = 'Bank reference number',
+    value = loan.bankReferenceNumber,
+    error = validationErrors.errorList.bankReferenceNumber
+  )}}
+
+  <div class="govuk-form-group">
+    {{ dateField.render(
+      legend = 'Requested Cover Start Date (optional)',
+      id = 'requestedCoverStartDate',
+      hint = 'For example, 31 05 2017',
+      dayValue = loan['requestedCoverStartDate-day'] or loan.requestedCoverStartDate and loan.requestedCoverStartDate | localiseTimestamp('DD', user.timezone),
+      monthValue = loan['requestedCoverStartDate-month'] or loan.requestedCoverStartDate and loan.requestedCoverStartDate | localiseTimestamp('MM', user.timezone),
+      yearValue = loan['requestedCoverStartDate-year'] or loan.requestedCoverStartDate and loan.requestedCoverStartDate | localiseTimestamp('YYYY', user.timezone),
+      error = validationErrors.errorList.requestedCoverStartDate
+    )}}
+  </div>
+
+  <div class="govuk-form-group">
+    {{ dateField.render(
+      legend = 'Cover End Date',
+      id = 'coverEndDate',
+      hint = 'For example, 31 05 2017',
+      dayValue = loan['coverEndDate-day'],
+      monthValue = loan['coverEndDate-month'],
+      yearValue = loan['coverEndDate-year'],
+      error = validationErrors.errorList.coverEndDate
+    )}}
+  </div>
+
+{% endmacro %}

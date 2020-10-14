@@ -1,8 +1,8 @@
-const axios = require('axios');
-const FormData = require('form-data');
-const apollo = require('./graphql/apollo');
+import axios from 'axios';
+import FormData from 'form-data';
+import apollo from './graphql/apollo';
 
-const { dealsQuery, transactionsQuery } = require('./graphql/queries');
+import { dealsQuery, transactionsQuery } from './graphql/queries';
 
 require('dotenv').config();
 

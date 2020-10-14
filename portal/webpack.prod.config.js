@@ -1,7 +1,7 @@
 const path = require('path');
 const globEntries = require('webpack-glob-entries');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
-// const TerserPlugin = require('terser-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
@@ -25,14 +25,15 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/',
-    filename: '[name].js'
+    filename: '[name].js',
+    library: ['DTFS', '[name]'],
+    libraryTarget: 'var',
   },
   target: 'web',
-  devtool: 'source-map',
   optimization: {
     minimize: true,
     minimizer: [
-      // new TerserPlugin(),
+      new TerserPlugin(),
       new OptimizeCSSAssetsPlugin({})
     ],
   },
@@ -43,7 +44,8 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-        }
+          options: {},
+        },
       },
       {
         test: /\.html$|njk|nunjucks/,

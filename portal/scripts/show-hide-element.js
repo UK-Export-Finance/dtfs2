@@ -6,7 +6,7 @@ export const changeScreenVisibilityOfElement = (elementId, showBoolean) => {
   if (showBoolean) {
     element.className = '';
   } else {
-    element.className = 'govuk-visually-hidden';
+    element.className = 'display-none';
   }
 };
 
@@ -19,13 +19,3 @@ export const showHideElement = (elementId, showBoolean) => {
     element.setAttribute('hidden', true);
   }
 };
-
-const attachToWindow = () => {
-  window.dtfs = {
-    ...window.dtfs,
-    changeScreenVisibilityOfElement,
-    showHideElement,
-  };
-};
-
-export default attachToWindow;

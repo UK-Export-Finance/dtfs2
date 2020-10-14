@@ -73,14 +73,13 @@ context('Bond Details', () => {
   });
 
   describe('When a user selects `unissued` facility stage', () => {
-    it('should render additional form fields and display `unissued` specific validation errors without submit', () => {
+    it('should render additional form fields', () => {
       cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
       pages.contract.addBondButton().click();
       pages.bondDetails.facilityStageUnissuedInput().click();
 
       pages.bondDetails.ukefGuaranteeInMonthsInput().should('be.visible');
-      pages.bondDetails.ukefGuaranteeInMonthsInputErrorMessage().should('be.visible');
     });
 
     describe('after form submit and navigating back to `Bond Details` page', () => {
@@ -171,7 +170,7 @@ context('Bond Details', () => {
   });
 
   describe('When a user selects `issued` facility stage', () => {
-    it('should render additional form fields and display `issued` specific validation errors without submit', () => {
+    it('should render additional form fields', () => {
       cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
       pages.contract.addBondButton().click();
@@ -185,9 +184,6 @@ context('Bond Details', () => {
       pages.bondDetails.coverEndDateMonthInput().should('be.visible');
       pages.bondDetails.coverEndDateYearInput().should('be.visible');
       pages.bondDetails.uniqueIdentificationNumberInput().should('be.visible');
-
-      pages.bondDetails.coverEndDateInputErrorMessage().should('be.visible');
-      pages.bondDetails.uniqueIdentificationNumberInputErrorMessage().should('be.visible');
     });
 
     describe('after form submit and navigating back to `Bond Details` page', () => {

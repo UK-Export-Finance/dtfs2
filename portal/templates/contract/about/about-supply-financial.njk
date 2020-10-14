@@ -23,7 +23,7 @@
 
   <script type="text/javascript">
     function onChangeSupplyContractCurrency(event) {
-      window.dtfs.changeScreenVisibilityOfElement('supply-contract-currency-conversion-fields', event.target.value !== 'GBP');
+      DTFS.main.changeScreenVisibilityOfElement('supply-contract-currency-conversion-fields', event.target.value !== 'GBP');
     };
   </script>
 
@@ -72,7 +72,7 @@
       {% set hideByDefault = (deal.submissionDetails["supplyContractCurrency"].id and deal.submissionDetails["supplyContractCurrency"].id==='GBP') %}
     {% endif %}
 
-    <div id="supply-contract-currency-conversion-fields" class="{% if hideByDefault %}govuk-visually-hidden{% endif %}">
+    <div id="supply-contract-currency-conversion-fields" class="{% if hideByDefault %}display-none{% endif %}">
 
       {{ govukInput({
         label: { text: 'Conversion rate from Supply Contract currency to GBP' },

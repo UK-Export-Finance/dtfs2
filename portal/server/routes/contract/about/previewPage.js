@@ -22,7 +22,7 @@ const userCanAccessAbout = (user) => {
   return true;
 };
 
-router.get('/contract/:_id/about/preview', async (req, res) => {
+router.get('/contract/:_id/about/check-your-answers', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
   const { user } = req.session;

@@ -1,4 +1,4 @@
-const { bankDetails, contract, contractPreview } = require('../../pages');
+const { bankDetails, contract, contractCheckDealDetails } = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
 
@@ -54,7 +54,7 @@ context('Create deal', () => {
 
     // confirm that the data we've entered appears on the preview page
     contract.previewTab().click();
-    contractPreview.header().invoke('text').then((text) => {
+    contractCheckDealDetails.header().invoke('text').then((text) => {
       expect(text.trim()).equal(`Supply Contract name: TESTING`);
     });
 
