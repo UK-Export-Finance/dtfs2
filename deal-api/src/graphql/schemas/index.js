@@ -42,6 +42,7 @@ type DealDetails {
   checker: Checker
   dateOfLastAction: String
   submissionDate: String
+  approvalDate: String
   created: String
   workflowStatus: String
   owningBank: OwningBank
