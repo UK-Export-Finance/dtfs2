@@ -1,0 +1,52 @@
+{% import '_macros/task-list.njk' as taskList %}
+
+{% macro render(params) %}
+  {% set title = params.title %}
+  {% set dealId = params.dealId %}
+  {% set completedForms = params.completedForms %}
+  {% set facilityId = params.facilityId %}
+  {% set facilityName = params.facilityName %}
+
+  {% set hrefRoute = '/contract/' + dealId + '/' + facilityName +  '/' + facilityId %}
+
+  <h1 class="govuk-heading-l">{{ title }} </h1>
+
+  <input type="hidden" value="{{ facilityId }}" data-cy="{{ facilityName }}-id"/>
+
+  <div class="govuk-grid-row forms-task-list">
+
+    <div class="govuk-grid-column-three-quarters">
+
+      {{taskList.render({
+        items: [
+          {
+            title: "Bond details",
+            completed: completedForms.bondDetails,
+            href: hrefRoute + '/details'
+          },
+          {
+            title: "Financial details",
+            completed: completedForms.bondFinancialDetails,
+            href: hrefRoute + '/financial-details'
+          },
+          {
+            title: "Fee details",
+            completed: completedForms.bondFeeDetails,
+            href: hrefRoute + '/fee-details'
+          }
+        ]
+      })}}
+
+      <a
+        href="{{ hrefRoute }}/check-your-answers"
+        class="govuk-body govuk-link"
+        data-cy="link-check-your-answers"
+      >Check your answers</a>
+
+    </div>
+
+  </div>
+
+  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-8 govuk-!-margin-bottom-8" />
+
+{% endmacro %}

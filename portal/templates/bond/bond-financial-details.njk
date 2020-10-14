@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
-{% import './_macros/bond-nav.njk' as bondNav %}
+{% import 'contract/components/forms-task-list.njk' as formsTaskList %}
 {% import '_macros/currency-same-as-supply-contract-currency.njk' as currencySameAsSupplyContractCurrency %}
 {% import '_macros/facility-inputs/covered-percentage.njk' as coveredPercentage %}
 {% import '_macros/facility-inputs/guarantee-fee-payable-by-bank.njk' as guaranteeFeePayableByBank %}
@@ -20,15 +20,13 @@
     }}
   {% endif %}
 
-  {{ bondNav.render(
-    completedForms = completedForms,
-    current = 'bondFinancialDetails',
-    contractId = dealId,
-    childId = bond._id,
-    bondStatus = bond.status
-  )}}
-
-  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+  {{ formsTaskList.render({
+    title: 'Bond',
+    dealId: dealId,
+    completedForms: completedForms,
+    facilityName: 'bond',
+    facilityId: bond._id
+  })}}
 
   <form method="POST" autocomplete="off" novalidate>
 
