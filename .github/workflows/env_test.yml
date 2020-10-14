@@ -233,21 +233,21 @@ jobs:
             --vnet tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
-    - name: Private endpoint
-      uses: Azure/cli@v1.0.0
-      with:
-        # Restrict inbound traffic to not be open to the Internet
-        # NB: group-id isn't well documented. It means "Target sub-resource"
-        #     The purpose of connection-name is unknown.
-        inlineScript: |
-          portal_ui_id=$(az webapp show --name tfs-${{ env.environment }}-portal-ui --query "id" -o tsv)
-          az network private-endpoint create \
-            --name tfs-${{ env.environment }}-portal-ui \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "$portal_ui_id" \
-            --group-id sites \
-            --connection-name tfs-${{ env.environment }}-portal-ui
+    # - name: Private endpoint
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # Restrict inbound traffic to not be open to the Internet
+    #     # NB: group-id isn't well documented. It means "Target sub-resource"
+    #     #     The purpose of connection-name is unknown.
+    #     inlineScript: |
+    #       portal_ui_id=$(az webapp show --name tfs-${{ env.environment }}-portal-ui --query "id" -o tsv)
+    #       az network private-endpoint create \
+    #         --name tfs-${{ env.environment }}-portal-ui \
+    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+    #         --subnet ${{ env.environment }}-private-endpoints \
+    #         --private-connection-resource-id "$portal_ui_id" \
+    #         --group-id sites \
+    #         --connection-name tfs-${{ env.environment }}-portal-ui
 
     - name: DNS A-records
       uses: Azure/cli@v1.0.0
@@ -379,21 +379,21 @@ jobs:
             --vnet tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
-    - name: Private endpoint
-      uses: Azure/cli@v1.0.0
-      with:
-        # Restrict inbound traffic to not be open to the Internet
-        # NB: group-id isn't well documented. It means "Target sub-resource".
-        #     The purpose of connection-name is unknown.
-        inlineScript: |
-          portal_api_id=$(az webapp show --name tfs-${{ env.environment }}-portal-api --query "id" -o tsv)
-          az network private-endpoint create \
-            --name tfs-${{ env.environment }}-portal-api \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "$portal_api_id" \
-            --group-id sites \
-            --connection-name tfs-${{ env.environment }}-portal-api
+    # - name: Private endpoint
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # Restrict inbound traffic to not be open to the Internet
+    #     # NB: group-id isn't well documented. It means "Target sub-resource".
+    #     #     The purpose of connection-name is unknown.
+    #     inlineScript: |
+    #       portal_api_id=$(az webapp show --name tfs-${{ env.environment }}-portal-api --query "id" -o tsv)
+    #       az network private-endpoint create \
+    #         --name tfs-${{ env.environment }}-portal-api \
+    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+    #         --subnet ${{ env.environment }}-private-endpoints \
+    #         --private-connection-resource-id "$portal_api_id" \
+    #         --group-id sites \
+    #         --connection-name tfs-${{ env.environment }}-portal-api
 
     - name: DNS A-records
       uses: Azure/cli@v1.0.0
@@ -534,21 +534,21 @@ jobs:
         inlineScript: |
           az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB --server-version 3.6
 
-    - name: Private link
-      uses: Azure/cli@v1.0.0
-      with:
-        # Restrict inbound traffic to not be open to the Internet
-        # NB: group-id isn't well documented. It means "Target sub-resource"
-        #     The purpose of connection-name is unknown.
-        inlineScript: |
-          mongo_id=$(az cosmosdb show --name tfs-${{ env.environment }}-mongo --query "id" -o tsv)
-          az network private-endpoint create \
-            --name tfs-${{ env.environment }}-mongo \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "$mongo_id" \
-            --group-id MongoDB \
-            --connection-name tfs-${{ env.environment }}-mongo
+    # - name: Private link
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # Restrict inbound traffic to not be open to the Internet
+    #     # NB: group-id isn't well documented. It means "Target sub-resource"
+    #     #     The purpose of connection-name is unknown.
+    #     inlineScript: |
+    #       mongo_id=$(az cosmosdb show --name tfs-${{ env.environment }}-mongo --query "id" -o tsv)
+    #       az network private-endpoint create \
+    #         --name tfs-${{ env.environment }}-mongo \
+    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+    #         --subnet ${{ env.environment }}-private-endpoints \
+    #         --private-connection-resource-id "$mongo_id" \
+    #         --group-id MongoDB \
+    #         --connection-name tfs-${{ env.environment }}-mongo
 
     - name: DNS A-records
       uses: Azure/cli@v1.0.0
@@ -731,21 +731,21 @@ jobs:
         inlineScript: |
           az storage share create --account-name tfs${{ env.environment }}storage --name workflow
 
-    - name: Private link
-      uses: Azure/cli@v1.0.0
-      with:
-        # Restrict inbound traffic to not be open to the Internet
-        # NB: group-id isn't well documented. It means "Target sub-resource"
-        #     The purpose of connection-name is unknown.
-        inlineScript: |
-          file_storage_id=$(az storage account show --name tfs${{ env.environment }}storage --query "id" -o tsv)
-          az network private-endpoint create \
-            --name tfs${{ env.environment }}storage \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "$file_storage_id" \
-            --group-id file \
-            --connection-name tfs${{ env.environment }}storage
+    # - name: Private link
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # Restrict inbound traffic to not be open to the Internet
+    #     # NB: group-id isn't well documented. It means "Target sub-resource"
+    #     #     The purpose of connection-name is unknown.
+    #     inlineScript: |
+    #       file_storage_id=$(az storage account show --name tfs${{ env.environment }}storage --query "id" -o tsv)
+    #       az network private-endpoint create \
+    #         --name tfs${{ env.environment }}storage \
+    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+    #         --subnet ${{ env.environment }}-private-endpoints \
+    #         --private-connection-resource-id "$file_storage_id" \
+    #         --group-id file \
+    #         --connection-name tfs${{ env.environment }}storage
              
     - name: DNS A-records
       uses: Azure/cli@v1.0.0
@@ -810,21 +810,21 @@ jobs:
     # Apparently private link for Redis is in preview, but it's not available in the UKEF Azure portal:
     # https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-private-link
     # This may have changed as of 6 Oct 2020
-    - name: Private link
-      uses: Azure/cli@v1.0.0
-      with:
-        # Restrict inbound traffic to not be open to the Internet
-        # NB: group-id isn't well documented. It means "Target sub-resource"
-        #     The purpose of connection-name is unknown.
-        inlineScript: |
-          redis_id=$(az redis show --name tfs-${{ env.environment }}-redis --query "id" -o tsv)
-          az network private-endpoint create \
-            --name tfs-${{ env.environment }}-redis \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "$redis_id" \
-            --group-id redisCache \
-            --connection-name tfs-${{ env.environment }}-redis
+    # - name: Private link
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # Restrict inbound traffic to not be open to the Internet
+    #     # NB: group-id isn't well documented. It means "Target sub-resource"
+    #     #     The purpose of connection-name is unknown.
+    #     inlineScript: |
+    #       redis_id=$(az redis show --name tfs-${{ env.environment }}-redis --query "id" -o tsv)
+    #       az network private-endpoint create \
+    #         --name tfs-${{ env.environment }}-redis \
+    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+    #         --subnet ${{ env.environment }}-private-endpoints \
+    #         --private-connection-resource-id "$redis_id" \
+    #         --group-id redisCache \
+    #         --connection-name tfs-${{ env.environment }}-redis
              
     - name: DNS A-records
       uses: Azure/cli@v1.0.0
