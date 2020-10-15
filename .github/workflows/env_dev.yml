@@ -905,7 +905,7 @@ jobs:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
-
+ 
     - name: Create
       uses: Azure/cli@v1.0.0
       with:
