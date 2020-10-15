@@ -57,7 +57,7 @@ context('Add a Loan to a Deal', () => {
 
     // get loanId, go back to Deal page
     // assert that some inputted Loan data is displayed in the table
-    partials.loanProgressNav.loanId().then((loanIdHiddenInput) => {
+    partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
       const loanId = loanIdHiddenInput[0].value;
 
       pages.loanPreview.saveGoBackButton().click();
@@ -114,7 +114,7 @@ context('Add a Loan to a Deal', () => {
 
       // get loanId, go back to Deal page
       // assert Loan status
-      partials.loanProgressNav.loanId().then((loanIdHiddenInput) => {
+      partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
         const loanId = loanIdHiddenInput[0].value;
 
         pages.loanPreview.saveGoBackButton().click();

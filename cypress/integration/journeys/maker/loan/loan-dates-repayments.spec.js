@@ -20,7 +20,7 @@ const MOCK_DEAL = {
 const goToPage = (deal) => {
   cy.loginGoToDealPage(MAKER_LOGIN, deal);
   pages.contract.addLoanButton().click();
-  partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
+  partials.taskListHeader.itemLink('dates-and-repayments').click();
 
   cy.url().should('include', '/loan/');
   cy.url().should('include', '/dates-repayments');
@@ -56,7 +56,7 @@ context('Loan Dates and Repayments', () => {
       cy.url().should('include', '/loan/');
       cy.url().should('include', '/check-your-answers');
 
-      partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
+      partials.taskListHeader.itemLink('dates-and-repayments').click();
       cy.url().should('include', '/dates-repayments');
 
       partials.errorSummary.errorSummaryLinks().should('have.length', 2);
@@ -73,7 +73,7 @@ context('Loan Dates and Repayments', () => {
       pages.loanDatesRepayments.submit().click();
       cy.url().should('include', '/check-your-answers');
 
-      partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
+      partials.taskListHeader.itemLink('dates-and-repayments').click();
       cy.url().should('include', '/dates-repayments');
 
       pages.loanDatesRepayments.premiumFrequencyAnnuallyInput().should('not.be.visible');
@@ -95,7 +95,7 @@ context('Loan Dates and Repayments', () => {
       pages.loanDatesRepayments.submit().click();
       cy.url().should('include', '/check-your-answers');
 
-      partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
+      partials.taskListHeader.itemLink('dates-and-repayments').click();
       partials.errorSummary.errorSummaryLinks().should('have.length', 2);
 
       pages.loanDatesRepayments.premiumTypeInputErrorMessage().should('not.be.visible');
@@ -109,7 +109,7 @@ context('Loan Dates and Repayments', () => {
       fillLoanForm.datesRepayments.inAdvanceAnnually();
       pages.loanDatesRepayments.submit().click();
 
-      partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
+      partials.taskListHeader.itemLink('dates-and-repayments').click();
       pages.loanDatesRepayments.premiumTypeInAdvanceInput().should('be.checked');
       pages.loanDatesRepayments.premiumFrequencyAnnuallyInput().should('be.checked');
       assertNoValidationErrors();
@@ -117,7 +117,7 @@ context('Loan Dates and Repayments', () => {
       fillLoanForm.datesRepayments.inArrearQuarterly();
       pages.loanDatesRepayments.submit().click();
 
-      partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
+      partials.taskListHeader.itemLink('dates-and-repayments').click();
       pages.loanDatesRepayments.premiumTypeInArrearInput().should('be.checked');
       pages.loanDatesRepayments.premiumFrequencyQuarterlyInput().should('be.checked');
       assertNoValidationErrors();
@@ -125,17 +125,21 @@ context('Loan Dates and Repayments', () => {
   });
 
   describe('when all required fields are provided', () => {
-    it('should display a checked `Loan Dates repayments` checkbox in progress nav', () => {
+    it('should display a completed status tag in task list header', () => {
       goToPage(deal);
       fillLoanForm.datesRepayments.inAdvanceAnnually();
       pages.loanDatesRepayments.submit().click();
       cy.url().should('include', '/check-your-answers');
 
-      partials.loanProgressNav.progressNavLinkLoanDatesRepaymentsCompletedCheckbox().should('be.visible');
-      partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
+      partials.taskListHeader.itemStatus('dates-and-repayments').invoke('text').then((text) => {
+        expect(text.trim()).equal('Completed');
+      });
+      partials.taskListHeader.itemLink('dates-and-repayments').click();
 
       cy.url().should('include', '/dates-repayments');
-      partials.loanProgressNav.progressNavLinkLoanDatesRepaymentsCompletedCheckbox().should('be.visible');
+      partials.taskListHeader.itemStatus('dates-and-repayments').invoke('text').then((text) => {
+        expect(text.trim()).equal('Completed');
+      });
     });
   });
 
@@ -143,14 +147,14 @@ context('Loan Dates and Repayments', () => {
     it('should save the form data, return to Deal page and prepopulate form fields when returning back to the page', () => {
       goToPage(deal);
       fillLoanForm.datesRepayments.inAdvanceAnnually();
-      partials.loanProgressNav.loanId().then((loanIdHiddenInput) => {
+      partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
         const loanId = loanIdHiddenInput[0].value;
         pages.loanDatesRepayments.saveGoBackButton().click();
 
         const row = pages.contract.loansTransactionsTable.row(loanId);
 
         row.bankReferenceNumberLink().click();
-        partials.loanProgressNav.progressNavLinkLoanDatesRepayments().click();
+        partials.taskListHeader.itemLink('dates-and-repayments').click();
 
         pages.loanDatesRepayments.premiumTypeInAdvanceInput().should('be.checked');
         pages.loanDatesRepayments.premiumFrequencyAnnuallyInput().should('be.checked');

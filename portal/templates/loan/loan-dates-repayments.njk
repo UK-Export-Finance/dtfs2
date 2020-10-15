@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% import './_macros/loan-nav.njk' as loanNav %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
 {% import './_macros/premium-frequency-radios.njk' as premiumFrequencyRadios %}
 {% import '../_macros/facility-inputs/day-count-radios.njk' as dayCountRadios %}
 
@@ -18,14 +18,13 @@
     }}
   {% endif %}
 
-  {{ loanNav.render(
-    completedForms = completedForms,
-    current = 'loanDatesRepayments',
-    contractId = dealId,
-    childId = loan._id
-  )}}
-
-  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+  {{ taskListHeader.render({
+    title: 'Loan',
+    dealId: dealId,
+    facilityName: 'loan',
+    facilityId: loan._id,
+    items: taskListItems
+  })}}
 
   <form method="POST" autocomplete="off">
 

@@ -1,4 +1,4 @@
 const replaceWhiteSpaceWithDash = (str) =>
-  str.replace(' ', '-');
+  str.replace(/ /g, '-');
 
 export default replaceWhiteSpaceWithDash;

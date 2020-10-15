@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% import './_macros/loan-nav.njk' as loanNav %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
 {% import './_macros/facility-stage-conditional-form-fields.njk' as facilityStageConditionalFormFields %}
 {% import './_macros/facility-stage-unconditional-form-fields.njk' as facilityStageUnconditionalFormFields %}
 
@@ -21,14 +21,13 @@
     }}
   {% endif %}
 
-  {{ loanNav.render(
-    completedForms = completedForms,
-    current = 'loanDetails',
-    contractId = dealId,
-    childId = loan._id
-  )}}
-
-  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+  {{ taskListHeader.render({
+    title: 'Loan',
+    dealId: dealId,
+    facilityName: 'loan',
+    facilityId: loan._id,
+    items: taskListItems
+  })}}
 
   <form method="POST" autocomplete="off" novalidate>
 

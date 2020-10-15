@@ -22,6 +22,7 @@ import {
   loanPreviewValidationErrors,
 } from './pageSpecificValidationErrors';
 import completedLoanForms from './completedForms';
+import loanTaskList from './loanTaskList';
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 import canIssueOrEditIssueFacility from '../canIssueOrEditIssueFacility';
 import isDealEditable from '../isDealEditable';
@@ -134,7 +135,7 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]
     dealId,
     loan,
     validationErrors: loanGuaranteeDetailsValidationErrors(validationErrors, loan),
-    completedForms,
+    taskListItems: loanTaskList(completedForms),
     user: req.session.user,
   });
 });
@@ -179,7 +180,7 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL,
     loan,
     currencies: mapCurrencies(currencies, loan.currency),
     validationErrors: loanFinancialDetailsValidationErrors(validationErrors, loan),
-    completedForms,
+    taskListItems: loanTaskList(completedForms),
     user: req.session.user,
   });
 });
@@ -220,7 +221,7 @@ router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL])
     dealId,
     loan,
     validationErrors: loanDatesRepaymentsValidationErrors(validationErrors, loan),
-    completedForms,
+    taskListItems: loanTaskList(completedForms),
     user: req.session.user,
   });
 });
@@ -296,7 +297,7 @@ router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), as
     dealId,
     loan,
     validationErrors: formattedValidationErrors,
-    completedForms,
+    taskListItems: loanTaskList(completedForms),
     user: req.session.user,
   });
 });

@@ -1,6 +1,6 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% import './_macros/loan-nav.njk' as loanNav %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
 {% import './_macros/loan-submission-details.njk' as submissionDetails %}
 
 {% block pageTitle %}Loan Preview{% endblock %}
@@ -16,13 +16,13 @@
     }}
   {% endif %}
 
-  {{ loanNav.render(
-    completedForms = completedForms,
-    current = 'loanPreview',
-    contractId = dealId,
-    childId = loan._id,
-    loanStatus = loan.status
-  )}}
+  {{ taskListHeader.render({
+    title: 'Loan',
+    dealId: dealId,
+    facilityName: 'loan',
+    facilityId: loan._id,
+    items: taskListItems
+  })}}
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
 

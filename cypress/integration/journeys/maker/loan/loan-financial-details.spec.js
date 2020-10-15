@@ -36,7 +36,7 @@ const goToPageWithUnconditionalFacilityStage = (deal) => {
 const goToPage = (deal) => {
   cy.loginGoToDealPage(MAKER_LOGIN, deal);
   pages.contract.addLoanButton().click();
-  partials.loanProgressNav.progressNavLinkLoanFinancialDetails().click();
+  partials.taskListHeader.itemLink('loan-financial-details').click();
 
   cy.url().should('include', '/loan/');
   cy.url().should('include', '/financial-details');
@@ -67,7 +67,7 @@ context('Loan Financial Details', () => {
       cy.url().should('include', '/dates-repayments');
       pages.loanDatesRepayments.submit().click();
       cy.url().should('include', '/check-your-answers');
-      partials.loanProgressNav.progressNavLinkLoanFinancialDetails().click();
+      partials.taskListHeader.itemLink('loan-financial-details').click();
 
       partials.errorSummary.errorSummaryLinks().should('have.length', 5);
       pages.loanFinancialDetails.facilityValueInputErrorMessage().should('be.visible');
@@ -83,7 +83,7 @@ context('Loan Financial Details', () => {
 
     pages.loanFinancialDetails.disbursementAmountInput().should('be.visible');
 
-    partials.loanProgressNav.progressNavLinkLoanGuaranteeDetails().click();
+    partials.taskListHeader.itemLink('loan-guarantee-details').click();
     pages.loanGuaranteeDetails.facilityStageConditionalInput().click();
     pages.loanGuaranteeDetails.submit().click();
 
@@ -111,7 +111,7 @@ context('Loan Financial Details', () => {
       pages.loanFinancialDetails.currencySameAsSupplyContractCurrencyInputNo().click();
       pages.loanFinancialDetails.submit().click();
 
-      partials.loanProgressNav.progressNavLinkLoanFinancialDetails().click();
+      partials.taskListHeader.itemLink('loan-financial-details').click();
       cy.url().should('include', '/financial-details');
 
       const TOTAL_REQUIRED_FORM_FIELDS = 6;
@@ -128,16 +128,17 @@ context('Loan Financial Details', () => {
     });
   });
 
-  it('should prepopulate form inputs from submitted data and render a checked checkbox in progress nav', () => {
+  it('should prepopulate form inputs from submitted data and render a `completed` status tag in task list header', () => {
     goToPageWithUnconditionalFacilityStage(deal);
 
     fillLoanForm.financialDetails.currencyNotTheSameAsSupplyContractCurrency();
     pages.loanFinancialDetails.submit().click();
 
-    partials.loanProgressNav.progressNavLoanFinancialDetailsCompletedCheckbox().should('be.visible');
-    partials.loanProgressNav.progressNavLoanFinancialDetailsCompletedCheckbox().should('be.checked');
+    partials.taskListHeader.itemStatus('loan-financial-details').invoke('text').then((text) => {
+      expect(text.trim()).equal('Completed');
+    });
 
-    partials.loanProgressNav.progressNavLinkLoanFinancialDetails().click();
+    partials.taskListHeader.itemLink('loan-financial-details').click();
 
     assertLoanFormValues.financialDetails.currencyNotTheSameAsSupplyContractCurrency();
   });
@@ -184,7 +185,7 @@ context('Loan Financial Details', () => {
 
       fillLoanForm.financialDetails.currencyNotTheSameAsSupplyContractCurrency();
 
-      partials.loanProgressNav.loanId().then((loanIdHiddenInput) => {
+      partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
         const loanId = loanIdHiddenInput[0].value;
 
         pages.loanFinancialDetails.saveGoBackButton().click();
@@ -195,7 +196,7 @@ context('Loan Financial Details', () => {
         const row = pages.contract.loansTransactionsTable.row(loanId);
 
         row.bankReferenceNumberLink().click();
-        partials.loanProgressNav.progressNavLinkLoanFinancialDetails().click();
+        partials.taskListHeader.itemLink('loan-financial-details').click();
         cy.url().should('include', '/loan/');
         cy.url().should('include', '/financial-details');
 
