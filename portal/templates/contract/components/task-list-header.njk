@@ -3,7 +3,7 @@
 {% macro render(params) %}
   {% set title = params.title %}
   {% set dealId = params.dealId %}
-  {% set completedForms = params.completedForms %}
+  {% set items = params.items %}
   {% set facilityId = params.facilityId %}
   {% set facilityName = params.facilityName %}
 
@@ -18,23 +18,8 @@
     <div class="govuk-grid-column-three-quarters">
 
       {{taskList.render({
-        items: [
-          {
-            title: "Bond details",
-            completed: completedForms.bondDetails,
-            href: hrefRoute + '/details'
-          },
-          {
-            title: "Financial details",
-            completed: completedForms.bondFinancialDetails,
-            href: hrefRoute + '/financial-details'
-          },
-          {
-            title: "Fee details",
-            completed: completedForms.bondFeeDetails,
-            href: hrefRoute + '/fee-details'
-          }
-        ]
+        items: items,
+        hrefRoute: hrefRoute
       })}}
 
       <a

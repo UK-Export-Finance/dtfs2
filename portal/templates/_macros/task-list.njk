@@ -16,7 +16,7 @@
         {{taskListItem.render({
           title: item.title,
           completed: item.completed,
-          href: item.href
+          href: params.hrefRoute + item.href
         })}}
 
       {% endfor %}

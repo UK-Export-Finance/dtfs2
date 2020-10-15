@@ -23,6 +23,7 @@ import {
   bondPreviewValidationErrors,
 } from './pageSpecificValidationErrors';
 import completedBondForms from './completedForms';
+import bondTaskList from './bondTaskList';
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 import canIssueOrEditIssueFacility from '../canIssueOrEditIssueFacility';
 import isDealEditable from '../isDealEditable';
@@ -122,7 +123,7 @@ router.get('/contract/:_id/bond/:bondId/details', provide([DEAL]), async (req, r
     dealId,
     bond,
     validationErrors: bondDetailsValidationErrors(validationErrors, bond),
-    completedForms,
+    taskListItems: bondTaskList(completedForms),
     user: req.session.user,
   });
 });
@@ -172,7 +173,7 @@ router.get('/contract/:_id/bond/:bondId/financial-details', provide([CURRENCIES,
     bond,
     validationErrors: bondFinancialDetailsValidationErrors(validationErrors, bond),
     currencies: mapCurrencies(currencies, bondResponse.bond.currency),
-    completedForms,
+    taskListItems: bondTaskList(completedForms),
     user: req.session.user,
   });
 });
@@ -219,7 +220,7 @@ router.get('/contract/:_id/bond/:bondId/fee-details', provide([DEAL]), async (re
     dealId,
     bond,
     validationErrors: bondFeeDetailsValidationErrors(validationErrors, bond),
-    completedForms,
+    taskListItems: bondTaskList(completedForms),
     user: req.session.user,
   });
 });
@@ -300,7 +301,7 @@ router.get('/contract/:_id/bond/:bondId/check-your-answers', async (req, res) =>
     dealId,
     bond,
     validationErrors: formattedValidationErrors,
-    completedForms,
+    taskListItems: bondTaskList(completedForms),
     user: req.session.user,
   });
 });
