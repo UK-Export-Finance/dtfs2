@@ -22,7 +22,7 @@ const goToBondFeeDetailsPage = (deal) => {
   cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
   pages.contract.addBondButton().click();
-  partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
+  partials.taskListHeader.itemLink('fee-details').click();
   cy.url().should('include', '/fee-details');
 };
 
@@ -48,7 +48,7 @@ context('Bond Fee Details', () => {
       pages.bondFeeDetails.submit().click();
 
       cy.url().should('include', '/check-your-answers');
-      partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
+      partials.taskListHeader.itemLink('fee-details').click();
 
       const TOTAL_REQUIRED_FORM_FIELDS = 2;
 
@@ -68,7 +68,7 @@ context('Bond Fee Details', () => {
       pages.bondFeeDetails.submit().click();
 
       cy.url().should('include', '/check-your-answers');
-      partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
+      partials.taskListHeader.itemLink('fee-details').click();
 
       const TOTAL_REQUIRED_FORM_FIELDS = 2;
 
@@ -79,22 +79,28 @@ context('Bond Fee Details', () => {
     });
   });
 
-  it('form submit of all required fields should display a checked `Bond Fee Details` checkbox in progress nav', () => {
+  it('form submit of all required fields should render a `completed` status tag only for `Bond Fee Details` in task list header', () => {
     cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
     pages.contract.addBondButton().click();
-    partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
+    partials.taskListHeader.itemLink('fee-details').click();
 
     fillBondForm.feeDetails();
 
     pages.bondFeeDetails.submit().click();
+    partials.taskListHeader.itemStatus('fee-details').invoke('text').then((text) => {
+      expect(text.trim()).equal('Completed');
+    });
 
-    partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('be.visible');
-    partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('be.checked');
+    partials.taskListHeader.itemStatus('bond-details').invoke('text').then((text) => {
+      expect(text.trim()).equal('Incomplete');
+    });
 
-    partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('not.be.visible');
-    partials.bondProgressNav.progressNavBondFinancialDetailsCompletedCheckbox().should('not.be.visible');
+    partials.taskListHeader.itemStatus('financial-details').invoke('text').then((text) => {
+      expect(text.trim()).equal('Incomplete');
+    });
   });
+
 
   it('form submit should progress to the `Bond Preview` page and prepopulate submitted form fields when returning back to `Bond Fee Details` page', () => {
     goToBondFeeDetailsPage(deal);
@@ -106,7 +112,7 @@ context('Bond Fee Details', () => {
     cy.url().should('include', '/bond/');
     cy.url().should('include', '/check-your-answers');
 
-    partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
+    partials.taskListHeader.itemLink('fee-details').click();
     cy.url().should('include', '/fee-details');
 
     assertBondFormValues.feeDetails();
@@ -130,7 +136,7 @@ context('Bond Fee Details', () => {
 
       fillBondForm.feeDetails();
 
-      partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+      partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
 
         pages.bondFeeDetails.saveGoBackButton().click();
@@ -141,7 +147,7 @@ context('Bond Fee Details', () => {
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
         row.uniqueNumberLink().click();
-        partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
+        partials.taskListHeader.itemLink('fee-details').click();
         cy.url().should('include', '/fee-details');
 
         assertBondFormValues.feeDetails();
