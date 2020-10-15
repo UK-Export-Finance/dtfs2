@@ -1,7 +1,5 @@
-const { reports, defaults } = require('../../../../pages');
+const { reports } = require('../../../../pages');
 const { auditSupplyContracts } = reports;
-
-const relative = require('../../../../relativeURL');
 
 const mockUsers = require('../../../../../fixtures/mockUsers');
 const BARCLAYS_LOGIN = mockUsers.find( user=> (user.roles.includes('maker') && user.bank.name === 'Barclays Bank') );
