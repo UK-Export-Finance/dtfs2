@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% import 'contract/components/forms-task-list.njk' as formsTaskList %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
 {% import './_macros/fee-frequency-radios.njk' as feeFrequencyRadios %}
 {% import '../_macros/facility-inputs/day-count-radios.njk' as dayCountRadios %}
 
@@ -18,7 +18,7 @@
     }}
   {% endif %}
 
-  {{ formsTaskList.render({
+  {{ taskListHeader.render({
     title: 'Bond',
     dealId: dealId,
     completedForms: completedForms,
