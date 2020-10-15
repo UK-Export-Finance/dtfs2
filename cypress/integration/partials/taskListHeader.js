@@ -3,6 +3,7 @@ const partial = {
   loanId: () => cy.get('[data-cy="bond-id"]'),
   itemLink: (itemTitle) => cy.get(`[data-cy="task-list-link-${itemTitle}"]`),
   itemStatus: (itemTitle) => cy.get(`[data-cy="task-list-item-${itemTitle}"] [data-cy="status-tag"]`),
+  checkYourAnswersLink: () => cy.get('[data-cy="link-check-your-answers"]'),
 };
 
 module.exports = partial;

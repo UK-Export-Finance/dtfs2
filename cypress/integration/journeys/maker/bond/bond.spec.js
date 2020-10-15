@@ -86,7 +86,7 @@ context('Add a Bond to a Deal', () => {
       pages.contract.addBondButton().click();
 
       // get bondId, go back to Deal page
-      partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+      partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
 
         pages.bondDetails.saveGoBackButton().click();
@@ -101,7 +101,7 @@ context('Add a Bond to a Deal', () => {
     });
 
     describe('after viewing the `Bond Preview` page', () => {
-      it('should display validation errors in `Bond Details`, `Bond Financial Details` and `Bond Fee Details` pages', () => {
+      it('should display validation errors in `Bond Details`, `Bond Financial Details` and `Bond Fee Details` pages and a link to `Check your answers` page', () => {
         cy.createADeal({
           username: MAKER_LOGIN.username,
           password: MAKER_LOGIN.password,
@@ -117,31 +117,21 @@ context('Add a Bond to a Deal', () => {
         cy.url().should('include', '/bond/');
         cy.url().should('include', '/check-your-answers');
 
-        partials.bondProgressNav.progressNavLinkBondDetails().click();
+        partials.taskListHeader.itemLink('bond-details').click();
         partials.errorSummary.errorSummaryLinks().should('have.length', 2);
 
-        partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+        partials.taskListHeader.itemLink('financial-details').click();
         partials.errorSummary.errorSummaryLinks().should('have.length', 4);
 
-        partials.bondProgressNav.progressNavLinkBondFeeDetails().click();
+        partials.taskListHeader.itemLink('fee-details').click();
         partials.errorSummary.errorSummaryLinks().should('have.length', 2);
+
+        partials.taskListHeader.checkYourAnswersLink().should('be.visible');
+        partials.taskListHeader.checkYourAnswersLink().click();
+
+        cy.url().should('include', '/bond/');
+        cy.url().should('include', '/check-your-answers');
       });
-    });
-
-    it('should display a progress nav link to `Preview`', () => {
-      cy.loginGoToDealPage(MAKER_LOGIN, deal);
-
-      pages.contract.addBondButton().click();
-      pages.bondDetails.submit().click();
-
-      cy.url().should('include', '/bond/');
-      cy.url().should('include', '/financial-details');
-
-      partials.bondProgressNav.progressNavLinkBondPreview().should('be.visible');
-      partials.bondProgressNav.progressNavLinkBondPreview().click();
-
-      cy.url().should('include', '/bond/');
-      cy.url().should('include', '/check-your-answers');
     });
   });
 
@@ -161,23 +151,27 @@ context('Add a Bond to a Deal', () => {
       pages.bondPreview.submissionDetails().should('be.visible');
     });
 
-    it('should display a checked checkbox for all progress nav items and only text for `Preview`', () => {
+    it('should display a `completed` status tag for all Bond forms in task list header and a `check your answers` link', () => {
       cy.loginGoToDealPage(MAKER_LOGIN, deal);
       cy.addBondToDeal();
       cy.url().should('include', '/check-your-answers');
 
-      partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('be.visible');
-      partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('be.checked');
 
-      partials.bondProgressNav.progressNavBondFinancialDetailsCompletedCheckbox().should('be.visible');
-      partials.bondProgressNav.progressNavBondFinancialDetailsCompletedCheckbox().should('be.checked');
+      partials.taskListHeader.itemStatus('bond-details').invoke('text').then((text) => {
+        expect(text.trim()).equal('Completed');
+      });
 
-      partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('be.visible');
-      partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('be.checked');
+      partials.taskListHeader.itemStatus('financial-details').invoke('text').then((text) => {
+        expect(text.trim()).equal('Completed');
+      });
 
-      partials.bondProgressNav.progressNavLinkBondPreview().should('not.be.visible');
-      partials.bondProgressNav.progressNavBondTextPreview().should('be.visible');
-      partials.bondProgressNav.progressNavBondTextPreview().invoke('text').then((text) => {
+      partials.taskListHeader.itemStatus('fee-details').invoke('text').then((text) => {
+        expect(text.trim()).equal('Completed');
+      });
+
+      partials.taskListHeader.checkYourAnswersLink().should('be.visible');
+
+      partials.taskListHeader.checkYourAnswersLink().invoke('text').then((text) => {
         expect(text.trim()).equal('Check your answers');
       });
     });
@@ -189,7 +183,7 @@ context('Add a Bond to a Deal', () => {
 
       // get bondId, go back to Deal page
       // assert that some inputted Bond data is displayed in the table
-      partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+      partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
 
         pages.bondPreview.saveGoBackButton().click();
