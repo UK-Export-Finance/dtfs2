@@ -10,7 +10,10 @@
     {% set statusTagText = 'Incomplete' %}
   {% endif %}
 
-  <li class="task-list__item">
+  <li
+    class="task-list__item"
+    data-cy="task-list-item-{{ params.title.toLowerCase() | replaceWhiteSpaceWithDash }}"
+  >
     <span class="task-list__task-name">
       <a
         class="govuk-link"
