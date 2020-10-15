@@ -1,6 +1,6 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% import 'contract/components/forms-task-list.njk' as formsTaskList %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
 {% import './_macros/bond-submission-details.njk' as bondSubmissionDetails %}
 
 {% block pageTitle %}Bond Preview{% endblock %}
@@ -16,7 +16,7 @@
     }}
   {% endif %}
 
-  {{ formsTaskList.render({
+  {{ taskListHeader.render({
     title: 'Bond',
     dealId: dealId,
     completedForms: completedForms,
