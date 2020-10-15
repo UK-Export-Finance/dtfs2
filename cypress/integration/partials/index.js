@@ -1,8 +1,9 @@
 module.exports = {
   errorSummary: require('./errorSummary'),
   successMessage: require('./successMessage'),
-  bondProgressNav: require('./bondProgressNav'),
+  // bondProgressNav: require('./bondProgressNav'),
   loanProgressNav: require('./loanProgressNav'),
   ukefComments: require('./ukef-comments'),
   skipLink: require('./skip-link'),
+  taskListHeader: require('./taskListHeader'),
 };

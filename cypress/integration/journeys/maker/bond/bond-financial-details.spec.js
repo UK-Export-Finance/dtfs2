@@ -28,7 +28,7 @@ const goToBondFinancialDetailsPage = (deal) => {
   cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
   pages.contract.addBondButton().click();
-  partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+  partials.taskListHeader.itemLink('financial-details').click();
   cy.url().should('include', '/contract');
   cy.url().should('include', '/bond/');
   cy.url().should('include', '/financial-details');
@@ -53,7 +53,7 @@ context('Bond Financial Details', () => {
       cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
       pages.contract.addBondButton().click();
-      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+      partials.taskListHeader.itemLink('financial-details').click();
       cy.url().should('include', '/financial-details');
       cy.title().should('eq', `Bond Financial Details${pages.defaults.pageTitleAppend}`);
 
@@ -61,7 +61,7 @@ context('Bond Financial Details', () => {
       pages.bondFinancialDetails.submit().click();
 
       cy.url().should('include', '/fee-details');
-      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+      partials.taskListHeader.itemLink('financial-details').click();
 
       const TOTAL_REQUIRED_FORM_FIELDS = 4;
 
@@ -79,7 +79,7 @@ context('Bond Financial Details', () => {
       cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
       pages.contract.addBondButton().click();
-      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+      partials.taskListHeader.itemLink('financial-details').click();
 
       let riskMarginFee = '20';
       pages.bondFinancialDetails.guaranteeFeePayableByBankInput().invoke('attr', 'placeholder').should('eq', '0');
@@ -98,7 +98,7 @@ context('Bond Financial Details', () => {
       cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
       pages.contract.addBondButton().click();
-      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+      partials.taskListHeader.itemLink('financial-details').click();
 
       pages.bondFinancialDetails.ukefExposureInput().invoke('attr', 'placeholder').should('eq', '0.00');
 
@@ -118,21 +118,26 @@ context('Bond Financial Details', () => {
     });
   });
 
-  it('form submit of all required fields should render a checked checkbox only for `Bond Financial Details` in progress nav', () => {
+  it('form submit of all required fields should render a `completed` status tag only for `Bond Financial Details` in task list header', () => {
     cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
     pages.contract.addBondButton().click();
-    partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+    partials.taskListHeader.itemLink('financial-details').click();
 
     fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
 
     pages.bondFinancialDetails.submit().click();
+    partials.taskListHeader.itemStatus('financial-details').invoke('text').then((text) => {
+      expect(text.trim()).equal('Completed');
+    });
 
-    partials.bondProgressNav.progressNavBondFinancialDetailsCompletedCheckbox().should('be.visible');
-    partials.bondProgressNav.progressNavBondFinancialDetailsCompletedCheckbox().should('be.checked');
+    partials.taskListHeader.itemStatus('bond-details').invoke('text').then((text) => {
+      expect(text.trim()).equal('Incomplete');
+    });
 
-    partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('not.be.visible');
-    partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('not.be.visible');
+    partials.taskListHeader.itemStatus('fee-details').invoke('text').then((text) => {
+      expect(text.trim()).equal('Incomplete');
+    });
   });
 
   describe('When a user submits the `Bond Financial Details` form', () => {
@@ -140,7 +145,7 @@ context('Bond Financial Details', () => {
       cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
       pages.contract.addBondButton().click();
-      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+      partials.taskListHeader.itemLink('financial-details').click();
       cy.url().should('include', '/financial-details');
 
       fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
@@ -150,7 +155,7 @@ context('Bond Financial Details', () => {
       cy.url().should('include', '/bond/');
       cy.url().should('include', '/fee-details');
 
-      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+      partials.taskListHeader.itemLink('financial-details').click();
       cy.url().should('include', '/financial-details');
 
       assertBondFormValues.financialDetails.currencySameAsSupplyContractCurrency();
@@ -178,7 +183,7 @@ context('Bond Financial Details', () => {
       cy.url().should('include', '/bond/');
       cy.url().should('include', '/fee-details');
 
-      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+      partials.taskListHeader.itemLink('financial-details').click();
       cy.url().should('include', '/financial-details');
 
       assertBondFormValues.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
@@ -190,7 +195,7 @@ context('Bond Financial Details', () => {
         pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
         pages.bondFinancialDetails.submit().click();
 
-        partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+        partials.taskListHeader.itemLink('financial-details').click();
         cy.url().should('include', '/financial-details');
 
         const TOTAL_REQUIRED_FORM_FIELDS = 6;
@@ -216,7 +221,7 @@ context('Bond Financial Details', () => {
 
       // get bondId, go back to Deal page
       // assert that some inputted bond data is displayed in the table
-      partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+      partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
 
         pages.bondFinancialDetails.submit().click();
@@ -241,7 +246,7 @@ context('Bond Financial Details', () => {
       };
 
       const goBackToFinancialDetails = () => {
-        partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+        partials.taskListHeader.itemLink('financial-details').click();
         cy.url().should('include', '/financial-details');
       };
 
@@ -280,7 +285,7 @@ context('Bond Financial Details', () => {
       };
 
       const goBackToFinancialDetails = () => {
-        partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+        partials.taskListHeader.itemLink('financial-details').click();
         cy.url().should('include', '/financial-details');
       };
 
@@ -305,7 +310,7 @@ context('Bond Financial Details', () => {
     };
 
     const goBackToFinancialDetails = () => {
-      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+      partials.taskListHeader.itemLink('financial-details').click();
       cy.url().should('include', '/financial-details');
     };
 
@@ -326,12 +331,12 @@ context('Bond Financial Details', () => {
       cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
       pages.contract.addBondButton().click();
-      partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+      partials.taskListHeader.itemLink('financial-details').click();
       cy.url().should('include', '/financial-details');
 
       fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
 
-      partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+      partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
 
         pages.bondFinancialDetails.saveGoBackButton().click();
@@ -342,7 +347,7 @@ context('Bond Financial Details', () => {
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
         row.uniqueNumberLink().click();
-        partials.bondProgressNav.progressNavLinkBondFinancialDetails().click();
+        partials.taskListHeader.itemLink('financial-details').click();
         cy.url().should('include', '/financial-details');
 
         assertBondFormValues.financialDetails.currencySameAsSupplyContractCurrency();
