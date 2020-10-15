@@ -45,7 +45,7 @@ context('Bond Details', () => {
       pages.bondDetails.submit().click();
 
       cy.url().should('include', '/financial-details');
-      partials.bondProgressNav.progressNavLinkBondDetails().click();
+      partials.taskListHeader.itemLink('bond-details').click();
 
       const TOTAL_REQUIRED_FORM_FIELDS = 2;
 
@@ -56,7 +56,7 @@ context('Bond Details', () => {
     });
   });
 
-  it('form submit of all required fields should display a checked checkbox only for `Bond Details` in progress nav', () => {
+  it('form submit of all required fields should display a `completed` status tag only for `Bond Details` in task list header', () => {
     cy.loginGoToDealPage(MAKER_LOGIN, deal);
 
     pages.contract.addBondButton().click();
@@ -65,11 +65,17 @@ context('Bond Details', () => {
 
     pages.bondDetails.submit().click();
 
-    partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('be.visible');
-    partials.bondProgressNav.progressNavBondDetailsCompletedCheckbox().should('be.checked');
+    partials.taskListHeader.itemStatus('bond-details').invoke('text').then((text) => {
+      expect(text.trim()).equal('Completed');
+    });
 
-    partials.bondProgressNav.progressNavBondFinancialDetailsCompletedCheckbox().should('not.be.visible');
-    partials.bondProgressNav.progressNavBondFeeDetailsCompletedCheckbox().should('not.be.visible');
+    partials.taskListHeader.itemStatus('financial-details').invoke('text').then((text) => {
+      expect(text.trim()).equal('Incomplete');
+    });
+
+    partials.taskListHeader.itemStatus('fee-details').invoke('text').then((text) => {
+      expect(text.trim()).equal('Incomplete');
+    });
   });
 
   describe('When a user selects `unissued` facility stage', () => {
@@ -92,7 +98,7 @@ context('Bond Details', () => {
 
         pages.bondDetails.submit().click();
         cy.url().should('include', '/financial-details');
-        partials.bondProgressNav.progressNavLinkBondDetails().click();
+        partials.taskListHeader.itemLink('bond-details').click();
 
         const UNISSUED_REQUIRED_FORM_FIELDS = 1;
         const TOTAL_REQUIRED_FORM_FIELDS = UNISSUED_REQUIRED_FORM_FIELDS;
@@ -123,7 +129,7 @@ context('Bond Details', () => {
 
       // get bondId, go back to deal page
       // assert uniqueNumber text and link
-      partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+      partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
 
         fillBondForm.details.facilityStageUnissued();
@@ -162,7 +168,7 @@ context('Bond Details', () => {
       pages.bondDetails.submit().click();
 
       cy.url().should('include', '/financial-details');
-      partials.bondProgressNav.progressNavLinkBondDetails().click();
+      partials.taskListHeader.itemLink('bond-details').click();
       cy.url().should('include', '/details');
 
       assertBondFormValues.details.unissued();
@@ -196,7 +202,7 @@ context('Bond Details', () => {
 
         pages.bondDetails.submit().click();
         cy.url().should('include', '/financial-details');
-        partials.bondProgressNav.progressNavLinkBondDetails().click();
+        partials.taskListHeader.itemLink('bond-details').click();
 
         const ISSUED_REQUIRED_FORM_FIELDS = 2;
         const TOTAL_REQUIRED_FORM_FIELDS = ISSUED_REQUIRED_FORM_FIELDS;
@@ -219,7 +225,7 @@ context('Bond Details', () => {
       cy.url().should('include', '/bond/');
       cy.url().should('include', '/financial-details');
 
-      partials.bondProgressNav.progressNavLinkBondDetails().click();
+      partials.taskListHeader.itemLink('bond-details').click();
       cy.url().should('include', '/details');
 
       assertBondFormValues.details.issued();
@@ -233,7 +239,7 @@ context('Bond Details', () => {
 
         fillBondForm.details.facilityStageIssued();
 
-        partials.bondProgressNav.bondId().then((bondIdHiddenInput) => {
+        partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
           const bondId = bondIdHiddenInput[0].value;
 
           pages.bondDetails.saveGoBackButton().click();
