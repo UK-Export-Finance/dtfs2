@@ -3,9 +3,9 @@ const partials = require('../../../partials');
 const fillLoanForm = require('./fill-loan-forms');
 const assertLoanFormValues = require('./assert-loan-form-values');
 const LOAN_FORM_VALUES = require('./loan-form-values');
-
 const mockUsers = require('../../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 const MOCK_DEAL = {
   details: {
@@ -69,7 +69,7 @@ context('Loan Guarantee Details', () => {
       pages.loanDatesRepayments.submit().click();
       cy.url().should('include', '/check-your-answers');
 
-      partials.loanProgressNav.progressNavLinkLoanGuaranteeDetails().click();
+      partials.taskListHeader.itemLink('loan-guarantee-details').click();
 
       cy.url().should('include', '/guarantee-details');
 
@@ -102,7 +102,7 @@ context('Loan Guarantee Details', () => {
       pages.loanGuaranteeDetails.facilityStageConditionalInput().click();
       pages.loanGuaranteeDetails.submit().click();
 
-      partials.loanProgressNav.progressNavLinkLoanGuaranteeDetails().click();
+      partials.taskListHeader.itemLink('loan-guarantee-details').click();
 
       partials.errorSummary.errorSummaryLinks().should('have.length', 1);
 
@@ -122,7 +122,7 @@ context('Loan Guarantee Details', () => {
 
       pages.loanGuaranteeDetails.submit().click();
 
-      partials.loanProgressNav.progressNavLinkLoanGuaranteeDetails().click();
+      partials.taskListHeader.itemLink('loan-guarantee-details').click();
 
       partials.errorSummary.errorSummaryLinks().should('have.length', 2);
 
@@ -136,7 +136,7 @@ context('Loan Guarantee Details', () => {
 
       pages.loanGuaranteeDetails.coverEndDateErrorMessage().should('be.visible');
 
-      partials.loanProgressNav.loanId().then((loanIdHiddenInput) => {
+      partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
         const loanId = loanIdHiddenInput[0].value;
 
         pages.loanGuaranteeDetails.saveGoBackButton().click();
@@ -162,7 +162,7 @@ context('Loan Guarantee Details', () => {
     fillLoanForm.guaranteeDetails.facilityStageConditional();
     pages.loanGuaranteeDetails.submit().click();
 
-    partials.loanProgressNav.progressNavLinkLoanGuaranteeDetails().click();
+    partials.taskListHeader.itemLink('loan-guarantee-details').click();
     assertLoanFormValues.guaranteeDetails.facilityStageConditional();
 
     // Facility stage = Unconditional
@@ -172,7 +172,7 @@ context('Loan Guarantee Details', () => {
     pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().should('have.value', LOAN_FORM_VALUES.GUARANTEE_DETAILS.bankReferenceNumber);
     pages.loanGuaranteeDetails.submit().click();
 
-    partials.loanProgressNav.progressNavLinkLoanGuaranteeDetails().click();
+    partials.taskListHeader.itemLink('loan-guarantee-details').click();
     assertLoanFormValues.guaranteeDetails.facilityStageUnconditional();
   });
 
@@ -182,7 +182,7 @@ context('Loan Guarantee Details', () => {
 
       fillLoanForm.guaranteeDetails.facilityStageUnconditional();
 
-      partials.loanProgressNav.loanId().then((loanIdHiddenInput) => {
+      partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
         const loanId = loanIdHiddenInput[0].value;
 
         pages.loanGuaranteeDetails.saveGoBackButton().click();
