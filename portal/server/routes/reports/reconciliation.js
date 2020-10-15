@@ -1,4 +1,5 @@
 import express from 'express';
+import moment from 'moment';
 import api from '../../api';
 import buildReportFilters from '../buildReportFilters';
 import {
@@ -10,6 +11,9 @@ const primaryNav = 'reports';
 const router = express.Router();
 
 router.get('/reports/reconciliation-report', async (req, res) => res.redirect('/reports/reconciliation-report/0'));
+
+const nowMinus = (minutes) => moment().subtract(minutes, 'minutes').utc().valueOf()
+  .toString();
 
 router.get('/reports/reconciliation-report/:page', async (req, res) => {
   const { userToken } = requestParams(req);
@@ -23,56 +27,28 @@ router.get('/reports/reconciliation-report/:page', async (req, res) => {
     reportFilters.bank = '';
   }
   const filters = buildReportFilters(reportFilters, req.session.user);
-  /*
-  // this is the graphQL needed in the deal.controller
-  const query = {
-    '$or': [
-      {'$and': [
-        {'details.status':'Submitted'},
-        {'details.workflowStatus': 'Draft'}
-      ]},
-      {'$or': [
-        {'bondTransactions.items':{'$elemMatch':{'status':'Submitted'}}},
-        {'loanTransactions.items':{'$elemMatch':{'status':'Submitted'}}}
-      ]},
-    ]
-  };
-  */
-  // get deals that have been submitted (and so are awaiting response)
-  // deal.details.workflowStatus = draft && status = submitted
+
   filters.push(
     {
       field: 'details.status',
       value: 'Submitted',
     },
   );
+
   filters.push(
     {
-      field: 'details.workflowStatus',
-      value: 'Draft',
+      field: 'details.submissionDate',
+      value: nowMinus(120),
+      operator: 'lt',
     },
   );
-  // get deals where transaction facilityStage = submitted
-  const facilityFilters = buildReportFilters(reportFilters, req.session.user);
-  facilityFilters.push(
-    {
-      field: 'transaction.status',
-      value: 'Submitted',
-    },
-  );
-  // get the deals
+
   const submittedDeals = await getApiData(
     api.contracts(0, 0, filters, userToken),
     res,
   );
 
-  // get deals with submitted facilities
-  const faciltyDeals = await getApiData(
-    api.contracts(0, 0, facilityFilters, userToken),
-    res,
-  );
-  // add the two lists
-  const deals = submittedDeals.deals.concat(faciltyDeals.deals);
+  const { deals } = submittedDeals;
 
   const count = deals.length;
   // get banks for filter list
@@ -116,28 +92,13 @@ router.post('/reports/reconciliation-report/:page', async (req, res) => {
       value: 'Submitted',
     },
   );
-  filters.push(
-    {
-      field: 'details.workflowStatus',
-      value: 'Draft',
-    },
-  );
-  const facilityFilters = buildReportFilters(reportFilters, req.session.user);
-  facilityFilters.push(
-    {
-      field: 'transaction.status',
-      value: 'Submitted',
-    },
-  );
+
   const submittedDeals = await getApiData(
     api.contracts(0, 0, filters, userToken),
     res,
   );
-  const faciltyDeals = await getApiData(
-    api.contracts(0, 0, facilityFilters, userToken),
-    res,
-  );
-  const deals = submittedDeals.deals.concat(faciltyDeals.deals);
+
+  const { deals } = submittedDeals;
   const count = deals.length;
   const banks = await getApiData(api.banks(userToken), res);
   // no pagination
