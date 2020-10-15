@@ -910,6 +910,8 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
+          publicIpDebug=$(az network public-ip show --name tfs-dev-ip --resource-group Digital-Dev)
+          echo "Public IP Debug $publicIpDebug"
           az network application-gateway create --name tfs-${{ env.environment }}-gw \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.environment }}-gateway \
