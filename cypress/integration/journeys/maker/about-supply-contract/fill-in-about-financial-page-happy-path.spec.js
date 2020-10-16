@@ -1,9 +1,10 @@
 const {
   contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview, defaults,
 } = require('../../../pages');
-
+const partials = require('../../../partials');
 const mockUsers = require('../../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find(user => (user.roles.includes('maker')) );
 
 // test data we want to set up + work with..
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
@@ -30,8 +31,8 @@ context('about-supply-contract', () => {
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
     contract.visit(deal);
     contract.aboutSupplierDetailsLink().click();
-    contractAboutSupplier.nav().aboutBuyerLink().click();
-    contractAboutBuyer.nav().aboutFinancialLink().click();
+    partials.taskListHeader.itemLink('buyer').click();
+    partials.taskListHeader.itemLink('financial-information').click();
 
     cy.title().should('eq', `Financial information - ${deal.details.bankSupplyContractName}${defaults.pageTitleAppend}`);
 
@@ -53,7 +54,9 @@ context('about-supply-contract', () => {
     contractAboutPreview.visit(deal);
     contractAboutPreview.submissionDetails().should('be.visible');
 
-    contractAboutPreview.nav().aboutFinancialComplete().should('exist');
+    partials.taskListHeader.itemStatus('financial-information').invoke('text').then((text) => {
+      expect(text.trim()).equal('Completed');
+    });
 
     // since we've cleared all validation at this point the section should show as completed on the deal page
     contract.visit(deal);

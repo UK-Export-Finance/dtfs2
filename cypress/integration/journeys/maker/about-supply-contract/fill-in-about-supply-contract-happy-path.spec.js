@@ -1,9 +1,10 @@
 const {
   contract, contractAboutSupplier, contractAboutPreview, defaults,
 } = require('../../../pages');
-
+const partials = require('../../../partials');
 const mockUsers = require('../../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find(user => (user.roles.includes('maker')) );
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
@@ -103,6 +104,8 @@ context('about-supply-contract', () => {
     contractAboutPreview.visit(deal);
     contractAboutPreview.submissionDetails().should('be.visible');
 
-    contractAboutPreview.nav().aboutSupplierComplete().should('exist');
+    partials.taskListHeader.itemStatus('supplier-and-counter-indemnifier/guarantor').invoke('text').then((text) => {
+      expect(text.trim()).equal('Completed');
+    });
   });
 });

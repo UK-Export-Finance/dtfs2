@@ -3,8 +3,9 @@ const moment = require('moment');
 const {
   contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
 } = require('../../../pages');
-
+const partials = require('../../../partials');
 const mockUsers = require('../../../../fixtures/mockUsers');
+
 const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
 // test data we want to set up + work with..
@@ -32,8 +33,8 @@ context('about-supply-contract', () => {
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
     contract.visit(deal);
     contract.aboutSupplierDetailsLink().click();
-    contractAboutSupplier.nav().aboutBuyerLink().click();
-    contractAboutBuyer.nav().aboutFinancialLink().click();
+    partials.taskListHeader.itemLink('buyer').click();
+    partials.taskListHeader.itemLink('financial-information').click();
 
     // set a GBP value, so we don't need to fill in the exchange-rate fields
     contractAboutFinancial.supplyContractValue().type('10,000');

@@ -3,9 +3,9 @@ const {
 } = require('../../../pages');
 
 const partials = require('../../../partials');
-
 const mockUsers = require('../../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find(user => (user.roles.includes('maker')) );
 
 // test data we want to set up + work with..
 const aDealWithAboutSupplyContractComplete = require('./dealWithFirstPageComplete.json');
