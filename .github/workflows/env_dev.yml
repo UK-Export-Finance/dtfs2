@@ -114,7 +114,8 @@ jobs:
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --delegations Microsoft.Web/serverFarms \
             --address-prefixes 10.0.200.0/28
-
+            --service-endpoints Microsoft.AzureCosmosDB
+            
     # We'll aim to move this out of this section and consolidate into a single VM job:
     # - name: Virtual machine subnet
     #   uses: Azure/cli@v1.0.0
@@ -382,7 +383,14 @@ jobs:
         # US Gov 52.244.48.71
         # All other regions 104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26
         inlineScript: |
-          az cosmosdb create --name tfs-${{ env.environment }}-mongo --kind MongoDB --server-version 3.6
+          svcEndpoint=$(az network vnet subnet show -name ${{ env.app_service_plan }}-app-service-plan-egress --vnet-name tfs-${{ env.app_service_plan }}-vnet --query 'id' -o tsv)
+
+          az cosmosdb create \
+            --name tfs-${{ env.environment }}-mongo \
+            --kind MongoDB \
+            --enable-virtual-network true \
+            --virtual-network-rules $svcEndpoint \
+            --server-version 3.6
 
     - name: Database with autoscale
       uses: Azure/cli@v1.0.0
