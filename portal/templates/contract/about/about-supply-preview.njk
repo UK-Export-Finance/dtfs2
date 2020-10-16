@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
-{% import './components/about-submission-details.njk' as aboutSubmissionDetails %}
-{% import './components/about-supply-contract-nav.njk' as aboutSupplyContract %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
+{% import './components/about-submission-details.njk' as aboutSubmissionDetails %}
 
 {% block pageTitle %}Preview - {{ deal.details.bankSupplyContractName }}{% endblock %}
 
@@ -16,13 +16,12 @@
     }}
   {% endif %}
 
-  {{ aboutSupplyContract.nav(
-    completedStatus = deal.supplyContract.completedStatus,
-    current = 'preview',
-    contractId = deal._id
-  )}}
-
-  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+  {{ taskListHeader.render({
+    title: 'About the Supply Contract',
+    dealId: deal._id,
+    items: taskListItems,
+    entityName: 'about'
+  })}}
 
   {% include "_partials/print-button.njk" %}
 

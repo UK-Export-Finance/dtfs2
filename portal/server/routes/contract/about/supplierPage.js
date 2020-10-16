@@ -13,10 +13,10 @@ import {
   provide, DEAL, INDUSTRY_SECTORS, COUNTRIES,
 } from '../../api-data-provider';
 
-import calculateStatusOfEachPage from './navStatusCalculations';
 import updateSubmissionDetails from './updateSubmissionDetails';
+import calculateStatusOfEachPage from './navStatusCalculations';
+import aboutTaskList from './aboutTaskList';
 import { supplierValidationErrors } from './pageSpecificValidationErrors';
-
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 
 const router = express.Router();
@@ -45,9 +45,7 @@ router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COU
 
   const errorSummary = generateErrorSummary(validationErrors, errorHref);
 
-  deal.supplyContract = {
-    completedStatus: calculateStatusOfEachPage(Object.keys(errorSummary.errorList)),
-  };
+  const completedForms = calculateStatusOfEachPage(Object.keys(errorSummary.errorList));
 
   // if data was submitted via companies house POST, it's not posted to API and we redirect to this route.
   // if we have this data in the session, combine with existing deal data to be rendered in the page.
@@ -82,6 +80,7 @@ router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COU
     mappedIndustrySectors,
     mappedIndustryClasses,
     user: req.session.user,
+    taskListItems: aboutTaskList(completedForms),
   });
 });
 

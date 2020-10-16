@@ -9,8 +9,8 @@ import {
 import { DEAL } from '../../api-data-provider';
 
 import { aboutSupplyContractPreviewValidationErrors } from './pageSpecificValidationErrors';
-
 import calculateStatusOfEachPage from './navStatusCalculations';
+import aboutTaskList from './aboutTaskList';
 
 const router = express.Router();
 
@@ -43,9 +43,7 @@ router.get('/contract/:_id/about/check-your-answers', async (req, res) => {
     errorHref,
   );
 
-  deal.supplyContract = {
-    completedStatus: calculateStatusOfEachPage(Object.keys(errorSummary.errorList)),
-  };
+  const completedForms = calculateStatusOfEachPage(Object.keys(errorSummary.errorList));
 
   let formattedValidationErrors;
   if (validationErrors.count !== 0) {
@@ -59,6 +57,7 @@ router.get('/contract/:_id/about/check-your-answers', async (req, res) => {
     deal,
     validationErrors: formattedValidationErrors,
     user: req.session.user,
+    taskListItems: aboutTaskList(completedForms),
   });
 });
 

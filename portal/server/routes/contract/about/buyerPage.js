@@ -11,8 +11,9 @@ import {
   provide, DEAL, COUNTRIES,
 } from '../../api-data-provider';
 
-import calculateStatusOfEachPage from './navStatusCalculations';
 import updateSubmissionDetails from './updateSubmissionDetails';
+import aboutTaskList from './aboutTaskList';
+import calculateStatusOfEachPage from './navStatusCalculations';
 import { buyerValidationErrors } from './pageSpecificValidationErrors';
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 
@@ -42,9 +43,7 @@ router.get('/contract/:_id/about/buyer', provide([DEAL, COUNTRIES]), async (req,
     errorHref,
   );
 
-  deal.supplyContract = {
-    completedStatus: calculateStatusOfEachPage(Object.keys(errorSummary.errorList)),
-  };
+  const completedForms = calculateStatusOfEachPage(Object.keys(errorSummary.errorList));
 
   const buyerAddressCountryCode = deal.submissionDetails['buyer-address-country'] && deal.submissionDetails['buyer-address-country'].code;
   const destinationOfGoodsAndServicesCountryCode = deal.submissionDetails.destinationOfGoodsAndServices
@@ -60,6 +59,7 @@ router.get('/contract/:_id/about/buyer', provide([DEAL, COUNTRIES]), async (req,
     validationErrors: buyerValidationErrors(validationErrors, deal.submissionDetails),
     mappedCountries,
     user: req.session.user,
+    taskListItems: aboutTaskList(completedForms),
   });
 });
 

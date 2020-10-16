@@ -12,10 +12,10 @@ import {
   provide, DEAL, CURRENCIES,
 } from '../../api-data-provider';
 
-import calculateStatusOfEachPage from './navStatusCalculations';
 import updateSubmissionDetails from './updateSubmissionDetails';
+import calculateStatusOfEachPage from './navStatusCalculations';
+import aboutTaskList from './aboutTaskList';
 import { financialPageValidationErrors } from './pageSpecificValidationErrors';
-
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 
 const router = express.Router();
@@ -44,15 +44,14 @@ router.get('/contract/:_id/about/financial', provide([CURRENCIES]), async (req, 
     errorHref,
   );
 
-  deal.supplyContract = {
-    completedStatus: calculateStatusOfEachPage(Object.keys(errorSummary.errorList)),
-  };
+  const completedForms = calculateStatusOfEachPage(Object.keys(errorSummary.errorList));
 
   return res.render('contract/about/about-supply-financial.njk', {
     deal,
     validationErrors: financialPageValidationErrors(validationErrors, deal.submissionDetails),
     currencies: mapCurrencies(currencies, deal.submissionDetails.supplyContractCurrency),
     user: req.session.user,
+    taskListItems: aboutTaskList(completedForms),
   });
 });
 
