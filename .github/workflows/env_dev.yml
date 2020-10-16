@@ -396,19 +396,19 @@ jobs:
       with:
         inlineScript: |
         
-        svcEndpoint=$(az network vnet subnet show --name ${{ env.app_service_plan }}-app-service-plan-egress --vnet-name tfs-${{ env.app_service_plan }}-vnet --query 'id' -o tsv) 
-        az cosmosdb network-rule add \
-          --subnet svcEndpoint \
-          --name tfs-${{ env.environment }}-mongo \
-          --virtual-network ${{ env.app_service_plan }}-app-service-plan-egress \
-          --vnet-name tfs-${{ env.app_service_plan }}-vnet
-        
-        vmEndpoint=$(az network vnet subnet show --name ${{ env.resource_group }}-vm --vnet-name tfs-${{ env.app_service_plan }}-vnet --query 'id' -o tsv)
-        az cosmosdb network-rule add \
-          --subnet vmEndpoint \
-          --name tfs-${{ env.environment }}-mongo \
-          --virtual-network ${{ env.app_service_plan }}-app-service-plan-egress \
-          --vnet-name tfs-${{ env.app_service_plan }}-vnet
+          svcEndpoint=$(az network vnet subnet show --name ${{ env.app_service_plan }}-app-service-plan-egress --vnet-name tfs-${{ env.app_service_plan }}-vnet --query 'id' -o tsv) 
+          az cosmosdb network-rule add \
+            --subnet svcEndpoint \
+            --name tfs-${{ env.environment }}-mongo \
+            --virtual-network ${{ env.app_service_plan }}-app-service-plan-egress \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet
+          
+          vmEndpoint=$(az network vnet subnet show --name ${{ env.resource_group }}-vm --vnet-name tfs-${{ env.app_service_plan }}-vnet --query 'id' -o tsv)
+          az cosmosdb network-rule add \
+            --subnet vmEndpoint \
+            --name tfs-${{ env.environment }}-mongo \
+            --virtual-network ${{ env.app_service_plan }}-app-service-plan-egress \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet
 
     - name: Database with autoscale
       uses: Azure/cli@v1.0.0
