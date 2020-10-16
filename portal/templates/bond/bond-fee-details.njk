@@ -21,9 +21,9 @@
   {{ taskListHeader.render({
     title: 'Bond',
     dealId: dealId,
-    completedForms: completedForms,
-    facilityName: 'bond',
-    facilityId: bond._id
+    entityName: 'bond',
+    entityId: bond._id,
+    items: taskListItems
   })}}
 
   <form method="POST" autocomplete="off" novalidate>
