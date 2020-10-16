@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
 {% import './components/address-fields.njk' as address %}
-{% import './components/about-supply-contract-nav.njk' as aboutSupplyContract %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
@@ -19,13 +19,12 @@
     }}
   {% endif %}
 
-  {{ aboutSupplyContract.nav(
-    completedStatus = deal.supplyContract.completedStatus,
-    current = 'buyer',
-    contractId = deal._id
-  )}}
-
-  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+  {{ taskListHeader.render({
+    title: 'About the Supply Contract',
+    dealId: deal._id,
+    items: taskListItems,
+    entityName: 'about'
+  })}}
 
   <form method="POST" autocomplete="off">
 

@@ -1,6 +1,6 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% import './components/about-supply-contract-nav.njk' as aboutSupplyContract %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
 {% import './components/supplier-type-dropdown.njk' as supplierTypeDropdown %}
 {% import './components/supplier-name-and-address-lookup.njk' as supplierNameAndAddressLookup %}
 {% import './components/supplier-correspondence-address.njk' as supplierCorrespondenceAddress %}
@@ -25,11 +25,12 @@
     }}
   {% endif %}
 
-  {{ aboutSupplyContract.nav(
-    completedStatus = deal.supplyContract.completedStatus,
-    current = 'supplierAndGuarantor',
-    contractId = deal._id
-  )}}
+  {{ taskListHeader.render({
+    title: 'About the Supply Contract',
+    dealId: deal._id,
+    items: taskListItems,
+    entityName: 'about'
+  })}}
 
   <script type="text/javascript">
     const industrySectors = {{ industrySectors | dump | safe }};
@@ -42,8 +43,6 @@
       DTFS.main.changeScreenVisibilityOfElement(element, shouldShow);
     }
   </script>
-
-  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
 
   <form method="POST" autocomplete="off">
 
