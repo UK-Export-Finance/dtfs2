@@ -396,7 +396,7 @@ jobs:
           az cosmosdb update \
             --name tfs-${{ env.environment }}-mongo \
             --enable-virtual-network true \
-            --virtual-network-rules $vmEndpoint
+            --virtual-network-rules $svcEndpoint
           
           vmEndpoint=$(az network vnet subnet show --name ${{ env.resource_group }}-vm --vnet-name tfs-${{ env.app_service_plan }}-vnet --query 'id' -o tsv)
           az cosmosdb update \
