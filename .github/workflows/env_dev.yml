@@ -394,10 +394,10 @@ jobs:
             --virtual-network-rules $svcEndpoint \
             --server-version 3.6
             
-          vmEndpoint = $(az network vnet subnet show --name ${{ env.resource_group }}-vm --vnet-name tfs-${{ env.app_service_plan }}-vnet --query 'id' -o tsv)
+          vmEndpoint=$(az network vnet subnet show --name ${{ env.resource_group }}-vm --vnet-name tfs-${{ env.app_service_plan }}-vnet --query 'id' -o tsv)
           az cosmosdb update \
             --name tfs-${{ env.environment }}-mongo \
-            --virtual-network-rules $vmEndpoint \
+            --virtual-network-rules $vmEndpoint
 
     - name: Database with autoscale
       uses: Azure/cli@v1.0.0
