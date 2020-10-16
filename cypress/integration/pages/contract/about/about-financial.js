@@ -1,5 +1,3 @@
-const nav = require('./nav');
-
 const date = (prefix) => {
   return {
     day: () => cy.get(`[data-cy="${prefix}-day"]`),
@@ -10,7 +8,6 @@ const date = (prefix) => {
 
 const page = {
   visit: (deal) => cy.visit(`/contract/${deal._id}/about/financial`),
-  nav: () => nav,
 
   supplyContractValue: () => cy.get('[data-cy="supplyContractValue"]'),
   supplyContractCurrency: () => cy.get('[data-cy="supplyContractCurrency"]'),
