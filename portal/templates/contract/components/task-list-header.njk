@@ -4,14 +4,19 @@
   {% set title = params.title %}
   {% set dealId = params.dealId %}
   {% set items = params.items %}
-  {% set facilityId = params.facilityId %}
-  {% set facilityName = params.facilityName %}
+  {% set entityName = params.entityName %}
+  {% set entityId = params.entityId %}
 
-  {% set hrefRoute = '/contract/' + dealId + '/' + facilityName +  '/' + facilityId %}
+  {% if entityName and entityId %}
+    {% set hrefRoute = '/contract/' + dealId + '/' + entityName +  '/' + entityId %}
 
+    {% else %}
+    {% set hrefRoute = '/contract/' + dealId + '/' + entityName %}
+  {% endif %}
+  
   <h1 class="govuk-heading-l">{{ title }} </h1>
 
-  <input type="hidden" value="{{ facilityId }}" data-cy="{{ facilityName }}-id"/>
+  <input type="hidden" value="{{ entityId }}" data-cy="{{ entityName }}-id"/>
 
   <div class="govuk-grid-row forms-task-list">
 
