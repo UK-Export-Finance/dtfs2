@@ -1,6 +1,7 @@
 const {
   contract, contractAboutSupplier, contractAboutBuyer, contractAboutPreview, defaults,
 } = require('../../../pages');
+const partials = require('../../../partials');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
 const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
@@ -51,6 +52,8 @@ context('about-supply-contract', () => {
     contractAboutPreview.visit(deal);
     contractAboutPreview.submissionDetails().should('be.visible');
 
-    contractAboutPreview.nav().aboutBuyerComplete().should('exist');
+    partials.taskListHeader.itemStatus('buyer').invoke('text').then((text) => {
+      expect(text.trim()).equal('Completed');
+    });
   });
 });

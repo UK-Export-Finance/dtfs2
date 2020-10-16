@@ -156,7 +156,6 @@ context('Add a Bond to a Deal', () => {
       cy.addBondToDeal();
       cy.url().should('include', '/check-your-answers');
 
-
       partials.taskListHeader.itemStatus('bond-details').invoke('text').then((text) => {
         expect(text.trim()).equal('Completed');
       });
