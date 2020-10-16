@@ -1,8 +1,8 @@
 {% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
 {% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
 {% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
-{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% import '_macros/confirm-eligibility-nav.njk' as confirmEligibility %}
 {% import '_macros/eligibility-documentation-file-input.njk' as eligibilityDocumentationInput %}
 
 {% block pageTitle %}Eligibility Criteria Supporting Documentation - {{bankSupplyContractName }}{% endblock %}
@@ -18,13 +18,12 @@
     }}
   {% endif %}
 
-  {{ confirmEligibility.nav(
-    completedStatus = eligibility.completedStatus,
-    current = 'supportingDocumentation',
-    contractId = _id
-  )}}
-
-  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-6">
+  {{ taskListHeader.render({
+    title: 'Confirm eligibility',
+    dealId: _id,
+    entityName: 'eligibility',
+    items: taskListItems
+  })}}
 
   <form method="POST" autocomplete="off" enctype="multipart/form-data">
 

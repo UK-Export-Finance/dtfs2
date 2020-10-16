@@ -7,12 +7,39 @@ import {
   requestParams,
   generateErrorSummary,
   formatCountriesForGDSComponent,
+  errorHref,
 } from '../../../helpers';
 import {
   provide, DEAL, COUNTRIES,
 } from '../../api-data-provider';
 import submittedEligibilityMatchesOriginalData from './submittedEligibilityMatchesOriginalData';
 import submittedDocumentationMatchesOriginalData from './submittedDocumentationMatchesOriginalData';
+import completedEligibilityForms from './completedForms';
+import eligibilityTaskList from './eligibilityTaskList';
+
+const mergeEligibilityValidationErrors = (criteria, files) => {
+  const criteriaCount = (criteria && criteria.validationErrors && criteria.validationErrors.count)
+    ? criteria.validationErrors.count : 0;
+
+  const filesCount = (files && files.validationErrors && files.validationErrors.count)
+    ? files.validationErrors.count : 0;
+
+  const count = criteriaCount + filesCount;
+
+  const criteriaErrorList = (criteria && criteria.validationErrors && criteria.validationErrors.errorList)
+    ? criteria.validationErrors.errorList : {};
+
+  const filesErrorList = (files && files.validationErrors && files.validationErrors.errorList)
+    ? files.validationErrors.errorList : {};
+
+  return {
+    count,
+    errorList: {
+      ...criteriaErrorList,
+      ...filesErrorList,
+    },
+  };
+};
 
 const upload = multer();
 
@@ -36,7 +63,16 @@ router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), as
     return res.redirect('/');
   }
 
-  const validationErrors = generateErrorSummary(deal.eligibility.validationErrors, eligibilityErrorHref);
+  const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
+    deal.eligibility,
+    deal.dealFiles,
+  );
+
+  const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
+
+  const criteriaValidationErrors = generateErrorSummary(deal.eligibility.validationErrors, eligibilityErrorHref);
+
+  const completedForms = completedEligibilityForms(validationErrors);
 
   return res.render('eligibility/eligibility-criteria.njk',
     {
@@ -47,9 +83,10 @@ router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), as
         !deal.eligibility.agentAddressCountry,
       ),
       eligibility: deal.eligibility,
-      validationErrors,
+      validationErrors: criteriaValidationErrors,
       bankSupplyContractName: deal.details.bankSupplyContractName,
       user: req.session.user,
+      taskListItems: eligibilityTaskList(completedForms),
     });
 });
 
@@ -92,18 +129,25 @@ router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]
 
   const { eligibility, dealFiles = {} } = deal;
 
-  const documentationErrorHref = (id) => `#${id}`;
+  const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
+    deal.eligibility,
+    deal.dealFiles,
+  );
+  const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
 
-  const validationErrors = generateErrorSummary(dealFiles.validationErrors, documentationErrorHref);
+  const documentationValidationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
+
+  const completedForms = completedEligibilityForms(validationErrors);
 
   return res.render('eligibility/eligibility-supporting-documentation.njk',
     {
       _id: deal._id, // eslint-disable-line no-underscore-dangle
       dealFiles,
       eligibility,
-      validationErrors,
+      validationErrors: documentationValidationErrors,
       bankSupplyContractName: deal.details.bankSupplyContractName,
       user: req.session.user,
+      taskListItems: eligibilityTaskList(completedForms),
     });
 });
 
@@ -118,18 +162,28 @@ router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(),
 
   const { eligibility, dealFiles = {} } = updatedDeal;
 
-  const validationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
+  const documentationValidationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
 
-  if (validationErrors.count === 0) {
+  if (documentationValidationErrors.count === 0) {
     return res.redirect(`/contract/${_id}/eligibility/check-your-answers`);
   }
+
+  const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
+    updatedDeal.eligibility,
+    updatedDeal.dealFiles,
+  );
+  const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
+
+  const completedForms = completedEligibilityForms(validationErrors);
 
   return res.render('eligibility/eligibility-supporting-documentation.njk', {
     _id,
     eligibility,
     dealFiles,
-    validationErrors,
+    validationErrors: documentationValidationErrors,
     bankSupplyContractName: updatedDeal.details.bankSupplyContractName,
+    user: req.session.user,
+    taskListItems: eligibilityTaskList(completedForms),
   });
 });
 
@@ -174,7 +228,6 @@ router.get('/contract/:_id/eligibility-documentation/:fieldname/:filename', asyn
     res,
   );
 
-
   res.set('Content-disposition', `attachment; filename=${filename}`);
   res.set('Content-Type', fileData.headers['content-type']);
 
@@ -185,15 +238,26 @@ router.get('/contract/:_id/eligibility-documentation/:fieldname/:filename', asyn
 
 router.get('/contract/:_id/eligibility/check-your-answers', provide([DEAL]), async (req, res) => {
   const { deal } = req.apiData;
-
   const { user } = req.session;
+
   if (!userCanAccessEligibility(user)) {
     return res.redirect('/');
   }
 
+  const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
+    deal.eligibility,
+    deal.dealFiles,
+  );
+
+  const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
+
+  const completedForms = completedEligibilityForms(validationErrors);
+
   return res.render('eligibility/eligibility-preview.njk', {
     deal,
     user: req.session.user,
+    validationErrors,
+    taskListItems: eligibilityTaskList(completedForms),
   });
 });
 
