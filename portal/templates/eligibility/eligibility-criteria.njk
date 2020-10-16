@@ -2,6 +2,7 @@
 {% import '_macros/confirm-eligibility-nav.njk' as confirmEligibility %}
 
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
@@ -26,13 +27,12 @@
     }}
     {% endif %}
 
-  {{ confirmEligibility.nav(
-    completedStatus = eligibility.completedStatus,
-    current = 'eligibilityCriteria',
-    contractId = _id
-  )}}
-
-  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+  {{ taskListHeader.render({
+    title: 'Confirm eligibility',
+    dealId: _id,
+    entityName: 'eligibility',
+    items: taskListItems
+  })}}
   
   <form method="POST" autocomplete="off">
 

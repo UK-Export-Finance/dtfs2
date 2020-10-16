@@ -1,5 +1,6 @@
 {% extends "index.njk" %}
-{% import '_macros/confirm-eligibility-nav.njk' as confirmEligibility %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
 {% import '_macros/mandatory-criteria-box.njk' as mandatoryCriteriaBox %}
 {% import '_macros/eligibility-criteria-answers.njk' as eligibilityCriteriaAnswers %}
 {% import '_macros/eligibility-documentation-preview.njk' as eligibilityDocumentation %}
@@ -8,13 +9,21 @@
 
 {% block content %}
 
-  {{ confirmEligibility.nav(
-    completedStatus = deal.eligibility.completedStatus,
-    current = 'preview',
-    contractId = deal._id
-  )}}
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
 
-  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8">
+  {{ taskListHeader.render({
+    title: 'Confirm eligibility',
+    dealId: deal._id,
+    entityName: 'eligibility',
+    items: taskListItems
+  })}}
 
   {% include "_partials/print-button.njk" %}
 
