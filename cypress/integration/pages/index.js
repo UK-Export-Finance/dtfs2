@@ -22,6 +22,7 @@ module.exports = {
   cloneDeal: require('./cloneDeal'),
   eligibilityCriteria: require('./eligibilityCriteria'),
   eligibilityDocumentation: require('./eligibilityDocumentation'),
+  eligibilityPreview: require('./eligibilityPreview'),
   header: require('./header'),
   bondDetails: require('./bondDetails'),
   bondFinancialDetails: require('./bondFinancialDetails'),
