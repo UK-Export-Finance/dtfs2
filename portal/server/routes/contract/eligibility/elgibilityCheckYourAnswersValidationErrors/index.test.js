@@ -7,7 +7,7 @@ describe('eligibility `check your answers` validation errors', () => {
       const mockErrorList = {
         [FIELDS.ELIGIBILITY_CRITERIA.REQUIRED_FIELDS[0]]: { order: '1', text: 'Field is required' },
         [FIELDS.ELIGIBILITY_CRITERIA.REQUIRED_FIELDS[1]]: { order: '2', text: 'Field is required' },
-        [FIELDS.SUPPORTING_DOCUMENTATION.CONDITIONALLY_REQUIRED_FIELDS[0]]: { order: '3', text: 'Field is required' }
+        [FIELDS.SUPPORTING_DOCUMENTATION.CONDITIONALLY_REQUIRED_FIELDS[0]]: { order: '3', text: 'Field is required' },
       };
 
       const mockValidationErrors = {
