@@ -4,10 +4,10 @@ const DEFAULTS = {
       status: 'Draft',
     },
     eligibility: {
-      status: 'Not Started',
+      status: 'Not started',
     },
     submissionDetails: {
-      status: 'Not Started',
+      status: 'Not started',
     },
     bondTransactions: {
       items: [],

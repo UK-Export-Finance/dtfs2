@@ -3,8 +3,8 @@ module.exports = (submissionDetails, validationErrors) => {
   // that some of the validation is time-sensitive so we have to be able to
   // recalculate this stuff on the fly... this leaves us with a
   // 'partially persistent' state which we should probably mend at some point..
-  if (submissionDetails.status === 'Not Started') {
-    return 'Not Started';
+  if (submissionDetails.status === 'Not started') {
+    return 'Not started';
   }
 
   if (validationErrors && Object.keys(validationErrors).length > 0) {
