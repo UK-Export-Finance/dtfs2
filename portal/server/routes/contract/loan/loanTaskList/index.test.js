@@ -25,7 +25,7 @@ describe('loanTaskList', () => {
         title: 'Dates and repayments',
         completed: mockCompletedForms.loanDatesRepayments,
         href: '/dates-repayments',
-      }, 
+      },
     ]);
   });
 });
