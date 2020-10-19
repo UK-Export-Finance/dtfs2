@@ -162,7 +162,7 @@ router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(),
 
   const { eligibility, dealFiles = {} } = updatedDeal;
 
-  const documentationValidationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
+  const documentationValidationErrors = generateErrorSummary(dealFiles.validationErrors, errorHref);
 
   if (documentationValidationErrors.count === 0) {
     return res.redirect(`/contract/${_id}/eligibility/check-your-answers`);
@@ -201,14 +201,24 @@ router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', 
     const { eligibility, dealFiles } = updatedDeal;
 
     if (dealFiles && dealFiles.validationErrors && dealFiles.validationErrors.uploadErrorCount) {
-      const validationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
+      const documentationValidationErrors = generateErrorSummary(dealFiles.validationErrors, errorHref);
+
+      const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
+        updatedDeal.eligibility,
+        updatedDeal.dealFiles,
+      );
+      const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
+
+
+      const completedForms = completedEligibilityForms(updatedDeal.eligibility.status, validationErrors);
 
       return res.render('eligibility/eligibility-supporting-documentation.njk', {
         _id,
         eligibility,
         dealFiles,
-        validationErrors,
+        validationErrors: documentationValidationErrors,
         bankSupplyContractName: deal.details.bankSupplyContractName,
+        taskListItems: eligibilityTaskList(completedForms),
       });
     }
   }
