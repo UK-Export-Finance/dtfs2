@@ -72,7 +72,7 @@ router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), as
 
   const criteriaValidationErrors = generateErrorSummary(deal.eligibility.validationErrors, eligibilityErrorHref);
 
-  const completedForms = completedEligibilityForms(validationErrors);
+  const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
 
   return res.render('eligibility/eligibility-criteria.njk',
     {
@@ -137,7 +137,7 @@ router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]
 
   const documentationValidationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
 
-  const completedForms = completedEligibilityForms(validationErrors);
+  const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
 
   return res.render('eligibility/eligibility-supporting-documentation.njk',
     {
@@ -174,7 +174,7 @@ router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(),
   );
   const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
 
-  const completedForms = completedEligibilityForms(validationErrors);
+  const completedForms = completedEligibilityForms(updatedDeal.eligibility.status, validationErrors);
 
   return res.render('eligibility/eligibility-supporting-documentation.njk', {
     _id,
@@ -251,7 +251,7 @@ router.get('/contract/:_id/eligibility/check-your-answers', provide([DEAL]), asy
 
   const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
 
-  const completedForms = completedEligibilityForms(validationErrors);
+  const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
 
   return res.render('eligibility/eligibility-preview.njk', {
     deal,
