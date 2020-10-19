@@ -2,9 +2,8 @@
 
 {% macro render(params) %}
 
-  {# TODO this should come from the server #}
   {% if params.completed %}
-    {% set statusTagText = 'Completed' %}
+    {% set statusTagText = params.completed %}
 
     {% else %}
     {% set statusTagText = 'Incomplete' %}
