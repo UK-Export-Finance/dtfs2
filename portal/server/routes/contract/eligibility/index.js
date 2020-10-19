@@ -265,7 +265,6 @@ router.get('/contract/:_id/eligibility/check-your-answers', provide([DEAL]), asy
       allEligibilityValidationErrors,
       deal._id, // eslint-disable-line no-underscore-dangle
     ),
-    // errorHref,
   );
 
   const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
