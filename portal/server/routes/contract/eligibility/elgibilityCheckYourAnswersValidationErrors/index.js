@@ -14,7 +14,6 @@ const elgibilityCheckYourAnswersValidationErrors = (validationErrors, dealId) =>
         || FIELDS.SUPPORTING_DOCUMENTATION.CONDITIONALLY_REQUIRED_FIELDS.includes(fieldName)) {
         mappedValidationErrors.errorList[fieldName].href = `/contract/${dealId}/eligibility/supporting-documentation#${fieldName}`;
       }
-
     });
   }
 
