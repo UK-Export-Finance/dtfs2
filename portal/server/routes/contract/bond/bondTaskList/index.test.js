@@ -25,7 +25,7 @@ describe('bondTaskList', () => {
         title: 'Fee details',
         completed: mockCompletedForms.bondFeeDetails,
         href: '/fee-details',
-      }, 
+      },
     ]);
   });
 });

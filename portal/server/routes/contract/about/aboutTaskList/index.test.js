@@ -25,7 +25,7 @@ describe('aboutTaskList', () => {
         title: 'Financial information',
         completed: mockCompletedForms.financialInformation,
         href: '/financial',
-      }, 
+      },
     ]);
   });
 });
