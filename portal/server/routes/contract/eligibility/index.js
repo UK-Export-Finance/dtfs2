@@ -16,6 +16,7 @@ import submittedEligibilityMatchesOriginalData from './submittedEligibilityMatch
 import submittedDocumentationMatchesOriginalData from './submittedDocumentationMatchesOriginalData';
 import completedEligibilityForms from './completedForms';
 import eligibilityTaskList from './eligibilityTaskList';
+import elgibilityCheckYourAnswersValidationErrors from './elgibilityCheckYourAnswersValidationErrors';
 
 const mergeEligibilityValidationErrors = (criteria, files) => {
   const criteriaCount = (criteria && criteria.validationErrors && criteria.validationErrors.count)
@@ -259,7 +260,13 @@ router.get('/contract/:_id/eligibility/check-your-answers', provide([DEAL]), asy
     deal.dealFiles,
   );
 
-  const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
+  const validationErrors = generateErrorSummary(
+    elgibilityCheckYourAnswersValidationErrors(
+      allEligibilityValidationErrors,
+      deal._id, // eslint-disable-line no-underscore-dangle
+    ),
+    // errorHref,
+  );
 
   const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
 

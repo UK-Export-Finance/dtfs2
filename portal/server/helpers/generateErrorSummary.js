@@ -50,13 +50,27 @@ const generateErrorSummary = (
   const filteredValidationErrorList = Object.fromEntries(filteredValidationErrorListArray);
 
   const summary = filteredValidationErrorListArray.map(([id, value]) => {
-    const { text, summaryText, hrefRoot } = value;
+    const {
+      text,
+      summaryText,
+      hrefRoot,
+      href,
+    } = value;
 
-    const href = hrefRoot ? `${value.hrefRoot}${hrefGenerator(id)}` : hrefGenerator(id);
+    // most fields use just a simple field id link.
+    // some require an additional `hrefRoot` to link to certain pages that contain the field id link.
+    // one edge case (Eligibility Criteria - Check Your Answers), have many different ids/groups, so field.href is used.
+    let fieldHref = hrefGenerator(id);
+
+    if (hrefRoot) {
+      fieldHref = `${value.hrefRoot}${hrefGenerator(id)}`;
+    } else if (href) {
+      fieldHref = href;
+    }
 
     return {
       text: summaryText || text,
-      href,
+      href: fieldHref,
     };
   });
 
