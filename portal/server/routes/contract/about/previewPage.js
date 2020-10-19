@@ -53,7 +53,7 @@ router.get('/contract/:_id/about/check-your-answers', async (req, res) => {
     );
   }
 
-  return res.render('contract/about/about-supply-preview.njk', {
+  return res.render('contract/about/about-supply-check-your-answers.njk', {
     deal,
     validationErrors: formattedValidationErrors,
     user: req.session.user,
