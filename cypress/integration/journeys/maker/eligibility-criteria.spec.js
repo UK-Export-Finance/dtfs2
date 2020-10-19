@@ -4,7 +4,7 @@ const {
   eligibilityDocumentation,
   defaults,
 } = require('../../pages');
-const { errorSummary } = require('../../partials');
+const { errorSummary, taskListHeader } = require('../../partials');
 
 const criteriaCount = 8;
 
@@ -48,7 +48,7 @@ context('Eligibility Criteria', () => {
     eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().first().click();
     eligibilityCriteria.nextPageButton().click();
 
-    eligibilityCriteria.eligibiityProgressNav.eligibilityCriteria().click();
+    taskListHeader.itemLink('eligibility-criteria').click();
 
     errorSummary.errorSummaryLinks().should('have.length', criteriaCount - 1);
   });
@@ -94,7 +94,7 @@ context('Eligibility Criteria', () => {
 
     eligibilityCriteria.agentsCountry().select('GBR');
     eligibilityCriteria.nextPageButton().click();
-    eligibilityCriteria.eligibiityProgressNav.eligibilityCriteria().click();
+    taskListHeader.itemLink('eligibility-criteria').click();
 
     const agentsCountry2 = eligibilityCriteria.agentsCountry();
     agentsCountry2.find(':selected').should('have.value', 'GBR');
