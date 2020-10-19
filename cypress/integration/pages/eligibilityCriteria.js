@@ -16,11 +16,6 @@ const page = {
   agentsCountry: () => cy.get('[data-cy="agent-country"]'),
   nextPageButton: () => cy.get('[data-cy="next-page"]'),
   saveGoBackButton: () => cy.get('[data-cy="save-go-back-button"]'),
-  eligibiityProgressNav: {
-    eligibilityCriteria: () => cy.get('[data-cy="progress-nav-item-link-eligibility/criteria"]'),
-    supportingDocumentation: () => cy.get('[data-cy="progress-nav-item-link-eligibility/supporting-documentation"]'),
-    preview: () => cy.get('[data-cy="progress-nav-item-link-eligibility/check-your-answers"]'),
-  },
 };
 
 module.exports = page;

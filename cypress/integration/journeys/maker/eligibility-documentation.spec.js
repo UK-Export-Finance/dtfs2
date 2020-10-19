@@ -1,5 +1,5 @@
 const { contract, eligibilityCriteria, eligibilityDocumentation } = require('../../pages');
-const { errorSummary } = require('../../partials');
+const { taskListHeader } = require('../../partials');
 
 const mockUsers = require('../../../fixtures/mockUsers');
 const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
@@ -22,7 +22,7 @@ context('Eligibility Documentation', () => {
   });
 
   it('should display validation error if Manual Inclusion Questionnaire not submitted', () => {
-    eligibilityCriteria.eligibiityProgressNav.supportingDocumentation().click();
+    taskListHeader.itemLink('supporting-documentation').click();
     eligibilityDocumentation.saveButton().click();
 
     eligibilityDocumentation.fieldErrorMessage('exporterQuestionnaire').should('have.length', 1);
