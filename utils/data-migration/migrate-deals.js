@@ -103,54 +103,40 @@ const archiveFile = async (dealId) => {
 const processXml = async (dealId) => {
   const dealXml = await fileshare.readFile({ fileshare: 'workflow', folder: `${AZURE_WORKFLOW_FILESHARE_CONFIG.MIGRATION_FOLDER}/${dealId}`, filename: `deal_${dealId}.xml` });
 
-  const { Deal: workflowDeal, error } = await xml2js.parseStringPromise(dealXml.toString(), { ignoreAttrs: true, explicitArray: false });
+  const { Deal: workflowDeal } = await xml2js.parseStringPromise(dealXml.toString(), { ignoreAttrs: true, explicitArray: false });
   return workflowDeal;
 };
+
+const importSingleDeal = async (dealId) =>
+  processXml(dealId).then(async (workflowDeal) => mapV2(dealId, workflowDeal).then(async (v2Deal) => {
+    if (v2Deal) {
+      const success = await api.importDeal(v2Deal, token).then(async ({ success, deal }) => {
+        if (success) {
+          log.addSuccess(dealId);
+        } else if (deal.validationErrors) {
+          log.addError(dealId, deal.validationErrors.errorList);
+        } else if (deal.errmsg) {
+          log.addError(dealId, deal.errmsg);
+        } else {
+          log.addError(dealId, 'unknown API deal create error');
+        }
+        return success;
+      });
+      return success;
+    }
+    return false;
+  }));
 
 const migrateDeals = async () => {
   const dealFolders = await fileshare.listDirectoryFiles({ fileshare: 'workflow', folder: AZURE_WORKFLOW_FILESHARE_CONFIG.MIGRATION_FOLDER });
   importDealCount = dealFolders.length;
 
-  const createDealPromises = [];
-
-  let dealCount = 0;
-  dealFolders.forEach(async ({ name: dealId }) => {
-    const createDealPromise = new Promise((resolve) => {
-      processXml(dealId).then((workflowDeal) => {
-        mapV2(dealId, workflowDeal).then((v2Deal) => {
-          if (v2Deal) {
-            api.importDeal(v2Deal, token).then(async ({ success, deal }) => {
-              if (success) {
-                //                consoleLogColor(`created deal: ${dealId}`, 'green');
-                log.addSuccess(dealId);
-              } else if (deal.validationErrors) {
-                log.addError(dealId, deal.validationErrors.errorList);
-              } else if (deal.errmsg) {
-                log.addError(dealId, deal.errmsg);
-              } else {
-                log.addError(dealId, 'unknown API deal create error');
-              }
-
-              dealCount += 1;
-              if (success) {
-                // await archiveFile(dealId);
-              }
-              consoleLogColor(`Processed ${dealCount} of ${dealFolders.length}`, success ? 'green' : 'red');
-              resolve(dealId);
-            });
-          } else {
-            dealCount += 1;
-            consoleLogColor(`Processed ${dealCount} of ${dealFolders.length}`, 'red');
-            resolve(dealId);
-          }
-        });
-      });
-    });
-
-    createDealPromises.push(createDealPromise);
-  });
-
-  await Promise.all(createDealPromises);
+  for (let i = 0; i < dealFolders.length; i += 1) {
+    console.log(`processing deal ${i + 1}: DealId ${dealFolders[i].name}`);
+    // eslint-disable-next-line no-await-in-loop
+    const success = await importSingleDeal(dealFolders[i].name);
+    consoleLogColor(`Processed ${i + 1} of ${dealFolders.length}: DealId ${dealFolders[i].name}`, success ? 'green' : 'red');
+  }
 };
 
 const doMigrate = async () => {

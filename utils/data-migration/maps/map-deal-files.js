@@ -11,6 +11,13 @@ const AZURE_PORTAL_FILESHARE_CONFIG = {
   STORAGE_ACCESS_KEY: process.env.MIGRATION_AZURE_PORTAL_STORAGE_ACCESS_KEY,
 };
 
+const AZURE_WORKFLOW_FILESHARE_CONFIG = {
+  FILESHARE_NAME: process.env.MIGRATION_AZURE_WORKFLOW_FILESHARE_NAME,
+  MIGRATION_FOLDER: process.env.MIGRATION_AZURE_WORKFLOW_MIGRATION_FOLDER,
+  STORAGE_ACCOUNT: process.env.MIGRATION_AZURE_WORKFLOW_STORAGE_ACCOUNT,
+  STORAGE_ACCESS_KEY: process.env.MIGRATION_AZURE_WORKFLOW_STORAGE_ACCESS_KEY,
+};
+
 const mapDealFiles = async (portalDealId, v1Deal) => {
   const hasError = false;
 
@@ -21,8 +28,6 @@ const mapDealFiles = async (portalDealId, v1Deal) => {
   };
 
   const copyDealFile = async (dealFiles) => {
-    const AZURE_WORKFLOW_FILESHARE_CONFIG = fileshare.getConfig();
-
     for (let i = 0; i < dealFiles.length; i += 1) {
       const from = {
         fileshare: AZURE_WORKFLOW_FILESHARE_CONFIG.FILESHARE_NAME,
@@ -30,11 +35,14 @@ const mapDealFiles = async (portalDealId, v1Deal) => {
         filename: dealFiles[i].filename,
       };
 
+      fileshare.setConfig(AZURE_WORKFLOW_FILESHARE_CONFIG);
+      const fileshareConfig = fileshare.getConfig();
+
       // eslint-disable-next-line no-await-in-loop
       const fileBuffer = await fileshare.readFile(from).catch((err) => console.log({ err }));
 
       if (fileBuffer.error) {
-        logError(`File not found: ${from.folder}/${from.filename}`);
+        logError(`File not found: ${fileshareConfig.STORAGE_ACCOUNT}::${fileshareConfig.FILESHARE_NAME}::${from.folder}/${from.filename}`);
       } else {
         const to = {
           fileshare: AZURE_PORTAL_FILESHARE_CONFIG.FILESHARE_NAME,
@@ -52,10 +60,9 @@ const mapDealFiles = async (portalDealId, v1Deal) => {
           logError(`Error uploading file: ${to.folder}/${to.filename}: ${uploadFile.error.message}`);
         }
       }
-
-      // Reset config to workflow
-      fileshare.setConfig(AZURE_WORKFLOW_FILESHARE_CONFIG);
     }
+    // Reset config to workflow
+    fileshare.setConfig(AZURE_WORKFLOW_FILESHARE_CONFIG);
   };
 
   const v2SingleDealFile = (filename, type) => (

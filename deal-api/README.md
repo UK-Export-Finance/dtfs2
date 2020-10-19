@@ -15,4 +15,4 @@ npm run api-test
 test coverage will be generated and can be viewed with (on a mac, anyway..)
 ```
 open ./reports/coverage/api-test/lcov-report/index.html
-```
+``` 
