@@ -297,7 +297,7 @@ router.get('/contract/:_id/bond/:bondId/check-your-answers', async (req, res) =>
 
   const completedForms = completedBondForms(validationErrors);
 
-  return res.render('bond/bond-preview.njk', {
+  return res.render('bond/bond-check-your-answers.njk', {
     dealId,
     bond,
     validationErrors: formattedValidationErrors,

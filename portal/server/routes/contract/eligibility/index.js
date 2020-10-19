@@ -270,7 +270,7 @@ router.get('/contract/:_id/eligibility/check-your-answers', provide([DEAL]), asy
 
   const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
 
-  return res.render('eligibility/eligibility-preview.njk', {
+  return res.render('eligibility/eligibility-check-your-answers.njk', {
     deal,
     user: req.session.user,
     validationErrors,

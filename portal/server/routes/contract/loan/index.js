@@ -293,7 +293,7 @@ router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), as
 
   const completedForms = completedLoanForms(validationErrors);
 
-  return res.render('loan/loan-preview.njk', {
+  return res.render('loan/loan-check-your-answers.njk', {
     dealId,
     loan,
     validationErrors: formattedValidationErrors,
