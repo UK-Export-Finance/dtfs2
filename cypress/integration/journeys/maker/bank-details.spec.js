@@ -45,11 +45,11 @@ context('Create deal', () => {
 
     //confirm deal is in the correct starting state..
     contract.aboutSupplierDetailsStatus().should(
-      (status) => expect(status).to.contain('Not Started')
+      (status) => expect(status).to.contain('Not started')
     );
 
     contract.eligibilityStatus().should(
-      (status) => expect(status).to.contain('Not Started')
+      (status) => expect(status).to.contain('Not started')
     );
 
     // confirm that the data we've entered appears on the preview page

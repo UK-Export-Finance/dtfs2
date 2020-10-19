@@ -42,7 +42,7 @@ module.exports = [
       },
     },
     submissionDetails: {
-      status: 'Not Started',
+      status: 'Not started',
     },
   }, {
     details: {

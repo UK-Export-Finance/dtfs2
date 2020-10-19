@@ -1,8 +1,8 @@
 const submissionDetailsRules = require('../validation/submission-details-rules');
 
 const aboutSupplyContractStatus = (submissionDetails) => {
-  if (submissionDetails.status === 'Not Started') {
-    return 'Not Started';
+  if (submissionDetails.status === 'Not started') {
+    return 'Not started';
   }
 
   const validationErrors = submissionDetailsRules(submissionDetails);

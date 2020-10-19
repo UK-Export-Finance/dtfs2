@@ -36,7 +36,7 @@ context('about-supply-contract', () => {
     };
 
     cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(aDealWith_AboutSupplyContract_InStatus('Not Started'), MAKER_LOGIN)
+    cy.insertOneDeal(aDealWith_AboutSupplyContract_InStatus('Not started'), MAKER_LOGIN)
       .then((insertedDeal) => deal = insertedDeal);
   });
 
@@ -47,7 +47,7 @@ context('about-supply-contract', () => {
     contract.visit(deal);
     // check the status is displaying correctly
     contract.aboutSupplierDetailsStatus().invoke('text').then((text) => {
-      expect(text.trim()).equal('Not Started');
+      expect(text.trim()).equal('Not started');
     });
     contract.aboutSupplierDetailsLink().click();
 
