@@ -2,7 +2,7 @@ const cron = require('node-cron');
 const jobs = require('./jobs');
 
 const initScheduler = () => {
-  if (process.env.DTFS_PORTAL_SCHEDULER) {
+  if (process.env.DTFS_PORTAL_SCHEDULER === 'true') {
     Object.values(jobs).forEach((job) => {
       const { schedule, task, message } = job.init();
       console.log(`Added schedule: ${message}`);
