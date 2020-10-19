@@ -717,8 +717,8 @@ jobs:
               JWT_SIGNING_KEY="${{ env.JWT_SIGNING_KEY }}" \
               JWT_VALIDATING_KEY="${{ env.JWT_VALIDATING_KEY }}" \
               GOV_NOTIFY_API_KEY="${{ env.GOV_NOTIFY_API_KEY }}" \
-              GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}"
-              DTFS_PORTAL_SCHEDULER="${{ env.DTFS_PORTAL_SCHEDULER }}"
+              GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
+              DTFS_PORTAL_SCHEDULER="${{ env.DTFS_PORTAL_SCHEDULER }}" \
               FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ env.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}"
               
                 
