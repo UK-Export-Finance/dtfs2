@@ -14,7 +14,7 @@ describe('loanTaskList', () => {
       {
         title: 'Loan guarantee details',
         completed: mockCompletedForms.loanGuaranteeDetails,
-        href: '/details',
+        href: '/guarantee-details',
       },
       {
         title: 'Loan financial details',
