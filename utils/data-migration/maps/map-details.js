@@ -70,7 +70,9 @@ const mapDetails = (portalDealId, v1Deal) => {
 
   const isAIN = ecAnswer.filter(({ Answer }) => Answer === 'True').length === ecAnswer.length;
   const isMIA = ecAnswer.filter(({ Answer }) => Answer === 'False').length > 0;
-  const isMIN = isMIA && typeof v1Deal.Deal_information.Extra_fields.Submission_date_MIN === 'string';
+  const isMIN = isMIA
+    && typeof v1Deal.Deal_information.Extra_fields.Submission_date_MIN === 'string'
+    && Boolean(v1Deal.Deal_information.Extra_fields.Submission_date_MIN);
 
   if (isMIN) {
     details.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
