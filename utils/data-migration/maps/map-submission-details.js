@@ -63,6 +63,7 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
 
   if (financial.Conversion_date) {
     // Conversion date in format dd-mm-yyyy
+    submissionDetails.supplyContractConversionDate = financial.Conversion_date.replace(/-/g, '/');
     [
       submissionDetails['supplyContractConversionDate-day'],
       submissionDetails['supplyContractConversionDate-month'],
