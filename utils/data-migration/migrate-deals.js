@@ -51,7 +51,9 @@ const mapV2 = async (portalDealId, v1Deal) => {
   const [dealFiles, dealFilesError] = await mapDealFiles(portalDealId, v1Deal);
   const [bondTransactions, bondTransactionsError] = mapBondTransactions(portalDealId, v1Deal);
   const [loanTransactions, loanTransactionsError] = mapLoanTransactions(portalDealId, v1Deal);
-
+  const specialConditions = v1Deal.Deal_information.Extra_fields.Special_conditions && [{
+    text: v1Deal.Deal_information.Extra_fields.Special_conditions,
+  }];
   if (
     detailsError
     || eligibilityError
@@ -75,6 +77,7 @@ const mapV2 = async (portalDealId, v1Deal) => {
     dealFiles,
     bondTransactions,
     loanTransactions,
+    specialConditions,
   };
 
   return mappedV2;
