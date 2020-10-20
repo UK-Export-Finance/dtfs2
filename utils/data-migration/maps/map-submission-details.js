@@ -33,7 +33,7 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
     exporterRegistrationSource: exporterInfo.Exporter_registration_source,
   };
 
-  const supplierCorrespondenceAddressIsSame = addressIsSame(exporterInfo.Exporter_address, exporterInfo.Exporter_correspondence_address);
+  const supplierCorrespondenceAddressIsDifferent = !addressIsSame(exporterInfo.Exporter_address, exporterInfo.Exporter_correspondence_address);
   const indemnifierLegallyDistinct = Boolean(exporterInfo.Indemnifier_name);
 
   const submissionDetails = {
@@ -46,7 +46,7 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
     'supplier-address-line-3': exporterInfo.Exporter_address.Line3,
     'supplier-address-postcode': exporterInfo.Exporter_address.PostalCode,
     'supplier-address-town': exporterInfo.Exporter_address.Town,
-    'supplier-correspondence-address-is-different': supplierCorrespondenceAddressIsSame.toString(),
+    'supplier-correspondence-address-is-different': supplierCorrespondenceAddressIsDifferent.toString(),
     'industry-sector': exporterInfo.Industry_sector_code,
     'industry-class': exporterInfo.Industry_class_code,
     'sme-type': findPortalValue(exporterInfo.Sme_type, 'Sme_type', 'DEAL', 'SME_TYPE', logError),
@@ -71,7 +71,7 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
   }
 
 
-  if (!supplierCorrespondenceAddressIsSame) {
+  if (supplierCorrespondenceAddressIsDifferent) {
     submissionDetails['supplier-correspondence-address-country'] = getCountryById(exporterInfo.Exporter_correspondence_address.Country);
     submissionDetails['supplier-correspondence-address-line-1'] = exporterInfo.Exporter_correspondence_address.Line1;
     submissionDetails['supplier-correspondence-address-line-2'] = exporterInfo.Exporter_correspondence_address.Line2;
