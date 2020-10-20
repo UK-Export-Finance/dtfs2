@@ -122,7 +122,7 @@ router.get('/dashboard/:page', async (req, res) => {
   const userisChecker = roles.includes('checker');
   const userIsMakerAndChecker = (userisMaker && userisChecker);
 
-  if (req.session.dashboardFilters === null) {
+  if (!req.session.dashboardFilters) {
     // set some default behaviours for the filters...
     req.session.dashboardFilters = {};
 

@@ -38,13 +38,13 @@ context('Login', () => {
     cy.url().should('eq', relative('/'));
   });
 
-  it('A successful login takes the user to the /start-now page', () => {
+  it('A successful login takes the user to the /dashboard page', () => {
     cy.login(MAKER_LOGIN);
 
     cy.url().should('eq', relative('/dashboard/0'));
   });
 
-  it('When a logged-in user clicks the home link they go to the /start-now page', () => {
+  it('When a logged-in user clicks the home link they go to the /dashboard page', () => {
     cy.login(MAKER_LOGIN);
 
     header.home().click();
@@ -68,7 +68,7 @@ context('Login', () => {
     cy.url().should('eq', relative('/dashboard/0'));
   });
 
-  it("Should pass Lighthouse audit", function () {
+  it('Should pass Lighthouse audit', function () {
     cy.lighthouse({
       performance: 85,
       accessibility: 100,
