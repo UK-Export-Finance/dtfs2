@@ -5,7 +5,7 @@ const idMap = {
   Ec_initial_term_check: 12,
   Ec_total_exposure_check: 13,
   Ec_bond_issuance_check: 14,
-  Ec_industry_check: '',
+  Ec_industry_check: 16,
   Ec_indemnifier_turnover_check: '',
   Ec_indemnifier_net_worth_check: '',
   Ec_indemnifier_liquidity_check: '',
@@ -19,7 +19,7 @@ const idMap = {
   Ec_fees_interest_frequency_check: '',
   Ec_affiliate_to_the_supplier_check: '',
   Ec_requested_cover_start_date_check: 15,
-  Ec_supplier_declaration_check: 16,
+  Ec_supplier_declaration_check: '',
   Ec_affected_transaction_check: '',
   Ec_bank_complied_check: '',
   Ec_bank_sole_beneficial_owner_check: '',
@@ -39,8 +39,7 @@ const getCriteria = (ecList) => {
     }
     return ecAnswer;
   });
-
-  return criteria;
+  return criteria.sort((c1, c2) => c1.id - c2.id);
 };
 
 const getV1ExtraInfo = (ecList) => ({
