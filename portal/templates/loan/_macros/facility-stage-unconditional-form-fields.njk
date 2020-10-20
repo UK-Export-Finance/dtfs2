@@ -1,7 +1,7 @@
 {% import './bank-reference-number-field.njk' as bankReferenceNumberField %}
 {% import '_macros/date-field.njk' as dateField %}
 
-{% macro render(loan, validationErrors) %}
+{% macro render(user, loan, validationErrors) %}
 
   {{bankReferenceNumberField.render(
     id = 'facilityStageUnconditional-bankReferenceNumber',
@@ -33,5 +33,6 @@
       error = validationErrors.errorList.coverEndDate
     )}}
   </div>
+
 
 {% endmacro %}
