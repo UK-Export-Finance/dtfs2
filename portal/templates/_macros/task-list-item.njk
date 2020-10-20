@@ -3,7 +3,7 @@
 {% macro render(params) %}
 
   {% if params.completed %}
-    {% set statusTagText = params.completed %}
+    {% set statusTagText = 'Completed' %}
 
     {% else %}
     {% set statusTagText = 'Incomplete' %}

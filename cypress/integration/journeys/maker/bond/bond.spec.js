@@ -52,7 +52,7 @@ context('Add a Bond to a Deal', () => {
   });
 
   describe('when a user submits all Bond forms without completing any fields', () => {
-    it('should display all validation errors for required fields in `Bond Preview` page', () => {
+    it('should display all validation errors for required fields in `Check your answers` page', () => {
       cy.createADeal({
         username: MAKER_LOGIN.username,
         password: MAKER_LOGIN.password,
@@ -62,22 +62,20 @@ context('Add a Bond to a Deal', () => {
       pages.contract.addBondButton().click();
       pages.bondDetails.submit().click();
       pages.bondFinancialDetails.submit().click();
-      pages.bondFeeDetails.submit().click();
 
-      cy.url().should('include', '/contract');
-      cy.url().should('include', '/bond/');
-      cy.url().should('include', '/check-your-answers');
-      cy.title().should('eq', `Bond Preview${pages.defaults.pageTitleAppend}`);
-      const TOTAL_REQUIRED_FORM_FIELDS = 8;
-      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+      partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
+        const bondId = bondIdHiddenInput[0].value;
+        pages.bondFeeDetails.submit().click();
+
+        cy.url().should('include', '/contract');
+        cy.url().should('include', '/bond/');
+        cy.url().should('include', '/check-your-answers');
+        cy.title().should('eq', `Check your answers - Bond - ${bondId}${pages.defaults.pageTitleAppend}`);
+        const TOTAL_REQUIRED_FORM_FIELDS = 8;
+        partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+      });
     });
   });
-
-  // TODO
-  // describe('when a user creates a Bond without submitting anything', () => {
-  //   it('bond should display `Incomplete` status in Deal page', () => {
-  //   });
-  // });
 
   describe('when a user submits a Bond form without completing any fields', () => {
     it('bond should display `Incomplete` status in Deal page', () => {
