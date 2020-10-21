@@ -456,6 +456,7 @@ describe('/v1/deals/:id/status - facilities', () => {
     describe('when the status changes to `Submitted`', () => {
       let createdDeal;
       let updatedDeal;
+      let expectedFacilitiesSubmittedBy;
 
       beforeEach(async () => {
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
@@ -469,9 +470,11 @@ describe('/v1/deals/:id/status - facilities', () => {
         };
 
         updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+
+        expectedFacilitiesSubmittedBy = aBarclaysChecker;
       });
 
-      const isUnsubmittedIssuedFacilityWithFacilityStageChange = (facility) => {
+      const isUnsubmittedFacilityWithIssueFacilityDetailsProvided = (facility) => {
         const issuedBond = facility.facilityStage === 'Issued';
         const unconditionalLoan = facility.facilityStage === 'Unconditional';
 
@@ -483,16 +486,63 @@ describe('/v1/deals/:id/status - facilities', () => {
         return null;
       };
 
-      // TODO: loans
-      describe('any unconditional loans that have details provided, status=`Ready for check`', () => {
-        it('should add `Submitted` status, `issueFacilityDetailsSubmitted` property', async () => {
+      describe('any unconditional loans', () => {
+        it('should add issuedFacilitySubmittedToUkefTimestamp anda issuedFacilitySubmittedToUkefBy', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-          const unconditionalLoansThatShouldBeUpdated = createdDeal.loanTransactions.items.filter((b) =>
-            isUnsubmittedIssuedFacilityWithFacilityStageChange(b));
+          const unconditionalLoansThatShouldBeUpdated = createdDeal.loanTransactions.items.filter((l) =>
+            l.facilityStage === 'Unconditional');
+
+            // make sure we have some loans to test against
+          expect(unconditionalLoansThatShouldBeUpdated.length > 0).toEqual(true);
+
+          unconditionalLoansThatShouldBeUpdated.forEach((loan) => {
+            const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
+            expect(typeof updatedLoan.issuedFacilitySubmittedToUkefTimestamp).toEqual('string');
+            expect(updatedLoan.issuedFacilitySubmittedToUkefBy.username).toEqual(expectedFacilitiesSubmittedBy.username);
+            expect(updatedLoan.issuedFacilitySubmittedToUkefBy.email).toEqual(expectedFacilitiesSubmittedBy.email);
+            expect(updatedLoan.issuedFacilitySubmittedToUkefBy.firstname).toEqual(expectedFacilitiesSubmittedBy.firstname);
+            expect(updatedLoan.issuedFacilitySubmittedToUkefBy.lastname).toEqual(expectedFacilitiesSubmittedBy.lastname);
+          });
+        });
+      });
+
+      describe('any issued bonds', () => {
+        it('should add issuedFacilitySubmittedToUkefTimestamp anda issuedFacilitySubmittedToUkefBy', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toBeDefined();
+
+          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+          const issuedBondsThatShouldBeUpdated = createdDeal.bondTransactions.items.filter((l) =>
+            l.facilityStage === 'Issued');
+
+          // make sure we have some bonds to test against
+          expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
+
+          issuedBondsThatShouldBeUpdated.forEach((bond) => {
+            const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
+            expect(typeof updatedBond.issuedFacilitySubmittedToUkefTimestamp).toEqual('string');
+            expect(updatedBond.issuedFacilitySubmittedToUkefBy.username).toEqual(expectedFacilitiesSubmittedBy.username);
+            expect(updatedBond.issuedFacilitySubmittedToUkefBy.email).toEqual(expectedFacilitiesSubmittedBy.email);
+            expect(updatedBond.issuedFacilitySubmittedToUkefBy.firstname).toEqual(expectedFacilitiesSubmittedBy.firstname);
+            expect(updatedBond.issuedFacilitySubmittedToUkefBy.lastname).toEqual(expectedFacilitiesSubmittedBy.lastname);
+          });
+        });
+      });
+
+      describe('any unconditional loans that have Issue Facility Form details provided (issueFacilityDetailsProvided) and status=`Ready for check`', () => {
+        it('should add `Submitted` status and `issueFacilityDetailsSubmitted` property', async () => {
+          expect(updatedDeal.status).toEqual(200);
+          expect(updatedDeal.body).toBeDefined();
+
+          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+          const unconditionalLoansThatShouldBeUpdated = createdDeal.loanTransactions.items.filter((l) =>
+            isUnsubmittedFacilityWithIssueFacilityDetailsProvided(l));
 
           // make sure we have some loans to test against
           expect(unconditionalLoansThatShouldBeUpdated.length > 0).toEqual(true);
@@ -505,15 +555,15 @@ describe('/v1/deals/:id/status - facilities', () => {
         });
       });
 
-      describe('any issued bonds that have details provided, status=`Ready for check`', () => {
-        it('should add `Submitted` status, `issueFacilityDetailsSubmitted` property', async () => {
+      describe('any issued bonds that have Issue Facility Form details provided (issueFacilityDetailsProvided) and status=`Ready for check`', () => {
+        it('should add `Submitted` status and `issueFacilityDetailsSubmitted` property', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedBondsThatShouldBeUpdated = createdDeal.bondTransactions.items.filter((b) =>
-            isUnsubmittedIssuedFacilityWithFacilityStageChange(b));
+            isUnsubmittedFacilityWithIssueFacilityDetailsProvided(b));
 
           // make sure we have some bonds to test against
           expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
