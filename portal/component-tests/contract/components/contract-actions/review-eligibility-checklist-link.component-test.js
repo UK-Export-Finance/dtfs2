@@ -15,7 +15,7 @@ describe(component, () => {
       for (const deal of deals) {
         const wrapper = render({user, deal});
         wrapper.expectLink('[data-cy="reviewEligibilityChecklistForm"]')
-          .toLinkTo(`/contract/${deal._id}/eligibility/supporting-documentation`, 'Review your eligibility checklist form');
+          .toLinkTo(`/contract/${deal._id}/submission-details#eligibility-criteria`, 'Review your eligibility checklist form');
       }
     });
 
