@@ -1080,6 +1080,12 @@ jobs:
             --source-address-prefixes "51.140.76.208" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
 
+          # Tony B
+          az network nsg rule create --name team-ips-tonyb --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 5000 --direction Inbound --protocol "*" --access Allow \
+            --source-address-prefixes "87.74.99.121" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+
     - name: Associate NSG to gateway subnet
       uses: Azure/cli@v1.0.0
       with:
