@@ -11,11 +11,17 @@ const logError = (error) => {
   log.addError(portalId, error);
 };
 
-const addressIsSame = (address1, address2) => address1.Line1 === address2.Line1
-&& address1.Line2 === address2.Line2
-&& address1.Line3 === address2.Line3
-&& address1.PostalCode === address2.PostalCode
-&& address1.Country === address2.Country;
+const addressIsDifferent = (address1, address2) => {
+  if (!address2.Line1) {
+    return false;
+  }
+
+  return address1.Line1 !== address2.Line1
+    || address1.Line2 !== address2.Line2
+    || address1.Line3 !== address2.Line3
+    || address1.PostalCode !== address2.PostalCode
+    || address1.Country !== address2.Country;
+};
 
 const mapSubmissionsDetails = (portalDealId, v1Deal) => {
   portalId = portalDealId;
@@ -33,7 +39,7 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
     exporterRegistrationSource: exporterInfo.Exporter_registration_source,
   };
 
-  const supplierCorrespondenceAddressIsDifferent = !addressIsSame(exporterInfo.Exporter_address, exporterInfo.Exporter_correspondence_address);
+  const supplierCorrespondenceAddressIsDifferent = addressIsDifferent(exporterInfo.Exporter_address, exporterInfo.Exporter_correspondence_address);
   const indemnifierLegallyDistinct = Boolean(exporterInfo.Indemnifier_name);
 
   const submissionDetails = {
@@ -92,7 +98,7 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
     submissionDetails['indemnifier-address-town'] = exporterInfo.Indemnifier_address_Town;
     submissionDetails['indemnifier-address-country'] = getCountryById(exporterInfo.Indemnifier_address_Country);
 
-    const indemnifierCorrespondenceAddressDifferent = !addressIsSame(exporterInfo.Indemnifier_address, exporterInfo.Indemnifier_correspondence_address);
+    const indemnifierCorrespondenceAddressDifferent = addressIsDifferent(exporterInfo.Indemnifier_address, exporterInfo.Indemnifier_correspondence_address);
     submissionDetails.indemnifierCorrespondenceAddressDifferent = indemnifierCorrespondenceAddressDifferent.toString();
 
     if (indemnifierCorrespondenceAddressDifferent) {
