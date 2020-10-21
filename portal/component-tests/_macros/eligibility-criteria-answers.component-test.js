@@ -12,6 +12,12 @@ describe(component, () => {
     wrapper = render(deal.eligibility);
   });
 
+  it('should render a heading', () => {
+    wrapper.expectElement('#eligibility-criteria').toExist();
+    wrapper.expectElement('h4').toExist();
+    wrapper.expectText('#eligibility-criteria').toRead('Eligibility criteria');
+  });
+
   it('should render a heading, answer and description for each criterion', () => {
     for (const criterion of deal.eligibility.criteria) { // eslint-disable-line no-restricted-syntax
       const criterionIdSelector = `criterion-${criterion.id}`;
