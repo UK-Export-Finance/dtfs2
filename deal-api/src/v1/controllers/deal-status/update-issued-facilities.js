@@ -1,6 +1,7 @@
 const $ = require('mongo-dot-notation');
 const CONSTANTS = require('../../../constants');
 const issuedDateValidationRules = require('../../validation/fields/issued-date');
+const now = require('../../../now');
 
 const facilityHasValidIssuedDate = (facility, deal) => {
   const emptyErrorList = {};
@@ -91,14 +92,15 @@ const updateIssuedFacilities = async (
   collection,
   fromStatus,
   deal,
-  updateIssuedFacilitiesCoverStartDates = false,
+  canUpdateIssuedFacilitiesCoverStartDates,
   newStatus,
 ) => {
   const updatedDeal = deal;
 
-
   const fromStatusIsApprovedStatus = (fromStatus === CONSTANTS.DEAL.STATUS.APPROVED
                                       || fromStatus === CONSTANTS.DEAL.STATUS.APPROVED_WITH_CONDITIONS);
+
+  const isMIAdeal = deal.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
   const isMINdeal = deal.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
 
   const update = (facilities) => {
@@ -132,11 +134,13 @@ const updateIssuedFacilities = async (
           facility.status = newStatus;
         }
 
-        if (updateIssuedFacilitiesCoverStartDates
+        if (canUpdateIssuedFacilitiesCoverStartDates
           && !facility.issueFacilityDetailsSubmitted
           && !facility.requestedCoverStartDate) {
           if (fromStatusIsApprovedStatus && isMINdeal) {
             facility.requestedCoverStartDate = deal.details.manualInclusionNoticeSubmissionDate;
+          } else if (isMIAdeal) {
+            facility.requestedCoverStartDate = now();
           } else if (facilityHasValidIssuedDate(facility, deal)) {
             facility.requestedCoverStartDate = facility.issuedDate;
           }

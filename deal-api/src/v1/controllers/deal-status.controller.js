@@ -91,11 +91,7 @@ exports.update = (req, res) => {
     }
 
     if (toStatus === 'Ready for Checker\'s approval') {
-      const isAINdeal = dealAfterAllUpdates.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
-      const isMINdeal = dealAfterAllUpdates.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
-
-      const updateIssuedFacilitiesCoverStartDates = (isAINdeal || isMINdeal);
-
+      const canUpdateIssuedFacilitiesCoverStartDates = true;
       const newIssuedFacilityStatus = 'Ready for check';
 
       if (
@@ -119,20 +115,20 @@ exports.update = (req, res) => {
         collection,
         fromStatus,
         dealAfterAllUpdates,
-        updateIssuedFacilitiesCoverStartDates,
+        canUpdateIssuedFacilitiesCoverStartDates,
         newIssuedFacilityStatus,
       );
     }
 
     if (toStatus === 'Further Maker\'s input required') {
-      const updateIssuedFacilitiesCoverStartDates = false;
+      const canUpdateIssuedFacilitiesCoverStartDates = false;
       const newIssuedFacilityStatus = 'Maker\'s input required';
 
       dealAfterAllUpdates = await updateIssuedFacilities(
         collection,
         fromStatus,
         dealAfterAllUpdates,
-        updateIssuedFacilitiesCoverStartDates,
+        canUpdateIssuedFacilitiesCoverStartDates,
         newIssuedFacilityStatus,
       );
     }
