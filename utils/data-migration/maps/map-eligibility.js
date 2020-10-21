@@ -1,4 +1,5 @@
 const log = require('../helpers/log');
+const { getCountryById } = require('../helpers/countries');
 
 const idMap = {
   Ec_agents_check: 11,
@@ -57,11 +58,13 @@ const mapEligibility = (portalDealId, v1Deal) => {
 
   const { Eligibility_checklist: ecList } = v1Deal;
 
+  const country = getCountryById(ecList.Agent_address.Country);
+
   const eligibility = {
     criteria: getCriteria(ecList),
     v1ExtraInfo: getV1ExtraInfo(ecList),
     agentName: ecList.Agent_name,
-    agentAddressCountry: ecList.Agent_address.Country,
+    agentAddressCountry: country ? country.code : '',
     agentAddressLine1: ecList.Agent_address.Line1,
     agentAddressLine2: ecList.Agent_address.Line2,
     agentAddressLine3: ecList.Agent_address.Line3,
