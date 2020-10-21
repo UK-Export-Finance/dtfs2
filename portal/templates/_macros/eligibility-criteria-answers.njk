@@ -1,7 +1,7 @@
 {% macro render(eligibility) %}
 
   <div data-cy="eligibility-criteria-answers">
-    <h4 class="govuk-heading-m">Eligibility criteria</h4>
+    <h4 class="govuk-heading-m" id="eligibility-criteria">Eligibility criteria</h4>
 
     <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-4">
       {% for criterion in eligibility.criteria %}
