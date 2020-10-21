@@ -4,6 +4,7 @@ const mapSubmissionDetails = require('./map-submission-details');
 const mapDealFiles = require('./map-deal-files');
 const mapBondTransactions = require('./map-bond-transactions');
 const mapLoanTransactions = require('./map-loan-transactions');
+const mapComments = require('./map-comments');
 
 module.exports = {
   mapDetails,
@@ -12,4 +13,5 @@ module.exports = {
   mapDealFiles,
   mapBondTransactions,
   mapLoanTransactions,
+  mapComments,
 };
