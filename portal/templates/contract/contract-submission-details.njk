@@ -34,11 +34,11 @@
       <h2 class="govuk-heading-l">
         <span data-cy="general-deal-info-heading">General deal information</span>
 
-        {{ editLink.render(
-          editable = editable,
-          href = '/contract/' + deal._id + '/about/supplier',
-          dataCy = 'edit-about-link'
-        )}}
+        {{ editLink.render({
+          editable: editable,
+          href: '/contract/' + deal._id + '/about/supplier',
+          dataCy: 'edit-about-link'
+        })}}
       </h2>
 
       {% if deal.submissionDetails %}
@@ -47,34 +47,34 @@
 
       <h3 class="govuk-heading-l">
         <span data-cy="confirm-eligibility-heading">Confirm eligibility</span>
-        {{ editLink.render(
-          editable = editable,
-          href = '/contract/' + deal._id + '/eligibility/criteria',
-          dataCy = 'edit-eligibility-link'
-        )}}
+        {{ editLink.render({
+          editable: editable,
+          href: '/contract/' + deal._id + '/eligibility/criteria',
+          dataCy: 'edit-eligibility-link'
+        })}}
       </h3>
 
       {% if deal.mandatoryCriteria %}
-        {{ mandatoryCriteriaBox.render(deal.mandatoryCriteria)}}
+        {{ mandatoryCriteriaBox.render({ mandatoryCriteria: deal.mandatoryCriteria }) }}
       {% endif %}
 
       {% if deal.eligibility.criteria %}
-        {{ eligibilityCriteriaAnswers.render(deal.eligibility)}}
+        {{ eligibilityCriteriaAnswers.render(deal.eligibility) }}
       {% endif %}
 
       {% if deal.dealFiles %}
-        {{ eligibilityDocumentation.render(deal.dealFiles, deal._id)}}
+        {{ eligibilityDocumentation.render(deal.dealFiles, deal._id) }}
       {% endif %}
 
       {% for bond in deal.bondTransactions.items %}
         <div id="bond-{{ bond._id }}" data-cy="bond-{{ bond._id }}">
           <h3 class="govuk-heading-l">
             <span data-cy="bond-heading">Bond</span>
-            {{ editLink.render(
-              editable = editable,
-              href = '/contract/' + deal._id + '/bond/' + bond._id + '/details',
-              dataCy = 'edit-bond-' + bond._id + '-link'
-            )}}
+            {{ editLink.render({
+              editable: editable,
+              href: '/contract/' + deal._id + '/bond/' + bond._id + '/details',
+              dataCy: 'edit-bond-' + bond._id + '-link'
+            })}}
           </h3>
 
           {{ bondSubmissionDetails.render(bond, user)}}
@@ -85,14 +85,14 @@
         <div id="loan-{{ loan._id }}" data-cy="loan-{{ loan._id }}">
           <h3 class="govuk-heading-l">
             <span data-cy="loan-heading">Loan</span>
-            {{ editLink.render(
-              editable = editable,
-              href = '/contract/' + deal._id + '/loan/' + loan._id + '/guarantee-details',
-              dataCy = 'edit-loan-' + loan._id + '-link'
-            )}}
+            {{ editLink.render({
+              editable: editable,
+              href: '/contract/' + deal._id + '/loan/' + loan._id + '/guarantee-details',
+              dataCy: 'edit-loan-' + loan._id + '-link'
+            })}}
           </h3>
 
-          {{ loanSubmissionDetails.render(loan, user)}}
+          {{ loanSubmissionDetails.render(loan, user) }}
         </div>
       {% endfor %}
 

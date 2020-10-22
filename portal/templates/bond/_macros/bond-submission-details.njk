@@ -1,4 +1,6 @@
-{% macro render(bond, user) %}
+{% macro render(params) %}
+  {% set bond = params.bond %}
+  {% set user = params.user %}
 
   <div data-cy="bond-submission-details">
     <h2 class="govuk-heading-m">Bond details</h2>

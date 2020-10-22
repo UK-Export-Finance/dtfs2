@@ -1,4 +1,4 @@
-{% macro render(criteria) %}
+{% macro render(params) %}
 
   <div class="govuk-grid-row govuk-!-margin-0 govuk-!-padding-top-4 govuk-!-margin-bottom-6 box" data-cy="mandatory-criteria-box">
 
@@ -9,7 +9,7 @@
 
       <p class="govuk-body-s">You have affirmed that all the following mandatory criteria are or will be true for this deal on the date that cover starts.</p>
 
-      {% for group in criteria %}
+      {% for group in params.mandatoryCriteria %}
         <h6 class="govuk-heading-s">{{ group.title }}</h6>
 
         <ol class="govuk-list govuk-list--number">

@@ -1,7 +1,10 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
-{% macro render(value, validationError) %}
+{% macro render(params) %}
+  {% set value = params.value %}
+  {% set validationError = params.validationError %}
+
   {{ govukInput({
     label: {
       text: "Other"

@@ -102,7 +102,10 @@
             'data-cy': 'reason-for-visiting-other'
           },
           conditional: {
-            html: reasonForVisitingOther.render(feedback.reasonForVisitingOther, validationErrors.errorList.reasonForVisitingOther)
+            html: reasonForVisitingOther.render({
+              value: feedback.reasonForVisitingOther,
+              validationError: validationErrors.errorList.reasonForVisitingOther
+            })
           }
         }
       ],

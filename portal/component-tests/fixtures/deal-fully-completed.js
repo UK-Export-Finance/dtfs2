@@ -328,6 +328,7 @@ const deal = {
     ],
     security: 'security test',
   },
+  mandatoryCriteria: [],
 };
 
 module.exports = deal;
