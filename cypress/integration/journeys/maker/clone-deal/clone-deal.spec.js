@@ -1,6 +1,6 @@
 const pages = require('../../../pages');
 const partials = require('../../../partials');
-const fullyCompletedDeal = require('./dealFullyCompleted');
+const fullyCompletedDeal = require('../fixtures/dealFullyCompleted');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
 

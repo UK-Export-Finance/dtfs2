@@ -53,7 +53,7 @@ context('Create deal', () => {
     );
 
     // confirm that the data we've entered appears on the preview page
-    contract.previewTab().click();
+    contract.checkDealDetailsTab).click();
     contractCheckDealDetails.header().invoke('text').then((text) => {
       expect(text.trim()).equal(`Supply Contract name: TESTING`);
     });
