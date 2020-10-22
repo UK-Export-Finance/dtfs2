@@ -1,4 +1,6 @@
-{% macro render(loan, user) %}
+{% macro render(params) %}
+  {% set loan = params.loan %}
+  {% set user = params.user %}
 
   <div data-cy="loan-submission-details">
     <h2 class="govuk-heading-m">Loan guarantee details</h2>

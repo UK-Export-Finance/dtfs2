@@ -87,7 +87,7 @@ describe(page, () => {
 
         wrapper.expectText(`${bondSelector} [data-cy="bond-heading"]`).toRead('Bond');
 
-        const editLinkComponent = `[data-cy="edit-bond-${bond._id}-link-/contract/${deal._id}/bond/${bond._id}/bond/details"]`;
+        const editLinkComponent = `[data-cy="edit-bond-${bond._id}-link-/contract/${deal._id}/bond/${bond._id}/details"]`;
         wrapper.expectElement(editLinkComponent).toExist();
 
         wrapper.expectElement(`${bondSelector} [data-cy="bond-submission-details"]`).toExist();
@@ -102,7 +102,7 @@ describe(page, () => {
 
         wrapper.expectText(`${loanSelector} [data-cy="loan-heading"]`).toRead('Loan');
 
-        const editLinkComponent = `[data-cy="edit-loan-${loan._id}-link-/contract/${deal._id}/loan/${loan._id}/loan/guarantee-details"]`;
+        const editLinkComponent = `[data-cy="edit-loan-${loan._id}-link-/contract/${deal._id}/loan/${loan._id}/guarantee-details"]`;
         wrapper.expectElement(editLinkComponent).toExist();
 
         wrapper.expectElement(`${loanSelector} [data-cy="loan-submission-details"]`).toExist();

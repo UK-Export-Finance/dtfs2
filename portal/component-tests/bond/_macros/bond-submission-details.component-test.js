@@ -6,10 +6,20 @@ const render = componentRenderer(component);
 
 describe(component, () => {
   let wrapper;
+  const user = {
+    roles: ['maker'],
+    timezone: 'Europe/London',
+  };
+
   const bond = deal.bondTransactions.items[0];
+  bond.issuedDate = '1603367125920';
+  bond.requestedCoverStartDate = '1603367125920';
 
   beforeEach(() => {
-    wrapper = render(bond);
+    wrapper = render({
+      bond,
+      user,
+    });
   });
 
   it('should render bondIssuer', () => {
@@ -63,18 +73,30 @@ describe(component, () => {
     const selector = '[data-cy="currency-same-as-supply-contract-currency"]';
 
     it('should render `Yes` when value is `true`', () => {
-      wrapper = render({
+      const bondWithCurrencySameAsSupplyContractCurrency = {
         ...bond,
         currencySameAsSupplyContractCurrency: 'true',
+      };
+
+      wrapper = render({
+        user,
+        bond: bondWithCurrencySameAsSupplyContractCurrency,
       });
+
       wrapper.expectText(selector).toRead('Yes');
     });
 
     it('should render `No` when value is false', () => {
-      wrapper = render({
+      const bondWithCurrencyNotTheSameAsSupplyContractCurrency = {
         ...bond,
         currencySameAsSupplyContractCurrency: 'false',
+      };
+
+      wrapper = render({
+        user,
+        bond: bondWithCurrencyNotTheSameAsSupplyContractCurrency,
       });
+
       wrapper.expectText(selector).toRead('No');
     });
   });

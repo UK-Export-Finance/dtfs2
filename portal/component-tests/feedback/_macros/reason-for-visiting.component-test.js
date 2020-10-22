@@ -7,11 +7,14 @@ describe(component, () => {
   let wrapper;
   const value = 'testing';
   const validationError = {
-    reasonForVisitingOther: { text: 'Reason for visiting other error message' },
+    text: 'Reason for visiting other error message',
   };
 
   beforeEach(() => {
-    wrapper = render({ value, validationError });
+    wrapper = render({
+      value,
+      validationError,
+    });
   });
 
   it('should render text input', () => {
