@@ -77,6 +77,7 @@ const mapV2 = async (portalDealId, v1Deal) => {
     bondTransactions,
     loanTransactions,
     ...comments,
+    editedBy: [],
   };
 
   return mappedV2;
