@@ -10,6 +10,7 @@ describe(component, () => {
 
   const deal = {
     details: {
+      status: 'Ready for Checker\'s approval',
       submissionType: 'Manual Inclusion Application',
     },
     bondTransactions: {
@@ -22,6 +23,8 @@ describe(component, () => {
           currency: { id: 'GBP' },
           facilityStage: 'Unissued',
           requestedCoverStartDate: moment().utc().valueOf(),
+          uniqueIdentificationNumber: '1234',
+          canIssueOrEditIssueFacility: true,
         },
         {
           _id: '2',
@@ -31,6 +34,8 @@ describe(component, () => {
           currency: { id: 'GBP' },
           facilityStage: 'Unissued',
           requestedCoverStartDate: moment().utc().valueOf(),
+          uniqueIdentificationNumber: '1234',
+          canIssueOrEditIssueFacility: true,
         },
       ],
     },
@@ -53,7 +58,7 @@ describe(component, () => {
 
   describe('table rows', () => {
     it('should render columns/elements/text for each bond', () => {
-      const wrapper = render({ user, deal, confirmedRequestedCoverStartDates: [] });
+      const wrapper = render({ user, deal, confirmedRequestedCoverStartDates: [], editable: true });
 
       deal.bondTransactions.items.forEach((facility) => {
         const facilityIdSelector = `[data-cy="bond-${facility._id}"]`;
@@ -83,7 +88,10 @@ describe(component, () => {
         const dealWithBondsThatCanChangeCoverDate = deal;
         dealWithBondsThatCanChangeCoverDate.details.status = 'Acknowledged by UKEF';
         dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].facilityStage = 'Issued';
+        dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].issueFacilityDetailsSubmitted = true;
+
         dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].facilityStage = 'Issued';
+        dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].issueFacilityDetailsSubmitted = true;
 
         const wrapper = render({
           user,

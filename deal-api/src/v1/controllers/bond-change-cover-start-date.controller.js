@@ -48,7 +48,8 @@ exports.updateBondCoverStartDate = async (req, res) => {
         deal,
       );
 
-      if (validationErrors.errorList.requestedCoverStartDate) {
+      if (validationErrors.errorList
+        && validationErrors.errorList.requestedCoverStartDate) {
         return res.status(400).send({
           validationErrors,
           bond,
