@@ -27,7 +27,7 @@
 
   {% include "_partials/print-button.njk" %}
 
-  {{ mandatoryCriteriaBox.render(deal.mandatoryCriteria)}}
+  {{ mandatoryCriteriaBox.render({ mandatoryCriteria: deal.mandatoryCriteria }) }}
 
   {{ eligibilityCriteriaAnswers.render(deal.eligibility)}}
 
