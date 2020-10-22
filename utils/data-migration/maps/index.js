@@ -5,6 +5,7 @@ const mapDealFiles = require('./map-deal-files');
 const mapBondTransactions = require('./map-bond-transactions');
 const mapLoanTransactions = require('./map-loan-transactions');
 const mapComments = require('./map-comments');
+const mapMandatoryCriteria = require('./map-mandatory-criteria');
 
 module.exports = {
   mapDetails,
@@ -14,4 +15,5 @@ module.exports = {
   mapBondTransactions,
   mapLoanTransactions,
   mapComments,
+  mapMandatoryCriteria,
 };
