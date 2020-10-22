@@ -70,7 +70,7 @@ const mapEligibility = (portalDealId, v1Deal) => {
     agentAddressLine3: ecList.Agent_address.Line3,
     agentAddressTown: ecList.Agent_address.Town,
     agentAddressPostcode: ecList.Agent_address.PostalCode,
-    status: 'Complete',
+    status: 'Completed',
   };
 
   return [
