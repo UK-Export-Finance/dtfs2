@@ -1,6 +1,7 @@
 const submissionDetailsRules = require('./submission-details-rules');
 const bondRules = require('./bond');
 const loanRules = require('./loan');
+const isValidationRequired = require('./is-validation-required');
 
 module.exports = (deal) => {
   // ideally we want this to recursively call into everything inside the deal..
@@ -15,10 +16,16 @@ module.exports = (deal) => {
   //  - so this probably wants separating out and making distinct somehow..
 
   const validationErrors = {
-    submissionDetailsErrors: submissionDetailsRules(deal.submissionDetails),
+    submissionDetailsErrors: {},
     bondErrors: {},
     loanErrors: {},
   };
+
+  if (!isValidationRequired(deal)) {
+    return validationErrors;
+  }
+
+  validationErrors.submissionDetailsErrors = submissionDetailsRules(deal.submissionDetails);
 
   deal.bondTransactions.items.filter((bond) => {
     validationErrors.bondErrors[bond._id] = bondRules(bond, deal);// eslint-disable-line no-underscore-dangle

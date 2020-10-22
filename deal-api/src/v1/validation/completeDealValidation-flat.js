@@ -1,6 +1,7 @@
 const submissionDetailsRules = require('./submission-details-rules');
 const bondRules = require('./bond');
 const loanRules = require('./loan');
+const isValidationRequired = require('./is-validation-required');
 
 module.exports = (deal) => {
   // ideally we want this to recursively call into everything inside the deal..
@@ -13,6 +14,14 @@ module.exports = (deal) => {
   // we know they're wrong,  we also have 'hard validation' amongst this at the moment-
   // eg. deal-status validation is all saying "no, this is not valid i wont do it.."
   //  - so this probably wants separating out and making distinct somehow..
+
+  if (!isValidationRequired(deal)) {
+    return {
+      submissionDetailsErrors: {},
+      bondErrors: {},
+      loanErrors: {},
+    };
+  }
 
   let validationErrors = {
     ...submissionDetailsRules(deal.submissionDetails),
