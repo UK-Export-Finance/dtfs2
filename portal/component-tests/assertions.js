@@ -72,7 +72,7 @@ const assertions = (wrapper, html, params) => {
     expectElement: (selector) => {
       return {
         toExist: () => {
-          expect(wrapper(selector).html()).toBeDefined();
+          expect(wrapper(selector).html()).not.toBeNull();
         },
         notToExist: () => {
           expect(wrapper(selector).html()).toBeNull();
