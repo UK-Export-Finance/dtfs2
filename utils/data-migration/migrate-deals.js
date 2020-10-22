@@ -2,7 +2,14 @@ const xml2js = require('xml2js');
 const fileshare = require('./helpers/fileshare');
 require('dotenv').config();
 const {
-  mapDetails, mapEligibility, mapSubmissionDetails, mapDealFiles, mapBondTransactions, mapLoanTransactions, mapComments,
+  mapDetails,
+  mapEligibility,
+  mapSubmissionDetails,
+  mapDealFiles,
+  mapBondTransactions,
+  mapLoanTransactions,
+  mapComments,
+  mapMandatoryCriteria,
 } = require('./maps');
 const { initBanks } = require('./helpers/banks');
 const { initUsers } = require('./helpers/users');
@@ -52,6 +59,7 @@ const mapV2 = async (portalDealId, v1Deal) => {
   const [bondTransactions, bondTransactionsError] = mapBondTransactions(portalDealId, v1Deal);
   const [loanTransactions, loanTransactionsError] = mapLoanTransactions(portalDealId, v1Deal);
   const comments = mapComments(v1Deal);
+  const mandatoryCriteria = mapMandatoryCriteria(v1Deal);
 
   if (
     detailsError
@@ -78,6 +86,7 @@ const mapV2 = async (portalDealId, v1Deal) => {
     loanTransactions,
     ...comments,
     editedBy: [],
+    mandatoryCriteria,
   };
 
   return mappedV2;
