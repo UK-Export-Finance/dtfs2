@@ -76,10 +76,12 @@ module.exports = {
       // tell webpack to pass index.njk through the nunjucks-html-loader
       template: 'nunjucks-html-loader!./templates/index.njk',
     }),
-    new CopyPlugin([
-      { from: './node_modules/govuk-frontend/govuk/assets', to: './assets' },
-      { from: './static/images', to: './assets/images' },
-      { from: './static/*', flatten: true },
-    ]),
+    new CopyPlugin({
+      patterns: [
+        { from: './node_modules/govuk-frontend/govuk/assets', to: './assets' },
+        { from: './static/images', to: './assets/images' },
+        { from: './static/*', flatten: true },
+      ],
+    }),
   ],
 };
