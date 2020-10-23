@@ -80,7 +80,7 @@ context('A checker submits an approval for a deal; workflow responds with a type
     ukefComments.specialCondition.title().should('not.exist');
     ukefComments.specialCondition.text().should('not.exist');
 
-    contract.checkDealDetailsTab).click();
+    contract.checkDealDetailsTab().click();
     ukefComments.comments.title().should('not.exist');
     ukefComments.comments.text().should('not.exist');
     ukefComments.specialCondition.title().should('not.exist');
@@ -139,7 +139,7 @@ context('A checker submits an approval for a deal; workflow responds with a type
     ukefComments.specialCondition.title().should('not.exist');
     ukefComments.specialCondition.text().should('not.exist');
 
-    contract.checkDealDetailsTab).click();
+    contract.checkDealDetailsTab().click();
     ukefComments.comments.title().should('not.exist');
     ukefComments.comments.text().should('not.exist');
     ukefComments.specialCondition.title().should('not.exist');
@@ -198,7 +198,7 @@ context('A checker submits an approval for a deal; workflow responds with a type
     ukefComments.specialCondition.title().should('not.exist');
     ukefComments.specialCondition.text().should('not.exist');
 
-    contract.checkDealDetailsTab).click();
+    contract.checkDealDetailsTab().click();
     ukefComments.comments.title().should('not.exist');
     ukefComments.comments.text().should('not.exist');
     ukefComments.specialCondition.title().should('not.exist');
@@ -261,7 +261,7 @@ context('A checker submits an approval for a deal; workflow responds with a type
       expect(text.trim()).to.equal('special condition text');
     });
 
-    contract.checkDealDetailsTab).click();
+    contract.checkDealDetailsTab().click();
     ukefComments.specialCondition.title().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Special Conditions:');
     });
@@ -330,7 +330,7 @@ context('A checker submits an approval for a deal; workflow responds with a type
     ukefComments.specialCondition.title().should('not.exist');
     ukefComments.specialCondition.text().should('not.exist');
 
-    contract.checkDealDetailsTab).click();
+    contract.checkDealDetailsTab().click();
     ukefComments.comments.title().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Reason for rejection:');
     });
