@@ -18,7 +18,7 @@
     "basic-auth": "^2.0.0",
     "basic-auth-connect": "^1.0.0",
     "body-parser": "^1.14.1",
-    "browser-sync": "^2.11.1",
+    "browser-sync": "^2.26.13",
     "client-sessions": "^0.8.0",
     "cookie-parser": "^1.4.5",
     "cross-spawn": "^7.0.2",
