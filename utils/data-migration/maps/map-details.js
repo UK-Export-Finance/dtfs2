@@ -42,7 +42,10 @@ const mapDetails = (portalDealId, v1Deal) => {
     ? v1Deal.Deal_information.Extra_fields.All_Makers.Maker[0].username
     : v1Deal.Deal_information.Extra_fields.All_Makers.Maker.username;
 
-  const maker = getUserByEmail(makerUsername);
+  const minUsername = v1Deal.Deal_information.Extra_fields.MIN_Maker.username;
+
+  const maker = minUsername ? getUserByEmail(minUsername) : getUserByEmail(makerUsername);
+
   if (maker.username) {
     details.maker = maker;
   } else {
