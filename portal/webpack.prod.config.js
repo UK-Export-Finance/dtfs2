@@ -34,7 +34,7 @@ module.exports = {
     minimize: true,
     minimizer: [
       new TerserPlugin(),
-      new OptimizeCSSAssetsPlugin({})
+      new OptimizeCSSAssetsPlugin({}),
     ],
   },
   module: {
