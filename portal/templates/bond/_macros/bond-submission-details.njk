@@ -139,26 +139,28 @@
         </div>
       {% endif %}
 
-      {% if bond.currency.text %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key govuk-body-s">
-            Currency
-          </dt>
-          <dd class="govuk-summary-list__value govuk-body-s" data-cy="currency">
-            {{ bond.currency.text }}
-          </dd>
-        </div>
-      {% endif %}
+      {% if bond.currencySameAsSupplyContractCurrency !== "true" %}
+        {% if bond.currency.text %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-body-s">
+              Currency
+            </dt>
+            <dd class="govuk-summary-list__value govuk-body-s" data-cy="currency">
+              {{ bond.currency.text }}
+            </dd>
+          </div>
+        {% endif %}
 
-      {% if bond.conversionRate %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key govuk-body-s">
-            Conversion rate to the Supply Contract currency
-          </dt>
-          <dd class="govuk-summary-list__value govuk-body-s" data-cy="conversion-rate">
-            {{ bond.conversionRate }}
-          </dd>
-        </div>
+        {% if bond.conversionRate %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-body-s">
+              Conversion rate to the Supply Contract currency
+            </dt>
+            <dd class="govuk-summary-list__value govuk-body-s" data-cy="conversion-rate">
+              {{ bond.conversionRate }}
+            </dd>
+          </div>
+        {% endif %}
       {% endif %}
 
 
