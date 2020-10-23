@@ -106,26 +106,28 @@
         </div>
       {% endif %}
 
-      {% if loan.currency %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key govuk-body-s">
-            Currency
-          </dt>
-          <dd class="govuk-summary-list__value govuk-body-s" data-cy="currency">
-            {{ loan.currency.text }}
-          </dd>
-        </div>
-      {% endif %}
+      {% if loan.currencySameAsSupplyContractCurrency !== "true" %}
+        {% if loan.currency %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-body-s">
+              Currency
+            </dt>
+            <dd class="govuk-summary-list__value govuk-body-s" data-cy="currency">
+              {{ loan.currency.text }}
+            </dd>
+          </div>
+        {% endif %}
 
-      {% if loan.conversionRate %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key govuk-body-s">
-            Conversion rate to the supply contract currency
-          </dt>
-          <dd class="govuk-summary-list__value govuk-body-s" data-cy="conversion-rate">
-            {{ loan.conversionRate }}
-          </dd>
-        </div>
+        {% if loan.conversionRate %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-body-s">
+              Conversion rate to the supply contract currency
+            </dt>
+            <dd class="govuk-summary-list__value govuk-body-s" data-cy="conversion-rate">
+              {{ loan.conversionRate }}
+            </dd>
+          </div>
+        {% endif %}
       {% endif %}
       
       {% if loan['conversionRateDate-day'] and loan['conversionRateDate-month'] and loan['conversionRateDate-year'] %}

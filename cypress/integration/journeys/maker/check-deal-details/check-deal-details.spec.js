@@ -83,4 +83,34 @@ context('Check deal details', () => {
     pages.contractSubmissionDetails.editLinkLoan(dealId, loanId).click();
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/guarantee-details`));
   });
+
+  it('Should only display bond currency if different to deal', () => {
+    cy.login({ ...MAKER_LOGIN });
+
+    goToCheckDealDetailsPage();
+
+    const differentBondCurrencyId = dealInDraft.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const differentBondCurrency = pages.contractSubmissionDetails.currencyInfoFacility('bond', differentBondCurrencyId);
+    differentBondCurrency.sameAsDealCurrency().should('contain.text', 'No');
+    differentBondCurrency.currency().should('exist');
+    differentBondCurrency.conversionRate().should('exist');
+
+    const sameBondCurrencyId = dealInDraft.bondTransactions.items[1]._id; // eslint-disable-line no-underscore-dangle
+    const sameBondCurrency = pages.contractSubmissionDetails.currencyInfoFacility('bond', sameBondCurrencyId);
+    sameBondCurrency.sameAsDealCurrency().should('contain.text', 'Yes');
+    sameBondCurrency.currency().should('not.exist');
+    sameBondCurrency.conversionRate().should('not.exist');
+
+    const differentLoanCurrencyId = dealInDraft.loanTransactions.items[1]._id; // eslint-disable-line no-underscore-dangle
+    const differentLoanCurrency = pages.contractSubmissionDetails.currencyInfoFacility('loan', differentLoanCurrencyId);
+    differentLoanCurrency.sameAsDealCurrency().should('contain.text', 'No');
+    differentLoanCurrency.currency().should('exist');
+    differentLoanCurrency.conversionRate().should('exist');
+
+    const sameLoanCurrencyId = dealInDraft.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const sameLoanCurrency = pages.contractSubmissionDetails.currencyInfoFacility('loan', sameLoanCurrencyId);
+    sameLoanCurrency.sameAsDealCurrency().should('contain.text', 'Yes');
+    sameLoanCurrency.currency().should('not.exist');
+    sameLoanCurrency.conversionRate().should('not.exist');
+  });
 });
