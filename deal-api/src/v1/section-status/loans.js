@@ -1,5 +1,6 @@
 const loanValidationErrors = require('../validation/loan');
 const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
+const isValidationRequired = require('../validation/is-validation-required');
 const CONSTANTS = require('../../constants');
 
 const loanStatus = (loan, loanErrors, loanIssueFacilityErrors) => {
@@ -58,9 +59,8 @@ const addAccurateStatusesToLoans = (
   if (deal.loanTransactions.items.length) {
     deal.loanTransactions.items.forEach((l) => {
       const loan = l;
-      const validationErrors = loanValidationErrors(loan, deal);
+      const validationErrors = isValidationRequired(deal) && loanValidationErrors(loan, deal);
       let issueFacilityValidationErrors;
-
       if (loan.issueFacilityDetailsStarted
           && loanHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, submissionType, loan)) {
         issueFacilityValidationErrors = loanIssueFacilityValidationErrors(
