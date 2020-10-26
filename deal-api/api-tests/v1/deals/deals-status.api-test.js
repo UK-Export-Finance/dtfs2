@@ -139,6 +139,28 @@ describe('/v1/deals/:id/status', () => {
       expect(status).toEqual(404);
     });
 
+    it('400s when new status is the same as the existing status', async () => {
+      const submittedDeal = {
+        ...completedDeal,
+        details: {
+          ...completedDeal.details,
+          status: 'Submitted'
+        },
+      };
+
+      const postResult = await as(anHSBCMaker).post(submittedDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        comments: 'Flee!',
+        status: submittedDeal.details.status,
+      };
+
+      const { status, body } = await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+
+      expect(status).toEqual(400);
+      expect(body.success).toEqual(false);
+    });
+
     it('returns the updated status', async () => {
       const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
       const createdDeal = postResult.body;
@@ -324,7 +346,15 @@ describe('/v1/deals/:id/status', () => {
     });
 
     it("rejects 'Ready for Checker's approval' updates if no comment provided.", async () => {
-      const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
+      const draftDeal = {
+        ...completedDeal,
+        details: {
+          ...completedDeal.details,
+          status: 'Draft',
+        },
+      };
+
+      const postResult = await as(anHSBCMaker).post(draftDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const statusUpdate = {
         status: "Ready for Checker's approval",
