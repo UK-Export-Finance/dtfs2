@@ -1,5 +1,7 @@
 const bondValidationErrors = require('../validation/bond');
 const bondIssueFacilityValidationErrors = require('../validation/bond-issue-facility');
+const isValidationRequired = require('../validation/is-validation-required');
+
 const CONSTANTS = require('../../constants');
 
 const bondStatus = (bond, bondErrors, bondIssueFacilityErrors) => {
@@ -58,7 +60,7 @@ const addAccurateStatusesToBonds = (
   if (deal.bondTransactions.items.length) {
     deal.bondTransactions.items.forEach((b) => {
       const bond = b;
-      const validationErrors = bondValidationErrors(bond, deal);
+      const validationErrors = isValidationRequired(deal) && bondValidationErrors(bond, deal);
       let issueFacilityValidationErrors;
 
       if (bond.issueFacilityDetailsStarted
