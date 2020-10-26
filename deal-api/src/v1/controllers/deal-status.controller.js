@@ -45,7 +45,7 @@ exports.update = (req, res) => {
 
     if (toStatus === fromStatus) {
       return res.status(400).send({
-        success: false
+        success: false,
       });
     }
 
