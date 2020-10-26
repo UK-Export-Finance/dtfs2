@@ -31,7 +31,9 @@ context('A checker confirms a deal; workflow responds with a confirmation_acknow
   });
 
   it('Checker submits a deal; workflow responds; UKEF_deal_id is updated within portal.', () => {
-    // log in, visit a deal, select abandon
+    //---------------------------------------------------------------
+    // Checker logs in, submits deal to UKEF
+    //---------------------------------------------------------------
     cy.login(CHECKER_LOGIN);
     contract.visit(goodDeal);
     contract.proceedToSubmit().click();
