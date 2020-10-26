@@ -16,11 +16,7 @@ module.exports = (deal) => {
   //  - so this probably wants separating out and making distinct somehow..
 
   if (!isValidationRequired(deal)) {
-    return {
-      submissionDetailsErrors: {},
-      bondErrors: {},
-      loanErrors: {},
-    };
+    return {};
   }
 
   let validationErrors = {
