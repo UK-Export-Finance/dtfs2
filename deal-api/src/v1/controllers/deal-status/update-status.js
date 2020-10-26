@@ -5,10 +5,14 @@ const updateStatus = async (collection, _id, from, to) => {
   const statusUpdate = {
     details: {
       status: to,
-      previousStatus: from,
       dateOfLastAction: now(),
     },
   };
+
+
+  if (from !== to) {
+    statusUpdate.details.previousStatus = from;
+  }
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id },
