@@ -71,19 +71,16 @@ const mapDetails = (portalDealId, v1Deal) => {
 
   const ecAnswer = v1Deal.Eligibility_checklist.Extra_fields.Ec_answers.Ec_answer;
 
-  const isAIN = ecAnswer.filter(({ Answer }) => Answer === 'True').length === ecAnswer.length;
-  const isMIA = ecAnswer.filter(({ Answer }) => Answer === 'False').length > 0;
-  const isMIN = isMIA
+  details.submissionType = ecAnswer.find(({ Answer }) => Answer === 'False')
+    ? CONSTANTS.DEAL.SUBMISSION_TYPE.MIA : CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
+
+  const isMIN = details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
     && typeof v1Deal.Deal_information.Extra_fields.Submission_date_MIN === 'string'
     && Boolean(v1Deal.Deal_information.Extra_fields.Submission_date_MIN);
 
   if (isMIN) {
     details.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
     details.manualInclusionNoticeSubmissionDate = convertV1Date(v1Deal.Deal_information.Extra_fields.Submission_date_MIN);
-  } else if (isMIA) {
-    details.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
-  } else if (isAIN) {
-    details.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
   }
 
   return [
