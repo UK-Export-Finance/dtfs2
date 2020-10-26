@@ -185,6 +185,23 @@ describe('/v1/deals/:id/status', () => {
       expect(body.deal.details.dateOfLastAction).not.toEqual(completedDeal.details.dateOfLastAction);
     });
 
+    it('updates the deals.details.previousStatus field', async () => {
+      const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        comments: 'Flee!',
+        status: 'Abandoned Deal',
+      };
+
+      await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+
+      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+
+      expect(status).toEqual(200);
+      expect(body.deal.details.previousStatus).toEqual(createdDeal.details.status);
+      expect(body.deal.details.status).toEqual('Abandoned Deal');
+    });
+
     it('updates details.previousWorkflowStatus only when relevant workflow status changed', async () => {
       const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
       const createdDeal = postResult.body;
@@ -198,6 +215,24 @@ describe('/v1/deals/:id/status', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(body.deal.details.previousWorkflowStatus).toEqual('Draft');
+    });
+
+    it('does NOT update previousStatus if the `from` and `to` status matches', async () => {
+      const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        comments: 'Flee!',
+        status: completedDeal.details.status
+      };
+
+      const expectedPreviousStatus = completedDeal.details.previousStatus;
+
+      await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+
+      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+
+      expect(body.deal.details.previousStatus).toEqual(expectedPreviousStatus);
+      expect(body.deal.details.status).toEqual(completedDeal.details.status);
     });
 
     it('adds the comment to the existing comments', async () => {
@@ -262,7 +297,7 @@ describe('/v1/deals/:id/status', () => {
       expect(sendStatusUpdateEmails).toHaveBeenCalled();
     });
 
-    it('does not send an email if the status hasn\'t changed', async () => {
+    it('does NOT send an email if the status hasn\'t changed', async () => {
       const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const statusUpdate = {
@@ -324,7 +359,15 @@ describe('/v1/deals/:id/status', () => {
     });
 
     it("rejects 'Ready for Checker's approval' updates if no comment provided.", async () => {
-      const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
+      const draftDeal = {
+        ...completedDeal,
+        details: {
+          ...completedDeal.details,
+          status: 'Draft',
+        },
+      };
+
+      const postResult = await as(anHSBCMaker).post(draftDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const statusUpdate = {
         status: "Ready for Checker's approval",

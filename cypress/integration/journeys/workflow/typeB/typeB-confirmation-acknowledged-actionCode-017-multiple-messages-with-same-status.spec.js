@@ -1,15 +1,12 @@
 const pages = require('../../../pages');
-const relative = require('../../../relativeURL');
-
 const mockUsers = require('../../../../fixtures/mockUsers');
 
 const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'Barclays Bank'));
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 
-// test data we want to set up + work with..
 const dealReadyToSubmitWithAlreadySubmittedIssuedFacilities = require('./test-data/MIA-deal-ready-to-submit-with-already-submitted-issued-facilities');
 
-context('A checker submits a deal; workflow responds with a confirmation_acknowledged status and empty facility statuses', () => {
+context('Checker submits a deal; workflow responds twice with the same confirmation_acknowledged status', () => {
   let deal;
 
   beforeEach(() => {
@@ -28,17 +25,25 @@ context('A checker submits a deal; workflow responds with a confirmation_acknowl
       });
   });
 
-  it('Checker submits a deal; workflow responds; deal and facilities statuses are updated', () => {
+  it('deal status should not have duplicate `current` and `previous` statuses', () => {
     //---------------------------------------------------------------
     // Checker logs in, submits deal to UKEF
     //---------------------------------------------------------------
     cy.login(CHECKER_LOGIN);
     pages.contract.visit(deal);
+
+    pages.contract.status().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Ready for Checker\'s approval');
+    });
+
     pages.contract.proceedToSubmit().click();
 
     pages.contractConfirmSubmission.confirmSubmit().check();
     pages.contractConfirmSubmission.acceptAndSubmit().click();
 
+    //---------------------------------------------------------------
+    // Receive type B message with `approved` status
+    //---------------------------------------------------------------
     cy.sendTypeB({
       header: {
         portal_deal_id: deal._id,
@@ -59,6 +64,37 @@ context('A checker submits a deal; workflow responds with a confirmation_acknowl
           BSS_comments: 'blahblah blah blahblah',
         },
       ],
+      loans: [],
+    });
+
+    //---------------------------------------------------------------
+    // Deal status should be updated
+    //---------------------------------------------------------------
+    pages.contract.visit(deal);
+    pages.contract.status().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Accepted by UKEF (with conditions)');
+    });
+
+    pages.contract.previousStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Submitted');
+    });
+
+    //---------------------------------------------------------------
+    // Receive a second type B message with the same, `approved` status
+    //---------------------------------------------------------------
+    cy.sendTypeB({
+      header: {
+        portal_deal_id: deal._id,
+        bank_deal_id: deal.details.bankSupplyContractID,
+        Message_Type: 'B',
+        Action_Code: '017',
+      },
+      deal: {
+        UKEF_deal_id: '123456',
+        Deal_status: 'approved_conditions',
+        Deal_comments: 'blah blah',
+      },
+      bonds: [],
       loans: [
         {
           EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
@@ -69,23 +105,21 @@ context('A checker submits a deal; workflow responds with a confirmation_acknowl
       ],
     });
 
+    //---------------------------------------------------------------
+    // Deal status should not be update, should remain the same
+    // Deal status should not have duplicate statuses
+    //---------------------------------------------------------------
     pages.contract.visit(deal);
     pages.contract.status().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Accepted by UKEF (with conditions)');
     });
 
-    const bondId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
-    const bondRow = pages.contract.bondTransactionsTable.row(bondId);
-
-    bondRow.bondStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acknowledged');
+    pages.contract.previousStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.not.equal('Accepted by UKEF (with conditions)');
     });
 
-    const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
-    const loanRow = pages.contract.loansTransactionsTable.row(loanId);
-
-    loanRow.loanStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acknowledged');
+    pages.contract.previousStatus().invoke('text').then((text) => {
+      expect(text.trim()).to.equal('Submitted');
     });
   });
 });
