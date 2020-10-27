@@ -53,7 +53,6 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
 
       const statusUpdate = {
         status: 'Ready for Checker\'s approval',
-        confirmSubmit: true,
       };
 
       updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${submittedMinDeal._id}/status`);
