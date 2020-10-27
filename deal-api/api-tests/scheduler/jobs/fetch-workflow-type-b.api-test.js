@@ -7,7 +7,7 @@ typeBController.processTypeB = jest.fn(() => Promise.resolve({ success: true }))
 const fetchWorkflowTypeB = require('../../../src/scheduler/jobs/fetch-workflow-type-b');
 const fileshare = require('../../../src/drivers/fileshare');
 
-describe('schedule fetching of type b', () => {
+xdescribe('schedule fetching of type b', () => {
   const originalWarn = console.warn;
   const originalLog = console.log;
 
