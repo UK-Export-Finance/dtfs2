@@ -19,16 +19,15 @@ const updateSubmittedIssuedFacilities = async (user, collection, deal) => {
       const shouldUpdateIssuedFacility = ((shouldUpdateLoan
                                           || shouldUpdateBond)
                                           && facility.issueFacilityDetailsProvided
+                                          && !facility.issueFacilityDetailsSubmitted
                                           && facility.status === CONSTANTS.FACILITIES.STATUS.READY_FOR_APPROVAL);
-
-      if (shouldUpdateLoan || shouldUpdateBond) {
-        facility.issuedFacilitySubmittedToUkefTimestamp = now();
-        facility.issuedFacilitySubmittedToUkefBy = user;
-      }
 
       if (shouldUpdateIssuedFacility) {
         facility.issueFacilityDetailsSubmitted = true;
         facility.status = CONSTANTS.FACILITIES.STATUS.SUBMITTED;
+
+        facility.issuedFacilitySubmittedToUkefTimestamp = now();
+        facility.issuedFacilitySubmittedToUkefBy = user;
       }
 
       return facility;
