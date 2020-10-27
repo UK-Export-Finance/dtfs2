@@ -157,8 +157,6 @@ module.exports.login = async (req, res, next) => {
   const loginResult = await login(username, password);
 
   if (loginResult.err) {
-    console.log(`Login failed: ${loginResult.err}`);
-
     // pick out the specific cases we understand and could treat differently
     if (userNotFound === loginResult.err) {
       return res.status(401).json({ success: false, msg: 'could not find user' });
@@ -174,12 +172,10 @@ module.exports.login = async (req, res, next) => {
     }
 
     // otherwise this is a technical failure during the lookup
-    console.log(`login attempt failed unexpectedly: ${loginResult.err}`);
     return next(loginResult.err);
   }
   const { tokenObject, user } = loginResult;
 
-  console.log('Login success');
   return res.status(200).json({
     success: true, token: tokenObject.token, user: sanitizeUser(user), expiresIn: tokenObject.expires,
   });
