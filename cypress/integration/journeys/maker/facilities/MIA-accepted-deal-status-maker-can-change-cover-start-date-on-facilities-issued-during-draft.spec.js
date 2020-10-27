@@ -8,7 +8,6 @@ const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') &
 
 context('Given an MIA Deal in Draft with an Issued Bond and Unconditional Loan', () => {
   let deal;
-  // let dealId;
 
   beforeEach(() => {
     cy.on('uncaught:exception', (err, runnable) => {
@@ -22,7 +21,6 @@ context('Given an MIA Deal in Draft with an Issued Bond and Unconditional Loan',
     cy.insertOneDeal(MIADraftDealWithIssuedFacilities, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
-        // dealId = deal._id; // eslint-disable-line no-underscore-dangle
       });
   });
 
@@ -55,7 +53,7 @@ context('Given an MIA Deal in Draft with an Issued Bond and Unconditional Loan',
     //---------------------------------------------------------------
     cy.sendTypeB({
       header: {
-        portal_deal_id: deal._id,
+        portal_deal_id: deal._id, // eslint-disable-line no-underscore-dangle
         bank_deal_id: deal.details.bankSupplyContractID,
         Message_Type: 'B',
         Action_Code: '017',
@@ -67,7 +65,7 @@ context('Given an MIA Deal in Draft with an Issued Bond and Unconditional Loan',
       },
       bonds: [
         {
-          BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
+          BSS_portal_facility_id: deal.bondTransactions.items[0]._id, // eslint-disable-line no-underscore-dangle
           BSS_ukef_facility_id: '54321',
           BSS_status: '',
           BSS_comments: 'test',
@@ -75,7 +73,7 @@ context('Given an MIA Deal in Draft with an Issued Bond and Unconditional Loan',
       ],
       loans: [
         {
-          EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
+          EWCS_portal_facility_id: deal.loanTransactions.items[0]._id, // eslint-disable-line no-underscore-dangle
           EWCS_ukef_facility_id: '65432',
           EWCS_status: '',
           EWCS_comments: 'test',
