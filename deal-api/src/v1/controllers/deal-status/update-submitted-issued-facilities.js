@@ -22,8 +22,11 @@ const updateSubmittedIssuedFacilities = async (user, collection, deal) => {
                                           && !facility.issueFacilityDetailsSubmitted
                                           && facility.status === CONSTANTS.FACILITIES.STATUS.READY_FOR_APPROVAL);
 
-      if (shouldUpdateIssuedFacility) {
+      if (shouldUpdateLoan || shouldUpdateBond) {
         facility.issueFacilityDetailsSubmitted = true;
+      }
+
+      if (shouldUpdateIssuedFacility) {
         facility.status = CONSTANTS.FACILITIES.STATUS.SUBMITTED;
 
         facility.issuedFacilitySubmittedToUkefTimestamp = now();
