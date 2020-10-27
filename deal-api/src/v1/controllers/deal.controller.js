@@ -253,12 +253,11 @@ const handleEditedBy = async (req) => {
     // ideally we could refactor, perhaps, so that no partial updates are allowed.
     // but for now...
     if (!req.body.editedBy) {
-      await findOneDeal(req.params.id, (deal) => {
-        editedBy = [
-          ...deal.editedBy,
-          newEditedBy,
-        ];
-      });
+      const deal = await findOneDeal(req.params.id);
+      editedBy = [
+        ...deal.editedBy,
+        newEditedBy,
+      ];
     } else {
       editedBy = [
         ...req.body.editedBy,
