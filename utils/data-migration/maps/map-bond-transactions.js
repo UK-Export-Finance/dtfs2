@@ -52,6 +52,10 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
       v1ExtraInfo,
     };
 
+    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED) {
+      v2bond.status = CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
+    }
+
     if (bond.BSS_Financial_details.BSS_conversion_date_deal) {
     // Conversion date in format dd-mm-yyyy
       [
