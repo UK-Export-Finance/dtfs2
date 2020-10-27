@@ -30,7 +30,6 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
   };
 
   beforeAll(async () => {
-    // await wipeDB.wipe(['deals']);
     const testUsers = await testUserCache.initialise(app);
     const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
     aBarclaysMaker = barclaysMakers[0];
@@ -39,46 +38,136 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
   });
 
   describe('when a deal status changes to `Submitted`', () => {
-    let submittedMinDeal;
     let updatedDeal;
+    let dealId;
+
+    const loanReadyForCheck = (id) => ({
+      _id: id,
+      facilityStage: 'Unconditional',
+      previousFacilityStage: 'Conditional',
+      ukefGuaranteeInMonths: '12',
+      bankReferenceNumber: '123456',
+      guaranteeFeePayableByBank: '10.8000',
+      ukefExposure: '2,469,135.60',
+      facilityValue: '12345678',
+      currencySameAsSupplyContractCurrency: 'false',
+      interestMarginFee: '12',
+      coveredPercentage: '20',
+      minimumQuarterlyFee: '20',
+      premiumFrequency: 'Monthly',
+      premiumType: 'In advance',
+      dayCountBasis: '365',
+      currency: {
+        text: 'GBP - UK Sterling',
+        id: 'GBP',
+      },
+      conversionRate: '80',
+      'conversionRateDate-day': `${moment().subtract(1, 'day').format('DD')}`,
+      'conversionRateDate-month': `${moment().subtract(1, 'day').format('MM')}`,
+      'conversionRateDate-year': `${moment().format('YYYY')}`,
+      disbursementAmount: '10',
+      issuedDate: moment().utc().valueOf(),
+      'coverEndDate-day': `${moment().add(1, 'month').format('DD')}`,
+      'coverEndDate-month': `${moment().add(1, 'month').format('MM')}`,
+      'coverEndDate-year': `${moment().add(1, 'month').format('YYYY')}`,
+      issueFacilityDetailsStarted: true,
+      issueFacilityDetailsProvided: true,
+      status: 'Ready for check',
+    });
+
+    const bondReadyForCheck = (id) => ({
+      _id: id,
+      bondIssuer: 'issuer',
+      bondType: 'Retention bond',
+      facilityStage: 'Issued',
+      previousFacilityStage: 'Unissued',
+      ukefGuaranteeInMonths: '24',
+      uniqueIdentificationNumber: '1234',
+      bondBeneficiary: 'test',
+      facilityValue: '123456.55',
+      currencySameAsSupplyContractCurrency: 'true',
+      riskMarginFee: '9.09',
+      coveredPercentage: '2',
+      feeType: 'In arrear',
+      feeFrequency: 'Monthly',
+      dayCountBasis: '360',
+      guaranteeFeePayableByBank: '12.345',
+      ukefExposure: '1,234.56',
+      issuedDate: moment().utc().valueOf(),
+      'coverEndDate-day': `${moment().add(1, 'month').format('DD')}`,
+      'coverEndDate-month': `${moment().add(1, 'month').format('MM')}`,
+      'coverEndDate-year': `${moment().add(1, 'month').format('YYYY')}`,
+      uniqueIdentificationNumber: '1234567890',
+      issueFacilityDetailsProvided: true,
+      status: 'Ready for check',
+    });
 
     beforeEach(async () => {
-      // const minDeal = completedDeal;
-      // minDeal.details.manualInclusionNoticeSubmissionDate = moment().utc().valueOf();
-      // minDeal.details.status = 'Accepted by UKEF (without conditions)';
+      const completedDealWithReadyForCheckFacilities = {
+        ...completedDeal,
+        loanTransactions: {
+          items: [
+            loanReadyForCheck('1234'),
+            loanReadyForCheck('5678'),
+          ],
+        },
+        bondTransactions: {
+          items: [
+            bondReadyForCheck('1234'),
+            bondReadyForCheck('5678'),
+          ],
+        },
+      };
 
-      const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(minDeal))).to('/v1/deals');
-
-      const deal = postResult.body;
+      const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(completedDealWithReadyForCheckFacilities))).to('/v1/deals');
 
       const statusUpdate = {
         status: 'Submitted',
         confirmSubmit: true,
       };
 
-      updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${deal._id}/status`);
+      updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${postResult.body._id}/status`);
+      dealId = updatedDeal.body._id;
     });
 
-    // describe('any issued bonds that have details provided, not yet submitted and no requestedCoverStartDate', () => {
-    //   it('defaults requestedCoverStartDate to the manualInclusionNoticeSubmissionDate', async () => {
-    //     expect(updatedDeal.status).toEqual(200);
-    //     expect(updatedDeal.body).toBeDefined();
+    describe('any Unconditional loans that have issueFacilityDetailsProvided, `Ready for check` status and NOT issueFacilityDetailsSubmitted', () => {
+      it('should change status to `Submitted`, add issueFacilityDetailsSubmitted, submitted timestamp and submitted by', async () => {
+        expect(updatedDeal.status).toEqual(200);
+        expect(updatedDeal.body).toBeDefined();
 
-    //     const { body } = await as(aSuperuser).get(`/v1/deals/${submittedMinDeal._id}`);
+        const { body } = await as(aSuperuser).get(`/v1/deals/${dealId}`);
+        const deal = body.deal;
 
-    //     const issuedBondsThatShouldBeUpdated = submittedMinDeal.bondTransactions.items.filter((b) =>
-    //       isUnsubmittedIssuedFacility(b)
-    //       && !b.requestedCoverStartDate);
+        deal.loanTransactions.items.forEach((loan) => {
+          expect(loan.issueFacilityDetailsSubmitted).toEqual(true);
+          expect(loan.status).toEqual('Submitted');
+          expect(typeof loan.issuedFacilitySubmittedToUkefTimestamp).toEqual('string');
+          expect(loan.issuedFacilitySubmittedToUkefBy.username).toEqual(aBarclaysChecker.username);
+          expect(loan.issuedFacilitySubmittedToUkefBy.email).toEqual(aBarclaysChecker.email);
+          expect(loan.issuedFacilitySubmittedToUkefBy.firstname).toEqual(aBarclaysChecker.firstname);
+          expect(loan.issuedFacilitySubmittedToUkefBy.lastname).toEqual(aBarclaysChecker.lastname);
+        });
+      });
+    });
 
-    //     // make sure we have some bonds to test against
-    //     expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
+    describe('any Issued bonds that have issueFacilityDetailsProvided, `Ready for check` status and NOT issueFacilityDetailsSubmitted', () => {
+      it('should change status to `Submitted`, add issueFacilityDetailsSubmitted, submitted timestamp and submitted by', async () => {
+        expect(updatedDeal.status).toEqual(200);
+        expect(updatedDeal.body).toBeDefined();
 
-    //     issuedBondsThatShouldBeUpdated.forEach((bond) => {
-    //       const updatedBond = body.deal.bondTransactions.items.find((l) => l._id === bond._id);
-    //       expect(updatedBond.requestedCoverStartDate).toEqual(submittedMinDeal.details.manualInclusionNoticeSubmissionDate);
-    //     });
-    //   });
-    // });
+        const { body } = await as(aSuperuser).get(`/v1/deals/${dealId}`);
+        const deal = body.deal;
 
+        deal.bondTransactions.items.forEach((bond) => {
+          expect(bond.issueFacilityDetailsSubmitted).toEqual(true);
+          expect(bond.status).toEqual('Submitted');
+          expect(typeof bond.issuedFacilitySubmittedToUkefTimestamp).toEqual('string');
+          expect(bond.issuedFacilitySubmittedToUkefBy.username).toEqual(aBarclaysChecker.username);
+          expect(bond.issuedFacilitySubmittedToUkefBy.email).toEqual(aBarclaysChecker.email);
+          expect(bond.issuedFacilitySubmittedToUkefBy.firstname).toEqual(aBarclaysChecker.firstname);
+          expect(bond.issuedFacilitySubmittedToUkefBy.lastname).toEqual(aBarclaysChecker.lastname);
+        });
+      });
+    });
   });
 });
