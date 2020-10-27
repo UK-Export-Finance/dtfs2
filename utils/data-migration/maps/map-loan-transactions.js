@@ -50,6 +50,10 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
 
     };
 
+    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL) {
+      v2loan.status = CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
+    }
+
     if (loan.EWCS_Financial_details.EWCS_conversion_date_deal) {
     // Conversion date in format dd-mm-yyyy
       [
