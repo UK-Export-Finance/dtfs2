@@ -6,7 +6,7 @@ in one terminal, launch our dependencies:
 ```
 docker-compose up --build
 ```
- 
+
 in a second terminal, execute our api tests:
 ```
 npm run api-test
