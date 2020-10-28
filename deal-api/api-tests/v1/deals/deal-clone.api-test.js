@@ -8,6 +8,19 @@ const { as } = require('../../api')(app);
 const dealToClone = completedDeal;
 
 dealToClone.details.submissionType = 'Automatic Inclusion Notice';
+dealToClone.eligibility = {
+  status: 'Incomplete',
+  criteria: completedDeal.eligibility.criteria,
+  validationErrors: {
+    count: 1,
+    errorList: {
+      1: {
+        order: 1,
+        text: 'Field is required',
+      },
+    }
+  }
+};
 
 dealToClone.editedBy = [
   { userId: '1' },
@@ -110,6 +123,52 @@ describe('/v1/deals/:id/clone', () => {
         expect(body.specialConditions).toEqual([]);
       });
 
+      it('clones eligibility', async () => {
+        const clonePostBody = {
+          bankSupplyContractID: 'new-bank-deal-id',
+          bankSupplyContractName: 'new-bank-deal-name',
+          cloneTransactions: 'false',
+        };
+
+        const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        expect(body.eligibility.status).toEqual(originalDeal.eligibility.status);
+        expect(body.eligibility.criteria).toEqual(originalDeal.eligibility.criteria);
+        expect(body.eligibility.validationErrors).toEqual(originalDeal.eligibility.validationErrors);
+      });
+
+      it('clones eligibility agent details', async () => {
+        const dealToCloneWithEligibilityAgentDetails = {
+          ...dealToClone,
+          eligibility: {
+            ...dealToClone.eligibility,
+            agentAddressLine1: completedDeal.agentAddressLine1,
+            agentAddressLine2: completedDeal.agentAddressLine2,
+            agentAddressLine3: completedDeal.agentAddressLine3,
+            agentAddressCountry: completedDeal.agentAddressCountry,
+            agentName: completedDeal.agentName,
+            agentAddressPostcode: completedDeal.agentAddressPostcode,
+            agentAddressTown: completedDeal.agentAddressTown,
+          }
+        };
+
+        const clonePostBody = {
+          bankSupplyContractID: 'new-bank-deal-id',
+          bankSupplyContractName: 'new-bank-deal-name',
+          cloneTransactions: 'false',
+        };
+
+        await as(anHSBCMaker).post(dealToCloneWithEligibilityAgentDetails).to('/v1/deals');
+
+        const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        expect(body.eligibility.agentAddressLine1).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressLine1);
+        expect(body.eligibility.agentAddressLine2).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressLine2);
+        expect(body.eligibility.agentAddressLine3).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressLine3);
+        expect(body.eligibility.agentAddressCountry).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressCountry);
+        expect(body.eligibility.agentName).toEqual(dealToCloneWithEligibilityAgentDetails.agentName);
+        expect(body.eligibility.agentAddressPostcode).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressPostcode);
+        expect(body.eligibility.agentAddressTown).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressTown);
+      });
+
       describe('when deal submissionType is MIN', () => {
         it('should change deal submissionType to MIA', async () => {
           const clonePostBody = {
@@ -129,7 +188,6 @@ describe('/v1/deals/:id/clone', () => {
       });
 
       // TODO: test other things in deal object.
-      // eligibility
       // submissionDetails
       // summary
       // supplyContractCurrency
