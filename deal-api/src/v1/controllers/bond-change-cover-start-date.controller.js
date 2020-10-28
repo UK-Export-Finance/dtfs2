@@ -1,7 +1,7 @@
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { updateBondInDeal } = require('./bonds.controller');
-const bondIssueFacilityValidationErrors = require('../validation/bond-issue-facility');
+const facilityChangeCoverStartDateValidationErrors = require('../validation/facility-change-cover-start-date');
 const {
   hasAllRequestedCoverStartDateValues,
   updateRequestedCoverStartDate,
@@ -43,7 +43,7 @@ exports.updateBondCoverStartDate = async (req, res) => {
         bond = updateRequestedCoverStartDate(bond);
       }
 
-      const validationErrors = bondIssueFacilityValidationErrors(
+      const validationErrors = facilityChangeCoverStartDateValidationErrors(
         bond,
         deal,
       );

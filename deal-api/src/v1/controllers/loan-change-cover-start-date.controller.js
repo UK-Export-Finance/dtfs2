@@ -1,7 +1,7 @@
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const { updateLoanInDeal } = require('./loans.controller');
-const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
+const facilityChangeCoverStartDateValidationErrors = require('../validation/facility-change-cover-start-date');
 const {
   hasAllRequestedCoverStartDateValues,
   updateRequestedCoverStartDate,
@@ -43,7 +43,7 @@ exports.updateLoanCoverStartDate = async (req, res) => {
         loan = updateRequestedCoverStartDate(loan);
       }
 
-      const validationErrors = loanIssueFacilityValidationErrors(
+      const validationErrors = facilityChangeCoverStartDateValidationErrors(
         loan,
         deal,
       );
