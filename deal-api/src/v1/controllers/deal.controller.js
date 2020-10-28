@@ -166,13 +166,13 @@ const createDealEligibility = async (eligibility) => {
       return eligibilityAgentDetails;
     }
     return null;
-  }
+  };
 
   return {
     status: eligibilityStatus,
     criteria: eligibilityCriteriaWithAnswers,
     ...eligibilityCriteria11AgentDetails(),
-  }
+  };
 };
 
 const createDeal = async (req, res) => {
