@@ -421,11 +421,11 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
         count: 1,
         errorList: {
           requestedCoverStartDate: {
-            text: 'Enter the Cover End Date', order: '1',
+            text: 'Enter the Requested Cover Start Date', order: '1',
           },
         },
         summary: [{
-          text: 'Enter the Cover End Date',
+          text: 'Enter the Requested Cover Start Date',
           href: '#requestedCoverStartDate',
         }],
       };
