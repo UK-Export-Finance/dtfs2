@@ -89,7 +89,7 @@ jobs:
         node ./re-insert-mocks.js
     - name: Run API tests
       run: |
-        docker-compose exec -T deal-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --detectOpenHandles --runInBand # --forceExit
+        docker-compose exec -T deal-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --detectOpenHandles --forceExit
     - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}
