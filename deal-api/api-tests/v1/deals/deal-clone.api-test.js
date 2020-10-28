@@ -123,7 +123,7 @@ describe('/v1/deals/:id/clone', () => {
         expect(body.specialConditions).toEqual([]);
       });
 
-      it('clones eligibility', async () => {
+      it('should clone eligibility', async () => {
         const clonePostBody = {
           bankSupplyContractID: 'new-bank-deal-id',
           bankSupplyContractName: 'new-bank-deal-name',
@@ -136,7 +136,7 @@ describe('/v1/deals/:id/clone', () => {
         expect(body.eligibility.validationErrors).toEqual(originalDeal.eligibility.validationErrors);
       });
 
-      it('clones eligibility agent details', async () => {
+      it('should clone eligibility agent details', async () => {
         const dealToCloneWithEligibilityAgentDetails = {
           ...dealToClone,
           eligibility: {
@@ -157,9 +157,11 @@ describe('/v1/deals/:id/clone', () => {
           cloneTransactions: 'false',
         };
 
-        await as(anHSBCMaker).post(dealToCloneWithEligibilityAgentDetails).to('/v1/deals');
+        const createDeal = await as(anHSBCMaker).post(dealToCloneWithEligibilityAgentDetails).to('/v1/deals');
+        const { _id: dealId } = createDeal.body;
 
-        const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${dealId}/clone`);
+
         expect(body.eligibility.agentAddressLine1).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressLine1);
         expect(body.eligibility.agentAddressLine2).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressLine2);
         expect(body.eligibility.agentAddressLine3).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressLine3);
@@ -167,6 +169,40 @@ describe('/v1/deals/:id/clone', () => {
         expect(body.eligibility.agentName).toEqual(dealToCloneWithEligibilityAgentDetails.agentName);
         expect(body.eligibility.agentAddressPostcode).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressPostcode);
         expect(body.eligibility.agentAddressTown).toEqual(dealToCloneWithEligibilityAgentDetails.agentAddressTown);
+      });
+
+      it('should clone submissionDetails', async () => {
+        const clonePostBody = {
+          bankSupplyContractID: 'new-bank-deal-id',
+          bankSupplyContractName: 'new-bank-deal-name',
+          cloneTransactions: 'true',
+        };
+
+        const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        expect(body.submissionDetails).toEqual(originalDeal.submissionDetails);
+      });
+
+      it('should clone summary', async () => {
+        const clonePostBody = {
+          bankSupplyContractID: 'new-bank-deal-id',
+          bankSupplyContractName: 'new-bank-deal-name',
+          cloneTransactions: 'true',
+        };
+
+        const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        expect(body.summary).toEqual(originalDeal.summary);
+      });
+
+
+      it('should clone summary', async () => {
+        const clonePostBody = {
+          bankSupplyContractID: 'new-bank-deal-id',
+          bankSupplyContractName: 'new-bank-deal-name',
+          cloneTransactions: 'true',
+        };
+
+        const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        expect(body.summary).toEqual(originalDeal.summary);
       });
 
       describe('when deal submissionType is MIN', () => {
@@ -186,11 +222,6 @@ describe('/v1/deals/:id/clone', () => {
           expect(body.details.submissionType).toEqual('Manual Inclusion Application');
         });
       });
-
-      // TODO: test other things in deal object.
-      // submissionDetails
-      // summary
-      // supplyContractCurrency
 
       it('clones a deal with only specific bondTransactions fields', async () => {
         const clonePostBody = {
