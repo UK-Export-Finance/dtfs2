@@ -15,7 +15,7 @@ const dbConnect = async () => {
       useUnifiedTopology: true,
     },
   );
-  connection = client.db(dbName);
+  connection = await client.db(dbName);
   return connection;
 };
 
@@ -33,6 +33,13 @@ module.exports.getCollection = async (collectionName) => {
   if (!connection) {
     await getConnection();
   }
+  const collection = await connection.collection(collectionName);
 
-  return connection.collection(collectionName);
+  return collection;
+};
+
+module.exports.close = async () => {
+  if (client) {
+    await client.close();
+  }
 };

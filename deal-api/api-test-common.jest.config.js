@@ -1,5 +1,5 @@
 module.exports = {
-  setupFiles: [
+  setupFilesAfterEnv: [
     './api-test-setup.jest.config.js',
   ],
 };
