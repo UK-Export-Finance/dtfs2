@@ -10,6 +10,7 @@ const page = {
     conversionRate: () => cy.get(`[data-cy="${type}-${facilityId}"]`).find('[data-cy="conversion-rate"]'),
   }
   ),
+  mandatoryCriteriaBox: () => cy.get('[data-cy="mandatory-criteria-box"]'),
 };
 
 module.exports = page;
