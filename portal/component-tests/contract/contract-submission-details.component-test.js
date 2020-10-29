@@ -71,6 +71,26 @@ describe(page, () => {
       wrapper.expectElement('[data-cy="mandatory-criteria-box"]').toExist();
     });
 
+    describe('v1 migrated data', () => {
+      beforeEach(() => {
+        wrapper = render({
+          deal: {
+            ...deal,
+            mandatoryCriteria: [],
+          },
+          user: {
+            timezone: 'Europe/London',
+            roles: ['maker'],
+          },
+          editable: true,
+        });
+      });
+
+      it('should not render Mandatory criteria component if no mandatory criteria', () => {
+        wrapper.expectElement('[data-cy="mandatory-criteria-box"]').notToExist();
+      });
+    });
+
     it('should render Eligibility Criteria Answers component', () => {
       wrapper.expectElement('[data-cy="eligibility-criteria-answers"]').toExist();
     });
