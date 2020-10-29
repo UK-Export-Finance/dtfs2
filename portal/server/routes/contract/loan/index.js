@@ -430,11 +430,28 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
         }],
       };
     } else {
-      const today = new Date();
+      const previousCoverStartDate = moment().set({
+        date: Number(loan['requestedCoverStartDate-day']),
+        month: Number(loan['requestedCoverStartDate-month']) - 1, // months are zero indexed
+        year: Number(loan['requestedCoverStartDate-year']),
+      });
+
+      const previousCoverStartDateTimestamp = moment(previousCoverStartDate).utc().valueOf().toString();
+
+      const now = moment();
+
+      const dateOfCoverChange = moment().set({
+        date: Number(moment(now).format('DD')),
+        month: Number(moment(now).format('MM')) - 1, // months are zero indexed
+        year: Number(moment(now).format('YYYY')),
+      });
+
+      const dateOfCoverChangeTimestamp = moment(dateOfCoverChange).utc().valueOf().toString();
+
       const newLoanDetails = {
         ...req.body,
-        previousCoverStartDate: `${loan['requestedCoverStartDate-day']}/${loan['requestedCoverStartDate-month']}/${loan['requestedCoverStartDate-year']}`,
-        dateOfCoverChange: `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`,
+        previousCoverStartDate: previousCoverStartDateTimestamp,
+        dateOfCoverChange: dateOfCoverChangeTimestamp,
       };
 
       const { validationErrors } = await postToApi(
