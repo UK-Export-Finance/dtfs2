@@ -113,4 +113,33 @@ context('Check deal details', () => {
     sameLoanCurrency.currency().should('not.exist');
     sameLoanCurrency.conversionRate().should('not.exist');
   });
+
+  it('Should display mandatory criteria box with given mandatory criteria', () => {
+    // Older migrated v1 deals do not have mandatory criteria
+    cy.login({ ...MAKER_LOGIN });
+    goToCheckDealDetailsPage();
+    pages.contractSubmissionDetails.mandatoryCriteriaBox().should('exist');
+  });
+
+  context('Portal_v1 migrated deals', () => {
+    const dealNoMandatoryCriteria = {
+      ...dealInDraft,
+      mandatoryCriteria: [],
+    };
+
+    beforeEach(() => {
+      cy.insertOneDeal(dealNoMandatoryCriteria, MAKER_LOGIN)
+        .then((insertedDeal) => {
+          deal = insertedDeal;
+          dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        });
+    });
+
+    it('Should not display mandatory criteria box when no given mandatory criteria', () => {
+      // Older migrated v1 deals do not have mandatory criteria
+      cy.login({ ...MAKER_LOGIN });
+      goToCheckDealDetailsPage();
+      pages.contractSubmissionDetails.mandatoryCriteriaBox().should('not.exist');
+    });
+  });
 });
