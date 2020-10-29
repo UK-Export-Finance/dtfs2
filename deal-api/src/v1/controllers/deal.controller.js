@@ -146,22 +146,38 @@ const fillInEligibilityCriteria = (criterias, answers) => criterias.map((criteri
   };
 });
 
-const createDeal = async (req, res) => {
-  const collection = await db.getCollection('deals');
+const createDealEligibility = async (eligibility) => {
+  const beingGivenEligibility = (eligibility && eligibility.criteria);
   const eligibilityCriteria = await findEligibilityCriteria();
-  const dealId = await generateDealId();
-
-  const beingGivenEligibility = (req.body.eligibility && req.body.eligibility.criteria);
 
   // if we're being asked to create a deal and being given an eligibility block
-  //  use details out of the eligibility block over the details we get from the API
+  // use details out of the eligibility block over the details we get from the API
   const eligibilityCriteriaWithAnswers = beingGivenEligibility
-    ? fillInEligibilityCriteria(eligibilityCriteria, req.body.eligibility.criteria)
+    ? fillInEligibilityCriteria(eligibilityCriteria, eligibility.criteria)
     : eligibilityCriteria;
 
-  const eligibilityStatus = req.body.eligibility && req.body.eligibility.status
-    ? req.body.eligibility.status
+  const eligibilityStatus = eligibility && eligibility.status
+    ? eligibility.status
     : DEFAULTS.DEALS.eligibility.status;
+
+  const eligibilityCriteria11AgentDetails = () => {
+    if (beingGivenEligibility) {
+      const { criteria, status, ...eligibilityAgentDetails } = eligibility;
+      return eligibilityAgentDetails;
+    }
+    return null;
+  };
+
+  return {
+    status: eligibilityStatus,
+    criteria: eligibilityCriteriaWithAnswers,
+    ...eligibilityCriteria11AgentDetails(),
+  };
+};
+
+const createDeal = async (req, res) => {
+  const collection = await db.getCollection('deals');
+  const dealId = await generateDealId();
 
   const time = now();
   const newDeal = {
@@ -176,10 +192,7 @@ const createDeal = async (req, res) => {
       maker: req.user,
       owningBank: req.user.bank,
     },
-    eligibility: {
-      status: eligibilityStatus,
-      criteria: eligibilityCriteriaWithAnswers,
-    },
+    eligibility: await createDealEligibility(req.body.eligibility),
   };
 
   const validationErrors = getDealErrors(newDeal);
