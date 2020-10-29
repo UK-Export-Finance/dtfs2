@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "cypress": "^4.11.0",
-    "cypress-audit": "^0.2.2",
+    "cypress-audit": "^0.2.3",
     "cypress-file-upload": "^4.0.7",
     "cypress-plugin-tab": "^1.0.5",
     "cypress-xpath": "1.4.0",
