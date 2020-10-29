@@ -4,7 +4,14 @@
     <h4 class="govuk-heading-m" id="eligibility-criteria">Eligibility criteria</h4>
 
     <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-4">
+      {% set previousGroup = "" %}
       {% for criterion in eligibility.criteria %}
+
+        {% if criterion.group and criterion.group != previousGroup %}
+            {# Need to display criteria group for v2 migrated deals submitted before 2020-02-03 #}
+            <h5 class="govuk-heading-m govuk-!-margin-top-5 govuk-!-margin-bottom-2">{{ criterion.group}}</h5>
+          {% set previousGroup = criterion.group %}
+        {% endif %}
 
         <div class="eligibility-criteria-row govuk-!-margin-bottom-2">
           <dt class="govuk-!-margin-bottom-1 criterion-heading">
@@ -14,7 +21,11 @@
             {% endif %}
           </dt>
 
-          <dd class="govuk-hint govuk-!-margin-left-0" data-cy="criterion-{{ criterion.id }}-description">{{ criterion.description }}</dd>
+          <dd class="govuk-hint govuk-!-margin-left-0" data-cy="criterion-{{ criterion.id }}-description">{{ criterion.description }}
+            {% if criterion.group and criterion.answer | string | capitalize === "False" %}
+              <div class="eligibility-criteria-waived">Eligibility criterion waived by UKEF</div>
+            {% endif %}
+          </dd>
         </div>
 
         {% if criterion.id === 11 %}
