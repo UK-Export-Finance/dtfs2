@@ -446,11 +446,28 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
         }],
       };
     } else {
-      const today = new Date();
+      const previousCoverStartDate = moment().set({
+        date: Number(bondToRender['requestedCoverStartDate-day']),
+        month: Number(bondToRender['requestedCoverStartDate-month']) - 1, // months are zero indexed
+        year: Number(bondToRender['requestedCoverStartDate-year']),
+      });
+
+      const previousCoverStartDateTimestamp = moment(previousCoverStartDate).utc().valueOf().toString();
+
+      const now = moment();
+
+      const dateOfCoverChange = moment().set({
+        date: Number(moment(now).format('DD')),
+        month: Number(moment(now).format('MM')) - 1, // months are zero indexed
+        year: Number(moment(now).format('YYYY')),
+      });
+
+      const dateOfCoverChangeTimestamp = moment(dateOfCoverChange).utc().valueOf().toString();
+
       const newBondDetails = {
         ...req.body,
-        previousCoverStartDate: `${bondToRender['requestedCoverStartDate-day']}/${bondToRender['requestedCoverStartDate-month']}/${bondToRender['requestedCoverStartDate-year']}`,
-        dateOfCoverChange: `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`,
+        previousCoverStartDate: previousCoverStartDateTimestamp,
+        dateOfCoverChange: dateOfCoverChangeTimestamp,
       };
 
       const { bond, validationErrors } = await postToApi(
