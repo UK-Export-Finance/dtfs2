@@ -1,5 +1,6 @@
 const { orderNumber } = require('../../../utils/error-list-order-number');
 const { hasValue } = require('../../../utils/string');
+const { countryIsDisabled } = require('../fields/country');
 
 module.exports = (submissionDetails, errorList) => {
   const newErrorList = { ...errorList };
@@ -31,6 +32,16 @@ module.exports = (submissionDetails, errorList) => {
       order: orderNumber(newErrorList),
       text: 'Supplier country is required',
     };
+  }
+
+  if (submissionDetails['supplier-address-country']) {
+    const isDisabled = countryIsDisabled(submissionDetails['supplier-address-country'].code);
+    if (isDisabled) {
+      newErrorList['supplier-address-country'] = {
+        order: orderNumber(newErrorList),
+        text: 'Supplier country is no longer available',
+      };
+    }
   }
 
   return newErrorList;
