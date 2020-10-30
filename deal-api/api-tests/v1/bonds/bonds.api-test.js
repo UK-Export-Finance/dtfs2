@@ -23,15 +23,10 @@ describe('/v1/deals/:id/bond', () => {
     },
     eligibility: {
       criteria: [
-        { id: 15, answer: true }
+        { id: 15, answer: true },
       ],
     },
   });
-
-  const mockCurrencies = [
-    { id: 'GBP', text: 'GBP - UK Sterling' },
-    { id: 'EUR', text: 'EUR - Euros' },
-  ];
 
   const allBondFields = {
     bondIssuer: 'issuer',
@@ -102,8 +97,7 @@ describe('/v1/deals/:id/bond', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['currencies', 'deals']);
-    await as(anEditor).postEach(mockCurrencies).to('/v1/currencies');
+    await wipeDB.wipe(['deals']);
   });
 
   describe('GET /v1/deals/:id/bond/:id', () => {
@@ -656,14 +650,14 @@ describe('/v1/deals/:id/bond', () => {
 
       const { body: createBondBody } = createBondResponse;
       const { bondId } = createBondBody;
-    
+
       const bond = {
         ...allBondFields,
         ...requestedCoverStartDate(),
         ...coverEndDate(),
       };
 
-      const { status, body} = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+      const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
       expect(status).toEqual(200);
       expect(body.requestedCoverStartDate).toEqual(expect.any(String));

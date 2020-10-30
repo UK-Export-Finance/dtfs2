@@ -50,7 +50,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
     await as(anEditor).postEach(mockCountries).to('/v1/countries');
-    await as(anEditor).postEach(mockCurrencies).to('/v1/currencies');
   });
 
   describe('For all cases', () => {

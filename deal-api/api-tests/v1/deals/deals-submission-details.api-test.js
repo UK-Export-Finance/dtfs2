@@ -30,11 +30,6 @@ const mockCountries = [
   { id: 124, name: 'Canada', code: 'CAN' },
 ];
 
-const mockCurrencies = [
-  { currencyId: 12, text: 'GBP - UK Sterling', id: 'GBP' },
-  { currencyId: 5, text: 'CAD - Canadian Dollars', id: 'CAD' },
-];
-
 describe('/v1/deals/:id/submission-details', () => {
   let noRoles;
   let anHSBCMaker;
@@ -54,10 +49,9 @@ describe('/v1/deals/:id/submission-details', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals', 'countries', 'currencies']);
+    await wipeDB.wipe(['deals', 'countries']);
     // await wipeDB.wipe(['deals']);
     await as(anEditor).postEach(mockCountries).to('/v1/countries');
-    await as(anEditor).postEach(mockCurrencies).to('/v1/currencies');
   });
 
   describe('GET /v1/deals/:id/submission-details', () => {

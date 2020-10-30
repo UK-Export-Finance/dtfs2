@@ -9,14 +9,6 @@ const cleanBanks = async (token) => {
   }
 };
 
-const cleanCurrencies = async (token) => {
-  console.log('cleaning currencies');
-
-  for (currency of await api.listCurrencies(token)) {
-    await api.deleteCurrency(currency, token);
-  }
-};
-
 const cleanCountries = async (token) => {
   console.log('cleaning countries');
 
@@ -74,7 +66,6 @@ const cleanAllTables = async () => {
   });
 
   await cleanBanks(token);
-  await cleanCurrencies(token);
   await cleanCountries(token);
   await cleanDeals(token);
   await cleanIndustrySectors(token);

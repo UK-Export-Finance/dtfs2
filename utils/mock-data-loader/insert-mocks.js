@@ -30,11 +30,6 @@ const insertMocks = async () => {
     await api.createBank(bank, token);
   }
 
-  console.log('inserting currencies');
-  for (currency of MOCKS.CURRENCIES) {
-    await api.createCurrency(currency, token);
-  }
-
   console.log('inserting countries');
   for (country of MOCKS.COUNTRIES) {
     await api.createCountry(country, token);

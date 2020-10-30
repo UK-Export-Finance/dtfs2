@@ -23,15 +23,10 @@ describe('/v1/deals/:id/loan', () => {
     },
     eligibility: {
       criteria: [
-        { id: 15, answer: true }
+        { id: 15, answer: true },
       ],
     },
   });
-
-  const mockCurrencies = [
-    { id: 'GBP', text: 'GBP - UK Sterling' },
-    { id: 'EUR', text: 'EUR - Euros' },
-  ];
 
   const nowDate = moment();
   const requestedCoverStartDate = () => {
@@ -88,8 +83,7 @@ describe('/v1/deals/:id/loan', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['currencies', 'deals']);
-    await as(anEditor).postEach(mockCurrencies).to('/v1/currencies');
+    await wipeDB.wipe(['deals']);
   });
 
   describe('GET /v1/deals/:id/loan/:id', () => {
@@ -181,7 +175,6 @@ describe('/v1/deals/:id/loan', () => {
         expect(body.loan.status).toEqual('Completed');
         expect(body.dealId).toEqual(dealId);
       });
-
     });
   });
 
@@ -467,7 +460,6 @@ describe('/v1/deals/:id/loan', () => {
       expect(body.loan['requestedCoverStartDate-day']).toEqual(loan['requestedCoverStartDate-day']);
       expect(body.loan['requestedCoverStartDate-month']).toEqual(loan['requestedCoverStartDate-month']);
       expect(body.loan['requestedCoverStartDate-year']).toEqual(loan['requestedCoverStartDate-year']);
-
     });
   });
 
