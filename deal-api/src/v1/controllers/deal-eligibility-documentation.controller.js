@@ -3,7 +3,7 @@ const fileshare = require('../../drivers/fileshare');
 const { formatFilenameForSharepoint } = require('../../utils');
 const { userHasAccessTo } = require('../users/checks');
 const { findOneDeal, updateDeal } = require('./deal.controller');
-const { getEligibilityStatus } = require('../validation/eligibility-criteria');
+const { getEligibilityErrors, getCriteria11Errors, getEligibilityStatus } = require('../validation/eligibility-criteria');
 const { getDocumentationErrors } = require('../validation/eligibility-documentation');
 
 const { EXPORT_FOLDER } = fileshare.getConfig('portal');
@@ -116,10 +116,13 @@ exports.update = async (req, res) => {
       dealFilesErrorCount: validationErrors.count,
     });
 
+    const eligibilityCriteriaValidationErrors = getEligibilityErrors(deal.eligibility.criteria);
+
     const updatedDealData = {
       ...deal,
       eligibility: {
         status,
+        validationErrors: eligibilityCriteriaValidationErrors,
       },
       dealFiles: {
         ...dealFiles,
