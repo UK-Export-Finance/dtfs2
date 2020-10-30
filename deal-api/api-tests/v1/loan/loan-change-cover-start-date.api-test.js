@@ -19,18 +19,13 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
     },
   });
 
-  const mockCurrencies = [
-    { id: 'GBP', text: 'GBP - UK Sterling' },
-    { id: 'EUR', text: 'EUR - Euros' },
-  ];
-
-  const nowDate = moment();
-
   let noRoles;
   let aBarclaysMaker;
   let anHSBCMaker;
   let aSuperuser;
-  let anEditor;
+
+  let dealId;
+  let loanId;
 
   const mockCoverStartDate = moment().subtract(1, 'month');
 
@@ -39,11 +34,6 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
     'requestedCoverStartDate-day': moment(mockCoverStartDate).format('DD'),
     'requestedCoverStartDate-month': moment(mockCoverStartDate).format('MM'),
     'requestedCoverStartDate-year': moment(mockCoverStartDate).format('YYYY'),
-  };
-
-  const updateDeal = async (dealId, body) => {
-    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${dealId}`);
-    return result.body;
   };
 
   const updateLoan = async (dealId, loanId, body) => {
@@ -83,12 +73,10 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
-    anEditor = testUsers().withRole('editor').one();
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['currencies', 'deals']);
-    await as(anEditor).postEach(mockCurrencies).to('/v1/currencies');
+    await wipeDB.wipe(['deals']);
     await createDealAndLoan();
   });
 
@@ -134,7 +122,7 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
 
       expect(status).toEqual(200);
     });
-    
+
     describe('when loan.facilityStage is not `Unconditional`', () => {
       it('should return 400', async () => {
         const conditionalLoanBody = {
@@ -179,7 +167,7 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
         };
 
         await updateLoanCoverStartDate(dealId, loanId, updateCoverStartDateBody);
-        
+
         const { body } = await as(aSuperuser).get(`/v1/deals/${dealId}/loan/${loanId}`);
         expect(body.loan['requestedCoverStartDate-day']).toEqual(mockLoan['requestedCoverStartDate-day']);
         expect(body.loan['requestedCoverStartDate-month']).toEqual(mockLoan['requestedCoverStartDate-month']);
@@ -200,7 +188,7 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
 
       it('should return 200 with the new date', async () => {
         await updateLoanCoverStartDate(dealId, loanId, updateCoverStartDateBody);
-        
+
         const { status, body } = await as(aSuperuser).get(`/v1/deals/${dealId}/loan/${loanId}`);
         expect(status).toEqual(200);
         expect(body.loan['requestedCoverStartDate-day']).toEqual(updateCoverStartDateBody['requestedCoverStartDate-day']);

@@ -11,21 +11,12 @@ const usd = aCurrency({ id: 'USD', text: 'USD - US Dollars' });
 const gbp = aCurrency({ id: 'GBP', text: 'GBP - UK Sterling' });
 const cad = aCurrency({ id: 'CAD', text: 'CAD - Canadian Dollars' });
 
-const newCurrency = usd;
-const updatedCurrency = aCurrency({ id: 'USD', text: 'USD - US Denari' });
-
 describe('/v1/currencies', () => {
-  let anEditor;
   let aNonEditor;
 
-  beforeAll( async() => {
+  beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    anEditor = testUsers().withRole('editor').one();
     aNonEditor = testUsers().withoutRole('editor').one();
-  });
-
-  beforeEach(async () => {
-    await wipeDB.wipe(['currencies']);
   });
 
   describe('GET /v1/currencies', () => {
@@ -42,14 +33,13 @@ describe('/v1/currencies', () => {
     });
 
     it('returns a list of currencies, alphebetized', async () => {
-      await as(anEditor).postEach([gbp, usd, cad]).to('/v1/currencies');
-
       const { status, body } = await as(aNonEditor).get('/v1/currencies', aNonEditor.token);
 
-      const expectedOrder = [cad, gbp, usd];
-
       expect(status).toEqual(200);
-      expect(body.currencies).toEqual(expectMongoIds(expectedOrder));
+      expect(body.currencies.length).toBeGreaterThan(1);
+      for (let i = 1; i < body.currencies.length; i += 1) {
+        expect(body.currencies[i - 1].id < body.currencies[i].id).toBe(true);
+      }
     });
   });
 
@@ -67,96 +57,10 @@ describe('/v1/currencies', () => {
     });
 
     it('returns a currency', async () => {
-      await as(anEditor).post(newCurrency).to('/v1/currencies');
-
       const { status, body } = await as(aNonEditor).get('/v1/currencies/USD');
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectMongoId(newCurrency));
-    });
-  });
-
-  describe('POST /v1/currencies', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().post(newCurrency).to('/v1/currencies');
-
-      expect(status).toEqual(401);
-    });
-
-    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      const { status } = await as(aNonEditor).post(newCurrency).to('/v1/currencies');
-
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      const { status } = await as(anEditor).post(newCurrency).to('/v1/currencies');
-
-      expect(status).toEqual(200);
-    });
-  });
-
-  describe('PUT /v1/currencies/:id', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().put(updatedCurrency).to('/v1/currencies/USD');
-
-      expect(status).toEqual(401);
-    });
-
-    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await as(anEditor).post(newCurrency).to('/v1/currencies');
-      const { status } = await as(aNonEditor).put(updatedCurrency).to('/v1/currencies/USD');
-
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await as(anEditor).post(newCurrency).to('/v1/currencies');
-      const { status } = await as(anEditor).put(updatedCurrency).to('/v1/currencies/USD');
-
-      expect(status).toEqual(200);
-    });
-
-    it('updates the currency', async () => {
-      await as(anEditor).post(newCurrency).to('/v1/currencies');
-      await as(anEditor).put(updatedCurrency).to('/v1/currencies/USD');
-
-      const { status, body } = await as(anEditor).get('/v1/currencies/USD');
-
-      expect(status).toEqual(200);
-      expect(body).toEqual(expectMongoId(updatedCurrency));
-    });
-  });
-
-  describe('DELETE /v1/currencies/:id', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().remove('/v1/currencies/USD');
-
-      expect(status).toEqual(401);
-    });
-
-    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await as(anEditor).post(newCurrency).to('/v1/currencies');
-      const { status } = await as(aNonEditor).remove('/v1/currencies/USD');
-
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await as(anEditor).post(newCurrency).to('/v1/currencies');
-      const { status } = await as(anEditor).remove('/v1/currencies/USD');
-
-      expect(status).toEqual(200);
-    });
-
-    it('deletes the currency', async () => {
-      await as(anEditor).post(newCurrency).to('/v1/currencies');
-      await as(anEditor).remove('/v1/currencies/USD');
-
-      const { status, body } = await as(anEditor).get('/v1/currencies/USD');
-
-      expect(status).toEqual(200);
-      expect(body).toEqual({});
+      expect(body).toMatchObject(usd);
     });
   });
 });

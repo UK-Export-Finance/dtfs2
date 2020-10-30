@@ -202,23 +202,11 @@ authRouter.route('/banks/:id')
 authRouter.route('/currencies')
   .get(
     currencies.findAll,
-  )
-  .post(
-    validate({ role: ['editor'] }),
-    currencies.create,
   );
 
 authRouter.route('/currencies/:id')
   .get(
     currencies.findOne,
-  )
-  .put(
-    validate({ role: ['editor'] }),
-    currencies.update,
-  )
-  .delete(
-    validate({ role: ['editor'] }),
-    currencies.delete,
   );
 
 authRouter.route('/countries')

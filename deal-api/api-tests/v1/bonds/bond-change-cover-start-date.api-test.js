@@ -87,8 +87,7 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['currencies', 'deals']);
-    await as(anEditor).postEach(mockCurrencies).to('/v1/currencies');
+    await wipeDB.wipe(['deals']);
     await createDealAndBond();
   });
 

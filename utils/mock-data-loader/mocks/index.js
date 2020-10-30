@@ -1,5 +1,4 @@
 const COUNTRIES = require('./countries');
-const CURRENCIES = require('./currencies');
 const INDUSTRY_SECTORS = require('./industry-sectors');
 const USERS = require('./users');
 const BANKS = require('./banks');
@@ -11,7 +10,6 @@ const CONTRACTS = require('./contracts');
 const MOCKS = {
   USERS,
   BANKS,
-  CURRENCIES,
   COUNTRIES,
   INDUSTRY_SECTORS,
   ELIGIBILITY_CRITERIA,

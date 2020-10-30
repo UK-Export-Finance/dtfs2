@@ -20,15 +20,10 @@ describe('/v1/deals/:id/bond', () => {
     },
     eligibility: {
       criteria: [
-        { id: 15, answer: true }
+        { id: 15, answer: true },
       ],
     },
   });
-
-  const mockCurrencies = [
-    { id: 'GBP', text: 'GBP - UK Sterling' },
-    { id: 'EUR', text: 'EUR - Euros' },
-  ];
 
   const allBondFields = {
     bondIssuer: 'issuer',
@@ -64,9 +59,7 @@ describe('/v1/deals/:id/bond', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['currencies', 'deals']);
-
-    await as(anEditor).postEach(mockCurrencies).to('/v1/currencies');
+    await wipeDB.wipe(['deals']);
 
     const dealResponse = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
     deal = dealResponse.body;
@@ -333,7 +326,7 @@ describe('/v1/deals/:id/bond', () => {
               ...deal,
               eligibility: {
                 criteria: [
-                  { id: 15,  answer: false }
+                  { id: 15, answer: false },
                 ],
               },
             };
