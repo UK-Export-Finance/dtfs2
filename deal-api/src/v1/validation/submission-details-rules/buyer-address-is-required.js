@@ -1,5 +1,6 @@
 const { orderNumber } = require('../../../utils/error-list-order-number');
 const { hasValue } = require('../../../utils/string');
+const { countryIsDisabled } = require('../fields/country');
 
 module.exports = (submissionDetails, errorList) => {
   const newErrorList = { ...errorList };
@@ -31,6 +32,16 @@ module.exports = (submissionDetails, errorList) => {
       order: orderNumber(newErrorList),
       text: 'Buyer town is required for non-UK addresses',
     };
+  }
+
+  if (submissionDetails['buyer-address-country']) {
+    const isDisabled = countryIsDisabled(submissionDetails['buyer-address-country'].code);
+    if (isDisabled) {
+      newErrorList['buyer-address-country'] = {
+        order: orderNumber(newErrorList),
+        text: 'Buyer country is no longer available',
+      };
+    }
   }
 
   return newErrorList;
