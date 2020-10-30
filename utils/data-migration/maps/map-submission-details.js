@@ -77,7 +77,6 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
     ] = financial.Conversion_date.split('-');
   }
 
-
   if (supplierCorrespondenceAddressIsDifferent) {
     submissionDetails['supplier-correspondence-address-country'] = getCountryById(exporterInfo.Exporter_correspondence_address.Country);
     submissionDetails['supplier-correspondence-address-line-1'] = exporterInfo.Exporter_correspondence_address.Line1;
@@ -90,13 +89,12 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
   if (indemnifierLegallyDistinct) {
     submissionDetails['indemnifier-companies-house-registration-number'] = exporterInfo.Indemnifier_co_hse_reg_number;
     submissionDetails['indemnifier-name'] = exporterInfo.Indemnifier_name;
-    submissionDetails['indemnifier-address-line-1'] = exporterInfo.Indemnifier_address_Line1;
-    submissionDetails['indemnifier-address-line-2'] = exporterInfo.Indemnifier_address_Line2;
-    submissionDetails['indemnifier-address-line-3'] = exporterInfo.Indemnifier_address_Line3;
-    submissionDetails['indemnifier-address-town'] = exporterInfo.Indemnifier_address_Town;
-    submissionDetails['indemnifier-address-postcode'] = exporterInfo.Indemnifier_address_PostalCode;
-    submissionDetails['indemnifier-address-town'] = exporterInfo.Indemnifier_address_Town;
-    submissionDetails['indemnifier-address-country'] = getCountryById(exporterInfo.Indemnifier_address_Country);
+    submissionDetails['indemnifier-address-line-1'] = exporterInfo.Indemnifier_address.Line1;
+    submissionDetails['indemnifier-address-line-2'] = exporterInfo.Indemnifier_address.Line2;
+    submissionDetails['indemnifier-address-line-3'] = exporterInfo.Indemnifier_address.Line3;
+    submissionDetails['indemnifier-address-town'] = exporterInfo.Indemnifier_address.Town;
+    submissionDetails['indemnifier-address-postcode'] = exporterInfo.Indemnifier_address.PostalCode;
+    submissionDetails['indemnifier-address-country'] = getCountryById(exporterInfo.Indemnifier_address.Country);
 
     const indemnifierCorrespondenceAddressDifferent = addressIsDifferent(exporterInfo.Indemnifier_address, exporterInfo.Indemnifier_correspondence_address);
     submissionDetails.indemnifierCorrespondenceAddressDifferent = indemnifierCorrespondenceAddressDifferent.toString();
