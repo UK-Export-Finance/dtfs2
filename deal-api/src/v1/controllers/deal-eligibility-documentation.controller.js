@@ -47,7 +47,9 @@ exports.update = async (req, res) => {
       return;
     }
 
-    const deletePromises = fileshare.deleteMultipleFiles(req.body.deleteFile);
+    const filesToDelete = Object.keys(req.body).filter((k) => k.includes('deleteFile'));
+
+    const deletePromises = fileshare.deleteMultipleFiles('portal', filesToDelete);
 
     const uploadPromises = req.files.map(async (file) => {
       const {
