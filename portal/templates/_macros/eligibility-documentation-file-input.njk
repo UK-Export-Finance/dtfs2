@@ -28,7 +28,7 @@
         <div class="govuk-checkboxes">
           {% for file in fileList %}
                 <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="delete-hint-{{ fieldname }}-{{ loop.index }}" name="deleteFile-{{ fieldname }}" type="checkbox" value="{{ file.fullPath }}">
+                  <input class="govuk-checkboxes__input" id="delete-hint-{{ fieldname }}-{{ loop.index }}" name="deleteFile" type="checkbox" value="{{ file.fullPath }}">
                   <label class="govuk-label govuk-checkboxes__label" for="delete-hint-{{ fieldname }}-{{ loop.index }}">
                     <a download="{{file.filename}}" href="/contract/{{dealId}}/eligibility-documentation/{{fieldname}}/{{file.filename}}">{{file.filename}}</a>
                   </label>
