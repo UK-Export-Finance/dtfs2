@@ -212,24 +212,13 @@ authRouter.route('/currencies/:id')
 authRouter.route('/countries')
   .get(
     countries.findAll,
-  )
-  .post(
-    validate({ role: ['editor'] }),
-    countries.create,
   );
 
 authRouter.route('/countries/:code')
   .get(
     countries.findOne,
-  )
-  .put(
-    validate({ role: ['editor'] }),
-    countries.update,
-  )
-  .delete(
-    validate({ role: ['editor'] }),
-    countries.delete,
   );
+
 
 authRouter.route('/feedback')
   .get(

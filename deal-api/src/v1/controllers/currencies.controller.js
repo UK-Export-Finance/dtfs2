@@ -13,5 +13,6 @@ exports.findAll = (req, res) => {
 
 exports.findOne = (req, res) => {
   const currency = findOneCurrency(req.params.id);
-  return res.status(200).send(currency);
+  const status = currency ? '200' : '404';
+  return res.status(status).send(currency);
 };

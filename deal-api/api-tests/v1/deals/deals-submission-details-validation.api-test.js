@@ -27,29 +27,16 @@ const newDeal = aDeal({
   }],
 });
 
-const mockCountries = [
-  { id: 826, name: 'United Kingdom', code: 'GBR' },
-  { id: 124, name: 'Canada', code: 'CAN' },
-];
-
-const mockCurrencies = [
-  { currencyId: 12, text: 'GBP - UK Sterling', id: 'GBP' },
-  { currencyId: 37, text: 'USD - US Dollars', id: 'USD' },
-];
-
 describe('PUT /v1/deals/:id/submission-details validation rules', () => {
   let anHSBCMaker;
-  let anEditor;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
-    anEditor = testUsers().withRole('editor').one();
   });
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
-    await as(anEditor).postEach(mockCountries).to('/v1/countries');
   });
 
   describe('For all cases', () => {
