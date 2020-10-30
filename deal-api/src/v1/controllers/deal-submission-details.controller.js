@@ -40,8 +40,8 @@ const updateSubmissionDetails = async (req, submissionDetails) => {
   return updateDealResponse;
 };
 
-const countryObject = async (countryCode) => {
-  const countryObj = await findOneCountry(countryCode);
+const countryObject = (countryCode) => {
+  const countryObj = findOneCountry(countryCode);
 
   const { name, code } = countryObj;
 

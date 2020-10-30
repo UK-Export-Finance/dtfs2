@@ -1,15 +1,13 @@
-const wipeDB = require('../../wipeDB');
-const aCurrency = require('./currency-builder');
-
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
 const { as } = require('../../api')(app);
-const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
-const usd = aCurrency({ id: 'USD', text: 'USD - US Dollars' });
-const gbp = aCurrency({ id: 'GBP', text: 'GBP - UK Sterling' });
-const cad = aCurrency({ id: 'CAD', text: 'CAD - Canadian Dollars' });
+const usd = {
+  currencyId: 37,
+  text: 'USD - US Dollars',
+  id: 'USD',
+};
 
 describe('/v1/currencies', () => {
   let aNonEditor;
@@ -45,13 +43,13 @@ describe('/v1/currencies', () => {
 
   describe('GET /v1/currencies/:id', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/currencies/123');
+      const { status } = await as().get('/v1/currencies/USD');
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that do present a valid Authorization token', async () => {
-      const { status } = await as(aNonEditor).get('/v1/currencies/123');
+      const { status } = await as(aNonEditor).get('/v1/currencies/USD');
 
       expect(status).toEqual(200);
     });
@@ -61,6 +59,12 @@ describe('/v1/currencies', () => {
 
       expect(status).toEqual(200);
       expect(body).toMatchObject(usd);
+    });
+
+    it('returns 404 when country doesn\t exist', async () => {
+      const { status } = await as(aNonEditor).get('/v1/currencies/123');
+
+      expect(status).toEqual(404);
     });
   });
 });

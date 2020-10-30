@@ -25,11 +25,6 @@ const newDeal = aDeal({
   }],
 });
 
-const mockCountries = [
-  { id: 826, name: 'United Kingdom', code: 'GBR' },
-  { id: 124, name: 'Canada', code: 'CAN' },
-];
-
 describe('/v1/deals/:id/submission-details', () => {
   let noRoles;
   let anHSBCMaker;
@@ -49,9 +44,7 @@ describe('/v1/deals/:id/submission-details', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals', 'countries']);
-    // await wipeDB.wipe(['deals']);
-    await as(anEditor).postEach(mockCountries).to('/v1/countries');
+    await wipeDB.wipe(['deals']);
   });
 
   describe('GET /v1/deals/:id/submission-details', () => {

@@ -1,79 +1,33 @@
-const assert = require('assert');
-const db = require('../../drivers/db-client');
 const utils = require('../../utils/array');
+const COUNTRIES = require('../../reference-data/countries');
 
 const getCountryFromArray = (arr, code) => arr.filter((country) => country.code === code)[0];
 
-const sortCountries = (arr, callback) => {
-  const countriesWithoutUK = arr.filter((country) => country.code !== 'GBR');
-  const uk = getCountryFromArray(arr, 'GBR');
+const sortCountries = () => {
+  const countriesWithoutUK = COUNTRIES.filter((country) => country.code !== 'GBR');
 
-  let sortedArray = [
+  const sortedArray = [
+    getCountryFromArray(COUNTRIES, 'GBR'),
     ...utils.sortArrayAlphabetically(countriesWithoutUK, 'name'),
   ];
 
-  if (uk) {
-    sortedArray = [
-      uk,
-      ...sortedArray,
-    ];
-  }
-
-  return callback(sortedArray);
+  return sortedArray;
 };
 
-const findCountries = async (callback) => {
-  const collection = await db.getCollection('countries');
 
-  collection.find({}).toArray((err, result) => {
-    assert.equal(err, null);
-    callback(result);
+const findOneCountry = (findCode) => COUNTRIES.find(({ code }) => code === findCode);
+exports.findOneCountry = findOneCountry;
+
+exports.findAll = (req, res) => {
+  const sortedCountries = sortCountries(COUNTRIES);
+  res.status(200).send({
+    count: sortedCountries.length,
+    countries: sortedCountries,
   });
 };
 
-const findOneCountry = async (code, callback) => {
-  const collection = await db.getCollection('countries');
-
-  let cb;
-
-  if (typeof callback === 'function') {
-    cb = (err, result) => {
-      assert.equal(err, null);
-      callback(result);
-    };
-  }
-
-  return collection.findOne({ code }, cb);
-};
-
-exports.findOneCountry = findOneCountry;
-
-exports.create = async (req, res) => {
-  const collection = await db.getCollection('countries');
-  const country = await collection.insertOne(req.body);
-
-  res.status(200).send(country);
-};
-
-exports.findAll = (req, res) => (
-  findCountries((countries) => sortCountries(countries, (sortedCountries) => res.status(200).send({
-    count: sortedCountries.length,
-    countries: sortedCountries,
-  })))
-);
-
-exports.findOne = (req, res) => (
-  findOneCountry(req.params.code, (country) => res.status(200).send(country))
-);
-
-exports.update = async (req, res) => {
-  const collection = await db.getCollection('countries');
-  const status = await collection.updateOne({ code: { $eq: req.params.code } }, { $set: req.body }, {});
-  res.status(200).send(status);
-};
-
-exports.delete = async (req, res) => {
-  const collection = await db.getCollection('countries');
-  const status = await collection.deleteOne({ code: req.params.code });
-  res.status(200).send(status);
+exports.findOne = (req, res) => {
+  const country = findOneCountry(req.params.code);
+  const status = country ? '200' : '404';
+  res.status(status).send(country);
 };
