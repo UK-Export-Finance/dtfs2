@@ -19,12 +19,7 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
   const mapSingleBond = (bond) => {
     const v1ExtraInfo = {
       originalRequestedCoverStartDate: convertV1Date(bond.Extra_fields.Original_requested_cover_start_date),
-      dateThenIssued: convertV1Date(bond.Extra_fields.Date_then_issued),
     };
-
-    if (bond.Extra_fields.User_who_issued && bond.Extra_fields.User_who_issued.username) {
-      v1ExtraInfo.userWhoIssued = getUserByEmail(bond.Extra_fields.User_who_issued.username);
-    }
 
     const facilityStage = findPortalValue(bond.BSS_Guarantee_details.BSS_stage, 'BSS_stage', 'FACILITIES', 'STAGE_BOND', logError);
 
@@ -91,6 +86,14 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
           v2bond['coverEndDate-year'],
         ] = bond.BSS_Dates_repayments.BSS_cover_end_date.split('-');
       }
+    }
+
+    if (bond.Extra_fields.Date_then_issued) {
+      v2bond.issuedFacilitySubmittedToUkefTimestamp = convertV1Date(bond.Extra_fields.Date_then_issued);
+    }
+
+    if (bond.Extra_fields.User_who_issued && bond.Extra_fields.User_who_issued.username) {
+      v2bond.issuedFacilitySubmittedToUkefBy = getUserByEmail(bond.Extra_fields.User_who_issued.username);
     }
 
     return v2bond;
