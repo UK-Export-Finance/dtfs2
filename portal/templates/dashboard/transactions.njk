@@ -130,7 +130,7 @@
               </td>
 
               <td data-cy="facilityIssuedDate" class="govuk-table__cell govuk-!-font-size-14">
-                {{ transaction.issuedFacilitySubmittedToUkefTimestamp | localiseTimestamp('DD/MM/YYYY', user.timezone) | dashIfEmpty }}
+                {{ transaction.issuedDate | localiseTimestamp('DD/MM/YYYY', user.timezone) | dashIfEmpty }}
               </td>
 
               <td data-cy="maker" class="govuk-table__cell govuk-!-font-size-14">

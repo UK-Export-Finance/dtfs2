@@ -19,12 +19,7 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
   const mapSingleLoan = (loan) => {
     const v1ExtraInfo = {
       originalRequestedCoverStartDate: convertV1Date(loan.Extra_fields.Original_requested_cover_start_date),
-      dateThenIssued: convertV1Date(loan.Extra_fields.Date_then_issued),
     };
-
-    if (loan.Extra_fields.User_who_issued && loan.Extra_fields.User_who_issued.username) {
-      v1ExtraInfo.userWhoIssued = getUserByEmail(loan.Extra_fields.User_who_issued.username);
-    }
 
     const facilityStage = findPortalValue(loan.EWCS_Guarantee_details.EWCS_stage, 'EWCS_stage', 'FACILITIES', 'STAGE_LOAN', logError);
 
@@ -47,7 +42,7 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
       premiumFrequency: findPortalValue(loan.EWCS_Dates_repayments.EWCS_premium_freq, 'EWCS_premium_freq', 'FACILITIES', 'FEE_FREQUENCY', logError),
       ukefGuaranteeInMonths: loan.EWCS_Dates_repayments.EWCS_cover_period,
       dayCountBasis: findPortalValue(loan.EWCS_Dates_repayments.EWCS_day_basis, 'EWCS_day_basis', 'FACILITIES', 'DAY_COUNT_BASIS', logError),
-
+      v1ExtraInfo,
     };
 
     if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL) {
@@ -89,6 +84,14 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
           v2loan['coverEndDate-year'],
         ] = loan.EWCS_Dates_repayments.EWCS_cover_end_date.split('-');
       }
+    }
+
+    if (loan.Extra_fields.Date_then_issued) {
+      v2loan.issuedFacilitySubmittedToUkefTimestamp = convertV1Date(loan.Extra_fields.Date_then_issued);
+    }
+
+    if (loan.Extra_fields.User_who_issued && loan.Extra_fields.User_who_issued.username) {
+      v2loan.issuedFacilitySubmittedToUkefBy = getUserByEmail(loan.Extra_fields.User_who_issued.username);
     }
 
     return v2loan;
