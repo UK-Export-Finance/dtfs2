@@ -22,34 +22,37 @@ module.exports = (submittedValues, deal, errorList) => {
   const eligibilityCriteria15 = deal.eligibility.criteria.find((c) => c.id === 15);
   const canEnterDateGreaterThan3Months = eligibilityCriteria15 && eligibilityCriteria15.answer === false;
 
+  const dealHasBeenSubmitted = deal.details.submissionDate;
+
   if (requestedCoverStartDateTimestamp) {
     const nowDate = moment().startOf('day');
 
-    if (!canEnterDateGreaterThan3Months) {
-      const MAX_MONTHS_FROM_NOW = 3;
-
-      const day = moment(requestedCoverStartDateTimestamp).format('DD');
-      const month = moment(requestedCoverStartDateTimestamp).format('MM');
-      const year = moment(requestedCoverStartDateTimestamp).format('YYYY');
-
-      if (!dateIsInTimeframe(
-        day,
-        month,
-        year,
-        nowDate,
-        moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months'),
-      )) {
+    if (!dealHasBeenSubmitted) {
+      if (moment(requestedCoverStartDateTimestamp).isBefore(nowDate)) {
         newErrorList.requestedCoverStartDate = {
-          text: `Requested Cover Start Date must be between ${moment().format('Do MMMM YYYY')} and ${moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months').format('Do MMMM YYYY')}`,
+          text: 'Requested Cover Start Date must be today or in the future',
           order: orderNumber(newErrorList),
         };
+      } else if (!canEnterDateGreaterThan3Months) {
+        const MAX_MONTHS_FROM_NOW = 3;
+
+        const day = moment(requestedCoverStartDateTimestamp).format('DD');
+        const month = moment(requestedCoverStartDateTimestamp).format('MM');
+        const year = moment(requestedCoverStartDateTimestamp).format('YYYY');
+
+        if (!dateIsInTimeframe(
+          day,
+          month,
+          year,
+          nowDate,
+          moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months'),
+        )) {
+          newErrorList.requestedCoverStartDate = {
+            text: `Requested Cover Start Date must be between ${moment().format('Do MMMM YYYY')} and ${moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months').format('Do MMMM YYYY')}`,
+            order: orderNumber(newErrorList),
+          };
+        }
       }
-    }
-    if (moment(requestedCoverStartDateTimestamp).isBefore(nowDate)) {
-      newErrorList.requestedCoverStartDate = {
-        text: 'Requested Cover Start Date must be today or in the future',
-        order: orderNumber(newErrorList),
-      };
     }
   } else if (!requestedCoverStartDateTimestamp && dateHasSomeValues(
     requestedCoverStartDateDay,
