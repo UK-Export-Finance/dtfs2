@@ -4,7 +4,7 @@ const {
 const partials = require('../../../partials');
 const mockUsers = require('../../../../fixtures/mockUsers');
 
-const MAKER_LOGIN = mockUsers.find(user => (user.roles.includes('maker')) );
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 // test data we want to set up + work with..
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
@@ -21,8 +21,12 @@ context('about-supply-contract', () => {
   });
 
   before(() => {
+    console.log(JSON.stringify(aDealWithAboutBuyerComplete, null, 4));
     cy.insertOneDeal(aDealWithAboutBuyerComplete, MAKER_LOGIN)
-      .then((insertedDeal) => deal = insertedDeal);
+      .then((insertedDeal) => {
+        console.log({ insertedDeal });
+        deal = insertedDeal;
+      });
   });
 
   it('A maker picks up a deal with the supplier details completed, and fills in the about-buyer-contract section, using the companies house search.', () => {

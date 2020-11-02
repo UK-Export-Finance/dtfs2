@@ -147,6 +147,12 @@ describe('/v1/deals/:id/submission-details', () => {
       const createdDeal = postResult.body;
       const submissionDetails = {
         supplierCompaniesHouseRegistrationNumber: '12345678',
+        destinationOfGoodsAndServices: {},
+        'buyer-address-country': {},
+        'indemnifier-correspondence-address-country': {},
+        'indemnifier-address-country': {},
+        'supplier-address-country': {},
+        'supplier-correspondence-address-country': {},
       };
       const expectedResponse = {
         ...submissionDetails,
@@ -237,6 +243,12 @@ describe('/v1/deals/:id/submission-details', () => {
       const createdDeal = postResult.body;
       const submissionDetails = {
         supplierCompaniesHouseRegistrationNumber: '12345678',
+        destinationOfGoodsAndServices: {},
+        'buyer-address-country': {},
+        'indemnifier-correspondence-address-country': {},
+        'indemnifier-address-country': {},
+        'supplier-address-country': {},
+        'supplier-correspondence-address-country': {},
       };
       const expectedResponse = {
         ...submissionDetails,
