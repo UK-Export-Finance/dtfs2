@@ -34,6 +34,11 @@ describe('/v1/deals/:id/loan', () => {
     return response.body;
   };
 
+  const updateDeal = async (dealBody) => {
+    const response = await as(aBarclaysMaker).put(dealBody).to(`/v1/deals/${dealId}`);
+    return response.body;
+  };
+
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
@@ -284,6 +289,56 @@ describe('/v1/deals/:id/loan', () => {
 
           const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
           expect(validationErrors.errorList.requestedCoverStartDate).toBeUndefined();
+        });
+
+        describe('when the deal has already been submitted', () => {
+          describe('when is before today', () => {
+            it('should NOT return validationError', async () => {
+              await updateDeal({
+                ...newDeal,
+                details: {
+                  ...newDeal.details,
+                  submissionDate: moment().utc().valueOf(),
+                }
+              });
+
+              const beforeToday = moment().subtract(1, 'day');
+
+              const requestedCoverStartDateFields = {
+                'requestedCoverStartDate-day': moment(beforeToday).format('DD'),
+                'requestedCoverStartDate-month': moment(beforeToday).format('MM'),
+                'requestedCoverStartDate-year': moment(beforeToday).format('YYYY'),
+              };
+
+              const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+              expect(validationErrors.errorList.requestedCoverStartDate).toBeUndefined();
+            });
+          });
+
+          describe('when is 3 months or more', () => {
+            it('should NOT return validationError', async () => {
+              await updateDeal({
+                ...newDeal,
+                details: {
+                  ...newDeal.details,
+                  submissionDate: moment().utc().valueOf(),
+                }
+              });
+
+              const nowDate = moment();
+              const requestedCoverStartDate = moment(nowDate).add(3, 'months').add(1, 'day');
+
+              const requestedCoverStartDateFields = {
+                'requestedCoverStartDate-day': moment(requestedCoverStartDate).format('DD'),
+                'requestedCoverStartDate-month': moment(requestedCoverStartDate).format('MM'),
+                'requestedCoverStartDate-year': moment(requestedCoverStartDate).format('YYYY'),
+              };
+
+              const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+
+              expect(validationErrors.errorList.requestedCoverStartDate).toBeUndefined();
+            });
+          });
         });
       });
 
