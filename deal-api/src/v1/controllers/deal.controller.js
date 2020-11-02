@@ -136,7 +136,7 @@ const findOneDeal = async (_id, callback) => {
 exports.findOneDeal = findOneDeal;
 
 const fillInEligibilityCriteria = (criterias, answers) => criterias.map((criteria) => {
-  const matchingAnswer = answers.find((answer) => answer.id === criteria.id);
+  const matchingAnswer = answers ? answers.find((answer) => answer.id === criteria.id) : null;
   if (!matchingAnswer) {
     return criteria;
   }
