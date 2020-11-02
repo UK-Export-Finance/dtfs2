@@ -31,7 +31,6 @@ describe('/v1/deals/:id/submission-details', () => {
   let aBarclaysMaker;
   let aBarclaysChecker;
   let aSuperuser;
-  let anEditor;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
@@ -40,7 +39,6 @@ describe('/v1/deals/:id/submission-details', () => {
     aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
-    anEditor = testUsers().withRole('editor').one();
   });
 
   beforeEach(async () => {

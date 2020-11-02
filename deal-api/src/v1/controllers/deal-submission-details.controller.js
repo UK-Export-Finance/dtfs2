@@ -71,29 +71,12 @@ const checkCountryCode = (existingDeal, submitted, fieldName) => {
 const checkAllCountryCodes = async (deal, fields) => {
   const modifiedFields = fields;
 
-  if ('destinationOfGoodsAndServices' in modifiedFields) {
-    modifiedFields.destinationOfGoodsAndServices = checkCountryCode(deal, fields, 'destinationOfGoodsAndServices');
-  }
-
-  if ('buyer-address-country' in modifiedFields) {
-    modifiedFields['buyer-address-country'] = checkCountryCode(deal, fields, 'buyer-address-country');
-  }
-
-  if ('indemnifier-correspondence-address-country' in modifiedFields) {
-    modifiedFields['indemnifier-correspondence-address-country'] = checkCountryCode(deal, fields, 'indemnifier-correspondence-address-country');
-  }
-
-  if ('indemnifier-address-country' in modifiedFields) {
-    modifiedFields['indemnifier-address-country'] = checkCountryCode(deal, fields, 'indemnifier-address-country');
-  }
-
-  if ('supplier-address-country' in modifiedFields) {
-    modifiedFields['supplier-address-country'] = checkCountryCode(deal, fields, 'supplier-address-country');
-  }
-
-  if ('supplier-correspondence-address-country' in modifiedFields) {
-    modifiedFields['supplier-correspondence-address-country'] = checkCountryCode(deal, fields, 'supplier-correspondence-address-country');
-  }
+  modifiedFields.destinationOfGoodsAndServices = checkCountryCode(deal, fields, 'destinationOfGoodsAndServices');
+  modifiedFields['buyer-address-country'] = checkCountryCode(deal, fields, 'buyer-address-country');
+  modifiedFields['indemnifier-correspondence-address-country'] = checkCountryCode(deal, fields, 'indemnifier-correspondence-address-country');
+  modifiedFields['indemnifier-address-country'] = checkCountryCode(deal, fields, 'indemnifier-address-country');
+  modifiedFields['supplier-address-country'] = checkCountryCode(deal, fields, 'supplier-address-country');
+  modifiedFields['supplier-correspondence-address-country'] = checkCountryCode(deal, fields, 'supplier-correspondence-address-country');
 
   return modifiedFields;
 };
