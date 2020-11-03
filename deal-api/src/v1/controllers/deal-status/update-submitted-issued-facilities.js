@@ -13,24 +13,27 @@ const updateSubmittedIssuedFacilities = async (user, collection, deal) => {
 
       const { facilityStage } = facility;
 
-      const shouldUpdateLoan = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
-      const shouldUpdateBond = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
+      const shouldUpdateLoan = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
+                                && !facility.issueFacilityDetailsSubmitted);
 
-      const shouldUpdateIssuedFacility = ((shouldUpdateLoan
-                                          || shouldUpdateBond)
-                                          && facility.issueFacilityDetailsProvided
-                                          && !facility.issueFacilityDetailsSubmitted
-                                          && facility.status === CONSTANTS.FACILITIES.STATUS.READY_FOR_APPROVAL);
+      const shouldUpdateBond = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
+                                && !facility.issueFacilityDetailsSubmitted);
 
       if (shouldUpdateLoan || shouldUpdateBond) {
         facility.issueFacilityDetailsSubmitted = true;
-      }
-
-      if (shouldUpdateIssuedFacility) {
-        facility.status = CONSTANTS.FACILITIES.STATUS.SUBMITTED;
-
         facility.issuedFacilitySubmittedToUkefTimestamp = now();
         facility.issuedFacilitySubmittedToUkefBy = user;
+      }
+
+      const facilityIsReadyForApproval = facility.status === CONSTANTS.FACILITIES.STATUS.READY_FOR_APPROVAL;
+
+      const facilityIssuedFromIssueFacilityForm = ((shouldUpdateLoan
+                                                  || shouldUpdateBond)
+                                                  && facility.issueFacilityDetailsProvided
+                                                  && facilityIsReadyForApproval);
+
+      if (facilityIssuedFromIssueFacilityForm) {
+        facility.status = CONSTANTS.FACILITIES.STATUS.SUBMITTED;
       }
 
       return facility;
