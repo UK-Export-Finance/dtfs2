@@ -1,4 +1,9 @@
 {% macro render(eligibility) %}
+{% if eligibility.v1ExtraInfo %}
+  {% set agentCriteria = 1 %}
+{% else %}
+  {% set agentCriteria = 11 %}
+{% endif %}
 
   <div data-cy="eligibility-criteria-answers">
     <h4 class="govuk-heading-m" id="eligibility-criteria">Eligibility criteria</h4>
@@ -28,13 +33,13 @@
           </dd>
         </div>
 
-        {% if criterion.id === 11 %}
+        {% if criterion.id === agentCriteria %}
 
           {% set hasAgentAddressLine = eligibility.agentAddressLine1 | length or eligibility.agentAddressLine2 | length or eligibility.agentAddressLine3 | length %}
           {% set renderAgentAddress = hasAgentAddressLine or eligibility.agentAddressTown | length or eligibilityagentAddressPostcode | length %}
    
           {% if eligibility.agentName or renderAgentAddress %}
-            <div class="eligibility-criteria-row govuk-!-margin-bottom-2">
+            <div class="eligibility-criteria-row govuk-!-margin-bottom-2" data-cy="eligibility-agent-details-criteria-{{ agentCriteria }}">
 
               {% if eligibility.agentName %}
                 <div class="govuk-summary-list__row">

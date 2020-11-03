@@ -121,6 +121,14 @@ context('Check deal details', () => {
     pages.contractSubmissionDetails.mandatoryCriteriaBox().should('exist');
   });
 
+  it('Should display agents address under criteria 11', () => {
+    // Older migrated v1 deals do not have mandatory criteria
+    cy.login({ ...MAKER_LOGIN });
+    goToCheckDealDetailsPage();
+    pages.eligibilityCriteria.eligibilityAgent(11).should('exist');
+    pages.eligibilityCriteria.eligibilityAgent(1).should('not.exist');
+  });
+
   context('Portal_v1 migrated deals', () => {
     const dealNoMandatoryCriteria = {
       ...dealInDraft,
@@ -130,8 +138,29 @@ context('Check deal details', () => {
     beforeEach(() => {
       cy.insertOneDeal(dealNoMandatoryCriteria, MAKER_LOGIN)
         .then((insertedDeal) => {
-          deal = insertedDeal;
-          dealId = deal._id; // eslint-disable-line no-underscore-dangle
+          const dealWithCriteria1 = {
+            ...insertedDeal,
+            eligibility: {
+              ...insertedDeal.eligibility,
+              criteria: [
+                {
+                  id: 1,
+                  description: 'The Supplier has confirmed in its Supplier Supplementary Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
+                  answer: false,
+                  group: 'Supply Contract / Transaction criteria',
+                },
+                ...insertedDeal.eligibility.criteria,
+              ],
+              v1ExtraInfo: {
+                revisionId: 7,
+              },
+            },
+          };
+
+          cy.updateDeal(insertedDeal._id, dealWithCriteria1, MAKER_LOGIN).then((updatedDeal) => {
+            deal = updatedDeal;
+            dealId = deal._id; // eslint-disable-line no-underscore-dangle
+          });
         });
     });
 
@@ -140,6 +169,14 @@ context('Check deal details', () => {
       cy.login({ ...MAKER_LOGIN });
       goToCheckDealDetailsPage();
       pages.contractSubmissionDetails.mandatoryCriteriaBox().should('not.exist');
+    });
+
+    it('Should display agents address under criteria 1', () => {
+      // Older migrated v1 deals do not have mandatory criteria
+      cy.login({ ...MAKER_LOGIN });
+      goToCheckDealDetailsPage();
+      pages.eligibilityCriteria.eligibilityAgent(1).should('exist');
+      pages.eligibilityCriteria.eligibilityAgent(11).should('not.exist');
     });
   });
 });
