@@ -15,13 +15,17 @@ const mapDetails = (portalDealId, v1Deal) => {
     log.addError(portalDealId, error);
   };
 
+  const previousStatus = v1Deal.Deal_information.Extra_fields.Deal_previous_status === 'confirmed_by_bank'
+    ? 'submitted'
+    : v1Deal.Deal_information.Extra_fields.Deal_previous_status;
+
   const details = {
     bank: v1Deal.Application_bank,
     bankSupplyContractID: v1Deal.General_information.Bank_deal_id,
     bankSupplyContractName: v1Deal.General_information.Deal_name,
     ukefDealId: v1Deal.UKEF_deal_id,
     status: findPortalValue(v1Deal.Deal_information.Extra_fields.Deal_status, 'Deal_status', 'DEAL', 'STATUS', logError),
-    previousStatus: findPortalValue(v1Deal.Deal_information.Extra_fields.Deal_previous_status, 'Deal_previous_status', 'DEAL', 'STATUS', logError),
+    previousStatus: findPortalValue(previousStatus, 'Deal_previous_status', 'DEAL', 'STATUS', logError),
     previousWorkflowStatus: v1Deal.Deal_information.Extra_fields.Deal_status,
     owningBank: getBankByName(v1Deal.Application_bank),
     dateOfLastAction: convertV1Date(v1Deal.Deal_information.Extra_fields.Deal_updated),
