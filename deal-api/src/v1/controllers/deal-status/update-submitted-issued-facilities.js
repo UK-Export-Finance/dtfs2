@@ -27,10 +27,6 @@ const updateSubmittedIssuedFacilities = async (user, collection, deal) => {
 
       const facilityIsReadyForApproval = facility.status === CONSTANTS.FACILITIES.STATUS.READY_FOR_APPROVAL;
 
-      // TODO / clarify (check e2e tests?)
-      // here we are now only adding Submitted facility status
-      // if the facility has completed Issue Facility form.
-      // I *think* this is correct.....
       const facilityIssuedFromIssueFacilityForm = ((shouldUpdateLoan
                                                   || shouldUpdateBond)
                                                   && facility.issueFacilityDetailsProvided
