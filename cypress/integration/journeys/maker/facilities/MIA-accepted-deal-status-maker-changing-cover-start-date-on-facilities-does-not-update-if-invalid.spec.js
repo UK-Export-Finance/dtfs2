@@ -51,6 +51,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     // Issued Bond - enter and submit an invalid date in 'Confirm start date' form
     //---------------------------------------------------------------
     issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().click();
+
     pages.facilityConfirmCoverStartDate.coverStartDateDay().type(INVALID_DATE.format('DD'));
     pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(INVALID_DATE.format('MM'));
     pages.facilityConfirmCoverStartDate.coverStartDateYear().type(INVALID_DATE.format('YYYY'));
@@ -68,6 +69,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     // Unconditional Loan - enter and submit an invalid date in 'Confirm start date' form
     //---------------------------------------------------------------
     unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().click();
+
     pages.facilityConfirmCoverStartDate.coverStartDateDay().type(INVALID_DATE.format('DD'));
     pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(INVALID_DATE.format('MM'));
     pages.facilityConfirmCoverStartDate.coverStartDateYear().type(INVALID_DATE.format('YYYY'));

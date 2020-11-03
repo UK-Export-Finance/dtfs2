@@ -1,7 +1,7 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% import '_macros/date-field.njk' as dateField %}
+{% import '../_macros/facility-inputs/new-cover-start-date-field.njk' as newCoverStartDateField %}
 
 {% block content %}
 
@@ -19,9 +19,15 @@
   <form method="POST" autocomplete="off">
 
     {% if needToChangeRequestedCoverStartDate %}
+
       <input type="hidden" name="needToChangeRequestedCoverStartDate" value="true" />
 
-    {% else %}
+      {{newCoverStartDateField.render(
+        enteredValues,
+        validationErrors.errorList.requestedCoverStartDate
+      )}}
+
+      {% else %}
 
       {{ govukRadios({
         idPrefix: "needToChangeRequestedCoverStartDate",
@@ -39,6 +45,12 @@
             checked: needToChangeRequestedCoverStartDate === "true",
             attributes: {
               'data-cy': 'need-to-change-cover-start-date-yes'
+            },
+            conditional: {
+              html: newCoverStartDateField.render(
+                enteredValues,
+                validationErrors.errorList.requestedCoverStartDate
+              )
             }
           },
           {
@@ -54,15 +66,6 @@
 
     {% endif %}
 
-    {{ dateField.render(
-      legend = 'New Requested Cover Start Date',
-      id = 'requestedCoverStartDate',
-      hint = 'For example, 27 11 2019',
-      error = validationErrors.errorList.requestedCoverStartDate,
-      dayValue = enteredValues['requestedCoverStartDate-day'],
-      monthValue = enteredValues['requestedCoverStartDate-month'],
-      yearValue = enteredValues['requestedCoverStartDate-year']
-    )}}
 
     <button data-cy="submit-button" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
       Save

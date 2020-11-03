@@ -28,6 +28,12 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
       });
   });
 
+  const coverStartDateShouldNotBeVisibile = () => {
+    pages.facilityConfirmCoverStartDate.coverStartDateDay().should('not.be.visible');
+    pages.facilityConfirmCoverStartDate.coverStartDateMonth().should('not.be.visible');
+    pages.facilityConfirmCoverStartDate.coverStartDateYear().should('not.be.visible');
+  };
+
   it('Maker can `Confirm or change start date` for Issued & Unconditional facilities and only resubmit the deal once all Issued & Unconditional facilities have had their start date confirmed', () => {
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
@@ -183,6 +189,8 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
     secondIssuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().click();
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().click();
+    coverStartDateShouldNotBeVisibile();
+
     pages.facilityConfirmCoverStartDate.submit().click();
 
     //---------------------------------------------------------------
@@ -194,6 +202,8 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
     secondUnconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().click();
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().click();
+
+    coverStartDateShouldNotBeVisibile();
     pages.facilityConfirmCoverStartDate.submit().click();
 
     //---------------------------------------------------------------
