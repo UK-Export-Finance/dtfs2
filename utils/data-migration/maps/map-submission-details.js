@@ -100,13 +100,12 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
     submissionDetails.indemnifierCorrespondenceAddressDifferent = indemnifierCorrespondenceAddressDifferent.toString();
 
     if (indemnifierCorrespondenceAddressDifferent) {
-      submissionDetails['indemnifier-correspondence-address-line-1'] = exporterInfo.Indemnifier_correspondence_address_Line1;
-      submissionDetails['indemnifier-correspondence-address-line-2'] = exporterInfo.Indemnifier_correspondence_address_Line2;
-      submissionDetails['indemnifier-correspondence-address-line-3'] = exporterInfo.Indemnifier_correspondence_address_Line3;
-      submissionDetails['indemnifier-correspondence-address-town'] = exporterInfo.Indemnifier_correspondence_address_Town;
-      submissionDetails['indemnifier-correspondence-address-postcode'] = exporterInfo.Indemnifier_correspondence_address_PostalCode;
-      submissionDetails['indemnifier-correspondence-address-town'] = exporterInfo.Indemnifier_correspondence_address_Town;
-      submissionDetails['indemnifier-correspondence-address-country'] = getCountryById(exporterInfo.Indemnifier_correspondence_address_Country);
+      submissionDetails['indemnifier-correspondence-address-line-1'] = exporterInfo.Indemnifier_correspondence_address.Line1;
+      submissionDetails['indemnifier-correspondence-address-line-2'] = exporterInfo.Indemnifier_correspondence_address.Line2;
+      submissionDetails['indemnifier-correspondence-address-line-3'] = exporterInfo.Indemnifier_correspondence_address.Line3;
+      submissionDetails['indemnifier-correspondence-address-town'] = exporterInfo.Indemnifier_correspondence_address.Town;
+      submissionDetails['indemnifier-correspondence-address-postcode'] = exporterInfo.Indemnifier_correspondence_address.PostalCode;
+      submissionDetails['indemnifier-correspondence-address-country'] = getCountryById(exporterInfo.Indemnifier_correspondence_address.Country);
     }
   }
 
