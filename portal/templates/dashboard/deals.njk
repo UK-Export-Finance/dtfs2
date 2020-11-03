@@ -81,7 +81,11 @@
               </td>
 
               <td data-cy="checker" class="govuk-table__cell govuk-!-font-size-14">
-                {{ contract.details.checker | displayName}}
+                {% if contract.details.checkerMIN %}
+                  {{ contract.details.checkerMIN | displayName}}
+                {% else %}
+                  {{ contract.details.checker | displayName}}
+                {% endif %}
               </td>
 
               <td data-cy="updated" class="govuk-table__cell govuk-!-font-size-14">
