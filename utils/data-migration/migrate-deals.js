@@ -22,6 +22,9 @@ const log = require('./helpers/log');
 const { getToken, removeMigrationUser } = require('./temporary-token-handler');
 const api = require('./api');
 
+const Entities = require('html-entities').AllHtmlEntities;
+
+const entities = new Entities();
 
 let token;
 let logFile;
@@ -50,6 +53,8 @@ const teardown = async () => {
   consoleLogColor(`Migrated ${successCount} of ${importDealCount}`, successCount === importDealCount ? 'green' : 'red');
   console.log(`Log file: ${logFile}`);
 };
+
+const convertHtmlEntities = (value) => entities.decode(value);
 
 const mapV2 = async (portalDealId, v1Deal) => {
   const [details, detailsError] = mapDetails(portalDealId, v1Deal);
@@ -115,7 +120,7 @@ const archiveFile = async (dealId) => {
 const processXml = async (dealId) => {
   const dealXml = await fileshare.readFile({ fileshare: 'workflow', folder: `${AZURE_WORKFLOW_FILESHARE_CONFIG.MIGRATION_FOLDER}/${dealId}`, filename: `deal_${dealId}.xml` });
 
-  const { Deal: workflowDeal } = await xml2js.parseStringPromise(dealXml.toString(), { ignoreAttrs: true, explicitArray: false });
+  const { Deal: workflowDeal } = await xml2js.parseStringPromise(dealXml.toString(), { ignoreAttrs: true, explicitArray: false, valueProcessors: [convertHtmlEntities] });
   return workflowDeal;
 };
 
