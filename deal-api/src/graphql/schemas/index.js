@@ -40,6 +40,7 @@ type DealDetails {
   submissionType: String
   maker: Maker
   checker: Checker
+  checkerMIN: Checker
   dateOfLastAction: String
   submissionDate: String
   approvalDate: String
