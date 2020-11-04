@@ -1080,6 +1080,12 @@ jobs:
             --source-address-prefixes "51.140.76.208" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
 
+            # Caroline - VM
+          az network nsg rule create --name team-ips-caroline-vm --nsg-name tfs-${{ env.environment }}-gw-nsg \
+          --priority 4000 --direction Inbound --protocol "*" --access Allow \
+          --source-address-prefixes "51.132.249.180" --source-port-ranges "*" \
+          --destination-address-prefixes "*" --destination-port-ranges "*"
+          
           # Tony B
           az network nsg rule create --name team-ips-tonyb --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 4001 --direction Inbound --protocol "*" --access Allow \
