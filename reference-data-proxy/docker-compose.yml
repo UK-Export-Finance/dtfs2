@@ -1,0 +1,20 @@
+version: "3"
+services:
+
+  ref-data-api:
+    build: .
+    image: dtfs/ref-data-api
+    restart: always
+    ports:
+      - "5002:5002"
+    volumes:
+      - ./src:/app/src:ro
+    environment:
+      - DEBUG=express:*
+      - PORT=5002
+      - CORS_ORIGIN=http://localhost:5002
+      - JWT_SIGNING_KEY
+      - JWT_VALIDATING_KEY
+
+    entrypoint: npx nodemon src/index.js
+
