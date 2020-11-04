@@ -29,7 +29,7 @@ module.exports = {
     library: ['DTFS', '[name]'],
     libraryTarget: 'var',
   },
-  target: 'web',
+  target: ['web', 'es5'],
   optimization: {
     minimize: true,
     minimizer: [
@@ -44,7 +44,11 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: {},
+          options: {
+            presets: [
+              '@babel/preset-env',
+            ],
+          },
         },
       },
       {
