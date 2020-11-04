@@ -742,8 +742,8 @@ jobs:
           az webapp config connection-string set --name tfs-${{ env.environment }}-reference-data-proxy \
             --connection-string-type custom \
             --settings \
-              MULESOFT_API="${{ env.MULESOFT_API }}"
-
+              MULESOFT_API="TMP"
+    
   portal-api:
     name: Portal API
     needs: [vnet, private-dns, cosmos-db-create]
