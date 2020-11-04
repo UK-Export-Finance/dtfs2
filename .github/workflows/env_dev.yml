@@ -603,6 +603,147 @@ jobs:
             echo "IP for tfs-${{ env.environment }}-mongo.privatelink.mongo.cosmos.azure.com is $ipv4_address"
           fi
               
+  reference-data-proxy:
+    name: Reference data API
+    needs: [vnet, private-dns]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp create --name tfs-${{ env.environment }}-reference-data-proxy \
+            --plan ${{ env.app_service_plan }} \
+            --deployment-container-image-name ${{ env.registry }}/reference-data-proxy:${{ env.environment }}
+
+    - name: Vnet integration
+      uses: Azure/cli@v1.0.0
+      with:
+        # Enable outbound traffic from Portal API to the services subnet so we can access Cosmos and Storage
+        inlineScript: |
+          az webapp vnet-integration add --name tfs-${{ env.environment }}-reference-data-proxy \
+            --vnet tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.app_service_plan }}-app-service-plan-egress
+
+    - name: Private endpoint
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource".
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          reference_data_api_id=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query "id" -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-reference-data-proxy \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-private-endpoints \
+            --private-connection-resource-id "$reference_data_api_id" \
+            --group-id sites \
+            --connection-name tfs-${{ env.environment }}-reference-data-proxy
+
+    - name: DNS A-records
+      uses: Azure/cli@v1.0.0
+      with:
+        # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
+        # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
+        # NB the -z tests below are checking 
+        inlineScript: |
+          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-reference-data-proxy --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+
+          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-reference-data-proxy --query 'networkInterfaces[0].id' -o tsv)
+          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+          
+          # Create
+          if [ -z "$ipv4_address" ]
+          then
+            echo Setting private link IP address...
+
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-reference-data-proxy --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-reference-data-proxy \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+            
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-reference-data-proxy.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-reference-data-proxy.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          fi
+
+          # Update
+          if [ "$ipv4_address" != "$interface_ip" ]
+          then
+            echo Update private link IP address...
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-reference-data-proxy --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-reference-data-proxy --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-reference-data-proxy \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-reference-data-proxy.scm --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-reference-data-proxy.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-reference-data-proxy.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          fi
+
+    - name: Continuous deployment
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment container config --name tfs-${{ env.environment }}-reference-data-proxy \
+            --enable-cd true
+
+    - name: Enable container logging
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp log config --name tfs-${{ env.environment }}-reference-data-proxy \
+            --docker-container-logging filesystem
+
+    - name: Always-on
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp config set --name tfs-${{ env.environment }}-reference-data-proxy \
+            --always-on true
+
+    - name: Environment variables
+      uses: Azure/cli@v1.0.0
+      with:
+        # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
+        # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
+        # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
+        inlineScript: |
+          az webapp config appsettings set --name tfs-${{ env.environment }}-reference-data-proxy \
+            --settings \
+              PORT=5000 \
+              WEBSITES_PORT=5000
+
+    - name: Secrets
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |          
+          az webapp config connection-string set --name tfs-${{ env.environment }}-reference-data-proxy \
+            --connection-string-type custom \
+            --settings \
+              MULESOFT_API="${{ env.MULESOFT_API }}"
+
   portal-api:
     name: Portal API
     needs: [vnet, private-dns, cosmos-db-create]
@@ -739,14 +880,11 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
-
-          echo "Mongo connection string: $mongo_connection_string"
           
           az webapp config connection-string set --name tfs-${{ env.environment }}-portal-api \
             --connection-string-type custom \
             --settings \
-              AZURE_PORTAL_EXPORT_FOLDER="${{ env.AZURE_PORTAL_EXPORT_FOLDER }}" \
+              MULESOFT_API="${{ env.MULESOFT_API }}" \
               AZURE_PORTAL_FILESHARE_NAME="${{ env.AZURE_PORTAL_FILESHARE_NAME }}" \
               AZURE_PORTAL_STORAGE_ACCESS_KEY="${{ env.AZURE_PORTAL_STORAGE_ACCESS_KEY }}" \
               AZURE_PORTAL_STORAGE_ACCOUNT="${{ env.AZURE_PORTAL_STORAGE_ACCOUNT }}" \
@@ -763,7 +901,8 @@ jobs:
               GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
               DTFS_PORTAL_SCHEDULER="${{ env.DTFS_PORTAL_SCHEDULER }}" \
               FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ env.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}"
-                
+                            
+
   file-storage:
     name: File storage
     needs: [vnet, private-dns]
