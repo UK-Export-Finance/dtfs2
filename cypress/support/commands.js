@@ -35,6 +35,8 @@ Cypress.Commands.add("insertManyDeals", require('./deal-api/insertManyDeals'));
 Cypress.Commands.add("deleteDeals", require('./deal-api/deleteDeals'));
 Cypress.Commands.add("downloadFile", downloadFile);
 Cypress.Commands.add("removeUserIfPresent", require('./deal-api/removeUserIfPresent'));
+Cypress.Commands.add("updateBond", require('./deal-api/updateBond'));
+Cypress.Commands.add("updateLoan", require('./deal-api/updateLoan'));
 
 // commands used to interact with the test hooks - ie. endpoints that only exist during pipeline execution.
 Cypress.Commands.add("sendTypeB", require('./test-hooks-api/sendTypeB'));
