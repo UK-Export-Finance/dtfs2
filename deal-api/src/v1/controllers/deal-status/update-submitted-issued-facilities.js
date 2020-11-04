@@ -10,25 +10,40 @@ const updateSubmittedIssuedFacilities = async (user, collection, deal) => {
 
     arr.forEach((f) => {
       const facility = f;
-
       const { facilityStage } = facility;
 
-      const shouldUpdateLoan = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
-                                && !facility.issueFacilityDetailsSubmitted);
+      const isUnconditionalUnsubmittedLoan = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
+                                             && !facility.issueFacilityDetailsSubmitted);
 
-      const shouldUpdateBond = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
-                                && !facility.issueFacilityDetailsSubmitted);
+      const isIssuedUnsubmittedBond = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
+                                      && !facility.issueFacilityDetailsSubmitted);
 
-      if (shouldUpdateLoan || shouldUpdateBond) {
+      const shouldUpdate = (isUnconditionalUnsubmittedLoan || isIssuedUnsubmittedBond);
+
+      if (shouldUpdate) {
         facility.issueFacilityDetailsSubmitted = true;
         facility.issuedFacilitySubmittedToUkefTimestamp = now();
         facility.issuedFacilitySubmittedToUkefBy = user;
+
+        if (!facility.previousFacilityStage
+          && !facility.issueFacilityDetailsProvided) {
+          // Facility has been issued at the Deal draft stage. Therefore:
+          // - no need for Maker to Issue the facility from Issue Facility Form
+          // - won't get 'Submitted' status (declared below when Issue Facility Form details provided)
+          //
+          // At this point, the facility status should not change - it's already been issued.
+          // So, we 'lock' the status - everything is completed for this facility.
+          //
+          // Without this, the following would happen, which we do not want:
+          // - the facility's status would continue to by dynamically generated
+          // - the facility's status could be marked as 'incomplete', as dates become invalid
+          facility.status = CONSTANTS.FACILITIES.STATUS.COMPLETED;
+        }
       }
 
       const facilityIsReadyForApproval = facility.status === CONSTANTS.FACILITIES.STATUS.READY_FOR_APPROVAL;
 
-      const facilityIssuedFromIssueFacilityForm = ((shouldUpdateLoan
-                                                  || shouldUpdateBond)
+      const facilityIssuedFromIssueFacilityForm = (shouldUpdate
                                                   && facility.issueFacilityDetailsProvided
                                                   && facilityIsReadyForApproval);
 

@@ -134,7 +134,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
     });
 
     describe('any Unconditional loans that do NOT have issueFacilityDetailsSubmitted', () => {
-      it('should add issueFacilityDetailsSubmitted, submitted timestamp and submitted by', async () => {
+      it('should add issueFacilityDetailsSubmitted, submitted timestamp, submitted by and `Completed` status', async () => {
         expect(updatedDeal.status).toEqual(200);
         expect(updatedDeal.body).toBeDefined();
 
@@ -166,12 +166,13 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
           expect(updatedLoan.issuedFacilitySubmittedToUkefBy.email).toEqual(aBarclaysChecker.email);
           expect(updatedLoan.issuedFacilitySubmittedToUkefBy.firstname).toEqual(aBarclaysChecker.firstname);
           expect(updatedLoan.issuedFacilitySubmittedToUkefBy.lastname).toEqual(aBarclaysChecker.lastname);
+          expect(updatedLoan.status).toEqual('Completed');
         });
       });
     });
 
     describe('any Issued bonds that do NOT have issueFacilityDetailsSubmitted', () => {
-      it('should add issueFacilityDetailsSubmitted, submitted timestamp and submitted by', async () => {
+      it('should add issueFacilityDetailsSubmitted, submitted timestamp, submitted by and `Completed` status', async () => {
         expect(updatedDeal.status).toEqual(200);
         expect(updatedDeal.body).toBeDefined();
 
@@ -203,6 +204,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
           expect(updatedBond.issuedFacilitySubmittedToUkefBy.email).toEqual(aBarclaysChecker.email);
           expect(updatedBond.issuedFacilitySubmittedToUkefBy.firstname).toEqual(aBarclaysChecker.firstname);
           expect(updatedBond.issuedFacilitySubmittedToUkefBy.lastname).toEqual(aBarclaysChecker.lastname);
+          expect(updatedBond.status).toEqual('Completed');
         });
       });
     });
