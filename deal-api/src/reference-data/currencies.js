@@ -177,6 +177,7 @@ const CURRENCIES = [
     currencyId: 35,
     text: 'THB - Thai Bahts',
     id: 'THB',
+    disabled: true,
   },
   {
     currencyId: 36,
@@ -192,6 +193,7 @@ const CURRENCIES = [
     currencyId: 38,
     text: 'XAF - CFA Francs',
     id: 'XAF',
+    disabled: true,
   },
   {
     currencyId: 39,
