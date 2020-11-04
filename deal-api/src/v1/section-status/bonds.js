@@ -8,7 +8,7 @@ const bondStatus = (bond, bondErrors, bondIssueFacilityErrors) => {
   const hasBondErrors = (bondErrors && bondErrors.count !== 0);
   const hasBondIssueFacilityErrors = (bondIssueFacilityErrors && bondIssueFacilityErrors.count !== 0);
 
-  // this will be 'Not started', 'Ready for check', 'Submitted', or 'Acknowledged'
+  // this will be 'Not started', 'Ready for check', 'Submitted', 'Acknowledged', 'Completed'
   // this comes from either:
   // - the deal status changing - when submitting a deal with an issued bond, we add a status to the bond.
   // - workflow/xml.
