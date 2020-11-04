@@ -986,29 +986,23 @@ jobs:
             --source-address-prefixes "81.174.144.245" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
 
-          # Dan B
-          az network nsg rule create --name team-ips-danb --nsg-name tfs-${{ env.environment }}-gw-nsg \
+          # UKEF IP
+          az network nsg rule create --name team-ips-ukef --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 3000 --direction Inbound --protocol "*" --access Allow \
             --source-address-prefixes "51.140.76.208" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
-
-          # Caroline
-          az network nsg rule create --name team-ips-caroline --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 4000 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "51.140.76.208" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-          # Caroline - VM
-          az network nsg rule create --name team-ips-caroline-vm --nsg-name tfs-${{ env.environment }}-gw-nsg \
-          --priority 4000 --direction Inbound --protocol "*" --access Allow \
-          --source-address-prefixes "51.132.249.180" --source-port-ranges "*" \
-          --destination-address-prefixes "*" --destination-port-ranges "*"
 
           # Tony B
           az network nsg rule create --name team-ips-tonyb --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 4001 --direction Inbound --protocol "*" --access Allow \
             --source-address-prefixes "87.74.99.121" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
+
+          # Caroline - VM
+          az network nsg rule create --name team-ips-caroline-vm --nsg-name tfs-${{ env.environment }}-gw-nsg \
+          --priority 4002 --direction Inbound --protocol "*" --access Allow \
+          --source-address-prefixes "51.132.249.180" --source-port-ranges "*" \
+          --destination-address-prefixes "*" --destination-port-ranges "*"
 
     - name: Associate NSG to gateway subnet
       uses: Azure/cli@v1.0.0
