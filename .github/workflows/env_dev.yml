@@ -880,10 +880,14 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          
+          mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
+
+          echo "Mongo connection string: $mongo_connection_string"
+
           az webapp config connection-string set --name tfs-${{ env.environment }}-portal-api \
             --connection-string-type custom \
             --settings \
+              AZURE_PORTAL_EXPORT_FOLDER="${{ env.AZURE_PORTAL_EXPORT_FOLDER }}" \
               AZURE_PORTAL_FILESHARE_NAME="${{ env.AZURE_PORTAL_FILESHARE_NAME }}" \
               AZURE_PORTAL_STORAGE_ACCESS_KEY="${{ env.AZURE_PORTAL_STORAGE_ACCESS_KEY }}" \
               AZURE_PORTAL_STORAGE_ACCOUNT="${{ env.AZURE_PORTAL_STORAGE_ACCOUNT }}" \
