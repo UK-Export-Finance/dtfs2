@@ -99,6 +99,28 @@ module.exports.updateDeal = (dealId, update, token) => cy.request({
   return resp.body;
 });
 
+module.exports.updateBond = (dealId, bondId, update, token) => cy.request({
+  url: `${api()}/v1/deals/${dealId}/bond/${bondId}`,
+  method: 'PUT',
+  body: update,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+  failOnStatusCode: false, // need to allow this for when we invalidate a bond and test user flow
+}).then((resp) => resp.body);
+
+module.exports.updateLoan = (dealId, loanId, update, token) => cy.request({
+  url: `${api()}/v1/deals/${dealId}/loan/${loanId}`,
+  method: 'PUT',
+  body: update,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+  failOnStatusCode: false, // need to allow this for when we invalidate a bond and test user flow
+}).then((resp) => resp.body);
+
 module.exports.downloadFile = (token, deal) => cy.request({
   url: `${api()}/v1/deals/${deal._id}/integration/type-a`,
   method: 'GET',

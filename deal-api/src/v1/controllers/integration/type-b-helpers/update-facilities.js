@@ -32,6 +32,15 @@ const updateBondStatus = (bond, workflowBond, workflowActionCode) => {
       return CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
     }
   }
+
+  // "facilities issued in draft deal stage should have status updated after submission".
+  // These type of facilities are the only facilities that we manually add a status to.
+  // This happens during deal submission to UKEF. They are 'locked' in 'Completed' status.
+  // The status is otherwise generated from workflow response (above), or dynmically generated according to validation.
+  if (bond.status === CONSTANTS.FACILITIES.STATUS.COMPLETED) {
+    return bond.status;
+  }
+
   return null;
 };
 
@@ -66,6 +75,14 @@ const updateLoanStatus = (loan, workflowLoan, workflowActionCode) => {
     if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL) {
       return CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
     }
+  }
+
+  // "facilities issued in draft deal stage should have status updated after submission".
+  // These type of facilities are the only facilities that we manually add a status to.
+  // This happens during deal submission to UKEF. They are 'locked' in 'Completed' status.
+  // The status is otherwise generated from workflow response (above), or dynmically generated according to validation.
+  if (loan.status === CONSTANTS.FACILITIES.STATUS.COMPLETED) {
+    return loan.status;
   }
 
   return null;
