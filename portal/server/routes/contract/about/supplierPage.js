@@ -18,6 +18,7 @@ import calculateStatusOfEachPage from './navStatusCalculations';
 import aboutTaskList from './aboutTaskList';
 import { supplierValidationErrors } from './pageSpecificValidationErrors';
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
+import { getIndustrySectorById, getIndustryClassById } from './getIndustryById';
 
 const router = express.Router();
 
@@ -84,7 +85,8 @@ router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COU
   });
 });
 
-router.post('/contract/:_id/about/supplier', async (req, res) => {
+router.post('/contract/:_id/about/supplier', provide([INDUSTRY_SECTORS]), async (req, res) => {
+  const { industrySectors } = req.apiData;
   const { _id, userToken } = requestParams(req);
   const submissionDetails = req.body;
 
@@ -125,6 +127,34 @@ router.post('/contract/:_id/about/supplier', async (req, res) => {
     submissionDetails['indemnifier-correspondence-address-line-3'] = '';
     submissionDetails['indemnifier-correspondence-address-town'] = '';
     submissionDetails['indemnifier-correspondence-address-postcode'] = '';
+  }
+
+  // get industry sector object from the submitted industry sector code
+  const industrySectorCode = submissionDetails['industry-sector'];
+
+  let industrySectorObj;
+
+  if (industrySectorCode) {
+    industrySectorObj = getIndustrySectorById(industrySectors, industrySectorCode);
+
+    submissionDetails['industry-sector'] = {
+      code: industrySectorCode,
+      name: getIndustrySectorById(industrySectors, industrySectorCode).name,
+    };
+  } else {
+    submissionDetails['industry-sector'] = {};
+  }
+
+  // get industry class object from the submitted industry class code
+  const industryClassCode = submissionDetails['industry-class'];
+
+  if (industryClassCode && industrySectorObj.classes) {
+    submissionDetails['industry-class'] = {
+      code: industryClassCode,
+      name: getIndustryClassById(industrySectorObj.classes, industryClassCode).name,
+    };
+  } else {
+    submissionDetails['industry-class'] = {};
   }
 
   await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);

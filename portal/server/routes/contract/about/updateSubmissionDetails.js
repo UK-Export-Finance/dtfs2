@@ -2,7 +2,6 @@ import api from '../../../api';
 
 const updateSubmissionDetails = async (deal, postedSubmissionDetails, userToken) => {
   const submissionDetails = {
-    // ...deal.submissionDetails,
     ...postedSubmissionDetails,
   };
 

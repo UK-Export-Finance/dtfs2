@@ -3,13 +3,16 @@
 // also add empty first option for design.
 
 const mapIndustrySectors = (industrySectors, selectedIndustrySector) => {
+  const selectedIndustrySectorCode = (selectedIndustrySector
+    && selectedIndustrySector.code) ? selectedIndustrySector.code : '';
+
   const mappedSectors = [
     { text: 'Select value' },
     ...industrySectors.map((sourceSector) => {
       const sector = {
         value: sourceSector.code,
         text: sourceSector.name,
-        selected: selectedIndustrySector === sourceSector.code,
+        selected: selectedIndustrySectorCode === sourceSector.code,
       };
       return sector;
     }),
