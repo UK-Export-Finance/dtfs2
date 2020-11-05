@@ -17,7 +17,10 @@ const getCurrencyById = (currencyId = '') => {
   };
 };
 
+const formatCurrency = (value) => Number(value).toFixed(2);
+
 module.exports = {
   initCurrencies,
   getCurrencyById,
+  formatCurrency,
 };
