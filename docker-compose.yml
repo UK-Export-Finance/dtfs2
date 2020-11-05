@@ -52,6 +52,7 @@ services:
       - GOV_NOTIFY_EMAIL_RECIPIENT
       - DTFS_PORTAL_SCHEDULER=true
       - FETCH_WORKFLOW_TYPE_B_SCHEDULE=*/1 * * * * *
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
 
     entrypoint: npx nodemon src/index.js
 
@@ -70,7 +71,20 @@ services:
 
   redis:
     image: redis:alpine
-
+  
+  reference-data-proxy:
+    build: ./reference-data-proxy
+    image: dtfs/reference-data-proxy
+    restart: always
+    ports:
+      - "5002:5002"
+    volumes:
+      - ./reference-data-proxy/src:/app/src:ro
+    environment:
+      - PORT=5002
+      - MULESOFT_API
+    entrypoint: npx nodemon src/index.js
+    
   test-hook-api:
     build: ./test-hook-api
     image: dtfs/test-hook-api
