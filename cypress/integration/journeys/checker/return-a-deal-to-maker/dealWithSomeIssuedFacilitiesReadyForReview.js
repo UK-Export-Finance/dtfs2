@@ -109,9 +109,9 @@ const deal = {
     "indemnifier-correspondence-address-town": "",
     "indemnifier-name": "",
     "industry-class": {
-  "code": "56101",
-  "name": "Licensed restaurants"
-},,
+      "code": "56101",
+      "name": "Licensed restaurants"
+    },
     "industry-sector": {
       "code": "1008",
       "name": "Accommodation and food service activities"

@@ -77,11 +77,11 @@ describe(component, () => {
   });
 
   it('should render industry-sector', () => {
-    wrapper.expectText('[data-cy="industry-sector"]').toRead(submissionDetails['industry-sector']);
+    wrapper.expectText('[data-cy="industry-sector"]').toRead(submissionDetails['industry-sector'].name);
   });
 
   it('should render industry-class', () => {
-    wrapper.expectText('[data-cy="industry-class"]').toRead(submissionDetails['industry-class']);
+    wrapper.expectText('[data-cy="industry-class"]').toRead(submissionDetails['industry-class'].name);
   });
 
   it('should render sme-type', () => {
