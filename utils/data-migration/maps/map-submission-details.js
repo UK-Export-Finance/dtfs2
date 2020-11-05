@@ -1,6 +1,7 @@
 const log = require('../helpers/log');
 const { getCountryById } = require('../helpers/countries');
 const { getCurrencyById } = require('../helpers/currencies');
+const { getIndustrySectorByCode, getIndustryClassByCode } = require('../helpers/industry-sectors');
 const findPortalValue = require('./findPortalValue');
 
 let hasError = false;
@@ -42,6 +43,8 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
   const supplierCorrespondenceAddressIsDifferent = addressIsDifferent(exporterInfo.Exporter_address, exporterInfo.Exporter_correspondence_address);
   const indemnifierLegallyDistinct = Boolean(exporterInfo.Indemnifier_name);
 
+  const industrySector = getIndustrySectorByCode(exporterInfo.Industry_sector_code.toString());
+
   const submissionDetails = {
     'supplier-type': findPortalValue(exporterInfo.Customer_type, 'Customer_type', 'DEAL', 'SUPPLIER_TYPE', logError),
     'supplier-companies-house-registration-number': exporterInfo.Exporter_co_hse_reg_number,
@@ -53,8 +56,8 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
     'supplier-address-postcode': exporterInfo.Exporter_address.PostalCode,
     'supplier-address-town': exporterInfo.Exporter_address.Town,
     'supplier-correspondence-address-is-different': supplierCorrespondenceAddressIsDifferent.toString(),
-    'industry-sector': exporterInfo.Industry_sector_code,
-    'industry-class': exporterInfo.Industry_class_code,
+    'industry-sector': industrySector.code,
+    'industry-class': getIndustryClassByCode(industrySector.classes, exporterInfo.Industry_class_code.toString()),
     'sme-type': findPortalValue(exporterInfo.Sme_type, 'Sme_type', 'DEAL', 'SME_TYPE', logError),
     'supply-contract-description': exporterInfo.Description_of_export,
     legallyDistinct: indemnifierLegallyDistinct.toString(),

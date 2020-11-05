@@ -15,6 +15,7 @@ const { initBanks } = require('./helpers/banks');
 const { initUsers } = require('./helpers/users');
 const { initCountries } = require('./helpers/countries');
 const { initCurrencies } = require('./helpers/currencies');
+const { initIndustrySectors } = require('./helpers/industry-sectors');
 
 const consoleLogColor = require('./helpers/console-log-colour');
 
@@ -43,6 +44,7 @@ const init = async () => {
   await initUsers(token);
   await initCountries(token);
   await initCurrencies(token);
+  await initIndustrySectors(token);
   fileshare.setConfig(AZURE_WORKFLOW_FILESHARE_CONFIG);
   logFile = log.init('migrate-deals');
 };
