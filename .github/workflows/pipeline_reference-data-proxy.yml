@@ -58,9 +58,11 @@ jobs:
         docker pull ${{ secrets.DEV_ACR_REGISTRY }}/reference-data-proxy
         docker tag ${{ secrets.DEV_ACR_REGISTRY }}/reference-data-proxy dtfs/reference-data-proxy
     - name: Start Docker Compose
+      working-directory: ./reference-data-proxy
       run: |
         docker-compose up -d
     - name: Run API tests
+      working-directory: ./reference-data-proxy
       run: |
         docker-compose exec -T reference-data-proxy npx jest --notify --coverage --verbose --config=api-test.jest.config.js --runInBand
     - uses: act10ns/slack@v1
