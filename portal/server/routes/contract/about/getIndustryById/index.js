@@ -1,4 +1,4 @@
-export const getIndustrySectorById = (industrySectors, id) => 
+export const getIndustrySectorById = (industrySectors, id) =>
   industrySectors.find((sector) => sector.code === id);
 
 export const getIndustryClassById = (industrySectorClasses, id) =>
