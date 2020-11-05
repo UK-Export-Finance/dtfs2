@@ -167,7 +167,7 @@
         },
         "industry-sector": {
             "code": "1008",
-            "name": "Accommodation and food service activities",
+            "name": "Accommodation and food service activities"
         },
         "legallyDistinct" : "false",
         "sme-type" : "Small",
