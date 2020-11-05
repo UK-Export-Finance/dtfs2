@@ -1,5 +1,5 @@
 
-const { getCurrencyById } = require('../helpers/currencies');
+const { getCurrencyById, formatCurrency } = require('../helpers/currencies');
 const { convertV1Date } = require('../helpers/date-helpers');
 const { getUserByEmail } = require('../helpers/users');
 
@@ -32,7 +32,7 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
       currency: getCurrencyById(loan.EWCS_Financial_details.EWCS_currency_code),
       currencySameAsSupplyContractCurrency: (loan.EWCS_Financial_details.EWCS_currency_code === v1Deal.Deal_information.Financial.Deal_currency_code).toString(),
       conversionRate: loan.EWCS_Financial_details.EWCS_conversion_rate_deal,
-      disbursementAmount: loan.EWCS_Financial_details.EWCS_disbursement_amount,
+      disbursementAmount: formatCurrency(loan.EWCS_Financial_details.EWCS_disbursement_amount),
       interestMarginFee: loan.EWCS_Financial_details.EWCS_interest_rate,
       guaranteeFeePayableByBank: loan.EWCS_Financial_details.EWCS_fee_perc,
       coveredPercentage: loan.EWCS_Financial_details.EWCS_guarantee_perc,
