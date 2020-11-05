@@ -49,13 +49,13 @@ module.exports = {
     "indemnifier-name" : "WATKINSON TRADING LIMITED",
     "indemnifierCorrespondenceAddressDifferent" : "true",
     "industry-sector": {
-  "code": "1008",
-  "name": "Accommodation and food service activities"
-},
+      "code": "1008",
+      "name": "Accommodation and food service activities"
+    },
     "industry-class": {
-  "code": "56101",
-  "name": "Licensed restaurants"
-},
+      "code": "56101",
+      "name": "Licensed restaurants"
+    },
     "legallyDistinct" : "true",
     "sme-type" : "Small",
     "supplier-address-country" : "GBR",
