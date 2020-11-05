@@ -10,7 +10,7 @@
     "unit-test": "jest --notify --coverage --verbose --config=unit.jest.config.js ",
     "unit-test-quick": "jest --config=unit.jest.config.js --testTimeout=10000",
     "api-test": "jest --notify --coverage --verbose --runInBand --config=api-test.jest.config.js ",
-    "api-test-file": "jest --config=api-test-file.jest.config.js --verbose --testMatch ",
+    "api-test-file": "jest --config=api-test-file.jest.config.js --runInBand --verbose --testMatch ",
     "api-test-quick": "jest --config=api-test.jest.config.js --runInBand --testTimeout=10000"
   },
   "repository": {
@@ -30,6 +30,7 @@
   "dependencies": {
     "@azure/storage-file-share": "12.1.1",
     "apollo-server-express": "2.18.2",
+    "axios": "^0.21.0",
     "body-parser": "1.19.0",
     "cors": "2.8.5",
     "dotenv": "8.2.0",
