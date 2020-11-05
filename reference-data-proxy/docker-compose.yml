@@ -1,9 +1,9 @@
 version: "3"
 services:
 
-  ref-data-api:
+  reference-data-proxy:
     build: .
-    image: dtfs/ref-data-api
+    image: dtfs/reference-data-proxy
     restart: always
     ports:
       - "5002:5002"
