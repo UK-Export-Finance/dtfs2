@@ -424,8 +424,14 @@ const deal = {
     'indemnifier-correspondence-address-town': 'Chelmsford',
     'indemnifier-name': 'WATKINSON TRADING LIMITED',
     indemnifierCorrespondenceAddressDifferent: 'true',
-    'industry-sector': '1008',
-    'industry-class': '56210',
+    'industry-sector': {
+      code: '1008',
+      name: 'Accommodation and food service activities',
+    },
+    'industry-class': {
+      code: '56101',
+      name: 'Licensed restaurants',
+    },
     legallyDistinct: 'true',
     'sme-type': 'Small',
     'supplier-address-country': {

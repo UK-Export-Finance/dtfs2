@@ -133,7 +133,10 @@ const deal = {
     "indemnifier-name": "",
     "indemnifierCorrespondenceAddressDifferent": "",
     "industry-class": "47789",
-    "industry-sector": "1006",
+    "industry-sector": {
+      "code": "1008",
+      "name": "Accommodation and food service activities"
+    },
     "legallyDistinct": "false",
     "sme-type": "Micro",
     "supplier-address-country": {

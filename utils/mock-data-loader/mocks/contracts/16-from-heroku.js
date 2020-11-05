@@ -129,8 +129,14 @@ module.exports = {
         "indemnifier-correspondence-address-postcode" : "",
         "indemnifier-correspondence-address-town" : "",
         "indemnifier-name" : "",
-        "industry-class" : "84110",
-        "industry-sector" : "1014",
+        "industry-class": {
+            "code": "56101",
+            "name": "Licensed restaurants"
+        },
+        "industry-sector": {
+            "code": "1008",
+            "name": "Accommodation and food service activities",
+        },
         "legallyDistinct" : "false",
         "sme-type" : "Small",
         "supplier-address-country" : {

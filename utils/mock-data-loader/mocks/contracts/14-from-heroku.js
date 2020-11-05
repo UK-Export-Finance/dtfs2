@@ -93,8 +93,8 @@ module.exports = {
         "indemnifier-correspondence-address-postcode" : "",
         "indemnifier-correspondence-address-town" : "",
         "indemnifier-name" : "",
-        "industry-class" : "",
-        "industry-sector" : "",
+        "industry-class" : {},
+        "industry-sector" : {},
         "supplier-address-country" : {
             "code" : "GBR",
             "name" : "United Kingdom"
