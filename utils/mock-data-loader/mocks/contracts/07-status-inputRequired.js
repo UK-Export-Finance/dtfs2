@@ -139,7 +139,10 @@ module.exports = {
     "supplier-name": 'TEST',
     supplierAddress: 'Test <br/> PO1 3AX <br/>GBR',
     "supplier-correspondence-address-is-different": false,
-    "industry-sector": '1234',
+    "industry-sector": {
+      code: '1008',
+      name: 'Accommodation and food service activities',
+    },
     "industry-class": '56789',
     "sme-type": 'Micro',
     "supply-contract-description": 'Test',
