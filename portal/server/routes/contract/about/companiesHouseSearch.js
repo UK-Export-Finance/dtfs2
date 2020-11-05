@@ -74,11 +74,17 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
 
   if (industryFromSicCode) {
     if (industryFromSicCode.sector) {
-      deal.submissionDetails['industry-sector'] = industryFromSicCode.sector.code;
+      deal.submissionDetails['industry-sector'] = {
+        code: industryFromSicCode.sector.code,
+        name: industryFromSicCode.sector.name,
+      };
     }
 
     if (industryFromSicCode.class) {
-      deal.submissionDetails['industry-class'] = industryFromSicCode.class.code;
+      deal.submissionDetails['industry-class'] = {
+        code: industryFromSicCode.class.code,
+        name: industryFromSicCode.class.name,
+      };
     }
   }
 

@@ -96,7 +96,7 @@
           Industry sector
         </dt>
         <dd data-cy="industry-sector" class="govuk-summary-list__value govuk-body-s">
-          {{ submissionDetails["industry-sector"] }}
+          {{ submissionDetails["industry-sector"].name }}
         </dd>
       </div>
     {% endif %}
@@ -107,7 +107,7 @@
           Industry class
         </dt>
         <dd data-cy="industry-class" class="govuk-summary-list__value govuk-body-s">
-          {{ submissionDetails["industry-class"] }}
+          {{ submissionDetails["industry-class"].name }}
         </dd>
       </div>
     {% endif %}

@@ -4,11 +4,15 @@
 
 const mapIndustryClasses = (industrySectors, selectedIndustrySector, selectedIndustryClass) => {
   const industryClasses = industrySectors.reduce((acc, curr) => {
-    if (selectedIndustrySector === curr.code) {
+    if (selectedIndustrySector && selectedIndustrySector.code
+      && selectedIndustrySector.code === curr.code) {
       return acc.concat(curr.classes);
     }
     return acc;
   }, []);
+
+  const selectedIndustryClassCode = (selectedIndustryClass
+    && selectedIndustryClass.code) ? selectedIndustryClass.code : '';
 
   const mappedIndustryClasses = [
     { text: 'Select value' },
@@ -16,7 +20,7 @@ const mapIndustryClasses = (industrySectors, selectedIndustrySector, selectedInd
       const clazz = {
         value: sourceClass.code,
         text: sourceClass.name,
-        selected: selectedIndustryClass === sourceClass.code,
+        selected: selectedIndustryClassCode === sourceClass.code,
       };
       return clazz;
     }),
