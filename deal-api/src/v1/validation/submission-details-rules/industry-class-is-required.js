@@ -1,10 +1,11 @@
 const { orderNumber } = require('../../../utils/error-list-order-number');
-const { hasValue } = require('../../../utils/string');
 
 module.exports = (submissionDetails, errorList) => {
   const newErrorList = { ...errorList };
 
-  if (!hasValue(submissionDetails['industry-sector'])) {
+  const industryClass = submissionDetails['industry-class'];
+
+  if (!industryClass || Object.keys(industryClass).length < 2) {
     newErrorList['industry-class'] = {
       order: orderNumber(newErrorList),
       text: 'Industry Class is required',
