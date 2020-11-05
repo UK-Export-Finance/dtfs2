@@ -6,6 +6,8 @@ const {
 } = require('../../utils/number');
 const { hasValue } = require('../../utils/string');
 
+const CONSTANTS = require('../../constants');
+
 const formatNumber = (numb) => formattedNumber(roundNumber(numb, 2));
 
 const calculateFacilitiesInGbp = (facilityInDealCurrency, supplyContractConversionRateToGbp) => {
@@ -90,8 +92,13 @@ const calculate = (
 };
 
 const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP, bonds, loans) => {
-  const hasCompletedBonds = bonds.filter((b) => b.status === 'Completed').length > 0;
-  const hasCompletedLoans = loans.filter((l) => l.status === 'Completed').length > 0;
+  const hasCompletedBonds = bonds.filter((b) =>
+    b.status !== CONSTANTS.FACILITIES.STATUS.NOT_STARTED
+    && b.status !== CONSTANTS.FACILITIES.STATUS.INCOMPLETE).length > 0;
+
+  const hasCompletedLoans = loans.filter((l) =>
+    l.status !== CONSTANTS.FACILITIES.STATUS.NOT_STARTED
+    && l.status !== CONSTANTS.FACILITIES.STATUS.INCOMPLETE).length > 0;
 
   const hasSupplyContractCurrencyId = (supplyContractCurrency
     && supplyContractCurrency.id
