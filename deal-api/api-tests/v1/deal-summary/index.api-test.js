@@ -50,7 +50,7 @@ describe('deal-summary', () => {
     });
   });
 
-  describe('with no completed bonds or loans', () => {
+  describe('with only `Incomplete` bonds and loans', () => {
     it('should return empty object', () => {
       const mockDeal = {
         submissionDetails: {
@@ -63,6 +63,26 @@ describe('deal-summary', () => {
           items: [
             { status: 'Incomplete' },
             { status: 'Incomplete' },
+          ],
+        },
+      };
+      expect(calculateDealSummary(mockDeal)).toEqual({});
+    });
+  });
+
+  describe('with only `Not started` bonds and loans', () => {
+    it('should return empty object', () => {
+      const mockDeal = {
+        submissionDetails: {
+          supplyContractConversionRateToGBP: '50',
+        },
+        bondTransactions: {
+          items: [],
+        },
+        loanTransactions: {
+          items: [
+            { status: 'Not started' },
+            { status: 'Not started' },
           ],
         },
       };
