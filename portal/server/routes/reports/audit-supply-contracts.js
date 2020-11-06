@@ -150,35 +150,7 @@ router.post('/reports/audit-supply-contracts/:page', async (req, res) => {
   }
 
   req.session.supplyContractsFilters = reportFilters;
-
-  const banks = await getApiData(
-    api.banks(userToken),
-    res,
-  );
-
-  const filters = buildReportFilters(reportFilters, req.session.user);
-  const dealData = await getApiData(
-    api.contracts(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
-    res,
-  );
-
-  const pages = {
-    totalPages: Math.ceil(dealData.count / PAGESIZE),
-    currentPage: parseInt(req.params.page, 10),
-    totalItems: dealData.count,
-  };
-
-  return res.render('reports/audit-supply-contracts.njk', {
-    pages,
-    contracts: dealData.deals,
-    banks,
-    filter: {
-      ...reportFilters,
-    },
-    primaryNav,
-    subNav: 'audit-supply-contracts',
-    user: req.session.user,
-  });
+  return res.redirect('/reports/audit-supply-contracts/0');
 });
 
 router.get('/reports/audit-supply-contracts/:id/transactions', async (req, res) => res.redirect('/reports/audit-supply-contracts/:id/transactions/0'));
