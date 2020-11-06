@@ -114,7 +114,7 @@ module.exports = {
         "supplier-correspondence-address-line-3" : "",
         "supplier-correspondence-address-postcode" : "",
         "supplier-correspondence-address-town" : "",
-        "supplier-name" : "sdfsdfdsfsdfsdkfnksdfnksdklfnsdlkfnlksdfnkdsfnkldskfsdklfnkdflkndfsdlkfnlkfnkdsfnksdfnknfkln1849826349862983469826438926348962983469832649832649862389469832649832649862398469823469823468326498263489362498623984698236486239486239846298346982349jdbfkjbsdfbjsbdfjsdjfbjfbsdfbnmsdbfmnsdbfmnbdfnmbsdfnbdsfdfbnsbnms8yr9823489623894698469863498623498692384698324689264892634986234896389469283649823649862348623948639284698236498236482634986238946928364283946982364983264983649836498263498623498693284698236498324",
+        "supplier-name" : "test",
         "supplier-type" : "",
         "supply-contract-description" : ""
     },

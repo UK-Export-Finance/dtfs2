@@ -10,6 +10,11 @@ const primaryNav = 'reports';
 const router = express.Router();
 router.get('/reports/:id/transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
+
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  }
+
   const filters = {}; // TODO wire up filters; probably do same as dashboard +use session
 
   const { transactions, count } = await getApiData(
