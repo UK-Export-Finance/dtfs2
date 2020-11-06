@@ -151,9 +151,6 @@ context('Check deal details', () => {
                 },
                 ...insertedDeal.eligibility.criteria,
               ],
-              v1ExtraInfo: {
-                revisionId: 7,
-              },
             },
           };
 

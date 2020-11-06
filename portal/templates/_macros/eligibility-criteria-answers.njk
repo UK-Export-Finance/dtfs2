@@ -1,5 +1,5 @@
-{% macro render(eligibility) %}
-{% if eligibility.v1ExtraInfo %}
+{% macro render(eligibility, hasMandatoryCriteria) %}
+{% if hasMandatoryCriteria == 0 %}
   {% set agentCriteria = 1 %}
 {% else %}
   {% set agentCriteria = 11 %}
