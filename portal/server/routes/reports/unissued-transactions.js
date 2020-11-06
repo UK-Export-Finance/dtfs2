@@ -15,6 +15,11 @@ router.get('/reports/unissued-transactions', async (req, res) => res.redirect('/
 
 router.get('/reports/unissued-transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
+
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  }
+
   const fromDays = req.query.fromDays || 0;
   const toDays = req.query.toDays || 90;
 

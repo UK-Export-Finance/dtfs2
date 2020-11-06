@@ -14,6 +14,11 @@ router.get('/reports/transactions-report', async (req, res) => res.redirect('/re
 
 router.get('/reports/transactions-report/:page', async (req, res) => {
   const { userToken } = requestParams(req);
+
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  }
+
   const reportFilters = req.session.transactionFilters;
 
   const filters = buildReportFilters(reportFilters, req.session.user);

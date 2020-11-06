@@ -15,6 +15,11 @@ router.get('/reports/mia_min-cover-start-date-changes', async (req, res) => res.
 
 router.get('/reports/mia_min-cover-start-date-changes/:page', async (req, res) => {
   const { userToken } = requestParams(req);
+
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  }
+
   // get deals where transaction facilityStage = unconditional/issued
   const reportFilters = req.body;
   if (reportFilters.bank === 'any') {
