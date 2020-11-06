@@ -7,20 +7,27 @@ const initIndustrySectors = async (token) => {
   return industrySectors;
 };
 
-const getIndustrySectorByCode = (code = '') => {
+const getIndustrySectorByCode = (code = '', logError) => {
   const v2IndustrySector = industrySectors.find((c) => c.code.toString() === code.toString());
-  if (!v2IndustrySector) return {};
 
-  return {
-    code: v2IndustrySector.code,
-    name: v2IndustrySector.name,
-    classes: v2IndustrySector.classes,
-  };
+  if (!v2IndustrySector) {
+    logError(`Industry Sector Code: ${code} did not map to v2`);
+    return false;
+  }
+
+  return v2IndustrySector;
 };
 
-const getIndustryClassByCode = (industrySectorClasses, code = '') => {
-  industrySectorClasses.find((sourceClass) =>
+const getIndustryClassByCode = (industrySectorClasses, code = '', logError) => {
+  const industryClass = industrySectorClasses.find((sourceClass) =>
     sourceClass.code === code);
+
+  if (!industryClass) {
+    logError(`Industry Class Code: ${code} did not map to v2`);
+    return false;
+  }
+
+  return industryClass;
 };
 
 module.exports = {
