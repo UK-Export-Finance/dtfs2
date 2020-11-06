@@ -93,6 +93,10 @@ router.get('/reports/audit-supply-contracts', async (req, res) => res.redirect('
 router.get('/reports/audit-supply-contracts/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  }
+
   const banks = await getApiData(
     api.banks(userToken),
     res,
@@ -157,6 +161,10 @@ router.get('/reports/audit-supply-contracts/:id/transactions', async (req, res) 
 
 router.get('/reports/audit-supply-contracts/:id/transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
+
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  }
 
   const idFilter = {
     _id: req.params.id,

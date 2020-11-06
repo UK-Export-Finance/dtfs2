@@ -16,6 +16,11 @@ router.get('/reports/countdown-indicator', async (req, res) => {
   //  so I'm, just mocking this out the old way rather than trying to work out how to re-plumb the API.
   const { userToken } = requestParams(req);
 
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  }
+
+
   // need to query mongo and filter on multiple fields:
   // I've filtered the deals (MIA/MIN) on the main record submission type
   // then filtered the array locally

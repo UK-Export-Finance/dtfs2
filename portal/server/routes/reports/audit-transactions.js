@@ -99,6 +99,10 @@ router.get('/reports/audit-transactions', async (req, res) => res.redirect('/rep
 router.get('/reports/audit-transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  }
+
   const banks = await getApiData(
     api.banks(userToken),
     res,

@@ -13,8 +13,14 @@ const router = express.Router();
 
 router.get('/reports/mia-to-be-submitted/without-conditions/:page', async (req, res) => {
   // TODO wire up getMIAData function
-  const filterByDealStatus = 'Accepted by UKEF (without conditions)';
   const { userToken } = requestParams(req);
+
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  }
+
+  const filterByDealStatus = 'Accepted by UKEF (without conditions)';
+
   let maxDays = 10;
   let workingDays = 14;
   if (filterByDealStatus === 'Accepted by UKEF (with conditions)') {
