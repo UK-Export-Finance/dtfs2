@@ -22,7 +22,11 @@ router.get('/reports/reconciliation-report/:page', async (req, res) => {
     res.redirect('/');
   }
 
-  const reportFilters = req.body;
+  const reportFilters = {
+    ...req.session.reconciliationFilters,
+    ...req.body,
+  };
+
   if (reportFilters.bank === 'any') {
     reportFilters.bank = '';
   }
@@ -80,45 +84,9 @@ router.post('/reports/reconciliation-report/:page', async (req, res) => {
     res.redirect('/');
   }
 
-  const reportFilters = req.body;
-  if (reportFilters.bank === 'any') {
-    reportFilters.bank = '';
-  }
-  const filters = buildReportFilters(reportFilters, req.session.user);
+  req.session.reconciliationFilters = req.body;
 
-  filters.push(
-    {
-      field: 'details.status',
-      value: 'Submitted',
-    },
-  );
-
-  const submittedDeals = await getApiData(
-    api.contracts(0, 0, filters, userToken),
-    res,
-  );
-
-  const { deals } = submittedDeals;
-  const count = deals.length;
-  const banks = await getApiData(api.banks(userToken), res);
-  // no pagination
-  const pages = {
-    // totalPages: Math.ceil(count / PAGESIZE),
-    // currentPage: parseInt(req.params.page, 10),
-    totalItems: count,
-  };
-
-  return res.render('reports/reconciliation-report.njk', {
-    pages,
-    banks,
-    deals,
-    filter: {
-      ...reportFilters,
-    },
-    primaryNav,
-    subNav: 'reconciliation-report',
-    user: req.session.user,
-  });
+  return res.redirect('/reports/reconciliation-report/0');
 });
 
 export default router;
