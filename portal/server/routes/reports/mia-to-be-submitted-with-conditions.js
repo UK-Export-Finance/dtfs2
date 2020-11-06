@@ -12,9 +12,14 @@ const primaryNav = 'reports';
 const router = express.Router();
 
 router.get('/reports/mia-to-be-submitted/with-conditions/:page', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  }
+
   // TODO wire up getMIAData function
   const filterByDealStatus = 'Accepted by UKEF (with conditions)';
-  const { userToken } = requestParams(req);
   let maxDays = 10;
   let workingDays = 14;
   if (filterByDealStatus === 'Accepted by UKEF (with conditions)') {
@@ -26,6 +31,7 @@ router.get('/reports/mia-to-be-submitted/with-conditions/:page', async (req, res
 
 
   const submissionFilters = {
+    ...req.session.miaToBeSubmittedWithConditionsFilters,
     filterBySubmissionType: 'manualInclusionApplication',
   };
 
@@ -95,89 +101,19 @@ router.get('/reports/mia-to-be-submitted/with-conditions/:page', async (req, res
 
 
 router.post('/reports/mia-to-be-submitted/with-conditions/:page', async (req, res) => {
-  // TODO wire up getMIAData function
-  const filterByDealStatus = 'Accepted by UKEF (with conditions)';
   const { userToken } = requestParams(req);
-  let maxDays = 10;
-  let workingDays = 14;
-  if (filterByDealStatus === 'Accepted by UKEF (with conditions)') {
-    workingDays = 28;
-    maxDays = 20;
-  }
-  const fromDays = req.query.fromDays || 0;
-  const toDays = req.query.toDays || maxDays;
 
-  const submissionFilters = req.body;
-  if (submissionFilters.bank === 'any') {
-    submissionFilters.bank = '';
-  }
-  submissionFilters.filterBySubmissionType = 'manualInclusionApplication';
-
-  const banks = await getApiData(
-    api.banks(userToken),
-    res,
-  );
-
-  const MIAfilters = buildReportFilters(submissionFilters, req.session.user);
-  const applications = await getApiData(
-    api.contracts(0, 0, MIAfilters, userToken),
-    res,
-  );
-
-  let miaWithConditions = [];
-  let tempDeals = [];
-  let deals = [];
-  let count = 0;
-  if (applications.deals) {
-    miaWithConditions = applications.deals.filter((deal) => (deal.details.status === filterByDealStatus));
-    tempDeals = getExpiryDates(miaWithConditions, workingDays, true);
-    // once we have the deals and expiry dates, filter the display
-    if (fromDays > 0) {
-      deals = tempDeals.filter(
-        (deal) => deal.remainingDays >= fromDays && deal.remainingDays <= toDays,
-      );
-    } else {
-      deals = tempDeals.filter(
-        (deal) => deal.remainingDays <= toDays,
-      );
-    }
-    count = deals.length;
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
   }
 
-  const pages = {
-    totalPages: Math.ceil(count / PAGESIZE),
-    currentPage: parseInt(req.params.page, 10),
-    totalItems: count,
-  };
-
-  const sortOrder = {
-    queryString: `${req.params.page}?fromDays=${fromDays}&toDays=${toDays}&sort=desc`,
-    order: 'ascending',
-    image: 'twistie-up',
-  };
-
-  // default order from getExpiryDates is asc
-  if (req.query && req.query.sort && req.query.sort === 'desc') {
-    if (deals) {
-      deals.sort((a, b) => parseFloat(b.remainingDays) - parseFloat(a.remainingDays));
-    }
-    sortOrder.queryString = `${req.params.page}?fromDays=${fromDays}&toDays=${toDays}`;
-    sortOrder.order = 'descending';
-    sortOrder.image = 'twistie-down';
+  const filters = req.body;
+  if (filters.bank === 'any') {
+    filters.bank = '';
   }
-  return res.render('reports/MIA-to-be-submitted-report.njk', {
-    pages,
-    conditions: 'with',
-    deals,
-    filter: {
-      ...submissionFilters,
-    },
-    banks,
-    sortOrder,
-    primaryNav,
-    subNav: 'countdown-indicator',
-    user: req.session.user,
-  });
+  req.session.miaToBeSubmittedWithConditionsFilters = filters;
+
+  return res.redirect('/reports/mia-to-be-submitted/with-conditions/0');
 });
 
 export default router;
