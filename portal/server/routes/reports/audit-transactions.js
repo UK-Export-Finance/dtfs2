@@ -99,6 +99,10 @@ router.get('/reports/audit-transactions', async (req, res) => res.redirect('/rep
 router.get('/reports/audit-transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
+  if (!await api.validateToken(userToken)) {
+    res.redirect('/');
+  }
+
   const banks = await getApiData(
     api.banks(userToken),
     res,
@@ -157,35 +161,7 @@ router.post('/reports/audit-transactions/:page', async (req, res) => {
 
   req.session.transactionsFilters = reportFilters;
 
-  const banks = await getApiData(
-    api.banks(userToken),
-    res,
-  );
-
-  const filters = buildReportFilters(reportFilters, req.session.user);
-  const transactionData = await getApiData(
-    api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken),
-    res,
-  );
-
-  const pages = {
-    totalPages: Math.ceil(transactionData.count / PAGESIZE),
-    currentPage: parseInt(req.params.page, 10),
-    totalItems: transactionData.count,
-  };
-
-  return res.render('reports/audit-transactions.njk', {
-    pages,
-    transactions: transactionData.transactions,
-    banks,
-    filter: {
-      ...reportFilters,
-    },
-    facilityStages: CONSTANTS.FACILITY_STAGE,
-    primaryNav,
-    subNav: 'audit-transactions',
-    user: req.session.user,
-  });
+  return res.redirect('/reports/audit-transactions/0');
 });
 
 export default router;
