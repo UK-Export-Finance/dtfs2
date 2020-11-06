@@ -43,8 +43,6 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
   const supplierCorrespondenceAddressIsDifferent = addressIsDifferent(exporterInfo.Exporter_address, exporterInfo.Exporter_correspondence_address);
   const indemnifierLegallyDistinct = Boolean(exporterInfo.Indemnifier_name);
 
-  const industrySector = getIndustrySectorByCode(exporterInfo.Industry_sector_code.toString());
-
   const submissionDetails = {
     'supplier-type': findPortalValue(exporterInfo.Customer_type, 'Customer_type', 'DEAL', 'SUPPLIER_TYPE', logError),
     'supplier-companies-house-registration-number': exporterInfo.Exporter_co_hse_reg_number,
@@ -56,8 +54,6 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
     'supplier-address-postcode': exporterInfo.Exporter_address.PostalCode,
     'supplier-address-town': exporterInfo.Exporter_address.Town,
     'supplier-correspondence-address-is-different': supplierCorrespondenceAddressIsDifferent.toString(),
-    'industry-sector': industrySector.code,
-    'industry-class': getIndustryClassByCode(industrySector.classes, exporterInfo.Industry_class_code.toString()),
     'sme-type': findPortalValue(exporterInfo.Sme_type, 'Sme_type', 'DEAL', 'SME_TYPE', logError),
     'supply-contract-description': exporterInfo.Description_of_export,
     legallyDistinct: indemnifierLegallyDistinct.toString(),
@@ -69,6 +65,26 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
     supplyContractValue: financial.Contract_value,
     v1ExtraInfo,
   };
+
+  if (exporterInfo.Industry_sector_code) {
+    const industrySector = getIndustrySectorByCode(exporterInfo.Industry_sector_code, logError);
+
+    if (industrySector) {
+      submissionDetails['industry-sector'] = {
+        code: industrySector.code,
+        name: industrySector.name,
+      };
+
+      const industryClass = getIndustryClassByCode(industrySector.classes, exporterInfo.Industry_class_code, logError);
+
+      if (industryClass) {
+        submissionDetails['industry-class'] = {
+          code: industryClass.code,
+          name: industryClass.name,
+        };
+      }
+    }
+  }
 
   if (financial.Conversion_date) {
     // Conversion date in format dd-mm-yyyy
