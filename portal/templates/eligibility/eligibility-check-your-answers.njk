@@ -29,7 +29,7 @@
 
   {{ mandatoryCriteriaBox.render({ mandatoryCriteria: deal.mandatoryCriteria }) }}
 
-  {{ eligibilityCriteriaAnswers.render(deal.eligibility)}}
+  {{ eligibilityCriteriaAnswers.render(deal.eligibility, deal.mandatoryCriteria | length)}}
 
   {{ eligibilityDocumentation.render(deal.dealFiles, deal._id)}}
 
