@@ -108,12 +108,12 @@ router.post('/reports/unissued-transactions/:page', async (req, res) => {
     res.redirect('/');
   }
 
-  const submissionFilters = req.body;
-  if (submissionFilters.bank === 'any') {
-    submissionFilters.bank = '';
+  const filters = req.body;
+  if (filters.bank === 'any') {
+    filters.bank = '';
   }
 
-  req.session.unissuedTransactionsFilters = submissionFilters;
+  req.session.unissuedTransactionsFilters = filters;
 
   return res.redirect('/reports/unissued-transactions/0');
 });
