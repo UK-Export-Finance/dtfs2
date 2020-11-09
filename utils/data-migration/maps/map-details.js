@@ -73,17 +73,17 @@ const mapDetails = (portalDealId, v1Deal) => {
     details.submissionDate = convertV1Date(submissionDate);
   }
 
-  const ecAnswer = v1Deal.Eligibility_checklist.Extra_fields.Ec_answers.Ec_answer;
+  const applicationRoute = v1Deal.Application_route;
 
-  details.submissionType = ecAnswer.find(({ Answer }) => Answer === 'False')
-    ? CONSTANTS.DEAL.SUBMISSION_TYPE.MIA : CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
+  details.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
 
-  const isMIN = details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
-    && typeof v1Deal.Deal_information.Extra_fields.Submission_date_MIN === 'string'
-    && Boolean(v1Deal.Deal_information.Extra_fields.Submission_date_MIN);
+  if (applicationRoute === 'ATP') {
+    details.submissionType = ['confirmed_by_bank', 'confirmation_acknowledged'].includes(v1Deal.Deal_information.Extra_fields.Deal_status)
+      ? CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
+      : CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
+  }
 
-  if (isMIN) {
-    details.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
+  if (details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
     details.manualInclusionNoticeSubmissionDate = convertV1Date(v1Deal.Deal_information.Extra_fields.Submission_date_MIN);
   }
 
