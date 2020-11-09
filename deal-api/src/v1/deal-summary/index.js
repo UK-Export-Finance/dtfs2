@@ -92,13 +92,27 @@ const calculate = (
 };
 
 const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP, bonds, loans) => {
-  const hasCompletedBonds = bonds.filter((b) =>
-    b.status !== CONSTANTS.FACILITIES.STATUS.NOT_STARTED
-    && b.status !== CONSTANTS.FACILITIES.STATUS.INCOMPLETE).length > 0;
+  const hasCompletedBonds = bonds.filter((b) => {
+    // if issuedFacilitySubmittedToUkefTimestamp is true, the facility has been previously completed.
+    if (b.issuedFacilitySubmittedToUkefTimestamp) {
+      return b;
+    } else if (b.status !== CONSTANTS.FACILITIES.STATUS.NOT_STARTED
+        && b.status !== CONSTANTS.FACILITIES.STATUS.INCOMPLETE) {
+      return b;
+    }
+    return null;
+  });
 
-  const hasCompletedLoans = loans.filter((l) =>
-    l.status !== CONSTANTS.FACILITIES.STATUS.NOT_STARTED
-    && l.status !== CONSTANTS.FACILITIES.STATUS.INCOMPLETE).length > 0;
+  const hasCompletedLoans = loans.filter((l) => {
+    // if issuedFacilitySubmittedToUkefTimestamp is true, the facility has been previously completed.
+    if (l.issuedFacilitySubmittedToUkefTimestamp) {
+      return l;
+    } else if (l.status !== CONSTANTS.FACILITIES.STATUS.NOT_STARTED
+      && l.status !== CONSTANTS.FACILITIES.STATUS.INCOMPLETE) {
+      return l;
+    }
+    return null;
+  });
 
   const hasSupplyContractCurrencyId = (supplyContractCurrency
     && supplyContractCurrency.id
