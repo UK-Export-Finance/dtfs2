@@ -9,60 +9,61 @@ const usd = {
   id: 'USD',
 };
 
-describe('/v1/currencies', () => {
-  let aNonEditor;
+describe('/v1/countries', () => {
+  let noRoles;
 
-  beforeAll(async () => {
+  const gbr = {
+    id: 826,
+    name: 'United Kingdom',
+    code: 'GBR',
+  };
+
+  beforeEach(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aNonEditor = testUsers().withoutRole('editor').one();
+    noRoles = testUsers().withoutAnyRoles().one();
   });
 
-  describe('GET /v1/currencies', () => {
+  describe('GET /v1/countries', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/currencies');
+      const { status } = await as().get('/v1/countries');
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await as(aNonEditor).get('/v1/currencies');
+      const { status } = await as(noRoles).get('/v1/countries');
 
       expect(status).toEqual(200);
     });
 
-    it('returns a list of currencies, alphebetized', async () => {
-      const { status, body } = await as(aNonEditor).get('/v1/currencies', aNonEditor.token);
+    it('returns a list of countries, alphebetized but with GBR/United Kingdom at the top', async () => {
+      const { status, body } = await as(noRoles).get('/v1/countries');
 
       expect(status).toEqual(200);
-      expect(body.currencies.length).toBeGreaterThan(1);
-      for (let i = 1; i < body.currencies.length; i += 1) {
-        expect(body.currencies[i - 1].id < body.currencies[i].id).toBe(true);
+      expect(body.countries.length).toBeGreaterThan(1);
+      expect(body.countries[0]).toEqual(gbr);
+
+      for (let i = 2; i < body.countries.length; i += 1) {
+        expect(body.countries[i - 1].name < body.countries[i].name).toBe(true);
       }
     });
   });
 
-  describe('GET /v1/currencies/:id', () => {
+  describe('GET /v1/countries/:code', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/currencies/USD');
+      const { status } = await as().get('/v1/countries/GBR');
 
       expect(status).toEqual(401);
     });
 
-    it('accepts requests that do present a valid Authorization token', async () => {
-      const { status } = await as(aNonEditor).get('/v1/currencies/USD');
-
+    it('accepts requests that do present a valid Authorization token and returns country', async () => {
+      const { status, body } = await as(noRoles).get('/v1/countries/GBR');
       expect(status).toEqual(200);
-    });
-
-    it('returns a currency', async () => {
-      const { status, body } = await as(aNonEditor).get('/v1/currencies/USD');
-
-      expect(status).toEqual(200);
-      expect(body).toMatchObject(usd);
+      expect(body).toEqual(gbr);
     });
 
     it('returns 404 when country doesn\t exist', async () => {
-      const { status } = await as(aNonEditor).get('/v1/currencies/123');
+      const { status } = await as(noRoles).get('/v1/countries/123');
 
       expect(status).toEqual(404);
     });
