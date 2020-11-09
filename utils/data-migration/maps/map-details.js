@@ -78,7 +78,11 @@ const mapDetails = (portalDealId, v1Deal) => {
   details.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
 
   if (applicationRoute === 'ATP') {
-    details.submissionType = ['confirmed_by_bank', 'confirmation_acknowledged'].includes(v1Deal.Deal_information.Extra_fields.Deal_status)
+    const statusToCompare = ['ready_for_approval', 'further_input_required'].includes(v1Deal.Deal_information.Extra_fields.Deal_status)
+      ? v1Deal.Deal_information.Extra_fields.Deal_previous_status
+      : v1Deal.Deal_information.Extra_fields.Deal_status;
+
+    details.submissionType = ['confirmed_by_bank', 'confirmation_acknowledged'].includes(statusToCompare)
       ? CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
       : CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
   }
