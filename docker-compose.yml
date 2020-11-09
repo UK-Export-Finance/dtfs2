@@ -27,6 +27,7 @@ services:
     restart: always
     depends_on:
       - deal-api-data
+      - reference-data-proxy
     ports:
       - "5001:5001"
     volumes:
