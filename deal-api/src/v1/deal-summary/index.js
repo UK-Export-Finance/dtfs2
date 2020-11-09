@@ -96,7 +96,9 @@ const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP,
     // if issuedFacilitySubmittedToUkefTimestamp is true, the facility has been previously completed.
     if (b.issuedFacilitySubmittedToUkefTimestamp) {
       return b;
-    } else if (b.status !== CONSTANTS.FACILITIES.STATUS.NOT_STARTED
+    }
+
+    if (b.status !== CONSTANTS.FACILITIES.STATUS.NOT_STARTED
         && b.status !== CONSTANTS.FACILITIES.STATUS.INCOMPLETE) {
       return b;
     }
@@ -107,7 +109,8 @@ const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP,
     // if issuedFacilitySubmittedToUkefTimestamp is true, the facility has been previously completed.
     if (l.issuedFacilitySubmittedToUkefTimestamp) {
       return l;
-    } else if (l.status !== CONSTANTS.FACILITIES.STATUS.NOT_STARTED
+    }
+    if (l.status !== CONSTANTS.FACILITIES.STATUS.NOT_STARTED
       && l.status !== CONSTANTS.FACILITIES.STATUS.INCOMPLETE) {
       return l;
     }
