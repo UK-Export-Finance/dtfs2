@@ -213,6 +213,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
               ...newDeal.details,
               submissionType: 'Manual Inclusion Application',
               submissionDate: moment().subtract(1, 'week').utc().valueOf(),
+              manualInclusionApplicationSubmissionDate: moment().subtract(3, 'day').utc().valueOf(),
               manualInclusionNoticeSubmissionDate: moment().subtract(2, 'day').utc().valueOf(),
               status: 'Accepted by UKEF (without conditions)',
             },
@@ -270,10 +271,10 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const formattedManualInclusionNoticeSubmissionDate = moment(formattedTimestamp(updatedDeal.details.manualInclusionNoticeSubmissionDate)).format('Do MMMM YYYY');
+            const formattedManualInclusionApplicationSubmissionDate = moment(formattedTimestamp(updatedDeal.details.manualInclusionApplicationSubmissionDate)).format('Do MMMM YYYY');
             const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY');
 
-            const expectedText = `Requested Cover Start Date must be between ${formattedManualInclusionNoticeSubmissionDate} and ${todayPlus3MonthsFormatted}`;
+            const expectedText = `Requested Cover Start Date must be between ${formattedManualInclusionApplicationSubmissionDate} and ${todayPlus3MonthsFormatted}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });

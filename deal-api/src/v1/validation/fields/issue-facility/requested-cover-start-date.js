@@ -24,11 +24,15 @@ module.exports = (
     submissionType: dealSubmissionType,
     submissionDate: dealSubmissionDateTimestamp,
     manualInclusionNoticeSubmissionDate: manualInclusionNoticeSubmissionDateTimestamp,
+    manualInclusionApplicationSubmissionDate: manualInclusionApplicationSubmissionDateTimestamp,
   } = deal.details;
 
   const dealSubmissionDate = formattedTimestamp(dealSubmissionDateTimestamp);
   const requestedCoverStartDate = formattedTimestamp(submittedValues.requestedCoverStartDate);
   const manualInclusionNoticeSubmissionDate = formattedTimestamp(manualInclusionNoticeSubmissionDateTimestamp);
+  const manualInclusionApplicationSubmissionDate = formattedTimestamp(
+    manualInclusionApplicationSubmissionDateTimestamp,
+  );
 
   // EC 15 is: 'Cover Start Date is no more than three months from the date of submission'
   const eligibilityCriteria15 = deal.eligibility.criteria.find((c) => c.id === 15);
@@ -37,6 +41,7 @@ module.exports = (
   if (requestedCoverStartDate) {
     const formattedDealSubmissionDate = moment(dealSubmissionDate).format('Do MMMM YYYY');
     const formattedManualInclusionNoticeSubmissionDate = moment(manualInclusionNoticeSubmissionDate).format('Do MMMM YYYY');
+    const formattedManualInclusionApplicationSubmissionDate = moment(manualInclusionApplicationSubmissionDate).format('Do MMMM YYYY');
 
     const today = moment();
     const todayFormatted = moment(today).format('Do MMMM YYYY');
@@ -77,7 +82,7 @@ module.exports = (
 
       if (!canEnterDateGreaterThan3Months && moment(requestedCoverStartDate).isAfter(todayPlus3Months)) {
         newErrorList.requestedCoverStartDate = {
-          text: `Requested Cover Start Date must be between ${formattedManualInclusionNoticeSubmissionDate} and ${todayPlus3MonthsFormatted}`,
+          text: `Requested Cover Start Date must be between ${formattedManualInclusionApplicationSubmissionDate} and ${todayPlus3MonthsFormatted}`,
           order: orderNumber(newErrorList),
         };
       }
