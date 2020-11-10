@@ -1018,7 +1018,6 @@ const COUNTRIES = [
     id: 768,
     name: 'Togo',
     code: 'TGO',
-    disabled: true,
   },
   {
     id: 776,
