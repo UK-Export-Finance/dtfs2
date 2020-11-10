@@ -1,18 +1,19 @@
 const utils = require('../../utils/array');
-const CURRENCIES = require('../../reference-data/currencies');
+const refDataApi = require('../../reference-data/api');
 
-const findOneCurrency = (id) => CURRENCIES.find((c) => c.id === id);
+const findOneCurrency = async (id) => refDataApi.currencies.getCurrency(id);
 exports.findOneCurrency = findOneCurrency;
 
-exports.findAll = (req, res) => {
+exports.findAll = async (req, res) => {
+  const currencies = await refDataApi.currencies.getCurrencies();
   res.status(200).send({
-    count: CURRENCIES.length,
-    currencies: utils.sortArrayAlphabetically(CURRENCIES, 'id'),
+    count: currencies.length,
+    currencies: utils.sortArrayAlphabetically(currencies, 'id'),
   });
 };
 
-exports.findOne = (req, res) => {
-  const currency = findOneCurrency(req.params.id);
+exports.findOne = async (req, res) => {
+  const currency = await findOneCurrency(req.params.id);
   const status = currency ? '200' : '404';
   return res.status(status).send(currency);
 };
