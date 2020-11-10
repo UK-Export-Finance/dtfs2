@@ -11,7 +11,6 @@ const { processTypeB } = require('../../v1/controllers/integration/type-b.contro
 
 const task = async (fileshare = 'workflow', overwriteFolder) => {
   const { IMPORT_FOLDER } = getConfig(fileshare);
-  console.log(`defining fetch-workflow-type-b schedule: ${schedule}`);
 
   const lockFile = {
     fileshare: 'workflow',
