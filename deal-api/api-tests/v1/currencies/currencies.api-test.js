@@ -1,7 +1,13 @@
+/**
+ * @jest-environment node
+ */
+
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
 const { as } = require('../../api')(app);
+
+jest.unmock('../../../src/reference-data/api');
 
 const usd = {
   currencyId: 37,

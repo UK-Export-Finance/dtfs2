@@ -29,9 +29,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
-  console.log('ref-data', req.params.code);
   const country = findOneCountry(req.params.code);
   const status = country ? '200' : '404';
-  console.log({ country, status });
   res.status(status).send(country);
 };

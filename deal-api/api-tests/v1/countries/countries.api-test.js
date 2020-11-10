@@ -1,13 +1,13 @@
+/**
+ * @jest-environment node
+ */
+
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
 const { as } = require('../../api')(app);
 
-const usd = {
-  currencyId: 37,
-  text: 'USD - US Dollars',
-  id: 'USD',
-};
+jest.unmock('../../../src/reference-data/api');
 
 describe('/v1/countries', () => {
   let noRoles;
@@ -18,7 +18,7 @@ describe('/v1/countries', () => {
     code: 'GBR',
   };
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
   });
@@ -62,7 +62,7 @@ describe('/v1/countries', () => {
       expect(body).toEqual(gbr);
     });
 
-    it('returns 404 when country doesn\t exist', async () => {
+    it('returns 404 when country doesn\'t exist', async () => {
       const { status } = await as(noRoles).get('/v1/countries/123');
 
       expect(status).toEqual(404);

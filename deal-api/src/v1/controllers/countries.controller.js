@@ -1,6 +1,6 @@
 const utils = require('../../utils/array');
 
-const { getCountries, getCountry } = require('../../reference-data/api');
+const refDataApi = require('../../reference-data/api');
 
 const getCountryFromArray = (arr, code) => arr.filter((country) => country.code === code)[0];
 
@@ -16,15 +16,15 @@ const sortCountries = (countries) => {
 };
 
 const findOneCountry = async (code) => {
-  const country = await getCountry(code);
+  const country = await refDataApi.countries.getCountry(code);
   return country;
 };
 
 exports.findOneCountry = findOneCountry;
 
 exports.findAll = async (req, res) => {
-  const countries = await getCountries();
-  const sortedCountries = await sortCountries(countries);
+  const countries = await refDataApi.countries.getCountries();
+  const sortedCountries = sortCountries(countries);
   res.status(200).send({
     count: sortedCountries.length,
     countries: sortedCountries,

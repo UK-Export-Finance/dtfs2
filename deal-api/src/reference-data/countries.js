@@ -3,22 +3,22 @@ const axios = require('axios');
 
 const referenceProxyUrl = process.env.REFERENCE_DATA_PROXY_URL;
 
-const getCurrencies = async () => {
+const getCountries = async () => {
   const response = await axios({
     method: 'get',
-    url: `${referenceProxyUrl}/currencies`,
+    url: `${referenceProxyUrl}/countries`,
     headers: {
       'Content-Type': 'application/json',
     },
   });
 
-  return response.data && response.data.currencies;
+  return response.data && response.data.countries;
 };
 
-const getCurrency = async (id) => {
+const getCountry = async (code) => {
   const response = await axios({
     method: 'get',
-    url: `${referenceProxyUrl}/currencies/${id}`,
+    url: `${referenceProxyUrl}/countries/${code}`,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -28,6 +28,6 @@ const getCurrency = async (id) => {
 };
 
 module.exports = {
-  getCurrencies,
-  getCurrency,
+  getCountries,
+  getCountry,
 };
