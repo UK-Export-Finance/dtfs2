@@ -6,7 +6,7 @@ export const isObjectWithChildValues = (field) =>
 export const stripEmptyValues = (obj, originalData) => {
   const stripped = {};
 
-  // only return fieldS that have a 'value':
+  // only return fields that have a 'value':
   // - a non-empty string
   // - an object with children
   Object.entries(obj).forEach(([key, value]) => {
