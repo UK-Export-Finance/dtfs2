@@ -26,6 +26,7 @@ import loanTaskList from './loanTaskList';
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 import canIssueOrEditIssueFacility from '../canIssueOrEditIssueFacility';
 import isDealEditable from '../isDealEditable';
+import premiumFrequencyField from './premiumFrequencyField';
 
 const router = express.Router();
 
@@ -71,44 +72,6 @@ const handleBankReferenceNumberField = (loanBody) => {
 
   delete modifiedLoan['facilityStageConditional-bankReferenceNumber'];
   delete modifiedLoan['facilityStageUnconditional-bankReferenceNumber'];
-
-  return modifiedLoan;
-};
-
-const handlePremiumFrequencyField = (loanBody, existingLoan) => {
-  const modifiedLoan = loanBody;
-
-  const {
-    premiumType,
-    premiumFrequency,
-    inAdvancePremiumFrequency,
-    inArrearPremiumFrequency,
-  } = modifiedLoan;
-
-  const premiumFrequencyValue = () => {
-    if (premiumType === 'In advance') {
-      return inAdvancePremiumFrequency;
-    }
-
-    if (premiumType === 'In arrear') {
-      return inArrearPremiumFrequency;
-    }
-
-    if (premiumFrequency) {
-      return premiumFrequency;
-    }
-
-    if (existingLoan && existingLoan.premiumFrequency) {
-      return existingLoan.premiumFrequency;
-    }
-
-    return '';
-  };
-
-  modifiedLoan.premiumFrequency = premiumFrequencyValue();
-
-  delete modifiedLoan.inAdvancePremiumFrequency;
-  delete modifiedLoan.inArrearPremiumFrequency;
 
   return modifiedLoan;
 };
@@ -233,7 +196,7 @@ router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL])
 router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  const modifiedBody = handlePremiumFrequencyField(req.body);
+  const modifiedBody = premiumFrequencyField(req.body);
 
   await postToApi(
     api.updateDealLoan(
@@ -311,7 +274,7 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
   const { loan } = req.apiData.loan;
 
   let modifiedBody = handleBankReferenceNumberField(req.body);
-  modifiedBody = handlePremiumFrequencyField(req.body, loan);
+  modifiedBody = premiumFrequencyField(req.body, loan);
 
   // UI form submit only has the currency code. API has a currency object.
   // to check if something has changed, only use the currency code.
