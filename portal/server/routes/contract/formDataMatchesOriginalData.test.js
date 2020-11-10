@@ -1,17 +1,37 @@
 import formDataMatchesOriginalData, {
-  stripEmptyValuesFromObject,
+  isObjectWithChildValues,
+  stripEmptyValues,
   getFieldsWithEmptyValues,
   getFieldsFromOriginalData,
 } from './formDataMatchesOriginalData';
 
 describe('formDataMatchesOriginalData', () => {
-  describe('stripEmptyValuesFromObject', () => {
+  describe('isObjectWithChildValues', () => {
+    it('should return false when an empty object is passed', () => {
+      const result = isObjectWithChildValues({});
+      expect(result).toEqual(false);
+    });
+
+    it('should return true when a populated object is passed', () => {
+      const result = isObjectWithChildValues({
+        something: 'test',
+        hello: 'world',
+      });
+      expect(result).toEqual(true);
+    });
+  });
+
+  describe('stripEmptyValues', () => {
     it('should return object with no empty values', () => {
       const mockFields = {
         fieldA: 'test',
         fieldB: 'testing',
         fieldC: 'some value',
         fieldX: 'test',
+        fieldY: {
+          someField: 'a',
+          anotherField: 'b',
+        },
       };
 
       const obj = {
@@ -22,12 +42,16 @@ describe('formDataMatchesOriginalData', () => {
 
       const originalData = mockFields;
 
-      const result = stripEmptyValuesFromObject(obj, originalData);
+      const result = stripEmptyValues(obj, originalData);
       expect(result).toEqual({
         fieldA: 'test',
         fieldB: 'testing',
         fieldC: 'some value',
         fieldX: 'test',
+        fieldY: {
+          someField: 'a',
+          anotherField: 'b',
+        },
       });
     });
   });
@@ -97,15 +121,17 @@ describe('formDataMatchesOriginalData', () => {
   });
 
   describe('when formData and originalData objects match', () => {
-    it('should return false', () => {
+    it('should return true', () => {
       const formData = {
         someField: 'test',
         anotherField: 'testing',
+        testObj: { test: true },
       };
 
       const originalData = {
         someField: 'test',
         anotherField: 'testing',
+        testObj: { test: true },
       };
 
       const result = formDataMatchesOriginalData(formData, originalData);
