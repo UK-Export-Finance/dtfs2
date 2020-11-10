@@ -1,11 +1,18 @@
 import isEqual from 'lodash.isequal';
 
-export const stripEmptyValuesFromObject = (obj, originalData) => {
+export const isObjectWithChildValues = (field) =>
+  Boolean(Object.keys(field).length && Object.keys(field).length > 0);
+
+export const stripEmptyValues = (obj, originalData) => {
   const stripped = {};
 
+  // only return fieldS that have a 'value':
+  // - a non-empty string
+  // - an object with children
   Object.entries(obj).forEach(([key, value]) => {
     if ((value && value.length)
-      || originalData[key] === value) {
+      || originalData[key] === value
+      || isObjectWithChildValues(value)) {
       stripped[key] = value;
     }
   });
@@ -30,7 +37,6 @@ export const getFieldsWithEmptyValues = (obj) => {
 
   Object.entries(obj).forEach(([key, value]) => {
     if (!value || (value && !value.length)) {
-      // || obj[key] === value) {
       result[key] = value;
     }
   });
@@ -39,13 +45,16 @@ export const getFieldsWithEmptyValues = (obj) => {
 };
 
 const formDataMatchesOriginalData = (formData, originalData) => {
-  // get the fields we care about from original/api data
+  // get the fields from original API data that we want to equality check
   const strippedOriginalData = getFieldsFromOriginalData(formData, originalData);
 
-  // we only want empty form values that are also already empty in the API
+  // get the fields that are empty in API/original data
   const originalDataEmptyValues = getFieldsWithEmptyValues(strippedOriginalData);
-  const cleanFormData = stripEmptyValuesFromObject(formData, originalDataEmptyValues);
 
+  // remove empty fields from the submitted form data
+  const cleanFormData = stripEmptyValues(formData, originalDataEmptyValues);
+
+  // finally, equality check submitted form data against original data from API
   if (isEqual(strippedOriginalData, cleanFormData)) {
     return true;
   }

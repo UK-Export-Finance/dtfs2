@@ -18,7 +18,7 @@ import calculateStatusOfEachPage from './navStatusCalculations';
 import aboutTaskList from './aboutTaskList';
 import { supplierValidationErrors } from './pageSpecificValidationErrors';
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
-import { getIndustrySectorById, getIndustryClassById } from './getIndustryById';
+import industryFields from './industryFields';
 
 const router = express.Router();
 
@@ -88,7 +88,7 @@ router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COU
 router.post('/contract/:_id/about/supplier', provide([INDUSTRY_SECTORS]), async (req, res) => {
   const { industrySectors } = req.apiData;
   const { _id, userToken } = requestParams(req);
-  const submissionDetails = req.body;
+  let submissionDetails = req.body;
 
   if (submissionDetails['supplier-correspondence-address-is-different'] === 'false') {
     // clear supplier correspondence address fields:
@@ -129,33 +129,7 @@ router.post('/contract/:_id/about/supplier', provide([INDUSTRY_SECTORS]), async 
     submissionDetails['indemnifier-correspondence-address-postcode'] = '';
   }
 
-  // get industry sector object from the submitted industry sector code
-  const industrySectorCode = submissionDetails['industry-sector'];
-
-  let industrySectorObj;
-
-  if (industrySectorCode) {
-    industrySectorObj = getIndustrySectorById(industrySectors, industrySectorCode);
-
-    submissionDetails['industry-sector'] = {
-      code: industrySectorCode,
-      name: getIndustrySectorById(industrySectors, industrySectorCode).name,
-    };
-  } else {
-    submissionDetails['industry-sector'] = {};
-  }
-
-  // get industry class object from the submitted industry class code
-  const industryClassCode = submissionDetails['industry-class'];
-
-  if (industryClassCode && industrySectorObj.classes) {
-    submissionDetails['industry-class'] = {
-      code: industryClassCode,
-      name: getIndustryClassById(industrySectorObj.classes, industryClassCode).name,
-    };
-  } else {
-    submissionDetails['industry-class'] = {};
-  }
+  submissionDetails = industryFields(submissionDetails, industrySectors);
 
   await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
 
@@ -163,9 +137,10 @@ router.post('/contract/:_id/about/supplier', provide([INDUSTRY_SECTORS]), async 
   return res.redirect(redirectUrl);
 });
 
-router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL]), async (req, res) => {
+router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL, INDUSTRY_SECTORS]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const deal = req.apiData[DEAL];
+  const { industrySectors } = req.apiData;
 
   const {
     'supplier-address-country': supplierAddressCountry,
@@ -184,7 +159,7 @@ router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL]), async
     'indemnifier-correspondence-address-country': (indemnifierCorrespondenceAddressCountry && indemnifierCorrespondenceAddressCountry.code) ? indemnifierCorrespondenceAddressCountry.code : '',
   };
 
-  const submissionDetails = req.body;
+  let submissionDetails = req.body;
 
   if (submissionDetails['supplier-correspondence-address-is-different'] === 'false') {
     // clear supplier correspondence address fields:
@@ -224,6 +199,8 @@ router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL]), async
     submissionDetails['indemnifier-correspondence-address-town'] = '';
     submissionDetails['indemnifier-correspondence-address-postcode'] = '';
   }
+
+  submissionDetails = industryFields(submissionDetails, industrySectors);
 
   if (!formDataMatchesOriginalData(submissionDetails, mappedOriginalData)) {
     await updateSubmissionDetails(deal, submissionDetails, userToken);
