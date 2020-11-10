@@ -75,12 +75,12 @@ const handleBankReferenceNumberField = (loanBody) => {
   return modifiedLoan;
 };
 
-const handlePremiumFrequencyField = (loanBody) => {
+const handlePremiumFrequencyField = (loanBody, existingLoan) => {
   const modifiedLoan = loanBody;
 
   const {
     premiumType,
-    premiumFrequency: existingPremiumFrequency,
+    premiumFrequency,
     inAdvancePremiumFrequency,
     inArrearPremiumFrequency,
   } = modifiedLoan;
@@ -94,8 +94,12 @@ const handlePremiumFrequencyField = (loanBody) => {
       return inArrearPremiumFrequency;
     }
 
-    if (existingPremiumFrequency) {
-      return existingPremiumFrequency;
+    if (premiumFrequency) {
+      return premiumFrequency;
+    }
+
+    if (existingLoan && existingLoan.premiumFrequency) {
+      return existingLoan.premiumFrequency;
     }
 
     return '';
@@ -307,7 +311,7 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
   const { loan } = req.apiData.loan;
 
   let modifiedBody = handleBankReferenceNumberField(req.body);
-  modifiedBody = handlePremiumFrequencyField(req.body);
+  modifiedBody = handlePremiumFrequencyField(req.body, loan);
 
   // UI form submit only has the currency code. API has a currency object.
   // to check if something has changed, only use the currency code.
