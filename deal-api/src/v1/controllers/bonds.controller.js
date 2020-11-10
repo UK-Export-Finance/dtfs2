@@ -1,7 +1,7 @@
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const bondValidationErrors = require('../validation/bond');
-const { generateFacilityId } = require('../../utils/generateIds');
+const { generateFacilityId } = require('../../utils/generate-ids');
 const { bondStatus } = require('../section-status/bonds');
 const {
   calculateGuaranteeFee,
