@@ -56,12 +56,12 @@ const userCanAccessBondPreview = (user) => {
   return true;
 };
 
-const handleFeeFrequency = (bondBody) => {
+const handleFeeFrequency = (bondBody, existingBond) => {
   const modifiedBond = bondBody;
 
   const {
     feeType,
-    feeFrequency: existingFeeFrequency,
+    feeFrequency,
     inAdvanceFeeFrequency,
     inArrearFeeFrequency,
   } = modifiedBond;
@@ -75,8 +75,12 @@ const handleFeeFrequency = (bondBody) => {
       return inArrearFeeFrequency;
     }
 
-    if (existingFeeFrequency) {
-      return existingFeeFrequency;
+    if (feeFrequency) {
+      return feeFrequency;
+    }
+
+    if (existingBond && existingBond.feeFrequency) {
+      return existingBond.feeFrequency;
     }
 
     return '';
@@ -310,7 +314,7 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (
   const { _id: dealId, bondId, userToken } = requestParams(req);
   const { bond } = req.apiData.bond;
 
-  const modifiedBody = handleFeeFrequency(req.body);
+  const modifiedBody = handleFeeFrequency(req.body, bond);
 
   // UI form submit only has the currency code. API has a currency object.
   // to check if something has changed, only use the currency code.
