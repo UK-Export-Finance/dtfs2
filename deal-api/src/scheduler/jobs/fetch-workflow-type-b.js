@@ -4,8 +4,6 @@ const defaultSchedule = '*/1 * * * * *';
 const schedule = process.env.FETCH_WORKFLOW_TYPE_B_SCHEDULE || defaultSchedule;
 const logController = require('../../v1/controllers/log-controller');
 
-console.log(`defining fetch-workflow-type-b schedule: ${schedule}`);
-
 const {
   listDirectoryFiles, readFile, moveFile, getConfig, uploadFile, deleteFile,
 } = require('../../drivers/fileshare');
@@ -13,6 +11,7 @@ const { processTypeB } = require('../../v1/controllers/integration/type-b.contro
 
 const task = async (fileshare = 'workflow', overwriteFolder) => {
   const { IMPORT_FOLDER } = getConfig(fileshare);
+  console.log(`defining fetch-workflow-type-b schedule: ${schedule}`);
 
   const lockFile = {
     fileshare: 'workflow',
