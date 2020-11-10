@@ -9,6 +9,15 @@ const generateDealId = async () => {
     },
   );
 
+  if (!value) {
+    const initValue = {
+      _id: 'DEAL_COUNTER',
+      count: 1000000,
+    };
+    await collection.insert(initValue);
+    return generateDealId();
+  }
+
   return `${value.count}`;
 };
 
@@ -20,6 +29,16 @@ const generateFacilityId = async () => {
       $inc: { count: 1 },
     },
   );
+
+  if (!value) {
+    const initValue = {
+      _id: 'FACILITY_COUNTER',
+      count: 1000000,
+    };
+    await collection.insert(initValue);
+    return generateFacilityId();
+  }
+
   return `${value.count}`;
 };
 

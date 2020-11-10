@@ -1,7 +1,7 @@
 const DEFAULTS = require('../defaults');
 const { findMandatoryCriteria } = require('./mandatoryCriteria.controller');
 const { findOneDeal, create: createDeal } = require('./deal.controller');
-const { generateFacilityId } = require('../../utils/generateIds');
+const { generateFacilityId } = require('../../utils/generate-ids');
 const { getCloneDealErrors } = require('../validation/clone-deal');
 const CONSTANTS = require('../../constants');
 
