@@ -27,6 +27,7 @@ import bondTaskList from './bondTaskList';
 import formDataMatchesOriginalData from '../formDataMatchesOriginalData';
 import canIssueOrEditIssueFacility from '../canIssueOrEditIssueFacility';
 import isDealEditable from '../isDealEditable';
+import feeFrequencyField from './feeFrequencyField';
 
 const router = express.Router();
 
@@ -54,44 +55,6 @@ const userCanAccessBondPreview = (user) => {
   }
 
   return true;
-};
-
-const handleFeeFrequency = (bondBody, existingBond) => {
-  const modifiedBond = bondBody;
-
-  const {
-    feeType,
-    feeFrequency,
-    inAdvanceFeeFrequency,
-    inArrearFeeFrequency,
-  } = modifiedBond;
-
-  const feeFrequencyValue = () => {
-    if (feeType === 'In advance') {
-      return inAdvanceFeeFrequency;
-    }
-
-    if (feeType === 'In arrear') {
-      return inArrearFeeFrequency;
-    }
-
-    if (feeFrequency) {
-      return feeFrequency;
-    }
-
-    if (existingBond && existingBond.feeFrequency) {
-      return existingBond.feeFrequency;
-    }
-
-    return '';
-  };
-
-  modifiedBond.feeFrequency = feeFrequencyValue();
-
-  delete modifiedBond.inAdvanceFeeFrequency;
-  delete modifiedBond.inArrearFeeFrequency;
-
-  return modifiedBond;
 };
 
 router.get('/contract/:_id/bond/create', async (req, res) => {
@@ -232,7 +195,7 @@ router.get('/contract/:_id/bond/:bondId/fee-details', provide([DEAL]), async (re
 router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
-  const modifiedBody = handleFeeFrequency(req.body);
+  const modifiedBody = feeFrequencyField(req.body);
 
   await postToApi(
     api.updateBond(
@@ -314,7 +277,7 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (
   const { _id: dealId, bondId, userToken } = requestParams(req);
   const { bond } = req.apiData.bond;
 
-  const modifiedBody = handleFeeFrequency(req.body, bond);
+  const modifiedBody = feeFrequencyField(req.body, bond);
 
   // UI form submit only has the currency code. API has a currency object.
   // to check if something has changed, only use the currency code.
