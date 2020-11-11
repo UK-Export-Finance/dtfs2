@@ -243,23 +243,12 @@ authRouter.route('/feedback/:id')
 authRouter.route('/industry-sectors')
   .get(
     industrySectors.findAll,
-  )
-  .post(
-    validate({ role: ['editor'] }),
-    industrySectors.create,
   );
+
 
 authRouter.route('/industry-sectors/:code')
   .get(
     industrySectors.findOne,
-  )
-  .put(
-    validate({ role: ['editor'] }),
-    industrySectors.update,
-  )
-  .delete(
-    validate({ role: ['editor'] }),
-    industrySectors.delete,
   );
 
 authRouter.route('/mandatory-criteria')

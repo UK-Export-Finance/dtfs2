@@ -30,10 +30,6 @@ const insertMocks = async () => {
     await api.createBank(bank, token);
   }
 
-  console.log('inserting industry-sectors');
-  for (industrySector of MOCKS.INDUSTRY_SECTORS) {
-    await api.createIndustrySector(industrySector, token);
-  }
 
   console.log('inserting mandatory-criteria');
   for (mandatoryCriteria of MOCKS.MANDATORY_CRITERIA) {
