@@ -17,14 +17,6 @@ const cleanDeals = async (token) => {
   }
 };
 
-const cleanIndustrySectors = async (token) => {
-  console.log('cleaning industry-sectors');
-
-  for (industrySector of await api.listIndustrySectors(token)) {
-    await api.deleteIndustrySector(industrySector, token);
-  }
-};
-
 const cleanMandatoryCriteria = async (token) => {
   console.log('cleaning mandatory-criteria');
 
@@ -59,7 +51,6 @@ const cleanAllTables = async () => {
 
   await cleanBanks(token);
   await cleanDeals(token);
-  await cleanIndustrySectors(token);
   await cleanMandatoryCriteria(token);
   await cleanEligibilityCriteria(token);
   await cleanUsers();

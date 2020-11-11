@@ -17,6 +17,6 @@ exports.findAll = (req, res) => (
 
 exports.findOne = (req, res) => {
   const industrySector = findOneIndustrySector(req.params.code);
-  const status = industrySector ? '200' : '401';
+  const status = industrySector ? '200' : '404';
   res.status(status).send(industrySector);
 };
