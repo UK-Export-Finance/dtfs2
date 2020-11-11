@@ -1,38 +1,7 @@
-version: "3"
+version: "3" 
 services:
-  trade_finance_manager:
-    build: ./trade_finance_manager
-    image: dtfs/trade_finance_manager
-    ports:
-      - "5100:5100"
-    volumes:
-      - ./trade_finance_manager/scripts:/app/scripts:ro
-      - ./trade_finance_manager/styles:/app/styles:ro
-      - ./trade_finance_manager/templates:/app/templates:ro
-      - ./trade_finance_manager/server:/app/server:ro
-    command: node dist/server.js
-  portal:
-    build: ./portal
-    image: dtfs/portal
-    restart: always
-    depends_on:
-      - deal-api
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./portal/scripts:/app/scripts:ro
-      - ./portal/styles:/app/styles:ro
-      - ./portal/templates:/app/templates:ro
-      - ./portal/server:/app/server:ro
-    environment:
-      - DEAL_API_URL=http://deal-api:5001
-      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
-      - COMPANIES_HOUSE_API_KEY
-      - REDIS_URI=redis:6379
-    command: node dist/server.js
-
   deal-api:
-    build: ./deal-api
+    build: ../deal-api
     image: dtfs/deal-api
     restart: always
     depends_on:
@@ -40,29 +9,27 @@ services:
     ports:
       - "5001:5001"
     volumes:
-      - ./deal-api/src:/app/src:ro
+      - ../deal-api/src:/app/src:ro
     environment:
+      - DEBUG=express:*
       - PORT=5001
       - CORS_ORIGIN=http://localhost:5000
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
       - MONGO_INITDB_DATABASE=test
       - MONGODB_URI=mongodb://root:r00t@deal-api-data:27017/?authMechanism=DEFAULT
+      - AZURE_WORKFLOW_FILESHARE_NAME
       - AZURE_WORKFLOW_STORAGE_ACCOUNT
       - AZURE_WORKFLOW_STORAGE_ACCESS_KEY
-      - AZURE_WORKFLOW_FILESHARE_NAME
       - AZURE_WORKFLOW_EXPORT_FOLDER
       - AZURE_WORKFLOW_IMPORT_FOLDER
+      - AZURE_PORTAL_FILESHARE_NAME
       - AZURE_PORTAL_STORAGE_ACCOUNT
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
-      - AZURE_PORTAL_FILESHARE_NAME
       - AZURE_PORTAL_EXPORT_FOLDER
-      - DTFS_PORTAL_SCHEDULER
       - GOV_NOTIFY_API_KEY
       - GOV_NOTIFY_EMAIL_RECIPIENT
-      - DTFS_PORTAL_SCHEDULER=true
-      - FETCH_WORKFLOW_TYPE_B_SCHEDULE=*/1 * * * * *
-
+      - DTFS_PORTAL_SCHEDULER
     entrypoint: npx nodemon src/index.js
 
   deal-api-data:
@@ -73,16 +40,13 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
     volumes:
-      - ./deal-api-data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ../deal-api-data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - ./deal-api-data-volume:/data/db
     ports:
       - "27017-27019:27017-27019"
 
-  redis:
-    image: redis:alpine
-
   test-hook-api:
-    build: ./test-hook-api
+    build: ../test-hook-api
     image: dtfs/test-hook-api
     restart: always
     depends_on:
@@ -90,7 +54,7 @@ services:
     ports:
       - "5069:5069"
     volumes:
-      - ./test-hook-api/src:/app/src:ro
+      - ../test-hook-api/src:/app/src:ro
     environment:
       - PORT=5069
       - CORS_ORIGIN=http://localhost:5000
