@@ -6,6 +6,7 @@ services:
     restart: always
     depends_on:
       - deal-api-data
+      - reference-data-proxy
     ports:
       - "5001:5001"
     volumes:
@@ -30,6 +31,7 @@ services:
       - GOV_NOTIFY_API_KEY
       - GOV_NOTIFY_EMAIL_RECIPIENT
       - DTFS_PORTAL_SCHEDULER
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
     entrypoint: npx nodemon src/index.js
 
   deal-api-data:
@@ -44,6 +46,19 @@ services:
       - ./deal-api-data-volume:/data/db
     ports:
       - "27017-27019:27017-27019"
+
+  reference-data-proxy:
+    build: ../reference-data-proxy
+    image: dtfs/reference-data-proxy
+    restart: always
+    ports:
+      - "5002:5002"
+    volumes:
+      - ../reference-data-proxy/src:/app/src:ro
+    environment:
+      - PORT=5002
+      - MULESOFT_API
+    entrypoint: npx nodemon src/index.js
 
   test-hook-api:
     build: ../test-hook-api
