@@ -453,18 +453,9 @@ jobs:
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name mandatoryCriteria || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name mandatoryCriteria --shard "_id"
 
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name currencies || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name currencies --shard "_id"
-
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name users || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name users --shard "_id"
 
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name industrySectors || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name industrySectors --shard "_id"
-
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name countries || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name countries --shard "_id"
-          
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters --shard "_id"
   
@@ -864,8 +855,10 @@ jobs:
       with:
         inlineScript: |
           mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
-
           echo "Mongo connection string: $mongo_connection_string"
+
+          reference_data_proxy_url=$(az webapp show --name tfs-dev-reference-data-proxy --resource-group digital-dev --query defaultHostName -o tsv)
+          echo "Reference data proxy url: http://$reference_data_proxy_url"
 
           az webapp config connection-string set --name tfs-${{ env.environment }}-portal-api \
             --connection-string-type custom \
@@ -887,7 +880,7 @@ jobs:
               GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
               DTFS_PORTAL_SCHEDULER="${{ env.DTFS_PORTAL_SCHEDULER }}" \
               FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ env.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}"
-                            
+              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"              
 
   file-storage:
     name: File storage
@@ -1200,7 +1193,7 @@ jobs:
           # Tony B
           az network nsg rule create --name team-ips-tonyb --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 4001 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "87.74.99.121" --source-port-ranges "*" \
+            --source-address-prefixes "84.9.237.44" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
 
           # Caroline - VM
