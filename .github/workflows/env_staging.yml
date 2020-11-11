@@ -860,7 +860,7 @@ jobs:
           mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
           echo "Mongo connection string: $mongo_connection_string"
 
-          reference_data_proxy_url=$(az webapp show --name tfs-dev-reference-data-proxy --resource-group digital-dev --query defaultHostName -o tsv)
+          reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
           echo "Reference data proxy url: http://$reference_data_proxy_url"
 
           az webapp config connection-string set --name tfs-${{ env.environment }}-portal-api \
