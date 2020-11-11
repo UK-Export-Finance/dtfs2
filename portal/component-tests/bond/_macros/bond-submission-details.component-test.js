@@ -146,4 +146,30 @@ describe(component, () => {
   it('should render dayCountBasis', () => {
     wrapper.expectText('[data-cy="day-count-basis"]').toRead(bond.dayCountBasis);
   });
+
+  describe('when currencySameAsSupplyContractCurrency is `false`', () => {
+    const bondWithCurrencyNotTheSameAsSupplyContractCurrency = {
+      ...bond,
+      currencySameAsSupplyContractCurrency: 'true',
+    };
+
+    beforeEach(() => {
+      wrapper = render({
+        user,
+        bond: bondWithCurrencyNotTheSameAsSupplyContractCurrency,
+      });
+    });
+
+    it('should NOT render currency', () => {
+      wrapper.expectElement('[data-cy="currency"]').notToExist();
+    });
+
+    it('should NOT render conversionRate', () => {
+      wrapper.expectElement('[data-cy="conversion-rate"]').notToExist();
+    });
+
+    it('should NOT render conversionRateDate', () => {
+      wrapper.expectElement('[data-cy="conversion-rate-date"]').notToExist();
+    });
+  });
 });

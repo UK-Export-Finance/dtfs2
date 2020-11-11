@@ -128,17 +128,17 @@
             </dd>
           </div>
         {% endif %}
-      {% endif %}
       
-      {% if loan['conversionRateDate-day'] and loan['conversionRateDate-month'] and loan['conversionRateDate-year'] %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key govuk-body-s">
-            Conversion rate date
-          </dt>
-          <dd class="govuk-summary-list__value govuk-body-s" data-cy="conversion-rate-date">
-            {{ loan['conversionRateDate-day'] }}/{{ loan['conversionRateDate-month'] }}/{{ loan['conversionRateDate-year'] }}
-          </dd>
-        </div>
+        {% if loan['conversionRateDate-day'] and loan['conversionRateDate-month'] and loan['conversionRateDate-year'] %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-body-s">
+              Conversion rate date
+            </dt>
+            <dd class="govuk-summary-list__value govuk-body-s" data-cy="conversion-rate-date">
+              {{ loan['conversionRateDate-day'] }}/{{ loan['conversionRateDate-month'] }}/{{ loan['conversionRateDate-year'] }}
+            </dd>
+          </div>
+        {% endif %}
       {% endif %}
 
       {% if loan.disbursementAmount %}

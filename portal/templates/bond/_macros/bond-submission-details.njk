@@ -161,18 +161,17 @@
             </dd>
           </div>
         {% endif %}
-      {% endif %}
 
-
-      {% if bond['conversionRateDate-day'] and bond['conversionRateDate-month'] and bond['conversionRateDate-year'] %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key govuk-body-s">
-            Conversion rate date 
-          </dt>
-          <dd class="govuk-summary-list__value govuk-body-s" data-cy="conversion-rate-date">
-            {{ bond['conversionRateDate-day'] }}/{{ bond['conversionRateDate-month'] }}/{{ bond['conversionRateDate-year'] }}
-          </dd>
-        </div>
+        {% if bond['conversionRateDate-day'] and bond['conversionRateDate-month'] and bond['conversionRateDate-year'] %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-body-s">
+              Conversion rate date 
+            </dt>
+            <dd class="govuk-summary-list__value govuk-body-s" data-cy="conversion-rate-date">
+              {{ bond['conversionRateDate-day'] }}/{{ bond['conversionRateDate-month'] }}/{{ bond['conversionRateDate-year'] }}
+            </dd>
+          </div>
+        {% endif %}
       {% endif %}
 
 
