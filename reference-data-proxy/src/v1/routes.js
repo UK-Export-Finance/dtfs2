@@ -3,6 +3,7 @@ const express = require('express');
 const openRouter = express.Router();
 const countries = require('./controllers/countries.controller');
 const currencies = require('./controllers/currencies.controller');
+const industrySectors = require('./controllers/industry-sectors.controller');
 
 openRouter.route('/countries')
   .get(
@@ -24,5 +25,14 @@ openRouter.route('/currencies/:id')
     currencies.findOne,
   );
 
+openRouter.route('/industry-sectors')
+  .get(
+    industrySectors.findAll,
+  );
+
+openRouter.route('/industry-sectors/:code')
+  .get(
+    industrySectors.findOne,
+  );
 
 module.exports = { openRouter };
