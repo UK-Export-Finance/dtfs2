@@ -1,0 +1,77 @@
+{% extends "cases/index.html" %}
+{% set selected = 'cases_closed'%}
+{% block sub_content %}
+          <h2 class="govuk-heading-l">Closed Cases</h2>
+          <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset" aria-describedby="changed-name-hint">
+              <div class="govuk-radios govuk-radios--inline">
+                <div class="govuk-radios__item">
+                  <input class="govuk-radios__input" id="changed-name" name="changed-name" type="radio" value="yes">
+                  <label class="govuk-label govuk-radios__label" for="changed-name">My cases</label>
+                </div>
+                <div class="govuk-radios__item">
+                  <input class="govuk-radios__input" id="changed-name-2" name="changed-name" type="radio" value="no">
+                  <label class="govuk-label govuk-radios__label" for="changed-name-2">All cases</label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <table class="govuk-table tfm tfm-width">
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Case ref</th>
+                <th scope="col" class="govuk-table__header">Type of work</th>
+                <th scope="col" class="govuk-table__header">Tasks for me</th>
+                <th scope="col" class="govuk-table__header">Exporter</th>
+                <th scope="col" class="govuk-table__header">Deal</th>
+                <th scope="col" class="govuk-table__header">Buyer</th>
+                <th scope="col" class="govuk-table__header">Bank</th>
+                <th scope="col" class="govuk-table__header">Target delivery date</th>
+              </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell">
+                  <a href="">C0344</a>
+                </td>
+                <td class="govuk-table__cell">MIA</td>
+                <td class="govuk-table__cell">1</td>
+                <td class="govuk-table__cell">Rowntree Defence Ltd</td>
+                <td class="govuk-table__cell">
+                  <a href="">0020010027</a>
+                </td>
+                <td class="govuk-table__cell">Government of the People's...</td>
+                <td class="govuk-table__cell">Santander</td>
+                <td/>
+              </tr>
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell"></td>
+                <td class="govuk-table__cell"></td>
+                <td class="govuk-table__cell"></td>
+                <td class="govuk-table__cell"></td>
+                <td class="govuk-table__cell">
+                  <a href="">0020010029</a>
+                </td>
+                <td class="govuk-table__cell">Government of the People's...</td>
+                <td class="govuk-table__cell">Santander</td>
+                <td/>
+              </tr>
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell">
+                  <a href="case.html">C0345</a>
+                </td>
+                <td class="govuk-table__cell">MIA</td>
+                <td class="govuk-table__cell">5</td>
+                <td class="govuk-table__cell">Love to Learn Ltd</td>
+                <td class="govuk-table__cell">
+                  <a href="">0020010552</a>
+                </td>
+                <td class="govuk-table__cell">Kingdom of Wakanda Co...</td>
+                <td class="govuk-table__cell">Lloyds bank</td>
+                <td/>
+              </tr>
+            </tbody>
+          </table>
+
+
+{% endblock%}
