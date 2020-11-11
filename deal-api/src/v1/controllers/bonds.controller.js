@@ -36,7 +36,12 @@ const putBondInDealObject = (deal, bond) => {
 };
 
 const updateBondInDeal = async (params, user, deal, bond) => {
-  const modifiedDeal = putBondInDealObject(deal, bond);
+  const bondToUpdate = {
+    ...bond,
+    lastEdited: now(),
+  };
+
+  const modifiedDeal = putBondInDealObject(deal, bondToUpdate);
 
   const newReq = {
     params,
@@ -200,8 +205,6 @@ exports.updateBond = async (req, res) => {
       } else {
         delete modifiedBond.requestedCoverStartDate;
       }
-
-      modifiedBond.lastEdited = now();
 
       const updatedBond = await updateBondInDeal(req.params, req.user, deal, modifiedBond);
 

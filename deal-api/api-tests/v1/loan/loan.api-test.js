@@ -461,6 +461,21 @@ describe('/v1/deals/:id/loan', () => {
       expect(body.loan['requestedCoverStartDate-month']).toEqual(loan['requestedCoverStartDate-month']);
       expect(body.loan['requestedCoverStartDate-year']).toEqual(loan['requestedCoverStartDate-year']);
     });
+
+    it('should generate lastEdited timestamp', async () => {
+      const { dealId, loanId } = await addLoanToDeal();
+
+      const loan = {
+        facilityStage: 'Unconditional',
+        bankReferenceNumber: '1234',
+      };
+
+      await updateLoan(dealId, loanId, loan);
+      const { status, body } = await as(aSuperuser).get(`/v1/deals/${dealId}/loan/${loanId}`);
+
+      expect(status).toEqual(200);
+      expect(body.loan.lastEdited).toEqual(expect.any(String));
+    });
   });
 
   describe('PUT /v1/deals/:id/loan/create', () => {
