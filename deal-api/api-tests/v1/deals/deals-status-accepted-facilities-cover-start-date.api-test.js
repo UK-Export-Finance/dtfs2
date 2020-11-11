@@ -75,6 +75,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         issuedBondsThatShouldBeUpdated.forEach((bond) => {
           const updatedBond = body.deal.bondTransactions.items.find((l) => l._id === bond._id);
           expect(updatedBond.requestedCoverStartDate).toEqual(submittedMinDeal.details.manualInclusionNoticeSubmissionDate);
+          expect(typeof updatedBond.lastEdited).toEqual('string');
         });
       });
     });
@@ -94,8 +95,9 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
 
         issuedLoansThatShouldBeUpdated.forEach((loan) => {
-          const updatedBond = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
-          expect(updatedBond.requestedCoverStartDate).toEqual(submittedMinDeal.details.manualInclusionNoticeSubmissionDate);
+          const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
+          expect(updatedLoan.requestedCoverStartDate).toEqual(submittedMinDeal.details.manualInclusionNoticeSubmissionDate);
+          expect(typeof updatedLoan.lastEdited).toEqual('string');
         });
       });
     });
@@ -139,6 +141,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         issuedBondsThatShouldBeUpdated.forEach((bond) => {
           const updatedBond = body.deal.bondTransactions.items.find((l) => l._id === bond._id);
           expect(updatedBond.requestedCoverStartDate).toEqual(submittedMinDeal.details.manualInclusionNoticeSubmissionDate);
+          expect(typeof updatedBond.lastEdited).toEqual('string');
         });
       });
     });
@@ -158,8 +161,9 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
 
         issuedLoansThatShouldBeUpdated.forEach((loan) => {
-          const updatedBond = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
-          expect(updatedBond.requestedCoverStartDate).toEqual(submittedMinDeal.details.manualInclusionNoticeSubmissionDate);
+          const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
+          expect(updatedLoan.requestedCoverStartDate).toEqual(submittedMinDeal.details.manualInclusionNoticeSubmissionDate);
+          expect(typeof updatedLoan.lastEdited).toEqual('string');
         });
       });
     });

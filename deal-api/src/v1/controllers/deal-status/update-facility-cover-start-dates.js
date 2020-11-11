@@ -20,6 +20,8 @@ const updateFacilityCoverStartDates = async (collection, deal) => {
 
       if (shouldUpdate) {
         const today = new Date();
+
+        facility.lastEdited = now();
         facility.requestedCoverStartDate = now();
         facility['requestedCoverStartDate-day'] = today.getDate();
         facility['requestedCoverStartDate-month'] = today.getMonth() + 1;

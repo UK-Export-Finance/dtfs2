@@ -665,6 +665,24 @@ describe('/v1/deals/:id/bond', () => {
       expect(body['requestedCoverStartDate-month']).toEqual(bond['requestedCoverStartDate-month']);
       expect(body['requestedCoverStartDate-year']).toEqual(bond['requestedCoverStartDate-year']);
     });
+
+    it('should generate lastEdited timestamp', async () => {
+      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+      const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+
+      const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+
+      const { body: createBondBody } = createBondResponse;
+      const { bondId } = createBondBody;
+
+      const bond = allBondFields;
+
+      const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+      expect(status).toEqual(200);
+      expect(body.lastEdited).toEqual(expect.any(String));
+    });
+
   });
 
   describe('DELETE /v1/deals/:id/bond/:id', () => {

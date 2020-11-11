@@ -36,7 +36,12 @@ const putLoanInDealObject = (deal, loan) => {
 };
 
 const updateLoanInDeal = async (params, user, deal, loan) => {
-  const modifiedDeal = putLoanInDealObject(deal, loan);
+  const loanToUpdate = {
+    ...loan,
+    lastEdited: now(),
+  };
+
+  const modifiedDeal = putLoanInDealObject(deal, loanToUpdate);
 
   const newReq = {
     params,
@@ -205,7 +210,6 @@ exports.updateLoan = async (req, res) => {
         delete modifiedLoan.requestedCoverStartDate;
       }
 
-      modifiedLoan.lastEdited = now();
       const updatedLoan = await updateLoanInDeal(req.params, req.user, deal, modifiedLoan);
 
       const validationErrors = loanValidationErrors(updatedLoan, deal);

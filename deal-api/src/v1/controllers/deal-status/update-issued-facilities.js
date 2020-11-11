@@ -118,11 +118,12 @@ const updateIssuedFacilities = async (
 
       if (shouldUpdateFacility(facility)) {
         if (facility.issueFacilityDetailsProvided && !facility.issueFacilityDetailsSubmitted) {
+          facility.lastEdited = now();
+          facility.previousFacilityStage = facilityStage;
+
           if (shouldUpdateStatus) {
             facility.status = newStatus;
           }
-
-          facility.previousFacilityStage = facilityStage;
 
           if (isLoanFacility(facilityStage)) {
             facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
@@ -132,16 +133,20 @@ const updateIssuedFacilities = async (
         } else if (shouldUpdateStatus) {
           // update all issued facilities regardless of if they've been submitted or have completed all required fields.
           facility.status = newStatus;
+          facility.lastEdited = now();
         }
 
         if (canUpdateIssuedFacilitiesCoverStartDates
           && !facility.issueFacilityDetailsSubmitted
           && !facility.requestedCoverStartDate) {
           if (fromStatusIsApprovedStatus && isMINdeal) {
+            facility.lastEdited = now();
             facility.requestedCoverStartDate = deal.details.manualInclusionNoticeSubmissionDate;
           } else if (isMIAdeal) {
+            facility.lastEdited = now();
             facility.requestedCoverStartDate = now();
           } else if (facilityHasValidIssuedDate(facility, deal)) {
+            facility.lastEdited = now();
             facility.requestedCoverStartDate = facility.issuedDate;
           }
         }
