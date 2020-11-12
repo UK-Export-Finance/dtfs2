@@ -14,10 +14,9 @@ env:
   resource_group: ${{ secrets.TEST_RESOURCE_GROUP }}
   app_service_plan: test
   redis_sku: Basic
-  database_name: test
+  database_name: tfs-portal
   application_gateway_cidr: 10.0.1.0/28
   private_endpoints_cidr: 10.0.2.0/28
-  app_service_plan_cidr: 10.0.3.0/28
   # Container registry
   registry: ${{ secrets.TEST_ACR_REGISTRY }}
   # App service settings
@@ -35,7 +34,9 @@ env:
   AZURE_WORKFLOW_FILESHARE_NAME: "${{ secrets.TEST_AZURE_WORKFLOW_FILESHARE_NAME }}"
   AZURE_WORKFLOW_EXPORT_FOLDER: "${{ secrets.TEST_AZURE_WORKFLOW_EXPORT_FOLDER }}"
   AZURE_WORKFLOW_IMPORT_FOLDER: "${{ secrets.TEST_AZURE_WORKFLOW_IMPORT_FOLDER }}"
-  MONGODB_URI: "${{ secrets.TEST_MONGODB_URI }}"
+  MONGODB_ROOT_USER: "${{ secrets.TEST_MONGODB_ROOT_USER }}"
+  MONGODB_ROOT_SALT: "${{ secrets.TEST_MONGODB_ROOT_SALT }}"
+  MONGODB_ROOT_HASH: "${{ secrets.TEST_MONGODB_ROOT_HASH}}"
   REDIS_URI: "${{ secrets.TEST_REDIS_URI }}"
   JWT_SIGNING_KEY: "${{ secrets.TEST_JWT_SIGNING_KEY }}"
   JWT_VALIDATING_KEY: "${{ secrets.TEST_JWT_VALIDATING_KEY }}"
