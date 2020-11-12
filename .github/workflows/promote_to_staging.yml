@@ -3,9 +3,6 @@ name: Deploy staging
 on:
   push:
     branches: [ staging ]
-    paths: 
-    - 'deal-api/**'
-    - 'portal/**'
 
 env:
   environment: staging
