@@ -2,7 +2,7 @@ name: Production DNS
 
 on:
   push:
-    branches: [ infrastructure ]
+    branches: [ master ]
     paths: 
     - '.github/workflows/dns.yml'
 
@@ -39,12 +39,12 @@ jobs:
         inlineScript: |
           az network dns zone create --name ${{ env.domain_name }}
 
-    - name: Front Door verification record
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network dns record-set cname create --zone ${{ env.domain_name }} --name afdverify.${{ env.domain_name }}
-          az network dns record-set cname set-record --zone ${{ env.domain_name }} --record-set-name afdverify.${{ env.domain_name }} --cname ${{ env.front_door_name }}.azurefd.net
+    # - name: Front Door verification record
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     inlineScript: |
+    #       az network dns record-set cname create --zone ${{ env.domain_name }} --name afdverify.${{ env.domain_name }}
+    #       az network dns record-set cname set-record --zone ${{ env.domain_name }} --record-set-name afdverify.${{ env.domain_name }} --cname ${{ env.front_door_name }}.azurefd.net
 
     - name: Alias record for service.gov.uk domain
       uses: Azure/cli@v1.0.0
@@ -64,6 +64,11 @@ jobs:
             --front-door-name ${{ env.front_door_name }} \
             --name "GOVUK" \
             --host-name ${{ env.domain_name }}
+
+    - name: Enable HTTPS
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
           az network front-door frontend-endpoint enable-https \
             --front-door-name ${{ env.front_door_name }} \
             --name "service.gov.uk"
