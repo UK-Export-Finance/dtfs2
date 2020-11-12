@@ -181,7 +181,7 @@ jobs:
 
           az network private-dns link vnet show   --name storage-dns --zone-name "privatelink.redis.cache.windows.net" || \
           az network private-dns link vnet create --name storage-dns --zone-name "privatelink.redis.cache.windows.net" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
-
+ 
   public-ip:
     name: Public IP
     runs-on: ubuntu-latest
