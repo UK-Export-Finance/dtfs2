@@ -1065,19 +1065,22 @@ jobs:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
- 
-    - name: Create
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network application-gateway create --name tfs-${{ env.environment }}-gw \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet ${{ env.environment }}-gateway \
-            --public-ip-address tfs-${{ env.environment }}-ip \
-            --frontend-port 80 \
-            --max-capacity 10 --min-capacity 1 \
-            --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
-            --sku Standard_v2
+
+    # theres current a bug in Azure CLI preventing a AG from being created without a private-ip
+    # looks like its been fixed but not released as on 12/11/2020
+    # see: https://github.com/Azure/azure-cli/pull/15757 
+    # - name: Create
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     inlineScript: |
+    #       az network application-gateway create --name tfs-${{ env.environment }}-gw \
+    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+    #         --subnet ${{ env.environment }}-gateway \
+    #         --public-ip-address tfs-${{ env.environment }}-ip \
+    #         --frontend-port 80 \
+    #         --max-capacity 10 --min-capacity 1 \
+    #         --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
+    #         --sku Standard_v2
  
     - name: Https ingress for data migration
       uses: Azure/cli@v1.0.0
