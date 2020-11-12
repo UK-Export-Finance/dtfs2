@@ -212,26 +212,11 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
+            const todayPlus3Months = moment().add(3, 'month');
             const todayFormatted = moment().format('Do MMMM YYYY');
-            const expectedText = `Requested Cover Start Date must be after ${todayFormatted}`;
-            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
-          });
-        });
+            const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY');
 
-        describe('when requestedCoverStartDate is before the deal\'s manual inclusion notice submission date', () => {
-          it('should return validationError', async () => {
-            const threeDaysAgo = moment().subtract(3, 'day');
-            const requestedCoverStartDateFields = {
-              'requestedCoverStartDate-day': moment(threeDaysAgo).format('DD'),
-              'requestedCoverStartDate-month': moment(threeDaysAgo).format('MM'),
-              'requestedCoverStartDate-year': moment(threeDaysAgo).format('YYYY'),
-            };
-
-            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
-            expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
-
-            const formattedManualInclusionNoticeSubmissionDate = moment(formattedTimestamp(updatedDeal.details.manualInclusionNoticeSubmissionDate)).format('Do MMMM YYYY');
-            const expectedText = `Requested Cover Start Date must be after ${formattedManualInclusionNoticeSubmissionDate}`;
+            const expectedText = `Requested Cover Start Date must be between ${todayFormatted} and ${todayPlus3MonthsFormatted}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });
@@ -249,10 +234,10 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const formattedManualInclusionApplicationSubmissionDate = moment(formattedTimestamp(updatedDeal.details.manualInclusionApplicationSubmissionDate)).format('Do MMMM YYYY');
+            const todayFormatted = moment().format('Do MMMM YYYY');
             const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY');
 
-            const expectedText = `Requested Cover Start Date must be between ${formattedManualInclusionApplicationSubmissionDate} and ${todayPlus3MonthsFormatted}`;
+            const expectedText = `Requested Cover Start Date must be between ${todayFormatted} and ${todayPlus3MonthsFormatted}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });
