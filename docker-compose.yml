@@ -2,15 +2,11 @@ version: "3"
 services:
   trade_finance_manager:
     build: ./trade_finance_manager
-    image: dtfs/trade_finance_manager
+    image: portal/tfm-ui
     ports:
-      - "5100:5100"
-    volumes:
-      - ./trade_finance_manager/scripts:/app/scripts:ro
-      - ./trade_finance_manager/styles:/app/styles:ro
-      - ./trade_finance_manager/templates:/app/templates:ro
-      - ./trade_finance_manager/server:/app/server:ro
-    command: node dist/server.js
+      - "5100:8080"
+    command: node server/index.js
+
   portal:
     build: ./portal
     image: dtfs/portal
