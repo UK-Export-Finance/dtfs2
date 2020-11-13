@@ -858,7 +858,7 @@ jobs:
           echo "Mongo connection string: $mongo_connection_string"
 
           reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
-          echo "Reference data proxy url: http://$reference_data_proxy_url"
+          echo "Reference data proxy url: https://$reference_data_proxy_url"
 
           az webapp config connection-string set --name tfs-${{ env.environment }}-portal-api \
             --connection-string-type custom \
@@ -880,7 +880,7 @@ jobs:
               GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
               DTFS_PORTAL_SCHEDULER="${{ env.DTFS_PORTAL_SCHEDULER }}" \
               FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ env.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}" \
-              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"              
+              REFERENCE_DATA_PROXY_URL="https://$reference_data_proxy_url"              
 
   file-storage:
     name: File storage
