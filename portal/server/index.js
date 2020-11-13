@@ -1,7 +1,8 @@
 import express from 'express';
 import morgan from 'morgan';
 import session from 'express-session';
-import cookieParser from 'cookie-parser';
+import redis from 'redis';
+
 import flash from 'connect-flash';
 import path from 'path';
 import crypto from 'crypto';
@@ -13,6 +14,8 @@ import uploadTest from './upload-test';
 
 import configureNunjucks from './nunjucks-configuration';
 
+const RedisStore = require('connect-redis')(session);
+
 const app = express();
 
 const PORT = process.env.PORT || 5000;
@@ -20,13 +23,21 @@ const PORT = process.env.PORT || 5000;
 // Fail-safe fallback to a 256-bit random value:
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(256 / 8).toString('hex');
 
-app.use(session({
+const sessionOptions = {
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
-}));
+};
 
-app.use(cookieParser()); // could optionally use a secret here
+if (process.env.REDIS_URI) {
+  console.log(`Connecting to redis server: ${process.env.REDIS_URI}`);
+
+  const redisClient = redis.createClient(`//${process.env.REDIS_URI}`);
+  sessionOptions.store = new RedisStore({ client: redisClient });
+}
+
+app.use(session(sessionOptions));
+
 app.use(flash());
 app.use(json2csv);
 
