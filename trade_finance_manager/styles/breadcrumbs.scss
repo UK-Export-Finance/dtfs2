@@ -1,0 +1,12 @@
+.breadcrumbs {
+  text-align: center;
+}
+
+.breadcrumbs li {
+  display: inline-block;
+  padding: 0 10px;
+}
+
+.breadcrumbs li.active {
+  background: lightgrey;
+}

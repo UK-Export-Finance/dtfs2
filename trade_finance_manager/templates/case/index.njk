@@ -1,0 +1,10 @@
+{% extends "layout_navbar.html" %}
+
+{% block pageTitle %}
+  Trade Finance Manager - {{ case.ID }} - {{ case.Exporter}} - {{ case.Buyer }}
+{% endblock %}
+
+{% block content %}
+  {% include "_partials/case_summary.njk" %}
+  {% include "_partials/case_sub_navigation.njk" %}
+{% endblock %}
