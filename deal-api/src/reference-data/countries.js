@@ -25,7 +25,7 @@ const getCountry = async (code) => {
       'Content-Type': 'application/json',
     },
   }).catch((err) => err);
-  console.log(`getCountryResponse ${id}`, response);
+  console.log(`getCountryResponse ${code}`, response);
   return response.data;
 };
 
