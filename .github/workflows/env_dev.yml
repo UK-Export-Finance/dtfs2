@@ -206,7 +206,7 @@ jobs:
 
   portal-ui:
     name: Portal UI
-    needs: [vnet, private-dns]
+    needs: [vnet, private-dns, reference-data-proxy]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -330,6 +330,8 @@ jobs:
         # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
         # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
         inlineScript: |
+          reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
+
           az webapp config appsettings set --name tfs-${{ env.environment }}-portal-ui \
             --settings \
               PORT=5000 \
@@ -337,8 +339,9 @@ jobs:
               DEAL_API_URL="${{ env.DEAL_API_URL }}" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
               WEBSITE_DNS_SERVER="168.63.129.16" \
-              WEBSITE_VNET_ROUTE_ALL=1
-
+              WEBSITE_VNET_ROUTE_ALL=1 \
+              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"
+              
     - name: Secrets
       uses: Azure/cli@v1.0.0
       with:
@@ -720,7 +723,7 @@ jobs:
     
   portal-api:
     name: Portal API
-    needs: [vnet, private-dns, cosmos-db-create]
+    needs: [vnet, private-dns, cosmos-db-create, reference-data-proxy]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
