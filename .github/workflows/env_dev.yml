@@ -851,7 +851,8 @@ jobs:
           az webapp config appsettings set --name tfs-${{ env.environment }}-portal-api \
             --settings \
               PORT=5000 \
-              WEBSITES_PORT=5000
+              WEBSITES_PORT=5000 \
+              WEBSITE_DNS_SERVER="168.63.129.16"
 
     - name: Secrets
       uses: Azure/cli@v1.0.0
