@@ -1,0 +1,39 @@
+
+<div class="govuk-grid-row tfm tfm-width" >
+  <div class="govuk-grid-column-full">
+  {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+
+  {{ mojSubNavigation({
+  label: 'Sub navigation',
+  items: [{
+  text: 'Tasks',
+  href: 'tasks',
+  active: selected=='tasks'
+  }, {
+  text: 'Deal',
+  href: 'deal',
+  active: selected=='deal'
+  }, {
+  text: 'Parties',
+  href: 'parties',
+  active: selected=='parties'
+  }, {
+  text: 'Documents',
+  href: 'documents',
+  active: selected=='documents'
+  }, {
+  text: 'Activity',
+  href: 'activity',
+  active: selected=='activity'
+  }, {
+  text: 'Underwriting',
+  href: 'underwriting',
+  active: selected=='underwriting'
+  }, {
+  text: 'Linked deals',
+  href: 'linked-deals',
+  active: selected=='linked-deals'
+  }]
+  }) }}
+ </div> 
+ </div>

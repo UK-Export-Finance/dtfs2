@@ -1,0 +1,17 @@
+  {%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
+
+{{ mojPrimaryNavigation({
+label: 'Primary navigation',
+items: [
+{
+  text: 'Home',
+  href: '/home',
+  active: primary == 'home'
+},
+{
+  text: 'Deals',
+  href: '/deals',
+  active: primary == 'deals'
+}
+]
+}) }} 
