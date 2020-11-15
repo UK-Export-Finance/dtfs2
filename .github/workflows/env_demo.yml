@@ -582,15 +582,15 @@ jobs:
           then
             echo Update private link IP address...
 
-            az network private-dns record-set a delete --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.azurewebsites.net" --yes
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-mongo \
               --zone-name "privatelink.mongo.cosmos.azure.com" \
               --ipv4-address $interface_ip
 
-            az network private-dns record-set a delete --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.azurewebsites.net" --yes
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-mongo-uksouth \
               --zone-name "privatelink.mongo.cosmos.azure.com" \
