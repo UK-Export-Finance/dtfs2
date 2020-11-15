@@ -1,7 +1,9 @@
 
-FROM node:lts-alpine as build
+
 
 # Build container
+
+FROM node:lts-alpine as build
 
 
 RUN mkdir /tfm-build
