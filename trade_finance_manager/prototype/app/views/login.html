@@ -1,0 +1,23 @@
+{% extends "layout.html" %} {% block content %}
+<form action="/inbox">
+    <div class="govuk-grid-row tfm">
+        <div class="govuk-grid-column-full">
+            <p class="header-label">Sign in</p>
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="username">
+                Username
+                </label>
+                <input class="govuk-input govuk-input--width-20" id="username" name="username" type="text" autocomplete="user name">
+            </div>
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="password">
+                Password
+                </label>
+                <input class="govuk-input govuk-input--width-20" id="password" name="password" type="password" autocomplete="password">
+            </div>
+            <button class="govuk-button" formaction="/inbox">Sign in</button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}

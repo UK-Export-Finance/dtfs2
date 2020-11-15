@@ -1,0 +1,8 @@
+{
+    "LoginURL" : "https://ef-alpha--dtfsalpha.my.salesforce.com/services/oauth2/token",
+    "Username" : "ukef-alpha-api@ukef.com",
+    "Password" : "NotBinary1234!",
+    "ClientID" : "3MVG9uAc45HBYUriYSrXsP5fUEeoWKG4rpWGaDf3IMLWJefoShupmhK_KKcgDrI.TODpFuDZ_tyFfuoNUOoXf",
+    "ClientSecret" : "BD92145D1FDB758201CEA04703394DC93C59FBF74A7480EF660C42472242CC13",
+    "token" : "OrsAFSm15E63CP5rk1PS0Nfbk"
+}
