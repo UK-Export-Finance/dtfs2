@@ -207,7 +207,7 @@ jobs:
 
   portal-ui:
     name: Portal UI
-    needs: [vnet, private-dns]
+    needs: [vnet, private-dns, reference-data-proxy]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -331,6 +331,8 @@ jobs:
         # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
         # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
         inlineScript: |
+          reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
+
           az webapp config appsettings set --name tfs-${{ env.environment }}-portal-ui \
             --settings \
               PORT=5000 \
@@ -338,8 +340,9 @@ jobs:
               DEAL_API_URL="${{ env.DEAL_API_URL }}" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
               WEBSITE_DNS_SERVER="168.63.129.16" \
-              WEBSITE_VNET_ROUTE_ALL=1
-
+              WEBSITE_VNET_ROUTE_ALL=1 \
+              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"
+              
     - name: Secrets
       uses: Azure/cli@v1.0.0
       with:
@@ -553,29 +556,45 @@ jobs:
         # NB ipConfigurations[0] appears to be the "primary". There's also a property called "requiredMemberName" that *seems* to be the value needed for record-set-name but I can't find any documentation on it, so sticking with [0] and [1] for now:
         inlineScript: |
           ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com" --query "aRecords[0].ipv4Address" -o tsv || echo "")
-
+          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-mongo --query 'networkInterfaces[0].id' -o tsv)
+          interface_ip=$(az resource show --ids $interface_id --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+        
           if [ -z "$ipv4_address" ]
           then
-            mongo_interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-mongo --query 'networkInterfaces[0].id' -o tsv)
-
-            mongo_interface_ip=$(az resource show --ids $mongo_interface_id --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
             az network private-dns record-set a show   --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com" || \
             az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.mongo.cosmos.azure.com"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-mongo \
               --zone-name "privatelink.mongo.cosmos.azure.com" \
-              --ipv4-address $mongo_interface_ip
+              --ipv4-address $interface_ip
 
-            mongo_uksouth_interface_ip=$(az resource show --ids $mongo_interface_id --query "properties.ipConfigurations[1].properties.privateIPAddress" -o tsv)
+            uksouth_interface_ip=$(az resource show --ids $interface_id --query "properties.ipConfigurations[1].properties.privateIPAddress" -o tsv)
             az network private-dns record-set a show   --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com" || \
             az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.mongo.cosmos.azure.com"
             az network private-dns record-set a add-record \
               --record-set-name tfs-${{ env.environment }}-mongo-uksouth \
               --zone-name "privatelink.mongo.cosmos.azure.com" \
-              --ipv4-address $mongo_uksouth_interface_ip
+              --ipv4-address $uksouth_interface_ip
+          fi
 
-          else
-            echo "IP for tfs-${{ env.environment }}-mongo.privatelink.mongo.cosmos.azure.com is $ipv4_address"
+          # Update
+          if [ "$ipv4_address" != "$interface_ip" ]
+          then
+            echo Update private link IP address...
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-mongo \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-mongo-uksouth --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-mongo-uksouth \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
           fi
               
   reference-data-proxy:
@@ -721,7 +740,7 @@ jobs:
     
   portal-api:
     name: Portal API
-    needs: [vnet, private-dns, cosmos-db-create]
+    needs: [vnet, private-dns, cosmos-db-create, reference-data-proxy]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -875,6 +894,8 @@ jobs:
               AZURE_WORKFLOW_STORAGE_ACCESS_KEY="${{ env.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}" \
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="$mongo_connection_string" \
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1 \
               JWT_SIGNING_KEY="${{ env.JWT_SIGNING_KEY }}" \
               JWT_VALIDATING_KEY="${{ env.JWT_VALIDATING_KEY }}" \
               GOV_NOTIFY_API_KEY="${{ env.GOV_NOTIFY_API_KEY }}" \
