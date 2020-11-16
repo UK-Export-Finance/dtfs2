@@ -4,7 +4,7 @@ require('dotenv').config();
 const urlRoot = process.env.COMPANIES_HOUSE_API_URL;
 const apiKey = process.env.COMPANIES_HOUSE_API_KEY;
 
-const getByRegistrationNumber = async (registrationNumber, returnError = false) => {
+const getByRegistrationNumber = async (registrationNumber) => {
   try {
     const response = await axios({
       method: 'get',
@@ -13,9 +13,21 @@ const getByRegistrationNumber = async (registrationNumber, returnError = false) 
         username: apiKey,
       },
     });
-    return response.data;
+    return {
+      company: response.data,
+    };
   } catch (err) {
-    return returnError ? err : null;
+    const errorResponse = err.response.data;
+
+    if (errorResponse.errors && errorResponse.errors.length) {
+      return {
+        errorMessage: 'Enter a valid Companies House registration number',
+      };
+    }
+
+    return {
+      errorMessage: 'Enter a Companies House registration number',
+    };
   }
 };
 
