@@ -57,7 +57,7 @@ export const mapRequiredValidationErrors = (validationErrors, fields) => {
   - this is the opposite of 'page specific validation rules'
   - this is currently only used for Companies House validation.
 */
-export const hasAlwaysShowErrorFields = (allFields, submittedFields) => {
+export const hasSubmittedAlwaysShowErrorFields = (allFields, submittedFields) => {
   const { ALWAYS_SHOW_ERROR_FIELDS } = allFields;
 
   const hasAlwaysShowFields = ALWAYS_SHOW_ERROR_FIELDS && ALWAYS_SHOW_ERROR_FIELDS.length > 0;
@@ -77,9 +77,7 @@ export const hasAlwaysShowErrorFields = (allFields, submittedFields) => {
 export const mapAlwaysShowErrorFields = (validationErrors, fields) => {
   const mappedErrors = validationErrors;
 
-  const alwaysShowErrorFields = fields.ALWAYS_SHOW_ERROR_FIELDS;
-
-  mappedErrors.errorList = filterErrorList(validationErrors.errorList, alwaysShowErrorFields);
+  mappedErrors.errorList = filterErrorList(validationErrors.errorList, fields.ALWAYS_SHOW_ERROR_FIELDS);
 
   return {
     ...generateErrorSummary(
@@ -89,7 +87,7 @@ export const mapAlwaysShowErrorFields = (validationErrors, fields) => {
   };
 };
 
-const mapRequiredAndAlwaysShowErrorFields = (validationErrors, allFields) => {
+export const mapRequiredAndAlwaysShowErrorFields = (validationErrors, allFields) => {
   const mappedErrors = validationErrors;
   const allRequiredFields = requiredFieldsArray(allFields);
   const alwaysShowErrorFields = allFields.ALWAYS_SHOW_ERROR_FIELDS;
@@ -112,15 +110,14 @@ const mapRequiredAndAlwaysShowErrorFields = (validationErrors, allFields) => {
 export const pageSpecificValidationErrors = (validationErrors, fields, submittedFields) => {
   if (validationErrors && validationErrors.errorList) {
     if (shouldReturnRequiredValidation(fields, submittedFields)) {
-
-      if (hasAlwaysShowErrorFields(fields, submittedFields)) {
+      if (hasSubmittedAlwaysShowErrorFields(fields, submittedFields)) {
         return mapRequiredAndAlwaysShowErrorFields(validationErrors, fields);
       }
 
       return mapRequiredValidationErrors(validationErrors, fields);
     }
 
-    if (hasAlwaysShowErrorFields(fields, submittedFields)) {
+    if (hasSubmittedAlwaysShowErrorFields(fields, submittedFields)) {
       return mapAlwaysShowErrorFields(validationErrors, fields);
     }
   }
