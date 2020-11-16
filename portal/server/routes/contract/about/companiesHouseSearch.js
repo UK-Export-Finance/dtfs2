@@ -1,7 +1,9 @@
 import express from 'express';
 import companiesHouseAPI from '../../../companies-house-api';
 import {
-  provide, INDUSTRY_SECTORS,
+  provide,
+  INDUSTRY_SECTORS,
+  COUNTRIES,
 } from '../../api-data-provider';
 
 // https://developer.companieshouse.gov.uk/api/docs/company/company_number/registered-office-address/registeredOfficeAddress-resource.html
@@ -45,21 +47,44 @@ const getIndustryFromSicCode = (industrySectors, sicCodes) => {
   return result;
 };
 
-router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', provide([INDUSTRY_SECTORS]), async (req, res) => {
+router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', provide([INDUSTRY_SECTORS, COUNTRIES]), async (req, res) => {
   const { prefix } = req.params;
   const { deal, industrySectors } = req.apiData;
 
-  const searchTerm = `${prefix}-companies-house-registration-number`;
-  const company = await companiesHouseAPI.getByRegistrationNumber(req.body[searchTerm]);
-
-  deal.submissionDetails = req.body;
+  const registrationNumberField = `${prefix}-companies-house-registration-number`;
+  const { company, errorMessage } = await companiesHouseAPI.getByRegistrationNumber(req.body[registrationNumberField]);
 
   if (!company) {
     req.session.aboutSupplierFormData = deal;
+
+    const companiesHouseValidationErrors = {
+      count: 1,
+      errorList: {
+        [registrationNumberField]: {
+          order: '1',
+          text: errorMessage,
+        },
+      },
+    };
+
+    // add companies house validation error and submitted registration number to session
+    // these can then be consumed in the GET route that we redirect to.
+    req.session.companiesHouseSearchValidationErrors = companiesHouseValidationErrors;
+
+    req.session.aboutSupplierFormData = {
+      ...req.session.aboutSupplierFormData,
+      submissionDetails: {
+        ...req.session.aboutSupplierFormData.submissionDetails,
+        [registrationNumberField]: req.body[registrationNumberField],
+      },
+    };
+
     return res.redirect(`/contract/${deal._id}/about/supplier`); // eslint-disable-line no-underscore-dangle
   }
 
   // munge data back into form data
+  deal.submissionDetails = req.body;
+
   deal.submissionDetails[`${prefix}-name`] = company.company_name;
   deal.submissionDetails[`${prefix}-address-line-1`] = company.registered_office_address.address_line_1;
   deal.submissionDetails[`${prefix}-address-line-2`] = company.registered_office_address.address_line_2;
