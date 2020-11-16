@@ -6,6 +6,7 @@
   {% set prefix=opts.prefix %}
   {% set label=opts.label %}
   {% set deal=opts.deal %}
+  {% set errorMessage=opts.validationErrors.errorList[prefix+'-companies-house-registration-number'] %}
 
   {{ govukInput({
     label: { text: label },
@@ -17,7 +18,7 @@
     attributes: {
       "data-cy": prefix+'-companies-house-registration-number'
     },
-    errorMessage: validationErrors.errorList[prefix+'-companies-house-registration-number']
+    errorMessage: errorMessage
   }) }}
 
   {{ govukButton({

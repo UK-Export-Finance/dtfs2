@@ -1,7 +1,10 @@
 // NOTE:
-// pageSpecificValidationErrors are required specifically to match the existing UX/UI.
+// pageSpecificValidationErrors are required specifically to match the existing UX/UI. This being:
+// - only show validation errors if
+// - - the entities 'Check your answers' page (AKA 'Preview' page) has been viewed
+// - - one of entities forms has had a value submitted
 // by having pageSpecificValidationErrors logic in the UI, we remain decoupled from the API.
-// when the UX/UI is redesigned, we should only have to update the UI.
+
 import errorHref from './errorHref';
 import generateErrorSummary from './generateErrorSummary';
 import {
@@ -20,9 +23,6 @@ export const allFieldsArray = (fields) => {
   return allFields;
 };
 
-// only return validation if:
-// any single field has been submitted for the given page (required, conditionally required or optional)
-// or if the Preview page has been viewed (flag from api/db)
 export const shouldReturnRequiredValidation = (fields, fieldValues) => {
   const allFields = allFieldsArray(fields);
 
@@ -50,10 +50,78 @@ export const mapRequiredValidationErrors = (validationErrors, fields) => {
   };
 };
 
+/*
+  ALWAYS_SHOW_ERROR_FIELDS are fields that are:
+  - not required (therefore optional)
+  - BUT if this field has an error, always show it after form submit.
+  - this is the opposite of 'page specific validation rules'
+  - this is currently only used for Companies House validation.
+*/
+export const hasAlwaysShowErrorFields = (allFields, submittedFields) => {
+  const { ALWAYS_SHOW_ERROR_FIELDS } = allFields;
+
+  const hasAlwaysShowFields = ALWAYS_SHOW_ERROR_FIELDS && ALWAYS_SHOW_ERROR_FIELDS.length > 0;
+
+  if (hasAlwaysShowFields) {
+    const pageFields = Object.keys(submittedFields).filter((fieldName) =>
+      ALWAYS_SHOW_ERROR_FIELDS.includes(fieldName));
+
+    if (pageFields.length > 0) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+export const mapAlwaysShowErrorFields = (validationErrors, fields) => {
+  const mappedErrors = validationErrors;
+
+  const alwaysShowErrorFields = fields.ALWAYS_SHOW_ERROR_FIELDS;
+
+  mappedErrors.errorList = filterErrorList(validationErrors.errorList, alwaysShowErrorFields);
+
+  return {
+    ...generateErrorSummary(
+      mappedErrors,
+      errorHref,
+    ),
+  };
+};
+
+const mapRequiredAndAlwaysShowErrorFields = (validationErrors, allFields) => {
+  const mappedErrors = validationErrors;
+  const allRequiredFields = requiredFieldsArray(allFields);
+  const alwaysShowErrorFields = allFields.ALWAYS_SHOW_ERROR_FIELDS;
+
+  const fieldsToReturn = [
+    ...allRequiredFields,
+    ...alwaysShowErrorFields,
+  ];
+
+  mappedErrors.errorList = filterErrorList(validationErrors.errorList, fieldsToReturn);
+
+  return {
+    ...generateErrorSummary(
+      mappedErrors,
+      errorHref,
+    ),
+  };
+};
+
 export const pageSpecificValidationErrors = (validationErrors, fields, submittedFields) => {
   if (validationErrors && validationErrors.errorList) {
     if (shouldReturnRequiredValidation(fields, submittedFields)) {
+
+      if (hasAlwaysShowErrorFields(fields, submittedFields)) {
+        return mapRequiredAndAlwaysShowErrorFields(validationErrors, fields);
+      }
+
       return mapRequiredValidationErrors(validationErrors, fields);
+    }
+
+    if (hasAlwaysShowErrorFields(fields, submittedFields)) {
+      return mapAlwaysShowErrorFields(validationErrors, fields);
     }
   }
 

@@ -30,6 +30,10 @@ const FIELDS = {
       'indemnifier-correspondence-address-town',
     ],
     OPTIONAL_FIELDS: [],
+    ALWAYS_SHOW_ERROR_FIELDS: [
+      'supplier-companies-house-registration-number',
+      'indemnifier-companies-house-registration-number',
+    ],
   },
   BUYER: {
     REQUIRED_FIELDS: [
