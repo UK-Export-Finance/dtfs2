@@ -1,7 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import session from 'express-session';
-import redis from 'redis';
+// import redis from 'redis';
 
 import flash from 'connect-flash';
 import path from 'path';
@@ -14,7 +14,7 @@ import uploadTest from './upload-test';
 
 import configureNunjucks from './nunjucks-configuration';
 
-const RedisStore = require('connect-redis')(session);
+// const RedisStore = require('connect-redis')(session);
 
 const app = express();
 
@@ -29,12 +29,14 @@ const sessionOptions = {
   saveUninitialized: true,
 };
 
+/*
 if (process.env.REDIS_URI) {
   console.log(`Connecting to redis server: ${process.env.REDIS_URI}`);
 
   const redisClient = redis.createClient(`//${process.env.REDIS_URI}`);
   sessionOptions.store = new RedisStore({ client: redisClient });
 }
+*/
 
 app.use(session(sessionOptions));
 
