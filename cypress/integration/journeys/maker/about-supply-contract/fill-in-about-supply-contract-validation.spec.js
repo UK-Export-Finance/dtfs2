@@ -3,6 +3,8 @@ const {
 } = require('../../../pages');
 const partials = require('../../../partials');
 
+const relative = require('../../../relativeURL');
+
 const mockUsers = require('../../../../fixtures/mockUsers');
 const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
 
@@ -11,6 +13,7 @@ const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
 
 context('about-supply-contract', () => {
   let deal;
+  let dealId;
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -18,9 +21,9 @@ context('about-supply-contract', () => {
       console.log(err.stack);
       return false;
     });
-  });
 
-  before(() => {
+    cy.deleteDeals(MAKER_LOGIN);
+
     const aDealWith_AboutSupplyContract_InStatus = (status) => {
       const candidates = twentyOneDeals
         .filter((deal) => (deal.submissionDetails && status === deal.submissionDetails.status))
@@ -34,9 +37,11 @@ context('about-supply-contract', () => {
       }
     };
 
-    cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(aDealWith_AboutSupplyContract_InStatus('Incomplete'), MAKER_LOGIN)
-      .then((insertedDeal) => deal = insertedDeal);
+      .then((insertedDeal) => {
+        deal = insertedDeal;
+        dealId = insertedDeal._id;
+      });
   });
 
   it('A maker picks up a deal in status=Draft, and triggers all validation errors.', () => {
@@ -152,4 +157,94 @@ context('about-supply-contract', () => {
     contractAboutPreview.errors().should('not.contain', 'Indemnifier correspondence postcode is required for UK addresses');
     contractAboutPreview.errors().should('contain', 'Indemnifier correspondence town is required for non-UK addresses');
   });
+
+  it('A maker picks up a deal in status=Draft, triggers Supplier companies house validation errors', () => {
+    cy.login(MAKER_LOGIN);
+    contractAboutSupplier.visit(deal);
+
+    //---------------------------------------------------------------
+    // supplier companies house submit - without providing a value
+    //---------------------------------------------------------------
+    contractAboutSupplier.supplierSearchCompaniesHouse().click();
+
+    cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
+
+    // should only see companies house validation errors
+    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+    contractAboutSupplier.expectError('Enter a Companies House registration number');
+
+    //---------------------------------------------------------------
+    // supplier companies house submit - providing an invalid value
+    //---------------------------------------------------------------
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('TEST');
+    contractAboutSupplier.supplierSearchCompaniesHouse().click();
+
+    cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
+
+    // should only see companies house validation errors
+    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+    contractAboutSupplier.expectError('Enter a valid Companies House registration number');
+
+    //---------------------------------------------------------------
+    // viewing the `Check your answers` page and then re-visiting the About Supplier page
+    //---------------------------------------------------------------
+    // should display all required validation errors
+    partials.taskListHeader.checkYourAnswersLink().click();
+    partials.taskListHeader.itemLink('supplier-and-counter-indemnifier/guarantor').click();
+    partials.errorSummary.errorSummaryLinks().should('have.length', 11);
+
+    // triggering companies house error should then display companies house & required validation errors
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('TEST');
+    contractAboutSupplier.supplierSearchCompaniesHouse().click();
+    partials.errorSummary.errorSummaryLinks().should('have.length', 12);
+    contractAboutSupplier.expectError('Enter a valid Companies House registration number');
+  });
+
+
+  it('A maker picks up a deal in status=Draft, triggers Indemnifier companies house validation errors', () => {
+    cy.login(MAKER_LOGIN);
+    contractAboutSupplier.visit(deal);
+
+    //---------------------------------------------------------------
+    // indemnifier companies house submit - without providing a value
+    //---------------------------------------------------------------
+    contractAboutSupplier.legallyDistinct().click();
+    contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
+
+    cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
+
+    // should see required & companies house validation errors
+    partials.errorSummary.errorSummaryLinks().should('have.length', 12);
+    contractAboutSupplier.expectError('Enter a Companies House registration number');
+
+    //---------------------------------------------------------------
+    // indemnifier companies house submit - providing an invalid value
+    //---------------------------------------------------------------
+    contractAboutSupplier.legallyDistinct().click();
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().type('TEST');
+    contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
+
+    cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
+
+    // should see required & companies house validation errors
+    partials.errorSummary.errorSummaryLinks().should('have.length', 12);
+    contractAboutSupplier.expectError('Enter a valid Companies House registration number');
+
+    //---------------------------------------------------------------
+    // viewing the `Check your answers` page and then re-visiting the About Supplier page
+    //---------------------------------------------------------------
+    // should display all required validation errors
+    partials.taskListHeader.checkYourAnswersLink().click();
+    partials.taskListHeader.itemLink('supplier-and-counter-indemnifier/guarantor').click();
+    partials.errorSummary.errorSummaryLinks().should('have.length', 11);
+
+    // triggering companies house error should then display companies house & required validation errors
+    contractAboutSupplier.legallyDistinct().click();
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().type('TEST');
+    contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
+    partials.errorSummary.errorSummaryLinks().should('have.length', 12);
+    contractAboutSupplier.expectError('Enter a valid Companies House registration number');
+  });
+
+  // TODO CH input value should be populated
 });
