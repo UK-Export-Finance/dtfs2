@@ -4,7 +4,7 @@ import {
   financialPageValidationErrors,
   aboutSupplyContractPreviewValidationErrors,
 } from '.';
-import FIELDS from './pageFields';
+import FIELDS from '../pageFields';
 import { pageSpecificValidationErrors } from '../../../../helpers/pageSpecificValidationErrors';
 
 describe('about supply contract page specific validation errors', () => {

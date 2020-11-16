@@ -44,6 +44,18 @@ router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COU
 
   const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
 
+  // if companies house submit button was pressed and there are validaiton errors,
+  // combine with existing deal validation errors.
+  if (req.session.companiesHouseSearchValidationErrors) {
+    validationErrors.count += req.session.companiesHouseSearchValidationErrors.count;
+    validationErrors.errorList = {
+      ...validationErrors.errorList,
+      ...req.session.companiesHouseSearchValidationErrors.errorList,
+    };
+
+    delete req.session.companiesHouseSearchValidationErrors;
+  }
+
   const errorSummary = generateErrorSummary(validationErrors, errorHref);
 
   const completedForms = calculateStatusOfEachPage(Object.keys(errorSummary.errorList));
