@@ -50,7 +50,8 @@
     {{ companiesHouse.input({
       label: 'Indemnifier Companies House registration number (optional)',
       deal: deal,
-      prefix: 'indemnifier'
+      prefix: 'indemnifier',
+      validationErrors: validationErrors
     }) }}
 
     <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">

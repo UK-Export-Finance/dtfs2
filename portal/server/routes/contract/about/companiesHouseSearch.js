@@ -67,7 +67,7 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
       },
     };
 
-    // add companies house validation error and submitted registration number to session
+    // add companies house validation error and submitted values to session
     // these can then be consumed in the GET route that we redirect to.
     req.session.companiesHouseSearchValidationErrors = companiesHouseValidationErrors;
 
@@ -76,6 +76,7 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
       submissionDetails: {
         ...req.session.aboutSupplierFormData.submissionDetails,
         [registrationNumberField]: req.body[registrationNumberField],
+        legallyDistinct: req.body.legallyDistinct,
       },
     };
 
