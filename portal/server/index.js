@@ -15,7 +15,7 @@ import uploadTest from './upload-test';
 
 import configureNunjucks from './nunjucks-configuration';
 
-// const RedisStore = require('connect-redis')(session);
+const RedisStore = require('connect-redis')(session);
 
 const app = express();
 
@@ -57,9 +57,9 @@ if (process.env.REDIS_HOSTNAME) {
     console.log('REDIS connected');
   });
 
-  // const sessionStore = new RedisStore({ client: redisClient });
+  const sessionStore = new RedisStore({ client: redisClient });
 
-  // sessionOptions.store = sessionStore;
+  sessionOptions.store = sessionStore;
 }
 
 
