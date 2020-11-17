@@ -346,7 +346,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          redis = $(az redis show --resource-group digital-dev --name tfs-dev-redis --query '[hostName, sslPort]')
+          redis=$(az redis show --name tfs-${{ env.environment }}-redis --query '[hostName, sslPort]')
           redis_key=$(az redis list-keys --name tfs-${{ env.environment }}-redis --query primaryKey --output tsv)
 
           az webapp config connection-string set --name tfs-${{ env.environment }}-portal-ui \
