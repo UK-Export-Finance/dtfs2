@@ -346,7 +346,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          redis=$(az redis show --name tfs-${{ env.environment }}-redis --query '[hostName, sslPort]')
+          redis=$(az redis show --name tfs-${{ env.environment }}-redis --query '[hostName, sslPort]' --output tsv)
           redis_key=$(az redis list-keys --name tfs-${{ env.environment }}-redis --query primaryKey --output tsv)
 
           echo "REDIS CONNECTION: $redis_key@$redis[0]:$redis[1]"
