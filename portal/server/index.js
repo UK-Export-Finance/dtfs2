@@ -32,17 +32,10 @@ const sessionOptions = {
 
 console.log(`REDIS_URI: ${process.env.REDIS_URI}`);
 if (process.env.REDIS_URI) {
-  console.log(`Connecting to redis server: ${process.env.REDIS_URI}`);
+  console.log(`Connecting to redis server: rediss://${process.env.REDIS_URI}`);
 
-  const redisClient = redis.createClient(`//${process.env.REDIS_URI}`);
+  const redisClient = redis.createClient(`rediss://${process.env.REDIS_URI}`);
   redisClient.on('error', (err) => {
-    assert(err instanceof Error);
-    assert(err instanceof AbortError);
-    assert(err instanceof AggregateError);
-
-    // The set and get are aggregated in here
-    assert.strictEqual(err.errors.length, 2);
-    assert.strictEqual(err.code, 'NR_CLOSED');
     console.log(`Unable to connect to Redis: ${process.env.REDIS_URI}`, { err });
   });
 
