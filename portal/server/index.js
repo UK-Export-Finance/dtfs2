@@ -30,7 +30,6 @@ const sessionOptions = {
   saveUninitialized: true,
 };
 
-console.log(`REDIS_URI: ${process.env.REDIS_URI}`);
 if (process.env.REDIS_HOSTNAME) {
   console.log(`Connecting to redis server: redis://${process.env.REDIS_URI} `);
 
@@ -60,6 +59,8 @@ if (process.env.REDIS_HOSTNAME) {
   const sessionStore = new RedisStore({ client: redisClient });
 
   sessionOptions.store = sessionStore;
+} else {
+  console.log('No REDIS configured, using default MemoryStore');
 }
 
 
