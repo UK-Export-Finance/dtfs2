@@ -46,16 +46,6 @@ services:
       - ./deal-api-data-volume:/data/db
     ports:
       - "27017-27019:27017-27019"
-
-  redis:
-    image: redis:alpine
-    ports:
-     - "6379:6379"
-    volumes:
-     - $PWD/redis-data:/var/lib/redis
-     - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
-    environment:
-     - REDIS_REPLICATION_MODE=master
     
   reference-data-proxy:
     build: ../reference-data-proxy
