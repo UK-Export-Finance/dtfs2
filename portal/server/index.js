@@ -31,11 +31,12 @@ const sessionOptions = {
 };
 
 console.log(`REDIS_URI: ${process.env.REDIS_URI}`);
-if (process.env.REDIS_URI) {
+if (process.env.REDIS_HOSTNAME) {
   console.log(`Connecting to redis server: redis://${process.env.REDIS_URI} `);
 
-  const redisClient = redis.createClient(`redis://${process.env.REDIS_URI}`);
-  console.log({ redisClient });
+  const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME,
+    { auth_pass: process.env.REDIS_KEY, tls: { servername: process.env.REDIS_HOSTNAME } });
+
   redisClient.on('error', (err) => {
     console.log(`Unable to connect to Redis: ${process.env.REDIS_URI}`, { err });
   });
@@ -50,7 +51,6 @@ if (process.env.REDIS_URI) {
 
   const sessionStore = new RedisStore({ client: redisClient });
 
-  console.log({ sessionStore });
   // sessionOptions.store = sessionStore;
 }
 
