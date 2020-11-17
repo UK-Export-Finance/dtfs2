@@ -353,9 +353,9 @@ jobs:
             --connection-string-type custom \
             --settings \
               SESSION_SECRET="${{ env.SESSION_SECRET }}" \
-              REDIS_HOSTNAME: "${redis[0]}" \
-              REDIS_PORT: "${redis[1]}" \
-              REDIS_KEY: "${redis_key}" \ 
+              REDIS_HOSTNAME: "${{ redis[0] }}" \
+              REDIS_PORT: "${{ redis[1] }}" \
+              REDIS_KEY: "${{ redis_key }}" \ 
               COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
 
   cosmos-db-create:
