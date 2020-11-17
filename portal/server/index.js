@@ -32,9 +32,9 @@ const sessionOptions = {
 
 console.log(`REDIS_URI: ${process.env.REDIS_URI}`);
 if (process.env.REDIS_URI) {
-  console.log(`Connecting to redis server: redis://${process.env.REDIS_URI} `);
+  console.log(`Connecting to redis server: rediss://${process.env.REDIS_URI} `);
 
-  const redisClient = redis.createClient(`redis://${process.env.REDIS_URI}`);
+  const redisClient = redis.createClient(`rediss://${process.env.REDIS_URI}`);
   console.log({ redisClient });
   redisClient.on('error', (err) => {
     console.log(`Unable to connect to Redis: ${process.env.REDIS_URI}`, { err });
