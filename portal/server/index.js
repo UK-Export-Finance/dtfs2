@@ -50,7 +50,7 @@ if (process.env.REDIS_URI) {
   const sessionStore = new RedisStore({ client: redisClient });
 
   console.log({ sessionStore });
-  sessionOptions.store = sessionStore;
+  // sessionOptions.store = sessionStore;
 }
 
 
