@@ -206,7 +206,7 @@ jobs:
 
   portal-ui:
     name: Portal UI
-    needs: [vnet, private-dns, reference-data-proxy]
+    needs: [vnet, private-dns, reference-data-proxy, redis]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1

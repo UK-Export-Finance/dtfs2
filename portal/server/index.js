@@ -1,20 +1,21 @@
 import express from 'express';
 import morgan from 'morgan';
 import session from 'express-session';
-// import redis from 'redis';
+import redis, { AbortError, AggregateError } from 'redis';
 
 import flash from 'connect-flash';
 import path from 'path';
 import crypto from 'crypto';
 import json2csv from 'express-json2csv';
 import './azure-env';
+import assert from 'assert';
 import routes from './routes';
 import healthcheck from './healthcheck';
 import uploadTest from './upload-test';
 
 import configureNunjucks from './nunjucks-configuration';
 
-// const RedisStore = require('connect-redis')(session);
+const RedisStore = require('connect-redis')(session);
 
 const app = express();
 
@@ -29,14 +30,36 @@ const sessionOptions = {
   saveUninitialized: true,
 };
 
-/*
+console.log(`REDIS_URI: ${process.env.REDIS_URI}`);
 if (process.env.REDIS_URI) {
   console.log(`Connecting to redis server: ${process.env.REDIS_URI}`);
 
   const redisClient = redis.createClient(`//${process.env.REDIS_URI}`);
-  sessionOptions.store = new RedisStore({ client: redisClient });
+  redisClient.on('error', (err) => {
+    assert(err instanceof Error);
+    assert(err instanceof AbortError);
+    assert(err instanceof AggregateError);
+
+    // The set and get are aggregated in here
+    assert.strictEqual(err.errors.length, 2);
+    assert.strictEqual(err.code, 'NR_CLOSED');
+    console.log(`Unable to connect to Redis: ${process.env.REDIS_URI}`, { err });
+  });
+
+  redisClient.on('ready', () => {
+    console.log('REDIS ready');
+  });
+
+  redisClient.on('connect', () => {
+    console.log('REDIS connected');
+  });
+
+  const sessionStore = new RedisStore({ client: redisClient });
+
+  console.log({ sessionStore });
+  sessionOptions.store = sessionStore;
 }
-*/
+
 
 app.use(session(sessionOptions));
 
