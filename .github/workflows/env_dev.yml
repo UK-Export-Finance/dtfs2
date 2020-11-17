@@ -346,17 +346,18 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          redis=$(az redis show --name tfs-${{ env.environment }}-redis --query '[hostName, sslPort]' --output tsv)
+          redis_hostname=$(az redis show --name tfs-${{ env.environment }}-redis --query hostName --output tsv)
+          redis_sslPort=$(az redis show --name tfs-${{ env.environment }}-redis --query sslPort --output tsv)
           redis_key=$(az redis list-keys --name tfs-${{ env.environment }}-redis --query primaryKey --output tsv)
 
-          echo "REDIS CONNECTION: $redis_key@$redis[0]:$redis[1]"
+          echo "REDIS CONNECTION: $redis_key@$redis_hostname:$redis_sslPort"
 
           az webapp config connection-string set --name tfs-${{ env.environment }}-portal-ui \
             --connection-string-type custom \
             --settings \
               SESSION_SECRET="${{ env.SESSION_SECRET }}" \
-              REDIS_HOSTNAME: "$redis[0]" \
-              REDIS_PORT: "$redis[1]" \
+              REDIS_HOSTNAME: "$redis_hostname" \
+              REDIS_PORT: "$redis_sslPort" \
               REDIS_KEY: "$redis_key" \ 
               COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
 
