@@ -1,45 +1,35 @@
-'use strict';
+import express from 'express';
+import morgan from 'morgan';
 
-const express = require('express');
-const nunjucks = require('nunjucks');
-var path = require('path');
-// Constants
+import path from 'path';
+import routes from './routes';
 
-const PORT = process.env.PORT || 5100;
-const HOST = '0.0.0.0';
+import configureNunjucks from './nunjucks-configuration';
 
-
-// App
 const app = express();
 
-app.use(express.static(__dirname + '/public'));
-app.use('/assets', express.static(path.join(__dirname, '/node_modules/govuk-frontend/govuk/assets')));
-app.use('/assets', express.static(path.join(__dirname, '/node_modules/@ministryofjustice/frontend/moj/assets')));
+const PORT = process.env.PORT || 5100;
 
-nunjucks.configure('templates', {
+configureNunjucks({
   autoescape: true,
-  express: app
+  express: app,
+  noCache: true,
+  watch: true,
 });
 
-app.get('/', (req, res) => {
-  return res.render('accordeon.njk', {
-    user: 'simon'
-  });
-});
+app.use(express.urlencoded());
 
-app.get('/case', (req, res) => {
-  res.send('case');
-});
+app.use(morgan('dev', {
+  // skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
+  skip: (req) => req.url.startsWith('/assets'),
+}));
 
-app.get('/case/deal', (req, res) => {
-  //reportData = {};
+app.use('/', routes);
 
-  return res.render('case/deal/index.njk', {
-    user: 'simon'
-  });
-});
+app.use(express.static('dist'));
 
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
+app.get('*', (req, res) => res.render('page-not-found.njk'));
 
-app.listen(PORT, () => console.log(`TFM-UI app listening on port ${PORT}!`)); // eslint-disable-line no-console
-
+app.listen(PORT, () => console.log(`TFM UI app listening on port ${PORT}!`)); // eslint-disable-line no-console
