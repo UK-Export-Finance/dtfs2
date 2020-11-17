@@ -34,8 +34,16 @@ console.log(`REDIS_URI: ${process.env.REDIS_URI}`);
 if (process.env.REDIS_HOSTNAME) {
   console.log(`Connecting to redis server: redis://${process.env.REDIS_URI} `);
 
-  const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME,
-    { auth_pass: process.env.REDIS_KEY, tls: { servername: process.env.REDIS_HOSTNAME } });
+  let redisOptions = {};
+
+  if (process.env.REDIS_KEY) {
+    redisOptions = {
+      auth_pass: process.env.REDIS_KEY,
+      tls: { servername: process.env.REDIS_HOSTNAME },
+    };
+  }
+
+  const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
 
   redisClient.on('error', (err) => {
     console.log(`Unable to connect to Redis: ${process.env.REDIS_URI}`, { err });
