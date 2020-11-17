@@ -44,7 +44,7 @@ jobs:
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
 
-  test-disabled:
+  test:
     name: "E2E test disabled"
     needs: build
     runs-on: ubuntu-latest
