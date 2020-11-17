@@ -57,7 +57,7 @@ if (process.env.REDIS_HOSTNAME) {
     console.log('REDIS connected');
   });
 
-  const sessionStore = new RedisStore({ client: redisClient });
+  // const sessionStore = new RedisStore({ client: redisClient });
 
   // sessionOptions.store = sessionStore;
 }
