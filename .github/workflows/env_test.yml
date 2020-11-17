@@ -206,7 +206,7 @@ jobs:
 
   portal-ui:
     name: Portal UI
-    needs: [vnet, private-dns, reference-data-proxy]
+    needs: [vnet, private-dns, reference-data-proxy, redis]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -332,6 +332,12 @@ jobs:
         inlineScript: |
           reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
 
+          redis_hostname=$(az redis show --name tfs-${{ env.environment }}-redis --query hostName --output tsv)
+          redis_sslPort=$(az redis show --name tfs-${{ env.environment }}-redis --query sslPort --output tsv)
+          redis_key=$(az redis list-keys --name tfs-${{ env.environment }}-redis --query primaryKey --output tsv)
+
+          echo "REDIS CONNECTION: $redis_key@$redis_hostname:$redis_sslPort"
+
           az webapp config appsettings set --name tfs-${{ env.environment }}-portal-ui \
             --settings \
               PORT=5000 \
@@ -340,6 +346,9 @@ jobs:
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
+              REDIS_HOSTNAME="$redis_hostname" \
+              REDIS_PORT="$redis_sslPort" \
+              REDIS_KEY="$redis_key" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"
               
     - name: Secrets
@@ -350,7 +359,6 @@ jobs:
             --connection-string-type custom \
             --settings \
               SESSION_SECRET="${{ env.SESSION_SECRET }}" \
-              REDIS_URI="${{ env.REDIS_URI }}" \
               COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
 
   cosmos-db-create:
