@@ -346,11 +346,16 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
+          redis = $(az redis show --resource-group digital-dev --name tfs-dev-redis --query '[hostName, sslPort]')
+          redis_key=$(az redis list-keys --name tfs-${{ env.environment }}-redis --query primaryKey --output tsv)
+
           az webapp config connection-string set --name tfs-${{ env.environment }}-portal-ui \
             --connection-string-type custom \
             --settings \
               SESSION_SECRET="${{ env.SESSION_SECRET }}" \
-              REDIS_URI="${{ env.REDIS_URI }}" \
+              REDIS_HOSTNAME: "${redis[0]}" \
+              REDIS_PORT: "${redis[1]}" \
+              REDIS_KEY: "${redis_key}" \ 
               COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
 
   cosmos-db-create:
