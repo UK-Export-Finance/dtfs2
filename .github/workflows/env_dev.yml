@@ -349,6 +349,8 @@ jobs:
           redis=$(az redis show --name tfs-${{ env.environment }}-redis --query '[hostName, sslPort]')
           redis_key=$(az redis list-keys --name tfs-${{ env.environment }}-redis --query primaryKey --output tsv)
 
+          echo "REDIS CONNECTION: $redis_key@$redis[0]:$redis[1]"
+
           az webapp config connection-string set --name tfs-${{ env.environment }}-portal-ui \
             --connection-string-type custom \
             --settings \
