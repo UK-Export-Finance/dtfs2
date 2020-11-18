@@ -1,4 +1,5 @@
 {% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
+{% import './_macros/case-summary.njk' as caseSummary %}
 
 {% extends "index.njk" %}
   {% set primary = 'cases' %}
@@ -9,9 +10,8 @@
 
   {% block content %}
 
-  {% endblock %}
+    {{caseSummary.render()}}
 
-  {% block secondary_nav %}
     <div class="govuk-grid-column-full govuk-!-padding-top-8">
       {{ mojSubNavigation({
         label: 'Sub navigation',
@@ -39,8 +39,8 @@
         }]
       }) }}
     </div>
-  {% endblock %}
 
+  {% endblock %}
 
   {% block sub_content %}
 
