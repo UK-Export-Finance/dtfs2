@@ -20,13 +20,10 @@ env:
   # Container registry
   registry: ${{ secrets.TEST_ACR_REGISTRY }}
   # App service settings
-  DEAL_API_URL: "https://tfs-test-portal-api.azurewebsites.net"
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
   # App service secrets
   SESSION_SECRET: "${{ secrets.TEST_SESSION_SECRET }}"
   COMPANIES_HOUSE_API_KEY: "${{ secrets.COMPANIES_HOUSE_API_KEY }}"
-  AZURE_PORTAL_STORAGE_ACCOUNT: "${{ secrets.TEST_AZURE_PORTAL_STORAGE_ACCOUNT }}"
-  AZURE_PORTAL_STORAGE_ACCESS_KEY: "${{ secrets.TEST_AZURE_PORTAL_STORAGE_ACCESS_KEY }}"
   AZURE_PORTAL_FILESHARE_NAME: "${{ secrets.TEST_AZURE_PORTAL_FILESHARE_NAME }}"
   AZURE_PORTAL_EXPORT_FOLDER: "${{ secrets.TEST_AZURE_PORTAL_EXPORT_FOLDER }}"
   AZURE_WORKFLOW_STORAGE_ACCOUNT: "${{ secrets.TEST_AZURE_WORKFLOW_STORAGE_ACCOUNT }}"
@@ -205,7 +202,7 @@ jobs:
 
   portal-ui:
     name: Portal UI
-    needs: [vnet, private-dns, reference-data-proxy, redis]
+    needs: [vnet, private-dns, portal-api, reference-data-proxy, redis]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -329,19 +326,19 @@ jobs:
         # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
         # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
         inlineScript: |
+          deal_api=$(az webapp show --name tfs-${{ env.environment }}-portal-api --query defaultHostName -o tsv)
           reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
-
+          
           redis_hostname=$(az redis show --name tfs-${{ env.environment }}-redis --query hostName --output tsv)
           redis_sslPort=$(az redis show --name tfs-${{ env.environment }}-redis --query sslPort --output tsv)
           redis_key=$(az redis list-keys --name tfs-${{ env.environment }}-redis --query primaryKey --output tsv)
-
           echo "REDIS CONNECTION: $redis_key@$redis_hostname:$redis_sslPort"
 
           az webapp config appsettings set --name tfs-${{ env.environment }}-portal-ui \
             --settings \
               PORT=5000 \
               WEBSITES_PORT=5000 \
-              DEAL_API_URL="${{ env.DEAL_API_URL }}" \
+              DEAL_API_URL="https://$deal_api" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
@@ -751,7 +748,7 @@ jobs:
     
   portal-api:
     name: Portal API
-    needs: [vnet, private-dns, cosmos-db-create, reference-data-proxy]
+    needs: [vnet, private-dns, cosmos-db-create, reference-data-proxy, file-storage]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -889,6 +886,9 @@ jobs:
           echo "Mongo connection string: $mongo_connection_string"
 
           reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
+
+          portal_file_storage_key=$(az storage account keys list --resource-group digital-dev --account-name tfsdevstorage --query [0].value -o tsv)
+
           echo "Reference data proxy url: http://$reference_data_proxy_url"
 
           az webapp config connection-string set --name tfs-${{ env.environment }}-portal-api \
@@ -896,8 +896,8 @@ jobs:
             --settings \
               AZURE_PORTAL_EXPORT_FOLDER="${{ env.AZURE_PORTAL_EXPORT_FOLDER }}" \
               AZURE_PORTAL_FILESHARE_NAME="${{ env.AZURE_PORTAL_FILESHARE_NAME }}" \
-              AZURE_PORTAL_STORAGE_ACCESS_KEY="${{ env.AZURE_PORTAL_STORAGE_ACCESS_KEY }}" \
-              AZURE_PORTAL_STORAGE_ACCOUNT="${{ env.AZURE_PORTAL_STORAGE_ACCOUNT }}" \
+              AZURE_PORTAL_STORAGE_ACCESS_KEY="$portal_file_storage_key" \
+              AZURE_PORTAL_STORAGE_ACCOUNT="tfs${{ env.environment }}storage" \
               AZURE_WORKFLOW_EXPORT_FOLDER="${{ env.AZURE_WORKFLOW_EXPORT_FOLDER }}" \
               AZURE_WORKFLOW_FILESHARE_NAME="${{ env.AZURE_WORKFLOW_FILESHARE_NAME }}" \
               AZURE_WORKFLOW_IMPORT_FOLDER="${{ env.AZURE_WORKFLOW_IMPORT_FOLDER }}" \
@@ -944,7 +944,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az storage share create --account-name tfs${{ env.environment }}storage --name files
+          az storage share create --account-name tfs${{ env.environment }}storage --name ${{ env.AZURE_PORTAL_FILESHARE_NAME }}
 
     - name: File share (workflow)
       uses: Azure/cli@v1.0.0
@@ -1099,18 +1099,18 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
  
-    # - name: Create
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     inlineScript: |
-    #       az network application-gateway create --name tfs-${{ env.environment }}-gw \
-    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-    #         --subnet ${{ env.environment }}-gateway \
-    #         --public-ip-address tfs-${{ env.environment }}-ip \
-    #         --frontend-port 80 \
-    #         --max-capacity 10 --min-capacity 1 \
-    #         --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
-    #         --sku Standard_v2
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network application-gateway create --name tfs-${{ env.environment }}-gw \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-gateway \
+            --public-ip-address tfs-${{ env.environment }}-ip \
+            --frontend-port 80 \
+            --max-capacity 10 --min-capacity 1 \
+            --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
+            --sku Standard_v2
 
     - name: Https ingress for data migration
       uses: Azure/cli@v1.0.0
