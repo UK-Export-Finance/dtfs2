@@ -1,0 +1,27 @@
+{% from "moj/components/header/macro.njk" import mojHeader %}
+
+{{ mojHeader({
+  organisationLabel: {
+    text: 'UK Export\n Finance',
+    href: '#'
+  },
+  serviceLabel: {
+    text: 'Trade Finance Manager',
+    href: '#'
+  },
+  navigation: {
+    label: 'Account navigation',
+    items: [{
+      text: 'Diana Prince',
+      href: '#',
+      active: true
+      }, {
+        text: 'Sign out',
+        href: '#'
+    }]
+  }
+}) }} 
+
+
+
+{% include "_partials/primary-navigation.njk" %}

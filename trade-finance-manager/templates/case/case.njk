@@ -1,0 +1,49 @@
+{% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
+{% import './_macros/case-summary.njk' as caseSummary %}
+
+{% extends "index.njk" %}
+  {% set primary = 'cases' %}
+
+  {% block pageTitle %}
+    C0345
+  {% endblock %}
+
+  {% block content %}
+
+    {{caseSummary.render()}}
+
+    <div class="govuk-grid-column-full govuk-!-padding-top-8">
+      {{ mojSubNavigation({
+        label: 'Sub navigation',
+        items: [{
+          text: 'Tasks',
+          href: 'tasks'
+        }, {
+          text: 'Deal',
+          href: 'deal'
+        }, {
+          text: 'Parties',
+          href: 'parties'
+        }, {
+          text: 'Documents',
+          href: 'documents'
+        }, {
+          text: 'Activity',
+          href: 'activity'
+        }, {
+          text: 'Underwriting',
+          href: 'underwriting'
+        }, {
+          text: 'Linked deals',
+          href: 'linked-deals'
+        }]
+      }) }}
+    </div>
+
+  {% endblock %}
+
+  {% block sub_content %}
+
+  {% endblock %}
+
+  
