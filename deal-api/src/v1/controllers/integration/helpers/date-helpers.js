@@ -1,7 +1,9 @@
 const moment = require('moment');
 
+const formatYear = (year) => (year < 1000 ? (2000 + parseInt(year, 10)).toString() : year && year.toString());
+
 const formatDate = (day, month, year) => {
-  const fourDigitYear = !year || year.length === 4 ? year : 20 + year.slice(-2).padStart(2, '0');
+  const fourDigitYear = formatYear(year);
 
   const dt = moment([fourDigitYear, month - 1, day]);
   return dt.isValid() ? dt.format('DD-MM-YYYY') : '';
@@ -16,4 +18,5 @@ const formatTimestamp = (timestamp) => {
 module.exports = {
   formatDate,
   formatTimestamp,
+  formatYear,
 };

@@ -1,6 +1,7 @@
 /* calculating exposure period based on UKEF SQL function */
 const moment = require('moment');
 const { formattedTimestamp } = require('../../../facility-dates/timestamp');
+const { formatYear } = require('./date-helpers');
 
 const calculateExposurePeriod = (facility) => {
   let coverStartDate;
@@ -9,20 +10,20 @@ const calculateExposurePeriod = (facility) => {
 
     // Need a date without the h:m:s elements as this effects the diff calculation
     coverStartDate = moment([
-      startDate.year(),
+      formatYear(startDate.year()),
       startDate.month(),
       startDate.date(),
     ]);
   } else {
     coverStartDate = moment([
-      facility['requestedCoverStartDate-year'],
+      formatYear(facility['requestedCoverStartDate-year']),
       facility['requestedCoverStartDate-month'] - 1,
       facility['requestedCoverStartDate-day'],
     ]);
   }
 
   const coverEndDate = moment([
-    facility['coverEndDate-year'],
+    formatYear(facility['coverEndDate-year']),
     facility['coverEndDate-month'] - 1,
     facility['coverEndDate-day'],
   ]);
