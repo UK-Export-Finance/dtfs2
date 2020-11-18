@@ -8,6 +8,9 @@ const configureNunjucks = (opts) => {
   ];
 
   const nunjucksEnvironment = nunjucks.configure(appViews, opts);
+
+  nunjucksEnvironment.addFilter('example', () => '');
+
   return nunjucks;
 };
 
