@@ -10,7 +10,7 @@ const app = express();
 
 const PORT = process.env.PORT || 5100;
 
-configureNunjucks({{
+configureNunjucks({
   autoescape: true,
   express: app,
   noCache: true,
