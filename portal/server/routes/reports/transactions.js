@@ -12,6 +12,7 @@ router.get('/reports/:id/transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
   if (!await api.validateToken(userToken)) {
+    console.log('Invalid token:', { userToken, session: req.session });
     res.redirect('/');
   }
 
