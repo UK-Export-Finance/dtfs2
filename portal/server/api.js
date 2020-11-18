@@ -421,7 +421,9 @@ const transactions = async (start, pagesize, filters, token) => {
   };
   console.log('api.transactions', { token });
   const response = await apollo('GET', transactionsQuery, params, token);
-  console.log({ response });
+  if (response.errors) {
+    console.log({ responseError: JSON.stringify(response, null, 4) });
+  }
   return response.data.transactions;
 };
 
