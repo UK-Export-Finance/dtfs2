@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 {% block beforeContent %}
-<div class="govuk-grid-row tfm tfm-width">
+<div class="govuk-grid-row tfm">
   <div class="govuk-grid-column-full">
     {{ govukBreadcrumbs({
       items: [
@@ -22,7 +22,7 @@
 {% endblock %}
 {% block content %}
 <form action="/cases/pricing" method="post">
-  <div class="govuk-grid-row tfm tfm-width">
+  <div class="govuk-grid-row tfm">
       <div class="govuk-grid-column-full">
         {{ govukRadios({
         idPrefix: "credit-rating",
@@ -54,7 +54,7 @@
         }) }}
       </div>
   </div>
-  <div class="govuk-grid-row tfm tfm-width">
+  <div class="govuk-grid-row tfm">
     <div class="govuk-grid-column-one-quarter flex-container">
       <button class="govuk-button" data-module="govuk-button">Save</button>
       <a href="/cases/pricing" class="cancel-link">Cancel</a>

@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 {% block beforeContent %}
-<div class="govuk-grid-row tfm tfm-width existing-facility">
+<div class="govuk-grid-row tfm existing-facility">
   <div class="govuk-grid-column-full" style="margin-left: 0 50px">
 {{ govukBreadcrumbs({
   items: [
@@ -21,7 +21,7 @@
 </div>
 {% endblock %}
 {% block content %}
-<div class="govuk-grid-row tfm tfm-width existing-facility">
+<div class="govuk-grid-row tfm existing-facility">
   <div class="govuk-grid-column-full">
     <h1 class="govuk-heading-xl">Existing facilities with banks and other organisations</h1>
     <h2>The exporter's existing facilities</h2>
@@ -78,7 +78,7 @@
 </div>
 </div>
 {% from "moj/components/button-menu/macro.njk" import mojButtonMenu %}
-<div class="govuk-grid-row tfm tfm-width">
+<div class="govuk-grid-row tfm">
   <div class="govuk-grid-column-full">
 {{ mojButtonMenu({
 items: [{

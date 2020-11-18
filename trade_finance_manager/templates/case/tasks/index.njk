@@ -1,7 +1,7 @@
 {% extends "cases/case.html" %}
 {% set selected = 'tasks' %}
 {% block sub_content %}
-<div class="govuk-grid-row tfm tfm-width">
+<div class="govuk-grid-row tfm">
     <div class="govuk-grid-column-two-thirds">
           <p class="header-label">Tasks</p>
       {%- from "moj/components/task-list/macro.njk" import mojTaskList -%}
