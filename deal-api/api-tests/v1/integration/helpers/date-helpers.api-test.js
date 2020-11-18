@@ -30,4 +30,18 @@ describe('converts date for integration', () => {
       expect(formattedTimestamp).toEqual('');
     });
   });
+
+  describe('format year', () => {
+    it('formats a year to 4 digits', () => {
+      const formattedYear4DigitStr = dateHelper.formatYear('2020');
+      const formattedYear2DigitStr = dateHelper.formatYear('20');
+      const formattedYear4DigitNum = dateHelper.formatYear(2020);
+      const formattedYear2DigitNum = dateHelper.formatYear(20);
+
+      expect(formattedYear4DigitStr).toEqual('2020');
+      expect(formattedYear2DigitStr).toEqual('2020');
+      expect(formattedYear4DigitNum).toEqual('2020');
+      expect(formattedYear2DigitNum).toEqual('2020');
+    });
+  });
 });
