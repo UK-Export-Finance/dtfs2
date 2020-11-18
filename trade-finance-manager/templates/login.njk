@@ -1,0 +1,39 @@
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
+{% extends "index.njk" %}
+
+{% block content %}
+
+
+  <h1 class="govuk-heading-l">Log in</h1>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+
+      <form method="POST" autocomplete="off">
+
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="email">
+            Email
+          </label>
+          <input class="govuk-input" id="email" name="email" type="text">
+        </div>
+
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="password">
+            Password
+          </label>
+          <input class="govuk-input" id="password" name="password" type="password">
+        </div>
+
+
+        <button class="govuk-button" data-module="govuk-button">
+          Log in
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+
+{% endblock %}

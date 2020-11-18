@@ -1,0 +1,29 @@
+.case-summary {
+  background-color:#1D70B8; 
+  color: white; 
+  font-family: Helvetica;
+  font-size: 16px;
+}
+
+.case-summary td:nth-child(1), .case-summary th:nth-child(1) {  
+  font-weight: bold;
+  width: 300px;
+}
+.case-summary td:nth-child(2), .case-summary th:nth-child(2) {  
+  width: 700px;
+}
+
+.case-summary td:nth-child(3), .case-summary th:nth-child(3) {  
+  font-weight: bold;
+  width: 200px;
+}
+
+.case-summary th {
+  text-align: left;
+}
+.case-summary tr {
+  height: 35px  
+}
+.case-summary table {
+  margin: 20px 0;
+}

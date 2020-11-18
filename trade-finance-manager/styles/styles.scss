@@ -1,0 +1,146 @@
+@import "node_modules/govuk-frontend/govuk/all";
+@import "node_modules/@ministryofjustice/frontend/moj/all";
+
+// custom styles
+@import "./moj-sub-navigation.scss";
+@import "./case-summary.scss";
+
+
+body {
+  font-family: Helvetica;
+}
+
+.tfm-width,
+.moj-header__container {
+  max-width: 1440px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.ukef-heading-l {
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 36px;
+  line-height: 39px;
+}
+
+.ukef-heading-xs {
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+
+.ukef-body-s {
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.header-label {
+  height: 50px;
+  color: #241F20;
+  font-family: Helvetica;
+  font-size: 48px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 50px;
+}
+
+.separator-line {
+  border-top-style: solid;
+  margin-top: 30px;
+}
+
+.govuk-grid-column-full, 
+.govuk-grid-column-two-thirds, 
+.govuk-grid-column-three-quarters, 
+.govuk-grid-column-one-quarter,
+.govuk-grid-column-one-third,
+.govuk-grid-column-one-half
+ {
+  padding: 0 30px;
+}
+
+.govuk-grid-column-four-fifths {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 15px;
+}
+
+@media (min-width: 40.0625em) {
+  .govuk-grid-column-four-fifths {
+    width: 80%;
+    float: left;
+  }
+}
+
+.govuk-grid-column-one-fifth {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 15px;
+}
+
+@media (min-width: 40.0625em) {
+  .govuk-grid-column-one-fifth {
+    width: 20%;
+    float: left;
+  }
+}
+
+.govuk-grid-column-one-tenth {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 15px;
+}
+
+@media (min-width: 40.0625em) {
+  .govuk-grid-column-one-tenth {
+    width: 11%;
+    float: left;
+  }
+}
+
+.govuk-grid-column-nine-tenths {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 15px;
+}
+
+@media (min-width: 40.0625em) {
+  .govuk-grid-column-nine-tenths {
+    width: 89%;
+    float: left;
+  }
+}
+
+.govuk-grid-column-eight-tenths {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 15px;
+}
+
+@media (min-width: 40.0625em) {
+  .govuk-grid-column-eight-tenths {
+    width: 78%;
+    float: left;
+  }
+}
+
+.govuk-grid-column-four-tenths {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 15px;
+}
+
+@media (min-width: 40.0625em) {
+  .govuk-grid-column-four-tenths {
+    width: 39%;
+    float: left;
+  }
+}

@@ -1,7 +1,7 @@
 version: "3"
 services:
-  trade_finance_manager:
-    build: ./trade_finance_manager
+  trade-finance-manager:
+    build: ./trade-finance-manager
     image: portal/tfm-ui
     ports:
       - "5100:8080"
