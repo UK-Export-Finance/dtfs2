@@ -338,7 +338,7 @@ jobs:
             --settings \
               PORT=5000 \
               WEBSITES_PORT=5000 \
-              DEAL_API_URL="$deal_api" \
+              DEAL_API_URL="https://$deal_api" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
@@ -1099,18 +1099,18 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
  
-    # - name: Create
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     inlineScript: |
-    #       az network application-gateway create --name tfs-${{ env.environment }}-gw \
-    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-    #         --subnet ${{ env.environment }}-gateway \
-    #         --public-ip-address tfs-${{ env.environment }}-ip \
-    #         --frontend-port 80 \
-    #         --max-capacity 10 --min-capacity 1 \
-    #         --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
-    #         --sku Standard_v2
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network application-gateway create --name tfs-${{ env.environment }}-gw \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-gateway \
+            --public-ip-address tfs-${{ env.environment }}-ip \
+            --frontend-port 80 \
+            --max-capacity 10 --min-capacity 1 \
+            --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
+            --sku Standard_v2
 
     - name: Https ingress for data migration
       uses: Azure/cli@v1.0.0
