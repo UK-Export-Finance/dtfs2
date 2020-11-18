@@ -1,178 +1,77 @@
 {% extends "case/case.njk" %}
 
-{% block sub_content %}
-  <div class="govuk-grid-row tfm tfm-width">
-      <div class="govuk-grid-column-three-quarters">
-      <p class="header-label">Applications</p>
-      </div>
-  </div>
-  <div class="govuk-grid-row tfm tfm-width">
-      <div class="govuk-grid-column-three-quarters deal">
-        <table>
-          <tr>
-            <th><a href="#">0020010552</th>
-            <th>Provision of education services and materials to Kingdom of Wakanda Colleges of Excellence</th>
-          </tr>
-          <tr>
-            <td>Bank</td>
-            <td><a href="#">Lloyds bank</td>
-          </tr>
-          <tr>
-            <td>Buyer</td>
-            <td><a href="#">Kingdom of Wakanda Colleges of Excellence</a></td>
-          </tr>        
-          <tr>
-            <td>Agent</td>
-            <td><a href="#">Stark Investments Ltd</a></td>
-          </tr>
-          <tr>
-            <td>Industry sector</td>
-            <td>Education</td>
-          </tr>        
-          <tr>
-            <td>Industry class</td>
-            <td>Civil</td>
-          </tr>        
-          <tr>
-            <td>Size</td>
-            <td>Medium SME</td>
-          </tr>        
-          <tr>
-            <td>Destination Country</td>
-            <td>Wakanda</td>
-          </tr>        
-          <tr>
-            <td>Export value</td>
-            <td>GBP 9,373,500.48</td>
-          </tr>        
-          <tr>
-            <td>Guarantee types</td>
-            <td>BSS</td>
-          </tr>        
-          <tr>
-            <td>Maximum UKEF liability</td>
-            <td>GBP 2,774,556.14</td>
-          </tr>      
-        </table>
-      </div>
-  </div>
+{% import '../../_macros/case-summary.njk' as caseSummary %}
+
+{% block content %}
+
+  {{caseSummary.render()}}
+  
 {% endblock %}
 
-{# {% extends "case/case.njk" %}
-{% set selected = 'deals' %}
-
 {% block sub_content %}
-  <div class="govuk-grid-row tfm tfm-width">
-      <div class="govuk-grid-column-three-quarters">
-      <p class="header-label">Applications</p>
-      </div>
-  </div>
-  <div class="govuk-grid-row tfm tfm-width">
-      <div class="govuk-grid-column-three-quarters deal">
-        <table>
-          <tr>
-            <th><a href="#">0020010552</th>
-            <th>Provision of education services and materials to Kingdom of Wakanda Colleges of Excellence</th>
-          </tr>
-          <tr>
-            <td>Bank</td>
-            <td><a href="#">Lloyds bank</td>
-          </tr>
-          <tr>
-            <td>Buyer</td>
-            <td><a href="#">Kingdom of Wakanda Colleges of Excellence</a></td>
-          </tr>        
-          <tr>
-            <td>Agent</td>
-            <td><a href="#">Stark Investments Ltd</a></td>
-          </tr>
-          <tr>
-            <td>Industry sector</td>
-            <td>Education</td>
-          </tr>        
-          <tr>
-            <td>Industry class</td>
-            <td>Civil</td>
-          </tr>        
-          <tr>
-            <td>Size</td>
-            <td>Medium SME</td>
-          </tr>        
-          <tr>
-            <td>Destination Country</td>
-            <td>Wakanda</td>
-          </tr>        
-          <tr>
-            <td>Export value</td>
-            <td>GBP 9,373,500.48</td>
-          </tr>        
-          <tr>
-            <td>Guarantee types</td>
-            <td>BSS</td>
-          </tr>        
-          <tr>
-            <td>Maximum UKEF liability</td>
-            <td>GBP 2,774,556.14</td>
-          </tr>      
-        </table>
-      </div>
-  </div>
-{% endblock %} #}
 
-
-<div class="govuk-grid-row tfm tfm-width">
-      <div class="govuk-grid-column-three-quarters">
-      <p class="header-label">Applications</p>
-      </div>
+  <div class="govuk-grid-row tfm">
+    <div class="govuk-grid-column-three-quarters">
+      <p class="header-label">Deal</p>
+    </div>
   </div>
-  <div class="govuk-grid-row tfm tfm-width">
-      <div class="govuk-grid-column-three-quarters deal">
-        <table>
-          <tr>
-            <th><a href="#">0020010552</th>
-            <th>Provision of education services and materials to Kingdom of Wakanda Colleges of Excellence</th>
-          </tr>
-          <tr>
-            <td>Bank</td>
-            <td><a href="#">Lloyds bank</td>
-          </tr>
-          <tr>
-            <td>Buyer</td>
-            <td><a href="#">Kingdom of Wakanda Colleges of Excellence</a></td>
-          </tr>        
-          <tr>
-            <td>Agent</td>
-            <td><a href="#">Stark Investments Ltd</a></td>
-          </tr>
-          <tr>
-            <td>Industry sector</td>
-            <td>Education</td>
-          </tr>        
-          <tr>
-            <td>Industry class</td>
-            <td>Civil</td>
-          </tr>        
-          <tr>
-            <td>Size</td>
-            <td>Medium SME</td>
-          </tr>        
-          <tr>
-            <td>Destination Country</td>
-            <td>Wakanda</td>
-          </tr>        
-          <tr>
-            <td>Export value</td>
-            <td>GBP 9,373,500.48</td>
-          </tr>        
-          <tr>
-            <td>Guarantee types</td>
-            <td>BSS</td>
-          </tr>        
-          <tr>
-            <td>Maximum UKEF liability</td>
-            <td>GBP 2,774,556.14</td>
-          </tr>      
-        </table>
+  <div class="govuk-grid-row tfm">
+    <div class="govuk-grid-column-full separator-line deal">
+      <p class="ukef-heading-l" style="padding-top:30px">Bank application or notice</p>
+      <div class="govuk-grid-row  tfm tfm-width" style="padding-top:30px">
+        <div class="govuk-grid-column-one-fifth">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full" style="padding-bottom:20px; padding-left:0">
+              <div class="ukef-heading-xs">Bank</div>
+              <div class="ukef-body-s">Santander</div>
+            </div>
+          </div>
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full" style="padding-bottom:20px; padding-left:0">
+              <div class="ukef-heading-xs">MGA version</div>
+              <div class="ukef-body-s">v1.0</div>
+            </div>
+          </div>
+        </div>
+        <div class="govuk-grid-column-one-fifth">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full" style="padding-bottom:20px; padding-left:0">
+              <div class="ukef-heading-xs">Contact name</div>
+              <div class="ukef-body-s">Nadia Mackay</div>
+            </div>
+          </div>
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full"  style="padding-bottom:20px; padding-left:0">
+              <div class="ukef-heading-xs">Bank reference</div>
+              <div class="ukef-body-s">CI/D/3856392</div>
+            </div>
+          </div>
+        </div>
+        <div class="govuk-grid-column-one-fifth">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full"  style="padding-bottom:20px; padding-left:0">
+              <div class="ukef-heading-xs">Telephone</div>
+              <div class="ukef-body-s">0800 034 567</div>
+            </div>
+          </div>
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full"  style="padding-bottom:20px; padding-left:0">
+              <div class="ukef-heading-xs">Bank's additional reference</div>
+              <div class="ukef-body-s">L2L-Wakanda Sep 2020</div>
+            </div>
+          </div>
+        </div>
+        <div class="govuk-grid-column-one-fifth">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full"  style="padding-bottom:20px; padding-left:0">
+              <div class="ukef-heading-xs">Email</div>
+              <div class="ukef-body-s">nadia.mackay@santander.com</div>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
   </div>
+  
+{% endblock %}
 

@@ -41,10 +41,12 @@
 
     {% include "_partials/header.njk" %}
 
-    <div class="govuk-width-container">
+    <div>
     
-      <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+      <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing tfm-width govuk-!-padding-top-0" id="main-content" role="main">
         {% block content %}{% endblock %}
+        {% block secondary_nav%}{% endblock %}
+        {% block sub_content %}{% endblock %}
       </main>
 
     </div>

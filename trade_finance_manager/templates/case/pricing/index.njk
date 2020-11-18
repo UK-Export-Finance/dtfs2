@@ -1,12 +1,12 @@
 {% extends "cases/case.html" %}
 {% set selected = 'pricing' %}
 {% block sub_content %}
-  <div class="govuk-grid-row tfm tfm-width">
+  <div class="govuk-grid-row tfm">
       <div class="govuk-grid-column-three-quarters">
       <p class="header-label">Pricing</p>
       </div>
   </div>
-  <div class="govuk-grid-row tfm tfm-width">
+  <div class="govuk-grid-row tfm">
       <div class="govuk-grid-column-three-quarters separator-line pricing">
         <h2>Interest Margin</h2>
         <table>
@@ -29,7 +29,7 @@
         </table>
       </div>
   </div>
-    <div class="govuk-grid-row tfm tfm-width">
+    <div class="govuk-grid-row tfm">
       <div class="govuk-grid-column-three-quarters separator-line pricing">
         <h2>Risk profile</h2>
         <table>
@@ -52,7 +52,7 @@
         </table>
       </div>
   </div>
-    <div class="govuk-grid-row tfm tfm-width">
+    <div class="govuk-grid-row tfm">
       <div class="govuk-grid-column-three-quarters separator-line pricing">
         <h2>Credit rating</h2>
         {% if not data['credit-rating'] %}
@@ -78,7 +78,7 @@
         {% endif %}
       </div>
   </div>
-    <div class="govuk-grid-row tfm tfm-width">
+    <div class="govuk-grid-row tfm">
       <div class="govuk-grid-column-three-quarters separator-line pricing">
         <h2>Loss given default</h2>
         <table>
