@@ -492,6 +492,7 @@ jobs:
           az configure --defaults group=${{ env.resource_group }}  
           
     - name: Populate Collections
+      uses: actions/checkout@v1
       with:
         mongodb-version: "3.6"
         inlineScript: |
