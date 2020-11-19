@@ -1,7 +1,7 @@
 {
   "name": "tfm",
   "version": "1.0.0",
-  "description": "Trade Finance Manager",
+  "description": "Trade Finance Manager UI",
   "private": true,
   "main": "index.js",
   "scripts": {
