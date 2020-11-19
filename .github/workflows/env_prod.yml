@@ -896,7 +896,7 @@ jobs:
 
           reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
 
-          portal_file_storage_key=$(az storage account keys list --resource-group digital-dev --account-name tfsdevstorage --query [0].value -o tsv)
+          portal_file_storage_key=$(az storage account keys list--account-name tfs${{ env.environment }}storage --query [0].value -o tsv)
 
           echo "Reference data proxy url: http://$reference_data_proxy_url"
 
