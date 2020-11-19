@@ -526,6 +526,8 @@ jobs:
         EOF
         echo "Initialising Root user"
         echo "Mongo connection string: $mongo_connection_string"
+        echo "Mongo version:"
+        mongo --version
         mongo "$mongo_connection_string" db-init.js
         echo end.
       
