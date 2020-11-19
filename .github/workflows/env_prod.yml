@@ -478,7 +478,7 @@ jobs:
   cosmos-db-populate:
     name: Cosmos DB (Mongo) Initialise root user
     needs: cosmos-db-init
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-16.04
     steps:
     - uses: azure/login@v1
       with:
@@ -493,6 +493,11 @@ jobs:
           
     - name: Populate Collections
       run: |
+        wget -qO - https://www.mongodb.org/static/pgp/server-3.6.asc | sudo apt-key add -
+        echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
+        sudo apt-get update
+        sudo apt-get install -y mongodb-org=3.6 mongodb-org-server=3.6 mongodb-org-shell=3.6 mongodb-org-mongos=3.6 mongodb-org-tools=3.6
+        
         mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
 
         cat <<EOF > db-init.js
