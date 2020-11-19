@@ -492,7 +492,6 @@ jobs:
           az configure --defaults group=${{ env.resource_group }}  
           
     - name: Populate Collections
-      uses: Azure/cli@v1.0.0
       with:
         mongodb-version: 3.6
       run: |
