@@ -493,7 +493,7 @@ jobs:
           
     - name: Populate Collections
       with:
-        mongodb-version: 3.6
+        mongodb-version: '3.6'
       run: |
         mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
 
