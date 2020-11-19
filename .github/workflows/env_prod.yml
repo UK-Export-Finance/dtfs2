@@ -493,45 +493,45 @@ jobs:
           
     - name: Populate Collections
       with:
-        mongodb-version: '3.6'
-      run: |
-        mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
+        mongodb-version: "3.6"
+        inlineScript: |
+          mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
 
-        cat <<EOF > db-init.js
-        db = db.getSiblingDB("${{ env.database_name }}")
-        try {
-          db.users.insertOne(
-            {
-              "_id" : ObjectId('000000000000000000000001'),
-              "user-status": "active",
-              "timezone": "Europe/London",
-              "username": "${{ env.MONGODB_ROOT_USER }}",
-              "firstname": "ROOT",
-              "surname": "USER",
-              "email": "",
-              "roles": [
-                "maker",
-                "editor",
-                "admin"
-              ],
-              "bank": {
-                "id": "*"
-              },
-              salt: "${{ env.MONGODB_ROOT_SALT }}",
-              hash: "${{ env.MONGODB_ROOT_HASH }}"
-            },    
-          )
-        } catch (err) {
-          print("User: ${{ env.MONGODB_ROOT_USER }} already exists.")
-          print(err)
-        }
-        EOF
-        echo "Initialising Root user"
-        echo "Mongo connection string: $mongo_connection_string"
-        echo "Mongo version:"
-        mongo --version
-        mongo "$mongo_connection_string" db-init.js
-        echo end.
+          cat <<EOF > db-init.js
+          db = db.getSiblingDB("${{ env.database_name }}")
+          try {
+            db.users.insertOne(
+              {
+                "_id" : ObjectId('000000000000000000000001'),
+                "user-status": "active",
+                "timezone": "Europe/London",
+                "username": "${{ env.MONGODB_ROOT_USER }}",
+                "firstname": "ROOT",
+                "surname": "USER",
+                "email": "",
+                "roles": [
+                  "maker",
+                  "editor",
+                  "admin"
+                ],
+                "bank": {
+                  "id": "*"
+                },
+                salt: "${{ env.MONGODB_ROOT_SALT }}",
+                hash: "${{ env.MONGODB_ROOT_HASH }}"
+              },    
+            )
+          } catch (err) {
+            print("User: ${{ env.MONGODB_ROOT_USER }} already exists.")
+            print(err)
+          }
+          EOF
+          echo "Initialising Root user"
+          echo "Mongo connection string: $mongo_connection_string"
+          echo "Mongo version:"
+          mongo --version
+          mongo "$mongo_connection_string" db-init.js
+          echo end.
       
   cosmos-db-private:
     name: Cosmos DB (Mongo) Make Private
