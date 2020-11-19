@@ -1,4 +1,5 @@
 const axios = require('axios');
+const dealReducer = require('../reducers/deal');
 
 // TODO move to something like
 // dealApi.getDeal
@@ -21,10 +22,9 @@ const getDeal = async () => {
 
 
 const queryDeal = async () => {
-  const dealResponse = await getDeal();
-  console.log('queryDeal - dealResponse \n', dealResponse);
+  const dealResponse = await getDeal()
 
-  return dealResponse.deal;
+  return dealReducer(dealResponse.deal);
 };
 
 module.exports = queryDeal;

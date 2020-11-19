@@ -2,6 +2,7 @@ const typeDefs = `
 
 type OwningBank {
   name: String
+  emails: [String]
 }
 
 type Maker {
@@ -33,9 +34,16 @@ type DealDetails {
   owningBank: OwningBank
 }
 
+type DealSubmissionDetails {
+  supplierName: String
+  supplyContractDescription: String
+  destinationCountry: String
+}
+
 type Deal {
   _id: String!
   details: DealDetails
+  submissionDetails: DealSubmissionDetails
 }
 
 type Query {

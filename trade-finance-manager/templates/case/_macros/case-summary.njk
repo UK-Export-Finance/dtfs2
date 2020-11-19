@@ -1,12 +1,12 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 
-{% macro render() %}
+{% macro render(deal) %}
 
   <div class="govuk-grid-row case-summary govuk-!-margin-0 govuk-!-padding-top-6">
   <div class="govuk-grid-column-one-tenth">
     <div class="label">Deal ID</div>
-    <div class="ukef-heading-l">20008998</div>
+    <div class="ukef-heading-l">{{ deal._id }}</div>
   </div>
   <div class="govuk-grid-column-nine-tenths">
     <div class="govuk-grid-row">
@@ -41,7 +41,7 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
         <div class="ukef-heading-xs">Type</div>
-        <div class="ukef-body-s">Manual inclusion application</div>
+        <div class="ukef-body-s">{{ deal.details.submissionType }}</div>
       </div>
     </div>
     <div class="govuk-grid-row">
@@ -55,13 +55,13 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
         <div class="ukef-heading-xs">Export description</div>
-        <div class="ukef-body-s">Provision of education services and material to Kingdom of Wakanda Colleges of Excellence</div>
+        <div class="ukef-body-s">{{ deal.submissionDetails.supplyContractDescription }}</div>
       </div>
     </div>
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
         <div class="ukef-heading-xs">Destiantion Country</div>
-        <div class="ukef-body-s">Wakanda</div>
+        <div class="ukef-body-s">{{ deal.submissionDetails.destinationCountry }}</div>
       </div>
     </div>
     <div class="govuk-grid-row">
