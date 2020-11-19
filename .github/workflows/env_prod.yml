@@ -123,16 +123,16 @@ jobs:
             
             
     # We'll aim to move this out of this section and consolidate into a single VM job:
-    # - name: Virtual machine subnet
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     # Subnet for a temporary maintenance virtual machine.
-    #     inlineScript: |
-    #       az network vnet subnet create \
-    #         --name ${{ env.resource_group }}-vm \
-    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-    #         --address-prefixes 10.0.210.0/28
-    #         --service-endpoints Microsoft.AzureCosmosDB
+    - name: Virtual machine subnet
+      uses: Azure/cli@v1.0.0
+      with:
+        # Subnet for a temporary maintenance virtual machine.
+        inlineScript: |
+          az network vnet subnet create \
+            --name ${{ env.resource_group }}-vm \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --address-prefixes 10.0.210.0/28
+            --service-endpoints Microsoft.AzureCosmosDB
           
   private-dns:
     name: Private DNS zones
