@@ -479,9 +479,6 @@ jobs:
     name: Cosmos DB (Mongo) Initialise root user
     needs: cosmos-db-init
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        mongodb-version: [3.6]
     steps:
     - uses: azure/login@v1
       with:
@@ -495,6 +492,9 @@ jobs:
           az configure --defaults group=${{ env.resource_group }}  
           
     - name: Populate Collections
+      uses: Azure/cli@v1.0.0
+      with:
+        mongodb-version: 3.6
       run: |
         mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
 
