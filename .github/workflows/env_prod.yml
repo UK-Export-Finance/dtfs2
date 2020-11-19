@@ -131,7 +131,7 @@ jobs:
           az network vnet subnet create \
             --name ${{ env.resource_group }}-vm \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes 10.0.210.0/28
+            --address-prefixes 10.0.210.0/28 \
             --service-endpoints Microsoft.AzureCosmosDB
           
   private-dns:
