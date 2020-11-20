@@ -2,6 +2,7 @@ import express from 'express';
 import companiesHouseAPI from '../../../companies-house-api';
 import {
   provide,
+  DEAL,
   INDUSTRY_SECTORS,
   COUNTRIES,
 } from '../../api-data-provider';
@@ -47,7 +48,7 @@ const getIndustryFromSicCode = (industrySectors, sicCodes) => {
   return result;
 };
 
-router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', provide([INDUSTRY_SECTORS, COUNTRIES]), async (req, res) => {
+router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', provide([DEAL, INDUSTRY_SECTORS, COUNTRIES]), async (req, res) => {
   const { prefix } = req.params;
   const { deal, industrySectors } = req.apiData;
 
