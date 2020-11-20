@@ -114,16 +114,16 @@ jobs:
             
             
     # We'll aim to move this out of this section and consolidate into a single VM job:
-    # - name: Virtual machine subnet
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     # Subnet for a temporary maintenance virtual machine.
-    #     inlineScript: |
-    #       az network vnet subnet create \
-    #         --name ${{ env.resource_group }}-vm \
-    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-    #         --address-prefixes 10.0.210.0/28
-    #         --service-endpoints Microsoft.AzureCosmosDB
+    - name: Virtual machine subnet
+      uses: Azure/cli@v1.0.0
+      with:
+        # Subnet for a temporary maintenance virtual machine.
+        inlineScript: |
+          az network vnet subnet create \
+            --name ${{ env.resource_group }}-vm \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --address-prefixes 10.0.210.0/28 \
+            --service-endpoints Microsoft.AzureCosmosDB
           
   private-dns:
     name: Private DNS zones
@@ -466,8 +466,8 @@ jobs:
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters --shard "_id"
   
-  # cosmos-db-init-id-counters:
-  #   name: Cosmos DB (Mongo) Initialise iDCounters and root user
+  # cosmos-db-populate:
+  #   name: Cosmos DB (Mongo) Initialise root user
   #   needs: cosmos-db-init
   #   runs-on: ubuntu-latest
   #   steps:
@@ -481,11 +481,14 @@ jobs:
   #       inlineScript: |
   #         az configure --defaults location=uksouth
   #         az configure --defaults group=${{ env.resource_group }}  
-          
+    
   #   - name: Populate Collections
   #     run: |
+
   #       mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
 
+  #       cat <<EOF > db-init.js
+  #       db = db.getSiblingDB("${{ env.database_name }}")
   #       try {
   #         db.users.insertOne(
   #           {
@@ -509,13 +512,15 @@ jobs:
   #           },    
   #         )
   #       } catch (err) {
-  #         print("Deal counter exists.")
+  #         print("User: ${{ env.MONGODB_ROOT_USER }} already exists.")
   #         print(err)
   #       }
   #       EOF
-  #       echo "Initialising idCounters and adding root user"
+  #       echo "Initialising Root user"
   #       echo "Mongo connection string: $mongo_connection_string"
-  #       mongo "$mongo_connection_string" deal-counter.js
+  #       echo "Mongo version:"
+  #       mongo --version
+  #       mongo "$mongo_connection_string" db-init.js
   #       echo end.
       
   cosmos-db-private:
@@ -887,7 +892,7 @@ jobs:
 
           reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
 
-          portal_file_storage_key=$(az storage account keys list --resource-group digital-dev --account-name tfsdevstorage --query [0].value -o tsv)
+          portal_file_storage_key=$(az storage account keys list --account-name tfs${{ env.environment }}storage --query [0].value -o tsv)
 
           echo "Reference data proxy url: http://$reference_data_proxy_url"
 
