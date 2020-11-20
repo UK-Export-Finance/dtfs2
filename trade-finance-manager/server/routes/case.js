@@ -8,6 +8,10 @@ router.get('/case/deal/:_id', async (req, res) => {
  
   const deal = await api.getDeal(dealId);
 
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
   return res.render('case/deal/deal.njk', {
     deal
   });

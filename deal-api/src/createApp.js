@@ -30,6 +30,8 @@ app.use(uploadTest);
 app.use(passport.initialize());
 app.use(bodyParser.json({ type: 'application/json' }));
 
+// TODO allow for multiple cors - portal and TFM.
+// temporarily, localy, changed allowed CORs to point to TFM api.
 app.use(cors({
   origin: CORS_ORIGIN,
   allowedHeaders: ['Content-Type', 'Authorization'],
