@@ -30,6 +30,8 @@ app.use(express.static('dist'));
 
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
+app.get('/not-found', (req, res) => res.render('page-not-found.njk'));
+
 app.get('*', (req, res) => res.render('page-not-found.njk'));
 
 app.listen(PORT, () => console.log(`TFM UI app listening on port ${PORT}!`)); // eslint-disable-line no-console
