@@ -5,8 +5,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 
 require('dotenv').config();
 
-// const urlRoot = process.env.TRADE_FINANCE_MANAGER_API_URL;
-const urlRoot = 'http://localhost:5200';
+const urlRoot = process.env.TRADE_FINANCE_MANAGER_API_URL;
 
 const httpLink = createHttpLink({
   uri: `${urlRoot}/graphql`,
