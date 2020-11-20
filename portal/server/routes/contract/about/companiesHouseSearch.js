@@ -53,7 +53,9 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
   const { deal, industrySectors } = req.apiData;
 
   const registrationNumberField = `${prefix}-companies-house-registration-number`;
-  const { company, errorMessage } = await companiesHouseAPI.getByRegistrationNumber(req.body[registrationNumberField]);
+  const registrationNumberFieldValue = req.body[registrationNumberField];
+
+  const { company, errorMessage } = await companiesHouseAPI.getByRegistrationNumber(registrationNumberFieldValue);
 
   if (!company) {
     req.session.aboutSupplierFormData = deal;
@@ -75,9 +77,8 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
     req.session.aboutSupplierFormData = {
       ...req.session.aboutSupplierFormData,
       submissionDetails: {
-        ...req.session.aboutSupplierFormData.submissionDetails,
-        [registrationNumberField]: req.body[registrationNumberField],
-        legallyDistinct: req.body.legallyDistinct,
+        ...deal.submissionDetails,
+        ...req.body,
       },
     };
 

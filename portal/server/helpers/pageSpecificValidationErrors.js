@@ -67,6 +67,9 @@ export const hasSubmittedAlwaysShowErrorFields = (allFields, submittedFields) =>
   const hasAlwaysShowFields = ALWAYS_SHOW_ERROR_FIELDS && ALWAYS_SHOW_ERROR_FIELDS.length > 0;
 
   if (hasAlwaysShowFields) {
+    // const pageFields = Object.keys(submittedFields).filter((fieldName) =>
+    //   submittedFields[fieldName].length && ALWAYS_SHOW_ERROR_FIELDS.includes(fieldName));
+
     const pageFields = Object.keys(submittedFields).filter((fieldName) =>
       ALWAYS_SHOW_ERROR_FIELDS.includes(fieldName));
 
@@ -113,7 +116,7 @@ export const mapRequiredAndAlwaysShowErrorFields = (validationErrors, allFields)
 
 export const pageSpecificValidationErrors = (validationErrors, fields, submittedFields) => {
   if (validationErrors && validationErrors.errorList) {
-    if (hasSubmittedAlwaysShowErrorFields(fields, submittedFields)) {
+    if (!submittedFields.viewedPreviewPage && hasSubmittedAlwaysShowErrorFields(fields, submittedFields)) {
       return mapAlwaysShowErrorFields(validationErrors, fields);
     }
 

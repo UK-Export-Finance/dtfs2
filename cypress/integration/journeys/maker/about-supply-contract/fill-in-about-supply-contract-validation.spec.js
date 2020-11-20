@@ -200,6 +200,49 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
   });
 
+  it('A maker picks up a deal in status=Draft, fills in a field, triggers Supplier companies house validation errors', () => {
+    cy.login(MAKER_LOGIN);
+    contractAboutSupplier.visit(deal);
+
+    //---------------------------------------------------------------
+    // fill in at least one form field unrelated to Companies House
+    //---------------------------------------------------------------
+    contractAboutSupplier.supplierType().select('Exporter');
+
+    //---------------------------------------------------------------
+    // supplier companies house submit - providing an invalid value
+    //---------------------------------------------------------------
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('TEST');
+    contractAboutSupplier.supplierSearchCompaniesHouse().click();
+
+    cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
+
+    // should only see companies house validation errors
+    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+    contractAboutSupplier.expectError('Enter a valid Companies House registration number');
+
+    // the unrelated form field we provided earlier should be populated
+    contractAboutSupplier.supplierType().find(':selected').should('have.value', 'Exporter');
+
+    // companies house input value should be retained
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().invoke('val').then((value) => {
+      expect(value).equal('TEST');
+    });
+
+    //---------------------------------------------------------------
+    // viewing the `Check your answers` page and then re-visiting the About Supplier page
+    //---------------------------------------------------------------
+    // should display all required validation errors
+    partials.taskListHeader.checkYourAnswersLink().click();
+    partials.taskListHeader.itemLink('supplier-and-counter-indemnifier/guarantor').click();
+    partials.errorSummary.errorSummaryLinks().should('have.length', 11);
+
+    // triggering companies house error should then display companies house & required validation errors
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('TEST');
+    contractAboutSupplier.supplierSearchCompaniesHouse().click();
+    partials.errorSummary.errorSummaryLinks().should('have.length', 12);
+    contractAboutSupplier.expectError('Enter a valid Companies House registration number');
+  });
 
   it('A maker picks up a deal in status=Draft, triggers Indemnifier companies house validation errors', () => {
     cy.login(MAKER_LOGIN);
@@ -213,8 +256,8 @@ context('about-supply-contract', () => {
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
 
-    // should see required & companies house validation errors
-    partials.errorSummary.errorSummaryLinks().should('have.length', 12);
+    // should only see companies house validation errors
+    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
     contractAboutSupplier.expectError('Enter a Companies House registration number');
 
     //---------------------------------------------------------------
@@ -226,9 +269,14 @@ context('about-supply-contract', () => {
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
 
-    // should see required & companies house validation errors
-    partials.errorSummary.errorSummaryLinks().should('have.length', 12);
+    // should only see companies house validation errors
+    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
+
+    // companies house input value should be retained
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().invoke('val').then((value) => {
+      expect(value).equal('TEST');
+    });
 
     //---------------------------------------------------------------
     // viewing the `Check your answers` page and then re-visiting the About Supplier page
@@ -245,6 +293,4 @@ context('about-supply-contract', () => {
     partials.errorSummary.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
   });
-
-  // TODO CH input value should be populated
 });
