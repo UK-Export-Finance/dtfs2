@@ -2,7 +2,7 @@ const dealReducer = (deal) => {
   const { submissionDetails } = deal;
 
   const result = {
-    _id: deal._id,
+    _id: deal._id, // eslint-disable-line no-underscore-dangle
     details: deal.details,
 
     // TODO maybe better to have flat structure, no submissionDetails / details

@@ -3,6 +3,8 @@ services:
   trade-finance-manager:
     build: ./trade-finance-manager
     image: dtfs/trade-finance-manager
+    depends_on:
+      - trade-finance-manager-api
     ports:
       - "5003:5003"
     volumes:
@@ -12,8 +14,27 @@ services:
       - ./trade-finance-manager/server:/app/server:ro
     environment:
       - PORT=5003
+      - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
     command: node dist/server.js
-
+  
+  trade-finance-manager-api:
+    build: ./trade-finance-manager-api
+    image: dtfs/trade-finance-manager-api
+    restart: always
+    depends_on:
+      - deal-api
+      - deal-api-data
+      - reference-data-proxy
+    ports:
+      - "5004:5004"
+    volumes:
+      - ./trade-finance-manager-api/src:/app/src:ro
+    environment:
+      - PORT=5004
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+    entrypoint: npx nodemon src/index.js
+  
   portal:
     build: ./portal
     image: dtfs/portal
