@@ -475,71 +475,66 @@ jobs:
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters --shard "_id"
   
-  cosmos-db-populate:
-    name: Cosmos DB (Mongo) Initialise root user
-    needs: cosmos-db-init
-    runs-on: ubuntu-latest
-    steps:
-    - uses: azure/login@v1
-      with:
-        creds: ${{ env.credentials }}
+  # cosmos-db-populate:
+  #   name: Cosmos DB (Mongo) Initialise root user
+  #   needs: cosmos-db-init
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: azure/login@v1
+  #     with:
+  #       creds: ${{ env.credentials }}
 
-    - name: Defaults
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}  
+  #   - name: Defaults
+  #     uses: Azure/cli@v1.0.0
+  #     with:
+  #       inlineScript: |
+  #         az configure --defaults location=uksouth
+  #         az configure --defaults group=${{ env.resource_group }}  
     
-    - name: Populate Collections
-      run: |
-        APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
-        wget -qO - https://www.mongodb.org/static/pgp/server-3.6.asc | sudo apt-key add -
-        echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
-        sudo apt-get update
-        sudo apt-get install -y mongodb-org=3.6.21 mongodb-org-server=3.6.21 mongodb-org-shell=3.6.21 mongodb-org-mongos=3.6.21 mongodb-org-tools=3.6.21
-      
-        mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
+  #   - name: Populate Collections
+  #     run: |
 
-        cat <<EOF > db-init.js
-        db = db.getSiblingDB("${{ env.database_name }}")
-        try {
-          db.users.insertOne(
-            {
-              "_id" : ObjectId('000000000000000000000001'),
-              "user-status": "active",
-              "timezone": "Europe/London",
-              "username": "${{ env.MONGODB_ROOT_USER }}",
-              "firstname": "ROOT",
-              "surname": "USER",
-              "email": "",
-              "roles": [
-                "maker",
-                "editor",
-                "admin"
-              ],
-              "bank": {
-                "id": "*"
-              },
-              salt: "${{ env.MONGODB_ROOT_SALT }}",
-              hash: "${{ env.MONGODB_ROOT_HASH }}"
-            },    
-          )
-        } catch (err) {
-          print("User: ${{ env.MONGODB_ROOT_USER }} already exists.")
-          print(err)
-        }
-        EOF
-        echo "Initialising Root user"
-        echo "Mongo connection string: $mongo_connection_string"
-        echo "Mongo version:"
-        mongo --version
-        mongo "$mongo_connection_string" db-init.js
-        echo end.
+  #       mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
+
+  #       cat <<EOF > db-init.js
+  #       db = db.getSiblingDB("${{ env.database_name }}")
+  #       try {
+  #         db.users.insertOne(
+  #           {
+  #             "_id" : ObjectId('000000000000000000000001'),
+  #             "user-status": "active",
+  #             "timezone": "Europe/London",
+  #             "username": "${{ env.MONGODB_ROOT_USER }}",
+  #             "firstname": "ROOT",
+  #             "surname": "USER",
+  #             "email": "",
+  #             "roles": [
+  #               "maker",
+  #               "editor",
+  #               "admin"
+  #             ],
+  #             "bank": {
+  #               "id": "*"
+  #             },
+  #             salt: "${{ env.MONGODB_ROOT_SALT }}",
+  #             hash: "${{ env.MONGODB_ROOT_HASH }}"
+  #           },    
+  #         )
+  #       } catch (err) {
+  #         print("User: ${{ env.MONGODB_ROOT_USER }} already exists.")
+  #         print(err)
+  #       }
+  #       EOF
+  #       echo "Initialising Root user"
+  #       echo "Mongo connection string: $mongo_connection_string"
+  #       echo "Mongo version:"
+  #       mongo --version
+  #       mongo "$mongo_connection_string" db-init.js
+  #       echo end.
       
   cosmos-db-private:
     name: Cosmos DB (Mongo) Make Private
-    needs: [cosmos-db-init, private-dns, cosmos-db-populate]
+    needs: [cosmos-db-init, private-dns]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
