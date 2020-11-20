@@ -90,6 +90,7 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
 
     if (bond.Extra_fields.Date_then_issued) {
       v2bond.issuedFacilitySubmittedToUkefTimestamp = convertV1Date(bond.Extra_fields.Date_then_issued);
+      v2bond.issueFacilityDetailsSubmitted = true;
     }
 
     if (bond.Extra_fields.User_who_issued && bond.Extra_fields.User_who_issued.username) {
