@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/case/deal/:_id', async (req, res) => {
   const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
- 
+
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -13,7 +13,7 @@ router.get('/case/deal/:_id', async (req, res) => {
   }
 
   return res.render('case/deal/deal.njk', {
-    deal
+    deal,
   });
 });
 

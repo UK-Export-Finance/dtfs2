@@ -1,1 +1,3 @@
-export { default as dealQuery } from './deal-query';
+import dealQuery from './deal-query';
+
+export default dealQuery;
