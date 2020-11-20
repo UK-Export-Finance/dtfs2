@@ -47,7 +47,7 @@ type Deal {
 }
 
 type Query {
-  deal: Deal
+  deal(_id: ID!): Deal
 }
 `;
 

@@ -1,23 +1,24 @@
 import gql from 'graphql-tag';
 
-const dealQuery = `
-query Deal {
-  deal {
-    _id,
-    details {
-      status,
-      submissionType,
-      owningBank {
-        name,
-        emails
+const dealQuery = gql`
+  query Deal($id: ID!) {
+    deal(_id: $id) {
+      _id,
+      details {
+        status,
+        submissionType,
+        owningBank {
+          name,
+          emails
+        }
+      }
+      submissionDetails {
+        supplierName,
+        supplyContractDescription,
+        destinationCountry
       }
     }
-    submissionDetails {
-      supplierName,
-      supplyContractDescription,
-      destinationCountry
-    }
   }
-}`;
+`;
 
-export default gql(dealQuery);
+export default dealQuery;

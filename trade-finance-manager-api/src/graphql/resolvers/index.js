@@ -2,7 +2,7 @@ const queryDeal = require('./query-deal');
 
 const resolvers = {
   Query: {
-    deal: queryDeal,
+    deal: (root, args) => queryDeal(args),
   },
 };
 
