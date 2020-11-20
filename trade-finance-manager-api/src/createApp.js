@@ -9,13 +9,15 @@ const { makeExecutableSchema } = require('graphql-tools');
 
 const { resolvers, typeDefs, graphQlRouter } = require('./graphql');
 
+const healthcheck = require('./healthcheck');
+
 dotenv.config();
 
 // const { CORS_ORIGIN } = process.env;
 
 const app = express();
 app.use(bodyParser.json({ type: 'application/json' }));
-
+app.use(healthcheck);
 // app.use(cors({
 //   origin: CORS_ORIGIN,
 //   allowedHeaders: ['Content-Type', 'Authorization'],

@@ -5,6 +5,7 @@ import path from 'path';
 import routes from './routes';
 
 import configureNunjucks from './nunjucks-configuration';
+import healthcheck from './healthcheck';
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(morgan('dev', {
   skip: (req) => req.url.startsWith('/assets'),
 }));
 
+app.use(healthcheck);
 app.use('/', routes);
 
 app.use(express.static('dist'));
