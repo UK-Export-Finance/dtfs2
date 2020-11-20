@@ -26,10 +26,14 @@ export const allFieldsArray = (fields) => {
 export const shouldReturnRequiredValidation = (fields, fieldValues) => {
   const allFields = allFieldsArray(fields);
 
+  if (fieldValues.viewedPreviewPage) {
+    return true;
+  }
+
   const totalFieldValues = Object.keys(fieldValues).filter((fieldName) =>
     allFields.includes(fieldName) && fieldValues[fieldName].length > 0);
 
-  if (totalFieldValues.length > 0 || fieldValues.viewedPreviewPage) {
+  if (totalFieldValues.length > 0) {
     return true;
   }
 
@@ -109,16 +113,16 @@ export const mapRequiredAndAlwaysShowErrorFields = (validationErrors, allFields)
 
 export const pageSpecificValidationErrors = (validationErrors, fields, submittedFields) => {
   if (validationErrors && validationErrors.errorList) {
+    if (hasSubmittedAlwaysShowErrorFields(fields, submittedFields)) {
+      return mapAlwaysShowErrorFields(validationErrors, fields);
+    }
+
     if (shouldReturnRequiredValidation(fields, submittedFields)) {
       if (hasSubmittedAlwaysShowErrorFields(fields, submittedFields)) {
         return mapRequiredAndAlwaysShowErrorFields(validationErrors, fields);
       }
 
       return mapRequiredValidationErrors(validationErrors, fields);
-    }
-
-    if (hasSubmittedAlwaysShowErrorFields(fields, submittedFields)) {
-      return mapAlwaysShowErrorFields(validationErrors, fields);
     }
   }
 
