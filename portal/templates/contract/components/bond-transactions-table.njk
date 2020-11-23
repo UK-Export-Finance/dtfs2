@@ -1,7 +1,7 @@
 {% import '_macros/status-tag.njk' as statusTag %}
 {% import './bond-link.njk' as bondLink %}
 {% import './issue-or-delete-facility-link.njk' as issueOrDeleteFacilityLink %}
-{% import './requested-start-date-link.njk' as requestedCoverStartDate %}
+{% import './requested-start-date-link.njk' as requestedCoverStartDateLink %}
 
 {# TODO: component tests #}
 
@@ -68,14 +68,13 @@
                   {% set componentData = {user: params.user, deal: params.deal, editable: params.editable, facility: bond, facilityName: 'bond', hasConfirmedCoverStartDate: hasConfirmedCoverStartDate, facilityTableIndex: loop.index} %}
 
                   {% set userIsMaker = params.user.roles.includes('maker')%}
-                  {% set userIsChecker = params.user.roles.includes('checker')%}
 
                   {% set dealSubmissionType = params.deal.details.submissionType %}
 
-                  {% set requestedCoverDateCanEdit = userIsMaker and not userIsChecker and bond.status !== "Maker's input required" and dealStatusAllowsRequestedCoverDateChange and dealSubmissionType === 'Manual Inclusion Application' and bond.facilityStage === 'Issued' and bond.issueFacilityDetailsSubmitted %}
+                  {% set requestedCoverDateCanEdit = userIsMaker and bond.status !== "Maker's input required" and dealStatusAllowsRequestedCoverDateChange and dealSubmissionType === 'Manual Inclusion Application' and bond.facilityStage === 'Issued' and bond.issueFacilityDetailsSubmitted %}
 
                   {% if requestedCoverDateCanEdit %}
-                    {{ requestedCoverStartDate.render(componentData) }}
+                    {{ requestedCoverStartDateLink.render(componentData) }}
 
                     {% else %}
                     {{ issueOrDeleteFacilityLink.render(componentData) }}

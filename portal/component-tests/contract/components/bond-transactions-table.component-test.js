@@ -107,6 +107,33 @@ describe(component, () => {
           wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-issue-facility-${facility._id}"]`).notToExist();
         });
       });
+
+
+      describe('when viewed by maker-checker role', () => {
+        const makerCheckerUser = { roles: ['maker', 'checker'], timezone: 'Europe/London' };
+
+        it('should render `change start date` link', () => {
+          const dealWithBondsThatCanChangeCoverDate = deal;
+          dealWithBondsThatCanChangeCoverDate.details.status = 'Acknowledged by UKEF';
+          dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].facilityStage = 'Issued';
+          dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].issueFacilityDetailsSubmitted = true;
+
+          dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].facilityStage = 'Issued';
+          dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].issueFacilityDetailsSubmitted = true;
+
+          const wrapper = render({
+            user: makerCheckerUser,
+            deal: dealWithBondsThatCanChangeCoverDate,
+            confirmedRequestedCoverStartDates: [],
+          });
+
+          deal.bondTransactions.items.forEach((facility) => {
+            const facilityIdSelector = `[data-cy="bond-${facility._id}"]`;
+
+            wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-change-or-confirm-cover-start-date-${facility._id}"]`).toExist();
+          });
+        });
+      });
     });
   });
 });
