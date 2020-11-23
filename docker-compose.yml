@@ -33,6 +33,8 @@ services:
     environment:
       - PORT=5004
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - MONGO_INITDB_DATABASE=test
+      - MONGODB_URI=mongodb://root:r00t@deal-api-data:27017/?authMechanism=DEFAULT
     entrypoint: npx nodemon src/index.js
   
   portal:

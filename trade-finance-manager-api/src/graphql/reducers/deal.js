@@ -10,7 +10,8 @@ const dealReducer = (deal) => {
     submissionDetails: {
       supplierName: submissionDetails['supplier-name'],
       supplyContractDescription: submissionDetails['supply-contract-description'],
-      destinationCountry: submissionDetails.destinationOfGoodsAndServices.name,
+      destinationCountry: submissionDetails.destinationOfGoodsAndServices
+                          && submissionDetails.destinationOfGoodsAndServices.name,
     },
   };
 
