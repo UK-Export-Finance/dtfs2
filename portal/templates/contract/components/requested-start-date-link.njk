@@ -1,8 +1,5 @@
 {% macro render(params) %}
 
-  {% set userIsMaker = params.user.roles.includes('maker')%}
-  {% set userIsChecker = params.user.roles.includes('checker')%}
-
   {% set dealId = params.deal._id %}
   {% set dealStatus = params.deal.details.status %}
   {% set dealSubmissionType = params.deal.details.submissionType %}

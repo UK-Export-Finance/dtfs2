@@ -85,17 +85,17 @@ describe(component, () => {
 
     describe('when a loan Cover Date can be modified', () => {
       it('should render `change start date` link and NOT `issue facility link', () => {
-        const dealWithloansThatCanChangeCoverDate = deal;
-        dealWithloansThatCanChangeCoverDate.details.status = 'Acknowledged by UKEF';
-        dealWithloansThatCanChangeCoverDate.loanTransactions.items[0].facilityStage = 'Unconditional';
-        dealWithloansThatCanChangeCoverDate.loanTransactions.items[0].issueFacilityDetailsSubmitted = true;
+        const dealWithLoansThatCanChangeCoverDate = deal;
+        dealWithLoansThatCanChangeCoverDate.details.status = 'Acknowledged by UKEF';
+        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].facilityStage = 'Unconditional';
+        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].issueFacilityDetailsSubmitted = true;
 
-        dealWithloansThatCanChangeCoverDate.loanTransactions.items[1].facilityStage = 'Unconditional';
-        dealWithloansThatCanChangeCoverDate.loanTransactions.items[1].issueFacilityDetailsSubmitted = true;
+        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].facilityStage = 'Unconditional';
+        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].issueFacilityDetailsSubmitted = true;
 
         const wrapper = render({
           user,
-          deal: dealWithloansThatCanChangeCoverDate,
+          deal: dealWithLoansThatCanChangeCoverDate,
           confirmedRequestedCoverStartDates: [],
         });
 
@@ -108,5 +108,34 @@ describe(component, () => {
         });
       });
     });
+
+    describe('when viewed by maker-checker role', () => {
+      const makerCheckerUser = { roles: ['maker', 'checker'], timezone: 'Europe/London' };
+
+      it('should render `change start date` link', () => {
+        const dealWithLoansThatCanChangeCoverDate = deal;
+        dealWithLoansThatCanChangeCoverDate.details.status = 'Acknowledged by UKEF';
+        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].facilityStage = 'Unconditional';
+        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].issueFacilityDetailsSubmitted = true;
+
+        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].facilityStage = 'Unconditional';
+        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].issueFacilityDetailsSubmitted = true;
+
+        const wrapper = render({
+          user: makerCheckerUser,
+          deal: dealWithLoansThatCanChangeCoverDate,
+          confirmedRequestedCoverStartDates: [],
+        });
+
+        deal.loanTransactions.items.forEach((facility) => {
+          const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
+
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-change-or-confirm-cover-start-date-${facility._id}"]`).toExist();
+
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-issue-facility-${facility._id}"]`).notToExist();
+        });
+      });
+    });
+
   });
 });
