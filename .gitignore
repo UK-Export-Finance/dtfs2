@@ -15,4 +15,8 @@ secrets/**
 jwt_key
 deal-api/generated_reports
 portal/generated_reports
+
+trade-finance-manager-api/generated_reports
+trade-finance-manager/generated_reports
+
 *.ipynb
