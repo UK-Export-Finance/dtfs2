@@ -9,7 +9,7 @@ module.exports = (bond, deal) => {
       count: totalErrors,
     };
   }
-  console.log({ errorList });
+
   return {
     count: totalErrors,
     errorList,
