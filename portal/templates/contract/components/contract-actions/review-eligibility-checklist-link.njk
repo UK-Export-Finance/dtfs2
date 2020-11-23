@@ -1,6 +1,6 @@
 {% macro render(params) %}
   {% if params.deal.details.status %}
-    {% if params.user.roles.includes('checker') %}
+    {% if params.user.roles.includes('checker') or params.user.roles.includes('maker') %}
         {% if ["Ready for Checker's approval"].includes(params.deal.details.status) %}
 
           <p class="govuk-body">
