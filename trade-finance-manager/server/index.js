@@ -9,7 +9,7 @@ import healthcheck from './healthcheck';
 
 const app = express();
 
-const PORT = process.env.PORT || 5100;
+const PORT = process.env.PORT || 5003;
 
 configureNunjucks({
   autoescape: true,
