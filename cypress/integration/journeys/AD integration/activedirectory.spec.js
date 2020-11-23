@@ -44,12 +44,12 @@ context('Login', () => {
     cy.url().should('eq', relative('/dashboard/0'));
   });
 
-  it('When a logged-in user clicks the home link they go to the /dashboard page', () => {
+  it('Logged-in user home link should point to gov.uk', () => {
     cy.login(MAKER_LOGIN);
 
-    header.home().click();
-
-    cy.url().should('eq', relative('/dashboard/0'));
+    header.home().invoke('attr', 'href').then((href) => {
+      expect(href).to.equal('https://www.gov.uk');
+    });
   });
 
   it('When a logged-in user clicks the dashboard link they go to the /dashboard page', () => {
