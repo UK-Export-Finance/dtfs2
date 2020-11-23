@@ -53,22 +53,15 @@ describe(component, () => {
   });
 
   describe("when viewed by a checker", () => {
-    it("should not render at all", () =>{
-      const user = {roles: ['checker']};
+    it("should not render at all", () => {
+      const user = { _id: 123, roles: ['checker'] };
       const deals = [
-        {_id: 1, details:{status:"Draft"}},
-        {_id: 2, details:{status:"Further Maker's input required"}},
-        {_id: 3, details:{status:"Submitted"}},
-        {_id: 4, details:{status:"Rejected by UKEF"}},
-        {_id: 5, details:{status:"Abandoned Deal"}},
-        {_id: 6, details:{status:"Acknowledged by UKEF"}},
-        {_id: 7, details:{status:"Accepted by UKEF (without conditions)"}},
-        {_id: 8, details:{status:"Accepted by UKEF (with conditions)"}},
-        {_id: 9, details:{status:"Ready for Checker's approval"}},
+        { _id: 1, details: { status: "Draft", maker: { _id: 123 } } },
+        { _id: 2, details: { status: "Further Maker's input required", maker: { _id: 123 } } },
       ];
 
       for (const deal of deals) {
-        const wrapper = render({user, deal});
+        const wrapper = render({ user, deal });
         wrapper.expectSecondaryButton('[data-cy="Abandon"]')
           .notToExist();
       }
@@ -76,24 +69,17 @@ describe(component, () => {
   });
 
   describe("when viewed by a user with maker AND checker role", () => {
-    it("should not render at all", () => {
-      const user = { roles: ['maker', 'checker'] };
+    it("should render", () => {
+      const user = { _id: 123, roles: ['maker', 'checker'] };
       const deals = [
-        { _id: 1, details: { status: "Draft" } },
-        { _id: 2, details: { status: "Further Maker's input required" } },
-        { _id: 3, details: { status: "Submitted" } },
-        { _id: 4, details: { status: "Rejected by UKEF" } },
-        { _id: 5, details: { status: "Abandoned Deal" } },
-        { _id: 6, details: { status: "Acknowledged by UKEF" } },
-        { _id: 7, details: { status: "Accepted by UKEF (without conditions)" } },
-        { _id: 8, details: { status: "Accepted by UKEF (with conditions)" } },
-        { _id: 9, details: { status: "Ready for Checker's approval" } },
+        { _id: 1, details: { status: "Draft", maker: { _id: 123 } } },
+        { _id: 2, details: { status: "Further Maker's input required", maker: { _id: 123 } } },
       ];
 
       for (const deal of deals) {
         const wrapper = render({ user, deal });
         wrapper.expectSecondaryButton('[data-cy="Abandon"]')
-          .notToExist();
+          .toLinkTo(`/contract/${deal._id}/delete`, 'Abandon');
       }
     });
   });
