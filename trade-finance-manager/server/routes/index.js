@@ -5,7 +5,7 @@ import caseRoutes from './case';
 const router = express.Router();
 
 router.use('/', loginRoutes);
-router.use('/', caseRoutes);
+router.use('/case', caseRoutes);
 
 
 export default router;

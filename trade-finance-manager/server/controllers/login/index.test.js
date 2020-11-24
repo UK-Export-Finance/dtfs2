@@ -13,9 +13,9 @@ describe('controllers - login', () => {
   });
 
   describe('POST', () => {
-    it('should redirect to /case/deal/1000677', () => {
+    it('should redirect to /case/deal/1000676', () => {
       loginController.postLogin(req, res);
-      expect(res.redirect).toHaveBeenCalledWith('/case/deal/1000677');
+      expect(res.redirect).toHaveBeenCalledWith('/case/deal/1000676');
     });
   });
 });
