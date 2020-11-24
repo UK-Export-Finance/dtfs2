@@ -45,7 +45,6 @@ env:
 # Below this line should be the same for all environments
 
 jobs:
-
 - job: vnet
   # NB Only one vnet can be associated per App Service Plan,
   # therefore all App Services on a plan must share a single vnet.
