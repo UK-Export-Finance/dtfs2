@@ -1077,17 +1077,17 @@ jobs:
               FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ env.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"              
 
-  - template: ${{ env.environment }}-templates/webapp-ui.yml
-    parameters:
-      label: Trade Finance Manager UI
-      name: trade-finance-manager
-      environment: ${{ env.environment }}
-      needs: [vnet, private-dns, redis]
-      registry: ${{ env.registry }}
-      credentials: ${{ env.credentials }}
-      resource_group: ${{ env.resource_group }}
-      app_service_plan: ${{ env.app_service_plan }}
-      SESSION_SECRET: ${{ env.SESSION_SECRET }}
+- template: ${{ env.environment }}-templates/webapp-ui.yml
+  parameters:
+    label: Trade Finance Manager UI
+    name: trade-finance-manager
+    environment: ${{ env.environment }}
+    needs: [vnet, private-dns, redis]
+    registry: ${{ env.registry }}
+    credentials: ${{ env.credentials }}
+    resource_group: ${{ env.resource_group }}
+    app_service_plan: ${{ env.app_service_plan }}
+    SESSION_SECRET: ${{ env.SESSION_SECRET }}
 
   file-storage:
     name: File storage
