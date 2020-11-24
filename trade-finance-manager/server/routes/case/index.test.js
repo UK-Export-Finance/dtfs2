@@ -11,6 +11,6 @@ describe('routes - case', () => {
   });
 
   it('should setup routes with controllers', () => {
-    expect(get).toHaveBeenCalledWith('/case/deal/:_id', caseController.getCaseDeal);
+    expect(get).toHaveBeenCalledWith('/deal/:_id', caseController.getCaseDeal);
   });
 });
