@@ -1077,7 +1077,7 @@ jobs:
               FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ env.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"              
 
-  -template: ${{ env.environment }}-templates/webapp-ui.yml
+  - template: ${{ env.environment }}-templates/webapp-ui.yml
     parameters:
       label: Trade Finance Manager UI
       name: trade-finance-manager
