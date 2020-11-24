@@ -134,7 +134,10 @@ exports.update = (req, res) => {
 
     if (toStatus === 'Submitted') {
       await updateSubmittedIssuedFacilities(req.user, collection, dealAfterAllUpdates);
-      dealAfterAllUpdates = await createSubmissionDate(collection, req.params.id, user);
+
+      if (!dealAfterAllUpdates.details.submissionDate) {
+        dealAfterAllUpdates = await createSubmissionDate(collection, req.params.id, user);
+      }
 
       if (dealAfterAllUpdates.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
         && !dealAfterAllUpdates.details.manualInclusionApplicationSubmissionDate) {
