@@ -3,7 +3,7 @@ import api from '../../api';
 // NOTE
 // the relationship between deal & case is currently unknown,
 // and therefore how this will be managed/stored/referenced.
-// This approachis purely for initial development.
+// This approach is purely for initial development.
 
 const getCaseDeal = async (req, res) => {
   const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
