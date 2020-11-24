@@ -66,6 +66,31 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       expect(body.deal.details.submissionDate).toBeDefined();
     });
 
+    it('does NOT add a submissionDate to the deal when one already exists', async () => {
+      const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
+
+      // add a mock 'timestamp'/value that we can test against
+      const mockSubmissionDate = '123456';
+      submittedDeal.details.submissionDate = mockSubmissionDate;
+
+      const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        status: 'Submitted',
+        confirmSubmit: true,
+      };
+
+      const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+
+      expect(updatedDeal.status).toEqual(200);
+      expect(updatedDeal.body).toBeDefined();
+
+      const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+      expect(body.deal.details.submissionDate).toEqual(mockSubmissionDate);
+    });
+
     it('creates type_a xml if deal successfully submitted', async () => {
       const files = [
         {
