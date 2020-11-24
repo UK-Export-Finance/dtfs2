@@ -4,7 +4,7 @@ import caseRoutes from './case';
 
 describe('routes index', () => {
   beforeEach(() => {
-    require('./index');
+    require('./index'); // eslint-disable-line global-require
   });
 
   afterEach(() => {

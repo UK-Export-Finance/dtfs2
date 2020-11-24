@@ -22,4 +22,3 @@ const getCaseDeal = async (req, res) => {
 export default {
   getCaseDeal,
 };
-
