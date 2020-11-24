@@ -46,85 +46,85 @@ env:
 
 jobs:
 
-  vnet:
-    # NB Only one vnet can be associated per App Service Plan,
-    # therefore all App Services on a plan must share a single vnet.
-    # So we name the vnet after the app service plan, rather than the environment.
-    name: Vnet
-    runs-on: ubuntu-latest
-    steps:
+- job: vnet
+  # NB Only one vnet can be associated per App Service Plan,
+  # therefore all App Services on a plan must share a single vnet.
+  # So we name the vnet after the app service plan, rather than the environment.
+  name: Vnet
+  runs-on: ubuntu-latest
+  steps:
 
-    - uses: azure/login@v1
-      with:
-        creds: ${{ env.credentials }}
+  - uses: azure/login@v1
+    with:
+      creds: ${{ env.credentials }}
 
-    - name: Defaults
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
+  - name: Defaults
+    uses: Azure/cli@v1.0.0
+    with:
+      inlineScript: |
+        az configure --defaults location=uksouth
+        az configure --defaults group=${{ env.resource_group }}
 
-    - name: Vnet
-      uses: Azure/cli@v1.0.0
-      with:
-        # We have to do a show here or we get an error on create if the vnet already exists:
-        inlineScript: |
-          az network vnet show --name tfs-${{ env.app_service_plan }}-vnet || \
-          az network vnet create --name tfs-${{ env.app_service_plan }}-vnet
+  - name: Vnet
+    uses: Azure/cli@v1.0.0
+    with:
+      # We have to do a show here or we get an error on create if the vnet already exists:
+      inlineScript: |
+        az network vnet show --name tfs-${{ env.app_service_plan }}-vnet || \
+        az network vnet create --name tfs-${{ env.app_service_plan }}-vnet
 
-    - name: Application Gateway subnet
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network vnet subnet create \
-            --name ${{ env.environment }}-gateway \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes ${{ env.application_gateway_cidr }}
+  - name: Application Gateway subnet
+    uses: Azure/cli@v1.0.0
+    with:
+      inlineScript: |
+        az network vnet subnet create \
+          --name ${{ env.environment }}-gateway \
+          --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+          --address-prefixes ${{ env.application_gateway_cidr }}
 
-    - name: Private links subnet
-      uses: Azure/cli@v1.0.0
-      with:
-        # Subnet for hosting private endpoints for microservices and backing services.
-        # Apparently you can't both delegate and have private endpoints in the same subnet.
-        inlineScript: |
-          az network vnet subnet show --name ${{ env.environment }}-private-endpoints --vnet-name tfs-${{ env.app_service_plan }}-vnet || \
-          az network vnet subnet create \
-            --name ${{ env.environment }}-private-endpoints \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes ${{ env.private_endpoints_cidr }}
-          az network vnet subnet update \
-            --name ${{ env.environment }}-private-endpoints \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --disable-private-endpoint-network-policies true
+  - name: Private links subnet
+    uses: Azure/cli@v1.0.0
+    with:
+      # Subnet for hosting private endpoints for microservices and backing services.
+      # Apparently you can't both delegate and have private endpoints in the same subnet.
+      inlineScript: |
+        az network vnet subnet show --name ${{ env.environment }}-private-endpoints --vnet-name tfs-${{ env.app_service_plan }}-vnet || \
+        az network vnet subnet create \
+          --name ${{ env.environment }}-private-endpoints \
+          --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+          --address-prefixes ${{ env.private_endpoints_cidr }}
+        az network vnet subnet update \
+          --name ${{ env.environment }}-private-endpoints \
+          --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+          --disable-private-endpoint-network-policies true
 
-    - name: App Service Plan egress subnet
-      uses: Azure/cli@v1.0.0
-      with:
-        # Subnet for delegation to App Service for outbound traffic from microservices
-        # Delegation Microsoft.Web/serverFarms allows only one App Service plan to be associated,
-        # So this subnet is named after the app service plan, rather than after the environment.
-        inlineScript: |
-          az network vnet subnet create \
-            --name ${{ env.app_service_plan }}-app-service-plan-egress \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --delegations Microsoft.Web/serverFarms \
-            --service-endpoints Microsoft.AzureCosmosDB \
-            --address-prefixes 10.0.200.0/28
-            
-            
-    # We'll aim to move this out of this section and consolidate into a single VM job:
-    - name: Virtual machine subnet
-      uses: Azure/cli@v1.0.0
-      with:
-        # Subnet for a temporary maintenance virtual machine.
-        inlineScript: |
-          az network vnet subnet create \
-            --name ${{ env.resource_group }}-vm \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes 10.0.210.0/28 \
-            --service-endpoints Microsoft.AzureCosmosDB
+  - name: App Service Plan egress subnet
+    uses: Azure/cli@v1.0.0
+    with:
+      # Subnet for delegation to App Service for outbound traffic from microservices
+      # Delegation Microsoft.Web/serverFarms allows only one App Service plan to be associated,
+      # So this subnet is named after the app service plan, rather than after the environment.
+      inlineScript: |
+        az network vnet subnet create \
+          --name ${{ env.app_service_plan }}-app-service-plan-egress \
+          --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+          --delegations Microsoft.Web/serverFarms \
+          --service-endpoints Microsoft.AzureCosmosDB \
+          --address-prefixes 10.0.200.0/28
           
+          
+  # We'll aim to move this out of this section and consolidate into a single VM job:
+  - name: Virtual machine subnet
+    uses: Azure/cli@v1.0.0
+    with:
+      # Subnet for a temporary maintenance virtual machine.
+      inlineScript: |
+        az network vnet subnet create \
+          --name ${{ env.resource_group }}-vm \
+          --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+          --address-prefixes 10.0.210.0/28 \
+          --service-endpoints Microsoft.AzureCosmosDB
+        
   private-dns:
     name: Private DNS zones
     needs: vnet
