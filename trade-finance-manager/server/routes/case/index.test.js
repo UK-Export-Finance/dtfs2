@@ -1,9 +1,9 @@
-import { get, post } from '../../test-mocks/router-mock';
+import { get } from '../../test-mocks/router-mock';
 import caseController from '../../controllers/case';
 
 describe('routes - case', () => {
   beforeEach(() => {
-    require('./index');
+    require('./index'); // eslint-disable-line global-require
   });
 
   afterEach(() => {

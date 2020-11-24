@@ -1,6 +1,6 @@
 import caseController from '.';
 import api from '../../api';
-import { mockReq, mockRes } from '../../test-mocks';
+import { mockRes } from '../../test-mocks';
 
 const res = mockRes();
 
@@ -16,10 +16,10 @@ describe('controllers - case', () => {
         api.getDeal = () => Promise.resolve(mockDeal);
       });
 
-      it('should render deal template with data', async() => {
+      it('should render deal template with data', async () => {
         const req = {
           params: {
-            _id: mockDeal._id,
+            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
           },
         };
 
