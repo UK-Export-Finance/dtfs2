@@ -1234,7 +1234,7 @@ jobs:
           # Tony B
           az network nsg rule create --name team-ips-tonyb --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 4001 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "84.9.237.44" --source-port-ranges "*" \
+            --source-address-prefixes "87.74.98.153" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
 
           # Caroline - VM
