@@ -124,7 +124,19 @@ jobs:
           --vnet-name tfs-${{ env.app_service_plan }}-vnet \
           --address-prefixes 10.0.210.0/28 \
           --service-endpoints Microsoft.AzureCosmosDB
-        
+
+- template: dev-templates/webapp-ui.yml
+  parameters:
+    label: Trade Finance Manager UI
+    name: trade-finance-manager
+    environment: ${{ env.environment }}
+    needs: [vnet, private-dns, redis]
+    registry: ${{ env.registry }}
+    credentials: ${{ env.credentials }}
+    resource_group: ${{ env.resource_group }}
+    app_service_plan: ${{ env.app_service_plan }}
+    SESSION_SECRET: ${{ env.SESSION_SECRET }}
+
   private-dns:
     name: Private DNS zones
     needs: vnet
@@ -1076,18 +1088,6 @@ jobs:
               DTFS_PORTAL_SCHEDULER="${{ env.DTFS_PORTAL_SCHEDULER }}" \
               FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ env.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"              
-
-  - template: dev-templates/webapp-ui.yml
-    parameters:
-      label: Trade Finance Manager UI
-      name: trade-finance-manager
-      environment: ${{ env.environment }}
-      needs: [vnet, private-dns, redis]
-      registry: ${{ env.registry }}
-      credentials: ${{ env.credentials }}
-      resource_group: ${{ env.resource_group }}
-      app_service_plan: ${{ env.app_service_plan }}
-      SESSION_SECRET: ${{ env.SESSION_SECRET }}
 
   file-storage:
     name: File storage
