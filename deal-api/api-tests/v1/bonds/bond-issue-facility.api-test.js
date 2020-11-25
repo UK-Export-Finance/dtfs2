@@ -61,7 +61,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
   const issueFacilityBody = {
     ...createCoverDateFields('requestedCoverStartDate', moment().add(1, 'week')),
     ...createCoverDateFields('coverEndDate', moment().add(1, 'month')),
-    ...createCoverDateFields('issuedDate', moment().add(2, 'day')),
+    ...createCoverDateFields('issuedDate', moment()),
     uniqueIdentificationNumber: '1234',
   };
 
