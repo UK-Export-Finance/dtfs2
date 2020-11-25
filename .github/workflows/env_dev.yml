@@ -15,7 +15,7 @@ env:
   app_service_plan: dev
   redis_sku: Basic
   database_name: tfs-portal
-  application_gateway_cidr: 10.0.0.0/28
+  application_gateway_cidr: 10.0.0.0/27
   private_endpoints_cidr: 10.0.1.0/28
   # Container registry
   registry: ${{ secrets.DEV_ACR_REGISTRY }}
