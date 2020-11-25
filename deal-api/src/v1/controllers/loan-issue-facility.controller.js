@@ -87,6 +87,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
 
       return res.status(200).send(updatedLoan);
     }
+
     return res.status(404).send();
   });
 };

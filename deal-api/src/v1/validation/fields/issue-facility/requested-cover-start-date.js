@@ -75,7 +75,7 @@ module.exports = (
         }
       }
 
-      if (!canEnterDateGreaterThan3Months && moment(requestedCoverStartDate).isBefore(today)) {
+      if (!canEnterDateGreaterThan3Months && moment(requestedCoverStartDate).isBefore(today, 'day')) {
         newErrorList.requestedCoverStartDate = {
           text: `Requested Cover Start Date must be between ${todayFormatted} and ${todayPlus3MonthsFormatted}`,
           order: orderNumber(newErrorList),

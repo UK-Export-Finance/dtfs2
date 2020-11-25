@@ -39,6 +39,7 @@ exports.updateBondIssueFacility = async (req, res) => {
         ...req.body,
       };
 
+
       if (!modifiedBond.issueFacilityDetailsStarted
         && !modifiedBond.issueFacilityDetailsSubmitted) {
         // add a flag for UI/design/status/business handling...
@@ -88,6 +89,7 @@ exports.updateBondIssueFacility = async (req, res) => {
 
       return res.status(200).send(updatedBond);
     }
+
     return res.status(404).send();
   });
 };
