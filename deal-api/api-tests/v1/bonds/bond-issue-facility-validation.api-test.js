@@ -10,6 +10,7 @@ const { formattedTimestamp } = require('../../../src/v1/facility-dates/timestamp
 describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
   // TODO
   // add all required Conditional bond fields
+  const submissionDate = moment().subtract(1, 'week');
 
   const newDeal = aDeal({
     details: {
@@ -17,7 +18,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
       bankSupplyContractID: 'mock id',
       status: 'Acknowledged by UKEF',
       submissionType: 'Manual Inclusion Notice',
-      submissionDate: moment().utc().valueOf(),
+      submissionDate: moment(submissionDate).utc().valueOf(),
     },
     submissionDetails: {
       supplyContractCurrency: {
@@ -96,18 +97,90 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
       expect(body.validationErrors.errorList.uniqueIdentificationNumber).toBeDefined();
     });
 
-    // TODO issuedDate
     // TODO coverEndDate
     // TODO coverDate
     // TODO disbursementAmount
     // TODO bankReferenceNumber
 
-    describe('requestedCoverStartDate', () => {
-      let createdbond;
+    describe('issuedDate', () => {
+      const updateIssuedDate = async (issuedDate) => {
+        const bond = {
+          ...issuedDate,
+        };
 
+        const body = await updateBondIssuance(dealId, bondId, bond);
+        return body;
+      };
+    
+    
+      describe('when has some values', () => {
+        it('should return validationError', async () => {
+          await createDealAndBond();
+
+          const nowDate = moment();
+          const issuedDateFields = {
+            'issuedDate-day': moment(nowDate).format('DD'),
+            'issuedDate-month': '',
+            'issuedDate-year': '',
+          };
+
+          const { validationErrors } = await updateIssuedDate(issuedDateFields);
+          expect(validationErrors.errorList.issuedDate.order).toBeDefined();
+
+          const expectedText = dateValidationText(
+            'Issued Date',
+            issuedDateFields['issuedDate-day'],
+            issuedDateFields['issuedDate-month'],
+            issuedDateFields['issuedDate-year'],
+          );
+          expect(validationErrors.errorList.issuedDate.text).toEqual(expectedText);
+        });
+      });
+
+      describe('when issuedDate is not after the deal submission date', () => {
+        it('should return validationError', async () => {
+          await createDealAndBond();
+
+          const beforeSubmissionDate = moment(submissionDate).subtract(1, 'week');
+          const issuedDateFields = {
+            'issuedDate-day': moment(beforeSubmissionDate).format('DD'),
+            'issuedDate-month': moment(beforeSubmissionDate).format('MM'),
+            'issuedDate-year': moment(beforeSubmissionDate).format('YYYY'),
+          };
+
+          const { validationErrors } = await updateIssuedDate(issuedDateFields);
+          expect(validationErrors.errorList.issuedDate.order).toBeDefined();
+
+          const formattedSubmissionDate = moment(formattedTimestamp(newDeal.details.submissionDate)).format('Do MMMM YYYY');
+          const expectedText = `Issued Date must be on or after ${formattedSubmissionDate}`;
+          expect(validationErrors.errorList.issuedDate.text).toEqual(expectedText);
+        });
+      });
+
+      describe('when issuedDate is after today', () => {
+        it('should return validationError', async () => {
+          await createDealAndBond();
+
+          const tomorrow = moment().add(1, 'day');
+          const issuedDateFields = {
+            'issuedDate-day': moment(tomorrow).format('DD'),
+            'issuedDate-month': moment(tomorrow).format('MM'),
+            'issuedDate-year': moment(tomorrow).format('YYYY'),
+          };
+
+          const { validationErrors } = await updateIssuedDate(issuedDateFields);
+          expect(validationErrors.errorList.issuedDate.order).toBeDefined();
+
+          const formattedSubmissionDate = moment(formattedTimestamp(newDeal.details.submissionDate)).format('Do MMMM YYYY');
+          const expectedText = 'Issued Date must be in the past';
+          expect(validationErrors.errorList.issuedDate.text).toEqual(expectedText);
+        });
+      });
+    });
+
+    describe('requestedCoverStartDate', () => {
       const updateRequestedCoverStartDate = async (requestedCoverStartDate) => {
         const bond = {
-          ...createdbond,
           ...requestedCoverStartDate,
         };
 
