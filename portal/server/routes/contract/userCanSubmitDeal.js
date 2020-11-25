@@ -5,22 +5,16 @@ const userCanSubmitDeal = (deal, user) => {
     return false;
   }
 
-  const isMakerCheckerUser = (user.roles.includes('maker') && user.roles.includes('checker'));
+  const userCreatedTheDeal = (deal.details.maker._id === user._id); // eslint-disable-line no-underscore-dangle
 
-  if (!isMakerCheckerUser) {
-    return true;
-  }
-
-  const makerCheckerCreatedTheDeal = (deal.details.maker._id === user._id); // eslint-disable-line no-underscore-dangle
-
-  if (makerCheckerCreatedTheDeal) {
+  if (userCreatedTheDeal) {
     return false;
   }
 
-  const makerCheckerEditedTheDeal = deal.editedBy.find((edited) =>
+  const userEditedTheDeal = deal.editedBy.find((edited) =>
     edited.userId === user._id); // eslint-disable-line no-underscore-dangle
 
-  if (makerCheckerEditedTheDeal) {
+  if (userEditedTheDeal) {
     return false;
   }
 
