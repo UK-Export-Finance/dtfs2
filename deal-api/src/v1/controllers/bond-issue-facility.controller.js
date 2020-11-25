@@ -39,6 +39,7 @@ exports.updateBondIssueFacility = async (req, res) => {
         ...req.body,
       };
 
+
       if (!modifiedBond.issueFacilityDetailsStarted
         && !modifiedBond.issueFacilityDetailsSubmitted) {
         // add a flag for UI/design/status/business handling...
@@ -75,14 +76,16 @@ exports.updateBondIssueFacility = async (req, res) => {
         modifiedBond.issueFacilityDetailsProvided = true;
       } else {
         modifiedBond.issueFacilityDetailsProvided = false;
-
-        return res.status(400).send({
-          validationErrors,
-          bond: modifiedBond,
-        });
       }
 
       const updatedBond = await updateBondInDeal(req.params, req.user, deal, modifiedBond);
+
+      if (validationErrors.count !== 0) {
+        return res.status(400).send({
+          validationErrors,
+          bond: updatedBond,
+        });
+      }
 
       return res.status(200).send(updatedBond);
     }
