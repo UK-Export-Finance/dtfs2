@@ -10,7 +10,7 @@ const {
 } = require('../../../src/v1/section-calculations');
 const { findOneCurrency } = require('../../../src/v1/controllers/currencies.controller');
 
-describe('/v1/deals/:id/bond/:id/issue-facility', () => {
+describe('/v1/deals/:id/loan/:id/issue-facility', () => {
   const newDeal = aDeal({
     details: {
       bankSupplyContractName: 'mock name',
@@ -41,21 +41,19 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     };
   };
 
-  const allBondFields = {
-    bondIssuer: 'issuer',
-    bondType: 'bond type',
-    facilityStage: 'Unissued',
-    previousFacilityStage: 'Unissued',
-    ukefGuaranteeInMonths: '24',
-    bondBeneficiary: 'test',
-    facilityValue: '123456.55',
+  const allLoanFields = {
+    facilityStage: 'Unconditional',
+    previousFacilityStage: 'Unconditional',
+    bankReferenceNumber: '1234',
+    disbursementAmount: '5',
+    facilityValue: '100',
     currencySameAsSupplyContractCurrency: 'true',
-    riskMarginFee: '9.09',
-    coveredPercentage: '2',
-    feeType: 'test',
-    feeFrequency: 'test',
-    dayCountBasis: 'test',
-    status: 'Ready for check'
+    interestMarginFee: '10',
+    coveredPercentage: '40',
+    premiumType: 'At maturity',
+    dayCountBasis: '365',
+    ...createCoverDateFields('coverEndDate', moment().add(1, 'month')),
+    status: 'Ready for check',
   };
 
   const issueFacilityBody = {
@@ -71,21 +69,21 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
   let aSuperuser;
   let anEditor;
   let dealId;
-  let bondId;
+  let loanId;
 
-  const addBondToDeal = async () => {
+  const addLoanToDeal = async () => {
     const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
     dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
-    const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
-    bondId = createBondResponse.body.bondId;
+    const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+    loanId = createLoanResponse.body.loanId;
 
-    const { status } = await as(aBarclaysMaker).put(allBondFields).to(`/v1/deals/${dealId}/bond/${bondId}`);
+    const { status } = await as(aBarclaysMaker).put(allLoanFields).to(`/v1/deals/${dealId}/loan/${loanId}`);
     expect(status).toEqual(200);
   };
 
-  const putIssueFacility = async (dealId, bondId, body) => {
-    const response = await as(aBarclaysMaker).put(body).to(`/v1/deals/${dealId}/bond/${bondId}/issue-facility`);
+  const putIssueFacility = async (dealId, loanId, body) => {
+    const response = await as(aBarclaysMaker).put(body).to(`/v1/deals/${dealId}/loan/${loanId}/issue-facility`);
     return response;
   };
 
@@ -99,45 +97,45 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
-    await addBondToDeal();
+    await addLoanToDeal();
   });
 
-  describe('PUT /v1/deals/:id/bond/:id/issue-facility', () => {
+  describe('PUT /v1/deals/:id/loan/:id/issue-facility', () => {
     it('should return 401 when user cannot access the deal', async () => {
-      const { status } = await as(anHSBCMaker).put({}).to(`/v1/deals/${dealId}/bond/${bondId}/issue-facility`);
+      const { status } = await as(anHSBCMaker).put({}).to(`/v1/deals/${dealId}/loan/${loanId}/issue-facility`);
       expect(status).toEqual(401);
     });
 
     it('should return 404 when deal does not exist', async () => {
-      const { status } = await putIssueFacility('1234', bondId, {});
+      const { status } = await putIssueFacility('1234', loanId, {});
       expect(status).toEqual(404);
     });
 
-    it('should return 404 when bond does not exist', async () => {
+    it('should return 404 when loan does not exist', async () => {
       const { status } = await putIssueFacility(dealId, '1234', {});
       expect(status).toEqual(404);
     });
 
-    it('should return 403 when bond cannot be issued', async () => {
+    it('should return 403 when loan cannot be issued', async () => {
       // put deal into a state that doesn't allow facility issuance
       await as(aSuperuser).put({
         comments: 'test',
         status: 'Abandoned Deal'
       }).to(`/v1/deals/${dealId}/status`);
 
-      const { status } = await putIssueFacility(dealId, bondId, {});
+      const { status } = await putIssueFacility(dealId, loanId, {});
       expect(status).toEqual(403);
     });
 
-    it('should remove bond status and add issueFacilityDetailsStarted', async () => {
-      const { body } = await putIssueFacility(dealId, bondId, issueFacilityBody);
+    it('should remove loan status and add issueFacilityDetailsStarted', async () => {
+      const { body } = await putIssueFacility(dealId, loanId, issueFacilityBody);
 
-      expect(body.status === allBondFields.status).toEqual(false);
+      expect(body.status === allLoanFields.status).toEqual(false);
       expect(body.issueFacilityDetailsStarted).toEqual(true);
     });
 
-    it('should return 200 with updated bond, add issueFacilityDetailsProvided and generate timestamps', async () => {
-      const { status, body } = await putIssueFacility(dealId, bondId, issueFacilityBody);
+    it('should return 200 with updated loan, add issueFacilityDetailsProvided and generate timestamps', async () => {
+      const { status, body } = await putIssueFacility(dealId, loanId, issueFacilityBody);
 
       expect(status).toEqual(200);
       expect(body.issueFacilityDetailsProvided).toEqual(true);
@@ -150,42 +148,48 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
         ...createCoverDateFields('requestedCoverStartDate', moment().add(1, 'week')),
       };
 
-      it('should return 400 with validationErrors, the bond,  and add issueFacilityDetailsProvided=false', async () => {
-        const { status, body } = await putIssueFacility(dealId, bondId, incompleteIssueFacilityBody);
+      it('should return 400 with validationErrors, the loan,  and add issueFacilityDetailsProvided=false', async () => {
+        const { status, body } = await putIssueFacility(dealId, loanId, incompleteIssueFacilityBody);
 
         expect(status).toEqual(400);
         expect(body.validationErrors).toBeDefined();
-        expect(body.bond.issueFacilityDetailsProvided).toEqual(false);
+        expect(body.loan.issueFacilityDetailsProvided).toEqual(false);
       });
 
-      describe('when there is no bond.uniqueIdentificationNumber', () => {
-        it('should return validationErrors, the bond with uniqueIdentificationNumberRequiredForIssuance', async () => {
-          const { status, body } = await putIssueFacility(dealId, bondId, incompleteIssueFacilityBody);
+      describe('when there is no loan.bankReferenceNumber', () => {
+        it('should return validationErrors, the loan with bankReferenceNumberRequiredForIssuance', async () => {
+          // remove bankReferenceNumber
+          await as(aBarclaysMaker).put({
+            ...allLoanFields,
+            bankReferenceNumber: ''
+          }).to(`/v1/deals/${dealId}/loan/${loanId}`);
+
+          const { status, body } = await putIssueFacility(dealId, loanId, incompleteIssueFacilityBody);
 
           expect(status).toEqual(400);
           expect(body.validationErrors).toBeDefined();
-          expect(body.bond.uniqueIdentificationNumberRequiredForIssuance).toEqual(true);
+          expect(body.loan.bankReferenceNumberRequiredForIssuance).toEqual(true);
         });
       });
 
       describe('when requestedCoverStartDate exists and only some values are updated', () => {
         it('should remove requestedCoverStartDate timestamp', async () => {
-          await putIssueFacility(dealId, bondId, issueFacilityBody);
+          await putIssueFacility(dealId, loanId, issueFacilityBody);
 
           const incompleteDate = {
-            'requestedCoverStartDate-day' : moment().format('DD'),
+            'requestedCoverStartDate-day': moment().format('DD'),
             'requestedCoverStartDate-month': moment().format('MM'),
             'requestedCoverStartDate-year': '',
           };
 
-          const { body } = await putIssueFacility(dealId, bondId, incompleteDate);
-          expect(body.bond.requestedCoverStartDate).toBeUndefined();
+          const { body } = await putIssueFacility(dealId, loanId, incompleteDate);
+          expect(body.loan.requestedCoverStartDate).toBeUndefined();
         });
       });
 
       describe('when issuedDate exists and only some values are updated', () => {
         it('should remove issuedDate timestamp', async () => {
-          await putIssueFacility(dealId, bondId, issueFacilityBody);
+          await putIssueFacility(dealId, loanId, issueFacilityBody);
 
           const incompleteDate = {
             'issuedDate-day': moment().format('DD'),
@@ -193,11 +197,11 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
             'issuedDate-year': '',
           };
 
-          const { body } = await putIssueFacility(dealId, bondId, incompleteDate);
-          expect(body.bond.issuedDate).toBeUndefined();
+          const { body } = await putIssueFacility(dealId, loanId, incompleteDate);
+          expect(body.loan.issuedDate).toBeUndefined();
         });
       });
     });
   });
 });
-    
+

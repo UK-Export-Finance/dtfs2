@@ -74,14 +74,16 @@ exports.updateLoanIssueFacility = async (req, res) => {
         modifiedLoan.issueFacilityDetailsProvided = true;
       } else {
         modifiedLoan.issueFacilityDetailsProvided = false;
-
-        return res.status(400).send({
-          validationErrors,
-          loan: modifiedLoan,
-        });
       }
 
       const updatedLoan = await updateLoanInDeal(req.params, req.user, deal, modifiedLoan);
+
+      if (validationErrors.count !== 0) {
+        return res.status(400).send({
+          validationErrors,
+          loan: updatedLoan,
+        });
+      }
 
       return res.status(200).send(updatedLoan);
     }
