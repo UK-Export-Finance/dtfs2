@@ -215,7 +215,6 @@ jobs:
     - uses: azure/login@v1
       with:
         creds: ${{ env.credentials }}
-        - uses: azure/login@v1
 
     - name: Defaults
       uses: Azure/cli@v1.0.0
