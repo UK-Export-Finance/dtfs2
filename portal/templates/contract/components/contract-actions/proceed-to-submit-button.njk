@@ -2,12 +2,6 @@
 
 {% macro render(params) %}
 
-<p><strong>temp for debugging:</strong></p>
-<p>userCanSubmit: {{ params.userCanSubmit }}</p>
-<p>user.roles: {{ params.user.roles }}</p>
-<p>roles.includes checker: {{ params.user.roles.includes('checker') }}</p>
-<p>roles.includes maker: {{ params.user.roles.includes('maker') }}</p>
-
   {% if params.deal.details.status and params.userCanSubmit %}
 
     {% if not ["Draft", "Further Maker's input required", "Acknowledged by UKEF", "In progress by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)"].includes(params.deal.details.status) and params.user.roles.includes('checker') and params.user.roles.includes('maker') %}
