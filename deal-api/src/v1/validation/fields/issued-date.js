@@ -35,7 +35,7 @@ module.exports = (facility, errorList, deal) => {
 
     if (moment(issuedDate).isAfter(today, 'day')) {
       newErrorList.issuedDate = {
-        text: 'Issued Date must be in the past',
+        text: 'Issued Date must be today or in the past',
         order: orderNumber(newErrorList),
       };
     }

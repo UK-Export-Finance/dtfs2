@@ -172,7 +172,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
           expect(validationErrors.errorList.issuedDate.order).toBeDefined();
 
           const formattedSubmissionDate = moment(formattedTimestamp(newDeal.details.submissionDate)).format('Do MMMM YYYY');
-          const expectedText = 'Issued Date must be in the past';
+          const expectedText = 'Issued Date must be today or in the past';
           expect(validationErrors.errorList.issuedDate.text).toEqual(expectedText);
         });
       });
