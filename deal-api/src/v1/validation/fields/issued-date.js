@@ -25,7 +25,6 @@ module.exports = (facility, errorList, deal) => {
 
   if (dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear)) {
     if (!moment(issuedDate).isSameOrAfter(dealSubmissionDate, 'day')) {
-
       const formattedDealSubmissionDate = moment(dealSubmissionDate).format('Do MMMM YYYY');
 
       newErrorList.issuedDate = {
