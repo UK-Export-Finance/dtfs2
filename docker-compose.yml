@@ -1,17 +1,17 @@
 version: "3"
 services:
-  trade-finance-manager:
-    build: ./trade-finance-manager
-    image: dtfs/trade-finance-manager
+  trade-finance-manager-ui:
+    build: ./trade-finance-manager-ui
+    image: dtfs/trade-finance-manager-ui
     depends_on:
       - trade-finance-manager-api
     ports:
       - "5003:5003"
     volumes:
-      - ./trade-finance-manager/scripts:/app/scripts:ro
-      - ./trade-finance-manager/styles:/app/styles:ro
-      - ./trade-finance-manager/templates:/app/templates:ro
-      - ./trade-finance-manager/server:/app/server:ro
+      - ./trade-finance-manager-ui/scripts:/app/scripts:ro
+      - ./trade-finance-manager-ui/styles:/app/styles:ro
+      - ./trade-finance-manager-ui/templates:/app/templates:ro
+      - ./trade-finance-manager-ui/server:/app/server:ro
     environment:
       - PORT=5003
       - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
