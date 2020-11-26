@@ -9,7 +9,7 @@ const MONGO_INITDB_DATABASE = process.env.MONGO_INITDB_DATABASE || 'test';
 
 async function pingMongo() {
   if (!MONGODB_URI) {
-    return 'MONGODB_URI is empty.';
+    return `MONGODB_URI is empty. ${JSON.stringify(process.env)}`;
   }
 
   let client;
