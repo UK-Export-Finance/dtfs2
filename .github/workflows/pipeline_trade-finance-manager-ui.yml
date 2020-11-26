@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
     paths: 
-    - 'trade-finance-manager/**'
+    - 'trade-finance-manager-ui/**'
   schedule:
     # A weekly run to roll up any base image patches,
     # in office hours, avoiding bank holiday Mondays:
@@ -33,7 +33,7 @@ jobs:
         username: ${{ secrets.DEV_ACR_USERNAME }}
         password: ${{ secrets.DEV_ACR_PASSWORD }}
         repository: trade-finance-manager-ui
-        path: trade-finance-manager
+        path: trade-finance-manager-ui
         tags: latest
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
