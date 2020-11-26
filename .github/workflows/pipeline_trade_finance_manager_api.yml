@@ -1,0 +1,132 @@
+name: Trade Finance Manager UI
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+    - 'trade-finance-manager-api/**'
+  schedule:
+    # A weekly run to roll up any base image patches,
+    # in office hours, avoiding bank holiday Mondays:
+    # "At 12:00 on Tuesday." - https://crontab.guru/
+    - cron: '0 12 * * 2'
+
+env:
+  environment: dev
+  # Credentials for accessing Azure
+  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+  resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
+
+jobs:
+
+  build:
+    name: Build and push Trade Finance Manager API
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Commit hash
+      run: "echo GITHUB_SHA=${{ github.sha }}"
+    - name: Build and push
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
+        repository: trade-finance-manager-api
+        path: trade-finance-manager-api
+        tags: latest
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
+
+  test:
+    name: "Run API tests in Compose"
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      MULESOFT_API: ${{ secrets.APITEST_MULESOFT }}
+
+    steps:
+    - uses: actions/checkout@v2
+    # Pull the latest images to run with so we don't need to build them
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
+    - name: Pull trade-finance-manager-api
+      run: |
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-api
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-api dtfs/trade-finance-manager-api
+    - name: Start Docker Compose
+      working-directory: ./trade-finance-manager-api
+      run: |
+        docker-compose up -d
+    - name: Run API tests
+      working-directory: ./trade-finance-manager-api
+      run: |
+        docker-compose exec -T trade-finance-manager-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --runInBand
+    - uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#dtfs2-dev'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: failure()
+
+  promote:
+    name: Promote container images to Dev
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Log in to Dev container registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
+    - name: Tag images
+      run: |
+        from=latest
+        to=dev
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-api:$from
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-api:$from ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-api:$to
+        docker push ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-api:$to
+
+  deploy:
+    name: Deploy container images to Dev
+    needs: promote
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Create slot ${{ github.sha }}
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot create --name tfs-${{ env.environment }}-trade-finance-manager-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-trade-finance-manager-api
+
+    - name: Swap slot ${{ github.sha }} into production
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot swap   --name tfs-${{ env.environment }}-trade-finance-manager-api --slot ${{ github.sha }} --action swap
+
+    - name: Delete slot ${{ github.sha }}
+      # Clean up the slot regardless of errors
+      if: ${{ always() }}
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot delete --name tfs-${{ env.environment }}-trade-finance-manager-api --slot ${{ github.sha }}
+
+  
