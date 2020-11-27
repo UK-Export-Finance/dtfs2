@@ -21,5 +21,9 @@ git push -f --set-upstream origin $environment_destination
 
 # Clean up
 git checkout master
-git branch -d $environment_source
+
+if [ $environment_source != "master" ]; then
+    git branch -d $environment_source
+fi
+
 git branch -d $environment_destination
