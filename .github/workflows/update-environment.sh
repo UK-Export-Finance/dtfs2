@@ -19,6 +19,8 @@ git checkout $environment_source
 git checkout -b $environment_destination
 git push -f --set-upstream origin $environment_destination
 
+git log -n 1 --pretty | sort
+
 # Clean up
 git checkout master
 
