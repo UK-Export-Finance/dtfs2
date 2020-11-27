@@ -34,6 +34,7 @@ const getShareClient = async (fileshare) => {
   );
   console.log('getShareCLient', { FILESHARE_NAME, URI: `https://${STORAGE_ACCOUNT}.file.core.windows.net`, credentials });
   const shareClient = await serviceClient.getShareClient(FILESHARE_NAME);
+  console.log('Got share client', { shareClient });
   await shareClient.create().catch(({ details }) => {
     console.log('getShareClient Error', { details });
     if (!details) return;
@@ -46,7 +47,7 @@ const getShareClient = async (fileshare) => {
 
 const getDirectory = async (fileshare, folderPaths = '') => {
   const shareClient = await getShareClient(fileshare);
-  console.log('Got share client', { shareClient });
+
   console.log('Get directoryClient', { folderPaths });
   const directoryClient = shareClient.getDirectoryClient(folderPaths);
   console.log('got directoryClient', { directoryClient });
