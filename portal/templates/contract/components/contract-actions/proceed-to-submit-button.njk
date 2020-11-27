@@ -2,7 +2,11 @@
 
 {% macro render(params) %}
 
+  <p>params.user.roles: {{ params.user.roles }}</p>
+
   {% if params.deal.details.status and params.userCanSubmit %}
+
+    <p>condition 1</p>
 
     {% if not ["Draft", "Further Maker's input required", "Acknowledged by UKEF", "In progress by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)"].includes(params.deal.details.status) and params.user.roles.includes('checker') and params.user.roles.includes('maker') %}
       {{ govukButton({
@@ -17,7 +21,11 @@
 
     {% if params.user.roles.includes('checker') and not params.user.roles.includes('maker') %}
 
+      <p>condition 2</p>
+
         {% if ["Ready for Checker's approval"].includes(params.deal.details.status) %}
+
+        <p>condition 3</p>
 
           {{ govukButton({
             "disabled": false,
@@ -29,6 +37,8 @@
           }) }}
 
         {% elseif  ["Draft", "Abandoned Deal", "Acknowledged by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)", "In progress by UKEF"].includes(params.deal.details.status) %}
+
+          <p>condition 4</p>
 
           {{ govukButton({
             "disabled": true,

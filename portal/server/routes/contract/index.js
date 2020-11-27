@@ -18,6 +18,7 @@ import {
 } from '../api-data-provider';
 import isDealEditable from './isDealEditable';
 import userCanSubmitDeal from './userCanSubmitDeal';
+import userCanSubmitDealDebugging from './userCanSubmitDealDebugging';
 import dealHasIssuedFacilitiesToSubmit from './dealHasIssuedFacilitiesToSubmit';
 import dealWithCanIssueOrEditIssueFacilityFlags from './dealWithCanIssueOrEditIssueFacilityFlags';
 
@@ -66,6 +67,7 @@ router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
     canFullyCalculateDealSummary,
     editable: isDealEditable(deal, user),
     userCanSubmit: userCanSubmitDeal(deal, user),
+    userCanSubmitDebugging: userCanSubmitDealDebugging(deal, user),
     dealHasIssuedFacilitiesToSubmit: dealHasIssuedFacilitiesToSubmit(deal),
     confirmedRequestedCoverStartDates: confirmedRequestedCoverStartDates[dealId] || [],
     allRequestedCoverStartDatesConfirmed: deal.details.submissionType === 'Automatic Inclusion Notice' || allRequestedCoverStartDatesConfirmed,
