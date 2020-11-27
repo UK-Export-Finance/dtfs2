@@ -32,7 +32,7 @@ const getShareClient = async (fileshare) => {
     `https://${STORAGE_ACCOUNT}.file.core.windows.net`,
     credentials,
   );
-
+  console.log('getShareCLient', { FILESHARE_NAME, URI: `https://${STORAGE_ACCOUNT}.file.core.windows.net`, credentials });
   const shareClient = await serviceClient.getShareClient(FILESHARE_NAME);
   shareClient.create().catch(({ details }) => {
     if (!details) return;
@@ -76,7 +76,7 @@ const uploadFile = async ({
   // const directoryClient = await exportDirectory.getDirectoryClient(folder);
 
   const directoryClient = await getDirectory(fileshare, folder);
-
+  console.log({ directoryClient });
   await directoryClient.create().catch(({ details }) => {
     if (!details) return false;
     if (details.errorCode === 'ResourceAlreadyExists') return false;
@@ -91,6 +91,7 @@ const uploadFile = async ({
   });
 
   const fileClient = await directoryClient.getFileClient(`${filename}`);
+  console.log({ fileClient });
   const existingFileProps = await fileClient.getProperties().catch(() => {});
 
   if (existingFileProps && allowOverwrite) {

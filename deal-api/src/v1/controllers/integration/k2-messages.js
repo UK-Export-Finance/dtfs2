@@ -365,8 +365,12 @@ const createTypeA = async (deal, fromStatus) => {
     buffer: Buffer.from('', 'utf-8'),
   };
 
+  console.log('Upload lockfile', { lockFile });
   await fileshare.uploadFile(lockFile);
-  const dealUpload = fileshare.uploadFile(upload);
+  console.log('Lock file uploaded');
+  console.log('Upload Deal file', { workflowFolder, filename });
+  const dealUpload = await fileshare.uploadFile(upload);
+  console.log('Deal file uploaded', { dealUpload });
 
   // Upload corresponding supporting docs
   const dealUploadPromises = [];
