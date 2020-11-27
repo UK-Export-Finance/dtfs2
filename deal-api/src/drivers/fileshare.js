@@ -34,7 +34,8 @@ const getShareClient = async (fileshare) => {
   );
   console.log('getShareCLient', { FILESHARE_NAME, URI: `https://${STORAGE_ACCOUNT}.file.core.windows.net`, credentials });
   const shareClient = await serviceClient.getShareClient(FILESHARE_NAME);
-  shareClient.create().catch(({ details }) => {
+  await shareClient.create().catch(({ details }) => {
+    console.log('getShareClient Error', { details });
     if (!details) return;
     if (details.errorCode === 'ShareAlreadyExists') return;
     throw new Error(details.message);
@@ -45,10 +46,12 @@ const getShareClient = async (fileshare) => {
 
 const getDirectory = async (fileshare, folderPaths = '') => {
   const shareClient = await getShareClient(fileshare);
-
+  console.log('Got share client', { shareClient });
+  console.log('Get directoryClient', { folderPaths });
   const directoryClient = shareClient.getDirectoryClient(folderPaths);
-
+  console.log('got directoryClient', { directoryClient });
   await directoryClient.create().catch(async ({ details }) => {
+    console.log('directoryClientError', { details });
     if (!details) return false;
     if (details.errorCode === 'ResourceAlreadyExists') return false;
     if (details.errorCode === 'ParentNotFound') {
@@ -74,10 +77,13 @@ const uploadFile = async ({
   // const exportDirectory = await getExportDirectory(fileshare);
 
   // const directoryClient = await exportDirectory.getDirectoryClient(folder);
-
+  console.log('Upload file', {
+    fileshare, folder, filename, allowOverwrite,
+  });
   const directoryClient = await getDirectory(fileshare, folder);
   console.log({ directoryClient });
   await directoryClient.create().catch(({ details }) => {
+    console.log('uploadFile directoryCLient error', { details });
     if (!details) return false;
     if (details.errorCode === 'ResourceAlreadyExists') return false;
     console.error('Fileshare create resource error', { fileshare, folder, details });
