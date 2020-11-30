@@ -35,13 +35,14 @@ const getShareClient = async (fileshare) => {
   console.log('getShareCLient', { FILESHARE_NAME, URI: `https://${STORAGE_ACCOUNT}.file.core.windows.net`, credentials });
   const shareClient = await serviceClient.getShareClient(FILESHARE_NAME);
   console.log('Got share client', { shareClient });
+  /*
   await shareClient.create().catch(({ details }) => {
     console.log('getShareClient Error', { details });
     if (!details) return;
     if (details.errorCode === 'ShareAlreadyExists') return;
     throw new Error(details.message);
   });
-
+  */
   return shareClient;
 };
 
