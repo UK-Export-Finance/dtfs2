@@ -170,7 +170,10 @@ exports.update = (req, res) => {
               checkerMIN: req.user,
             },
           },
-          user: req.user,
+          // NOTE
+          // intentionally NOT including req.user here
+          // this ensures that the checker submitting
+          // ..does not get added to the 'editedBy' array.
         };
 
         dealAfterAllUpdates = await updateDeal(minUpdateReq);
