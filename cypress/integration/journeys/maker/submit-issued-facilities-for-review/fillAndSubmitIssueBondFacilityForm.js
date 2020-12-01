@@ -1,7 +1,7 @@
 const moment = require('moment');
 const pages = require('../../../pages');
 
-export const ISSUED_BOND_DATE_VALUE = moment().add(1, 'day');
+export const ISSUED_BOND_DATE_VALUE = moment();
 
 export const fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate = () => {
   pages.bondIssueFacility.issuedDateDayInput().type(ISSUED_BOND_DATE_VALUE.format('DD'));

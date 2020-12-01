@@ -1,7 +1,7 @@
 const moment = require('moment');
 const pages = require('../../../pages');
 
-export const ISSUED_LOAN_DATE_VALUE = moment().add(1, 'day');
+export const ISSUED_LOAN_DATE_VALUE = moment();
 
 export const fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate = () => {
   pages.loanIssueFacility.issuedDateDayInput().type(ISSUED_LOAN_DATE_VALUE.format('DD'));

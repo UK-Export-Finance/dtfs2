@@ -25,7 +25,7 @@ const bondStatus = (bond, bondErrors, bondIssueFacilityErrors) => {
   return CONSTANTS.FACILITIES.STATUS.INCOMPLETE;
 };
 
-const bondHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, dealSubmissionType, bond) => {
+const bondHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, bond) => {
   const allowedDealStatus = ((dealStatus === 'Acknowledged by UKEF'
                             || dealStatus === 'Accepted by UKEF (with conditions)'
                             || dealStatus === 'Accepted by UKEF (without conditions)'
@@ -33,13 +33,9 @@ const bondHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, d
                             || dealStatus === 'Submitted')
                             && previousDealStatus !== 'Draft');
 
-  const allowedDealSubmissionType = (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
-                                    || dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN);
-
   const allowedFacilityStage = bond.facilityStage === 'Unissued';
 
   if (allowedDealStatus
-    && allowedDealSubmissionType
     && allowedFacilityStage
     && !bond.issueFacilityDetailsSubmitted) {
     return true;
@@ -54,7 +50,6 @@ const addAccurateStatusesToBonds = (
   const {
     status: dealStatus,
     previousStatus: previousDealStatus,
-    submissionType,
   } = deal.details;
 
   if (deal.bondTransactions.items.length) {
@@ -64,7 +59,7 @@ const addAccurateStatusesToBonds = (
       let issueFacilityValidationErrors;
 
       if (bond.issueFacilityDetailsStarted
-          && bondHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, submissionType, bond)) {
+          && bondHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, bond)) {
         issueFacilityValidationErrors = bondIssueFacilityValidationErrors(
           bond,
           deal,
@@ -79,5 +74,6 @@ const addAccurateStatusesToBonds = (
 
 module.exports = {
   bondStatus,
+  bondHasIncompleteIssueFacilityDetails,
   addAccurateStatusesToBonds,
 };

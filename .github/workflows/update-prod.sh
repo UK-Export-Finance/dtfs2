@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-./update-environment.sh prod
+./update-environment.sh staging prod

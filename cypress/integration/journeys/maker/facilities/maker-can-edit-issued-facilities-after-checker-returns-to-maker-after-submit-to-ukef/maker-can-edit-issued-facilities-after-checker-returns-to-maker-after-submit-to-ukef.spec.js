@@ -64,7 +64,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       bondRow.issueFacilityLink().click();
       cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
       pages.bondIssueFacility.issuedDateDayInput().clear();
-      pages.bondIssueFacility.issuedDateDayInput().type(moment().add(1, 'month').format('DD'));
+      pages.bondIssueFacility.issuedDateDayInput().type(moment().format('DD'));
       pages.bondIssueFacility.submit().click();
     });
 
@@ -86,7 +86,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       loanRow.issueFacilityLink().click();
       cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));
       pages.loanIssueFacility.issuedDateDayInput().clear();
-      pages.loanIssueFacility.issuedDateDayInput().type(moment().add(1, 'month').format('DD'));
+      pages.loanIssueFacility.issuedDateDayInput().type(moment().format('DD'));
       pages.bondIssueFacility.submit().click();
     });
 

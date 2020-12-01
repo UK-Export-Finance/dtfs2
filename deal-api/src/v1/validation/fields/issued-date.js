@@ -21,6 +21,7 @@ module.exports = (facility, errorList, deal) => {
 
   const dealSubmissionDate = formattedTimestamp(dealSubmissionDateTimestamp);
   const issuedDate = formattedTimestamp(facility.issuedDate);
+  const today = moment();
 
   if (dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear)) {
     if (!moment(issuedDate).isSameOrAfter(dealSubmissionDate, 'day')) {
@@ -28,6 +29,13 @@ module.exports = (facility, errorList, deal) => {
 
       newErrorList.issuedDate = {
         text: `Issued Date must be on or after ${formattedDealSubmissionDate}`,
+        order: orderNumber(newErrorList),
+      };
+    }
+
+    if (moment(issuedDate).isAfter(today, 'day')) {
+      newErrorList.issuedDate = {
+        text: 'Issued Date must be today or in the past',
         order: orderNumber(newErrorList),
       };
     }

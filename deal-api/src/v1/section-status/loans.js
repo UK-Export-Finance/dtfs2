@@ -24,7 +24,7 @@ const loanStatus = (loan, loanErrors, loanIssueFacilityErrors) => {
   return CONSTANTS.FACILITIES.STATUS.INCOMPLETE;
 };
 
-const loanHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, dealSubmissionType, loan) => {
+const loanHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, loan) => {
   const allowedDealStatus = ((dealStatus === 'Acknowledged by UKEF'
                             || dealStatus === 'Accepted by UKEF (with conditions)'
                             || dealStatus === 'Accepted by UKEF (without conditions)'
@@ -32,13 +32,9 @@ const loanHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, d
                             || dealStatus === 'Submitted')
                             && previousDealStatus !== 'Draft');
 
-  const allowedDealSubmissionType = (dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
-                                    || dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN);
-
   const allowedFacilityStage = loan.facilityStage === 'Conditional';
 
   if (allowedDealStatus
-    && allowedDealSubmissionType
     && allowedFacilityStage
     && !loan.issueFacilityDetailsSubmitted) {
     return true;
@@ -53,7 +49,6 @@ const addAccurateStatusesToLoans = (
   const {
     status: dealStatus,
     previousStatus: previousDealStatus,
-    submissionType,
   } = deal.details;
 
   if (deal.loanTransactions.items.length) {
@@ -61,8 +56,9 @@ const addAccurateStatusesToLoans = (
       const loan = l;
       const validationErrors = isValidationRequired(deal) && loanValidationErrors(loan, deal);
       let issueFacilityValidationErrors;
+
       if (loan.issueFacilityDetailsStarted
-          && loanHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, submissionType, loan)) {
+          && loanHasIncompleteIssueFacilityDetails(dealStatus, previousDealStatus, loan)) {
         issueFacilityValidationErrors = loanIssueFacilityValidationErrors(
           loan,
           deal,
@@ -77,5 +73,6 @@ const addAccurateStatusesToLoans = (
 
 module.exports = {
   loanStatus,
+  loanHasIncompleteIssueFacilityDetails,
   addAccurateStatusesToLoans,
 };

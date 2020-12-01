@@ -34,7 +34,7 @@ const getShareClient = async (fileshare) => {
   );
 
   const shareClient = await serviceClient.getShareClient(FILESHARE_NAME);
-  shareClient.create().catch(({ details }) => {
+  await shareClient.create().catch(({ details }) => {
     if (!details) return;
     if (details.errorCode === 'ShareAlreadyExists') return;
     throw new Error(details.message);
@@ -47,7 +47,6 @@ const getDirectory = async (fileshare, folderPaths = '') => {
   const shareClient = await getShareClient(fileshare);
 
   const directoryClient = shareClient.getDirectoryClient(folderPaths);
-
   await directoryClient.create().catch(async ({ details }) => {
     if (!details) return false;
     if (details.errorCode === 'ResourceAlreadyExists') return false;
@@ -91,6 +90,7 @@ const uploadFile = async ({
   });
 
   const fileClient = await directoryClient.getFileClient(`${filename}`);
+
   const existingFileProps = await fileClient.getProperties().catch(() => {});
 
   if (existingFileProps && allowOverwrite) {
