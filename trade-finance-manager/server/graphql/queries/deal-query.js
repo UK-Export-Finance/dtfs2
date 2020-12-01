@@ -6,6 +6,7 @@ const dealQuery = gql`
       _id,
       details {
         status,
+        submissionDate,
         submissionType,
         owningBank {
           name,
@@ -15,7 +16,10 @@ const dealQuery = gql`
       submissionDetails {
         supplierName,
         supplyContractDescription,
-        destinationCountry
+        destinationCountry,
+        supplyContractCurrency,
+        supplyContractValue,
+        buyerName
       }
     }
   }

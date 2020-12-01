@@ -37,6 +37,9 @@ type DealDetails {
 type DealSubmissionDetails {
   supplierName: String
   supplyContractDescription: String
+  supplyContractCurrency: String
+  supplyContractValue: String
+  buyerName: String
   destinationCountry: String
 }
 
