@@ -36,7 +36,7 @@ describe('fileshare', () => {
       expect(fileDownload.toString('utf-8')).toEqual(someXML);
 
       // cleanup
-      await fileshare.deleteMultipleFiles(fileshare, `${folder}/${filename}`);
+      await fileshare.deleteMultipleFiles(fileshare, folder, filename);
       const readFile = await fileshare.readFile({
         fileshare: fileshareName,
         folder,
@@ -49,10 +49,9 @@ describe('fileshare', () => {
 
   describe('multiple uploads', () => {
     const fileList = ['file1.xml', 'file2.xml', 'file3.xml'];
-    const deleteFileList = fileList.map((filename) => `${folder}/${filename}`);
 
     beforeEach(async () => {
-      await fileshare.deleteMultipleFiles(fileshare, deleteFileList);
+      await fileshare.deleteMultipleFiles(fileshare, folder, fileList);
     });
 
     it('uploads and deletes multiple files', async () => {
@@ -73,7 +72,7 @@ describe('fileshare', () => {
       await Promise.all(fileshareWritePromises);
 
 
-      await fileshare.deleteMultipleFiles(fileshareName, deleteFileList);
+      await fileshare.deleteMultipleFiles(fileshareName, folder, fileList);
 
       fileList.forEach((filename) => {
         fileshareReadPromises.push(
@@ -99,7 +98,7 @@ describe('fileshare', () => {
     const filename = 'duplicate.xml';
 
     afterEach(async () => {
-      await fileshare.deleteMultipleFiles(fileshare, [`${folder}/${filename}`]);
+      await fileshare.deleteMultipleFiles(fileshare, folder, [filename]);
     });
 
     it('returns error if trying to upload a file that already exists', async () => {
@@ -156,7 +155,7 @@ describe('fileshare', () => {
 
     afterEach(async () => {
       try {
-        await fileshare.deleteMultipleFiles(fileshare, [`${nonExistentSubFolder}/out.xml`]).then(async () => {
+        await fileshare.deleteMultipleFiles(fileshare, nonExistentSubFolder, ['out.xml']).then(async () => {
           await fileshare.deleteDirectory(fileshare, nonExistentSubFolder).then(() => {
             fileshare.deleteDirectory(fileshare, nonExistentFolder);
           });
@@ -189,7 +188,7 @@ describe('fileshare', () => {
     const copiedFilename = 'copied-file.xml';
 
     afterEach(async () => {
-      await fileshare.deleteMultipleFiles(fileshare, [`${folder}/${filename}`, `${folder}/${copiedFilename}`]);
+      await fileshare.deleteMultipleFiles(fileshare, folder, [filename, copiedFilename]);
     });
 
     it('copies file from one location to another', async () => {
@@ -313,10 +312,8 @@ describe('fileshare', () => {
     const fileList = ['file1.xml', 'file2.xml', 'file3.xml'];
     const listFolder = `${folder}/list-files`;
 
-    const deleteFileList = fileList.map((filename) => `${listFolder}/${filename}`);
-
     beforeEach(async () => {
-      await fileshare.deleteMultipleFiles(fileshareName, deleteFileList);
+      await fileshare.deleteMultipleFiles(fileshareName, listFolder, fileList);
     });
 
 

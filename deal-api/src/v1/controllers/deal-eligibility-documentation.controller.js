@@ -27,10 +27,8 @@ const removeDeletedFiles = (dealFiles, deletedFilesList) => {
   Object.keys(dealFiles).forEach((fieldname) => {
     if (Array.isArray(dealFiles[fieldname])) {
       updatedDealFiles[fieldname] = dealFiles[fieldname].filter(
-        ({ fullPath }) => deletedFilesList.indexOf(fullPath) === -1,
+        ({ filename }) => deletedFilesList.indexOf(filename) === -1,
       );
-    } else {
-      updatedDealFiles[fieldname] = dealFiles[fieldname];
     }
   });
   return updatedDealFiles;
@@ -47,7 +45,7 @@ exports.update = async (req, res) => {
       return;
     }
 
-    const deletePromises = fileshare.deleteMultipleFiles('portal', req.body.deleteFile);
+    const deletePromises = fileshare.deleteMultipleFiles('portal', `${EXPORT_FOLDER}/${req.params.id}`, req.body.deleteFile);
 
     const uploadPromises = req.files.map(async (file) => {
       const {
@@ -92,7 +90,7 @@ exports.update = async (req, res) => {
     const uploadedDealFiles = await Promise.all(uploadPromises, deletePromises);
 
     const dealFiles = {
-      ...removeDeletedFiles(deal.dealFiles, req.body.deleteFile),
+      ...removeDeletedFiles(deal.dealFiles, req.body.deleteFile, `${EXPORT_FOLDER}/${req.params.id}`),
     };
 
     uploadedDealFiles.forEach(({ fieldname, ...rest }) => {
