@@ -12,11 +12,11 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-third">
         <div class="label">Exporter</div>
-        <div class="ukef-heading-l">Love to learn Ltd</div>
+        <div class="ukef-heading-l">{{ deal.submissionDetails.supplierName }}</div>
       </div>
       <div class="govuk-grid-column-two-thirds">
         <div class="label">Buyer</div>
-        <div class="ukef-heading-l">Kingdom of Wakanda colleges of Excellence</div>
+        <div class="ukef-heading-l">{{ deal.submissionDetails.buyerName }}</div>
       </div>
     </div>
   </div>
@@ -26,7 +26,7 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
         <div class="ukef-heading-xs">Status</div>
-        <div class="ukef-body-s">Application</div>
+        <div class="ukef-body-s">{{ deal.details.status }}</div>
       </div>
     </div>
   </div>
@@ -35,7 +35,7 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
         <div class="ukef-heading-xs">Date received</div>
-        <div class="ukef-body-s">16 Sep 2020</div>
+        <div class="ukef-body-s">{{ deal.details.submissionDate | localiseTimestamp("DD/MM/YYYY HH:mm", 'en-gb') }}</div>
       </div>
     </div>
     <div class="govuk-grid-row">
@@ -47,7 +47,7 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
         <div class="ukef-heading-xs">Bank</div>
-        <div class="ukef-body-s">Santander</div>
+        <div class="ukef-body-s">{{deal.details.owningBank.name}}</div>
       </div>
     </div>
   </div>
@@ -60,14 +60,14 @@
     </div>
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-        <div class="ukef-heading-xs">Destiantion Country</div>
+        <div class="ukef-heading-xs">Destination Country</div>
         <div class="ukef-body-s">{{ deal.submissionDetails.destinationCountry }}</div>
       </div>
     </div>
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
         <div class="ukef-heading-xs">Agent</div>
-        <div class="ukef-body-s">Stark Investments Ltd (United States)</div>
+        <div class="ukef-body-s"></div>
       </div>
     </div>
   </div>
@@ -75,13 +75,13 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
         <div class="ukef-heading-xs">Export contract value</div>
-        <div class="ukef-body-s">SAR 45,384,024.00 GBP 9,737,500.48</div>
+        <div class="ukef-body-s">{{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue  }} GBP {{deal.submissionDetails.supplyContractValue }}</div>
       </div>
     </div>
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
         <div class="ukef-heading-xs">Total facilities in this deal</div>
-        <div class="ukef-body-s">SAR 28,597,920.00 GBP 5,906,541.25</div>
+        <div class="ukef-body-s">{{ deal.submissionDetails.supplyContractCurrency }} 28,597,920.00 GBP 5,906,541.25</div>
       </div>
     </div>
     <div class="govuk-grid-row">
