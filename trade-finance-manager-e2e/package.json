@@ -1,0 +1,19 @@
+{
+  "name": "trade-finance-manager-e2e",
+  "version": "1.0.0",
+  "description": "Trade Finance Manager end to end tests",
+  "devDependencies": {
+    "cypress": "^4.11.0",
+    "cypress-audit": "^0.2.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notbinary/dtfs2.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/notbinary/dtfs2/issues"
+  },
+  "homepage": "https://github.com/notbinary/dtfs2#readme"
+}
