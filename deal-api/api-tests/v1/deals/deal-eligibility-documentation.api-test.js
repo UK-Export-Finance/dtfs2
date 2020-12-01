@@ -1,5 +1,5 @@
 const wipeDB = require('../../wipeDB');
-const aDeal = require('../deals/deal-builder');
+const aDeal = require('./deal-builder');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -419,8 +419,8 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
       const deleteFileData = {
         deleteFile: [
-          dealFiles.exporterQuestionnaire[0].fullPath,
-          dealFiles.financialStatements[0].fullPath,
+          dealFiles.exporterQuestionnaire[0].filename,
+          dealFiles.financialStatements[0].filename,
         ],
       };
 

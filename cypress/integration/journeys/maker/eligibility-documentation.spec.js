@@ -2,7 +2,8 @@ const { contract, eligibilityCriteria, eligibilityDocumentation } = require('../
 const { taskListHeader } = require('../../partials');
 
 const mockUsers = require('../../../fixtures/mockUsers');
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 context('Eligibility Documentation', () => {
   beforeEach(() => {
@@ -47,5 +48,26 @@ context('Eligibility Documentation', () => {
     eligibilityDocumentation.saveButton().click();
 
     cy.url().should('include', '/eligibility/check-your-answers');
+  });
+
+  it('should only display upload button when a file has been chosen', () => {
+    taskListHeader.itemLink('supporting-documentation').click();
+    eligibilityDocumentation.questionnaireFileInputUploadButton().should('not.be.visible');
+    eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-upload.txt');
+    eligibilityDocumentation.questionnaireFileInputUploadButton().should('be.visible');
+  });
+
+  it('should list the uploaded files and remove them', () => {
+    taskListHeader.itemLink('supporting-documentation').click();
+    eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-upload.txt');
+    eligibilityDocumentation.questionnaireFileInputUploadButton().click();
+    eligibilityDocumentation.questionnaireFileInputUploadButton().should('not.be.visible');
+
+    eligibilityDocumentation.questionnaireFileUploaded().should('have.length', 1);
+    eligibilityDocumentation.questionnaireFileUploadedRemove().should('have.length', 1);
+
+    eligibilityDocumentation.questionnaireFileUploadedRemove().click();
+    eligibilityDocumentation.questionnaireFileUploaded().should('not.exist');
+    eligibilityDocumentation.questionnaireFileUploadedRemove().should('not.exist');
   });
 });

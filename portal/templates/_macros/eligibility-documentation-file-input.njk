@@ -12,31 +12,26 @@
       </span>
     {% endif %}
     <input
-      class="govuk-file-upload govuk-!-width-one-half box-input "
+      class="govuk-file-upload govuk-!-width-one-half "
       id={{ fieldname }}
       name={{ fieldname }}
-      data-cy={{ fieldname }}
+      data-cy="{{ fieldname }}-upload"
       type="file"
       accept= ".gif, .jpg, .jpeg, .png, .bmp, .tif, .txt, .pdf, .doc, .docx, .ppt, .pptx, .xls, .xlsx, .msg, .zip"
       multiple
+      onChange="DTFS.main.changeScreenVisibilityOfElement('{{ fieldname }}-file-upload-button-container', Boolean(this.value))"
     >
-    {% if fileList | length %}
-    <input type="submit" class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" value="Remove selected" />
+    <span id="{{ fieldname }}-file-upload-button-container" class="display-none">
+      <input formAction="?stayonpage=true" type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" value="Upload" data-cy="{{ fieldname }}-upload-button" />
+    </span>
 
-      <div class="govuk-form-group">
-      <fieldset class="govuk-fieldset">
-        <div class="govuk-checkboxes">
-          {% for file in fileList %}
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="delete-hint-{{ fieldname }}-{{ loop.index }}" name="deleteFile" type="checkbox" value="{{ file.fullPath }}">
-                  <label class="govuk-label govuk-checkboxes__label" for="delete-hint-{{ fieldname }}-{{ loop.index }}">
-                    <a download="{{file.filename}}" href="/contract/{{dealId}}/eligibility-documentation/{{fieldname}}/{{file.filename}}">{{file.filename}}</a>
-                  </label>
-                </div>
-          {% endfor %}
-        </div>
-      </fieldset>
-    </div>
+    {% if fileList | length %}
+      {% for file in fileList %}
+            <div class="govuk-!-margin-top-2">
+              <a download="{{file.filename}}" class="govuk-link file-upload-link" href="/contract/{{dealId}}/eligibility-documentation/{{fieldname}}/{{file.filename}}" data-cy="{{ fieldname }}-file-uploaded">{{file.filename}}</a>
+              <button formAction="?stayonpage=true&removefile={{ file.filename }}" type="submit" class="govuk-link govuk-!-font-size-19 govuk-!-margin-bottom-0 button-as-link" data-cy="{{ fieldname }}-file-uploaded-remove">Remove</button>
+            </div>
+      {% endfor %}
     {% endif %}
     </div>
 {% endmacro %}

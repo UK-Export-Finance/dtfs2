@@ -141,16 +141,16 @@ const deleteFile = async (fileshare, filePath) => {
   await shareClient.deleteFile(filePath).catch(() => {});
 };
 
-const deleteMultipleFiles = async (fileshare, fileList) => {
+const deleteMultipleFiles = async (fileshare, filePath, fileList) => {
   if (!fileList) return false;
 
   if (Array.isArray(fileList)) {
-    return fileList.map(async (filePath) => {
-      await deleteFile(fileshare, filePath);
+    return fileList.map(async (filename) => {
+      await deleteFile(fileshare, `${filePath}/${filename}`);
     });
   }
 
-  return deleteFile(fileshare, fileList);
+  return deleteFile(fileshare, `${filePath}/${fileList}`);
 };
 
 const deleteDirectory = async (fileshare, folder) => {

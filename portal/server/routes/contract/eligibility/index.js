@@ -154,10 +154,15 @@ router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]
 
 router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(), async (req, res) => {
   const { _id, userToken } = requestParams(req);
-  const { body, files } = req;
+  const { body, files, query } = req;
+  const formData = { ...body };
+
+  if (query.removefile) {
+    formData.deleteFile = query.removefile;
+  }
 
   const updatedDeal = await getApiData(
-    api.updateEligibilityDocumentation(_id, body, files, userToken),
+    api.updateEligibilityDocumentation(_id, formData, files, userToken),
     res,
   );
 
@@ -165,7 +170,7 @@ router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(),
 
   const documentationValidationErrors = generateErrorSummary(dealFiles.validationErrors, errorHref);
 
-  if (documentationValidationErrors.count === 0) {
+  if (query.stayonpage !== 'true' && documentationValidationErrors.count === 0) {
     return res.redirect(`/contract/${_id}/eligibility/check-your-answers`);
   }
 
