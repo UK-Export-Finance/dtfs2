@@ -1,6 +1,9 @@
-const formatUkefId = (ukefId) => (ukefId.startsWith('00')
-  ? ukefId
-  : `00${ukefId}`
-);
+const formatUkefId = (ukefId) => {
+  if (!ukefId) return '';
+
+  return ukefId.startsWith('00')
+    ? ukefId
+    : `00${ukefId}`;
+};
 
 module.exports = formatUkefId;
