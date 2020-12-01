@@ -4,6 +4,7 @@ const findPortalValue = require('./findPortalValue');
 const { getBankByName } = require('../helpers/banks');
 const { getUserByEmail } = require('../helpers/users');
 const { convertV1Date } = require('../helpers/date-helpers');
+const formatUkefId = require('../helpers/formatUkefId');
 const log = require('../helpers/log');
 const CONSTANTS = require('../../../deal-api/src/constants');
 
@@ -23,7 +24,7 @@ const mapDetails = (portalDealId, v1Deal) => {
     bank: v1Deal.Application_bank,
     bankSupplyContractID: v1Deal.General_information.Bank_deal_id,
     bankSupplyContractName: v1Deal.General_information.Deal_name,
-    ukefDealId: v1Deal.UKEF_deal_id,
+    ukefDealId: formatUkefId(v1Deal.UKEF_deal_id),
     status: findPortalValue(v1Deal.Deal_information.Extra_fields.Deal_status, 'Deal_status', 'DEAL', 'STATUS', logError),
     previousStatus: findPortalValue(previousStatus, 'Deal_previous_status', 'DEAL', 'STATUS', logError),
     previousWorkflowStatus: v1Deal.Deal_information.Extra_fields.Deal_status,
