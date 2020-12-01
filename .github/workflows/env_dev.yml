@@ -15,8 +15,7 @@ env:
   app_service_plan: dev
   redis_sku: Basic
   database_name: tfs-portal
-  application_gateway_portal_cidr: 10.0.0.0/28
-  application_gateway_tfm_cidr: 10.0.2.0/28
+  application_gateway_cidr: 10.0.0.0/28
   private_endpoints_cidr: 10.0.1.0/28
   # Container registry
   registry: ${{ secrets.DEV_ACR_REGISTRY }}
@@ -73,6 +72,15 @@ jobs:
         inlineScript: |
           az network vnet show --name tfs-${{ env.app_service_plan }}-vnet || \
           az network vnet create --name tfs-${{ env.app_service_plan }}-vnet
+
+    - name: Application Gateway subnet
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network vnet subnet create \
+            --name ${{ env.environment }}-gateway \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --address-prefixes ${{ env.application_gateway_cidr }}
 
     - name: Private links subnet
       uses: Azure/cli@v1.0.0
@@ -197,6 +205,116 @@ jobs:
             --sku Standard
 
   # END Virtual Network setup
+
+  # START Network Security Group
+  network-security-group:
+    name: Network Security Group Create
+    needs: vnet
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Network Security Group
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network nsg create  --name tfs-${{ env.environment }}-gw-nsg
+
+    - name: Application Gateway management traffic
+      uses: Azure/cli@v1.0.0
+      with:
+        # The "GatewayManager" rule is explained in the Application Gateway FAQ: 
+        #   https://docs.microsoft.com/en-us/azure/application-gateway/application-gateway-faq#how-do-i-use-application-gateway-v2-with-only-private-frontend-ip-address
+        # See also: https://stackoverflow.com/questions/52674810/azure-app-gateway-v2-cannot-be-configured-with-nsg/52697957
+        inlineScript: |
+          az network nsg rule create --name gateway-manager --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 100 --direction Inbound --protocol "*" --access Allow \
+            --source-address-prefixes "GatewayManager" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "65200-65535"
+
+    - name: ${{ env.front_door_access }} Front Door traffic
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 200 --direction Inbound --protocol "*" --access ${{ env.front_door_access }} \
+            --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+
+    - name: Allow Azure fileshare
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 200 --direction Inbound --protocol "*" --access ${{ env.front_door_access }} \
+            --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+
+    - name: Temporary team IPs
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+
+          # VMs
+          az network nsg rule create --name vm-ips-dev --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 997 --direction Inbound --protocol "*" --access Allow \
+            --source-address-prefixes "51.104.202.42" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+          az network nsg rule create --name vm-ips-test --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 998 --direction Inbound --protocol "*" --access Allow \
+            --source-address-prefixes "51.11.144.7" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+          az network nsg rule create --name vm-ips-prod --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 999 --direction Inbound --protocol "*" --access Allow \
+            --source-address-prefixes "51.145.36.44" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+
+          # David
+          az network nsg rule create --name team-ips-david --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 1000 --direction Inbound --protocol "*" --access Allow \
+            --source-address-prefixes "195.188.184.171" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+
+          # Andrew
+          az network nsg rule create --name team-ips-andrew --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 2000 --direction Inbound --protocol "*" --access Allow \
+            --source-address-prefixes "81.174.144.245" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+
+          # UKEF IP
+          az network nsg rule create --name team-ips-ukef --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 3000 --direction Inbound --protocol "*" --access Allow \
+            --source-address-prefixes "51.140.76.208" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+
+          # Tony B
+          az network nsg rule create --name team-ips-tonyb --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 4001 --direction Inbound --protocol "*" --access Allow \
+            --source-address-prefixes "87.74.98.153" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+
+          # Caroline - VM
+          az network nsg rule create --name team-ips-caroline-vm --nsg-name tfs-${{ env.environment }}-gw-nsg \
+          --priority 4002 --direction Inbound --protocol "*" --access Allow \
+          --source-address-prefixes "51.132.249.180" --source-port-ranges "*" \
+          --destination-address-prefixes "*" --destination-port-ranges "*"
+
+    - name: Associate NSG to gateway subnet
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network vnet subnet update --name ${{ env.environment }}-gateway --vnet-name tfs-${{ env.app_service_plan }}-vnet --network-security-group tfs-${{ env.environment }}-gw-nsg
+
+  # END Network Security Group
 
   # START CosmosDB setup
   cosmos-db-create:
@@ -1422,16 +1540,7 @@ jobs:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
-
-    - name: Application Gateway subnet
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network vnet subnet create \
-            --name ${{ env.environment }}-gateway \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes ${{ env.application_gateway_portal_cidr }}
-    
+ 
     - name: Create
       uses: Azure/cli@v1.0.0
       with:
@@ -1441,10 +1550,10 @@ jobs:
             --subnet ${{ env.environment }}-gateway \
             --public-ip-address tfs-${{ env.environment }}-ip \
             --frontend-port 80 \
-            --max-capacity 10 --min-capacity 1 \
+            --max-capacity 5 --min-capacity 1 \
             --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
             --sku Standard_v2
-    
+
     - name: Https ingress for data migration
       uses: Azure/cli@v1.0.0
       with:
@@ -1503,7 +1612,7 @@ jobs:
             --host-name-from-backend-pool true \
             --probe healthcheck --enable-probe true \
             --protocol Https --port 443
-    
+
   application-gateway-tfm:
     name: Application Gateway TFM
     needs: [vnet, public-ip, trade-finance-manager-ui]
@@ -1519,32 +1628,17 @@ jobs:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
-
-    - name: Application Gateway subnet
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network vnet subnet create \
-            --name ${{ env.environment }}-tfm-gateway \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --address-prefixes ${{ env.application_gateway_tfm_cidr }}
-    
-    - name: Associate NSG to gateway subnet
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network vnet subnet update --name ${{ env.environment }}-tfm-gateway --vnet-name tfs-${{ env.app_service_plan }}-vnet --network-security-group tfs-${{ env.environment }}-gw-nsg
-
+ 
     - name: Create
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
           az network application-gateway create --name tfs-${{ env.environment }}-tfm-gw \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet ${{ env.environment }}-tfm-gateway \
+            --subnet ${{ env.environment }}-gateway \
             --public-ip-address tfs-${{ env.environment }}-tfm-ip \
             --frontend-port 80 \
-            --max-capacity 10 --min-capacity 1 \
+            --max-capacity 5 --min-capacity 1 \
             --servers tfs-${{ env.environment }}-trade-finance-manager-ui.azurewebsites.net \
             --sku Standard_v2
 
@@ -1608,118 +1702,6 @@ jobs:
             --protocol Https --port 443
 
   # END Application gateways
-
-# START Network Security Group
-  network-security-group:
-    name: Network Security Group Create
-    needs: [vnet, application-gateway-portal, application-gateway-tfm]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: azure/login@v1
-      with:
-        creds: ${{ env.credentials }}
-
-    - name: Defaults
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.resource_group }}
-
-    - name: Network Security Group
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network nsg create  --name tfs-${{ env.environment }}-gw-nsg
-
-    - name: Application Gateway management traffic
-      uses: Azure/cli@v1.0.0
-      with:
-        # The "GatewayManager" rule is explained in the Application Gateway FAQ: 
-        #   https://docs.microsoft.com/en-us/azure/application-gateway/application-gateway-faq#how-do-i-use-application-gateway-v2-with-only-private-frontend-ip-address
-        # See also: https://stackoverflow.com/questions/52674810/azure-app-gateway-v2-cannot-be-configured-with-nsg/52697957
-        inlineScript: |
-          az network nsg rule create --name gateway-manager --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 100 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "GatewayManager" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "65200-65535"
-
-    - name: ${{ env.front_door_access }} Front Door traffic
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 200 --direction Inbound --protocol "*" --access ${{ env.front_door_access }} \
-            --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-    - name: Allow Azure fileshare
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 200 --direction Inbound --protocol "*" --access ${{ env.front_door_access }} \
-            --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-    - name: Temporary team IPs
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-
-          # VMs
-          az network nsg rule create --name vm-ips-dev --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 997 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "51.104.202.42" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-          az network nsg rule create --name vm-ips-test --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 998 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "51.11.144.7" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-          az network nsg rule create --name vm-ips-prod --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 999 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "51.145.36.44" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-          # David
-          az network nsg rule create --name team-ips-david --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 1000 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "195.188.184.171" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-          # Andrew
-          az network nsg rule create --name team-ips-andrew --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 2000 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "81.174.144.245" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-          # UKEF IP
-          az network nsg rule create --name team-ips-ukef --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 3000 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "51.140.76.208" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-          # Tony B
-          az network nsg rule create --name team-ips-tonyb --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 4001 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "87.74.98.153" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-          # Caroline - VM
-          az network nsg rule create --name team-ips-caroline-vm --nsg-name tfs-${{ env.environment }}-gw-nsg \
-          --priority 4002 --direction Inbound --protocol "*" --access Allow \
-          --source-address-prefixes "51.132.249.180" --source-port-ranges "*" \
-          --destination-address-prefixes "*" --destination-port-ranges "*"
-
-    - name: Associate NSG to gateway subnets
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network vnet subnet update --name ${{ env.environment }}-gateway --vnet-name tfs-${{ env.app_service_plan }}-vnet --network-security-group tfs-${{ env.environment }}-gw-nsg
-          az network vnet subnet update --name ${{ env.environment }}-tfm-gateway --vnet-name tfs-${{ env.app_service_plan }}-vnet --network-security-group tfs-${{ env.environment }}-gw-nsg
-
-
-  # END Network Security Group
 
   # START Front Doors
   front-door-portal:

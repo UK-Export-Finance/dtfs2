@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-./update-environment.sh staging
+./update-environment.sh test staging

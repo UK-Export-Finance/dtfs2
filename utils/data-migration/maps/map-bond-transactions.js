@@ -2,6 +2,7 @@
 const { getCurrencyById } = require('../helpers/currencies');
 const { convertV1Date } = require('../helpers/date-helpers');
 const { getUserByEmail } = require('../helpers/users');
+const formatUkefId = require('../helpers/formatUkefId');
 
 const findPortalValue = require('./findPortalValue');
 const CONSTANTS = require('../../../deal-api/src/constants');
@@ -25,7 +26,7 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
 
     const v2bond = {
       _id: bond.BSS_Guarantee_details.BSS_portal_facility_id,
-      ukefFacilityID: bond.UKEF_BSS_facility_id,
+      ukefFacilityID: formatUkefId(bond.UKEF_BSS_facility_id),
       uniqueIdentificationNumber: bond.BSS_Guarantee_details.BSS_bank_id,
       bondIssuer: bond.BSS_Guarantee_details.BSS_issuer,
       bondType: findPortalValue(bond.BSS_Guarantee_details.BSS_type, 'BSS_type', 'FACILITIES', 'TYPE', logError),

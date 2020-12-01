@@ -3,6 +3,7 @@ import morgan from 'morgan';
 
 import path from 'path';
 import routes from './routes';
+import './azure-env';
 
 import configureNunjucks from './nunjucks-configuration';
 import healthcheck from './healthcheck';

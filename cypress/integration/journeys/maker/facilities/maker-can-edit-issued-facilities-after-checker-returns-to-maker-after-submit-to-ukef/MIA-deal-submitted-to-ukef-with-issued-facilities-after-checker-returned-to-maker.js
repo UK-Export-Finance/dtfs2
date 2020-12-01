@@ -210,9 +210,9 @@ const deal = {
         "ukefFacilityID": [
           "12345"
         ],
-        "issuedDate-day": moment().add(1, 'week').format('DD'),
-        "issuedDate-month": moment().add(1, 'week').format('MM'),
-        "issuedDate-year": moment().add(1, 'week').format('YYYY'),
+        "issuedDate-day": moment().add().format('DD'),
+        "issuedDate-month": moment().add().format('MM'),
+        "issuedDate-year": moment().add().format('YYYY'),
         "requestedCoverStartDate-day": "",
         "requestedCoverStartDate-month": "",
         "requestedCoverStartDate-year": "",
@@ -251,9 +251,9 @@ const deal = {
         "ukefFacilityID": [
           "56789"
         ],
-        "issuedDate-day": moment().add(1, 'week').format('DD'),
-        "issuedDate-month": moment().add(1, 'week').format('MM'),
-        "issuedDate-year": moment().add(1, 'week').format('YYYY'),
+        "issuedDate-day": moment().add().format('DD'),
+        "issuedDate-month": moment().add().format('MM'),
+        "issuedDate-year": moment().add().format('YYYY'),
         "requestedCoverStartDate-day": "",
         "requestedCoverStartDate-month": "",
         "requestedCoverStartDate-year": "",
