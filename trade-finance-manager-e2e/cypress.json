@@ -1,0 +1,9 @@
+{
+  "baseUrl": "http://localhost:5003",
+  "integrationFolder": "integration",
+  "fixturesFolder": "fixtures",
+  "pluginsFile": false,
+  "supportFile": false,
+  "videosFolder": "videos",
+  "testFiles": "**/*.spec.js"
+}
