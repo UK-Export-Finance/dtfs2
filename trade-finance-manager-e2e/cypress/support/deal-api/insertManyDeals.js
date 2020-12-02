@@ -6,15 +6,13 @@ module.exports = (deals, opts) => {
   logIn(opts).then((token) => {
     const persisted = [];
 
-    for (const dealToInsert of deals) {
-
+    deals.forEach((dealToInsert) => {
       insertDeal(dealToInsert, token).then((persistedDeal) => {
         persisted.push(persistedDeal);
         if (persisted.length === deals.length) {
           return persisted;
         }
       });
-
-    };
+    });
   });
-}
+};
