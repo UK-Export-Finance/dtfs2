@@ -1,9 +1,7 @@
 {
   "baseUrl": "http://localhost:5003",
-  "integrationFolder": "integration",
-  "fixturesFolder": "fixtures",
-  "pluginsFile": false,
-  "supportFile": false,
-  "videosFolder": "videos",
+  "portalApiProtocol": "http://",
+  "portalApiHost": "localhost",
+  "portalApiPort": "5001",
   "testFiles": "**/*.spec.js"
 }
