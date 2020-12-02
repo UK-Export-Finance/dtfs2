@@ -9,14 +9,9 @@ const deleteOneDeal = (token, dealId) =>
 module.exports = (dealId, user) => {
   console.log('deleteOneDeal::');
 
-  return logIn(user).then((token) => {
-    // return listAllDeals(token).then( (deals) => {
-
-    return new Cypress.Promise((resolve) => {
+  return logIn(user).then((token) =>
+    new Cypress.Promise((resolve) => {
       deleteOneDeal(token, dealId);
       resolve();
-    });
-
-    // });
-  });
-}
+    }));
+};

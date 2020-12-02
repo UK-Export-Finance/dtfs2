@@ -1,5 +1,5 @@
 const api = () => {
-  const url = `${Cypress.config('portalApiProtocol')}${Cypress.config('portalApiHost')}:${Cypress.config('portalApiPort')}`;
+  const url = `${Cypress.config('dealApiProtocol')}${Cypress.config('dealApiHost')}:${Cypress.config('dealApiPort')}`;
   return url;
 };
 

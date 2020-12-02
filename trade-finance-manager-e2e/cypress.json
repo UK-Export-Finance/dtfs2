@@ -1,7 +1,7 @@
 {
   "baseUrl": "http://localhost:5003",
-  "portalApiProtocol": "http://",
-  "portalApiHost": "localhost",
-  "portalApiPort": "5001",
+  "dealApiProtocol": "http://",
+  "dealApiHost": "localhost",
+  "dealApiPort": "5001",
   "testFiles": "**/*.spec.js"
 }
