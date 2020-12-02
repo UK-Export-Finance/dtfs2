@@ -3,93 +3,98 @@
 
 {% macro render(deal) %}
 
-  <div class="govuk-grid-row case-summary govuk-!-margin-0 govuk-!-padding-top-6">
-  <div class="govuk-grid-column-one-tenth">
-    <div class="label">Deal ID</div>
-    <div class="ukef-heading-l">{{ deal._id }}</div>
-  </div>
-  <div class="govuk-grid-column-nine-tenths">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-third">
-        <div class="label">Exporter</div>
-        <div class="ukef-heading-l">{{ deal.submissionDetails.supplierName }}</div>
-      </div>
-      <div class="govuk-grid-column-two-thirds">
-        <div class="label">Buyer</div>
-        <div class="ukef-heading-l">{{ deal.submissionDetails.buyerName }}</div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="govuk-grid-row case-summary govuk-!-margin-0 govuk-!-padding-top-6">
-  <div class="govuk-grid-column-one-tenth">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <div class="ukef-heading-xs">Status</div>
-        <div class="ukef-body-s">{{ deal.details.status }}</div>
-      </div>
-    </div>
-  </div>
+  <div data-cy="case-summary">
 
-  <div class="govuk-grid-column-one-tenth">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-        <div class="ukef-heading-xs">Date received</div>
-        <div class="ukef-body-s">{{ deal.details.submissionDate | localiseTimestamp("DD/MM/YYYY HH:mm", 'en-gb') }}</div>
+    <div class="govuk-grid-row case-summary govuk-!-margin-0 govuk-!-padding-top-6">
+      <div class="govuk-grid-column-one-tenth">
+        <div class="label">Deal ID</div>
+        <div class="ukef-heading-l">{{ deal._id }}</div>
+      </div>
+      <div class="govuk-grid-column-nine-tenths">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third">
+            <div class="label">Exporter</div>
+            <div class="ukef-heading-l">{{ deal.submissionDetails.supplierName }}</div>
+          </div>
+          <div class="govuk-grid-column-two-thirds">
+            <div class="label">Buyer</div>
+            <div class="ukef-heading-l">{{ deal.submissionDetails.buyerName }}</div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-        <div class="ukef-heading-xs">Type</div>
-        <div class="ukef-body-s">{{ deal.details.submissionType }}</div>
+    <div class="govuk-grid-row case-summary govuk-!-margin-0 govuk-!-padding-top-6">
+      <div class="govuk-grid-column-one-tenth">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <div class="ukef-heading-xs">Status</div>
+            <div class="ukef-body-s">{{ deal.details.status }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="govuk-grid-column-one-tenth">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
+            <div class="ukef-heading-xs">Date received</div>
+            {# <div class="ukef-body-s">{{ deal.details.submissionDate | localiseTimestamp("DD/MM/YYYY HH:mm", 'en-gb') }}</div> #}
+            <div class="ukef-body-s">{{ deal.details.submissionDate }}</div>
+          </div>
+        </div>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
+            <div class="ukef-heading-xs">Type</div>
+            <div class="ukef-body-s">{{ deal.details.submissionType }}</div>
+          </div>
+        </div>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
+            <div class="ukef-heading-xs">Bank</div>
+            <div class="ukef-body-s">{{deal.details.owningBank.name}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="govuk-grid-column-four-tenths">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
+            <div class="ukef-heading-xs">Export description</div>
+            <div class="ukef-body-s">{{ deal.submissionDetails.supplyContractDescription }}</div>
+          </div>
+        </div>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
+            <div class="ukef-heading-xs">Destination Country</div>
+            <div class="ukef-body-s">{{ deal.submissionDetails.destinationCountry }}</div>
+          </div>
+        </div>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
+            <div class="ukef-heading-xs">Agent</div>
+            <div class="ukef-body-s"></div>
+          </div>
+        </div>
+      </div>
+      <div class="govuk-grid-column-four-tenths">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
+            <div class="ukef-heading-xs">Export contract value</div>
+            <div class="ukef-body-s">{{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue  }} GBP {{deal.submissionDetails.supplyContractValue }}</div>
+          </div>
+        </div>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
+            <div class="ukef-heading-xs">Total facilities in this deal</div>
+            <div class="ukef-body-s">{{ deal.submissionDetails.supplyContractCurrency }} 28,597,920.00 GBP 5,906,541.25</div>
+          </div>
+        </div>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
+            <div class="ukef-heading-xs">UKEF exposure for this deal</div>
+            <div class="ukef-body-s">GBP 4,725,233</div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-        <div class="ukef-heading-xs">Bank</div>
-        <div class="ukef-body-s">{{deal.details.owningBank.name}}</div>
-      </div>
-    </div>
+
   </div>
-  <div class="govuk-grid-column-four-tenths">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-        <div class="ukef-heading-xs">Export description</div>
-        <div class="ukef-body-s">{{ deal.submissionDetails.supplyContractDescription }}</div>
-      </div>
-    </div>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-        <div class="ukef-heading-xs">Destination Country</div>
-        <div class="ukef-body-s">{{ deal.submissionDetails.destinationCountry }}</div>
-      </div>
-    </div>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-        <div class="ukef-heading-xs">Agent</div>
-        <div class="ukef-body-s"></div>
-      </div>
-    </div>
-  </div>
-  <div class="govuk-grid-column-four-tenths">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-        <div class="ukef-heading-xs">Export contract value</div>
-        <div class="ukef-body-s">{{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue  }} GBP {{deal.submissionDetails.supplyContractValue }}</div>
-      </div>
-    </div>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-        <div class="ukef-heading-xs">Total facilities in this deal</div>
-        <div class="ukef-body-s">{{ deal.submissionDetails.supplyContractCurrency }} 28,597,920.00 GBP 5,906,541.25</div>
-      </div>
-    </div>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
-        <div class="ukef-heading-xs">UKEF exposure for this deal</div>
-        <div class="ukef-body-s">GBP 4,725,233</div>
-      </div>
-    </div>
-  </div>
-</div>
 {% endmacro %}

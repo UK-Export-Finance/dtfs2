@@ -4,7 +4,6 @@
 
 {% block content %}
 
-
   <h1 class="govuk-heading-l">Log in</h1>
 
   <div class="govuk-grid-row">
@@ -16,18 +15,18 @@
           <label class="govuk-label" for="email">
             Email
           </label>
-          <input class="govuk-input" id="email" name="email" type="text">
+          <input class="govuk-input" id="email" name="email" type="text" data-cy="email">
         </div>
 
         <div class="govuk-form-group">
           <label class="govuk-label" for="password">
             Password
           </label>
-          <input class="govuk-input" id="password" name="password" type="password">
+          <input class="govuk-input" id="password" name="password" type="password" data-cy="password">
         </div>
 
 
-        <button class="govuk-button" data-module="govuk-button">
+        <button class="govuk-button" data-module="govuk-button" data-cy="submit-button">
           Log in
         </button>
 
