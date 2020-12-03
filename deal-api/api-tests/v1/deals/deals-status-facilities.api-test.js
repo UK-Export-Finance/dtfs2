@@ -217,6 +217,75 @@ describe('/v1/deals/:id/status - facilities', () => {
       });
     });
 
+
+    describe('when the status changes to `Ready for Checker\'s approval`', () => {
+      describe('when a deal is MIA and has been approved', () => {
+        let createdDeal;
+        let updatedDeal;
+
+        beforeEach(async () => {
+          completedDeal.status = 'Accepted by UKEF (without conditions)';
+          completedDeal.details.submissionType = 'Manual Inclusion Application';
+          completedDeal.details.approvalDate = moment().utc().valueOf().toString();
+
+          const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
+
+          const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+
+          createdDeal = postResult.body;
+          const statusUpdate = {
+            status: 'Ready for Checker\'s approval',
+            comments: 'Nope',
+          };
+
+          updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+        });
+
+        describe('any issued bonds that have details provided, but not yet been submitted', () => {
+          it('defaults requestedCoverStartDate to today if no requestedCoverStartDate', async () => {
+            expect(updatedDeal.status).toEqual(200);
+            expect(updatedDeal.body).toBeDefined();
+
+            const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+            const issuedBondsThatShouldBeUpdated = createdDeal.bondTransactions.items.filter((b) =>
+              isUnsubmittedIssuedFacility(b) && !b.requestedCoverStartDate);
+
+            // make sure we have some bonds to test against
+            expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
+
+            issuedBondsThatShouldBeUpdated.forEach((bond) => {
+              const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
+              expect(typeof updatedBond.requestedCoverStartDate).toEqual('string');
+              expect(typeof updatedBond.lastEdited).toEqual('string');
+            });
+          });
+        });
+
+        describe('any issued loans that have details provided, but not yet been submitted', () => {
+          it('defaults requestedCoverStartDate to the issuedDate if no requestedCoverStartDate', async () => {
+            expect(updatedDeal.status).toEqual(200);
+            expect(updatedDeal.body).toBeDefined();
+
+            const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+            const issuedLoansThatShouldBeUpdated = createdDeal.loanTransactions.items.filter((l) =>
+              isUnsubmittedIssuedFacility(l)
+              && !l.requestedCoverStartDate);
+
+            // make sure we have some loans to test against
+            expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
+
+            issuedLoansThatShouldBeUpdated.forEach((loan) => {
+              const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
+              expect(typeof updatedLoan.requestedCoverStartDate).toEqual('string');
+              expect(typeof updatedLoan.lastEdited).toEqual('string');
+            });
+          });
+        });
+      });
+    });
+
     describe('when the status changes to `Further Maker\'s input required`', () => {
       let createdDeal;
       let updatedDeal;
@@ -304,6 +373,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       };
 
       const postDealAndUpdateStatus = async (deal, status) => {
+        deal.details.approvalDate = null;
         const postResult = await as(anHSBCMaker).post(deal).to('/v1/deals');
         const createdDeal = postResult.body;
 

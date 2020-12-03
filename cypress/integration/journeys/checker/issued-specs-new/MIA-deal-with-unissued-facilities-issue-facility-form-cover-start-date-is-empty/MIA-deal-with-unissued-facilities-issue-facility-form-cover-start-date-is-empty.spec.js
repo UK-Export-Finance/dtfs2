@@ -1,15 +1,15 @@
 // const moment = require('moment');
-const relative = require('../../relativeURL');
-const pages = require('../../pages');
+const relative = require('../../../../relativeURL');
+const pages = require('../../../../pages');
 
-const mockUsers = require('../../../fixtures/mockUsers');
+const mockUsers = require('../../../../../fixtures/mockUsers');
 
 const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'Barclays Bank'));
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 
 const miaDealReadyToSubmit = require('./miaDeal');
 
-context('todo..', () => {
+context('Maker/Checker submit an MIA deal with `Unissued` facilities; workflow responds', () => {
   let deal;
   let dealId;
 
@@ -29,7 +29,11 @@ context('todo..', () => {
       });
   });
 
-  it('should do stuff...', () => {
+  it('When Maker goes to issue facility form, Cover Start Date fields should be empty', () => {
+    //---------------------------------------------------------------
+    // maker submits deal to checker
+    //---------------------------------------------------------------
+
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
 
@@ -38,6 +42,9 @@ context('todo..', () => {
     pages.contractReadyForReview.readyForCheckersApproval().click();
 
 
+    //---------------------------------------------------------------
+    // checker submits deal to UKEF
+    //---------------------------------------------------------------
     cy.login({ ...CHECKER_LOGIN });
     pages.contract.visit(deal);
 
@@ -45,6 +52,10 @@ context('todo..', () => {
     pages.contractConfirmSubmission.confirmSubmit().check();
     pages.contractConfirmSubmission.acceptAndSubmit().click();
 
+
+    //---------------------------------------------------------------
+    // receive typeB XML with `In progress` deal status
+    //---------------------------------------------------------------
     cy.sendTypeB({
       header: {
         portal_deal_id: dealId,
@@ -68,6 +79,10 @@ context('todo..', () => {
       loans: [],
     });
 
+
+    //---------------------------------------------------------------
+    // receive typeB XML with `Approved` deal status
+    //---------------------------------------------------------------
     cy.sendTypeB({
       header: {
         portal_deal_id: dealId,
@@ -91,6 +106,10 @@ context('todo..', () => {
       loans: [],
     });
 
+
+    //---------------------------------------------------------------
+    // When maker goes to issue facilities, cover start date field should be empty
+    //---------------------------------------------------------------
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
 
@@ -103,5 +122,7 @@ context('todo..', () => {
     pages.bondIssueFacility.requestedCoverStartDateDayInput().should('have.value', '');
     pages.bondIssueFacility.requestedCoverStartDateMonthInput().should('have.value', '');
     pages.bondIssueFacility.requestedCoverStartDateYearInput().should('have.value', '');
+
+    // TODO Check loan
   });
 });
