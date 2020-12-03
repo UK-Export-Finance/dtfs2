@@ -78,7 +78,7 @@ context('User can view a case deal', () => {
     // expect to land on deal page
     cy.url().should('eq', relative(`/case/deal/${dealId}`));
 
-    pages.caseDealPage.caseSummary().should('exist');
+    pages.caseDealPage.caseSummary(dealId).should('exist');
     pages.caseDealPage.caseSubNavigation().should('exist');
     pages.caseDealPage.dealBankDetails().should('exist');
     pages.caseDealPage.dealFacilities().should('exist');

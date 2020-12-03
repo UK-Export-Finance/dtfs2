@@ -1,5 +1,5 @@
 const caseDealPage = {
-  caseSummary: () => cy.get('[data-cy="case-summary"]'),
+  caseSummary: (dealId) => cy.get(`[data-cy="case-summary-${dealId}"]`),
   caseSubNavigation: () => cy.get('[data-cy="case-sub-navigation"]'),
   dealBankDetails: () => cy.get('[data-cy="deal-bank-details"]'),
   dealFacilities: () => cy.get('[data-cy="deal-facilities"]'),
