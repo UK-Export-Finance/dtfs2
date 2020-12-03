@@ -123,6 +123,17 @@ context('Maker/Checker submit an MIA deal with `Unissued` facilities; workflow r
     pages.bondIssueFacility.requestedCoverStartDateMonthInput().should('have.value', '');
     pages.bondIssueFacility.requestedCoverStartDateYearInput().should('have.value', '');
 
+    pages.contract.visit(deal);
+    const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const loanRow = pages.contract.loansTransactionsTable.row(loanId);
+
+    loanRow.issueFacilityLink().click();
+    cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));
+
+    pages.loanIssueFacility.requestedCoverStartDateDayInput().should('have.value', '');
+    pages.loanIssueFacility.requestedCoverStartDateMonthInput().should('have.value', '');
+    pages.loanIssueFacility.requestedCoverStartDateYearInput().should('have.value', '');
+
     // TODO Check loan
   });
 });
