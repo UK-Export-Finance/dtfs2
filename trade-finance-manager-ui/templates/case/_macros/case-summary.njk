@@ -3,7 +3,7 @@
 
 {% macro render(deal) %}
 
-  <div data-cy="case-summary">
+  <div data-cy="case-summary-{{ deal._id }}">
 
     <div class="govuk-grid-row case-summary govuk-!-margin-0 govuk-!-padding-top-6">
       <div class="govuk-grid-column-one-tenth">
@@ -44,7 +44,7 @@
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
             <div class="ukef-heading-xs">Type</div>
-            <div class="ukef-body-s">{{ deal.details.submissionType }}</div>
+            <div class="ukef-body-s" data-cy="submission-type">{{ deal.details.submissionType }}</div>
           </div>
         </div>
         <div class="govuk-grid-row">
