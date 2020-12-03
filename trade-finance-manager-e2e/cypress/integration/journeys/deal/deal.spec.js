@@ -82,5 +82,11 @@ context('User can view a case deal', () => {
     pages.caseDealPage.caseSubNavigation().should('exist');
     pages.caseDealPage.dealBankDetails().should('exist');
     pages.caseDealPage.dealFacilities().should('exist');
+    pages.caseDealPage.mgaVersion().should('exist');
   });
+
+  it('should render correct MGA version', () => {
+    pages.caseDealPage.mgaVersion().should('have.text', 'January 2020');
+  });
+
 });
