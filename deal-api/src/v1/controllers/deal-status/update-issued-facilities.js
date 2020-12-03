@@ -102,6 +102,7 @@ const updateIssuedFacilities = async (
 
   const isMIAdeal = deal.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
   const isMINdeal = deal.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
+  const dealHasBeenApproved = deal.details.approvalDate;
 
   const update = (facilities) => {
     const arr = facilities;
@@ -142,7 +143,7 @@ const updateIssuedFacilities = async (
           if (fromStatusIsApprovedStatus && isMINdeal) {
             facility.lastEdited = now();
             facility.requestedCoverStartDate = deal.details.manualInclusionNoticeSubmissionDate;
-          } else if (isMIAdeal) {
+          } else if (isMIAdeal && dealHasBeenApproved) {
             facility.lastEdited = now();
             facility.requestedCoverStartDate = now();
           } else if (facilityHasValidIssuedDate(facility, deal)) {
