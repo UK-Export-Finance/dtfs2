@@ -109,7 +109,7 @@ jobs:
 
   promote:
     name: Promote container images to Dev
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     steps:
     - name: Log in to Dev container registry
