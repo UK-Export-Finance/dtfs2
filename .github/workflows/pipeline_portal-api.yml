@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
     paths:
-    - 'deal-api/**'
+    - 'portal-api/**'
     - 'cypress/**'
   schedule:
     # A weekly run to roll up any base image patches,
@@ -39,7 +39,7 @@ jobs:
         username: ${{ secrets.DEV_ACR_USERNAME }}
         password: ${{ secrets.DEV_ACR_PASSWORD }}
         repository: portal-api
-        path: deal-api
+        path: portal-api
         tags: latest
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
@@ -73,7 +73,7 @@ jobs:
     - name: Pull portal-api
       run: |
         docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-api
-        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-api dtfs/deal-api
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-api dtfs/portal-api
     - name: Pull portal-ui
       run: |
         docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui
@@ -90,7 +90,7 @@ jobs:
         node ./re-insert-mocks.js
     - name: Run API tests
       run: |
-        docker-compose exec -T deal-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --runInBand
+        docker-compose exec -T portal-api npx jest --notify --coverage --verbose --config=api-test.jest.config.js --runInBand
     - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}

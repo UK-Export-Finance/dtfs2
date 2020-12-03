@@ -5,7 +5,7 @@ const { getUserByEmail } = require('../helpers/users');
 const formatUkefId = require('../helpers/formatUkefId');
 
 const findPortalValue = require('./findPortalValue');
-const CONSTANTS = require('../../../deal-api/src/constants');
+const CONSTANTS = require('../../../portal-api/src/constants');
 
 const log = require('../helpers/log');
 

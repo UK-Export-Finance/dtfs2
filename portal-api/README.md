@@ -1,4 +1,4 @@
-# deal-api
+# portal-api
  
 ## to execute api tests:
 

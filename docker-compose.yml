@@ -23,8 +23,8 @@ services:
     image: dtfs/trade-finance-manager-api
     restart: always
     depends_on:
-      - deal-api
-      - deal-api-data
+      - portal-api
+      - portal-api-data
       - reference-data-proxy
     ports:
       - "5004:5004"
@@ -34,7 +34,7 @@ services:
       - PORT=5004
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - MONGO_INITDB_DATABASE=test
-      - MONGODB_URI=mongodb://root:r00t@deal-api-data:27017/?authMechanism=DEFAULT
+      - MONGODB_URI=mongodb://root:r00t@portal-api-data:27017/?authMechanism=DEFAULT
     entrypoint: npx nodemon src/index.js
   
   portal:
@@ -42,7 +42,7 @@ services:
     image: dtfs/portal
     restart: always
     depends_on:
-      - deal-api
+      - portal-api
     ports:
       - "5000:5000"
     volumes:
@@ -51,30 +51,30 @@ services:
       - ./portal/templates:/app/templates:ro
       - ./portal/server:/app/server:ro
     environment:
-      - DEAL_API_URL=http://deal-api:5001
+      - DEAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
     command: node dist/server.js
 
-  deal-api:
-    build: ./deal-api
-    image: dtfs/deal-api
+  portal-api:
+    build: ./portal-api
+    image: dtfs/portal-api
     restart: always
     depends_on:
-      - deal-api-data
+      - portal-api-data
       - reference-data-proxy
     ports:
       - "5001:5001"
     volumes:
-      - ./deal-api/src:/app/src:ro
+      - ./portal-api/src:/app/src:ro
     environment:
       - PORT=5001
       - CORS_ORIGIN=http://localhost:5000
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
       - MONGO_INITDB_DATABASE=test
-      - MONGODB_URI=mongodb://root:r00t@deal-api-data:27017/?authMechanism=DEFAULT
+      - MONGODB_URI=mongodb://root:r00t@portal-api-data:27017/?authMechanism=DEFAULT
       - AZURE_WORKFLOW_STORAGE_ACCOUNT
       - AZURE_WORKFLOW_STORAGE_ACCESS_KEY
       - AZURE_WORKFLOW_FILESHARE_NAME
@@ -93,7 +93,7 @@ services:
 
     entrypoint: npx nodemon src/index.js
 
-  deal-api-data:
+  portal-api-data:
     image: mongo
     restart: always
     environment:
@@ -101,8 +101,8 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
     volumes:
-      - ./deal-api-data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-      - ./deal-api-data-volume:/data/db
+      - ./portal-api-data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./portal-api-data-volume:/data/db
     ports:
       - "27017-27019:27017-27019"
   
@@ -124,7 +124,7 @@ services:
     image: dtfs/test-hook-api
     restart: always
     depends_on:
-      - deal-api
+      - portal-api
     ports:
       - "5069:5069"
     volumes:

@@ -15,8 +15,8 @@ cd portal
 docker build --tag dtfs/portal .
 cd $home
 
-#cd deal-api
-#docker build --tag deal-api .
+#cd portal-api
+#docker build --tag portal-api .
 #cd $home
 
 if [ ! -z "$(docker ps -aq)"; then

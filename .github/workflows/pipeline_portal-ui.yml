@@ -72,7 +72,7 @@ jobs:
     - name: Pull portal-api
       run: |
         docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-api
-        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-api dtfs/deal-api
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-api dtfs/portal-api
     - name: Pull portal
       run: |
         docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui

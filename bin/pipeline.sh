@@ -56,12 +56,12 @@ echo "{\"stage\": \"pipeline:wait-for-mongo\", \"duration\": \"$((end-start))\",
 
 start=`date +%s`
 
-docker-compose exec deal-api /bin/sh ./bin/api-test.sh
+docker-compose exec portal-api /bin/sh ./bin/api-test.sh
 apiTestResults=$?
 
 end=`date +%s`
 
-[ $apiTestResults -eq 0 ] && echo "{\"stage\": \"pipeline:deal-api-integration-tests\", \"duration\": \"$((end-start))\", \"result\": \"pass\"}" >> "$LOG" || echo "{\"stage\": \"pipeline:deal-api-integration-tests\", \"duration\": \"$((end-start))\", \"result\": \"fail\"}" >> "$LOG"
+[ $apiTestResults -eq 0 ] && echo "{\"stage\": \"pipeline:portal-api-integration-tests\", \"duration\": \"$((end-start))\", \"result\": \"pass\"}" >> "$LOG" || echo "{\"stage\": \"pipeline:portal-api-integration-tests\", \"duration\": \"$((end-start))\", \"result\": \"fail\"}" >> "$LOG"
 [ $apiTestResults -ne 0 ] && exit $apiTestResults
 
 
