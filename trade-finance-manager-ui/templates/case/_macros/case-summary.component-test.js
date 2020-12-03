@@ -7,6 +7,9 @@ describe(component, () => {
   let wrapper;
   let params = {
     _id: '12345678',
+    details: {
+      submissionType: 'Automatic Inclusion Notice',
+    },
     submissionDetails: {
       supplierName: 'The Supplier name',
       buyerName: 'The Buyer name',
@@ -18,12 +21,14 @@ describe(component, () => {
   });
 
   it('should render supplier name', () => {
-    wrapper.expectElement('[data-cy="supplier-name"]').toExist();
     wrapper.expectText('[data-cy="supplier-name"]').toRead(params.submissionDetails.supplierName);
   });
 
   it('should render buyer name', () => {
-    wrapper.expectElement('[data-cy="buyer-name"]').toExist();
     wrapper.expectText('[data-cy="buyer-name"]').toRead(params.submissionDetails.buyerName);
+  });
+
+  it('should render submission type', () => {
+    wrapper.expectText('[data-cy="submission-type"]').toRead(params.details.submissionType);
   });
 });
