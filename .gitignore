@@ -4,6 +4,7 @@ pipeline.log
 dist
 node_modules
 deal-api-data-volume
+portal-api-data-volume
 cypress/videos
 cypress/screenshots
 
@@ -13,7 +14,7 @@ Library/
 
 secrets/**
 jwt_key
-deal-api/generated_reports
+portal-api/generated_reports
 portal/generated_reports
 
 trade-finance-manager-api/generated_reports

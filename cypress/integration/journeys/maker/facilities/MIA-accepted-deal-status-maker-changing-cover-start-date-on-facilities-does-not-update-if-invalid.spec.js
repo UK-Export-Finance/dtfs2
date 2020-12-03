@@ -1,7 +1,7 @@
 const moment = require('moment');
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
-const { formattedTimestamp } = require('../../../../../deal-api/src/v1/facility-dates/timestamp');
+const { formattedTimestamp } = require('../../../../../portal-api/src/v1/facility-dates/timestamp');
 
 const MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast = require('./fixtures/MIA-deal-with-accepted-status-issued-facilities-cover-start-date-in-past');
 const mockUsers = require('../../../../fixtures/mockUsers');

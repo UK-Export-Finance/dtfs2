@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { roundNumber } = require('../../../../../deal-api/src/utils/number');
+const { roundNumber } = require('../../../../../portal-api/src/utils/number');
 
 const date = moment();
 const requestedCoverStartDate = date;

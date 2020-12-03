@@ -1,7 +1,7 @@
 const moment = require('moment');
 
 // NOTE!!
-// these objects are to be pushed straight into the deal-api,
+// these objects are to be pushed straight into the portal-api,
 // so the fields need to go into the correct places in the object..
 
 module.exports = [
@@ -84,12 +84,12 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
     comments: [{
-      "user" : {
-          "firstname" : "bob",
-          "surname" : "builder",
+      user: {
+        firstname: 'bob',
+        surname: 'builder',
       },
-      "timestamp" : "2020 07 01 11:12:08:194 +0100",
-      "text" : "to me"
+      timestamp: '2020 07 01 11:12:08:194 +0100',
+      text: 'to me',
     }],
   }, {
     details: {
@@ -112,12 +112,12 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
     comments: [{
-      "user" : {
-          "firstname" : "bob",
-          "surname" : "builder",
+      user: {
+        firstname: 'bob',
+        surname: 'builder',
       },
-      "timestamp" : "2020 07 01 11:12:08:194 +0100",
-      "text" : "to me"
+      timestamp: '2020 07 01 11:12:08:194 +0100',
+      text: 'to me',
     }],
   }, {
     details: {
@@ -157,12 +157,12 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
     comments: [{
-      "user" : {
-          "firstname" : "bob",
-          "surname" : "builder",
+      user: {
+        firstname: 'bob',
+        surname: 'builder',
       },
-      "timestamp" : "2020 07 01 11:12:08:194 +0100",
-      "text" : "to me"
+      timestamp: '2020 07 01 11:12:08:194 +0100',
+      text: 'to me',
     }],
   }, {
     details: {
@@ -183,12 +183,12 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
     comments: [{
-      "user" : {
-          "firstname" : "bob",
-          "surname" : "builder",
+      user: {
+        firstname: 'bob',
+        surname: 'builder',
       },
-      "timestamp" : "2020 07 01 11:12:08:194 +0100",
-      "text" : "to me"
+      timestamp: '2020 07 01 11:12:08:194 +0100',
+      text: 'to me',
     }],
   }, {
     details: {
@@ -209,12 +209,12 @@ module.exports = [
       'supplier-name': 'Supplier name 2',
     },
     comments: [{
-      "user" : {
-          "firstname" : "bob",
-          "surname" : "builder",
+      user: {
+        firstname: 'bob',
+        surname: 'builder',
       },
-      "timestamp" : "2020 07 01 11:12:08:194 +0100",
-      "text" : "to me"
+      timestamp: '2020 07 01 11:12:08:194 +0100',
+      text: 'to me',
     }],
   }, {
     details: {

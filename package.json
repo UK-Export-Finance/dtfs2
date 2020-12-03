@@ -21,8 +21,8 @@
   },
   "scripts": {
     "pipeline": "./bin/pipeline.sh",
-    "lint": "eslint ./deal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts",
-    "lint:fix": "eslint ./deal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts --fix",
+    "lint": "eslint ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts",
+    "lint:fix": "eslint ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
