@@ -96,7 +96,8 @@ jobs:
         pwd
         cd $GITHUB_WORKSPACE
         npm install
-        npx cypress run --spec "cypress/integration/**/*.spec.js" --config video=false # --record
+        cd e2e-tests/portal
+        npx cypress run --config video=false # --record
     - name: Save Cypress screenshots
       if: ${{ failure() }}
       uses: actions/upload-artifact@main
