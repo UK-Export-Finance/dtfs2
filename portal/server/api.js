@@ -29,6 +29,37 @@ const login = async (username, password) => {
   }
 };
 
+const resetPassword = async (email) => {
+  const response = await axios({
+    method: 'post',
+    url: `${urlRoot}/v1/users/reset-password`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: { email },
+  });
+
+  return response.data ? {
+    success: response.data.success,
+  } : '';
+};
+
+const resetPasswordFromToken = async (resetPwdToken, formData) => {
+  const response = await axios({
+    method: 'post',
+    url: `${urlRoot}/v1/users/reset-password/${resetPwdToken}`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: formData,
+  });
+
+  return {
+    status: response.status,
+    data: response.data,
+  };
+};
+
 const contracts = async (start, pagesize, filters, token) => {
   const params = {
     start,
@@ -600,6 +631,8 @@ export default {
   createDealLoan,
   createFeedback,
   login,
+  resetPassword,
+  resetPasswordFromToken,
   transactions,
   updateBond,
   updateBondIssueFacility,

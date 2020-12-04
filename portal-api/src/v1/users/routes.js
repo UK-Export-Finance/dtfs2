@@ -6,6 +6,7 @@ const {
 const {
   create, update, remove, list, findOne, disable,
 } = require('./controller');
+const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
@@ -178,5 +179,80 @@ module.exports.login = async (req, res, next) => {
 
   return res.status(200).json({
     success: true, token: tokenObject.token, user: sanitizeUser(user), expiresIn: tokenObject.expires,
+  });
+};
+
+module.exports.resetPassword = async (req, res) => {
+  const { email } = req.body;
+  const { success } = await resetPassword(email);
+
+  return res.status(200).json({
+    success,
+  });
+};
+
+module.exports.resetPasswordWithToken = async (req, res, next) => {
+  const { resetPwdToken } = req.params;
+
+  const user = await getUserByPasswordToken(resetPwdToken, req.body);
+
+  if (!user) {
+    return res.status(200).json({
+      success: false,
+      errors: {
+        count: 1,
+        errorList: {
+          password: {
+            text: 'Password reset link is not valid',
+          },
+        },
+      },
+    });
+  }
+
+  const hoursSincePasswordResetRequest = user.resetPwdTimestamp
+    ? (Date.now() - user.resetPwdTimestamp) / 1000 / 60 / 60
+    : 9999;
+
+  if (hoursSincePasswordResetRequest > 24) {
+    return res.status(200).json({
+      success: false,
+      errors: {
+        count: 1,
+        errorList: {
+          password: {
+            text: 'Password reset link has expired',
+          },
+        },
+      },
+    });
+  }
+
+  const errors = applyUpdateRules(user, req.body);
+
+  if (errors.length) {
+    return res.status(200).json({
+      success: false,
+      errors: {
+        count: errors.length,
+        errorList: combineErrors(errors),
+      },
+    });
+  }
+  const updateData = {
+    ...req.body,
+    resetPwdToken: '',
+    resetPwdTimestamp: '',
+    loginFailureCount: 0,
+  };
+
+  return update(user._id, updateData, (updateErr) => { // eslint-disable-line no-underscore-dangle
+    if (updateErr) {
+      next(updateErr);
+    } else {
+      res.status(200).json({
+        success: true,
+      });
+    }
   });
 };

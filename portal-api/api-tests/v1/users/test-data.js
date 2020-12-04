@@ -69,7 +69,7 @@ module.exports = [
     roles: ['maker'],
     bank: {
       id: '961',
-      name: 'HSBC'
+      name: 'HSBC',
     },
   }, {
     username: 'CHECKER-2',
@@ -79,7 +79,7 @@ module.exports = [
     roles: ['checker'],
     bank: {
       id: '961',
-      name: 'HSBC'
+      name: 'HSBC',
     },
   }, {
     username: 'MAKENCHECK-2',
@@ -89,7 +89,7 @@ module.exports = [
     roles: ['maker', 'checker'],
     bank: {
       id: '961',
-      name: 'HSBC'
+      name: 'HSBC',
     },
   }, {
     username: 'READER-2',
@@ -99,8 +99,24 @@ module.exports = [
     roles: ['reader'],
     bank: {
       id: '961',
-      name: 'HSBC'
+      name: 'HSBC',
     },
-  }
+  },
+  {
+    username: 'MAKER_WITH_EMAIL',
+    password: '1!aB5678',
+    firstname: 'Miss',
+    surname: 'Two',
+    email: 'maker@testemail.com',
+    roles: ['maker'],
+    bank: {
+      id: '956',
+      name: 'Barclays Bank',
+      emails: [
+        'maker4@ukexportfinance.gov.uk',
+        'checker4@ukexportfinance.gov.uk',
+      ],
+    },
+  },
 
 ];

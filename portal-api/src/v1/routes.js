@@ -333,6 +333,16 @@ openRouter.route('/login')
     users.login,
   );
 
+openRouter.route('/users/reset-password')
+  .post(
+    users.resetPassword,
+  );
+
+openRouter.route('/users/reset-password/:resetPwdToken')
+  .post(
+    users.resetPasswordWithToken,
+  );
+
 // simplest token-validator
 authRouter.get(
   '/validate',

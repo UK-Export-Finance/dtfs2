@@ -16,6 +16,15 @@
 
   {% endif %}
 
+  {% if passwordupdated %}
+
+    {{ govukInsetText({
+      classes: "govuk-!-margin-top-0",
+      text: "Password updated. Please log in."
+    }) }}
+
+  {% endif %}
+
   <h1 class="govuk-heading-l">Log in</h1>
 
   <div class="govuk-grid-row">
@@ -45,7 +54,7 @@
     </div>
   </div>
 
-  <p class="govuk-body govuk-!-margin-bottom-6"><a class="govuk-link" href="/reset-password">Forgot your password?</a></p>
+  <p class="govuk-body govuk-!-margin-bottom-6"><a class="govuk-link" href="/reset-password" data-cy="reset-password" >Forgot your password?</a></p>
 
   <h2 class="govuk-heading-m">Having trouble with this page?</h2>
 

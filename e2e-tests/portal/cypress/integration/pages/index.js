@@ -1,4 +1,5 @@
 module.exports = {
+  login: require('./login'),
   header: require('./header'),
   landingPage: require('./landingPage'),
   beforeYouStart: require('./beforeYouStart'),
@@ -43,6 +44,7 @@ module.exports = {
   changePassword: require('./user/changePassword'),
   createUser: require('./admin/users/createUser'),
   editUser: require('./admin/users/editUser'),
+  resetPassword: require('./resetPassword'),
   mga: require('./mga'),
   footer: require('./footer'),
 
