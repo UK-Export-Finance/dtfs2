@@ -1,15 +1,18 @@
 // const moment = require('moment');
-const relative = require('../../../../relativeURL');
-const pages = require('../../../../pages');
+const relative = require('../../relativeURL');
+const pages = require('../../pages');
 
-const mockUsers = require('../../../../../fixtures/mockUsers');
+const mockUsers = require('../../../fixtures/mockUsers');
+const { fillAndSubmitIssueBondFacilityForm } = require('../maker/submit-issued-facilities-for-review/fillAndSubmitIssueBondFacilityForm');
+
 
 const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'Barclays Bank'));
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 
-const miaDealReadyToSubmit = require('./miaDeal');
+const miaDealReadyToSubmit = require('./miaDeal-with-unissued-facilities');
 
-context('Maker/Checker submit an MIA deal with `Unissued` facilities; workflow responds', () => {
+
+context('todoo...', () => {
   let deal;
   let dealId;
 
@@ -29,7 +32,7 @@ context('Maker/Checker submit an MIA deal with `Unissued` facilities; workflow r
       });
   });
 
-  it('When Maker goes to issue facility form, Cover Start Date fields should be empty', () => {
+  it('blaaaaaaa', () => {
     //---------------------------------------------------------------
     // maker submits deal to checker
     //---------------------------------------------------------------
@@ -38,7 +41,7 @@ context('Maker/Checker submit an MIA deal with `Unissued` facilities; workflow r
     pages.contract.visit(deal);
 
     pages.contract.proceedToReview().click();
-    pages.contractReadyForReview.comments().type('Ready');
+    pages.contractReadyForReview.comments().type('Issued facilities');
     pages.contractReadyForReview.readyForCheckersApproval().click();
 
 
@@ -72,11 +75,16 @@ context('Maker/Checker submit an MIA deal with `Unissued` facilities; workflow r
         {
           BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
           BSS_ukef_facility_id: '54321',
-          BSS_status: 'Issued acknowledged',
-          BSS_comments: 'blahblah blah blahblah',
+          BSS_status: '"',
         },
       ],
-      loans: [],
+      loans: [
+        {
+          EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
+          EWCS_ukef_facility_id: '56789',
+          EWCS_status: '""',
+        },
+      ],
     });
 
 
@@ -88,7 +96,7 @@ context('Maker/Checker submit an MIA deal with `Unissued` facilities; workflow r
         portal_deal_id: dealId,
         bank_deal_id: deal.details.bankSupplyContractID,
         Message_Type: 'B',
-        Action_Code: '006',
+        Action_Code: '011',
       },
       deal: {
         UKEF_deal_id: '123456',
@@ -99,41 +107,33 @@ context('Maker/Checker submit an MIA deal with `Unissued` facilities; workflow r
         {
           BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
           BSS_ukef_facility_id: '54321',
-          BSS_status: '""',
-          BSS_comments: 'blahblah blah blahblah',
+          BSS_status: 'Issued acknowledged',
         },
       ],
-      loans: [],
+      loans: [
+        {
+          EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
+          EWCS_ukef_facility_id: '56789',
+          EWCS_status: 'Issued acknowledged',
+        },
+      ],
     });
 
 
-    //---------------------------------------------------------------
-    // When maker goes to issue facilities, cover start date field should be empty
-    //---------------------------------------------------------------
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
 
-    const bondId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    // (to replicate bug): facilities should be 'acknowledged' and 'incomplete'
+    // fill in issue facility forms
+    // bug is - are completeing form, some are marked as 'not started' but should be 'completed'
+
+    const bondId = deal.bondTransactions.items[0]._id;
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
     bondRow.issueFacilityLink().click();
-    cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
 
-    pages.bondIssueFacility.requestedCoverStartDateDayInput().should('have.value', '');
-    pages.bondIssueFacility.requestedCoverStartDateMonthInput().should('have.value', '');
-    pages.bondIssueFacility.requestedCoverStartDateYearInput().should('have.value', '');
+    fillAndSubmitIssueBondFacilityForm();
 
-    pages.contract.visit(deal);
-    const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
-    const loanRow = pages.contract.loansTransactionsTable.row(loanId);
-
-    loanRow.issueFacilityLink().click();
-    cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));
-
-    pages.loanIssueFacility.requestedCoverStartDateDayInput().should('have.value', '');
-    pages.loanIssueFacility.requestedCoverStartDateMonthInput().should('have.value', '');
-    pages.loanIssueFacility.requestedCoverStartDateYearInput().should('have.value', '');
-
-    // TODO Check loan
+    cy.url().should('eq', '/test');
   });
 });
