@@ -25,8 +25,13 @@ export const fillAndSubmitIssueLoanFacilityForm = () => {
   pages.loanIssueFacility.issuedDateYearInput().type(ISSUED_LOAN_DATE_VALUE.format('YYYY'));
 
   const requestedCoverStartDate = moment().add(2, 'day');
+  pages.bondIssueFacility.requestedCoverStartDateDayInput().clear();
   pages.loanIssueFacility.requestedCoverStartDateDayInput().type(requestedCoverStartDate.format('DD'));
+
+  pages.bondIssueFacility.requestedCoverStartDateMonthInput().clear();
   pages.loanIssueFacility.requestedCoverStartDateMonthInput().type(requestedCoverStartDate.format('MM'));
+
+  pages.bondIssueFacility.requestedCoverStartDateYearInput().clear();
   pages.loanIssueFacility.requestedCoverStartDateYearInput().type(requestedCoverStartDate.format('YYYY'));
 
   const coverEndDate = moment().add(1, 'month');
