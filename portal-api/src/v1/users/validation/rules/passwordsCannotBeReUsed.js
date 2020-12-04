@@ -3,13 +3,15 @@ const utils = require('../../../../crypto/utils');
 module.exports = (user, change) => {
   if (change && change.password) {
     const { password } = change;
-    const { blockedPasswordList } = user;
+    const { blockedPasswordList = [] } = user;
 
-    const passwordAlreadyUsed = blockedPasswordList
-      && blockedPasswordList.reduce((soFar = false, blockedPasswordEntry) => {
-        const { salt, hash } = blockedPasswordEntry;
-        return soFar || utils.validPassword(password, salt, hash);
-      });
+    // Add current password to check
+    blockedPasswordList.push({ oldHash: user.hash, oldSalt: user.salt });
+
+    const passwordAlreadyUsed = blockedPasswordList.reduce((soFar, blockedPasswordEntry) => {
+      const { oldSalt, oldHash } = blockedPasswordEntry;
+      return soFar || utils.validPassword(password, oldHash, oldSalt);
+    }, false);
 
     if (passwordAlreadyUsed) {
       return [{

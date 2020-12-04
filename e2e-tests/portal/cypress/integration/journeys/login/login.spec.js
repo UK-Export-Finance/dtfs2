@@ -1,4 +1,5 @@
 const {
+  login,
   header,
   beforeYouStart,
   bankDetails,
@@ -7,8 +8,9 @@ const {
 const relative = require('../../relativeURL');
 
 const mockUsers = require('../../../fixtures/mockUsers');
-const BAD_LOGIN = {username: 'doesntExist', password: 'whatever'};
-const MAKER_LOGIN = mockUsers.find( user=> (user.roles.includes('maker')) );
+
+const BAD_LOGIN = { username: 'doesntExist', password: 'whatever' };
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
 context('Login', () => {
   beforeEach(() => {
@@ -17,6 +19,7 @@ context('Login', () => {
       console.log(err.stack);
       return false;
     });
+    login.visit();
   });
 
   it('When a user that is not logged in navigates to a protected route, they progress to the login page', () => {
@@ -28,6 +31,11 @@ context('Login', () => {
 
     dashboard.visit();
     cy.url().should('eq', relative('/'));
+  });
+
+  it('The reset password link takes you to reset password page', () => {
+    login.resetPasswordLink().click();
+    cy.url().should('eq', relative('/reset-password'));
   });
 
   it('A failed login leaves the user on the landing page', () => {
@@ -68,15 +76,16 @@ context('Login', () => {
     cy.url().should('eq', relative('/dashboard/0'));
   });
 
-  it('Should pass Lighthouse audit', function () {
+  /*
+  it('Should pass Lighthouse audit', () => {
     cy.lighthouse({
       performance: 85,
       accessibility: 100,
-      "best-practices": 85,
+      'best-practices': 85,
       seo: 85,
       pwa: 100,
     });
     cy.pa11y();
   });
-
+  */
 });

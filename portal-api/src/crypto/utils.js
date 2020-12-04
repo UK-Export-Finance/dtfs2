@@ -17,6 +17,7 @@ const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY, 'base64').toString('as
  */
 function validPassword(password, hash, salt) {
   const hashVerify = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('hex');
+
   return hash === hashVerify;
 }
 
@@ -33,6 +34,7 @@ function validPassword(password, hash, salt) {
  */
 function genPassword(password) {
   const salt = crypto.randomBytes(32).toString('hex');
+
   const genHash = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('hex');
 
   return {
@@ -41,6 +43,13 @@ function genPassword(password) {
   };
 }
 
+function genPasswordResetToken(user) {
+  const hash = crypto.pbkdf2Sync(user.email, user.salt, 10000, 64, 'sha512').toString('hex');
+
+  return {
+    hash,
+  };
+}
 
 /**
  * @param {*} user - The user object.  We need this to set the JWT `sub` payload property to the MongoDB user ID
@@ -69,3 +78,4 @@ function issueJWT(user) {
 module.exports.validPassword = validPassword;
 module.exports.genPassword = genPassword;
 module.exports.issueJWT = issueJWT;
+module.exports.genPasswordResetToken = genPasswordResetToken;
