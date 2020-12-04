@@ -3,7 +3,7 @@ const pages = require('../../../../pages');
 const relative = require('../../../../relativeURL');
 const MIADealWithAcceptedStatusIssuedFacilities = require('./MIA-deal-with-accepted-status-issued-facilities');
 const mockUsers = require('../../../../../fixtures/mockUsers');
-const { formattedTimestamp } = require('../../../../../../portal-api/src/v1/facility-dates/timestamp');
+const { formattedTimestamp } = require('../../../../../../../../portal-api/src/v1/facility-dates/timestamp');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker')));

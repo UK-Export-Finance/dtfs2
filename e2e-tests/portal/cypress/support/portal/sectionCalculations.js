@@ -1,4 +1,4 @@
-const { roundNumber } = require('../../../portal-api/src/utils/number');
+const { roundNumber } = require('../../../../../portal-api/src/utils/number');
 
 const calculateExpectedGuaranteeFee = (marginFee) => {
   const calculation = marginFee * 0.9;
