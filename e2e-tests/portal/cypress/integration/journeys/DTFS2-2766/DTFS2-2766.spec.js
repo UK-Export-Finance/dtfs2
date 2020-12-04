@@ -1,5 +1,5 @@
 // const moment = require('moment');
-const relative = require('../../relativeURL');
+// const relative = require('../../relativeURL');
 const pages = require('../../pages');
 
 const mockUsers = require('../../../fixtures/mockUsers');
@@ -91,9 +91,36 @@ context('todoo...', () => {
     //---------------------------------------------------------------
     // receive typeB XML with `Approved` deal status
     //---------------------------------------------------------------
+    // cy.sendTypeB({
+    //   header: {
+    //     portal_deal_id: dealId,
+    //     bank_deal_id: deal.details.bankSupplyContractID,
+    //     Message_Type: 'B',
+    //     Action_Code: '011',
+    //   },
+    //   deal: {
+    //     UKEF_deal_id: '123456',
+    //     Deal_status: 'approved',
+    //     Deal_comments: 'blah blah',
+    //   },
+    //   bonds: [
+    //     {
+    //       BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
+    //       BSS_ukef_facility_id: '54321',
+    //       BSS_status: 'Issued acknowledged',
+    //     },
+    //   ],
+    //   loans: [
+    //     {
+    //       EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
+    //       EWCS_ukef_facility_id: '56789',
+    //       EWCS_status: 'Issued acknowledged',
+    //     },
+    //   ],
+    // });
     cy.sendTypeB({
       header: {
-        portal_deal_id: dealId,
+        portal_deal_id: deal._id,
         bank_deal_id: deal.details.bankSupplyContractID,
         Message_Type: 'B',
         Action_Code: '011',
@@ -107,14 +134,16 @@ context('todoo...', () => {
         {
           BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
           BSS_ukef_facility_id: '54321',
-          BSS_status: 'Issued acknowledged',
+          // BSS_status: '',
+          BSS_comments: 'blahblah blah blahblah',
         },
       ],
       loans: [
         {
           EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
-          EWCS_ukef_facility_id: '56789',
-          EWCS_status: 'Issued acknowledged',
+          EWCS_ukef_facility_id: '65432',
+          // EWCS_status: '',
+          EWCS_comments: 'blahblah blah blahblah',
         },
       ],
     });
