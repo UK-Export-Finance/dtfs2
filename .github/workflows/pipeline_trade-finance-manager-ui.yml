@@ -5,6 +5,7 @@ on:
     branches: [ master ]
     paths: 
     - 'trade-finance-manager-ui/**'
+    - 'e2e-tests/trade-finance-manager/cypress/**'
   schedule:
     # A weekly run to roll up any base image patches,
     # in office hours, avoiding bank holiday Mondays:
@@ -38,71 +39,78 @@ jobs:
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
 
-  # test:
-  #   name: "Run end-to-end tests in Compose"
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.E2ETEST_AZURE_WORKFLOW_STORAGE_ACCOUNT }}
-  #     AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.E2ETEST_AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
-  #     AZURE_WORKFLOW_FILESHARE_NAME: ${{ secrets.E2ETEST_AZURE_WORKFLOW_FILESHARE_NAME }}
-  #     AZURE_WORKFLOW_EXPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_WORKFLOW_EXPORT_FOLDER }}
-  #     AZURE_WORKFLOW_IMPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_WORKFLOW_IMPORT_FOLDER }}
+  test:
+    name: "Run end-to-end tests in Compose"
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.E2ETEST_AZURE_WORKFLOW_STORAGE_ACCOUNT }}
+      AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.E2ETEST_AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
+      AZURE_WORKFLOW_FILESHARE_NAME: ${{ secrets.E2ETEST_AZURE_WORKFLOW_FILESHARE_NAME }}
+      AZURE_WORKFLOW_EXPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_WORKFLOW_EXPORT_FOLDER }}
+      AZURE_WORKFLOW_IMPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_WORKFLOW_IMPORT_FOLDER }}
 
-  #     AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.E2ETEST_AZURE_PORTAL_STORAGE_ACCOUNT }}
-  #     AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.E2ETEST_AZURE_PORTAL_STORAGE_ACCESS_KEY }}
-  #     AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.E2ETEST_AZURE_PORTAL_FILESHARE_NAME }}
-  #     AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_PORTAL_EXPORT_FOLDER }}
+      AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.E2ETEST_AZURE_PORTAL_STORAGE_ACCOUNT }}
+      AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.E2ETEST_AZURE_PORTAL_STORAGE_ACCESS_KEY }}
+      AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.E2ETEST_AZURE_PORTAL_FILESHARE_NAME }}
+      AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_PORTAL_EXPORT_FOLDER }}
 
-  #     GOV_NOTIFY_API_KEY: ${{ secrets.E2ETEST_GOV_NOTIFY_API_KEY }}
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   # Pull the latest images to run with so we don't need to build them
-  #   - uses: azure/docker-login@v1
-  #     with:
-  #       login-server: ${{ secrets.DEV_ACR_REGISTRY }}
-  #       username: ${{ secrets.DEV_ACR_USERNAME }}
-  #       password: ${{ secrets.DEV_ACR_PASSWORD }}
-  #   - name: Pull trade-finance-manager-api
-  #     run: |
-  #       docker pull ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-api
-  #       docker tag ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-api dtfs/trade-finance-manager-api
-  #   - name: Pull portal
-  #     run: |
-  #       docker pull ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-ui
-  #       docker tag ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-ui dtfs/trade-finance-manager-ui
-  #   - name: Start Docker Compose
-  #     run: |
-  #       source secrets/set_jwt_keypair.sh
-  #       docker-compose up -d
-  #       echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
-  #       sleep 10
-  #   - name: Run e2e tests
-  #     env:
-  #       CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-  #     run: |
-  #       pwd
-  #       cd $GITHUB_WORKSPACE
-  #       npm install
-  #       npx cypress run --spec "cypress/integration/**/*.spec.js" --config video=false # --record
-  #   - name: Save Cypress screenshots
-  #     if: ${{ failure() }}
-  #     uses: actions/upload-artifact@main
-  #     with:
-  #       name: screenshots
-  #       path: './cypress/screenshots'
-  #   - uses: act10ns/slack@v1
-  #     with:
-  #       status: ${{ job.status }}
-  #       steps: ${{ toJson(steps) }}
-  #       channel: '#dtfs2-dev'
-  #     env:
-  #       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-  #     if: failure()
+      GOV_NOTIFY_API_KEY: ${{ secrets.E2ETEST_GOV_NOTIFY_API_KEY }}
+    steps:
+    - uses: actions/checkout@v2
+    # Pull the latest images to run with so we don't need to build them
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
+    - name: Pull trade-finance-manager-api
+      run: |
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-api
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-api dtfs/trade-finance-manager-api
+    - name: Pull portal
+      run: |
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-ui
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/trade-finance-manager-ui dtfs/trade-finance-manager-ui
+    - name: Start Docker Compose
+      run: |
+        source secrets/set_jwt_keypair.sh
+        docker-compose up -d
+        echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
+        sleep 10
+    - name: Load mock data
+      run: |
+        cd utils/mock-data-loader
+        npm install
+        node ./re-insert-mocks.js
+        pwd
+    - name: Run e2e tests
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      run: |
+        pwd
+        cd $GITHUB_WORKSPACE
+        npm install
+        cd e2e-tests/trade-finance-manager
+        npx cypress run --config video=false # --record
+    - name: Save Cypress screenshots
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@main
+      with:
+        name: screenshots
+        path: './cypress/screenshots'
+    - uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#dtfs2-dev'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: failure()
 
   promote:
     name: Promote container images to Dev
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     steps:
     - name: Log in to Dev container registry

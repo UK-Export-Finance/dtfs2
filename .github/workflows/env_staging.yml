@@ -1,5 +1,5 @@
 name: Staging environment infrastructure
-
+ 
 on:
   push:
     branches: [ staging ]

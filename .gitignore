@@ -5,8 +5,8 @@ dist
 node_modules
 deal-api-data-volume
 portal-api-data-volume
-cypress/videos
-cypress/screenshots
+**/cypress/videos
+**/cypress/screenshots
 
 trade-finance-manager/salesforce.json
 
