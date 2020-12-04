@@ -31,4 +31,16 @@ describe(component, () => {
   it('should render submission type', () => {
     wrapper.expectText('[data-cy="submission-type"]').toRead(params.details.submissionType);
   });
+
+  it('should render correct exporter name', () => {
+    pages.caseDealPage.exporterName().should('have.text', 'Supplier name');
+  });
+
+  it('should render correct buyer name', () => {
+    pages.caseDealPage.buyerName().should('have.text', 'Buyer name');
+  });
+
+  it('should render correct bank name', () => {
+    pages.caseDealPage.bank().should('have.text', 'HSBC');
+  });
 });
