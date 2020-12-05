@@ -345,7 +345,7 @@ jobs:
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
-              REDIS_HOSTNAME_TMP_REMOVE="$redis_hostname" \
+              REDIS_HOSTNAME="$redis_hostname" \
               REDIS_PORT="$redis_sslPort" \
               REDIS_KEY="$redis_key" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"
