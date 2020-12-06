@@ -372,12 +372,6 @@ jobs:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
-
-    - name: Remove previous private-endpoint
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network private-endpoint delete --name "tfs-${{ env.environment }}-mongo"
       
     - name: Cosmos account for mongodb
       uses: Azure/cli@v1.0.0
@@ -1037,56 +1031,56 @@ jobs:
     # Apparently private link for Redis is in preview, but it's not available in the UKEF Azure portal:
     # https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-private-link
     # This may have changed as of 6 Oct 2020
-    - name: Private link
-      uses: Azure/cli@v1.0.0
-      with:
-        # Restrict inbound traffic to not be open to the Internet
-        # NB: group-id isn't well documented. It means "Target sub-resource"
-        #     The purpose of connection-name is unknown.
-        inlineScript: |
-          redis_id=$(az redis show --name tfs-${{ env.environment }}-redis --query "id" -o tsv)
-          az network private-endpoint create \
-            --name tfs-${{ env.environment }}-redis \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "$redis_id" \
-            --group-id redisCache \
-            --connection-name tfs-${{ env.environment }}-redis
+    # - name: Private link
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # Restrict inbound traffic to not be open to the Internet
+    #     # NB: group-id isn't well documented. It means "Target sub-resource"
+    #     #     The purpose of connection-name is unknown.
+    #     inlineScript: |
+    #       redis_id=$(az redis show --name tfs-${{ env.environment }}-redis --query "id" -o tsv)
+    #       az network private-endpoint create \
+    #         --name tfs-${{ env.environment }}-redis \
+    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+    #         --subnet ${{ env.environment }}-private-endpoints \
+    #         --private-connection-resource-id "$redis_id" \
+    #         --group-id redisCache \
+    #         --connection-name tfs-${{ env.environment }}-redis
              
-    - name: DNS A-records
-      uses: Azure/cli@v1.0.0
-      with:
-        # We have to add explicit A records so that redis resolves correctly to the private endpoint address
-        inlineScript: |
-          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+    # - name: DNS A-records
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # We have to add explicit A records so that redis resolves correctly to the private endpoint address
+    #     inlineScript: |
+    #       ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
 
-          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-redis --query 'networkInterfaces[0].id' -o tsv)
-          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+    #       interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-redis --query 'networkInterfaces[0].id' -o tsv)
+    #       interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
           
-          # Create
-          if [ -z "$ipv4_address" ]
-          then
-            echo Setting private link IP address...
+    #       # Create
+    #       if [ -z "$ipv4_address" ]
+    #       then
+    #         echo Setting private link IP address...
 
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net"
-            az network private-dns record-set a add-record \
-              --record-set-name tfs-${{ env.environment }}-redis \
-              --zone-name "privatelink.redis.cache.windows.net" \
-              --ipv4-address $interface_ip
-          fi
+    #         az network private-dns record-set a create --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net"
+    #         az network private-dns record-set a add-record \
+    #           --record-set-name tfs-${{ env.environment }}-redis \
+    #           --zone-name "privatelink.redis.cache.windows.net" \
+    #           --ipv4-address $interface_ip
+    #       fi
 
-          # Update
-          if [ "$ipv4_address" != "$interface_ip" ]
-          then
-            echo Updating private link IP address...
+    #       # Update
+    #       if [ "$ipv4_address" != "$interface_ip" ]
+    #       then
+    #         echo Updating private link IP address...
 
-            az network private-dns record-set a delete --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net" --yes
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net"
-            az network private-dns record-set a add-record \
-              --record-set-name tfs-${{ env.environment }}-redis \
-              --zone-name "privatelink.redis.cache.windows.net" \
-              --ipv4-address $interface_ip
-          fi
+    #         az network private-dns record-set a delete --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net" --yes
+    #         az network private-dns record-set a create --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net"
+    #         az network private-dns record-set a add-record \
+    #           --record-set-name tfs-${{ env.environment }}-redis \
+    #           --zone-name "privatelink.redis.cache.windows.net" \
+    #           --ipv4-address $interface_ip
+    #       fi
 
   application-gateway:
     name: Application Gateway
