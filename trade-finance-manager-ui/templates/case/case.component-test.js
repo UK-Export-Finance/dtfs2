@@ -24,7 +24,7 @@ describe(page, () => {
   // TODO page title
 
   it('should render case summary component', () => {
-    wrapper.expectElement(`[data-cy="case-summary-${params.deal._id}"]`).toExist();
+    wrapper.expectElement(`[data-cy="case-summary"]`).toExist();
   });
 
   it('should render case sub navigation', () => {
