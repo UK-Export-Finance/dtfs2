@@ -37,8 +37,8 @@
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
             <div class="ukef-heading-xs">Date received</div>
-            {# <div class="ukef-body-s">{{ deal.details.submissionDate | localiseTimestamp("DD/MM/YYYY HH:mm", 'en-gb') }}</div> #}
-            <div class="ukef-body-s">{{ deal.details.submissionDate }}</div>
+            {# <div class="ukef-body-s" data-cy="submission-date">{{ deal.details.submissionDate | localiseTimestamp("DD/MM/YYYY HH:mm", 'en-gb') }}</div> #}
+            <div class="ukef-body-s" data-cy="submission-date">{{ deal.details.submissionDate }}</div>
           </div>
         </div>
         <div class="govuk-grid-row">
@@ -58,13 +58,13 @@
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
             <div class="ukef-heading-xs">Export description</div>
-            <div class="ukef-body-s">{{ deal.submissionDetails.supplyContractDescription }}</div>
+            <div class="ukef-body-s" data-cy="export-description">{{ deal.submissionDetails.supplyContractDescription }}</div>
           </div>
         </div>
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
             <div class="ukef-heading-xs">Destination Country</div>
-            <div class="ukef-body-s">{{ deal.submissionDetails.destinationCountry }}</div>
+            <div class="ukef-body-s" data-cy="destination-country">{{ deal.submissionDetails.destinationCountry }}</div>
           </div>
         </div>
         <div class="govuk-grid-row">
@@ -78,13 +78,13 @@
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
             <div class="ukef-heading-xs">Export contract value</div>
-            <div class="ukef-body-s">{{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue  }} GBP {{deal.submissionDetails.supplyContractValue }}</div>
+            <div class="ukef-body-s" data-cy="contract-value">{{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue }}</div>
           </div>
         </div>
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
             <div class="ukef-heading-xs">Total facilities in this deal</div>
-            <div class="ukef-body-s">{{ deal.submissionDetails.supplyContractCurrency }} 28,597,920.00 GBP 5,906,541.25</div>
+            <div class="ukef-body-s"></div>
           </div>
         </div>
         <div class="govuk-grid-row">
