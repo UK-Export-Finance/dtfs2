@@ -21,6 +21,11 @@ const dealQuery = gql`
         supplyContractValue,
         buyerName
       }
+      eligibilityCriteria {
+        id,
+        description,
+        answer
+      }
     }
   }
 `;

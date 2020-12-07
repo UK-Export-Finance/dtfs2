@@ -43,10 +43,18 @@ type DealSubmissionDetails {
   destinationCountry: String
 }
 
+type DealEligibilityCriterion {
+  _id: String
+  id: Int
+  description: String
+  answer: String
+}
+
 type Deal {
   _id: String!
   details: DealDetails
   submissionDetails: DealSubmissionDetails
+  eligibilityCriteria: [DealEligibilityCriterion!]
 }
 
 type Query {
