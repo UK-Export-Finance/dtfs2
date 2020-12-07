@@ -5,11 +5,9 @@ const pages = require('../../pages');
 const mockUsers = require('../../../fixtures/mockUsers');
 const {
   fillAndSubmitIssueBondFacilityForm,
-  fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate,
 } = require('../maker/submit-issued-facilities-for-review/fillAndSubmitIssueBondFacilityForm');
 const {
   fillAndSubmitIssueLoanFacilityForm,
-  fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate,
 } = require('../maker/submit-issued-facilities-for-review/fillAndSubmitIssueLoanFacilityForm');
 
 
@@ -19,7 +17,7 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && us
 const miaDealReadyToSubmit = require('./miaDeal-with-unissued-facilities');
 
 
-context('todoo...', () => {
+context('trying to replicate....', () => {
   let deal;
   let dealId;
 
@@ -39,7 +37,7 @@ context('todoo...', () => {
       });
   });
 
-  it('blaaaaaaa', () => {
+  it('todo......', () => {
     //---------------------------------------------------------------
     // maker submits deal to checker
     //---------------------------------------------------------------
@@ -82,20 +80,24 @@ context('todoo...', () => {
         {
           BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
           BSS_ukef_facility_id: '54321',
+          BSS_status: '""',
         },
         {
           BSS_portal_facility_id: deal.bondTransactions.items[1]._id,
           BSS_ukef_facility_id: '54321',
+          BSS_status: '""',
         },
       ],
       loans: [
         {
           EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
           EWCS_ukef_facility_id: '56789',
+          EWCS_status: '""',
         },
         {
           EWCS_portal_facility_id: deal.loanTransactions.items[1]._id,
           EWCS_ukef_facility_id: '56789',
+          EWCS_status: '""',
         },
       ],
     });
@@ -120,13 +122,13 @@ context('todoo...', () => {
         {
           BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
           BSS_ukef_facility_id: '54321',
-          // BSS_status: '',
+          BSS_status: '""',
           BSS_comments: 'blahblah blah blahblah',
         },
         {
           BSS_portal_facility_id: deal.bondTransactions.items[1]._id,
           BSS_ukef_facility_id: '54321',
-          // BSS_status: '',
+          BSS_status: '""',
           BSS_comments: 'blahblah blah blahblah',
         },
       ],
@@ -134,25 +136,24 @@ context('todoo...', () => {
         {
           EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
           EWCS_ukef_facility_id: '65432',
-          // EWCS_status: '',
+          EWCS_status: '""',
           EWCS_comments: 'blahblah blah blahblah',
         },
         {
           EWCS_portal_facility_id: deal.loanTransactions.items[1]._id,
           EWCS_ukef_facility_id: '65432',
-          // EWCS_status: '',
+          EWCS_status: '""',
           EWCS_comments: 'blahblah blah blahblah',
         },
       ],
     });
 
 
+    // STEP 5
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
 
-    // (to replicate bug): facilities should be 'acknowledged' and 'incomplete'
-    // fill in issue facility forms
-    // bug is - are completeing form, some are marked as 'not started' but should be 'completed'
+    // complete one bond issue facility form
 
     const firstBondId = deal.bondTransactions.items[0]._id;
     const firstBondRow = pages.contract.bondTransactionsTable.row(firstBondId);
@@ -161,12 +162,37 @@ context('todoo...', () => {
 
     fillAndSubmitIssueBondFacilityForm();
 
+    // complete one loan issue facility form
+
     const firstLoanId = deal.loanTransactions.items[0]._id;
     const firstLoanRow = pages.contract.loansTransactionsTable.row(firstLoanId);
 
     firstLoanRow.issueFacilityLink().click();
 
     fillAndSubmitIssueLoanFacilityForm();
+
+    // start but don't complete, second bond
+
+    const secondBondId = deal.bondTransactions.items[1]._id;
+    const secondBondRow = pages.contract.bondTransactionsTable.row(secondBondId);
+
+    secondBondRow.issueFacilityLink().click();
+
+    pages.bondIssueFacility.uniqueIdentificationNumber().type('1234');
+    pages.bondIssueFacility.submit().click();
+    pages.bondIssueFacility.cancelButton().click();
+
+    // start but don't complete, second loan
+    const secondLoanId = deal.loanTransactions.items[1]._id;
+    const secondLoanRow = pages.contract.loansTransactionsTable.row(secondLoanId);
+
+    secondLoanRow.issueFacilityLink().click();
+    pages.loanIssueFacility.disbursementAmount().type('1234');
+    pages.loanIssueFacility.bankReferenceNumber().type('5678');
+
+    pages.loanIssueFacility.submit().click();
+    pages.loanIssueFacility.cancelButton().click();
+
 
     // now at step 6 in the ticket....
 
@@ -217,20 +243,24 @@ context('todoo...', () => {
         {
           BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
           BSS_ukef_facility_id: '54321',
+          BSS_status: '""',
         },
         {
           BSS_portal_facility_id: deal.bondTransactions.items[1]._id,
           BSS_ukef_facility_id: '54321',
+          BSS_status: '""',
         },
       ],
       loans: [
         {
           EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
           EWCS_ukef_facility_id: '56789',
+          EWCS_status: '""',
         },
         {
           EWCS_portal_facility_id: deal.loanTransactions.items[1]._id,
           EWCS_ukef_facility_id: '56789',
+          EWCS_status: '""',
         },
       ],
     });
@@ -248,25 +278,24 @@ context('todoo...', () => {
     // step 10...
     // issue the remaining incomplete/not started, unissued facilities.
 
-    const secondBondId = deal.bondTransactions.items[1]._id;
-    const secondBondRow = pages.contract.bondTransactionsTable.row(secondBondId);
-
     secondBondRow.issueFacilityLink().click();
 
-    fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate();
+    fillAndSubmitIssueBondFacilityForm();
 
-    // const secondLoanId = deal.loanTransactions.items[1]._id;
-    // const secondLoanRow = pages.contract.loansTransactionsTable.row(secondLoanId);
+    secondLoanRow.issueFacilityLink().click();
 
-    // secondLoanRow.issueFacilityLink().click();
+    fillAndSubmitIssueLoanFacilityForm();
 
-    // fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate();
+    // this is what we should get to correctly replicate the bug:
+    secondBondRow.bondStatus().invoke('text').then((text) => {
+      expect(text.trim()).not.to.equal('Not started');
+      expect(text.trim()).to.equal('Completed');
+    });
 
-    // the bug says that these newly completed facilities, are showing as 'Not started'
-    // they should be completed.
-    // this e2e test is currenetly not replicating this :(
-
-
-    cy.url().should('eq', '/test');
+    secondLoanRow.loanStatus().invoke('text').then((text) => {
+      // expect(text.trim()).to.equal('Incomplete');
+      expect(text.trim()).not.to.equal('Not started');
+      expect(text.trim()).to.equal('Completed');
+    });
   });
 });
