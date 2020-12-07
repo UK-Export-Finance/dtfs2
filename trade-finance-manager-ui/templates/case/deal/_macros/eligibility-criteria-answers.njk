@@ -3,31 +3,22 @@
 {% macro render(params) %}
   {% set criteria = params.eligibilityCriteria %}
 
-  <ul class="govuk-!-padding-0">
-    {% for criterion in criteria %}
-      <li class="govuk-row eligibility-criteria-answers__list-item">
-        <div class="govuk-row">
-      
-          <div class="govuk-grid-column-two-tenths govuk-!-padding-0">
+  <table class="govuk-table" data-cy="eligibility-criteria-answers">
+    <tbody class="govuk-table__body">
+      {% for criterion in criteria %}
+        <tr class="govuk-table__row">
+          <th class="govuk-table__header govuk-!-font-weight-regular govuk-!-padding-right-6" data-cy="criterion-{{criterion.id}}-heading">EC{{ criterion.id }}</th>
 
-            <div class="govuk-row">
-              <div class="govuk-grid-column-one-half govuk-!-padding-0">
-                <p>EC{{ criterion.id }}</p>
-              </div>
+          <td class="govuk-table__cell">
+            {{eligibilityCriteriaAnswerTag.render({ answer: criterion.answer })}}
+          </td>
 
-              <div class="govuk-grid-column-one-half govuk-!-padding-0">
-                {{eligibilityCriteriaAnswerTag.render(criterion.answer)}}
-              </div>
-            </div>
+          <td class="govuk-table__cell govuk-!-padding-left-8" data-cy="criterion-{{criterion.id}}-description">{{ criterion.description }}</td>
 
-          </div>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
-          <div class="govuk-grid-column-eight-tenths">
-            <p>{{ criterion.description }}</p>
-          </div>
-        </div>
-      </li>
-    {% endfor %}
-  </ul>
 
 {% endmacro %}
