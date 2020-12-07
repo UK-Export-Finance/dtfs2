@@ -32,11 +32,11 @@ describe(page, () => {
   });
   
   // TODO page title
-  it('should render  mga version', () => {
+  it('should render mga version', () => {
     wrapper.expectText('[data-cy="mga-version"]').toRead('January 2020');
   });
 
-  it('should render  bank', () => {
+  it('should render bank', () => {
     wrapper.expectText('[data-cy="deal-bank"]').toRead(params.deal.details.owningBank.name);
   });
 
@@ -48,6 +48,8 @@ describe(page, () => {
     wrapper.expectText('[data-cy="email"]').toRead(params.deal.details.maker.bank.emails[0] );
   });
 
-  
+  it('should render eligibility criteria answers', () => {
+    wrapper.expectElement('[data-cy="eligibility-criteria-answers"]').toExist();
+  });
 
 });
