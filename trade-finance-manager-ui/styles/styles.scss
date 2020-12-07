@@ -3,8 +3,11 @@
 
 // custom styles
 @import "./moj-sub-navigation.scss";
-@import "./case-summary.scss";
 @import "./moj-primary-navigation.scss";
+
+@import "./case-summary.scss";
+@import "./eligibility-criteria-answers.scss";
+
 
 body {
   font-family: Helvetica;
@@ -102,6 +105,19 @@ body {
 @media (min-width: 40.0625em) {
   .govuk-grid-column-one-tenth {
     width: 11%;
+    float: left;
+  }
+}
+
+.govuk-grid-column-two-tenths {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 15px;
+}
+
+@media (min-width: 40.0625em) {
+  .govuk-grid-column-two-tenths {
+    width: 20%;
     float: left;
   }
 }
