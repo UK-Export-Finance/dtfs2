@@ -136,6 +136,24 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
       expect(body.issueFacilityDetailsStarted).toEqual(true);
     });
 
+    it('should remove bond status when issueFacilityDetailsStarted already exists in the bond', async () => {
+      const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      bondId = createBondResponse.body.bondId;
+
+      const bondWithIssueFacilityDetailsStarted = {
+        ...allBondFields,
+        issueFacilityDetailsStarted: true,
+        issueFacilityDetailsSubmitted: false,
+      };
+
+      const { status } = await as(aBarclaysMaker).put(bondWithIssueFacilityDetailsStarted).to(`/v1/deals/${dealId}/bond/${bondId}`);
+
+
+      const { body } = await putIssueFacility(dealId, bondId, issueFacilityBody);
+
+      expect(body.status).toBeUndefined();
+    });
+
     it('should return 200 with updated bond, add issueFacilityDetailsProvided and generate timestamps', async () => {
       const { status, body } = await putIssueFacility(dealId, bondId, issueFacilityBody);
 
