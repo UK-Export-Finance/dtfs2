@@ -38,7 +38,7 @@ context('Maker/Checker submit an MIA deal with `Unissued` facilities; workflow r
     pages.contract.visit(deal);
 
     pages.contract.proceedToReview().click();
-    pages.contractReadyForReview.comments().type('Issued facilities');
+    pages.contractReadyForReview.comments().type('Ready');
     pages.contractReadyForReview.readyForCheckersApproval().click();
 
 
