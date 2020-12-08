@@ -1,3 +1,6 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% import './_macros/eligibility-criteria-answers.njk' as eligibilityCriteriaAnswers %}
+
 {% extends "case/case.njk" %}
 
 {% block sub_content %}
@@ -10,7 +13,9 @@
 
   <div class="govuk-grid-row" data-cy="deal-bank-details">
     <div class="govuk-grid-column-full separator-line deal">
+
       <p class="ukef-heading-l" style="padding-top:30px">Bank application or notice</p>
+
       <div class="govuk-grid-row govuk-!-margin-0 govuk-!-padding-top-6">
         <div class="govuk-grid-column-one-fifth">
           <div class="govuk-grid-row">
@@ -63,6 +68,14 @@
           </div>
         </div>
       </div>
+
+      {% set componentData = {eligibilityCriteria: deal.eligibilityCriteria} %}
+
+      {{ govukDetails({
+        summaryText: "Eligibility criteria",
+        html: eligibilityCriteriaAnswers.render(componentData)
+      }) }}
+
     </div>
   </div>
 
