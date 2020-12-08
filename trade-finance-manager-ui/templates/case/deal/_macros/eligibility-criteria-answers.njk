@@ -1,0 +1,24 @@
+{% import './eligibility-criteria-answer-tag.njk' as eligibilityCriteriaAnswerTag %}
+
+{% macro render(params) %}
+  {% set criteria = params.eligibilityCriteria %}
+
+  <table class="govuk-table" data-cy="eligibility-criteria-answers">
+    <tbody class="govuk-table__body">
+      {% for criterion in criteria %}
+        <tr class="govuk-table__row">
+          <th class="govuk-table__header govuk-!-font-weight-regular govuk-!-padding-right-6" data-cy="criterion-{{criterion.id}}-heading">EC{{ criterion.id }}</th>
+
+          <td class="govuk-table__cell">
+            {{eligibilityCriteriaAnswerTag.render({ answer: criterion.answer })}}
+          </td>
+
+          <td class="govuk-table__cell govuk-!-padding-left-8" data-cy="criterion-{{criterion.id}}-description">{{ criterion.description }}</td>
+
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+{% endmacro %}

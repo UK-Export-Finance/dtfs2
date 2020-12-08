@@ -45,7 +45,7 @@ env:
 # Below this line should be the same for all environments
 
 jobs:
-
+  # START Virtual Network setup 
   vnet:
     # NB Only one vnet can be associated per App Service Plan,
     # therefore all App Services on a plan must share a single vnet.
@@ -200,9 +200,16 @@ jobs:
             --allocation-method Static \
             --sku Standard
 
-  portal-ui:
-    name: Portal UI
-    needs: [vnet, private-dns, portal-api, reference-data-proxy, redis]
+          az network public-ip create --name tfs-${{ env.environment }}-tfm-ip \
+            --allocation-method Static \
+            --sku Standard
+
+  # END Virtual Network setup
+
+  # START Network Security Group
+  network-security-group:
+    name: Network Security Group Create
+    needs: vnet
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -216,147 +223,100 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
 
-    - name: Create
+    - name: Network Security Group
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp create --name tfs-${{ env.environment }}-portal-ui \
-            --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ env.registry }}/portal-ui:${{ env.environment }}
+          az network nsg create  --name tfs-${{ env.environment }}-gw-nsg
 
-    - name: Vnet integration
+    - name: Application Gateway management traffic
       uses: Azure/cli@v1.0.0
       with:
-        # Enable outbound traffic to the private-endpoints subnet so we can access Portal API and Redis
+        # The "GatewayManager" rule is explained in the Application Gateway FAQ: 
+        #   https://docs.microsoft.com/en-us/azure/application-gateway/application-gateway-faq#how-do-i-use-application-gateway-v2-with-only-private-frontend-ip-address
+        # See also: https://stackoverflow.com/questions/52674810/azure-app-gateway-v2-cannot-be-configured-with-nsg/52697957
         inlineScript: |
-          az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-ui \
-            --vnet tfs-${{ env.app_service_plan }}-vnet \
-            --subnet ${{ env.app_service_plan }}-app-service-plan-egress
+          az network nsg rule create --name gateway-manager --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 100 --direction Inbound --protocol "*" --access Allow \
+            --source-address-prefixes "GatewayManager" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "65200-65535"
 
-    - name: Private endpoint
-      uses: Azure/cli@v1.0.0
-      with:
-        # Restrict inbound traffic to not be open to the Internet
-        # NB: group-id isn't well documented. It means "Target sub-resource"
-        #     The purpose of connection-name is unknown.
-        inlineScript: |
-          portal_ui_id=$(az webapp show --name tfs-${{ env.environment }}-portal-ui --query "id" -o tsv)
-          az network private-endpoint create \
-            --name tfs-${{ env.environment }}-portal-ui \
-            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-            --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "$portal_ui_id" \
-            --group-id sites \
-            --connection-name tfs-${{ env.environment }}-portal-ui
-
-    - name: DNS A-records
-      uses: Azure/cli@v1.0.0
-      with:
-        # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
-        # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
-        inlineScript: |
-          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
-
-          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-portal-ui --query 'networkInterfaces[0].id' -o tsv)
-          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
-          
-          # Create
-          if [ -z "$ipv4_address" ]
-          then
-            echo Setting private link IP address...
-
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net"
-            az network private-dns record-set a add-record \
-              --record-set-name tfs-${{ env.environment }}-portal-ui \
-              --zone-name "privatelink.azurewebsites.net" \
-              --ipv4-address $interface_ip
-            
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net"
-            az network private-dns record-set a add-record \
-              --record-set-name tfs-${{ env.environment }}-portal-ui.scm \
-              --zone-name "privatelink.azurewebsites.net" \
-              --ipv4-address $interface_ip
-          fi
-
-          # Update
-          if [ "$ipv4_address" != "$interface_ip" ]
-          then
-            echo Updating private link IP address...
-
-            az network private-dns record-set a delete --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net" --yes
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net"
-            az network private-dns record-set a add-record \
-              --record-set-name tfs-${{ env.environment }}-portal-ui \
-              --zone-name "privatelink.azurewebsites.net" \
-              --ipv4-address $interface_ip
-
-            az network private-dns record-set a delete --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net" --yes
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net"
-            az network private-dns record-set a add-record \
-              --record-set-name tfs-${{ env.environment }}-portal-ui.scm \
-              --zone-name "privatelink.azurewebsites.net" \
-              --ipv4-address $interface_ip
-          fi
-
-    - name: Continuous deployment
+    - name: ${{ env.front_door_access }} Front Door traffic
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp deployment container config --name tfs-${{ env.environment }}-portal-ui \
-            --enable-cd true
+          az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 200 --direction Inbound --protocol "*" --access ${{ env.front_door_access }} \
+            --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
 
-    - name: Enable container logging
+    - name: Allow Azure fileshare
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp log config --name tfs-${{ env.environment }}-portal-ui \
-            --docker-container-logging filesystem
+          az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 200 --direction Inbound --protocol "*" --access ${{ env.front_door_access }} \
+            --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
 
-    - name: Always-on
+    - name: Temporary team IPs
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp config set --name tfs-${{ env.environment }}-portal-ui \
-            --always-on true
 
-    - name: Environment variables
+          # VMs
+          az network nsg rule create --name vm-ips-dev --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 997 --direction Inbound --protocol "*" --access Allow \
+            --source-address-prefixes "51.104.202.42" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+          az network nsg rule create --name vm-ips-test --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 998 --direction Inbound --protocol "*" --access Allow \
+            --source-address-prefixes "51.11.144.7" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+          az network nsg rule create --name vm-ips-prod --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 999 --direction Inbound --protocol "*" --access Allow \
+            --source-address-prefixes "51.145.36.44" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+
+          # David
+          az network nsg rule create --name team-ips-david --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 1000 --direction Inbound --protocol "*" --access Allow \
+            --source-address-prefixes "195.188.184.171" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+
+          # Andrew
+          az network nsg rule create --name team-ips-andrew --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 2000 --direction Inbound --protocol "*" --access Allow \
+            --source-address-prefixes "81.174.144.245" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+
+          # UKEF IP
+          az network nsg rule create --name team-ips-ukef --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 3000 --direction Inbound --protocol "*" --access Allow \
+            --source-address-prefixes "51.140.76.208" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+
+          # Tony B
+          az network nsg rule create --name team-ips-tonyb --nsg-name tfs-${{ env.environment }}-gw-nsg \
+            --priority 4001 --direction Inbound --protocol "*" --access Allow \
+            --source-address-prefixes "87.74.98.153" --source-port-ranges "*" \
+            --destination-address-prefixes "*" --destination-port-ranges "*"
+
+          # Caroline - VM
+          az network nsg rule create --name team-ips-caroline-vm --nsg-name tfs-${{ env.environment }}-gw-nsg \
+          --priority 4002 --direction Inbound --protocol "*" --access Allow \
+          --source-address-prefixes "51.132.249.180" --source-port-ranges "*" \
+          --destination-address-prefixes "*" --destination-port-ranges "*"
+
+    - name: Associate NSG to gateway subnet
       uses: Azure/cli@v1.0.0
       with:
-        # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
-        # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
-        # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
         inlineScript: |
-          deal_api=$(az webapp show --name tfs-${{ env.environment }}-portal-api --query defaultHostName -o tsv)
-          reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
-          
-          redis_hostname=$(az redis show --name tfs-${{ env.environment }}-redis --query hostName --output tsv)
-          redis_sslPort=$(az redis show --name tfs-${{ env.environment }}-redis --query sslPort --output tsv)
-          redis_key=$(az redis list-keys --name tfs-${{ env.environment }}-redis --query primaryKey --output tsv)
-          echo "REDIS CONNECTION: $redis_key@$redis_hostname:$redis_sslPort"
+          az network vnet subnet update --name ${{ env.environment }}-gateway --vnet-name tfs-${{ env.app_service_plan }}-vnet --network-security-group tfs-${{ env.environment }}-gw-nsg
 
-          az webapp config appsettings set --name tfs-${{ env.environment }}-portal-ui \
-            --settings \
-              PORT=5000 \
-              WEBSITES_PORT=5000 \
-              DEAL_API_URL="https://$deal_api" \
-              COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
-              WEBSITE_DNS_SERVER="168.63.129.16" \
-              WEBSITE_VNET_ROUTE_ALL=1 \
-              REDIS_HOSTNAME="$redis_hostname" \
-              REDIS_PORT="$redis_sslPort" \
-              REDIS_KEY="$redis_key" \
-              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"
-              
-    - name: Secrets
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az webapp config connection-string set --name tfs-${{ env.environment }}-portal-ui \
-            --connection-string-type custom \
-            --settings \
-              SESSION_SECRET="${{ env.SESSION_SECRET }}" \
-              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
+  # END Network Security Group
 
+  # START CosmosDB setup
   cosmos-db-create:
     name: Cosmos DB (Mongo) Create
     needs: vnet
@@ -603,7 +563,181 @@ jobs:
               --zone-name "privatelink.mongo.cosmos.azure.com" \
               --ipv4-address $uksouth_interface_ip
           fi
-              
+  # END CosmosDB setup
+
+  # START File Storage setup
+  file-storage:
+    name: File storage
+    needs: [vnet, private-dns]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az storage account create --name tfs${{ env.environment }}storage \
+            --sku Standard_ZRS \
+            --https-only true \
+            --encryption-services file
+
+    - name: File share (files)
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az storage share create --account-name tfs${{ env.environment }}storage --name ${{ env.AZURE_PORTAL_FILESHARE_NAME }}
+
+    - name: File share (workflow)
+      uses: Azure/cli@v1.0.0
+      with:
+        # This fileshare is used if the environment isn't integrated to Workflow.
+        inlineScript: |
+          az storage share create --account-name tfs${{ env.environment }}storage --name workflow
+
+    - name: Private link
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource"
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          file_storage_id=$(az storage account show --name tfs${{ env.environment }}storage --query "id" -o tsv)
+          az network private-endpoint create \
+            --name tfs${{ env.environment }}storage \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-private-endpoints \
+            --private-connection-resource-id "$file_storage_id" \
+            --group-id file \
+            --connection-name tfs${{ env.environment }}storage
+             
+    - name: DNS A-records
+      uses: Azure/cli@v1.0.0
+      with:
+        # We have to add explicit A records so that Stogare Accounts resolve correctly to the private endpoint address
+        # https://docs.microsoft.com/en-us/azure/storage/files/storage-files-networking-endpoints?tabs=azure-cli
+        inlineScript: |
+          ipv4_address=$(az network private-dns record-set a show --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+
+          interface_id=$(az network private-endpoint show --name tfs${{ env.environment }}storage --query 'networkInterfaces[0].id' -o tsv)
+          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+          
+          # Create
+          if [ -z "$ipv4_address" ]
+          then
+            echo Setting private link IP address...
+
+            az network private-dns record-set a create --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs${{ env.environment }}storage \
+              --zone-name "privatelink.file.core.windows.net" \
+              --ipv4-address $interface_ip
+          fi
+
+          # Update
+          if [ "$ipv4_address" != "$interface_ip" ]
+          then
+            echo Updating private link IP address...
+
+            az network private-dns record-set a delete --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net" --yes
+            az network private-dns record-set a create --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs${{ env.environment }}storage \
+              --zone-name "privatelink.file.core.windows.net" \
+              --ipv4-address $interface_ip
+          fi
+  # END File Storage setup
+
+  # START Redis setup           
+  redis:
+    name: Redis session store
+    needs: [vnet, private-dns]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az redis create --name tfs-${{ env.environment }}-redis \
+            --sku ${{ env.redis_sku }} \
+            --vm-size C0
+    
+    # Apparently private link for Redis is in preview, but it's not available in the UKEF Azure portal:
+    # https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-private-link
+    # This may have changed as of 6 Oct 2020
+    # - name: Private link
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # Restrict inbound traffic to not be open to the Internet
+    #     # NB: group-id isn't well documented. It means "Target sub-resource"
+    #     #     The purpose of connection-name is unknown.
+    #     inlineScript: |
+    #       redis_id=$(az redis show --name tfs-${{ env.environment }}-redis --query "id" -o tsv)
+    #       az network private-endpoint create \
+    #         --name tfs-${{ env.environment }}-redis \
+    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+    #         --subnet ${{ env.environment }}-private-endpoints \
+    #         --private-connection-resource-id "$redis_id" \
+    #         --group-id redisCache \
+    #         --connection-name tfs-${{ env.environment }}-redis
+             
+    # - name: DNS A-records
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     # We have to add explicit A records so that redis resolves correctly to the private endpoint address
+    #     inlineScript: |
+    #       ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+
+    #       interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-redis --query 'networkInterfaces[0].id' -o tsv)
+    #       interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+          
+    #       # Create
+    #       if [ -z "$ipv4_address" ]
+    #       then
+    #         echo Setting private link IP address...
+
+    #         az network private-dns record-set a create --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net"
+    #         az network private-dns record-set a add-record \
+    #           --record-set-name tfs-${{ env.environment }}-redis \
+    #           --zone-name "privatelink.redis.cache.windows.net" \
+    #           --ipv4-address $interface_ip
+    #       fi
+
+    #       # Update
+    #       if [ "$ipv4_address" != "$interface_ip" ]
+    #       then
+    #         echo Updating private link IP address...
+
+    #         az network private-dns record-set a delete --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net" --yes
+    #         az network private-dns record-set a create --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net"
+    #         az network private-dns record-set a add-record \
+    #           --record-set-name tfs-${{ env.environment }}-redis \
+    #           --zone-name "privatelink.redis.cache.windows.net" \
+    #           --ipv4-address $interface_ip
+    #       fi
+  # END Redis setup
+
+  # START API setup
   reference-data-proxy:
     name: Reference data API
     needs: [vnet, private-dns]
@@ -744,10 +878,10 @@ jobs:
             --connection-string-type custom \
             --settings \
               MULESOFT_API="TMP"
-    
+
   portal-api:
     name: Portal API
-    needs: [vnet, private-dns, cosmos-db-create, reference-data-proxy, file-storage]
+    needs: [vnet, private-dns, cosmos-db-private, reference-data-proxy, file-storage]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -914,9 +1048,9 @@ jobs:
               FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ env.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"              
 
-  file-storage:
-    name: File storage
-    needs: [vnet, private-dns]
+  trade-finance-manager-api:
+    name: Trade Finance Manager API
+    needs: [vnet, private-dns, cosmos-db-private, reference-data-proxy]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -934,49 +1068,45 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az storage account create --name tfs${{ env.environment }}storage \
-            --sku Standard_ZRS \
-            --https-only true \
-            --encryption-services file
+          az webapp create --name tfs-${{ env.environment }}-trade-finance-manager-api \
+            --plan ${{ env.app_service_plan }} \
+            --deployment-container-image-name ${{ env.registry }}/trade-finance-manager-api:${{ env.environment }}
 
-    - name: File share (files)
+    - name: Vnet integration
       uses: Azure/cli@v1.0.0
       with:
+        # Enable outbound traffic from Portal API to the services subnet so we can access Cosmos and Storage
         inlineScript: |
-          az storage share create --account-name tfs${{ env.environment }}storage --name ${{ env.AZURE_PORTAL_FILESHARE_NAME }}
+          az webapp vnet-integration add --name tfs-${{ env.environment }}-trade-finance-manager-api \
+            --vnet tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
-    - name: File share (workflow)
-      uses: Azure/cli@v1.0.0
-      with:
-        # This fileshare is used if the environment isn't integrated to Workflow.
-        inlineScript: |
-          az storage share create --account-name tfs${{ env.environment }}storage --name workflow
-
-    - name: Private link
+    - name: Private endpoint
       uses: Azure/cli@v1.0.0
       with:
         # Restrict inbound traffic to not be open to the Internet
-        # NB: group-id isn't well documented. It means "Target sub-resource"
+        # NB: group-id isn't well documented. It means "Target sub-resource".
         #     The purpose of connection-name is unknown.
         inlineScript: |
-          file_storage_id=$(az storage account show --name tfs${{ env.environment }}storage --query "id" -o tsv)
+          tfm_portal_id=$(az webapp show --name tfs-${{ env.environment }}-trade-finance-manager-api --query "id" -o tsv)
           az network private-endpoint create \
-            --name tfs${{ env.environment }}storage \
+            --name tfs-${{ env.environment }}-trade-finance-manager-api \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "$file_storage_id" \
-            --group-id file \
-            --connection-name tfs${{ env.environment }}storage
-             
+            --private-connection-resource-id "$tfm_portal_id" \
+            --group-id sites \
+            --connection-name tfs-${{ env.environment }}-trade-finance-manager-api
+
     - name: DNS A-records
       uses: Azure/cli@v1.0.0
       with:
-        # We have to add explicit A records so that Stogare Accounts resolve correctly to the private endpoint address
-        # https://docs.microsoft.com/en-us/azure/storage/files/storage-files-networking-endpoints?tabs=azure-cli
+        # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
+        # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
+        # NB the -z tests below are checking 
         inlineScript: |
-          ipv4_address=$(az network private-dns record-set a show --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-trade-finance-manager-api --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
 
-          interface_id=$(az network private-endpoint show --name tfs${{ env.environment }}storage --query 'networkInterfaces[0].id' -o tsv)
+          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-trade-finance-manager-api --query 'networkInterfaces[0].id' -o tsv)
           interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
           
           # Create
@@ -984,10 +1114,172 @@ jobs:
           then
             echo Setting private link IP address...
 
-            az network private-dns record-set a create --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net"
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-trade-finance-manager-api --zone-name "privatelink.azurewebsites.net"
             az network private-dns record-set a add-record \
-              --record-set-name tfs${{ env.environment }}storage \
-              --zone-name "privatelink.file.core.windows.net" \
+              --record-set-name tfs-${{ env.environment }}-trade-finance-manager-api \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+            
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-trade-finance-manager-api.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-trade-finance-manager-api.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          fi
+
+          # Update
+          if [ "$ipv4_address" != "$interface_ip" ]
+          then
+            echo Update private link IP address...
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-trade-finance-manager-api --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-trade-finance-manager-api --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-trade-finance-manager-api \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-trade-finance-manager-api.scm --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-trade-finance-manager-api.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-trade-finance-manager-api.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          fi
+
+    - name: Continuous deployment
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment container config --name tfs-${{ env.environment }}-trade-finance-manager-api \
+            --enable-cd true
+
+    - name: Enable container logging
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp log config --name tfs-${{ env.environment }}-trade-finance-manager-api \
+            --docker-container-logging filesystem
+
+    - name: Always-on
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp config set --name tfs-${{ env.environment }}-trade-finance-manager-api \
+            --always-on true
+
+    - name: Environment variables
+      uses: Azure/cli@v1.0.0
+      with:
+        # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
+        # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
+        # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
+        inlineScript: |
+          az webapp config appsettings set --name tfs-${{ env.environment }}-trade-finance-manager-api \
+            --settings \
+              PORT=5000 \
+              WEBSITES_PORT=5000
+
+    - name: Secrets
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
+          echo "Mongo connection string: $mongo_connection_string"
+
+          reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
+
+          portal_file_storage_key=$(az storage account keys list --account-name tfs${{ env.environment }}storage --query [0].value -o tsv)
+
+          echo "Reference data proxy url: http://$reference_data_proxy_url"
+
+          az webapp config connection-string set --name tfs-${{ env.environment }}-trade-finance-manager-api \
+            --connection-string-type custom \
+            --settings \
+              MONGO_INITDB_DATABASE="${{ env.database_name }}" \
+              MONGODB_URI="$mongo_connection_string" \
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1 \
+              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"              
+
+  # END API setup
+
+  # START UI setup
+  portal-ui:
+    name: Portal UI
+    needs: [vnet, private-dns, portal-api, reference-data-proxy, redis]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp create --name tfs-${{ env.environment }}-portal-ui \
+            --plan ${{ env.app_service_plan }} \
+            --deployment-container-image-name ${{ env.registry }}/portal-ui:${{ env.environment }}
+
+    - name: Vnet integration
+      uses: Azure/cli@v1.0.0
+      with:
+        # Enable outbound traffic to the private-endpoints subnet so we can access Portal API and Redis
+        inlineScript: |
+          az webapp vnet-integration add --name tfs-${{ env.environment }}-portal-ui \
+            --vnet tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.app_service_plan }}-app-service-plan-egress
+
+    - name: Private endpoint
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource"
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          portal_ui_id=$(az webapp show --name tfs-${{ env.environment }}-portal-ui --query "id" -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-portal-ui \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-private-endpoints \
+            --private-connection-resource-id "$portal_ui_id" \
+            --group-id sites \
+            --connection-name tfs-${{ env.environment }}-portal-ui
+
+    - name: DNS A-records
+      uses: Azure/cli@v1.0.0
+      with:
+        # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
+        # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
+        inlineScript: |
+          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+
+          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-portal-ui --query 'networkInterfaces[0].id' -o tsv)
+          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+          
+          # Create
+          if [ -z "$ipv4_address" ]
+          then
+            echo Setting private link IP address...
+
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-portal-ui \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+            
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-portal-ui.scm \
+              --zone-name "privatelink.azurewebsites.net" \
               --ipv4-address $interface_ip
           fi
 
@@ -996,17 +1288,83 @@ jobs:
           then
             echo Updating private link IP address...
 
-            az network private-dns record-set a delete --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net" --yes
-            az network private-dns record-set a create --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net"
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui --zone-name "privatelink.azurewebsites.net"
             az network private-dns record-set a add-record \
-              --record-set-name tfs${{ env.environment }}storage \
-              --zone-name "privatelink.file.core.windows.net" \
+              --record-set-name tfs-${{ env.environment }}-portal-ui \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-portal-ui.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-portal-ui.scm \
+              --zone-name "privatelink.azurewebsites.net" \
               --ipv4-address $interface_ip
           fi
-             
-  redis:
-    name: Redis session store
-    needs: [vnet, private-dns]
+
+    - name: Continuous deployment
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment container config --name tfs-${{ env.environment }}-portal-ui \
+            --enable-cd true
+
+    - name: Enable container logging
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp log config --name tfs-${{ env.environment }}-portal-ui \
+            --docker-container-logging filesystem
+
+    - name: Always-on
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp config set --name tfs-${{ env.environment }}-portal-ui \
+            --always-on true
+
+    - name: Environment variables
+      uses: Azure/cli@v1.0.0
+      with:
+        # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
+        # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
+        # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
+        inlineScript: |
+          deal_api=$(az webapp show --name tfs-${{ env.environment }}-portal-api --query defaultHostName -o tsv)
+          reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
+          
+          redis_hostname=$(az redis show --name tfs-${{ env.environment }}-redis --query hostName --output tsv)
+          redis_sslPort=$(az redis show --name tfs-${{ env.environment }}-redis --query sslPort --output tsv)
+          redis_key=$(az redis list-keys --name tfs-${{ env.environment }}-redis --query primaryKey --output tsv)
+          echo "REDIS CONNECTION: $redis_key@$redis_hostname:$redis_sslPort"
+
+          az webapp config appsettings set --name tfs-${{ env.environment }}-portal-ui \
+            --settings \
+              PORT=5000 \
+              WEBSITES_PORT=5000 \
+              DEAL_API_URL="https://$deal_api" \
+              COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1 \
+              REDIS_HOSTNAME="$redis_hostname" \
+              REDIS_PORT="$redis_sslPort" \
+              REDIS_KEY="$redis_key" \
+              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"
+              
+    - name: Secrets
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp config connection-string set --name tfs-${{ env.environment }}-portal-ui \
+            --connection-string-type custom \
+            --settings \
+              SESSION_SECRET="${{ env.SESSION_SECRET }}" \
+              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
+ 
+  trade-finance-manager-ui:
+    name: Trade Finance Manager UI
+    needs: [vnet, private-dns, trade-finance-manager-api, redis]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1024,67 +1382,146 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az redis create --name tfs-${{ env.environment }}-redis \
-            --sku ${{ env.redis_sku }} \
-            --vm-size C0
-    
-    # Apparently private link for Redis is in preview, but it's not available in the UKEF Azure portal:
-    # https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-private-link
-    # This may have changed as of 6 Oct 2020
-    # - name: Private link
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     # Restrict inbound traffic to not be open to the Internet
-    #     # NB: group-id isn't well documented. It means "Target sub-resource"
-    #     #     The purpose of connection-name is unknown.
-    #     inlineScript: |
-    #       redis_id=$(az redis show --name tfs-${{ env.environment }}-redis --query "id" -o tsv)
-    #       az network private-endpoint create \
-    #         --name tfs-${{ env.environment }}-redis \
-    #         --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-    #         --subnet ${{ env.environment }}-private-endpoints \
-    #         --private-connection-resource-id "$redis_id" \
-    #         --group-id redisCache \
-    #         --connection-name tfs-${{ env.environment }}-redis
-             
-    # - name: DNS A-records
-    #   uses: Azure/cli@v1.0.0
-    #   with:
-    #     # We have to add explicit A records so that redis resolves correctly to the private endpoint address
-    #     inlineScript: |
-    #       ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+          az webapp create --name tfs-${{ env.environment }}-trade-finance-manager-ui \
+            --plan ${{ env.app_service_plan }} \
+            --deployment-container-image-name ${{ env.registry }}/trade-finance-manager-ui:${{ env.environment }}
 
-    #       interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-redis --query 'networkInterfaces[0].id' -o tsv)
-    #       interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+    - name: Vnet integration
+      uses: Azure/cli@v1.0.0
+      with:
+        # Enable outbound traffic to the private-endpoints subnet so we can access TFM API and Redis
+        inlineScript: |
+          az webapp vnet-integration add --name tfs-${{ env.environment }}-trade-finance-manager-ui \
+            --vnet tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.app_service_plan }}-app-service-plan-egress
+
+    - name: Private endpoint
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource"
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          tfm_ui_id=$(az webapp show --name tfs-${{ env.environment }}-trade-finance-manager-ui --query "id" -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-trade-finance-manager-ui \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-private-endpoints \
+            --private-connection-resource-id "$tfm_ui_id" \
+            --group-id sites \
+            --connection-name tfs-${{ env.environment }}-trade-finance-manager-ui
+
+    - name: DNS A-records
+      uses: Azure/cli@v1.0.0
+      with:
+        # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
+        # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
+        inlineScript: |
+          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-trade-finance-manager-ui --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+
+          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-trade-finance-manager-ui --query 'networkInterfaces[0].id' -o tsv)
+          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
           
-    #       # Create
-    #       if [ -z "$ipv4_address" ]
-    #       then
-    #         echo Setting private link IP address...
+          # Create
+          if [ -z "$ipv4_address" ]
+          then
+            echo Setting private link IP address...
 
-    #         az network private-dns record-set a create --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net"
-    #         az network private-dns record-set a add-record \
-    #           --record-set-name tfs-${{ env.environment }}-redis \
-    #           --zone-name "privatelink.redis.cache.windows.net" \
-    #           --ipv4-address $interface_ip
-    #       fi
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-trade-finance-manager-ui --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-trade-finance-manager-ui \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+            
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-trade-finance-manager-ui.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-trade-finance-manager-ui.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          fi
 
-    #       # Update
-    #       if [ "$ipv4_address" != "$interface_ip" ]
-    #       then
-    #         echo Updating private link IP address...
+          # Update
+          if [ "$ipv4_address" != "$interface_ip" ]
+          then
+            echo Updating private link IP address...
 
-    #         az network private-dns record-set a delete --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net" --yes
-    #         az network private-dns record-set a create --name tfs-${{ env.environment }}-redis --zone-name "privatelink.redis.cache.windows.net"
-    #         az network private-dns record-set a add-record \
-    #           --record-set-name tfs-${{ env.environment }}-redis \
-    #           --zone-name "privatelink.redis.cache.windows.net" \
-    #           --ipv4-address $interface_ip
-    #       fi
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-trade-finance-manager-ui --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-trade-finance-manager-ui --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-trade-finance-manager-ui \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
 
-  application-gateway:
-    name: Application Gateway
-    needs: [vnet, public-ip]
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-trade-finance-manager-ui.scm --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-trade-finance-manager-ui.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-trade-finance-manager-ui.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          fi
+
+    - name: Continuous deployment
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment container config --name tfs-${{ env.environment }}-trade-finance-manager-ui \
+            --enable-cd true
+
+    - name: Enable container logging
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp log config --name tfs-${{ env.environment }}-trade-finance-manager-ui \
+            --docker-container-logging filesystem
+
+    - name: Always-on
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp config set --name tfs-${{ env.environment }}-trade-finance-manager-ui \
+            --always-on true
+
+    - name: Environment variables
+      uses: Azure/cli@v1.0.0
+      with:
+        # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
+        # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
+        # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
+        inlineScript: |
+          tfm_api=$(az webapp show --name tfs-${{ env.environment }}-trade-finance-manager-api --query defaultHostName -o tsv)
+          reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
+          
+          redis_hostname=$(az redis show --name tfs-${{ env.environment }}-redis --query hostName --output tsv)
+          redis_sslPort=$(az redis show --name tfs-${{ env.environment }}-redis --query sslPort --output tsv)
+          redis_key=$(az redis list-keys --name tfs-${{ env.environment }}-redis --query primaryKey --output tsv)
+          echo "REDIS CONNECTION: $redis_key@$redis_hostname:$redis_sslPort"
+
+          az webapp config appsettings set --name tfs-${{ env.environment }}-trade-finance-manager-ui \
+            --settings \
+              PORT=5000 \
+              WEBSITES_PORT=5000 \
+              TRADE_FINANCE_MANAGER_API_URL="https://$tfm_api" \
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1 \
+              REDIS_HOSTNAME="$redis_hostname" \
+              REDIS_PORT="$redis_sslPort" \
+              REDIS_KEY="$redis_key" \
+              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"
+              
+    - name: Secrets
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp config connection-string set --name tfs-${{ env.environment }}-trade-finance-manager-ui \
+            --connection-string-type custom \
+            --settings \
+              SESSION_SECRET="${{ env.SESSION_SECRET }}"
+  # END UI setup
+
+  # START Application gateways
+  application-gateway-portal:
+    name: Application Gateway Portal
+    needs: [vnet, public-ip, portal-ui]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1107,7 +1544,7 @@ jobs:
             --subnet ${{ env.environment }}-gateway \
             --public-ip-address tfs-${{ env.environment }}-ip \
             --frontend-port 80 \
-            --max-capacity 10 --min-capacity 1 \
+            --max-capacity 5 --min-capacity 1 \
             --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
             --sku Standard_v2
 
@@ -1149,97 +1586,6 @@ jobs:
               --address-pool appGatewayBackendPool
           fi
 
-    - name: Network Security Group
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network nsg create  --name tfs-${{ env.environment }}-gw-nsg
-
-    - name: Application Gateway management traffic
-      uses: Azure/cli@v1.0.0
-      with:
-        # The "GatewayManager" rule is explained in the Application Gateway FAQ: 
-        #   https://docs.microsoft.com/en-us/azure/application-gateway/application-gateway-faq#how-do-i-use-application-gateway-v2-with-only-private-frontend-ip-address
-        # See also: https://stackoverflow.com/questions/52674810/azure-app-gateway-v2-cannot-be-configured-with-nsg/52697957
-        inlineScript: |
-          az network nsg rule create --name gateway-manager --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 100 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "GatewayManager" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "65200-65535"
-
-    - name: ${{ env.front_door_access }} Front Door traffic
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 200 --direction Inbound --protocol "*" --access ${{ env.front_door_access }} \
-            --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-    - name: Allow Azure fileshare
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 200 --direction Inbound --protocol "*" --access ${{ env.front_door_access }} \
-            --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-    - name: Temporary team IPs
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-
-          # VMs
-          az network nsg rule create --name vm-ips-dev --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 997 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "51.104.202.42" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-          az network nsg rule create --name vm-ips-test --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 998 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "51.11.144.7" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-          az network nsg rule create --name vm-ips-prod --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 999 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "51.145.36.44" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-          # David
-          az network nsg rule create --name team-ips-david --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 1000 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "195.188.184.171" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-          # Andrew
-          az network nsg rule create --name team-ips-andrew --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 2000 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "81.174.144.245" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-          # UKEF IP
-          az network nsg rule create --name team-ips-ukef --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 3000 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "51.140.76.208" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-          # Tony B
-          az network nsg rule create --name team-ips-tonyb --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 4001 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "87.74.98.153" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-          # Caroline - VM
-          az network nsg rule create --name team-ips-caroline-vm --nsg-name tfs-${{ env.environment }}-gw-nsg \
-          --priority 4002 --direction Inbound --protocol "*" --access Allow \
-          --source-address-prefixes "51.132.249.180" --source-port-ranges "*" \
-          --destination-address-prefixes "*" --destination-port-ranges "*"
-
-    - name: Associate NSG to gateway subnet
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network vnet subnet update --name ${{ env.environment }}-gateway --vnet-name tfs-${{ env.app_service_plan }}-vnet --network-security-group tfs-${{ env.environment }}-gw-nsg
-
     - name: Healthcheck probe
       uses: Azure/cli@v1.0.0
       with:
@@ -1261,11 +1607,102 @@ jobs:
             --probe healthcheck --enable-probe true \
             --protocol Https --port 443
 
-  front-door:
+  application-gateway-tfm:
+    name: Application Gateway TFM
+    needs: [vnet, public-ip, trade-finance-manager-ui]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+ 
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network application-gateway create --name tfs-${{ env.environment }}-tfm-gw \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-gateway \
+            --public-ip-address tfs-${{ env.environment }}-tfm-ip \
+            --frontend-port 80 \
+            --max-capacity 5 --min-capacity 1 \
+            --servers tfs-${{ env.environment }}-trade-finance-manager-ui.azurewebsites.net \
+            --sku Standard_v2
+
+    - name: Https ingress for data migration
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          cert="${{ env.MIGRATION_SSL_CERTIFICATE }}"
+          if [ ! -z "$cert" ]
+          then
+            # Create the certificate file from the secret value:
+            echo $cert | base64 -d > cert.pfx
+
+            az network application-gateway ssl-cert create \
+              --gateway-name tfs-${{ env.environment }}-tfm-gw \
+              --name ${{ env.environment }}-cert \
+              --cert-password ${{ env.MIGRATION_SSL_CERTIFICATE_PASSWORD }} \
+              --cert-file cert.pfx
+
+            echo "Creating frontend port"
+            az network application-gateway frontend-port create \
+              --gateway-name tfs-${{ env.environment }}-tfm-gw \
+              --name tfs-${{ env.environment }}-port-https \
+              --port 443
+
+            echo "Creating HTTP listener..."
+            az network application-gateway http-listener create \
+              --gateway-name tfs-${{ env.environment }}-tfm-gw \
+              --name ${{ env.environment }}-https \
+              --frontend-port tfs-${{ env.environment }}-port-https \
+              --ssl-cert ${{ env.environment }}-cert
+
+            echo "Creating rule..."
+            az network application-gateway rule create \
+              --gateway-name tfs-${{ env.environment }}-tfm-gw \
+              --name ${{ env.environment }}-migration \
+              --http-listener ${{ env.environment }}-https \
+              --http-settings appGatewayBackendHttpSettings \
+              --address-pool appGatewayBackendPool
+          fi
+
+    - name: Healthcheck probe
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network application-gateway probe create --name healthcheck \
+            --gateway-name tfs-${{ env.environment }}-tfm-gw \
+            --protocol Https \
+            --path "/healthcheck" \
+            --host-name-from-http-settings true
+
+    - name: Update back-end http settings
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          httpsettings_name=$(az network application-gateway show --name tfs-${{ env.environment }}-tfm-gw --query "backendHttpSettingsCollection[0].name" -o tsv)
+          az network application-gateway http-settings update --name $httpsettings_name \
+            --gateway-name tfs-${{ env.environment }}-tfm-gw \
+            --host-name-from-backend-pool true \
+            --probe healthcheck --enable-probe true \
+            --protocol Https --port 443
+
+  # END Application gateways
+
+  # START Front Doors
+  front-door-portal:
     # NB Front Door takes a little while to be available
     # So you won't get a successful request for the first few minutes.
-    name: WAF/DDoS
-    needs: application-gateway
+    name: Portal Front Door WAF/DDoS
+    needs: application-gateway-portal
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1337,3 +1774,81 @@ jobs:
     #         --forwarding-protocol HttpsOnly \
     #         --backend-pool portal-api \
     #         --patterns "/v1/*"
+
+  front-door-tfm:
+    # NB Front Door takes a little while to be available
+    # So you won't get a successful request for the first few minutes.
+    name: TFM Front Door WAF/DDoS
+    needs: application-gateway-tfm
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+          # Front door requires an extension to the az cli:
+          az extension add --name front-door
+
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          gateway_ip_id=$(az network application-gateway show --name tfs-${{ env.environment }}-tfm-gw --query "frontendIpConfigurations[0].publicIpAddress.id" -o tsv)
+          gateway_ip=$(az resource show --ids "$gateway_ip_id" --query "properties.ipAddress" -o tsv)
+
+          az network front-door create --name tfs-${{ env.environment }}-tfm-fd \
+            --accepted-protocols Https \
+            --forwarding-protocol HttpOnly \
+            --backend-address $gateway_ip \
+            --probeMethod GET \
+            --protocol Http \
+            --path "/healthcheck"
+
+    - name: Redirect to https
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          frontend_endpoint_name=$(az network front-door show --name tfs-${{ env.environment }}-tfm-fd --query "frontendEndpoints[0].name" -o tsv)
+          az network front-door routing-rule create --front-door-name tfs-${{ env.environment }}-tfm-fd \
+            --name RedirectToHttps \
+            --frontend-endpoints $frontend_endpoint_name \
+            --route-type Redirect \
+            --accepted-protocols Http \
+            --redirect-protocol HttpsOnly
+
+    # - name: API routing
+    #   uses: Azure/cli@v1.0.0
+    #   with:
+    #     inlineScript: |
+    #       frontend_endpoint_name=$(az network front-door show --name tfs-${{ env.environment }}-fd --query "frontendEndpoints[0].name" -o tsv)
+    #       az network front-door load-balancing create --front-door-name tfs-${{ env.environment }}-fd \
+    #         --name api-lb \
+    #         --sample-size 4 \
+    #         --successful-samples-required 2
+    #       az network front-door probe create --front-door-name tfs-${{ env.environment }}-fd \
+    #         --interval 60 \
+    #         --name api-probe \
+    #         --path /healthcheck \
+    #         --probeMethod GET \
+    #         --protocol Https
+    #       az network front-door backend-pool create --front-door-name tfs-${{ env.environment }}-fd \
+    #         --name portal-api \
+    #         --address tfs-${{ env.environment }}-portal-api.azurewebsites.net \
+    #         --load-balancing api-lb \
+    #         --probe api-probe
+    #       az network front-door routing-rule create --front-door-name tfs-${{ env.environment }}-fd \
+    #         --name API \
+    #         --frontend-endpoints $frontend_endpoint_name \
+    #         --route-type Forward \
+    #         --accepted-protocols Https \
+    #         --forwarding-protocol HttpsOnly \
+    #         --backend-pool portal-api \
+    #         --patterns "/v1/*"
+  # END Front Doors

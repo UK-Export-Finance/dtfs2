@@ -77,6 +77,9 @@ const assertions = (wrapper, html, params) => {
         notToExist: () => {
           expect(wrapper(selector).html()).toBeNull();
         },
+        hasClass: (value) => {
+          expect(wrapper(selector).hasClass(value)).toEqual(true);
+        },
       }
     },
     expectInput: (selector) => {

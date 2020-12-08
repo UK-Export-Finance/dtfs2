@@ -16,6 +16,7 @@ const dealReducer = (deal) => {
       destinationCountry: submissionDetails.destinationOfGoodsAndServices
                           && submissionDetails.destinationOfGoodsAndServices.name,
     },
+    eligibilityCriteria: deal.eligibility.criteria,
   };
 
   return result;
