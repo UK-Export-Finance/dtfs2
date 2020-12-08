@@ -1,5 +1,3 @@
-// const moment = require('moment');
-// const relative = require('../../relativeURL');
 const pages = require('../../pages');
 
 const mockUsers = require('../../../fixtures/mockUsers');
@@ -10,14 +8,13 @@ const {
   fillAndSubmitIssueLoanFacilityForm,
 } = require('../maker/submit-issued-facilities-for-review/fillAndSubmitIssueLoanFacilityForm');
 
-
 const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'Barclays Bank'));
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 
 const miaDealReadyToSubmit = require('./miaDeal-with-unissued-facilities');
 
-
-context('trying to replicate....', () => {
+// this is for bug DTFS2-2766
+context('Maker submits MIA deal to checker, cheker submits to UKEF, receive specific typeB messages, Maker completes SOME issued facilities, submits to checker, checker submits to UKEF, receive typeB message, Maker completes remaining issue facility forms', () => {
   let deal;
   let dealId;
 
@@ -37,11 +34,10 @@ context('trying to replicate....', () => {
       });
   });
 
-  it('todo......', () => {
+  it('should have final facility statuses of `Completed`', () => {
     //---------------------------------------------------------------
     // maker submits deal to checker
     //---------------------------------------------------------------
-
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
 
@@ -149,11 +145,11 @@ context('trying to replicate....', () => {
     });
 
 
-    // STEP 5
+    //---------------------------------------------------------------
+    // Maker completes one bond issue facility form
+    //---------------------------------------------------------------
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
-
-    // complete one bond issue facility form
 
     const firstBondId = deal.bondTransactions.items[0]._id;
     const firstBondRow = pages.contract.bondTransactionsTable.row(firstBondId);
@@ -162,8 +158,10 @@ context('trying to replicate....', () => {
 
     fillAndSubmitIssueBondFacilityForm();
 
-    // complete one loan issue facility form
 
+    //---------------------------------------------------------------
+    // Maker completes one loan issue facility form
+    //---------------------------------------------------------------
     const firstLoanId = deal.loanTransactions.items[0]._id;
     const firstLoanRow = pages.contract.loansTransactionsTable.row(firstLoanId);
 
@@ -171,8 +169,10 @@ context('trying to replicate....', () => {
 
     fillAndSubmitIssueLoanFacilityForm();
 
-    // start but don't complete, second bond
 
+    //---------------------------------------------------------------
+    // Maker starts, but doesn't complete, the second/last bond issue facility form
+    //---------------------------------------------------------------
     const secondBondId = deal.bondTransactions.items[1]._id;
     const secondBondRow = pages.contract.bondTransactionsTable.row(secondBondId);
 
@@ -182,7 +182,10 @@ context('trying to replicate....', () => {
     pages.bondIssueFacility.submit().click();
     pages.bondIssueFacility.cancelButton().click();
 
-    // start but don't complete, second loan
+
+    //---------------------------------------------------------------
+    // Maker starts, but doesn't complete, the second/last loan issue facility form
+    //---------------------------------------------------------------
     const secondLoanId = deal.loanTransactions.items[1]._id;
     const secondLoanRow = pages.contract.loansTransactionsTable.row(secondLoanId);
 
@@ -192,9 +195,6 @@ context('trying to replicate....', () => {
 
     pages.loanIssueFacility.submit().click();
     pages.loanIssueFacility.cancelButton().click();
-
-
-    // now at step 6 in the ticket....
 
 
     //---------------------------------------------------------------
@@ -217,11 +217,6 @@ context('trying to replicate....', () => {
     pages.contract.proceedToSubmit().click();
     pages.contractConfirmSubmission.confirmSubmit().check();
     pages.contractConfirmSubmission.acceptAndSubmit().click();
-
-
-    // now at step 7 of the ticket....
-
-    // step 8 N/A for e2e, step 8 is the type A xml we send.
 
 
     //---------------------------------------------------------------
@@ -265,36 +260,31 @@ context('trying to replicate....', () => {
       ],
     });
 
-    // now at step 9 of the ticket...
-
-
+    //---------------------------------------------------------------
+    // Maker issue the remaining incomplete/not started, unissued facilities
+    //---------------------------------------------------------------
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
 
-    // so HERE the only remaining unissued Bond has 'not started' status...
-    // it gets wiped somehow after this.
-
-
-    // step 10...
-    // issue the remaining incomplete/not started, unissued facilities.
-
     secondBondRow.issueFacilityLink().click();
-
     fillAndSubmitIssueBondFacilityForm();
 
     secondLoanRow.issueFacilityLink().click();
-
     fillAndSubmitIssueLoanFacilityForm();
 
-    // this is what we should get to correctly replicate the bug:
+
+    //---------------------------------------------------------------
+    // Bond and loan stauses should be updated to Completed
+    //---------------------------------------------------------------
     secondBondRow.bondStatus().invoke('text').then((text) => {
       expect(text.trim()).not.to.equal('Not started');
+      expect(text.trim()).not.to.equal('Incomplete');
       expect(text.trim()).to.equal('Completed');
     });
 
     secondLoanRow.loanStatus().invoke('text').then((text) => {
-      // expect(text.trim()).to.equal('Incomplete');
       expect(text.trim()).not.to.equal('Not started');
+      expect(text.trim()).not.to.equal('Incomplete');
       expect(text.trim()).to.equal('Completed');
     });
   });
