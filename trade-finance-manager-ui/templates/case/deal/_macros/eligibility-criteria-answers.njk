@@ -6,14 +6,22 @@
   <table class="govuk-table" data-cy="eligibility-criteria-answers">
     <tbody class="govuk-table__body">
       {% for criterion in criteria %}
-        <tr class="govuk-table__row">
-          <th class="govuk-table__header govuk-!-font-weight-regular govuk-!-padding-right-6" data-cy="criterion-{{criterion.id}}-heading">EC{{ criterion.id }}</th>
 
-          <td class="govuk-table__cell">
+      {% if loop.last %}
+        {% set tableCellClass = 'govuk-table__cell--last' %}
+
+        {% else %}
+          {% set tableCellClass = 'govuk-table__cell' %}
+      {% endif %}
+
+        <tr class="govuk-table__row" data-cy="criterion-{{ loop.index }}-row">
+          <th class="govuk-table__header govuk-!-font-weight-regular govuk-!-padding-right-6 {{ tableCellClass }}" data-cy="criterion-{{criterion.id}}-heading">EC{{ criterion.id }}</th>
+
+          <td class="govuk-table__cell {{ tableCellClass }}">
             {{eligibilityCriteriaAnswerTag.render({ answer: criterion.answer })}}
           </td>
 
-          <td class="govuk-table__cell govuk-!-padding-left-8">
+          <td class="govuk-table__cell govuk-!-padding-left-8 {{ tableCellClass }}">
             <div class="govuk-grid-column-three-quarters govuk-!-padding-0">
               <p class="govuk-body govuk-!-margin-bottom-2" data-cy="criterion-{{criterion.id}}-description">{{ criterion.description }}</p>
 

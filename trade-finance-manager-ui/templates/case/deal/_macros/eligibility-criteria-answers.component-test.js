@@ -95,9 +95,18 @@ describe(component, () => {
 
       if (criterion.descriptionList.length > 0) {
         criterion.descriptionList.forEach((descriptionList, index) => {
-          wrapper.expectText(`[data-cy="${criterionIdSelector}-descriptionList-${index + 1}"]`).toRead(criterion.descriptionList[index]);
+          const selector = `[data-cy="${criterionIdSelector}-descriptionList-${index + 1}"]`;
+          wrapper.expectText(selector).toRead(criterion.descriptionList[index]);
         });
       }
     });
+  });
+
+  it('should render `last` class for the table cells in last table row', () => {
+    const lastCriterion = params.eligibilityCriteria[params.eligibilityCriteria.length - 1];
+    const lastCriterionIndex = params.eligibilityCriteria.indexOf(lastCriterion);
+
+    const tableCellClassSelector = '.govuk-table__cell--last';
+    wrapper.expectElement(tableCellClassSelector).lengthToEqual(3);
   });
 });
