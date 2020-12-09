@@ -121,7 +121,6 @@ context('A checker selects to submit a contract from the view-contract page', ()
     });
   });
 
-  // DTFS2-2557
   describe('If a deal has been previously submitted and the deal contains a bond with a cover start date that is now in the past', () => {
     it('it should successfully submit', () => {
       // log in, visit a deal, submit
@@ -141,7 +140,6 @@ context('A checker selects to submit a contract from the view-contract page', ()
     });
   });
 
-  // DTFS2-2557
   describe('If a deal has been previously submitted and the deal contains a loan with a cover start date that is now in the past', () => {
     it('it should successfully submit', () => {
       // log in, visit a deal, submit
