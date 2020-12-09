@@ -80,6 +80,10 @@ const assertions = (wrapper, html, params) => {
         hasClass: (value) => {
           expect(wrapper(selector).hasClass(value)).toEqual(true);
         },
+        lengthToEqual: (expectedLength) => {
+          const expected = expectedLength + 1; // cheerio html() assertion automatically adds 1.
+          expect(wrapper(selector).html().length).toEqual(expected);
+        },
       }
     },
     expectInput: (selector) => {
