@@ -23,8 +23,9 @@ const dealQuery = gql`
       }
       eligibilityCriteria {
         id,
+        answer,
         description,
-        answer
+        descriptionList
       }
     }
   }
