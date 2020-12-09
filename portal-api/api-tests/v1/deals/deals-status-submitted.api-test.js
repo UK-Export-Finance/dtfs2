@@ -155,6 +155,52 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
     });
   });
 
+  describe('when the status changes to `Submitted` on a deal that has bond facilities with `ready for check` status and cover start dates that are in the past', () => {
+    it('return validation errors', async () => {
+      const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
+
+      submittedDeal.details.previousWorkflowStatus = 'invalid status';
+      submittedDeal.bondTransactions.items[0].status = 'Ready for check';
+      submittedDeal.bondTransactions.items[0].requestedCoverStartDate = moment().subtract(1, 'day').utc().valueOf();
+
+      const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+
+      const createdDeal = postResult.body;
+
+      const statusUpdate = {
+        status: 'Submitted',
+        confirmSubmit: true,
+      };
+
+      const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      expect(updatedDeal.status).toEqual(200);
+      expect(updatedDeal.body.errorList.requestedCoverStartDate.text).toEqual('Requested Cover Start Date must be today or in the future');
+    });
+  });
+  
+  describe('when the status changes to `Submitted` on a deal that has loan facilities with `ready for check` status and cover start dates that are in the past', () => {
+    it('return validation errors', async () => {
+      const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
+
+      submittedDeal.details.previousWorkflowStatus = 'invalid status';
+      submittedDeal.loanTransactions.items[0].status = 'Ready for check';
+      submittedDeal.loanTransactions.items[0].requestedCoverStartDate = moment().subtract(1, 'day').utc().valueOf();
+
+      const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+
+      const createdDeal = postResult.body;
+
+      const statusUpdate = {
+        status: 'Submitted',
+        confirmSubmit: true,
+      };
+
+      const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      expect(updatedDeal.status).toEqual(200);
+      expect(updatedDeal.body.errorList.requestedCoverStartDate.text).toEqual('Requested Cover Start Date must be today or in the future');
+    });
+  });
+
   describe('when the MIA deal status changes to `Submitted`', () => {
     it('adds an MIA submissionDate to the deal', async () => {
       const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
