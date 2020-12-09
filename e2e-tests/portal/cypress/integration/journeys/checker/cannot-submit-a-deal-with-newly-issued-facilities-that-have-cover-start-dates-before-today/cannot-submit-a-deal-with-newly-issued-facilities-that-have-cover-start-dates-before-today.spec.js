@@ -1,14 +1,13 @@
-const moment = require('moment');
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const theDeal = require('./deal');
 const mockUsers = require('../../../../fixtures/mockUsers');
 
-const CHECKER_LOGIN = mockUsers.find(user => (user.roles.includes('checker') && user.bank.name === 'Barclays Bank'));
-const MAKER_LOGIN = mockUsers.find(user => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
+const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'Barclays Bank'));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'Barclays Bank'));
 
 // DTFS2-2839
-context('Checker tries to submit a deal that has facilities with cover start dates that are not `today`', () => {
+context('Checker tries to submit a deal that has changed/newly issued facilities (in `Ready for check` status) with cover start dates that are not `today`', () => {
   let deal;
   let dealId;
 
@@ -42,8 +41,7 @@ context('Checker tries to submit a deal that has facilities with cover start dat
 
     cy.url().should('eq', relative(`/contract/${dealId}/confirm-submission`));
 
-    const todayFormatted = moment().format('Do MMMM YYYY');
-    const expectedError = `Requested Cover Start Date must be after ${todayFormatted}`;
+    const expectedError = 'Requested Cover Start Date must be today or in the future';
     pages.contractConfirmSubmission.expectError(expectedError);
   });
 });

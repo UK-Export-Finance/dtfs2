@@ -1,7 +1,7 @@
 const submissionDetailsRules = require('./submission-details-rules');
 const bondRules = require('./bond');
 const loanRules = require('./loan');
-const requestedCoverStartDateRule = require('./checker-submit-deal-facility-cover-start-dates');
+const facilityReadyForCheckRequestedCoverStartDateRule = require('./checker-submit-deal-facility-ready-for-check-cover-start-dates');
 const isValidationRequired = require('./is-validation-required');
 
 module.exports = (deal) => {
@@ -28,7 +28,7 @@ module.exports = (deal) => {
     validationErrors = {
       ...validationErrors,
       ...bondRules(bond, deal).errorList,
-      ...requestedCoverStartDateRule(bond, deal),
+      ...facilityReadyForCheckRequestedCoverStartDateRule(bond),
     };
     return true;
   });
@@ -37,7 +37,7 @@ module.exports = (deal) => {
     validationErrors = {
       ...validationErrors,
       ...loanRules(loan, deal).errorList,
-      ...requestedCoverStartDateRule(loan, deal),
+      ...facilityReadyForCheckRequestedCoverStartDateRule(loan),
     };
     return true;
   });
