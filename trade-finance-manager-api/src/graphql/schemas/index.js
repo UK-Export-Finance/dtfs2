@@ -47,6 +47,7 @@ type DealEligibilityCriterion {
   _id: String
   id: Int
   description: String
+  descriptionList: [String]
   answer: String
 }
 

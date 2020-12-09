@@ -13,7 +13,19 @@
             {{eligibilityCriteriaAnswerTag.render({ answer: criterion.answer })}}
           </td>
 
-          <td class="govuk-table__cell govuk-!-padding-left-8" data-cy="criterion-{{criterion.id}}-description">{{ criterion.description }}</td>
+          <td class="govuk-table__cell govuk-!-padding-left-8">
+            <div class="govuk-grid-column-three-quarters govuk-!-padding-0">
+              <p class="govuk-body govuk-!-margin-bottom-2" data-cy="criterion-{{criterion.id}}-description">{{ criterion.description }}</p>
+
+              {% if criterion.descriptionList.length > 0 %}
+                <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-2">
+                  {% for item in criterion.descriptionList %}
+                    <li data-cy="criterion-{{criterion.id}}-descriptionList-{{ loop.index }}">{{ item }}</li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </div>
+          </td>
 
         </tr>
       {% endfor %}
