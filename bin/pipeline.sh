@@ -54,8 +54,20 @@ sleep 10
 end=`date +%s`
 echo "{\"stage\": \"pipeline:wait-for-mongo\", \"duration\": \"$((end-start))\", \"result\": \"pass\"}" >> "$LOG"
 
-start=`date +%s`
 
+starttfm=`date +%s`
+echo "running Trade Finance Manager API tests"
+docker-compose exec trade-finance-manager-api /bin/sh ./bin/api-test.sh
+tfmApiTestResults=$?
+
+endtfm=`date +%s`
+
+[ $tfmApiTestResults -eq 0 ] && echo "{\"stage\": \"pipeline:tfm-api-integration-tests\", \"duration\": \"$((endtfm-starttfm))\", \"result\": \"pass\"}" >> "$LOG" || echo "{\"stage\": \"pipeline:tfm-api-integration-tests\", \"duration\": \"$((endtfm-starttfm))\", \"result\": \"fail\"}" >> "$LOG"
+[ $tfmApiTestResults -ne 0 ] && exit $tfmApiTestResults
+
+
+start=`date +%s`
+echo "running Portal API tests"
 docker-compose exec portal-api /bin/sh ./bin/api-test.sh
 apiTestResults=$?
 
