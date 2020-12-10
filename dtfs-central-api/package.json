@@ -1,0 +1,48 @@
+{
+  "name": "tfm-api",
+  "version": "1.0.0",
+  "description": "Trade Finance Manager API",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint ./src",
+    "start": "node src/index.js",
+    "start:dev": "npx nodemon src/index.js",
+    "unit-test": "jest --notify --coverage --verbose --config=unit.jest.config.js ",
+    "unit-test-quick": "jest --config=unit.jest.config.js --testTimeout=10000",
+    "api-test": "jest --notify --coverage --verbose --runInBand --config=api-test.jest.config.js ",
+    "api-test-file": "jest --config=api-test-file.jest.config.js --runInBand --verbose --testMatch ",
+    "api-test-quick": "jest --config=api-test.jest.config.js --runInBand --testTimeout=10000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notbinary/dtfs2.git"
+  },
+  "keywords": [
+    "export",
+    "finance"
+  ],
+  "author": "David Carboni",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/notbinary/dtfs2/issues"
+  },
+  "homepage": "https://github.com/notbinary/dtfs2#readme",
+  "dependencies": {
+    "apollo-server-express": "2.18.2",
+    "axios": "^0.21.0",
+    "body-parser": "1.19.0",
+    "cors": "2.8.5",
+    "dotenv": "8.2.0",
+    "express": "4.17.1",
+    "graphql-middleware": "^4.0.2",
+    "graphql-tools": "^6.2.5",
+    "mongodb": "^3.6.3"
+  },
+  "devDependencies": {
+    "eslint": "6.1.0",
+    "eslint-config-airbnb-base": "14.0.0",
+    "eslint-plugin-import": "2.20.1",
+    "jest": "26.1.0",
+    "nodemon": "^2.0.4"
+  }
+}
