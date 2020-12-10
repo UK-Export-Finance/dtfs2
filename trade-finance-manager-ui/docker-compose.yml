@@ -1,12 +1,43 @@
 version: "3" 
 services:
+  dtfs-submissions-data:
+    image: mongo
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=dtfs-submissions
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=r00t
+    volumes:
+      - ../dtfs-submissions-data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
+    ports:
+      - "27017-27019:27017-27019"
+
+  dtfs-central-api:
+    build: ../dtfs-central-api
+    image: dtfs/dtfs-central-api
+    restart: always
+    depends_on:
+      - dtfs-submissions-data
+      - reference-data-proxy
+    ports:
+      - "5005:5005"
+    volumes:
+      - ../dtfs-central-api/src:/app/src:ro
+    environment:
+      - PORT=5005
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - MONGO_INITDB_DATABASE=dtfs-submissions
+      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
+    entrypoint: npx nodemon src/index.js
+
   trade-finance-manager-api:
     build: ../trade-finance-manager-api
     image: dtfs/trade-finance-manager-api
     restart: always
     depends_on:
       - portal-api
-      - portal-api-data
+      - dtfs-submissions-api
       - reference-data-proxy
     ports:
       - "5004:5004"
@@ -15,6 +46,7 @@ services:
     environment:
       - PORT=5004
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - MONGO_INITDB_DATABASE=test
       - MONGODB_URI=mongodb://root:r00t@portal-api-data:27017/?authMechanism=DEFAULT
     entrypoint: npx nodemon src/index.js
@@ -24,7 +56,7 @@ services:
     image: dtfs/portal-api
     restart: always
     depends_on:
-      - portal-api-data
+      - dtfs-submissions-api
       - reference-data-proxy
     ports:
       - "5001:5001"
@@ -51,20 +83,8 @@ services:
       - GOV_NOTIFY_EMAIL_RECIPIENT
       - DTFS_PORTAL_SCHEDULER
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - DTFS_CENTRAL_API=http://dtfs-central-api:5005
     entrypoint: npx nodemon src/index.js
-
-  portal-api-data:
-    image: mongo
-    restart: always
-    environment:
-      - MONGO_INITDB_DATABASE=test
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=r00t
-    volumes:
-      - ../portal-api-data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-      - ./portal-api-data-volume:/data/db
-    ports:
-      - "27017-27019:27017-27019"
   
   reference-data-proxy:
     build: ../reference-data-proxy

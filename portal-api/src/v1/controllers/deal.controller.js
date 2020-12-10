@@ -1,4 +1,3 @@
-const assert = require('assert');
 const $ = require('mongo-dot-notation');
 
 const DEFAULTS = require('../defaults');
@@ -11,6 +10,7 @@ const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
 const calculateDealSummary = require('../deal-summary');
 const { findEligibilityCriteria } = require('./eligibilityCriteria.controller');
+const api = require('../api');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -85,54 +85,28 @@ const dealsQuery = (user, filter) => {
 };
 
 const findDeals = async (requestingUser, filter) => {
-  const collection = await db.getCollection('deals');
-
   const query = dealsQuery(requestingUser, filter);
-  const dealResults = collection.find(query);
-
-  const count = await dealResults.count();
-  const deals = await dealResults
-    .sort({ 'details.dateOfLastAction': -1 })
-    .toArray();
-
-  return {
-    count,
-    deals,
-  };
+  return api.queryDeals(query);
 };
+
 exports.findDeals = findDeals;
 
 const findPaginatedDeals = async (requestingUser, start = 0, pagesize = 20, filter) => {
-  const collection = await db.getCollection('deals');
-
   const query = dealsQuery(requestingUser, filter);
-
-  const dealResults = collection.find(query);
-
-  const count = await dealResults.count();
-  const deals = await dealResults
-    .sort({ 'details.dateOfLastAction': -1 })
-    .skip(start)
-    .limit(pagesize)
-    .toArray();
-
-  return {
-    count,
-    deals,
-  };
+  return api.queryDeals(query, start, pagesize);
 };
 exports.findPaginatedDeals = findPaginatedDeals;
 
 const findOneDeal = async (_id, callback) => {
-  const collection = await db.getCollection('deals');
+  const deal = await api.findOneDeal(_id);
+
   if (callback) {
-    collection.findOne({ _id }, (err, result) => {
-      assert.equal(err, null);
-      callback(result);
-    });
+    callback(deal);
   }
-  return collection.findOne({ _id });
+
+  return deal;
 };
+
 exports.findOneDeal = findOneDeal;
 
 const fillInEligibilityCriteria = (criterias, answers) => criterias.map((criteria) => {

@@ -1,16 +1,16 @@
 version: "3"
 services:
 
-  portal-api-data:
+  dtfs-submissions-data:
     image: mongo
     restart: always
     environment:
-      - MONGO_INITDB_DATABASE=test
+      - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
     volumes:
-      - ../portal-api-data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-      - ./portal-api-data-volume-test:/data/db
+      - ../dtfs-submissions-data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
     ports:
       - "27017-27019:27017-27019"
 

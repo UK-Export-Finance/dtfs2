@@ -5,6 +5,7 @@ dist
 node_modules
 deal-api-data-volume
 portal-api-data-volume
+dtfs-submissions-data-volume*
 **/cypress/videos
 **/cypress/screenshots
 
@@ -14,10 +15,7 @@ Library/
 
 secrets/**
 jwt_key
-portal-api/generated_reports
-portal/generated_reports
 
-trade-finance-manager-api/generated_reports
-trade-finance-manager-ui/generated_reports
+**/generated_reports
 
 *.ipynb

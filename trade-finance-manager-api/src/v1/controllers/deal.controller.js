@@ -1,10 +1,9 @@
-const db = require('../../drivers/db-client');
 const mapDeal = require('../mappings/map-deal');
+const api = require('../api');
 
 const findOneDeal = async (_id) => {
-  const collection = await db.getCollection('deals');
-  const deal = await collection.findOne({ _id });
-
+  const deal = await api.findOneDeal(_id);
   return mapDeal(deal);
 };
+
 exports.findOneDeal = findOneDeal;
