@@ -88,6 +88,10 @@ const mapDetails = (portalDealId, v1Deal) => {
       : CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
   }
 
+  if (details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
+    details.manualInclusionApplicationSubmissionDate = convertV1Date(submissionDate);
+  }
+
   if (details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
     details.manualInclusionNoticeSubmissionDate = convertV1Date(v1Deal.Deal_information.Extra_fields.Submission_date_MIN);
   }
