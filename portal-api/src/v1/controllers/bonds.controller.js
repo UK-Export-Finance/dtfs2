@@ -104,6 +104,7 @@ exports.create = async (req, res) => {
     const newBondObj = {
       _id: facilityId,
       createdDate: now(),
+      facilityType: 'bond',
     };
 
     const modifiedDeal = putBondInDealObject(deal, newBondObj);
