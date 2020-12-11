@@ -29,6 +29,19 @@ context('Create deal', () => {
     });
   });
 
+  it('should limit amount of text input characters', () => {
+    cy.passRedLine(MAKER_LOGIN);
+    bankDetails.bankDealId().clear();
+
+    const BANK_DEAL_ID_CHARACTER_COUNT = 30;
+    bankDetails.bankDealId().type('a'.repeat(BANK_DEAL_ID_CHARACTER_COUNT + 1));
+    bankDetails.bankDealIdCount().should('have.text', 'You have 0 characters remaining');
+
+    const BANK_DEAL_NAME_CHARACTER_COUNT = 100;
+    bankDetails.bankDealName().type('a'.repeat(BANK_DEAL_NAME_CHARACTER_COUNT + 1));
+    bankDetails.bankDealNameCount().should('have.text', 'You have 0 characters remaining');
+  });
+
   it('When the a user fills in the bank detais they progress to the deal page and the data they entered is visible', () => {
     cy.passRedLine(MAKER_LOGIN);
 
