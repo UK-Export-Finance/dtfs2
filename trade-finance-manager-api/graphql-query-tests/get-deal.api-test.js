@@ -43,8 +43,10 @@ const GET_DEAL = gql`
   }
 `;
 
-describe('graphql query - deal', () => {
-  it('should return a mapped deal with only requested query fields via dealReducer', async () => {
+describe('graphql query - get deal', () => {
+  let query;
+
+  beforeAll(() => {
     const schema = makeExecutableSchema({ typeDefs, resolvers });
     const schemaWithMiddleware = applyMiddleware(schema);
 
@@ -55,8 +57,11 @@ describe('graphql query - deal', () => {
     });
 
     // use the test server to create a query function
-    const { query } = createTestClient(server);
+    const { query: doQuery } = createTestClient(server);
+    query = doQuery;
+  });
 
+  it('should return a mapped deal via dealReducer', async () => {
     const { data } = await query({
       query: GET_DEAL,
       variables: { id: '1234567' },
