@@ -248,7 +248,7 @@ describe('/v1/deals/:id/bond', () => {
       expect(bondIds[2] - bondIds[1]).toEqual(1);
     });
 
-    it('adds an empty bond to a deal', async () => {
+    it('adds an empty bond to a deal, with facility createdDate, facilityType', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = postResult.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -259,6 +259,8 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(200);
       expect(body.deal.bondTransactions.items.length).toEqual(1);
       expect(body.deal.bondTransactions.items[0]._id).toBeDefined(); // eslint-disable-line no-underscore-dangle
+      expect(typeof body.deal.bondTransactions.items[0].createdDate).toEqual('string');
+      expect(body.deal.bondTransactions.items[0].facilityType).toEqual('bond');
     });
 
     it('adds an empty bond to a deal whilst retaining existing bonds', async () => {
@@ -379,6 +381,7 @@ describe('/v1/deals/:id/bond', () => {
           status: 'Completed',
           createdDate: expect.any(String),
           lastEdited: expect.any(String),
+          facilityType: 'bond',
         };
         expect(updatedBond).toEqual(expectedUpdatedBond);
       });
@@ -439,6 +442,7 @@ describe('/v1/deals/:id/bond', () => {
           status: 'Completed',
           createdDate: expect.any(String),
           lastEdited: expect.any(String),
+          facilityType: 'bond',
         };
         delete expectedBond.ukefGuaranteeInMonths;
 
@@ -501,6 +505,7 @@ describe('/v1/deals/:id/bond', () => {
           status: 'Completed',
           createdDate: expect.any(String),
           lastEdited: expect.any(String),
+          facilityType: 'bond',
         };
         delete expectedBond.requestedCoverStartDate;
         delete expectedBond['requestedCoverStartDate-day'];
@@ -554,6 +559,7 @@ describe('/v1/deals/:id/bond', () => {
         status: 'Completed',
         createdDate: expect.any(String),
         lastEdited: expect.any(String),
+        facilityType: 'bond',
       });
     });
 

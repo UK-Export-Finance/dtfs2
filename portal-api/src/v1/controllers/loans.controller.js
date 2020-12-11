@@ -104,6 +104,7 @@ exports.create = async (req, res) => {
     const newLoanObj = {
       _id: facilityId,
       createdDate: now(),
+      facilityType: 'loan',
     };
 
     const modifiedDeal = putLoanInDealObject(deal, newLoanObj);
