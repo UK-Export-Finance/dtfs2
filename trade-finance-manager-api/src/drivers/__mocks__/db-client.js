@@ -1,4 +1,4 @@
-const MOCK_DEAL = require('../../../mocks/mock-deal');
+const MOCK_DEAL = require('./mock-deal');
 
 const MOCK_DEALS = [
   MOCK_DEAL,
