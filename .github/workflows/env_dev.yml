@@ -1,4 +1,4 @@
-name: Dev environment infrastructure
+name: Dev environment infrastructure 
 
 on:
   push:

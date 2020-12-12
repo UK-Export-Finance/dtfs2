@@ -1,13 +1,17 @@
 const fs = require('fs');
 const moment = require('moment');
+const args = require('minimist')(process.argv.slice(2));
 const api = require('./api');
 const { getToken, removeMigrationUser } = require('./temporary-token-handler');
 const consoleLogColor = require('./helpers/console-log-colour');
 
-const filename = process.argv[2];
+
+const { file, bankId } = args;
+
+console.log(`Importing bankId ${bankId} from ${file}`);
 
 const loadUsersFromFile = () => {
-  const jsonBuffer = fs.readFileSync(filename);
+  const jsonBuffer = fs.readFileSync(file);
   return JSON.parse(jsonBuffer);
 };
 
@@ -50,9 +54,13 @@ const migrateUsers = async () => {
   const userNoBanksError = [];
 
   const usersV1 = loadUsersFromFile();
-  const usersV2 = usersV1.map((userV1) => {
+  const usersV1Bank = bankId ? usersV1.filter(({ Bank_id }) => Bank_id === bankId.toString()) : usersV1;
+  const importBank = bankId ? banks.find((b) => b.id === bankId.toString()) : { name: 'All banks' };
+
+  const usersV2 = usersV1Bank.map((userV1) => {
     const bank = banks.find((b) => b.id === userV1.Bank_id);
     if (!bank) {
+      console.log({ banks, bankId: userV1.Bank_id });
       userNoBanksError.push(userV1.Mail);
       consoleLogColor(`unknown bank: ${userV1.Mail}`);
       return {};
@@ -113,7 +121,7 @@ const migrateUsers = async () => {
   console.log('\n--------------');
   console.log('USER MIGRATION SUMMARY\n');
 
-  consoleLogColor(`Created ${successUsers.length}/${usersV1.length} users `, successUsers.length === usersV1.length ? 'green' : 'red');
+  consoleLogColor(`Created ${successUsers.length}/${usersV1Bank.length} '${importBank.name}' users from a total list of ${usersV1.length}`, successUsers.length === usersV1Bank.length ? 'green' : 'red');
 
   if (existingUserErrors.length || apiUserErrors.length || userNoBanksError.length) {
     consoleLogColor(`error migrating ${existingUserErrors.length + apiUserErrors.length + userNoBanksError.length} users`);

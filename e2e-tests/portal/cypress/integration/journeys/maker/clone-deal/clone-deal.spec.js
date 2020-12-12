@@ -94,20 +94,17 @@ context('Clone a deal', () => {
         expect(text.trim()).equal('Completed');
       });
 
-      // TODO when eligibility status/errors are checked when we do a GET deal
-      // confirm Eligibility is retained
-      // pages.contract.eligibilityStatus().invoke('text').then((text) => {
-      //   expect(text.trim()).equal('Incomplete');
-      // });
+      // confirm Eligibility is now marked as 'Not started'
+      pages.contract.eligibilityStatus().invoke('text').then((text) => {
+        expect(text.trim()).equal('Not started');
+      });
 
       // confirm bond statuses are 'Incomplete'
-
       pages.contract.bondTransactionsTableRows().each((bondTableRow) => {
         const bondId = bondTableRow.attr('data-cy').split('-')[1];
         const bond = pages.contract.bondTransactionsTable.row(bondId);
         bond.bondStatus().contains('Incomplete');
       });
-
 
       // confirm loan statuses are 'Incomplete'
       pages.contract.loansTransactionsTableRows().each((loanTableRow) => {
