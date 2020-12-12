@@ -1,12 +1,31 @@
 const dealReducer = (deal) => {
-  const { submissionDetails } = deal;
+  const {
+    details,
+    submissionDetails,
+  } = deal;
+
+  const {
+    status,
+    submissionDate,
+    submissionType,
+    owningBank,
+  } = details;
+
+  // TODO: maybe better to have flat structure, no submissionDetails / details
+  // keep it simple/similar to regular source for now
 
   const result = {
     _id: deal._id, // eslint-disable-line no-underscore-dangle
-    details: deal.details,
+    details: {
+      status,
+      submissionDate,
+      submissionType,
+      owningBank: {
+        name: owningBank.name,
+        emails: owningBank.emails,
+      },
+    },
 
-    // TODO maybe better to have flat structure, no submissionDetails / details
-    // keep it simple/similar to regular source for now
     submissionDetails: {
       supplierName: submissionDetails['supplier-name'],
       supplyContractCurrency: submissionDetails.supplyContractCurrency.id,
