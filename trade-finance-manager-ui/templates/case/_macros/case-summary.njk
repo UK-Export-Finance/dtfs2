@@ -78,7 +78,7 @@
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
             <div class="ukef-heading-xs">Export contract value</div>
-            <div class="ukef-body-s" data-cy="contract-value">{{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue }}</div>
+            <div class="ukef-body-s" data-cy="contract-value">{{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue | formatAsCurrency }}</div>
           </div>
         </div>
         <div class="govuk-grid-row">
