@@ -18,4 +18,6 @@ jwt_key
 
 **/generated_reports
 
+reference-data-proxy/generated_reports
+
 *.ipynb
