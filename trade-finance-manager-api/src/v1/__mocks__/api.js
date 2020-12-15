@@ -9,5 +9,5 @@ module.exports = {
     const deal = MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
     return deal;
   },
-  queryDeals: (query, start = 0, pagesize = 0) => MOCK_DEALS,
+  queryDeals: () => MOCK_DEALS,
 };
