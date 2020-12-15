@@ -1,6 +1,7 @@
 const axios = require('axios');
 const CONSTANTS = require('../../constants');
 
+// dev
 // https://dev-ukef-tf-ea-v1.uk-e1.cloudhub.io/api/v1/numbers
 
 // mocking
@@ -26,7 +27,7 @@ exports.create = async (req, res) => {
     method: 'post',
     url: 'https://anypoint.mulesoft.com/mocking/api/v1/links/f5b562e9-440d-4566-85fb-d9f9a999c440/numbers',
     headers: {
-      Authorization: 'test',
+      Authorization: 'mock test',
     },
     data:[
         {
@@ -37,8 +38,10 @@ exports.create = async (req, res) => {
       ]
   }).catch((catchErr) => catchErr);
 
+
   const { status, data } = response;
 
-  return res.status(status).send(data);
-
+  return res.status(status).send({
+    id: data.mdmNumberExample.value.maskedId
+  });
 };

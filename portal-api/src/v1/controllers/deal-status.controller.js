@@ -139,7 +139,7 @@ exports.update = (req, res) => {
       const generateIdFromNumberGenerator = async () => {
         const numbGenResponse = await refDataApi.numberGenerator.create(CONSTANTS.NUMBER_GENERATOR.DEAL);
         return numbGenResponse.data.mdmNumberExample.value.maskedId;
-      }
+      };
 
       if (!dealAfterAllUpdates.numberGeneratorDealId) {
         dealAfterAllUpdates.details.numberGeneratorDealId = await generateIdFromNumberGenerator();
