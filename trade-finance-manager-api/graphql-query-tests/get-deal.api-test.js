@@ -4,11 +4,11 @@ const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('graphql-tools');
 const gql = require('graphql-tag');
 
-jest.mock('../src/drivers/db-client');
+jest.mock('../src/v1/api');
 
 const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
-const MOCK_DEAL = require('../src/drivers/__mocks__/mock-deal');
+const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 const mapDeal = require('../src/v1/mappings/map-deal');
 const dealReducer = require('../src/graphql/reducers/deal');
 
@@ -66,8 +66,8 @@ describe('graphql query - get deal', () => {
       query: GET_DEAL,
       variables: { id: '1234567' },
     });
-
     const mappedDeal = mapDeal(MOCK_DEAL);
+
     const expected = dealReducer(mappedDeal);
 
     expect(data.deal).toEqual(expected);
