@@ -1361,7 +1361,7 @@ jobs:
               MONGODB_URI="$mongo_connection_string" \
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
-              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \            
+              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
               DTFS_CENTRAL_API="http://$dtfs_central_api_url"  
   # END API setup
 
