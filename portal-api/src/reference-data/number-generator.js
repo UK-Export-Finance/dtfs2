@@ -3,7 +3,7 @@ const axios = require('axios');
 const referenceProxyUrl = process.env.REFERENCE_DATA_PROXY_URL;
 
 const create = async (numberType) => {
-  const { status, data } = await axios({
+  const { data } = await axios({
     method: 'get',
     url: `${referenceProxyUrl}/number-generator/${numberType}`,
     headers: {
