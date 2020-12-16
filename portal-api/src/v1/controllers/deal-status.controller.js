@@ -7,8 +7,6 @@ const db = require('../../drivers/db-client');
 const { createTypeA } = require('./integration/k2-messages');
 const validateStateChange = require('../validation/deal-status');
 
-const refDataApi = require('../../reference-data/api');
-
 const userCanSubmitDeal = require('./deal-status/user-can-submit-deal');
 const updateStatus = require('./deal-status/update-status');
 const createSubmissionDate = require('./deal-status/create-submission-date');
@@ -135,17 +133,6 @@ exports.update = (req, res) => {
     }
 
     if (toStatus === 'Submitted') {
-      // POC
-      const generateIdFromNumberGenerator = async () => {
-        const numbGenResponse = await refDataApi.numberGenerator.create(CONSTANTS.NUMBER_GENERATOR.DEAL);
-        return numbGenResponse;
-      };
-
-      if (!dealAfterAllUpdates.numberGeneratorDealId) {
-        dealAfterAllUpdates.details.numberGeneratorDealId = await generateIdFromNumberGenerator();
-      }
-      // TODO facilities
-
       await updateSubmittedIssuedFacilities(req.user, collection, dealAfterAllUpdates);
 
       if (!dealAfterAllUpdates.details.submissionDate) {
