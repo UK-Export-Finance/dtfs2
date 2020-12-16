@@ -37,7 +37,7 @@ services:
     restart: always
     depends_on:
       - portal-api
-      - dtfs-submissions-api
+      - dtfs-central-api
       - reference-data-proxy
     ports:
       - "5004:5004"
@@ -47,16 +47,36 @@ services:
       - PORT=5004
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
-      - MONGO_INITDB_DATABASE=test
-      - MONGODB_URI=mongodb://root:r00t@portal-api-data:27017/?authMechanism=DEFAULT
+      - MONGO_INITDB_DATABASE=dtfs-submissions
+      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
     entrypoint: npx nodemon src/index.js
-    
+  
+  portal:
+    build: ../portal
+    image: dtfs/portal
+    restart: always
+    depends_on:
+      - portal-api
+    ports:
+      - "5000:5000"
+    volumes:
+      - ../portal/scripts:/app/scripts:ro
+      - ../portal/styles:/app/styles:ro
+      - ../portal/templates:/app/templates:ro
+      - ../portal/server:/app/server:ro
+    environment:
+      - DEAL_API_URL=http://portal-api:5001
+      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
+      - COMPANIES_HOUSE_API_KEY
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+    command: node dist/server.js
+
   portal-api:
     build: ../portal-api
     image: dtfs/portal-api
     restart: always
     depends_on:
-      - dtfs-submissions-api
+      - dtfs-central-api
       - reference-data-proxy
     ports:
       - "5001:5001"
@@ -68,8 +88,8 @@ services:
       - CORS_ORIGIN=http://localhost:5000
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
-      - MONGO_INITDB_DATABASE=test
-      - MONGODB_URI=mongodb://root:r00t@portal-api-data:27017/?authMechanism=DEFAULT
+      - MONGO_INITDB_DATABASE=dtfs-submissions
+      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - AZURE_WORKFLOW_FILESHARE_NAME
       - AZURE_WORKFLOW_STORAGE_ACCOUNT
       - AZURE_WORKFLOW_STORAGE_ACCESS_KEY

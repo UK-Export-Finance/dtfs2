@@ -36,7 +36,7 @@ services:
     image: dtfs/portal-api
     restart: always
     depends_on:
-      - dtfs-submissions-api
+      - dtfs-central-api
       - reference-data-proxy
     ports:
       - "5001:5001"
@@ -48,8 +48,8 @@ services:
       - CORS_ORIGIN=http://localhost:5000
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
-      - MONGO_INITDB_DATABASE=test
-      - MONGODB_URI=mongodb://root:r00t@portal-api-data:27017/?authMechanism=DEFAULT
+      - MONGO_INITDB_DATABASE=dtfs-submissions
+      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - AZURE_WORKFLOW_FILESHARE_NAME
       - AZURE_WORKFLOW_STORAGE_ACCOUNT
       - AZURE_WORKFLOW_STORAGE_ACCESS_KEY
