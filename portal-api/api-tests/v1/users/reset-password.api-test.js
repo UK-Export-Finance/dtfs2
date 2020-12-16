@@ -36,6 +36,11 @@ describe('password reset', () => {
     });
   });
 
+  it('should be case-insensitive when accepting email', async () => {
+    const reset = await resetPassword(aMaker.email.toUpperCase());
+    expect(reset).toMatchObject({ success: true });
+  });
+
   it('should return false for a invalid reset token', async () => {
     const user = await getUserByPasswordToken('invalid-reset-token');
     expect(user).toEqual(false);

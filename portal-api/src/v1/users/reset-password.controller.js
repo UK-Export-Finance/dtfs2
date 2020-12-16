@@ -17,7 +17,7 @@ const sendResetEmail = async (emailAddress, resetToken) => {
 exports.resetPassword = async (email) => {
   const collection = await db.getCollection('users');
 
-  const user = await collection.findOne({ email });
+  const user = await collection.findOne({ email }, { collation: { locale: 'en', strength: 2 } });
 
   if (!user) {
     return {
