@@ -882,7 +882,8 @@ jobs:
           az webapp config connection-string set --name tfs-${{ env.environment }}-reference-data-proxy \
             --connection-string-type custom \
             --settings \
-              MULESOFT_API="TMP"
+              - MULESOFT_API_KEY="TMP"
+              - MULESOFT_API_SECRET="TMP"
 
   dtfs-central-api:
     name: DTFS Central API
@@ -1544,3 +1545,4 @@ jobs:
     #         --patterns "/v1/*"
 
   # END Front Doors
+  

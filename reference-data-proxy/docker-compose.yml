@@ -15,6 +15,9 @@ services:
       - CORS_ORIGIN=http://localhost:5002
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
+      - MULESOFT_API_KEY
+      - MULESOFT_API_SECRET
+      - MULESOFT_API_NUMBER_GENERATOR=https://dev-ukef-tf-ea-v1.uk-e1.cloudhub.io/api/v1/numbers
 
     entrypoint: npx nodemon src/index.js
 

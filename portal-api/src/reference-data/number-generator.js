@@ -11,10 +11,7 @@ const create = async (numberType) => {
     },
   }).catch((err) => err);
 
-  return {
-    status,
-    data,
-  };
+  return data.id;
 };
 
 module.exports = {

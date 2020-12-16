@@ -105,6 +105,7 @@ services:
       - CORS_ORIGIN=http://localhost:5000
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
+      - MULESOFT_API_NUMBER_GENERATOR
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - AZURE_WORKFLOW_STORAGE_ACCOUNT
@@ -136,7 +137,9 @@ services:
       - ./reference-data-proxy/src:/app/src:ro
     environment:
       - PORT=5002
-      - MULESOFT_API
+      - MULESOFT_API_KEY
+      - MULESOFT_API_SECRET
+      - MULESOFT_API_NUMBER_GENERATOR=https://dev-ukef-tf-ea-v1.uk-e1.cloudhub.io/api/v1/numbers
     entrypoint: npx nodemon src/index.js
     
   test-hook-api:
