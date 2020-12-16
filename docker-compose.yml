@@ -55,7 +55,7 @@ services:
     restart: always
     depends_on:
       - portal-api
-      - dtfs-submissions-data
+      - dtfs-central-api
       - reference-data-proxy
     ports:
       - "5004:5004"
@@ -94,7 +94,7 @@ services:
     image: dtfs/portal-api
     restart: always
     depends_on:
-      - dtfs-submissions-data
+      - dtfs-central-api
       - reference-data-proxy
     ports:
       - "5001:5001"
