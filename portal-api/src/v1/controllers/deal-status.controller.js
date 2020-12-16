@@ -138,7 +138,7 @@ exports.update = (req, res) => {
       // POC
       const generateIdFromNumberGenerator = async () => {
         const numbGenResponse = await refDataApi.numberGenerator.create(CONSTANTS.NUMBER_GENERATOR.DEAL);
-        return numbGenResponse.data.mdmNumberExample.value.maskedId;
+        return numbGenResponse;
       };
 
       if (!dealAfterAllUpdates.numberGeneratorDealId) {

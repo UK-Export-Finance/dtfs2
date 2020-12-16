@@ -5,16 +5,12 @@ const { get } = require('../api')(app);
 const mockResponse = {
   status: 201,
   data: {
-    "mdmNumberExample": {
-      "value": {
-        "id": 20000001,
-        "maskedId": "0020000001",
-        "numberTypeId": 1,
-        "createdBy": "ECGD\\jsmith",
-        "createdDatetime": "2018-06-06T16:45:35.473Z",
-        "requestingSystem": "SQL Query"
-      }
-    }
+    id: 20018971,
+    maskedId: '0030007215',
+    numberTypeId: 1,
+    createdBy: 'Portal v2/TFM',
+    createdDatetime: '2020-12-16T15:12:28.13Z',
+    requestingSystem: 'Portal v2/TFM',
   }
 };
 
@@ -37,7 +33,7 @@ describe('/number-generator', () => {
 
       expect(status).toEqual(mockResponse.status);
       expect(body).toEqual({
-        id: mockResponse.data.mdmNumberExample.value.maskedId
+        id: mockResponse.data.maskedId
       });
     });
   });

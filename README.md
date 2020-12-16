@@ -29,6 +29,7 @@ Along with `secrets/set_jwt_keypair.sh` you'll need the following scripts to set
  * `set_azure_api_keys.sh`
  * `set_companies_house_api_key.sh`
  * `set_gov_notify_api_key.sh`
+ * `set_number_generator_api_key.sh`
 
 The list of variables can be seen in the environment build workdlows under [`.github/workflows`](.github/workflows)
 

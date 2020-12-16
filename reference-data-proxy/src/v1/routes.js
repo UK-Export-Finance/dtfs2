@@ -22,7 +22,7 @@ openRouter.route('/currencies')
   );
 
 openRouter.route('/currencies/:id')
-  .get( 
+  .get(
     currencies.findOne,
   );
 

@@ -43,7 +43,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     env:
-      MULESOFT_API: ${{ secrets.APITEST_MULESOFT }}
+      MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
+      MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
 
     steps:
     - uses: actions/checkout@v2
