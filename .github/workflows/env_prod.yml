@@ -882,7 +882,8 @@ jobs:
           az webapp config connection-string set --name tfs-${{ env.environment }}-reference-data-proxy \
             --connection-string-type custom \
             --settings \
-              - MULESOFT_API_KEY="TMP"
+              - MULESOFT_API_NUMBER_GENERATOR_URL="TMP" \
+              - MULESOFT_API_KEY="TMP" \
               - MULESOFT_API_SECRET="TMP"
 
   dtfs-central-api:
