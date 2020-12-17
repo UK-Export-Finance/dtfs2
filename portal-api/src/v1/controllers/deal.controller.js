@@ -292,7 +292,6 @@ exports.update = async (req, res) => {
       if (!userHasAccessTo(req.user, deal)) {
         res.status(401).send();
       } else {
-        // const updatedDeal = await updateDeal(req);
         const updatedDeal = await updateDeal(
           dealId,
           req.body,

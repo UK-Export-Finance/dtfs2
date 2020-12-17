@@ -15,7 +15,6 @@ exports.update = async (req, res) => {
         res.status(401).send();
       }
 
-
       const { eligibility: { criteria }, dealFiles = {} } = deal;
       let criteriaComplete = true;
       let criteriaAllTrue = true;
