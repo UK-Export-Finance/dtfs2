@@ -9,17 +9,15 @@ describe(page, () => {
       _id: '12345678',
       details: {
         submissionType: 'Automatic Inclusion Notice',
-        bankSupplyContractId: 'contract-1',
+        bankSupplyContractID: 'contract-1',
         bankSupplyContractName: 'FirstContract',
         owningBank: {
-          name: 'Lloyds'
+          name: 'Lloyds',
+          emails : ['xxx@yyy.com'] 
         },
         maker: {
           firstname: 'John',
           surname: 'Doe',
-          bank: {
-            emails : ['xxx@yyy.com'] 
-            }
         }
       },
       submissionDetails: {
@@ -47,11 +45,11 @@ describe(page, () => {
   });
 
   it('should render email', () => {
-    wrapper.expectText('[data-cy="email"]').toRead(params.deal.details.maker.bank.emails[0] );
+    wrapper.expectText('[data-cy="email"]').toRead(params.deal.details.owningBank.emails[0] );
   });
 
   it('should render bank reference', () => {
-    wrapper.expectText('[data-cy="bank-reference"]').toRead(params.deal.details.bankSupplyContractId );
+    wrapper.expectText('[data-cy="bank-reference"]').toRead(params.deal.details.bankSupplyContractID );
   });
 
   it('should render bank additional reference', () => {
