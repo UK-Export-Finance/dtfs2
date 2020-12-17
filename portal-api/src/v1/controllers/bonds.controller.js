@@ -35,7 +35,7 @@ const putBondInDealObject = (deal, bond) => {
   };
 };
 
-const updateBondInDeal = async (params, user, deal, bond) => {
+const updateBondInDeal = async (user, deal, bond) => {
   const bondToUpdate = {
     ...bond,
     lastEdited: now(),
@@ -43,13 +43,11 @@ const updateBondInDeal = async (params, user, deal, bond) => {
 
   const modifiedDeal = putBondInDealObject(deal, bondToUpdate);
 
-  const newReq = {
-    params,
-    body: modifiedDeal,
+  const updatedDeal = await updateDeal(
+    deal._id, // eslint-disable-line no-underscore-dangle
+    modifiedDeal,
     user,
-  };
-
-  const updatedDeal = await updateDeal(newReq);
+  );
 
   const bondInDeal = updatedDeal.bondTransactions.items.find((b) =>
     String(b._id) === bond._id); // eslint-disable-line no-underscore-dangle
@@ -109,13 +107,11 @@ exports.create = async (req, res) => {
 
     const modifiedDeal = putBondInDealObject(deal, newBondObj);
 
-    const newReq = {
-      params: req.params,
-      body: modifiedDeal,
-      user: req.user,
-    };
-
-    const updateDealResponse = await updateDeal(newReq);
+    const updateDealResponse = await updateDeal(
+      deal._id, // eslint-disable-line no-underscore-dangle
+      modifiedDeal,
+      req.user,
+    );
 
     return res.status(200).send({
       ...updateDealResponse,
@@ -207,7 +203,7 @@ exports.updateBond = async (req, res) => {
         delete modifiedBond.requestedCoverStartDate;
       }
 
-      const updatedBond = await updateBondInDeal(req.params, req.user, deal, modifiedBond);
+      const updatedBond = await updateBondInDeal(req.user, deal, modifiedBond);
 
       const validationErrors = bondValidationErrors(updatedBond, deal);
 
@@ -254,13 +250,12 @@ exports.deleteBond = async (req, res) => {
         },
       };
 
-      const newReq = {
-        params: req.params,
-        body: modifiedDeal,
-        user: req.user,
-      };
+      const updateDealResponse = await updateDeal(
+        deal._id, // eslint-disable-line no-underscore-dangle
+        modifiedDeal,
+        req.user,
+      );
 
-      const updateDealResponse = await updateDeal(newReq);
       return res.status(200).send(updateDealResponse);
     }
     return res.status(404).send();
