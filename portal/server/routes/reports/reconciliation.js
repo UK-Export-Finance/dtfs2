@@ -6,9 +6,13 @@ import {
   getApiData,
   requestParams,
 } from '../../helpers';
+import { validate } from '../role-validator';
 
 const primaryNav = 'reports';
 const router = express.Router();
+
+router.use('/reports/reconciliation-report',
+  validate({ role: ['admin', 'ukef_operations'] }));
 
 router.get('/reports/reconciliation-report', async (req, res) => res.redirect('/reports/reconciliation-report/0'));
 
