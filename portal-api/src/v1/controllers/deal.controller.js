@@ -214,18 +214,18 @@ exports.findOne = (req, res) => {
   });
 };
 
-const handleEditedBy = async (req) => {
+const handleEditedBy = async (dealId, dealUpdate, user) => {
   let editedBy = [];
 
   // sometimes we don't have a user making changes.
   // eg we can get new data from type-b XML/workflow.
-  if (req.user) {
+  if (user) {
     const {
       username,
       roles,
       bank,
       _id,
-    } = req.user;
+    } = user;
 
     const newEditedBy = {
       date: now(),
@@ -239,15 +239,15 @@ const handleEditedBy = async (req) => {
     // need to make sure that we have all existing entries in `editedBy`.
     // ideally we could refactor, perhaps, so that no partial updates are allowed.
     // but for now...
-    if (!req.body.editedBy) {
-      const deal = await findOneDeal(req.params.id);
+    if (!dealUpdate.editedBy) {
+      const deal = await findOneDeal(dealId);
       editedBy = [
         ...deal.editedBy,
         newEditedBy,
       ];
     } else {
       editedBy = [
-        ...req.body.editedBy,
+        ...dealUpdate.editedBy,
         newEditedBy,
       ];
     }
@@ -256,22 +256,22 @@ const handleEditedBy = async (req) => {
   return editedBy;
 };
 
-const updateDeal = async (req) => {
+const updateDeal = async (dealId, dealChanges, user) => {
   const collection = await db.getCollection('deals');
 
-  const editedBy = await handleEditedBy(req);
+  const editedBy = await handleEditedBy(dealId, dealChanges, user);
 
   const update = {
-    ...req.body,
+    ...dealChanges,
     details: {
-      ...req.body.details,
+      ...dealChanges.details,
       dateOfLastAction: now(),
     },
     editedBy,
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: req.params.id },
+    { _id: dealId },
     $.flatten(withoutId(update)),
     { returnOriginal: false },
   );
@@ -283,14 +283,21 @@ const updateDeal = async (req) => {
 exports.updateDeal = updateDeal;
 
 exports.update = async (req, res) => {
-  await findOneDeal(req.params.id, async (deal) => {
+  const dealId = req.params.id;
+
+  await findOneDeal(dealId, async (deal) => {
     if (!deal) res.status(404).send();
 
     if (deal) {
       if (!userHasAccessTo(req.user, deal)) {
         res.status(401).send();
       } else {
-        const updatedDeal = await updateDeal(req);
+        // const updatedDeal = await updateDeal(req);
+        const updatedDeal = await updateDeal(
+          dealId,
+          req.body,
+          req.user,
+        );
         res.status(200).json(updatedDeal);
       }
     }
