@@ -9,6 +9,9 @@ const dealReducer = (deal) => {
     submissionDate,
     submissionType,
     owningBank,
+    bankSupplyContractID,
+    bankSupplyContractName,
+    maker,
   } = details;
 
   // TODO: maybe better to have flat structure, no submissionDetails / details
@@ -24,6 +27,12 @@ const dealReducer = (deal) => {
         name: owningBank.name,
         emails: owningBank.emails,
       },
+      maker: {
+        firstname: maker.firstname,
+        surname: maker.surname,
+      },
+      bankSupplyContractID,
+      bankSupplyContractName,
     },
 
     submissionDetails: {

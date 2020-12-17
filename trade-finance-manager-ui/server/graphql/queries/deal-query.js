@@ -11,7 +11,13 @@ const dealQuery = gql`
         owningBank {
           name,
           emails
-        }
+        },
+        maker {
+          firstname,
+          surname,
+        },
+        bankSupplyContractID,
+        bankSupplyContractName,
       }
       submissionDetails {
         supplierName,
