@@ -136,7 +136,9 @@ services:
       - ./reference-data-proxy/src:/app/src:ro
     environment:
       - PORT=5002
-      - MULESOFT_API
+      - MULESOFT_API_KEY
+      - MULESOFT_API_SECRET
+      - MULESOFT_API_NUMBER_GENERATOR_URL
     entrypoint: npx nodemon src/index.js
     
   test-hook-api:

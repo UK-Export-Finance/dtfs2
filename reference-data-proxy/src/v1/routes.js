@@ -4,6 +4,7 @@ const openRouter = express.Router();
 const countries = require('./controllers/countries.controller');
 const currencies = require('./controllers/currencies.controller');
 const industrySectors = require('./controllers/industry-sectors.controller');
+const numberGenerator = require('./controllers/number-generator.controller');
 
 openRouter.route('/countries')
   .get(
@@ -33,6 +34,11 @@ openRouter.route('/industry-sectors')
 openRouter.route('/industry-sectors/:code')
   .get(
     industrySectors.findOne,
+  );
+
+openRouter.route('/number-generator/:numberType')
+  .get(
+    numberGenerator.create,
   );
 
 module.exports = { openRouter };
