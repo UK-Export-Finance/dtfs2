@@ -47,8 +47,6 @@ env:
   FETCH_WORKFLOW_TYPE_B_SCHEDULE: "* * * * *"
 
 
-  # TODO move number generator URL to up here ^^^  e.g with COMPANIES_HOUSE_API_URL
-
 # Below this line should be the same for all environments
 
 jobs:
