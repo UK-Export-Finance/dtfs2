@@ -1,8 +1,9 @@
-const { header, users, createUser} = require('../../../pages');
+const { header, users, createUser } = require('../../../pages');
 const relative = require('../../../relativeURL');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
-const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
+
+const ADMIN_LOGIN = mockUsers.find((user) => (user.roles.includes('admin')));
 
 context('Admin user creates a new user', () => {
   const validUser = {
@@ -73,7 +74,6 @@ context('Admin user creates a new user', () => {
     users.row(validUser).lastLogin().invoke('text').then((text) => {
       expect(text.trim()).to.not.equal('');
     });
-
   });
 
   it('Admin user adds a new user, triggering validation errors', () => {
@@ -103,10 +103,9 @@ context('Admin user creates a new user', () => {
     createUser.passwordError().invoke('text').then((text) => {
       expect(text.trim()).to.contain('Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.');
     });
-
   });
 
-  it("Manage users screen should pass Lighthouse audit", function () {
+  it('Manage users screen should pass Lighthouse audit', () => {
     // login and go to manage users
     cy.login(ADMIN_LOGIN);
     header.users().click();
@@ -114,14 +113,14 @@ context('Admin user creates a new user', () => {
     cy.lighthouse({
       performance: 85,
       accessibility: 100,
-      "best-practices": 85,
+      'best-practices': 85,
       seo: 85,
       pwa: 100,
     });
     cy.pa11y();
   });
 
-  it("Add user screen should pass Lighthouse audit", function () {
+  it('Add user screen should pass Lighthouse audit', () => {
     // login and go to add/edit user
     cy.login(ADMIN_LOGIN);
     header.users().click();
@@ -130,11 +129,10 @@ context('Admin user creates a new user', () => {
     cy.lighthouse({
       performance: 85,
       accessibility: 100,
-      "best-practices": 85,
+      'best-practices': 85,
       seo: 85,
       pwa: 100,
     });
     cy.pa11y();
   });
-
 });
