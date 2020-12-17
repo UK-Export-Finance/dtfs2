@@ -18,7 +18,7 @@ exports.create = async (req, res) => {
 
   const response = await axios({
     method: 'post',
-    url: process.env.MULESOFT_API_NUMBER_GENERATOR,
+    url: process.env.MULESOFT_API_NUMBER_GENERATOR_URL,
     auth: {
       username: process.env.MULESOFT_API_KEY,
       password: process.env.MULESOFT_API_SECRET,

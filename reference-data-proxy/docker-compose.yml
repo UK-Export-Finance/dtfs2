@@ -17,7 +17,7 @@ services:
       - JWT_VALIDATING_KEY
       - MULESOFT_API_KEY
       - MULESOFT_API_SECRET
-      - MULESOFT_API_NUMBER_GENERATOR=https://dev-ukef-tf-ea-v1.uk-e1.cloudhub.io/api/v1/numbers
+      - MULESOFT_API_NUMBER_GENERATOR_URL
 
     entrypoint: npx nodemon src/index.js
 
