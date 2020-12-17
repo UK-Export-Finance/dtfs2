@@ -21,7 +21,7 @@ exports.create = async (req, res) => {
     url: process.env.MULESOFT_API_NUMBER_GENERATOR,
     auth: {
       username: process.env.MULESOFT_API_KEY,
-      password: process.env.MULESOFT_API_SECRET
+      password: process.env.MULESOFT_API_SECRET,
     },
     data: [
       {
