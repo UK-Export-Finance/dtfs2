@@ -129,13 +129,11 @@ exports.update = async (req, res) => {
       },
     };
 
-    const newReq = {
-      params: req.params,
-      body: updatedDealData,
-      user: req.user,
-    };
-
-    const updatedDeal = await updateDeal(newReq);
+    const updatedDeal = await updateDeal(
+      deal._id, // eslint-disable-line no-underscore-dangle
+      updatedDealData,
+      req.user,
+    );
 
     // Don't want to save upload errors to db, only display on this request
     Object.entries(validationUploadErrors.errorList).forEach(([key, value]) => {
