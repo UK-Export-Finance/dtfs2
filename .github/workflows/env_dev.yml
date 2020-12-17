@@ -38,9 +38,14 @@ env:
   JWT_VALIDATING_KEY: "${{ secrets.DEV_JWT_VALIDATING_KEY }}"
   GOV_NOTIFY_API_KEY: "${{ secrets.DEV_GOV_NOTIFY_API_KEY }}"
   GOV_NOTIFY_EMAIL_RECIPIENT: "${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}"
+  MULESOFT_API_NUMBER_GENERATOR_URL: "${{ secrets.DEV_MULESOFT_API_NUMBER_GENERATOR_URL }}"
+  MULESOFT_API_KEY: "${{ secrets.DEV_MULESOFT_API_KEY }}"
+  MULESOFT_API_SECRET: "${{ secrets.DEV_MULESOFT_API_SECRET }}"
+
 
   DTFS_PORTAL_SCHEDULER: false
   FETCH_WORKFLOW_TYPE_B_SCHEDULE: "* * * * *"
+
 
 # Below this line should be the same for all environments
 
@@ -877,7 +882,10 @@ jobs:
           az webapp config connection-string set --name tfs-${{ env.environment }}-reference-data-proxy \
             --connection-string-type custom \
             --settings \
-              MULESOFT_API="TMP"
+              MULESOFT_API_NUMBER_GENERATOR_URL="${{ env.MULESOFT_API_NUMBER_GENERATOR_URL }}" \
+              MULESOFT_API_KEY="${{ env.MULESOFT_API_KEY }}" \
+              MULESOFT_API_SECRET="${{ env.MULESOFT_API_SECRET }}"
+
 
   dtfs-central-api:
     name: DTFS Central API
