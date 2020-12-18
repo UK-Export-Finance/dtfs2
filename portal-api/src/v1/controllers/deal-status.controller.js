@@ -2,7 +2,6 @@ const { findOneDeal, updateDeal } = require('./deal.controller');
 const { addComment } = require('./deal-comments.controller');
 
 const { userHasAccessTo } = require('../users/checks');
-const db = require('../../drivers/db-client');
 
 const { createTypeA } = require('./integration/k2-messages');
 const validateStateChange = require('../validation/deal-status');
@@ -59,13 +58,12 @@ exports.update = (req, res) => {
       });
     }
 
-    const collection = await db.getCollection('deals');
     const updatedDeal = await updateStatus(req.params.id, fromStatus, toStatus);
     const updatedDealStatus = updatedDeal.details.status;
 
     const shouldCheckFacilityDates = (fromStatus === 'Draft' && updatedDealStatus === 'Ready for Checker\'s approval');
     if (shouldCheckFacilityDates) {
-      await updateFacilityCoverStartDates(collection, updatedDeal);
+      await updateFacilityCoverStartDates(req.user, updatedDeal);
     }
 
     let dealAfterAllUpdates = updatedDeal;
@@ -110,7 +108,7 @@ exports.update = (req, res) => {
       }
 
       dealAfterAllUpdates = await updateIssuedFacilities(
-        collection,
+        req.user,
         fromStatus,
         dealAfterAllUpdates,
         canUpdateIssuedFacilitiesCoverStartDates,
@@ -123,7 +121,7 @@ exports.update = (req, res) => {
       const newIssuedFacilityStatus = 'Maker\'s input required';
 
       dealAfterAllUpdates = await updateIssuedFacilities(
-        collection,
+        req.user,
         fromStatus,
         dealAfterAllUpdates,
         canUpdateIssuedFacilitiesCoverStartDates,
@@ -132,7 +130,7 @@ exports.update = (req, res) => {
     }
 
     if (toStatus === 'Submitted') {
-      await updateSubmittedIssuedFacilities(req.user, collection, dealAfterAllUpdates);
+      await updateSubmittedIssuedFacilities(req.user, dealAfterAllUpdates);
 
       if (!dealAfterAllUpdates.details.submissionDate) {
         dealAfterAllUpdates = await createSubmissionDate(req.params.id, user);
