@@ -1,22 +1,19 @@
-const $ = require('mongo-dot-notation');
+const { updateDeal } = require('../deal.controller');
 const now = require('../../../now');
 
-const createMiaSubmissionDate = async (collection, _id) => {
-  const submissionDate = {
+const createMiaSubmissionDate = async (dealId) => {
+  const modifiedDeal = {
     details: {
       manualInclusionApplicationSubmissionDate: now(),
     },
   };
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id },
-    $.flatten(submissionDate),
-    { returnOriginal: false },
+  const updatedDeal = await updateDeal(
+    dealId,
+    modifiedDeal,
   );
 
-  const { value } = findAndUpdateResponse;
-
-  return value;
+  return updatedDeal;
 };
 
 module.exports = createMiaSubmissionDate;

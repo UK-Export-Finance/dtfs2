@@ -60,7 +60,7 @@ exports.update = (req, res) => {
     }
 
     const collection = await db.getCollection('deals');
-    const updatedDeal = await updateStatus(collection, req.params.id, fromStatus, toStatus);
+    const updatedDeal = await updateStatus(req.params.id, fromStatus, toStatus);
     const updatedDealStatus = updatedDeal.details.status;
 
     const shouldCheckFacilityDates = (fromStatus === 'Draft' && updatedDealStatus === 'Ready for Checker\'s approval');
@@ -79,13 +79,11 @@ exports.update = (req, res) => {
     // `Maker input required` or 'Submitted'
     if (toStatus !== 'Further Maker\'s input required'
         && toStatus !== 'Submitted') {
-      const newReq = {
-        params: req.params,
-        body: dealAfterAllUpdates,
-        user: req.user,
-      };
-
-      const dealAfterEditedByUpdate = await updateDeal(newReq);
+      const dealAfterEditedByUpdate = await updateDeal(
+        req.params.id,
+        dealAfterAllUpdates,
+        req.user,
+      );
       dealAfterAllUpdates = dealAfterEditedByUpdate;
     }
 
@@ -99,15 +97,16 @@ exports.update = (req, res) => {
       ) {
         // Is changing MIA to MIN
         const minDealMakerUpdate = {
-          params: req.params,
-          body: {
-            details: {
-              makerMIN: req.user,
-            },
+          details: {
+            makerMIN: req.user,
           },
-          user: req.user,
         };
-        dealAfterAllUpdates = await updateDeal(minDealMakerUpdate);
+
+        dealAfterAllUpdates = await updateDeal(
+          req.params.id,
+          minDealMakerUpdate,
+          req.user,
+        );
       }
 
       dealAfterAllUpdates = await updateIssuedFacilities(
@@ -136,12 +135,12 @@ exports.update = (req, res) => {
       await updateSubmittedIssuedFacilities(req.user, collection, dealAfterAllUpdates);
 
       if (!dealAfterAllUpdates.details.submissionDate) {
-        dealAfterAllUpdates = await createSubmissionDate(collection, req.params.id, user);
+        dealAfterAllUpdates = await createSubmissionDate(req.params.id, user);
       }
 
       if (dealAfterAllUpdates.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
         && !dealAfterAllUpdates.details.manualInclusionApplicationSubmissionDate) {
-        dealAfterAllUpdates = await createMiaSubmissionDate(collection, req.params.id, user);
+        dealAfterAllUpdates = await createMiaSubmissionDate(req.params.id, user);
       }
 
       // TODO - Reinstate typeA XML creation once Loans and Summary have been added
@@ -151,7 +150,7 @@ exports.update = (req, res) => {
 
       if (typeA.errorCount) {
         // Revert status
-        await updateStatus(collection, req.params.id, toStatus, fromStatus);
+        await updateStatus(req.params.id, toStatus, fromStatus);
         return res.status(200).send(typeA);
       }
 
@@ -160,29 +159,28 @@ exports.update = (req, res) => {
         && dealAfterAllUpdates.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
       ) {
         // Must be confirming acceptance of MIA so change to MIN
-        // Need to use 'MIN submission date' in Issue Facility validation, so add minSubmissionDate
-        const minUpdateReq = {
-          params: req.params,
-          body: {
-            details: {
-              submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
-              manualInclusionNoticeSubmissionDate: now(),
-              checkerMIN: req.user,
-            },
+        // Add 'MIN submission date'
+        const minUpdate = {
+          details: {
+            submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
+            manualInclusionNoticeSubmissionDate: now(),
+            checkerMIN: req.user,
           },
-          // NOTE
-          // intentionally NOT including req.user here
-          // this ensures that the checker submitting
-          // ..does not get added to the 'editedBy' array.
         };
 
-        dealAfterAllUpdates = await updateDeal(minUpdateReq);
+        dealAfterAllUpdates = await updateDeal(
+          req.params.id,
+          minUpdate,
+          // NOTE: intentionally NOT including req.user here.
+          // This ensures that the checker submitting
+          // ..does not get added to the 'editedBy' array.
+        );
       }
     }
     // check for approvals back from UKEF and date stamp it for countdown indicator
     if (toStatus === CONSTANTS.DEAL.STATUS.APPROVED
       || toStatus === CONSTANTS.DEAL.STATUS.APPROVED_WITH_CONDITIONS) {
-      dealAfterAllUpdates = await createApprovalDate(collection, req.params.id);
+      dealAfterAllUpdates = await createApprovalDate(req.params.id);
     }
 
     if (toStatus !== fromStatus) {

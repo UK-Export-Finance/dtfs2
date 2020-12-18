@@ -1,28 +1,24 @@
-const $ = require('mongo-dot-notation');
+const { updateDeal } = require('../deal.controller');
 const now = require('../../../now');
 
-const updateStatus = async (collection, _id, from, to) => {
-  const statusUpdate = {
+const updateStatus = async (dealId, from, to) => {
+  const modifiedDeal = {
     details: {
       status: to,
       dateOfLastAction: now(),
     },
   };
 
-
   if (from !== to) {
-    statusUpdate.details.previousStatus = from;
+    modifiedDeal.details.previousStatus = from;
   }
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id },
-    $.flatten(statusUpdate),
-    { returnOriginal: false },
+  const updatedDeal = await updateDeal(
+    dealId,
+    modifiedDeal,
   );
 
-  const { value } = findAndUpdateResponse;
-
-  return value;
+  return updatedDeal;
 };
 
 module.exports = updateStatus;
