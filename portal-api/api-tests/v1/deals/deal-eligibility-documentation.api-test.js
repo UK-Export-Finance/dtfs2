@@ -171,6 +171,30 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       expect(body.dealFiles.validationErrors.errorList[fieldname].text).toMatch(`${filename} could not be saved`);
     });
 
+    it('returns validation error if file extension is not allowed', async () => {
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const newId = postResult.body._id;
+
+      const filename = 'invalid-file.bat';
+      const fieldname = 'exporterQuestionnaire';
+      const type = 'general_correspondence';
+
+      const files = [{
+        fieldname,
+        filepath: `api-tests/fixtures/${filename}`,
+        type,
+      }];
+
+      const { status, body } = await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
+
+      expect(status).toEqual(200);
+
+      expect(body.dealFiles[fieldname]).toBeUndefined();
+
+      expect(body.dealFiles.validationErrors.errorList[fieldname]).toBeDefined();
+      expect(body.dealFiles.validationErrors.errorList[fieldname].text).toMatch(`${filename} file type is not allowed`);
+    });
+
     it('uploads multiple files from same fieldname with the correct type', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
