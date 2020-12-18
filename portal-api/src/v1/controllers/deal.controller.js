@@ -217,8 +217,11 @@ exports.findOne = (req, res) => {
 const handleEditedBy = async (dealId, dealUpdate, user) => {
   let editedBy = [];
 
-  // sometimes we don't have a user making changes.
-  // eg we can get new data from type-b XML/workflow.
+  // sometimes we don't have a user making changes. When:
+  // - we can get new data from type-b XML/workflow.
+  // - some deal updates do not want to be marked as "edited by X user"
+  // for example when a Checker submits a deal, they have not 'edited' the deal, only submitted it.
+
   if (user) {
     const {
       username,
@@ -256,15 +259,27 @@ const handleEditedBy = async (dealId, dealUpdate, user) => {
   return editedBy;
 };
 
-const updateDeal = async (dealId, dealChanges, user) => {
+const updateDeal = async (dealId, dealChanges, user, existingDeal) => {
   const collection = await db.getCollection('deals');
 
   const editedBy = await handleEditedBy(dealId, dealChanges, user);
 
+  let existingDealDetails;
+  if (existingDeal && existingDeal.details) {
+    existingDealDetails = existingDeal.details;
+  }
+
+  let dealChangesDetails;
+  if (dealChanges && dealChanges.details) {
+  // if (dealChanges.details) {
+    dealChangesDetails = dealChanges.details;
+  }
+
   const update = {
     ...dealChanges,
     details: {
-      ...dealChanges.details,
+      ...existingDealDetails,
+      ...dealChangesDetails,
       dateOfLastAction: now(),
     },
     editedBy,
@@ -296,6 +311,7 @@ exports.update = async (req, res) => {
           dealId,
           req.body,
           req.user,
+          deal,
         );
         res.status(200).json(updatedDeal);
       }

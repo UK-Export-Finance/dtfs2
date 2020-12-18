@@ -1,26 +1,23 @@
-const $ = require('mongo-dot-notation');
-const { findOneDeal } = require('./deal.controller');
+const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userOwns } = require('../users/checks');
-const db = require('../../drivers/db-client');
 const validateNameChange = require('../validation/deal-name');
 const now = require('../../now');
 
-const updateName = async (collection, deal, to) => {
-  const update = {
+const updateName = async (dealId, to, user) => {
+  const modifiedDeal = {
     details: {
       bankSupplyContractName: to,
       dateOfLastAction: now(),
     },
   };
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: deal._id }, // eslint-disable-line no-underscore-dangle
-    $.flatten(update),
-    { returnOriginal: false },
+  const updatedDeal = await updateDeal(
+    dealId,
+    modifiedDeal,
+    user,
   );
 
-  const { value } = findAndUpdateResponse;
-  return value;
+  return updatedDeal;
 };
 
 exports.update = (req, res) => {
@@ -40,8 +37,11 @@ exports.update = (req, res) => {
       });
     }
 
-    const collection = await db.getCollection('deals');
-    const dealAfterAllUpdates = await updateName(collection, deal, bankSupplyContractName);
+    const dealAfterAllUpdates = await updateName(
+      deal._id, // eslint-disable-line no-underscore-dangle
+      bankSupplyContractName,
+      req.user,
+    );
     return res.status(200).send(dealAfterAllUpdates.details.bankSupplyContractName);
   });
 };
