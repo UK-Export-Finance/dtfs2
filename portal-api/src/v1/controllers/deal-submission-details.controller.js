@@ -33,7 +33,7 @@ const updateSubmissionDetails = async (dealId, submissionDetails, user) => {
   const updateDealResponse = await updateDeal(
     dealId,
     update,
-    user
+    user,
   );
   return updateDealResponse;
 };
