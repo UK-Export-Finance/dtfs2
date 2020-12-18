@@ -271,7 +271,6 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal) => {
 
   let dealChangesDetails;
   if (dealChanges && dealChanges.details) {
-  // if (dealChanges.details) {
     dealChangesDetails = dealChanges.details;
   }
 
