@@ -867,6 +867,8 @@ jobs:
         # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
         # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
         # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
+        # NOTE: MULESOFT envs were producing an error when used in connection_string so have been moved to appsettings
+        # ref: https://docs.microsoft.com/en-us/azure/app-service/configure-common 
         inlineScript: |
           az webapp config appsettings set --name tfs-${{ env.environment }}-reference-data-proxy \
             --settings \
@@ -2010,3 +2012,4 @@ jobs:
     #         --backend-pool portal-api \
     #         --patterns "/v1/*"
   # END Front Doors
+  

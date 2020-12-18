@@ -867,22 +867,16 @@ jobs:
         # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
         # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
         # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
+        # NOTE: MULESOFT envs were producing an error when used in connection_string so have been moved to appsettings
+        # ref: https://docs.microsoft.com/en-us/azure/app-service/configure-common 
         inlineScript: |
           az webapp config appsettings set --name tfs-${{ env.environment }}-reference-data-proxy \
             --settings \
               PORT=5000 \
-              WEBSITES_PORT=5000
-
-    - name: Secrets
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |          
-          az webapp config connection-string set --name tfs-${{ env.environment }}-reference-data-proxy \
-            --connection-string-type custom \
-            --settings \
-              MULESOFT_API_NUMBER_GENERATOR_URL="TMP" \
-              MULESOFT_API_KEY="TMP" \
-              MULESOFT_API_SECRET="TMP"
+              WEBSITES_PORT=5000 \
+              MULESOFT_API_NUMBER_GENERATOR_URL="${{ env.MULESOFT_API_NUMBER_GENERATOR_URL }}" \
+              MULESOFT_API_KEY="${{ env.MULESOFT_API_KEY }}" \
+              MULESOFT_API_SECRET="${{ env.MULESOFT_API_SECRET }}"
 
   dtfs-central-api:
     name: DTFS Central API
