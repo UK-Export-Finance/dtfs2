@@ -22,7 +22,7 @@ exports.findOne = (req, res) => {
   });
 };
 
-const updateSubmissionDetails = async (req, submissionDetails) => {
+const updateSubmissionDetails = async (dealId, submissionDetails, user) => {
   const update = {
     submissionDetails,
     details: {
@@ -30,13 +30,11 @@ const updateSubmissionDetails = async (req, submissionDetails) => {
     },
   };
 
-  const newReq = {
-    params: req.params,
-    body: update,
-    user: req.user,
-  };
-
-  const updateDealResponse = await updateDeal(newReq);
+  const updateDealResponse = await updateDeal(
+    dealId,
+    update,
+    user
+  );
   return updateDealResponse;
 };
 
@@ -149,7 +147,7 @@ exports.update = (req, res) => {
       );
     }
 
-    const dealAfterAllUpdates = await updateSubmissionDetails(req, submissionDetails);
+    const dealAfterAllUpdates = await updateSubmissionDetails(req.params.id, submissionDetails, req.params.user);
 
     const validationErrors = validateSubmissionDetails({ ...dealAfterAllUpdates.submissionDetails, ...req.body });
 
