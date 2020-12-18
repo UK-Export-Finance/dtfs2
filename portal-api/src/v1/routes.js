@@ -27,14 +27,22 @@ const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-
 const mga = require('./controllers/mga.controller');
 
 const users = require('./users/routes');
+const { cleanXss } = require('./middleware');
 
 const authRouter = express.Router();
 const openRouter = express.Router();
+const authRouterAllowXss = express.Router();
 
 const upload = multer();
 
-authRouter.use(passport.authenticate('jwt', { session: false }));
+authRouterAllowXss.use(
+  passport.authenticate('jwt', { session: false }),
+);
 
+authRouter.use(
+  passport.authenticate('jwt', { session: false }),
+  cleanXss,
+);
 
 authRouter.route('/deals')
   .post(
@@ -251,28 +259,6 @@ authRouter.route('/industry-sectors/:code')
     industrySectors.findOne,
   );
 
-authRouter.route('/mandatory-criteria')
-  .get(
-    mandatoryCriteria.findAll,
-  )
-  .post(
-    validate({ role: ['editor'] }),
-    mandatoryCriteria.create,
-  );
-
-authRouter.route('/mandatory-criteria/:id')
-  .get(
-    mandatoryCriteria.findOne,
-  )
-  .put(
-    validate({ role: ['editor'] }),
-    mandatoryCriteria.update,
-  )
-  .delete(
-    validate({ role: ['editor'] }),
-    mandatoryCriteria.delete,
-  );
-
 authRouter.route('/eligibility-criteria')
   .get(
     eligibilityCriteria.findAll,
@@ -303,6 +289,28 @@ authRouter.route('/mga')
 authRouter.route('/mga/:filename')
   .get(
     mga.downloadMga,
+  );
+
+authRouterAllowXss.route('/mandatory-criteria')
+  .get(
+    mandatoryCriteria.findAll,
+  )
+  .post(
+    validate({ role: ['editor'] }),
+    mandatoryCriteria.create,
+  );
+
+authRouterAllowXss.route('/mandatory-criteria/:id')
+  .get(
+    mandatoryCriteria.findOne,
+  )
+  .put(
+    validate({ role: ['editor'] }),
+    mandatoryCriteria.update,
+  )
+  .delete(
+    validate({ role: ['editor'] }),
+    mandatoryCriteria.delete,
   );
 
 openRouter.route('/users')
@@ -370,4 +378,4 @@ authRouter.get('/test/protected/checker', (req, res) => {
   res.status(200).json({ success: true, msg: 'You are successfully authenticated to this route!' });
 });
 
-module.exports = { authRouter, openRouter };
+module.exports = { authRouter, openRouter, authRouterAllowXss };
