@@ -56,7 +56,7 @@ exports.updateBondCoverStartDate = async (req, res) => {
         });
       }
 
-      const updatedBond = await updateBondInDeal(req.params, req.user, deal, bond);
+      const updatedBond = await updateBondInDeal(req.user, deal, bond);
       return res.status(200).send(updatedBond);
     }
     return res.status(404).send();
