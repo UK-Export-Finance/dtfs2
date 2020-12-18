@@ -37,7 +37,7 @@ const removeDeletedFiles = (dealFiles, deletedFilesList) => {
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 exports.update = async (req, res) => {
-  const uploadErrors = [];
+  const uploadErrors = req.filesNotAllowed ? req.filesNotAllowed : [];
 
   await findOneDeal(req.params.id, async (deal) => {
     if (!userHasAccessTo(req.user, deal)) {

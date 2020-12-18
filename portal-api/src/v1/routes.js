@@ -1,6 +1,5 @@
 const express = require('express');
 const passport = require('passport');
-const multer = require('multer');
 
 const { validate } = require('../role-validator');
 
@@ -27,13 +26,12 @@ const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-
 const mga = require('./controllers/mga.controller');
 
 const users = require('./users/routes');
-const { cleanXss } = require('./middleware');
+const { cleanXss, fileUpload } = require('./middleware');
 
 const authRouter = express.Router();
 const openRouter = express.Router();
 const authRouterAllowXss = express.Router();
 
-const upload = multer();
 
 authRouterAllowXss.use(
   passport.authenticate('jwt', { session: false }),
@@ -175,7 +173,7 @@ authRouter.route('/deals/:id/eligibility-criteria')
 authRouter.route('/deals/:id/eligibility-documentation')
   .put(
     validate({ role: ['maker'] }),
-    upload.any(),
+    fileUpload.any(),
     dealEligibilityDocumentation.update,
   );
 
