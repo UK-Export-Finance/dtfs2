@@ -18,8 +18,8 @@ dealToClone.eligibility = {
         order: 1,
         text: 'Field is required',
       },
-    }
-  }
+    },
+  },
 };
 
 dealToClone.editedBy = [
@@ -132,7 +132,8 @@ describe('/v1/deals/:id/clone', () => {
 
         const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
         expect(body.eligibility.status).toEqual(originalDeal.eligibility.status);
-        expect(body.eligibility.criteria).toEqual(originalDeal.eligibility.criteria);
+        const criteriaWithoutId = originalDeal.eligibility.criteria.map(({ _id, ...rest }) => rest);
+        expect(body.eligibility.criteria).toMatchObject(criteriaWithoutId);
         expect(body.eligibility.validationErrors).toEqual(originalDeal.eligibility.validationErrors);
       });
 
@@ -148,7 +149,7 @@ describe('/v1/deals/:id/clone', () => {
             agentName: completedDeal.agentName,
             agentAddressPostcode: completedDeal.agentAddressPostcode,
             agentAddressTown: completedDeal.agentAddressTown,
-          }
+          },
         };
 
         const clonePostBody = {
@@ -212,7 +213,7 @@ describe('/v1/deals/:id/clone', () => {
             bankSupplyContractName: 'new-bank-deal-name',
             cloneTransactions: 'true',
           };
-         
+
           const minDeal = originalDeal;
           minDeal.details.submissionType = 'Manual Inclusion Notice';
 
