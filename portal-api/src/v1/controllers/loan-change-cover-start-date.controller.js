@@ -56,8 +56,8 @@ exports.updateLoanCoverStartDate = async (req, res) => {
         });
       }
 
-      const updatedloan = await updateLoanInDeal(req.params, req.user, deal, loan);
-      return res.status(200).send(updatedloan);
+      const updatedLoan = await updateLoanInDeal(req.user, deal, loan);
+      return res.status(200).send(updatedLoan);
     }
     return res.status(404).send();
   });
