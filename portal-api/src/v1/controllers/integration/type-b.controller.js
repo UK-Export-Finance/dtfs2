@@ -118,7 +118,11 @@ const processTypeB = async ({ filename, fileContents }) => {
     body: updatedDealInfo,
   };
 
-  await dealController.updateDeal(updateRequest);
+  await dealController.updateDeal(
+    dealId,
+    updatedDealInfo,
+    interfaceUser
+  );
 
   const { Deal_comments: dealComments = [] } = workflowDeal;
   const { Action_Code: actionCode } = workflowDeal.$;
