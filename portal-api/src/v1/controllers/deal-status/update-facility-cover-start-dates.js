@@ -1,8 +1,8 @@
-const $ = require('mongo-dot-notation');
+const { updateDeal } = require('../deal.controller');
 const now = require('../../../now');
 const CONSTANTS = require('../../../constants');
 
-const updateFacilityCoverStartDates = async (collection, deal) => {
+const updateFacilityCoverStartDates = async (user, deal) => {
   const facilities = {
     bonds: deal.bondTransactions.items,
     loans: deal.loanTransactions.items,
@@ -31,19 +31,17 @@ const updateFacilityCoverStartDates = async (collection, deal) => {
     return arr;
   };
 
-  const updatedDeal = deal;
-  updatedDeal.bondTransactions.items = updateFacilities(facilities.bonds);
-  updatedDeal.loanTransactions.items = updateFacilities(facilities.loans);
+  const modifiedDeal = deal;
+  modifiedDeal.bondTransactions.items = updateFacilities(facilities.bonds);
+  modifiedDeal.loanTransactions.items = updateFacilities(facilities.loans);
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: deal._id }, // eslint-disable-line no-underscore-dangle
-    $.flatten(updatedDeal),
-    { returnOriginal: false },
+  const updatedDeal = await updateDeal(
+    deal._id, // eslint-disable-line no-underscore-dangle,
+    modifiedDeal,
+    user,
   );
 
-  const { value } = findAndUpdateResponse;
-
-  return value;
+  return updatedDeal;
 };
 
 module.exports = updateFacilityCoverStartDates;

@@ -1,4 +1,4 @@
-const $ = require('mongo-dot-notation');
+const { updateDeal } = require('../deal.controller');
 const CONSTANTS = require('../../../constants');
 const issuedDateValidationRules = require('../../validation/fields/issued-date');
 const now = require('../../../now');
@@ -89,13 +89,13 @@ const shouldUpdateFacility = (facility) => {
 };
 
 const updateIssuedFacilities = async (
-  collection,
+  user,
   fromStatus,
   deal,
   canUpdateIssuedFacilitiesCoverStartDates,
   newStatus,
 ) => {
-  const updatedDeal = deal;
+  const modifiedDeal = deal;
 
   const fromStatusIsApprovedStatus = (fromStatus === CONSTANTS.DEAL.STATUS.APPROVED
                                       || fromStatus === CONSTANTS.DEAL.STATUS.APPROVED_WITH_CONDITIONS);
@@ -157,23 +157,21 @@ const updateIssuedFacilities = async (
     return arr;
   };
 
-  if (updatedDeal.loanTransactions.items.length > 0) {
-    updatedDeal.loanTransactions.items = update(updatedDeal.loanTransactions.items);
+  if (modifiedDeal.loanTransactions.items.length > 0) {
+    modifiedDeal.loanTransactions.items = update(modifiedDeal.loanTransactions.items);
   }
 
-  if (updatedDeal.bondTransactions.items.length > 0) {
-    updatedDeal.bondTransactions.items = update(updatedDeal.bondTransactions.items);
+  if (modifiedDeal.bondTransactions.items.length > 0) {
+    modifiedDeal.bondTransactions.items = update(modifiedDeal.bondTransactions.items);
   }
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: deal._id }, // eslint-disable-line no-underscore-dangle
-    $.flatten(updatedDeal),
-    { returnOriginal: false },
+  const updatedDeal = await updateDeal(
+    deal._id, // eslint-disable-line no-underscore-dangle,
+    modifiedDeal,
+    user,
   );
 
-  const { value } = findAndUpdateResponse;
-
-  return value;
+  return updatedDeal;
 };
 
 module.exports = updateIssuedFacilities;
