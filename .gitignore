@@ -21,3 +21,4 @@ jwt_key
 reference-data-proxy/generated_reports
 
 *.ipynb
+.ipynb_checkpoints
