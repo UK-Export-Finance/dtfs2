@@ -1,27 +1,38 @@
 {% from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation %}
-
-{{ mojPrimaryNavigation({
-label: 'Primary navigation',
-items: [
-{
-  text: 'New',
-  href: '/inbox',
-  active: primary == 'inbox'
-},
-{
-  text: 'In progress',
-  href: '/cases',
-  active: primary == 'cases'
-},
-{
-  text: 'Completed',
-  href: '/deals',
-  active: primary == 'deals'
-},
-{
-    text: 'Reports',
-  href: '/reports',
-  active: primary == 'reports'
-}
-]
-}) }} 
+    <div class="govuk-grid-column-full govuk-!-padding-top-8">
+      {{ mojSubNavigation({
+        label: 'Sub navigation',
+        items: [{
+          text: 'Tasks',
+          href: '/case/tasks/'+dealId,
+          active: (active_sheet=='tasks')
+        }, {
+          text: 'Deal',
+          href: '/case/deal/'+dealId,
+          active: (active_sheet=='deal')
+        }, {
+          text: 'Parties',
+          href: '/case/parties/'+dealId,
+          active: (active_sheet=='parties')
+        }, {
+          text: 'Documents',
+          href: '/case/documents/'+dealId,
+          active: (active_sheet=='documents')
+        }, {
+          text: 'Activity',
+          href: '/case/activity/'+dealId,
+          active: (active_sheet=='activity')
+        }, {
+          text: 'Underwriting',
+          href: '/case/underwriting/'+dealId,
+          active: (active_sheet=='underwriting')
+        }, {
+          text: 'Linked deals',
+          href: '/case/linked-deals/'+dealId,
+          active: (active_sheet=='linked-deals')
+        }],
+        attributes: {
+          'data-cy': 'case-sub-navigation'
+        }
+      }) }}
+    </div>

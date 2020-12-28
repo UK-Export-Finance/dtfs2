@@ -11,37 +11,7 @@
   {% block content %}
 
     {{caseSummary.render(deal)}}
-
-    <div class="govuk-grid-column-full govuk-!-padding-top-8">
-      {{ mojSubNavigation({
-        label: 'Sub navigation',
-        items: [{
-          text: 'Tasks',
-          href: 'tasks'
-        }, {
-          text: 'Deal',
-          href: 'deal'
-        }, {
-          text: 'Parties',
-          href: 'parties'
-        }, {
-          text: 'Documents',
-          href: 'documents'
-        }, {
-          text: 'Activity',
-          href: 'activity'
-        }, {
-          text: 'Underwriting',
-          href: 'underwriting'
-        }, {
-          text: 'Linked deals',
-          href: 'linked-deals'
-        }],
-        attributes: {
-          'data-cy': 'case-sub-navigation'
-        }
-      }) }}
-    </div>
+     {% include "_partials/case_sub_navigation.njk" %}
 
   {% endblock %}
 
