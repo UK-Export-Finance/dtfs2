@@ -36,6 +36,14 @@ body {
   line-height: 20px;
 }
 
+.ukef-hint {
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 19px;
+  line-height: 25px;
+  color: govuk-colour("dark-grey", $legacy: "grey-1");
+}
 
 .ukef-body-s {
   font-family: Helvetica;
