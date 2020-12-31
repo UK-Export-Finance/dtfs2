@@ -4,72 +4,250 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
-      <p class="header-label">Deal</p>
+      <p class="header-label">Parties</p>
     </div>
   </div>
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full separator-line deal">
-      <p class="ukef-heading-l" style="padding-top:30px">Bank application or notice</p>
-      <div class="govuk-grid-row govuk-!-margin-0 govuk-!-padding-top-6">
-        <div class="govuk-grid-column-one-fifth">
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full govuk-!-padding-bottom-4 govuk-!-padding-left-0">
-              <div class="ukef-heading-xs">Bank</div>
-              <div class="ukef-body-s">{{ deal.details.owningBank.name }}</div>
-            </div>
-          </div>
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full govuk-!-padding-bottom-4 govuk-!-padding-left-0">
-              <div class="ukef-heading-xs">MGA version</div>
-              <div class="ukef-body-s"></div>
-            </div>
-          </div>
+  <div class="govuk-grid-row separator-line deal">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-l">Exporter</p>
         </div>
-        <div class="govuk-grid-column-one-fifth">
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full govuk-!-padding-bottom-4 govuk-!-padding-left-0">
-              <div class="ukef-heading-xs">Contact name</div>
-              <div class="ukef-body-s"></div>
-            </div>
-          </div>
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full govuk-!-padding-bottom-4 govuk-!-padding-left-0">
-              <div class="ukef-heading-xs">Bank reference</div>
-              <div class="ukef-body-s"></div>
-            </div>
-          </div>
-        </div>
-        <div class="govuk-grid-column-one-fifth">
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full govuk-!-padding-bottom-4 govuk-!-padding-left-0">
-              <div class="ukef-heading-xs">Telephone</div>
-              <div class="ukef-body-s"></div>
-            </div>
-          </div>
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full govuk-!-padding-bottom-4 govuk-!-padding-left-0">
-              <div class="ukef-heading-xs">Bank's additional reference</div>
-              <div class="ukef-body-s"></div>
-            </div>
-          </div>
-        </div>
-        <div class="govuk-grid-column-one-fifth">
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full govuk-!-padding-bottom-4 govuk-!-padding-left-0">
-              <div class="ukef-heading-xs">Email</div>
-              <div class="ukef-body-s">{{ deal.details.owningBank.emails[0] }}</div>
-            </div>
-          </div>
+        <div class="govuk-grid-column-two-thirds">
+          <p>Matched</p>
         </div>
       </div>
     </div>
   </div>
-    <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full separator-line deal">
-      <p class="ukef-heading-l" style="padding-top:30px">Facilities</p>
-
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Name</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Address</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Country</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">industry Sector</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Industry class</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Companies house<br>registration number</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">SME size</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Correspondence address</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Correspondence country</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
     </div>
   </div>
-{% endblock %}
+  <div class="govuk-grid-row separator-line deal">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-l">Buyer</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+          <p>Not Matched</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Name</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Address</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Country</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+    </div>
+  </div>
+  <div class="govuk-grid-row  separator-line deal">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-l">Agent</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+          <p>Not Matched</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Name</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Address</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Country</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Commission rate</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+    </div>
+  </div>
+  <div class="govuk-grid-row separator-line deal">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-l">Indemnifier</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+          <p>Not Matched</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Name</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Address</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Country</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Companies house<br>registration number</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Is the indemnifier legally<br>distinct from the exporter?</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <p class="ukef-heading-xs">Approval level required</p>
+        </div>
+        <div class="govuk-grid-column-two-thirds"></div>
+      </div>
+    </div>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third">
+            <p class="ukef-heading-xs">Correspondence address</p>
+          </div>
+          <div class="govuk-grid-column-two-thirds"></div>
+        </div>
+      </div>
+      <div class="govuk-grid-column-one-half">
+        <p class="ukef-heading-xs">Correspondence country</p>
+      </div>
+      <div class="govuk-grid-column-two-thirds"></div>
+    </div>
+  </div>
+  <div class="govuk-grid-row separator-line deal">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+          <p class="ukef-heading-l">Bond issuer</p>
+          <p class="ukef-hint" style="margin-top:-36px">(if different to buyer)</p>
+        </div>
+        <div class="govuk-grid-column-one-half">
+          <p>Matched</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="govuk-grid-row separator-line deal">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+          <p class="ukef-heading-l">Bond beneficiary</p>
+          <p class="ukef-hint" style="margin-top:-36px">(if different to buyer)</p>
+        </div>
+        <div class="govuk-grid-column-one-half">
+          <p>Matched</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
+
+{% endblock %}
