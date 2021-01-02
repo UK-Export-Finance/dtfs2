@@ -7,7 +7,7 @@
       <p class="header-label">Parties</p>
     </div>
   </div>
-
+  {{ deal | dump }}
   <div class="govuk-grid-row separator-line deal">
     <div class="govuk-grid-column-one-half">
       <div class="govuk-grid-row">
@@ -26,13 +26,13 @@
         <div class="govuk-grid-column-one-third">
           <p class="ukef-heading-xs">Name</p>
         </div>
-        <div class="govuk-grid-column-two-thirds"></div>
+        <div class="govuk-grid-column-two-thirds">{{ deal.submissionDetails.supplierName }}</div>
       </div>
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-third">
           <p class="ukef-heading-xs">Address</p>
         </div>
-        <div class="govuk-grid-column-two-thirds"></div>
+        <div class="govuk-grid-column-two-thirds">{{ deal.submissionDetails.supplierAddress }}</div>
       </div>
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-third">
