@@ -93,6 +93,7 @@ const dealReducer = (deal) => {
       supplierCorrespondenceAddressTown:
         submissionDetails["supplier-correspondence-address-town"],
       supplierAddress: submissionDetails.supplierAddress,
+      smeType: submissionDetails["sme-type"]
     },
     agentAddressCountry: deal.eligibility.agentAddressCountry,
     agentAddressLine1: deal.eligibility.agentAddressLine1,

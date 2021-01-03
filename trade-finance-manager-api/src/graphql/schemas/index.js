@@ -76,7 +76,8 @@ type DealSubmissionDetails {
   supplierCorrespondenceAddressLine3: String,
   supplierCorrespondenceAddressPostcode: String,
   supplierCorrespondenceAddressTown: String,
-  supplierAddress: String
+  supplierAddress: String,
+  smeType: String
 }
 
 type DealEligibilityCriterion {

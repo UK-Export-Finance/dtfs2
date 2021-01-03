@@ -71,7 +71,8 @@ const dealQuery = gql`
         supplierCorrespondenceAddressLine3,
         supplierCorrespondenceAddressPostcode,
         supplierCorrespondenceAddressTown,
-        supplierAddress
+        supplierAddress,
+        smeType
       }
       eligibilityCriteria {
         id,
