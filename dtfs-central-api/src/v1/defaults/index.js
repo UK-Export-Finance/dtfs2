@@ -1,0 +1,24 @@
+const DEFAULTS = {
+  DEALS: {
+    details: {
+      status: 'Draft',
+    },
+    eligibility: {
+      status: 'Not started',
+    },
+    submissionDetails: {
+      status: 'Not started',
+    },
+    bondTransactions: {
+      items: [],
+    },
+    loanTransactions: {
+      items: [],
+    },
+    summary: {},
+    comments: [],
+    editedBy: [],
+  },
+};
+
+module.exports = DEFAULTS;
