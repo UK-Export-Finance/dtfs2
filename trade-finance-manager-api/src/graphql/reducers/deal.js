@@ -46,8 +46,8 @@ const dealReducer = (deal) => {
       supplyContractDescription:
         submissionDetails['supply-contract-description'],
       destinationCountry:
-        submissionDetails.destinationOfGoodsAndServices &&
-        submissionDetails.destinationOfGoodsAndServices.name,
+        submissionDetails.destinationOfGoodsAndServices 
+        && submissionDetails.destinationOfGoodsAndServices.name,
       indemnifierAddressCountry:
         submissionDetails['indemnifier-address-country'].name,
       indemnifierAddressLine1: submissionDetails['indemnifier-address-line-1'],
