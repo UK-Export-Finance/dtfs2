@@ -5,6 +5,7 @@ const passwordAtLeastOneLowercase = require('./rules/passwordAtLeastOneLowercase
 const passwordAtLeastOneSpecialCharacter = require('./rules/passwordAtLeastOneSpecialCharacter');
 const passwordsCannotBeReUsed = require('./rules/passwordsCannotBeReUsed');
 const passwordsMustMatch = require('./rules/passwordsMustMatch');
+const currentPasswordMustMatch = require('./rules/currentPasswordMustMatch');
 
 const createRules = [
   passwordAtLeast8Characters,
@@ -22,6 +23,7 @@ const updateRules = [
   passwordAtLeastOneSpecialCharacter,
   passwordsCannotBeReUsed,
   passwordsMustMatch,
+  currentPasswordMustMatch,
 ];
 
 const applyRules = (ruleset, existingUser, candidateChange) => ruleset.reduce((accumulator, rule) => {

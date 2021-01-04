@@ -228,7 +228,10 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
     });
   }
 
-  const errors = applyUpdateRules(user, req.body);
+  const errors = applyUpdateRules(user, {
+    resetPwdToken,
+    ...req.body,
+  });
 
   if (errors.length) {
     return res.status(200).json({

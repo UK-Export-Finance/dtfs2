@@ -1,8 +1,11 @@
-const { header, users, createUser, userProfile, changePassword } = require('../../pages');
+const {
+  header, users, createUser, userProfile, changePassword,
+} = require('../../pages');
 const relative = require('../../relativeURL');
 
 const mockUsers = require('../../../fixtures/mockUsers');
-  const ADMIN_LOGIN = mockUsers.find( user=> (user.roles.includes('admin')) );
+
+const ADMIN_LOGIN = mockUsers.find((user) => (user.roles.includes('admin')));
 
 context('Admin user creates a new user; the new user updates their password.', () => {
   const userToCreate = {
@@ -12,7 +15,7 @@ context('Admin user creates a new user; the new user updates their password.', (
     surname: 'the builder',
     bank: 'Barclays Bank',
     roles: ['maker'],
-  }
+  };
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -51,6 +54,7 @@ context('Admin user creates a new user; the new user updates their password.', (
     cy.login(userToCreate);
     header.profile().click();
     userProfile.changePassword().click();
+    changePassword.currentPassword().type(userToCreate.password);
     changePassword.password().type('fail');
     changePassword.confirmPassword().type('fail');
     changePassword.submit().click();
@@ -61,7 +65,20 @@ context('Admin user creates a new user; the new user updates their password.', (
       expect(text.trim()).to.contain('Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.');
     });
 
+    // try changing with wrong current password
+    changePassword.currentPassword().type('wrongPassword');
+    changePassword.password().type('P4ssPl£ase');
+    changePassword.confirmPassword().type('P4ssPl£ase');
+    changePassword.submit().click();
+
+    // expect failure
+    cy.url().should('match', /change-password/);
+    changePassword.currentPasswordError().invoke('text').then((text) => {
+      expect(text.trim()).to.contain('Current password is not correct.');
+    });
+
     // try to change to a legit password
+    changePassword.currentPassword().type(userToCreate.password);
     changePassword.password().type('P4ssPl£ase');
     changePassword.confirmPassword().type('P4ssPl£ase');
     changePassword.submit().click();
@@ -69,13 +86,14 @@ context('Admin user creates a new user; the new user updates their password.', (
     // prove that we can log in with the new password..
     cy.login({
       ...userToCreate,
-      password: 'P4ssPl£ase'
+      password: 'P4ssPl£ase',
     });
     cy.url().should('eq', relative('/dashboard/0'));
 
     // prove that we cant re-use an old password
     header.profile().click();
     userProfile.changePassword().click();
+    changePassword.currentPassword().type(userToCreate.password);
     changePassword.password().type(userToCreate.password);
     changePassword.confirmPassword().type(userToCreate.password);
     changePassword.submit().click();
@@ -85,6 +103,5 @@ context('Admin user creates a new user; the new user updates their password.', (
     changePassword.passwordError().invoke('text').then((text) => {
       expect(text.trim()).to.contain('Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.');
     });
-
   });
 });

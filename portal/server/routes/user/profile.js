@@ -33,6 +33,7 @@ router.get('/:_id/change-password', async (req, res) => {
     {
       _id,
       user: req.session.user,
+      requireCurrentPassword: true,
     });
 });
 
@@ -56,6 +57,7 @@ router.post('/:_id/change-password', async (req, res) => {
       _id,
       user: req.session.user,
       validationErrors: formattedValidationErrors,
+      requireCurrentPassword: true,
     });
 });
 
