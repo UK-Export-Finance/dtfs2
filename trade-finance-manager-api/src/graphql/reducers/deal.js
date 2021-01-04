@@ -1,4 +1,5 @@
 const dealReducer = (deal) => {
+  console.log('dealReducer1', { deal });
   const { details, submissionDetails, eligibility } = deal;
 
   const {
@@ -106,7 +107,7 @@ const dealReducer = (deal) => {
     },
     eligibilityCriteria: deal.eligibility.criteria,
   };
-
+  console.log('dealReducer2', { deal, result });
   return result;
 };
 
