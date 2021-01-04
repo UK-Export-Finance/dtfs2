@@ -104,7 +104,7 @@ type Deal {
   details: DealDetails
   submissionDetails: DealSubmissionDetails
   eligibilityCriteria: [DealEligibilityCriterion!]
-  eligibility: [DealEligibility!]
+  eligibility: DealEligibility
 }
 
 type Query {

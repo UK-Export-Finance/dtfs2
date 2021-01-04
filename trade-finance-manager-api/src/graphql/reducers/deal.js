@@ -1,5 +1,5 @@
 const dealReducer = (deal) => {
-  const { details, submissionDetails } = deal;
+  const { details, submissionDetails, eligibility } = deal;
 
   const {
     status,
@@ -49,7 +49,7 @@ const dealReducer = (deal) => {
         submissionDetails.destinationOfGoodsAndServices &&
         submissionDetails.destinationOfGoodsAndServices.name,
       indemnifierAddressCountry:
-        submissionDetails["indemnifier-address-country"],
+        submissionDetails["indemnifier-address-country"].name,
       indemnifierAddressLine1: submissionDetails["indemnifier-address-line-1"],
       indemnifierAddressLine2: submissionDetails["indemnifier-address-line-2"],
       indemnifierAddressLine3: submissionDetails["indemnifier-address-line-3"],
@@ -95,14 +95,15 @@ const dealReducer = (deal) => {
       supplierAddress: submissionDetails.supplierAddress,
       smeType: submissionDetails["sme-type"]
     },
-    agentAddressCountry: deal.eligibility.agentAddressCountry,
-    agentAddressLine1: deal.eligibility.agentAddressLine1,
-    agentAddressLine2: deal.eligibility.agentAddressLine2,
-    agentAddressLine3: deal.eligibility.agentAddressLine3,
-    agentAddressPostcode: deal.eligibility.agentAddressPostcode,
-    agentAddressTown: deal.eligibility.agentAddressTown,
-    agentName: deal.eligibility.agentName,
-    agentAlias: 'Simon',
+    eligibility: {
+      agentAddressCountry: eligibility.agentAddressCountry,
+      agentAddressLine1: eligibility.agentAddressLine1,
+      agentAddressLine2: eligibility.agentAddressLine2,
+      agentAddressLine3: eligibility.agentAddressLine3,
+      agentAddressPostcode: eligibility.agentAddressPostcode,
+      agentAddressTown: eligibility.agentAddressTown,
+      agentName: eligibility.agentName
+    },
     eligibilityCriteria: deal.eligibility.criteria,
   };
 
