@@ -46,8 +46,8 @@ const dealReducer = (deal) => {
       supplyContractDescription:
         submissionDetails['supply-contract-description'],
       destinationCountry:
-        submissionDetails.destinationOfGoodsAndServices &&
-        submissionDetails.destinationOfGoodsAndServices.name,
+        submissionDetails.destinationOfGoodsAndServices
+        && submissionDetails.destinationOfGoodsAndServices.name,
       indemnifierAddressCountry:
         submissionDetails['indemnifier-address-country'].name,
       indemnifierAddressLine1: submissionDetails['indemnifier-address-line-1'],
@@ -93,7 +93,7 @@ const dealReducer = (deal) => {
       supplierCorrespondenceAddressTown:
         submissionDetails['supplier-correspondence-address-town'],
       supplierAddress: submissionDetails.supplierAddress,
-      smeType: submissionDetails['sme-type']
+      smeType: submissionDetails['sme-type'],
     },
     eligibility: {
       agentAddressCountry: eligibility.agentAddressCountry,
@@ -102,7 +102,7 @@ const dealReducer = (deal) => {
       agentAddressLine3: eligibility.agentAddressLine3,
       agentAddressPostcode: eligibility.agentAddressPostcode,
       agentAddressTown: eligibility.agentAddressTown,
-      agentName: eligibility.agentName
+      agentName: eligibility.agentName,
     },
     eligibilityCriteria: deal.eligibility.criteria,
   };
