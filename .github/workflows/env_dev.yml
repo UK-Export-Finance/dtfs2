@@ -1210,7 +1210,7 @@ jobs:
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
-    needs: [vnet, private-dns, cosmos-db-private, reference-data-proxy]
+    needs: [vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1352,8 +1352,6 @@ jobs:
 
           dtfs_central_api_url=$(az webapp show --name tfs-${{ env.environment }}-dtfs-central-api --query defaultHostName -o tsv)
           echo "DTFS central API url: http://$dtfs_central_api_url"
-
-          portal_file_storage_key=$(az storage account keys list --account-name tfs${{ env.environment }}storage --query [0].value -o tsv)
 
           az webapp config connection-string set --name tfs-${{ env.environment }}-trade-finance-manager-api \
             --connection-string-type custom \
