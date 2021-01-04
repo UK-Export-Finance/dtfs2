@@ -7,7 +7,6 @@ import api from '../../api';
 
 const getCaseDeal = async (req, res) => {
   const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
-  console.log('dealId:'+dealId);
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -17,13 +16,12 @@ const getCaseDeal = async (req, res) => {
   return res.render('case/deal/deal.njk', {
     deal,
     active_sheet: 'deal',
-    dealId
+    dealId,
   });
 };
 
 const getCaseParties = async (req, res) => {
   const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
-  console.log('dealId:'+dealId);
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -33,11 +31,11 @@ const getCaseParties = async (req, res) => {
   return res.render('case/parties/parties.njk', {
     deal,
     active_sheet: 'parties',
-    dealId
+    dealId,
   });
 };
 
 export default {
   getCaseDeal,
-  getCaseParties
+  getCaseParties,
 };
