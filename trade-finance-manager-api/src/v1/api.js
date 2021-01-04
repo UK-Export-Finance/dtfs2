@@ -5,6 +5,7 @@ require('dotenv').config();
 const urlRoot = process.env.DTFS_CENTRAL_API;
 
 const findOneDeal = async (dealId) => {
+  console.log('findOneDeal', `${urlRoot}/v1/deals/${dealId}`);
   try {
     const response = await axios({
       method: 'get',
@@ -13,9 +14,10 @@ const findOneDeal = async (dealId) => {
         'Content-Type': 'application/json',
       },
     });
-
+    console.log('findOneDeal', { responsData: response.data });
     return response.data.deal;
   } catch (err) {
+    console.log('findOneDeal - error', { err });
     return new Error('error with token');// do something proper here, but for now just reject failed logins..
   }
 };

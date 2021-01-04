@@ -1,4 +1,5 @@
 const dealReducer = (deal) => {
+  console.log('dealReducer1', { deal });
   const { details, submissionDetails, eligibility } = deal;
 
   const {
@@ -46,7 +47,7 @@ const dealReducer = (deal) => {
       supplyContractDescription:
         submissionDetails['supply-contract-description'],
       destinationCountry:
-        submissionDetails.destinationOfGoodsAndServices 
+        submissionDetails.destinationOfGoodsAndServices
         && submissionDetails.destinationOfGoodsAndServices.name,
       indemnifierAddressCountry:
         submissionDetails['indemnifier-address-country'].name,
@@ -106,7 +107,7 @@ const dealReducer = (deal) => {
     },
     eligibilityCriteria: deal.eligibility.criteria,
   };
-
+  console.log('dealReducer2', { deal, result });
   return result;
 };
 
