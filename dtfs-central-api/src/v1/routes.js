@@ -1,16 +1,29 @@
 const express = require('express');
 
 const openRouter = express.Router();
-const deal = require('./controllers/deal.controller');
+const dealController = require('./controllers/deal.controller');
+const updateDealController = require('./controllers/update-deal.controller');
+const deleteDealController = require('./controllers/delete-deal.controller');
+
+openRouter.route('/deals')
+  .post(
+    dealController.createDealPost,
+  );
 
 openRouter.route('/deals/:id')
   .get(
-    deal.findOneDealGet,
+    dealController.findOneDealGet,
+  )
+  .put(
+    updateDealController.updateDealPut,
+  )
+  .delete(
+    deleteDealController.deleteDeal,
   );
 
 openRouter.route('/deals/query')
   .post(
-    deal.queryDealsPost,
+    dealController.queryDealsPost,
   );
 
 module.exports = { openRouter };
