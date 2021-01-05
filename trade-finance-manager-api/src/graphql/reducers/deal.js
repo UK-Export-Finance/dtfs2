@@ -1,6 +1,4 @@
 const dealReducer = (deal) => {
-  // eslint-disable-next-line no-console
-  console.log('dealReducer1', { deal });
   const { details, submissionDetails, eligibility } = deal;
 
   const {
@@ -108,8 +106,6 @@ const dealReducer = (deal) => {
     },
     eligibilityCriteria: deal.eligibility.criteria,
   };
-  // eslint-disable-next-line no-console
-  console.log('dealReducer2', { deal, result });
   return result;
 };
 
