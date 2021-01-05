@@ -1,9 +1,11 @@
 const bankSupplyContractID = require('./bank-supply-contract-id');
 const bankSupplyContractName = require('./bank-supply-contract-name');
+const makerObject = require('./maker-object');
 
 const rules = [
   bankSupplyContractID,
   bankSupplyContractName,
+  makerObject,
 ];
 
 module.exports = (deal) => {

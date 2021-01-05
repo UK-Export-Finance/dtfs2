@@ -5,6 +5,7 @@ const DEFAULTS = {
     },
     eligibility: {
       status: 'Not started',
+      criteria: [],
     },
     submissionDetails: {
       status: 'Not started',
