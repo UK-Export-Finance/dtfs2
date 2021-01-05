@@ -2,11 +2,8 @@ const wipeDB = require('../../wipeDB');
 const aDeal = require('./deal-builder');
 
 const app = require('../../../src/createApp');
-// const dealWithAboutComplete = require('../../fixtures/deal-with-complete-about-section.json');
-// const dealWithAboutIncomplete = require('../../fixtures/deal-with-incomplete-about-section.json');
 const api = require('../../api')(app);
 const { expectAddedFields, expectAddedFieldsWithEditedBy } = require('./expectAddedFields');
-// const calculateDealSummary = require('../../../src/v1/deal-summary');
 
 const mockUser = {
   _id: '123456789',
