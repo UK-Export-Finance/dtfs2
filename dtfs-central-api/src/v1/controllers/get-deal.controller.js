@@ -23,19 +23,26 @@ exports.queryDealsPost = async (req, res) => {
   res.status(200).send(deals);
 };
 
-
-const findOneDeal = async (_id) => {
-  console.log('central - findOneDeal', _id);
+const findOneDeal = async (_id, callback) => {
   const collection = await db.getCollection('deals');
   const deal = await collection.findOne({ _id });
-  console.log('central - findOneDeal', { deal });
+
+  if (callback) {
+    callback(deal);
+  }
+
   return deal;
 };
 exports.findOneDeal = findOneDeal;
 
 exports.findOneDealGet = async (req, res) => {
   const deal = await findOneDeal(req.params.id);
-  res.status(200).send({
-    deal,
-  });
+
+  if (deal) {
+    return res.status(200).send({
+      deal,
+    });
+  }
+
+  return res.status(404).send();
 };

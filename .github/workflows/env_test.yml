@@ -1008,6 +1008,8 @@ jobs:
         inlineScript: |
           az webapp config appsettings set --name tfs-${{ env.environment }}-dtfs-central-api \
             --settings \
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1 \
               PORT=5000 \
               WEBSITES_PORT=5000
 
@@ -1029,8 +1031,6 @@ jobs:
             --settings \
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="$mongo_connection_string" \
-              WEBSITE_DNS_SERVER="168.63.129.16" \
-              WEBSITE_VNET_ROUTE_ALL=1 \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"   
 
   portal-api:
@@ -1162,6 +1162,8 @@ jobs:
         inlineScript: |
           az webapp config appsettings set --name tfs-${{ env.environment }}-portal-api \
             --settings \
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1 \
               PORT=5000 \
               WEBSITES_PORT=5000
 
@@ -1196,8 +1198,6 @@ jobs:
               AZURE_WORKFLOW_STORAGE_ACCESS_KEY="${{ env.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}" \
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="$mongo_connection_string" \
-              WEBSITE_DNS_SERVER="168.63.129.16" \
-              WEBSITE_VNET_ROUTE_ALL=1 \
               JWT_SIGNING_KEY="${{ env.JWT_SIGNING_KEY }}" \
               JWT_VALIDATING_KEY="${{ env.JWT_VALIDATING_KEY }}" \
               GOV_NOTIFY_API_KEY="${{ env.GOV_NOTIFY_API_KEY }}" \
@@ -1209,7 +1209,7 @@ jobs:
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
-    needs: [vnet, private-dns, cosmos-db-private, reference-data-proxy]
+    needs: [vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1336,6 +1336,8 @@ jobs:
         inlineScript: |
           az webapp config appsettings set --name tfs-${{ env.environment }}-trade-finance-manager-api \
             --settings \
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1 \
               PORT=5000 \
               WEBSITES_PORT=5000
 
@@ -1352,15 +1354,11 @@ jobs:
           dtfs_central_api_url=$(az webapp show --name tfs-${{ env.environment }}-dtfs-central-api --query defaultHostName -o tsv)
           echo "DTFS central API url: http://$dtfs_central_api_url"
 
-          portal_file_storage_key=$(az storage account keys list --account-name tfs${{ env.environment }}storage --query [0].value -o tsv)
-
           az webapp config connection-string set --name tfs-${{ env.environment }}-trade-finance-manager-api \
             --connection-string-type custom \
             --settings \
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="$mongo_connection_string" \
-              WEBSITE_DNS_SERVER="168.63.129.16" \
-              WEBSITE_VNET_ROUTE_ALL=1 \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
               DTFS_CENTRAL_API="http://$dtfs_central_api_url"  
   # END API setup
