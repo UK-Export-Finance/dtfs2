@@ -31,18 +31,29 @@ const createDeal = async (req, res) => {
   const validationErrors = getDealErrors(newDeal);
 
   if (validationErrors.count !== 0) {
-    return res.status(400).send({
-      validationErrors
-    });
+    return { validationErrors };
   }
 
   const response = await collection.insertOne(newDeal);
 
   const createdDeal = response.ops[0];
-  return res.status(200).send(createdDeal);
+
+  return {
+    deal: createdDeal,
+  };
 };
 
 exports.createDealPost = async (req, res) => {
-  const result = await createDeal(req, res);
-  return result;
+  const {
+    validationErrors,
+    deal,
+  } = await createDeal(req, res);
+
+  if (validationErrors) {
+    return res.status(400).send({
+      validationErrors
+    });
+  }
+
+  return res.status(200).send(deal);
 };
