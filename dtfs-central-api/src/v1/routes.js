@@ -1,18 +1,19 @@
 const express = require('express');
 
 const openRouter = express.Router();
-const dealController = require('./controllers/deal.controller');
+const createDealController = require('./controllers/create-deal.controller');
+const getDealController = require('./controllers/get-deal.controller');
 const updateDealController = require('./controllers/update-deal.controller');
 const deleteDealController = require('./controllers/delete-deal.controller');
 
 openRouter.route('/deals')
   .post(
-    dealController.createDealPost,
+    createDealController.createDealPost,
   );
 
 openRouter.route('/deals/:id')
   .get(
-    dealController.findOneDealGet,
+    getDealController.findOneDealGet,
   )
   .put(
     updateDealController.updateDealPut,
@@ -23,7 +24,7 @@ openRouter.route('/deals/:id')
 
 openRouter.route('/deals/query')
   .post(
-    dealController.queryDealsPost,
+    getDealController.queryDealsPost,
   );
 
 module.exports = { openRouter };

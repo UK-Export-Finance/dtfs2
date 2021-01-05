@@ -1,5 +1,5 @@
 const $ = require('mongo-dot-notation');
-const { findOneDeal } = require('./deal.controller');
+const { findOneDeal } = require('./get-deal.controller');
 const db = require('../../drivers/db-client');
 const now = require('../../now');
 
@@ -56,7 +56,7 @@ const handleEditedBy = async (dealId, dealUpdate, user) => {
 
 const updateDeal = async (dealId, dealChanges, user, existingDeal) => {
   const collection = await db.getCollection('deals');
-
+  
   const editedBy = await handleEditedBy(dealId, dealChanges, user);
 
   let existingDealDetails;
@@ -98,17 +98,17 @@ exports.updateDealPut = async (req, res) => {
     if (!deal) res.status(404).send();
 
     if (deal) {
-      if (!userHasAccessTo(req.user, deal)) {
-        res.status(401).send();
-      } else {
-        const updatedDeal = await updateDeal(
-          dealId,
-          req.body,
-          req.user,
-          deal,
-        );
-        res.status(200).json(updatedDeal);
-      }
+      const user = req.body.user;
+      const dealUpdate = req.body;
+      delete dealUpdate.user;
+
+      const updatedDeal = await updateDeal(
+        dealId,
+        dealUpdate,
+        user,
+        deal,
+      );
+      res.status(200).json(updatedDeal);
     }
     res.status(404).send();
   });
