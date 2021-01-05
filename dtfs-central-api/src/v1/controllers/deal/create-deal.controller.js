@@ -1,8 +1,8 @@
-const db = require('../../drivers/db-client');
-const DEFAULTS = require('../defaults');
-const now = require('../../now');
-const getDealErrors = require('../validation/create-deal');
-const { generateDealId } = require('../../utils/generate-ids');
+const db = require('../../../drivers/db-client');
+const DEFAULTS = require('../../defaults');
+const now = require('../../../now');
+const getDealErrors = require('../../validation/create-deal');
+const { generateDealId } = require('../../../utils/generate-ids');
 
 const createDeal = async (req) => {
   const collection = await db.getCollection('deals');

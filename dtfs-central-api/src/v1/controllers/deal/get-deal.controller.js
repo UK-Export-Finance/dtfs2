@@ -1,4 +1,4 @@
-const db = require('../../drivers/db-client');
+const db = require('../../../drivers/db-client');
 
 const queryDeals = async (query, start = 0, pagesize = 0) => {
   const collection = await db.getCollection('deals');

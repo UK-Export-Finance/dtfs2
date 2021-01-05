@@ -1,10 +1,10 @@
 const express = require('express');
 
 const openRouter = express.Router();
-const createDealController = require('./controllers/create-deal.controller');
-const getDealController = require('./controllers/get-deal.controller');
-const updateDealController = require('./controllers/update-deal.controller');
-const deleteDealController = require('./controllers/delete-deal.controller');
+const createDealController = require('./controllers/deal/create-deal.controller');
+const getDealController = require('./controllers/deal/get-deal.controller');
+const updateDealController = require('./controllers/deal/update-deal.controller');
+const deleteDealController = require('./controllers/deal/delete-deal.controller');
 
 openRouter.route('/deals')
   .post(
@@ -27,4 +27,22 @@ openRouter.route('/deals/query')
     getDealController.queryDealsPost,
   );
 
+
+// openRouter.route('/facilities')
+//   .post(
+//     createFacilityController.createFacilityPost,
+//   );
+
+// openRouter.route('/facilities/:id')
+//   .get(
+//     getFacilityController.findOneFacilityGet,
+//   )
+//   .put(
+//     updateFacilityController.updateFacilityPut,
+//   )
+//   .delete(
+//     deleteFacilityController.deleteFacility,
+//   );
+
+ 
 module.exports = { openRouter };
