@@ -25,10 +25,9 @@ exports.queryDealsPost = async (req, res) => {
 
 
 const findOneDeal = async (_id) => {
-  console.log('central - findOneDeal', _id);
   const collection = await db.getCollection('deals');
   const deal = await collection.findOne({ _id });
-  console.log('central - findOneDeal', { deal });
+
   return deal;
 };
 exports.findOneDeal = findOneDeal;
