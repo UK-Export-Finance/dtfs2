@@ -1,7 +1,7 @@
 const $ = require('mongo-dot-notation');
 const { findOneDeal } = require('./get-deal.controller');
-const db = require('../../drivers/db-client');
-const now = require('../../now');
+const db = require('../../../drivers/db-client');
+const now = require('../../../now');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
