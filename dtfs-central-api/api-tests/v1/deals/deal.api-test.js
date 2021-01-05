@@ -110,6 +110,24 @@ describe('/v1/deals', () => {
     });
   });
 
+  describe('POST /v1/deals/query', () => {
+    it('returns multiple deals with count', async () => {
+      const deal1 = await api.post(newDeal).to('/v1/deals');
+      const deal2 = await api.post(newDeal).to('/v1/deals');
+      const deal3 = await api.post(newDeal).to('/v1/deals');
+
+      const { status, body } = await api.post().to('/v1/deals/query');
+
+      expect(status).toEqual(200);
+      expect(body.count).toEqual(3);
+      expect(body.deals).toEqual([
+        deal3.body,
+        deal2.body,
+        deal1.body,
+      ]);
+    });
+  });
+
   describe('GET /v1/deals/:id', () => {
     it('returns the requested resource', async () => {
       const postResult = await api.post(newDeal).to('/v1/deals');
@@ -206,7 +224,7 @@ describe('/v1/deals', () => {
       expect(body.deal).toEqual(expectAddedFieldsWithEditedBy(updatedDeal, mockUser));
     });
 
-    it('adds updates and retains `editedBy` array with req.user data', async () => {
+    it('adds updates and retains `editedBy` array with user data', async () => {
       const postResult = await api.post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const firstUpdate = {
