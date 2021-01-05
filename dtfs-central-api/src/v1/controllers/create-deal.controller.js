@@ -4,7 +4,7 @@ const now = require('../../now');
 const getDealErrors = require('../validation/create-deal');
 const { generateDealId } = require('../../utils/generate-ids');
 
-const createDeal = async (req, res) => {
+const createDeal = async (req) => {
   const collection = await db.getCollection('deals');
   const dealId = await generateDealId();
   const time = now();
@@ -24,8 +24,8 @@ const createDeal = async (req, res) => {
     },
     eligibility: {
       ...DEFAULTS.DEALS.eligibility,
-      ...req.body.eligibility
-    }
+      ...req.body.eligibility,
+    },
   };
 
   const validationErrors = getDealErrors(newDeal);
@@ -47,11 +47,11 @@ exports.createDealPost = async (req, res) => {
   const {
     validationErrors,
     deal,
-  } = await createDeal(req, res);
+  } = await createDeal(req);
 
   if (validationErrors) {
     return res.status(400).send({
-      validationErrors
+      validationErrors,
     });
   }
 

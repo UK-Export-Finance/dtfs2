@@ -56,7 +56,7 @@ const handleEditedBy = async (dealId, dealUpdate, user) => {
 
 const updateDeal = async (dealId, dealChanges, user, existingDeal) => {
   const collection = await db.getCollection('deals');
-  
+
   const editedBy = await handleEditedBy(dealId, dealChanges, user);
 
   let existingDealDetails;
@@ -98,7 +98,7 @@ exports.updateDealPut = async (req, res) => {
     if (!deal) res.status(404).send();
 
     if (deal) {
-      const user = req.body.user;
+      const { user } = req.body;
       const dealUpdate = req.body;
       delete dealUpdate.user;
 
