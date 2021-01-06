@@ -6,6 +6,8 @@ const getDealController = require('./controllers/deal/get-deal.controller');
 const updateDealController = require('./controllers/deal/update-deal.controller');
 const deleteDealController = require('./controllers/deal/delete-deal.controller');
 
+const createFacilityController = require('./controllers/facility/create-facility.controller');
+
 openRouter.route('/deals')
   .post(
     createDealController.createDealPost,
@@ -27,11 +29,10 @@ openRouter.route('/deals/query')
     getDealController.queryDealsPost,
   );
 
-
-// openRouter.route('/facilities')
-//   .post(
-//     createFacilityController.createFacilityPost,
-//   );
+openRouter.route('/facilities')
+  .post(
+    createFacilityController.createFacilityPost,
+  );
 
 // openRouter.route('/facilities/:id')
 //   .get(
