@@ -33,7 +33,12 @@ const getShareClient = async (fileshare) => {
     credentials,
   );
 
+  console.log('getShareClient', {
+    STORAGE_ACCOUNT,
+    FILESHARE_NAME,
+  });
   const shareClient = await serviceClient.getShareClient(FILESHARE_NAME);
+  console.log('getShareClient', { shareClient });
   await shareClient.create().catch(({ details }) => {
     if (!details) return;
     if (details.errorCode === 'ShareAlreadyExists') return;
@@ -44,9 +49,11 @@ const getShareClient = async (fileshare) => {
 };
 
 const getDirectory = async (fileshare, folderPaths = '') => {
+  console.log('getDirectory');
   const shareClient = await getShareClient(fileshare);
-
-  const directoryClient = shareClient.getDirectoryClient(folderPaths);
+  console.log('getDirectory', { shareClient });
+  const directoryClient = await shareClient.getDirectoryClient(folderPaths);
+  console.log('getDirectory', { directoryClient });
   await directoryClient.create().catch(async ({ details }) => {
     if (!details) return false;
     if (details.errorCode === 'ResourceAlreadyExists') return false;
@@ -73,9 +80,9 @@ const uploadFile = async ({
   // const exportDirectory = await getExportDirectory(fileshare);
 
   // const directoryClient = await exportDirectory.getDirectoryClient(folder);
-
+  console.log('uploadFile');
   const directoryClient = await getDirectory(fileshare, folder);
-
+  console.log('uploadFile', { directoryClient });
   await directoryClient.create().catch(({ details }) => {
     if (!details) return false;
     if (details.errorCode === 'ResourceAlreadyExists') return false;
@@ -90,6 +97,7 @@ const uploadFile = async ({
   });
 
   const fileClient = await directoryClient.getFileClient(`${filename}`);
+  console.log('uploadFile', { fileClient });
 
   const existingFileProps = await fileClient.getProperties().catch(() => {});
 
@@ -98,7 +106,9 @@ const uploadFile = async ({
   }
 
   if (!existingFileProps || allowOverwrite) {
+    console.log('uploadFile 1');
     await fileClient.uploadData(buffer);
+    console.log('uploadFile 2');
     return {
       folder,
       filename: fileClient.name,
