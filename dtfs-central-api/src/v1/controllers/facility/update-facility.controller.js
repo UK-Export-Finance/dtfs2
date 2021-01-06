@@ -43,6 +43,7 @@ exports.updateFacilityPut = async (req, res) => {
         facilityId,
         req.body,
       );
+
       res.status(200).json(updatedFacility);
     }
     res.status(404).send();

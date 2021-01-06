@@ -1,5 +1,5 @@
 const wipeDB = require('../../wipeDB');
-const aDeal = require('./deal-builder');
+const aDeal = require('../deal-builder');
 
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);

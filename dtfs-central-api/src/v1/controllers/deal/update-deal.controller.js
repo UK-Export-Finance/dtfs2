@@ -54,7 +54,7 @@ const handleEditedBy = async (dealId, dealUpdate, user) => {
   return editedBy;
 };
 
-const updateDeal = async (dealId, dealChanges, user, existingDeal) => {
+const updateDeal = async (dealId, dealChanges, user, existingDeal, callback) => {
   const collection = await db.getCollection('deals');
 
   const editedBy = await handleEditedBy(dealId, dealChanges, user);
@@ -87,9 +87,18 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal) => {
 
   const { value } = findAndUpdateResponse;
 
+  if (callback) {
+    callback(value);
+  }
+
   return value;
 };
 exports.updateDeal = updateDeal;
+
+const addFacilityIdToDeal = async (dealId, facilityId, user) => {
+  
+}
+exports.addFacilityIdToDeal = addFacilityIdToDeal;
 
 exports.updateDealPut = async (req, res) => {
   const dealId = req.params.id;

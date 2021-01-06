@@ -2,45 +2,58 @@ const db = require('../../../drivers/db-client');
 const now = require('../../../now');
 const { generateFacilityId } = require('../../../utils/generate-ids');
 const getFacilityErrors = require('../../validation/create-facility');
+const { findOneDeal } = require('../deal/get-deal.controller');
+const { addFacilityIdToDeal } = require('../deal/update-deal.controller');
 
 const createFacility = async (req) => {
   const collection = await db.getCollection('facilities');
   const facilityId = await generateFacilityId();
 
-  const { facilityType } = req.body;
+  const {
+    user,
+    facilityType,
+    associatedDealId,
+  } = req.body;
 
   const newFacility = {
     _id: facilityId,
     facilityType,
+    associatedDealId,
     createdDate: now(),
   };
 
-  const validationErrors = getFacilityErrors(newFacility);
-
-  if (validationErrors.count !== 0) {
-    return { validationErrors };
-  }
-
   const response = await collection.insertOne(newFacility);
-
   const createdFacility = response.ops[0];
 
-  return {
-    facility: createdFacility,
-  };
+  // TODO add the facility ID to deal
+  // const updatedDeal = await addFacilityIdToDeal(
+  //   associatedDealId,
+  //   createdFacility._id,
+  //   user,
+  // );
+
+  return createdFacility;
 };
 
 exports.createFacilityPost = async (req, res) => {
-  const {
-    validationErrors,
-    facility,
-  } = await createFacility(req);
+  // TODO add user/maker-object to validation ?
+  const validationErrors = getFacilityErrors(req.body);
 
-  if (validationErrors) {
+  if (validationErrors.count !== 0) {
     return res.status(400).send({
       validationErrors,
     });
   }
 
-  return res.status(200).send(facility);
+  const { associatedDealId } = req.body;
+
+  findOneDeal(associatedDealId, async (deal) => {
+    if (deal) {
+      const facility = await createFacility(req);
+
+      return res.status(200).send(facility);
+    }
+
+    return res.status(404).send('Deal not found');
+  });
 };
