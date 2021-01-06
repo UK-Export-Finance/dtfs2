@@ -39,13 +39,13 @@ const getShareClient = async (fileshare) => {
   });
   const shareClient = await serviceClient.getShareClient(FILESHARE_NAME);
   console.log('getShareClient', { shareClient });
-  await shareClient.create().catch(({ details }) => {
+  const shareClientResult = await shareClient.create().catch(({ details }) => {
     console.log('getShareClient error', { details });
     if (!details) return;
     if (details.errorCode === 'ShareAlreadyExists') return;
     throw new Error(details.message);
   });
-
+  console.log({ shareClientResult });
   return shareClient;
 };
 
@@ -53,7 +53,7 @@ const getDirectory = async (fileshare, folderPaths = '') => {
   console.log('getDirectory');
   const shareClient = await getShareClient(fileshare);
   console.log('getDirectory', { shareClient });
-  const directoryClient = await shareClient.getDirectoryClient(folderPaths);
+  const directoryClient = shareClient.getDirectoryClient(folderPaths);
   console.log('getDirectory', { directoryClient });
   await directoryClient.create().catch(async ({ details }) => {
     if (!details) return false;
