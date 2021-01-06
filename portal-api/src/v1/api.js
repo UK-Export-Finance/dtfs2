@@ -16,7 +16,7 @@ const findOneDeal = async (dealId) => {
 
     return response.data.deal;
   } catch (err) {
-    return new Error('error with token');// do something proper here, but for now just reject failed logins..
+    return false;
   }
 };
 
@@ -37,7 +37,7 @@ const queryDeals = async (query, start = 0, pagesize = 0) => {
 
     return response.data;
   } catch (err) {
-    return new Error('error with token');// do something proper here, but for now just reject failed logins..
+    return false;
   }
 };
 
