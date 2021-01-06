@@ -347,7 +347,7 @@ const createTypeA = async (deal, fromStatus) => {
 
   const workflowConfig = fileshare.getConfig('workflow');
   const portalConfig = fileshare.getConfig('portal');
-
+  console.log({ workflowConfig });
   const workflowFolder = `${workflowConfig.EXPORT_FOLDER}/${deal._id}`; // eslint-disable-line no-underscore-dangle
   const portalFolder = `${portalConfig.EXPORT_FOLDER}/${deal._id}`; // eslint-disable-line no-underscore-dangle
 

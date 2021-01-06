@@ -119,7 +119,7 @@ services:
       - DTFS_PORTAL_SCHEDULER
       - GOV_NOTIFY_API_KEY
       - GOV_NOTIFY_EMAIL_RECIPIENT
-      - DTFS_PORTAL_SCHEDULER=true
+      - DTFS_PORTAL_SCHEDULER=false
       - FETCH_WORKFLOW_TYPE_B_SCHEDULE=*/1 * * * * *
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
