@@ -40,6 +40,7 @@ const getShareClient = async (fileshare) => {
   const shareClient = await serviceClient.getShareClient(FILESHARE_NAME);
   console.log('getShareClient', { shareClient });
   await shareClient.create().catch(({ details }) => {
+    console.log('getShareClient error', { details });
     if (!details) return;
     if (details.errorCode === 'ShareAlreadyExists') return;
     throw new Error(details.message);
