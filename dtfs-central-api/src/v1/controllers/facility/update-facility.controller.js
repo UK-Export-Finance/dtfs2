@@ -1,5 +1,6 @@
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
+const { updateDealEditedBy } = require('../deal/update-deal.controller');
 const db = require('../../../drivers/db-client');
 const now = require('../../../now');
 
@@ -9,14 +10,11 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-// TODO - currently in portal, when a facility is updated - deal is also updated with editedBy.
-// should we do that here?
-// do we have
-const updateFacility = async (facilityId, facilityChanges) => {
+const updateFacility = async (facilityId, facilityBody) => {
   const collection = await db.getCollection('facilities');
 
   const update = {
-    ...facilityChanges,
+    ...facilityBody,
     lastEdited: now(),
   };
 
@@ -26,11 +24,22 @@ const updateFacility = async (facilityId, facilityChanges) => {
     { returnOriginal: false },
   );
 
-  const { value } = findAndUpdateResponse;
+  const { value: updatedFacility } = findAndUpdateResponse;
 
-  return value;
+  // update the deal so that the user that has edited this facility,
+  // is also marked as editing the associated deal
+  const {
+    associatedDealId,
+    user,
+  } = facilityBody;
+
+  await updateDealEditedBy(associatedDealId, user);
+
+  return updatedFacility;
 };
 exports.updateFacility = updateFacility;
+
+// TODO: ADD VALIDATION
 
 exports.updateFacilityPut = async (req, res) => {
   const facilityId = req.params.id;

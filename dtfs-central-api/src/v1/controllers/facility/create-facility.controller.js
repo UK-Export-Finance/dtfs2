@@ -25,18 +25,17 @@ const createFacility = async (req) => {
   const response = await collection.insertOne(newFacility);
   const createdFacility = response.ops[0];
 
-  // TODO add the facility ID to deal
-  // const updatedDeal = await addFacilityIdToDeal(
-  //   associatedDealId,
-  //   createdFacility._id,
-  //   user,
-  // );
+  await addFacilityIdToDeal(
+    associatedDealId,
+    createdFacility._id, // eslint-disable-line no-underscore-dangle
+    user,
+  );
 
   return createdFacility;
 };
 
 exports.createFacilityPost = async (req, res) => {
-  // TODO add user/maker-object to validation ?
+  // TODO add user / user object to validation
   const validationErrors = getFacilityErrors(req.body);
 
   if (validationErrors.count !== 0) {
@@ -47,7 +46,7 @@ exports.createFacilityPost = async (req, res) => {
 
   const { associatedDealId } = req.body;
 
-  findOneDeal(associatedDealId, async (deal) => {
+  return findOneDeal(associatedDealId, async (deal) => {
     if (deal) {
       const facility = await createFacility(req);
 

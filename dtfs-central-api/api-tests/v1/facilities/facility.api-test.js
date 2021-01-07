@@ -4,11 +4,6 @@ const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const aDeal = require('../deal-builder');
 
-const newFacility = {
-  facilityType: 'bond',
-  associatedDealId: '123123456',
-};
-
 const mockUser = {
   _id: '123456789',
   username: 'temp',
@@ -17,6 +12,12 @@ const mockUser = {
     id: '956',
     name: 'Barclays Bank',
   },
+};
+
+const newFacility = {
+  facilityType: 'bond',
+  associatedDealId: '123123456',
+  user: mockUser,
 };
 
 const newDeal = aDeal({
@@ -51,6 +52,13 @@ describe('/v1/facilities', () => {
   });
 
   describe('POST /v1/facilities', () => {
+    it('returns 404 when associatedDeal/associatedDealId is not found', async () => {
+      newFacility.associatedDealId = '1234';
+      const { body, status } = await api.post(newFacility).to('/v1/facilities');
+
+      expect(status).toEqual(404);
+    });
+
     it('returns the created facility with correct fields', async () => {
       const { body, status } = await api.post(newFacility).to('/v1/facilities');
 
@@ -72,11 +80,35 @@ describe('/v1/facilities', () => {
       expect(facility3.body._id - facility2.body._id).toEqual(1);
     });
 
-    it('returns 404 when associatedDealId is not found', async () => {
-      newFacility.associatedDealId = '1234';
-      const { body, status } = await api.post(newFacility).to('/v1/facilities');
+    it('adds the facility id to the associated deal', async () => {
+      const createdFacilityResponse = await api.post(newFacility).to('/v1/facilities');
 
-      expect(status).toEqual(404);
+      const createdFacility = createdFacilityResponse.body;
+
+      const { status, body } = await api.get(`/v1/deals/${newFacility.associatedDealId}`);
+
+      expect(status).toEqual(200);
+      expect(body.deal.facilities).toEqual([
+        createdFacility._id,
+      ]);
+    });
+
+    it('updates `editedBy` in the associated deal', async () => {
+      const originalDeal = await api.get(`/v1/deals/${newFacility.associatedDealId}`);
+
+      expect(originalDeal.body.deal.editedBy).toEqual([]);
+
+      const createdFacilityResponse = await api.post(newFacility).to('/v1/facilities');
+
+      const { status, body } = await api.get(`/v1/deals/${newFacility.associatedDealId}`);
+
+      expect(status).toEqual(200);
+
+      expect(body.deal.editedBy[0].userId).toEqual(newFacility.user._id);
+      expect(body.deal.editedBy[0].bank).toEqual(newFacility.user.bank);
+      expect(body.deal.editedBy[0].roles).toEqual(newFacility.user.roles);
+      expect(body.deal.editedBy[0].username).toEqual(newFacility.user.username);
+      expect(typeof body.deal.editedBy[0].date).toEqual('string');
     });
 
     describe('when required fields are missing', () => {
@@ -89,13 +121,16 @@ describe('/v1/facilities', () => {
         const { body, status } = await api.post(postBody).to('/v1/facilities');
 
         expect(status).toEqual(400);
-        expect(body.validationErrors.count).toEqual(2);
+        expect(body.validationErrors.count).toEqual(3);
 
         expect(body.validationErrors.errorList.facilityType).toBeDefined();
         expect(body.validationErrors.errorList.facilityType.text).toEqual('Enter the Facility type');
 
         expect(body.validationErrors.errorList.associatedDealId).toBeDefined();
         expect(body.validationErrors.errorList.associatedDealId.text).toEqual('Enter the Associated deal id');
+
+        expect(body.validationErrors.errorList.userObject).toBeDefined();
+        expect(body.validationErrors.errorList.userObject.text).toEqual('User object with _id, roles and bank is required');
       });
     });
 
@@ -103,16 +138,20 @@ describe('/v1/facilities', () => {
       it('returns 400 with validation errors', async () => {
         const postBody = {
           facilityType: 'invalid-facility',
-          associatedDealId: '123123456'
+          associatedDealId: '123123456',
+          user: {}
         };
 
         const { body, status } = await api.post(postBody).to('/v1/facilities');
 
         expect(status).toEqual(400);
-        expect(body.validationErrors.count).toEqual(1);
+        expect(body.validationErrors.count).toEqual(2);
 
         expect(body.validationErrors.errorList.facilityType).toBeDefined();
         expect(body.validationErrors.errorList.facilityType.text).toEqual('Facility type must be bond or loan');
+
+        expect(body.validationErrors.errorList.userObject).toBeDefined();
+        expect(body.validationErrors.errorList.userObject.text).toEqual('User object with _id, roles and bank is required');
       });
     });
   });
@@ -150,6 +189,7 @@ describe('/v1/facilities', () => {
       const updatedFacility = {
         ...createdFacility,
         facilityValue: 123456,
+        user: mockUser,
       };
 
       const { body, status } = await api.put(updatedFacility).to(`/v1/facilities/${createdFacility._id}`);
@@ -166,6 +206,7 @@ describe('/v1/facilities', () => {
       const updatedFacility = {
         ...createdFacility,
         facilityValue: 123456,
+        user: mockUser,
       };
 
       await api.put(updatedFacility).to(`/v1/facilities/${createdFacility._id}`);
@@ -174,6 +215,34 @@ describe('/v1/facilities', () => {
 
       expect(typeof body.lastEdited).toEqual('string');
       expect(body.facilityValue).toEqual(updatedFacility.facilityValue);
+    });
+
+    it('updates `editedBy` in the associated deal', async () => {
+      const originalDeal = await api.get(`/v1/deals/${newFacility.associatedDealId}`);
+
+      expect(originalDeal.body.deal.editedBy).toEqual([]);
+
+      const createdFacilityResponse = await api.post(newFacility).to('/v1/facilities');
+
+      const getDealResponse = await api.get(`/v1/deals/${newFacility.associatedDealId}`);
+      expect(getDealResponse.body.deal.editedBy.length).toEqual(1);
+
+      const updatedFacility = {
+        ...createdFacilityResponse.body,
+        facilityValue: 123456,
+        user: mockUser,
+      };
+
+      await api.put(updatedFacility).to(`/v1/facilities/${createdFacilityResponse.body._id}`);
+
+      const { body } = await api.get(`/v1/deals/${newFacility.associatedDealId}`);
+
+
+      expect(body.deal.editedBy[1].userId).toEqual(updatedFacility.user._id);
+      expect(body.deal.editedBy[1].bank).toEqual(updatedFacility.user.bank);
+      expect(body.deal.editedBy[1].roles).toEqual(updatedFacility.user.roles);
+      expect(body.deal.editedBy[1].username).toEqual(updatedFacility.user.username);
+      expect(typeof body.deal.editedBy[1].date).toEqual('string');
     });
   });
 

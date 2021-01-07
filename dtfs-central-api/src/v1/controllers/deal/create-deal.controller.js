@@ -26,6 +26,7 @@ const createDeal = async (req) => {
       ...DEFAULTS.DEALS.eligibility,
       ...req.body.eligibility,
     },
+    facilities: DEFAULTS.DEALS.facilities,
   };
 
   const validationErrors = getDealErrors(newDeal);

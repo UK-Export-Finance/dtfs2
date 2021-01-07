@@ -95,10 +95,59 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, callback) => 
 };
 exports.updateDeal = updateDeal;
 
-const addFacilityIdToDeal = async (dealId, facilityId, user) => {
-  
-}
+const updateDealEditedBy = async (dealId, user) => {
+  const collection = await db.getCollection('deals');
+
+  const editedBy = await handleEditedBy(dealId, {}, user);
+
+  const dealUpdate = {
+    editedBy,
+  };
+
+  const findAndUpdateResponse = await collection.findOneAndUpdate(
+    { _id: dealId },
+    $.flatten(withoutId(dealUpdate)),
+    { returnOriginal: false },
+  );
+
+  const { value } = findAndUpdateResponse;
+
+  return value;
+};
+exports.updateDealEditedBy = updateDealEditedBy;
+
+const addFacilityIdToDeal = async (dealId, newFacilityId, user) => {
+  await findOneDeal(dealId, async (deal) => {
+    const { facilities } = deal;
+
+    const updatedFacilities = [
+      ...facilities,
+      newFacilityId,
+    ];
+
+    const dealUpdate = {
+      ...deal,
+      facilities: updatedFacilities,
+    };
+
+    const updatedDeal = await updateDeal(
+      dealId,
+      dealUpdate,
+      user,
+    );
+
+    return updatedDeal;
+  });
+};
+
 exports.addFacilityIdToDeal = addFacilityIdToDeal;
+
+
+// const removeFacilityIdFromDeal = async (dealId, facilityId, user) => {
+
+// };
+
+// exports.removeFacilityIdFromDeal = removeFacilityIdFromDeal;
 
 exports.updateDealPut = async (req, res) => {
   const dealId = req.params.id;

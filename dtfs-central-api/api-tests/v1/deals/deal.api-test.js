@@ -44,6 +44,7 @@ describe('/v1/deals', () => {
       expect(body.details.owningBank).toEqual(newDeal.details.maker.bank);
       expect(body.eligibility.status).toEqual(newDeal.eligibility.status);
       expect(body.eligibility.criteria).toEqual(newDeal.eligibility.criteria);
+      expect(body.facilities).toEqual([]);
     });
 
     it('creates incremental integer deal IDs', async () => {
