@@ -7,6 +7,30 @@ const { BLOCKED, ACTIVE } = require('../../constants/user').STATUS;
 const { sanitizeUser } = require('./sanitizeUserData');
 const utils = require('../../crypto/utils');
 
+const createPasswordToken = async (email) => {
+  const collection = await db.getCollection('users');
+
+  const user = await collection.findOne({ email }, { collation: { locale: 'en', strength: 2 } });
+
+  if (!user) {
+    return false;
+  }
+
+  const { hash } = utils.genPasswordResetToken(user);
+
+  const userUpdate = {
+    resetPwdToken: hash,
+    resetPwdTimestamp: `${Date.now()}`,
+  };
+
+  // eslint-disable-next-line no-underscore-dangle
+  await collection.updateOne({ _id: user._id }, { $set: userUpdate }, {});
+
+  return hash;
+};
+exports.createPasswordToken = createPasswordToken;
+
+
 const sendBlockedEmail = async (emailAddress) => {
   const EMAIL_TEMPLATE_ID = '82506983-cb85-4f33-b962-922b850be7ac';
 
@@ -27,7 +51,7 @@ const sendUnblockedEmail = async (emailAddress) => {
   );
 };
 
-const sendNewAccountEmail = async (user, password) => {
+const sendNewAccountEmail = async (user, resetToken) => {
   const EMAIL_TEMPLATE_ID = '354031c8-8ca5-4ac7-9356-00613faf793c';
   const emailAddress = user.username;
 
@@ -38,7 +62,7 @@ const sendNewAccountEmail = async (user, password) => {
     bank: (user.bank && user.bank.name) ? user.bank.name : '',
     roles: user.roles.join(','),
     status: user['user-status'],
-    password,
+    resetToken,
   };
 
   await sendEmail(
@@ -74,7 +98,6 @@ exports.create = async (user, callback) => {
     ...user,
   };
 
-  const { password } = insert;
   // tidy fields that shouldn't be here. this might not be the best place.
   delete insert.password;
   //---
@@ -87,7 +110,8 @@ exports.create = async (user, callback) => {
   // nasty hack, but... right now we have a load of test users with
   // non-email-address usernames and no time to fix that neatly.. so..
   if (createdUser.username && createdUser.username.includes('@')) {
-    await sendNewAccountEmail(createdUser, password);
+    const resetPasswordToken = await createPasswordToken(createdUser.email);
+    await sendNewAccountEmail(createdUser, resetPasswordToken);
   }
 
   callback(null, createdUser);

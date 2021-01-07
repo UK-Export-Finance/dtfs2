@@ -1,6 +1,6 @@
-const utils = require('../../crypto/utils');
 const db = require('../../drivers/db-client');
 const sendEmail = require('../email');
+const { createPasswordToken } = require('./controller');
 
 const sendResetEmail = async (emailAddress, resetToken) => {
   const EMAIL_TEMPLATE_ID = '6935e539-1a0c-4eca-a6f3-f239402c0987';
@@ -15,31 +15,19 @@ const sendResetEmail = async (emailAddress, resetToken) => {
 };
 
 exports.resetPassword = async (email) => {
-  const collection = await db.getCollection('users');
+  const resetToken = await createPasswordToken(email);
 
-  const user = await collection.findOne({ email }, { collation: { locale: 'en', strength: 2 } });
-
-  if (!user) {
+  if (!resetToken) {
     return {
       success: false,
     };
   }
 
-  const { hash } = utils.genPasswordResetToken(user);
-
-  const userUpdate = {
-    resetPwdToken: hash,
-    resetPwdTimestamp: `${Date.now()}`,
-  };
-
-  // eslint-disable-next-line no-underscore-dangle
-  await collection.updateOne({ _id: user._id }, { $set: userUpdate }, {});
-
-  await sendResetEmail(user.email, hash);
+  await sendResetEmail(email, resetToken);
 
   return {
     success: true,
-    resetToken: hash,
+    resetToken,
   };
 };
 
