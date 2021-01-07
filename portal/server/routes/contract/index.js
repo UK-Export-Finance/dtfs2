@@ -20,9 +20,11 @@ import isDealEditable from './isDealEditable';
 import userCanSubmitDeal from './userCanSubmitDeal';
 import dealHasIssuedFacilitiesToSubmit from './dealHasIssuedFacilitiesToSubmit';
 import dealWithCanIssueOrEditIssueFacilityFlags from './dealWithCanIssueOrEditIssueFacilityFlags';
-
+import validateToken from '../middleware/validate-token';
 
 const router = express.Router();
+
+router.use('/contract/*', validateToken);
 
 router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
   const { deal } = req.apiData;

@@ -27,8 +27,8 @@ module.exports = (username, password) => new Promise((resolve) => {
     if (user['user-status'] === 'blocked') {
       return resolve({ err: userIsBlocked });
     }
-    const tokenObject = utils.issueJWT(user);
+    const { sessionIdentifier, ...tokenObject } = utils.issueJWT(user);
 
-    return updateLastLogin(user, () => resolve({ user, tokenObject }));
+    return updateLastLogin(user, sessionIdentifier, () => resolve({ user, tokenObject }));
   });
 });

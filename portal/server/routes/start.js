@@ -7,6 +7,8 @@ import {
   postToApi,
 } from '../helpers';
 
+import validateToken from './middleware/validate-token';
+
 import {
   provide, MANDATORY_CRITERIA,
 } from './api-data-provider';
@@ -14,21 +16,15 @@ import {
 import beforeYouStartValidation from '../validation/before-you-start';
 
 const router = express.Router();
+router.use('/before-you-start/*', validateToken);
 
-const userCanCreateADeal = (user) => {
-  if (!user.roles.includes('maker')) {
-    return false;
-  }
-
-  return true;
-};
+const userCanCreateADeal = (user) => user && user.roles.includes('maker');
 
 router.get('/before-you-start', provide([MANDATORY_CRITERIA]), async (req, res) => {
   const { mandatoryCriteria } = req.apiData;
-  const { userToken } = requestParams(req);
   const { user } = req.session;
 
-  if (!await api.validateToken(userToken) || !userCanCreateADeal(user)) {
+  if (!userCanCreateADeal(user)) {
     res.redirect('/');
   } else {
     res.render('before-you-start/before-you-start.njk', {
@@ -61,10 +57,9 @@ router.post('/before-you-start', provide([MANDATORY_CRITERIA]), async (req, res)
 });
 
 router.get('/before-you-start/bank-deal', async (req, res) => {
-  const { userToken } = requestParams(req);
   const { user } = req.session;
 
-  if (!await api.validateToken(userToken) || !userCanCreateADeal(user)) {
+  if (!userCanCreateADeal(user)) {
     res.redirect('/');
   } else {
     res.render('before-you-start/before-you-start-bank-deal.njk', {

@@ -5,8 +5,11 @@ import {
   getApiData,
   requestParams,
 } from '../helpers';
+import validateToken from './middleware/validate-token';
 
 const router = express.Router();
+
+router.use('/mga/*', validateToken);
 
 router.get('/mga', async (req, res) => {
   const { userToken } = requestParams(req);
