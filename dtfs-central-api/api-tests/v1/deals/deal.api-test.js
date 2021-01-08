@@ -130,20 +130,63 @@ describe('/v1/deals', () => {
   });
 
   describe('GET /v1/deals/:id', () => {
+    it('404s requests for unknown ids', async () => {
+      const { status } = await api.get('/v1/deals/12345678910');
+
+      expect(status).toEqual(404);
+    });
+  
     it('returns the requested resource', async () => {
       const postResult = await api.post(newDeal).to('/v1/deals');
-      const newId = postResult.body._id;
+      const dealId = postResult.body._id;
 
-      const { status, body } = await api.get(`/v1/deals/${newId}`);
+      const { status, body } = await api.get(`/v1/deals/${dealId}`);
 
       expect(status).toEqual(200);
       expect(body.deal).toEqual(expectAddedFields(newDeal));
     });
 
-    it('404s requests for unknown ids', async () => {
-      const { status } = await api.get('/v1/deals/12345678910');
+    describe('when a deal has facilities', () => {
+      it('return returns facilities mapped to deal.bondTransactions and deal.loanTransactions', async () => {
+        const postResult = await api.post(newDeal).to('/v1/deals');
+        const dealId = postResult.body._id;
 
-      expect(status).toEqual(404);
+        // create some facilities
+        const mockFacility = {
+          associatedDealId: dealId,
+          facilityValue: 123456,
+          user: mockUser,
+        };
+
+        const mockBond = {
+          facilityType: 'bond',
+          ...mockFacility,
+        };
+
+        const mockLoan = {
+          facilityType: 'loan',
+          ...mockFacility,
+        };
+
+        const createdBond1 = await api.post(mockBond).to('/v1/facilities');
+        const createdBond2 = await api.post(mockBond).to('/v1/facilities');
+        const createdLoan1 = await api.post(mockLoan).to('/v1/facilities');
+        const createdLoan2 = await api.post(mockLoan).to('/v1/facilities');
+
+        const { status, body } = await api.get(`/v1/deals/${dealId}`);
+
+        expect(status).toEqual(200);
+        expect(body.deal.bondTransactions.items).toEqual([
+          createdBond1.body,
+          createdBond2.body,
+        ]);
+
+        expect(body.deal.loanTransactions.items).toEqual([
+          createdLoan1.body,
+          createdLoan2.body,
+        ]);
+
+      });
     });
   });
 
