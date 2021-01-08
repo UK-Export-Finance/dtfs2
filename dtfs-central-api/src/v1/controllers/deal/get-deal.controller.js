@@ -24,8 +24,49 @@ exports.queryDealsPost = async (req, res) => {
 };
 
 const findOneDeal = async (_id, callback) => {
-  const collection = await db.getCollection('deals');
-  const deal = await collection.findOne({ _id });
+  const dealsCollection = await db.getCollection('deals');
+  const facilitiesCollection = await db.getCollection('facilities');
+
+  const deal = await dealsCollection.findOne({ _id });
+
+  if (deal) {
+    const facilityIds = deal.facilities;
+
+    if (facilityIds.length > 0) {
+      const mappedDeal = deal;
+      const mappedBonds = [];
+      const mappedLoans = [];
+
+      const facilities = await facilitiesCollection.find({
+        _id: {
+          $in: facilityIds,
+        },
+      }).toArray();
+
+      facilityIds.forEach((id) => {
+        const facilityObj = facilities.find((f) => f._id === id); // eslint-disable-line no-underscore-dangle
+
+        const { facilityType } = facilityObj;
+
+        if (facilityType === 'bond') {
+          mappedBonds.push(facilityObj);
+        }
+
+        if (facilityType === 'loan') {
+          mappedLoans.push(facilityObj);
+        }
+      });
+
+      mappedDeal.bondTransactions.items = mappedBonds;
+      mappedDeal.loanTransactions.items = mappedLoans;
+
+      if (callback) {
+        callback(mappedDeal);
+      }
+
+      return mappedDeal;
+    }
+  }
 
   if (callback) {
     callback(deal);
