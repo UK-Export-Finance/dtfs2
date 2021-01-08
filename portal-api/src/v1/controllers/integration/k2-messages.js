@@ -347,7 +347,7 @@ const createTypeA = async (deal, fromStatus) => {
 
   const workflowConfig = fileshare.getConfig('workflow');
   const portalConfig = fileshare.getConfig('portal');
-  console.log({ workflowConfig });
+
   const workflowFolder = `${workflowConfig.EXPORT_FOLDER}/${deal._id}`; // eslint-disable-line no-underscore-dangle
   const portalFolder = `${portalConfig.EXPORT_FOLDER}/${deal._id}`; // eslint-disable-line no-underscore-dangle
 
@@ -365,12 +365,9 @@ const createTypeA = async (deal, fromStatus) => {
     buffer: Buffer.from('', 'utf-8'),
   };
 
-  console.log('Upload lockfile', { lockFile });
+
   await fileshare.uploadFile(lockFile);
-  console.log('Lock file uploaded');
-  console.log('Upload Deal file', { workflowFolder, filename });
   const dealUpload = await fileshare.uploadFile(upload);
-  console.log('Deal file uploaded', { dealUpload });
 
   // Upload corresponding supporting docs
   const dealUploadPromises = [];
