@@ -46,15 +46,17 @@ const findOneDeal = async (_id, callback) => {
       facilityIds.forEach((id) => {
         const facilityObj = facilities.find((f) => f._id === id); // eslint-disable-line no-underscore-dangle
 
-        const { facilityType } = facilityObj;
+        if (facilityObj) {
+          const { facilityType } = facilityObj;
 
-        // TODO: constants
-        if (facilityType === 'bond') {
-          mappedBonds.push(facilityObj);
-        }
+          // TODO: constants
+          if (facilityType === 'bond') {
+            mappedBonds.push(facilityObj);
+          }
 
-        if (facilityType === 'loan') {
-          mappedLoans.push(facilityObj);
+          if (facilityType === 'loan') {
+            mappedLoans.push(facilityObj);
+          }
         }
       });
 

@@ -143,11 +143,28 @@ const addFacilityIdToDeal = async (dealId, newFacilityId, user) => {
 exports.addFacilityIdToDeal = addFacilityIdToDeal;
 
 
-// const removeFacilityIdFromDeal = async (dealId, facilityId, user) => {
+const removeFacilityIdFromDeal = async (dealId, facilityId, user) => {
+  await findOneDeal(dealId, async (deal) => {
+    const { facilities } = deal;
 
-// };
+    const updatedFacilities = facilities.filter((f) => f !== facilityId);
 
-// exports.removeFacilityIdFromDeal = removeFacilityIdFromDeal;
+    const dealUpdate = {
+      ...deal,
+      facilities: updatedFacilities,
+    };
+
+    const updatedDeal = await updateDeal(
+      dealId,
+      dealUpdate,
+      user,
+    );
+
+    return updatedDeal;
+  });
+};
+
+exports.removeFacilityIdFromDeal = removeFacilityIdFromDeal;
 
 exports.updateDealPut = async (req, res) => {
   const dealId = req.params.id;
