@@ -32,7 +32,7 @@ const findOneDeal = async (_id, callback) => {
   if (deal) {
     const facilityIds = deal.facilities;
 
-    if (facilityIds.length > 0) {
+    if (facilityIds && facilityIds.length > 0) {
       const mappedDeal = deal;
       const mappedBonds = [];
       const mappedLoans = [];
@@ -48,6 +48,7 @@ const findOneDeal = async (_id, callback) => {
 
         const { facilityType } = facilityObj;
 
+        // TODO: constants
         if (facilityType === 'bond') {
           mappedBonds.push(facilityObj);
         }
