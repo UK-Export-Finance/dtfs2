@@ -49,7 +49,10 @@ module.exports = (app) => ({
   get: async (url) => request(app)
     .get(url),
 
-  remove: async (url) => request(app)
-    .delete(url)
-    .send(),
+  remove: (data) => ({
+    to: async (url) =>
+      request(app)
+        .delete(url)
+        .send(data),
+  }),
 });

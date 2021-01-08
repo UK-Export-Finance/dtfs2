@@ -1,5 +1,4 @@
 const wipeDB = require('../../wipeDB');
-
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const aDeal = require('../deal-builder');
@@ -248,7 +247,7 @@ describe('/v1/facilities', () => {
 
   describe('DELETE /v1/facilities/:id', () => {
     it('404s requests for unknown ids', async () => {
-      const { status } = await api.remove('/v1/facilities/12345678910');
+      const { status } = await api.remove({}).to('/v1/facilities/12345678910');
 
       expect(status).toEqual(404);
     });
@@ -256,12 +255,60 @@ describe('/v1/facilities', () => {
     it('deletes the facility', async () => {
       const { body } = await api.post(newFacility).to('/v1/facilities');
 
-      const deleteResponse = await api.remove(`/v1/facilities/${body._id}`);
+      const {
+        associatedDealId,
+        _id: facilityId,
+      } = body;
+
+      const removeBody = {
+        associatedDealId,
+        user: mockUser,
+      };
+
+      const deleteResponse = await api.remove(removeBody).to(`/v1/facilities/${body._id}`);
       expect(deleteResponse.status).toEqual(200);
 
       const { status } = await api.get(`/v1/facilities/${body._id}`);
 
       expect(status).toEqual(404);
+    });
+
+    it('removes the facility id from the associated deal\'s facilities', async () => {
+      const mockBond = {
+        facilityType: 'bond',
+        ...newFacility,
+      };
+
+      const mockLoan = {
+        facilityType: 'loan',
+        ...newFacility,
+      };
+
+      const createdBond = await api.post(mockBond).to('/v1/facilities');
+      const createdLoan = await api.post(mockBond).to('/v1/facilities');
+
+      // make sure we've got facilities added to the deal
+      const getDealResponse = await api.get(`/v1/deals/${newFacility.associatedDealId}`);
+      expect(getDealResponse.body.deal.facilities.length).toEqual(2);
+
+      // delete a bond facility
+      const {
+        associatedDealId,
+        _id: facilityId,
+      } = createdBond.body;
+
+      const removeBondBody = {
+        associatedDealId,
+        user: mockUser,
+      };
+
+      const deleteResponse = await api.remove(removeBondBody).to(`/v1/facilities/${facilityId}`);
+      expect(deleteResponse.status).toEqual(200);
+
+      // check the deal's facilities array
+      const { body: getDealBody } = await api.get(`/v1/deals/${newFacility.associatedDealId}`);
+      expect(getDealBody.deal.facilities.length).toEqual(1);
+      expect(getDealBody.deal.facilities[0]).toEqual(createdLoan.body._id);
     });
   });
 });

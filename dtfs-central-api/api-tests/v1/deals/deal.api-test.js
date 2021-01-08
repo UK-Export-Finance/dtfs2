@@ -31,6 +31,7 @@ const newDeal = aDeal({
 describe('/v1/deals', () => {
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['facilities']);
   });
 
   describe('POST /v1/deals', () => {
@@ -147,7 +148,7 @@ describe('/v1/deals', () => {
     });
 
     describe('when a deal has facilities', () => {
-      it('return returns facilities mapped to deal.bondTransactions and deal.loanTransactions', async () => {
+      it('returns facilities mapped to deal.bondTransactions and deal.loanTransactions', async () => {
         const postResult = await api.post(newDeal).to('/v1/deals');
         const dealId = postResult.body._id;
 
@@ -308,7 +309,7 @@ describe('/v1/deals', () => {
 
   describe('DELETE /v1/deals/:id', () => {
     it('404s requests for unknown ids', async () => {
-      const { status } = await api.remove('/v1/deals/12345678910');
+      const { status } = await api.remove({}).to('/v1/deals/12345678910');
 
       expect(status).toEqual(404);
     });
@@ -316,7 +317,7 @@ describe('/v1/deals', () => {
     it('deletes the deal', async () => {
       const { body } = await api.post(newDeal).to('/v1/deals');
 
-      const deleteResponse = await api.remove(`/v1/deals/${body._id}`);
+      const deleteResponse = await api.remove({}).to(`/v1/deals/${body._id}`);
       expect(deleteResponse.status).toEqual(200);
 
       const { status } = await api.get(`/v1/deals/${body._id}`);
