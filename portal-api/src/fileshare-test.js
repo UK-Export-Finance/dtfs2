@@ -1,5 +1,5 @@
-const fetch = require('node-fetch');
 const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
+const isPortReachable = require('is-port-reachable');
 
 const AZURE_WORKFLOW_FILESHARE_CONFIG = {
   STORAGE_ACCOUNT: process.env.AZURE_WORKFLOW_STORAGE_ACCOUNT,
@@ -7,11 +7,16 @@ const AZURE_WORKFLOW_FILESHARE_CONFIG = {
   FILESHARE_NAME: process.env.AZURE_WORKFLOW_FILESHARE_NAME,
 };
 
-const fetchTest = () => {
+const fetchTest = async () => {
   const { STORAGE_ACCOUNT } = AZURE_WORKFLOW_FILESHARE_CONFIG;
-  fetch(`https://${STORAGE_ACCOUNT}.file.core.windows.net`)
-    .then((res) => console.log('fetchTest res', res))
-    .catch((err) => console.log('fetchText err', err));
+  const url = `${STORAGE_ACCOUNT}.file.core.windows.net`;
+  const port443 = await isPortReachable(443, { host: url });
+  const port80 = await isPortReachable(80, { host: url });
+  const port445 = await isPortReachable(445, { host: url });
+  const port10101 = await isPortReachable(10101, { host: url });
+  return {
+    url, port80, port443, port445, port10101,
+  };
 };
 
 const getCredentials = async () => {
@@ -93,7 +98,7 @@ const getDirectory = async (folderPaths = 'fileshare_test') => {
 
 
 const shareTest = async () => {
-  fetchTest();
+  const ports = await fetchTest();
   const shareDirectory = await getDirectory();
   console.log('test', { shareDirectory });
   const {
@@ -105,6 +110,7 @@ const shareTest = async () => {
     path,
     url,
     shareName,
+    ports,
   };
 };
 
