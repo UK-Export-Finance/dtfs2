@@ -1,4 +1,4 @@
-const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
+// const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
 const isPortReachable = require('is-port-reachable');
 
 const AZURE_WORKFLOW_FILESHARE_CONFIG = {
@@ -19,57 +19,57 @@ const fetchTest = async () => {
   };
 };
 
-const getCredentials = async () => {
-  const {
-    STORAGE_ACCOUNT, STORAGE_ACCESS_KEY,
-  } = AZURE_WORKFLOW_FILESHARE_CONFIG;
+// const getCredentials = async () => {
+//   const {
+//     STORAGE_ACCOUNT, STORAGE_ACCESS_KEY,
+//   } = AZURE_WORKFLOW_FILESHARE_CONFIG;
 
-  console.log({ STORAGE_ACCOUNT, STORAGE_ACCESS_KEY });
-  const credentials = await new StorageSharedKeyCredential(STORAGE_ACCOUNT, STORAGE_ACCESS_KEY);
+//   console.log({ STORAGE_ACCOUNT, STORAGE_ACCESS_KEY });
+//   const credentials = await new StorageSharedKeyCredential(STORAGE_ACCOUNT, STORAGE_ACCESS_KEY);
 
-  // return credentials.computeHMACSHA256(stringToSign);
-  return credentials;
-};
+//   // return credentials.computeHMACSHA256(stringToSign);
+//   return credentials;
+// };
 
-const getShareClient = async () => {
-  const credentials = await getCredentials();
-  const { STORAGE_ACCOUNT, FILESHARE_NAME } = AZURE_WORKFLOW_FILESHARE_CONFIG;
-  console.log({ STORAGE_ACCOUNT, FILESHARE_NAME });
-  const serviceClient = new ShareServiceClient(
-    `https://${STORAGE_ACCOUNT}.file.core.windows.net`,
-    credentials,
-  );
+// const getShareClient = async () => {
+//   const credentials = await getCredentials();
+//   const { STORAGE_ACCOUNT, FILESHARE_NAME } = AZURE_WORKFLOW_FILESHARE_CONFIG;
+//   console.log({ STORAGE_ACCOUNT, FILESHARE_NAME });
+//   const serviceClient = new ShareServiceClient(
+//     `https://${STORAGE_ACCOUNT}.file.core.windows.net`,
+//     credentials,
+//   );
 
-  /*
-  if (process.env.AZURE_LOG_LEVEL) {
-    console.log('get Share props');
-    const shareProps = await serviceClient.getProperties();
-    console.log({ shareProps });
-  }
-  */
+//   /*
+//   if (process.env.AZURE_LOG_LEVEL) {
+//     console.log('get Share props');
+//     const shareProps = await serviceClient.getProperties();
+//     console.log({ shareProps });
+//   }
+//   */
 
-  let i = 1;
-  const shareList = serviceClient.listShares();
-  console.log('LIST SHARES', { shareList });
-  // eslint-disable-next-line no-restricted-syntax
-  for await (const share of shareList) {
-    // eslint-disable-next-line no-plusplus
-    console.log(`\nSHARE ${i++}: ${share.name}`);
-  }
+//   let i = 1;
+//   const shareList = serviceClient.listShares();
+//   console.log('LIST SHARES', { shareList });
+//   // eslint-disable-next-line no-restricted-syntax
+//   for await (const share of shareList) {
+//     // eslint-disable-next-line no-plusplus
+//     console.log(`\nSHARE ${i++}: ${share.name}`);
+//   }
 
-  const shareClient = await serviceClient.getShareClient(FILESHARE_NAME);
-  console.log('getShareClient', { shareClient });
+//   const shareClient = await serviceClient.getShareClient(FILESHARE_NAME);
+//   console.log('getShareClient', { shareClient });
 
-  await shareClient.create().catch(({ details }) => {
-    console.log({ details });
-    if (!details) return;
-    if (details.errorCode === 'ShareAlreadyExists') return;
-    throw new Error(details.message);
-  });
+//   await shareClient.create().catch(({ details }) => {
+//     console.log({ details });
+//     if (!details) return;
+//     if (details.errorCode === 'ShareAlreadyExists') return;
+//     throw new Error(details.message);
+//   });
 
-  return shareClient;
-};
-
+//   return shareClient;
+// };
+/*
 const getDirectory = async (folderPaths = 'fileshare_test') => {
   const shareClient = await getShareClient();
 
@@ -95,10 +95,14 @@ const getDirectory = async (folderPaths = 'fileshare_test') => {
   });
   return directoryClient;
 };
-
+*/
 
 const shareTest = async () => {
   const ports = await fetchTest();
+  return {
+    ports,
+  };
+  /*
   const shareDirectory = await getDirectory();
   console.log('test', { shareDirectory });
   const {
@@ -112,6 +116,7 @@ const shareTest = async () => {
     shareName,
     ports,
   };
+  */
 };
 
 module.exports = shareTest;
