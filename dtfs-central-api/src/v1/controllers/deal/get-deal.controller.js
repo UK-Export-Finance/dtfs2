@@ -1,4 +1,5 @@
 const db = require('../../../drivers/db-client');
+const CONSTANTS = require('../../../constants');
 
 const queryDeals = async (query, start = 0, pagesize = 0) => {
   const collection = await db.getCollection('deals');
@@ -50,11 +51,11 @@ const findOneDeal = async (_id, callback) => {
           const { facilityType } = facilityObj;
 
           // TODO: constants
-          if (facilityType === 'bond') {
+          if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
             mappedBonds.push(facilityObj);
           }
 
-          if (facilityType === 'loan') {
+          if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
             mappedLoans.push(facilityObj);
           }
         }
