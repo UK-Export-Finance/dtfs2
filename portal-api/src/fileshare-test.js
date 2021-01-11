@@ -8,7 +8,7 @@ const AZURE_WORKFLOW_FILESHARE_CONFIG = {
 };
 
 const fetchTest = () => {
-  const { STORAGE_ACCOUNT, FILESHARE_NAME } = AZURE_WORKFLOW_FILESHARE_CONFIG;
+  const { STORAGE_ACCOUNT } = AZURE_WORKFLOW_FILESHARE_CONFIG;
   fetch(`https://${STORAGE_ACCOUNT}.file.core.windows.net`)
     .then((res) => console.log('fetchTest res', res))
     .catch((err) => console.log('fetchText err', err));
