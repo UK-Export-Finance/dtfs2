@@ -83,9 +83,19 @@ const getDirectory = async (folderPaths = 'fileshare_test') => {
   return directoryClient;
 };
 
-const test = async () => {
+const shareTest = async () => {
   const shareDirectory = await getDirectory();
   console.log('test', { shareDirectory });
+  const {
+    accountName, name, path, url, shareName,
+  } = shareDirectory;
+  return {
+    accountName,
+    name,
+    path,
+    url,
+    shareName,
+  };
 };
 
-test();
+module.exports = shareTest;
