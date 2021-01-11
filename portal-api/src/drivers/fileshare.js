@@ -1,4 +1,5 @@
 const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
+const fetch = require('node-fetch');
 
 const { AZURE_WORKFLOW_FILESHARE_CONFIG, AZURE_PORTAL_FILESHARE_CONFIG } = require('../config/fileshare.config');
 
@@ -33,30 +34,28 @@ const getShareClient = async (fileshare) => {
     credentials,
   );
 
-  console.log('getShareClient', {
-    STORAGE_ACCOUNT,
-    FILESHARE_NAME,
-  });
+  if (process.env.AZURE_LOG_LEVEL) {
+    console.log('get Share props');
+    const shareProps = await serviceClient.getProperties();
+    console.log({ shareProps });
+  }
+
   const shareClient = await serviceClient.getShareClient(FILESHARE_NAME);
-  console.log('getShareClient', { shareClient });
-  /*
-  const shareClientResult = await shareClient.create().catch(({ details }) => {
-    console.log('getShareClient error', { details });
+
+  await shareClient.create().catch(({ details }) => {
     if (!details) return;
     if (details.errorCode === 'ShareAlreadyExists') return;
     throw new Error(details.message);
   });
-  console.log({ shareClientResult });
-  */
+
   return shareClient;
 };
 
 const getDirectory = async (fileshare, folderPaths = '') => {
-  console.log('getDirectory');
   const shareClient = await getShareClient(fileshare);
-  console.log('getDirectory', { shareClient });
+
   const directoryClient = shareClient.getDirectoryClient(folderPaths);
-  console.log('getDirectory', { directoryClient });
+
   await directoryClient.create().catch(async ({ details }) => {
     if (!details) return false;
     if (details.errorCode === 'ResourceAlreadyExists') return false;
@@ -77,15 +76,27 @@ const getDirectory = async (fileshare, folderPaths = '') => {
   return directoryClient;
 };
 
+const tmpTests = async () => {
+  const tests = ['https://www.bbc.co.uk/news', 'https://tfsandrew.file.core.windows.net/'];
+
+  tests.forEach((uri) => {
+    fetch('https://www.bbc.co.uk/news', { method: 'GET' })
+      .then((response) => console.log({ uri, response }))
+      .catch((err) => console.log({ uri, err }));
+  });
+};
+
+
 const uploadFile = async ({
   fileshare, folder, filename, buffer, allowOverwrite,
 }) => {
   // const exportDirectory = await getExportDirectory(fileshare);
-
+  if (process.env.AZURE_LOG_LEVEL) {
+    tmpTests();
+  }
   // const directoryClient = await exportDirectory.getDirectoryClient(folder);
-  console.log('uploadFile');
   const directoryClient = await getDirectory(fileshare, folder);
-  console.log('uploadFile', { directoryClient });
+
   await directoryClient.create().catch(({ details }) => {
     if (!details) return false;
     if (details.errorCode === 'ResourceAlreadyExists') return false;
@@ -100,7 +111,6 @@ const uploadFile = async ({
   });
 
   const fileClient = await directoryClient.getFileClient(`${filename}`);
-  console.log('uploadFile', { fileClient });
 
   const existingFileProps = await fileClient.getProperties().catch(() => {});
 
@@ -109,9 +119,8 @@ const uploadFile = async ({
   }
 
   if (!existingFileProps || allowOverwrite) {
-    console.log('uploadFile 1');
     await fileClient.uploadData(buffer);
-    console.log('uploadFile 2');
+
     return {
       folder,
       filename: fileClient.name,

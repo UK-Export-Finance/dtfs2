@@ -9,8 +9,11 @@ import reconciliation from './reconciliation';
 import transactionsReport from './transactions-report';
 import transactions from './transactions';
 import unissuedTransactions from './unissued-transactions';
+import validateToken from '../middleware/validate-token';
 
 const router = express.Router();
+
+router.use('/reports/*', validateToken);
 
 // Default redirect until we put in a nav.
 router.get('/reports', async (req, res) => {

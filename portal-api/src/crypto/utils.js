@@ -56,6 +56,7 @@ function genPasswordResetToken(user) {
  */
 function issueJWT(user) {
   const { _id } = user;
+  const sessionIdentifier = crypto.randomBytes(32).toString('hex');
 
   const expiresIn = '1d';
 
@@ -65,6 +66,7 @@ function issueJWT(user) {
     username: user.username,
     roles: user.roles,
     bank: user.bank,
+    sessionIdentifier,
   };
 
   const signedToken = jsonwebtoken.sign(payload, PRIV_KEY, { expiresIn, algorithm: 'RS256' });
@@ -72,6 +74,7 @@ function issueJWT(user) {
   return {
     token: `Bearer ${signedToken}`,
     expires: expiresIn,
+    sessionIdentifier,
   };
 }
 

@@ -159,11 +159,12 @@ exports.update = async (_id, update, callback) => {
   });
 };
 
-exports.updateLastLogin = async (user, callback) => {
+exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
   const collection = await db.getCollection('users');
   const update = {
     lastLogin: now(),
     loginFailureCount: 0,
+    sessionIdentifier,
   };
   await collection.updateOne(
     { _id: { $eq: new ObjectID(user._id) } }, // eslint-disable-line no-underscore-dangle

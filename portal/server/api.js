@@ -468,8 +468,7 @@ const validateToken = async (token) => {
       'Content-Type': 'application/json',
     },
     url: `${urlRoot}/v1/validate`,
-  });
-
+  }).catch((err) => err.response);
   return response.status === 200;
 };
 
