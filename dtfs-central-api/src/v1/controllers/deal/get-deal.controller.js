@@ -50,7 +50,6 @@ const findOneDeal = async (_id, callback) => {
         if (facilityObj) {
           const { facilityType } = facilityObj;
 
-          // TODO: constants
           if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
             mappedBonds.push(facilityObj);
           }
