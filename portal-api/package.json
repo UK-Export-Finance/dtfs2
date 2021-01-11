@@ -7,6 +7,7 @@
     "lint": "eslint ./src",
     "start": "node src/index.js",
     "start:dev": "npx nodemon src/index.js",
+    "start_azure_debug": "node --inspect=0.0.0.0:$APPSVC_TUNNEL_PORT src/index.js",
     "unit-test": "jest --notify --coverage --verbose --config=unit.jest.config.js ",
     "unit-test-quick": "jest --config=unit.jest.config.js --testTimeout=10000",
     "api-test": "jest --notify --coverage --verbose --runInBand --config=api-test.jest.config.js ",
