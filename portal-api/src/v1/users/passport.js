@@ -33,7 +33,8 @@ module.exports = (passport) => {
       if (err) {
         return done(err, false);
       }
-      if (user) {
+
+      if (user && user.sessionIdentifier === jwtPayload.sessionIdentifier) {
         return done(null, sanitize(user));
       }
       return done(null, false);

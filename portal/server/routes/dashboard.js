@@ -9,28 +9,21 @@ import {
   getFlashSuccessMessage,
 } from '../helpers';
 
+import validateToken from './middleware/validate-token';
+
 const router = express.Router();
 const PAGESIZE = 20;
 const primaryNav = 'dashboard';
 
-router.get('/dashboard', async (req, res) => {
-  const { userToken } = requestParams(req);
-  req.session.dashboardFilters = null;
+router.use('/dashboard/*', validateToken);
 
-  if (!await api.validateToken(userToken)) {
-    res.redirect('/');
-  } else {
-    res.redirect('/dashboard/0');
-  }
+router.get('/dashboard', async (req, res) => {
+  req.session.dashboardFilters = null;
+  res.redirect('/dashboard/0');
 });
 
 router.get('/dashboard/transactions', async (req, res) => {
-  const { userToken } = requestParams(req);
   req.session.transactionFilters = null;
-
-  if (!await api.validateToken(userToken)) {
-    return res.redirect('/');
-  }
   return res.redirect('/dashboard/transactions/0');
 });
 
@@ -70,10 +63,6 @@ router.get('/dashboard/transactions/:page', async (req, res) => {
 router.post('/dashboard/transactions/:page', async (req, res) => {
   const { userToken } = requestParams(req);
 
-  if (!await api.validateToken(userToken)) {
-    res.redirect('/');
-  }
-
   const transactionFilters = req.body;
 
   req.session.transactionFilters = transactionFilters;
@@ -109,10 +98,6 @@ router.post('/dashboard/transactions/:page', async (req, res) => {
 
 router.get('/dashboard/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-
-  if (!await api.validateToken(userToken)) {
-    res.redirect('/');
-  }
 
   // when a user with checker role views the dashboard, default to status=readyForApproval
   // when a user with maker AND checker role views the dashboard, do not default to status=readyForApproval
@@ -168,10 +153,6 @@ router.get('/dashboard/:page', async (req, res) => {
 
 router.post('/dashboard/:page', async (req, res) => {
   const { userToken } = requestParams(req);
-
-  if (!await api.validateToken(userToken)) {
-    res.redirect('/');
-  }
 
   const dashboardFilters = req.body;
   req.session.dashboardFilters = dashboardFilters;
