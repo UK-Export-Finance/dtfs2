@@ -1,9 +1,17 @@
+const fetch = require('node-fetch');
 const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
 
 const AZURE_WORKFLOW_FILESHARE_CONFIG = {
   STORAGE_ACCOUNT: process.env.AZURE_WORKFLOW_STORAGE_ACCOUNT,
   STORAGE_ACCESS_KEY: process.env.AZURE_WORKFLOW_STORAGE_ACCESS_KEY,
   FILESHARE_NAME: process.env.AZURE_WORKFLOW_FILESHARE_NAME,
+};
+
+const fetchTest = () => {
+  const { STORAGE_ACCOUNT, FILESHARE_NAME } = AZURE_WORKFLOW_FILESHARE_CONFIG;
+  fetch(`https://${STORAGE_ACCOUNT}.file.core.windows.net`)
+    .then((res) => console.log('fetchTest res', res))
+    .catch((err) => console.log('fetchText err', err));
 };
 
 const getCredentials = async () => {
@@ -83,7 +91,9 @@ const getDirectory = async (folderPaths = 'fileshare_test') => {
   return directoryClient;
 };
 
+
 const shareTest = async () => {
+  fetchTest();
   const shareDirectory = await getDirectory();
   console.log('test', { shareDirectory });
   const {
