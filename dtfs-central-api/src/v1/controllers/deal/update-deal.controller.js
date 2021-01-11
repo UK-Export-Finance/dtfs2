@@ -183,6 +183,7 @@ exports.updateDealPut = async (req, res) => {
         user,
         deal,
       );
+
       res.status(200).json(updatedDeal);
     }
     res.status(404).send();
