@@ -1,21 +1,25 @@
 {% extends "case/case.njk" %}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
 {% block sub_content %}
-
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
       <p class="header-label">Parties</p>
     </div>
   </div>
-  {{ deal | dump }}
   <div class="govuk-grid-row separator-line deal">
     <div class="govuk-grid-column-one-half">
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-third">
           <p class="ukef-heading-l">Exporter</p>
         </div>
-        <div class="govuk-grid-column-two-thirds">
-          <p>Matched</p>
+        <div class="govuk-grid-column-two-thirds ukef-heading-l">
+          <p>
+            {{govukTag({
+          text: "Matched",
+          classes: "govuk-tag--blue"
+        })}}
+          </p>
         </div>
       </div>
     </div>
@@ -78,7 +82,9 @@
         <div class="govuk-grid-column-one-third">
           <p class="ukef-heading-xs">SME size</p>
         </div>
-        <div class="govuk-grid-column-two-thirds"><p>{{ deal.submissionDetails.smeType }}</p></div>
+        <div class="govuk-grid-column-two-thirds">
+          <p>{{ deal.submissionDetails.smeType }}</p>
+        </div>
       </div>
     </div>
     <div class="govuk-grid-column-one-half">
@@ -164,19 +170,26 @@
           <div class="govuk-grid-column-one-third">
             <p class="ukef-heading-xs">Name</p>
           </div>
-          <div class="govuk-grid-column-two-thirds"></div>
+          <div class="govuk-grid-column-two-thirds">
+            <p>{{ deal.eligibility.agentName }}</p>
+          </div>
         </div>
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-third">
             <p class="ukef-heading-xs">Address</p>
           </div>
-          <div class="govuk-grid-column-two-thirds"></div>
+          <div class="govuk-grid-column-two-thirds">
+            <p>{{ deal.eligibility.agentAddressLine1 }}</p>
+            <p>{{ deal.eligibility.agentAddressLine2 }}</p>
+            <p>{{ deal.eligibility.agentAddressLine3 }}</p>
+            <p>{{ deal.eligibility.agentAddressTown }}, {{ deal.eligibility.agentAddressPostcode }}</p>
+</div>
         </div>
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-third">
             <p class="ukef-heading-xs">Country</p>
           </div>
-          <div class="govuk-grid-column-two-thirds"></div>
+          <div class="govuk-grid-column-two-thirds">{{ deal.eligibility.agentAddressCountry }}</div>
         </div>
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-third">
@@ -193,7 +206,7 @@
             <p class="ukef-heading-l">Indemnifier</p>
           </div>
           <div class="govuk-grid-column-two-thirds">
-            <p>Not Matched</p>
+            <p></p>
           </div>
         </div>
       </div>
@@ -257,7 +270,8 @@
                   {{ deal.submissionDetails.indemnifierCorrespondenceAddressLine1 }}
                   {{ deal.submissionDetails.indemnifierCorrespondenceAddressLine2 }}
                   {{ deal.submissionDetails.indemnifierCorrespondenceAddressLine3 }}
-                  {{ deal.submissionDetails.indemnifierCorrespondenceAddressTown }}, {{ deal.submissionDetails.indemnifierCorrespondenceAddressPostcode }}
+                  {{ deal.submissionDetails.indemnifierCorrespondenceAddressTown }},
+                  {{ deal.submissionDetails.indemnifierCorrespondenceAddressPostcode }}
                 </p>
               </div>
             </div>
@@ -276,7 +290,7 @@
               <p class="ukef-hint" style="margin-top:-36px">(if different to buyer)</p>
             </div>
             <div class="govuk-grid-column-one-half">
-              <p>Matched</p>
+              <p></p>
             </div>
           </div>
         </div>
@@ -289,7 +303,7 @@
               <p class="ukef-hint" style="margin-top:-36px">(if different to buyer)</p>
             </div>
             <div class="govuk-grid-column-one-half">
-              <p>Matched</p>
+              <p></p>
             </div>
           </div>
         </div>

@@ -57,7 +57,7 @@ const dealReducer = (deal) => {
         submissionDetails['indemnifier-address-postcode'],
       indemnifierAddressTown: submissionDetails['indemnifier-address-town'],
       indemnifierCorrespondenceAddressCountry:
-        submissionDetails['indemnifier-correspondence-address-country'],
+        submissionDetails['indemnifier-correspondence-address-country.name'],
       indemnifierCorrespondenceAddressLine1:
         submissionDetails['indemnifier-correspondence-address-line-1'],
       indemnifierCorrespondenceAddressLine2:
@@ -71,8 +71,8 @@ const dealReducer = (deal) => {
       indemnifierName: submissionDetails['indemnifier-name'],
       industryClass: submissionDetails['industry-class'],
       industrySector: submissionDetails['industry-sector.name'],
-      supplierAddressCountry: submissionDetails['supplier-address-country'],
-      supplierCountry: submissionDetails['supplier-address-country'],
+      supplierAddressCountry: submissionDetails['supplier-address-country.name'],
+      supplierCountry: submissionDetails['supplier-address-country.name'],
       supplierAddressLine1: submissionDetails['supplier-address-line-1'],
       supplierAddressLine2: submissionDetails['supplier-address-line-2'],
       supplierAddressLine3: submissionDetails['supplier-address-line-3'],
@@ -81,7 +81,7 @@ const dealReducer = (deal) => {
       supplierCompaniesHouseRegistrationNumber:
         submissionDetails['supplier-companies-house-registration-number'],
       supplierCorrespondenceAddressCountry:
-        submissionDetails['supplier-correspondence-address-country'],
+        submissionDetails['supplier-correspondence-address-country.name'],
       supplierCorrespondenceAddressLine1:
         submissionDetails['supplier-correspondence-address-line-1'],
       supplierCorrespondenceAddressLine2:
