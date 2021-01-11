@@ -1,5 +1,5 @@
 const wipeDB = require('../../wipeDB');
-const aDeal = require('./deal-builder');
+const aDeal = require('../deal-builder');
 
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
@@ -31,6 +31,7 @@ const newDeal = aDeal({
 describe('/v1/deals', () => {
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['facilities']);
   });
 
   describe('POST /v1/deals', () => {
@@ -44,6 +45,7 @@ describe('/v1/deals', () => {
       expect(body.details.owningBank).toEqual(newDeal.details.maker.bank);
       expect(body.eligibility.status).toEqual(newDeal.eligibility.status);
       expect(body.eligibility.criteria).toEqual(newDeal.eligibility.criteria);
+      expect(body.facilities).toEqual([]);
     });
 
     it('creates incremental integer deal IDs', async () => {
@@ -129,20 +131,63 @@ describe('/v1/deals', () => {
   });
 
   describe('GET /v1/deals/:id', () => {
+    it('404s requests for unknown ids', async () => {
+      const { status } = await api.get('/v1/deals/12345678910');
+
+      expect(status).toEqual(404);
+    });
+  
     it('returns the requested resource', async () => {
       const postResult = await api.post(newDeal).to('/v1/deals');
-      const newId = postResult.body._id;
+      const dealId = postResult.body._id;
 
-      const { status, body } = await api.get(`/v1/deals/${newId}`);
+      const { status, body } = await api.get(`/v1/deals/${dealId}`);
 
       expect(status).toEqual(200);
       expect(body.deal).toEqual(expectAddedFields(newDeal));
     });
 
-    it('404s requests for unknown ids', async () => {
-      const { status } = await api.get('/v1/deals/12345678910');
+    describe('when a deal has facilities', () => {
+      it('returns facilities mapped to deal.bondTransactions and deal.loanTransactions', async () => {
+        const postResult = await api.post(newDeal).to('/v1/deals');
+        const dealId = postResult.body._id;
 
-      expect(status).toEqual(404);
+        // create some facilities
+        const mockFacility = {
+          associatedDealId: dealId,
+          facilityValue: 123456,
+          user: mockUser,
+        };
+
+        const mockBond = {
+          facilityType: 'bond',
+          ...mockFacility,
+        };
+
+        const mockLoan = {
+          facilityType: 'loan',
+          ...mockFacility,
+        };
+
+        const createdBond1 = await api.post(mockBond).to('/v1/facilities');
+        const createdBond2 = await api.post(mockBond).to('/v1/facilities');
+        const createdLoan1 = await api.post(mockLoan).to('/v1/facilities');
+        const createdLoan2 = await api.post(mockLoan).to('/v1/facilities');
+
+        const { status, body } = await api.get(`/v1/deals/${dealId}`);
+
+        expect(status).toEqual(200);
+        expect(body.deal.bondTransactions.items).toEqual([
+          createdBond1.body,
+          createdBond2.body,
+        ]);
+
+        expect(body.deal.loanTransactions.items).toEqual([
+          createdLoan1.body,
+          createdLoan2.body,
+        ]);
+
+      });
     });
   });
 
@@ -264,7 +309,7 @@ describe('/v1/deals', () => {
 
   describe('DELETE /v1/deals/:id', () => {
     it('404s requests for unknown ids', async () => {
-      const { status } = await api.remove('/v1/deals/12345678910');
+      const { status } = await api.remove({}).to('/v1/deals/12345678910');
 
       expect(status).toEqual(404);
     });
@@ -272,7 +317,7 @@ describe('/v1/deals', () => {
     it('deletes the deal', async () => {
       const { body } = await api.post(newDeal).to('/v1/deals');
 
-      const deleteResponse = await api.remove(`/v1/deals/${body._id}`);
+      const deleteResponse = await api.remove({}).to(`/v1/deals/${body._id}`);
       expect(deleteResponse.status).toEqual(200);
 
       const { status } = await api.get(`/v1/deals/${body._id}`);
