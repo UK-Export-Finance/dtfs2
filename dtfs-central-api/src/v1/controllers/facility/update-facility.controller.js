@@ -3,6 +3,7 @@ const { findOneFacility } = require('./get-facility.controller');
 const { updateDealEditedBy } = require('../deal/update-deal.controller');
 const db = require('../../../drivers/db-client');
 const now = require('../../../now');
+const getUpdateFacilityErrors = require('../../validation/update-facility');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -39,10 +40,16 @@ const updateFacility = async (facilityId, facilityBody) => {
 };
 exports.updateFacility = updateFacility;
 
-// TODO: ADD VALIDATION
-
 exports.updateFacilityPut = async (req, res) => {
   const facilityId = req.params.id;
+
+  const validationErrors = getUpdateFacilityErrors(req.body);
+
+  if (validationErrors.count !== 0) {
+    return res.status(400).send({
+      validationErrors,
+    });
+  }
 
   await findOneFacility(facilityId, async (facility) => {
     if (!facility) res.status(404).send();
