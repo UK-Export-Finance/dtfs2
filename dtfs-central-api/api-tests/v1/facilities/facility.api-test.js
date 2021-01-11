@@ -52,8 +52,13 @@ describe('/v1/facilities', () => {
 
   describe('POST /v1/facilities', () => {
     it('returns 404 when associatedDeal/associatedDealId is not found', async () => {
-      newFacility.associatedDealId = '1234';
-      const { body, status } = await api.post(newFacility).to('/v1/facilities');
+      const facilityWithInvalidDealId = {
+        associatedDealId: '1234',
+        facilityType: 'bond',
+        user: mockUser,
+      };
+
+      const { body, status } = await api.post(facilityWithInvalidDealId).to('/v1/facilities');
 
       expect(status).toEqual(404);
     });
@@ -176,10 +181,26 @@ describe('/v1/facilities', () => {
 
   describe('PUT /v1/facilities/:id', () => {
     it('404s requests for unknown ids', async () => {
-      const { status } = await api.put({}).to('/v1/facilities/123456789012');
+      const { status } = await api.put({ user: mockUser }).to('/v1/facilities/123456789012');
 
       expect(status).toEqual(404);
     });
+
+    describe('when required fields are missing', () => {
+      it('returns 400 with validation errors', async () => {
+        const postResult = await api.post(newFacility).to('/v1/facilities');
+        const createdFacility = postResult.body;
+
+        const { body, status } = await api.put({}).to(`/v1/facilities/${createdFacility._id}`);
+
+        expect(status).toEqual(400);
+        expect(body.validationErrors.count).toEqual(1);
+
+        expect(body.validationErrors.errorList.userObject).toBeDefined();
+        expect(body.validationErrors.errorList.userObject.text).toEqual('User object with _id, roles and bank is required');
+      });
+    });
+
 
     it('returns the updated facility', async () => {
       const postResult = await api.post(newFacility).to('/v1/facilities');
