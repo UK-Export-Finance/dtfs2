@@ -1,15 +1,9 @@
 // const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
 const isPortReachable = require('is-port-reachable');
 
-const AZURE_WORKFLOW_FILESHARE_CONFIG = {
-  STORAGE_ACCOUNT: process.env.AZURE_WORKFLOW_STORAGE_ACCOUNT,
-  STORAGE_ACCESS_KEY: process.env.AZURE_WORKFLOW_STORAGE_ACCESS_KEY,
-  FILESHARE_NAME: process.env.AZURE_WORKFLOW_FILESHARE_NAME,
-};
-const { STORAGE_ACCOUNT } = AZURE_WORKFLOW_FILESHARE_CONFIG;
-
 const urlList = [
-  `${STORAGE_ACCOUNT}.file.core.windows.net`,
+  'rrstagingmedia.file.core.windows.net',
+  'tfsandrew.file.core.windows.net',
   'google.com',
 ];
 
