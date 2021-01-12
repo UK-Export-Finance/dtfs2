@@ -1,7 +1,7 @@
 const $ = require('mongo-dot-notation');
 const { findOneDeal } = require('./get-deal.controller');
-const db = require('../../drivers/db-client');
-const now = require('../../now');
+const db = require('../../../drivers/db-client');
+const now = require('../../../now');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -54,7 +54,7 @@ const handleEditedBy = async (dealId, dealUpdate, user) => {
   return editedBy;
 };
 
-const updateDeal = async (dealId, dealChanges, user, existingDeal) => {
+const updateDeal = async (dealId, dealChanges, user, existingDeal, callback) => {
   const collection = await db.getCollection('deals');
 
   const editedBy = await handleEditedBy(dealId, dealChanges, user);
@@ -87,9 +87,84 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal) => {
 
   const { value } = findAndUpdateResponse;
 
+  if (callback) {
+    callback(value);
+  }
+
   return value;
 };
 exports.updateDeal = updateDeal;
+
+const updateDealEditedBy = async (dealId, user) => {
+  const collection = await db.getCollection('deals');
+
+  const editedBy = await handleEditedBy(dealId, {}, user);
+
+  const dealUpdate = {
+    editedBy,
+  };
+
+  const findAndUpdateResponse = await collection.findOneAndUpdate(
+    { _id: dealId },
+    $.flatten(withoutId(dealUpdate)),
+    { returnOriginal: false },
+  );
+
+  const { value } = findAndUpdateResponse;
+
+  return value;
+};
+exports.updateDealEditedBy = updateDealEditedBy;
+
+const addFacilityIdToDeal = async (dealId, newFacilityId, user) => {
+  await findOneDeal(dealId, async (deal) => {
+    const { facilities } = deal;
+
+    const updatedFacilities = [
+      ...facilities,
+      newFacilityId,
+    ];
+
+    const dealUpdate = {
+      ...deal,
+      facilities: updatedFacilities,
+    };
+
+    const updatedDeal = await updateDeal(
+      dealId,
+      dealUpdate,
+      user,
+    );
+
+    return updatedDeal;
+  });
+};
+
+exports.addFacilityIdToDeal = addFacilityIdToDeal;
+
+
+const removeFacilityIdFromDeal = async (dealId, facilityId, user) => {
+  await findOneDeal(dealId, async (deal) => {
+    const { facilities } = deal;
+
+    const updatedFacilities = facilities.filter((f) => f !== facilityId);
+
+    const dealUpdate = {
+      ...deal,
+      facilities: updatedFacilities,
+    };
+
+    const updatedDeal = await updateDeal(
+      dealId,
+      dealUpdate,
+      user,
+    );
+
+    return updatedDeal;
+  });
+};
+
+exports.removeFacilityIdFromDeal = removeFacilityIdFromDeal;
 
 exports.updateDealPut = async (req, res) => {
   const dealId = req.params.id;
@@ -108,6 +183,7 @@ exports.updateDealPut = async (req, res) => {
         user,
         deal,
       );
+
       res.status(200).json(updatedDeal);
     }
     res.status(404).send();

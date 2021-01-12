@@ -1,8 +1,8 @@
-const db = require('../../drivers/db-client');
-const DEFAULTS = require('../defaults');
-const now = require('../../now');
-const getDealErrors = require('../validation/create-deal');
-const { generateDealId } = require('../../utils/generate-ids');
+const db = require('../../../drivers/db-client');
+const DEFAULTS = require('../../defaults');
+const now = require('../../../now');
+const getDealErrors = require('../../validation/create-deal');
+const { generateDealId } = require('../../../utils/generate-ids');
 
 const createDeal = async (req) => {
   const collection = await db.getCollection('deals');
@@ -26,6 +26,7 @@ const createDeal = async (req) => {
       ...DEFAULTS.DEALS.eligibility,
       ...req.body.eligibility,
     },
+    facilities: DEFAULTS.DEALS.facilities,
   };
 
   const validationErrors = getDealErrors(newDeal);
