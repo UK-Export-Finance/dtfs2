@@ -13,8 +13,6 @@ const urlList = [
   'google.com',
 ];
 
-const promises = [];
-
 const fetchTest = async () => urlList.map(async (url) => {
   const port443 = await isPortReachable(443, { host: url });
   const port80 = await isPortReachable(80, { host: url });
