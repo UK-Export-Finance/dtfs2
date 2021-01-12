@@ -317,6 +317,7 @@ jobs:
       with:
         inlineScript: |
           az network vnet subnet update --name ${{ env.environment }}-gateway --vnet-name tfs-${{ env.app_service_plan }}-vnet --network-security-group tfs-${{ env.environment }}-gw-nsg
+          az network vnet subnet update --name ${{ env.environment }}-private-endpoints --vnet-name tfs-${{ env.app_service_plan }}-vnet --network-security-group tfs-${{ env.environment }}-gw-nsg
 
   # END Network Security Group
 
