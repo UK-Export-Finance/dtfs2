@@ -1,5 +1,5 @@
 const { findOneDeal } = require('./get-deal.controller');
-const db = require('../../drivers/db-client');
+const db = require('../../../drivers/db-client');
 
 exports.deleteDeal = async (req, res) => {
   findOneDeal(req.params.id, async (deal) => {

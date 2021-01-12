@@ -3,6 +3,8 @@ const { MongoClient } = require('mongodb');
 const { NotifyClient } = require('notifications-node-client');
 const util = require('util');
 
+const shareTest = require('./fileshare-test');
+
 const router = express.Router();
 const GITHUB_SHA = process.env.GITHUB_SHA || 'undefined';
 const { MONGODB_URI } = process.env;
@@ -28,8 +30,18 @@ async function pingMongo() {
   }
 }
 
-async function pingStorage() {
-  return STORAGE_ACCOUNT;
+async function pingStorage(doFetch) {
+  if (!doFetch) {
+    return {
+      STORAGE_ACCOUNT,
+    };
+  }
+
+  const fileshare = await shareTest();
+  return {
+    STORAGE_ACCOUNT,
+    fileshare,
+  };
 }
 
 async function pingNotify() {
@@ -43,7 +55,8 @@ async function pingNotify() {
 router.get('/healthcheck', (req, res) => {
   const mongo = pingMongo();
   const notify = pingNotify();
-  const storage = pingStorage();
+
+  const storage = pingStorage(Boolean(req.query.fetchtest));
   Promise.all([mongo, notify, storage]).then((values) => {
     res.status(200).json({
       commit_hash: GITHUB_SHA,

@@ -26,6 +26,7 @@ const expectAddedFields = (obj) => {
       owningBank: expect.any(Object),
       status: 'Draft',
     },
+    facilities: [],
     editedBy: [],
   });
 
