@@ -6,10 +6,16 @@ const AZURE_WORKFLOW_FILESHARE_CONFIG = {
   STORAGE_ACCESS_KEY: process.env.AZURE_WORKFLOW_STORAGE_ACCESS_KEY,
   FILESHARE_NAME: process.env.AZURE_WORKFLOW_FILESHARE_NAME,
 };
+const { STORAGE_ACCOUNT } = AZURE_WORKFLOW_FILESHARE_CONFIG;
 
-const fetchTest = async () => {
-  const { STORAGE_ACCOUNT } = AZURE_WORKFLOW_FILESHARE_CONFIG;
-  const url = `${STORAGE_ACCOUNT}.file.core.windows.net`;
+const urlList = [
+  `${STORAGE_ACCOUNT}.file.core.windows.net`,
+  'google.com',
+];
+
+const promises = [];
+
+const fetchTest = async () => urlList.map(async (url) => {
   const port443 = await isPortReachable(443, { host: url });
   const port80 = await isPortReachable(80, { host: url });
   const port445 = await isPortReachable(445, { host: url });
@@ -17,7 +23,7 @@ const fetchTest = async () => {
   return {
     url, port80, port443, port445, port10101,
   };
-};
+});
 
 // const getCredentials = async () => {
 //   const {
@@ -99,9 +105,13 @@ const getDirectory = async (folderPaths = 'fileshare_test') => {
 
 const shareTest = async () => {
   const ports = await fetchTest();
+
+  const portRes = await Promise.all(ports);
+
   return {
-    ports,
+    portRes,
   };
+
   /*
   const shareDirectory = await getDirectory();
   console.log('test', { shareDirectory });
