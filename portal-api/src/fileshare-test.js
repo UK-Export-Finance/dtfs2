@@ -7,6 +7,7 @@ const urlList = [
   'tfsandrew.file.core.windows.net',
   'tfsandrew.z33.web.core.windows.net',
   'tfsandrew.blob.core.windows.net',
+  'tfsprodstorage.file.core.windows.net',
   'windows.net',
   '20.38.106.200',
   'tfs-prod-fd.azurefd.net',
