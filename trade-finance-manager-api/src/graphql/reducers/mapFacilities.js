@@ -1,4 +1,5 @@
 const moment = require('moment');
+const CONSTANTS = require('../../constants');
 
 const mapFacilities = (facilities) => {
   const mappedFacilities = facilities;
@@ -6,20 +7,20 @@ const mapFacilities = (facilities) => {
   mappedFacilities.map((f) => {
     const facility = f;
     if (facility.facilityType === 'bond') {
-      facility.facilityType = 'BSS';
+      facility.facilityType = CONSTANTS.FACILITIES.FACILITY_TYPE_CODE.BOND;
     }
     if (facility.facilityType === 'loan') {
-      facility.facilityType = 'EWCS';
+      facility.facilityType = CONSTANTS.FACILITIES.FACILITY_TYPE_CODE.LOAN;
     }
 
     // currently, we don't always have facilityType.
     // this is a hacky fallback/workaround for initial TFM development.
     // TODO: remove this once DTFS2-3054 is completed.
     if (facility.bondType) {
-      facility.facilityType = 'BSS';
+      facility.facilityType = CONSTANTS.FACILITIES.FACILITY_TYPE_CODE.BOND;
     }
     if (facility.disbursementAmount) {
-      facility.facilityType = 'EWCS';
+      facility.facilityType = CONSTANTS.FACILITIES.FACILITY_TYPE_CODE.LOAN;
     }
 
     const {
