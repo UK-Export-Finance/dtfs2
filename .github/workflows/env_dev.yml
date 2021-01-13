@@ -56,6 +56,7 @@ jobs:
     # therefore all App Services on a plan must share a single vnet.
     # So we name the vnet after the app service plan, rather than the environment.
     name: Vnet
+    needs: public-ip
     runs-on: ubuntu-latest
     steps:
 
@@ -107,10 +108,6 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-            az network public-ip create --name tfs-${{ env.environment }}-nat-ip \
-              --allocation-method Static \
-              --sku Standard
-
             az network nat gateway create --name tfs-${{ env.environment }}-nat-gw \
               --public-ip-addresses tfs-${{ env.environment }}-nat-ip
 
@@ -188,8 +185,8 @@ jobs:
           az network private-dns link vnet show   --name storage-dns --zone-name "privatelink.file.core.windows.net" || \
           az network private-dns link vnet create --name storage-dns --zone-name "privatelink.file.core.windows.net" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
 
-          az network private-dns link vnet show   --name redis-dns --zone-name "privatelink.redis.cache.windows.net" || \
-          az network private-dns link vnet create --name redis-dns --zone-name "privatelink.redis.cache.windows.net" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
+          az network private-dns link vnet show   --name storage-dns --zone-name "privatelink.redis.cache.windows.net" || \
+          az network private-dns link vnet create --name storage-dns --zone-name "privatelink.redis.cache.windows.net" --registration-enabled false --virtual-network tfs-${{ env.app_service_plan }}-vnet
  
   public-ip:
     name: Public IP
@@ -217,6 +214,10 @@ jobs:
             --sku Standard
 
           az network public-ip create --name tfs-${{ env.environment }}-tfm-ip \
+            --allocation-method Static \
+            --sku Standard
+          
+          az network public-ip create --name tfs-${{ env.environment }}-nat-ip \
             --allocation-method Static \
             --sku Standard
 
