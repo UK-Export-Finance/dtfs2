@@ -9,7 +9,7 @@ describe('controllers - case', () => {
     describe('when deal exists', () => {
       const mockDeal = {
         _id: '1000023',
-        mockDeal: true,
+        mock: true,
       };
 
       beforeEach(() => {
@@ -26,6 +26,8 @@ describe('controllers - case', () => {
         await caseController.getCaseDeal(req, res);
         expect(res.render).toHaveBeenCalledWith('case/deal/deal.njk', {
           deal: mockDeal,
+          active_sheet: 'deal',
+          dealId: req.params._id, // eslint-disable-line no-underscore-dangle
         });
       });
     });
