@@ -1,5 +1,5 @@
 const mapSubmissionDetails = (submissionDetails) => {
-  const result =  {
+  const result = {
     supplierName: submissionDetails['supplier-name'],
     supplyContractCurrency: submissionDetails.supplyContractCurrency.id,
     supplyContractValue: submissionDetails.supplyContractValue,
