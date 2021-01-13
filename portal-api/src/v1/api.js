@@ -37,6 +37,7 @@ const queryDeals = async (query, start = 0, pagesize = 0) => {
 
     return response.data;
   } catch (err) {
+    console.log('queryDeal err', { err });
     return false;
   }
 };
