@@ -6,10 +6,10 @@ const mapFacilities = (facilities) => {
 
   mappedFacilities.map((f) => {
     const facility = f;
-    if (facility.facilityType === 'bond') {
+    if (facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
       facility.facilityType = CONSTANTS.FACILITIES.FACILITY_TYPE_CODE.BOND;
     }
-    if (facility.facilityType === 'loan') {
+    if (facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
       facility.facilityType = CONSTANTS.FACILITIES.FACILITY_TYPE_CODE.LOAN;
     }
 
