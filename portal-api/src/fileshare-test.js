@@ -3,12 +3,16 @@ const isPortReachable = require('is-port-reachable');
 
 const urlList = [
   'rrstagingmedia.file.core.windows.net',
+  'tfsdevstorage.file.core.windows.net',
   'tfsandrew.file.core.windows.net',
   'tfsandrew.z33.web.core.windows.net',
   'tfsandrew.blob.core.windows.net',
+  'windows.net',
   '20.38.106.200',
   'tfs-prod-fd.azurefd.net',
   'google.com',
+  '20.49.219.203', // (tfs-dev-ip)
+  '20.49.129.205', // (tfs-test-ip)
 ];
 
 const fetchTest = async () => urlList.map(async (url) => {
