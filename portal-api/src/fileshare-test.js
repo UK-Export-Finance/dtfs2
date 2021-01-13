@@ -4,6 +4,7 @@ const isPortReachable = require('is-port-reachable');
 const urlList = [
   'rrstagingmedia.file.core.windows.net',
   'tfsandrew.file.core.windows.net',
+  '20.38.106.200',
   'google.com',
 ];
 
