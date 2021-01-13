@@ -101,9 +101,9 @@ type DealEligibility {
 
 type Facility  {
   _id: String!
-  facilityType: String!
+  facilityProduct: String!
   facilityValue: String!
-  expectedExpiryDate: String!
+  coverEndDate: String!
 }
 
 type Deal {

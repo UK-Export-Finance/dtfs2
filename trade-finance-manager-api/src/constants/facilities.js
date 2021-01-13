@@ -3,12 +3,12 @@ const FACILITY_TYPE = {
   LOAN: 'loan',
 };
 
-const FACILITY_TYPE_CODE = {
+const FACILITY_PRODUCT_CODE = {
   BOND: 'BSS',
   LOAN: 'EWCS',
 };
 
 module.exports = {
   FACILITY_TYPE,
-  FACILITY_TYPE_CODE,
+  FACILITY_PRODUCT_CODE,
 };

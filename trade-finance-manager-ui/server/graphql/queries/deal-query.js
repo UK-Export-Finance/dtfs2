@@ -21,9 +21,9 @@ const dealQuery = gql`
       }
       facilities {
         _id,
-        facilityType,
+        facilityProduct,
         facilityValue,
-        expectedExpiryDate
+        coverEndDate
       }
       eligibility {
         agentAddressCountry,

@@ -5,11 +5,11 @@
     <thead class="govuk-table__head">
       <tr>
         <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-facility-id">Facility ID</th>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-product">Product</th>
         <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-type">Type</th>
-        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-status">Status</th>
-        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-issue-date">Expected issue date</th>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-stage">Stage</th>
         <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-tenor">Tenor</th>
-        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-expected-expiry-date">Expected expiry date</th>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-cover-end-date">Cover end date</th>
         <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-value-export-currency">Value (export currency)</th>
         <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-value-gbp">Value (GBP)</th>
         <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-ukef-exposure">UKEF exposure</th>
@@ -19,11 +19,11 @@
       {% for facility in facilities %}
         <tr class="govuk-table__row" data-cy="facilities-table-row">
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-id">&nbsp;</td>
-          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-type">{{ facility.facilityType }}</td>
-          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-status">&nbsp;</td>
-          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-issue-date">&nbsp;</td>
+          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-product">{{ facility.facilityProduct }}</td>
+          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-type">&nbsp;</td>
+          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-stage">&nbsp;</td>
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-tenor">&nbsp;</td>
-          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-expected-expiry-date">{{ facility.expectedExpiryDate }}</td>
+          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-cover-end-date">{{ facility.coverEndDate }} (expected)</td>
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-value-export-currency">&nbsp;</td>
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-value-gbp">&nbsp;</td>
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-ukef-exposure">&nbsp;</td>

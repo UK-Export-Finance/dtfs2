@@ -10,13 +10,13 @@ describe(component, () => {
     facilities: [
       {
         _id: '123',
-        facilityType: 'BSS',
-        expectedExpiryDate: '02 Nov 2021',
+        facilityProduct: 'BSS',
+        coverEndDate: '02 Nov 2021',
       },
       {
         _id: '456',
-        facilityType: 'EWCS',
-        expectedExpiryDate: '04 Dec 2021',
+        facilityProduct: 'EWCS',
+        coverEndDate: '04 Dec 2021',
       },
     ]
   };
@@ -30,24 +30,24 @@ describe(component, () => {
       wrapper.expectText('[data-cy="facilities-table-heading-facility-id"]').toRead('Facility ID');
     });
 
+    it('should render `product` table heading', () => {
+      wrapper.expectText('[data-cy="facilities-table-heading-product"]').toRead('Product');
+    });
+
     it('should render `type` table heading', () => {
       wrapper.expectText('[data-cy="facilities-table-heading-type"]').toRead('Type');
     });
 
-    it('should render `status` table heading', () => {
-      wrapper.expectText('[data-cy="facilities-table-heading-status"]').toRead('Status');
-    });
-
-    it('should render `issue date` table heading', () => {
-      wrapper.expectText('[data-cy="facilities-table-heading-issue-date"]').toRead('Expected issue date');
+    it('should render `stage` table heading', () => {
+      wrapper.expectText('[data-cy="facilities-table-heading-stage"]').toRead('Stage');
     });
 
     it('should render `tenor` table heading', () => {
       wrapper.expectText('[data-cy="facilities-table-heading-tenor"]').toRead('Tenor');
     });
 
-    it('should render `expected expiry date` table heading', () => {
-      wrapper.expectText('[data-cy="facilities-table-heading-expected-expiry-date"]').toRead('Expected expiry date');
+    it('should render `cover end date` table heading', () => {
+      wrapper.expectText('[data-cy="facilities-table-heading-cover-end-date"]').toRead('Cover end date');
     });
 
     it('should render `value (export currency)` table heading', () => {
@@ -65,17 +65,17 @@ describe(component, () => {
 
   
   describe('for each facility', () => {
-    it('should render facilityType table cell', () => {
+    it('should render facilityProduct table cell', () => {
       params.facilities.forEach((facility) => {
-        const cellSelector = `[data-cy="facility-${facility._id}-type"]`;
-        wrapper.expectText(cellSelector).toRead(facility.facilityType);
+        const cellSelector = `[data-cy="facility-${facility._id}-product"]`;
+        wrapper.expectText(cellSelector).toRead(facility.facilityProduct);
       });
     });
 
-    it('should render expectedExpiryDate table cell', () => {
+    it('should render coverEndDate table cell', () => {
       params.facilities.forEach((facility) => {
-        const cellSelector = `[data-cy="facility-${facility._id}-expected-expiry-date"]`;
-        wrapper.expectText(cellSelector).toRead(facility.expectedExpiryDate);
+        const cellSelector = `[data-cy="facility-${facility._id}-cover-end-date"]`;
+        wrapper.expectText(cellSelector).toRead(`${facility.coverEndDate} (expected)`);
       });
     });
 

@@ -34,9 +34,9 @@ const GET_DEAL = gql`
       }
       facilities {
         _id,
-        facilityType,
+        facilityProduct,
         facilityValue,
-        expectedExpiryDate
+        coverEndDate
       }
       eligibility {
         agentAddressCountry,
@@ -141,9 +141,9 @@ describe('graphql query - get deal', () => {
 
     const expectedFacilities = mappedFacilities.map((f) => ({
       _id: f._id,
-      facilityType: f.facilityType,
+      facilityProduct: f.facilityProduct,
       facilityValue: f.facilityValue,
-      expectedExpiryDate: f.expectedExpiryDate,
+      coverEndDate: f.coverEndDate,
     }));
     expect(queryResponseFacilities).toEqual(expectedFacilities);
   });
