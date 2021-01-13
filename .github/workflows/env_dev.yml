@@ -105,13 +105,14 @@ jobs:
     
     - name: NAT gateway
       uses: Azure/cli@v1.0.0
-      inlineScript: |
-          az network public-ip create --name tfs-${{ env.environment }}-nat-ip \
-            --allocation-method Static \
-            --sku Standard
+      with:
+        inlineScript: |
+            az network public-ip create --name tfs-${{ env.environment }}-nat-ip \
+              --allocation-method Static \
+              --sku Standard
 
-          az network nat gateway create --name tfs-{{ env.environment }}-nat-gw \
-            --public-ip-addresses tfs-${{ env.environment }}-nat-ip
+            az network nat gateway create --name tfs-{{ env.environment }}-nat-gw \
+              --public-ip-addresses tfs-${{ env.environment }}-nat-ip
 
     - name: App Service Plan egress subnet
       uses: Azure/cli@v1.0.0
