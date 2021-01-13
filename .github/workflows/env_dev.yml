@@ -127,7 +127,7 @@ jobs:
             --delegations Microsoft.Web/serverFarms \
             --service-endpoints Microsoft.AzureCosmosDB \
             --address-prefixes 10.0.200.0/28 \
-            --nat-gateway tfs-{{ env.environment }}-nat-gw
+            --nat-gateway tfs-${{ env.environment }}-nat-gw
             
     # We'll aim to move this out of this section and consolidate into a single VM job:
     - name: Virtual machine subnet
