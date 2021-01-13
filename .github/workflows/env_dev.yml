@@ -107,7 +107,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-            az network public-ip create --name tfs-${{ env.environment }}-nat-ip \
+            az network public-ip create --name tfs-{{ env.environment }}-nat-ip \
               --allocation-method Static \
               --sku Standard
 
