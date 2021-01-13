@@ -47,7 +47,7 @@ const dealReducer = (deal) => {
       agentAddressTown: eligibility.agentAddressTown,
       agentName: eligibility.agentName,
     },
-    eligibilityCriteria: deal.eligibility.criteria,
+    eligibilityCriteria: eligibility.criteria,
   };
 
   return result;
