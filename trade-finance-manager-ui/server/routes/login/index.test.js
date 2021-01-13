@@ -11,6 +11,9 @@ describe('routes - login', () => {
   });
 
   it('should setup routes with controllers', () => {
+    expect(get).toHaveBeenCalledTimes(1);
+    expect(post).toHaveBeenCalledTimes(1);
+
     expect(get).toHaveBeenCalledWith('/', loginController.getLogin);
     expect(post).toHaveBeenCalledWith('/', loginController.postLogin);
   });

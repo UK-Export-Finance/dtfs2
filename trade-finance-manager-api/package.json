@@ -37,6 +37,7 @@
     "graphql-middleware": "^4.0.2",
     "graphql-tools": "^6.2.5",
     "is-port-reachable": "^3.0.0",
+    "moment": "^2.29.1",
     "mongodb": "^3.6.3"
   },
   "devDependencies": {

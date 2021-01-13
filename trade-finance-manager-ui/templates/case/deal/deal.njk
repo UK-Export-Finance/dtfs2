@@ -1,5 +1,6 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% import './_macros/eligibility-criteria-answers.njk' as eligibilityCriteriaAnswers %}
+{% import './_macros/facilities-table.njk' as facilitiesTable %}
 
 {% extends "case/case.njk" %}
 
@@ -82,6 +83,10 @@
   <div class="govuk-grid-row" data-cy="deal-facilities">
     <div class="govuk-grid-column-full separator-line deal">
       <p class="ukef-heading-l" style="padding-top:30px">Facilities</p>
+
+      {% set componentData = {facilities: deal.facilities} %}
+      {{ facilitiesTable.render(componentData) }}
+
     </div>
   </div>
 {% endblock %}

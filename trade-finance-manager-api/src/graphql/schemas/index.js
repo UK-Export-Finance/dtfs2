@@ -99,9 +99,17 @@ type DealEligibility {
   agentAlias: String
 }
 
+type Facility  {
+  _id: String!
+  facilityProduct: String!
+  facilityValue: String!
+  coverEndDate: String!
+}
+
 type Deal {
   _id: String!
   details: DealDetails
+  facilities: [Facility]
   submissionDetails: DealSubmissionDetails
   eligibilityCriteria: [DealEligibilityCriterion!]
   eligibility: DealEligibility

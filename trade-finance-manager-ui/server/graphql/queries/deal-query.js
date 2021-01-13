@@ -19,6 +19,12 @@ const dealQuery = gql`
         bankSupplyContractID,
         bankSupplyContractName,
       }
+      facilities {
+        _id,
+        facilityProduct,
+        facilityValue,
+        coverEndDate
+      }
       eligibility {
         agentAddressCountry,
         agentAddressLine1,
@@ -28,6 +34,12 @@ const dealQuery = gql`
         agentAddressTown,
         agentName,
         agentAlias
+      }
+      eligibilityCriteria {
+        id,
+        answer,
+        description,
+        descriptionList
       }
       submissionDetails {
         supplierName,
@@ -71,14 +83,7 @@ const dealQuery = gql`
         supplierCorrespondenceAddressLine3,
         supplierCorrespondenceAddressPostcode,
         supplierCorrespondenceAddressTown,
-        supplierAddress,
         smeType
-      }
-      eligibilityCriteria {
-        id,
-        answer,
-        description,
-        descriptionList
       }
     }
   }
