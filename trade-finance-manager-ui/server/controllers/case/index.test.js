@@ -94,5 +94,4 @@ describe('controllers - case', () => {
       });
     });
   });
-
 });

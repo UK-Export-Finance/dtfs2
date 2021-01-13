@@ -15,5 +15,4 @@ describe('routes - case', () => {
     expect(get).toHaveBeenCalledWith('/deal/:_id', caseController.getCaseDeal);
     expect(get).toHaveBeenCalledWith('/parties/:_id', caseController.getCaseParties);
   });
-
 });
