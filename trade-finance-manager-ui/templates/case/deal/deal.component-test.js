@@ -56,11 +56,11 @@ describe(page, () => {
     wrapper.expectText('[data-cy="bank-additional-reference"]').toRead(params.deal.details.bankSupplyContractName );
   });
 
-  
-
-  
   it('should render eligibility criteria answers', () => {
     wrapper.expectElement('[data-cy="eligibility-criteria-answers"]').toExist();
   });
 
+  it('should render facilities table', () => {
+    wrapper.expectElement('[data-cy="facilities-table"]').toExist();
+  });
 });

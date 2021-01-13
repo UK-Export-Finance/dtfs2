@@ -11,6 +11,7 @@ const resolvers = require('../src/graphql/resolvers');
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 const mapDeal = require('../src/v1/mappings/map-deal');
 const dealReducer = require('../src/graphql/reducers/deal');
+const mapFacilities = require('../src/graphql/reducers/mapFacilities');
 
 const GET_DEAL = gql`
   query Deal($id: ID!) {
@@ -23,7 +24,34 @@ const GET_DEAL = gql`
         owningBank {
           name,
           emails
-        }
+        },
+        maker {
+          firstname,
+          surname,
+        },
+        bankSupplyContractID,
+        bankSupplyContractName,
+      }
+      facilities {
+        _id,
+        facilityType,
+        facilityValue,
+        expectedExpiryDate
+      }
+      eligibility {
+        agentAddressCountry,
+        agentAddressLine1,
+        agentAddressLine2,
+        agentAddressLine3,
+        agentAddressPostcode,
+        agentAddressTown,
+        agentName
+      }
+      eligibilityCriteria {
+        id,
+        answer,
+        description,
+        descriptionList
       }
       submissionDetails {
         supplierName,
@@ -31,13 +59,43 @@ const GET_DEAL = gql`
         destinationCountry,
         supplyContractCurrency,
         supplyContractValue,
-        buyerName
-      }
-      eligibilityCriteria {
-        id,
-        answer,
-        description,
-        descriptionList
+        buyerName,
+        buyerAddressCountry,
+        buyerAddressLine1,
+        buyerAddressLine2,
+        buyerAddressLine3,
+        buyerAddressPostcode,
+        buyerAddressTown,
+        indemnifierAddressCountry,
+        indemnifierAddressLine1,
+        indemnifierAddressLine2,
+        indemnifierAddressLine3,
+        indemnifierAddressPostcode,
+        indemnifierAddressTown,
+        indemnifierCorrespondenceAddressCountry,
+        indemnifierCorrespondenceAddressLine1,
+        indemnifierCorrespondenceAddressLine2,
+        indemnifierCorrespondenceAddressLine3,
+        indemnifierCorrespondenceAddressPostcode,
+        indemnifierCorrespondenceAddressTown,
+        indemnifierName,
+        industryClass,
+        industrySector,
+        supplierAddressCountry,
+        supplierCountry,
+        supplierAddressLine1,
+        supplierAddressLine2,
+        supplierAddressLine3,
+        supplierAddressPostcode,
+        supplierAddressTown,
+        supplierCompaniesHouseRegistrationNumber,
+        supplierCorrespondenceAddressCountry,
+        supplierCorrespondenceAddressLine1,
+        supplierCorrespondenceAddressLine2,
+        supplierCorrespondenceAddressLine3,
+        supplierCorrespondenceAddressPostcode,
+        supplierCorrespondenceAddressTown,
+        smeType
       }
     }
   }
@@ -68,8 +126,25 @@ describe('graphql query - get deal', () => {
     });
     const mappedDeal = mapDeal(MOCK_DEAL);
 
-    const expected = dealReducer(mappedDeal);
+    const queryResponseFacilities = data.deal.facilities;
 
-    expect(data.deal).toEqual(expected);
+    const expectedDealWithoutFacilities = dealReducer(mappedDeal)
+    delete expectedDealWithoutFacilities.facilities;
+
+    const queryResponseWithoutFacilities = data.deal;
+    delete queryResponseWithoutFacilities.facilities;
+
+    expect(queryResponseWithoutFacilities).toEqual(expectedDealWithoutFacilities);
+
+    const mappedFacilities = mapFacilities(MOCK_DEAL.facilities);
+
+
+    const expectedFacilities = mappedFacilities.map((f) => ({
+      _id: String(f._id),
+      facilityType: f.facilityType,
+      facilityValue: f.facilityValue,
+      expectedExpiryDate: f.expectedExpiryDate,
+    }));
+    expect(queryResponseFacilities).toEqual(expectedFacilities);
   });
 });
