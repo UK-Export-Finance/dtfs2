@@ -12,8 +12,8 @@ describe('routes index', () => {
   });
 
   it('should setup all routes', () => {
+    expect(use).toHaveBeenCalledTimes(2);
     expect(use).toHaveBeenCalledWith('/', loginRoutes);
     expect(use).toHaveBeenCalledWith('/case', caseRoutes);
-    expect(use).toHaveBeenCalledTimes(2);
   });
 });
