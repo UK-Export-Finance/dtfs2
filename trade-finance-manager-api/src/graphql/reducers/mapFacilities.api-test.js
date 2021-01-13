@@ -2,7 +2,7 @@ const moment = require('moment');
 const mapFacilities = require('./mapFacilities');
 
 describe('mapFacilities', () => {
-  it('should map `bond` and `loan` facilityType with FACILITY_TYPE_CODE and return a formatted expectedExpiryDate', async () => {
+  it('should map `bond` and `loan` facilityType/facilityProduct with FACILITY_PRODUCT_CODE and return a formatted coverEndDate', async () => {
     const mockCoverEndDate = {
       'coverEndDate-day': '01',
       'coverEndDate-month': '02',
@@ -30,18 +30,18 @@ describe('mapFacilities', () => {
       year: Number(mockCoverEndDate['coverEndDate-year']),
     });
 
-    const expectedExpiryDate = moment(coverEndDate).format('DD MMM YYYY');
+    const expectedCoverEndDate = moment(coverEndDate).format('DD MMM YYYY');
 
     const expected = [
       {
         ...mockFacilities[0],
-        facilityType: 'BSS',
-        expectedExpiryDate,
+        facilityProduct: 'BSS',
+        coverEndDate: expectedCoverEndDate,
       },
       {
         ...mockFacilities[1],
-        facilityType: 'EWCS',
-        expectedExpiryDate,
+        facilityProduct: 'EWCS',
+        coverEndDate: expectedCoverEndDate,
       },
     ];
 
