@@ -6,7 +6,7 @@ describe('mapFacilities', () => {
     const mockCoverEndDate = {
       'coverEndDate-day': '01',
       'coverEndDate-month': '02',
-      'coverEndDate-year': '2021'
+      'coverEndDate-year': '2021',
     };
 
     const mockFacilities = [
@@ -42,7 +42,7 @@ describe('mapFacilities', () => {
         ...mockFacilities[1],
         facilityType: 'EWCS',
         expectedExpiryDate,
-      }
+      },
     ];
 
     expect(result).toEqual(expected);
