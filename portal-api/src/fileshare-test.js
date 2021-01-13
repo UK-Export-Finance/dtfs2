@@ -2,6 +2,7 @@
 const isPortReachable = require('is-port-reachable');
 
 const urlList = [
+  'tfs-dev-dtfs-central-api.azurewebsites.net',
   'rrstagingmedia.file.core.windows.net',
   'tfsdevstorage.file.core.windows.net',
   'tfsdemostorage.file.core.windows.net',
