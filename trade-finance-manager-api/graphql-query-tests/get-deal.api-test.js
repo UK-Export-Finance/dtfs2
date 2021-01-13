@@ -140,7 +140,7 @@ describe('graphql query - get deal', () => {
 
 
     const expectedFacilities = mappedFacilities.map((f) => ({
-      _id: String(f._id),
+      _id: f._id,
       facilityType: f.facilityType,
       facilityValue: f.facilityValue,
       expectedExpiryDate: f.expectedExpiryDate,

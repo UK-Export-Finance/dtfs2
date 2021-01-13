@@ -181,7 +181,10 @@ const MOCK_DEAL = {
         text: 'GBP - UK Sterling',
         id: 'GBP',
       },
-      _id: 12345678,
+      'coverEndDate-day': '20',
+      'coverEndDate-month': '10',
+      'coverEndDate-year': '2020',
+      _id: '12345678',
     },
     {
       _id: '23456789',
