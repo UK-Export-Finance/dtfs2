@@ -56,7 +56,6 @@ jobs:
     # therefore all App Services on a plan must share a single vnet.
     # So we name the vnet after the app service plan, rather than the environment.
     name: Vnet
-    needs: public-ip
     runs-on: ubuntu-latest
     steps:
 
