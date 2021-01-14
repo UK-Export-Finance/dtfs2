@@ -114,7 +114,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          az network nat gateway create --name tfs-${{ env.environment }}-nat-gw \
+          az network nat gateway create --name tfs-${{ env.app_service_plan }}-nat-gw \
             --public-ip-addresses tfs-${{ env.app_service_plan }}-nat-ip
 
     - name: App Service Plan egress subnet
@@ -130,7 +130,7 @@ jobs:
             --delegations Microsoft.Web/serverFarms \
             --service-endpoints Microsoft.AzureCosmosDB \
             --address-prefixes 10.0.200.0/28 \
-            --nat-gateway tfs-${{ env.environment }}-nat-gw
+            --nat-gateway tfs-${{ env.app_service_plan }}-nat-gw
             
     # We'll aim to move this out of this section and consolidate into a single VM job:
     - name: Virtual machine subnet
