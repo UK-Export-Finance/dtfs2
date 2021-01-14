@@ -1,5 +1,6 @@
 import relative from '../../relativeURL';
 import pages from '../../pages';
+import MOCK_DEAL from '../../../fixtures/deal';
 
 const MOCK_USER = {
   username: 'MAKER',
@@ -32,26 +33,6 @@ const ADMIN_LOGIN = {
   },
 };
 
-const MOCK_DEAL = {
-  _id: '1000676',
-  details: {
-    bankSupplyContractID: 'mock',
-    bankSupplyContractName: 'test',
-    submissionDate: 1597406043000,
-  },
-  submissionDetails: {
-    'supplier-name': 'Supplier name',
-    supplyContractCurrency: {
-      id: 'GBP',
-    },
-    'buyer-name': 'Buyer name',
-    'supply-contract-description': 'Test description',
-    destinationOfGoodsAndServices: {
-      name: 'United Kingdom',
-    },
-  },
-};
-
 context('User can view a case deal', () => {
   let deal;
   let dealId;
@@ -72,11 +53,9 @@ context('User can view a case deal', () => {
   // what's more robust?
 
   it('should render case deal components', () => {
-    cy.login(MOCK_USER);
+    // cy.login(MOCK_USER);
 
-    // NOTE: temp for dev
-    // expect to land on deal page
-    cy.url().should('eq', relative(`/case/deal/${dealId}`));
+    cy.visit(relative(`/case/deal/${dealId}`));
 
     pages.caseDealPage.caseSummary().should('exist');
     pages.caseDealPage.caseSubNavigation().should('exist');
