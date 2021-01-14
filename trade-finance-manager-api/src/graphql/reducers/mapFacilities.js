@@ -49,7 +49,13 @@ const mapFacilities = (facilities) => {
     facility.ukefExposure = `${facility.currency.id} ${facility.ukefExposure}`;
     facility.coveredPercentage = `${facility.coveredPercentage}%`;
 
-    return facility;
+    return {
+      facilityType: facility.facilityType,
+      facilityProduct: facility.facilityProduct,
+      coverEndDate: facility.coverEndDate,
+      ukefExposure: facility.ukefExposure,
+      coveredPercentage: facility.coveredPercentage,
+    };
   });
 
   return mappedFacilities;

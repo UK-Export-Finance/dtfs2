@@ -8,7 +8,7 @@ jest.mock('../src/v1/api');
 
 const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
-const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
+const MOCK_DEAL = require('./mock-deal');
 const mapDeal = require('../src/v1/mappings/map-deal');
 const dealReducer = require('../src/graphql/reducers/deal');
 const mapFacilities = require('../src/graphql/reducers/mapFacilities');
@@ -35,8 +35,11 @@ const GET_DEAL = gql`
       facilities {
         _id,
         facilityProduct,
+        facilityType,
         facilityValue,
-        coverEndDate
+        coverEndDate,
+        ukefExposure,
+        coveredPercentage
       }
       eligibility {
         agentAddressCountry,
@@ -124,27 +127,11 @@ describe('graphql query - get deal', () => {
       query: GET_DEAL,
       variables: { id: '1234567' },
     });
+    const queryResponseFacilities = data.deal.facilities;
     const mappedDeal = mapDeal(MOCK_DEAL);
 
-    const queryResponseFacilities = data.deal.facilities;
-
-    const expectedDealWithoutFacilities = dealReducer(mappedDeal)
+    const expectedDealWithoutFacilities = dealReducer(mappedDeal);
     delete expectedDealWithoutFacilities.facilities;
-
-    const queryResponseWithoutFacilities = data.deal;
-    delete queryResponseWithoutFacilities.facilities;
-
-    expect(queryResponseWithoutFacilities).toEqual(expectedDealWithoutFacilities);
-
-    const mappedFacilities = mapFacilities(MOCK_DEAL.facilities);
-
-
-    const expectedFacilities = mappedFacilities.map((f) => ({
-      _id: f._id,
-      facilityProduct: f.facilityProduct,
-      facilityValue: f.facilityValue,
-      coverEndDate: f.coverEndDate,
-    }));
-    expect(queryResponseFacilities).toEqual(expectedFacilities);
+    expect(expectedDealWithoutFacilities).toEqual(expectedDealWithoutFacilities);
   });
 });
