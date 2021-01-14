@@ -26,7 +26,12 @@
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-cover-end-date">{{ facility.coverEndDate }} (expected)</td>
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-value-export-currency">&nbsp;</td>
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-value-gbp">&nbsp;</td>
-          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-ukef-exposure">{{ facility.ukefExposure}}</td>
+          <td class="govuk-table__cell govuk-body-s">
+            <span data-cy="facility-{{ facility._id }}-ukef-exposure">{{ facility.ukefExposure}}</span>
+            <span data-cy="facility-{{ facility._id }}-covered-percentage" style="float:right;">
+            ({{ facility.coveredPercentage }})
+            </span>
+          </td>
         </tr>
       {% endfor %}
     </tbody>

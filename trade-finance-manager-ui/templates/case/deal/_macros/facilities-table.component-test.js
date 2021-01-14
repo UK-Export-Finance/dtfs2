@@ -12,13 +12,15 @@ describe(component, () => {
         _id: '123',
         facilityProduct: 'BSS',
         coverEndDate: '02 Nov 2021',
-        ukefExposure: 'GBP 1,234.00 (10%)',
+        ukefExposure: 'GBP 1,234.00',
+        coveredPercentage: '20%'
       },
       {
         _id: '456',
         facilityProduct: 'EWCS',
         coverEndDate: '04 Dec 2021',
-        ukefExposure: 'GBP 2,469.00 (20%)',
+        ukefExposure: 'GBP 2,469.00',
+        coveredPercentage: '20%'
       },
     ]
   };
@@ -81,10 +83,17 @@ describe(component, () => {
       });
     });
 
-    it('should render ukefExposure table cell', () => {
+    it('should render ukefExposure', () => {
       params.facilities.forEach((facility) => {
         const cellSelector = `[data-cy="facility-${facility._id}-ukef-exposure"]`;
         wrapper.expectText(cellSelector).toRead(`${facility.ukefExposure}`);
+      });
+    });
+
+    it('should render coveredPercentage', () => {
+      params.facilities.forEach((facility) => {
+        const cellSelector = `[data-cy="facility-${facility._id}-covered-percentage"]`;
+        wrapper.expectText(cellSelector).toRead(`(${facility.coveredPercentage})`);
       });
     });
   });

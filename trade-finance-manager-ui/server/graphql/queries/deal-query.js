@@ -24,7 +24,8 @@ const dealQuery = gql`
         facilityProduct,
         facilityValue,
         coverEndDate,
-        ukefExposure
+        ukefExposure,
+        coveredPercentage
       }
       eligibility {
         agentAddressCountry,
