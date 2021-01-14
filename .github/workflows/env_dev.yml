@@ -104,12 +104,20 @@ jobs:
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --disable-private-endpoint-network-policies true
     
+    - name: NAT Public IP
+        uses: Azure/cli@v1.0.0
+        with:
+        inlineScript: |
+              az network public-ip create --name tfs-${{ env.app_service_plan }}-nat-ip \
+            --allocation-method Static \
+            --sku Standard
+
     - name: NAT gateway
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
             az network nat gateway create --name tfs-${{ env.environment }}-nat-gw \
-              --public-ip-addresses tfs-${{ env.environment }}-nat-ip
+              --public-ip-addresses tfs-${{ env.app_service_plan }}-nat-ip
 
     - name: App Service Plan egress subnet
       uses: Azure/cli@v1.0.0
@@ -214,10 +222,6 @@ jobs:
             --sku Standard
 
           az network public-ip create --name tfs-${{ env.environment }}-tfm-ip \
-            --allocation-method Static \
-            --sku Standard
-          
-          az network public-ip create --name tfs-${{ env.environment }}-nat-ip \
             --allocation-method Static \
             --sku Standard
 
