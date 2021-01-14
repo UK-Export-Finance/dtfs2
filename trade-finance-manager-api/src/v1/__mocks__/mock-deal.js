@@ -163,6 +163,7 @@ const MOCK_DEAL = {
   },
   facilities: [
     {
+      _id: '12345678',
       bondIssuer: 'Issuer',
       bondType: 'Advance payment guarantee',
       facilityStage: 'Unissued',
@@ -184,7 +185,6 @@ const MOCK_DEAL = {
       'coverEndDate-day': '20',
       'coverEndDate-month': '10',
       'coverEndDate-year': '2020',
-      _id: '12345678',
     },
     {
       _id: '23456789',
@@ -216,6 +216,10 @@ const MOCK_DEAL = {
       issueFacilityDetailsProvided: true,
       status: 'Acknowledged',
       ukefFacilityID: '65432',
+      currency: {
+        text: 'GBP - UK Sterling',
+        id: 'GBP',
+      },
     },
   ],
 };
