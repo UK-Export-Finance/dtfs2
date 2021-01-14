@@ -2,6 +2,16 @@ const mapDeal = require('./map-deal');
 const CONTENT_STRINGS = require('../content-strings');
 
 describe('mappings - map-deal', () => {
+  const mockBonds = [
+    { _id: '1' },
+    { _id: '2' },
+  ];
+
+  const mockLoans = [
+    { _id: '3' },
+    { _id: '4' },
+  ];
+
   const mockDeal = {
     eligibility: {
       criteria: [
@@ -47,10 +57,17 @@ describe('mappings - map-deal', () => {
         },
       ],
     },
+    bondTransactions: {
+      items: mockBonds,
+    },
+    loanTransactions: {
+      items: mockLoans,
+    },
   };
 
-  it('should map/update eligibility.criteria from content-strings', () => {
-    const result = mapDeal(mockDeal);
+  it('should map facilities and update eligibility.criteria from content-strings', () => {
+    const deal = mockDeal;
+    const result = mapDeal(deal);
 
     const expectedCriteria = (criteria) =>
       criteria.map((criterion) => {
@@ -62,12 +79,20 @@ describe('mappings - map-deal', () => {
         return mappedCriterion;
       });
 
+    const mockDealWithoutBondsAndLoans = deal;
+    delete mockDealWithoutBondsAndLoans.bondTransactions;
+    delete mockDealWithoutBondsAndLoans.loanTransactions;
+
     const expected = {
       ...mockDeal,
       eligibility: {
         ...mockDeal.eligibility,
         criteria: expectedCriteria(mockDeal.eligibility.criteria),
       },
+      facilities: [
+        ...mockBonds,
+        ...mockLoans,
+      ],
     };
 
     expect(result).toEqual(expected);

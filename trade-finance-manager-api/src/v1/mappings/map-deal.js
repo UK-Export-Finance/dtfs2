@@ -13,6 +13,14 @@ const mapDeal = (deal) => {
     return mappedCriterion;
   });
 
+  mappedDeal.facilities = [
+    ...deal.bondTransactions.items,
+    ...deal.loanTransactions.items,
+  ];
+
+  delete mappedDeal.bondTransactions.items;
+  delete mappedDeal.loanTransactions.items;
+
   return mappedDeal;
 };
 
