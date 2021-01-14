@@ -46,7 +46,7 @@ const mapFacilities = (facilities) => {
 
     facility.coverEndDate = moment(coverEndDate).format('DD MMM YYYY');
 
-    facility.ukefExposure = `GBP ${facility.ukefExposure}`;
+    facility.ukefExposure = `${facility.currency.id} ${facility.ukefExposure}`;
     facility.coveredPercentage = `${facility.coveredPercentage}%`;
 
     return facility;

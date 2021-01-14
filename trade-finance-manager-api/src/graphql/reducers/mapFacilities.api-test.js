@@ -12,6 +12,11 @@ describe('mapFacilities', () => {
     const mockUkefExposure = '1,234.00';
     const mockCoveredPercentage = '10';
 
+    const mockCurrency = {
+      text: 'GBP - UK Sterling',
+      id: 'GBP',
+    };
+
     const mockFacilities = [
       {
         facilityType: 'bond',
@@ -20,6 +25,7 @@ describe('mapFacilities', () => {
         ukefExposure: mockUkefExposure,
         coveredPercentage: mockCoveredPercentage,
         bondType: 'Performance Bond',
+        currency: mockCurrency,
       },
       {
         facilityType: 'loan',
@@ -27,6 +33,7 @@ describe('mapFacilities', () => {
         ...mockCoverEndDate,
         ukefExposure: mockUkefExposure,
         coveredPercentage: mockCoveredPercentage,
+        currency: mockCurrency,
       },
     ];
 
@@ -40,7 +47,7 @@ describe('mapFacilities', () => {
 
     const expectedCoverEndDate = moment(coverEndDate).format('DD MMM YYYY');
 
-    const expectedUkefExposure = `GBP ${mockUkefExposure}`;
+    const expectedUkefExposure = `${mockCurrency.id} ${mockUkefExposure}`;
     const expectedCoveredPercentage = `${mockCoveredPercentage}%`;
 
     const expected = [
