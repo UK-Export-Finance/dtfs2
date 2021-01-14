@@ -6,6 +6,8 @@ const mapFacilities = (facilities) => {
 
   mappedFacilities.map((f) => {
     const facility = f;
+    // facilityType will eventually be facilityProduct / facilityProductCode
+    // TODO: refactor when DTFS2-3054 is completed.
     if (facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
       facility.facilityProduct = CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND;
     }
@@ -21,6 +23,13 @@ const mapFacilities = (facilities) => {
     }
     if (facility.disbursementAmount) {
       facility.facilityProduct = CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN;
+    }
+
+    if (facility.facilityProduct === CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND) {
+      // only bonds have `bondType`
+      facility.facilityType = facility.bondType;
+    } else {
+      facility.facilityType = null;
     }
 
     const {

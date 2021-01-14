@@ -13,7 +13,8 @@ describe(component, () => {
         facilityProduct: 'BSS',
         coverEndDate: '02 Nov 2021',
         ukefExposure: 'GBP 1,234.00',
-        coveredPercentage: '20%'
+        coveredPercentage: '20%',
+        facilityType: 'Performance Bond',
       },
       {
         _id: '456',
@@ -22,7 +23,7 @@ describe(component, () => {
         ukefExposure: 'GBP 2,469.00',
         coveredPercentage: '20%'
       },
-    ]
+    ],
   };
 
   beforeEach(() => {
@@ -73,6 +74,22 @@ describe(component, () => {
       params.facilities.forEach((facility) => {
         const cellSelector = `[data-cy="facility-${facility._id}-product"]`;
         wrapper.expectText(cellSelector).toRead(facility.facilityProduct);
+      });
+    });
+
+    describe('facilityType table cell', () => {
+      it('should render facilityType when facility is bond', () => {
+        const bond = params.facilities.find((f) => f.facilityProduct === 'BSS');
+
+        const cellSelector = `[data-cy="facility-${bond._id}-type"]`;
+        wrapper.expectText(cellSelector).toRead(bond.facilityType);
+      });
+
+      it('should render a dash when facility is loan', () => {
+        const facility = params.facilities.find((f) => f.facilityProduct !== 'BSS');
+
+        const cellSelector = `[data-cy="facility-${facility._id}-type"]`;
+        wrapper.expectText(cellSelector).toRead('-');
       });
     });
 

@@ -19,6 +19,7 @@ describe('mapFacilities', () => {
         ...mockCoverEndDate,
         ukefExposure: mockUkefExposure,
         coveredPercentage: mockCoveredPercentage,
+        bondType: 'Performance Bond',
       },
       {
         facilityType: 'loan',
@@ -46,12 +47,14 @@ describe('mapFacilities', () => {
       {
         ...mockFacilities[0],
         facilityProduct: 'BSS',
+        facilityType: 'Performance Bond',
         coverEndDate: expectedCoverEndDate,
         ukefExposure: expectedUkefExposure,
         coveredPercentage: expectedCoveredPercentage,
       },
       {
         ...mockFacilities[1],
+        facilityType: null,
         facilityProduct: 'EWCS',
         coverEndDate: expectedCoverEndDate,
         ukefExposure: expectedUkefExposure,
