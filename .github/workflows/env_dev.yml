@@ -105,12 +105,12 @@ jobs:
             --disable-private-endpoint-network-policies true
     
     - name: NAT Public IP
-        uses: Azure/cli@v1.0.0
-        with:
-        inlineScript: |
-              az network public-ip create --name tfs-${{ env.app_service_plan }}-nat-ip \
-            --allocation-method Static \
-            --sku Standard
+      uses: Azure/cli@v1.0.0
+      with:
+      inlineScript: |
+            az network public-ip create --name tfs-${{ env.app_service_plan }}-nat-ip \
+          --allocation-method Static \
+          --sku Standard
 
     - name: NAT gateway
       uses: Azure/cli@v1.0.0
