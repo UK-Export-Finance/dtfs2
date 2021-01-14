@@ -105,6 +105,7 @@ type Facility  {
   facilityValue: String!
   coverEndDate: String!
   ukefExposure: String!
+  coveredPercentage: String!
 }
 
 type Deal {

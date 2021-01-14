@@ -39,7 +39,8 @@ describe('mapFacilities', () => {
 
     const expectedCoverEndDate = moment(coverEndDate).format('DD MMM YYYY');
 
-    const expectedUkefExposure = `GBP ${mockUkefExposure} (${mockCoveredPercentage}%)`;
+    const expectedUkefExposure = `GBP ${mockUkefExposure}`;
+    const expectedCoveredPercentage = `${mockCoveredPercentage}%`;
 
     const expected = [
       {
@@ -47,12 +48,14 @@ describe('mapFacilities', () => {
         facilityProduct: 'BSS',
         coverEndDate: expectedCoverEndDate,
         ukefExposure: expectedUkefExposure,
+        coveredPercentage: expectedCoveredPercentage,
       },
       {
         ...mockFacilities[1],
         facilityProduct: 'EWCS',
         coverEndDate: expectedCoverEndDate,
         ukefExposure: expectedUkefExposure,
+        coveredPercentage: expectedCoveredPercentage,
       },
     ];
 
