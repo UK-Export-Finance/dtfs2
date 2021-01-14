@@ -22,6 +22,7 @@ const dealQuery = gql`
       facilities {
         _id,
         facilityProduct,
+        facilityType,
         facilityValue,
         coverEndDate,
         ukefExposure,
