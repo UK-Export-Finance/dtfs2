@@ -5,14 +5,14 @@ const render = componentRenderer(component);
 
 describe(component, () => {
   let wrapper;
-  let params = {
+  const params = {
     _id: '12345678',
     details: {
       submissionType: 'Automatic Inclusion Notice',
       submissionDate: '1597067095109',
       owningBank: {
-        name: 'Lloyds'
-      }
+        name: 'Lloyds',
+      },
     },
     submissionDetails: {
       supplierName: 'The Supplier name',
@@ -20,7 +20,7 @@ describe(component, () => {
       destinationCountry: 'USA',
       supplyContractDescription: 'Lore ipsum...',
       supplyContractCurrency: 'USD',
-      supplyContractValue: '5145000'
+      supplyContractValue: '5145000.45',
     },
   };
 
@@ -45,7 +45,7 @@ describe(component, () => {
   });
 
   it('should render contract value', () => {
-    wrapper.expectText('[data-cy="contract-value"]').toRead(params.submissionDetails.supplyContractCurrency + ' ' + '5,145,000.00');
+    wrapper.expectText('[data-cy="contract-value"]').toRead(`${params.submissionDetails.supplyContractCurrency} 5,145,000.45`);
   });
 
 
@@ -60,7 +60,4 @@ describe(component, () => {
   it('should render  bank name', () => {
     wrapper.expectText('[data-cy="bank-name"]').toRead(params.details.owningBank.name);
   });
-
-
-  
 });
