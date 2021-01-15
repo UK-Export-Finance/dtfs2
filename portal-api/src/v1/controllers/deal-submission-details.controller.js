@@ -146,8 +146,7 @@ exports.update = (req, res) => {
         submissionDetails.supplyContractCurrency,
       );
     }
-
-    const dealAfterAllUpdates = await updateSubmissionDetails(req.params.id, submissionDetails, req.params.user);
+    const dealAfterAllUpdates = await updateSubmissionDetails(req.params.id, submissionDetails, user);
 
     const validationErrors = validateSubmissionDetails({ ...dealAfterAllUpdates.submissionDetails, ...req.body });
 

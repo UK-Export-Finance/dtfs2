@@ -1,9 +1,6 @@
-const $ = require('mongo-dot-notation');
-
 const DEFAULTS = require('../defaults');
 const db = require('../../drivers/db-client');
 const getDealErrors = require('../validation/deal');
-const now = require('../../now');
 const { isSuperUser, userHasAccessTo } = require('../users/checks');
 const { generateDealId } = require('../../utils/generate-ids');
 const validate = require('../validation/completeDealValidation');
@@ -11,12 +8,6 @@ const calculateStatuses = require('../section-status/calculateStatuses');
 const calculateDealSummary = require('../deal-summary');
 const { findEligibilityCriteria } = require('./eligibilityCriteria.controller');
 const api = require('../api');
-
-const withoutId = (obj) => {
-  const cleanedObject = { ...obj };
-  delete cleanedObject._id; // eslint-disable-line no-underscore-dangle
-  return cleanedObject;
-};
 
 const dealsQuery = (user, filter) => {
   // add the bank clause if we're not a superuser
@@ -149,44 +140,36 @@ const createDealEligibility = async (eligibility) => {
   };
 };
 
-const createDeal = async (req, res) => {
-  const collection = await db.getCollection('deals');
-  const dealId = await generateDealId();
-
-  const time = now();
+const createNewDealData = async (deal, maker) => {
   const newDeal = {
-    _id: dealId,
     ...DEFAULTS.DEALS,
-    ...req.body,
+    ...deal,
     details: {
       ...DEFAULTS.DEALS.details,
-      ...req.body.details,
-      created: time,
-      dateOfLastAction: time,
-      maker: req.user,
-      owningBank: req.user.bank,
+      ...deal.details,
+      maker,
+      owningBank: maker.bank,
     },
-    eligibility: await createDealEligibility(req.body.eligibility),
+    eligibility: await createDealEligibility(deal.eligibility),
   };
 
+  /*
   const validationErrors = getDealErrors(newDeal);
 
-  if (validationErrors.count !== 0) {
-    return res.status(400).send({
+  if (validationErrors.count) {
+    return {
       ...newDeal,
       validationErrors,
-    });
+    };
   }
-
-  const response = await collection.insertOne(newDeal);
-
-  const createdDeal = response.ops[0];
-  return res.status(200).send(createdDeal);
+*/
+  return newDeal;
 };
 
 exports.create = async (req, res) => {
-  const result = await createDeal(req, res);
-  return result;
+  const deal = await createNewDealData(req.body, req.user);
+  const { status, data } = await api.createDeal(deal, req.user);
+  return res.status(status).send(data);
 };
 
 exports.findOne = (req, res) => {
@@ -214,6 +197,7 @@ exports.findOne = (req, res) => {
   });
 };
 
+/*
 const handleEditedBy = async (dealId, dealUpdate, user) => {
   let editedBy = [];
 
@@ -258,41 +242,11 @@ const handleEditedBy = async (dealId, dealUpdate, user) => {
 
   return editedBy;
 };
+*/
 
-const updateDeal = async (dealId, dealChanges, user, existingDeal) => {
-  const collection = await db.getCollection('deals');
-
-  const editedBy = await handleEditedBy(dealId, dealChanges, user);
-
-  let existingDealDetails;
-  if (existingDeal && existingDeal.details) {
-    existingDealDetails = existingDeal.details;
-  }
-
-  let dealChangesDetails;
-  if (dealChanges && dealChanges.details) {
-    dealChangesDetails = dealChanges.details;
-  }
-
-  const update = {
-    ...dealChanges,
-    details: {
-      ...existingDealDetails,
-      ...dealChangesDetails,
-      dateOfLastAction: now(),
-    },
-    editedBy,
-  };
-
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: dealId },
-    $.flatten(withoutId(update)),
-    { returnOriginal: false },
-  );
-
-  const { value } = findAndUpdateResponse;
-
-  return value;
+const updateDeal = async (dealId, dealUpdate, user) => {
+  const updatedDeal = await api.updateDeal(dealId, dealUpdate, user);
+  return updatedDeal;
 };
 exports.updateDeal = updateDeal;
 
@@ -302,35 +256,31 @@ exports.update = async (req, res) => {
   await findOneDeal(dealId, async (deal) => {
     if (!deal) res.status(404).send();
 
-    if (deal) {
-      if (!userHasAccessTo(req.user, deal)) {
-        res.status(401).send();
-      } else {
-        const updatedDeal = await updateDeal(
-          dealId,
-          req.body,
-          req.user,
-          deal,
-        );
-        res.status(200).json(updatedDeal);
-      }
+    if (!userHasAccessTo(req.user, deal)) {
+      res.status(401).send();
+    } else {
+      const updatedDeal = await updateDeal(
+        dealId,
+        req.body,
+        req.user,
+        deal,
+      );
+      res.status(200).json(updatedDeal);
     }
-    res.status(404).send();
   });
 };
 
 exports.delete = async (req, res) => {
-  findOneDeal(req.params.id, async (deal) => {
+  const dealId = req.params.id;
+
+  await findOneDeal(dealId, async (deal) => {
     if (!deal) res.status(404).send();
 
-    if (deal) {
-      if (!userHasAccessTo(req.user, deal)) {
-        res.status(401).send();
-      } else {
-        const collection = await db.getCollection('deals');
-        const status = await collection.deleteOne({ _id: req.params.id });
-        res.status(200).send(status);
-      }
+    if (!userHasAccessTo(req.user, deal)) {
+      res.status(401).send();
+    } else {
+      const response = await api.deleteDeal(dealId);
+      res.status(response.status).send(response.body);
     }
   });
 };

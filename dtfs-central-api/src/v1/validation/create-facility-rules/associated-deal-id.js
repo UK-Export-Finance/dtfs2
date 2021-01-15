@@ -1,7 +1,7 @@
 const { orderNumber } = require('../../../utils/error-list-order-number');
 const { hasValue } = require('../../../utils/string');
 
-module.exports = (facility, errorList) => {
+module.exports = (facility = {}, errorList) => {
   const newErrorList = { ...errorList };
   const { associatedDealId } = facility;
 

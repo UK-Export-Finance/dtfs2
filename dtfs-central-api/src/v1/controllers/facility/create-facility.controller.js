@@ -5,15 +5,9 @@ const getCreateFacilityErrors = require('../../validation/create-facility');
 const { findOneDeal } = require('../deal/get-deal.controller');
 const { addFacilityIdToDeal } = require('../deal/update-deal.controller');
 
-const createFacility = async (req) => {
+const createFacility = async ({ facilityType, associatedDealId }, user, routePath) => {
   const collection = await db.getCollection('facilities');
   const facilityId = await generateFacilityId();
-
-  const {
-    user,
-    facilityType,
-    associatedDealId,
-  } = req.body;
 
   const newFacility = {
     _id: facilityId,
@@ -29,13 +23,20 @@ const createFacility = async (req) => {
     associatedDealId,
     createdFacility._id, // eslint-disable-line no-underscore-dangle
     user,
+    routePath,
   );
 
   return createdFacility;
 };
 
 exports.createFacilityPost = async (req, res) => {
-  const validationErrors = getCreateFacilityErrors(req.body);
+  const { facility, user } = req.body;
+
+  if (!user) {
+    return res.status(404).send();
+  }
+
+  const validationErrors = getCreateFacilityErrors(facility);
 
   if (validationErrors.count !== 0) {
     return res.status(400).send({
@@ -43,13 +44,11 @@ exports.createFacilityPost = async (req, res) => {
     });
   }
 
-  const { associatedDealId } = req.body;
-
-  return findOneDeal(associatedDealId, async (deal) => {
+  return findOneDeal(facility.associatedDealId, async (deal) => {
     if (deal) {
-      const facility = await createFacility(req);
+      const updatedFacility = await createFacility(facility, user, req.routePath);
 
-      return res.status(200).send(facility);
+      return res.status(200).send(updatedFacility);
     }
 
     return res.status(404).send('Deal not found');

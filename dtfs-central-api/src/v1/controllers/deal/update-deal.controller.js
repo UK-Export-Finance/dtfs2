@@ -52,53 +52,23 @@ const handleEditedByPortal = async (dealId, dealUpdate, user) => {
     }
   }
 
-  return {
-    editedBy,
-  };
+  return editedBy;
 };
 
-const handleEditedByTfm = async (dealId, dealUpdate, user) => {
-  let editedBy = [];
+const updateDealEditedByPortal = async (dealId, user) => {
+  const collection = await db.getCollection('deals');
+  const editedBy = await handleEditedByPortal(dealId, {}, user);
 
-  // sometimes we don't have a user making changes. When:
-  // - we can get new data from type-b XML/workflow.
-  // - some deal updates do not want to be marked as "edited by X user"
-  // for example when a Checker submits a deal, they have not 'edited' the deal, only submitted it.
+  const findAndUpdateResponse = await collection.findOneAndUpdate(
+    { _id: dealId },
+    $.flatten(withoutId({ editedBy })),
+    { returnOriginal: false },
+  );
 
-  if (user) {
-    const {
-      username,
-      _id,
-    } = user;
-
-    const newEditedBy = {
-      date: now(),
-      username,
-      userId: _id,
-    };
-
-    // if partial update
-    // need to make sure that we have all existing entries in `editedBy`.
-    // ideally we could refactor, perhaps, so that no partial updates are allowed.
-    // but for now...
-    if (!dealUpdate.tfm && !dealUpdate.tfm.editedBy) {
-      const deal = await findOneDeal(dealId);
-      editedBy = [
-        ...deal.tfm.editedBy,
-        newEditedBy,
-      ];
-    } else {
-      editedBy = [
-        ...dealUpdate.tfm.editedBy,
-        newEditedBy,
-      ];
-    }
-  }
-
-  return {
-    editedBy,
-  };
+  const { value } = findAndUpdateResponse;
+  return value;
 };
+exports.updateDealEditedByPortal = updateDealEditedByPortal;
 
 const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) => {
   const collection = await db.getCollection('deals');
@@ -122,36 +92,21 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
     },
   };
 
+  if (routePath === PORTAL_ROUTE) {
+    update.editedBy = await handleEditedByPortal(dealId, update, user);
+  }
+
   const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: dealId },
     $.flatten(withoutId(update)),
     { returnOriginal: false },
   );
 
-  const { value } = findAndUpdateResponse;
-
-  return value;
+  return findAndUpdateResponse.value;
 };
 exports.updateDeal = updateDeal;
 
-const updateDealEditedByPortal = async (dealId, user) => {
-  const collection = await db.getCollection('deals');
-
-  const dealUpdate = await handleEditedByPortal(dealId, {}, user);
-
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: dealId },
-    $.flatten(withoutId(dealUpdate)),
-    { returnOriginal: false },
-  );
-
-  const { value } = findAndUpdateResponse;
-
-  return value;
-};
-exports.updateDealEditedByPortal = updateDealEditedByPortal;
-
-const addFacilityIdToDeal = async (dealId, newFacilityId, user) => {
+const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath) => {
   await findOneDeal(dealId, async (deal) => {
     const { facilities } = deal;
 
@@ -169,6 +124,8 @@ const addFacilityIdToDeal = async (dealId, newFacilityId, user) => {
       dealId,
       dealUpdate,
       user,
+      null,
+      routePath,
     );
 
     return updatedDeal;
@@ -178,7 +135,7 @@ const addFacilityIdToDeal = async (dealId, newFacilityId, user) => {
 exports.addFacilityIdToDeal = addFacilityIdToDeal;
 
 
-const removeFacilityIdFromDeal = async (dealId, facilityId, user) => {
+const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => {
   await findOneDeal(dealId, async (deal) => {
     const { facilities } = deal;
 
@@ -193,6 +150,8 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user) => {
       dealId,
       dealUpdate,
       user,
+      null,
+      routePath,
     );
 
     return updatedDeal;
@@ -204,14 +163,10 @@ exports.removeFacilityIdFromDeal = removeFacilityIdFromDeal;
 exports.updateDealPut = async (req, res) => {
   const dealId = req.params.id;
 
+  const { user, dealUpdate } = req.body;
+
   await findOneDeal(dealId, async (deal) => {
-    if (!deal) res.status(404).send();
-
     if (deal) {
-      const { user } = req.body;
-      const dealUpdate = req.body;
-      delete dealUpdate.user;
-
       const updatedDeal = await updateDeal(
         dealId,
         dealUpdate,
@@ -219,9 +174,8 @@ exports.updateDealPut = async (req, res) => {
         deal,
         req.routePath,
       );
-
-      res.status(200).json(updatedDeal);
+      return res.status(200).json(updatedDeal);
     }
-    res.status(404).send();
+    return res.status(404).send();
   });
 };
