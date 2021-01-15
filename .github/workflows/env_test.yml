@@ -43,7 +43,7 @@ env:
   MULESOFT_API_SECRET: "${{ secrets.TEST_MULESOFT_API_SECRET }}"
 
   # Disable consuming typeB while testing tfs-prod which links to the same workflow during testing
-  DTFS_PORTAL_SCHEDULER: false
+  DTFS_PORTAL_SCHEDULER: true
   FETCH_WORKFLOW_TYPE_B_SCHEDULE: "* * * * *"
 
 # Below this line should be the same for all environments
