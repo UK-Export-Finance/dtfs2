@@ -116,7 +116,7 @@ describe('mapFacilities', () => {
     expect(result).toEqual(expected);
   });
 
-  describe('when a facility.currency is NOT GBP', () => {
+  describe('when facility.currency is NOT GBP', () => {
     it('should return facilityValue as empty string', () => {
       const result = mapFacilities([
         {
@@ -129,6 +129,26 @@ describe('mapFacilities', () => {
       ]);
 
       expect(result[0].facilityValue).toEqual('');
+    });
+  });
+
+  describe('when a facility does NOT have coverEndDate', () => {
+    it('should not return coverEndDate', () => {
+      const result = mapFacilities([
+        {
+          _id: '23456789',
+          facilityType: 'loan',
+          ukefExposure: mockUkefExposure,
+          coveredPercentage: mockCoveredPercentage,
+          currency: mockCurrency,
+          facilityValue: mockFacilityValue,
+          'coverEndDate-day': '',
+          'coverEndDate-month': '',
+          'coverEndDate-year': '',
+        },
+      ]);
+
+      expect(result[0].coverEndDate).toEqual(undefined);
     });
   });
 });
