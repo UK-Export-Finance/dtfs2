@@ -2,9 +2,9 @@ const moment = require('moment');
 const CONSTANTS = require('../../constants');
 
 const mapFacilities = (facilities) => {
-  const mappedFacilities = facilities;
+  const mappedFacilities = [];
 
-  mappedFacilities.map((f) => {
+  facilities.forEach((f) => {
     const facility = f;
     // facilityType will eventually be facilityProduct / facilityProductCode
     // TODO: refactor when DTFS2-3054 is completed.
@@ -49,13 +49,24 @@ const mapFacilities = (facilities) => {
     facility.ukefExposure = `${facility.currency.id} ${facility.ukefExposure}`;
     facility.coveredPercentage = `${facility.coveredPercentage}%`;
 
-    return {
+    // DTFS-2727
+    // for initial dev, only return facilityValue if currency is GBP.
+    // until we figure out which API to use for conversion from non-GBP.
+    if (facility.currency.id === 'GBP') {
+      facility.facilityValue = `${facility.currency.id} ${facility.facilityValue}`;
+    } else {
+      facility.facilityValue = '';
+    }
+
+    mappedFacilities.push({
+      _id: facility._id, // eslint-disable-line no-underscore-dangle
       facilityType: facility.facilityType,
       facilityProduct: facility.facilityProduct,
       coverEndDate: facility.coverEndDate,
       ukefExposure: facility.ukefExposure,
       coveredPercentage: facility.coveredPercentage,
-    };
+      facilityValue: facility.facilityValue,
+    });
   });
 
   return mappedFacilities;
