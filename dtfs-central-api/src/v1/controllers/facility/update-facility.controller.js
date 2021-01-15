@@ -47,7 +47,13 @@ exports.updateFacility = updateFacility;
 exports.updateFacilityPut = async (req, res) => {
   const facilityId = req.params.id;
 
-  const validationErrors = getUpdateFacilityErrors(req.body);
+  const { user, facility: facilityUpdate } = req.body;
+
+  if (!user) {
+    return res.status(400).send('User missing');
+  }
+
+  const validationErrors = getUpdateFacilityErrors(facilityUpdate);
 
   if (validationErrors.count !== 0) {
     return res.status(400).send({

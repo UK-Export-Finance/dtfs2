@@ -5,6 +5,7 @@ const createDealController = require('../controllers/deal/create-deal.controller
 const getDealController = require('../controllers/deal/get-deal.controller');
 const updateDealController = require('../controllers/deal/update-deal.controller');
 const deleteDealController = require('../controllers/deal/delete-deal.controller');
+const addDealController = require('../controllers/deal/add-deal-comment.controller');
 
 const createFacilityController = require('../controllers/facility/create-facility.controller');
 const getFacilityController = require('../controllers/facility/get-facility.controller');
@@ -32,6 +33,11 @@ portalRouter.route('/deals/:id')
   )
   .delete(
     deleteDealController.deleteDeal,
+  );
+
+portalRouter.route('/deals/:id/comment')
+  .post(
+    addDealController.addDealCommentPost,
   );
 
 portalRouter.route('/deals/query')

@@ -16,28 +16,26 @@ const mockUser = {
 const newFacility = {
   facilityType: 'bond',
   associatedDealId: '123123456',
-  user: mockUser,
 };
 
 const newDeal = aDeal({
   details: {
     bankSupplyContractName: 'mock name',
     bankSupplyContractID: 'mock id',
-    maker: mockUser,
   },
   editedBy: [],
   eligibility: {
     status: 'Not started',
     criteria: [{}],
-  }
+  },
 });
 
 const createDeal = async () => {
-  const { body, status } = await api.post(newDeal).to('/v1/deals');
+  const { body, status } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
   return body;
-}
+};
 
-describe('/v1/facilities', () => {
+describe('/v1/portal/facilities', () => {
   let dealId;
 
   beforeEach(async () => {
@@ -50,21 +48,31 @@ describe('/v1/facilities', () => {
     newFacility.associatedDealId = dealId;
   });
 
-  describe('POST /v1/facilities', () => {
+  describe('POST /v1/portal/facilities', () => {
     it('returns 404 when associatedDeal/associatedDealId is not found', async () => {
       const facilityWithInvalidDealId = {
         associatedDealId: '1234',
         facilityType: 'bond',
-        user: mockUser,
       };
 
-      const { body, status } = await api.post(facilityWithInvalidDealId).to('/v1/facilities');
+      const { body, status } = await api.post({ facility: facilityWithInvalidDealId, user: mockUser }).to('/v1/portal/facilities');
+
+      expect(status).toEqual(404);
+    });
+
+    it('returns 404 when user is not found', async () => {
+      const facilityWithInvalidDealId = {
+        associatedDealId: '1234',
+        facilityType: 'bond',
+      };
+
+      const { status } = await api.post({ facility: facilityWithInvalidDealId }).to('/v1/portal/facilities');
 
       expect(status).toEqual(404);
     });
 
     it('returns the created facility with correct fields', async () => {
-      const { body, status } = await api.post(newFacility).to('/v1/facilities');
+      const { body, status } = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
       expect(status).toEqual(200);
 
@@ -75,9 +83,9 @@ describe('/v1/facilities', () => {
     });
 
     it('creates incremental integer facility IDs', async () => {
-      const facility1 = await api.post(newFacility).to('/v1/facilities');
-      const facility2 = await api.post(newFacility).to('/v1/facilities');
-      const facility3 = await api.post(newFacility).to('/v1/facilities');
+      const facility1 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const facility2 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const facility3 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
       expect(parseInt(facility1.body._id).toString()).toEqual(facility1.body._id);
       expect(facility2.body._id - facility1.body._id).toEqual(1);
@@ -85,11 +93,11 @@ describe('/v1/facilities', () => {
     });
 
     it('adds the facility id to the associated deal', async () => {
-      const createdFacilityResponse = await api.post(newFacility).to('/v1/facilities');
+      const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
       const createdFacility = createdFacilityResponse.body;
 
-      const { status, body } = await api.get(`/v1/deals/${newFacility.associatedDealId}`);
+      const { status, body } = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
 
       expect(status).toEqual(200);
       expect(body.deal.facilities).toEqual([
@@ -98,20 +106,20 @@ describe('/v1/facilities', () => {
     });
 
     it('updates `editedBy` in the associated deal', async () => {
-      const originalDeal = await api.get(`/v1/deals/${newFacility.associatedDealId}`);
+      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
 
       expect(originalDeal.body.deal.editedBy).toEqual([]);
 
-      const createdFacilityResponse = await api.post(newFacility).to('/v1/facilities');
+      const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
-      const { status, body } = await api.get(`/v1/deals/${newFacility.associatedDealId}`);
+      const { status, body } = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
 
       expect(status).toEqual(200);
 
-      expect(body.deal.editedBy[0].userId).toEqual(newFacility.user._id);
-      expect(body.deal.editedBy[0].bank).toEqual(newFacility.user.bank);
-      expect(body.deal.editedBy[0].roles).toEqual(newFacility.user.roles);
-      expect(body.deal.editedBy[0].username).toEqual(newFacility.user.username);
+      expect(body.deal.editedBy[0].userId).toEqual(mockUser._id);
+      expect(body.deal.editedBy[0].bank).toEqual(mockUser.bank);
+      expect(body.deal.editedBy[0].roles).toEqual(mockUser.roles);
+      expect(body.deal.editedBy[0].username).toEqual(mockUser.username);
       expect(typeof body.deal.editedBy[0].date).toEqual('string');
     });
 
@@ -122,19 +130,16 @@ describe('/v1/facilities', () => {
           associatedDealId: '',
         };
 
-        const { body, status } = await api.post(postBody).to('/v1/facilities');
+        const { body, status } = await api.post({ facility: postBody, user: mockUser }).to('/v1/portal/facilities');
 
         expect(status).toEqual(400);
-        expect(body.validationErrors.count).toEqual(3);
+        expect(body.validationErrors.count).toEqual(2);
 
         expect(body.validationErrors.errorList.facilityType).toBeDefined();
         expect(body.validationErrors.errorList.facilityType.text).toEqual('Enter the Facility type');
 
         expect(body.validationErrors.errorList.associatedDealId).toBeDefined();
         expect(body.validationErrors.errorList.associatedDealId.text).toEqual('Enter the Associated deal id');
-
-        expect(body.validationErrors.errorList.userObject).toBeDefined();
-        expect(body.validationErrors.errorList.userObject.text).toEqual('User object with _id, roles and bank is required');
       });
     });
 
@@ -143,29 +148,26 @@ describe('/v1/facilities', () => {
         const postBody = {
           facilityType: 'invalid-facility',
           associatedDealId: '123123456',
-          user: {}
+          user: {},
         };
 
-        const { body, status } = await api.post(postBody).to('/v1/facilities');
+        const { body, status } = await api.post({ facility: postBody, user: mockUser }).to('/v1/portal/facilities');
 
         expect(status).toEqual(400);
-        expect(body.validationErrors.count).toEqual(2);
+        expect(body.validationErrors.count).toEqual(1);
 
         expect(body.validationErrors.errorList.facilityType).toBeDefined();
         expect(body.validationErrors.errorList.facilityType.text).toEqual('Facility type must be bond or loan');
-
-        expect(body.validationErrors.errorList.userObject).toBeDefined();
-        expect(body.validationErrors.errorList.userObject.text).toEqual('User object with _id, roles and bank is required');
       });
     });
   });
 
-  describe('GET /v1/facilities/:id', () => {
+  describe('GET /v1/portal/facilities/:id', () => {
     it('returns the requested resource', async () => {
-      const postResult = await api.post(newFacility).to('/v1/facilities');
+      const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
 
-      const { status, body } = await api.get(`/v1/facilities/${newId}`);
+      const { status, body } = await api.get(`/v1/portal/facilities/${newId}`);
 
       expect(status).toEqual(200);
       expect(body._id).toEqual(newId);
@@ -173,37 +175,36 @@ describe('/v1/facilities', () => {
     });
 
     it('404s requests for unknown ids', async () => {
-      const { status } = await api.get('/v1/facilities/12345678910');
+      const { status } = await api.get('/v1/portal/facilities/12345678910');
 
       expect(status).toEqual(404);
     });
   });
 
-  describe('PUT /v1/facilities/:id', () => {
+  describe('PUT /v1/portal/facilities/:id', () => {
     it('404s requests for unknown ids', async () => {
-      const { status } = await api.put({ user: mockUser }).to('/v1/facilities/123456789012');
+      const { status } = await api.put({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities/123456789012');
+      expect(status).toEqual(404);
+    });
+
+    it('returns 400 when user is missing', async () => {
+      const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const createdFacility = postResult.body;
+      const { status, text } = await api.put({ facility: newFacility }).to(`/v1/portal/facilities/${createdFacility._id}`);
+
+      expect(status).toEqual(400);
+      expect(text).toEqual('User missing');
+    });
+
+    it('returns 404 when adding facility to non-existant deal', async () => {
+      await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const { status } = await api.put({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities/111111}');
 
       expect(status).toEqual(404);
     });
 
-    describe('when required fields are missing', () => {
-      it('returns 400 with validation errors', async () => {
-        const postResult = await api.post(newFacility).to('/v1/facilities');
-        const createdFacility = postResult.body;
-
-        const { body, status } = await api.put({}).to(`/v1/facilities/${createdFacility._id}`);
-
-        expect(status).toEqual(400);
-        expect(body.validationErrors.count).toEqual(1);
-
-        expect(body.validationErrors.errorList.userObject).toBeDefined();
-        expect(body.validationErrors.errorList.userObject.text).toEqual('User object with _id, roles and bank is required');
-      });
-    });
-
-
     it('returns the updated facility', async () => {
-      const postResult = await api.post(newFacility).to('/v1/facilities');
+      const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const createdFacility = postResult.body;
 
       const updatedFacility = {
@@ -212,7 +213,7 @@ describe('/v1/facilities', () => {
         user: mockUser,
       };
 
-      const { body, status } = await api.put(updatedFacility).to(`/v1/facilities/${createdFacility._id}`);
+      const { body, status } = await api.put(updatedFacility).to(`/v1/portal/facilities/${createdFacility._id}`);
 
       expect(status).toEqual(200);
       expect(typeof body.lastEdited).toEqual('string');
@@ -220,7 +221,7 @@ describe('/v1/facilities', () => {
     });
 
     it('updates the facility', async () => {
-      const postResult = await api.post(newFacility).to('/v1/facilities');
+      const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const createdFacility = postResult.body;
 
       const updatedFacility = {
@@ -229,22 +230,22 @@ describe('/v1/facilities', () => {
         user: mockUser,
       };
 
-      await api.put(updatedFacility).to(`/v1/facilities/${createdFacility._id}`);
+      await api.put(updatedFacility).to(`/v1/portal/facilities/${createdFacility._id}`);
 
-      const { body } = await api.get(`/v1/facilities/${createdFacility._id}`);
+      const { body } = await api.get(`/v1/portal/facilities/${createdFacility._id}`);
 
       expect(typeof body.lastEdited).toEqual('string');
       expect(body.facilityValue).toEqual(updatedFacility.facilityValue);
     });
 
     it('updates `editedBy` in the associated deal', async () => {
-      const originalDeal = await api.get(`/v1/deals/${newFacility.associatedDealId}`);
+      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
 
       expect(originalDeal.body.deal.editedBy).toEqual([]);
 
-      const createdFacilityResponse = await api.post(newFacility).to('/v1/facilities');
+      const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
-      const getDealResponse = await api.get(`/v1/deals/${newFacility.associatedDealId}`);
+      const getDealResponse = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
       expect(getDealResponse.body.deal.editedBy.length).toEqual(1);
 
       const updatedFacility = {
@@ -253,10 +254,9 @@ describe('/v1/facilities', () => {
         user: mockUser,
       };
 
-      await api.put(updatedFacility).to(`/v1/facilities/${createdFacilityResponse.body._id}`);
+      await api.put(updatedFacility).to(`/v1/portal/facilities/${createdFacilityResponse.body._id}`);
 
-      const { body } = await api.get(`/v1/deals/${newFacility.associatedDealId}`);
-
+      const { body } = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
 
       expect(body.deal.editedBy[1].userId).toEqual(updatedFacility.user._id);
       expect(body.deal.editedBy[1].bank).toEqual(updatedFacility.user.bank);
@@ -266,15 +266,40 @@ describe('/v1/facilities', () => {
     });
   });
 
-  describe('DELETE /v1/facilities/:id', () => {
+  describe('PUT /v1/tfm/facilities/:id', () => {
+    it('doesn\'t update `editedBy` in the associated deal', async () => {
+      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
+
+      expect(originalDeal.body.deal.editedBy).toEqual([]);
+
+      const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/tfm/facilities');
+
+      const getDealResponse = await api.get(`/v1/tfm/deals/${newFacility.associatedDealId}`);
+      expect(getDealResponse.body.deal.editedBy.length).toEqual(0);
+
+      const updatedFacility = {
+        ...createdFacilityResponse.body,
+        facilityValue: 123456,
+        user: mockUser,
+      };
+
+      await api.put(updatedFacility).to(`/v1/tfm/facilities/${createdFacilityResponse.body._id}`);
+
+      const { body } = await api.get(`/v1/tfm/deals/${newFacility.associatedDealId}`);
+
+      expect(body.deal.editedBy.length).toEqual(0);
+    });
+  });
+
+  describe('DELETE /v1/portal/facilities/:id', () => {
     it('404s requests for unknown ids', async () => {
-      const { status } = await api.remove({}).to('/v1/facilities/12345678910');
+      const { status } = await api.remove({}).to('/v1/portal/facilities/12345678910');
 
       expect(status).toEqual(404);
     });
 
     it('deletes the facility', async () => {
-      const { body } = await api.post(newFacility).to('/v1/facilities');
+      const { body } = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
       const {
         associatedDealId,
@@ -286,10 +311,10 @@ describe('/v1/facilities', () => {
         user: mockUser,
       };
 
-      const deleteResponse = await api.remove(removeBody).to(`/v1/facilities/${body._id}`);
+      const deleteResponse = await api.remove(removeBody).to(`/v1/portal/facilities/${body._id}`);
       expect(deleteResponse.status).toEqual(200);
 
-      const { status } = await api.get(`/v1/facilities/${body._id}`);
+      const { status } = await api.get(`/v1/portal/facilities/${body._id}`);
 
       expect(status).toEqual(404);
     });
@@ -305,11 +330,11 @@ describe('/v1/facilities', () => {
         ...newFacility,
       };
 
-      const createdBond = await api.post(mockBond).to('/v1/facilities');
-      const createdLoan = await api.post(mockBond).to('/v1/facilities');
+      const createdBond = await api.post({ facility: mockBond, user: mockUser }).to('/v1/portal/facilities');
+      const createdLoan = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
 
       // make sure we've got facilities added to the deal
-      const getDealResponse = await api.get(`/v1/deals/${newFacility.associatedDealId}`);
+      const getDealResponse = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
       expect(getDealResponse.body.deal.facilities.length).toEqual(2);
 
       // delete a bond facility
@@ -323,11 +348,11 @@ describe('/v1/facilities', () => {
         user: mockUser,
       };
 
-      const deleteResponse = await api.remove(removeBondBody).to(`/v1/facilities/${facilityId}`);
+      const deleteResponse = await api.remove({ user: mockUser }).to(`/v1/portal/facilities/${facilityId}`);
       expect(deleteResponse.status).toEqual(200);
 
       // check the deal's facilities array
-      const { body: getDealBody } = await api.get(`/v1/deals/${newFacility.associatedDealId}`);
+      const { body: getDealBody } = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
       expect(getDealBody.deal.facilities.length).toEqual(1);
       expect(getDealBody.deal.facilities[0]).toEqual(createdLoan.body._id);
     });

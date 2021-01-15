@@ -41,7 +41,84 @@ const queryDeals = async (query, start = 0, pagesize = 0) => {
   }
 };
 
+const createDeal = async (deal, user) => {
+  try {
+    return await axios({
+      method: 'post',
+      url: `${urlRoot}/v1/portal/deals`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        deal,
+        user,
+      },
+    });
+  } catch ({ response }) {
+    return response;
+  }
+};
+
+const updateDeal = async (dealId, dealUpdate, user) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${urlRoot}/v1/portal/deals/${dealId}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        dealUpdate,
+        user,
+      },
+    });
+
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+const deleteDeal = async (dealId) => {
+  try {
+    return await axios({
+      method: 'delete',
+      url: `${urlRoot}/v1/portal/deals/${dealId}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  } catch (err) {
+    return err;
+  }
+};
+
+const addDealComment = async (dealId, commentType, comment) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${urlRoot}/v1/portal/deals/${dealId}/comment`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        commentType,
+        comment,
+      },
+    });
+
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+
 module.exports = {
   findOneDeal,
   queryDeals,
+  createDeal,
+  updateDeal,
+  deleteDeal,
+  addDealComment,
 };

@@ -58,7 +58,8 @@ exports.update = (req, res) => {
       });
     }
 
-    const updatedDeal = await updateStatus(req.params.id, fromStatus, toStatus);
+    const updatedDeal = await updateStatus(req.params.id, fromStatus, toStatus, user);
+
     const updatedDealStatus = updatedDeal.details.status;
 
     const shouldCheckFacilityDates = (fromStatus === 'Draft' && updatedDealStatus === 'Ready for Checker\'s approval');
@@ -131,7 +132,6 @@ exports.update = (req, res) => {
 
     if (toStatus === 'Submitted') {
       await updateSubmittedIssuedFacilities(req.user, dealAfterAllUpdates);
-
       if (!dealAfterAllUpdates.details.submissionDate) {
         dealAfterAllUpdates = await createSubmissionDate(req.params.id, user);
       }

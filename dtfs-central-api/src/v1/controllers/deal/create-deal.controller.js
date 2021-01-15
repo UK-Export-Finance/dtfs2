@@ -4,27 +4,24 @@ const now = require('../../../now');
 const getDealErrors = require('../../validation/create-deal');
 const { generateDealId } = require('../../../utils/generate-ids');
 
-const createDeal = async (req) => {
+const createDeal = async (deal, maker) => {
   const collection = await db.getCollection('deals');
   const dealId = await generateDealId();
   const time = now();
 
-  const makerBank = req.body.details && req.body.details.maker && req.body.details.maker.bank;
+  const { details } = deal;
 
   const newDeal = {
     _id: dealId,
     ...DEFAULTS.DEALS,
-    ...req.body,
+    ...deal,
     details: {
       ...DEFAULTS.DEALS.details,
-      ...req.body.details,
+      ...details,
       created: time,
       dateOfLastAction: time,
-      owningBank: makerBank,
-    },
-    eligibility: {
-      ...DEFAULTS.DEALS.eligibility,
-      ...req.body.eligibility,
+      maker,
+      owningBank: maker && maker.bank,
     },
     facilities: DEFAULTS.DEALS.facilities,
   };
@@ -32,7 +29,10 @@ const createDeal = async (req) => {
   const validationErrors = getDealErrors(newDeal);
 
   if (validationErrors.count !== 0) {
-    return { validationErrors };
+    return {
+      deal: newDeal,
+      validationErrors,
+    };
   }
 
   const response = await collection.insertOne(newDeal);
@@ -45,13 +45,19 @@ const createDeal = async (req) => {
 };
 
 exports.createDealPost = async (req, res) => {
+  const { user } = req.body;
+  if (!user) {
+    return res.status(404).send();
+  }
+
   const {
     validationErrors,
     deal,
-  } = await createDeal(req);
+  } = await createDeal(req.body.deal, user);
 
   if (validationErrors) {
     return res.status(400).send({
+      ...deal,
       validationErrors,
     });
   }
