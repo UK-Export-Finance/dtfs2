@@ -19,9 +19,11 @@ const mapFacilities = (facilities) => {
     // this is a hacky fallback/workaround for initial TFM development.
     // TODO: remove this once DTFS2-3054 is completed.
     if (facility.bondType) {
+      // only bonds have `bondType`
       facility.facilityProduct = CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND;
     }
-    if (facility.disbursementAmount) {
+    if (facility.interestMarginFee) {
+      // only loans have `interestMarginFee`
       facility.facilityProduct = CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN;
     }
 
