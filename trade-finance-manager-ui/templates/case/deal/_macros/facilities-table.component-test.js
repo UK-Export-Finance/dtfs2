@@ -33,6 +33,14 @@ describe(component, () => {
         coveredPercentage: '20%',
         facilityValue: '',
       },
+      {
+        _id: '112',
+        facilityProduct: '',
+        coverEndDate: '04 Dec 2021',
+        ukefExposure: 'GBP 2,469.00',
+        coveredPercentage: '20%',
+        facilityValue: 'GBP 1,234',
+      },
     ],
   };
 
@@ -80,10 +88,21 @@ describe(component, () => {
 
   
   describe('for each facility', () => {
-    it('should render facilityProduct table cell', () => {
-      params.facilities.forEach((facility) => {
-        const cellSelector = `[data-cy="facility-${facility._id}-product"]`;
-        wrapper.expectText(cellSelector).toRead(facility.facilityProduct);
+    describe('facilityProduct table cell', () => {
+      it('should render value', () => {
+        const facilities = params.facilities.filter((f) => f.facilityProduct !== '');
+
+        facilities.forEach((facility) => {
+          const cellSelector = `[data-cy="facility-${facility._id}-product"]`;
+          wrapper.expectText(cellSelector).toRead(facility.facilityProduct);
+        });
+      });
+
+      it('should render a dash when facilityProduct is empty', () => {
+        const facility = params.facilities.find((f) => f.facilityProduct === '');
+
+        const cellSelector = `[data-cy="facility-${facility._id}-type"]`;
+        wrapper.expectText(cellSelector).toRead('-');
       });
     });
 
@@ -112,7 +131,7 @@ describe(component, () => {
 
     describe('`facilityValue in GBP` table cell', () => {
       it('should render', () => {
-        const facilities = params.facilities.filter((f) => f.facilityValue !== '');;
+        const facilities = params.facilities.filter((f) => f.facilityValue !== '');
 
         facilities.forEach((facility) => {
           const cellSelector = `[data-cy="facility-${facility._id}-value-gbp"]`;

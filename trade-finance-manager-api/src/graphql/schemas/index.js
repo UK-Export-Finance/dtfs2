@@ -104,7 +104,7 @@ type Facility  {
   facilityProduct: String!
   facilityType: String
   facilityValue: String
-  coverEndDate: String!
+  coverEndDate: String
   ukefExposure: String!
   coveredPercentage: String!
 }
