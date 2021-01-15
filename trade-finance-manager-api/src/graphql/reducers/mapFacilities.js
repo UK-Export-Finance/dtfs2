@@ -51,7 +51,7 @@ const mapFacilities = (facilities) => {
         month: Number(coverEndDateMonth) - 1, // months are zero indexed
         year: Number(coverEndDateYear),
       });
-      
+
       facility.coverEndDate = moment(coverEndDate).format('DD MMM YYYY');
     }
 
