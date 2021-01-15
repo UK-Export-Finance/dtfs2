@@ -15,13 +15,23 @@ describe(component, () => {
         ukefExposure: 'GBP 1,234.00',
         coveredPercentage: '20%',
         facilityType: 'Performance Bond',
+        facilityValue: 'GBP 1,234',
       },
       {
         _id: '456',
         facilityProduct: 'EWCS',
         coverEndDate: '04 Dec 2021',
         ukefExposure: 'GBP 2,469.00',
-        coveredPercentage: '20%'
+        coveredPercentage: '20%',
+        facilityValue: 'GBP 1,234',
+      },
+      {
+        _id: '789',
+        facilityProduct: 'EWCS',
+        coverEndDate: '04 Dec 2021',
+        ukefExposure: 'GBP 2,469.00',
+        coveredPercentage: '20%',
+        facilityValue: '',
       },
     ],
   };
@@ -99,6 +109,25 @@ describe(component, () => {
         wrapper.expectText(cellSelector).toRead(`${facility.coverEndDate} (expected)`);
       });
     });
+
+    describe('`facilityValue in GBP` table cell', () => {
+      it('should render', () => {
+        const facilities = params.facilities.filter((f) => f.facilityValue !== '');;
+
+        facilities.forEach((facility) => {
+          const cellSelector = `[data-cy="facility-${facility._id}-value-gbp"]`;
+          wrapper.expectText(cellSelector).toRead(facility.facilityValue);
+        });
+      });
+
+      it('should render a dash when facilityValue is empty', () => {
+        const facility = params.facilities.find((f) => f.facilityValue === '');
+
+        const cellSelector = `[data-cy="facility-${facility._id}-value-gbp"]`;
+        wrapper.expectText(cellSelector).toRead('-');
+      });
+    });
+
 
     it('should render ukefExposure', () => {
       params.facilities.forEach((facility) => {
