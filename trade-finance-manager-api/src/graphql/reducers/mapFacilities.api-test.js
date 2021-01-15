@@ -2,41 +2,81 @@ const moment = require('moment');
 const mapFacilities = require('./mapFacilities');
 
 describe('mapFacilities', () => {
+  const mockCoverEndDate = {
+    'coverEndDate-day': '01',
+    'coverEndDate-month': '02',
+    'coverEndDate-year': '2021',
+  };
+
+  const mockUkefExposure = '1,234.00';
+  const mockCoveredPercentage = '10';
+
+  const mockCurrency = {
+    text: 'GBP - UK Sterling',
+    id: 'GBP',
+  };
+
+  const mockFacilityValue = '12345.00';
+
+  const mockFacilities = [
+    {
+      _id: '12345678',
+      facilityType: 'bond',
+      ...mockCoverEndDate,
+      ukefExposure: mockUkefExposure,
+      coveredPercentage: mockCoveredPercentage,
+      bondType: 'Performance Bond',
+      currency: mockCurrency,
+      facilityValue: mockFacilityValue,
+
+      // fields we do not consume
+      bondIssuer: 'Issuer',
+      facilityStage: 'Unissued',
+      ukefGuaranteeInMonths: '10',
+      bondBeneficiary: 'test',
+      guaranteeFeePayableByBank: '9.0000',
+      currencySameAsSupplyContractCurrency: 'true',
+      riskMarginFee: '10',
+      minimumRiskMarginFee: '30',
+      feeType: 'At maturity',
+      dayCountBasis: '365',
+    },
+    {
+      _id: '23456789',
+      facilityType: 'loan',
+      ...mockCoverEndDate,
+      ukefExposure: mockUkefExposure,
+      coveredPercentage: mockCoveredPercentage,
+      currency: mockCurrency,
+      facilityValue: mockFacilityValue,
+
+      // fields we do not consume
+      createdDate: 1610369832226.0,
+      facilityStage: 'Conditional',
+      ukefGuaranteeInMonths: '12',
+      bankReferenceNumber: '5678',
+      guaranteeFeePayableByBank: '27.0000',
+      lastEdited: 1610369832226.0,
+      currencySameAsSupplyContractCurrency: 'true',
+      interestMarginFee: '30',
+      minimumQuarterlyFee: '10',
+      premiumType: 'At maturity',
+      dayCountBasis: '365',
+      'issuedDate-day': '25',
+      'issuedDate-month': '08',
+      'issuedDate-year': '2020',
+      disbursementAmount: '1,234.00',
+      issueFacilityDetailsStarted: true,
+      bankReferenceNumberRequiredForIssuance: true,
+      requestedCoverStartDate: 1610369832226.0,
+      issuedDate: 1610369832226.0,
+      issueFacilityDetailsProvided: true,
+      status: 'Acknowledged',
+      ukefFacilityID: '65432',
+    },
+  ];
+
   it('should map and format correct fields/values', async () => {
-    const mockCoverEndDate = {
-      'coverEndDate-day': '01',
-      'coverEndDate-month': '02',
-      'coverEndDate-year': '2021',
-    };
-
-    const mockUkefExposure = '1,234.00';
-    const mockCoveredPercentage = '10';
-
-    const mockCurrency = {
-      text: 'GBP - UK Sterling',
-      id: 'GBP',
-    };
-
-    const mockFacilities = [
-      {
-        facilityType: 'bond',
-        test: true,
-        ...mockCoverEndDate,
-        ukefExposure: mockUkefExposure,
-        coveredPercentage: mockCoveredPercentage,
-        bondType: 'Performance Bond',
-        currency: mockCurrency,
-      },
-      {
-        facilityType: 'loan',
-        test: true,
-        ...mockCoverEndDate,
-        ukefExposure: mockUkefExposure,
-        coveredPercentage: mockCoveredPercentage,
-        currency: mockCurrency,
-      },
-    ];
-
     const result = mapFacilities(mockFacilities);
 
     const coverEndDate = moment().set({
@@ -50,25 +90,45 @@ describe('mapFacilities', () => {
     const expectedUkefExposure = `${mockCurrency.id} ${mockUkefExposure}`;
     const expectedCoveredPercentage = `${mockCoveredPercentage}%`;
 
+    const expectedFacilityValue = `${mockCurrency.id} ${mockFacilityValue}`;
+
     const expected = [
       {
-        ...mockFacilities[0],
+        _id: mockFacilities[0]._id, // eslint-disable-line no-underscore-dangle
         facilityProduct: 'BSS',
-        facilityType: 'Performance Bond',
+        facilityType: mockFacilities[0].bondType,
         coverEndDate: expectedCoverEndDate,
         ukefExposure: expectedUkefExposure,
         coveredPercentage: expectedCoveredPercentage,
+        facilityValue: expectedFacilityValue,
       },
       {
-        ...mockFacilities[1],
+        _id: mockFacilities[1]._id, // eslint-disable-line no-underscore-dangle
         facilityType: null,
         facilityProduct: 'EWCS',
         coverEndDate: expectedCoverEndDate,
         ukefExposure: expectedUkefExposure,
         coveredPercentage: expectedCoveredPercentage,
+        facilityValue: expectedFacilityValue,
       },
     ];
 
     expect(result).toEqual(expected);
+  });
+
+  describe('when a facility.currency is NOT GBP', () => {
+    it('should return facilityValue as empty string', () => {
+      const result = mapFacilities([
+        {
+          ...mockFacilities[0],
+          currency: {
+            text: 'USD - US Dollars',
+            id: 'USD',
+          },
+        },
+      ]);
+
+      expect(result[0].facilityValue).toEqual('');
+    });
   });
 });
