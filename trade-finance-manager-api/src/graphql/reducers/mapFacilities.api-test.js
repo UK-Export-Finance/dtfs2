@@ -1,5 +1,6 @@
 const moment = require('moment');
 const mapFacilities = require('./mapFacilities');
+const { formattedNumber } = require('../../utils/number');
 
 describe('mapFacilities', () => {
   const mockCoverEndDate = {
@@ -90,9 +91,11 @@ describe('mapFacilities', () => {
     const expectedUkefExposure = `${mockCurrency.id} ${mockUkefExposure}`;
     const expectedCoveredPercentage = `${mockCoveredPercentage}%`;
 
-    const expectedFacilityValue = `${mockCurrency.id} ${mockFacilityValue}`;
+    const formattedFacilityValue = formattedNumber(mockFacilityValue);
 
-    const expectedFacilityValueExportCurrency = `${mockCurrency.id} ${mockFacilityValue}`;
+    const expectedFacilityValue = `${mockCurrency.id} ${formattedFacilityValue}`;
+
+    const expectedFacilityValueExportCurrency = `${mockCurrency.id} ${formattedFacilityValue}`;
 
     const expected = [
       {
