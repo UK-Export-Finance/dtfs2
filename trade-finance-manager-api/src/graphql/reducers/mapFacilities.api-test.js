@@ -85,7 +85,7 @@ describe('mapFacilities', () => {
       year: Number(mockCoverEndDate['coverEndDate-year']),
     });
 
-    const expectedCoverEndDate = moment(coverEndDate).format('DD MMM YYYY');
+    const expectedCoverEndDate = moment(coverEndDate).format('D MMM YYYY');
 
     const expectedUkefExposure = `${mockCurrency.id} ${mockUkefExposure}`;
     const expectedCoveredPercentage = `${mockCoveredPercentage}%`;

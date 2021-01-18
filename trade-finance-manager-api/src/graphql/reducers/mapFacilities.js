@@ -52,7 +52,7 @@ const mapFacilities = (facilities) => {
         year: Number(coverEndDateYear),
       });
 
-      facility.coverEndDate = moment(coverEndDate).format('DD MMM YYYY');
+      facility.coverEndDate = moment(coverEndDate).format('D MMM YYYY');
     }
 
     facility.ukefExposure = `${facility.currency.id} ${facility.ukefExposure}`;
