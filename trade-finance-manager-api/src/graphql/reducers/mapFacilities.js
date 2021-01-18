@@ -7,6 +7,9 @@ const mapFacilities = (facilities) => {
 
   facilities.forEach((f) => {
     const facility = f;
+
+    const { facilityValue } = facility;
+
     // facilityType will eventually be facilityProduct / facilityProductCode
     // TODO: refactor when DTFS2-3054 is completed.
     if (facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
@@ -57,8 +60,6 @@ const mapFacilities = (facilities) => {
 
     facility.ukefExposure = `${facility.currency.id} ${facility.ukefExposure}`;
     facility.coveredPercentage = `${facility.coveredPercentage}%`;
-
-    const facilityValue = facility.facilityValue;
 
     // DTFS-2727
     // for initial dev, only return facilityValue if currency is GBP.
