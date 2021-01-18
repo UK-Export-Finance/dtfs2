@@ -8,5 +8,5 @@ const formatAsCurrency = (str) => {
   }
   return isEmpty ? '-' : amount;
 };
-module.exports.formatAsCurrency = formatAsCurrency;
+
 export default formatAsCurrency;
