@@ -1,6 +1,7 @@
 const moment = require('moment');
 const mapFacilities = require('./mapFacilities');
 const { formattedNumber } = require('../../utils/number');
+const mapFacilityStage = require('./mappings/facilities/mapFacilityStage');
 
 describe('mapFacilities', () => {
   const mockCoverEndDate = {
@@ -102,6 +103,7 @@ describe('mapFacilities', () => {
         _id: mockFacilities[0]._id, // eslint-disable-line no-underscore-dangle
         facilityProduct: 'BSS',
         facilityType: mockFacilities[0].bondType,
+        facilityStage: mapFacilityStage(mockFacilities[0].facilityStage),
         coverEndDate: expectedCoverEndDate,
         ukefExposure: expectedUkefExposure,
         coveredPercentage: expectedCoveredPercentage,
@@ -111,6 +113,7 @@ describe('mapFacilities', () => {
       {
         _id: mockFacilities[1]._id, // eslint-disable-line no-underscore-dangle
         facilityType: null,
+        facilityStage: mapFacilityStage(mockFacilities[1].facilityStage),
         facilityProduct: 'EWCS',
         coverEndDate: expectedCoverEndDate,
         ukefExposure: expectedUkefExposure,
