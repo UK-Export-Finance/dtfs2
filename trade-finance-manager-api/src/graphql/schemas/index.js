@@ -8,7 +8,8 @@ type OwningBank {
 type Maker {
   username: String
   firstname: String
-  surname: String
+  surname: String,
+  email: String,
 }
 
 type Checker {

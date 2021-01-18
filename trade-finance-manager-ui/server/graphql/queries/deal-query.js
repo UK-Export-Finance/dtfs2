@@ -15,6 +15,7 @@ const dealQuery = gql`
         maker {
           firstname,
           surname,
+          email,
         },
         bankSupplyContractID,
         bankSupplyContractName,
