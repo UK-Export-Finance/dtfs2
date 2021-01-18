@@ -1,6 +1,7 @@
 const moment = require('moment');
 const CONSTANTS = require('../../constants');
 const { hasValue } = require('../../utils/string');
+const { formattedNumber } = require('../../utils/number');
 
 const mapFacilities = (facilities) => {
   const mappedFacilities = [];
@@ -9,6 +10,8 @@ const mapFacilities = (facilities) => {
     const facility = f;
 
     const { facilityValue } = facility;
+
+    const formattedFacilityValue = formattedNumber(facilityValue);
 
     // facilityType will eventually be facilityProduct / facilityProductCode
     // TODO: refactor when DTFS2-3054 is completed.
@@ -65,12 +68,12 @@ const mapFacilities = (facilities) => {
     // for initial dev, only return facilityValue if currency is GBP.
     // until we figure out which API to use for conversion from non-GBP.
     if (facility.currency.id === 'GBP') {
-      facility.facilityValue = `${facility.currency.id} ${facilityValue}`;
+      facility.facilityValue = `${facility.currency.id} ${formattedFacilityValue}`;
     } else {
       facility.facilityValue = '';
     }
 
-    facility.facilityValueExportCurrency = `${facility.currency.id} ${facilityValue}`;
+    facility.facilityValueExportCurrency = `${facility.currency.id} ${formattedFacilityValue}`;
 
     mappedFacilities.push({
       _id: facility._id, // eslint-disable-line no-underscore-dangle
