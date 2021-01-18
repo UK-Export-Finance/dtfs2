@@ -37,7 +37,7 @@
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-full govuk-!-padding-bottom-4">
             <div class="ukef-heading-xs">Date received</div>
-            <div class="ukef-body-s" data-cy="submission-date">{{ deal.details.submissionDate | localiseTimestamp("DD/MM/YYYY HH:mm", 'en-gb') }}</div>
+            <div class="ukef-body-s" data-cy="submission-date">{{ deal.details.submissionDate | localiseTimestamp("DD MMM YYYY", 'en-gb') }}</div>
             {# <div class="ukef-body-s" data-cy="submission-date">{{ deal.details.submissionDate }}</div> #}
           </div>
         </div>
