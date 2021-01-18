@@ -103,6 +103,7 @@ type Facility  {
   _id: String!
   facilityProduct: String!
   facilityType: String
+  facilityValueExportCurrency: String!
   facilityValue: String
   coverEndDate: String
   ukefExposure: String!

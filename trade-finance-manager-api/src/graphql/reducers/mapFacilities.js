@@ -58,14 +58,18 @@ const mapFacilities = (facilities) => {
     facility.ukefExposure = `${facility.currency.id} ${facility.ukefExposure}`;
     facility.coveredPercentage = `${facility.coveredPercentage}%`;
 
+    const facilityValue = facility.facilityValue;
+
     // DTFS-2727
     // for initial dev, only return facilityValue if currency is GBP.
     // until we figure out which API to use for conversion from non-GBP.
     if (facility.currency.id === 'GBP') {
-      facility.facilityValue = `${facility.currency.id} ${facility.facilityValue}`;
+      facility.facilityValue = `${facility.currency.id} ${facilityValue}`;
     } else {
       facility.facilityValue = '';
     }
+
+    facility.facilityValueExportCurrency = `${facility.currency.id} ${facilityValue}`;
 
     mappedFacilities.push({
       _id: facility._id, // eslint-disable-line no-underscore-dangle
@@ -75,6 +79,7 @@ const mapFacilities = (facilities) => {
       ukefExposure: facility.ukefExposure,
       coveredPercentage: facility.coveredPercentage,
       facilityValue: facility.facilityValue,
+      facilityValueExportCurrency: facility.facilityValueExportCurrency,
     });
   });
 

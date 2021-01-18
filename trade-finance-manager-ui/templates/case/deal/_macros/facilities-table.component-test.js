@@ -16,6 +16,7 @@ describe(component, () => {
         coveredPercentage: '20%',
         facilityType: 'Performance Bond',
         facilityValue: 'GBP 1,234',
+        facilityValueExportCurrency: 'AUD 34000',
       },
       {
         _id: '456',
@@ -24,6 +25,7 @@ describe(component, () => {
         ukefExposure: 'GBP 2,469.00',
         coveredPercentage: '20%',
         facilityValue: 'GBP 1,234',
+        facilityValueExportCurrency: 'AUD 34000',
       },
       {
         _id: '789',
@@ -32,6 +34,7 @@ describe(component, () => {
         ukefExposure: 'GBP 2,469.00',
         coveredPercentage: '20%',
         facilityValue: '',
+        facilityValueExportCurrency: 'AUD 34000',
       },
       {
         _id: '112',
@@ -40,6 +43,7 @@ describe(component, () => {
         ukefExposure: 'GBP 2,469.00',
         coveredPercentage: '20%',
         facilityValue: 'GBP 1,234',
+        facilityValueExportCurrency: 'AUD 34000',
       },
     ],
   };
@@ -126,6 +130,13 @@ describe(component, () => {
       params.facilities.forEach((facility) => {
         const cellSelector = `[data-cy="facility-${facility._id}-cover-end-date"]`;
         wrapper.expectText(cellSelector).toRead(`${facility.coverEndDate} (expected)`);
+      });
+    });
+
+    it('should render `value (export currency)` table cell', () => {
+      params.facilities.forEach((facility) => {
+        const cellSelector = `[data-cy="facility-${facility._id}-value-export-currency"]`;
+        wrapper.expectText(cellSelector).toRead(facility.facilityValueExportCurrency);
       });
     });
 

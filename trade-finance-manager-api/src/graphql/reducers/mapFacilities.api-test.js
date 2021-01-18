@@ -92,6 +92,8 @@ describe('mapFacilities', () => {
 
     const expectedFacilityValue = `${mockCurrency.id} ${mockFacilityValue}`;
 
+    const expectedFacilityValueExportCurrency = `${mockCurrency.id} ${mockFacilityValue}`;
+
     const expected = [
       {
         _id: mockFacilities[0]._id, // eslint-disable-line no-underscore-dangle
@@ -101,6 +103,7 @@ describe('mapFacilities', () => {
         ukefExposure: expectedUkefExposure,
         coveredPercentage: expectedCoveredPercentage,
         facilityValue: expectedFacilityValue,
+        facilityValueExportCurrency: expectedFacilityValueExportCurrency,
       },
       {
         _id: mockFacilities[1]._id, // eslint-disable-line no-underscore-dangle
@@ -110,6 +113,7 @@ describe('mapFacilities', () => {
         ukefExposure: expectedUkefExposure,
         coveredPercentage: expectedCoveredPercentage,
         facilityValue: expectedFacilityValue,
+        facilityValueExportCurrency: expectedFacilityValueExportCurrency,
       },
     ];
 
