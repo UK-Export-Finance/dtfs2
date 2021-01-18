@@ -32,10 +32,15 @@ const GET_DEAL = gql`
         bankSupplyContractID,
         bankSupplyContractName,
       }
+      totals {
+        facilitiesValue
+      }
       facilities {
         _id,
         facilityProduct,
         facilityType,
+        facilityStage,
+        facilityValueExportCurrency,
         facilityValue,
         coverEndDate,
         ukefExposure,

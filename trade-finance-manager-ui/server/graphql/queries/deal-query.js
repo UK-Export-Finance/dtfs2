@@ -20,6 +20,9 @@ const dealQuery = gql`
         bankSupplyContractID,
         bankSupplyContractName,
       }
+      totals {
+        facilitiesValue
+      }
       facilities {
         _id,
         facilityProduct,
