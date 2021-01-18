@@ -32,6 +32,7 @@ const dealReducer = (deal) => {
       maker: {
         firstname: maker.firstname,
         surname: maker.surname,
+        email: maker.email,
       },
       bankSupplyContractID,
       bankSupplyContractName,
