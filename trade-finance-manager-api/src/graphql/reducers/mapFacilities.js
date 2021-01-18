@@ -2,6 +2,7 @@ const moment = require('moment');
 const CONSTANTS = require('../../constants');
 const { hasValue } = require('../../utils/string');
 const { formattedNumber } = require('../../utils/number');
+const mapFacilityStage = require('./mappings/facilities/mapFacilityStage');
 
 const mapFacilities = (facilities) => {
   const mappedFacilities = [];
@@ -9,7 +10,10 @@ const mapFacilities = (facilities) => {
   facilities.forEach((f) => {
     const facility = f;
 
-    const { facilityValue } = facility;
+    const {
+      facilityValue,
+      facilityStage,
+    } = facility;
 
     const formattedFacilityValue = formattedNumber(facilityValue);
 
@@ -78,6 +82,7 @@ const mapFacilities = (facilities) => {
     mappedFacilities.push({
       _id: facility._id, // eslint-disable-line no-underscore-dangle
       facilityType: facility.facilityType,
+      facilityStage: mapFacilityStage(facilityStage),
       facilityProduct: facility.facilityProduct,
       coverEndDate: facility.coverEndDate,
       ukefExposure: facility.ukefExposure,

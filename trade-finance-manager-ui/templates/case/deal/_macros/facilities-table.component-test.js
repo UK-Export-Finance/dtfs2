@@ -17,6 +17,7 @@ describe(component, () => {
         facilityType: 'Performance Bond',
         facilityValue: 'GBP 1,234',
         facilityValueExportCurrency: 'AUD 34000',
+        facilityStage: 'Commitment',
       },
       {
         _id: '456',
@@ -26,6 +27,7 @@ describe(component, () => {
         coveredPercentage: '20%',
         facilityValue: 'GBP 1,234',
         facilityValueExportCurrency: 'AUD 34000',
+        facilityStage: 'Issued',
       },
       {
         _id: '789',
@@ -35,6 +37,7 @@ describe(component, () => {
         coveredPercentage: '20%',
         facilityValue: '',
         facilityValueExportCurrency: 'AUD 34000',
+        facilityStage: 'Commitment',
       },
       {
         _id: '112',
@@ -44,6 +47,7 @@ describe(component, () => {
         coveredPercentage: '20%',
         facilityValue: 'GBP 1,234',
         facilityValueExportCurrency: 'AUD 34000',
+        facilityStage: 'Issued',
       },
     ],
   };
@@ -123,6 +127,13 @@ describe(component, () => {
 
         const cellSelector = `[data-cy="facility-${facility._id}-type"]`;
         wrapper.expectText(cellSelector).toRead('-');
+      });
+    });
+
+    it('should render facilityStage table cell', () => {
+      params.facilities.forEach((facility) => {
+        const cellSelector = `[data-cy="facility-${facility._id}-stage"]`;
+        wrapper.expectText(cellSelector).toRead(facility.facilityStage);
       });
     });
 
