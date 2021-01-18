@@ -16,6 +16,8 @@ describe(component, () => {
         coveredPercentage: '20%',
         facilityType: 'Performance Bond',
         facilityValue: 'GBP 1,234',
+        facilityValueExportCurrency: 'AUD 34000',
+        facilityStage: 'Commitment',
       },
       {
         _id: '456',
@@ -24,6 +26,8 @@ describe(component, () => {
         ukefExposure: 'GBP 2,469.00',
         coveredPercentage: '20%',
         facilityValue: 'GBP 1,234',
+        facilityValueExportCurrency: 'AUD 34000',
+        facilityStage: 'Issued',
       },
       {
         _id: '789',
@@ -32,6 +36,18 @@ describe(component, () => {
         ukefExposure: 'GBP 2,469.00',
         coveredPercentage: '20%',
         facilityValue: '',
+        facilityValueExportCurrency: 'AUD 34000',
+        facilityStage: 'Commitment',
+      },
+      {
+        _id: '112',
+        facilityProduct: '',
+        coverEndDate: '04 Dec 2021',
+        ukefExposure: 'GBP 2,469.00',
+        coveredPercentage: '20%',
+        facilityValue: 'GBP 1,234',
+        facilityValueExportCurrency: 'AUD 34000',
+        facilityStage: 'Issued',
       },
     ],
   };
@@ -80,10 +96,21 @@ describe(component, () => {
 
   
   describe('for each facility', () => {
-    it('should render facilityProduct table cell', () => {
-      params.facilities.forEach((facility) => {
-        const cellSelector = `[data-cy="facility-${facility._id}-product"]`;
-        wrapper.expectText(cellSelector).toRead(facility.facilityProduct);
+    describe('facilityProduct table cell', () => {
+      it('should render value', () => {
+        const facilities = params.facilities.filter((f) => f.facilityProduct !== '');
+
+        facilities.forEach((facility) => {
+          const cellSelector = `[data-cy="facility-${facility._id}-product"]`;
+          wrapper.expectText(cellSelector).toRead(facility.facilityProduct);
+        });
+      });
+
+      it('should render a dash when facilityProduct is empty', () => {
+        const facility = params.facilities.find((f) => f.facilityProduct === '');
+
+        const cellSelector = `[data-cy="facility-${facility._id}-type"]`;
+        wrapper.expectText(cellSelector).toRead('-');
       });
     });
 
@@ -103,6 +130,13 @@ describe(component, () => {
       });
     });
 
+    it('should render facilityStage table cell', () => {
+      params.facilities.forEach((facility) => {
+        const cellSelector = `[data-cy="facility-${facility._id}-stage"]`;
+        wrapper.expectText(cellSelector).toRead(facility.facilityStage);
+      });
+    });
+
     it('should render coverEndDate table cell', () => {
       params.facilities.forEach((facility) => {
         const cellSelector = `[data-cy="facility-${facility._id}-cover-end-date"]`;
@@ -110,9 +144,16 @@ describe(component, () => {
       });
     });
 
+    it('should render `value (export currency)` table cell', () => {
+      params.facilities.forEach((facility) => {
+        const cellSelector = `[data-cy="facility-${facility._id}-value-export-currency"]`;
+        wrapper.expectText(cellSelector).toRead(facility.facilityValueExportCurrency);
+      });
+    });
+
     describe('`facilityValue in GBP` table cell', () => {
       it('should render', () => {
-        const facilities = params.facilities.filter((f) => f.facilityValue !== '');;
+        const facilities = params.facilities.filter((f) => f.facilityValue !== '');
 
         facilities.forEach((facility) => {
           const cellSelector = `[data-cy="facility-${facility._id}-value-gbp"]`;
