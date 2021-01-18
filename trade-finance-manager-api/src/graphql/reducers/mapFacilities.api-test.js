@@ -30,10 +30,10 @@ describe('mapFacilities', () => {
       bondType: 'Performance Bond',
       currency: mockCurrency,
       facilityValue: mockFacilityValue,
+      facilityStage: 'Unissued',
 
       // fields we do not consume
       bondIssuer: 'Issuer',
-      facilityStage: 'Unissued',
       ukefGuaranteeInMonths: '10',
       bondBeneficiary: 'test',
       guaranteeFeePayableByBank: '9.0000',
@@ -51,10 +51,10 @@ describe('mapFacilities', () => {
       coveredPercentage: mockCoveredPercentage,
       currency: mockCurrency,
       facilityValue: mockFacilityValue,
+      facilityStage: 'Conditional',
 
       // fields we do not consume
       createdDate: 1610369832226.0,
-      facilityStage: 'Conditional',
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '5678',
       guaranteeFeePayableByBank: '27.0000',

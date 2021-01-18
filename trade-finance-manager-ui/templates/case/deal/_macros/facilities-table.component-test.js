@@ -50,6 +50,9 @@ describe(component, () => {
         facilityStage: 'Issued',
       },
     ],
+    totals: {
+      facilitiesValue: 'GBP 123,456.78',
+    }
   };
 
   beforeEach(() => {
@@ -182,6 +185,13 @@ describe(component, () => {
         const cellSelector = `[data-cy="facility-${facility._id}-covered-percentage"]`;
         wrapper.expectText(cellSelector).toRead(`(${facility.coveredPercentage})`);
       });
+    });
+  });
+
+  describe('totals row', () => {
+    it('should render totals.facilitiesValue', () => {
+      const cellSelector = '[data-cy="facilities-total-value"]';
+      wrapper.expectText(cellSelector).toRead(params.totals.facilitiesValue);
     });
   });
 });

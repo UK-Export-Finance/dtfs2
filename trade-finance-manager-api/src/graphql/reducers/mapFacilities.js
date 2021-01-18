@@ -70,7 +70,7 @@ const mapFacilities = (facilities) => {
 
     // DTFS-2727
     // for initial dev, only return facilityValue if currency is GBP.
-    // until we figure out which API to use for conversion from non-GBP.
+    // TODO: until we figure out which API to use for conversion from non-GBP.
     if (facility.currency.id === 'GBP') {
       facility.facilityValue = `${facility.currency.id} ${formattedFacilityValue}`;
     } else {
@@ -85,10 +85,10 @@ const mapFacilities = (facilities) => {
       facilityStage: mapFacilityStage(facilityStage),
       facilityProduct: facility.facilityProduct,
       coverEndDate: facility.coverEndDate,
-      ukefExposure: facility.ukefExposure,
       coveredPercentage: facility.coveredPercentage,
-      facilityValue: facility.facilityValue,
       facilityValueExportCurrency: facility.facilityValueExportCurrency,
+      facilityValue: facility.facilityValue,
+      ukefExposure: facility.ukefExposure,
     });
   });
 
