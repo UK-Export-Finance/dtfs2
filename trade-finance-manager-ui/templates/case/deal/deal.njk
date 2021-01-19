@@ -65,8 +65,10 @@
       <p class="ukef-heading-l" style="padding-top:30px">Facilities</p>
 
       {% set componentData = {
-        facilities: deal.facilities
+        facilities: deal.facilities,
+        totals: deal.totals
       } %}
+
       {{ facilitiesTable.render(componentData) }}
 
     </div>

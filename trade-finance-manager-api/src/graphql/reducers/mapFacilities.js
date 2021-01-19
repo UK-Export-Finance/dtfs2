@@ -1,8 +1,7 @@
-const moment = require('moment');
 const CONSTANTS = require('../../constants');
-const { hasValue } = require('../../utils/string');
 const { formattedNumber } = require('../../utils/number');
 const mapFacilityStage = require('./mappings/facilities/mapFacilityStage');
+const mapCoverEndDate = require('./mappings/facilities/mapCoverEndDate');
 
 const mapFacilities = (facilities) => {
   const mappedFacilities = [];
@@ -45,32 +44,14 @@ const mapFacilities = (facilities) => {
       facility.facilityType = null;
     }
 
-    const {
-      'coverEndDate-day': coverEndDateDay,
-      'coverEndDate-month': coverEndDateMonth,
-      'coverEndDate-year': coverEndDateYear,
-    } = facility;
-
-    const hasCoverEndDate = (hasValue(coverEndDateDay)
-                            && hasValue(coverEndDateMonth)
-                            && hasValue(coverEndDateYear));
-
-    if (hasCoverEndDate) {
-      const coverEndDate = moment().set({
-        date: Number(coverEndDateDay),
-        month: Number(coverEndDateMonth) - 1, // months are zero indexed
-        year: Number(coverEndDateYear),
-      });
-
-      facility.coverEndDate = moment(coverEndDate).format('D MMM YYYY');
-    }
+    facility.coverEndDate = mapCoverEndDate(facility);
 
     facility.ukefExposure = `${facility.currency.id} ${facility.ukefExposure}`;
     facility.coveredPercentage = `${facility.coveredPercentage}%`;
 
     // DTFS-2727
     // for initial dev, only return facilityValue if currency is GBP.
-    // until we figure out which API to use for conversion from non-GBP.
+    // TODO: until we figure out which API to use for conversion from non-GBP.
     if (facility.currency.id === 'GBP') {
       facility.facilityValue = `${facility.currency.id} ${formattedFacilityValue}`;
     } else {
@@ -85,10 +66,10 @@ const mapFacilities = (facilities) => {
       facilityStage: mapFacilityStage(facilityStage),
       facilityProduct: facility.facilityProduct,
       coverEndDate: facility.coverEndDate,
-      ukefExposure: facility.ukefExposure,
       coveredPercentage: facility.coveredPercentage,
-      facilityValue: facility.facilityValue,
       facilityValueExportCurrency: facility.facilityValueExportCurrency,
+      facilityValue: facility.facilityValue,
+      ukefExposure: facility.ukefExposure,
     });
   });
 
