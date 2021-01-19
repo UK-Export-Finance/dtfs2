@@ -1,5 +1,6 @@
 {% macro render(params) %}
   {% set facilities = params.facilities %}
+  {% set totals = params.totals %}
 
   <table class="govuk-table" data-cy="facilities-table">
     <thead class="govuk-table__head">
@@ -49,6 +50,21 @@
         </tr>
       {% endfor %}
     </tbody>
+
+    <tfoot>
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__cell govuk-body-s govuk-!-font-weight-bold">Totals</td>
+        <td class="govuk-table__cell govuk-body-s">&nbsp;</td>
+        <td class="govuk-table__cell govuk-body-s">&nbsp;</td>
+        <td class="govuk-table__cell govuk-body-s">&nbsp;</td>
+        <td class="govuk-table__cell govuk-body-s">&nbsp;</td>
+        <td class="govuk-table__cell govuk-body-s">&nbsp;</td>
+        <td class="govuk-table__cell govuk-body-s">&nbsp;</td>
+        <td class="govuk-table__cell govuk-body-s govuk-!-font-weight-bold" data-cy="facilities-total-value">{{ totals.facilitiesValueInGBP }}</td>
+        <td class="govuk-table__cell govuk-body-s govuk-!-font-weight-bold">&nbsp;</td>
+      </tr>
+    </tfoot>
+
   </table>
 
 {% endmacro %}

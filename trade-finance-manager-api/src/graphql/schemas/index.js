@@ -112,9 +112,14 @@ type Facility  {
   coveredPercentage: String!
 }
 
+type DealTotals {
+  facilitiesValueInGBP: String!
+}
+
 type Deal {
   _id: String!
   details: DealDetails
+  totals: DealTotals
   facilities: [Facility]
   submissionDetails: DealSubmissionDetails
   eligibilityCriteria: [DealEligibilityCriterion!]

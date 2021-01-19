@@ -1,5 +1,9 @@
+const mapTotals = require('./mappings/mapTotals');
 const mapFacilities = require('./mapFacilities');
 const mapSubmissionDetails = require('./mapSubmissionDetails');
+
+// TODO: add unit test
+// so that when this is changed, tests fail.
 
 const dealReducer = (deal) => {
   const {
@@ -37,6 +41,7 @@ const dealReducer = (deal) => {
       bankSupplyContractID,
       bankSupplyContractName,
     },
+    totals: mapTotals(facilities),
     facilities: mapFacilities(facilities),
     submissionDetails: mapSubmissionDetails(submissionDetails),
     eligibility: {
