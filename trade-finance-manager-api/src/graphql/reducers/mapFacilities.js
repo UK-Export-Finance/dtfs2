@@ -1,8 +1,7 @@
-const moment = require('moment');
 const CONSTANTS = require('../../constants');
-const { hasValue } = require('../../utils/string');
 const { formattedNumber } = require('../../utils/number');
 const mapFacilityStage = require('./mappings/facilities/mapFacilityStage');
+const mapCoverEndDate = require('./mappings/facilities/mapCoverEndDate');
 
 const mapFacilities = (facilities) => {
   const mappedFacilities = [];
@@ -45,25 +44,7 @@ const mapFacilities = (facilities) => {
       facility.facilityType = null;
     }
 
-    const {
-      'coverEndDate-day': coverEndDateDay,
-      'coverEndDate-month': coverEndDateMonth,
-      'coverEndDate-year': coverEndDateYear,
-    } = facility;
-
-    const hasCoverEndDate = (hasValue(coverEndDateDay)
-                            && hasValue(coverEndDateMonth)
-                            && hasValue(coverEndDateYear));
-
-    if (hasCoverEndDate) {
-      const coverEndDate = moment().set({
-        date: Number(coverEndDateDay),
-        month: Number(coverEndDateMonth) - 1, // months are zero indexed
-        year: Number(coverEndDateYear),
-      });
-
-      facility.coverEndDate = moment(coverEndDate).format('D MMM YYYY');
-    }
+    facility.coverEndDate = mapCoverEndDate(facility);
 
     facility.ukefExposure = `${facility.currency.id} ${facility.ukefExposure}`;
     facility.coveredPercentage = `${facility.coveredPercentage}%`;
