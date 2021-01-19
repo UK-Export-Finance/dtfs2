@@ -1,4 +1,3 @@
-const moment = require('moment');
 const mapFacilities = require('./mapFacilities');
 const { formattedNumber } = require('../../utils/number');
 const mapFacilityStage = require('./mappings/facilities/mapFacilityStage');
