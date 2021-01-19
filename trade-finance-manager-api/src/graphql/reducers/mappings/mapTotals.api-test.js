@@ -52,4 +52,12 @@ describe('mapTotals', () => {
     const expected = `GBP ${formattedNumber(totalValue)}`;
     expect(result.facilitiesValueInGBP).toEqual(expected);
   });
+
+  describe('when no facilities have GBP facilities', () => {
+    it('should return empty object', () => {
+      const result = mapTotals([]);
+      expect(result).toEqual({});
+    });
+  });
+
 });

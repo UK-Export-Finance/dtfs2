@@ -8,11 +8,16 @@ const mapTotals = (facilities) => {
 
   const facilitiesValueArray = gbpFacilities.map(({ facilityValue }) => Number(facilityValue));
 
-  const formattedFacilitiesValue = formattedNumber(facilitiesValueArray.reduce((a, b) => a + b));
+  if (facilitiesValueArray.length) {
+    const formattedFacilitiesValue = formattedNumber(facilitiesValueArray.reduce((a, b) => a + b));
 
-  return {
-    facilitiesValueInGBP: `GBP ${formattedFacilitiesValue}`,
-  };
+
+    return {
+      facilitiesValueInGBP: `GBP ${formattedFacilitiesValue}`,
+    }; 
+  }
+
+  return {};
 };
 
 module.exports = mapTotals;
