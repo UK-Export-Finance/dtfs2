@@ -31,7 +31,7 @@ describe('mapTotals', () => {
                        + Number(mockFacilities[2].facilityValue);
 
     const expected = `GBP ${formattedNumber(totalValue)}`;
-    expect(result.facilitiesValue).toEqual(expected);
+    expect(result.facilitiesValueInGBP).toEqual(expected);
   });
 
   // TODO: until we figure out which API to use for conversion from non-GBP.
@@ -42,7 +42,7 @@ describe('mapTotals', () => {
         id: 'USD',
       },
     });
-    
+
     const result = mapTotals(mockFacilities);
 
     const totalValue = Number(mockFacilities[0].facilityValue)
@@ -50,6 +50,6 @@ describe('mapTotals', () => {
       + Number(mockFacilities[2].facilityValue);
 
     const expected = `GBP ${formattedNumber(totalValue)}`;
-    expect(result.facilitiesValue).toEqual(expected);
+    expect(result.facilitiesValueInGBP).toEqual(expected);
   });
 });
