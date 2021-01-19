@@ -67,6 +67,10 @@ body {
   border-top-style: solid;
   margin-top: 30px;
 }
+.govuk-grid-row {
+  margin-left: 0;
+  margin-right: 0;
+}
 
 .govuk-grid-column-full, 
 .govuk-grid-column-two-thirds, 
@@ -75,13 +79,13 @@ body {
 .govuk-grid-column-one-third,
 .govuk-grid-column-one-half
  {
-  padding: 0 30px;
+  padding: 0;
 }
 
 .govuk-grid-column-four-fifths {
   box-sizing: border-box;
   width: 100%;
-  padding: 0 15px;
+  padding: 0;
 }
 
 @media (min-width: 40.0625em) {
@@ -94,7 +98,7 @@ body {
 .govuk-grid-column-one-fifth {
   box-sizing: border-box;
   width: 100%;
-  padding: 0 15px;
+  padding: 0 ;
 }
 
 @media (min-width: 40.0625em) {
@@ -107,7 +111,7 @@ body {
 .govuk-grid-column-one-tenth {
   box-sizing: border-box;
   width: 100%;
-  padding: 0 15px;
+  padding: 0;
 }
 
 @media (min-width: 40.0625em) {
@@ -120,7 +124,7 @@ body {
 .govuk-grid-column-two-tenths {
   box-sizing: border-box;
   width: 100%;
-  padding: 0 15px;
+  padding: 0;
 }
 
 @media (min-width: 40.0625em) {
@@ -133,7 +137,7 @@ body {
 .govuk-grid-column-nine-tenths {
   box-sizing: border-box;
   width: 100%;
-  padding: 0 15px;
+  padding: 0;
 }
 
 @media (min-width: 40.0625em) {
@@ -146,7 +150,7 @@ body {
 .govuk-grid-column-eight-tenths {
   box-sizing: border-box;
   width: 100%;
-  padding: 0 15px;
+  padding: 0;
 }
 
 @media (min-width: 40.0625em) {
@@ -159,7 +163,7 @@ body {
 .govuk-grid-column-four-tenths {
   box-sizing: border-box;
   width: 100%;
-  padding: 0 15px;
+  padding: 0;
 }
 
 @media (min-width: 40.0625em) {
