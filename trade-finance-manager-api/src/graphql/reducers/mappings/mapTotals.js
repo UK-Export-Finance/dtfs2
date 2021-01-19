@@ -11,10 +11,9 @@ const mapTotals = (facilities) => {
   if (facilitiesValueArray.length) {
     const formattedFacilitiesValue = formattedNumber(facilitiesValueArray.reduce((a, b) => a + b));
 
-
     return {
       facilitiesValueInGBP: `GBP ${formattedFacilitiesValue}`,
-    }; 
+    };
   }
 
   return {};

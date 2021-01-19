@@ -59,5 +59,4 @@ describe('mapTotals', () => {
       expect(result).toEqual({});
     });
   });
-
 });
