@@ -113,7 +113,7 @@ type Facility  {
 }
 
 type DealTotals {
-  facilitiesValue: String!
+  facilitiesValueInGBP: String!
 }
 
 type Deal {

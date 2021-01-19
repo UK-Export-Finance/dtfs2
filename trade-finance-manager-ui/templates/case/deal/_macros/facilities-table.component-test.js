@@ -51,7 +51,7 @@ describe(component, () => {
       },
     ],
     totals: {
-      facilitiesValue: 'GBP 123,456.78',
+      facilitiesValueInGBP: 'GBP 123,456.78',
     }
   };
 
@@ -189,9 +189,9 @@ describe(component, () => {
   });
 
   describe('totals row', () => {
-    it('should render totals.facilitiesValue', () => {
+    it('should render totals.facilitiesValueInGBP', () => {
       const cellSelector = '[data-cy="facilities-total-value"]';
-      wrapper.expectText(cellSelector).toRead(params.totals.facilitiesValue);
+      wrapper.expectText(cellSelector).toRead(params.totals.facilitiesValueInGBP);
     });
   });
 });

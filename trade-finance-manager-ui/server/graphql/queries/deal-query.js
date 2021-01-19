@@ -21,7 +21,7 @@ const dealQuery = gql`
         bankSupplyContractName,
       }
       totals {
-        facilitiesValue
+        facilitiesValueInGBP
       }
       facilities {
         _id,
