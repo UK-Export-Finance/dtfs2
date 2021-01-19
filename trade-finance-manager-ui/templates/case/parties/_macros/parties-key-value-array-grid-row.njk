@@ -1,0 +1,14 @@
+{% macro render(params) %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+      <p class="ukef-heading-xs">{{params.key}}</p>
+    </div>
+    <div class="govuk-grid-column-two-thirds"><p>
+        {% for value in params.values %}
+          {% if value %}{{ value }}<br>{% endif %}
+        {% endfor %}
+      </p>
+    </div>
+  </div>
+{% endmacro %}

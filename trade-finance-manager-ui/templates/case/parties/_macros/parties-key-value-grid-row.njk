@@ -1,0 +1,19 @@
+{% macro render(params) %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+      {% if params.keyClass %}
+      {% set bodyClass = params.keyClass %}
+      <p class="{{ params.keyClass }}">{{ params.key | safe }}</p>
+      {% else %}
+        <p class="ukef-heading-xs">{{ params.key | safe }}</p>
+        {% endif %}
+    </div>
+    <div class="govuk-grid-column-two-thirds">
+      <p>
+        {{ params.value }}
+      </p>
+    </div>
+  </div>
+
+{% endmacro %}
