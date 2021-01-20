@@ -6,6 +6,8 @@ const { addComment } = require('./deal-comments.controller');
 const { userHasAccessTo } = require('../users/checks');
 
 const { createTypeA } = require('./integration/k2-messages');
+const refDataApi = require('../../reference-data/api');
+
 const validateStateChange = require('../validation/deal-status');
 
 const userCanSubmitDeal = require('./deal-status/user-can-submit-deal');
@@ -133,6 +135,39 @@ exports.update = (req, res) => {
     }
 
     if (toStatus === 'Submitted') {
+      // TODO add constants
+      const newDealId = await refDataApi.numberGenerator.create('deal');
+
+      dealAfterAllUpdates.bondTransactions.items = await Promise.all(
+        dealAfterAllUpdates.bondTransactions.items.map(async (f) => {
+          const facility = f;
+
+          facility.newFacilityIdFromNumberGen = await refDataApi.numberGenerator.create('facility');
+          return facility;
+        }),
+      );
+
+      dealAfterAllUpdates.loanTransactions.items = await Promise.all(
+        dealAfterAllUpdates.loanTransactions.items.map(async (f) => {
+          const facility = f;
+
+          facility.newFacilityIdFromNumberGen = await refDataApi.numberGenerator.create('facility');
+          return facility;
+        }),
+      );
+
+      dealAfterAllUpdates = await updateDeal(
+        req.params.id,
+        {
+          tonyTestingNumberGenerator: {
+            newDealId,
+          },
+          bondTransactions: dealAfterAllUpdates.bondTransactions,
+          loanTransactions: dealAfterAllUpdates.loanTransactions,
+        },
+        req.user,
+      );
+
       await updateSubmittedIssuedFacilities(req.user, dealAfterAllUpdates);
       if (!dealAfterAllUpdates.details.submissionDate) {
         dealAfterAllUpdates = await createSubmissionDate(req.params.id, user);
@@ -143,7 +178,6 @@ exports.update = (req, res) => {
         dealAfterAllUpdates = await createMiaSubmissionDate(req.params.id, user);
       }
 
-      // TODO - Reinstate typeA XML creation once Loans and Summary have been added
       const useTFM = await (isTFMBank(user.bank && user.bank.id));
       if (useTFM) {
         // Integrate with TFM

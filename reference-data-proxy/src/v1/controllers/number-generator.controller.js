@@ -1,6 +1,9 @@
 const axios = require('axios');
 const CONSTANTS = require('../../constants');
-const { checkDealId } = require('./acbs.controller');
+const {
+  checkDealId,
+  checkFacilityId,
+} = require('./acbs.controller');
 
 const numberTypeIsValid = (numberType) => {
   if (!Object.values(CONSTANTS.NUMBER_GENERATOR).includes(numberType)) {
@@ -10,7 +13,7 @@ const numberTypeIsValid = (numberType) => {
   return true;
 };
 
-const callNumberGenerator = async (numberType) => {
+const callNumberGeneratorApi = async (numberType) => {
   const response = await axios({
     method: 'post',
     url: process.env.MULESOFT_API_NUMBER_GENERATOR_URL,
@@ -26,50 +29,58 @@ const callNumberGenerator = async (numberType) => {
       },
     ],
   }).catch((catchErr) => catchErr);
-  
+
   return response;
-}
+};
+
+
+const checkId = async (entityType, id) => {
+  // TODO: constants
+  if (entityType === 'deal') {
+    const dealIdStatus = await checkDealId(id);
+    console.log(`Checked dealId ${id} with ACBS API: ${dealIdStatus}`);
+    return dealIdStatus;
+  }
+
+  if (entityType === 'facility') {
+    const facilityIdStatus = await checkFacilityId(id);
+    console.log(`Checked facilityId ${id} with ACBS API: ${facilityIdStatus}`);
+    return facilityIdStatus;
+  }
+
+  return null;
+};
 
 exports.create = async (req, res) => {
-  const numberType = Number(req.params.numberType);
+  const { entityType } = req.params;
+  let numberType;
+
+  // TODO: constants
+  if (entityType === 'deal' || entityType === 'facility') {
+    numberType = 1;
+  }
 
   if (!numberTypeIsValid(numberType)) {
     return res.status(400).send('Invalid number type.');
   }
 
-  // const response = await axios({
-  //   method: 'post',
-  //   url: process.env.MULESOFT_API_NUMBER_GENERATOR_URL,
-  //   auth: {
-  //     username: process.env.MULESOFT_API_KEY,
-  //     password: process.env.MULESOFT_API_SECRET,
-  //   },
-  //   data: [
-  //     {
-  //       numberTypeId: numberType,
-  //       createdBy: 'Portal v2/TFM',
-  //       requestingSystem: 'Portal v2/TFM',
-  //     },
-  //   ],
-  // }).catch((catchErr) => catchErr);
+  return new Promise(() => {
+    const interval = setInterval(async () => {
+      const { data } = await callNumberGeneratorApi(numberType);
 
-  const { status, data } = await callNumberGenerator(numberType);
-  
-  const numberGeneratorId = data.maskedId;
-  
-  // TODO check with ACBS
-  if (numberType === CONSTANTS.NUMBER_GENERATOR.DEAL) {
-    const { status } = await checkDealId();
+      const numberGeneratorId = data.maskedId;
+      const statusCode = await checkId(entityType, numberGeneratorId);
 
-    if (status === 404) {
-      // deal id is not being used 
-      
-    } else {
-      // deal id is already in use so we need to get another one.
-    }
-  }
+      if (statusCode === 404) {
+        // deal id is not being used, so we can use it.
+        clearInterval(interval);
+        return res.status(200).send({
+          id: numberGeneratorId,
+        });
+      }
 
-  // return res.status(status).send({
-  //   id: data.maskedId,
-  // });
+      return numberGeneratorId;
+      // TODO: how often should we call? 
+    }, 6000);
+  });
 };
