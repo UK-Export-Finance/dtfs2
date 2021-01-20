@@ -37,7 +37,7 @@ openRouter.route('/industry-sectors/:code')
     industrySectors.findOne,
   );
 
-openRouter.route('/number-generator/:numberType')
+openRouter.route('/number-generator/:entityType')
   .get(
     numberGenerator.create,
   );
