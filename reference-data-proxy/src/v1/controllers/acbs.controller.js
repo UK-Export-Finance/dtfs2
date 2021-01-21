@@ -4,10 +4,6 @@
 // 2) ACBS API tells us if the deal/facility IDs are already in use.
 
 const axios = require('axios');
-//
-
-// DEAL ID THAT EXISTS in dev env: 0020900035
-//
 
 exports.checkDealId = async (dealId) => {
   const response = await axios({
