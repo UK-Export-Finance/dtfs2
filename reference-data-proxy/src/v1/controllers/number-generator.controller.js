@@ -6,7 +6,7 @@ const {
 } = require('./acbs.controller');
 
 const numberTypeIsValid = (numberType) => {
-  if (!Object.values(CONSTANTS.NUMBER_GENERATOR).includes(numberType)) {
+  if (!Object.values(CONSTANTS.NUMBER_GENERATOR.NUMBER_TYPE).includes(numberType)) {
     return false;
   }
 
@@ -30,19 +30,21 @@ const callNumberGeneratorApi = async (numberType) => {
     ],
   }).catch((catchErr) => catchErr);
 
-  return response;
+  const { maskedId: id } = response.data;
+  console.log(`Created id ${id} with Number Generator API`);
+
+  return id;
 };
 
 
 const checkId = async (entityType, id) => {
-  // TODO: constants
-  if (entityType === 'deal') {
+  if (entityType === CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL) {
     const dealIdStatus = await checkDealId(id);
     console.log(`Checked dealId ${id} with ACBS API: ${dealIdStatus}`);
     return dealIdStatus;
   }
 
-  if (entityType === 'facility') {
+  if (entityType === CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.FACILITY) {
     const facilityIdStatus = await checkFacilityId(id);
     console.log(`Checked facilityId ${id} with ACBS API: ${facilityIdStatus}`);
     return facilityIdStatus;
@@ -53,34 +55,56 @@ const checkId = async (entityType, id) => {
 
 exports.create = async (req, res) => {
   const { entityType } = req.params;
+
   let numberType;
 
-  // TODO: constants
-  if (entityType === 'deal' || entityType === 'facility') {
+  if (entityType === CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL
+    || entityType === CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.FACILITY) {
     numberType = 1;
   }
 
   if (!numberTypeIsValid(numberType)) {
-    return res.status(400).send('Invalid number type.');
+    const message = `must be ${CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL} or ${CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.FACILITY}`;
+    return res.status(400).send(`Invalid entity type - ${message}`);
   }
 
-  return new Promise(() => {
+  const createAndValidateId = () => new Promise((resolve) => {
+    let numberGeneratorResponse;
+    let completed = true;
+    let totalCalls = 0;
+
     const interval = setInterval(async () => {
-      const { data } = await callNumberGeneratorApi(numberType);
-
-      const numberGeneratorId = data.maskedId;
-      const statusCode = await checkId(entityType, numberGeneratorId);
-
-      if (statusCode === 404) {
-        // deal id is not being used, so we can use it.
-        clearInterval(interval);
-        return res.status(200).send({
-          id: numberGeneratorId,
-        });
+      totalCalls = totalCalls + 1;
+      if (totalCalls === 1) {
+        completed = false;
       }
 
-      return numberGeneratorId;
-      // TODO: how often should we call? 
-    }, 6000);
+      if (!completed && !numberGeneratorResponse) {
+        numberGeneratorResponse = await callNumberGeneratorApi(numberType);
+        const { data } = numberGeneratorResponse;
+
+        const numberGeneratorId = data.maskedId;
+
+        const statusCode = await checkId(entityType, numberGeneratorId);
+
+        if (statusCode === 404) {
+          // deal id is not being used, so we can use it.
+          completed = true;
+          clearInterval(interval);
+          return resolve(numberGeneratorId);
+        }
+
+        // wipe the state so that API's are called again.
+        completed = false;
+        numberGeneratorResponse = null;
+        return numberGeneratorId;
+      }
+    }, 500);
+  });
+
+  const validId = await createAndValidateId();
+
+  return res.status(200).send({
+    id: validId,
   });
 };
