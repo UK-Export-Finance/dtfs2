@@ -3,12 +3,13 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const express = require('express');
 
+const { PORTAL_ROUTE, TFM_ROUTE } = require('./constants/routes');
 
 const healthcheck = require('./healthcheck');
 
 dotenv.config();
 
-const { openRouter } = require('./v1/routes');
+const { portalRoutes, tfmRoutes } = require('./v1/routes');
 
 // const { CORS_ORIGIN } = process.env;
 
@@ -16,7 +17,9 @@ const app = express();
 app.use(bodyParser.json({ type: 'application/json' }));
 app.use(healthcheck);
 
-app.use('/v1', openRouter);
+app.use(`/v1/${PORTAL_ROUTE}`, portalRoutes);
+app.use(`/v1/${TFM_ROUTE}`, tfmRoutes);
+
 
 // app.use(cors({
 //   origin: CORS_ORIGIN,

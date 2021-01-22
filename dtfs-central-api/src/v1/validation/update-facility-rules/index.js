@@ -1,8 +1,4 @@
-const userObject = require('./user-object');
-
-const rules = [
-  userObject,
-];
+const rules = [];
 
 module.exports = (facility) => {
   let errorList = {};

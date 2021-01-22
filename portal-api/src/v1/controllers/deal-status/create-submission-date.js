@@ -12,6 +12,7 @@ const createSubmissionDate = async (dealId, user) => {
   const updatedDeal = await updateDeal(
     dealId,
     modifiedDeal,
+    user,
   );
 
   return updatedDeal;

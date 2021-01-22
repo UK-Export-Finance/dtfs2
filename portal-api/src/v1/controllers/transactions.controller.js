@@ -1,6 +1,6 @@
 const transactionFixer = require('./transactions/transactionFixer');
 
-const db = require('../../drivers/db-client');
+const api = require('../api');
 
 // To return all transactions, use start=0, pagesize<=0
 exports.findTransactions = async (requestingUser, start = 0, pagesize = 20, filter) => {
@@ -13,14 +13,11 @@ exports.findTransactions = async (requestingUser, start = 0, pagesize = 20, filt
   // console.log(`query :: \n${JSON.stringify(query)}`);
   // get the deals that might contain transactions we care about
   //   ordered by deal.details.dateOfLastAction
-  const collection = await db.getCollection('deals');
-  const dealResults = collection.find(query);
-  const dealsWithTransactions = await dealResults.sort({ 'details.dateOfLastAction': -1 }).toArray();
-  // console.log(`dealsWithTransactions :: \n${JSON.stringify(dealsWithTransactions)}`);
+  const { deals } = await api.queryDeals(query);
 
   // use Array.reduce to loop over our list of deals,
   //  accumulating an array of "loans and bonds" suitable to return via the API
-  const allTransactions = dealsWithTransactions.reduce((transactionsAccumulatedSoFar, deal) => {
+  const allTransactions = deals.reduce((transactionsAccumulatedSoFar, deal) => {
     // use our transactionFix toolkit to get the list of bonds+loans that fit the provided filters
     const transactionsForThisDeal = transactionFix.filteredTransactions(deal);
     return transactionsAccumulatedSoFar.concat(transactionsForThisDeal);

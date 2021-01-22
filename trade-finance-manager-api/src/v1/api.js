@@ -8,7 +8,7 @@ const findOneDeal = async (dealId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${urlRoot}/v1/deals/${dealId}`,
+      url: `${urlRoot}/v1/tfm/deals/${dealId}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -25,7 +25,7 @@ const queryDeals = async (query, start = 0, pagesize = 0) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${urlRoot}/v1/deals/query`,
+      url: `${urlRoot}/v1/tfm/deals/query`,
       headers: {
         'Content-Type': 'application/json',
       },
