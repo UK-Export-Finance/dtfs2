@@ -1,6 +1,7 @@
 const MOCK_COUNTRIES = require('./countries');
 const MOCK_CURRENCIES = require('./currencies');
 const MOCK_INDUSTRY_SECTORS = require('./industry-sectors');
+const MOCK_NUMBER_GENERATOR = require('./number-generator');
 
 const getCountries = () => MOCK_COUNTRIES;
 const getCountry = (findCode) => MOCK_COUNTRIES.find(({ code }) => code === findCode);
@@ -25,4 +26,5 @@ module.exports = {
     getIndustrySectors,
     getIndustrySector,
   },
+  numberGenerator: MOCK_NUMBER_GENERATOR,
 };

@@ -97,12 +97,7 @@ const updateBonds = (dealBonds, workflowDeal, checkIssueFacilities) => {
       return bond;
     }
 
-    const updatedBond = {
-      ...bond,
-      ukefFacilityID: Array.isArray(workflowBond.BSS_ukef_facility_id)
-        ? workflowBond.BSS_ukef_facility_id[0]
-        : workflowBond.BSS_ukef_facility_id,
-    };
+    const updatedBond = bond;
 
     if (checkIssueFacilities) {
       const workflowActionCode = workflowDeal.$.Action_Code;
@@ -125,12 +120,7 @@ const updateLoans = (dealLoans, workflowDeal, checkIssueFacilities) => {
       return loan;
     }
 
-    const updatedLoan = {
-      ...loan,
-      ukefFacilityID: Array.isArray(workflowLoan.EWCS_ukef_facility_id)
-        ? workflowLoan.EWCS_ukef_facility_id[0]
-        : workflowLoan.EWCS_ukef_facility_id,
-    };
+    const updatedLoan = loan;
 
     if (checkIssueFacilities) {
       const workflowActionCode = workflowDeal.$.Action_Code;
