@@ -31,11 +31,9 @@ const callNumberGeneratorApi = async (numberType) => {
   }).catch((catchErr) => catchErr);
 
   const { maskedId: id } = response.data;
-  console.log(`Created id ${id} with Number Generator API`);
 
   return id;
 };
-
 
 const checkId = async (entityType, id) => {
   if (entityType === CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL) {
@@ -69,8 +67,9 @@ exports.create = async (req, res) => {
   }
 
   const createAndValidateId = () => new Promise((resolve) => {
-    let numberGeneratorResponse;
+    let numberGeneratorId;
     let completed = true;
+    let pending = false;
     let totalCalls = 0;
 
     const interval = setInterval(async () => {
@@ -79,11 +78,9 @@ exports.create = async (req, res) => {
         completed = false;
       }
 
-      if (!completed && !numberGeneratorResponse) {
-        numberGeneratorResponse = await callNumberGeneratorApi(numberType);
-        const { data } = numberGeneratorResponse;
-
-        const numberGeneratorId = data.maskedId;
+      if (!pending && !completed && !numberGeneratorId) {
+        pending = true;
+        numberGeneratorId = await callNumberGeneratorApi(numberType);
 
         const statusCode = await checkId(entityType, numberGeneratorId);
 
@@ -95,11 +92,12 @@ exports.create = async (req, res) => {
         }
 
         // wipe the state so that API's are called again.
+        pending = false;
         completed = false;
-        numberGeneratorResponse = null;
+        numberGeneratorId = null;
         return numberGeneratorId;
       }
-    }, 500);
+    }, 10);
   });
 
   const validId = await createAndValidateId();
