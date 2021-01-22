@@ -137,11 +137,6 @@ exports.update = (req, res) => {
     if (toStatus === 'Submitted') {
       const ukefDealId = await refDataApi.numberGenerator.create('deal');
 
-      const tempAllFacilities = [
-        ...dealAfterAllUpdates.bondTransactions.items,
-        ...dealAfterAllUpdates.loanTransactions.items,
-      ];
-
       const updatedBonds = await Promise.all(
         dealAfterAllUpdates.bondTransactions.items.map(async (f) => {
           const facility = f;
