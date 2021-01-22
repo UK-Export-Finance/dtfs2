@@ -99,7 +99,6 @@ const processTypeB = async ({ filename, fileContents }) => {
 
   const updatedDealInfo = {
     details: {
-      ukefDealId: workflowDeal.UKEF_deal_id[0],
       previousWorkflowStatus: workflowDeal.Deal_status[0],
     },
     bondTransactions: {

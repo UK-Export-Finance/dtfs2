@@ -135,20 +135,18 @@ exports.update = (req, res) => {
     }
 
     if (toStatus === 'Submitted') {
-      const newDealId = await refDataApi.numberGenerator.create('deal');
+      const ukefDealId = await refDataApi.numberGenerator.create('deal');
 
       const tempAllFacilities = [
         ...dealAfterAllUpdates.bondTransactions.items,
         ...dealAfterAllUpdates.loanTransactions.items,
       ];
 
-      console.log('------- FACILITIES COUNT ', tempAllFacilities.length);
-
       const updatedBonds = await Promise.all(
         dealAfterAllUpdates.bondTransactions.items.map(async (f) => {
           const facility = f;
 
-          facility.newFacilityIdFromNumberGen = await refDataApi.numberGenerator.create('facility');
+          facility.ukefFacilityID = await refDataApi.numberGenerator.create('facility');
           return facility;
         }),
       );
@@ -157,18 +155,16 @@ exports.update = (req, res) => {
         dealAfterAllUpdates.loanTransactions.items.map(async (f) => {
           const facility = f;
 
-          facility.newFacilityIdFromNumberGen = await refDataApi.numberGenerator.create('facility');
+          facility.ukefFacilityID = await refDataApi.numberGenerator.create('facility');
           return facility;
         }),
       );
 
-      // TODO error handling if ACBS/Number generator fails
-
       dealAfterAllUpdates = await updateDeal(
         req.params.id,
         {
-          tonyTestingNumberGenerator: {
-            newDealId,
+          details: {
+            ukefDealId,
           },
           bondTransactions: {
             items: updatedBonds,
