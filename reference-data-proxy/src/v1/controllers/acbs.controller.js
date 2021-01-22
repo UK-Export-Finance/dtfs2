@@ -4,8 +4,9 @@
 // 2) ACBS API tells us if the deal/facility IDs are already in use.
 
 const axios = require('axios');
+const CONSTANTS = require('../../constants');
 
-exports.checkDealId = async (dealId) => {
+const checkDealId = async (dealId) => {
   const response = await axios({
     method: 'get',
     url: `${process.env.MULESOFT_API_ACBS_DEAL_URL}/${dealId}`,
@@ -25,8 +26,9 @@ exports.checkDealId = async (dealId) => {
 
   return new Error('Error calling ACBS API (deal)');
 };
+exports.checkDealId = checkDealId;
 
-exports.checkFacilityId = async (facilityId) => {
+const checkFacilityId = async (facilityId) => {
   const response = await axios({
     method: 'get',
     url: `${process.env.MULESOFT_API_ACBS_FACILITY_URL}/${facilityId}`,
@@ -40,9 +42,30 @@ exports.checkFacilityId = async (facilityId) => {
     return response.status;
   }
 
-  if (response && response.response && response.response.status === 404) {
-    return 404;
+  if (response && response.response && response.response.status) {
+    return response.response.status;
   }
 
   return new Error('Error calling ACBS API (facility)');
+};
+exports.checkFacilityId = checkFacilityId;
+
+exports.findOne = async (req, res) => {
+  const { entityType, id } = req.params;
+
+  if (entityType === CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL) {
+    const dealIdStatus = await checkDealId(id);
+    console.log(`Checked dealId ${id} with ACBS API: ${dealIdStatus}`);
+
+    return res.status(dealIdStatus).send();
+  }
+
+  if (entityType === CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.FACILITY) {
+    const facilityIdStatus = await checkFacilityId(id);
+    console.log(`Checked facilityId ${id} with ACBS API: ${facilityIdStatus}`);
+
+    return res.status(facilityIdStatus).send();
+  }
+
+  return res.status(500).send();
 };
