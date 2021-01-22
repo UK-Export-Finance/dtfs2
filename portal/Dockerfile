@@ -13,7 +13,6 @@ RUN npm run lint
 RUN npm test
 RUN npm run buildProd
 
-
 # Runtime container
 
 FROM node:lts-alpine

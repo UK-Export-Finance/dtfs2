@@ -7,7 +7,6 @@ RUN npm install
 
 ADD ./src ./src
 
-
 FROM node:lts AS lint
 
 WORKDIR /app

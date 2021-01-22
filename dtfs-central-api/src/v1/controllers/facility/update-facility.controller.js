@@ -1,9 +1,10 @@
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
-const { updateDealEditedBy } = require('../deal/update-deal.controller');
+const { updateDealEditedByPortal } = require('../deal/update-deal.controller');
 const db = require('../../../drivers/db-client');
 const now = require('../../../now');
 const getUpdateFacilityErrors = require('../../validation/update-facility');
+const { PORTAL_ROUTE } = require('../../../constants/routes');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -11,7 +12,7 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateFacility = async (facilityId, facilityBody) => {
+const updateFacility = async (facilityId, facilityBody, routePath) => {
   const collection = await db.getCollection('facilities');
 
   const update = {
@@ -27,14 +28,17 @@ const updateFacility = async (facilityId, facilityBody) => {
 
   const { value: updatedFacility } = findAndUpdateResponse;
 
+  if (routePath === PORTAL_ROUTE) {
   // update the deal so that the user that has edited this facility,
   // is also marked as editing the associated deal
-  const {
-    associatedDealId,
-    user,
-  } = facilityBody;
+    const {
+      associatedDealId,
+      user,
+    } = facilityBody;
 
-  await updateDealEditedBy(associatedDealId, user);
+    await updateDealEditedByPortal(associatedDealId, user);
+  }
+
 
   return updatedFacility;
 };
@@ -43,7 +47,13 @@ exports.updateFacility = updateFacility;
 exports.updateFacilityPut = async (req, res) => {
   const facilityId = req.params.id;
 
-  const validationErrors = getUpdateFacilityErrors(req.body);
+  const { user, facility: facilityUpdate } = req.body;
+
+  if (!user) {
+    return res.status(400).send('User missing');
+  }
+
+  const validationErrors = getUpdateFacilityErrors(facilityUpdate);
 
   if (validationErrors.count !== 0) {
     return res.status(400).send({
@@ -57,6 +67,7 @@ exports.updateFacilityPut = async (req, res) => {
     const updatedFacility = await updateFacility(
       facilityId,
       req.body,
+      req.routePath,
     );
 
     return res.status(200).json(updatedFacility);

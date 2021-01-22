@@ -12,14 +12,14 @@ exports.deleteFacility = async (req, res) => {
 
       // remove facility ID from the associated deal
       const {
-        associatedDealId,
         user,
       } = req.body;
 
       await removeFacilityIdFromDeal(
-        associatedDealId,
+        facility.associatedDealId,
         facilityId,
         user,
+        req.routePath,
       );
 
       return res.status(200).send(status);

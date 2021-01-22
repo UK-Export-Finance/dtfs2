@@ -5,6 +5,7 @@ const countries = require('./controllers/countries.controller');
 const currencies = require('./controllers/currencies.controller');
 const industrySectors = require('./controllers/industry-sectors.controller');
 const numberGenerator = require('./controllers/number-generator.controller');
+const partyDb = require('./controllers/party-db.controller');
 
 openRouter.route('/countries')
   .get(
@@ -39,6 +40,11 @@ openRouter.route('/industry-sectors/:code')
 openRouter.route('/number-generator/:numberType')
   .get(
     numberGenerator.create,
+  );
+
+openRouter.route('/party-db/:companyReg')
+  .get(
+    partyDb.lookup,
   );
 
 module.exports = { openRouter };

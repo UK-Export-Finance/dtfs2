@@ -17,9 +17,9 @@ const expectAddedFields = (obj) => {
     },
     summary: {},
     comments: [],
-    ... obj,
+    ...obj,
     details: {
-      ... obj.details,
+      ...obj.details,
       created: expect.any(String),
       dateOfLastAction: expect.any(String),
       maker: expect.any(Object),
@@ -31,7 +31,7 @@ const expectAddedFields = (obj) => {
   });
 
   return expectation;
-}
+};
 
 const expectedEditedByObject = (user) => ({
   date: expect.any(String),
@@ -42,7 +42,7 @@ const expectedEditedByObject = (user) => ({
 });
 
 const expectAddedFieldsWithEditedBy = (obj, user, numberOfUpdates = 1) => {
-  let expectedEditedByArray = new Array(numberOfUpdates);
+  const expectedEditedByArray = new Array(numberOfUpdates);
   expectedEditedByArray.fill(expectedEditedByObject(user));
 
   const expectation = expectMongoId({

@@ -222,7 +222,7 @@ describe('/v1/deals/:id/status', () => {
       const createdDeal = postResult.body;
       const statusUpdate = {
         comments: 'Flee!',
-        status: completedDeal.details.status
+        status: completedDeal.details.status,
       };
 
       const expectedPreviousStatus = completedDeal.details.previousStatus;
