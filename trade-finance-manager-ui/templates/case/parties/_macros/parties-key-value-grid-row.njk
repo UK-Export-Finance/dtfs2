@@ -9,7 +9,7 @@
         {% endif %}
     </div>
     <div class="govuk-grid-column-two-thirds">
-      {% if params.dataCy %}<p data-cy="{{ params.dataCy }}">{% else %}<p>{% endif %}
+      {% if params.dataCy | safe %}<p data-cy="{{ params.dataCy }}">{% else %}<p>{% endif %}
         {{ params.value }}
       </p>
     </div>
