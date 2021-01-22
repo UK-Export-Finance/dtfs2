@@ -4,7 +4,8 @@
     <div class="govuk-grid-column-one-third">
       <p class="ukef-heading-xs">{{params.key}}</p>
     </div>
-    <div class="govuk-grid-column-two-thirds"><p>
+    <div class="govuk-grid-column-two-thirds">
+      {% if params.dataCy %}<p data-cy="{{ params.dataCy }}">{% else %}<p>{% endif %}
         {% for value in params.values %}
           {% if value %}{{ value }}<br>{% endif %}
         {% endfor %}

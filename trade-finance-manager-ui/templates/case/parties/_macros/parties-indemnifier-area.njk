@@ -16,7 +16,8 @@
     <div class="govuk-grid-column-one-half">
       {{ keyValueGridRow.render({
         key: 'Name',
-        value: deal.submissionDetails.indemnifierName
+        value: deal.submissionDetails.indemnifierName,
+        dataCy: 'indemnifier-name'
       }) }}
       {{ keyValueArrayGridRow.render({
         key: 'Address',
@@ -24,12 +25,16 @@
                 deal.submissionDetails.indemnifierAddressLine2,
                 deal.submissionDetails.indemnifierAddressLine3,
                 deal.submissionDetails.indemnifierAddressTown,
-                deal.submissionDetails.indemnifierAddressPostcode] 
+                deal.submissionDetails.indemnifierAddressPostcode],
+        dataCy: 'indemnifier-address'
+
       }) }}
       {{ keyValueGridRow.render({
         key: 'Country',
-        value: ''
+        value: deal.submissionDetails.indemnifierAddressCountry,
+        dataCy: 'indemnifier-address-country'
       }) }}
+
       {{ keyValueGridRow.render({
         key: 'Companies house<br>registration number',
         value: ''
@@ -50,7 +55,8 @@
                 deal.submissionDetails.indemnifierCorrespondenceAddressLine2,
                 deal.submissionDetails.indemnifierCorrespondenceAddressLine3,
                 deal.submissionDetails.indemnifierCorrespondenceAddressTown,
-                deal.submissionDetails.indemnifierCorrespondenceAddressPostcode] 
+                deal.submissionDetails.indemnifierCorrespondenceAddressPostcode],
+        dataCy: 'correspondence-address'
       }) }}
       {{ keyValueGridRow.render({
         key: 'Correspondence country',
