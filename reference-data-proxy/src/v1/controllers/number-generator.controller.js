@@ -73,7 +73,7 @@ exports.create = async (req, res) => {
     let totalCalls = 0;
 
     const interval = setInterval(async () => {
-      totalCalls = totalCalls + 1;
+      totalCalls += totalCalls;
       if (totalCalls === 1) {
         completed = false;
       }
@@ -97,6 +97,8 @@ exports.create = async (req, res) => {
         numberGeneratorId = null;
         return numberGeneratorId;
       }
+
+      return null;
     }, 10);
   });
 
