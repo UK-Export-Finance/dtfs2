@@ -1,4 +1,5 @@
-// ACBS API service it used to check that deal/facility ids are not already being used.
+// ACBS API is used to check that deal/facility ids are not already being used.
+//
 // the flow is:
 // 1) number-generator API gives us deal and facility IDs
 // 2) ACBS API tells us if the deal/facility IDs are already in use.
