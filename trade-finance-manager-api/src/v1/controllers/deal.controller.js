@@ -1,9 +1,12 @@
 const mapDeal = require('../mappings/map-deal');
 const api = require('../api');
 
-const findOneDeal = async (_id) => {
-  const deal = await api.findOneDeal(_id);
+const findOneDeal = async (dealId) => {
+  const deal = await api.findOneDeal(dealId).catch((error) => error);
 
+  if (deal.error) {
+    return false;
+  }
   return mapDeal(deal);
 };
 
