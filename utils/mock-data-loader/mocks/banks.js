@@ -50,10 +50,11 @@ const BANKS = [
     name: 'UKEF test bank (Delegated)',
     mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
     emails: [
-      'maker1@ukexportfinance.gov.uk',
-      'checker1@ukexportfinance.gov.uk',
+      'maker@ukexportfinance.gov.uk',
+      'checker@ukexportfinance.gov.uk',
     ],
     companiesHouseNo: 'UKEF0001',
+    useTFM: true,
   },
 ];
 
