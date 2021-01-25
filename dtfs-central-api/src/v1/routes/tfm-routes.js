@@ -2,9 +2,9 @@ const express = require('express');
 
 const tfmRouter = express.Router();
 
-const getDealController = require('../controllers/deal/get-deal.controller');
-const updateDealController = require('../controllers/deal/update-deal.controller');
-const deleteDealController = require('../controllers/deal/delete-deal.controller');
+const getDealController = require('../controllers/portal/deal/get-deal.controller');
+const updateDealController = require('../controllers/portal/deal/update-deal.controller');
+const deleteDealController = require('../controllers/portal/deal/delete-deal.controller');
 
 const createFacilityController = require('../controllers/facility/create-facility.controller');
 const getFacilityController = require('../controllers/facility/get-facility.controller');

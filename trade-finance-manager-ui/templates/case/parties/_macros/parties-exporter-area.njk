@@ -29,6 +29,12 @@
         dataCy: 'exporter-name'
       }) }}
 
+      {{ keyValueGridRow.render({
+        key: 'Unique reference number',
+        value: deal.tfm && deal.tfm.partyUrn,
+        dataCy: 'exporter-unique-ref'
+      }) }}
+
       {{ keyValueArrayGridRow.render({
         key: 'Address',
         values:  [ deal.submissionDetails.supplierAddressLine1,

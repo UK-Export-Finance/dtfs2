@@ -10,6 +10,7 @@ const { makeExecutableSchema } = require('graphql-tools');
 const { resolvers, typeDefs, graphQlRouter } = require('./graphql');
 
 const healthcheck = require('./healthcheck');
+const { openRouter } = require('./v1/routes');
 
 dotenv.config();
 
@@ -18,6 +19,8 @@ dotenv.config();
 const app = express();
 app.use(bodyParser.json({ type: 'application/json' }));
 app.use(healthcheck);
+app.use('/v1', openRouter);
+
 // app.use(cors({
 //   origin: CORS_ORIGIN,
 //   allowedHeaders: ['Content-Type', 'Authorization'],

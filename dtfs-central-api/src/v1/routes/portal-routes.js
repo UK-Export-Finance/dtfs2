@@ -1,16 +1,16 @@
 const express = require('express');
 
 const portalRouter = express.Router();
-const createDealController = require('../controllers/deal/create-deal.controller');
-const getDealController = require('../controllers/deal/get-deal.controller');
-const updateDealController = require('../controllers/deal/update-deal.controller');
-const deleteDealController = require('../controllers/deal/delete-deal.controller');
-const addDealController = require('../controllers/deal/add-deal-comment.controller');
+const createDealController = require('../controllers/portal/deal/create-deal.controller');
+const getDealController = require('../controllers/portal/deal/get-deal.controller');
+const updateDealController = require('../controllers/portal/deal/update-deal.controller');
+const deleteDealController = require('../controllers/portal/deal/delete-deal.controller');
+const addDealController = require('../controllers/portal/deal/add-deal-comment.controller');
 
-const createFacilityController = require('../controllers/facility/create-facility.controller');
-const getFacilityController = require('../controllers/facility/get-facility.controller');
-const updateFacilityController = require('../controllers/facility/update-facility.controller');
-const deleteFacilityController = require('../controllers/facility/delete-facility.controller');
+const createFacilityController = require('../controllers/portal/facility/create-facility.controller');
+const getFacilityController = require('../controllers/portal/facility/get-facility.controller');
+const updateFacilityController = require('../controllers/portal/facility/update-facility.controller');
+const deleteFacilityController = require('../controllers/portal/facility/delete-facility.controller');
 
 const { PORTAL_ROUTE } = require('../../constants/routes');
 
