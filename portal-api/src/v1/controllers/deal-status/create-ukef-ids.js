@@ -35,14 +35,10 @@ const createUkefIds = async (dealId, deal, user) => {
         items: updatedLoans,
       },
     },
-<<<<<<< HEAD
     user,
-=======
-    req.user,
->>>>>>> DTFS2-2998 - move deal-status controller - createUkefIds into own function
   );
 
   return updatedDeal;
 };
 
-module.exports = createSubmissionDate;
+module.exports = createUkefIds;

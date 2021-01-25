@@ -135,13 +135,6 @@ exports.update = (req, res) => {
     }
 
     if (toStatus === 'Submitted') {
-      // TODO - if allowed...
-      dealAfterAllUpdates = await CreateUkefIds(
-        req.params.id,
-        dealAfterAllUpdates,
-        req.user,
-      );
-
       await updateSubmittedIssuedFacilities(req.user, dealAfterAllUpdates);
       if (!dealAfterAllUpdates.details.submissionDate) {
         dealAfterAllUpdates = await createSubmissionDate(req.params.id, user);
@@ -153,9 +146,13 @@ exports.update = (req, res) => {
       }
 
       const useTFM = await (isTFMBank(user.bank && user.bank.id));
+
       if (useTFM) {
-        // Integrate with TFM
-        console.log('Call TFM init API');
+        dealAfterAllUpdates = await createUkefIds(
+          req.params.id,
+          dealAfterAllUpdates,
+          user,
+        );
       } else {
         // Integrate with workflow
         const { previousWorkflowStatus } = deal.details;
