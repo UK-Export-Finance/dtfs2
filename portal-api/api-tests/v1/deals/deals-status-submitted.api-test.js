@@ -22,6 +22,9 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   let aBarclaysChecker;
   let aBarclaysMakerChecker;
   let aSuperuser;
+  let tfmMaker;
+  let tfmChecker;
+
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
@@ -35,6 +38,9 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
     const barclaysMakerChecker = testUsers().withMultipleRoles('maker', 'checker').withBankName('Barclays Bank').one();
     aBarclaysMakerChecker = barclaysMakerChecker;
     aSuperuser = testUsers().superuser().one();
+
+    tfmMaker = testUsers().withRole('maker').withBankName('UKEF test bank (Delegated)').one();
+    tfmChecker = testUsers().withRole('checker').withBankName('UKEF test bank (Delegated)').one();
   });
 
   beforeEach(async () => {
@@ -130,6 +136,41 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       const { status, body } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
       expect(body).toBeDefined();
+    });
+  });
+
+  describe('when the status changes to `Submitted` by a TFM enabled checker/bank', () => {
+    it('should add UKEF ids to deal and facilities', async () => {
+      const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
+
+      const postResult = await as(tfmMaker).post(submittedDeal).to('/v1/deals');
+
+      const createdDeal = postResult.body;
+      const statusUpdate = {
+        status: 'Submitted',
+        confirmSubmit: true,
+      };
+
+      const updatedDeal = await as(tfmChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+
+      expect(updatedDeal.status).toEqual(200);
+      expect(updatedDeal.body).toBeDefined();
+
+      const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
+
+
+      expect(body.deal.details.ukefDealId).toBeDefined();
+      expect(typeof body.deal.details.ukefDealId).toEqual('string');
+
+      body.deal.bondTransactions.items.forEach((bond) => {
+        expect(bond.ukefFacilityID).toBeDefined();
+        expect(typeof bond.ukefFacilityID).toEqual('string');
+      });
+
+      body.deal.loanTransactions.items.forEach((loan) => {
+        expect(loan.ukefFacilityID).toBeDefined();
+        expect(typeof loan.ukefFacilityID).toEqual('string');
+      });
     });
   });
 

@@ -125,6 +125,27 @@ const testUsers = [
     roles: ['maker', 'checker'],
     bank: banks.Barclays,
   },
+
+  {
+    username: 'maker-tfm',
+    password: 'AbC!2345',
+    firstname: 'Tamil',
+    surname: 'Rahani',
+    email: 'maker@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: ['maker'],
+    bank: banks.UKEF,
+  },
+  {
+    username: 'checker-tfm',
+    password: 'AbC!2345',
+    firstname: 'Nikolaevich',
+    surname: 'Chernov',
+    email: 'checker@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: ['checker'],
+    bank: banks.UKEF,
+  },
 ];
 
 let notYetInitialised = true;
