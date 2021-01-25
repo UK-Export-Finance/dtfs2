@@ -22,7 +22,7 @@ const createUkefIds = async (dealId, deal, user) => {
     }),
   );
 
-  updatedDeal = await updateDeal(
+  const updatedDeal = await updateDeal(
     dealId,
     {
       details: {

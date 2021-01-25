@@ -7,6 +7,8 @@ const axios = require('axios');
 const CONSTANTS = require('../../constants');
 
 const checkDealId = async (dealId) => {
+  console.log(`Checking deal id ${dealId} with ACBS`);
+
   const response = await axios({
     method: 'get',
     url: `${process.env.MULESOFT_API_ACBS_DEAL_URL}/${dealId}`,
@@ -29,6 +31,8 @@ const checkDealId = async (dealId) => {
 exports.checkDealId = checkDealId;
 
 const checkFacilityId = async (facilityId) => {
+  console.log(`Checking facility id ${facilityId} with ACBS`);
+
   const response = await axios({
     method: 'get',
     url: `${process.env.MULESOFT_API_ACBS_FACILITY_URL}/${facilityId}`,
