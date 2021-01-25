@@ -56,3 +56,8 @@ exports.delete = async (req, res) => {
   const status = await collection.deleteOne({ id: req.params.id });
   res.status(200).send(status);
 };
+
+exports.isTFMBank = async (bankId) => {
+  const bank = await findOneBank(bankId);
+  return Boolean(bank && bank.useTFM);
+};

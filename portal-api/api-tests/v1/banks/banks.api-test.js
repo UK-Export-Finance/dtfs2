@@ -13,6 +13,7 @@ const updatedBank = aBank({
   id: '112233',
   bankName: 'Updated bank name',
 });
+const tfmBank = aBank({ id: '112234', useTFM: true });
 
 describe('/v1/banks', () => {
   let anEditor;
@@ -167,6 +168,18 @@ describe('/v1/banks', () => {
       const bank = await bankController.findOneBank(newBank.id);
 
       expect(bank).toMatchObject(newBank);
+    });
+
+    it('returns is a bank should use TFM instead of workflow', async () => {
+      await as(anEditor).post(newBank).to('/v1/banks');
+
+      const useTfmfalse = await bankController.isTFMBank(newBank.id);
+      expect(useTfmfalse).toEqual(false);
+
+      await as(anEditor).post(tfmBank).to('/v1/banks');
+
+      const useTfmTrue = await bankController.isTFMBank(tfmBank.id);
+      expect(useTfmTrue).toEqual(true);
     });
   });
 });

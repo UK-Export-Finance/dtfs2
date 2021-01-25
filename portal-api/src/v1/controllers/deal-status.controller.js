@@ -1,4 +1,6 @@
 const { findOneDeal, updateDeal } = require('./deal.controller');
+const { isTFMBank } = require('./banks.controller');
+
 const { addComment } = require('./deal-comments.controller');
 
 const { userHasAccessTo } = require('../users/checks');
@@ -142,14 +144,21 @@ exports.update = (req, res) => {
       }
 
       // TODO - Reinstate typeA XML creation once Loans and Summary have been added
-      const { previousWorkflowStatus } = deal.details;
+      const useTFM = await (isTFMBank(user.bank && user.bank.id));
+      if (useTFM) {
+        // Integrate with TFM
+        console.log('Call TFM init API');
+      } else {
+        // Integrate with workflow
+        const { previousWorkflowStatus } = deal.details;
 
-      const typeA = await createTypeA(dealAfterAllUpdates, previousWorkflowStatus);
+        const typeA = await createTypeA(dealAfterAllUpdates, previousWorkflowStatus);
 
-      if (typeA.errorCount) {
+        if (typeA.errorCount) {
         // Revert status
-        await updateStatus(req.params.id, toStatus, fromStatus);
-        return res.status(200).send(typeA);
+          await updateStatus(req.params.id, toStatus, fromStatus);
+          return res.status(200).send(typeA);
+        }
       }
 
       if (
