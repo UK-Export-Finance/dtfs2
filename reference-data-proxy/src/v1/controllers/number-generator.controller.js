@@ -14,6 +14,7 @@ const numberTypeIsValid = (numberType) => {
 };
 
 const callNumberGeneratorApi = async (numberType) => {
+  console.log('Calling Number Generator API');
   const response = await axios({
     method: 'post',
     url: process.env.MULESOFT_API_NUMBER_GENERATOR_URL,
@@ -54,6 +55,8 @@ const checkId = async (entityType, id) => {
 exports.create = async (req, res) => {
   const { entityType } = req.params;
 
+  console.log(`Creating UKEF ID for ${entityType}`);
+
   let numberType;
 
   if (entityType === CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL
@@ -73,7 +76,7 @@ exports.create = async (req, res) => {
     let totalCalls = 0;
 
     const interval = setInterval(async () => {
-      totalCalls += totalCalls;
+      totalCalls += 1;
       if (totalCalls === 1) {
         completed = false;
       }
