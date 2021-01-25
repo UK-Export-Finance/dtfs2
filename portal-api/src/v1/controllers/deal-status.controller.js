@@ -6,7 +6,6 @@ const { addComment } = require('./deal-comments.controller');
 const { userHasAccessTo } = require('../users/checks');
 
 const { createTypeA } = require('./integration/k2-messages');
-const refDataApi = require('../../reference-data/api');
 
 const validateStateChange = require('../validation/deal-status');
 
@@ -20,6 +19,7 @@ const createApprovalDate = require('./deal-status/create-approval-date');
 const updateFacilityCoverStartDates = require('./deal-status/update-facility-cover-start-dates');
 const updateIssuedFacilities = require('./deal-status/update-issued-facilities');
 const updateSubmittedIssuedFacilities = require('./deal-status/update-submitted-issued-facilities');
+const createUkefIds = require('./deal-status/create-ukef-ids');
 const now = require('../../now');
 
 const CONSTANTS = require('../../constants');
@@ -135,39 +135,10 @@ exports.update = (req, res) => {
     }
 
     if (toStatus === 'Submitted') {
-      const ukefDealId = await refDataApi.numberGenerator.create('deal');
-
-      const updatedBonds = await Promise.all(
-        dealAfterAllUpdates.bondTransactions.items.map(async (f) => {
-          const facility = f;
-
-          facility.ukefFacilityID = await refDataApi.numberGenerator.create('facility');
-          return facility;
-        }),
-      );
-
-      const updatedLoans = await Promise.all(
-        dealAfterAllUpdates.loanTransactions.items.map(async (f) => {
-          const facility = f;
-
-          facility.ukefFacilityID = await refDataApi.numberGenerator.create('facility');
-          return facility;
-        }),
-      );
-
-      dealAfterAllUpdates = await updateDeal(
+      // TODO - if allowed...
+      dealAfterAllUpdates = await CreateUkefIds(
         req.params.id,
-        {
-          details: {
-            ukefDealId,
-          },
-          bondTransactions: {
-            items: updatedBonds,
-          },
-          loanTransactions: {
-            items: updatedLoans,
-          },
-        },
+        dealAfterAllUpdates,
         req.user,
       );
 
