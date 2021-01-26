@@ -116,8 +116,12 @@ type DealTotals {
   facilitiesValueInGBP: String!
 }
 
-type TfmData {
-  partyUrn: String
+type TFMSubmissionDetails {
+  supplierPartyUrn: String
+}
+
+type TFMData {
+  submissionDetails: TFMSubmissionDetails
 }
 
 type Deal {
@@ -128,7 +132,7 @@ type Deal {
   submissionDetails: DealSubmissionDetails
   eligibilityCriteria: [DealEligibilityCriterion!]
   eligibility: DealEligibility
-  tfm: TfmData
+  tfm: TFMData
 }
 
 type Query {

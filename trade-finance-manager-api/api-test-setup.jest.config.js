@@ -2,7 +2,9 @@ const axios = require('axios');
 const corsAdapter = require('axios/lib/adapters/http');
 const db = require('./src/drivers/db-client');
 
-const mockFiles = [];
+const mockFiles = [
+  './src/v1/api',
+];
 
 mockFiles.forEach((mockFile) => {
   jest.mock(mockFile);

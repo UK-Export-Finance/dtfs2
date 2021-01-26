@@ -95,7 +95,9 @@ const dealQuery = gql`
         smeType
       }
       tfm {
-        partyUrn
+        submissionDetails {
+          supplierPartyUrn
+        }
       }
     }
   }
