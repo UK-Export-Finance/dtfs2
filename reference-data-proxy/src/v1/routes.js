@@ -6,6 +6,8 @@ const currencies = require('./controllers/currencies.controller');
 const industrySectors = require('./controllers/industry-sectors.controller');
 const numberGenerator = require('./controllers/number-generator.controller');
 const partyDb = require('./controllers/party-db.controller');
+const acbs = require('./controllers/acbs.controller');
+
 
 openRouter.route('/countries')
   .get(
@@ -37,9 +39,14 @@ openRouter.route('/industry-sectors/:code')
     industrySectors.findOne,
   );
 
-openRouter.route('/number-generator/:numberType')
+openRouter.route('/number-generator/:entityType')
   .get(
     numberGenerator.create,
+  );
+
+openRouter.route('/acbs/:entityType/:id')
+  .get(
+    acbs.findOne,
   );
 
 openRouter.route('/party-db/:companyReg')

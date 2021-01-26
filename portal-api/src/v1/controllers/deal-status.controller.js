@@ -1,9 +1,12 @@
 const { findOneDeal, updateDeal } = require('./deal.controller');
+const { isTFMBank } = require('./banks.controller');
+
 const { addComment } = require('./deal-comments.controller');
 
 const { userHasAccessTo } = require('../users/checks');
 
 const { createTypeA } = require('./integration/k2-messages');
+
 const validateStateChange = require('../validation/deal-status');
 
 const userCanSubmitDeal = require('./deal-status/user-can-submit-deal');
@@ -16,6 +19,7 @@ const createApprovalDate = require('./deal-status/create-approval-date');
 const updateFacilityCoverStartDates = require('./deal-status/update-facility-cover-start-dates');
 const updateIssuedFacilities = require('./deal-status/update-issued-facilities');
 const updateSubmittedIssuedFacilities = require('./deal-status/update-submitted-issued-facilities');
+const createUkefIds = require('./deal-status/create-ukef-ids');
 const now = require('../../now');
 
 const CONSTANTS = require('../../constants');
@@ -141,15 +145,25 @@ exports.update = (req, res) => {
         dealAfterAllUpdates = await createMiaSubmissionDate(req.params.id, user);
       }
 
-      // TODO - Reinstate typeA XML creation once Loans and Summary have been added
-      const { previousWorkflowStatus } = deal.details;
+      const useTFM = await (isTFMBank(user.bank && user.bank.id));
 
-      const typeA = await createTypeA(dealAfterAllUpdates, previousWorkflowStatus);
+      if (useTFM) {
+        dealAfterAllUpdates = await createUkefIds(
+          req.params.id,
+          dealAfterAllUpdates,
+          user,
+        );
+      } else {
+        // Integrate with workflow
+        const { previousWorkflowStatus } = deal.details;
 
-      if (typeA.errorCount) {
+        const typeA = await createTypeA(dealAfterAllUpdates, previousWorkflowStatus);
+
+        if (typeA.errorCount) {
         // Revert status
-        await updateStatus(req.params.id, toStatus, fromStatus);
-        return res.status(200).send(typeA);
+          await updateStatus(req.params.id, toStatus, fromStatus);
+          return res.status(200).send(typeA);
+        }
       }
 
       if (
