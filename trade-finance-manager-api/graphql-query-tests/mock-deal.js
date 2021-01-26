@@ -165,6 +165,7 @@ const MOCK_DEAL = {
     items: [
       {
         _id: '12345678',
+        ukefFacilityID: '0040004833',
         bondIssuer: 'Issuer',
         bondType: 'Advance payment guarantee',
         facilityStage: 'Unissued',
@@ -193,6 +194,7 @@ const MOCK_DEAL = {
     items: [
       {
         _id: '23456789',
+        ukefFacilityID: '0040004833',
         createdDate: 1610369832226.0,
         facilityStage: 'Conditional',
         ukefGuaranteeInMonths: '12',

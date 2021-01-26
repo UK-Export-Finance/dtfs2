@@ -62,6 +62,7 @@ const mapFacilities = (facilities) => {
 
     mappedFacilities.push({
       _id: facility._id, // eslint-disable-line no-underscore-dangle
+      ukefFacilityID: facility.ukefFacilityID,
       facilityType: facility.facilityType,
       facilityStage: mapFacilityStage(facilityStage),
       facilityProduct: facility.facilityProduct,

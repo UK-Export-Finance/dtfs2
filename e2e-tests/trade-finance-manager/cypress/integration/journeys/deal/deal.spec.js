@@ -67,4 +67,18 @@ context('User can view a case deal', () => {
   it('should render correct MGA version', () => {
     pages.caseDealPage.mgaVersion().should('have.text', 'January 2020');
   });
+
+  describe('facilities table', () => {
+    it('clicking `Facility ID` link should take user to facility details page when', () => {
+      // cy.login(MOCK_USER);
+      cy.visit(relative(`/case/deal/${dealId}`));
+
+      const facilityId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+      const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
+
+      facilityRow.facilityId().click();
+
+      cy.url().should('eq', relative(`/case/facility/${facilityId}`));
+    });
+  });
 });

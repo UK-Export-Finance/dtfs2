@@ -10,6 +10,7 @@ describe(component, () => {
     facilities: [
       {
         _id: '123',
+        ukefFacilityID: '0040004833',
         facilityProduct: 'BSS',
         coverEndDate: '02 Nov 2021',
         ukefExposure: 'GBP 1,234.00',
@@ -21,6 +22,7 @@ describe(component, () => {
       },
       {
         _id: '456',
+        ukefFacilityID: '0040004833',
         facilityProduct: 'EWCS',
         coverEndDate: '04 Dec 2021',
         ukefExposure: 'GBP 2,469.00',
@@ -31,6 +33,7 @@ describe(component, () => {
       },
       {
         _id: '789',
+        ukefFacilityID: '0040004833',
         facilityProduct: 'EWCS',
         coverEndDate: '04 Dec 2021',
         ukefExposure: 'GBP 2,469.00',
@@ -41,6 +44,7 @@ describe(component, () => {
       },
       {
         _id: '112',
+        ukefFacilityID: '0040004833',
         facilityProduct: '',
         coverEndDate: '04 Dec 2021',
         ukefExposure: 'GBP 2,469.00',
@@ -99,6 +103,17 @@ describe(component, () => {
 
   
   describe('for each facility', () => {
+    it('should render ukefFacilityID link, linking to facility id', () => {
+      params.facilities.forEach((facility) => {
+        const selector = `[data-cy="facility-${facility._id}-ukef-facility-id-link"]`;
+        
+        wrapper.expectLink(selector).toLinkTo(
+          `/case/facility/${facility._id}`,
+          facility.ukefFacilityID,
+        );
+      });
+    });
+
     describe('facilityProduct table cell', () => {
       it('should render value', () => {
         const facilities = params.facilities.filter((f) => f.facilityProduct !== '');

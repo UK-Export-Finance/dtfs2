@@ -102,6 +102,7 @@ type DealEligibility {
 
 type Facility  {
   _id: String!
+  ukefFacilityID: String!
   facilityProduct: String!
   facilityType: String
   facilityStage: String!
