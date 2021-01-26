@@ -264,6 +264,75 @@ const USERS = [
       ],
     },
   },
+
+  {
+    username: 'MAKER-TFM',
+    password: 'AbC!2345',
+    firstname: 'Tamil',
+    surname: 'Rahani',
+    email: 'maker@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: ['maker'],
+    bank: {
+      // _id: '', //TODO [dw] better linking of mock data
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'checker@ukexportfinance.gov.uk',
+      ],
+    },
+  },
+  {
+    username: 'CHECKER-TFM',
+    password: 'AbC!2345',
+    firstname: 'Nikolaevich',
+    surname: 'Chernov',
+    email: 'checker@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: ['checker'],
+    bank: {
+      // _id: '', //TODO [dw] better linking of mock data
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'checker@ukexportfinance.gov.uk',
+      ],
+    },
+  },
+  {
+    username: 'MAKENCHECK-TFM',
+    password: 'AbC!2345',
+    firstname: 'Vladimir',
+    surname: 'Scorpius',
+    email: 'maker@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: ['maker', 'checker'],
+    bank: {
+      // _id: '', //TODO [dw] better linking of mock data
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'checker@ukexportfinance.gov.uk',
+      ],
+    },
+  },
+  {
+    username: 'READER-TFM',
+    password: 'AbC!2345',
+    firstname: 'Wolfgang',
+    surname: 'Weisen',
+    email: 'maker@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: ['reader'],
+    bank: {
+      // _id: '', //TODO [dw] better linking of mock data
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: [
+        'checker@ukexportfinance.gov.uk',
+      ],
+    },
+  },
   {
     username: 'UKEF_OPERATIONS',
     password: 'AbC!2345',

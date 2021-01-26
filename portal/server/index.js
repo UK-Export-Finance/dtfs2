@@ -63,7 +63,6 @@ if (process.env.REDIS_HOSTNAME) {
   console.log('No REDIS configured, using default MemoryStore');
 }
 
-
 app.use(session(sessionOptions));
 
 app.use(flash());

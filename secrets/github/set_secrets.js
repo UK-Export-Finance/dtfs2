@@ -11,6 +11,8 @@ const pat_path = "./pat.txt"
 const csv_path = "./environment_variables.csv"
 
 const { Octokit } = require("@octokit/rest");
+const { throttling } = require("@octokit/plugin-throttling");
+const ThrottledOctokit = Octokit.plugin(throttling);
 
 // Processes a csv of the form:
 //
@@ -241,19 +243,40 @@ async function setSecret(secret_name, secret_value, repoPublicKey, orgPublicKey,
 
         // If Github is stuck in an "Abuse Detection" state then
         // fall back to setting the secret at the organisation level:
+        //console.log(err)
         console.log(` - Error setting ${secret_name}, falling back to org-level secret.`);
-        if (secret_name.endsWith("_DEAL_API_URL")) {
-            console.log(util.inspect(err));
-        }
         return setOrgSecret(secret_name, secret_value, orgPublicKey, repoId, octokit);;
     }
 }
 
 async function main() {
 
-    // Get the repo public key
-    const pat = getPersonalAccessToken();
-    const octokit = new Octokit({auth: pat, userAgent: username});
+    // const octokit = new Octokit({auth: pat, userAgent: username});
+    const octokit = new ThrottledOctokit({
+        auth: getPersonalAccessToken(),
+        userAgent: username,
+        throttle: {
+          onRateLimit: (retryAfter, options) => {
+            console.log(
+              `Request quota exhausted for request - retry after ${retryAfter}s: ${options.method} ${options.url}`
+            );
+      
+            // Retry twice after hitting a rate limit error, then give up
+            if (options.request.retryCount <= 2) {
+              console.log(`Retrying after ${retryAfter} seconds!`);
+              return true;
+            }
+          },
+          onAbuseLimit: (retryAfter, options) => {
+            // does not retry, only logs a warning
+            console.log(
+              `Abuse detected for request - retry after ${retryAfter}s: ${options.method} ${options.url}`
+            );
+          },
+        },
+      });
+
+    // Get the repo and org public keys
     const repoPublicKey = await getRepoPublicKey(octokit);
     const orgPublicKey = await getOrgPublicKey(octokit);
     const repo = await getRepo(octokit);
@@ -280,7 +303,9 @@ async function main() {
                 console.log(`Secrets not included in the csv (${secretsList.length}):\n ${secretsList}`);
             }
             // Set the secrets, but delay each call to try and avoid the Github abuse detection mechanism
-            delay = 2000;
+            // NB Github abuse detection seems to fire for most secrets, and in a consistent pattern.
+            //    once a secret gets "blocked" it seems to stay blocked permanently.
+            delay = 1000;
             Object.keys(secrets).forEach((secretName) => {
                 delay += 2000;
                 setTimeout(async function() {
