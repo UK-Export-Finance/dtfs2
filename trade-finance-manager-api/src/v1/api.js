@@ -17,7 +17,7 @@ const findOneDeal = async (dealId) => {
 
     return response.data.deal;
   } catch ({ response }) {
-    return { error: response };
+    return false;
   }
 };
 

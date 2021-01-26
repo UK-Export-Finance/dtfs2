@@ -1,5 +1,5 @@
 const { findOneDeal } = require('./deal.controller');
-const { addPartyURN } = require('./deal.party-db');
+const { addPartyUrns } = require('./deal.party-db');
 const api = require('../api');
 
 const submitDeal = async (dealId) => {
@@ -9,12 +9,8 @@ const submitDeal = async (dealId) => {
     return false;
   }
 
-  const updatedDealWithPartyUrn = await addPartyURN(deal);
-  if (updatedDealWithPartyUrn) {
-    return api.updateDeal(dealId, updatedDealWithPartyUrn);
-  }
-
-  return false;
+  const updatedDealWithPartyUrn = await addPartyUrns(deal);
+  return api.updateDeal(dealId, updatedDealWithPartyUrn);
 };
 
 exports.submitDeal = submitDeal;

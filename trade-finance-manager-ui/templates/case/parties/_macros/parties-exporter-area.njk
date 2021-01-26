@@ -5,7 +5,7 @@
 {% macro render(params) %}
 {% set deal = params.deal %}
 
-{% if not deal.tfm.partyUrn %}
+{% if not deal.tfm.submissionDetails.supplierPartyUrn %}
   {% set exporterUniqueRefStyle = "govuk-tag govuk-tag--red" %}
 {% endif %}
 
@@ -36,7 +36,7 @@
 
       {{ keyValueGridRow.render({
         key: 'Unique reference number',
-        value: deal.tfm.partyUrn or "NOT MATCHED",
+        value: deal.tfm.submissionDetails.supplierPartyUrn or "NOT MATCHED",
         valueStyle: exporterUniqueRefStyle,
         dataCy: 'exporter-unique-ref'
       }) }}
