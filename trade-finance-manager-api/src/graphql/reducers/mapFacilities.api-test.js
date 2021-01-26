@@ -23,6 +23,7 @@ describe('mapFacilities', () => {
   const mockFacilities = [
     {
       _id: '12345678',
+      ukefFacilityID: '0040004833',
       facilityType: 'bond',
       ...mockCoverEndDate,
       ukefExposure: mockUkefExposure,
@@ -45,6 +46,7 @@ describe('mapFacilities', () => {
     },
     {
       _id: '23456789',
+      ukefFacilityID: '0040004833',
       facilityType: 'loan',
       ...mockCoverEndDate,
       ukefExposure: mockUkefExposure,
@@ -74,7 +76,6 @@ describe('mapFacilities', () => {
       issuedDate: 1610369832226.0,
       issueFacilityDetailsProvided: true,
       status: 'Acknowledged',
-      ukefFacilityID: '65432',
     },
   ];
 
@@ -93,6 +94,7 @@ describe('mapFacilities', () => {
     const expected = [
       {
         _id: mockFacilities[0]._id, // eslint-disable-line no-underscore-dangle
+        ukefFacilityID: mockFacilities[0].ukefFacilityID,
         facilityProduct: 'BSS',
         facilityType: mockFacilities[0].bondType,
         facilityStage: mapFacilityStage(mockFacilities[0].facilityStage),
@@ -104,6 +106,7 @@ describe('mapFacilities', () => {
       },
       {
         _id: mockFacilities[1]._id, // eslint-disable-line no-underscore-dangle
+        ukefFacilityID: mockFacilities[1].ukefFacilityID,
         facilityType: null,
         facilityStage: mapFacilityStage(mockFacilities[1].facilityStage),
         facilityProduct: 'EWCS',

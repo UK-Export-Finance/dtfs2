@@ -25,6 +25,7 @@ const dealQuery = gql`
       }
       facilities {
         _id,
+        ukefFacilityID,
         facilityProduct,
         facilityType,
         facilityStage,
