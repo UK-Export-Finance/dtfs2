@@ -56,6 +56,13 @@ jobs:
       AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_PORTAL_EXPORT_FOLDER }}
 
       GOV_NOTIFY_API_KEY: ${{ secrets.E2ETEST_GOV_NOTIFY_API_KEY }}
+
+      MULESOFT_API_KEY: ${{ secrets.E2ETEST_MULESOFT_API_KEY }}
+      MULESOFT_API_SECRET: ${{ secrets.E2ETEST_MULESOFT_API_SECRET }}
+      MULESOFT_API_NUMBER_GENERATOR_URL: ${{ secrets.E2ETEST_MULESOFT_API_NUMBER_GENERATOR_URL }}
+      MULESOFT_API_ACBS_DEAL_URL: ${{ secrets.E2ETEST_MULESOFT_API_ACBS_DEAL_URL }}
+      MULESOFT_API_ACBS_FACILITY_URL: ${{ secrets.E2ETEST_MULESOFT_API_ACBS_FACILITY_URL }}
+
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
