@@ -21,7 +21,6 @@ const findOneDeal = async (dealId) => {
   }
 };
 
-
 const updateDeal = async (dealId, dealUpdate, user) => {
   try {
     const response = await axios({
@@ -33,6 +32,22 @@ const updateDeal = async (dealId, dealUpdate, user) => {
       data: {
         dealUpdate,
         user,
+      },
+    });
+
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+const findOneFacility = async (facilityId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${urlRoot}/v1/tfm/facilities/${facilityId}`,
+      headers: {
+        'Content-Type': 'application/json',
       },
     });
 
@@ -81,6 +96,7 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
 module.exports = {
   findOneDeal,
   updateDeal,
+  findOneFacility,
   queryDeals,
   getPartyDbInfo,
 };

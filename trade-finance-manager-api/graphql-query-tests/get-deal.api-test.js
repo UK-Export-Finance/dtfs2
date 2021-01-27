@@ -11,7 +11,6 @@ const resolvers = require('../src/graphql/resolvers');
 const MOCK_DEAL = require('./mock-deal');
 const mapDeal = require('../src/v1/mappings/map-deal');
 const dealReducer = require('../src/graphql/reducers/deal');
-const mapFacilities = require('../src/graphql/reducers/mapFacilities');
 
 const GET_DEAL = gql`
   query Deal($id: ID!) {

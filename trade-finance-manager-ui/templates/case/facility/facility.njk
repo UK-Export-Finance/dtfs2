@@ -1,0 +1,22 @@
+{% extends "case/case.njk" %}
+
+{% block sub_content %}
+
+{# TODO - component test #}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+      <p class="header-label">The facility</p>
+
+      <p>ukefFacilityID: {{ facility.ukefFacilityID }}</p>
+      <p>facilityProduct: {{ facility.facilityProduct }}</p>
+      <p>facilityType: {{ facility.facilityType }}</p>
+      <p>facilityStage: {{ facility.facilityStage }}</p>
+
+
+    </div>
+  </div>
+
+{% endblock %}
+
+

@@ -138,7 +138,9 @@ type Deal {
 
 type Query {
   deal(_id: ID!): Deal
+  facility(_id: ID!): Facility
 }
+
 `;
 
 module.exports = typeDefs;
