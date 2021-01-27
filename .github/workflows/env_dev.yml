@@ -1233,7 +1233,7 @@ jobs:
               DTFS_PORTAL_SCHEDULER="${{ env.DTFS_PORTAL_SCHEDULER }}" \
               FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ env.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
-              DTFS_CENTRAL_API="http://$dtfs_central_api_url"            
+              DTFS_CENTRAL_API="http://$dtfs_central_api_url" \         
               TFM_API="http://$tfm_api_url" 
 
   trade-finance-manager-api:
