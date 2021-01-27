@@ -22,6 +22,7 @@ const MOCK_FACILITY = {
   'coverEndDate-day': '20',
   'coverEndDate-month': '10',
   'coverEndDate-year': '2020',
+  bankReferenceNumber: '12345678',
 };
 
 module.exports = MOCK_FACILITY;

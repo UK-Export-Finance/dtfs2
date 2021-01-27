@@ -4,17 +4,65 @@
 
 {# TODO - component test #}
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-three-quarters">
-      <p class="header-label">The facility</p>
+  <div>
 
-      <p>ukefFacilityID: {{ facility.ukefFacilityID }}</p>
-      <p>facilityProduct: {{ facility.facilityProduct }}</p>
-      <p>facilityType: {{ facility.facilityType }}</p>
-      <p>facilityStage: {{ facility.facilityStage }}</p>
+    <h3 class="govuk-heading-l">{{ facility.facilityType }}</h3>
 
+    <div class="govuk-grid-row" data-cy="facility-overview">
 
+      <div class="govuk-grid-column-full">
+
+        <h3 class="govuk-heading-l">Overview</h3>
+
+        <div class="govuk-grid-row">
+
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <h4 class="govuk-heading-s">Product</h4>
+            </div>
+
+            <div class="govuk-grid-column-three-quarters">
+              <p class="govuk-body-s" data-cy="facility-product">{{ facility.facilityProduct }}</p>
+            </div>
+          </div>
+
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <h4 class="govuk-heading-s">Type</h4>
+            </div>
+            <div class="govuk-grid-column-three-quarters">
+              <p class="govuk-body-s" data-cy="facility-type">{{ facility.facilityType }}</p>
+            </div>
+          </div>
+
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <h4 class="govuk-heading-s">Facility stage</h4>
+            </div>
+            <div class="govuk-grid-column-three-quarters">
+              <p class="govuk-body-s" data-cy="facility-stage">{{ facility.facilityStage }}</p>
+            </div>
+          </div>
+
+        
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <h4 class="govuk-heading-s">Bank facility reference</h4>
+            </div>
+            <div class="govuk-grid-column-three-quarters">
+              <p class="govuk-body-s" data-cy="bank-facility-reference">{{ facility.bankFacilityReference }}</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
     </div>
+    
+    <div class="govuk-grid-row separator-line" data-cy="facility-value-and-exposure">
+      <h3 class="govuk-heading-l">Value and exposure</h3>
+    </div>
+
   </div>
 
 {% endblock %}
