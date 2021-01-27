@@ -2,6 +2,7 @@ const mapFacility = require('./mapFacility');
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityStage = require('./mapFacilityStage');
 const mapCoverEndDate = require('./mapCoverEndDate');
+const mapBankFacilityReference = require('./mapBankFacilityReference');
 
 describe('mapFacility', () => {
   const mockCoverEndDate = {
@@ -31,6 +32,7 @@ describe('mapFacility', () => {
     currency: mockCurrency,
     facilityValue: mockFacilityValue,
     facilityStage: 'Unissued',
+    bankReferenceNumber: '123456',
 
     // fields we do not consume
     bondIssuer: 'Issuer',
@@ -67,6 +69,7 @@ describe('mapFacility', () => {
       coveredPercentage: expectedCoveredPercentage,
       facilityValue: expectedFacilityValue,
       facilityValueExportCurrency: expectedFacilityValueExportCurrency,
+      bankFacilityReference: mapBankFacilityReference(mockFacility),
     };
 
     expect(result).toEqual(expected);

@@ -2,6 +2,7 @@ const CONSTANTS = require('../../../../constants');
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityStage = require('./mapFacilityStage');
 const mapCoverEndDate = require('./mapCoverEndDate');
+const mapBankFacilityReference = require('./mapBankFacilityReference');
 
 const mapFacility = (f) => {
   const facility = f;
@@ -68,6 +69,7 @@ const mapFacility = (f) => {
     facilityValueExportCurrency: facility.facilityValueExportCurrency,
     facilityValue: facility.facilityValue,
     ukefExposure: facility.ukefExposure,
+    bankFacilityReference: mapBankFacilityReference(facility),
   };
 };
 

@@ -25,7 +25,8 @@ const GET_FACILITY = gql`
       facilityValue,
       coverEndDate,
       ukefExposure,
-      coveredPercentage
+      coveredPercentage,
+      bankFacilityReference
     }
   }
 `;
