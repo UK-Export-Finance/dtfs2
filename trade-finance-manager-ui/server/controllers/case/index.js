@@ -20,6 +20,21 @@ const getCaseDeal = async (req, res) => {
   });
 };
 
+const getCaseFacility = async (req, res) => {
+  const facilityId = req.params._id;// eslint-disable-line no-underscore-dangle
+  const facility = await api.getFacility(facilityId);
+
+  if (!facility) {
+    return res.redirect('/not-found');
+  }
+
+  return res.render('case/facility/facility.njk', {
+    facility,
+    active_sheet: 'facility',
+    facilityId,
+  });
+};
+
 const getCaseParties = async (req, res) => {
   const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
@@ -37,5 +52,6 @@ const getCaseParties = async (req, res) => {
 
 export default {
   getCaseDeal,
+  getCaseFacility,
   getCaseParties,
 };

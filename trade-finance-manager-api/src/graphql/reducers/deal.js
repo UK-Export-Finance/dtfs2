@@ -1,5 +1,5 @@
 const mapTotals = require('./mappings/mapTotals');
-const mapFacilities = require('./mapFacilities');
+const mapFacilities = require('./mappings/facilities/mapFacilities');
 const mapSubmissionDetails = require('./mapSubmissionDetails');
 
 // TODO: add unit test

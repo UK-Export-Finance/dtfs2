@@ -1,7 +1,5 @@
 const mapFacilities = require('./mapFacilities');
-const { formattedNumber } = require('../../utils/number');
-const mapFacilityStage = require('./mappings/facilities/mapFacilityStage');
-const mapCoverEndDate = require('./mappings/facilities/mapCoverEndDate');
+const mapFacility = require('./mapFacility');
 
 describe('mapFacilities', () => {
   const mockCoverEndDate = {
@@ -20,7 +18,7 @@ describe('mapFacilities', () => {
 
   const mockFacilityValue = '12345.00';
 
-  const mockFacilities = [
+  const MOCK_FACILITIES = [
     {
       _id: '12345678',
       ukefFacilityID: '0040004833',
@@ -79,43 +77,17 @@ describe('mapFacilities', () => {
     },
   ];
 
+  const mockFacilities = [
+    { ...MOCK_FACILITIES[0] },
+    { ...MOCK_FACILITIES[1] },
+  ];
+
   it('should map and format correct fields/values', async () => {
     const result = mapFacilities(mockFacilities);
 
-    const expectedUkefExposure = `${mockCurrency.id} ${mockUkefExposure}`;
-    const expectedCoveredPercentage = `${mockCoveredPercentage}%`;
-
-    const formattedFacilityValue = formattedNumber(mockFacilityValue);
-
-    const expectedFacilityValue = `${mockCurrency.id} ${formattedFacilityValue}`;
-
-    const expectedFacilityValueExportCurrency = `${mockCurrency.id} ${formattedFacilityValue}`;
-
     const expected = [
-      {
-        _id: mockFacilities[0]._id, // eslint-disable-line no-underscore-dangle
-        ukefFacilityID: mockFacilities[0].ukefFacilityID,
-        facilityProduct: 'BSS',
-        facilityType: mockFacilities[0].bondType,
-        facilityStage: mapFacilityStage(mockFacilities[0].facilityStage),
-        coverEndDate: mapCoverEndDate({ ...mockCoverEndDate }),
-        ukefExposure: expectedUkefExposure,
-        coveredPercentage: expectedCoveredPercentage,
-        facilityValue: expectedFacilityValue,
-        facilityValueExportCurrency: expectedFacilityValueExportCurrency,
-      },
-      {
-        _id: mockFacilities[1]._id, // eslint-disable-line no-underscore-dangle
-        ukefFacilityID: mockFacilities[1].ukefFacilityID,
-        facilityType: null,
-        facilityStage: mapFacilityStage(mockFacilities[1].facilityStage),
-        facilityProduct: 'EWCS',
-        coverEndDate: mapCoverEndDate({ ...mockCoverEndDate }),
-        ukefExposure: expectedUkefExposure,
-        coveredPercentage: expectedCoveredPercentage,
-        facilityValue: expectedFacilityValue,
-        facilityValueExportCurrency: expectedFacilityValueExportCurrency,
-      },
+      { ...mapFacility(MOCK_FACILITIES[0]) },
+      { ...mapFacility(MOCK_FACILITIES[1]) },
     ];
 
     expect(result).toEqual(expected);

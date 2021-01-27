@@ -1,12 +1,10 @@
-const CONSTANTS = require('../../constants');
-const { formattedNumber } = require('../../utils/number');
-const mapFacilityStage = require('./mappings/facilities/mapFacilityStage');
-const mapCoverEndDate = require('./mappings/facilities/mapCoverEndDate');
+const mapFacility = require('./mapFacility');
 
 const mapFacilities = (facilities) => {
   const mappedFacilities = [];
 
   facilities.forEach((f) => {
+    /*
     const facility = f;
 
     const {
@@ -72,6 +70,8 @@ const mapFacilities = (facilities) => {
       facilityValue: facility.facilityValue,
       ukefExposure: facility.ukefExposure,
     });
+    */
+    mappedFacilities.push(mapFacility(f));
   });
 
   return mappedFacilities;
