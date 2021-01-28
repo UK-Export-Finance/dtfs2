@@ -94,6 +94,11 @@ const dealQuery = gql`
         supplierCorrespondenceAddressTown,
         smeType
       }
+      tfm {
+        submissionDetails {
+          supplierPartyUrn
+        }
+      }
     }
   }
 `;

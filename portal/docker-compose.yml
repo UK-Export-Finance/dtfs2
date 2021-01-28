@@ -64,6 +64,7 @@ services:
       - DTFS_PORTAL_SCHEDULER
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
+      - TFM_API=http://trade-finance-manager-api:5004
     entrypoint: npx nodemon src/index.js
     
   reference-data-proxy:
@@ -82,6 +83,8 @@ services:
       - MULESOFT_API_PARTY_DB_KEY
       - MULESOFT_API_PARTY_DB_SECRET
       - MULESOFT_API_PARTY_DB_URL
+      - MULESOFT_API_ACBS_DEAL_URL
+      - MULESOFT_API_ACBS_FACILITY_URL
     entrypoint: npx nodemon src/index.js
 
   test-hook-api:

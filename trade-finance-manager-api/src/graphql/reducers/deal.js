@@ -11,6 +11,7 @@ const dealReducer = (deal) => {
     submissionDetails,
     eligibility,
     facilities,
+    tfm,
   } = deal;
 
   const {
@@ -54,6 +55,7 @@ const dealReducer = (deal) => {
       agentName: eligibility.agentName,
     },
     eligibilityCriteria: eligibility.criteria,
+    tfm,
   };
 
   return result;

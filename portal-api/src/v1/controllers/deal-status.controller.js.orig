@@ -6,6 +6,7 @@ const { addComment } = require('./deal-comments.controller');
 const { userHasAccessTo } = require('../users/checks');
 
 const { createTypeA } = require('./integration/k2-messages');
+
 const validateStateChange = require('../validation/deal-status');
 
 const userCanSubmitDeal = require('./deal-status/user-can-submit-deal');
@@ -148,14 +149,17 @@ exports.update = (req, res) => {
       const useTFM = await (isTFMBank(user.bank && user.bank.id));
 
       if (useTFM) {
+<<<<<<< HEAD
         dealAfterAllUpdates = await createUkefIds(
           req.params.id,
           dealAfterAllUpdates,
           user,
         );
+=======
         // Integrate with TFM
         // eslint-disable-next-line no-underscore-dangle
-        api.tfmDealSubmit(deal._id);
+        api.tfmDealInit(deal._id);
+>>>>>>> 17a1eba7... DTFS2-2356 Call to initTFM deal from portal when deal submitted
       } else {
       // Integrate with workflow
         const { previousWorkflowStatus } = deal.details;

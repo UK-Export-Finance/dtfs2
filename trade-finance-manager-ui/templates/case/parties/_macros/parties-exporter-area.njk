@@ -4,6 +4,11 @@
 
 {% macro render(params) %}
 {% set deal = params.deal %}
+
+{% if not deal.tfm.submissionDetails.supplierPartyUrn %}
+  {% set exporterUniqueRefStyle = "govuk-tag govuk-tag--red" %}
+{% endif %}
+
 <div class="govuk-grid-row separator-line deal">
     <div class="govuk-grid-column-one-half">
       <div class="govuk-grid-row">
@@ -27,6 +32,13 @@
         key: 'Name',
         value: deal.submissionDetails.supplierName,
         dataCy: 'exporter-name'
+      }) }}
+
+      {{ keyValueGridRow.render({
+        key: 'Unique reference number',
+        value: deal.tfm.submissionDetails.supplierPartyUrn or "NOT MATCHED",
+        valueStyle: exporterUniqueRefStyle,
+        dataCy: 'exporter-unique-ref'
       }) }}
 
       {{ keyValueArrayGridRow.render({
