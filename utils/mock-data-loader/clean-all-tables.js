@@ -1,4 +1,5 @@
 const api = require('./api');
+const centralApi = require('./centralApi');
 const tokenFor = require('./temporary-token-handler');
 
 const cleanBanks = async (token) => {
@@ -14,6 +15,14 @@ const cleanDeals = async (token) => {
 
   for (deal of await api.listDeals(token)) {
     await api.deleteDeal(deal, token);
+  }
+};
+
+const cleanFacilities = async (token) => {
+  console.log('cleaning central facilities');
+
+  for (facility of await centralApi.listFacilities()) {
+    await centralApi.deleteFacility(facility._id, token);
   }
 };
 
@@ -51,6 +60,7 @@ const cleanAllTables = async () => {
 
   await cleanBanks(token);
   await cleanDeals(token);
+  await cleanFacilities();
   await cleanMandatoryCriteria(token);
   await cleanEligibilityCriteria(token);
   await cleanUsers();

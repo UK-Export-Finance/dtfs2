@@ -1,4 +1,5 @@
 const api = require('./api');
+const centralApi = require('./centralApi');
 const MOCKS = require('./mocks');
 
 const tokenFor = require('./temporary-token-handler');
@@ -42,8 +43,25 @@ const insertMocks = async () => {
   }
 
   console.log('inserting deals');
+  let tfmBankDeal;
+
   for (contract of MOCKS.CONTRACTS) {
-    await api.createDeal(contract, token);
+    const createdDeal = await api.createDeal(contract, token);
+    if (contract.details.owningBank.useTFM) {
+      tfmBankDeal = createdDeal;
+    }
+  }
+
+  console.log('inserting facilites into central');
+  const tfmMaker = MOCKS.USERS.find((user) => user.username === 'MAKER-TFM');
+
+  for (facility of MOCKS.FACILITIES) {
+    const createdFacility = await centralApi.createFacility(facility, tfmBankDeal._id, tfmMaker);
+    const facilityWithDealId = {
+      ...facility,
+      associatedDealId: tfmBankDeal._id
+    }
+    await centralApi.updateFacility(createdFacility._id, facilityWithDealId, tfmMaker);
   }
 
   // Add a deal from a different bank for testing
