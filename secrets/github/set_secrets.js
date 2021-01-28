@@ -65,7 +65,7 @@ function encrypt(secretValue, key) {
     // Encrypt using LibSodium.
     encryptedBytes = sodium.seal(messageBytes, keyBytes);
     encryptedB64 = Buffer.from(encryptedBytes).toString('base64');
-    console.log(`${shorten(secretValue)} -> ${shorten(encryptedB64)}`)
+    //console.log(`${shorten(secretValue)} -> ${shorten(encryptedB64)}`)
     return encryptedB64
 }
 
@@ -189,7 +189,6 @@ async function listRepoSecrets(octokit) {
 
 async function setOrgSecret(secret_name, secret_value, orgPublicKey, repoId, octokit) {
 
-    console.log(` - Setting org secret: ${secret_name}`);
     const encrypted_value = encrypt(secret_value, orgPublicKey.key);
     try {
         const response = await octokit.actions.createOrUpdateOrgSecret({
@@ -202,6 +201,7 @@ async function setOrgSecret(secret_name, secret_value, orgPublicKey, repoId, oct
         });
 
         if (response.status === 201 || response.status == 204) {
+            console.log(`${secret_name} * org`);
             return "";
         }
         
@@ -213,8 +213,6 @@ async function setOrgSecret(secret_name, secret_value, orgPublicKey, repoId, oct
 }
 
 async function setSecret(secret_name, secret_value, repoPublicKey, orgPublicKey, repoId, octokit) {
-
-    console.log(`Setting repo secret: ${secret_name}`);
 
     const encrypted_value = encrypt(secret_value, repoPublicKey.key);
     //console.log({
@@ -232,6 +230,7 @@ async function setSecret(secret_name, secret_value, repoPublicKey, orgPublicKey,
         });
 
         if (response.status === 201 || response.status == 204) {
+            console.log(`${secret_name} - repo`);
             return "";
         }
 
@@ -244,7 +243,7 @@ async function setSecret(secret_name, secret_value, repoPublicKey, orgPublicKey,
         // If Github is stuck in an "Abuse Detection" state then
         // fall back to setting the secret at the organisation level:
         //console.log(err)
-        console.log(` - Error setting ${secret_name}, falling back to org-level secret.`);
+        //console.log(` - Error setting ${secret_name}, falling back to org-level secret.`);
         return setOrgSecret(secret_name, secret_value, orgPublicKey, repoId, octokit);;
     }
 }
@@ -305,9 +304,9 @@ async function main() {
             // Set the secrets, but delay each call to try and avoid the Github abuse detection mechanism
             // NB Github abuse detection seems to fire for most secrets, and in a consistent pattern.
             //    once a secret gets "blocked" it seems to stay blocked permanently.
-            delay = 1000;
+            delay = 200;
             Object.keys(secrets).forEach((secretName) => {
-                delay += 2000;
+                delay += 200;
                 setTimeout(async function() {
                     result = await setSecret(secretName, secrets[secretName], repoPublicKey, orgPublicKey, repo.id, octokit);
                     if (result) {
