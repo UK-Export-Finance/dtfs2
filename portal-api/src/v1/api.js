@@ -115,7 +115,6 @@ const addDealComment = async (dealId, commentType, comment) => {
 };
 
 const tfmDealSubmit = async (dealId) => {
-  console.log(`tfmDealSubmit ${dealId}`);
   try {
     const response = await axios({
       method: 'get',
