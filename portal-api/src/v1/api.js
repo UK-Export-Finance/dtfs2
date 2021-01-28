@@ -3,6 +3,7 @@ const axios = require('axios');
 require('dotenv').config();
 
 const urlRoot = process.env.DTFS_CENTRAL_API;
+const tfmUrl = process.env.TFM_API;
 
 const findOneDeal = async (dealId) => {
   try {
@@ -113,6 +114,22 @@ const addDealComment = async (dealId, commentType, comment) => {
   }
 };
 
+const tfmDealSubmit = async (dealId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmUrl}/v1/deals/${dealId}/submit`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
 
 module.exports = {
   findOneDeal,
@@ -121,4 +138,5 @@ module.exports = {
   updateDeal,
   deleteDeal,
   addDealComment,
+  tfmDealSubmit,
 };

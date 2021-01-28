@@ -128,11 +128,6 @@ describe('graphql query - get deal', () => {
   });
 
   it('should return a mapped deal via dealReducer', async () => {
-    const { data } = await query({
-      query: GET_DEAL,
-      variables: { id: '1234567' },
-    });
-    const queryResponseFacilities = data.deal.facilities;
     const mappedDeal = mapDeal(MOCK_DEAL);
 
     const expectedDealWithoutFacilities = dealReducer(mappedDeal);

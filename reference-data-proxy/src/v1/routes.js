@@ -49,7 +49,7 @@ openRouter.route('/acbs/:entityType/:id')
     acbs.findOne,
   );
 
-openRouter.route('/party-db/:companyReg')
+openRouter.route('/party-db/:companyRegNo')
   .get(
     partyDb.lookup,
   );
