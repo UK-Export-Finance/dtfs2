@@ -1,4 +1,5 @@
 {% extends "case/case.njk" %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 
 {% block sub_content %}
 
@@ -22,7 +23,7 @@
             </div>
 
             <div class="govuk-grid-column-three-quarters">
-              <p class="govuk-body-s" data-cy="facility-product">{{ facility.facilityProduct }}</p>
+              <p class="govuk-body-s" data-cy="facility-product">{{ facility.facilityProduct.name }}</p>
             </div>
           </div>
 
@@ -40,7 +41,13 @@
               <h4 class="govuk-heading-s">Facility stage</h4>
             </div>
             <div class="govuk-grid-column-three-quarters">
-              <p class="govuk-body-s" data-cy="facility-stage">{{ facility.facilityStage }}</p>
+              {{govukTag({
+                text: facility.facilityStage,
+                classes: "govuk-tag--green",
+                attributes: {
+                  'data-cy': 'facility-stage'
+                }
+              })}}
             </div>
           </div>
 

@@ -10,7 +10,9 @@ const facilityQuery = gql`
     facility(_id: $id) {
       _id,
       ukefFacilityID,
-      facilityProduct,
+      facilityProduct {
+        name
+      },
       facilityType,
       facilityStage,
       facilityValueExportCurrency,
