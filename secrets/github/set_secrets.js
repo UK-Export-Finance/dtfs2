@@ -179,6 +179,12 @@ async function listRepoSecrets(octokit) {
         secrets.forEach(function (secret) {
             names.push(secret.name);
           });
+        
+        // Azure acces credentials aren't in the spreadsheet, so don't show them as left-over
+        names = names.filter(item => item !== 'AZURE_DIGITAL_DEV')
+        names = names.filter(item => item !== 'AZURE_DIGITAL_TEST')
+        names = names.filter(item => item !== 'AZURE_DIGITAL_PROD')
+
         return names;
 
     } else {
@@ -296,7 +302,7 @@ async function main() {
                 ...newSecrets
             }
         })
-        .on('end', () => {
+        .on('end', async () => {
             console.log('CSV file successfully processed');
             if (secretsList.length > 0) {
                 console.log(`Secrets not included in the csv (${secretsList.length}):\n ${secretsList}`);
@@ -304,15 +310,15 @@ async function main() {
             // Set the secrets, but delay each call to try and avoid the Github abuse detection mechanism
             // NB Github abuse detection seems to fire for most secrets, and in a consistent pattern.
             //    once a secret gets "blocked" it seems to stay blocked permanently.
-            delay = 200;
-            Object.keys(secrets).forEach((secretName) => {
-                delay += 200;
-                setTimeout(async function() {
-                    result = await setSecret(secretName, secrets[secretName], repoPublicKey, orgPublicKey, repo.id, octokit);
-                    if (result) {
-                        failed_secrets.push(secretName)
-                    }
-                }, delay);
+            //delay = 10;
+            Object.keys(secrets).forEach(async (secretName) => {
+                //delay += 10;
+                //setTimeout(async function() {
+                result = await setSecret(secretName, secrets[secretName], repoPublicKey, orgPublicKey, repo.id, octokit);
+                if (result) {
+                    failed_secrets.push(secretName)
+                }
+                //}, delay);
             })
         });
 
