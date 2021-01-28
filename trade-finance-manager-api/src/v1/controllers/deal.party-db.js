@@ -1,11 +1,13 @@
 const api = require('../api');
 
 const getPartyUrn = async ({ companyRegNo }) => {
+  console.log(`getPartyUrn for ${companyRegNo}`);
   if (!companyRegNo) {
     return '';
   }
 
   const partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
+  console.log('getPartyUrn', { partyDbInfo });
   if (!partyDbInfo) {
     return '';
   }
@@ -29,7 +31,7 @@ const addPartyUrns = async (deal) => {
       },
     },
   };
-
+  console.log('addPartyUrn', { dealUpdate });
   // eslint-disable-next-line no-underscore-dangle
   const updatedDeal = await api.updateDeal(deal._id, dealUpdate);
   return updatedDeal;
