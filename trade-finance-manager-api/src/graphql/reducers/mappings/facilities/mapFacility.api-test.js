@@ -3,6 +3,7 @@ const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityStage = require('./mapFacilityStage');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
+const mapFacilityProduct = require('./mapFacilityProduct');
 
 describe('mapFacility', () => {
   const mockCoverEndDate = {
@@ -61,7 +62,7 @@ describe('mapFacility', () => {
     const expected = {
       _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
       ukefFacilityID: mockFacility.ukefFacilityID,
-      facilityProduct: 'BSS',
+      facilityProduct: mapFacilityProduct(mockFacility),
       facilityType: mockFacility.bondType,
       facilityStage: mapFacilityStage(mockFacility.facilityStage),
       coverEndDate: mapCoverEndDate({ ...mockCoverEndDate }),

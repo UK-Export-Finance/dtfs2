@@ -11,7 +11,9 @@ describe(component, () => {
       {
         _id: '123',
         ukefFacilityID: '0040004833',
-        facilityProduct: 'BSS',
+        facilityProduct: {
+          code: 'BSS',
+        },
         coverEndDate: '02 Nov 2021',
         ukefExposure: 'GBP 1,234.00',
         coveredPercentage: '20%',
@@ -23,7 +25,9 @@ describe(component, () => {
       {
         _id: '456',
         ukefFacilityID: '0040004833',
-        facilityProduct: 'EWCS',
+        facilityProduct: {
+          code: 'EWCS',
+        },
         coverEndDate: '04 Dec 2021',
         ukefExposure: 'GBP 2,469.00',
         coveredPercentage: '20%',
@@ -34,7 +38,9 @@ describe(component, () => {
       {
         _id: '789',
         ukefFacilityID: '0040004833',
-        facilityProduct: 'EWCS',
+        facilityProduct: {
+          code: 'EWCS',
+        },
         coverEndDate: '04 Dec 2021',
         ukefExposure: 'GBP 2,469.00',
         coveredPercentage: '20%',
@@ -45,7 +51,9 @@ describe(component, () => {
       {
         _id: '112',
         ukefFacilityID: '0040004833',
-        facilityProduct: '',
+        facilityProduct: {
+          code: '',
+        },
         coverEndDate: '04 Dec 2021',
         ukefExposure: 'GBP 2,469.00',
         coveredPercentage: '20%',
@@ -116,16 +124,16 @@ describe(component, () => {
 
     describe('facilityProduct table cell', () => {
       it('should render value', () => {
-        const facilities = params.facilities.filter((f) => f.facilityProduct !== '');
+        const facilities = params.facilities.filter((f) => f.facilityProduct.code !== '');
 
         facilities.forEach((facility) => {
           const cellSelector = `[data-cy="facility-${facility._id}-product"]`;
-          wrapper.expectText(cellSelector).toRead(facility.facilityProduct);
+          wrapper.expectText(cellSelector).toRead(facility.facilityProduct.code);
         });
       });
 
       it('should render a dash when facilityProduct is empty', () => {
-        const facility = params.facilities.find((f) => f.facilityProduct === '');
+        const facility = params.facilities.find((f) => f.facilityProduct.code === '');
 
         const cellSelector = `[data-cy="facility-${facility._id}-type"]`;
         wrapper.expectText(cellSelector).toRead('-');
@@ -134,14 +142,14 @@ describe(component, () => {
 
     describe('facilityType table cell', () => {
       it('should render facilityType when facility is bond', () => {
-        const bond = params.facilities.find((f) => f.facilityProduct === 'BSS');
+        const bond = params.facilities.find((f) => f.facilityProduct.code === 'BSS');
 
         const cellSelector = `[data-cy="facility-${bond._id}-type"]`;
         wrapper.expectText(cellSelector).toRead(bond.facilityType);
       });
 
       it('should render a dash when facility is loan', () => {
-        const facility = params.facilities.find((f) => f.facilityProduct !== 'BSS');
+        const facility = params.facilities.find((f) => f.facilityProduct.code !== 'BSS');
 
         const cellSelector = `[data-cy="facility-${facility._id}-type"]`;
         wrapper.expectText(cellSelector).toRead('-');

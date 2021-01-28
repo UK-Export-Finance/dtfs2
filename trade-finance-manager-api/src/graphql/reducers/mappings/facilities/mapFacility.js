@@ -3,6 +3,7 @@ const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityStage = require('./mapFacilityStage');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
+const mapFacilityProduct = require('./mapFacilityProduct');
 
 const mapFacility = (f) => {
   const facility = f;
@@ -14,28 +15,9 @@ const mapFacility = (f) => {
 
   const formattedFacilityValue = formattedNumber(facilityValue);
 
-  // facilityType will eventually be facilityProduct / facilityProductCode
-  // TODO: refactor when DTFS2-3054 is completed.
-  if (facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
-    facility.facilityProduct = CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND;
-  }
-  if (facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
-    facility.facilityProduct = CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN;
-  }
+  facility.facilityProduct = mapFacilityProduct(facility);
 
-  // currently, we don't always have facilityType.
-  // this is a hacky fallback/workaround for initial TFM development.
-  // TODO: remove this once DTFS2-3054 is completed.
-  if (facility.bondType) {
-    // only bonds have `bondType`
-    facility.facilityProduct = CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND;
-  }
-  if (facility.interestMarginFee) {
-    // only loans have `interestMarginFee`
-    facility.facilityProduct = CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN;
-  }
-
-  if (facility.facilityProduct === CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND) {
+  if (facility.facilityProduct.code === CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND) {
     // only bonds have `bondType`
     facility.facilityType = facility.bondType;
   } else {

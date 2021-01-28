@@ -45,7 +45,7 @@ const findOneFacility = async (facilityId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${urlRoot}/v1/tfm/facilities/${facilityId}`,
+      url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}`,
       headers: {
         'Content-Type': 'application/json',
       },
