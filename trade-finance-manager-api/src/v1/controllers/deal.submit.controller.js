@@ -4,7 +4,7 @@ const api = require('../api');
 
 const submitDeal = async (dealId) => {
   const deal = await findOneDeal(dealId);
-  console.log(`Submit deal to tfm id: ${dealId._id}`);
+  console.log(`Submit deal to tfm id: ${dealId}`);
   if (!deal) {
     return false;
   }
