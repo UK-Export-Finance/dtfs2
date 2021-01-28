@@ -11,7 +11,9 @@ describe(page, () => {
       ukefFacilityID: '0040004833',
       facilityType: 'Performance Bond',
       facilityStage: 'Commitment',
-      facilityProduct: 'BSS',
+      facilityProduct: {
+        name: 'Bond Support Scheme',
+      },
       coverEndDate: '1 Feb 2021',
       coveredPercentage: '10%',
       facilityValueExportCurrency: 'GBP 12,345.00',
@@ -26,7 +28,7 @@ describe(page, () => {
   });
 
   it('should render facilityProduct', () => {
-    wrapper.expectText('[data-cy="facility-product"]').toRead(params.facility.facilityProduct);
+    wrapper.expectText('[data-cy="facility-product"]').toRead(params.facility.facilityProduct.name);
   });
 
   it('should render facilityType', () => {
