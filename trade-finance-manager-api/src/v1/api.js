@@ -74,6 +74,7 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
     });
     return response.data;
   } catch ({ response }) {
+    console.log('PartyDb error:', { url: `${refDataUrl}/party-db/${encodeURIComponent(companyRegNo)}`, response });
     return false;
   }
 };
