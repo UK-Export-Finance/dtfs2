@@ -900,7 +900,10 @@ jobs:
               MULESOFT_API_ACBS_DEAL_URL="${{ env.MULESOFT_API_ACBS_DEAL_URL }}" \
               MULESOFT_API_ACBS_FACILITY_URL="${{ env.MULESOFT_API_ACBS_FACILITY_URL }}" \
               MULESOFT_API_KEY="${{ env.MULESOFT_API_KEY }}" \
-              MULESOFT_API_SECRET="${{ env.MULESOFT_API_SECRET }}"
+              MULESOFT_API_SECRET="${{ env.MULESOFT_API_SECRET }}" \
+              MULESOFT_API_PARTY_DB_KEY="${{ env.MULESOFT_API_PARTY_DB_KEY}}" \
+              MULESOFT_API_PARTY_DB_SECRET="${{ env.MULESOFT_API_PARTY_DB_SECRET}}" \
+              MULESOFT_API_PARTY_DB_URL="${{ env.MULESOFT_API_PARTY_DB_URL}}"
 
   dtfs-central-api:
     name: DTFS Central API
@@ -1058,7 +1061,7 @@ jobs:
 
   portal-api:
     name: Portal API
-    needs: [vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api, file-storage]
+    needs: [vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api, file-storage, trade-finance-manager-api]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1203,7 +1206,9 @@ jobs:
           dtfs_central_api_url=$(az webapp show --name tfs-${{ env.environment }}-dtfs-central-api --query defaultHostName -o tsv)
           echo "DTFS central API url: http://$dtfs_central_api_url"
 
+          tfm_api_url=$(az webapp show --name tfs-${{ env.environment }}-trade-finance-manager-api --query defaultHostName -o tsv)
 
+      
           portal_file_storage_key=$(az storage account keys list --account-name tfs${{ env.environment }}storage --query [0].value -o tsv)
 
 
@@ -1228,7 +1233,8 @@ jobs:
               DTFS_PORTAL_SCHEDULER="${{ env.DTFS_PORTAL_SCHEDULER }}" \
               FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ env.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
-              DTFS_CENTRAL_API="http://$dtfs_central_api_url"            
+              DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
+              TFM_API="http://$tfm_api_url"
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
@@ -2034,4 +2040,5 @@ jobs:
     #         --backend-pool portal-api \
     #         --patterns "/v1/*"
   # END Front Doors
+  
   
