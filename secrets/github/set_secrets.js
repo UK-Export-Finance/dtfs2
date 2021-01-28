@@ -310,6 +310,8 @@ async function main() {
             // Set the secrets, but delay each call to try and avoid the Github abuse detection mechanism
             // NB Github abuse detection seems to fire for most secrets, and in a consistent pattern.
             //    once a secret gets "blocked" it seems to stay blocked permanently.
+            // Update: it appears that there's a limit of 100 secrets per repo, unless they're set on an 
+            // environment. At the time of writing, Octokit doesn't support environments.
             //delay = 10;
             Object.keys(secrets).forEach(async (secretName) => {
                 //delay += 10;
