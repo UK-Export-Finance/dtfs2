@@ -49,11 +49,10 @@ const USERS = [
     roles: ['maker'],
     bank: {
       // _id: '', //TODO [dw] better linking of mock data
-      id: '956',
-      name: 'Barclays Bank',
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
       emails: [
-        'maker4@ukexportfinance.gov.uk',
-        'checker4@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
       ],
     },
   },
@@ -117,11 +116,10 @@ const USERS = [
     roles: ['checker'],
     bank: {
       // _id: '', //TODO [dw] better linking of mock data
-      id: '956',
-      name: 'Barclays Bank',
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
       emails: [
-        'maker4@ukexportfinance.gov.uk',
-        'checker4@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
       ],
     },
   },
@@ -153,11 +151,10 @@ const USERS = [
     roles: ['maker', 'checker'],
     bank: {
       // _id: '', //TODO [dw] better linking of mock data
-      id: '956',
-      name: 'Barclays Bank',
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
       emails: [
-        'maker4@ukexportfinance.gov.uk',
-        'checker4@ukexportfinance.gov.uk',
+        'checker@ukexportfinance.gov.uk',
       ],
     },
   },
