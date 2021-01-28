@@ -9,6 +9,7 @@ const addDealController = require('../controllers/portal/deal/add-deal-comment.c
 
 const createFacilityController = require('../controllers/portal/facility/create-facility.controller');
 const getFacilityController = require('../controllers/portal/facility/get-facility.controller');
+const getFacilitiesController = require('../controllers/portal/facility/get-facilities.controller');
 const updateFacilityController = require('../controllers/portal/facility/update-facility.controller');
 const deleteFacilityController = require('../controllers/portal/facility/delete-facility.controller');
 
@@ -46,6 +47,9 @@ portalRouter.route('/deals/query')
   );
 
 portalRouter.route('/facilities')
+  .get(
+    getFacilitiesController.findAllGet,
+  )
   .post(
     createFacilityController.createFacilityPost,
   );
