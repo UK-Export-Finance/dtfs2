@@ -8,6 +8,11 @@ const FACILITY_PRODUCT_CODE = {
   LOAN: 'EWCS',
 };
 
+const FACILITY_PRODUCT_NAME = {
+  BOND: 'Bond Support Scheme',
+  LOAN: 'Export Working Capital Scheme',
+};
+
 const FACILITY_STAGE_PORTAL = {
   UNISSUED: 'Unissued',
   ISSUED: 'Issued',
@@ -23,6 +28,7 @@ const FACILITY_STAGE = {
 module.exports = {
   FACILITY_TYPE,
   FACILITY_PRODUCT_CODE,
+  FACILITY_PRODUCT_NAME,
   FACILITY_STAGE_PORTAL,
   FACILITY_STAGE,
 };

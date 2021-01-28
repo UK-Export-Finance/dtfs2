@@ -30,7 +30,7 @@
             </a>
           </td>
 
-          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-product">{{ facility.facilityProduct | dashIfEmpty }}</td>
+          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-product">{{ facility.facilityProduct.code | dashIfEmpty }}</td>
 
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-type">{{ facility.facilityType | dashIfEmpty}}</td>
 

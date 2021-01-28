@@ -18,7 +18,10 @@ const GET_FACILITY = gql`
     facility(_id: $id) {
       _id,
       ukefFacilityID,
-      facilityProduct,
+      facilityProduct {
+        code,
+        name
+      },
       facilityType,
       facilityStage,
       facilityValueExportCurrency,

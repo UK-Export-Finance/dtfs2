@@ -37,7 +37,9 @@ const GET_DEAL = gql`
       facilities {
         _id,
         ukefFacilityID,
-        facilityProduct,
+        facilityProduct {
+          code
+        },
         facilityType,
         facilityStage,
         facilityValueExportCurrency,

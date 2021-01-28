@@ -100,10 +100,15 @@ type DealEligibility {
   agentAlias: String
 }
 
-type Facility  {
+type FacilityProduct {
+  code: String!
+  name: String!
+}
+
+type Facility {
   _id: String!
   ukefFacilityID: String!
-  facilityProduct: String!
+  facilityProduct: FacilityProduct!
   facilityType: String
   facilityStage: String!
   facilityValueExportCurrency: String!
