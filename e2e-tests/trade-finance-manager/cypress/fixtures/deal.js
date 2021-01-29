@@ -1,5 +1,4 @@
 const MOCK_DEAL = {
-  _id: '1234567',
   details: {
     status: 'Acknowledged by UKEF',
     bank: 'Mock bank',
@@ -164,7 +163,7 @@ const MOCK_DEAL = {
   bondTransactions: {
     items: [
       {
-        _id: '12345678',
+        facilityType: 'bond',
         ukefFacilityID: '0040004833',
         bondIssuer: 'Issuer',
         bondType: 'Advance payment guarantee',
@@ -187,13 +186,14 @@ const MOCK_DEAL = {
         'coverEndDate-day': '20',
         'coverEndDate-month': '10',
         'coverEndDate-year': '2020',
+        bankReferenceNumber: 'Test-123',
       },
     ],
   },
   loanTransactions: {
     items: [
       {
-        _id: '23456789',
+        facilityType: 'loan',
         ukefFacilityID: '0040004833',
         createdDate: 1610369832226.0,
         facilityStage: 'Conditional',
@@ -226,6 +226,7 @@ const MOCK_DEAL = {
           text: 'GBP - UK Sterling',
           id: 'GBP',
         },
+        uniqueIdentificationNumber: 'Test-321',
       },
     ],
   },

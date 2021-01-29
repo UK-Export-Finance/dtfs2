@@ -4,13 +4,14 @@ module.exports = (deals, opts) => {
   console.log(`createManyDeals::`);
 
   logIn(opts).then((token) => {
-    const persisted = [];
+    const persistedDeals = [];
 
     deals.forEach((dealToInsert) => {
-      insertDeal(dealToInsert, token).then((persistedDeal) => {
-        persisted.push(persistedDeal);
-        if (persisted.length === deals.length) {
-          return persisted;
+      insertDeal(dealToInsert, token).then((deal) => {
+        persistedDeals.push(deal);
+
+        if (persistedDeals.length === deals.length) {
+          return persistedDeals;
         }
       });
     });
