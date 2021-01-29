@@ -51,7 +51,6 @@
             </div>
           </div>
 
-        
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-quarter">
               <h4 class="govuk-heading-s">Bank facility reference</h4>
@@ -65,9 +64,64 @@
 
       </div>
     </div>
-    
+
     <div class="govuk-grid-row separator-line" data-cy="facility-value-and-exposure">
-      <h3 class="govuk-heading-l">Value and exposure</h3>
+
+      <div class="govuk-grid-column-full">
+
+        <h3 class="govuk-heading-l">Value and exposure</h3>
+
+        <div class="govuk-grid-row">
+
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <h4 class="govuk-heading-s">Value (export currency)</h4>
+            </div>
+
+            <div class="govuk-grid-column-three-quarters">
+              <p class="govuk-body-s" data-cy="facility-value-export-currency">{{ facility.facilityValueExportCurrency | dashIfEmpty}}</p>
+            </div>
+          </div>
+
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <h4 class="govuk-heading-s">Exchange rate</h4>
+            </div>
+            <div class="govuk-grid-column-three-quarters">
+              <p class="govuk-body-s">-</p>
+            </div>
+          </div>
+
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <h4 class="govuk-heading-s">Value (GBP)</h4>
+            </div>
+            <div class="govuk-grid-column-three-quarters">
+            <p class="govuk-body-s" data-cy="facility-value-gbp">{{ facility.facilityValue | dashIfEmpty }}</p>
+            </div>
+          </div>
+
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <h4 class="govuk-heading-s">UKEF cover</h4>
+            </div>
+            <div class="govuk-grid-column-three-quarters">
+              <p class="govuk-body-s" data-cy="facility-ukef-cover">{{ facility.coveredPercentage | dashIfEmpty }}</p>
+            </div>
+          </div>
+
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <h4 class="govuk-heading-s">Maximum UKEF exposure</h4>
+            </div>
+            <div class="govuk-grid-column-three-quarters">
+              <p class="govuk-body-s" data-cy="facility-maximum-ukef-exposure">{{ facility.ukefExposure | dashIfEmpty }}</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
     </div>
 
   </div>
