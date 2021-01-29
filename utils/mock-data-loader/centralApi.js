@@ -56,6 +56,7 @@ const listFacilities = async () => {
     },
   }).catch((err) => { console.log(`err: ${err}`); });
 
+  if (!response) return [];
   return response.data;
 };
 
