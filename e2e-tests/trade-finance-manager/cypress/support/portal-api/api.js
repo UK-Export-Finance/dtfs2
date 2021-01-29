@@ -28,7 +28,6 @@ module.exports.deleteDeal = (token, dealId) => cy.request({
   },
   failOnStatusCode: false,
 });
-// }).then((resp) => expect(resp.status).to.equal(200));
 
 module.exports.insertDeal = (deal, token) => cy.request({
   url: `${api()}/v1/deals`,

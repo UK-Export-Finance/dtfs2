@@ -60,7 +60,7 @@ const insertMocks = async () => {
     const facilityWithDealId = {
       ...facility,
       associatedDealId: tfmBankDeal._id
-    }
+    };
     await centralApi.updateFacility(createdFacility._id, facilityWithDealId, tfmMaker);
   }
 

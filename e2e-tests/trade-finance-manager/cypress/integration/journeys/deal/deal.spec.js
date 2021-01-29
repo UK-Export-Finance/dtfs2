@@ -2,20 +2,19 @@ import relative from '../../relativeURL';
 import pages from '../../pages';
 import MOCK_DEAL from '../../../fixtures/deal';
 
-const MOCK_USER = {
-  username: 'MAKER',
+const MOCK_MAKER_TFM = {
+  username: 'MAKER-TFM',
   password: 'AbC!2345',
-  firstname: 'Hugo',
-  surname: 'Drax',
+  firstname: 'Tamil',
+  surname: 'Rahani',
   email: 'maker@ukexportfinance.gov.uk',
   timezone: 'Europe/London',
   roles: ['maker'],
   bank: {
-    id: '956',
-    name: 'Barclays Bank',
+    id: '9',
+    name: 'UKEF test bank (Delegated)',
     emails: [
-      'maker4@ukexportfinance.gov.uk',
-      'checker4@ukexportfinance.gov.uk',
+      'checker@ukexportfinance.gov.uk',
     ],
   },
 };
@@ -36,21 +35,49 @@ const ADMIN_LOGIN = {
 context('User can view a case deal', () => {
   let deal;
   let dealId;
+  const dealFacilities = [];
 
   before(() => {
     cy.deleteDeals(MOCK_DEAL._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
 
-    cy.insertOneDeal(MOCK_DEAL, MOCK_USER)
+    // mimic a submitted deal:
+    // 1) add submitted deal TO DB
+    // 2) create the deal's facilities in facilties DB collection
+    // 3) update the facilities to match the submitted deal.
+    cy.insertOneDeal(MOCK_DEAL, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const mockFacilities = [
+          ...deal.bondTransactions.items,
+          ...deal.loanTransactions.items,
+        ];
+
+        mockFacilities.forEach((facility) => {
+          cy.createFacility(facility, dealId, MOCK_MAKER_TFM).then((createdFacility) => {
+            const facilityId = createdFacility._id; // eslint-disable-line no-underscore-dangle
+            const facilityWithDealId = {
+              ...facility,
+              associatedDealId: dealId,
+            };
+
+            cy.updateFacility(facilityId, facilityWithDealId, MOCK_MAKER_TFM);
+
+            dealFacilities.push({
+              ...createdFacility,
+              associatedDealId: dealId,
+            });
+          });
+        });
       });
   });
 
-  // TODO: user flow etc (once built...)
-  // this is more a POC of 'we can test things in cypress'
-  // TODO: should we test for all data or seperate with component tests?
-  // what's more robust?
+  after(() => {
+    dealFacilities.forEach((facility) => {
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
+    });
+  });
 
   it('should render case deal components', () => {
     // cy.login(MOCK_USER);
@@ -73,7 +100,7 @@ context('User can view a case deal', () => {
       // cy.login(MOCK_USER);
       cy.visit(relative(`/case/deal/${dealId}`));
 
-      const facilityId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+      const facilityId = dealFacilities[0]._id; // eslint-disable-line no-underscore-dangle
       const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
 
       facilityRow.facilityId().click();
