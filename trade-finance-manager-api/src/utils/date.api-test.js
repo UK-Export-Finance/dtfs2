@@ -1,6 +1,6 @@
 const {
   formatYear,
-} = require('../../src/utils/date');
+} = require('./date');
 
 describe('utils - date', () => {
   describe('formatYear', () => {
