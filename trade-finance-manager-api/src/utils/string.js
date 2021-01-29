@@ -12,7 +12,10 @@ const hasValue = (str) => {
   return false;
 };
 
+const stripCommas = (str) => str.replace(',', '');
+
 module.exports = {
   isEmptyString,
   hasValue,
+  stripCommas,
 };
