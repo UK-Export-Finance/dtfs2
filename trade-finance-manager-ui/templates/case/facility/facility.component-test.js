@@ -27,19 +27,43 @@ describe(page, () => {
     wrapper = render(params);
   });
 
-  it('should render facilityProduct', () => {
-    wrapper.expectText('[data-cy="facility-product"]').toRead(params.facility.facilityProduct.name);
+  describe('overview section', () => {
+
+    it('should render facilityProduct', () => {
+      wrapper.expectText('[data-cy="facility-product"]').toRead(params.facility.facilityProduct.name);
+    });
+
+    it('should render facilityType', () => {
+      wrapper.expectText('[data-cy="facility-type"]').toRead(params.facility.facilityType);
+    });
+
+    it('should render facilityStage', () => {
+      wrapper.expectText('[data-cy="facility-stage"]').toRead(params.facility.facilityStage);
+    });
+
+    it('should render bankFacilityReference', () => {
+      wrapper.expectText('[data-cy="bank-facility-reference"]').toRead(params.facility.bankFacilityReference);
+    });
+
   });
 
-  it('should render facilityType', () => {
-    wrapper.expectText('[data-cy="facility-type"]').toRead(params.facility.facilityType);
-  });
+  describe('value and exposure section', () => {
 
-  it('should render facilityStage', () => {
-    wrapper.expectText('[data-cy="facility-stage"]').toRead(params.facility.facilityStage);
-  });
+    it('should render facilityValueExportCurrency', () => {
+      wrapper.expectText('[data-cy="facility-value-export-currency"]').toRead(params.facility.facilityValueExportCurrency);
+    });
 
-  it('should render bankFacilityReference', () => {
-    wrapper.expectText('[data-cy="bank-facility-reference"]').toRead(params.facility.bankFacilityReference);
+    it('should render facilityValue', () => {
+      wrapper.expectText('[data-cy="facility-value-gbp"]').toRead(params.facility.facilityValue);
+    });
+
+    it('should render UKEF cover / coveredPercentage', () => {
+      wrapper.expectText('[data-cy="facility-ukef-cover"]').toRead(params.facility.coveredPercentage);
+    });
+
+    it('should render maximum ukefExposure', () => {
+      wrapper.expectText('[data-cy="facility-maximum-ukef-exposure"]').toRead(params.facility.ukefExposure);
+    });
+
   });
 });
