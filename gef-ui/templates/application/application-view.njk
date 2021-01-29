@@ -1,0 +1,21 @@
+{% extends "index.njk" %}
+{% import '_macros/success-message.njk' as success %}
+
+{% block pageTitle %}{{ deal.details.bankSupplyContractName }}{% endblock %}
+
+{% block content %}
+
+  {% set componentData = {user: user, deal: deal, editable: editable, dealFormsCompleted: dealFormsCompleted, canFullyCalculateDealSummary: canFullyCalculateDealSummary, selected: 'view', userCanSubmit: userCanSubmit, dealHasIssuedFacilitiesToSubmit: dealHasIssuedFacilitiesToSubmit, confirmedRequestedCoverStartDates: confirmedRequestedCoverStartDates, allRequestedCoverStartDatesConfirmed:allRequestedCoverStartDatesConfirmed} %}
+
+  {% if successMessage %}
+    {{ success.message(
+      message = successMessage
+    )}}
+  {% endif %}
+
+    <h1 class="govuk-heading-l">
+      Application name:
+      <span data-cy="bankSupplyContractName" class="govuk-body govuk-!-font-size-24">{{ application.name }}</span>
+    </h1>
+
+{% endblock %}
