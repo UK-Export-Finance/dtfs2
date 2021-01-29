@@ -1,22 +1,30 @@
 const { formattedNumber } = require('../../../utils/number');
+const { stripCommas } = require('../../../utils/string');
 
 const mapTotals = (facilities) => {
+  const totals = {};
+
   // DTFS-2727
   // for initial dev, only return facilityValue if currency is GBP.
   // TODO: until we figure out which API to use for conversion from non-GBP.
   const gbpFacilities = facilities.filter((f) => f.currency.id === 'GBP');
 
-  const facilitiesValueArray = gbpFacilities.map(({ facilityValue }) => Number(facilityValue));
+  const facilitiesValue = gbpFacilities.map(({ facilityValue }) => Number(facilityValue));
 
-  if (facilitiesValueArray.length) {
-    const formattedFacilitiesValue = formattedNumber(facilitiesValueArray.reduce((a, b) => a + b));
+  if (facilitiesValue.length) {
+    const formattedFacilitiesValue = formattedNumber(facilitiesValue.reduce((a, b) => a + b));
 
-    return {
-      facilitiesValueInGBP: `GBP ${formattedFacilitiesValue}`,
-    };
+    totals.facilitiesValueInGBP = `GBP ${formattedFacilitiesValue}`;
   }
 
-  return {};
+  const ukefExposure = facilities.map(({ ukefExposure }) => Number(stripCommas(ukefExposure)));
+
+  if (ukefExposure.length) {
+    const formattedUkefExposure = formattedNumber(ukefExposure.reduce((a, b) => a + b));
+    totals.facilitiesUkefExposure = `GBP ${formattedUkefExposure}`;
+  }
+
+  return totals;
 };
 
 module.exports = mapTotals;

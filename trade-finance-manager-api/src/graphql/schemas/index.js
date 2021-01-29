@@ -121,6 +121,7 @@ type Facility {
 
 type DealTotals {
   facilitiesValueInGBP: String!
+  facilitiesUkefExposure: String!
 }
 
 type TFMSubmissionDetails {

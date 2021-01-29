@@ -64,7 +64,8 @@ describe(component, () => {
     ],
     totals: {
       facilitiesValueInGBP: 'GBP 123,456.78',
-    }
+      facilitiesUkefExposure: 'GBP 10,200.12',
+    },
   };
 
   beforeEach(() => {
@@ -216,5 +217,11 @@ describe(component, () => {
       const cellSelector = '[data-cy="facilities-total-value"]';
       wrapper.expectText(cellSelector).toRead(params.totals.facilitiesValueInGBP);
     });
+
+    it('should render totals.facilitiesUkefExposure', () => {
+      const cellSelector = '[data-cy="facilities-total-ukef-exposure"]';
+      wrapper.expectText(cellSelector).toRead(params.totals.facilitiesUkefExposure);
+    });
+
   });
 });

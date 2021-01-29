@@ -1,6 +1,7 @@
 const {
   isEmptyString,
   hasValue,
+  stripCommas,
 } = require('../../src/utils/string');
 
 describe('utils - string', () => {
@@ -26,6 +27,12 @@ describe('utils - string', () => {
       expect(hasValue(null)).toEqual(false);
       expect(hasValue('')).toEqual(false);
       expect(hasValue(' ')).toEqual(false);
+    });
+  });
+
+  describe('stripCommas', () => {
+    it('should remove commas from a string', () => {
+      expect(stripCommas('10,123.45')).toEqual('10123.45');
     });
   });
 });
