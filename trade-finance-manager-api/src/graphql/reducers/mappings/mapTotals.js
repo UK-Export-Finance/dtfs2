@@ -17,10 +17,10 @@ const mapTotals = (facilities) => {
     totals.facilitiesValueInGBP = `GBP ${formattedFacilitiesValue}`;
   }
 
-  const ukefExposure = facilities.map(({ ukefExposure }) => Number(stripCommas(ukefExposure)));
+  const facilitiesUkefExposure = facilities.map(({ ukefExposure }) => Number(stripCommas(ukefExposure)));
 
-  if (ukefExposure.length) {
-    const formattedUkefExposure = formattedNumber(ukefExposure.reduce((a, b) => a + b));
+  if (facilitiesUkefExposure.length) {
+    const formattedUkefExposure = formattedNumber(facilitiesUkefExposure.reduce((a, b) => a + b));
     totals.facilitiesUkefExposure = `GBP ${formattedUkefExposure}`;
   }
 
