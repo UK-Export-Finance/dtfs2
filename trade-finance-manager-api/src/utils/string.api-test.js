@@ -2,7 +2,7 @@ const {
   isEmptyString,
   hasValue,
   stripCommas,
-} = require('../../src/utils/string');
+} = require('./string');
 
 describe('utils - string', () => {
   describe('isEmptyString', () => {

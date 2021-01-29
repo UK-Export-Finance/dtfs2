@@ -1,6 +1,6 @@
 const {
   formattedNumber,
-} = require('../../src/utils/number');
+} = require('./number');
 
 describe('utils - number', () => {
   describe('formattedNumber', () => {
