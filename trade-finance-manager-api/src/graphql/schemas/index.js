@@ -134,6 +134,7 @@ type TFMData {
 
 type Deal {
   _id: String!
+  ukefDealId: String!
   details: DealDetails
   totals: DealTotals
   facilities: [Facility]
