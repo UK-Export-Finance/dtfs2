@@ -20,6 +20,7 @@ services:
       - COMPANIES_HOUSE_API_KEY
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
+      - REDIS_HOSTNAME=redis
     command: node dist/server.js
 
   dtfs-submissions-data:
@@ -108,6 +109,11 @@ services:
       - MULESOFT_API_ACBS_DEAL_URL
       - MULESOFT_API_ACBS_FACILITY_URL
     entrypoint: npx nodemon src/index.js
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
 
   test-hook-api:
     build: ../test-hook-api
