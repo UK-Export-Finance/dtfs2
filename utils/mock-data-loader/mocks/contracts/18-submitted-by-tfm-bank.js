@@ -39,7 +39,8 @@ module.exports = {
       "useTFM": true
     },
     "created": "1610719516272",
-    "previousStatus": "Ready for Checker's approval"
+    "previousStatus": "Ready for Checker's approval",
+    ukefDealId: '0020010552',
   },
   eligibility: {
     submissionType: 'Manual Inclusion Application',

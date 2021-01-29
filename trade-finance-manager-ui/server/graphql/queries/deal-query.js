@@ -4,6 +4,7 @@ const dealQuery = gql`
   query Deal($id: ID!) {
     deal(_id: $id) {
       _id,
+      ukefDealId,
       details {
         status,
         submissionDate,

@@ -7,6 +7,7 @@ describe(component, () => {
   let wrapper;
   const params = {
     _id: '12345678',
+    ukefDealId: '100200300',
     details: {
       submissionType: 'Automatic Inclusion Notice',
       submissionDate: '1597067095109',
@@ -26,6 +27,10 @@ describe(component, () => {
 
   beforeEach(() => {
     wrapper = render(params);
+  });
+
+  it('should render UKEF deal id', () => {
+    wrapper.expectText('[data-cy="ukef-deal-id"]').toRead(params.ukefDealId);
   });
 
   it('should render supplier name', () => {

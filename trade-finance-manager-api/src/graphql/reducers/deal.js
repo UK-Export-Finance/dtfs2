@@ -15,6 +15,7 @@ const dealReducer = (deal) => {
   } = deal;
 
   const {
+    ukefDealId,
     status,
     submissionDate,
     submissionType,
@@ -26,6 +27,7 @@ const dealReducer = (deal) => {
 
   const result = {
     _id: deal._id, // eslint-disable-line no-underscore-dangle
+    ukefDealId,
     details: {
       status,
       submissionDate,
