@@ -52,28 +52,18 @@ describe('mapTotals', () => {
   });
 
   // TODO: until we figure out which API to use for conversion from non-GBP.
-  it('should NOT calculate non-GBP facilities', () => {
-    mockFacilities.push({
-      facilityValue: '100000.00',
-      currency: {
-        id: 'USD',
-      },
-      ukefExposure: '8,000.00',
-    });
-
-    const result = mapTotals(mockFacilities);
-
-    const totalValue = Number(mockFacilities[0].facilityValue)
-      + Number(mockFacilities[1].facilityValue)
-      + Number(mockFacilities[2].facilityValue);
-
-    const expected = `GBP ${formattedNumber(totalValue)}`;
-    expect(result.facilitiesValueInGBP).toEqual(expected);
-  });
-
-  describe('when no facilities have GBP facilities', () => {
+  describe('when some facilities are NOT GBP', () => {
     it('should not return facilitiesValueInGBP', () => {
-      const result = mapTotals([]);
+      const result = mapTotals([
+        ...mockFacilities,
+        {
+          facilityValue: '150.10',
+          currency: {
+            id: 'USD',
+          },
+          ukefExposure: '8,000.00',
+        },
+      ]);
       expect(result.facilitiesValueInGBP).toEqual(undefined);
     });
   });
