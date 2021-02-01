@@ -30,6 +30,7 @@ Along with `secrets/set_jwt_keypair.sh` you'll need the following scripts to set
  * `set_companies_house_api_key.sh`
  * `set_gov_notify_api_key.sh`
  * `set_mulesoft_api_key.sh`
+ * `set_session_secrets.sh`
 
 The list of variables can be seen in the environment build workdlows under [`.github/workflows`](.github/workflows)
 
@@ -64,22 +65,18 @@ From another terminal, stop everything cleanly with:
 docker-compose down
 ```
 
-Portal can then be seen at:
-```
-http://localhost:5000
-```
+Several services are built:
 
-The API is at:
-```
-http://localhost:5001/
-```
-(although these endpoints mostly require access tokens to interact with..)
-```
-http://localhost:5001/v1/deals
-```
-
-a mongoDB container will have been started:
-* to connect a client from your local machine, connect to `localhost:27017` as `root/r00t`
+| Service | URL |
+| ------- | --- |
+| Portal UI | http://localhost:5000 |
+| Portal API | http://localhost:5001 |
+| Reference Data Proxy | http://localhost:5002 |
+| TFM UI | http://localhost:5003 |
+| TFM API | http://localhost:5004 |
+| Central API | http://localhost:5005 |
+| GEF | http://localhost:5006 |
+| Mongo DB | root:r00t@localhost:27017 |
 
 
 ### Git workflow
