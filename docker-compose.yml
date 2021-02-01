@@ -178,6 +178,18 @@ services:
     ports:
       - "6379:6379"
 
+  reverse-proxy:
+    build: ./reverse-proxy
+    image: "dtfs/reverse-proxy"
+    depends_on:
+      - portal
+      - gef-ui
+    ports:
+      - "80:80"
+    environment:
+      - PORTAL_UI=portal:5000
+      - GEF_UI=gef-ui:5006
+
   test-hook-api:
     build: ./test-hook-api
     image: dtfs/test-hook-api

@@ -1,0 +1,29 @@
+upstream portal-ui {
+  server ${PORTAL_UI};    
+}
+
+upstream gef-ui {
+  server ${GEF_UI};   
+}
+
+server {
+  listen 80;
+
+  location / {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+
+    proxy_pass http://portal-ui/;
+  }
+
+  location /gef/ {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+
+    proxy_pass http://gef-ui/;
+  }
+}

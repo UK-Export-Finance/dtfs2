@@ -1,12 +1,13 @@
 version: "3" 
 services:
-  
+
   portal:
     build: ../portal
     image: dtfs/portal
     restart: always
     depends_on:
       - portal-api
+      - redis
     ports:
       - "5000:5000"
     volumes:
@@ -114,6 +115,17 @@ services:
     image: "redis:alpine"
     ports:
       - "6379:6379"
+
+  reverse-proxy:
+    build: ../reverse-proxy
+    image: "dtfs/reverse-proxy"
+    depends_on:
+      - portal
+    ports:
+      - "80:80"
+    environment:
+      - PORTAL_UI=portal:5000
+      - GEF_UI=host.docker.internal:5006
 
   test-hook-api:
     build: ../test-hook-api
