@@ -68,7 +68,7 @@ services:
     environment:
       - DEBUG=express:*
       - PORT=5001
-      - CORS_ORIGIN=http://localhost:5006
+      - CORS_ORIGIN=http://localhost:5000
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
@@ -127,7 +127,7 @@ services:
       - ../test-hook-api/src:/app/src:ro
     environment:
       - PORT=5069
-      - CORS_ORIGIN=http://localhost:5006
+      - CORS_ORIGIN=http://localhost:5000
       - AZURE_WORKFLOW_STORAGE_ACCOUNT
       - AZURE_WORKFLOW_STORAGE_ACCESS_KEY
       - AZURE_WORKFLOW_FILESHARE_NAME
