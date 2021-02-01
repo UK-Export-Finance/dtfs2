@@ -120,8 +120,8 @@ type Facility {
 }
 
 type DealTotals {
-  facilitiesValueInGBP: String!
-  facilitiesUkefExposure: String!
+  facilitiesValueInGBP: String
+  facilitiesUkefExposure: String
 }
 
 type TFMSubmissionDetails {
