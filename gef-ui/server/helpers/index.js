@@ -10,7 +10,6 @@ import mapCurrencies from './mapCurrencies';
 import mapCountries from './mapCountries';
 import mapIndustryClasses from './mapIndustryClasses';
 import mapIndustrySectors from './mapIndustrySectors';
-import pageSpecificValidationErrors from './pageSpecificValidationErrors';
 import sanitizeCurrency from './sanitizeCurrency';
 
 export {
@@ -26,6 +25,5 @@ export {
   mapCurrencies,
   mapIndustryClasses,
   mapIndustrySectors,
-  pageSpecificValidationErrors,
   sanitizeCurrency,
 };

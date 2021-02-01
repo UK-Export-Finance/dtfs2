@@ -74,6 +74,7 @@ services:
     image: dtfs/portal
     restart: always
     depends_on:
+      - redis
       - portal-api
     ports:
       - "5000:5000"
@@ -148,7 +149,30 @@ services:
       - MULESOFT_API_ACBS_DEAL_URL
       - MULESOFT_API_ACBS_FACILITY_URL
     entrypoint: npx nodemon src/index.js
-  
+
+  gef-ui:
+    build: ./gef-ui
+    image: dtfs/gef-ui
+    restart: always
+    depends_on:
+      - redis
+      - portal-api
+    ports:
+      - "5006:5006"
+    volumes:
+      - ./gef-ui/scripts:/app/scripts:ro
+      - ./gef-ui/styles:/app/styles:ro
+      - ./gef-ui/templates:/app/templates:ro
+      - ./gef-ui/server:/app/server:ro
+    environment:
+      - DEAL_API_URL=http://portal-api:5001
+      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
+      - COMPANIES_HOUSE_API_KEY
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - SESSION_SECRET
+      - REDIS_HOSTNAME=redis
+    command: node dist/server.js
+
   redis:
     image: "redis:alpine"
     ports:
