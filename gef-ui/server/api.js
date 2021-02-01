@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const urlRoot = process.env.DEAL_API_URL;
 
+// eslint-disable-next-line no-unused-vars
 const getApplication = async (id, token) => {
   const mock = {
     ...MOCK_APPLICATION,
