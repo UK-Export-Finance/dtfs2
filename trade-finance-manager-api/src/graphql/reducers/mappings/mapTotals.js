@@ -9,7 +9,7 @@ const mapTotals = (facilities) => {
   // TODO: until we figure out which API to use for conversion from non-GBP.
   const gbpFacilities = facilities.filter((f) => f.currency.id === 'GBP');
 
-  if (facilities.length === gbpFacilities.length) { 
+  if (facilities.length === gbpFacilities.length) {
     const facilitiesValue = gbpFacilities.map(({ facilityValue }) => Number(facilityValue));
 
     const formattedFacilitiesValue = formattedNumber(facilitiesValue.reduce((a, b) => a + b));
