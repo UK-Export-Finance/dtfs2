@@ -32,7 +32,7 @@ describe('utils - string', () => {
 
   describe('stripCommas', () => {
     it('should remove commas from a string', () => {
-      expect(stripCommas('10,123.45')).toEqual('10123.45');
+      expect(stripCommas('9,876,543,120,987.99')).toEqual('9876543120987.99');
     });
   });
 });
