@@ -1,0 +1,180 @@
+name: GEF UI
+
+on:
+  push:
+    branches: [ master ]
+    paths: 
+    - 'gef/**'
+    - 'e2e-tests/gef/cypress/**'
+  schedule:
+    # A weekly run to roll up any base image patches,
+    # in office hours, avoiding bank holiday Mondays:
+    # "At 12:00 on Tuesday." - https://crontab.guru/
+    - cron: '0 12 * * 2'
+
+env:
+  environment: dev
+  # Credentials for accessing Azure
+  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+  resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
+  # These values are used when running tests in Docker Compose
+  COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
+  GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
+
+jobs:
+
+  build:
+    name: Build and push GEF UI
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Commit hash
+      run: "echo GITHUB_SHA=${{ github.sha }}"
+    - name: Build and push
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
+        repository: gef-ui
+        path: gef
+        tags: latest
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
+
+  test:
+    name: "Run end-to-end tests in Compose"
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.E2ETEST_AZURE_WORKFLOW_STORAGE_ACCOUNT }}
+      AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.E2ETEST_AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
+      AZURE_WORKFLOW_FILESHARE_NAME: ${{ secrets.E2ETEST_AZURE_WORKFLOW_FILESHARE_NAME }}
+      AZURE_WORKFLOW_EXPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_WORKFLOW_EXPORT_FOLDER }}
+      AZURE_WORKFLOW_IMPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_WORKFLOW_IMPORT_FOLDER }}
+
+      AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.E2ETEST_AZURE_PORTAL_STORAGE_ACCOUNT }}
+      AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.E2ETEST_AZURE_PORTAL_STORAGE_ACCESS_KEY }}
+      AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.E2ETEST_AZURE_PORTAL_FILESHARE_NAME }}
+      AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.E2ETEST_AZURE_PORTAL_EXPORT_FOLDER }}
+
+      GOV_NOTIFY_API_KEY: ${{ secrets.E2ETEST_GOV_NOTIFY_API_KEY }}
+
+      MULESOFT_API_KEY: ${{ secrets.E2ETEST_MULESOFT_API_KEY }}
+      MULESOFT_API_SECRET: ${{ secrets.E2ETEST_MULESOFT_API_SECRET }}
+      MULESOFT_API_NUMBER_GENERATOR_URL: ${{ secrets.E2ETEST_MULESOFT_API_NUMBER_GENERATOR_URL }}
+      MULESOFT_API_ACBS_DEAL_URL: ${{ secrets.E2ETEST_MULESOFT_API_ACBS_DEAL_URL }}
+      MULESOFT_API_ACBS_FACILITY_URL: ${{ secrets.E2ETEST_MULESOFT_API_ACBS_FACILITY_URL }}
+
+      SESSION_SECRET: ${{ env.E2ETEST_SESSION_SECRET }} 
+
+    steps:
+    - uses: actions/checkout@v2
+    # Pull the latest images to run with so we don't need to build them
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
+    - name: Pull portal-api
+      run: |
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-api
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-api dtfs/portal-api
+    - name: Pull portal
+      run: |
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui dtfs/portal
+    - name: Pull GEF
+      run: |
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/gef-ui
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/gef-ui dtfs/gef-ui
+    - name: Start Docker Compose
+      run: |
+        source secrets/set_jwt_keypair.sh
+        docker-compose up -d
+        echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
+        sleep 10
+    - name: Load mock data
+      run: |
+        cd utils/mock-data-loader
+        npm install
+        node ./re-insert-mocks.js
+        pwd
+    - name: Run e2e tests
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      run: |
+        pwd
+        cd $GITHUB_WORKSPACE
+        npm install
+        cd e2e-tests/gef
+        npx cypress run --config video=false # --record
+    - name: Save Cypress screenshots
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@main
+      with:
+        name: screenshots
+        path: './cypress/screenshots'
+    - uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#dtfs2-dev'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: failure()
+
+  promote:
+    name: Promote container images to Dev
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Log in to Dev container registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
+    - name: Tag images
+      run: |
+        from=latest
+        to=dev
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/gef-ui:$from
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/gef-ui:$from ${{ secrets.DEV_ACR_REGISTRY }}/gef-ui:$to
+        docker push ${{ secrets.DEV_ACR_REGISTRY }}/gef-ui:$to
+
+  deploy:
+    name: Deploy container images to Dev
+    needs: promote
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Create slot ${{ github.sha }}
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot create --name tfs-${{ env.environment }}-gef-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-gef-ui
+
+    - name: Swap slot ${{ github.sha }} into production
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot swap   --name tfs-${{ env.environment }}-gef-ui --slot ${{ github.sha }} --action swap
+
+    - name: Delete slot ${{ github.sha }}
+      # Clean up the slot regardless of errors
+      if: ${{ always() }}
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot delete --name tfs-${{ env.environment }}-gef-ui --slot ${{ github.sha }}
