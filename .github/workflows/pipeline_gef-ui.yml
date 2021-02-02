@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
     paths: 
-    - 'gef/**'
+    - 'gef-ui/**'
     - 'e2e-tests/gef/cypress/**'
   schedule:
     # A weekly run to roll up any base image patches,
@@ -37,7 +37,7 @@ jobs:
         username: ${{ secrets.DEV_ACR_USERNAME }}
         password: ${{ secrets.DEV_ACR_PASSWORD }}
         repository: gef-ui
-        path: gef
+        path: gef-ui
         tags: latest
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
