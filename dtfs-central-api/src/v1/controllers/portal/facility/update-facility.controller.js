@@ -12,7 +12,7 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateFacility = async (facilityId, facilityBody, routePath) => {
+const updateFacility = async (facilityId, facilityBody, associatedDealId, user, routePath) => {
   const collection = await db.getCollection('facilities');
 
   const update = {
@@ -29,16 +29,11 @@ const updateFacility = async (facilityId, facilityBody, routePath) => {
   const { value: updatedFacility } = findAndUpdateResponse;
 
   if (routePath === PORTAL_ROUTE) {
-  // update the deal so that the user that has edited this facility,
-  // is also marked as editing the associated deal
-    const {
-      associatedDealId,
-      user,
-    } = facilityBody;
+    // update the deal so that the user that has edited this facility,
+    // is also marked as editing the associated deal
 
     await updateDealEditedByPortal(associatedDealId, user);
   }
-
 
   return updatedFacility;
 };
@@ -47,11 +42,14 @@ exports.updateFacility = updateFacility;
 exports.updateFacilityPut = async (req, res) => {
   const facilityId = req.params.id;
 
-  const { user, facility: facilityUpdate } = req.body;
+  const { user } = req.body;
 
   if (!user) {
     return res.status(400).send('User missing');
   }
+
+  delete req.body.user;
+  const facilityUpdate = req.body;
 
   const validationErrors = getUpdateFacilityErrors(facilityUpdate);
 
@@ -64,9 +62,13 @@ exports.updateFacilityPut = async (req, res) => {
   const facility = await findOneFacility(facilityId);
 
   if (facility) {
+    const { associatedDealId } = facility;
+
     const updatedFacility = await updateFacility(
       facilityId,
-      req.body,
+      facilityUpdate,
+      associatedDealId,
+      user,
       req.routePath,
     );
 
