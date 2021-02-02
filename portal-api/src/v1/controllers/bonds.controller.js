@@ -75,19 +75,19 @@ const facilityStageFields = (bond) => {
 
   if (facilityStage === 'Issued') {
     // remove any `Unissued Facility Stage` specific fields/values
-    delete modifiedBond.ukefGuaranteeInMonths;
+    modifiedBond.ukefGuaranteeInMonths = null;
   }
 
   if (facilityStage === 'Unissued') {
     // remove any `Issued Facility Stage` specific fields/values
-    delete modifiedBond.requestedCoverStartDate;
-    delete modifiedBond['requestedCoverStartDate-day'];
-    delete modifiedBond['requestedCoverStartDate-month'];
-    delete modifiedBond['requestedCoverStartDate-year'];
-    delete modifiedBond['coverEndDate-day'];
-    delete modifiedBond['coverEndDate-month'];
-    delete modifiedBond['coverEndDate-year'];
-    delete modifiedBond.uniqueIdentificationNumber;
+    modifiedBond.requestedCoverStartDate = null;
+    modifiedBond['requestedCoverStartDate-day'] = null;
+    modifiedBond['requestedCoverStartDate-month'] = null;
+    modifiedBond['requestedCoverStartDate-year'] = null;
+    modifiedBond['coverEndDate-day'] = null;
+    modifiedBond['coverEndDate-month'] = null;
+    modifiedBond['coverEndDate-year'] = null;
+    modifiedBond.uniqueIdentificationNumber = null;
   }
 
   return modifiedBond;
@@ -97,7 +97,7 @@ const feeTypeFields = (bond) => {
   const modifiedBond = bond;
   const { feeType } = modifiedBond;
   if (feeType === 'At maturity') {
-    delete modifiedBond.feeFrequency;
+    modifiedBond.feeFrequency = null;
   }
 
   return modifiedBond;
@@ -147,7 +147,7 @@ exports.updateBond = async (req, res) => {
       if (hasAllRequestedCoverStartDateValues(modifiedBond)) {
         modifiedBond = updateRequestedCoverStartDate(modifiedBond);
       } else {
-        delete modifiedBond.requestedCoverStartDate;
+        modifiedBond.requestedCoverStartDate = null;
       }
 
       const { status, data } = await facilitiesController.update(bondId, modifiedBond, req.user);
@@ -175,7 +175,7 @@ exports.deleteBond = async (req, res) => {
   await findOneDeal(req.params.id, async (deal) => {
     if (deal) {
       if (!userHasAccessTo(req.user, deal)) {
-        res.status(401).send();
+        return res.status(401).send();
       }
 
       const { status, data } = await facilitiesController.delete(bondId, req.user);
