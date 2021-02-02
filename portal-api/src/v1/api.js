@@ -114,6 +114,75 @@ const addDealComment = async (dealId, commentType, comment) => {
   }
 };
 
+const createFacility = async (facility, user) => {
+  try {
+    return await axios({
+      method: 'post',
+      url: `${urlRoot}/v1/portal/facilities`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        facility,
+        user,
+      },
+    });
+  } catch ({ response }) {
+    return response;
+  }
+};
+
+const findOneFacility = async (facilityId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${urlRoot}/v1/portal/facilities/${facilityId}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (err) {
+    return false;
+  }
+};
+
+const updateFacility = async (facilityId, facility, user) => {
+  try {
+    return await axios({
+      method: 'put',
+      url: `${urlRoot}/v1/portal/facilities/${facilityId}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        ...facility,
+        user,
+      },
+    });
+  } catch ({ response }) {
+    return response;
+  }
+};
+
+const deleteFacility = async (facilityId, user) => {
+  try {
+    return await axios({
+      method: 'delete',
+      url: `${urlRoot}/v1/portal/facilities/${facilityId}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        user,
+      },
+    });
+  } catch ({ response }) {
+    return response;
+  }
+};
+
 const tfmDealSubmit = async (dealId) => {
   try {
     const response = await axios({
@@ -138,5 +207,9 @@ module.exports = {
   updateDeal,
   deleteDeal,
   addDealComment,
+  createFacility,
+  findOneFacility,
+  updateFacility,
+  deleteFacility,
   tfmDealSubmit,
 };
