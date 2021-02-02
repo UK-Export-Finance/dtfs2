@@ -68,6 +68,8 @@ jobs:
       MULESOFT_API_ACBS_DEAL_URL: ${{ secrets.E2ETEST_MULESOFT_API_ACBS_DEAL_URL }}
       MULESOFT_API_ACBS_FACILITY_URL: ${{ secrets.E2ETEST_MULESOFT_API_ACBS_FACILITY_URL }}
 
+      SESSION_SECRET: ${{ env.E2ETEST_SESSION_SECRET }} 
+
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
