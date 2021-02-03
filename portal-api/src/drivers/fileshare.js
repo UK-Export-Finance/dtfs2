@@ -20,7 +20,7 @@ const getCredentials = async (fileshare = 'portal') => {
   const {
     STORAGE_ACCOUNT, STORAGE_ACCESS_KEY,
   } = getConfig(fileshare);
-
+  console.log({ STORAGE_ACCOUNT, STORAGE_ACCESS_KEY });
   const credentials = await new StorageSharedKeyCredential(STORAGE_ACCOUNT, STORAGE_ACCESS_KEY);
 
   return credentials;
@@ -29,6 +29,7 @@ const getCredentials = async (fileshare = 'portal') => {
 const getShareClient = async (fileshare) => {
   const credentials = await getCredentials(fileshare);
   const { STORAGE_ACCOUNT, FILESHARE_NAME } = getConfig(fileshare);
+
   const serviceClient = new ShareServiceClient(
     `https://${STORAGE_ACCOUNT}.file.core.windows.net`,
     credentials,
