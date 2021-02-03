@@ -1,15 +1,15 @@
 const $ = require('mongo-dot-notation');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('../../portal/deal/get-deal.controller');
+const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;
   return cleanedObject;
 };
 
-const submitDeal = async (deal) => {
+const createDealSnapshot = async (deal) => {
   const collection = await db.getCollection('tfm-deals');
-
   const update = {
     dealSnapshot: deal,
   };
@@ -18,16 +18,42 @@ const submitDeal = async (deal) => {
     // eslint-disable-next-line no-underscore-dangle
     { _id: deal._id },
     $.flatten(withoutId(update)),
-    { returnOriginal: false },
+    { returnOriginal: false, upsert: true },
   );
 
   return findAndUpdateResponse.value;
 };
 
-exports.submitDealPut = async (req, res) => {
-  const { dealId } = req.body;
+const createFacilitiesSnapshot = async (dealId) => {
+  const dealFacilities = await findAllFacilitiesByDealId(dealId);
+  const collection = await db.getCollection('tfm-facilities');
 
-  await findOneDeal(dealId, async (deal) => {
+  const updatedFacilties = Promise.all(
+    dealFacilities.map(async (facility) => collection.findOneAndUpdate(
+    // eslint-disable-next-line no-underscore-dangle
+      { _id: facility._id },
+      $.flatten(withoutId(facility)),
+      { returnOriginal: false, upsert: true },
+    )),
+  );
+
+  return updatedFacilties;
+};
+
+const submitDeal = async (deal) => {
+  await createDealSnapshot(deal);
+  // eslint-disable-next-line no-underscore-dangle
+  await createFacilitiesSnapshot(deal._id);
+
+  // eslint-disable-next-line no-underscore-dangle
+  const updatedDeal = await findOneDeal(deal._id, false, 'tfm');
+  return updatedDeal;
+};
+
+exports.submitDealPut = async (req, res) => {
+  const { id } = req.params;
+
+  await findOneDeal(id, async (deal) => {
     if (deal) {
       const updatedDeal = await submitDeal(deal);
       return res.status(200).json(updatedDeal);

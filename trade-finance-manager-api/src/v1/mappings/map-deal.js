@@ -1,7 +1,7 @@
 const CONTENT_STRINGS = require('../content-strings');
 
 const mapDeal = (deal) => {
-  const mappedDeal = deal;
+  const mappedDeal = JSON.parse(JSON.stringify(deal));
 
   mappedDeal.eligibility.criteria.map((criterion) => {
     const mappedCriterion = criterion;

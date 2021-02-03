@@ -5,7 +5,6 @@ import facilityQuery from './graphql/queries/facility-query';
 
 const getDeal = async (id) => {
   const response = await apollo('GET', dealQuery, { id });
-
   return response.data.deal;
 };
 

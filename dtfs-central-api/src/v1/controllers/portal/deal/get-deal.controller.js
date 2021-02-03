@@ -24,13 +24,19 @@ exports.queryDealsPost = async (req, res) => {
   res.status(200).send(deals);
 };
 
-const findOneDeal = async (_id, callback) => {
-  const dealsCollection = await db.getCollection('deals');
-  const facilitiesCollection = await db.getCollection('facilities');
+const findOneDeal = async (_id, callback, type) => {
+  const [dealsCollectionName, facilitiesCollectionName] = type === 'tfm'
+    ? ['tfm-deals', 'tfm-facilities']
+    : ['deals', 'facilities'];
 
-  const deal = await dealsCollection.findOne({ _id });
+  const dealsCollection = await db.getCollection(dealsCollectionName);
+  const facilitiesCollection = await db.getCollection(facilitiesCollectionName);
 
-  if (deal) {
+  const dealItem = await dealsCollection.findOne({ _id });
+
+  const deal = type === 'tfm' ? dealItem && dealItem.dealSnapshot : dealItem;
+
+  if (dealItem) {
     const facilityIds = deal.facilities;
 
     if (facilityIds && facilityIds.length > 0) {
@@ -68,19 +74,27 @@ const findOneDeal = async (_id, callback) => {
         items: mappedLoans,
       };
 
+      const returnDeal = type === 'tfm'
+        ? {
+          ...dealItem,
+          snapshotDeal: mappedDeal,
+        }
+        : mappedDeal;
+
+
       if (callback) {
-        callback(mappedDeal);
+        callback(returnDeal);
       }
 
-      return mappedDeal;
+      return returnDeal;
     }
   }
 
   if (callback) {
-    callback(deal);
+    callback(dealItem);
   }
 
-  return deal;
+  return dealItem;
 };
 exports.findOneDeal = findOneDeal;
 

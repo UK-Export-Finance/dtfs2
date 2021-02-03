@@ -138,6 +138,7 @@ type TFMData {
   submissionDetails: TFMSubmissionDetails
 }
 
+<<<<<<< HEAD
 input DashboardFilters {
   field: String
   value: String
@@ -149,8 +150,10 @@ input DealsInput {
   pagesize: Int,
   filters: [DashboardFilters]
 }
-
+type Deal {
+=======
 type DealSnapshot {
+>>>>>>> fd40d1c3... DTFS2-3345 tfs deal snapshot
   _id: String!
   ukefDealId: String
   details: DealDetails
