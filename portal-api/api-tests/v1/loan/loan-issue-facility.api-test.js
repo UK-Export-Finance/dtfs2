@@ -149,7 +149,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
 
       const { body } = await putIssueFacility(dealId, loanId, issueFacilityBody);
 
-      expect(body.status).toBeUndefined();
+      expect(body.status).toEqual(null);
     });
 
 
@@ -202,7 +202,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
           };
 
           const { body } = await putIssueFacility(dealId, loanId, incompleteDate);
-          expect(body.loan.requestedCoverStartDate).toBeUndefined();
+          expect(body.loan.requestedCoverStartDate).toEqual(null);
         });
       });
 
@@ -217,7 +217,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
           };
 
           const { body } = await putIssueFacility(dealId, loanId, incompleteDate);
-          expect(body.loan.issuedDate).toBeUndefined();
+          expect(body.loan.issuedDate).toEqual(null);
         });
       });
     });

@@ -10,6 +10,7 @@ const { createTimestampFromSubmittedValues } = require('../facility-dates/timest
 const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
 const { hasValue } = require('../../utils/string');
 const canIssueFacility = require('../facility-issuance');
+const facilitiesController = require('./facilities.controller');
 
 exports.updateLoanIssueFacility = async (req, res) => {
   const {
@@ -22,8 +23,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
         return res.status(401).send();
       }
 
-      const loan = deal.loanTransactions.items.find((l) =>
-        String(l._id) === loanId); // eslint-disable-line no-underscore-dangle
+      const loan = await facilitiesController.findOne(loanId);
 
       if (!loan) {
         return res.status(404).send();
@@ -40,7 +40,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
       };
 
       // remove status added via type B XML. (we dynamically generate statuses)
-      delete modifiedLoan.status;
+      modifiedLoan.status = null;
 
       if (!modifiedLoan.issueFacilityDetailsStarted
         && !modifiedLoan.issueFacilityDetailsSubmitted) {
@@ -56,13 +56,13 @@ exports.updateLoanIssueFacility = async (req, res) => {
       if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {
         modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
       } else {
-        delete modifiedLoan.requestedCoverStartDate;
+        modifiedLoan.requestedCoverStartDate = null;
       }
 
       if (hasAllIssuedDateValues(modifiedLoan)) {
         modifiedLoan.issuedDate = createTimestampFromSubmittedValues(req.body, 'issuedDate');
       } else {
-        delete modifiedLoan.issuedDate;
+        modifiedLoan.issuedDate = null;
       }
 
       const validationErrors = loanIssueFacilityValidationErrors(
@@ -76,16 +76,16 @@ exports.updateLoanIssueFacility = async (req, res) => {
         modifiedLoan.issueFacilityDetailsProvided = false;
       }
 
-      const updatedLoan = await updateLoanInDeal(req.user, deal, modifiedLoan);
+      const { status, data } = await facilitiesController.update(loanId, modifiedLoan, req.user);
 
       if (validationErrors.count !== 0) {
         return res.status(400).send({
           validationErrors,
-          loan: updatedLoan,
+          loan: data,
         });
       }
 
-      return res.status(200).send(updatedLoan);
+      return res.status(200).send(data);
     }
 
     return res.status(404).send();
