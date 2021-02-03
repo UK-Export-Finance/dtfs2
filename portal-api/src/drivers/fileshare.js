@@ -20,7 +20,8 @@ const getCredentials = async (fileshare = 'portal') => {
   const {
     STORAGE_ACCOUNT, STORAGE_ACCESS_KEY,
   } = getConfig(fileshare);
-  console.log({ STORAGE_ACCOUNT, STORAGE_ACCESS_KEY });
+
+  console.log({ STORAGE_ACCOUNT: STORAGE_ACCOUNT.split(''), STORAGE_ACCESS_KEY: STORAGE_ACCESS_KEY.split('') });
   const credentials = await new StorageSharedKeyCredential(STORAGE_ACCOUNT, STORAGE_ACCESS_KEY);
 
   return credentials;
