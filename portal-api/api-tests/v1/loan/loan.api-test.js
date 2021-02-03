@@ -302,7 +302,7 @@ describe('/v1/deals/:id/loan', () => {
         const { status, body } = await updateLoan(dealId, loanId, updateToUnconditionalLoan);
 
         expect(status).toEqual(200);
-        expect(body.ukefGuaranteeInMonths).toEqual(undefined);
+        expect(body.ukefGuaranteeInMonths).toEqual(null);
       });
     });
 
@@ -335,14 +335,14 @@ describe('/v1/deals/:id/loan', () => {
         const { status, body } = await updateLoan(dealId, loanId, updateToConditionalLoan);
 
         expect(status).toEqual(200);
-        expect(body.requestedCoverStartDate).toEqual(undefined);
-        expect(body['requestedCoverStartDate-day']).toEqual(undefined);
-        expect(body['requestedCoverStartDate-month']).toEqual(undefined);
-        expect(body['requestedCoverStartDate-year']).toEqual(undefined);
-        expect(body['coverEndDate-day']).toEqual(undefined);
-        expect(body['coverEndDate-month']).toEqual(undefined);
-        expect(body['coverEndDate-year']).toEqual(undefined);
-        expect(body.disbursementAmount).toEqual(undefined);
+        expect(body.requestedCoverStartDate).toEqual(null);
+        expect(body['requestedCoverStartDate-day']).toEqual(null);
+        expect(body['requestedCoverStartDate-month']).toEqual(null);
+        expect(body['requestedCoverStartDate-year']).toEqual(null);
+        expect(body['coverEndDate-day']).toEqual(null);
+        expect(body['coverEndDate-month']).toEqual(null);
+        expect(body['coverEndDate-year']).toEqual(null);
+        expect(body.disbursementAmount).toEqual(null);
       });
     });
 
@@ -400,10 +400,10 @@ describe('/v1/deals/:id/loan', () => {
         const { status, body } = await updateLoan(dealId, loanId, updatedLoan);
 
         expect(status).toEqual(200);
-        expect(body.conversionRate).toEqual(undefined);
-        expect(body['conversionRateDate-day']).toEqual(undefined);
-        expect(body['conversionRateDate-month']).toEqual(undefined);
-        expect(body['conversionRateDate-year']).toEqual(undefined);
+        expect(body.conversionRate).toEqual(null);
+        expect(body['conversionRateDate-day']).toEqual(null);
+        expect(body['conversionRateDate-month']).toEqual(null);
+        expect(body['conversionRateDate-year']).toEqual(null);
 
         const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
         expect(body.currency).toEqual({
@@ -515,20 +515,6 @@ describe('/v1/deals/:id/loan', () => {
       expect(status).toEqual(200);
     });
 
-    it('creates incremental integer loan IDs', async () => {
-      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-      const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
-
-      await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
-      await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
-      const { body } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
-
-      const loanIds = body.loanTransactions.items.map((loan) => loan._id);
-
-      expect(loanIds[1] - loanIds[0]).toEqual(1);
-      expect(loanIds[2] - loanIds[1]).toEqual(1);
-    });
-
     it('adds an empty loan to a deal, with facility createdDate, facilityType', async () => {
 
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
@@ -545,26 +531,21 @@ describe('/v1/deals/:id/loan', () => {
       expect(body.deal.loanTransactions.items[0].facilityType).toEqual('loan');
     });
 
-    it('adds an empty loan to a deal whilst retaining existing loans', async () => {
-      const mockLoan = { _id: '123456789012' };
-      const newDealWithExistingLoans = {
-        ...newDeal,
-        loanTransactions: {
-          items: [
-            mockLoan,
-          ],
-        },
-      };
-
-      const deal = await as(aBarclaysMaker).post(newDealWithExistingLoans).to('/v1/deals/');
+    it('adds an empty loan to a deal', async () => {
+      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
-      await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+      const newLoan = {
+        facilityType: 'loan',
+        associatedDealId: dealId,
+      };
+
+      await as(aBarclaysMaker).put(newLoan).to(`/v1/deals/${dealId}/loan/create`);
 
       const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
 
       expect(status).toEqual(200);
-      expect(body.deal.loanTransactions.items.length).toEqual(2);
+      expect(body.deal.facilities.length).toEqual(1);
     });
   });
 
