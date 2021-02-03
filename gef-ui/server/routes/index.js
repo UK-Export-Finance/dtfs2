@@ -1,8 +1,8 @@
 import express from 'express';
-import applicationRoutes from './application';
+import dealRoutes from './deal';
 
 const router = express.Router();
 
-router.use('/', applicationRoutes);
+router.use('/', dealRoutes);
 
 export default router;

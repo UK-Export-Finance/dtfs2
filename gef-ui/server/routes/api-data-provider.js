@@ -4,24 +4,24 @@ const INDUSTRY_SECTORS = 'industrySectors';
 const COUNTRIES = 'countries';
 const CURRENCIES = 'currencies';
 const MANDATORY_CRITERIA = 'mandatoryCriteria';
-const APPLICATION = 'application';
-const APPLICATION_VALIDATION = 'applicationValidation';
+const DEAL = 'deal';
+const DEAL_VALIDATION = 'dealValidation';
 
 
 const get = async (dataType, req) => {
   const token = req.session.userToken;
 
-  if (APPLICATION === dataType) {
-    const applicationId = req.params._id;// eslint-disable-line no-underscore-dangle
-    const { application, validationErrors } = await api.getApplication(applicationId, token).catch(
+  if (DEAL === dataType) {
+    const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+    const { deal, validationErrors } = await api.getDeal(dealId, token).catch(
       (err) => {
-        console.log(`api-data-provider: querying for deal(${applicationId}) => ${err}`);
-        return { application: {}, validationErrors: {} };
+        console.log(`api-data-provider: querying for deal(${dealId}) => ${err}`);
+        return { deal: {}, validationErrors: {} };
       },
     );
 
-    req.apiData[APPLICATION_VALIDATION] = validationErrors || { count: 0, errorList: [] };
-    req.apiData[APPLICATION] = application;
+    req.apiData[DEAL_VALIDATION] = validationErrors || { count: 0, errorList: [] };
+    req.apiData[DEAL] = deal;
     return;
   } if (INDUSTRY_SECTORS === dataType) {
     const { industrySectors } = await api.getIndustrySectors(token).catch(
@@ -83,7 +83,7 @@ export {
   COUNTRIES,
   CURRENCIES,
   MANDATORY_CRITERIA,
-  APPLICATION,
-  APPLICATION_VALIDATION,
+  DEAL,
+  DEAL_VALIDATION,
   provide,
 };

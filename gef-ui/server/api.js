@@ -1,14 +1,14 @@
 import axios from 'axios';
-import MOCK_APPLICATION from './mock-data/application';
+import MOCK_DEAL from './mock-data/deal';
 
 require('dotenv').config();
 
 const urlRoot = process.env.DEAL_API_URL;
 
 // eslint-disable-next-line no-unused-vars
-const getApplication = async (id, token) => {
+const getDeal = async (id, token) => {
   const mock = {
-    ...MOCK_APPLICATION,
+    ...MOCK_DEAL,
     id,
   };
 
@@ -23,7 +23,7 @@ const getApplication = async (id, token) => {
 
   return {
     status: 200,
-    application: mock,
+    deal: mock,
     validationErrors: false,
   };
 };
@@ -139,7 +139,7 @@ const user = async (id, token) => {
 
 
 export default {
-  getApplication,
+  getDeal,
   banks,
   validateToken,
   users,
