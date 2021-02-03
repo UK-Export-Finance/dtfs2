@@ -2,11 +2,11 @@ const express = require('express');
 
 const openRouter = express.Router();
 
-const dealInit = require('./controllers/deal.submit.controller');
+const dealSubmit = require('./controllers/deal.submit.controller');
 
-openRouter.route('/deals/:dealId/submit')
-  .get(
-    dealInit.submitDealGET,
+openRouter.route('/deals/submit')
+  .put(
+    dealSubmit.submitDealPUT,
   );
 
 module.exports = { openRouter };

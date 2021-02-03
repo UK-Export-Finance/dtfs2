@@ -16,7 +16,8 @@ const getCaseDeal = async (req, res) => {
   }
 
   return res.render('case/deal/deal.njk', {
-    deal,
+    deal: deal.dealSnapshot,
+    tfm: deal.tfm,
     active_sheet: 'deal',
     dealId,
   });
@@ -46,7 +47,8 @@ const getCaseParties = async (req, res) => {
   }
 
   return res.render('case/parties/parties.njk', {
-    deal,
+    deal: deal.dealSnapshot,
+    tfm: deal.tfm,
     active_sheet: 'parties',
     dealId,
   });

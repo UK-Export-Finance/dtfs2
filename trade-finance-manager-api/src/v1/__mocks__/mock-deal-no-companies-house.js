@@ -1,5 +1,5 @@
-const MOCK_DEAL = {
-  _id: '123456789',
+const MOCK_DEAL_NO_COMPANIES_HOUSE = {
+  _id: 'NO_COMPANIES_HOUSE',
   details: {
     status: 'Acknowledged by UKEF',
     bank: 'Mock bank',
@@ -69,7 +69,7 @@ const MOCK_DEAL = {
     'supplier-address-line-3': 'test',
     'supplier-address-postcode': 'test',
     'supplier-address-town': 'test',
-    'supplier-companies-house-registration-number': '12345678',
+    'supplier-companies-house-registration-number': '',
     'supplier-correspondence-address-country': {
       code: 'GBR',
       name: 'United Kingdom',
@@ -230,4 +230,4 @@ const MOCK_DEAL = {
   },
 };
 
-module.exports = MOCK_DEAL;
+module.exports = MOCK_DEAL_NO_COMPANIES_HOUSE;

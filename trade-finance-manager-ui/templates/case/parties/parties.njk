@@ -16,12 +16,12 @@
       <p class="header-label">Parties</p>
     </div>
   </div>
-  {{ exporterArea.render({deal: deal}) }}
-  {{ buyerArea.render({deal: deal}) }}
-  {{ agentArea.render({deal: deal}) }}
-  {{ indemnifierArea.render({ deal: deal}) }}
-  {{ bondIssuerArea.render({ deal: deal}) }}
-   {{ bondBeneficiaryArea.render({ deal: deal}) }}
+  {{ exporterArea.render({deal: deal, tfm: tfm}) }}
+  {{ buyerArea.render({deal: deal, tfm: tfm}) }}
+  {{ agentArea.render({deal: deal, tfm: tfm}) }}
+  {{ indemnifierArea.render({ deal: deal, tfm: tfm}) }}
+  {{ bondIssuerArea.render({ deal: deal, tfm: tfm}) }}
+   {{ bondBeneficiaryArea.render({ deal: deal, tfm: tfm}) }}
 
 
 
