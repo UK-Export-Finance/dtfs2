@@ -34,7 +34,6 @@ exports.updateBondIssueFacility = async (req, res) => {
       }
 
       let modifiedBond = {
-        _id: bondId,
         ...bond,
         ...req.body,
       };
