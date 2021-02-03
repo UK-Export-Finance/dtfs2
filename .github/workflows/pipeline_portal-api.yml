@@ -77,14 +77,7 @@ jobs:
     - name: Pull portal-ui
       run: |
         docker pull ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui
-        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui dtfs/portal
-    - name: Check env variables
-      run: |
-        echo "AZURE_WORKFLOW_STORAGE_ACCOUNT"
-        echo "${{secrets.APITEST_AZURE_WORKFLOW_STORAGE_ACCOUNT:1:25}}"
-        echo "AZURE_PORTAL_STORAGE_ACCOUNT"
-        echo "${{secrets.APITEST_AZURE_PORTAL_STORAGE_ACCOUNT:1:25}}"
-        
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/portal-ui dtfs/portal        
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh && docker-compose up -d
