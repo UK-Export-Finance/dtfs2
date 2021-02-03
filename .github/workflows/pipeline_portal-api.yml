@@ -20,7 +20,7 @@ env:
   # These values are used when running tests in Docker Compose
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
   GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
-  DTFS_PORTAL_SCHEDULER: true
+  DTFS_PORTAL_SCHEDULER: false
   FETCH_WORKFLOW_TYPE_B_SCHEDULE: "*/1 * * * * *"
 
 jobs:
