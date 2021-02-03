@@ -10,6 +10,7 @@ const { createTimestampFromSubmittedValues } = require('../facility-dates/timest
 const bondIssueFacilityValidationErrors = require('../validation/bond-issue-facility');
 const { hasValue } = require('../../utils/string');
 const canIssueFacility = require('../facility-issuance');
+const facilitiesController = require('./facilities.controller');
 
 exports.updateBondIssueFacility = async (req, res) => {
   const {
@@ -22,8 +23,7 @@ exports.updateBondIssueFacility = async (req, res) => {
         return res.status(401).send();
       }
 
-      const bond = deal.bondTransactions.items.find((b) =>
-        String(b._id) === bondId); // eslint-disable-line no-underscore-dangle
+      const bond = await facilitiesController.findOne(bondId);
 
       if (!bond) {
         return res.status(404).send();
@@ -40,7 +40,7 @@ exports.updateBondIssueFacility = async (req, res) => {
       };
 
       // remove status added via type B XML. (we dynamically generate statuses)
-      delete modifiedBond.status;
+      modifiedBond.status = null;
 
       if (!modifiedBond.issueFacilityDetailsStarted
           && !modifiedBond.issueFacilityDetailsSubmitted) {
@@ -56,13 +56,13 @@ exports.updateBondIssueFacility = async (req, res) => {
       if (hasAllRequestedCoverStartDateValues(modifiedBond)) {
         modifiedBond = updateRequestedCoverStartDate(modifiedBond);
       } else {
-        delete modifiedBond.requestedCoverStartDate;
+        modifiedBond.requestedCoverStartDate = null;
       }
 
       if (hasAllIssuedDateValues(modifiedBond)) {
         modifiedBond.issuedDate = createTimestampFromSubmittedValues(req.body, 'issuedDate');
       } else {
-        delete modifiedBond.issuedDate;
+        modifiedBond.issuedDate = null;
       }
 
       const validationErrors = bondIssueFacilityValidationErrors(
@@ -76,16 +76,16 @@ exports.updateBondIssueFacility = async (req, res) => {
         modifiedBond.issueFacilityDetailsProvided = false;
       }
 
-      const updatedBond = await updateBondInDeal(req.user, deal, modifiedBond);
+      const { status, data } = await facilitiesController.update(bondId, modifiedBond, req.user);
 
       if (validationErrors.count !== 0) {
         return res.status(400).send({
           validationErrors,
-          bond: updatedBond,
+          bond: data,
         });
       }
 
-      return res.status(200).send(updatedBond);
+      return res.status(200).send(data);
     }
 
     return res.status(404).send();
