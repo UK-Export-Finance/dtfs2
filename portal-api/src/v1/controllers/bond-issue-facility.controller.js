@@ -1,6 +1,5 @@
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
-const { updateBondInDeal } = require('./bonds.controller');
 const { hasAllIssuedDateValues } = require('../facility-dates/issued-date');
 const {
   hasAllRequestedCoverStartDateValues,
@@ -84,7 +83,7 @@ exports.updateBondIssueFacility = async (req, res) => {
         });
       }
 
-      return res.status(200).send(data);
+      return res.status(status).send(data);
     }
 
     return res.status(404).send();

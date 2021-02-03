@@ -1,6 +1,5 @@
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
-const { updateLoanInDeal } = require('./loans.controller');
 const facilityChangeCoverStartDateValidationErrors = require('../validation/facility-change-cover-start-date');
 const {
   hasAllRequestedCoverStartDateValues,
@@ -57,7 +56,7 @@ exports.updateLoanCoverStartDate = async (req, res) => {
 
       const { status, data } = await facilitiesController.update(loanId, modifiedLoan, req.user);
 
-      return res.status(200).send(data);
+      return res.status(status).send(data);
     }
     return res.status(404).send();
   });
