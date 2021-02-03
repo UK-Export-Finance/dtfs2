@@ -229,7 +229,7 @@ const updateEligibilityDocumentation = async (dealId, body, files, token) => {
   return response.data;
 };
 
-const createDealLoan = async (dealId, token) => {
+const createLoan = async (dealId, token) => {
   const response = await axios({
     method: 'put',
     url: `${urlRoot}/v1/deals/${dealId}/loan/create`,
@@ -241,7 +241,7 @@ const createDealLoan = async (dealId, token) => {
   return response.data;
 };
 
-const getDealLoan = async (dealId, loanId, token) => {
+const getLoan = async (dealId, loanId, token) => {
   const response = await axios({
     method: 'get',
     url: `${urlRoot}/v1/deals/${dealId}/loan/${loanId}`,
@@ -253,7 +253,7 @@ const getDealLoan = async (dealId, loanId, token) => {
   return response.data;
 };
 
-const updateDealLoan = async (dealId, loanId, formData, token) => {
+const updateLoan = async (dealId, loanId, formData, token) => {
   const response = await axios({
     method: 'put',
     url: `${urlRoot}/v1/deals/${dealId}/loan/${loanId}`,
@@ -627,7 +627,7 @@ export default {
   contracts,
   createBond,
   createDeal,
-  createDealLoan,
+  createLoan,
   createFeedback,
   login,
   resetPassword,
@@ -638,7 +638,7 @@ export default {
   updateBondCoverStartDate,
   deleteDealBond,
   updateDeal,
-  updateDealLoan,
+  updateLoan,
   updateLoanIssueFacility,
   updateLoanCoverStartDate,
   deleteDealLoan,
@@ -656,7 +656,7 @@ export default {
   getCurrencies,
   getCountries,
   getDeal,
-  getDealLoan,
+  getLoan,
   getIndustrySectors,
   getMandatoryCriteria,
   downloadFile,
