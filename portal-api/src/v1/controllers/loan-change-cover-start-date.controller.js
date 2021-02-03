@@ -7,6 +7,7 @@ const {
   updateRequestedCoverStartDate,
 } = require('../facility-dates/requested-cover-start-date');
 const CONSTANTS = require('../../constants');
+const facilitiesController = require('./facilities.controller');
 
 exports.updateLoanCoverStartDate = async (req, res) => {
   const {
@@ -19,8 +20,7 @@ exports.updateLoanCoverStartDate = async (req, res) => {
         return res.status(401).send();
       }
 
-      const existingLoan = deal.loanTransactions.items.find((b) =>
-        String(b._id) === loanId); // eslint-disable-line no-underscore-dangle
+      const existingLoan = await facilitiesController.findOne(loanId);
 
       if (!existingLoan) {
         return res.status(404).send();
@@ -33,18 +33,17 @@ exports.updateLoanCoverStartDate = async (req, res) => {
         return res.status(400).send();
       }
 
-      let loan = {
-        _id: loanId,
+      let modifiedLoan = {
         ...existingLoan,
         ...req.body,
       };
 
-      if (hasAllRequestedCoverStartDateValues(loan)) {
-        loan = updateRequestedCoverStartDate(loan);
+      if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {
+        modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
       }
 
       const validationErrors = facilityChangeCoverStartDateValidationErrors(
-        loan,
+        modifiedLoan,
         deal,
       );
 
@@ -52,12 +51,13 @@ exports.updateLoanCoverStartDate = async (req, res) => {
         && validationErrors.errorList.requestedCoverStartDate) {
         return res.status(400).send({
           validationErrors,
-          loan,
+          loan: modifiedLoan,
         });
       }
 
-      const updatedLoan = await updateLoanInDeal(req.user, deal, loan);
-      return res.status(200).send(updatedLoan);
+      const { status, data } = await facilitiesController.update(loanId, modifiedLoan, req.user);
+
+      return res.status(200).send(data);
     }
     return res.status(404).send();
   });

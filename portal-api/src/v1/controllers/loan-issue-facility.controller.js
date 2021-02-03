@@ -34,7 +34,6 @@ exports.updateLoanIssueFacility = async (req, res) => {
       }
 
       let modifiedLoan = {
-        _id: loanId,
         ...loan,
         ...req.body,
       };
