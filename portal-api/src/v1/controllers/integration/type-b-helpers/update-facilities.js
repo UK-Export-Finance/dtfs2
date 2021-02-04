@@ -1,6 +1,7 @@
 const CONSTANTS = require('../../../../constants');
+const facilitiesController = require('../../facilities.controller');
 
-const updateBondStatus = (bond, workflowBond, workflowActionCode) => {
+const changeBondStatus = (bond, workflowBond, workflowActionCode) => {
   const {
     facilityStage,
     previousFacilityStage,
@@ -44,7 +45,7 @@ const updateBondStatus = (bond, workflowBond, workflowActionCode) => {
   return null;
 };
 
-const updateLoanStatus = (loan, workflowLoan, workflowActionCode) => {
+const changeLoanStatus = (loan, workflowLoan, workflowActionCode) => {
   const {
     facilityStage,
     previousFacilityStage,
@@ -88,62 +89,87 @@ const updateLoanStatus = (loan, workflowLoan, workflowActionCode) => {
   return null;
 };
 
-const updateBonds = (dealBonds, workflowDeal, checkIssueFacilities) => {
-  const bondTransactionItems = dealBonds.map((bond) => {
-    const workflowBond = workflowDeal.BSSFacilities && workflowDeal.BSSFacilities.find(
-      (b) => b.BSS_portal_facility_id[0] === bond._id, // eslint-disable-line no-underscore-dangle
-    );
-    if (!workflowBond) {
-      return bond;
-    }
+const updateBond = async (bond, dealId, workflowDeal, interfaceUser, checkIssueFacilities) => {
+  let modifiedBond = bond;
+  const bondId = bond._id; // eslint-disable-line no-underscore-dangle
 
-    const updatedBond = {
-      ...bond,
-      ukefFacilityID: Array.isArray(workflowBond.BSS_ukef_facility_id)
-        ? workflowBond.BSS_ukef_facility_id[0]
-        : workflowBond.BSS_ukef_facility_id,
-    };
+  const workflowBond = workflowDeal.BSSFacilities && workflowDeal.BSSFacilities.find(
+    (b) => b.BSS_portal_facility_id[0] === bondId,
+  );
+  
+  if (!workflowBond) {
+    return bond;
+  }
 
-    if (checkIssueFacilities) {
-      const workflowActionCode = workflowDeal.$.Action_Code;
-      updatedBond.status = updateBondStatus(bond, workflowBond, workflowActionCode);
-    }
+  modifiedBond = {
+    ...modifiedBond,
+    ukefFacilityID: Array.isArray(workflowBond.BSS_ukef_facility_id)
+      ? workflowBond.BSS_ukef_facility_id[0]
+      : workflowBond.BSS_ukef_facility_id,
+    // fail safe to make sure we have associatedDealId.
+    // this should already exist in the data,
+    // but a lot of E2E tests do not have this.
+    // TODO: update E2E test data.
+    associatedDealId: dealId,
+  };
 
-    return updatedBond;
-  });
+  if (checkIssueFacilities) {
+    const workflowActionCode = workflowDeal.$.Action_Code;
+    modifiedBond.status = changeBondStatus(bond, workflowBond, workflowActionCode);
+  }
 
-  return bondTransactionItems;
+  const { status, data } = await facilitiesController.update(bondId, modifiedBond, interfaceUser);
+
+  return modifiedBond;
 };
 
-const updateLoans = (dealLoans, workflowDeal, checkIssueFacilities) => {
-  const loanTransactionItems = dealLoans.map((loan) => {
-    const workflowLoan = workflowDeal.EWCSFacilities && workflowDeal.EWCSFacilities.find(
-      (b) => b.EWCS_portal_facility_id[0] === loan._id, // eslint-disable-line no-underscore-dangle
-    );
+const updateLoan = async (loan, dealId, workflowDeal, interfaceUser, checkIssueFacilities) => {
+  let modifiedLoan = loan;
+  const loanId = loan._id; // eslint-disable-line no-underscore-dangle
 
-    if (!workflowLoan) {
-      return loan;
-    }
+  const workflowLoan = workflowDeal.EWCSFacilities && workflowDeal.EWCSFacilities.find(
+    (b) => b.EWCS_portal_facility_id[0] === loanId,
+  );
 
-    const updatedLoan = {
-      ...loan,
-      ukefFacilityID: Array.isArray(workflowLoan.EWCS_ukef_facility_id)
-        ? workflowLoan.EWCS_ukef_facility_id[0]
-        : workflowLoan.EWCS_ukef_facility_id,
-    };
+  if (!workflowLoan) {
+    return loan;
+  }
 
-    if (checkIssueFacilities) {
-      const workflowActionCode = workflowDeal.$.Action_Code;
-      updatedLoan.status = updateLoanStatus(loan, workflowLoan, workflowActionCode);
-    }
+  modifiedLoan = {
+    ...modifiedLoan,
+    ukefFacilityID: Array.isArray(workflowLoan.EWCS_ukef_facility_id)
+      ? workflowLoan.EWCS_ukef_facility_id[0]
+      : workflowLoan.EWCS_ukef_facility_id,
 
-    return updatedLoan;
-  });
+    // fail safe to make sure we have associatedDealId.
+    // this should already exist in the data,
+    // but a lot of E2E tests do not have this.
+    // TODO: update E2E test data.
+    associatedDealId: dealId,
+  };
 
-  return loanTransactionItems;
+  if (checkIssueFacilities) {
+    const workflowActionCode = workflowDeal.$.Action_Code;
+    modifiedLoan.status = changeLoanStatus(loan, workflowLoan, workflowActionCode);
+  }
+
+  const { status, data } = await facilitiesController.update(loanId, modifiedLoan, interfaceUser);
+
+  return data;
 };
+
+const updateFacilities = (facilities, dealId, workflowDeal, interfaceUser, checkIssueFacilities) => {
+  facilities.forEach(async (facilityId) => {
+    const facility = await facilitiesController.findOne(facilityId);
+
+    if (facility.facilityType === 'bond') {
+      await updateBond(facility, dealId, workflowDeal, interfaceUser, checkIssueFacilities);
+    } else if (facility.facilityType === 'loan') {
+      await updateLoan(facility, dealId, workflowDeal, interfaceUser, checkIssueFacilities);
+    }
+  });
+}
 
 module.exports = {
-  updateBonds,
-  updateLoans,
+  updateFacilities,
 };
