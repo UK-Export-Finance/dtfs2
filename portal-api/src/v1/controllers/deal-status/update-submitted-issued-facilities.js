@@ -1,4 +1,3 @@
-const { updateDeal } = require('../deal.controller');
 const CONSTANTS = require('../../../constants');
 const now = require('../../../now');
 const facilitiesController = require('../facilities.controller');
@@ -52,10 +51,9 @@ const updateSubmittedIssuedFacilities = async (user, deal) => {
       facility.status = CONSTANTS.FACILITIES.STATUS.SUBMITTED;
     }
 
-    const { status, data } = await facilitiesController.update(facility._id, facility, user);
-    return data;
+    const { data } = await facilitiesController.update(facilityId, facility, user);
 
-    return facility;
+    return data;
   });
 
   return deal;
