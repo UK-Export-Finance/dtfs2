@@ -1936,7 +1936,7 @@ jobs:
 
             echo "Creating GEF HTTP settings..."
             az network application-gateway http-settings create \
-              --gateway-nametfs-${{ env.environment }}-gw \
+              --gateway-name tfs-${{ env.environment }}-gw \
               --name gefGatewayBackendHttpSettings \
               --port 443 \
               --protocol Https \
@@ -1949,7 +1949,7 @@ jobs:
 
             echo "Creating GEF rule url path map..."
             az network application-gateway url-path-map create 
-              --gateway-name tfs-${{ env.environment }}-url-gw \
+              --gateway-name tfs-${{ env.environment }}-gw \
               --name tfs-${{ env.environment }}-gef-url-path-map \
               --rule-name gef \
               --paths /gef/* \
