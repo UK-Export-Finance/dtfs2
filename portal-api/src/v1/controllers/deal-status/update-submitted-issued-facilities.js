@@ -1,73 +1,64 @@
 const { updateDeal } = require('../deal.controller');
 const CONSTANTS = require('../../../constants');
 const now = require('../../../now');
+const facilitiesController = require('../facilities.controller');
 
 const updateSubmittedIssuedFacilities = async (user, deal) => {
   const modifiedDeal = deal;
 
-  const update = (facilities) => {
-    const arr = facilities;
+  modifiedDeal.facilities.forEach(async (facilityId) => {
+    const facility = await facilitiesController.findOne(facilityId);
 
-    arr.forEach((f) => {
-      const facility = f;
-      const { facilityStage } = facility;
+    const { facilityStage } = facility;
 
-      const isUnconditionalUnsubmittedLoan = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
-                                             && !facility.issueFacilityDetailsSubmitted);
+    const isUnconditionalUnsubmittedLoan = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
+                                            && !facility.issueFacilityDetailsSubmitted);
 
-      const isIssuedUnsubmittedBond = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
-                                      && !facility.issueFacilityDetailsSubmitted);
+    const isIssuedUnsubmittedBond = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
+                                    && !facility.issueFacilityDetailsSubmitted);
 
-      const shouldUpdate = (isUnconditionalUnsubmittedLoan || isIssuedUnsubmittedBond);
+    const shouldUpdate = (isUnconditionalUnsubmittedLoan || isIssuedUnsubmittedBond);
 
-      if (shouldUpdate) {
-        facility.lastEdited = now();
+    if (shouldUpdate) {
+      facility.lastEdited = now();
 
-        facility.issueFacilityDetailsSubmitted = true;
-        facility.issuedFacilitySubmittedToUkefTimestamp = now();
-        facility.issuedFacilitySubmittedToUkefBy = user;
+      facility.issueFacilityDetailsSubmitted = true;
+      facility.issuedFacilitySubmittedToUkefTimestamp = now();
+      facility.issuedFacilitySubmittedToUkefBy = user;
 
-        if (!facility.previousFacilityStage
-          && !facility.issueFacilityDetailsProvided) {
-          // Facility has been issued at the Deal draft stage. Therefore:
-          // - no need for Maker to Issue the facility from Issue Facility Form
-          // - won't get 'Submitted' status (declared below when Issue Facility Form details provided)
-          //
-          // At this point, the facility status should not change - it's already been issued.
-          // So, we 'lock' the status - everything is completed for this facility.
-          //
-          // Without this, the following would happen, which we do not want:
-          // - the facility's status would continue to by dynamically generated
-          // - the facility's status could be marked as 'incomplete', as dates become invalid
-          facility.status = CONSTANTS.FACILITIES.STATUS.COMPLETED;
-        }
+      if (!facility.previousFacilityStage
+        && !facility.issueFacilityDetailsProvided) {
+        // Facility has been issued at the Deal draft stage. Therefore:
+        // - no need for Maker to Issue the facility from Issue Facility Form
+        // - won't get 'Submitted' status (declared below when Issue Facility Form details provided)
+        //
+        // At this point, the facility status should not change - it's already been issued.
+        // So, we 'lock' the status - everything is completed for this facility.
+        //
+        // Without this, the following would happen, which we do not want:
+        // - the facility's status would continue to by dynamically generated
+        // - the facility's status could be marked as 'incomplete', as dates become invalid
+        facility.status = CONSTANTS.FACILITIES.STATUS.COMPLETED;
       }
+    }
 
-      const facilityIsReadyForApproval = facility.status === CONSTANTS.FACILITIES.STATUS.READY_FOR_APPROVAL;
+    const facilityIsReadyForApproval = facility.status === CONSTANTS.FACILITIES.STATUS.READY_FOR_APPROVAL;
 
-      const facilityIssuedFromIssueFacilityForm = (shouldUpdate
-                                                  && facility.issueFacilityDetailsProvided
-                                                  && facilityIsReadyForApproval);
+    const facilityIssuedFromIssueFacilityForm = (shouldUpdate
+                                                && facility.issueFacilityDetailsProvided
+                                                && facilityIsReadyForApproval);
 
-      if (facilityIssuedFromIssueFacilityForm) {
-        facility.status = CONSTANTS.FACILITIES.STATUS.SUBMITTED;
-      }
+    if (facilityIssuedFromIssueFacilityForm) {
+      facility.status = CONSTANTS.FACILITIES.STATUS.SUBMITTED;
+    }
 
-      return facility;
-    });
-    return arr;
-  };
+    const { status, data } = await facilitiesController.update(facility._id, facility, user);
+    return data;
 
-  modifiedDeal.loanTransactions.items = update(modifiedDeal.loanTransactions.items);
-  modifiedDeal.bondTransactions.items = update(modifiedDeal.bondTransactions.items);
+    return facility;
+  });
 
-  const updatedDeal = await updateDeal(
-    deal._id, // eslint-disable-line no-underscore-dangle,
-    modifiedDeal,
-    user,
-  );
-
-  return updatedDeal;
+  return deal;
 };
 
 module.exports = updateSubmittedIssuedFacilities;

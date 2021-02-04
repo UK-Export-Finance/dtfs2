@@ -54,3 +54,10 @@ Cypress.Commands.add('login', require('./portal/logIn'));
 Cypress.Commands.add('loginGoToDealPage', require('./portal/loginGoToDealPage'));
 Cypress.Commands.add('passRedLine', require('./portal/passRedLine'));
 Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
+
+// commands that add/edit facilities directly in central API
+// TODO - ideally this would call portal API (which would then call central API)
+// copied this from TFM e2e tests in the interest of time
+Cypress.Commands.add('createFacility', require('./central-api/createFacility'));
+Cypress.Commands.add('updateFacility', require('./central-api/updateFacility'));
+Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));

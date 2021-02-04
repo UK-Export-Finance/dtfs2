@@ -214,6 +214,7 @@ const deal = {
     "items" : [
       {
         "_id": "1001496",
+        "facilityType": "bond",
         "facilityStage": "Unissued",
         "ukefGuaranteeInMonths": "24",
         "facilityValue": "100000.00",
@@ -237,6 +238,7 @@ const deal = {
       },
       {
         "_id": "1001497",
+        "facilityType": "bond",
         "facilityStage": "Unissued",
         "ukefGuaranteeInMonths": "24",
         "facilityValue": "100000.00",
@@ -264,6 +266,7 @@ const deal = {
     "items" : [
       {
         "_id": "1001499",
+        "facilityType": "loan",
         "ukefGuaranteeInMonths": "24",
         "bankReferenceNumber": "",
         "facilityValue": "100000.00",
@@ -285,6 +288,7 @@ const deal = {
       },
       {
         "_id": "1001498",
+        "facilityType": "loan",
         "ukefGuaranteeInMonths": "24",
         "bankReferenceNumber": "",
         "facilityValue": "100000.00",

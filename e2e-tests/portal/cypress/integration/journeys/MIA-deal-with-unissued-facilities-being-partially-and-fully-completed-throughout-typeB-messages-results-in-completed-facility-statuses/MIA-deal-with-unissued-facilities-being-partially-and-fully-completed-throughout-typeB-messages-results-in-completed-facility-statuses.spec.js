@@ -17,6 +17,10 @@ const miaDealReadyToSubmit = require('./miaDeal-with-unissued-facilities');
 context('Maker submits MIA deal to checker, cheker submits to UKEF, receive specific typeB messages, Maker completes SOME issued facilities, submits to checker, checker submits to UKEF, receive typeB message, Maker completes remaining issue facility forms', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   beforeEach(() => {
     cy.on('uncaught:exception', (err, runnable) => {
@@ -27,10 +31,44 @@ context('Maker submits MIA deal to checker, cheker submits to UKEF, receive spec
 
   before(() => {
     cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(miaDealReadyToSubmit, { ...MAKER_LOGIN })
+
+    // mimic a submitted deal:
+    // 1) add submitted deal TO DB
+    // 2) create the deal's facilities in facilties DB collection
+    // 3) update the facilities to match the submitted deal.
+    cy.insertOneDeal(miaDealReadyToSubmit, MAKER_LOGIN)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const mockFacilities = [
+          ...deal.bondTransactions.items,
+          ...deal.loanTransactions.items,
+        ];
+
+        mockFacilities.forEach((facility) => {
+          cy.createFacility(facility, dealId, MAKER_LOGIN).then((createdFacility) => {
+            const facilityId = createdFacility._id; // eslint-disable-line no-underscore-dangle
+            const facilityWithDealId = {
+              ...facility,
+              associatedDealId: dealId,
+            };
+
+            cy.updateFacility(facilityId, facilityWithDealId, MAKER_LOGIN);
+
+            if (facility.facilityType === 'bond') {
+              dealFacilities.bonds.push({
+                ...createdFacility,
+                associatedDealId: dealId,
+              });
+            } else if (facility.facilityType === 'loan') {
+              dealFacilities.loans.push({
+                ...createdFacility,
+                associatedDealId: dealId,
+              });
+            }
+          });
+        });
       });
   });
 
@@ -151,18 +189,17 @@ context('Maker submits MIA deal to checker, cheker submits to UKEF, receive spec
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
 
-    const firstBondId = deal.bondTransactions.items[0]._id;
+    const firstBondId = dealFacilities.bonds[0]._id;
     const firstBondRow = pages.contract.bondTransactionsTable.row(firstBondId);
 
     firstBondRow.issueFacilityLink().click();
 
     fillAndSubmitIssueBondFacilityForm();
 
-
     //---------------------------------------------------------------
     // Maker completes one loan issue facility form
     //---------------------------------------------------------------
-    const firstLoanId = deal.loanTransactions.items[0]._id;
+    const firstLoanId = dealFacilities.loans[0]._id;
     const firstLoanRow = pages.contract.loansTransactionsTable.row(firstLoanId);
 
     firstLoanRow.issueFacilityLink().click();
@@ -173,7 +210,7 @@ context('Maker submits MIA deal to checker, cheker submits to UKEF, receive spec
     //---------------------------------------------------------------
     // Maker starts, but doesn't complete, the second/last bond issue facility form
     //---------------------------------------------------------------
-    const secondBondId = deal.bondTransactions.items[1]._id;
+    const secondBondId = dealFacilities.bonds[1]._id;
     const secondBondRow = pages.contract.bondTransactionsTable.row(secondBondId);
 
     secondBondRow.issueFacilityLink().click();
@@ -186,7 +223,7 @@ context('Maker submits MIA deal to checker, cheker submits to UKEF, receive spec
     //---------------------------------------------------------------
     // Maker starts, but doesn't complete, the second/last loan issue facility form
     //---------------------------------------------------------------
-    const secondLoanId = deal.loanTransactions.items[1]._id;
+    const secondLoanId = dealFacilities.loans[1]._id;
     const secondLoanRow = pages.contract.loansTransactionsTable.row(secondLoanId);
 
     secondLoanRow.issueFacilityLink().click();
