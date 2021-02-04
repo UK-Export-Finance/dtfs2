@@ -1960,7 +1960,7 @@ jobs:
             az network application-gateway rule create \
               --gateway-name tfs-${{ env.environment }}-gw \
               --name ${{ env.environment }}-migration \
-              --rule-type PathBasedRouting
+              --routing-rule-type PathBasedRouting
               --http-listener ${{ env.environment }}-https \
               --http-settings appGatewayBackendHttpSettings \
               --address-pool appGatewayBackendPool \
