@@ -96,7 +96,7 @@ const updateBond = async (bond, dealId, workflowDeal, interfaceUser, checkIssueF
   const workflowBond = workflowDeal.BSSFacilities && workflowDeal.BSSFacilities.find(
     (b) => b.BSS_portal_facility_id[0] === bondId,
   );
-  
+
   if (!workflowBond) {
     return bond;
   }
@@ -118,9 +118,9 @@ const updateBond = async (bond, dealId, workflowDeal, interfaceUser, checkIssueF
     modifiedBond.status = changeBondStatus(bond, workflowBond, workflowActionCode);
   }
 
-  const { status, data } = await facilitiesController.update(bondId, modifiedBond, interfaceUser);
+  const { data } = await facilitiesController.update(bondId, modifiedBond, interfaceUser);
 
-  return modifiedBond;
+  return data;
 };
 
 const updateLoan = async (loan, dealId, workflowDeal, interfaceUser, checkIssueFacilities) => {
@@ -153,7 +153,7 @@ const updateLoan = async (loan, dealId, workflowDeal, interfaceUser, checkIssueF
     modifiedLoan.status = changeLoanStatus(loan, workflowLoan, workflowActionCode);
   }
 
-  const { status, data } = await facilitiesController.update(loanId, modifiedLoan, interfaceUser);
+  const { data } = await facilitiesController.update(loanId, modifiedLoan, interfaceUser);
 
   return data;
 };
@@ -168,7 +168,7 @@ const updateFacilities = (facilities, dealId, workflowDeal, interfaceUser, check
       await updateLoan(facility, dealId, workflowDeal, interfaceUser, checkIssueFacilities);
     }
   });
-}
+};
 
 module.exports = {
   updateFacilities,

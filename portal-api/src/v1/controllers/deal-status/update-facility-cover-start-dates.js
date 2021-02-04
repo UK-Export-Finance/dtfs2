@@ -1,4 +1,3 @@
-const { updateDeal } = require('../deal.controller');
 const now = require('../../../now');
 const CONSTANTS = require('../../../constants');
 const facilitiesController = require('../facilities.controller');
@@ -24,9 +23,10 @@ const updateFacilityCoverStartDates = async (user, deal) => {
       facility['requestedCoverStartDate-month'] = today.getMonth() + 1;
       facility['requestedCoverStartDate-year'] = today.getFullYear();
 
-      const { status, data } = await facilitiesController.update(facility._id, facility, user);
+      const { data } = await facilitiesController.update(facilityId, facility, user);
       return data;
     }
+    return facility;
   });
 
   return deal;

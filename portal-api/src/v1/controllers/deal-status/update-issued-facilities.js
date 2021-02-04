@@ -1,4 +1,3 @@
-const { updateDeal } = require('../deal.controller');
 const CONSTANTS = require('../../../constants');
 const issuedDateValidationRules = require('../../validation/fields/issued-date');
 const now = require('../../../now');
@@ -96,8 +95,6 @@ const updateIssuedFacilities = async (
   canUpdateIssuedFacilitiesCoverStartDates,
   newStatus,
 ) => {
-  const modifiedDeal = deal;
-
   const fromStatusIsApprovedStatus = (fromStatus === CONSTANTS.DEAL.STATUS.APPROVED
                                       || fromStatus === CONSTANTS.DEAL.STATUS.APPROVED_WITH_CONDITIONS);
 
@@ -153,7 +150,7 @@ const updateIssuedFacilities = async (
         }
       }
 
-      const { data } = await facilitiesController.update(facility._id, facility, user);
+      const { data } = await facilitiesController.update(facilityId, facility, user);
       return data;
     }
     return facility;
