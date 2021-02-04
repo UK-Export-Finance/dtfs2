@@ -1945,14 +1945,14 @@ jobs:
               --host-name-from-backend-pool true \
               --probe healthcheck --enable-probe true \
               --protocol Https --port 443 \
-              --path /
+              --path "/"
 
             echo "Creating GEF rule url path map..."
             az network application-gateway url-path-map create 
               --gateway-name tfs-${{ env.environment }}-gw \
               --name tfs-${{ env.environment }}-gef-url-path-map \
               --rule-name gef \
-              --paths /gef/* \
+              --paths "/gef/*" \
               --address-pool gefGatewayBackendPool \
               --http-settings gefGatewayBackendHttpSettings
 
