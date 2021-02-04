@@ -1867,7 +1867,7 @@ jobs:
   # START Application gateways
   application-gateway-portal:
     name: Application Gateway Portal
-    needs: [vnet, public-ip, portal-ui]
+    needs: [vnet, public-ip, portal-ui, gef-ui]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1891,7 +1891,6 @@ jobs:
             --public-ip-address tfs-${{ env.environment }}-ip \
             --frontend-port 80 \
             --max-capacity 5 --min-capacity 1 \
-            --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
             --sku Standard_v2
 
     - name: Https ingress for data migration
@@ -1922,14 +1921,50 @@ jobs:
               --name ${{ env.environment }}-https \
               --frontend-port tfs-${{ env.environment }}-port-https \
               --ssl-cert ${{ env.environment }}-cert
+            
+            echo "Creating Portal Backend Pool"
+            az network application-gateway address-pool create \
+              --gateway-name  tfs-${{ env.environment }}-gw \
+              --name appGatewayBackendPool \
+              --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net
+
+            echo "Creating GEF Backend Pool"
+            az network application-gateway address-pool create \
+              --gateway-name  tfs-${{ env.environment }}-gw \
+              --name gefGatewayBackendPool \
+              --servers tfs-${{ env.environment }}-gef-ui.azurewebsites.net
+
+            echo "Creating GEF HTTP settings..."
+            az network application-gateway http-settings create \
+              --gateway-nametfs-${{ env.environment }}-gw \
+              --name gefGatewayBackendHttpSettings \
+              --port 443 \
+              --protocol Https \
+              --cookie-based-affinity Disabled \
+              --timeout 30 \
+              --host-name-from-backend-pool true \
+              --probe healthcheck --enable-probe true \
+              --protocol Https --port 443 \
+              --path /
+
+            echo "Creating GEF rule url path map..."
+            az network application-gateway url-path-map create 
+              --gateway-name tfs-${{ env.environment }}-url-gw \
+              --name tfs-${{ env.environment }}-gef-url-path-map \
+              --rule-name gef \
+              --paths /gef/* \
+              --address-pool gefGatewayBackendPool \
+              --http-settings gefGatewayBackendHttpSettings
 
             echo "Creating rule..."
             az network application-gateway rule create \
               --gateway-name tfs-${{ env.environment }}-gw \
               --name ${{ env.environment }}-migration \
+              --rule-type PathBasedRouting
               --http-listener ${{ env.environment }}-https \
               --http-settings appGatewayBackendHttpSettings \
-              --address-pool appGatewayBackendPool
+              --address-pool appGatewayBackendPool \
+              --url-path-map tfs-${{ env.environment }}-gef-url-path-map
           fi
 
     - name: Healthcheck probe
@@ -1946,8 +1981,8 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          httpsettings_name=$(az network application-gateway show --name tfs-${{ env.environment }}-gw --query "backendHttpSettingsCollection[0].name" -o tsv)
-          az network application-gateway http-settings update --name $httpsettings_name \
+          az network application-gateway http-settings update \
+            --name appGatewayBackendHttpSettings \
             --gateway-name tfs-${{ env.environment }}-gw \
             --host-name-from-backend-pool true \
             --probe healthcheck --enable-probe true \
