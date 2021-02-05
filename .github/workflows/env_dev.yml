@@ -1955,7 +1955,6 @@ jobs:
             --cookie-based-affinity Disabled \
             --timeout 30 \
             --host-name-from-backend-pool true \
-            --probe healthcheck --enable-probe true \
             --protocol Https \
             --port 443 \
             --path "/"
@@ -1986,6 +1985,12 @@ jobs:
             --protocol Https \
             --path "/healthcheck" \
             --host-name-from-http-settings true
+          
+          az network application-gateway probe create --name gef-healthcheck \
+            --gateway-name tfs-${{ env.environment }}-gw \
+            --protocol Https \
+            --path "/healthcheck" \
+            --host-name-from-http-settings true
 
     - name: Update back-end http settings
       uses: Azure/cli@v1.0.0
@@ -1996,6 +2001,13 @@ jobs:
             --gateway-name tfs-${{ env.environment }}-gw \
             --host-name-from-backend-pool true \
             --probe healthcheck --enable-probe true \
+            --protocol Https --port 443
+
+          az network application-gateway http-settings update \
+            --name gefGatewayBackendHttpSettings \
+            --gateway-name tfs-${{ env.environment }}-gw \
+            --host-name-from-backend-pool true \
+            --probe gef-healthcheck --enable-probe true \
             --protocol Https --port 443
 
   application-gateway-tfm:
