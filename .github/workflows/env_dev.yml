@@ -1889,7 +1889,6 @@ jobs:
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.environment }}-gateway \
             --public-ip-address tfs-${{ env.environment }}-ip \
-            --frontend-port 80 \
             --max-capacity 5 --min-capacity 1 \
             --sku Standard_v2
 
