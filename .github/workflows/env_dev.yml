@@ -1956,6 +1956,7 @@ jobs:
             --timeout 30 \
             --host-name-from-backend-pool true \
             --protocol Https \
+            --port 443 \
             --path "/"
 
           echo "Creating GEF rule url path map..."
