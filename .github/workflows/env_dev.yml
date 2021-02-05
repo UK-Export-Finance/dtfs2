@@ -1885,10 +1885,17 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
+          echo "Creating frontend port"
+          az network application-gateway frontend-port create \
+            --gateway-name tfs-${{ env.environment }}-gw \
+            --name tfs-${{ env.environment }}-port-http \
+            --port 80
+
           az network application-gateway create --name tfs-${{ env.environment }}-gw \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.environment }}-gateway \
             --public-ip-address tfs-${{ env.environment }}-ip \
+            --frontend-port tfs-${{ env.environment }}-port-http \
             --max-capacity 5 --min-capacity 1 \
             --sku Standard_v2
 
@@ -1934,12 +1941,6 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          echo "Creating frontend port"
-          az network application-gateway frontend-port create \
-            --gateway-name tfs-${{ env.environment }}-gw \
-            --name tfs-${{ env.environment }}-port-http \
-            --port 80
-
           echo "Creating HTTP listener..."
           az network application-gateway http-listener create \
             --gateway-name tfs-${{ env.environment }}-gw \
