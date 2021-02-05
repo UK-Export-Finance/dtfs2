@@ -1940,8 +1940,8 @@ jobs:
           echo "Creating HTTP listener..."
           az network application-gateway http-listener create \
             --gateway-name tfs-${{ env.environment }}-gw \
-            --name tfs-${{ env.environment }}-https \
-            --frontend-port frontendport_name
+            --name tfs-${{ env.environment }}-http \
+            --frontend-port $frontendport_name
             
           echo "Creating Portal Backend Pool"
           az network application-gateway address-pool create \
@@ -1982,7 +1982,7 @@ jobs:
             --gateway-name tfs-${{ env.environment }}-gw \
             --name tfs-${{ env.environment }}-rule1 \
             --routing-rule-type PathBasedRouting
-            --http-listener tfs-${{ env.environment }}-https \
+            --http-listener tfs-${{ env.environment }}-http \
             --http-settings appGatewayBackendHttpSettings \
             --address-pool appGatewayBackendPool \
             --url-path-map tfs-${{ env.environment }}-gef-url-path-map
