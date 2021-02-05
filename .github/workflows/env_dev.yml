@@ -1893,23 +1893,7 @@ jobs:
             --max-capacity 5 --min-capacity 1 \
             --sku Standard_v2
 
-    - name: Https ingress for data migration
-      uses: Azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          cert="${{ env.MIGRATION_SSL_CERTIFICATE }}"
-          if [ ! -z "$cert" ]
-          then
-            # Create the certificate file from the secret value:
-            echo $cert | base64 -d > cert.pfx
-
-            az network application-gateway ssl-cert create \
-              --gateway-name tfs-${{ env.environment }}-gw \
-              --name ${{ env.environment }}-cert \
-              --cert-password ${{ env.MIGRATION_SSL_CERTIFICATE_PASSWORD }} \
-              --cert-file cert.pfx
-          fi
-    - name: Configure Application Gateway
+    - name: Configure Portal Application Gateway
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
@@ -1922,10 +1906,9 @@ jobs:
           echo "Creating HTTP listener..."
           az network application-gateway http-listener create \
             --gateway-name tfs-${{ env.environment }}-gw \
-            --name ${{ env.environment }}-https \
+            --name tfs-${{ env.environment }}-https \
             --frontend-port tfs-${{ env.environment }}-port-https \
-            --ssl-cert ${{ env.environment }}-cert
-          
+            
           echo "Creating Portal Backend Pool"
           az network application-gateway address-pool create \
             --gateway-name  tfs-${{ env.environment }}-gw \
@@ -1963,13 +1946,35 @@ jobs:
           echo "Creating rule..."
           az network application-gateway rule create \
             --gateway-name tfs-${{ env.environment }}-gw \
-            --name ${{ env.environment }}-migration \
+            --name tfs-${{ env.environment }}-rule1 \
             --routing-rule-type PathBasedRouting
-            --http-listener ${{ env.environment }}-https \
+            --http-listener tfs-${{ env.environment }}-https \
             --http-settings appGatewayBackendHttpSettings \
             --address-pool appGatewayBackendPool \
             --url-path-map tfs-${{ env.environment }}-gef-url-path-map
-          
+            
+    - name: Https ingress for data migration
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          cert="${{ env.MIGRATION_SSL_CERTIFICATE }}"
+          if [ ! -z "$cert" ]
+          then
+            # Create the certificate file from the secret value:
+            echo $cert | base64 -d > cert.pfx
+
+            az network application-gateway ssl-cert create \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name tfs-${{ env.environment }}-cert \
+              --cert-password ${{ env.MIGRATION_SSL_CERTIFICATE_PASSWORD }} \
+              --cert-file cert.pfx
+
+            az network application-gateway http-listener update \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name tfs-${{ env.environment }}-https \
+              --ssl-cert tfs-${{ env.environment }}-cert
+          fi
+
     - name: Healthcheck probe
       uses: Azure/cli@v1.0.0
       with:
@@ -2020,6 +2025,43 @@ jobs:
             --servers tfs-${{ env.environment }}-trade-finance-manager-ui.azurewebsites.net \
             --sku Standard_v2
 
+    - name: Configure TFS Application Gateway
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          cert="${{ env.MIGRATION_SSL_CERTIFICATE }}"
+          if [ ! -z "$cert" ]
+          then
+            # Create the certificate file from the secret value:
+            echo $cert | base64 -d > cert.pfx
+
+            az network application-gateway ssl-cert create \
+              --gateway-name tfs-${{ env.environment }}-tfm-gw \
+              --name tfs-${{ env.environment }}-tfm-cert \
+              --cert-password ${{ env.MIGRATION_SSL_CERTIFICATE_PASSWORD }} \
+              --cert-file cert.pfx
+
+            echo "Creating frontend port"
+            az network application-gateway frontend-port create \
+              --gateway-name tfs-${{ env.environment }}-tfm-gw \
+              --name tfs-${{ env.environment }}tfm--port-https \
+              --port 443
+
+            echo "Creating HTTP listener..."
+            az network application-gateway http-listener create \
+              --gateway-name tfs-${{ env.environment }}-tfm-gw \
+              --name tfs-${{ env.environment }}-tfm-https \
+              --frontend-port tfs-${{ env.environment }}-tfm-port-https \
+
+            echo "Creating rule..."
+            az network application-gateway rule create \
+              --gateway-name tfs-${{ env.environment }}-tfm-gw \
+              --name tfs-${{ env.environment }}-tfm-rule1 \
+              --http-listener tfs-${{ env.environment }}-tfm-https \
+              --http-settings appGatewayBackendHttpSettings \
+              --address-pool appGatewayBackendPool
+          fi
+
     - name: Https ingress for data migration
       uses: Azure/cli@v1.0.0
       with:
@@ -2032,30 +2074,14 @@ jobs:
 
             az network application-gateway ssl-cert create \
               --gateway-name tfs-${{ env.environment }}-tfm-gw \
-              --name ${{ env.environment }}-cert \
+              --name tfs-${{ env.environment }}-tfm-cert \
               --cert-password ${{ env.MIGRATION_SSL_CERTIFICATE_PASSWORD }} \
               --cert-file cert.pfx
 
-            echo "Creating frontend port"
-            az network application-gateway frontend-port create \
+            az network application-gateway http-listener update \
               --gateway-name tfs-${{ env.environment }}-tfm-gw \
-              --name tfs-${{ env.environment }}-port-https \
-              --port 443
-
-            echo "Creating HTTP listener..."
-            az network application-gateway http-listener create \
-              --gateway-name tfs-${{ env.environment }}-tfm-gw \
-              --name ${{ env.environment }}-https \
-              --frontend-port tfs-${{ env.environment }}-port-https \
-              --ssl-cert ${{ env.environment }}-cert
-
-            echo "Creating rule..."
-            az network application-gateway rule create \
-              --gateway-name tfs-${{ env.environment }}-tfm-gw \
-              --name ${{ env.environment }}-migration \
-              --http-listener ${{ env.environment }}-https \
-              --http-settings appGatewayBackendHttpSettings \
-              --address-pool appGatewayBackendPool
+              --name tfs-${{ env.environment }}-tfm-https \
+              --ssl-cert tfs-${{ env.environment }}-tfm-cert
           fi
 
     - name: Healthcheck probe
