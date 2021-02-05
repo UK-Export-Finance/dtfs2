@@ -1972,7 +1972,7 @@ jobs:
           az network application-gateway rule create \
             --gateway-name tfs-${{ env.environment }}-gw \
             --name tfs-${{ env.environment }}-rule1 \
-            --routing-rule-type PathBasedRouting \
+            --rule-type PathBasedRouting \
             --address-pool appGatewayBackendPool \
             --url-path-map tfs-${{ env.environment }}-gef-url-path-map
 
