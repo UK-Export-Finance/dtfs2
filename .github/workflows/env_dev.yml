@@ -1935,17 +1935,9 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          frontendport_name=$(az network application-gateway show --name tfs-${{ env.environment }}-gw --query "frontendPorts[0].name" -o tsv)
-
-          echo "Creating HTTP listener..."
-          az network application-gateway http-listener create \
-            --gateway-name tfs-${{ env.environment }}-gw \
-            --name tfs-${{ env.environment }}-http \
-            --frontend-port $frontendport_name
-            
           echo "Creating Portal Backend Pool"
           az network application-gateway address-pool create \
-            --gateway-name  tfs-${{ env.environment }}-gw \
+            --gateway-name tfs-${{ env.environment }}-gw \
             --name appGatewayBackendPool \
             --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net
 
@@ -1959,13 +1951,13 @@ jobs:
           az network application-gateway http-settings create \
             --gateway-name tfs-${{ env.environment }}-gw \
             --name gefGatewayBackendHttpSettings \
-            --port 443 \
             --protocol Https \
             --cookie-based-affinity Disabled \
             --timeout 30 \
             --host-name-from-backend-pool true \
             --probe healthcheck --enable-probe true \
-            --protocol Https --port 443 \
+            --protocol Https \
+            --port 443 \
             --path "/"
 
           echo "Creating GEF rule url path map..."
@@ -1982,8 +1974,6 @@ jobs:
             --gateway-name tfs-${{ env.environment }}-gw \
             --name tfs-${{ env.environment }}-rule1 \
             --routing-rule-type PathBasedRouting
-            --http-listener tfs-${{ env.environment }}-http \
-            --http-settings appGatewayBackendHttpSettings \
             --address-pool appGatewayBackendPool \
             --url-path-map tfs-${{ env.environment }}-gef-url-path-map
             
