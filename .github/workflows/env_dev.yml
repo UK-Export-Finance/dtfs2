@@ -1974,6 +1974,7 @@ jobs:
             --name tfs-${{ env.environment }}-rule1 \
             --rule-type PathBasedRouting \
             --address-pool appGatewayBackendPool \
+            --http-settings appGatewayBackendHttpSettings \
             --url-path-map tfs-${{ env.environment }}-gef-url-path-map
 
     - name: Healthcheck probe
