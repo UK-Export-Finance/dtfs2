@@ -1941,6 +1941,18 @@ jobs:
             --name appGatewayBackendPool \
             --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net
 
+          echo "Upodating Portal HTTP settings..."
+          az network application-gateway http-settings update \
+            --gateway-name tfs-${{ env.environment }}-gw \
+            --name appGatewayBackendHttpSettings \
+            --protocol Https \
+            --cookie-based-affinity Disabled \
+            --timeout 30 \
+            --host-name-from-backend-pool true \
+            --protocol Https \
+            --port 443 \
+            --path "/"
+
           echo "Creating GEF Backend Pool"
           az network application-gateway address-pool create \
             --gateway-name  tfs-${{ env.environment }}-gw \
@@ -1968,23 +1980,11 @@ jobs:
             --address-pool gefGatewayBackendPool \
             --http-settings gefGatewayBackendHttpSettings
           
-          frontend_port_name=$(az network application-gateway show --name tfs-${{ env.environment }}-tfm-gw --query "frontendPorts[0].name" -o tsv)
-
-          echo "Creating backend listener..."
-          az network application-gateway http-listener create \
-            --frontend-port $frontend_port_name \
-            --name backendListener \
-            --frontend-ip appGatewayFrontendIP \
-            --gateway-name tfs-${{ env.environment }}-gw
-            
-          echo "Creating rule..."
-          az network application-gateway rule create \
+          echo "Updating rule..."
+          az network application-gateway rule update \
             --gateway-name tfs-${{ env.environment }}-gw \
-            --name tfs-${{ env.environment }}-rule1 \
+            --name rule1 \
             --rule-type PathBasedRouting \
-            --address-pool appGatewayBackendPool \
-            --http-listener backendListener \
-            --http-settings appGatewayBackendHttpSettings \
             --url-path-map tfs-${{ env.environment }}-gef-url-path-map
 
     - name: Healthcheck probe
