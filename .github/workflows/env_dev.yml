@@ -1975,19 +1975,12 @@ jobs:
             --gateway-name tfs-${{ env.environment }}-gw \
             --name gef-url-path-map \
             --rule-name gef-url-rule \
-            --address-pool appGatewayBackendPool \
-            --http-settings appGatewayBackendHttpSettings \
-            --paths /
-          
-          echo "Creating url path map rule..."
-          az network application-gateway url-path-map rule create \
-            --gateway-name tfs-${{ env.environment }}-gw \
-            --name gef-url-path-map-rule \
-            --path-map-name gef-url-path-map \
-            --paths /gef/* \
             --address-pool gefGatewayBackendPool \
-            --http-settings gefGatewayBackendHttpSettings
-
+            --default-address-pool appGatewayBackendPool \
+            --http-settings appGatewayBackendHttpSettings \
+            --default-http-settings appGatewayBackendHttpSettings \
+            --paths /gef/*
+        
           echo "Updating rule..."
           az network application-gateway rule update \
             --gateway-name tfs-${{ env.environment }}-gw \
