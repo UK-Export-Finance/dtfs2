@@ -1941,7 +1941,7 @@ jobs:
             --name appGatewayBackendPool \
             --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net
 
-          echo "Upodating Portal HTTP settings..."
+          echo "Updating Portal HTTP settings..."
           az network application-gateway http-settings update \
             --gateway-name tfs-${{ env.environment }}-gw \
             --name appGatewayBackendHttpSettings \
@@ -1950,8 +1950,7 @@ jobs:
             --timeout 30 \
             --host-name-from-backend-pool true \
             --protocol Https \
-            --port 443 \
-            --path "/"
+            --port 443
 
           echo "Creating GEF Backend Pool"
           az network application-gateway address-pool create \
@@ -1974,18 +1973,27 @@ jobs:
           echo "Creating GEF rule url path map..."
           az network application-gateway url-path-map create \
             --gateway-name tfs-${{ env.environment }}-gw \
-            --name tfs-${{ env.environment }}-gef-url-path-map \
-            --rule-name gef \
+            --name gef-url-path-map \
+            --rule-name gef-url-rule \
+            --paths /gef/* \
+            --address-pool appGatewayBackendPool \
+            --http-settings appGatewayBackendHttpSettings
+          
+          echo "Creating url path map rule..."
+          az network application-gateway url-path-map rule create \
+            --gateway-name tfs-${{ env.environment }}-gw \
+            --name gef-url-path-map-rule \
+            --path-map-name gef-url-path-map \
             --paths /gef/* \
             --address-pool gefGatewayBackendPool \
             --http-settings gefGatewayBackendHttpSettings
-          
+
           echo "Updating rule..."
           az network application-gateway rule update \
             --gateway-name tfs-${{ env.environment }}-gw \
             --name rule1 \
             --rule-type PathBasedRouting \
-            --url-path-map tfs-${{ env.environment }}-gef-url-path-map
+            --url-path-map gef-url-path-map
 
     - name: Healthcheck probe
       uses: Azure/cli@v1.0.0
