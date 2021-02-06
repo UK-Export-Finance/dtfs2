@@ -1976,7 +1976,8 @@ jobs:
             --name gef-url-path-map \
             --rule-name gef-url-rule \
             --address-pool appGatewayBackendPool \
-            --http-settings appGatewayBackendHttpSettings
+            --http-settings appGatewayBackendHttpSettings \
+            --paths /
           
           echo "Creating url path map rule..."
           az network application-gateway url-path-map rule create \
