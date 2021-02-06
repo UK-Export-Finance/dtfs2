@@ -1975,7 +1975,6 @@ jobs:
             --gateway-name tfs-${{ env.environment }}-gw \
             --name gef-url-path-map \
             --rule-name gef-url-rule \
-            --paths /gef/* \
             --address-pool appGatewayBackendPool \
             --http-settings appGatewayBackendHttpSettings
           
