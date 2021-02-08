@@ -132,6 +132,25 @@ const createFacility = async (facility, user) => {
   }
 };
 
+const createMultipleFacilities = async (facilities, associatedDealId, user) => {
+  try {
+    return await axios({
+      method: 'post',
+      url: `${urlRoot}/v1/portal/multiple-facilities`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        facilities,
+        associatedDealId,
+        user,
+      },
+    });
+  } catch ({ response }) {
+    return response;
+  }
+};
+
 const findOneFacility = async (facilityId) => {
   try {
     const response = await axios({
@@ -208,6 +227,7 @@ module.exports = {
   deleteDeal,
   addDealComment,
   createFacility,
+  createMultipleFacilities,
   findOneFacility,
   updateFacility,
   deleteFacility,

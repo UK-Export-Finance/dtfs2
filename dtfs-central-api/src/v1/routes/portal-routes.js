@@ -8,6 +8,7 @@ const deleteDealController = require('../controllers/portal/deal/delete-deal.con
 const addDealController = require('../controllers/portal/deal/add-deal-comment.controller');
 
 const createFacilityController = require('../controllers/portal/facility/create-facility.controller');
+const createMultipleFacilitiesController = require('../controllers/portal/facility/create-multiple-facilities.controller');
 const getFacilityController = require('../controllers/portal/facility/get-facility.controller');
 const getFacilitiesController = require('../controllers/portal/facility/get-facilities.controller');
 const updateFacilityController = require('../controllers/portal/facility/update-facility.controller');
@@ -52,6 +53,11 @@ portalRouter.route('/facilities')
   )
   .post(
     createFacilityController.createFacilityPost,
+  );
+
+portalRouter.route('/multiple-facilities')
+  .post(
+    createMultipleFacilitiesController.createMultipleFacilitiesPost,
   );
 
 portalRouter.route('/facilities/:id')
