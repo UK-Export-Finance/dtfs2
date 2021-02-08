@@ -7,6 +7,7 @@ const completedDeal = require('../../fixtures/deal-fully-completed-issued-and-un
 
 const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
+const createFacilities = require('../../createFacilities');
 
 // Mock currency & country API calls as no currency/country data is in db during pipeline test as previous test had removed them
 jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
@@ -29,7 +30,8 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
   };
 
   beforeAll(async () => {
-    // await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['facilities']);
     const testUsers = await testUserCache.initialise(app);
     const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
     aBarclaysMaker = barclaysMakers[0];
@@ -40,8 +42,9 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
   describe('when a MIN deal status changes from `Accepted by UKEF (without conditions)` to `Ready for Checker\'s approval`', () => {
     let submittedMinDeal;
     let updatedDeal;
+    let dealId;
 
-    beforeEach(async () => {
+    beforeEach(async (done) => {
       const minDeal = completedDeal;
       minDeal.details.manualInclusionNoticeSubmissionDate = moment().utc().valueOf();
       minDeal.details.status = 'Accepted by UKEF (without conditions)';
@@ -49,12 +52,21 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
       const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(minDeal))).to('/v1/deals');
 
       submittedMinDeal = postResult.body;
+      dealId = submittedMinDeal._id;
 
-      const statusUpdate = {
-        status: 'Ready for Checker\'s approval',
-      };
+      const createdFacilities = await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
 
-      updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${submittedMinDeal._id}/status`);
+      if (createdFacilities.length) {
+        completedDeal.mockFacilities = createdFacilities;
+
+        const statusUpdate = {
+          status: 'Ready for Checker\'s approval',
+        };
+
+        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${submittedMinDeal._id}/status`);
+
+        done();
+      }
     });
 
     describe('any issued bonds that have details provided, not yet submitted and no requestedCoverStartDate', () => {
@@ -62,17 +74,19 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         expect(updatedDeal.status).toEqual(200);
         expect(updatedDeal.body).toBeDefined();
 
-        const { body } = await as(aSuperuser).get(`/v1/deals/${submittedMinDeal._id}`);
+        const { body } = await as(aSuperuser).get(`/v1/deals/${dealId}`);
 
-        const issuedBondsThatShouldBeUpdated = submittedMinDeal.bondTransactions.items.filter((b) =>
-          isUnsubmittedIssuedFacility(b)
-          && !b.requestedCoverStartDate);
+        const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
+          f.facilityType === 'bond'
+          && isUnsubmittedIssuedFacility(f)
+          && !f.requestedCoverStartDate);
 
         // make sure we have some bonds to test against
         expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
 
         issuedBondsThatShouldBeUpdated.forEach((bond) => {
-          const updatedBond = body.deal.bondTransactions.items.find((l) => l._id === bond._id);
+          const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
+
           expect(updatedBond.requestedCoverStartDate).toEqual(submittedMinDeal.details.manualInclusionNoticeSubmissionDate);
           expect(typeof updatedBond.lastEdited).toEqual('string');
         });
@@ -86,9 +100,10 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
 
         const { body } = await as(aSuperuser).get(`/v1/deals/${submittedMinDeal._id}`);
 
-        const issuedLoansThatShouldBeUpdated = submittedMinDeal.loanTransactions.items.filter((l) =>
-          isUnsubmittedIssuedFacility(l)
-          && !l.requestedCoverStartDate);
+        const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
+          f.facilityType === 'loan'
+          && isUnsubmittedIssuedFacility(f)
+          && !f.requestedCoverStartDate);
 
         // make sure we have some loans to test against
         expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
@@ -106,7 +121,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
     let submittedMinDeal;
     let updatedDeal;
 
-    beforeEach(async () => {
+    beforeEach(async (done) => {
       const minDeal = completedDeal;
       minDeal.details.manualInclusionNoticeSubmissionDate = moment().utc().valueOf();
       minDeal.details.status = 'Accepted by UKEF (with conditions)';
@@ -114,13 +129,21 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
       const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(minDeal))).to('/v1/deals');
 
       submittedMinDeal = postResult.body;
+      dealId = submittedMinDeal._id;
 
-      const statusUpdate = {
-        status: 'Ready for Checker\'s approval',
-        confirmSubmit: true,
-      };
+      const createdFacilities = await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
+      if (createdFacilities.length) {
+        completedDeal.mockFacilities = createdFacilities;
+       
+        const statusUpdate = {
+          status: 'Ready for Checker\'s approval',
+          confirmSubmit: true,
+        };
 
-      updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${submittedMinDeal._id}/status`);
+        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${submittedMinDeal._id}/status`);
+
+        done();
+      }
     });
 
     describe('any issued bonds that have details provided, not yet submitted and no requestedCoverStartDate', () => {
@@ -130,9 +153,10 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
 
         const { body } = await as(aSuperuser).get(`/v1/deals/${submittedMinDeal._id}`);
 
-        const issuedBondsThatShouldBeUpdated = submittedMinDeal.bondTransactions.items.filter((b) =>
-          isUnsubmittedIssuedFacility(b)
-          && !b.requestedCoverStartDate);
+        const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
+          f.facilityType === 'bond'
+          && isUnsubmittedIssuedFacility(f)
+          && !f.requestedCoverStartDate);
 
         // make sure we have some bonds to test against
         expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
@@ -152,9 +176,10 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
 
         const { body } = await as(aSuperuser).get(`/v1/deals/${submittedMinDeal._id}`);
 
-        const issuedLoansThatShouldBeUpdated = submittedMinDeal.loanTransactions.items.filter((l) =>
-          isUnsubmittedIssuedFacility(l)
-          && !l.requestedCoverStartDate);
+        const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
+          f.facilityType === 'loan'
+          && isUnsubmittedIssuedFacility(f)
+          && !f.requestedCoverStartDate);
 
         // make sure we have some loans to test against
         expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);

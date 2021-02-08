@@ -20,6 +20,7 @@ const eligibilityCriteria = require('./controllers/eligibilityCriteria.controlle
 const loans = require('./controllers/loans.controller');
 const loanIssueFacility = require('./controllers/loan-issue-facility.controller');
 const bonds = require('./controllers/bonds.controller');
+const facilities = require('./controllers/facilities.controller');
 const bondIssueFacility = require('./controllers/bond-issue-facility.controller');
 const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-date.controller');
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
@@ -142,6 +143,12 @@ authRouter.route('/deals/:id/bond/:bondId/change-cover-start-date')
   .put(
     validate({ role: ['maker'] }),
     bondChangeCoverStartDate.updateBondCoverStartDate,
+  );
+
+authRouter.route('/deals/:id/multiple-facilities')
+  .post(
+    validate({ role: ['maker'] }),
+    facilities.createMultiple,
   );
 
 authRouter.route('/deals/:id')

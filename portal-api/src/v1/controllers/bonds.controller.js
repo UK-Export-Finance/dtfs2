@@ -25,6 +25,7 @@ exports.create = async (req, res) => {
     const facilityBody = {
       facilityType: 'bond',
       associatedDealId: req.params.id,
+      ...req.body,
     };
 
     const { status, data } = await facilitiesController.create(facilityBody, req.user);
