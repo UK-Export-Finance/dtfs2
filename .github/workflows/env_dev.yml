@@ -50,7 +50,6 @@ env:
   DTFS_PORTAL_SCHEDULER: false
   FETCH_WORKFLOW_TYPE_B_SCHEDULE: "* * * * *"
 
-
 # Below this line should be the same for all environments
 
 jobs:
