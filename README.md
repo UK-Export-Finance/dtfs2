@@ -48,7 +48,22 @@ NB this code has been developed on Mac OS and runs in Linux containers. You may 
 
 With docker running, execute all tests with:
 ```
-npm install && npm run pipeline
+Ensure npm install is run from within respective folder
+
+Pipeline tests
+From root:
+npm run pipeline
+
+Api Tests
+From respective folder (./portal-api, ./dtfs-central-api)
+All tests: npm run api-test
+Individual tests: npm run api-test-file "**/*/deals-party-db.api-test.js"
+
+E2E tests
+From respective folder (./e2e-tests/portal, ./e2e-tests/trade-finance-manager, ./e2e-tests/gef)
+All tests: npx cypress run
+Individual tests: npx cypress open
+
 ```
 
 ### Running the world locally
@@ -76,8 +91,18 @@ Several services are built:
 | TFM API | http://localhost:5004 |
 | Central API | http://localhost:5005 |
 | GEF | http://localhost:5006 |
-| Mongo DB | root:r00t@localhost:27017 |
+| Mongo DB | root:r00t@localhost:27017 | Connect via MongoDB client
 
+### CI
+Several environments are used:
+http://tfs-dev-fd.azurefd.net/
+http://tfs-demo-fd.azurefd.net/
+http://tfs-test-fd.azurefd.net/
+http://tfs-staging-fd.azurefd.net/
+http://tfs-prod-fd.azurefd.net/
+
+GEF can be accessed by appending /geg
+e.g. http://tfs-test-fd.azurefd.net/gef/deals/1
 
 ### Git workflow
 
