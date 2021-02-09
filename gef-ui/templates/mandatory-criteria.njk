@@ -1,0 +1,64 @@
+{% extends "index.njk" %}
+{% import '_macros/success-message.njk' as success %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}Confirm eligiblity (mandatory criteria){% endblock %}
+
+{% block content %}
+
+  {% if successMessage %}
+    {{ success.message(
+      message = successMessage
+    )}}
+  {% endif %}
+    <span class="govuk-caption-xl">
+      Create new application
+    </span>
+
+    <h1 class="govuk-heading-l">
+      Confirm eligiblity (mandatory criteria)
+    </h1>
+
+    {{ criteria | safe }}
+
+    <form action="mandatory-criteria" method="post">
+    {{ govukRadios({
+      classes: "govuk-radios--inline",
+      idPrefix: "mandatory-criteria",
+      name: "mandatoryCriteria",
+      fieldset: {
+        legend: {
+          text: "Can you confirm that the mandatory criteria will be true for this General Export Facility?",
+          isPageHeading: false,
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      errorMessage: validationErrorMessage,
+      items: [
+        {
+          value: 'true',
+          text: "True"
+        },
+        {
+          value: 'false',
+          text: "False"
+        }
+      ] }) 
+    }}
+
+    <div class="govuk-button-group">
+      {{ govukButton({
+        text: "Continue"
+      }) }}
+
+      <a class="govuk-link" href="#">Cancel</a>
+    </div>
+  </form>
+
+{% endblock %}
+
+<script>
+  const validator = 
+</script>
+
