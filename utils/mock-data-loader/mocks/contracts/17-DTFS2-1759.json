@@ -219,6 +219,7 @@
         "supplyContractValue" : "50000000.00",
         "viewedPreviewPage" : true
     },
+    "facilities": [],
     "bondTransactions" : {
         "items" : [
             {
