@@ -8,7 +8,7 @@ const createUkefIds = async (dealId, deal, user) => {
   const totalFacilities = deal.facilities.length;
   let updatedFacilitiesCount = 0;
 
-  return new Promise(async (resolve) => {
+  return new Promise(async (resolve) => { // eslint-disable-line no-async-promise-executor
     const updatedDeal = await updateDeal(
       dealId,
       {
@@ -26,7 +26,7 @@ const createUkefIds = async (dealId, deal, user) => {
         ukefFacilityID,
       };
 
-      const { status, data } = await facilitiesController.update(facilityId, modifiedFacility, user);
+      await facilitiesController.update(facilityId, modifiedFacility, user);
 
       updatedFacilitiesCount += 1;
 
