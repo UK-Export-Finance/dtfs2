@@ -157,13 +157,15 @@ exports.update = (req, res) => {
         // Integrate with TFM
         api.tfmDealSubmit(deal._id); // eslint-disable-line no-underscore-dangle
       } else {
-      // Integrate with workflow
+        // Integrate with workflow
         const { previousWorkflowStatus } = deal.details;
 
-        const typeA = await createTypeA(dealAfterAllUpdates, previousWorkflowStatus);
+        // make sure we have the latest deal in DB with bonds and loans populated
+        const dealLatest = await findOneDeal(deal._id); // eslint-disable-line no-underscore-dangle
+        const typeA = await createTypeA(dealLatest, previousWorkflowStatus);
 
         if (typeA.errorCount) {
-        // Revert status
+          // Revert status
           await updateStatus(req.params.id, toStatus, fromStatus);
           return res.status(200).send(typeA);
         }

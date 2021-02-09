@@ -6,6 +6,7 @@ const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
 const incompleteDeal = require('../../fixtures/deal-with-incomplete-about-section.json');
 const sendStatusUpdateEmails = require('../../../src/v1/controllers/deal-status/send-status-update-emails');
+const createFacilities = require('../../createFacilities');
 
 const { as } = require('../../api')(app);
 const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
@@ -219,7 +220,10 @@ describe('/v1/deals/:id/status', () => {
 
     it('does NOT update previousStatus if the `from` and `to` status matches', async () => {
       const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
-      const createdDeal = postResult.body;
+      const dealId = postResult.body._id;
+
+      await createFacilities(anHSBCMaker, dealId, completedDeal.mockFacilities);
+
       const statusUpdate = {
         comments: 'Flee!',
         status: completedDeal.details.status,
@@ -227,9 +231,9 @@ describe('/v1/deals/:id/status', () => {
 
       const expectedPreviousStatus = completedDeal.details.previousStatus;
 
-      await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
 
-      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${dealId}`);
 
       expect(body.deal.details.previousStatus).toEqual(expectedPreviousStatus);
       expect(body.deal.details.status).toEqual(completedDeal.details.status);
@@ -287,12 +291,15 @@ describe('/v1/deals/:id/status', () => {
 
     it('sends an email if the status has changed', async () => {
       const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
-      const createdDeal = postResult.body;
+      const dealId = postResult.body._id;
+
+      await createFacilities(anHSBCMaker, dealId, completedDeal.mockFacilities);
+
       const statusUpdate = {
         status: 'Submitted',
       };
 
-      const { status, body } = await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
 
       expect(sendStatusUpdateEmails).toHaveBeenCalled();
     });
