@@ -15,6 +15,10 @@ const MAKER_LOGIN = mockUsers.find(user => (user.roles.includes('maker') && user
 context('A maker issues facilities, submits to checker; checker submits deal to UKEF', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   beforeEach(() => {
     cy.on('uncaught:exception', (err, runnable) => {
@@ -29,7 +33,27 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = MIADealAcceptedStatusWithUnissuedFacilities;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
+  });
+
+  after(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   it('Facility statuses should be updated, checker can only review the Issue Facility details', () => {
@@ -41,14 +65,14 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     pages.contract.visit(deal);
 
     // complete issue bond facility form
-    const bondId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const bondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
     bondRow.issueFacilityLink().click();
     fillAndSubmitIssueBondFacilityForm();
 
     // complete issue loan facility form
-    const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const loanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
     loanRow.issueFacilityLink().click();
