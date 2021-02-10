@@ -106,64 +106,67 @@ const updateIssuedFacilities = async (
   let updatedCount = 0;
 
   return new Promise((resolve) => {
-    deal.facilities.forEach(async (facilityId) => {
-      const facility = await facilitiesController.findOne(facilityId);
+    if (deal.facilities.length) {
+      deal.facilities.forEach(async (facilityId) => {
+        const facility = await facilitiesController.findOne(facilityId);
 
-      const { facilityStage } = facility;
+        const { facilityStage } = facility;
 
-      const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
-                                  && facility.issueFacilityDetailsProvided
-                                  && fromStatus !== CONSTANTS.DEAL.STATUS.DRAFT
-                                  && facility.status !== CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED
-                                  && (newStatus && newStatus.length > 0));
+        const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
+                                    && facility.issueFacilityDetailsProvided
+                                    && fromStatus !== CONSTANTS.DEAL.STATUS.DRAFT
+                                    && facility.status !== CONSTANTS.FACILITIES.STATUS.ACKNOWLEDGED
+                                    && (newStatus && newStatus.length > 0));
 
-      if (shouldUpdateFacility(facility)) {
-        shouldUpdateCount += 1;
+        if (shouldUpdateFacility(facility)) {
+          shouldUpdateCount += 1;
 
-        if (facility.issueFacilityDetailsProvided && !facility.issueFacilityDetailsSubmitted) {
-          facility.lastEdited = now();
-          facility.previousFacilityStage = facilityStage;
+          if (facility.issueFacilityDetailsProvided && !facility.issueFacilityDetailsSubmitted) {
+            facility.lastEdited = now();
+            facility.previousFacilityStage = facilityStage;
 
-          if (shouldUpdateStatus) {
+            if (shouldUpdateStatus) {
+              facility.status = newStatus;
+            }
+
+            if (isLoanFacility(facilityStage)) {
+              facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
+            } else if (isBondFacility(facilityStage)) {
+              facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
+            }
+          } else if (shouldUpdateStatus) {
+            // update all issued facilities regardless of if they've been submitted or have completed all required fields.
             facility.status = newStatus;
+            facility.lastEdited = now();
           }
 
-          if (isLoanFacility(facilityStage)) {
-            facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
-          } else if (isBondFacility(facilityStage)) {
-            facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
+          if (canUpdateIssuedFacilitiesCoverStartDates
+            && !facility.issueFacilityDetailsSubmitted
+            && !facility.requestedCoverStartDate) {
+            if (fromStatusIsApprovedStatus && isMINdeal) {
+              facility.lastEdited = now();
+              facility.requestedCoverStartDate = deal.details.manualInclusionNoticeSubmissionDate;
+            } else if (isMIAdeal && dealHasBeenApproved) {
+              facility.lastEdited = now();
+              facility.requestedCoverStartDate = now();
+            } else if (facilityHasValidIssuedDate(facility, deal)) {
+              facility.lastEdited = now();
+              facility.requestedCoverStartDate = facility.issuedDate;
+            }
           }
-        } else if (shouldUpdateStatus) {
-          // update all issued facilities regardless of if they've been submitted or have completed all required fields.
-          facility.status = newStatus;
-          facility.lastEdited = now();
+
+          await facilitiesController.update(facilityId, facility, user);
+
+          updatedCount += 1;
         }
 
-        if (canUpdateIssuedFacilitiesCoverStartDates
-          && !facility.issueFacilityDetailsSubmitted
-          && !facility.requestedCoverStartDate) {
-          if (fromStatusIsApprovedStatus && isMINdeal) {
-            facility.lastEdited = now();
-            facility.requestedCoverStartDate = deal.details.manualInclusionNoticeSubmissionDate;
-          } else if (isMIAdeal && dealHasBeenApproved) {
-            facility.lastEdited = now();
-            facility.requestedCoverStartDate = now();
-          } else if (facilityHasValidIssuedDate(facility, deal)) {
-            facility.lastEdited = now();
-            facility.requestedCoverStartDate = facility.issuedDate;
-          }
+        if (updatedCount === shouldUpdateCount) {
+          return resolve(deal);
         }
-
-        await facilitiesController.update(facilityId, facility, user);
-
-        updatedCount += 1;
-      }
-
-      if (updatedCount === shouldUpdateCount) {
-        return resolve(deal);
-      }
-      return facility;
-    });
+        return facility;
+      });
+    }
+    return resolve(deal);
   });
 };
 
