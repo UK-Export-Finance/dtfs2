@@ -8,6 +8,10 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && us
 context('A maker and checker can submit and re-submit a deal to each other multiple times', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   beforeEach(() => {
     cy.on('uncaught:exception', (err, runnable) => {
@@ -21,11 +25,21 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = dealReadyToSubmitToChecker;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
   });
 
   const assertFacilityTableValuesWithDealStatusInDraft = () => {
-    deal.bondTransactions.items.forEach((bond) => {
+    dealFacilities.bonds.forEach((bond) => {
       const bondId = bond._id; // eslint-disable-line no-underscore-dangle
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
@@ -40,7 +54,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       bondRow.issueFacilityLink().should('not.be.visible');
     });
 
-    deal.loanTransactions.items.forEach((loan) => {
+    dealFacilities.loans.forEach((loan) => {
       const loanId = loan._id; // eslint-disable-line no-underscore-dangle
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
@@ -58,11 +72,11 @@ context('A maker and checker can submit and re-submit a deal to each other mult
   };
 
   const assertFacilityTableValuesWithDealStatusInFurtherMakerInputRequired = () => {
-    const unissuedBonds = deal.bondTransactions.items.filter((b) => b.facilityStage === 'Unissued');
-    const issuedBonds = deal.bondTransactions.items.filter((b) => b.facilityStage === 'Issued');
+    const unissuedBonds = dealFacilities.bonds.filter((b) => b.facilityStage === 'Unissued');
+    const issuedBonds = dealFacilities.bonds.filter((b) => b.facilityStage === 'Issued');
 
-    const conditionalLoans = deal.loanTransactions.items.filter((l) => l.facilityStage === 'Conditional');
-    const unconditionalLoans = deal.loanTransactions.items.filter((l) => l.facilityStage === 'Unconditional');
+    const conditionalLoans = dealFacilities.loans.filter((l) => l.facilityStage === 'Conditional');
+    const unconditionalLoans = dealFacilities.loans.filter((l) => l.facilityStage === 'Unconditional');
 
     unissuedBonds.forEach((bond) => {
       const bondId = bond._id; // eslint-disable-line no-underscore-dangle
@@ -130,11 +144,11 @@ context('A maker and checker can submit and re-submit a deal to each other mult
   };
 
   const assertFacilityTableValuesWithDealStatusInReadyForChecker = () => {
-    const unissuedBonds = deal.bondTransactions.items.filter((b) => b.facilityStage === 'Unissued');
-    const issuedBonds = deal.bondTransactions.items.filter((b) => b.facilityStage === 'Issued');
+    const unissuedBonds = dealFacilities.bonds.filter((b) => b.facilityStage === 'Unissued');
+    const issuedBonds = dealFacilities.bonds.filter((b) => b.facilityStage === 'Issued');
 
-    const conditionalLoans = deal.loanTransactions.items.filter((l) => l.facilityStage === 'Conditional');
-    const unconditionalLoans = deal.loanTransactions.items.filter((l) => l.facilityStage === 'Unconditional');
+    const conditionalLoans = dealFacilities.loans.filter((l) => l.facilityStage === 'Conditional');
+    const unconditionalLoans = dealFacilities.loans.filter((l) => l.facilityStage === 'Unconditional');
 
     unissuedBonds.forEach((bond) => {
       const bondId = bond._id; // eslint-disable-line no-underscore-dangle
