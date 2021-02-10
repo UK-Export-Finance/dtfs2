@@ -10,6 +10,10 @@ const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') &
 context('A checker selects to return a deal (with some issued facilities) to maker from the view-contract page', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -26,7 +30,27 @@ context('A checker selects to return a deal (with some issued facilities) to mak
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = dealWithSomeIssuedFacilitiesReadyForReview;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
+  });
+
+  afterEach(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   it('Facilities display the correct facility statuses and after returning the deal to maker, facility statuses should be updated', () => {
@@ -34,7 +58,7 @@ context('A checker selects to return a deal (with some issued facilities) to mak
     pages.contract.visit(deal);
 
     // expect Unissued Bonds (that need to 'Issue Facility') to have correct status
-    const unissuedBond = deal.bondTransactions.items.find((b) => b.facilityStage === 'Unissued'); // eslint-disable-line no-underscore-dangle
+    const unissuedBond = dealFacilities.bonds.find((b) => b.facilityStage === 'Unissued'); // eslint-disable-line no-underscore-dangle
     const unissuedBondId = unissuedBond._id; // eslint-disable-line no-underscore-dangle
     const unissuedBondRow = pages.contract.bondTransactionsTable.row(unissuedBondId);
 
@@ -43,7 +67,7 @@ context('A checker selects to return a deal (with some issued facilities) to mak
     });
 
     // expect Issued Bonds (that do not need to 'Issue Facility') to have correct status
-    const issuedBond = deal.bondTransactions.items.find((b) => b.facilityStage === 'Issued'); // eslint-disable-line no-underscore-dangle
+    const issuedBond = dealFacilities.bonds.find((b) => b.facilityStage === 'Issued'); // eslint-disable-line no-underscore-dangle
     const issuedBondId = issuedBond._id; // eslint-disable-line no-underscore-dangle
     const issuedBondRow = pages.contract.bondTransactionsTable.row(issuedBondId);
 
@@ -52,7 +76,7 @@ context('A checker selects to return a deal (with some issued facilities) to mak
     });
 
     // expect Conditional Loans (that need to 'Issue Facility') to have correct status
-    const conditionalLoan = deal.loanTransactions.items.find((l) => l.facilityStage === 'Conditional'); // eslint-disable-line no-underscore-dangle
+    const conditionalLoan = dealFacilities.loans.find((l) => l.facilityStage === 'Conditional'); // eslint-disable-line no-underscore-dangle
     const conditionalLoanId = conditionalLoan._id; // eslint-disable-line no-underscore-dangle
     const conditionalLoanRow = pages.contract.loansTransactionsTable.row(conditionalLoanId);
 
@@ -61,7 +85,7 @@ context('A checker selects to return a deal (with some issued facilities) to mak
     });
 
     // expect Unconditional Loans (that do not need to 'Issue Facility') to have correct status
-    const unconditionalLoan = deal.loanTransactions.items.find((l) => l.facilityStage === 'Unconditional'); // eslint-disable-line no-underscore-dangle
+    const unconditionalLoan = dealFacilities.loans.find((l) => l.facilityStage === 'Unconditional'); // eslint-disable-line no-underscore-dangle
     const unconditionalLoanId = unconditionalLoan._id; // eslint-disable-line no-underscore-dangle
     const unconditionalLoanRow = pages.contract.loansTransactionsTable.row(unconditionalLoanId);
 
