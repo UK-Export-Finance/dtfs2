@@ -39,8 +39,11 @@ Cypress.Commands.add('deleteDeals', require('./portal-api/deleteDeals'));
 
 Cypress.Commands.add('downloadFile', downloadFile);
 Cypress.Commands.add('removeUserIfPresent', require('./portal-api/removeUserIfPresent'));
+
+// TODO do we need updateBond and updateLoan anymore? probably not.
 Cypress.Commands.add('updateBond', require('./portal-api/updateBond'));
 Cypress.Commands.add('updateLoan', require('./portal-api/updateLoan'));
+Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'));
 
 // commands used to interact with the test hooks - ie. endpoints that only exist during pipeline execution.
 Cypress.Commands.add('sendTypeB', require('./test-hooks-api/sendTypeB'));
@@ -56,8 +59,5 @@ Cypress.Commands.add('passRedLine', require('./portal/passRedLine'));
 Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
 
 // commands that add/edit facilities directly in central API
-// TODO - ideally this would call portal API (which would then call central API)
-// copied this from TFM e2e tests in the interest of time
-Cypress.Commands.add('createFacility', require('./central-api/createFacility'));
 Cypress.Commands.add('updateFacility', require('./central-api/updateFacility'));
 Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));

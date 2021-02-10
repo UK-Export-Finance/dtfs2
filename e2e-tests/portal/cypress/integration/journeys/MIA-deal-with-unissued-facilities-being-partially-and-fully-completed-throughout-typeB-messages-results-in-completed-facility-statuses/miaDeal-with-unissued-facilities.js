@@ -210,106 +210,96 @@ const deal = {
         "supplyContractConversionDate-month" : "",
           "supplyContractConversionDate-year" : ""
   },
-  "bondTransactions" : {
-    "items" : [
-      {
-        "_id": "1001496",
-        "facilityType": "bond",
-        "facilityStage": "Unissued",
-        "ukefGuaranteeInMonths": "24",
-        "facilityValue": "100000.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "createdDate": moment().utc().valueOf(),
-        "lastEdited": moment().utc().valueOf(),
-        "bondIssuer": "",
-        "bondType": "Advance payment guarantee",
-        "bondBeneficiary": "",
-        "guaranteeFeePayableByBank": "1.8000",
-        "ukefExposure": "80,000.00",
-        "riskMarginFee": "2",
-        "coveredPercentage": "80",
-        "minimumRiskMarginFee": "",
-        "feeType": "At maturity",
-        "dayCountBasis": "365",
-        "currency": {
-          "text": "GBP - UK Sterling",
-          "id": "GBP"
-        }
-      },
-      {
-        "_id": "1001497",
-        "facilityType": "bond",
-        "facilityStage": "Unissued",
-        "ukefGuaranteeInMonths": "24",
-        "facilityValue": "100000.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "createdDate": moment().utc().valueOf(),
-        "lastEdited": moment().utc().valueOf(),
-        "bondIssuer": "",
-        "bondType": "Performance bond",
-        "bondBeneficiary": "",
-        "guaranteeFeePayableByBank": "1.8000",
-        "ukefExposure": "80,000.00",
-        "riskMarginFee": "2",
-        "coveredPercentage": "80",
-        "minimumRiskMarginFee": "",
-        "feeType": "At maturity",
-        "dayCountBasis": "365",
-        "currency": {
-          "text": "GBP - UK Sterling",
-          "id": "GBP"
-        }
+  "mockFacilities" : [
+    {
+      "facilityType": "bond",
+      "facilityStage": "Unissued",
+      "ukefGuaranteeInMonths": "24",
+      "facilityValue": "100000.00",
+      "currencySameAsSupplyContractCurrency": "true",
+      "createdDate": moment().utc().valueOf(),
+      "lastEdited": moment().utc().valueOf(),
+      "bondIssuer": "",
+      "bondType": "Advance payment guarantee",
+      "bondBeneficiary": "",
+      "guaranteeFeePayableByBank": "1.8000",
+      "ukefExposure": "80,000.00",
+      "riskMarginFee": "2",
+      "coveredPercentage": "80",
+      "minimumRiskMarginFee": "",
+      "feeType": "At maturity",
+      "dayCountBasis": "365",
+      "currency": {
+        "text": "GBP - UK Sterling",
+        "id": "GBP"
       }
-    ]
-  },
-  "loanTransactions" : {
-    "items" : [
-      {
-        "_id": "1001499",
-        "facilityType": "loan",
-        "ukefGuaranteeInMonths": "24",
-        "bankReferenceNumber": "",
-        "facilityValue": "100000.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "createdDate": moment().utc().valueOf(),
-        "lastEdited": moment().utc().valueOf(),
-        "facilityStage": "Conditional",
-        "guaranteeFeePayableByBank": "1.8000",
-        "ukefExposure": "80,000.00",
-        "interestMarginFee": "2",
-        "coveredPercentage": "80",
-        "minimumQuarterlyFee": "",
-        "premiumType": "At maturity",
-        "dayCountBasis": "365",
-        "currency": {
-          "text": "GBP - UK Sterling",
-          "id": "GBP"
-        }
-      },
-      {
-        "_id": "1001498",
-        "facilityType": "loan",
-        "ukefGuaranteeInMonths": "24",
-        "bankReferenceNumber": "",
-        "facilityValue": "100000.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "createdDate": moment().utc().valueOf(),
-        "lastEdited": moment().utc().valueOf(),
-        "facilityStage": "Conditional",
-        "guaranteeFeePayableByBank": "1.8000",
-        "ukefExposure": "80,000.00",
-        "interestMarginFee": "2",
-        "coveredPercentage": "80",
-        "minimumQuarterlyFee": "",
-        "premiumType": "At maturity",
-        "dayCountBasis": "365",
-        "currency": {
-          "text": "GBP - UK Sterling",
-          "id": "GBP"
-        }
+    },
+    {
+      "facilityType": "bond",
+      "facilityStage": "Unissued",
+      "ukefGuaranteeInMonths": "24",
+      "facilityValue": "100000.00",
+      "currencySameAsSupplyContractCurrency": "true",
+      "createdDate": moment().utc().valueOf(),
+      "lastEdited": moment().utc().valueOf(),
+      "bondIssuer": "",
+      "bondType": "Performance bond",
+      "bondBeneficiary": "",
+      "guaranteeFeePayableByBank": "1.8000",
+      "ukefExposure": "80,000.00",
+      "riskMarginFee": "2",
+      "coveredPercentage": "80",
+      "minimumRiskMarginFee": "",
+      "feeType": "At maturity",
+      "dayCountBasis": "365",
+      "currency": {
+        "text": "GBP - UK Sterling",
+        "id": "GBP"
       }
-    ]
-  },
+    },
+    {
+      "facilityType": "loan",
+      "ukefGuaranteeInMonths": "24",
+      "bankReferenceNumber": "",
+      "facilityValue": "100000.00",
+      "currencySameAsSupplyContractCurrency": "true",
+      "createdDate": moment().utc().valueOf(),
+      "lastEdited": moment().utc().valueOf(),
+      "facilityStage": "Conditional",
+      "guaranteeFeePayableByBank": "1.8000",
+      "ukefExposure": "80,000.00",
+      "interestMarginFee": "2",
+      "coveredPercentage": "80",
+      "minimumQuarterlyFee": "",
+      "premiumType": "At maturity",
+      "dayCountBasis": "365",
+      "currency": {
+        "text": "GBP - UK Sterling",
+        "id": "GBP"
+      }
+    },
+    {
+      "facilityType": "loan",
+      "ukefGuaranteeInMonths": "24",
+      "bankReferenceNumber": "",
+      "facilityValue": "100000.00",
+      "currencySameAsSupplyContractCurrency": "true",
+      "createdDate": moment().utc().valueOf(),
+      "lastEdited": moment().utc().valueOf(),
+      "facilityStage": "Conditional",
+      "guaranteeFeePayableByBank": "1.8000",
+      "ukefExposure": "80,000.00",
+      "interestMarginFee": "2",
+      "coveredPercentage": "80",
+      "minimumQuarterlyFee": "",
+      "premiumType": "At maturity",
+      "dayCountBasis": "365",
+      "currency": {
+        "text": "GBP - UK Sterling",
+        "id": "GBP"
+      },
+    },
+  ],
   "summary" : {
   },
   "comments" : [],

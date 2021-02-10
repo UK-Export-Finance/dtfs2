@@ -31,43 +31,32 @@ context('A maker submits a deal to checker, checker submits to UKEF, maker submi
       return false;
     });
 
-    // mimic a submitted deal:
-    // 1) add submitted deal TO DB
-    // 2) create the deal's facilities in facilties DB collection
-    // 3) update the facilities to match the submitted deal.
     cy.insertOneDeal(dealWithUnIssuedFacilities, MAKER_LOGIN)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
 
-        const mockFacilities = dealWithUnIssuedFacilities.facilities;
+        const { mockFacilities } = dealWithUnIssuedFacilities;
 
-        mockFacilities.forEach((facility) => {
-          cy.createFacility(facility, dealId, MAKER_LOGIN).then((createdFacility) => {
-            const facilityId = createdFacility._id; // eslint-disable-line no-underscore-dangle
-            const facilityWithDealId = {
-              ...facility,
-              associatedDealId: dealId,
-            };
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
 
-            cy.updateFacility(facilityId, facilityWithDealId, MAKER_LOGIN);
-
-            if (facility.facilityType === 'bond') {
-              dealFacilities.bonds.push({
-                ...createdFacility,
-                associatedDealId: dealId,
-              });
-            } else if (facility.facilityType === 'loan') {
-              dealFacilities.loans.push({
-                ...createdFacility,
-                associatedDealId: dealId,
-              });
-            }
-          });
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
         });
       });
-
   });
+
+  after(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+  });;
 
   it('Checker can view (but not edit) Issued facilities, facility statuses should be updated throughout the deal status changes', () => {
     //---------------------------------------------------------------
