@@ -39,19 +39,19 @@
 
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
-    {% include "_partials/skip-link.njk" %}
+    {% include "includes/skip-link.njk" %}
 
     {% if user and user.roles and user.roles.includes('ukef_operations') %}
-      {% include "_partials/admin-header.njk" %}
+      {% include "includes/admin-header.njk" %}
     {% endif %}
 
-    {% include "_partials/header.njk" %}
-    {% include "_partials/primary-navigation.njk" %}
+    {% include "includes/header.njk" %}
+    {% include "includes/primary-navigation.njk" %}
 
     <div class="govuk-width-container">
     
     {% if primaryNav == "reports" %}
-    {% include "_partials/sub-navigation.njk" %}
+    {% include "includes/sub-navigation.njk" %}
     {% endif %}
 
       <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
@@ -60,7 +60,7 @@
 
     </div>
 
-    {% include "_partials/footer.njk" %}
+    {% include "includes/footer.njk" %}
 
     <script src="govukFrontend.js" type="text/javascript"></script>
     <script src="maskedInputs.js" type="text/javascript"></script>
