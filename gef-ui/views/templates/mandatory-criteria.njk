@@ -20,7 +20,9 @@
       Confirm eligiblity (mandatory criteria)
     </h1>
 
+    <div data-cy="mandatory-criteria">
     {{ criteria | safe }}
+    </div>
 
     <form action="mandatory-criteria" method="post">
     {{ govukRadios({
@@ -52,7 +54,7 @@
         text: "Continue"
       }) }}
 
-      <a class="govuk-link" href="#">Cancel</a>
+      <a class="govuk-link" href="/">Cancel</a>
     </div>
   </form>
 
