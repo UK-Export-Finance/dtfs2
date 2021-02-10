@@ -167,10 +167,8 @@ const deal = {
     "supplyContractValue": "12312323.00",
     "viewedPreviewPage": true
   },
-  "facilities": [
-
-
-{
+  "mockFacilities": [
+  {
       "facilityType": "bond",
       "bondIssuer": "",
       "bondType": "Bid bond",
