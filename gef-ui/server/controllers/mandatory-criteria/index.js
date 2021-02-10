@@ -1,5 +1,6 @@
 import _isEmpty from 'lodash/isEmpty'
 import { getCriteria } from '../../models/mandatory-criteria'
+import { parseBool } from '../../utils/helpers'
 
 export const getMandatoryCriteria = async function (req, res) {
   // const response = await getCriteria()
@@ -12,12 +13,17 @@ export const validateMandatoryCriteria = async function (req, res) {
   const body = req.body
   const { mandatoryCriteria } = body
   const isEmpty = _isEmpty(mandatoryCriteria)
-
   if (isEmpty) {
-    res.status(422).render('mandatory-criteria.njk', {
+    return res.status(422).render('mandatory-criteria.njk', {
       validationErrorMessage: {
         text: 'Select an option'
       }
     })
   }
+
+  if (parseBool(mandatoryCriteria)) {
+    return res.redirect('name-application');
+  }
+
+  return res.render('mandatory-criteria.njk')
 }

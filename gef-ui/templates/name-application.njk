@@ -1,0 +1,37 @@
+{% extends "index.njk" %}
+{% import '_macros/success-message.njk' as success %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}Confirm eligiblity (mandatory criteria){% endblock %}
+
+{% block content %}
+
+  {% if successMessage %}
+    {{ success.message(
+      message = successMessage
+    )}}
+  {% endif %}
+    <h1 class="govuk-heading-l">
+      Name application
+    </h1>
+
+    {{ criteria | safe }}
+
+    <form action="name-application" method="post">
+
+    <div class="govuk-button-group">
+      {{ govukButton({
+        text: "Continue"
+      }) }}
+
+      <a class="govuk-link" href="#">Cancel</a>
+    </div>
+  </form>
+
+{% endblock %}
+
+<script>
+  const validator = 
+</script>
+
