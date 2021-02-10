@@ -11,6 +11,10 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && us
 context('Given a deal that has `Accepted` status with Issued, Unissued, Unconditional and Conditional facilities', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   beforeEach(() => {
     cy.on('uncaught:exception', (err, runnable) => {
@@ -25,17 +29,37 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
+  });
+
+  afterEach(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   it('Maker can `Confirm or change start date` for Issued & Unconditional facilities and only resubmit the deal once all Issued & Unconditional facilities have had their start date confirmed', () => {
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
 
-    const issuedSubmittedBond = deal.bondTransactions.items.find((b) =>
+    const issuedSubmittedBond = dealFacilities.bonds.find((b) =>
       b.facilityStage === 'Issued' && b.status === 'Submitted');
 
-    const unconditionalSubmittedLoan = deal.loanTransactions.items.find((l) =>
+    const unconditionalSubmittedLoan = dealFacilities.loans.find((l) =>
       l.facilityStage === 'Unconditional' && l.status === 'Submitted');
 
     const issuedSubmittedBondId = issuedSubmittedBond._id; // eslint-disable-line no-underscore-dangle

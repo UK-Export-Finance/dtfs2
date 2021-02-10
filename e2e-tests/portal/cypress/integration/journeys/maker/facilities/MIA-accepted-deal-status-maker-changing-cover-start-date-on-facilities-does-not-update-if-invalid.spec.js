@@ -11,6 +11,10 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && us
 context('Given a deal that has `Accepted` status with Issued, Unissued, Unconditional and Conditional facilities', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   beforeEach(() => {
     cy.on('uncaught:exception', (err, runnable) => {
@@ -25,7 +29,27 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
+  });
+
+  afterEach(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   it('When a maker clicks `confirm start date` on Issued & Unconditional facilities, enters an invalid date, the date should not be saved', () => {
@@ -33,13 +57,13 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
     pages.contract.visit(deal);
 
-    const issuedSubmittedBond = deal.bondTransactions.items.find((b) =>
+    const issuedSubmittedBond = dealFacilities.bonds.find((b) =>
       b.facilityStage === 'Issued' && b.status === 'Submitted');
 
     const issuedSubmittedBondId = issuedSubmittedBond._id; // eslint-disable-line no-underscore-dangle
     const issuedSubmittedBondRow = pages.contract.bondTransactionsTable.row(issuedSubmittedBondId);
 
-    const unconditionalSubmittedLoan = deal.loanTransactions.items.find((l) =>
+    const unconditionalSubmittedLoan = dealFacilities.loans.find((l) =>
       l.facilityStage === 'Unconditional' && l.status === 'Submitted');
 
     const unconditionalSubmittedLoanId = unconditionalSubmittedLoan._id; // eslint-disable-line no-underscore-dangle

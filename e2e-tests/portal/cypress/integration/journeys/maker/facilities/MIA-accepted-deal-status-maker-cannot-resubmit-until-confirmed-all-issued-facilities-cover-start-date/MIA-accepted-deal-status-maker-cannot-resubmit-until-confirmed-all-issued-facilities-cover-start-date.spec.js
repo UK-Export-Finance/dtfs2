@@ -11,6 +11,10 @@ const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker')))
 context('Given a deal that has `Accepted` status with Issued, Unissued, Unconditional and Conditional facilities', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   beforeEach(() => {
     cy.on('uncaught:exception', (err, runnable) => {
@@ -25,7 +29,27 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = MIADealWithAcceptedStatusIssuedFacilities;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
+  });
+
+  afterEach(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   const coverStartDateInputsShouldNotBeVisibile = () => {
@@ -38,28 +62,28 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
 
-    const issuedSubmittedBond = deal.bondTransactions.items.find((b) =>
+    const issuedSubmittedBond = dealFacilities.bonds.find((b) =>
       b.facilityStage === 'Issued' && b.status === 'Submitted');
 
-    const issuedCompletedBond = deal.bondTransactions.items.find((b) =>
+    const issuedCompletedBond = dealFacilities.bonds.find((b) =>
       b.facilityStage === 'Issued' && b.status !== 'Submitted'); // `Completed` is generated dynamically
 
-    const unissuedBond = deal.bondTransactions.items.find((b) =>
+    const unissuedBond = dealFacilities.bonds.find((b) =>
       b.facilityStage === 'Unissued');
 
-    const unconditionalSubmittedLoan = deal.loanTransactions.items.find((l) =>
+    const unconditionalSubmittedLoan = dealFacilities.loans.find((l) =>
       l.facilityStage === 'Unconditional' && l.status === 'Submitted');
 
-    const unconditionalCompletedLoan = deal.loanTransactions.items.find((l) =>
+    const unconditionalCompletedLoan = dealFacilities.loans.find((l) =>
       l.facilityStage === 'Unconditional' && l.status !== 'Submitted'); // `Completed` is generated dynamically
 
-    const conditionalLoan = deal.loanTransactions.items.find((l) =>
+    const conditionalLoan = dealFacilities.loans.find((l) =>
       l.facilityStage === 'Conditional');
 
     const issuedSubmittedBondId = issuedSubmittedBond._id; // eslint-disable-line no-underscore-dangle
     const issuedSubmittedBondRow = pages.contract.bondTransactionsTable.row(issuedSubmittedBondId);
 
-    const secondIssuedSubmittedBond = deal.bondTransactions.items.find((b) =>
+    const secondIssuedSubmittedBond = dealFacilities.bonds.find((b) =>
       b.facilityStage === 'Issued' && b.status === 'Submitted' && b._id !== issuedSubmittedBondId); // eslint-disable-line no-underscore-dangle
 
     const secondIssuedSubmittedBondId = secondIssuedSubmittedBond._id; // eslint-disable-line no-underscore-dangle
@@ -76,7 +100,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     const unconditionalSubmittedLoanRow = pages.contract.loansTransactionsTable.row(unconditionalSubmittedLoanId);
 
     // secondUnconditionalSubmittedLoanRow
-    const secondUnconditionalSubmittedLoan = deal.loanTransactions.items.find((l) =>
+    const secondUnconditionalSubmittedLoan = dealFacilities.loans.find((l) =>
       l.facilityStage === 'Unconditional' && l.status === 'Submitted' && l._id !== unconditionalSubmittedLoanId); // eslint-disable-line no-underscore-dangle
 
     const secondUnconditionalSubmittedLoanId = secondUnconditionalSubmittedLoan._id; // eslint-disable-line no-underscore-dangle
@@ -254,12 +278,12 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     //---------------------------------------------------------------
     pages.contract.visit(deal);
 
-    deal.bondTransactions.items.forEach((bond) => {
+    dealFacilities.bonds.forEach((bond) => {
       const bondRow = pages.contract.bondTransactionsTable.row(bond._id); // eslint-disable-line no-underscore-dangle
       bondRow.changeOrConfirmCoverStartDateLink().should('not.be.visible');
     });
 
-    deal.loanTransactions.items.forEach((loan) => {
+    dealFacilities.loans.forEach((loan) => {
       const loanRow = pages.contract.loansTransactionsTable.row(loan._id); // eslint-disable-line no-underscore-dangle
       loanRow.changeOrConfirmCoverStartDateLink().should('not.be.visible');
     });
@@ -272,7 +296,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     cy.login({ ...CHECKER_LOGIN });
     pages.contract.visit(deal);
 
-    deal.bondTransactions.items.forEach((bond) => {
+    dealFacilities.bonds.forEach((bond) => {
       const bondRow = pages.contract.bondTransactionsTable.row(bond._id); // eslint-disable-line no-underscore-dangle
       bondRow.changeOrConfirmCoverStartDateLink().should('not.be.visible');
 
@@ -281,7 +305,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
       });
     });
 
-    deal.loanTransactions.items.forEach((loan) => {
+    dealFacilities.loans.forEach((loan) => {
       const loanRow = pages.contract.loansTransactionsTable.row(loan._id); // eslint-disable-line no-underscore-dangle
       loanRow.changeOrConfirmCoverStartDateLink().should('not.be.visible');
 

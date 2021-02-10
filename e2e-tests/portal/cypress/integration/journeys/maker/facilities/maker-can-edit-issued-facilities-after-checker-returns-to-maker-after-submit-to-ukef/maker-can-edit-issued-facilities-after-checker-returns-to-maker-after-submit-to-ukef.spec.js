@@ -9,6 +9,10 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && us
 context('Given an MIA deal that has been submitted to UKEF, maker has issued facilities and a checker has returned the deal to maker', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   beforeEach(() => {
     cy.on('uncaught:exception', (err, runnable) => {
@@ -23,7 +27,27 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = mockDeal;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
+  });
+
+  afterEach(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   it('Maker can edit only the issued facilities details that have already been submitted to checker (but NOT submitted to UKEF)', () => {
@@ -46,7 +70,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
     // maker can submit Issued Facility forms
     //---------------------------------------------------------------
 
-    deal.bondTransactions.items.forEach((bond) => {
+    dealFacilities.bonds.forEach((bond) => {
       const bondId = bond._id; // eslint-disable-line no-underscore-dangle
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
@@ -68,7 +92,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       pages.bondIssueFacility.submit().click();
     });
 
-    deal.loanTransactions.items.forEach((loan) => {
+    dealFacilities.loans.forEach((loan) => {
       const loanId = loan._id; // eslint-disable-line no-underscore-dangle
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
