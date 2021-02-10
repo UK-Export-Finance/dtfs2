@@ -1,3 +1,4 @@
+const moment = require('moment');
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const relative = require('../../../relativeURL');
@@ -17,18 +18,71 @@ const MOCK_DEAL = {
       id: 'GBP',
     },
   },
-  loanTransactions: {
-    items: [
-      { _id: '1234' },
-      { _id: '5678' },
-      { _id: '9112' },
-    ],
-  },
+  mockFacilities: [
+    {
+      "facilityType": "loan",
+      "_id": "1000210",
+      "createdDate": moment().utc().valueOf(),
+      "facilityStage": "Conditional",
+      "ukefGuaranteeInMonths": "12",
+      "bankReferenceNumber": "",
+      "guaranteeFeePayableByBank": "18.0000",
+      "lastEdited": moment().utc().valueOf(),
+      "facilityValue": "1234.00",
+      "currencySameAsSupplyContractCurrency": "true",
+      "interestMarginFee": "20",
+      "coveredPercentage": "40",
+      "minimumQuarterlyFee": "",
+      "ukefExposure": "493.60",
+      "premiumType": "At maturity",
+      "dayCountBasis": "365"
+    },
+    {
+      "facilityType": "loan",
+      "_id": "1000210",
+      "createdDate": moment().utc().valueOf(),
+      "facilityStage": "Conditional",
+      "ukefGuaranteeInMonths": "12",
+      "bankReferenceNumber": "",
+      "guaranteeFeePayableByBank": "18.0000",
+      "lastEdited": moment().utc().valueOf(),
+      "facilityValue": "1234.00",
+      "currencySameAsSupplyContractCurrency": "true",
+      "interestMarginFee": "20",
+      "coveredPercentage": "40",
+      "minimumQuarterlyFee": "",
+      "ukefExposure": "493.60",
+      "premiumType": "At maturity",
+      "dayCountBasis": "365"
+    },
+    {
+      "facilityType": "loan",
+      "_id": "1000210",
+      "createdDate": moment().utc().valueOf(),
+      "facilityStage": "Conditional",
+      "ukefGuaranteeInMonths": "12",
+      "bankReferenceNumber": "",
+      "guaranteeFeePayableByBank": "18.0000",
+      "lastEdited": moment().utc().valueOf(),
+      "facilityValue": "1234.00",
+      "currencySameAsSupplyContractCurrency": "true",
+      "interestMarginFee": "20",
+      "coveredPercentage": "40",
+      "minimumQuarterlyFee": "",
+      "ukefExposure": "493.60",
+      "premiumType": "At maturity",
+      "dayCountBasis": "365"
+    },
+  ],
 };
 
 context('Delete a Loan', () => {
   let deal;
   let dealId;
+  let loanToDeleteId;
+  const dealFacilities = {
+    loans: [],
+  };
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -41,8 +95,25 @@ context('Delete a Loan', () => {
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = MOCK_DEAL;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.loans = loans;
+        });
       });
   });
+
+  after(() => {
+    dealFacilities.loans.forEach((facility) => {
+      if (facility._id !== loanToDeleteId) {
+        cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+      }
+    });
+  });
+
 
   it('Deleting a loan via the Deal page should remove the loan and redirect back to the Deal page with a success message', () => {
     cy.login({ ...MAKER_LOGIN });
@@ -50,7 +121,7 @@ context('Delete a Loan', () => {
 
     pages.contract.loansTransactionsTableRows().should('have.length', 3);
 
-    const loanToDeleteId = deal.loanTransactions.items[1]._id; // eslint-disable-line no-underscore-dangle
+    loanToDeleteId = dealFacilities.loans[1]._id; // eslint-disable-line no-underscore-dangle
     const loanToDeleteRow = pages.contract.loansTransactionsTable.row(loanToDeleteId);
 
     loanToDeleteRow.deleteLink().click();
