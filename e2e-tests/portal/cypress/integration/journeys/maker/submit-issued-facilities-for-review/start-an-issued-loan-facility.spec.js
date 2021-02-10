@@ -8,6 +8,9 @@ const MAKER_LOGIN = mockUsers.find(user => (user.roles.includes('maker') && user
 context('A maker is informed of a loan\'s status before submitting an issued loan facility with a deal in `Acknowledged by UKEF` status', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    loans: [],
+  };
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -22,6 +25,14 @@ context('A maker is informed of a loan\'s status before submitting an issued loa
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = dealWithNotStartedFacilityStatuses;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.loans = loans;
+        });
       });
   });
 
@@ -30,7 +41,7 @@ context('A maker is informed of a loan\'s status before submitting an issued loa
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('be.disabled');
 
-    const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const loanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
     loanRow.loanStatus().invoke('text').then((text) => {
