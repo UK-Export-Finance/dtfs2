@@ -187,50 +187,46 @@ const deal = {
     },
     "supplyContractValue": "1234.00"
   },
-  "bondTransactions": {
-    "items": [
-      {
-        "_id": "1000122",
-        "createdDate": moment().utc().valueOf(),
-        "bondIssuer": "",
-        "bondType": "Progress payment bond",
-        "facilityStage": "Unissued",
-        "ukefGuaranteeInMonths": "12",
-        "bondBeneficiary": "",
-        "guaranteeFeePayableByBank": "10.8000",
-        "lastEdited": moment().utc().valueOf(),
-        "facilityValue": "1234.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "riskMarginFee": "12",
-        "coveredPercentage": "20",
-        "minimumRiskMarginFee": "",
-        "ukefExposure": "246.80",
-        "feeType": "At maturity",
-        "dayCountBasis": "365"
-      }
-    ]
-  },
-  "loanTransactions": {
-    "items": [
-      {
-        "_id": "1000210",
-        "createdDate": moment().utc().valueOf(),
-        "facilityStage": "Conditional",
-        "ukefGuaranteeInMonths": "12",
-        "bankReferenceNumber": "",
-        "guaranteeFeePayableByBank": "18.0000",
-        "lastEdited": moment().utc().valueOf(),
-        "facilityValue": "1234.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "interestMarginFee": "20",
-        "coveredPercentage": "40",
-        "minimumQuarterlyFee": "",
-        "ukefExposure": "493.60",
-        "premiumType": "At maturity",
-        "dayCountBasis": "365"
-      },
-    ]
-  },
+  "mockFacilities": [
+    {
+      "facilityType": "bond",
+      "_id": "1000122",
+      "createdDate": moment().utc().valueOf(),
+      "bondIssuer": "",
+      "bondType": "Progress payment bond",
+      "facilityStage": "Unissued",
+      "ukefGuaranteeInMonths": "12",
+      "bondBeneficiary": "",
+      "guaranteeFeePayableByBank": "10.8000",
+      "lastEdited": moment().utc().valueOf(),
+      "facilityValue": "1234.00",
+      "currencySameAsSupplyContractCurrency": "true",
+      "riskMarginFee": "12",
+      "coveredPercentage": "20",
+      "minimumRiskMarginFee": "",
+      "ukefExposure": "246.80",
+      "feeType": "At maturity",
+      "dayCountBasis": "365"
+    },
+    {
+      "facilityType": "loan",
+      "_id": "1000210",
+      "createdDate": moment().utc().valueOf(),
+      "facilityStage": "Conditional",
+      "ukefGuaranteeInMonths": "12",
+      "bankReferenceNumber": "",
+      "guaranteeFeePayableByBank": "18.0000",
+      "lastEdited": moment().utc().valueOf(),
+      "facilityValue": "1234.00",
+      "currencySameAsSupplyContractCurrency": "true",
+      "interestMarginFee": "20",
+      "coveredPercentage": "40",
+      "minimumQuarterlyFee": "",
+      "ukefExposure": "493.60",
+      "premiumType": "At maturity",
+      "dayCountBasis": "365"
+    },
+  ],
   "summary": {},
   "comments": [
     {

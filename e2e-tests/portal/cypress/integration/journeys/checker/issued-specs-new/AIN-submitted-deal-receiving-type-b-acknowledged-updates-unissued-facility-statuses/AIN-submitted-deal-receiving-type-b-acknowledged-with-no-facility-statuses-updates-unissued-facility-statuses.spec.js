@@ -8,6 +8,10 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && us
 context('Checker submits an AIN deal with `Unissued` bonds and `Unconditional` loans; workflow responds (without facility statuses)', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   beforeEach(() => {
     cy.on('uncaught:exception', (err, runnable) => {
@@ -23,17 +27,37 @@ context('Checker submits an AIN deal with `Unissued` bonds and `Unconditional` l
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = dealWithNotStartedFacilityStatuses;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
+  });
+
+  after(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   it('Updates the statuses of `Unissued` bonds and `Conditional` loans from `Completed` to `Not started`', () => {
     cy.login({ ...CHECKER_LOGIN });
     pages.contract.visit(deal);
 
-    const bondId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const bondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-    const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const loanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
     pages.contract.proceedToSubmit().click();
@@ -54,13 +78,13 @@ context('Checker submits an AIN deal with `Unissued` bonds and `Unconditional` l
       },
       bonds: [
         {
-          BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
+          BSS_portal_facility_id: dealFacilities.bonds[0]._id,
           BSS_ukef_facility_id: '12345',
         },
       ],
       loans: [
         {
-          EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
+          EWCS_portal_facility_id: dealFacilities.loans[0]._id,
           EWCS_ukef_facility_id: '56789',
         },
       ],

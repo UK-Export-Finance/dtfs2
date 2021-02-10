@@ -10,6 +10,10 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && us
 context('Checker sumits an MIA deal with `Unissued` bonds and `Conditional` loans; workflow responds with `Approved` status', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   beforeEach(() => {
     cy.on('uncaught:exception', (err, runnable) => {
@@ -24,7 +28,27 @@ context('Checker sumits an MIA deal with `Unissued` bonds and `Conditional` loan
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = MIADealWithUnissuedFacilities;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
+  });
+
+  after(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   it('Maker should be able to issue facilities, facilities should have `Not started` statuses', () => {
@@ -55,14 +79,14 @@ context('Checker sumits an MIA deal with `Unissued` bonds and `Conditional` loan
       },
       bonds: [
         {
-          BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
+          BSS_portal_facility_id: dealFacilities.bonds[0]._id,
           BSS_ukef_facility_id: '12345',
           BSS_status: '""',
         },
       ],
       loans: [
         {
-          EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
+          EWCS_portal_facility_id: dealFacilities.loans[0]._id,
           EWCS_ukef_facility_id: '56789',
           EWCS_status: '""',
         },
@@ -80,7 +104,7 @@ context('Checker sumits an MIA deal with `Unissued` bonds and `Conditional` loan
     pages.contract.visit(deal);
 
     // bond
-    const bondId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const bondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
     bondRow.bondStatus().invoke('text').then((text) => {
@@ -94,7 +118,7 @@ context('Checker sumits an MIA deal with `Unissued` bonds and `Conditional` loan
 
     // loan
     pages.contract.visit(deal);
-    const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const loanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
     loanRow.loanStatus().invoke('text').then((text) => {
