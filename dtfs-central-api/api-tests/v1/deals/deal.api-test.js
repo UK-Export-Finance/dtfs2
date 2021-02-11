@@ -210,7 +210,6 @@ describe('/v1/portal/deals', () => {
         const createdLoan2 = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
 
         const { status, body } = await api.get(`/v1/portal/deals/${dealId}`);
-        console.log('status: ', status);
 
         expect(status).toEqual(200);
         expect(body.deal.bondTransactions.items).toEqual([

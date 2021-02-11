@@ -135,7 +135,9 @@ const updateIssuedFacilities = async (
               facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
             }
           } else if (shouldUpdateStatus) {
-            // update all issued facilities regardless of if they've been submitted or have completed all required fields.
+            // update all issued facilities regardless of if
+            // they've been submitted
+            // ...or have completed all required fields.
             facility.status = newStatus;
             facility.lastEdited = now();
           }
