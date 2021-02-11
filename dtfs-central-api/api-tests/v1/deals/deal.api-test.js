@@ -34,7 +34,7 @@ const newDeal = aDeal({
 });
 
 describe('/v1/portal/deals', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['facilities']);
   });
@@ -148,6 +148,7 @@ describe('/v1/portal/deals', () => {
 
   describe('POST /v1/portal/deals/query', () => {
     it('returns multiple deals with count', async () => {
+      await wipeDB.wipe(['deals']);
       const deal1 = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const deal2 = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const deal3 = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
@@ -209,6 +210,7 @@ describe('/v1/portal/deals', () => {
         const createdLoan2 = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
 
         const { status, body } = await api.get(`/v1/portal/deals/${dealId}`);
+        console.log('status: ', status);
 
         expect(status).toEqual(200);
         expect(body.deal.bondTransactions.items).toEqual([

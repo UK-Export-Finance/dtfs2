@@ -13,7 +13,7 @@ const mockUser = {
   },
 };
 
-const mockFacility = {
+const newFacility = {
   facilityType: 'bond',
   associatedDealId: '123123456',
 };
@@ -42,32 +42,30 @@ describe('/v1/portal/facilities', () => {
     await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['facilities']);
   });
- 
+
   beforeEach(async () => {
     const deal = await createDeal();
 
     dealId = deal._id;
-    mockFacility.associatedDealId = dealId;
+    newFacility.associatedDealId = dealId;
   });
 
-  describe('GET /v1/portal/facilities/', () => {
-    it('returns multiple facilties', async () => {
-      await api.post({ facility: mockFacility, user: mockUser }).to('/v1/portal/facilities');
-      await api.post({ facility: mockFacility, user: mockUser }).to('/v1/portal/facilities');
-      await api.post({ facility: mockFacility, user: mockUser }).to('/v1/portal/facilities');
+  describe('GET /v1/portal/facilities/:id', () => {
+    it('returns the requested resource', async () => {
+      const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const newId = postResult.body._id;
 
-      const { status, body } = await api.get('/v1/portal/facilities');
+      const { status, body } = await api.get(`/v1/portal/facilities/${newId}`);
 
       expect(status).toEqual(200);
-      expect(body.length).toEqual(3);
+      expect(body._id).toEqual(newId);
+      expect(typeof body.createdDate).toEqual('string');
     });
 
-    it('returns 200 with empty array when there are no facilities', async () => {
-      await wipeDB.wipe(['facilities']);
-      const { status, body } = await api.get('/v1/portal/facilities');
+    it('404s requests for unknown ids', async () => {
+      const { status } = await api.get('/v1/portal/facilities/12345678910');
 
-      expect(status).toEqual(200);
-      expect(body.length).toEqual(0);
+      expect(status).toEqual(404);
     });
   });
 });
