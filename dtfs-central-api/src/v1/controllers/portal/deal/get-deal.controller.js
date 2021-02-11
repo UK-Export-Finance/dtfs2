@@ -60,8 +60,13 @@ const findOneDeal = async (_id, callback) => {
         }
       });
 
-      mappedDeal.bondTransactions.items = mappedBonds;
-      mappedDeal.loanTransactions.items = mappedLoans;
+      mappedDeal.bondTransactions = {
+        items: mappedBonds,
+      };
+
+      mappedDeal.loanTransactions = {
+        items: mappedLoans,
+      };
 
       if (callback) {
         callback(mappedDeal);
