@@ -12,11 +12,11 @@
       message = successMessage
     )}}
   {% endif %}
-    <span class="govuk-caption-xl">
+    <span class="govuk-caption-xl" data-cy="heading-caption">
       Create new application
     </span>
 
-    <h1 class="govuk-heading-l">
+    <h1 class="govuk-heading-l" data-cy="main-heading">
       Confirm eligiblity (mandatory criteria)
     </h1>
 
@@ -24,7 +24,10 @@
     {{ criteria | safe }}
     </div>
 
-    <form action="mandatory-criteria" method="post">
+    <form
+      action="mandatory-criteria"
+      method="post"
+      data-cy="form">
     {{ govukRadios({
       classes: "govuk-radios--inline",
       idPrefix: "mandatory-criteria",
@@ -36,15 +39,26 @@
           classes: "govuk-fieldset__legend--s"
         }
       },
-      errorMessage: validationErrorMessage,
+      errorMessage: validationErrorMessage and {
+        text: validationErrorMessage,
+        attributes: {
+          'data-cy': 'mandatory-criteria-error'
+        }
+      },
       items: [
         {
           value: true,
-          text: "True"
+          text: "True",
+          attributes: {
+            'data-cy': 'mandatory-criteria-true'
+          }
         },
         {
           value: false,
-          text: "False"
+          text: "False",
+          attributes: {
+            'data-cy': 'mandatory-criteria-false'
+          }
         }
       ] }) 
     }}
