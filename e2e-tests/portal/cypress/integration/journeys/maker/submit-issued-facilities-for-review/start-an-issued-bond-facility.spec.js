@@ -28,15 +28,16 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
 
         const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+        const bonds = mockFacilities.filter((f) => f.facilityType === 'bond');
 
-          dealFacilities.bonds = bonds;
+        cy.createFacilities(dealId, bonds, MAKER_LOGIN).then((createdFacilities) => {
+
+          dealFacilities.bonds = createdFacilities;
         });
       });
   });
 
-  afterEach(() => {
+  after(() => {
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
     });

@@ -43,7 +43,7 @@ context('Maker/Checker submit an MIA deal with `Unissued` facilities; workflow r
       });
   });
 
-  afterEach(() => {
+  after(() => {
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
     });

@@ -42,7 +42,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
       });
   });
 
-  afterEach(() => {
+  after(() => {
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
     });
