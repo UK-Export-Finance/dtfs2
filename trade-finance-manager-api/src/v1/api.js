@@ -59,7 +59,6 @@ const findOneFacility = async (facilityId) => {
 
 const queryDeals = async ({ query, start = 0, pagesize = 0 }) => {
   try {
-    console.log(`query:${JSON.stringify(query)}`);
     const response = await axios({
       method: 'post',
       url: `${centralApiUrl}/v1/tfm/deals/query`,

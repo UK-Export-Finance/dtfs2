@@ -1,0 +1,53 @@
+
+{% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
+{% import './_macros/deals-table.njk' as dealsTable %}
+
+{% extends "index.njk" %}
+{% set primary = 'deals' %}
+
+{% block pageTitle %}
+  Trade Finance Manager
+{% endblock %}
+
+{% block content %}
+  {# {{ deals | dump }} #}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+      <p class="header-label">Your work</p>
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+      {% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{{ govukRadios({
+  classes: "govuk-radios--inline govuk-radios--small",
+  idPrefix: "tasks",
+  name: "task-assignment",
+  items: [
+    {
+      value: "you",
+      text: "Tasks for you"
+    },
+    {
+      value: "team",
+      text: "Unassigned tasks for your team"
+    },
+    {
+      value: "all",
+      text: "All tasks for your team"
+    }
+  ]
+}) }}
+    </div>
+  </div>
+
+        {% set componentData = {
+        deals: deals.deals
+      } %}
+
+      {{ dealsTable.render(componentData) }}
+{% endblock %}
+
+{% block sub_content %}{% endblock %}
