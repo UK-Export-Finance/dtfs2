@@ -4,7 +4,6 @@ const CONSTANTS = require('../../../../constants');
 const queryDeals = async (query, start = 0, pagesize = 0) => {
   const collection = await db.getCollection('deals');
   const dealResults = collection.find(query);
-  console.log(`central api query: ${JSON.stringify(query)}`);
   const count = await dealResults.count();
   const deals = await dealResults
     .sort({ 'details.dateOfLastAction': -1 })
@@ -12,8 +11,6 @@ const queryDeals = async (query, start = 0, pagesize = 0) => {
     .limit(pagesize)
     .toArray();
 
-  console.log(`central api count: ${count}`);
-  console.log(`central api deals: ${deals}`);
 
   return {
     count,

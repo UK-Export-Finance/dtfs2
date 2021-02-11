@@ -1,4 +1,4 @@
-const { queryDeals } = require('../../v1/api');
+const queryDeals = require('./query-deals');
 const queryDeal = require('./query-deal');
 const queryFacility = require('./query-facility');
 
