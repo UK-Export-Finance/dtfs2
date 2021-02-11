@@ -44,7 +44,7 @@ context('A checker submits a deal; workflow responds with a confirmation_acknowl
       });
   });
 
-  afterEach(() => {
+  after(() => {
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
     });

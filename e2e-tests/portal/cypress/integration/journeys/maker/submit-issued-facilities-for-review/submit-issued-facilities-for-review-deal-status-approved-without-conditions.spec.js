@@ -49,7 +49,7 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
       });
   });
 
-  afterEach(() => {
+  after(() => {
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
     });

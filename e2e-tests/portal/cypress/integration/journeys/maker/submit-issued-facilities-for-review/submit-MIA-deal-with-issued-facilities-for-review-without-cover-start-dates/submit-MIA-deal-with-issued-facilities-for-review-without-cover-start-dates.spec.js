@@ -48,7 +48,7 @@ context('Checker submits an MIA deal, workflow responds, Maker completes issue f
       });
   });
 
-  afterEach(() => {
+  after(() => {
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
     });

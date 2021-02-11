@@ -39,6 +39,16 @@ context('Checker submits an MIA deal with `Unissued` bonds and `Conditional` loa
       });
   });
 
+  after(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+  });
+
   describe('Checker re-submits the MIN deal with `Unissued` bonds and `Conditional` loans; workflow responds', () => {
     it('Updates the statuses of `Unissued` bonds and `Conditional` loans from `Completed` to `Not started`', () => {
       //---------------------------------------------------------------

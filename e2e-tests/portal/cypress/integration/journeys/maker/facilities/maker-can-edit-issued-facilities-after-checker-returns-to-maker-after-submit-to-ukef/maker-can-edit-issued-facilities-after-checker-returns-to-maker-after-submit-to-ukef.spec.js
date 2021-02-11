@@ -40,7 +40,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       });
   });
 
-  afterEach(() => {
+  after(() => {
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
     });

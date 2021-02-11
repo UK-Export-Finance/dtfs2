@@ -40,7 +40,7 @@ context('Given an MIA Deal in Draft with an Issued Bond and Unconditional Loan',
       });
   });
 
-  afterEach(() => {
+  after(() => {
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
     });

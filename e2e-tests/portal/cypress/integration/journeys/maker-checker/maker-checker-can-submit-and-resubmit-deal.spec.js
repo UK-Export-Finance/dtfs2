@@ -48,6 +48,16 @@ context('Maker submits deal to checker, Maker-Checker submits to UKEF, workflow 
       });
   });
 
+  after(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+  });
+
   it('Maker-Checker can resubmit the deal', () => {
     //---------------------------------------------------------------
     // maker submits deal to checker

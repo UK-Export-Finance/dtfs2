@@ -38,6 +38,16 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       });
   });
 
+  after(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+  });
+
   const assertFacilityTableValuesWithDealStatusInDraft = () => {
     dealFacilities.bonds.forEach((bond) => {
       const bondId = bond._id; // eslint-disable-line no-underscore-dangle

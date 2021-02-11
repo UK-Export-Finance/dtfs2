@@ -28,12 +28,19 @@ context('A maker is informed of a loan\'s status before submitting an issued loa
 
         const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+        const loans = mockFacilities.filter((f) => f.facilityType === 'loan');
 
-          dealFacilities.loans = loans;
+        cy.createFacilities(dealId, loans, MAKER_LOGIN).then((createdFacilities) => {
+          dealFacilities.loans = createdFacilities;
         });
       });
+  });
+
+  after(() => {
+    dealFacilities.loans.forEach((facility) => {
+      console.log('AFTER -------- facility._id ', facility._id);
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   it('Starting to fill in the Issue Loan Facility form should change the Loan status from `Not started` to `Incomplete` and the Issue Facility link to `Facility issued`', () => {
