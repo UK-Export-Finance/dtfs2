@@ -22,6 +22,12 @@ const TOTAL_FORM_FIELDS = 3;
 
 context('Clone a deal', () => {
   let deal;
+  let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
+
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
     cy.on('uncaught:exception', (err, runnable) => {
@@ -31,7 +37,30 @@ context('Clone a deal', () => {
 
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(fullyCompletedDeal, MAKER_LOGIN)
-      .then((insertedDeal) => deal = insertedDeal);
+      .then((insertedDeal) => {
+        deal = insertedDeal;
+        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = fullyCompletedDeal;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
+      });
+  });
+
+  after(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   describe('When a user creates a deal and clicks `clone deal`', () => {
