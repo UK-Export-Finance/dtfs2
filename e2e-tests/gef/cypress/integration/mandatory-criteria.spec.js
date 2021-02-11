@@ -1,9 +1,9 @@
-import relative from './relativeURL';
+import relative from './relativeURL'
 
 context('Mandatory Criteria Page', () => {
   beforeEach(() => {
-    cy.login({ username: 'MAKER', password: 'AbC!2345' });
-    cy.on('uncaught:exception', (err, runnable) => false);
+    cy.login({ username: 'MAKER', password: 'AbC!2345' })
+    cy.on('uncaught:exception', () => false)
     cy.visit(relative('/gef/mandatory-criteria'))
   })
 
