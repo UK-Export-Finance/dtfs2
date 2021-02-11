@@ -10,7 +10,7 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateFacility = async (facilityId, facilityBody, routePath) => {
+const updateFacility = async (facilityId, facilityBody) => {
   const collection = await db.getCollection('facilities');
 
   const update = {

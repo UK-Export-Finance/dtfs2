@@ -114,8 +114,6 @@ describe('/v1/portal/facilities', () => {
 
       const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
-      console.log('status: ', createdFacilityResponse.status);
-
       const getDealResponse = await api.get(`/v1/portal/deals/${newFacility.associatedDealId}`);
       expect(getDealResponse.body.deal.editedBy.length).toEqual(1);
 
