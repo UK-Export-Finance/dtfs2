@@ -43,6 +43,7 @@ describe('/v1/deals/:id/status', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['facilities']);
     sendStatusUpdateEmails.mockClear();
   });
 

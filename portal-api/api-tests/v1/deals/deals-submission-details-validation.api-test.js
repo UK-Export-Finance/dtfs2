@@ -37,6 +37,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['facilities']);
   });
 
   describe('For all cases', () => {

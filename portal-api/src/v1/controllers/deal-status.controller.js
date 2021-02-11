@@ -206,6 +206,9 @@ exports.update = (req, res) => {
       await sendStatusUpdateEmails(dealAfterAllUpdates, fromStatus, req.user);
     }
 
-    return res.status(200).send(dealAfterAllUpdates);
+    // make sure we have the latest deal in DB with bonds and loans populated
+    const dealLatest = await findOneDeal(deal._id); // eslint-disable-line no-underscore-dangle
+
+    return res.status(200).send(dealLatest);
   });
 };

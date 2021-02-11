@@ -43,6 +43,7 @@ describe('/v1/deals/:id/submission-details', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['facilities']);
   });
 
   describe('GET /v1/deals/:id/submission-details', () => {

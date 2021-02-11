@@ -99,6 +99,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['facilities']);
     await addBondToDeal();
   });
 
