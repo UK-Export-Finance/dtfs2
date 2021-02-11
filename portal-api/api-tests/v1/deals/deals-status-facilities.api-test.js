@@ -58,6 +58,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       let createdDeal;
       let updatedDeal;
       let dealId;
+      let createdFacilities;
 
       beforeEach(async (done) => {
         completedDeal.status = 'Further Maker\'s input required';
@@ -70,7 +71,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         createdDeal = postResult.body;
         dealId = createdDeal._id;
 
-        const createdFacilities = await createFacilities(aBarclaysMaker, dealId, originalFacilities);
+        createdFacilities = await createFacilities(aBarclaysMaker, dealId, originalFacilities);
 
         if (createdFacilities.length) {
           completedDeal.mockFacilities = createdFacilities;
@@ -126,16 +127,18 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
+
           const issuedLoansThatShouldBeUpdated = body.deal.loanTransactions.items.filter((l) =>
             l.facilityStage === 'Conditional'
             && l.issueFacilityDetailsProvided === true
             && !l.issueFacilityDetailsSubmitted);
 
           issuedLoansThatShouldBeUpdated.forEach((loan) => {
-            expect(loan.status).toEqual('Ready for check');
-            expect(loan.facilityStage).toEqual('Unconditional');
-            expect(loan.previousFacilityStage).toEqual('Conditional');
-            expect(typeof loan.lastEdited).toEqual('string');
+            const theLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
+            expect(theLoan.status).toEqual('Ready for check');
+            expect(theLoan.facilityStage).toEqual('Unconditional');
+            expect(theLoan.previousFacilityStage).toEqual('Conditional');
+            expect(typeof theLoan.lastEdited).toEqual('string');
           });
         });
       });

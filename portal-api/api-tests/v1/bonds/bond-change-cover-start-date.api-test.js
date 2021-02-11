@@ -88,6 +88,7 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['facilities']);
     await createDealAndBond();
   });
 

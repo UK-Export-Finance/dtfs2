@@ -65,6 +65,7 @@ describe('/v1/deals/:id/bond', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['facilities']);
 
     const dealResponse = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
     deal = dealResponse.body;

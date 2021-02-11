@@ -77,6 +77,7 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['facilities']);
     await createDealAndLoan();
   });
 
