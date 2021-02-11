@@ -59,5 +59,4 @@ Cypress.Commands.add('passRedLine', require('./portal/passRedLine'));
 Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
 
 // commands that add/edit facilities directly in central API
-Cypress.Commands.add('updateFacility', require('./central-api/updateFacility'));
 Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));
