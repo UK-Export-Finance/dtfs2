@@ -15,9 +15,7 @@ export const validateMandatoryCriteria = async function (req, res) {
   const isEmpty = _isEmpty(mandatoryCriteria)
   if (isEmpty) {
     return res.status(422).render('templates/mandatory-criteria.njk', {
-      validationErrorMessage: {
-        text: 'Select an option'
-      }
+      validationErrorMessage: 'Select an option'
     })
   }
 

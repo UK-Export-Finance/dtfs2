@@ -1,40 +1,40 @@
 import relative from './relativeURL';
 
 context('Mandatory Criteria Page', () => {
-  describe('As a none logged in user', () => {
-    it('Redirects me to the login page', () => {
-      cy.visit(relative('/gef/mandatory-criteria'))
-      cy.url().should('include', '/')
-      // ARRANGE
-      // - visit page
-      // - query for element
+  beforeEach(() => {
+    cy.login({ username: 'MAKER', password: 'AbC!2345' });
+    cy.on('uncaught:exception', (err, runnable) => false);
+    cy.visit(relative('/gef/mandatory-criteria'))
+  })
 
-      // ACT
-      // - interact with that element
+  describe('Visiting page', () => {
+    it ('displays the header', () => {
+      cy.get('[data-cy="heading-caption"]')
+      cy.get('[data-cy="main-heading"]')
+    })
 
-      // ASSERT
-      // - make an assertion
+    it ('displays the mandatory criteria text', () => {
+      // Need to mock api response
+      cy.get('[data-cy="mandatory-criteria"]')
     })
   })
 
-  describe('As a logged in user', () => {
-    beforeEach(() => {
-      cy.login(MAKER);
+  describe('Clicking on Continue', () => {
+    it ('returns error when no radio button has been selected', () => {
+      cy.get('[data-cy="form"]').submit()
+      cy.get('[data-cy="mandatory-criteria-error"]')
     })
 
-    it('Visits the Mandatory Criteria page', () => {
-      console.log(1)
-      cy.visit(relative('/gef/mandatory-criteria'))
-      cy.url().should('include', '/')
-      // ARRANGE
-      // - visit page
-      // - query for element
+    it('redirects the user to ** when they select False', () => {
+      cy.get('[data-cy="mandatory-criteria-false"]').click()
+      cy.get('[data-cy="form"]').submit()
+      cy.url().should('eq', relative('/gef/mandatory-criteria'))
+    })
 
-      // ACT
-      // - interact with that element
-
-      // ASSERT
-      // - make an assertion
+    it('redirects the user to the Name Application page', () => {
+      cy.get('[data-cy="mandatory-criteria-true"]').click()
+      cy.get('[data-cy="form"]').submit()
+      cy.url().should('eq', relative('/gef/name-application'))
     })
   })
 })
