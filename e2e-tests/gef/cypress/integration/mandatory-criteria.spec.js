@@ -44,7 +44,8 @@ context('Mandatory Criteria Page', () => {
 
   describe('Clicking on Cancel', () => {
     it('keeps the user on the same page FOR NOW', () => {
-
+      cy.get('[data-cy="cancel-button"]').click()
+      cy.url().should('eq', relative('/gef/mandatory-criteria'))
     })
   })
 })
