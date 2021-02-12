@@ -1,11 +1,11 @@
 /* eslint-disable no-underscore-dangle */
 const componentRenderer = require('../../../component-tests/componentRenderer');
 
-const component = '../templates/case/deal/_macros/deals-table.njk';
+const component = './deals-table.njk';
 
 const render = componentRenderer(component);
 
-describe(component, () => {
+describe.skip(component, () => {
   let wrapper;
   const params = {
     deals: [
