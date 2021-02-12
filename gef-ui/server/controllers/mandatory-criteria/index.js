@@ -3,7 +3,8 @@ import { getCriteria } from '../../models/mandatory-criteria'
 import { parseBool } from '../../utils/helpers'
 
 export const getMandatoryCriteria = async function (req, res) {
-  // const response = await getCriteria()
+  const response = await getCriteria()
+  console.log('DATA', response)
   return res.render('templates/mandatory-criteria.njk', {
     criteria: '<strong>hello</strong>'
   });
