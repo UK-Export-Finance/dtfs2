@@ -44,7 +44,7 @@ const handleEditedByPortal = async (dealId, dealUpdate, user) => {
         editedBy = [
           ...deal.editedBy,
           newEditedBy,
-        ]; 
+        ];
       } else {
         editedBy = [
           newEditedBy,
