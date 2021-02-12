@@ -1,3 +1,5 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
 {% import './parties-key-value-grid-row.njk' as keyValueGridRow %}
 {% import './parties-key-value-array-grid-row.njk' as keyValueArrayGridRow %}
 {% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
@@ -7,19 +9,20 @@
 {% set deal = params.deal %}
 
 {% if not deal.tfm.submissionDetails.supplierPartyUrn %}
-  {% set exporterUniqueRefStyle = "govuk-tag govuk-tag--red" %}
+  {% set uniqueRefStyle = "govuk-tag govuk-tag--red" %}
+  {% set uniqueRefKeyStyle = "govuk-!-font-weight-bold govuk-!-margin-top-4" %}
 {% endif %}
 
-<div class="govuk-grid-row separator-line deal">
+<div class="govuk-grid-row ukef-flex-container separator-line deal">
     <div class="govuk-grid-column-one-half">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-third">
-          <p class="ukef-heading-l">Exporter</p>
-        </div>
-      </div>
+      {% if params.editable %}
+        <h1 class="ukef-heading-l govuk-!-margin-top-9">Edit exporter details</h1>
+      {% else %}
+        <h2 class="ukef-heading-l">Exporter</h2>
+      {% endif %}
     </div>
-    <div class="govuk-grid-column-one-half ukef-flex-container ukef-flex-container--align-right">
-      {{ uniqueReferenceNumberEditLink.render() }}
+    <div class="govuk-grid-column-one-half ukef-flex-container--align-center-right">
+      {{ uniqueReferenceNumberEditLink.render({dealId: deal._id, type: 'exporter'}) }}
     </div>
   </div>
   <div class="govuk-grid-row">
@@ -30,13 +33,27 @@
         dataCy: 'exporter-name'
       }) }}
 
-      {{ keyValueGridRow.render({
-        key: 'Unique reference number',
-        value: deal.tfm.submissionDetails.supplierPartyUrn or "NOT MATCHED",
-        valueStyle: exporterUniqueRefStyle,
-        dataCy: 'exporter-unique-ref'
-      }) }}
-
+      {% if params.editable %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-half">
+          {{ govukInput({
+            label: {
+              text: "Unique reference number (URN)"
+            },
+            id: "exporter-urn",
+            name: "exporter-urn"
+          }) }}
+          </div>
+        </div>
+      {% else %}
+        {{ keyValueGridRow.render({
+          key: 'Unique reference number',
+          keyClass: uniqueRefKeyStyle,
+          value: deal.tfm.submissionDetails.supplierPartyUrn or "NOT MATCHED",
+          valueStyle: uniqueRefStyle,
+          dataCy: 'exporter-unique-ref'
+        }) }}
+      {% endif %}
       {{ keyValueArrayGridRow.render({
         key: 'Address',
         values:  [ deal.submissionDetails.supplierAddressLine1,
@@ -72,8 +89,10 @@
         value: deal.submissionDetails.smeType,
         dataCy: 'sme-size'
       }) }}
-    </div>
-    <div class="govuk-grid-column-one-half">
+    {% if not params.editable %}
+      </div>
+      <div class="govuk-grid-column-one-half">
+    {% endif %}
       {{ keyValueArrayGridRow.render({
         key: 'Correspondence address',
         values:  [ deal.submissionDetails.supplierCorrespondenceAddressLine1,
