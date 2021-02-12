@@ -6,3 +6,8 @@ export const parseBool = (params) => {
     params === undefined
   )
 }
+
+export const userToken = (req) => {
+  const { userToken } = req.session;
+  return userToken
+}

@@ -1,41 +1,12 @@
-import axios from 'axios'
+import Axios from './axios'
 
-require('dotenv').config()
+export default function Api (token) {
+  Axios.defaults.headers.common['Authorization'] = token
 
-const urlRoot = process.env.DEAL_API_URL
-
-const validateToken = async (token) => {
-  if (!token) return false
-
-  const response = await axios({
-    method: 'get',
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-    url: `${urlRoot}/v1/validate`,
-  }).catch((err) => err.response)
-  return response.status === 200
+  this.getMandatoryCriteria = async function () {
+    const response = await Axios.get('/1')
+    console.log('response', response.data)
+    return response.data
+  }
 }
 
-const getMandatoryCriteria = async (token) => {
-  if (!token) return false
-
-  const response = await axios({
-    method: 'get',
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-    url: `${urlRoot}/v1/users`,
-  })
-
-  return response.data
-}
-
-
-
-export default {
-  validateToken,
-  getMandatoryCriteria
-}

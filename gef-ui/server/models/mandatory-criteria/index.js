@@ -1,7 +1,9 @@
-import api from '../../services/api'
+import Api from '../../services/api'
 
-export const getCriteria = async () => {
-  const criteria = await api.getMandatoryCriteria()
+export async function getCriteria (token) {
+  const api = new Api(token)
 
-  return criteria
+  const response = await api.getMandatoryCriteria()
+  console.log('response', response)
+  return reponse
 }
