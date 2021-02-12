@@ -55,7 +55,7 @@ describe('/v1/deals/:id/loan', () => {
   let aSuperuser;
   let anEditor;
 
-  const addLoanToDeal = async () => {
+  const createLoan = async () => {
     const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
     const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -137,7 +137,7 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('returns a loan with dealId, `Incomplete` status', async () => {
-      const { dealId, loanId } = await addLoanToDeal();
+      const { dealId, loanId } = await createLoan();
 
       await updateLoan(dealId, loanId, {});
 
@@ -151,7 +151,7 @@ describe('/v1/deals/:id/loan', () => {
 
     describe('when a loan has all required fields', () => {
       it('retuns a loan with dealId and `Completed` status', async () => {
-        const { dealId, loanId } = await addLoanToDeal();
+        const { dealId, loanId } = await createLoan();
 
         const loan = {
           facilityStage: 'Unconditional',
@@ -243,7 +243,7 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('should add guaranteeFeePayableByBank and ukefExposure values to the loan', async () => {
-      const { dealId, loanId } = await addLoanToDeal();
+      const { dealId, loanId } = await createLoan();
 
       const loan = {
         facilityValue: '100',
@@ -262,7 +262,7 @@ describe('/v1/deals/:id/loan', () => {
 
     describe('when req.body contains requestedCoverStartDate-day, month and year', () => {
       it('should generate a timestamp', async () => {
-        const { dealId, loanId } = await addLoanToDeal();
+        const { dealId, loanId } = await createLoan();
 
         const loan = {
           ...requestedCoverStartDate(),
@@ -276,7 +276,7 @@ describe('/v1/deals/:id/loan', () => {
 
     describe('when req.body.facilityStage is `Unconditional`', () => {
       it('should remove `Conditional` related values from the loan', async () => {
-        const { dealId, loanId } = await addLoanToDeal();
+        const { dealId, loanId } = await createLoan();
 
         const conditionalLoan = {
           facilityStage: 'Conditional',
@@ -309,7 +309,7 @@ describe('/v1/deals/:id/loan', () => {
 
     describe('when req.body.facilityStage is `Conditional`', () => {
       it('should remove `Unconditional` related values from the loan (but retain bankReferenceNumber)', async () => {
-        const { dealId, loanId } = await addLoanToDeal();
+        const { dealId, loanId } = await createLoan();
 
         const unconditionalLoan = {
           facilityStage: 'Unconditional',
@@ -348,7 +348,7 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('should add the deal\'s supplyContractCurrency to the loan\'s currency', async () => {
-      const { dealId, loanId } = await addLoanToDeal();
+      const { dealId, loanId } = await createLoan();
 
       const loan = {
         facilityStage: 'Conditional',
@@ -373,7 +373,7 @@ describe('/v1/deals/:id/loan', () => {
 
     describe('when req.body.currencySameAsSupplyContractCurrency is changed from false to true', () => {
       it('should remove `currency is NOT the same` values from the loan and add the deal\'s supplyContractCurrency', async () => {
-        const { dealId, loanId } = await addLoanToDeal();
+        const { dealId, loanId } = await createLoan();
 
         const loan = {
           facilityStage: 'Conditional',
@@ -416,7 +416,7 @@ describe('/v1/deals/:id/loan', () => {
 
     describe('when req.body.premiumType is changed to \'At maturity\'', () => {
       it('should remove premiumFrequency from the loan', async () => {
-        const { dealId, loanId } = await addLoanToDeal();
+        const { dealId, loanId } = await createLoan();
 
         const loan = {
           premiumType: 'In advance',
@@ -437,7 +437,7 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('should generate requestedCoverStartDate timestamp', async () => {
-      const { dealId, loanId } = await addLoanToDeal();
+      const { dealId, loanId } = await createLoan();
 
       const loan = {
         facilityStage: 'Unconditional',
@@ -464,7 +464,7 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('should generate lastEdited timestamp', async () => {
-      const { dealId, loanId } = await addLoanToDeal();
+      const { dealId, loanId } = await createLoan();
 
       const loan = {
         facilityStage: 'Unconditional',
@@ -555,7 +555,7 @@ describe('/v1/deals/:id/loan', () => {
     let loanId;
 
     beforeEach(async () => {
-      const addLoanResponse = await addLoanToDeal();
+      const addLoanResponse = await createLoan();
       dealId = addLoanResponse.dealId;
       loanId = addLoanResponse.loanId;
     });

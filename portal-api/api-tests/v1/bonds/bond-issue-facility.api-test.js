@@ -73,7 +73,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
   let dealId;
   let bondId;
 
-  const addBondToDeal = async () => {
+  const createBond = async () => {
     const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
     dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -100,7 +100,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['facilities']);
-    await addBondToDeal();
+    await createBond();
   });
 
   describe('PUT /v1/deals/:id/bond/:id/issue-facility', () => {
