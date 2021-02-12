@@ -19,7 +19,8 @@ describe(page, () => {
       facilityValueExportCurrency: 'GBP 12,345.00',
       facilityValue: 'GBP 12,345.00',
       ukefExposure: 'GBP 1,234.00',
-      bankFacilityReference: '123456'
+      bankFacilityReference: '123456',
+      guaranteeFeePayableToUkef: '10%',
     },
   };
 
@@ -63,6 +64,14 @@ describe(page, () => {
 
     it('should render maximum ukefExposure', () => {
       wrapper.expectText('[data-cy="facility-maximum-ukef-exposure"]').toRead(params.facility.ukefExposure);
+    });
+
+  });
+
+  describe('`facility pricing and risk` section', () => {
+
+    it('should render guaranteeFeePayableToUkef', () => {
+      wrapper.expectText('[data-cy="facility-guarantee-fee-payable-to-ukef"]').toRead(params.facility.guaranteeFeePayableToUkef);
     });
 
   });

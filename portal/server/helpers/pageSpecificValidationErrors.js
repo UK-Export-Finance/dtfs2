@@ -31,7 +31,9 @@ export const shouldReturnRequiredValidation = (fields, fieldValues) => {
   }
 
   const totalFieldValues = Object.keys(fieldValues).filter((fieldName) =>
-    allFields.includes(fieldName) && fieldValues[fieldName].length > 0);
+    allFields.includes(fieldName)
+    && fieldValues[fieldName] !== null
+    && fieldValues[fieldName].length > 0);
 
   if (totalFieldValues.length > 0) {
     return true;
@@ -67,9 +69,6 @@ export const hasSubmittedAlwaysShowErrorFields = (allFields, submittedFields) =>
   const hasAlwaysShowFields = ALWAYS_SHOW_ERROR_FIELDS && ALWAYS_SHOW_ERROR_FIELDS.length > 0;
 
   if (hasAlwaysShowFields) {
-    // const pageFields = Object.keys(submittedFields).filter((fieldName) =>
-    //   submittedFields[fieldName].length && ALWAYS_SHOW_ERROR_FIELDS.includes(fieldName));
-
     const pageFields = Object.keys(submittedFields).filter((fieldName) =>
       ALWAYS_SHOW_ERROR_FIELDS.includes(fieldName));
 

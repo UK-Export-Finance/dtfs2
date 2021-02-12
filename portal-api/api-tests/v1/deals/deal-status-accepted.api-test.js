@@ -18,7 +18,8 @@ describe('PUT /v1/deals/:id/status - to `Accepted by UKEF`', () => {
   let updatedDeal;
 
   beforeAll(async () => {
-    // await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['facilities']);
     const testUsers = await testUserCache.initialise(app);
     const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
     aBarclaysMaker = barclaysMakers[0];

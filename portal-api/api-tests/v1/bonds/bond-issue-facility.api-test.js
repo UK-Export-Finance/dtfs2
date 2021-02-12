@@ -73,7 +73,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
   let dealId;
   let bondId;
 
-  const addBondToDeal = async () => {
+  const createBond = async () => {
     const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
     dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -99,7 +99,8 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
-    await addBondToDeal();
+    await wipeDB.wipe(['facilities']);
+    await createBond();
   });
 
   describe('PUT /v1/deals/:id/bond/:id/issue-facility', () => {
@@ -133,6 +134,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
       const { body } = await putIssueFacility(dealId, bondId, issueFacilityBody);
 
       expect(body.status === allBondFields.status).toEqual(false);
+      expect(body.status).toEqual(null);
       expect(body.issueFacilityDetailsStarted).toEqual(true);
     });
 
@@ -151,7 +153,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
 
       const { body } = await putIssueFacility(dealId, bondId, issueFacilityBody);
 
-      expect(body.status).toBeUndefined();
+      expect(body.status).toEqual(null);
     });
 
     it('should return 200 with updated bond, add issueFacilityDetailsProvided and generate timestamps', async () => {
@@ -197,7 +199,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
           };
 
           const { body } = await putIssueFacility(dealId, bondId, incompleteDate);
-          expect(body.bond.requestedCoverStartDate).toBeUndefined();
+          expect(body.bond.requestedCoverStartDate).toEqual(null);
         });
       });
 
@@ -212,7 +214,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
           };
 
           const { body } = await putIssueFacility(dealId, bondId, incompleteDate);
-          expect(body.bond.issuedDate).toBeUndefined();
+          expect(body.bond.issuedDate).toEqual(null);
         });
       });
     });

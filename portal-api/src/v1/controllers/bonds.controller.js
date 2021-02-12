@@ -1,7 +1,6 @@
-const { findOneDeal, updateDeal } = require('./deal.controller');
+const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const bondValidationErrors = require('../validation/bond');
-const { generateFacilityId } = require('../../utils/generate-ids');
 const { bondStatus } = require('../section-status/bonds');
 const {
   calculateGuaranteeFee,
@@ -13,48 +12,30 @@ const {
   updateRequestedCoverStartDate,
 } = require('../facility-dates/requested-cover-start-date');
 const { sanitizeCurrency } = require('../../utils/number');
-const now = require('../../now');
+const facilitiesController = require('./facilities.controller');
 
-const getBondsExceptForOne = (bonds, id) =>
-  bonds.filter((bond) => String(bond._id) !== id); // eslint-disable-line no-underscore-dangle
+exports.create = async (req, res) => {
+  await findOneDeal(req.params.id, async (deal) => {
+    if (!deal) return res.status(404).send();
 
-const putBondInDealObject = (deal, bond) => {
-  const allOtherBonds = getBondsExceptForOne(
-    deal.bondTransactions.items,
-    bond._id, // eslint-disable-line no-underscore-dangle
-  );
+    if (!userHasAccessTo(req.user, deal)) {
+      return res.status(401).send();
+    }
 
-  return {
-    ...deal,
-    bondTransactions: {
-      items: [
-        ...allOtherBonds,
-        bond,
-      ],
-    },
-  };
+    const facilityBody = {
+      facilityType: 'bond',
+      associatedDealId: req.params.id,
+      ...req.body,
+    };
+
+    const { status, data } = await facilitiesController.create(facilityBody, req.user);
+
+    return res.status(status).send({
+      ...data,
+      bondId: data._id, // eslint-disable-line no-underscore-dangle
+    });
+  });
 };
-
-const updateBondInDeal = async (user, deal, bond) => {
-  const bondToUpdate = {
-    ...bond,
-    lastEdited: now(),
-  };
-
-  const modifiedDeal = putBondInDealObject(deal, bondToUpdate);
-
-  const updatedDeal = await updateDeal(
-    deal._id, // eslint-disable-line no-underscore-dangle
-    modifiedDeal,
-    user,
-  );
-
-  const bondInDeal = updatedDeal.bondTransactions.items.find((b) =>
-    String(b._id) === bond._id); // eslint-disable-line no-underscore-dangle
-
-  return bondInDeal;
-};
-exports.updateBondInDeal = updateBondInDeal;
 
 exports.getBond = async (req, res) => {
   const {
@@ -68,8 +49,7 @@ exports.getBond = async (req, res) => {
         res.status(401).send();
       }
 
-      const bond = deal.bondTransactions.items.find((b) =>
-        String(b._id) === bondId); // eslint-disable-line no-underscore-dangle
+      const bond = await facilitiesController.findOne(bondId);
 
       if (bond) {
         const validationErrors = bondValidationErrors(bond, deal);
@@ -83,40 +63,10 @@ exports.getBond = async (req, res) => {
           validationErrors,
         });
       }
+
       return res.status(404).send();
     }
     return res.status(404).send();
-  });
-};
-
-exports.create = async (req, res) => {
-  await findOneDeal(req.params.id, async (deal) => {
-    if (!deal) return res.status(404).send();
-
-    if (!userHasAccessTo(req.user, deal)) {
-      return res.status(401).send();
-    }
-
-    const facilityId = await generateFacilityId();
-
-    const newBondObj = {
-      _id: facilityId,
-      createdDate: now(),
-      facilityType: 'bond',
-    };
-
-    const modifiedDeal = putBondInDealObject(deal, newBondObj);
-
-    const updateDealResponse = await updateDeal(
-      deal._id, // eslint-disable-line no-underscore-dangle
-      modifiedDeal,
-      req.user,
-    );
-
-    return res.status(200).send({
-      ...updateDealResponse,
-      bondId: newBondObj._id, // eslint-disable-line no-underscore-dangle
-    });
   });
 };
 
@@ -126,19 +76,19 @@ const facilityStageFields = (bond) => {
 
   if (facilityStage === 'Issued') {
     // remove any `Unissued Facility Stage` specific fields/values
-    delete modifiedBond.ukefGuaranteeInMonths;
+    modifiedBond.ukefGuaranteeInMonths = null;
   }
 
   if (facilityStage === 'Unissued') {
     // remove any `Issued Facility Stage` specific fields/values
-    delete modifiedBond.requestedCoverStartDate;
-    delete modifiedBond['requestedCoverStartDate-day'];
-    delete modifiedBond['requestedCoverStartDate-month'];
-    delete modifiedBond['requestedCoverStartDate-year'];
-    delete modifiedBond['coverEndDate-day'];
-    delete modifiedBond['coverEndDate-month'];
-    delete modifiedBond['coverEndDate-year'];
-    delete modifiedBond.uniqueIdentificationNumber;
+    modifiedBond.requestedCoverStartDate = null;
+    modifiedBond['requestedCoverStartDate-day'] = null;
+    modifiedBond['requestedCoverStartDate-month'] = null;
+    modifiedBond['requestedCoverStartDate-year'] = null;
+    modifiedBond['coverEndDate-day'] = null;
+    modifiedBond['coverEndDate-month'] = null;
+    modifiedBond['coverEndDate-year'] = null;
+    modifiedBond.uniqueIdentificationNumber = null;
   }
 
   return modifiedBond;
@@ -148,7 +98,7 @@ const feeTypeFields = (bond) => {
   const modifiedBond = bond;
   const { feeType } = modifiedBond;
   if (feeType === 'At maturity') {
-    delete modifiedBond.feeFrequency;
+    modifiedBond.feeFrequency = null;
   }
 
   return modifiedBond;
@@ -165,15 +115,13 @@ exports.updateBond = async (req, res) => {
         res.status(401).send();
       }
 
-      const existingBond = deal.bondTransactions.items.find((bond) =>
-        String(bond._id) === bondId); // eslint-disable-line no-underscore-dangle
+      const existingBond = await facilitiesController.findOne(bondId);
 
       if (!existingBond) {
         return res.status(404).send();
       }
 
       let modifiedBond = {
-        _id: bondId,
         ...existingBond,
         ...req.body,
       };
@@ -200,21 +148,21 @@ exports.updateBond = async (req, res) => {
       if (hasAllRequestedCoverStartDateValues(modifiedBond)) {
         modifiedBond = updateRequestedCoverStartDate(modifiedBond);
       } else {
-        delete modifiedBond.requestedCoverStartDate;
+        modifiedBond.requestedCoverStartDate = null;
       }
 
-      const updatedBond = await updateBondInDeal(req.user, deal, modifiedBond);
+      const { status, data } = await facilitiesController.update(bondId, modifiedBond, req.user);
 
-      const validationErrors = bondValidationErrors(updatedBond, deal);
+      const validationErrors = bondValidationErrors(data, deal);
 
       if (validationErrors.count !== 0) {
         return res.status(400).send({
           validationErrors,
-          bond: updatedBond,
+          bond: data,
         });
       }
 
-      return res.status(200).send(updatedBond);
+      return res.status(status).send(data);
     }
     return res.status(404).send();
   });
@@ -228,35 +176,12 @@ exports.deleteBond = async (req, res) => {
   await findOneDeal(req.params.id, async (deal) => {
     if (deal) {
       if (!userHasAccessTo(req.user, deal)) {
-        res.status(401).send();
+        return res.status(401).send();
       }
 
-      const bond = deal.bondTransactions.items.find((b) =>
-        String(b._id) === bondId); // eslint-disable-line no-underscore-dangle
+      const { status, data } = await facilitiesController.delete(bondId, req.user);
 
-      if (!bond) {
-        return res.status(404).send();
-      }
-
-      const allOtherBonds = getBondsExceptForOne(
-        deal.bondTransactions.items,
-        bond._id, // eslint-disable-line no-underscore-dangle
-      );
-
-      const modifiedDeal = {
-        ...deal,
-        bondTransactions: {
-          items: allOtherBonds,
-        },
-      };
-
-      const updateDealResponse = await updateDeal(
-        deal._id, // eslint-disable-line no-underscore-dangle
-        modifiedDeal,
-        req.user,
-      );
-
-      return res.status(200).send(updateDealResponse);
+      return res.status(status).send(data);
     }
     return res.status(404).send();
   });

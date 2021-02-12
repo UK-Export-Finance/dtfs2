@@ -4,6 +4,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
 const { as } = require('../../api')(app);
+const createFacilities = require('../../createFacilities');
 
 const dealToClone = completedDeal;
 
@@ -64,6 +65,7 @@ describe('/v1/deals/:id/clone', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['facilities']);
   });
 
   describe('POST /v1/deals/:id/clone', () => {
@@ -87,10 +89,14 @@ describe('/v1/deals/:id/clone', () => {
 
     describe('with post body', () => {
       let originalDeal;
+      let createdFacilities;
 
       beforeEach(async () => {
         const { body } = await as(anHSBCMaker).post(dealToClone).to('/v1/deals');
         originalDeal = body;
+        const originalDealId = originalDeal._id;
+
+        createdFacilities = await createFacilities(anHSBCMaker, originalDealId, completedDeal.mockFacilities);
       });
 
       it('clones a deal with only specific properties in `details`, wipes `comments`, `editedBy` `ukefComments`, `specialConditions`, changes `maker` to the user making the request, marks status `Draft`', async () => {
@@ -233,8 +239,10 @@ describe('/v1/deals/:id/clone', () => {
 
         const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
-        const firstOriginalBond = originalDeal.bondTransactions.items[0];
-        const secondOriginalBond = originalDeal.bondTransactions.items[1];
+        const firstOriginalBond = createdFacilities.find((f) => f.facilityType === 'bond');
+        const secondOriginalBond = createdFacilities.find((f) =>
+          f.facilityType === 'bond'
+          && f._id !== firstOriginalBond._id);
 
         const expectedFirstBondTransaction = {
           facilityStage: firstOriginalBond.facilityStage,
@@ -282,8 +290,10 @@ describe('/v1/deals/:id/clone', () => {
 
         const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
-        const firstOriginalLoan = originalDeal.loanTransactions.items[0];
-        const secondOriginalLoan = originalDeal.loanTransactions.items[1];
+        const firstOriginalLoan = createdFacilities.find((f) => f.facilityType === 'loan');
+        const secondOriginalLoan = createdFacilities.find((f) =>
+          f.facilityType === 'loan'
+          && f._id !== firstOriginalLoan._id);
 
         const expectedFirstLoanTransaction = {
           bankReferenceNumber: firstOriginalLoan.bankReferenceNumber,

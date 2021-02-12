@@ -1,5 +1,10 @@
 const typeDefs = `
 
+type StatusType {
+  code: Int
+  msg: String
+}
+
 type OwningBank {
   name: String
   emails: [String]
@@ -116,7 +121,8 @@ type Facility {
   coverEndDate: String
   ukefExposure: String!
   coveredPercentage: String!
-  bankFacilityReference: String!
+  bankFacilityReference: String
+  guaranteeFeePayableToUkef: String
 }
 
 type DealTotals {
@@ -132,6 +138,17 @@ type TFMData {
   submissionDetails: TFMSubmissionDetails
 }
 
+input DashboardFilters {
+  field: String
+  value: String
+  operator: String
+}
+
+input DealsInput {
+  start: Int,
+  pagesize: Int,
+  filters: [DashboardFilters]
+}
 type Deal {
   _id: String!
   ukefDealId: String!
@@ -144,8 +161,20 @@ type Deal {
   tfm: TFMData
 }
 
+type Deals {
+  count: Int
+  deals: [Deal]
+}
+
+type DealsQuery {
+  status: StatusType
+  count: Int,
+  deals: [Deal]
+}
+
 type Query {
   deal(_id: ID!): Deal
+  deals(params: DealsInput): DealsQuery
   facility(_id: ID!): Facility
 }
 

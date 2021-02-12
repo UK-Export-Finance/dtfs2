@@ -32,6 +32,7 @@ describe('deal comments controller', () => {
 
   afterEach(async () => {
     await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['facilities']);
   });
 
   it('should update a comment', async () => {

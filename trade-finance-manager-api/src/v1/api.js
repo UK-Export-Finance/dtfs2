@@ -57,7 +57,7 @@ const findOneFacility = async (facilityId) => {
   }
 };
 
-const queryDeals = async (query, start = 0, pagesize = 0) => {
+const queryDeals = async ({ query, start = 0, pagesize = 0 }) => {
   try {
     const response = await axios({
       method: 'post',
@@ -74,7 +74,7 @@ const queryDeals = async (query, start = 0, pagesize = 0) => {
 
     return response.data;
   } catch (err) {
-    return new Error('error with token');// do something proper here, but for now just reject failed logins..
+    return err;// do something proper here, but for now just reject failed logins..
   }
 };
 

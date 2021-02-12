@@ -16,6 +16,7 @@ describe('/v1/deals', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['facilities']);
   });
 
   describe('POST /v1/deals', () => {

@@ -38,6 +38,9 @@ module.exports = {
       supportingDocumentation: false,
     },
   },
+  facilities: [],
+  // TODO with mock data: generate facilities
+  // so that mocks do not have bondTransactions and loanTransactions
   bondTransactions: {
     items: [
       {

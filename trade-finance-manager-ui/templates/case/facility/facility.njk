@@ -124,6 +124,29 @@
       </div>
     </div>
 
+    <div class="govuk-grid-row separator-line" data-cy="facility-pricing-and-risk">
+
+      <div class="govuk-grid-column-full">
+
+        <h3 class="govuk-heading-l">Pricing and risk</h3>
+
+        <div class="govuk-grid-row">
+
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <h4 class="govuk-heading-s">Guarantee fee payable to UKEF</h4>
+            </div>
+
+            <div class="govuk-grid-column-three-quarters">
+              <p class="govuk-body-s" data-cy="facility-guarantee-fee-payable-to-ukef">{{ facility.guaranteeFeePayableToUkef | dashIfEmpty}}</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
   </div>
 
 {% endblock %}

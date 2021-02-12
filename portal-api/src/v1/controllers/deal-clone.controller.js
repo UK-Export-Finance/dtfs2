@@ -49,6 +49,7 @@ const stripTransaction = async (transaction, allowedFields) => {
       stripped[key] = transaction[key];
     }
   });
+
   // timestamp the newly cloned transactions and treat like a new draft.
   stripped._id = await generateFacilityId(); // eslint-disable-line no-underscore-dangle
   stripped.createdDate = now();

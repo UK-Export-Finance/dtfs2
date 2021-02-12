@@ -8,6 +8,11 @@ const dealReadyToSubmit = require('./test-data/dealReadyToSubmit');
 
 context('A TFM checker submits a deal', () => {
   let deal;
+  let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -21,7 +26,28 @@ context('A TFM checker submits a deal', () => {
     cy.insertManyDeals([dealReadyToSubmit()], MAKER_LOGIN)
       .then(insertedDeals => {
         deal = insertedDeals[0];
+        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = dealReadyToSubmit();
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
+  });
+
+  after(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   it('TFM Checker submits a deal; UKEF deal and facility IDs are displayed', () => {
@@ -49,7 +75,7 @@ context('A TFM checker submits a deal', () => {
       expect(text.trim()).not.to.equal(' ');
     });
 
-    const bondId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const bondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
     bondRow.ukefFacilityId().invoke('text').then((text) => {
@@ -57,7 +83,7 @@ context('A TFM checker submits a deal', () => {
       expect(text.trim()).not.to.equal(' ');
     });
 
-    const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const loanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
     loanRow.ukefFacilityId().invoke('text').then((text) => {

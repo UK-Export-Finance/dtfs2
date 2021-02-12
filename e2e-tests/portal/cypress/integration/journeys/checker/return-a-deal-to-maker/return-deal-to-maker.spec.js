@@ -11,6 +11,7 @@ const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
 
 context('A checker selects to return a deal to maker from the view-contract page', () => {
   let deal;
+  let dealId;
 
   beforeEach( () => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -27,7 +28,10 @@ context('A checker selects to return a deal to maker from the view-contract page
 
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(aDealInStatus("Ready for Checker's approval"), MAKER_LOGIN)
-      .then( insertedDeal => deal=insertedDeal);
+      .then((insertedDeal) => {
+        deal = insertedDeal;
+        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+      });
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {

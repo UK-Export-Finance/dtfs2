@@ -4,13 +4,13 @@ const CONSTANTS = require('../../../../constants');
 const queryDeals = async (query, start = 0, pagesize = 0) => {
   const collection = await db.getCollection('deals');
   const dealResults = collection.find(query);
-
   const count = await dealResults.count();
   const deals = await dealResults
     .sort({ 'details.dateOfLastAction': -1 })
     .skip(start)
     .limit(pagesize)
     .toArray();
+
 
   return {
     count,
@@ -60,8 +60,13 @@ const findOneDeal = async (_id, callback) => {
         }
       });
 
-      mappedDeal.bondTransactions.items = mappedBonds;
-      mappedDeal.loanTransactions.items = mappedLoans;
+      mappedDeal.bondTransactions = {
+        items: mappedBonds,
+      };
+
+      mappedDeal.loanTransactions = {
+        items: mappedLoans,
+      };
 
       if (callback) {
         callback(mappedDeal);

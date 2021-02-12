@@ -36,6 +36,7 @@ const banks = {
       'maker1@ukexportfinance.gov.uk',
       'checker1@ukexportfinance.gov.uk',
     ],
+    useTFM: true,
   },
   any: {
     id: '*',
@@ -144,7 +145,10 @@ const testUsers = [
     email: 'checker@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['checker'],
-    bank: banks.UKEF,
+    bank: {
+      ...banks.UKEF,
+      useTFM: true,
+    },
   },
 ];
 

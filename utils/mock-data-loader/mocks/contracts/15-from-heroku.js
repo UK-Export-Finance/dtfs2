@@ -74,6 +74,9 @@ module.exports = {
     "submissionDetails" : {
         "status" : "Not started"
     },
+    facilities: [],
+    // TODO with mock data: generate facilities
+    // so that mocks do not have bondTransactions and loanTransactions
     "bondTransactions" : {
         "items" : [
             {

@@ -40,35 +40,15 @@ context('User can view a case deal', () => {
   before(() => {
     cy.deleteDeals(MOCK_DEAL._id, ADMIN_LOGIN); // eslint-disable-line no-underscore-dangle
 
-    // mimic a submitted deal:
-    // 1) add submitted deal TO DB
-    // 2) create the deal's facilities in facilties DB collection
-    // 3) update the facilities to match the submitted deal.
     cy.insertOneDeal(MOCK_DEAL, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
 
-        const mockFacilities = [
-          ...deal.bondTransactions.items,
-          ...deal.loanTransactions.items,
-        ];
+        const { mockFacilities } = MOCK_DEAL;
 
-        mockFacilities.forEach((facility) => {
-          cy.createFacility(facility, dealId, MOCK_MAKER_TFM).then((createdFacility) => {
-            const facilityId = createdFacility._id; // eslint-disable-line no-underscore-dangle
-            const facilityWithDealId = {
-              ...facility,
-              associatedDealId: dealId,
-            };
-
-            cy.updateFacility(facilityId, facilityWithDealId, MOCK_MAKER_TFM);
-
-            dealFacilities.push({
-              ...createdFacility,
-              associatedDealId: dealId,
-            });
-          });
+        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+          dealFacilities.push(...createdFacilities);
         });
       });
   });
