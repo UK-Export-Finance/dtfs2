@@ -25,51 +25,9 @@ const dealsReducer = (dealsquery) => {
     return mappedDeals;
   };
 
-  const {
-    _id,
-    //   details,
-    //   submissionDetails,
-
-  } = deals;
-
-  // const {
-  //   ukefDealId,
-  //   status,
-  //   submissionDate,
-  //   submissionType,
-  //   owningBank,
-  //   bankSupplyContractID,
-  //   bankSupplyContractName,
-  //   maker,
-  // } = details;
-
-  // const {
-  //   name,
-  // } = owningBank;
-
   const results = {
     count,
     deals: dealsMap(deals),
-    //       deals: {
-    //         _id,
-    //         details: {
-    //           status,
-    //           bankSupplyContractID,
-    //           bankSupplyContractName,
-    //           ukefDealId,
-    //           submissionType,
-    //           maker: {
-    //             firstname: maker.firstname,
-    //             surname: maker.surname,
-    //             email: maker.email,
-    //           },
-    //           owningBank: {
-    //             name,
-    //           },
-    //           submissionDate,
-    //         },
-    //         submissionDetails: mapSubmissionDetails(submissionDetails),
-    //       },
   };
   return results;
 };
