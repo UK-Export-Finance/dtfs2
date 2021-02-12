@@ -122,6 +122,7 @@ type Facility {
   ukefExposure: String!
   coveredPercentage: String!
   bankFacilityReference: String
+  guaranteeFeePayableToUkef: String
 }
 
 type DealTotals {
