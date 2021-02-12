@@ -1704,12 +1704,170 @@ jobs:
             --connection-string-type custom \
             --settings \
               SESSION_SECRET="${{ env.SESSION_SECRET }}"
+
+  gef-ui:
+    name: GEF UI
+    needs: [vnet, private-dns, portal-api, reference-data-proxy, redis]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp create --name tfs-${{ env.environment }}-gef-ui \
+            --plan ${{ env.app_service_plan }} \
+            --deployment-container-image-name ${{ env.registry }}/gef-ui:${{ env.environment }}
+
+    - name: Vnet integration
+      uses: Azure/cli@v1.0.0
+      with:
+        # Enable outbound traffic to the private-endpoints subnet so we can access Portal API and Redis
+        inlineScript: |
+          az webapp vnet-integration add --name tfs-${{ env.environment }}-gef-ui \
+            --vnet tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.app_service_plan }}-app-service-plan-egress
+
+    - name: Private endpoint
+      uses: Azure/cli@v1.0.0
+      with:
+        # Restrict inbound traffic to not be open to the Internet
+        # NB: group-id isn't well documented. It means "Target sub-resource"
+        #     The purpose of connection-name is unknown.
+        inlineScript: |
+          gef_ui_id=$(az webapp show --name tfs-${{ env.environment }}-gef-ui --query "id" -o tsv)
+          az network private-endpoint create \
+            --name tfs-${{ env.environment }}-gef-ui \
+            --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+            --subnet ${{ env.environment }}-private-endpoints \
+            --private-connection-resource-id "$gef_ui_id" \
+            --group-id sites \
+            --connection-name tfs-${{ env.environment }}-gef-ui
+
+    - name: DNS A-records
+      uses: Azure/cli@v1.0.0
+      with:
+        # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
+        # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
+        inlineScript: |
+          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-gef-ui --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+
+          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-gef-ui --query 'networkInterfaces[0].id' -o tsv)
+          interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
+          
+          # Create
+          if [ -z "$ipv4_address" ]
+          then
+            echo Setting private link IP address...
+
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-gef-ui --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-gef-ui \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+            
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-gef-ui.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-gef-ui.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          fi
+
+          # Update
+          if [ "$ipv4_address" != "$interface_ip" ]
+          then
+            echo Updating private link IP address...
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-gef-ui --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-gef-ui --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-gef-ui \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-gef-ui.scm --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-gef-ui.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a add-record \
+              --record-set-name tfs-${{ env.environment }}-gef-ui.scm \
+              --zone-name "privatelink.azurewebsites.net" \
+              --ipv4-address $interface_ip
+          fi
+
+    - name: Continuous deployment
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment container config --name tfs-${{ env.environment }}-gef-ui \
+            --enable-cd true
+
+    - name: Enable container logging
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp log config --name tfs-${{ env.environment }}-gef-ui \
+            --docker-container-logging filesystem
+
+    - name: Always-on
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp config set --name tfs-${{ env.environment }}-gef-ui \
+            --always-on true
+
+    - name: Environment variables
+      uses: Azure/cli@v1.0.0
+      with:
+        # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
+        # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
+        # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
+        inlineScript: |
+          deal_api=$(az webapp show --name tfs-${{ env.environment }}-portal-api --query defaultHostName -o tsv)
+          reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
+          
+          redis_hostname=$(az redis show --name tfs-${{ env.environment }}-redis --query hostName --output tsv)
+          redis_sslPort=$(az redis show --name tfs-${{ env.environment }}-redis --query sslPort --output tsv)
+          redis_key=$(az redis list-keys --name tfs-${{ env.environment }}-redis --query primaryKey --output tsv)
+          echo "REDIS CONNECTION: $redis_key@$redis_hostname:$redis_sslPort"
+
+          az webapp config appsettings set --name tfs-${{ env.environment }}-gef-ui \
+            --settings \
+              PORT=5000 \
+              WEBSITES_PORT=5000 \
+              DEAL_API_URL="https://$deal_api" \
+              COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1 \
+              REDIS_HOSTNAME="$redis_hostname" \
+              REDIS_PORT="$redis_sslPort" \
+              REDIS_KEY="$redis_key" \
+              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"
+              
+    - name: Secrets
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp config connection-string set --name tfs-${{ env.environment }}-gef-ui \
+            --connection-string-type custom \
+            --settings \
+              SESSION_SECRET="${{ env.SESSION_SECRET }}" \
+              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
+ 
   # END UI setup
 
   # START Application gateways
   application-gateway-portal:
     name: Application Gateway Portal
-    needs: [vnet, public-ip, portal-ui]
+    needs: [vnet, public-ip, portal-ui, gef-ui]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1733,7 +1891,6 @@ jobs:
             --public-ip-address tfs-${{ env.environment }}-ip \
             --frontend-port 80 \
             --max-capacity 5 --min-capacity 1 \
-            --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net \
             --sku Standard_v2
 
     - name: Https ingress for data migration
@@ -1774,6 +1931,63 @@ jobs:
               --address-pool appGatewayBackendPool
           fi
 
+    - name: Configure Portal Application Gateway
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          echo "Creating Portal Backend Pool"
+          az network application-gateway address-pool create \
+            --gateway-name tfs-${{ env.environment }}-gw \
+            --name appGatewayBackendPool \
+            --servers tfs-${{ env.environment }}-portal-ui.azurewebsites.net
+
+          echo "Updating Portal HTTP settings..."
+          az network application-gateway http-settings update \
+            --gateway-name tfs-${{ env.environment }}-gw \
+            --name appGatewayBackendHttpSettings \
+            --protocol Https \
+            --cookie-based-affinity Disabled \
+            --timeout 30 \
+            --host-name-from-backend-pool true \
+            --protocol Https \
+            --port 443
+
+          echo "Creating GEF Backend Pool"
+          az network application-gateway address-pool create \
+            --gateway-name  tfs-${{ env.environment }}-gw \
+            --name gefGatewayBackendPool \
+            --servers tfs-${{ env.environment }}-gef-ui.azurewebsites.net
+
+          echo "Creating GEF HTTP settings..."
+          az network application-gateway http-settings create \
+            --gateway-name tfs-${{ env.environment }}-gw \
+            --name gefGatewayBackendHttpSettings \
+            --protocol Https \
+            --cookie-based-affinity Disabled \
+            --timeout 30 \
+            --host-name-from-backend-pool true \
+            --protocol Https \
+            --port 443 \
+            --path "/"
+
+          echo "Creating GEF rule url path map..."
+          az network application-gateway url-path-map create \
+            --gateway-name tfs-${{ env.environment }}-gw \
+            --name gef-url-path-map \
+            --rule-name gef-url-rule \
+            --address-pool gefGatewayBackendPool \
+            --http-settings gefGatewayBackendHttpSettings \
+            --default-address-pool appGatewayBackendPool \
+            --default-http-settings appGatewayBackendHttpSettings \
+            --paths /gef/*
+        
+          echo "Updating rule..."
+          az network application-gateway rule update \
+            --gateway-name tfs-${{ env.environment }}-gw \
+            --name rule1 \
+            --rule-type PathBasedRouting \
+            --url-path-map gef-url-path-map
+
     - name: Healthcheck probe
       uses: Azure/cli@v1.0.0
       with:
@@ -1783,16 +1997,29 @@ jobs:
             --protocol Https \
             --path "/healthcheck" \
             --host-name-from-http-settings true
+          
+          az network application-gateway probe create --name gef-healthcheck \
+            --gateway-name tfs-${{ env.environment }}-gw \
+            --protocol Https \
+            --path "/healthcheck" \
+            --host-name-from-http-settings true
 
     - name: Update back-end http settings
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          httpsettings_name=$(az network application-gateway show --name tfs-${{ env.environment }}-gw --query "backendHttpSettingsCollection[0].name" -o tsv)
-          az network application-gateway http-settings update --name $httpsettings_name \
+          az network application-gateway http-settings update \
+            --name appGatewayBackendHttpSettings \
             --gateway-name tfs-${{ env.environment }}-gw \
             --host-name-from-backend-pool true \
             --probe healthcheck --enable-probe true \
+            --protocol Https --port 443
+
+          az network application-gateway http-settings update \
+            --name gefGatewayBackendHttpSettings \
+            --gateway-name tfs-${{ env.environment }}-gw \
+            --host-name-from-backend-pool true \
+            --probe gef-healthcheck --enable-probe true \
             --protocol Https --port 443
 
   application-gateway-tfm:
@@ -1823,7 +2050,7 @@ jobs:
             --max-capacity 5 --min-capacity 1 \
             --servers tfs-${{ env.environment }}-trade-finance-manager-ui.azurewebsites.net \
             --sku Standard_v2
-
+            
     - name: Https ingress for data migration
       uses: Azure/cli@v1.0.0
       with:
@@ -2040,5 +2267,4 @@ jobs:
     #         --backend-pool portal-api \
     #         --patterns "/v1/*"
   # END Front Doors
-  
-  
+ 
