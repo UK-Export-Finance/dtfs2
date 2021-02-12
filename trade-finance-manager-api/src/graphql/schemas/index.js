@@ -121,7 +121,7 @@ type Facility {
   coverEndDate: String
   ukefExposure: String!
   coveredPercentage: String!
-  bankFacilityReference: String!
+  bankFacilityReference: String
 }
 
 type DealTotals {
