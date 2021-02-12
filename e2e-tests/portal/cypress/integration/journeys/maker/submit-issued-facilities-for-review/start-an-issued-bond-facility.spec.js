@@ -8,6 +8,9 @@ const MAKER_LOGIN = mockUsers.find(user => (user.roles.includes('maker') && user
 context('A maker is informed of a bond\'s status before submitting an issued bond facility with a deal in `Acknowledged by UKEF` status', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+  };
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -22,7 +25,22 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = dealWithNotStartedFacilityStatuses;
+
+        const bonds = mockFacilities.filter((f) => f.facilityType === 'bond');
+
+        cy.createFacilities(dealId, bonds, MAKER_LOGIN).then((createdFacilities) => {
+
+          dealFacilities.bonds = createdFacilities;
+        });
       });
+  });
+
+  after(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   it('Starting to fill in the Issue Bond Facility form should change the Bond status from `Not started` to `Incomplete` and the Issue Facility link to `Facility issued`', () => {
@@ -30,7 +48,7 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('be.disabled');
 
-    const bondId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const bondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
     bondRow.bondStatus().invoke('text').then((text) => {

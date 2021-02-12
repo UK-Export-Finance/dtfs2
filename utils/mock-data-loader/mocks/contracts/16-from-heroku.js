@@ -187,6 +187,9 @@ module.exports = {
         "supplyContractValue" : "70000000.00",
         "viewedPreviewPage" : true
     },
+    facilities: [],
+    // TODO with mock data: generate facilities
+    // so that mocks do not have bondTransactions and loanTransactions
     "bondTransactions" : {
         "items" : [
             {

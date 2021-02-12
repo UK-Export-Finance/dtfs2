@@ -1,7 +1,6 @@
-const { findOneDeal, updateDeal } = require('./deal.controller');
+const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const loanValidationErrors = require('../validation/loan');
-const { generateFacilityId } = require('../../utils/generate-ids');
 const {
   calculateGuaranteeFee,
   calculateUkefExposure,
@@ -13,48 +12,30 @@ const {
 } = require('../facility-dates/requested-cover-start-date');
 const { loanStatus } = require('../section-status/loans');
 const { sanitizeCurrency } = require('../../utils/number');
-const now = require('../../now');
+const facilitiesController = require('./facilities.controller');
 
-const getLoansExceptForOne = (loans, id) =>
-  loans.filter((loan) => String(loan._id) !== id); // eslint-disable-line no-underscore-dangle
+exports.create = async (req, res) => {
+  await findOneDeal(req.params.id, async (deal) => {
+    if (!deal) return res.status(404).send();
 
-const putLoanInDealObject = (deal, loan) => {
-  const allOtherLoans = getLoansExceptForOne(
-    deal.loanTransactions.items,
-    loan._id, // eslint-disable-line no-underscore-dangle
-  );
+    if (!userHasAccessTo(req.user, deal)) {
+      return res.status(401).send();
+    }
 
-  return {
-    ...deal,
-    loanTransactions: {
-      items: [
-        ...allOtherLoans,
-        loan,
-      ],
-    },
-  };
+    const facilityBody = {
+      facilityType: 'loan',
+      associatedDealId: req.params.id,
+      ...req.body,
+    };
+
+    const { status, data } = await facilitiesController.create(facilityBody, req.user);
+
+    return res.status(status).send({
+      ...data,
+      loanId: data._id, // eslint-disable-line no-underscore-dangle
+    });
+  });
 };
-
-const updateLoanInDeal = async (user, deal, loan) => {
-  const loanToUpdate = {
-    ...loan,
-    lastEdited: now(),
-  };
-
-  const modifiedDeal = putLoanInDealObject(deal, loanToUpdate);
-
-  const updatedDeal = await updateDeal(
-    deal._id, // eslint-disable-line no-underscore-dangle
-    modifiedDeal,
-    user,
-  );
-
-  const loanInDeal = updatedDeal.loanTransactions.items.find((l) =>
-    String(l._id) === loan._id); // eslint-disable-line no-underscore-dangle
-
-  return loanInDeal;
-};
-exports.updateLoanInDeal = updateLoanInDeal;
 
 exports.getLoan = async (req, res) => {
   const {
@@ -68,8 +49,7 @@ exports.getLoan = async (req, res) => {
         res.status(401).send();
       }
 
-      const loan = deal.loanTransactions.items.find((b) =>
-        String(b._id) === loanId); // eslint-disable-line no-underscore-dangle
+      const loan = await facilitiesController.findOne(loanId);
 
       if (loan) {
         const validationErrors = loanValidationErrors(loan, deal);
@@ -89,56 +69,25 @@ exports.getLoan = async (req, res) => {
   });
 };
 
-exports.create = async (req, res) => {
-  await findOneDeal(req.params.id, async (deal) => {
-    if (!deal) return res.status(404).send();
-
-    if (!userHasAccessTo(req.user, deal)) {
-      return res.status(401).send();
-    }
-
-    const facilityId = await generateFacilityId();
-
-    const newLoanObj = {
-      _id: facilityId,
-      createdDate: now(),
-      facilityType: 'loan',
-    };
-
-    const modifiedDeal = putLoanInDealObject(deal, newLoanObj);
-
-    const updateDealResponse = await updateDeal(
-      deal._id, // eslint-disable-line no-underscore-dangle
-      modifiedDeal,
-      req.user,
-    );
-
-    return res.status(200).send({
-      ...updateDealResponse,
-      loanId: newLoanObj._id, // eslint-disable-line no-underscore-dangle
-    });
-  });
-};
-
-const loanFacilityStageFields = (loan) => {
+const facilityStageFields = (loan) => {
   const modifiedLoan = loan;
   const { facilityStage } = modifiedLoan;
 
   if (facilityStage === 'Conditional') {
     // remove any 'Unconditional' specific fields
-    delete modifiedLoan.requestedCoverStartDate;
-    delete modifiedLoan['requestedCoverStartDate-day'];
-    delete modifiedLoan['requestedCoverStartDate-month'];
-    delete modifiedLoan['requestedCoverStartDate-year'];
-    delete modifiedLoan['coverEndDate-day'];
-    delete modifiedLoan['coverEndDate-month'];
-    delete modifiedLoan['coverEndDate-year'];
-    delete modifiedLoan.disbursementAmount;
+    modifiedLoan.requestedCoverStartDate = null;
+    modifiedLoan['requestedCoverStartDate-day'] = null;
+    modifiedLoan['requestedCoverStartDate-month'] = null;
+    modifiedLoan['requestedCoverStartDate-year'] = null;
+    modifiedLoan['coverEndDate-day'] = null;
+    modifiedLoan['coverEndDate-month'] = null;
+    modifiedLoan['coverEndDate-year'] = null;
+    modifiedLoan.disbursementAmount = null;
   }
 
   if (facilityStage === 'Unconditional') {
     // remove any 'Conditional' specific fields
-    delete modifiedLoan.ukefGuaranteeInMonths;
+    modifiedLoan.ukefGuaranteeInMonths = null;
   }
 
   return modifiedLoan;
@@ -148,7 +97,7 @@ const premiumTypeFields = (loan) => {
   const modifiedLoan = loan;
   const { premiumType } = modifiedLoan;
   if (premiumType === 'At maturity') {
-    delete modifiedLoan.premiumFrequency;
+    modifiedLoan.premiumFrequency = null;
   }
 
   return modifiedLoan;
@@ -165,20 +114,18 @@ exports.updateLoan = async (req, res) => {
         res.status(401).send();
       }
 
-      const loan = deal.loanTransactions.items.find((l) =>
-        String(l._id) === loanId); // eslint-disable-line no-underscore-dangle
+      const existingLoan = await facilitiesController.findOne(loanId);
 
-      if (!loan) {
+      if (!existingLoan) {
         return res.status(404).send();
       }
 
       let modifiedLoan = {
-        _id: loanId,
-        ...loan,
+        ...existingLoan,
         ...req.body,
       };
 
-      modifiedLoan = loanFacilityStageFields(modifiedLoan);
+      modifiedLoan = facilityStageFields(modifiedLoan);
 
       modifiedLoan = await handleTransactionCurrencyFields(
         modifiedLoan,
@@ -196,34 +143,35 @@ exports.updateLoan = async (req, res) => {
         modifiedLoan.facilityValue = sanitizedFacilityValue.sanitizedValue;
       }
 
-      const sanitizedFacilityDisbursement = sanitizeCurrency(modifiedLoan.disbursementAmount);
-      if (sanitizedFacilityDisbursement.sanitizedValue) {
-        modifiedLoan.disbursementAmount = sanitizedFacilityDisbursement.sanitizedValue;
+      if (modifiedLoan.disbursementAmount) {
+        const sanitizedFacilityDisbursement = sanitizeCurrency(modifiedLoan.disbursementAmount);
+        if (sanitizedFacilityDisbursement.sanitizedValue) {
+          modifiedLoan.disbursementAmount = sanitizedFacilityDisbursement.sanitizedValue;
+        }
       }
 
       if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {
         modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
       } else {
-        delete modifiedLoan.requestedCoverStartDate;
+        modifiedLoan.requestedCoverStartDate = null;
       }
 
-      const updatedLoan = await updateLoanInDeal(req.user, deal, modifiedLoan);
+      const { status, data } = await facilitiesController.update(loanId, modifiedLoan, req.user);
 
-      const validationErrors = loanValidationErrors(updatedLoan, deal);
+      const validationErrors = loanValidationErrors(data, deal);
 
       if (validationErrors.count !== 0) {
         return res.status(400).send({
           validationErrors,
-          loan: updatedLoan,
+          loan: data,
         });
       }
 
-      return res.status(200).send(updatedLoan);
+      return res.status(status).send(data);
     }
     return res.status(404).send();
   });
 };
-
 
 exports.deleteLoan = async (req, res) => {
   const {
@@ -233,35 +181,12 @@ exports.deleteLoan = async (req, res) => {
   await findOneDeal(req.params.id, async (deal) => {
     if (deal) {
       if (!userHasAccessTo(req.user, deal)) {
-        res.status(401).send();
+        return res.status(401).send();
       }
 
-      const loan = deal.loanTransactions.items.find((l) =>
-        String(l._id) === loanId); // eslint-disable-line no-underscore-dangle
+      const { status, data } = await facilitiesController.delete(loanId, req.user);
 
-      if (!loan) {
-        return res.status(404).send();
-      }
-
-      const allOtherLoans = getLoansExceptForOne(
-        deal.loanTransactions.items,
-        loan._id, // eslint-disable-line no-underscore-dangle
-      );
-
-      const modifiedDeal = {
-        ...deal,
-        loanTransactions: {
-          items: allOtherLoans,
-        },
-      };
-
-      const updateDealResponse = await updateDeal(
-        deal._id, // eslint-disable-line no-underscore-dangle
-        modifiedDeal,
-        req.user,
-      );
-
-      return res.status(200).send(updateDealResponse);
+      return res.status(status).send(data);
     }
     return res.status(404).send();
   });

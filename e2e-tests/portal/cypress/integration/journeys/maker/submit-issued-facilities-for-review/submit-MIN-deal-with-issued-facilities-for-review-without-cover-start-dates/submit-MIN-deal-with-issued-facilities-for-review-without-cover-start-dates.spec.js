@@ -17,6 +17,10 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && us
 context('Maker fills in bond & loan issue facility forms without requested cover start date and submits the deal for checker review', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -31,7 +35,26 @@ context('Maker fills in bond & loan issue facility forms without requested cover
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+        const { mockFacilities } = minDealWithNotStartedFacilityStatuses;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
+  });
+
+  after(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   it('defaults the submitted facilities requested cover start dates to the previously entered issue date', () => {
@@ -39,7 +62,7 @@ context('Maker fills in bond & loan issue facility forms without requested cover
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('be.disabled');
 
-    const bondId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const bondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
     bondRow.issueFacilityLink().click();
@@ -47,7 +70,7 @@ context('Maker fills in bond & loan issue facility forms without requested cover
     fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
-    const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const loanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
     loanRow.issueFacilityLink().click();

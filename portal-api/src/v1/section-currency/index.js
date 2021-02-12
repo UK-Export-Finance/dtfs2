@@ -25,11 +25,11 @@ const handleTransactionCurrencyFields = async (dealSection, deal) => {
 
   if (currencySameAsSupplyContractCurrency && currencySameAsSupplyContractCurrency === 'true') {
     // remove any 'currency is NOT the same' specific values
-    delete modifiedSection.currency;
-    delete modifiedSection.conversionRate;
-    delete modifiedSection['conversionRateDate-day'];
-    delete modifiedSection['conversionRateDate-month'];
-    delete modifiedSection['conversionRateDate-year'];
+    modifiedSection.currency = null;
+    modifiedSection.conversionRate = null;
+    modifiedSection['conversionRateDate-day'] = null;
+    modifiedSection['conversionRateDate-month'] = null;
+    modifiedSection['conversionRateDate-year'] = null;
 
     if (supplyContractCurrencyCodeId) {
       modifiedSection.currency = await getCurrencyObject(supplyContractCurrencyCodeId);

@@ -67,7 +67,7 @@ const get = async (dataType, req) => {
       loanId,
     } = req.params;
 
-    const loan = await api.getDealLoan(_id, loanId, token).catch(
+    const loan = await api.getLoan(_id, loanId, token).catch(
       (err) => {
         console.log(`api-data-provider: querying for loan => ${err}`);
         return { loan: {} };

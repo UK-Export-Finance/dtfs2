@@ -157,6 +157,7 @@ describe('/graphql query deals', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['facilities']);
   });
 
   describe('/graphql list deals', () => {

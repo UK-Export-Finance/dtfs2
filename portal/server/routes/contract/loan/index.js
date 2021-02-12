@@ -78,9 +78,14 @@ const handleBankReferenceNumberField = (loanBody) => {
 
 router.get('/contract/:_id/loan/create', async (req, res) => {
   const { _id: dealId, userToken } = requestParams(req);
-  const { _id, loanId } = await api.createDealLoan(dealId, userToken); // eslint-disable-line no-underscore-dangle
+  const {
+    associatedDealId,
+    loanId,
+  } = await api.createLoan(dealId, userToken); // eslint-disable-line no-underscore-dangle
 
-  return res.redirect(`/contract/${_id}/loan/${loanId}/guarantee-details`); // eslint-disable-line no-underscore-dangle
+  req.params._id = associatedDealId; // eslint-disable-line no-underscore-dangle
+
+  return res.redirect(`/contract/${associatedDealId}/loan/${loanId}/guarantee-details`); // eslint-disable-line no-underscore-dangle
 });
 
 router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]), async (req, res) => {
@@ -113,7 +118,7 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) =>
   const modifiedBody = handleBankReferenceNumberField(req.body);
 
   await postToApi(
-    api.updateDealLoan(
+    api.updateLoan(
       dealId,
       loanId,
       modifiedBody,
@@ -156,7 +161,7 @@ router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) =>
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
   await postToApi(
-    api.updateDealLoan(
+    api.updateLoan(
       dealId,
       loanId,
       req.body,
@@ -199,7 +204,7 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => 
   const modifiedBody = premiumFrequencyField(req.body);
 
   await postToApi(
-    api.updateDealLoan(
+    api.updateLoan(
       dealId,
       loanId,
       modifiedBody,
@@ -241,7 +246,7 @@ router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), as
   };
 
   await postToApi(
-    api.updateDealLoan(
+    api.updateLoan(
       dealId,
       loanId,
       updatedLoan,
@@ -288,7 +293,7 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
 
   if (!formDataMatchesOriginalData(modifiedBody, mappedOriginalData)) {
     await postToApi(
-      api.updateDealLoan(
+      api.updateLoan(
         dealId,
         loanId,
         modifiedBody,
@@ -484,7 +489,7 @@ router.post('/contract/:_id/loan/:loanId/delete', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
   await postToApi(
-    api.deleteDealLoan(
+    api.deleteLoan(
       dealId,
       loanId,
       userToken,

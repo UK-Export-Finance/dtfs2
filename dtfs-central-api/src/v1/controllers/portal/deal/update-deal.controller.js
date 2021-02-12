@@ -40,10 +40,16 @@ const handleEditedByPortal = async (dealId, dealUpdate, user) => {
     // but for now...
     if (!dealUpdate.editedBy) {
       const deal = await findOneDeal(dealId);
-      editedBy = [
-        ...deal.editedBy,
-        newEditedBy,
-      ];
+      if (deal && deal.editedBy) {
+        editedBy = [
+          ...deal.editedBy,
+          newEditedBy,
+        ];
+      } else {
+        editedBy = [
+          newEditedBy,
+        ];
+      }
     } else {
       editedBy = [
         ...dealUpdate.editedBy,

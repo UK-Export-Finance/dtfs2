@@ -15,6 +15,10 @@ const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') &
 context('A maker submits a deal to checker, checker submits to UKEF, maker submits issued loan/bond facilities, checker returns to maker, maker submits to checker', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   before(() => {
     cy.deleteDeals(MAKER_LOGIN);
@@ -26,12 +30,33 @@ context('A maker submits a deal to checker, checker submits to UKEF, maker submi
       console.log(err.stack);
       return false;
     });
+
     cy.insertOneDeal(dealWithUnIssuedFacilities, MAKER_LOGIN)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = dealWithUnIssuedFacilities;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
   });
+
+  after(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+  });;
 
   it('Checker can view (but not edit) Issued facilities, facility statuses should be updated throughout the deal status changes', () => {
     //---------------------------------------------------------------
@@ -70,34 +95,34 @@ context('A maker submits a deal to checker, checker submits to UKEF, maker submi
       },
       bonds: [
         {
-          BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
+          BSS_portal_facility_id: dealFacilities.bonds[0]._id,
           BSS_ukef_facility_id: '12345',
           BSS_status: '""',
         },
         {
-          BSS_portal_facility_id: deal.bondTransactions.items[1]._id,
+          BSS_portal_facility_id: dealFacilities.bonds[1]._id,
           BSS_ukef_facility_id: '12345',
           BSS_status: '""',
         },
         {
-          BSS_portal_facility_id: deal.bondTransactions.items[2]._id,
+          BSS_portal_facility_id: dealFacilities.bonds[2]._id,
           BSS_ukef_facility_id: '12345',
           BSS_status: '""',
         },
       ],
       loans: [
         {
-          EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
+          EWCS_portal_facility_id: dealFacilities.loans[0]._id,
           EWCS_ukef_facility_id: '56789',
           EWCS_status: '""',
         },
         {
-          EWCS_portal_facility_id: deal.loanTransactions.items[1]._id,
+          EWCS_portal_facility_id: dealFacilities.loans[1]._id,
           EWCS_ukef_facility_id: '56789',
           EWCS_status: '""',
         },
         {
-          EWCS_portal_facility_id: deal.loanTransactions.items[2]._id,
+          EWCS_portal_facility_id: dealFacilities.loans[2]._id,
           EWCS_ukef_facility_id: '56789',
           EWCS_status: '""',
         },
@@ -111,11 +136,11 @@ context('A maker submits a deal to checker, checker submits to UKEF, maker submi
     cy.login(MAKER_LOGIN);
     pages.contract.visit(deal);
 
-    const bondThatWillBeIssuedObj = deal.bondTransactions.items.find((b) => !b.status);
+    const bondThatWillBeIssuedObj = dealFacilities.bonds.find((b) => !b.status);
     const bondThatWillBeIssuedId = bondThatWillBeIssuedObj._id; // eslint-disable-line no-underscore-dangle
     const bondThatWillBeIssuedRow = pages.contract.bondTransactionsTable.row(bondThatWillBeIssuedId);
 
-    const loanThatWillBeIssuedObj = deal.loanTransactions.items.find((l) => !l.status);
+    const loanThatWillBeIssuedObj = dealFacilities.loans.find((l) => !l.status);
 
     const loanThatWillBeIssuedId = loanThatWillBeIssuedObj._id; // eslint-disable-line no-underscore-dangle
     const loanThatWillBeIssuedIdRow = pages.contract.loansTransactionsTable.row(loanThatWillBeIssuedId);
@@ -149,11 +174,11 @@ context('A maker submits a deal to checker, checker submits to UKEF, maker submi
     //---------------------------------------------------------------
     // maker starts, but does not complete, a different Bond Issue Facility form
     //---------------------------------------------------------------
-    const unissuedNotStartedBondObj = deal.bondTransactions.items.find((bond) => !bond.status && bond._id !== bondThatWillBeIssuedId); // eslint-disable-line no-underscore-dangle
+    const unissuedNotStartedBondObj = dealFacilities.bonds.find((bond) => !bond.status && bond._id !== bondThatWillBeIssuedId); // eslint-disable-line no-underscore-dangle
     const unissuedNotStartedBondId = unissuedNotStartedBondObj._id; // eslint-disable-line no-underscore-dangle
     const unissuedNotStartedBondRow = pages.contract.bondTransactionsTable.row(unissuedNotStartedBondId);
 
-    const unissuedIncompleteBondObj = deal.bondTransactions.items.find((bond) =>
+    const unissuedIncompleteBondObj = dealFacilities.bonds.find((bond) =>
       !bond.status
       && bond._id !== bondThatWillBeIssuedId // eslint-disable-line no-underscore-dangle
       && bond._id !== unissuedNotStartedBondId); // eslint-disable-line no-underscore-dangle
@@ -175,11 +200,11 @@ context('A maker submits a deal to checker, checker submits to UKEF, maker submi
     // maker starts, but does not complete, a different Loan Issue Facility form
     //---------------------------------------------------------------
 
-    const conditionalNotStartedLoanObj = deal.loanTransactions.items.find((bond) => !bond.status && bond._id !== loanThatWillBeIssuedId); // eslint-disable-line no-underscore-dangle
+    const conditionalNotStartedLoanObj = dealFacilities.loans.find((loan) => !loan.status && loan._id !== loanThatWillBeIssuedId); // eslint-disable-line no-underscore-dangle
     const conditionalNotStartedLoanId = conditionalNotStartedLoanObj._id; // eslint-disable-line no-underscore-dangle
     const conditionalNotStartedLoanRow = pages.contract.loansTransactionsTable.row(conditionalNotStartedLoanId);
 
-    const conditionalIncompleteLoanObj = deal.loanTransactions.items.find((loan) =>
+    const conditionalIncompleteLoanObj = dealFacilities.loans.find((loan) =>
       !loan.status
       && loan._id !== loanThatWillBeIssuedId // eslint-disable-line no-underscore-dangle
       && loan._id !== conditionalNotStartedLoanId); // eslint-disable-line no-underscore-dangle

@@ -1,44 +1,42 @@
 const refDataApi = require('../../../reference-data/api');
 const { updateDeal } = require('../deal.controller');
+const facilitiesController = require('../facilities.controller');
 
 const createUkefIds = async (dealId, deal, user) => {
   const ukefDealId = await refDataApi.numberGenerator.create('deal');
 
-  const updatedBonds = await Promise.all(
-    deal.bondTransactions.items.map(async (f) => {
-      const facility = f;
+  const totalFacilities = deal.facilities.length;
+  let updatedFacilitiesCount = 0;
 
-      facility.ukefFacilityID = await refDataApi.numberGenerator.create('facility');
-      return facility;
-    }),
-  );
-
-  const updatedLoans = await Promise.all(
-    deal.loanTransactions.items.map(async (f) => {
-      const facility = f;
-
-      facility.ukefFacilityID = await refDataApi.numberGenerator.create('facility');
-      return facility;
-    }),
-  );
-
-  const updatedDeal = await updateDeal(
-    dealId,
-    {
-      details: {
-        ukefDealId,
+  return new Promise(async (resolve) => { // eslint-disable-line no-async-promise-executor
+    const updatedDeal = await updateDeal(
+      dealId,
+      {
+        details: {
+          ukefDealId,
+        },
       },
-      bondTransactions: {
-        items: updatedBonds,
-      },
-      loanTransactions: {
-        items: updatedLoans,
-      },
-    },
-    user,
-  );
+      user,
+    );
 
-  return updatedDeal;
+    deal.facilities.forEach(async (facilityId) => {
+      const ukefFacilityID = await refDataApi.numberGenerator.create('facility');
+
+      const modifiedFacility = {
+        ukefFacilityID,
+      };
+
+      await facilitiesController.update(facilityId, modifiedFacility, user);
+
+      updatedFacilitiesCount += 1;
+
+      if (updatedFacilitiesCount === totalFacilities) {
+        return resolve(updatedDeal);
+      }
+
+      return facilityId;
+    });
+  });
 };
 
 module.exports = createUkefIds;

@@ -105,41 +105,35 @@
       }
     ]
   },
-    "bondTransactions": {
-      "items": [
-      {
-          "_id": "1234567891",
-          "bondIssuer": "issuer",
-          "bondType": "bond type",
-          "facilityStage": "unissued",
-          "ukefGuaranteeInMonths": "24",
-          "uniqueIdentificationNumber": "1234",
-          "bondBeneficiary": "test",
-          "facilityValue": "123",
-          "currencySameAsSupplyContractCurrency": "true",
-          "riskMarginFee": "1",
-          "coveredPercentage": "2",
-          "feeType": "test",
-          "feeFrequency": "test",
-          "dayCountBasis": "test"
-      }
-    ]
-  },
-  "loanTransactions": {
-    "items": [
-      {
-        "_id": "1234567891",
-        "facilityStage": "Unconditional",
-        "bankReferenceNumber": "123",
+  "mockFacilities": [
+    {
+        "facilityType": "bond",
+        "bondIssuer": "issuer",
+        "bondType": "bond type",
+        "facilityStage": "unissued",
+        "ukefGuaranteeInMonths": "24",
+        "uniqueIdentificationNumber": "1234",
+        "bondBeneficiary": "test",
         "facilityValue": "123",
-        "disbursementAmount": "12",
-        "ukefGuaranteeInMonths": "12",
         "currencySameAsSupplyContractCurrency": "true",
-        "interestMarginFee": "5",
-        "coveredPercentage": "40",
-        "premiumType": "At maturity",
-        "dayCountBasis": "365"
-      }
-    ]
-  }
+        "riskMarginFee": "1",
+        "coveredPercentage": "2",
+        "feeType": "test",
+        "feeFrequency": "test",
+        "dayCountBasis": "test"
+    },
+    {
+      "facilityType": "loan",
+      "facilityStage": "Unconditional",
+      "bankReferenceNumber": "123",
+      "facilityValue": "123",
+      "disbursementAmount": "12",
+      "ukefGuaranteeInMonths": "12",
+      "currencySameAsSupplyContractCurrency": "true",
+      "interestMarginFee": "5",
+      "coveredPercentage": "40",
+      "premiumType": "At maturity",
+      "dayCountBasis": "365"
+    }
+  ]
 }
