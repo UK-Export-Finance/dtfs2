@@ -160,62 +160,56 @@ const deal = {
     "supplyContractValue": "12312323.00",
     "viewedPreviewPage": true
   },
-  "bondTransactions": {
-    "items": [
-      {
-        "_id": "1000208",
-        "bondIssuer": "",
-        "bondType": "Bid bond",
-        "facilityStage": "Unissued",
-        "ukefGuaranteeInMonths": "12",
-        "bondBeneficiary": "",
-        "guaranteeFeePayableByBank": "18.0000",
-        "facilityValue": "21313.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "riskMarginFee": "20",
-        "coveredPercentage": "30",
-        "minimumRiskMarginFee": "",
-        "ukefExposure": "6,393.90",
-        "feeType": "At maturity",
-        "dayCountBasis": "365",
-        "currency": {
-          "text": "GBP - UK Sterling",
-          "id": "GBP"
-        },
-        "status": "Not started",
+  "mockFacilities": [
+    {
+      "facilityType": "bond",
+      "bondIssuer": "",
+      "bondType": "Bid bond",
+      "facilityStage": "Unissued",
+      "ukefGuaranteeInMonths": "12",
+      "bondBeneficiary": "",
+      "guaranteeFeePayableByBank": "18.0000",
+      "facilityValue": "21313.00",
+      "currencySameAsSupplyContractCurrency": "true",
+      "riskMarginFee": "20",
+      "coveredPercentage": "30",
+      "minimumRiskMarginFee": "",
+      "ukefExposure": "6,393.90",
+      "feeType": "At maturity",
+      "dayCountBasis": "365",
+      "currency": {
+        "text": "GBP - UK Sterling",
+        "id": "GBP"
       },
-    ]
-  },
-  "loanTransactions": {
-    "items": [
-      {
-        "_id": "1000209",
-        "facilityStage": "Conditional",
-        "ukefGuaranteeInMonths": "12",
-        "bankReferenceNumber": "",
-        "guaranteeFeePayableByBank": "10.8000",
-        "facilityValue": "123123.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "interestMarginFee": "12",
-        "coveredPercentage": "20",
-        "minimumQuarterlyFee": "",
-        "ukefExposure": "24,624.60",
-        "premiumFrequency": "Monthly",
-        "premiumType": "In arrear",
-        "dayCountBasis": "360",
-        "viewedPreviewPage": true,
-        "currency": {
-          "text": "GBP - UK Sterling",
-          "id": "GBP"
-        },
-        "coverEndDate-day": "",
-        "coverEndDate-month": "",
-        "coverEndDate-year": "",
-        "disbursementAmount": "",
-        "status": "Not started",
+      "status": "Not started",
+    },
+    {
+      "facilityType": "loan",
+      "facilityStage": "Conditional",
+      "ukefGuaranteeInMonths": "12",
+      "bankReferenceNumber": "",
+      "guaranteeFeePayableByBank": "10.8000",
+      "facilityValue": "123123.00",
+      "currencySameAsSupplyContractCurrency": "true",
+      "interestMarginFee": "12",
+      "coveredPercentage": "20",
+      "minimumQuarterlyFee": "",
+      "ukefExposure": "24,624.60",
+      "premiumFrequency": "Monthly",
+      "premiumType": "In arrear",
+      "dayCountBasis": "360",
+      "viewedPreviewPage": true,
+      "currency": {
+        "text": "GBP - UK Sterling",
+        "id": "GBP"
       },
-    ]
-  },
+      "coverEndDate-day": "",
+      "coverEndDate-month": "",
+      "coverEndDate-year": "",
+      "disbursementAmount": "",
+      "status": "Not started",
+    },
+  ],
   "summary": {},
   "comments": [],
   "dealFiles": {}

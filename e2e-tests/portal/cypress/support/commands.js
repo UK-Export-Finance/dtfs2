@@ -39,8 +39,10 @@ Cypress.Commands.add('deleteDeals', require('./portal-api/deleteDeals'));
 
 Cypress.Commands.add('downloadFile', downloadFile);
 Cypress.Commands.add('removeUserIfPresent', require('./portal-api/removeUserIfPresent'));
+
 Cypress.Commands.add('updateBond', require('./portal-api/updateBond'));
 Cypress.Commands.add('updateLoan', require('./portal-api/updateLoan'));
+Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'));
 
 // commands used to interact with the test hooks - ie. endpoints that only exist during pipeline execution.
 Cypress.Commands.add('sendTypeB', require('./test-hooks-api/sendTypeB'));
@@ -54,3 +56,6 @@ Cypress.Commands.add('login', require('./portal/logIn'));
 Cypress.Commands.add('loginGoToDealPage', require('./portal/loginGoToDealPage'));
 Cypress.Commands.add('passRedLine', require('./portal/passRedLine'));
 Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
+
+// commands that add/edit facilities directly in central API
+Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));

@@ -175,70 +175,64 @@ const deal = {
     },
     "supplyContractValue": "1234.00"
   },
-  "bondTransactions": {
-    "items": [
-      {
-        "_id": "02345678",
-        "createdDate": moment().utc().valueOf(),
-        "bondIssuer": "",
-        "bondType": "Advance payment guarantee",
-        "facilityStage": "Issued",
-        "requestedCoverStartDate-day": "",
-        "requestedCoverStartDate-month": "",
-        "requestedCoverStartDate-year": "",
-        "coverEndDate-day": moment().add(1, 'monnth').format('DD'),
-        "coverEndDate-month": moment().add(1, 'monnth').format('MM'),
-        "coverEndDate-year": moment().add(1, 'monnth').format('YYYY'),
-        "uniqueIdentificationNumber": "1234",
-        "bondBeneficiary": "",
-        "guaranteeFeePayableByBank": "10.8000",
-        "lastEdited": moment().utc().valueOf(),
-        "facilityValue": "1234.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "riskMarginFee": "12",
-        "coveredPercentage": "24",
-        "minimumRiskMarginFee": "",
-        "ukefExposure": "296.16",
-        "feeType": "At maturity",
-        "dayCountBasis": "365",
-        "currency": {
-          "text": "GBP - UK Sterling",
-          "id": "GBP"
-        }
+  "mockFacilities": [
+    {
+      "facilityType": "bond",
+      "createdDate": moment().utc().valueOf(),
+      "bondIssuer": "",
+      "bondType": "Advance payment guarantee",
+      "facilityStage": "Issued",
+      "requestedCoverStartDate-day": "",
+      "requestedCoverStartDate-month": "",
+      "requestedCoverStartDate-year": "",
+      "coverEndDate-day": moment().add(1, 'monnth').format('DD'),
+      "coverEndDate-month": moment().add(1, 'monnth').format('MM'),
+      "coverEndDate-year": moment().add(1, 'monnth').format('YYYY'),
+      "uniqueIdentificationNumber": "1234",
+      "bondBeneficiary": "",
+      "guaranteeFeePayableByBank": "10.8000",
+      "lastEdited": moment().utc().valueOf(),
+      "facilityValue": "1234.00",
+      "currencySameAsSupplyContractCurrency": "true",
+      "riskMarginFee": "12",
+      "coveredPercentage": "24",
+      "minimumRiskMarginFee": "",
+      "ukefExposure": "296.16",
+      "feeType": "At maturity",
+      "dayCountBasis": "365",
+      "currency": {
+        "text": "GBP - UK Sterling",
+        "id": "GBP"
       }
-    ]
-  },
-  "loanTransactions": {
-    "items": [
-      {
-        "_id": "12345678",
-        "createdDate": moment().utc().valueOf(),
-        "facilityStage": "Unconditional",
-        "requestedCoverStartDate-day": "",
-        "requestedCoverStartDate-month": "",
-        "requestedCoverStartDate-year": "",
-        "coverEndDate-day": moment().add(1, 'monnth').format('DD'),
-        "coverEndDate-month": moment().add(1, 'monnth').format('MM'),
-        "coverEndDate-year": moment().add(1, 'monnth').format('YYYY'),
-        "bankReferenceNumber": "1234",
-        "guaranteeFeePayableByBank": "21.6000",
-        "lastEdited": moment().utc().valueOf(),
-        "facilityValue": "1234.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "disbursementAmount": "12.00",
-        "interestMarginFee": "24",
-        "coveredPercentage": "48",
-        "minimumQuarterlyFee": "",
-        "ukefExposure": "592.32",
-        "premiumType": "At maturity",
-        "dayCountBasis": "365",
-        "currency": {
-          "text": "GBP - UK Sterling",
-          "id": "GBP"
-        }
+    },
+    {
+      "facilityType": "loan",
+      "createdDate": moment().utc().valueOf(),
+      "facilityStage": "Unconditional",
+      "requestedCoverStartDate-day": "",
+      "requestedCoverStartDate-month": "",
+      "requestedCoverStartDate-year": "",
+      "coverEndDate-day": moment().add(1, 'monnth').format('DD'),
+      "coverEndDate-month": moment().add(1, 'monnth').format('MM'),
+      "coverEndDate-year": moment().add(1, 'monnth').format('YYYY'),
+      "bankReferenceNumber": "1234",
+      "guaranteeFeePayableByBank": "21.6000",
+      "lastEdited": moment().utc().valueOf(),
+      "facilityValue": "1234.00",
+      "currencySameAsSupplyContractCurrency": "true",
+      "disbursementAmount": "12.00",
+      "interestMarginFee": "24",
+      "coveredPercentage": "48",
+      "minimumQuarterlyFee": "",
+      "ukefExposure": "592.32",
+      "premiumType": "At maturity",
+      "dayCountBasis": "365",
+      "currency": {
+        "text": "GBP - UK Sterling",
+        "id": "GBP"
       }
-    ]
-  },
+    }
+  ],
   "summary": {},
   "comments": [],
   "editedBy": [

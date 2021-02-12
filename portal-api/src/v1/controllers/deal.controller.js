@@ -197,53 +197,6 @@ exports.findOne = (req, res) => {
   });
 };
 
-/*
-const handleEditedBy = async (dealId, dealUpdate, user) => {
-  let editedBy = [];
-
-  // sometimes we don't have a user making changes. When:
-  // - we can get new data from type-b XML/workflow.
-  // - some deal updates do not want to be marked as "edited by X user"
-  // for example when a Checker submits a deal, they have not 'edited' the deal, only submitted it.
-
-  if (user) {
-    const {
-      username,
-      roles,
-      bank,
-      _id,
-    } = user;
-
-    const newEditedBy = {
-      date: now(),
-      username,
-      roles,
-      bank,
-      userId: _id,
-    };
-
-    // if partial update
-    // need to make sure that we have all existing entries in `editedBy`.
-    // ideally we could refactor, perhaps, so that no partial updates are allowed.
-    // but for now...
-    if (!dealUpdate.editedBy) {
-      const deal = await findOneDeal(dealId);
-      editedBy = [
-        ...deal.editedBy,
-        newEditedBy,
-      ];
-    } else {
-      editedBy = [
-        ...dealUpdate.editedBy,
-        newEditedBy,
-      ];
-    }
-  }
-
-  return editedBy;
-};
-*/
-
 const updateDeal = async (dealId, dealUpdate, user) => {
   const updatedDeal = await api.updateDeal(dealId, dealUpdate, user);
   return updatedDeal;

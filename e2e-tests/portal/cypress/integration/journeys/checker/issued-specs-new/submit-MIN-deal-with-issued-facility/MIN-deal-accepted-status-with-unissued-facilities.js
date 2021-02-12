@@ -205,57 +205,50 @@ const deal = {
         },
         "supplyContractValue" : "1234.00"
     },
-    "bondTransactions" : {
-        "items" : [ 
-            {
-                "_id" : "1000061",
-                "createdDate": moment().utc().valueOf(),
-                "bondIssuer" : "",
-                "bondType" : "Performance bond",
-                "facilityStage" : "Unissued",
-                "ukefGuaranteeInMonths" : "12",
-                "bondBeneficiary" : "",
-                "guaranteeFeePayableByBank" : "18.0000",
-                "lastEdited": moment().utc().valueOf(),
-                "facilityValue" : "1234.00",
-                "currencySameAsSupplyContractCurrency" : "true",
-                "riskMarginFee" : "20",
-                "coveredPercentage" : "40",
-                "minimumRiskMarginFee" : "",
-                "ukefExposure" : "493.60",
-                "feeType" : "At maturity",
-                "dayCountBasis" : "365",
-                "currency" : {
-                    "text" : "GBP - UK Sterling",
-                    "id" : "GBP"
-                },
-                "status": "Not started"
-            }
-        ]
-    },
-    "loanTransactions" : {
-        "items" : [ 
-
-            {
-                "_id": "1000063",
-                "createdDate": moment().utc().valueOf(),
-                "facilityStage": "Conditional",
-                "ukefGuaranteeInMonths": "12",
-                "bankReferenceNumber": "",
-                "guaranteeFeePayableByBank": "27.0000",
-                "lastEdited": moment().utc().valueOf(),
-                "facilityValue": "1234.00",
-                "currencySameAsSupplyContractCurrency": "true",
-                "interestMarginFee": "30",
-                "coveredPercentage": "20",
-                "minimumQuarterlyFee": "",
-                "ukefExposure": "246.80",
-                "premiumType": "At maturity",
-                "dayCountBasis": "365",
-                "status": "Not started"
-            }
-        ]
-    },
+    "mockFacilities" : [ 
+        {
+            "facilityType": "bond",
+            "createdDate": moment().utc().valueOf(),
+            "bondIssuer" : "",
+            "bondType" : "Performance bond",
+            "facilityStage" : "Unissued",
+            "ukefGuaranteeInMonths" : "12",
+            "bondBeneficiary" : "",
+            "guaranteeFeePayableByBank" : "18.0000",
+            "lastEdited": moment().utc().valueOf(),
+            "facilityValue" : "1234.00",
+            "currencySameAsSupplyContractCurrency" : "true",
+            "riskMarginFee" : "20",
+            "coveredPercentage" : "40",
+            "minimumRiskMarginFee" : "",
+            "ukefExposure" : "493.60",
+            "feeType" : "At maturity",
+            "dayCountBasis" : "365",
+            "currency" : {
+                "text" : "GBP - UK Sterling",
+                "id" : "GBP"
+            },
+            "status": "Not started"
+        },
+        {
+            "facilityType": "loan",
+            "createdDate": moment().utc().valueOf(),
+            "facilityStage": "Conditional",
+            "ukefGuaranteeInMonths": "12",
+            "bankReferenceNumber": "",
+            "guaranteeFeePayableByBank": "27.0000",
+            "lastEdited": moment().utc().valueOf(),
+            "facilityValue": "1234.00",
+            "currencySameAsSupplyContractCurrency": "true",
+            "interestMarginFee": "30",
+            "coveredPercentage": "20",
+            "minimumQuarterlyFee": "",
+            "ukefExposure": "246.80",
+            "premiumType": "At maturity",
+            "dayCountBasis": "365",
+            "status": "Not started"
+        }
+    ],
     "summary" : {},
     "comments" : [ 
         {

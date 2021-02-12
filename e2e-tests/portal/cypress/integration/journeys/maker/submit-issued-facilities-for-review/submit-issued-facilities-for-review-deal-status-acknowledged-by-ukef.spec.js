@@ -10,6 +10,10 @@ const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && us
 context('A maker can issue and submit issued bond and loan facilities with a deal in `Acknowledged by UKEF` status', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -24,7 +28,27 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = dealWithNotStartedFacilityStatuses;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
+  });
+
+  after(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   it('Completing Issue bond and Issue loan facility form\'s allows maker to re-submit the deal for review. Deal/facilities should be updated after submitting for review', () => {
@@ -32,16 +56,16 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('be.disabled');
 
-    const firstBondId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const firstBondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
     const firstBondRow = pages.contract.bondTransactionsTable.row(firstBondId);
 
-    const firstLoanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const firstLoanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
     const firstLoanRow = pages.contract.loansTransactionsTable.row(firstLoanId);
 
     //---------------------------------------------------------------
     // check initial facility stage, status and issue facility link
     //---------------------------------------------------------------
-    deal.bondTransactions.items.forEach((bond) => {
+    dealFacilities.bonds.forEach((bond) => {
       const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
@@ -65,7 +89,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     //---------------------------------------------------------------
     // check initial Loan stage, status and issue facility link
     //---------------------------------------------------------------
-    deal.loanTransactions.items.forEach((loan) => {
+    dealFacilities.loans.forEach((loan) => {
       const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
@@ -129,7 +153,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     //---------------------------------------------------------------
     // Maker starts, but doesn't finish, a different Issue Facility form (Bond)
     //---------------------------------------------------------------
-    const incompleteIssueFacilityBondId = deal.bondTransactions.items[1]._id; // eslint-disable-line no-underscore-dangle
+    const incompleteIssueFacilityBondId = dealFacilities.bonds[1]._id; // eslint-disable-line no-underscore-dangle
     const incompleteIssueFacilityBondRow = pages.contract.bondTransactionsTable.row(incompleteIssueFacilityBondId);
 
     incompleteIssueFacilityBondRow.issueFacilityLink().click();
@@ -156,7 +180,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     //---------------------------------------------------------------
     // Maker starts, but doesn't finish, a different Issue Facility form (Loan)
     //---------------------------------------------------------------
-    const incompleteIssueFacilityLoanId = deal.loanTransactions.items[1]._id; // eslint-disable-line no-underscore-dangle
+    const incompleteIssueFacilityLoanId = dealFacilities.loans[1]._id; // eslint-disable-line no-underscore-dangle
     const incompleteIssueFacilityLoanRow = pages.contract.loansTransactionsTable.row(incompleteIssueFacilityLoanId);
 
     incompleteIssueFacilityLoanRow.issueFacilityLink().click();
@@ -271,7 +295,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     //---------------------------------------------------------------
     // Facilities that have NOT started should not be updated
     //---------------------------------------------------------------
-    const notStartedIssueFacilityBondId = deal.bondTransactions.items[2]._id; // eslint-disable-line no-underscore-dangle
+    const notStartedIssueFacilityBondId = dealFacilities.bonds[2]._id; // eslint-disable-line no-underscore-dangle
     const notStartedIssueFacilityBondRow = pages.contract.bondTransactionsTable.row(notStartedIssueFacilityBondId);
 
     notStartedIssueFacilityBondRow.bondStatus().invoke('text').then((text) => {
@@ -285,7 +309,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     notStartedIssueFacilityBondRow.issueFacilityLink().should('not.exist');
 
 
-    const notStartedFacilityLoanId = deal.loanTransactions.items[2]._id; // eslint-disable-line no-underscore-dangle
+    const notStartedFacilityLoanId = dealFacilities.loans[2]._id; // eslint-disable-line no-underscore-dangle
     const notStartedFacilityLoanRow = pages.contract.loansTransactionsTable.row(notStartedFacilityLoanId);
 
     notStartedFacilityLoanRow.loanStatus().invoke('text').then((text) => {

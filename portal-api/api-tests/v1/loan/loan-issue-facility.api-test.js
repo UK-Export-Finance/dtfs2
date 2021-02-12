@@ -71,7 +71,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
   let dealId;
   let loanId;
 
-  const addLoanToDeal = async () => {
+  const createLoan = async () => {
     const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
     dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -97,7 +97,8 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
-    await addLoanToDeal();
+    await wipeDB.wipe(['facilities']);
+    await createLoan();
   });
 
   describe('PUT /v1/deals/:id/loan/:id/issue-facility', () => {
@@ -149,7 +150,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
 
       const { body } = await putIssueFacility(dealId, loanId, issueFacilityBody);
 
-      expect(body.status).toBeUndefined();
+      expect(body.status).toEqual(null);
     });
 
 
@@ -202,7 +203,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
           };
 
           const { body } = await putIssueFacility(dealId, loanId, incompleteDate);
-          expect(body.loan.requestedCoverStartDate).toBeUndefined();
+          expect(body.loan.requestedCoverStartDate).toEqual(null);
         });
       });
 
@@ -217,7 +218,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
           };
 
           const { body } = await putIssueFacility(dealId, loanId, incompleteDate);
-          expect(body.loan.issuedDate).toBeUndefined();
+          expect(body.loan.issuedDate).toEqual(null);
         });
       });
     });

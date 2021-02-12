@@ -53,17 +53,18 @@
       }
     ]
   },  
-  "loanTransactions": {
-    "items": [
-      {
-        "_id": "1234567"
-      },
-      {
-        "_id": "1234568"
-      },
-      {
-        "_id": "1234569"
-      }
-    ]
-  }
+  "mockFacilities": [
+    {
+      "facilityType": "loan"
+    },
+    {
+      "facilityType": "loan"
+    },
+    {
+      "facilityType": "loan"
+    },
+    {
+      "facilityType": "loan"
+    }
+  ]
 }

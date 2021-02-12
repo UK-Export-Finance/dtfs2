@@ -79,6 +79,7 @@ describe('/v1/deals/:id/loan/:loanId', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['facilities']);
   });
 
   describe('PUT /v1/deals/:id/loan/:loanId/change-cover-start-date', () => {

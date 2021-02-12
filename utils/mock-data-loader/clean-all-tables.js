@@ -10,19 +10,19 @@ const cleanBanks = async (token) => {
   }
 };
 
-const cleanDeals = async (token) => {
-  console.log('cleaning deals');
-
-  for (deal of await api.listDeals(token)) {
-    await api.deleteDeal(deal, token);
-  }
-};
-
 const cleanFacilities = async (token) => {
   console.log('cleaning central facilities');
 
   for (facility of await centralApi.listFacilities()) {
     await centralApi.deleteFacility(facility._id, token);
+  }
+};
+
+const cleanDeals = async (token) => {
+  console.log('cleaning deals');
+
+  for (deal of await api.listDeals(token)) {
+    await api.deleteDeal(deal, token);
   }
 };
 

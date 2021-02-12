@@ -4,8 +4,7 @@ const dealCommentsController = require('../deal-comments.controller');
 const logController = require('../log-controller');
 const {
   generateStatus,
-  updateBonds,
-  updateLoans,
+  updateFacilities,
 } = require('./type-b-helpers');
 const statusUpdateController = require('../deal-status.controller');
 const CONSTANTS = require('../../../constants');
@@ -102,13 +101,11 @@ const processTypeB = async ({ filename, fileContents }) => {
       ukefDealId: workflowDeal.UKEF_deal_id[0],
       previousWorkflowStatus: workflowDeal.Deal_status[0],
     },
-    bondTransactions: {
-      items: updateBonds(deal.bondTransactions.items, workflowDeal, checkIssueFacilities),
-    },
-    loanTransactions: {
-      items: updateLoans(deal.loanTransactions.items, workflowDeal, checkIssueFacilities),
-    },
   };
+
+  if (checkIssueFacilities) {
+    updateFacilities(deal.facilities, dealId, workflowDeal, interfaceUser, checkIssueFacilities);
+  }
 
   await dealController.updateDeal(
     dealId,

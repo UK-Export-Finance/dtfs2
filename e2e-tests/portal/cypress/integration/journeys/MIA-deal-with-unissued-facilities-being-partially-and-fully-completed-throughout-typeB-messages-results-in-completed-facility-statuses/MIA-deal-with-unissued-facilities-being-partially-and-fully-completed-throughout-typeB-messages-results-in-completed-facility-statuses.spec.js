@@ -17,6 +17,10 @@ const miaDealReadyToSubmit = require('./miaDeal-with-unissued-facilities');
 context('Maker submits MIA deal to checker, cheker submits to UKEF, receive specific typeB messages, Maker completes SOME issued facilities, submits to checker, checker submits to UKEF, receive typeB message, Maker completes remaining issue facility forms', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   beforeEach(() => {
     cy.on('uncaught:exception', (err, runnable) => {
@@ -27,11 +31,32 @@ context('Maker submits MIA deal to checker, cheker submits to UKEF, receive spec
 
   before(() => {
     cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(miaDealReadyToSubmit, { ...MAKER_LOGIN })
+
+    cy.insertOneDeal(miaDealReadyToSubmit, MAKER_LOGIN)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = miaDealReadyToSubmit;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
+  });
+
+  after(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   it('should have final facility statuses of `Completed`', () => {
@@ -74,24 +99,24 @@ context('Maker submits MIA deal to checker, cheker submits to UKEF, receive spec
       },
       bonds: [
         {
-          BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
+          BSS_portal_facility_id: dealFacilities.bonds[0]._id,
           BSS_ukef_facility_id: '54321',
           BSS_status: '""',
         },
         {
-          BSS_portal_facility_id: deal.bondTransactions.items[1]._id,
+          BSS_portal_facility_id: dealFacilities.bonds[1]._id,
           BSS_ukef_facility_id: '54321',
           BSS_status: '""',
         },
       ],
       loans: [
         {
-          EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
+          EWCS_portal_facility_id: dealFacilities.loans[0]._id,
           EWCS_ukef_facility_id: '56789',
           EWCS_status: '""',
         },
         {
-          EWCS_portal_facility_id: deal.loanTransactions.items[1]._id,
+          EWCS_portal_facility_id: dealFacilities.loans[1]._id,
           EWCS_ukef_facility_id: '56789',
           EWCS_status: '""',
         },
@@ -116,13 +141,13 @@ context('Maker submits MIA deal to checker, cheker submits to UKEF, receive spec
       },
       bonds: [
         {
-          BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
+          BSS_portal_facility_id: dealFacilities.bonds[0]._id,
           BSS_ukef_facility_id: '54321',
           BSS_status: '""',
           BSS_comments: 'blahblah blah blahblah',
         },
         {
-          BSS_portal_facility_id: deal.bondTransactions.items[1]._id,
+          BSS_portal_facility_id: dealFacilities.bonds[1]._id,
           BSS_ukef_facility_id: '54321',
           BSS_status: '""',
           BSS_comments: 'blahblah blah blahblah',
@@ -130,13 +155,13 @@ context('Maker submits MIA deal to checker, cheker submits to UKEF, receive spec
       ],
       loans: [
         {
-          EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
+          EWCS_portal_facility_id: dealFacilities.loans[0]._id,
           EWCS_ukef_facility_id: '65432',
           EWCS_status: '""',
           EWCS_comments: 'blahblah blah blahblah',
         },
         {
-          EWCS_portal_facility_id: deal.loanTransactions.items[1]._id,
+          EWCS_portal_facility_id: dealFacilities.loans[1]._id,
           EWCS_ukef_facility_id: '65432',
           EWCS_status: '""',
           EWCS_comments: 'blahblah blah blahblah',
@@ -151,18 +176,17 @@ context('Maker submits MIA deal to checker, cheker submits to UKEF, receive spec
     cy.login({ ...MAKER_LOGIN });
     pages.contract.visit(deal);
 
-    const firstBondId = deal.bondTransactions.items[0]._id;
+    const firstBondId = dealFacilities.bonds[0]._id;
     const firstBondRow = pages.contract.bondTransactionsTable.row(firstBondId);
 
     firstBondRow.issueFacilityLink().click();
 
     fillAndSubmitIssueBondFacilityForm();
 
-
     //---------------------------------------------------------------
     // Maker completes one loan issue facility form
     //---------------------------------------------------------------
-    const firstLoanId = deal.loanTransactions.items[0]._id;
+    const firstLoanId = dealFacilities.loans[0]._id;
     const firstLoanRow = pages.contract.loansTransactionsTable.row(firstLoanId);
 
     firstLoanRow.issueFacilityLink().click();
@@ -173,7 +197,7 @@ context('Maker submits MIA deal to checker, cheker submits to UKEF, receive spec
     //---------------------------------------------------------------
     // Maker starts, but doesn't complete, the second/last bond issue facility form
     //---------------------------------------------------------------
-    const secondBondId = deal.bondTransactions.items[1]._id;
+    const secondBondId = dealFacilities.bonds[1]._id;
     const secondBondRow = pages.contract.bondTransactionsTable.row(secondBondId);
 
     secondBondRow.issueFacilityLink().click();
@@ -186,7 +210,7 @@ context('Maker submits MIA deal to checker, cheker submits to UKEF, receive spec
     //---------------------------------------------------------------
     // Maker starts, but doesn't complete, the second/last loan issue facility form
     //---------------------------------------------------------------
-    const secondLoanId = deal.loanTransactions.items[1]._id;
+    const secondLoanId = dealFacilities.loans[1]._id;
     const secondLoanRow = pages.contract.loansTransactionsTable.row(secondLoanId);
 
     secondLoanRow.issueFacilityLink().click();
@@ -236,24 +260,24 @@ context('Maker submits MIA deal to checker, cheker submits to UKEF, receive spec
       },
       bonds: [
         {
-          BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
+          BSS_portal_facility_id: dealFacilities.bonds[0]._id,
           BSS_ukef_facility_id: '54321',
           BSS_status: '""',
         },
         {
-          BSS_portal_facility_id: deal.bondTransactions.items[1]._id,
+          BSS_portal_facility_id: dealFacilities.bonds[1]._id,
           BSS_ukef_facility_id: '54321',
           BSS_status: '""',
         },
       ],
       loans: [
         {
-          EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
+          EWCS_portal_facility_id: dealFacilities.loans[0]._id,
           EWCS_ukef_facility_id: '56789',
           EWCS_status: '""',
         },
         {
-          EWCS_portal_facility_id: deal.loanTransactions.items[1]._id,
+          EWCS_portal_facility_id: dealFacilities.loans[1]._id,
           EWCS_ukef_facility_id: '56789',
           EWCS_status: '""',
         },

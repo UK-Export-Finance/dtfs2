@@ -1,22 +1,19 @@
-const { updateDeal } = require('../deal.controller');
 const now = require('../../../now');
 const CONSTANTS = require('../../../constants');
+const facilitiesController = require('../facilities.controller');
 
 const updateFacilityCoverStartDates = async (user, deal) => {
-  const facilities = {
-    bonds: deal.bondTransactions.items,
-    loans: deal.loanTransactions.items,
-  };
+  const modifiedDeal = deal;
 
-  const updateFacilities = (arr) => {
-    arr.forEach((f) => {
-      const facility = f;
+  if (modifiedDeal.facilities.length) {
+    modifiedDeal.facilities.forEach(async (facilityId) => {
+      const facility = await facilitiesController.findOne(facilityId);
 
       const { facilityStage } = facility;
 
       const shouldUpdate = ((facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
-                           || facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL)
-                           && !facility.requestedCoverStartDate);
+                            || facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL)
+                            && !facility.requestedCoverStartDate);
 
       if (shouldUpdate) {
         const today = new Date();
@@ -26,22 +23,15 @@ const updateFacilityCoverStartDates = async (user, deal) => {
         facility['requestedCoverStartDate-day'] = today.getDate();
         facility['requestedCoverStartDate-month'] = today.getMonth() + 1;
         facility['requestedCoverStartDate-year'] = today.getFullYear();
+
+        const { data } = await facilitiesController.update(facilityId, facility, user);
+        return data;
       }
+      return facility;
     });
-    return arr;
-  };
+  }
 
-  const modifiedDeal = deal;
-  modifiedDeal.bondTransactions.items = updateFacilities(facilities.bonds);
-  modifiedDeal.loanTransactions.items = updateFacilities(facilities.loans);
-
-  const updatedDeal = await updateDeal(
-    deal._id, // eslint-disable-line no-underscore-dangle,
-    modifiedDeal,
-    user,
-  );
-
-  return updatedDeal;
+  return deal;
 };
 
 module.exports = updateFacilityCoverStartDates;

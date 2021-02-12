@@ -9,12 +9,6 @@ const expectAddedFields = (obj) => {
     submissionDetails: {
       status: 'Not started',
     },
-    bondTransactions: {
-      items: [],
-    },
-    loanTransactions: {
-      items: [],
-    },
     summary: {},
     comments: [],
     ...obj,

@@ -16,6 +16,11 @@ const MAKER_CHECKER_LOGIN = mockUsers.find((user) => (
 context('Maker submits deal to checker, Maker-Checker submits to UKEF, workflow responds, Maker updates deal, workflow responds', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
+
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -30,7 +35,27 @@ context('Maker submits deal to checker, Maker-Checker submits to UKEF, workflow 
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id;
+
+        const { mockFacilities } = dealReadyToSubmitForReview;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
+  });
+
+  after(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   it('Maker-Checker can resubmit the deal', () => {
@@ -70,7 +95,7 @@ context('Maker submits deal to checker, Maker-Checker submits to UKEF, workflow 
       },
       bonds: [
         {
-          BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
+          BSS_portal_facility_id: dealFacilities.bonds[0]._id,
           BSS_ukef_facility_id: '54321',
           BSS_status: 'Issued acknowledged',
           BSS_comments: 'blahblah blah blahblah',
@@ -93,7 +118,7 @@ context('Maker submits deal to checker, Maker-Checker submits to UKEF, workflow 
       },
       bonds: [
         {
-          BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
+          BSS_portal_facility_id: dealFacilities.bonds[0]._id,
           BSS_ukef_facility_id: '54321',
           BSS_status: '""',
           BSS_comments: 'blahblah blah blahblah',
@@ -109,7 +134,7 @@ context('Maker submits deal to checker, Maker-Checker submits to UKEF, workflow 
     cy.login(MAKER_LOGIN);
     pages.contract.visit(deal);
 
-    let bondId = deal.bondTransactions.items[1]._id; // eslint-disable-line no-underscore-dangle
+    let bondId = dealFacilities.bonds[1]._id; // eslint-disable-line no-underscore-dangle
     let bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
     bondRow.changeOrConfirmCoverStartDateLink().click();
@@ -153,7 +178,7 @@ context('Maker submits deal to checker, Maker-Checker submits to UKEF, workflow 
       },
       bonds: [
         {
-          BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
+          BSS_portal_facility_id: dealFacilities.bonds[0]._id,
           BSS_ukef_facility_id: '12345',
           BSS_status: '""',
         },
@@ -167,7 +192,7 @@ context('Maker submits deal to checker, Maker-Checker submits to UKEF, workflow 
     cy.login(MAKER_LOGIN);
     pages.contract.visit(deal);
 
-    bondId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    bondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
     bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
     bondRow.issueFacilityLink().click();

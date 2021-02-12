@@ -1,12 +1,12 @@
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
-const { updateBondInDeal } = require('./bonds.controller');
 const facilityChangeCoverStartDateValidationErrors = require('../validation/facility-change-cover-start-date');
 const {
   hasAllRequestedCoverStartDateValues,
   updateRequestedCoverStartDate,
 } = require('../facility-dates/requested-cover-start-date');
 const CONSTANTS = require('../../constants');
+const facilitiesController = require('./facilities.controller');
 
 exports.updateBondCoverStartDate = async (req, res) => {
   const {
@@ -19,8 +19,7 @@ exports.updateBondCoverStartDate = async (req, res) => {
         return res.status(401).send();
       }
 
-      const existingBond = deal.bondTransactions.items.find((b) =>
-        String(b._id) === bondId); // eslint-disable-line no-underscore-dangle
+      const existingBond = await facilitiesController.findOne(bondId);
 
       if (!existingBond) {
         return res.status(404).send();
@@ -33,18 +32,17 @@ exports.updateBondCoverStartDate = async (req, res) => {
         return res.status(400).send();
       }
 
-      let bond = {
-        _id: bondId,
+      let modifiedBond = {
         ...existingBond,
         ...req.body,
       };
 
-      if (hasAllRequestedCoverStartDateValues(bond)) {
-        bond = updateRequestedCoverStartDate(bond);
+      if (hasAllRequestedCoverStartDateValues(modifiedBond)) {
+        modifiedBond = updateRequestedCoverStartDate(modifiedBond);
       }
 
       const validationErrors = facilityChangeCoverStartDateValidationErrors(
-        bond,
+        modifiedBond,
         deal,
       );
 
@@ -52,12 +50,13 @@ exports.updateBondCoverStartDate = async (req, res) => {
         && validationErrors.errorList.requestedCoverStartDate) {
         return res.status(400).send({
           validationErrors,
-          bond,
+          bond: modifiedBond,
         });
       }
 
-      const updatedBond = await updateBondInDeal(req.user, deal, bond);
-      return res.status(200).send(updatedBond);
+      const { status, data } = await facilitiesController.update(bondId, modifiedBond, req.user);
+
+      return res.status(status).send(data);
     }
     return res.status(404).send();
   });

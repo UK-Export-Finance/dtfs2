@@ -13,11 +13,12 @@ module.exports = () => {
   deal.submissionDetails['supplyContractConversionDate-month'] = `${now.format('MM')}`;
   deal.submissionDetails['supplyContractConversionDate-year'] = `${now.format('YYYY')}`;
 
-  deal.loanTransactions.items[0].requestedCoverStartDate = moment().utc().valueOf();
+  const loan = deal.mockFacilities.find((f) => f.facilityType === 'loan');
+  loan.requestedCoverStartDate = moment().utc().valueOf();
 
   const aMonthInTheFuture = moment().add(1, 'month');
-  deal.loanTransactions.items[0]['coverEndDate-day'] = aMonthInTheFuture.format('DD');
-  deal.loanTransactions.items[0]['coverEndDate-month'] = aMonthInTheFuture.format('MM');
-  deal.loanTransactions.items[0]['coverEndDate-year'] = moment(aMonthInTheFuture).format('YYYY');
+  loan['coverEndDate-day'] = aMonthInTheFuture.format('DD');
+  loan['coverEndDate-month'] = aMonthInTheFuture.format('MM');
+  loan['coverEndDate-year'] = moment(aMonthInTheFuture).format('YYYY');
   return deal;
 };
