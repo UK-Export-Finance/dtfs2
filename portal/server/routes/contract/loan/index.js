@@ -489,7 +489,7 @@ router.post('/contract/:_id/loan/:loanId/delete', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
   await postToApi(
-    api.deleteDealLoan(
+    api.deleteLoan(
       dealId,
       loanId,
       userToken,

@@ -40,7 +40,6 @@ Cypress.Commands.add('deleteDeals', require('./portal-api/deleteDeals'));
 Cypress.Commands.add('downloadFile', downloadFile);
 Cypress.Commands.add('removeUserIfPresent', require('./portal-api/removeUserIfPresent'));
 
-// TODO do we need updateBond and updateLoan anymore? probably not.
 Cypress.Commands.add('updateBond', require('./portal-api/updateBond'));
 Cypress.Commands.add('updateLoan', require('./portal-api/updateLoan'));
 Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'));
