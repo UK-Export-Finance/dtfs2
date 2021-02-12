@@ -1,4 +1,4 @@
-export const parseBool = (params) => {
+const parseBool = (params) => {
   return !(
     params === "false" ||
     params === "0" ||
@@ -7,7 +7,12 @@ export const parseBool = (params) => {
   )
 }
 
-export const userToken = (req) => {
+const userToken = (req) => {
   const { userToken } = req.session;
   return userToken
+}
+
+export {
+  parseBool,
+  userToken
 }
