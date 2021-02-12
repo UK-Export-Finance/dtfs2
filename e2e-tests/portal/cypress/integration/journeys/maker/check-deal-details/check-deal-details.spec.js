@@ -17,6 +17,10 @@ const dealInDraft = {
 context('Check deal details', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -30,7 +34,27 @@ context('Check deal details', () => {
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = fullyCompletedDeal;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
+  });
+
+  afterEach(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   const goToCheckDealDetailsPage = () => {
@@ -66,7 +90,7 @@ context('Check deal details', () => {
     // A Bond
     //---------------------------------------------------------------
     goToCheckDealDetailsPage();
-    const bondId = dealInDraft.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const bondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
 
     pages.contractSubmissionDetails.editLinkBond(dealId, bondId).should('be.visible');
     pages.contractSubmissionDetails.editLinkBond(dealId, bondId).click();
@@ -77,7 +101,7 @@ context('Check deal details', () => {
     // A Loan
     //---------------------------------------------------------------
     goToCheckDealDetailsPage();
-    const loanId = dealInDraft.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const loanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
 
     pages.contractSubmissionDetails.editLinkLoan(dealId, loanId).should('be.visible');
     pages.contractSubmissionDetails.editLinkLoan(dealId, loanId).click();
@@ -89,25 +113,25 @@ context('Check deal details', () => {
 
     goToCheckDealDetailsPage();
 
-    const differentBondCurrencyId = dealInDraft.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const differentBondCurrencyId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
     const differentBondCurrency = pages.contractSubmissionDetails.currencyInfoFacility('bond', differentBondCurrencyId);
     differentBondCurrency.sameAsDealCurrency().should('contain.text', 'No');
     differentBondCurrency.currency().should('exist');
     differentBondCurrency.conversionRate().should('exist');
 
-    const sameBondCurrencyId = dealInDraft.bondTransactions.items[1]._id; // eslint-disable-line no-underscore-dangle
+    const sameBondCurrencyId = dealFacilities.bonds[1]._id; // eslint-disable-line no-underscore-dangle
     const sameBondCurrency = pages.contractSubmissionDetails.currencyInfoFacility('bond', sameBondCurrencyId);
     sameBondCurrency.sameAsDealCurrency().should('contain.text', 'Yes');
     sameBondCurrency.currency().should('not.exist');
     sameBondCurrency.conversionRate().should('not.exist');
 
-    const differentLoanCurrencyId = dealInDraft.loanTransactions.items[1]._id; // eslint-disable-line no-underscore-dangle
+    const differentLoanCurrencyId = dealFacilities.loans[1]._id; // eslint-disable-line no-underscore-dangle
     const differentLoanCurrency = pages.contractSubmissionDetails.currencyInfoFacility('loan', differentLoanCurrencyId);
     differentLoanCurrency.sameAsDealCurrency().should('contain.text', 'No');
     differentLoanCurrency.currency().should('exist');
     differentLoanCurrency.conversionRate().should('exist');
 
-    const sameLoanCurrencyId = dealInDraft.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+    const sameLoanCurrencyId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
     const sameLoanCurrency = pages.contractSubmissionDetails.currencyInfoFacility('loan', sameLoanCurrencyId);
     sameLoanCurrency.sameAsDealCurrency().should('contain.text', 'Yes');
     sameLoanCurrency.currency().should('not.exist');

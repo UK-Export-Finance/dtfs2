@@ -40,6 +40,7 @@ describe('/v1/deals/:id/bankSupplyContractName', () => {
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
+    await wipeDB.wipe(['facilities']);
   });
 
   describe('PUT /v1/deals/:id/bankSupplyContractName', () => {

@@ -7,6 +7,11 @@ const MAKER_LOGIN = mockUsers.find(user => (user.roles.includes('maker') && user
 
 context('Checker submits an MIA deal with `Unissued` bonds and `Conditional` loans; workflow responds, becomes an MIN deal, maker re-submits, checker re-submits, workflow responds', () => {
   let deal;
+  let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   beforeEach(() => {
     cy.on('uncaught:exception', (err, runnable) => {
@@ -20,7 +25,28 @@ context('Checker submits an MIA deal with `Unissued` bonds and `Conditional` loa
     cy.insertOneDeal(MIADealWithUnissuedFacilities, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
+        dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = MIADealWithUnissuedFacilities;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
+  });
+
+  after(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   describe('Checker re-submits the MIN deal with `Unissued` bonds and `Conditional` loans; workflow responds', () => {
@@ -35,10 +61,10 @@ context('Checker submits an MIA deal with `Unissued` bonds and `Conditional` loa
         expect(text.trim()).to.contain('Manual Inclusion Application');
       });
 
-      const bondId = deal.bondTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+      const bondId = dealFacilities.bonds[0]._id; // eslint-disable-line no-underscore-dangle
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-      const loanId = deal.loanTransactions.items[0]._id; // eslint-disable-line no-underscore-dangle
+      const loanId = dealFacilities.loans[0]._id; // eslint-disable-line no-underscore-dangle
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
 
@@ -79,14 +105,14 @@ context('Checker submits an MIA deal with `Unissued` bonds and `Conditional` loa
         },
         bonds: [
           {
-            BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
+            BSS_portal_facility_id: dealFacilities.bonds[0]._id,
             BSS_ukef_facility_id: '12345',
             BSS_status: '""',
           },
         ],
         loans: [
           {
-            EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
+            EWCS_portal_facility_id: dealFacilities.loans[0]._id,
             EWCS_ukef_facility_id: '56789',
             EWCS_status: '""',
           },
@@ -109,14 +135,14 @@ context('Checker submits an MIA deal with `Unissued` bonds and `Conditional` loa
         },
         bonds: [
           {
-            BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
+            BSS_portal_facility_id: dealFacilities.bonds[0]._id,
             BSS_ukef_facility_id: '12345',
             BSS_status: '""',
           },
         ],
         loans: [
           {
-            EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
+            EWCS_portal_facility_id: dealFacilities.loans[0]._id,
             EWCS_ukef_facility_id: '56789',
             EWCS_status: '""',
           },
@@ -189,14 +215,14 @@ context('Checker submits an MIA deal with `Unissued` bonds and `Conditional` loa
         },
         bonds: [
           {
-            BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
+            BSS_portal_facility_id: dealFacilities.bonds[0]._id,
             BSS_ukef_facility_id: '12345',
             BSS_status: '""',
           },
         ],
         loans: [
           {
-            EWCS_portal_facility_id: deal.loanTransactions.items[0]._id,
+            EWCS_portal_facility_id: dealFacilities.loans[0]._id,
             EWCS_ukef_facility_id: '56789',
             EWCS_status: '""',
           },

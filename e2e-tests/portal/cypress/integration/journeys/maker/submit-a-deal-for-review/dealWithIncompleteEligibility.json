@@ -97,24 +97,22 @@
       }
     ]
   },
-    "bondTransactions": {
-      "items": [
-      {
-          "_id": "1234567891",
-          "bondIssuer": "issuer",
-          "bondType": "bond type",
-          "facilityStage": "unissued",
-          "ukefGuaranteeInMonths": "24",
-          "uniqueIdentificationNumber": "1234",
-          "bondBeneficiary": "test",
-          "facilityValue": "123",
-          "currencySameAsSupplyContractCurrency": "true",
-          "riskMarginFee": "1",
-          "coveredPercentage": "2",
-          "feeType": "test",
-          "feeFrequency": "test",
-          "dayCountBasis": "test"
-      }
-    ]
-  }
+  "mockFacilities": [
+    {
+        "facilityType": "bond",
+        "bondIssuer": "issuer",
+        "bondType": "bond type",
+        "facilityStage": "unissued",
+        "ukefGuaranteeInMonths": "24",
+        "uniqueIdentificationNumber": "1234",
+        "bondBeneficiary": "test",
+        "facilityValue": "123",
+        "currencySameAsSupplyContractCurrency": "true",
+        "riskMarginFee": "1",
+        "coveredPercentage": "2",
+        "feeType": "test",
+        "feeFrequency": "test",
+        "dayCountBasis": "test"
+    }
+  ]
 }

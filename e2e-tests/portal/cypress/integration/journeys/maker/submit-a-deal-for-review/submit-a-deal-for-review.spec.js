@@ -17,6 +17,22 @@ const dealWithNoLoanCoverStartDate = require('./dealWithNoLoanCoverStartDate');
 
 context('A maker selects to submit a contract for review from the view-contract page', () => {
   let deals = {};
+  let dealId;
+  const dealFacilities = {
+    dealReadyToSubmitForReview: {
+      bonds: [],
+      loans: [],
+    },
+    dealWithNoBondCoverStartDate: {
+      bonds: [],
+      loans: [],
+    },
+    dealWithNoLoanCoverStartDate: {
+      bonds: [],
+      loans: [],
+    },
+  };
+  const allCreatedFacilities = [];
 
   beforeEach(() => {
     // [dw] at time of writing, the portal was throwing exceptions; this stops cypress caring
@@ -28,28 +44,106 @@ context('A maker selects to submit a contract for review from the view-contract 
   before(() => {
     cy.deleteDeals(MAKER_LOGIN);
     cy.insertOneDeal(dealWithIncompleteBonds, MAKER_LOGIN)
-      .then((insertedDeal) => deals.dealWithIncompleteBonds = insertedDeal);
+      .then((insertedDeal) => {
+        deals.dealWithIncompleteBonds = insertedDeal;
+        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = dealWithIncompleteBonds;
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          allCreatedFacilities.push(...createdFacilities);
+        });
+      });
 
     cy.insertOneDeal(dealWithIncompleteLoans, MAKER_LOGIN)
-      .then((insertedDeal) => deals.dealWithIncompleteLoans = insertedDeal);
+      .then((insertedDeal) => {
+        deals.dealWithIncompleteLoans = insertedDeal;
+        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = dealWithIncompleteLoans;
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          allCreatedFacilities.push(...createdFacilities);
+        });
+      });
 
     cy.insertOneDeal(dealWithIncompleteAbout, MAKER_LOGIN)
-      .then((insertedDeal) => deals.dealWithIncompleteAbout = insertedDeal);
+      .then((insertedDeal) => {
+        deals.dealWithIncompleteAbout = insertedDeal;
+        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = dealWithIncompleteAbout;
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          allCreatedFacilities.push(...createdFacilities);
+        });
+      });
 
     cy.insertOneDeal(dealWithIncompleteEligibility, MAKER_LOGIN)
-      .then((insertedDeal) => deals.dealWithIncompleteEligibility = insertedDeal);
+      .then((insertedDeal) => {
+        deals.dealWithIncompleteEligibility = insertedDeal;
+        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = dealWithIncompleteEligibility;
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          allCreatedFacilities.push(...createdFacilities);
+        });
+      });
 
     cy.insertOneDeal(dealReadyToSubmitForReview, MAKER_LOGIN)
-      .then((insertedDeal) => deals.dealReadyToSubmitForReview = insertedDeal);
+      .then((insertedDeal) => {
+        deals.dealReadyToSubmitForReview = insertedDeal;
+        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
 
-    cy.insertOneDeal(dealReadyToSubmitForReview, MAKER_LOGIN)
-      .then((insertedDeal) => deals.dealReadyToSubmitForReview = insertedDeal);
+        const { mockFacilities } = dealReadyToSubmitForReview;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.dealReadyToSubmitForReview.bonds = bonds;
+          dealFacilities.dealReadyToSubmitForReview.loans = loans;
+
+          allCreatedFacilities.push(...createdFacilities);
+        });
+      });
 
     cy.insertOneDeal(dealWithNoBondCoverStartDate, MAKER_LOGIN)
-      .then((insertedDeal) => deals.dealWithNoBondCoverStartDate = insertedDeal);
+      .then((insertedDeal) => {
+        deals.dealWithNoBondCoverStartDate = insertedDeal;
+        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = dealWithNoBondCoverStartDate;
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.dealWithNoBondCoverStartDate.bonds = bonds;
+          dealFacilities.dealWithNoBondCoverStartDate.loans = loans;
+
+          allCreatedFacilities.push(...createdFacilities);
+        });
+      });
 
     cy.insertOneDeal(dealWithNoLoanCoverStartDate, MAKER_LOGIN)
-      .then((insertedDeal) => deals.dealWithNoLoanCoverStartDate = insertedDeal);
+      .then((insertedDeal) => {
+        deals.dealWithNoLoanCoverStartDate = insertedDeal;
+        dealId = insertedDeal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = dealWithNoLoanCoverStartDate;
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.dealWithNoLoanCoverStartDate.bonds = bonds;
+          dealFacilities.dealWithNoLoanCoverStartDate.loans = loans;
+
+          allCreatedFacilities.push(...createdFacilities);
+        });
+      });
+  });
+
+  after(() => {
+    allCreatedFacilities.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   describe('When a deal does NOT have Eligibility with `Completed` status', () => {
@@ -162,12 +256,12 @@ context('A maker selects to submit a contract for review from the view-contract 
       contract.eligibilityCriteriaLink().should('not.exist');
       contract.addBondButton().should('not.exist');
 
-      const aBond = contract.bondTransactionsTable.row(deal.bondTransactions.items[0]._id);
+      const aBond = contract.bondTransactionsTable.row(dealFacilities.dealReadyToSubmitForReview.bonds[0]._id);
       aBond.deleteLink().should('not.exist');
       aBond.uniqueNumberLink().should('not.exist');
 
       contract.addLoanButton().should('not.exist');
-      const aLoan = contract.loansTransactionsTable.row(deal.loanTransactions.items[0]._id);
+      const aLoan = contract.loansTransactionsTable.row(dealFacilities.dealReadyToSubmitForReview.loans[0]._id);
       aLoan.bankReferenceNumberLink().should('not.exist');
 
       // visit the comments page and prove that the comment has been added
@@ -201,7 +295,7 @@ context('A maker selects to submit a contract for review from the view-contract 
 
       cy.url().should('eq', relative(`/contract/${deal._id}`));
 
-      const bondId = deal.bondTransactions.items[0]._id;
+      const bondId = dealFacilities.dealWithNoBondCoverStartDate.bonds[0]._id;
       const row = contract.bondTransactionsTable.row(bondId);
 
       const expectedDate = moment().format('DD/MM/YYYY');
@@ -229,7 +323,7 @@ context('A maker selects to submit a contract for review from the view-contract 
 
       cy.url().should('eq', relative(`/contract/${deal._id}`));
 
-      const loanId = deal.loanTransactions.items[0]._id;
+      const loanId = dealFacilities.dealWithNoLoanCoverStartDate.loans[0]._id;
       const row = contract.loansTransactionsTable.row(loanId);
 
       const expectedDate = moment().format('DD/MM/YYYY');

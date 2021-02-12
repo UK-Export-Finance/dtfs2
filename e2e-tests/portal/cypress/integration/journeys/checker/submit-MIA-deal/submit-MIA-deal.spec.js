@@ -13,6 +13,10 @@ const miaDealReadyToSubmit = require('./test-data/MIA-deal-ready-to-submit');
 context('Checker submits an MIA deal, workflow responds, maker/checker resubmit', () => {
   let deal;
   let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
 
   beforeEach(() => {
     cy.on('uncaught:exception', (err, runnable) => {
@@ -27,7 +31,27 @@ context('Checker submits an MIA deal, workflow responds, maker/checker resubmit'
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id; // eslint-disable-line no-underscore-dangle
+
+        const { mockFacilities } = miaDealReadyToSubmit;
+
+        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+          const bonds = createdFacilities.filter((f) => f.facilityType === 'bond');
+          const loans = createdFacilities.filter((f) => f.facilityType === 'loan');
+
+          dealFacilities.bonds = bonds;
+          dealFacilities.loans = loans;
+        });
       });
+  });
+
+  after(() => {
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
+    });
   });
 
   it('deal should be updated from MIA to MIN, submission dates displayed. MIA submission date should only be populated when deal becomes MIN', () => {
@@ -84,7 +108,7 @@ context('Checker submits an MIA deal, workflow responds, maker/checker resubmit'
       },
       bonds: [
         {
-          BSS_portal_facility_id: deal.bondTransactions.items[0]._id,
+          BSS_portal_facility_id: dealFacilities.bonds[0]._id,
           BSS_ukef_facility_id: '12345',
           BSS_status: '""',
         },

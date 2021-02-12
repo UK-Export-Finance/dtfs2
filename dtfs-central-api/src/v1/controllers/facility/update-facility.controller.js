@@ -1,10 +1,8 @@
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
-const { updateDealEditedByPortal } = require('../deal/update-deal.controller');
 const db = require('../../../drivers/db-client');
 const now = require('../../../now');
 const getUpdateFacilityErrors = require('../../validation/update-facility');
-const { PORTAL_ROUTE } = require('../../../constants/routes');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -12,7 +10,7 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateFacility = async (facilityId, facilityBody, routePath) => {
+const updateFacility = async (facilityId, facilityBody) => {
   const collection = await db.getCollection('facilities');
 
   const update = {
@@ -27,18 +25,6 @@ const updateFacility = async (facilityId, facilityBody, routePath) => {
   );
 
   const { value: updatedFacility } = findAndUpdateResponse;
-
-  if (routePath === PORTAL_ROUTE) {
-  // update the deal so that the user that has edited this facility,
-  // is also marked as editing the associated deal
-    const {
-      associatedDealId,
-      user,
-    } = facilityBody;
-
-    await updateDealEditedByPortal(associatedDealId, user);
-  }
-
 
   return updatedFacility;
 };
