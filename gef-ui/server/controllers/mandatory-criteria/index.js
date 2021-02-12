@@ -2,7 +2,7 @@ import _isEmpty from 'lodash/isEmpty'
 import * as Criteria from '../../models/mandatory-criteria'
 import { parseBool, userToken } from '../../utils/helpers'
 
-export const getMandatoryCriteria = async function (req, res) {
+const getMandatoryCriteria = async function (req, res) {
   await Criteria.getCriteria(userToken(req))
 
   return res.render('templates/mandatory-criteria.njk', {
@@ -26,3 +26,7 @@ export const getMandatoryCriteria = async function (req, res) {
 
 //   return res.render('templates/mandatory-criteria.njk')
 // }
+
+export {
+  getMandatoryCriteria
+}

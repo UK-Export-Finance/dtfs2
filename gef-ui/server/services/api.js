@@ -5,7 +5,6 @@ export default function Api (token) {
 
   this.getMandatoryCriteria = async function () {
     const response = await Axios.get('/1')
-    console.log('response', response.data)
     return response.data
   }
 }
