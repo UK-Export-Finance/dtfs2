@@ -108,8 +108,7 @@ const updateBond = async (bond, dealId, workflowDeal, interfaceUser, checkIssueF
       : workflowBond.BSS_ukef_facility_id,
     // fail safe to make sure we have associatedDealId.
     // this should already exist in the data,
-    // but a lot of E2E tests do not have this.
-    // TODO: update E2E test data.
+    // but some legacy deals might not have this.
     associatedDealId: dealId,
   };
 
@@ -143,8 +142,7 @@ const updateLoan = async (loan, dealId, workflowDeal, interfaceUser, checkIssueF
 
     // fail safe to make sure we have associatedDealId.
     // this should already exist in the data,
-    // but a lot of E2E tests do not have this.
-    // TODO: update E2E test data.
+    // but some legacy deals might not have this.
     associatedDealId: dealId,
   };
 

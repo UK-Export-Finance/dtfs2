@@ -38,7 +38,6 @@ context('A maker is informed of a loan\'s status before submitting an issued loa
 
   after(() => {
     dealFacilities.loans.forEach((facility) => {
-      console.log('AFTER -------- facility._id ', facility._id);
       cy.deleteFacility(facility._id, MAKER_LOGIN); // eslint-disable-line no-underscore-dangle
     });
   });

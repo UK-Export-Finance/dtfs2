@@ -292,7 +292,7 @@ const updateLoanCoverStartDate = async (dealId, loanId, formData, token) => {
   return response.data;
 };
 
-const deleteDealLoan = async (dealId, loanId, token) => {
+const deleteLoan = async (dealId, loanId, token) => {
   const response = await axios({
     method: 'delete',
     url: `${urlRoot}/v1/deals/${dealId}/loan/${loanId}`,
@@ -367,7 +367,7 @@ const updateBondCoverStartDate = async (dealId, bondId, formData, token) => {
   return response.data;
 };
 
-const deleteDealBond = async (dealId, bondId, token) => {
+const deleteBond = async (dealId, bondId, token) => {
   const response = await axios({
     method: 'delete',
     url: `${urlRoot}/v1/deals/${dealId}/bond/${bondId}`,
@@ -636,12 +636,12 @@ export default {
   updateBond,
   updateBondIssueFacility,
   updateBondCoverStartDate,
-  deleteDealBond,
+  deleteBond,
   updateDeal,
   updateLoan,
   updateLoanIssueFacility,
   updateLoanCoverStartDate,
-  deleteDealLoan,
+  deleteLoan,
   updateDealName,
   updateDealStatus,
   updateEligibilityCriteria,
