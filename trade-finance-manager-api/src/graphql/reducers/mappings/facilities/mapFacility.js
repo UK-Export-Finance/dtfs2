@@ -1,9 +1,10 @@
 const CONSTANTS = require('../../../../constants');
 const { formattedNumber } = require('../../../../utils/number');
+const mapFacilityProduct = require('./mapFacilityProduct');
 const mapFacilityStage = require('./mapFacilityStage');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
-const mapFacilityProduct = require('./mapFacilityProduct');
+const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
 
 const mapFacility = (f) => {
   const facility = f;
@@ -11,6 +12,7 @@ const mapFacility = (f) => {
   const {
     facilityValue,
     facilityStage,
+    guaranteeFeePayableByBank,
   } = facility;
 
   const formattedFacilityValue = formattedNumber(facilityValue);
@@ -52,6 +54,7 @@ const mapFacility = (f) => {
     facilityValue: facility.facilityValue,
     ukefExposure: facility.ukefExposure,
     bankFacilityReference: mapBankFacilityReference(facility),
+    guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFeePayableByBank),
   };
 };
 

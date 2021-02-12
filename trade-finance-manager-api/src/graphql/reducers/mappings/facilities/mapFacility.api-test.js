@@ -1,9 +1,10 @@
 const mapFacility = require('./mapFacility');
 const { formattedNumber } = require('../../../../utils/number');
+const mapFacilityProduct = require('./mapFacilityProduct');
 const mapFacilityStage = require('./mapFacilityStage');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
-const mapFacilityProduct = require('./mapFacilityProduct');
+const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
 
 describe('mapFacility', () => {
   const mockCoverEndDate = {
@@ -71,6 +72,7 @@ describe('mapFacility', () => {
       facilityValue: expectedFacilityValue,
       facilityValueExportCurrency: expectedFacilityValueExportCurrency,
       bankFacilityReference: mapBankFacilityReference(mockFacility),
+      guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacility.guaranteeFeePayableByBank),
     };
 
     expect(result).toEqual(expected);

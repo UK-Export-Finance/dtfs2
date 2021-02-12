@@ -29,7 +29,8 @@ const GET_FACILITY = gql`
       coverEndDate,
       ukefExposure,
       coveredPercentage,
-      bankFacilityReference
+      bankFacilityReference,
+      guaranteeFeePayableToUkef
     }
   }
 `;
