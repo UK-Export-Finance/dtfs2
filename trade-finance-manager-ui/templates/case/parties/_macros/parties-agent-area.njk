@@ -1,16 +1,29 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
 {% import './parties-key-value-grid-row.njk' as keyValueGridRow %}
 {% import './parties-key-value-array-grid-row.njk' as keyValueArrayGridRow %}
+{% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
 
 {% macro render(params) %}
 {% set deal = params.deal %}
- <div class="govuk-grid-row  separator-line deal">
+{% if not deal.tfm.submissionDetails.agentPartyUrn %}
+  {% set uniqueRefStyle = "govuk-tag govuk-tag--red" %}
+  {% set uniqueRefKeyStyle = "govuk-!-font-weight-bold govuk-!-margin-top-4" %}
+{% endif %}
+
+ <div class="govuk-grid-row {% if not params.editable %}ukef-flex-container separator-line deal{% endif %}">
     <div class="govuk-grid-column-one-half">
-      {{ keyValueGridRow.render({
-        key: 'Agent',
-        value: '',
-        keyClass: 'ukef-heading-l'
-      }) }}
+      {% if params.editable %}
+        <h1 class="ukef-heading-l govuk-!-margin-top-9">Edit agent details</h1>
+      {% else %}
+        <h2 class="ukef-heading-l">Agent</h2>
+      {% endif %}
     </div>
+    {% if not params.editable %}
+      <div class="govuk-grid-column-one-half ukef-flex-container--align-center-right">
+        {{ uniqueReferenceNumberEditLink.render({dealId: deal._id, type: 'agent'}) }}
+      </div>
+    {% endif %}
   </div>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
@@ -19,6 +32,29 @@
         value: deal.eligibility.agentName,
         dataCy: 'agent-name'
       }) }}
+
+      {% if params.editable %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-half">
+          {{ govukInput({
+            label: {
+              text: "Unique reference number (URN)"
+            },
+            id: "agent-urn",
+            name: "agent-urn"
+          }) }}
+          </div>
+        </div>
+      {% else %}
+        {{ keyValueGridRow.render({
+          key: 'Unique reference number',
+          keyClass: uniqueRefKeyStyle,
+          value: deal.tfm.submissionDetails.agentPartyUrn or "NOT MATCHED",
+          valueStyle: uniqueRefStyle,
+          dataCy: 'agent-unique-ref'
+        }) }}
+      {% endif %}
+
       {{ keyValueArrayGridRow.render({
         key: 'Address',
         values:  [ deal.eligibility.agentAddressLine1,

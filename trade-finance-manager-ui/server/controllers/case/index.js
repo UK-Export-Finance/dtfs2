@@ -1,5 +1,7 @@
 import api from '../../api';
 
+import FACILITY_TYPE from '../../constants/facilities';
+
 // NOTE
 // the relationship between deal & case is currently unknown,
 // and therefore how this will be managed/stored/referenced.
@@ -50,8 +52,44 @@ const getCaseParties = async (req, res) => {
   });
 };
 
+const getPartyDetails = (partyType) => (
+  async (req, res) => {
+    const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+    const deal = await api.getDeal(dealId);
+
+    if (!deal) {
+      return res.redirect('/not-found');
+    }
+
+    return res.render(`case/parties/edit/${partyType}-edit.njk`, {
+      deal,
+      dealId,
+    });
+  }
+);
+
+const getBondIssuerPartyDetails = async (req, res) => {
+  const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+  const deal = await api.getDeal(dealId);
+
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  const bonds = deal.facilities.filter(({ facilityProduct }) => facilityProduct.code === FACILITY_TYPE.BSS);
+  console.log({ bonds: JSON.stringify(bonds, null, 4) });
+  return res.render('case/parties/edit/bond-issuers-edit.njk', {
+    deal,
+    dealId,
+    bonds,
+  });
+};
+
+
 export default {
   getCaseDeal,
   getCaseFacility,
   getCaseParties,
+  getPartyDetails,
+  getBondIssuerPartyDetails,
 };

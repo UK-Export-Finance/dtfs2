@@ -1,19 +1,21 @@
 {% import './parties-key-value-grid-row.njk' as keyValueGridRow %}
 {% import './parties-key-value-array-grid-row.njk' as keyValueArrayGridRow %}
+{% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
 
 {% macro render(params) %}
 {% set deal = params.deal %}
-<div class="govuk-grid-row separator-line deal">
+{% if deal.tfm.bondIssuer.length > 0 %}
+  {% set uniqueRefStyle = "govuk-tag govuk-tag--red" %}
+  {% set uniqueRefKeyStyle = "govuk-!-font-weight-bold govuk-!-margin-top-4" %}
+{% endif %}
+
+<div class="govuk-grid-row ukef-flex-container separator-line deal">
   <div class="govuk-grid-column-one-half">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <p class="ukef-heading-l">Bond issuer</p>
-        <p class="ukef-hint" style="margin-top:-36px">(if different to buyer)</p>
-      </div>
-      <div class="govuk-grid-column-one-half">
-        <p></p>
-      </div>
-    </div>
+    <h2 class="ukef-heading-l">Bond issuer</h2>
+    <p class="ukef-hint" style="margin-top:-36px">(if different to buyer)</p>
+  </div>
+  <div class="govuk-grid-column-one-half ukef-flex-container--align-center-right">
+    {{ uniqueReferenceNumberEditLink.render({dealId: deal._id, type: 'bond-issuer'}) }}
   </div>
 </div>
 {% endmacro %}
