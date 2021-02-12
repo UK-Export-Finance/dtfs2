@@ -74,7 +74,7 @@ describe('/v1/deals/:id/bond', () => {
   let aSuperuser;
   let anEditor;
 
-  const addBondToDeal = async () => {
+  const createBond = async () => {
     const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
     const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -692,7 +692,7 @@ describe('/v1/deals/:id/bond', () => {
     let bondId;
 
     beforeEach(async () => {
-      const addBondResponse = await addBondToDeal();
+      const addBondResponse = await createBond();
       dealId = addBondResponse.dealId;
       bondId = addBondResponse.bondId;
     });
