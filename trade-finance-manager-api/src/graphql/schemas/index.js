@@ -115,6 +115,7 @@ type Facility {
   ukefFacilityID: String!
   facilityProduct: FacilityProduct!
   facilityType: String
+  ukefFacilityType: String!
   facilityStage: String!
   facilityValueExportCurrency: String!
   facilityValue: String
@@ -123,6 +124,7 @@ type Facility {
   coveredPercentage: String!
   bankFacilityReference: String
   guaranteeFeePayableToUkef: String
+  bondIssuer: String
 }
 
 type DealTotals {

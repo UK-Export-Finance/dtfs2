@@ -1,0 +1,38 @@
+{% macro render(params) %}
+  {% set facilities = params.facilities %}
+
+  <table class="govuk-table" data-cy="bond-issuer-facilities-table">
+    <thead class="govuk-table__head">
+      <tr>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-facility-id">Facility ID</th>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-bond-issuer">Bond issuer</th>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-unique-reference-number">Unique Reference Number</th>
+      </tr>
+    </thead>
+
+    <tbody class="govuk-table__body">
+      {% for facility in facilities %}
+
+        {% if facility.ukefFacilityType === 'bond' and facility.bondIssuer %}
+          <tr class="govuk-table__row" data-cy="facility-{{ facility._id }}">
+            <td class="govuk-table__cell govuk-body-s">
+              <a
+                class="govuk-link"
+                href="/case/facility/{{ facility._id }}"
+                aria-label="View Facility details"
+                data-cy="facility-{{ facility._id }}-ukef-facility-id-link">
+                <span data-cy="facility-{{ facility._id }}-ukef-facility-id-link-text">{{ facility.ukefFacilityID }}</span>
+              </a>
+            </td>
+
+            <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-bond-issuer">{{ facility.bondIssuer }}</td>
+
+            <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-unique-reference-number">TODO</td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+
+  </table>
+
+{% endmacro %}

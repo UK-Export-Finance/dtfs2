@@ -10,10 +10,13 @@ const mapFacility = (f) => {
   const facility = f;
 
   const {
+    facilityType,
     facilityValue,
     facilityStage,
     guaranteeFeePayableByBank,
   } = facility;
+
+  const ukefFacilityType = facilityType;
 
   const formattedFacilityValue = formattedNumber(facilityValue);
 
@@ -46,8 +49,9 @@ const mapFacility = (f) => {
     _id: facility._id, // eslint-disable-line no-underscore-dangle
     ukefFacilityID: facility.ukefFacilityID,
     facilityType: facility.facilityType,
-    facilityStage: mapFacilityStage(facilityStage),
+    ukefFacilityType,
     facilityProduct: facility.facilityProduct,
+    facilityStage: mapFacilityStage(facilityStage),
     coverEndDate: facility.coverEndDate,
     coveredPercentage: facility.coveredPercentage,
     facilityValueExportCurrency: facility.facilityValueExportCurrency,
@@ -55,6 +59,9 @@ const mapFacility = (f) => {
     ukefExposure: facility.ukefExposure,
     bankFacilityReference: mapBankFacilityReference(facility),
     guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFeePayableByBank),
+
+    // bond specifics
+    bondIssuer: facility.bondIssuer,
   };
 };
 

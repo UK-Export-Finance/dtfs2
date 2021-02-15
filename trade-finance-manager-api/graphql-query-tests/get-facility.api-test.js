@@ -23,6 +23,7 @@ const GET_FACILITY = gql`
         name
       },
       facilityType,
+      ukefFacilityType,
       facilityStage,
       facilityValueExportCurrency,
       facilityValue,
@@ -30,7 +31,8 @@ const GET_FACILITY = gql`
       ukefExposure,
       coveredPercentage,
       bankFacilityReference,
-      guaranteeFeePayableToUkef
+      guaranteeFeePayableToUkef,
+      bondIssuer
     }
   }
 `;
