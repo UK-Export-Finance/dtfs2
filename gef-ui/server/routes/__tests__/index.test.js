@@ -14,7 +14,7 @@ jest.doMock('express', () => {
 
 describe('Routes', () => {
   beforeEach(() => {
-    require('../index');
+    require('../index')
   })
 
   afterEach(() => {
