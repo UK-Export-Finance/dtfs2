@@ -19,7 +19,7 @@ const wipe = async (collections) => {
 };
 
 const wipeAll = async () => {
-  const wiped = await wipe(['deals', 'facilities', 'banks', 'transactions', 'industrySectors', 'mandatoryCriteria', 'eligibilityCriteria', 'users']);
+  const wiped = await wipe(['deals', 'facilities', 'banks', 'transactions', 'industrySectors', 'mandatoryCriteria', 'mandatoryCriteriaVersioned', 'eligibilityCriteria', 'users']);
   return wiped;
 };
 
