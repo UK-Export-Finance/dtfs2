@@ -1,6 +1,7 @@
 {% import './parties-key-value-grid-row.njk' as keyValueGridRow %}
 {% import './parties-key-value-array-grid-row.njk' as keyValueArrayGridRow %}
 {% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
+{% import './bond-issuer-facilities-table.njk' as bondIssuerFacilitiesTable %}
 
 {% macro render(params) %}
 {% set deal = params.deal %}
@@ -14,8 +15,16 @@
     <h2 class="ukef-heading-l">Bond issuer</h2>
     <p class="ukef-hint" style="margin-top:-36px">(if different to buyer)</p>
   </div>
-  <div class="govuk-grid-column-one-half ukef-flex-container--align-center-right">
+
+  <div class="govuk-grid-row deal">
+
     {{ uniqueReferenceNumberEditLink.render({dealId: deal._id, type: 'bond-issuer'}) }}
+
+    {% set componentData = {
+      facilities: deal.facilities
+    } %}
+
+    {{ bondIssuerFacilitiesTable.render(componentData) }}
   </div>
 </div>
 {% endmacro %}

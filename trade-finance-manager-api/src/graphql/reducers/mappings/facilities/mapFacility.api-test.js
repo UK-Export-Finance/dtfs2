@@ -23,10 +23,12 @@ describe('mapFacility', () => {
 
   const mockFacilityValue = '12345.00';
 
+  const originalFacilityType = 'bond';
+
   const mockFacility = {
     _id: '12345678',
     ukefFacilityID: '0040004833',
-    facilityType: 'bond',
+    facilityType: originalFacilityType,
     ...mockCoverEndDate,
     ukefExposure: mockUkefExposure,
     coveredPercentage: mockCoveredPercentage,
@@ -63,8 +65,9 @@ describe('mapFacility', () => {
     const expected = {
       _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
       ukefFacilityID: mockFacility.ukefFacilityID,
-      facilityProduct: mapFacilityProduct(mockFacility),
       facilityType: mockFacility.bondType,
+      ukefFacilityType: originalFacilityType,
+      facilityProduct: mapFacilityProduct(mockFacility),
       facilityStage: mapFacilityStage(mockFacility.facilityStage),
       coverEndDate: mapCoverEndDate({ ...mockCoverEndDate }),
       ukefExposure: expectedUkefExposure,
@@ -73,6 +76,7 @@ describe('mapFacility', () => {
       facilityValueExportCurrency: expectedFacilityValueExportCurrency,
       bankFacilityReference: mapBankFacilityReference(mockFacility),
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacility.guaranteeFeePayableByBank),
+      bondIssuer: mockFacility.bondIssuer,
     };
 
     expect(result).toEqual(expected);

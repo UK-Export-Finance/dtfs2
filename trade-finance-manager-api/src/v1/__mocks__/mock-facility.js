@@ -1,6 +1,7 @@
 const MOCK_FACILITY = {
   _id: '12345678',
   ukefFacilityID: '0040004833',
+  facilityType: 'bond',
   bondIssuer: 'Issuer',
   bondType: 'Advance payment guarantee',
   facilityStage: 'Unissued',
