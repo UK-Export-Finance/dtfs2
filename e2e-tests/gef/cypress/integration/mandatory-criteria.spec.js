@@ -8,7 +8,7 @@ context('Mandatory Criteria Page', () => {
 
   beforeEach(() => {
     cy.server()
-    cy.route('GET', '**/mandatory-criteria', 'fixtures:mandatory-criteria.json')
+    cy.route('GET', '**/mandatory-criteria', 'fixture:mandatory-criteria.json')
     Cypress.Cookies.preserveOnce('connect.sid')
     cy.visit(relative('/gef/mandatory-criteria'))
   })

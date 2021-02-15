@@ -1,7 +1,9 @@
 {% extends "index.njk" %}
 {% import '_macros/success-message.njk' as success %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+
 
 {% block pageTitle %}Confirm eligiblity (mandatory criteria){% endblock %}
 
@@ -12,22 +14,38 @@
       message = successMessage
     )}}
   {% endif %}
-    <span class="govuk-caption-xl" data-cy="heading-caption">
-      Create new application
-    </span>
 
-    <h1 class="govuk-heading-l" data-cy="main-heading">
-      Confirm eligiblity (mandatory criteria)
-    </h1>
+  {{ govukErrorSummary({
+  titleText: "There is a problem",
+  errorList: [
+    {
+      text: "The date your passport was issued must be in the past",
+      href: "#passport-issued-error"
+    },
+    {
+      text: "Enter a postcode, like AA1 1AA",
+      href: "#postcode-error"
+    }
+  ]
+}) }}
 
-    <div data-cy="mandatory-criteria">
-    {{ criteria | safe }}
-    </div>
 
-    <form
-      action="mandatory-criteria"
-      method="post"
-      data-cy="form">
+  <span class="govuk-caption-xl" data-cy="heading-caption">
+    Create new application
+  </span>
+
+  <h1 class="govuk-heading-l" data-cy="main-heading">
+    Confirm eligiblity (mandatory criteria)
+  </h1>
+
+  <div data-cy="mandatory-criteria">
+  {{ criteria.htmlText | safe }}
+  </div>
+
+  <form
+    action="mandatory-criteria"
+    method="post"
+    data-cy="form">
     {{ govukRadios({
       classes: "govuk-radios--inline",
       idPrefix: "mandatory-criteria",
@@ -73,6 +91,6 @@
         href="/gef/mandatory-criteria"
         data-cy="cancel-button">Cancel</a>
     </div>
-  </form>
+</form>
 
 {% endblock %}
