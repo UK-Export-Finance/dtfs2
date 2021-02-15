@@ -18,7 +18,7 @@ router.route('/mandatory-criteria-versioned/latest')
     mandatoryCriteriaVersioned.findLatest,
   );
 
-router.route('/gef/mandatory-criteria-versioned/:id')
+router.route('/mandatory-criteria-versioned/:id')
   .get(
     mandatoryCriteriaVersioned.findOne,
   )
