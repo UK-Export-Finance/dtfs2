@@ -11,12 +11,12 @@
   {% set uniqueRefKeyStyle = "govuk-!-font-weight-bold govuk-!-margin-top-4" %}
 {% endif %}
 
- <div class="govuk-grid-row {% if not params.editable %}ukef-flex-container separator-line deal{% endif %}">
+ <div class="govuk-grid-row {% if not params.editable %}ukef-flex-container separator-line deal{% endif %}" data-cy="parties-buyer">
     <div class="govuk-grid-column-one-half">
         {% if params.editable %}
-          <h1 class="ukef-heading-l govuk-!-margin-top-9">Edit buyer details</h1>
+          <h1 class="ukef-heading-l govuk-!-margin-top-9" data-cy="edit-heading">Edit buyer details</h1>
         {% else %}
-          <h2 class="ukef-heading-l">Buyer</h2>
+          <h2 class="ukef-heading-l" data-cy="edit-heading">Buyer</h2>
         {% endif %}
       </h2>
     </div>
@@ -41,7 +41,10 @@
               text: "Unique reference number (URN)"
             },
             id: "buyer-urn",
-            name: "buyer-urn"
+            name: "buyer-urn",
+            attributes: {
+              "data-cy": "urn-input"
+            }
           }) }}
           </div>
         </div>
