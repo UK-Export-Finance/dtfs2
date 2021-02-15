@@ -19,9 +19,7 @@ function returnEntries(globPath) {
 module.exports = {
   mode: 'development',
   entry: {
-    main: './scripts/main.js',
-    govukFrontend: './scripts/govuk-frontend.js',
-    maskedInputs: './scripts/masked-inputs.js',
+    main: './scripts/main.js'
   },
   output: {
     path: path.join(__dirname, 'dist'),
