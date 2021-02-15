@@ -17,23 +17,25 @@ const getMandatoryCriteria = async function (req, res) {
   }
 }
 
-// const validateMandatoryCriteria = async function (req, res) {
-//   const body = req.body
-//   const { mandatoryCriteria } = body
-//   const isEmpty = _isEmpty(mandatoryCriteria)
-//   if (isEmpty) {
-//     return res.status(422).render('templates/mandatory-criteria.njk', {
-//       validationErrorMessage: 'Select an option'
-//     })
-//   }
+const validateMandatoryCriteria = async function (req, res) {
+  const body = req.body
+  const { mandatoryCriteria } = body
+  const isEmpty = _isEmpty(mandatoryCriteria)
 
-//   if (parseBool(mandatoryCriteria)) {
-//     return res.redirect('name-application');
-//   }
+  if (isEmpty) {
+    return res.status(422).render('templates/mandatory-criteria.njk', {
+      validationErrorMessage: 'Select an option'
+    })
+  }
 
-//   return res.render('templates/mandatory-criteria.njk')
-// }
+  if (parseBool(mandatoryCriteria)) {
+    return res.redirect('name-application');
+  }
+
+  return res.render('templates/mandatory-criteria.njk')
+}
 
 export {
-  getMandatoryCriteria
+  getMandatoryCriteria,
+  validateMandatoryCriteria
 }

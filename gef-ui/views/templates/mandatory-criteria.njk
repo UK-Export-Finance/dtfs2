@@ -38,9 +38,11 @@
     Confirm eligiblity (mandatory criteria)
   </h1>
 
+  {% if criteria.htmlText %}
   <div data-cy="mandatory-criteria">
   {{ criteria.htmlText | safe }}
   </div>
+  {% endif %}
 
   <form
     action="mandatory-criteria"

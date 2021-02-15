@@ -7,8 +7,6 @@ context('Mandatory Criteria Page', () => {
   })
 
   beforeEach(() => {
-    cy.server()
-    cy.route('GET', '**/mandatory-criteria', 'fixture:mandatory-criteria.json')
     Cypress.Cookies.preserveOnce('connect.sid')
     cy.visit(relative('/gef/mandatory-criteria'))
   })
@@ -20,9 +18,7 @@ context('Mandatory Criteria Page', () => {
     })
 
     it ('displays the mandatory criteria text', () => {
-      // Need to mock api response
       cy.get('[data-cy="mandatory-criteria"]')
-        .should('contain', '<p>This is some html code</p>')
     })
   })
 
