@@ -1,10 +1,12 @@
 import axios from 'axios'
+require('dotenv').config()
 
-// const V = 'v1'
-const BASE_URL = 'https://jsonplaceholder.typicode.com/todos'
+const BASE_URL = process.env.BASE_URL
+const VERSION = 'v1'
 
 export default axios.create({
-  baseURL: BASE_URL,
+  baseURL: `${BASE_URL}/${VERSION}`,
+  timeout: 1000,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',

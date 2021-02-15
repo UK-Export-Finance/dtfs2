@@ -1,13 +1,20 @@
 import _isEmpty from 'lodash/isEmpty'
 import * as Criteria from '../../models/mandatory-criteria'
-import { parseBool, userToken } from '../../utils/helpers'
+import { parseBool, userToken, errorHandler } from '../../utils/helpers'
 
 const getMandatoryCriteria = async function (req, res) {
-  await Criteria.getCriteria(userToken(req))
+  try {
+    const criteria = await Criteria.getCriteria(userToken(req))
 
-  return res.render('templates/mandatory-criteria.njk', {
-    criteria: '<strong>hello</strong>'
-  });
+    return res.render('templates/mandatory-criteria.njk', {
+      criteria
+    })
+  } catch (err) {
+    const { status, message } = errorHandler(err)
+    return res.status(status).render('templates/mandatory-criteria.njk', {
+      error: message
+    })
+  }
 }
 
 // const validateMandatoryCriteria = async function (req, res) {
