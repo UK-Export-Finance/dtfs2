@@ -4,6 +4,7 @@ const caseDealPage = {
   dealBankDetails: () => cy.get('[data-cy="deal-bank-details"]'),
   dealFacilities: () => cy.get('[data-cy="deal-facilities"]'),
   mgaVersion: () => cy.get('[data-cy="mga-version"]'),
+  partiesLink: () => cy.get('[data-cy="parties-link"]'),
 
   dealFacilitiesTable: {
     row: (facilityId) => {
