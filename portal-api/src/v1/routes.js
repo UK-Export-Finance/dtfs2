@@ -29,6 +29,8 @@ const mga = require('./controllers/mga.controller');
 const users = require('./users/routes');
 const { cleanXss, fileUpload } = require('./middleware');
 
+const gef = require('./gef/routes');
+
 const authRouter = express.Router();
 const openRouter = express.Router();
 const authRouterAllowXss = express.Router();
@@ -42,6 +44,8 @@ authRouter.use(
   passport.authenticate('jwt', { session: false }),
   cleanXss,
 );
+
+authRouter.use('/gef', gef);
 
 authRouter.route('/deals')
   .post(

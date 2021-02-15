@@ -98,6 +98,21 @@ const createMandatoryCriteria = async (mandatoryCriteria, token) => {
   return response.data;
 };
 
+const createMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
+  const response = await axios({
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/gef/mandatory-criteria-versioned`,
+    data: mandatoryCriteria,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response.data;
+};
+
 const createEligibilityCriteria = async (eligibilityCriteria, token) => {
   const response = await axios({
     method: 'post',
@@ -212,6 +227,20 @@ const deleteMandatoryCriteria = async (mandatoryCriteria, token) => {
   return response.data;
 };
 
+const deleteMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/gef/mandatory-criteria-versioned/${mandatoryCriteria.id}`,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response.data;
+};
+
 const deleteEligibilityCriteria = async (eligibilityCriteria, token) => {
   const response = await axios({
     method: 'delete',
@@ -315,6 +344,20 @@ const listMandatoryCriteria = async (token) => {
   return response.data.mandatoryCriteria;
 };
 
+const listMandatoryCriteriaVersioned = async (token) => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/gef/mandatory-criteria-versioned`,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response.data.mandatoryCriteria;
+};
+
 const listEligibilityCriteria = async (token) => {
   const response = await axios({
     method: 'get',
@@ -394,6 +437,7 @@ module.exports = {
   createDeal,
   createIndustrySector,
   createMandatoryCriteria,
+  createMandatoryCriteriaVersioned,
   createEligibilityCriteria,
   createUser,
   deleteBank,
@@ -402,6 +446,7 @@ module.exports = {
   deleteDeal,
   deleteIndustrySector,
   deleteMandatoryCriteria,
+  deleteMandatoryCriteriaVersioned,
   deleteEligibilityCriteria,
   deleteUser,
   listBanks,
@@ -410,6 +455,7 @@ module.exports = {
   listDeals,
   listIndustrySectors,
   listMandatoryCriteria,
+  listMandatoryCriteriaVersioned,
   listEligibilityCriteria,
   listUsers,
   resetIdCounters,
