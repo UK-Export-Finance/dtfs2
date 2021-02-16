@@ -1,0 +1,23 @@
+{% import '../_macros/parties-exporter-area.njk' as exporterArea %}
+{% import '../../_macros/save-close-buttons.njk' as saveCloseButtons %}
+
+{% extends "index.njk" %}
+  {% set primary = 'cases' %}
+
+  {% block pageTitle %}
+    Edit exporter details: {{ deal.submissionDetails.supplierName }}
+  {% endblock %}
+
+  {% block content %}
+    {{ exporterArea.render({deal: deal, editable: true}) }}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        {{ saveCloseButtons.render({returnTo: "/case/parties/" + dealId}) }}
+      </div>
+    </div>
+
+  {% endblock %}
+
+  {% block sub_content %}
+  {% endblock %}

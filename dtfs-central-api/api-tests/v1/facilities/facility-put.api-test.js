@@ -141,10 +141,12 @@ describe('/v1/portal/facilities', () => {
 
       expect(originalDeal.body.deal.editedBy).toEqual([]);
 
+      await api.put({}).to(`/v1/tfm/deals/${newFacility.associatedDealId}/submit`);
+
       const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/tfm/facilities');
 
       const getDealResponse = await api.get(`/v1/tfm/deals/${newFacility.associatedDealId}`);
-      expect(getDealResponse.body.deal.editedBy.length).toEqual(0);
+      expect(getDealResponse.body.deal.dealSnapshot.editedBy.length).toEqual(0);
 
       const updatedFacility = {
         ...createdFacilityResponse.body,
@@ -156,7 +158,7 @@ describe('/v1/portal/facilities', () => {
 
       const { body } = await api.get(`/v1/tfm/deals/${newFacility.associatedDealId}`);
 
-      expect(body.deal.editedBy.length).toEqual(0);
+      expect(body.deal.dealSnapshot.editedBy.length).toEqual(0);
     });
   });
 });

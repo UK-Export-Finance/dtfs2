@@ -1,5 +1,5 @@
-const mapDeal = require('./map-deal');
-const CONTENT_STRINGS = require('../content-strings');
+const mapDeal = require('../../../src/v1/mappings/map-deal');
+const CONTENT_STRINGS = require('../../../src/v1/content-strings');
 
 describe('mappings - map-deal', () => {
   const mockBonds = [
@@ -89,6 +89,8 @@ describe('mappings - map-deal', () => {
         ...mockDeal.eligibility,
         criteria: expectedCriteria(mockDeal.eligibility.criteria),
       },
+      bondTransactions: {},
+      loanTransactions: {},
       facilities: [
         ...mockBonds,
         ...mockLoans,
