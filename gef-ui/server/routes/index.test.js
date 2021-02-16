@@ -1,5 +1,5 @@
-import mandatoryCriteriaRoutes from '../mandatory-criteria'
-import nameApplicationRoutes from '../name-application'
+import mandatoryCriteriaRoutes from './mandatory-criteria'
+import nameApplicationRoutes from './name-application'
 
 const useSpy = jest.fn()
 jest.doMock('express', () => {
@@ -14,7 +14,7 @@ jest.doMock('express', () => {
 
 describe('Routes', () => {
   beforeEach(() => {
-    require('../index')
+    require('./index')
   })
 
   afterEach(() => {
