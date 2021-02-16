@@ -1,5 +1,5 @@
 import Axios from './axios'
-import * as Api from './api'
+import * as api from './api'
 jest.mock('./axios')
 
 afterEach(() => {
@@ -10,13 +10,13 @@ describe('Api', () => {
   describe('ValidateToken', () => {
     it('returns `true` if token is valid', async () => {
       Axios.get.mockReturnValue(Promise.resolve({ status: 200 }))
-      const response = await Api.validateToken()
+      const response = await api.validateToken()
       expect(response).toBeTruthy();
     })
 
     it('returns `false` if token is not valid', async () => {
       Axios.get.mockReturnValue(Promise.resolve({ status: 400 }))
-      const response = await Api.validateToken()
+      const response = await api.validateToken()
       expect(response).toBeFalsy();
     })
 
@@ -24,7 +24,7 @@ describe('Api', () => {
       Axios.get.mockReturnValue(Promise.reject({}))
       let error
       try {
-        await Api.validateToken()
+        await api.validateToken()
       } catch (err) {
         error = err
       }
