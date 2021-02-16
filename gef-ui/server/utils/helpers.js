@@ -10,8 +10,8 @@ const parseBool = (params) => {
 }
 
 const userToken = (req) => {
-  const { userToken } = req.session;
-  return userToken
+  const token = req.session.userToken;
+  return token
 }
 
 const errorHandler = (error) => {
