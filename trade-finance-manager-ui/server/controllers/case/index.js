@@ -79,7 +79,7 @@ const getBondIssuerPartyDetails = async (req, res) => {
   }
 
   const bonds = deal.facilities.filter(({ facilityProduct }) => facilityProduct.code === FACILITY_TYPE.BSS);
-  console.log({ bonds: JSON.stringify(bonds, null, 4) });
+
   return res.render('case/parties/edit/bond-issuers-edit.njk', {
     deal,
     dealId,
