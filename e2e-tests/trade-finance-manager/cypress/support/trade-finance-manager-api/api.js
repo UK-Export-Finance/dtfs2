@@ -3,15 +3,15 @@ const api = () => {
   return url;
 };
 
-module.exports.submitDeal = (dealId, token) => cy.request({
+module.exports.submitDeal = (dealId) => cy.request({
   url: `${api()}/v1/deals/submit`,
   method: 'PUT',
   body: { dealId },
   headers: {
     'Content-Type': 'application/json',
-    Authorization: token,
   },
 }).then((resp) => {
   expect(resp.status).to.equal(200);
+  console.log({ dealId, body: resp.body });
   return resp.body;
 });

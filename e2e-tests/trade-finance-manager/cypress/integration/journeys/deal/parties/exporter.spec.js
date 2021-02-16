@@ -51,6 +51,7 @@ context('User can view party details', () => {
           dealFacilities.push(...createdFacilities);
         });
 
+        cy.submitDeal(dealId);
         cy.visit(relative(`/case/parties/${dealId}`));
       });
   });

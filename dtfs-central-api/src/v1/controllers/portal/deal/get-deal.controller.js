@@ -77,7 +77,7 @@ const findOneDeal = async (_id, callback, type) => {
       const returnDeal = type === 'tfm'
         ? {
           ...dealItem,
-          snapshotDeal: mappedDeal,
+          dealSnapshot: mappedDeal,
         }
         : mappedDeal;
 

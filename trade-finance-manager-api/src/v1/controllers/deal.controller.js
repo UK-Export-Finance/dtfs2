@@ -22,6 +22,6 @@ const findOnePortalDeal = async (dealId) => {
     return false;
   }
 
-  return mapDeal(deal);
+  return deal;
 };
 exports.findOnePortalDeal = findOnePortalDeal;
