@@ -12,18 +12,18 @@ export default function Api (token) {
     }
   }
 
-  this.getMandatoryCriteria = async function () {
-    try {
-      // const response = await Axios.get('/mandatory-criteria/latest')
-      const response = { 
-        data: {
-          htmlText: '<p>Test</p>'
-        }
-      }
-      return response.data
-    } catch (err) {
-      throw err
-    }
-  }
+  // this.getMandatoryCriteria = async function () {
+  //   try {
+  //     // const response = await Axios.get('/mandatory-criteria/latest')
+  //     const response = { 
+  //       data: {
+  //         htmlText: '<p>Test</p>'
+  //       }
+  //     }
+  //     return response.data
+  //   } catch (err) {
+  //     throw err
+  //   }
+  // }
 }
 
