@@ -2,7 +2,11 @@ import relative from './relativeURL'
 
 context('Mandatory Criteria Page', () => {
   before(() => {
-    cy.login({ username: 'MAKER', password: 'AbC!2345' })
+    cy.fixture('login')
+      .then((res) => {
+        cy.login(res.MAKER)
+      })
+    
     cy.on('uncaught:exception', () => false)
   })
 
