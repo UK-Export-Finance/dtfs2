@@ -2,9 +2,10 @@ const express = require('express');
 
 const tfmRouter = express.Router();
 
-const getDealController = require('../controllers/portal/deal/get-deal.controller');
-const updateDealController = require('../controllers/portal/deal/update-deal.controller');
-const deleteDealController = require('../controllers/portal/deal/delete-deal.controller');
+const tfmGetDealController = require('../controllers/tfm/deal/tfm-get-deal.controller');
+const tfmUpdateDealController = require('../controllers/tfm/deal/tfm-update-deal.controller');
+const tfmSubmitDealController = require('../controllers/tfm/deal/tfm-submit-deal.controller');
+
 
 const createFacilityController = require('../controllers/facility/create-facility.controller');
 const getFacilityController = require('../controllers/facility/get-facility.controller');
@@ -20,18 +21,15 @@ tfmRouter.use((req, res, next) => {
 
 tfmRouter.route('/deals/:id')
   .get(
-    getDealController.findOneDealGet,
+    tfmGetDealController.findOneDealGet,
   )
   .put(
-    updateDealController.updateDealPut,
-  )
-  .delete(
-    deleteDealController.deleteDeal,
+    tfmUpdateDealController.updateDealPut,
   );
 
-tfmRouter.route('/deals/query')
-  .post(
-    getDealController.queryDealsPost,
+tfmRouter.route('/deals/:id/submit')
+  .put(
+    tfmSubmitDealController.submitDealPut,
   );
 
 tfmRouter.route('/facilities')

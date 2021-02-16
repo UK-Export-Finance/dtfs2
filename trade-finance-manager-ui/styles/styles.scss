@@ -7,7 +7,7 @@
 
 @import "./case-summary.scss";
 @import "./table.scss";
-
+@import "./links.scss";
 
 body {
   font-family: Helvetica;
@@ -184,4 +184,12 @@ body {
   display: inline-block;
   padding: .5em .5em .5em 0;
   min-height: 21px;
+}
+
+.ukef-flex-container {
+  display: flex;
+    &--align-center-right {
+      align-self: center;
+      text-align: right;
+    }
 }

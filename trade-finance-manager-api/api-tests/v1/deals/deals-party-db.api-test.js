@@ -8,8 +8,10 @@ describe('add partyUrn to deal', () => {
 
   it('should return false when companies house no not given', async () => {
     const deal = {
-      submissionDetails: {
-        'supplier-companies-house-registration-number': '',
+      dealSnapshot: {
+        submissionDetails: {
+          'supplier-companies-house-registration-number': '',
+        },
       },
     };
     const noCompaniesHouse = await addPartyUrns(deal);
@@ -18,8 +20,10 @@ describe('add partyUrn to deal', () => {
 
   it('should return false when companies house no is not matched', async () => {
     const deal = {
-      submissionDetails: {
-        'supplier-companies-house-registration-number': 'NO_MATCH',
+      dealSnapshot: {
+        submissionDetails: {
+          'supplier-companies-house-registration-number': 'NO_MATCH',
+        },
       },
     };
     const noMatch = await addPartyUrns(deal);
@@ -28,8 +32,10 @@ describe('add partyUrn to deal', () => {
 
   it('should return the deal with partyUrn is successfully matched', async () => {
     const deal = {
-      submissionDetails: {
-        'supplier-companies-house-registration-number': 'MATCH',
+      dealSnapshot: {
+        submissionDetails: {
+          'supplier-companies-house-registration-number': 'MATCH',
+        },
       },
     };
     const match = await addPartyUrns(deal);
@@ -38,8 +44,10 @@ describe('add partyUrn to deal', () => {
 
   it('should retain existing tfm data', async () => {
     const deal = {
-      submissionDetails: {
-        'supplier-companies-house-registration-number': 'MATCH',
+      dealSnapshot: {
+        submissionDetails: {
+          'supplier-companies-house-registration-number': 'MATCH',
+        },
       },
       tfm: {
         mockField: 'mock data',

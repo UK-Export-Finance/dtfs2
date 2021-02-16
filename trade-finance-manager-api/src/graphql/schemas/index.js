@@ -149,15 +149,21 @@ input DealsInput {
   pagesize: Int,
   filters: [DashboardFilters]
 }
-type Deal {
+
+type DealSnapshot {
   _id: String!
-  ukefDealId: String!
+  ukefDealId: String
   details: DealDetails
   totals: DealTotals
   facilities: [Facility]
   submissionDetails: DealSubmissionDetails
   eligibilityCriteria: [DealEligibilityCriterion!]
   eligibility: DealEligibility
+}
+
+type Deal {
+  _id: String!
+  dealSnapshot: DealSnapshot
   tfm: TFMData
 }
 

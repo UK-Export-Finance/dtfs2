@@ -1,0 +1,32 @@
+{% import '../_macros/parties-bond-issuer-edit.njk' as bondIssuerEdit %}
+{% import '../../_macros/save-close-buttons.njk' as saveCloseButtons %}
+
+{% extends "index.njk" %}
+  {% set primary = 'cases' %}
+
+  {% block pageTitle %}
+    Edit bond issue details
+  {% endblock %}
+
+  {% block content %}
+    <div class="govuk-grid-row {% if not params.editable %}ukef-flex-container separator-line deal{% endif %}">
+      <div class="govuk-grid-column-one-half">
+        <h1 class="ukef-heading-l govuk-!-margin-top-9">Edit bond issuer details</h1>
+      </div>
+    </div>
+
+    {% for bond in bonds %}
+      {{ bondIssuerEdit.render({ bond: bond }) }}
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    {% endfor %}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        {{ saveCloseButtons.render({returnTo: "/case/parties/" + dealId}) }}
+      </div>
+    </div>
+
+  {% endblock %}
+
+  {% block sub_content %}
+  {% endblock %}

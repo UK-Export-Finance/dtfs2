@@ -9,27 +9,45 @@
         }, {
           text: 'Deal',
           href: '/case/deal/'+dealId,
-          active: (active_sheet=='deal')
+          active: (active_sheet=='deal'),
+          attributes: {
+            "data-cy": "deal-link"
+          }
         }, {
           text: 'Parties',
           href: '/case/parties/'+dealId,
-          active: (active_sheet=='parties')
+          active: (active_sheet=='parties'),
+          attributes: {
+            "data-cy": "parties-link"
+          }
         }, {
           text: 'Documents',
           href: '/case/documents/'+dealId,
-          active: (active_sheet=='documents')
+          active: (active_sheet=='documents'),
+          attributes: {
+            "data-cy": "documents-link"
+          }
         }, {
           text: 'Activity',
           href: '/case/activity/'+dealId,
-          active: (active_sheet=='activity')
+          active: (active_sheet=='activity'),
+          attributes: {
+            "data-cy": "activity-link"
+          }
         }, {
           text: 'Underwriting',
           href: '/case/underwriting/'+dealId,
-          active: (active_sheet=='underwriting')
+          active: (active_sheet=='underwriting'),
+          attributes: {
+            "data-cy": "underwriting-link"
+          }
         }, {
           text: 'Linked deals',
           href: '/case/linked-deals/'+dealId,
-          active: (active_sheet=='linked-deals')
+          active: (active_sheet=='linked-deals'),
+          attributes: {
+            "data-cy": "linked-deals-link"
+          }
         }],
         attributes: {
           'data-cy': 'case-sub-navigation'
