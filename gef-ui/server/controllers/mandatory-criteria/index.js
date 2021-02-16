@@ -1,10 +1,10 @@
 import _isEmpty from 'lodash/isEmpty'
-import * as Criteria from '../../models/mandatory-criteria'
+import * as Api from '../../services/api'
 import { parseBool, userToken, errorHandler } from '../../utils/helpers'
 
 const getMandatoryCriteria = async function (req, res) {
   try {
-    const criteria = await Criteria.getCriteria(userToken(req))
+    const criteria = await Api.getMandatoryCriteria()
 
     return res.render('templates/mandatory-criteria.njk', {
       criteria
@@ -21,7 +21,7 @@ const validateMandatoryCriteria = async function (req, res) {
   const body = req.body
   const { mandatoryCriteria } = body
   const isEmpty = _isEmpty(mandatoryCriteria)
-  const criteria = await Criteria.getCriteria(userToken(req))
+  const criteria = await Api.getMandatoryCriteria()
   
   if (isEmpty) {
     return res.status(422).render('templates/mandatory-criteria.njk', {
