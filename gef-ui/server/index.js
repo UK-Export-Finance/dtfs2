@@ -88,7 +88,7 @@ app.use(express.static('dist'));
 
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
-app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
+app.get('*', (req, res) => res.render('templates/page-not-found.njk', { user: req.session.user }));
 
 console.log(`GITHUB_SHA: ${process.env.GITHUB_SHA}`);
 
