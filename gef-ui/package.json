@@ -52,6 +52,7 @@
     "graphql-tag": "^2.10.3",
     "http-errors": "^1.8.0",
     "imask": "^6.0.5",
+    "lodash": "^4.17.20",
     "lodash.isequal": "^4.5.0",
     "moment": "2.24.0",
     "moment-timezone": "0.5.31",
