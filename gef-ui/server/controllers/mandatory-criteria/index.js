@@ -10,8 +10,8 @@ const getMandatoryCriteria = async function (req, res) {
       criteria
     })
   } catch (err) {
-    const { status, message } = errorHandler(err)
-    return res.status(status).render('templates/mandatory-criteria.njk', {
+    const { message } = errorHandler(err)
+    return res.render('templates/mandatory-criteria.njk', {
       error: message
     })
   }
