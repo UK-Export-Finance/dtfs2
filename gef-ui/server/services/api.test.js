@@ -26,7 +26,6 @@ describe('Api', () => {
       try {
         await Api.validateToken()
       } catch (err) {
-        console.log('error', err)
         error = err
       }
       expect(error).toEqual(new TypeError('Error with token'));
