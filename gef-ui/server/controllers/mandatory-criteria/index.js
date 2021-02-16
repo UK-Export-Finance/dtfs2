@@ -1,33 +1,33 @@
-import _isEmpty from 'lodash/isEmpty'
-import * as api from '../../services/api'
-import { parseBool, errorHandler } from '../../utils/helpers'
+import _isEmpty from 'lodash/isEmpty';
+import * as api from '../../services/api';
+import { parseBool, errorHandler } from '../../utils/helpers';
 
-const getMandatoryCriteria = async function (req, res) {
+const getMandatoryCriteria = async (req, res) => {
   try {
-    const criteria = await api.getMandatoryCriteria()
+    const criteria = await api.getMandatoryCriteria();
 
     return res.render('templates/mandatory-criteria.njk', {
-      criteria
-    })
+      criteria,
+    });
   } catch (err) {
-    const { message } = errorHandler(err)
+    const { message } = errorHandler(err);
     return res.render('templates/mandatory-criteria.njk', {
-      error: message
-    })
+      error: message,
+    });
   }
-}
+};
 
-const validateMandatoryCriteria = async function (req, res) {
-  const body = req.body
-  const { mandatoryCriteria } = body
-  const isEmpty = _isEmpty(mandatoryCriteria)
-  const criteria = await api.getMandatoryCriteria()
-  
+const validateMandatoryCriteria = async (req, res) => {
+  const { body } = req;
+  const { mandatoryCriteria } = body;
+  const isEmpty = _isEmpty(mandatoryCriteria);
+  const criteria = await api.getMandatoryCriteria();
+
   if (isEmpty) {
     return res.status(422).render('templates/mandatory-criteria.njk', {
       validationErrorMessage: 'Select an option',
-      criteria
-    })
+      criteria,
+    });
   }
 
   if (parseBool(mandatoryCriteria)) {
@@ -35,11 +35,11 @@ const validateMandatoryCriteria = async function (req, res) {
   }
 
   return res.render('templates/mandatory-criteria.njk', {
-    criteria
-  })
-}
+    criteria,
+  });
+};
 
 export {
   getMandatoryCriteria,
-  validateMandatoryCriteria
-}
+  validateMandatoryCriteria,
+};
