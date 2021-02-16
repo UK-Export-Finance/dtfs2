@@ -1,30 +1,30 @@
-import Axios from './axios'
+import Axios from './axios';
 
 const validateToken = async function (token) {
   try {
-    Axios.defaults.headers.common['Authorization'] = token
-    const response = await Axios.get('/validate')
-    return response.status === 200
+    Axios.defaults.headers.common.Authorization = token;
+    const response = await Axios.get('/validate');
+    return response.status === 200;
   } catch (err) {
-    throw new TypeError('Error with token')
+    return false;
   }
-}
+};
 
 const getMandatoryCriteria = async function () {
   try {
     // const response = await Axios.get('/mandatory-criteria/latest')
-    const response = { 
+    const response = {
       data: {
-        htmlText: '<p>Test</p>'
-      }
-    }
-    return response.data
+        htmlText: '<p>Test</p>',
+      },
+    };
+    return response.data;
   } catch (err) {
-    throw err
+    throw err;
   }
-}
+};
 
 export {
   validateToken,
-  getMandatoryCriteria
-}
+  getMandatoryCriteria,
+};
