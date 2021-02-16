@@ -20,16 +20,5 @@ describe('Api', () => {
       const response = await api.validateToken();
       expect(response).toBeFalsy();
     });
-
-    it('is able to trow an error', async () => {
-      Axios.get.mockReturnValue(Promise.reject(new TypeError('Error with token')));
-      let error;
-      try {
-        await api.validateToken();
-      } catch (err) {
-        error = err;
-      }
-      expect(error).toEqual(new TypeError('Error with token'));
-    });
   });
 });
