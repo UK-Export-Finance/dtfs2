@@ -10,11 +10,9 @@
   {% set uniqueRefKeyStyle = "govuk-!-font-weight-bold govuk-!-margin-top-4" %}
 {% endif %}
 
-<div class="govuk-grid-row ukef-flex-container separator-line deal">
-  <div class="govuk-grid-column-one-half">
-    <h2 class="ukef-heading-l">Bond issuer</h2>
-    <p class="ukef-hint" style="margin-top:-36px">(if different to buyer)</p>
-  </div>
+<div class="govuk-grid-row separator-line deal">
+  <h2 class="ukef-heading-l">Bond issuer</h2>
+  <p class="ukef-hint" style="margin-top:-36px">(if different to buyer)</p>
 
   <div class="govuk-grid-row deal">
 
@@ -26,5 +24,6 @@
 
     {{ bondIssuerFacilitiesTable.render(componentData) }}
   </div>
+
 </div>
 {% endmacro %}
