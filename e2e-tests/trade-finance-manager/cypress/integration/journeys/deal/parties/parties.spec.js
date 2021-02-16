@@ -51,8 +51,7 @@ context('User can view party details', () => {
           dealFacilities.push(...createdFacilities);
         });
 
-        cy.visit(relative(`/case/deal/${dealId}`));
-        pages.caseDealPage.partiesLink().click();
+        cy.submitDeal(dealId, MOCK_MAKER_TFM);
       });
   });
 
@@ -64,6 +63,8 @@ context('User can view party details', () => {
 
   describe('Parties pages', () => {
     it('should render components in party page', () => {
+      cy.visit(relative(`/case/deal/${dealId}`));
+      pages.caseDealPage.partiesLink().click();
       cy.url().should('eq', relative(`/case/parties/${dealId}`));
 
       pages.partiesPage.exporterArea().should('exist');
