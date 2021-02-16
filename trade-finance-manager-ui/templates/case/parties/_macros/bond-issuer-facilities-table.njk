@@ -1,4 +1,5 @@
 {% import '../../../_macros/facility-link.njk' as facilityLink %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 
 {% macro render(params) %}
   {% set facilities = params.facilities %}
@@ -29,7 +30,21 @@
 
             <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-bond-issuer">{{ facility.bondIssuer }}</td>
 
-            <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-unique-reference-number">TODO</td>
+            <td class="govuk-table__cell govuk-body-s">
+              {% if facility.bankFacilityReference %}
+
+                <span data-cy="facility-{{ facility._id }}-unique-reference-number">{{ facility.bankFacilityReference }}</span>
+
+              {% else %}
+                {{govukTag({
+                  text: 'Not matched',
+                  classes: "govuk-tag--red",
+                  attributes: {
+                    'data-cy': 'facility-unique-reference-number-not-matched'
+                  }
+                })}}
+              {% endif %}
+            </td>
           </tr>
         {% endif %}
       {% endfor %}
