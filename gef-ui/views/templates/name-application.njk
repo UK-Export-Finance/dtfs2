@@ -6,19 +6,13 @@
 {% block pageTitle %}Confirm eligiblity (mandatory criteria){% endblock %}
 
 {% block content %}
+  <h1 class="govuk-heading-l">
+    Name application
+  </h1>
 
-  {% if successMessage %}
-    {{ success.message(
-      message = successMessage
-    )}}
-  {% endif %}
-    <h1 class="govuk-heading-l">
-      Name application
-    </h1>
+  {{ criteria | safe }}
 
-    {{ criteria | safe }}
-
-    <form action="name-application" method="post">
+  <form method="post">
 
     <div class="govuk-button-group">
       {{ govukButton({
