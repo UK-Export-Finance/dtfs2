@@ -1,14 +1,14 @@
-import * as Api from '../../services/api'
+import * as Api from '../../services/api';
 
 const validateToken = async (req, res, next) => {
-  const { userToken } = req.session
+  const { userToken } = req.session;
   if (userToken && await Api.validateToken(userToken)) {
-    return next()
+    return next();
   }
 
-  req.session.destroy(() => {
+  return req.session.destroy(() => {
     res.redirect('/');
-  })
-}
+  });
+};
 
-export default validateToken
+export default validateToken;

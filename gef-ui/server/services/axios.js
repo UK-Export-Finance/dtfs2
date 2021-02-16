@@ -1,8 +1,11 @@
-import axios from 'axios'
-require('dotenv').config()
+import axios from 'axios';
 
-const BASE_URL = process.env.BASE_URL
-const VERSION = 'v1'
+require('dotenv').config();
+
+const { BASE_URL } = process.env;
+const VERSION = 'v1';
+
+console.log('poo', `${BASE_URL}/${VERSION}`);
 
 export default axios.create({
   baseURL: `${BASE_URL}/${VERSION}`,
@@ -10,5 +13,5 @@ export default axios.create({
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-  }
-})
+  },
+});
