@@ -12,6 +12,5 @@ module.exports.submitDeal = (dealId) => cy.request({
   },
 }).then((resp) => {
   expect(resp.status).to.equal(200);
-  console.log({ dealId, body: resp.body });
   return resp.body;
 });
