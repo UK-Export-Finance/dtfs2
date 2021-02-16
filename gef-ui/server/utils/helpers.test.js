@@ -1,4 +1,4 @@
-const { userToken, parseBool } = require('../helpers');
+import { userToken, parseBool } from './helpers'
 
 describe('userToken()', () => {
   it('returns the correct user token', () => {
@@ -14,10 +14,10 @@ describe('userToken()', () => {
 
 describe('parseBool()', () => {
   it('returns a boolean', () => {
-    expect(parseBool('true')).toBeTruthy()
-    expect(parseBool('false')).toBeFalsy()
-    expect(parseBool('')).toBeFalsy()
-    expect(parseBool(undefined)).toBeFalsy()
-    expect(parseBool('0')).toBeFalsy()
+    expect(parseBool('true')).toBe(true)
+    expect(parseBool('false')).toBe(false)
+    expect(parseBool('')).toBe(false)
+    expect(parseBool(undefined)).toBe(false)
+    expect(parseBool('0')).toBe(false)
   })
 })

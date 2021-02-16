@@ -1,6 +1,6 @@
 import Axios from './axios'
 
-export const validateToken = async function (token) {
+const validateToken = async function (token) {
   try {
     Axios.defaults.headers.common['Authorization'] = token
     const response = await Axios.get('/validate')
@@ -10,7 +10,7 @@ export const validateToken = async function (token) {
   }
 }
 
-export const getMandatoryCriteria = async function () {
+const getMandatoryCriteria = async function () {
   try {
     // const response = await Axios.get('/mandatory-criteria/latest')
     const response = { 
@@ -22,4 +22,9 @@ export const getMandatoryCriteria = async function () {
   } catch (err) {
     throw err
   }
+}
+
+export {
+  validateToken,
+  getMandatoryCriteria
 }
