@@ -1,6 +1,6 @@
 import _isEmpty from 'lodash/isEmpty'
 import * as Api from '../../services/api'
-import { parseBool, userToken, errorHandler } from '../../utils/helpers'
+import { parseBool, errorHandler } from '../../utils/helpers'
 
 const getMandatoryCriteria = async function (req, res) {
   try {
