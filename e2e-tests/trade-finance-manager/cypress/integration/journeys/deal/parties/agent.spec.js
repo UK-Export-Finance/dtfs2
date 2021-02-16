@@ -51,9 +51,7 @@ context('User can view party details', () => {
           dealFacilities.push(...createdFacilities);
         });
 
-        cy.visit(relative(`/case/deal/${dealId}`));
-        pages.caseDealPage.partiesLink().click();
-        pages.partiesPage.agentEditLink().click();
+        cy.visit(relative(`/case/parties/${dealId}`));
       });
   });
 
@@ -66,6 +64,8 @@ context('User can view party details', () => {
 
   describe('Agent page', () => {
     it('should render edit page', () => {
+      pages.partiesPage.agentEditLink().click();
+
       cy.url().should('eq', relative(`/case/parties/${dealId}/agent`));
       pages.partiesPage.agentEditLink().should('not.exist');
 

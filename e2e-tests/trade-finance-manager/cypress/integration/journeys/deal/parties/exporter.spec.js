@@ -51,9 +51,7 @@ context('User can view party details', () => {
           dealFacilities.push(...createdFacilities);
         });
 
-        cy.visit(relative(`/case/deal/${dealId}`));
-        pages.caseDealPage.partiesLink().click();
-        pages.partiesPage.exporterEditLink().click();
+        cy.visit(relative(`/case/parties/${dealId}`));
       });
   });
 
@@ -66,6 +64,8 @@ context('User can view party details', () => {
 
   describe('Exporter page', () => {
     it('should render edit page', () => {
+      pages.partiesPage.exporterEditLink().click();
+
       cy.url().should('eq', relative(`/case/parties/${dealId}/exporter`));
       pages.partiesPage.exporterEditLink().should('not.exist');
 
