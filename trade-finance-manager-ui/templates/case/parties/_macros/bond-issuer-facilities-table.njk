@@ -3,6 +3,7 @@
 
 {% macro render(params) %}
   {% set facilities = params.facilities %}
+  <p>facilities.length: {{ facilities.length }}</p>
 
   <table class="govuk-table" data-cy="bond-issuer-facilities-table">
     <thead class="govuk-table__head">
@@ -31,6 +32,7 @@
             <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-bond-issuer">{{ facility.bondIssuer }}</td>
 
             <td class="govuk-table__cell govuk-body-s">
+
               {% if facility.bankFacilityReference %}
 
                 <span data-cy="facility-{{ facility._id }}-unique-reference-number">{{ facility.bankFacilityReference }}</span>
