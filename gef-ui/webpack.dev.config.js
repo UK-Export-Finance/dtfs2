@@ -19,9 +19,7 @@ function returnEntries(globPath) {
 module.exports = {
   mode: 'development',
   entry: {
-    main: './scripts/main.js',
-    govukFrontend: './scripts/govuk-frontend.js',
-    maskedInputs: './scripts/masked-inputs.js',
+    main: './scripts/main.js'
   },
   output: {
     path: path.join(__dirname, 'dist'),
@@ -45,7 +43,7 @@ module.exports = {
           loader: 'nunjucks-html-loader',
           options: {
             // base directory in which webpack is going to find any .njk files
-            searchPaths: [...returnEntries('./templates/**/')],
+            searchPaths: [...returnEntries('./views/**/')],
           },
         }],
       },
@@ -66,7 +64,7 @@ module.exports = {
       filename: 'index.html',
       inject: 'body',
       // tell webpack to pass index.njk through the nunjucks-html-loader
-      template: 'nunjucks-html-loader!./templates/index.njk',
+      template: 'nunjucks-html-loader!./views/index.njk',
     }),
     new CopyPlugin({
       patterns: [

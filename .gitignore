@@ -23,3 +23,5 @@ reference-data-proxy/generated_reports
 *.ipynb
 .ipynb_checkpoints
 .vscode/settings.json
+.DS_Store
+/gef-ui/.env
