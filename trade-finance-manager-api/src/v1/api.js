@@ -30,7 +30,7 @@ const findOneDeal = async (dealId) => {
         'Content-Type': 'application/json',
       },
     });
-    return response.data;
+    return response.data.deal;
   } catch ({ response }) {
     return false;
   }
