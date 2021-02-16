@@ -27,7 +27,7 @@ describe('deal controller', () => {
 
     it('should fetch a portal deal', async () => {
       const deal = await findOnePortalDeal(MOCK_DEAL._id);
-      expect(deal).toEqual(mappedDeal);
+      expect(deal).toEqual(MOCK_DEAL);
     });
   });
 });
