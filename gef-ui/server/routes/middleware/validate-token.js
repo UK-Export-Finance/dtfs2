@@ -1,9 +1,8 @@
-import Api from '../../services/api'
+import * as Api from '../../services/api'
 
 const validateToken = async (req, res, next) => {
   const { userToken } = req.session
-  const api = new Api(userToken)
-  if (userToken && await api.validateToken()) {
+  if (userToken && await Api.validateToken(userToken)) {
     return next()
   }
 

@@ -1,16 +1,13 @@
-import Api from '../../services/api'
+import * as Api from '../../services/api'
 
-const getCriteria = async (token) => {
-  const api = new Api(token)
-
+const getCriteria = async () => {
   try {
-    const response = await api.getMandatoryCriteria()
+    const response = await Api.getMandatoryCriteria()
 
     return response
   } catch (err) {
     throw err
   }
-  
 }
 
 export {
