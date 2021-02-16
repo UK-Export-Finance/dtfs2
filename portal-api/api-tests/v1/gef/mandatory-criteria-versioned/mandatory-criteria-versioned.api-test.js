@@ -24,7 +24,7 @@ describe('/v1/gef/mandatory-criteria-versioned', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['mandatoryCriteriaVersioned']);
+    await wipeDB.wipe(['gef-mandatoryCriteriaVersioned']);
   });
 
   describe('GET /v1/gef/mandatory-criteria-versioned', () => {
