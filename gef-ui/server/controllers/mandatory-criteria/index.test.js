@@ -1,5 +1,5 @@
 import { getMandatoryCriteria } from './index'
-import * as Api from '../../services/api'
+import * as api from '../../services/api'
 
 
 const mockResponse = () => {
@@ -18,7 +18,7 @@ describe('Mandatory Criteria - Controller', () => {
     }
 
     beforeEach(() => {
-      Api.getMandatoryCriteria = () => Promise.resolve(mockCriteria)
+      api.getMandatoryCriteria = () => Promise.resolve(mockCriteria)
     })
 
     it('renders the `mandatory-criteria` template', async () => {
@@ -32,7 +32,7 @@ describe('Mandatory Criteria - Controller', () => {
   describe('Unsuccessfully GET Mandatory Criteria', () => {
     beforeEach(() => {
       const mockedRejection = { response: { status: 400, message: 'Whoops' } }
-      Api.getMandatoryCriteria = () => Promise.reject(mockedRejection)
+      api.getMandatoryCriteria = () => Promise.reject(mockedRejection)
     })
 
     it('renders the `mandatory-criteria` template with error message', async () => {
