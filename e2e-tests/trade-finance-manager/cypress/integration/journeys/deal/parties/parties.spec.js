@@ -53,6 +53,10 @@ context('User can view party details', () => {
 
         cy.submitDeal(dealId);
         cy.visit(relative(`/case/deal/${dealId}`));
+
+        pages.caseDealPage.partiesLink().click();
+        cy.url().should('eq', relative(`/case/parties/${dealId}`));
+
       });
   });
 
@@ -62,11 +66,8 @@ context('User can view party details', () => {
     });
   });
 
-  describe('Parties pages', () => {
+  describe('Parties page', () => {
     it('should render components in party page', () => {
-      pages.caseDealPage.partiesLink().click();
-      cy.url().should('eq', relative(`/case/parties/${dealId}`));
-
       pages.partiesPage.exporterArea().should('exist');
       pages.partiesPage.buyerArea().should('exist');
       pages.partiesPage.agentArea().should('exist');
@@ -76,6 +77,17 @@ context('User can view party details', () => {
       pages.partiesPage.buyerEditLink().should('have.length', 1);
       pages.partiesPage.agentEditLink().should('have.length', 1);
       pages.partiesPage.indemnifierEditLink().should('have.length', 1);
+    });
+  });
+
+  describe('bond issuer facilities table', () => {
+    it('clicking `Facility ID` link should take user to facility details page', () => {
+      const facilityId = dealFacilities[0]._id; // eslint-disable-line no-underscore-dangle
+      const facilityRow = pages.partiesPage.bondIssuerFacilitiesTable.row(facilityId);
+
+      facilityRow.facilityId().click();
+
+      cy.url().should('eq', relative(`/case/facility/${facilityId}`));
     });
   });
 });
