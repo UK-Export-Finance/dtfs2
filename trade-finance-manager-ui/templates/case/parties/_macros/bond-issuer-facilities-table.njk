@@ -1,3 +1,5 @@
+{% import '../../../_macros/facility-link.njk' as facilityLink %}
+
 {% macro render(params) %}
   {% set facilities = params.facilities %}
 
@@ -16,13 +18,13 @@
         {% if facility.ukefFacilityType === 'bond' and facility.bondIssuer %}
           <tr class="govuk-table__row" data-cy="facility-{{ facility._id }}">
             <td class="govuk-table__cell govuk-body-s">
-              <a
-                class="govuk-link"
-                href="/case/facility/{{ facility._id }}"
-                aria-label="View Facility details"
-                data-cy="facility-{{ facility._id }}-ukef-facility-id-link">
-                <span data-cy="facility-{{ facility._id }}-ukef-facility-id-link-text">{{ facility.ukefFacilityID }}</span>
-              </a>
+
+              {% set componentData = {
+                id: facility._id,
+                ukefFacilityID: facility.ukefFacilityID
+              } %}
+
+              {{ facilityLink.render(componentData) }}
             </td>
 
             <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-bond-issuer">{{ facility.bondIssuer }}</td>
