@@ -52,7 +52,7 @@ const BANKS = [
   },
   {
     id: '9',
-    name: 'UKEF test bank (Delegated)',
+    name: 'UKEF test bank (Delegated) (TFM)',
     mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
     emails: [
       'maker@ukexportfinance.gov.uk',
@@ -61,6 +61,17 @@ const BANKS = [
     companiesHouseNo: 'UKEF0001',
     partyUrn: '00318345',
     useTFM: true,
+  },
+  {
+    id: '10',
+    name: 'UKEF test bank (Delegated) (Workflow)',
+    mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
+    emails: [
+      'maker@ukexportfinance.gov.uk',
+      'checker@ukexportfinance.gov.uk',
+    ],
+    companiesHouseNo: 'UKEF0001',
+    partyUrn: '00318345',
   },
 ];
 
