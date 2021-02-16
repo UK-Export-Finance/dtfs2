@@ -50,6 +50,8 @@ context('User can view a case deal', () => {
         cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
         });
+
+        cy.submitDeal(dealId);
       });
   });
 

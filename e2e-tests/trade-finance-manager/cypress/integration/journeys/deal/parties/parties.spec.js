@@ -51,7 +51,8 @@ context('User can view party details', () => {
           dealFacilities.push(...createdFacilities);
         });
 
-        cy.submitDeal(dealId, MOCK_MAKER_TFM);
+        cy.submitDeal(dealId);
+        cy.visit(relative(`/case/deal/${dealId}`));
       });
   });
 
@@ -63,7 +64,6 @@ context('User can view party details', () => {
 
   describe('Parties pages', () => {
     it('should render components in party page', () => {
-      cy.visit(relative(`/case/deal/${dealId}`));
       pages.caseDealPage.partiesLink().click();
       cy.url().should('eq', relative(`/case/parties/${dealId}`));
 
