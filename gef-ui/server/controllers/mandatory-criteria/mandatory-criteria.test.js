@@ -18,7 +18,7 @@ describe('Mandatory Criteria - Controller', () => {
     }
 
     beforeEach(() => {
-      Api.getMandatoryCriteria = () => Promise.resolve(mockCriteria);
+      Api.getMandatoryCriteria = () => Promise.resolve(mockCriteria)
     })
 
     it('renders the `mandatory-criteria` template', async () => {

@@ -6,7 +6,7 @@ const validateToken = async function (token) {
     const response = await Axios.get('/validate')
     return response.status === 200
   } catch (err) {
-    return err.response
+    throw new TypeError('Error with token')
   }
 }
 

@@ -9,21 +9,27 @@ afterEach(() => {
 describe('Api', () => {
   describe('ValidateToken', () => {
     it('returns `true` if token is valid', async () => {
-      Axios.get.mockImplementationOnce(() => ({ status: 200}))
+      Axios.get.mockReturnValue(Promise.resolve({ status: 200 }))
       const response = await Api.validateToken()
       expect(response).toBeTruthy();
     })
 
     it('returns `false` if token is not valid', async () => {
-      Axios.get.mockImplementationOnce(() => ({ status: 400}))
+      Axios.get.mockReturnValue(Promise.resolve({ status: 400 }))
       const response = await Api.validateToken()
       expect(response).toBeFalsy();
     })
 
     it('is able to trow an error', async () => {
-      Axios.get.mockImplementation(() => { throw { response: 'Something went wrong' } })
-      const response = await Api.validateToken()
-      expect(response).toEqual('Something went wrong');
+      Axios.get.mockReturnValue(Promise.reject({}))
+      let error
+      try {
+        await Api.validateToken()
+      } catch (err) {
+        console.log('error', err)
+        error = err
+      }
+      expect(error).toEqual(new TypeError('Error with token'));
     })
   })
 })
