@@ -1,28 +1,27 @@
-import mandatoryCriteriaRoutes from './mandatory-criteria'
-import nameApplicationRoutes from './name-application'
+import mandatoryCriteriaRoutes from './mandatory-criteria';
+import nameApplicationRoutes from './name-application';
 
-const useSpy = jest.fn()
-jest.doMock('express', () => {
-  return {
-    Router() {
-      return {
-        use: useSpy
-      }
-    }
-  }
-})
+const useSpy = jest.fn();
+jest.doMock('express', () => ({
+  Router() {
+    return {
+      use: useSpy,
+    };
+  },
+}));
 
 describe('Routes', () => {
   beforeEach(() => {
-    require('./index')
-  })
+    // eslint-disable-next-line global-require
+    require('./index');
+  });
 
   afterEach(() => {
-    jest.resetAllMocks()
-  })
+    jest.resetAllMocks();
+  });
 
   it('should setup all routes', () => {
-    expect(useSpy).toHaveBeenCalledWith(mandatoryCriteriaRoutes)
-    expect(useSpy).toHaveBeenCalledWith(nameApplicationRoutes)
-  })
-})
+    expect(useSpy).toHaveBeenCalledWith(mandatoryCriteriaRoutes);
+    expect(useSpy).toHaveBeenCalledWith(nameApplicationRoutes);
+  });
+});

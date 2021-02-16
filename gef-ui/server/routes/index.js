@@ -1,10 +1,10 @@
-import express from 'express'
-import mandatoryCriteriaRoutes from './mandatory-criteria'
-import nameApplicationRoutes from './name-application'
+import express from 'express';
+import mandatoryCriteriaRoutes from './mandatory-criteria';
+import nameApplicationRoutes from './name-application';
 
-const router = express.Router()
+const router = express.Router();
 
-router.use(mandatoryCriteriaRoutes)
-router.use(nameApplicationRoutes)
+router.use(mandatoryCriteriaRoutes);
+router.use(nameApplicationRoutes);
 
-export default router
+export default router;
