@@ -13,17 +13,20 @@ describe(component, () => {
         ukefFacilityID: '0040004833',
         ukefFacilityType: 'bond',
         bondIssuer: 'test bond issuer',
+        bankFacilityReference: '1234-test',
       },
       {
         _id: '456',
         ukefFacilityType: 'bond',
         ukefFacilityID: '0040004833',
         bondIssuer: 'test bond issuer',
+        bankFacilityReference: '1234-test',
       },
       {
         _id: '789',
         ukefFacilityType: 'bond',
         ukefFacilityID: '0040004833',
+        bankFacilityReference: '1234-test',
       },
       {
         _id: '112',
@@ -67,12 +70,30 @@ describe(component, () => {
       });
     });
 
-    // it('should render TODO table cell value', () => {
-    //   expectedFacilities.forEach((facility) => {
-    //     const cellSelector = `[data-cy="facility-${facility._id}-unique-reference-number"]`;
-    //     wrapper.expectText(cellSelector).toRead(facility.facilityProduct.code);
-    //   });
-    // });
+    describe('unique reference number (bankFacilityReference) table cell value', () => {
+      it('should render', () => {
+        const expectedFacilities = params.facilities.filter((f) =>
+          f.bondIssuer
+          && f.bankFacilityReference);
+
+        expectedFacilities.forEach((facility) => {
+          const selector = `[data-cy="facility-${facility._id}-unique-reference-number"]`;
+          wrapper.expectText(selector).toRead(facility.bankFacilityReference);
+          wrapper.expectElement(`[data-cy="facility-${facility._id}-unique-reference-number-not-matched"]`).notToExist();
+        });
+      });
+
+      it('should render `not matched` tag when there is no bankFacilityReference value', () => {
+        const expectedFacilities = params.facilities.filter((f) =>
+          f.bondIssuer
+          && !f.bankFacilityReference);
+
+        expectedFacilities.forEach((facility) => {
+          const cellSelector = `[data-cy="facility-${facility._id}-unique-reference-number-not-matched"]`;
+          wrapper.expectText(cellSelector).toRead(facility.bankFacilityReference);
+        });
+      });
+    });
 
     it('should not render facilties that are not a bond or do not have bondIssuer value', () => {
       const faciliitesThatShouldNotBeRendered = params.facilities.filter((f) =>
