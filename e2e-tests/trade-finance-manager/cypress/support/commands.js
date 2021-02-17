@@ -11,3 +11,5 @@ Cypress.Commands.add('deleteDeals', require('./portal-api/deleteDeals'));
 Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'));
 
 Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));
+
+Cypress.Commands.add('submitDeal', require('./trade-finance-manager-api/submitDeal'));

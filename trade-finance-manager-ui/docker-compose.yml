@@ -1,5 +1,29 @@
 version: "3" 
 services:
+
+  portal:
+    build: ../portal
+    image: dtfs/portal
+    restart: always
+    depends_on:
+      - portal-api
+      - redis
+    ports:
+      - "5000:5000"
+    volumes:
+      - ../portal/scripts:/app/scripts:ro
+      - ../portal/styles:/app/styles:ro
+      - ../portal/templates:/app/templates:ro
+      - ../portal/server:/app/server:ro
+    environment:
+      - DEAL_API_URL=http://portal-api:5001
+      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
+      - COMPANIES_HOUSE_API_KEY
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - SESSION_SECRET
+      - REDIS_HOSTNAME=redis
+    command: node dist/server.js
+
   dtfs-submissions-data:
     image: mongo
     restart: always
@@ -30,46 +54,6 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
     entrypoint: npx nodemon src/index.js
-
-  trade-finance-manager-api:
-    build: ../trade-finance-manager-api
-    image: dtfs/trade-finance-manager-api
-    restart: always
-    depends_on:
-      - portal-api
-      - dtfs-central-api
-      - reference-data-proxy
-    ports:
-      - "5004:5004"
-    volumes:
-      - ../trade-finance-manager-api/src:/app/src:ro
-    environment:
-      - PORT=5004
-      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
-      - DTFS_CENTRAL_API=http://dtfs-central-api:5005
-      - MONGO_INITDB_DATABASE=dtfs-submissions
-      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
-    entrypoint: npx nodemon src/index.js
-  
-  portal:
-    build: ../portal
-    image: dtfs/portal
-    restart: always
-    depends_on:
-      - portal-api
-    ports:
-      - "5000:5000"
-    volumes:
-      - ../portal/scripts:/app/scripts:ro
-      - ../portal/styles:/app/styles:ro
-      - ../portal/templates:/app/templates:ro
-      - ../portal/server:/app/server:ro
-    environment:
-      - DEAL_API_URL=http://portal-api:5001
-      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
-      - COMPANIES_HOUSE_API_KEY
-      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
-    command: node dist/server.js
 
   portal-api:
     build: ../portal-api
@@ -107,6 +91,49 @@ services:
       - TFM_API=http://trade-finance-manager-api:5004
     entrypoint: npx nodemon src/index.js
   
+  trade-finance-manager-api:
+    build: ../trade-finance-manager-api
+    image: dtfs/trade-finance-manager-api
+    restart: always
+    depends_on:
+      - portal-api
+      - dtfs-central-api
+      - reference-data-proxy
+    ports:
+      - "5004:5004"
+    volumes:
+      - ../trade-finance-manager-api/src:/app/src:ro
+    environment:
+      - PORT=5004
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - MONGO_INITDB_DATABASE=dtfs-submissions
+      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
+      - DTFS_CENTRAL_API=http://dtfs-central-api:5005
+    entrypoint: npx nodemon src/index.js
+
+  gef-ui:
+    build: ../gef-ui
+    image: dtfs/gef-ui
+    restart: always
+    depends_on:
+      - redis
+      - portal-api
+    ports:
+      - "5006:5006"
+    volumes:
+      - ../gef-ui/scripts:/app/scripts:ro
+      - ../gef-ui/styles:/app/styles:ro
+      - ../gef-ui/templates:/app/templates:ro
+      - ../gef-ui/server:/app/server:ro
+    environment:
+      - DEAL_API_URL=http://portal-api:5001
+      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
+      - COMPANIES_HOUSE_API_KEY
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - SESSION_SECRET
+      - REDIS_HOSTNAME=redis
+    command: node dist/server.js
+    
   reference-data-proxy:
     build: ../reference-data-proxy
     image: dtfs/reference-data-proxy
@@ -126,6 +153,22 @@ services:
       - MULESOFT_API_ACBS_DEAL_URL
       - MULESOFT_API_ACBS_FACILITY_URL
     entrypoint: npx nodemon src/index.js
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+
+  reverse-proxy:
+    build: ../reverse-proxy
+    image: "dtfs/reverse-proxy"
+    depends_on:
+      - portal
+    ports:
+      - "80:80"
+    environment:
+      - PORTAL_UI=portal:5000
+      - GEF_UI=host.docker.internal:5006
 
   test-hook-api:
     build: ../test-hook-api

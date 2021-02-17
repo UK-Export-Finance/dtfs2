@@ -1,6 +1,7 @@
 const MOCK_FACILITY = {
   _id: '12345678',
   ukefFacilityID: '0040004833',
+  facilityType: 'bond',
   bondIssuer: 'Issuer',
   bondType: 'Advance payment guarantee',
   facilityStage: 'Unissued',
@@ -22,7 +23,7 @@ const MOCK_FACILITY = {
   'coverEndDate-day': '20',
   'coverEndDate-month': '10',
   'coverEndDate-year': '2020',
-  bankReferenceNumber: '12345678',
+  uniqueIdentificationNumber: '12345678',
 };
 
 module.exports = MOCK_FACILITY;

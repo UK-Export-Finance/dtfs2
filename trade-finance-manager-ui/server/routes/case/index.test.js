@@ -11,7 +11,7 @@ describe('routes - case', () => {
   });
 
   it('should setup routes with controllers', () => {
-    expect(get).toHaveBeenCalledTimes(3);
+    expect(get).toHaveBeenCalledTimes(8);
     expect(get).toHaveBeenCalledWith('/deal/:_id', caseController.getCaseDeal);
     expect(get).toHaveBeenCalledWith('/facility/:_id', caseController.getCaseFacility);
     expect(get).toHaveBeenCalledWith('/parties/:_id', caseController.getCaseParties);

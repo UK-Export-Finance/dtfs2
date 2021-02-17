@@ -18,6 +18,7 @@ const DEFAULTS = {
     summary: {},
     comments: [],
     editedBy: [],
+    facilities: [],
   },
 };
 

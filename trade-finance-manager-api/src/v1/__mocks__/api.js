@@ -1,14 +1,26 @@
 const MOCK_DEAL = require('./mock-deal');
 const MOCK_DEAL_NO_PARTY_DB = require('./mock-deal-no-party-db');
+const MOCK_DEAL_NO_COMPANIES_HOUSE = require('./mock-deal-no-companies-house');
 const MOCK_FACILITY = require('./mock-facility');
 
 const MOCK_DEALS = [
   MOCK_DEAL,
   MOCK_DEAL_NO_PARTY_DB,
+  MOCK_DEAL_NO_COMPANIES_HOUSE,
 ];
 
 module.exports = {
   findOneDeal: (dealId) => {
+    const dealSnapshot = MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const deal = {
+      _id: dealId,
+      dealSnapshot,
+      tfm: {},
+    };
+
+    return dealSnapshot ? Promise.resolve(deal) : Promise.reject();
+  },
+  findOnePortalDeal: (dealId) => {
     const deal = MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
     return deal ? Promise.resolve(deal) : Promise.reject();
   },
@@ -21,6 +33,11 @@ module.exports = {
       ...updatedDeal,
     };
   },
+  submitDeal: (dealId) => ({
+    _id: dealId,
+    // eslint-disable-next-line no-underscore-dangle
+    dealSnapshot: MOCK_DEALS.find((d) => d._id === dealId),
+  }),
   getPartyDbInfo: ({ companyRegNo }) => (
     companyRegNo === 'NO_MATCH'
       ? false

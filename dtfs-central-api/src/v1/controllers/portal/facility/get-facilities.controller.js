@@ -12,6 +12,14 @@ const findAll = async (_id, callback) => {
 };
 exports.findAll = findAll;
 
+
+const findAllFacilitiesByDealId = async (dealId) => {
+  const collection = await db.getCollection('facilities');
+  const facilities = collection.find({ associatedDealId: dealId });
+  return facilities.toArray();
+};
+exports.findAllFacilitiesByDealId = findAllFacilitiesByDealId;
+
 exports.findAllGet = async (req, res) => {
   const facilities = await findAll();
 

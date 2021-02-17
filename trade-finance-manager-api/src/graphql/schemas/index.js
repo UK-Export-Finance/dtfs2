@@ -115,6 +115,7 @@ type Facility {
   ukefFacilityID: String!
   facilityProduct: FacilityProduct!
   facilityType: String
+  ukefFacilityType: String!
   facilityStage: String!
   facilityValueExportCurrency: String!
   facilityValue: String
@@ -122,6 +123,8 @@ type Facility {
   ukefExposure: String!
   coveredPercentage: String!
   bankFacilityReference: String
+  guaranteeFeePayableToUkef: String
+  bondIssuer: String
 }
 
 type DealTotals {
@@ -148,16 +151,23 @@ input DealsInput {
   pagesize: Int,
   filters: [DashboardFilters]
 }
-type Deal {
+
+type DealSnapshot {
   _id: String!
   ukefDealId: String!
   Product: String
+  ukefDealId: String
   details: DealDetails
   totals: DealTotals
   facilities: [Facility]
   submissionDetails: DealSubmissionDetails
   eligibilityCriteria: [DealEligibilityCriterion!]
   eligibility: DealEligibility
+}
+
+type Deal {
+  _id: String!
+  dealSnapshot: DealSnapshot
   tfm: TFMData
 }
 

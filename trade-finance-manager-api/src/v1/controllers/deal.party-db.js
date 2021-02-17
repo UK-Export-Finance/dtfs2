@@ -25,7 +25,7 @@ const addPartyUrns = async (deal) => {
       ...deal.tfm,
       submissionDetails: {
         ...tfmSubmissionDetails,
-        supplierPartyUrn: await getPartyUrn({ companyRegNo: deal.submissionDetails['supplier-companies-house-registration-number'] }),
+        supplierPartyUrn: await getPartyUrn({ companyRegNo: deal.dealSnapshot.submissionDetails['supplier-companies-house-registration-number'] }),
       },
     },
   };

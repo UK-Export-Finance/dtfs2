@@ -4,26 +4,26 @@ describe('mapBankFacilityReference', () => {
   const mockBond = {
     _id: '1234',
     bondType: 'Retention bond',
-    bankReferenceNumber: 'abc123',
+    uniqueIdentificationNumber: 'abc123',
   };
 
   const mockLoan = {
     _id: '1234',
     interestMarginFee: '12',
-    uniqueIdentificationNumber: '700',
+    bankReferenceNumber: '700',
   };
 
-  describe('when facility is bond and has bankReferenceNumber', () => {
-    it('should return bankReferenceNumber', () => {
+  describe('when facility is bond', () => {
+    it('should return uniqueIdentificationNumber', () => {
       const result = mapBankFacilityReference(mockBond);
-      expect(result).toEqual(mockBond.bankReferenceNumber);
+      expect(result).toEqual(mockBond.uniqueIdentificationNumber);
     });
   });
 
-  describe('when facility is loan and has uniqueIdentificationNumber', () => {
-    it('should return uniqueIdentificationNumber', () => {
+  describe('when facility is loan', () => {
+    it('should return bankReferenceNumber', () => {
       const result = mapBankFacilityReference(mockLoan);
-      expect(result).toEqual(mockLoan.uniqueIdentificationNumber);
+      expect(result).toEqual(mockLoan.bankReferenceNumber);
     });
   });
 });

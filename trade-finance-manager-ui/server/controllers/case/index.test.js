@@ -9,6 +9,9 @@ describe('controllers - case', () => {
     describe('when deal exists', () => {
       const mockDeal = {
         _id: '1000023',
+        dealSnapshot: {
+          _id: '1000023',
+        },
         mock: true,
       };
 
@@ -25,7 +28,7 @@ describe('controllers - case', () => {
 
         await caseController.getCaseDeal(req, res);
         expect(res.render).toHaveBeenCalledWith('case/deal/deal.njk', {
-          deal: mockDeal,
+          deal: mockDeal.dealSnapshot,
           active_sheet: 'deal',
           dealId: req.params._id, // eslint-disable-line no-underscore-dangle
         });
@@ -100,6 +103,9 @@ describe('controllers - case', () => {
     describe('when deal exists', () => {
       const mockDeal = {
         _id: '1000023',
+        dealSnapshot: {
+          _id: '1000023',
+        },
         mock: true,
       };
 
@@ -116,7 +122,7 @@ describe('controllers - case', () => {
 
         await caseController.getCaseParties(req, res);
         expect(res.render).toHaveBeenCalledWith('case/parties/parties.njk', {
-          deal: mockDeal,
+          deal: mockDeal.dealSnapshot,
           active_sheet: 'parties',
           dealId: req.params._id, // eslint-disable-line no-underscore-dangle
         });

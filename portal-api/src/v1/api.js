@@ -205,11 +205,12 @@ const deleteFacility = async (facilityId, user) => {
 const tfmDealSubmit = async (dealId) => {
   try {
     const response = await axios({
-      method: 'get',
-      url: `${tfmUrl}/v1/deals/${dealId}/submit`,
+      method: 'put',
+      url: `${tfmUrl}/v1/deals/submit`,
       headers: {
         'Content-Type': 'application/json',
       },
+      data: { dealId },
     });
 
     return response.data;

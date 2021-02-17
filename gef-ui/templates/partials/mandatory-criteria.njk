@@ -1,0 +1,87 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}Confirm eligiblity (mandatory criteria){% endblock %}
+
+{% block content %}
+
+  {{ govukErrorSummary({
+    titleText: "There is a problem",
+    errorList: [
+      {
+        text: "The date your passport was issued must be in the past",
+        href: "#passport-issued-error"
+      },
+      {
+        text: "Enter a postcode, like AA1 1AA",
+        href: "#postcode-error"
+      }
+    ]
+  }) }}
+
+
+  <span class="govuk-caption-xl" data-cy="heading-caption">
+    Create new application
+  </span>
+
+  <h1 class="govuk-heading-l" data-cy="main-heading">
+    Confirm eligiblity (mandatory criteria)
+  </h1>
+
+  <div data-cy="mandatory-criteria">
+  {{ criteria.htmlText | safe }}
+  </div>
+
+  <form
+    method="post"
+    data-cy="form">
+    {{ govukRadios({
+      classes: "govuk-radios--inline",
+      idPrefix: "mandatory-criteria",
+      name: "mandatoryCriteria",
+      fieldset: {
+        legend: {
+          text: "Can you confirm that the mandatory criteria will be true for this General Export Facility?",
+          isPageHeading: false,
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      errorMessage: validationErrorMessage and {
+        text: validationErrorMessage,
+        attributes: {
+          'data-cy': 'mandatory-criteria-error'
+        }
+      },
+      items: [
+        {
+          value: true,
+          text: "True",
+          attributes: {
+            'data-cy': 'mandatory-criteria-true'
+          }
+        },
+        {
+          value: false,
+          text: "False",
+          attributes: {
+            'data-cy': 'mandatory-criteria-false'
+          }
+        }
+      ] }) 
+    }}
+
+    <div class="govuk-button-group">
+      {{ govukButton({
+        text: "Continue"
+      }) }}
+
+      <a
+        class="govuk-link"
+        href="/gef/mandatory-criteria"
+        data-cy="cancel-button">Cancel</a>
+    </div>
+</form>
+
+{% endblock %}

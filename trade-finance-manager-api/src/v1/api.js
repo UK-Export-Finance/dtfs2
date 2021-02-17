@@ -5,6 +5,22 @@ require('dotenv').config();
 const centralApiUrl = process.env.DTFS_CENTRAL_API;
 const refDataUrl = process.env.REFERENCE_DATA_PROXY_URL;
 
+const findOnePortalDeal = async (dealId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data.deal;
+  } catch ({ response }) {
+    return false;
+  }
+};
+
 const findOneDeal = async (dealId) => {
   try {
     const response = await axios({
@@ -14,7 +30,6 @@ const findOneDeal = async (dealId) => {
         'Content-Type': 'application/json',
       },
     });
-
     return response.data.deal;
   } catch ({ response }) {
     return false;
@@ -33,6 +48,23 @@ const updateDeal = async (dealId, dealUpdate, user) => {
         dealUpdate,
         user,
       },
+    });
+
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+const submitDeal = async (dealId) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${centralApiUrl}/v1/tfm/deals/${dealId}/submit`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {},
     });
 
     return response.data;
@@ -95,7 +127,9 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
 
 module.exports = {
   findOneDeal,
+  findOnePortalDeal,
   updateDeal,
+  submitDeal,
   findOneFacility,
   queryDeals,
   getPartyDbInfo,
