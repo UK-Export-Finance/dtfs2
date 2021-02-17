@@ -29,18 +29,30 @@ context('Mandatory Criteria Page', () => {
   });
 
   describe('Clicking on Continue', () => {
-    it('returns error when no radio button has been selected', () => {
+    it('shows error summary at top of page when no radio button has been selected', () => {
+      mandatoryCriteria.form().submit();
+      mandatoryCriteria.errorSummary();
+    });
+
+    it('Clicking on error link in error summary takes you to correct field', () => {
+      mandatoryCriteria.form().submit();
+      mandatoryCriteria.errorSummary();
+      mandatoryCriteria.firstErrorLink().click();
+      cy.url().should('eq', relative('/gef/mandatory-criteria'));
+    });
+
+    it('shows validation error when no radio button has been selected', () => {
       mandatoryCriteria.form().submit();
       mandatoryCriteria.formError();
     });
 
-    it('redirects the user to ** when they select False', () => {
+    it('redirects the user to ** when they select `False`', () => {
       mandatoryCriteria.falseRadio().click();
       mandatoryCriteria.form().submit();
       cy.url().should('eq', relative('/gef/mandatory-criteria'));
     });
 
-    it('redirects the user to the Name Application page when they select True', () => {
+    it('redirects the user to the Name Application page when they select `True`', () => {
       mandatoryCriteria.trueRadio().click();
       mandatoryCriteria.form().submit();
       cy.url().should('eq', relative('/gef/name-application'));
