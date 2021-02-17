@@ -7,6 +7,7 @@ query Deals($start: Int, $pagesize: Int, $filters:[DashboardFilters]){
     count
     deals{
       _id
+      Product
       details{
         status
         bankSupplyContractID
