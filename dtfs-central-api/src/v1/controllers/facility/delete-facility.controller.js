@@ -8,8 +8,10 @@ exports.deleteFacility = async (req, res) => {
   findOneFacility(facilityId, async (facility) => {
     if (facility) {
       const collection = await db.getCollection('facilities');
-      const status = await collection.deleteOne({ _id: facilityId });
+      const tfmCollection = await db.getCollection('facilities');
 
+      const status = await collection.deleteOne({ _id: facilityId });
+      await tfmCollection.deleteOne({ _id: facilityId });
       // remove facility ID from the associated deal
       const {
         user,

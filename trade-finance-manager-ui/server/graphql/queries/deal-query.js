@@ -5,8 +5,20 @@ const dealQuery = gql`
     deal(_id: $id) {
       _id
       tfm {
-        submissionDetails {
-          supplierPartyUrn
+        parties {
+          exporter {
+            partyUrn
+          }
+          buyer {
+            partyUrn
+          }
+          indemnifier {
+            partyUrn
+          }
+          agent {
+            partyUrn
+            commissionRate
+          }
         }
       }
       dealSnapshot {
@@ -34,20 +46,28 @@ const dealQuery = gql`
         }
         facilities {
           _id,
-          ukefFacilityID,
-          facilityProduct {
-            code
-          },
-          facilityType,
-          ukefFacilityType,
-          facilityStage,
-          facilityValueExportCurrency,
-          facilityValue,
-          ukefExposure,
-          coveredPercentage,
-          bondIssuer,
-          bondBeneficiary,
-          bankFacilityReference
+          facilitySnapshot {
+            _id,
+            ukefFacilityID,
+            facilityProduct {
+              code
+            },
+            facilityType,
+            ukefFacilityType,
+            facilityStage,
+            facilityValueExportCurrency,
+            facilityValue,
+            coverEndDate,
+            ukefExposure,
+            coveredPercentage,
+            bondIssuer,
+            bondBeneficiary,
+            bankFacilityReference
+          }
+          tfm {
+            bondIssuerPartyUrn
+            bondBeneficiaryPartyUrn
+          }
         }
         eligibility {
           agentAddressCountry,

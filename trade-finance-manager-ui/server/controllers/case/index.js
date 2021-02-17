@@ -1,7 +1,5 @@
 import api from '../../api';
 
-import FACILITY_TYPE from '../../constants/facilities';
-
 // NOTE
 // the relationship between deal & case is currently unknown,
 // and therefore how this will be managed/stored/referenced.
@@ -69,7 +67,8 @@ const getPartyDetails = (partyType) => (
     }
 
     return res.render(`case/parties/edit/${partyType}-edit.njk`, {
-      deal,
+      deal: deal.dealSnapshot,
+      tfm: deal.tfm,
       dealId,
     });
   }
@@ -83,13 +82,60 @@ const getBondIssuerPartyDetails = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const bonds = deal.facilities.filter(({ facilityProduct }) => facilityProduct.code === FACILITY_TYPE.BSS);
-
-  return res.render('case/parties/edit/bond-issuers-edit.njk', {
-    deal,
-    dealId,
-    bonds,
+  return res.render('case/parties/edit/bonds-edit.njk', {
+    bondType: 'bond issuer',
+    deal: deal.dealSnapshot,
   });
+};
+
+
+const getBondBeneficiaryrPartyDetails = async (req, res) => {
+  const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+  const deal = await api.getDeal(dealId);
+
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  return res.render('case/parties/edit/bonds-edit.njk', {
+    bondType: 'bond beneficiary',
+    deal: deal.dealSnapshot,
+  });
+};
+
+const postPartyDetails = (partyType) => (
+  async (req, res) => {
+    const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+
+    const update = {
+      [partyType]: req.body,
+    };
+
+    await api.updateParty(dealId, update);
+
+    return res.redirect(`/case/parties/${dealId}`);
+  }
+);
+
+const postTfmFacility = async (req, res) => {
+  const { facilityId, ...facilityUpdateFields } = req.body;
+  const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+
+
+  await Promise.all(
+    facilityId.map((id, index) => {
+      const facilityUpdate = {};
+      Object.entries(facilityUpdateFields).forEach(([fieldName, values]) => {
+        facilityUpdate[fieldName] = values[index];
+      });
+      return api.updateFacility(id, facilityUpdate);
+    }),
+  );
+
+
+  // const { data } = await api.updateParty(dealId, update);
+
+  return res.redirect(`/case/parties/${dealId}`);
 };
 
 
@@ -99,4 +145,7 @@ export default {
   getCaseParties,
   getPartyDetails,
   getBondIssuerPartyDetails,
+  getBondBeneficiaryrPartyDetails,
+  postPartyDetails,
+  postTfmFacility,
 };

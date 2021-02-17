@@ -1,0 +1,16 @@
+const mapFacility = require('./mappings/facilities/mapFacility');
+
+<<<<<<< HEAD
+const facilityReducer = (facility, dealDetails) =>
+  mapFacility(facility, dealDetails);
+=======
+const facilityReducer = (facility) => (
+  {
+    _id: facility._id, // eslint-disable-line no-underscore-dangle
+    facilitySnapshot: mapFacility(facility),
+    tfm: facility.tfm,
+  }
+);
+>>>>>>> 47dcde9b... dtfs2-2626 funcationality for editable parties pages - api tests
+
+module.exports = facilityReducer;

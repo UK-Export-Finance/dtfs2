@@ -1,0 +1,31 @@
+{% import '../_macros/parties-indemnifier-area.njk' as indemnifierArea %}
+{% import '../../_macros/save-close-buttons.njk' as saveCloseButtons %}
+
+{% extends "index.njk" %}
+  {% set primary = 'cases' %}
+
+  {% block pageTitle %}
+    Edit agent details: {{ deal.submissionDetails.indemnifierName }}
+  {% endblock %}
+
+  {% block content %}
+    <form autocomplete="off" method="POST">
+      {{ indemnifierArea.render({deal: deal, tfm: tfm, editable: true}) }}
+
+<<<<<<< HEAD
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        {{ saveCloseButtons.render({returnTo: "/case/" + dealId + "/parties"}) }}
+=======
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+          {{ saveCloseButtons.render({returnTo: "/case/parties/" + dealId}) }}
+        </div>
+>>>>>>> dc5e181f... dtfs2-2626 editable parties pages
+      </div>
+    </form>
+
+  {% endblock %}
+
+  {% block sub_content %}
+  {% endblock %}

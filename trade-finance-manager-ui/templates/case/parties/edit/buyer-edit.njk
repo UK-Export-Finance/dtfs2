@@ -9,14 +9,14 @@
   {% endblock %}
 
   {% block content %}
-    {{ buyerArea.render({deal: deal, editable: true}) }}
+    <form autocomplete="off" method="POST">
+      {{ buyerArea.render({deal: deal, tfm: tfm, editable: true}) }}
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
         {{ saveCloseButtons.render({returnTo: "/case/" + dealId + "/parties"}) }}
       </div>
-    </div>
-
+    </form>
   {% endblock %}
 
   {% block sub_content %}

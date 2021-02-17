@@ -10,7 +10,7 @@ const findOneDeal = async (dealId) => {
 
   return {
     ...deal,
-    dealSnapshot: mapDeal(deal.dealSnapshot),
+    dealSnapshot: await mapDeal(deal.dealSnapshot),
   };
 };
 exports.findOneDeal = findOneDeal;
@@ -25,3 +25,16 @@ const findOnePortalDeal = async (dealId) => {
   return deal;
 };
 exports.findOnePortalDeal = findOnePortalDeal;
+
+const updateTfmParty = async (dealId, tfmUpdate) => {
+  const partyUpdate = {
+    tfm: {
+      parties: tfmUpdate,
+    },
+  };
+
+  // eslint-disable-next-line no-underscore-dangle
+  const updatedDeal = await api.updateDeal(dealId, partyUpdate);
+  return updatedDeal;
+};
+exports.updateTfmParty = updateTfmParty;

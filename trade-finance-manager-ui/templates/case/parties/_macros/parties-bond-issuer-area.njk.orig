@@ -1,0 +1,48 @@
+{% import './bond-issuer-facilities-table.njk' as bondIssuerFacilitiesTable %}
+{% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
+
+{% macro render(params) %}
+{% set deal = params.deal %}
+
+{% set filteredFacilities = deal.facilities | bondIssuerFacilities %}
+
+<div class="govuk-grid-row {% if not params.editable %}ukef-flex-container separator-line deal{% endif %}">
+    <div class="govuk-grid-column-one-half">
+    <h2 class="ukef-heading-l" data-cy="bond-issuer-heading">Bond issuer</h2>
+    <p class="ukef-hint" style="margin-top:-36px" data-cy="bond-issuer-sub-heading">(if different to bank)</p>
+    </div>
+
+  {% if filteredFacilities.length > 0 and not params.editable %}
+    <div class="govuk-grid-column-one-half ukef-flex-container--align-center-right">
+      {{ uniqueReferenceNumberEditLink.render({dealId: deal._id, type: 'bond-issuer'}) }}
+    </div>
+  {% endif %}
+</div>
+
+<div class="govuk-grid-row deal">
+
+<<<<<<< HEAD
+      {% set componentData = {
+        facilities: filteredFacilities,
+        caseId: deal._id
+      } %}
+              
+      {{ bondIssuerFacilitiesTable.render(componentData) }}
+=======
+  {% if filteredFacilities.length > 0 %}
+>>>>>>> dc5e181f... dtfs2-2626 editable parties pages
+
+    {% set componentData = {
+      facilities: filteredFacilities
+    } %}
+            
+    {{ bondIssuerFacilitiesTable.render(componentData) }}
+
+  {% else %}
+    <p data-cy="bond-issuer-not-applicable">Not applicable</p>
+  {% endif %}
+
+</div>
+
+
+{% endmacro %}

@@ -32,7 +32,7 @@ const createFacilitiesSnapshot = async (dealId) => {
     dealFacilities.map(async (facility) => collection.findOneAndUpdate(
     // eslint-disable-next-line no-underscore-dangle
       { _id: facility._id },
-      $.flatten(withoutId(facility)),
+      $.flatten({ facilitySnapshot: facility, tfm: {} }),
       { returnOriginal: false, upsert: true },
     )),
   );

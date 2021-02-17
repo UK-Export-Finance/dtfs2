@@ -1,0 +1,44 @@
+{% import '../_macros/parties-bond-edit.njk' as bondEdit %}
+{% import '../../_macros/save-close-buttons.njk' as saveCloseButtons %}
+
+{% extends "index.njk" %}
+  {% set primary = 'cases' %}
+
+  {% block pageTitle %}
+    Edit {{ bondType}} details
+  {% endblock %}
+
+  {% block content %}
+  {% if bondType == 'bond issuer' %}
+    {% set filteredFacilities = deal.facilities | bondIssuerFacilities %}
+  {% else %}
+    {% set filteredFacilities = deal.facilities | bondBeneficiaryFacilities %}
+  {% endif %}
+
+   <form autocomplete="off" method="POST">
+    <div class="govuk-grid-row {% if not params.editable %}ukef-flex-container separator-line deal{% endif %}">
+      <div class="govuk-grid-column-one-half">
+        <h1 class="ukef-heading-l govuk-!-margin-top-9">Edit {{ bondType }} details</h1>
+      </div>
+    </div>
+
+    {% for facility in filteredFacilities %}
+      <input name="facilityId[]" type="hidden" value="{{ facility._id }}" />
+      {{ bondEdit.render({ bond: facility, bondType: bondType }) }}
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    {% endfor %}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+<<<<<<< HEAD:trade-finance-manager-ui/templates/case/parties/edit/bond-issuers-edit.njk
+        {{ saveCloseButtons.render({returnTo: "/case/" + dealId + "/parties"}) }}
+=======
+        {{ saveCloseButtons.render({returnTo: "/case/parties/" + deal._id}) }}
+>>>>>>> dc5e181f... dtfs2-2626 editable parties pages:trade-finance-manager-ui/templates/case/parties/edit/bonds-edit.njk
+      </div>
+    </div>
+  </form>
+  {% endblock %}
+
+  {% block sub_content %}
+  {% endblock %}

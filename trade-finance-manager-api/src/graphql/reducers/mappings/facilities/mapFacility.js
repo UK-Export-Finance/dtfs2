@@ -17,6 +17,7 @@ const mapFacility = (f, dealDetails) => {
     guaranteeFeePayableByBank,
   } = facility;
 
+
   const ukefFacilityType = facilityType;
 
   const formattedFacilityValue = formattedNumber(facilityValue);

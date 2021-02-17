@@ -118,7 +118,7 @@ type FacilityDates {
   tenor: String
 }
 
-type Facility {
+type FacilitySnapshot {
   _id: String!
   ukefFacilityID: String!
   facilityProduct: FacilityProduct!
@@ -136,17 +136,40 @@ type Facility {
   dates: FacilityDates
 }
 
+type Facility {
+  _id: String!
+  facilitySnapshot: FacilitySnapshot
+  tfm: TFMFacilityData
+}
+
 type DealTotals {
   facilitiesValueInGBP: String
   facilitiesUkefExposure: String
 }
 
-type TFMSubmissionDetails {
-  supplierPartyUrn: String
+type TFMParty {
+  partyUrn: String
 }
 
-type TFMData {
-  submissionDetails: TFMSubmissionDetails
+type TFMAgent {
+  partyUrn: String
+  commissionRate: String
+}
+
+type TFMParties {
+  exporter: TFMParty
+  buyer: TFMParty
+  indemnifier: TFMParty
+  agent: TFMAgent
+}
+
+type TFMDealData {
+  parties: TFMParties
+}
+
+type TFMFacilityData {
+  bondIssuerPartyUrn: String
+  bondBeneficiaryPartyUrn: String
 }
 
 input DashboardFilters {
@@ -174,7 +197,7 @@ type DealSnapshot {
 type Deal {
   _id: String!
   dealSnapshot: DealSnapshot
-  tfm: TFMData
+  tfm: TFMDealData
 }
 
 type Deals {
@@ -188,12 +211,38 @@ type DealsQuery {
   deals: [Deal]
 }
 
+
+input TFMPartyInput {
+  partyUrn: String
+}
+
+input TFMAgentInput {
+  partyUrn: String
+  commissionRate: String
+}
+
+input TFMPartiesInput {
+  exporter: TFMPartyInput
+  indemnifier: TFMPartyInput
+  buyer: TFMPartyInput
+  agent: TFMAgentInput
+}
+
+input TFMFacilityInput {
+  bondIssuerPartyUrn: String
+  bondBeneficiaryPartyUrn: String
+}
+
 type Query {
   deal(_id: ID!): Deal
   deals(params: DealsInput): DealsQuery
   facility(_id: ID!): Facility
 }
 
+type Mutation {
+  updateParties(_id: ID!, partyUpdate: TFMPartiesInput): TFMDealData
+  updateFacility(_id: ID!, facilityUpdate: TFMFacilityInput): TFMFacilityData
+}
 `;
 
 module.exports = typeDefs;
