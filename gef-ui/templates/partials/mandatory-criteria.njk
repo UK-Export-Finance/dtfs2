@@ -1,9 +1,7 @@
 {% extends "index.njk" %}
-{% import '_macros/success-message.njk' as success %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-
 
 {% block pageTitle %}Confirm eligiblity (mandatory criteria){% endblock %}
 
@@ -32,11 +30,9 @@
     Confirm eligiblity (mandatory criteria)
   </h1>
 
-  {% if criteria.htmlText %}
   <div data-cy="mandatory-criteria">
   {{ criteria.htmlText | safe }}
   </div>
-  {% endif %}
 
   <form
     method="post"

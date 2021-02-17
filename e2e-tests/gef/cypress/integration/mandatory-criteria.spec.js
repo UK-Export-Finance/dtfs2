@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import relative from './relativeURL';
 import { mandatoryCriteria } from './pages/mandatory-criteria';
 
@@ -13,7 +14,7 @@ context('Mandatory Criteria Page', () => {
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
-    mandatoryCriteria.visit(relative('/gef/mandatory-criteria'));
+    cy.visit(relative('/gef/mandatory-criteria'));
   });
 
   describe('Visiting page', () => {
