@@ -1,7 +1,6 @@
-
+/* eslint-disable no-undef */
 
 const mandatoryCriteria = {
-  visit: (path) => cy.visit(path),
   captionHead: () => cy.get('[data-cy="heading-caption"]'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
   mandatoryCriteriaText: () => cy.get('[data-cy="mandatory-criteria"]'),
@@ -9,9 +8,9 @@ const mandatoryCriteria = {
   formError: () => cy.get('[data-cy="mandatory-criteria-error"]'),
   falseRadio: () => cy.get('[data-cy="mandatory-criteria-false"]'),
   trueRadio: () => cy.get('[data-cy="mandatory-criteria-true"]'),
-  cancelButton: () => cy.get('[data-cy="cancel-button"]')
+  cancelButton: () => cy.get('[data-cy="cancel-button"]'),
 };
 
-export {
-  mandatoryCriteria
+export default {
+  mandatoryCriteria,
 };
