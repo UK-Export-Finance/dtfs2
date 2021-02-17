@@ -151,6 +151,7 @@ input DealsInput {
 type Deal {
   _id: String!
   ukefDealId: String!
+  Product: String
   details: DealDetails
   totals: DealTotals
   facilities: [Facility]

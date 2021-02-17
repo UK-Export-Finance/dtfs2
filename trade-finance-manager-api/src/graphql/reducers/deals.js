@@ -1,9 +1,10 @@
+/* eslint-disable no-underscore-dangle */
 const mapSubmissionDetails = require('./mapSubmissionDetails');
 
 // TODO: add unit test
 // so that when this is changed, tests fail.
 
-const dealsReducer = (dealsquery) => {
+const dealsReducer = (dealsquery, _productDictionary) => {
   const {
     count,
     deals,
@@ -12,6 +13,10 @@ const dealsReducer = (dealsquery) => {
   const mapDeal = (d) => {
     const deal = d;
     deal.submissionDetails = mapSubmissionDetails(d.submissionDetails);
+    if (d._id in _productDictionary) {
+      deal.Product = _productDictionary[d._id];
+    }
+
     return deal;
   };
 
