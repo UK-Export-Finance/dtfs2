@@ -1,5 +1,4 @@
 /* eslint-disable no-undef */
-
 const mandatoryCriteria = {
   captionHead: () => cy.get('[data-cy="heading-caption"]'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
@@ -11,6 +10,4 @@ const mandatoryCriteria = {
   cancelButton: () => cy.get('[data-cy="cancel-button"]'),
 };
 
-export default {
-  mandatoryCriteria,
-};
+export default mandatoryCriteria;

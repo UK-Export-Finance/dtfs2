@@ -1,5 +1,4 @@
 import Axios from './axios';
-import { errorHandler } from '../utils/helpers';
 
 const validateToken = async (token) => {
   try {
@@ -13,11 +12,10 @@ const validateToken = async (token) => {
 
 const getMandatoryCriteria = async () => {
   try {
-    const response = await Axios.get('/g');
+    const response = await Axios.get('/gef/mandatory-criteria-versioned/latest');
     return response.data;
   } catch (err) {
-    console.log('BABY', err);
-    return errorHandler(err);
+    return err;
   }
 };
 
