@@ -2,11 +2,11 @@ import axios from 'axios';
 
 require('dotenv').config();
 
-const { BASE_URL } = process.env;
+const { DEAL_API_URL } = process.env;
 const VERSION = 'v1';
 
 export default axios.create({
-  baseURL: `${BASE_URL}/${VERSION}`,
+  baseURL: `${DEAL_API_URL}/${VERSION}`,
   timeout: 1000,
   headers: {
     Accept: 'application/json',
