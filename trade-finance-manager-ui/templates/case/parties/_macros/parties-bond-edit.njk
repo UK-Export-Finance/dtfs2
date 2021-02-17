@@ -5,7 +5,14 @@
 {% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
 
 {% macro render(params) %}
-{% set bond = params.bond %}
+{% set bond = params.bond.facilitySnapshot %}
+{% if params.bondType == "bond issuer" %}
+  {% set partyUrnValue = params.bond.tfm.bondIssuerPartyUrn %}
+  {% set partyUrnFieldname="bondIssuerPartyUrn[]" %}
+{% else %}
+  {% set partyUrnValue = params.bond.tfm.bondBeneficiaryPartyUrn %}
+  {% set partyUrnFieldname="bondBeneficiaryPartyUrn[]" %}
+{% endif %}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
@@ -21,8 +28,9 @@
           label: {
             text: "Unique reference number (URN)"
           },
-          id: "bond-urn",
-          name: "bond-urn[]"
+          id: "party-urn",
+          name: partyUrnFieldname,
+          value: partyUrnValue
         }) }}
         </div>
       </div>
@@ -43,4 +51,5 @@
       }) }}
     </div>
   </div>
+
 {% endmacro %}

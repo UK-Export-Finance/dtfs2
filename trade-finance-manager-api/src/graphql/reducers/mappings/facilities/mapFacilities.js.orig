@@ -1,0 +1,21 @@
+const mapFacility = require('./mapFacility');
+
+const mapFacilities = (facilities, dealDetails) => {
+  const mappedFacilities = [];
+
+  facilities.forEach((f) => {
+<<<<<<< HEAD
+    mappedFacilities.push(mapFacility(f, dealDetails));
+=======
+    mappedFacilities.push({
+      _id: f._id, // eslint-disable-line no-underscore-dangle
+      facilitySnapshot: mapFacility(f.facilitySnapshot),
+      tfm: f.tfm,
+    });
+>>>>>>> d5a5b4b1... dtfs2-2626 editable parties pages
+  });
+
+  return mappedFacilities;
+};
+
+module.exports = mapFacilities;

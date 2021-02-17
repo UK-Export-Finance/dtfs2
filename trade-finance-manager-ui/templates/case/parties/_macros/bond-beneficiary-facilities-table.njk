@@ -23,19 +23,19 @@
             {% set componentData = {
               caseId: caseId,
               facilityId: facility._id,
-              ukefFacilityID: facility.ukefFacilityID
+              ukefFacilityID: facility.facilitySnapshot.ukefFacilityID
             } %}
 
             {{ facilityLink.render(componentData) }}
           </td>
 
-          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-bond-beneficiary">{{ facility.bondBeneficiary }}</td>
+          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-bond-beneficiary">{{ facility.facilitySnapshot.bondBeneficiary }}</td>
 
           <td class="govuk-table__cell govuk-body-s">
 
-            {% if facility.bankFacilityReference %}
+            {% if facility.tfm.bondBeneficiaryPartyUrn %}
 
-              <span data-cy="facility-{{ facility._id }}-unique-reference-number">{{ facility.bankFacilityReference }}</span>
+              <span data-cy="facility-{{ facility._id }}-unique-reference-number">{{ facility.tfm.bondBeneficiaryPartyUrn }}</span>
 
             {% else %}
               {{govukTag({

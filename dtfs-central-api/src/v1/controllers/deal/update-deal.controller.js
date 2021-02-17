@@ -137,6 +137,10 @@ exports.addFacilityIdToDeal = addFacilityIdToDeal;
 
 const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => {
   await findOneDeal(dealId, async (deal) => {
+    if (!deal) {
+      return false;
+    }
+
     const { facilities } = deal;
 
     const updatedFacilities = facilities.filter((f) => f !== facilityId);

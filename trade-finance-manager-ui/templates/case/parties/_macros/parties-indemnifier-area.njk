@@ -5,8 +5,10 @@
 {% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
 
 {% macro render(params) %}
-  {% set deal = params.deal %}
-  {% if not deal.tfm.submissionDetails.indemnifierPartyUrn %}
+{% set deal = params.deal %}
+{% set indemnifier = params.tfm.parties.indemnifier %}
+
+  {% if not indemnifier.partyUrn %}
     {% set uniqueRefStyle = "govuk-tag govuk-tag--red" %}
     {% set uniqueRefKeyStyle = "govuk-!-font-weight-bold govuk-!-margin-top-4" %}
   {% endif %}
@@ -40,11 +42,12 @@
             label: {
               text: "Unique reference number (URN)"
             },
-            id: "indemnifier-urn",
-            name: "indemnifier-urn",
+            id: "partyUrn",
+            name: "partyUrn",
             attributes: {
-              "data-cy": "urn-input"
-            }
+              "data-cy": "party-urn-input"
+            },
+            value: indemnifier.partyUrn
           }) }}
           </div>
         </div>
@@ -52,7 +55,7 @@
         {{ keyValueGridRow.render({
           key: 'Unique reference number',
           keyClass: uniqueRefKeyStyle,
-          value: deal.tfm.submissionDetails.indemnifierPartyUrn or "NOT MATCHED",
+          value: indemnifier.partyUrn or "NOT MATCHED",
           valueStyle: uniqueRefStyle,
           dataCy: 'indemnifier-unique-ref'
         }) }}

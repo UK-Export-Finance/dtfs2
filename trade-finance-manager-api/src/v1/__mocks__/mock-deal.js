@@ -161,6 +161,7 @@ const MOCK_DEAL = {
     agentAddressPostcode: 'CF64 5SH',
     agentAddressTown: 'City',
   },
+  facilities: ['12345678', '23456789'],
   bondTransactions: {
     items: [
       {

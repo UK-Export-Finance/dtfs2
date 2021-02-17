@@ -19,8 +19,10 @@ describe('/v1/deals', () => {
       const tfmDeal = {
         ...MOCK_DEAL_NO_COMPANIES_HOUSE,
         tfm: {
-          submissionDetails: {
-            supplierPartyUrn: '',
+          parties: {
+            exporter: {
+              partyUrn: '',
+            },
           },
         },
       };
@@ -35,8 +37,10 @@ describe('/v1/deals', () => {
       const tfmDeal = {
         ...MOCK_DEAL_NO_PARTY_DB,
         tfm: {
-          submissionDetails: {
-            supplierPartyUrn: '',
+          parties: {
+            exporter: {
+              partyUrn: '',
+            },
           },
         },
       };
@@ -50,8 +54,10 @@ describe('/v1/deals', () => {
       const tfmDeal = {
         ...MOCK_DEAL,
         tfm: {
-          submissionDetails: {
-            supplierPartyUrn: 'testPartyUrn',
+          parties: {
+            exporter: {
+              partyUrn: 'testPartyUrn',
+            },
           },
         },
       };

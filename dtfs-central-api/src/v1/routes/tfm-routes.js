@@ -5,12 +5,8 @@ const tfmRouter = express.Router();
 const tfmGetDealController = require('../controllers/tfm/deal/tfm-get-deal.controller');
 const tfmUpdateDealController = require('../controllers/tfm/deal/tfm-update-deal.controller');
 const tfmSubmitDealController = require('../controllers/tfm/deal/tfm-submit-deal.controller');
-
-
-const createFacilityController = require('../controllers/facility/create-facility.controller');
-const getFacilityController = require('../controllers/facility/get-facility.controller');
-const updateFacilityController = require('../controllers/facility/update-facility.controller');
-const deleteFacilityController = require('../controllers/facility/delete-facility.controller');
+const tfmGetFacilityController = require('../controllers/tfm/facility/tfm-get-facility.controller');
+const tfmUpdateFacilityController = require('../controllers/tfm/facility/tfm-update-facility.controller');
 
 const { TFM_ROUTE } = require('../../constants/routes');
 
@@ -32,20 +28,13 @@ tfmRouter.route('/deals/:id/submit')
     tfmSubmitDealController.submitDealPut,
   );
 
-tfmRouter.route('/facilities')
-  .post(
-    createFacilityController.createFacilityPost,
-  );
 
 tfmRouter.route('/facilities/:id')
   .get(
-    getFacilityController.findOneFacilityGet,
+    tfmGetFacilityController.findOneFacilityGet,
   )
   .put(
-    updateFacilityController.updateFacilityPut,
-  )
-  .delete(
-    deleteFacilityController.deleteFacility,
+    tfmUpdateFacilityController.updateFacilityPut,
   );
 
 module.exports = tfmRouter;

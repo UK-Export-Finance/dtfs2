@@ -4,7 +4,11 @@ const mapFacilities = (facilities, dealDetails) => {
   const mappedFacilities = [];
 
   facilities.forEach((f) => {
-    mappedFacilities.push(mapFacility(f, dealDetails));
+    mappedFacilities.push({
+      _id: f._id, // eslint-disable-line no-underscore-dangle
+      facilitySnapshot: mapFacility(f.facilitySnapshot, dealDetails),
+      tfm: f.tfm,
+    });
   });
 
   return mappedFacilities;
