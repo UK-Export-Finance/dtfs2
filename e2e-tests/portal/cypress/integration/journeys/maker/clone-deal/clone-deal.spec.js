@@ -1,5 +1,6 @@
 const pages = require('../../../pages');
 const partials = require('../../../partials');
+const relative = require('../../../relativeURL');
 const fullyCompletedDeal = require('../fixtures/dealFullyCompleted');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
@@ -140,6 +141,119 @@ context('Clone a deal', () => {
         const loanId = loanTableRow.attr('data-cy').split('-')[1];
         const loan = pages.contract.loansTransactionsTable.row(loanId);
         loan.loanStatus().contains('Incomplete');
+      });
+    });
+
+    it('user can view and edit the cloned bonds', () => {
+      goToCloneDealPage(deal);
+
+      pages.cloneDeal.bankSupplyContractIDInput();
+      pages.cloneDeal.bankSupplyContractNameInput();
+      pages.cloneDeal.cloneTransactionsInput().click();
+
+      pages.cloneDeal.submit().click();
+
+      // click link to cloned deal
+      partials.successMessage.successMessageLink().click();
+      cy.url().should('include', '/contract/');
+
+      let clonedDealId;
+      cy.url().then((url) => {
+        clonedDealId = url.substring(url.lastIndexOf('/') + 1);
+      });
+
+      pages.contract.bondTransactionsTableRows().each((bondTableRow) => {
+        const bondId = bondTableRow.attr('data-cy').split('-')[1];
+        const bond = pages.contract.bondTransactionsTable.row(bondId);
+        bond.uniqueNumberLink().click();
+        cy.url().should('include', '/bond');
+        cy.url().should('include', '/details');
+
+        pages.bondDetails.bondIssuerInput().type('test');
+        pages.bondDetails.submit().click();
+        cy.url().should('include', '/bond');
+        cy.url().should('include', '/financial-details');
+        cy.visit(`/contract/${clonedDealId}`);
+      });
+    });
+
+    it('user can view and edit the cloned loans', () => {
+      goToCloneDealPage(deal);
+
+      pages.cloneDeal.bankSupplyContractIDInput();
+      pages.cloneDeal.bankSupplyContractNameInput();
+      pages.cloneDeal.cloneTransactionsInput().click();
+
+      pages.cloneDeal.submit().click();
+
+      // click link to cloned deal
+      partials.successMessage.successMessageLink().click();
+      cy.url().should('include', '/contract/');
+
+      let clonedDealId;
+      cy.url().then((url) => {
+        clonedDealId = url.substring(url.lastIndexOf('/') + 1);
+      });
+
+      pages.contract.loansTransactionsTableRows().each((loanTableRow) => {
+        const loanId = loanTableRow.attr('data-cy').split('-')[1];
+        const loan = pages.contract.loansTransactionsTable.row(loanId);
+        loan.bankReferenceNumberLink().click();
+        cy.url().should('include', '/loan');
+        cy.url().should('include', '/guarantee-details');
+
+        pages.loanGuaranteeDetails.facilityStageConditionalInput().click();
+        pages.loanGuaranteeDetails.submit().click();
+        cy.url().should('include', '/loan');
+        cy.url().should('include', '/financial-details');
+        cy.visit(`/contract/${clonedDealId}`);
+      });
+    });
+
+    it('user can delete the cloned bonds and loans', () => {
+      goToCloneDealPage(deal);
+
+      pages.cloneDeal.bankSupplyContractIDInput();
+      pages.cloneDeal.bankSupplyContractNameInput();
+      pages.cloneDeal.cloneTransactionsInput().click();
+
+      pages.cloneDeal.submit().click();
+
+      // click link to cloned deal
+      partials.successMessage.successMessageLink().click();
+      cy.url().should('include', '/contract/');
+
+      let clonedDealId;
+      cy.url().then((url) => {
+        clonedDealId = url.substring(url.lastIndexOf('/') + 1);
+
+        // check length of cloned facilities
+        pages.contract.bondTransactionsTableRows().should('have.length', 2);
+        pages.contract.loansTransactionsTableRows().should('have.length', 2);
+
+        // delete bonds
+        pages.contract.bondTransactionsTableRows().each((bondTableRow) => {
+          const bondId = bondTableRow.attr('data-cy').split('-')[1];
+          const bond = pages.contract.bondTransactionsTable.row(bondId);
+          bond.deleteLink().click();
+          cy.url().should('eq', relative(`/contract/${clonedDealId}/bond/${bondId}/delete`));
+          pages.loanDelete.submit().click();
+          cy.visit(`/contract/${clonedDealId}`);
+        });
+
+        // delete loans
+        pages.contract.loansTransactionsTableRows().each((loanTableRow) => {
+          const loanId = loanTableRow.attr('data-cy').split('-')[1];
+          const loan = pages.contract.loansTransactionsTable.row(loanId);
+          loan.deleteLink().click();
+          cy.url().should('eq', relative(`/contract/${clonedDealId}/loan/${loanId}/delete`));
+          pages.loanDelete.submit().click();
+          cy.visit(`/contract/${clonedDealId}`);
+        });
+
+        cy.visit(`/contract/${clonedDealId}`);
+        pages.contract.bondTransactionsTableRows().should('have.length', 0);
+        pages.contract.loansTransactionsTableRows().should('have.length', 0);
       });
     });
   });

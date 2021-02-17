@@ -1,3 +1,8 @@
+const FACILITY_TYPE = {
+  BOND: 'bond',
+  LOAN: 'loan',
+};
+
 const FEE_TYPE = {
   ADVANCE: 'In advance',
   ARREAR: 'In arrear',
@@ -48,6 +53,7 @@ const TYPE = {
 };
 
 module.exports = {
+  FACILITY_TYPE,
   FEE_TYPE,
   FEE_FREQUENCY,
   DAY_COUNT_BASIS,

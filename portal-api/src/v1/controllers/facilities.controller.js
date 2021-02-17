@@ -18,3 +18,6 @@ exports.createMultiple = async (req, res) => {
   const { data } = await api.createMultipleFacilities(facilities, associatedDealId, user);
   return res.status(200).send(data);
 };
+
+exports.createMultipleFacilities = async (facilities, associatedDealId, user) =>
+  api.createMultipleFacilities(facilities, associatedDealId, user);
