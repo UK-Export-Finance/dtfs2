@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import relative from './relativeURL';
-import { mandatoryCriteria } from './pages/mandatory-criteria';
+import mandatoryCriteria from './pages/mandatory-criteria';
 
 context('Mandatory Criteria Page', () => {
   before(() => {
