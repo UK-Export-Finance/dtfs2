@@ -90,7 +90,7 @@ app.use(express.static('dist'));
 
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
-app.get('*', (req, res) => res.render('templates/page-not-found.njk', { user: req.session.user }));
+app.get('*', (req, res) => res.render('partials/page-not-found.njk', { user: req.session.user }));
 
 // eslint-disable-next-line no-console
 console.log(`GITHUB_SHA: ${process.env.GITHUB_SHA}`);

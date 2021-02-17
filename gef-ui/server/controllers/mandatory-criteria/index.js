@@ -6,12 +6,12 @@ const getMandatoryCriteria = async (req, res) => {
   try {
     const criteria = await api.getMandatoryCriteria();
 
-    return res.render('templates/mandatory-criteria.njk', {
+    return res.render('partials/mandatory-criteria.njk', {
       criteria,
     });
   } catch (err) {
     const { message } = errorHandler(err);
-    return res.render('templates/mandatory-criteria.njk', {
+    return res.render('partials/mandatory-criteria.njk', {
       error: message,
     });
   }
@@ -24,7 +24,7 @@ const validateMandatoryCriteria = async (req, res) => {
   const criteria = await api.getMandatoryCriteria();
 
   if (isEmpty) {
-    return res.status(422).render('templates/mandatory-criteria.njk', {
+    return res.status(422).render('partials/mandatory-criteria.njk', {
       validationErrorMessage: 'Select an option',
       criteria,
     });
@@ -34,7 +34,7 @@ const validateMandatoryCriteria = async (req, res) => {
     return res.redirect('name-application');
   }
 
-  return res.render('templates/mandatory-criteria.njk', {
+  return res.render('partials/mandatory-criteria.njk', {
     criteria,
   });
 };
