@@ -7,8 +7,8 @@ const mandatoryCriteria = {
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
   firstErrorLink: () => cy.get('[data-cy="error-summary"]').first('a'),
   formError: () => cy.get('[data-cy="mandatory-criteria-error"]'),
-  falseRadio: () => cy.get('[data-cy="mandatory-criteria-false"]'),
-  trueRadio: () => cy.get('[data-cy="mandatory-criteria-true"]'),
+  falseRadio: () => cy.get('[data-cy="mandatory-criteria-no"]'),
+  trueRadio: () => cy.get('[data-cy="mandatory-criteria-yes"]'),
   cancelButton: () => cy.get('[data-cy="cancel-button"]'),
 };
 
