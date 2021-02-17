@@ -23,7 +23,7 @@ describe('Mandatory Criteria - Controller', () => {
 
     it('renders the `mandatory-criteria` template', async () => {
       await getMandatoryCriteria({}, response);
-      expect(response.render).toHaveBeenCalledWith('templates/mandatory-criteria.njk', {
+      expect(response.render).toHaveBeenCalledWith('partials/mandatory-criteria.njk', {
         criteria: mockCriteria,
       });
     });
@@ -37,7 +37,7 @@ describe('Mandatory Criteria - Controller', () => {
 
     it('renders the `mandatory-criteria` template with error message', async () => {
       await getMandatoryCriteria({}, response);
-      expect(response.render).toHaveBeenCalledWith('templates/mandatory-criteria.njk', {
+      expect(response.render).toHaveBeenCalledWith('partials/mandatory-criteria.njk', {
         error: 'Bad Request',
       });
     });
