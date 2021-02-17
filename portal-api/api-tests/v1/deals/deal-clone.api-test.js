@@ -237,7 +237,11 @@ describe('/v1/deals/:id/clone', () => {
           cloneTransactions: 'true',
         };
 
-        const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        const clonedDealResponse = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        const clonedDealId = clonedDealResponse.body._id;
+
+        const getDealResponse = await as(anHSBCMaker).get(`/v1/deals/${clonedDealId}`);
+        const clonedDeal = getDealResponse.body.deal;
 
         const firstOriginalBond = createdFacilities.find((f) => f.facilityType === 'bond');
         const secondOriginalBond = createdFacilities.find((f) =>
@@ -245,6 +249,7 @@ describe('/v1/deals/:id/clone', () => {
           && f._id !== firstOriginalBond._id);
 
         const expectedFirstBondTransaction = {
+          facilityType: 'bond',
           facilityStage: firstOriginalBond.facilityStage,
           requestedCoverStartDate: firstOriginalBond.requestedCoverStartDate,
           'coverEndDate-day': firstOriginalBond['coverEndDate-day'],
@@ -262,6 +267,7 @@ describe('/v1/deals/:id/clone', () => {
           createdDate: expect.any(String),
         };
         const expectedSecondBondTransaction = {
+          facilityType: 'bond',
           facilityStage: secondOriginalBond.facilityStage,
           requestedCoverStartDate: secondOriginalBond.requestedCoverStartDate,
           'coverEndDate-day': secondOriginalBond['coverEndDate-day'],
@@ -275,10 +281,10 @@ describe('/v1/deals/:id/clone', () => {
           createdDate: expect.any(String),
         };
 
-        expect(body.bondTransactions.items[0]).toMatchObject(expectedFirstBondTransaction);
-        expect(body.bondTransactions.items[0]._id).not.toEqual(firstOriginalBond._id);
-        expect(body.bondTransactions.items[1]).toMatchObject(expectedSecondBondTransaction);
-        expect(body.bondTransactions.items[1]._id).not.toEqual(secondOriginalBond._id);
+        expect(clonedDeal.bondTransactions.items[0]).toMatchObject(expectedFirstBondTransaction);
+        expect(clonedDeal.bondTransactions.items[0]._id).not.toEqual(firstOriginalBond._id);
+        expect(clonedDeal.bondTransactions.items[1]).toMatchObject(expectedSecondBondTransaction);
+        expect(clonedDeal.bondTransactions.items[1]._id).not.toEqual(secondOriginalBond._id);
       });
 
       it('clones a deal with only specific loanTransactions fields', async () => {
@@ -288,7 +294,11 @@ describe('/v1/deals/:id/clone', () => {
           cloneTransactions: 'true',
         };
 
-        const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        const clonedDealResponse = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        const clonedDealId = clonedDealResponse.body._id;
+
+        const getDealResponse = await as(anHSBCMaker).get(`/v1/deals/${clonedDealId}`);
+        const clonedDeal = getDealResponse.body.deal;
 
         const firstOriginalLoan = createdFacilities.find((f) => f.facilityType === 'loan');
         const secondOriginalLoan = createdFacilities.find((f) =>
@@ -296,6 +306,7 @@ describe('/v1/deals/:id/clone', () => {
           && f._id !== firstOriginalLoan._id);
 
         const expectedFirstLoanTransaction = {
+          facilityType: 'loan',
           bankReferenceNumber: firstOriginalLoan.bankReferenceNumber,
           facilityValue: firstOriginalLoan.facilityValue,
           currencySameAsSupplyContractCurrency: firstOriginalLoan.currencySameAsSupplyContractCurrency,
@@ -309,6 +320,7 @@ describe('/v1/deals/:id/clone', () => {
         };
 
         const expectedSecondLoanTransaction = {
+          facilityType: 'loan',
           requestedCoverStartDate: secondOriginalLoan.requestedCoverStartDate,
           'coverEndDate-day': secondOriginalLoan['coverEndDate-day'],
           'coverEndDate-month': secondOriginalLoan['coverEndDate-month'],
@@ -326,13 +338,13 @@ describe('/v1/deals/:id/clone', () => {
           createdDate: expect.any(String),
         };
 
-        expect(body.loanTransactions.items[0]).toMatchObject(expectedFirstLoanTransaction);
-        expect(body.loanTransactions.items[0]._id).not.toEqual(firstOriginalLoan._id);
-        expect(body.loanTransactions.items[1]).toMatchObject(expectedSecondLoanTransaction);
-        expect(body.loanTransactions.items[1]._id).not.toEqual(secondOriginalLoan._id);
+        expect(clonedDeal.loanTransactions.items[0]).toMatchObject(expectedFirstLoanTransaction);
+        expect(clonedDeal.loanTransactions.items[0]._id).not.toEqual(firstOriginalLoan._id);
+        expect(clonedDeal.loanTransactions.items[1]).toMatchObject(expectedSecondLoanTransaction);
+        expect(clonedDeal.loanTransactions.items[1]._id).not.toEqual(secondOriginalLoan._id);
       });
 
-      it('returns empty bondTransactions and loanTransactions when empty in original deal', async () => {
+      it('returns empty facilities, bondTransactions and loanTransactions when empty in original deal', async () => {
         const dealWithEmptyBondsAndLoans = {
           ...dealToClone,
           bondTransactions: { items: [] },
@@ -350,6 +362,7 @@ describe('/v1/deals/:id/clone', () => {
 
         const { body: responseBody } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
+        expect(responseBody.facilities).toEqual([]);
         expect(responseBody.bondTransactions).toEqual({
           items: [],
         });
@@ -367,6 +380,7 @@ describe('/v1/deals/:id/clone', () => {
           };
           const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
+          expect(body.facilities).toEqual([]);
           expect(body.bondTransactions).toEqual({
             items: [],
           });
