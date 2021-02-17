@@ -25,7 +25,7 @@ const validateMandatoryCriteria = async (req, res) => {
 
 
   if (isEmpty) {
-    return res.status(422).render('partials/mandatory-criteria.njk', {
+    return res.render('partials/mandatory-criteria.njk', {
       errors: {
         errorSummary: [
           {
