@@ -75,7 +75,7 @@ describe('mapFacility', () => {
       facilityValue: expectedFacilityValue,
       facilityValueExportCurrency: expectedFacilityValueExportCurrency,
       bankFacilityReference: mapBankFacilityReference(mockFacility),
-      guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacility.guaranteeFeePayableByBank),
+      guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacility.guaranteeFeePayableByBank, 4),
       bondIssuer: mockFacility.bondIssuer,
     };
 

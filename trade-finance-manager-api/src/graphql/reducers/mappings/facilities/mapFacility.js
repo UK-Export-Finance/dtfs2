@@ -58,7 +58,7 @@ const mapFacility = (f) => {
     facilityValue: facility.facilityValue,
     ukefExposure: facility.ukefExposure,
     bankFacilityReference: mapBankFacilityReference(facility),
-    guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFeePayableByBank),
+    guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFeePayableByBank, 4),
 
     // bond specifics
     bondIssuer: facility.bondIssuer,
