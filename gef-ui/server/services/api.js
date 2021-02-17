@@ -1,4 +1,5 @@
 import Axios from './axios';
+import { errorHandler } from '../utils/helpers';
 
 const validateToken = async (token) => {
   try {
@@ -11,13 +12,13 @@ const validateToken = async (token) => {
 };
 
 const getMandatoryCriteria = async () => {
-  // const response = await Axios.get('/mandatory-criteria/latest')
-  const response = {
-    data: {
-      htmlText: '<p>Test</p>',
-    },
-  };
-  return response.data;
+  try {
+    const response = await Axios.get('/g');
+    return response.data;
+  } catch (err) {
+    console.log('BABY', err);
+    return errorHandler(err);
+  }
 };
 
 export {
