@@ -1,19 +1,20 @@
-{% import './parties-key-value-grid-row.njk' as keyValueGridRow %}
-{% import './parties-key-value-array-grid-row.njk' as keyValueArrayGridRow %}
+{% import './bond-issuer-facilities-table.njk' as bondIssuerFacilitiesTable %}
 
 {% macro render(params) %}
 {% set deal = params.deal %}
+
 <div class="govuk-grid-row separator-line deal">
-  <div class="govuk-grid-column-one-half">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <p class="ukef-heading-l">Bond issuer</p>
-        <p class="ukef-hint" style="margin-top:-36px">(if different to buyer)</p>
-      </div>
-      <div class="govuk-grid-column-one-half">
-        <p></p>
-      </div>
-    </div>
+  <h2 class="ukef-heading-l" data-cy="bond-issuer-heading">Bond issuer</h2>
+  <p class="ukef-hint" style="margin-top:-36px" data-cy="bond-issuer-sub-heading">(if different to buyer)</p>
+
+  <div class="govuk-grid-row deal">
+
+    {% set componentData = {
+      facilities: deal.facilities
+    } %}
+
+    {{ bondIssuerFacilitiesTable.render(componentData) }}
   </div>
+
 </div>
 {% endmacro %}

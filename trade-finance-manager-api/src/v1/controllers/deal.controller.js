@@ -7,7 +7,21 @@ const findOneDeal = async (dealId) => {
   if (!deal) {
     return false;
   }
-  return mapDeal(deal);
-};
 
+  return {
+    ...deal,
+    dealSnapshot: mapDeal(deal.dealSnapshot),
+  };
+};
 exports.findOneDeal = findOneDeal;
+
+const findOnePortalDeal = async (dealId) => {
+  const deal = await api.findOnePortalDeal(dealId).catch(() => false);
+
+  if (!deal) {
+    return false;
+  }
+
+  return deal;
+};
+exports.findOnePortalDeal = findOnePortalDeal;

@@ -30,8 +30,6 @@ const sessionOptions = {
 };
 
 if (process.env.REDIS_HOSTNAME) {
-  console.log(`Connecting to redis server: redis://${process.env.REDIS_HOSTNAME} `);
-
   let redisOptions = {};
 
   if (process.env.REDIS_KEY) {
@@ -44,14 +42,17 @@ if (process.env.REDIS_HOSTNAME) {
   const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
 
   redisClient.on('error', (err) => {
+    // eslint-disable-next-line no-console
     console.log(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
   });
 
   redisClient.on('ready', () => {
+    // eslint-disable-next-line no-console
     console.log('REDIS ready');
   });
 
   redisClient.on('connect', () => {
+    // eslint-disable-next-line no-console
     console.log('REDIS connected');
   });
 
@@ -59,6 +60,7 @@ if (process.env.REDIS_HOSTNAME) {
 
   sessionOptions.store = sessionStore;
 } else {
+  // eslint-disable-next-line no-console
   console.log('No REDIS configured, using default MemoryStore');
 }
 app.set('trustproxy', true);
@@ -88,8 +90,9 @@ app.use(express.static('dist'));
 
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
-app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
+app.get('*', (req, res) => res.render('partials/page-not-found.njk', { user: req.session.user }));
 
+// eslint-disable-next-line no-console
 console.log(`GITHUB_SHA: ${process.env.GITHUB_SHA}`);
 
 app.listen(PORT, () => console.log(`DTFS2 app listening on port ${PORT}!`)); // eslint-disable-line no-console

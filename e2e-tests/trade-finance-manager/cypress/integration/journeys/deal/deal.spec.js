@@ -50,6 +50,8 @@ context('User can view a case deal', () => {
         cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
         });
+
+        cy.submitDeal(dealId);
       });
   });
 
@@ -76,7 +78,7 @@ context('User can view a case deal', () => {
   });
 
   describe('facilities table', () => {
-    it('clicking `Facility ID` link should take user to facility details page when', () => {
+    it('clicking `Facility ID` link should take user to facility details page', () => {
       // cy.login(MOCK_USER);
       cy.visit(relative(`/case/deal/${dealId}`));
 

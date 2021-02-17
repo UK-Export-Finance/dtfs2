@@ -23,13 +23,16 @@ const GET_FACILITY = gql`
         name
       },
       facilityType,
+      ukefFacilityType,
       facilityStage,
       facilityValueExportCurrency,
       facilityValue,
       coverEndDate,
       ukefExposure,
       coveredPercentage,
-      bankFacilityReference
+      bankFacilityReference,
+      guaranteeFeePayableToUkef,
+      bondIssuer
     }
   }
 `;

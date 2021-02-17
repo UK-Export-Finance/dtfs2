@@ -1,0 +1,13 @@
+{% macro render(params) %}
+  {% set id = params.id %}
+  {% set ukefFacilityID = params.ukefFacilityID %}
+
+  <a
+    class="govuk-link"
+    href="/case/facility/{{ id }}"
+    aria-label="View Facility details"
+    data-cy="facility-{{ id }}-ukef-facility-id-link">
+    <span data-cy="facility-{{ id }}-ukef-facility-id-link-text">{{ ukefFacilityID }}</span>
+  </a>
+
+{% endmacro %}

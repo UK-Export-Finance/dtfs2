@@ -1,13 +1,12 @@
 const DEFAULTS = require('../defaults');
 const { findMandatoryCriteria } = require('./mandatoryCriteria.controller');
-const { findOneDeal, create: createDeal } = require('./deal.controller');
-const { generateFacilityId } = require('../../utils/generate-ids');
+const { findOneDeal, createDeal } = require('./deal.controller');
 const { getCloneDealErrors } = require('../validation/clone-deal');
+const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
 
-const now = require('../../now');
-
 const CLONE_BOND_FIELDS = [
+  'facilityType',
   'facilityStage',
   'requestedCoverStartDate',
   'coverEndDate-day',
@@ -25,6 +24,7 @@ const CLONE_BOND_FIELDS = [
 ];
 
 const CLONE_LOAN_FIELDS = [
+  'facilityType',
   'bankReferenceNumber',
   'facilityValue',
   'currency',
@@ -41,7 +41,7 @@ const CLONE_LOAN_FIELDS = [
   'ukefGuaranteeInMonths',
 ];
 
-const stripTransaction = async (transaction, allowedFields) => {
+const stripTransaction = (transaction, allowedFields) => {
   const stripped = {};
 
   Object.keys(transaction).forEach((key) => {
@@ -49,10 +49,6 @@ const stripTransaction = async (transaction, allowedFields) => {
       stripped[key] = transaction[key];
     }
   });
-
-  // timestamp the newly cloned transactions and treat like a new draft.
-  stripped._id = await generateFacilityId(); // eslint-disable-line no-underscore-dangle
-  stripped.createdDate = now();
 
   return stripped;
 };
@@ -90,30 +86,13 @@ exports.clone = async (req, res) => {
       comments: [],
       ukefComments: [],
       specialConditions: [],
+      bondTransactions: DEFAULTS.DEALS.bondTransactions,
+      loanTransactions: DEFAULTS.DEALS.loanTransactions,
+      facilities: DEFAULTS.DEALS.facilities,
     };
 
     if (modifiedDeal.details.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
       modifiedDeal.details.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
-    }
-
-    if (cloneTransactions === 'false') {
-      modifiedDeal.bondTransactions = DEFAULTS.DEALS.bondTransactions;
-      modifiedDeal.loanTransactions = DEFAULTS.DEALS.loanTransactions;
-    } else {
-      const hasBonds = modifiedDeal.bondTransactions.items.length > 0;
-      const hasLoans = modifiedDeal.loanTransactions.items.length > 0;
-
-      if (hasBonds) {
-        modifiedDeal.bondTransactions.items = await Promise.all(modifiedDeal.bondTransactions.items.map((bond) => (
-          stripTransaction(bond, CLONE_BOND_FIELDS)
-        )));
-      }
-
-      if (hasLoans) {
-        modifiedDeal.loanTransactions.items = await Promise.all(modifiedDeal.loanTransactions.items.map((loan) => (
-          stripTransaction(loan, CLONE_LOAN_FIELDS)
-        )));
-      }
     }
 
     const validationErrors = getCloneDealErrors(modifiedDeal, cloneTransactions);
@@ -125,7 +104,41 @@ exports.clone = async (req, res) => {
       });
     }
 
-    req.body = modifiedDeal;
-    return createDeal(req, res);
+    const {
+      data: createdDeal,
+    } = await createDeal(modifiedDeal, req.user);
+
+    const createdDealId = createdDeal._id; // eslint-disable-line no-underscore-dangle
+
+    if (cloneTransactions === 'true') {
+      const hasBonds = existingDeal.bondTransactions.items.length > 0;
+      const hasLoans = existingDeal.loanTransactions.items.length > 0;
+
+      if (hasBonds || hasLoans) {
+        const facilities = [
+          ...existingDeal.bondTransactions.items,
+          ...existingDeal.loanTransactions.items,
+        ];
+
+        const strippedFacilities = facilities.map((facility) => {
+          if (facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+            return stripTransaction(facility, CLONE_BOND_FIELDS);
+          }
+
+          if (facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
+            return stripTransaction(facility, CLONE_LOAN_FIELDS);
+          }
+          return facility;
+        });
+
+        await facilitiesController.createMultipleFacilities(
+          strippedFacilities,
+          createdDealId,
+          req.user,
+        );
+      }
+    }
+
+    return res.status(200).send(createdDeal);
   });
 };

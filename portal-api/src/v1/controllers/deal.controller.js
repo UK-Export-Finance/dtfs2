@@ -166,9 +166,14 @@ const createNewDealData = async (deal, maker) => {
   return newDeal;
 };
 
+const createDeal = async (dealBody, user) => {
+  const deal = await createNewDealData(dealBody, user);
+  return api.createDeal(deal, user);
+};
+exports.createDeal = createDeal;
+
 exports.create = async (req, res) => {
-  const deal = await createNewDealData(req.body, req.user);
-  const { status, data } = await api.createDeal(deal, req.user);
+  const { status, data } = await createDeal(req.body, req.user);
   return res.status(status).send(data);
 };
 

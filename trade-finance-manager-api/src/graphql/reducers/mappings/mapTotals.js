@@ -3,7 +3,6 @@ const { stripCommas } = require('../../../utils/string');
 
 const mapTotals = (facilities) => {
   const totals = {};
-
   // DTFS-2727, DTFS2-2730
   // for initial dev, only calculate totals if all facilities is currency is GBP.
   // TODO: until we figure out which API to use for conversion from non-GBP.
