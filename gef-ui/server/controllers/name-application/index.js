@@ -1,8 +1,12 @@
+import * as api from '../../services/api';
+
 const nameApplication = async (req, res) => res.render('partials/name-application.njk');
 
 const createApplication = async (req, res) => {
-  const { body } = req;
-  const { bankInternalRefName, additionalRefName } = body;
+  const { body, session } = req;
+
+  const { bankInternalRefName } = body;
+  const { _id: userId } = session.user;
 
   if (!bankInternalRefName) {
     return res.render('partials/name-application.njk', {
@@ -19,6 +23,23 @@ const createApplication = async (req, res) => {
           },
         },
       },
+    });
+  }
+
+  try {
+    const application = await api.createApplication({
+      ...body,
+      userId,
+    });
+
+    if (application.data.status === 200) {
+      return res.redirect('application-details');
+    }
+
+    return application.data;
+  } catch (err) {
+    return res.render('partials/name-application.njk', {
+      errors: err,
     });
   }
 };
