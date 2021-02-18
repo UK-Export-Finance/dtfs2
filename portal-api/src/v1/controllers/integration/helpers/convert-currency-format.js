@@ -1,6 +1,7 @@
 const { sanitizeCurrency } = require('../../../../utils/number');
 
-const santizeCurrencyFormat = (value) => {
+const santizeCurrencyFormat = (currency) => {
+  const value = currency || '';
   const { isCurrency, sanitizedValue } = sanitizeCurrency(value);
   return isCurrency ? sanitizedValue : value;
 };
