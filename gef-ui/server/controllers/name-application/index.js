@@ -27,16 +27,12 @@ const createApplication = async (req, res) => {
   }
 
   try {
-    const application = await api.createApplication({
+    await api.createApplication({
       ...body,
       userId,
     });
 
-    if (application.data.status === 200) {
-      return res.redirect('application-details');
-    }
-
-    return application.data;
+    return res.redirect('application-details');
   } catch (err) {
     return res.render('partials/name-application.njk', {
       errors: err,
