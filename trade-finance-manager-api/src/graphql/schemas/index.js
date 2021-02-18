@@ -156,7 +156,6 @@ type DealSnapshot {
   _id: String!
   ukefDealId: String!
   Product: String
-  ukefDealId: String
   details: DealDetails
   totals: DealTotals
   facilities: [Facility]
