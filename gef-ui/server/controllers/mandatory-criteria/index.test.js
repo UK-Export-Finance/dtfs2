@@ -69,6 +69,6 @@ describe('Validate Mandatory Criteria', () => {
       },
     };
     await validateMandatoryCriteria(mockedRequest, response);
-    expect(response.render).toHaveBeenCalledWith('partials/ineligible.njk');
+    expect(response.redirect).toHaveBeenCalledWith('ineligible');
   });
 });
