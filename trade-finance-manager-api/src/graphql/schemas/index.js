@@ -154,7 +154,7 @@ input DealsInput {
 
 type DealSnapshot {
   _id: String!
-  ukefDealId: String!
+  ukefDealId: String
   Product: String
   details: DealDetails
   totals: DealTotals
