@@ -1,5 +1,5 @@
 const componentRenderer = require('../../../../component-tests/componentRenderer');
-const page = '../templates/case/parties/_macros/parties-bond-issuer-area.njk';
+const page = '../templates/case/parties/_macros/parties-bond-beneficiary-area.njk';
 const render = componentRenderer(page);
 
 describe(page, () => {
@@ -30,14 +30,14 @@ describe(page, () => {
   });
 
   it('should render heading', () => {
-    wrapper.expectText('[data-cy="bond-issuer-heading"]').toRead('Bond issuer');
+    wrapper.expectText('[data-cy="bond-issuer-heading"]').toRead('Bond beneficiary');
   });
 
   it('should render sub heading', () => {
-    wrapper.expectText('[data-cy="bond-issuer-sub-heading"]').toRead('(if different to bank)');
+    wrapper.expectText('[data-cy="bond-issuer-sub-heading"]').toRead('(if different to buyer)');
   });
 
   it('should render bond issuer facilities table', () => {
-    wrapper.expectElement('[data-cy="bond-issuer-facilities-table"]').toExist();
+    wrapper.expectElement('[data-cy="bond-beneficiary-facilities-table"]').toExist();
   });
 });

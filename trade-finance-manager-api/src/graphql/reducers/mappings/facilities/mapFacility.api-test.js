@@ -38,11 +38,11 @@ describe('mapFacility', () => {
     facilityValue: mockFacilityValue,
     facilityStage: 'Unissued',
     bankReferenceNumber: '123456',
+    bondIssuer: 'Issuer',
+    bondBeneficiary: 'test',
 
     // fields we do not consume
-    bondIssuer: 'Issuer',
     ukefGuaranteeInMonths: '10',
-    bondBeneficiary: 'test',
     guaranteeFeePayableByBank: '9.0000',
     currencySameAsSupplyContractCurrency: 'true',
     riskMarginFee: '10',
@@ -67,7 +67,6 @@ describe('mapFacility', () => {
       _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
       ukefFacilityID: mockFacility.ukefFacilityID,
       facilityType: mockFacility.bondType,
-      // ukefFacilityType: capitalizeFirstLetter(originalFacilityType),
       ukefFacilityType: originalFacilityType,
       facilityProduct: mapFacilityProduct(mockFacility),
       facilityStage: mapFacilityStage(mockFacility.facilityStage),
@@ -79,6 +78,7 @@ describe('mapFacility', () => {
       bankFacilityReference: mapBankFacilityReference(mockFacility),
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacility.guaranteeFeePayableByBank, 4),
       bondIssuer: mockFacility.bondIssuer,
+      bondBeneficiary: mockFacility.bondBeneficiary,
     };
 
     expect(result).toEqual(expected);
