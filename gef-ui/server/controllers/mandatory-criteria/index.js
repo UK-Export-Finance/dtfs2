@@ -47,9 +47,7 @@ const validateMandatoryCriteria = async (req, res) => {
     return res.redirect('name-application');
   }
 
-  return res.render('partials/mandatory-criteria.njk', {
-    criteria,
-  });
+  return res.redirect('ineligible');
 };
 
 export {
