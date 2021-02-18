@@ -1,6 +1,6 @@
-import mandatoryCriteriaRoutes from './mandatory-criteria';
-import nameApplicationRoutes from './name-application';
-import ineligibleRoutes from './ineligible';
+import mandatoryCriteriaRoutes from '../mandatory-criteria';
+import nameApplicationRoutes from '../name-application';
+import ineligibleRoutes from '../ineligible';
 
 const useSpy = jest.fn();
 jest.doMock('express', () => ({
@@ -14,7 +14,7 @@ jest.doMock('express', () => ({
 describe('Routes', () => {
   beforeEach(() => {
     // eslint-disable-next-line global-require
-    require('./index');
+    require('../index');
   });
 
   afterEach(() => {
