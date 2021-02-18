@@ -1,9 +1,10 @@
 import express from 'express';
-import renderNameApplication from '../controllers/name-application';
+import { nameApplication, createApplication } from '../controllers/name-application';
+import validateToken from './middleware/validate-token';
 
 const router = express.Router();
 
-router.get('/name-application', (req, res) => renderNameApplication(req, res));
-// router.post('/name-application', (req, res) => validateMandatoryCriteria(req, res))
+router.get('/name-application', validateToken, (req, res) => nameApplication(req, res));
+router.post('/name-application', validateToken, (req, res) => createApplication(req, res));
 
 export default router;
