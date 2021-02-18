@@ -1,25 +1,50 @@
 {% extends "index.njk" %}
-{% import '_macros/success-message.njk' as success %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 
-{% block pageTitle %}Confirm eligiblity (mandatory criteria){% endblock %}
+{% block pageTitle %}Name application{% endblock %}
 
 {% block content %}
-  <h1 class="govuk-heading-l">
-    Name application
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+  
+  <h1 class="govuk-heading-l" data-cy="main-heading">
+    Name your application
   </h1>
 
-  {{ criteria | safe }}
-
   <form method="post">
+    {{ govukInput({
+      label: {
+        text: "Enter your bank’s internal reference or name"
+      },
+      classes: "govuk-!-width-one-half",
+      id: "banksInternalRef",
+      name: "banksInternalRef"
+    }) }}
+
+    {{ govukInput({
+      label: {
+        text: "Additional reference or name (optional)"
+      },
+      classes: "govuk-!-width-one-half",
+      id: "banksAdditionalRef",
+      name: "banksAdditionalRef"
+    }) }}
 
     <div class="govuk-button-group">
       {{ govukButton({
         text: "Continue"
       }) }}
 
-      <a class="govuk-link" href="#">Cancel</a>
+      <a class="govuk-link" href="#">Abandon application</a>
     </div>
   </form>
 
