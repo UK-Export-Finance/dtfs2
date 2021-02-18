@@ -1,5 +1,6 @@
 import mandatoryCriteriaRoutes from './mandatory-criteria';
 import nameApplicationRoutes from './name-application';
+import ineligibleRoutes from './ineligible';
 
 const useSpy = jest.fn();
 jest.doMock('express', () => ({
@@ -23,5 +24,6 @@ describe('Routes', () => {
   it('should setup all routes', () => {
     expect(useSpy).toHaveBeenCalledWith(mandatoryCriteriaRoutes);
     expect(useSpy).toHaveBeenCalledWith(nameApplicationRoutes);
+    expect(useSpy).toHaveBeenCalledWith(ineligibleRoutes);
   });
 });
