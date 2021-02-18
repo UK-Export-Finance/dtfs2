@@ -1,5 +1,4 @@
 {% extends "index.njk" %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block pageTitle %}Not eligible{% endblock %}
@@ -9,7 +8,16 @@
     This is not eligible for a GEF guarantee
   </h1>
 
-  <div class="app-prose-scope">
+  <div class="app-prose-scope" data-cy="content">
     <p>If you need more information, you can contact us using the details at the bottom of this page.</p>
   </div>
+
+
+  {{ govukButton({
+    text: "Back to applications",
+    href: "ineligible",
+    attributes: {
+      'data-cy': 'back-button'
+    }
+  }) }}
 {% endblock %}

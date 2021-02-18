@@ -62,16 +62,13 @@ describe('Validate Mandatory Criteria', () => {
     expect(response.redirect).toHaveBeenCalledWith('name-application');
   });
 
-  it('keeps user on same page if they select `false`', async () => {
+  it('redirects use to `ineligible` page if they select `false`', async () => {
     const mockedRequest = {
       body: {
         mandatoryCriteria: 'false',
       },
     };
-    api.getMandatoryCriteria = () => Promise.resolve(mockCriteria);
     await validateMandatoryCriteria(mockedRequest, response);
-    expect(response.render).toHaveBeenCalledWith('partials/mandatory-criteria.njk', {
-      criteria: mockCriteria,
-    });
+    expect(response.render).toHaveBeenCalledWith('partials/ineligible.njk');
   });
 });
