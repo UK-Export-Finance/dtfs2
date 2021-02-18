@@ -11,13 +11,12 @@ const validateToken = async (token) => {
 };
 
 const getMandatoryCriteria = async () => {
-  // const response = await Axios.get('/mandatory-criteria/latest')
-  const response = {
-    data: {
-      htmlText: '<p>Test</p>',
-    },
-  };
-  return response.data;
+  try {
+    const response = await Axios.get('/gef/mandatory-criteria-versioned/latest');
+    return response.data;
+  } catch (err) {
+    return err;
+  }
 };
 
 export {
