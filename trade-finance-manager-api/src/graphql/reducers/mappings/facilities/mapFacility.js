@@ -1,5 +1,6 @@
 const CONSTANTS = require('../../../../constants');
 const { formattedNumber } = require('../../../../utils/number');
+const { capitalizeFirstLetter } = require('../../../../utils/string');
 const mapFacilityProduct = require('./mapFacilityProduct');
 const mapFacilityStage = require('./mapFacilityStage');
 const mapCoverEndDate = require('./mapCoverEndDate');
@@ -25,6 +26,8 @@ const mapFacility = (f) => {
   if (facility.facilityProduct.code === CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND) {
     // only bonds have `bondType`
     facility.facilityType = facility.bondType;
+  } else if (facility.facilityProduct.code === CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN) {
+    facility.facilityType = capitalizeFirstLetter(CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
   } else {
     facility.facilityType = null;
   }
