@@ -1,5 +1,6 @@
 const mapFacility = require('./mapFacility');
 const { formattedNumber } = require('../../../../utils/number');
+const { capitalizeFirstLetter } = require('../../../../utils/string');
 const mapFacilityProduct = require('./mapFacilityProduct');
 const mapFacilityStage = require('./mapFacilityStage');
 const mapCoverEndDate = require('./mapCoverEndDate');
@@ -66,6 +67,7 @@ describe('mapFacility', () => {
       _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
       ukefFacilityID: mockFacility.ukefFacilityID,
       facilityType: mockFacility.bondType,
+      // ukefFacilityType: capitalizeFirstLetter(originalFacilityType),
       ukefFacilityType: originalFacilityType,
       facilityProduct: mapFacilityProduct(mockFacility),
       facilityStage: mapFacilityStage(mockFacility.facilityStage),
@@ -80,6 +82,18 @@ describe('mapFacility', () => {
     };
 
     expect(result).toEqual(expected);
+  });
+
+  describe('when facility is a loan', () => {
+    it('should capitalize facilityType', () => {
+      const result = mapFacility({
+        ...mockFacility,
+        bondType: null,
+        facilityType: 'loan',
+      });
+
+      expect(result.facilityType).toEqual(capitalizeFirstLetter('loan'));
+    });
   });
 
   describe('when facility.currency is NOT GBP', () => {
