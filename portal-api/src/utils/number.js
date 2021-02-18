@@ -31,7 +31,8 @@ const roundNumber = (value, digits) => {
 };
 
 const sanitizeCurrency = (currency) => {
-  const originalValue = currency || '';
+  const originalValue = currency ? String(currency) : '';
+
   const sanitizedValue = originalValue.replace(/,(\d{3})/g, '$1');
   const isCurrency = Boolean(Number(sanitizedValue) || sanitizedValue === '0');
 
