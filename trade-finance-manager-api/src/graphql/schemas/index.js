@@ -27,7 +27,7 @@ type DealDetails {
   status: String
   bankSupplyContractID: String
   bankSupplyContractName: String
-  ukefDealId: String
+  ukefDealId: String!
   submissionType: String
   maker: Maker
   checker: Checker
@@ -154,7 +154,6 @@ input DealsInput {
 
 type DealSnapshot {
   _id: String!
-  ukefDealId: String
   Product: String
   details: DealDetails
   totals: DealTotals
