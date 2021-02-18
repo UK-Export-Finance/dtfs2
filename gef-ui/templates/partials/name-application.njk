@@ -20,14 +20,17 @@
     Name your application
   </h1>
 
-  <form method="post">
+  <form method="post" actions="create-application">
     {{ govukInput({
       label: {
         text: "Enter your bank’s internal reference or name"
       },
       classes: "govuk-!-width-one-half",
-      id: "banksInternalRef",
-      name: "banksInternalRef"
+      id: "bankInternalRefName",
+      name: "bankInternalRefName",
+      errorMessage: errors and {
+        text: errors.fieldErrors.bankInternalRefName.text
+      }
     }) }}
 
     {{ govukInput({
@@ -35,8 +38,8 @@
         text: "Additional reference or name (optional)"
       },
       classes: "govuk-!-width-one-half",
-      id: "banksAdditionalRef",
-      name: "banksAdditionalRef"
+      id: "additionalRefName",
+      name: "additionalRefName"
     }) }}
 
     <div class="govuk-button-group">
