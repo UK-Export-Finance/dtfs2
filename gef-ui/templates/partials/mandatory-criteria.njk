@@ -25,7 +25,7 @@
     Confirm eligiblity (mandatory criteria)
   </h1>
 
-  <div data-cy="mandatory-criteria">
+  <div data-cy="mandatory-criteria" class="app-prose-scope">
   {{ criteria.htmlText | safe }}
   </div>
 
@@ -77,6 +77,6 @@
         href="/gef/mandatory-criteria"
         data-cy="cancel-button">Cancel</a>
     </div>
-</form>
+  </form>
 
 {% endblock %}
