@@ -62,7 +62,7 @@ describe('Validate Mandatory Criteria', () => {
     expect(response.redirect).toHaveBeenCalledWith('name-application');
   });
 
-  it('redirects use to `ineligible` page if they select `false`', async () => {
+  it('redirects user to `ineligible` page if they select `false`', async () => {
     const mockedRequest = {
       body: {
         mandatoryCriteria: 'false',
