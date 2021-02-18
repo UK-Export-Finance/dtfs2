@@ -65,6 +65,7 @@ const mapFacility = (f) => {
 
     // bond specifics
     bondIssuer: facility.bondIssuer,
+    bondBeneficiary: facility.bondBeneficiary,
   };
 };
 

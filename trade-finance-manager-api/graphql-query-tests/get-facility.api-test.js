@@ -32,7 +32,8 @@ const GET_FACILITY = gql`
       coveredPercentage,
       bankFacilityReference,
       guaranteeFeePayableToUkef,
-      bondIssuer
+      bondIssuer,
+      bondBeneficiary
     }
   }
 `;

@@ -125,6 +125,7 @@ type Facility {
   bankFacilityReference: String
   guaranteeFeePayableToUkef: String
   bondIssuer: String
+  bondBeneficiary: String
 }
 
 type DealTotals {
