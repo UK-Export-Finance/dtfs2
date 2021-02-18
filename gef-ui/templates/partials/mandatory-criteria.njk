@@ -6,20 +6,15 @@
 {% block pageTitle %}Confirm eligiblity (mandatory criteria){% endblock %}
 
 {% block content %}
-
-  {{ govukErrorSummary({
-    titleText: "There is a problem",
-    errorList: [
-      {
-        text: "The date your passport was issued must be in the past",
-        href: "#passport-issued-error"
-      },
-      {
-        text: "Enter a postcode, like AA1 1AA",
-        href: "#postcode-error"
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
       }
-    ]
-  }) }}
+    }) }}
+  {% endif %}
 
 
   <span class="govuk-caption-xl" data-cy="heading-caption">
@@ -39,7 +34,7 @@
     data-cy="form">
     {{ govukRadios({
       classes: "govuk-radios--inline",
-      idPrefix: "mandatory-criteria",
+      idPrefix: "confirm",
       name: "mandatoryCriteria",
       fieldset: {
         legend: {
@@ -48,8 +43,8 @@
           classes: "govuk-fieldset__legend--s"
         }
       },
-      errorMessage: validationErrorMessage and {
-        text: validationErrorMessage,
+      errorMessage: errors and {
+        text: errors.fieldErrors.confirm.text,
         attributes: {
           'data-cy': 'mandatory-criteria-error'
         }
@@ -57,16 +52,16 @@
       items: [
         {
           value: true,
-          text: "True",
+          text: "Yes",
           attributes: {
-            'data-cy': 'mandatory-criteria-true'
+            'data-cy': 'mandatory-criteria-yes'
           }
         },
         {
           value: false,
-          text: "False",
+          text: "No",
           attributes: {
-            'data-cy': 'mandatory-criteria-false'
+            'data-cy': 'mandatory-criteria-no'
           }
         }
       ] }) 

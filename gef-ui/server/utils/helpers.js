@@ -1,4 +1,4 @@
-const httpError = require('http-errors');
+import httpError from 'http-errors';
 
 const parseBool = (params) => !(
   params === 'false'

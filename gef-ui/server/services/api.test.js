@@ -7,18 +7,24 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe('Api', () => {
-  describe('ValidateToken', () => {
-    it('returns `true` if token is valid', async () => {
-      Axios.get.mockReturnValue(Promise.resolve({ status: 200 }));
-      const response = await api.validateToken();
-      expect(response).toBeTruthy();
-    });
+describe('validateToken()', () => {
+  it('returns `true` if token is valid', async () => {
+    Axios.get.mockReturnValue(Promise.resolve({ status: 200 }));
+    const response = await api.validateToken();
+    expect(response).toBeTruthy();
+  });
 
-    it('returns `false` if token is not valid', async () => {
-      Axios.get.mockReturnValue(Promise.resolve({ status: 400 }));
-      const response = await api.validateToken();
-      expect(response).toBeFalsy();
-    });
+  it('returns `false` if token is not valid', async () => {
+    Axios.get.mockReturnValue(Promise.resolve({ status: 400 }));
+    const response = await api.validateToken();
+    expect(response).toBeFalsy();
+  });
+});
+
+describe('getMandatoryCriteria()', () => {
+  it('returns the correct response', async () => {
+    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    const response = await api.getMandatoryCriteria();
+    expect(response).toEqual({ status: 200 });
   });
 });

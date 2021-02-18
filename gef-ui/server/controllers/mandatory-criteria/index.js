@@ -23,9 +23,22 @@ const validateMandatoryCriteria = async (req, res) => {
   const isEmpty = _isEmpty(mandatoryCriteria);
   const criteria = await api.getMandatoryCriteria();
 
+
   if (isEmpty) {
-    return res.status(422).render('partials/mandatory-criteria.njk', {
-      validationErrorMessage: 'Select an option',
+    return res.render('partials/mandatory-criteria.njk', {
+      errors: {
+        errorSummary: [
+          {
+            text: 'Select an option',
+            href: 'mandatory-criteria#confirm',
+          },
+        ],
+        fieldErrors: {
+          confirm: {
+            text: 'Select an option',
+          },
+        },
+      },
       criteria,
     });
   }
