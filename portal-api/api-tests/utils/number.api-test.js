@@ -5,6 +5,7 @@ const {
   stripDecimals,
   roundNumber,
   formattedNumber,
+  sanitizeCurrency,
 } = require('../../src/utils/number');
 
 describe('utils - number', () => {
@@ -49,6 +50,60 @@ describe('utils - number', () => {
       expect(stripDecimals(12345678)).toEqual(12345678);
     });
   });
+
+
+  describe('sanitize Currency', () => {
+    it('should return sanitized currency', () => {
+      expect(sanitizeCurrency(1234)).toEqual(
+        {
+          sanitizedValue: '1234',
+          isCurrency: true,
+          decimalPlaces: true,
+        },
+      );
+
+      expect(sanitizeCurrency('1234')).toEqual(
+        {
+          sanitizedValue: '1234',
+          isCurrency: true,
+          decimalPlaces: true,
+        },
+      );
+
+      expect(sanitizeCurrency('1,234.12')).toEqual(
+        {
+          sanitizedValue: '1234.12',
+          isCurrency: true,
+          decimalPlaces: true,
+        },
+      );
+
+      expect(sanitizeCurrency('abc')).toEqual(
+        {
+          sanitizedValue: 'abc',
+          isCurrency: false,
+          decimalPlaces: true,
+        },
+      );
+
+      expect(sanitizeCurrency('')).toEqual(
+        {
+          sanitizedValue: '',
+          isCurrency: false,
+          decimalPlaces: true,
+        },
+      );
+
+      expect(sanitizeCurrency(null)).toEqual(
+        {
+          sanitizedValue: '',
+          isCurrency: false,
+          decimalPlaces: true,
+        },
+      );
+    });
+  });
+
 
   describe('roundNumber', () => {
     it('should round a number up with passed digits/decimals', () => {
