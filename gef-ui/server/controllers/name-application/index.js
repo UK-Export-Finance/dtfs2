@@ -2,20 +2,20 @@ const nameApplication = async (req, res) => res.render('partials/name-applicatio
 
 const createApplication = async (req, res) => {
   const { body } = req;
-  const { banksInternalRef, banksAdditionalRef } = body;
+  const { bankInternalRefName, additionalRefName } = body;
 
-  if (!banksInternalRef) {
+  if (!bankInternalRefName) {
     return res.render('partials/name-application.njk', {
       errors: {
         errorSummary: [
           {
             text: 'You must enter a bank reference or name',
-            href: 'name-applicatione#banksInternalRef',
+            href: 'name-applicatione#bankInternalRefName',
           },
         ],
         fieldErrors: {
-          confirm: {
-            text: 'Select an option',
+          bankInternalRefName: {
+            text: 'You must enter a bank reference or name',
           },
         },
       },
