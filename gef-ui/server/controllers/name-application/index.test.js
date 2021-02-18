@@ -30,6 +30,11 @@ describe('Create Application', () => {
       body: {
         bankInternalRefName: '',
       },
+      session: {
+        user: {
+          _id: 'abc',
+        },
+      },
     };
     api.createApplication = () => Promise.resolve(mockCriteria);
     await createApplication(mockedRequest, response);
@@ -42,6 +47,11 @@ describe('Create Application', () => {
     const mockedRequest = {
       body: {
         bankInternalRefName: '1234',
+      },
+      session: {
+        user: {
+          _id: 'abc',
+        },
       },
     };
     await createApplication(mockedRequest, response);
