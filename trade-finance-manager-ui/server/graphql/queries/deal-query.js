@@ -11,8 +11,8 @@ const dealQuery = gql`
       }
       dealSnapshot {
         _id,
-        ukefDealId,
         details {
+          ukefDealId,
           status,
           submissionDate,
           submissionType,
