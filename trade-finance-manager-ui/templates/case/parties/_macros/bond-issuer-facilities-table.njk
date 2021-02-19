@@ -16,7 +16,6 @@
     <tbody class="govuk-table__body">
       {% for facility in facilities %}
 
-        {# {% if facility.ukefFacilityType === 'bond' and facility.bondIssuer %} #}
         <tr class="govuk-table__row" data-cy="facility-{{ facility._id }}">
           <td class="govuk-table__cell govuk-body-s">
 
@@ -47,7 +46,7 @@
             {% endif %}
           </td>
         </tr>
-        {# {% endif %} #}
+
       {% endfor %}
     </tbody>
 

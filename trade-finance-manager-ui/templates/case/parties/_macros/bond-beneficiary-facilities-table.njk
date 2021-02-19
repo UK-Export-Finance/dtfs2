@@ -15,6 +15,7 @@
 
     <tbody class="govuk-table__body">
       {% for facility in facilities %}
+
         <tr class="govuk-table__row" data-cy="facility-{{ facility._id }}">
           <td class="govuk-table__cell govuk-body-s">
 
@@ -45,6 +46,7 @@
             {% endif %}
           </td>
         </tr>
+
       {% endfor %}
     </tbody>
   </table>

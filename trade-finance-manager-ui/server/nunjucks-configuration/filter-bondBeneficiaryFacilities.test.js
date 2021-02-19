@@ -8,7 +8,7 @@ describe('nunjuck filters - bondBeneficiaryFacilities', () => {
     ];
 
     const mockBondsWithoutBondBeneficiary = [
-      { ukefFacilityType: 'bond'},
+      { ukefFacilityType: 'bond' },
     ];
 
     const mockLoans = [
