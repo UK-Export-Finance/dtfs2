@@ -14,8 +14,12 @@ const hasValue = (str) => {
 
 const stripCommas = (str) => str.replace(/,/g, '');
 
+const capitalizeFirstLetter = (str) =>
+  str.charAt(0).toUpperCase() + str.slice(1);
+
 module.exports = {
   isEmptyString,
   hasValue,
   stripCommas,
+  capitalizeFirstLetter,
 };

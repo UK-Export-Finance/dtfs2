@@ -47,6 +47,7 @@ const dealQuery = gql`
           ukefExposure,
           coveredPercentage,
           bondIssuer,
+          bondBeneficiary,
           bankFacilityReference
         }
         eligibility {

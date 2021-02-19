@@ -5,6 +5,8 @@ import displayName from './filter-displayName';
 import formatAsCurrency from './formatAsCurrency';
 import countriesWithEmptyInitialOption from './filter-countriesWithEmptyInitialOption';
 import replaceWhiteSpaceWithDash from './filter-replaceWhiteSpaceWithDash';
+import bondBeneficiaryFacilities from './filter-bondBeneficiaryFacilities';
+import bondIssuerFacilities from './filter-bondIssuerFacilities';
 
 const configureNunjucks = (opts) => {
   const appViews = [
@@ -21,6 +23,8 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('formatAsCurrency', formatAsCurrency);
   nunjucksEnvironment.addFilter('countriesWithEmptyInitialOption', countriesWithEmptyInitialOption);
   nunjucksEnvironment.addFilter('replaceWhiteSpaceWithDash', replaceWhiteSpaceWithDash);
+  nunjucksEnvironment.addFilter('bondBeneficiaryFacilities', bondBeneficiaryFacilities);
+  nunjucksEnvironment.addFilter('bondIssuerFacilities', bondIssuerFacilities);
   return nunjucks;
 };
 

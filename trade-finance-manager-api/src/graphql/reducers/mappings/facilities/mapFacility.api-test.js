@@ -1,5 +1,6 @@
 const mapFacility = require('./mapFacility');
 const { formattedNumber } = require('../../../../utils/number');
+const { capitalizeFirstLetter } = require('../../../../utils/string');
 const mapFacilityProduct = require('./mapFacilityProduct');
 const mapFacilityStage = require('./mapFacilityStage');
 const mapCoverEndDate = require('./mapCoverEndDate');
@@ -37,11 +38,11 @@ describe('mapFacility', () => {
     facilityValue: mockFacilityValue,
     facilityStage: 'Unissued',
     bankReferenceNumber: '123456',
+    bondIssuer: 'Issuer',
+    bondBeneficiary: 'test',
 
     // fields we do not consume
-    bondIssuer: 'Issuer',
     ukefGuaranteeInMonths: '10',
-    bondBeneficiary: 'test',
     guaranteeFeePayableByBank: '9.0000',
     currencySameAsSupplyContractCurrency: 'true',
     riskMarginFee: '10',
@@ -77,9 +78,22 @@ describe('mapFacility', () => {
       bankFacilityReference: mapBankFacilityReference(mockFacility),
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacility.guaranteeFeePayableByBank, 4),
       bondIssuer: mockFacility.bondIssuer,
+      bondBeneficiary: mockFacility.bondBeneficiary,
     };
 
     expect(result).toEqual(expected);
+  });
+
+  describe('when facility is a loan', () => {
+    it('should capitalize facilityType', () => {
+      const result = mapFacility({
+        ...mockFacility,
+        bondType: null,
+        facilityType: 'loan',
+      });
+
+      expect(result.facilityType).toEqual(capitalizeFirstLetter('loan'));
+    });
   });
 
   describe('when facility.currency is NOT GBP', () => {

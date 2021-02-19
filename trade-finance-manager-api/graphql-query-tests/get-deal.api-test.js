@@ -56,7 +56,10 @@ const GET_DEAL = gql`
           facilityValue,
           coverEndDate,
           ukefExposure,
-          coveredPercentage
+          coveredPercentage,
+          bondIssuer,
+          bondBeneficiary,
+          bankFacilityReference
         }
         eligibility {
           agentAddressCountry,

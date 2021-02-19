@@ -4,11 +4,11 @@
 {% macro render(params) %}
   {% set facilities = params.facilities %}
 
-  <table class="govuk-table" data-cy="bond-issuer-facilities-table">
+  <table class="govuk-table" data-cy="bond-beneficiary-facilities-table">
     <thead class="govuk-table__head">
       <tr>
         <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-facility-id">Facility ID</th>
-        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-bond-issuer">Bond issuer</th>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-bond-beneficiary">Bond beneficiary</th>
         <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-unique-reference-number">Unique Reference Number</th>
       </tr>
     </thead>
@@ -27,7 +27,7 @@
             {{ facilityLink.render(componentData) }}
           </td>
 
-          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-bond-issuer">{{ facility.bondIssuer }}</td>
+          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-bond-beneficiary">{{ facility.bondBeneficiary }}</td>
 
           <td class="govuk-table__cell govuk-body-s">
 
@@ -49,7 +49,6 @@
 
       {% endfor %}
     </tbody>
-
   </table>
 
 {% endmacro %}
