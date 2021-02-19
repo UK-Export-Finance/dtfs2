@@ -5,15 +5,24 @@
 
 <div class="govuk-grid-row separator-line deal">
   <h2 class="ukef-heading-l" data-cy="bond-issuer-heading">Bond issuer</h2>
-  <p class="ukef-hint" style="margin-top:-36px" data-cy="bond-issuer-sub-heading">(if different to buyer)</p>
+  <p class="ukef-hint" style="margin-top:-36px" data-cy="bond-issuer-sub-heading">(if different to bank)</p>
 
   <div class="govuk-grid-row deal">
 
-    {% set componentData = {
-      facilities: deal.facilities
-    } %}
+    {% set filteredFacilities = deal.facilities | bondIssuerFacilities %}
 
-    {{ bondIssuerFacilitiesTable.render(componentData) }}
+    {% if filteredFacilities.length > 0 %}
+
+      {% set componentData = {
+        facilities: filteredFacilities
+      } %}
+              
+      {{ bondIssuerFacilitiesTable.render(componentData) }}
+
+    {% else %}
+      <p data-cy="bond-issuer-not-applicable">Not applicable</p>
+    {% endif %}
+
   </div>
 
 </div>

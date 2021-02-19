@@ -1,6 +1,6 @@
 const componentRenderer = require('../../../../component-tests/componentRenderer');
 
-const component = '../templates/case/parties/_macros/bond-issuer-facilities-table.njk';
+const component = '../templates/case/parties/_macros/bond-beneficiary-facilities-table.njk';
 
 const render = componentRenderer(component);
 
@@ -12,14 +12,14 @@ describe(component, () => {
         _id: '123',
         ukefFacilityID: '0040004833',
         ukefFacilityType: 'bond',
-        bondIssuer: 'test bond issuer',
+        bondBeneficiary: 'test bond beneficiary',
         bankFacilityReference: '1234-test',
       },
       {
         _id: '456',
         ukefFacilityType: 'bond',
         ukefFacilityID: '0040004833',
-        bondIssuer: 'test bond issuer',
+        bondBeneficiary: 'test bond beneficiary',
         bankFacilityReference: '1234-test',
       },
       {
@@ -31,6 +31,7 @@ describe(component, () => {
     ],
   };
 
+
   beforeEach(() => {
     wrapper = render(params);
   });
@@ -40,8 +41,8 @@ describe(component, () => {
       wrapper.expectText('[data-cy="facilities-table-heading-facility-id"]').toRead('Facility ID');
     });
 
-    it('should render `bond issuer` table heading', () => {
-      wrapper.expectText('[data-cy="facilities-table-heading-bond-issuer"]').toRead('Bond issuer');
+    it('should render `bond beneficiary` table heading', () => {
+      wrapper.expectText('[data-cy="facilities-table-heading-bond-beneficiary"]').toRead('Bond beneficiary');
     });
 
     it('should render `unique reference number` table heading', () => {
@@ -50,8 +51,8 @@ describe(component, () => {
   });
 
   const expectedFacilities = params.facilities.filter((f) =>
-    f.ukefFacilityType === 'bond'
-    && f.bondIssuer);
+      f.ukefFacilityType === 'bond'
+      && f.bondBeneficiary);
 
   it('should render ukefFacilityID link, linking to facility id', () => {
     expectedFacilities.forEach((facility) => {
@@ -67,7 +68,7 @@ describe(component, () => {
   describe('unique reference number (bankFacilityReference) table cell value', () => {
     it('should render', () => {
       const expectedFacilities = params.facilities.filter((f) =>
-        f.bondIssuer
+        f.bondBeneficiary
         && f.bankFacilityReference);
 
       expectedFacilities.forEach((facility) => {
@@ -79,7 +80,7 @@ describe(component, () => {
 
     it('should render `not matched` tag when there is no bankFacilityReference value', () => {
       const expectedFacilities = params.facilities.filter((f) =>
-        f.bondIssuer
+        f.bondBeneficiary
         && !f.bankFacilityReference);
 
       expectedFacilities.forEach((facility) => {

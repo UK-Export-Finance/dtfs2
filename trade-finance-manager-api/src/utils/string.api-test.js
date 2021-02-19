@@ -2,6 +2,7 @@ const {
   isEmptyString,
   hasValue,
   stripCommas,
+  capitalizeFirstLetter,
 } = require('./string');
 
 describe('utils - string', () => {
@@ -33,6 +34,13 @@ describe('utils - string', () => {
   describe('stripCommas', () => {
     it('should remove commas from a string', () => {
       expect(stripCommas('9,876,543,120,987.99')).toEqual('9876543120987.99');
+    });
+  });
+
+  describe('capitalizeFirstLetter', () => {
+    it('should capitalize the first letter of a string', () => {
+      const result = capitalizeFirstLetter('testing');
+      expect(result).toEqual('Testing');
     });
   });
 });

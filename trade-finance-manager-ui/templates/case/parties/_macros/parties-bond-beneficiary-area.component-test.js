@@ -1,27 +1,12 @@
 const componentRenderer = require('../../../../component-tests/componentRenderer');
-const page = '../templates/case/parties/_macros/parties-bond-issuer-area.njk';
+const page = '../templates/case/parties/_macros/parties-bond-beneficiary-area.njk';
 const render = componentRenderer(page);
 
 describe(page, () => {
   let wrapper;
   const params = {
     deal: {
-      _id: '12345678',
-      details: {
-        submissionType: 'Automatic Inclusion Notice',
-        bankSupplyContractID: 'contract-1',
-        bankSupplyContractName: 'FirstContract',
-        owningBank: {
-          name: 'Lloyds',
-          emails: ['xxx@yyy.com'],
-        },
-        maker: {
-          firstname: 'John',
-          surname: 'Doe',
-          email: 'john.doe@exporter.com',
-        },
-      },
-      facilities: []
+      facilities: [],
     },
   };
 
@@ -30,15 +15,15 @@ describe(page, () => {
   });
 
   it('should render heading', () => {
-    wrapper.expectText('[data-cy="bond-issuer-heading"]').toRead('Bond issuer');
+    wrapper.expectText('[data-cy="bond-beneficiary-heading"]').toRead('Bond beneficiary');
   });
 
   it('should render sub heading', () => {
-    wrapper.expectText('[data-cy="bond-issuer-sub-heading"]').toRead('(if different to bank)');
+    wrapper.expectText('[data-cy="bond-beneficiary-sub-heading"]').toRead('(if different to buyer)');
   });
 
-  describe('when facilities have bondIssuer', () => {
-    it('should render bond issuer facilities table', () => {
+  describe('when facilities have bondBeneficiary', () => {
+    it('should render bond beneificiary facilities table', () => {
       const paramsWithFacilities = {
         deal: {
           facilities: [
@@ -46,14 +31,14 @@ describe(page, () => {
               _id: '123',
               ukefFacilityID: '0040004833',
               ukefFacilityType: 'bond',
-              bondIssuer: 'test bond beneficiary',
+              bondBeneficiary: 'test bond beneficiary',
               bankFacilityReference: '1234-test',
             },
             {
               _id: '456',
               ukefFacilityType: 'bond',
               ukefFacilityID: '0040004833',
-              bondIssuer: 'test bond beneficiary',
+              bondBeneficiary: 'test bond beneficiary',
               bankFacilityReference: '1234-test',
             },
             {
@@ -68,12 +53,12 @@ describe(page, () => {
 
       wrapper = render(paramsWithFacilities);
 
-        wrapper.expectElement('[data-cy="bond-issuer-facilities-table"]').toExist();
-      wrapper.expectElement('[data-cy="bond-issuer-not-applicable"]').notToExist();
+      wrapper.expectElement('[data-cy="bond-beneficiary-facilities-table"]').toExist();
+      wrapper.expectElement('[data-cy="bond-beneficiaries-not-applicable"]').notToExist();
     });
   });
 
-  describe('when facilities do not have bondIssuer', () => {
+  describe('when facilities do not have bondBeneficiary', () => {
     it('should render `Not applicable`', () => {
       const paramsWithFacilities = {
         deal: {
@@ -96,8 +81,8 @@ describe(page, () => {
 
       wrapper = render(paramsWithFacilities);
 
-      wrapper.expectElement('[data-cy="bond-issuer-not-applicable"]').toExist();
-      wrapper.expectElement('[data-cy="bond-issuer-facilities-table"]').notToExist();
+      wrapper.expectElement('[data-cy="bond-beneficiaries-not-applicable"]').toExist();
+      wrapper.expectElement('[data-cy="bond-beneficiary-facilities-table"]').notToExist();
     });
   });
 

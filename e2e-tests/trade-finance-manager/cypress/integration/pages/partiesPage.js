@@ -9,10 +9,19 @@ const partiesPage = {
   indemnifierEditLink: () => cy.get('[data-cy="parties-indemnifier"] [data-cy="edit-party-link"]'),
   bondIssuerFacilitiesTable: {
     row: (facilityId) => {
-      const row = cy.get(`[data-cy="facility-${facilityId}"]`);
+      const row = cy.get(`[data-cy="bond-issuer-facilities-table"] [data-cy="facility-${facilityId}"]`);
       return {
         row,
-        facilityId: () => row.get(`[data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
+        facilityId: () => row.get(`[data-cy="bond-issuer-facilities-table"] [data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
+      };
+    },
+  },
+  bondBeneficiaryFacilitiesTable: {
+    row: (facilityId) => {
+      const row = cy.get(`[data-cy="bond-beneficiary-facilities-table"] [data-cy="facility-${facilityId}"]`);
+      return {
+        row,
+        facilityId: () => row.get(`[data-cy="bond-beneficiary-facilities-table"] [data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
       };
     },
   },
