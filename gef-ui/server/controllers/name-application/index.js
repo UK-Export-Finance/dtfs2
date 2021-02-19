@@ -1,3 +1,4 @@
+import { forOwn } from 'lodash';
 import * as api from '../../services/api';
 import { validationErrorHandler } from '../../utils/helpers';
 
@@ -5,7 +6,6 @@ const nameApplication = async (req, res) => res.render('partials/name-applicatio
 
 const createApplication = async (req, res) => {
   const { body, session } = req;
-
   const { bankInternalRefName } = body;
   const { _id: userId } = session.user;
 
@@ -20,16 +20,20 @@ const createApplication = async (req, res) => {
   }
 
   try {
-    await api.createApplication({
+    const application = await api.createApplication({
       ...body,
       userId,
     });
 
-    return res.redirect('application-details');
+    // Show validation errors from server
+    if (application.response.status === 422) {
+      return res.render('partials/name-application.njk', {
+        errors: validationErrorHandler(application.response.messages, 'name-application'),
+      });
+    }
   } catch (err) {
-    return res.render('partials/name-application.njk', {
-      errors: err,
-    });
+    console.error(err);
+    return err;
   }
 };
 

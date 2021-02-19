@@ -1,6 +1,6 @@
 import _isEmpty from 'lodash/isEmpty';
 import * as api from '../../services/api';
-import { parseBool, errorHandler, validationErrorHandler } from '../../utils/helpers';
+import { parseBool, validationErrorHandler } from '../../utils/helpers';
 
 const getMandatoryCriteria = async (req, res) => {
   try {
@@ -10,10 +10,7 @@ const getMandatoryCriteria = async (req, res) => {
       criteria,
     });
   } catch (err) {
-    const { message } = errorHandler(err);
-    return res.render('partials/mandatory-criteria.njk', {
-      error: message,
-    });
+    return err;
   }
 };
 

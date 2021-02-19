@@ -14,12 +14,21 @@ const userToken = (req) => {
 
 const isObject = (el) => typeof el === 'object' && el !== null && !(el instanceof Array);
 
-const errorHandler = (error) => {
+const apiErrorHandler = (error) => {
   if (error.code === 'ECONNABORTED') {
-    return httpError(501, 'Request timed out.');
+    throw httpError(501, 'Request timed out.');
+  }
+  // Is validation error
+  if (error.response.status === 422) {
+    return {
+      response: {
+        status: error.response.status,
+        messages: error.response.data,
+      },
+    };
   }
 
-  return httpError(error.response.status, error.response.statusText);
+  throw httpError(error.response.status, error.response.statusText, error.response.data);
 };
 
 const validationErrorHandler = (errs, href = '') => {
@@ -47,6 +56,6 @@ export {
   parseBool,
   userToken,
   isObject,
-  errorHandler,
+  apiErrorHandler,
   validationErrorHandler,
 };
