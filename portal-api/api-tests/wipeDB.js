@@ -19,7 +19,18 @@ const wipe = async (collections) => {
 };
 
 const wipeAll = async () => {
-  const wiped = await wipe(['deals', 'facilities', 'banks', 'transactions', 'industrySectors', 'mandatoryCriteria', 'gef-mandatoryCriteriaVersioned', 'eligibilityCriteria', 'users']);
+  const wiped = await wipe([
+    'deals',
+    'facilities',
+    'banks',
+    'transactions',
+    'industrySectors',
+    'mandatoryCriteria',
+    'eligibilityCriteria',
+    'users',
+    'gef-mandatoryCriteriaVersioned',
+    'gef-application',
+  ]);
   return wiped;
 };
 
