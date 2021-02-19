@@ -9,11 +9,20 @@
 
   <div class="govuk-grid-row deal">
 
-    {% set componentData = {
-      facilities: deal.facilities
-    } %}
+    {% set filteredFacilities = deal.facilities | bondIssuerFacilities %}
 
-    {{ bondIssuerFacilitiesTable.render(componentData) }}
+    {% if filteredFacilities.length > 0 %}
+
+      {% set componentData = {
+        facilities: filteredFacilities
+      } %}
+              
+      {{ bondIssuerFacilitiesTable.render(componentData) }}
+
+    {% else %}
+      <p data-cy="bond-issuer-not-applicable">Not applicable</p>
+    {% endif %}
+
   </div>
 
 </div>

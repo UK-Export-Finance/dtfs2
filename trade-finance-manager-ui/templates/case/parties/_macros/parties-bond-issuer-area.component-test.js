@@ -37,7 +37,68 @@ describe(page, () => {
     wrapper.expectText('[data-cy="bond-issuer-sub-heading"]').toRead('(if different to bank)');
   });
 
-  it('should render bond issuer facilities table', () => {
-    wrapper.expectElement('[data-cy="bond-issuer-facilities-table"]').toExist();
+  describe('when facilities have bondIssuer', () => {
+    it('should render bond issuer facilities table', () => {
+      const paramsWithFacilities = {
+        deal: {
+          facilities: [
+            {
+              _id: '123',
+              ukefFacilityID: '0040004833',
+              ukefFacilityType: 'bond',
+              bondIssuer: 'test bond beneficiary',
+              bankFacilityReference: '1234-test',
+            },
+            {
+              _id: '456',
+              ukefFacilityType: 'bond',
+              ukefFacilityID: '0040004833',
+              bondIssuer: 'test bond beneficiary',
+              bankFacilityReference: '1234-test',
+            },
+            {
+              _id: '789',
+              ukefFacilityType: 'bond',
+              ukefFacilityID: '0040004833',
+              bankFacilityReference: '1234-test',
+            },
+          ],
+        },
+      };
+
+      wrapper = render(paramsWithFacilities);
+
+        wrapper.expectElement('[data-cy="bond-issuer-facilities-table"]').toExist();
+      wrapper.expectElement('[data-cy="bond-issuer-not-applicable"]').notToExist();
+    });
   });
+
+  describe('when facilities do not have bondIssuer', () => {
+    it('should render `Not applicable`', () => {
+      const paramsWithFacilities = {
+        deal: {
+          facilities: [
+            {
+              _id: '123',
+              ukefFacilityType: 'bond',
+            },
+            {
+              _id: '456',
+              ukefFacilityType: 'bond',
+            },
+            {
+              _id: '789',
+              ukefFacilityType: 'bond',
+            },
+          ],
+        },
+      };
+
+      wrapper = render(paramsWithFacilities);
+
+      wrapper.expectElement('[data-cy="bond-issuer-not-applicable"]').toExist();
+      wrapper.expectElement('[data-cy="bond-issuer-facilities-table"]').notToExist();
+    });
+  });
+
 });

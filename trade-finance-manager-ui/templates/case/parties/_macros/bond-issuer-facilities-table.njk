@@ -16,38 +16,38 @@
     <tbody class="govuk-table__body">
       {% for facility in facilities %}
 
-        {% if facility.ukefFacilityType === 'bond' and facility.bondIssuer %}
-          <tr class="govuk-table__row" data-cy="facility-{{ facility._id }}">
-            <td class="govuk-table__cell govuk-body-s">
+        {# {% if facility.ukefFacilityType === 'bond' and facility.bondIssuer %} #}
+        <tr class="govuk-table__row" data-cy="facility-{{ facility._id }}">
+          <td class="govuk-table__cell govuk-body-s">
 
-              {% set componentData = {
-                id: facility._id,
-                ukefFacilityID: facility.ukefFacilityID
-              } %}
+            {% set componentData = {
+              id: facility._id,
+              ukefFacilityID: facility.ukefFacilityID
+            } %}
 
-              {{ facilityLink.render(componentData) }}
-            </td>
+            {{ facilityLink.render(componentData) }}
+          </td>
 
-            <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-bond-issuer">{{ facility.bondIssuer }}</td>
+          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-bond-issuer">{{ facility.bondIssuer }}</td>
 
-            <td class="govuk-table__cell govuk-body-s">
+          <td class="govuk-table__cell govuk-body-s">
 
-              {% if facility.bankFacilityReference %}
+            {% if facility.bankFacilityReference %}
 
-                <span data-cy="facility-{{ facility._id }}-unique-reference-number">{{ facility.bankFacilityReference }}</span>
+              <span data-cy="facility-{{ facility._id }}-unique-reference-number">{{ facility.bankFacilityReference }}</span>
 
-              {% else %}
-                {{govukTag({
-                  text: 'Not matched',
-                  classes: "govuk-tag--red",
-                  attributes: {
-                    'data-cy': 'facility-unique-reference-number-not-matched'
-                  }
-                })}}
-              {% endif %}
-            </td>
-          </tr>
-        {% endif %}
+            {% else %}
+              {{govukTag({
+                text: 'Not matched',
+                classes: "govuk-tag--red",
+                attributes: {
+                  'data-cy': 'facility-unique-reference-number-not-matched'
+                }
+              })}}
+            {% endif %}
+          </td>
+        </tr>
+        {# {% endif %} #}
       {% endfor %}
     </tbody>
 
