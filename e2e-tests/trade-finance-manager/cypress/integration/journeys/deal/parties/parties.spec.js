@@ -90,4 +90,17 @@ context('User can view party details', () => {
       cy.url().should('eq', relative(`/case/facility/${facilityId}`));
     });
   });
+
+  describe('bond beneficiary facilities table', () => {
+    it('clicking `Facility ID` link should take user to facility details page', () => {
+      cy.visit(`/case/parties/${dealId}`);
+
+      const facilityId = dealFacilities[0]._id; // eslint-disable-line no-underscore-dangle
+      const facilityRow = pages.partiesPage.bondBeneficiaryFacilitiesTable.row(facilityId);
+
+      facilityRow.facilityId().click();
+
+      cy.url().should('eq', relative(`/case/facility/${facilityId}`));
+    });
+  });
 });
