@@ -37,11 +37,6 @@ const insertMocks = async () => {
     await api.createMandatoryCriteria(mandatoryCriteria, token);
   }
 
-  console.log('inserting mandatory-criteria-versioned');
-  for (mandatoryCriteria of MOCKS.MANDATORY_CRITERIA_VERSIONED) {
-    await api.createMandatoryCriteriaVersioned(mandatoryCriteria, token);
-  }
-
   console.log('inserting eligibility-criteria');
   for (eligibilityCriteria of MOCKS.ELIGIBILITY_CRITERIA) {
     await api.createEligibilityCriteria(eligibilityCriteria, token);

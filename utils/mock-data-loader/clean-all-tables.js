@@ -34,14 +34,6 @@ const cleanMandatoryCriteria = async (token) => {
   }
 };
 
-const cleanMandatoryCriteriaVersioned = async (token) => {
-  console.log('cleaning mandatory-criteria-versioned');
-
-  for (mandatoryCriteria of await api.listMandatoryCriteriaVersioned(token)) {
-    await api.deleteMandatoryCriteriaVersioned(mandatoryCriteria, token);
-  }
-};
-
 const cleanEligibilityCriteria = async (token) => {
   console.log('cleaning eligibility-criteria');
 
@@ -70,7 +62,6 @@ const cleanAllTables = async () => {
   await cleanDeals(token);
   await cleanFacilities();
   await cleanMandatoryCriteria(token);
-  await cleanMandatoryCriteriaVersioned(token);
   await cleanEligibilityCriteria(token);
   await cleanUsers();
 };

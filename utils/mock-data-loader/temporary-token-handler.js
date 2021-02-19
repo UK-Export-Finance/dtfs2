@@ -17,7 +17,7 @@ module.exports = async (user) => {
     console.log(`${JSON.stringify(err)}`);
   });
 
-  console.log(`Logging in as ${user}`);
+  console.log(`Logging in as "${user.username}"`);
   const { data } = await axios({
     method: 'post',
     url: `${urlRoot}/v1/login`,
