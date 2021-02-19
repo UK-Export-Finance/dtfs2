@@ -28,6 +28,7 @@ const findOneMandatoryCriteria = async (id, callback) => {
 const findLatestMandatoryCriteria = async (callback) => {
   const collection = await db.getCollection('gef-mandatoryCriteriaVersioned');
   collection.find({ isInDraft: false }).sort({ version: -1 }).limit(1).toArray((err, result) => {
+    console.log('findLatestMandatoryCriteria error', { err: JSON.stringify(err, null, 4) });
     assert.equal(err, null);
     callback(result[0]);
   });
