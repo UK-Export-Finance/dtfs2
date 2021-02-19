@@ -1,6 +1,6 @@
 import _isEmpty from 'lodash/isEmpty';
 import * as api from '../../services/api';
-import { parseBool, errorHandler } from '../../utils/helpers';
+import { parseBool, errorHandler, validationErrorHandler } from '../../utils/helpers';
 
 const getMandatoryCriteria = async (req, res) => {
   try {
@@ -25,20 +25,12 @@ const validateMandatoryCriteria = async (req, res) => {
 
 
   if (isEmpty) {
+    const mandatoryError = {
+      errRef: 'bankInternalRefName',
+      errMsg: 'You must enter a bank reference or name',
+    };
     return res.render('partials/mandatory-criteria.njk', {
-      errors: {
-        errorSummary: [
-          {
-            text: 'Select an option',
-            href: 'mandatory-criteria#confirm',
-          },
-        ],
-        fieldErrors: {
-          confirm: {
-            text: 'Select an option',
-          },
-        },
-      },
+      errors: validationErrorHandler(mandatoryError, 'mandatory-criteria'),
       criteria,
     });
   }
