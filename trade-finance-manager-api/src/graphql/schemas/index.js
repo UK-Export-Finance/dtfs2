@@ -155,7 +155,6 @@ input DealsInput {
 
 type DealSnapshot {
   _id: String!
-  Product: String
   details: DealDetails
   totals: DealTotals
   facilities: [Facility]
