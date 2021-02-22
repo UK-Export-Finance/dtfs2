@@ -32,8 +32,8 @@ exports.create = async (req, res) => {
   if (validateErrs) {
     res.status(422).send(validateErrs);
   } else {
-    const doc = await collection.insertOne(req.body);
-    res.status(201).send(doc);
+    const doc = await collection.insert(req.body);
+    res.status(201).json(doc.ops[0]);
   }
 };
 
