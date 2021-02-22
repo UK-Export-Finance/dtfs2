@@ -1,4 +1,3 @@
-import { forOwn } from 'lodash';
 import * as api from '../../services/api';
 import { validationErrorHandler } from '../../utils/helpers';
 
@@ -25,8 +24,6 @@ const createApplication = async (req, res) => {
       userId,
     });
 
-    console.log('application', application);
-
     // Show validation errors from server
     if (application.response.status === 422) {
       return res.render('partials/name-application.njk', {
@@ -34,9 +31,10 @@ const createApplication = async (req, res) => {
       });
     }
 
-    return res.redirect('application-details');
+    // eslint-disable-next-line no-underscore-dangle
+    return res.redirect(`application-details/${application._id}`);
   } catch (err) {
-    return err;
+    return res.render('partials/problem-with-service.njk');
   }
 };
 
