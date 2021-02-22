@@ -21,7 +21,10 @@ const facilityQuery = gql`
       ukefExposure,
       coveredPercentage,
       bankFacilityReference,
-      guaranteeFeePayableToUkef
+      guaranteeFeePayableToUkef,
+      bondIssuer,
+      bondBeneficiary,
+      bankFacilityReference
     }
   }
 `;

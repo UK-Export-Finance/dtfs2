@@ -37,7 +37,7 @@ exports.create = async (req, res) => {
   const collection = await db.getCollection('gef-mandatoryCriteriaVersioned');
   const mandatoryCriteria = await collection.insertOne(req.body);
 
-  res.status(200).send(mandatoryCriteria);
+  res.status(201).send(mandatoryCriteria.ops[0]);
 };
 
 exports.findAll = (req, res) => (
