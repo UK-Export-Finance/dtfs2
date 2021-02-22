@@ -1,12 +1,12 @@
-const wipeDB = require('../../../wipeDB');
+const wipeDB = require('../../wipeDB');
 
-const app = require('../../../../src/createApp');
-const testUserCache = require('../../../api-test-users');
+const app = require('../../../src/createApp');
+const testUserCache = require('../../api-test-users');
 
-const { as } = require('../../../api')(app);
-const { expectMongoId, expectMongoIds } = require('../../../expectMongoIds');
+const { as } = require('../../api')(app);
+const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
-const allMandatoryCriteria = require('../../../fixtures/gef/mandatoryCriteriaVersioned');
+const allMandatoryCriteria = require('../../fixtures/gef/mandatoryCriteriaVersioned');
 const newMandatoryCriteria = allMandatoryCriteria[0];
 const updatedMandatoryCriteria = {
   ...newMandatoryCriteria,
