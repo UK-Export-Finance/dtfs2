@@ -20,7 +20,9 @@
     Name your application
   </h1>
 
-  <form method="post">
+  <form
+    method="post"
+    data-cy="form">
     {{ govukInput({
       label: {
         text: "Enter your bank’s internal reference or name"
@@ -29,7 +31,10 @@
       id: "bankInternalRefName",
       name: "bankInternalRefName",
       errorMessage: errors and {
-        text: errors.fieldErrors.bankInternalRefName.text
+        text: errors.fieldErrors.bankInternalRefName.text,
+        attributes: {
+          'data-cy': 'internal-ref-error'
+        }
       },
       attributes: {
         'data-cy': 'internal-ref'
@@ -56,7 +61,7 @@
       }
       }) }}
 
-      <a class="govuk-link" href="#" data-cy="cancel">Abandon application</a>
+      <a class="govuk-link" href="/gef/name-application" data-cy="cancel">Abandon application</a>
     </div>
   </form>
 
