@@ -55,7 +55,7 @@ describe(baseUrl, () => {
       await as(aMaker).post(allItems[15]).to(baseUrl);
 
 
-      // MW: couldn't get the promise.all running in sequenal order
+      // MW: couldn't get the promise.all running in sequential order
       // await allItems.map(async (item) => {
       //   return as(aMaker).post(item).to(baseUrl);
       // })
