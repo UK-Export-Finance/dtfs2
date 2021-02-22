@@ -28,7 +28,7 @@ const apiErrorHandler = (error) => {
     };
   }
 
-  throw httpError(error.response.status, error.response.statusText, error.response.data);
+  throw httpError(error.response.status, error.response.statusText);
 };
 
 const validationErrorHandler = (errs, href = '') => {
