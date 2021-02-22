@@ -25,14 +25,17 @@ const createApplication = async (req, res) => {
       userId,
     });
 
+    console.log('application', application);
+
     // Show validation errors from server
     if (application.response.status === 422) {
       return res.render('partials/name-application.njk', {
         errors: validationErrorHandler(application.response.messages, 'name-application'),
       });
     }
+
+    return res.redirect('application-details');
   } catch (err) {
-    console.error(err);
     return err;
   }
 };
