@@ -10,7 +10,7 @@ const getMandatoryCriteria = async (req, res) => {
       criteria,
     });
   } catch (err) {
-    return err;
+    return res.render('partials/problem-with-service.njk');
   }
 };
 
@@ -18,25 +18,30 @@ const validateMandatoryCriteria = async (req, res) => {
   const { body } = req;
   const { mandatoryCriteria } = body;
   const isEmpty = _isEmpty(mandatoryCriteria);
-  const criteria = await api.getMandatoryCriteria();
+
+  try {
+    const criteria = await api.getMandatoryCriteria();
 
 
-  if (isEmpty) {
-    const mandatoryError = {
-      errRef: 'bankInternalRefName',
-      errMsg: 'You must enter a bank reference or name',
-    };
-    return res.render('partials/mandatory-criteria.njk', {
-      errors: validationErrorHandler(mandatoryError, 'mandatory-criteria'),
-      criteria,
-    });
+    if (isEmpty) {
+      const mandatoryError = {
+        errRef: 'bankInternalRefName',
+        errMsg: 'You must enter a bank reference or name',
+      };
+      return res.render('partials/mandatory-criteria.njk', {
+        errors: validationErrorHandler(mandatoryError, 'mandatory-criteria'),
+        criteria,
+      });
+    }
+
+    if (parseBool(mandatoryCriteria)) {
+      return res.redirect('name-application');
+    }
+
+    return res.redirect('ineligible');
+  } catch (err) {
+    return res.render('partials/problem-with-service.njk');
   }
-
-  if (parseBool(mandatoryCriteria)) {
-    return res.redirect('name-application');
-  }
-
-  return res.redirect('ineligible');
 };
 
 export {
