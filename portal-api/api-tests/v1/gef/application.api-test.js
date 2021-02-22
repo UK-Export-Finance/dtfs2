@@ -1,15 +1,16 @@
-const wipeDB = require('../../../wipeDB');
 
-const app = require('../../../../src/createApp');
-const testUserCache = require('../../../api-test-users');
+const wipeDB = require('../../wipeDB');
 
-const { as } = require('../../../api')(app);
-const { expectMongoId, expectMongoIds } = require('../../../expectMongoIds');
+const app = require('../../../src/createApp');
+const testUserCache = require('../../api-test-users');
+
+const { as } = require('../../api')(app);
+const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
 const baseUrl = '/v1/gef/application';
 const collectionName = 'gef-application';
 
-const allItems = require('../../../fixtures/gef/application');
+const allItems = require('../../fixtures/gef/application');
 const createNewItem = allItems[0];
 const updatedItem = {
   ...createNewItem,
