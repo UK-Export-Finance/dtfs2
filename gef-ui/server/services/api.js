@@ -22,7 +22,7 @@ const getMandatoryCriteria = async () => {
 
 const createApplication = async (payload) => {
   try {
-    const response = await Axios.post('/gef/applicatio', payload);
+    const response = await Axios.post('/gef/application', payload);
     return response.data;
   } catch (err) {
     return apiErrorHandler(err);
