@@ -9,9 +9,6 @@ const mockResponse = () => {
 };
 
 const response = mockResponse();
-const mockCriteria = {
-  mockedText: 'This is a test',
-};
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -36,7 +33,6 @@ describe('Create Application', () => {
         },
       },
     };
-    api.createApplication = () => Promise.resolve(mockCriteria);
     await createApplication(mockedRequest, response);
     expect(response.render).toHaveBeenCalledWith('partials/name-application.njk', expect.objectContaining({
       errors: expect.any(Object),
@@ -54,7 +50,30 @@ describe('Create Application', () => {
         },
       },
     };
+    const mockApplication = {
+      _id: '123456',
+      bankInternalRefName: 'Ref Name',
+    };
+
+    api.createApplication = () => Promise.resolve(mockApplication);
     await createApplication(mockedRequest, response);
-    expect(response.redirect).toHaveBeenCalledWith('application-details');
+    expect(response.redirect).toHaveBeenCalledWith('application-details/123456');
+  });
+
+  it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+    const mockedRequest = {
+      body: {
+        bankInternalRefName: '1234',
+      },
+      session: {
+        user: {
+          _id: 'abc',
+        },
+      },
+    };
+
+    api.createApplication = () => Promise.reject();
+    await createApplication(mockedRequest, response);
+    expect(response.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 });
