@@ -26,13 +26,11 @@ describe('GET Mandatory Criteria', () => {
     });
   });
 
-  it('renders the `mandatory-criteria` template with error message', async () => {
+  it('redirects user to `problem with service` page if there is an issue with the api', async () => {
     const mockedRejection = { response: { status: 400, message: 'Whoops' } };
     api.getMandatoryCriteria = () => Promise.reject(mockedRejection);
     await getMandatoryCriteria({}, response);
-    expect(response.render).toHaveBeenCalledWith('partials/mandatory-criteria.njk', {
-      error: 'Bad Request',
-    });
+    expect(response.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 });
 
