@@ -11,7 +11,6 @@ const requiredValidation = async (bankInternalRefName) => {
 
 const doesApplicationAlreadyExist = async (collection, bankInternalRefName) => {
   const doc = await collection.findOne({ bankInternalRefName });
-  console.log(doc);
   if (doc) {
     return {
       errCode: 'ALREADY_EXISTS',
