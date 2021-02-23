@@ -6,8 +6,9 @@ const mapFacilityStage = require('./mapFacilityStage');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
+const mapDates = require('./mapDates');
 
-const mapFacility = (f) => {
+const mapFacility = (f, dealDetails) => {
   const facility = f;
 
   const {
@@ -48,13 +49,15 @@ const mapFacility = (f) => {
 
   facility.facilityValueExportCurrency = `${facility.currency.id} ${formattedFacilityValue}`;
 
+  facility.facilityStage = mapFacilityStage(facilityStage);
+
   return {
     _id: facility._id, // eslint-disable-line no-underscore-dangle
     ukefFacilityID: facility.ukefFacilityID,
     facilityType: facility.facilityType,
     ukefFacilityType,
     facilityProduct: facility.facilityProduct,
-    facilityStage: mapFacilityStage(facilityStage),
+    facilityStage: facility.facilityStage,
     coverEndDate: facility.coverEndDate,
     coveredPercentage: facility.coveredPercentage,
     facilityValueExportCurrency: facility.facilityValueExportCurrency,
@@ -66,6 +69,8 @@ const mapFacility = (f) => {
     // bond specifics
     bondIssuer: facility.bondIssuer,
     bondBeneficiary: facility.bondBeneficiary,
+
+    dates: mapDates(facility, dealDetails),
   };
 };
 

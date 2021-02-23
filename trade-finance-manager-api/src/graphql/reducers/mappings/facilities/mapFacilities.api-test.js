@@ -1,7 +1,10 @@
 const mapFacilities = require('./mapFacilities');
 const mapFacility = require('./mapFacility');
+const MOCK_DEAL = require('../../../../v1/__mocks__/mock-deal');
 
 describe('mapFacilities', () => {
+  const mockDealDetails = MOCK_DEAL.details;
+
   const mockCoverEndDate = {
     'coverEndDate-day': '01',
     'coverEndDate-month': '02',
@@ -22,6 +25,7 @@ describe('mapFacilities', () => {
     {
       _id: '12345678',
       ukefFacilityID: '0040004833',
+      associatedDealId: '123456789',
       facilityType: 'bond',
       ...mockCoverEndDate,
       ukefExposure: mockUkefExposure,
@@ -45,6 +49,7 @@ describe('mapFacilities', () => {
     {
       _id: '23456789',
       ukefFacilityID: '0040004833',
+      associatedDealId: '123456789',
       facilityType: 'loan',
       ...mockCoverEndDate,
       ukefExposure: mockUkefExposure,
@@ -52,6 +57,9 @@ describe('mapFacilities', () => {
       currency: mockCurrency,
       facilityValue: mockFacilityValue,
       facilityStage: 'Conditional',
+      requestedCoverStartDate: 1610369832226.0,
+      issuedDate: 1610369832226.0,
+
 
       // fields we do not consume
       createdDate: 1610369832226.0,
@@ -64,14 +72,9 @@ describe('mapFacilities', () => {
       minimumQuarterlyFee: '10',
       premiumType: 'At maturity',
       dayCountBasis: '365',
-      'issuedDate-day': '25',
-      'issuedDate-month': '08',
-      'issuedDate-year': '2020',
       disbursementAmount: '1,234.00',
       issueFacilityDetailsStarted: true,
       bankReferenceNumberRequiredForIssuance: true,
-      requestedCoverStartDate: 1610369832226.0,
-      issuedDate: 1610369832226.0,
       issueFacilityDetailsProvided: true,
       status: 'Acknowledged',
     },
@@ -83,11 +86,11 @@ describe('mapFacilities', () => {
   ];
 
   it('should map and format correct fields/values', async () => {
-    const result = mapFacilities(mockFacilities);
+    const result = mapFacilities(mockFacilities, mockDealDetails);
 
     const expected = [
-      { ...mapFacility(MOCK_FACILITIES[0]) },
-      { ...mapFacility(MOCK_FACILITIES[1]) },
+      { ...mapFacility(MOCK_FACILITIES[0], mockDealDetails) },
+      { ...mapFacility(MOCK_FACILITIES[1], mockDealDetails) },
     ];
 
     expect(result).toEqual(expected);
@@ -95,7 +98,7 @@ describe('mapFacilities', () => {
 
   describe('when facility.currency is NOT GBP', () => {
     it('should return facilityValue as empty string', () => {
-      const result = mapFacilities([
+      const facilitiesNonGBP = [
         {
           ...mockFacilities[0],
           currency: {
@@ -103,7 +106,9 @@ describe('mapFacilities', () => {
             id: 'USD',
           },
         },
-      ]);
+      ];
+
+      const result = mapFacilities(facilitiesNonGBP, mockDealDetails);
 
       expect(result[0].facilityValue).toEqual('');
     });
