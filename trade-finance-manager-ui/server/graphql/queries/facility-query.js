@@ -24,7 +24,13 @@ const facilityQuery = gql`
       guaranteeFeePayableToUkef,
       bondIssuer,
       bondBeneficiary,
-      bankFacilityReference
+      bankFacilityReference,
+      dates {
+        inclusionNoticeReceived,
+        bankIssueNoticeReceived,
+        coverStartDate,
+        coverEndDate,
+      }
     }
   }
 `;
