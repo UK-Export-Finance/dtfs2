@@ -49,13 +49,15 @@ const mapFacility = (f, dealDetails) => {
 
   facility.facilityValueExportCurrency = `${facility.currency.id} ${formattedFacilityValue}`;
 
+  facility.facilityStage = mapFacilityStage(facilityStage);
+
   return {
     _id: facility._id, // eslint-disable-line no-underscore-dangle
     ukefFacilityID: facility.ukefFacilityID,
     facilityType: facility.facilityType,
     ukefFacilityType,
     facilityProduct: facility.facilityProduct,
-    facilityStage: mapFacilityStage(facilityStage),
+    facilityStage: facility.facilityStage,
     coverEndDate: facility.coverEndDate,
     coveredPercentage: facility.coveredPercentage,
     facilityValueExportCurrency: facility.facilityValueExportCurrency,

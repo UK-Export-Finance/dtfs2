@@ -40,6 +40,7 @@ const GET_FACILITY = gql`
         bankIssueNoticeReceived,
         coverStartDate,
         coverEndDate,
+        tenor,
       }
     }
   }

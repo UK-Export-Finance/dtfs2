@@ -11,6 +11,7 @@ describe('mapDates', () => {
   const mockFacility = {
     issuedDate: '160690061100',
     requestedCoverStartDate: '160690061200',
+    ukefGuaranteeInMonths: '12',
     ...mockCoverEndDate,
   };
 
@@ -40,5 +41,19 @@ describe('mapDates', () => {
     const result = mapDates(mockFacility, mockDealDetails);
 
     expect(result.coverEndDate).toEqual(mapCoverEndDate(mockFacility));
+  });
+
+  describe('when facilityStage is `Commitment`', () => {
+    it('should return tenor as facility ukefGuaranteeInMonths', () => {
+      const commitmentFacility = {
+        ...mockFacility,
+        facilityStage: 'Commitment',
+      };
+
+      const result = mapDates(commitmentFacility, mockDealDetails);
+
+      const expected = `${mockFacility.ukefGuaranteeInMonths} months`;
+      expect(result.tenor).toEqual(expected);
+    });
   });
 });

@@ -65,6 +65,7 @@ const GET_DEAL = gql`
             bankIssueNoticeReceived,
             coverStartDate,
             coverEndDate,
+            tenor,
           }
         }
         eligibility {

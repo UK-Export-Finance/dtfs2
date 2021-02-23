@@ -27,20 +27,20 @@ describe('mapFacility', () => {
   };
 
   const mockFacilityValue = '12345.00';
-
-  const originalFacilityType = 'bond';
+  const mockFacilityType = 'bond';
+  const mockFacilityStage = 'Unissued';
 
   const mockFacility = {
     _id: '12345678',
     ukefFacilityID: '0040004833',
-    facilityType: originalFacilityType,
+    facilityType: mockFacilityType,
     ...mockCoverEndDate,
     ukefExposure: mockUkefExposure,
     coveredPercentage: mockCoveredPercentage,
     bondType: 'Performance Bond',
     currency: mockCurrency,
     facilityValue: mockFacilityValue,
-    facilityStage: 'Unissued',
+    facilityStage: mockFacilityStage,
     bankReferenceNumber: '123456',
     bondIssuer: 'Issuer',
     bondBeneficiary: 'test',
@@ -71,9 +71,9 @@ describe('mapFacility', () => {
       _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
       ukefFacilityID: mockFacility.ukefFacilityID,
       facilityType: mockFacility.bondType,
-      ukefFacilityType: originalFacilityType,
+      ukefFacilityType: mockFacilityType,
       facilityProduct: mapFacilityProduct(mockFacility),
-      facilityStage: mapFacilityStage(mockFacility.facilityStage),
+      facilityStage: mapFacilityStage(mockFacilityStage),
       coverEndDate: mapCoverEndDate({ ...mockCoverEndDate }),
       ukefExposure: expectedUkefExposure,
       coveredPercentage: expectedCoveredPercentage,
