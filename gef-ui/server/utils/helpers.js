@@ -52,10 +52,34 @@ const validationErrorHandler = (errs, href = '') => {
   };
 };
 
+const mapSummaryList = (data, itemsToShow) => itemsToShow.map((item) => {
+  const { label, href } = item;
+  const value = data[item.id];
+
+  return {
+    key: {
+      text: label,
+    },
+    value: {
+      text: value || '—',
+    },
+    actions: {
+      items: [
+        {
+          href,
+          text: `${value ? 'Change' : 'Add'}`,
+          visuallyHiddenText: item.label,
+        },
+      ],
+    },
+  };
+});
+
 export {
   parseBool,
   userToken,
   isObject,
   apiErrorHandler,
   validationErrorHandler,
+  mapSummaryList,
 };

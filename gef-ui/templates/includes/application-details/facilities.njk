@@ -4,7 +4,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-half">
     <h2 class="govuk-heading-m" data-cy="main-heading">
-      About the exporter
+      Facilities
     </h2>
   </div>
 
@@ -16,11 +16,11 @@
   </div>
 </div>
 
-{% if exporterRows.length < 1 %}
-  <a class="govuk-link" href="{{exporterUri}}" data-cy="cancel">Enter details</a>
+{% if facilityRows.length < 1 %}
+  <a class="govuk-link" href="/gef{{url}}/facility" data-cy="cancel">Add a facility</a>
 {% else %}
   {{ govukSummaryList({
-    rows: exporterRows
+    rows: facilityRows
   }) }}
 {% endif %}
 
