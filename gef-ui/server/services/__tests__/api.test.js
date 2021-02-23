@@ -36,3 +36,11 @@ describe('createApplication()', () => {
     expect(response).toEqual({ status: 200 });
   });
 });
+
+describe('getApplication()', () => {
+  it('returns the correct response', async () => {
+    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    const response = await api.getApplication();
+    expect(response).toEqual({ status: 200 });
+  });
+});
