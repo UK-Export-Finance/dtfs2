@@ -13,9 +13,19 @@
       }
     }) }}
   {% endif %}
-  
-  <h1 class="govuk-heading-l" data-cy="main-heading">
-    Application details
-  </h1>
+
+  <header>
+    <span class="govuk-caption-xl" data-cy="heading-caption">
+      General export facility
+    </span>
+    <h1 class="govuk-heading-l" data-cy="main-heading">
+      Application details
+    </h1>
+  </header>
+
+  <hr class="hr hr--bold"/>
+
+
+  {% include "includes/application-details/about-exporter.njk" %}
 
 {% endblock %}
