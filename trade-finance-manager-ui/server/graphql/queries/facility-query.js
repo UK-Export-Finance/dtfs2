@@ -30,6 +30,7 @@ const facilityQuery = gql`
         bankIssueNoticeReceived,
         coverStartDate,
         coverEndDate,
+        tenor,
       }
     }
   }

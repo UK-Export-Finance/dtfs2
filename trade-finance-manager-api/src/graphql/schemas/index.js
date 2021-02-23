@@ -115,6 +115,7 @@ type FacilityDates {
   bankIssueNoticeReceived: String
   coverStartDate: String
   coverEndDate: String
+  tenor: String
 }
 
 type Facility {

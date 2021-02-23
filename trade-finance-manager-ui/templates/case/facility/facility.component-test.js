@@ -28,6 +28,7 @@ describe(page, () => {
         bankIssueNoticeReceived: '1606900616652',
         coverStartDate: '1606900616653',
         coverEndDate: '20 Oct 2020',
+        tenor: '3 months',
       },
     },
     user: {
@@ -100,6 +101,10 @@ describe(page, () => {
 
     it('should render coverEndDate', () => {
       wrapper.expectText('[data-cy="facility-cover-end-date"]').toRead(params.facility.dates.coverEndDate);
+    });
+
+    it('should render tenor', () => {
+      wrapper.expectText('[data-cy="facility-tenor"]').toRead(params.facility.dates.tenor);
     });
 
   });
