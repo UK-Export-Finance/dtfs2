@@ -3,6 +3,7 @@ import {
   parseBool,
   isObject,
   validationErrorHandler,
+  mapSummaryList,
 } from './helpers';
 
 describe('userToken()', () => {
@@ -106,5 +107,47 @@ describe('validationErrorHandler()', () => {
         },
       },
     });
+  });
+});
+
+describe('mapSummaryList()', () => {
+  const mockedData = {
+    id: 123456,
+    name: '',
+    address: {
+      line1: 'Addres line 1',
+      line2: 'Address line 2',
+    },
+  };
+  const displayItems = [
+    {
+      label: 'Id',
+      id: 'id',
+    },
+    {
+      label: 'Name',
+      id: 'name',
+      href: '/name',
+    },
+  ];
+
+  it('returns an empty array if Data object is empty ', () => {
+    expect(mapSummaryList({}, displayItems)).toEqual([]);
+    expect(mapSummaryList(null, displayItems)).toEqual([]);
+    expect(mapSummaryList(undefined, displayItems)).toEqual([]);
+  });
+
+  it('returns the correct Array', () => {
+    expect(mapSummaryList(mockedData, displayItems)).toEqual([
+      {
+        actions: { items: [{ href: null, text: 'Change', visuallyHiddenText: 'Id' }] },
+        key: { text: 'Id' },
+        value: { text: 123456 },
+      },
+      {
+        actions: { items: [{ href: '/name', text: 'Add', visuallyHiddenText: 'Name' }] },
+        key: { text: 'Name' },
+        value: { text: '—' },
+      }]);
   });
 });

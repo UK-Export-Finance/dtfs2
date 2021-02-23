@@ -47,10 +47,20 @@ const getExporter = async (exporterId) => {
   }
 };
 
+const getFacility = async (facilityId) => {
+  try {
+    const response = await Axios.get(`/gef/faciltiy/${facilityId}`);
+    return response.data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
 export {
   validateToken,
   getMandatoryCriteria,
   createApplication,
   getApplication,
   getExporter,
+  getFacility,
 };
