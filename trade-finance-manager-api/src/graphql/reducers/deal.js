@@ -9,6 +9,7 @@ const dealReducer = (deal) => {
   const { tfm, dealSnapshot } = deal;
 
   const {
+    details,
     submissionDetails,
     facilities,
     eligibility,
@@ -19,7 +20,7 @@ const dealReducer = (deal) => {
     dealSnapshot: {
       ...dealSnapshot,
       totals: mapTotals(facilities),
-      facilities: mapFacilities(facilities),
+      facilities: mapFacilities(facilities, details),
       submissionDetails: mapSubmissionDetails(submissionDetails),
       eligibilityCriteria: eligibility.criteria,
     },

@@ -9,6 +9,7 @@ jest.mock('../src/v1/api');
 const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
 const MOCK_FACILITY = require('../src/v1/__mocks__/mock-facility');
+const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 const facilityReducer = require('../src/graphql/reducers/facility');
 
 const mockFacility = { ...MOCK_FACILITY };
@@ -33,7 +34,14 @@ const GET_FACILITY = gql`
       bankFacilityReference,
       guaranteeFeePayableToUkef,
       bondIssuer,
-      bondBeneficiary
+      bondBeneficiary,
+      dates {
+        inclusionNoticeReceived,
+        bankIssueNoticeReceived,
+        coverStartDate,
+        coverEndDate,
+        tenor,
+      }
     }
   }
 `;
@@ -61,8 +69,9 @@ describe('graphql query - get facility', () => {
       query: GET_FACILITY,
       variables: { id: '12345678' },
     });
-  
-    const expected = facilityReducer(mockFacility);
+
+    const mockDealDetails = MOCK_DEAL.details;
+    const expected = facilityReducer(mockFacility, mockDealDetails);
     expect(data.facility).toEqual(expected);
   });
 });
