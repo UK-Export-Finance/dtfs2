@@ -44,3 +44,19 @@ describe('getApplication()', () => {
     expect(response).toEqual({ status: 200 });
   });
 });
+
+describe('getExporter()', () => {
+  it('returns the correct response', async () => {
+    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    const response = await api.getExporter();
+    expect(response).toEqual({ status: 200 });
+  });
+});
+
+describe('getFacility()', () => {
+  it('returns the correct response', async () => {
+    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    const response = await api.getFacility();
+    expect(response).toEqual({ status: 200 });
+  });
+});

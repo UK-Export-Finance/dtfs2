@@ -1,4 +1,5 @@
 import httpError from 'http-errors';
+import _isEmpty from 'lodash/isEmpty';
 
 const parseBool = (params) => !(
   params === 'false'
@@ -52,28 +53,32 @@ const validationErrorHandler = (errs, href = '') => {
   };
 };
 
-const mapSummaryList = (data, itemsToShow) => itemsToShow.map((item) => {
-  const { label, href } = item;
-  const value = data[item.id];
+const mapSummaryList = (data, itemsToShow) => {
+  if (!data || _isEmpty(data)) { return []; }
 
-  return {
-    key: {
-      text: label,
-    },
-    value: {
-      text: value || '—',
-    },
-    actions: {
-      items: [
-        {
-          href,
-          text: `${value ? 'Change' : 'Add'}`,
-          visuallyHiddenText: item.label,
-        },
-      ],
-    },
-  };
-});
+  return itemsToShow.map((item) => {
+    const { label, href } = item;
+    const value = data[item.id];
+
+    return {
+      key: {
+        text: label,
+      },
+      value: {
+        text: value || '—',
+      },
+      actions: {
+        items: [
+          {
+            href: href || null,
+            text: `${value ? 'Change' : 'Add'}`,
+            visuallyHiddenText: item.label,
+          },
+        ],
+      },
+    };
+  });
+};
 
 export {
   parseBool,
