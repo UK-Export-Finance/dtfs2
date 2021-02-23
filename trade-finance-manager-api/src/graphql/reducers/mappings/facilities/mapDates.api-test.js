@@ -41,5 +41,4 @@ describe('mapDates', () => {
 
     expect(result.coverEndDate).toEqual(mapCoverEndDate(mockFacility));
   });
-
 });

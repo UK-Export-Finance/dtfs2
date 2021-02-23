@@ -166,7 +166,7 @@ const MOCK_DEAL = {
       ukefFacilityID: '0040004833',
       bondIssuer: 'Issuer',
       bondType: 'Advance payment guarantee',
-      facilityStage: 'Unissued',
+      facilityStage: 'Issued',
       ukefGuaranteeInMonths: '10',
       bondBeneficiary: 'test',
       guaranteeFeePayableByBank: '9.0000',
@@ -185,6 +185,8 @@ const MOCK_DEAL = {
       'coverEndDate-day': '20',
       'coverEndDate-month': '10',
       'coverEndDate-year': '2020',
+      issuedDate: '1606900616651',
+      requestedCoverStartDate: '1606900616652',
       bankReferenceNumber: 'Test-123',
     },
     {
