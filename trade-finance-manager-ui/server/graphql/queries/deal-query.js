@@ -48,13 +48,7 @@ const dealQuery = gql`
           coveredPercentage,
           bondIssuer,
           bondBeneficiary,
-          bankFacilityReference,
-          dates {
-            inclusionNoticeReceived,
-            bankIssueNoticeReceived,
-            coverStartDate,
-            coverEndDate,
-          }
+          bankFacilityReference
         }
         eligibility {
           agentAddressCountry,

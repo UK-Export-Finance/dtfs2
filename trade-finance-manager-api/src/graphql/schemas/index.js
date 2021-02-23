@@ -111,7 +111,7 @@ type FacilityProduct {
 }
 
 type FacilityDates {
-  inclusionNoticeReceived: String
+  inclusionNoticeReceived: String!
   bankIssueNoticeReceived: String
   coverStartDate: String
   coverEndDate: String
