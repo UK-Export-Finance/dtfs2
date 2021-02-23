@@ -6,8 +6,9 @@ const mapFacilityStage = require('./mapFacilityStage');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
+const mapDates = require('./mapDates');
 
-const mapFacility = (f) => {
+const mapFacility = (f, dealDetails) => {
   const facility = f;
 
   const {
@@ -66,6 +67,8 @@ const mapFacility = (f) => {
     // bond specifics
     bondIssuer: facility.bondIssuer,
     bondBeneficiary: facility.bondBeneficiary,
+
+    dates: mapDates(facility, dealDetails),
   };
 };
 

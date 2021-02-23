@@ -35,6 +35,11 @@ const getCaseFacility = async (req, res) => {
     facility,
     active_sheet: 'facility',
     facilityId,
+
+    // TODO: remove once we have user login/session.
+    user: {
+      timezone: 'Europe/London',
+    },
   });
 };
 
