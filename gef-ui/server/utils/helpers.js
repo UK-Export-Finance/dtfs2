@@ -54,26 +54,41 @@ const validationErrorHandler = (errs, href = '') => {
 };
 
 const mapSummaryList = (data, itemsToShow) => {
-  if (!data || _isEmpty(data)) { return []; }
+  const { details, required } = data;
+  if (!details || _isEmpty(details)) { return []; }
+
+  const valueObj = (val, isRequired) => {
+    if (isRequired && val === null) {
+      return {
+        html: '<span class="has-text-danger">Required</span>',
+      };
+    } if (val === null) {
+      return {
+        text: '—',
+      };
+    }
+    return {
+      text: val,
+    };
+  };
 
   return itemsToShow.map((item) => {
     const { label, href } = item;
-    const value = data[item.id];
+    const value = details[item.id];
+    const isRequired = required.includes(item.id);
 
     return {
       key: {
         text: label,
       },
-      value: {
-        text: value || '—',
-      },
+      value: valueObj(value, isRequired),
       actions: {
         items: [
-          (href ? {
+          ...(href ? [{
             href: href || null,
             text: `${value ? 'Change' : 'Add'}`,
             visuallyHiddenText: item.label,
-          } : null),
+          }] : []),
         ],
       },
     };
