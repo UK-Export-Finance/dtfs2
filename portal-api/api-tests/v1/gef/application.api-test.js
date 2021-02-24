@@ -62,7 +62,7 @@ describe(baseUrl, () => {
 
       // await Promise.all(promise);
 
-      const { body, status } = await as(noRoles).get(baseUrl);
+      const { body, status } = await as(aMaker).get(baseUrl);
 
       expected = {
         count: allItems.length,

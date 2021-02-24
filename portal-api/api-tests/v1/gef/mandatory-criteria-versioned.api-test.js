@@ -20,6 +20,7 @@ describe('/v1/gef/mandatory-criteria-versioned', () => {
   beforeAll(async() => {
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
+    aMaker = testUsers().withRole('maker').one();
     anEditor = testUsers().withRole('editor').one();
   });
 
@@ -30,13 +31,11 @@ describe('/v1/gef/mandatory-criteria-versioned', () => {
   describe('GET /v1/gef/mandatory-criteria-versioned', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().get('/v1/gef/mandatory-criteria-versioned');
-
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await as(noRoles).get('/v1/gef/mandatory-criteria-versioned');
-
+      const { status } = await as(aMaker).get('/v1/gef/mandatory-criteria-versioned');
       expect(status).toEqual(200);
     });
 
@@ -47,7 +46,7 @@ describe('/v1/gef/mandatory-criteria-versioned', () => {
       await as(anEditor).post(allMandatoryCriteria[3]).to('/v1/gef/mandatory-criteria-versioned');
       await as(anEditor).post(allMandatoryCriteria[4]).to('/v1/gef/mandatory-criteria-versioned');
 
-      const { body } = await as(noRoles).get('/v1/gef/mandatory-criteria-versioned');
+      const { body } = await as(aMaker).get('/v1/gef/mandatory-criteria-versioned');
 
       expect(body).toEqual({
         count: 5,
@@ -71,7 +70,7 @@ describe('/v1/gef/mandatory-criteria-versioned', () => {
     });
 
     it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await as(noRoles).get('/v1/gef/mandatory-criteria-versioned/latest');
+      const { status } = await as(aMaker).get('/v1/gef/mandatory-criteria-versioned/latest');
 
       expect(status).toEqual(200);
     });
@@ -84,7 +83,7 @@ describe('/v1/gef/mandatory-criteria-versioned', () => {
       await as(anEditor).post(allMandatoryCriteria[3]).to('/v1/gef/mandatory-criteria-versioned');
       await as(anEditor).post(allMandatoryCriteria[4]).to('/v1/gef/mandatory-criteria-versioned');
 
-      const { body } = await as(noRoles).get(`/v1/gef/mandatory-criteria-versioned/latest`);
+      const { body } = await as(aMaker).get(`/v1/gef/mandatory-criteria-versioned/latest`);
 
       expect(body).toEqual(expect.objectContaining(allMandatoryCriteria[2]));
     });
@@ -98,8 +97,7 @@ describe('/v1/gef/mandatory-criteria-versioned', () => {
     });
 
     it('accepts requests that do present a valid Authorization token', async () => {
-      const { status } = await as(noRoles).get('/v1/gef/mandatory-criteria-versioned/1');
-
+      const { status } = await as(aMaker).get('/v1/gef/mandatory-criteria-versioned/1');
       expect(status).toEqual(200);
     });
 
@@ -116,12 +114,11 @@ describe('/v1/gef/mandatory-criteria-versioned', () => {
   describe('POST /v1/gef/mandatory-criteria-versioned', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().post(newMandatoryCriteria).to('/v1/gef/mandatory-criteria-versioned');
-
       expect(status).toEqual(401);
     });
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      const { status } = await as(noRoles).post(newMandatoryCriteria).to('/v1/gef/mandatory-criteria-versioned');
+      const { status } = await as(aMaker).post(newMandatoryCriteria).to('/v1/gef/mandatory-criteria-versioned');
 
       expect(status).toEqual(401);
     });
@@ -142,9 +139,7 @@ describe('/v1/gef/mandatory-criteria-versioned', () => {
 
     it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
       await as(anEditor).post(newMandatoryCriteria).to('/v1/gef/mandatory-criteria-versioned');
-
-      const { status } = await as(noRoles).put(updatedMandatoryCriteria).to('/v1/gef/mandatory-criteria-versioned/1');
-
+      const { status } = await as(aMaker).put(updatedMandatoryCriteria).to('/v1/gef/mandatory-criteria-versioned/1');
       expect(status).toEqual(401);
     });
 
@@ -203,15 +198,6 @@ describe('/v1/gef/mandatory-criteria-versioned', () => {
   describe('DELETE /v1/gef/mandatory-criteria-versioned/:id', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().remove('/v1/gef/mandatory-criteria-versioned/1');
-
-      expect(status).toEqual(401);
-    });
-
-    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await as(anEditor).post(newMandatoryCriteria).to('/v1/gef/mandatory-criteria-versioned');
-
-      const { status } = await as(noRoles).remove('/v1/gef/mandatory-criteria-versioned/1');
-
       expect(status).toEqual(401);
     });
 
