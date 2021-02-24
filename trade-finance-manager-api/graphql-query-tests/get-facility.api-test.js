@@ -28,7 +28,6 @@ const GET_FACILITY = gql`
       facilityStage,
       facilityValueExportCurrency,
       facilityValue,
-      coverEndDate,
       ukefExposure,
       coveredPercentage,
       bankFacilityReference,
