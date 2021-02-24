@@ -69,4 +69,16 @@ describe('Validate Mandatory Criteria', () => {
     await validateMandatoryCriteria(mockedRequest, response);
     expect(response.redirect).toHaveBeenCalledWith('ineligible');
   });
+
+  it('redirects user to `problem with service` page if there is an issue with the api', async () => {
+    const mockedRequest = {
+      body: {
+        mandatoryCriteria: '',
+      },
+    };
+    const mockedRejection = { response: { status: 400, message: 'Whoops' } };
+    api.getMandatoryCriteria = () => Promise.reject(mockedRejection);
+    await validateMandatoryCriteria(mockedRequest, response);
+    expect(response.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+  });
 });
