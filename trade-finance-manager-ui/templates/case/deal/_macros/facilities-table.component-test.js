@@ -15,13 +15,15 @@ describe(component, () => {
         facilityProduct: {
           code: 'BSS',
         },
-        coverEndDate: '02 Nov 2021',
         ukefExposure: 'GBP 1,234.00',
         coveredPercentage: '20%',
         facilityType: 'Performance Bond',
         facilityValue: 'GBP 1,234',
         facilityValueExportCurrency: 'AUD 34000',
         facilityStage: 'Commitment',
+        dates: {
+          coverEndDate: '02 Nov 2021',
+        },
       },
       {
         _id: '456',
@@ -29,12 +31,14 @@ describe(component, () => {
         facilityProduct: {
           code: 'EWCS',
         },
-        coverEndDate: '04 Dec 2021',
         ukefExposure: 'GBP 2,469.00',
         coveredPercentage: '20%',
         facilityValue: 'GBP 1,234',
         facilityValueExportCurrency: 'AUD 34000',
         facilityStage: 'Issued',
+        dates: {
+          coverEndDate: '04 Dec 2021',
+        },
       },
       {
         _id: '789',
@@ -42,12 +46,14 @@ describe(component, () => {
         facilityProduct: {
           code: 'EWCS',
         },
-        coverEndDate: '04 Dec 2021',
         ukefExposure: 'GBP 2,469.00',
         coveredPercentage: '20%',
         facilityValue: '',
         facilityValueExportCurrency: 'AUD 34000',
         facilityStage: 'Commitment',
+        dates: {
+          coverEndDate: '04 Dec 2021',
+        },
       },
       {
         _id: '112',
@@ -55,12 +61,14 @@ describe(component, () => {
         facilityProduct: {
           code: '',
         },
-        coverEndDate: '04 Dec 2021',
         ukefExposure: 'GBP 2,469.00',
         coveredPercentage: '20%',
         facilityValue: 'GBP 1,234',
         facilityValueExportCurrency: 'AUD 34000',
         facilityStage: 'Issued',
+        dates: {
+          coverEndDate: '04 Dec 2021',
+        },
       },
     ],
     totals: {
@@ -168,7 +176,7 @@ describe(component, () => {
     it('should render coverEndDate table cell', () => {
       params.facilities.forEach((facility) => {
         const cellSelector = `[data-cy="facility-${facility._id}-cover-end-date"]`;
-        wrapper.expectText(cellSelector).toRead(`${facility.coverEndDate} (expected)`);
+        wrapper.expectText(cellSelector).toRead(`${facility.dates.coverEndDate} (expected)`);
       });
     });
 

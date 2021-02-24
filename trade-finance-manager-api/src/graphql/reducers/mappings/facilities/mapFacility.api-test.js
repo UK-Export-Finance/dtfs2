@@ -1,9 +1,8 @@
-const mapFacility = require('./mapFacility');
+fconst mapFacility = require('./mapFacility');
 const { formattedNumber } = require('../../../../utils/number');
 const { capitalizeFirstLetter } = require('../../../../utils/string');
 const mapFacilityProduct = require('./mapFacilityProduct');
 const mapFacilityStage = require('./mapFacilityStage');
-const mapCoverEndDate = require('./mapCoverEndDate');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
 const mapDates = require('./mapDates');
@@ -74,7 +73,6 @@ describe('mapFacility', () => {
       ukefFacilityType: mockFacilityType,
       facilityProduct: mapFacilityProduct(mockFacility),
       facilityStage: mapFacilityStage(mockFacilityStage),
-      coverEndDate: mapCoverEndDate({ ...mockCoverEndDate }),
       ukefExposure: expectedUkefExposure,
       coveredPercentage: expectedCoveredPercentage,
       facilityValue: expectedFacilityValue,

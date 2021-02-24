@@ -3,7 +3,6 @@ const { formattedNumber } = require('../../../../utils/number');
 const { capitalizeFirstLetter } = require('../../../../utils/string');
 const mapFacilityProduct = require('./mapFacilityProduct');
 const mapFacilityStage = require('./mapFacilityStage');
-const mapCoverEndDate = require('./mapCoverEndDate');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
 const mapDates = require('./mapDates');
@@ -33,8 +32,6 @@ const mapFacility = (f, dealDetails) => {
     facility.facilityType = null;
   }
 
-  facility.coverEndDate = mapCoverEndDate(facility);
-
   facility.ukefExposure = `${facility.currency.id} ${facility.ukefExposure}`;
   facility.coveredPercentage = `${facility.coveredPercentage}%`;
 
@@ -58,7 +55,6 @@ const mapFacility = (f, dealDetails) => {
     ukefFacilityType,
     facilityProduct: facility.facilityProduct,
     facilityStage: facility.facilityStage,
-    coverEndDate: facility.coverEndDate,
     coveredPercentage: facility.coveredPercentage,
     facilityValueExportCurrency: facility.facilityValueExportCurrency,
     facilityValue: facility.facilityValue,
