@@ -1,4 +1,4 @@
-import validateToken from './middleware/validate-token';
+import validateToken from '../middleware/validate-token';
 
 const getSpy = jest.fn();
 const postSpy = jest.fn();
@@ -14,7 +14,7 @@ jest.doMock('express', () => ({
 describe('Routes', () => {
   beforeEach(() => {
     // eslint-disable-next-line global-require
-    require('./mandatory-criteria');
+    require('../name-application');
   });
 
   afterEach(() => {
@@ -22,7 +22,7 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith('/mandatory-criteria', validateToken, expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/mandatory-criteria', validateToken, expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/name-application', validateToken, expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/name-application', validateToken, expect.any(Function));
   });
 });

@@ -10,6 +10,7 @@ const mandatoryCriteria = {
   falseRadio: () => cy.get('[data-cy="mandatory-criteria-no"]'),
   trueRadio: () => cy.get('[data-cy="mandatory-criteria-yes"]'),
   cancelButton: () => cy.get('[data-cy="cancel-button"]'),
+  problemWithService: () => cy.get('[data-cy="problem-with-service"]'),
 };
 
 export default mandatoryCriteria;

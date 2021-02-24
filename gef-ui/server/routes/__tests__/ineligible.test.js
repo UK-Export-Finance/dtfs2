@@ -1,4 +1,4 @@
-import validateToken from './middleware/validate-token';
+import validateToken from '../middleware/validate-token';
 
 const getSpy = jest.fn();
 jest.doMock('express', () => ({
@@ -12,7 +12,7 @@ jest.doMock('express', () => ({
 describe('Routes', () => {
   beforeEach(() => {
     // eslint-disable-next-line global-require
-    require('./ineligible');
+    require('../ineligible');
   });
 
   afterEach(() => {

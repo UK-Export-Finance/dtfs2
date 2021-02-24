@@ -1,25 +1,67 @@
 {% extends "index.njk" %}
-{% import '_macros/success-message.njk' as success %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 
-{% block pageTitle %}Confirm eligiblity (mandatory criteria){% endblock %}
+{% block pageTitle %}Name application{% endblock %}
 
 {% block content %}
-  <h1 class="govuk-heading-l">
-    Name application
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+  
+  <h1 class="govuk-heading-l" data-cy="main-heading">
+    Name your application
   </h1>
 
-  {{ criteria | safe }}
+  <form
+    method="post"
+    data-cy="form">
+    {{ govukInput({
+      label: {
+        text: "Enter your bank’s internal reference or name"
+      },
+      classes: "govuk-!-width-one-half",
+      id: "bankInternalRefName",
+      name: "bankInternalRefName",
+      errorMessage: errors and {
+        text: errors.fieldErrors.bankInternalRefName.text,
+        attributes: {
+          'data-cy': 'internal-ref-error'
+        }
+      },
+      attributes: {
+        'data-cy': 'internal-ref'
+      }
+    }) }}
 
-  <form method="post">
+    {{ govukInput({
+      label: {
+        text: "Additional reference or name (optional)"
+      },
+      classes: "govuk-!-width-one-half",
+      id: "additionalRefName",
+      name: "additionalRefName",
+      attributes: {
+        'data-cy': 'additional-ref'
+      }
+    }) }}
 
     <div class="govuk-button-group">
       {{ govukButton({
-        text: "Continue"
+        text: "Continue",
+        attributes: {
+        'data-cy': 'continue-button'
+      }
       }) }}
 
-      <a class="govuk-link" href="#">Cancel</a>
+      <a class="govuk-link" href="/gef/name-application" data-cy="cancel">Abandon application</a>
     </div>
   </form>
 
