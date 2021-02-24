@@ -52,7 +52,7 @@ context('User can view party details', () => {
         });
 
         cy.submitDeal(dealId);
-        cy.visit(relative(`/case/parties/${dealId}`));
+        cy.visit(relative(`/case/${dealId}/parties`));
       });
   });
 
@@ -67,7 +67,7 @@ context('User can view party details', () => {
     it('should render edit page', () => {
       pages.partiesPage.agentEditLink().click();
 
-      cy.url().should('eq', relative(`/case/parties/${dealId}/agent`));
+      cy.url().should('eq', relative(`/case/${dealId}/parties/agent`));
       pages.partiesPage.agentEditLink().should('not.exist');
 
       pages.agentPage.urnInput().should('exist');
@@ -77,7 +77,7 @@ context('User can view party details', () => {
       pages.agentPage.closeLink().should('exist');
 
       pages.agentPage.closeLink().click();
-      cy.url().should('eq', relative(`/case/parties/${dealId}`));
+      cy.url().should('eq', relative(`/case/${dealId}/parties`));
     });
   });
 });

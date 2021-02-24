@@ -3,6 +3,7 @@
 
 {% macro render(params) %}
   {% set facilities = params.facilities %}
+  {% set caseId = params.caseId %}
 
   <table class="govuk-table" data-cy="bond-beneficiary-facilities-table">
     <thead class="govuk-table__head">
@@ -20,7 +21,8 @@
           <td class="govuk-table__cell govuk-body-s">
 
             {% set componentData = {
-              id: facility._id,
+              caseId: caseId,
+              facilityId: facility._id,
               ukefFacilityID: facility.ukefFacilityID
             } %}
 

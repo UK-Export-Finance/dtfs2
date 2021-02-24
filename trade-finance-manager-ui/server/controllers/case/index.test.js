@@ -67,7 +67,7 @@ describe('controllers - case', () => {
       it('should render deal template with data', async () => {
         const req = {
           params: {
-            _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
+            facilityId: mockFacility._id, // eslint-disable-line no-underscore-dangle
           },
         };
 
@@ -75,7 +75,7 @@ describe('controllers - case', () => {
         expect(res.render).toHaveBeenCalledWith('case/facility/facility.njk', {
           facility: mockFacility,
           active_sheet: 'facility',
-          facilityId: req.params._id, // eslint-disable-line no-underscore-dangle
+          facilityId: req.params.facilityId,
           user: {
             timezone: 'Europe/London',
           },

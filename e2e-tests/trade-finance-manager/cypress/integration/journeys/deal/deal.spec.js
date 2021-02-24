@@ -64,7 +64,7 @@ context('User can view a case deal', () => {
   it('should render case deal components', () => {
     // cy.login(MOCK_USER);
 
-    cy.visit(relative(`/case/deal/${dealId}`));
+    cy.visit(relative(`/case/${dealId}/deal`));
 
     pages.caseDealPage.caseSummary().should('exist');
     pages.caseDealPage.caseSubNavigation().should('exist');
@@ -80,14 +80,14 @@ context('User can view a case deal', () => {
   describe('facilities table', () => {
     it('clicking `Facility ID` link should take user to facility details page', () => {
       // cy.login(MOCK_USER);
-      cy.visit(relative(`/case/deal/${dealId}`));
+      cy.visit(relative(`/case/${dealId}/deal`));
 
       const facilityId = dealFacilities[0]._id; // eslint-disable-line no-underscore-dangle
       const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
 
       facilityRow.facilityId().click();
 
-      cy.url().should('eq', relative(`/case/facility/${facilityId}`));
+      cy.url().should('eq', relative(`/case/${dealId}/facility/${facilityId}`));
     });
   });
 });
