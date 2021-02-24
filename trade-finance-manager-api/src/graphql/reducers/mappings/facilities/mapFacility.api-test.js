@@ -1,4 +1,4 @@
-fconst mapFacility = require('./mapFacility');
+const mapFacility = require('./mapFacility');
 const { formattedNumber } = require('../../../../utils/number');
 const { capitalizeFirstLetter } = require('../../../../utils/string');
 const mapFacilityProduct = require('./mapFacilityProduct');

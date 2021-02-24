@@ -127,7 +127,6 @@ type Facility {
   facilityStage: String!
   facilityValueExportCurrency: String!
   facilityValue: String
-  coverEndDate: String
   ukefExposure: String!
   coveredPercentage: String!
   bankFacilityReference: String
