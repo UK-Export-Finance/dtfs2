@@ -13,6 +13,7 @@ const queryFacility = async ({ _id }) => {
 
   const dealDetails = deal.dealSnapshot.details;
 
+
   return facilityReducer(facility, dealDetails);
 };
 
