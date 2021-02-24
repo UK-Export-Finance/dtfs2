@@ -69,11 +69,11 @@ const mapSummaryList = (data, itemsToShow) => {
       },
       actions: {
         items: [
-          {
+          (href ? {
             href: href || null,
             text: `${value ? 'Change' : 'Add'}`,
             visuallyHiddenText: item.label,
-          },
+          } : null),
         ],
       },
     };
