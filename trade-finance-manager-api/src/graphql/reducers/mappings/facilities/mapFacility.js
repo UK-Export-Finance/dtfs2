@@ -9,7 +9,7 @@ const mapDates = require('./mapDates');
 
 const mapFacility = (f, dealDetails) => {
   const facility = f;
-
+  
   const {
     facilityType,
     facilityValue,

@@ -8,7 +8,7 @@ const mapDates = (facility, dealDetails) => {
   const dealSubmissionDate = dealDetails.submissionDate;
 
   dates.inclusionNoticeReceived = dealSubmissionDate;
-  dates.bankIssueNoticeReceived = facility.issuedDate;
+  dates.bankIssueNoticeReceived = facility.issuedFacilitySubmittedToUkefTimestamp;
   dates.coverStartDate = facility.requestedCoverStartDate;
   dates.coverEndDate = mapCoverEndDate(facility);
 

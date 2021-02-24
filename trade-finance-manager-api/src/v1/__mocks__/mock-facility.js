@@ -25,7 +25,7 @@ const MOCK_FACILITY = {
   'coverEndDate-month': '10',
   'coverEndDate-year': '2020',
   uniqueIdentificationNumber: '12345678',
-  issuedDate: '1606900616651',
+  issuedFacilitySubmittedToUkefTimestamp: '1606900616651',
   requestedCoverStartDate: '1606900616652',
 };
 
