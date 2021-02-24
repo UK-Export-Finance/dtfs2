@@ -40,8 +40,8 @@
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-tenor">&nbsp;</td>
 
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-cover-end-date">
-            {% if facility.coverEndDate %}
-              {{ facility.coverEndDate }} (expected)
+            {% if facility.dates.coverEndDate %}
+              {{ facility.dates.coverEndDate }} (expected)
               {% else %}
               -
             {% endif %}
