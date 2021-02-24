@@ -1,0 +1,193 @@
+
+const wipeDB = require('../../wipeDB');
+
+const app = require('../../../src/createApp');
+const testUserCache = require('../../api-test-users');
+
+const { as } = require('../../api')(app);
+const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
+
+const baseUrl = '/v1/gef/application';
+const collectionName = 'gef-application';
+
+const allItems = require('../../fixtures/gef/application');
+
+describe(baseUrl, () => {
+  let noRoles;
+  let aMaker;
+  let anEditor;
+
+  beforeAll(async() => {
+    const testUsers = await testUserCache.initialise(app);
+    noRoles = testUsers().withoutAnyRoles().one();
+    aMaker = testUsers().withRole('maker').one();
+    anEditor = testUsers().withRole('editor').one();
+  });
+
+  beforeEach(async () => {
+    await wipeDB.wipe([collectionName]);
+  });
+
+  describe(`GET ${baseUrl}`, () => {
+
+    it('rejects requests that do not present a valid Authorization token', async () => {
+      const { status } = await as().get(baseUrl);
+      expect(status).toEqual(401);
+    });
+
+    it('returns list of all items', async () => {
+
+      await as(aMaker).post(allItems[0]).to(baseUrl);
+      await as(aMaker).post(allItems[1]).to(baseUrl);
+      await as(aMaker).post(allItems[2]).to(baseUrl);
+      await as(aMaker).post(allItems[3]).to(baseUrl);
+      await as(aMaker).post(allItems[4]).to(baseUrl);
+      await as(aMaker).post(allItems[5]).to(baseUrl);
+      await as(aMaker).post(allItems[6]).to(baseUrl);
+      await as(aMaker).post(allItems[7]).to(baseUrl);
+      await as(aMaker).post(allItems[8]).to(baseUrl);
+      await as(aMaker).post(allItems[9]).to(baseUrl);
+      await as(aMaker).post(allItems[10]).to(baseUrl);
+      await as(aMaker).post(allItems[11]).to(baseUrl);
+      await as(aMaker).post(allItems[12]).to(baseUrl);
+      await as(aMaker).post(allItems[13]).to(baseUrl);
+      await as(aMaker).post(allItems[14]).to(baseUrl);
+      await as(aMaker).post(allItems[15]).to(baseUrl);
+
+
+      // MW: couldn't get the promise.all running in sequential order
+      // await allItems.map(async (item) => {
+      //   return as(aMaker).post(item).to(baseUrl);
+      // })
+
+      // await Promise.all(promise);
+
+      const { body, status } = await as(noRoles).get(baseUrl);
+
+      expected = {
+        count: allItems.length,
+        data: expectMongoIds(allItems)
+      }
+
+      expect(body).toEqual(expected);
+      expect(status).toEqual(200);
+
+    });
+
+  });
+
+  describe(`GET ${baseUrl}/:id`, () => {
+
+    it('rejects requests that do not present a valid Authorization token', async () => {
+      const { status } = await as().get(`${baseUrl}/1`);
+      expect(status).toEqual(401);
+    });
+
+    it('returns an individual item', async () => {
+      const item = await as(aMaker).post(allItems[0]).to(baseUrl);
+      const { status, body } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
+      expect(status).toEqual(200);
+      expect(body).toEqual(expectMongoId(allItems[0]));
+    });
+  });
+
+  describe(`POST ${baseUrl}`, () => {
+    it('rejects requests that do not present a valid Authorization token', async () => {
+      const { status } = await as().post(allItems[0]).to(baseUrl);
+      expect(status).toEqual(401);
+    });
+
+    it('accepts requests that present a valid Authorization token with "maker" role', async () => {
+      const { status } = await as(aMaker).post(allItems[0]).to(baseUrl);
+      expect(status).toEqual(201);
+    });
+
+    it('it returns the item I created', async () => {
+      const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
+      expect(body).toEqual(expectMongoId(allItems[0]))
+    });
+
+    it('it returns a duplicate error in the system the item I created an application of the same reference', async () => {
+      await as(aMaker).post(allItems[0]).to(baseUrl); // 1st instance
+      const { status, body } = await as(aMaker).post(allItems[0]).to(baseUrl); // 2nd instance
+      expect(body).toEqual([{
+        errCode: 'ALREADY_EXISTS',
+        errRef: 'bankInternalRefName',
+        errMsg: 'The bank reference you have entered already exists.',
+      }]);
+      expect(status).toEqual(422);
+    });
+
+    it('it tells me the Bank Internal Ref Name is null', async () => {
+      const removeName = {
+        ...allItems[0], 
+        bankInternalRefName: null
+      }
+      const { body, status } = await as(aMaker).post(removeName).to(baseUrl);
+      expect(body).toEqual([{
+        errCode: 'MANDATORY_FIELD',
+        errRef: 'bankInternalRefName',
+        errMsg: 'Application Reference Name is Mandatory',
+      }]);
+      expect(status).toEqual(422);
+    });
+
+    it('it tells me the Bank Internal Ref Name is an empty string', async () => {
+      const removeName = {
+        ...allItems[0], 
+        bankInternalRefName: ''
+      }
+      const { body, status } = await as(aMaker).post(removeName).to(baseUrl);
+      expect(body).toEqual([{
+        errCode: 'MANDATORY_FIELD',
+        errRef: 'bankInternalRefName',
+        errMsg: 'Application Reference Name is Mandatory',
+      }]);
+      expect(status).toEqual(422);
+    });
+
+  });
+
+  describe(`PUT ${baseUrl}/:id`, () => {
+
+    const updated = {
+      ...allItems[0], 
+      bankInternalRefName: 'Updated Ref Name (Unit Test)'
+    }
+
+    it('rejects requests that do not present a valid Authorization token', async () => {
+      const { status } = await as().put(updated).to(`${baseUrl}/1`);
+      expect(status).toEqual(401);
+    });
+
+    it('accepts requests that present a valid Authorization token with "maker" role', async () => {
+      const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
+      const { status } = await as(aMaker).put(updated).to(`${baseUrl}/${body._id}`);
+      expect(status).toEqual(200);
+    });
+
+  });
+
+  describe(`DELETE ${baseUrl}/:id`, () => {
+    it('rejects requests that do not present a valid Authorization token', async () => {
+      const { status } = await as().remove(`${baseUrl}/1`);
+      expect(status).toEqual(401);
+    });
+
+    // it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
+    //   await as(anEditor).post(newMandatoryCriteria).to('/v1/gef/mandatory-criteria-versioned');
+
+    //   const { status } = await as(noRoles).remove('/v1/gef/mandatory-criteria-versioned/1');
+
+    //   expect(status).toEqual(401);
+    // });
+
+    it('accepts requests that present a valid Authorization token with "maker" role', async () => {
+      const { body } = await as(aMaker).post(allItems[0]).to(`${baseUrl}`);
+      const { status } = await as(aMaker).remove(`${baseUrl}/${String(body._id)}`);
+      expect(status).toEqual(200);
+      expect(body).not.toEqual({ success: false, msg: "you don't have the right role" })
+    });
+
+  });
+});
