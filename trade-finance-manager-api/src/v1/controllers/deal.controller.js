@@ -35,6 +35,6 @@ const updateTfmParty = async (dealId, tfmUpdate) => {
 
   // eslint-disable-next-line no-underscore-dangle
   const updatedDeal = await api.updateDeal(dealId, partyUpdate);
-  return updatedDeal;
+  return updatedDeal.tfm;
 };
 exports.updateTfmParty = updateTfmParty;

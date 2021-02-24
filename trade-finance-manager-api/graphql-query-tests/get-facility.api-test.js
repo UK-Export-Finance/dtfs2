@@ -36,7 +36,14 @@ const GET_FACILITY = gql`
         bankFacilityReference,
         guaranteeFeePayableToUkef,
         bondIssuer,
-        bondBeneficiary
+        bondBeneficiary,
+        dates {
+          inclusionNoticeReceived,
+          bankIssueNoticeReceived,
+          coverStartDate,
+          coverEndDate,
+          tenor
+        }
       }
     }
   }
@@ -67,7 +74,9 @@ describe('graphql query - get facility', () => {
     });
 
     const mockDealDetails = MOCK_DEAL.details;
-    const expected = facilityReducer(mockFacility, mockDealDetails);
-    expect(data.facility).toEqual(expected);
+    const expected = facilityReducer({
+      facilitySnapshot: mockFacility,
+    }, mockDealDetails);
+    expect(data.facility.facilitySnapshot).toEqual(expected.facilitySnapshot);
   });
 });

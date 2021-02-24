@@ -7,7 +7,7 @@ require('dotenv').config();
 const queryFacility = async ({ _id }) => {
   const facility = await findOneFacility(_id);
 
-  const { associatedDealId } = facility;
+  const { associatedDealId } = facility.facilitySnapshot;
 
   const deal = await findOneDeal(associatedDealId);
 

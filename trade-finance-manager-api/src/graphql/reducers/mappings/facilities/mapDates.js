@@ -3,6 +3,7 @@ const mapCoverEndDate = require('./mapCoverEndDate');
 
 const mapDates = (facility, dealDetails) => {
   const dates = {};
+
   const { facilityStage } = facility;
 
   const dealSubmissionDate = dealDetails.submissionDate;
