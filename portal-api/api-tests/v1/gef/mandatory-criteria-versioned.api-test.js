@@ -129,7 +129,7 @@ describe('/v1/gef/mandatory-criteria-versioned', () => {
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
       const { status } = await as(anEditor).post(newMandatoryCriteria).to('/v1/gef/mandatory-criteria-versioned');
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(201);
     });
   });
 

@@ -6,8 +6,12 @@ const mapFacilityStage = require('./mapFacilityStage');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
+const mapDates = require('./mapDates');
+const MOCK_DEAL = require('../../../../v1/__mocks__/mock-deal');
 
 describe('mapFacility', () => {
+  const mockDealDetails = MOCK_DEAL.details;
+
   const mockCoverEndDate = {
     'coverEndDate-day': '01',
     'coverEndDate-month': '02',
@@ -23,20 +27,20 @@ describe('mapFacility', () => {
   };
 
   const mockFacilityValue = '12345.00';
-
-  const originalFacilityType = 'bond';
+  const mockFacilityType = 'bond';
+  const mockFacilityStage = 'Unissued';
 
   const mockFacility = {
     _id: '12345678',
     ukefFacilityID: '0040004833',
-    facilityType: originalFacilityType,
+    facilityType: mockFacilityType,
     ...mockCoverEndDate,
     ukefExposure: mockUkefExposure,
     coveredPercentage: mockCoveredPercentage,
     bondType: 'Performance Bond',
     currency: mockCurrency,
     facilityValue: mockFacilityValue,
-    facilityStage: 'Unissued',
+    facilityStage: mockFacilityStage,
     bankReferenceNumber: '123456',
     bondIssuer: 'Issuer',
     bondBeneficiary: 'test',
@@ -52,7 +56,7 @@ describe('mapFacility', () => {
   };
 
   it('should map and format correct fields/values', async () => {
-    const result = mapFacility(mockFacility);
+    const result = mapFacility(mockFacility, mockDealDetails);
 
     const expectedUkefExposure = `${mockCurrency.id} ${mockUkefExposure}`;
     const expectedCoveredPercentage = `${mockCoveredPercentage}%`;
@@ -67,9 +71,9 @@ describe('mapFacility', () => {
       _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
       ukefFacilityID: mockFacility.ukefFacilityID,
       facilityType: mockFacility.bondType,
-      ukefFacilityType: originalFacilityType,
+      ukefFacilityType: mockFacilityType,
       facilityProduct: mapFacilityProduct(mockFacility),
-      facilityStage: mapFacilityStage(mockFacility.facilityStage),
+      facilityStage: mapFacilityStage(mockFacilityStage),
       coverEndDate: mapCoverEndDate({ ...mockCoverEndDate }),
       ukefExposure: expectedUkefExposure,
       coveredPercentage: expectedCoveredPercentage,
@@ -79,6 +83,7 @@ describe('mapFacility', () => {
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacility.guaranteeFeePayableByBank, 4),
       bondIssuer: mockFacility.bondIssuer,
       bondBeneficiary: mockFacility.bondBeneficiary,
+      dates: mapDates(mockFacility, mockDealDetails),
     };
 
     expect(result).toEqual(expected);
@@ -86,11 +91,13 @@ describe('mapFacility', () => {
 
   describe('when facility is a loan', () => {
     it('should capitalize facilityType', () => {
-      const result = mapFacility({
+      const mockLoan = {
         ...mockFacility,
         bondType: null,
         facilityType: 'loan',
-      });
+      };
+
+      const result = mapFacility(mockLoan, mockDealDetails);
 
       expect(result.facilityType).toEqual(capitalizeFirstLetter('loan'));
     });
@@ -98,13 +105,15 @@ describe('mapFacility', () => {
 
   describe('when facility.currency is NOT GBP', () => {
     it('should return facilityValue as empty string', () => {
-      const result = mapFacility({
+      const mockFacilityNotGBP = {
         ...mockFacility,
         currency: {
           text: 'USD - US Dollars',
           id: 'USD',
         },
-      });
+      };
+
+      const result = mapFacility(mockFacilityNotGBP, mockDealDetails);
 
       expect(result.facilityValue).toEqual('');
     });
