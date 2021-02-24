@@ -1,6 +1,7 @@
 import httpError from 'http-errors';
 import _isEmpty from 'lodash/isEmpty';
 
+// Converts strings into Booleans
 const parseBool = (params) => !(
   params === 'false'
     || params === '0'
@@ -8,13 +9,16 @@ const parseBool = (params) => !(
     || params === undefined
 );
 
+// Fetches the user token from session
 const userToken = (req) => {
   const token = req.session.userToken;
   return token;
 };
 
+// Checks to see if an element is an object or not
 const isObject = (el) => typeof el === 'object' && el !== null && !(el instanceof Array);
 
+// Converts Api errors into more manageable objects
 const apiErrorHandler = (error) => {
   if (error.code === 'ECONNABORTED') {
     throw httpError(501, 'Request timed out.');
@@ -32,6 +36,11 @@ const apiErrorHandler = (error) => {
   throw httpError(error.response.status, error.response.statusText);
 };
 
+/*
+  Maps through validation errors from the server and returns it
+  so both Summary Error component and field component
+  can display the error messages correctly.
+*/
 const validationErrorHandler = (errs, href = '') => {
   const errorSummary = [];
   const fieldErrors = {};
