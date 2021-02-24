@@ -24,7 +24,7 @@ describe('mapCoverEndDate', () => {
       year: Number(coverEndDateYear),
     });
 
-    const expected = moment(coverEndDate).format('D MMM YYYY');
+    const expected = moment(coverEndDate).format('D MMMM YYYY');
 
     expect(result).toEqual(expected);
   });
@@ -51,7 +51,7 @@ describe('mapCoverEndDate', () => {
         year: formatYear(Number(coverEndDateYear)),
       });
 
-      const expected = moment(coverEndDate).format('D MMM YYYY');
+      const expected = moment(coverEndDate).format('D MMMM YYYY');
       expect(result).toEqual(expected);
 
       const year = moment(coverEndDate).format('YYYY');
