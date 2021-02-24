@@ -7,6 +7,7 @@ const render = componentRenderer(component);
 describe(component, () => {
   let wrapper;
   const params = {
+    caseId: '100123',
     facilities: [
       {
         _id: '123',
@@ -117,7 +118,7 @@ describe(component, () => {
         const selector = `[data-cy="facility-${facility._id}-ukef-facility-id-link"]`;
         
         wrapper.expectLink(selector).toLinkTo(
-          `/case/facility/${facility._id}`,
+          `/case/${params.caseId}/facility/${facility._id}`,
           facility.ukefFacilityID,
         );
       });

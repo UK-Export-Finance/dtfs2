@@ -14,7 +14,8 @@
     {% if filteredFacilities.length > 0 %}
 
       {% set componentData = {
-        facilities: filteredFacilities
+        facilities: filteredFacilities,
+        caseId: deal._id
       } %}
               
       {{ bondBeneficiaryFacilitiesTable.render(componentData) }}

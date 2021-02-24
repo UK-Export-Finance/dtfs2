@@ -24,7 +24,7 @@ const getCaseDeal = async (req, res) => {
 };
 
 const getCaseFacility = async (req, res) => {
-  const facilityId = req.params._id;// eslint-disable-line no-underscore-dangle
+  const { facilityId } = req.params;
   const facility = await api.getFacility(facilityId);
 
   if (!facility) {
