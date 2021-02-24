@@ -66,6 +66,8 @@ describe('mapFacility', () => {
 
     const expectedFacilityValueExportCurrency = `${mockCurrency.id} ${formattedFacilityValue}`;
 
+    const facilityStage = mapFacilityStage(mockFacilityStage);
+
     const expected = {
       _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
       ukefFacilityID: mockFacility.ukefFacilityID,
@@ -81,7 +83,10 @@ describe('mapFacility', () => {
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacility.guaranteeFeePayableByBank, 4),
       bondIssuer: mockFacility.bondIssuer,
       bondBeneficiary: mockFacility.bondBeneficiary,
-      dates: mapDates(mockFacility, mockDealDetails),
+      dates: mapDates({
+        ...mockFacility,
+        facilityStage,
+      }, mockDealDetails),
     };
 
     expect(result).toEqual(expected);

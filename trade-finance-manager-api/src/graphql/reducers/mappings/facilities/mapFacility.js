@@ -8,7 +8,8 @@ const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
 const mapDates = require('./mapDates');
 
 const mapFacility = (f, dealDetails) => {
-  const facility = f;
+  // Deep clone
+  const facility = JSON.parse(JSON.stringify(f, null, 4));
 
   const {
     facilityType,
