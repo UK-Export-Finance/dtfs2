@@ -1,7 +1,9 @@
 const pageRenderer = require('../../../component-tests/pageRenderer');
-
 const page = '../templates/case/facility/facility.njk';
+const filterLocaliseTimestamp = require('../../../server/nunjucks-configuration/filter-localiseTimestamp');
 const render = pageRenderer(page);
+
+const localiseTimestamp = filterLocaliseTimestamp.default;
 
 describe(page, () => {
   let wrapper;
@@ -21,6 +23,16 @@ describe(page, () => {
       ukefExposure: 'GBP 1,234.00',
       bankFacilityReference: '123456',
       guaranteeFeePayableToUkef: '10%',
+      dates: {
+        inclusionNoticeReceived: '1606900616651',
+        bankIssueNoticeReceived: '1606900616652',
+        coverStartDate: '1606900616653',
+        coverEndDate: '20 Oct 2020',
+        tenor: '3 months',
+      },
+    },
+    user: {
+      timezone: 'Europe/London',
     },
   };
 
@@ -64,6 +76,35 @@ describe(page, () => {
 
     it('should render maximum ukefExposure', () => {
       wrapper.expectText('[data-cy="facility-maximum-ukef-exposure"]').toRead(params.facility.ukefExposure);
+    });
+
+  });
+
+  describe('`dates` section', () => {
+
+    it('should render inclusionNoticeReceived', () => {
+      const expected = localiseTimestamp(params.facility.dates.inclusionNoticeReceived, 'd MMMM YYYY', params.user.timezone);
+      wrapper.expectText('[data-cy="facility-inclusion-notice-received"]').toRead(expected);
+    });
+
+    it('should render bankIssueNoticeReceived', () => {
+      const expected = localiseTimestamp(params.facility.dates.bankIssueNoticeReceived, 'd MMMM YYYY', params.user.timezone);
+
+      wrapper.expectText('[data-cy="facility-bank-issue-notice-received"]').toRead(expected);
+    });
+
+    it('should render coverStartDate', () => {
+      const expected = localiseTimestamp(params.facility.dates.coverStartDate, 'd MMMM YYYY', params.user.timezone);
+
+      wrapper.expectText('[data-cy="facility-cover-start-date"]').toRead(expected);
+    });
+
+    it('should render coverEndDate', () => {
+      wrapper.expectText('[data-cy="facility-cover-end-date"]').toRead(params.facility.dates.coverEndDate);
+    });
+
+    it('should render tenor', () => {
+      wrapper.expectText('[data-cy="facility-tenor"]').toRead(params.facility.dates.tenor);
     });
 
   });

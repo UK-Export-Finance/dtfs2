@@ -9,8 +9,10 @@ const dealReducer = (deal) => {
   const { tfm, dealSnapshot } = deal;
 
   const {
+    details,
     submissionDetails,
     facilities,
+    eligibility,
   } = dealSnapshot;
 
   const result = {
@@ -18,8 +20,9 @@ const dealReducer = (deal) => {
     dealSnapshot: {
       ...dealSnapshot,
       totals: mapTotals(facilities),
-      facilities: mapFacilities(facilities),
+      facilities: mapFacilities(facilities, details),
       submissionDetails: mapSubmissionDetails(submissionDetails),
+      eligibilityCriteria: eligibility.criteria,
     },
     tfm,
   };

@@ -67,7 +67,6 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  console.log('req.params.id', req.params.id);
   const status = await collection.deleteOne({ _id: ObjectId(String(req.params.id)) });
   res.status(200).send(status);
 };

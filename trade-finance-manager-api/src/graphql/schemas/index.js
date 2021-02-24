@@ -110,6 +110,14 @@ type FacilityProduct {
   name: String!
 }
 
+type FacilityDates {
+  inclusionNoticeReceived: String!
+  bankIssueNoticeReceived: String
+  coverStartDate: String
+  coverEndDate: String
+  tenor: String
+}
+
 type Facility {
   _id: String!
   ukefFacilityID: String!
@@ -126,6 +134,7 @@ type Facility {
   guaranteeFeePayableToUkef: String
   bondIssuer: String
   bondBeneficiary: String
+  dates: FacilityDates
 }
 
 type DealTotals {
@@ -155,7 +164,6 @@ input DealsInput {
 
 type DealSnapshot {
   _id: String!
-  Product: String
   details: DealDetails
   totals: DealTotals
   facilities: [Facility]

@@ -59,7 +59,14 @@ const GET_DEAL = gql`
           coveredPercentage,
           bondIssuer,
           bondBeneficiary,
-          bankFacilityReference
+          bankFacilityReference,
+          dates {
+            inclusionNoticeReceived,
+            bankIssueNoticeReceived,
+            coverStartDate,
+            coverEndDate,
+            tenor,
+          }
         }
         eligibility {
           agentAddressCountry,

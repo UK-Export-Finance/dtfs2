@@ -76,6 +76,9 @@ describe('controllers - case', () => {
           facility: mockFacility,
           active_sheet: 'facility',
           facilityId: req.params._id, // eslint-disable-line no-underscore-dangle
+          user: {
+            timezone: 'Europe/London',
+          },
         });
       });
     });
