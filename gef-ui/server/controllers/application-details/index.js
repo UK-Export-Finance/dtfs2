@@ -17,7 +17,7 @@ const applicationDetails = async (req, res) => {
     const mockedExporterDetails = {
       details: {
         companiesHouseRegistrationNumber: 123456,
-        companyName: '',
+        companyName: null,
         registeredAddress: {
           line1: 'Addres line 1',
           line2: 'Address line 2',
@@ -32,7 +32,6 @@ const applicationDetails = async (req, res) => {
         isFinanceIncreasing: null,
         isInDraft: false,
       },
-
       required: ['companyName', 'registeredAddress.line2'],
     };
 
