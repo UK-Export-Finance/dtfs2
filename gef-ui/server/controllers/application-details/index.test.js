@@ -8,39 +8,44 @@ const MockResponse = () => {
   return res;
 };
 
-const response = MockResponse();
-const mockedRequest = {
+const MockRequest = () => ({
   params: {
     applicationId: '123',
   },
   url: '/fakeurl.com',
-};
-const mockApplicationResponse = {
+});
+
+const MockApplicationResponse = () => ({
   exporterDetails: {
     _id: '123',
   },
-};
+});
 
-const mockExporterResponse = {
+const MockExporterResponse = () => ({
   companiesHouseRegistrationNumber: 'tedsi',
-};
+});
+
+const mockResponse = MockResponse();
+const mockRequest = MockRequest();
+const mockApplicationResponse = MockApplicationResponse();
+const mockExporterResponse = MockExporterResponse();
 
 afterEach(() => {
   jest.clearAllMocks();
 });
 
-// describe('GET Application Details', () => {
-//   it('renders the `Application Details` template', async () => {
-//     api.getApplication = () => Promise.resolve(mockApplicationResponse);
-//     api.getExporter = () => Promise.resolve(mockExporterResponse);
-//     await applicationDetails(mockedRequest, response);
-//     expect(response.render).toHaveBeenCalledWith('partials/applications-details.njk');
-//   });
-// });
+describe('GET Application Details', () => {
+  it('renders the `Application Details` template', async () => {
+    api.getApplication = () => Promise.resolve(mockApplicationResponse);
+    api.getExporter = () => Promise.resolve(mockExporterResponse);
+    await applicationDetails(mockRequest, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/applications-details.njk');
+  });
+});
 
 // describe('Create Application', () => {
 //   it('returns error object if `bankInternalRefName` property is empty', async () => {
-//     const mockedRequest = {
+//     const mockRequest = {
 //       body: {
 //         bankInternalRefName: '',
 //       },
@@ -50,14 +55,14 @@ afterEach(() => {
 //         },
 //       },
 //     };
-//     await createApplication(mockedRequest, response);
-//     expect(response.render).toHaveBeenCalledWith('partials/name-application.njk', expect.objectContaining({
+//     await createApplication(mockRequest, mockResponse);
+//     expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', expect.objectContaining({
 //       errors: expect.any(Object),
 //     }));
 //   });
 
 //   it('redirects user to `application details` page if successful', async () => {
-//     const mockedRequest = {
+//     const mockRequest = {
 //       body: {
 //         bankInternalRefName: '1234',
 //       },
@@ -73,12 +78,12 @@ afterEach(() => {
 //     };
 
 //     api.createApplication = () => Promise.resolve(mockApplication);
-//     await createApplication(mockedRequest, response);
-//     expect(response.redirect).toHaveBeenCalledWith('application-details/123456');
+//     await createApplication(mockRequest, mockResponse);
+//     expect(mockResponse.redirect).toHaveBeenCalledWith('application-details/123456');
 //   });
 
 //   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-//     const mockedRequest = {
+//     const mockRequest = {
 //       body: {
 //         bankInternalRefName: '1234',
 //       },
@@ -90,7 +95,7 @@ afterEach(() => {
 //     };
 
 //     api.createApplication = () => Promise.reject();
-//     await createApplication(mockedRequest, response);
-//     expect(response.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+//     await createApplication(mockRequest, mockResponse);
+//     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
 //   });
 // });

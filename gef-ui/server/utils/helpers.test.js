@@ -116,7 +116,9 @@ describe('mapSummaryList()', () => {
     details: {
       id: 123456,
     },
-    required: [],
+    validation: {
+      required: [],
+    },
   });
 
   const MockedDisplayItems = () => [
@@ -163,7 +165,7 @@ describe('mapSummaryList()', () => {
     const mockedData = MockedData();
 
     mockedData.details.id = null;
-    mockedData.required = ['id'];
+    mockedData.validation.required = ['id'];
     const { html } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
     expect(html).toMatch('required');
   });
