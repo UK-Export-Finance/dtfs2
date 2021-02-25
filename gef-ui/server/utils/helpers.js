@@ -59,8 +59,8 @@ const validationErrorHandler = (errs, href = '') => {
 
 const mapSummaryList = (data, itemsToShow) => {
   if (!data || _isEmpty(data)) { return []; }
-  const { details, required } = data;
-  // if (!details || _isEmpty(details)) { return []; }
+  const { details, validation } = data;
+  const { required } = validation;
 
   const valueObj = (val, isRequired) => {
     if (isRequired && val === null) {
