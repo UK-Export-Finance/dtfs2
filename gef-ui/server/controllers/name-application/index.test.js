@@ -46,15 +46,13 @@ describe('Create Application', () => {
   });
 
   it('renders the `application details` page with validation errors if valdiation fails on server', async () => {
-    const mockValidationResponse = {
-      response: {
-        status: 422,
-        message: 'Validation error from server',
-      },
+    const mockValidationRejection = {
+      status: 422,
+      data: [],
     };
-    api.createApplication = () => Promise.resolve(mockValidationResponse);
+    api.createApplication = () => Promise.reject(mockValidationRejection);
     await createApplication(mockedRequest, response);
-    expect(response.render).toHaveBeenCalledWith('partials/name-application.njk');
+    expect(response.render).toHaveBeenCalledWith('partials/name-application.njk', { errors: { errorSummary: [], fieldErrors: {} } });
   });
 
   it('redirects user to `application details` page if successful', async () => {

@@ -19,21 +19,16 @@ const userToken = (req) => {
 const isObject = (el) => typeof el === 'object' && el !== null && !(el instanceof Array);
 
 // Converts Api errors into more manageable objects
-const apiErrorHandler = (error) => {
-  if (error.code === 'ECONNABORTED') {
+const apiErrorHandler = ({ code, response }) => {
+  if (code === 'ECONNABORTED') {
     throw httpError(501, 'Request timed out.');
   }
   // Is validation error
-  if (error.response.status === 422) {
-    return {
-      response: {
-        status: error.response.status,
-        messages: error.response.data,
-      },
-    };
+  if (response.status === 422) {
+    throw response;
   }
 
-  throw httpError(error.response.status, error.response.statusText);
+  throw httpError(response.status, response.statusText);
 };
 
 /*
@@ -63,22 +58,31 @@ const validationErrorHandler = (errs, href = '') => {
 };
 
 const mapSummaryList = (data, itemsToShow) => {
+  if (!data || _isEmpty(data)) { return []; }
   const { details, required } = data;
-  if (!details || _isEmpty(details)) { return []; }
+  // if (!details || _isEmpty(details)) { return []; }
 
   const valueObj = (val, isRequired) => {
     if (isRequired && val === null) {
-      return {
-        html: '<span class="has-text-danger">Required</span>',
-      };
-    } if (val === null) {
-      return {
-        text: '—',
-      };
+      return { html: '<span class="has-text-danger" data-cy="required">Required</span>' };
     }
-    return {
-      text: val,
-    };
+
+    if (val === null) {
+      return { text: '—' };
+    }
+
+    if (isObject(val)) {
+      const list = [];
+      Object.values(val).forEach((value) => {
+        if (value) {
+          list.push(`<li>${value}</li>`);
+        }
+      });
+
+      return { html: `<ul class="is-unstyled">${list.join('')}</ul>` };
+    }
+
+    return { text: val };
   };
 
   return itemsToShow.map((item) => {
@@ -94,7 +98,7 @@ const mapSummaryList = (data, itemsToShow) => {
       actions: {
         items: [
           ...(href ? [{
-            href: href || null,
+            href,
             text: `${value ? 'Change' : 'Add'}`,
             visuallyHiddenText: item.label,
           }] : []),

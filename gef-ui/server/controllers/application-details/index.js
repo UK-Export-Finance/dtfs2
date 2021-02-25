@@ -20,7 +20,7 @@ const applicationDetails = async (req, res) => {
         companyName: null,
         registeredAddress: {
           line1: 'Addres line 1',
-          line2: 'Address line 2',
+          line2: '',
           city: 'City',
           postcode: 'Postcode',
           country: 'GB',
@@ -45,6 +45,10 @@ const applicationDetails = async (req, res) => {
         label: 'Company name',
         id: 'companyName',
         href: `${exporterUri}/address`,
+      },
+      {
+        label: 'Address',
+        id: 'registeredAddress',
       },
     ];
 

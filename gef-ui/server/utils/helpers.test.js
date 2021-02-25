@@ -45,6 +45,7 @@ describe('validationErrorHandler()', () => {
       errRef: 'abc',
       errMsg: 'message',
     };
+
     expect(validationErrorHandler(mockedError)).toEqual({
       errorSummary: [{
         text: 'message',
@@ -111,43 +112,83 @@ describe('validationErrorHandler()', () => {
 });
 
 describe('mapSummaryList()', () => {
-  const mockedData = {
-    id: 123456,
-    name: '',
-    address: {
-      line1: 'Addres line 1',
-      line2: 'Address line 2',
+  const data = () => ({
+    details: {
+      id: 123456,
     },
-  };
-  const displayItems = [
+    required: [],
+  });
+
+  const displayItems = () => [
     {
       label: 'Id',
       id: 'id',
     },
-    {
-      label: 'Name',
-      id: 'name',
-      href: '/name',
-    },
   ];
 
   it('returns an empty array if Data object is empty ', () => {
-    expect(mapSummaryList({}, displayItems)).toEqual([]);
-    expect(mapSummaryList(null, displayItems)).toEqual([]);
-    expect(mapSummaryList(undefined, displayItems)).toEqual([]);
+    expect(mapSummaryList({})).toEqual([]);
+    expect(mapSummaryList(null)).toEqual([]);
+    expect(mapSummaryList(undefined)).toEqual([]);
   });
 
-  it('returns the correct Array', () => {
-    expect(mapSummaryList(mockedData, displayItems)).toEqual([
-      {
-        actions: { items: [{ href: null, text: 'Change', visuallyHiddenText: 'Id' }] },
-        key: { text: 'Id' },
-        value: { text: 123456 },
-      },
-      {
-        actions: { items: [{ href: '/name', text: 'Add', visuallyHiddenText: 'Name' }] },
-        key: { text: 'Name' },
-        value: { text: '—' },
-      }]);
+  it('returns an array populated by the correct properties', () => {
+    const mockedData = data();
+    const mockedDisplayItems = displayItems();
+
+    expect(mapSummaryList(mockedData, mockedDisplayItems)).toEqual([{ actions: { items: [] }, key: { text: 'Id' }, value: { text: 123456 } }]);
+  });
+
+  it('returns populated items array if href property is required', () => {
+    const mockedDisplayItems = displayItems();
+    const mockedData = data();
+    mockedDisplayItems[0].href = '/test';
+    const { items } = mapSummaryList(mockedData, mockedDisplayItems)[0].actions;
+    expect(items.length).toEqual(1);
+  });
+
+  it('returns the correct link label if href has been required', () => {
+    const mockedDisplayItems = displayItems();
+    const mockedData = data();
+    mockedDisplayItems[0].href = '/test';
+    const item = mapSummaryList(mockedData, mockedDisplayItems)[0].actions.items[0];
+    expect(item).toEqual(expect.objectContaining({ href: '/test', text: 'Change' }));
+    mockedData.details.id = null;
+    const item2 = mapSummaryList(mockedData, mockedDisplayItems)[0].actions.items[0];
+    expect(item2.text).toEqual('Add');
+  });
+
+  it('returns the `Required` html element if corresponding dataset is required', () => {
+    const mockedDisplayItems = displayItems();
+    const mockedData = data();
+
+    mockedData.details.id = null;
+    mockedData.required = ['id'];
+    const { html } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    expect(html).toMatch('required');
+  });
+
+  it('returns a long dash if value is emtpy and is NOT required', () => {
+    const mockedDisplayItems = displayItems();
+    const mockedData = data();
+
+    mockedData.details.id = null;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    expect(text).toMatch('—');
+  });
+
+  it('returns an unordered list if property contains an object', () => {
+    const mockedDisplayItems = displayItems();
+    const mockedData = data();
+
+    mockedData.details.address = {};
+    mockedData.details.address.line1 = 'Test Road';
+    mockedData.details.address.line2 = null;
+    mockedDisplayItems.slice(1);
+    mockedDisplayItems[0].label = 'Address';
+    mockedDisplayItems[0].id = 'address';
+
+    const { html } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    expect(html).toEqual('<ul class="is-unstyled"><li>Test Road</li></ul>');
   });
 });
