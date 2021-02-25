@@ -14,6 +14,7 @@ const applicationDetails = async (req, res) => {
     // const facilityUri = `gef${url}/facility/${facilityId}`;
 
     const mockedExporterDetails = {
+      status: 'NOT_STARTED',
       details: {
         companiesHouseRegistrationNumber: 123456,
         companyName: null,

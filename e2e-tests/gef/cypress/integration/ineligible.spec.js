@@ -4,6 +4,7 @@ import ineligible from './pages/ineligible';
 
 context('Ineligible Page', () => {
   before(() => {
+    // cy.clearDatabase();
     cy.fixture('login')
       .then((res) => {
         cy.login(res.MAKER);
