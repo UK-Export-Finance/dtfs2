@@ -166,10 +166,15 @@ const generateTypeA = async (deal, fromStatus) => {
         bondUniqueIdentificationNumber = bond.uniqueIdentificationNumber;
       }
 
+      let bondUkefFacilityId;
+      if (bond.ukefFacilityID) {
+        bondUkefFacilityId = Array.isArray(bond.ukefFacilityID) ? bond.ukefFacilityID[0] : bond.ukefFacilityID;
+      }
+
       const bss = builder.createBSS()
       //    .UKEF_BSS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
         .BSS_portal_facility_id(bond._id) // eslint-disable-line no-underscore-dangle
-        .UKEF_BSS_facility_id(bond.ukefFacilityID && bond.ukefFacilityID[0])
+        .UKEF_BSS_facility_id(bondUkefFacilityId)
         .BSS_bank_id(bondUniqueIdentificationNumber)
         .BSS_issuer(bond.bondIssuer)
         .BSS_type(k2Map.FACILITIES.TYPE[bond.bondType])
@@ -225,10 +230,16 @@ const generateTypeA = async (deal, fromStatus) => {
         const loanConversionRate = calculateFacilityConversionRate(loan, dealCurrencyId);
         const loanConversionDate = calculateFacilityConversionDate(loan, dealCurrencyId);
 
+
+        let loanUkefFacilityId;
+        if (loan.ukefFacilityID) {
+          loanUkefFacilityId = Array.isArray(loan.ukefFacilityID) ? loan.ukefFacilityID[0] : loan.ukefFacilityID;
+        }
+
         const ewcs = builder.createEWCS()
         //    .UKEF_EWCS_facility_id('//TODO Drupal field: bss_ukef_facility_id')
           .EWCS_portal_facility_id(loan._id) // eslint-disable-line no-underscore-dangle
-          .UKEF_EWCS_facility_id(loan.ukefFacilityID && loan.ukefFacilityID[0])
+          .UKEF_EWCS_facility_id(loanUkefFacilityId)
           .EWCS_bank_id(loan.bankReferenceNumber)
           .EWCS_stage(k2Map.FACILITIES.STAGE_LOAN[loan.facilityStage])
           .EWCS_value(convertCurrencyFormat(loan.facilityValue))
