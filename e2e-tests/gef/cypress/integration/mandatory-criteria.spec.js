@@ -4,6 +4,7 @@ import mandatoryCriteria from './pages/mandatory-criteria';
 
 context('Mandatory Criteria Page', () => {
   before(() => {
+    cy.clearDatabase();
     cy.fixture('login')
       .then((res) => {
         cy.login(res.MAKER);
