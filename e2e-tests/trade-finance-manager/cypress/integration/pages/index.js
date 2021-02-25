@@ -5,6 +5,8 @@ import exporterPage from './exporterPage';
 import buyerPage from './buyerPage';
 import agentPage from './agentPage';
 import indemnifierPage from './indemnifierPage';
+import bondIssuerPage from './bondIssuerPage';
+import bondBeneficiaryPage from './bondBeneficiaryPage';
 
 export default {
   landingPage,
@@ -14,4 +16,6 @@ export default {
   buyerPage,
   agentPage,
   indemnifierPage,
+  bondIssuerPage,
+  bondBeneficiaryPage,
 };

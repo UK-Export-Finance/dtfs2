@@ -30,9 +30,10 @@ const getCaseFacility = async (req, res) => {
   }
 
   return res.render('case/facility/facility.njk', {
-    facility,
+    facility: facility.facilitySnapshot,
     active_sheet: 'facility',
     facilityId,
+    tfm: facility.tfm,
 
     // TODO: remove once we have user login/session.
     user: {
@@ -113,7 +114,7 @@ const postPartyDetails = (partyType) => (
 
     await api.updateParty(dealId, update);
 
-    return res.redirect(`/case/parties/${dealId}`);
+    return res.redirect(`/case/${dealId}/parties`);
   }
 );
 
@@ -135,7 +136,7 @@ const postTfmFacility = async (req, res) => {
 
   // const { data } = await api.updateParty(dealId, update);
 
-  return res.redirect(`/case/parties/${dealId}`);
+  return res.redirect(`/case/${dealId}/parties`);
 };
 
 

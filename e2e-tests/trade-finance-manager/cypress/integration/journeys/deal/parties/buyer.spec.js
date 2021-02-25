@@ -79,5 +79,25 @@ context('User can view party details', () => {
       pages.buyerPage.closeLink().click();
       cy.url().should('eq', relative(`/case/${dealId}/parties`));
     });
+
+    it('should save entered details', () => {
+      const partyUrn = 'test partyurn';
+
+      pages.partiesPage.buyerEditLink().click();
+      pages.buyerPage.urnInput().type(partyUrn);
+
+      pages.buyerPage.saveButton().click();
+
+      cy.url().should('eq', relative(`/case/${dealId}/parties`));
+
+      pages.buyerPage.uniqueRef().invoke('text').then((text) => {
+        expect(text.trim()).equal(partyUrn);
+      });
+
+      pages.partiesPage.buyerEditLink().click();
+      pages.buyerPage.urnInput().invoke('val').then((value) => {
+        expect(value.trim()).equal(partyUrn);
+      });
+    });
   });
 });
