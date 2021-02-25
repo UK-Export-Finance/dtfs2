@@ -32,7 +32,7 @@ const ADMIN_LOGIN = {
   },
 };
 
-context('User can view party details', () => {
+context('User can view bond details', () => {
   let deal;
   let dealId;
   const dealFacilities = [];
@@ -63,39 +63,36 @@ context('User can view party details', () => {
   });
 
 
-  describe('Exporter page', () => {
+  describe('Bond issuer page', () => {
     it('should render edit page', () => {
-      pages.partiesPage.exporterEditLink().click();
+      pages.partiesPage.bondBeneficiaryEditLink().click();
 
-      cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
-      pages.partiesPage.exporterEditLink().should('not.exist');
+      cy.url().should('eq', relative(`/case/${dealId}/parties/bond-beneficiary`));
+      pages.partiesPage.bondBeneficiaryEditLink().should('not.exist');
 
-      pages.exporterPage.urnInput().should('exist');
-      pages.exporterPage.heading().should('have.text', 'Edit exporter details');
+      pages.bondBeneficiaryPage.urnInput().should('exist');
+      pages.bondBeneficiaryPage.heading().should('have.text', 'Edit bond beneficiary details');
 
-      pages.exporterPage.saveButton().should('exist');
-      pages.exporterPage.closeLink().should('exist');
+      pages.bondBeneficiaryPage.saveButton().should('exist');
+      pages.bondBeneficiaryPage.closeLink().should('exist');
 
-      pages.exporterPage.closeLink().click();
+      pages.bondBeneficiaryPage.closeLink().click();
       cy.url().should('eq', relative(`/case/${dealId}/parties`));
     });
 
     it('should save entered details', () => {
       const partyUrn = 'test partyurn';
 
-      pages.partiesPage.exporterEditLink().click();
-      pages.exporterPage.urnInput().type(partyUrn);
+      pages.partiesPage.bondBeneficiaryEditLink().click();
+      pages.bondBeneficiaryPage.urnInput().type(partyUrn);
 
-      pages.exporterPage.saveButton().click();
+      pages.bondBeneficiaryPage.saveButton().click();
 
       cy.url().should('eq', relative(`/case/${dealId}/parties`));
 
-      pages.exporterPage.uniqueRef().invoke('text').then((text) => {
-        expect(text.trim()).equal(partyUrn);
-      });
+      pages.partiesPage.bondBeneficiaryEditLink().click();
 
-      pages.partiesPage.exporterEditLink().click();
-      pages.exporterPage.urnInput().invoke('val').then((value) => {
+      pages.bondBeneficiaryPage.urnInput().invoke('val').then((value) => {
         expect(value.trim()).equal(partyUrn);
       });
     });

@@ -64,6 +64,51 @@ describe('/v1/portal/deals', () => {
       expect(status).toEqual(200);
       expect(body.deal.dealSnapshot).toMatchObject(newDeal);
     });
+
+    describe('when a deal has facilities', () => {
+      it('returns facilities mapped to deal.bondTransactions and deal.loanTransactions', async () => {
+        const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+        const dealId = postResult.body._id;
+
+        // create some facilities
+        const mockFacility = {
+          associatedDealId: dealId,
+          facilityValue: 123456,
+          user: mockUser,
+        };
+
+        const mockBond = {
+          facilityType: 'bond',
+          ...mockFacility,
+        };
+
+        const mockLoan = {
+          facilityType: 'loan',
+          ...mockFacility,
+        };
+
+        const createdBond1 = await api.post({ facility: mockBond, user: mockUser }).to('/v1/portal/facilities');
+        const createdBond2 = await api.post({ facility: mockBond, user: mockUser }).to('/v1/portal/facilities');
+        const createdLoan1 = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
+        const createdLoan2 = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
+
+        await api.put({}).to(`/v1/tfm/deals/${dealId}/submit`);
+
+        const { status, body } = await api.get(`/v1/tfm/deals/${dealId}`);
+
+        expect(status).toEqual(200);
+
+        expect(body.deal.dealSnapshot.bondTransactions.items).toEqual([
+          createdBond1.body,
+          createdBond2.body,
+        ]);
+
+        expect(body.deal.dealSnapshot.loanTransactions.items).toEqual([
+          createdLoan1.body,
+          createdLoan2.body,
+        ]);
+      });
+    });
   });
 
   describe('PUT /v1/tfm/deals', () => {

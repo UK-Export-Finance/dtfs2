@@ -57,12 +57,18 @@ const dealQuery = gql`
             facilityStage,
             facilityValueExportCurrency,
             facilityValue,
-            coverEndDate,
             ukefExposure,
             coveredPercentage,
             bondIssuer,
             bondBeneficiary,
-            bankFacilityReference
+            bankFacilityReference,
+            dates {
+              inclusionNoticeReceived,
+              bankIssueNoticeReceived,
+              coverStartDate,
+              coverEndDate,
+              tenor
+            }
           }
           tfm {
             bondIssuerPartyUrn

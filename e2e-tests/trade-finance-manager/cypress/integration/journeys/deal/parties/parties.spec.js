@@ -52,11 +52,11 @@ context('User can view party details', () => {
         });
 
         cy.submitDeal(dealId);
+
         cy.visit(relative(`/case/${dealId}/deal`));
 
         pages.caseDealPage.partiesLink().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
-
       });
   });
 

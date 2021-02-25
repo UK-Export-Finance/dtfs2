@@ -45,7 +45,7 @@
             id: "partyUrn",
             name: "partyUrn",
             attributes: {
-              "data-cy": "party-urn-input"
+              "data-cy": "agent-unique-ref-input"
             },
             value: agent.partyUrn
           }) }}
@@ -85,7 +85,7 @@
             id: "commissionRate",
             name: "commissionRate",
             attributes: {
-              "data-cy": "party-commission-rate-input"
+              "data-cy": "agent-commission-rate-input"
             },
             value: agent.commissionRate
           }) }}
@@ -94,7 +94,8 @@
       {% else %}
         {{ keyValueGridRow.render({
           key: 'Commission rate',
-          value: agent.commissionRate
+          value: agent.commissionRate,
+          dataCy: 'agent-commission-rate'
         }) }}
       {% endif %}
     </div>

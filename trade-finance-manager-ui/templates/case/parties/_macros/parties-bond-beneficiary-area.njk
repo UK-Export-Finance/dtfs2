@@ -5,7 +5,7 @@
 {% set deal = params.deal %}
 {% set filteredFacilities = deal.facilities | bondBeneficiaryFacilities %}
 
-<div class="govuk-grid-row {% if not params.editable %}ukef-flex-container separator-line deal{% endif %}">
+<div class="govuk-grid-row {% if not params.editable %}ukef-flex-container separator-line deal{% endif %}" data-cy="bond-beneficiary-area">
   <div class="govuk-grid-column-one-half">
     <h2 class="ukef-heading-l" data-cy="bond-beneficiary-heading">Bond beneficiary</h2>
     <p class="ukef-hint" style="margin-top:-36px" data-cy="bond-beneficiary-sub-heading">(if different to buyer)</p>
