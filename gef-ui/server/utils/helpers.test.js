@@ -112,14 +112,14 @@ describe('validationErrorHandler()', () => {
 });
 
 describe('mapSummaryList()', () => {
-  const data = () => ({
+  const MockedData = () => ({
     details: {
       id: 123456,
     },
     required: [],
   });
 
-  const displayItems = () => [
+  const MockedDisplayItems = () => [
     {
       label: 'Id',
       id: 'id',
@@ -133,23 +133,23 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns an array populated by the correct properties', () => {
-    const mockedData = data();
-    const mockedDisplayItems = displayItems();
+    const mockedData = MockedData();
+    const mockedDisplayItems = MockedDisplayItems();
 
     expect(mapSummaryList(mockedData, mockedDisplayItems)).toEqual([{ actions: { items: [] }, key: { text: 'Id' }, value: { text: 123456 } }]);
   });
 
   it('returns populated items array if href property is required', () => {
-    const mockedDisplayItems = displayItems();
-    const mockedData = data();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
     mockedDisplayItems[0].href = '/test';
     const { items } = mapSummaryList(mockedData, mockedDisplayItems)[0].actions;
     expect(items.length).toEqual(1);
   });
 
   it('returns the correct link label if href has been required', () => {
-    const mockedDisplayItems = displayItems();
-    const mockedData = data();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
     mockedDisplayItems[0].href = '/test';
     const item = mapSummaryList(mockedData, mockedDisplayItems)[0].actions.items[0];
     expect(item).toEqual(expect.objectContaining({ href: '/test', text: 'Change' }));
@@ -159,8 +159,8 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns the `Required` html element if corresponding dataset is required', () => {
-    const mockedDisplayItems = displayItems();
-    const mockedData = data();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
 
     mockedData.details.id = null;
     mockedData.required = ['id'];
@@ -169,8 +169,8 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns a long dash if value is emtpy and is NOT required', () => {
-    const mockedDisplayItems = displayItems();
-    const mockedData = data();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
 
     mockedData.details.id = null;
     const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
@@ -178,8 +178,8 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns an unordered list if property contains an object', () => {
-    const mockedDisplayItems = displayItems();
-    const mockedData = data();
+    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = MockedData();
 
     mockedData.details.address = {};
     mockedData.details.address.line1 = 'Test Road';

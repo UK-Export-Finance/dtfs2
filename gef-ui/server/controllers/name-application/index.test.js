@@ -1,14 +1,14 @@
 import { nameApplication, createApplication } from './index';
 import * as api from '../../services/api';
 
-const mockResponse = () => {
+const MockResponse = () => {
   const res = {};
   res.redirect = jest.fn();
   res.render = jest.fn();
   return res;
 };
 
-const response = mockResponse();
+const mockResponse = MockResponse();
 const mockedRequest = {
   body: {
     bankInternalRefName: '1234',
@@ -26,8 +26,8 @@ afterEach(() => {
 
 describe('GET Name Application', () => {
   it('renders the `name-application` template', async () => {
-    await nameApplication({}, response);
-    expect(response.render).toHaveBeenCalledWith('partials/name-application.njk');
+    await nameApplication({}, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk');
   });
 });
 
@@ -39,8 +39,8 @@ describe('Create Application', () => {
         bankInternalRefName: '',
       },
     };
-    await createApplication(updatedMockedRequest, response);
-    expect(response.render).toHaveBeenCalledWith('partials/name-application.njk', expect.objectContaining({
+    await createApplication(updatedMockedRequest, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', expect.objectContaining({
       errors: expect.any(Object),
     }));
   });
@@ -51,8 +51,8 @@ describe('Create Application', () => {
       data: [],
     };
     api.createApplication = () => Promise.reject(mockValidationRejection);
-    await createApplication(mockedRequest, response);
-    expect(response.render).toHaveBeenCalledWith('partials/name-application.njk', { errors: { errorSummary: [], fieldErrors: {} } });
+    await createApplication(mockedRequest, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', { errors: { errorSummary: [], fieldErrors: {} } });
   });
 
   it('redirects user to `application details` page if successful', async () => {
@@ -62,14 +62,14 @@ describe('Create Application', () => {
     };
 
     api.createApplication = () => Promise.resolve(mockApplication);
-    await createApplication(mockedRequest, response);
-    expect(response.redirect).toHaveBeenCalledWith('application-details/123456');
+    await createApplication(mockedRequest, mockResponse);
+    expect(mockResponse.redirect).toHaveBeenCalledWith('application-details/123456');
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     const mockedRejection = { response: { status: 400, message: 'Whoops' } };
     api.createApplication = () => Promise.reject(mockedRejection);
-    await createApplication(mockedRequest, response);
-    expect(response.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    await createApplication(mockedRequest, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 });
