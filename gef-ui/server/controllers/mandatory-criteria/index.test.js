@@ -1,14 +1,14 @@
 import { getMandatoryCriteria, validateMandatoryCriteria } from './index';
 import * as api from '../../services/api';
 
-const mockResponse = () => {
+const MockResponse = () => {
   const res = {};
   res.redirect = jest.fn();
   res.render = jest.fn();
   return res;
 };
 
-const response = mockResponse();
+const mockResponse = MockResponse();
 const mockCriteria = {
   mockedText: 'This is a test',
 };
@@ -20,8 +20,8 @@ afterEach(() => {
 describe('GET Mandatory Criteria', () => {
   it('renders the `mandatory-criteria` template', async () => {
     api.getMandatoryCriteria = () => Promise.resolve(mockCriteria);
-    await getMandatoryCriteria({}, response);
-    expect(response.render).toHaveBeenCalledWith('partials/mandatory-criteria.njk', {
+    await getMandatoryCriteria({}, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/mandatory-criteria.njk', {
       criteria: mockCriteria,
     });
   });
@@ -29,8 +29,8 @@ describe('GET Mandatory Criteria', () => {
   it('redirects user to `problem with service` page if there is an issue with the api', async () => {
     const mockedRejection = { response: { status: 400, message: 'Whoops' } };
     api.getMandatoryCriteria = () => Promise.reject(mockedRejection);
-    await getMandatoryCriteria({}, response);
-    expect(response.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    await getMandatoryCriteria({}, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 });
 
@@ -42,8 +42,8 @@ describe('Validate Mandatory Criteria', () => {
       },
     };
     api.getMandatoryCriteria = () => Promise.resolve(mockCriteria);
-    await validateMandatoryCriteria(mockedRequest, response);
-    expect(response.render).toHaveBeenCalledWith('partials/mandatory-criteria.njk', expect.objectContaining({
+    await validateMandatoryCriteria(mockedRequest, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/mandatory-criteria.njk', expect.objectContaining({
       criteria: expect.any(Object),
       errors: expect.any(Object),
     }));
@@ -56,8 +56,8 @@ describe('Validate Mandatory Criteria', () => {
       },
     };
     api.getMandatoryCriteria = () => Promise.resolve(mockCriteria);
-    await validateMandatoryCriteria(mockedRequest, response);
-    expect(response.redirect).toHaveBeenCalledWith('name-application');
+    await validateMandatoryCriteria(mockedRequest, mockResponse);
+    expect(mockResponse.redirect).toHaveBeenCalledWith('name-application');
   });
 
   it('redirects user to `ineligible` page if they select `false`', async () => {
@@ -66,8 +66,8 @@ describe('Validate Mandatory Criteria', () => {
         mandatoryCriteria: 'false',
       },
     };
-    await validateMandatoryCriteria(mockedRequest, response);
-    expect(response.redirect).toHaveBeenCalledWith('ineligible');
+    await validateMandatoryCriteria(mockedRequest, mockResponse);
+    expect(mockResponse.redirect).toHaveBeenCalledWith('ineligible');
   });
 
   it('redirects user to `problem with service` page if there is an issue with the api', async () => {
@@ -78,7 +78,7 @@ describe('Validate Mandatory Criteria', () => {
     };
     const mockedRejection = { response: { status: 400, message: 'Whoops' } };
     api.getMandatoryCriteria = () => Promise.reject(mockedRejection);
-    await validateMandatoryCriteria(mockedRequest, response);
-    expect(response.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    await validateMandatoryCriteria(mockedRequest, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 });

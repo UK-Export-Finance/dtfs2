@@ -1,14 +1,14 @@
 import applicationDetails from './index';
 import * as api from '../../services/api';
 
-const mockResponse = () => {
+const MockResponse = () => {
   const res = {};
   res.redirect = jest.fn();
   res.render = jest.fn();
   return res;
 };
 
-const response = mockResponse();
+const response = MockResponse();
 const mockedRequest = {
   params: {
     applicationId: '123',
