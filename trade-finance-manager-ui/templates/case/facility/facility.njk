@@ -125,8 +125,9 @@
             <h4 class="govuk-heading-s">Inclusion notice received</h4>
           </div>
 
+
           <div class="govuk-grid-column-three-quarters">
-            <p class="govuk-body-s" data-cy="facility-inclusion-notice-received">{{ facility.dates.inclusionNoticeReceived | localiseTimestamp('d MMMM YYYY', user.timezone) | dashIfEmpty }}</p>
+            <p class="govuk-body-s" data-cy="facility-inclusion-notice-received">{{ facility.dates.inclusionNoticeReceived | localiseTimestamp("D MMMM YYYY", user.timezone) | dashIfEmpty }}</p>
           </div>
         </div>
 
@@ -136,7 +137,7 @@
           </div>
 
           <div class="govuk-grid-column-three-quarters">
-            <p class="govuk-body-s" data-cy="facility-bank-issue-notice-received">{{ facility.dates.bankIssueNoticeReceived | localiseTimestamp('d MMMM YYYY', user.timezone) | dashIfEmpty }}</p>
+            <p class="govuk-body-s" data-cy="facility-bank-issue-notice-received">{{ facility.dates.bankIssueNoticeReceived | localiseTimestamp('D MMMM YYYY', user.timezone) | dashIfEmpty }}</p>
           </div>
         </div>
 
@@ -146,7 +147,7 @@
           </div>
 
           <div class="govuk-grid-column-three-quarters">
-            <p class="govuk-body-s" data-cy="facility-cover-start-date">{{ facility.dates.coverStartDate | localiseTimestamp('d MMMM YYYY', user.timezone) | dashIfEmpty }}</p>
+            <p class="govuk-body-s" data-cy="facility-cover-start-date">{{ facility.dates.coverStartDate | localiseTimestamp('D MMMM YYYY', user.timezone) | dashIfEmpty }}</p>
           </div>
         </div>
 
