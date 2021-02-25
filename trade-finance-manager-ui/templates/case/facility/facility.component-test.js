@@ -83,18 +83,18 @@ describe(page, () => {
   describe('`dates` section', () => {
 
     it('should render inclusionNoticeReceived', () => {
-      const expected = localiseTimestamp(params.facility.dates.inclusionNoticeReceived, 'd MMMM YYYY', params.user.timezone);
+      const expected = localiseTimestamp(params.facility.dates.inclusionNoticeReceived, 'D MMMM YYYY', params.user.timezone);
       wrapper.expectText('[data-cy="facility-inclusion-notice-received"]').toRead(expected);
     });
 
     it('should render bankIssueNoticeReceived', () => {
-      const expected = localiseTimestamp(params.facility.dates.bankIssueNoticeReceived, 'd MMMM YYYY', params.user.timezone);
+      const expected = localiseTimestamp(params.facility.dates.bankIssueNoticeReceived, 'D MMMM YYYY', params.user.timezone);
 
       wrapper.expectText('[data-cy="facility-bank-issue-notice-received"]').toRead(expected);
     });
 
     it('should render coverStartDate', () => {
-      const expected = localiseTimestamp(params.facility.dates.coverStartDate, 'd MMMM YYYY', params.user.timezone);
+      const expected = localiseTimestamp(params.facility.dates.coverStartDate, 'D MMMM YYYY', params.user.timezone);
 
       wrapper.expectText('[data-cy="facility-cover-start-date"]').toRead(expected);
     });
