@@ -160,6 +160,21 @@ const findUser = async (username) => {
   }
 };
 
+const getCurrencyExchangeRate = async (source, target) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${refDataUrl}/currency-exchange-rate/${source}/${target}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -170,4 +185,5 @@ module.exports = {
   queryDeals,
   getPartyDbInfo,
   findUser,
+  getCurrencyExchangeRate,
 };
