@@ -4,6 +4,7 @@ const tfmRouter = express.Router();
 
 const tfmGetDealController = require('../controllers/tfm/deal/tfm-get-deal.controller');
 const tfmUpdateDealController = require('../controllers/tfm/deal/tfm-update-deal.controller');
+const tfmDeleteDealController = require('../controllers/tfm/deal/tfm-delete-deal.controller');
 const tfmSubmitDealController = require('../controllers/tfm/deal/tfm-submit-deal.controller');
 const tfmGetFacilityController = require('../controllers/tfm/facility/tfm-get-facility.controller');
 const tfmUpdateFacilityController = require('../controllers/tfm/facility/tfm-update-facility.controller');
@@ -21,6 +22,9 @@ tfmRouter.route('/deals/:id')
   )
   .put(
     tfmUpdateDealController.updateDealPut,
+  )
+  .delete(
+    tfmDeleteDealController.deleteDeal,
   );
 
 tfmRouter.route('/deals/:id/submit')
