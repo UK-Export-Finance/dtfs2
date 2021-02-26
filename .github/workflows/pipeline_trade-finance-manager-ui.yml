@@ -94,10 +94,6 @@ jobs:
         npm install
         node ./re-insert-mocks.js
         pwd
-    - name: UI Component tests
-      run: |
-        cd $GITHUB_WORKSPACE/trade-finance-manager-ui
-        npm run test
     - name: Run e2e tests
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
