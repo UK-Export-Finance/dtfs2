@@ -4,7 +4,8 @@ import nameApplication from './pages/name-application';
 
 context('Name Application Page', () => {
   before(() => {
-    cy.clearDatabase();
+    //  cy.clearDatabase();
+    cy.exec('cd ../../utils/mock-data-loader && node re-insert-mocks.js');
     cy.fixture('login')
       .then((res) => {
         cy.login(res.MAKER);
