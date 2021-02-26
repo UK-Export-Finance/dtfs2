@@ -9,17 +9,17 @@ router.get('/:_id/facility/:facilityId', caseController.getCaseFacility);
 
 router.get('/:_id/parties', caseController.getCaseParties);
 
-router.get('/:_id/parties/exporter', caseController.getPartyDetails('exporter'));
-router.post('/:_id/parties/exporter', caseController.postPartyDetails('exporter'));
+router.get('/:_id/parties/exporter', caseController.getExporterPartyDetails);
+router.post('/:_id/parties/exporter', caseController.postExporterPartyDetails);
 
-router.get('/:_id/parties/buyer', caseController.getPartyDetails('buyer'));
-router.post('/:_id/parties/buyer', caseController.postPartyDetails('buyer'));
+router.get('/:_id/parties/buyer', caseController.getBuyerPartyDetails);
+router.post('/:_id/parties/buyer', caseController.postBuyerPartyDetails);
 
-router.get('/:_id/parties/agent', caseController.getPartyDetails('agent'));
-router.post('/:_id/parties/agent', caseController.postPartyDetails('agent'));
+router.get('/:_id/parties/agent', caseController.getAgentPartyDetails);
+router.post('/:_id/parties/agent', caseController.postAgentPartyDetails);
 
-router.get('/:_id/parties/indemnifier', caseController.getPartyDetails('indemnifier'));
-router.post('/:_id/parties/indemnifier', caseController.postPartyDetails('indemnifier'));
+router.get('/:_id/parties/indemnifier', caseController.getIndemnifierPartyDetails);
+router.post('/:_id/parties/indemnifier', caseController.postIndemnifierPartyDetails);
 
 router.get('/:_id/parties/bond-issuer', caseController.getBondIssuerPartyDetails);
 router.post('/:_id/parties/bond-issuer', caseController.postTfmFacility);

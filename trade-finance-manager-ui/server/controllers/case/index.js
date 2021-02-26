@@ -80,6 +80,11 @@ const getPartyDetails = (partyType) => (
   }
 );
 
+const getExporterPartyDetails = getPartyDetails('exporter');
+const getBuyerPartyDetails = getPartyDetails('buyer');
+const getAgentPartyDetails = getPartyDetails('agent');
+const getIndemnifierPartyDetails = getPartyDetails('indemnifier');
+
 const getBondIssuerPartyDetails = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
@@ -121,6 +126,11 @@ const postPartyDetails = (partyType) => (
   }
 );
 
+const postExporterPartyDetails = postPartyDetails('exporter');
+const postBuyerPartyDetails = postPartyDetails('buyer');
+const postAgentPartyDetails = postPartyDetails('agent');
+const postIndemnifierPartyDetails = postPartyDetails('indemnifier');
+
 const postTfmFacility = async (req, res) => {
   const { facilityId, ...facilityUpdateFields } = req.body;
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
@@ -147,9 +157,15 @@ export default {
   getCaseDeal,
   getCaseFacility,
   getCaseParties,
-  getPartyDetails,
+  getExporterPartyDetails,
+  getBuyerPartyDetails,
+  getAgentPartyDetails,
+  getIndemnifierPartyDetails,
   getBondIssuerPartyDetails,
   getBondBeneficiaryrPartyDetails,
-  postPartyDetails,
+  postExporterPartyDetails,
+  postBuyerPartyDetails,
+  postAgentPartyDetails,
+  postIndemnifierPartyDetails,
   postTfmFacility,
 };
