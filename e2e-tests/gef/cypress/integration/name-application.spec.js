@@ -4,8 +4,7 @@ import nameApplication from './pages/name-application';
 
 context('Name Application Page', () => {
   before(() => {
-    //  cy.clearDatabase();
-    cy.exec('cd ../../utils/mock-data-loader && node re-insert-mocks.js');
+    cy.clearDatabase();
     cy.fixture('login')
       .then((res) => {
         cy.login(res.MAKER);
@@ -49,6 +48,13 @@ context('Name Application Page', () => {
       nameApplication.internalRef().type('NEW_REF_NAME');
       nameApplication.form().submit();
       nameApplication.applicationDetailsPage();
+    });
+
+    it('Entering the same Bank internal ref shows a error to the user', () => {
+      nameApplication.internalRef().type('NEW_REF_NAME');
+      nameApplication.form().submit();
+      nameApplication.errorSummary();
+      nameApplication.applicationDetailsPage().should('not.exist');
     });
   });
 
