@@ -12,6 +12,20 @@ const getDeal = async (dealId) => {
   return response.data;
 };
 
+const deleteDeal = async (deal, token) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/tfm/deals/${deal._id}`,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response && response.data;
+};
+
 const createFacility = async (facility, associatedDealId, user) => {
   const response = await axios({
     method: 'post',
@@ -75,6 +89,7 @@ const deleteFacility = async (facilityId) => {
 
 module.exports = {
   getDeal,
+  deleteDeal,
   createFacility,
   updateFacility,
   listFacilities,

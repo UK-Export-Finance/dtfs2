@@ -4,7 +4,6 @@ require('dotenv').config();
 const { QUERY, apollo } = require('./graphql');
 
 const { gef } = require('./gef/api');
-console.log(gef)
 
 // TODO multiple services talk to the same api; we end up writing basically the same code twice to achieve this
 //  ... a binary repo to publish things to so we can share? ... local references in package.json??
@@ -418,5 +417,5 @@ module.exports = {
   resetIdCounters,
   updateCountry,
   updateCurrency,
-  gef
+  gef,
 };
