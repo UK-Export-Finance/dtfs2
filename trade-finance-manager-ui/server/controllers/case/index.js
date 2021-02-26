@@ -6,7 +6,7 @@ import api from '../../api';
 // This approach is purely for initial development.
 
 const getCaseDeal = async (req, res) => {
-  const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -29,7 +29,12 @@ const getCaseFacility = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  const { associatedDealId } = facility.facilitySnapshot;
+  const deal = await api.getDeal(associatedDealId);
+
   return res.render('case/facility/facility.njk', {
+    deal: deal.dealSnapshot,
+    dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
     facility: facility.facilitySnapshot,
     active_sheet: 'facility',
     facilityId,
@@ -43,7 +48,7 @@ const getCaseFacility = async (req, res) => {
 };
 
 const getCaseParties = async (req, res) => {
-  const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -60,7 +65,7 @@ const getCaseParties = async (req, res) => {
 
 const getPartyDetails = (partyType) => (
   async (req, res) => {
-    const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+    const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
     const deal = await api.getDeal(dealId);
 
     if (!deal) {
@@ -76,7 +81,7 @@ const getPartyDetails = (partyType) => (
 );
 
 const getBondIssuerPartyDetails = async (req, res) => {
-  const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -90,7 +95,7 @@ const getBondIssuerPartyDetails = async (req, res) => {
 
 
 const getBondBeneficiaryrPartyDetails = async (req, res) => {
-  const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -104,7 +109,7 @@ const getBondBeneficiaryrPartyDetails = async (req, res) => {
 
 const postPartyDetails = (partyType) => (
   async (req, res) => {
-    const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+    const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
 
     const update = {
       [partyType]: req.body,
@@ -118,7 +123,7 @@ const postPartyDetails = (partyType) => (
 
 const postTfmFacility = async (req, res) => {
   const { facilityId, ...facilityUpdateFields } = req.body;
-  const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
 
 
   await Promise.all(

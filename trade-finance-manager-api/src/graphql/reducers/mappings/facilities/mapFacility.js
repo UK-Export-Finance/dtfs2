@@ -52,6 +52,7 @@ const mapFacility = (f, dealDetails) => {
 
   return {
     _id: facility._id, // eslint-disable-line no-underscore-dangle
+    associatedDealId: facility.associatedDealId,
     ukefFacilityID: facility.ukefFacilityID,
     facilityType: facility.facilityType,
     ukefFacilityType,

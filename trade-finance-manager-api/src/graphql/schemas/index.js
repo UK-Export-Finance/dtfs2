@@ -121,6 +121,7 @@ type FacilityDates {
 type FacilitySnapshot {
   _id: String!
   ukefFacilityID: String!
+  associatedDealId: String!
   facilityProduct: FacilityProduct!
   facilityType: String
   ukefFacilityType: String!
