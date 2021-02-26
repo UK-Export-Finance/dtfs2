@@ -21,7 +21,7 @@ const deleteDeal = async (deal, token) => {
       Authorization: token || '',
     },
     url: `${urlRoot}/v1/tfm/deals/${deal._id}`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch(() => { });
 
   return response && response.data;
 };
