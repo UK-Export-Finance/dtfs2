@@ -94,7 +94,7 @@ jobs:
         npm install
         node ./re-insert-mocks.js
         pwd
-    - name: UI Component tests
+    - name: UI tests
       run: |
         cd $GITHUB_WORKSPACE/trade-finance-manager-ui
         npm run test
