@@ -57,11 +57,24 @@ describe('controllers - case', () => {
     describe('when facility exists', () => {
       const mockFacility = {
         _id: '1000023',
-        mock: true,
+        facilitySnapshot: {
+          _id: '1000023',
+          associatedDealId: '12345678',
+          mock: true,
+        },
+      };
+
+      const mockDeal = {
+        _id: '12345678',
+        dealSnapshot: {
+          _id: '12345678',
+          mock: true,
+        },
       };
 
       beforeEach(() => {
         api.getFacility = () => Promise.resolve(mockFacility);
+        api.getDeal = () => Promise.resolve(mockDeal);
       });
 
       it('should render deal template with data', async () => {
@@ -73,7 +86,9 @@ describe('controllers - case', () => {
 
         await caseController.getCaseFacility(req, res);
         expect(res.render).toHaveBeenCalledWith('case/facility/facility.njk', {
-          facility: mockFacility,
+          deal: mockDeal.dealSnapshot,
+          dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+          facility: mockFacility.facilitySnapshot,
           active_sheet: 'facility',
           facilityId: req.params.facilityId,
           user: {
