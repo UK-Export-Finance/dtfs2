@@ -1,10 +1,11 @@
 /* eslint-disable no-undef */
 import relative from './relativeURL';
+import mandatoryCriteria from './pages/mandatory-criteria';
 import nameApplication from './pages/name-application';
 
 context('Name Application Page', () => {
   before(() => {
-    cy.clearDatabase();
+    cy.reinsertMocks();
     cy.fixture('login')
       .then((res) => {
         cy.login(res.MAKER);
@@ -15,7 +16,9 @@ context('Name Application Page', () => {
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
-    cy.visit(relative('/gef/name-application'));
+    cy.visit(relative('/gef/mandatory-criteria'));
+    mandatoryCriteria.trueRadio().click();
+    mandatoryCriteria.form().submit();
   });
 
   describe('Visiting page', () => {

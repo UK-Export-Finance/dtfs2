@@ -4,7 +4,7 @@ import mandatoryCriteria from './pages/mandatory-criteria';
 
 context('Mandatory Criteria Page', () => {
   before(() => {
-    cy.clearDatabase();
+    cy.reinsertMocks();
     cy.fixture('login')
       .then((res) => {
         cy.login(res.MAKER);
@@ -20,7 +20,7 @@ context('Mandatory Criteria Page', () => {
 
   describe('Visiting page', () => {
     it('displays the header', () => {
-      mandatoryCriteria.captionHead();
+      mandatoryCriteria.captionHeading();
       mandatoryCriteria.mainHeading();
     });
 
