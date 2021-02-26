@@ -83,8 +83,7 @@ const getBondIssuerPartyDetails = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  return res.render('case/parties/edit/bonds-edit.njk', {
-    bondType: 'bond issuer',
+  return res.render('case/parties/edit/bonds-issuer-edit.njk', {
     deal: deal.dealSnapshot,
   });
 };
@@ -98,8 +97,7 @@ const getBondBeneficiaryrPartyDetails = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  return res.render('case/parties/edit/bonds-edit.njk', {
-    bondType: 'bond beneficiary',
+  return res.render('case/parties/edit/bonds-beneficiary-edit.njk', {
     deal: deal.dealSnapshot,
   });
 };
