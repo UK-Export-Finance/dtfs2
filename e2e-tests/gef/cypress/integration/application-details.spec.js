@@ -1,10 +1,12 @@
 /* eslint-disable no-undef */
 import relative from './relativeURL';
-import ineligible from './pages/ineligible';
+import mandatoryCriteria from './pages/mandatory-criteria';
+import nameApplication from './pages/name-application';
+import applicationDetails from './pages/application-details';
 
 context('Application Details Page', () => {
   before(() => {
-    cy.clearDatabase();
+    cy.reinsertMocks();
     cy.fixture('login')
       .then((res) => {
         cy.login(res.MAKER);
@@ -15,16 +17,20 @@ context('Application Details Page', () => {
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
-    cy.visit(relative('/gef/application-details'));
+    cy.visit(relative('/gef/mandatory-criteria'));
+    mandatoryCriteria.trueRadio().click();
+    mandatoryCriteria.form().submit();
+    nameApplication.internalRef().type('NEW_REF_NAME');
+    nameApplication.form().submit();
   });
 
-  // describe('Visiting page', () => {
-  //   it('displays the correct elements', () => {
-  //     ineligible.mainHeading();
-  //     ineligible.content();
-  //     ineligible.backButton();
-  //   });
-  // });
+  describe('Visiting page', () => {
+    it('displays the correct elements', () => {
+      applicationDetails.applicationDetailsPage();
+      applicationDetails.captionHeading();
+      applicationDetails.mainHeading();
+    });
+  });
 
   // describe('Clicking on Back Button', () => {
   //   it('redirects user to ** page', () => {

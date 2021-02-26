@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import login from './commands/login';
-import clearDatabase from './commands/clearDatabase';
+import reinsertMocks from './commands/reinsertMocks';
 
 Cypress.Commands.add('login', login);
-Cypress.Commands.add('clearDatabase', clearDatabase);
+Cypress.Commands.add('reinsertMocks', reinsertMocks);
