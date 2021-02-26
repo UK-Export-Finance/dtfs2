@@ -99,7 +99,7 @@ const getBondIssuerPartyDetails = async (req, res) => {
 };
 
 
-const getBondBeneficiaryrPartyDetails = async (req, res) => {
+const getBondBeneficiaryPartyDetails = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
@@ -115,6 +115,12 @@ const getBondBeneficiaryrPartyDetails = async (req, res) => {
 const postPartyDetails = (partyType) => (
   async (req, res) => {
     const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+
+    const deal = await api.getDeal(dealId);
+
+    if (!deal) {
+      return res.redirect('/not-found');
+    }
 
     const update = {
       [partyType]: req.body,
@@ -135,6 +141,11 @@ const postTfmFacility = async (req, res) => {
   const { facilityId, ...facilityUpdateFields } = req.body;
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
 
+  const deal = await api.getDeal(dealId);
+
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
 
   await Promise.all(
     facilityId.map((id, index) => {
@@ -162,7 +173,7 @@ export default {
   getAgentPartyDetails,
   getIndemnifierPartyDetails,
   getBondIssuerPartyDetails,
-  getBondBeneficiaryrPartyDetails,
+  getBondBeneficiaryPartyDetails,
   postExporterPartyDetails,
   postBuyerPartyDetails,
   postAgentPartyDetails,
