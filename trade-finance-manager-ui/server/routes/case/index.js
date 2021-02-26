@@ -24,7 +24,7 @@ router.post('/:_id/parties/indemnifier', caseController.postIndemnifierPartyDeta
 router.get('/:_id/parties/bond-issuer', caseController.getBondIssuerPartyDetails);
 router.post('/:_id/parties/bond-issuer', caseController.postTfmFacility);
 
-router.get('/:_id/parties/bond-beneficiary', caseController.getBondBeneficiaryrPartyDetails);
+router.get('/:_id/parties/bond-beneficiary', caseController.getBondBeneficiaryPartyDetails);
 router.post('/:_id/parties/bond-beneficiary', caseController.postTfmFacility);
 
 

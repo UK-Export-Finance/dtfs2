@@ -33,7 +33,7 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith('/:_id/parties/bond-issuer', caseController.getBondIssuerPartyDetails);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary', caseController.getBondBeneficiaryrPartyDetails);
+    expect(get).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary', caseController.getBondBeneficiaryPartyDetails);
 
     // POST routes
     expect(post).toHaveBeenCalledTimes(6);
