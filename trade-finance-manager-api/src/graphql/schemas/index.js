@@ -112,7 +112,7 @@ type FacilityProduct {
 
 type FacilityDates {
   inclusionNoticeReceived: String!
-  bankIssueNoticeReceived: String!
+  bankIssueNoticeReceived: String
   coverStartDate: String
   coverEndDate: String
   tenor: String
