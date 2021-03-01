@@ -112,8 +112,8 @@ const updateFacility = async (facilityId, facilityUpdate, user) => {
 const queryDeals = async ({ query, start = 0, pagesize = 0 }) => {
   try {
     const response = await axios({
-      method: 'post',
-      url: `${centralApiUrl}/v1/tfm/deals/query`,
+      method: 'get',
+      url: `${centralApiUrl}/v1/tfm/deals`,
       headers: {
         'Content-Type': 'application/json',
       },

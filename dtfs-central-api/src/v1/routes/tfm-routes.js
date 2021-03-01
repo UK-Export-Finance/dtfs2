@@ -3,6 +3,7 @@ const express = require('express');
 const tfmRouter = express.Router();
 
 const tfmGetDealController = require('../controllers/tfm/deal/tfm-get-deal.controller');
+const tfmGetDealsController = require('../controllers/tfm/deal/tfm-get-deals.controller');
 const tfmUpdateDealController = require('../controllers/tfm/deal/tfm-update-deal.controller');
 const tfmSubmitDealController = require('../controllers/tfm/deal/tfm-submit-deal.controller');
 const tfmGetFacilityController = require('../controllers/tfm/facility/tfm-get-facility.controller');
@@ -28,6 +29,10 @@ tfmRouter.route('/deals/:id/submit')
     tfmSubmitDealController.submitDealPut,
   );
 
+tfmRouter.route('/deals')
+  .get(
+    tfmGetDealsController.findDealsGet,
+  );
 
 tfmRouter.route('/facilities/:id')
   .get(
