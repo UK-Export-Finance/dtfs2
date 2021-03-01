@@ -7,7 +7,8 @@ const render = componentRenderer(component);
 describe(component, () => {
   let wrapper;
   const params = {
-    id: '123',
+    caseId: '100123',
+    facilityId: '123',
     ukefFacilityID: '0040004833', 
   };
 
@@ -16,10 +17,10 @@ describe(component, () => {
   });
 
   it('should render ukefFacilityID link, linking to facility id', () => {
-    const selector = `[data-cy="facility-${params.id}-ukef-facility-id-link"]`;
+    const selector = `[data-cy="facility-${params.facilityId}-ukef-facility-id-link"]`;
 
     wrapper.expectLink(selector).toLinkTo(
-      `/case/facility/${params.id}`,
+      `/case/${params.caseId}/facility/${params.facilityId}`,
       params.ukefFacilityID);
   });
 });

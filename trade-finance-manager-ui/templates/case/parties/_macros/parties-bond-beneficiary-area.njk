@@ -1,20 +1,31 @@
 {% import './bond-beneficiary-facilities-table.njk' as bondBeneficiaryFacilitiesTable %}
+{% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
 
 {% macro render(params) %}
 {% set deal = params.deal %}
+{% set filteredFacilities = deal.facilities | bondBeneficiaryFacilities %}
 
-<div class="govuk-grid-row separator-line deal">
-  <h2 class="ukef-heading-l" data-cy="bond-beneficiary-heading">Bond beneficiary</h2>
-  <p class="ukef-hint" style="margin-top:-36px" data-cy="bond-beneficiary-sub-heading">(if different to buyer)</p>
+<div class="govuk-grid-row {% if not params.editable %}ukef-flex-container separator-line deal{% endif %}" data-cy="bond-beneficiary-area">
+  <div class="govuk-grid-column-one-half">
+    <h2 class="ukef-heading-l" data-cy="bond-beneficiary-heading">Bond beneficiary</h2>
+    <p class="ukef-hint" style="margin-top:-36px" data-cy="bond-beneficiary-sub-heading">(if different to buyer)</p>
+  </div>
+
+  {% if filteredFacilities.length > 0 and not params.editable %}
+    <div class="govuk-grid-column-one-half ukef-flex-container--align-center-right">
+      {{ uniqueReferenceNumberEditLink.render({dealId: deal._id, type: 'bond-beneficiary'}) }}
+    </div>
+  {% endif %}
+
+</div>
 
   <div class="govuk-grid-row deal">
-
-    {% set filteredFacilities = deal.facilities | bondBeneficiaryFacilities %}
 
     {% if filteredFacilities.length > 0 %}
 
       {% set componentData = {
-        facilities: filteredFacilities
+        facilities: filteredFacilities,
+        caseId: deal._id
       } %}
               
       {{ bondBeneficiaryFacilitiesTable.render(componentData) }}

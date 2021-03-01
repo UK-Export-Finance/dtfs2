@@ -1,7 +1,7 @@
 const bondIssuerFacilities = (facilities) =>
-  facilities.filter((facility) =>
-    facility.ukefFacilityType
-    && facility.ukefFacilityType === 'bond'
-    && facility.bondIssuer);
+  facilities.filter(({ facilitySnapshot }) =>
+    facilitySnapshot.ukefFacilityType
+    && facilitySnapshot.ukefFacilityType === 'bond'
+    && facilitySnapshot.bondIssuer);
 
 export default bondIssuerFacilities;

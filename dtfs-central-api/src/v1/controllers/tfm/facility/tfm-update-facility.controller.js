@@ -1,8 +1,6 @@
 const $ = require('mongo-dot-notation');
-const { findOneFacility } = require('./get-facility.controller');
-const db = require('../../../drivers/db-client');
-const now = require('../../../now');
-const getUpdateFacilityErrors = require('../../validation/update-facility');
+const { findOneFacility } = require('./tfm-get-facility.controller');
+const db = require('../../../../drivers/db-client');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -10,12 +8,13 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateFacility = async (facilityId, facilityBody) => {
-  const collection = await db.getCollection('facilities');
+const updateFacility = async (facilityId, tfmUpdate) => {
+  const collection = await db.getCollection('tfm-facilities');
 
   const update = {
-    ...facilityBody,
-    lastEdited: now(),
+    tfm: {
+      ...tfmUpdate,
+    },
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
@@ -33,27 +32,14 @@ exports.updateFacility = updateFacility;
 exports.updateFacilityPut = async (req, res) => {
   const facilityId = req.params.id;
 
-  const { user, facility: facilityUpdate } = req.body;
-
-  if (!user) {
-    return res.status(400).send('User missing');
-  }
-
-  const validationErrors = getUpdateFacilityErrors(facilityUpdate);
-
-  if (validationErrors.count !== 0) {
-    return res.status(400).send({
-      validationErrors,
-    });
-  }
+  const { facilityUpdate } = req.body;
 
   const facility = await findOneFacility(facilityId);
 
   if (facility) {
     const updatedFacility = await updateFacility(
       facilityId,
-      req.body,
-      req.routePath,
+      facilityUpdate,
     );
 
     return res.status(200).json(updatedFacility);

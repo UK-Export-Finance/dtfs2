@@ -25,8 +25,8 @@ const validateMandatoryCriteria = async (req, res) => {
 
     if (isEmpty) {
       const mandatoryError = {
-        errRef: 'bankInternalRefName',
-        errMsg: 'You must enter a bank reference or name',
+        errRef: 'confirm',
+        errMsg: 'Select if the mandatory criteria will be true or false on the date that cover starts',
       };
       return res.render('partials/mandatory-criteria.njk', {
         errors: validationErrorHandler(mandatoryError, 'mandatory-criteria'),

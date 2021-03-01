@@ -1,36 +1,21 @@
+const fs = require('fs');
 const componentRenderer = require('../../../component-tests/componentRenderer');
 
 const component = '../templates/case/_macros/case-summary.njk';
 const render = componentRenderer(component);
 
+const rawdata = fs.readFileSync('templates/case/mock_data/deal.json');
+const params = JSON.parse(rawdata);
+
 describe(component, () => {
   let wrapper;
-  const params = {
-    _id: '12345678',
-    ukefDealId: '100200300',
-    details: {
-      submissionType: 'Automatic Inclusion Notice',
-      submissionDate: '1597067095109',
-      owningBank: {
-        name: 'Lloyds',
-      },
-    },
-    submissionDetails: {
-      supplierName: 'The Supplier name',
-      buyerName: 'The Buyer name',
-      destinationCountry: 'USA',
-      supplyContractDescription: 'Lore ipsum...',
-      supplyContractCurrency: 'USD',
-      supplyContractValue: '5145000.45',
-    },
-  };
 
   beforeEach(() => {
     wrapper = render(params);
   });
 
   it('should render UKEF deal id', () => {
-    wrapper.expectText('[data-cy="ukef-deal-id"]').toRead(params.ukefDealId);
+    wrapper.expectText('[data-cy="ukef-deal-id"]').toRead(params.details.ukefDealId);
   });
 
   it('should render supplier name', () => {
@@ -50,7 +35,7 @@ describe(component, () => {
   });
 
   it('should render contract value', () => {
-    wrapper.expectText('[data-cy="contract-value"]').toRead(`${params.submissionDetails.supplyContractCurrency} 5,145,000.45`);
+    wrapper.expectText('[data-cy="contract-value"]').toRead(`${params.submissionDetails.supplyContractCurrency} 8,000,000.00`);
   });
 
 

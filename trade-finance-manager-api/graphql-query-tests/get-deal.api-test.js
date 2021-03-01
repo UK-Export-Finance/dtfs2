@@ -46,20 +46,31 @@ const GET_DEAL = gql`
         }
         facilities {
           _id,
-          ukefFacilityID,
-          facilityProduct {
-            code
-          },
-          facilityType,
-          facilityStage,
-          facilityValueExportCurrency,
-          facilityValue,
-          coverEndDate,
-          ukefExposure,
-          coveredPercentage,
-          bondIssuer,
-          bondBeneficiary,
-          bankFacilityReference
+          tfm,
+          facilitySnapshot {
+            _id,
+            ukefFacilityID,
+            facilityProduct {
+              code
+            },
+            facilityType,
+            facilityStage,
+            facilityValueExportCurrency,
+            facilityValue,
+            coverEndDate,
+            ukefExposure,
+            coveredPercentage,
+            bondIssuer,
+            bondBeneficiary,
+            bankFacilityReference
+            dates {
+              inclusionNoticeReceived,
+              bankIssueNoticeReceived,
+              coverStartDate,
+              coverEndDate,
+              tenor,
+            }
+          }
         }
         eligibility {
           agentAddressCountry,
@@ -144,7 +155,7 @@ describe('graphql query - get deal', () => {
   });
 
   it('should return a mapped deal via dealReducer', async () => {
-    const mappedDeal = mapDeal(MOCK_DEAL);
+    const mappedDeal = await mapDeal(MOCK_DEAL);
 
     const expectedDealWithoutFacilities = dealReducer({ dealSnapshot: mappedDeal });
     delete expectedDealWithoutFacilities.facilities;

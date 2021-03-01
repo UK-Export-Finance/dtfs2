@@ -18,14 +18,22 @@ const addPartyUrns = async (deal) => {
     return false;
   }
 
-  const tfmSubmissionDetails = deal.tfm && deal.tfm.submissionDetails;
+  const { tfm = {} } = deal;
+  const { parties = {} } = tfm;
+
+  const {
+    exporter,
+  } = parties;
 
   const dealUpdate = {
     tfm: {
       ...deal.tfm,
-      submissionDetails: {
-        ...tfmSubmissionDetails,
-        supplierPartyUrn: await getPartyUrn({ companyRegNo: deal.dealSnapshot.submissionDetails['supplier-companies-house-registration-number'] }),
+      parties: {
+        ...parties,
+        exporter: {
+          ...exporter,
+          partyUrn: await getPartyUrn({ companyRegNo: deal.dealSnapshot.submissionDetails['supplier-companies-house-registration-number'] }),
+        },
       },
     },
   };
