@@ -54,7 +54,7 @@ openRouter.route('/party-db/:companyRegNo')
     partyDb.lookup,
   );
 
-openRouter.route('/currency-exchange-rate')
+openRouter.route('/currency-exchange-rate/:source/:target')
   .get(
     currencyExchangeRate.getExchangeRate,
   );
