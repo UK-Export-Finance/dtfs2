@@ -9,7 +9,7 @@ const updateFacility = require('./mutation-update-facility');
 const resolvers = {
   Query: {
     deal: (root, args) => queryDeal(args),
-    deals: (root, args) => queryDeals(args.params),
+    deals: (root, args) => queryDeals(args),
     facility: (root, args) => queryFacility(args),
   },
   Mutation: {

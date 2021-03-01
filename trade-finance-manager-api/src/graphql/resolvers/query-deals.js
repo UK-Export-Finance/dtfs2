@@ -1,5 +1,6 @@
 const CONSTANTS = require('../../constants');
 const dealsReducer = require('../reducers/deals');
+const { findOneDeal } = require('../../v1/controllers/deal.controller');
 const { queryDeals } = require('../../v1/api');
 const { findOneFacility } = require('../../v1/controllers/facility.controller');
 
@@ -39,6 +40,9 @@ const getDeals = async (args) => {
       });
     }
   };
+  console.log(args);
+  const deal = await findOneDeal(1000161);
+  console.log(`deal:${deal}`);
   const q = await queryDeals(args);
   await Promise.all(q.deals.map(fn));
 

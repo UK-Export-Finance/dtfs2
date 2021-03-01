@@ -165,6 +165,7 @@ type TFMParties {
 
 type TFMDealData {
   parties: TFMParties
+  product: String
 }
 
 type TFMFacilityData {
