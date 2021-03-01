@@ -52,11 +52,11 @@ context('User can view party details', () => {
         });
 
         cy.submitDeal(dealId);
-        cy.visit(relative(`/case/deal/${dealId}`));
+
+        cy.visit(relative(`/case/${dealId}/deal`));
 
         pages.caseDealPage.partiesLink().click();
-        cy.url().should('eq', relative(`/case/parties/${dealId}`));
-
+        cy.url().should('eq', relative(`/case/${dealId}/parties`));
       });
   });
 
@@ -87,20 +87,20 @@ context('User can view party details', () => {
 
       facilityRow.facilityId().click();
 
-      cy.url().should('eq', relative(`/case/facility/${facilityId}`));
+      cy.url().should('eq', relative(`/case/${dealId}/facility/${facilityId}`));
     });
   });
 
   describe('bond beneficiary facilities table', () => {
     it('clicking `Facility ID` link should take user to facility details page', () => {
-      cy.visit(`/case/parties/${dealId}`);
+      cy.visit(`/case/${dealId}/parties`);
 
       const facilityId = dealFacilities[0]._id; // eslint-disable-line no-underscore-dangle
       const facilityRow = pages.partiesPage.bondBeneficiaryFacilitiesTable.row(facilityId);
 
       facilityRow.facilityId().click();
 
-      cy.url().should('eq', relative(`/case/facility/${facilityId}`));
+      cy.url().should('eq', relative(`/case/${dealId}/facility/${facilityId}`));
     });
   });
 });

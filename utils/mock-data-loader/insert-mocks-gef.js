@@ -9,7 +9,7 @@ const insertMocks = async () => {
     password: 'AbC!2345',
     firstname: 'Mock',
     surname: 'DataLoader',
-    roles: ['maker', 'editor', 'data-admin']
+    roles: ['maker', 'editor', 'checker', 'data-admin']
   });
 
   console.log('inserting mandatory-criteria-versioned');

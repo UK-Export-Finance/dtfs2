@@ -7,26 +7,44 @@ const render = componentRenderer(component);
 describe(component, () => {
   let wrapper;
   const params = {
+    caseId: '100123',
     facilities: [
       {
         _id: '123',
-        ukefFacilityID: '0040004833',
-        ukefFacilityType: 'bond',
-        bondIssuer: 'test bond issuer',
-        bankFacilityReference: '1234-test',
+        facilitySnapshot: {
+          _id: '123',
+          ukefFacilityID: '0040004833',
+          ukefFacilityType: 'bond',
+          bondIssuer: 'test bond issuer',
+        },
+        tfm: {
+          bondIssuerPartyUrn: '1234-test',
+        },
       },
       {
         _id: '456',
-        ukefFacilityType: 'bond',
-        ukefFacilityID: '0040004833',
-        bondIssuer: 'test bond issuer',
-        bankFacilityReference: '1234-test',
+        facilitySnapshot: {
+          _id: '456',
+          ukefFacilityType: 'bond',
+          ukefFacilityID: '0040004833',
+          bondIssuer: 'test bond issuer',
+          bankFacilityReference: '1234-test',
+        },
+        tfm: {
+          bondIssuerPartyUrn: '1234-test',
+        },
       },
       {
         _id: '789',
-        ukefFacilityType: 'bond',
-        ukefFacilityID: '0040004833',
-        bankFacilityReference: '1234-test',
+        facilitySnapshot: {
+          _id: '789',
+          ukefFacilityType: 'bond',
+          ukefFacilityID: '0040004833',
+          bankFacilityReference: '1234-test',
+        },
+        tfm: {
+          bondIssuerPartyUrn: '1234-test',
+        },
       },
     ],
   };
@@ -49,42 +67,43 @@ describe(component, () => {
     });
   });
 
-  const expectedFacilities = params.facilities.filter((f) =>
-    f.ukefFacilityType === 'bond'
-    && f.bondIssuer);
 
   it('should render ukefFacilityID link, linking to facility id', () => {
-    expectedFacilities.forEach((facility) => {
+    const expectedFacilities = params.facilities.filter(({ facilitySnapshot: f }) =>
+      f.ukefFacilityType === 'bond'
+    && f.bondIssuer);
+
+    expectedFacilities.forEach(({ facilitySnapshot: facility }) => {
       const selector = `[data-cy="facility-${facility._id}-ukef-facility-id-link"]`;
 
       wrapper.expectLink(selector).toLinkTo(
-        `/case/facility/${facility._id}`,
-        facility.ukefFacilityID);
-
+        `/case/${params.caseId}/facility/${facility._id}`,
+        facility.ukefFacilityID,
+      );
     });
   });
 
-  describe('unique reference number (bankFacilityReference) table cell value', () => {
+  describe('unique reference number (bondIssuerPartyUrn) table cell value', () => {
     it('should render', () => {
-      const expectedFacilities = params.facilities.filter((f) =>
+      const expectedFacilities = params.facilities.filter(({ facilitySnapshot: f, tfm }) =>
         f.bondIssuer
-        && f.bankFacilityReference);
+        && tfm.bondIssuerPartyUrn);
 
       expectedFacilities.forEach((facility) => {
         const selector = `[data-cy="facility-${facility._id}-unique-reference-number"]`;
-        wrapper.expectText(selector).toRead(facility.bankFacilityReference);
+        wrapper.expectText(selector).toRead(facility.tfm.bondIssuerPartyUrn);
         wrapper.expectElement(`[data-cy="facility-${facility._id}-unique-reference-number-not-matched"]`).notToExist();
       });
     });
 
-    it('should render `not matched` tag when there is no bankFacilityReference value', () => {
-      const expectedFacilities = params.facilities.filter((f) =>
+    it('should render `not matched` tag when there is no bondIssuerPartyUrn value', () => {
+      const expectedFacilities = params.facilities.filter(({ facilitySnapshot: f, tfm }) =>
         f.bondIssuer
-        && !f.bankFacilityReference);
+        && !tfm.bondIssuerPartyUrn);
 
       expectedFacilities.forEach((facility) => {
         const cellSelector = `[data-cy="facility-${facility._id}-unique-reference-number-not-matched"]`;
-        wrapper.expectText(cellSelector).toRead(facility.bankFacilityReference);
+        wrapper.expectText(cellSelector).toRead(facility.tfm.bondIssuerPartyUrn);
       });
     });
   });

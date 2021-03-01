@@ -52,7 +52,7 @@ context('User can view party details', () => {
         });
 
         cy.submitDeal(dealId);
-        cy.visit(relative(`/case/parties/${dealId}`));
+        cy.visit(relative(`/case/${dealId}/parties`));
       });
   });
 
@@ -67,17 +67,42 @@ context('User can view party details', () => {
     it('should render edit page', () => {
       pages.partiesPage.agentEditLink().click();
 
-      cy.url().should('eq', relative(`/case/parties/${dealId}/agent`));
+      cy.url().should('eq', relative(`/case/${dealId}/parties/agent`));
       pages.partiesPage.agentEditLink().should('not.exist');
 
-      pages.agentPage.urnInput().should('exist');
+      pages.agentPage.agentUniqueRefInput().should('exist');
       pages.agentPage.heading().should('have.text', 'Edit agent details');
 
       pages.agentPage.saveButton().should('exist');
       pages.agentPage.closeLink().should('exist');
 
       pages.agentPage.closeLink().click();
-      cy.url().should('eq', relative(`/case/parties/${dealId}`));
+      cy.url().should('eq', relative(`/case/${dealId}/parties`));
+    });
+
+    it('should save entered details', () => {
+      pages.partiesPage.agentEditLink().click();
+      pages.agentPage.agentUniqueRefInput().type('agent partyurn');
+      pages.agentPage.agentCommissionRateInput().type('2.5');
+
+      pages.agentPage.saveButton().click();
+
+      cy.url().should('eq', relative(`/case/${dealId}/parties`));
+
+      pages.agentPage.agentUniqueRef().invoke('text').then((text) => {
+        expect(text.trim()).equal('agent partyurn');
+      });
+      pages.agentPage.agentCommissionRate().invoke('text').then((text) => {
+        expect(text.trim()).equal('2.5');
+      });
+
+      pages.partiesPage.agentEditLink().click();
+      pages.agentPage.agentUniqueRefInput().invoke('val').then((value) => {
+        expect(value.trim()).equal('agent partyurn');
+      });
+      pages.agentPage.agentCommissionRateInput().invoke('val').then((value) => {
+        expect(value.trim()).equal('2.5');
+      });
     });
   });
 });

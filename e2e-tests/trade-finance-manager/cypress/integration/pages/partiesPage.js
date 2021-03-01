@@ -7,6 +7,8 @@ const partiesPage = {
   agentEditLink: () => cy.get('[data-cy="parties-agent"] [data-cy="edit-party-link"]'),
   indemnifierArea: () => cy.get('[data-cy="parties-indemnifier"]'),
   indemnifierEditLink: () => cy.get('[data-cy="parties-indemnifier"] [data-cy="edit-party-link"]'),
+  bondIssuerEditLink: () => cy.get('[data-cy="bond-issuer-area"] [data-cy="edit-party-link"]'),
+  bondBeneficiaryEditLink: () => cy.get('[data-cy="bond-beneficiary-area"] [data-cy="edit-party-link"]'),
   bondIssuerFacilitiesTable: {
     row: (facilityId) => {
       const row = cy.get(`[data-cy="bond-issuer-facilities-table"] [data-cy="facility-${facilityId}"]`);

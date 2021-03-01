@@ -1,14 +1,12 @@
 import api from '../../api';
 
-import FACILITY_TYPE from '../../constants/facilities';
-
 // NOTE
 // the relationship between deal & case is currently unknown,
 // and therefore how this will be managed/stored/referenced.
 // This approach is purely for initial development.
 
 const getCaseDeal = async (req, res) => {
-  const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -24,22 +22,33 @@ const getCaseDeal = async (req, res) => {
 };
 
 const getCaseFacility = async (req, res) => {
-  const facilityId = req.params._id;// eslint-disable-line no-underscore-dangle
+  const { facilityId } = req.params;
   const facility = await api.getFacility(facilityId);
 
   if (!facility) {
     return res.redirect('/not-found');
   }
 
+  const { associatedDealId } = facility.facilitySnapshot;
+  const deal = await api.getDeal(associatedDealId);
+
   return res.render('case/facility/facility.njk', {
-    facility,
+    deal: deal.dealSnapshot,
+    dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+    facility: facility.facilitySnapshot,
     active_sheet: 'facility',
     facilityId,
+    tfm: facility.tfm,
+
+    // TODO: remove once we have user login/session.
+    user: {
+      timezone: 'Europe/London',
+    },
   });
 };
 
 const getCaseParties = async (req, res) => {
-  const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -56,7 +65,7 @@ const getCaseParties = async (req, res) => {
 
 const getPartyDetails = (partyType) => (
   async (req, res) => {
-    const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+    const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
     const deal = await api.getDeal(dealId);
 
     if (!deal) {
@@ -64,27 +73,94 @@ const getPartyDetails = (partyType) => (
     }
 
     return res.render(`case/parties/edit/${partyType}-edit.njk`, {
-      deal,
+      deal: deal.dealSnapshot,
+      tfm: deal.tfm,
       dealId,
     });
   }
 );
 
+const getExporterPartyDetails = getPartyDetails('exporter');
+const getBuyerPartyDetails = getPartyDetails('buyer');
+const getAgentPartyDetails = getPartyDetails('agent');
+const getIndemnifierPartyDetails = getPartyDetails('indemnifier');
+
 const getBondIssuerPartyDetails = async (req, res) => {
-  const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
     return res.redirect('/not-found');
   }
 
-  const bonds = deal.facilities.filter(({ facilityProduct }) => facilityProduct.code === FACILITY_TYPE.BSS);
-
-  return res.render('case/parties/edit/bond-issuers-edit.njk', {
-    deal,
-    dealId,
-    bonds,
+  return res.render('case/parties/edit/bonds-issuer-edit.njk', {
+    deal: deal.dealSnapshot,
   });
+};
+
+
+const getBondBeneficiaryPartyDetails = async (req, res) => {
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const deal = await api.getDeal(dealId);
+
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  return res.render('case/parties/edit/bonds-beneficiary-edit.njk', {
+    deal: deal.dealSnapshot,
+  });
+};
+
+const postPartyDetails = (partyType) => (
+  async (req, res) => {
+    const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+
+    const deal = await api.getDeal(dealId);
+
+    if (!deal) {
+      return res.redirect('/not-found');
+    }
+
+    const update = {
+      [partyType]: req.body,
+    };
+
+    await api.updateParty(dealId, update);
+
+    return res.redirect(`/case/${dealId}/parties`);
+  }
+);
+
+const postExporterPartyDetails = postPartyDetails('exporter');
+const postBuyerPartyDetails = postPartyDetails('buyer');
+const postAgentPartyDetails = postPartyDetails('agent');
+const postIndemnifierPartyDetails = postPartyDetails('indemnifier');
+
+const postTfmFacility = async (req, res) => {
+  const { facilityId, ...facilityUpdateFields } = req.body;
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+
+  const deal = await api.getDeal(dealId);
+
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  await Promise.all(
+    facilityId.map((id, index) => {
+      const facilityUpdate = {};
+      Object.entries(facilityUpdateFields).forEach(([fieldName, values]) => {
+        facilityUpdate[fieldName] = values[index];
+      });
+      return api.updateFacility(id, facilityUpdate);
+    }),
+  );
+
+
+  // const { data } = await api.updateParty(dealId, update);
+
+  return res.redirect(`/case/${dealId}/parties`);
 };
 
 
@@ -92,6 +168,15 @@ export default {
   getCaseDeal,
   getCaseFacility,
   getCaseParties,
-  getPartyDetails,
+  getExporterPartyDetails,
+  getBuyerPartyDetails,
+  getAgentPartyDetails,
+  getIndemnifierPartyDetails,
   getBondIssuerPartyDetails,
+  getBondBeneficiaryPartyDetails,
+  postExporterPartyDetails,
+  postBuyerPartyDetails,
+  postAgentPartyDetails,
+  postIndemnifierPartyDetails,
+  postTfmFacility,
 };

@@ -20,7 +20,7 @@ const mapCoverEndDate = (facility) => {
       year: formatYear(Number(coverEndDateYear)),
     });
 
-    return moment(coverEndDate).format('D MMM YYYY');
+    return moment(coverEndDate).format('D MMMM YYYY');
   }
 
   return undefined;

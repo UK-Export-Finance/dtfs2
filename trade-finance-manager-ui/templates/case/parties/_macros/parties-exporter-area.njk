@@ -7,8 +7,9 @@
 
 {% macro render(params) %}
 {% set deal = params.deal %}
+{% set exporter = params.tfm.parties.exporter %}
 
-{% if not deal.tfm.submissionDetails.supplierPartyUrn %}
+{% if not exporter.partyUrn %}
   {% set uniqueRefStyle = "govuk-tag govuk-tag--red" %}
   {% set uniqueRefKeyStyle = "govuk-!-font-weight-bold govuk-!-margin-top-4" %}
 {% endif %}
@@ -42,11 +43,12 @@
             label: {
               text: "Unique reference number (URN)"
             },
-            id: "exporter-urn",
-            name: "exporter-urn",
+            id: "partyUrn",
+            name: "partyUrn",
             attributes: {
               "data-cy": "urn-input"
-            }
+            },
+            value: exporter.partyUrn
           }) }}
           </div>
         </div>
@@ -54,7 +56,7 @@
         {{ keyValueGridRow.render({
           key: 'Unique reference number',
           keyClass: uniqueRefKeyStyle,
-          value: deal.tfm.submissionDetails.supplierPartyUrn or "NOT MATCHED",
+          value: exporter.partyUrn or "NOT MATCHED",
           valueStyle: uniqueRefStyle,
           dataCy: 'exporter-unique-ref'
         }) }}

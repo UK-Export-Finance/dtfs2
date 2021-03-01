@@ -52,7 +52,7 @@ context('User can view party details', () => {
         });
 
         cy.submitDeal(dealId);
-        cy.visit(relative(`/case/parties/${dealId}`));
+        cy.visit(relative(`/case/${dealId}/parties`));
       });
   });
 
@@ -67,7 +67,7 @@ context('User can view party details', () => {
     it('should render edit page', () => {
       pages.partiesPage.buyerEditLink().click();
 
-      cy.url().should('eq', relative(`/case/parties/${dealId}/buyer`));
+      cy.url().should('eq', relative(`/case/${dealId}/parties/buyer`));
       pages.partiesPage.buyerEditLink().should('not.exist');
 
       pages.buyerPage.urnInput().should('exist');
@@ -77,7 +77,27 @@ context('User can view party details', () => {
       pages.buyerPage.closeLink().should('exist');
 
       pages.buyerPage.closeLink().click();
-      cy.url().should('eq', relative(`/case/parties/${dealId}`));
+      cy.url().should('eq', relative(`/case/${dealId}/parties`));
+    });
+
+    it('should save entered details', () => {
+      const partyUrn = 'test partyurn';
+
+      pages.partiesPage.buyerEditLink().click();
+      pages.buyerPage.urnInput().type(partyUrn);
+
+      pages.buyerPage.saveButton().click();
+
+      cy.url().should('eq', relative(`/case/${dealId}/parties`));
+
+      pages.buyerPage.uniqueRef().invoke('text').then((text) => {
+        expect(text.trim()).equal(partyUrn);
+      });
+
+      pages.partiesPage.buyerEditLink().click();
+      pages.buyerPage.urnInput().invoke('val').then((value) => {
+        expect(value.trim()).equal(partyUrn);
+      });
     });
   });
 });

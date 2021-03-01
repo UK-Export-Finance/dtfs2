@@ -3,12 +3,13 @@ const { formattedNumber } = require('../../../../utils/number');
 const { capitalizeFirstLetter } = require('../../../../utils/string');
 const mapFacilityProduct = require('./mapFacilityProduct');
 const mapFacilityStage = require('./mapFacilityStage');
-const mapCoverEndDate = require('./mapCoverEndDate');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
+const mapDates = require('./mapDates');
 
-const mapFacility = (f) => {
-  const facility = f;
+const mapFacility = (f, dealDetails) => {
+  // Deep clone
+  const facility = JSON.parse(JSON.stringify(f, null, 4));
 
   const {
     facilityType,
@@ -16,6 +17,7 @@ const mapFacility = (f) => {
     facilityStage,
     guaranteeFeePayableByBank,
   } = facility;
+
 
   const ukefFacilityType = facilityType;
 
@@ -32,8 +34,6 @@ const mapFacility = (f) => {
     facility.facilityType = null;
   }
 
-  facility.coverEndDate = mapCoverEndDate(facility);
-
   facility.ukefExposure = `${facility.currency.id} ${facility.ukefExposure}`;
   facility.coveredPercentage = `${facility.coveredPercentage}%`;
 
@@ -48,14 +48,16 @@ const mapFacility = (f) => {
 
   facility.facilityValueExportCurrency = `${facility.currency.id} ${formattedFacilityValue}`;
 
+  facility.facilityStage = mapFacilityStage(facilityStage);
+
   return {
     _id: facility._id, // eslint-disable-line no-underscore-dangle
+    associatedDealId: facility.associatedDealId,
     ukefFacilityID: facility.ukefFacilityID,
     facilityType: facility.facilityType,
     ukefFacilityType,
     facilityProduct: facility.facilityProduct,
-    facilityStage: mapFacilityStage(facilityStage),
-    coverEndDate: facility.coverEndDate,
+    facilityStage: facility.facilityStage,
     coveredPercentage: facility.coveredPercentage,
     facilityValueExportCurrency: facility.facilityValueExportCurrency,
     facilityValue: facility.facilityValue,
@@ -66,6 +68,8 @@ const mapFacility = (f) => {
     // bond specifics
     bondIssuer: facility.bondIssuer,
     bondBeneficiary: facility.bondBeneficiary,
+
+    dates: mapDates(facility, dealDetails),
   };
 };
 

@@ -7,59 +7,80 @@ const render = componentRenderer(component);
 describe(component, () => {
   let wrapper;
   const params = {
+    caseId: '100123',
     facilities: [
       {
         _id: '123',
-        ukefFacilityID: '0040004833',
-        facilityProduct: {
-          code: 'BSS',
+        facilitySnapshot: {
+          _id: '123',
+          ukefFacilityID: '0040004833',
+          facilityProduct: {
+            code: 'BSS',
+          },
+          ukefExposure: 'GBP 1,234.00',
+          coveredPercentage: '20%',
+          facilityType: 'Performance Bond',
+          facilityValue: 'GBP 1,234',
+          facilityValueExportCurrency: 'AUD 34000',
+          facilityStage: 'Commitment',
+          dates: {
+            coverEndDate: '02 Nov 2021',
+          },
         },
-        coverEndDate: '02 Nov 2021',
-        ukefExposure: 'GBP 1,234.00',
-        coveredPercentage: '20%',
-        facilityType: 'Performance Bond',
-        facilityValue: 'GBP 1,234',
-        facilityValueExportCurrency: 'AUD 34000',
-        facilityStage: 'Commitment',
       },
       {
         _id: '456',
-        ukefFacilityID: '0040004833',
-        facilityProduct: {
-          code: 'EWCS',
+        facilitySnapshot: {
+          _id: '456',
+          ukefFacilityID: '0040004833',
+          facilityProduct: {
+            code: 'EWCS',
+          },
+          ukefExposure: 'GBP 2,469.00',
+          coveredPercentage: '20%',
+          facilityValue: 'GBP 1,234',
+          facilityValueExportCurrency: 'AUD 34000',
+          facilityStage: 'Issued',
+          dates: {
+            coverEndDate: '04 Dec 2021',
+          },
         },
-        coverEndDate: '04 Dec 2021',
-        ukefExposure: 'GBP 2,469.00',
-        coveredPercentage: '20%',
-        facilityValue: 'GBP 1,234',
-        facilityValueExportCurrency: 'AUD 34000',
-        facilityStage: 'Issued',
       },
       {
         _id: '789',
-        ukefFacilityID: '0040004833',
-        facilityProduct: {
-          code: 'EWCS',
+        facilitySnapshot: {
+          _id: '789',
+          ukefFacilityID: '0040004833',
+          facilityProduct: {
+            code: 'EWCS',
+          },
+          ukefExposure: 'GBP 2,469.00',
+          coveredPercentage: '20%',
+          facilityValue: '',
+          facilityValueExportCurrency: 'AUD 34000',
+          facilityStage: 'Commitment',
+          dates: {
+            coverEndDate: '04 Dec 2021',
+          },
         },
-        coverEndDate: '04 Dec 2021',
-        ukefExposure: 'GBP 2,469.00',
-        coveredPercentage: '20%',
-        facilityValue: '',
-        facilityValueExportCurrency: 'AUD 34000',
-        facilityStage: 'Commitment',
       },
       {
         _id: '112',
-        ukefFacilityID: '0040004833',
-        facilityProduct: {
-          code: '',
+        facilitySnapshot: {
+          _id: '112',
+          ukefFacilityID: '0040004833',
+          facilityProduct: {
+            code: '',
+          },
+          ukefExposure: 'GBP 2,469.00',
+          coveredPercentage: '20%',
+          facilityValue: 'GBP 1,234',
+          facilityValueExportCurrency: 'AUD 34000',
+          facilityStage: 'Issued',
+          dates: {
+            coverEndDate: '04 Dec 2021',
+          },
         },
-        coverEndDate: '04 Dec 2021',
-        ukefExposure: 'GBP 2,469.00',
-        coveredPercentage: '20%',
-        facilityValue: 'GBP 1,234',
-        facilityValueExportCurrency: 'AUD 34000',
-        facilityStage: 'Issued',
       },
     ],
     totals: {
@@ -110,14 +131,14 @@ describe(component, () => {
     });
   });
 
-  
+
   describe('for each facility', () => {
     it('should render ukefFacilityID link, linking to facility id', () => {
-      params.facilities.forEach((facility) => {
+      params.facilities.forEach(({ facilitySnapshot: facility }) => {
         const selector = `[data-cy="facility-${facility._id}-ukef-facility-id-link"]`;
-        
+
         wrapper.expectLink(selector).toLinkTo(
-          `/case/facility/${facility._id}`,
+          `/case/${params.caseId}/facility/${facility._id}`,
           facility.ukefFacilityID,
         );
       });
@@ -125,16 +146,16 @@ describe(component, () => {
 
     describe('facilityProduct table cell', () => {
       it('should render value', () => {
-        const facilities = params.facilities.filter((f) => f.facilityProduct.code !== '');
+        const facilities = params.facilities.filter(({ facilitySnapshot: f }) => f.facilityProduct.code !== '');
 
-        facilities.forEach((facility) => {
+        facilities.forEach(({ facilitySnapshot: facility }) => {
           const cellSelector = `[data-cy="facility-${facility._id}-product"]`;
           wrapper.expectText(cellSelector).toRead(facility.facilityProduct.code);
         });
       });
 
       it('should render a dash when facilityProduct is empty', () => {
-        const facility = params.facilities.find((f) => f.facilityProduct.code === '');
+        const facility = params.facilities.find(({ facilitySnapshot: f }) => f.facilityProduct.code === '');
 
         const cellSelector = `[data-cy="facility-${facility._id}-type"]`;
         wrapper.expectText(cellSelector).toRead('-');
@@ -143,14 +164,14 @@ describe(component, () => {
 
     describe('facilityType table cell', () => {
       it('should render facilityType when facility is bond', () => {
-        const bond = params.facilities.find((f) => f.facilityProduct.code === 'BSS');
+        const { facilitySnapshot: bond } = params.facilities.find(({ facilitySnapshot: f }) => f.facilityProduct.code === 'BSS');
 
         const cellSelector = `[data-cy="facility-${bond._id}-type"]`;
         wrapper.expectText(cellSelector).toRead(bond.facilityType);
       });
 
       it('should render a dash when facility is loan', () => {
-        const facility = params.facilities.find((f) => f.facilityProduct.code !== 'BSS');
+        const facility = params.facilities.find(({ facilitySnapshot: f }) => f.facilityProduct.code !== 'BSS');
 
         const cellSelector = `[data-cy="facility-${facility._id}-type"]`;
         wrapper.expectText(cellSelector).toRead('-');
@@ -158,21 +179,21 @@ describe(component, () => {
     });
 
     it('should render facilityStage table cell', () => {
-      params.facilities.forEach((facility) => {
+      params.facilities.forEach(({ facilitySnapshot: facility }) => {
         const cellSelector = `[data-cy="facility-${facility._id}-stage"]`;
         wrapper.expectText(cellSelector).toRead(facility.facilityStage);
       });
     });
 
     it('should render coverEndDate table cell', () => {
-      params.facilities.forEach((facility) => {
+      params.facilities.forEach(({ facilitySnapshot: facility }) => {
         const cellSelector = `[data-cy="facility-${facility._id}-cover-end-date"]`;
-        wrapper.expectText(cellSelector).toRead(`${facility.coverEndDate} (expected)`);
+        wrapper.expectText(cellSelector).toRead(`${facility.dates.coverEndDate} (expected)`);
       });
     });
 
     it('should render `value (export currency)` table cell', () => {
-      params.facilities.forEach((facility) => {
+      params.facilities.forEach(({ facilitySnapshot: facility }) => {
         const cellSelector = `[data-cy="facility-${facility._id}-value-export-currency"]`;
         wrapper.expectText(cellSelector).toRead(facility.facilityValueExportCurrency);
       });
@@ -180,16 +201,16 @@ describe(component, () => {
 
     describe('`facilityValue in GBP` table cell', () => {
       it('should render', () => {
-        const facilities = params.facilities.filter((f) => f.facilityValue !== '');
+        const facilities = params.facilities.filter(({ facilitySnapshot: f }) => f.facilityValue !== '');
 
-        facilities.forEach((facility) => {
+        facilities.forEach(({ facilitySnapshot: facility }) => {
           const cellSelector = `[data-cy="facility-${facility._id}-value-gbp"]`;
           wrapper.expectText(cellSelector).toRead(facility.facilityValue);
         });
       });
 
       it('should render a dash when facilityValue is empty', () => {
-        const facility = params.facilities.find((f) => f.facilityValue === '');
+        const facility = params.facilities.find(({ facilitySnapshot: f }) => f.facilityValue === '');
 
         const cellSelector = `[data-cy="facility-${facility._id}-value-gbp"]`;
         wrapper.expectText(cellSelector).toRead('-');
@@ -198,14 +219,14 @@ describe(component, () => {
 
 
     it('should render ukefExposure', () => {
-      params.facilities.forEach((facility) => {
+      params.facilities.forEach(({ facilitySnapshot: facility }) => {
         const cellSelector = `[data-cy="facility-${facility._id}-ukef-exposure"]`;
         wrapper.expectText(cellSelector).toRead(`${facility.ukefExposure}`);
       });
     });
 
     it('should render coveredPercentage', () => {
-      params.facilities.forEach((facility) => {
+      params.facilities.forEach(({ facilitySnapshot: facility }) => {
         const cellSelector = `[data-cy="facility-${facility._id}-covered-percentage"]`;
         wrapper.expectText(cellSelector).toRead(`(${facility.coveredPercentage})`);
       });
@@ -222,6 +243,5 @@ describe(component, () => {
       const cellSelector = '[data-cy="facilities-total-ukef-exposure"]';
       wrapper.expectText(cellSelector).toRead(params.totals.facilitiesUkefExposure);
     });
-
   });
 });

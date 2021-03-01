@@ -19,7 +19,6 @@ const createApplication = async (data, token) => {
 };
 
 const deleteApplication = async (data, token) => {
-  console.log("DELETE", data._id);
   const response = await axios({
     method: 'delete',
     headers: {
@@ -41,7 +40,7 @@ const listApplication = async (token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/application?page=null&pageSize=null`,
+    url: `${urlRoot}/v1/gef/application`, //?page=null&pageSize=null
   }).catch((err) => { console.log(`err: ${err}`); });
 
   return response.data.data;

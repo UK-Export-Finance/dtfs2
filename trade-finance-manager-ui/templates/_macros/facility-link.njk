@@ -1,13 +1,14 @@
 {% macro render(params) %}
-  {% set id = params.id %}
+  {% set caseId = params.caseId %}
+  {% set facilityId = params.facilityId %}
   {% set ukefFacilityID = params.ukefFacilityID %}
 
   <a
     class="govuk-link"
-    href="/case/facility/{{ id }}"
+    href="/case/{{ caseId }}/facility/{{ facilityId }}"
     aria-label="View Facility details"
-    data-cy="facility-{{ id }}-ukef-facility-id-link">
-    <span data-cy="facility-{{ id }}-ukef-facility-id-link-text">{{ ukefFacilityID }}</span>
+    data-cy="facility-{{ facilityId }}-ukef-facility-id-link">
+    <span data-cy="facility-{{ facilityId }}-ukef-facility-id-link-text">{{ ukefFacilityID }}</span>
   </a>
 
 {% endmacro %}

@@ -15,7 +15,7 @@ describe('add partyUrn to deal', () => {
       },
     };
     const noCompaniesHouse = await addPartyUrns(deal);
-    expect(noCompaniesHouse.tfm.submissionDetails.supplierPartyUrn).toEqual('');
+    expect(noCompaniesHouse.tfm.parties.exporter.partyUrn).toEqual('');
   });
 
   it('should return false when companies house no is not matched', async () => {
@@ -27,7 +27,7 @@ describe('add partyUrn to deal', () => {
       },
     };
     const noMatch = await addPartyUrns(deal);
-    expect(noMatch.tfm.submissionDetails.supplierPartyUrn).toEqual('');
+    expect(noMatch.tfm.parties.exporter.partyUrn).toEqual('');
   });
 
   it('should return the deal with partyUrn is successfully matched', async () => {
@@ -39,7 +39,7 @@ describe('add partyUrn to deal', () => {
       },
     };
     const match = await addPartyUrns(deal);
-    expect(match.tfm.submissionDetails.supplierPartyUrn).toEqual('testPartyUrn');
+    expect(match.tfm.parties.exporter.partyUrn).toEqual('testPartyUrn');
   });
 
   it('should retain existing tfm data', async () => {

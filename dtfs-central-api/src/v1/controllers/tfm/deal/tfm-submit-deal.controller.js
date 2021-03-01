@@ -1,6 +1,8 @@
 const $ = require('mongo-dot-notation');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('../../portal/deal/get-deal.controller');
+const tfmController = require('./tfm-get-deal.controller');
+
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
 
 const withoutId = (obj) => {
@@ -32,7 +34,7 @@ const createFacilitiesSnapshot = async (dealId) => {
     dealFacilities.map(async (facility) => collection.findOneAndUpdate(
     // eslint-disable-next-line no-underscore-dangle
       { _id: facility._id },
-      $.flatten(withoutId(facility)),
+      $.flatten({ facilitySnapshot: facility, tfm: {} }),
       { returnOriginal: false, upsert: true },
     )),
   );
@@ -46,7 +48,7 @@ const submitDeal = async (deal) => {
   await createFacilitiesSnapshot(deal._id);
 
   // eslint-disable-next-line no-underscore-dangle
-  const updatedDeal = await findOneDeal(deal._id, false, 'tfm');
+  const updatedDeal = await tfmController.findOneDeal(deal._id);
   return updatedDeal;
 };
 

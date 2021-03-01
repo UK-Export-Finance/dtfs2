@@ -1,6 +1,6 @@
 const $ = require('mongo-dot-notation');
 const db = require('../../../../drivers/db-client');
-const { findOneDeal } = require('../../portal/deal/get-deal.controller');
+const { findOneDeal } = require('./tfm-get-deal.controller');
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;

@@ -9,22 +9,35 @@ const facilityQuery = gql`
   query Facility($id: ID!) {
     facility(_id: $id) {
       _id,
-      ukefFacilityID,
-      facilityProduct {
-        name
+      facilitySnapshot {
+        ukefFacilityID,
+        associatedDealId,
+        facilityProduct {
+          name
+        },
+        facilityType,
+        facilityStage,
+        facilityValueExportCurrency,
+        facilityValue,
+        ukefExposure,
+        coveredPercentage,
+        bankFacilityReference,
+        guaranteeFeePayableToUkef,
+        bondIssuer,
+        bondBeneficiary,
+        bankFacilityReference,
+        dates {
+          inclusionNoticeReceived,
+          bankIssueNoticeReceived,
+          coverStartDate,
+          coverEndDate,
+          tenor,
+        }
       },
-      facilityType,
-      facilityStage,
-      facilityValueExportCurrency,
-      facilityValue,
-      coverEndDate,
-      ukefExposure,
-      coveredPercentage,
-      bankFacilityReference,
-      guaranteeFeePayableToUkef,
-      bondIssuer,
-      bondBeneficiary,
-      bankFacilityReference
+      tfm {
+        bondIssuerPartyUrn,
+        bondBeneficiaryPartyUrn
+      }
     }
   }
 `;

@@ -6,7 +6,9 @@
 
 {% macro render(params) %}
 {% set deal = params.deal %}
-{% if not deal.tfm.submissionDetails.agentPartyUrn %}
+{% set agent = params.tfm.parties.agent %}
+
+{% if not agent.partyUrn %}
   {% set uniqueRefStyle = "govuk-tag govuk-tag--red" %}
   {% set uniqueRefKeyStyle = "govuk-!-font-weight-bold govuk-!-margin-top-4" %}
 {% endif %}
@@ -40,11 +42,12 @@
             label: {
               text: "Unique reference number (URN)"
             },
-            id: "agent-urn",
-            name: "agent-urn",
+            id: "partyUrn",
+            name: "partyUrn",
             attributes: {
-              "data-cy": "urn-input"
-            }
+              "data-cy": "agent-unique-ref-input"
+            },
+            value: agent.partyUrn
           }) }}
           </div>
         </div>
@@ -52,7 +55,7 @@
         {{ keyValueGridRow.render({
           key: 'Unique reference number',
           keyClass: uniqueRefKeyStyle,
-          value: deal.tfm.submissionDetails.agentPartyUrn or "NOT MATCHED",
+          value: agent.partyUrn or "NOT MATCHED",
           valueStyle: uniqueRefStyle,
           dataCy: 'agent-unique-ref'
         }) }}
@@ -72,10 +75,29 @@
         value: deal.eligibility.agentAddressCountry,
         dataCy: 'agent-address-country'
       }) }}
-      {{ keyValueGridRow.render({
-        key: 'Commission rate',
-        value: ''
-      }) }}
+      {% if params.editable %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-half">
+          {{ govukInput({
+            label: {
+              text: "Commission rate"
+            },
+            id: "commissionRate",
+            name: "commissionRate",
+            attributes: {
+              "data-cy": "agent-commission-rate-input"
+            },
+            value: agent.commissionRate
+          }) }}
+          </div>
+        </div>
+      {% else %}
+        {{ keyValueGridRow.render({
+          key: 'Commission rate',
+          value: agent.commissionRate,
+          dataCy: 'agent-commission-rate'
+        }) }}
+      {% endif %}
     </div>
-  </div>
+</div>
 {% endmacro %}

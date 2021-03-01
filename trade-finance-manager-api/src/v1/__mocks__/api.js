@@ -24,7 +24,6 @@ module.exports = {
     const deal = MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
     return deal ? Promise.resolve(deal) : Promise.reject();
   },
-  findOneFacility: () => MOCK_FACILITY,
   queryDeals: () => MOCK_DEALS,
   updateDeal: (dealId, updatedDeal) => {
     const deal = MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
@@ -37,6 +36,18 @@ module.exports = {
     _id: dealId,
     // eslint-disable-next-line no-underscore-dangle
     dealSnapshot: MOCK_DEALS.find((d) => d._id === dealId),
+  }),
+  findOneFacility: (facilityId) => ({
+    _id: facilityId,
+    facilitySnapshot: {
+      ...MOCK_FACILITY,
+      _id: facilityId,
+    },
+    tfm: {},
+  }),
+  updateFacility: (facilityId, tfmUpdate) => ({
+    ...MOCK_FACILITY,
+    ...tfmUpdate,
   }),
   getPartyDbInfo: ({ companyRegNo }) => (
     companyRegNo === 'NO_MATCH'
