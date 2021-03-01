@@ -15,7 +15,7 @@ const createTeam = async (team, token) => {
       Authorization: token || '',
     },
     url: `${urlRoot}/v1/tfm/teams`,
-    data: team,
+    data: { team },
   }).catch((err) => { console.log(`err: ${err}`); });
 
   return response.data;
@@ -59,7 +59,7 @@ const createUser = async (user, token) => {
       Authorization: token || '',
     },
     url: `${urlRoot}/v1/tfm/users`,
-    data: user,
+    data: { user },
   }).catch((err) => { console.log(`err: ${err}`); });
 
   return response.data;
@@ -86,7 +86,7 @@ const deleteUser = async (user) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/v1/tfm/users/${user._id}`,
+    url: `${urlRoot}/v1/tfm/users/${user.username}`,
   }).catch((err) => { console.log(`err: ${err}`); });
 
   return response.data;

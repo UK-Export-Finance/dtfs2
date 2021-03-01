@@ -9,6 +9,7 @@ const getDeals = async (req, res) => {
   return res.render('deals/deals.njk', {
     deals,
     active_sheet: 'deal',
+    user: req.session.user,
   });
 };
 

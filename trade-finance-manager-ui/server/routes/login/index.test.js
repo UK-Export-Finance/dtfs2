@@ -11,10 +11,12 @@ describe('routes - login', () => {
   });
 
   it('should setup routes with controllers', () => {
-    expect(get).toHaveBeenCalledTimes(1);
+    expect(get).toHaveBeenCalledTimes(2);
     expect(post).toHaveBeenCalledTimes(1);
 
     expect(get).toHaveBeenCalledWith('/', loginController.getLogin);
     expect(post).toHaveBeenCalledWith('/', loginController.postLogin);
+
+    expect(get).toHaveBeenCalledWith('/logout', loginController.logout);
   });
 });

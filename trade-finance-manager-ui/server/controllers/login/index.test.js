@@ -1,3 +1,4 @@
+import api from '../../api';
 import loginController from '.';
 import { mockReq, mockRes } from '../../test-mocks';
 
@@ -13,9 +14,46 @@ describe('controllers - login', () => {
   });
 
   describe('POST', () => {
-    it('should redirect to /case/deal/1000676', () => {
-      loginController.postLogin(req, res);
-      expect(res.redirect).toHaveBeenCalledWith('/case/deal/1000676');
+    beforeEach(() => {
+      api.login = async (username) => {
+        const returnVal = username ? { user: { username } } : false;
+        return Promise.resolve(returnVal);
+      };
+    });
+
+    it('should render login template if login unsuccessful', async () => {
+      const postReq = {
+        ...req,
+        body: {},
+      };
+      await loginController.postLogin(postReq, res);
+      expect(res.render).toHaveBeenCalledWith('login.njk');
+    });
+
+    it('should redirect to /deals if login successful', async () => {
+      const postReq = {
+        ...req,
+        body: {
+          email: 'test1',
+        },
+      };
+      await loginController.postLogin(postReq, res);
+      expect(res.redirect).toHaveBeenCalledWith('/deals');
+    });
+  });
+
+  describe('Logout', () => {
+    it('should return to login page on logout', () => {
+      const logoutReq = {
+        ...req,
+        session: {
+          destroy: (callback) => { callback(); },
+        },
+      };
+
+      loginController.logout(logoutReq, res);
+
+      expect(res.redirect).toHaveBeenCalledWith('/');
     });
   });
 });

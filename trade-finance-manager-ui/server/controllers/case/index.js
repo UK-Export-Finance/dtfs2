@@ -18,6 +18,7 @@ const getCaseDeal = async (req, res) => {
     tfm: deal.tfm,
     active_sheet: 'deal',
     dealId,
+    user: req.session.user,
   });
 };
 
@@ -39,11 +40,7 @@ const getCaseFacility = async (req, res) => {
     active_sheet: 'facility',
     facilityId,
     tfm: facility.tfm,
-
-    // TODO: remove once we have user login/session.
-    user: {
-      timezone: 'Europe/London',
-    },
+    user: req.session.user,
   });
 };
 
@@ -60,6 +57,7 @@ const getCaseParties = async (req, res) => {
     tfm: deal.tfm,
     active_sheet: 'parties',
     dealId,
+    user: req.session.user,
   });
 };
 
@@ -76,6 +74,7 @@ const getPartyDetails = (partyType) => (
       deal: deal.dealSnapshot,
       tfm: deal.tfm,
       dealId,
+      user: req.session.user,
     });
   }
 );
@@ -95,6 +94,7 @@ const getBondIssuerPartyDetails = async (req, res) => {
 
   return res.render('case/parties/edit/bonds-issuer-edit.njk', {
     deal: deal.dealSnapshot,
+    user: req.session.user,
   });
 };
 
@@ -109,6 +109,7 @@ const getBondBeneficiaryPartyDetails = async (req, res) => {
 
   return res.render('case/parties/edit/bonds-beneficiary-edit.njk', {
     deal: deal.dealSnapshot,
+    user: req.session.user,
   });
 };
 

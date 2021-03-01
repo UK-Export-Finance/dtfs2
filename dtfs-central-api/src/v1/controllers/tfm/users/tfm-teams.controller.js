@@ -9,8 +9,8 @@ const createTeam = async (team) => {
 exports.createTeam = createTeam;
 
 exports.createTeamPOST = async (req, res) => {
-  const team = await createTeam(req.body);
-  res.status(200).json(team);
+  const team = await createTeam(req.body.team);
+  res.status(200).json(team.ops[0]);
 };
 
 const listTeams = async () => {
@@ -24,9 +24,9 @@ exports.listTeamsGET = async (req, res) => {
   return res.status(200).send({ teams });
 };
 
-const findOneTeam = async (id, callback) => {
+const findOneTeam = async (id) => {
   const collection = await db.getCollection(teamsCollection);
-  collection.findOne({ id }, callback);
+  return collection.findOne({ id });
 };
 exports.findOneTeam = findOneTeam;
 
