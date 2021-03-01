@@ -29,8 +29,18 @@ const createApplication = async (payload) => {
   }
 };
 
+const getAutomaticCover = async () => {
+  try {
+    const response = await Axios.get('/gef/automatic-cover-versioned/latest');
+    return response.data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
 export {
   validateToken,
   getMandatoryCriteria,
   createApplication,
+  getAutomaticCover,
 };
