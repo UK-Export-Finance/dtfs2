@@ -39,6 +39,10 @@ const getApplication = async (applicationId) => {
 };
 
 const getExporter = async (exporterId) => {
+  if (!exporterId) {
+    return {};
+  }
+
   try {
     const response = await Axios.get(`/gef/exporter/${exporterId}`);
     return response.data;
@@ -47,9 +51,13 @@ const getExporter = async (exporterId) => {
   }
 };
 
-const getFacility = async (facilityId) => {
+const getFacilities = async (applicationId) => {
+  if (!applicationId) {
+    return [];
+  }
+
   try {
-    const response = await Axios.get(`/gef/faciltiy/${facilityId}`);
+    const response = await Axios.get('/gef/facilities', { params: { applicationId } });
     return response.data;
   } catch (err) {
     return apiErrorHandler(err);
@@ -62,5 +70,5 @@ export {
   createApplication,
   getApplication,
   getExporter,
-  getFacility,
+  getFacilities,
 };

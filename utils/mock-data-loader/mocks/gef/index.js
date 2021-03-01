@@ -3,7 +3,7 @@ const APPLICATION = require('./application');
 
 const MOCKS = {
   MANDATORY_CRITERIA_VERSIONED,
-  APPLICATION
+  APPLICATION,
 };
 
 module.exports = MOCKS;

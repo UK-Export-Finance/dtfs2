@@ -5,51 +5,64 @@ const applicationDetails = async (req, res) => {
   try {
     const { params, url } = req;
     const { applicationId } = params;
-    // const application = await api.getApplication(applicationId);
-    // eslint-disable-next-line no-underscore-dangle
-    const exporterId = '1223'; // application.exporterId;
-    // const exporter = await api.getExporter(exporterId);
-    // const facilities = await api.getFacilities(applicationId);
+    const application = await api.getApplication(applicationId);
+    console.log('applications', application);
+    const { exporterId, facilityIds } = application;
+    const exporter = await api.getExporter(exporterId);
+    const facilities = await api.getFacilities(applicationId);
     const exporterUri = `gef${url}/exporter/${exporterId}`;
     // const facilityUri = `gef${url}/facility/${facilityId}`;
 
-    const mockedExporterDetails = {
-      status: 'NOT_STARTED',
-      details: {
-        companiesHouseRegistrationNumber: 123456,
-        companyName: null,
-        registeredAddress: null,
-        industrySectorId: 1234,
-        industryClassId: 5444,
-        smeType: 'Medium',
-        probabilityOfDefault: null,
-        isFinanceIncreasing: null,
-        isInDraft: false,
-      },
-      validation: {
-        required: ['companyName', 'registeredAddress'],
-      },
-    };
+    console.log('facilties', facilities);
+
 
     const displayItems = [
       {
         label: 'Companies House registration number',
         id: 'companiesHouseRegistrationNumber',
+        href: `${exporterUri}/`,
       },
       {
         label: 'Company name',
         id: 'companyName',
-        href: `${exporterUri}/address`,
+        href: `${exporterUri}/`,
       },
       {
-        label: 'Address',
+        label: 'Registered Address',
         id: 'registeredAddress',
+      },
+      {
+        label: 'Correspondence address, if different',
+        id: 'correspondenceAddress',
+      },
+      {
+        label: 'Industry sector',
+        id: 'industrySectorId',
+      },
+      {
+        label: 'Industry class',
+        id: 'industryClassId',
+      },
+      {
+        label: 'SME type',
+        id: 'smeTypeId',
+        href: `${exporterUri}/`,
+      },
+      {
+        label: 'Probability of default',
+        id: 'probabilityOfDefault',
+        href: `${exporterUri}/`,
+      },
+      {
+        label: 'Is finance for this exporter increasing?',
+        id: 'isFinanceIncreasing',
+        href: `${exporterUri}/`,
       },
     ];
 
     return res.render('partials/application-details.njk', {
-      exporterRows: mapSummaryList(mockedExporterDetails, displayItems),
-      // facilityRows: [],
+      exporterRows: mapSummaryList(exporter, displayItems),
+      facilityRows: [],
       // exporterUri,
       // facilityUri,
     });

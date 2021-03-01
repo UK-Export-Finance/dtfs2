@@ -16,13 +16,16 @@ const MockRequest = () => ({
 });
 
 const MockApplicationResponse = () => ({
-  exporterDetails: {
-    _id: '123',
-  },
+  exporterId: '123',
 });
 
 const MockExporterResponse = () => ({
-  companiesHouseRegistrationNumber: 'tedsi',
+  details: {
+    companiesHouseRegistrationNumber: 'tedsi',
+  },
+  validation: {
+    required: [],
+  },
 });
 
 const mockResponse = MockResponse();
@@ -39,7 +42,9 @@ describe('GET Application Details', () => {
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
     await applicationDetails(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/applications-details.njk');
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
+      exporterRows: expect.any(Array),
+    }));
   });
 });
 
