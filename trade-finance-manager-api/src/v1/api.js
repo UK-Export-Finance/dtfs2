@@ -145,6 +145,21 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
   }
 };
 
+const findUser = async (username) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${centralApiUrl}/v1/tfm/users/${username}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch ({ response }) {
+    return false;
+  }
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -154,4 +169,5 @@ module.exports = {
   updateFacility,
   queryDeals,
   getPartyDbInfo,
+  findUser,
 };
