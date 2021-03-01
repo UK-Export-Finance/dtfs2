@@ -10,6 +10,9 @@ const tfmSubmitDealController = require('../controllers/tfm/deal/tfm-submit-deal
 const tfmGetFacilityController = require('../controllers/tfm/facility/tfm-get-facility.controller');
 const tfmUpdateFacilityController = require('../controllers/tfm/facility/tfm-update-facility.controller');
 
+const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controller');
+const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
+
 const { TFM_ROUTE } = require('../../constants/routes');
 
 tfmRouter.use((req, res, next) => {
@@ -44,6 +47,41 @@ tfmRouter.route('/facilities/:id')
   )
   .put(
     tfmUpdateFacilityController.updateFacilityPut,
+  );
+
+// User routes for mock teams & users
+tfmRouter.route('/teams')
+  .get(
+    tfmTeamsController.listTeamsGET,
+  )
+  .post(
+    tfmTeamsController.createTeamPOST,
+  );
+
+tfmRouter.route('/teams/:id')
+  .get(
+    tfmTeamsController.findOneTeamGET,
+  )
+  .delete(
+    tfmTeamsController.deleteTeamDELETE,
+  );
+
+
+// User routes for mock teams & users
+tfmRouter.route('/users')
+  .get(
+    tfmUsersController.listUsersGET,
+  )
+  .post(
+    tfmUsersController.createUserPOST,
+  );
+
+tfmRouter.route('/users/:_id')
+  .get(
+    tfmUsersController.findOneUserGET,
+  )
+  .delete(
+    tfmUsersController.deleteUserDELETE,
   );
 
 module.exports = tfmRouter;
