@@ -11,6 +11,7 @@ const facilityQuery = gql`
       _id,
       facilitySnapshot {
         ukefFacilityID,
+        associatedDealId,
         facilityProduct {
           name
         },
