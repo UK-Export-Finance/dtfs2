@@ -1,19 +1,26 @@
 const express = require('express');
 const { validate } = require('../../role-validator');
-const mandatoryCriteriaVersioned = require('./controllers/mandatoryCriteriaVersioned.controller');
+
 const application = require('./controllers/application.controller');
+const exporter = require('./controllers/exporter.controller');
+const mandatoryCriteriaVersioned = require('./controllers/mandatoryCriteriaVersioned.controller');
 
 const router = express.Router();
 
 // Application
 router.route('/application')
-  .get(validate({ role: ['maker', 'checker'] }), application.getAll)
+  .get(validate({ role: ['checker'] }), application.getAll)
   .post(validate({ role: ['maker'] }), application.create);
 
 router.route('/application/:id')
   .get(validate({ role: ['maker', 'checker'] }), application.getById)
   .put(validate({ role: ['maker'] }), application.update)
   .delete(validate({ role: ['maker'] }), application.delete);
+
+// Exporter
+router.route('/exporter/:id')
+  .get(validate({ role: ['maker', 'checker'] }), exporter.getById)
+  .put(validate({ role: ['maker'] }), exporter.update);
 
 // Mandatory Criteria
 router.route('/mandatory-criteria-versioned')
