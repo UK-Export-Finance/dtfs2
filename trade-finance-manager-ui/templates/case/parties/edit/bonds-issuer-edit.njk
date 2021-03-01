@@ -1,30 +1,26 @@
-{% import '../_macros/parties-bond-edit.njk' as bondEdit %}
+{% import '../_macros/parties-bond-issuer-edit.njk' as bondIssuerEdit %}
 {% import '../../_macros/save-close-buttons.njk' as saveCloseButtons %}
 
 {% extends "index.njk" %}
   {% set primary = 'cases' %}
 
   {% block pageTitle %}
-    Edit {{ bondType}} details
+    Edit bond issuer details
   {% endblock %}
 
   {% block content %}
-  {% if bondType == 'bond issuer' %}
     {% set filteredFacilities = deal.facilities | bondIssuerFacilities %}
-  {% else %}
-    {% set filteredFacilities = deal.facilities | bondBeneficiaryFacilities %}
-  {% endif %}
 
    <form autocomplete="off" method="POST">
     <div class="govuk-grid-row {% if not params.editable %}ukef-flex-container separator-line deal{% endif %}">
       <div class="govuk-grid-column-one-half">
-        <h1 class="ukef-heading-l govuk-!-margin-top-9" data-cy="edit-heading">Edit {{ bondType }} details</h1>
+        <h1 class="ukef-heading-l govuk-!-margin-top-9" data-cy="edit-heading">Edit bond issuer details</h1>
       </div>
     </div>
 
     {% for facility in filteredFacilities %}
       <input name="facilityId[]" type="hidden" value="{{ facility._id }}" />
-      {{ bondEdit.render({ bond: facility, bondType: bondType }) }}
+      {{ bondIssuerEdit.render({ bond: facility }) }}
       <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     {% endfor %}
 

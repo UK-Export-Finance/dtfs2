@@ -1,4 +1,5 @@
 const componentRenderer = require('../../../../component-tests/componentRenderer');
+
 const page = '../templates/case/parties/_macros/parties-bond-issuer-area.njk';
 const render = componentRenderer(page);
 
@@ -21,7 +22,7 @@ describe(page, () => {
           email: 'john.doe@exporter.com',
         },
       },
-      facilities: []
+      facilities: [],
     },
   };
 
@@ -44,23 +45,38 @@ describe(page, () => {
           facilities: [
             {
               _id: '123',
-              ukefFacilityID: '0040004833',
-              ukefFacilityType: 'bond',
-              bondIssuer: 'test bond beneficiary',
-              bankFacilityReference: '1234-test',
+              facilitySnapshot: {
+                _id: '123',
+                ukefFacilityID: '0040004833',
+                ukefFacilityType: 'bond',
+                bondIssuer: 'test bond beneficiary',
+              },
+              tfm: {
+                bondBeneficiaryPartyUrn: '1234-test',
+              },
             },
             {
               _id: '456',
-              ukefFacilityType: 'bond',
-              ukefFacilityID: '0040004833',
-              bondIssuer: 'test bond beneficiary',
-              bankFacilityReference: '1234-test',
+              facilitySnapshot: {
+                _id: '456',
+                ukefFacilityType: 'bond',
+                ukefFacilityID: '0040004833',
+                bondIssuer: 'test bond beneficiary',
+              },
+              tfm: {
+                bondBeneficiaryPartyUrn: '1234-test',
+              },
             },
             {
               _id: '789',
-              ukefFacilityType: 'bond',
-              ukefFacilityID: '0040004833',
-              bankFacilityReference: '1234-test',
+              facilitySnapshot: {
+                _id: '789',
+                ukefFacilityType: 'bond',
+                ukefFacilityID: '0040004833',
+              },
+              tfm: {
+                bondBeneficiaryPartyUrn: '1234-test',
+              },
             },
           ],
         },
@@ -68,7 +84,7 @@ describe(page, () => {
 
       wrapper = render(paramsWithFacilities);
 
-        wrapper.expectElement('[data-cy="bond-issuer-facilities-table"]').toExist();
+      wrapper.expectElement('[data-cy="bond-issuer-facilities-table"]').toExist();
       wrapper.expectElement('[data-cy="bond-issuer-not-applicable"]').notToExist();
     });
   });
@@ -80,15 +96,24 @@ describe(page, () => {
           facilities: [
             {
               _id: '123',
-              ukefFacilityType: 'bond',
+              facilitySnapshot: {
+                _id: '123',
+                ukefFacilityType: 'bond',
+              },
             },
             {
               _id: '456',
-              ukefFacilityType: 'bond',
+              facilitySnapshot: {
+                _id: '456',
+                ukefFacilityType: 'bond',
+              },
             },
             {
               _id: '789',
-              ukefFacilityType: 'bond',
+              facilitySnapshot: {
+                _id: '789',
+                ukefFacilityType: 'bond',
+              },
             },
           ],
         },
@@ -100,5 +125,4 @@ describe(page, () => {
       wrapper.expectElement('[data-cy="bond-issuer-facilities-table"]').notToExist();
     });
   });
-
 });

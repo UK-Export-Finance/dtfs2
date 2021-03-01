@@ -21,6 +21,7 @@ const GET_FACILITY = gql`
       facilitySnapshot {
         _id
         ukefFacilityID,
+        associatedDealId,
         facilityProduct {
           code,
           name
@@ -30,7 +31,6 @@ const GET_FACILITY = gql`
         facilityStage,
         facilityValueExportCurrency,
         facilityValue,
-        coverEndDate,
         ukefExposure,
         coveredPercentage,
         bankFacilityReference,
@@ -72,7 +72,7 @@ describe('graphql query - get facility', () => {
       query: GET_FACILITY,
       variables: { id: '12345678' },
     });
-
+    
     const mockDealDetails = MOCK_DEAL.details;
     const expected = facilityReducer({
       facilitySnapshot: mockFacility,
