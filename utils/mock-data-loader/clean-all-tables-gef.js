@@ -9,6 +9,14 @@ const cleanApplication = async (token) => {
   }
 };
 
+const cleanExporter = async (token) => {
+  console.log('cleaning exporter');
+
+  for (data of await api.listApplication(token)) {
+    await api.deleteExporter(data.exporterId, token);
+  }
+};
+
 const cleanMandatoryCriteriaVersioned = async (token) => {
   console.log('cleaning mandatory-criteria-versioned');
 
@@ -26,6 +34,7 @@ const cleanAllTables = async () => {
   });
 
   await cleanApplication(token);
+  await cleanExporter(token);
   await cleanMandatoryCriteriaVersioned(token);
 };
 
