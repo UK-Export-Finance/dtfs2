@@ -56,6 +56,18 @@ const facilityItems = (exporterUri) => [
     href: `${exporterUri}/`,
   },
   {
+    label: 'Cover start date',
+    id: 'coverStartDate',
+    href: `${exporterUri}/`,
+    method: (callback) => moment(callback).format('D MMMM YYYY'),
+  },
+  {
+    label: 'Cover end date',
+    id: 'coverEndDate',
+    href: `${exporterUri}/`,
+    method: (callback) => moment(callback).format('D MMMM YYYY'),
+  },
+  {
     label: 'Months the UKEF guarantee will be in place for',
     id: 'monthsOfCover',
     href: `${exporterUri}/`,
@@ -67,10 +79,9 @@ const facilityItems = (exporterUri) => [
     href: `${exporterUri}/`,
   },
   {
-    label: 'Cash facility value',
+    label: 'Facility value',
     id: 'value',
     href: `${exporterUri}/`,
-    suffix: ' GBP',
     isCurrency: true,
   },
   {
@@ -80,16 +91,22 @@ const facilityItems = (exporterUri) => [
     suffix: '%',
   },
   {
-    label: 'Cover start date',
-    id: 'coverStartDate',
+    label: 'Your bank’s maximum liability',
+    id: 'banksMaximumLiability',
     href: `${exporterUri}/`,
-    method: (callback) => moment(callback).format('D MMMM YYYY'),
+    isCurrency: true,
   },
   {
-    label: 'Cover end date',
-    id: 'coverEndDate',
+    label: 'UKEF’s maximum liability',
+    id: 'ukefMaximumLiability',
     href: `${exporterUri}/`,
-    method: (callback) => moment(callback).format('D MMMM YYYY'),
+    isCurrency: true,
+  },
+  {
+    label: 'Interest margin your bank will charge',
+    id: 'interestPercentage',
+    href: `${exporterUri}/`,
+    suffix: '%',
   },
 ];
 
