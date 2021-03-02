@@ -1,4 +1,3 @@
-import { fn } from 'moment';
 import validateToken from '../validate-token';
 import * as api from '../../../services/api';
 

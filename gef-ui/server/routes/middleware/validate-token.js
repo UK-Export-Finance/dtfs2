@@ -6,10 +6,6 @@ const validateToken = async (req, res, next) => {
     return next();
   }
 
-  console.log('poo', req.session.destroy(() => {
-    res.redirect('/');
-  }));
-
   return req.session.destroy(() => {
     res.redirect('/');
   });
