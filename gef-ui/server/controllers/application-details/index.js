@@ -30,7 +30,7 @@ const applicationDetails = async (req, res) => {
           currency: 'GBP',
           value: 2000,
           coverPercentage: 20,
-          interestPercentage: 2.5,
+          riskMarginPercentage: 14,
           paymentType: Number,
           createdAt: 1614682309534,
           updatedAt: null,

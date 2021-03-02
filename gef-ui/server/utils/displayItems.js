@@ -108,6 +108,12 @@ const facilityItems = (exporterUri) => [
     href: `${exporterUri}/`,
     suffix: '%',
   },
+  {
+    label: 'Risk margin your bank will charge',
+    id: 'riskMarginPercentage',
+    href: `${exporterUri}/`,
+    suffix: '%',
+  },
 ];
 
 export {
