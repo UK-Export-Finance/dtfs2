@@ -12,10 +12,6 @@ const applicationDetails = async (req, res) => {
     const facilities = await api.getFacilities(applicationId);
     const exporterUrl = `/gef/application-details/${applicationId}`;
 
-    if (!application) {
-      return res.render('partials/page-not-found');
-    }
-
     return res.render('partials/application-details.njk', {
       exporter: {
         status: status[exporter.status],
