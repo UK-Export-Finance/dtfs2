@@ -162,23 +162,23 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns an array populated by the correct properties', () => {
-    const mockedData = MockedData();
-    const mockedDisplayItems = MockedDisplayItems();
+    const mockedData = new MockedData();
+    const mockedDisplayItems = new MockedDisplayItems();
 
     expect(mapSummaryList(mockedData, mockedDisplayItems)).toEqual([{ actions: { items: [] }, key: { text: 'Id' }, value: { text: '123456' } }]);
   });
 
   it('returns populated items array if href property is required', () => {
-    const mockedDisplayItems = MockedDisplayItems();
-    const mockedData = MockedData();
+    const mockedDisplayItems = new MockedDisplayItems();
+    const mockedData = new MockedData();
     mockedDisplayItems[0].href = '/test';
     const { items } = mapSummaryList(mockedData, mockedDisplayItems)[0].actions;
     expect(items.length).toEqual(1);
   });
 
   it('returns the correct link label if href has been required', () => {
-    const mockedDisplayItems = MockedDisplayItems();
-    const mockedData = MockedData();
+    const mockedDisplayItems = new MockedDisplayItems();
+    const mockedData = new MockedData();
     mockedDisplayItems[0].href = '/test';
     const item = mapSummaryList(mockedData, mockedDisplayItems)[0].actions.items[0];
     expect(item).toEqual(expect.objectContaining({ href: '/test', text: 'Change' }));
@@ -188,8 +188,8 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns the `Required` html element if corresponding dataset is required', () => {
-    const mockedDisplayItems = MockedDisplayItems();
-    const mockedData = MockedData();
+    const mockedDisplayItems = new MockedDisplayItems();
+    const mockedData = new MockedData();
 
     mockedData.details.id = null;
     mockedData.validation.required = ['id'];
@@ -198,8 +198,8 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns a long dash if value is emtpy and is NOT required', () => {
-    const mockedDisplayItems = MockedDisplayItems();
-    const mockedData = MockedData();
+    const mockedDisplayItems = new MockedDisplayItems();
+    const mockedData = new MockedData();
 
     mockedData.details.id = null;
     const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
@@ -207,8 +207,8 @@ describe('mapSummaryList()', () => {
   });
 
   it('returns an unordered list if property contains an object', () => {
-    const mockedDisplayItems = MockedDisplayItems();
-    const mockedData = MockedData();
+    const mockedDisplayItems = new MockedDisplayItems();
+    const mockedData = new MockedData();
 
     mockedData.details.address = {};
     mockedData.details.address.line1 = 'Test Road';
@@ -219,5 +219,56 @@ describe('mapSummaryList()', () => {
 
     const { html } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
     expect(html).toEqual('<ul class="is-unstyled"><li>Test Road</li></ul>');
+  });
+
+  it('returns `null` if value is undefined', () => {
+    const mockedDisplayItems = new MockedDisplayItems();
+    const mockedData = new MockedData();
+
+    mockedData.details.id = '123';
+    mockedDisplayItems[0].id = 'abc';
+
+    const response = mapSummaryList(mockedData, mockedDisplayItems)[0];
+    expect(response).toEqual(null);
+  });
+
+  it('returns a value with currency', () => {
+    const mockedDisplayItems = new MockedDisplayItems();
+    const mockedData = new MockedData();
+
+    mockedDisplayItems[0].id = 'price';
+    mockedDisplayItems[0].isCurrency = true;
+
+    mockedData.details.price = 200;
+    mockedData.details.currency = 'GBP';
+
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    expect(text).toEqual('200 GBP');
+  });
+
+  it('returns a value with a prefix', () => {
+    const mockedDisplayItems = new MockedDisplayItems();
+    const mockedData = new MockedData();
+
+    mockedDisplayItems[0].id = 'price';
+    mockedDisplayItems[0].prefix = '£';
+
+    mockedData.details.price = 200;
+
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    expect(text).toEqual('£200');
+  });
+
+  it('returns a value with a suffix', () => {
+    const mockedDisplayItems = new MockedDisplayItems();
+    const mockedData = new MockedData();
+
+    mockedDisplayItems[0].id = 'percentage';
+    mockedDisplayItems[0].suffix = '%';
+
+    mockedData.details.percentage = 15;
+
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    expect(text).toEqual('15%');
   });
 });
