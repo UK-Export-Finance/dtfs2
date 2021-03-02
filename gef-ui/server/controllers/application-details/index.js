@@ -2,19 +2,19 @@ import * as api from '../../services/api';
 import { mapSummaryList, status, facilityType } from '../../utils/helpers';
 import { exporterItems, facilityItems } from '../../utils/displayItems';
 
+
 const applicationDetails = async (req, res) => {
   try {
-    const { params, url } = req;
+    const { params } = req;
     const { applicationId } = params;
     const application = await api.getApplication(applicationId);
     const { exporterId } = application;
     const exporter = await api.getExporter(exporterId);
     const facilities = await api.getFacilities(applicationId);
-    const exporterUri = `${url}/exporter/${exporterId}`;
-    // const facilityUri = `gef${url}/facility/${facilityId}`;
+    const exporterUrl = `/gef/application-details/${applicationId}`;
 
     const mockedFacilities = {
-      status: 2, // 0 - Not started, 1 - In Progress, 2 - Completed
+      status: 2,
       items: [{
         details: {
           applicationId: '123',
@@ -67,16 +67,20 @@ const applicationDetails = async (req, res) => {
       }],
     };
 
+    if (!application) {
+      return res.render('partials/page-not-found');
+    }
+
     return res.render('partials/application-details.njk', {
       exporter: {
         status: status[exporter.status],
-        rows: mapSummaryList(exporter, exporterItems(exporterUri)),
+        rows: mapSummaryList(exporter, exporterItems(exporterUrl)),
       },
       facilities: {
         status: status[mockedFacilities.status],
         items: mockedFacilities.items.map((item) => ({
           heading: facilityType[item.details.type],
-          rows: mapSummaryList(item, facilityItems(exporterUri)),
+          rows: mapSummaryList(item, facilityItems(exporterUrl)),
         })),
       },
     });
