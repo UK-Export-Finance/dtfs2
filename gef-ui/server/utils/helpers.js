@@ -1,5 +1,6 @@
 import httpError from 'http-errors';
 import _isEmpty from 'lodash/isEmpty';
+import commaNumber from 'comma-number';
 
 // Converts strings into Booleans
 const parseBool = (params) => !(
@@ -62,16 +63,16 @@ const mapSummaryList = (data, itemsToShow) => {
   const { details, validation } = data;
   const { required } = validation;
 
-  const valueObj = (val, isRequired) => {
+  const valueObj = (val, isRequired, currency, options = {}) => {
     if (isRequired && val === null) {
       return { html: '<span class="has-text-danger" data-cy="required">Required</span>' };
     }
 
-    if (val === null) {
+    if (!val) {
       return { text: '—' };
     }
 
-    if (isObject(val)) {
+    if (isObject(val) || Array.isArray(val)) {
       const list = [];
       Object.values(val).forEach((value) => {
         if (value) {
@@ -82,19 +83,30 @@ const mapSummaryList = (data, itemsToShow) => {
       return { html: `<ul class="is-unstyled">${list.join('')}</ul>` };
     }
 
-    return { text: val };
+    if (options.isCurrency) {
+      return {
+        text: `${commaNumber(val)} ${currency}`,
+      };
+    }
+
+    return { text: `${options.prefix || ''}${options.method ? options.method(val) : val}${options.suffix || ''}` };
   };
 
   return itemsToShow.map((item) => {
-    const { label, href } = item;
+    const {
+      label, href, prefix, suffix, method, isCurrency,
+    } = item;
     const value = details[item.id];
+    const { currency } = details;
     const isRequired = required.includes(item.id);
 
     return {
       key: {
         text: label,
       },
-      value: valueObj(value, isRequired),
+      value: valueObj(value, isRequired, currency, {
+        prefix, suffix, method, isCurrency,
+      }),
       actions: {
         items: [
           ...(href ? [{
@@ -109,18 +121,23 @@ const mapSummaryList = (data, itemsToShow) => {
 };
 
 const status = ({
-  0: {
+  1: {
     text: 'Not started',
     class: 'govuk-tag--grey',
   },
-  1: {
+  2: {
     text: 'In progress',
     class: 'govuk-tag--blue',
   },
-  2: {
+  3: {
     text: 'Completed',
     class: 'govuk-tag--green',
   },
+});
+
+const facilityType = ({
+  1: 'Cash',
+  2: 'Contingent',
 });
 
 export {
@@ -131,4 +148,5 @@ export {
   validationErrorHandler,
   mapSummaryList,
   status,
+  facilityType,
 };
