@@ -6,8 +6,7 @@ const applicationDetails = async (req, res) => {
     const { params, url } = req;
     const { applicationId } = params;
     const application = await api.getApplication(applicationId);
-    console.log('applications', application);
-    const { exporterId, facilityIds } = application;
+    const { exporterId } = application;
     const exporter = await api.getExporter(exporterId);
     const facilities = await api.getFacilities(applicationId);
     const exporterUri = `${url}/exporter/${exporterId}`;

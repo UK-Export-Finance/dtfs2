@@ -57,9 +57,11 @@ const getFacilities = async (applicationId) => {
   }
 
   try {
-    const response = { data: [] };// await Axios.get('/gef/facilities', { params: { applicationId } });
+    const response = await Axios.get('/gef/facilities', { params: { applicationId } });
+    console.log('response', response);
     return response.data;
   } catch (err) {
+    console.log('error', err);
     return apiErrorHandler(err);
   }
 };
