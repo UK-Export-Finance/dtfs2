@@ -8,30 +8,33 @@ const MockResponse = () => {
   return res;
 };
 
-const MockRequest = () => ({
-  params: {
-    applicationId: '123',
-  },
-  url: '/fakeurl.com',
-});
+const MockRequest = () => {
+  const req = {};
+  req.params = {};
+  req.params.applicationId = '123';
+  req.url = '/fakeurl.com';
+  return req;
+};
 
-const MockApplicationResponse = () => ({
-  exporterId: '123',
-});
+const MockApplicationResponse = () => {
+  const res = {};
+  res.exporterId = '123';
+  return res;
+};
 
-const MockExporterResponse = () => ({
-  details: {
-    companiesHouseRegistrationNumber: 'tedsi',
-  },
-  validation: {
-    required: [],
-  },
-});
+const MockExporterResponse = () => {
+  const req = {};
+  req.details = {};
+  req.validation = {};
+  req.details.companiesHouseRegistrationNumber = 'tedsi';
+  req.validation.required = [];
+  return req;
+};
 
-const mockResponse = MockResponse();
-const mockRequest = MockRequest();
-const mockApplicationResponse = MockApplicationResponse();
-const mockExporterResponse = MockExporterResponse();
+const mockResponse = new MockResponse();
+const mockRequest = new MockRequest();
+const mockApplicationResponse = new MockApplicationResponse();
+const mockExporterResponse = new MockExporterResponse();
 
 afterEach(() => {
   jest.clearAllMocks();

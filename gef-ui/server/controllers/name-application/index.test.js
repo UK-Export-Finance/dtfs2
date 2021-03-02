@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { nameApplication, createApplication } from './index';
 import * as api from '../../services/api';
 
@@ -8,17 +9,18 @@ const MockResponse = () => {
   return res;
 };
 
-const mockResponse = MockResponse();
-const mockedRequest = {
-  body: {
-    bankInternalRefName: '1234',
-  },
-  session: {
-    user: {
-      _id: 'abc',
-    },
-  },
+const MockRequest = () => {
+  const req = {};
+  req.body = {};
+  req.session = {};
+  req.session.user = {};
+  req.body.bankInternalRefName = '1234';
+  req.session.user._id = 'abc';
+  return req;
 };
+
+const mockResponse = new MockResponse();
+const mockRequest = new MockRequest();
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -34,7 +36,7 @@ describe('GET Name Application', () => {
 describe('Create Application', () => {
   it('returns error object if `bankInternalRefName` property is empty', async () => {
     const updatedMockedRequest = {
-      ...mockedRequest,
+      ...mockRequest,
       body: {
         bankInternalRefName: '',
       },
@@ -51,7 +53,7 @@ describe('Create Application', () => {
       data: [],
     };
     api.createApplication = () => Promise.reject(mockValidationRejection);
-    await createApplication(mockedRequest, mockResponse);
+    await createApplication(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', { errors: { errorSummary: [], fieldErrors: {} } });
   });
 
@@ -62,14 +64,14 @@ describe('Create Application', () => {
     };
 
     api.createApplication = () => Promise.resolve(mockApplication);
-    await createApplication(mockedRequest, mockResponse);
+    await createApplication(mockRequest, mockResponse);
     expect(mockResponse.redirect).toHaveBeenCalledWith('application-details/123456');
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     const mockedRejection = { response: { status: 400, message: 'Whoops' } };
     api.createApplication = () => Promise.reject(mockedRejection);
-    await createApplication(mockedRequest, mockResponse);
+    await createApplication(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 });

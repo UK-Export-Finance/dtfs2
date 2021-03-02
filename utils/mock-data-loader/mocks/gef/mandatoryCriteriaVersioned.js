@@ -1,18 +1,19 @@
-var escape = require('escape-html');
+const escape = require('escape-html');
+
 const MANDATORY_CRITERIA_VERSIONED = [
   {
     version: 1.0,
     dateCreated: new Date('2021-01-01T00:00'),
     isInDraft: false,
     title: 'test 1',
-    htmlText: '<p class="govuk-body">Test is a mock test</p>',
+    htmlText: escape('<p class="govuk-body">Test is a mock test</p>'),
   },
   {
     version: 1.1,
     dateCreated: new Date('2021-01-02T00:00'),
     isInDraft: false,
     title: 'test 2',
-    htmlText: '<p class="govuk-body">Test is a mock test</p>',
+    htmlText: escape('<p class="govuk-body">Test is a mock test</p>'),
   },
   {
     version: 2,
@@ -48,14 +49,14 @@ const MANDATORY_CRITERIA_VERSIONED = [
     dateCreated: new Date('2021-01-04T00:00'),
     isInDraft: false,
     title: 'test 4 (old version)',
-    htmlText: '<p class="govuk-body">Test is a mock test</p>',
+    htmlText: escape('<p class="govuk-body">Test is a mock test</p>'),
   },
   {
     version: 3.4,
     dateCreated: new Date('2021-01-04T00:00'),
     isInDraft: true,
     title: 'test 5 (draft)',
-    htmlText: '<p class="govuk-body">Test is a mock test</p>',
+    htmlText: escape('<p class="govuk-body">Test is a mock test</p>'),
   },
 ];
 
