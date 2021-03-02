@@ -65,11 +65,12 @@ describe(baseUrl, () => {
 
       const { body, status } = await as(aChecker).get(baseUrl);
 
-      expected = {
+      const expected = {
         count: allItems.length,
         data: allItems.map((item) => ({
           ...expectMongoId(item),
           exporterId: expect.any(String),
+          createdAt: expect.any(Number),
           facilityIds: null,
         })),
       };
@@ -97,6 +98,7 @@ describe(baseUrl, () => {
       const expected = {
         ...allItems[0],
         exporterId: expect.any(String),
+        createdAt: expect.any(Number),
         facilityIds: null,
       };
       expect(body).toEqual(expectMongoId(expected));
@@ -119,6 +121,7 @@ describe(baseUrl, () => {
       const expected = {
         ...allItems[0],
         exporterId: expect.any(String),
+        createdAt: expect.any(Number),
         facilityIds: null,
       };
       expect(body).toEqual(expectMongoId(expected));

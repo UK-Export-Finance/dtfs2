@@ -17,6 +17,14 @@ const cleanExporter = async (token) => {
   }
 };
 
+const cleanFacilities = async (token) => {
+  console.log('cleaning facilities');
+
+  for (data of await api.listFacilities(token)) {
+    await api.deleteFacilities(data, token);
+  }
+};
+
 const cleanMandatoryCriteriaVersioned = async (token) => {
   console.log('cleaning mandatory-criteria-versioned');
 
@@ -35,6 +43,7 @@ const cleanAllTables = async () => {
 
   await cleanApplication(token);
   await cleanExporter(token);
+  await cleanFacilities(token);
   await cleanMandatoryCriteriaVersioned(token);
 };
 

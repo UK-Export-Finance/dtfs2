@@ -9,6 +9,7 @@ const { Exporter } = require('../models/exporter');
 
 const applicationCollectionName = 'gef-application';
 const exporterCollectionName = 'gef-exporter';
+const facilitiesCollectionName = 'gef-facilities';
 
 // const defaultPaginationOpts = {
 //   sortBy: null,
@@ -79,7 +80,11 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   const applicationCollection = await db.getCollection(applicationCollectionName);
   const exporterCollection = await db.getCollection(exporterCollectionName);
+  const facilitiesCollection = await db.getCollection(facilitiesCollectionName);
   const applicationResponse = await applicationCollection.findOneAndDelete({ _id: ObjectId(String(req.params.id)) });
-  exporterCollection.findOneAndDelete({ _id: ObjectId(String(applicationResponse.value.exporterId)) });
+  await exporterCollection.findOneAndDelete({ _id: ObjectId(String(applicationResponse.value.exporterId)) });
+  await facilitiesCollection.deleteMany({
+    applicationId: ObjectId(String(req.params.id)),
+  });
   res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value);
 };
