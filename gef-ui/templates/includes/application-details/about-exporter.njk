@@ -10,8 +10,8 @@
 
   <div class="govuk-grid-column-one-half">
     {{ govukTag({
-      text: exporterStatus.text,
-      classes: exporterStatus.class
+      text: exporter.status.text,
+      classes: 'govuk-!-margin-bottom-4' + ' ' +exporter.status.class
     }) }}
   </div>
 </div>
@@ -20,7 +20,7 @@
   <a class="govuk-link" href="{{exporterUri}}" data-cy="cancel">Enter details</a>
 {% else %}
   {{ govukSummaryList({
-    rows: exporterRows
+    rows: exporter.rows
   }) }}
 {% endif %}
 

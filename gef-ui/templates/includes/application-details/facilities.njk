@@ -10,18 +10,23 @@
 
   <div class="govuk-grid-column-one-half">
     {{ govukTag({
-      text: "Not started",
-      classes: "govuk-tag--grey"
+      text: facilities.status.text,
+      classes: 'govuk-!-margin-bottom-4' + ' ' + facilities.status.class
     }) }}
   </div>
 </div>
 
-{% if facilityRows.length < 1 %}
+{% if facilities.items.length < 1 %}
   <a class="govuk-link" href="/gef{{url}}/facility" data-cy="cancel">Add a facility</a>
 {% else %}
-  {{ govukSummaryList({
-    rows: facilityRows
-  }) }}
+  {% for item in facilities.items %}
+    <h3 class="govuk-heading-m" data-cy="main-heading">
+      {{item.heading}} facility
+    </h3>
+    {{ govukSummaryList({
+      rows: item.rows
+    }) }}
+  {% endfor %}
 {% endif %}
 
 <hr class="govuk-section-break govuk-section-break--bold govuk-section-break--l govuk-section-break--visible">
