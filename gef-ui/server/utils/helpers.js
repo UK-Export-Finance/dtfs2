@@ -108,6 +108,21 @@ const mapSummaryList = (data, itemsToShow) => {
   });
 };
 
+const status = ({
+  0: {
+    text: 'Not started',
+    class: 'govuk-tag--grey',
+  },
+  1: {
+    text: 'In progress',
+    class: 'govuk-tag--blue',
+  },
+  2: {
+    text: 'Completed',
+    class: 'govuk-tag--green',
+  },
+});
+
 export {
   parseBool,
   userToken,
@@ -115,4 +130,5 @@ export {
   apiErrorHandler,
   validationErrorHandler,
   mapSummaryList,
+  status,
 };
