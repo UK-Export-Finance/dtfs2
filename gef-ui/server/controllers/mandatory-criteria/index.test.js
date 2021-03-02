@@ -8,10 +8,14 @@ const MockResponse = () => {
   return res;
 };
 
-const mockResponse = MockResponse();
-const mockCriteria = {
-  mockedText: 'This is a test',
+const MockCriteriaResponse = () => {
+  const res = {};
+  res.mockedText = 'This is a test';
+  return res;
 };
+
+const mockResponse = new MockResponse();
+const mockCriteriaResponse = new MockCriteriaResponse();
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -19,10 +23,10 @@ afterEach(() => {
 
 describe('GET Mandatory Criteria', () => {
   it('renders the `mandatory-criteria` template', async () => {
-    api.getMandatoryCriteria = () => Promise.resolve(mockCriteria);
+    api.getMandatoryCriteria = () => Promise.resolve(mockCriteriaResponse);
     await getMandatoryCriteria({}, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/mandatory-criteria.njk', {
-      criteria: mockCriteria,
+      criteria: mockCriteriaResponse,
     });
   });
 
@@ -41,7 +45,7 @@ describe('Validate Mandatory Criteria', () => {
         mandatoryCriteria: '',
       },
     };
-    api.getMandatoryCriteria = () => Promise.resolve(mockCriteria);
+    api.getMandatoryCriteria = () => Promise.resolve(mockCriteriaResponse);
     await validateMandatoryCriteria(mockedRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/mandatory-criteria.njk', expect.objectContaining({
       criteria: expect.any(Object),
@@ -55,7 +59,7 @@ describe('Validate Mandatory Criteria', () => {
         mandatoryCriteria: 'true',
       },
     };
-    api.getMandatoryCriteria = () => Promise.resolve(mockCriteria);
+    api.getMandatoryCriteria = () => Promise.resolve(mockCriteriaResponse);
     await validateMandatoryCriteria(mockedRequest, mockResponse);
     expect(mockResponse.redirect).toHaveBeenCalledWith('name-application');
   });

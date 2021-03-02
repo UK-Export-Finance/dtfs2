@@ -7,7 +7,7 @@ const MockResponse = () => {
   return res;
 };
 
-const mockResponse = MockResponse();
+const mockResponse = new MockResponse();
 
 afterEach(() => {
   jest.clearAllMocks();

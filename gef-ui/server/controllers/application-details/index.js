@@ -10,7 +10,7 @@ const applicationDetails = async (req, res) => {
     const { exporterId, facilityIds } = application;
     const exporter = await api.getExporter(exporterId);
     const facilities = await api.getFacilities(applicationId);
-    const exporterUri = `gef${url}/exporter/${exporterId}`;
+    const exporterUri = `${url}/exporter/${exporterId}`;
     // const facilityUri = `gef${url}/facility/${facilityId}`;
 
     console.log('facilties', facilities);
