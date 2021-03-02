@@ -271,4 +271,18 @@ describe('mapSummaryList()', () => {
     const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
     expect(text).toEqual('15%');
   });
+
+  it('alters the value depending on the `method` passed', () => {
+    const mockedDisplayItems = new MockedDisplayItems();
+    const mockedData = new MockedData();
+
+    const reverseFunction = (val) => val.split('').reverse().join('');
+
+    mockedDisplayItems[0].id = 'reverse';
+    mockedDisplayItems[0].method = (callback) => reverseFunction(callback);
+
+    mockedData.details.reverse = 'abcd';
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems)[0].value;
+    expect(text).toEqual('dcba');
+  });
 });
