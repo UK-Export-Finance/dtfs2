@@ -2,7 +2,7 @@ class Application {
   constructor(req, exporterId) {
     if (exporterId) {
       // New Application
-      this.userId = req.userID ? String(req.userID) : null;
+      this.userId = req.userId ? String(req.userId) : null;
       this.exporterId = exporterId;
       this.bankInternalRefName = req.bankInternalRefName ? String(req.bankInternalRefName) : null;
       this.facilityIds = null;
