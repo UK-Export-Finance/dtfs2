@@ -39,10 +39,6 @@ const getApplication = async (applicationId) => {
 };
 
 const getExporter = async (exporterId) => {
-  if (!exporterId) {
-    return {};
-  }
-
   try {
     const response = await Axios.get(`/gef/exporter/${exporterId}`);
     return response.data;
