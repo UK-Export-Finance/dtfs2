@@ -4,6 +4,7 @@ import {
   isObject,
   validationErrorHandler,
   mapSummaryList,
+  apiErrorHandler,
 } from './helpers';
 
 describe('userToken()', () => {
@@ -36,6 +37,32 @@ describe('isObject()', () => {
     expect(isObject(1)).toBe(false);
     expect(isObject(true)).toBe(false);
     expect(isObject(false)).toBe(false);
+  });
+});
+
+describe('apiErrorHandler', () => {
+  it('returns a request time out error', () => {
+    expect(() => apiErrorHandler({ code: 'ECONNABORTED' })).toThrow('Request timed out.');
+  });
+
+  it('returns the entire response object if there is a validation error', () => {
+    const mockResponse = {
+      response: {
+        status: 422,
+        data: [],
+      },
+    };
+    expect(() => apiErrorHandler(mockResponse)).toThrow(new Error(mockResponse.response));
+  });
+
+  it('returns a standard error', () => {
+    const mockResponse = {
+      response: {
+        status: 301,
+        statusText: 'Error message',
+      },
+    };
+    expect(() => apiErrorHandler(mockResponse)).toThrow('Error message');
   });
 });
 
