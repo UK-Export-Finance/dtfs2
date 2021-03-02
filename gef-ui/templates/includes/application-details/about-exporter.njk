@@ -11,13 +11,13 @@
   <div class="govuk-grid-column-one-half">
     {{ govukTag({
       text: exporter.status.text,
-      classes: 'govuk-!-margin-bottom-4' + ' ' +exporter.status.class
+      classes: 'govuk-!-margin-top-2 govuk-!-margin-bottom-4' + ' ' + exporter.status.class
     }) }}
   </div>
 </div>
 
-{% if exporterRows.length < 1 %}
-  <a class="govuk-link" href="{{exporterUri}}" data-cy="cancel">Enter details</a>
+{% if exporter.rows.length < 1 %}
+  <a class="govuk-link" href="#" data-cy="cancel">Enter details</a>
 {% else %}
   {{ govukSummaryList({
     rows: exporter.rows
