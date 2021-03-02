@@ -4,6 +4,10 @@ const api = require('../../api')(app);
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_NO_PARTY_DB = require('../../../src/v1/__mocks__/mock-deal-no-party-db');
 const MOCK_DEAL_NO_COMPANIES_HOUSE = require('../../../src/v1/__mocks__/mock-deal-no-companies-house');
+const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../src/v1/__mocks__/mock-deal-facilities-USD-currency');
+const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-currency-exchange-rate');
+
+const { findOneFacility } = require('../../../src/v1/controllers/facility.controller');
 
 describe('/v1/deals', () => {
   describe('PUT /v1/deals/:dealId/submit', () => {
@@ -65,5 +69,17 @@ describe('/v1/deals', () => {
       expect(status).toEqual(200);
       expect(body).toEqual(tfmDeal);
     });
+
+    it('adds facilityValueInGBP to all facilities that are NOT in GBP', async () => {
+      const { status, body } = await api.put({ dealId: MOCK_DEAL_FACILITIES_USD_CURRENCY._id }).to('/v1/deals/submit');
+
+      expect(status).toEqual(200);
+
+      const bond = body.bondTransactions.items[0];
+      expect(bond.tfm.facilityValueInGBP).toEqual(Number(bond.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE);
+
+      const loan = body.loanTransactions.items[0];
+      expect(loan.tfm.facilityValueInGBP).toEqual(Number(loan.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE);
+    }); 
   });
 });
