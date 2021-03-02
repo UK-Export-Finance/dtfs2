@@ -69,12 +69,6 @@ describe('getApplication()', () => {
 });
 
 describe('getExporter()', () => {
-  it('returns an empty object if there is no exporterId param', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.getExporter();
-    expect(response).toEqual({});
-  });
-
   it('returns the correct response', async () => {
     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
     const response = await api.getExporter('fakeId');
