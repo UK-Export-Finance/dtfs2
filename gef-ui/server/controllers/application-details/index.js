@@ -46,6 +46,8 @@ const applicationDetails = async (req, res) => {
           hasBeenIssued: true,
           name: 'MONKEY',
           startOnDayOfNotice: true,
+          banksMaximumLiability: 400000,
+          ukefMaximumLiability: 1600000,
           coverStartDate: null,
           coverEndDate: 1614682309534,
           monthsOfCover: 7,
