@@ -12,7 +12,10 @@ exports.getExchangeRate = async (req, res) => {
       username: process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY,
       password: process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET,
     },
-  }).catch((catchErr) => catchErr.response);
+  }).catch((catchErr) => {
+    console.error('Error calling Exchange rate API');
+    return catchErr.response;
+  });
 
   const { status, data } = response;
 

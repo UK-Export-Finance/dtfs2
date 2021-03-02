@@ -8,11 +8,11 @@ jest.mock('../src/v1/api');
 
 const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
-const MOCK_FACILITY = require('../src/v1/__mocks__/mock-facility');
+const MOCK_FACILITIES = require('../src/v1/__mocks__/mock-facilities');
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 const facilityReducer = require('../src/graphql/reducers/facility');
 
-const mockFacility = { ...MOCK_FACILITY };
+const mockFacility = { ...MOCK_FACILITIES[0] };
 
 const GET_FACILITY = gql`
   query Facility($id: ID!) {

@@ -3,9 +3,6 @@ const api = require('../api');
 const findOneFacility = async (_id) => {
   const facility = await api.findOneFacility(_id);
 
-  const testing = await api.getCurrencyExchangeRate();
-  console.log('facility called ref.data - test \n', testing);
-
   return facility;
 };
 
