@@ -68,7 +68,7 @@ const mapSummaryList = (data, itemsToShow) => {
       return { html: '<span class="has-text-danger" data-cy="required">Required</span>' };
     }
 
-    if (!val) {
+    if (val === null) {
       return { text: '—' };
     }
 
@@ -99,6 +99,9 @@ const mapSummaryList = (data, itemsToShow) => {
     const value = details[item.id];
     const { currency } = details;
     const isRequired = required.includes(item.id);
+
+    // Don't show row if value is undefined
+    if (value === undefined) { return null; }
 
     return {
       key: {
