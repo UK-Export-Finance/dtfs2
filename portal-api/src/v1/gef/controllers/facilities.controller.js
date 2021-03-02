@@ -16,7 +16,7 @@ exports.getAll = async (req, res) => {
   const collection = await db.getCollection(collectionName);
   let find = {};
   if (req.query && req.query.applicationId) {
-    find = { applicationId: ObjectId(String(req.query.applicationId)) };
+    find = { applicationId: String(req.query.applicationId) };
   }
   const doc = await collection
     .find(find)
@@ -65,6 +65,6 @@ exports.delete = async (req, res) => {
 
 exports.deleteByApplicationId = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const response = await collection.deleteMany({ applicationId: ObjectId(String(req.query.applicationId)) });
-  res.status(utils.mongoStatus(response)).send(response.value);
+  const response = await collection.deleteMany({ applicationId: req.query.applicationId });
+  res.status(utils.mongoStatus(response)).send(response);
 };
