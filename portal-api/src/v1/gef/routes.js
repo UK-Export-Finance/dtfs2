@@ -25,7 +25,7 @@ router.route('/exporter/:id')
 
 // Facilities
 router.route('/facilities')
-  .get(validate({ role: ['checker', 'data-admin'] }), facilities.getAll)
+  .get(validate({ role: ['maker', 'checker', 'data-admin'] }), facilities.getAll)
   .post(validate({ role: ['maker', 'data-admin'] }), facilities.create);
 
 router.route('/facilities/:id')
