@@ -2,7 +2,6 @@ import * as api from '../../services/api';
 import { mapSummaryList, status, facilityType } from '../../utils/helpers';
 import { exporterItems, facilityItems } from '../../utils/displayItems';
 
-
 const applicationDetails = async (req, res) => {
   try {
     const { params } = req;
@@ -10,7 +9,7 @@ const applicationDetails = async (req, res) => {
     const application = await api.getApplication(applicationId);
     const { exporterId } = application;
     const exporter = await api.getExporter(exporterId);
-    const facilities = await api.getFacilities(applicationId);
+    // const facilities = await api.getFacilities(applicationId);
     const exporterUrl = `/gef/application-details/${applicationId}`;
 
     const mockedFacilities = {

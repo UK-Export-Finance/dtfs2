@@ -12,7 +12,6 @@ const MockRequest = () => {
   const req = {};
   req.params = {};
   req.params.applicationId = '123';
-  req.url = '/fakeurl.com';
   return req;
 };
 
@@ -25,6 +24,7 @@ const MockApplicationResponse = () => {
 const MockExporterResponse = () => {
   const req = {};
   req.details = {};
+  req.status = '';
   req.validation = {};
   req.details.companiesHouseRegistrationNumber = 'tedsi';
   req.validation.required = [];
@@ -44,9 +44,17 @@ describe('GET Application Details', () => {
   it('renders the `Application Details` template', async () => {
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
+    // api.getFacilities = () => Promise.resolve(mockExporterResponse);
     await applicationDetails(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
-      exporterRows: expect.any(Array),
+      exporter: {
+        status: expect.any(String), // status[exporter.status],
+        rows: expect.any(Array), // mapSummaryList(exporter, exporterItems(exporterUrl)),
+      },
+      // facilities: {
+      //   status: expect.any(String), // status[mockedFacilities.status],
+      //   items: expect.any(Array),
+      // },
     }));
   });
 });
