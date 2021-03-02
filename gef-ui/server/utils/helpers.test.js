@@ -114,7 +114,7 @@ describe('validationErrorHandler()', () => {
 describe('mapSummaryList()', () => {
   const MockedData = () => ({
     details: {
-      id: 123456,
+      id: '123456',
     },
     validation: {
       required: [],
@@ -138,7 +138,7 @@ describe('mapSummaryList()', () => {
     const mockedData = MockedData();
     const mockedDisplayItems = MockedDisplayItems();
 
-    expect(mapSummaryList(mockedData, mockedDisplayItems)).toEqual([{ actions: { items: [] }, key: { text: 'Id' }, value: { text: 123456 } }]);
+    expect(mapSummaryList(mockedData, mockedDisplayItems)).toEqual([{ actions: { items: [] }, key: { text: 'Id' }, value: { text: '123456' } }]);
   });
 
   it('returns populated items array if href property is required', () => {
