@@ -1,5 +1,5 @@
 import * as api from '../../services/api';
-import { mapSummaryList } from '../../utils/helpers';
+import { mapSummaryList, status } from '../../utils/helpers';
 
 const applicationDetails = async (req, res) => {
   try {
@@ -60,6 +60,7 @@ const applicationDetails = async (req, res) => {
     ];
 
     return res.render('partials/application-details.njk', {
+      exporterStatus: status[exporter.status],
       exporterRows: mapSummaryList(exporter, displayItems),
       facilityRows: [],
       // exporterUri,
