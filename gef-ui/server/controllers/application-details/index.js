@@ -1,5 +1,6 @@
 import * as api from '../../services/api';
-import { mapSummaryList, status } from '../../utils/helpers';
+import { mapSummaryList, status, facilityType } from '../../utils/helpers';
+import { exporterItems, facilityItems } from '../../utils/displayItems';
 
 const applicationDetails = async (req, res) => {
   try {
@@ -12,59 +13,70 @@ const applicationDetails = async (req, res) => {
     const exporterUri = `${url}/exporter/${exporterId}`;
     // const facilityUri = `gef${url}/facility/${facilityId}`;
 
-    console.log('facilties', facilities);
-
-
-    const displayItems = [
-      {
-        label: 'Companies House registration number',
-        id: 'companiesHouseRegistrationNumber',
-        href: `${exporterUri}/`,
+    const mockedFacilities = {
+      status: 2, // 0 - Not started, 1 - In Progress, 2 - Completed
+      items: [{
+        details: {
+          applicationId: '123',
+          type: 1,
+          hasBeenIssued: true,
+          name: 'My test',
+          startOnDayOfNotice: true,
+          coverStartDate: null,
+          coverEndDate: 1614682309534,
+          monthsOfCover: 7,
+          details: ['term-basis', 'committed-basis', 'other'],
+          detailsOther: null,
+          currency: 'GBP',
+          value: 2000,
+          coverPercentage: 20,
+          interestPercentage: 2.5,
+          paymentType: Number,
+          createdAt: 1614682309534,
+          updatedAt: null,
+        },
+        validation: {
+          required: [],
+        },
       },
       {
-        label: 'Company name',
-        id: 'companyName',
-        href: `${exporterUri}/`,
-      },
-      {
-        label: 'Registered Address',
-        id: 'registeredAddress',
-      },
-      {
-        label: 'Correspondence address, if different',
-        id: 'correspondenceAddress',
-      },
-      {
-        label: 'Industry sector',
-        id: 'industrySectorId',
-      },
-      {
-        label: 'Industry class',
-        id: 'industryClassId',
-      },
-      {
-        label: 'SME type',
-        id: 'smeTypeId',
-        href: `${exporterUri}/`,
-      },
-      {
-        label: 'Probability of default',
-        id: 'probabilityOfDefault',
-        href: `${exporterUri}/`,
-      },
-      {
-        label: 'Is finance for this exporter increasing?',
-        id: 'isFinanceIncreasing',
-        href: `${exporterUri}/`,
-      },
-    ];
+        details: {
+          applicationId: '123',
+          type: 2,
+          hasBeenIssued: true,
+          name: 'MONKEY',
+          startOnDayOfNotice: true,
+          coverStartDate: null,
+          coverEndDate: 1614682309534,
+          monthsOfCover: 7,
+          details: ['term-basis', 'committed-basis', 'other'],
+          detailsOther: null,
+          currency: 'GBP',
+          value: 2000,
+          coverPercentage: 20,
+          interestPercentage: 2.5,
+          paymentType: Number,
+          createdAt: 1614682309534,
+          updatedAt: null,
+        },
+        validation: {
+          required: [],
+        },
+      }],
+    };
 
     return res.render('partials/application-details.njk', {
-      exporterStatus: status[exporter.status],
-      exporterRows: mapSummaryList(exporter, displayItems),
-      facilityRows: [],
-      // exporterUri,
-      // facilityUri,
+      exporter: {
+        status: status[exporter.status],
+        rows: mapSummaryList(exporter, exporterItems(exporterUri)),
+      },
+      facilities: {
+        status: status[mockedFacilities.status],
+        items: mockedFacilities.items.map((item) => ({
+          heading: facilityType[item.details.type],
+          rows: mapSummaryList(item, facilityItems(exporterUri)),
+        })),
+      },
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
