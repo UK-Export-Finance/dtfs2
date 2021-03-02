@@ -24,7 +24,7 @@ exports.findMandatoryCriteria = findMandatoryCriteria;
 
 const findOneMandatoryCriteria = async (id, callback) => {
   const collection = await db.getCollection(collectionName);
-  collection.findOne({ _id: ObjectID(id) }, (err, result) => {
+  collection.findOne({ _id: new ObjectID(String(id)) }, (err, result) => {
     assert.equal(err, null);
     callback(result);
   });
@@ -70,7 +70,7 @@ exports.findLatest = (req, res) => (
 exports.update = async (req, res) => {
   const collection = await db.getCollection(collectionName);
   const update = req.body;
-  update.updated = Date.now();
+  update.updatedAt = Date.now();
   const response = await collection.findOneAndUpdate(
     { _id: ObjectID(req.params.id) }, { $set: update }, { returnOriginal: false },
   );
@@ -79,6 +79,6 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const response = await collection.findOneAndDelete({ _id: ObjectID(req.params.id) });
+  const response = await collection.findOneAndDelete({ _id: new ObjectID(String(req.params.id)) });
   res.status(utils.mongoStatus(response)).send(response.value);
 };
