@@ -6,8 +6,7 @@ const applicationDetails = async (req, res) => {
   try {
     const { params } = req;
     const { applicationId } = params;
-    const application = await api.getApplication(applicationId);
-    const { exporterId } = application;
+    const { exporterId } = await api.getApplication(applicationId);
     const exporter = await api.getExporter(exporterId);
     const facilities = await api.getFacilities(applicationId);
     const exporterUrl = `/gef/application-details/${applicationId}`;
@@ -24,6 +23,7 @@ const applicationDetails = async (req, res) => {
           rows: mapSummaryList(item, facilityItems(exporterUrl)),
         })),
       },
+      submit: false,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
