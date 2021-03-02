@@ -7,8 +7,8 @@ const insertMocksGef = require('./insert-mocks-gef');
 
 
 cleanAllTables().then(() => {
-    insertMocks().then(() => {
-        console.log('\n === GEF SPECIFIC === \n')
-        cleanAllTablesGef().then(insertMocksGef);
-    })
+  insertMocks().then(() => {
+    console.log('\n === GEF SPECIFIC === \n');
+    cleanAllTablesGef().then(insertMocksGef);
+  });
 });
