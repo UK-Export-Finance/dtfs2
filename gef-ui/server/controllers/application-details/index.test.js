@@ -50,76 +50,31 @@ afterEach(() => {
 
 describe('GET Application Details', () => {
   it('renders the `Application Details` template', async () => {
+    mockFacilityResponse.items = [{ details: { type: 1 }, validation: { required: [] } }];
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
     api.getFacilities = () => Promise.resolve(mockFacilityResponse);
     await applicationDetails(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
       exporter: {
-        status: expect.any(Object), // status[exporter.status],
-        rows: expect.any(Array), // mapSummaryList(exporter, exporterItems(exporterUrl)),
+        status: expect.any(Object),
+        rows: expect.any(Array),
       },
       facilities: {
-        status: expect.any(Object), // status[mockedFacilities.status],
-        items: expect.any(Array),
+        status: expect.any(Object),
+        items: [
+          {
+            heading: expect.any(String),
+            rows: expect.any(Array),
+          },
+        ],
       },
     }));
   });
+
+  it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+    api.getApplication = () => Promise.reject();
+    await applicationDetails(mockRequest, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+  });
 });
-
-// describe('Create Application', () => {
-//   it('returns error object if `bankInternalRefName` property is empty', async () => {
-//     const mockRequest = {
-//       body: {
-//         bankInternalRefName: '',
-//       },
-//       session: {
-//         user: {
-//           _id: 'abc',
-//         },
-//       },
-//     };
-//     await createApplication(mockRequest, mockResponse);
-//     expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', expect.objectContaining({
-//       errors: expect.any(Object),
-//     }));
-//   });
-
-//   it('redirects user to `application details` page if successful', async () => {
-//     const mockRequest = {
-//       body: {
-//         bankInternalRefName: '1234',
-//       },
-//       session: {
-//         user: {
-//           _id: 'abc',
-//         },
-//       },
-//     };
-//     const mockApplication = {
-//       _id: '123456',
-//       bankInternalRefName: 'Ref Name',
-//     };
-
-//     api.createApplication = () => Promise.resolve(mockApplication);
-//     await createApplication(mockRequest, mockResponse);
-//     expect(mockResponse.redirect).toHaveBeenCalledWith('application-details/123456');
-//   });
-
-//   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-//     const mockRequest = {
-//       body: {
-//         bankInternalRefName: '1234',
-//       },
-//       session: {
-//         user: {
-//           _id: 'abc',
-//         },
-//       },
-//     };
-
-//     api.createApplication = () => Promise.reject();
-//     await createApplication(mockRequest, mockResponse);
-//     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
-//   });
-// });
