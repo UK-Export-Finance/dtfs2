@@ -16,7 +16,7 @@
   </div>
 </div>
 
-{% if exporter.rows.length < 1 %}
+{% if exporter.status.code === 0 %}
   <a class="govuk-link" href="#" data-cy="cancel">Enter details</a>
 {% else %}
   {{ govukSummaryList({
