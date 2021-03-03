@@ -3,10 +3,10 @@ const db = require('../../../../drivers/db-client');
 
 // const { findOneDeal } = require('../../portal/deal/get-deal.controller');
 
-const findDeals = async (_id, callback) => {
+const findDeals = async (callback) => {
   const dealsCollection = await db.getCollection('tfm-deals');
 
-  const deals = await dealsCollection.find();
+  const deals = await dealsCollection.find({}).toArray();
 
   if (callback) {
     callback(deals);

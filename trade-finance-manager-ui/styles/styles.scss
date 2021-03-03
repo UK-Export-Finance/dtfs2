@@ -6,6 +6,7 @@
 @import "./moj-primary-navigation.scss";
 
 @import "./case-summary.scss";
+@import "./deals-table.scss";
 @import "./table.scss";
 @import "./links.scss";
 
@@ -192,4 +193,7 @@ body {
       align-self: center;
       text-align: right;
     }
+}
+.moj-primary-navigation__container {
+  max-width: 1440px;
 }
