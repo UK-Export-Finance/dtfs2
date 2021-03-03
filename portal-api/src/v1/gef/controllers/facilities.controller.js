@@ -18,13 +18,28 @@ exports.getAll = async (req, res) => {
   if (req.query && req.query.applicationId) {
     find = { applicationId: String(req.query.applicationId) };
   }
-  const doc = await collection
-    .find(find)
-    .toArray();
-  res.status(200).send({
+  const doc = await collection.find(find).toArray();
+
+  let response = {
     count: doc.length,
     data: doc,
-  });
+  };
+
+  if (req.query && req.query.applicationId) {
+    const facilities = [];
+    doc.forEach((item) => {
+      facilities.push({
+        status: facilitiesStatus(item),
+        details: item,
+        validation: facilitiesValidation(item),
+      });
+    });
+    response = {
+      status: null, // overallStatus(),
+      data: facilities,
+    };
+  }
+  res.status(200).send(response);
 };
 
 exports.getById = async (req, res) => {
