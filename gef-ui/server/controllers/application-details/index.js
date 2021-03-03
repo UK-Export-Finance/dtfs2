@@ -11,19 +11,23 @@ const applicationDetails = async (req, res) => {
     const facilities = await api.getFacilities(applicationId);
     const exporterUrl = `/gef/application-details/${applicationId}`;
 
+    const exporterStatus = status[exporter.status];
+    const facilitiesStatus = status[facilities.status];
+    const canSubmit = exporterStatus.code + facilitiesStatus.code === 4; // Both statuses are set to complete
+
     return res.render('partials/application-details.njk', {
       exporter: {
-        status: status[exporter.status],
+        status: exporterStatus,
         rows: mapSummaryList(exporter, exporterItems(exporterUrl)),
       },
       facilities: {
-        status: status[facilities.status],
+        status: facilitiesStatus,
         items: facilities.items.map((item) => ({
           heading: facilityType[item.details.type],
           rows: mapSummaryList(item, facilityItems(exporterUrl)),
         })),
       },
-      submit: false,
+      submit: canSubmit,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');

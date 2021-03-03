@@ -124,23 +124,26 @@ const mapSummaryList = (data, itemsToShow) => {
 };
 
 const status = ({
-  1: {
+  0: {
     text: 'Not started',
     class: 'govuk-tag--grey',
+    code: 0,
   },
-  2: {
+  1: {
     text: 'In progress',
     class: 'govuk-tag--blue',
+    code: 1,
   },
-  3: {
+  2: {
     text: 'Completed',
     class: 'govuk-tag--green',
+    code: 2,
   },
 });
 
 const facilityType = ({
-  1: 'Cash',
-  2: 'Contingent',
+  0: 'Cash',
+  1: 'Contingent',
 });
 
 export {

@@ -83,7 +83,7 @@ const getFacilities = async (applicationId) => {
     {
       details: {
         applicationId: '123',
-        type: 2,
+        type: 0,
         hasBeenIssued: true,
         name: 'MONKEY',
         startOnDayOfNotice: true,

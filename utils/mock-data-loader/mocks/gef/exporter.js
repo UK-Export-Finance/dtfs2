@@ -1,6 +1,6 @@
 const EXPORTER = [{
   companiesHouseRegistrationNumber: null,
-  companyName: 'Foundry 4',
+  companyName: null,
   registeredAddress: null,
   correspondenceAddress: null,
   industrySectorId: null,
