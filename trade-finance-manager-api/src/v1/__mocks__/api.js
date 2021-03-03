@@ -56,4 +56,7 @@ module.exports = {
         partyUrn: 'testPartyUrn',
       }]
   ),
+  findUser: (username) => (
+    username === 'invalidUser' ? false : { username }
+  ),
 };

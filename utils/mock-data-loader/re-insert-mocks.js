@@ -5,10 +5,16 @@ const insertMocks = require('./insert-mocks');
 const cleanAllTablesGef = require('./clean-all-tables-gef');
 const insertMocksGef = require('./insert-mocks-gef');
 
+// TFM specific
+const cleanAllTablesTfm = require('./tfm/clean-all-tables-tfm');
+const insertMocksTfm = require('./tfm/insert-mocks-tfm');
 
-cleanAllTables().then(() => {
-  insertMocks().then(() => {
-    console.log('\n === GEF SPECIFIC === \n');
-    cleanAllTablesGef().then(insertMocksGef);
-  });
-});
+const init = async () => {
+  await cleanAllTables();
+  await insertMocks();
+  await cleanAllTablesGef();
+  await insertMocksGef();
+  await cleanAllTablesTfm();
+  await insertMocksTfm();
+};
+init();

@@ -1,5 +1,8 @@
 {% from "moj/components/header/macro.njk" import mojHeader %}
 
+
+{% if user %}
+
 {{ mojHeader({
   organisationLabel: {
     text: 'UK Export\n Finance',
@@ -11,17 +14,34 @@
   },
   navigation: {
     label: 'Account navigation',
-    items: [{
-      text: 'Diana Prince',
-      href: '#',
-      active: true
-      }, {
+    items: [
+      {
+        text: user.username,
+        href: '#',
+        active: true
+      },
+      {
         text: 'Sign out',
-        href: '#'
-    }]
+        href: '/logout'
+      }
+    ]
   }
 }) }} 
 
+{% else %}
+
+{{ mojHeader({
+  organisationLabel: {
+    text: 'UK Export\n Finance',
+    href: '#'
+  },
+  serviceLabel: {
+    text: 'Trade Finance Manager',
+    href: '#'
+  }
+}) }}
+
+{% endif %}
 
 
 {% include "_partials/primary-navigation.njk" %}

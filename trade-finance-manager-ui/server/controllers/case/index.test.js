@@ -4,6 +4,12 @@ import { mockRes } from '../../test-mocks';
 
 const res = mockRes();
 
+const session = {
+  user: {
+    username: 'testUser',
+  },
+};
+
 describe('controllers - case', () => {
   describe('GET case deal', () => {
     describe('when deal exists', () => {
@@ -24,6 +30,7 @@ describe('controllers - case', () => {
           params: {
             _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
           },
+          session,
         };
 
         await caseController.getCaseDeal(req, res);
@@ -31,6 +38,7 @@ describe('controllers - case', () => {
           deal: mockDeal.dealSnapshot,
           active_sheet: 'deal',
           dealId: req.params._id, // eslint-disable-line no-underscore-dangle
+          user: session.user,
         });
       });
     });
@@ -45,6 +53,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
+          session,
         };
 
         await caseController.getCaseDeal(req, res);
@@ -82,6 +91,7 @@ describe('controllers - case', () => {
           params: {
             facilityId: mockFacility._id, // eslint-disable-line no-underscore-dangle
           },
+          session,
         };
 
         await caseController.getCaseFacility(req, res);
@@ -91,9 +101,7 @@ describe('controllers - case', () => {
           facility: mockFacility.facilitySnapshot,
           active_sheet: 'facility',
           facilityId: req.params.facilityId,
-          user: {
-            timezone: 'Europe/London',
-          },
+          user: session.user,
         });
       });
     });
@@ -108,6 +116,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
+          session,
         };
 
         await caseController.getCaseFacility(req, res);
@@ -136,6 +145,7 @@ describe('controllers - case', () => {
           params: {
             _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
           },
+          session,
         };
 
         await caseController.getCaseParties(req, res);
@@ -143,6 +153,7 @@ describe('controllers - case', () => {
           deal: mockDeal.dealSnapshot,
           active_sheet: 'parties',
           dealId: req.params._id, // eslint-disable-line no-underscore-dangle
+          user: session.user,
         });
       });
     });
@@ -157,6 +168,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
+          session,
         };
 
         await caseController.getCaseParties(req, res);
@@ -194,6 +206,7 @@ describe('controllers - case', () => {
           params: {
             _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
           },
+          session,
         };
 
         await caseController.getExporterPartyDetails(req, res);
@@ -201,6 +214,7 @@ describe('controllers - case', () => {
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
           dealId: req.params._id, // eslint-disable-line no-underscore-dangle
+          user: session.user,
         });
       });
     });
@@ -215,6 +229,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
+          session,
         };
 
         await caseController.getExporterPartyDetails(req, res);
@@ -252,10 +267,15 @@ describe('controllers - case', () => {
           params: {
             _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
           },
+          session,
         };
 
         await caseController.getBondIssuerPartyDetails(req, res);
-        expect(res.render).toHaveBeenCalledWith('case/parties/edit/bonds-issuer-edit.njk', { deal: mockDeal.dealSnapshot });
+        expect(res.render).toHaveBeenCalledWith('case/parties/edit/bonds-issuer-edit.njk',
+          {
+            deal: mockDeal.dealSnapshot,
+            user: session.user,
+          });
       });
     });
 
@@ -269,6 +289,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
+          session,
         };
 
         await caseController.getBondIssuerPartyDetails(req, res);
@@ -306,10 +327,15 @@ describe('controllers - case', () => {
           params: {
             _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
           },
+          session,
         };
 
         await caseController.getBondBeneficiaryPartyDetails(req, res);
-        expect(res.render).toHaveBeenCalledWith('case/parties/edit/bonds-beneficiary-edit.njk', { deal: mockDeal.dealSnapshot });
+        expect(res.render).toHaveBeenCalledWith('case/parties/edit/bonds-beneficiary-edit.njk',
+          {
+            deal: mockDeal.dealSnapshot,
+            user: session.user,
+          });
       });
     });
 
@@ -323,6 +349,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
+          session,
         };
 
         await caseController.getBondBeneficiaryPartyDetails(req, res);
@@ -352,6 +379,7 @@ describe('controllers - case', () => {
               partyUrn: '12345',
             },
           },
+          session,
         };
 
         await caseController.postExporterPartyDetails(req, res);
@@ -370,6 +398,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
+          session,
         };
 
         await caseController.postExporterPartyDetails(req, res);
@@ -398,6 +427,7 @@ describe('controllers - case', () => {
             facilityId: [1, 2],
             bondIssuerPartyUrn: [123, 234],
           },
+          session,
         };
 
         await caseController.postTfmFacility(req, res);
@@ -417,6 +447,7 @@ describe('controllers - case', () => {
             _id: '1',
           },
           body: {},
+          session,
         };
 
         await caseController.postTfmFacility(req, res);
