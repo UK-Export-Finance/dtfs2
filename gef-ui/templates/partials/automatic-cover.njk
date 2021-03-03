@@ -27,44 +27,35 @@
     text: "If you’re eligible for automatic cover, you can submit all the application details as an automatic inclusion notice (AIN). Once you’ve submitted the AIN, your cover will be available immediately for you to use."
   }) }}
 
-  {# <form
-    method="post"
-    data-cy="form">
-    {{ govukRadios({
-      classes: "govuk-radios--inline",
-      idPrefix: "confirm",
-      name: "mandatoryCriteria",
-      fieldset: {
-        legend: {
-          text: "Can you confirm that the mandatory criteria will be true for this General Export Facility?",
-          isPageHeading: false,
-          classes: "govuk-fieldset__legend--s"
-        }
-      },
-      errorMessage: errors and {
-        text: errors.fieldErrors.confirm.text,
-        attributes: {
-          'data-cy': 'mandatory-criteria-error'
-        }
-      },
-      items: [
-        {
-          value: true,
-          text: "Yes",
-          attributes: {
-            'data-cy': 'mandatory-criteria-yes'
+  <form method="post" data-cy="form">
+    {% for term in terms %}
+      {{ govukRadios({
+        classes: "govuk-radios--inline",
+        idPrefix: "automaticCover" + loop.index,
+        name: term.id,
+        fieldset: {
+          legend: {
+            html: term.htmlText
           }
         },
-        {
-          value: false,
-          text: "No",
+        errorMessage: errors and errors.fieldErrors[term.id] and  {
+          text: errors.fieldErrors[term.id].text,
           attributes: {
-            'data-cy': 'mandatory-criteria-no'
+            'data-cy': 'mandatory-criteria-error'
           }
-        }
-      ] }) 
-    }}
-
+        },
+        items: [
+          {
+            value: true,
+            text: "True"
+          },
+          {
+            value: false,
+            text: "False"
+          }
+        ]
+      }) }}
+    {% endfor %}
     <div class="govuk-button-group">
       {{ govukButton({
         text: "Continue"
@@ -72,9 +63,8 @@
 
       <a
         class="govuk-link"
-        href="/gef/mandatory-criteria"
-        data-cy="cancel-button">Cancel</a>
+        href="/gef/automatic-cover"
+        data-cy="cancel-button">Save and go back to application</a>
     </div>
-  </form> #}
-
+  </form>
 {% endblock %}
