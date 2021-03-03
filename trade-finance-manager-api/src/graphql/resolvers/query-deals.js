@@ -32,7 +32,7 @@ const getProduct = async (deal) => {
 const getDeals = async (args) => {
   const dict = {};
   const fn = async (d) => {
-    if (d.facilities.length > 0) {
+    if (d.facilities && d.facilities.length > 0) {
       await getProduct(d).then((p) => {
         // eslint-disable-next-line no-underscore-dangle
         dict[d._id] = p;
@@ -45,6 +45,5 @@ const getDeals = async (args) => {
   const reducedDeals = dealsReducer(q, dict);
   return reducedDeals;
 };
-
 
 module.exports = getDeals;

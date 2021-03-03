@@ -1,6 +1,7 @@
 import relative from '../../relativeURL';
 import partials from '../../partials';
 import MOCK_DEAL from '../../../fixtures/deal';
+import MOCK_USERS from '../../../fixtures/users';
 
 const MOCK_MAKER_TFM = {
   username: 'MAKER-TFM',
@@ -52,8 +53,11 @@ context('Facility page', () => {
         });
 
         cy.submitDeal(dealId);
-        cy.visit(relative(`/case/${dealId}/parties`));
       });
+  });
+
+  beforeEach(() => {
+    cy.login(MOCK_USERS[0]);
   });
 
   after(() => {
