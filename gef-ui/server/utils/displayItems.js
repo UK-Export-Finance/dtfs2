@@ -1,15 +1,15 @@
 import moment from 'moment';
 
-const exporterItems = (exporterUri) => [
+const exporterItems = (exporterUrl) => [
   {
     label: 'Companies House registration number',
     id: 'companiesHouseRegistrationNumber',
-    href: `${exporterUri}/`,
+    href: `${exporterUrl}/`,
   },
   {
     label: 'Company name',
     id: 'companyName',
-    href: `${exporterUri}/`,
+    href: `${exporterUrl}/`,
   },
   {
     label: 'Registered Address',
@@ -30,89 +30,89 @@ const exporterItems = (exporterUri) => [
   {
     label: 'SME type',
     id: 'smeTypeId',
-    href: `${exporterUri}/`,
+    href: `${exporterUrl}/`,
   },
   {
     label: 'Probability of default',
     id: 'probabilityOfDefault',
-    href: `${exporterUri}/`,
+    href: `${exporterUrl}/`,
   },
   {
     label: 'Is finance for this exporter increasing?',
     id: 'isFinanceIncreasing',
-    href: `${exporterUri}/`,
+    href: `${exporterUrl}/`,
     method: (callback) => (callback ? 'Yes' : 'No'),
   },
 ];
 
-const facilityItems = (exporterUri) => [
+const facilityItems = (exporterUrl) => [
   {
     label: 'Name',
     id: 'name',
-    href: `${exporterUri}/`,
+    href: `${exporterUrl}/`,
   },
   {
     label: 'Stage',
     id: 'stage',
-    href: `${exporterUri}/`,
+    href: `${exporterUrl}/`,
   },
   {
     label: 'Cover start date',
     id: 'coverStartDate',
-    href: `${exporterUri}/`,
+    href: `${exporterUrl}/`,
     method: (callback) => moment(callback).format('D MMMM YYYY'),
   },
   {
     label: 'Cover end date',
     id: 'coverEndDate',
-    href: `${exporterUri}/`,
+    href: `${exporterUrl}/`,
     method: (callback) => moment(callback).format('D MMMM YYYY'),
   },
   {
     label: 'Months the UKEF guarantee will be in place for',
     id: 'monthsOfCover',
-    href: `${exporterUri}/`,
+    href: `${exporterUrl}/`,
     suffix: ' months',
   },
   {
     label: 'Facility provided on',
     id: 'details',
-    href: `${exporterUri}/`,
+    href: `${exporterUrl}/`,
   },
   {
     label: 'Facility value',
     id: 'value',
-    href: `${exporterUri}/`,
+    href: `${exporterUrl}/`,
     isCurrency: true,
   },
   {
     label: 'Percentage of UKEF cover needed',
     id: 'coverPercentage',
-    href: `${exporterUri}/`,
+    href: `${exporterUrl}/`,
     suffix: '%',
   },
   {
     label: 'Your bank’s maximum liability',
     id: 'banksMaximumLiability',
-    href: `${exporterUri}/`,
+    href: `${exporterUrl}/`,
     isCurrency: true,
   },
   {
     label: 'UKEF’s maximum liability',
     id: 'ukefMaximumLiability',
-    href: `${exporterUri}/`,
+    href: `${exporterUrl}/`,
     isCurrency: true,
   },
   {
     label: 'Interest margin your bank will charge',
     id: 'interestPercentage',
-    href: `${exporterUri}/`,
+    href: `${exporterUrl}/`,
     suffix: '%',
   },
   {
     label: 'Risk margin your bank will charge',
     id: 'riskMarginPercentage',
-    href: `${exporterUri}/`,
+    href: `${exporterUrl}/`,
     suffix: '%',
   },
 ];
