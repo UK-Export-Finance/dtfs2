@@ -20,7 +20,7 @@
 {% if facilities.items.length < 1 %}
   <a class="govuk-link" href="#" data-cy="cancel">Add a facility</a>
 {% else %}
-  {% for item in facilities.items %}
+  {% for item in facilities.data %}
     <h3 class="govuk-heading-m" data-cy="main-heading">
       {{item.heading}} facility
     </h3>
@@ -30,9 +30,11 @@
   {% endfor %}
 {% endif %}
 
-{{ govukButton({
-  text: "Add another facility",
-  classes: "govuk-button--secondary"
-}) }}
+{% if facilities.items.length > 0 %}
+  {{ govukButton({
+    text: "Add another facility",
+    classes: "govuk-button--secondary"
+  }) }}
+{% endif %}
 
 <hr class="govuk-section-break govuk-section-break--bold govuk-section-break--m govuk-!-margin-bottom-7 govuk-section-break--visible">

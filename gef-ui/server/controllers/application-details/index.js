@@ -11,10 +11,10 @@ const applicationDetails = async (req, res) => {
     const facilities = await api.getFacilities(applicationId);
     const exporterUrl = `/gef/application-details/${applicationId}`;
 
-    const exporterStatus = status[exporter.status];
-    const facilitiesStatus = status[facilities.status];
-    const canSubmit = exporterStatus.code + facilitiesStatus.code === 4; // Both statuses are set to complete
 
+    const exporterStatus = status[exporter.status || 0]; // if null, set status to Not started
+    const facilitiesStatus = status[facilities.status || 0]; // if null, set status to Not started
+    const canSubmit = exporterStatus.code + facilitiesStatus.code === 4; // Both statuses are set to complete
     return res.render('partials/application-details.njk', {
       exporter: {
         status: exporterStatus,
@@ -22,7 +22,7 @@ const applicationDetails = async (req, res) => {
       },
       facilities: {
         status: facilitiesStatus,
-        items: facilities.items.map((item) => ({
+        items: facilities.data.map((item) => ({
           heading: facilityType[item.details.type],
           rows: mapSummaryList(item, facilityItems(exporterUrl)),
         })),
