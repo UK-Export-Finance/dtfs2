@@ -41,6 +41,7 @@ const exporterItems = (exporterUri) => [
     label: 'Is finance for this exporter increasing?',
     id: 'isFinanceIncreasing',
     href: `${exporterUri}/`,
+    method: (callback) => (callback ? 'Yes' : 'No'),
   },
 ];
 
