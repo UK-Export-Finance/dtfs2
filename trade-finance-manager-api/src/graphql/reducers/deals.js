@@ -12,11 +12,14 @@ const dealsReducer = (dealsquery, _productDictionary) => {
 
   const mapDeal = (d) => {
     const deal = d;
-    deal.submissionDetails = mapSubmissionDetails(d.submissionDetails);
+    deal.dealSnapshot.submissionDetails = mapSubmissionDetails(d.dealSnapshot.submissionDetails);
+
     if (d._id in _productDictionary) {
       deal.Product = _productDictionary[d._id];
     }
 
+    // hard coded for now
+    deal.tfm.product = 'BSS & EWCS';
     return deal;
   };
 
@@ -34,6 +37,7 @@ const dealsReducer = (dealsquery, _productDictionary) => {
     count,
     deals: dealsMap(deals),
   };
+
   return results;
 };
 
