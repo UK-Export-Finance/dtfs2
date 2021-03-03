@@ -34,7 +34,7 @@ const MockExporterResponse = () => {
 const MockFacilityResponse = () => {
   const res = {};
   res.status = 1;
-  res.items = [];
+  res.data = [];
   return res;
 };
 
@@ -62,13 +62,9 @@ describe('GET Application Details', () => {
       },
       facilities: {
         status: expect.any(Object),
-        items: [
-          {
-            heading: expect.any(String),
-            rows: expect.any(Array),
-          },
-        ],
+        data: expect.any(Array),
       },
+      submit: expect.any(Boolean),
     }));
   });
 
