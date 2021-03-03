@@ -5,7 +5,7 @@ import mandatoryCriteria from './pages/mandatory-criteria';
 context('Mandatory Criteria Page', () => {
   before(() => {
     cy.reinsertMocks();
-    cy.fixture('login')
+    cy.fixture('credentials')
       .then((res) => {
         cy.login(res.MAKER);
       });

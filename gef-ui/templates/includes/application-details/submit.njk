@@ -6,8 +6,11 @@
 
 {% if submit %}
   {{ govukButton({
-    text: "Submit to be checked at your bank"
+    text: "Submit to be checked at your bank",
+    attributes: {
+      'data-cy': 'submit-button'
+    }
   }) }}
 {% else %}
-  <p class="govuk-body">You cannot submit yet - you must complete all required sections first.</p>
+  <p class="govuk-body" data-cy="submit-validation-text">You cannot submit yet - you must complete all required sections first.</p>
 {% endif %}

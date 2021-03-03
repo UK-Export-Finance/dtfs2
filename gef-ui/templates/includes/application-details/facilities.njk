@@ -4,7 +4,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-half">
-    <h2 class="govuk-heading-l" data-cy="facilities-heading">
+    <h2 class="govuk-heading-l" data-cy="facility-heading">
       Facilities
     </h2>
   </div>
@@ -14,14 +14,14 @@
       text: facilities.status.text,
       classes: 'govuk-!-margin-top-2 govuk-!-margin-bottom-4' + ' ' + facilities.status.class,
       attributes: {
-        'data-cy': 'facilities-summary-list'
+        'data-cy': 'facility-status'
       }
     }) }}
   </div>
 </div>
 
 {% if facilities.data.length < 1 %}
-  <a class="govuk-link" href="#" data-cy="add-facility-link">Add a facility</a>
+  <a class="govuk-link" href="#" data-cy="facility-add-link">Add a facility</a>
 {% else %}
   {% for item in facilities.data %}
     <h3 class="govuk-heading-m" data-cy="facility-type-heading">
@@ -41,7 +41,7 @@
     text: "Add another facility",
     classes: "govuk-button--secondary",
     attributes: {
-      'data-cy': 'add-another-facility-button'
+      'data-cy': 'facility-add-another-button'
     }
   }) }}
 {% endif %}

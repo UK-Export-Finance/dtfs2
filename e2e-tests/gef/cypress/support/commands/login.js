@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
-const login = (opts) => {
-  const { username, password } = opts;
+const login = (credentials) => {
+  const { username, password } = credentials;
 
   cy.visit('/');
   cy.get('[data-cy="email"]').type(username);

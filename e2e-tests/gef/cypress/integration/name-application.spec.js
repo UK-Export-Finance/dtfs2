@@ -6,7 +6,7 @@ import nameApplication from './pages/name-application';
 context('Name Application Page', () => {
   before(() => {
     cy.reinsertMocks();
-    cy.fixture('login')
+    cy.fixture('credentials')
       .then((res) => {
         cy.login(res.MAKER);
       });
