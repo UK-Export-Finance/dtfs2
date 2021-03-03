@@ -52,66 +52,14 @@ const getFacilities = async (applicationId) => {
     return [];
   }
 
-  // try {
-  // const response = await Axios.get('/gef/facilities', { params: { applicationId } });
-  return {
-    status: 2,
-    items: [{
-      details: {
-        applicationId: '123',
-        type: 1,
-        hasBeenIssued: true,
-        name: 'My test',
-        startOnDayOfNotice: true,
-        coverStartDate: null,
-        coverEndDate: 1614682309534,
-        monthsOfCover: 7,
-        details: ['term-basis', 'committed-basis', 'other'],
-        detailsOther: null,
-        currency: 'GBP',
-        value: 2000,
-        coverPercentage: 20,
-        riskMarginPercentage: 14,
-        paymentType: Number,
-        createdAt: 1614682309534,
-        updatedAt: null,
-      },
-      validation: {
-        required: [],
-      },
-    },
-    {
-      details: {
-        applicationId: '123',
-        type: 0,
-        hasBeenIssued: true,
-        name: 'MONKEY',
-        startOnDayOfNotice: true,
-        banksMaximumLiability: 400000,
-        ukefMaximumLiability: 1600000,
-        coverStartDate: null,
-        coverEndDate: 1614682309534,
-        monthsOfCover: 7,
-        details: ['term-basis', 'committed-basis', 'other'],
-        detailsOther: null,
-        currency: 'GBP',
-        value: 2000,
-        coverPercentage: 20,
-        interestPercentage: 2.5,
-        paymentType: Number,
-        createdAt: 1614682309534,
-        updatedAt: null,
-      },
-      validation: {
-        required: [],
-      },
-    }],
-  };
-  // return response.data;
-  // } catch (err) {
-  //   console.log('error', err);
-  //   return apiErrorHandler(err);
-  // }
+  try {
+    const response = await Axios.get('/gef/facilities', { params: { applicationId } });
+    console.log('response', response);
+    return response.data;
+  } catch (err) {
+    console.log('error', err);
+    return apiErrorHandler(err);
+  }
 };
 
 export {
