@@ -20,7 +20,7 @@
 </div>
 
 {% if exporter.status.code === 0 %}
-  <a class="govuk-link" href="#" data-cy="enter-details-link">Enter details</a>
+  <a class="govuk-link" href="#" data-cy="exporter-details-link">Enter details</a>
 {% else %}
   {{ govukSummaryList({
     rows: exporter.rows,
