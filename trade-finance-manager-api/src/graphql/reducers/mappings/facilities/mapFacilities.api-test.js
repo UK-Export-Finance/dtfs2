@@ -3,6 +3,7 @@ const mapFacility = require('./mapFacility');
 const MOCK_DEAL = require('../../../../v1/__mocks__/mock-deal');
 
 describe('mapFacilities', () => {
+  const mockTfmFacility = {};
   const mockDealDetails = MOCK_DEAL.details;
 
   const mockCoverEndDate = {
@@ -23,6 +24,7 @@ describe('mapFacilities', () => {
 
   const MOCK_FACILITIES = [
     {
+      _id: '12345678',
       facilitySnapshot: {
         _id: '12345678',
         ukefFacilityID: '0040004833',
@@ -47,8 +49,10 @@ describe('mapFacilities', () => {
         feeType: 'At maturity',
         dayCountBasis: '365',
       },
+      tfm: mockTfmFacility,
     },
     {
+      _id: '23456789',
       facilitySnapshot: {
         _id: '23456789',
         ukefFacilityID: '0040004833',
@@ -81,6 +85,7 @@ describe('mapFacilities', () => {
         issueFacilityDetailsProvided: true,
         status: 'Acknowledged',
       },
+      tfm: mockTfmFacility,
     },
   ];
 
@@ -93,30 +98,18 @@ describe('mapFacilities', () => {
     const result = mapFacilities(mockFacilities, mockDealDetails);
 
     const expected = [
-      { facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[0].facilitySnapshot, mockDealDetails) } },
-      { facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[1].facilitySnapshot, mockDealDetails) } },
+      {
+        _id: MOCK_FACILITIES[0]._id, // eslint-disable-line no-underscore-dangle
+        facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[0].facilitySnapshot, mockTfmFacility, mockDealDetails) },
+        tfm: mockTfmFacility,
+      },
+      {
+        _id: MOCK_FACILITIES[1]._id, // eslint-disable-line no-underscore-dangle
+        facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[1].facilitySnapshot, mockTfmFacility, mockDealDetails) },
+        tfm: mockTfmFacility,
+      },
     ];
 
     expect(result).toEqual(expected);
-  });
-
-  describe('when facility.currency is NOT GBP', () => {
-    it('should return facilityValue as empty string', () => {
-      const facilitiesNonGBP = [
-        {
-          facilitySnapshot: {
-            ...mockFacilities[0].facilitySnapshot,
-            currency: {
-              text: 'USD - US Dollars',
-              id: 'USD',
-            },
-          },
-        },
-      ];
-
-      const result = mapFacilities(facilitiesNonGBP, mockDealDetails);
-
-      expect(result[0].facilitySnapshot.facilityValue).toEqual('');
-    });
   });
 });

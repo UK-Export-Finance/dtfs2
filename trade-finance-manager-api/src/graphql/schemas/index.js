@@ -179,6 +179,7 @@ type TFMDealData {
 type TFMFacilityData {
   bondIssuerPartyUrn: String
   bondBeneficiaryPartyUrn: String
+  facilityValueInGBP: String
 }
 
 input DashboardFilters {

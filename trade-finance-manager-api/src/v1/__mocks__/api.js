@@ -61,9 +61,14 @@ module.exports = {
   updateFacility: (facilityId, tfmUpdate) => {
     const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId); // eslint-disable-line no-underscore-dangle
 
+    // for some reason 2 api tests act differently if tfmUpdate is *not* included in both
+    // root object and in tfm object.
     return {
       ...facility,
       ...tfmUpdate,
+      tfm: {
+        ...tfmUpdate,
+      },
     };
   },
   getPartyDbInfo: ({ companyRegNo }) => (
