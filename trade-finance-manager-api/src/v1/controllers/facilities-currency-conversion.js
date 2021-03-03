@@ -4,11 +4,11 @@ const addFacilityCurrencyConversion = async (deal) => {
   const modifiedDeal = deal;
   let facilities = [];
 
-  // TODO we only have this logic because it acts differently in api tests and in real world.
-  // real world has snapshot, api test doesn't.
-  // get snapshot scenario working in api test, then can be removed
+  // workaround
+  // for some reason, in API tests we do not have dealSnapshot
+  // but in the real world, we do.
 
-  const dealHasSnapshot = (deal && deal.dealSnapshot);
+  const dealHasSnapshot = (modifiedDeal && modifiedDeal.dealSnapshot);
 
   if (dealHasSnapshot) {
     facilities = [
@@ -46,10 +46,7 @@ const addFacilityCurrencyConversion = async (deal) => {
         } = currencyExchange;
 
         const facilityUpdate = {
-          tfm: {
-            ...facility.tfm,
-            facilityValueInGBP: Number(facilityValue) * exchangeRate,
-          },
+          facilityValueInGBP: Number(facilityValue) * exchangeRate,
         };
 
         const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
@@ -81,7 +78,6 @@ const addFacilityCurrencyConversion = async (deal) => {
       }
       return modifiedDeal;
     });
-    // return modifiedDeal;
   });
 };
 
