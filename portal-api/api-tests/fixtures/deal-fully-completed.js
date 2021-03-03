@@ -391,7 +391,10 @@ const deal = {
     agentAddressLine1: 'ADDR 1',
     agentAddressLine2: 'Addr 2',
     agentAddressLine3: 'Addr 3',
-    agentAddressCountry: 'GBR',
+    agentAddressCountry: {
+      code: 'GBR',
+      name: 'United Kingdom',
+    },
     agentName: 'AGENT NAME',
     agentAddressPostcode: 'CF64 5SH',
     agentAddressTown: 'City',
