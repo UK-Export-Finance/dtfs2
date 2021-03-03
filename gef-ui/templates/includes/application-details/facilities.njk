@@ -17,7 +17,7 @@
   </div>
 </div>
 
-{% if facilities.items.length < 1 %}
+{% if facilities.data.length < 1 %}
   <a class="govuk-link" href="#" data-cy="cancel">Add a facility</a>
 {% else %}
   {% for item in facilities.data %}
@@ -30,7 +30,7 @@
   {% endfor %}
 {% endif %}
 
-{% if facilities.items.length > 0 %}
+{% if facilities.data.length > 0 %}
   {{ govukButton({
     text: "Add another facility",
     classes: "govuk-button--secondary"
