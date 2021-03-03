@@ -4,7 +4,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-half">
-    <h2 class="govuk-heading-l" data-cy="main-heading">
+    <h2 class="govuk-heading-l" data-cy="facilities-heading">
       Facilities
     </h2>
   </div>
@@ -12,20 +12,26 @@
   <div class="govuk-grid-column-one-half">
     {{ govukTag({
       text: facilities.status.text,
-      classes: 'govuk-!-margin-top-2 govuk-!-margin-bottom-4' + ' ' + facilities.status.class
+      classes: 'govuk-!-margin-top-2 govuk-!-margin-bottom-4' + ' ' + facilities.status.class,
+      attributes: {
+        'data-cy': 'facilities-summary-list'
+      }
     }) }}
   </div>
 </div>
 
 {% if facilities.data.length < 1 %}
-  <a class="govuk-link" href="#" data-cy="cancel">Add a facility</a>
+  <a class="govuk-link" href="#" data-cy="add-facility-link">Add a facility</a>
 {% else %}
   {% for item in facilities.data %}
-    <h3 class="govuk-heading-m" data-cy="main-heading">
+    <h3 class="govuk-heading-m" data-cy="facility-type-heading">
       {{item.heading}} facility
     </h3>
     {{ govukSummaryList({
-      rows: item.rows
+      rows: item.rows,
+      attributes: {
+        'data-cy': 'facility-summary-list'
+      }
     }) }}
   {% endfor %}
 {% endif %}
@@ -33,7 +39,10 @@
 {% if facilities.data.length > 0 %}
   {{ govukButton({
     text: "Add another facility",
-    classes: "govuk-button--secondary"
+    classes: "govuk-button--secondary",
+    attributes: {
+      'data-cy': 'add-another-facility-button'
+    }
   }) }}
 {% endif %}
 
