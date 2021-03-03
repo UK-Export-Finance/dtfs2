@@ -23,7 +23,7 @@
     </div>
     {% if not params.editable %}
       <div class="govuk-grid-column-one-half ukef-flex-container--align-center-right">
-        {{ uniqueReferenceNumberEditLink.render({dealId: deal._id, type: 'agent'}) }}
+        {{ uniqueReferenceNumberEditLink.render({dealId: deal._id, type: 'agent', linkText: "Edit agent details"}) }}
       </div>
     {% endif %}
   </div>
