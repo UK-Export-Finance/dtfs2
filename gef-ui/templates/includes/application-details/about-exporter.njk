@@ -3,7 +3,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-half">
-    <h2 class="govuk-heading-l" data-cy="main-heading">
+    <h2 class="govuk-heading-l" data-cy="exporter-heading">
       About the exporter
     </h2>
   </div>
@@ -11,16 +11,22 @@
   <div class="govuk-grid-column-one-half">
     {{ govukTag({
       text: exporter.status.text,
-      classes: 'govuk-!-margin-top-2 govuk-!-margin-bottom-4' + ' ' + exporter.status.class
+      classes: 'govuk-!-margin-top-2 govuk-!-margin-bottom-4' + ' ' + exporter.status.class,
+      attributes: {
+        'data-cy': 'exporter-status'
+      }
     }) }}
   </div>
 </div>
 
 {% if exporter.status.code === 0 %}
-  <a class="govuk-link" href="#" data-cy="cancel">Enter details</a>
+  <a class="govuk-link" href="#" data-cy="enter-details-link">Enter details</a>
 {% else %}
   {{ govukSummaryList({
-    rows: exporter.rows
+    rows: exporter.rows,
+    attributes: {
+      'data-cy': 'exporter-summary-list'
+    }
   }) }}
 {% endif %}
 
