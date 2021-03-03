@@ -3,9 +3,25 @@ const { userHasAccessTo } = require('../users/checks');
 const { getEligibilityErrors, getCriteria11Errors, getEligibilityStatus } = require('../validation/eligibility-criteria');
 const { getDocumentationErrors } = require('../validation/eligibility-documentation');
 const CONSTANTS = require('../../constants');
+const { findOneCountry } = require('./countries.controller');
+
+const countryObject = async (countryCode) => {
+  const countryObj = await findOneCountry(countryCode);
+
+  if (!countryObj) {
+    return {};
+  }
+
+  const { name, code } = countryObj;
+
+  return {
+    name,
+    code,
+  };
+};
 
 exports.update = async (req, res) => {
-  await findOneDeal(req.params.id, (deal) => {
+  await findOneDeal(req.params.id, async (deal) => {
     if (!deal) {
       res.status(404).send();
     }
@@ -47,7 +63,7 @@ exports.update = async (req, res) => {
 
       const criteria11Additional = {
         agentName: criteria11IsFalse && req.body.agentName ? req.body.agentName.substring(0, 150) : '',
-        agentAddressCountry: criteria11IsFalse ? req.body.agentAddressCountry : '',
+        agentAddressCountry: criteria11IsFalse ? await countryObject(req.body.agentAddressCountry) : '',
         agentAddressLine1: criteria11IsFalse ? req.body.agentAddressLine1 : '',
         agentAddressLine2: criteria11IsFalse ? req.body.agentAddressLine2 : '',
         agentAddressLine3: criteria11IsFalse ? req.body.agentAddressLine3 : '',
