@@ -7,7 +7,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     updatedAt: null,
     isInDraft: false,
     title: 'test 1',
-    htmlText: '<p class="govuk-body">Test is a mock test</p>',
+    htmlText: escape('<p class="govuk-body">Test is a mock test</p>'),
   },
   {
     version: 1.1,
@@ -15,7 +15,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     updatedAt: null,
     isInDraft: false,
     title: 'test 2',
-    htmlText: '<p class="govuk-body">Test is a mock test</p>',
+    htmlText: escape('<p class="govuk-body">Test is a mock test</p>'),
   },
   {
     version: 2,
@@ -53,7 +53,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     updatedAt: null,
     isInDraft: false,
     title: 'test 4 (old version)',
-    htmlText: '<p class="govuk-body">Test is a mock test</p>',
+    htmlText: escape('<p class="govuk-body">Test is a mock test</p>'),
   },
   {
     version: 3.4,
@@ -61,7 +61,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     updatedAt: null,
     isInDraft: true,
     title: 'test 5 (draft)',
-    htmlText: '<p class="govuk-body">Test is a mock test</p>',
+    htmlText: escape('<p class="govuk-body">Test is a mock test</p>'),
   },
 ];
 

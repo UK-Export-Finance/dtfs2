@@ -9,6 +9,7 @@ const nameApplication = {
   formError: () => cy.get('[data-cy="internal-ref-error"]'),
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
   firstErrorLink: () => cy.get('[data-cy="error-summary"]').first('a'),
+  applicationDetailsPage: () => cy.get('[data-cy="application-details-page"]'),
 };
 
 export default nameApplication;

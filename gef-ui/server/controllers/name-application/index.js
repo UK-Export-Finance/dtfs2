@@ -24,16 +24,16 @@ const createApplication = async (req, res) => {
       userId,
     });
 
-    // Show validation errors from server
-    if (application.response && application.response.status === 422) {
-      return res.render('partials/name-application.njk', {
-        errors: validationErrorHandler(application.response.messages, 'name-application'),
-      });
-    }
-
     // eslint-disable-next-line no-underscore-dangle
     return res.redirect(`application-details/${application._id}`);
   } catch (err) {
+    // Show validation errors from server
+    if (err.status === 422) {
+      return res.render('partials/name-application.njk', {
+        errors: validationErrorHandler(err.data, 'name-application'),
+      });
+    }
+
     return res.render('partials/problem-with-service.njk');
   }
 };

@@ -1,13 +1,13 @@
 import ineligible from './index';
 
-const mockResponse = () => {
+const MockResponse = () => {
   const res = {};
   res.redirect = jest.fn();
   res.render = jest.fn();
   return res;
 };
 
-const response = mockResponse();
+const mockResponse = new MockResponse();
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -15,7 +15,7 @@ afterEach(() => {
 
 describe('GET Mandatory Criteria', () => {
   it('renders the `ineligible` template', async () => {
-    await ineligible({}, response);
-    expect(response.render).toHaveBeenCalledWith('partials/ineligible.njk');
+    await ineligible({}, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/ineligible.njk');
   });
 });
