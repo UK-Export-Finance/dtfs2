@@ -1,4 +1,4 @@
-import ineligibleGef from './index';
+import ineligibleAutomaticCover from './index';
 
 const mockResponse = () => {
   const res = {};
@@ -13,9 +13,16 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe('GET Mandatory Criteria', () => {
-  it('renders the `ineligible for GEF` template', async () => {
-    await ineligibleGef({}, response);
-    expect(response.render).toHaveBeenCalledWith('partials/ineligible-gef.njk');
+describe('GET Ineligible Automatic Cover', () => {
+  it('renders the `ineligible for Automatic Cover` template with the correct paramaters', async () => {
+    const mockedRequest = {
+      params: {
+        applicationId: '123',
+      },
+    };
+    await ineligibleAutomaticCover(mockedRequest, response);
+    expect(response.render).toHaveBeenCalledWith('partials/ineligible-automatic-cover.njk', {
+      applicationId: '123',
+    });
   });
 });
