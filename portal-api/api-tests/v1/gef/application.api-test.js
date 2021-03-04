@@ -103,6 +103,11 @@ describe(baseUrl, () => {
       };
       expect(body).toEqual(expectMongoId(expected));
     });
+
+    it('returns a 204 - "No Content" if there are no records', async () => {
+      const { status } = await as(aMaker).get(`${baseUrl}/doesnotexist`);
+      expect(status).toEqual(204);
+    });
   });
 
   describe(`POST ${baseUrl}`, () => {
@@ -183,6 +188,11 @@ describe(baseUrl, () => {
       const { status } = await as(aMaker).put(updated).to(`${baseUrl}/${body._id}`);
       expect(status).toEqual(200);
     });
+
+    it('returns a 204 - "No Content" if there are no records', async () => {
+      const { status } = await as(aMaker).put(updated).to(`${baseUrl}/doesnotexist`);
+      expect(status).toEqual(204);
+    });
   });
 
   describe(`DELETE ${baseUrl}/:id`, () => {
@@ -191,19 +201,16 @@ describe(baseUrl, () => {
       expect(status).toEqual(401);
     });
 
-    // it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-    //   await as(anEditor).post(newMandatoryCriteria).to('/v1/gef/mandatory-criteria-versioned');
-
-    //   const { status } = await as(noRoles).remove('/v1/gef/mandatory-criteria-versioned/1');
-
-    //   expect(status).toEqual(401);
-    // });
-
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
       const { body } = await as(aMaker).post(allItems[0]).to(`${baseUrl}`);
       const { status } = await as(aMaker).remove(`${baseUrl}/${String(body._id)}`);
       expect(status).toEqual(200);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
+    });
+
+    it('returns a 204 - "No Content" if there are no records', async () => {
+      const { status } = await as(aMaker).remove(`${baseUrl}/doesnotexist`);
+      expect(status).toEqual(204);
     });
   });
 });

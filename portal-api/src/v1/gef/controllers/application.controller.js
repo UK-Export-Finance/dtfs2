@@ -65,26 +65,36 @@ exports.getAll = async (req, res) => {
 exports.getById = async (req, res) => {
   const collection = await db.getCollection(applicationCollectionName);
   const doc = await collection.findOne({ _id: ObjectId(String(req.params.id)) });
-  res.status(200).send(doc);
+  if (doc) {
+    res.status(200).send(doc);
+  } else {
+    res.status(204).send();
+  }
 };
 
 exports.update = async (req, res) => {
   const collection = await db.getCollection(applicationCollectionName);
   const update = new Application(req.body);
-  const response = await collection.findOneAndUpdate(
+  const result = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(String(req.params.id)) } }, { $set: update }, { returnOriginal: false },
   );
-  res.status(utils.mongoStatus(response)).send(response.value);
+  let response;
+  if (result.value) {
+    response = result.value;
+  }
+  res.status(utils.mongoStatus(result)).send(response);
 };
 
 exports.delete = async (req, res) => {
   const applicationCollection = await db.getCollection(applicationCollectionName);
-  const exporterCollection = await db.getCollection(exporterCollectionName);
-  const facilitiesCollection = await db.getCollection(facilitiesCollectionName);
   const applicationResponse = await applicationCollection.findOneAndDelete({ _id: ObjectId(String(req.params.id)) });
-  await exporterCollection.findOneAndDelete({ _id: ObjectId(String(applicationResponse.value.exporterId)) });
-  await facilitiesCollection.deleteMany({
-    applicationId: ObjectId(String(req.params.id)),
-  });
-  res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value);
+  if (applicationResponse.value) {
+    // remove exporter information related to the application
+    const exporterCollection = await db.getCollection(exporterCollectionName);
+    await exporterCollection.findOneAndDelete({ _id: ObjectId(String(applicationResponse.value.exporterId)) });
+    // remove facility information related to the application
+    const facilitiesCollection = await db.getCollection(facilitiesCollectionName);
+    await facilitiesCollection.deleteMany({ applicationId: ObjectId(String(req.params.id)) });
+  }
+  res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
 };
