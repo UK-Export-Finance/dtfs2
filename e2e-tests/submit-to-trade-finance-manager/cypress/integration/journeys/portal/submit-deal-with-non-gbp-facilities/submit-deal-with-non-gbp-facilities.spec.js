@@ -68,11 +68,11 @@ context('Portal to TFM deal submission', () => {
     // user can view the submitted deal in TFM
     //---------------------------------------------------------------
     // Cypress.config('tfmUrl') returns incorrect url...
-    const tfmUrl = 'http://localhost:5003';
-    const tfmCaseDealPage = `${tfmUrl}/case/${dealId}/deal`;
+    const tfmRootUrl = 'http://localhost:5003';
+    const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
 
     cy.forceVisit(tfmCaseDealPage);
-    cy.url().should('eq', `${tfmUrl}/case/${dealId}/deal`);
+    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/deal`);
 
     //---------------------------------------------------------------
     // deal facilities with non-GBP currency display GBP and non-GBP currency values
@@ -83,7 +83,7 @@ context('Portal to TFM deal submission', () => {
 
     facilityRow.facilityId().click();
 
-    cy.url().should('eq', relative(`/case/${dealId}/facility/${facilityId}`));
+    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/facility/${facilityId}`);
 
     tfmPages.facilityPage.facilityValueExportCurrency().invoke('text').then((text) => {
       const facilityCurrency = facilityWithNonGBPCurrency.currency.id;
