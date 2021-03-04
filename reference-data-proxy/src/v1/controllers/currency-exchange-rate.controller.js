@@ -1,13 +1,22 @@
 const axios = require('axios');
 
 exports.getExchangeRate = async (req, res) => {
-  console.log('Calling Exchange rate API');
-
   const { source, target } = req.params;
+
+  console.log(`Calling Exchange rate API - ${source} to ${target}`);
+
+  // API does not support XYZ to GBP conversion so we have to reverse and calculate
+  let actualSource = source;
+  let actualTarget = target;
+
+  if (source !== 'GBP' && target === 'GBP') {
+    actualSource = 'GBP';
+    actualTarget = source;
+  }
 
   const response = await axios({
     method: 'get',
-    url: `${process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL}?source=${source}&target=${target}`,
+    url: `${process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL}?source=${actualSource}&target=${actualTarget}`,
     auth: {
       username: process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY,
       password: process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET,
@@ -19,5 +28,14 @@ exports.getExchangeRate = async (req, res) => {
 
   const { status, data } = response;
 
-  return res.status(status).send(data[0]);
+  const { midPrice } = data[0];
+
+  const responseObj = { midPrice };
+
+  // workaround for API not supporting XYZ to GBP conversion
+  if (source !== 'GBP') {
+    responseObj.midPrice = (1 / midPrice);
+  }
+
+  return res.status(status).send(responseObj);
 };
