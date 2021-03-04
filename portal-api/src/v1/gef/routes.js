@@ -10,7 +10,7 @@ const router = express.Router();
 
 // Application
 router.route('/application')
-  .get(validate({ role: ['checker', 'data-admin'] }), application.getAll)
+  .get(validate({ role: ['maker', 'checker', 'data-admin'] }), application.getAll)
   .post(validate({ role: ['maker', 'data-admin'] }), application.create);
 
 router.route('/application/:id')

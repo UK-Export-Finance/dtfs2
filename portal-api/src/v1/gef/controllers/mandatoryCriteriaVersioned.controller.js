@@ -74,11 +74,11 @@ exports.update = async (req, res) => {
   const response = await collection.findOneAndUpdate(
     { _id: ObjectID(req.params.id) }, { $set: update }, { returnOriginal: false },
   );
-  res.status(utils.mongoStatus(response)).send(response.value);
+  res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection(collectionName);
   const response = await collection.findOneAndDelete({ _id: new ObjectID(String(req.params.id)) });
-  res.status(utils.mongoStatus(response)).send(response.value);
+  res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };
