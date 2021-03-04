@@ -45,7 +45,6 @@ module.exports.createFacilities = (dealId, facilities, user, token) => cy.reques
     Authorization: token,
   },
 }).then((resp) => {
-  console.log('testttt \n', resp);
   expect(resp.status).to.equal(200);
   return resp.body;
 });

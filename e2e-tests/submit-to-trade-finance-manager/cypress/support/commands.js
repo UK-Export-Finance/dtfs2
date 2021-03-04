@@ -31,17 +31,12 @@ import 'cypress-audit/commands';
 
 // commands used to interact directly with portal-api
 Cypress.Commands.add('insertManyDeals', require('./portal-api/insertManyDeals'));
-Cypress.Commands.add('deleteDeals', require('./portal-api/deleteDeals'));
 
 Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'));
 
 
 // commands that abstract common tasks you might perform while clicking round the portal..
-Cypress.Commands.add('createADeal', require('./portal/createADeal'));
 Cypress.Commands.add('login', require('./portal/logIn'));
-
-// commands that add/edit facilities directly in central API
-Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));
 
 
 Cypress.Commands.add('forceVisit', (url) => {
