@@ -34,11 +34,13 @@ module.exports = {
     return deal ? Promise.resolve(deal) : Promise.reject();
   },
   queryDeals: () => ALL_MOCK_DEALS,
-  updateDeal: (dealId, updatedDeal) => {
+  updateDeal: (dealId, updatedTfmDealData) => {
     const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
     return {
-      ...deal,
-      ...updatedDeal,
+      dealSnapshot: {
+        ...deal,
+      },
+      ...updatedTfmDealData,
     };
   },
   submitDeal: (dealId) => ({

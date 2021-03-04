@@ -21,7 +21,7 @@ describe('/v1/deals', () => {
       const { status, body } = await api.put({ dealId: MOCK_DEAL_NO_COMPANIES_HOUSE._id }).to('/v1/deals/submit');
 
       const tfmDeal = {
-        ...MOCK_DEAL_NO_COMPANIES_HOUSE,
+        dealSnapshot: MOCK_DEAL_NO_COMPANIES_HOUSE,
         tfm: {
           parties: {
             exporter: {
@@ -39,7 +39,7 @@ describe('/v1/deals', () => {
       const { status, body } = await api.put({ dealId: MOCK_DEAL_NO_PARTY_DB._id }).to('/v1/deals/submit');
 
       const tfmDeal = {
-        ...MOCK_DEAL_NO_PARTY_DB,
+        dealSnapshot: MOCK_DEAL_NO_PARTY_DB,
         tfm: {
           parties: {
             exporter: {
@@ -55,8 +55,9 @@ describe('/v1/deals', () => {
 
     it('returns the requested resource with partyUrn if matched', async () => {
       const { status, body } = await api.put({ dealId: MOCK_DEAL._id }).to('/v1/deals/submit');
+
       const tfmDeal = {
-        ...MOCK_DEAL,
+        dealSnapshot: MOCK_DEAL,
         tfm: {
           parties: {
             exporter: {
@@ -75,10 +76,10 @@ describe('/v1/deals', () => {
 
       expect(status).toEqual(200);
 
-      const bond = body.bondTransactions.items[0];
+      const bond = body.dealSnapshot.bondTransactions.items[0];
       expect(bond.tfm.facilityValueInGBP).toEqual(Number(bond.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE);
 
-      const loan = body.loanTransactions.items[0];
+      const loan = body.dealSnapshot.loanTransactions.items[0];
       expect(loan.tfm.facilityValueInGBP).toEqual(Number(loan.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE);
     }); 
   });
