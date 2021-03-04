@@ -37,7 +37,7 @@ const addFacilityCurrencyConversion = async (deal) => {
         facilityType,
       } = facility;
 
-      if (currency.id !== 'GBP') {
+      if (currency && currency.id !== 'GBP') {
         shouldUpdateCount += 1;
         const currencyExchange = await api.getCurrencyExchangeRate(currency.id, 'GBP');
 
