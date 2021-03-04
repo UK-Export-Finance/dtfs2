@@ -1,11 +1,11 @@
 const wipeDB = require('../../wipeDB');
-const aDeal = require('../deals/deal-builder');
+const aDeal = require('./deal-builder');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
 const { as } = require('../../api')(app);
-const { expectAddedFields } = require('../deals/expectAddedFields');
+const { expectAddedFields } = require('./expectAddedFields');
 
 const {
   updatedECPartial,

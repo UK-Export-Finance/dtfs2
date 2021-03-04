@@ -104,7 +104,10 @@ const generateTypeA = async (deal, fromStatus) => {
     .Ec_agents_address_line_3(deal.eligibility.agentAddressLine3)
     .Ec_agents_address_town(deal.eligibility.agentAddressTown)
     .Ec_agents_address_postal_code(deal.eligibility.agentAddressPostcode)
-    .Ec_agents_address_country(await convertCountryCodeToId(deal.eligibility.agentAddressCountry))
+    .Ec_agents_address_country(
+      deal.eligibility.agentAddressCountry
+      && await convertCountryCodeToId(deal.eligibility.agentAddressCountry.code),
+    )
 
     .Ec_initial_term_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 12))
     .Ec_total_exposure_check(eligibilityCriteriaHelper.isCriteriaSet(deal.eligibility, 13))
