@@ -20,6 +20,6 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith('/ineligible', validateToken, expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/ineligible-gef', validateToken, expect.any(Function));
   });
 });
