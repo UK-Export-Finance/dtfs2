@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 
 const wipeDB = require('../../wipeDB');
 
@@ -5,7 +6,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
 const { as } = require('../../api')(app);
-const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
+const { expectMongoId } = require('../../expectMongoIds');
 
 const baseUrl = '/v1/gef/application';
 const collectionName = 'gef-application';
@@ -13,15 +14,17 @@ const collectionName = 'gef-application';
 const allItems = require('../../fixtures/gef/application');
 
 describe(baseUrl, () => {
-  let noRoles;
+  // let noRoles;
   let aMaker;
-  let anEditor;
+  let aChecker;
+  // let anEditor;
 
-  beforeAll(async() => {
+  beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
+    // noRoles = testUsers().withoutAnyRoles().one();
     aMaker = testUsers().withRole('maker').one();
-    anEditor = testUsers().withRole('editor').one();
+    aChecker = testUsers().withRole('checker').one();
+    // anEditor = testUsers().withRole('editor').one();
   });
 
   beforeEach(async () => {
@@ -29,14 +32,12 @@ describe(baseUrl, () => {
   });
 
   describe(`GET ${baseUrl}`, () => {
-
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().get(baseUrl);
       expect(status).toEqual(401);
     });
 
     it('returns list of all items', async () => {
-
       await as(aMaker).post(allItems[0]).to(baseUrl);
       await as(aMaker).post(allItems[1]).to(baseUrl);
       await as(aMaker).post(allItems[2]).to(baseUrl);
@@ -62,32 +63,49 @@ describe(baseUrl, () => {
 
       // await Promise.all(promise);
 
-      const { body, status } = await as(aMaker).get(baseUrl);
+      const { body, status } = await as(aChecker).get(baseUrl);
 
-      expected = {
-        count: allItems.length,
-        data: expectMongoIds(allItems)
-      }
+      const expected = {
+        items: allItems.map((item) => ({
+          ...expectMongoId(item),
+          exporterId: expect.any(String),
+          createdAt: expect.any(Number),
+          facilityIds: null,
+        })),
+      };
 
       expect(body).toEqual(expected);
       expect(status).toEqual(200);
-
     });
-
   });
 
   describe(`GET ${baseUrl}/:id`, () => {
-
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().get(`${baseUrl}/1`);
       expect(status).toEqual(401);
     });
 
+    it('accepts requests that present a valid Authorization token with "maker" role', async () => {
+      const item = await as(aMaker).post(allItems[0]).to(baseUrl);
+      const { status } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
+      expect(status).toEqual(200);
+    });
+
     it('returns an individual item', async () => {
       const item = await as(aMaker).post(allItems[0]).to(baseUrl);
-      const { status, body } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
-      expect(status).toEqual(200);
-      expect(body).toEqual(expectMongoId(allItems[0]));
+      const { body } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
+      const expected = {
+        ...allItems[0],
+        exporterId: expect.any(String),
+        createdAt: expect.any(Number),
+        facilityIds: null,
+      };
+      expect(body).toEqual(expectMongoId(expected));
+    });
+
+    it('returns a 204 - "No Content" if there are no records', async () => {
+      const { status } = await as(aMaker).get(`${baseUrl}/doesnotexist`);
+      expect(status).toEqual(204);
     });
   });
 
@@ -102,9 +120,15 @@ describe(baseUrl, () => {
       expect(status).toEqual(201);
     });
 
-    it('it returns the item I created', async () => {
+    it('returns me a new application upon creation', async () => {
       const { body } = await as(aMaker).post(allItems[0]).to(baseUrl);
-      expect(body).toEqual(expectMongoId(allItems[0]))
+      const expected = {
+        ...allItems[0],
+        exporterId: expect.any(String),
+        createdAt: expect.any(Number),
+        facilityIds: null,
+      };
+      expect(body).toEqual(expectMongoId(expected));
     });
 
     it('it returns a duplicate error in the system the item I created an application of the same reference', async () => {
@@ -120,9 +144,9 @@ describe(baseUrl, () => {
 
     it('it tells me the Bank Internal Ref Name is null', async () => {
       const removeName = {
-        ...allItems[0], 
-        bankInternalRefName: null
-      }
+        ...allItems[0],
+        bankInternalRefName: null,
+      };
       const { body, status } = await as(aMaker).post(removeName).to(baseUrl);
       expect(body).toEqual([{
         errCode: 'MANDATORY_FIELD',
@@ -134,9 +158,9 @@ describe(baseUrl, () => {
 
     it('it tells me the Bank Internal Ref Name is an empty string', async () => {
       const removeName = {
-        ...allItems[0], 
-        bankInternalRefName: ''
-      }
+        ...allItems[0],
+        bankInternalRefName: '',
+      };
       const { body, status } = await as(aMaker).post(removeName).to(baseUrl);
       expect(body).toEqual([{
         errCode: 'MANDATORY_FIELD',
@@ -145,15 +169,13 @@ describe(baseUrl, () => {
       }]);
       expect(status).toEqual(422);
     });
-
   });
 
   describe(`PUT ${baseUrl}/:id`, () => {
-
     const updated = {
-      ...allItems[0], 
-      bankInternalRefName: 'Updated Ref Name (Unit Test)'
-    }
+      ...allItems[0],
+      bankInternalRefName: 'Updated Ref Name (Unit Test)',
+    };
 
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().put(updated).to(`${baseUrl}/1`);
@@ -166,6 +188,10 @@ describe(baseUrl, () => {
       expect(status).toEqual(200);
     });
 
+    it('returns a 204 - "No Content" if there are no records', async () => {
+      const { status } = await as(aMaker).put(updated).to(`${baseUrl}/doesnotexist`);
+      expect(status).toEqual(204);
+    });
   });
 
   describe(`DELETE ${baseUrl}/:id`, () => {
@@ -174,20 +200,16 @@ describe(baseUrl, () => {
       expect(status).toEqual(401);
     });
 
-    // it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-    //   await as(anEditor).post(newMandatoryCriteria).to('/v1/gef/mandatory-criteria-versioned');
-
-    //   const { status } = await as(noRoles).remove('/v1/gef/mandatory-criteria-versioned/1');
-
-    //   expect(status).toEqual(401);
-    // });
-
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
       const { body } = await as(aMaker).post(allItems[0]).to(`${baseUrl}`);
       const { status } = await as(aMaker).remove(`${baseUrl}/${String(body._id)}`);
       expect(status).toEqual(200);
-      expect(body).not.toEqual({ success: false, msg: "you don't have the right role" })
+      expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
     });
 
+    it('returns a 204 - "No Content" if there are no records', async () => {
+      const { status } = await as(aMaker).remove(`${baseUrl}/doesnotexist`);
+      expect(status).toEqual(204);
+    });
   });
 });
