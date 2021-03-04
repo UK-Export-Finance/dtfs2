@@ -49,8 +49,7 @@ exports.findAll = (req, res) => (
   findMandatoryCriteria((mandatoryCriteria) =>
     sortMandatoryCriteria(mandatoryCriteria, (sortedMandatoryCriteria) =>
       res.status(200).send({
-        count: mandatoryCriteria.length,
-        mandatoryCriteria: sortedMandatoryCriteria,
+        items: sortedMandatoryCriteria,
       })))
 );
 
