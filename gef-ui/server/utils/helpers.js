@@ -39,7 +39,7 @@ const validationErrorHandler = (errs, href = '') => {
   errors.forEach((el) => {
     errorSummary.push({
       text: el.errMsg,
-      href: `${href}#${el.errRef}`,
+      href: `#${el.errRef}`,
     });
     fieldErrors[el.errRef] = {
       text: el.errMsg,
