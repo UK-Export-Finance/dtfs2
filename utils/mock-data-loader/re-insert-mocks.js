@@ -9,6 +9,7 @@ const insertMocksGef = require('./insert-mocks-gef');
 const cleanAllTablesTfm = require('./tfm/clean-all-tables-tfm');
 const insertMocksTfm = require('./tfm/insert-mocks-tfm');
 
+
 const init = async () => {
   await cleanAllTables();
   await insertMocks();
