@@ -16,7 +16,7 @@ const automaticCover = async (req, res) => {
   try {
     const cover = {
       version: 123,
-      terms: [
+      items: [
         {
           id: 'coverStart',
           htmlText: decode('<p>12. The period between the Cover Start Date and the  Cover End Date does not exceed the Facility Maximum Cover Period.</p>'),
@@ -38,7 +38,7 @@ const automaticCover = async (req, res) => {
     }; // await api.getAutomaticCover();
 
     return res.render('partials/automatic-cover.njk', {
-      terms: cover.terms,
+      terms: cover.items,
 
     });
   } catch (err) {
@@ -51,7 +51,7 @@ const validateAutomaticCover = async (req, res) => {
 
   const cover = {
     version: 123,
-    terms: [
+    items: [
       {
         id: 'coverStart',
         htmlText: decode('<p>12. The period between the Cover Start Date and the  Cover End Date does not exceed the Facility Maximum Cover Period.</p>'),
@@ -72,11 +72,11 @@ const validateAutomaticCover = async (req, res) => {
     ],
   };
 
-  const automaticCoverErrors = new AutomaticCoverErrors(body, cover.terms);
+  const automaticCoverErrors = new AutomaticCoverErrors(body, cover.items);
 
   return res.render('partials/automatic-cover.njk', {
     errors: validationErrorHandler(automaticCoverErrors, 'automatic-cover'),
-    terms: cover.terms,
+    terms: cover.items,
     selected: body,
   });
 
