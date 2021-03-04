@@ -12,7 +12,15 @@ function AutomaticCoverErrors(fields, items) {
   }));
 }
 
+function fieldContainsAFalseBoolean(fields) {
+  const receivedFields = Object.values(fields);
+  return receivedFields.some((field) => field === 'false');
+}
+
 const automaticCover = async (req, res) => {
+  const { params } = req;
+  const { applicationId } = params;
+
   try {
     const cover = {
       version: 123,
@@ -39,7 +47,7 @@ const automaticCover = async (req, res) => {
 
     return res.render('partials/automatic-cover.njk', {
       terms: cover.items,
-
+      applicationId,
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
@@ -47,63 +55,75 @@ const automaticCover = async (req, res) => {
 };
 
 const validateAutomaticCover = async (req, res) => {
-  const { body } = req;
+  const { body, params } = req;
+  const { applicationId } = params;
 
-  const cover = {
-    version: 123,
-    items: [
-      {
-        id: 'coverStart',
-        htmlText: decode('<p>12. The period between the Cover Start Date and the  Cover End Date does not exceed the Facility Maximum Cover Period.</p>'),
-        errMsg: '12. Select if the Maximum Cover period has been exceeded',
-      },
-      {
-        id: 'noticeDate',
-        htmlText: decode('<p>13. The period between the Inclusion Notice Date and the Requested Cover Start Date does not exceed 3 months or such longer period as may be agreed by UKEF.</p>'),
-        errMsg: '13. Select if the period between the includsion Notice Date and the Requested Cover Start Date exceeds 3 months or any other period agreed by UKEF',
-      },
-      {
-        id: 'facilityLimit',
-        htmlText: decode(`<p>14.  The Covered Facility Limit (converted for this purpose into the Master Guarantee Base Currency ) of the facility is not more than the lesser of:</p>
-                <p>(i) the Available Master Guarantee Limit 
-                (ii) the Available Obligor’s limit</p>`),
-        errMsg: '14. Select if the Covered Facility Limit is not more than the lowest of either of the 2 options',
-      },
-    ],
-  };
+  try {
+    const cover = {
+      version: 123,
+      items: [
+        {
+          id: 'coverStart',
+          htmlText: decode('<p>12. The period between the Cover Start Date and the  Cover End Date does not exceed the Facility Maximum Cover Period.</p>'),
+          errMsg: '12. Select if the Maximum Cover period has been exceeded',
+        },
+        {
+          id: 'noticeDate',
+          htmlText: decode('<p>13. The period between the Inclusion Notice Date and the Requested Cover Start Date does not exceed 3 months or such longer period as may be agreed by UKEF.</p>'),
+          errMsg: '13. Select if the period between the includsion Notice Date and the Requested Cover Start Date exceeds 3 months or any other period agreed by UKEF',
+        },
+        {
+          id: 'facilityLimit',
+          htmlText: decode(`<p>14.  The Covered Facility Limit (converted for this purpose into the Master Guarantee Base Currency ) of the facility is not more than the lesser of:</p>
+                  <p>(i) the Available Master Guarantee Limit 
+                  (ii) the Available Obligor’s limit</p>`),
+          errMsg: '14. Select if the Covered Facility Limit is not more than the lowest of either of the 2 options',
+        },
+      ],
+    };
 
-  const automaticCoverErrors = new AutomaticCoverErrors(body, cover.items);
+    // await api.getAutomaticCover();
 
-  return res.render('partials/automatic-cover.njk', {
-    errors: validationErrorHandler(automaticCoverErrors, 'automatic-cover'),
-    terms: cover.items,
-    selected: body,
-  });
+    const automaticCoverErrors = new AutomaticCoverErrors(body, cover.items);
+
+    if (automaticCoverErrors.length > 0) {
+      return res.render('partials/automatic-cover.njk', {
+        errors: validationErrorHandler(automaticCoverErrors, 'automatic-cover'),
+        terms: cover.items,
+        selected: body,
+        applicationId,
+      });
+    }
+
+    // If form has at least 1 false, then redirect user to not eligible page
+    if (fieldContainsAFalseBoolean(body)) {
+      return res.redirect('ineligible-automatic-cover');
+    }
 
 
-  // try {
-  //   const criteria = await api.getMandatoryCriteria();
+    // try {
+    //   const criteria = await api.getMandatoryCriteria();
 
 
-  //   if (isEmpty) {
-  //     const mandatoryError = {
-  //       errRef: 'bankInternalRefName',
-  //       errMsg: 'You must enter a bank reference or name',
-  //     };
-  //     return res.render('partials/mandatory-criteria.njk', {
-  //       errors: validationErrorHandler(mandatoryError, 'mandatory-criteria'),
-  //       criteria,
-  //     });
-  //   }
+    //   if (isEmpty) {
+    //     const mandatoryError = {
+    //       errRef: 'bankInternalRefName',
+    //       errMsg: 'You must enter a bank reference or name',
+    //     };
+    //     return res.render('partials/mandatory-criteria.njk', {
+    //       errors: validationErrorHandler(mandatoryError, 'mandatory-criteria'),
+    //       criteria,
+    //     });
+    //   }
 
-  //   if (parseBool(mandatoryCriteria)) {
-  //     return res.redirect('name-application');
-  //   }
+    //   if (parseBool(mandatoryCriteria)) {
+    //     return res.redirect('name-application');
+    //   }
 
   //   return res.redirect('ineligible');
-  // } catch (err) {
-  //   return res.render('partials/problem-with-service.njk');
-  // }
+  } catch (err) {
+    return res.render('partials/problem-with-service.njk');
+  }
 };
 
 export {
