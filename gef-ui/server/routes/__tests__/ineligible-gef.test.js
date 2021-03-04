@@ -12,7 +12,7 @@ jest.doMock('express', () => ({
 describe('Routes', () => {
   beforeEach(() => {
     // eslint-disable-next-line global-require
-    require('../ineligible');
+    require('../ineligible-gef');
   });
 
   afterEach(() => {
