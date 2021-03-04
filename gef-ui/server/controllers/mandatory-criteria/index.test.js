@@ -71,7 +71,7 @@ describe('Validate Mandatory Criteria', () => {
       },
     };
     await validateMandatoryCriteria(mockedRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith('ineligible');
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/ineligible');
   });
 
   it('redirects user to `problem with service` page if there is an issue with the api', async () => {
