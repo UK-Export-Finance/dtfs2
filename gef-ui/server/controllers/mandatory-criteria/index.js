@@ -32,7 +32,7 @@ const validateMandatoryCriteria = async (req, res) => {
         errMsg: 'Select if the mandatory criteria will be true or false on the date that cover starts',
       };
       return res.render('partials/mandatory-criteria.njk', {
-        errors: validationErrorHandler(mandatoryError, 'mandatory-criteria'),
+        errors: validationErrorHandler(mandatoryError),
         criteria: {
           ...criteria,
           htmlText: decode(criteria.htmlText),
@@ -44,7 +44,7 @@ const validateMandatoryCriteria = async (req, res) => {
       return res.redirect('name-application');
     }
 
-    return res.redirect('ineligible');
+    return res.redirect('/gef/ineligible');
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
   }
