@@ -100,27 +100,7 @@ const validateAutomaticCover = async (req, res) => {
       return res.redirect('ineligible-automatic-cover');
     }
 
-
-    // try {
-    //   const criteria = await api.getMandatoryCriteria();
-
-
-    //   if (isEmpty) {
-    //     const mandatoryError = {
-    //       errRef: 'bankInternalRefName',
-    //       errMsg: 'You must enter a bank reference or name',
-    //     };
-    //     return res.render('partials/mandatory-criteria.njk', {
-    //       errors: validationErrorHandler(mandatoryError, 'mandatory-criteria'),
-    //       criteria,
-    //     });
-    //   }
-
-    //   if (parseBool(mandatoryCriteria)) {
-    //     return res.redirect('name-application');
-    //   }
-
-  //   return res.redirect('ineligible');
+    return res.redirect(`/gef/application-details/${applicationId}`);
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
   }
