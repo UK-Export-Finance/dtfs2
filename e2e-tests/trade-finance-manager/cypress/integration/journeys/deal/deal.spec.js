@@ -1,6 +1,7 @@
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import MOCK_DEAL from '../../../fixtures/deal';
+import MOCK_USERS from '../../../fixtures/users';
 
 const MOCK_MAKER_TFM = {
   username: 'MAKER-TFM',
@@ -55,6 +56,11 @@ context('User can view a case deal', () => {
       });
   });
 
+  beforeEach(() => {
+    cy.login(MOCK_USERS[0]);
+    cy.visit(relative(`/case/${dealId}/deal`));
+  });
+
   after(() => {
     dealFacilities.forEach((facility) => {
       cy.deleteFacility(facility._id, MOCK_MAKER_TFM); // eslint-disable-line no-underscore-dangle
@@ -62,10 +68,6 @@ context('User can view a case deal', () => {
   });
 
   it('should render case deal components', () => {
-    // cy.login(MOCK_USER);
-
-    cy.visit(relative(`/case/${dealId}/deal`));
-
     pages.caseDealPage.caseSummary().should('exist');
     pages.caseDealPage.caseSubNavigation().should('exist');
     pages.caseDealPage.dealBankDetails().should('exist');
@@ -79,9 +81,6 @@ context('User can view a case deal', () => {
 
   describe('facilities table', () => {
     it('clicking `Facility ID` link should take user to facility details page', () => {
-      // cy.login(MOCK_USER);
-      cy.visit(relative(`/case/${dealId}/deal`));
-
       const facilityId = dealFacilities[0]._id; // eslint-disable-line no-underscore-dangle
       const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
 
