@@ -1,6 +1,7 @@
 import relative from '../../../relativeURL';
 import pages from '../../../pages';
 import MOCK_DEAL from '../../../../fixtures/deal';
+import MOCK_USERS from '../../../../fixtures/users';
 
 const MOCK_MAKER_TFM = {
   username: 'MAKER-TFM',
@@ -52,12 +53,12 @@ context('User can view party details', () => {
         });
 
         cy.submitDeal(dealId);
-
-        cy.visit(relative(`/case/${dealId}/deal`));
-
-        pages.caseDealPage.partiesLink().click();
-        cy.url().should('eq', relative(`/case/${dealId}/parties`));
       });
+  });
+
+  beforeEach(() => {
+    cy.login(MOCK_USERS[0]);
+    cy.visit(relative(`/case/${dealId}/parties`));
   });
 
   after(() => {

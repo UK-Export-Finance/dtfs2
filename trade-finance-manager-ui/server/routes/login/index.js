@@ -7,4 +7,6 @@ router.get('/', loginController.getLogin);
 
 router.post('/', loginController.postLogin);
 
+router.get('/logout', loginController.logout);
+
 export default router;
