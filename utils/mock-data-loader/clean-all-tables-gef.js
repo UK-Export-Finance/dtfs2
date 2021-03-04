@@ -9,6 +9,22 @@ const cleanApplication = async (token) => {
   }
 };
 
+const cleanExporter = async (token) => {
+  console.log('cleaning exporter');
+
+  for (data of await api.listApplication(token)) {
+    await api.deleteExporter(data.exporterId, token);
+  }
+};
+
+const cleanFacilities = async (token) => {
+  console.log('cleaning facilities');
+
+  for (data of await api.listFacilities(token)) {
+    await api.deleteFacilities(data.details, token);
+  }
+};
+
 const cleanMandatoryCriteriaVersioned = async (token) => {
   console.log('cleaning mandatory-criteria-versioned');
 
@@ -21,11 +37,13 @@ const cleanAllTables = async () => {
   const token = await tokenFor({
     username: 'admin',
     password: 'AbC!2345',
-    roles: ['maker', 'editor'],
+    roles: ['maker', 'editor', 'checker'],
     bank: { id: '*' },
   });
 
   await cleanApplication(token);
+  await cleanExporter(token);
+  await cleanFacilities(token);
   await cleanMandatoryCriteriaVersioned(token);
 };
 
