@@ -36,7 +36,6 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-
   it('Portal deal is submitted to UKEF, user views deal in TFM. Facilities display GBP and non-GBP', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
