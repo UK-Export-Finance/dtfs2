@@ -100,7 +100,7 @@ describe(baseUrl, () => {
 
       const { body, status } = await as(aChecker).get(baseUrl);
 
-      expect(body).toEqual({ status: 0, details: [newFacility, newFacility] });
+      expect(body).toEqual({ status: 0, items: [newFacility, newFacility] });
       expect(status).toEqual(200);
     });
 
@@ -122,7 +122,7 @@ describe(baseUrl, () => {
 
       const { body, status } = await as(aChecker).get(`${baseUrl}?applicationId=${applicationItem.body._id}`);
 
-      expect(body).toEqual({ status: 0, details: [newFacility, newFacility] });
+      expect(body).toEqual({ status: 0, items: [newFacility, newFacility] });
       expect(status).toEqual(200);
     });
 
@@ -130,7 +130,7 @@ describe(baseUrl, () => {
       const { body } = await as(aMaker).get(`${baseUrl}?applicationId=doesnotexist`);
       expect(body).toEqual({
         status: 0,
-        details: [],
+        items: [],
       });
     });
   });

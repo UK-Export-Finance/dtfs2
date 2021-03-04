@@ -66,8 +66,7 @@ describe(baseUrl, () => {
       const { body, status } = await as(aChecker).get(baseUrl);
 
       const expected = {
-        count: allItems.length,
-        data: allItems.map((item) => ({
+        items: allItems.map((item) => ({
           ...expectMongoId(item),
           exporterId: expect.any(String),
           createdAt: expect.any(Number),

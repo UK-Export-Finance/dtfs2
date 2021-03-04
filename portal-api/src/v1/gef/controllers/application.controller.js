@@ -56,8 +56,7 @@ exports.getAll = async (req, res) => {
     // .limit(pagination.pageSize)
     .toArray();
   res.status(200).send({
-    count: doc.length,
-    data: doc,
+    items: doc,
     // pagination,
   });
 };

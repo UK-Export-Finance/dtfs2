@@ -30,7 +30,7 @@ exports.getAll = async (req, res) => {
   });
   res.status(200).send({
     status: facilitiesOverallStatus(facilities),
-    details: facilities,
+    items: facilities,
   });
 };
 
