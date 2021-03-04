@@ -9,22 +9,30 @@ const collectionName = 'gef-exporter';
 exports.getById = async (req, res) => {
   const collection = await db.getCollection(collectionName);
   const doc = await collection.findOne({ _id: ObjectId(String(req.params.id)) });
-  const response = {
-    status: exporterStatus(doc),
-    details: doc,
-    validation: exporterValidation(doc),
-  };
-  res.status(200).send(response);
+  if (doc) {
+    const response = {
+      status: exporterStatus(doc),
+      details: doc,
+      validation: exporterValidation(doc),
+    };
+    res.status(200).send(response);
+  } else {
+    res.status(204).send();
+  }
 };
 
 exports.update = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const response = await collection.findOneAndUpdate(
+  const result = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(String(req.params.id)) } }, { $set: new Exporter(req.body) }, { returnOriginal: false },
   );
-  res.status(utils.mongoStatus(response)).send({
-    status: exporterStatus(response.value),
-    details: response.value,
-    validation: exporterValidation(response.value),
-  });
+  let response;
+  if (result.value) {
+    response = {
+      status: exporterStatus(result.value),
+      details: result.value,
+      validation: exporterValidation(result.value),
+    };
+  }
+  res.status(utils.mongoStatus(result)).send(response);
 };

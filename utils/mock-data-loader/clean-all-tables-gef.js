@@ -21,7 +21,7 @@ const cleanFacilities = async (token) => {
   console.log('cleaning facilities');
 
   for (data of await api.listFacilities(token)) {
-    await api.deleteFacilities(data, token);
+    await api.deleteFacilities(data.details, token);
   }
 };
 
