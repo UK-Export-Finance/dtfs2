@@ -45,7 +45,7 @@ const listApplication = async (token) => {
     },
     url: `${urlRoot}/v1/gef/application`, // ?page=null&pageSize=null
   }).catch((err) => { console.log(`err: ${err}`); });
-  return response.data.data;
+  return response.data.items;
 };
 
 // Exporter
@@ -106,7 +106,7 @@ const listFacilities = async (token) => {
     },
     url: `${urlRoot}/v1/gef/facilities`, // ?page=null&pageSize=null
   }).catch((err) => { console.log(`err: ${err}`); });
-  return response.data.details;
+  return response.data.items;
 };
 
 const deleteFacilities = async (facility, token) => {
@@ -180,7 +180,7 @@ const listMandatoryCriteriaVersioned = async (token) => {
     url: `${urlRoot}/v1/gef/mandatory-criteria-versioned`,
   }).catch((err) => { console.log(`err: ${err}`); });
 
-  return response.data.mandatoryCriteria;
+  return response.data.items;
 };
 
 
