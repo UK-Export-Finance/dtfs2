@@ -22,7 +22,7 @@ const applicationDetails = async (req, res) => {
       },
       facilities: {
         status: facilitiesStatus,
-        data: facilities.data.map((item) => ({
+        data: facilities.items.map((item) => ({
           heading: facilityType[item.details.type],
           rows: mapSummaryList(item, facilityItems(exporterUrl)),
         })),
