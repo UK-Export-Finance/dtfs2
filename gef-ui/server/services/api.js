@@ -29,6 +29,37 @@ const createApplication = async (payload) => {
   }
 };
 
+const getApplication = async (applicationId) => {
+  try {
+    const response = await Axios.get(`/gef/application/${applicationId}`);
+    return response.data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
+const getExporter = async (exporterId) => {
+  try {
+    const response = await Axios.get(`/gef/exporter/${exporterId}`);
+    return response.data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
+const getFacilities = async (applicationId) => {
+  if (!applicationId) {
+    return [];
+  }
+
+  try {
+    const response = await Axios.get('/gef/facilities', { params: { applicationId } });
+    return response.data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
 const getAutomaticCover = async () => {
   try {
     const response = await Axios.get('/gef/automatic-cover-versioned/latest');
@@ -43,4 +74,7 @@ export {
   getMandatoryCriteria,
   createApplication,
   getAutomaticCover,
+  getApplication,
+  getExporter,
+  getFacilities,
 };
