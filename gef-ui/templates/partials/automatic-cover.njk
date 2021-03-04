@@ -31,7 +31,7 @@
     {% for term in terms %}
       {{ govukRadios({
         classes: "govuk-radios--inline",
-        idPrefix: "automaticCover" + loop.index,
+        idPrefix: term.id,
         name: term.id,
         fieldset: {
           legend: {
@@ -46,12 +46,14 @@
         },
         items: [
           {
-            value: true,
-            text: "True"
+            value: "true",
+            text: "True",
+            checked: selected[term.id] === "true"
           },
           {
-            value: false,
-            text: "False"
+            value: "false",
+            text: "False",
+            checked: selected[term.id] === "false"
           }
         ]
       }) }}

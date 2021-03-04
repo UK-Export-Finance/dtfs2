@@ -2,6 +2,16 @@ import { decode } from 'html-entities';
 import * as api from '../../services/api';
 import { validationErrorHandler } from '../../utils/helpers';
 
+function AutomaticCoverErrors(fields, items) {
+  const receivedFields = Object.keys(fields); // Array of received fields i.e ['coverStart']
+  const errorsToDisplay = items.filter((item) => !receivedFields.includes(item.id));
+
+  return errorsToDisplay.map((error) => ({
+    errRef: error.id,
+    errMsg: error.errMsg,
+  }));
+}
+
 const automaticCover = async (req, res) => {
   try {
     const cover = {
@@ -29,6 +39,7 @@ const automaticCover = async (req, res) => {
 
     return res.render('partials/automatic-cover.njk', {
       terms: cover.terms,
+
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
@@ -37,9 +48,6 @@ const automaticCover = async (req, res) => {
 
 const validateAutomaticCover = async (req, res) => {
   const { body } = req;
-  console.log('BODY', body);
-  // const { mandatoryCriteria } = body;
-  // const isEmpty = _isEmpty(mandatoryCriteria);
 
   const cover = {
     version: 123,
@@ -64,16 +72,12 @@ const validateAutomaticCover = async (req, res) => {
     ],
   };
 
-  const automaticCoverErrors = [{
-    errRef: 'coverStart',
-    errMsg: '12. Select if the Maximum Cover period has been exceeded',
-  }];
-
-  console.log('error response', validationErrorHandler(automaticCoverErrors, 'automatic-cover'));
+  const automaticCoverErrors = new AutomaticCoverErrors(body, cover.terms);
 
   return res.render('partials/automatic-cover.njk', {
     errors: validationErrorHandler(automaticCoverErrors, 'automatic-cover'),
     terms: cover.terms,
+    selected: body,
   });
 
 
