@@ -67,7 +67,10 @@ describe(page, () => {
         smeType: 'Micro',
       },
       eligibility: {
-        agentAddressCountry: 'United Kingdom',
+        agentAddressCountry: {
+          code: 'GBR',
+          name: 'United Kingdom',
+        },
         agentAddressLine1: 'ADDR 1',
         agentAddressLine2: 'Addr 2',
         agentAddressLine3: 'Addr 3',
@@ -85,7 +88,7 @@ describe(page, () => {
   it('should render agent address country', () => {
     wrapper
       .expectText('[data-cy="agent-address-country"]')
-      .toRead(params.deal.eligibility.agentAddressCountry);
+      .toRead(params.deal.eligibility.agentAddressCountry.name);
   });
   it('should render agent agentAddressLine1 in address', () => {
     wrapper

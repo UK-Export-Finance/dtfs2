@@ -1,10 +1,12 @@
 /* eslint-disable no-undef */
 import relative from './relativeURL';
+import mandatoryCriteria from './pages/mandatory-criteria';
 import nameApplication from './pages/name-application';
 
 context('Name Application Page', () => {
   before(() => {
-    cy.fixture('login')
+    cy.reinsertMocks();
+    cy.fixture('credentials')
       .then((res) => {
         cy.login(res.MAKER);
       });
@@ -14,7 +16,9 @@ context('Name Application Page', () => {
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
-    cy.visit(relative('/gef/name-application'));
+    cy.visit(relative('/gef/mandatory-criteria'));
+    mandatoryCriteria.trueRadio().click();
+    mandatoryCriteria.form().submit();
   });
 
   describe('Visiting page', () => {
@@ -30,15 +34,10 @@ context('Name Application Page', () => {
     });
   });
 
-  describe('Clicking on Continue', () => {
+  describe('Filling in form', () => {
     it('shows error summary at top of page when fields have been left blank', () => {
       nameApplication.form().submit();
       nameApplication.errorSummary();
-    });
-
-    it('shows validation error when no radio button has been selected', () => {
-      nameApplication.form().submit();
-      nameApplication.formError();
     });
 
     it('Clicking on error link in error summary takes you to correct field', () => {
@@ -46,6 +45,19 @@ context('Name Application Page', () => {
       nameApplication.errorSummary();
       nameApplication.firstErrorLink().click();
       cy.url().should('eq', relative('/gef/name-application'));
+    });
+
+    it('Entering new Bank internal ref takes you application detail page', () => {
+      nameApplication.internalRef().type('NEW_REF_NAME');
+      nameApplication.form().submit();
+      nameApplication.applicationDetailsPage();
+    });
+
+    it('Entering the same Bank internal ref shows a error to the user', () => {
+      nameApplication.internalRef().type('NEW_REF_NAME');
+      nameApplication.form().submit();
+      nameApplication.errorSummary();
+      nameApplication.applicationDetailsPage().should('not.exist');
     });
   });
 

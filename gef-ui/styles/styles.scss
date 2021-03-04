@@ -1,1 +1,17 @@
 @import "node_modules/govuk-frontend/govuk/all";
+@import "./helpers.scss";
+
+.govuk-section-break {
+  &--bold {
+    border: 0;
+    border-bottom: 3px solid $govuk-text-colour;
+  }
+}
+
+.govuk-summary-list__key {
+  width: 50%;
+}
+.govuk-summary-list__value {
+  padding-left: 15px;
+  width: 30%;
+}

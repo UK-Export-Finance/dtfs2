@@ -46,7 +46,10 @@ const updatedECCriteria11WithExtraInfo = {
 
 const criteria11ExtraInfo = {
   agentName: 'Agent Name',
-  agentAddressCountry: 'GBR',
+  agentAddressCountry: {
+    code: 'GBR',
+    name: 'United Kingdom',
+  },
   agentAddressLine1: 'Address 1',
   agentAddressLine2: 'Address 2',
   agentAddressLine3: 'Address 3',

@@ -1,13 +1,13 @@
 import ineligibleGef from './index';
 
-const mockResponse = () => {
+const MockResponse = () => {
   const res = {};
   res.redirect = jest.fn();
   res.render = jest.fn();
   return res;
 };
 
-const response = mockResponse();
+const mockResponse = new MockResponse();
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -15,7 +15,7 @@ afterEach(() => {
 
 describe('GET Mandatory Criteria', () => {
   it('renders the `ineligible for GEF` template', async () => {
-    await ineligibleGef({}, response);
-    expect(response.render).toHaveBeenCalledWith('partials/ineligible-gef.njk');
+    await ineligibleGef({}, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/ineligible-gef.njk');
   });
 });

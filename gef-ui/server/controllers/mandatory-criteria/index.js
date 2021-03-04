@@ -1,4 +1,5 @@
 import _isEmpty from 'lodash/isEmpty';
+import { decode } from 'html-entities';
 import * as api from '../../services/api';
 import { parseBool, validationErrorHandler } from '../../utils/helpers';
 
@@ -7,7 +8,10 @@ const getMandatoryCriteria = async (req, res) => {
     const criteria = await api.getMandatoryCriteria();
 
     return res.render('partials/mandatory-criteria.njk', {
-      criteria,
+      criteria: {
+        ...criteria,
+        htmlText: decode(criteria.htmlText),
+      },
     });
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
@@ -22,15 +26,17 @@ const validateMandatoryCriteria = async (req, res) => {
   try {
     const criteria = await api.getMandatoryCriteria();
 
-
     if (isEmpty) {
       const mandatoryError = {
-        errRef: 'bankInternalRefName',
-        errMsg: 'You must enter a bank reference or name',
+        errRef: 'confirm',
+        errMsg: 'Select if the mandatory criteria will be true or false on the date that cover starts',
       };
       return res.render('partials/mandatory-criteria.njk', {
         errors: validationErrorHandler(mandatoryError, 'mandatory-criteria'),
-        criteria,
+        criteria: {
+          ...criteria,
+          htmlText: decode(criteria.htmlText),
+        },
       });
     }
 
