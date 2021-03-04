@@ -5,6 +5,11 @@ type StatusType {
   msg: String
 }
 
+type Country {
+  code: String
+  name: String
+}
+
 type OwningBank {
   name: String
   emails: [String]
@@ -95,7 +100,7 @@ type DealEligibilityCriterion {
 }
 
 type DealEligibility {
-  agentAddressCountry: String
+  agentAddressCountry: Country
   agentAddressLine1: String
   agentAddressLine2: String
   agentAddressLine3: String
@@ -166,6 +171,7 @@ type TFMParties {
 
 type TFMDealData {
   parties: TFMParties
+  product: String
 }
 
 type TFMFacilityData {

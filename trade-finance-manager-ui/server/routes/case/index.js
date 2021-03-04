@@ -1,6 +1,7 @@
 import express from 'express';
 import caseController from '../../controllers/case';
 
+
 const router = express.Router();
 
 router.get('/:_id/deal', caseController.getCaseDeal);

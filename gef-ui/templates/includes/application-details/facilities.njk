@@ -1,0 +1,49 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    <h2 class="govuk-heading-l" data-cy="facility-heading">
+      Facilities
+    </h2>
+  </div>
+
+  <div class="govuk-grid-column-one-half">
+    {{ govukTag({
+      text: facilities.status.text,
+      classes: 'govuk-!-margin-top-2 govuk-!-margin-bottom-4' + ' ' + facilities.status.class,
+      attributes: {
+        'data-cy': 'facility-status'
+      }
+    }) }}
+  </div>
+</div>
+
+{% if facilities.data.length < 1 %}
+  <a class="govuk-link" href="#" data-cy="facility-add-link">Add a facility</a>
+{% else %}
+  {% for item in facilities.data %}
+    <h3 class="govuk-heading-m" data-cy="facility-type-heading">
+      {{item.heading}} facility
+    </h3>
+    {{ govukSummaryList({
+      rows: item.rows,
+      attributes: {
+        'data-cy': 'facility-summary-list'
+      }
+    }) }}
+  {% endfor %}
+{% endif %}
+
+{% if facilities.data.length > 0 %}
+  {{ govukButton({
+    text: "Add another facility",
+    classes: "govuk-button--secondary",
+    attributes: {
+      'data-cy': 'facility-add-another-button'
+    }
+  }) }}
+{% endif %}
+
+<hr class="govuk-section-break govuk-section-break--bold govuk-section-break--m govuk-!-margin-bottom-7 govuk-section-break--visible">

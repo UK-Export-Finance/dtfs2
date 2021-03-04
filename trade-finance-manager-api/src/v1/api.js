@@ -112,8 +112,8 @@ const updateFacility = async (facilityId, facilityUpdate, user) => {
 const queryDeals = async ({ query, start = 0, pagesize = 0 }) => {
   try {
     const response = await axios({
-      method: 'post',
-      url: `${centralApiUrl}/v1/tfm/deals/query`,
+      method: 'get',
+      url: `${centralApiUrl}/v1/tfm/deals`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -145,6 +145,21 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
   }
 };
 
+const findUser = async (username) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${centralApiUrl}/v1/tfm/users/${username}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch ({ response }) {
+    return false;
+  }
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -154,4 +169,5 @@ module.exports = {
   updateFacility,
   queryDeals,
   getPartyDbInfo,
+  findUser,
 };

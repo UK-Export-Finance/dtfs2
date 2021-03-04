@@ -80,7 +80,7 @@ router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), as
       _id: deal._id, // eslint-disable-line no-underscore-dangle
       countries: formatCountriesForGDSComponent(
         countries,
-        deal.eligibility.agentAddressCountry,
+        deal.eligibility.agentAddressCountry && deal.eligibility.agentAddressCountry.code,
         !deal.eligibility.agentAddressCountry,
       ),
       eligibility: deal.eligibility,

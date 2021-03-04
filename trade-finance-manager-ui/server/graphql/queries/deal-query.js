@@ -76,7 +76,10 @@ const dealQuery = gql`
           }
         }
         eligibility {
-          agentAddressCountry,
+          agentAddressCountry {
+            code
+            name
+          },
           agentAddressLine1,
           agentAddressLine2,
           agentAddressLine3,
