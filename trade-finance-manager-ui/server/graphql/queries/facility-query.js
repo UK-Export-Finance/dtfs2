@@ -36,7 +36,8 @@ const facilityQuery = gql`
       },
       tfm {
         bondIssuerPartyUrn,
-        bondBeneficiaryPartyUrn
+        bondBeneficiaryParty,
+        facilityValueInGBP
       }
     }
   }
