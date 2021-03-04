@@ -106,8 +106,7 @@ const listFacilities = async (token) => {
     },
     url: `${urlRoot}/v1/gef/facilities`, // ?page=null&pageSize=null
   }).catch((err) => { console.log(`err: ${err}`); });
-
-  return response.data.data;
+  return response.data.details;
 };
 
 const deleteFacilities = async (facility, token) => {

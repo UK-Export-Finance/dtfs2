@@ -1,27 +1,28 @@
+/* eslint-disable consistent-return */
 const hasRequiredItems = (doc) => {
   const required = [];
-  if (!doc.companiesHouseRegistrationNumber) {
+  if (doc.companiesHouseRegistrationNumber === null) {
     required.push('companiesHouseRegistrationNumber');
   }
-  if (!doc.companyName) {
+  if (doc.companyName === null) {
     required.push('companyName');
   }
-  if (!doc.registeredAddress) {
+  if (doc.registeredAddress === null) {
     required.push('registeredAddress');
   }
-  if (!doc.industrySectorId) {
+  if (doc.industrySectorId === null) {
     required.push('industrySectorId');
   }
-  if (!doc.industryClassId) {
+  if (doc.industryClassId === null) {
     required.push('industryClassId');
   }
-  if (!doc.smeTypeId) {
+  if (doc.smeTypeId === null) {
     required.push('smeTypeId');
   }
-  if (!doc.probabilityOfDefault) {
+  if (doc.probabilityOfDefault === null) {
     required.push('probabilityOfDefault');
   }
-  if (!doc.isFinanceIncreasing) {
+  if (doc.isFinanceIncreasing === null) {
     required.push('isFinanceIncreasing');
   }
   return required;
