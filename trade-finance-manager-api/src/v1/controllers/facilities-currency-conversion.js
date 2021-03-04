@@ -4,23 +4,10 @@ const addFacilityCurrencyConversion = async (deal) => {
   const modifiedDeal = deal;
   let facilities = [];
 
-  // workaround
-  // for some reason, in API tests we do not have dealSnapshot
-  // but in the real world, we do.
-
-  const dealHasSnapshot = (modifiedDeal && modifiedDeal.dealSnapshot);
-
-  if (dealHasSnapshot) {
-    facilities = [
-      ...modifiedDeal.dealSnapshot.bondTransactions.items,
-      ...modifiedDeal.dealSnapshot.loanTransactions.items,
-    ];
-  } else {
-    facilities = [
-      ...modifiedDeal.bondTransactions.items,
-      ...modifiedDeal.loanTransactions.items,
-    ];
-  }
+  facilities = [
+    ...modifiedDeal.dealSnapshot.bondTransactions.items,
+    ...modifiedDeal.dealSnapshot.loanTransactions.items,
+  ];
 
   const bonds = [];
   const loans = [];
@@ -66,13 +53,8 @@ const addFacilityCurrencyConversion = async (deal) => {
       }
 
       if (updatedCount === shouldUpdateCount) {
-        if (dealHasSnapshot) {
-          modifiedDeal.dealSnapshot.bondTransactions.items = bonds;
-          modifiedDeal.dealSnapshot.loanTransactions.items = loans;
-        } else {
-          modifiedDeal.bondTransactions.items = bonds;
-          modifiedDeal.loanTransactions.items = loans;
-        }
+        modifiedDeal.dealSnapshot.bondTransactions.items = bonds;
+        modifiedDeal.dealSnapshot.loanTransactions.items = loans;
 
         return resolve(modifiedDeal);
       }
