@@ -65,12 +65,17 @@ context('Portal to TFM deal submission', () => {
 
 
     //---------------------------------------------------------------
-    // user can view the submitted deal in TFM
+    // user can login to TFM and view the submitted deal
     //---------------------------------------------------------------
     // Cypress.config('tfmUrl') returns incorrect url...
     const tfmRootUrl = 'http://localhost:5003';
-    const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
 
+    cy.forceVisit(tfmRootUrl);
+
+    tfmPages.landingPage.email().type('T1_USER_1');
+    tfmPages.landingPage.submitButton().click();
+
+    const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
     cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/deal`);
 
