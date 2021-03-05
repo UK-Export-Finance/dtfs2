@@ -2016,7 +2016,7 @@ jobs:
             echo "Updating NSG"
             az network nsg rule create --name api-port \
               --nsg-name tfs-${{ env.environment }}-gw-nsg \
-              --priority 5000 \
+              --priority 300 \
               --direction Inbound \
               --protocol "*" \
               --access Allow \
