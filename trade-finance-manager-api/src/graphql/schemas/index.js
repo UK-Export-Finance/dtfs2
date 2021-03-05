@@ -58,6 +58,8 @@ type DealSubmissionDetails {
   buyerAddressPostcode: String,
   buyerAddressTown: String,
   destinationCountry: String,
+  legallyDistinct: String,
+  indemnifierCompaniesHouseRegistrationNumber: String,
   indemnifierAddressCountry: String
   indemnifierAddressLine1: String,
   indemnifierAddressLine2: String,

@@ -80,11 +80,13 @@
 
       {{ keyValueGridRow.render({
         key: 'Companies house<br>registration number',
-        value: ''
+        value: deal.submissionDetails.indemnifierCompaniesHouseRegistrationNumber,
+        dataCy: 'indemnifier-companies-house-registration-number'
       }) }}
       {{ keyValueGridRow.render({
         key: 'Is the indemnifier legally<br>distinct from the exporter?',
-        value: ''
+        value: deal.submissionDetails.legallyDistinct,
+        dataCy: 'indemnifier-legally-distinct'
       }) }}
       {{ keyValueGridRow.render({
         key: 'Approval level required',
