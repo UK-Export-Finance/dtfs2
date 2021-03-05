@@ -37,7 +37,9 @@ const facilityQuery = gql`
       tfm {
         bondIssuerPartyUrn,
         bondBeneficiaryParty,
-        facilityValueInGBP
+        facilityValueInGBP,
+        ukefExposure,
+        ukefExposureCalculationTimestamp
       }
     }
   }

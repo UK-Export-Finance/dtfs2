@@ -14,7 +14,10 @@ const facilityReducer = require('../src/graphql/reducers/facility');
 
 const mockFacility = {
   ...MOCK_FACILITIES[0],
-  tfm: {},
+  tfm: {
+    ukefExposure: '1,234.00',
+    ukefExposureCalculationTimestamp: '1606900616651',
+  },
 };
 
 const GET_FACILITY = gql`
@@ -47,6 +50,13 @@ const GET_FACILITY = gql`
           coverEndDate,
           tenor
         }
+      },
+      tfm {
+        bondIssuerPartyUrn,
+        bondBeneficiaryPartyUrn,
+        facilityValueInGBP,
+        ukefExposure,
+        ukefExposureCalculationTimestamp
       }
     }
   }

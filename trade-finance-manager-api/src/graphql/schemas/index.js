@@ -180,6 +180,8 @@ type TFMFacilityData {
   bondIssuerPartyUrn: String
   bondBeneficiaryPartyUrn: String
   facilityValueInGBP: String
+  ukefExposure: String
+  ukefExposureCalculationTimestamp: String
 }
 
 input DashboardFilters {

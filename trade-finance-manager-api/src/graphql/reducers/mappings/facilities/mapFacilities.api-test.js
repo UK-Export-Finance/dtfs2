@@ -3,7 +3,11 @@ const mapFacility = require('./mapFacility');
 const MOCK_DEAL = require('../../../../v1/__mocks__/mock-deal');
 
 describe('mapFacilities', () => {
-  const mockTfmFacility = {};
+  const mockTfmFacility = {
+    ukefExposure: '1,234.00',
+    ukefExposureCalculationTimestamp: '1606900616651',
+  };
+
   const mockDealDetails = MOCK_DEAL.details;
 
   const mockCoverEndDate = {
@@ -12,7 +16,6 @@ describe('mapFacilities', () => {
     'coverEndDate-year': '2021',
   };
 
-  const mockUkefExposure = '1,234.00';
   const mockCoveredPercentage = '10';
 
   const mockCurrency = {
@@ -31,7 +34,6 @@ describe('mapFacilities', () => {
         associatedDealId: '123456789',
         facilityType: 'bond',
         ...mockCoverEndDate,
-        ukefExposure: mockUkefExposure,
         coveredPercentage: mockCoveredPercentage,
         bondType: 'Performance Bond',
         currency: mockCurrency,
@@ -39,6 +41,7 @@ describe('mapFacilities', () => {
         facilityStage: 'Unissued',
 
         // fields we do not consume
+        ukefExposure: '1,234.00',
         bondIssuer: 'Issuer',
         ukefGuaranteeInMonths: '10',
         bondBeneficiary: 'test',
@@ -59,7 +62,6 @@ describe('mapFacilities', () => {
         associatedDealId: '123456789',
         facilityType: 'loan',
         ...mockCoverEndDate,
-        ukefExposure: mockUkefExposure,
         coveredPercentage: mockCoveredPercentage,
         currency: mockCurrency,
         facilityValue: mockFacilityValue,
@@ -69,6 +71,7 @@ describe('mapFacilities', () => {
 
 
         // fields we do not consume
+        ukefExposure: '1,234.00',
         createdDate: 1610369832226.0,
         ukefGuaranteeInMonths: '12',
         bankReferenceNumber: '5678',
