@@ -18,6 +18,7 @@ const addFacilityCurrencyConversion = async (deal) => {
 
   return new Promise((resolve) => {
     facilities.forEach(async (facility) => {
+
       const {
         _id: facilityId,
         currency,
@@ -46,12 +47,13 @@ const addFacilityCurrencyConversion = async (deal) => {
         };
       } else {
         facilityUpdate = {
-          ukefExposure,
+          ukefExposure: Number(String(ukefExposure).replace(/,/g, '')),
           ukefExposureCalculationTimestamp: submissionDate,
         };
       }
 
       const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
+
       updatedCount += 1;
 
       // update deal object to return in response

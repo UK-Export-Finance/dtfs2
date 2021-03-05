@@ -7,6 +7,7 @@ const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
 const mapDates = require('./mapDates');
+const mapUkefExposure = require('./mapUkefExposure');
 
 const mapFacility = (f, facilityTfm, dealDetails) => {
   // Deep clone
@@ -35,7 +36,6 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     facility.facilityType = null;
   }
 
-  facility.ukefExposure = `${facility.currency.id} ${facility.ukefExposure}`;
   facility.coveredPercentage = `${facility.coveredPercentage}%`;
 
   const formattedFacilityValue = formattedNumber(facilityValue);
@@ -57,7 +57,7 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     coveredPercentage: facility.coveredPercentage,
     facilityValueExportCurrency: facility.facilityValueExportCurrency,
     facilityValue: mappedFacilityValue,
-    ukefExposure: facility.ukefExposure,
+    ukefExposure: mapUkefExposure(facilityTfm),
     bankFacilityReference: mapBankFacilityReference(facility),
     guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFeePayableByBank),
 

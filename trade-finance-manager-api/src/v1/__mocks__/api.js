@@ -57,7 +57,11 @@ module.exports = {
         ...facility,
         _id: facilityId,
       },
-      tfm: {},
+      // tfm: {},
+      tfm: {
+        ukefExposure: '1,234.00',
+        ukefExposureCalculationTimestamp: '1606900616651',
+      },
     };
   },
   updateFacility: (facilityId, tfmUpdate) => {

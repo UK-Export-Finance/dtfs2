@@ -7,10 +7,15 @@ const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
 const mapDates = require('./mapDates');
+const mapUkefExposure = require('./mapUkefExposure');
 const MOCK_DEAL = require('../../../../v1/__mocks__/mock-deal');
 
 describe('mapFacility', () => {
-  const mockTfmFacility = {};
+  const mockTfmFacility = {
+    ukefExposure: '1,234.00',
+    ukefExposureCalculationTimestamp: '1606900616651',
+  };
+
   const mockDealDetails = MOCK_DEAL.details;
 
   const mockCoverEndDate = {
@@ -19,7 +24,6 @@ describe('mapFacility', () => {
     'coverEndDate-year': '2021',
   };
 
-  const mockUkefExposure = '1,234.00';
   const mockCoveredPercentage = '10';
 
   const mockCurrency = {
@@ -37,7 +41,6 @@ describe('mapFacility', () => {
     ukefFacilityID: '0040004833',
     facilityType: mockFacilityType,
     ...mockCoverEndDate,
-    ukefExposure: mockUkefExposure,
     coveredPercentage: mockCoveredPercentage,
     bondType: 'Performance Bond',
     currency: mockCurrency,
@@ -48,6 +51,7 @@ describe('mapFacility', () => {
     bondBeneficiary: 'test',
 
     // fields we do not consume
+    ukefExposure: '1,234.00',
     ukefGuaranteeInMonths: '10',
     guaranteeFeePayableByBank: '9.0000',
     currencySameAsSupplyContractCurrency: 'true',
@@ -60,7 +64,6 @@ describe('mapFacility', () => {
   it('should map and format correct fields/values', async () => {
     const result = mapFacility(mockFacility, mockTfmFacility, mockDealDetails);
 
-    const expectedUkefExposure = `${mockCurrency.id} ${mockUkefExposure}`;
     const expectedCoveredPercentage = `${mockCoveredPercentage}%`;
 
     const formattedFacilityValue = formattedNumber(mockFacilityValue);
@@ -77,10 +80,10 @@ describe('mapFacility', () => {
       ukefFacilityType: mockFacilityType,
       facilityProduct: mapFacilityProduct(mockFacility),
       facilityStage: mapFacilityStage(mockFacilityStage),
-      ukefExposure: expectedUkefExposure,
       coveredPercentage: expectedCoveredPercentage,
       facilityValue: mapFacilityValue(mockFacility.currency, formattedFacilityValue, mockTfmFacility),
       facilityValueExportCurrency: expectedFacilityValueExportCurrency,
+      ukefExposure: mapUkefExposure(mockTfmFacility),
       bankFacilityReference: mapBankFacilityReference(mockFacility),
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacility.guaranteeFeePayableByBank, 4),
       bondIssuer: mockFacility.bondIssuer,
