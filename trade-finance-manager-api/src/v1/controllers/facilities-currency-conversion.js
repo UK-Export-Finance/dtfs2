@@ -1,10 +1,12 @@
 const api = require('../api');
+const calculateUkefExposure = require('../helpers/calculateUkefExposure');
 
 const addFacilityCurrencyConversion = async (deal) => {
   const modifiedDeal = deal;
-  let facilities = [];
 
-  facilities = [
+  const { submissionDate } = deal.dealSnapshot.details;
+
+  const facilities = [
     ...modifiedDeal.dealSnapshot.bondTransactions.items,
     ...modifiedDeal.dealSnapshot.loanTransactions.items,
   ];
@@ -12,7 +14,6 @@ const addFacilityCurrencyConversion = async (deal) => {
   const bonds = [];
   const loans = [];
 
-  let shouldUpdateCount = 0;
   let updatedCount = 0;
 
   return new Promise((resolve) => {
@@ -22,37 +23,45 @@ const addFacilityCurrencyConversion = async (deal) => {
         currency,
         facilityValue,
         facilityType,
+        coveredPercentage,
+        ukefExposure,
       } = facility;
 
+      let facilityUpdate;
+
       if (currency && currency.id !== 'GBP') {
-        shouldUpdateCount += 1;
         const currencyExchange = await api.getCurrencyExchangeRate(currency.id, 'GBP');
 
         const {
           midPrice: exchangeRate,
         } = currencyExchange;
 
-        const facilityUpdate = {
-          facilityValueInGBP: Number(facilityValue) * exchangeRate,
+        const strippedFacilityValue = Number(facilityValue.replace(/,/g, ''));
+
+        const facilityValueInGBP = strippedFacilityValue * exchangeRate;
+
+        facilityUpdate = {
+          facilityValueInGBP,
+          ...calculateUkefExposure(facilityValueInGBP, coveredPercentage),
         };
-
-        const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
-
-        // update deal object to return in response
-        if (facilityType === 'bond') {
-          bonds.push(updatedFacility);
-        } else if (facilityType === 'loan') {
-          loans.push(updatedFacility);
-        }
-
-        updatedCount += 1;
-      } else if (facilityType === 'bond') {
-        bonds.push(facility);
-      } else if (facilityType === 'loan') {
-        loans.push(facility);
+      } else {
+        facilityUpdate = {
+          ukefExposure,
+          ukefExposureCalculationTimestamp: submissionDate,
+        };
       }
 
-      if (updatedCount === shouldUpdateCount) {
+      const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
+      updatedCount += 1;
+
+      // update deal object to return in response
+      if (facilityType === 'bond') {
+        bonds.push(updatedFacility);
+      } else if (facilityType === 'loan') {
+        loans.push(updatedFacility);
+      }
+
+      if (updatedCount === facilities.length) {
         modifiedDeal.dealSnapshot.bondTransactions.items = bonds;
         modifiedDeal.dealSnapshot.loanTransactions.items = loans;
 
@@ -62,5 +71,6 @@ const addFacilityCurrencyConversion = async (deal) => {
     });
   });
 };
+
 
 exports.addFacilityCurrencyConversion = addFacilityCurrencyConversion;
