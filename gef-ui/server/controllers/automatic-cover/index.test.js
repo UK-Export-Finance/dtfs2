@@ -6,7 +6,7 @@ const MockRequest = () => {
   const req = {};
   req.params = {};
   req.params.applicationId = '123';
-
+  req.body = {};
   return req;
 };
 
@@ -49,39 +49,46 @@ describe('GET Automatic Cover', () => {
   });
 });
 
-// describe('Validate Mandatory Criteria', () => {
-//   it('returns error object if mandatory criteria property is empty', async () => {
-//     const mockedRequest = {
-//       body: {
-//         mandatoryCriteria: '',
-//       },
-//     };
-//     api.getMandatoryCriteria = () => Promise.resolve(mockCriteria);
-//     await validateMandatoryCriteria(mockedRequest, response);
-//     expect(response.render).toHaveBeenCalledWith('partials/mandatory-criteria.njk', expect.objectContaining({
-//       criteria: expect.any(Object),
-//       errors: expect.any(Object),
-//     }));
-//   });
+describe('Validate Automatic Cover', () => {
+  it('renders the correct data if validation fails', async () => {
+    mockCoverResponse.items.push({
+      id: 'coverStart',
+      htmlText: 'Some text',
+      errMsg: 'Error message for some text',
+    });
+    api.getAutomaticCover = () => Promise.resolve(mockCoverResponse);
+    await validateAutomaticCover(mockRequest, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/automatic-cover.njk', expect.objectContaining({
+      errors: expect.any(Object),
+      terms: mockCoverResponse.items,
+      selected: {},
+      applicationId: '123',
+    }));
+  });
 
-//   it('redirects user to `name application` page if they select `true`', async () => {
-//     const mockedRequest = {
-//       body: {
-//         mandatoryCriteria: 'true',
-//       },
-//     };
-//     api.getMandatoryCriteria = () => Promise.resolve(mockCriteria);
-//     await validateMandatoryCriteria(mockedRequest, response);
-//     expect(response.redirect).toHaveBeenCalledWith('name-application');
-//   });
+  it('redirects user to `ineligible-automatic-cover` page if user selects at least 1 false`', async () => {
+    mockRequest.body = { coverStart: 'false' };
+    api.getAutomaticCover = () => Promise.resolve(mockCoverResponse);
+    await validateAutomaticCover(mockRequest, mockResponse);
+    expect(mockResponse.redirect).toHaveBeenCalledWith('ineligible-automatic-cover');
 
-//   it('redirects user to `ineligible` page if they select `false`', async () => {
-//     const mockedRequest = {
-//       body: {
-//         mandatoryCriteria: 'false',
-//       },
-//     };
-//     await validateMandatoryCriteria(mockedRequest, response);
-//     expect(response.redirect).toHaveBeenCalledWith('ineligible');
-//   });
-// });
+    mockRequest.body = { coverStart: 'false', value: 'true' };
+    api.getAutomaticCover = () => Promise.resolve(mockCoverResponse);
+    await validateAutomaticCover(mockRequest, mockResponse);
+    expect(mockResponse.redirect).toHaveBeenCalledWith('ineligible-automatic-cover');
+  });
+
+  it('redirects user to `application details` page if user selects all true values`', async () => {
+    mockRequest.body = { coverStart: 'true', value: 'true' };
+    api.getAutomaticCover = () => Promise.resolve(mockCoverResponse);
+    await validateAutomaticCover(mockRequest, mockResponse);
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+  });
+
+  it('redirects user to `problem with service` page if there is an issue with the api', async () => {
+    const mockedRejection = { response: { status: 400, message: 'Whoops' } };
+    api.getAutomaticCover = () => Promise.reject(mockedRejection);
+    await validateAutomaticCover(mockRequest, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+  });
+});
