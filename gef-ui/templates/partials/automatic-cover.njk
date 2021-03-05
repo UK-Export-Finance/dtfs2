@@ -38,35 +38,47 @@
             html: term.htmlText
           }
         },
+        attributes: {
+          'data-cy': 'automatic-cover-term'
+        },
         errorMessage: errors and errors.fieldErrors[term.id] and  {
           text: errors.fieldErrors[term.id].text,
           attributes: {
-            'data-cy': 'mandatory-criteria-error'
+            'data-cy': 'automatic-cover-error'
           }
         },
         items: [
           {
             value: "true",
             text: "True",
-            checked: selected[term.id] === "true"
+            checked: selected[term.id] === "true",
+            attributes: {
+              'data-cy': 'automatic-cover-true'
+            }
           },
           {
             value: "false",
             text: "False",
-            checked: selected[term.id] === "false"
+            checked: selected[term.id] === "false",
+            attributes: {
+              'data-cy': 'automatic-cover-false'
+            }
           }
         ]
       }) }}
     {% endfor %}
     <div class="govuk-button-group">
       {{ govukButton({
-        text: "Continue"
+        text: "Continue",
+        attributes: {
+          'data-cy': 'continue-button'
+        }
       }) }}
 
       <a
         class="govuk-link"
         href="/gef/application-details/{{applicationId}}"
-        data-cy="cancel-button">Save and go back to application</a>
+        data-cy="save-go-back-link">Save and go back to application</a>
     </div>
   </form>
 {% endblock %}
