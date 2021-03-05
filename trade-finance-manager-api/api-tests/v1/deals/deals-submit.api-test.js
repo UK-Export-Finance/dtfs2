@@ -8,6 +8,7 @@ const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../src/v1/__mocks__/moc
 const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-currency-exchange-rate');
 
 const { findOneFacility } = require('../../../src/v1/controllers/facility.controller');
+const calculateUkefExposure = require('../../../src/v1/helpers/calculateUkefExposure');
 
 describe('/v1/deals', () => {
   describe('PUT /v1/deals/:dealId/submit', () => {
@@ -81,6 +82,64 @@ describe('/v1/deals', () => {
 
       const loan = body.dealSnapshot.loanTransactions.items[0];
       expect(loan.tfm.facilityValueInGBP).toEqual(Number(loan.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE);
-    }); 
+    });
+
+    describe('all bonds that are NOT in GBP', () => {
+      it('adds ukefExposure and ukefExposureCalculationTimestamp', async () => {
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_FACILITIES_USD_CURRENCY._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+
+        const bond = body.dealSnapshot.bondTransactions.items[0];
+        const facilityValueInGBP = Number(bond.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE;
+
+        const calculatedUkefExposureObj = calculateUkefExposure(facilityValueInGBP, bond.coveredPercentage);
+
+        expect(bond.tfm.ukefExposure).toEqual(calculatedUkefExposureObj.ukefExposure);
+        expect(typeof bond.tfm.ukefExposureCalculationTimestamp).toEqual('string');
+      });
+    });
+
+    describe('all loans that are NOT in GBP', () => {
+      it('adds ukefExposure and ukefExposureCalculationTimestamp', async () => {
+        const { status, body } = await api.put({ dealId: MOCK_DEAL_FACILITIES_USD_CURRENCY._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+
+        const loan = body.dealSnapshot.loanTransactions.items[0];
+        const facilityValueInGBP = Number(loan.facilityValue) * MOCK_CURRENCY_EXCHANGE_RATE;
+
+        const calculatedUkefExposureObj = calculateUkefExposure(facilityValueInGBP, loan.coveredPercentage);
+
+        expect(loan.tfm.ukefExposure).toEqual(calculatedUkefExposureObj.ukefExposure);
+        expect(typeof loan.tfm.ukefExposureCalculationTimestamp).toEqual('string');
+      });
+    });
+
+    describe('all bonds that are in GBP', () => {
+      it('adds original ukefExposure and ukefExposureCalculationTimestamp as deal submission date', async () => {
+        const { status, body } = await api.put({ dealId: MOCK_DEAL._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+
+        const bond = body.dealSnapshot.bondTransactions.items[0];
+
+        expect(bond.tfm.ukefExposure).toEqual(bond.ukefExposure);
+        expect(bond.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL.details.submissionDate);
+      });
+    });
+
+    describe('all loans that are in GBP', () => {
+      it('adds original ukefExposure and ukefExposureCalculationTimestamps', async () => {
+        const { status, body } = await api.put({ dealId: MOCK_DEAL._id }).to('/v1/deals/submit');
+
+        expect(status).toEqual(200);
+
+        const loan = body.dealSnapshot.loanTransactions.items[0];
+
+        expect(loan.tfm.ukefExposure).toEqual(loan.ukefExposure);
+        expect(loan.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL.details.submissionDate);
+      });
+    });
   });
 });
