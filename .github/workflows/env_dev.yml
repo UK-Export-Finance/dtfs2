@@ -2007,6 +2007,7 @@ jobs:
       with:
         inlineScript: |
         if [ $env.allow_api_access ]
+        then
           echo "Creating Portal API Backend Pool..."
           az network application-gateway address-pool create \
             --gateway-name tfs-${{ env.environment }}-gw \
@@ -2014,25 +2015,24 @@ jobs:
             --servers tfs-${{ env.environment }}-portal-api.azurewebsites.net
 
           echo "Creating Frontend Port..."
-            az network application-gateway frontend-port create \
+          az network application-gateway frontend-port create \
             --gateway-name tfs-${{ env.environment }}-gw \
             --name tfs-${{ env.environment }}-port-api \
             --port 44232
 
           echo "Creating HTTP listener..."
-            az network application-gateway http-listener create \
-              --gateway-name tfs-${{ env.environment }}-gw \
-              --name apiGatewayHttpListener \
-              --frontend-port tfs-${{ env.environment }}-port-api
+          az network application-gateway http-listener create \
+            --gateway-name tfs-${{ env.environment }}-gw \
+            --name apiGatewayHttpListener \
+            --frontend-port tfs-${{ env.environment }}-port-api
 
           echo "Creating API routing rule..."
-            az network application-gateway rule create \
-              --gateway-name tfs-${{ env.environment }}-gw \
-              --name api-rule \
-              --address-pool apiGatewayBackendPool \
-              --http-listener apiGatewayHttpListener \
-              --http-settings appGatewayBackendHttpSettings
-          
+          az network application-gateway rule create \
+            --gateway-name tfs-${{ env.environment }}-gw \
+            --name api-rule \
+            --address-pool apiGatewayBackendPool \
+            --http-listener apiGatewayHttpListener \
+            --http-settings appGatewayBackendHttpSettings
         fi
     - name: Healthcheck probe
       uses: Azure/cli@v1.0.0
