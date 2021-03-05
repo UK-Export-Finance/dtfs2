@@ -35,6 +35,8 @@ describe(page, () => {
         buyerAddressLine3: 'buyerAddressLine3',
         buyerAddressPostcode: 'buyerAddressPostcode',
         buyerAddressTown: 'buyerAddressTown',
+        legallyDistinct: 'Yes',
+        indemnifierCompaniesHouseRegistrationNumber: 'indemnifierCompaniesHouseRegistrationNumber',
         indemnifierAddressCountry: 'indemnifierAddressCountry',
         indemnifierAddressLine1: 'indemnifierAddressLine1',
         indemnifierAddressLine2: 'indemnifierAddressLine2',
@@ -117,5 +119,17 @@ describe(page, () => {
     wrapper
       .expectText('[data-cy="indemnifier-name"]')
       .toRead(params.deal.submissionDetails.indemnifierName);
+  });
+
+  it('should render indemnifier companies house no', () => {
+    wrapper
+      .expectText('[data-cy="indemnifier-companies-house-registration-number"]')
+      .toRead(params.deal.submissionDetails.indemnifierCompaniesHouseRegistrationNumber);
+  });
+
+  it('should render indemnifier legally distinct', () => {
+    wrapper
+      .expectText('[data-cy="indemnifier-legally-distinct"]')
+      .toRead(params.deal.submissionDetails.legallyDistinct);
   });
 });

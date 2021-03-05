@@ -107,6 +107,8 @@ const dealQuery = gql`
           buyerAddressLine3,
           buyerAddressPostcode,
           buyerAddressTown,
+          legallyDistinct,
+          indemnifierCompaniesHouseRegistrationNumber,
           indemnifierAddressCountry,
           indemnifierAddressLine1,
           indemnifierAddressLine2,
