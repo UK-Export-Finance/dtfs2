@@ -113,7 +113,8 @@ jobs:
         inlineScript: |
           az network public-ip create --name tfs-${{ env.app_service_plan }}-nat-ip \
             --allocation-method Static \
-            --sku Standard
+            --sku Standard \
+            --zone 1 2 3
 
     - name: NAT gateway
       uses: Azure/cli@v1.0.0
@@ -222,11 +223,13 @@ jobs:
         inlineScript: |
           az network public-ip create --name tfs-${{ env.environment }}-ip \
             --allocation-method Static \
-            --sku Standard
+            --sku Standard \
+            --zone 1 2 3
 
           az network public-ip create --name tfs-${{ env.environment }}-tfm-ip \
             --allocation-method Static \
-            --sku Standard
+            --sku Standard \
+            --zone 1 2 3
 
   # END Virtual Network setup
 
