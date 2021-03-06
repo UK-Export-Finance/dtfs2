@@ -31,6 +31,12 @@ describe(page, () => {
         tenor: '3 months',
       },
     },
+    facilityTfm: {
+      ukefExposure: {
+        exposure: 'GBP 123',
+        timestamp: '1606900616651',
+      },
+    },
     user: {
       timezone: 'Europe/London',
     },
@@ -75,7 +81,9 @@ describe(page, () => {
     });
 
     it('should render maximum ukefExposure', () => {
-      wrapper.expectText('[data-cy="facility-maximum-ukef-exposure"]').toRead(params.facility.ukefExposure);
+      const expectedTimestamp = localiseTimestamp(params.facilityTfm.ukefExposure.timestamp, 'D MMMM YYYY', params.user.timezone);
+      const expected = `${params.facilityTfm.ukefExposure.exposure} as at ${expectedTimestamp}`;
+      wrapper.expectText('[data-cy="facility-maximum-ukef-exposure"]').toRead(expected);
     });
 
   });
@@ -89,7 +97,6 @@ describe(page, () => {
 
     it('should render bankIssueNoticeReceived', () => {
       const expected = localiseTimestamp(params.facility.dates.bankIssueNoticeReceived, 'D MMMM YYYY', params.user.timezone);
-
       wrapper.expectText('[data-cy="facility-bank-issue-notice-received"]').toRead(expected);
     });
 

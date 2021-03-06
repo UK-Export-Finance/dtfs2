@@ -3,11 +3,12 @@ const { formattedNumber } = require('../../../../utils/number');
 const { capitalizeFirstLetter } = require('../../../../utils/string');
 const mapFacilityProduct = require('./mapFacilityProduct');
 const mapFacilityStage = require('./mapFacilityStage');
+const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
 const mapDates = require('./mapDates');
 
-const mapFacility = (f, dealDetails) => {
+const mapFacility = (f, facilityTfm, dealDetails) => {
   // Deep clone
   const facility = JSON.parse(JSON.stringify(f, null, 4));
 
@@ -16,12 +17,10 @@ const mapFacility = (f, dealDetails) => {
     facilityValue,
     facilityStage,
     guaranteeFeePayableByBank,
+    currency,
   } = facility;
 
-
   const ukefFacilityType = facilityType;
-
-  const formattedFacilityValue = formattedNumber(facilityValue);
 
   facility.facilityProduct = mapFacilityProduct(facility);
 
@@ -34,21 +33,17 @@ const mapFacility = (f, dealDetails) => {
     facility.facilityType = null;
   }
 
-  facility.ukefExposure = `${facility.currency.id} ${facility.ukefExposure}`;
   facility.coveredPercentage = `${facility.coveredPercentage}%`;
 
-  // DTFS-2727
-  // for initial dev, only return facilityValue if currency is GBP.
-  // TODO: until we figure out which API to use for conversion from non-GBP.
-  if (facility.currency.id === 'GBP') {
-    facility.facilityValue = `${facility.currency.id} ${formattedFacilityValue}`;
-  } else {
-    facility.facilityValue = '';
-  }
+  const formattedFacilityValue = formattedNumber(facilityValue);
 
-  facility.facilityValueExportCurrency = `${facility.currency.id} ${formattedFacilityValue}`;
+  const mappedFacilityValue = mapFacilityValue(currency, formattedFacilityValue, facilityTfm);
+
+  facility.facilityValueExportCurrency = `${currency.id} ${formattedFacilityValue}`;
 
   facility.facilityStage = mapFacilityStage(facilityStage);
+
+  facility.ukefExposure = `${facility.currency.id} ${facility.ukefExposure}`;
 
   return {
     _id: facility._id, // eslint-disable-line no-underscore-dangle
@@ -60,7 +55,7 @@ const mapFacility = (f, dealDetails) => {
     facilityStage: facility.facilityStage,
     coveredPercentage: facility.coveredPercentage,
     facilityValueExportCurrency: facility.facilityValueExportCurrency,
-    facilityValue: facility.facilityValue,
+    facilityValue: mappedFacilityValue,
     ukefExposure: facility.ukefExposure,
     bankFacilityReference: mapBankFacilityReference(facility),
     guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFeePayableByBank),
