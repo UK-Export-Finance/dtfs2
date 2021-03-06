@@ -12,7 +12,11 @@ describe('mapUkefExposure', () => {
 
     const formattedUkefExposure = formattedNumber(mockFacilityTfm.ukefExposure);
 
-    const expected = `GBP ${formattedUkefExposure} as at ${mockFacilityTfm.ukefExposureCalculationTimestamp}`;
+    const expected = {
+      exposure: `GBP ${formattedUkefExposure}`,
+      timestamp: `${mockFacilityTfm.ukefExposureCalculationTimestamp}`,
+    };
+
     expect(result).toEqual(expected);
   });
 });

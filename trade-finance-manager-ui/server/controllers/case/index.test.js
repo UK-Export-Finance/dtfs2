@@ -71,6 +71,10 @@ describe('controllers - case', () => {
           associatedDealId: '12345678',
           mock: true,
         },
+        tfm: {
+          ukefExposure: { exposure: 'GBP 57.21', timestamp: '1614954617041' },
+          facilityValueInGBP: 238.39322963227846,
+        },
       };
 
       const mockDeal = {
@@ -99,6 +103,7 @@ describe('controllers - case', () => {
           deal: mockDeal.dealSnapshot,
           dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
           facility: mockFacility.facilitySnapshot,
+          facilityTfm: mockFacility.tfm,
           active_sheet: 'facility',
           facilityId: req.params.facilityId,
           user: session.user,

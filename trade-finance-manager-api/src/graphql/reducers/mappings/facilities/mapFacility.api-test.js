@@ -7,7 +7,7 @@ const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
 const mapDates = require('./mapDates');
-const mapUkefExposure = require('./mapUkefExposure');
+
 const MOCK_DEAL = require('../../../../v1/__mocks__/mock-deal');
 
 describe('mapFacility', () => {
@@ -49,9 +49,9 @@ describe('mapFacility', () => {
     bankReferenceNumber: '123456',
     bondIssuer: 'Issuer',
     bondBeneficiary: 'test',
+    ukefExposure: '1,234.00',
 
     // fields we do not consume
-    ukefExposure: '1,234.00',
     ukefGuaranteeInMonths: '10',
     guaranteeFeePayableByBank: '9.0000',
     currencySameAsSupplyContractCurrency: 'true',
@@ -83,7 +83,7 @@ describe('mapFacility', () => {
       coveredPercentage: expectedCoveredPercentage,
       facilityValue: mapFacilityValue(mockFacility.currency, formattedFacilityValue, mockTfmFacility),
       facilityValueExportCurrency: expectedFacilityValueExportCurrency,
-      ukefExposure: mapUkefExposure(mockTfmFacility),
+      ukefExposure: `${mockFacility.currency.id} ${mockFacility.ukefExposure}`,
       bankFacilityReference: mapBankFacilityReference(mockFacility),
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacility.guaranteeFeePayableByBank, 4),
       bondIssuer: mockFacility.bondIssuer,

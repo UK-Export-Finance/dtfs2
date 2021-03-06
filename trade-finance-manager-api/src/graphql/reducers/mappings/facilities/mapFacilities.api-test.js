@@ -39,9 +39,9 @@ describe('mapFacilities', () => {
         currency: mockCurrency,
         facilityValue: mockFacilityValue,
         facilityStage: 'Unissued',
+        ukefExposure: '1,234.00',
 
         // fields we do not consume
-        ukefExposure: '1,234.00',
         bondIssuer: 'Issuer',
         ukefGuaranteeInMonths: '10',
         bondBeneficiary: 'test',
@@ -68,10 +68,9 @@ describe('mapFacilities', () => {
         facilityStage: 'Conditional',
         requestedCoverStartDate: 1610369832226.0,
         issuedDate: 1610369832226.0,
-
+        ukefExposure: '1,234.00',
 
         // fields we do not consume
-        ukefExposure: '1,234.00',
         createdDate: 1610369832226.0,
         ukefGuaranteeInMonths: '12',
         bankReferenceNumber: '5678',
