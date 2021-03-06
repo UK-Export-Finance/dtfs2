@@ -1,17 +1,26 @@
 const MOCK_DEAL = require('./mock-deal');
 const MOCK_DEAL_NO_PARTY_DB = require('./mock-deal-no-party-db');
 const MOCK_DEAL_NO_COMPANIES_HOUSE = require('./mock-deal-no-companies-house');
-const MOCK_FACILITY = require('./mock-facility');
+const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('./mock-deal-facilities-USD-currency');
+const MOCK_FACILITIES = require('./mock-facilities');
+const MOCK_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
+const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
 
-const MOCK_DEALS = [
+const ALL_MOCK_DEALS = [
   MOCK_DEAL,
   MOCK_DEAL_NO_PARTY_DB,
   MOCK_DEAL_NO_COMPANIES_HOUSE,
+  MOCK_DEAL_FACILITIES_USD_CURRENCY,
+];
+
+const ALL_MOCK_FACILITIES = [
+  ...MOCK_FACILITIES,
+  ...MOCK_FACILITIES_USD_CURRENCY,
 ];
 
 module.exports = {
   findOneDeal: (dealId) => {
-    const dealSnapshot = MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const dealSnapshot = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
     const deal = {
       _id: dealId,
       dealSnapshot,
@@ -21,34 +30,53 @@ module.exports = {
     return dealSnapshot ? Promise.resolve(deal) : Promise.reject();
   },
   findOnePortalDeal: (dealId) => {
-    const deal = MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
     return deal ? Promise.resolve(deal) : Promise.reject();
   },
-  queryDeals: () => MOCK_DEALS,
-  updateDeal: (dealId, updatedDeal) => {
-    const deal = MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+  queryDeals: () => ALL_MOCK_DEALS,
+  updateDeal: (dealId, updatedTfmDealData) => {
+    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
     return {
-      ...deal,
-      ...updatedDeal,
+      dealSnapshot: {
+        ...deal,
+      },
+      ...updatedTfmDealData,
     };
   },
   submitDeal: (dealId) => ({
     _id: dealId,
     // eslint-disable-next-line no-underscore-dangle
-    dealSnapshot: MOCK_DEALS.find((d) => d._id === dealId),
+    dealSnapshot: ALL_MOCK_DEALS.find((d) => d._id === dealId),
   }),
-  findOneFacility: (facilityId) => ({
-    _id: facilityId,
-    facilitySnapshot: {
-      ...MOCK_FACILITY,
+  findOneFacility: (facilityId) => {
+    const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId); // eslint-disable-line no-underscore-dangle
+
+    return {
       _id: facilityId,
-    },
-    tfm: {},
-  }),
-  updateFacility: (facilityId, tfmUpdate) => ({
-    ...MOCK_FACILITY,
-    ...tfmUpdate,
-  }),
+      facilitySnapshot: {
+        ...facility,
+        _id: facilityId,
+      },
+      // tfm: {},
+      tfm: {
+        ukefExposure: '1,234.00',
+        ukefExposureCalculationTimestamp: '1606900616651',
+      },
+    };
+  },
+  updateFacility: (facilityId, tfmUpdate) => {
+    const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId); // eslint-disable-line no-underscore-dangle
+
+    // for some reason 2 api tests act differently if tfmUpdate is *not* included in both
+    // root object and in tfm object.
+    return {
+      ...facility,
+      ...tfmUpdate,
+      tfm: {
+        ...tfmUpdate,
+      },
+    };
+  },
   getPartyDbInfo: ({ companyRegNo }) => (
     companyRegNo === 'NO_MATCH'
       ? false
@@ -59,4 +87,7 @@ module.exports = {
   findUser: (username) => (
     username === 'invalidUser' ? false : { username }
   ),
+  getCurrencyExchangeRate: () => ({
+    midPrice: MOCK_CURRENCY_EXCHANGE_RATE,
+  }),
 };

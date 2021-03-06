@@ -7,6 +7,7 @@ import agentPage from './agentPage';
 import indemnifierPage from './indemnifierPage';
 import bondIssuerPage from './bondIssuerPage';
 import bondBeneficiaryPage from './bondBeneficiaryPage';
+import facilityPage from './facilityPage';
 
 export default {
   landingPage,
@@ -18,4 +19,5 @@ export default {
   indemnifierPage,
   bondIssuerPage,
   bondBeneficiaryPage,
+  facilityPage,
 };

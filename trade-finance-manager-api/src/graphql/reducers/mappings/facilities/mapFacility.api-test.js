@@ -3,12 +3,19 @@ const { formattedNumber } = require('../../../../utils/number');
 const { capitalizeFirstLetter } = require('../../../../utils/string');
 const mapFacilityProduct = require('./mapFacilityProduct');
 const mapFacilityStage = require('./mapFacilityStage');
+const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
 const mapDates = require('./mapDates');
+
 const MOCK_DEAL = require('../../../../v1/__mocks__/mock-deal');
 
 describe('mapFacility', () => {
+  const mockTfmFacility = {
+    ukefExposure: '1,234.00',
+    ukefExposureCalculationTimestamp: '1606900616651',
+  };
+
   const mockDealDetails = MOCK_DEAL.details;
 
   const mockCoverEndDate = {
@@ -17,7 +24,6 @@ describe('mapFacility', () => {
     'coverEndDate-year': '2021',
   };
 
-  const mockUkefExposure = '1,234.00';
   const mockCoveredPercentage = '10';
 
   const mockCurrency = {
@@ -35,7 +41,6 @@ describe('mapFacility', () => {
     ukefFacilityID: '0040004833',
     facilityType: mockFacilityType,
     ...mockCoverEndDate,
-    ukefExposure: mockUkefExposure,
     coveredPercentage: mockCoveredPercentage,
     bondType: 'Performance Bond',
     currency: mockCurrency,
@@ -44,6 +49,7 @@ describe('mapFacility', () => {
     bankReferenceNumber: '123456',
     bondIssuer: 'Issuer',
     bondBeneficiary: 'test',
+    ukefExposure: '1,234.00',
 
     // fields we do not consume
     ukefGuaranteeInMonths: '10',
@@ -56,14 +62,11 @@ describe('mapFacility', () => {
   };
 
   it('should map and format correct fields/values', async () => {
-    const result = mapFacility(mockFacility, mockDealDetails);
+    const result = mapFacility(mockFacility, mockTfmFacility, mockDealDetails);
 
-    const expectedUkefExposure = `${mockCurrency.id} ${mockUkefExposure}`;
     const expectedCoveredPercentage = `${mockCoveredPercentage}%`;
 
     const formattedFacilityValue = formattedNumber(mockFacilityValue);
-
-    const expectedFacilityValue = `${mockCurrency.id} ${formattedFacilityValue}`;
 
     const expectedFacilityValueExportCurrency = `${mockCurrency.id} ${formattedFacilityValue}`;
 
@@ -77,10 +80,10 @@ describe('mapFacility', () => {
       ukefFacilityType: mockFacilityType,
       facilityProduct: mapFacilityProduct(mockFacility),
       facilityStage: mapFacilityStage(mockFacilityStage),
-      ukefExposure: expectedUkefExposure,
       coveredPercentage: expectedCoveredPercentage,
-      facilityValue: expectedFacilityValue,
+      facilityValue: mapFacilityValue(mockFacility.currency, formattedFacilityValue, mockTfmFacility),
       facilityValueExportCurrency: expectedFacilityValueExportCurrency,
+      ukefExposure: `${mockFacility.currency.id} ${mockFacility.ukefExposure}`,
       bankFacilityReference: mapBankFacilityReference(mockFacility),
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacility.guaranteeFeePayableByBank, 4),
       bondIssuer: mockFacility.bondIssuer,
@@ -102,25 +105,9 @@ describe('mapFacility', () => {
         facilityType: 'loan',
       };
 
-      const result = mapFacility(mockLoan, mockDealDetails);
+      const result = mapFacility(mockLoan, mockTfmFacility, mockDealDetails);
 
       expect(result.facilityType).toEqual(capitalizeFirstLetter('loan'));
-    });
-  });
-
-  describe('when facility.currency is NOT GBP', () => {
-    it('should return facilityValue as empty string', () => {
-      const mockFacilityNotGBP = {
-        ...mockFacility,
-        currency: {
-          text: 'USD - US Dollars',
-          id: 'USD',
-        },
-      };
-
-      const result = mapFacility(mockFacilityNotGBP, mockDealDetails);
-
-      expect(result.facilityValue).toEqual('');
     });
   });
 });
