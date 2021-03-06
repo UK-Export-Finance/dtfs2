@@ -17,6 +17,7 @@ env:
   database_name: dtfs-submissions
   application_gateway_cidr: 10.0.10.0/28
   private_endpoints_cidr: 10.0.11.0/28
+  api_portal_access_port: 44232
   # Container registry
   registry: ${{ secrets.DEMO_ACR_REGISTRY }}
   # App service settings

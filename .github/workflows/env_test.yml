@@ -2012,7 +2012,8 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          if [ "$env.api_portal_access_port" ]
+          api_port="${{ env.api_portal_access_port }}"
+          if [ ! -z "$api_port" ]
           then
             echo "Updating NSG"
             az network nsg rule create --name api-port \
@@ -2331,4 +2332,3 @@ jobs:
     #         --backend-pool portal-api \
     #         --patterns "/v1/*"
   # END Front Doors
-  
