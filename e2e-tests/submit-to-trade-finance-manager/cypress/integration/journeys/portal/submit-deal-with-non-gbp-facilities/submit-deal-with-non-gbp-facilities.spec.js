@@ -36,7 +36,7 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Portal deal is submitted to UKEF, user views deal in TFM. Facilities display GBP and non-GBP', () => {
+  it('Portal deal is submitted to UKEF, user views deal in TFM. Facilities display GBP and non-GBP values and maximum ukef exposure in GBP', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -95,6 +95,10 @@ context('Portal to TFM deal submission', () => {
     });
 
     tfmPages.facilityPage.facilityValueGbp().invoke('text').then((text) => {
+      expect(text.trim()).to.contain('GBP');
+    });
+
+    tfmPages.facilityPage.facilityMaximumUkefExposure().invoke('text').then((text) => {
       expect(text.trim()).to.contain('GBP');
     });
   });
