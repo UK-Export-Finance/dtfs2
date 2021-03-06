@@ -43,6 +43,7 @@ const GET_FACILITY = gql`
         guaranteeFeePayableToUkef,
         bondIssuer,
         bondBeneficiary,
+        ukefExposure,
         dates {
           inclusionNoticeReceived,
           bankIssueNoticeReceived,
@@ -55,8 +56,10 @@ const GET_FACILITY = gql`
         bondIssuerPartyUrn,
         bondBeneficiaryPartyUrn,
         facilityValueInGBP,
-        ukefExposure,
-        ukefExposureCalculationTimestamp
+        ukefExposure {
+          exposure,
+          timestamp
+        },
       }
     }
   }

@@ -18,7 +18,6 @@ const addFacilityCurrencyConversion = async (deal) => {
 
   return new Promise((resolve) => {
     facilities.forEach(async (facility) => {
-
       const {
         _id: facilityId,
         currency,

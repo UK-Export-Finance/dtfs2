@@ -8,7 +8,10 @@ const mapUkefExposure = (facilityTfm) => {
 
   const formattedUkefExposure = formattedNumber(ukefExposure);
 
-  return `GBP ${formattedUkefExposure} as at ${ukefExposureCalculationTimestamp}`;
+  return {
+    exposure: `GBP ${formattedUkefExposure}`,
+    timestamp: `${ukefExposureCalculationTimestamp}`,
+  };
 };
 
 module.exports = mapUkefExposure;

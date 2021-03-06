@@ -107,7 +107,7 @@
             <h4 class="govuk-heading-s ukef-grey-bg-row-column-left-text">Maximum UKEF exposure</h4>
           </div>
           <div class="govuk-grid-column-three-quarters">
-            <p class="govuk-body-s ukef-grey-bg-row-column-right-text" data-cy="facility-maximum-ukef-exposure">{{ facility.ukefExposure | dashIfEmpty }}</p>
+            <p class="govuk-body-s ukef-grey-bg-row-column-right-text" data-cy="facility-maximum-ukef-exposure">{{ facilityTfm.ukefExposure.exposure }} as at {{ facilityTfm.ukefExposure.timestamp | localiseTimestamp("D MMMM YYYY", user.timezone) }}</p>
           </div>
         </div>
 

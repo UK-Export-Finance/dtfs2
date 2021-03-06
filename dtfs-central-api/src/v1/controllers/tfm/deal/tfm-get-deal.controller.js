@@ -1,9 +1,5 @@
-
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
-
-// const { findOneDeal } = require('../../portal/deal/get-deal.controller');
-
 
 const findOneDeal = async (_id, callback) => {
   const dealsCollection = await db.getCollection('tfm-deals');
