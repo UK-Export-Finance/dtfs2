@@ -1,11 +1,14 @@
 import * as api from '../../services/api';
-import { mapSummaryList, status, facilityType } from '../../utils/helpers';
+import {
+  mapSummaryList, status, facilityType, parseBool,
+} from '../../utils/helpers';
 import { exporterItems, facilityItems } from '../../utils/displayItems';
 
 const applicationDetails = async (req, res) => {
   try {
-    const { params } = req;
+    const { params, query } = req;
     const { applicationId } = params;
+    const { manual } = query;
     const { exporterId } = await api.getApplication(applicationId);
     const exporter = await api.getExporter(exporterId);
     const facilities = await api.getFacilities(applicationId);
@@ -15,6 +18,7 @@ const applicationDetails = async (req, res) => {
     const canSubmit = exporterStatus.code + facilitiesStatus.code === 4; // Both statuses are set to complete
 
     return res.render('partials/application-details.njk', {
+      isManual: parseBool(manual),
       exporter: {
         status: exporterStatus,
         rows: mapSummaryList(exporter, exporterItems(exporterUrl)),

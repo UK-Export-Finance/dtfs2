@@ -18,6 +18,7 @@ const exporterItems = (exporterUrl) => [
   {
     label: 'Correspondence address, if different',
     id: 'correspondenceAddress',
+    href: `${exporterUrl}/`,
   },
   {
     label: 'Industry sector',
