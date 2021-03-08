@@ -23,6 +23,7 @@ describe(page, () => {
       ukefExposure: 'GBP 1,234.00',
       bankFacilityReference: '123456',
       guaranteeFeePayableToUkef: '10%',
+      banksInterestMargin: '10%',
       dates: {
         inclusionNoticeReceived: '1606900616651',
         bankIssueNoticeReceived: '1606900616652',
@@ -117,6 +118,10 @@ describe(page, () => {
   });
 
   describe('`facility pricing and risk` section', () => {
+
+    it('should render banksInterestMargin', () => {
+      wrapper.expectText('[data-cy="facility-banks-interest-margin"]').toRead(params.facility.banksInterestMargin);
+    });
 
     it('should render guaranteeFeePayableToUkef', () => {
       wrapper.expectText('[data-cy="facility-guarantee-fee-payable-to-ukef"]').toRead(params.facility.guaranteeFeePayableToUkef);

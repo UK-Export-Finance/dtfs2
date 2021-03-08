@@ -5,6 +5,7 @@ const mapFacilityStage = require('./mapFacilityStage');
 const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
+const mapBanksInterestMargin = require('./mapBanksInterestMargin');
 const mapDates = require('./mapDates');
 
 const mapFacility = (f, facilityTfm, dealDetails) => {
@@ -43,6 +44,7 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     ukefExposure: `${facility.currency.id} ${facility.ukefExposure}`,
     bankFacilityReference: mapBankFacilityReference(facility),
     guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFeePayableByBank),
+    banksInterestMargin: mapBanksInterestMargin(facility),
 
     // bond specifics
     bondIssuer: facility.bondIssuer,

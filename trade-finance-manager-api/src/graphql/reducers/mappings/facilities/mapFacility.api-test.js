@@ -6,6 +6,7 @@ const mapFacilityStage = require('./mapFacilityStage');
 const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
+const mapBanksInterestMargin = require('./mapBanksInterestMargin');
 const mapDates = require('./mapDates');
 
 const MOCK_DEAL = require('../../../../v1/__mocks__/mock-deal');
@@ -50,12 +51,12 @@ describe('mapFacility', () => {
     bondIssuer: 'Issuer',
     bondBeneficiary: 'test',
     ukefExposure: '1,234.00',
+    riskMarginFee: '10',
 
     // fields we do not consume
     ukefGuaranteeInMonths: '10',
     guaranteeFeePayableByBank: '9.0000',
     currencySameAsSupplyContractCurrency: 'true',
-    riskMarginFee: '10',
     minimumRiskMarginFee: '30',
     feeType: 'At maturity',
     dayCountBasis: '365',
@@ -79,6 +80,16 @@ describe('mapFacility', () => {
       facilityProduct: expectedFacilityProduct,
     });
 
+    const expectedBanksInterestMargin = mapBanksInterestMargin({
+      ...mockFacility,
+      facilityProduct: expectedFacilityProduct,
+    });
+
+    const expectedDates = mapDates({
+      ...mockFacility,
+      facilityStage,
+    }, mockDealDetails);
+
     const expected = {
       _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
       associatedDealId: mockFacility.associatedDealId,
@@ -93,12 +104,10 @@ describe('mapFacility', () => {
       ukefExposure: `${mockFacility.currency.id} ${mockFacility.ukefExposure}`,
       bankFacilityReference: mapBankFacilityReference(mockFacility),
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacility.guaranteeFeePayableByBank, 4),
+      banksInterestMargin: expectedBanksInterestMargin,
       bondIssuer: mockFacility.bondIssuer,
       bondBeneficiary: mockFacility.bondBeneficiary,
-      dates: mapDates({
-        ...mockFacility,
-        facilityStage,
-      }, mockDealDetails),
+      dates: expectedDates,
     };
 
     expect(result).toEqual(expected);
