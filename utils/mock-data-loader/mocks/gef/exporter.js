@@ -28,7 +28,7 @@ const EXPORTER = [{
   industrySectorId: 123,
   industryClassId: 123,
   smeTypeId: 2,
-  probabilityOfDefault: 45,
+  probabilityOfDefault: 45.5,
   isFinanceIncreasing: true,
 }];
 
