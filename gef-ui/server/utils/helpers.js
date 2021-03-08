@@ -40,6 +40,9 @@ const apiErrorHandler = ({ code, response }) => {
 const validationErrorHandler = (errs, href = '') => {
   const errorSummary = [];
   const fieldErrors = {};
+
+  if (!errs) { return false; }
+
   const errors = isObject(errs) ? [errs] : errs;
 
   errors.forEach((el) => {
