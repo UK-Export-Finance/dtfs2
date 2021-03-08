@@ -1,15 +1,15 @@
 const APPLICATION = [{
   userId: null,
-  bankInternalRefName: 'Bank 1',
-  additionalRefName: 'Team 1',
+  bankInternalRefName: 'Barclays 123',
+  additionalRefName: null,
 }, {
   userId: null,
-  bankInternalRefName: 'Bank 2',
-  additionalRefName: 'Team 2',
+  bankInternalRefName: 'Natwest 123',
+  additionalRefName: '',
 }, {
   userId: null,
-  bankInternalRefName: 'Bank 3',
-  additionalRefName: 'Team 3',
+  bankInternalRefName: 'HSBC 123',
+  additionalRefName: 'Some Additional Reference',
 }];
 
 module.exports = APPLICATION;
