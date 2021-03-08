@@ -25,7 +25,7 @@ class Facility {
       this.name = req.name ? String(req.name) : null;
       this.startOnDayOfNotice = req.startOnDayOfNotice != null ? Boolean(req.startOnDayOfNotice) : null;
       this.coverStartDate = req.coverStartDate ? new Date(req.coverStartDate) : null;
-      this.coverEndDate = req.coverStartDate ? new Date(req.coverStartDate) : null;
+      this.coverEndDate = req.coverEndDate ? new Date(req.coverEndDate) : null;
       this.monthsOfCover = req.monthsOfCover ? Number(req.monthsOfCover) : null;
       this.details = req.details ? req.details : null;
       this.detailsOther = req.detailsOther ? String(req.detailsOther) : null;
