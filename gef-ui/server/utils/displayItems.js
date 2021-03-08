@@ -36,6 +36,7 @@ const exporterItems = (exporterUrl) => [
     label: 'Probability of default',
     id: 'probabilityOfDefault',
     href: `${exporterUrl}/`,
+    suffix: '%',
   },
   {
     label: 'Is finance for this exporter increasing?',
@@ -45,7 +46,7 @@ const exporterItems = (exporterUrl) => [
   },
 ];
 
-const facilityItems = (exporterUrl) => [
+const facilityItems = (exporterUrl, type) => [
   {
     label: 'Name',
     id: 'name',
@@ -104,14 +105,8 @@ const facilityItems = (exporterUrl) => [
     isCurrency: true,
   },
   {
-    label: 'Interest margin your bank will charge',
+    label: type === 0 ? 'Interest margin your bank will charge' : 'Risk margin your bank will charge',
     id: 'interestPercentage',
-    href: `${exporterUrl}/`,
-    suffix: '%',
-  },
-  {
-    label: 'Risk margin your bank will charge',
-    id: 'riskMarginPercentage',
     href: `${exporterUrl}/`,
     suffix: '%',
   },
