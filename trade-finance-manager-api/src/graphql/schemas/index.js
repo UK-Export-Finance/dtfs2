@@ -143,6 +143,7 @@ type FacilitySnapshot {
   coveredPercentage: String!
   bankFacilityReference: String
   guaranteeFeePayableToUkef: String
+  banksInterestMargin: String
   bondIssuer: String
   bondBeneficiary: String
   ukefExposure: String
