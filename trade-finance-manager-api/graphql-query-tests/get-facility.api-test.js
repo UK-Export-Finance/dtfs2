@@ -8,11 +8,17 @@ jest.mock('../src/v1/api');
 
 const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
-const MOCK_FACILITY = require('../src/v1/__mocks__/mock-facility');
+const MOCK_FACILITIES = require('../src/v1/__mocks__/mock-facilities');
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 const facilityReducer = require('../src/graphql/reducers/facility');
 
-const mockFacility = { ...MOCK_FACILITY };
+const mockFacility = {
+  ...MOCK_FACILITIES[0],
+  tfm: {
+    ukefExposure: '1,234.00',
+    ukefExposureCalculationTimestamp: '1606900616651',
+  },
+};
 
 const GET_FACILITY = gql`
   query Facility($id: ID!) {
@@ -37,6 +43,7 @@ const GET_FACILITY = gql`
         guaranteeFeePayableToUkef,
         bondIssuer,
         bondBeneficiary,
+        ukefExposure,
         dates {
           inclusionNoticeReceived,
           bankIssueNoticeReceived,
@@ -44,6 +51,15 @@ const GET_FACILITY = gql`
           coverEndDate,
           tenor
         }
+      },
+      tfm {
+        bondIssuerPartyUrn,
+        bondBeneficiaryPartyUrn,
+        facilityValueInGBP,
+        ukefExposure {
+          exposure,
+          timestamp
+        },
       }
     }
   }
@@ -72,11 +88,16 @@ describe('graphql query - get facility', () => {
       query: GET_FACILITY,
       variables: { id: '12345678' },
     });
-    
+
     const mockDealDetails = MOCK_DEAL.details;
-    const expected = facilityReducer({
+
+    const expectedFacility = {
       facilitySnapshot: mockFacility,
-    }, mockDealDetails);
+      tfm: mockFacility.tfm,
+    };
+
+    const expected = facilityReducer(expectedFacility, mockDealDetails);
+
     expect(data.facility.facilitySnapshot).toEqual(expected.facilitySnapshot);
   });
 });

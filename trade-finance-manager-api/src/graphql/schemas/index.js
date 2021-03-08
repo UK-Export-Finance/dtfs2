@@ -58,6 +58,8 @@ type DealSubmissionDetails {
   buyerAddressPostcode: String,
   buyerAddressTown: String,
   destinationCountry: String,
+  legallyDistinct: String,
+  indemnifierCompaniesHouseRegistrationNumber: String,
   indemnifierAddressCountry: String
   indemnifierAddressLine1: String,
   indemnifierAddressLine2: String,
@@ -123,6 +125,11 @@ type FacilityDates {
   tenor: String
 }
 
+type FacilityUkefExposure {
+  exposure: String
+  timestamp: String
+}
+
 type FacilitySnapshot {
   _id: String!
   ukefFacilityID: String!
@@ -133,12 +140,12 @@ type FacilitySnapshot {
   facilityStage: String!
   facilityValueExportCurrency: String!
   facilityValue: String
-  ukefExposure: String!
   coveredPercentage: String!
   bankFacilityReference: String
   guaranteeFeePayableToUkef: String
   bondIssuer: String
   bondBeneficiary: String
+  ukefExposure: String
   dates: FacilityDates
 }
 
@@ -177,6 +184,8 @@ type TFMDealData {
 type TFMFacilityData {
   bondIssuerPartyUrn: String
   bondBeneficiaryPartyUrn: String
+  facilityValueInGBP: String
+  ukefExposure: FacilityUkefExposure
 }
 
 input DashboardFilters {
