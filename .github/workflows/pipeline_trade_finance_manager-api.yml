@@ -69,21 +69,21 @@ jobs:
         cd utils/mock-data-loader
         npm install
         node ./re-insert-mocks.js
-    - name: Run Submit to Trade Finance Manager e2e tests
-      env:
-        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      run: |
-        pwd
-        cd $GITHUB_WORKSPACE
-        npm install
-        cd e2e-tests/submit-to-trade-finance-manager
-        npx cypress run --config video=false # --record
-    - name: Save Cypress screenshots
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@main
-      with:
-        name: screenshots
-        path: './cypress/screenshots'
+    # - name: Run Submit to Trade Finance Manager e2e tests
+    #   env:
+    #     CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+    #   run: |
+    #     pwd
+    #     cd $GITHUB_WORKSPACE
+    #     npm install
+    #     cd e2e-tests/submit-to-trade-finance-manager
+    #     npx cypress run --config video=false # --record
+    # - name: Save Cypress screenshots
+    #   if: ${{ failure() }}
+    #   uses: actions/upload-artifact@main
+    #   with:
+    #     name: screenshots
+    #     path: './cypress/screenshots'
     - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}
