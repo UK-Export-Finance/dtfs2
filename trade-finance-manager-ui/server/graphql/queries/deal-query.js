@@ -57,11 +57,11 @@ const dealQuery = gql`
             facilityStage,
             facilityValueExportCurrency,
             facilityValue,
-            ukefExposure,
             coveredPercentage,
             bondIssuer,
             bondBeneficiary,
             bankFacilityReference,
+            ukefExposure,
             dates {
               inclusionNoticeReceived,
               bankIssueNoticeReceived,
@@ -69,10 +69,15 @@ const dealQuery = gql`
               coverEndDate,
               tenor
             }
-          }
+          },
           tfm {
-            bondIssuerPartyUrn
-            bondBeneficiaryPartyUrn
+            bondIssuerPartyUrn,
+            bondBeneficiaryPartyUrn,
+            facilityValueInGBP,
+            ukefExposure {
+              exposure,
+              timestamp
+            }
           }
         }
         eligibility {
@@ -107,6 +112,8 @@ const dealQuery = gql`
           buyerAddressLine3,
           buyerAddressPostcode,
           buyerAddressTown,
+          legallyDistinct,
+          indemnifierCompaniesHouseRegistrationNumber,
           indemnifierAddressCountry,
           indemnifierAddressLine1,
           indemnifierAddressLine2,

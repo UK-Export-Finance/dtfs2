@@ -1,5 +1,6 @@
 const { findOnePortalDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
+const { addFacilityCurrencyConversion } = require('./facilities-currency-conversion');
 const api = require('../api');
 
 const submitDeal = async (dealId) => {
@@ -10,8 +11,12 @@ const submitDeal = async (dealId) => {
   }
 
   const submittedDeal = await api.submitDeal(dealId);
+
   const updatedDealWithPartyUrn = await addPartyUrns(submittedDeal);
-  return api.updateDeal(dealId, updatedDealWithPartyUrn);
+
+  const updatedDealWithFacilityCurrencyConversions = await addFacilityCurrencyConversion(updatedDealWithPartyUrn);
+
+  return api.updateDeal(dealId, updatedDealWithFacilityCurrencyConversions);
 };
 
 exports.submitDeal = submitDeal;

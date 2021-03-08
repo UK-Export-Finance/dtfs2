@@ -15,6 +15,8 @@ const mapSubmissionDetails = (submissionDetails) => {
     destinationCountry:
       submissionDetails.destinationOfGoodsAndServices
       && (submissionDetails.destinationOfGoodsAndServices || {}).name,
+    legallyDistinct: submissionDetails.legallyDistinct === 'true' ? 'Yes' : 'No',
+    indemnifierCompaniesHouseRegistrationNumber: submissionDetails['indemnifier-companies-house-registration-number'],
     indemnifierAddressCountry:
       (submissionDetails['indemnifier-address-country'] || {}).name,
     indemnifierAddressLine1: submissionDetails['indemnifier-address-line-1'],

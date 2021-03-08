@@ -36,7 +36,7 @@ const insertMocks = async () => {
   await MOCKS.FACILITIES.forEach(async (item) => {
     await item.forEach(async (subitem, index) => {
       // eslint-disable-next-line no-param-reassign
-      subitem.applicationId = application[index]._id;
+      // subitem.applicationId = application[index]._id;
       const facilty = await api.createFacilities(subitem, token);
       await api.updateFacilities(facilty, subitem, token);
     });

@@ -3,6 +3,11 @@ const mapFacility = require('./mapFacility');
 const MOCK_DEAL = require('../../../../v1/__mocks__/mock-deal');
 
 describe('mapFacilities', () => {
+  const mockTfmFacility = {
+    ukefExposure: '1,234.00',
+    ukefExposureCalculationTimestamp: '1606900616651',
+  };
+
   const mockDealDetails = MOCK_DEAL.details;
 
   const mockCoverEndDate = {
@@ -11,7 +16,6 @@ describe('mapFacilities', () => {
     'coverEndDate-year': '2021',
   };
 
-  const mockUkefExposure = '1,234.00';
   const mockCoveredPercentage = '10';
 
   const mockCurrency = {
@@ -23,18 +27,19 @@ describe('mapFacilities', () => {
 
   const MOCK_FACILITIES = [
     {
+      _id: '12345678',
       facilitySnapshot: {
         _id: '12345678',
         ukefFacilityID: '0040004833',
         associatedDealId: '123456789',
         facilityType: 'bond',
         ...mockCoverEndDate,
-        ukefExposure: mockUkefExposure,
         coveredPercentage: mockCoveredPercentage,
         bondType: 'Performance Bond',
         currency: mockCurrency,
         facilityValue: mockFacilityValue,
         facilityStage: 'Unissued',
+        ukefExposure: '1,234.00',
 
         // fields we do not consume
         bondIssuer: 'Issuer',
@@ -47,22 +52,23 @@ describe('mapFacilities', () => {
         feeType: 'At maturity',
         dayCountBasis: '365',
       },
+      tfm: mockTfmFacility,
     },
     {
+      _id: '23456789',
       facilitySnapshot: {
         _id: '23456789',
         ukefFacilityID: '0040004833',
         associatedDealId: '123456789',
         facilityType: 'loan',
         ...mockCoverEndDate,
-        ukefExposure: mockUkefExposure,
         coveredPercentage: mockCoveredPercentage,
         currency: mockCurrency,
         facilityValue: mockFacilityValue,
         facilityStage: 'Conditional',
         requestedCoverStartDate: 1610369832226.0,
         issuedDate: 1610369832226.0,
-
+        ukefExposure: '1,234.00',
 
         // fields we do not consume
         createdDate: 1610369832226.0,
@@ -81,6 +87,7 @@ describe('mapFacilities', () => {
         issueFacilityDetailsProvided: true,
         status: 'Acknowledged',
       },
+      tfm: mockTfmFacility,
     },
   ];
 
@@ -93,30 +100,18 @@ describe('mapFacilities', () => {
     const result = mapFacilities(mockFacilities, mockDealDetails);
 
     const expected = [
-      { facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[0].facilitySnapshot, mockDealDetails) } },
-      { facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[1].facilitySnapshot, mockDealDetails) } },
+      {
+        _id: MOCK_FACILITIES[0]._id, // eslint-disable-line no-underscore-dangle
+        facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[0].facilitySnapshot, mockTfmFacility, mockDealDetails) },
+        tfm: mockTfmFacility,
+      },
+      {
+        _id: MOCK_FACILITIES[1]._id, // eslint-disable-line no-underscore-dangle
+        facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[1].facilitySnapshot, mockTfmFacility, mockDealDetails) },
+        tfm: mockTfmFacility,
+      },
     ];
 
     expect(result).toEqual(expected);
-  });
-
-  describe('when facility.currency is NOT GBP', () => {
-    it('should return facilityValue as empty string', () => {
-      const facilitiesNonGBP = [
-        {
-          facilitySnapshot: {
-            ...mockFacilities[0].facilitySnapshot,
-            currency: {
-              text: 'USD - US Dollars',
-              id: 'USD',
-            },
-          },
-        },
-      ];
-
-      const result = mapFacilities(facilitiesNonGBP, mockDealDetails);
-
-      expect(result[0].facilitySnapshot.facilityValue).toEqual('');
-    });
   });
 });

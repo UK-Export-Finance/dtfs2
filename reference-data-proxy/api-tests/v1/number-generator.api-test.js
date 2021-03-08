@@ -2,14 +2,14 @@ const axios = require('axios');
 const app = require('../../src/createApp');
 const { get } = require('../api')(app);
 
-const mockDealId = '0030007215';
+const mockId = '0030007215';
 
 const mockResponses = {
   numberGenerator: {
     status: 201,
     data: {
       id: 20018971,
-      maskedId: mockDealId,
+      maskedId: mockId,
       numberTypeId: 1,
       createdBy: 'Portal v2/TFM',
       createdDatetime: '2020-12-16T15:12:28.13Z',
@@ -19,13 +19,14 @@ const mockResponses = {
   acbs: {
     status: 404,
     data: {
-      id: mockDealId,
+      id: mockId,
     },
   },
 };
 
 jest.mock('axios', () => jest.fn((args) => {
   const { method, url } = args;
+
   if (method === 'post') {
     if (url === process.env.MULESOFT_API_NUMBER_GENERATOR_URL) {
       return Promise.resolve(mockResponses.numberGenerator);
@@ -33,7 +34,13 @@ jest.mock('axios', () => jest.fn((args) => {
   }
 
   if (method === 'get') {
-    if (url === `${process.env.MULESOFT_API_ACBS_DEAL_URL}/${mockDealId}`) {
+    if (url === `${process.env.MULESOFT_API_ACBS_DEAL_URL}/${mockId}`) {
+      return Promise.resolve(mockResponses.acbs);
+    }
+  }
+
+  if (method === 'get') {
+    if (url === `${process.env.MULESOFT_API_ACBS_FACILITY_URL}/${mockId}`) {
       return Promise.resolve(mockResponses.acbs);
     }
   }
@@ -51,12 +58,14 @@ describe('/number-generator', () => {
       });
     });
 
-    it('should return maskedId value', async () => {
-      const { status, body } = await get('/number-generator/deal');
+    describe('when entityType is `deal`', () => {
+      it('should return maskedId value', async () => {
+        const { status, body } = await get('/number-generator/deal');
 
-      expect(status).toEqual(200);
-      expect(body).toEqual({
-        id: mockResponses.numberGenerator.data.maskedId,
+        expect(status).toEqual(200);
+        expect(body).toEqual({
+          id: mockResponses.numberGenerator.data.maskedId,
+        });
       });
     });
 
