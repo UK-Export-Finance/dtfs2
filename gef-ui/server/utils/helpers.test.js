@@ -104,6 +104,13 @@ describe('validationErrorHandler()', () => {
     });
   });
 
+  it('returns `false`, if no arguments are passed', () => {
+    expect(validationErrorHandler()).toBeFalsy();
+    expect(validationErrorHandler(null)).toBeFalsy();
+    expect(validationErrorHandler(undefined)).toBeFalsy();
+    expect(validationErrorHandler('')).toBeFalsy();
+  });
+
   it('accepts errors as an array', () => {
     const mockedError = [
       {
