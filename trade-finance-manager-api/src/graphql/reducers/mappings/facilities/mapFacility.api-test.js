@@ -1,7 +1,7 @@
 const mapFacility = require('./mapFacility');
 const { formattedNumber } = require('../../../../utils/number');
-const { capitalizeFirstLetter } = require('../../../../utils/string');
 const mapFacilityProduct = require('./mapFacilityProduct');
+const mapFacilityType = require('./mapFacilityType');
 const mapFacilityStage = require('./mapFacilityStage');
 const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
@@ -72,13 +72,20 @@ describe('mapFacility', () => {
 
     const facilityStage = mapFacilityStage(mockFacilityStage);
 
+    const expectedFacilityProduct = mapFacilityProduct(mockFacility);
+
+    const expectedFacilityType = mapFacilityType({
+      ...mockFacility,
+      facilityProduct: expectedFacilityProduct,
+    });
+
     const expected = {
       _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
       associatedDealId: mockFacility.associatedDealId,
       ukefFacilityID: mockFacility.ukefFacilityID,
-      facilityType: mockFacility.bondType,
+      facilityType: expectedFacilityType,
       ukefFacilityType: mockFacilityType,
-      facilityProduct: mapFacilityProduct(mockFacility),
+      facilityProduct: expectedFacilityProduct,
       facilityStage: mapFacilityStage(mockFacilityStage),
       coveredPercentage: expectedCoveredPercentage,
       facilityValue: mapFacilityValue(mockFacility.currency, formattedFacilityValue, mockTfmFacility),
@@ -95,19 +102,5 @@ describe('mapFacility', () => {
     };
 
     expect(result).toEqual(expected);
-  });
-
-  describe('when facility is a loan', () => {
-    it('should capitalize facilityType', () => {
-      const mockLoan = {
-        ...mockFacility,
-        bondType: null,
-        facilityType: 'loan',
-      };
-
-      const result = mapFacility(mockLoan, mockTfmFacility, mockDealDetails);
-
-      expect(result.facilityType).toEqual(capitalizeFirstLetter('loan'));
-    });
   });
 });
