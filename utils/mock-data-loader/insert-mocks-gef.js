@@ -35,8 +35,8 @@ const insertMocks = async () => {
   });
 
   console.log('inserting and updating facilities information');
-  MOCKS.FACILITIES.forEach(async (item) => {
-    item.forEach(async (subitem, index) => {
+  MOCKS.FACILITIES.forEach(async (item, index) => {
+    item.forEach(async (subitem) => {
       // eslint-disable-next-line no-param-reassign
       subitem.applicationId = application[index]._id;
       const facilty = await api.createFacilities(subitem, token);
