@@ -1,15 +1,8 @@
 const faker = require('faker');
 
-const EXPORTER = [{ // Not started
-  companiesHouseRegistrationNumber: null,
-  companyName: null,
-  registeredAddress: null,
-  correspondenceAddress: null,
-  industrySectorId: null,
-  industryClassId: null,
-  smeTypeId: null,
-  probabilityOfDefault: null,
-  isFinanceIncreasing: null,
+const EXPORTER = [{
+// Not started - the mock inserter will ignore this line as the updatedTime is bumped
+// but leave it in as its index based
 },
 { // Half Completed
   companiesHouseRegistrationNumber: null,
@@ -22,7 +15,7 @@ const EXPORTER = [{ // Not started
   probabilityOfDefault: 67,
   isFinanceIncreasing: false,
 }, { // Completed
-  companiesHouseRegistrationNumber: null,
+  companiesHouseRegistrationNumber: 123456789,
   companyName: faker.company.companyName(),
   registeredAddress: {
     line1: faker.address.streetName(),
@@ -35,7 +28,7 @@ const EXPORTER = [{ // Not started
   industrySectorId: 123,
   industryClassId: 123,
   smeTypeId: 2,
-  probabilityOfDefault: 45,
+  probabilityOfDefault: 45.5,
   isFinanceIncreasing: true,
 }];
 
