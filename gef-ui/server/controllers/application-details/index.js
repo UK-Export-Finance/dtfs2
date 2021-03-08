@@ -23,7 +23,7 @@ const applicationDetails = async (req, res) => {
         status: facilitiesStatus,
         data: facilities.items.map((item) => ({
           heading: facilityType[item.details.type],
-          rows: mapSummaryList(item, facilityItems(exporterUrl)),
+          rows: mapSummaryList(item, facilityItems(exporterUrl, item.details.type)),
         })),
       },
       submit: canSubmit,
