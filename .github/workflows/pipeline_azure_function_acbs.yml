@@ -62,7 +62,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          profile = ${az functionapp deployment list-publishing-profiles --name tfs-dev-function-acbs --xml}
+          profile=$(az functionapp deployment list-publishing-profiles --name tfs-dev-function-acbs --xml)
 
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
