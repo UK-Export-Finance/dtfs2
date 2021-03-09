@@ -22,7 +22,7 @@ env:
   AZURE_FUNCTIONAPP_NAME: acbs_function    # set this to your application's name
   AZURE_FUNCTIONAPP_PACKAGE_PATH: './azure-functions/acbs-function'      # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '12.x'                     # set this to the node version to use (supports 8.x, 10.x, 12.x)
-  credentials: ${{ secrets.AZURE_DIGITAL_TEST }}
+  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
 
 jobs:
