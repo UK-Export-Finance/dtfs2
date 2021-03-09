@@ -35,11 +35,16 @@ const validateCompaniesHouse = async (req, res) => {
       };
     }
 
+    const companiesHouse = await api.getCompaniesHouseDetails(regNumber);
 
-    return res.render('partials/companies-house.njk', {
-      errors: validationErrorHandler(regNumberError),
-      regNumber: regNumber || companiesHouseRegistrationNumber,
-    });
+    if (regNumberError) {
+      return res.render('partials/companies-house.njk', {
+        errors: validationErrorHandler(regNumberError),
+        regNumber: regNumber || companiesHouseRegistrationNumber,
+      });
+    }
+
+    return res.redirect('exporters-address');
   } catch (err) {
     return res.render('partials/problem-with-service.njk');
   }
