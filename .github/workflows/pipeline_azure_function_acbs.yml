@@ -19,7 +19,7 @@ on:
 #
 # 2. Change these variables for your configuration:
 env:
-  AZURE_FUNCTIONAPP_NAME: acbs_functions    # set this to your application's name
+  AZURE_FUNCTIONAPP_NAME: tfs-dev-function-acbs    # set this to your application's name
   AZURE_FUNCTIONAPP_PACKAGE_PATH: './azure-functions/acbs-function'      # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '12.x'                     # set this to the node version to use (supports 8.x, 10.x, 12.x)
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
@@ -62,7 +62,7 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          profile=$(az functionapp deployment list-publishing-profiles --name tfs-dev-function-acbs --xml)
+          profile=$(az functionapp deployment list-publishing-profiles --name ${{ env.AZURE_FUNCTIONAPP_NAME }} --xml)
 
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
