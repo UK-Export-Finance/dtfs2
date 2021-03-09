@@ -27,6 +27,17 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@master
 
@@ -43,6 +54,13 @@ jobs:
         npm run build --if-present
         npm run test --if-present
         popd
+    
+    - name: 'Get FunctionApp Publish profile'
+      id: publishprofile
+      uses: Azure/cli@v1.0.0
+        with:
+          inlineScript: |
+            profile = ${az functionapp deployment list-publishing-profiles --name tfs-dev-function-acbs --xml}
 
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
@@ -50,6 +68,6 @@ jobs:
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
         package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-        publish-profile: ${{ secrets.DEV_AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+        publish-profile: ${{ steps.publishprofile.outputs.profile }}
 
 # For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
