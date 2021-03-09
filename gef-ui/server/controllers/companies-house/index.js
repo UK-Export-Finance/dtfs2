@@ -1,8 +1,8 @@
 import _isEmpty from 'lodash/isEmpty';
 import * as api from '../../services/api';
-import { validationErrorHandler, isEmpty } from '../../utils/helpers';
+import { validationErrorHandler } from '../../utils/helpers';
 
-const companiesRegNumber = async (req, res) => {
+const companiesHouse = async (req, res) => {
   try {
     const { params } = req;
     const { applicationId } = params;
@@ -10,7 +10,7 @@ const companiesRegNumber = async (req, res) => {
     const { details } = await api.getExporter(exporterId);
     const { companiesHouseRegistrationNumber } = details;
 
-    return res.render('partials/companies-reg-number.njk', {
+    return res.render('partials/companies-house.njk', {
       regNumber: companiesHouseRegistrationNumber,
     });
   } catch (err) {
@@ -18,7 +18,7 @@ const companiesRegNumber = async (req, res) => {
   }
 };
 
-const validateCompaniesRegNumber = async (req, res) => {
+const validateCompaniesHouse = async (req, res) => {
   try {
     const { params, body } = req;
     const { regNumber } = body;
@@ -36,7 +36,7 @@ const validateCompaniesRegNumber = async (req, res) => {
     }
 
 
-    return res.render('partials/companies-reg-number.njk', {
+    return res.render('partials/companies-house.njk', {
       errors: validationErrorHandler(regNumberError),
       regNumber: regNumber || companiesHouseRegistrationNumber,
     });
@@ -46,6 +46,6 @@ const validateCompaniesRegNumber = async (req, res) => {
 };
 
 export {
-  companiesRegNumber,
-  validateCompaniesRegNumber,
+  companiesHouse,
+  validateCompaniesHouse,
 };
