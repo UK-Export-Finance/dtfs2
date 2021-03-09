@@ -8,6 +8,7 @@ const numberGenerator = require('./controllers/number-generator.controller');
 const partyDb = require('./controllers/party-db.controller');
 const acbs = require('./controllers/acbs.controller');
 const currencyExchangeRate = require('./controllers/currency-exchange-rate.controller');
+const exposurePeriod = require('./controllers/exposure-period.controller');
 
 openRouter.route('/countries')
   .get(
@@ -57,6 +58,11 @@ openRouter.route('/party-db/:companyRegNo')
 openRouter.route('/currency-exchange-rate/:source/:target')
   .get(
     currencyExchangeRate.getExchangeRate,
+  );
+
+openRouter.route('/exposure-period/:startDate/:endDate/:facilityType')
+  .get(
+    exposurePeriod.getExposurePeriod,
   );
 
 module.exports = { openRouter };
