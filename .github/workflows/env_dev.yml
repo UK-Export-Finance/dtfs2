@@ -811,8 +811,7 @@ jobs:
             --os-type Linux \
             --functions-version 3 \
             --runtime node \
-            --runtime-version 12 \
-            --consumption-plan-location uksouth
+            --runtime-version 12
 
   # END Function setup
 
