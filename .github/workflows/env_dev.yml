@@ -784,6 +784,38 @@ jobs:
     #       fi
   # END Redis setup
 
+  # START Function setup
+  functions:
+    name: ACBS Function Setup
+    needs: [vnet, private-dns, file-storage]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az functionapp create --name tfs-${{ env.environment }}-function-acbs \
+            --plan ${{ env.app_service_plan }} \
+            --storage-account tfs${{ env.environment }}storage \
+            --os-type Linux \
+            --functions-version 3 \
+            --runtime node \
+            --runtime-version 12 \
+            --consumption-plan-location uksouth
+
+  # END Function setup
+
   # START API setup
   reference-data-proxy:
     name: Reference data API
