@@ -53,19 +53,4 @@ describe('mapDates', () => {
 
     expect(result.tenor).toEqual(mapTenorDate(mockFacility, mockFacilityTfm));
   });
-
-
-  // describe('when facilityStage is `Commitment`', () => {
-  //   it('should return tenor as facility ukefGuaranteeInMonths', () => {
-  //     const commitmentFacility = {
-  //       ...mockFacility,
-  //       facilityStage: 'Commitment',
-  //     };
-
-  //     const result = mapDates(commitmentFacility, mockDealDetails);
-
-  //     const expected = `${mockFacility.ukefGuaranteeInMonths} months`;
-  //     expect(result.tenor).toEqual(expected);
-  //   });
-  // });
 });

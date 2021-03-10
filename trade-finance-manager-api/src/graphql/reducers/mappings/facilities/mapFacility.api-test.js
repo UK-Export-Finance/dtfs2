@@ -111,9 +111,9 @@ describe('mapFacility', () => {
       bankFacilityReference: mapBankFacilityReference(mockFacility),
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacility.guaranteeFeePayableByBank, 4),
       banksInterestMargin: expectedBanksInterestMargin,
+      dates: expectedDates,
       bondIssuer: mockFacility.bondIssuer,
       bondBeneficiary: mockFacility.bondBeneficiary,
-      dates: expectedDates,
     };
 
     expect(result).toEqual(expected);

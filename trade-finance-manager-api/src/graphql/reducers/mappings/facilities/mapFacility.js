@@ -46,12 +46,11 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFeePayableByBank),
     banksInterestMargin: mapBanksInterestMargin(facility),
 
+    dates: mapDates(facility, facilityTfm, dealDetails),
+
     // bond specifics
     bondIssuer: facility.bondIssuer,
     bondBeneficiary: facility.bondBeneficiary,
-
-    // dates: mapDates(facility, dealDetails),
-    dates: mapDates(facility, facilityTfm, dealDetails),
   };
 };
 

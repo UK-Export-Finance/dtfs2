@@ -37,7 +37,7 @@ describe('mapTenorDate', () => {
     const mockFacility = {
       facilityStage: 'Issued',
     };
- 
+
     it('should return exposurePeriodInMonths', () => {
       const mockFacilityTfm = {
         exposurePeriodInMonths: 3,
@@ -62,6 +62,6 @@ describe('mapTenorDate', () => {
 
         expect(result).toEqual(expected);
       });
-    });    
+    });
   });
 });
