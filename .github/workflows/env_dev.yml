@@ -811,10 +811,6 @@ jobs:
             --storage-account tfs${{ env.environment }}storage \
             --deployment-container-image-name ${{ env.registry }}/azure-function-acbs:${{ env.environment }}
 
-        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
-        username: ${{ secrets.DEV_ACR_USERNAME }}
-        password: ${{ secrets.DEV_ACR_PASSWORD }}
-
     - name: Continuous deployment
       uses: Azure/cli@v1.0.0
       with:
