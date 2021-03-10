@@ -9,4 +9,3 @@ COPY . /home/site/wwwroot
 
 RUN cd /home/site/wwwroot && \
     npm install
-    
