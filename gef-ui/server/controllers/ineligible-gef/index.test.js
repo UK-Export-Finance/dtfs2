@@ -1,4 +1,4 @@
-import ineligible from './index';
+import ineligibleGef from './index';
 
 const MockResponse = () => {
   const res = {};
@@ -14,8 +14,8 @@ afterEach(() => {
 });
 
 describe('GET Mandatory Criteria', () => {
-  it('renders the `ineligible` template', async () => {
-    await ineligible({}, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/ineligible.njk');
+  it('renders the `ineligible for GEF` template', async () => {
+    await ineligibleGef({}, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/ineligible-gef.njk');
   });
 });

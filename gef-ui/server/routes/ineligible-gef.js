@@ -1,9 +1,9 @@
 import express from 'express';
-import ineligible from '../controllers/ineligible';
+import ineligibleGef from '../controllers/ineligible-gef';
 import validateToken from './middleware/validate-token';
 
 const router = express.Router();
 
-router.get('/ineligible', validateToken, (req, res) => ineligible(req, res));
+router.get('/ineligible-gef', validateToken, (req, res) => ineligibleGef(req, res));
 
 export default router;

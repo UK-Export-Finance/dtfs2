@@ -2,14 +2,12 @@
 import relative from './relativeURL';
 import mandatoryCriteria from './pages/mandatory-criteria';
 import nameApplication from './pages/name-application';
+import CREDENTIALS from '../fixtures/credentials.json';
 
 context('Name Application Page', () => {
   before(() => {
     cy.reinsertMocks();
-    cy.fixture('credentials')
-      .then((res) => {
-        cy.login(res.MAKER);
-      });
+    cy.login(CREDENTIALS.MAKER);
 
     cy.on('uncaught:exception', () => false);
   });
