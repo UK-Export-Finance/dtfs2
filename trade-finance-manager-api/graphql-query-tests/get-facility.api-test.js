@@ -44,6 +44,7 @@ const GET_FACILITY = gql`
         bondIssuer,
         bondBeneficiary,
         ukefExposure,
+        banksInterestMargin,
         dates {
           inclusionNoticeReceived,
           bankIssueNoticeReceived,
