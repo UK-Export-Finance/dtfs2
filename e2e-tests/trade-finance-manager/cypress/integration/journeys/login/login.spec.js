@@ -4,11 +4,11 @@ import MOCK_USERS from '../../../fixtures/users';
 
 context('User can login', () => {
   describe('Login page', () => {
-    it('should login and redirect to /deals when successful', () => {
+    it('should login and redirect to /deals/all when successful', () => {
       pages.landingPage.visit();
       pages.landingPage.email().type(MOCK_USERS[0].username);
       pages.landingPage.submitButton().click();
-      cy.url().should('eq', relative('/deals'));
+      cy.url().should('eq', relative('/deals/all'));
     });
 
     it('should not login and redirect to /deals when successful', () => {
