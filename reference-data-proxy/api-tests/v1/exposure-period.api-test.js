@@ -29,21 +29,25 @@ jest.mock('axios', () => jest.fn((args) => {
 describe('/exposure-period', () => {
   describe('GET /v1/exposure-period/:startDate/:endDate/:facilityType', () => {
     describe('when facilityType is `bond`', () => {
-      it('should return response data', async () => {
+      it('should return response.data.exposurePeriod as exposurePeriodInMonths', async () => {
         const { status, body } = await get(`/exposure-period/${mockStartDate}/${mockEndDate}/bond`);
 
         expect(status).toEqual(200);
-        expect(body).toEqual(mockResponse.data);
+        expect(body).toEqual({
+          exposurePeriodInMonths: mockResponse.data.exposurePeriod,
+        });
       });
     });
 
     describe('when facilityType is `loan`', () => {
-      it('should return response data', async () => {
+      it('should return response.data.exposurePeriod as exposurePeriodInMonths', async () => {
 
         const { status, body } = await get(`/exposure-period/${mockStartDate}/${mockEndDate}/loan`);
 
         expect(status).toEqual(200);
-        expect(body).toEqual(mockResponse.data);
+        expect(body).toEqual({
+          exposurePeriodInMonths: mockResponse.data.exposurePeriod,
+        });
       });
     });
   });
