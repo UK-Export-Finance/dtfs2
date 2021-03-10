@@ -34,5 +34,9 @@ exports.getExposurePeriod = async (req, res) => {
 
   const { status, data } = response;
 
-  return res.status(status).send(data);
+  const { exposurePeriod } = data;
+
+  return res.status(status).send({
+    exposurePeriodInMonths: exposurePeriod,
+  });
 };
