@@ -50,7 +50,8 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     bondIssuer: facility.bondIssuer,
     bondBeneficiary: facility.bondBeneficiary,
 
-    dates: mapDates(facility, dealDetails),
+    // dates: mapDates(facility, dealDetails),
+    dates: mapDates(facility, facilityTfm, dealDetails),
   };
 };
 

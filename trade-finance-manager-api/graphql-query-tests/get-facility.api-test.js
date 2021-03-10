@@ -17,6 +17,7 @@ const mockFacility = {
   tfm: {
     ukefExposure: '1,234.00',
     ukefExposureCalculationTimestamp: '1606900616651',
+    exposurePeriodInMonths: 12,
   },
 };
 

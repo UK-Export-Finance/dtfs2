@@ -52,9 +52,9 @@ describe('mapFacility', () => {
     bondBeneficiary: 'test',
     ukefExposure: '1,234.00',
     riskMarginFee: '10',
+    ukefGuaranteeInMonths: '10',
 
     // fields we do not consume
-    ukefGuaranteeInMonths: '10',
     guaranteeFeePayableByBank: '9.0000',
     currencySameAsSupplyContractCurrency: 'true',
     minimumRiskMarginFee: '30',
@@ -85,10 +85,16 @@ describe('mapFacility', () => {
       facilityProduct: expectedFacilityProduct,
     });
 
-    const expectedDates = mapDates({
+    const facilityLatest = {
       ...mockFacility,
       facilityStage,
-    }, mockDealDetails);
+    };
+
+    const expectedDates = mapDates(
+      facilityLatest,
+      mockTfmFacility,
+      mockDealDetails,
+    );
 
     const expected = {
       _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
