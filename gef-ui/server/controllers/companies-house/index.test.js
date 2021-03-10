@@ -82,16 +82,13 @@ describe('Validate Companies House', () => {
     }));
   });
 
-  // it('redirects user to `name application` page if they select `true`', async () => {
-  //   const mockedRequest = {
-  //     body: {
-  //       mandatoryCriteria: 'true',
-  //     },
-  //   };
-  //   api.getMandatoryCriteria = () => Promise.resolve(mockCriteriaResponse);
-  //   await validateMandatoryCriteria(mockedRequest, mockResponse);
-  //   expect(mockResponse.redirect).toHaveBeenCalledWith('name-application');
-  // });
+  it('redirects user to `exporters address` page if response from api is successful', async () => {
+    mockRequest.body.regNumber = '123';
+    api.getApplication = () => Promise.resolve(mockApplicationResponse);
+    api.getExporter = () => Promise.resolve(mockExporterResponse);
+    await validateCompaniesHouse(mockRequest, mockResponse);
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/name-application');
+  });
 
   // it('redirects user to `ineligible` page if they select `false`', async () => {
   //   const mockedRequest = {
