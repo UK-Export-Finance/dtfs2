@@ -42,7 +42,6 @@ const validateAutomaticCover = async (req, res) => {
 
   try {
     const { terms } = await api.getEligibilityCriteria();
-
     const automaticCoverErrors = new AutomaticCoverErrors(body, terms);
 
     if (automaticCoverErrors.length > 0) {
