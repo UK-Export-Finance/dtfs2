@@ -1,7 +1,6 @@
 import { automaticCover, validateAutomaticCover } from './index';
 import * as api from '../../services/api';
 
-
 const MockRequest = () => {
   const req = {};
   req.params = {};
