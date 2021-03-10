@@ -69,6 +69,15 @@ const getEligibilityCriteria = async () => {
   }
 };
 
+const companiesHouse = async (regNumber) => {
+  try {
+    const { data } = await Axios.get(`/gef/companies-house/${regNumber}`);
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
 export {
   validateToken,
   getMandatoryCriteria,
@@ -77,4 +86,5 @@ export {
   getApplication,
   getExporter,
   getFacilities,
+  companiesHouse,
 };
