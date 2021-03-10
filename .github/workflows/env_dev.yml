@@ -808,11 +808,8 @@ jobs:
           az functionapp create --name tfs-${{ env.environment }}-function-acbs \
             --plan ${{ env.app_service_plan }} \
             --storage-account tfs${{ env.environment }}storage \
-            --os-type Linux \
-            --functions-version 3 \
-            --runtime node \
-            --runtime-version 12
-
+            --deployment-container-image-name dtfs/azure-function-acbs \
+            --functions-version 3
   # END Function setup
 
   # START API setup
