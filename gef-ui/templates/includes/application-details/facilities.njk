@@ -36,7 +36,7 @@
   {% endfor %}
 {% endif %}
 
-{% if facilities.status.code !== 0 %}
+{% else %}
   {{ govukButton({
     text: "Add another facility",
     classes: "govuk-button--secondary",
