@@ -26,6 +26,7 @@ const facilityQuery = gql`
         bondBeneficiary,
         bankFacilityReference,
         ukefExposure,
+        banksInterestMargin,
         dates {
           inclusionNoticeReceived,
           bankIssueNoticeReceived,

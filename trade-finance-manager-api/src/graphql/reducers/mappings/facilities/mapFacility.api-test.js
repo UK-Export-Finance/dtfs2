@@ -1,11 +1,12 @@
 const mapFacility = require('./mapFacility');
 const { formattedNumber } = require('../../../../utils/number');
-const { capitalizeFirstLetter } = require('../../../../utils/string');
 const mapFacilityProduct = require('./mapFacilityProduct');
+const mapFacilityType = require('./mapFacilityType');
 const mapFacilityStage = require('./mapFacilityStage');
 const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
+const mapBanksInterestMargin = require('./mapBanksInterestMargin');
 const mapDates = require('./mapDates');
 
 const MOCK_DEAL = require('../../../../v1/__mocks__/mock-deal');
@@ -50,12 +51,12 @@ describe('mapFacility', () => {
     bondIssuer: 'Issuer',
     bondBeneficiary: 'test',
     ukefExposure: '1,234.00',
+    riskMarginFee: '10',
 
     // fields we do not consume
     ukefGuaranteeInMonths: '10',
     guaranteeFeePayableByBank: '9.0000',
     currencySameAsSupplyContractCurrency: 'true',
-    riskMarginFee: '10',
     minimumRiskMarginFee: '30',
     feeType: 'At maturity',
     dayCountBasis: '365',
@@ -72,13 +73,30 @@ describe('mapFacility', () => {
 
     const facilityStage = mapFacilityStage(mockFacilityStage);
 
+    const expectedFacilityProduct = mapFacilityProduct(mockFacility);
+
+    const expectedFacilityType = mapFacilityType({
+      ...mockFacility,
+      facilityProduct: expectedFacilityProduct,
+    });
+
+    const expectedBanksInterestMargin = mapBanksInterestMargin({
+      ...mockFacility,
+      facilityProduct: expectedFacilityProduct,
+    });
+
+    const expectedDates = mapDates({
+      ...mockFacility,
+      facilityStage,
+    }, mockDealDetails);
+
     const expected = {
       _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
       associatedDealId: mockFacility.associatedDealId,
       ukefFacilityID: mockFacility.ukefFacilityID,
-      facilityType: mockFacility.bondType,
+      facilityType: expectedFacilityType,
       ukefFacilityType: mockFacilityType,
-      facilityProduct: mapFacilityProduct(mockFacility),
+      facilityProduct: expectedFacilityProduct,
       facilityStage: mapFacilityStage(mockFacilityStage),
       coveredPercentage: expectedCoveredPercentage,
       facilityValue: mapFacilityValue(mockFacility.currency, formattedFacilityValue, mockTfmFacility),
@@ -86,28 +104,12 @@ describe('mapFacility', () => {
       ukefExposure: `${mockFacility.currency.id} ${mockFacility.ukefExposure}`,
       bankFacilityReference: mapBankFacilityReference(mockFacility),
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacility.guaranteeFeePayableByBank, 4),
+      banksInterestMargin: expectedBanksInterestMargin,
       bondIssuer: mockFacility.bondIssuer,
       bondBeneficiary: mockFacility.bondBeneficiary,
-      dates: mapDates({
-        ...mockFacility,
-        facilityStage,
-      }, mockDealDetails),
+      dates: expectedDates,
     };
 
     expect(result).toEqual(expected);
-  });
-
-  describe('when facility is a loan', () => {
-    it('should capitalize facilityType', () => {
-      const mockLoan = {
-        ...mockFacility,
-        bondType: null,
-        facilityType: 'loan',
-      };
-
-      const result = mapFacility(mockLoan, mockTfmFacility, mockDealDetails);
-
-      expect(result.facilityType).toEqual(capitalizeFirstLetter('loan'));
-    });
   });
 });

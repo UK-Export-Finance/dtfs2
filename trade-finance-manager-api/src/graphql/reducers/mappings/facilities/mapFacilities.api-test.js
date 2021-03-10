@@ -40,6 +40,7 @@ describe('mapFacilities', () => {
         facilityValue: mockFacilityValue,
         facilityStage: 'Unissued',
         ukefExposure: '1,234.00',
+        riskMarginFee: '10',
 
         // fields we do not consume
         bondIssuer: 'Issuer',
@@ -47,7 +48,6 @@ describe('mapFacilities', () => {
         bondBeneficiary: 'test',
         guaranteeFeePayableByBank: '9.0000',
         currencySameAsSupplyContractCurrency: 'true',
-        riskMarginFee: '10',
         minimumRiskMarginFee: '30',
         feeType: 'At maturity',
         dayCountBasis: '365',
@@ -69,6 +69,7 @@ describe('mapFacilities', () => {
         requestedCoverStartDate: 1610369832226.0,
         issuedDate: 1610369832226.0,
         ukefExposure: '1,234.00',
+        interestMarginFee: '30',
 
         // fields we do not consume
         createdDate: 1610369832226.0,
@@ -77,7 +78,6 @@ describe('mapFacilities', () => {
         guaranteeFeePayableByBank: '27.0000',
         lastEdited: 1610369832226.0,
         currencySameAsSupplyContractCurrency: 'true',
-        interestMarginFee: '30',
         minimumQuarterlyFee: '10',
         premiumType: 'At maturity',
         dayCountBasis: '365',

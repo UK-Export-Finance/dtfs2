@@ -62,6 +62,7 @@ const dealQuery = gql`
             bondBeneficiary,
             bankFacilityReference,
             ukefExposure,
+            banksInterestMargin,
             dates {
               inclusionNoticeReceived,
               bankIssueNoticeReceived,
