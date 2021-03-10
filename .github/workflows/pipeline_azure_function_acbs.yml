@@ -65,6 +65,7 @@ jobs:
   promote:
     name: Promote container images to Dev
     runs-on: ubuntu-latest
+    needs: test
     steps:
     - name: Log in to Dev container registry
       uses: azure/docker-login@v1
