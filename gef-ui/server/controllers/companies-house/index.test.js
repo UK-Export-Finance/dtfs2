@@ -30,10 +30,17 @@ const MockExporterResponse = () => {
   return res;
 };
 
+const MockCHResponse = () => {
+  const res = {};
+  res.status = 200;
+  return res;
+};
+
 const mockRequest = new MockRequest();
 const mockResponse = new MockResponse();
 const mockApplicationResponse = new MockApplicationResponse();
 const mockExporterResponse = new MockExporterResponse();
+const mockCHResponse = new MockCHResponse();
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -44,6 +51,7 @@ describe('GET Comapnies House', () => {
     mockExporterResponse.details.companiesHouseRegistrationNumber = '';
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
+    api.getCompaniesHouseDetails = () => Promise.resolve(mockCHResponse);
     await companiesHouse(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
@@ -54,6 +62,7 @@ describe('GET Comapnies House', () => {
     mockExporterResponse.details.companiesHouseRegistrationNumber = 'xyz';
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
+    api.getCompaniesHouseDetails = () => Promise.resolve(mockCHResponse);
     await companiesHouse(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
@@ -74,6 +83,7 @@ describe('Validate Companies House', () => {
     mockRequest.body.regNumber = '';
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
+
     await validateCompaniesHouse(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', expect.objectContaining({
@@ -86,29 +96,15 @@ describe('Validate Companies House', () => {
     mockRequest.body.regNumber = '123';
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
+    api.getCompaniesHouseDetails = () => Promise.resolve(mockCHResponse);
     await validateCompaniesHouse(mockRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/name-application');
+    expect(mockResponse.redirect).toHaveBeenCalledWith('exporters-address');
   });
 
-  // it('redirects user to `ineligible` page if they select `false`', async () => {
-  //   const mockedRequest = {
-  //     body: {
-  //       mandatoryCriteria: 'false',
-  //     },
-  //   };
-  //   await validateMandatoryCriteria(mockedRequest, mockResponse);
-  //   expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/ineligible');
-  // });
-
-  // it('redirects user to `problem with service` page if there is an issue with the api', async () => {
-  //   const mockedRequest = {
-  //     body: {
-  //       mandatoryCriteria: '',
-  //     },
-  //   };
-  //   const mockedRejection = { response: { status: 400, message: 'Whoops' } };
-  //   api.getMandatoryCriteria = () => Promise.reject(mockedRejection);
-  //   await validateMandatoryCriteria(mockedRequest, mockResponse);
-  //   expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
-  // });
+  it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {
+    const mockedRejection = { response: { status: 400, message: 'Whoops' } };
+    api.getApplication = () => Promise.reject(mockedRejection);
+    await validateCompaniesHouse({}, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+  });
 });
