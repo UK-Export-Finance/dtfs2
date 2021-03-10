@@ -82,22 +82,34 @@ describe('getExporter()', () => {
   });
 });
 
-// describe('getFacilities()', () => {
-//   it('returns an empty Array if no application Id is passed', async () => {
-//     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-//     const response = await api.getFacilities();
-//     expect(response).toEqual([]);
-//   });
+describe('getFacilities()', () => {
+  it('returns an empty Array if no application Id is passed', async () => {
+    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    const response = await api.getFacilities();
+    expect(response).toEqual([]);
+  });
 
-//   it('returns the correct response', async () => {
-//     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-//     const response = await api.getFacilities('fakeId');
-//     expect(response).toEqual({ status: 200 });
-//   });
+  it('returns the correct response', async () => {
+    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    const response = await api.getFacilities('fakeId');
+    expect(response).toEqual({ status: 200 });
+  });
 
-//   it('throws an error if there is an api error', async () => {
-//     Axios.get.mockReturnValue(Promise.reject());
-//     const response = await api.getFacilities('fakeId');
-//     await expect(response).rejects.toThrowError();
-//   });
-// });
+  it('throws an error if there is an api error', async () => {
+    Axios.get.mockReturnValue(Promise.reject());
+    await expect(api.getFacilities('fakeId')).rejects.toThrowError();
+  });
+});
+
+describe('getAutomaticCover()', () => {
+  it('returns the correct response', async () => {
+    Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    const response = await api.getEligibilityCriteria();
+    expect(response).toEqual({ status: 200 });
+  });
+
+  it('throws an error if there is an api error', async () => {
+    Axios.get.mockReturnValue(Promise.reject());
+    await expect(api.getEligibilityCriteria()).rejects.toThrowError();
+  });
+});

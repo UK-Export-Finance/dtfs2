@@ -3,14 +3,12 @@ import relative from './relativeURL';
 import mandatoryCriteria from './pages/mandatory-criteria';
 import nameApplication from './pages/name-application';
 import applicationDetails from './pages/application-details';
+import CREDENTIALS from '../fixtures/credentials.json';
 
 context('Application Details Page', () => {
   before(() => {
     cy.reinsertMocks();
-    cy.fixture('credentials')
-      .then((res) => {
-        cy.login(res.MAKER);
-      });
+    cy.login(CREDENTIALS.MAKER);
 
     cy.on('uncaught:exception', () => false);
     Cypress.Cookies.preserveOnce('connect.sid');
