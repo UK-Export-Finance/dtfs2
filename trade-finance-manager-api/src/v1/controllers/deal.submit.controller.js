@@ -14,7 +14,6 @@ const submitDeal = async (dealId) => {
 
   const updatedDealWithPartyUrn = await addPartyUrns(submittedDeal);
 
-  // TODO: only update the facilities if they don't already have the data
   const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithPartyUrn);
 
   return api.updateDeal(dealId, updatedDealWithUpdatedFacilities);

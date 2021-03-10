@@ -10,7 +10,7 @@ const monthString = (period) => {
 
 const mapTenorDate = (facility, facilityTfm) => {
   const { facilityStage } = facility;
-  
+
   let period;
 
   if (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE.COMMITMENT) {
