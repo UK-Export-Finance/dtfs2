@@ -81,50 +81,39 @@ jobs:
         docker tag ${{ secrets.DEV_ACR_REGISTRY }}/azure-function-acbs:$from ${{ secrets.DEV_ACR_REGISTRY }}/azure-function-acbs:$to
         docker push ${{ secrets.DEV_ACR_REGISTRY }}/azure-function-acbs:$to
 
-  # build-and-deploy:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: azure/login@v1
-  #     with:
-  #       creds: ${{ env.credentials }}
+  deploy:
+    name: Deploy container images to Dev
+    needs: promote
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
 
-  #   - name: Defaults
-  #     uses: Azure/cli@v1.0.0
-  #     with:
-  #       inlineScript: |
-  #         az configure --defaults location=uksouth
-  #         az configure --defaults group=${{ env.resource_group }}
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
 
-  #   - name: 'Checkout GitHub Action'
-  #     uses: actions/checkout@master
+    - name: Create slot ${{ github.sha }}
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az functionapp deployment slot create --name tfs-${{ env.environment }}-function-acbs --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-function-acbs
 
-  #   - name: Setup Node ${{ env.NODE_VERSION }} Environment
-  #     uses: actions/setup-node@v1
-  #     with:
-  #       node-version: ${{ env.NODE_VERSION }}
+    - name: Swap slot ${{ github.sha }}
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az functionapp deployment slot swap --name tfs-${{ env.environment }}-function-acbs --slot ${{ github.sha }} --action swap
 
-  #   - name: 'Resolve Project Dependencies Using Npm'
-  #     shell: bash
-  #     run: |
-  #       pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-  #       npm install
-  #       npm run build --if-present
-  #       npm run test --if-present
-  #       popd
-    
-  #   - name: 'Get FunctionApp Publish profile'
-  #     id: publishprofile
-  #     uses: Azure/cli@v1.0.0
-  #     with:
-  #       inlineScript: |
-  #         profile=$(az functionapp deployment list-publishing-profiles --name ${{ env.AZURE_FUNCTIONAPP_NAME }} --xml)
+    - name: Delete slot ${{ github.sha }}
+      # Clean up the slot regardless of errors
+      if: ${{ always() }}
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az functionapp deployment slot delete --name tfs-${{ env.environment }}-function-acbs --slot ${{ github.sha }}
 
-  #   - name: 'Run Azure Functions Action'
-  #     uses: Azure/functions-action@v1
-  #     id: fa
-  #     with:
-  #       app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-  #       package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-  #       publish-profile: ${{ steps.publishprofile.outputs.profile }}
-
-# For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
