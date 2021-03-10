@@ -1,13 +1,12 @@
 {
-  "name": "azure-functions",
-  "version": "1.0.0",
+  "name": "",
+  "version": "",
   "description": "",
-  "scripts": {
-    "start": "func start",
+  "scripts" : {
     "test": "echo \"No tests yet...\""
   },
+  "author": "",
   "dependencies": {
     "durable-functions": "^1.4.6"
-  },
-  "devDependencies": {}
+  }
 }
