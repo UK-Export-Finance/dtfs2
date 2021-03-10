@@ -4,8 +4,8 @@ import { apiErrorHandler } from '../utils/helpers';
 const validateToken = async (token) => {
   try {
     Axios.defaults.headers.common.Authorization = token;
-    const response = await Axios.get('/validate');
-    return response.status === 200;
+    const { status } = await Axios.get('/validate');
+    return status === 200;
   } catch (err) {
     return false;
   }
@@ -13,8 +13,8 @@ const validateToken = async (token) => {
 
 const getMandatoryCriteria = async () => {
   try {
-    const response = await Axios.get('/gef/mandatory-criteria-versioned/latest');
-    return response.data;
+    const { data } = await Axios.get('/gef/mandatory-criteria-versioned/latest');
+    return data;
   } catch (err) {
     return apiErrorHandler(err);
   }
@@ -22,8 +22,8 @@ const getMandatoryCriteria = async () => {
 
 const createApplication = async (payload) => {
   try {
-    const response = await Axios.post('/gef/application', payload);
-    return response.data;
+    const { data } = await Axios.post('/gef/application', payload);
+    return data;
   } catch (err) {
     return apiErrorHandler(err);
   }
@@ -31,8 +31,8 @@ const createApplication = async (payload) => {
 
 const getApplication = async (applicationId) => {
   try {
-    const response = await Axios.get(`/gef/application/${applicationId}`);
-    return response.data;
+    const { data } = await Axios.get(`/gef/application/${applicationId}`);
+    return data;
   } catch (err) {
     return apiErrorHandler(err);
   }
@@ -40,8 +40,8 @@ const getApplication = async (applicationId) => {
 
 const getExporter = async (exporterId) => {
   try {
-    const response = await Axios.get(`/gef/exporter/${exporterId}`);
-    return response.data;
+    const { data } = await Axios.get(`/gef/exporter/${exporterId}`);
+    return data;
   } catch (err) {
     return apiErrorHandler(err);
   }
@@ -53,8 +53,17 @@ const getFacilities = async (applicationId) => {
   }
 
   try {
-    const response = await Axios.get('/gef/facilities', { params: { applicationId } });
-    return response.data;
+    const { data } = await Axios.get('/gef/facilities', { params: { applicationId } });
+    return data;
+  } catch (err) {
+    return apiErrorHandler(err);
+  }
+};
+
+const getEligibilityCriteria = async () => {
+  try {
+    const { data } = await Axios.get('/gef/eligibility-criteria/latest');
+    return data;
   } catch (err) {
     return apiErrorHandler(err);
   }
@@ -64,6 +73,7 @@ export {
   validateToken,
   getMandatoryCriteria,
   createApplication,
+  getEligibilityCriteria,
   getApplication,
   getExporter,
   getFacilities,
