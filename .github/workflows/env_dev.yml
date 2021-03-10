@@ -47,6 +47,9 @@ env:
   MULESOFT_API_PARTY_DB_KEY: "${{ secrets.DEV_MULESOFT_API_PARTY_DB_KEY }}"
   MULESOFT_API_PARTY_DB_SECRET: "${{ secrets.DEV_MULESOFT_API_PARTY_DB_SECRET }}"
   MULESOFT_API_PARTY_DB_URL: "${{ secrets.DEV_MULESOFT_API_PARTY_DB_URL }}"
+  MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL: "${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL }}"
+  MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY: "${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}"
+  MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: "${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}"
 
   DTFS_PORTAL_SCHEDULER: false
   FETCH_WORKFLOW_TYPE_B_SCHEDULE: "* * * * *"
@@ -781,6 +784,42 @@ jobs:
     #       fi
   # END Redis setup
 
+  # START Function setup
+  functions:
+    name: ACBS Function Setup
+    needs: [vnet, private-dns, file-storage]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az functionapp create --name tfs-${{ env.environment }}-function-acbs \
+            --plan ${{ env.app_service_plan }} \
+            --functions-version 3 \
+            --storage-account tfs${{ env.environment }}storage \
+            --deployment-container-image-name ${{ env.registry }}/azure-function-acbs:${{ env.environment }}
+
+    - name: Continuous deployment
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az functionapp deployment container config --name tfs-${{ env.environment }}-function-acbs \
+            --enable-cd true
+
+  # END Function setup
+
   # START API setup
   reference-data-proxy:
     name: Reference data API
@@ -922,7 +961,10 @@ jobs:
               MULESOFT_API_SECRET="${{ env.MULESOFT_API_SECRET }}" \
               MULESOFT_API_PARTY_DB_KEY="${{ env.MULESOFT_API_PARTY_DB_KEY}}" \
               MULESOFT_API_PARTY_DB_SECRET="${{ env.MULESOFT_API_PARTY_DB_SECRET}}" \
-              MULESOFT_API_PARTY_DB_URL="${{ env.MULESOFT_API_PARTY_DB_URL}}"
+              MULESOFT_API_PARTY_DB_URL="${{ env.MULESOFT_API_PARTY_DB_URL}}" \
+              MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL="${{ env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL }}" \
+              MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY="${{ env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}" \
+              MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET="${{ env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}"
 
   dtfs-central-api:
     name: DTFS Central API
@@ -2011,12 +2053,13 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
-          if [ "$env.api_portal_access_port" ]
+          api_port="${{ env.api_portal_access_port }}"
+          if [ ! -z "$api_port" ]
           then
             echo "Updating NSG"
             az network nsg rule create --name api-port \
               --nsg-name tfs-${{ env.environment }}-gw-nsg \
-              --priority 5000 \
+              --priority 300 \
               --direction Inbound \
               --protocol "*" \
               --access Allow \

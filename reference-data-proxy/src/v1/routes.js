@@ -7,7 +7,7 @@ const industrySectors = require('./controllers/industry-sectors.controller');
 const numberGenerator = require('./controllers/number-generator.controller');
 const partyDb = require('./controllers/party-db.controller');
 const acbs = require('./controllers/acbs.controller');
-
+const currencyExchangeRate = require('./controllers/currency-exchange-rate.controller');
 
 openRouter.route('/countries')
   .get(
@@ -52,6 +52,11 @@ openRouter.route('/acbs/:entityType/:id')
 openRouter.route('/party-db/:companyRegNo')
   .get(
     partyDb.lookup,
+  );
+
+openRouter.route('/currency-exchange-rate/:source/:target')
+  .get(
+    currencyExchangeRate.getExchangeRate,
   );
 
 module.exports = { openRouter };

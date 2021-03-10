@@ -1,3 +1,4 @@
+import { decode } from 'html-entities';
 import * as api from '../../services/api';
 import { validationErrorHandler } from '../../utils/helpers';
 
@@ -6,10 +7,13 @@ const automaticCover = async (req, res) => {
   const { applicationId } = params;
 
   try {
-    const cover = await api.getAutomaticCover();
+    const { terms } = await api.getEligibilityCriteria();
 
     return res.render('partials/automatic-cover.njk', {
-      terms: cover.items,
+      terms: terms.map((term) => ({
+        ...term,
+        htmlText: decode(term.htmlText),
+      })),
       applicationId,
     });
   } catch (err) {
@@ -37,15 +41,14 @@ const validateAutomaticCover = async (req, res) => {
   const { applicationId } = params;
 
   try {
-    const cover = await api.getAutomaticCover();
-
-    const automaticCoverErrors = new AutomaticCoverErrors(body, cover.items);
+    const { terms } = await api.getEligibilityCriteria();
+    const automaticCoverErrors = new AutomaticCoverErrors(body, terms);
 
     if (automaticCoverErrors.length > 0) {
       return res.render('partials/automatic-cover.njk', {
         errors: validationErrorHandler(automaticCoverErrors, 'automatic-cover'),
-        terms: cover.items,
         selected: body,
+        terms,
         applicationId,
       });
     }

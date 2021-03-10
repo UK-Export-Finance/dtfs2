@@ -6,6 +6,19 @@ const getDeals = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  const compare = (a, b) => {
+    if (b.dealSnapshot.details.submissionDate < a.dealSnapshot.details.submissionDate) {
+      return -1;
+    }
+    if (b.dealSnapshot.details.submissionDate > a.dealSnapshot.details.submissionDate) {
+      return 1;
+    }
+    return 0;
+  };
+
+  deals.deals.sort((a, b) =>
+    compare(a, b));
+
   return res.render('deals/deals.njk', {
     deals,
     active_sheet: 'deal',

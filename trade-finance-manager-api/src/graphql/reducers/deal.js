@@ -26,6 +26,7 @@ const dealReducer = (deal) => {
     },
     tfm,
   };
+
   return result;
 };
 

@@ -1,17 +1,20 @@
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 {% macro render(params) %}
   {% set deals = params.deals %}
+  <style>
+    
+  </style>
   <table class="govuk-table deals-table" data-cy="deals-table">
     <thead class="govuk-table__head">
       <tr>
-        <th class="govuk-table__header govuk-body-s" data-cy="deals-table-heading-deal-id">Deal ID</th>
-        <th class="govuk-table__header govuk-body-s" data-cy="deals-table-heading-product">Product</th>
-        <th class="govuk-table__header govuk-body-s" data-cy="deals-table-heading-type">Type</th>
-        <th class="govuk-table__header govuk-body-s" data-cy="deals-table-heading-exporter">Exporter</th>
-        <th class="govuk-table__header govuk-body-s" data-cy="deals-table-heading-buyer">Buyer</th>
-        <th class="govuk-table__header govuk-body-s" data-cy="deals-table-heading-bank">Bank</th>
-        <th class="govuk-table__header govuk-body-s" data-cy="deals-table-heading-stage">Stage</th>
-        <th class="govuk-table__header govuk-body-s" data-cy="deals-table-heading-date-received">Date received</th>
+        <th class="govuk-table__header govuk-heading-s" data-cy="deals-table-heading-deal-id">Deal ID</th>
+        <th class="govuk-table__header govuk-heading-s" data-cy="deals-table-heading-product">Product</th>
+        <th class="govuk-table__header govuk-heading-s" data-cy="deals-table-heading-type">Type</th>
+        <th class="govuk-table__header govuk-heading-s" data-cy="deals-table-heading-exporter">Exporter</th>
+        <th class="govuk-table__header govuk-heading-s" data-cy="deals-table-heading-buyer">Buyer</th>
+        <th class="govuk-table__header govuk-heading-s" data-cy="deals-table-heading-bank">Bank</th>
+        <th class="govuk-table__header govuk-heading-s" data-cy="deals-table-heading-stage">Stage</th>
+        <th class="govuk-table__header govuk-heading-s" data-cy="deals-table-heading-date-received">Date received</th>
       </tr>
     </thead>
 
@@ -21,10 +24,10 @@
           <td class="govuk-table__cell govuk-body-s">
             <a
               class="govuk-link"
-              href="/case/deal/{{ deal._id }}"
+              href="/case/{{ deal._id }}/deal"
               aria-label="View deal details"
               data-cy="deal-{{ deal._id }}-ukef-deal-id-link">
-              <span data-cy="deal-{{ deal._id }}-ukef-deal-id-link-text">{{ deal._id }}</span>
+              <span data-cy="deal-{{ deal._id }}-ukef-deal-id-link-text">{{ deal.dealSnapshot.details.ukefDealId }}</span>
             </a>
           </td>
           <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-product">{{ deal.tfm.product | dashIfEmpty }}</td>
@@ -37,7 +40,7 @@
           text: deal.dealSnapshot.details.status | dashIfEmpty,
           classes: "govuk-tag--blue"
         })}}</td>
-          <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-date-received">{{ deal.dealSnapshot.details.submissionDate | localiseTimestamp("D MMMM YYYY", 'en-gb') }}</td>
+          <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-date-received">{{ deal.dealSnapshot.details.submissionDate | localiseTimestamp("D MMM YYYY", 'en-gb') }}</td>
         </tr>
       {% endfor %}
     </tbody>

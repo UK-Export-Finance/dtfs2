@@ -1,0 +1,9 @@
+{
+  "baseUrl": "http://localhost:5000",
+  "dealApiProtocol": "http://",
+  "dealApiHost": "localhost",
+  "dealApiPort": "5001",
+  "projectId": "f1ud6y",
+  "testFiles": "**/*.spec.js",
+  "chromeWebSecurity": false
+}

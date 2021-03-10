@@ -11,6 +11,7 @@ const MockResponse = () => {
 const MockRequest = () => {
   const req = {};
   req.params = {};
+  req.query = {};
   req.params.applicationId = '123';
   return req;
 };
