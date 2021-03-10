@@ -807,9 +807,21 @@ jobs:
         inlineScript: |
           az functionapp create --name tfs-${{ env.environment }}-function-acbs \
             --plan ${{ env.app_service_plan }} \
+            --functions-version 3 \
             --storage-account tfs${{ env.environment }}storage \
-            --deployment-container-image-name dtfs/azure-function-acbs \
-            --functions-version 3
+            --deployment-container-image-name ${{ env.registry }}/azure-function-acbs:${{ env.environment }}
+
+        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
+
+    - name: Continuous deployment
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az functionapp deployment container config --name tfs-${{ env.environment }}-function-acbs \
+            --enable-cd true
+
   # END Function setup
 
   # START API setup
