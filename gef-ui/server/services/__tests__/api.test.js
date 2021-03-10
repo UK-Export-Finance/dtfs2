@@ -104,12 +104,12 @@ describe('getFacilities()', () => {
 describe('getAutomaticCover()', () => {
   it('returns the correct response', async () => {
     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.getAutomaticCover();
+    const response = await api.getEligibilityCriteria();
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.get.mockReturnValue(Promise.reject());
-    await expect(api.getAutomaticCover()).rejects.toThrowError();
+    await expect(api.getEligibilityCriteria()).rejects.toThrowError();
   });
 });
