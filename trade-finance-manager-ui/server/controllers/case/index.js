@@ -39,7 +39,7 @@ const getCaseFacility = async (req, res) => {
     facility: facility.facilitySnapshot,
     active_sheet: 'facility',
     facilityId,
-    tfm: facility.tfm,
+    facilityTfm: facility.tfm,
     user: req.session.user,
   });
 };

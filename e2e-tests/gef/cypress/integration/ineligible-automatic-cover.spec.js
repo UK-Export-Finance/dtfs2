@@ -19,7 +19,6 @@ context('Ineligible Automatic Cover Page', () => {
       });
     cy.login(CREDENTIALS.MAKER);
 
-
     cy.on('uncaught:exception', () => false);
   });
 

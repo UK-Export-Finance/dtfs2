@@ -1,7 +1,13 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
-{% block pageTitle %}Application details{% endblock %}
+{% block pageTitle %}
+  {% if isManual %}
+    Manual inclusion napplication
+  {% else %}
+    Automatic inclusion notice
+  {% endif %}
+{% endblock %}
 
 {% block content %}
   {% if errors %}
@@ -19,7 +25,11 @@
       General export facility
     </span>
     <h1 class="govuk-heading-xl" data-cy="main-heading">
-      Application details
+      {% if isManual %}
+        Manual inclusion application
+      {% else %}
+        Automatic inclusion notice
+      {% endif %}
     </h1>
   </header>
 

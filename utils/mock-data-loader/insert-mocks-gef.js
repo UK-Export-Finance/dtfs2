@@ -20,6 +20,11 @@ const insertMocks = async () => {
     await api.createMandatoryCriteriaVersioned(item, token);
   });
 
+  console.log('inserting eligibility-criteria');
+  MOCKS.ELIGIBILITY_CRITERIA.forEach(async (item) => {
+    await api.createEligibilityCriteria(item, token);
+  });
+
   console.log('inserting application');
   for (data of MOCKS.APPLICATION) {
     await api.createApplication(data, token);
@@ -29,27 +34,23 @@ const insertMocks = async () => {
 
   console.log('update exporter information');
   MOCKS.EXPORTER.forEach(async (item, index) => {
-    await api.updateExporter(application[index].exporterId, item, token);
+    if (index > 0) {
+      await api.updateExporter(application[index].exporterId, item, token);
+    }
   });
 
   console.log('inserting and updating facilities information');
-  await MOCKS.FACILITIES.forEach(async (item) => {
-    await item.forEach(async (subitem, index) => {
+  MOCKS.FACILITIES.forEach(async (item, index) => {
+    item.forEach(async (subitem) => {
       // eslint-disable-next-line no-param-reassign
       subitem.applicationId = application[index]._id;
       const facilty = await api.createFacilities(subitem, token);
+      // eslint-disable-next-line no-param-reassign
+      delete subitem.applicationId;
       await api.updateFacilities(facilty, subitem, token);
     });
   });
 
-  // console.log('facilitiesfacilities', facilities);
-
-  // console.log('updating facilities information');
-  // await MOCKS.FACILITIES.forEach(async (item) => {
-  //   await item.forEach(async (subitem, index) => {
-  //     await api.updateFacilities(facilities[index], subitem, token);
-  //   });
-  // });
 };
 
 module.exports = insertMocks;

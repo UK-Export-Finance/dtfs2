@@ -57,11 +57,12 @@ const dealQuery = gql`
             facilityStage,
             facilityValueExportCurrency,
             facilityValue,
-            ukefExposure,
             coveredPercentage,
             bondIssuer,
             bondBeneficiary,
             bankFacilityReference,
+            ukefExposure,
+            banksInterestMargin,
             dates {
               inclusionNoticeReceived,
               bankIssueNoticeReceived,
@@ -69,10 +70,15 @@ const dealQuery = gql`
               coverEndDate,
               tenor
             }
-          }
+          },
           tfm {
-            bondIssuerPartyUrn
-            bondBeneficiaryPartyUrn
+            bondIssuerPartyUrn,
+            bondBeneficiaryPartyUrn,
+            facilityValueInGBP,
+            ukefExposure {
+              exposure,
+              timestamp
+            }
           }
         }
         eligibility {

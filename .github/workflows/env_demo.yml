@@ -17,6 +17,7 @@ env:
   database_name: dtfs-submissions
   application_gateway_cidr: 10.0.10.0/28
   private_endpoints_cidr: 10.0.11.0/28
+  api_portal_access_port: 44232
   # Container registry
   registry: ${{ secrets.DEMO_ACR_REGISTRY }}
   # App service settings
@@ -42,6 +43,9 @@ env:
   MULESOFT_API_NUMBER_GENERATOR_URL: "${{ secrets.DEMO_MULESOFT_API_NUMBER_GENERATOR_URL }}"
   MULESOFT_API_ACBS_DEAL_URL: "${{ secrets.DEMO_MULESOFT_API_ACBS_DEAL_URL }}"
   MULESOFT_API_ACBS_FACILITY_URL: "${{ secrets.DEMO_MULESOFT_API_ACBS_FACILITY_URL }}"
+  MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL: "${{ secrets.DEMO_MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL }}"
+  MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY: "${{ secrets.DEMO_MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}"
+  MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: "${{ secrets.DEMO_MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}"
   MULESOFT_API_KEY: "${{ secrets.DEMO_MULESOFT_API_KEY }}"
   MULESOFT_API_SECRET: "${{ secrets.DEMO_MULESOFT_API_SECRET }}"
   MULESOFT_API_PARTY_DB_KEY: "${{ secrets.DEMO_MULESOFT_API_PARTY_DB_KEY }}"
@@ -113,7 +117,8 @@ jobs:
         inlineScript: |
           az network public-ip create --name tfs-${{ env.app_service_plan }}-nat-ip \
             --allocation-method Static \
-            --sku Standard
+            --sku Standard \
+            --zone 1 2 3
 
     - name: NAT gateway
       uses: Azure/cli@v1.0.0
@@ -222,11 +227,13 @@ jobs:
         inlineScript: |
           az network public-ip create --name tfs-${{ env.environment }}-ip \
             --allocation-method Static \
-            --sku Standard
+            --sku Standard \
+            --zone 1 2 3
 
           az network public-ip create --name tfs-${{ env.environment }}-tfm-ip \
             --allocation-method Static \
-            --sku Standard
+            --sku Standard \
+            --zone 1 2 3
 
   # END Virtual Network setup
 
@@ -302,6 +309,7 @@ jobs:
             --source-address-prefixes "51.145.36.44" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
 
+          
           # David
           az network nsg rule create --name team-ips-david --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 1000 --direction Inbound --protocol "*" --access Allow \
@@ -332,6 +340,7 @@ jobs:
           --source-address-prefixes "51.132.249.180" --source-port-ranges "*" \
           --destination-address-prefixes "*" --destination-port-ranges "*"
 
+          
     - name: Associate NSG to gateway subnet
       uses: Azure/cli@v1.0.0
       with:
@@ -776,6 +785,37 @@ jobs:
     #       fi
   # END Redis setup
 
+  # START Function setup
+  functions:
+    name: ACBS Function Setup
+    needs: [vnet, private-dns, file-storage]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ env.resource_group }}
+
+    - name: Create
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az functionapp create --name tfs-${{ env.environment }}-function-acbs \
+            --plan ${{ env.app_service_plan }} \
+            --storage-account tfs${{ env.environment }}storage \
+            --os-type Linux \
+            --functions-version 3 \
+            --runtime node \
+            --runtime-version 12
+
+  # END Function setup
+
   # START API setup
   reference-data-proxy:
     name: Reference data API
@@ -917,7 +957,10 @@ jobs:
               MULESOFT_API_SECRET="${{ env.MULESOFT_API_SECRET }}" \
               MULESOFT_API_PARTY_DB_KEY="${{ env.MULESOFT_API_PARTY_DB_KEY}}" \
               MULESOFT_API_PARTY_DB_SECRET="${{ env.MULESOFT_API_PARTY_DB_SECRET}}" \
-              MULESOFT_API_PARTY_DB_URL="${{ env.MULESOFT_API_PARTY_DB_URL}}"
+              MULESOFT_API_PARTY_DB_URL="${{ env.MULESOFT_API_PARTY_DB_URL}}" \
+              MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL="${{ env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL }}" \
+              MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY="${{ env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}" \
+              MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET="${{ env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}"
 
   dtfs-central-api:
     name: DTFS Central API
@@ -2002,6 +2045,51 @@ jobs:
             --rule-type PathBasedRouting \
             --url-path-map gef-url-path-map
 
+    - name: Configure Portal API access
+      uses: Azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          api_port="${{ env.api_portal_access_port }}"
+          if [ ! -z "$api_port" ]
+          then
+            echo "Updating NSG"
+            az network nsg rule create --name api-port \
+              --nsg-name tfs-${{ env.environment }}-gw-nsg \
+              --priority 300 \
+              --direction Inbound \
+              --protocol "*" \
+              --access Allow \
+              --source-address-prefixes "Internet" \
+              --source-port-ranges "*" \
+              --destination-address-prefixes "*" \
+              --destination-port-ranges "${{ env.api_portal_access_port }}"
+
+            echo "Creating Portal API Backend Pool..."
+            az network application-gateway address-pool create \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name apiGatewayBackendPool \
+              --servers tfs-${{ env.environment }}-portal-api.azurewebsites.net
+
+            echo "Creating Frontend Port..."
+            az network application-gateway frontend-port create \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name tfs-${{ env.environment }}-port-api \
+              --port ${{ env.api_portal_access_port }}
+
+            echo "Creating HTTP listener..."
+            az network application-gateway http-listener create \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name apiGatewayHttpListener \
+              --frontend-port tfs-${{ env.environment }}-port-api
+
+            echo "Creating API routing rule..."
+            az network application-gateway rule create \
+              --gateway-name tfs-${{ env.environment }}-gw \
+              --name api-rule \
+              --address-pool apiGatewayBackendPool \
+              --http-listener apiGatewayHttpListener \
+              --http-settings appGatewayBackendHttpSettings
+          fi
     - name: Healthcheck probe
       uses: Azure/cli@v1.0.0
       with:
@@ -2281,4 +2369,6 @@ jobs:
     #         --backend-pool portal-api \
     #         --patterns "/v1/*"
   # END Front Doors
+  
+  
    

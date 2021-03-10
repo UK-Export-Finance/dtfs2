@@ -1,0 +1,130 @@
+name: Deploy ACBS Function App
+
+on:
+  push:
+    branches: [ master ]
+    paths: 
+    - 'azure-functions/acbs-function/**'
+  schedule:
+    # A weekly run to roll up any base image patches, 
+    # in office hours, avoiding bank holiday Mondays:
+    # "At 12:00 on Tuesday." - https://crontab.guru/
+    - cron: '0 12 * * 2'
+
+# CONFIGURATION
+# For help, go to https://github.com/Azure/Actions
+#
+# 1. Set up the following secrets in your repository:
+#   AZURE_FUNCTIONAPP_PUBLISH_PROFILE
+#
+# 2. Change these variables for your configuration:
+env:
+  AZURE_FUNCTIONAPP_NAME: tfs-dev-function-acbs    # set this to your application's name
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './azure-functions/acbs-function'      # set this to the path to your web app project, defaults to the repository root
+  NODE_VERSION: '12.x'                     # set this to the node version to use (supports 8.x, 10.x, 12.x)
+  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+  resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
+
+jobs:
+  build:
+    name: Build and push ACBS Azure Function
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Commit hash
+      run: "echo GITHUB_SHA=${{ github.sha }}"
+    - name: Build and push
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
+        repository: azure-function-acbs
+        path: azure-functions/acbs-function
+        tags: latest
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
+
+  test:
+    name: Test ACBS Azure Functions
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    # Pull the latest images to run with so we don't need to build them
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
+    - name: Pull ACBS Function
+      run: |
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/azure-function-acbs
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/azure-function-acbs dtfs/pazure-function-acbs
+        
+  promote:
+    name: Promote container images to Dev
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+    - name: Log in to Dev container registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.DEV_ACR_REGISTRY }}
+        username: ${{ secrets.DEV_ACR_USERNAME }}
+        password: ${{ secrets.DEV_ACR_PASSWORD }}
+    - name: Tag images
+      run: |
+        from=latest
+        to=dev
+        docker pull ${{ secrets.DEV_ACR_REGISTRY }}/azure-function-acbs:$from
+        docker tag ${{ secrets.DEV_ACR_REGISTRY }}/azure-function-acbs:$from ${{ secrets.DEV_ACR_REGISTRY }}/azure-function-acbs:$to
+        docker push ${{ secrets.DEV_ACR_REGISTRY }}/azure-function-acbs:$to
+
+  # build-and-deploy:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: azure/login@v1
+  #     with:
+  #       creds: ${{ env.credentials }}
+
+  #   - name: Defaults
+  #     uses: Azure/cli@v1.0.0
+  #     with:
+  #       inlineScript: |
+  #         az configure --defaults location=uksouth
+  #         az configure --defaults group=${{ env.resource_group }}
+
+  #   - name: 'Checkout GitHub Action'
+  #     uses: actions/checkout@master
+
+  #   - name: Setup Node ${{ env.NODE_VERSION }} Environment
+  #     uses: actions/setup-node@v1
+  #     with:
+  #       node-version: ${{ env.NODE_VERSION }}
+
+  #   - name: 'Resolve Project Dependencies Using Npm'
+  #     shell: bash
+  #     run: |
+  #       pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+  #       npm install
+  #       npm run build --if-present
+  #       npm run test --if-present
+  #       popd
+    
+  #   - name: 'Get FunctionApp Publish profile'
+  #     id: publishprofile
+  #     uses: Azure/cli@v1.0.0
+  #     with:
+  #       inlineScript: |
+  #         profile=$(az functionapp deployment list-publishing-profiles --name ${{ env.AZURE_FUNCTIONAPP_NAME }} --xml)
+
+  #   - name: 'Run Azure Functions Action'
+  #     uses: Azure/functions-action@v1
+  #     id: fa
+  #     with:
+  #       app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+  #       package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+  #       publish-profile: ${{ steps.publishprofile.outputs.profile }}
+
+# For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples

@@ -19,24 +19,30 @@ const facilityQuery = gql`
         facilityStage,
         facilityValueExportCurrency,
         facilityValue,
-        ukefExposure,
         coveredPercentage,
         bankFacilityReference,
         guaranteeFeePayableToUkef,
         bondIssuer,
         bondBeneficiary,
         bankFacilityReference,
+        ukefExposure,
+        banksInterestMargin,
         dates {
           inclusionNoticeReceived,
           bankIssueNoticeReceived,
           coverStartDate,
           coverEndDate,
-          tenor,
+          tenor
         }
       },
       tfm {
         bondIssuerPartyUrn,
-        bondBeneficiaryPartyUrn
+        bondBeneficiaryPartyUrn,
+        facilityValueInGBP,
+        ukefExposure {
+          exposure,
+          timestamp
+        }
       }
     }
   }

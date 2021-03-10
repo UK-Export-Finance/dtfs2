@@ -23,12 +23,19 @@ describe(page, () => {
       ukefExposure: 'GBP 1,234.00',
       bankFacilityReference: '123456',
       guaranteeFeePayableToUkef: '10%',
+      banksInterestMargin: '10%',
       dates: {
         inclusionNoticeReceived: '1606900616651',
         bankIssueNoticeReceived: '1606900616652',
         coverStartDate: '1606900616653',
         coverEndDate: '20 Oct 2020',
         tenor: '3 months',
+      },
+    },
+    facilityTfm: {
+      ukefExposure: {
+        exposure: 'GBP 123',
+        timestamp: '1606900616651',
       },
     },
     user: {
@@ -75,7 +82,9 @@ describe(page, () => {
     });
 
     it('should render maximum ukefExposure', () => {
-      wrapper.expectText('[data-cy="facility-maximum-ukef-exposure"]').toRead(params.facility.ukefExposure);
+      const expectedTimestamp = localiseTimestamp(params.facilityTfm.ukefExposure.timestamp, 'D MMMM YYYY', params.user.timezone);
+      const expected = `${params.facilityTfm.ukefExposure.exposure} as at ${expectedTimestamp}`;
+      wrapper.expectText('[data-cy="facility-maximum-ukef-exposure"]').toRead(expected);
     });
 
   });
@@ -89,7 +98,6 @@ describe(page, () => {
 
     it('should render bankIssueNoticeReceived', () => {
       const expected = localiseTimestamp(params.facility.dates.bankIssueNoticeReceived, 'D MMMM YYYY', params.user.timezone);
-
       wrapper.expectText('[data-cy="facility-bank-issue-notice-received"]').toRead(expected);
     });
 
@@ -110,6 +118,10 @@ describe(page, () => {
   });
 
   describe('`facility pricing and risk` section', () => {
+
+    it('should render banksInterestMargin', () => {
+      wrapper.expectText('[data-cy="facility-banks-interest-margin"]').toRead(params.facility.banksInterestMargin);
+    });
 
     it('should render guaranteeFeePayableToUkef', () => {
       wrapper.expectText('[data-cy="facility-guarantee-fee-payable-to-ukef"]').toRead(params.facility.guaranteeFeePayableToUkef);
