@@ -1,10 +1,9 @@
-const CONSTANTS = require('../../../../constants');
 const mapCoverEndDate = require('./mapCoverEndDate');
+const mapTenorDate = require('./mapTenorDate');
 
-const mapDates = (facility, dealDetails) => {
+
+const mapDates = (facility, facilityTfm, dealDetails) => {
   const dates = {};
-
-  const { facilityStage } = facility;
 
   const dealSubmissionDate = dealDetails.submissionDate;
 
@@ -13,9 +12,7 @@ const mapDates = (facility, dealDetails) => {
   dates.coverStartDate = facility.requestedCoverStartDate;
   dates.coverEndDate = mapCoverEndDate(facility);
 
-  if (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE.COMMITMENT) {
-    dates.tenor = `${facility.ukefGuaranteeInMonths} months`;
-  }
+  dates.tenor = mapTenorDate(facility, facilityTfm);
 
   return dates;
 };
