@@ -20,6 +20,11 @@ const insertMocks = async () => {
     await api.createMandatoryCriteriaVersioned(item, token);
   });
 
+  console.log('inserting eligibility-criteria');
+  MOCKS.ELIGIBILITY_CRITERIA.forEach(async (item) => {
+    await api.createEligibilityCriteria(item, token);
+  });
+
   console.log('inserting application');
   for (data of MOCKS.APPLICATION) {
     await api.createApplication(data, token);
@@ -46,14 +51,6 @@ const insertMocks = async () => {
     });
   });
 
-  // console.log('facilitiesfacilities', facilities);
-
-  // console.log('updating facilities information');
-  // await MOCKS.FACILITIES.forEach(async (item) => {
-  //   await item.forEach(async (subitem, index) => {
-  //     await api.updateFacilities(facilities[index], subitem, token);
-  //   });
-  // });
 };
 
 module.exports = insertMocks;

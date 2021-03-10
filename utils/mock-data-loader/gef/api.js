@@ -138,6 +138,51 @@ const updateFacilities = async (facility, data, token) => {
   return response;
 };
 
+// Eligibility Criteria
+
+const createEligibilityCriteria = async (data, token) => {
+  const response = await axios({
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/gef/eligibility-criteria`,
+    data,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response.data;
+};
+
+const deleteEligibilityCriteria = async (mandatoryCriteria, token) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/gef/eligibility-criteria/${mandatoryCriteria._id}`,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response.data;
+};
+
+const listEligibilityCriteria = async (token) => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/gef/eligibility-criteria`,
+  }).catch((err) => { console.log(`err: ${err}`); });
+
+  return response.data.items;
+};
+
 // Mandatory Criteria
 
 const createMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
@@ -194,6 +239,9 @@ module.exports = {
   listFacilities,
   deleteFacilities,
   updateFacilities,
+  createEligibilityCriteria,
+  deleteEligibilityCriteria,
+  listEligibilityCriteria,
   createMandatoryCriteriaVersioned,
   deleteMandatoryCriteriaVersioned,
   listMandatoryCriteriaVersioned,

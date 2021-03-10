@@ -5,6 +5,7 @@ const application = require('./controllers/application.controller');
 const exporter = require('./controllers/exporter.controller');
 const facilities = require('./controllers/facilities.controller');
 const mandatoryCriteriaVersioned = require('./controllers/mandatoryCriteriaVersioned.controller');
+const eligibilityCriteria = require('./controllers/eligibilityCriteria.controller');
 
 const router = express.Router();
 
@@ -33,6 +34,19 @@ router.route('/facilities/:id')
   .get(validate({ role: ['maker', 'checker', 'data-admin'] }), facilities.getById)
   .put(validate({ role: ['maker', 'data-admin'] }), facilities.update)
   .delete(validate({ role: ['maker', 'data-admin'] }), facilities.delete);
+
+// Eligibility Criteria
+router.route('/eligibility-criteria')
+  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), eligibilityCriteria.getAll)
+  .post(validate({ role: ['editor', 'data-admin'] }), eligibilityCriteria.create);
+
+router.route('/eligibility-criteria/latest')
+  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), eligibilityCriteria.getLatest);
+
+router.route('/eligibility-criteria/:id')
+  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), eligibilityCriteria.getById)
+  // .put(validate({ role: ['editor', 'data-admin'] }), eligibilityCriteria.update)
+  .delete(validate({ role: ['editor', 'data-admin'] }), eligibilityCriteria.delete);
 
 // Mandatory Criteria
 router.route('/mandatory-criteria-versioned')
