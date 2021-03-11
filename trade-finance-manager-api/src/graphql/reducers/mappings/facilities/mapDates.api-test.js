@@ -1,5 +1,6 @@
 const mapDates = require('./mapDates');
 const mapCoverEndDate = require('./mapCoverEndDate');
+const mapTenorDate = require('./mapTenorDate');
 
 describe('mapDates', () => {
   const mockCoverEndDate = {
@@ -15,45 +16,41 @@ describe('mapDates', () => {
     ...mockCoverEndDate,
   };
 
+  const mockFacilityTfm = {
+    exposurePeriodInMonths: 3,
+  };
+
   const mockDealDetails = {
     submissionDate: '1606900616651',
   };
 
   it('should return inclusionNoticeReceived as deal submissionDate', () => {
-    const result = mapDates(mockFacility, mockDealDetails);
+    const result = mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
 
     expect(result.inclusionNoticeReceived).toEqual(mockDealDetails.submissionDate);
   });
 
   it('should return bankIssueNoticeReceived as facility issuedFacilitySubmittedToUkefTimestamp;', () => {
-    const result = mapDates(mockFacility, mockDealDetails);
+    const result = mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
 
     expect(result.bankIssueNoticeReceived).toEqual(mockFacility.issuedFacilitySubmittedToUkefTimestamp);
   });
 
   it('should return coverStartDate as facility requestedCoverStartDate', () => {
-    const result = mapDates(mockFacility, mockDealDetails);
+    const result = mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
 
     expect(result.coverStartDate).toEqual(mockFacility.requestedCoverStartDate);
   });
 
   it('should return coverEndDate as facility coverEndDate values', () => {
-    const result = mapDates(mockFacility, mockDealDetails);
+    const result = mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
 
     expect(result.coverEndDate).toEqual(mapCoverEndDate(mockFacility));
   });
 
-  describe('when facilityStage is `Commitment`', () => {
-    it('should return tenor as facility ukefGuaranteeInMonths', () => {
-      const commitmentFacility = {
-        ...mockFacility,
-        facilityStage: 'Commitment',
-      };
+  it('should return tenor', () => {
+    const result = mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
 
-      const result = mapDates(commitmentFacility, mockDealDetails);
-
-      const expected = `${mockFacility.ukefGuaranteeInMonths} months`;
-      expect(result.tenor).toEqual(expected);
-    });
+    expect(result.tenor).toEqual(mapTenorDate(mockFacility, mockFacilityTfm));
   });
 });
