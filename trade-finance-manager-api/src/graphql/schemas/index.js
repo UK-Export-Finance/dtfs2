@@ -147,6 +147,7 @@ type FacilitySnapshot {
   bondIssuer: String
   bondBeneficiary: String
   ukefExposure: String
+  firstDrawdownAmountInExportCurrency: String
   dates: FacilityDates
 }
 

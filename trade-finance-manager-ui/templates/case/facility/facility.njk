@@ -47,6 +47,17 @@
           </div>
         </div>
 
+        {% if facility.firstDrawdownAmountInExportCurrency %}
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <h4 class="govuk-heading-s">First drawdown amount (export currency)</h4>
+            </div>
+            <div class="govuk-grid-column-three-quarters">
+              <p class="govuk-body-s" data-cy="first-drawdown-amount-in-export-currency">{{ facility.firstDrawdownAmountInExportCurrency | dashIfEmpty }}</p>
+            </div>
+          </div>
+        {% endif %}
+
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-quarter">
             <h4 class="govuk-heading-s">Bank facility reference</h4>

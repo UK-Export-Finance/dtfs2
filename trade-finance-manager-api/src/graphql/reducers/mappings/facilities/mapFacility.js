@@ -6,6 +6,7 @@ const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
 const mapBanksInterestMargin = require('./mapBanksInterestMargin');
+const mapFirstDrawdownAmountInExportCurrency = require('./mapFirstDrawdownAmountInExportCurrency');
 const mapDates = require('./mapDates');
 
 const mapFacility = (f, facilityTfm, dealDetails) => {
@@ -45,6 +46,7 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     bankFacilityReference: mapBankFacilityReference(facility),
     guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFeePayableByBank),
     banksInterestMargin: mapBanksInterestMargin(facility),
+    firstDrawdownAmountInExportCurrency: mapFirstDrawdownAmountInExportCurrency(facility),
 
     dates: mapDates(facility, facilityTfm, dealDetails),
 
