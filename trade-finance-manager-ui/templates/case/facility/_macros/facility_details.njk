@@ -4,6 +4,8 @@
   {% set facility = params.facility %}
   {% set user = params.user %}
   {% set facilityTfm = params. facilityTfm %}
+      <h3 class="govuk-heading-l">{{ facility.facilityType }}</h3>
+
     <div class="govuk-grid-row" data-cy="facility-overview">
 
       <div class="govuk-grid-column-full">
@@ -43,6 +45,17 @@
             })}}
           </div>
         </div>
+
+        {% if facility.firstDrawdownAmountInExportCurrency %}
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <h4 class="govuk-heading-s">First drawdown amount (export currency)</h4>
+            </div>
+            <div class="govuk-grid-column-three-quarters">
+              <p class="govuk-body-s" data-cy="first-drawdown-amount-in-export-currency">{{ facility.firstDrawdownAmountInExportCurrency | dashIfEmpty }}</p>
+            </div>
+          </div>
+        {% endif %}
 
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-quarter">
@@ -200,4 +213,6 @@
 
       </div>
     </div>
+
+  </div>
 {% endmacro %}
