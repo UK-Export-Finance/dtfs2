@@ -98,7 +98,7 @@ context('Portal to TFM deal submission', () => {
       // the actual month is generated dynamically via API.
       // 'months' is added to the mapping of the API result.
       // so safe to assert based on `months` appearing, rather than adding regex assertion.
-      expect(text.trim()).to.contain('months');
+      expect(text.trim()).to.contain('month');
     });
 
     //---------------------------------------------------------------
@@ -122,7 +122,7 @@ context('Portal to TFM deal submission', () => {
       // the actual month is generated dynamically via API.
       // 'months' is added to the mapping of the API result.
       // so safe to assert based on `months` appearing, rather than adding regex assertion.
-      expect(text.trim()).to.contain('months');
+      expect(text.trim()).to.contain('month');
     });
   });
 });
