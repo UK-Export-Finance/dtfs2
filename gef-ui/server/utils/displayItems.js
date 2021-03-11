@@ -1,5 +1,10 @@
 import moment from 'moment';
 
+const YES = 'Yes';
+const NO = 'No';
+const ISSUED = 'Issued';
+const UNISSUED = 'Unissued';
+
 const exporterItems = (exporterUrl) => [
   {
     label: 'Companies House registration number',
@@ -9,7 +14,6 @@ const exporterItems = (exporterUrl) => [
   {
     label: 'Company name',
     id: 'companyName',
-    href: `${exporterUrl}/`,
   },
   {
     label: 'Registered Address',
@@ -43,7 +47,7 @@ const exporterItems = (exporterUrl) => [
     label: 'Is finance for this exporter increasing?',
     id: 'isFinanceIncreasing',
     href: `${exporterUrl}/`,
-    method: (callback) => (callback ? 'Yes' : 'No'),
+    method: (callback) => (callback ? YES : NO),
   },
 ];
 
@@ -55,8 +59,9 @@ const facilityItems = (exporterUrl, type) => [
   },
   {
     label: 'Stage',
-    id: 'stage',
+    id: 'hasBeenIssued',
     href: `${exporterUrl}/`,
+    method: (callback) => (callback ? ISSUED : UNISSUED),
   },
   {
     label: 'Cover start date',
