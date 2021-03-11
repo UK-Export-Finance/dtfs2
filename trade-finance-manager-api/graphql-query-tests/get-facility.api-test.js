@@ -46,6 +46,7 @@ const GET_FACILITY = gql`
         bondBeneficiary,
         ukefExposure,
         banksInterestMargin,
+        firstDrawdownAmountInExportCurrency,
         dates {
           inclusionNoticeReceived,
           bankIssueNoticeReceived,

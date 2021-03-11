@@ -63,6 +63,7 @@ const dealQuery = gql`
             bankFacilityReference,
             ukefExposure,
             banksInterestMargin,
+            firstDrawdownAmountInExportCurrency,
             dates {
               inclusionNoticeReceived,
               bankIssueNoticeReceived,

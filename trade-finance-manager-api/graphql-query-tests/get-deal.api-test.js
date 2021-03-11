@@ -54,15 +54,19 @@ const GET_DEAL = gql`
               code
             },
             facilityType,
+            ukefFacilityType,
             facilityStage,
             facilityValueExportCurrency,
             facilityValue,
-            coverEndDate,
             ukefExposure,
             coveredPercentage,
+            bankFacilityReference,
+            guaranteeFeePayableToUkef,
             bondIssuer,
             bondBeneficiary,
-            bankFacilityReference
+            ukefExposure,
+            banksInterestMargin,
+            firstDrawdownAmountInExportCurrency,
             dates {
               inclusionNoticeReceived,
               bankIssueNoticeReceived,
