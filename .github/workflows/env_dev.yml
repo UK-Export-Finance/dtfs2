@@ -1464,6 +1464,7 @@ jobs:
   portal-ui:
     name: Portal UI
     needs: [vnet, private-dns, portal-api, reference-data-proxy, redis]
+    environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1616,6 +1617,7 @@ jobs:
             --connection-string-type custom \
             --settings \
               SESSION_SECRET="${{ env.SESSION_SECRET }}" \
+              SECRETS_TEST="${{ secrets.DEV_SESSION_SECRET }}" \
               COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
  
   trade-finance-manager-ui:
