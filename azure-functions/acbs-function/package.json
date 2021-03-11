@@ -2,11 +2,14 @@
   "name": "",
   "version": "",
   "description": "",
-  "scripts" : {
+  "scripts": {
     "test": "echo \"No tests yet...\""
   },
   "author": "",
   "dependencies": {
-    "durable-functions": "^1.4.6"
+    "axios": "^0.21.1",
+    "dotenv": "^8.2.0",
+    "durable-functions": "^1.4.6",
+    "moment": "^2.29.1"
   }
 }

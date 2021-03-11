@@ -12,6 +12,7 @@ describe('add partyUrn to deal', () => {
         submissionDetails: {
           'supplier-companies-house-registration-number': '',
         },
+        eligibility: {},
       },
     };
     const noCompaniesHouse = await addPartyUrns(deal);
@@ -24,6 +25,7 @@ describe('add partyUrn to deal', () => {
         submissionDetails: {
           'supplier-companies-house-registration-number': 'NO_MATCH',
         },
+        eligibility: {},
       },
     };
     const noMatch = await addPartyUrns(deal);
@@ -36,6 +38,7 @@ describe('add partyUrn to deal', () => {
         submissionDetails: {
           'supplier-companies-house-registration-number': 'MATCH',
         },
+        eligibility: {},
       },
     };
     const match = await addPartyUrns(deal);
@@ -48,6 +51,7 @@ describe('add partyUrn to deal', () => {
         submissionDetails: {
           'supplier-companies-house-registration-number': 'MATCH',
         },
+        eligibility: {},
       },
       tfm: {
         mockField: 'mock data',

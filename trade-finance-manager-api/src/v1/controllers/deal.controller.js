@@ -1,5 +1,8 @@
 const mapDeal = require('../mappings/map-deal');
+
 const api = require('../api');
+const allPartiesHaveUrn = require('../helpers/checkIfAllPartiesHaveUrn');
+const { createACBS } = require('./acbs.controller');
 
 const findOneDeal = async (dealId) => {
   const deal = await api.findOneDeal(dealId).catch(() => false);
@@ -35,6 +38,14 @@ const updateTfmParty = async (dealId, tfmUpdate) => {
 
   // eslint-disable-next-line no-underscore-dangle
   const updatedDeal = await api.updateDeal(dealId, partyUpdate);
+
+  const allRequiredPartiesHaveUrn = allPartiesHaveUrn(updatedDeal.tfm.parties);
+
+  if (allRequiredPartiesHaveUrn) {
+    // Start ACBS process
+    const acbsFunctionUris = await createACBS(updatedDeal);
+    console.log({ acbsFunctionUris });
+  }
   return updatedDeal.tfm;
 };
 exports.updateTfmParty = updateTfmParty;

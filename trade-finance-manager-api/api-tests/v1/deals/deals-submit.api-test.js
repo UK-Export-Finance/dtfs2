@@ -33,7 +33,7 @@ describe('/v1/deals', () => {
       };
 
       expect(status).toEqual(200);
-      expect(body).toEqual(tfmDeal);
+      expect(body).toMatchObject(tfmDeal);
     });
 
     it('returns the requested resource without partyUrn if not matched', async () => {
@@ -51,7 +51,7 @@ describe('/v1/deals', () => {
       };
 
       expect(status).toEqual(200);
-      expect(body).toEqual(tfmDeal);
+      expect(body).toMatchObject(tfmDeal);
     });
 
     it('returns the requested resource with partyUrn if matched', async () => {
@@ -69,7 +69,7 @@ describe('/v1/deals', () => {
       };
 
       expect(status).toEqual(200);
-      expect(body).toEqual(tfmDeal);
+      expect(body).toMatchObject(tfmDeal);
     });
 
     it('adds facilityValueInGBP to all facilities that are NOT in GBP', async () => {

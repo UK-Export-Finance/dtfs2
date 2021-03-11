@@ -190,6 +190,25 @@ const getFacilityExposurePeriod = async (startDate, endDate, facilityType) => {
   }
 };
 
+const createACBS = async (deal) => {
+  console.log(`${refDataUrl}/acbs`);
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${refDataUrl}/acbs`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        deal,
+      },
+    });
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -202,4 +221,5 @@ module.exports = {
   findUser,
   getCurrencyExchangeRate,
   getFacilityExposurePeriod,
+  createACBS,
 };
