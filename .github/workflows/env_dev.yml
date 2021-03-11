@@ -1617,7 +1617,7 @@ jobs:
             --connection-string-type custom \
             --settings \
               SESSION_SECRET="${{ env.SESSION_SECRET }}" \
-              SECRETS_TEST="${{ secrets.DEV_SESSION_SECRET }}" \
+              SECRETS_TEST="${{ secrets.DEV_SECRETS_TEST }}" \
               COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
  
   trade-finance-manager-ui:
