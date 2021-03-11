@@ -18,14 +18,12 @@ env:
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
 
-defaults:
-  environment:
-    name: dev
-
 jobs:
 
   build:
     name: Build and push TFM UI
+    environment:
+      name: dev
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -45,6 +43,8 @@ jobs:
 
   test:
     name: "Run end-to-end tests in Compose"
+    environment:
+      name: dev
     needs: build
     runs-on: ubuntu-latest
     env:
@@ -128,6 +128,8 @@ jobs:
 
   promote:
     name: Promote container images to Dev
+    environment:
+      name: dev
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -147,6 +149,8 @@ jobs:
 
   deploy:
     name: Deploy container images to Dev
+    environment:
+      name: dev
     needs: promote
     runs-on: ubuntu-latest
     steps:
