@@ -42,9 +42,19 @@ openRouter.route('/industry-sectors/:code')
     industrySectors.findOne,
   );
 
+openRouter.route('/industry-sectors/:code/acbs-sector')
+  .get(
+    industrySectors.getACBSIndustrySector,
+  );
+
 openRouter.route('/number-generator/:entityType')
   .get(
     numberGenerator.create,
+  );
+
+openRouter.route('/acbs')
+  .post(
+    acbs.createAcbsRecordPOST,
   );
 
 openRouter.route('/acbs/:entityType/:id')

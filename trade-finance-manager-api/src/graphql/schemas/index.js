@@ -164,10 +164,12 @@ type DealTotals {
 
 type TFMParty {
   partyUrn: String
+  partyUrnRequired: Boolean
 }
 
 type TFMAgent {
   partyUrn: String
+  partyUrnRequired: Boolean
   commissionRate: String
 }
 
@@ -233,10 +235,12 @@ type DealsQuery {
 
 input TFMPartyInput {
   partyUrn: String
+  partyUrnRequired: Boolean
 }
 
 input TFMAgentInput {
   partyUrn: String
+  partyUrnRequired: String
   commissionRate: String
 }
 
