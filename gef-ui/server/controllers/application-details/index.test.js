@@ -25,7 +25,7 @@ const MockApplicationResponse = () => {
 const MockExporterResponse = () => {
   const res = {};
   res.details = {};
-  res.status = 1;
+  res.status = 'IN_PROGRESS';
   res.validation = {};
   res.details.companiesHouseRegistrationNumber = 'tedsi';
   res.validation.required = [];
@@ -34,7 +34,7 @@ const MockExporterResponse = () => {
 
 const MockFacilityResponse = () => {
   const res = {};
-  res.status = 1;
+  res.status = 'IN_PROGRESS';
   res.data = [];
   return res;
 };
@@ -51,7 +51,7 @@ afterEach(() => {
 
 describe('GET Application Details', () => {
   it('renders the `Application Details` template', async () => {
-    mockFacilityResponse.items = [{ details: { type: 1 }, validation: { required: [] } }];
+    mockFacilityResponse.items = [{ details: { type: 'CASH' }, validation: { required: [] } }];
     api.getApplication = () => Promise.resolve(mockApplicationResponse);
     api.getExporter = () => Promise.resolve(mockExporterResponse);
     api.getFacilities = () => Promise.resolve(mockFacilityResponse);
