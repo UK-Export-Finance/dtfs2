@@ -186,6 +186,7 @@ type TFMFacilityData {
   bondIssuerPartyUrn: String
   bondBeneficiaryPartyUrn: String
   facilityValueInGBP: String
+  exposurePeriodInMonths: Int
   ukefExposure: FacilityUkefExposure
 }
 

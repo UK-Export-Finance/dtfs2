@@ -75,6 +75,7 @@ const dealQuery = gql`
             bondIssuerPartyUrn,
             bondBeneficiaryPartyUrn,
             facilityValueInGBP,
+            exposurePeriodInMonths,
             ukefExposure {
               exposure,
               timestamp
