@@ -22,8 +22,7 @@ jobs:
 
   build:
     name: Build and push TFM UI
-    environment:
-      name: dev
+    environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -43,8 +42,7 @@ jobs:
 
   test:
     name: "Run end-to-end tests in Compose"
-    environment:
-      name: dev
+    environment: dev
     needs: build
     runs-on: ubuntu-latest
     env:
@@ -128,8 +126,7 @@ jobs:
 
   promote:
     name: Promote container images to Dev
-    environment:
-      name: dev
+    environment: dev
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -149,8 +146,7 @@ jobs:
 
   deploy:
     name: Deploy container images to Dev
-    environment:
-      name: dev
+    environment: dev
     needs: promote
     runs-on: ubuntu-latest
     steps:
