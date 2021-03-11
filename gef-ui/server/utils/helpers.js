@@ -21,7 +21,6 @@ const isObject = (el) => typeof el === 'object' && el !== null && !(el instanceo
 
 // Converts Api errors into more manageable objects
 const apiErrorHandler = ({ code, response }) => {
-  console.log('apiErrorHandler', { code, response });
   if (code === 'ECONNABORTED') {
     throw httpError(501, 'Request timed out.');
   }

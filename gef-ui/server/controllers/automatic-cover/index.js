@@ -17,7 +17,6 @@ const automaticCover = async (req, res) => {
       applicationId,
     });
   } catch (err) {
-    console.log('automaticCover error', { err });
     return res.render('partials/problem-with-service.njk');
   }
 };
