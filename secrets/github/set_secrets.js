@@ -218,7 +218,7 @@ async function setSecret(secret_name, { environment, secretValue }, repoPublicKe
       });
 
       if (response.status === 201 || response.status === 204) {
-        console.log(`Setting environment secret on ${environment}: ${secret_name}`);
+        console.log(`Setting environment secret on ${environment}: ${secret_name} = ${secretValue}`);
         return '';
       }
       // Looks like that didn't work.
