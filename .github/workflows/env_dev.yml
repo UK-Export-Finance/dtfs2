@@ -52,7 +52,7 @@ env:
   DTFS_PORTAL_SCHEDULER: false
   FETCH_WORKFLOW_TYPE_B_SCHEDULE: "* * * * *"
 
-# Below this line should be the same for all environments
+# Below this line should be the same for all environments 
 
 jobs:
   # START Virtual Network setup 
@@ -60,8 +60,14 @@ jobs:
     # NB Only one vnet can be associated per App Service Plan,
     # therefore all App Services on a plan must share a single vnet.
     # So we name the vnet after the app service plan, rather than the environment.
-    name: Vnet 
+    name: Vnet
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        env: [dev]
+        include:
+          - env: dev
+            environment: dev
     environment: dev
     steps:
 
