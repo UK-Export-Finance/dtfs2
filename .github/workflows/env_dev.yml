@@ -80,7 +80,7 @@ jobs:
           echo AZURE_WORKFLOW_STORAGE_ACCOUNT=${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}        
           
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ secrets.AZURE_RESOURCE_GROUP }}
+          az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
     - name: Vnet
       uses: Azure/cli@v1.0.0
