@@ -1,0 +1,108 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% block pageTitle %}Exporter’s address{% endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: "#"
+  }) }}
+
+  <header data-cy="application-details-page">
+    <span class="govuk-caption-xl" data-cy="heading-caption">
+      About the exporter
+    </span>
+    <h1 class="govuk-heading-xl" data-cy="main-heading">
+      Exporter’s address
+    </h1>
+  </header>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-one-half">
+      <p class="govuk-body"><strong>Company Name</strong></p>
+      <p class="govuk-body">{{ companyName }}</p>
+
+      <p class="govuk-body"><strong>Registered company address</strong></p>
+      {{ registeredAddress | safe }}
+    </div>
+  </div>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-4">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukDetails({
+        summaryText: "How do I change the registered company address?",
+        text: "You cannot change the registered company address in this service. This information is sent to us from Companies House. Check with the exporter if you have a query about their registered address."
+      }) }}
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        <form
+          method="post"
+          data-cy="form">
+          {{ govukRadios({
+            classes: "govuk-radios--inline",
+            idPrefix: "confirm",
+            name: "mandatoryCriteria",
+            fieldset: {
+              legend: {
+                text: "Can you confirm that the mandatory criteria will be true for this General Export Facility?",
+                isPageHeading: false,
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            errorMessage: errors and {
+              text: errors.fieldErrors.confirm.text,
+              attributes: {
+                'data-cy': 'mandatory-criteria-error'
+              }
+            },
+            items: [
+              {
+                value: true,
+                text: "Yes",
+                attributes: {
+                  'data-cy': 'mandatory-criteria-yes'
+                }
+              },
+              {
+                value: false,
+                text: "No",
+                attributes: {
+                  'data-cy': 'mandatory-criteria-no'
+                }
+              }
+            ] }) 
+          }}
+
+          <div class="govuk-button-group">
+            {{ govukButton({
+              text: "Continue"
+            }) }}
+
+            <a
+              class="govuk-link"
+              href="/gef/application-details/{{applicationId}}"
+              data-cy="cancel-button">Save and return to application</a>
+          </div>
+        </form>
+    </div>
+  </div>
+
+{% endblock %}
