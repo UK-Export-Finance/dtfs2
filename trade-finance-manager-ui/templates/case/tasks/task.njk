@@ -1,50 +1,82 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
+{# TODO: should not  have case summary #}
 {% extends "case/case.njk" %}
 
 {% block sub_content %}
 
   <p>Task</p>
-  <h2 class="header-label">Task Title here...</h2>
+  <h2 class="header-label">{{ task.title }}</h2>
   
   <div class="govuk-grid-row" data-cy="deal-tasks">
 
     <h4>Deal</h4>
-    <p>deal data and link here</p>
+    <p><a href="/case/{{ dealId }}/deal">{{ deal.details.ukefDealId }}</a>&nbsp; {{ deal.submissionDetails.supplierName }} &#62; {{ deal.submissionDetails.buyerName }}</p>
 
     <h4>Type of work</h4>
-    <p>todo...</p>
+    <p>{{ deal.details.submissionType }} </p>
 
     <h4>Team</h4>
-    <p>todo...</p>
+    <p>{{ task.team.name }}</p>
 
-    <h4>Assigned to</h4>
-
-
-    {{govukRadios({
-        fieldset: {
-          legend: {
-            text: "Status",
-            classes: "govuk-fieldset__legend--m"
-          }
+    <form>
+      {% set bla = (user.firstName + ' ' + user.lastName + ' ' + '(Assign to me)') %}
+   
+      {{ govukSelect({
+        id: "sort",
+        name: "sort",
+        label: {
+          text: "Assigned to"
         },
-        name: "status",
         items: [
           {
-            value: "To do",
-            text: "To do"
+            value: "Unassigned",
+            text: "Unassigned"
           },
           {
-            value: "In progress",
-            text: "In progress"
-          },
-          {
-            value: "Done",
-            text: "Done"
+            value: user._id,
+            text: bla
           }
         ]
-      })
-    }}
+      }) }}
+
+      {{govukRadios({
+          fieldset: {
+            legend: {
+              text: "Status",
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          name: "status",
+          items: [
+            {
+              value: "To do",
+              text: "To do"
+            },
+            {
+              value: "In progress",
+              text: "In progress"
+            },
+            {
+              value: "Done",
+              text: "Done"
+            }
+          ]
+        })
+      }}
+
+      {{ govukButton({
+        text: "Save and close",
+        attributes: {
+          'data-cy': 'save-button'
+        }
+      }) }}
+
+      <a class="govuk-link govuk-!-margin-left-6 close-without-saving-link" href="#" data-cy="close-link">Close without saving</a>
+     
+    </form>
 
   </div>
 {% endblock %}
