@@ -157,7 +157,7 @@ jobs:
           
   private-dns:
     name: Private DNS zones
-    environment: ${{ matrix.environment  }}
+     environment: dev
     needs: vnet
     runs-on: ubuntu-latest
     steps:
@@ -208,7 +208,7 @@ jobs:
  
   public-ip:
     name: Public IP
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
 
@@ -244,7 +244,7 @@ jobs:
   network-security-group:
     name: Network Security Group Create
     needs: vnet
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -358,7 +358,7 @@ jobs:
   cosmos-db-create:
     name: Cosmos DB (Mongo) Create
     needs: vnet
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -422,7 +422,7 @@ jobs:
   cosmos-db-init:
     name: Cosmos DB (Mongo) Initialise Collections
     needs: cosmos-db-create
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -481,7 +481,7 @@ jobs:
   cosmos-db-private:
     name: Cosmos DB (Mongo) Make Private
     needs: [cosmos-db-init, private-dns]
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -571,7 +571,7 @@ jobs:
   file-storage:
     name: File storage
     needs: [vnet, private-dns]
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -664,7 +664,7 @@ jobs:
   redis:
     name: Redis session store
     needs: [vnet, private-dns]
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -745,7 +745,7 @@ jobs:
   functions:
     name: ACBS Function Setup
     needs: [vnet, private-dns, file-storage]
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -782,7 +782,7 @@ jobs:
   reference-data-proxy:
     name: Reference data API
     needs: [vnet, private-dns]
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1084,7 +1084,7 @@ jobs:
   portal-api:
     name: Portal API
     needs: [vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api, file-storage, trade-finance-manager-api]
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1262,7 +1262,7 @@ jobs:
   trade-finance-manager-api:
     name: Trade Finance Manager API
     needs: [vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api]
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1420,7 +1420,7 @@ jobs:
   portal-ui:
     name: Portal UI
     needs: [vnet, private-dns, portal-api, reference-data-proxy, redis]
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1579,7 +1579,7 @@ jobs:
   trade-finance-manager-ui:
     name: Trade Finance Manager UI
     needs: [vnet, private-dns, trade-finance-manager-api, redis]
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1735,7 +1735,7 @@ jobs:
   gef-ui:
     name: GEF UI
     needs: [vnet, private-dns, portal-api, reference-data-proxy, redis]
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -1896,7 +1896,7 @@ jobs:
   application-gateway-portal:
     name: Application Gateway Portal
     needs: [vnet, public-ip, portal-ui, gef-ui]
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -2099,7 +2099,7 @@ jobs:
   application-gateway-tfm:
     name: Application Gateway TFM
     needs: [vnet, public-ip, trade-finance-manager-ui]
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -2193,7 +2193,7 @@ jobs:
     # So you won't get a successful request for the first few minutes.
     name: Portal Front Door WAF/DDoS
     needs: application-gateway-portal
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
@@ -2271,7 +2271,7 @@ jobs:
     # So you won't get a successful request for the first few minutes.
     name: TFM Front Door WAF/DDoS
     needs: application-gateway-tfm
-    environment: ${{ matrix.environment  }}
+     environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
