@@ -64,8 +64,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        environment: [dev]
-    environment: ${{ matrix.environment }}
+        env: [dev]
+    environment: ${{ matrix.env }}
     steps:
 
     - uses: azure/login@v1
