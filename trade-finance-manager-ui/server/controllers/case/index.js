@@ -1,10 +1,5 @@
 import api from '../../api';
 
-// NOTE
-// the relationship between deal & case is currently unknown,
-// and therefore how this will be managed/stored/referenced.
-// This approach is purely for initial development.
-
 const getCaseDeal = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
   const deal = await api.getDeal(dealId);
@@ -14,6 +9,40 @@ const getCaseDeal = async (req, res) => {
   }
 
   return res.render('case/deal/deal.njk', {
+    deal: deal.dealSnapshot,
+    tfm: deal.tfm,
+    active_sheet: 'deal',
+    dealId,
+    user: req.session.user,
+  });
+};
+
+const getCaseTasks = async (req, res) => {
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const deal = await api.getDeal(dealId);
+
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  return res.render('case/tasks/tasks.njk', {
+    deal: deal.dealSnapshot,
+    tfm: deal.tfm,
+    active_sheet: 'deal',
+    dealId,
+    user: req.session.user,
+  });
+};
+
+const getCaseTask = async (req, res) => {
+  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const deal = await api.getDeal(dealId);
+
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  return res.render('case/tasks/task.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
     active_sheet: 'deal',
@@ -167,6 +196,8 @@ const postTfmFacility = async (req, res) => {
 
 export default {
   getCaseDeal,
+  getCaseTasks,
+  getCaseTask,
   getCaseFacility,
   getCaseParties,
   getExporterPartyDetails,

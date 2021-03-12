@@ -1,0 +1,50 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% extends "case/case.njk" %}
+
+{% block sub_content %}
+
+  <p>Task</p>
+  <h2 class="header-label">Task Title here...</h2>
+  
+  <div class="govuk-grid-row" data-cy="deal-tasks">
+
+    <h4>Deal</h4>
+    <p>deal data and link here</p>
+
+    <h4>Type of work</h4>
+    <p>todo...</p>
+
+    <h4>Team</h4>
+    <p>todo...</p>
+
+    <h4>Assigned to</h4>
+
+
+    {{govukRadios({
+        fieldset: {
+          legend: {
+            text: "Status",
+            classes: "govuk-fieldset__legend--m"
+          }
+        },
+        name: "status",
+        items: [
+          {
+            value: "To do",
+            text: "To do"
+          },
+          {
+            value: "In progress",
+            text: "In progress"
+          },
+          {
+            value: "Done",
+            text: "Done"
+          }
+        ]
+      })
+    }}
+
+  </div>
+{% endblock %}

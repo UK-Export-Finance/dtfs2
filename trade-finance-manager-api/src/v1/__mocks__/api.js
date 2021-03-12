@@ -4,6 +4,7 @@ const MOCK_DEAL_NO_COMPANIES_HOUSE = require('./mock-deal-no-companies-house');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('./mock-deal-facilities-USD-currency');
 const MOCK_FACILITIES = require('./mock-facilities');
 const MOCK_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
+const MOCK_DEAL_MIN = require('./mock-deal-MIN');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
 
 const ALL_MOCK_DEALS = [
@@ -11,6 +12,7 @@ const ALL_MOCK_DEALS = [
   MOCK_DEAL_NO_PARTY_DB,
   MOCK_DEAL_NO_COMPANIES_HOUSE,
   MOCK_DEAL_FACILITIES_USD_CURRENCY,
+  MOCK_DEAL_MIN,
 ];
 
 const ALL_MOCK_FACILITIES = [
@@ -57,7 +59,6 @@ module.exports = {
         ...facility,
         _id: facilityId,
       },
-      // tfm: {},
       tfm: {
         ukefExposure: '1,234.00',
         ukefExposureCalculationTimestamp: '1606900616651',
