@@ -74,13 +74,10 @@ jobs:
       with:
         inlineScript: |
           echo RESOURCE_GROUP=${{ secrets.RESOURCE_GROUP }}
-          echo SECRET_TEST_TMP=${{ secrets.SECRET_TEST_TMP }}
-          echo TMP_RESOURCE_GROUP=${{ secrets.TMP_RESOURCE_GROUP }}
-          echo RESOURCE_GROUP_TMP=${{ secrets.RESOURCE_GROUP_TMP }}
-          
+          echo AZURE_RESOURCE_GROUP=${{ secrets.AZURE_RESOURCE_GROUP }}          
           
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ secrets.RESOURCE_GROUP_TMP }}
+          az configure --defaults group=${{ secrets.AZURE_RESOURCE_GROUP }}
 
     - name: Vnet
       uses: Azure/cli@v1.0.0
@@ -153,7 +150,7 @@ jobs:
         # Subnet for a temporary maintenance virtual machine.
         inlineScript: |
           az network vnet subnet create \
-            --name ${{secrets.RESOURCE_GROUP }}-vm \
+            --name ${{secrets.AZURE_RESOURCE_GROUP }}-vm \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --address-prefixes 10.0.210.0/28 \
             --service-endpoints Microsoft.AzureCosmosDB
@@ -174,7 +171,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
 
     - name: Zones
       uses: Azure/cli@v1.0.0
@@ -224,7 +221,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
 
     - name: IP address
       uses: Azure/cli@v1.0.0
@@ -259,7 +256,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
 
     - name: Network Security Group
       uses: Azure/cli@v1.0.0
@@ -373,7 +370,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
       
     - name: Cosmos account for mongodb
       uses: Azure/cli@v1.0.0
@@ -407,7 +404,7 @@ jobs:
             --virtual-network ${{ env.app_service_plan }}-app-service-plan-egress \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet
           
-          vmEndpoint=$(az network vnet subnet show --name ${{secrets.RESOURCE_GROUP }}-vm --vnet-name tfs-${{ env.app_service_plan }}-vnet --query 'id' -o tsv)
+          vmEndpoint=$(az network vnet subnet show --name ${{secrets.AZURE_RESOURCE_GROUP }}-vm --vnet-name tfs-${{ env.app_service_plan }}-vnet --query 'id' -o tsv)
           az cosmosdb network-rule add \
             --subnet "$vmEndpoint" \
             --name tfs-${{ env.environment }}-mongo \
@@ -437,7 +434,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
 
     - name: Collections
       uses: Azure/cli@v1.0.0
@@ -496,7 +493,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}         
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}         
           
     - name: Private link
       uses: Azure/cli@v1.0.0
@@ -586,7 +583,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -679,7 +676,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -760,7 +757,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -797,7 +794,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -944,7 +941,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -1099,7 +1096,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -1277,7 +1274,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -1435,7 +1432,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -1594,7 +1591,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -1750,7 +1747,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
 
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -1911,7 +1908,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
  
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -2114,7 +2111,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
  
     - name: Create
       uses: Azure/cli@v1.0.0
@@ -2208,7 +2205,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
 
           # Front door requires an extension to the az cli:
           az extension add --name front-door
@@ -2286,7 +2283,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{secrets.AZURE_RESOURCE_GROUP }}
 
           # Front door requires an extension to the az cli:
           az extension add --name front-door
