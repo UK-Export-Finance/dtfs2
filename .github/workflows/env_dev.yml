@@ -76,8 +76,8 @@ jobs:
           echo RESOURCE_GROUP=${{ secrets.RESOURCE_GROUP }}
           echo AZURE_RESOURCE_GROUP=${{ secrets.AZURE_RESOURCE_GROUP }}          
           echo RESOURCE_GROUP_TMP=${{ secrets.AZURE_RESOURCE_GROUP_TMP }}
-          echo AZURE_RG=${{ secrets.AZURE_RG }}          
-                    
+          echo AZURE_RG=${{ secrets.AZURE_RG }}  
+          echo AZURE_WORKFLOW_STORAGE_ACCOUNT=${{ AZURE_WORKFLOW_STORAGE_ACCOUNT }}        
           
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.AZURE_RESOURCE_GROUP }}
