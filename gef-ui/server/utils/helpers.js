@@ -40,6 +40,9 @@ const apiErrorHandler = ({ code, response }) => {
 const validationErrorHandler = (errs, href = '') => {
   const errorSummary = [];
   const fieldErrors = {};
+
+  if (!errs) { return false; }
+
   const errors = isObject(errs) ? [errs] : errs;
 
   errors.forEach((el) => {
@@ -124,26 +127,26 @@ const mapSummaryList = (data, itemsToShow) => {
 };
 
 const status = ({
-  0: {
+  NOT_STARTED: {
     text: 'Not started',
     class: 'govuk-tag--grey',
-    code: 0,
+    code: 'NOT_STARTED',
   },
-  1: {
+  IN_PROGRESS: {
     text: 'In progress',
     class: 'govuk-tag--blue',
-    code: 1,
+    code: 'IN_PROGRESS',
   },
-  2: {
+  COMPLETED: {
     text: 'Completed',
     class: 'govuk-tag--green',
-    code: 2,
+    code: 'COMPLETED',
   },
 });
 
 const facilityType = ({
-  0: 'Cash',
-  1: 'Contingent',
+  CASH: 'Cash',
+  CONTINGENT: 'Contingent',
 });
 
 export {
