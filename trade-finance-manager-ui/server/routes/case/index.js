@@ -6,6 +6,10 @@ const router = express.Router();
 
 router.get('/:_id/deal', caseController.getCaseDeal);
 
+router.get('/:_id/tasks', caseController.getCaseTasks);
+
+router.get('/:_id/tasks/:taskId', caseController.getCaseTask);
+
 router.get('/:_id/facility/:facilityId', caseController.getCaseFacility);
 
 router.get('/:_id/parties', caseController.getCaseParties);

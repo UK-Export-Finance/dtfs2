@@ -1,5 +1,6 @@
 const { findOnePortalDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
+const { createDealTasks } = require('./deal.tasks');
 const { updateFacilities } = require('./update-facilities');
 const api = require('../api');
 
@@ -14,7 +15,9 @@ const submitDeal = async (dealId) => {
 
   const updatedDealWithPartyUrn = await addPartyUrns(submittedDeal);
 
-  const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithPartyUrn);
+  const updatedDealWithTasks = await createDealTasks(updatedDealWithPartyUrn);
+
+  const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithTasks);
 
   return api.updateDeal(dealId, updatedDealWithUpdatedFacilities);
 };

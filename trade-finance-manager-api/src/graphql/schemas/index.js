@@ -183,9 +183,22 @@ type TFMParties {
   agent: TFMAgent
 }
 
+type TFMTeam {
+  id: String
+  name: String
+}
+
+type TFMTask {
+  id: String
+  title: String
+  status: String
+  team: TFMTeam
+}
+
 type TFMDealData {
   parties: TFMParties
   product: String
+  tasks: [TFMTask]
 }
 
 type TFMFacilityData {
