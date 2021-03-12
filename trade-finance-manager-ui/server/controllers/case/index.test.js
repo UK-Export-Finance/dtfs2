@@ -7,6 +7,8 @@ const res = mockRes();
 const session = {
   user: {
     username: 'testUser',
+    firstName: 'Joe',
+    lastName: 'Bloggs',
   },
 };
 
@@ -17,6 +19,10 @@ describe('controllers - case', () => {
         _id: '1000023',
         dealSnapshot: {
           _id: '1000023',
+        },
+        tfm: {
+          parties: [],
+          tasks: [],
         },
         mock: true,
       };
@@ -36,6 +42,7 @@ describe('controllers - case', () => {
         await caseController.getCaseDeal(req, res);
         expect(res.render).toHaveBeenCalledWith('case/deal/deal.njk', {
           deal: mockDeal.dealSnapshot,
+          tfm: mockDeal.tfm,
           active_sheet: 'deal',
           dealId: req.params._id, // eslint-disable-line no-underscore-dangle
           user: session.user,
@@ -62,7 +69,126 @@ describe('controllers - case', () => {
     });
   });
 
-  describe.skip('GET case facility', () => {
+  describe('GET case tasks', () => {
+    describe('when deal exists', () => {
+      const mockDeal = {
+        _id: '1000023',
+        dealSnapshot: {
+          _id: '1000023',
+        },
+        tfm: {
+          parties: [],
+          tasks: [],
+        },
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should render tasks template with data', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+          },
+          session,
+        };
+
+        await caseController.getCaseTasks(req, res);
+        expect(res.render).toHaveBeenCalledWith('case/tasks/tasks.njk', {
+          deal: mockDeal.dealSnapshot,
+          tfm: mockDeal.tfm,
+          active_sheet: 'tasks',
+          dealId: req.params._id, // eslint-disable-line no-underscore-dangle
+          user: session.user,
+        });
+      });
+    });
+    
+    describe('when deal does NOT exist', () => {
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve();
+      });
+
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session,
+        };
+
+        await caseController.getCaseTasks(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+  });
+
+  describe('GET case task', () => {
+    describe('when deal exists', () => {
+      const mockDeal = {
+        _id: '1000023',
+        dealSnapshot: {
+          _id: '1000023',
+        },
+        tfm: {
+          parties: [],
+          tasks: [
+            { id: '123' },
+            { id: '456' },
+          ],
+        },
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should render tasks template with data and task from deal', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+            taskId: '456',
+          },
+          session,
+        };
+
+        const expectedTask = mockDeal.tfm.tasks.find((t) => t.id === '456');
+
+        await caseController.getCaseTask(req, res);
+        expect(res.render).toHaveBeenCalledWith('case/tasks/task.njk', {
+          deal: mockDeal.dealSnapshot,
+          tfm: mockDeal.tfm,
+          active_sheet: 'tasks',
+          dealId: req.params._id, // eslint-disable-line no-underscore-dangle
+          user: session.user,
+          task: expectedTask,
+        });
+      });
+    });
+    
+    describe('when deal does NOT exist', () => {
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve();
+      });
+
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session,
+        };
+
+        await caseController.getCaseTask(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+  });
+
+  describe('GET case facility', () => {
     describe('when facility exists', () => {
       const mockFacility = {
         _id: '1000023',
