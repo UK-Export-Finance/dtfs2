@@ -30,7 +30,7 @@ const createApplication = async (req, res) => {
     // Show validation errors from server
     if (err.status === 422) {
       return res.render('partials/name-application.njk', {
-        errors: validationErrorHandler(err.data, 'name-application'),
+        errors: validationErrorHandler(err.data),
       });
     }
 

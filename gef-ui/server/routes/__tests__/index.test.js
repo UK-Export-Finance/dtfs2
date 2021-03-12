@@ -4,6 +4,7 @@ import ineligibleGefRoutes from '../ineligible-gef';
 import ineligibleAutomaticCoverRoutes from '../ineligible-automatic-cover';
 import automaticCoverRoutes from '../automatic-cover';
 import applicationDetailsRoutes from '../application-details';
+import companiesHouseRoutes from '../companies-house';
 
 const useSpy = jest.fn();
 jest.doMock('express', () => ({
@@ -31,5 +32,6 @@ describe('Routes', () => {
     expect(useSpy).toHaveBeenCalledWith(ineligibleAutomaticCoverRoutes);
     expect(useSpy).toHaveBeenCalledWith(automaticCoverRoutes);
     expect(useSpy).toHaveBeenCalledWith(applicationDetailsRoutes);
+    expect(useSpy).toHaveBeenCalledWith(companiesHouseRoutes);
   });
 });
