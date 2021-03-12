@@ -14,6 +14,7 @@ const { Octokit } = require('@octokit/rest');
 const { throttling } = require('@octokit/plugin-throttling');
 const { env } = require('process');
 
+
 const ThrottledOctokit = Octokit.plugin(throttling);
 
 // Processes a csv of the form:
@@ -68,38 +69,15 @@ function encrypt(secretValue, key) {
   return encryptedB64;
 }
 
-function processKey(row, secretsList) {
-  secrets = {};
-  const key = row.Key;
-  // console.log(`Processing: ${key}`);
-  // console.log(`Environments:`)
-  Object.keys(row).forEach((key) => {
-    // For each environment where a value is specified, set the secret value:
-    if (key !== 'Key' && row[key]) {
-      // Secret name
-      let secretName;
-      if (key === 'all') {
-        secretName = `${row.Key}`;
-      } else {
-        secretName = `${key.toUpperCase()}_${row.Key}`;
-      }
-      // console.log(` - ${key} -> ${secretName}`)
-      removeItem(secretsList, secretName);
+function processKey(row) {
+  const { Key, ...rowData } = row;
 
-      // Encrypt secret value
-      secretValue = row[key];
-      secrets[secretName] = { key, secretValue };
-    }
-  });
-  return secrets;
-}
-
-function removeItem(array, item) {
-  const index = array.indexOf(item);
-  if (index > -1) {
-    array.splice(index, 1);
-  }
-  return array;
+  const secrets = Object.entries(rowData).filter(([_, secretValue]) => Boolean(secretValue))
+    .map(([environment, secretValue]) => (secretValue && {
+      environment,
+      secretValue,
+    }));
+  return { [Key]: secrets };
 }
 
 async function getRepo(octokit) {
@@ -146,38 +124,41 @@ async function getOrgPublicKey(octokit) {
   throw ('Error getting org public key');
 }
 
-async function listRepoSecrets(octokit) {
+function listRepoSecrets(octokit, repository_id, environmentList) {
   console.log('Listing repository secrets...');
+  console.log({ environmentList });
 
-  const response = await octokit.actions.listRepoSecrets({
-    owner,
-    repo,
-    per_page: 100,
-  });
+  const responses = environmentList.map((environment_name) => {
+    let response;
 
-  if (response.status === 200) {
-    // Check we've got all the secrets
-    total_count = response.data.total_count;
-    if (total_count > 100) {
-      throw ('Too many secrets, need to paginate.');
+    if (environment_name === 'all') {
+      response = octokit.actions.listRepoSecrets({
+        owner,
+        repo,
+        per_page: 100,
+      });
+    } else {
+      response = octokit.actions.listEnvironmentSecrets({
+        repository_id,
+        environment_name,
+      });
     }
 
-    // Collate secret names
-    secrets = response.data.secrets;
-    names = [];
-    secrets.forEach((secret) => {
-      names.push(secret.name);
+    return new Promise((resolve, reject) => {
+      response.then((r) => {
+        resolve({
+          response: r,
+          environment: environment_name,
+        });
+      });
     });
+  });
 
-    // Azure acces credentials aren't in the spreadsheet, so don't show them as left-over
-    names = names.filter((item) => item !== 'AZURE_DIGITAL_DEV');
-    names = names.filter((item) => item !== 'AZURE_DIGITAL_TEST');
-    names = names.filter((item) => item !== 'AZURE_DIGITAL_PROD');
+  return responses;
 
-    return names;
-  }
-  console.log(response);
-  throw ('Error listing repo secrets');
+
+  // console.log(response);
+  // throw ('Error listing repo secrets');
 }
 
 async function setOrgSecret(secret_name, secret_value, orgPublicKey, repoId, octokit) {
@@ -203,7 +184,7 @@ async function setOrgSecret(secret_name, secret_value, orgPublicKey, repoId, oct
   }
 }
 
-async function setSecret(secret_name, { key, secretValue }, repoPublicKey, orgPublicKey, repoId, octokit) {
+async function setSecret(secret_name, { environment, secretValue }, repoPublicKey, orgPublicKey, repoId, octokit) {
   const encrypted_value = encrypt(secretValue, repoPublicKey.key);
   // console.log({
   try {
@@ -211,7 +192,7 @@ async function setSecret(secret_name, { key, secretValue }, repoPublicKey, orgPu
     // const response = await octokit.actions.createOrUpdateRepoSecret(
     //  - doesn't add the secret name to the end of the path
     // const response = await octokit.request("PUT /repos/:owner/:repo/actions/secrets/:name", {
-    if (key === 'all') {
+    if (environment === 'all') {
       const response = await octokit.actions.createOrUpdateRepoSecret({
         owner,
         repo,
@@ -221,24 +202,23 @@ async function setSecret(secret_name, { key, secretValue }, repoPublicKey, orgPu
       });
 
       if (response.status === 201 || response.status == 204) {
-        console.log(`${secret_name} - repo`);
+        console.log(`Setting repo secret: ${secret_name}`);
         return '';
       }
       // Looks like that didn't work.
       console.log(response);
       throw (`Error setting secret value: ${secret_name}: status code ${response.status}`);
     } else {
-      const environment_name = key;
       const response = await octokit.actions.createOrUpdateEnvironmentSecret({
         repository_id: repoId,
-        environment_name,
+        environment_name: environment,
         secret_name,
         encrypted_value,
         key_id: repoPublicKey.key_id,
       });
 
       if (response.status === 201 || response.status === 204) {
-        console.log(`${secret_name} - environment`);
+        console.log(`Setting environment secret on ${environment}: ${secret_name}`);
         return '';
       }
       // Looks like that didn't work.
@@ -249,9 +229,26 @@ async function setSecret(secret_name, { key, secretValue }, repoPublicKey, orgPu
     // If Github is stuck in an "Abuse Detection" state then
     // fall back to setting the secret at the organisation level:
     // console.log(err)
-    // console.log(` - Error setting ${secret_name}, falling back to org-level secret.`);
+    console.log(` - Error setting ${environment} - ${secret_name},`, { errorName: err.name, errorStatus: err.status });
     // return setOrgSecret(secret_name, secretValue, orgPublicKey, repoId, octokit);
-    console.log('didnt work');
+    // console.log('didnt work');
+  }
+}
+
+function checkForMissingSecrets(currentSecrets, newSecrets) {
+  const missingSecrets = [];
+  Object.entries(newSecrets).forEach(([secretName, envSecrets]) => {
+    envSecrets.forEach((envSecret) => {
+      const currentEnv = currentSecrets.find(({ environment }) => environment === envSecret.environment);
+      if (!currentEnv) return;
+      if (!currentEnv.secrets.includes(secretName)) {
+        // console.log({ currentEnv, secretName });
+        missingSecrets.push(`${currentEnv.environment}:${secretName}`);
+      }
+    });
+  });
+  if (missingSecrets.length > 0) {
+    console.log(`Secrets not included in the csv (${missingSecrets.length}):\n ${missingSecrets.join(', ')}`);
   }
 }
 
@@ -287,40 +284,85 @@ async function main() {
   const repo = await getRepo(octokit);
 
   // List the current secrets
-  const secretsList = await listRepoSecrets(octokit);
+
+  let currentSecretsList = [];
 
   // Parse the input csv
   let secrets = {};
-  const failed_secrets = [];
+
   fs.createReadStream(csv_path)
     .pipe(csv())
+    .on('headers', (headers) => {
+      const envList = headers.filter((environmentName) => environmentName !== 'Key');
+      currentSecretsList = listRepoSecrets(octokit, repo.id, envList);
+    })
     .on('data', async (row) => {
-      // console.log(row);
-      const newSecrets = await processKey(row, secretsList, repoPublicKey);
+      const newSecrets = await processKey(row, repoPublicKey);
       secrets = {
-        ...secrets,
         ...newSecrets,
+        ...secrets,
       };
     })
     .on('end', async () => {
       console.log('CSV file successfully processed');
-      if (secretsList.length > 0) {
-        console.log(`Secrets not included in the csv (${secretsList.length}):\n ${secretsList}`);
-      }
+
+
+      const currentSecretsResults = await Promise.all(currentSecretsList);
+
+
+      const currentSecrets = currentSecretsResults.map(({ environment, response }) => {
+        if (response.status === 200) {
+          // Check we've got all the secrets
+          total_count = response.data.total_count;
+          if (total_count > 100) {
+            throw ('Too many secrets, need to paginate.');
+          }
+
+          // Collate secret names
+          const { secrets } = response.data;
+          names = [];
+          secrets.forEach((secret) => {
+            names.push(secret.name);
+          });
+
+          // Azure acces credentials aren't in the spreadsheet, so don't show them as left-over
+          names = names.filter((item) => item !== 'AZURE_DIGITAL_DEV');
+          names = names.filter((item) => item !== 'AZURE_DIGITAL_TEST');
+          names = names.filter((item) => item !== 'AZURE_DIGITAL_PROD');
+
+          return {
+            environment,
+            secrets: names,
+          };
+        }
+      });
+
+      checkForMissingSecrets(currentSecrets, secrets);
+
       // Set the secrets, but delay each call to try and avoid the Github abuse detection mechanism
       // NB Github abuse detection seems to fire for most secrets, and in a consistent pattern.
       //    once a secret gets "blocked" it seems to stay blocked permanently.
       // Update: it appears that there's a limit of 100 secrets per repo, unless they're set on an
       // environment. At the time of writing, Octokit doesn't support environments.
       // delay = 10;
-      Object.keys(secrets).forEach(async (secretName) => {
+      Object.entries(secrets).forEach(async ([secretName, secretValues]) => {
+        const failed_secrets = [];
         // delay += 10;
         // setTimeout(async function() {
-        result = await setSecret(secretName, secrets[secretName], repoPublicKey, '', repo.id, octokit);
-        if (result) {
-          failed_secrets.push(secretName);
-        }
+        secretValues.forEach(async (secretValue) => {
+          const result = await setSecret(secretName, secretValue, repoPublicKey, '', repo.id, octokit);
+          if (result) {
+            failed_secrets.push({
+              environment: secretValue.environment,
+              secretName,
+            });
+          }
+        });
         // }, delay);
+
+        if (failed_secrets.length) {
+          console.log(`${failed_secrets.length} failed secrets`, failed_secrets);
+        }
       });
     });
 }
