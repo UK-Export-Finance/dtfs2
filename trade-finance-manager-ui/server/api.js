@@ -20,7 +20,6 @@ const getDeals = async () => {
   return response.data.deals;
 };
 
-
 const getFacility = async (id) => {
   const response = await apollo('GET', facilityQuery, { id });
 

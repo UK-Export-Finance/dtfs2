@@ -1,0 +1,20 @@
+{% extends "case/case.njk" %}
+
+{% block sub_content %}
+
+  <h2 class="header-label">Tasks for this deal</h2>
+  
+  <div class="govuk-grid-row" data-cy="deal-tasks">
+
+  <br />
+  <br />
+
+  <ul class="govuk-list">
+    {% for task in tfm.tasks %}
+      <li><a href="/case/{{ dealId }}/tasks/{{ task.id }}">{{ task.title}}</a></li>
+    {% endfor %}
+  </ul>
+
+  </div>
+
+{% endblock %}

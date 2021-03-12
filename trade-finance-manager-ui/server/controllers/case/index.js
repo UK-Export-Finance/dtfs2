@@ -28,26 +28,33 @@ const getCaseTasks = async (req, res) => {
   return res.render('case/tasks/tasks.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    active_sheet: 'deal',
+    active_sheet: 'tasks',
     dealId,
     user: req.session.user,
   });
 };
 
+const getTask = (taskId, tasks) =>
+  tasks.find((t) => t.id === taskId);
+
 const getCaseTask = async (req, res) => {
   const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const { taskId } = req.params;
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
     return res.redirect('/not-found');
   }
 
+  const task = getTask(taskId, deal.tfm.tasks);
+
   return res.render('case/tasks/task.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    active_sheet: 'deal',
+    active_sheet: 'tasks',
     dealId,
     user: req.session.user,
+    task,
   });
 };
 
