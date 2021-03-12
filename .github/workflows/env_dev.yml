@@ -63,8 +63,6 @@ jobs:
     name: Vnet
     runs-on: ubuntu-latest
     environment: dev
-    env:
-      RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
     steps:
 
     - uses: azure/login@v1
@@ -75,8 +73,11 @@ jobs:
       uses: Azure/cli@v1.0.0
       with:
         inlineScript: |
+          echo RESOURCE_GROUP=${{ secrets.RESOURCE_GROUP }}
+          echo SECRET_TEST_TMP=${{ secrets.SECRET_TEST_TMP }}
+          
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ env.RESOURCE_GROUP }}
+          az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
     - name: Vnet
       uses: Azure/cli@v1.0.0
