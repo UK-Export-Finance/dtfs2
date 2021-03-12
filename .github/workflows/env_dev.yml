@@ -65,7 +65,7 @@ jobs:
     environment: ${{ matrix.environment }}
     strategy:
       matrix:
-        environment: [${{ env.environment }}]
+        environment: [dev]
     steps:
 
     - uses: azure/login@v1
