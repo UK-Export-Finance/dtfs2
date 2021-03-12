@@ -60,7 +60,7 @@ jobs:
     # NB Only one vnet can be associated per App Service Plan,
     # therefore all App Services on a plan must share a single vnet.
     # So we name the vnet after the app service plan, rather than the environment.
-    name: Vnet
+    name: Vnet ${{ matrix.environment }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -68,7 +68,7 @@ jobs:
         include:
           - env: dev
             environment: dev
-    environment: ${{ matrix.environment }}
+    environment: dev
     steps:
 
     - uses: azure/login@v1
