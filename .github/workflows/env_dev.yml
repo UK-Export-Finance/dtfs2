@@ -62,10 +62,10 @@ jobs:
     # So we name the vnet after the app service plan, rather than the environment.
     name: Vnet
     runs-on: ubuntu-latest
-    environment: ${{ matrix.environment }}
     strategy:
       matrix:
         environment: [dev]
+    environment: ${{ matrix.environment }}
     steps:
 
     - uses: azure/login@v1
