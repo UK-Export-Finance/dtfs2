@@ -6,10 +6,6 @@ on:
     paths: 
     - '.github/workflows/env_dev.yml'
 
-strategy:
-  matrix:
-    environment: [dev]
-
 env:
   # Environment
   front_door_access: Allow
@@ -67,6 +63,9 @@ jobs:
     name: Vnet
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
+    strategy:
+      matrix:
+        environment: [${{ env.environment }}]
     steps:
 
     - uses: azure/login@v1
