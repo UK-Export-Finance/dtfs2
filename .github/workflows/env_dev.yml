@@ -927,6 +927,7 @@ jobs:
   dtfs-central-api:
     name: DTFS Central API
     needs: [vnet, private-dns, cosmos-db-private, reference-data-proxy]
+    environment: dev
     runs-on: ubuntu-latest
     steps:
     - uses: azure/login@v1
