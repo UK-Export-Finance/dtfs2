@@ -9,7 +9,7 @@ on:
 env:
   # Environment
   front_door_access: Allow
-  environment: ${{ env.environment }}
+  environment: dev
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
 #  resource_group: ${{ secrets.DEV_RESOURCE_GROUP }}
   app_service_plan: dev
