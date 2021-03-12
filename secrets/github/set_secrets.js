@@ -95,20 +95,53 @@ async function getRepo(octokit) {
   throw ('Error getting repo information');
 }
 
-async function getRepoPublicKey(octokit) {
-  console.log('Getting repository public key...');
+// async function getRepoPublicKey(octokit) {
+//   console.log('Getting repository public key...');
 
-  const response = await octokit.actions.getRepoPublicKey({
-    owner,
-    repo,
+//   const response = await octokit.actions.getRepoPublicKey({
+//     owner,
+//     repo,
+//   });
+
+//   if (response.status === 200) {
+//     console.log(response.data);
+//     return response.data;
+//   }
+//   console.log(response);
+//   throw ('Error getting repo public key');
+// }
+
+function getPublicKeys(octokit, repository_id, environmentList) {
+  console.log('Getting environemnt public keys...');
+
+  const responses = environmentList.map((environment_name) => {
+    console.log(`Getting public key for ${environment_name} environment`);
+    let response;
+
+    if (environment_name === 'all') {
+      response = octokit.actions.getRepoPublicKey({
+        owner,
+        repo,
+      });
+    } else {
+      response = octokit.actions.getEnvironmentPublicKey({
+        repository_id,
+        environment_name,
+      });
+    }
+    return new Promise((resolve, reject) => {
+      response.then((r) => {
+        resolve({
+          publicKey: r.data,
+          environment_name,
+        });
+      });
+    });
   });
 
-  if (response.status === 200) {
-    return response.data;
-  }
-  console.log(response);
-  throw ('Error getting repo public key');
+  return responses;
 }
+
 
 async function getOrgPublicKey(octokit) {
   console.log('Getting org public key...');
@@ -184,8 +217,8 @@ async function setOrgSecret(secret_name, secret_value, orgPublicKey, repoId, oct
   }
 }
 
-async function setSecret(secret_name, { environment, secretValue }, repoPublicKey, orgPublicKey, repoId, octokit) {
-  const encrypted_value = encrypt(secretValue, repoPublicKey.key);
+async function setSecret(secret_name, { environment, secretValue }, publicKey, orgPublicKey, repoId, octokit) {
+  const encrypted_value = encrypt(secretValue, publicKey.key);
   // console.log({
   try {
     // Broken:
@@ -198,7 +231,7 @@ async function setSecret(secret_name, { environment, secretValue }, repoPublicKe
         repo,
         secret_name,
         encrypted_value,
-        key_id: repoPublicKey.key_id,
+        key_id: publicKey.key_id,
       });
 
       if (response.status === 201 || response.status == 204) {
@@ -214,7 +247,7 @@ async function setSecret(secret_name, { environment, secretValue }, repoPublicKe
         environment_name: environment,
         secret_name,
         encrypted_value,
-        key_id: repoPublicKey.key_id,
+        key_id: publicKey.key_id,
       });
 
       if (response.status === 201 || response.status === 204) {
@@ -279,13 +312,15 @@ async function main() {
   });
 
   // Get the repo and org public keys
-  const repoPublicKey = await getRepoPublicKey(octokit);
+  let envPublicKeys;
+
   // const orgPublicKey = await getOrgPublicKey(octokit);
   const repo = await getRepo(octokit);
 
   // List the current secrets
 
   let currentSecretsList = [];
+  let envPublicKeysList = [];
 
   // Parse the input csv
   let secrets = {};
@@ -295,9 +330,10 @@ async function main() {
     .on('headers', (headers) => {
       const envList = headers.filter((environmentName) => environmentName !== 'Key');
       currentSecretsList = listRepoSecrets(octokit, repo.id, envList);
+      envPublicKeysList = getPublicKeys(octokit, repo.id, envList);
     })
     .on('data', async (row) => {
-      const newSecrets = await processKey(row, repoPublicKey);
+      const newSecrets = await processKey(row);
       secrets = {
         ...newSecrets,
         ...secrets,
@@ -308,6 +344,7 @@ async function main() {
 
 
       const currentSecretsResults = await Promise.all(currentSecretsList);
+      envPublicKeys = await Promise.all(envPublicKeysList);
 
 
       const currentSecrets = currentSecretsResults.map(({ environment, response }) => {
@@ -350,7 +387,9 @@ async function main() {
         // delay += 10;
         // setTimeout(async function() {
         secretValues.forEach(async (secretValue) => {
-          const result = await setSecret(secretName, secretValue, repoPublicKey, '', repo.id, octokit);
+          const { publicKey } = envPublicKeys.find(({ environment_name }) => environment_name === secretValue.environment);
+
+          const result = await setSecret(secretName, secretValue, publicKey, '', repo.id, octokit);
           if (result) {
             failed_secrets.push({
               environment: secretValue.environment,
