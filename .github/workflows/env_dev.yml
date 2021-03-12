@@ -74,8 +74,10 @@ jobs:
       with:
         inlineScript: |
           echo RESOURCE_GROUP=${{ secrets.RESOURCE_GROUP }}
-          echo RESOURCE_GROUP_TMP=${{ secrets.RESOURCE_GROUP_TMP }}
           echo SECRET_TEST_TMP=${{ secrets.SECRET_TEST_TMP }}
+          echo TMP_RESOURCE_GROUP=${{ secrets.TMP_RESOURCE_GROUP }}
+          echo RESOURCE_GROUP_TMP=${{ secrets.RESOURCE_GROUP_TMP }}
+          
           
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.RESOURCE_GROUP_TMP }}
