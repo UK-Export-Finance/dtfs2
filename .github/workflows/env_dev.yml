@@ -59,7 +59,10 @@ jobs:
     name: Define environment
     runs-on: ubuntu-latest
     outputs:
-      environment: dev
+      environment: ${{ steps.define.outputs.environment }}
+    steps:
+    - id: define
+      run: echo "::set-output name=environment::dev"
 
   # START Virtual Network setup 
   vnet:
